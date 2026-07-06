@@ -77,6 +77,15 @@ public static class Migrate
         AddCol("student_profiles", "profile_photo", "profile_photo TEXT");
         AddCol("users", "two_factor_enabled", "two_factor_enabled INTEGER DEFAULT 0");
 
+        // ── Multi-certification upgrade for pre-existing databases ──
+        // certifications is created by schema.sql; here we make sure every lifecycle table carries
+        // certification_id and that legacy rows are attributed to the founding certification (id 1).
+        foreach (var t in new[] { "sample_questions", "exam_entitlements", "exam_bookings", "exam_attempts", "issued_credentials" })
+        {
+            AddCol(t, "certification_id", "certification_id INTEGER DEFAULT 1");
+            db.Exec($"UPDATE {t} SET certification_id=1 WHERE certification_id IS NULL");
+        }
+
         // bootstrap owner admin on first run (parity with db.js seed)
         try
         {

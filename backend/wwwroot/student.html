@@ -677,7 +677,7 @@ async function vHome(){const me=S.me;const ns=nextStep(me);const cs=credStatus(m
   const win=me.exam.entitled&&!me.exam.passed?`<div class="cdchip ${dTo(me.exam.deadline)<60?'warn':''}"><b>${Math.max(0,dTo(me.exam.deadline))}</b><span>days left in window</span></div>`:'';
   const bk=me.exam.booking?`<div class="cdchip"><b>${Math.max(0,dTo(me.exam.booking.scheduled_at))}</b><span>days to exam</span></div>`:'';
   const facts=[];
-  facts.push(me.exam.booking?['cal','PCP-AI Examination','Booked · '+fDT(me.exam.booking.scheduled_at),'b','On track']:me.exam.passed?['cert','PCP-AI Examination','Passed','g','Complete']:me.exam.entitled?['exam','PCP-AI Examination','90 minutes · 65% to pass · not yet booked','a','Action needed']:['exam','PCP-AI Examination','Fee not yet paid','n','Pending']);
+  facts.push(me.exam.booking?['cal','PCP-AI Examination','Booked · '+fDT(me.exam.booking.scheduled_at),'b','On track']:me.exam.passed?['cert','PCP-AI Examination','Passed','g','Complete']:me.exam.entitled?['exam',(me.exam.certification||'PCP-AI')+' Examination','not yet booked','a','Action needed']:['exam','PCP-AI Examination','Fee not yet paid','n','Pending']);
   if(me.exam.entitled&&!me.exam.passed)facts.push(['cpd','Scheduling window','Closes '+fD(me.exam.deadline)+' · '+Math.max(0,dTo(me.exam.deadline))+' days remaining','b','On track']);
   facts.push(me.membership?['card','Student membership','Active · renews '+fD(me.membership.expiry_date),(me.membership.expiry_date&&dTo(me.membership.expiry_date)<45?'a':'g'),me.membership.expiry_date&&dTo(me.membership.expiry_date)<45?'Renewal soon':'Active']:['card','Student membership','No active membership','n','—']);
   const J=journey(me);
@@ -848,15 +848,36 @@ async function vMessages(){const d=await api('/api/me/messages');const rows=d.ro
   document.querySelectorAll('[data-mgo]').forEach(b=>b.onclick=async()=>{await api('/api/me/messages/'+b.dataset.mid2+'/read',{method:'POST'});await loadMsgs();go(b.dataset.mgo)});
 }
 /* ---------- MY EXAM ---------- */
+function certLabel(ex){return (ex&&ex.certification)||(S.me&&S.me.exam&&S.me.exam.certification)||'PCP-AI'}
+function certShort(ex){return (ex&&ex.cert_code)||'PCP-AI'}
+function renderExamPicker(list){
+  $('#view').innerHTML=`<div class="card"><div class="ch"><h3>My examinations</h3></div><div class="cb">
+    <p class="muted tiny" style="margin-top:0">You hold entitlements for ${list.length} certifications. Each has its own booking, sitting and credential.</p>
+    ${list.map(e=>{const st=e.credential?['Certified','g']:(e.latest_attempt&&e.latest_attempt.status==='submitted')?['Submitted','b']:(e.booking&&e.booking.status==='scheduled')?['Booked · '+fDT(e.booking.scheduled_at),'b']:['Not yet booked','a'];
+      return `<div class="srow" style="align-items:center"><div><b>${esc(e.certification_name||e.certification_code||'Certification')}</b><div class="tiny muted">window ends ${fD(e.deadline)}${e.credential?' · '+esc(e.credential.credential_id):''}</div></div>
+        <span class="tag ${st[1]}"><span class="dot"></span>${st[0]}</span> <button class="btn btn-sm btn-p" data-pick="${e.certification_id}">Manage</button></div>`}).join('')}
+  </div></div>`;
+  document.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{S.selCert=+b.dataset.pick;vExam()});
+}
 let calM=new Date();calM.setDate(1);let selDay=null,selSlot=null,lTimer=null;
 async function vExam(){
-  if(S.mode!=='demo'&&S.readinessOk===undefined){try{const r=await api('/api/me/readiness');S.readinessOk=!!(r.latest&&r.latest.passed);}catch(_){S.readinessOk=false;}}clearInterval(lTimer);const ex=S.me.exam;
-  if(!ex.entitled){$('#view').innerHTML=`<div class="card"><div class="cb empty"><div class="ei">${svg('exam')}</div><h4>No exam entitlement yet</h4><p>The PCP-AI examination fee (${money(350)}) opens a 12-month scheduling window. Pay via the PCI website checkout — it appears here automatically.</p></div></div>`;return}
+  if(S.mode!=='demo'&&S.readinessOk===undefined){try{const r=await api('/api/me/readiness');S.readinessOk=!!(r.latest&&r.latest.passed);}catch(_){S.readinessOk=false;}}clearInterval(lTimer);
+  // Multi-certification: one entry per paid entitlement. A single exam keeps the classic view;
+  // several show a picker first. The selected certification's id rides on book/start calls.
+  const list=(S.me.exams&&S.me.exams.length)?S.me.exams:null;
+  let ex=S.me.exam;
+  if(list&&list.length>1&&S.selCert==null){renderExamPicker(list);return}
+  if(list){const pick=(S.selCert!=null&&list.find(e=>e.certification_id===S.selCert))||list[0];
+    ex={entitled:true,deadline:pick.deadline,payment_ref:pick.reference,
+        booking:(pick.booking&&pick.booking.status==='scheduled')?pick.booking:null,
+        passed:!!pick.credential,certification_id:pick.certification_id,
+        certification:pick.certification_name,cert_code:pick.certification_code};}
+  if(!ex.entitled){$('#view').innerHTML=`<div class="card"><div class="cb empty"><div class="ei">${svg('exam')}</div><h4>No exam entitlement yet</h4><p>The examination fee (${money(350)}) opens a 12-month scheduling window. Pay via the PCI website checkout — it appears here automatically.</p></div></div>`;return}
   if(ex.booking){renderBooked(ex);return}renderSched(ex);
 }
 function renderSched(ex,resc){const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'local time';
   $('#view').innerHTML=`<div class="grid g2">
-    <div class="card"><div class="ch"><h3>${resc?'Choose a new date':'Schedule your examination'}</h3><div class="sp"></div><span class="tag b">window ends ${fD(ex.deadline)}</span></div><div class="cb">
+    <div class="card"><div class="ch"><h3>${resc?'Choose a new date':'Schedule: '+esc(certLabel(ex))}</h3>${(S.me.exams&&S.me.exams.length>1)?'<button class="btn btn-sm" style="margin-left:10px" onclick="S.selCert=null;vExam()">← All exams</button>':''}<div class="sp"></div><span class="tag b">window ends ${fD(ex.deadline)}</span></div><div class="cb">
       ${(S.me.consents&&(S.me.consents.outstanding||[]).length)?`<div class="callout warn" style="margin-bottom:14px">${svg('sup')}<div><b>Candidate agreements required.</b> Booking is disabled until you accept the current candidate agreements. <button class="btn btn-sm" id="acceptConsents" style="margin-left:6px">Review &amp; accept</button></div></div>`:''}
       ${(S.me.accommodation&&S.me.accommodation.status==='approved')?`<div class="callout info" style="margin-bottom:14px">${svg('sup')}<div><b>Accommodation approved.</b> +${S.me.accommodation.approved_extra_minutes} minutes will be added to your exam duration automatically.</div></div>`:(S.me.accommodation&&['submitted','under_review'].includes(S.me.accommodation.status))?`<div class="callout info" style="margin-bottom:14px">${svg('sup')}<div><b>Accommodation request under review.</b> Consider waiting for the decision before booking.</div></div>`:`<div class="tiny muted" style="margin:-2px 0 12px">Need adjustments (extra time, assistive technology)? <button class="lnk" id="reqAccom" style="padding:0">Request an accommodation</button> before booking.</div>`}
       <div class="chead"><button class="btn btn-sm" id="cPrev">←</button><b id="cLab"></b><button class="btn btn-sm" id="cNext">→</button></div>
@@ -882,7 +903,7 @@ function renderSched(ex,resc){const tz=Intl.DateTimeFormat().resolvedOptions().t
     setTimeout(()=>{const f=$('#amF');if(f)f.onclick=()=>pickFile(x=>{ev=x;$('#amFn').textContent=x.name})},50);};
   $('#bookGo').onclick=async()=>{if(S.me.consents&&(S.me.consents.outstanding||[]).length){consentGate(async()=>{vExam()});return}
     const iso=new Date(selDay.getFullYear(),selDay.getMonth(),selDay.getDate(),...selSlot.split(':').map(Number)).toISOString();const btn=$('#bookGo');btn.disabled=true;btn.textContent='Confirming…';
-    try{if(resc){const r=await api('/api/me/exam/reschedule',{method:'POST',body:JSON.stringify({scheduled_at:iso,timezone:tz})});toast(r.free?'Rescheduled — no fee':'Rescheduled','ok')}else{await api('/api/me/exam/book',{method:'POST',body:JSON.stringify({scheduled_at:iso,timezone:tz})});toast('Exam booked — confirmation recorded','ok')}await refresh();vExam()}
+    try{if(resc){const r=await api('/api/me/exam/reschedule',{method:'POST',body:JSON.stringify({scheduled_at:iso,timezone:tz,certification_id:ex.certification_id})});toast(r.free?'Rescheduled — no fee':'Rescheduled','ok')}else{await api('/api/me/exam/book',{method:'POST',body:JSON.stringify({scheduled_at:iso,timezone:tz,certification_id:ex.certification_id})});toast('Exam booked — confirmation recorded','ok')}await refresh();vExam()}
     catch(e){const c=e.data&&e.data.error;
       if(c==='not_eligible'){const bl=(e.data.blocking_items||[]);
         if(bl.includes('consents_pending')){consentGate(async()=>{vExam()});btn.disabled=false;btn.textContent=resc?'Confirm new time':'Confirm booking';return}
@@ -905,7 +926,7 @@ function renderBooked(ex){const b=ex.booking,dt=new Date(b.scheduled_at);const C
   $('#view').innerHTML=`<div class="grid g2"><div>
     <div class="card"><div class="ch"><h3>Your booking</h3><div class="sp"></div><span class="tag g"><span class="dot"></span>confirmed</span></div><div class="cb">
       <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><div style="background:var(--brand);color:#fff;border-radius:14px;padding:14px 18px;text-align:center;min-width:88px"><b style="font-size:26px;display:block;line-height:1">${dt.getDate()}</b><span style="font-size:11px;letter-spacing:1px;text-transform:uppercase;opacity:.85">${dt.toLocaleDateString('en-GB',{month:'short'})}</span></div>
-        <div style="flex:1"><b style="font-size:16px">${fDT(b.scheduled_at)}</b><div class="tiny muted">PCP-AI Examination · 90 minutes · ${esc(b.timezone||'local')}</div><div class="tiny muted">Reschedules: ${b.reschedule_count||0} of 3 · free 72h+ · locks 24h before</div></div>
+        <div style="flex:1"><b style="font-size:16px">${fDT(b.scheduled_at)}</b><div class="tiny muted">${esc(certLabel(ex))} Examination · ${esc(b.timezone||'local')}</div><div class="tiny muted">Reschedules: ${b.reschedule_count||0} of 3 · free 72h+ · locks 24h before</div></div>
         <button class="btn" id="resched">Reschedule</button></div></div></div>
     <div class="card" style="margin-top:18px"><div class="ch"><h3>Launch</h3></div><div class="cb" id="launchBox"></div></div>
    </div><div>
@@ -919,7 +940,7 @@ function renderBooked(ex){const b=ex.booking,dt=new Date(b.scheduled_at);const C
       h=`<div style="text-align:center"><div class="kpi" style="margin-bottom:12px;display:inline-block"><div class="val">${d>0?d+'d ':''}${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</div><div class="sub">until launch opens</div></div><p class="tiny muted" style="margin:0">Launch activates 15 minutes before your slot and stays open for a 30-minute grace period.</p>${S.mode==='demo'?'<button class="btn btn-sm" id="djump" style="margin-top:10px">Demo: move slot to now →</button>':''}</div>`;}
     else if(now<=close){h=`<div style="text-align:center"><span class="tag g" style="margin-bottom:12px"><span class="dot"></span>Launch window open — closes ${fDT(new Date(close).toISOString())}</span><button class="btn btn-p btn-lg btn-bk" id="launchGo" ${allCk?'':'disabled'} style="margin-top:12px">Launch my examination</button>${allCk?`<button class="btn btn-bk" id="launchDesktop" style="margin-top:10px">Open in the PCI Secure Exam app instead</button>`:''}${allCk?'':'<p class="tiny muted" style="margin:10px 0 0">'+(rdyReq&&!rdyOk?'Run and pass the system readiness check':'Complete the checklist')+' to enable launch.</p>'}</div>`;}
     else{h=`<div class="empty"><div class="ei">!</div><h4>Launch window closed</h4><p>The grace period passed and the booking is marked missed. Contact support — documented incidents are considered under the examination administration policy.</p><button class="btn" data-go="sup">Open a ticket</button></div>`;}
-    $('#launchBox').innerHTML=h;wireGo();const dj=$('#djump');if(dj)dj.onclick=()=>{D.booking.scheduled_at=new Date(Date.now()+60e3).toISOString();persistD();refresh().then(vExam)};const lg=$('#launchGo');if(lg)lg.onclick=startExam;const ld=$('#launchDesktop');if(ld)ld.onclick=async()=>{try{const r=await api('/api/me/exam/launch-code',{method:'POST'});const url=(r.uri||('pciexam://start?code='+r.code))+'&api='+encodeURIComponent(S.api||location.origin);location.href=url;toast('Opening the PCI Secure Exam app… if nothing happens, install it from your account.','ok')}catch(e){toast('Could not create a launch code','err')}};};
+    $('#launchBox').innerHTML=h;wireGo();const dj=$('#djump');if(dj)dj.onclick=()=>{D.booking.scheduled_at=new Date(Date.now()+60e3).toISOString();persistD();refresh().then(vExam)};const lg=$('#launchGo');if(lg)lg.onclick=()=>startExam(ex.certification_id);const ld=$('#launchDesktop');if(ld)ld.onclick=async()=>{try{const r=await api('/api/me/exam/launch-code',{method:'POST'});const url=(r.uri||('pciexam://start?code='+r.code))+'&api='+encodeURIComponent(S.api||location.origin);location.href=url;toast('Opening the PCI Secure Exam app… if nothing happens, install it from your account.','ok')}catch(e){toast('Could not create a launch code','err')}};};
   paint();lTimer=setInterval(paint,1000);
 }
 async function runSys(){const out=$('#sysOut');out.innerHTML='<span class="muted tiny">Checking…</span>';const rows=[];const ua=navigator.userAgent;
@@ -955,7 +976,7 @@ async function runReadiness(){const out=$('#sysOut');if(!out)return;out.innerHTM
   out.insertAdjacentHTML('beforeend',`<div class="callout ${passed?'info':'warn'}" style="margin-top:10px">${svg('sup')}<div>${passed?'<b>Ready.</b> Your system meets the requirements for a proctored exam.':'<b>Not ready.</b> Camera, microphone and a working connection are all required. Fix the items above and run the check again.'}</div></div>`);
   toast(passed?'Readiness check passed':'Readiness check incomplete',passed?'ok':'err');
 }
-async function startExam(){try{const r=await api('/api/me/exam/start',{method:'POST'});openRunner({kind:'exam',attempt_id:r.attempt_id,items:r.items,mins:r.duration_minutes,started:r.started_at,saved:r.saved_answers||null,violations:r.violations||0,resumed:!!r.resumed})}
+async function startExam(certId){try{const r=await api('/api/me/exam/start',{method:'POST',body:JSON.stringify(certId?{certification_id:certId}:{})});openRunner({kind:'exam',attempt_id:r.attempt_id,items:r.items,mins:r.duration_minutes,started:r.started_at,saved:r.saved_answers||null,violations:r.violations||0,resumed:!!r.resumed})}
   catch(e){const c=e.data&&e.data.error;toast(c==='not_open'?'Launch opens 15 minutes before your slot':c==='missed'?'Launch window has closed':'Could not start','err');if(c==='missed')refresh().then(vExam)}}
 function openRunner(cfg){const key='sp2_ans_'+cfg.kind+'_'+(cfg.attempt_id||'p');const local=JSON.parse(store.get(key)||'{}');
   R={...cfg,idx:0,answers:Object.assign({},cfg.saved||{},local),flags:{},key,review:false,violations:cfg.violations||0};
@@ -966,7 +987,7 @@ function openRunner(cfg){const key='sp2_ans_'+cfg.kind+'_'+(cfg.attempt_id||'p')
 function drawRunner(){const it=R.items[R.idx],n=R.items.length,ans=R.answers[it.id];
   const pal=R.items.map((q,i)=>`<button class="${R.answers[q.id]!=null?'a':''} ${R.flags[q.id]?'f':''} ${i===R.idx?'c':''}" data-i="${i}">${i+1}</button>`).join('');
   const opts=it.options.map((o,i)=>{let c='';if(R.review){if(i===it.answer_index)c='ok';else if(ans===i)c='no'}else if(ans===i)c='sel';return `<div class="opt ${c}" data-o="${i}" tabindex="0" role="button"><span class="k">${'ABCDE'[i]}</span><div>${esc(o)}</div></div>`}).join('');
-  $('#runner').innerHTML=`<div class="rtop">${LOCKUP("sm")}<span class="md">${R.kind==='exam'?'PCP-AI Examination':'Practice · '+(R.review?'Review':'Session')}</span>
+  $('#runner').innerHTML=`<div class="rtop">${LOCKUP("sm")}<span class="md">${R.kind==='exam'?(certShort(S.me&&S.me.exam)+' Examination'):'Practice · '+(R.review?'Review':'Session')}</span>
      ${R.kind==='exam'&&!R.review?`<span class="sec-chip${(R.violations||0)?' v':''}" id="secChip" title="Browser-level protections: fullscreen, focus monitoring, copy/paste blocked. Full device lockdown requires the PCI secure browser at proctored delivery.">${(R.violations||0)?'⚠ '+R.violations+' violation'+(R.violations>1?'s':''):'🛡 Secure mode'}</span><button class="btn btn-sm" id="rCalc" style="margin-left:10px">Calculator</button>`:''}
      ${R.mins&&!R.review?'<span class="timer" id="rTimer">--:--</span>':''}
      ${R.review?'<button class="btn btn-sm" style="margin-left:auto" id="rClose">Close review</button>':(R.mins?'':'<button class="btn btn-sm btn-g" style="margin-left:auto" id="rQuit">Quit</button>')}</div>

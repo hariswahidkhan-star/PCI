@@ -110,7 +110,7 @@ def boot():
     proc.terminate(); raise SystemExit("server did not boot")
 
 # ---- helpers built on the real flows ----
-def make_paid_user(email, product="bundle", amount=9900, pi=None, sid=None, real_login=False):
+def make_paid_user(email, product="bundle", amount=9900, pi=None, sid=None, real_login=False, metadata=None):
     """Settle a payment via webhook, return (session_token, user_id).
 
     Helper users mint their session token directly in the DB — the real /api/login is rate-limited
@@ -118,7 +118,7 @@ def make_paid_user(email, product="bundle", amount=9900, pi=None, sid=None, real
     exam flows to the rate-limit test. The set-password + /api/login path is proven once, explicitly,
     via real_login=True (the happy-path user)."""
     pi = pi or ("pi_" + sha256hex(email+"pi")[:16]); sid = sid or ("cs_" + sha256hex(email+"cs")[:16])
-    code, _ = sign_and_send_webhook(sid, email, product, pi)
+    code, _ = sign_and_send_webhook(sid, email, product, pi, metadata=metadata)
     if code != 200: raise SystemExit(f"webhook failed for {email}: {code}")
     con = dbconn()
     row = con.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()
@@ -592,6 +592,87 @@ def run(proc):
     resets = con.execute("SELECT COUNT(*) FROM email_logs WHERE email_type='password_reset' AND email='manual@ex.co'").fetchone()[0]
     con.close()
     chk("9d10 forgot-password records a reset delivery", resets == 1, resets)
+
+    # ---------- 9e. MULTI-CERTIFICATION: full journey through a second credential ----------
+    print("\n=== 9e. Multi-certification ===")
+    # owner creates a second certification with its own pass mark, duration, expiry and price
+    c, cc = jget("POST", "/api/admin/certifications", token=admin,
+                 body={"code": "PCP-COST", "name": "Certified Cost Engineering Professional",
+                       "pass_mark_pct": 80, "duration_minutes": 60, "expiry_years": 2, "exam_price": 199})
+    chk("9e1 admin creates second certification", c==200 and cc.get("id"), cc)
+    cost_id = cc["id"]
+    chk("9e1' duplicate code rejected (409)", jget("POST", "/api/admin/certifications", token=admin, body={"code": "PCP-COST", "name": "x"})[0] == 409)
+    # public catalogue lists it with its own parameters
+    c, cat = jget("GET", "/api/certifications")
+    entry = next((r for r in cat.get("rows", []) if r.get("code") == "PCP-COST"), None)
+    chk("9e2 public catalogue shows the new certification", entry is not None and entry["duration_minutes"] == 60 and entry["pass_mark_pct"] == 80, entry)
+    # its own question bank via bulk upload
+    csv = "question,option_a,option_b,option_c,option_d,answer,domain\n" + "\n".join(
+        f"COST Q{i}: pick A,RightA{i},WrongB{i},WrongC{i},WrongD{i},A,Cost Engineering" for i in range(1, 4))
+    c, bu = jget("POST", "/api/admin/sample_questions/bulk", token=admin, body={"csv": csv, "certification": "PCP-COST"})
+    chk("9e3 bulk upload into the new bank", c==200 and bu.get("inserted") == 3, bu)
+    # buy the NEW certification via webhook metadata → entitlement routed to it
+    ctok, cuid = make_paid_user("cost1@ex.co", product="exam", metadata={"certification": "PCP-COST"})
+    con = dbconn()
+    ecid = con.execute("SELECT certification_id FROM exam_entitlements WHERE user_id=?", (cuid,)).fetchone()[0]
+    con.close()
+    chk("9e4 webhook routes entitlement to the purchased certification", ecid == cost_id, ecid)
+    accept_all_consents(ctok); complete_profile(ctok)
+    # book + start THIS certification: its own 60-minute duration and its own 3-item bank
+    slot = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() + 3*3600))
+    c, bkr = jget("POST", "/api/me/exam/book", token=ctok, body={"scheduled_at": slot, "timezone": "UTC", "certification_id": cost_id})
+    chk("9e5 booking lands on the certification", c==200 and bkr.get("certification_id") == cost_id, bkr)
+    req("POST", "/api/me/readiness", token=ctok, body={"camera": True, "microphone": True, "network": True})
+    c, st = jget("POST", "/api/me/exam/start", token=ctok, body={"certification_id": cost_id})
+    chk("9e6 start uses the certification's duration (60)", c==200 and st.get("duration_minutes") == 60, st)
+    ids = [i["id"] for i in st.get("items", [])]
+    con = dbconn()
+    bank = {r[0] for r in con.execute("SELECT id FROM sample_questions WHERE certification_id=?", (cost_id,))}
+    con.close()
+    chk("9e7 issued items come ONLY from this certification's bank", len(ids) == 3 and set(ids) == bank, (ids, bank))
+    # full-marks submit → pass at the 80% mark → credential with the NEW prefix + 2-year expiry
+    key = answer_key(ids)
+    c, sub = jget("POST", "/api/me/exam/submit", token=ctok, body={"attempt_id": st["attempt_id"], "answers": key})
+    cred = sub.get("credential") or ""
+    chk("9e8 pass issues credential with the certification's prefix", c==200 and cred.startswith("PCP-COST-"), sub)
+    c, v = jget("GET", f"/api/verify?id={cred}")
+    chk("9e9 verify shows the certification", v.get("valid") is True and v.get("certification_code") == "PCP-COST", v)
+    con = dbconn()
+    exp = con.execute("SELECT expires_at FROM issued_credentials WHERE credential_id=?", (cred,)).fetchone()[0]
+    con.close()
+    yrs = (int(exp[:4]) - int(time.strftime("%Y")))
+    chk("9e10 credential expiry honours the certification (2 years)", yrs == 2, exp)
+    # cross-bank injection: a PCP-COST attempt answering PCP-AI item ids → item_set_mismatch hold
+    xtok, xuid = make_paid_user("cost2@ex.co", product="exam", metadata={"certification": "PCP-COST"})
+    accept_all_consents(xtok); complete_profile(xtok)
+    jget("POST", "/api/me/exam/book", token=xtok, body={"scheduled_at": slot, "timezone": "UTC", "certification_id": cost_id})
+    req("POST", "/api/me/readiness", token=xtok, body={"camera": True, "microphone": True, "network": True})
+    c, xst = jget("POST", "/api/me/exam/start", token=xtok, body={"certification_id": cost_id})
+    con = dbconn()
+    foreign = [str(r[0]) for r in con.execute("SELECT id FROM sample_questions WHERE COALESCE(certification_id,1)=1 LIMIT 3")]
+    con.close()
+    c, xsub = jget("POST", "/api/me/exam/submit", token=xtok, body={"attempt_id": xst["attempt_id"], "answers": {f: 0 for f in foreign}})
+    chk("9e11 foreign-bank answers held as item_set_mismatch", c==200 and xsub.get("held") is True and xsub.get("hold_reason") == "item_set_mismatch", xsub)
+    # per-cert pass mark: 2/3 (66.7%) fails PCP-COST's 80% even though it would pass PCP-AI's 65%
+    ptok3, puid3 = make_paid_user("cost3@ex.co", product="exam", metadata={"certification": "PCP-COST"})
+    accept_all_consents(ptok3); complete_profile(ptok3)
+    jget("POST", "/api/me/exam/book", token=ptok3, body={"scheduled_at": slot, "timezone": "UTC", "certification_id": cost_id})
+    req("POST", "/api/me/readiness", token=ptok3, body={"camera": True, "microphone": True, "network": True})
+    c, pst = jget("POST", "/api/me/exam/start", token=ptok3, body={"certification_id": cost_id})
+    pids = [i["id"] for i in pst["items"]]; pkey3 = answer_key(pids)
+    partial = {k: (v if idx < 2 else v + 1) for idx, (k, v) in enumerate(sorted(pkey3.items()))}
+    c, psub = jget("POST", "/api/me/exam/submit", token=ptok3, body={"attempt_id": pst["attempt_id"], "answers": partial})
+    chk("9e12 66.7% fails the certification's 80% pass mark", c==200 and psub.get("result") == "fail" and not psub.get("credential"), psub)
+    # simultaneous bookings across certifications: same user buys PCP-AI too and books BOTH
+    _, _ = jget("POST", "/api/webhook")  # no-op guard (rate-limit safety spacing)
+    dtok, duid = make_paid_user("dual@ex.co", product="exam", metadata={"certification": "PCP-COST"})
+    accept_all_consents(dtok); complete_profile(dtok)
+    sign_and_send_webhook("cs_dualpcpai", "dual@ex.co", "exam", "pi_dualpcpai")   # second purchase: PCP-AI (default)
+    c1, b1 = jget("POST", "/api/me/exam/book", token=dtok, body={"scheduled_at": slot, "timezone": "UTC", "certification_id": cost_id})
+    c2, b2 = jget("POST", "/api/me/exam/book", token=dtok, body={"scheduled_at": slot, "timezone": "UTC", "certification_id": 1})
+    chk("9e13 bookings for two certifications coexist", c1 == 200 and c2 == 200, (b1, b2))
+    c, me2 = jget("GET", "/api/me", token=dtok)
+    chk("9e14 /api/me lists both exams with certification names", len(me2.get("exams", [])) == 2 and {e["certification_code"] for e in me2["exams"]} == {"PCP-AI", "PCP-COST"}, me2.get("exams"))
 
     # ---------- 10. Rate limits (LAST: exhausts the /api/login window for this IP) ----------
     print("\n=== 10. Rate limits ===")

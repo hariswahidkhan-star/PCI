@@ -130,6 +130,7 @@ CREATE TABLE IF NOT EXISTS exam_entitlements (
   user_id INTEGER NOT NULL,
   payment_id INTEGER REFERENCES payments(id),
   product_type TEXT,
+  certification_id INTEGER DEFAULT 1 REFERENCES certifications(id),
   status TEXT DEFAULT 'available',   -- available | booked | consumed | expired | refunded
   valid_until TEXT,
   booking_id INTEGER,
@@ -264,6 +265,7 @@ CREATE TABLE IF NOT EXISTS issued_credentials (
   user_id INTEGER REFERENCES users(id),
   attempt_id INTEGER REFERENCES exam_attempts(id),
   holder_name TEXT, credential TEXT DEFAULT 'PCP-AI',
+  certification_id INTEGER DEFAULT 1 REFERENCES certifications(id),
   status TEXT DEFAULT 'active',                  -- active | expired | revoked
   issued_at TEXT DEFAULT (datetime('now')), expires_at TEXT
 );
@@ -297,8 +299,33 @@ CREATE TABLE IF NOT EXISTS sample_questions (
   question TEXT NOT NULL UNIQUE, options TEXT, option_a TEXT, option_b TEXT, option_c TEXT, option_d TEXT,
   answer_index INTEGER, domain TEXT,
   published INTEGER DEFAULT 1, sort_order INTEGER,
-  is_practice INTEGER DEFAULT 0 DEFAULT 0
+  is_practice INTEGER DEFAULT 0 DEFAULT 0,
+  certification_id INTEGER DEFAULT 1 REFERENCES certifications(id)
 );
+
+-- ============================================================
+--  CERTIFICATIONS — the platform is multi-credential: every question bank,
+--  entitlement, booking, attempt and issued credential belongs to exactly one
+--  certification. PCP-AI is simply the first row. Per-certification columns
+--  override the global exam_* settings; NULL means "use the global setting".
+-- ============================================================
+CREATE TABLE IF NOT EXISTS certifications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  code TEXT UNIQUE NOT NULL,                 -- machine code, e.g. 'PCP-AI' (also the credential prefix)
+  name TEXT NOT NULL,                        -- display name, e.g. 'Certified Project Controls Professional — AI'
+  description TEXT,
+  credential_prefix TEXT,                    -- defaults to code when null
+  pass_mark_pct REAL,                        -- NULL → global exam_pass_mark_pct
+  duration_minutes INTEGER,                  -- NULL → global exam_duration_minutes
+  expiry_years INTEGER DEFAULT 3,
+  exam_price REAL,                           -- NULL → pricing_rules product_type='exam'
+  active INTEGER DEFAULT 1,
+  sort_order INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))
+);
+INSERT OR IGNORE INTO certifications(id,code,name,description,expiry_years,sort_order)
+  VALUES(1,'PCP-AI','Certified Project Controls Professional — AI',
+         'The integrated project-controls credential: planning, cost engineering, project finance and the governed use of AI.',3,1);
 CREATE TABLE IF NOT EXISTS governance_roles (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   role TEXT NOT NULL UNIQUE, holder TEXT, status TEXT DEFAULT 'open', remit TEXT, sort_order INTEGER DEFAULT 0
@@ -832,6 +859,7 @@ CREATE INDEX IF NOT EXISTS ix_codes_type ON discount_codes(code_type);
 CREATE TABLE IF NOT EXISTS exam_bookings (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL, payment_id INTEGER,
+  certification_id INTEGER DEFAULT 1 REFERENCES certifications(id),
   scheduled_at TEXT NOT NULL, timezone TEXT,
   status TEXT DEFAULT 'scheduled',           -- scheduled | completed | missed | cancelled
   reschedule_count INTEGER DEFAULT 0,
@@ -841,6 +869,7 @@ CREATE INDEX IF NOT EXISTS ix_bookings_user ON exam_bookings(user_id);
 CREATE TABLE IF NOT EXISTS exam_attempts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL, booking_id INTEGER,
+  certification_id INTEGER DEFAULT 1 REFERENCES certifications(id),
   kind TEXT DEFAULT 'exam',                  -- exam | practice
   violations INTEGER DEFAULT 0,
   started_at TEXT DEFAULT (datetime('now')), submitted_at TEXT,

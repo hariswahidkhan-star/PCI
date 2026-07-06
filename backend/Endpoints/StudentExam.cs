@@ -17,10 +17,17 @@ public static class StudentExam
         }
         IResult J(object o) => Results.Json(o);
 
-        Dictionary<string, object?>? ExamEntitlement(long uid) =>
-            db.QueryOne("SELECT * FROM payments WHERE user_id=? AND payment_status='paid' AND product_type IN ('exam','bundle') ORDER BY id DESC", uid);
-        Dictionary<string, object?>? ActiveBooking(long uid) =>
-            db.QueryOne("SELECT * FROM exam_bookings WHERE user_id=? AND status='scheduled' ORDER BY id DESC", uid);
+        // A paid exam/bundle payment is the entitlement proxy. certification_id comes from the
+        // formal exam_entitlements ledger; legacy rows without one belong to certification 1.
+        Dictionary<string, object?>? ExamEntitlement(long uid, long? certId = null) =>
+            certId is null
+            ? db.QueryOne("SELECT p.*, COALESCE(e.certification_id,1) certification_id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle') ORDER BY p.id DESC", uid)
+            : db.QueryOne("SELECT p.*, COALESCE(e.certification_id,1) certification_id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle') AND COALESCE(e.certification_id,1)=? ORDER BY p.id DESC", uid, certId);
+        // Bookings are per certification: holding a slot for one credential must not block another.
+        Dictionary<string, object?>? ActiveBooking(long uid, long? certId = null) =>
+            certId is null
+            ? db.QueryOne("SELECT * FROM exam_bookings WHERE user_id=? AND status='scheduled' ORDER BY id DESC", uid)
+            : db.QueryOne("SELECT * FROM exam_bookings WHERE user_id=? AND status='scheduled' AND COALESCE(certification_id,1)=? ORDER BY id DESC", uid, certId);
 
         // ---------------- GET /api/me ----------------
         app.MapGet("/api/me", (HttpContext ctx) =>
@@ -55,7 +62,26 @@ public static class StudentExam
                 },
                 membership = db.QueryOne("SELECT * FROM memberships WHERE user_id=?", u.Id),
                 payments = db.Query("SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference,exam_schedule_deadline FROM payments WHERE user_id=? ORDER BY id DESC", u.Id),
-                exam = new { entitled = ent != null, deadline = ent?["exam_schedule_deadline"], payment_ref = ent?["reference"], booking, passed = passAtt != null },
+                exam = new { entitled = ent != null, deadline = ent?["exam_schedule_deadline"], payment_ref = ent?["reference"], booking, passed = passAtt != null,
+                    certification_id = ent is null ? null : ent["certification_id"],
+                    certification = ent is null ? null : (object?)Certs.ById(db, ent["certification_id"])?["name"] },
+                // Multi-certification view: one entry per paid entitlement, each with its own
+                // certification, booking, latest attempt and credential. The legacy `exam` object
+                // above remains for existing UI paths (it reflects the most recent entitlement).
+                exams = db.Query(@"SELECT p.id payment_id, p.reference, p.exam_schedule_deadline, p.payment_status,
+                        COALESCE(e.certification_id,1) certification_id, e.status entitlement_status
+                        FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id
+                        WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle') ORDER BY p.id DESC", u.Id)
+                    .Select(r => {
+                        var cid = H.L(r["certification_id"]);
+                        var cert = Certs.ById(db, cid);
+                        var bk = db.QueryOne("SELECT id,scheduled_at,timezone,status FROM exam_bookings WHERE user_id=? AND payment_id=? ORDER BY id DESC", u.Id, r["payment_id"]);
+                        var att = db.QueryOne("SELECT id,status,result_status,submitted_at FROM exam_attempts WHERE user_id=? AND kind='exam' AND COALESCE(certification_id,1)=? ORDER BY id DESC", u.Id, cid);
+                        var cred = db.QueryOne("SELECT credential_id,status,expires_at FROM issued_credentials WHERE user_id=? AND COALESCE(certification_id,1)=? AND status='active' ORDER BY id DESC", u.Id, cid);
+                        return new { certification_id = cid, certification_code = cert?["code"], certification_name = cert?["name"],
+                            payment_id = r["payment_id"], reference = r["reference"], deadline = r["exam_schedule_deadline"],
+                            entitlement_status = r["entitlement_status"], booking = bk, latest_attempt = att, credential = cred };
+                    }).ToList(),
                 // Held attempts must not disclose pass/fail/score until released (Section A rule 6) —
                 // redacted SERVER-side, not merely hidden by the front-end.
                 attempts = db.Query("SELECT id,kind,started_at,submitted_at,percent,result,status,result_status,hold_reason,released_at,domain_breakdown,violations,duration_minutes FROM exam_attempts WHERE user_id=? ORDER BY id DESC LIMIT 25", u.Id)
@@ -169,18 +195,25 @@ public static class StudentExam
             return J(new { rows });
         });
 
-        // ---------------- exam booking ----------------
+        // ---------------- exam booking (per certification) ----------------
         app.MapPost("/api/me/exam/book", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            var ent = ExamEntitlement(u.Id);
+            var b = await H.Body(ctx.Request);
+            // Which credential is being booked: explicit certification (id or code) or, for
+            // single-certification candidates, the one their entitlement belongs to.
+            var certId = Certs.Resolve(db, H.GetS(b, "certification_id", "certification", "cert"));
+            var ent = ExamEntitlement(u.Id, certId) ?? (H.GetS(b, "certification_id", "certification", "cert") is null ? ExamEntitlement(u.Id) : null);
             if (ent is null) return Results.Json(new { error = "no_entitlement" }, statusCode: 400);
+            certId = H.L(ent["certification_id"]);
             // Uniform eligibility gate (consents, profile, payment validity, holds) — same rules as launch.
             var blockers = Lifecycle.BookingBlockers(db, u.Id, ent, db.QueryOne("SELECT * FROM student_profiles WHERE user_id=?", u.Id));
             if (blockers.Count > 0) return Results.Json(new { error = "not_eligible", blocking_items = blockers }, statusCode: 400);
             var deadline = H.Str(ent["exam_schedule_deadline"]);
             if (H.IsPast(deadline)) return Results.Json(new { error = "window_lapsed" }, statusCode: 400);
-            if (ActiveBooking(u.Id) is not null) return Results.Json(new { error = "already_booked" }, statusCode: 400);
+            // "already booked" is scoped to THIS certification — a slot for one credential must not
+            // block booking a different credential the candidate has also paid for.
+            if (ActiveBooking(u.Id, certId) is not null) return Results.Json(new { error = "already_booked" }, statusCode: 400);
             // #5 — one exam payment yields at most one live sitting. If this payment already has any
             // booking that is scheduled or completed (or a submitted attempt), a new booking is refused;
             // rescheduling must go through /reschedule, and a fresh sitting requires a fresh payment.
@@ -188,34 +221,36 @@ public static class StudentExam
             if (priorForPayment is not null) return Results.Json(new { error = "payment_already_used" }, statusCode: 400);
             var submittedForPayment = db.QueryOne(@"SELECT a.id FROM exam_attempts a JOIN exam_bookings bk ON bk.id=a.booking_id WHERE bk.payment_id=? AND a.kind='exam' AND a.status='submitted' LIMIT 1", ent["id"]);
             if (submittedForPayment is not null) return Results.Json(new { error = "exam_already_taken" }, statusCode: 400);
-            var b = await H.Body(ctx.Request);
             var scheduledAt = H.GetS(b, "scheduled_at");
             var timezone = H.GetS(b, "timezone");
             if (scheduledAt is null || H.JsMillis(scheduledAt) < DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 2 * 3600_000)
                 return Results.Json(new { error = "bad_slot" }, statusCode: 400);
             if (deadline is not null && H.After(scheduledAt, deadline)) return Results.Json(new { error = "beyond_window" }, statusCode: 400);
-            var id = db.ExecuteReturningId("INSERT INTO exam_bookings(user_id,payment_id,scheduled_at,timezone) VALUES(?,?,?,?)", u.Id, ent["id"], scheduledAt, timezone);
+            var id = db.ExecuteReturningId("INSERT INTO exam_bookings(user_id,payment_id,certification_id,scheduled_at,timezone) VALUES(?,?,?,?,?)", u.Id, ent["id"], certId, scheduledAt, timezone);
             // Link the formal entitlement to this booking and mark it booked, so submit can consume it
             // by booking_id (one-attempt-per-entitlement).
             db.Execute("UPDATE exam_entitlements SET status='booked', booking_id=? WHERE payment_id=? AND status IN ('available','booked')", id, ent["id"]);
-            log(u.Id, "exam_booked", scheduledAt);
-            return J(new { ok = true, id, scheduled_at = scheduledAt });
+            log(u.Id, "exam_booked", $"{scheduledAt} (cert {certId})");
+            return J(new { ok = true, id, scheduled_at = scheduledAt, certification_id = certId });
         });
 
         app.MapPost("/api/me/exam/reschedule", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            var bk = ActiveBooking(u.Id);
+            var b = await H.Body(ctx.Request);
+            // Optional certification scope for candidates holding bookings for several credentials;
+            // default stays "the latest scheduled booking" for existing single-cert clients.
+            var certSel = H.GetS(b, "certification_id", "certification", "cert");
+            var bk = certSel is null ? ActiveBooking(u.Id) : ActiveBooking(u.Id, Certs.Resolve(db, certSel));
             if (bk is null) return Results.Json(new { error = "no_booking" }, statusCode: 400);
             var hoursTo = (H.JsMillis(H.Str(bk["scheduled_at"])) - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()) / 3600_000.0;
             if (hoursTo < H.RESCHED_LOCK_H) return Results.Json(new { error = "locked", lock_hours = H.RESCHED_LOCK_H }, statusCode: 400);
             if (H.L(bk["reschedule_count"]) >= H.MAX_RESCHED) return Results.Json(new { error = "max_reschedules" }, statusCode: 400);
-            var b = await H.Body(ctx.Request);
             var scheduledAt = H.GetS(b, "scheduled_at");
             var timezone = H.GetS(b, "timezone");
             if (scheduledAt is null || H.JsMillis(scheduledAt) < DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 2 * 3600_000)
                 return Results.Json(new { error = "bad_slot" }, statusCode: 400);
-            var ent = ExamEntitlement(u.Id);
+            var ent = ExamEntitlement(u.Id, H.L(bk.GetValueOrDefault("certification_id") ?? 1L));
             var dl = ent is null ? null : H.Str(ent["exam_schedule_deadline"]);
             if (dl is not null && H.After(scheduledAt, dl)) return Results.Json(new { error = "beyond_window" }, statusCode: 400);
             db.Execute("UPDATE exam_bookings SET scheduled_at=?, timezone=?, reschedule_count=reschedule_count+1, updated_at=datetime('now') WHERE id=?", scheduledAt, timezone ?? H.Str(bk["timezone"]), bk["id"]);
@@ -223,26 +258,32 @@ public static class StudentExam
             return J(new { ok = true, free = hoursTo >= H.FREE_RESCHED_H, reschedule_count = H.L(bk["reschedule_count"]) + 1 });
         });
 
-        // ---------------- exam start (create-or-resume) ----------------
-        app.MapPost("/api/me/exam/start", (HttpContext ctx) =>
+        // ---------------- exam start (create-or-resume; certification-aware) ----------------
+        app.MapPost("/api/me/exam/start", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            var bk = ActiveBooking(u.Id);
+            var b = await H.Body(ctx.Request);
+            var certSel = H.GetS(b, "certification_id", "certification", "cert");
+            var bk = certSel is null ? ActiveBooking(u.Id) : ActiveBooking(u.Id, Certs.Resolve(db, certSel));
             if (bk is null) return Results.Json(new { error = "no_booking" }, statusCode: 400);
             if (!Lifecycle.ReadinessSatisfied(db, u.Id)) return Results.Json(new { error = "readiness_required", message = "Please complete the system readiness check before launching your exam." }, statusCode: 400);
+            var certId = H.L(bk.GetValueOrDefault("certification_id") ?? 1L);
             var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             var slot = H.JsMillis(H.Str(bk["scheduled_at"]));
-            var ec = H.Cfg(db);
+            var ec = Certs.Cfg(db, certId);   // duration/pass per certification; windows stay global
             if (now < slot - ec.OpenBefore * 60_000) return Results.Json(new { error = "not_open", opens_at = H.IsoFromMillis((long)(slot - ec.OpenBefore * 60_000)) }, statusCode: 400);
             if (now > slot + ec.Grace * 60_000) { db.Execute("UPDATE exam_bookings SET status='missed', updated_at=datetime('now') WHERE id=?", bk["id"]); return Results.Json(new { error = "missed" }, statusCode: 400); }
             var existing = db.QueryOne("SELECT * FROM exam_attempts WHERE user_id=? AND booking_id=? AND kind='exam'", u.Id, bk["id"]);
-            var items = db.Query("SELECT id,question,options,option_a,option_b,option_c,option_d,domain FROM sample_questions WHERE published=1 AND is_practice=0 ORDER BY sort_order,id")
+            // The live bank for THIS certification only — cross-certification leakage would both spoil
+            // the sitting and break the item-set integrity check on submit.
+            var items = db.Query("SELECT id,question,options,option_a,option_b,option_c,option_d,domain FROM sample_questions WHERE published=1 AND is_practice=0 AND COALESCE(certification_id,1)=? ORDER BY sort_order,id", certId)
                 .Select(r => new { id = r["id"], question = r["question"], options = H.OptionsFor(r), domain = r["domain"] }).ToList();
+            if (items.Count == 0) return Results.Json(new { error = "no_items", message = "This certification's examination bank is not yet published." }, statusCode: 400);
             if (existing is not null && (existing["status"] as string) == "in_progress")
             {
                 var saved = new Dictionary<string, JsonElement>();
                 try { saved = H.ToMap(JsonDocument.Parse(H.Str(existing["answers"]) ?? "{}").RootElement); } catch { }
-                return J(new { attempt_id = existing["id"], duration_minutes = existing["duration_minutes"], started_at = existing["started_at"], items, saved_answers = saved, violations = H.L(existing["violations"]), resumed = true });
+                return J(new { attempt_id = existing["id"], duration_minutes = existing["duration_minutes"], started_at = existing["started_at"], items, saved_answers = saved, violations = H.L(existing["violations"]), resumed = true, certification_id = certId });
             }
             if (existing is not null) return Results.Json(new { error = "already_submitted" }, statusCode: 400);
             var itemIds = JsonSerializer.Serialize(items.Select(i => i.id));
@@ -250,9 +291,9 @@ public static class StudentExam
             // status MUST be set explicitly to 'in_progress'; relying on a column default is fragile
             // (the schema default was historically mis-attached to bank_version, leaving status NULL,
             // which made submit reject every attempt as already_submitted).
-            var id = db.ExecuteReturningId("INSERT INTO exam_attempts(user_id,booking_id,kind,duration_minutes,item_ids,status) VALUES(?,?,?,?,?, 'in_progress')", u.Id, bk["id"], "exam", durMin, itemIds);
-            log(u.Id, "exam_started", "attempt " + id);
-            return J(new { attempt_id = id, duration_minutes = durMin, started_at = H.IsoNow, items });
+            var id = db.ExecuteReturningId("INSERT INTO exam_attempts(user_id,booking_id,certification_id,kind,duration_minutes,item_ids,status) VALUES(?,?,?,?,?,?, 'in_progress')", u.Id, bk["id"], certId, "exam", durMin, itemIds);
+            log(u.Id, "exam_started", $"attempt {id} (cert {certId})");
+            return J(new { attempt_id = id, duration_minutes = durMin, started_at = H.IsoNow, items, certification_id = certId });
         });
 
         // ---------------- submit (scoring + credential) ----------------
@@ -322,7 +363,7 @@ public static class StudentExam
             // Auto-issue a credential ONLY for a clean pass; held or late attempts issue nothing.
             if (r.Result == "pass" && clean)
             {
-                credential = Lifecycle.IssueCredential(db, u.Id, att["id"], ($"{u.FirstName} {u.LastName}").Trim());
+                credential = Lifecycle.IssueCredential(db, u.Id, att["id"], ($"{u.FirstName} {u.LastName}").Trim(), H.L(att.GetValueOrDefault("certification_id") ?? 1L));
                 if (credential is not null)
                 {
                     db.Execute("UPDATE exam_attempts SET result_status='credential_issued' WHERE id=?", att["id"]);
@@ -450,7 +491,7 @@ public static class StudentExam
                         db.Execute("UPDATE exam_entitlements SET status='consumed', attempt_id=? WHERE booking_id=? AND status IN ('available','booked')", att["id"], att["booking_id"]);
                     if (fr.Result == "pass" && clean)
                     {
-                        var cred = Lifecycle.IssueCredential(db, u.Id, att["id"], ($"{u.FirstName} {u.LastName}").Trim());
+                        var cred = Lifecycle.IssueCredential(db, u.Id, att["id"], ($"{u.FirstName} {u.LastName}").Trim(), H.L(att.GetValueOrDefault("certification_id") ?? 1L));
                         if (cred is not null) db.Execute("UPDATE exam_attempts SET result_status='credential_issued' WHERE id=?", att["id"]);
                         log(u.Id, "credential_issued", cred ?? "gen_failed");
                     }
@@ -652,7 +693,8 @@ public static class StudentExam
             }
             int max = rows.Count > 0 ? rows.Count : 1;
             double pct = Math.Round(sc / (double)max * 1000) / 10;
-            double passMark = Settings.Num(db, "exam_pass_mark_pct", H.PASS);
+            // Pass mark comes from the attempt's CERTIFICATION (falls back to the global setting).
+            double passMark = Certs.Cfg(db, H.L(att.GetValueOrDefault("certification_id") ?? 1L)).Pass;
             var breakdown = dom.Select(kv => new Band(kv.Key, (int)Math.Round(kv.Value.ok / (double)kv.Value.n * 100),
                 kv.Value.ok / (double)kv.Value.n >= 0.8 ? "above" : (kv.Value.ok / (double)kv.Value.n >= passMark / 100 ? "at" : "below"))).ToList();
             return new Scored(sc, max, pct, pct >= passMark ? "pass" : "fail", breakdown);

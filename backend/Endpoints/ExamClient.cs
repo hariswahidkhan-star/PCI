@@ -45,7 +45,9 @@ public static class ExamClient
 
             // ── STRICT LAUNCH TIMING (parity with browser start) ──
             // Enforce the scheduled window on the SERVER before an attempt can be created or resumed.
-            var cfg = H.Cfg(db);
+            var certId = H.L(bk.GetValueOrDefault("certification_id") ?? 1L);
+            var cert = Certs.ById(db, certId);
+            var cfg = Certs.Cfg(db, certId);   // duration/pass per certification; windows stay global
             var slotMs = H.JsMillis(H.Str(bk["scheduled_at"]));
             var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             var resuming = att is not null && (att["status"] as string) == "in_progress";
@@ -60,9 +62,10 @@ public static class ExamClient
                 }
             }
 
-            // Live exam bank ONLY — never practice items, never the answer key.
-            var items = db.Query("SELECT id,domain,question,options,option_a,option_b,option_c,option_d FROM sample_questions WHERE published=1 AND is_practice=0 ORDER BY sort_order,id")
+            // Live exam bank for THIS certification only — never practice items, never the answer key.
+            var items = db.Query("SELECT id,domain,question,options,option_a,option_b,option_c,option_d FROM sample_questions WHERE published=1 AND is_practice=0 AND COALESCE(certification_id,1)=? ORDER BY sort_order,id", certId)
                 .Select(it => new { Id = it["id"], Domain = it["domain"], Question = it["question"], Options = H.OptionsFor(it) }).ToList();
+            if (items.Count == 0) return Results.Json(new { error = "no_items" }, statusCode: 400);
 
             if (att is null)
             {
@@ -70,7 +73,7 @@ public static class ExamClient
                 var dur = cfg.Duration + Lifecycle.ApprovedExtraMinutes(db, uid); // approved accommodations apply on desktop too
                 var itemIds = JsonSerializer.Serialize(items.Select(i => i.Id));
                 // status set explicitly (see StudentExam note) so the desktop attempt is submittable.
-                var id = db.ExecuteReturningId("INSERT INTO exam_attempts(user_id,booking_id,kind,duration_minutes,item_ids,client_kind,status) VALUES(?,?,?,?,?,'desktop','in_progress')", uid, lc["booking_id"], "exam", dur, itemIds);
+                var id = db.ExecuteReturningId("INSERT INTO exam_attempts(user_id,booking_id,certification_id,kind,duration_minutes,item_ids,client_kind,status) VALUES(?,?,?,?,?,?,'desktop','in_progress')", uid, lc["booking_id"], certId, "exam", dur, itemIds);
                 att = db.QueryOne("SELECT * FROM exam_attempts WHERE id=?", id);
                 log(uid, "exam_started", $"attempt {id} (desktop)");
             }
@@ -91,7 +94,9 @@ public static class ExamClient
             {
                 SessionToken = examSession, session_token = examSession,
                 AttemptToken = code, CandidateName = candidateName, CandidateEmail = candidateEmail,
-                ExamCode = "PCP-AI", ExamTitle = "PCP-AI Examination", DurationMinutes = att["duration_minutes"],
+                ExamCode = H.Str(cert?["code"]) ?? "PCP-AI",
+                ExamTitle = (H.Str(cert?["name"]) ?? "PCP-AI") + " Examination",
+                DurationMinutes = att["duration_minutes"],
                 RemainingSeconds = Math.Max(0, (int)((deadline - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()) / 1000)),
                 SavedAnswers = savedAnswers, Resumed = !string.IsNullOrEmpty(H.Str(att["answers"])),
                 ScheduledAt = H.IsoFromMillis(slotMs), OpensAt = H.IsoFromMillis(slotMs - 15 * 60_000), ClosesAt = H.IsoFromMillis(slotMs + 30 * 60_000),

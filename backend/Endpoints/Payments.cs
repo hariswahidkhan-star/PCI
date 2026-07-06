@@ -34,11 +34,17 @@ public static class Payments
                 var d = await H.Body(req);
                 var product = PRODUCT_LABEL.ContainsKey(H.GetS(d, "product") ?? "") ? H.GetS(d, "product")! : "membership";
                 var email = H.GetS(d, "email");
+                // Which certification the exam seat is for (id or code; PCP-AI when unspecified).
+                var certRow = Certs.ById(db, Certs.Resolve(db, H.GetS(d, "certification_id", "certification", "cert")));
+                if (certRow is not null && !H.B(certRow["active"])) return Results.Json(new { error = "certification_inactive" }, statusCode: 400);
                 var codeVal = H.GetS(d, "code") is { } code ? Public.ValidateCode(db, code, product, email) : new Public.CodeValidation(null, null);
-                var pr = Public.Pricing(db, product, codeVal.Code);
+                var pr = Public.Pricing(db, product, codeVal.Code, certRow);
                 db.Execute("UPDATE enrollment_sessions SET selected_product=?, pricing_snapshot=?, last_activity_at=datetime('now') WHERE email=? AND session_status='in_progress'",
                     product, JsonSerializer.Serialize(pr), (email ?? "").ToLowerInvariant());
 
+                var label = PRODUCT_LABEL[product];
+                if (product is "exam" or "bundle" && certRow is not null)
+                    label = label.Replace("PCP-AI", H.Str(certRow["code"]) ?? "PCP-AI");
                 var options = new SessionCreateOptions
                 {
                     Mode = "payment",
@@ -46,10 +52,11 @@ public static class Payments
                         new() { Quantity = 1, PriceData = new SessionLineItemPriceDataOptions {
                             Currency = "usd", UnitAmount = (long)Math.Round(pr.final * 100),
                             ProductData = new SessionLineItemPriceDataProductDataOptions {
-                                Name = PRODUCT_LABEL[product], Description = "Access only. Certification is awarded separately under PCI policies." } } } },
+                                Name = label, Description = "Access only. Certification is awarded separately under PCI policies." } } } },
                     CustomerEmail = email,
                     Metadata = new Dictionary<string, string> {
-                        ["product"] = product, ["plan_label"] = PRODUCT_LABEL[product],
+                        ["product"] = product, ["plan_label"] = label,
+                        ["certification"] = certRow is null ? "PCP-AI" : (H.Str(certRow["code"]) ?? "PCP-AI"),
                         ["first_name"] = H.GetS(d, "first") ?? "", ["last_name"] = H.GetS(d, "last") ?? "",
                         ["country"] = H.GetS(d, "country") ?? "", ["discount_code"] = codeVal.Code is null ? "" : (H.Str(codeVal.Code["code"]) ?? ""),
                         ["final_amount"] = pr.final.ToString(), ["code_amount"] = pr.codeAmount.ToString(),
@@ -167,8 +174,10 @@ public static class Payments
                         if (product == "exam" || product == "bundle")
                         {
                             db.Execute("UPDATE payments SET exam_schedule_deadline=datetime('now','+1 year') WHERE reference=?", reference);
-                            // Formal one-attempt entitlement tied to this payment (idempotent via unique index).
-                            db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,status,valid_until) VALUES(?,?,?, 'available', datetime('now','+1 year'))", userId, payId, product);
+                            // Formal one-attempt entitlement tied to this payment (idempotent via unique
+                            // index) and to the PURCHASED certification (metadata code; PCP-AI default).
+                            var entCertId = Certs.Resolve(db, m.GetValueOrDefault("certification"));
+                            db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?,?,?, 'available', datetime('now','+1 year'))", userId, payId, product, entCertId);
                         }
                         log(userId, "account_activated", reference);
                         }

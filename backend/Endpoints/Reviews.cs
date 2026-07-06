@@ -127,6 +127,9 @@ public static class Reviews
                 }
             else return Results.Json(new { error = "no_rows" }, statusCode: 400);
 
+            // Bank destination: a top-level certification (id or code) applies to every row;
+            // an individual row's certification column overrides it. Default: the founding cert.
+            var defaultCertId = Certs.Resolve(db, H.GetS(b, "certification_id", "certification", "cert"));
             int inserted = 0; var errors = new List<object>(); int line = 1;
             db.Transaction(() =>
             {
@@ -144,8 +147,10 @@ public static class Reviews
                     var isPractice = ParseBool(G("is_practice", "practice"));
                     var published = r.ContainsKey("published") ? ParseBool(G("published")) : 1;
                     var sort = int.TryParse(G("sort_order", "order"), out var so) ? so : 0;
-                    db.Execute(@"INSERT INTO sample_questions(question,option_a,option_b,option_c,option_d,answer_index,domain,published,is_practice,sort_order)
-                                 VALUES(?,?,?,?,?,?,?,?,?,?)", q, oa, ob, oc, od, ans, domain, published, isPractice, sort);
+                    var rowCert = G("certification_id", "certification", "cert");
+                    var certId = rowCert == "" ? defaultCertId : Certs.Resolve(db, rowCert);
+                    db.Execute(@"INSERT INTO sample_questions(question,option_a,option_b,option_c,option_d,answer_index,domain,published,is_practice,sort_order,certification_id)
+                                 VALUES(?,?,?,?,?,?,?,?,?,?,?)", q, oa, ob, oc, od, ans, domain, published, isPractice, sort, certId);
                     inserted++;
                 }
             });

@@ -93,7 +93,9 @@ public static class AdminProctoring
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var action = H.GetS(b, "action") ?? "";
             var note = H.GetS(b, "note") ?? ""; if (note.Length > 1000) note = note[..1000];
-            var passMark = Settings.Num(db, "exam_pass_mark_pct", H.PASS);
+            // Configured pass mark for the attempt's CERTIFICATION (PCP-AI is simply cert 1).
+            var attCertId = H.L(a.GetValueOrDefault("certification_id") ?? 1L);
+            var passMark = Certs.Cfg(db, attCertId).Pass;
             var pct = H.D(a["percent"]);
             var holder = db.QueryOne("SELECT first_name,last_name FROM users WHERE id=?", a["user_id"]);
             var holderName = ($"{H.Str(holder?["first_name"])} {H.Str(holder?["last_name"])}").Trim();
@@ -109,7 +111,7 @@ public static class AdminProctoring
                     return Results.Json(new { error = "not_held" }, statusCode: 400);
                 var isPass = H.Str(a["result"]) == "pass";
                 string? cred = null;
-                if (isPass) cred = Lifecycle.IssueCredential(db, H.L(a["user_id"]!), a["id"], holderName);
+                if (isPass) cred = Lifecycle.IssueCredential(db, H.L(a["user_id"]!), a["id"], holderName, attCertId);
                 var newStatus = isPass ? (cred is not null ? "credential_issued" : "released_pass") : "released_fail";
                 db.Execute("UPDATE exam_attempts SET result_status=?, released_at=datetime('now'), review_status='cleared', review_note=?, reviewed_at=datetime('now') WHERE id=?", newStatus, note, id);
                 log(adm.Id, "result_released", $"attempt {id} → {newStatus}" + (note.Length > 0 ? " — " + note : ""));
@@ -138,7 +140,7 @@ public static class AdminProctoring
                     var existing = AttemptCred();
                     if (existing is not null && (existing["status"] as string) == "revoked")
                     { db.Execute("UPDATE issued_credentials SET status='active' WHERE id=?", existing["id"]); cred = H.Str(existing["credential_id"]); }
-                    else cred = Lifecycle.IssueCredential(db, H.L(a["user_id"]!), a["id"], holderName);
+                    else cred = Lifecycle.IssueCredential(db, H.L(a["user_id"]!), a["id"], holderName, attCertId);
                 }
                 var newStatus = isPass ? (cred is not null ? "credential_issued" : "released_pass") : "released_fail";
                 db.Execute("UPDATE exam_attempts SET result_status=?, result=?, released_at=COALESCE(released_at,datetime('now')), review_status='cleared', review_note=?, reviewed_at=datetime('now') WHERE id=?",

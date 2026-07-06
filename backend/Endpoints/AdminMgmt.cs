@@ -79,7 +79,63 @@ public static class AdminMgmt
         }
         Crud("faqs", new[]{ "question","answer","category","sort_order","published" }, "sort_order, id", "faqs");
         Crud("bok_domains", new[]{ "code","name","weight","description","sort_order" }, "sort_order, id", "bok");
-        Crud("sample_questions", new[]{ "question","options","option_a","option_b","option_c","option_d","answer_index","domain","published","sort_order","is_practice" }, "sort_order, id", "sampleq");
+        Crud("sample_questions", new[]{ "question","options","option_a","option_b","option_c","option_d","answer_index","domain","published","sort_order","is_practice","certification_id" }, "sort_order, id", "sampleq");
+
+        // ---------- certifications (multi-credential management; exam section) ----------
+        // Deliberately NOT the generic Crud: a certification that has ever issued a credential or
+        // has a question bank must never be hard-deleted — deactivate instead (active=0). The
+        // founding certification (id 1) is permanent.
+        app.MapGet("/api/admin/certifications", (HttpRequest req) => gate(req, "exams", _ =>
+            J(new { rows = db.Query(@"SELECT c.*,
+                    (SELECT COUNT(*) FROM sample_questions q WHERE COALESCE(q.certification_id,1)=c.id AND q.is_practice=0) bank_size,
+                    (SELECT COUNT(*) FROM exam_entitlements e WHERE COALESCE(e.certification_id,1)=c.id) entitlements,
+                    (SELECT COUNT(*) FROM issued_credentials ic WHERE COALESCE(ic.certification_id,1)=c.id) credentials
+                FROM certifications c ORDER BY c.sort_order, c.id") })));
+        app.MapPost("/api/admin/certifications", (HttpRequest req) => gate(req, "exams", adm =>
+        {
+            var b = H.Body(req).GetAwaiter().GetResult();
+            var codeV = (H.GetS(b, "code") ?? "").Trim().ToUpperInvariant();
+            var nameV = (H.GetS(b, "name") ?? "").Trim();
+            if (codeV.Length is < 2 or > 20 || !System.Text.RegularExpressions.Regex.IsMatch(codeV, @"^[A-Z0-9][A-Z0-9\-]*$"))
+                return Results.Json(new { error = "bad_code", message = "Code must be 2–20 characters: letters, digits and hyphens (e.g. PCP-COST)." }, statusCode: 400);
+            if (nameV.Length == 0) return Results.Json(new { error = "name_required" }, statusCode: 400);
+            if (Certs.ByCode(db, codeV) is not null) return Results.Json(new { error = "code_exists" }, statusCode: 409);
+            var id = db.ExecuteReturningId(@"INSERT INTO certifications(code,name,description,credential_prefix,pass_mark_pct,duration_minutes,expiry_years,exam_price,active,sort_order)
+                VALUES(?,?,?,?,?,?,?,?,?,?)",
+                codeV, nameV, H.GetS(b, "description"), H.GetS(b, "credential_prefix"),
+                H.GetNum(b, "pass_mark_pct"), H.GetNum(b, "duration_minutes"),
+                H.GetNum(b, "expiry_years") ?? 3, H.GetNum(b, "exam_price"),
+                b.TryGetValue("active", out var av) && av.ValueKind == JsonValueKind.False ? 0 : 1,
+                H.GetNum(b, "sort_order") ?? 0);
+            log(adm.Id, "certification_create", $"{codeV} (id {id})");
+            return J(new { ok = true, id });
+        }));
+        app.MapPatch("/api/admin/certifications/{id}", (HttpRequest req, long id) => gate(req, "exams", adm =>
+        {
+            if (Certs.ById(db, id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var b = H.Body(req).GetAwaiter().GetResult();
+            var allowed = new[]{ "name","description","credential_prefix","pass_mark_pct","duration_minutes","expiry_years","exam_price","active","sort_order" };
+            var set = allowed.Where(c => b.ContainsKey(c)).ToList();
+            if (id == 1 && set.Contains("active") && b["active"].ValueKind == JsonValueKind.False)
+                return Results.Json(new { error = "founding_cert_permanent", message = "The founding certification cannot be deactivated." }, statusCode: 400);
+            if (set.Count == 0) return J(new { ok = true });
+            var vals = set.Select(c => { var v = b[c]; return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
+            db.Execute($"UPDATE certifications SET {string.Join(",", set.Select(c => c + "=?"))}, updated_at=datetime('now') WHERE id=?", vals);
+            log(adm.Id, "certification_update", id.ToString());
+            return J(new { ok = true });
+        }));
+        app.MapDelete("/api/admin/certifications/{id}", (HttpRequest req, long id) => gate(req, "exams", adm =>
+        {
+            if (id == 1) return Results.Json(new { error = "founding_cert_permanent" }, statusCode: 400);
+            var refs = db.Scalar<long>(@"SELECT (SELECT COUNT(*) FROM issued_credentials WHERE certification_id=?)
+                + (SELECT COUNT(*) FROM exam_attempts WHERE certification_id=?)
+                + (SELECT COUNT(*) FROM exam_entitlements WHERE certification_id=?)
+                + (SELECT COUNT(*) FROM sample_questions WHERE certification_id=?)", id, id, id, id);
+            if (refs > 0) return Results.Json(new { error = "in_use", message = "This certification has history (credentials, attempts, entitlements or a question bank). Deactivate it instead of deleting." }, statusCode: 409);
+            db.Execute("DELETE FROM certifications WHERE id=?", id);
+            log(adm.Id, "certification_delete", id.ToString());
+            return J(new { ok = true });
+        }));
         Crud("governance_roles", new[]{ "role","holder","status","remit","sort_order" }, "sort_order, id", "governance");
         Crud("resources", new[]{ "title","category","doc_type","url","published","sort_order" }, "sort_order, id", "resources");
         Crud("news", new[]{ "title","body","published_date","published","sort_order" }, "published_date DESC, id DESC", "news");

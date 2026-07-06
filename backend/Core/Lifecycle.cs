@@ -159,23 +159,28 @@ public static class Lifecycle
     public static int ApprovedExtraMinutes(Db db, long userId)
         => (int)db.Scalar<long>("SELECT COALESCE(MAX(approved_extra_minutes),0) FROM accommodation_requests WHERE user_id=? AND status='approved'", userId);
 
-    /// <summary>Issue a PCP-AI credential for a passed attempt, retrying credential-id collisions. The
-    /// partial unique index on attempt_id guarantees at most one credential per attempt — if one is
-    /// already linked, its id is returned rather than issuing a duplicate. Returns null only if
-    /// generation failed (astronomically unlikely) — callers should log that case.</summary>
-    public static string? IssueCredential(Db db, long userId, object? attemptId, string holderName)
+    /// <summary>Issue a credential for a passed attempt, retrying credential-id collisions. The id
+    /// format is &lt;prefix&gt;-&lt;year&gt;-&lt;5 digits&gt; where prefix and expiry come from the attempt's
+    /// CERTIFICATION (PCP-AI is simply certification 1). The partial unique index on attempt_id
+    /// guarantees at most one credential per attempt — if one is already linked, its id is returned
+    /// rather than issuing a duplicate. Returns null only if generation failed (astronomically
+    /// unlikely) — callers should log that case.</summary>
+    public static string? IssueCredential(Db db, long userId, object? attemptId, string holderName, long certificationId = Certs.DefaultId)
     {
         var existing = attemptId is null ? null : db.QueryOne("SELECT credential_id FROM issued_credentials WHERE attempt_id=?", attemptId);
         if (existing is not null) return H.Str(existing["credential_id"]);
+        var cert = Certs.ById(db, certificationId) ?? Certs.ById(db, Certs.DefaultId)!;
+        var prefix = Certs.Prefix(cert);
+        var years = Certs.ExpiryYears(cert);
         var yr = DateTime.UtcNow.Year;
         var rnd = new Random();
         for (int i = 0; i < 20; i++)
         {
-            var cid = $"PCP-AI-{yr}-{10000 + rnd.Next(0, 89999)}";
+            var cid = $"{prefix}-{yr}-{10000 + rnd.Next(0, 89999)}";
             try
             {
-                db.Execute("INSERT INTO issued_credentials(credential_id,user_id,attempt_id,holder_name,credential,status,expires_at) VALUES(?,?,?,?,?, 'active', datetime('now','+3 year'))",
-                    cid, userId, attemptId, holderName, "PCP-AI");
+                db.Execute("INSERT INTO issued_credentials(credential_id,user_id,attempt_id,holder_name,credential,certification_id,status,expires_at) VALUES(?,?,?,?,?,?, 'active', datetime('now','+' || ? || ' year'))",
+                    cid, userId, attemptId, holderName, prefix, H.L(cert["id"]), years);
                 return cid;
             }
             catch { /* credential_id collision → retry; attempt_id duplicate → loop exits via existing check next call */ }

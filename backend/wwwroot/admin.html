@@ -352,6 +352,7 @@ const SECTIONS=[
 
   {g:'③ Live Exam'},
   {id:'set_exam',label:'Live Exam Settings',icon:'cog',render:()=>renderAppSettings('exam')},
+  {id:'certifications',label:'Certifications',icon:'award',render:renderCertifications,perm:'exams'},
   {id:'exams',label:'Exam registrations',icon:'clipboard',render:renderExams},
   {id:'proctoring',label:'Live proctoring & sessions',icon:'shield',render:renderProctoring,badge:'flaggedSessions'},
   {id:'sampleq',label:'Question bank',icon:'list',render:renderSampleQ},
@@ -387,7 +388,8 @@ function canSee(id){
   if(state.mode==='sample') return true;
   if(state.me&&state.me.is_owner) return true;
   if(!state.perms) return true;
-  return state.perms.includes(id);
+  const sec=SECTIONS.find(s=>s.id===id);
+  return state.perms.includes((sec&&sec.perm)||id);   // a section may map to another permission (certifications → exams)
 }
 function buildNav(){
   const nav=$('#nav'); nav.innerHTML='';
@@ -1483,6 +1485,7 @@ async function renderCrud(cfg){
   const raw=await api('/api/admin/'+cfg.endpoint); const rows=(raw.rows||raw||[]);
   const cols=cfg.columns.map(c=>({t:c.label})).concat([{t:''}]);
   const cell=(r,c)=>{ let v=r[c.k];
+    if(c.fmt) return '<td>'+c.fmt(v)+'</td>';
     if(c.badge) return '<td>'+badge(v)+'</td>';
     if(c.bool) return '<td>'+(Number(v)?'<span class="badge b-green"><span class="dot"></span>yes</span>':'<span class="badge b-grey"><span class="dot"></span>no</span>')+'</td>';
     if(c.pct) return '<td>'+(v||0)+'%</td>';
@@ -1521,14 +1524,19 @@ const C_BOK={endpoint:'bok_domains',noun:'domain',add:'New domain',unit:'domain'
   columns:[{k:'code',label:'Code',mono:true},{k:'name',label:'Domain',strong:true},{k:'weight',pct:true,label:'Weight'},{k:'sort_order',label:'Order'}],
   fields:[{k:'code',label:'Code',ph:'D1'},{k:'name',label:'Domain name',required:true},{k:'weight',label:'Indicative weight (%)',type:'number',default:0},{k:'description',label:'Description',type:'textarea'},{k:'sort_order',label:'Sort order',type:'number',default:0}]};
 const C_SQ={endpoint:'sample_questions',noun:'question',add:'New question',unit:'question',empty:'No sample questions yet.',intro:'MCQ items for the practice bank and the live exam. Enter each option in its own field; mark the correct one. Toggle “Practice item” to keep it out of the live exam. Use “Bulk upload” to import many at once.',
-  columns:[{k:'question',long:true,label:'Question'},{k:'domain',label:'Domain'},{k:'is_practice',bool:true,label:'Practice'},{k:'published',bool:true,label:'Live'},{k:'sort_order',label:'Order'}],
+  columns:[{k:'question',long:true,label:'Question'},{k:'certification_id',label:'Cert',fmt:v=>certName(v)},{k:'domain',label:'Domain'},{k:'is_practice',bool:true,label:'Practice'},{k:'published',bool:true,label:'Live'},{k:'sort_order',label:'Order'}],
   fields:[{k:'question',label:'Question',required:true,type:'textarea',rows:2},
+    {k:'certification_id',label:'Certification',type:'select',options:[],default:'1'},
     {k:'option_a',label:'Option A',required:true},{k:'option_b',label:'Option B',required:true},
     {k:'option_c',label:'Option C'},{k:'option_d',label:'Option D'},
     {k:'answer_index',label:'Correct option',type:'select',options:[['0','A'],['1','B'],['2','C'],['3','D']],default:'0'},
     {k:'domain',label:'Domain / topic'},
     {k:'is_practice',label:'Practice item (excluded from live exam)',type:'checkbox',default:0},
     {k:'sort_order',label:'Sort order',type:'number',default:0},{k:'published',label:'Published',type:'checkbox',default:1}]};
+/* certification lookup shared by the bank + certifications sections */
+let CERTS_CACHE=null;
+async function loadCerts(){ try{ CERTS_CACHE=(await api('/api/admin/certifications')).rows||[]; }catch(_){ CERTS_CACHE=CERTS_CACHE||[]; } return CERTS_CACHE; }
+function certName(id){ const c=(CERTS_CACHE||[]).find(x=>String(x.id)===String(id||1)); return c?esc(c.code):('#'+(id||1)); }
 const C_GOV={endpoint:'governance_roles',noun:'role',add:'New role',unit:'role',empty:'No governance roles yet.',intro:'Governance and leadership roles. Leave the holder blank for open positions — the site shows an honest “open” status rather than a fabricated name.',
   columns:[{k:'role',label:'Role',strong:true},{k:'holder',label:'Holder'},{k:'status',badge:true,label:'Status'},{k:'sort_order',label:'Order'}],
   fields:[{k:'role',label:'Role title',required:true},{k:'holder',label:'Holder (leave blank if open)'},{k:'status',label:'Status',type:'select',options:['open','appointed','interim'],default:'open'},{k:'remit',label:'Remit',type:'textarea'},{k:'sort_order',label:'Sort order',type:'number',default:0}]};
@@ -1547,6 +1555,10 @@ const C_MEDIA={endpoint:'media_assets',noun:'image',add:'Add image',unit:'image'
 function renderFaqs(){ return renderCrud(C_FAQ); }
 function renderBok(){ return renderCrud(C_BOK); }
 async function renderSampleQ(){
+  // Populate the certification selector before rendering (each question belongs to one bank).
+  await loadCerts();
+  const certField=C_SQ.fields.find(f=>f.k==='certification_id');
+  if(certField) certField.options=(CERTS_CACHE||[]).map(c=>[String(c.id), c.code+' — '+c.name]);
   await renderCrud(C_SQ);
   // Add a "Bulk upload" action alongside the default "New question" button.
   var head=document.querySelector('.view-actions')||document.querySelector('.toolbar');
@@ -1578,6 +1590,63 @@ async function renderSampleQ(){
         });
     };
   }
+}
+/* ---- Certifications: the platform's credentials. Per-cert pass mark/duration/expiry/price
+   override the global exam settings; each has its own question bank, entitlements and
+   credential prefix. History is never deleted — deactivate retired credentials instead. ---- */
+async function renderCertifications(){
+  const rows=await loadCerts();
+  const cols=[{t:'Code'},{t:'Name'},{t:'Pass %'},{t:'Duration'},{t:'Expiry'},{t:'Exam price'},{t:'Bank',num:1},{t:'Issued',num:1},{t:'Status'},{t:''}];
+  const body=rows.length?rows.map(c=>`<tr>
+    <td class="mono" style="font-weight:700">${esc(c.code)}</td>
+    <td>${esc(c.name)}${c.description?`<br><span class="em" style="font-size:12px">${esc(String(c.description).slice(0,90))}</span>`:''}</td>
+    <td>${c.pass_mark_pct==null?'<span class="em">global</span>':c.pass_mark_pct+'%'}</td>
+    <td>${c.duration_minutes==null?'<span class="em">global</span>':c.duration_minutes+' min'}</td>
+    <td>${c.expiry_years} yr</td>
+    <td>${c.exam_price==null?'<span class="em">standard</span>':money(c.exam_price)}</td>
+    <td class="num">${c.bank_size||0}</td>
+    <td class="num">${c.credentials||0}</td>
+    <td>${Number(c.active)?badge('active'):badge('deactivated')}</td>
+    <td class="actions"><button class="btn btn-sm" data-certedit="${c.id}">Edit</button>${c.id===1?'':` <button class="btn btn-sm" data-certtoggle="${c.id}" data-on="${Number(c.active)}">${Number(c.active)?'Deactivate':'Reactivate'}</button>`}</td></tr>`).join('')
+    :emptyRow(cols.length,'No certifications yet.');
+  $('#view').innerHTML='<div class="inline-note" style="margin-bottom:16px">Each certification has its own question bank, entitlements, bookings and credential prefix. Blank pass mark, duration or price means the global exam setting applies. Certifications with history can be deactivated but never deleted.</div>'
+    +'<div class="toolbar"><div class="spacer"></div><button class="btn btn-primary btn-sm" id="addCert">+ New certification</button></div>'
+    +tableShell(cols,body,`<div class="tfoot"><span>${rows.length} certification${rows.length===1?'':'s'}</span></div>`);
+  $('#addCert').onclick=()=>editCert(null);
+  document.querySelectorAll('[data-certedit]').forEach(b=>b.onclick=()=>editCert(rows.find(r=>String(r.id)===b.dataset.certedit)));
+  document.querySelectorAll('[data-certtoggle]').forEach(b=>b.onclick=async()=>{
+    const on=b.dataset.on==='1';
+    if(on&&!confirm('Deactivate this certification? New purchases and bookings stop; existing credentials remain verifiable.'))return;
+    await api('/api/admin/certifications/'+b.dataset.certtoggle,{method:'PATCH',body:JSON.stringify({active:!on})});
+    toast(on?'Deactivated':'Reactivated','ok'); CERTS_CACHE=null; renderCertifications();
+  });
+}
+function editCert(row){
+  const F=(l,k,v,ph,type)=>`<div class="form-row"><label>${l}</label><input id="c_${k}" type="${type||'text'}" value="${v==null?'':esc(String(v))}" placeholder="${ph||''}"/></div>`;
+  modal(row?('Edit '+esc(row.code)):'New certification',
+    (row?'':F('Code (permanent, e.g. PCP-COST)','code','','PCP-COST'))
+    +F('Name','name',row?row.name:'','Certified Cost Engineering Professional')
+    +F('Description','description',row?row.description:'')
+    +F('Pass mark % (blank = global setting)','pass_mark_pct',row?row.pass_mark_pct:'','65','number')
+    +F('Duration minutes (blank = global setting)','duration_minutes',row?row.duration_minutes:'','90','number')
+    +F('Credential validity (years)','expiry_years',row?row.expiry_years:3,'3','number')
+    +F('Exam price USD (blank = standard exam pricing)','exam_price',row?row.exam_price:'','299','number')
+    +F('Sort order','sort_order',row?row.sort_order:0,'0','number'),
+    row?'Save changes':'Create', async()=>{
+    const val=k=>{const el=$('#c_'+k);return el?el.value.trim():'';};
+    const num=k=>{const v=val(k);return v===''?null:+v;};
+    const b={name:val('name'),description:val('description'),pass_mark_pct:num('pass_mark_pct'),
+             duration_minutes:num('duration_minutes'),expiry_years:num('expiry_years')??3,
+             exam_price:num('exam_price'),sort_order:num('sort_order')??0};
+    if(!row)b.code=val('code');
+    if(!b.name){toast('Name is required','err');return false;}
+    if(!row&&!b.code){toast('Code is required','err');return false;}
+    try{
+      if(row)await api('/api/admin/certifications/'+row.id,{method:'PATCH',body:JSON.stringify(b)});
+      else await api('/api/admin/certifications',{method:'POST',body:JSON.stringify(b)});
+      toast(row?'Saved':'Certification created','ok'); CERTS_CACHE=null; renderCertifications(); return true;
+    }catch(e){toast(e.message==='code_exists'?'That code already exists':e.message==='bad_code'?'Code must be letters/digits/hyphens (2–20 chars)':'Save failed: '+e.message,'err');return false;}
+  });
 }
 function renderGovernance(){ return renderCrud(C_GOV); }
 function renderResources(){ return renderCrud(C_RES); }

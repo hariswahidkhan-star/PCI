@@ -12,7 +12,7 @@ public static class Public
     public record PriceItem(string cat, double std, double disc, double payable);
     public record PriceResult(string currency, List<PriceItem> items, double standard, double defaultDiscount, double codeAmount, double final);
 
-    public static PriceResult Pricing(Db db, string product, Dictionary<string, object?>? codeRow)
+    public static PriceResult Pricing(Db db, string product, Dictionary<string, object?>? codeRow, Dictionary<string, object?>? cert = null)
     {
         var items = new List<PriceItem>(); double standard = 0, defDisc = 0;
         foreach (var cat in CatsFor(product))
@@ -21,6 +21,9 @@ public static class Public
             if (r is null) continue;
             var disc = H.D(r["default_discount_percentage"]) / 100.0;
             var stdp = H.D(r["standard_price"]);
+            // A certification's own exam price (when set) overrides the generic exam pricing rule,
+            // so each credential can be priced independently.
+            if (cat == "exam" && cert is not null && cert["exam_price"] is not null) stdp = H.D(cert["exam_price"]);
             var payable = stdp * (1 - disc);
             standard += stdp; defDisc += stdp * disc;
             items.Add(new PriceItem(cat, stdp, disc, payable));
@@ -67,6 +70,20 @@ public static class Public
 
         app.MapGet("/api/pricing", () => J(new { currency = "USD", membership = Pricing(db, "membership", null), exam = Pricing(db, "exam", null), bundle = Pricing(db, "bundle", null) }));
 
+        // Public catalogue of ACTIVE certifications (safe fields only — never the bank or keys).
+        // Each entry carries its effective exam price and headline exam parameters.
+        app.MapGet("/api/certifications", () => J(new
+        {
+            rows = db.Query("SELECT id,code,name,description,expiry_years,sort_order FROM certifications WHERE active=1 ORDER BY sort_order,id")
+                .Select(c => {
+                    var cert = Certs.ById(db, c["id"]);
+                    var cfg = Certs.Cfg(db, H.L(c["id"]));
+                    return new { id = c["id"], code = c["code"], name = c["name"], description = c["description"],
+                        expiry_years = c["expiry_years"], duration_minutes = (int)cfg.Duration, pass_mark_pct = cfg.Pass,
+                        exam_price = Pricing(db, "exam", null, cert).final };
+                }).ToList()
+        }));
+
         app.MapPost("/api/validate-code", async (HttpRequest req) =>
         {
             var b = await H.Body(req);
@@ -81,7 +98,10 @@ public static class Public
         {
             var id = (req.Query["id"].ToString() ?? "").Trim().ToUpperInvariant();
             if (id.Length == 0) return Results.Json(new { error = "missing_id" }, statusCode: 400);
-            var c = db.QueryOne("SELECT credential_id,holder_name,credential,status,issued_at,expires_at FROM issued_credentials WHERE upper(credential_id)=?", id);
+            var c = db.QueryOne(@"SELECT ic.credential_id,ic.holder_name,ic.credential,ic.status,ic.issued_at,ic.expires_at,
+                       ct.code certification_code, ct.name certification_name
+                FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)
+                WHERE upper(ic.credential_id)=?", id);
             if (c is null) return J(new { found = false });
             // Compute the real verification state: a credential whose expiry has passed is NOT valid even
             // if the stored status column still says 'active' (statuses are not batch-updated on expiry).
