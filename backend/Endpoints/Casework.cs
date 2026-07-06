@@ -178,7 +178,7 @@ public static class Casework
             if (c is null) return J(new { found = false });
             var status = H.Str(c["status"]) ?? "active";
             var expires = H.Str(c["expires_at"]);
-            var lapsed = status == "active" && !string.IsNullOrEmpty(expires) && string.Compare(expires, H.IsoNow, StringComparison.Ordinal) < 0;
+            var lapsed = status == "active" && H.IsPast(expires);
             var state = status == "revoked" ? "revoked" : (lapsed || status == "expired") ? "expired" : "active";
             var regNo = db.Scalar<string>("SELECT registration_no FROM users WHERE id=?", u.Id);
             return J(new

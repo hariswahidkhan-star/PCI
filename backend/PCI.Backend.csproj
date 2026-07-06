@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.7" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Stripe.net" Version="45.14.0" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.410" />
   </ItemGroup>
   <ItemGroup>
     <!-- reuse the SAME schema + email templates + static site as the Node app -->

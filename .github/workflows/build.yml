@@ -63,6 +63,14 @@ jobs:
         run: |
           if [ -f tests/integration_test.py ]; then python3 tests/integration_test.py; else echo "no integration suite yet"; fi
 
+      - name: 500 sweep (every route x anon/student/owner)
+        run: python3 tests/sweep_500_test.py
+
+      - name: S3 storage provider live test (moto)
+        run: |
+          pip install --quiet 'moto[server]' || pip install --quiet --ignore-installed 'moto[server]'
+          python3 tests/storage_s3_test.py
+
       - name: System-check endpoint gated
         run: |
           code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/api/admin/system-check)

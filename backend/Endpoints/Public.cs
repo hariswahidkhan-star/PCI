@@ -87,7 +87,7 @@ public static class Public
             // if the stored status column still says 'active' (statuses are not batch-updated on expiry).
             var status = H.Str(c["status"]) ?? "active";
             var expires = H.Str(c["expires_at"]);
-            var lapsed = status == "active" && !string.IsNullOrEmpty(expires) && string.Compare(expires, H.IsoNow, StringComparison.Ordinal) < 0;
+            var lapsed = status == "active" && H.IsPast(expires);
             var state = status == "revoked" ? "revoked" : (lapsed || status == "expired") ? "expired" : "active";
             var copy = new Dictionary<string, object?>(c) { ["found"] = true, ["state"] = state, ["valid"] = state == "active" };
             return J(copy);

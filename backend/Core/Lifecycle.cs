@@ -49,7 +49,7 @@ public static class Lifecycle
             var payStatus = H.Str(entitlement.GetValueOrDefault("payment_status"));
             if (payStatus is "refunded" or "failed" or "reversed") blockers.Add("payment_not_valid");
             var deadline = H.Str(entitlement.GetValueOrDefault("exam_schedule_deadline"));
-            if (!string.IsNullOrEmpty(deadline) && string.Compare(deadline, H.IsoNow, StringComparison.Ordinal) < 0) blockers.Add("entitlement_expired");
+            if (H.IsPast(deadline)) blockers.Add("entitlement_expired");
         }
 
         // Profile completeness (legal name + a couple of key fields)

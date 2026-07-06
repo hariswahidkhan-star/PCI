@@ -20,6 +20,60 @@ builder.Services.AddSingleton(db);
 builder.Services.AddHostedService<PCI.Backend.Core.RetentionService>();
 
 var app = builder.Build();
+
+// ================= security response headers + CORS (OUTERMOST middleware) =================
+// Registered first so EVERY response — including the rate-limiter 429, the maintenance 503 and the
+// CORS 204 preflight — carries these headers. Scoped for single-file apps with inline <script>/<style>
+// ('unsafe-inline') plus the few external origins the site genuinely uses (Google Fonts, the two
+// analytics hosts, cdnjs for pdf-lib). CSP enforces by default; CSP_REPORT_ONLY=true runs it report-only.
+var _csp = string.Join("; ", new[]
+{
+    "default-src 'self'",
+    "base-uri 'self'",
+    "object-src 'none'",
+    "frame-ancestors 'none'",
+    "frame-src 'self' blob:",        // admin evidence viewer opens PDFs in a blob: iframe (admin.html openBlob)
+    "form-action 'self'",
+    "img-src 'self' data: blob: https://www.googletagmanager.com",
+    "media-src 'self' blob:",
+    "font-src 'self' data: https://fonts.gstatic.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://plausible.io https://cdnjs.cloudflare.com",
+    "connect-src 'self' https://plausible.io https://www.google-analytics.com",
+});
+var _cspHeader = string.Equals(Environment.GetEnvironmentVariable("CSP_REPORT_ONLY"), "true", StringComparison.OrdinalIgnoreCase)
+    ? "Content-Security-Policy-Report-Only" : "Content-Security-Policy";
+app.Use(async (ctx, next) =>
+{
+    var h = ctx.Response.Headers;
+    h["X-Content-Type-Options"] = "nosniff";
+    h["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    h["X-Frame-Options"] = "DENY";                       // legacy ally of frame-ancestors 'none'
+    h["Cross-Origin-Opener-Policy"] = "same-origin";
+    h[_cspHeader] = _csp;
+    // Emit HSTS whenever the TLS-terminating proxy reports https. Chained proxies send a comma-list
+    // ("https, http"), so match the FIRST hop, not the whole header — an exact-equals check silently
+    // dropped HSTS behind a second proxy.
+    var xfProto = ctx.Request.Headers["X-Forwarded-Proto"].ToString().Split(',')[0].Trim();
+    if (string.Equals(xfProto, "https", StringComparison.OrdinalIgnoreCase))
+        h["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains";
+    await next();
+});
+
+// CORS: responses honour ALLOWED_ORIGIN only; the boot validator rejects wildcard/empty in production,
+// so this reflects the single approved origin there and falls back to '*' only in development.
+var _allowedOrigin = Environment.GetEnvironmentVariable("ALLOWED_ORIGIN");
+app.Use(async (ctx, next) =>
+{
+    var res = ctx.Response;
+    res.Headers["Access-Control-Allow-Origin"] = string.IsNullOrEmpty(_allowedOrigin) ? "*" : _allowedOrigin;
+    if (!string.IsNullOrEmpty(_allowedOrigin)) res.Headers["Vary"] = "Origin";
+    res.Headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization";
+    res.Headers["Access-Control-Allow-Methods"] = "GET, POST, PATCH, DELETE, OPTIONS";
+    if (ctx.Request.Method == "OPTIONS") { res.StatusCode = 204; return; }
+    await next();
+});
+
 // Rate limiting: throttle brute-forceable endpoints (login, password reset, code validation, exam authorize)
 // per client IP with a fixed-window in-memory counter. Applied by path prefix via middleware so it is
 // robust to route-handler shape (no per-endpoint chaining required).
@@ -55,8 +109,9 @@ if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SMTP_HOST"))) Conso
     var sp = (Environment.GetEnvironmentVariable("STORAGE_PROVIDER") ?? "local").ToLowerInvariant();
     var sr = Environment.GetEnvironmentVariable("STORAGE_ROOT") ?? "./storage";
     if (sp == "local") Console.WriteLine($"[boot] storage: local at '{sr}' (evidence/attachments stored as files; DB holds references).");
-    else if (!PCI.Backend.Core.Storage.UsingLocal) { /* wired provider */ }
-    else Console.WriteLine($"[boot] storage: provider '{sp}' is not yet wired — falling back to local at '{sr}'. Set STORAGE_PROVIDER=local to silence.");
+    else if (!PCI.Backend.Core.Storage.UsingLocal) Console.WriteLine($"[boot] storage: s3 bucket '{Environment.GetEnvironmentVariable("S3_BUCKET")}'" + (Environment.GetEnvironmentVariable("S3_ENDPOINT") is { } ep ? $" via endpoint '{ep}'" : "") + " (DB holds references).");
+    else if (sp == "s3") Console.WriteLine($"[boot] storage: STORAGE_PROVIDER=s3 but S3_BUCKET is not set — falling back to local at '{sr}'.");
+    else Console.WriteLine($"[boot] storage: unknown provider '{sp}' — falling back to local at '{sr}'. Set STORAGE_PROVIDER=local or s3.");
 }
 
 // ── Production configuration validation (Section 21): warn loudly on unsafe production config ──
@@ -115,54 +170,8 @@ static string? S(Dictionary<string, JsonElement> b, params string[] keys)
     return null;
 }
 
-// ================= security response headers (all responses, incl. static + API) =================
-// Scoped for single-file apps with inline <script>/<style> (which require 'unsafe-inline') plus the few
-// external origins the site genuinely uses (Google Fonts, the two analytics hosts, cdnjs for pdf-lib).
-// CSP enforces by default; set CSP_REPORT_ONLY=true to run it report-only during rollout validation.
-// HSTS is emitted only when the TLS-terminating proxy forwards https, so it is never sent over plain http.
-var _csp = string.Join("; ", new[]
-{
-    "default-src 'self'",
-    "base-uri 'self'",
-    "object-src 'none'",
-    "frame-ancestors 'none'",
-    "form-action 'self'",
-    "img-src 'self' data: blob: https://www.googletagmanager.com",
-    "media-src 'self' blob:",
-    "font-src 'self' data: https://fonts.gstatic.com",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://plausible.io https://cdnjs.cloudflare.com",
-    "connect-src 'self' https://plausible.io https://www.google-analytics.com",
-});
-var _cspHeader = string.Equals(Environment.GetEnvironmentVariable("CSP_REPORT_ONLY"), "true", StringComparison.OrdinalIgnoreCase)
-    ? "Content-Security-Policy-Report-Only" : "Content-Security-Policy";
-app.Use(async (ctx, next) =>
-{
-    var h = ctx.Response.Headers;
-    h["X-Content-Type-Options"] = "nosniff";
-    h["Referrer-Policy"] = "strict-origin-when-cross-origin";
-    h["X-Frame-Options"] = "DENY";                       // legacy ally of frame-ancestors 'none'
-    h["Cross-Origin-Opener-Policy"] = "same-origin";
-    h[_cspHeader] = _csp;
-    if (string.Equals(ctx.Request.Headers["X-Forwarded-Proto"].ToString(), "https", StringComparison.OrdinalIgnoreCase))
-        h["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains";
-    await next();
-});
-
-// ================= CORS (Origin/Headers/Methods + OPTIONS 204) =================
-// Responses honour ALLOWED_ORIGIN only; the boot validator rejects a wildcard/empty origin in production,
-// so this reflects the single approved origin there and falls back to '*' only in development.
-var _allowedOrigin = Environment.GetEnvironmentVariable("ALLOWED_ORIGIN");
-app.Use(async (ctx, next) =>
-{
-    var res = ctx.Response;
-    res.Headers["Access-Control-Allow-Origin"] = string.IsNullOrEmpty(_allowedOrigin) ? "*" : _allowedOrigin;
-    if (!string.IsNullOrEmpty(_allowedOrigin)) res.Headers["Vary"] = "Origin";
-    res.Headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization";
-    res.Headers["Access-Control-Allow-Methods"] = "GET, POST, PATCH, DELETE, OPTIONS";
-    if (ctx.Request.Method == "OPTIONS") { res.StatusCode = 204; return; }
-    await next();
-});
+// (security response headers + CORS are registered as the OUTERMOST middleware, right after Build,
+//  so every response — including the rate-limiter 429, maintenance 503 and CORS 204 — carries them.)
 
 // ================= maintenance mode (parity: 503 holding page; admin + APIs stay up) =================
 const string MAINT_HTML = "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Project Controls Institute \u2014 momentarily offline</title><style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#F6F8FC;font-family:Inter,system-ui,sans-serif;color:#0F172A}.c{text-align:center;padding:32px}.lp{font-weight:800;font-size:34px;color:#1D4ED8;letter-spacing:-.04em}.m{margin-top:14px;color:#64748B;max-width:420px;line-height:1.6}</style></head><body><div class=\"c\"><div class=\"lp\">PCI</div><div class=\"m\"><b>We\u2019ll be right back.</b><br/>The Project Controls Institute website is briefly offline for maintenance. Thank you for your patience.</div></div></body></html>";
@@ -239,7 +248,7 @@ app.MapPost("/api/login", async (HttpRequest req) =>
     var email = (S(b, "email") ?? "").ToLowerInvariant();
     var password = S(b, "password") ?? "";
     var u = db.QueryOne("SELECT * FROM users WHERE email=?", email);
-    if (u is null || u["password_hash"] is not string ph || !BCrypt.Net.BCrypt.Verify(password, ph))
+    if (u is null || !Security.VerifyPassword(password, u["password_hash"] as string))
         return Results.Json(new { error = "invalid_credentials" }, statusCode: 401);
     if ((u["status"] as string) != "active") return Results.Json(new { error = "inactive" }, statusCode: 403);
     var session = Security.RandomHex(32);
@@ -262,7 +271,7 @@ app.MapPost("/api/admin/auth/login", async (HttpRequest req) =>
     var email = (S(b, "email") ?? "").Trim().ToLowerInvariant();
     var password = S(b, "password") ?? "";
     var a = db.QueryOne("SELECT * FROM admin_users WHERE lower(email)=?", email);
-    if (a is null || (a["status"] as string) != "active" || a["password_hash"] is not string ph || !BCrypt.Net.BCrypt.Verify(password, ph))
+    if (a is null || (a["status"] as string) != "active" || !Security.VerifyPassword(password, a["password_hash"] as string))
         return Results.Json(new { error = "invalid_credentials" }, statusCode: 401);
     var tok = Security.RandomHex(24);
     db.Execute("INSERT INTO admin_sessions(admin_id,token,expires_at) VALUES(?,?,datetime('now','+12 hours'))", a["id"], Security.Sha(tok));
@@ -414,10 +423,14 @@ app.MapPatch("/api/admin/settings", async (HttpRequest req) =>
     var a = Auth.AdminFromReq(req, db);
     if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
     var perms = a.Perms; var owner = a.IsOwner;
+    // Deny-by-default: prefixed keys map to their section permission; every OTHER key is a platform-level
+    // setting (auto_block_result_on_*, critical_violation_threshold, evidence_retention_days, …) that now
+    // drives automated result-holding and artefact deletion, so it requires the owner-only 'settings'
+    // permission. Previously the fallthrough was ': true', letting ANY admin (even a viewer) write them.
     bool KeyAllowed(string k) => owner
         || (k.StartsWith("web_") ? perms.Contains("set_web")
             : k.StartsWith("sp_") ? perms.Contains("set_sp")
-            : k.StartsWith("exam_") ? perms.Contains("set_exam") : true);
+            : k.StartsWith("exam_") ? perms.Contains("set_exam") : perms.Contains("settings"));
     var b = await Body(req);
     var rejected = new List<string>();
     foreach (var kv in b)

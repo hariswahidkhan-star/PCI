@@ -179,7 +179,7 @@ public static class StudentExam
             var blockers = Lifecycle.BookingBlockers(db, u.Id, ent, db.QueryOne("SELECT * FROM student_profiles WHERE user_id=?", u.Id));
             if (blockers.Count > 0) return Results.Json(new { error = "not_eligible", blocking_items = blockers }, statusCode: 400);
             var deadline = H.Str(ent["exam_schedule_deadline"]);
-            if (deadline is not null && string.Compare(deadline, H.IsoNow, StringComparison.Ordinal) < 0) return Results.Json(new { error = "window_lapsed" }, statusCode: 400);
+            if (H.IsPast(deadline)) return Results.Json(new { error = "window_lapsed" }, statusCode: 400);
             if (ActiveBooking(u.Id) is not null) return Results.Json(new { error = "already_booked" }, statusCode: 400);
             // #5 — one exam payment yields at most one live sitting. If this payment already has any
             // booking that is scheduled or completed (or a submitted attempt), a new booking is refused;
@@ -193,7 +193,7 @@ public static class StudentExam
             var timezone = H.GetS(b, "timezone");
             if (scheduledAt is null || H.JsMillis(scheduledAt) < DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 2 * 3600_000)
                 return Results.Json(new { error = "bad_slot" }, statusCode: 400);
-            if (deadline is not null && string.Compare(scheduledAt, deadline, StringComparison.Ordinal) > 0) return Results.Json(new { error = "beyond_window" }, statusCode: 400);
+            if (deadline is not null && H.After(scheduledAt, deadline)) return Results.Json(new { error = "beyond_window" }, statusCode: 400);
             var id = db.ExecuteReturningId("INSERT INTO exam_bookings(user_id,payment_id,scheduled_at,timezone) VALUES(?,?,?,?)", u.Id, ent["id"], scheduledAt, timezone);
             // Link the formal entitlement to this booking and mark it booked, so submit can consume it
             // by booking_id (one-attempt-per-entitlement).
@@ -217,7 +217,7 @@ public static class StudentExam
                 return Results.Json(new { error = "bad_slot" }, statusCode: 400);
             var ent = ExamEntitlement(u.Id);
             var dl = ent is null ? null : H.Str(ent["exam_schedule_deadline"]);
-            if (dl is not null && string.Compare(scheduledAt, dl, StringComparison.Ordinal) > 0) return Results.Json(new { error = "beyond_window" }, statusCode: 400);
+            if (dl is not null && H.After(scheduledAt, dl)) return Results.Json(new { error = "beyond_window" }, statusCode: 400);
             db.Execute("UPDATE exam_bookings SET scheduled_at=?, timezone=?, reschedule_count=reschedule_count+1, updated_at=datetime('now') WHERE id=?", scheduledAt, timezone ?? H.Str(bk["timezone"]), bk["id"]);
             log(u.Id, "exam_rescheduled", scheduledAt);
             return J(new { ok = true, free = hoursTo >= H.FREE_RESCHED_H, reschedule_count = H.L(bk["reschedule_count"]) + 1 });
@@ -356,8 +356,13 @@ public static class StudentExam
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             var a = db.QueryOne("SELECT * FROM exam_attempts WHERE id=? AND user_id=?", id, u.Id);
             if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            // A held attempt must not reveal pass/fail/score anywhere — same server-side redaction as
+            // /api/me and the score report. Without this, GET /api/me/attempts/{id} returned the raw row
+            // (percent, result, domain_breakdown) for an auto_held attempt.
+            var redactHeld = H.Str(a["result_status"]) == "auto_held";
             object? bd = null; try { bd = JsonSerializer.Deserialize<object>(H.Str(a["domain_breakdown"]) ?? "[]"); } catch { }
-            var copy = new Dictionary<string, object?>(a) { ["domain_breakdown"] = bd };
+            var copy = new Dictionary<string, object?>(a) { ["domain_breakdown"] = redactHeld ? null : bd };
+            if (redactHeld) { copy["percent"] = null; copy["result"] = null; copy["score"] = null; copy["max_score"] = null; }
             return J(copy);
         });
 
@@ -402,22 +407,55 @@ public static class StudentExam
             db.Execute("UPDATE exam_attempts SET last_heartbeat_at=datetime('now') WHERE id=?", att["id"]);
             var undelivered = db.Query("SELECT id,body,created_at FROM proctor_messages WHERE attempt_id=? AND sender='proctor' AND delivered_at IS NULL ORDER BY id ASC", att["id"]);
             foreach (var m in undelivered) db.Execute("UPDATE proctor_messages SET delivered_at=datetime('now') WHERE id=?", m["id"]);
-            // single lowercase keys; desktop ChatMessage(From,Body,At) binds case-insensitively
-            var messages = undelivered.Select(m => new { from = "PCI Support", body = m["body"], at = m["created_at"] }).ToList();
+            // single lowercase keys; desktop ChatMessage(From,Body,At) binds case-insensitively.
+            // `at` MUST be ISO-8601: created_at is SQLite "YYYY-MM-DD HH:MM:SS", which System.Text.Json
+            // cannot bind to the desktop's DateTimeOffset — an un-converted value throws and fails the
+            // ENTIRE HeartbeatResponse deserialization whenever a proctor message is pending.
+            var messages = undelivered.Select(m => new { from = "PCI Support", body = m["body"], at = H.IsoFromMillis(H.JsMillis(H.Str(m["created_at"]))) }).ToList();
             var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            var forceSubmit = nowMs >= deadline;
-            // #3 — once the server deadline passes, finalise the attempt on the server itself using the
-            // answers saved so far. This closes abandoned/disconnected sittings and prevents any further
-            // answer writes after time is up (the next heartbeat/submit sees status!='in_progress').
+            // Fire server-side finalisation only past the SAME hard stop the manual submit honours
+            // (duration + 1 min network grace), so a heartbeat can't finalise an attempt while the
+            // candidate's own on-time submit is still in flight. The DISPLAYED deadline stays at
+            // exactly `duration`, so the clock the candidate sees is unchanged.
+            var hardStop = deadline + 60_000;
+            var forceSubmit = nowMs >= hardStop;
+            // #3 — once the hard stop passes, finalise the attempt on the server using the answers saved
+            // so far. This closes abandoned/disconnected sittings and blocks any further answer writes.
+            // Server-side finalisation at time-up is a legitimate ON-TIME submission (all answers were
+            // saved before the deadline), so it PUBLISHES immediately under the same rules as a manual
+            // submit: block only on technical invalidity, else release, and issue a credential on a
+            // clean pass. Previously this left result_status unset (no publication, no credential, the
+            // entitlement never consumed) — an auto-timed-out pass was silently stranded.
             if (forceSubmit && (att["status"] as string) == "in_progress")
             {
                 Dictionary<long, long> finalAns;
                 try { finalAns = ParseAnswers(JsonDocument.Parse(H.Str(att["answers"]) ?? "{}").RootElement); } catch { finalAns = new(); }
                 var fr = ScoreAttempt(att, finalAns);
-                db.Execute("UPDATE exam_attempts SET submitted_at=datetime('now'), score=?, max_score=?, percent=?, result=?, domain_breakdown=?, status='submitted', review_status='auto_timeout' WHERE id=? AND status='in_progress'",
-                    fr.Score, fr.Max, fr.Pct, fr.Result, JsonSerializer.Serialize(fr.Breakdown), att["id"]);
-                db.Execute("UPDATE exam_bookings SET status='completed', updated_at=datetime('now') WHERE id=?", att["booking_id"]);
-                // No credential is issued on an auto-timeout finalisation.
+                var holdReason = Lifecycle.AutoHoldReason(db, att, u.Id, lateSubmit: false);
+                var clean = holdReason is null;
+                var resultStatus = Lifecycle.ReleaseStatus(clean, fr.Result);
+                var itemIdsForCount = new List<long>();
+                try { itemIdsForCount = JsonSerializer.Deserialize<List<long>>(H.Str(att["item_ids"]) ?? "[]") ?? new(); } catch { }
+                var unanswered = Math.Max(0, itemIdsForCount.Count - finalAns.Count);
+                var flagged = (int)db.Scalar<long>("SELECT COUNT(*) FROM proctor_events WHERE attempt_id=?", att["id"]);
+                var durationSeconds = (int)Math.Max(0, (nowMs - H.JsMillis(H.Str(att["started_at"]))) / 1000);
+                var finalized = db.Execute(@"UPDATE exam_attempts SET submitted_at=datetime('now'), score=?, max_score=?, percent=?, result=?, domain_breakdown=?, status='submitted', review_status=?, result_status=?, hold_reason=?, released_at=CASE WHEN ?='auto_held' THEN NULL ELSE datetime('now') END WHERE id=? AND status='in_progress'",
+                    fr.Score, fr.Max, fr.Pct, fr.Result, JsonSerializer.Serialize(fr.Breakdown),
+                    clean ? "auto_timeout" : "held", resultStatus, holdReason, resultStatus, att["id"]);
+                if (finalized > 0)
+                {
+                    db.Execute("UPDATE exam_bookings SET status='completed', updated_at=datetime('now') WHERE id=?", att["booking_id"]);
+                    Lifecycle.WriteScoreSnapshot(db, att, fr.Score, fr.Max, fr.Pct, fr.Result, JsonSerializer.Serialize(fr.Breakdown), unanswered, flagged, durationSeconds);
+                    if (att["booking_id"] is not null)
+                        db.Execute("UPDATE exam_entitlements SET status='consumed', attempt_id=? WHERE booking_id=? AND status IN ('available','booked')", att["id"], att["booking_id"]);
+                    if (fr.Result == "pass" && clean)
+                    {
+                        var cred = Lifecycle.IssueCredential(db, u.Id, att["id"], ($"{u.FirstName} {u.LastName}").Trim());
+                        if (cred is not null) db.Execute("UPDATE exam_attempts SET result_status='credential_issued' WHERE id=?", att["id"]);
+                        log(u.Id, "credential_issued", cred ?? "gen_failed");
+                    }
+                    log(u.Id, clean ? "result_released" : "result_held", $"auto_timeout {resultStatus} {fr.Pct}% {holdReason}");
+                }
             }
             var remaining = Math.Max(0, (int)((deadline - nowMs) / 1000));
             // Distinctly-named keys only (no ok+Ok / messages+Messages collisions). Desktop
@@ -562,7 +600,13 @@ public static class StudentExam
     }
 
     // ---- scoring (parity with scoreAttempt) ----
-    public record Band(string domain, int pct, string band);
+    // `pct` is what the browser shells read (student.html domain bars); `percent` is an alias emitted
+    // for the desktop client, whose DomainBand.Percent binds case-insensitively and would otherwise
+    // stay 0. Emitting both keeps browser and desktop breakdowns correct without a schema change.
+    public record Band(string domain, int pct, string band)
+    {
+        public int percent => pct;
+    }
     public record Scored(int Score, int Max, double Pct, string Result, List<Band> Breakdown);
 
     static object? TryJson(string? s) { try { return string.IsNullOrEmpty(s) ? null : JsonSerializer.Deserialize<object>(s); } catch { return null; } }

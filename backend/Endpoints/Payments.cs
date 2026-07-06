@@ -127,7 +127,7 @@ public static class Payments
                         {
                             var mrow = db.QueryOne("SELECT * FROM memberships WHERE user_id=?", userId);
                             var nowIso = H.IsoNow;
-                            var baseD = mrow is not null && H.Str(mrow["expiry_date"]) is { } ex && string.Compare(ex, nowIso, StringComparison.Ordinal) > 0 ? ex : nowIso;
+                            var baseD = mrow is not null && H.Str(mrow["expiry_date"]) is { } ex && H.After(ex, nowIso) ? ex : nowIso;
                             var newExp = H.IsoFromMillis(H.JsMillis(baseD) + 365L * 86400_000);
                             if (mrow is not null) db.Execute("UPDATE memberships SET expiry_date=?, status='active' WHERE user_id=?", newExp, userId);
                             else db.Execute("INSERT INTO memberships(user_id,membership_type,status,start_date,expiry_date) VALUES(?, 'Student','active',datetime('now'),?)", userId, newExp);
@@ -139,7 +139,7 @@ public static class Payments
                             if (cred is not null)
                             {
                                 var nowIso = H.IsoNow;
-                                var baseD = H.Str(cred["expires_at"]) is { } ex && string.Compare(ex, nowIso, StringComparison.Ordinal) > 0 ? ex : nowIso;
+                                var baseD = H.Str(cred["expires_at"]) is { } ex && H.After(ex, nowIso) ? ex : nowIso;
                                 var newExp = H.IsoFromMillis(H.JsMillis(baseD) + 3L * 365 * 86400_000);
                                 db.Execute("UPDATE issued_credentials SET expires_at=?, status='active' WHERE id=?", newExp, cred["id"]);
                                 log(userId, "recertified", newExp);

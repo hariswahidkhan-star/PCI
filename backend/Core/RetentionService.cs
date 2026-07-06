@@ -19,13 +19,19 @@ public sealed class RetentionService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // Run once shortly after boot, then every 24h, until the host stops.
         using var timer = new PeriodicTimer(Interval);
-        do
+        // Wait ONE interval before the first purge (while-loop, not do-while): a fresh boot never deletes
+        // data before an operator can review config, so a mis-set tiny retention window can't nuke
+        // artefacts at startup. The manual owner-only endpoint remains available for on-demand purges.
+        while (await WaitAsync(timer, stoppingToken))
         {
             try
             {
                 var days = (int)Settings.Num(_db, "evidence_retention_days", 365);
+                // 0 or negative → retention disabled; the scheduled job never auto-purges. This bounds the
+                // blast radius of a misconfiguration (a stray '0' can't mean "delete everything older than
+                // now" on the automated path).
+                if (days <= 0) continue;
                 var removed = Storage.PurgeOlderThan(days);
                 if (removed > 0)
                     Console.WriteLine($"[retention] purged {removed} artefact(s) older than {days}d");
@@ -35,7 +41,6 @@ public sealed class RetentionService : BackgroundService
                 Console.Error.WriteLine($"[retention] purge failed: {e.Message}");
             }
         }
-        while (await WaitAsync(timer, stoppingToken));
     }
 
     // WaitForNextTickAsync throws OperationCanceledException on shutdown; translate that to a clean stop.

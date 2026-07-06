@@ -97,6 +97,16 @@ public static class H
     }
     public static string IsoNow => DateTime.UtcNow.ToString("o");
     public static string IsoFromMillis(long ms) => DateTimeOffset.FromUnixTimeMilliseconds(ms).UtcDateTime.ToString("o");
+    public static long NowMillis => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+    /// <summary>True if the timestamp is strictly in the past. Compares by parsed INSTANT, not lexically:
+    /// SQLite datetimes are "YYYY-MM-DD HH:MM:SS" (space) while IsoNow is "…THH:MM:SS…" (T at index 10),
+    /// so an ordinal string compare wrongly ranks a same-day deadline/expiry as past for its entire final
+    /// day (' ' 0x20 &lt; 'T' 0x54) — expiring credentials and entitlements up to ~24h early.</summary>
+    public static bool IsPast(string? ts) => !string.IsNullOrEmpty(ts) && JsMillis(ts) < NowMillis;
+
+    /// <summary>True if instant a is strictly after instant b, regardless of space-vs-'T' formatting.</summary>
+    public static bool After(string? a, string? b) => JsMillis(a) > JsMillis(b);
 
     public static List<string> SplitOptions(object? opts) =>
         (opts?.ToString() ?? "").Split('\n', StringSplitOptions.RemoveEmptyEntries).ToList();

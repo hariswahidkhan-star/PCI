@@ -477,6 +477,72 @@ def run(proc):
         rejected = True  # Kestrel aborts the connection on oversized body → also a rejection
     chk("9b7 oversized request body rejected", rejected)
 
+    # ---------- 9c. Regressions for adversarial-review findings ----------
+    print("\n=== 9c. Review-finding regressions ===")
+
+    # R1 (held leak via /api/me/attempts/{id}): a held attempt must redact pass/fail on THAT endpoint too
+    req("PATCH", "/api/admin/settings", token=admin, body={"auto_block_result_on_critical_violation":"1","critical_violation_threshold":"1"})
+    rtok, ruid = make_paid_user("rheld@ex.co")
+    accept_all_consents(rtok); complete_profile(rtok)
+    c, bk, st = book_and_start(rtok, admin)
+    raid = st["attempt_id"]; rkey = answer_key([i["id"] for i in st["items"]])
+    con = dbconn(); con.execute("INSERT INTO proctor_events(attempt_id,user_id,type,severity,detail,at) VALUES(?,?,?,?,?,datetime('now'))",
+                                (raid, ruid, "MultipleFaces", "Critical", "x")); con.commit(); con.close()
+    jget("POST", "/api/me/exam/submit", token=rtok, body={"attempt_id": raid, "answers": rkey})
+    c, att = jget("GET", f"/api/me/attempts/{raid}", token=rtok)
+    chk("R1 /api/me/attempts/{id} redacts held pass/fail", c==200 and att.get("percent") is None and att.get("result") is None and att.get("domain_breakdown") is None, att)
+    req("PATCH", "/api/admin/settings", token=admin, body={"auto_block_result_on_critical_violation":"0"})
+
+    # R13 (desktop DomainBand.Percent): submit breakdown must carry BOTH pct (browser) and percent (desktop)
+    ptok, puid = make_paid_user("rband@ex.co")
+    accept_all_consents(ptok); complete_profile(ptok)
+    c, bk, st = book_and_start(ptok, admin)
+    pkey = answer_key([i["id"] for i in st["items"]])
+    c, sub = jget("POST", "/api/me/exam/submit", token=ptok, body={"attempt_id": st["attempt_id"], "answers": pkey})
+    band0 = (sub.get("breakdown") or [{}])[0]
+    chk("R13 breakdown band exposes pct AND percent", "pct" in band0 and "percent" in band0 and band0["pct"]==band0["percent"], band0)
+
+    # R3 (heartbeat auto-timeout PUBLISHES): a timed-out attempt scores, publishes and issues a credential
+    atok, auid = make_paid_user("rtimeout@ex.co")
+    accept_all_consents(atok); complete_profile(atok)
+    c, bk, st = book_and_start(atok, admin)
+    taid = st["attempt_id"]; tkey = answer_key([i["id"] for i in st["items"]])
+    con = dbconn()
+    con.execute("UPDATE exam_attempts SET answers=?, started_at=datetime('now','-3 hours') WHERE id=?", (json.dumps(tkey), taid))
+    con.commit(); con.close()
+    jget("POST", "/api/me/exam/heartbeat", token=atok, body={"attempt_id": taid})   # crosses hard stop → auto-finalise
+    con = dbconn()
+    rs = con.execute("SELECT result_status FROM exam_attempts WHERE id=?", (taid,)).fetchone()[0]
+    ncred = con.execute("SELECT COUNT(*) FROM issued_credentials WHERE attempt_id=?", (taid,)).fetchone()[0]
+    con.close()
+    chk("R3 auto-timeout publishes result_status", rs in ("credential_issued","released_pass"), rs)
+    chk("R3' auto-timeout issues credential on clean pass", ncred == 1, ncred)
+
+    # R4 (entitlement expiry space-vs-T): a same-day deadline a few hours ahead must NOT read expired
+    e4tok, e4uid = make_paid_user("rexpiry@ex.co")
+    accept_all_consents(e4tok); complete_profile(e4tok)
+    con = dbconn()
+    con.execute("UPDATE payments SET exam_schedule_deadline=datetime('now','+6 hours') WHERE user_id=? AND product_type IN ('exam','bundle')", (e4uid,))
+    con.commit(); con.close()
+    slot = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time()+3*3600))
+    c, bkr = jget("POST", "/api/me/exam/book", token=e4tok, body={"scheduled_at": slot, "timezone":"UTC"})
+    chk("R4 same-day deadline not flagged expired (space-vs-T fix)", c==200 or (isinstance(bkr,dict) and bkr.get("error")!="not_eligible"), bkr)
+
+    # R7 (settings RBAC): a viewer cannot write an un-prefixed platform key (auto_block_*)
+    vtok = None
+    c, vb = jget("POST", "/api/admin/team", token=admin, body={"email":"rbacview@pci.test","name":"V","role":"viewer"})
+    c, vl = jget("POST", "/api/admin/auth/login", body={"email":"rbacview@pci.test","password":vb.get("temp_password","")})
+    vtok = vl.get("token")
+    c, sw = jget("PATCH", "/api/admin/settings", token=vtok, body={"evidence_retention_days":"1"})
+    chk("R7 viewer BLOCKED from platform key (deny-by-default)", "evidence_retention_days" in (sw.get("rejected") or []), sw)
+    con = dbconn(); val = con.execute("SELECT svalue FROM site_settings WHERE skey='evidence_retention_days'").fetchone(); con.close()
+    chk("R7' rejected platform key not persisted", val is None or val[0] != "1", val)
+
+    # R9 (CSP frame-src blob for admin evidence viewer)
+    r = urllib.request.Request(BASE + "/index.html")
+    with urllib.request.urlopen(r) as resp: csp = resp.headers.get("Content-Security-Policy","")
+    chk("R9 CSP allows blob: in frame-src (admin evidence viewer)", "frame-src 'self' blob:" in csp, csp[:120])
+
     # ---------- 10. Rate limits (LAST: exhausts the /api/login window for this IP) ----------
     print("\n=== 10. Rate limits ===")
     hit_429 = False; retry_after = None
@@ -490,9 +556,12 @@ def run(proc):
                 urllib.request.urlopen(r)
             except urllib.error.HTTPError as e:
                 retry_after = e.headers.get("Retry-After")
+                nosniff_429 = e.headers.get("X-Content-Type-Options")  # R10: 429 must still carry security headers
             break
     chk("10a login rate limit returns 429", hit_429)
     chk("10b 429 carries Retry-After", retry_after is not None, retry_after)
+    # R10 (finding #10): security headers are outermost, so even a short-circuited 429 carries them
+    chk("10c 429 still carries security headers", 'nosniff_429' in dir() and nosniff_429 == "nosniff", locals().get("nosniff_429"))
 
     print("\n(assertions complete)")
 

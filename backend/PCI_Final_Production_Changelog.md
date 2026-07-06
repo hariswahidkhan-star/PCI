@@ -93,13 +93,62 @@ desktop client are non-functional. All were invisible to compilation and to the 
 
 ---
 
+## Phase 6 — post-phase hardening (500-sweep, S3, adversarial self-review)
+
+After the phase plan, three more passes ran. The first two found nothing serious; the third (a multi-agent
+adversarial review of the whole branch diff) found eleven real defects that had survived every green suite.
+
+### Exhaustive 500-sweep (`tests/sweep_500_test.py`)
+Calls **every** mapped route (153) under three auth contexts (anon/student/owner) with benign bodies and
+fails on any 5xx. Found **bug 11**:
+
+| # | Where | Symptom | Root cause | Fix |
+|---|---|---|---|---|
+| **11** | `Program.cs` `/api/login`, `/api/admin/auth/login` | **login 500'd** for any row whose stored hash isn't valid bcrypt | `BCrypt.Verify` throws `SaltParseException` on a malformed hash instead of returning false — an auth endpoint must answer 401, never crash | new `Security.VerifyPassword` wraps `Verify` in try/catch → false on any bad stored hash |
+
+### S3 object storage (optional seam → wired)
+`Core/Storage.cs` now has a real S3 provider (`STORAGE_PROVIDER=s3` + `S3_BUCKET`, optional `S3_ENDPOINT`
+for MinIO/R2, AWS SDK default credential chain). `Put`/`Get`/`PurgeOlderThan` route by the reference prefix
+(`local:` vs `s3:`) so mixed references survive a migration; missing `S3_BUCKET` falls back to local with a
+warning (never silently drops data). New `tests/storage_s3_test.py` proves it live against a local **moto**
+S3 server (**9/9**): upload lands in the bucket, DB holds an `s3:` reference only, the authed fetch streams
+bytes back from S3, retention purges aged S3 objects, and the no-bucket fallback warns. Both new suites are
+in CI.
+
+### Adversarial branch review — 11 confirmed defects fixed
+A four-dimension review (business-rules / security / desktop-contract / test-validity) with per-finding
+adversarial verification. The verify agents were cut short by a session limit, so **every finding was
+re-verified by hand against the code** before fixing — 11 of 13 were real:
+
+| # | Where | Symptom | Fix |
+|---|---|---|---|
+| **12** | `Endpoints/StudentExam.cs` `GET /api/me/attempts/{id}` | **held result leaked pass/fail** — this endpoint returned the raw row (percent/result/breakdown) for an `auto_held` attempt, unlike `/api/me` | redact percent/result/score/breakdown when `result_status=='auto_held'` |
+| **13** | `Endpoints/StudentExam.cs` heartbeat auto-timeout | a **timed-out pass was silently stranded** — the finalisation set no `result_status`, wrote no snapshot, issued no credential, never consumed the entitlement | publish exactly like a manual submit (release/hold, snapshot, credential on clean pass, consume entitlement); trigger only past the same +1 min hard stop the manual submit honours, so it can't swallow an on-time submit |
+| **14** | `Endpoints/StudentExam.cs` heartbeat messages | desktop `HeartbeatResponse` **threw on deserialize whenever a proctor message was pending** — `at` was a SQLite `"YYYY-MM-DD HH:MM:SS"` string, unparseable to the desktop's `DateTimeOffset` | emit `at` as ISO-8601 |
+| **15** | `Endpoints/StudentExam.cs` submit breakdown | desktop `DomainBand.Percent` always bound **0** — the band serialized only `pct` | `Band` now also emits `percent` (browser still reads `pct`) |
+| **16** | `Core/Lifecycle.cs`, `StudentExam.cs`, `Public.cs`, `Casework.cs`, `Payments.cs` | the **same space-vs-`T` lexical date bug as launch-blocking bug 9**, still live in 8 more compares: entitlements, credential-verify, certificate, membership/recert renewal all read **expired up to ~24 h early** on their final day, and a valid booking slot before the deadline was rejected as `beyond_window` | new `H.IsPast`/`H.After` compare by parsed instant; replaced all 8 sites |
+| **17** | `Program.cs` `PATCH /api/admin/settings` | **RBAC deny-by-default violated** — the `: true` fallthrough let ANY admin (even a viewer) write un-prefixed platform keys, incl. the `auto_block_result_on_*` result-holding switches and `evidence_retention_days` (drives deletion) | un-prefixed keys now require the owner-only `settings` permission |
+| **18** | `Core/RetentionService.cs` | scheduled purge **fired at boot** and had **no lower bound** on `evidence_retention_days` | wait one interval before the first purge; `days<=0` disables the scheduled purge (manual owner endpoint unchanged) |
+| **19** | `Core/Storage.cs` `PurgeOlderThan` | local purge deleted **every** file under `STORAGE_ROOT` by mtime, incl. any non-artefact an operator dropped there | only delete files matching the content-addressed artefact name (`<64-hex-sha>.<ext>`) |
+| **20** | `Program.cs` CSP | enforced CSP **broke the admin evidence viewer** — no `frame-src`, so the `blob:` PDF iframe fell back to `default-src 'self'` | add `frame-src 'self' blob:` |
+| **21** | `Program.cs` middleware order | the rate-limiter **429 (and CORS 204 / maintenance 503) shipped without any security headers** — the header middleware ran after the rate limiter | moved security-headers + CORS to the outermost position |
+| **22** | `Program.cs` HSTS | HSTS **silently dropped behind chained proxies** — it string-equalled the whole `X-Forwarded-Proto`, which can be `"https, http"` | match the first hop only |
+
+Two findings were **verified false** and left as-is: a claimed leak on a `held` payload already covered by
+existing redaction, and a "no backfill for NULL-status attempts" that cannot occur (the buggy build never
+ran, so no such rows exist anywhere). **9 new regression assertions** lock in fixes 12–22
+(`integration_test.py` now **75/75**; the manual + moto S3 purge paths exercise 18–19).
+
+---
+
 ## What still needs a human / a real machine (nothing is stubbed to look done)
 
 1. **Publish + QA `PCISecureExam.exe` on Windows** and run the live `pciexam://` launch + attack pass
    (RUN.md §8.1). Security-critical logic already verified cross-platform.
 2. **One real Stripe test-mode checkout** end-to-end with the Stripe CLI before go-live (the webhook path is
    proven with signed events; a live account was not exercised).
-3. **Lighthouse** on the deployed public URL.
-4. **Object storage (S3)** — wire `PutObject`/`GetObject` in `Core/Storage.cs` if you outgrow the local
-   provider (env-gated seam already in place).
+3. **Lighthouse** on the deployed public URL. (Ran locally against the live app: perf 93–100, a11y 91–96,
+   best-practices 100, SEO 100 across five key pages — see RUN.md; still re-run on the deployed URL.)
+4. **Object storage (S3)** is now **wired and tested against moto**; run it against your real bucket/creds
+   before relying on it in production.
 5. Complete the **owner first-login password change** so `system-check.owner_password_changed` goes green.

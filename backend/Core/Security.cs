@@ -20,6 +20,17 @@ public static class Security
         foreach (var b in buf) sb.Append(b.ToString("x2"));
         return sb.ToString();
     }
+
+    /// <summary>Constant-behaviour password check: false for null/malformed stored hashes instead of
+    /// throwing. BCrypt.Verify raises SaltParseException on a non-bcrypt hash value, which turned the
+    /// public login endpoints into a 500 for any row with a legacy/corrupted hash — an auth endpoint
+    /// must answer 401, never crash, on bad stored data.</summary>
+    public static bool VerifyPassword(string password, string? storedHash)
+    {
+        if (string.IsNullOrEmpty(storedHash)) return false;
+        try { return BCrypt.Net.BCrypt.Verify(password, storedHash); }
+        catch { return false; }
+    }
 }
 
 /// <summary>RBAC: section map, role grants, permsFor — ported verbatim from the Node backend.</summary>
