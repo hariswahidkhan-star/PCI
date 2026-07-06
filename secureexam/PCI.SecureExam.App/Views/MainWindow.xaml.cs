@@ -339,15 +339,18 @@ public partial class MainWindow : Window
     private void RenderSubmitted()
     {
         _flow.Teardown(this);
-        var r = _flow.Result;
+        // The held-vs-released decision lives in Core.SubmittedView (unit-tested): a held result yields
+        // ShowScore=false / ScorePercent=null, so the UI cannot display a 0% or a pass/fail during hold.
+        var view = PCI.SecureExam.Core.SubmittedView.For(_flow.Result);
         var body = Panel(16);
-        if (r is null) { body.Children.Add(H1("Submitted")); body.Children.Add(P("Your answers were submitted. If your result isn’t shown, it will appear in the PCI Student Portal shortly.")); }
-        else
-        {
-            body.Children.Add(H1(r.Result?.ToUpper() == "PASS" ? "Congratulations — you passed" : "Examination submitted"));
-            body.Children.Add(P($"Your score: {r.Percent:0.#}% (pass mark 65%). A full score report and any credential are available in your PCI Student Portal."));
-            if (!string.IsNullOrEmpty(r.CredentialId)) body.Children.Add(Note($"Credential issued: {r.CredentialId} — verifiable from the portal."));
-        }
+        body.Children.Add(H1(view.Title));
+        body.Children.Add(P(view.Body));
+        if (view.ShowScore && view.ScorePercent is { } pct)
+            body.Children.Add(P($"Your score: {pct:0.#}% (pass mark 65%)."));
+        if (view.Held)
+            body.Children.Add(Note("No score or pass/fail outcome is shown while your result is under review."));
+        if (view.CredentialLine is not null)
+            body.Children.Add(Note(view.CredentialLine));
         body.Children.Add(Primary("Close", () => Close()));
         Host.Content = Scroll(Center(body, 620));
     }

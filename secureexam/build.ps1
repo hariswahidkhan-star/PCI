@@ -4,8 +4,9 @@
   Usage:   ./build.ps1            # restore, build, test
            ./build.ps1 -Run       # also launch the client (Windows)
            ./build.ps1 -SelfTest  # build then run the machine self-test
+           ./build.ps1 -Publish   # produce the self-contained single-file .exe (win-x64)
 #>
-param([switch]$Run, [switch]$SelfTest)
+param([switch]$Run, [switch]$SelfTest, [switch]$Publish)
 $ErrorActionPreference = 'Stop'
 Write-Host "== restore ==" -ForegroundColor Cyan
 dotnet restore PCI.SecureExam.sln
@@ -16,6 +17,13 @@ dotnet test PCI.SecureExam.Tests/PCI.SecureExam.Tests.csproj -c Release --no-bui
 if ($SelfTest) {
   Write-Host "== self-test ==" -ForegroundColor Cyan
   dotnet run --project PCI.SecureExam.App -c Release -- --selftest
+}
+if ($Publish) {
+  Write-Host "== publish (self-contained single-file win-x64) ==" -ForegroundColor Cyan
+  dotnet publish PCI.SecureExam.App -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
+  $exe = "PCI.SecureExam.App/bin/Release/net8.0-windows/win-x64/publish/PCISecureExam.exe"
+  if (Test-Path $exe) { Write-Host "Published: $exe" -ForegroundColor Green }
+  else { Write-Warning "Expected exe not found at $exe — check the publish output above." }
 }
 if ($Run) {
   Write-Host "== run client ==" -ForegroundColor Cyan
