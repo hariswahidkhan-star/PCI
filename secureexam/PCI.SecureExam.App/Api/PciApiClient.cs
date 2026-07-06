@@ -1,3 +1,4 @@
+using System.Net.Http;           // WPF's implicit-usings profile removes System.Net.Http
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using PCI.SecureExam.Core.Models;

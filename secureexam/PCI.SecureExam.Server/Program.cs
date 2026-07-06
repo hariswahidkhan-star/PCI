@@ -1,3 +1,4 @@
+using PCI.SecureExam.Server.Controllers;   // LaunchStore
 using PCI.SecureExam.Server.Hubs;
 
 // Reference proctoring/launch server for the PCI Secure Exam client.

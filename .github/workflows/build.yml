@@ -22,7 +22,9 @@ jobs:
             echo "=== $t ==="
             out=$(python3 "$t")
             echo "$out"
-            if echo "$out" | grep -qiE "FAIL|✗"; then echo "::error::$t reported a failure"; exit 1; fi
+            # match the suites' uppercase FAIL verdicts only — case-insensitive matching
+            # false-positived on healthy output like "mic off -> failed? PASS"
+            if echo "$out" | grep -qE "\bFAIL\b|✗"; then echo "::error::$t reported a failure"; exit 1; fi
           done
 
       - name: JS syntax check (app shells)

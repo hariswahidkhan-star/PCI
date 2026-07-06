@@ -6,6 +6,10 @@ using System.Windows.Threading;
 using System.Windows.Shapes;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
+// OpenCvSharp also defines Window/Size/Rect — pin the WPF ones for this presentation class
+using Window = System.Windows.Window;
+using Size = System.Windows.Size;
+using Rect = System.Windows.Rect;
 using PCI.SecureExam.App.Exam;
 using PCI.SecureExam.Core.Models;
 using PCI.SecureExam.Core.Proctoring;

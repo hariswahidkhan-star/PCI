@@ -11,6 +11,14 @@
     <RootNamespace>PCI.SecureExam.App</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <!-- UseWindowsForms injects global usings for System.Windows.Forms + System.Drawing which
+         collide with the WPF namespaces (CS0104 on Application/Window/Brush/Button/Image/…).
+         WinForms is only used for screen/session APIs via fully-qualified names, so drop the
+         global usings instead of aliasing every WPF file. -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="OpenCvSharp4" Version="4.9.0.20240103" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.9.0.20240103" />
     <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.9.0.20240103" />

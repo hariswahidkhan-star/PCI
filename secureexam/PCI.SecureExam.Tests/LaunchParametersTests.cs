@@ -34,11 +34,22 @@ public class LaunchParametersTests
         Assert.False(p.IsValid);
     }
 
+    // WithLaunch only honours the launch-URI api= override when it passes domain pinning
+    // (ClientConfig.IsTrustedApi). The old expectation that ANY override wins predates the
+    // pinning hardening and contradicted the RunnableChecks attack suite.
     [Fact]
-    public void Launch_overrides_config_api_url()
+    public void Launch_override_ignored_for_untrusted_host()
     {
-        var cfg = new ClientConfig { ApiBaseUrl = "https://default" };
-        cfg.WithLaunch(LaunchParameters.Parse("pciexam://start?code=X&api=https://override"));
-        Assert.Equal("https://override", cfg.ApiBaseUrl);
+        var cfg = new ClientConfig { ApiBaseUrl = "https://exam.projectcontrolsinstitute.org" };
+        cfg.WithLaunch(LaunchParameters.Parse("pciexam://start?code=X&api=https://evil.example"));
+        Assert.Equal("https://exam.projectcontrolsinstitute.org", cfg.ApiBaseUrl);
+    }
+
+    [Fact]
+    public void Launch_override_accepted_for_allowlisted_host()
+    {
+        var cfg = new ClientConfig { ApiBaseUrl = "https://exam.projectcontrolsinstitute.org" };
+        cfg.WithLaunch(LaunchParameters.Parse("pciexam://start?code=X&api=https%3A%2F%2Feu.pci-global.org"));
+        Assert.Equal("https://eu.pci-global.org", cfg.ApiBaseUrl);
     }
 }
