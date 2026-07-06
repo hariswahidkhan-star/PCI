@@ -145,47 +145,108 @@ JS syntax gate → boot the backend → live smoke suite → system-check probe.
 
 ---
 
-## 6. ⚠️ Verification status — read this before trusting "production-ready"
+## 6. Verification status — what has actually been executed
 
-Development happened in a **sandbox where NuGet is firewalled** (`api.nuget.org` → 403). That has a concrete
-consequence you must understand:
+The original sandbox firewalled NuGet, so the backend was only ever *compiled against stubs* and never
+booted. **That boundary has now been crossed.** The table below reflects the state after the production
+readiness pass (2026-07-06), run on a real Linux machine with real NuGet. See
+`PCI_Final_Production_Changelog.md` for the full account, including every runtime bug found.
 
-**The backend has never been booted end-to-end in development.** Its three real dependencies
-(`Microsoft.Data.Sqlite`, `BCrypt.Net-Next`, `Stripe.net`) could not be downloaded, so verification used a
-**compile-harness with hand-written stubs** for those libraries, plus real-SQLite logic tests and JS/SQL
-static checks.
-
-| Aspect | Status in sandbox | How |
+| Aspect | Status | How |
 |---|---|---|
-| Backend **compiles** (0 errors/0 warnings) | ✅ verified | real Roslyn compiler, against dependency **stubs** |
-| Backend **logic** (scoring, lifecycle, RBAC rules, storage, settings) | ✅ verified | 61 assertions across 6 suites vs. **real SQLite** |
-| SQL validity, endpoint wiring, JS syntax | ✅ verified | static analysis / `node --check` |
-| Desktop **Core** compiles | ✅ verified | real compiler, no stubs (Core has no packages) |
-| Desktop **API-host pinning** security logic | ✅ **executed** | 15/15 attack cases run (see RunnableChecks) |
-| Backend **boots** as the real app | ❌ **not done here** | needs NuGet → do it via CI or locally |
-| Backend serves **real HTTP requests** | ❌ not done here | " |
-| **Stripe** checkout/webhook end-to-end | ❌ not done here | needs real Stripe keys |
-| Desktop **App** (WPF/OpenCV/NAudio) builds/runs | ❌ not possible here | **Windows-only** |
-| Load / browser / full integration | ❌ not done here | needs a real deployment |
+| Backend `dotnet restore`/`build -c Release` (real NuGet) | ✅ **executed** | Microsoft.Data.Sqlite 8.0.7, BCrypt.Net-Next 4.0.3, Stripe.net 45.14.0 — 0 errors/0 warnings |
+| Backend **boots** as the real app | ✅ **executed** | fresh boot + reboot; idempotent migrations verified (identical schema fingerprint, no duplicate seeds) |
+| Backend serves **real HTTP requests** | ✅ **executed** | live smoke suite 52/52; admin GET sweep 0×500 |
+| Backend **logic** (scoring, lifecycle, RBAC, storage, settings) | ✅ verified | 61 assertions across 6 SQLite suites |
+| **Adversarial end-to-end** (payments, exam, attacks, RBAC, storage, headers) | ✅ **executed** | `tests/integration_test.py` — 66 assertions, live HTTP |
+| **Stripe** webhook settlement + replay idempotency | ✅ **executed** | self-signed events (Stripe.net pins api_version 2024-06-20) — settle-once + replay-noop proven. *Live Stripe account not exercised* (no real keys); the checkout-session **create** call needs a real `sk_test_`/`sk_live_` key |
+| Security headers / CORS / body cap | ✅ **executed** | CSP+nosniff+frame-ancestors present; ALLOWED_ORIGIN honoured; >6 MB body rejected |
+| Production config validation | ✅ **executed** | refuses to boot (exit 78) on unsafe config; boots clean with correct vars; `system-check` `ok:true` |
+| Desktop **Core** + **xUnit tests** | ✅ **executed** | 21/21 tests (incl. held-result screen); Core RunnableChecks 15/15 host-pinning attacks |
+| Desktop **App** (WPF/OpenCV/NAudio) builds/runs; `.exe` published | ⚠️ **Windows-only — not run here** | compiles on the `windows-latest` CI job; publishing the `.exe` and the live `pciexam://` launch flow must be done on Windows (see §4 / §8) |
+| Load / Lighthouse | ⚠️ deferred | recommended manual pass on the deployed URL |
 
-**Honest bottom line:** the code is **code-complete and statically + logically verified**, not
-"proven in production." The accurate phrase is *"pending a real build-and-boot."* The CI I wrote performs
-that real boot + smoke test — **but it must actually be run on GitHub (or locally where NuGet works)**, and
-that green run is the thing that converts this from "should work" to "does work." Two payment-breaking bugs
-in earlier iterations compiled cleanly but only surfaced under real execution — so **run §2 and §5 on a
-connected machine and treat the first errors as expected**, not as a surprise.
+**Honest bottom line:** the backend, website, and desktop Core are **executed and adversarially tested** —
+not merely compile-clean. The single remaining gap that cannot be closed on Linux is running/publishing the
+**Windows WPF `.exe`** and its live `pciexam://` launch; the security-critical parts of that flow (API-host
+pinning, launch-code redemption/expiry/reuse/wrong-user) are already proven via the Core checks and the
+backend integration suite, so the Windows step is build-and-QA, not new logic.
 
 ---
 
 ## 7. Known limitations (not hidden)
 
+- **Desktop WPF `.exe`** must be built, published and QA'd on **Windows** — see §8. The security logic is
+  tested cross-platform; the GUI/kiosk/camera path needs a real Windows machine.
 - **Object storage** (`STORAGE_PROVIDER != local`) is a **documented seam**, not a live S3 integration —
-  it currently falls back to local with a warning. The reference format and all call sites are already
-  provider-agnostic, so wiring `PutObject`/`GetObject` is isolated to `Core/Storage.cs`.
-- **TOTP 2FA** is deliberately "coming soon" (the misleading toggle was removed); login is single-factor.
-- **Desktop WPF app** cannot be built/verified in a Linux sandbox; only its Core is. The full app needs a
-  Windows build + manual QA before exams.
-- **Retention purge** is on-demand (`POST /api/admin/storage/purge`); schedule it via cron/hosted service.
-- Evidence/attachment bytes on the `local` provider assume a **persistent volume**.
+  it falls back to local with a warning. All call sites are provider-agnostic, so wiring
+  `PutObject`/`GetObject` is isolated to `Core/Storage.cs`.
+- **TOTP 2FA** is deliberately "coming soon" — `/api/me/2fa` never enables a factor and never claims
+  protection (no toggle without a login challenge). Full TOTP is future work.
+- **Live Stripe account** is not exercised here (no real keys). The webhook path is proven with correctly
+  HMAC-signed events; before go-live, run one real test-mode checkout end-to-end with the Stripe CLI.
 - **Separate live/practice question banks** use an `is_practice` flag (safe) rather than a fully separate
-  versioned bank model — that richer model is future work.
+  versioned bank model — richer model is future work.
+
+---
+
+## 8. Deploy-readiness
+
+### 8.1 Windows desktop client (must be done on Windows)
+
+```powershell
+cd secureexam
+./build.ps1 -Publish
+# → PCI.SecureExam.App/bin/Release/net8.0-windows/win-x64/publish/PCISecureExam.exe
+```
+
+Then, on a clean Windows machine (no SDK):
+1. Copy `appsettings.Local.json.example` → `appsettings.Local.json`; set `AllowedApiHosts` to your pinned
+   API domain(s) and `ApiBaseUrl` to the production exam host.
+2. Run `PCISecureExam.exe --selftest` (self-tests the machine and exits 0 when ready).
+3. Launch it once so it registers the `pciexam://` scheme.
+4. From the student portal, book → readiness → "Open in Secure Exam app". Confirm it redeems the
+   single-use launch code against the **pinned** host, sits the exam, submits, and shows the result.
+5. **Attack it live:** `pciexam://start?...&api=https://evil.example` must be ignored; a reused or expired
+   launch code must be rejected; a code for another user must be rejected. (These are already covered by
+   `PCI.SecureExam.Core.RunnableChecks` and the backend integration suite; re-confirm on the real client.)
+6. A **held** submission must show the technical-hold screen with **no** score/pass-fail — verified by
+   `SubmittedViewTests`; confirm visually.
+
+> The assembly name is `PCISecureExam` (per the csproj), so the published binary is **`PCISecureExam.exe`**.
+
+### 8.2 Reverse proxy (TLS + HSTS)
+
+Terminate TLS at the proxy (nginx/Caddy/ALB) and forward to the app on `PORT`. **Forward
+`X-Forwarded-Proto: https`** — the app emits `Strict-Transport-Security` only when it sees that header
+(never over plain http). Also set HSTS at the proxy itself as defence in depth:
+
+```
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+proxy_set_header X-Forwarded-Proto $scheme;
+proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for;
+```
+
+### 8.3 Persistent volumes + backup
+
+- Mount a **persistent volume** for **both** `DATABASE_FILE` (the SQLite DB + `-wal`/`-shm`) and
+  `STORAGE_ROOT` (evidence/attachment bytes). Neither may live under `/tmp` — the config validator refuses
+  a `/tmp` database in production.
+- **Backup**: snapshot the DB with `sqlite3 pci.db ".backup '/backups/pci-$(date +%F).db'"` (or copy while
+  the app is quiesced — WAL mode makes a live file copy risky), and back up `STORAGE_ROOT` alongside it so
+  references and bytes stay consistent. Keep them in the same restore set.
+
+### 8.4 Scheduled retention
+
+The app runs a daily in-process `RetentionService` that purges artefacts older than
+`evidence_retention_days`. No cron needed. The manual owner endpoint `POST /api/admin/storage/purge`
+remains for on-demand runs.
+
+### 8.5 Production env checklist
+
+Set: `ASPNETCORE_ENVIRONMENT=Production`, `DATABASE_FILE` (persistent), `STORAGE_ROOT` (persistent),
+`APP_BASE_URL` (public https), `ALLOWED_ORIGIN` (exact origin, no wildcard), `STRIPE_SECRET_KEY` +
+`STRIPE_WEBHOOK_SECRET`, `ADMIN_OWNER_PASSWORD`, `SMTP_HOST` (+creds). Do **not** set
+`ENABLE_LEGACY_ADMIN_TOKEN` or `ALLOW_INSECURE_PRODUCTION`. Boot, then `GET /api/admin/system-check`
+(owner) must report `ok:true`. `owner_password_changed` stays false until the owner completes the forced
+first-login password change — do that before go-live.
