@@ -1,0 +1,13 @@
+# build context = repo root; only backend/ is needed in the image
+secureexam/
+docs/
+.github/
+.git/
+**/bin/
+**/obj/
+backend/tests/_*
+backend/*.db*
+backend/storage/
+Dockerfile
+render.yaml
+DEPLOY.md
