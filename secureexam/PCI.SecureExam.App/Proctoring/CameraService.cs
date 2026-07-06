@@ -1,3 +1,4 @@
+using System.IO;                 // WPF implicit-usings profile removes System.IO
 using OpenCvSharp;
 using PCI.SecureExam.Core.Models;
 using PCI.SecureExam.Core.Proctoring;

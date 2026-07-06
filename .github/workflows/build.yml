@@ -1,5 +1,8 @@
 name: ci
-on: { push: {}, pull_request: {} }
+# push covers main; pull_request covers feature branches (avoids double-running both events)
+on:
+  push: { branches: [main] }
+  pull_request: {}
 
 jobs:
   backend:
