@@ -1,0 +1,57 @@
+name: dotnet-backend
+on: { push: {}, pull_request: {} }
+jobs:
+  build-boot-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+
+      - name: Restore & build
+        run: dotnet build -c Release
+
+      - name: Logic tests (lifecycle, release, casework, settings)
+        run: |
+          set -e
+          for t in tests/lifecycle_test.py tests/release_test.py tests/casework_test.py tests/settings_test.py tests/publication_test.py tests/storage_test.py; do
+            echo "=== $t ==="
+            out=$(python3 "$t")
+            echo "$out"
+            if echo "$out" | grep -qiE "FAIL|✗"; then echo "::error::$t reported a failure"; exit 1; fi
+          done
+
+      - name: JS syntax check (app shells)
+        run: |
+          set -e
+          python3 - <<'PY'
+          import re, subprocess, sys, tempfile, os
+          shells = ['wwwroot/student.html','wwwroot/admin.html','wwwroot/exam-ui.html','wwwroot/checkout.html','wwwroot/enroll.html','wwwroot/index.html']
+          fail = False
+          for f in shells:
+              if not os.path.exists(f): continue
+              html = open(f, encoding='utf-8').read()
+              blocks = [m.group(2) for m in re.finditer(r'<script([^>]*)>(.*?)</script>', html, re.S)
+                        if 'src=' not in m.group(1) and 'json' not in m.group(1).lower()]
+              tmp = tempfile.NamedTemporaryFile('w', suffix='.js', delete=False)
+              tmp.write('\n;\n'.join(blocks)); tmp.close()
+              r = subprocess.run(['node','--check',tmp.name], capture_output=True, text=True)
+              print(('OK  ' if r.returncode==0 else 'FAIL')+' '+f)
+              if r.returncode != 0: print(r.stderr[:400]); fail = True
+          sys.exit(1 if fail else 0)
+          PY
+
+      - name: Boot the backend
+        env: { PORT: '8080', DATABASE_FILE: '/tmp/ci.db' }
+        run: |
+          dotnet run -c Release --no-build &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8080/api/health && break; sleep 1; done
+      - name: Live smoke suite
+        run: ./smoke-test.sh
+      - name: System-check endpoint reachable (health of ops readiness)
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/api/admin/system-check)
+          # 401 (needs owner auth) proves the route exists and is gated; 200 would require a session.
+          if [ "$code" = "401" ] || [ "$code" = "200" ]; then echo "system-check gated OK ($code)"; else echo "::error::system-check returned $code"; exit 1; fi

@@ -1,0 +1,21 @@
+name: build
+on:
+  push: { branches: [ main, master ] }
+  pull_request:
+jobs:
+  build-test:
+    runs-on: windows-latest      # WPF client needs Windows to compile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - run: dotnet restore PCI.SecureExam.sln
+      - run: dotnet build PCI.SecureExam.sln -c Release --no-restore
+      - run: dotnet test PCI.SecureExam.Tests/PCI.SecureExam.Tests.csproj -c Release --no-build --logger trx
+  core-tests-linux:
+    runs-on: ubuntu-latest       # Core + tests are cross-platform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - run: dotnet test PCI.SecureExam.Tests/PCI.SecureExam.Tests.csproj -c Release

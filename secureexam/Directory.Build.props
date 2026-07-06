@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Company>Project Controls Institute Global, Inc.</Company>
+    <Product>PCI Secure Exam</Product>
+    <Version>1.0.0</Version>
+    <Authors>Project Controls Institute</Authors>
+    <Copyright>© Project Controls Institute Global, Inc.</Copyright>
+  </PropertyGroup>
+</Project>

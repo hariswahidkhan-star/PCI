@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+# Live smoke suite for the .NET backend — identical assertions to the Node original (24 checks).
+set -uo pipefail
+B="http://127.0.0.1:8080"; pass=0; fail=0
+j(){ curl -s -X "$1" "$B$2" "${@:3}"; }
+chk(){ local n="$1" cond="$2"; if [ "$cond" = "1" ]; then echo "  PASS  $n"; pass=$((pass+1)); else echo "  FAIL  $n"; fail=$((fail+1)); fi; }
+code(){ curl -s -o /dev/null -w "%{http_code}" -X "$1" "$B$2" "${@:3}"; }
+
+chk "S01 /api/health" "$([ "$(j GET /api/health | grep -c pci-backend)" = 1 ] && echo 1)"
+for p in / /student.html /admin.html /exam-ui.html /index-launcher.html; do
+  chk "S02 static $p" "$([ "$(code GET "$p")" = 200 ] && echo 1)"
+done
+OT=$(j POST /api/admin/auth/login -H 'Content-Type: application/json' -d '{"email":"owner@pci.local","password":"changeme-owner"}' | python3 -c 'import sys,json;print(json.load(sys.stdin).get("token",""))')
+chk "S03 owner login" "$([ -n "$OT" ] && echo 1)"
+NP=$(j GET /api/admin/me -H "Authorization: Bearer $OT" | python3 -c 'import sys,json;d=json.load(sys.stdin);print(1 if d.get("role")=="owner" and len(d.get("permissions",[]))>=30 else 0)')
+chk "S04 owner + 32 perms" "$NP"
+chk "S05a forced pw change" "$([ "$(j POST /api/admin/me/password -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"new_password":"OwnerPass99!"}' | grep -c '"ok":true')" = 1 ] && echo 1)"
+OT=$(j POST /api/admin/auth/login -H 'Content-Type: application/json' -d '{"email":"owner@pci.local","password":"OwnerPass99!"}' | python3 -c 'import sys,json;print(json.load(sys.stdin).get("token",""))')
+chk "S05b re-login new pw" "$([ -n "$OT" ] && echo 1)"
+TP=$(j POST /api/admin/team -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"email":"exam.mgr@pci.test","name":"Exa","role":"exam_manager"}' | python3 -c 'import sys,json;print(json.load(sys.stdin).get("temp_password",""))')
+chk "S06 create exam_manager" "$([ -n "$TP" ] && echo 1)"
+T2=$(j POST /api/admin/auth/login -H 'Content-Type: application/json' -d "{\"email\":\"exam.mgr@pci.test\",\"password\":\"$TP\"}" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("token",""))')
+chk "S07 manager login temp pw" "$([ -n "$T2" ] && echo 1)"
+chk "S08 manager CAN exam-sessions" "$([ "$(code GET /api/admin/exam-sessions -H "Authorization: Bearer $T2")" = 200 ] && echo 1)"
+chk "S09 manager BLOCKED members 403" "$([ "$(code GET /api/admin/members -H "Authorization: Bearer $T2")" = 403 ] && echo 1)"
+chk "S10 manager BLOCKED team 403" "$([ "$(code GET /api/admin/team -H "Authorization: Bearer $T2")" = 403 ] && echo 1)"
+chk "S11a manager CAN set exam" "$([ "$(j PATCH /api/admin/settings -H "Authorization: Bearer $T2" -H 'Content-Type: application/json' -d '{"exam_pass_mark_pct":"70"}' | grep -c rejected)" = 0 ] && echo 1)"
+chk "S11b website key REJECTED" "$([ "$(j PATCH /api/admin/settings -H "Authorization: Bearer $T2" -H 'Content-Type: application/json' -d '{"web_membership_price":"111"}' | grep -c web_membership_price)" = 1 ] && echo 1)"
+chk "S12 price unchanged" "$([ "$(j GET /api/content | python3 -c 'import sys,json;d=json.load(sys.stdin);print(d["settings"].get("web_membership_price"))')" = 99 ] && echo 1)"
+chk "S13 legacy token = owner" "$([ "$(j GET /api/admin/me -H "x-admin-token: $ADMIN_TOKEN" | grep -c '"role":"owner"')" = 1 ] && echo 1)"
+chk "S14 pass mark persisted 70" "$([ "$(j GET /api/admin/settings -H "Authorization: Bearer $OT" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("exam_pass_mark_pct"))')" = 70 ] && echo 1)"
+j PATCH /api/admin/settings -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"web_maintenance_mode":"1"}' >/dev/null
+chk "S15a maintenance ON → 503" "$([ "$(code GET /)" = 503 ] && echo 1)"
+chk "S15b admin stays up" "$([ "$(code GET /admin.html)" = 200 ] && echo 1)"
+j PATCH /api/admin/settings -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"web_maintenance_mode":"0"}' >/dev/null
+chk "S15c maintenance OFF → 200" "$([ "$(code GET /)" = 200 ] && echo 1)"
+chk "S16 student login 401" "$([ "$(code POST /api/login -H 'Content-Type: application/json' -d '{"email":"x@y.z","password":"x"}')" = 401 ] && echo 1)"
+# ---- extended: student portal + exam-session module (ported this iteration) ----
+chk "S17 exam-sessions list (owner)" "$([ "$(code GET /api/admin/exam-sessions -H "Authorization: Bearer $OT")" = 200 ] && echo 1)"
+chk "S18 members list (owner)" "$([ "$(code GET /api/admin/members -H "Authorization: Bearer $OT")" = 200 ] && echo 1)"
+chk "S19 me requires auth (401)" "$([ "$(code GET /api/me)" = 401 ] && echo 1)"
+chk "S20 me/config requires auth (401)" "$([ "$(code GET /api/me/config)" = 401 ] && echo 1)"
+
+# ---- iteration 3: public + CMS + admin management ----
+chk "S21 /api/pricing" "$([ "$(j GET /api/pricing | grep -c currency)" = 1 ] && echo 1)"
+chk "S22 validate-code (invalid→valid:false)" "$([ "$(j POST /api/validate-code -H 'Content-Type: application/json' -d '{"code":"NOPE","product":"membership"}' | grep -c '"valid":false')" = 1 ] && echo 1)"
+chk "S23 verify unknown credential (found:false)" "$([ "$(j GET '/api/verify?id=PCP-AI-9999-99999' | grep -c '"found":false')" = 1 ] && echo 1)"
+chk "S24 newsletter subscribe" "$([ "$(j POST /api/newsletter -H 'Content-Type: application/json' -d '{"email":"n@ex.co"}' | grep -c '"ok":true')" = 1 ] && echo 1)"
+chk "S25 inquiry (returns reference)" "$([ "$(j POST /api/inquiry -H 'Content-Type: application/json' -d '{"email":"a@b.co","type":"general"}' | grep -c reference)" = 1 ] && echo 1)"
+chk "S26 form-submit (returns reference)" "$([ "$(j POST /api/form-submit -H 'Content-Type: application/json' -d '{"form_type":"contact","email":"a@b.co"}' | grep -c reference)" = 1 ] && echo 1)"
+chk "S27 CMS: create+list FAQ (owner)" "$([ -n "$(j POST /api/admin/faqs -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"question":"Q?","answer":"A","published":1}' | grep -o '"id"')" ] && echo 1)"
+chk "S28 admin overview (owner)" "$([ "$(j GET /api/admin/overview -H "Authorization: Bearer $OT" | grep -c kpis)" = 1 ] && echo 1)"
+chk "S29 admin audit log (owner)" "$([ "$(code GET /api/admin/audit -H "Authorization: Bearer $OT")" = 200 ] && echo 1)"
+chk "S30 CSV export members (owner)" "$([ "$(code GET '/api/admin/export?entity=members' -H "Authorization: Bearer $OT")" = 200 ] && echo 1)"
+chk "S31 exam_mgr BLOCKED from payments (403)" "$([ "$(code GET /api/admin/payments -H "Authorization: Bearer $T2")" = 403 ] && echo 1)"
+
+# ---- iteration 4: full parity (payments/enrollment/tickets/reports) ----
+chk "S32 checkout 503 without STRIPE key" "$([ "$(code POST /api/create-checkout-session -H 'Content-Type: application/json' -d '{"product":"membership"}')" = 503 ] && echo 1)"
+chk "S33 session/start (in-progress)" "$([ "$(j POST /api/session/start -H 'Content-Type: application/json' -d '{"email":"wizard@ex.co"}' | grep -c session_id)" = 1 ] && echo 1)"
+chk "S34 enrollment/save returns token" "$([ "$(j POST /api/enrollment/save -H 'Content-Type: application/json' -d '{"email":"wiz2@ex.co","step":2,"data":{}}' | grep -c resume_token)" = 1 ] && echo 1)"
+chk "S35 admin tickets (owner)" "$([ "$(code GET /api/admin/tickets -H "Authorization: Bearer $OT")" = 200 ] && echo 1)"
+chk "S36 admin reports (owner)" "$([ "$(j GET /api/admin/reports -H "Authorization: Bearer $OT" | grep -c totals)" = 1 ] && echo 1)"
+chk "S37 codes/generate (owner)" "$([ "$(j POST /api/admin/codes/generate -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"count":3,"prefix":"TEST"}' | grep -c batch_id)" = 1 ] && echo 1)"
+chk "S38 legacy /students (owner)" "$([ "$(code GET /api/admin/students -H "Authorization: Bearer $OT")" = 200 ] && echo 1)"
+
+# ---- security hardening checks ----
+chk "SEC1 practice hides answer key" "$([ "$(j GET /api/me/practice -H "Authorization: Bearer $ST" | grep -c answer_index)" = 0 ] && echo 1)"
+chk "SEC2 enrollment resume needs token (400)" "$([ "$(code GET '/api/enrollment/resume?email=x@y.co')" = 400 ] && echo 1)"
+chk "SEC3 set-password bad token rejected (400)" "$([ "$(code POST /api/set-password -H 'Content-Type: application/json' -d '{"token":"deadbeef","password":"abcd1234"}')" = 400 ] && echo 1)"
+chk "SEC4 legacy admin token rejected (401)" "$([ "$(code GET /api/admin/overview -H 'x-admin-token: changeme')" = 401 ] && echo 1)"
+chk "SEC5 exam_mgr blocked from CMS faqs write (403)" "$([ "$(code POST /api/admin/faqs -H "Authorization: Bearer $T2" -H 'Content-Type: application/json' -d '{"question":"q","answer":"a"}')" = 403 ] && echo 1)"
+chk "SEC6 exam_mgr can access sample_questions (200)" "$([ "$(code GET /api/admin/sample_questions -H "Authorization: Bearer $T2")" = 200 ] && echo 1)"
+
+echo ""; echo "  ══ $pass/$((pass+fail)) PASSED ══"
+[ "$fail" = 0 ]

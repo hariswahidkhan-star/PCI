@@ -1,0 +1,439 @@
+using System.Text.Json;
+using PCI.Backend.Core;
+using PCI.Backend.Data;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "8080"}");
+var app = builder.Build();
+// Rate limiting: throttle brute-forceable endpoints (login, password reset, code validation, exam authorize)
+// per client IP with a fixed-window in-memory counter. Applied by path prefix via middleware so it is
+// robust to route-handler shape (no per-endpoint chaining required).
+var _rlHits = new System.Collections.Concurrent.ConcurrentDictionary<string, (int count, long windowStart)>();
+string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize" };
+const int RL_LIMIT = 10; const long RL_WINDOW_MS = 60_000;
+app.Use(async (ctx, next) =>
+{
+    var path = ctx.Request.Path.Value ?? "";
+    if (ctx.Request.Method == "POST" && _rlPaths.Any(p => path.Equals(p, StringComparison.OrdinalIgnoreCase)))
+    {
+        var ip = ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        var key = ip + "|" + path;
+        var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        var entry = _rlHits.AddOrUpdate(key, (1, now), (_, cur) =>
+            now - cur.windowStart >= RL_WINDOW_MS ? (1, now) : (cur.count + 1, cur.windowStart));
+        if (entry.count > RL_LIMIT)
+        {
+            ctx.Response.StatusCode = 429;
+            ctx.Response.Headers["Retry-After"] = "60";
+            await ctx.Response.WriteAsJsonAsync(new { error = "rate_limited", message = "Too many attempts. Please wait a minute and try again." });
+            return;
+        }
+    }
+    await next();
+});
+
+// ---- DB: open + auto-migrate (parity with db.js auto-migrate on load) ----
+var dbPath = Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "./pci.db";
+var schemaPath = Path.Combine(AppContext.BaseDirectory, "schema.sql");
+if (!File.Exists(schemaPath)) schemaPath = "schema.sql";
+var db = new Db(dbPath);
+Migrate.Run(db, schemaPath);
+
+var stripeKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
+if(!string.IsNullOrEmpty(stripeKey)) Stripe.StripeConfiguration.ApiKey = stripeKey;
+if (string.IsNullOrEmpty(stripeKey)) Console.WriteLine("[boot] STRIPE_SECRET_KEY not set — payment endpoints will answer 503 until configured.");
+if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SMTP_HOST"))) Console.WriteLine("[boot] SMTP_HOST not set — emails will print to the console instead of sending.");
+{
+    var sp = (Environment.GetEnvironmentVariable("STORAGE_PROVIDER") ?? "local").ToLowerInvariant();
+    var sr = Environment.GetEnvironmentVariable("STORAGE_ROOT") ?? "./storage";
+    if (sp == "local") Console.WriteLine($"[boot] storage: local at '{sr}' (evidence/attachments stored as files; DB holds references).");
+    else if (!PCI.Backend.Core.Storage.UsingLocal) { /* wired provider */ }
+    else Console.WriteLine($"[boot] storage: provider '{sp}' is not yet wired — falling back to local at '{sr}'. Set STORAGE_PROVIDER=local to silence.");
+}
+
+// ── Production configuration validation (Section 21): warn loudly on unsafe production config ──
+// Reports every issue; in production it refuses to boot when a hard blocker is present (unless the operator
+// explicitly sets ALLOW_INSECURE_PRODUCTION=true), so the app never silently runs in an unsafe state.
+static List<(string sev, string key, string msg)> ConfigIssues()
+{
+    string? E(string k) => Environment.GetEnvironmentVariable(k);
+    bool prod = string.Equals(E("ASPNETCORE_ENVIRONMENT"), "Production", StringComparison.OrdinalIgnoreCase)
+             || string.Equals(E("APP_ENV"), "production", StringComparison.OrdinalIgnoreCase);
+    var issues = new List<(string, string, string)>();
+    void Err(string k, string m) => issues.Add(("error", k, m));
+    void Warn(string k, string m) => issues.Add(("warn", k, m));
+    if (prod)
+    {
+        var baseUrl = E("APP_BASE_URL") ?? E("SITE_BASE_URL");
+        if (string.IsNullOrEmpty(baseUrl) || baseUrl.Contains("localhost") || baseUrl.Contains("127.0.0.1")) Err("APP_BASE_URL", "must be a public HTTPS URL in production");
+        if (string.IsNullOrEmpty(E("STRIPE_SECRET_KEY"))) Warn("STRIPE_SECRET_KEY", "payments will be disabled (503) until set");
+        else if (string.IsNullOrEmpty(E("STRIPE_WEBHOOK_SECRET"))) Err("STRIPE_WEBHOOK_SECRET", "required to verify webhooks when Stripe is enabled");
+        if (string.IsNullOrEmpty(E("SMTP_HOST"))) Warn("SMTP_HOST", "emails will not send");
+        if (string.Equals(E("ENABLE_LEGACY_ADMIN_TOKEN"), "true", StringComparison.OrdinalIgnoreCase)) Err("ENABLE_LEGACY_ADMIN_TOKEN", "legacy admin token must be disabled in production");
+        var origin = E("ALLOWED_ORIGIN");
+        if (string.IsNullOrEmpty(origin) || origin == "*") Err("ALLOWED_ORIGIN", "CORS must not be wildcard in production; set an explicit origin");
+        var dbFile = E("DATABASE_FILE") ?? "./pci.db";
+        if (dbFile.StartsWith("/tmp") || dbFile.Contains("Temp")) Err("DATABASE_FILE", "database path is temporary; use a persistent volume");
+        if (string.IsNullOrEmpty(E("ADMIN_OWNER_PASSWORD"))) Warn("ADMIN_OWNER_PASSWORD", "bootstrap owner uses the default password until changed");
+    }
+    return issues;
+}
+{
+    var issues = ConfigIssues();
+    foreach (var (sev, key, msg) in issues) Console.WriteLine($"[config:{sev}] {key} — {msg}");
+    var hardErrors = issues.Where(i => i.sev == "error").ToList();
+    var allowInsecure = string.Equals(Environment.GetEnvironmentVariable("ALLOW_INSECURE_PRODUCTION"), "true", StringComparison.OrdinalIgnoreCase);
+    if (hardErrors.Count > 0 && !allowInsecure)
+    {
+        Console.WriteLine($"[config] Refusing to start: {hardErrors.Count} production configuration error(s). " +
+            "Fix them, or set ALLOW_INSECURE_PRODUCTION=true to override (not recommended).");
+        Environment.Exit(78); // EX_CONFIG
+    }
+}
+
+// ---- helpers ----
+IResult Json(object o) => Results.Json(o);
+void Log(long? uid, string action, string? details) =>
+    db.Execute("INSERT INTO audit_logs(user_id,action,details) VALUES(?,?,?)", uid, action, details ?? "");
+static async Task<Dictionary<string, JsonElement>> Body(HttpRequest r)
+{
+    try { return await r.ReadFromJsonAsync<Dictionary<string, JsonElement>>() ?? new(); }
+    catch { return new(); }
+}
+static string? S(Dictionary<string, JsonElement> b, params string[] keys)
+{
+    foreach (var k in keys) if (b.TryGetValue(k, out var v) && v.ValueKind != JsonValueKind.Null)
+        return v.ValueKind == JsonValueKind.String ? v.GetString() : v.ToString();
+    return null;
+}
+
+// ================= CORS (parity: Origin/Headers/Methods + OPTIONS 204) =================
+app.Use(async (ctx, next) =>
+{
+    var res = ctx.Response;
+    res.Headers["Access-Control-Allow-Origin"] = Environment.GetEnvironmentVariable("ALLOWED_ORIGIN") ?? "*";
+    res.Headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization";
+    res.Headers["Access-Control-Allow-Methods"] = "GET, POST, PATCH, DELETE, OPTIONS";
+    if (ctx.Request.Method == "OPTIONS") { res.StatusCode = 204; return; }
+    await next();
+});
+
+// ================= maintenance mode (parity: 503 holding page; admin + APIs stay up) =================
+const string MAINT_HTML = "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Project Controls Institute \u2014 momentarily offline</title><style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#F6F8FC;font-family:Inter,system-ui,sans-serif;color:#0F172A}.c{text-align:center;padding:32px}.lp{font-weight:800;font-size:34px;color:#1D4ED8;letter-spacing:-.04em}.m{margin-top:14px;color:#64748B;max-width:420px;line-height:1.6}</style></head><body><div class=\"c\"><div class=\"lp\">PCI</div><div class=\"m\"><b>We\u2019ll be right back.</b><br/>The Project Controls Institute website is briefly offline for maintenance. Thank you for your patience.</div></div></body></html>";
+app.Use(async (ctx, next) =>
+{
+    if (ctx.Request.Method == "GET")
+    {
+        var p = ctx.Request.Path.Value ?? "/";
+        var isPage = p == "/" || p.EndsWith(".html");
+        var allowed = p.StartsWith("/api") || p == "/admin.html";
+        if (isPage && !allowed && Settings.Bool(db, "web_maintenance_mode", false))
+        {
+            ctx.Response.StatusCode = 503;
+            ctx.Response.ContentType = "text/html";
+            await ctx.Response.WriteAsync(MAINT_HTML);
+            return;
+        }
+    }
+    await next();
+});
+
+// ================= health =================
+app.MapGet("/api/health", () => Json(new { ok = true, service = "pci-backend", time = DateTime.UtcNow.ToString("o") }));
+
+// Operational readiness for admins (owner-only). Reports booleans/severities only — never the secret values.
+app.MapGet("/api/admin/system-check", (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorised" }, statusCode: 401);
+    if (!a.IsOwner) return Results.Json(new { error = "forbidden" }, statusCode: 403);
+    string? E(string k) => Environment.GetEnvironmentVariable(k);
+    var issues = ConfigIssues();
+    var checks = new
+    {
+        stripe_configured = !string.IsNullOrEmpty(E("STRIPE_SECRET_KEY")),
+        stripe_webhook_configured = !string.IsNullOrEmpty(E("STRIPE_WEBHOOK_SECRET")),
+        smtp_configured = !string.IsNullOrEmpty(E("SMTP_HOST")),
+        base_url_set = !string.IsNullOrEmpty(E("APP_BASE_URL") ?? E("SITE_BASE_URL")),
+        cors_locked = !string.IsNullOrEmpty(E("ALLOWED_ORIGIN")) && E("ALLOWED_ORIGIN") != "*",
+        legacy_admin_token_disabled = !string.Equals(E("ENABLE_LEGACY_ADMIN_TOKEN"), "true", StringComparison.OrdinalIgnoreCase),
+        persistent_db = !((E("DATABASE_FILE") ?? "./pci.db").StartsWith("/tmp")),
+        owner_password_changed = db.Scalar<long>("SELECT COUNT(*) FROM admin_users WHERE email=? AND must_change_pw=0", (E("ADMIN_OWNER_EMAIL") ?? "owner@pci.local").ToLowerInvariant()) > 0,
+        migrations_applied = db.Scalar<long>("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='exam_score_snapshots'") > 0,
+        storage_local = PCI.Backend.Core.Storage.UsingLocal,
+    };
+    return Json(new { ok = issues.All(i => i.sev != "error"), environment = E("ASPNETCORE_ENVIRONMENT") ?? "Development", checks, issues = issues.Select(i => new { i.sev, i.key, i.msg }) });
+});
+
+// ================= public content =================
+app.MapGet("/api/content", () =>
+{
+    var content = new Dictionary<string, object?>();
+    foreach (var r in db.Query("SELECT ckey,cvalue FROM site_content")) content[(string)r["ckey"]!] = r["cvalue"];
+    var settings = new Dictionary<string, object?>();
+    foreach (var r in db.Query("SELECT * FROM site_settings")) settings[(string)r["skey"]!] = r["svalue"];
+    return Json(new
+    {
+        content, settings,
+        faqs = db.Query("SELECT question,answer,category FROM faqs WHERE published=1 ORDER BY sort_order,id"),
+        news = db.Query("SELECT title,body,published_date FROM news WHERE published=1 ORDER BY published_date DESC,id DESC"),
+        resources = db.Query("SELECT title,category,doc_type,url FROM resources WHERE published=1 ORDER BY sort_order,id"),
+        bok = db.Query("SELECT code,name,weight,description FROM bok_domains ORDER BY sort_order,id")
+    });
+});
+
+// ================= student login =================
+app.MapPost("/api/login", async (HttpRequest req) =>
+{
+    var b = await Body(req);
+    var email = (S(b, "email") ?? "").ToLowerInvariant();
+    var password = S(b, "password") ?? "";
+    var u = db.QueryOne("SELECT * FROM users WHERE email=?", email);
+    if (u is null || u["password_hash"] is not string ph || !BCrypt.Net.BCrypt.Verify(password, ph))
+        return Results.Json(new { error = "invalid_credentials" }, statusCode: 401);
+    if ((u["status"] as string) != "active") return Results.Json(new { error = "inactive" }, statusCode: 403);
+    var session = Security.RandomHex(32);
+    db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'session', datetime('now','+30 day'))",
+        u["id"], Security.Sha(session));
+    try {
+        var ua = req.Headers.UserAgent.ToString();
+        var dev = System.Text.RegularExpressions.Regex.IsMatch(ua, "Mobile|iPhone|Android") ? "Mobile"
+                : System.Text.RegularExpressions.Regex.IsMatch(ua, "iPad|Tablet") ? "Tablet" : "Desktop";
+        var ip = (req.Headers["x-forwarded-for"].ToString() is { Length: > 0 } xf ? xf : req.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "").Split(',')[0];
+        db.Execute("INSERT INTO login_events(user_id,ip,user_agent,device,outcome) VALUES(?,?,?,?,?)", u["id"], ip, ua.Length>300?ua[..300]:ua, dev, "success");
+    } catch { }
+    return Json(new { ok = true, token = session, user = new { id = u["id"], email = u["email"], firstName = u["first_name"], lastName = u["last_name"] } });
+});
+
+// ================= admin auth (login/logout/me/password) =================
+app.MapPost("/api/admin/auth/login", async (HttpRequest req) =>
+{
+    var b = await Body(req);
+    var email = (S(b, "email") ?? "").Trim().ToLowerInvariant();
+    var password = S(b, "password") ?? "";
+    var a = db.QueryOne("SELECT * FROM admin_users WHERE lower(email)=?", email);
+    if (a is null || (a["status"] as string) != "active" || a["password_hash"] is not string ph || !BCrypt.Net.BCrypt.Verify(password, ph))
+        return Results.Json(new { error = "invalid_credentials" }, statusCode: 401);
+    var tok = Security.RandomHex(24);
+    db.Execute("INSERT INTO admin_sessions(admin_id,token,expires_at) VALUES(?,?,datetime('now','+12 hours'))", a["id"], Security.Sha(tok));
+    db.Execute("UPDATE admin_users SET last_login_at=datetime('now') WHERE id=?", a["id"]);
+    var ctx = Auth.ToAdmin(a);
+    Log(0, "admin_login", ctx.Email);
+    return Json(new { token = tok, admin = new { id = ctx.Id, email = ctx.Email, name = ctx.Name, role = ctx.Role, must_change_pw = ctx.MustChangePw }, permissions = ctx.Perms });
+});
+
+app.MapPost("/api/admin/auth/logout", (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    var h = req.Headers.Authorization.ToString();
+    if (h.StartsWith("Bearer ")) db.Execute("DELETE FROM admin_sessions WHERE token=?", Security.Sha(h.Substring(7)));
+    return Json(new { ok = true });
+});
+
+app.MapGet("/api/admin/me", (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    return Json(new { id = a.Id, email = a.Email, name = a.Name, role = a.Role, is_owner = a.IsOwner, must_change_pw = a.MustChangePw, permissions = a.Perms });
+});
+
+app.MapPost("/api/admin/me/password", async (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    if (a.Id == 0) return Results.Json(new { error = "shared_token_cannot_set_pw" }, statusCode: 400);
+    var b = await Body(req);
+    var np = S(b, "new_password") ?? "";
+    if (np.Length < 8) return Results.Json(new { error = "weak_password" }, statusCode: 400);
+    db.Execute("UPDATE admin_users SET password_hash=?, must_change_pw=0 WHERE id=?", BCrypt.Net.BCrypt.HashPassword(np), a.Id);
+    return Json(new { ok = true });
+});
+
+// ================= Team & Access (owner only) =================
+IResult? OwnerGate(HttpRequest req, out AdminCtx? a)
+{
+    a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    if (!a.IsOwner) return Results.Json(new { error = "owner_only" }, statusCode: 403);
+    return null;
+}
+
+app.MapGet("/api/admin/team", (HttpRequest req) =>
+{
+    var gate = OwnerGate(req, out _); if (gate is not null) return gate;
+    var rows = db.Query("SELECT id,email,name,role,permissions,status,must_change_pw,last_login_at,created_at FROM admin_users ORDER BY id ASC")
+        .Select(a => {
+            var perms = new List<string>();
+            try { perms = JsonSerializer.Deserialize<List<string>>(a["permissions"] as string ?? "[]") ?? new(); } catch { }
+            return new Dictionary<string, object?>(a) { ["permissions"] = perms, ["effective"] = Rbac.PermsFor((string)a["role"]!, a["permissions"] as string) };
+        }).ToList();
+    return Json(new { rows, roles = Rbac.RoleGrants.Keys.Append("custom").ToArray(), sections = Rbac.Sections, role_grants = Rbac.RoleGrants });
+});
+
+app.MapPost("/api/admin/team", async (HttpRequest req) =>
+{
+    var gate = OwnerGate(req, out var admin); if (gate is not null) return gate;
+    var b = await Body(req);
+    var email = (S(b, "email") ?? "").Trim().ToLowerInvariant();
+    if (email.Length == 0 || !System.Text.RegularExpressions.Regex.IsMatch(email, ".+@.+\\..+"))
+        return Results.Json(new { error = "valid_email_required" }, statusCode: 400);
+    if (db.QueryOne("SELECT 1 FROM admin_users WHERE lower(email)=?", email) is not null)
+        return Results.Json(new { error = "email_exists" }, statusCode: 400);
+    var role = S(b, "role") ?? "viewer";
+    var perms = "[]";
+    if (b.TryGetValue("permissions", out var pv) && pv.ValueKind == JsonValueKind.Array) perms = pv.GetRawText();
+    var tempPw = S(b, "password") ?? Security.RandomHex(5);
+    var id = db.ExecuteReturningId("INSERT INTO admin_users(email,name,password_hash,role,permissions,status,must_change_pw,created_by) VALUES(?,?,?,?,?, 'active',1,?)",
+        email, S(b, "name") ?? "", BCrypt.Net.BCrypt.HashPassword(tempPw), role, perms, admin!.Id == 0 ? (object?)null : admin.Id);
+    Log(0, "admin_created", $"{email} ({role})");
+    return Json(new { ok = true, id, temp_password = tempPw });
+});
+
+app.MapPatch("/api/admin/team/{id}", async (HttpRequest req, long id) =>
+{
+    var gate = OwnerGate(req, out _); if (gate is not null) return gate;
+    var a = db.QueryOne("SELECT * FROM admin_users WHERE id=?", id);
+    if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+    var b = await Body(req);
+    var sets = new List<string>(); var vals = new List<object?>();
+    if (b.ContainsKey("name")) { sets.Add("name=?"); vals.Add(S(b, "name")); }
+    if (b.ContainsKey("role")) { sets.Add("role=?"); vals.Add(S(b, "role")); }
+    if (b.TryGetValue("permissions", out var pv) && pv.ValueKind == JsonValueKind.Array) { sets.Add("permissions=?"); vals.Add(pv.GetRawText()); }
+    if (b.TryGetValue("status", out var sv))
+    {
+        var status = sv.GetString();
+        if (status == "suspended" && (a["role"] as string) == "owner")
+        {
+            var owners = db.Scalar<long>("SELECT COUNT(*) FROM admin_users WHERE role='owner' AND status='active'");
+            if (owners <= 1) return Results.Json(new { error = "cannot_suspend_last_owner" }, statusCode: 400);
+        }
+        sets.Add("status=?"); vals.Add(status);
+    }
+    var newRole = S(b, "role");
+    if (newRole is not null && newRole != "owner" && (a["role"] as string) == "owner")
+    {
+        var owners = db.Scalar<long>("SELECT COUNT(*) FROM admin_users WHERE role='owner' AND status='active'");
+        if (owners <= 1) return Results.Json(new { error = "cannot_demote_last_owner" }, statusCode: 400);
+    }
+    if (sets.Count > 0) { vals.Add(id); db.Execute($"UPDATE admin_users SET {string.Join(", ", sets)} WHERE id=?", vals.ToArray()); }
+    Log(0, "admin_updated", a["email"] as string);
+    return Json(new { ok = true });
+});
+
+app.MapPost("/api/admin/team/{id}/reset-password", (HttpRequest req, long id) =>
+{
+    var gate = OwnerGate(req, out _); if (gate is not null) return gate;
+    var a = db.QueryOne("SELECT * FROM admin_users WHERE id=?", id);
+    if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+    var tempPw = Security.RandomHex(5);
+    db.Execute("UPDATE admin_users SET password_hash=?, must_change_pw=1 WHERE id=?", BCrypt.Net.BCrypt.HashPassword(tempPw), id);
+    db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", id);
+    Log(0, "admin_pw_reset", a["email"] as string);
+    return Json(new { ok = true, temp_password = tempPw });
+});
+
+app.MapDelete("/api/admin/team/{id}", (HttpRequest req, long id) =>
+{
+    var gate = OwnerGate(req, out _); if (gate is not null) return gate;
+    var a = db.QueryOne("SELECT * FROM admin_users WHERE id=?", id);
+    if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+    if ((a["role"] as string) == "owner")
+    {
+        var owners = db.Scalar<long>("SELECT COUNT(*) FROM admin_users WHERE role='owner' AND status='active'");
+        if (owners <= 1) return Results.Json(new { error = "cannot_delete_last_owner" }, statusCode: 400);
+    }
+    db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", id);
+    db.Execute("DELETE FROM admin_users WHERE id=?", id);
+    Log(0, "admin_deleted", a["email"] as string);
+    return Json(new { ok = true });
+});
+
+// ================= settings GET + gated PATCH =================
+app.MapGet("/api/admin/settings", (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    var o = new Dictionary<string, object?>();
+    foreach (var r in db.Query("SELECT skey,svalue FROM site_settings")) o[(string)r["skey"]!] = r["svalue"];
+    return Json(o);
+});
+
+app.MapPatch("/api/admin/settings", async (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    var perms = a.Perms; var owner = a.IsOwner;
+    bool KeyAllowed(string k) => owner
+        || (k.StartsWith("web_") ? perms.Contains("set_web")
+            : k.StartsWith("sp_") ? perms.Contains("set_sp")
+            : k.StartsWith("exam_") ? perms.Contains("set_exam") : true);
+    var b = await Body(req);
+    var rejected = new List<string>();
+    foreach (var kv in b)
+    {
+        if (KeyAllowed(kv.Key))
+            db.Execute("INSERT INTO site_settings(skey,svalue) VALUES(?,?) ON CONFLICT(skey) DO UPDATE SET svalue=excluded.svalue",
+                kv.Key, kv.Value.ValueKind == JsonValueKind.String ? kv.Value.GetString() : kv.Value.ToString());
+        else rejected.Add(kv.Key);
+    }
+    Log(null, "settings_update", string.Join(",", b.Keys));
+    return rejected.Count > 0 ? Json(new { ok = true, rejected }) : Json(new { ok = true });
+});
+
+// ---- shared gate delegate for endpoint modules + per-section gated admin reads ----
+IResult GateFn(HttpRequest req, string section, Func<AdminCtx, IResult> ok)
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    if (!a.IsOwner && !a.Perms.Contains(section)) return Results.Json(new { error = "forbidden", section }, statusCode: 403);
+    return ok(a);
+}
+Action<long?, string, string?> logFn = (uid, action, details) =>
+    db.Execute("INSERT INTO audit_logs(user_id,action,details) VALUES(?,?,?)", uid, action, details ?? "");
+
+// ---- register ported endpoint modules ----
+PCI.Backend.Endpoints.StudentExam.InitScorer(db);
+PCI.Backend.Endpoints.StudentExam.Map(app, db, logFn);
+PCI.Backend.Endpoints.ExamClient.Map(app, db, logFn);
+PCI.Backend.Endpoints.AdminProctoring.Map(app, db, logFn, GateFn);
+PCI.Backend.Endpoints.AdminStudents.Map(app, db, logFn, GateFn);
+PCI.Backend.Endpoints.Public.Map(app, db, logFn);
+PCI.Backend.Endpoints.AdminMgmt.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
+PCI.Backend.Endpoints.Payments.Map(app, db, logFn, () => !string.IsNullOrEmpty(stripeKey));
+PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
+PCI.Backend.Endpoints.Reviews.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
+PCI.Backend.Endpoints.Casework.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
+
+// Purge stored artefacts older than the configured retention window (owner-only). Metadata rows are kept
+// for audit; only the binary artefacts are removed once past retention.
+app.MapPost("/api/admin/storage/purge", (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorised" }, statusCode: 401);
+    if (!a.IsOwner) return Results.Json(new { error = "forbidden" }, statusCode: 403);
+    var days = (int)Settings.Num(db, "evidence_retention_days", 365);
+    var removed = PCI.Backend.Core.Storage.PurgeOlderThan(days);
+    logFn(a.Id, "storage_purge", $"{removed} artefacts older than {days}d");
+    return Json(new { ok = true, removed, retention_days = days });
+});
+
+// ================= admin overview (needed for the panel landing) =================
+
+// ================= static site (all four apps) — LAST so /api wins =================
+var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
+app.UseDefaultFiles(new DefaultFilesOptions { DefaultFileNames = new List<string> { "index.html" } });
+app.UseStaticFiles();
+
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+var u = $"http://localhost:{port}";
+Console.WriteLine("┌──────────────────────────────────────────────────────┐");
+Console.WriteLine("│  Project Controls Institute — platform is running    │");
+Console.WriteLine("├──────────────────────────────────────────────────────┤");
+Console.WriteLine($"│  Website        {u}/");
+Console.WriteLine($"│  Student Panel  {u}/student.html");
+Console.WriteLine($"│  Admin Panel    {u}/admin.html");
+Console.WriteLine($"│  Exam preview   {u}/exam-ui.html");
+Console.WriteLine("└──────────────────────────────────────────────────────┘");
+
+app.Run();

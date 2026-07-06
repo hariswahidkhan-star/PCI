@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex,nofollow"/><title>PCI Platform · Applications</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Archivo:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#0F172A;--brand:#1D4ED8;--line:#E7EBF1;--muted:#64748B;--bg:#F6F8FC;--sans:'Inter',system-ui,sans-serif;--disp:'Archivo',var(--sans)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(120% 90% at 50% -10%,#eef3ff 0%,var(--bg) 55%);font-family:var(--sans);color:var(--ink);min-height:100vh;padding:52px 20px 40px}
+.wrap{max-width:1040px;margin:0 auto}
+.lockup{display:flex;align-items:center;gap:13px;justify-content:center;margin-bottom:10px}
+.lockup .lp{font-family:var(--disp);font-weight:800;font-size:32px;color:var(--brand);letter-spacing:-.045em;line-height:.85}
+.lockup .lb{width:2px;height:32px;background:#cfd6e2;border-radius:2px}
+.lockup .ln{font-weight:600;font-size:12.5px;line-height:1.2;text-align:left}
+.sub{text-align:center;color:var(--muted);font-size:14.5px;margin:0 auto 36px;max-width:560px;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:12px;text-decoration:none;color:inherit;position:relative;transition:transform .16s,box-shadow .16s,border-color .16s}
+.card:hover{transform:translateY(-3px);box-shadow:0 24px 50px -20px rgba(29,78,216,.28);border-color:#cdd9f5}
+.card .ico{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff}
+.card h2{font-family:var(--disp);font-weight:800;font-size:19px}
+.card p{color:var(--muted);font-size:13px;line-height:1.55}
+.card .go{margin-top:auto;font-weight:600;font-size:13.5px;color:var(--brand)}
+.card .path{font-family:ui-monospace,Consolas,monospace;font-size:11px;color:#94A3B8}
+.tag{position:absolute;top:18px;right:18px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:#F1F4F8;border-radius:20px;padding:4px 10px}
+.i1{background:linear-gradient(150deg,#3B82F6,#1D4ED8)}.i2{background:linear-gradient(150deg,#6366F1,#4338CA)}.i3{background:linear-gradient(150deg,#0EA5A4,#0F766E)}.i4{background:linear-gradient(150deg,#334155,#0F172A)}
+.foot{text-align:center;color:#94A3B8;font-size:12px;margin-top:36px;line-height:1.7}.foot b{color:var(--muted)}
+svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.9}
+</style></head><body><div class="wrap">
+<div class="lockup"><span class="lp">PCI</span><span class="lb"></span><span class="ln">Project Controls<br/>Institute Global, Inc.</span></div>
+<p class="sub">Four separate applications, one platform — served together by the PCI backend.</p>
+<div class="grid">
+<a class="card" href="/"><span class="tag">Public</span><span class="ico i1"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15.5 0 18M12 3c-2.5 2.5-2.5 15.5 0 18"/></svg></span><h2>Website</h2><p>The public site — certification overview, membership, enrolment and credential verification.</p><span class="go">Open website →</span><span class="path">/</span></a>
+<a class="card" href="/student.html"><span class="tag">Sign-in</span><span class="ico i2"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14h5"/></svg></span><h2>Student Panel</h2><p>Schedule and sit exams, results and certificates, CPD, membership, payments and support.</p><span class="go">Open student panel →</span><span class="path">/student.html</span></a>
+<a class="card" href="/exam-ui.html"><span class="tag">Preview</span><span class="ico i3"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><h2>Secure Exam</h2><p>Interface preview of the downloadable proctored exam client — identity check, monitoring, lockdown, chat.</p><span class="go">Open exam preview →</span><span class="path">/exam-ui.html</span></a>
+<a class="card" href="/admin.html"><span class="tag">Staff</span><span class="ico i4"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 4-3 7-7 9-4-2-7-5-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg></span><h2>Admin Panel</h2><p>Staff oversight — members, payments, credentials, live proctoring, settings for all three apps, team &amp; access.</p><span class="go">Open admin panel →</span><span class="path">/admin.html</span></a>
+</div>
+<p class="foot"><b>Kept separate on purpose.</b> Independent applications sharing one backend.<br/>Membership access does not itself constitute certification — the PCP-AI credential is earned only by passing the examination.</p>
+</div></body></html>

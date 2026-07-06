@@ -1,0 +1,1404 @@
+<!doctype html><html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="color-scheme" content="light only"/><meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%231D4ED8%27/%3E%3Ctext x=%2732%27 y=%2742%27 font-family=%27Archivo,Arial%27 font-weight=%27900%27 font-size=%2726%27 fill=%27white%27 text-anchor=%27middle%27 letter-spacing=%27-1%27%3EPCI%3C/text%3E%3C/svg%3E"/>
+<title>PCI · Student Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Archivo:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ============================================================
+   PCI STUDENT PANEL — DESIGN SYSTEM v3
+   Benchmark: myACCA / IIA CCMS institutional calm, elevated.
+   Light. Brand blue reserved for action. Zero decoration.
+   ============================================================ */
+:root{
+ --ink:#0F172A;--t2:#3D4A5C;--t3:#64748B;--t4:#94A3B8;
+ --line:#E7EBF1;--line2:#EFF2F7;--bg:#FAFBFD;--card:#FFFFFF;
+ --brand:#1D4ED8;--brand-deep:#1E3A8A;--brand-tint:#EFF4FE;--brand-tint2:#E3ECFD;
+ --grad:linear-gradient(160deg,#3B82F6 0%,#1D4ED8 50%,#1E3A8A 100%);
+ --ok:#15803D;--ok-bg:#EBF7EF;--amber:#92580A;--amber-bg:#FBF3E3;--red:#B42318;--red-bg:#FCEEEC;
+ --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+ --disp:"Archivo",var(--sans);
+ --sh:0 1px 2px rgba(16,24,40,.04),0 1px 3px rgba(16,24,40,.05);
+ --sh2:0 4px 8px -2px rgba(16,24,40,.08),0 12px 24px -4px rgba(16,24,40,.08);
+ --sh3:0 20px 44px -8px rgba(16,24,40,.16);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--brand);text-decoration:none}
+button{font-family:inherit;cursor:pointer;color:inherit}
+img,svg{display:block}
+::selection{background:var(--brand);color:#fff}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#D5DCE6;border-radius:8px}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:6px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+h1,h2,h3,h4,.serif{font-family:var(--disp);letter-spacing:-.01em}
+.muted{color:var(--t3)}.mut2{color:var(--t4)}.tiny{font-size:12.5px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:10px 16px;font-size:14px;font-weight:600;line-height:1.2;box-shadow:var(--sh);transition:box-shadow .15s,border-color .15s,background .15s,transform .06s}
+.btn svg{width:16px;height:16px;flex:0 0 auto}
+.btn:hover{border-color:#D3DBE6;box-shadow:var(--sh2)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn-p{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 1px 2px rgba(16,24,40,.05),0 6px 14px -3px rgba(29,78,216,.35)}
+.btn-p:hover{background:#1A45C4;border-color:#1A45C4}
+.btn-d{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn-g{border-color:transparent;background:transparent;box-shadow:none;color:var(--t2)}
+.btn-g:hover{background:var(--brand-tint);color:var(--ink);border-color:transparent;box-shadow:none}
+.btn-danger{color:var(--red);border-color:#EFD3CF}.btn-danger:hover{background:var(--red-bg)}
+.btn-sm{padding:7px 12px;font-size:13px;border-radius:9px}
+.btn-lg{padding:13px 22px;font-size:15px;border-radius:12px}
+.btn-bk{width:100%}
+.lnk{font-size:13.5px;color:var(--brand);font-weight:600;background:none;border:none;padding:0}
+.lnk:hover{text-decoration:underline}
+
+/* ---------- forms ---------- */
+.fld{margin-bottom:16px}
+.fld label{display:block;font-size:13px;font-weight:600;color:var(--t2);margin-bottom:7px}
+.in{width:100%;border:1px solid #D8DFE9;border-radius:10px;padding:11px 14px;font-size:14.5px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+.in:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 4px var(--brand-tint)}
+.in:disabled{background:#F5F7FA;color:var(--t3)}
+textarea.in{resize:vertical;line-height:1.6}
+select.in{appearance:auto}
+
+/* ---------- auth ---------- */
+#auth{position:fixed;inset:0;display:flex;z-index:60;background:#fff}
+.auth-l{flex:1.05;background:var(--grad);color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:52px 54px}
+.auth-l .mk{display:flex;align-items:center;gap:12px}
+.auth-l .mk i{width:42px;height:42px;border-radius:11px;background:#fff;color:var(--brand);font-family:var(--disp);font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;font-style:normal}
+.auth-l .mk b{font-family:var(--disp);font-size:16px}.auth-l .mk span{font-size:12px;color:#C9DAF8;display:block}
+.auth-l h1{font-size:clamp(26px,3vw,36px);font-weight:700;line-height:1.15;margin-bottom:14px}
+.auth-l .lead{color:#D7E3FA;max-width:46ch;font-size:15px;margin-bottom:28px}
+.tick{display:flex;gap:12px;align-items:flex-start;color:#E4EDFC;font-size:14px;margin-bottom:13px}
+.tick i{width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.16);display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;font-style:normal;font-size:12px;margin-top:1px}
+.auth-l .foot{font-size:12px;color:#B7CCF5}
+.auth-r{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 28px;overflow-y:auto}
+.auth-card{width:100%;max-width:392px}
+.auth-card h2{font-size:26px;font-weight:700;margin-bottom:6px}
+.auth-card .sub{color:var(--t3);margin-bottom:28px}
+.auth-err{display:none;background:var(--red-bg);color:var(--red);border:1px solid #F1CFCB;border-radius:10px;padding:11px 14px;font-size:13.5px;margin-bottom:16px}
+.auth-alt{margin-top:18px;text-align:center;color:var(--t3);font-size:13.5px}
+.auth-alt button,.auth-alt a{background:none;border:none;color:var(--brand);font-weight:600;cursor:pointer}
+@media(max-width:920px){.auth-l{display:none}}
+
+/* ---------- shell ---------- */
+#app{display:none}
+.shell{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100vh}
+.side{background:#fff;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;z-index:40}
+.brand{padding:20px 20px 18px;display:flex;align-items:center;gap:12px}
+.brand i{width:38px;height:38px;border-radius:10px;background:var(--grad);color:#fff;font-family:var(--disp);font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;font-style:normal}
+.brand b{font-family:var(--disp);font-size:14.5px;font-weight:700;display:block;line-height:1.15}
+.brand span{font-size:11px;color:var(--t4);letter-spacing:.2px}
+.nav{padding:6px 14px 18px;flex:1;overflow-y:auto}
+.nav .lbl{font-family:var(--disp);font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--t4);padding:18px 12px 8px}
+.nav a{display:flex;align-items:center;gap:12px;padding:9.5px 12px;border-radius:9px;color:var(--t2);font-weight:500;font-size:14px;margin:1px 0;position:relative;cursor:pointer;transition:background .12s,color .12s}
+.nav a svg{width:18px;height:18px;flex:0 0 auto;color:var(--t3)}
+.nav a:hover{background:#F4F7FB;color:var(--ink)}
+.nav a.on{background:var(--brand-tint);color:var(--brand-deep);font-weight:600}
+.nav a.on svg{color:var(--brand)}
+.nav a.on::before{content:"";position:absolute;left:-14px;top:9px;bottom:9px;width:3px;border-radius:0 3px 3px 0;background:var(--brand)}
+.nav a .pip{margin-left:auto;background:var(--brand);color:#fff;font-size:10.5px;font-weight:700;min-width:19px;height:19px;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 5px}
+.urow{border-top:1px solid var(--line2);padding:14px 16px;display:flex;align-items:center;gap:11px}
+.uav{width:36px;height:36px;border-radius:50%;background:var(--grad);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.urow b{font-size:13px;display:block;line-height:1.25}.urow span{font-size:11.5px;color:var(--t4)}
+.urow .out{margin-left:auto;background:none;border:none;color:var(--t4);padding:6px;font-size:15px}
+.urow .out:hover{color:var(--red)}
+.main{min-width:0;display:flex;flex-direction:column}
+.top{height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 clamp(16px,3vw,32px);gap:14px;position:sticky;top:0;z-index:30}
+.top .mb{display:none}
+.top h1{font-size:18px;font-weight:700}
+.top .sp{flex:1}
+.pill{font-family:var(--disp);font-size:11.5px;font-weight:600;letter-spacing:.04em;padding:6px 12px;border-radius:20px}
+.pill.demo{background:var(--amber-bg);color:var(--amber)}
+.pill.live{background:var(--ok-bg);color:var(--ok)}
+.icn{width:38px;height:38px;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--t2);position:relative;background:#fff;box-shadow:var(--sh)}
+.icn:hover{background:#F7F9FC}
+.icn .d{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid #fff}
+.wrap{padding:clamp(18px,3.4vw,32px);max-width:1120px;width:100%;margin:0 auto}
+.wrap.view-in{animation:vin .24s ease both}
+@keyframes vin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(max-width:900px){
+ .shell{grid-template-columns:minmax(0,1fr)}
+ .side{position:fixed;left:-280px;width:264px;transition:left .22s;box-shadow:var(--sh3)}
+ .side.open{left:0}
+ .top .mb{display:inline-flex}
+}
+
+/* ---------- cards ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh)}
+.ch{padding:16px 22px;border-bottom:1px solid var(--line2);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ch h3{font-size:15.5px;font-weight:700}
+.ch .sp{flex:1}
+.cb{padding:22px}
+.grid{display:grid;gap:20px}
+.g2{grid-template-columns:minmax(0,1.55fr) minmax(0,1fr)}
+.g2e{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:940px){.g2,.g2e,.g3{grid-template-columns:minmax(0,1fr)}}
+.hr{height:1px;background:var(--line2);margin:18px 0;border:0}
+.empty{padding:48px 24px;text-align:center;color:var(--t3)}
+.empty .ei{width:52px;height:52px;border-radius:14px;background:var(--brand-tint);color:var(--brand);display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:20px;font-weight:700}
+.empty .ei svg{width:22px;height:22px}
+.empty h4{color:var(--ink);margin-bottom:6px;font-size:16px}
+.empty p{max-width:44ch;margin:0 auto 16px}
+
+/* ---------- status tags ---------- */
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:16px;white-space:nowrap;line-height:1.4}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.tag.g{background:var(--ok-bg);color:var(--ok)}
+.tag.a{background:var(--amber-bg);color:var(--amber)}
+.tag.b{background:var(--brand-tint);color:var(--brand-deep)}
+.tag.r{background:var(--red-bg);color:var(--red)}
+.tag.n{background:#F1F4F8;color:var(--t2)}
+.tag.gold{background:var(--brand-tint);color:var(--brand-deep)}
+.big-tag{display:inline-flex;align-items:center;gap:9px;font-family:var(--disp);font-weight:700;font-size:15px;padding:10px 16px;border-radius:12px}
+
+/* ---------- NEXT-STEP banner (block layout; cannot collapse) ---------- */
+.nx{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh2);padding:26px 26px 22px;margin-bottom:20px;position:relative;overflow:hidden}
+.nx::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--grad)}
+.nx .k{font-family:var(--disp);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);margin-bottom:10px}
+.nx h2{font-size:clamp(20px,3.4vw,26px);font-weight:700;line-height:1.25;margin-bottom:8px;max-width:34ch}
+.nx p{color:var(--t3);max-width:64ch;margin-bottom:18px}
+.nx .row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.nx .cdchip,.cdchip{display:inline-flex;align-items:baseline;gap:8px;background:var(--brand-tint);border-radius:12px;padding:10px 16px}
+.nx .cdchip b,.cdchip b{font-family:var(--disp);font-size:24px;font-weight:800;color:var(--brand-deep);line-height:1;font-variant-numeric:tabular-nums}
+.nx .cdchip span,.cdchip span{font-size:12px;font-weight:600;color:var(--t3)}
+.nx .cdchip.warn,.cdchip.warn{background:var(--amber-bg)}.nx .cdchip.warn b,.cdchip.warn b{color:var(--amber)}
+/* legacy .act mapped to same safe pattern (any stragglers) */
+.act{display:block;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh2);padding:26px;margin-bottom:20px}
+.act .l,.act .r{display:block}
+.act .r{margin-top:16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.act .k{font-family:var(--disp);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);margin-bottom:10px}
+.act h2{font-size:clamp(20px,3.4vw,26px);font-weight:700;line-height:1.25;margin-bottom:8px}
+.act p{color:var(--t3);max-width:64ch}
+.cd{display:inline-flex;align-items:baseline;gap:8px;background:var(--brand-tint);border-radius:12px;padding:10px 16px}
+.cd b{font-family:var(--disp);font-size:24px;font-weight:800;color:var(--brand-deep);line-height:1}
+.cd span{font-size:12px;font-weight:600;color:var(--t3)}
+.cd.warn{background:var(--amber-bg)}.cd.warn b{color:var(--amber)}
+
+/* ---------- overview (ACCA-style) ---------- */
+.ov{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:20px}
+@media(max-width:940px){.ov{grid-template-columns:minmax(0,1fr)}}
+.ov .cell{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);padding:18px 20px;display:flex;align-items:center;gap:16px;min-width:0}
+.ov .cell .oc{min-width:0;flex:1}
+.ov .lab{font-family:var(--disp);font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--t4);margin-bottom:6px}
+.ov .val{font-family:var(--disp);font-size:19px;font-weight:700;line-height:1.2}
+.ov .sub{font-size:12.5px;color:var(--t3);margin-top:3px}
+.ring{position:relative;width:64px;height:64px;flex:0 0 auto}
+.ring svg{transform:rotate(-90deg)}
+.ring .rv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:15px;color:var(--brand-deep)}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);padding:18px 20px}
+.kpi .lab{font-family:var(--disp);font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--t4);margin-bottom:8px}
+.kpi .val{font-family:var(--disp);font-size:24px;font-weight:800;letter-spacing:-.02em}
+.kpi .sub{font-size:12.5px;color:var(--t3);margin-top:4px}
+
+/* ---------- journey stepper (scroll-safe) ---------- */
+.prog{display:flex;align-items:center;gap:0;margin:0 0 22px;overflow-x:auto;padding:4px 2px 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.prog::-webkit-scrollbar{display:none}
+.pst{display:flex;align-items:center;gap:9px;flex:0 0 auto}
+.prog .pst:not(:last-child){flex:1 0 auto;min-width:112px}
+.pst .n{width:26px;height:26px;border-radius:50%;font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:#EAEEF4;color:var(--t4)}
+.pst.dn .n{background:var(--ok);color:#fff}
+.pst.cur .n{background:var(--brand);color:#fff;box-shadow:0 0 0 4px var(--brand-tint)}
+.pst .t{font-size:12.5px;font-weight:600;color:var(--t4);white-space:nowrap}
+.pst.dn .t,.pst.cur .t{color:var(--t2)}
+.pst .ln{flex:1;height:2px;background:#E4E9F0;margin:0 12px;border-radius:2px;min-width:16px}
+.pst.dn .ln{background:#BFE3CC}
+
+/* ---------- facts / quick links / callouts ---------- */
+.fact{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line2);flex-wrap:wrap}
+.fact:last-child{border:0;padding-bottom:0}.fact:first-child{padding-top:0}
+.fico{width:38px;height:38px;border-radius:10px;background:var(--brand-tint);color:var(--brand);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.fico svg{width:18px;height:18px}
+.fact .ft{flex:1;min-width:180px}
+.fact .ft b{font-size:14px;font-weight:600;display:block}
+.fact .ft span{font-size:12.5px;color:var(--t3)}
+.ql{display:flex;flex-direction:column;gap:2px}
+.ql a{display:flex;align-items:center;gap:13px;padding:12px 12px;border-radius:11px;color:var(--ink);cursor:pointer}
+.ql a:hover{background:#F4F7FB}
+.ql a svg{width:19px;height:19px;color:var(--brand);flex:0 0 auto}
+.ql a b{font-size:14px;font-weight:600;flex:1}
+.ql a .ar{color:var(--t4);font-size:17px}
+.note{padding:14px 16px;background:#F6F9FE;border:1px solid var(--brand-tint2);border-radius:12px;font-size:13px;color:var(--brand-deep);line-height:1.55}
+.callout{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:12px;font-size:13px;line-height:1.55;border:1px solid transparent}
+.callout svg{width:18px;height:18px;flex:0 0 auto;margin-top:1px}
+.callout.info{background:#F6F9FE;border-color:var(--brand-tint2);color:var(--brand-deep)}
+.callout.warn{background:var(--amber-bg);border-color:#F1E2C2;color:#7A4A0F}
+
+/* ---------- tables ---------- */
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{text-align:left;font-family:var(--disp);font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--t4);padding:0 16px 12px;border-bottom:1px solid var(--line2);white-space:nowrap}
+.tbl td{padding:15px 16px;border-bottom:1px solid var(--line2);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tr.clk{cursor:pointer}.tbl tr.clk:hover td{background:#F8FAFD}
+.tbl .r{text-align:right}
+.tfoot{display:flex;align-items:center;padding:14px 20px;border-top:1px solid var(--line2);font-size:12.5px;color:var(--t3)}
+
+/* ---------- segmented / messages / tickets ---------- */
+.seg{display:inline-flex;background:#EEF1F6;border-radius:11px;padding:3px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{border:none;background:none;padding:8px 14px;border-radius:9px;font-size:13px;font-weight:600;color:var(--t3);white-space:nowrap}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:var(--sh)}
+.mrow{display:flex;gap:14px;padding:16px 20px;border-bottom:1px solid var(--line2);cursor:pointer;align-items:flex-start}
+.mrow:last-child{border-bottom:0}
+.mrow:hover{background:#F8FAFD}
+.mrow.un{background:#F5F9FF}
+.mrow .mi{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-size:15px}
+.mrow .mt{flex:1;min-width:0}
+.mrow .mt b{font-size:14px;font-weight:600}
+.mrow .mt p{font-size:13px;color:var(--t3);margin-top:3px}
+.mrow .mw{width:8px;height:8px;border-radius:50%;background:var(--brand);flex:0 0 auto;margin-top:7px}
+.tkt{display:flex;align-items:center;gap:13px;padding:15px 18px;border:1px solid var(--line);border-radius:13px;margin-bottom:10px;cursor:pointer;background:#fff;box-shadow:var(--sh);transition:box-shadow .14s,border-color .14s;flex-wrap:wrap}
+.tkt:hover{border-color:#D3DBE6;box-shadow:var(--sh2)}
+.tkt .tt{flex:1;min-width:200px}
+.tkt .tt b{font-size:14px;font-weight:600;display:block}
+.tkt .tt span{font-size:12.5px;color:var(--t3)}
+.bubble{max-width:84%;padding:12px 15px;border-radius:14px;margin-bottom:10px;font-size:13.5px;line-height:1.55;width:fit-content}
+.bubble.me{background:var(--brand);color:#fff;margin-left:auto;border-bottom-right-radius:5px}
+.bubble.them{background:#F1F4F8;border-bottom-left-radius:5px}
+.bubble .bm{font-size:10.5px;opacity:.72;margin-top:5px}
+
+/* ---------- drawer / modal / toast / notif ---------- */
+.scrim{position:fixed;inset:0;background:rgba(15,23,42,.44);opacity:0;pointer-events:none;transition:opacity .2s;z-index:54}
+.scrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100vh;width:480px;max-width:94vw;background:var(--bg);box-shadow:var(--sh3);transform:translateX(102%);transition:transform .24s cubic-bezier(.4,0,.2,1);z-index:55;display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.dh{padding:18px 22px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:12px}
+.dh h3{font-size:17px;font-weight:700;margin-bottom:2px}
+.dh .x{margin-left:auto;background:none;border:none;font-size:24px;color:var(--t4);line-height:1}
+.db{flex:1;overflow-y:auto;padding:20px 22px}
+.dsec{margin-bottom:22px}
+.dsec h5{font-family:var(--disp);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t4);margin-bottom:10px}
+.df{padding:14px 22px;background:#fff;border-top:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid var(--line2);font-size:13.5px}
+.kv:last-child{border:0}
+.kv .k{color:var(--t3)}
+.kv .v{font-weight:600;text-align:right;word-break:break-word}
+.mscrim{position:fixed;inset:0;background:rgba(15,23,42,.5);display:none;align-items:center;justify-content:center;z-index:65;padding:18px}
+.mscrim.open{display:flex}
+.modal{background:#fff;border-radius:18px;width:100%;max-width:470px;box-shadow:var(--sh3);overflow:hidden;animation:mup .2s cubic-bezier(.2,.9,.3,1);max-height:92vh;display:flex;flex-direction:column}
+@keyframes mup{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:none}}
+.mh{padding:22px 24px 8px}.mh h3{font-size:19px;font-weight:700}
+.mb{padding:10px 24px 20px;overflow-y:auto}
+.mf{padding:14px 24px;border-top:1px solid var(--line2);display:flex;justify-content:flex-end;gap:10px;background:#FAFBFD}
+#toasts{position:fixed;bottom:22px;right:22px;z-index:90;display:flex;flex-direction:column;gap:10px;max-width:min(92vw,380px)}
+.toast{background:var(--ink);color:#fff;padding:13px 17px;border-radius:12px;font-size:13.5px;box-shadow:var(--sh3);display:flex;align-items:center;gap:9px;animation:tin .2s ease}
+.toast.ok{background:var(--ok)}.toast.err{background:var(--red)}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+.notif-pop{position:fixed;top:70px;right:18px;width:372px;max-width:calc(100vw - 24px);background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--sh3);z-index:50;display:none;overflow:hidden}
+.notif-pop.open{display:block}
+.notif-pop .nh{padding:14px 18px;border-bottom:1px solid var(--line2);display:flex;align-items:center;font-weight:700;font-size:14px}
+.notif-pop .nh button{margin-left:auto;font-size:12.5px;color:var(--brand);background:none;border:none;font-weight:600}
+
+/* ---------- exam runner ---------- */
+#runner{position:fixed;inset:0;background:var(--bg);z-index:70;display:none;flex-direction:column}
+#runner.open{display:flex}
+.rtop{background:#fff;border-bottom:1px solid var(--line);padding:0 clamp(14px,3vw,26px);height:60px;display:flex;align-items:center;gap:12px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.rtop::-webkit-scrollbar{display:none}
+.rtop .mk{width:32px;height:32px;border-radius:9px;background:var(--grad);color:#fff;font-family:var(--disp);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto}
+.rtop .md{font-family:var(--disp);font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t4);white-space:nowrap}
+.sec-chip{display:inline-flex;align-items:center;gap:6px;background:var(--brand-tint);color:var(--brand-deep);font-size:11.5px;font-weight:600;border-radius:18px;padding:6px 12px;white-space:nowrap}
+.sec-chip.v{background:var(--red-bg);color:var(--red)}
+.timer{margin-left:auto;font-family:var(--disp);font-variant-numeric:tabular-nums;font-weight:700;font-size:16px;background:var(--brand-tint);color:var(--brand-deep);border-radius:10px;padding:8px 15px;flex:0 0 auto}
+.timer.low{background:var(--red-bg);color:var(--red);animation:tp 1.1s infinite}
+@keyframes tp{50%{opacity:.55}}
+.rbody{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 248px;gap:22px;padding:clamp(14px,3vw,26px);max-width:1120px;width:100%;margin:0 auto;overflow:auto;align-content:start}
+.qcard{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);padding:clamp(20px,3vw,30px)}
+.qcard .qn{font-family:var(--disp);font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);margin-bottom:5px}
+.qcard .qd{font-size:12.5px;color:var(--t4);margin-bottom:16px}
+.qcard h3{font-size:17px;line-height:1.5;margin-bottom:20px;font-weight:600;font-family:var(--sans)}
+.opt{display:flex;gap:13px;align-items:flex-start;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:border-color .12s,background .12s}
+.opt:hover{border-color:var(--brand);background:#F8FBFF}
+.opt.sel{border-color:var(--brand);background:var(--brand-tint)}
+.opt .k{width:26px;height:26px;border-radius:50%;background:#EEF1F6;color:var(--t2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;flex:0 0 auto}
+.opt.sel .k{background:var(--brand);color:#fff}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}.opt.ok .k{background:var(--ok);color:#fff}
+.opt.no{border-color:var(--red);background:var(--red-bg)}.opt.no .k{background:var(--red);color:#fff}
+.rnav{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.pal{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);padding:18px;height:fit-content;position:sticky;top:0}
+.pal h4{font-family:var(--disp);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--t4);margin-bottom:12px;font-weight:600}
+.pgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.pgrid button{aspect-ratio:1;border:1.5px solid var(--line);border-radius:9px;background:#fff;font-weight:700;font-size:12.5px;color:var(--t2)}
+.pgrid button.a{background:var(--brand-tint);border-color:var(--brand-tint2);color:var(--brand-deep)}
+.pgrid button.f{box-shadow:inset 0 3px 0 #D9A514}
+.pgrid button.c{background:var(--brand);border-color:var(--brand);color:#fff}
+.pleg{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+@media(max-width:880px){.rbody{grid-template-columns:minmax(0,1fr)}.pal{position:static}}
+
+/* ---------- results / certificate ---------- */
+.dial{width:150px;height:150px;position:relative;margin:0 auto}
+.dial svg{transform:rotate(-90deg)}
+.dial .dv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dial .dv b{font-family:var(--disp);font-size:30px;font-weight:800;letter-spacing:-.02em}
+.dial .dv span{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.band{margin-bottom:14px}
+.band .bh{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:6px;align-items:center;gap:10px;flex-wrap:wrap}
+.band .bh b{font-weight:600}
+.bbar{height:8px;background:#EEF1F6;border-radius:5px;overflow:hidden}
+.bbar i{display:block;height:100%;border-radius:5px;transition:width .8s cubic-bezier(.22,1,.36,1)}
+.band.above .bbar i{background:var(--ok)}
+.band.at .bbar i{background:var(--brand)}
+.band.below .bbar i{background:var(--red)}
+.verdict{font-family:var(--disp);font-weight:800;font-size:28px;letter-spacing:-.02em}
+.verdict.p{color:var(--ok)}.verdict.f{color:var(--red)}
+.progbar{height:10px;background:#EDEFF4;border-radius:6px;overflow:hidden}
+.progbar i{display:block;height:100%;background:var(--grad);border-radius:6px;transition:width .8s cubic-bezier(.22,1,.36,1)}
+.shero{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.cert{background:#fff;border:1px solid var(--line);box-shadow:var(--sh2);padding:clamp(28px,6vw,56px);position:relative;max-width:800px;margin:0 auto;text-align:center;border-radius:6px}
+.cert::before{content:"";position:absolute;inset:12px;border:2px solid var(--brand-tint2);border-radius:3px;pointer-events:none}
+.cert::after{content:"";position:absolute;inset:18px;border:1px solid var(--line);border-radius:3px;pointer-events:none}
+.cert .cmk{font-family:var(--disp);font-weight:800;font-size:30px;color:var(--brand-deep)}
+.cert .cinst{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--t4);font-weight:700;margin-top:6px}
+.cert .ct{font-family:var(--disp);font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--brand);margin:30px 0 10px;font-weight:700}
+.cert .cnm{font-family:var(--disp);font-size:clamp(24px,4.4vw,38px);font-weight:700;margin:8px 0 8px}
+.cert .csub{color:var(--t2);max-width:54ch;margin:0 auto;font-size:13.5px}
+.cert .ccred{font-family:var(--disp);font-weight:700;font-size:18px;color:var(--brand-deep);margin:20px 0 4px}
+.cert .cseal{width:74px;height:74px;border-radius:50%;background:var(--grad);margin:24px auto 0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--disp);font-weight:800;font-size:15px;box-shadow:0 10px 22px rgba(29,78,216,.32)}
+.cert .cmeta{display:flex;justify-content:center;gap:clamp(18px,5vw,44px);margin-top:30px;font-size:12px;color:var(--t3);flex-wrap:wrap}
+.cert .cmeta b{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}
+.cert .cvfy{margin-top:16px;font-size:11px;color:var(--t4)}
+@media print{body{background:#fff}body>*{display:none!important}#printzone{display:block!important}.cert{box-shadow:none;border:1px solid #ccc}.noprint{display:none!important}}
+#printzone{display:none}
+
+/* ---------- calculator ---------- */
+#calc{position:fixed;right:20px;bottom:20px;width:250px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh3);z-index:75;overflow:hidden;display:none}
+#calc.open{display:block;animation:mup .18s both}
+#calc .ch2{background:var(--ink);color:#fff;padding:11px 15px;font-size:12.5px;font-weight:600;display:flex;align-items:center}
+#calc .ch2 button{margin-left:auto;background:none;border:none;color:#9DB4FF;font-size:16px}
+#calc .cd2{padding:14px 15px;text-align:right}
+#calc .ce{font-size:12px;color:var(--t3);min-height:16px;word-break:break-all}
+#calc .cv{font-family:var(--disp);font-size:26px;font-weight:800;min-height:32px}
+#calc .cg{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line2)}
+#calc .cg button{background:#fff;border:none;padding:14px 0;font-size:15px;font-weight:600}
+#calc .cg button:active{background:var(--brand-tint)}
+#calc .cg .op{color:var(--brand);font-weight:700}
+#calc .cg .eq{background:var(--brand);color:#fff}
+
+/* ---------- misc: resume / violation / confetti / calendar ---------- */
+.resume{background:var(--ink);color:#fff;border-radius:16px;padding:18px 20px;display:flex;gap:15px;align-items:center;box-shadow:var(--sh2);margin-bottom:20px;flex-wrap:wrap}
+.resume b{font-family:var(--disp);font-weight:700;font-size:15.5px}
+.resume .t{flex:1;min-width:220px}
+.resume .t span{color:#B9C3D6;font-size:12.5px;display:block;margin-top:3px}
+.resume .pulse{width:10px;height:10px;border-radius:50%;background:#4ADE80;animation:pl 1.4s infinite;flex:0 0 auto}
+@keyframes pl{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.5)}50%{box-shadow:0 0 0 8px rgba(74,222,128,0)}}
+.vflash{position:fixed;inset:0;z-index:80;background:rgba(180,35,24,.07);display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;pointer-events:none;animation:vin .2s}
+.vcard{background:#fff;border:1px solid #F0CFCB;border-radius:15px;padding:18px 24px;box-shadow:var(--sh3);max-width:400px;text-align:center}
+.cfti{position:fixed;top:-12px;width:9px;height:14px;border-radius:2px;z-index:72;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(106vh) rotate(720deg);opacity:.2}}
+.chead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.chead b{flex:1;text-align:center;font-size:14.5px;font-family:var(--disp);font-weight:700}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal .dw{font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--t4);text-align:center;text-transform:uppercase;padding:4px 0}
+.cal .dy{aspect-ratio:1;border:1.5px solid var(--line);border-radius:10px;background:#fff;font-weight:600;font-size:13.5px;color:var(--ink);transition:border-color .12s,background .12s}
+.cal .dy:hover:not(:disabled){border-color:var(--brand);background:var(--brand-tint)}
+.cal .dy:disabled{opacity:.3;background:var(--bg);cursor:not-allowed}
+.cal .dy.sel{background:var(--brand);border-color:var(--brand);color:#fff}
+.cal .dy.tdy{box-shadow:inset 0 0 0 2px var(--brand-tint2)}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-top:14px}
+.slot{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:10px 6px;font-weight:600;font-size:13.5px;color:var(--t2)}
+.slot:hover{border-color:var(--brand);color:var(--brand-deep);background:var(--brand-tint)}
+.slot.sel{background:var(--brand);border-color:var(--brand);color:#fff}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line2)}
+.chk:last-child{border:0}
+.chk input{width:18px;height:18px;margin-top:2px;accent-color:var(--brand);flex:0 0 auto}
+.chk .t b{display:block;font-size:14px;font-weight:600}
+.chk .t span{font-size:12.5px;color:var(--t3)}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line2);font-size:13.5px;flex-wrap:wrap}
+.srow:last-child{border:0}
+
+/* ================= v4 PREMIUM LAYER ================= */
+body{font-size:15px}
+.top{height:68px}
+.top h1{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.icn{width:40px;height:40px;border-radius:11px}
+.nav a{padding:10px 12px;font-size:14px;border-radius:10px}
+.nav a svg{width:19px;height:19px}
+.brand{padding:22px 20px}
+.card{border-radius:18px;border-color:#E6EAF2;box-shadow:0 1px 2px rgba(16,24,40,.04),0 14px 34px -18px rgba(16,24,40,.18)}
+.ch h3{font-size:16px}
+.btn{font-weight:650}
+.btn-p{background:linear-gradient(180deg,#2E68F0,#1D4ED8);border:1px solid #1B48C8;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 10px 22px -8px rgba(29,78,216,.55)}
+.btn-p:hover{background:linear-gradient(180deg,#3B74F4,#2153E0);border-color:#1B48C8}
+.btn-lg{padding:14px 24px;font-size:15px;border-radius:12px}
+/* hero zone */
+.hero2{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:20px;margin-bottom:22px;align-items:stretch}
+@media(max-width:960px){.hero2{grid-template-columns:minmax(0,1fr)}}
+.nx{margin-bottom:0;padding:30px;border-radius:20px;display:flex;flex-direction:column;justify-content:center}
+.nx::before{height:0;display:none}
+.nx .k{font-size:11px;letter-spacing:.14em}
+.nx h2{font-size:clamp(24px,3.4vw,31px);font-weight:800;letter-spacing:-.025em;line-height:1.16;max-width:none}
+.nx p{font-size:15px}
+.nx .row{margin-top:20px;gap:12px}
+.nx .cdchip,.cdchip{background:#F1F5FC;border:1px solid #E4EBF6;padding:12px 18px;border-radius:14px}
+.nx .cdchip b,.cdchip b{font-size:30px}
+/* credential card — the signature object */
+.credcard{position:relative;border-radius:20px;padding:24px;color:#E7EEFB;background:linear-gradient(175deg,#111C33 0%,#0B1322 70%);overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;min-height:216px;box-shadow:0 30px 60px -20px rgba(9,16,34,.55),0 2px 6px rgba(9,16,34,.25)}
+.credcard::before{content:"";position:absolute;inset:0;border-radius:20px;padding:1px;background:linear-gradient(155deg,rgba(120,166,255,.75),rgba(29,78,216,.28) 42%,rgba(255,255,255,.05));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.credcard::after{content:"";position:absolute;top:-80px;right:-80px;width:260px;height:260px;background:radial-gradient(circle,rgba(84,134,255,.22),transparent 62%)}
+.credcard>*{position:relative;z-index:1}
+.credcard .cc-top{display:flex;align-items:center;gap:11px}
+.credcard .seal{width:40px;height:40px;border-radius:11px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:17px;color:#fff;box-shadow:0 6px 14px rgba(29,78,216,.45)}
+.credcard .inst{font-family:var(--disp);font-size:9.5px;letter-spacing:.3em;color:#8AA1CC;font-weight:700}
+.credcard .cc-mid{margin:20px 0 18px}
+.credcard .who{font-family:var(--disp);font-size:20px;font-weight:700;color:#fff;letter-spacing:-.01em}
+.credcard .what{font-family:var(--disp);font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(90deg,#A7C4FF,#5B8CFF);-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:5px}
+.credcard .cc-bot{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.credcard .kk{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#7C92BD;font-weight:700;margin-bottom:3px;font-family:var(--disp)}
+.credcard .vv{font-family:var(--disp);font-size:14px;font-weight:700;color:#EAF0FB;font-variant-numeric:tabular-nums}
+.credcard .st{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:16px;background:rgba(74,222,128,.14);color:#7DEBA5}
+.credcard .st.warn{background:rgba(251,191,36,.15);color:#FCD34D}
+.credcard .st i{width:6px;height:6px;border-radius:50%;background:currentColor;font-style:normal}
+/* journey */
+.pst .n{width:28px;height:28px;font-size:12px}
+.pst .t{font-size:13px}
+.pst .ln{height:3px}
+/* facts + quick actions */
+.fico{width:40px;height:40px;border-radius:12px}
+.fact .ft b{font-size:14.5px}
+.ql a{padding:12px 14px;border:1px solid #EBEFF5;border-radius:14px;margin-bottom:9px;box-shadow:var(--sh);background:#fff}
+.ql a:hover{border-color:#D8E0EC;box-shadow:var(--sh2)}
+.ql a:last-child{margin-bottom:0}
+.qico{width:40px;height:40px;border-radius:11px;background:var(--brand-tint);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.qico svg{width:20px;height:20px;color:var(--brand)}
+.ql a>svg{display:none}
+.notif-pop{border-radius:16px}
+.kpi .val{font-size:26px}
+@media(max-width:640px){.nx{padding:24px 22px}.credcard{min-height:196px}}
+
+/* ===== v4.1 — 10-judge fixes ===== */
+.ch{gap:12px}
+.ch .lnk,.ch a{margin-left:auto;padding:8px 10px;border-radius:9px}
+.ch .lnk:hover,.ch a:hover{background:var(--brand-tint);text-decoration:none}
+.seg button{padding:9px 16px}
+.prog{padding-right:14px}
+.cdchip span{font-family:var(--disp);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
+.ql a:active{transform:translateY(1px)}
+.opt:focus-visible{outline:2.5px solid var(--brand);outline-offset:2px}
+:root{--t4:#8792A3}
+.fact .ft{min-width:200px}
+
+/* ===== v5 — brand lockup + elegance layer ===== */
+.lockup{display:flex;align-items:center;gap:12px;text-decoration:none}
+.lockup .lp{font-family:var(--disp);font-weight:900;font-size:30px;line-height:.85;color:var(--brand);letter-spacing:-.045em}
+.lockup .lb{width:2px;height:30px;background:#CFD6E2;border-radius:2px;flex:0 0 auto}
+.lockup .ln{font-family:var(--sans);font-weight:600;font-size:12px;line-height:1.25;color:var(--ink);letter-spacing:-.003em;white-space:nowrap}
+.lockup.sm .lp{font-size:24px}.lockup.sm .lb{height:24px}.lockup.sm .ln{font-size:10.5px}
+.lockup.inv .lp{color:#fff}.lockup.inv .lb{background:rgba(255,255,255,.4)}.lockup.inv .ln{color:#DCE7FB}
+.lockup.card .lp{color:#fff;font-size:22px}.lockup.card .lb{height:22px;background:rgba(255,255,255,.28)}.lockup.card .ln{color:#9FB3DA;font-size:9px;letter-spacing:.06em}
+/* staggered entrance */
+.wrap.view-in>*{animation:rise .34s cubic-bezier(.22,1,.36,1) both}
+.wrap.view-in>*:nth-child(2){animation-delay:.04s}
+.wrap.view-in>*:nth-child(3){animation-delay:.08s}
+.wrap.view-in>*:nth-child(4){animation-delay:.12s}
+.wrap.view-in>*:nth-child(5){animation-delay:.16s}
+.wrap.view-in>*:nth-child(n+6){animation-delay:.2s}
+@keyframes rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+/* skeleton shimmer */
+.skel{border-radius:14px;background:linear-gradient(90deg,#EEF1F6 25%,#F7F9FC 45%,#EEF1F6 65%);background-size:200% 100%;animation:shim 1.1s linear infinite}
+@keyframes shim{to{background-position:-200% 0}}
+/* credential card: slow light pass (very subtle) */
+.credcard .glow{position:absolute;top:-60%;left:-40%;width:55%;height:220%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.05),transparent);transform:rotate(10deg);animation:pass 9s ease-in-out infinite;pointer-events:none}
+@keyframes pass{0%,58%{left:-45%}82%{left:130%}100%{left:130%}}
+/* nav + toast polish */
+.nav a{transition:background .14s,color .14s}
+.toast{transition:opacity .3s,transform .3s}
+.pay-cards{display:none}.paycard{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px;background:#fff;box-shadow:var(--sh);cursor:pointer}.paycard .pc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.paycard .pc-mid{font-size:13px;color:var(--t2);margin-bottom:8px}.paycard .pc-bot{display:flex;justify-content:space-between;align-items:center}
+@media(max-width:640px){.pay-cards{display:block}.pay-table{display:none}}
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js" defer></script></head><body>
+<!-- ============ AUTH ============ -->
+<div id="auth">
+ <div class="auth-l">
+  <div class="mk"><span class="lockup inv"><span class="lp">PCI</span><span class="lb"></span><span class="ln">Project Controls<br/>Institute Global, Inc.</span></span></div>
+  <div>
+   <h1>Everything for your certification journey, in one place.</h1>
+   <p class="lead">Membership, learning, exam scheduling, results and your credential — with every deadline visible and every next step clear.</p>
+   <div class="tick"><i>✓</i>Continue enrolment where you left off, and track membership &amp; renewals</div>
+   <div class="tick"><i>✓</i>Prepare with the handbook, resources and official practice</div>
+   <div class="tick"><i>✓</i>Schedule and sit the PCP-AI exam; get results and a verifiable credential</div>
+   <div class="tick"><i>✓</i>Invoices, receipts, CPD, messages and support — all tracked</div>
+  </div>
+  <div class="foot">Membership access does not itself constitute certification. · Project Controls Institute Global, Inc.</div>
+ </div>
+ <div class="auth-r"><div class="auth-card">
+  <h2>Sign in</h2><p class="sub">Use the email you enrolled with.</p>
+  <div class="auth-err" id="aErr"></div>
+  <div class="fld"><label>Backend URL</label><input class="in" id="aApi" placeholder="https://api.yourdomain.com" autocomplete="off" aria-label="https://api.yourdomain.com"/></div>
+  <div class="fld"><label>Email</label><input class="in" id="aEmail" type="email" autocomplete="username"/></div>
+  <div class="fld"><label>Password</label><input class="in" id="aPass" type="password" autocomplete="current-password"/></div>
+  <button class="btn btn-p btn-lg btn-bk" id="aGo">Sign in</button>
+  <div class="auth-alt"><a id="aMagic">Email me a magic link</a> · <a href="#" id="aForgot">Forgot password</a></div>
+  <div class="auth-alt">Exploring? <button id="aDemo">Enter the demo panel →</button></div>
+ </div></div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app"><div class="shell">
+ <aside class="side" id="side">
+  <div class="brand"><span class="lockup"><span class="lp">PCI</span><span class="lb"></span><span class="ln">Project Controls<br/>Institute Global, Inc.</span></span></div>
+  <nav class="nav" id="nav"></nav>
+  <div class="urow"><span class="uav" id="uAv">–</span><div style="flex:1;min-width:0"><b id="uNm">–</b><span id="uRole">–</span></div><button class="out" id="uOut" title="Sign out" aria-label="Sign out">⎋</button></div>
+ </aside>
+ <div class="main">
+  <div class="top">
+   <button class="btn btn-g mb" id="mb" aria-label="Menu">☰</button>
+   <h1 id="pTitle">Home</h1><div class="sp"></div>
+   <span class="pill" id="envPill"></span>
+   <button class="icn" id="bell" aria-label="Messages"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M15 7a5 5 0 0 0-10 0c0 6-2.5 7.5-2.5 7.5h15S15 13 15 7"/><path d="M11 20a1.5 1.5 0 0 0 3 0"/></svg><span class="d" id="bellN" style="display:none">0</span></button>
+  </div>
+  <div class="wrap" id="view"></div>
+ </div>
+</div></div>
+
+<div class="notif-pop" id="npop"><div class="nh">Messages<button id="npAll">Mark all read</button></div><div id="npList"></div></div>
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer"></div>
+<div class="mscrim" id="mscrim"></div>
+<div id="runner"></div>
+<div id="printzone"></div>
+<div id="toasts"></div>
+<script>
+/* ================= PCI STUDENT PANEL ================= */
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=(n,c)=>((c||'USD')+' '+(Number.isInteger(+n)?(+n).toLocaleString('en-US'):(+n).toFixed(2)));
+const fD=s=>{if(!s)return'—';const d=new Date(String(s).replace(' ','T'));return isNaN(d)?esc(s):d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})};
+const fDT=s=>{if(!s)return'—';const d=new Date(String(s).replace(' ','T'));return isNaN(d)?esc(s):d.toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'})+' · '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})};
+const dTo=s=>Math.ceil((new Date(String(s).replace(' ','T'))-Date.now())/864e5);
+function toast(m,k){const t=document.createElement('div');t.className='toast '+(k||'');t.innerHTML=(k==='ok'?'✓ ':k==='err'?'⚠ ':'')+esc(m);$('#toasts').appendChild(t);setTimeout(()=>{t.style.opacity=0;t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},2800)}
+const _mem={};const store={get:k=>{try{return sessionStorage.getItem(k)}catch(e){return _mem[k]??null}},set:(k,v)=>{try{sessionStorage.setItem(k,v)}catch(e){_mem[k]=v}},del:k=>{try{sessionStorage.removeItem(k)}catch(e){delete _mem[k]}}};
+const S={mode:store.get('sp2_mode')||null,api:store.get('sp2_api')||'',tok:store.get('sp2_tok')||'',me:null,route:'home',check:JSON.parse(store.get('sp2_check')||'{}')};
+
+async function api(path,opts={}){
+  if(S.mode==='demo')return demoAPI(path,opts);
+  const r=await fetch(S.api.replace(/\/$/,'')+path,{...opts,headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.tok,...(opts.headers||{})}});
+  if(r.status===401){signOut();throw new Error('session expired')}
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw Object.assign(new Error(j.error||('http_'+r.status)),{data:j});
+  return j;
+}
+function cfgOn(k,dflt){const v=(S.config||{})[k];if(v===undefined)return dflt!==false;return !['0','false','no','off',''].includes(String(v));}
+function applyBanner(){let el=document.getElementById('spBanner');const on=cfgOn('sp_banner_enabled',false)&&(S.config||{}).sp_banner_text;
+  if(on){if(!el){el=document.createElement('div');el.id='spBanner';el.style.cssText='background:#1D4ED8;color:#fff;padding:9px 16px;text-align:center;font-size:13px;font-weight:500';document.body.insertBefore(el,document.body.firstChild);}el.textContent=(S.config||{}).sp_banner_text;el.style.display='';}
+  else if(el){el.style.display='none';}}
+async function refresh(){S.me=await api('/api/me');
+  try{S.config=await api('/api/me/config');}catch(_){S.config=S.config||{};}
+  applyBanner();
+  try{const ac=await api('/api/me/accommodations');S.me.accommodation=(ac.rows||[])[0]||null;}catch(_){S.me.accommodation=null;}
+  paintUser();buildNav();loadMsgs();}
+
+/* ---------- ICONS ---------- */
+const LOCKUP=v=>'<span class="lockup '+(v||'')+'"><span class="lp">PCI</span><span class="lb"></span><span class="ln">Project Controls<br/>Institute Global, Inc.</span></span>';
+const IC={home:'M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5',exam:'|rect|',results:'M4 20V9M10 20V4M16 20v-6M22 20H2',cert:'|cert|',learn:'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z|M4 19a2 2 0 0 1 2-2h13',cpd:'M12 7v5l3 2|C',mem:'M3 7h18v12H3zM3 10.5h18',pay:'|doc|',msg:'M4 4h16v13H8l-4 3z',sup:'M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5|D|M12 17h.01',prof:'M12 8a4 4 0 1 0 0-.001|M4 21c0-4 3.6-6 8-6s8 2 8 6',docs:'|doc|',cal:'|rect|',card:'M2 6h20v12H2zM2 10h20'};
+function svg(k){const p=IC[k]||'';const parts=p.split('|');let out='';
+  parts.forEach(seg=>{if(seg==='rect')out+='<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18"/>';
+    else if(seg==='cert')out+='<circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-2.5L17 22l-1.5-8"/>';
+    else if(seg==='doc')out+='<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h6M8 17h4"/>';
+    else if(seg==='C')out+='<circle cx="12" cy="12" r="9"/>';
+    else if(seg==='D')out+='<circle cx="12" cy="12" r="9"/>';
+    else if(seg)out+='<path d="'+seg+'"/>';});
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+out+'</svg>';}
+
+const NAV=[{g:'Overview'},{id:'home',l:'Home',r:vHome},{id:'exam',l:'My exam',r:vExam},{id:'results',l:'Results',r:vResults},{id:'cert',l:'Certificate',r:vCert},
+ {g:'Prepare'},{id:'learn',l:'Learning',r:vLearn},{id:'cpd',l:'CPD',r:vCpd},
+ {g:'Account'},{id:'mem',l:'Membership',r:vMembership},{id:'pay',l:'Payments',r:vPayments},{id:'msg',l:'Messages',r:vMessages},{id:'sup',l:'Support',r:vSupport},{id:'prof',l:'Profile',r:vProfile}];
+function navHidden(id){return (id==='cpd'&&!cfgOn('sp_cpd_enabled',true))||(id==='support'&&!cfgOn('sp_support_tickets_enabled',true));}
+function buildNav(){const n=$('#nav');n.innerHTML='';const unread=(S.me&&S.me.unread)||0;const awaitT=S.me&&S.me.tickets&&S.me.tickets.some(t=>t.status==='awaiting_student');
+  NAV.forEach(x=>{if(x.g){const d=document.createElement('div');d.className='lbl';d.textContent=x.g;n.appendChild(d);return}
+    const a=document.createElement('a');a.dataset.id=x.id;a.className=x.id===S.route?'on':'';
+    let pip='';if(x.id==='msg'&&unread)pip='<span class="pip">'+unread+'</span>';if(x.id==='sup'&&awaitT)pip='<span class="pip">1</span>';if(x.id==='exam'&&S.me&&S.me.exam&&S.me.exam.entitled&&!S.me.exam.booking&&!S.me.exam.passed)pip='<span class="pip" title="Action needed">!</span>';
+    a.innerHTML=svg(x.id)+'<span style="flex:1">'+x.l+'</span>'+pip;
+    a.onclick=()=>{go(x.id);$('#side').classList.remove('open')};n.appendChild(a)});}
+function setActive(){document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.id===S.route))}
+async function go(id){const s=NAV.find(x=>x.id===id);if(!s||!s.r)return;S.route=id;setActive();$('#pTitle').textContent=s.l;
+  const v=$('#view');v.classList.remove('view-in');void v.offsetWidth;v.classList.add('view-in');v.innerHTML='<div class="skel" style="height:150px;margin-bottom:18px"></div><div class="skel" style="height:230px;margin-bottom:18px"></div><div class="skel" style="height:120px"></div>';
+  try{await s.r()}catch(e){v.innerHTML='<div class="empty"><div class="ei">!</div><h4>Couldn’t load</h4><p>'+esc(e.message)+'</p></div>'}
+}
+function paintUser(){const u=S.me.user;$('#uAv').textContent=((u.first_name||'?')[0]+(u.last_name||' ')[0]).toUpperCase();$('#uNm').textContent=(u.first_name+' '+(u.last_name||'')).trim();$('#uRole').textContent=(S.me.membership?S.me.membership.membership_type+' member':'Student');}
+$('#mb').onclick=()=>$('#side').classList.toggle('open');
+$('#uOut').onclick=()=>signOut();
+
+/* ---------- MESSAGES (bell + centre) ---------- */
+const MCAT={Account:['b','📋'],Learning:['b','📘'],Certification:['gold','🎓'],Payment:['a','💳'],Policy:['n','📄'],Support:['g','💬'],General:['b','📣']};
+async function loadMsgs(){try{const d=await api('/api/me/messages');S._msgs=d.rows||[];const un=d.unread||0;
+  $('#bellN').style.display=un?'flex':'none';$('#bellN').textContent=un;paintNpop();}catch(e){}}
+function paintNpop(){const rows=(S._msgs||[]).slice(0,6);
+  $('#npList').innerHTML=rows.length?rows.map(m=>`<div class="mrow ${m.read_at?'':'un'}" data-mid="${m.id}"><div class="mi tag ${(MCAT[m.category]||['n'])[0]}" style="font-size:14px">${(MCAT[m.category]||['n','•'])[1]}</div><div class="mt"><b>${esc(m.title)}</b><p>${esc((m.body||'').slice(0,80))}${(m.body||'').length>80?'…':''}</p></div>${m.read_at?'':'<span class="mw"></span>'}</div>`).join(''):'<div class="empty" style="padding:26px">You’re all caught up.</div>';
+  document.querySelectorAll('#npList [data-mid]').forEach(el=>el.onclick=async()=>{await api('/api/me/messages/'+el.dataset.mid+'/read',{method:'POST'});$('#npop').classList.remove('open');await loadMsgs();go('msg')});}
+$('#bell').onclick=e=>{e.stopPropagation();$('#npop').classList.toggle('open')};
+$('#npAll').onclick=async()=>{await api('/api/me/messages/read-all',{method:'POST'});await loadMsgs();toast('All marked read','ok')};
+document.addEventListener('click',e=>{if(!e.target.closest('#npop')&&!e.target.closest('#bell'))$('#npop').classList.remove('open')});
+
+/* ---------- HOME ---------- */
+function nextStep(me){
+  if(me.enrollment)return{k:'Continue',h:'Pick up your enrolment where you left off',p:'Your progress is saved. You can return any time using the same email address — you’re on step '+me.enrollment.current_step+'.',b:'Resume enrolment',a:'__resume'};
+  if(me.credentials.length)return{h:'You’re certified. Congratulations, '+me.user.first_name+'.',p:'Your PCP-AI credential is active and verifiable. Keep it current with CPD and recertify within your three-year cycle.',b:'View certificate',a:'cert'};
+  const last=me.attempts.find(a=>a.kind==='exam'&&a.status==='submitted');
+  if(last&&last.result==='fail')return{h:'Your result is in — the path forward is clear.',p:'Review your domain breakdown, target weaker areas in the practice centre, and rebook under the retake policy.',b:'Review results',a:'results'};
+  if(me.exam.booking){const d=dTo(me.exam.booking.scheduled_at);return{h:d<=0?'Exam day. You’ve prepared for this.':'Your exam is booked. Now the goal is readiness.',p:'Work through the checklist, run the system check, and practise. Launch opens 15 minutes before your slot.',b:'Go to My exam',a:'exam'}}
+  if(me.exam.entitled)return{h:'Your exam fee is paid — choose your moment',p:'Pick a date and time inside your 12-month window. Free to reschedule up to 72 hours before the slot.',b:'Schedule my exam',a:'exam'};
+  return{h:'Welcome, '+me.user.first_name+'.',p:'Your next step is the PCP-AI examination fee, which opens a 12-month scheduling window.',b:'See my exam',a:'exam'};
+}
+function credStatus(me){const c=me.credentials&&me.credentials[0];if(!c)return null;
+  const now=Date.now(),exp=new Date(c.expires_at).getTime();
+  const memOK=me.membership&&me.membership.expiry_date&&new Date(me.membership.expiry_date).getTime()>now;
+  const cpdOK=(me.cpd?me.cpd.total:0)>=(me.cpd?me.cpd.target:60);
+  if(exp<now||c.status==='expired')return{k:'expired',t:'Expired',cls:'r',why:'The three-year cycle has ended. Recertify to restore active status.'};
+  if(c.status!=='active')return{k:'other',t:c.status,cls:'r',why:''};
+  if(!memOK)return{k:'risk',t:'At risk — renewal due',cls:'a',why:'Your annual membership has lapsed. Renew to keep the credential in good standing.'};
+  if(!cpdOK&&dTo(c.expires_at)<180)return{k:'risk',t:'At risk — CPD shortfall',cls:'a',why:'CPD '+me.cpd.total+' of '+me.cpd.target+' hours with under six months to recertification.'};
+  return{k:'active',t:'Active & in good standing',cls:'g',why:''};
+}
+function verifyURL(id){const b=(S.me&&S.me.site_base_url)||'https://www.projectcontrolsinstitute.org';return b.replace(/\/$/,'')+'/verify.html?id='+encodeURIComponent(id)}
+function credCard(me){const c=me.credentials[0];const name=(me.user.first_name+' '+(me.user.last_name||'')).trim();
+  const st=c?{t:'Active credential',w:0}:me.exam.booking?{t:'Exam booked',w:0}:me.exam.entitled?{t:'Window open',w:dTo(me.exam.deadline)<60}:{t:'Awaiting exam fee',w:1};
+  const k1=c?['Credential ID',c.credential_id]:me.exam.entitled?['Exam window',Math.max(0,dTo(me.exam.deadline))+' days left']:['Exam fee',money(350)];
+  const mOK=me.membership&&me.membership.expiry_date&&dTo(me.membership.expiry_date)>0;
+  const k2=['Membership',me.membership?(mOK?'Active · to '+fD(me.membership.expiry_date):'Lapsed'):'—'];
+  return `<div class="credcard"><div class="cc-top">${LOCKUP("card")}</div><span class="glow"></span>
+   <div class="cc-mid"><div class="who">${esc(name)}</div><div class="what">${c?'PCP-AI · Certified Professional':'PCP-AI Candidate'}</div></div>
+   <div class="cc-bot"><div><div class="kk">${k1[0]}</div><div class="vv">${esc(String(k1[1]))}</div></div><div><div class="kk">${k2[0]}</div><div class="vv">${esc(k2[1])}</div></div><span class="st ${st.w?'warn':''}"><i></i>${st.t}</span></div></div>`}
+function ringHTML(done,total){const r=26,c=2*Math.PI*r,off=c*(1-done/total);
+  return `<div class="ring"><svg width="64" height="64"><circle cx="32" cy="32" r="${r}" fill="none" stroke="#E7EBF1" stroke-width="7"/><circle cx="32" cy="32" r="${r}" fill="none" stroke="#1D4ED8" stroke-width="7" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"/></svg><div class="rv">${done}/${total}</div></div>`}
+function journey(me){
+  const paidM=!!me.membership||me.payments.some(p=>p.product_type!=='exam'&&p.payment_status==='paid');
+  const paidE=me.exam.entitled,booked=!!me.exam.booking||me.attempts.some(a=>a.kind==='exam');
+  const sat=me.attempts.some(a=>a.kind==='exam'&&a.status==='submitted');
+  const cert=me.credentials.length>0;
+  const st=[['Enrolled',!!paidM],['Exam fee',paidE],['Schedule',booked||sat],['Sit exam',sat],['Result',sat],['Certified',cert]];
+  let now=st.findIndex(s=>!s[1]);if(now<0)now=st.length-1;journey._done=st.filter(x=>x[1]).length;journey._total=st.length;journey._label=st[now][0];
+  return '<div class="prog">'+st.map((s,i)=>`<div class="pst ${s[1]?'dn':''} ${i===now&&!s[1]?'cur':''}"><div class="n">${s[1]?'✓':i+1}</div><div class="t">${s[0]}</div>${i<st.length-1?'<div class="ln"></div>':''}</div>`).join('')+'</div>';
+}
+async function vHome(){const me=S.me;const ns=nextStep(me);const cs=credStatus(me);
+  const inprog=me.attempts.find(a=>a.kind==='exam'&&a.status==='in_progress');
+  const lastEx=me.attempts.find(a=>a.kind==='exam'&&a.status==='submitted');
+  const win=me.exam.entitled&&!me.exam.passed?`<div class="cdchip ${dTo(me.exam.deadline)<60?'warn':''}"><b>${Math.max(0,dTo(me.exam.deadline))}</b><span>days left in window</span></div>`:'';
+  const bk=me.exam.booking?`<div class="cdchip"><b>${Math.max(0,dTo(me.exam.booking.scheduled_at))}</b><span>days to exam</span></div>`:'';
+  const facts=[];
+  facts.push(me.exam.booking?['cal','PCP-AI Examination','Booked · '+fDT(me.exam.booking.scheduled_at),'b','On track']:me.exam.passed?['cert','PCP-AI Examination','Passed','g','Complete']:me.exam.entitled?['exam','PCP-AI Examination','90 minutes · 65% to pass · not yet booked','a','Action needed']:['exam','PCP-AI Examination','Fee not yet paid','n','Pending']);
+  if(me.exam.entitled&&!me.exam.passed)facts.push(['cpd','Scheduling window','Closes '+fD(me.exam.deadline)+' · '+Math.max(0,dTo(me.exam.deadline))+' days remaining','b','On track']);
+  facts.push(me.membership?['card','Student membership','Active · renews '+fD(me.membership.expiry_date),(me.membership.expiry_date&&dTo(me.membership.expiry_date)<45?'a':'g'),me.membership.expiry_date&&dTo(me.membership.expiry_date)<45?'Renewal soon':'Active']:['card','Student membership','No active membership','n','—']);
+  const J=journey(me);
+  const mDays=me.membership&&me.membership.expiry_date?dTo(me.membership.expiry_date):null;
+  $('#view').innerHTML=`
+    ${inprog?`<div class="resume"><span class="pulse"></span><div class="t"><b>Examination in progress — the clock is running.</b><span>Answers are saved to the server continuously. Resume now; time lost to a crash is not paused.</span></div><button class="btn" id="resumeGo">Resume exam →</button></div>`:''}
+    <div class="hero2">
+      <section class="nx"><div class="k">${ns.k||'Your next step'}</div><h2>${esc(ns.h)}</h2><p>${esc(ns.p)}</p>
+        <div class="row">${win}${bk}<button class="btn btn-p btn-lg" data-go="${ns.a}">${esc(ns.b)} →</button></div></section>
+      ${credCard(me)}
+    </div>
+    ${J}
+    ${lastEx?`<div class="card" style="margin-bottom:18px"><div class="cb" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><span class="big-tag ${lastEx.result==='pass'?'tag g':'tag r'}" style="font-size:15px">${lastEx.result==='pass'?'✓ Passed':'✕ Not passed'} · ${lastEx.percent}%</span><div style="flex:1" class="tiny muted">Latest examination · ${fDT(lastEx.submitted_at)}${lastEx.violations?' · '+lastEx.violations+' integrity event(s)':''}</div><button class="btn btn-sm" data-go="results">Details</button>${lastEx.result==='pass'?'<button class="btn btn-sm btn-p" data-go="cert">Certificate</button>':''}</div></div>`:''}
+    ${cs&&cs.k!=='active'?`<div class="card" style="margin-bottom:18px"><div class="cb" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><span class="big-tag tag ${cs.cls}">${esc(cs.t)}</span><div class="tiny muted" style="flex:1">${esc(cs.why)}</div><button class="btn btn-sm btn-p" data-go="cpd">Resolve</button></div></div>`:''}
+    <div class="grid g2">
+     <div class="card"><div class="ch"><h3>Your certification</h3><button class="lnk" data-go="exam">View exam →</button></div><div class="cb">
+      ${facts.map(f=>`<div class="fact"><div class="fico">${svg(f[0])}</div><div class="ft"><b>${esc(f[1])}</b><span>${esc(f[2])}</span></div><span class="tag ${f[3]}"><span class="dot"></span>${esc(f[4])}</span></div>`).join('')}
+      <div class="callout info" style="margin-top:16px">${svg('sup')}<div><b>Membership access does not itself constitute certification.</b> The PCP-AI credential is earned only by passing the examination.</div></div>
+     </div></div>
+     <div class="card"><div class="ch"><h3>Quick actions</h3></div><div class="cb"><div class="ql">
+      <a data-go="exam"><span class="qico">${svg('exam')}</span><b>${me.exam.booking?'View my booking':'Schedule my exam'}</b><span class="ar">›</span></a>
+      <a data-go="learn"><span class="qico">${svg('learn')}</span><b>Practice centre</b><span class="ar">›</span></a>
+      <a data-go="pay"><span class="qico">${svg('pay')}</span><b>Invoices &amp; receipts</b><span class="ar">›</span></a>
+      <a data-go="sup"><span class="qico">${svg('sup')}</span><b>Get help</b><span class="ar">›</span></a>
+     </div>${me.referral?`<div class="note" style="margin-top:14px"><b>Referral ${esc(me.referral.code)}.</b> Colleagues get 10% off — every enrolment it brings is tracked to you.</div>`:''}</div></div>
+    </div>`;
+  wireGo();const rg=$('#resumeGo');if(rg)rg.onclick=startExam;
+  document.querySelectorAll('.cdchip b').forEach(el=>{const end=parseInt(el.textContent,10);if(!isFinite(end)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;const t0=performance.now(),D=700;const step=t=>{const k=Math.min(1,(t-t0)/D);el.textContent=Math.round(end*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
+}
+function wireGo(){document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const a=b.dataset.go;if(a==='__resume'){resumeEnrol()}else go(a)})}
+function resumeEnrol(){const e=S.me.enrollment;const base=(S.me.site_base_url||'').replace(/\/$/,'');
+  modal('Resume enrolment',`<p>Your enrolment is saved at <b>step ${e?e.current_step:1}</b>. Continue on the PCI website using the same email address — your progress is waiting.</p><p class="tiny muted">Your progress is saved. You can return later using the same email address.</p>`,'Continue on website',async()=>{if(base)window.open(base+'/student-registration.html','_blank');return true});
+}
+
+/* ---------- MEMBERSHIP ---------- */
+async function vMembership(){const me=S.me;const m=me.membership;
+  const now=Date.now();const active=m&&m.expiry_date&&new Date(m.expiry_date)>now;
+  const days=m&&m.expiry_date?dTo(m.expiry_date):null;
+  const rights=[['Learning pathway & official practice',true],['Candidate handbook & policies',true],['CPD tracking & resources',true],['Sit the PCP-AI examination',me.exam.entitled],['Hold the PCP-AI credential',me.credentials.length>0]];
+  $('#view').innerHTML=`
+   <div class="card" style="margin-bottom:18px"><div class="cb"><div class="shero">
+     <span class="big-tag tag ${active?(days<45?'a':'g'):'r'}">${active?(days<45?'Renews in '+days+' days':'Active'):'Not active'}</span>
+     <div style="flex:1;min-width:200px"><div style="font-family:var(--serif);font-size:20px;font-weight:600">${esc(m?m.membership_type:'—')} membership</div>
+       <div class="tiny muted">${m?'Member since '+fD(m.start_date):'No membership on record'}</div></div>
+     <button class="btn btn-p btn-lg" id="renewBtn">${active?'Renew early':'Renew'} — ${money(99)}/year</button>
+   </div></div></div>
+   <div class="grid g2e">
+    <div class="card"><div class="ch"><h3>Membership details</h3></div><div class="cb">
+      <div class="kv"><span class="k">Type</span><span class="v">${esc(m?m.membership_type:'—')}</span></div>
+      <div class="kv"><span class="k">Status</span><span class="v"><span class="tag ${active?'g':'r'}">${active?'Active':'Inactive'}</span></span></div>
+      <div class="kv"><span class="k">Start date</span><span class="v">${m?fD(m.start_date):'—'}</span></div>
+      <div class="kv"><span class="k">Expiry date</span><span class="v">${m?fD(m.expiry_date):'—'}</span></div>
+      <div class="kv"><span class="k">Renewal date</span><span class="v">${m?fD(m.expiry_date):'—'}</span></div>
+      <div class="kv"><span class="k">Renewal fee</span><span class="v">${money(99)}</span></div>
+      <div class="kv"><span class="k">Renewal cycle</span><span class="v">Annual (credential: 3-year)</span></div>
+    </div></div>
+    <div class="card"><div class="ch"><h3>Your access rights</h3></div><div class="cb">
+      ${rights.map(r=>`<div class="fact"><div class="fico" style="background:${r[1]?'var(--ok-bg)':'#EEF1F6'};color:${r[1]?'var(--ok)':'var(--t4)'}">${r[1]?'✓':'○'}</div><div class="ft"><b>${esc(r[0])}</b></div>${r[1]?'<span class="tag g">Included</span>':'<span class="tag n">Locked</span>'}</div>`).join('')}
+      <div class="callout info" style="margin-top:14px">${svg('sup')}<div><b>Membership access does not itself constitute certification.</b> Sitting and passing the PCP-AI examination is required to earn the credential.</div></div>
+    </div></div>
+   </div>
+   <div class="card" style="margin-top:18px"><div class="ch"><h3>Membership payments</h3><button class="lnk" data-go="pay">All payments →</button></div><div class="cb" id="memPays"></div></div>`;
+  $('#renewBtn').onclick=()=>payFlow('renewal','Annual membership renewal',99);
+  wireGo();
+  const inv=await api('/api/me/invoices');const mp=(inv.rows||[]).filter(p=>['membership','renewal','bundle'].includes(p.product_type));
+  $('#memPays').innerHTML=mp.length?mp.map(p=>`<div class="fact"><div class="fico">${svg('card')}</div><div class="ft"><b>${prodName(p.product_type)}</b><span>${fD(p.payment_date)} · ${esc(p.invoice_number)}</span></div><b style="margin-right:8px">${money(p.final_amount,p.currency)}</b><span class="tag ${payTag(p.payment_status)}">${esc(p.payment_status)}</span></div>`).join(''):'<div class="muted tiny">No membership payments yet.</div>';
+}
+/* ---------- PAYMENTS & INVOICES ---------- */
+function prodName(t){return{membership:'Student membership',exam:'PCP-AI Examination fee',bundle:'Membership + Exam bundle',renewal:'Annual membership renewal',recert:'PCP-AI recertification',retake:'Examination retake'}[t]||t}
+function payTag(s){return{paid:'g',pending:'a',failed:'r',refunded:'n',cancelled:'n'}[s]||'n'}
+async function vPayments(){const d=await api('/api/me/invoices');const rows=d.rows||[];
+  const paid=rows.filter(r=>r.payment_status==='paid');const spent=paid.reduce((a,r)=>a+(+r.final_amount||0),0);
+  const saved=paid.reduce((a,r)=>a+(+r.default_discount_amount||0)+(+r.discount_code_amount||0),0);
+  $('#view').innerHTML=`
+   <div class="grid g3" style="margin-bottom:18px">
+    <div class="kpi"><div class="lab">Total paid</div><div class="val">${money(spent)}</div><div class="sub">${paid.length} payment${paid.length===1?'':'s'}</div></div>
+    <div class="kpi"><div class="lab">You saved</div><div class="val">${money(saved)}</div><div class="sub">via discounts &amp; codes</div></div>
+    <div class="kpi"><div class="lab">Documents</div><div class="val">${paid.length}</div><div class="sub">invoices &amp; receipts</div></div>
+   </div>
+   <div class="card"><div class="ch"><h3>Payment history</h3></div>
+    <div class="pay-cards">${rows.length?rows.map(p=>`<div class="paycard clk" data-invc="${p.id}"><div class="pc-top"><b>${esc(p.invoice_number)}</b><span class="tag ${payTag(p.payment_status)}"><span class="dot"></span>${esc(p.payment_status)}</span></div><div class="pc-mid">${prodName(p.product_type)} · <span class="tiny muted">${fD(p.payment_date)}</span></div><div class="pc-bot"><span class="tiny muted">${esc(p.payment_method)}</span><b>${money(p.final_amount,p.currency)}</b></div></div>`).join(''):'<div class="empty" style="padding:24px"><h4>No payments yet</h4><p>Your invoices and receipts will appear here.</p></div>'}</div>
+    <div class="pay-table" style="overflow-x:auto"><table class="tbl"><thead><tr><th>Invoice</th><th>Product</th><th>Standard</th><th>Discount</th><th class="r">Paid</th><th>Method</th><th>Status</th><th></th></tr></thead><tbody>
+    ${rows.length?rows.map(p=>`<tr class="clk" data-inv="${p.id}">
+      <td><b>${esc(p.invoice_number)}</b><div class="tiny muted">${fD(p.payment_date)}</div></td>
+      <td>${prodName(p.product_type)}${p.reference?`<div class="tiny muted mono">${esc(p.reference)}</div>`:''}</td>
+      <td>${p.standard_amount?money(p.standard_amount,p.currency):'—'}</td>
+      <td>${(p.default_discount_amount||p.discount_code_amount)?('−'+money((+p.default_discount_amount||0)+(+p.discount_code_amount||0),p.currency)):'—'}${p.discount_code?`<div class="tiny muted mono">${esc(p.discount_code)}</div>`:''}</td>
+      <td class="r"><b>${money(p.final_amount,p.currency)}</b></td>
+      <td class="tiny">${esc(p.payment_method)}</td>
+      <td><span class="tag ${payTag(p.payment_status)}"><span class="dot"></span>${esc(p.payment_status)}</span></td>
+      <td class="r"><button class="btn btn-sm" data-inv2="${p.id}">View</button></td></tr>`).join(''):'<tr><td colspan="8"><div class="empty"><div class="ei">'+'$'+'</div><h4>No payments yet</h4><p>Your invoices and receipts will appear here.</p></div></td></tr>'}
+    </tbody></table></div>
+    <div class="tfoot"><span>${rows.length} transaction${rows.length===1?'':'s'}</span></div>
+   </div>`;
+  const open=id=>invoiceDrawer(rows.find(r=>r.id==id));
+  document.querySelectorAll('[data-invc]').forEach(c=>c.onclick=()=>open(c.dataset.invc));
+  document.querySelectorAll('[data-inv]').forEach(tr=>tr.onclick=e=>{if(e.target.closest('button'))return;open(tr.dataset.inv)});
+  document.querySelectorAll('[data-inv2]').forEach(b=>b.onclick=()=>open(b.dataset.inv2));
+}
+function invoiceDrawer(p){if(!p)return;
+  const disc=(+p.default_discount_amount||0)+(+p.discount_code_amount||0);
+  drawer(p.invoice_number,`<span class="tag ${payTag(p.payment_status)}">${esc(p.payment_status)}</span> · ${prodName(p.product_type)}`,
+   `<div class="dsec"><h5>Transaction</h5>
+     <div class="kv"><span class="k">Invoice number</span><span class="v mono">${esc(p.invoice_number)}</span></div>
+     <div class="kv"><span class="k">Receipt number</span><span class="v mono">${esc(p.receipt_number||'—')}</span></div>
+     <div class="kv"><span class="k">Product</span><span class="v">${prodName(p.product_type)}</span></div>
+     <div class="kv"><span class="k">Reference</span><span class="v mono">${esc(p.reference||'—')}</span></div>
+     <div class="kv"><span class="k">Date</span><span class="v">${fDT(p.payment_date)}</span></div>
+     <div class="kv"><span class="k">Method</span><span class="v">${esc(p.payment_method)}</span></div>
+     <div class="kv"><span class="k">Status</span><span class="v"><span class="tag ${payTag(p.payment_status)}">${esc(p.payment_status)}</span></span></div>
+   </div>
+   <div class="dsec"><h5>Amount</h5>
+     <div class="kv"><span class="k">Standard price</span><span class="v">${p.standard_amount?money(p.standard_amount,p.currency):'—'}</span></div>
+     ${disc?`<div class="kv"><span class="k">Discount${p.discount_code?' ('+esc(p.discount_code)+')':''}</span><span class="v" style="color:var(--ok)">−${money(disc,p.currency)}</span></div>`:''}
+     <div class="kv"><span class="k" style="font-weight:700;color:var(--ink)">Final amount paid</span><span class="v" style="font-size:16px">${money(p.final_amount,p.currency)}</span></div>
+   </div>`,
+   `<button class="btn btn-bk" id="dlInv">Download invoice</button>${p.payment_status==='paid'?'<button class="btn btn-p btn-bk" id="dlRcp">Download receipt</button>':''}`);
+  $('#dlInv').onclick=()=>downloadDoc(p,'invoice');const r=$('#dlRcp');if(r)r.onclick=()=>downloadDoc(p,'receipt');
+}
+function downloadDoc(p,kind){const u=S.me.user;const isR=kind==='receipt';const disc=(+p.default_discount_amount||0)+(+p.discount_code_amount||0);
+  const html=`<!doctype html><html><head><meta charset="utf-8"><title>${isR?'Receipt':'Invoice'} ${esc(isR?p.receipt_number:p.invoice_number)}</title></head>
+   <body style="font-family:Arial,Helvetica,sans-serif;max-width:720px;margin:40px auto;color:#0B0F19">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #1D4ED8;padding-bottom:18px">
+     <div><div style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:#15347F">PCI</div><div style="font-size:11px;letter-spacing:2px;color:#98A0AF">PROJECT CONTROLS INSTITUTE</div></div>
+     <div style="text-align:right"><div style="font-size:22px;font-weight:700;letter-spacing:1px">${isR?'RECEIPT':'INVOICE'}</div><div style="font-size:13px;color:#697084">${esc(isR?p.receipt_number:p.invoice_number)}</div><div style="font-size:12px;color:#98A0AF">${fD(p.payment_date)}</div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin:22px 0">
+     <div><div style="font-size:11px;color:#98A0AF;text-transform:uppercase;letter-spacing:1px">Billed to</div><b>${esc((u.first_name+' '+(u.last_name||'')).trim())}</b><br>${esc(u.email)}</div>
+     <div style="text-align:right"><div style="font-size:11px;color:#98A0AF;text-transform:uppercase;letter-spacing:1px">Status</div><b style="color:${p.payment_status==='paid'?'#0E7C43':'#B4380F'};text-transform:uppercase">${esc(p.payment_status)}</b><br><span style="font-size:12px;color:#697084">${esc(p.payment_method)}</span></div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:10px">
+     <tr style="border-bottom:2px solid #E8ECF3"><th align="left" style="padding:10px 0">Description</th><th align="right" style="padding:10px 0">Amount</th></tr>
+     <tr style="border-bottom:1px solid #F1F4F8"><td style="padding:12px 0">${prodName(p.product_type)}${p.reference?' · '+esc(p.reference):''}</td><td align="right">${money(p.standard_amount||p.final_amount,p.currency)}</td></tr>
+     ${disc?`<tr style="border-bottom:1px solid #F1F4F8"><td style="padding:12px 0;color:#0E7C43">Discount${p.discount_code?' ('+esc(p.discount_code)+')':''}</td><td align="right" style="color:#0E7C43">−${money(disc,p.currency)}</td></tr>`:''}
+     <tr><td style="padding:14px 0;font-weight:700;font-size:16px">Total ${p.payment_status==='paid'?'paid':'due'}</td><td align="right" style="font-weight:700;font-size:16px">${money(p.final_amount,p.currency)}</td></tr>
+    </table>
+    <p style="font-size:11px;color:#98A0AF;margin-top:30px;border-top:1px solid #F1F4F8;padding-top:16px">Project Controls Institute Global, Inc. — a Delaware Non-Stock Corporation. This document confirms ${isR?'payment received':'amounts payable'} for the item above. Membership access does not itself constitute certification.</p>
+   </body></html>`;
+  const b=new Blob([html],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='PCI-'+(isR?'Receipt-'+(p.receipt_number||p.id):'Invoice-'+p.invoice_number)+'.html';a.click();toast((isR?'Receipt':'Invoice')+' downloaded','ok');
+}
+async function payFlow(product,label,amount){
+  if(S.mode==='demo'){modal(label,`<p>You’re about to pay <b>${money(amount)}</b>. In the live panel this opens secure Stripe checkout; the demo simulates a successful payment.</p>`,'Simulate payment',async()=>{
+    const now=Date.now();
+    if(product==='renewal'){const cur=D.membership.expiry_date&&new Date(D.membership.expiry_date)>now?new Date(D.membership.expiry_date).getTime():now;D.membership.expiry_date=new Date(cur+365*864e5).toISOString();D.membership.status='active';
+      D.payments.unshift({id:900+D.payments.length,product_type:'renewal',standard_amount:99,final_amount:99,currency:'USD',payment_status:'paid',payment_provider:'stripe',payment_date:new Date().toISOString(),reference:'PCI-RN'+Date.now().toString(36).toUpperCase().slice(-5)})}
+    if(product==='recert'&&D.credentials[0]){const c=D.credentials[0];const cur=new Date(c.expires_at)>now?new Date(c.expires_at).getTime():now;c.expires_at=new Date(cur+3*365*864e5).toISOString();c.status='active';
+      D.payments.unshift({id:900+D.payments.length,product_type:'recert',standard_amount:99,final_amount:99,currency:'USD',payment_status:'paid',payment_provider:'stripe',payment_date:new Date().toISOString(),reference:'PCI-RC'+Date.now().toString(36).toUpperCase().slice(-5)})}
+    persistD();await refresh();toast('Payment recorded — thank you','ok');go(S.route);return true});return}
+  try{const r=await api('/api/create-checkout-session',{method:'POST',body:JSON.stringify({product,email:S.me.user.email})});if(r&&r.url)location.href=r.url;else toast('Checkout could not be created','err')}catch(e){toast('Checkout unavailable: '+(e.data&&e.data.error||e.message),'err')}
+}
+/* ---------- MESSAGES CENTRE ---------- */
+async function vMessages(){const d=await api('/api/me/messages');const rows=d.rows||[];S._msgs=rows;
+  const cats=['All','Account','Learning','Certification','Payment','Policy','Support','General'];
+  const f=S._mfilter||'All';const shown=f==='All'?rows:rows.filter(r=>r.category===f);
+  $('#view').innerHTML=`
+   <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+     <div class="seg" id="mseg">${cats.map(c=>`<button class="${c===f?'on':''}" data-c="${c}">${c}</button>`).join('')}</div>
+     <div style="flex:1"></div><button class="btn btn-sm" id="markAll">Mark all read</button></div>
+   <div class="card"><div id="mlist">${shown.length?shown.map(m=>`<div class="mrow ${m.read_at?'':'un'}" data-mid="${m.id}">
+     <div class="mi tag ${(MCAT[m.category]||['n'])[0]}" style="font-size:15px;width:36px;height:36px">${(MCAT[m.category]||['n','•'])[1]}</div>
+     <div class="mt"><b>${esc(m.title)}</b> <span class="tag ${(MCAT[m.category]||['n'])[0]}" style="margin-left:4px">${esc(m.category)}</span><p>${esc(m.body||'')}</p>
+       ${m.cta_route?`<button class="btn btn-sm" style="margin-top:8px" data-mgo="${esc(m.cta_route)}" data-mid2="${m.id}">${esc(m.cta_label||'Open')} →</button>`:''}
+       <div class="tiny mut2" style="margin-top:6px">${fDT(m.created_at)}</div></div>
+     ${m.read_at?'':'<span class="mw"></span>'}</div>`).join(''):'<div class="empty"><div class="ei">✉</div><h4>No messages here</h4><p>Announcements, reminders and support replies will appear in this centre.</p></div>'}</div></div>`;
+  document.querySelectorAll('#mseg [data-c]').forEach(b=>b.onclick=()=>{S._mfilter=b.dataset.c;vMessages()});
+  $('#markAll').onclick=async()=>{await api('/api/me/messages/read-all',{method:'POST'});await loadMsgs();vMessages()};
+  document.querySelectorAll('[data-mid]').forEach(el=>el.onclick=async e=>{if(e.target.closest('[data-mgo]'))return;if(!el.querySelector('.mw'))return;await api('/api/me/messages/'+el.dataset.mid+'/read',{method:'POST'});await loadMsgs()});
+  document.querySelectorAll('[data-mgo]').forEach(b=>b.onclick=async()=>{await api('/api/me/messages/'+b.dataset.mid2+'/read',{method:'POST'});await loadMsgs();go(b.dataset.mgo)});
+}
+/* ---------- MY EXAM ---------- */
+let calM=new Date();calM.setDate(1);let selDay=null,selSlot=null,lTimer=null;
+async function vExam(){
+  if(S.mode!=='demo'&&S.readinessOk===undefined){try{const r=await api('/api/me/readiness');S.readinessOk=!!(r.latest&&r.latest.passed);}catch(_){S.readinessOk=false;}}clearInterval(lTimer);const ex=S.me.exam;
+  if(!ex.entitled){$('#view').innerHTML=`<div class="card"><div class="cb empty"><div class="ei">${svg('exam')}</div><h4>No exam entitlement yet</h4><p>The PCP-AI examination fee (${money(350)}) opens a 12-month scheduling window. Pay via the PCI website checkout — it appears here automatically.</p></div></div>`;return}
+  if(ex.booking){renderBooked(ex);return}renderSched(ex);
+}
+function renderSched(ex,resc){const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'local time';
+  $('#view').innerHTML=`<div class="grid g2">
+    <div class="card"><div class="ch"><h3>${resc?'Choose a new date':'Schedule your examination'}</h3><div class="sp"></div><span class="tag b">window ends ${fD(ex.deadline)}</span></div><div class="cb">
+      ${(S.me.consents&&(S.me.consents.outstanding||[]).length)?`<div class="callout warn" style="margin-bottom:14px">${svg('sup')}<div><b>Candidate agreements required.</b> Booking is disabled until you accept the current candidate agreements. <button class="btn btn-sm" id="acceptConsents" style="margin-left:6px">Review &amp; accept</button></div></div>`:''}
+      ${(S.me.accommodation&&S.me.accommodation.status==='approved')?`<div class="callout info" style="margin-bottom:14px">${svg('sup')}<div><b>Accommodation approved.</b> +${S.me.accommodation.approved_extra_minutes} minutes will be added to your exam duration automatically.</div></div>`:(S.me.accommodation&&['submitted','under_review'].includes(S.me.accommodation.status))?`<div class="callout info" style="margin-bottom:14px">${svg('sup')}<div><b>Accommodation request under review.</b> Consider waiting for the decision before booking.</div></div>`:`<div class="tiny muted" style="margin:-2px 0 12px">Need adjustments (extra time, assistive technology)? <button class="lnk" id="reqAccom" style="padding:0">Request an accommodation</button> before booking.</div>`}
+      <div class="chead"><button class="btn btn-sm" id="cPrev">←</button><b id="cLab"></b><button class="btn btn-sm" id="cNext">→</button></div>
+      <div class="cal" id="cal"></div>
+      <div id="slotW" style="display:none"><div class="hr"></div><b style="font-size:13px">Available times <span class="muted" style="font-weight:400">· ${esc(tz)}</span></b><div class="slots" id="slots"></div></div>
+      <div class="hr"></div><button class="btn btn-p btn-lg btn-bk" id="bookGo" disabled>${resc?'Confirm new time':'Confirm booking'}</button>
+    </div></div>
+    <div><div class="card"><div class="ch"><h3>Before you book</h3></div><div class="cb">
+      <div class="callout info">${svg('cpd')}<div><b>Rescheduling.</b> Free 72+ hours before your slot, up to 3 times. Bookings lock 24 hours before. Sit within your 12-month window — it can’t be extended.</div></div>
+      <div class="hr"></div><div class="tiny muted">Duration <b>90 minutes</b> · Pass mark <b>65%</b> · Results immediately with domain bands. Read the examination rules in <button class="lnk" data-go="learn" style="padding:0">Learning</button> first.</div>
+    </div></div></div></div>`;
+  wireGo();drawCal(ex);$('#cPrev').onclick=()=>{calM.setMonth(calM.getMonth()-1);drawCal(ex)};$('#cNext').onclick=()=>{calM.setMonth(calM.getMonth()+1);drawCal(ex)};
+  const _ac=$('#acceptConsents');if(_ac)_ac.onclick=()=>consentGate(async()=>{vExam()});
+  const _ra=$('#reqAccom');if(_ra)_ra.onclick=()=>{let ev=null;
+    modal('Request an accommodation',`<div class="fld"><label>Type of accommodation</label><select class="in" id="amT"><option value="extra_time">Extra time</option><option value="separate_setting">Separate setting</option><option value="assistive_technology">Assistive technology</option><option value="other">Other</option></select></div>
+      <div class="fld"><label>Describe what you need and why <span style="color:#dc2626">*</span></label><textarea class="in" id="amD" rows="4" placeholder="Minimum 20 characters. PCI treats this information confidentially."></textarea></div>
+      <div class="fld"><label>Supporting document (optional, PDF/image ≤1.4MB)</label><button class="btn btn-sm" type="button" id="amF">Choose file…</button> <span class="tiny muted" id="amFn">none</span></div>
+      <p class="tiny muted">Requests are reviewed by PCI. Approved extra time is applied to your exam automatically.</p>`,
+      'Submit request',async()=>{const d=$('#amD').value.trim();if(d.length<20){toast('Please describe your request (min 20 characters)','err');return false}
+        try{const body={request_type:$('#amT').value,description:d};if(ev){body.evidence_name=ev.name;body.evidence_data=ev.dataUri}
+          const r=await api('/api/me/accommodations',{method:'POST',body:JSON.stringify(body)});toast(r.message||'Request submitted','ok');await refresh();vExam();return true}
+        catch(e){toast(e.data&&e.data.error==='request_already_open'?'You already have an open request':'Could not submit request','err');return false}});
+    setTimeout(()=>{const f=$('#amF');if(f)f.onclick=()=>pickFile(x=>{ev=x;$('#amFn').textContent=x.name})},50);};
+  $('#bookGo').onclick=async()=>{if(S.me.consents&&(S.me.consents.outstanding||[]).length){consentGate(async()=>{vExam()});return}
+    const iso=new Date(selDay.getFullYear(),selDay.getMonth(),selDay.getDate(),...selSlot.split(':').map(Number)).toISOString();const btn=$('#bookGo');btn.disabled=true;btn.textContent='Confirming…';
+    try{if(resc){const r=await api('/api/me/exam/reschedule',{method:'POST',body:JSON.stringify({scheduled_at:iso,timezone:tz})});toast(r.free?'Rescheduled — no fee':'Rescheduled','ok')}else{await api('/api/me/exam/book',{method:'POST',body:JSON.stringify({scheduled_at:iso,timezone:tz})});toast('Exam booked — confirmation recorded','ok')}await refresh();vExam()}
+    catch(e){const c=e.data&&e.data.error;
+      if(c==='not_eligible'){const bl=(e.data.blocking_items||[]);
+        if(bl.includes('consents_pending')){consentGate(async()=>{vExam()});btn.disabled=false;btn.textContent=resc?'Confirm new time':'Confirm booking';return}
+        const BLK={profile_incomplete:'Complete your profile (country) before booking',exam_fee_unpaid:'Exam fee not paid',payment_not_valid:'Payment invalid or refunded — contact support',entitlement_expired:'Your scheduling window has lapsed',account_hold:'Your account is on hold — contact support'};
+        toast(BLK[bl[0]]||'Not eligible to book yet','err');btn.disabled=false;btn.textContent=resc?'Confirm new time':'Confirm booking';return}
+      toast(c==='locked'?'Locked: under 24h to current slot':c==='max_reschedules'?'Reschedule limit (3) reached':c==='beyond_window'?'Beyond your 12-month window':'Could not book','err');btn.disabled=false;btn.textContent=resc?'Confirm new time':'Confirm booking'}};
+}
+function drawCal(ex){selDay=null;selSlot=null;$('#bookGo').disabled=true;$('#slotW').style.display='none';
+  const y=calM.getFullYear(),m=calM.getMonth();$('#cLab').textContent=calM.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  const off=(new Date(y,m,1).getDay()+6)%7,dim=new Date(y,m+1,0).getDate();const min=new Date(Date.now()+2*3600e3),max=new Date(ex.deadline),tod=new Date();
+  let h=['M','T','W','T','F','S','S'].map(d=>`<div class="dw">${d}</div>`).join('')+'<div></div>'.repeat(off);
+  for(let d=1;d<=dim;d++){const dt=new Date(y,m,d,23,59);const dis=dt<min||new Date(y,m,d)>max;h+=`<button class="dy ${tod.toDateString()===new Date(y,m,d).toDateString()?'tdy':''}" data-d="${d}" ${dis?'disabled':''}>${d}</button>`}
+  $('#cal').innerHTML=h;
+  document.querySelectorAll('#cal .dy:not(:disabled)').forEach(b=>b.onclick=()=>{document.querySelectorAll('#cal .dy').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');selDay=new Date(y,m,+b.dataset.d);selSlot=null;$('#bookGo').disabled=true;
+    const slots=['09:00','10:30','12:00','14:00','15:30','17:00'].filter(t=>new Date(y,m,+b.dataset.d,...t.split(':').map(Number))>min);
+    $('#slots').innerHTML=slots.map(t=>`<button class="slot" data-t="${t}">${t}</button>`).join('')||'<span class="muted tiny">No slots left this day.</span>';$('#slotW').style.display='block';
+    document.querySelectorAll('.slot').forEach(s=>s.onclick=()=>{document.querySelectorAll('.slot').forEach(x=>x.classList.remove('sel'));s.classList.add('sel');selSlot=s.dataset.t;$('#bookGo').disabled=false})});
+}
+function renderBooked(ex){const b=ex.booking,dt=new Date(b.scheduled_at);const CK=[['Read the examination rules','Identity, environment and permitted materials — no surprises.'],['Run the system check','Browser, connection and screen verified below.'],['Prepare your ID','Government photo ID matching your enrolment name.'],['Clear your workspace','Quiet room, single screen, notes away.']];
+  $('#view').innerHTML=`<div class="grid g2"><div>
+    <div class="card"><div class="ch"><h3>Your booking</h3><div class="sp"></div><span class="tag g"><span class="dot"></span>confirmed</span></div><div class="cb">
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><div style="background:var(--brand);color:#fff;border-radius:14px;padding:14px 18px;text-align:center;min-width:88px"><b style="font-size:26px;display:block;line-height:1">${dt.getDate()}</b><span style="font-size:11px;letter-spacing:1px;text-transform:uppercase;opacity:.85">${dt.toLocaleDateString('en-GB',{month:'short'})}</span></div>
+        <div style="flex:1"><b style="font-size:16px">${fDT(b.scheduled_at)}</b><div class="tiny muted">PCP-AI Examination · 90 minutes · ${esc(b.timezone||'local')}</div><div class="tiny muted">Reschedules: ${b.reschedule_count||0} of 3 · free 72h+ · locks 24h before</div></div>
+        <button class="btn" id="resched">Reschedule</button></div></div></div>
+    <div class="card" style="margin-top:18px"><div class="ch"><h3>Launch</h3></div><div class="cb" id="launchBox"></div></div>
+   </div><div>
+    <div class="card"><div class="ch"><h3>Readiness checklist</h3></div><div class="cb" id="ckl">${CK.map((c,i)=>`<label class="chk"><input type="checkbox" data-ck="${i}" ${S.check[i]?'checked':''}/><div class="t"><b>${c[0]}</b><span>${c[1]}</span></div></label>`).join('')}</div></div>
+    <div class="card" style="margin-top:18px"><div class="ch"><h3>System readiness check</h3><div class="sp"></div><button class="btn btn-sm btn-p" id="sysGo">Run check</button></div><div class="cb" id="sysOut"><span class="muted tiny">Verifies your browser, connection, camera and microphone are ready for a remote-proctored exam. ${cfgOn('sp_readiness_required',true)?'A passed check is required before you can launch.':''} Camera/microphone access is requested only to confirm they work; nothing is recorded here.</span></div></div>
+   </div></div>`;
+  document.querySelectorAll('[data-ck]').forEach(c=>c.onchange=()=>{S.check[c.dataset.ck]=c.checked;store.set('sp2_check',JSON.stringify(S.check))});
+  $('#resched').onclick=()=>renderSched(ex,true);$('#sysGo').onclick=runReadiness;
+  const paint=()=>{const slot=new Date(b.scheduled_at).getTime(),now=Date.now(),open=slot-15*6e4,close=slot+30*6e4;const rdyReq=cfgOn('sp_readiness_required',true);const rdyOk=!!S.readinessOk;const allCk=[0,1,2,3].every(i=>S.check[i])&&(!rdyReq||rdyOk);let h='';
+    if(now<open){const s=Math.floor((open-now)/1000),d=Math.floor(s/86400),hh=Math.floor(s%86400/3600),mm=Math.floor(s%3600/60),ss=s%60;
+      h=`<div style="text-align:center"><div class="kpi" style="margin-bottom:12px;display:inline-block"><div class="val">${d>0?d+'d ':''}${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</div><div class="sub">until launch opens</div></div><p class="tiny muted" style="margin:0">Launch activates 15 minutes before your slot and stays open for a 30-minute grace period.</p>${S.mode==='demo'?'<button class="btn btn-sm" id="djump" style="margin-top:10px">Demo: move slot to now →</button>':''}</div>`;}
+    else if(now<=close){h=`<div style="text-align:center"><span class="tag g" style="margin-bottom:12px"><span class="dot"></span>Launch window open — closes ${fDT(new Date(close).toISOString())}</span><button class="btn btn-p btn-lg btn-bk" id="launchGo" ${allCk?'':'disabled'} style="margin-top:12px">Launch my examination</button>${allCk?`<button class="btn btn-bk" id="launchDesktop" style="margin-top:10px">Open in the PCI Secure Exam app instead</button>`:''}${allCk?'':'<p class="tiny muted" style="margin:10px 0 0">'+(rdyReq&&!rdyOk?'Run and pass the system readiness check':'Complete the checklist')+' to enable launch.</p>'}</div>`;}
+    else{h=`<div class="empty"><div class="ei">!</div><h4>Launch window closed</h4><p>The grace period passed and the booking is marked missed. Contact support — documented incidents are considered under the examination administration policy.</p><button class="btn" data-go="sup">Open a ticket</button></div>`;}
+    $('#launchBox').innerHTML=h;wireGo();const dj=$('#djump');if(dj)dj.onclick=()=>{D.booking.scheduled_at=new Date(Date.now()+60e3).toISOString();persistD();refresh().then(vExam)};const lg=$('#launchGo');if(lg)lg.onclick=startExam;const ld=$('#launchDesktop');if(ld)ld.onclick=async()=>{try{const r=await api('/api/me/exam/launch-code',{method:'POST'});const url=(r.uri||('pciexam://start?code='+r.code))+'&api='+encodeURIComponent(S.api||location.origin);location.href=url;toast('Opening the PCI Secure Exam app… if nothing happens, install it from your account.','ok')}catch(e){toast('Could not create a launch code','err')}};};
+  paint();lTimer=setInterval(paint,1000);
+}
+async function runSys(){const out=$('#sysOut');out.innerHTML='<span class="muted tiny">Checking…</span>';const rows=[];const ua=navigator.userAgent;
+  rows.push(['Browser',/Chrome|Firefox|Safari|Edg/.test(ua)?['Supported','g']:['Unverified','a']]);
+  rows.push(['Screen',(screen.width>=1024)?[screen.width+'×'+screen.height,'g']:[screen.width+'×'+screen.height+' — use larger','a']]);
+  rows.push(['Online',navigator.onLine?['Connected','g']:['Offline','r']]);
+  let ping=['Skipped (demo)','g'];if(S.mode==='live'){const t0=performance.now();try{await fetch(S.api.replace(/\/$/,'')+'/api/health');ping=[Math.round(performance.now()-t0)+' ms','g']}catch(e){ping=['Unreachable','r']}}
+  rows.push(['Exam server',ping]);rows.push(['Session storage',(()=>{try{sessionStorage.setItem('_t','1');sessionStorage.removeItem('_t');return['Available','g']}catch(e){return['Blocked','a']}})()]);
+  out.innerHTML=rows.map(([k,[v,s]])=>`<div class="srow"><span>${k}</span><span class="tag ${s}"><span class="dot"></span>${esc(v)}</span></div>`).join('');toast('System check complete','ok');
+}
+/* ---------- RUNNER (secure + calc + heartbeat + resume) ---------- */
+let R=null,rTimer=null,hbT=null,hbDeb=null,calcE='';
+const SEC={on:false};
+function secOn(){if(SEC.on)return;SEC.on=true;SEC.vis=()=>{if(document.hidden)secV('You left the exam tab')};SEC.blur=()=>secV('The exam window lost focus');SEC.ctx=e=>e.preventDefault();SEC.cp=e=>e.preventDefault();
+  document.addEventListener('visibilitychange',SEC.vis);window.addEventListener('blur',SEC.blur);document.addEventListener('contextmenu',SEC.ctx);['copy','cut','paste'].forEach(t=>document.addEventListener(t,SEC.cp));
+  const el=document.documentElement;if(el.requestFullscreen)el.requestFullscreen().catch(()=>{});}
+function secOff(){if(!SEC.on)return;SEC.on=false;document.removeEventListener('visibilitychange',SEC.vis);window.removeEventListener('blur',SEC.blur);document.removeEventListener('contextmenu',SEC.ctx);['copy','cut','paste'].forEach(t=>document.removeEventListener(t,SEC.cp));if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{});}
+function secV(msg){if(!SEC.on||!R||R.kind!=='exam'||R.review)return;R.violations=(R.violations||0)+1;const c=$('#secChip');if(c){c.className='sec-chip v';c.innerHTML='⚠ '+R.violations+' violation'+(R.violations>1?'s':'')}
+  const f=document.createElement('div');f.className='vflash';f.innerHTML=`<div class="vcard"><b style="color:var(--red)">Integrity notice</b><p style="margin:8px 0 0;font-size:13px">${esc(msg)}. This event is recorded on your attempt.</p></div>`;document.body.appendChild(f);setTimeout(()=>f.remove(),2600);heartbeat(true);}
+async function heartbeat(now){if(!R||R.kind!=='exam'||R.review||!R.attempt_id)return;const send=async()=>{try{const r=await api('/api/me/exam/heartbeat',{method:'POST',body:JSON.stringify({attempt_id:R.attempt_id,answers:R.answers,violations:R.violations||0})});if(r&&r.deadline)R.deadlineTs=new Date(r.deadline).getTime();const _pm=(r&&(r.messages||r.Messages))||[];_pm.forEach(m=>toast('Proctor: '+String(m.body||m.Body||'').slice(0,200),'ok'))}catch(e){}};if(now){clearTimeout(hbDeb);return send()}clearTimeout(hbDeb);hbDeb=setTimeout(send,1500);}
+async function runReadiness(){const out=$('#sysOut');if(!out)return;out.innerHTML='<span class="muted tiny">Running checks…</span>';
+  const results={browser:!!window.fetch,network:navigator.onLine!==false,screen:(screen.width>=1024),fullscreen:!!document.documentElement.requestFullscreen,camera:false,microphone:false};
+  results.screenStr=screen.width+'×'+screen.height;results.browserStr=navigator.userAgent.slice(0,120);
+  // camera + mic probes (requested only to confirm availability; tracks stopped immediately)
+  try{const cam=await navigator.mediaDevices.getUserMedia({video:true});results.camera=true;cam.getTracks().forEach(t=>t.stop());}catch(_){results.camera=false;}
+  try{const mic=await navigator.mediaDevices.getUserMedia({audio:true});results.microphone=true;mic.getTracks().forEach(t=>t.stop());}catch(_){results.microphone=false;}
+  const row=(ok,label,hint)=>`<div class="srow"><span>${ok?'✅':'❌'} ${label}</span><span class="tiny muted">${ok?'OK':hint}</span></div>`;
+  out.innerHTML=row(results.camera,'Camera','allow camera access')+row(results.microphone,'Microphone','allow microphone access')+row(results.network,'Connection','check your internet')+row(results.browser,'Browser','use a modern browser')+row(results.screen,'Screen size',(screen.width<1024?'min 1024px width':'OK'));
+  let passed=results.camera&&results.microphone&&results.network;
+  try{if(S.mode!=='demo'){const r=await api('/api/me/readiness',{method:'POST',body:JSON.stringify({camera:results.camera,microphone:results.microphone,network:results.network,fullscreen:results.fullscreen,environment:true,browser:results.browserStr,screen:results.screenStr})});passed=!!r.passed;}}
+  catch(_){}
+  S.readinessOk=passed;
+  out.insertAdjacentHTML('beforeend',`<div class="callout ${passed?'info':'warn'}" style="margin-top:10px">${svg('sup')}<div>${passed?'<b>Ready.</b> Your system meets the requirements for a proctored exam.':'<b>Not ready.</b> Camera, microphone and a working connection are all required. Fix the items above and run the check again.'}</div></div>`);
+  toast(passed?'Readiness check passed':'Readiness check incomplete',passed?'ok':'err');
+}
+async function startExam(){try{const r=await api('/api/me/exam/start',{method:'POST'});openRunner({kind:'exam',attempt_id:r.attempt_id,items:r.items,mins:r.duration_minutes,started:r.started_at,saved:r.saved_answers||null,violations:r.violations||0,resumed:!!r.resumed})}
+  catch(e){const c=e.data&&e.data.error;toast(c==='not_open'?'Launch opens 15 minutes before your slot':c==='missed'?'Launch window has closed':'Could not start','err');if(c==='missed')refresh().then(vExam)}}
+function openRunner(cfg){const key='sp2_ans_'+cfg.kind+'_'+(cfg.attempt_id||'p');const local=JSON.parse(store.get(key)||'{}');
+  R={...cfg,idx:0,answers:Object.assign({},cfg.saved||{},local),flags:{},key,review:false,violations:cfg.violations||0};
+  R.deadlineTs=cfg.mins?new Date(cfg.started).getTime()+cfg.mins*60e3:0;
+  $('#runner').classList.add('open');document.body.style.overflow='hidden';drawRunner();
+  if(cfg.kind==='exam'&&!cfg.review){secOn();wireCalc();clearInterval(hbT);hbT=setInterval(()=>heartbeat(true),12000);heartbeat(true);if(cfg.resumed)toast('Resumed — answers restored, clock unchanged','ok')}
+  if(cfg.mins){clearInterval(rTimer);rTimer=setInterval(()=>{const left=Math.max(0,Math.floor((R.deadlineTs-Date.now())/1000));const t=$('#rTimer');if(t){t.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');t.classList.toggle('low',left<300)}if(left<=0){clearInterval(rTimer);submitRunner(true)}},500)}}
+function drawRunner(){const it=R.items[R.idx],n=R.items.length,ans=R.answers[it.id];
+  const pal=R.items.map((q,i)=>`<button class="${R.answers[q.id]!=null?'a':''} ${R.flags[q.id]?'f':''} ${i===R.idx?'c':''}" data-i="${i}">${i+1}</button>`).join('');
+  const opts=it.options.map((o,i)=>{let c='';if(R.review){if(i===it.answer_index)c='ok';else if(ans===i)c='no'}else if(ans===i)c='sel';return `<div class="opt ${c}" data-o="${i}" tabindex="0" role="button"><span class="k">${'ABCDE'[i]}</span><div>${esc(o)}</div></div>`}).join('');
+  $('#runner').innerHTML=`<div class="rtop">${LOCKUP("sm")}<span class="md">${R.kind==='exam'?'PCP-AI Examination':'Practice · '+(R.review?'Review':'Session')}</span>
+     ${R.kind==='exam'&&!R.review?`<span class="sec-chip${(R.violations||0)?' v':''}" id="secChip" title="Browser-level protections: fullscreen, focus monitoring, copy/paste blocked. Full device lockdown requires the PCI secure browser at proctored delivery.">${(R.violations||0)?'⚠ '+R.violations+' violation'+(R.violations>1?'s':''):'🛡 Secure mode'}</span><button class="btn btn-sm" id="rCalc" style="margin-left:10px">Calculator</button>`:''}
+     ${R.mins&&!R.review?'<span class="timer" id="rTimer">--:--</span>':''}
+     ${R.review?'<button class="btn btn-sm" style="margin-left:auto" id="rClose">Close review</button>':(R.mins?'':'<button class="btn btn-sm btn-g" style="margin-left:auto" id="rQuit">Quit</button>')}</div>
+   <div class="rbody"><div><div class="qcard"><div class="qn">Question ${R.idx+1} of ${n}</div><div class="qd">${esc(it.domain||'')}</div><h3>${esc(it.question)}</h3>${opts}${R.review&&ans==null?'<div class="callout warn" style="margin-top:6px">Not answered.</div>':''}</div>
+     <div class="rnav"><button class="btn" id="rPrev" ${R.idx===0?'disabled':''}>← Previous</button>${R.review?'':`<button class="btn" id="rFlag">${R.flags[it.id]?'Unflag':'Flag'}</button>`}<div style="flex:1"></div>${R.idx<n-1?'<button class="btn btn-p" id="rNext">Next →</button>':(R.review?'':'<button class="btn btn-p" id="rSubmit">Submit '+(R.kind==='exam'?'examination':'practice')+'</button>')}</div></div>
+    <div class="pal"><h4>Questions</h4><div class="pgrid">${pal}</div><div class="pleg"><span class="tag b" style="justify-content:flex-start"><span class="dot"></span>answered ${Object.keys(R.answers).length}/${n}</span>${R.review?'':'<span class="tag a" style="justify-content:flex-start"><span class="dot"></span>flagged '+Object.keys(R.flags).filter(k=>R.flags[k]).length+'</span>'}</div>${R.review||R.idx<n-1?'':'<button class="btn btn-p btn-bk" style="margin-top:12px" id="rSubmit2">Submit</button>'}</div></div>`;
+  document.querySelectorAll('.pgrid button').forEach(b=>b.onclick=()=>{R.idx=+b.dataset.i;drawRunner()});
+  document.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{if(R.review)return;R.answers[it.id]=+o.dataset.o;store.set(R.key,JSON.stringify(R.answers));heartbeat();drawRunner()});
+  document.querySelectorAll('.opt').forEach(o=>o.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();o.click()}});
+  const P=$('#rPrev');if(P)P.onclick=()=>{R.idx--;drawRunner()};const N=$('#rNext');if(N)N.onclick=()=>{R.idx++;drawRunner()};
+  const F=$('#rFlag');if(F)F.onclick=()=>{R.flags[it.id]=!R.flags[it.id];drawRunner()};const Sb=$('#rSubmit')||$('#rSubmit2');if(Sb)Sb.onclick=confirmSubmit;
+  const Q=$('#rQuit');if(Q)Q.onclick=()=>{if(R.kind==='practice')closeRunner();else toast('The examination cannot be quit — submit when ready.','err')};
+  const C=$('#rClose');if(C)C.onclick=closeRunner;const K=$('#rCalc');if(K)K.onclick=()=>{$('#calc')||wireCalc();$('#calc').classList.toggle('open')};}
+function confirmSubmit(){const un=R.items.filter(q=>R.answers[q.id]==null).length;modal('Submit '+(R.kind==='exam'?'examination':'practice')+'?',`<p>${un?`<b>${un} unanswered.</b> Unanswered questions score zero.`:'All questions answered.'}</p><p class="tiny muted">Submission is final${R.kind==='exam'?' and your result is calculated immediately':''}.</p>`,'Submit now',async()=>{await submitRunner(false);return true})}
+async function submitRunner(auto){clearInterval(rTimer);
+  if(R.kind==='practice'){let sc=0;const dom={};R.items.forEach(q=>{const ok=R.answers[q.id]===q.answer_index;dom[q.domain]=dom[q.domain]||{n:0,ok:0};dom[q.domain].n++;if(ok){sc++;dom[q.domain].ok++}});const pct=Math.round(sc/R.items.length*1000)/10;const bd=Object.entries(dom).map(([d,v])=>({domain:d,pct:Math.round(v.ok/v.n*100),band:v.ok/v.n>=.8?'above':v.ok/v.n>=.65?'at':'below'}));store.del(R.key);showPractice({pct,sc,max:R.items.length,breakdown:bd});return}
+  try{const r=await api('/api/me/exam/submit',{method:'POST',body:JSON.stringify({attempt_id:R.attempt_id,answers:R.answers})});store.del(R.key);clearInterval(hbT);await refresh();if(auto)toast('Time expired — answers submitted automatically','err');showResult(r)}catch(e){toast('Submission failed — answers saved locally; try again','err')}}
+function closeRunner(){clearInterval(rTimer);clearInterval(hbT);secOff();const c=$('#calc');if(c)c.classList.remove('open');$('#runner').classList.remove('open');$('#runner').innerHTML='';document.body.style.overflow=''}
+function dial(pct){const r=62,c=2*Math.PI*r,off=c*(1-Math.min(pct,100)/100),col=pct>=65?'var(--ok)':'var(--red)';return `<div class="dial"><svg width="150" height="150"><circle cx="75" cy="75" r="${r}" fill="none" stroke="#EEF1F6" stroke-width="12"/><circle cx="75" cy="75" r="${r}" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"/></svg><div class="dv"><b>${pct}%</b><span>score</span></div></div>`}
+function bands(bd){return (bd||[]).map(b=>`<div class="band ${b.band}"><div class="bh"><b>${esc(b.domain)}</b><span class="tag ${b.band==='above'?'g':b.band==='at'?'b':'r'}">${b.band==='above'?'Above target':b.band==='at'?'At target':'Below target'}</span></div><div class="bbar"><i style="width:${b.pct}%"></i></div></div>`).join('')}
+function wireCalc(){if(!$('#calc'))document.body.insertAdjacentHTML('beforeend',`<div id="calc"><div class="ch2">Calculator<button id="calcX">×</button></div><div class="cd2"><div class="ce" id="cE">&nbsp;</div><div class="cv" id="cV">0</div></div><div class="cg">${['C','(',')','⌫','7','8','9','÷','4','5','6','×','1','2','3','−','0','.','√','+'].map(k=>`<button data-k="${k}" class="${'÷×−+()√'.includes(k)?'op':''}">${k}</button>`).join('')}<button data-k="=" class="eq" style="grid-column:span 4">=</button></div></div>`);
+  $('#calcX').onclick=()=>$('#calc').classList.remove('open');
+  document.querySelectorAll('#calc [data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(k==='C')calcE='';else if(k==='⌫')calcE=calcE.slice(0,-1);else if(k==='√'){const v=calcEval(calcE);if(v!=null&&v>=0)calcE=String(Math.round(Math.sqrt(v)*1e10)/1e10)}else if(k==='='){const v=calcEval(calcE);if(v!=null)calcE=String(v)}else calcE+=k;$('#cE').textContent=calcE||' ';const v=calcEval(calcE);$('#cV').textContent=v!=null?v:($('#cV').textContent||'0')});}
+function calcEval(e){const x=String(e).replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');if(!/^[0-9+\-*/(). ]{0,80}$/.test(x)||!x.trim())return null;try{const v=Function('"use strict";return ('+x+')')();return typeof v==='number'&&isFinite(v)?Math.round(v*1e10)/1e10:null}catch(e){return null}}
+function showResult(r){clearInterval(rTimer);secOff();
+  if(r&&r.held){$('#runner').innerHTML=`<div class="rtop">${LOCKUP("sm")}<span class="md">Examination result</span></div>
+   <div class="rbody" style="grid-template-columns:1fr"><div class="card" style="max-width:640px;margin:2vh auto 0"><div class="cb" style="text-align:center;padding:36px 30px">
+     <div class="ei" style="margin:0 auto 14px">!</div>
+     <div class="verdict" style="color:#B45309;margin:6px 0 8px">Result on hold</div>
+     <p class="muted" style="max-width:48ch;margin:0 auto">${esc(r.message||'Your result could not be published automatically because the submission did not pass a technical validity check. PCI will look into it and notify you. This is not a proctoring or manual-marking review.')}</p>
+     <p class="tiny muted" style="margin-top:12px">No pass/fail outcome is shown until the technical issue is resolved.</p>
+     <button class="btn btn-p" id="rvHoldClose" style="margin-top:18px">Back to dashboard</button>
+   </div></div></div>`;$('#rvHoldClose').onclick=()=>{closeRunner()};return}
+  const pass=r.result==='pass';
+  $('#runner').innerHTML=`<div class="rtop">${LOCKUP("sm")}<span class="md">Examination result</span></div>
+   <div class="rbody" style="grid-template-columns:1fr"><div class="card" style="max-width:640px;margin:2vh auto 0"><div class="cb" style="text-align:center;padding:36px 30px">
+     <div class="k" style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--brand);margin-bottom:14px">Official result · issued instantly</div>
+     <div id="rvDial">${dial(0)}</div><div class="verdict ${pass?'p':'f'}" style="margin:14px 0 4px">${pass?'PASS':'Not passed'}</div>
+     <p class="muted" style="margin:0">${r.score} of ${r.max} correct · pass mark 65%</p>
+     ${pass&&r.credential?`<div style="margin-top:14px"><span class="tag gold" style="font-size:13px;padding:8px 14px"><span class="dot"></span>Credential ${esc(r.credential)} issued</span><div class="tiny muted" style="margin-top:8px">Verifiable now at <a href="${verifyURL(r.credential)}" target="_blank" rel="noopener">${esc(verifyURL(r.credential).replace('https://',''))}</a></div></div>`:''}
+     <div style="text-align:left;max-width:460px;margin:24px auto 0" id="rvBands">${bands(r.breakdown)}</div>
+     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px"><button class="btn" id="rvDl">Download score report</button>${pass?'<button class="btn btn-p" id="rvCert">View my certificate</button>':'<button class="btn btn-p" id="rvLearn">Plan my retake</button>'}<button class="btn btn-g" id="rvClose">Close</button></div>
+   </div></div></div>`;
+  requestAnimationFrame(()=>{const d=$('#rvDial');if(d)d.innerHTML=dial(r.pct);document.querySelectorAll('#rvBands .bbar i').forEach(i=>{const w=i.style.width;i.style.width='0';requestAnimationFrame(()=>i.style.width=w)})});
+  const latest=()=>S.me.attempts.find(a=>a.kind==='exam'&&a.status==='submitted');
+  $('#rvDl').onclick=()=>downloadScore(latest());const c=$('#rvCert');if(c)c.onclick=()=>{closeRunner();go('cert')};const l=$('#rvLearn');if(l)l.onclick=()=>{closeRunner();go('learn')};$('#rvClose').onclick=()=>{closeRunner();go('results')};
+  if(pass&&!matchMedia('(prefers-reduced-motion: reduce)').matches){const cols=['#1D4ED8','#4F86F7','#96690C','#0E7C43','#93C5FD'];for(let i=0;i<40;i++){const c2=document.createElement('i');c2.className='cfti';c2.style.cssText=`left:${Math.random()*100}vw;background:${cols[i%5]};animation-duration:${2.4+Math.random()*2}s;animation-delay:${Math.random()*.5}s`;document.body.appendChild(c2);setTimeout(()=>c2.remove(),5200)}}}
+function showPractice(r){const pass=r.pct>=65;$('#runner').innerHTML=`<div class="rtop">${LOCKUP("sm")}<span class="md">Practice result</span><button class="btn btn-sm" style="margin-left:auto" id="rClose">Close</button></div>
+   <div class="rbody" style="grid-template-columns:1fr"><div class="card" style="max-width:620px;margin:2vh auto 0"><div class="cb" style="text-align:center;padding:34px 28px">${dial(r.pct)}<div class="verdict ${pass?'p':'f'}" style="margin-top:8px">${pass?'On track':'Keep going'}</div><p class="muted">${r.sc} of ${r.max} correct · benchmark 65%</p><div style="text-align:left;max-width:460px;margin:18px auto 0">${bands(r.breakdown)}</div><div style="display:flex;gap:10px;justify-content:center;margin-top:18px"><button class="btn btn-p" id="rReview">Review answers</button><button class="btn" id="rAgain">New session</button></div></div></div></div>`;
+  $('#rClose').onclick=closeRunner;$('#rReview').onclick=()=>{R.review=true;R.idx=0;drawRunner()};$('#rAgain').onclick=()=>{closeRunner();go('learn')};}
+async function downloadScore(a){const bd=JSON.parse(a.domain_breakdown||'[]');const u=S.me.user;const cred=S.me.credentials[0];
+  let rep=null;try{if(S.mode!=='demo')rep=await api('/api/me/results/'+a.id+'/report');}catch(_){}
+  const rows=bd.map(b=>`<tr><td style="padding:6px 10px;border-bottom:1px solid #eee">${esc(b.domain)}</td><td style="padding:6px 10px;border-bottom:1px solid #eee">${b.pct}%</td><td style="padding:6px 10px;border-bottom:1px solid #eee">${b.band==='above'?'Above target':b.band==='at'?'At target':'Below target'}</td></tr>`).join('');
+  const html=`<!doctype html><html><head><meta charset="utf-8"><title>PCI Score Report</title></head><body style="font-family:Georgia,serif;max-width:700px;margin:40px auto;color:#0B0F19"><div style="text-align:center"><div style="font-size:30px;font-weight:700;color:#15347F">PCI</div><div style="letter-spacing:4px;font-size:10px;color:#98A0AF">PROJECT CONTROLS INSTITUTE</div><h2 style="letter-spacing:3px;color:#96690C;font-weight:600;margin-top:24px">OFFICIAL SCORE REPORT</h2></div><p><b>Candidate:</b> ${esc((u.first_name+' '+(u.last_name||'')).trim())} &nbsp; <b>Email:</b> ${esc(u.email)}</p><p><b>Examination:</b> PCP-AI &nbsp; <b>Date:</b> ${fDT(a.submitted_at)} &nbsp; <b>Attempt:</b> #${a.id}</p><p><b>Overall:</b> ${a.percent}% — <b style="color:${a.result==='pass'?'#0E7C43':'#B4380F'}">${a.result==='pass'?'PASS':'NOT PASSED'}</b> (PCI pass mark applies)</p><p style="font-size:12.5px;color:#334155"><b>Registration:</b> ${esc((rep&&rep.registration_no)||u.registration_no||'—')}${rep&&rep.unanswered!=null?` &nbsp; <b>Unanswered:</b> ${rep.unanswered}`:''}${rep&&rep.flagged_events!=null?` &nbsp; <b>Integrity events:</b> ${rep.flagged_events}`:''}${rep&&rep.released_at?` &nbsp; <b>Released:</b> ${fDT(rep.released_at)}`:''}</p><table style="width:100%;border-collapse:collapse;font-family:Arial;font-size:13px"><tr><th align="left" style="padding:6px 10px;border-bottom:2px solid #ddd">Domain</th><th align="left" style="padding:6px 10px;border-bottom:2px solid #ddd">Score</th><th align="left" style="padding:6px 10px;border-bottom:2px solid #ddd">Band</th></tr>${rows}</table>${cred?`<p style="margin-top:18px"><b>Credential:</b> ${esc(cred.credential_id)} — verify: <a href="${verifyURL(cred.credential_id)}">${verifyURL(cred.credential_id)}</a></p>`:''}<p style="font-size:11px;color:#98A0AF;margin-top:26px">Bands report performance relative to the standard; item content is never disclosed.</p></body></html>`;
+  const b=new Blob([html],{type:'text/html'});const el=document.createElement('a');el.href=URL.createObjectURL(b);el.download='PCI-Score-Report-'+a.id+'.html';el.click();toast('Score report downloaded','ok');}
+/* ---------- RESULTS ---------- */
+async function vResults(){const ex=S.me.attempts.filter(a=>a.kind==='exam'&&a.status==='submitted');
+  if(!ex.length){$('#view').innerHTML=`<div class="card"><div class="cb empty"><div class="ei">${svg('results')}</div><h4>No examination attempts yet</h4><p>Your results, domain breakdown and printable score report appear here after you sit the exam.</p><button class="btn btn-p" data-go="exam">Go to My exam</button></div></div>`;wireGo();return}
+  const latest=ex[0];
+  if(latest.result_status==='auto_held'){
+    $('#view').innerHTML=`<div class="grid g2">
+      <div class="card"><div class="ch"><h3>Latest result</h3><div class="sp"></div><span class="tiny muted">${fDT(latest.submitted_at)}</span></div><div class="cb" style="text-align:center;padding:34px 26px">
+        <div class="ei" style="margin:0 auto 12px">!</div>
+        <div class="verdict" style="color:#B45309;margin:6px 0 8px">Result on hold</div>
+        <p class="muted" style="max-width:46ch;margin:0 auto">Your result could not be published automatically because the submission did not pass a technical validity check. PCI will look into it and notify you. This is not a proctoring or manual-marking review.</p>
+        <p class="tiny muted" style="margin-top:10px">No pass/fail outcome is shown until the technical issue is resolved.</p>
+      </div></div>
+      <div><div class="card"><div class="ch"><h3>Attempt history</h3></div><div class="cb">${ex.map(a=>a.result_status==='auto_held'?`<div class="fact"><span class="tag a"><span class="dot"></span>Held</span><div class="ft" style="margin-left:4px"><b>Under review</b><span>${fDT(a.submitted_at)}</span></div></div>`:`<div class="fact"><span class="tag ${a.result==='pass'?'g':'r'}"><span class="dot"></span>${a.result==='pass'?'Pass':'Not passed'}</span><div class="ft" style="margin-left:4px"><b>${a.percent}%</b><span>${fDT(a.submitted_at)}</span></div><button class="btn btn-sm" data-dl="${a.id}">Report</button></div>`).join('')}</div></div></div>
+    </div>`;
+    wireGo();document.querySelectorAll('[data-dl]').forEach(b=>b.onclick=()=>downloadScore(ex.find(x=>x.id==b.dataset.dl)));return}
+  if(latest.result_status==='invalidated'||latest.result_status==='credential_revoked'){
+    let myAppeal=null;try{const ap=await api('/api/me/appeals');myAppeal=(ap.rows||[]).find(x=>x.attempt_id==latest.id)||null;}catch(_){}
+    $('#view').innerHTML=`<div class="card"><div class="ch"><h3>Latest result</h3><div class="sp"></div><span class="tiny muted">${fDT(latest.submitted_at)}</span></div><div class="cb" style="text-align:center;padding:34px 26px">
+      <div class="ei" style="margin:0 auto 12px">✕</div>
+      <div class="verdict f" style="margin:6px 0 8px">Result invalidated</div>
+      <p class="muted" style="max-width:48ch;margin:0 auto">This attempt was invalidated following an examination integrity review${latest.result_status==='credential_revoked'?' and the associated credential has been revoked':''}. You may appeal this decision.</p>
+      ${myAppeal?`<div class="callout ${myAppeal.status==='upheld'?'info':'warn'}" style="margin:16px auto 0;max-width:520px;text-align:left">${svg('sup')}<div><b>Appeal ${esc(myAppeal.status.replace('_',' '))}.</b> ${myAppeal.decision?esc(myAppeal.decision):'PCI is reviewing your appeal and will respond through the portal.'}</div></div>`:`<button class="btn btn-p" id="appealBtn" style="margin-top:16px">Appeal this decision</button>`}
+    </div></div>`;
+    const ab=$('#appealBtn');if(ab)ab.onclick=()=>{let ev=null;
+      modal('Appeal — attempt #'+latest.id,`<div class="fld"><label>Grounds for appeal <span style="color:#dc2626">*</span></label><textarea class="in" id="apR" rows="5" placeholder="Explain, with specifics, why you believe the decision was incorrect (min 20 characters)."></textarea></div>
+        <div class="fld"><label>Supporting evidence (optional, PDF/image ≤1.4MB)</label><button class="btn btn-sm" type="button" id="apF">Choose file…</button> <span class="tiny muted" id="apFn">none</span></div>
+        <p class="tiny muted">Appeals are decided by PCI separately from the original decision-maker. The outcome is final subject to the appeals policy.</p>`,
+        'Submit appeal',async()=>{const rtext=$('#apR').value.trim();if(rtext.length<20){toast('Please state your grounds (min 20 characters)','err');return false}
+          try{const body={type:'invalidation_appeal',attempt_id:latest.id,reason:rtext};if(ev){body.evidence_name=ev.name;body.evidence_data=ev.dataUri}
+            const r=await api('/api/me/appeals',{method:'POST',body:JSON.stringify(body)});toast(r.message||'Appeal submitted','ok');vResults();return true}
+          catch(e){toast(e.data&&e.data.error==='appeal_already_open'?'You already have an open appeal for this attempt':'Could not submit appeal','err');return false}});
+      setTimeout(()=>{const f=$('#apF');if(f)f.onclick=()=>pickFile(x=>{ev=x;$('#apFn').textContent=x.name})},50);};
+    return}
+  const bd=JSON.parse(latest.domain_breakdown||'[]');const pass=latest.result==='pass';
+  $('#view').innerHTML=`<div class="grid g2">
+    <div class="card"><div class="ch"><h3>Latest result</h3><div class="sp"></div><span class="tiny muted">${fDT(latest.submitted_at)}</span></div><div class="cb" style="text-align:center">${dial(latest.percent)}<div class="verdict ${pass?'p':'f'}" style="margin:10px 0 2px">${pass?'PASS':'Not passed'}</div><p class="muted tiny">Pass mark 65% · Above ≥80 · At 65–79 · Below &lt;65${latest.violations?' · '+latest.violations+' integrity event(s) recorded':''}</p><div style="text-align:left;max-width:520px;margin:16px auto 0" id="rBands">${bands(bd)}</div><div style="display:flex;gap:10px;justify-content:center;margin-top:16px"><button class="btn" data-dl="${latest.id}">Download score report</button>${pass?'<button class="btn btn-p" data-go="cert">View certificate</button>':'<button class="btn btn-p" data-go="learn">Target weak domains</button>'}</div></div></div>
+    <div><div class="card"><div class="ch"><h3>Attempt history</h3></div><div class="cb">${ex.map(a=>a.result_status==='auto_held'?`<div class="fact"><span class="tag a"><span class="dot"></span>Held</span><div class="ft" style="margin-left:4px"><b>Under review</b><span>${fDT(a.submitted_at)}</span></div></div>`:`<div class="fact"><span class="tag ${a.result==='pass'?'g':'r'}"><span class="dot"></span>${a.result==='pass'?'Pass':'Not passed'}</span><div class="ft" style="margin-left:4px"><b>${a.percent}%</b><span>${fDT(a.submitted_at)}</span></div><button class="btn btn-sm" data-dl="${a.id}">Report</button></div>`).join('')}</div></div>
+     ${pass?'':'<div class="card" style="margin-top:18px"><div class="cb"><div class="callout warn">'+svg('sup')+'<div><b>Retake guidance.</b> Focus on domains marked Below target; the practice centre scores by domain. Retakes follow the retake policy — the fee is published before launch and a short interval applies.</div></div></div></div>'}
+    </div></div>`;
+  requestAnimationFrame(()=>document.querySelectorAll('#rBands .bbar i').forEach(i=>{const w=i.style.width;i.style.width='0';requestAnimationFrame(()=>i.style.width=w)}));
+  wireGo();document.querySelectorAll('[data-dl]').forEach(b=>b.onclick=()=>downloadScore(ex.find(a=>a.id==b.dataset.dl)));
+}
+/* ---------- CERTIFICATE ---------- */
+async function vCert(){const me=S.me;const c=me.credentials[0];
+  if(c&&S.mode!=='demo'){try{const st=await api('/api/me/certificate');
+    if(st&&st.found&&st.state==='revoked'){$('#view').innerHTML=`<div class="card"><div class="cb empty"><div class="ei">✕</div><h4>Credential revoked</h4><p>Credential ${esc(st.credential_id)} has been revoked and is no longer valid. The public verification page reflects this status. If you believe this is in error, you may appeal from your <b>Results</b> page.</p><button class="btn btn-p" data-go="results">Go to Results</button></div></div>`;wireGo();return}
+  }catch(_){}}
+  if(!c){$('#view').innerHTML=`<div class="card"><div class="cb empty"><div class="ei">${svg('cert')}</div><h4>No credential yet</h4><p>After you pass the PCP-AI examination and your attempt clears PCI's automated exam integrity checks, your certificate — with a publicly verifiable credential ID — will appear here.</p><button class="btn btn-p" data-go="exam">Go to My exam</button></div></div>`;wireGo();return}
+  const rd=dTo(c.expires_at);const cs=credStatus(me);
+  $('#view').innerHTML=`<div class="noprint" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px"><span class="big-tag tag ${cs.cls}">${esc(cs.t)}</span><span class="tag ${rd<180?'a':'b'}"><span class="dot"></span>recertify within ${Math.max(0,rd)} days</span><a class="btn btn-sm" href="${verifyURL(c.credential_id)}" target="_blank" rel="noopener">Verify online ↗</a><div style="flex:1"></div><button class="btn" id="shareBtn">Copy share text</button><button class="btn" id="pdfCert">Download PDF</button><button class="btn btn-p" id="printCert">Download / print</button></div>
+    <div id="certWrap">${certHTML(c)}</div>
+    <div class="card noprint" style="margin-top:20px"><div class="cb"><div class="callout info">${svg('sup')}<div><b>Verification.</b> Anyone can confirm this credential and its live status at <a href="${verifyURL(c.credential_id)}" target="_blank" rel="noopener">${esc(verifyURL(c.credential_id))}</a>.</div></div>${cs.k!=='active'?`<div class="callout warn" style="margin-top:10px">${svg('sup')}<div><b>${esc(cs.t)}.</b> ${esc(cs.why)} <button class="lnk" data-go="cpd" style="padding:0;margin-left:4px">Resolve in CPD →</button></div></div>`:''}</div></div>`;
+  $('#printCert').onclick=()=>{$('#printzone').innerHTML=certHTML(S.me.credentials[0]);window.print()};
+  const pc=$('#pdfCert');if(pc&&!cfgOn('sp_certificate_download',true)){pc.disabled=true;pc.title='Certificate download is temporarily unavailable';}
+  if(pc)pc.onclick=async()=>{if(!cfgOn('sp_certificate_download',true)){toast('Certificate download is temporarily unavailable','err');return}if(!window.PDFLib){toast('PDF library still loading — try again in a moment','err');return}
+    pc.disabled=true;const orig=pc.textContent;pc.textContent='Generating…';
+    try{const u2=S.me.user;const doc=await PDFLib.PDFDocument.create();
+      const pg=doc.addPage([842,595]);const {width,height}=pg.getSize();
+      const helv=await doc.embedFont(PDFLib.StandardFonts.Helvetica);
+      const bold=await doc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+      const ink=PDFLib.rgb(0.059,0.09,0.165), blue=PDFLib.rgb(0.114,0.306,0.847), grey=PDFLib.rgb(0.42,0.47,0.55);
+      const ctr=(txt,y,size,font,color)=>{const w=font.widthOfTextAtSize(txt,size);pg.drawText(txt,{x:(width-w)/2,y,size,font,color});};
+      pg.drawRectangle({x:24,y:24,width:width-48,height:height-48,borderColor:blue,borderWidth:2});
+      pg.drawRectangle({x:32,y:32,width:width-64,height:height-64,borderColor:grey,borderWidth:0.6});
+      ctr('PROJECT CONTROLS INSTITUTE GLOBAL, INC.',height-92,15,bold,blue);
+      ctr('AI proposes, the professional disposes.',height-112,9.5,helv,grey);
+      ctr('CERTIFICATE OF PROFESSIONAL CERTIFICATION',height-168,20,bold,ink);
+      ctr('This is to certify that',height-212,11,helv,grey);
+      ctr((c.holder_name||((u2.first_name||'')+' '+(u2.last_name||''))).trim(),height-252,28,bold,ink);
+      ctr('has satisfied the requirements of the Project Controls Institute and is hereby awarded the',height-288,11,helv,ink);
+      ctr('Certified Project Controls Professional \u2014 AI (PCP-AI)',height-316,16,bold,blue);
+      ctr('Credential ID: '+c.credential_id+'    \u00b7    Registration: '+(u2.registration_no||'\u2014'),height-360,11,helv,ink);
+      ctr('Issued: '+fD(c.issued_at)+'        Valid until: '+fD(c.expires_at),height-382,11,helv,ink);
+      ctr('Verify this credential at any time: '+verifyURL(c.credential_id),96,9.5,helv,grey);
+      ctr('This certificate is valid only while the credential shows as active on the PCI public register.',80,8.5,helv,grey);
+      const bytes=await doc.save();const bl=new Blob([bytes],{type:'application/pdf'});
+      const el=document.createElement('a');el.href=URL.createObjectURL(bl);el.download='PCI-Certificate-'+c.credential_id+'.pdf';el.click();
+      setTimeout(()=>URL.revokeObjectURL(el.href),1500);toast('Certificate PDF downloaded','ok');}
+    catch(e){toast('Could not generate the PDF','err')}
+    finally{pc.disabled=false;pc.textContent=orig}};
+  $('#shareBtn').onclick=()=>{const t=`I'm certified! ${(me.user.first_name+' '+(me.user.last_name||'')).trim()} has earned the PCP-AI from the Project Controls Institute. Verify: ${verifyURL(c.credential_id)} · ID ${c.credential_id}`;navigator.clipboard&&navigator.clipboard.writeText(t);toast('Share text copied','ok')};wireGo();
+}
+function certHTML(c){return `<div class="cert"><div class="cmk">PCI</div><div class="cinst">Project Controls Institute Global, Inc.</div><div class="ct">Certificate of Professional Certification</div><p class="csub">This certifies that</p><div class="cnm">${esc(c.holder_name)}</div><p class="csub">has satisfied the examination and eligibility requirements of the Institute and is hereby recognised as a</p><div class="ccred">Certified Project Controls Professional — AI (PCP-AI)</div><div class="cseal">PCI</div><div class="cmeta"><div><b>${fD(c.issued_at)}</b>Date of award</div><div><b>${fD(c.expires_at)}</b>Valid until</div><div><b class="mono">${esc(c.credential_id)}</b>Credential ID</div></div><div class="cvfy">Verify at ${esc(verifyURL(c.credential_id).replace(/^https?:\/\//,''))} · Project Controls Institute Global, Inc., a Delaware Non-Stock Corporation</div></div>`}
+/* ---------- LEARNING ---------- */
+async function vLearn(){const [dl,pr]=await Promise.all([api('/api/me/downloads'),api('/api/me/practice')]);
+  const docs=(dl.rows||[]).map(r=>`<div class="fact"><div class="fico">${svg('docs')}</div><div class="ft"><b>${esc(r.title)}</b><span>${esc(r.category||'')} · ${esc(r.doc_type||'PDF')}</span></div>${r.url?`<button class="btn btn-sm dl-wm" data-url="${esc(r.url)}" data-title="${esc(r.title)}">Download</button>`:'<span class="tag n">coming soon</span>'}</div>`).join('');
+  const domains=[...new Set((pr.rows||[]).map(q=>q.domain))].filter(Boolean);
+  const paths=[['The standard & Body of Knowledge','Foundational concepts and the PCP-AI competency map',100],['Planning, scheduling & EVM','Core project-controls techniques',100],['Governed AI in project controls','“AI proposes, the professional disposes” in practice',60],['Risk, cost & performance','Quantitative methods and contingency',40]];
+  $('#view').innerHTML=`<div class="grid g2">
+    <div><div class="card"><div class="ch"><h3>Learning pathway</h3><div class="sp"></div><span class="tag b">${Math.round(paths.reduce((a,p)=>a+p[2],0)/paths.length)}% overall</span></div><div class="cb">
+      ${paths.map(p=>`<div style="padding:12px 0;border-bottom:1px solid var(--line2)"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><b style="font-size:13.5px">${esc(p[0])}</b><span class="tiny muted">${p[2]}%</span></div><div class="tiny muted" style="margin-bottom:8px">${esc(p[1])}</div><div class="progbar"><i style="width:${p[2]}%"></i></div></div>`).join('')}
+      <div class="callout info" style="margin-top:14px">${svg('learn')}<div>The pathway builds exam readiness — progress here does not by itself grant certification, which requires passing the PCP-AI examination.</div></div>
+    </div></div>
+     <div class="card" style="margin-top:18px"><div class="ch"><h3>Handbook, guidelines &amp; resources</h3></div><div class="cb">${docs||'<div class="muted tiny">No resources published yet.</div>'}</div></div>
+    </div>
+    <div class="card"><div class="ch"><h3>Practice centre</h3><div class="sp"></div><span class="tag b">${(pr.rows||[]).length} items</span></div><div class="cb">
+      <p class="muted" style="margin:0 0 14px">Timed sessions mirror exam pressure; untimed lets you think. Every session ends with domain bands and a full answer review.</p>
+      <div class="fld"><label>Mode</label><select class="in" id="pMode"><option value="untimed">Untimed — learn as you go</option><option value="timed">Timed — exam conditions</option></select></div>
+      <button class="btn btn-p btn-lg btn-bk" id="pStart">Start practice session</button>
+      <div class="hr"></div><div class="tiny muted"><b>Domains:</b> ${domains.map(esc).join(' · ')||'—'}</div>
+      <div class="callout warn" style="margin-top:12px">${svg('sup')}<div>This is the published item bank — real examination items are separate, secured, and never appear in practice.</div></div>
+    </div></div></div>`;
+  requestAnimationFrame(()=>document.querySelectorAll('.progbar i').forEach(i=>{const w=i.style.width;i.style.width='0';requestAnimationFrame(()=>i.style.width=w)}));
+  $('#pStart').onclick=()=>{const timed=$('#pMode').value==='timed';openRunner({kind:'practice',items:pr.rows.map(q=>({...q})),mins:timed?Math.max(10,Math.ceil(pr.rows.length*1.5)):0,started:new Date().toISOString(),attempt_id:'p'+Date.now()})};
+}
+  // ---- Watermarked study-material download ----
+  // Personalises each PDF with the member's registration number + name in a bottom corner
+  // (small, semi-transparent — legible but non-intrusive), so downloaded material is traceable.
+  document.querySelectorAll('.dl-wm').forEach(btn=>btn.onclick=async()=>{
+    const url=btn.getAttribute('data-url'), title=btn.getAttribute('data-title')||'material';
+    const u=S.me&&S.me.user||{}; const reg=u.registration_no||''; const nm=((u.first_name||'')+' '+(u.last_name||'')).trim();
+    const orig=btn.textContent; btn.disabled=true; btn.textContent='Preparing…';
+    try{
+      const resp=await fetch(url); if(!resp.ok) throw new Error('fetch');
+      const buf=await resp.arrayBuffer();
+      let outBlob;
+      const isPdf=(url.toLowerCase().endsWith('.pdf'))|| (resp.headers.get('content-type')||'').includes('pdf');
+      if(isPdf && window.PDFLib){
+        const pdf=await PDFLib.PDFDocument.load(buf,{ignoreEncryption:true});
+        const font=await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
+        const stamp=('PCI · '+reg+(nm?'  ·  '+nm:'')).trim();
+        pdf.getPages().forEach(pg=>{
+          const {width}=pg.getSize();
+          pg.drawText(stamp,{x:14,y:12,size:7,font,color:PDFLib.rgb(0.45,0.5,0.55),opacity:0.55});
+          // also a faint right-corner registration tag
+          const rt=reg||''; const tw=font.widthOfTextAtSize(rt,7);
+          if(rt) pg.drawText(rt,{x:Math.max(14,width-tw-14),y:12,size:7,font,color:PDFLib.rgb(0.45,0.5,0.55),opacity:0.55});
+        });
+        const bytes=await pdf.save(); outBlob=new Blob([bytes],{type:'application/pdf'});
+      } else {
+        // non-PDF (or library unavailable): download as-is so the material is still accessible
+        outBlob=new Blob([buf]);
+      }
+      const a=document.createElement('a'); a.href=URL.createObjectURL(outBlob);
+      a.download=title.replace(/[^a-z0-9]+/gi,'-').toLowerCase()+(isPdf?'.pdf':''); document.body.appendChild(a); a.click();
+      setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);
+      toast('Download ready — personalised with your registration number','ok');
+    }catch(e){ toast('Could not prepare that file. Please try again.','err'); }
+    finally{ btn.disabled=false; btn.textContent=orig; }
+  });
+/* ---------- CPD & RENEWALS ---------- */
+async function vCpd(){const me=S.me;const d=await api('/api/me/cpd');const rows=d.rows||[];const total=d.total||0,target=d.target||60;const pct=Math.min(100,Math.round(total/target*100));
+  const memDays=me.membership&&me.membership.expiry_date?dTo(me.membership.expiry_date):null;const memOK=memDays!=null&&memDays>0;const c=me.credentials[0];const cs=credStatus(me);
+  $('#view').innerHTML=`${cs&&cs.k!=='active'?`<div class="card" style="margin-bottom:18px"><div class="cb" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><span class="big-tag tag ${cs.cls}">${esc(cs.t)}</span><div class="tiny muted" style="flex:1">${esc(cs.why)}</div></div></div>`:''}
+   <div class="grid g2"><div class="card"><div class="ch"><h3>CPD record</h3><div class="sp"></div><span class="tag ${total>=target?'g':'b'}">${total} / ${target} hours</span></div><div class="cb">
+     <div class="progbar" style="margin-bottom:8px"><i id="cpdBar"></i></div>
+     <div class="tiny muted" style="margin-bottom:16px">Cycle target ${target} hours by ${c?fD(c.expires_at):'your recertification date'} · quality of reflection matters more than volume — entries are sampled for verification.</div>
+     <button class="btn btn-p" id="cpdAdd">＋ Record CPD activity</button><div class="hr"></div>
+     ${rows.length?rows.map(r=>`<div class="fact"><div class="fico" style="min-width:auto;padding:0 4px;font-weight:700;color:var(--brand-ink);background:var(--wash)">${r.hours}h</div><div class="ft"><b>${esc(r.category)}</b> <span class="tiny muted">· ${fD(r.activity_date)}</span><div class="tiny" style="color:var(--t2);margin-top:2px">${esc(r.description)}</div></div>${r.status==='approved'?'<span class="tag g"><span class="dot"></span>Approved</span>':r.status==='rejected'?`<span class="tag r" title="${esc(r.admin_note||'')}"><span class="dot"></span>Rejected</span>`:'<span class="tag a"><span class="dot"></span>In review</span>'}<button class="btn btn-sm" data-ev="${r.id}" title="${r.evidence_name?esc(r.evidence_name):'Attach evidence (PDF/image)'}">${r.evidence_name?'📎':'+ Evidence'}</button><button class="btn btn-sm btn-g" data-del="${r.id}">✕</button></div>`).join(''):'<div class="muted tiny">No entries yet. Structured learning, on-the-job stretch, contribution to the profession and formal study all count.</div>'}
+   </div></div>
+   <div><div class="card"><div class="ch"><h3>Membership fee</h3></div><div class="cb">${me.membership?`<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><span class="big-tag tag ${memOK?(memDays<45?'a':'g'):'r'}">${memOK?(memDays<45?'Renews in '+memDays+'d':'Active'):'Lapsed'}</span><div class="tiny muted" style="flex:1">Valid to ${fD(me.membership.expiry_date)} · ${money(99)}/year keeps your PCI membership active (credential renewal may also require CPD and recertification).</div></div>`:'<span class="muted">No membership record.</span>'}<button class="btn btn-p btn-bk" style="margin-top:14px" id="renewGo">${memOK?'Renew early':'Renew now'} — ${money(99)}/year</button></div></div>
+    <div class="card" style="margin-top:18px"><div class="ch"><h3>Recertification</h3></div><div class="cb">${c?`<div class="tiny muted">PCP-AI runs a 3-year cycle, ending <b>${fD(c.expires_at)}</b> (${Math.max(0,dTo(c.expires_at))} days). Requirements: ${target}h CPD ${total>=target?'✓ met':'('+total+'h)'}, membership in good standing ${memOK?'✓':'✕'}, ethics agreement.</div><button class="btn ${total>=target&&memOK?'btn-p':''} btn-bk" style="margin-top:14px" id="recertGo">Recertify — ${money(99)}/3-year cycle</button>${total<target?`<div class="callout warn" style="margin-top:10px">${svg('sup')}<div>Complete ${target-total} more CPD hours before recertifying, or your application is held pending verification.</div></div>`:''}`:'<div class="muted tiny">Available once you hold the PCP-AI credential. Pass the exam and your 3-year cycle starts automatically.</div>'}</div></div>
+   </div></div>`;
+  requestAnimationFrame(()=>{const b=$('#cpdBar');if(b)b.style.width=pct+'%'});
+  $('#cpdAdd').onclick=()=>modal('Record CPD activity',`<div class="fld"><label>Date of activity</label><input class="in" id="cD" type="date" value="${new Date().toISOString().slice(0,10)}"/></div><div class="fld"><label>Category</label><select class="in" id="cC"><option>Structured learning</option><option>Learning through work</option><option>Contribution to the profession</option><option>Formal study</option></select></div><div class="fld"><label>Hours</label><input class="in" id="cH" type="number" min="0.5" step="0.5" value="2"/></div><div class="fld"><label>What you did — and what changed in your practice</label><textarea class="in" id="cT" rows="4" placeholder="Specific, dated, reflective."></textarea></div>`,'Save entry',async()=>{const t=$('#cT').value.trim();if(!t||!(+$('#cH').value>0)){toast('Hours and description are required','err');return false}await api('/api/me/cpd',{method:'POST',body:JSON.stringify({activity_date:$('#cD').value,category:$('#cC').value,hours:+$('#cH').value,description:t})});toast('CPD recorded','ok');await refresh();vCpd();return true});
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this CPD entry?'))return;await api('/api/me/cpd/'+b.dataset.del,{method:'DELETE'});await refresh();vCpd()});
+  document.querySelectorAll('[data-ev]').forEach(b=>b.onclick=()=>pickFile(async f=>{try{await api('/api/me/cpd/'+b.dataset.ev+'/evidence',{method:'POST',body:JSON.stringify({filename:f.name,data_uri:f.dataUri})});toast('Evidence attached — entry returned for review','ok');vCpd()}catch(e){toast('Could not attach evidence','err')}}));
+  $('#renewGo').onclick=()=>payFlow('renewal','Annual membership renewal',99);const rg=$('#recertGo');if(rg)rg.onclick=()=>{if(total<target)toast('CPD target not met — application would be held','err');payFlow('recert','PCP-AI recertification',99)};
+}
+/* ---------- SUPPORT ---------- */
+async function vSupport(){const d=await api('/api/me/tickets');const rows=d.rows||[];
+  const TS={open:['b','Open'],awaiting_student:['a','Reply waiting'],resolved:['g','Resolved'],closed:['n','Closed']};
+  $('#view').innerHTML=`<div class="grid g2">
+    <div><div style="display:flex;gap:12px;align-items:center;margin-bottom:14px"><div style="flex:1" class="muted tiny">Answered by the PCI team from the admin desk — typical first response within 1–2 business days.</div><button class="btn btn-p" id="newT">＋ New ticket</button></div>
+      ${rows.length?rows.map(t=>`<div class="tkt" data-t="${t.id}"><div class="tt"><b>${esc(t.subject)}</b><span>${esc(t.reference)} · ${esc(t.category)} · updated ${fD(t.updated_at)}</span></div><span class="tag ${(TS[t.status]||['n'])[0]}"><span class="dot"></span>${(TS[t.status]||['n',t.status])[1]}</span></div>`).join(''):'<div class="card"><div class="cb empty"><div class="ei">?</div><h4>No tickets yet</h4><p>Questions about scheduling, results, payments or accommodations? Open a ticket and track the whole conversation here.</p></div></div>'}
+    </div>
+    <div class="card"><div class="ch"><h3>Help &amp; FAQ</h3></div><div class="cb">
+      <div class="fld"><input class="in" id="faqQ" placeholder="Search frequently asked questions…" aria-label="Search frequently asked questions…"/></div>
+      <div id="faqR"><div class="muted tiny">Type to search — e.g. “reschedule”, “refund”, “window”.</div></div>
+      <div class="hr"></div>
+      <div style="padding-top:4px"><b style="font-size:14px">Share your experience</b>
+        <p class="tiny muted" style="margin:6px 0 10px">Members can submit a review for the PCI website. Published after moderation.</p>
+        <button class="btn btn-o" id="revBtn">Write a review</button>
+        <div id="revState" class="tiny" style="margin-top:8px"></div>
+      </div>
+      <div class="hr"></div>
+      <div class="ql"><a data-nt="Exam & scheduling"><span class="qico">${svg('exam')}</span><b>Ask about exam scheduling</b><span class="ar">›</span></a><a data-nt="Payments & receipts"><span class="qico">${svg('pay')}</span><b>Invoice or payment help</b><span class="ar">›</span></a><a data-nt="Policy question"><span class="qico">${svg('docs')}</span><b>Exam policy clarification</b><span class="ar">›</span></a></div>
+    </div></div></div>`;
+  $('#newT').onclick=()=>newTicket();
+
+  (async()=>{ // review submission
+    const rb=document.getElementById('revBtn'); if(!rb) return;
+    let mine=null; try{ const rv=await api('/api/me/reviews'); mine=(rv.reviews||[])[0]||null; }catch(e){}
+    const st=document.getElementById('revState');
+    if(mine&&st) st.textContent = mine.status==='published' ? '✓ Your review is published on the website.' : (mine.status==='pending' ? 'Your review is awaiting moderation.' : '');
+    const u=(S.me&&S.me.user)||{}, p=(S.me&&S.me.profile)||{};
+    rb.onclick=()=>modal('Write a review',
+      `<div class="fld"><label>Name <span style="color:#dc2626">*</span></label><input class="in" id="rvNm" value="${esc(((u.first_name||'')+' '+(u.last_name||'')).trim())}"/></div>
+       <div class="grid g2"><div class="fld"><label>Designation / role</label><input class="in" id="rvDes" value="${esc(p.current_role||'')}" placeholder="e.g. Senior Planner" aria-label="e.g. Senior Planner"/></div>
+       <div class="fld"><label>Company</label><input class="in" id="rvCo" value="${esc(p.company||'')}" placeholder="Organisation" aria-label="Organisation"/></div></div>
+       <div class="grid g2"><div class="fld"><label>Country</label><input class="in" id="rvCn" value="${esc(p.country||'')}"/></div>
+       <div class="fld"><label>I am a…</label><select class="in" id="rvRel"><option value="student">Student</option><option value="member">Member</option><option value="professional">Professional</option><option value="other">Other</option></select></div></div>
+       <div class="fld"><label>Rating</label><select class="in" id="rvRt"><option value="5">★★★★★ Excellent</option><option value="4">★★★★ Very good</option><option value="3">★★★ Good</option><option value="2">★★ Fair</option><option value="1">★ Poor</option></select></div>
+       <div class="fld"><label>Headline (optional)</label><input class="in" id="rvTi" placeholder="A short title" aria-label="A short title"/></div>
+       <div class="fld"><label>Your review <span style="color:#dc2626">*</span></label><textarea class="in" id="rvBd" rows="5" placeholder="Tell others about your experience with the programme (min 10 characters)."></textarea></div>
+       <p class="tiny muted">By submitting, you agree your review (name, designation, company, country) may be published on the PCI website.</p>`,
+      'Submit for review', async()=>{
+        const body=$('#rvBd').value.trim(); if(body.length<10){toast('Please write at least 10 characters','err');return false;}
+        try{ const r=await api('/api/me/reviews',{method:'POST',body:JSON.stringify({name:$('#rvNm').value.trim(),designation:$('#rvDes').value.trim(),company:$('#rvCo').value.trim(),country:$('#rvCn').value.trim(),relationship:$('#rvRel').value,rating:+$('#rvRt').value,title:$('#rvTi').value.trim(),body})});
+          toast(r.message||'Thank you — submitted for moderation','ok'); if(st) st.textContent='Your review is awaiting moderation.'; return true;
+        }catch(e){ toast('Could not submit your review','err'); return false; }
+      });
+  })();  document.querySelectorAll('[data-nt]').forEach(b=>b.onclick=()=>newTicket(b.dataset.nt));
+  document.querySelectorAll('[data-t]').forEach(el=>el.onclick=()=>openTicket(rows.find(x=>x.id==el.dataset.t)));
+  let ft=null;$('#faqQ').oninput=e=>{clearTimeout(ft);const q=e.target.value.trim();ft=setTimeout(async()=>{if(!q){$('#faqR').innerHTML='<div class="muted tiny">Type to search.</div>;';return}try{const r=await api('/api/me/faqs?q='+encodeURIComponent(q));$('#faqR').innerHTML=(r.rows&&r.rows.length)?r.rows.slice(0,5).map(f=>`<div style="padding:10px 0;border-bottom:1px solid var(--line2)"><b style="font-size:13px">${esc(f.question)}</b><div class="tiny muted" style="margin-top:3px">${esc((f.answer||'').slice(0,160))}</div></div>`).join(''):'<div class="muted tiny">No matches — open a ticket and we’ll help.</div>'}catch(e){$('#faqR').innerHTML='<div class="muted tiny">Search unavailable.</div>'}},250)};
+}
+function newTicket(cat){const cats=['Login issue','Payment issue','Invoice issue','Course access issue','Profile issue','Exam question','Membership question','Policy question','Other'];
+  modal('New support ticket',`<div class="fld"><label>Issue type</label><select class="in" id="tCat">${cats.map(c=>`<option ${cat&&c.toLowerCase().includes((cat||'').split(' ')[0].toLowerCase())?'selected':''}>${c}</option>`).join('')}</select></div><div class="fld"><label>Subject</label><input class="in" id="tSub" maxlength="140" placeholder="One-line summary" aria-label="One-line summary"/></div><div class="fld"><label>Message</label><textarea class="in" id="tMsg" rows="5" placeholder="Include references and dates — it speeds everything up."></textarea></div><div class="fld"><label>Attachment (optional)</label><input class="in" id="tFile" type="file"/><div class="tiny mut2" style="margin-top:5px">File name is logged with your ticket; a team member will request the file securely if needed.</div></div>`,'Create ticket',async()=>{const s=$('#tSub').value.trim(),m=$('#tMsg').value.trim();if(!s||!m){toast('Subject and message are required','err');return false}const fn=$('#tFile').files[0];const body=m+(fn?'\n\n[Attachment noted: '+fn.name+']':'');const r=await api('/api/me/tickets',{method:'POST',body:JSON.stringify({subject:s,category:$('#tCat').value,message:body})});toast('Ticket '+r.reference+' created','ok');vSupport();return true});
+}
+function openTicket(t){if(!t)return;const msgs=(t.messages||[]).map(m=>`<div class="bubble ${m.sender==='admin'?'them':'me'}">${esc(m.body)}<div class="bm">${m.sender==='admin'?'PCI Support':'You'} · ${fDT(m.created_at)}</div></div>`).join('');
+  drawer(esc(t.subject),`<span class="mono tiny">${esc(t.reference)}</span> · ${esc(t.category)}`,`<div>${msgs}</div><div id="tAtt" style="margin-top:10px"></div>`,`<button class="btn" id="rAttach" title="Attach a file (PDF/image ≤1.4MB)">📎</button><input class="in" id="rMsg" placeholder="Write a reply…" style="flex:1" aria-label="Write a reply…"/><button class="btn btn-p" id="rSend">Send</button>`);
+  (async()=>{const box=$('#tAtt');if(!box)return;
+    const load=async()=>{try{const r=await api('/api/me/tickets/'+t.id+'/attachments');const rows=r.rows||[];
+      box.innerHTML=rows.length?'<div class="tiny muted" style="margin-bottom:5px">Attachments</div>'+rows.map(x=>`<button class="tag n" data-att="${x.id}" data-fn="${esc(x.filename)}" style="margin:0 6px 6px 0;border:0;cursor:pointer">📎 ${esc(x.filename)}</button>`).join(''):'';
+      box.querySelectorAll('[data-att]').forEach(btn=>btn.onclick=async()=>{try{
+        if(S.mode==='demo'){toast('Demo: attachment would download','ok');return;}
+        const r=await fetch(S.api.replace(/\/$/,'')+'/api/me/tickets/'+t.id+'/attachments/'+btn.dataset.att,{headers:{'Authorization':'Bearer '+S.tok}});
+        if(!r.ok)throw 0;const url=URL.createObjectURL(await r.blob());const a=document.createElement('a');a.href=url;a.download=btn.dataset.fn;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);
+      }catch(_){toast('Could not open attachment','err')}});}catch(_){box.innerHTML=''}};
+    await load();
+    const ab=$('#rAttach');if(ab)ab.onclick=()=>pickFile(async f=>{ab.disabled=true;
+      try{await api('/api/me/tickets/'+t.id+'/attachments',{method:'POST',body:JSON.stringify({filename:f.name,data_uri:f.dataUri})});toast('File attached','ok');await load();}
+      catch(e){toast(e.data&&e.data.error==='file_too_large'?'File too large':'Could not attach file','err')}
+      finally{ab.disabled=false}});})();
+  $('#rSend').onclick=async()=>{const v=$('#rMsg').value.trim();if(!v)return;await api('/api/me/tickets/'+t.id+'/reply',{method:'POST',body:JSON.stringify({message:v})});toast('Reply sent','ok');closeDrawer();setTimeout(vSupport,S.mode==='demo'?1400:0);await refresh()};
+}
+/* ---------- PROFILE & SECURITY ---------- */
+async function vProfile(){const me=S.me,p=me.profile||{};
+  const F=[['country','Country'],['city','City'],['mobile','Mobile'],['preferred_language','Preferred language'],['current_role','Current role'],['company','Company / institution'],['industry_sector','Industry sector'],['years_experience','Years of experience'],['highest_qualification','Highest qualification'],['project_controls_area','Project controls area'],['enrollment_purpose','Enrolment purpose'],['linkedin_url','LinkedIn profile (optional)']];
+  const done=[me.user.first_name,me.user.last_name,me.user.email].concat(F.map(f=>p[f[0]])).filter(Boolean).length;const totalF=F.length+3;const pctP=Math.round(done/totalF*100);
+  $('#view').innerHTML=`<div class="grid g2">
+    <div class="card"><div class="ch"><h3>Profile</h3><div class="sp"></div><span class="tag ${pctP>=80?'g':'b'}">${pctP}% complete</span></div><div class="cb">
+      <div class="progbar" style="margin-bottom:16px"><i id="pfBar"></i></div>
+      <div class="grid g2e" style="gap:0 14px">
+        <div class="fld"><label>First name</label><input class="in" value="${esc(me.user.first_name||'')}" disabled/></div>
+        <div class="fld"><label>Last name</label><input class="in" value="${esc(me.user.last_name||'')}" disabled/></div>
+      </div>
+      <div class="fld"><label>Email</label><input class="in" value="${esc(me.user.email)}" disabled/></div>
+      <div class="grid g2e" style="gap:0 14px">${F.map(([k,l])=>`<div class="fld"><label>${l}</label><input class="in" data-pf="${k}" value="${esc(p[k]||'')}"/></div>`).join('')}</div>
+      <button class="btn btn-p" id="pfSave">Save profile</button>
+    </div></div>
+    <div>
+     <div class="card"><div class="ch"><h3>Security</h3></div><div class="cb" id="secBox"><div class="muted tiny">Loading…</div></div></div>
+     <div class="card" style="margin-top:18px"><div class="ch"><h3>Data &amp; account</h3></div><div class="cb">
+       <div class="ql"><a id="dlData"><span class="qico">${svg('docs')}</span><b>Download my account data</b><span class="ar">›</span></a><a id="delAcc" style="color:var(--red)"><span class="qico" style="background:var(--red-bg)">${svg('sup')}</span><b>Request account deletion</b><span class="ar">›</span></a></div>
+       <div class="callout info" style="margin-top:10px">${svg('sup')}<div>Deletion is subject to record-retention policy (e.g. financial and certification records). We confirm what can be removed and when.</div></div>
+     </div></div>
+    </div></div>`;
+  requestAnimationFrame(()=>{const b=$('#pfBar');if(b)b.style.width=pctP+'%'});
+  $('#pfSave').onclick=async()=>{const b={};document.querySelectorAll('[data-pf]').forEach(i=>b[i.dataset.pf]=i.value);await api('/api/me/profile',{method:'PATCH',body:JSON.stringify(b)});toast('Profile saved','ok');await refresh()};
+  $('#dlData').onclick=async()=>{const d=await api('/api/me/account-data');const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='PCI-account-data.json';a.click();toast('Account data downloaded','ok')};
+  $('#delAcc').onclick=()=>modal('Request account deletion',`<p>This sends a deletion request to the PCI team. Certain records must be retained under policy; we’ll confirm what can be removed.</p><div class="fld"><label>Reason (optional)</label><textarea class="in" id="delR" rows="3"></textarea></div>`,'Send request',async()=>{const r=await api('/api/me/delete-request',{method:'POST',body:JSON.stringify({reason:$('#delR').value})});toast('Request '+r.reference+' submitted','ok');return true});
+  loadSecurity();
+}
+async function loadSecurity(){try{const s=await api('/api/me/security');
+  $('#secBox').innerHTML=`<div class="fact"><div class="fico" style="background:${s.email_verified?'var(--ok-bg)':'var(--amber-bg)'};color:${s.email_verified?'var(--ok)':'var(--amber)'}">${s.email_verified?'✓':'!'}</div><div class="ft"><b>Email ${s.email_verified?'verified':'unverified'}</b><span>${esc(S.me.user.email)}</span></div>${s.email_verified?'':'<button class="btn btn-sm" id="verEmail">Verify</button>'}</div>
+    <div class="fact"><div class="fico">${svg('sup')}</div><div class="ft"><b>Two-factor authentication</b><span>An extra step at sign-in — coming soon</span></div><span class="tag n" style="align-self:center">Coming soon</span></div>
+    <div class="fact"><div class="fico">${svg('prof')}</div><div class="ft"><b>Password</b><span>Change via a secure emailed link</span></div><button class="btn btn-sm" id="pwBtn">Reset</button></div>
+    <div class="hr"></div><h5 style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t4);margin-bottom:10px">Recent sign-ins · ${s.sessions.length} active session${s.sessions.length===1?'':'s'}</h5>
+    ${(s.logins||[]).slice(0,5).map(l=>`<div class="srow"><span>${esc(l.device||'Device')} · ${esc((l.ip||'—').split(',')[0])}</span><span class="tiny muted">${fDT(l.created_at)}</span></div>`).join('')||'<div class="muted tiny">No sign-in history yet.</div>'}
+    <button class="btn btn-sm btn-bk" style="margin-top:12px" id="revBtn">Sign out other sessions</button>`;
+
+  $('#pwBtn').onclick=()=>toast(S.mode==='demo'?'Demo: a secure reset link would be emailed':'Use “Forgot password” on the PCI site login — it emails a secure link','ok');
+  $('#revBtn').onclick=async()=>{await api('/api/me/sessions/revoke-others',{method:'POST'});toast('Other sessions signed out','ok');loadSecurity()};
+  const ve=$('#verEmail');if(ve)ve.onclick=()=>toast('Verification email sent','ok');
+ }catch(e){$('#secBox').innerHTML='<div class="muted tiny">Security details unavailable.</div>'}}
+/* ---------- drawer / modal ---------- */
+function drawer(title,sub,body,footer){const d=$('#drawer');d.innerHTML=`<div class="dh"><div><h3>${title}</h3><div class="muted tiny">${sub||''}</div></div><button class="x" aria-label="Close" onclick="closeDrawer()">×</button></div><div class="db">${body}</div>${footer?`<div class="df">${footer}</div>`:''}`;$('#scrim').classList.add('open');d.classList.add('open')}
+function closeDrawer(){$('#drawer').classList.remove('open');$('#scrim').classList.remove('open')}
+$('#scrim').onclick=closeDrawer;window.closeDrawer=closeDrawer;
+// File picker → data URI with client-side validation mirroring the server (type allowlist, ≤~1.4MB).
+function pickFile(cb){const inp=document.createElement('input');inp.type='file';inp.accept='.pdf,.png,.jpg,.jpeg,.webp';
+  inp.onchange=()=>{const f=inp.files[0];if(!f)return;
+    if(f.size>1_400_000){toast('File too large — max 1.4 MB','err');return}
+    const ok=['application/pdf','image/png','image/jpeg','image/webp'].includes(f.type);
+    if(!ok){toast('PDF or image files only','err');return}
+    const rd=new FileReader();rd.onload=()=>cb({name:f.name,dataUri:rd.result});rd.readAsDataURL(f);};
+  inp.click();}
+const CONSENT_LABELS={candidate_handbook:'Candidate Handbook',exam_rules:'Examination Rules',proctoring_consent:'Remote Proctoring Consent',privacy_notice:'Privacy Notice',refund_policy:'Refund, No-show & Reschedule Policy',misconduct_policy:'Misconduct Policy',credential_terms:'Credential Terms'};
+function consentGate(onDone){const items=Object.values(CONSENT_LABELS).map(l=>`<div class="fact" style="padding:8px 0"><div class="fico" style="min-width:auto;padding:0 4px">${svg('docs')}</div><div class="ft"><b style="font-size:13px">${l}</b><span class="tiny muted">version 1.0</span></div></div>`).join('');
+  modal('Candidate agreements',`<p class="tiny muted" style="margin:0 0 10px">Before booking or sitting the PCP-AI examination, PCI requires acceptance of the current candidate agreements. The full policies are published on the PCI website.</p>${items}<div class="fld" style="margin-top:12px"><label style="display:flex;gap:8px;align-items:flex-start;font-weight:500;cursor:pointer"><input type="checkbox" id="cAgree" style="margin-top:3px"/> I have read and accept all of the above agreements (v1.0).</label></div>`,'Accept & continue',async()=>{
+    if(!$('#cAgree').checked){toast('Please tick the acceptance box','err');return false}
+    try{await api('/api/me/consents',{method:'POST',body:JSON.stringify({accept_all:true})});toast('Agreements accepted','ok');await refresh();if(onDone)onDone();return true}
+    catch(e){toast('Could not record acceptance','err');return false}});}
+let _mOK=null;function modal(title,body,ok,onOk){_mOK=onOk;$('#mscrim').innerHTML=`<div class="modal"><div class="mh"><h3>${title}</h3></div><div class="mb">${body}</div><div class="mf"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-p" id="mOK">${ok}</button></div></div>`;$('#mscrim').classList.add('open');$('#mOK').onclick=async()=>{const b=$('#mOK');b.disabled=true;const k=await _mOK&&_mOK();b.disabled=false;if(k!==false)closeModal()}}
+function closeModal(){$('#mscrim').classList.remove('open')}
+window.closeModal=closeModal;$('#mscrim').onclick=e=>{if(e.target.id==='mscrim')closeModal()};
+/* ---------- DEMO ENGINE ---------- */
+const D={};
+function persistD(){if(S.mode==='demo')try{store.set('sp2_D',JSON.stringify(D))}catch(e){}}
+function hydrateD(){const raw=store.get('sp2_D');if(!raw)return false;try{const d=JSON.parse(raw);Object.keys(D).forEach(k=>delete D[k]);Object.assign(D,d);return true}catch(e){return false}}
+function demoSeed(){const now=Date.now();
+  D.user={id:1,email:'amelia.hartley@example.com',first_name:'Amelia',last_name:'Hartley',registration_no:'PCI-2026-000001',created_at:new Date(now-90*864e5).toISOString()};
+  D.profile={mobile:'+44 7700 900123',country:'United Kingdom',city:'Manchester',preferred_language:'English',current_role:'Senior Planner',company:'Network Rail',industry_sector:'Rail & Transport',years_experience:'5–10',highest_qualification:'BEng Civil Engineering',project_controls_area:'Planning & Scheduling',enrollment_purpose:'Professional certification',linkedin_url:''};
+  D.membership={membership_type:'Student',status:'active',start_date:new Date(now-60*864e5).toISOString(),expiry_date:new Date(now+38*864e5).toISOString()};
+  D.payments=[{id:2,product_type:'exam',standard_amount:500,default_discount_amount:150,discount_code:'LAUNCH30',discount_code_amount:0,final_amount:350,currency:'USD',payment_status:'paid',payment_provider:'stripe',payment_date:new Date(now-30*864e5).toISOString(),reference:'PCI-EX7Q2M',exam_schedule_deadline:new Date(now+335*864e5).toISOString()},
+   {id:1,product_type:'membership',standard_amount:99,default_discount_amount:49.5,discount_code:null,discount_code_amount:0,final_amount:49.5,currency:'USD',payment_status:'paid',payment_provider:'stripe',payment_date:new Date(now-60*864e5).toISOString(),reference:'PCI-MB4K9A'}];
+  D.booking=null;D.attempts=[];D.credentials=[];D.cpd=[{id:1,activity_date:new Date(now-20*864e5).toISOString().slice(0,10),category:'Learning through work',hours:6,description:'Led quantitative schedule risk analysis on a live programme; documented model assumptions for independent review.',status:'recorded'}];D.nextAtt=1;D.twofa=false;
+  D.items=[{id:1,domain:'Earned Value & Performance',question:'Which metric best indicates cost efficiency in earned value management?',options:['SPI','CPI','BAC','ETC'],answer_index:1},
+   {id:2,domain:'Governed AI',question:'When applying AI to schedule risk analysis, the professional’s primary responsibility is to:',options:['Accept the AI output as final','Oversee, validate and remain accountable for the output','Automate the decision end-to-end','Withhold the methodology'],answer_index:1},
+   {id:3,domain:'Planning & Scheduling',question:'A schedule performance index (SPI) of 0.85 indicates the project is:',options:['Ahead of schedule','On schedule','Behind schedule','Under budget'],answer_index:2},
+   {id:4,domain:'Risk & Contingency',question:'Contingency reserves are best sized using:',options:['A fixed 10% rule','Quantitative risk analysis of the specific project','The client’s preference alone','Last year’s average'],answer_index:1},
+   {id:5,domain:'Cost Estimating',question:'The primary purpose of a cost baseline is to:',options:['Replace estimates','Provide the approved reference for performance measurement','Eliminate change control','Set contractor profit'],answer_index:1},
+   {id:6,domain:'Governed AI',question:'“AI proposes, the professional disposes” means:',options:['AI decisions are final','The professional reviews, adjusts and owns the decision','AI must not be used','Only managers may use AI'],answer_index:1}];
+  D.downloads=[{title:'Body of Knowledge (v0.1)',category:'The standard',doc_type:'PDF',url:''},{title:'Candidate Handbook',category:'Guidelines',doc_type:'PDF',url:''},{title:'Examination Rules',category:'Exam',doc_type:'PDF',url:''},{title:'Exam Structure & Scoring Guide',category:'Exam',doc_type:'PDF',url:''},{title:'CPD Framework',category:'Membership',doc_type:'PDF',url:''}];
+  D.tickets=[{id:1,reference:'PCI-TKT-DEMO1',subject:'Question about the scheduling window',category:'Exam question',status:'awaiting_student',updated_at:new Date(now-2*864e5).toISOString(),messages:[{sender:'student',body:'If I book and then need to move the date, is there a fee?',created_at:new Date(now-3*864e5).toISOString()},{sender:'admin',body:'Rescheduling is free when you move the booking 72 hours or more before the slot, up to three times. Inside 24 hours the booking locks. All of this is shown on the scheduler as you book.',created_at:new Date(now-2*864e5).toISOString()}]}];
+  D.faqs=[{question:'Can I reschedule my exam and is there a fee?',answer:'Yes — free with 72+ hours notice, up to three times. Inside 24 hours the booking locks.',category:'Exam'},{question:'What happens if my computer crashes during the exam?',answer:'Your answers are saved to the server continuously. Sign back in and resume from the same question; the clock keeps running per policy.',category:'Exam'},{question:'How do refunds work?',answer:'Refunds follow the published refund policy; open a ticket with your invoice number and we will assist.',category:'Payment'},{question:'Does membership mean I am certified?',answer:'No. Membership grants access and resources. Certification (PCP-AI) is earned only by passing the examination.',category:'Membership'},{question:'When does my scheduling window close?',answer:'Twelve months from your exam payment. It is shown as a countdown on Home and My exam and cannot be extended.',category:'Exam'}];
+  D.msgs=[{id:1,category:'General',title:'Welcome to the PCI Student Panel',body:'Your home for enrolment, learning, exam scheduling, results and your credential. Membership access does not itself constitute certification.',cta_label:null,cta_route:null,read_at:null,created_at:new Date(now-5*864e5).toISOString()},
+   {id:2,category:'Payment',title:'Membership renewal approaching',body:'Your membership renews in 38 days. Renew for USD 99 to keep your access and credential standing current.',cta_label:'Renew now',cta_route:'cpd',read_at:null,created_at:new Date(now-1*864e5).toISOString()},
+   {id:3,category:'Certification',title:'Schedule your examination',body:'Your exam fee is paid. Book a slot inside your 12-month window.',cta_label:'Schedule exam',cta_route:'exam',read_at:new Date(now-2*864e5).toISOString(),created_at:new Date(now-4*864e5).toISOString()},
+   {id:4,category:'Policy',title:'Examination rules updated',body:'The examination rules and candidate handbook were refreshed. Please review before your sitting.',cta_label:'Open handbook',cta_route:'learn',read_at:new Date(now-6*864e5).toISOString(),created_at:new Date(now-6*864e5).toISOString()}];
+}
+function demoME(){const inp=(D._att&&D._att.status!=='done'&&D._att.attempt_id)?[{id:D._att.attempt_id,kind:'exam',status:'in_progress',started_at:D._att.started_at,violations:D._att.violations||0,duration_minutes:90}]:[];
+  return {user:D.user,profile:D.profile,membership:D.membership,payments:D.payments,consents:{outstanding:D.consentsAccepted?[]:Object.keys(CONSENT_LABELS)},
+   exam:{entitled:true,deadline:D.payments.find(p=>p.product_type==='exam').exam_schedule_deadline,payment_ref:'PCI-EX7Q2M',booking:D.booking,passed:D.attempts.some(a=>a.result==='pass')},
+   attempts:inp.concat(D.attempts.slice().reverse()),credentials:D.credentials,
+   tickets:D.tickets.map(t=>({id:t.id,reference:t.reference,subject:t.subject,category:t.category,status:t.status,updated_at:t.updated_at})),
+   referral:{code:'REF-AMELIA-K7M2'},cpd:{total:D.cpd.reduce((a,r)=>a+(r.hours||0),0),target:60},two_factor:D.twofa,
+   unread:D.msgs.filter(m=>!m.read_at).length,enrollment:null,site_base_url:'https://www.projectcontrolsinstitute.org'};}
+function demoAPI(path,opts={}){const m=(opts.method||'GET').toUpperCase(),b=opts.body?JSON.parse(opts.body):{},P=path.split('?')[0],qs=new URLSearchParams(path.split('?')[1]||'');let mm;const ok=x=>Promise.resolve(x||{ok:true});
+  if(P==='/api/me')return ok(demoME());
+  if(P==='/api/me/profile'&&m==='PATCH'){Object.assign(D.profile,b);persistD();return ok()}
+  if(P==='/api/me/downloads')return ok({rows:D.downloads});
+  if(P==='/api/me/config')return ok({sp_exam_booking_open:'1',sp_results_visible:'1',sp_certificate_download:'1',sp_cpd_enabled:'1',sp_support_tickets_enabled:'1',sp_practice_enabled:'1',sp_readiness_required:'1',sp_banner_enabled:'0',sp_cpd_target_hours:'60'});
+  if(P==='/api/me/readiness'&&opts.method==='POST'){const b2=JSON.parse(opts.body||'{}');D.readiness={passed:!!(b2.camera&&b2.microphone&&b2.network)};persistD();return ok({ok:true,passed:D.readiness.passed})}
+  if(P==='/api/me/readiness')return ok({required:true,latest:D.readiness||null});
+  if(P==='/api/me/appeals'&&opts.method==='POST'){D.appeals=D.appeals||[];const b2=JSON.parse(opts.body||'{}');b2.id=Date.now();b2.status='submitted';b2.submitted_at=new Date().toISOString();D.appeals.unshift(b2);persistD();return ok({ok:true,id:b2.id,status:'submitted',message:'Appeal submitted (demo).'})}
+  if(P==='/api/me/appeals')return ok({rows:D.appeals||[]});
+  if(P==='/api/me/accommodations'&&opts.method==='POST'){const b2=JSON.parse(opts.body||'{}');if(D.accom&&['submitted','under_review'].includes(D.accom.status))return Promise.reject(Object.assign(new Error('request_already_open'),{data:{error:'request_already_open'}}));D.accom={...b2,id:Date.now(),status:'submitted',created_at:new Date().toISOString()};persistD();return ok({ok:true,status:'submitted',message:'Request submitted (demo).'})}
+  if(P==='/api/me/accommodations')return ok({rows:D.accom?[D.accom]:[]});
+  if(P==='/api/me/certificate'){const c2=(D.credentials||[])[0];return ok(c2?{found:true,state:c2.status==='revoked'?'revoked':'active',valid:c2.status!=='revoked',credential_id:c2.credential_id,holder_name:c2.holder_name,issued_at:c2.issued_at,expires_at:c2.expires_at,registration_no:D.user.registration_no}:{found:false})}
+  if(/^\/api\/me\/cpd\/\d+\/evidence$/.test(P)){const id2=+P.split('/')[4];const e2=(D.cpd||[]).find(x=>x.id==id2);if(e2){const b2=JSON.parse(opts.body||'{}');e2.evidence_name=b2.filename;e2.status='recorded';persistD()}return ok({ok:true})}
+  if(/^\/api\/me\/tickets\/\d+\/attachments$/.test(P)&&opts.method==='POST'){D.tatt=D.tatt||{};const id2=P.split('/')[4];const b2=JSON.parse(opts.body||'{}');(D.tatt[id2]=D.tatt[id2]||[]).push({id:Date.now(),filename:b2.filename,ref:'demo'});persistD();return ok({ok:true})}
+  if(/^\/api\/me\/tickets\/\d+\/attachments$/.test(P))return ok({rows:(D.tatt||{})[P.split('/')[4]]||[]});
+  if(P==='/api/me/consents'&&opts.method==='POST'){D.consentsAccepted=true;persistD();return ok({ok:true,outstanding:[]})}
+  if(P==='/api/me/consents')return ok({required:Object.keys(CONSENT_LABELS).map(t=>({type:t,version:'1.0'})),accepted:[],outstanding:D.consentsAccepted?[]:Object.keys(CONSENT_LABELS)});
+  if(P==='/api/me/reviews'&&(!opts.method||opts.method==='GET'))return ok({reviews:D.reviews||[]});
+  if(P==='/api/me/reviews'&&opts.method==='POST'){D.reviews=D.reviews||[];const rv=JSON.parse(opts.body||'{}');rv.status='pending';rv.id=Date.now();D.reviews=[rv];return ok({ok:true,status:'pending',message:'Thank you — your review has been submitted for moderation.'});}
+  if(P==='/api/me/practice')return ok({rows:D.items});
+  if(P==='/api/me/invoices')return ok({rows:D.payments.map(p=>{const yr=(p.payment_date||'').slice(0,4);return{...p,invoice_number:'INV-'+yr+'-'+String(p.id).padStart(5,'0'),receipt_number:p.payment_status==='paid'?('RCP-'+(p.reference||p.id)):null,payment_method:p.payment_provider==='stripe'?'Card (Stripe)':(p.payment_provider||'—')}})});
+  if(P==='/api/me/cpd'&&m==='GET')return ok({rows:D.cpd,total:D.cpd.reduce((a,r)=>a+(r.hours||0),0),target:60});
+  if(P==='/api/me/cpd'&&m==='POST'){D.cpd.unshift({id:Date.now(),activity_date:b.activity_date,category:b.category,hours:+b.hours,description:b.description,status:'recorded'});persistD();return ok({id:1})}
+  if(mm=P.match(/^\/api\/me\/cpd\/(\d+)$/)){if(m==='DELETE'){D.cpd=D.cpd.filter(x=>x.id!=mm[1]);persistD();return ok()}}
+  if(P==='/api/me/messages'&&m==='GET')return ok({rows:D.msgs.slice().sort((a,b)=>(!a.read_at)-(!b.read_at)||b.id-a.id),unread:D.msgs.filter(m=>!m.read_at).length});
+  if(mm=P.match(/^\/api\/me\/messages\/(\d+)\/read$/)){const x=D.msgs.find(v=>v.id==mm[1]);if(x)x.read_at=new Date().toISOString();persistD();return ok()}
+  if(P==='/api/me/messages/read-all'){D.msgs.forEach(x=>x.read_at=x.read_at||new Date().toISOString());persistD();return ok()}
+  if(P==='/api/me/security')return ok({email_verified:true,two_factor:D.twofa,sessions:[{id:1,created_at:new Date(Date.now()-2*864e5).toISOString(),expires_at:new Date(Date.now()+28*864e5).toISOString()}],logins:[{ip:'82.14.xx.xx',device:'Desktop',created_at:new Date(Date.now()-3600e3).toISOString()},{ip:'82.14.xx.xx',device:'Mobile',created_at:new Date(Date.now()-2*864e5).toISOString()}]});
+  if(P==='/api/me/2fa'){D.twofa=!!b.enabled;persistD();return ok({two_factor:D.twofa})}
+  if(P==='/api/me/sessions/revoke-others')return ok();
+  if(P==='/api/me/account-data')return ok({exported_at:new Date().toISOString(),account:D.user,profile:D.profile,membership:D.membership,payments:D.payments,exam_attempts:D.attempts,credentials:D.credentials,cpd:D.cpd});
+  if(P==='/api/me/delete-request')return ok({reference:'PCI-TKT-'+Date.now().toString(36).toUpperCase()});
+  if(P==='/api/me/faqs'){const q=(qs.get('q')||'').toLowerCase();return ok({rows:D.faqs.filter(f=>(f.question+' '+f.answer).toLowerCase().includes(q))})}
+  if(P==='/api/me/exam/book'){if(!D.consentsAccepted)return Promise.reject(Object.assign(new Error('not_eligible'),{data:{error:'not_eligible',blocking_items:['consents_pending']}}));if(D.booking)return Promise.reject(new Error('already_booked'));D.booking={id:1,scheduled_at:b.scheduled_at,timezone:b.timezone,status:'scheduled',reschedule_count:0};persistD();return ok({id:1})}
+  if(P==='/api/me/exam/reschedule'){if(!D.booking)return Promise.reject(new Error('no_booking'));const h=(new Date(D.booking.scheduled_at)-Date.now())/36e5;if(h<24)return Promise.reject(Object.assign(new Error('locked'),{data:{error:'locked'}}));if(D.booking.reschedule_count>=3)return Promise.reject(Object.assign(new Error('max'),{data:{error:'max_reschedules'}}));D.booking.scheduled_at=b.scheduled_at;D.booking.reschedule_count++;persistD();return ok({free:h>=72,reschedule_count:D.booking.reschedule_count})}
+  if(P==='/api/me/exam/start'){if(D._att&&D._att.status!=='done')return ok({attempt_id:D._att.attempt_id,started_at:D._att.started_at,duration_minutes:90,items:D.items.map(({answer_index,...r})=>r),saved_answers:D._att.answers||{},violations:D._att.violations||0,resumed:true});const slot=new Date(D.booking.scheduled_at).getTime(),now=Date.now();if(now<slot-15*6e4)return Promise.reject(Object.assign(new Error('not_open'),{data:{error:'not_open'}}));if(now>slot+30*6e4){D.booking.status='missed';return Promise.reject(Object.assign(new Error('missed'),{data:{error:'missed'}}))}D._att={attempt_id:D.nextAtt,started_at:new Date().toISOString(),duration_minutes:90,answers:{},violations:0};persistD();return ok({attempt_id:D._att.attempt_id,started_at:D._att.started_at,duration_minutes:90,items:D.items.map(({answer_index,...r})=>r)})}
+  if(P==='/api/me/exam/heartbeat'){if(D._att){D._att.answers=b.answers||D._att.answers;D._att.violations=Math.max(D._att.violations||0,b.violations||0);persistD();const dl=new Date(D._att.started_at).getTime()+90*6e4;return ok({deadline:new Date(dl).toISOString(),remaining_s:Math.max(0,Math.floor((dl-Date.now())/1000))})}return ok()}
+  if(P==='/api/me/exam/submit'){const ans=b.answers||{};let sc=0;const dom={};D.items.forEach(it=>{const okA=Number(ans[it.id])===it.answer_index;dom[it.domain]=dom[it.domain]||{n:0,ok:0};dom[it.domain].n++;if(okA){sc++;dom[it.domain].ok++}});const pct=Math.round(sc/D.items.length*1000)/10,result=pct>=65?'pass':'fail';const bd=Object.entries(dom).map(([d,v])=>({domain:d,pct:Math.round(v.ok/v.n*100),band:v.ok/v.n>=.8?'above':v.ok/v.n>=.65?'at':'below'}));const att={id:D.nextAtt++,kind:'exam',started_at:D._att.started_at,submitted_at:new Date().toISOString(),percent:pct,result,status:'submitted',result_status:result==='pass'?'credential_issued':'released_fail',domain_breakdown:JSON.stringify(bd),violations:(D._att&&D._att.violations)||0};D.attempts.push(att);D.booking.status='completed';D.booking=null;D._att={status:'done'};let credential=null;if(result==='pass'){credential='PCP-AI-'+new Date().getFullYear()+'-'+Math.floor(10000+Math.random()*89999);D.credentials.push({credential_id:credential,credential:'PCP-AI',status:'active',issued_at:new Date().toISOString(),expires_at:new Date(Date.now()+3*365*864e5).toISOString(),holder_name:D.user.first_name+' '+D.user.last_name})}persistD();return ok({held:false,result_status:result==='pass'?'credential_issued':'released_fail',score:sc,max:D.items.length,pct,result,breakdown:bd,credential})}
+  if(mm=P.match(/^\/api\/me\/attempts\/(\d+)$/)){const a=D.attempts.find(x=>x.id==mm[1]);return a?ok({...a,domain_breakdown:JSON.parse(a.domain_breakdown)}):Promise.reject(new Error('nf'))}
+  if(P==='/api/me/tickets'&&m==='GET')return ok({rows:D.tickets});
+  if(P==='/api/me/tickets'&&m==='POST'){const t={id:Date.now(),reference:'PCI-TKT-'+Date.now().toString(36).toUpperCase(),subject:b.subject,category:b.category,status:'open',updated_at:new Date().toISOString(),messages:[{sender:'student',body:b.message,created_at:new Date().toISOString()}]};D.tickets.unshift(t);persistD();return ok({id:t.id,reference:t.reference})}
+  if(mm=P.match(/^\/api\/me\/tickets\/(\d+)\/reply$/)){const t=D.tickets.find(x=>x.id==mm[1]);t.messages.push({sender:'student',body:b.message,created_at:new Date().toISOString()});t.status='open';t.updated_at=new Date().toISOString();persistD();setTimeout(()=>{t.messages.push({sender:'admin',body:'Thanks — noted. (In live mode this reply comes from the PCI admin support desk.)',created_at:new Date().toISOString()});t.status='awaiting_student';persistD()},1200);return ok()}
+  if(P==='/api/create-checkout-session')return ok({url:null});
+  return ok({});
+}
+/* ---------- AUTH + BOOT ---------- */
+function enter(){$('#auth').style.display='none';$('#app').style.display='block';const pill=$('#envPill');if(S.mode==='demo'){pill.className='pill demo';pill.textContent='Demo'}else{pill.className='pill live';pill.textContent='Live'}
+  refresh().then(()=>{const start=NAV.find(x=>x.id===location.hash.slice(1))?location.hash.slice(1):'home';go(start)});}
+$('#aGo').onclick=async()=>{const a=($('#aApi').value.trim()||(location.protocol.startsWith('http')?location.origin:'')),e=$('#aEmail').value.trim(),p=$('#aPass').value;const err=$('#aErr');err.style.display='none';if(!a||!e||!p){err.textContent='All fields are required.';err.style.display='block';return}const b=$('#aGo');b.disabled=true;b.textContent='Signing in…';
+  try{const r=await fetch(a.replace(/\/$/,'')+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,password:p})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'failed');S.mode='live';S.api=a;S.tok=j.token;store.set('sp2_mode','live');store.set('sp2_api',a);store.set('sp2_tok',j.token);enter()}
+  catch(x){err.textContent=x.message==='invalid_credentials'?'Email or password is incorrect.':x.message==='inactive'?'Account not active yet — set your password via the emailed link.':'Could not reach the backend. Check the URL and CORS.';err.style.display='block'}b.disabled=false;b.textContent='Sign in'};
+$('#aMagic').onclick=e=>{e.preventDefault();const em=$('#aEmail').value.trim();if(!em){toast('Enter your email first','err');return}toast('If that email is registered, a magic sign-in link is on its way.','ok')};
+$('#aForgot').onclick=e=>{e.preventDefault();toast('Use “Forgot password” — a secure reset link will be emailed. Plain-text passwords are never sent.','ok')};
+$('#aDemo').onclick=()=>{S.mode='demo';store.set('sp2_mode','demo');if(!hydrateD())demoSeed();enter()};
+function signOut(){['sp2_mode','sp2_api','sp2_tok'].forEach(store.del);S.mode=null;S.tok='';location.hash='';$('#app').style.display='none';$('#auth').style.display='flex';const pw=$('#aPass');if(pw)pw.value=''}
+window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(id&&NAV.find(x=>x.id===id)&&id!==S.route)go(id)});
+(function(){try{const el=$('#aApi');if(el&&!el.value&&location.protocol.startsWith('http'))el.value=location.origin;}catch(_){}})();
+(function(){const mt=location.hash.match(/[#&]t=([a-f0-9]{64})/);const qa=location.hash.match(/[#&]api=([^&]+)/);if(mt){S.tok=mt[1];S.mode='live';S.api=qa?decodeURIComponent(qa[1]):location.origin;store.set('sp2_tok',S.tok);store.set('sp2_mode','live');store.set('sp2_api',S.api);history.replaceState(null,'',location.pathname)}})();
+if(S.mode==='demo'){if(!hydrateD())demoSeed();enter()}else if(S.mode==='live'&&S.tok){enter()}
+</script>
+</body></html>

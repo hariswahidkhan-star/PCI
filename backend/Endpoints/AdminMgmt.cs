@@ -1,0 +1,352 @@
+using System.Text;
+using System.Text.Json;
+using PCI.Backend.Core;
+using PCI.Backend.Data;
+
+namespace PCI.Backend.Endpoints;
+
+/// <summary>Remaining admin surface: generic CRUD factory (8 tables), overview, codes, pricing,
+/// credentials, inquiries, emails, audit, export, exams, abandoned, content/pages/subscribers/forms.</summary>
+public static class AdminMgmt
+{
+    static string Like(string? q) => "%" + System.Text.RegularExpressions.Regex.Replace(q ?? "", "[%_]", "") + "%";
+    static string CsvEsc(object? v)
+    {
+        var s = v?.ToString() ?? "";
+        if (System.Text.RegularExpressions.Regex.IsMatch(s, @"^[=+\-@]")) s = "'" + s;
+        return System.Text.RegularExpressions.Regex.IsMatch(s, "[\",\n]") ? "\"" + s.Replace("\"", "\"\"") + "\"" : s;
+    }
+    static string ToCsv(List<Dictionary<string, object?>> rows)
+    {
+        if (rows.Count == 0) return "";
+        var cols = rows[0].Keys.ToList();
+        var sb = new StringBuilder();
+        sb.Append(string.Join(",", cols)).Append('\n');
+        foreach (var r in rows) sb.Append(string.Join(",", cols.Select(k => CsvEsc(r.GetValueOrDefault(k))))).Append('\n');
+        return sb.ToString().TrimEnd('\n');
+    }
+
+    public static void Map(WebApplication app, Db db, Action<long?, string, string?> log,
+        Func<HttpRequest, AdminCtx?> adminFromReq, Func<HttpRequest, string, Func<AdminCtx, IResult>, IResult> gate)
+    {
+        IResult J(object o) => Results.Json(o);
+        // bare-admin guard (parity with `admin` middleware): any authenticated admin
+        IResult? Bare(HttpRequest req)
+        {
+            var a = adminFromReq(req);
+            return a is null ? Results.Json(new { error = "unauthorized" }, statusCode: 401) : null;
+        }
+        // Inline section gate for async-lambda handlers: null = allowed, else the 401/403 result.
+        IResult? Deny(HttpRequest req, string section)
+        {
+            var a = adminFromReq(req);
+            if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+            if (!a.IsOwner && !a.Perms.Contains(section)) return Results.Json(new { error = "forbidden", section }, statusCode: 403);
+            return null;
+        }
+
+        // ---------- generic CRUD factory (mirror of crud() in server.js) ----------
+        // Every CRUD verb is gated by the content type's RBAC section (not just "any admin").
+        void Crud(string name, string[] cols, string order, string section)
+        {
+            app.MapGet($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ => J(new { rows = db.Query($"SELECT * FROM {name} ORDER BY {order}") })));
+            app.MapPost($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ =>
+            {
+                var b = H.Body(req).GetAwaiter().GetResult();
+                var vals = cols.Select(c => (object?)(b.TryGetValue(c, out var v) && v.ValueKind != JsonValueKind.Null
+                    ? (v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ToString())
+                    : null)).ToArray();
+                var id = db.ExecuteReturningId($"INSERT INTO {name}({string.Join(",", cols)}) VALUES({string.Join(",", cols.Select(_ => "?"))})", vals);
+                log(null, name + "_create", id.ToString());
+                return J(new { id });
+            }));
+            app.MapPatch($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, _ =>
+            {
+                var b = H.Body(req).GetAwaiter().GetResult();
+                var set = cols.Where(c => b.ContainsKey(c)).ToList();
+                if (set.Count == 0) return J(new { ok = true });
+                var vals = set.Select(c => { var v = b[c]; return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
+                db.Execute($"UPDATE {name} SET {string.Join(",", set.Select(c => c + "=?"))} WHERE id=?", vals);
+                log(null, name + "_update", id.ToString());
+                return J(new { ok = true });
+            }));
+            app.MapDelete($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, _ =>
+            {
+                db.Execute($"DELETE FROM {name} WHERE id=?", id);
+                log(null, name + "_delete", id.ToString());
+                return J(new { ok = true });
+            }));
+        }
+        Crud("faqs", new[]{ "question","answer","category","sort_order","published" }, "sort_order, id", "faqs");
+        Crud("bok_domains", new[]{ "code","name","weight","description","sort_order" }, "sort_order, id", "bok");
+        Crud("sample_questions", new[]{ "question","options","option_a","option_b","option_c","option_d","answer_index","domain","published","sort_order","is_practice" }, "sort_order, id", "sampleq");
+        Crud("governance_roles", new[]{ "role","holder","status","remit","sort_order" }, "sort_order, id", "governance");
+        Crud("resources", new[]{ "title","category","doc_type","url","published","sort_order" }, "sort_order, id", "resources");
+        Crud("news", new[]{ "title","body","published_date","published","sort_order" }, "published_date DESC, id DESC", "news");
+        Crud("nav_items", new[]{ "label","url","nav_group","sort_order","visible" }, "nav_group, sort_order, id", "nav");
+        Crud("media_assets", new[]{ "filename","alt","width","height","usage" }, "id DESC", "media");
+
+        // ---------- overview ----------
+        app.MapGet("/api/admin/overview", (HttpRequest req) =>
+        {
+            var g = Bare(req); if (g is not null) return g;
+            long n(string sql) => db.Scalar<long>(sql);
+            double s(string sql) => db.Scalar<double>(sql);
+            var k = new {
+                members = n("SELECT COUNT(*) FROM users"),
+                activeMembers = n("SELECT COUNT(*) FROM users WHERE status='active'"),
+                pendingMembers = n("SELECT COUNT(*) FROM users WHERE status='pending'"),
+                inProgress = n("SELECT COUNT(*) FROM enrollment_sessions WHERE session_status='in_progress'"),
+                paidSessions = n("SELECT COUNT(*) FROM enrollment_sessions WHERE session_status='paid'"),
+                abandoned = n("SELECT COUNT(*) FROM enrollment_sessions WHERE session_status='in_progress' AND last_activity_at <= datetime('now','-72 hours')"),
+                payCount = n("SELECT COUNT(*) FROM payments WHERE payment_status='paid'"),
+                revenue = s("SELECT COALESCE(SUM(final_amount),0) FROM payments WHERE payment_status='paid'"),
+                revenueMonth = s("SELECT COALESCE(SUM(final_amount),0) FROM payments WHERE payment_status='paid' AND payment_date >= date('now','start of month')"),
+                refunded = n("SELECT COUNT(*) FROM payments WHERE payment_status='refunded'"),
+                failedPay = n("SELECT COUNT(*) FROM payments WHERE payment_status='failed'"),
+                credActive = n("SELECT COUNT(*) FROM issued_credentials WHERE status='active'"),
+                credTotal = n("SELECT COUNT(*) FROM issued_credentials"),
+                openInq = n("SELECT COUNT(*) FROM inquiries WHERE status!='closed'"),
+                examsDue = n("SELECT COUNT(*) FROM payments WHERE product_type IN ('exam','bundle') AND payment_status='paid' AND exam_schedule_deadline >= datetime('now')"),
+            };
+            var revSeries = db.Query("SELECT strftime('%Y-%m', payment_date) ym, COALESCE(SUM(final_amount),0) amount, COUNT(*) n FROM payments WHERE payment_status='paid' AND payment_date IS NOT NULL GROUP BY ym ORDER BY ym DESC LIMIT 12");
+            revSeries.Reverse();
+            var productMix = db.Query("SELECT product_type, COUNT(*) n, COALESCE(SUM(final_amount),0) amount FROM payments WHERE payment_status='paid' GROUP BY product_type");
+            var funnel = new { started = n("SELECT COUNT(*) FROM enrollment_sessions"), in_progress = k.inProgress, paid = k.paidSessions };
+            var recent = db.Query("SELECT created_at ts, action, details FROM audit_logs ORDER BY id DESC LIMIT 12");
+            return J(new { kpis = k, revSeries, productMix, funnel, recent });
+        });
+
+        // ---------- abandoned + resend ----------
+        app.MapGet("/api/admin/abandoned", (HttpRequest req) => gate(req, "enrollments", _ => J(db.Query(
+            "SELECT id,email,current_step,selected_product,last_activity_at,(resume_token_hash IS NOT NULL) AS resume_link_issued FROM enrollment_sessions WHERE session_status='in_progress' ORDER BY last_activity_at DESC"))));
+        app.MapPost("/api/admin/resend-resume", async (HttpRequest req) =>
+        {
+            var g = Deny(req, "enrollments"); if (g is not null) return g;
+            var b = await H.Body(req);
+            var email = (H.GetS(b, "email") ?? "").ToLowerInvariant();
+            var sN = db.QueryOne("SELECT * FROM enrollment_sessions WHERE email=? ORDER BY id DESC LIMIT 1", email);
+            if (sN is null) return Results.Json(new { error = "no_session" }, statusCode: 404);
+            var token = Security.RandomHex(32);
+            db.Execute("UPDATE enrollment_sessions SET resume_token_hash=?, resume_token_expiry=datetime('now','+7 day') WHERE id=?", Security.Sha(token), sN["id"]);
+            return J(new { ok = true });
+        });
+        app.MapPost("/api/admin/resend-welcome", async (HttpRequest req) =>
+        {
+            var g = Deny(req, "members"); if (g is not null) return g;
+            var b = await H.Body(req);
+            var email = (H.GetS(b, "email") ?? "").ToLowerInvariant();
+            var u = db.QueryOne("SELECT * FROM users WHERE email=?", email);
+            if (u is null) return Results.Json(new { error = "no_user" }, statusCode: 404);
+            var token = Security.RandomHex(32);
+            db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+7 day'))", u["id"], Security.Sha(token));
+            return J(new { ok = true });
+        });
+
+        // ---------- codes ----------
+        app.MapGet("/api/admin/codes", (HttpRequest req) => gate(req, "codes", _ => J(db.Query("SELECT * FROM discount_codes ORDER BY id DESC"))));
+        app.MapPost("/api/admin/codes", async (HttpRequest req) =>
+        {
+            var g = Deny(req, "codes"); if (g is not null) return g;
+            var b = await H.Body(req);
+            var id = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,single_use_per_email,active) VALUES(?,?,?,?,?,?,?,?,?)",
+                (H.GetS(b, "code") ?? "").ToUpperInvariant(), H.GetS(b, "discount_type"), H.GetNum(b, "discount_value"), H.GetS(b, "applies_to") ?? "all",
+                H.GetS(b, "start_date"), H.GetS(b, "end_date"), H.GetNum(b, "max_uses"), H.B(H.GetEl(b, "single_use_per_email")?.GetRawText()) ? 1 : 0, H.B(H.GetEl(b, "active")?.GetRawText()) ? 1 : 0);
+            return J(new { id });
+        });
+        app.MapPatch("/api/admin/codes/{id}", async (HttpRequest req, long id) =>
+        {
+            var g = Deny(req, "codes"); if (g is not null) return g;
+            var b = await H.Body(req);
+            object? act = b.ContainsKey("active") ? (H.B(b["active"].GetRawText()) ? 1 : 0) : null;
+            db.Execute("UPDATE discount_codes SET active=COALESCE(?,active), end_date=COALESCE(?,end_date), max_uses=COALESCE(?,max_uses) WHERE id=?",
+                act, H.GetS(b, "end_date"), H.GetNum(b, "max_uses"), id);
+            return J(new { ok = true });
+        });
+
+        // ---------- pricing ----------
+        app.MapGet("/api/admin/pricing", (HttpRequest req) => gate(req, "pricing", _ => J(db.Query("SELECT * FROM pricing_rules ORDER BY id"))));
+        app.MapPatch("/api/admin/pricing/{id}", async (HttpRequest req, long id) =>
+        {
+            var g = Deny(req, "pricing"); if (g is not null) return g;
+            var b = await H.Body(req);
+            object? act = b.ContainsKey("active") ? (H.B(b["active"].GetRawText()) ? 1 : 0) : null;
+            db.Execute("UPDATE pricing_rules SET standard_price=COALESCE(?,standard_price), default_discount_percentage=COALESCE(?,default_discount_percentage), active=COALESCE(?,active), updated_at=datetime('now') WHERE id=?",
+                H.GetNum(b, "standard_price"), H.GetNum(b, "default_discount_percentage"), act, id);
+            return J(new { ok = true });
+        });
+        app.MapPost("/api/admin/run-reminders", (HttpRequest req) => gate(req, "enrollments", _ => J(new { ok = true, reminders_sent = 0 })));
+
+        // ---------- enrollments + payments ----------
+        app.MapGet("/api/admin/enrollments", (HttpRequest req) => gate(req, "enrollments", _ =>
+        {
+            var status = req.Query["status"].ToString(); var q = req.Query["q"].ToString();
+            long.TryParse(req.Query["limit"], out var limit); if (limit == 0) limit = 200;
+            long.TryParse(req.Query["offset"], out var offset);
+            var where = new List<string>(); var args = new List<object?>();
+            if (!string.IsNullOrEmpty(status)) { where.Add("session_status=?"); args.Add(status); }
+            if (!string.IsNullOrEmpty(q)) { where.Add("email LIKE ?"); args.Add(Like(q)); }
+            var w = where.Count > 0 ? "WHERE " + string.Join(" AND ", where) : "";
+            var rows = db.Query($"SELECT id,email,current_step,session_status,selected_product,selected_membership,last_activity_at,created_at,reminders_sent,last_reminder_at,(resume_token_hash IS NOT NULL) resume_link_issued FROM enrollment_sessions {w} ORDER BY last_activity_at DESC LIMIT ? OFFSET ?", args.Append((object?)limit).Append((object?)offset).ToArray());
+            var total = db.Scalar<long>($"SELECT COUNT(*) FROM enrollment_sessions {w}", args.ToArray());
+            return J(new { rows, total });
+        }));
+        app.MapPost("/api/admin/enrollments/{id}/remind", (HttpRequest req, long id) => gate(req, "enrollments", _ => J(new { ok = true })));
+
+        app.MapGet("/api/admin/payments", (HttpRequest req) => gate(req, "payments", _ =>
+        {
+            var status = req.Query["status"].ToString(); var product = req.Query["product"].ToString(); var q = req.Query["q"].ToString();
+            long.TryParse(req.Query["limit"], out var limit); if (limit == 0) limit = 200;
+            long.TryParse(req.Query["offset"], out var offset);
+            var where = new List<string>(); var args = new List<object?>();
+            if (!string.IsNullOrEmpty(status)) { where.Add("p.payment_status=?"); args.Add(status); }
+            if (!string.IsNullOrEmpty(product)) { where.Add("p.product_type=?"); args.Add(product); }
+            if (!string.IsNullOrEmpty(q)) { where.Add("(p.reference LIKE ? OR u.email LIKE ?)"); args.Add(Like(q)); args.Add(Like(q)); }
+            var w = where.Count > 0 ? "WHERE " + string.Join(" AND ", where) : "";
+            var rows = db.Query($"SELECT p.*, u.email,u.first_name,u.last_name FROM payments p LEFT JOIN users u ON u.id=p.user_id {w} ORDER BY p.id DESC LIMIT ? OFFSET ?", args.Append((object?)limit).Append((object?)offset).ToArray());
+            var totals = db.QueryOne($"SELECT COALESCE(SUM(CASE WHEN p.payment_status='paid' THEN final_amount END),0) paid, COUNT(*) n, COALESCE(SUM(CASE WHEN p.payment_status='refunded' THEN final_amount END),0) refunded FROM payments p LEFT JOIN users u ON u.id=p.user_id {w}", args.ToArray());
+            return J(new { rows, totals });
+        }));
+        app.MapGet("/api/admin/payments/{id}", (HttpRequest req, long id) => gate(req, "payments", _ =>
+        {
+            var p = db.QueryOne("SELECT p.*, u.email,u.first_name,u.last_name FROM payments p LEFT JOIN users u ON u.id=p.user_id WHERE p.id=?", id);
+            return p is null ? Results.Json(new { error = "not_found" }, statusCode: 404) : J(p);
+        }));
+
+        // ---------- exams ----------
+        app.MapGet("/api/admin/exams", (HttpRequest req) => gate(req, "exams", _ => J(new { rows = db.Query(
+            "SELECT p.id,p.reference,p.product_type,p.payment_date,p.exam_schedule_deadline,u.email,u.first_name,u.last_name, CAST(julianday(p.exam_schedule_deadline)-julianday('now') AS INT) days_left FROM payments p LEFT JOIN users u ON u.id=p.user_id WHERE p.product_type IN ('exam','bundle') AND p.payment_status='paid' ORDER BY p.exam_schedule_deadline ASC") })));
+
+        // ---------- credentials ----------
+        app.MapGet("/api/admin/credentials", (HttpRequest req) => gate(req, "credentials", _ =>
+        {
+            var status = req.Query["status"].ToString(); var q = req.Query["q"].ToString();
+            var where = new List<string>(); var args = new List<object?>();
+            if (!string.IsNullOrEmpty(status)) { where.Add("status=?"); args.Add(status); }
+            if (!string.IsNullOrEmpty(q)) { where.Add("(credential_id LIKE ? OR holder_name LIKE ?)"); args.Add(Like(q)); args.Add(Like(q)); }
+            var w = where.Count > 0 ? "WHERE " + string.Join(" AND ", where) : "";
+            return J(new { rows = db.Query($"SELECT * FROM issued_credentials {w} ORDER BY id DESC", args.ToArray()) });
+        }));
+        app.MapPost("/api/admin/credentials", async (HttpRequest req) =>
+        {
+            var g = Deny(req, "credentials"); if (g is not null) return g;
+            var b = await H.Body(req);
+            var cid = H.GetS(b, "credential_id"); var holder = H.GetS(b, "holder_name");
+            if (string.IsNullOrEmpty(cid) || string.IsNullOrEmpty(holder)) return Results.Json(new { error = "missing_fields" }, statusCode: 400);
+            try { var id = db.ExecuteReturningId("INSERT INTO issued_credentials(credential_id,user_id,holder_name,credential,status,expires_at) VALUES(?,?,?,?, 'active',?)",
+                cid.ToUpperInvariant(), H.GetNum(b, "user_id"), holder, H.GetS(b, "credential") ?? "PCP-AI", H.GetS(b, "expires_at"));
+                log(H.Ln(H.GetNum(b, "user_id")), "credential_issued", cid); return J(new { id }); }
+            catch { return Results.Json(new { error = "duplicate_or_invalid" }, statusCode: 400); }
+        });
+        app.MapPost("/api/admin/credentials/{id}/status", async (HttpRequest req, long id) =>
+        {
+            var g = Deny(req, "credentials"); if (g is not null) return g;
+            var b = await H.Body(req); var status = H.GetS(b, "status");
+            if (status is not ("active" or "expired" or "revoked")) return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            db.Execute("UPDATE issued_credentials SET status=? WHERE id=?", status, id);
+            log(null, "credential_" + status, id.ToString());
+            return J(new { ok = true });
+        });
+
+        // ---------- inquiries ----------
+        app.MapGet("/api/admin/inquiries", (HttpRequest req) => gate(req, "inquiries", _ =>
+        {
+            var type = req.Query["type"].ToString(); var status = req.Query["status"].ToString(); var q = req.Query["q"].ToString();
+            var where = new List<string>(); var args = new List<object?>();
+            if (!string.IsNullOrEmpty(type)) { where.Add("type=?"); args.Add(type); }
+            if (!string.IsNullOrEmpty(status)) { where.Add("status=?"); args.Add(status); }
+            if (!string.IsNullOrEmpty(q)) { where.Add("(email LIKE ? OR org LIKE ? OR topic LIKE ?)"); args.Add(Like(q)); args.Add(Like(q)); args.Add(Like(q)); }
+            var w = where.Count > 0 ? "WHERE " + string.Join(" AND ", where) : "";
+            return J(new { rows = db.Query($"SELECT * FROM inquiries {w} ORDER BY id DESC", args.ToArray()) });
+        }));
+        app.MapPost("/api/admin/inquiries/{id}/status", async (HttpRequest req, long id) =>
+        {
+            var g = Deny(req, "inquiries"); if (g is not null) return g;
+            var b = await H.Body(req); var status = H.GetS(b, "status");
+            if (status is not ("new" or "in_progress" or "closed")) return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            db.Execute("UPDATE inquiries SET status=? WHERE id=?", status, id);
+            log(null, "inquiry_" + status, id.ToString());
+            return J(new { ok = true });
+        });
+
+        // ---------- emails + audit ----------
+        app.MapGet("/api/admin/emails", (HttpRequest req) =>
+        {
+            var g = Deny(req, "emails"); if (g is not null) return g;
+            var type = req.Query["type"].ToString(); var status = req.Query["status"].ToString(); var q = req.Query["q"].ToString();
+            var where = new List<string>(); var args = new List<object?>();
+            if (!string.IsNullOrEmpty(type)) { where.Add("email_type=?"); args.Add(type); }
+            if (!string.IsNullOrEmpty(status)) { where.Add("status=?"); args.Add(status); }
+            if (!string.IsNullOrEmpty(q)) { where.Add("email LIKE ?"); args.Add(Like(q)); }
+            var w = where.Count > 0 ? "WHERE " + string.Join(" AND ", where) : "";
+            return J(new { rows = db.Query($"SELECT * FROM email_logs {w} ORDER BY id DESC LIMIT 300", args.ToArray()) });
+        });
+        app.MapGet("/api/admin/audit", (HttpRequest req) => gate(req, "audit", _ => J(new { rows = db.Query("SELECT * FROM audit_logs ORDER BY id DESC LIMIT 300") })));
+
+        // ---------- CSV export ----------
+        app.MapGet("/api/admin/export", (HttpRequest req) =>
+        {
+            var g = Deny(req, "reports"); if (g is not null) return g;
+            var map = new Dictionary<string, string> {
+                ["members"] = "SELECT id,first_name,last_name,email,status,created_at FROM users ORDER BY id DESC",
+                ["payments"] = "SELECT id,reference,user_id,product_type,final_amount,currency,payment_status,payment_date FROM payments ORDER BY id DESC",
+                ["enrollments"] = "SELECT id,email,current_step,session_status,selected_product,last_activity_at FROM enrollment_sessions ORDER BY id DESC",
+                ["credentials"] = "SELECT credential_id,holder_name,credential,status,issued_at,expires_at FROM issued_credentials ORDER BY id DESC",
+                ["inquiries"] = "SELECT id,type,email,org,topic,reference,status,created_at FROM inquiries ORDER BY id DESC",
+                ["redemptions"] = "SELECT r.code,r.email,r.product_type,r.discount_amount,p.final_amount,p.reference,r.redeemed_at FROM code_redemptions r LEFT JOIN payments p ON p.id=r.payment_id ORDER BY r.id DESC",
+                ["subscribers"] = "SELECT email,status,created_at FROM newsletter_subscribers ORDER BY id DESC" };
+            var entity = req.Query["entity"].ToString();
+            if (!map.TryGetValue(entity, out var sql)) return Results.Json(new { error = "bad_entity" }, statusCode: 400);
+            var csv = ToCsv(db.Query(sql));
+            return Results.Text(csv, "text/csv");
+        });
+
+        // ---------- pages / content / subscribers / forms ----------
+        app.MapGet("/api/admin/pages", (HttpRequest req) => gate(req, "pages", _ => J(new { rows = db.Query("SELECT * FROM pages ORDER BY nav_group, title") })));
+        app.MapPatch("/api/admin/pages/{id}", async (HttpRequest req, long id) =>
+        {
+            var g = Deny(req, "pages"); if (g is not null) return g;
+            var b = await H.Body(req);
+            object? noindex = b.ContainsKey("noindex") ? (H.B(b["noindex"].GetRawText()) ? 1 : 0) : null;
+            object? published = b.ContainsKey("published") ? (H.B(b["published"].GetRawText()) ? 1 : 0) : null;
+            db.Execute("UPDATE pages SET title=COALESCE(?,title), meta_description=COALESCE(?,meta_description), noindex=COALESCE(?,noindex), published=COALESCE(?,published), updated_at=datetime('now') WHERE id=?",
+                H.GetS(b, "title"), H.GetS(b, "meta_description"), noindex, published, id);
+            log(null, "page_update", id.ToString());
+            return J(new { ok = true });
+        });
+        app.MapGet("/api/admin/content", (HttpRequest req) => gate(req, "content", _ => J(new { rows = db.Query("SELECT * FROM site_content ORDER BY cgroup, id") })));
+        app.MapPatch("/api/admin/content/{id}", async (HttpRequest req, long id) =>
+        {
+            var g = Deny(req, "content"); if (g is not null) return g;
+            var b = await H.Body(req);
+            db.Execute("UPDATE site_content SET cvalue=?, updated_at=datetime('now') WHERE id=?", H.GetS(b, "cvalue") ?? "", id);
+            log(null, "content_update", id.ToString());
+            return J(new { ok = true });
+        });
+        app.MapGet("/api/admin/subscribers", (HttpRequest req) => gate(req, "subscribers", _ => J(new { rows = db.Query("SELECT * FROM newsletter_subscribers ORDER BY id DESC") })));
+        app.MapPatch("/api/admin/subscribers/{id}", async (HttpRequest req, long id) =>
+        {
+            var g = Deny(req, "subscribers"); if (g is not null) return g;
+            var b = await H.Body(req);
+            db.Execute("UPDATE newsletter_subscribers SET status=? WHERE id=?", H.GetS(b, "status"), id);
+            return J(new { ok = true });
+        });
+        app.MapGet("/api/admin/form_submissions", (HttpRequest req) =>
+        {
+            var g = Deny(req, "submissions"); if (g is not null) return g;
+            var type = req.Query["type"].ToString(); var status = req.Query["status"].ToString();
+            var where = new List<string>(); var args = new List<object?>();
+            if (!string.IsNullOrEmpty(type)) { where.Add("form_type=?"); args.Add(type); }
+            if (!string.IsNullOrEmpty(status)) { where.Add("status=?"); args.Add(status); }
+            var w = where.Count > 0 ? "WHERE " + string.Join(" AND ", where) : "";
+            return J(new { rows = db.Query($"SELECT * FROM form_submissions {w} ORDER BY id DESC", args.ToArray()) });
+        });
+        app.MapPost("/api/admin/form_submissions/{id}/status", async (HttpRequest req, long id) =>
+        {
+            var g = Deny(req, "submissions"); if (g is not null) return g;
+            var b = await H.Body(req);
+            db.Execute("UPDATE form_submissions SET status=? WHERE id=?", H.GetS(b, "status"), id);
+            return J(new { ok = true });
+        });
+    }
+}

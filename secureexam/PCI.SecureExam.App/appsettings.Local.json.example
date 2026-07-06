@@ -1,0 +1,9 @@
+{
+  "ApiBaseUrl": "http://localhost:5000",
+  "Ai": {
+    "IdentityProvider": "AzureFace",
+    "Endpoint": "https://<your-face-resource>.cognitiveservices.azure.com",
+    "ApiKey": "<your-key>",
+    "IdentityMatchThreshold": 0.80
+  }
+}
