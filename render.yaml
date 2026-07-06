@@ -1,0 +1,48 @@
+# Render Blueprint — deploys the whole PCI platform (website + student panel + admin dashboard)
+# as one Docker web service with a persistent disk for the database and uploaded files.
+#
+# Use: push this repo to GitHub → Render dashboard → New → Blueprint → select the repo.
+# Render reads this file and provisions everything; you only fill in the env-var values
+# marked sync:false (they are secrets/deployment-specific, never committed).
+#
+# NOTE: persistent disks require a paid instance (Starter or above). Do NOT run this app
+# on the free tier — its filesystem is ephemeral and the SQLite database would be wiped
+# on every deploy/restart.
+
+services:
+  - type: web
+    name: pci-platform
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/health
+    autoDeploy: true
+    disk:
+      name: pci-data
+      mountPath: /data
+      sizeGB: 5
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: DATABASE_FILE
+        value: /data/pci.db
+      - key: STORAGE_ROOT
+        value: /data/storage
+      # ---- fill these in on the Render dashboard (Settings → Environment) ----
+      - key: APP_BASE_URL          # your public URL, e.g. https://pci-platform.onrender.com or https://www.yourdomain.org
+        sync: false
+      - key: ALLOWED_ORIGIN        # same value as APP_BASE_URL (no trailing slash)
+        sync: false
+      - key: ADMIN_OWNER_EMAIL     # your real admin email (replaces owner@pci.local on first boot)
+        sync: false
+      - key: ADMIN_OWNER_PASSWORD  # strong bootstrap password (you are forced to change it at first login anyway)
+        sync: false
+      - key: STRIPE_SECRET_KEY     # optional until you enable payments (sk_test_… first, sk_live_… at go-live)
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET # required as soon as STRIPE_SECRET_KEY is set (whsec_… from the Stripe webhook)
+        sync: false
+      - key: SMTP_HOST             # optional; without it, emails print to the service logs
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false

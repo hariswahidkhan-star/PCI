@@ -1,0 +1,12 @@
+bin/
+obj/
+*.db
+*.db-wal
+*.db-shm
+.env
+
+# integration test artifacts
+tests/_integration.db*
+tests/_integration_storage/
+tests/_sweep*
+tests/_s3*

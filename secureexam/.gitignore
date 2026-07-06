@@ -1,0 +1,24 @@
+## .NET
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+*.user
+*.suo
+.vs/
+*.dll
+*.pdb
+## Rider / VS Code
+.idea/
+.vscode/
+## Local config & secrets (never commit provider keys)
+appsettings.Local.json
+appsettings.*.Local.json
+*.env
+## Evidence captured during local runs
+evidence/
+## OS
+.DS_Store
+Thumbs.db

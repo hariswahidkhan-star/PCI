@@ -1,0 +1,95 @@
+namespace PCI.Backend.Data;
+
+public static class Migrate
+{
+    public static void Run(Db db, string schemaPath)
+    {
+        db.Exec(File.ReadAllText(schemaPath));
+        // ensure production lifecycle tables exist on pre-existing databases
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_score_snapshots(id INTEGER PRIMARY KEY AUTOINCREMENT,attempt_id INTEGER NOT NULL,user_id INTEGER NOT NULL,score INTEGER,max_score INTEGER,percent REAL,result TEXT,domain_breakdown TEXT,unanswered INTEGER,flagged_events INTEGER,duration_seconds INTEGER,submitted_at TEXT,answer_key_version TEXT,bank_version TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_score_snapshot_attempt ON exam_score_snapshots(attempt_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_entitlements(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,payment_id INTEGER,product_type TEXT,status TEXT DEFAULT 'available',valid_until TEXT,booking_id INTEGER,attempt_id INTEGER,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_entitlement_payment ON exam_entitlements(payment_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS candidate_consents(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,consent_type TEXT NOT NULL,policy_version TEXT NOT NULL,accepted_at TEXT DEFAULT (datetime('now')),ip_address TEXT,user_agent TEXT,metadata_json TEXT)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_consents_user ON candidate_consents(user_id, consent_type)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS webhook_events(id INTEGER PRIMARY KEY AUTOINCREMENT,provider TEXT DEFAULT 'stripe',event_id TEXT,processed_at TEXT DEFAULT (datetime('now')),status TEXT,error TEXT)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_webhook_event ON webhook_events(event_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS security_events(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER,kind TEXT,detail TEXT,ip TEXT,user_agent TEXT,created_at TEXT DEFAULT (datetime('now')))");
+
+
+        // idempotent column upgrades (parity with db.js)
+        void EnsureReviews() => db.Exec(@"CREATE TABLE IF NOT EXISTS reviews(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER,name TEXT NOT NULL,designation TEXT,company TEXT,country TEXT,relationship TEXT,rating INTEGER,title TEXT,body TEXT NOT NULL,status TEXT DEFAULT 'pending',featured INTEGER DEFAULT 0,sort_order INTEGER DEFAULT 0,created_at TEXT DEFAULT (datetime('now')),published_at TEXT,reviewed_by INTEGER)");
+        EnsureReviews();
+        void AddCol(string table, string col, string ddl)
+        {
+            var have = db.Columns(table);
+            if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+        }
+        AddCol("sample_questions", "is_practice", "is_practice INTEGER DEFAULT 0");
+        AddCol("exam_attempts", "result_status", "result_status TEXT DEFAULT 'not_started'");
+        AddCol("exam_attempts", "hold_reason", "hold_reason TEXT");
+        AddCol("exam_attempts", "released_at", "released_at TEXT");
+        AddCol("exam_attempts", "answer_key_version", "answer_key_version TEXT");
+        AddCol("exam_attempts", "bank_version", "bank_version TEXT");
+        AddCol("issued_credentials", "attempt_id", "attempt_id INTEGER");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_credential_attempt ON issued_credentials(attempt_id) WHERE attempt_id IS NOT NULL");
+        // Phase 2: casework tables + CPD evidence columns for pre-existing databases
+        db.Exec(@"CREATE TABLE IF NOT EXISTS appeals(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,attempt_id INTEGER,credential_id TEXT,type TEXT NOT NULL,reason TEXT NOT NULL,evidence_name TEXT,evidence_data TEXT,status TEXT DEFAULT 'submitted',submitted_at TEXT DEFAULT (datetime('now')),decision TEXT,decided_by INTEGER,decided_at TEXT)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_appeals_user ON appeals(user_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS accommodation_requests(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,request_type TEXT NOT NULL,description TEXT NOT NULL,evidence_name TEXT,evidence_data TEXT,status TEXT DEFAULT 'submitted',approved_extra_minutes INTEGER DEFAULT 0,admin_note TEXT,created_at TEXT DEFAULT (datetime('now')),decided_at TEXT,decided_by INTEGER)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_accom_user ON accommodation_requests(user_id)");
+        // fallback shape kept aligned with schema.sql (storage_ref required, data_uri nullable legacy)
+        db.Exec(@"CREATE TABLE IF NOT EXISTS support_attachments(id INTEGER PRIMARY KEY AUTOINCREMENT,ticket_id INTEGER NOT NULL,user_id INTEGER,filename TEXT NOT NULL,mime TEXT,size_bytes INTEGER,sha256 TEXT,data_uri TEXT,storage_ref TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_attach_ticket ON support_attachments(ticket_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_readiness_checks(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,booking_id INTEGER,camera INTEGER DEFAULT 0,microphone INTEGER DEFAULT 0,network INTEGER DEFAULT 0,fullscreen INTEGER DEFAULT 0,environment INTEGER DEFAULT 0,browser TEXT,screen TEXT,passed INTEGER DEFAULT 0,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_readiness_user ON exam_readiness_checks(user_id)");
+        // Phase 2: storage-abstraction metadata columns (bytes live in blob storage; DB holds ref+metadata)
+        AddCol("exam_evidence", "storage_ref", "storage_ref TEXT");
+        AddCol("exam_evidence", "size_bytes", "size_bytes INTEGER");
+        AddCol("exam_evidence", "sha256", "sha256 TEXT");
+        AddCol("support_attachments", "storage_ref", "storage_ref TEXT");
+        AddCol("support_attachments", "sha256", "sha256 TEXT");
+        AddCol("cpd_entries", "evidence_name", "evidence_name TEXT");
+        AddCol("cpd_entries", "evidence_data", "evidence_data TEXT");
+        AddCol("cpd_entries", "admin_note", "admin_note TEXT");
+        AddCol("cpd_entries", "reviewed_by", "reviewed_by INTEGER");
+        AddCol("cpd_entries", "reviewed_at", "reviewed_at TEXT");
+        AddCol("sample_questions", "option_a", "option_a TEXT");
+        AddCol("sample_questions", "option_b", "option_b TEXT");
+        AddCol("sample_questions", "option_c", "option_c TEXT");
+        AddCol("sample_questions", "option_d", "option_d TEXT");
+        AddCol("users", "registration_no", "registration_no TEXT");
+        AddCol("exam_launch_codes", "code_hash", "code_hash TEXT");
+        AddCol("discount_codes", "code_type", "code_type TEXT DEFAULT 'general'");
+        AddCol("discount_codes", "org_name", "org_name TEXT");
+        AddCol("discount_codes", "owner_user_id", "owner_user_id INTEGER");
+        AddCol("discount_codes", "batch_id", "batch_id TEXT");
+        AddCol("discount_codes", "per_user_limit", "per_user_limit INTEGER");
+        AddCol("discount_codes", "notes", "notes TEXT");
+        foreach (var (c, d) in new[]{
+            ("violations","violations INTEGER DEFAULT 0"),("identity_result","identity_result TEXT"),
+            ("identity_confidence","identity_confidence REAL"),("evidence_count","evidence_count INTEGER DEFAULT 0"),
+            ("review_status","review_status TEXT DEFAULT 'unreviewed'"),("review_note","review_note TEXT"),
+            ("reviewed_at","reviewed_at TEXT"),("client_kind","client_kind TEXT DEFAULT 'browser'"),
+            ("last_heartbeat_at","last_heartbeat_at TEXT")})
+            AddCol("exam_attempts", c, d);
+        AddCol("student_profiles", "linkedin_url", "linkedin_url TEXT");
+        AddCol("student_profiles", "profile_photo", "profile_photo TEXT");
+        AddCol("users", "two_factor_enabled", "two_factor_enabled INTEGER DEFAULT 0");
+
+        // bootstrap owner admin on first run (parity with db.js seed)
+        try
+        {
+            var n = db.Scalar<long>("SELECT COUNT(*) FROM admin_users");
+            if (n == 0)
+            {
+                var email = (Environment.GetEnvironmentVariable("ADMIN_OWNER_EMAIL") ?? "owner@pci.local").ToLowerInvariant();
+                var pw = Environment.GetEnvironmentVariable("ADMIN_OWNER_PASSWORD") ?? "changeme-owner";
+                db.Execute("INSERT INTO admin_users(email,name,password_hash,role,status,must_change_pw) VALUES(?,?,?,?, 'active',1)",
+                    email, "Owner", BCrypt.Net.BCrypt.HashPassword(pw), "owner");
+                Console.WriteLine($"[seed] bootstrap owner admin created: {email}");
+            }
+        }
+        catch { /* admin_users may not exist on a very first pass; ignored */ }
+    }
+}

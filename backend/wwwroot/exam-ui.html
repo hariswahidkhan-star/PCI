@@ -1,0 +1,388 @@
+<!doctype html><html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PCI Secure Exam · Interface Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Archivo:wght@600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+ --ink:#0B1322;--bg:#0B1322;--card:#111C33;--card2:#0E1626;--line:#22304A;
+ --text:#E7EEFB;--muted:#8AA1CC;--muted2:#64748B;
+ --brand:#1D4ED8;--brand2:#2E68F0;--brand-deep:#1E3A8A;
+ --ok:#4ADE80;--ok-bg:#123021;--ok-tx:#7DEBA5;
+ --warn:#FCD34D;--warn-bg:#2E240E;--err:#FCA5A5;--err-bg:#2A1512;
+ --sans:'Inter',system-ui,sans-serif;--disp:'Archivo',var(--sans);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070d;font-family:var(--sans);color:var(--text);-webkit-font-smoothing:antialiased;padding:22px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.disp{font-family:var(--disp)}
+/* ===== preview chrome ===== */
+.frame-label{color:#5B6B85;font-size:12px;text-align:center;max-width:1180px;line-height:1.5}
+.frame-label b{color:#93A7C9}
+.switcher{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:1180px}
+.switcher button{background:#0F1A2E;border:1px solid #1E2C46;color:#8AA1CC;font-family:var(--sans);font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:9px;cursor:pointer;transition:.15s}
+.switcher button:hover{border-color:#2D4368;color:#C7D2E4}
+.switcher button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+/* ===== the app window ===== */
+.win{width:1180px;max-width:100%;height:760px;background:var(--bg);border-radius:14px;overflow:hidden;box-shadow:0 40px 90px -20px rgba(0,0,0,.7),0 0 0 1px #16233c;display:flex;flex-direction:column;position:relative}
+.titlebar{height:34px;background:#080d17;display:flex;align-items:center;padding:0 14px;gap:8px;flex:0 0 auto}
+.tdot{width:11px;height:11px;border-radius:50%}
+.tdot.r{background:#FF5F57}.tdot.y{background:#FEBC2E}.tdot.g{background:#28C840}
+.ttitle{color:#4A5878;font-size:11.5px;margin-left:8px;font-weight:500}
+.tlock{margin-left:auto;color:#3D4B67;font-size:10.5px;display:flex;align-items:center;gap:5px}
+/* top status bar */
+.topbar{height:58px;background:var(--card2);display:flex;align-items:center;padding:0 20px;gap:12px;flex:0 0 auto;border-bottom:1px solid #131f34}
+.brand{display:flex;align-items:center;gap:11px}
+.brand .seal{width:34px;height:34px;border-radius:8px;background:linear-gradient(160deg,#3B82F6,#1D4ED8 55%,#1E3A8A);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:13px;color:#fff;box-shadow:0 5px 12px rgba(29,78,216,.4)}
+.brand b{font-weight:600;font-size:15px;color:var(--text)}
+.screen-label{margin:0 auto;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.02em}
+.status{display:flex;align-items:center;gap:10px}
+.pill{border-radius:14px;padding:6px 11px;display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600}
+.pill.online{background:var(--ok-bg);color:var(--ok-tx)}
+.pill.offline{background:var(--warn-bg);color:var(--warn)}
+.pill .lamp{width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill .lamp.pulse{animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.timer{background:#152449;color:#9FC0FF;font-family:'Consolas',ui-monospace,monospace;font-weight:700;font-size:15px;border-radius:10px;padding:7px 13px}
+.timer.low{background:#3a1620;color:var(--err);animation:pulse 1.1s infinite}
+/* body host */
+.host{flex:1;overflow:auto;position:relative}
+.host::-webkit-scrollbar{width:9px}.host::-webkit-scrollbar-thumb{background:#1c2b45;border-radius:6px}
+.center{max-width:720px;margin:0 auto;padding:38px 28px 44px}
+h1.big{font-family:var(--disp);font-size:27px;font-weight:800;margin-bottom:11px;letter-spacing:-.02em}
+p.lead{color:var(--muted);font-size:14.5px;line-height:1.6;margin-bottom:14px}
+.bullet{display:flex;gap:11px;align-items:flex-start;margin-bottom:10px}
+.bullet .d{width:6px;height:6px;border-radius:50%;background:var(--brand);margin-top:8px;flex:0 0 auto}
+.bullet span{color:#C7D2E4;font-size:14px;line-height:1.55}
+.note{background:#14223f;border-radius:12px;padding:14px 16px;margin:14px 0;color:#9FB3DA;font-size:12.5px;line-height:1.6;border:1px solid #1c2c49}
+.btn{background:linear-gradient(180deg,var(--brand2),var(--brand));border:none;color:#fff;font-family:var(--sans);font-weight:600;font-size:14.5px;padding:13px 22px;border-radius:11px;cursor:pointer;box-shadow:0 10px 22px -8px rgba(29,78,216,.6);transition:.15s;margin-top:12px}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:#16213A;color:#C7D2E4;box-shadow:none}
+.btn.block{width:100%;display:block}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btnrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+/* system check rows */
+.chk{display:flex;gap:13px;align-items:center;background:var(--card);border-radius:12px;padding:14px 16px;margin-bottom:9px;border:1px solid #1a2740}
+.chk .badge{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:0 0 auto}
+.chk .badge.p{background:var(--ok-bg);color:var(--ok-tx)}
+.chk .badge.w{background:var(--warn-bg);color:var(--warn)}
+.chk .badge.f{background:var(--err-bg);color:var(--err)}
+.chk .ct b{display:block;font-size:14px;font-weight:600}
+.chk .ct span{font-size:12px;color:var(--muted)}
+.chk .spin{width:27px;height:27px;border-radius:50%;border:2.5px solid #22304A;border-top-color:var(--brand);animation:spin .8s linear infinite;flex:0 0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* identity capture */
+.camwrap{background:#000;border-radius:14px;overflow:hidden;position:relative;border:1px solid #1c2c49}
+.camfeed{aspect-ratio:4/3;background:linear-gradient(135deg,#1a2438,#0d1420);position:relative;overflow:hidden}
+.camfeed .person{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);width:150px;height:180px;background:radial-gradient(ellipse 60% 45% at 50% 32%,#3a4a63,transparent 62%),radial-gradient(ellipse 48% 55% at 50% 92%,#2b3550,transparent);opacity:.55}
+.camfeed .person::before{content:"";position:absolute;left:50%;top:26%;transform:translate(-50%,-50%);width:74px;height:88px;border-radius:50% 50% 46% 46%;background:#4a5b78}
+.facebox{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);width:118px;height:132px;border:2.5px solid var(--ok);border-radius:10px;box-shadow:0 0 0 4000px rgba(0,0,0,.12)}
+.facebox .fl{position:absolute;width:15px;height:15px;border:2.5px solid var(--ok)}
+.facebox .fl.tl{top:-2px;left:-2px;border-right:0;border-bottom:0}
+.facebox .fl.tr{top:-2px;right:-2px;border-left:0;border-bottom:0}
+.facebox .fl.bl{bottom:-2px;left:-2px;border-right:0;border-top:0}
+.facebox .fl.br{bottom:-2px;right:-2px;border-left:0;border-top:0}
+.facetag{position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:var(--ok);color:#04210f;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.livebadge{position:absolute;top:12px;left:12px;background:rgba(180,35,24,.85);color:#fff;font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:6px;display:flex;align-items:center;gap:5px;letter-spacing:.04em}
+.livebadge .rec{width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 1.3s infinite}
+.scanline{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(74,222,128,.7),transparent);animation:scan 2.6s ease-in-out infinite}
+@keyframes scan{0%,100%{top:8%}50%{top:88%}}
+.id-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+/* ===== EXAM RUNNER ===== */
+.exam-grid{display:grid;grid-template-columns:1fr 300px;height:100%}
+.exam-left{padding:22px 14px 22px 22px;overflow:auto}
+.exam-left::-webkit-scrollbar{width:8px}.exam-left::-webkit-scrollbar-thumb{background:#1c2b45;border-radius:6px}
+.qcard{background:#fff;border-radius:16px;padding:28px 30px;color:#0F172A}
+.qmeta{font-family:var(--disp);font-size:11.5px;font-weight:700;letter-spacing:.08em;color:var(--brand);text-transform:uppercase;white-space:nowrap}
+.qdom{font-size:12.5px;color:#94A3B8;margin:3px 0 16px}
+.qtext{font-size:18px;line-height:1.5;font-weight:600;margin-bottom:20px;color:#0F172A}
+.opt{display:flex;gap:13px;align-items:center;border:1.6px solid #E7EBF1;border-radius:12px;padding:14px 16px;margin-bottom:11px;cursor:pointer;transition:.13s}
+.opt:hover{border-color:var(--brand);background:#F5F9FF}
+.opt.sel{border-color:var(--brand);background:#EFF4FE}
+.opt .k{width:27px;height:27px;border-radius:50%;background:#EEF1F6;color:#475569;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.opt.sel .k{background:var(--brand);color:#fff}
+.opt .otext{font-size:15px;color:#0F172A}
+.qnav{display:flex;gap:11px;margin-top:20px;align-items:center}
+.qnav .sp{flex:1}
+.btn-dark{background:var(--brand);color:#fff;border:none;font-weight:600;font-size:14px;padding:11px 20px;border-radius:10px;cursor:pointer;font-family:var(--sans)}
+.btn-out{background:#fff;color:#334155;border:1.5px solid #E2E8F0;font-weight:600;font-size:14px;padding:11px 20px;border-radius:10px;cursor:pointer;font-family:var(--sans)}
+/* right rail */
+.exam-rail{background:#0d1626;border-left:1px solid #16233c;padding:18px 16px;overflow:auto;display:flex;flex-direction:column;gap:12px}
+.exam-rail::-webkit-scrollbar{width:7px}.exam-rail::-webkit-scrollbar-thumb{background:#1c2b45;border-radius:6px}
+.railcard{background:var(--card);border:1px solid #1a2740;border-radius:14px;padding:13px}
+.railcard h4{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:9px}
+.railcam{border-radius:10px;overflow:hidden;position:relative;aspect-ratio:4/3;background:linear-gradient(135deg,#1a2438,#0d1420)}
+.railcam .person{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);width:88px;height:104px;opacity:.6}
+.railcam .person::before{content:"";position:absolute;left:50%;top:24%;transform:translate(-50%,-50%);width:44px;height:52px;border-radius:50% 50% 46% 46%;background:#4a5b78}
+.railcam .person::after{content:"";position:absolute;left:50%;top:78%;transform:translate(-50%,-50%);width:78px;height:56px;border-radius:44% 44% 0 0;background:#3a4a63}
+.railcam .mini-live{position:absolute;top:7px;left:7px;background:rgba(180,35,24,.85);color:#fff;font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:4px;display:flex;align-items:center;gap:4px}
+.railcam .mini-live .rec{width:5px;height:5px;border-radius:50%;background:#fff;animation:pulse 1.3s infinite}
+.railcam .facebox2{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:64px;height:74px;border:2px solid var(--ok);border-radius:7px}
+/* mic meter */
+.mic{display:flex;align-items:center;gap:9px}
+.mic .bars{flex:1;display:flex;gap:3px;align-items:flex-end;height:26px}
+.mic .bars i{flex:1;background:var(--brand);border-radius:2px;opacity:.85;animation:mic 1.1s ease-in-out infinite}
+.mic .bars i:nth-child(1){animation-delay:0s}.mic .bars i:nth-child(2){animation-delay:.1s}
+.mic .bars i:nth-child(3){animation-delay:.2s}.mic .bars i:nth-child(4){animation-delay:.32s}
+.mic .bars i:nth-child(5){animation-delay:.22s}.mic .bars i:nth-child(6){animation-delay:.12s}
+.mic .bars i:nth-child(7){animation-delay:.28s}.mic .bars i:nth-child(8){animation-delay:.05s}
+@keyframes mic{0%,100%{height:18%}50%{height:88%}}
+.mic .val{font-size:10.5px;color:var(--muted);font-weight:600}
+/* chat */
+.chatlog{display:flex;flex-direction:column;gap:7px;max-height:132px;overflow:auto;margin-bottom:9px}
+.chatlog::-webkit-scrollbar{width:6px}.chatlog::-webkit-scrollbar-thumb{background:#22304A;border-radius:4px}
+.msg{border-radius:10px;padding:8px 11px;font-size:12.5px;line-height:1.45;max-width:88%}
+.msg.them{background:#1A243D;align-self:flex-start}
+.msg.me{background:var(--brand);align-self:flex-end}
+.msg .mt{font-size:9px;color:var(--muted);margin-top:3px}
+.msg.me .mt{color:#BFD3FF}
+.chatin{display:flex;background:#0b1322;border:1px solid #22304A;border-radius:9px;overflow:hidden}
+.chatin input{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--sans);font-size:12.5px;padding:9px 11px}
+.chatin button{background:none;border:none;color:var(--brand);font-weight:700;font-size:12.5px;padding:0 12px;cursor:pointer}
+/* palette */
+.palette{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.palette button{aspect-ratio:1;border-radius:8px;border:none;background:#141f38;color:var(--muted);font-weight:700;font-size:12.5px;cursor:pointer;transition:.12s}
+.palette button.answered{background:#1A2B4D;color:#fff}
+.palette button.current{background:var(--brand);color:#fff;box-shadow:0 0 0 2px rgba(29,78,216,.35)}
+.palette button:hover{filter:brightness(1.25)}
+.pleg{margin-top:10px;font-size:11px;color:var(--muted);line-height:1.7}
+.pleg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+/* toast */
+.toast{position:absolute;top:14px;left:50%;transform:translateX(-50%);background:#2A1512;border-radius:12px;padding:11px 16px;display:flex;align-items:center;gap:9px;box-shadow:0 12px 30px rgba(0,0,0,.4);z-index:20;animation:drop .3s}
+@keyframes drop{from{opacity:0;transform:translate(-50%,-8px)}to{opacity:1;transform:translate(-50%,0)}}
+.toast .ic{color:var(--err);font-size:15px}
+.toast span{color:var(--err);font-size:13px;font-weight:600}
+/* submitted */
+.result-ring{width:150px;height:150px;position:relative;margin:8px auto 18px}
+.verdict{font-family:var(--disp);font-size:28px;font-weight:800;text-align:center;color:var(--ok);margin-bottom:6px}
+.hidden{display:none}
+
+/* ===== responsive: view the desktop client on a phone ===== */
+@media(max-width:900px){
+ body{padding:10px}
+ .frame-label{font-size:11.5px}
+ .win{width:100%;height:auto;min-height:0;border-radius:16px}
+ .host{overflow:visible}
+ .topbar{padding:0 12px;gap:8px;height:auto;min-height:56px;flex-wrap:wrap;padding-top:9px;padding-bottom:9px}
+ .brand b{font-size:14px}
+ .screen-label{order:3;flex-basis:100%;margin:2px 0 0;text-align:left;font-size:11px}
+ .status{margin-left:auto}
+ .timer{font-size:14px;padding:6px 11px}
+ /* stack: question first, rail below as a horizontal strip */
+ .exam-grid{display:flex;flex-direction:column;height:auto}
+ .exam-left{padding:14px 14px 6px;overflow:visible}
+ .qcard{padding:20px 18px;border-radius:14px}
+ .qtext{font-size:16px}
+ .opt{padding:13px 14px}
+ .opt .otext{font-size:14.5px}
+ .exam-rail{border-left:0;border-top:1px solid #16233c;flex-direction:row;flex-wrap:wrap;gap:10px;padding:14px;overflow:visible}
+ .exam-rail .railcard{flex:1 1 calc(50% - 5px);min-width:150px;margin:0}
+ .exam-rail .railcard:nth-child(3){flex-basis:100%}   /* chat full width */
+ .exam-rail .railcard:nth-child(4){flex-basis:100%}   /* palette full width */
+ .railcam{max-width:220px}
+ .center{padding:26px 18px 34px}
+ h1.big{font-size:23px}
+ .switcher button{font-size:11.5px;padding:7px 10px}
+ .id-2{grid-template-columns:1fr}
+ .qnav{flex-wrap:wrap}
+ .chatlog{max-height:150px}
+}
+@media(max-width:560px){
+ .exam-rail .railcard{flex-basis:100%}
+ .railcam{max-width:100%}
+ .titlebar .ttitle{font-size:10.5px}
+}
+
+/* ===== v2 design polish ===== */
+.topbar{background:linear-gradient(180deg,#0E1626,#0B1322)}
+.brand .seal{box-shadow:0 6px 16px rgba(29,78,216,.45),inset 0 1px 0 rgba(255,255,255,.15)}
+/* an "AI monitoring" indicator in the top bar */
+.aimon{display:flex;align-items:center;gap:7px;background:#101d36;border:1px solid #1c2c49;border-radius:14px;padding:6px 11px;font-size:11px;font-weight:600;color:#8FA6E8}
+.aimon .eye{width:14px;height:14px;position:relative}
+.aimon .eye::before{content:"";position:absolute;inset:0;border:1.5px solid #5B8CFF;border-radius:50% 50%;clip-path:ellipse(50% 38% at 50% 50%)}
+.aimon .eye::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:#5B8CFF;animation:pulse 2s infinite}
+.qcard{box-shadow:0 20px 50px -18px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.04)}
+.qtext{letter-spacing:-.01em}
+.opt{transition:border-color .13s,background .13s,transform .06s}
+.opt:active{transform:translateY(1px)}
+.opt .k{transition:.13s}
+.railcard{background:linear-gradient(180deg,#131f38,#101a30);box-shadow:0 8px 20px -12px rgba(0,0,0,.5)}
+.railcam{box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+.facebox2{box-shadow:0 0 14px rgba(74,222,128,.35)}
+.btn-dark{background:linear-gradient(180deg,#2E68F0,#1D4ED8);box-shadow:0 8px 18px -6px rgba(29,78,216,.6)}
+.btn-dark:hover{filter:brightness(1.08)}
+.palette button{transition:.12s}
+.palette button.current{box-shadow:0 0 0 2px rgba(29,78,216,.4),0 4px 10px -2px rgba(29,78,216,.5)}
+.timer{box-shadow:inset 0 0 0 1px rgba(159,192,255,.15)}
+/* subtle vignette on the exam bg for depth */
+.host{background:radial-gradient(120% 80% at 50% -10%,#0f1c33 0%,#0B1322 60%)}
+</style></head><body>
+
+<div class="frame-label">Interactive preview of the <b>PCI Secure Exam</b> desktop client (.NET 8 / WPF). This HTML mirrors the real client's screens and styling so you can see the candidate experience. Click the stages below to walk the full flow.</div>
+
+<div class="switcher" id="sw">
+ <button data-s="check">1 · System check</button>
+ <button data-s="identity">2 · Identity</button>
+ <button data-s="roomscan">3 · Room scan</button>
+ <button data-s="rules">4 · Rules</button>
+ <button data-s="exam" class="on">5 · Examination</button>
+ <button data-s="submitted">6 · Result</button>
+</div>
+
+<div class="win">
+ <div class="titlebar"><span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span><span class="ttitle">PCI Secure Exam</span><span class="tlock">🔒 Locked · kiosk mode</span></div>
+ <div class="topbar">
+  <div class="brand"><span class="seal">PCI</span><b>Secure Exam</b></div>
+  <div class="screen-label" id="slabel">Examination in progress</div>
+  <div class="aimon" id="aimon"><span class="eye"></span>AI monitoring active</div><div class="status">
+   <div class="pill online" id="connpill"><span class="lamp"></span><span id="conntext">Online</span></div>
+   <div class="timer" id="timer">89:12</div>
+  </div>
+ </div>
+ <div class="host" id="host"></div>
+</div>
+
+<script>
+const host=document.getElementById('host'), slabel=document.getElementById('slabel'), timerEl=document.getElementById('timer');
+const LABELS={check:'System check',identity:'Identity verification',roomscan:'Room scan',rules:'Examination rules',exam:'Examination in progress',submitted:'Submitted'};
+const QUESTIONS=[
+ {dom:'Earned Value & Performance',q:'Which metric best indicates cost efficiency in earned value management?',opts:['SPI — Schedule Performance Index','CPI — Cost Performance Index','BAC — Budget at Completion','ETC — Estimate to Complete']},
+ {dom:'Governed AI in Project Controls',q:'When an AI model proposes a revised schedule, the professional\u2019s primary responsibility is to:',opts:['Accept the AI output as final','Oversee, validate, and remain accountable for the decision','Automate the decision end-to-end','Withhold the methodology from the client']},
+ {dom:'Planning & Scheduling',q:'A Schedule Performance Index (SPI) of 0.85 indicates the project is:',opts:['Ahead of schedule','Exactly on schedule','Behind schedule','Under budget']},
+ {dom:'Risk & Contingency',q:'Contingency reserves are best sized using:',opts:['A fixed 10% of budget','Quantitative risk analysis of the specific project','The client\u2019s stated preference','Last year\u2019s project average']},
+ {dom:'Cost Estimating',q:'The primary purpose of a cost baseline is to:',opts:['Replace the estimate','Provide the approved reference for performance measurement','Eliminate change control','Set contractor profit margin']},
+ {dom:'Governed AI in Project Controls',q:'\u201CAI proposes, the professional disposes\u201D means:',opts:['AI decisions are final','The professional reviews, adjusts, and owns the decision','AI must never be used','Only managers may use AI']}
+];
+let curQ=0; const answers={};
+
+function railHTML(){return `
+ <div class="railcard"><h4>Camera</h4>
+  <div class="railcam"><div class="mini-live"><span class="rec"></span>REC</div><div class="facebox2"></div><div class="person"></div></div>
+ </div>
+ <div class="railcard"><h4>Microphone</h4>
+  <div class="mic"><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="val">monitoring</span></div>
+ </div>
+ <div class="railcard"><h4>Support chat</h4>
+  <div class="chatlog" id="clog">
+   <div class="msg them">Hello Amelia, this is the PCI proctor desk. I\u2019m here if you need anything during your exam.<div class="mt">PCI Support · 09:02</div></div>
+   <div class="msg me">Thank you — all clear so far.<div class="mt">You · 09:03</div></div>
+  </div>
+  <div class="chatin"><input id="cin" placeholder="Message the proctor…"/><button onclick="sendChat()">Send</button></div>
+ </div>
+ <div class="railcard"><h4>Questions</h4>
+  <div class="palette" id="pal"></div>
+  <div class="pleg"><i style="background:#1D4ED8"></i>current &nbsp; <i style="background:#1A2B4D"></i>answered &nbsp; <i style="background:#141f38"></i>unseen</div>
+ </div>`;}
+
+function drawExam(){
+ host.innerHTML=`<div class="exam-grid"><div class="exam-left"><div class="qcard" id="qcard"></div></div><div class="exam-rail">${railHTML()}</div></div>`;
+ drawQ(); drawPal();
+}
+function drawQ(){
+ const it=QUESTIONS[curQ];
+ document.getElementById('qcard').innerHTML=`
+  <div class="qmeta">Question ${curQ+1} of ${QUESTIONS.length}</div>
+  <div class="qdom">${it.dom}</div>
+  <div class="qtext">${it.q}</div>
+  ${it.opts.map((o,i)=>`<div class="opt ${answers[curQ]===i?'sel':''}" onclick="pick(${i})"><span class="k">${'ABCD'[i]}</span><span class="otext">${o}</span></div>`).join('')}
+  <div class="qnav">
+   ${curQ>0?'<button class="btn-out" onclick="nav(-1)">← Previous</button>':''}
+   <div class="sp"></div>
+   ${curQ<QUESTIONS.length-1?'<button class="btn-dark" onclick="nav(1)">Next →</button>':'<button class="btn-dark" onclick="show(\'submitted\')">Submit examination</button>'}
+  </div>`;
+}
+function drawPal(){
+ document.getElementById('pal').innerHTML=QUESTIONS.map((_,i)=>`<button class="${i===curQ?'current':answers[i]!=null?'answered':''}" onclick="jump(${i})">${i+1}</button>`).join('');
+}
+window.pick=i=>{answers[curQ]=i;drawQ();drawPal()};
+window.nav=d=>{curQ=Math.max(0,Math.min(QUESTIONS.length-1,curQ+d));drawQ();drawPal()};
+window.jump=i=>{curQ=i;drawQ();drawPal()};
+window.sendChat=()=>{const el=document.getElementById('cin');if(!el.value.trim())return;const log=document.getElementById('clog');
+ log.insertAdjacentHTML('beforeend',`<div class="msg me">${el.value.replace(/</g,'&lt;')}<div class="mt">You · now</div></div>`);el.value='';log.scrollTop=log.scrollHeight;
+ setTimeout(()=>{log.insertAdjacentHTML('beforeend',`<div class="msg them">Understood — I\u2019ve noted that. You may continue.<div class="mt">PCI Support · now</div></div>`);log.scrollTop=log.scrollHeight;},900);};
+
+function drawCheck(){
+ host.innerHTML=`<div class="center">
+  <h1 class="big">System check</h1>
+  <p class="lead">Verifying your equipment and environment. Every item must pass before you can continue to identity verification.</p>
+  <div id="clist">
+   ${chkRow('p','Webcam','Logitech HD 1080p ready (1920×1080).')}
+   ${chkRow('p','Microphone','Default input device ready.')}
+   ${chkRow('p','Displays','Single display detected.')}
+   ${chkRow('p','Environment','No virtual machine or remote session detected.')}
+   ${chkRow('spin','Applications','Scanning running processes…')}
+   ${chkRow('p','Connectivity','Connected to the exam service · 34 ms.')}
+  </div>
+  <button class="btn block" disabled id="ccont">Running checks…</button>
+ </div>`;
+ setTimeout(()=>{
+  document.getElementById('clist').children[4].outerHTML=chkRow('p','Applications','No prohibited applications running.');
+  const b=document.getElementById('ccont');b.disabled=false;b.textContent='Continue to identity verification';b.onclick=()=>show('identity');
+ },1600);
+}
+function chkRow(st,name,detail){
+ if(st==='spin')return `<div class="chk"><div class="spin"></div><div class="ct"><b>${name}</b><span>${detail}</span></div></div>`;
+ const g={p:'✓',w:'!',f:'✕'}[st];
+ return `<div class="chk"><div class="badge ${st}">${g}</div><div class="ct"><b>${name}</b><span>${detail}</span></div></div>`;
+}
+function drawIdentity(){
+ host.innerHTML=`<div class="center" style="max-width:640px">
+  <h1 class="big">Identity verification</h1>
+  <p class="lead">Centre your face in the frame and capture a photo, then hold your government photo ID to the camera. AI confirms a face is present and single; PCI confirms the match.</p>
+  <div class="camwrap"><div class="camfeed">
+    <div class="livebadge"><span class="rec"></span>LIVE · AI</div>
+    <div class="scanline"></div>
+    <div class="person"></div>
+    <div class="facebox"><span class="facetag">✓ Face detected · 1 person</span><span class="fl tl"></span><span class="fl tr"></span><span class="fl bl"></span><span class="fl br"></span></div>
+  </div></div>
+  <div class="btnrow" style="margin-top:14px"><button class="btn ghost" onclick="cap('face')">📸 Capture face</button><button class="btn ghost" onclick="cap('id')">🪪 Capture ID</button><span id="capmsg" style="color:var(--muted);font-size:13px"></span></div>
+  <div class="note" id="idnote">AI identity check runs on-device against the captured images. A production deployment confirms the biometric match via the configured face-recognition provider (Azure Face / AWS Rekognition).</div>
+  <button class="btn block" onclick="show('roomscan')">Verify identity &amp; continue</button>
+ </div>`;
+}
+let caps={};
+window.cap=(k)=>{caps[k]=1;document.getElementById('capmsg').textContent=(k==='face'?'Face':'ID')+' captured ✓';
+ if(caps.face&&caps.id)document.getElementById('idnote').innerHTML='<b style="color:var(--ok-tx)">Identity verified.</b> Face present and single, ID captured. Proceed to the room scan.';};
+function drawRoomscan(){
+ host.innerHTML=`<div class="center" style="max-width:640px">
+  <h1 class="big">Room scan</h1>
+  <p class="lead">Slowly pan your camera around your workspace so your environment is on record. Show your desk, the area behind your screen, and the room around you.</p>
+  <div class="camwrap"><div class="camfeed">
+    <div class="livebadge"><span class="rec"></span>RECORDING</div>
+    <div class="scanline"></div>
+    <div class="person" style="opacity:.32"></div>
+    <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.5);color:#cfe0ff;font-size:12px;padding:6px 12px;border-radius:8px">Pan slowly — 8 seconds recorded</div>
+  </div></div>
+  <button class="btn block" style="margin-top:16px" onclick="show('rules')">Capture &amp; continue</button>
+ </div>`;
+}
+function drawRules(){
+ host.innerHTML=`<div class="center">
+  <h1 class="big">Examination rules</h1>
+  ${['Remain visible and alone in the camera frame for the entire examination.','No phones, notes, additional screens, headphones, or other applications.','Do not attempt to leave the exam window — it is locked and focus loss is recorded.','The timer is controlled by the PCI server; if you disconnect it keeps running per policy, and you resume exactly where you left off.','Live chat with the proctor desk is available throughout your exam.'].map(r=>`<div class="bullet"><div class="d"></div><span>${r}</span></div>`).join('')}
+  <div class="note">Breaching these rules may invalidate your result. Integrity events are logged with timestamps and reviewed by PCI. Your answers save to the server every few seconds.</div>
+  <button class="btn block" onclick="show('exam')">I understand — start examination</button>
+ </div>`;
+}
+function drawSubmitted(){
+ host.innerHTML=`<div class="center" style="max-width:600px;text-align:center">
+  <div class="result-ring"><svg width="150" height="150" style="transform:rotate(-90deg)"><circle cx="75" cy="75" r="62" fill="none" stroke="#22304A" stroke-width="12"/><circle cx="75" cy="75" r="62" fill="none" stroke="#4ADE80" stroke-width="12" stroke-linecap="round" stroke-dasharray="389.6" stroke-dashoffset="70"/></svg><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><b class="disp" style="font-size:32px">82%</b><span style="font-size:10.5px;color:var(--muted);letter-spacing:.08em">SCORE</span></div></div>
+  <div class="verdict">PASS</div>
+  <p class="lead" style="text-align:center">41 of 50 correct · pass mark 65%. Your full score report and PCP-AI credential are available now in your PCI Student Portal.</p>
+  <div class="note" style="text-align:left">Credential issued: <b style="color:var(--text)">PCP-AI-2026-04812</b> — verifiable from the portal. This exam window is now closed.</div>
+  <button class="btn" onclick="alert('The secure client would close and hand back to the portal.')">Close</button>
+ </div>`;
+}
+const R={check:drawCheck,identity:drawIdentity,roomscan:drawRoomscan,rules:drawRules,exam:drawExam,submitted:drawSubmitted};
+function show(s){
+ document.querySelectorAll('#sw button').forEach(b=>b.classList.toggle('on',b.dataset.s===s));
+ slabel.textContent=LABELS[s];
+ timerEl.parentElement.style.visibility=(s==='exam')?'visible':'hidden';
+ const am=document.getElementById('aimon');if(am)am.style.display=(s==='exam')?'flex':'none';
+ R[s]();
+}
+document.querySelectorAll('#sw button').forEach(b=>b.onclick=()=>show(b.dataset.s));
+// live timer
+let secs=89*60+12;
+setInterval(()=>{secs--;const m=Math.floor(secs/60),s=secs%60;timerEl.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;timerEl.classList.toggle('low',secs<300);},1000);
+show('exam');
+</script>
+</body></html>
