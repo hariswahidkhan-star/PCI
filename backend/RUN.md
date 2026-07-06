@@ -65,7 +65,7 @@ First-run admin (from `Data/Migrate.cs`): `owner@pci.local` / `changeme-owner` �
 | `ALLOWED_ORIGIN` | prod | explicit origin; **wildcard is rejected in prod** |
 | `SMTP_HOST` (+user/pass/port) | email on | without it, emails print to console |
 | `STORAGE_ROOT` | prod | evidence/attachment files; use durable storage |
-| `STORAGE_PROVIDER` | optional | `local` (default). Object storage is a documented seam — see §7 |
+| `STORAGE_PROVIDER` | optional | `local` (default) or `s3` (any S3-compatible store; needs `S3_BUCKET`, optional `S3_ENDPOINT` for MinIO/R2, `S3_REGION`, AWS creds via the standard env vars) |
 | `ENABLE_LEGACY_ADMIN_TOKEN` | never in prod | legacy `x-admin-token`; the app **errors on boot** if this is on in prod |
 | `ALLOW_INSECURE_PRODUCTION` | escape hatch | set `true` to boot despite config errors (**not recommended**) |
 
@@ -140,8 +140,11 @@ python3 tests/storage_test.py     # storage abstraction: MIME/size/sniff/travers
 dotnet test
 ```
 
-CI (`.github/workflows/build.yml`) does the full loop: **restore → build → run the six logic suites →
-JS syntax gate → boot the backend → live smoke suite → system-check probe.**
+CI (`.github/workflows/build.yml`, repo root) does the full loop: **restore → build → six logic suites →
+JS syntax gate → boot the backend → live smoke suite (52 checks) → adversarial integration suite
+(75 assertions) → 500-sweep (every route × anon/student/owner) → system-check probe**, plus the
+secureexam solution on `windows-latest` and its tests on Linux. The S3/moto live test also runs,
+non-blocking (moto is unreliable on hosted runners; the test is authoritative locally).
 
 ---
 
@@ -158,13 +161,16 @@ readiness pass (2026-07-06), run on a real Linux machine with real NuGet. See
 | Backend **boots** as the real app | ✅ **executed** | fresh boot + reboot; idempotent migrations verified (identical schema fingerprint, no duplicate seeds) |
 | Backend serves **real HTTP requests** | ✅ **executed** | live smoke suite 52/52; admin GET sweep 0×500 |
 | Backend **logic** (scoring, lifecycle, RBAC, storage, settings) | ✅ verified | 61 assertions across 6 SQLite suites |
-| **Adversarial end-to-end** (payments, exam, attacks, RBAC, storage, headers) | ✅ **executed** | `tests/integration_test.py` — 66 assertions, live HTTP |
+| **Adversarial end-to-end** (payments, exam, attacks, RBAC, storage, headers) | ✅ **executed** | `tests/integration_test.py` — 75 assertions, live HTTP (incl. 9 regressions from the adversarial self-review) |
+| **500-sweep** (every route × anon/student/owner) | ✅ **executed** | `tests/sweep_500_test.py` — 456 calls, 0 server errors; found the BCrypt login-crash bug |
+| **S3 object-storage provider** | ✅ **executed locally** | `tests/storage_s3_test.py` vs a live moto S3 server — 9/9 (upload→`s3:` ref, authed fetch streams from S3, retention purge, no-bucket fallback). Re-run against a real bucket before production use |
 | **Stripe** webhook settlement + replay idempotency | ✅ **executed** | self-signed events (Stripe.net pins api_version 2024-06-20) — settle-once + replay-noop proven. *Live Stripe account not exercised* (no real keys); the checkout-session **create** call needs a real `sk_test_`/`sk_live_` key |
 | Security headers / CORS / body cap | ✅ **executed** | CSP+nosniff+frame-ancestors present; ALLOWED_ORIGIN honoured; >6 MB body rejected |
 | Production config validation | ✅ **executed** | refuses to boot (exit 78) on unsafe config; boots clean with correct vars; `system-check` `ok:true` |
 | Desktop **Core** + **xUnit tests** | ✅ **executed** | 21/21 tests (incl. held-result screen); Core RunnableChecks 15/15 host-pinning attacks |
 | Desktop **App** (WPF/OpenCV/NAudio) builds/runs; `.exe` published | ⚠️ **Windows-only — not run here** | compiles on the `windows-latest` CI job; publishing the `.exe` and the live `pciexam://` launch flow must be done on Windows (see §4 / §8) |
-| Load / Lighthouse | ⚠️ deferred | recommended manual pass on the deployed URL |
+| Lighthouse (local, against the live app) | ✅ **executed** | 5 key pages: performance 93–100, accessibility 91–96, best-practices 100, SEO 100. Re-run on the deployed URL (network conditions differ) |
+| Load testing | ⚠️ deferred | needs a real deployment |
 
 **Honest bottom line:** the backend, website, and desktop Core are **executed and adversarially tested** —
 not merely compile-clean. The single remaining gap that cannot be closed on Linux is running/publishing the
@@ -178,9 +184,10 @@ backend integration suite, so the Windows step is build-and-QA, not new logic.
 
 - **Desktop WPF `.exe`** must be built, published and QA'd on **Windows** — see §8. The security logic is
   tested cross-platform; the GUI/kiosk/camera path needs a real Windows machine.
-- **Object storage** (`STORAGE_PROVIDER != local`) is a **documented seam**, not a live S3 integration —
-  it falls back to local with a warning. All call sites are provider-agnostic, so wiring
-  `PutObject`/`GetObject` is isolated to `Core/Storage.cs`.
+- **Object storage (S3)** is now **wired** (`STORAGE_PROVIDER=s3` + `S3_BUCKET`; optional `S3_ENDPOINT`
+  for MinIO/R2) and live-tested against a moto mock (9/9). It has **not** been exercised against a real
+  AWS/MinIO deployment — do that before relying on it. Missing `S3_BUCKET` falls back to local with a
+  boot warning; `local:`/`s3:` references coexist, so migration is safe.
 - **TOTP 2FA** is deliberately "coming soon" — `/api/me/2fa` never enables a factor and never claims
   protection (no toggle without a login challenge). Full TOTP is future work.
 - **Live Stripe account** is not exercised here (no real keys). The webhook path is proven with correctly
