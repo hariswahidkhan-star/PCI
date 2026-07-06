@@ -543,6 +543,16 @@ def run(proc):
     with urllib.request.urlopen(r) as resp: csp = resp.headers.get("Content-Security-Policy","")
     chk("R9 CSP allows blob: in frame-src (admin evidence viewer)", "frame-src 'self' blob:" in csp, csp[:120])
 
+    # ---------- 9c2. Demo student seed (first-run only, like the bootstrap owner) ----------
+    print("\n=== 9c2. Demo student seed ===")
+    c, dl = jget("POST", "/api/login", body={"email": "student@pci.local", "password": "changeme-student"})
+    chk("9c2a demo student can log in on a fresh database", c==200 and bool(dl.get("token")), dl)
+    con = dbconn()
+    dgrants = [con.execute("SELECT COUNT(*) FROM %s WHERE user_id=(SELECT id FROM users WHERE email='student@pci.local')" % t).fetchone()[0]
+               for t in ("memberships", "exam_entitlements", "issued_credentials")]
+    con.close()
+    chk("9c2b demo student granted nothing (account only)", dgrants == [0, 0, 0], dgrants)
+
     # ---------- 9d. Manual onboarding + email delivery (mailer was missing entirely) ----------
     print("\n=== 9d. Admin add-member + mailer ===")
     # create a member from the admin panel; the setup link comes back in the response

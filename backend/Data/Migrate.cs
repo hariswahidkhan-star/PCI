@@ -91,5 +91,25 @@ public static class Migrate
             }
         }
         catch { /* admin_users may not exist on a very first pass; ignored */ }
+
+        // Demo student on first run (users table empty): lets the operator try the student panel
+        // before payments/SMTP are configured. Mirrors the bootstrap-owner pattern: known default
+        // password, loudly logged, and expected to be changed or deactivated before launch. The
+        // account carries NO membership, entitlement or credential — logging in shows an empty
+        // dashboard; payment remains the only path to anything that matters.
+        try
+        {
+            var n = db.Scalar<long>("SELECT COUNT(*) FROM users");
+            if (n == 0)
+            {
+                var email = (Environment.GetEnvironmentVariable("DEMO_STUDENT_EMAIL") ?? "student@pci.local").ToLowerInvariant();
+                var pw = Environment.GetEnvironmentVariable("DEMO_STUDENT_PASSWORD") ?? "changeme-student";
+                var uid = db.ExecuteReturningId("INSERT INTO users(email,first_name,last_name,role,status,password_hash) VALUES(?,?,?, 'student','active',?)",
+                    email, "Demo", "Student", BCrypt.Net.BCrypt.HashPassword(pw));
+                db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", uid);
+                Console.WriteLine($"[seed] demo student created: {email} — change the password or deactivate this account before launch");
+            }
+        }
+        catch { /* users may not exist on a very first pass; ignored */ }
     }
 }
