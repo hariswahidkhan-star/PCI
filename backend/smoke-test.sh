@@ -2,6 +2,8 @@
 # Live smoke suite for the .NET backend — identical assertions to the Node original (24 checks).
 set -uo pipefail
 B="http://127.0.0.1:8080"; pass=0; fail=0
+# optional env (default empty so set -u doesn't abort): ST = student session token
+ADMIN_TOKEN="${ADMIN_TOKEN:-}"; ST="${ST:-}"
 j(){ curl -s -X "$1" "$B$2" "${@:3}"; }
 chk(){ local n="$1" cond="$2"; if [ "$cond" = "1" ]; then echo "  PASS  $n"; pass=$((pass+1)); else echo "  FAIL  $n"; fail=$((fail+1)); fi; }
 code(){ curl -s -o /dev/null -w "%{http_code}" -X "$1" "$B$2" "${@:3}"; }
@@ -27,7 +29,9 @@ chk "S10 manager BLOCKED team 403" "$([ "$(code GET /api/admin/team -H "Authoriz
 chk "S11a manager CAN set exam" "$([ "$(j PATCH /api/admin/settings -H "Authorization: Bearer $T2" -H 'Content-Type: application/json' -d '{"exam_pass_mark_pct":"70"}' | grep -c rejected)" = 0 ] && echo 1)"
 chk "S11b website key REJECTED" "$([ "$(j PATCH /api/admin/settings -H "Authorization: Bearer $T2" -H 'Content-Type: application/json' -d '{"web_membership_price":"111"}' | grep -c web_membership_price)" = 1 ] && echo 1)"
 chk "S12 price unchanged" "$([ "$(j GET /api/content | python3 -c 'import sys,json;d=json.load(sys.stdin);print(d["settings"].get("web_membership_price"))')" = 99 ] && echo 1)"
-chk "S13 legacy token = owner" "$([ "$(j GET /api/admin/me -H "x-admin-token: $ADMIN_TOKEN" | grep -c '"role":"owner"')" = 1 ] && echo 1)"
+# The .NET backend removed the legacy shared x-admin-token entirely (Core/Auth.cs):
+# it must NEVER authenticate, with any value, in any environment.
+chk "S13 legacy x-admin-token is dead" "$([ "$(j GET /api/admin/me -H "x-admin-token: ${ADMIN_TOKEN:-changeme}" | grep -c '"role"')" = 0 ] && echo 1)"
 chk "S14 pass mark persisted 70" "$([ "$(j GET /api/admin/settings -H "Authorization: Bearer $OT" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("exam_pass_mark_pct"))')" = 70 ] && echo 1)"
 j PATCH /api/admin/settings -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"web_maintenance_mode":"1"}' >/dev/null
 chk "S15a maintenance ON → 503" "$([ "$(code GET /)" = 503 ] && echo 1)"

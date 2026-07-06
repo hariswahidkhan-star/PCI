@@ -46,7 +46,9 @@ print(f"3c. pdf accepted: {'PASS' if validate('data:application/pdf;base64,JVBER
 d.execute("INSERT INTO tickets(id,user_id,reference,subject,category,status) VALUES(7,1,'T-1','Help','general','open')")
 t=d.execute("SELECT id FROM tickets WHERE id=7 AND user_id=2").fetchone()
 print(f"3d. User 2 attaching to user 1's ticket: {'PASS (rejected)' if t is None else 'FAIL'}")
-d.execute("INSERT INTO support_attachments(ticket_id,user_id,filename,mime,size_bytes,data_uri) VALUES(7,1,'receipt.pdf','application/pdf',100,'data:application/pdf;base64,JVBERi0=')")
+# mirrors the production INSERT in Endpoints/Casework.cs: bytes live in blob storage,
+# the row carries storage_ref + metadata only (data_uri is legacy/nullable)
+d.execute("INSERT INTO support_attachments(ticket_id,user_id,filename,mime,size_bytes,storage_ref,sha256) VALUES(7,1,'receipt.pdf','application/pdf',100,'local:attachments/ab/abcdef.pdf','abcdef')")
 n=d.execute("SELECT COUNT(*) c FROM support_attachments WHERE ticket_id=7").fetchone()['c']
 print(f"3e. Attachment stored + listable: {n} -> {'PASS' if n==1 else 'FAIL'}")
 
