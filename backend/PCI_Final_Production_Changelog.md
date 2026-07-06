@@ -112,8 +112,10 @@ for MinIO/R2, AWS SDK default credential chain). `Put`/`Get`/`PurgeOlderThan` ro
 (`local:` vs `s3:`) so mixed references survive a migration; missing `S3_BUCKET` falls back to local with a
 warning (never silently drops data). New `tests/storage_s3_test.py` proves it live against a local **moto**
 S3 server (**9/9**): upload lands in the bucket, DB holds an `s3:` reference only, the authed fetch streams
-bytes back from S3, retention purges aged S3 objects, and the no-bucket fallback warns. Both new suites are
-in CI.
+bytes back from S3, retention purges aged S3 objects, and the no-bucket fallback warns. The 500-sweep runs
+as a blocking CI gate; the S3 live test runs in CI **non-blocking** (`continue-on-error`) because moto does
+not run reliably on the hosted runner — it is authoritative locally, and should be re-run against a real
+bucket before production use.
 
 ### Adversarial branch review — 11 confirmed defects fixed
 A four-dimension review (business-rules / security / desktop-contract / test-validity) with per-finding
