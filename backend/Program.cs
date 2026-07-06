@@ -11,9 +11,12 @@ builder.WebHost.ConfigureKestrel(o => o.Limits.MaxRequestBodySize = 6_000_000);
 
 // ---- DB: open + auto-migrate (BEFORE Build so the retention hosted service can depend on it) ----
 var dbPath = Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "./pci.db";
-var schemaPath = Path.Combine(AppContext.BaseDirectory, "schema.sql");
-if (!File.Exists(schemaPath)) schemaPath = "schema.sql";
 var db = new Db(dbPath);
+// the base schema is dialect-specific: schema.mysql.sql (generated from schema.sql) for MySQL.
+var schemaFile = db.Provider == Db.Kind.MySql ? "schema.mysql.sql" : "schema.sql";
+var schemaPath = Path.Combine(AppContext.BaseDirectory, schemaFile);
+if (!File.Exists(schemaPath)) schemaPath = schemaFile;
+Console.WriteLine($"[boot] database provider: {db.Provider} (schema: {schemaFile})");
 Migrate.Run(db, schemaPath);
 builder.Services.AddSingleton(db);
 // Scheduled retention: purge stored artefacts past evidence_retention_days, daily (manual endpoint stays).

@@ -85,6 +85,37 @@ jobs:
           # 401 (needs owner auth) proves the route exists and is gated; 200 would require a session.
           if [ "$code" = "401" ] || [ "$code" = "200" ]; then echo "system-check gated OK ($code)"; else echo "::error::system-check returned $code"; exit 1; fi
 
+  backend-mysql:
+    # Proves the dual-provider backend runs identically on MySQL: same adversarial suite, MySQL-backed.
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: backend } }
+    services:
+      mysql:
+        image: mariadb:10.11
+        env: { MARIADB_ROOT_PASSWORD: root, MARIADB_DATABASE: pci, MARIADB_USER: pci, MARIADB_PASSWORD: pcipass }
+        ports: [ '3306:3306' ]
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - run: dotnet build -c Release
+      - name: Grant the pci user database-create rights (for the test harness reset)
+        run: mysql -h 127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'pci'@'%'; FLUSH PRIVILEGES;"
+      - name: Adversarial integration suite against MySQL
+        env:
+          TEST_DB_PROVIDER: mysql
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_USER: pci
+          MYSQL_PASSWORD: pcipass
+          MYSQL_DATABASE: pci
+          MYSQL_SSL: 'false'
+        run: |
+          pip install --quiet --break-system-packages pymysql || pip install --quiet pymysql
+          python3 tests/integration_test.py
+
   secureexam-windows:
     runs-on: windows-latest      # WPF client needs Windows to compile
     defaults: { run: { working-directory: secureexam } }

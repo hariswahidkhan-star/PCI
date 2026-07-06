@@ -89,16 +89,65 @@ def sign_and_send_webhook(session_id, email, product, pi_id, metadata=None, amou
     return req("POST", "/api/webhook", raw=payload.encode(),
                headers={"Content-Type": "application/json", "Stripe-Signature": f"t={ts},v1={sig}"})
 
-def dbconn(): return sqlite3.connect(DB)
+# The same suite runs against SQLite (default) or MySQL (TEST_DB_PROVIDER=mysql) so parity is proven,
+# not assumed. On MySQL the DB-surgery statements below are translated (? → %s, datetime() → MySQL) by
+# a thin wrapper, so the test body is identical for both providers.
+PROVIDER = os.environ.get("TEST_DB_PROVIDER", "sqlite").lower()
+MYSQL = dict(host=os.environ.get("MYSQL_HOST", "127.0.0.1"), port=int(os.environ.get("MYSQL_PORT", "3306")),
+             user=os.environ.get("MYSQL_USER", "pci"), password=os.environ.get("MYSQL_PASSWORD", "pcipass"),
+             database=os.environ.get("MYSQL_DATABASE", "pci"))
+
+def _mysql_translate(sql):
+    # Percent literals in the SQL (DATE_FORMAT specifiers) are written as %% so pymysql's
+    # `query % args` step collapses them back to %. f-strings (not %-format) are used here so the
+    # escaping survives. ? placeholders become %s.
+    import re
+    sql = sql.replace("?", "%s")
+    sql = re.sub(r"datetime\('now',\s*'([+-]?\d+)\s+(\w+)'\)",
+                 lambda m: f"DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL {m.group(1)} {m.group(2).rstrip('s').upper()}),'%%Y-%%m-%%d %%H:%%i:%%s')",
+                 sql)
+    sql = sql.replace("datetime('now')", "DATE_FORMAT(UTC_TIMESTAMP(),'%%Y-%%m-%%d %%H:%%i:%%s')")
+    return sql
+
+class _MyWrap:
+    """Minimal drop-in for sqlite3.Connection over pymysql: execute()/commit()/close().
+    Always passes an args tuple to pymysql so `query % args` runs and collapses %% → % consistently."""
+    def __init__(self, conn): self.c = conn
+    def execute(self, sql, params=None):
+        cur = self.c.cursor()
+        cur.execute(_mysql_translate(sql), params if params is not None else ())
+        return cur
+    def commit(self): self.c.commit()
+    def close(self): self.c.close()
+
+def dbconn():
+    if PROVIDER == "mysql":
+        import pymysql
+        return _MyWrap(pymysql.connect(**MYSQL))
+    return sqlite3.connect(DB)
+
+def _reset_mysql():
+    import pymysql
+    root = pymysql.connect(host=MYSQL["host"], port=MYSQL["port"], user=MYSQL["user"], password=MYSQL["password"])
+    cur = root.cursor()
+    cur.execute("DROP DATABASE IF EXISTS " + MYSQL["database"])
+    cur.execute("CREATE DATABASE " + MYSQL["database"] + " CHARACTER SET utf8mb4")
+    root.commit(); root.close()
 
 # ---- server lifecycle ----
 def boot():
-    for f in (DB, DB+"-wal", DB+"-shm"):
-        try: os.remove(f)
-        except OSError: pass
-    env = dict(os.environ, DATABASE_FILE=DB, PORT=str(PORT), STORAGE_ROOT=STORAGE,
-               STRIPE_SECRET_KEY=STRIPE_KEY, STRIPE_WEBHOOK_SECRET=WEBHOOK_SECRET,
-               ASPNETCORE_ENVIRONMENT="Development")
+    if PROVIDER == "mysql":
+        _reset_mysql()
+        env = dict(os.environ, DB_PROVIDER="mysql", PORT=str(PORT), STORAGE_ROOT=STORAGE,
+                   STRIPE_SECRET_KEY=STRIPE_KEY, STRIPE_WEBHOOK_SECRET=WEBHOOK_SECRET,
+                   ASPNETCORE_ENVIRONMENT="Development", DATABASE_FILE=DB)
+    else:
+        for f in (DB, DB+"-wal", DB+"-shm"):
+            try: os.remove(f)
+            except OSError: pass
+        env = dict(os.environ, DATABASE_FILE=DB, PORT=str(PORT), STORAGE_ROOT=STORAGE,
+                   STRIPE_SECRET_KEY=STRIPE_KEY, STRIPE_WEBHOOK_SECRET=WEBHOOK_SECRET,
+                   ASPNETCORE_ENVIRONMENT="Development")
     proc = subprocess.Popen(["dotnet", DLL], env=env, cwd=BACKEND,
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     for _ in range(60):
