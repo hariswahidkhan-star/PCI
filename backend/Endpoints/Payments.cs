@@ -159,6 +159,10 @@ public static class Payments
                         if (sess is not null) db.Execute("UPDATE enrollment_sessions SET session_status='paid', last_activity_at=datetime('now') WHERE id=?", sess["id"]);
                         var token = Security.RandomHex(32);
                         db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+7 day'))", userId, Security.Sha(token));
+                        // Deliver the setup link — without this email the customer has paid but can
+                        // never set a password or reach the student panel.
+                        var mailBase = Mailer.BaseUrl(req);
+                        Mailer.SendWelcome(db, userId, email, m.GetValueOrDefault("first_name"), Mailer.SetupLink(mailBase, token), mailBase);
 
                         if (product == "exam" || product == "bundle")
                         {

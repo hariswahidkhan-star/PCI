@@ -1,0 +1,104 @@
+using PCI.Backend.Data;
+
+namespace PCI.Backend.Core;
+
+/// <summary>
+/// The platform's one email sender. When SMTP_HOST is configured it sends real mail
+/// (SMTP_PORT/SMTP_USER/SMTP_PASS/SMTP_FROM); otherwise it prints the complete message to the
+/// console — exactly what the boot banner promises. Every attempt is recorded in email_logs
+/// (status: sent | console | failed) so the admin Email-log section reflects reality.
+///
+/// This class existed in the Node original but was never ported: tokens for welcome/setup and
+/// password-reset links were being minted and then silently lost, so a paying customer could
+/// never receive the link that lets them set a password and log in.
+/// </summary>
+public static class Mailer
+{
+    static string? E(string k) => Environment.GetEnvironmentVariable(k);
+
+    /// <summary>Public base URL for links in emails: APP_BASE_URL/SITE_BASE_URL, else the
+    /// origin of the triggering request (correct for single-service deployments).</summary>
+    public static string BaseUrl(HttpRequest? req = null)
+    {
+        var b = E("APP_BASE_URL") ?? E("SITE_BASE_URL");
+        if (!string.IsNullOrWhiteSpace(b)) return b.TrimEnd('/');
+        if (req is not null) return $"{req.Scheme}://{req.Host}";
+        return "";
+    }
+
+    /// <summary>The link a candidate opens to set (or reset) their password.</summary>
+    public static string SetupLink(string baseUrl, string plaintextToken)
+        => $"{baseUrl}/reset-password.html?token={plaintextToken}";
+
+    /// <summary>Load emails/&lt;name&gt;.html and substitute {KEY} and {{KEY}} placeholders.
+    /// Falls back to a minimal HTML shell if the template file is missing.</summary>
+    public static string Template(string name, Dictionary<string, string> vars)
+    {
+        string html;
+        var path = Path.Combine(AppContext.BaseDirectory, "emails", name + ".html");
+        if (!File.Exists(path)) path = Path.Combine("emails", name + ".html");
+        if (File.Exists(path)) html = File.ReadAllText(path);
+        else html = "<html><body>{{BODY}}</body></html>";
+        foreach (var (k, v) in vars)
+            html = html.Replace("{{" + k + "}}", v).Replace("{" + k + "}", v);
+        return html;
+    }
+
+    /// <summary>Send (or console-print) an email and record it in email_logs. Never throws —
+    /// a mail failure must not break the transaction that triggered it (payment settlement,
+    /// password reset); the failure is visible in email_logs and the server log instead.</summary>
+    public static void Send(Db db, long? userId, string to, string emailType, string subject, string html)
+    {
+        var host = E("SMTP_HOST");
+        string status;
+        if (string.IsNullOrWhiteSpace(host))
+        {
+            // Console sink (development / SMTP not yet configured) — print enough to act on,
+            // including any links, exactly as the boot message promises.
+            Console.WriteLine($"[email→console] to={to} type={emailType} subject=\"{subject}\"");
+            foreach (var link in ExtractLinks(html)) Console.WriteLine($"[email→console]   link: {link}");
+            status = "console";
+        }
+        else
+        {
+            try
+            {
+                var from = E("SMTP_FROM") ?? E("SMTP_USER") ?? "no-reply@projectcontrolsinstitute.org";
+                using var client = new System.Net.Mail.SmtpClient(host, int.TryParse(E("SMTP_PORT"), out var p) ? p : 587);
+                var user = E("SMTP_USER");
+                if (!string.IsNullOrEmpty(user)) client.Credentials = new System.Net.NetworkCredential(user, E("SMTP_PASS"));
+                client.EnableSsl = !string.Equals(E("SMTP_SSL"), "false", StringComparison.OrdinalIgnoreCase);
+                using var msg = new System.Net.Mail.MailMessage(from, to, subject, html) { IsBodyHtml = true };
+                client.Send(msg);
+                status = "sent";
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"[email] send failed to {to} ({emailType}): {ex.Message}");
+                status = "failed";
+            }
+        }
+        try { db.Execute("INSERT INTO email_logs(user_id,email,email_type,subject,status) VALUES(?,?,?,?,?)", userId, to, emailType, subject, status); }
+        catch { /* the log row must never break the caller */ }
+    }
+
+    /// <summary>Convenience: welcome email with the password-setup link (used by the payment
+    /// webhook, admin member creation and resend-setup).</summary>
+    public static void SendWelcome(Db db, long userId, string to, string? firstName, string setupUrl, string baseUrl)
+    {
+        var html = Template("welcome", new()
+        {
+            ["FIRST_NAME"] = string.IsNullOrWhiteSpace(firstName) ? "there" : firstName!,
+            ["LOGIN_URL"] = setupUrl,
+            ["DOWNLOADS_URL"] = baseUrl + "/downloads.html",
+        });
+        Send(db, userId, to, "welcome", "Welcome to PCI — set your password", html);
+    }
+
+    static IEnumerable<string> ExtractLinks(string html)
+    {
+        foreach (System.Text.RegularExpressions.Match m in
+                 System.Text.RegularExpressions.Regex.Matches(html, "href=\"(http[^\"]+)\""))
+            yield return m.Groups[1].Value;
+    }
+}

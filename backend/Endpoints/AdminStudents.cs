@@ -65,9 +65,40 @@ public static class AdminStudents
             if (u is null) return Results.Json(new { error = "no_user" }, statusCode: 404);
             var token = Security.RandomHex(32);
             db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+7 day'))", id, Security.Sha(token));
+            // Deliver the link (previously the token was minted and then silently lost), and also
+            // return it to the authenticated admin so onboarding works even before SMTP is set up.
+            var baseUrl = Mailer.BaseUrl(ctx.Request);
+            var setupUrl = Mailer.SetupLink(baseUrl, token);
+            Mailer.SendWelcome(db, id, (string)u["email"]!, H.Str(u["first_name"]), setupUrl, baseUrl);
             log(id, "resend_setup", "");
-            return J(new { ok = true });
+            return J(new { ok = true, setup_url = setupUrl });
         });
+
+        // Manual onboarding: create a student account without a payment (comps, corporate seats,
+        // support cases). Deliberately grants NOTHING beyond the account itself — no membership,
+        // no exam entitlement, no credential (payment stays the only path to those). Gated on the
+        // 'members' section (owner + student_manager). Returns the setup link so the admin can
+        // hand it over directly even before SMTP is configured.
+        app.MapPost("/api/admin/members", (HttpContext ctx) => gate(ctx.Request, "members", adm =>
+        {
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var email = (H.GetS(b, "email") ?? "").Trim().ToLowerInvariant();
+            if (!System.Text.RegularExpressions.Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                return Results.Json(new { error = "invalid_email" }, statusCode: 400);
+            if (db.QueryOne("SELECT id FROM users WHERE email=?", email) is not null)
+                return Results.Json(new { error = "email_exists" }, statusCode: 409);
+            var first = H.GetS(b, "first_name", "first") ?? "";
+            var last = H.GetS(b, "last_name", "last") ?? "";
+            var uid = db.ExecuteReturningId("INSERT INTO users(email,first_name,last_name,role,status) VALUES(?,?,?, 'student','active')", email, first, last);
+            db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", uid);
+            var token = Security.RandomHex(32);
+            db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+7 day'))", uid, Security.Sha(token));
+            var baseUrl = Mailer.BaseUrl(ctx.Request);
+            var setupUrl = Mailer.SetupLink(baseUrl, token);
+            Mailer.SendWelcome(db, uid, email, first, setupUrl, baseUrl);
+            log(uid, "member_created_by_admin", $"by admin {adm.Id}");
+            return J(new { ok = true, id = uid, setup_url = setupUrl });
+        }));
 
         app.MapPost("/api/admin/members/{id}/referral-code", (HttpContext ctx, long id) =>
         {

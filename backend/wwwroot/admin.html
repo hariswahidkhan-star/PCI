@@ -248,12 +248,6 @@ td.actions{text-align:right;white-space:nowrap}
         <div class="fld"><label>Email</label><input id="inEmail" type="email" placeholder="you@pci.org" autocomplete="username" aria-label="you@pci.org"/></div>
         <div class="fld"><label>Password</label><input id="inPass" type="password" placeholder="Your password" autocomplete="current-password" aria-label="Your password"/></div>
         <button class="btn btn-primary" id="btnLogin">Sign in</button>
-        <div class="login-alt"><button id="toTokenMode">Use admin token instead</button></div>
-      </div>
-      <div id="loginToken" style="display:none">
-        <div class="fld"><label>Admin token</label><input id="inToken" type="password" placeholder="ADMIN_TOKEN" autocomplete="off" aria-label="ADMIN_TOKEN"/></div>
-        <button class="btn btn-primary" id="btnConnect">Connect with token</button>
-        <div class="login-alt"><button id="toAcctMode">&larr; Back to sign in</button></div>
       </div>
       <div class="login-alt">No backend running yet? <button id="btnSample">Explore with sample data &rarr;</button></div>
     </div>
@@ -303,17 +297,18 @@ const BADGE={ active:'b-green',paid:'b-green',closed:'b-grey',new:'b-blue',in_pr
 const badge=s=>`<span class="badge ${BADGE[s]||'b-grey'}"><span class="dot"></span>${esc(String(s||'—').replace(/_/g,' '))}</span>`;
 const PRODUCT={ membership:'Membership', exam:'PCP-AI Exam', bundle:'Membership + Exam', renewal:'Renewal', retake:'Retake' };
 
+/* The backend accepts admin session Bearer tokens only (the legacy x-admin-token was removed
+   server-side, so a header mode for it could never authenticate). */
+const authHeaders=()=>({'Authorization':'Bearer '+state.token});
 async function apiBlob(path){
-  const authH = state.authMode==='account' ? {'Authorization':'Bearer '+state.token} : {'x-admin-token':state.token};
-  const r=await fetch(state.api.replace(/\/$/,'')+path,{headers:authH});
+  const r=await fetch(state.apiBase.replace(/\/$/,'')+path,{headers:authHeaders()}); // was state.api (undefined) — broke every evidence/attachment view in live mode
   if(!r.ok)throw new Error('http_'+r.status);
   return URL.createObjectURL(await r.blob());
 }
 async function openBlob(path){try{const url=await apiBlob(path);const w=window.open();if(w)w.document.write('<iframe src="'+url+'" style="width:100%;height:100vh;border:0"></iframe>');else location.href=url;}catch(_){toast('Could not open evidence','err');}}
 async function api(path,opts={}){
   if(state.mode==='sample') return sampleAPI(path,opts);
-  const authH = state.authMode==='account' ? {'Authorization':'Bearer '+state.token} : {'x-admin-token':state.token};
-  const r=await fetch(state.apiBase.replace(/\/$/,'')+path,{...opts,headers:{...authH,'Content-Type':'application/json',...(opts.headers||{})}});
+  const r=await fetch(state.apiBase.replace(/\/$/,'')+path,{...opts,headers:{...authHeaders(),'Content-Type':'application/json',...(opts.headers||{})}});
   if(r.status===401){ signOut(); throw new Error('unauthorized'); }
   if(!r.ok){ let code='http_'+r.status; try{ const d=await r.json(); if(d&&d.error) code=d.error; }catch(_){ } throw new Error(code); }
   const ct=r.headers.get('content-type')||''; return ct.includes('json')?r.json():r.text();
@@ -538,12 +533,37 @@ async function renderMembers(){
     <td class="num">${m.paid_total?money(m.paid_total):'<span class="em">—</span>'}</td>
     <td class="em">${fmtDate(m.created_at)}</td>
     <td class="actions"><button class="btn btn-sm" data-view="${m.id}">View</button></td></tr>`).join(''):emptyRow(cols.length,'Members appear here after their first enrolment.');
-  $('#view').innerHTML=tb+tableShell(cols,body,`<div class="tfoot"><span>${rows.length} member${rows.length===1?'':'s'}</span><button class="btn btn-sm" data-export="members">Export CSV</button></div>`);
+  $('#view').innerHTML=tb+tableShell(cols,body,`<div class="tfoot"><span>${rows.length} member${rows.length===1?'':'s'}</span><button class="btn btn-sm btn-primary" id="btnAddMember">+ Add member</button> <button class="btn btn-sm" data-export="members">Export CSV</button></div>`);
   wireToolbar(renderMembers);
   document.querySelectorAll('[data-id]').forEach(tr=>tr.onclick=e=>{ if(e.target.closest('button'))return; openMember(tr.dataset.id); });
   document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>openMember(b.dataset.view));
+  const addBtn=$('#btnAddMember'); if(addBtn)addBtn.onclick=addMemberModal;
   wireExport();
   renderCpdQueue();
+}
+/* Manual onboarding: creates the account only (no membership/entitlement/credential — payment
+   remains the sole path to those). Shows the returned password-setup link so onboarding works
+   even before SMTP is configured. */
+function addMemberModal(){
+  modal('Add member',`
+    <div class="fld"><label>Email</label><input id="amEmail" type="email" placeholder="person@example.com"/></div>
+    <div class="fld"><label>First name</label><input id="amFirst"/></div>
+    <div class="fld"><label>Last name</label><input id="amLast"/></div>
+    <div class="inline-note">Creates a student account and a password-setup link. It grants no membership, exam entitlement or credential — those still require payment.</div>
+    <div id="amMsg"></div>`,'Create account',async()=>{
+    const email=$('#amEmail').value.trim(), first=$('#amFirst').value.trim(), last=$('#amLast').value.trim();
+    const msg=$('#amMsg');
+    if(!email){ msg.innerHTML='<div class="inline-note" style="color:#c0392b">Email is required.</div>'; return false; }
+    try{
+      const r=await api('/api/admin/members',{method:'POST',body:JSON.stringify({email,first_name:first,last_name:last})});
+      msg.innerHTML=`<div class="inline-note" style="word-break:break-all"><b>Account created.</b> Send this password-setup link to the member (also emailed when SMTP is configured):<br><span class="mono" id="amLink">${esc(r.setup_url||'')}</span><br><button class="btn btn-sm" style="margin-top:6px" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.getElementById('amLink').textContent).then(()=>toast('Link copied','ok'))">Copy link</button></div>`;
+      renderMembers();
+      return false; // keep the modal open so the admin can copy the link
+    }catch(e){
+      msg.innerHTML=`<div class="inline-note" style="color:#c0392b">${e.message==='email_exists'?'That email already has an account — use “Resend setup link” on the member instead.':e.message==='invalid_email'?'Please enter a valid email address.':'Could not create the account: '+esc(e.message)}</div>`;
+      return false;
+    }
+  });
 }
 async function renderCpdQueue(){
   let rows=[]; try{rows=(await api('/api/admin/cpd?status=recorded')).rows||[];}catch(_){ }
@@ -1025,13 +1045,13 @@ async function renderSettings(){
   const eb=(e,l)=>`<button class="btn btn-sm" data-export="${e}">${sico('send')} ${l}</button>`;
   $('#view').innerHTML=`
     <div class="panel"><div class="panel-h"><h3>Connection</h3></div><div class="panel-b">
-      ${kvrows([['Mode',state.mode==='sample'?'<span class="badge b-amber">Sample data</span>':'<span class="badge b-green">Live backend</span>'],['Backend URL','<span class="mono">'+(state.mode==='sample'?'—':esc(state.apiBase||'—'))+'</span>'],['Auth','x-admin-token header']])}
+      ${kvrows([['Mode',state.mode==='sample'?'<span class="badge b-amber">Sample data</span>':'<span class="badge b-green">Live backend</span>'],['Backend URL','<span class="mono">'+(state.mode==='sample'?'—':esc(state.apiBase||'—'))+'</span>'],['Auth','Admin account session (Bearer token)']])}
       <div style="margin-top:14px"><button class="btn btn-danger btn-sm" id="setLogout">Sign out / switch backend</button></div></div></div>
     <div class="panel"><div class="panel-h"><h3>Operations</h3></div><div class="panel-b">
       <div class="drow"><span class="k">Abandoned-enrolment reminders</span><span class="v"><button class="btn btn-sm btn-primary" id="runRem">Run reminder sweep now</button></span></div>
       <div class="inline-note" style="margin-top:12px">Sends the next due reminder to in-progress enrolments (3h → 24h → 72h cadence, max 3). In production run hourly via cron or set <span class="mono">REMINDER_AUTORUN=1</span>.</div></div></div>
     <div class="panel"><div class="panel-h"><h3>Data export</h3></div><div class="panel-b"><div class="toolbar">${eb('members','Members')}${eb('payments','Payments')}${eb('enrollments','Enrolments')}${eb('credentials','Credentials')}${eb('inquiries','Enquiries')}</div></div></div>
-    <div class="panel"><div class="panel-h"><h3>Security notice</h3></div><div class="panel-b"><div class="inline-note">This console authenticates with a single shared <b>admin token</b>. Before production, put it behind proper admin authentication (individual accounts, SSO/2FA, IP allow-listing and per-action authorisation). Never expose the token in client-side code or shared links.</div></div></div>`;
+    <div class="panel"><div class="panel-h"><h3>Security</h3></div><div class="panel-b"><div class="inline-note">Each administrator signs in with an individual account; access is role-based per section (owner, website / student / exam manager, viewer) and every action is attributed in the audit log. Use strong unique passwords and remove accounts promptly when staff leave. Two-factor authentication is coming soon.</div></div></div>`;
   $('#setLogout').onclick=signOut;
   $('#runRem').onclick=async()=>{const btn=$('#runRem');btn.disabled=true;try{const r=await api('/api/admin/run-reminders',{method:'POST'});toast('Reminder sweep complete: '+(r.reminders_sent||0)+' sent','ok');}catch(e){toast('Failed','err');}btn.disabled=false;};
   wireExport();
@@ -1039,7 +1059,7 @@ async function renderSettings(){
 function wireExport(){ document.querySelectorAll('[data-export]').forEach(b=>b.onclick=()=>doExport(b.dataset.export)); }
 async function doExport(entity){
   if(state.mode==='sample'){ toast('Export is available in live mode','err'); return; }
-  try{ const r=await fetch(state.apiBase.replace(/\/$/,'')+'/api/admin/export?entity='+entity,{headers:{'x-admin-token':state.token}}); const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='pci-'+entity+'.csv'; a.click(); URL.revokeObjectURL(url); toast('Exported '+entity,'ok'); }catch(e){ toast('Export failed','err'); }
+  try{ const r=await fetch(state.apiBase.replace(/\/$/,'')+'/api/admin/export?entity='+entity,{headers:authHeaders()}); if(!r.ok)throw new Error('http_'+r.status); const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='pci-'+entity+'.csv'; a.click(); URL.revokeObjectURL(url); toast('Exported '+entity,'ok'); }catch(e){ toast('Export failed','err'); }
 }
 
 /* ---------- APP SETTINGS (website / student panel / live exam) ---------- */
@@ -1302,18 +1322,8 @@ function closeModal(){ $('#modalScrim').classList.remove('open'); }
 $('#modalScrim').onclick=e=>{ if(e.target.id==='modalScrim') closeModal(); };
 window.closeDrawer=closeDrawer; window.closeModal=closeModal;
 
-/* ---------- auth ---------- */
-async function tryConnect(a,t){ state.apiBase=a; state.token=t; state.mode='live'; state.authMode='token'; await api('/api/admin/overview'); try{const me=await api('/api/admin/me'); state.me=me; state.perms=me.permissions||[];}catch(_){ state.perms=null; } store.set('pci_api',a); store.set('pci_tok',t); store.set('pci_mode','live'); store.set('pci_authmode','token'); }
+/* ---------- auth (individual admin accounts only — the legacy shared token is dead server-side) ---------- */
 (function adminPrefill(){try{const el=$('#inApi');const o=location.protocol.startsWith('http')?location.origin:'';if(el&&!el.value)el.value=store.get('pci_api')||o;}catch(_){}})();
-$('#btnConnect').onclick=async()=>{
-  const a=($('#inApi').value.trim()||(location.protocol.startsWith('http')?location.origin:'')),t=$('#inToken').value.trim(),err=$('#loginErr'); err.style.display='none';
-  if(!a||!t){ err.textContent='Enter both the backend URL and admin token.'; err.style.display='block'; return; }
-  const btn=$('#btnConnect'); btn.disabled=true; btn.textContent='Connecting…';
-  try{ await tryConnect(a,t); enterApp(); }catch(e){ err.textContent=e.message==='unauthorized'?'Invalid admin token for this backend.':'Could not reach the backend. Check the URL and CORS settings.'; err.style.display='block'; }
-  btn.disabled=false; btn.textContent='Connect';
-};
-$('#toTokenMode').onclick=()=>{ $('#loginAcct').style.display='none'; $('#loginToken').style.display='block'; };
-$('#toAcctMode').onclick=()=>{ $('#loginToken').style.display='none'; $('#loginAcct').style.display='block'; };
 $('#btnLogin').onclick=async()=>{
   const a=($('#inApi').value.trim()||(location.protocol.startsWith('http')?location.origin:'')),email=$('#inEmail').value.trim(),pass=$('#inPass').value,err=$('#loginErr'); err.style.display='none';
   if(!a||!email||!pass){ err.textContent='Enter the backend URL, email and password.'; err.style.display='block'; return; }

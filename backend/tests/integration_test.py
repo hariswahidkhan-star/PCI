@@ -543,6 +543,46 @@ def run(proc):
     with urllib.request.urlopen(r) as resp: csp = resp.headers.get("Content-Security-Policy","")
     chk("R9 CSP allows blob: in frame-src (admin evidence viewer)", "frame-src 'self' blob:" in csp, csp[:120])
 
+    # ---------- 9d. Manual onboarding + email delivery (mailer was missing entirely) ----------
+    print("\n=== 9d. Admin add-member + mailer ===")
+    # create a member from the admin panel; the setup link comes back in the response
+    c, am = jget("POST", "/api/admin/members", token=admin, body={"email": "manual@ex.co", "first_name": "Manu", "last_name": "Al"})
+    chk("9d1 admin creates member + gets setup link", c==200 and "reset-password.html?token=" in (am.get("setup_url") or ""), am)
+    # the link works end-to-end: set password → student login (the full onboarding journey)
+    mtoken = am["setup_url"].split("token=")[1]
+    c, sp = jget("POST", "/api/set-password", body={"token": mtoken, "password": "Manual-Pass-1!"})
+    chk("9d2 setup link sets a password", c==200 and sp.get("ok") is True, sp)
+    c, lg = jget("POST", "/api/login", body={"email": "manual@ex.co", "password": "Manual-Pass-1!"})
+    chk("9d3 manually-created member can log into the student panel", c==200 and bool(lg.get("token")), lg)
+    # created account grants NOTHING beyond login: no membership, no entitlement, no credential
+    con = dbconn()
+    grants = [con.execute(f"SELECT COUNT(*) FROM {t} WHERE user_id=(SELECT id FROM users WHERE email='manual@ex.co')").fetchone()[0]
+              for t in ("memberships", "exam_entitlements", "issued_credentials")]
+    con.close()
+    chk("9d4 manual account grants no membership/entitlement/credential", grants == [0, 0, 0], grants)
+    # duplicate email → 409; garbage email → 400
+    chk("9d5 duplicate email rejected (409)", jget("POST", "/api/admin/members", token=admin, body={"email": "manual@ex.co"})[0] == 409)
+    chk("9d6 invalid email rejected (400)", jget("POST", "/api/admin/members", token=admin, body={"email": "not-an-email"})[0] == 400)
+    # RBAC: exam_manager may not create members (members is a student-section permission)
+    c, xb = jget("POST", "/api/admin/team", token=admin, body={"email": "exm2@pci.test", "name": "X", "role": "exam_manager"})
+    c, xl = jget("POST", "/api/admin/auth/login", body={"email": "exm2@pci.test", "password": xb.get("temp_password", "")})
+    chk("9d7 exam_manager BLOCKED from creating members (403)", jget("POST", "/api/admin/members", token=xl.get("token"), body={"email": "x2@ex.co"})[0] == 403)
+    # resend-setup now returns the link too (previously the token was minted and lost)
+    con = dbconn(); mid = con.execute("SELECT id FROM users WHERE email='manual@ex.co'").fetchone()[0]; con.close()
+    c, rs = jget("POST", f"/api/admin/members/{mid}/resend-setup", token=admin, body={})
+    chk("9d8 resend-setup returns a fresh setup link", c==200 and "reset-password.html?token=" in (rs.get("setup_url") or ""), rs)
+    # every delivery attempt is recorded in email_logs (welcome ×2 here + webhook settlements earlier)
+    con = dbconn()
+    welcomes = con.execute("SELECT COUNT(*) FROM email_logs WHERE email_type='welcome'").fetchone()[0]
+    con.close()
+    chk("9d9 email_logs records welcome deliveries", welcomes >= 2, welcomes)
+    # forgot-password now actually delivers a reset email (was a silent dead end)
+    req("POST", "/api/forgot-password", body={"email": "manual@ex.co"})
+    con = dbconn()
+    resets = con.execute("SELECT COUNT(*) FROM email_logs WHERE email_type='password_reset' AND email='manual@ex.co'").fetchone()[0]
+    con.close()
+    chk("9d10 forgot-password records a reset delivery", resets == 1, resets)
+
     # ---------- 10. Rate limits (LAST: exhausts the /api/login window for this IP) ----------
     print("\n=== 10. Rate limits ===")
     hit_429 = False; retry_after = None

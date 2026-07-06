@@ -117,6 +117,10 @@ public static class Public
                 {
                     var token = Security.RandomHex(32);
                     db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+2 day'))", u["id"], Security.Sha(token));
+                    var baseUrl = Mailer.BaseUrl(req);
+                    Mailer.Send(db, H.Ln(u["id"]), email, "password_reset", "Reset your PCI password",
+                        Mailer.Template("welcome", new() { ["FIRST_NAME"] = H.Str(u["first_name"]) ?? "there",
+                            ["LOGIN_URL"] = Mailer.SetupLink(baseUrl, token), ["DOWNLOADS_URL"] = baseUrl + "/downloads.html" }));
                 }
             }
             return J(new { ok = true }); // never reveal whether an account exists
