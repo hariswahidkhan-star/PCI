@@ -14,7 +14,9 @@
   </ItemGroup>
   <ItemGroup>
     <!-- reuse the SAME schema + email templates + static site as the Node app -->
-    <Content Include="wwwroot/**/*" CopyToOutputDirectory="PreserveNewest" />
+    <!-- wwwroot is auto-included as Content by Microsoft.NET.Sdk.Web; Update (not Include)
+         avoids NETSDK1022 duplicate items while keeping the copy-to-output behaviour -->
+    <Content Update="wwwroot/**/*" CopyToOutputDirectory="PreserveNewest" />
     <None Include="schema.sql" CopyToOutputDirectory="PreserveNewest" />
     <None Include="emails/**/*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

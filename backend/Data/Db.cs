@@ -11,6 +11,11 @@ public sealed class Db
 {
     private readonly SqliteConnection _conn;
     private readonly object _gate = new();
+    // Real Microsoft.Data.Sqlite does not expose SqliteConnection.Transaction publicly
+    // (it is protected internal), so the active transaction is tracked here instead.
+    // Guarded by _gate: Transaction() holds the lock for its whole body and Monitor is
+    // re-entrant, so nested Execute/Query calls observe the field consistently.
+    private SqliteTransaction? _activeTx;
 
     public Db(string path)
     {
@@ -27,7 +32,7 @@ public sealed class Db
     private SqliteCommand NewCmd()
     {
         var cmd = _conn.CreateCommand();
-        cmd.Transaction = _conn.Transaction;
+        cmd.Transaction = _activeTx;
         return cmd;
     }
 
@@ -147,8 +152,10 @@ public sealed class Db
         lock (_gate)
         {
             using var tx = _conn.BeginTransaction();
+            _activeTx = tx;
             try { body(); tx.Commit(); }
             catch { try { tx.Rollback(); } catch { } throw; }
+            finally { _activeTx = null; }
         }
     }
 
