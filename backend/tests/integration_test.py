@@ -448,6 +448,35 @@ def run(proc):
     c, pg = jget("POST", "/api/admin/storage/purge", token=admin, body={})
     chk("9f storage purge runs (owner)", c==200, (c,pg))
 
+    # ---------- 9b. Security headers + body cap (Phase 2) ----------
+    print("\n=== 9b. Security headers + body cap ===")
+    # read raw headers off a page response
+    r = urllib.request.Request(BASE + "/index.html")
+    with urllib.request.urlopen(r) as resp:
+        hdrs = {k.lower(): v for k, v in resp.headers.items()}
+    chk("9b1 X-Content-Type-Options nosniff", hdrs.get("x-content-type-options") == "nosniff", hdrs.get("x-content-type-options"))
+    chk("9b2 Referrer-Policy set", "referrer-policy" in hdrs, hdrs.get("referrer-policy"))
+    chk("9b3 CSP present with frame-ancestors none", "frame-ancestors 'none'" in (hdrs.get("content-security-policy") or ""), hdrs.get("content-security-policy"))
+    chk("9b4 X-Frame-Options DENY", hdrs.get("x-frame-options") == "DENY", hdrs.get("x-frame-options"))
+    chk("9b5 no HSTS over plain http", "strict-transport-security" not in hdrs, hdrs.get("strict-transport-security"))
+    # HSTS appears only behind a forwarding https proxy
+    r2 = urllib.request.Request(BASE + "/api/health", headers={"X-Forwarded-Proto": "https"})
+    with urllib.request.urlopen(r2) as resp:
+        h2 = {k.lower(): v for k, v in resp.headers.items()}
+    chk("9b6 HSTS emitted when X-Forwarded-Proto=https", "strict-transport-security" in h2, h2.get("strict-transport-security"))
+    # oversized body (>6 MB) rejected before handler buffers it
+    over = json.dumps({"blob": "x" * 7_000_000}).encode()
+    rejected = False
+    try:
+        req_o = urllib.request.Request(BASE + "/api/newsletter", data=over, headers={"Content-Type": "application/json"}, method="POST")
+        code_o = urllib.request.urlopen(req_o).status
+        rejected = code_o in (413, 400)
+    except urllib.error.HTTPError as e:
+        rejected = e.code in (413, 400)
+    except Exception:
+        rejected = True  # Kestrel aborts the connection on oversized body → also a rejection
+    chk("9b7 oversized request body rejected", rejected)
+
     # ---------- 10. Rate limits (LAST: exhausts the /api/login window for this IP) ----------
     print("\n=== 10. Rate limits ===")
     hit_429 = False; retry_after = None

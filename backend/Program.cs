@@ -4,6 +4,21 @@ using PCI.Backend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "8080"}");
+// Global request-body cap: bounds memory and rejects oversized uploads BEFORE the handler buffers them.
+// A 3 MB artefact (Storage.MaxBytes) is ~4 MB as base64 inside a JSON data URI, so 6 MB leaves headroom
+// for one legitimate upload while still refusing anything larger up front (Kestrel → 413).
+builder.WebHost.ConfigureKestrel(o => o.Limits.MaxRequestBodySize = 6_000_000);
+
+// ---- DB: open + auto-migrate (BEFORE Build so the retention hosted service can depend on it) ----
+var dbPath = Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "./pci.db";
+var schemaPath = Path.Combine(AppContext.BaseDirectory, "schema.sql");
+if (!File.Exists(schemaPath)) schemaPath = "schema.sql";
+var db = new Db(dbPath);
+Migrate.Run(db, schemaPath);
+builder.Services.AddSingleton(db);
+// Scheduled retention: purge stored artefacts past evidence_retention_days, daily (manual endpoint stays).
+builder.Services.AddHostedService<PCI.Backend.Core.RetentionService>();
+
 var app = builder.Build();
 // Rate limiting: throttle brute-forceable endpoints (login, password reset, code validation, exam authorize)
 // per client IP with a fixed-window in-memory counter. Applied by path prefix via middleware so it is
@@ -31,13 +46,6 @@ app.Use(async (ctx, next) =>
     }
     await next();
 });
-
-// ---- DB: open + auto-migrate (parity with db.js auto-migrate on load) ----
-var dbPath = Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "./pci.db";
-var schemaPath = Path.Combine(AppContext.BaseDirectory, "schema.sql");
-if (!File.Exists(schemaPath)) schemaPath = "schema.sql";
-var db = new Db(dbPath);
-Migrate.Run(db, schemaPath);
 
 var stripeKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
 if(!string.IsNullOrEmpty(stripeKey)) Stripe.StripeConfiguration.ApiKey = stripeKey;
@@ -107,11 +115,49 @@ static string? S(Dictionary<string, JsonElement> b, params string[] keys)
     return null;
 }
 
-// ================= CORS (parity: Origin/Headers/Methods + OPTIONS 204) =================
+// ================= security response headers (all responses, incl. static + API) =================
+// Scoped for single-file apps with inline <script>/<style> (which require 'unsafe-inline') plus the few
+// external origins the site genuinely uses (Google Fonts, the two analytics hosts, cdnjs for pdf-lib).
+// CSP enforces by default; set CSP_REPORT_ONLY=true to run it report-only during rollout validation.
+// HSTS is emitted only when the TLS-terminating proxy forwards https, so it is never sent over plain http.
+var _csp = string.Join("; ", new[]
+{
+    "default-src 'self'",
+    "base-uri 'self'",
+    "object-src 'none'",
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+    "img-src 'self' data: blob: https://www.googletagmanager.com",
+    "media-src 'self' blob:",
+    "font-src 'self' data: https://fonts.gstatic.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://plausible.io https://cdnjs.cloudflare.com",
+    "connect-src 'self' https://plausible.io https://www.google-analytics.com",
+});
+var _cspHeader = string.Equals(Environment.GetEnvironmentVariable("CSP_REPORT_ONLY"), "true", StringComparison.OrdinalIgnoreCase)
+    ? "Content-Security-Policy-Report-Only" : "Content-Security-Policy";
+app.Use(async (ctx, next) =>
+{
+    var h = ctx.Response.Headers;
+    h["X-Content-Type-Options"] = "nosniff";
+    h["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    h["X-Frame-Options"] = "DENY";                       // legacy ally of frame-ancestors 'none'
+    h["Cross-Origin-Opener-Policy"] = "same-origin";
+    h[_cspHeader] = _csp;
+    if (string.Equals(ctx.Request.Headers["X-Forwarded-Proto"].ToString(), "https", StringComparison.OrdinalIgnoreCase))
+        h["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains";
+    await next();
+});
+
+// ================= CORS (Origin/Headers/Methods + OPTIONS 204) =================
+// Responses honour ALLOWED_ORIGIN only; the boot validator rejects a wildcard/empty origin in production,
+// so this reflects the single approved origin there and falls back to '*' only in development.
+var _allowedOrigin = Environment.GetEnvironmentVariable("ALLOWED_ORIGIN");
 app.Use(async (ctx, next) =>
 {
     var res = ctx.Response;
-    res.Headers["Access-Control-Allow-Origin"] = Environment.GetEnvironmentVariable("ALLOWED_ORIGIN") ?? "*";
+    res.Headers["Access-Control-Allow-Origin"] = string.IsNullOrEmpty(_allowedOrigin) ? "*" : _allowedOrigin;
+    if (!string.IsNullOrEmpty(_allowedOrigin)) res.Headers["Vary"] = "Origin";
     res.Headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization";
     res.Headers["Access-Control-Allow-Methods"] = "GET, POST, PATCH, DELETE, OPTIONS";
     if (ctx.Request.Method == "OPTIONS") { res.StatusCode = 204; return; }
@@ -161,6 +207,10 @@ app.MapGet("/api/admin/system-check", (HttpRequest req) =>
         owner_password_changed = db.Scalar<long>("SELECT COUNT(*) FROM admin_users WHERE email=? AND must_change_pw=0", (E("ADMIN_OWNER_EMAIL") ?? "owner@pci.local").ToLowerInvariant()) > 0,
         migrations_applied = db.Scalar<long>("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='exam_score_snapshots'") > 0,
         storage_local = PCI.Backend.Core.Storage.UsingLocal,
+        security_headers = true,                         // CSP + nosniff + frame-ancestors + referrer-policy
+        csp_enforced = !string.Equals(E("CSP_REPORT_ONLY"), "true", StringComparison.OrdinalIgnoreCase),
+        request_body_capped = true,                      // Kestrel MaxRequestBodySize = 6 MB
+        retention_scheduled = true,                      // daily RetentionService hosted service
     };
     return Json(new { ok = issues.All(i => i.sev != "error"), environment = E("ASPNETCORE_ENVIRONMENT") ?? "Development", checks, issues = issues.Select(i => new { i.sev, i.key, i.msg }) });
 });
