@@ -848,7 +848,8 @@ CREATE TABLE IF NOT EXISTS exam_attempts (
   item_ids TEXT, answers TEXT,
   score REAL, max_score REAL, percent REAL, result TEXT,   -- pass | fail
   domain_breakdown TEXT,
-  status TEXT, result_status TEXT DEFAULT 'not_started', hold_reason TEXT, released_at TEXT, answer_key_version TEXT, bank_version TEXT DEFAULT 'in_progress'          -- in_progress | submitted | expired
+  status TEXT DEFAULT 'in_progress',           -- in_progress | submitted | expired
+  result_status TEXT DEFAULT 'not_started', hold_reason TEXT, released_at TEXT, answer_key_version TEXT, bank_version TEXT
 );
 CREATE INDEX IF NOT EXISTS ix_attempts_user ON exam_attempts(user_id);
 CREATE TABLE IF NOT EXISTS tickets (

@@ -22,7 +22,12 @@ public static class ExamClient
             var code = H.GetS(b, "code", "Code") ?? "";
             var lc = db.QueryOne("SELECT * FROM exam_launch_codes WHERE code_hash=?", Security.Sha(code));
             if (lc is null) return Results.Json(new { error = "invalid_code" }, statusCode: 401);
-            if (lc["expires_at"] is not null && string.Compare(H.Str(lc["expires_at"]), H.IsoNow, StringComparison.Ordinal) < 0)
+            // Compare expiry numerically. expires_at is stored via SQLite datetime('now','+15 minutes')
+            // as "YYYY-MM-DD HH:MM:SS" (space), whereas H.IsoNow is ISO-8601 with a 'T'. A lexical
+            // string compare put the space (0x20) before 'T' (0x54), so within the same day EVERY code
+            // read as already-expired — the desktop launch could never authorize. JsMillis parses the
+            // SQLite format robustly, matching how booking/start timing is already done.
+            if (lc["expires_at"] is not null && H.JsMillis(H.Str(lc["expires_at"])) < DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                 return Results.Json(new { error = "code_expired" }, statusCode: 401);
             var sessionUser = Auth(ctx);
             if (sessionUser is not null && sessionUser.Id != H.L(lc["user_id"]))
@@ -64,7 +69,8 @@ public static class ExamClient
                 if (!Lifecycle.ReadinessSatisfied(db, uid)) return Results.Json(new { error = "readiness_required" }, statusCode: 400);
                 var dur = cfg.Duration + Lifecycle.ApprovedExtraMinutes(db, uid); // approved accommodations apply on desktop too
                 var itemIds = JsonSerializer.Serialize(items.Select(i => i.Id));
-                var id = db.ExecuteReturningId("INSERT INTO exam_attempts(user_id,booking_id,kind,duration_minutes,item_ids,client_kind) VALUES(?,?,?,?,?,'desktop')", uid, lc["booking_id"], "exam", dur, itemIds);
+                // status set explicitly (see StudentExam note) so the desktop attempt is submittable.
+                var id = db.ExecuteReturningId("INSERT INTO exam_attempts(user_id,booking_id,kind,duration_minutes,item_ids,client_kind,status) VALUES(?,?,?,?,?,'desktop','in_progress')", uid, lc["booking_id"], "exam", dur, itemIds);
                 att = db.QueryOne("SELECT * FROM exam_attempts WHERE id=?", id);
                 log(uid, "exam_started", $"attempt {id} (desktop)");
             }

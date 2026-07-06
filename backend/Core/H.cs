@@ -73,10 +73,16 @@ public static class H
         var s = token?.ToString() ?? "";
         if (System.Text.RegularExpressions.Regex.IsMatch(s, @"^\d+$"))
             return db.QueryOne("SELECT * FROM exam_attempts WHERE id=? AND user_id=?", s, userId);
-        // launch code → its attempt (create-or-resume handled in authorize); resolve most recent in-progress
-        var lc = db.QueryOne("SELECT * FROM exam_launch_codes WHERE code=? AND user_id=?", s, userId);
+        // launch code → its attempt. Codes are stored HASHED (code_hash), never as plaintext, so we
+        // must hash the supplied code to find the row (a prior version matched WHERE code=?, which is
+        // always NULL — so every desktop heartbeat/submit/evidence/identity resolved to no_attempt).
+        var lc = db.QueryOne("SELECT * FROM exam_launch_codes WHERE code_hash=? AND user_id=?", Security.Sha(s), userId);
         if (lc is null) return null;
-        return db.QueryOne("SELECT * FROM exam_attempts WHERE user_id=? AND (booking_id=? OR status='in_progress') ORDER BY id DESC", userId, lc["booking_id"]);
+        // Prefer the attempt the code was actually redeemed into (set by /api/exam/authorize);
+        // fall back to the booking's latest attempt for robustness.
+        if (lc["attempt_id"] is not null)
+            return db.QueryOne("SELECT * FROM exam_attempts WHERE id=? AND user_id=?", lc["attempt_id"], userId);
+        return db.QueryOne("SELECT * FROM exam_attempts WHERE user_id=? AND booking_id=? ORDER BY id DESC", userId, lc["booking_id"]);
     }
 
     // ---- ISO timestamp parity with JS toISOString/Date math ----

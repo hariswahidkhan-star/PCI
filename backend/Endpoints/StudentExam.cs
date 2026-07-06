@@ -247,7 +247,10 @@ public static class StudentExam
             if (existing is not null) return Results.Json(new { error = "already_submitted" }, statusCode: 400);
             var itemIds = JsonSerializer.Serialize(items.Select(i => i.id));
             var durMin = ec.Duration + Lifecycle.ApprovedExtraMinutes(db, u.Id); // approved accommodations genuinely extend the sitting
-            var id = db.ExecuteReturningId("INSERT INTO exam_attempts(user_id,booking_id,kind,duration_minutes,item_ids) VALUES(?,?,?,?,?)", u.Id, bk["id"], "exam", durMin, itemIds);
+            // status MUST be set explicitly to 'in_progress'; relying on a column default is fragile
+            // (the schema default was historically mis-attached to bank_version, leaving status NULL,
+            // which made submit reject every attempt as already_submitted).
+            var id = db.ExecuteReturningId("INSERT INTO exam_attempts(user_id,booking_id,kind,duration_minutes,item_ids,status) VALUES(?,?,?,?,?, 'in_progress')", u.Id, bk["id"], "exam", durMin, itemIds);
             log(u.Id, "exam_started", "attempt " + id);
             return J(new { attempt_id = id, duration_minutes = durMin, started_at = H.IsoNow, items });
         });
@@ -331,14 +334,21 @@ public static class StudentExam
             log(u.Id, "exam_submitted", $"{r.Result} {r.Pct}%");
             var ck = H.GetS(b, "client_kind", "clientKind", "ClientKind");
             if (ck is not null) { try { db.Execute("UPDATE exam_attempts SET client_kind=? WHERE id=?", ck, att["id"]); } catch { } }
+            // One key per logical field. Browser reads lowercase/snake_case; the desktop client
+            // deserializes case-insensitively, so it binds Ok/Result/Breakdown/Held from the lowercase
+            // keys and Percent/CredentialId/ResultStatus from the distinctly-named camelCase aliases.
+            // (The previous dual-cased objects — ok+Ok, result+Result — collided under ASP.NET's
+            // camelCase policy and 500'd on EVERY submit, and would also have tripped the desktop's
+            // case-insensitive duplicate-key check.)
             // Held attempts must NOT reveal pass/fail to the candidate until released.
             if (!clean)
-                return J(new { ok = true, held = true, result_status = resultStatus, hold_reason = holdReason,
-                    message = "Your result has been submitted and is currently on hold due to an examination integrity check. PCI will notify you once the review is complete.",
-                    Ok = true, Held = true });
-            return J(new { ok = true, held = false, result_status = resultStatus, score = r.Score, max = r.Max, pct = r.Pct, result = r.Result, breakdown = r.Breakdown, credential,
-                unanswered, flagged_events = flagged, late_submit = lateSubmit,
-                Ok = true, Percent = r.Pct, Result = r.Result, CredentialId = credential, Breakdown = r.Breakdown });
+                return J(new { ok = true, held = true, result_status = resultStatus, resultStatus,
+                    hold_reason = holdReason,
+                    message = "Your result has been submitted and is currently on hold due to an examination integrity check. PCI will notify you once the review is complete." });
+            return J(new { ok = true, held = false, result_status = resultStatus, resultStatus,
+                score = r.Score, max = r.Max, pct = r.Pct, percent = r.Pct, result = r.Result,
+                breakdown = r.Breakdown, credential, credentialId = credential,
+                unanswered, flagged_events = flagged, late_submit = lateSubmit });
         });
 
         app.MapGet("/api/me/attempts/{id}", (HttpContext ctx, long id) =>
@@ -392,7 +402,8 @@ public static class StudentExam
             db.Execute("UPDATE exam_attempts SET last_heartbeat_at=datetime('now') WHERE id=?", att["id"]);
             var undelivered = db.Query("SELECT id,body,created_at FROM proctor_messages WHERE attempt_id=? AND sender='proctor' AND delivered_at IS NULL ORDER BY id ASC", att["id"]);
             foreach (var m in undelivered) db.Execute("UPDATE proctor_messages SET delivered_at=datetime('now') WHERE id=?", m["id"]);
-            var messages = undelivered.Select(m => new { From = "PCI Support", from = "PCI Support", Body = m["body"], body = m["body"], At = m["created_at"], at = m["created_at"] }).ToList();
+            // single lowercase keys; desktop ChatMessage(From,Body,At) binds case-insensitively
+            var messages = undelivered.Select(m => new { from = "PCI Support", body = m["body"], at = m["created_at"] }).ToList();
             var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             var forceSubmit = nowMs >= deadline;
             // #3 — once the server deadline passes, finalise the attempt on the server itself using the
@@ -409,9 +420,14 @@ public static class StudentExam
                 // No credential is issued on an auto-timeout finalisation.
             }
             var remaining = Math.Max(0, (int)((deadline - nowMs) / 1000));
-            return J(new { ok = true, Ok = true, messages, Messages = messages, server_time = H.IsoNow, ServerTime = H.IsoNow,
-                deadline = H.IsoFromMillis(deadline), Deadline = H.IsoFromMillis(deadline),
-                remaining_s = remaining, RemainingSeconds = remaining, ForceSubmit = forceSubmit, forceSubmit });
+            // Distinctly-named keys only (no ok+Ok / messages+Messages collisions). Desktop
+            // HeartbeatResponse binds Ok/Deadline/ForceSubmit/Messages from lowercase and
+            // ServerTime/RemainingSeconds from the camelCase aliases.
+            return J(new { ok = true, messages,
+                server_time = H.IsoNow, serverTime = H.IsoNow,
+                deadline = H.IsoFromMillis(deadline),
+                remaining_s = remaining, remainingSeconds = remaining,
+                forceSubmit });
         });
 
         app.MapGet("/api/me/config", (HttpContext ctx) =>

@@ -38,13 +38,17 @@ public static class Lifecycle
     {
         var blockers = new List<string>();
 
-        // Payment / entitlement valid and unused
+        // Payment / entitlement valid and unused.
+        // NOTE: `entitlement` is a row from the payments table (see ExamEntitlement in StudentExam),
+        // so its status/deadline are read directly off the row. A prior version dereferenced a
+        // non-existent "payment_id" key, which threw KeyNotFoundException for any user who had
+        // actually paid — GetValueOrDefault keeps this robust to shape drift.
         if (entitlement is null) blockers.Add("exam_fee_unpaid");
         else
         {
-            var payStatus = H.Str(db.Scalar<string>("SELECT payment_status FROM payments WHERE id=?", entitlement["payment_id"]));
+            var payStatus = H.Str(entitlement.GetValueOrDefault("payment_status"));
             if (payStatus is "refunded" or "failed" or "reversed") blockers.Add("payment_not_valid");
-            var deadline = H.Str(entitlement["exam_schedule_deadline"]);
+            var deadline = H.Str(entitlement.GetValueOrDefault("exam_schedule_deadline"));
             if (!string.IsNullOrEmpty(deadline) && string.Compare(deadline, H.IsoNow, StringComparison.Ordinal) < 0) blockers.Add("entitlement_expired");
         }
 

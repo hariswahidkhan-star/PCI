@@ -4,3 +4,7 @@ obj/
 *.db-wal
 *.db-shm
 .env
+
+# integration test artifacts
+tests/_integration.db*
+tests/_integration_storage/
