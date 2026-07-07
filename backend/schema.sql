@@ -280,6 +280,18 @@ CREATE TABLE IF NOT EXISTS pages (
   nav_group TEXT, noindex INTEGER DEFAULT 0, published INTEGER DEFAULT 1,
   updated_at TEXT DEFAULT (datetime('now'))
 );
+-- Per-page editable content regions (fully dynamic content). block_key mirrors the page's
+-- data-cms="<slug>:<key>" attribute; the value is injected into the served HTML server-side
+-- (SEO-safe, works with JS off) and also exposed via /api/page-content for the client loader.
+CREATE TABLE IF NOT EXISTS page_blocks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  slug TEXT NOT NULL, block_key TEXT NOT NULL,
+  label TEXT, ctype TEXT DEFAULT 'text', cvalue TEXT,
+  sort_order INTEGER DEFAULT 0,
+  updated_at TEXT DEFAULT (datetime('now'))
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_page_block ON page_blocks(slug, block_key);
+CREATE INDEX IF NOT EXISTS ix_page_block_slug ON page_blocks(slug);
 CREATE TABLE IF NOT EXISTS site_content (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   ckey TEXT UNIQUE NOT NULL, cgroup TEXT, label TEXT, ctype TEXT DEFAULT 'text', cvalue TEXT,

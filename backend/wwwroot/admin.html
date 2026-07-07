@@ -1700,19 +1700,35 @@ async function renderPages(){
     <td class="em">${esc(String(p.meta_description||'').slice(0,48))}${(p.meta_description||'').length>48?'…':''}</td>
     <td>${Number(p.noindex)?'<span class="badge b-grey"><span class="dot"></span>noindex</span>':'<span class="badge b-green"><span class="dot"></span>indexed</span>'}</td>
     <td class="actions">${base?`<a class="btn btn-sm" href="${base}/${esc(p.slug)}" target="_blank" rel="noopener">View</a> `:''}<button class="btn btn-sm" data-edit="${p.id}">Edit</button></td></tr>`).join(''):emptyRow(cols.length,'No pages match.');
-  $('#view').innerHTML=`<div class="inline-note" style="margin-bottom:16px">Every page of the website — <b>${(d.rows||[]).length}</b> in total — with its SEO title, meta description and indexing. Search above or filter by group. “View” opens the live page at your configured site URL.</div>`+tb+tableShell(cols,body,`<div class="tfoot"><span>${rows.length} of ${(d.rows||[]).length} pages</span></div>`);
+  $('#view').innerHTML=`<div class="inline-note" style="margin-bottom:16px">Every page of the website — <b>${(d.rows||[]).length}</b> in total. Click a page to edit its <b>headline</b>, SEO <b>title</b>, <b>meta description</b> and any content regions. Changes go live immediately (no redeploy). Search above or filter by group.</div>`+tb+tableShell(cols,body,`<div class="tfoot"><span>${rows.length} of ${(d.rows||[]).length} pages</span></div>`);
   wireToolbar(renderPages);
   const edit=id=>editPage((d.rows||[]).find(r=>r.id==id));
   document.querySelectorAll('[data-id]').forEach(tr=>tr.onclick=e=>{if(e.target.closest('button,a'))return;edit(tr.dataset.id);});
   document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>edit(b.dataset.edit));
 }
-function editPage(p){ if(!p)return;
+async function editPage(p){ if(!p)return;
+  // pull the page's editable content blocks (headline + any data-cms regions)
+  let pc={blocks:{}}; try{ pc=await api('/api/page-content?slug='+encodeURIComponent(p.slug)); }catch(_){}
+  const blocks=pc.blocks||{};
+  const headline=blocks._h1||'';
+  // any additional (non-positional) content regions the page exposes
+  const extra=Object.keys(blocks).filter(k=>k!=='_h1');
+  const extraHtml=extra.map(k=>`<div class="form-row"><label>Content region — <span class="mono">${esc(k)}</span></label><textarea class="pb-input" data-key="${esc(k)}" rows="2">${esc(blocks[k]||'')}</textarea></div>`).join('');
   modal('Edit page — '+esc(p.slug),
-    `<div class="form-row"><label>Page title (SEO)</label><input id="pTitle" value="${esc(p.title||'')}"/></div>
-     <div class="form-row"><label>Meta description</label><textarea id="pDesc" rows="3">${esc(p.meta_description||'')}</textarea><div style="font-size:11px;color:var(--mist);margin-top:4px" id="pCount"></div></div>
+    `<div class="form-row"><label>Headline (the page's main <b>H1</b>)</label><input id="pH1" value="${esc(headline)}" placeholder="Shown at the top of the page"/></div>
+     <div class="form-row"><label>Page title (browser tab &amp; search result — SEO)</label><input id="pTitle" value="${esc(p.title||'')}"/></div>
+     <div class="form-row"><label>Meta description (search result summary)</label><textarea id="pDesc" rows="3">${esc(p.meta_description||'')}</textarea><div style="font-size:11px;color:var(--mist);margin-top:4px" id="pCount"></div></div>
+     ${extraHtml}
      <div class="form-row"><label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="pNoindex" style="width:auto" ${Number(p.noindex)?'checked':''}/> Hide from search engines (noindex)</label></div>
-     <div class="inline-note">URL: <span class="mono">${esc(p.slug)}</span></div>`,
-    'Save',async()=>{ await api('/api/admin/pages/'+p.id,{method:'PATCH',body:JSON.stringify({title:$('#pTitle').value,meta_description:$('#pDesc').value,noindex:$('#pNoindex').checked?1:0})}); toast('Page updated','ok'); renderPages(); return true; });
+     <div class="inline-note">URL: <span class="mono">${esc(p.slug)}</span> · <a href="/${esc(p.slug)}" target="_blank" rel="noopener">open live page ↗</a>. Changes are live immediately.</div>`,
+    'Save changes',async()=>{
+      await api('/api/admin/pages/'+p.id,{method:'PATCH',body:JSON.stringify({title:$('#pTitle').value,meta_description:$('#pDesc').value,noindex:$('#pNoindex').checked?1:0})});
+      // headline block (upsert on slug:_h1) + any edited content regions
+      const jobs=[api('/api/admin/page-blocks',{method:'POST',body:JSON.stringify({slug:p.slug,block_key:'_h1',label:'Headline',cvalue:$('#pH1').value})})];
+      document.querySelectorAll('.pb-input').forEach(t=>jobs.push(api('/api/admin/page-blocks',{method:'POST',body:JSON.stringify({slug:p.slug,block_key:t.dataset.key,cvalue:t.value})})));
+      await Promise.all(jobs);
+      toast('Page updated — live now','ok'); renderPages(); return true;
+    });
   setTimeout(()=>{ const t=$('#pDesc'); const upd=()=>{const l=t.value.length;$('#pCount').textContent=l+' characters'+(l>160?' — over 160, may be truncated in search':'');}; t.addEventListener('input',upd); upd(); },30);
 }
 

@@ -70,6 +70,16 @@ public static class Public
 
         app.MapGet("/api/pricing", () => J(new { currency = "USD", membership = Pricing(db, "membership", null), exam = Pricing(db, "exam", null), bundle = Pricing(db, "bundle", null) }));
 
+        // Structured content overrides for one page (title, meta description, editable blocks). Used by
+        // the client CMS loader and the admin live preview; the same values are also injected server-side.
+        app.MapGet("/api/page-content", (HttpRequest req) =>
+        {
+            var slug = req.Query["slug"].ToString();
+            if (string.IsNullOrEmpty(slug)) slug = "index.html";
+            if (slug.Contains("..")) return Results.Json(new { error = "bad_slug" }, statusCode: 400);
+            return J(PageContent.ForApi(db, slug));
+        });
+
         // Public catalogue of ACTIVE certifications (safe fields only — never the bank or keys).
         // Each entry carries its effective exam price and headline exam parameters.
         app.MapGet("/api/certifications", () => J(new
