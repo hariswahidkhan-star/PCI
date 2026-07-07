@@ -270,3 +270,37 @@ export interface ReportData {
   funnel: { started: number; paid: number }
   new_members: number
 }
+
+export interface TeamMember {
+  id: number
+  email: string
+  name?: string | null
+  role: string
+  permissions: string[]
+  effective: string[]
+  status: string
+  must_change_pw?: number | null
+  last_login_at?: string | null
+  created_at?: string | null
+}
+
+export interface TeamResponse {
+  rows: TeamMember[]
+  roles: string[]
+  sections: string[]
+  role_grants: Record<string, string[]>
+}
+
+export interface ExamReg {
+  id: number
+  reference?: string | null
+  product_type: string
+  payment_date?: string | null
+  exam_schedule_deadline?: string | null
+  email?: string | null
+  first_name?: string | null
+  last_name?: string | null
+  days_left?: number | null
+}
+
+export type Settings = Record<string, string>

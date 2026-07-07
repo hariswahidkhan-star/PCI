@@ -20,6 +20,9 @@ import Audit from './pages/Audit'
 import Reports from './pages/Reports'
 import Emails from './pages/Emails'
 import Content from './pages/Content'
+import Team from './pages/Team'
+import Settings from './pages/Settings'
+import Exams from './pages/Exams'
 import { ErrorNote } from '../components/ui'
 import type { ReactNode } from 'react'
 
@@ -27,6 +30,18 @@ import type { ReactNode } from 'react'
 function Perm({ section, children }: { section: string; children: ReactNode }) {
   const { can } = useAdminAuth()
   if (!can(section)) return <ErrorNote>You do not have permission to view this section.</ErrorNote>
+  return <>{children}</>
+}
+
+function OwnerOnly({ children }: { children: ReactNode }) {
+  const { me } = useAdminAuth()
+  if (!me?.is_owner) return <ErrorNote>This section is available to owners only.</ErrorNote>
+  return <>{children}</>
+}
+
+function AnyPerm({ sections, children }: { sections: string[]; children: ReactNode }) {
+  const { me, can } = useAdminAuth()
+  if (!me?.is_owner && !sections.some((s) => can(s))) return <ErrorNote>You do not have permission to view this section.</ErrorNote>
   return <>{children}</>
 }
 
@@ -58,6 +73,9 @@ export default function AdminApp() {
         <Route path="reports" element={<Perm section="reports"><Reports /></Perm>} />
         <Route path="emails" element={<Perm section="emails"><Emails /></Perm>} />
         <Route path="audit" element={<Perm section="audit"><Audit /></Perm>} />
+        <Route path="exams" element={<Perm section="exams"><Exams /></Perm>} />
+        <Route path="settings" element={<AnyPerm sections={['settings', 'set_web', 'set_sp', 'set_exam']}><Settings /></AnyPerm>} />
+        <Route path="team" element={<OwnerOnly><Team /></OwnerOnly>} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

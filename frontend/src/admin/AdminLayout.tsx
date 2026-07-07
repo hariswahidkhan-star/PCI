@@ -2,9 +2,11 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { useAdminAuth } from './AdminAuth'
 import { initials } from '../format'
 
-// Sections ported to the React admin so far. `perm` null = any authenticated admin.
+// Sections ported to the React admin so far. `perm` null = any authenticated admin;
+// `owner` = owner-only; `anyPerm` = visible if the admin holds any listed permission.
 // Everything else in the platform remains in the classic panel (linked below), so nothing is lost.
-const NAV: { to: string; label: string; perm: string | null; end?: boolean }[] = [
+interface NavItem { to: string; label: string; perm?: string | null; owner?: boolean; anyPerm?: string[]; end?: boolean }
+const NAV: NavItem[] = [
   { to: '/', label: 'Dashboard', perm: null, end: true },
   { to: '/students', label: 'Students', perm: 'members' },
   { to: '/enrollments', label: 'Enrolments', perm: 'enrollments' },
@@ -12,6 +14,7 @@ const NAV: { to: string; label: string; perm: string | null; end?: boolean }[] =
   { to: '/credentials', label: 'Credentials', perm: 'credentials' },
   { to: '/tickets', label: 'Support tickets', perm: 'tickets' },
   { to: '/certifications', label: 'Certifications', perm: 'exams' },
+  { to: '/exams', label: 'Exam registrations', perm: 'exams' },
   { to: '/codes', label: 'Discount codes', perm: 'codes' },
   { to: '/pages', label: 'Pages & content', perm: 'pages' },
   { to: '/enquiries', label: 'Enquiries', perm: 'inquiries' },
@@ -22,11 +25,17 @@ const NAV: { to: string; label: string; perm: string | null; end?: boolean }[] =
   { to: '/reports', label: 'Reports', perm: 'reports' },
   { to: '/emails', label: 'Email log', perm: 'emails' },
   { to: '/audit', label: 'Audit log', perm: 'audit' },
+  { to: '/settings', label: 'Settings', anyPerm: ['settings', 'set_web', 'set_sp', 'set_exam'] },
+  { to: '/team', label: 'Team & Access', owner: true },
 ]
 
 export default function AdminLayout() {
   const { me, logout, can } = useAdminAuth()
-  const items = NAV.filter((n) => n.perm === null || can(n.perm))
+  const items = NAV.filter((n) => {
+    if (n.owner) return !!me?.is_owner
+    if (n.anyPerm) return !!me?.is_owner || n.anyPerm.some((p) => can(p))
+    return n.perm == null || can(n.perm)
+  })
 
   return (
     <div className="shell">
