@@ -1,4 +1,4 @@
-# build context = repo root; only backend/ is needed in the image
+# build context = repo root; backend/ + frontend/ are needed in the image
 secureexam/
 docs/
 .github/
@@ -8,6 +8,10 @@ docs/
 backend/tests/_*
 backend/*.db*
 backend/storage/
+backend/wwwroot/app/
+# frontend: ship source for the Docker build, but never the local install/build output
+frontend/node_modules/
+frontend/dist/
 Dockerfile
 render.yaml
 DEPLOY.md

@@ -1,0 +1,52 @@
+// Display formatting helpers, kept framework-free so they're easy to unit-test.
+
+export function fmtDate(v: unknown): string {
+  if (!v) return '—'
+  const s = String(v)
+  const d = new Date(s.includes('T') ? s : s.replace(' ', 'T') + 'Z')
+  if (isNaN(d.getTime())) return s
+  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+}
+
+export function fmtDateTime(v: unknown): string {
+  if (!v) return '—'
+  const s = String(v)
+  const d = new Date(s.includes('T') ? s : s.replace(' ', 'T') + 'Z')
+  if (isNaN(d.getTime())) return s
+  return d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+}
+
+export function fmtMoney(amount: unknown, currency = 'USD'): string {
+  const n = typeof amount === 'number' ? amount : parseFloat(String(amount ?? ''))
+  if (isNaN(n)) return '—'
+  try {
+    return new Intl.NumberFormat(undefined, { style: 'currency', currency: (currency || 'USD').toUpperCase() }).format(n)
+  } catch {
+    return `${currency} ${n.toFixed(2)}`
+  }
+}
+
+export function titleCase(s: unknown): string {
+  const str = String(s ?? '').replace(/[_-]+/g, ' ').trim()
+  return str.replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
+export function initials(first?: string, last?: string): string {
+  return ((first?.[0] ?? '') + (last?.[0] ?? '')).toUpperCase() || 'U'
+}
+
+/** true when an ISO/SQL datetime is in the past (used for credential expiry). */
+export function isPast(v: unknown): boolean {
+  if (!v) return false
+  const s = String(v)
+  const d = new Date(s.includes('T') ? s : s.replace(' ', 'T') + 'Z')
+  return !isNaN(d.getTime()) && d.getTime() < Date.now()
+}
+
+export function daysUntil(v: unknown): number | null {
+  if (!v) return null
+  const s = String(v)
+  const d = new Date(s.includes('T') ? s : s.replace(' ', 'T') + 'Z')
+  if (isNaN(d.getTime())) return null
+  return Math.ceil((d.getTime() - Date.now()) / 86_400_000)
+}

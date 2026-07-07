@@ -521,12 +521,33 @@ var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProv
 app.UseDefaultFiles(new DefaultFilesOptions { DefaultFileNames = new List<string> { "index.html" } });
 app.UseStaticFiles();
 
+// ================= React SPA (Stage 3) — client-side routing fallback =================
+// The built React app (student portal) lives under wwwroot/app. This is TERMINAL MIDDLEWARE placed
+// AFTER UseStaticFiles on purpose: real asset requests (/app/assets/*.js, etc.) are served — and
+// short-circuited — by static files above, so they never reach here. Only an extension-less GET under
+// /app (a client-side route like /app/cpd) falls through, and we return the SPA shell for React Router
+// to resolve. A missing asset still 404s (extension guard). /api and the classic portals are untouched.
+var spaIndex = Path.Combine(webRoot, "app", "index.html");
+app.Use(async (ctx, next) =>
+{
+    var p = ctx.Request.Path.Value ?? "";
+    var isAppRoute = p == "/app" || p.StartsWith("/app/", StringComparison.OrdinalIgnoreCase);
+    if (ctx.Request.Method == "GET" && isAppRoute && !Path.HasExtension(p) && File.Exists(spaIndex))
+    {
+        ctx.Response.ContentType = "text/html; charset=utf-8";
+        await ctx.Response.SendFileAsync(spaIndex);
+        return;
+    }
+    await next();
+});
+
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 var u = $"http://localhost:{port}";
 Console.WriteLine("┌──────────────────────────────────────────────────────┐");
 Console.WriteLine("│  Project Controls Institute — platform is running    │");
 Console.WriteLine("├──────────────────────────────────────────────────────┤");
 Console.WriteLine($"│  Website        {u}/");
+Console.WriteLine($"│  Student (React){u}/app/");
 Console.WriteLine($"│  Student Panel  {u}/student.html");
 Console.WriteLine($"│  Admin Panel    {u}/admin.html");
 Console.WriteLine($"│  Exam preview   {u}/exam-ui.html");

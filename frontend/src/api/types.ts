@@ -1,0 +1,133 @@
+// Types mirroring the backend JSON contract (backend/Endpoints/StudentExam.cs, Program.cs).
+// Only the fields the portal actually renders are typed strictly; open-ended nested rows are
+// kept permissive so a backend addition never breaks the build.
+
+export interface LoginResponse {
+  ok: boolean
+  token: string
+  user: { id: number; email: string; firstName: string; lastName: string }
+}
+
+export interface MeUser {
+  id: number
+  email: string
+  first_name: string
+  last_name: string
+  registration_no: string
+  created_at: string
+}
+
+export interface Certification {
+  id: number
+  code: string
+  name: string
+  description?: string | null
+  expiry_years?: number | null
+}
+
+/** One paid exam entitlement, per certification (multi-cert view). */
+export interface ExamEntry {
+  certification_id: number
+  certification_code?: string | null
+  certification_name?: string | null
+  payment_id: number
+  reference?: string | null
+  deadline?: string | null
+  entitlement_status?: string | null
+  booking?: Record<string, unknown> | null
+  latest_attempt?: Record<string, unknown> | null
+  credential?: { credential_id: string; status: string; expires_at?: string | null } | null
+}
+
+export interface Attempt {
+  id: number
+  kind: string
+  started_at?: string | null
+  submitted_at?: string | null
+  percent?: number | null
+  result?: string | null
+  status?: string | null
+  result_status?: string | null
+  hold_reason?: string | null
+  released_at?: string | null
+  duration_minutes?: number | null
+}
+
+export interface Credential {
+  credential_id: string
+  credential?: string | null
+  status: string
+  issued_at?: string | null
+  expires_at?: string | null
+  holder_name?: string | null
+}
+
+export interface Payment {
+  id: number
+  product_type: string
+  final_amount: number
+  currency: string
+  payment_status: string
+  payment_date?: string | null
+  reference?: string | null
+  exam_schedule_deadline?: string | null
+}
+
+export interface Ticket {
+  id: number
+  reference: string
+  subject: string
+  category?: string | null
+  status: string
+  updated_at?: string | null
+}
+
+// Lifecycle state as computed by Lifecycle.BuildLifecycle (backend). The portal derives a visual
+// candidate journey from these fields (see pages/Overview.tsx).
+export interface Lifecycle {
+  membership_status: string
+  candidate_status: string
+  exam_status: string
+  result_status: string | null
+  credential_status: string | null
+  next_step: string
+  blocking_items: string[]
+}
+
+export interface Me {
+  user: MeUser
+  profile: Record<string, unknown> | null
+  lifecycle: Lifecycle
+  consents: { required: { type: string; version: string }[]; outstanding: unknown[] }
+  membership: Record<string, unknown> | null
+  payments: Payment[]
+  exam: {
+    entitled: boolean
+    deadline?: string | null
+    payment_ref?: string | null
+    booking?: Record<string, unknown> | null
+    passed: boolean
+    certification_id?: number | null
+    certification?: string | null
+  }
+  exams: ExamEntry[]
+  attempts: Attempt[]
+  credentials: Credential[]
+  tickets: Ticket[]
+  referral: { code: string } | null
+  cpd: { total: number; target: number }
+  two_factor: boolean
+  two_factor_coming_soon: boolean
+  unread: number
+  enrollment: Record<string, unknown> | null
+  site_base_url: string
+}
+
+export interface Message {
+  id: number
+  title?: string | null
+  body?: string | null
+  created_at?: string | null
+  read_at?: string | null
+  [k: string]: unknown
+}
