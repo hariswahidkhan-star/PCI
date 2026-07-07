@@ -120,3 +120,67 @@ export interface PageBlock {
   cvalue?: string | null
   sort_order?: number | null
 }
+
+export interface CredentialRow {
+  id: number
+  credential_id: string
+  holder_name?: string | null
+  credential?: string | null
+  status: string
+  issued_at?: string | null
+  expires_at?: string | null
+  user_id?: number | null
+}
+
+export interface TicketRow {
+  id: number
+  reference?: string | null
+  subject?: string | null
+  category?: string | null
+  status: string
+  updated_at?: string | null
+  email?: string | null
+  first_name?: string | null
+  last_name?: string | null
+  msg_count?: number
+}
+
+export interface TicketMessage {
+  sender: string
+  body: string
+  created_at?: string | null
+}
+
+export interface TicketDetail extends TicketRow {
+  messages: TicketMessage[]
+  [k: string]: unknown
+}
+
+export interface EnrollmentRow {
+  id: number
+  email: string
+  current_step?: string | null
+  session_status: string
+  selected_product?: string | null
+  selected_membership?: string | null
+  last_activity_at?: string | null
+  created_at?: string | null
+  reminders_sent?: number | null
+  last_reminder_at?: string | null
+  resume_link_issued?: number | null
+}
+
+export interface DiscountCode {
+  id: number
+  code: string
+  discount_type: string
+  discount_value: number
+  applies_to?: string | null
+  start_date?: string | null
+  end_date?: string | null
+  max_uses?: number | null
+  used_count?: number | null
+  single_use_per_email?: number | null
+  active?: number | null
+  code_type?: string | null
+}

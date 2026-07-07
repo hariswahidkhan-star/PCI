@@ -7,8 +7,12 @@ import { initials } from '../format'
 const NAV: { to: string; label: string; perm: string | null; end?: boolean }[] = [
   { to: '/', label: 'Dashboard', perm: null, end: true },
   { to: '/students', label: 'Students', perm: 'members' },
+  { to: '/enrollments', label: 'Enrolments', perm: 'enrollments' },
   { to: '/payments', label: 'Payments', perm: 'payments' },
+  { to: '/credentials', label: 'Credentials', perm: 'credentials' },
+  { to: '/tickets', label: 'Support tickets', perm: 'tickets' },
   { to: '/certifications', label: 'Certifications', perm: 'exams' },
+  { to: '/codes', label: 'Discount codes', perm: 'codes' },
   { to: '/pages', label: 'Pages & content', perm: 'pages' },
 ]
 

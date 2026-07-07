@@ -8,6 +8,10 @@ import Students from './pages/Students'
 import Payments from './pages/Payments'
 import Certifications from './pages/Certifications'
 import Pages from './pages/Pages'
+import Credentials from './pages/Credentials'
+import Tickets from './pages/Tickets'
+import Enrollments from './pages/Enrollments'
+import Codes from './pages/Codes'
 import { ErrorNote } from '../components/ui'
 import type { ReactNode } from 'react'
 
@@ -31,8 +35,12 @@ export default function AdminApp() {
       >
         <Route index element={<Dashboard />} />
         <Route path="students" element={<Perm section="members"><Students /></Perm>} />
+        <Route path="enrollments" element={<Perm section="enrollments"><Enrollments /></Perm>} />
         <Route path="payments" element={<Perm section="payments"><Payments /></Perm>} />
+        <Route path="credentials" element={<Perm section="credentials"><Credentials /></Perm>} />
+        <Route path="tickets" element={<Perm section="tickets"><Tickets /></Perm>} />
         <Route path="certifications" element={<Perm section="exams"><Certifications /></Perm>} />
+        <Route path="codes" element={<Perm section="codes"><Codes /></Perm>} />
         <Route path="pages" element={<Perm section="pages"><Pages /></Perm>} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
