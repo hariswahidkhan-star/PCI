@@ -11,9 +11,12 @@ builder.WebHost.ConfigureKestrel(o => o.Limits.MaxRequestBodySize = 6_000_000);
 
 // ---- DB: open + auto-migrate (BEFORE Build so the retention hosted service can depend on it) ----
 var dbPath = Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "./pci.db";
-var schemaPath = Path.Combine(AppContext.BaseDirectory, "schema.sql");
-if (!File.Exists(schemaPath)) schemaPath = "schema.sql";
 var db = new Db(dbPath);
+// the base schema is dialect-specific: schema.mysql.sql (generated from schema.sql) for MySQL.
+var schemaFile = db.Provider == Db.Kind.MySql ? "schema.mysql.sql" : "schema.sql";
+var schemaPath = Path.Combine(AppContext.BaseDirectory, schemaFile);
+if (!File.Exists(schemaPath)) schemaPath = schemaFile;
+Console.WriteLine($"[boot] database provider: {db.Provider} (schema: {schemaFile})");
 Migrate.Run(db, schemaPath);
 builder.Services.AddSingleton(db);
 // Scheduled retention: purge stored artefacts past evidence_retention_days, daily (manual endpoint stays).
@@ -440,6 +443,7 @@ app.MapPatch("/api/admin/settings", async (HttpRequest req) =>
                 kv.Key, kv.Value.ValueKind == JsonValueKind.String ? kv.Value.GetString() : kv.Value.ToString());
         else rejected.Add(kv.Key);
     }
+    PCI.Backend.Core.PageContent.Bump();   // announcement banner + any content-affecting settings
     Log(null, "settings_update", string.Join(",", b.Keys));
     return rejected.Count > 0 ? Json(new { ok = true, rejected }) : Json(new { ok = true });
 });
@@ -482,6 +486,35 @@ app.MapPost("/api/admin/storage/purge", (HttpRequest req) =>
 });
 
 // ================= admin overview (needed for the panel landing) =================
+
+// ============ dynamic content injection (Stage 2) — before static files ============
+// For a content page with DB overrides (editable title / meta description / data-cms regions), serve
+// the HTML with those values injected server-side (SEO-safe, works with JS off). Pages with no
+// overrides fall straight through to the static-file middleware, so untouched pages pay nothing.
+var webRoot = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
+// one-time: capture each page's current headline as an editable block so every page is editable out of the box
+PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
+app.Use(async (ctx, next) =>
+{
+    if (ctx.Request.Method == "GET")
+    {
+        var reqPath = ctx.Request.Path.Value ?? "/";
+        var slug = reqPath == "/" ? "index.html" : reqPath.TrimStart('/');
+        if (slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..")
+            && PCI.Backend.Core.PageContent.HasOverrides(db, slug))
+        {
+            var file = Path.Combine(webRoot, slug.Replace('/', Path.DirectorySeparatorChar));
+            if (File.Exists(file))
+            {
+                var rendered = PCI.Backend.Core.PageContent.Render(db, slug, () => File.ReadAllText(file));
+                ctx.Response.ContentType = "text/html; charset=utf-8";
+                await ctx.Response.WriteAsync(rendered);
+                return;
+            }
+        }
+    }
+    await next();
+});
 
 // ================= static site (all four apps) — LAST so /api wins =================
 var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();

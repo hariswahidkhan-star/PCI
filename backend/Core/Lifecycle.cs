@@ -179,8 +179,11 @@ public static class Lifecycle
             var cid = $"{prefix}-{yr}-{10000 + rnd.Next(0, 89999)}";
             try
             {
-                db.Execute("INSERT INTO issued_credentials(credential_id,user_id,attempt_id,holder_name,credential,certification_id,status,expires_at) VALUES(?,?,?,?,?,?, 'active', datetime('now','+' || ? || ' year'))",
-                    cid, userId, attemptId, holderName, prefix, H.L(cert["id"]), years);
+                // expiry computed in C# (SQLite-format string) so it is provider-agnostic — no SQL
+                // string concatenation, which does not translate to MySQL.
+                var expires = DateTime.UtcNow.AddYears(years).ToString("yyyy-MM-dd HH:mm:ss");
+                db.Execute("INSERT INTO issued_credentials(credential_id,user_id,attempt_id,holder_name,credential,certification_id,status,expires_at) VALUES(?,?,?,?,?,?, 'active', ?)",
+                    cid, userId, attemptId, holderName, prefix, H.L(cert["id"]), expires);
                 return cid;
             }
             catch { /* credential_id collision → retry; attempt_id duplicate → loop exits via existing check next call */ }

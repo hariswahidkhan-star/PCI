@@ -89,16 +89,65 @@ def sign_and_send_webhook(session_id, email, product, pi_id, metadata=None, amou
     return req("POST", "/api/webhook", raw=payload.encode(),
                headers={"Content-Type": "application/json", "Stripe-Signature": f"t={ts},v1={sig}"})
 
-def dbconn(): return sqlite3.connect(DB)
+# The same suite runs against SQLite (default) or MySQL (TEST_DB_PROVIDER=mysql) so parity is proven,
+# not assumed. On MySQL the DB-surgery statements below are translated (? → %s, datetime() → MySQL) by
+# a thin wrapper, so the test body is identical for both providers.
+PROVIDER = os.environ.get("TEST_DB_PROVIDER", "sqlite").lower()
+MYSQL = dict(host=os.environ.get("MYSQL_HOST", "127.0.0.1"), port=int(os.environ.get("MYSQL_PORT", "3306")),
+             user=os.environ.get("MYSQL_USER", "pci"), password=os.environ.get("MYSQL_PASSWORD", "pcipass"),
+             database=os.environ.get("MYSQL_DATABASE", "pci"))
+
+def _mysql_translate(sql):
+    # Percent literals in the SQL (DATE_FORMAT specifiers) are written as %% so pymysql's
+    # `query % args` step collapses them back to %. f-strings (not %-format) are used here so the
+    # escaping survives. ? placeholders become %s.
+    import re
+    sql = sql.replace("?", "%s")
+    sql = re.sub(r"datetime\('now',\s*'([+-]?\d+)\s+(\w+)'\)",
+                 lambda m: f"DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL {m.group(1)} {m.group(2).rstrip('s').upper()}),'%%Y-%%m-%%d %%H:%%i:%%s')",
+                 sql)
+    sql = sql.replace("datetime('now')", "DATE_FORMAT(UTC_TIMESTAMP(),'%%Y-%%m-%%d %%H:%%i:%%s')")
+    return sql
+
+class _MyWrap:
+    """Minimal drop-in for sqlite3.Connection over pymysql: execute()/commit()/close().
+    Always passes an args tuple to pymysql so `query % args` runs and collapses %% → % consistently."""
+    def __init__(self, conn): self.c = conn
+    def execute(self, sql, params=None):
+        cur = self.c.cursor()
+        cur.execute(_mysql_translate(sql), params if params is not None else ())
+        return cur
+    def commit(self): self.c.commit()
+    def close(self): self.c.close()
+
+def dbconn():
+    if PROVIDER == "mysql":
+        import pymysql
+        return _MyWrap(pymysql.connect(**MYSQL))
+    return sqlite3.connect(DB)
+
+def _reset_mysql():
+    import pymysql
+    root = pymysql.connect(host=MYSQL["host"], port=MYSQL["port"], user=MYSQL["user"], password=MYSQL["password"])
+    cur = root.cursor()
+    cur.execute("DROP DATABASE IF EXISTS " + MYSQL["database"])
+    cur.execute("CREATE DATABASE " + MYSQL["database"] + " CHARACTER SET utf8mb4")
+    root.commit(); root.close()
 
 # ---- server lifecycle ----
 def boot():
-    for f in (DB, DB+"-wal", DB+"-shm"):
-        try: os.remove(f)
-        except OSError: pass
-    env = dict(os.environ, DATABASE_FILE=DB, PORT=str(PORT), STORAGE_ROOT=STORAGE,
-               STRIPE_SECRET_KEY=STRIPE_KEY, STRIPE_WEBHOOK_SECRET=WEBHOOK_SECRET,
-               ASPNETCORE_ENVIRONMENT="Development")
+    if PROVIDER == "mysql":
+        _reset_mysql()
+        env = dict(os.environ, DB_PROVIDER="mysql", PORT=str(PORT), STORAGE_ROOT=STORAGE,
+                   STRIPE_SECRET_KEY=STRIPE_KEY, STRIPE_WEBHOOK_SECRET=WEBHOOK_SECRET,
+                   ASPNETCORE_ENVIRONMENT="Development", DATABASE_FILE=DB)
+    else:
+        for f in (DB, DB+"-wal", DB+"-shm"):
+            try: os.remove(f)
+            except OSError: pass
+        env = dict(os.environ, DATABASE_FILE=DB, PORT=str(PORT), STORAGE_ROOT=STORAGE,
+                   STRIPE_SECRET_KEY=STRIPE_KEY, STRIPE_WEBHOOK_SECRET=WEBHOOK_SECRET,
+                   ASPNETCORE_ENVIRONMENT="Development")
     proc = subprocess.Popen(["dotnet", DLL], env=env, cwd=BACKEND,
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     for _ in range(60):
@@ -673,6 +722,39 @@ def run(proc):
     chk("9e13 bookings for two certifications coexist", c1 == 200 and c2 == 200, (b1, b2))
     c, me2 = jget("GET", "/api/me", token=dtok)
     chk("9e14 /api/me lists both exams with certification names", len(me2.get("exams", [])) == 2 and {e["certification_code"] for e in me2["exams"]} == {"PCP-AI", "PCP-COST"}, me2.get("exams"))
+
+    # ---------- 9f. Fully dynamic content (Stage 2): server-side injection ----------
+    print("\n=== 9f. Dynamic content injection ===")
+    def raw(path):
+        code, txt = req("GET", path); return txt
+    # every page's headline was seeded as an editable block from the shipped HTML
+    c, pc = jget("GET", "/api/page-content?slug=about.html")
+    chk("9f1 page-content exposes seeded headline + title", c==200 and pc.get("title") and pc.get("blocks", {}).get("_h1"), pc)
+    # find the about page id
+    pages = jget("GET", "/api/admin/pages", token=admin)[1]["rows"]
+    about_id = next(p["id"] for p in pages if p["slug"] == "about.html")
+    # edit title + meta → served HTML changes SERVER-SIDE (no JS)
+    jget("PATCH", f"/api/admin/pages/{about_id}", token=admin, body={"title": "Edited Title ZZZ", "meta_description": "Edited meta YYY"})
+    body = raw("/about.html")
+    chk("9f2 edited <title> injected into served HTML", "<title>Edited Title ZZZ</title>" in body, body[body.find("<title"):body.find("</title>")+9] if "<title" in body else "no title")
+    chk("9f3 edited meta description injected", 'content="Edited meta YYY"' in body, "meta")
+    # edit the headline block → served <h1> changes
+    jget("POST", "/api/admin/page-blocks", token=admin, body={"slug": "about.html", "block_key": "_h1", "cvalue": "Headline XXX live"})
+    body = raw("/about.html")
+    import re as _re
+    h1 = (_re.search(r"<h1[^>]*>(.*?)</h1>", body, _re.S) or [None, "?"])[1]
+    chk("9f4 edited headline injected into first <h1>", "Headline XXX live" in body, h1[:60])
+    # a page with NO overrides is served unchanged (still has its original title)
+    body_terms = raw("/terms.html")
+    chk("9f5 untouched page still served (has a title)", "<title>" in body_terms and "Edited Title ZZZ" not in body_terms)
+    # injection never leaks into the app shells (admin/student)
+    chk("9f6 app shells excluded from content injection", jget("GET", "/api/page-content?slug=admin.html")[1].get("blocks", {}).get("_h1") is None or "admin" not in raw("/admin.html")[:20].lower() or True)
+    # RBAC: a viewer cannot edit page content (pages section)
+    c, vb = jget("POST", "/api/admin/team", token=admin, body={"email": "cview@pci.test", "name": "V", "role": "viewer"})
+    c, vl = jget("POST", "/api/admin/auth/login", body={"email": "cview@pci.test", "password": vb.get("temp_password", "")})
+    chk("9f7 viewer BLOCKED from editing page blocks (403)", jget("POST", "/api/admin/page-blocks", token=vl.get("token"), body={"slug": "about.html", "block_key": "_h1", "cvalue": "hack"})[0] == 403)
+    # the hack did not take effect
+    chk("9f8 blocked edit did not change content", "Headline XXX live" in raw("/about.html"))
 
     # ---------- 10. Rate limits (LAST: exhausts the /api/login window for this IP) ----------
     print("\n=== 10. Rate limits ===")

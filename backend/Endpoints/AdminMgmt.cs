@@ -367,6 +367,7 @@ public static class AdminMgmt
             object? published = b.ContainsKey("published") ? (H.B(b["published"].GetRawText()) ? 1 : 0) : null;
             db.Execute("UPDATE pages SET title=COALESCE(?,title), meta_description=COALESCE(?,meta_description), noindex=COALESCE(?,noindex), published=COALESCE(?,published), updated_at=datetime('now') WHERE id=?",
                 H.GetS(b, "title"), H.GetS(b, "meta_description"), noindex, published, id);
+            PCI.Backend.Core.PageContent.Bump();
             log(null, "page_update", id.ToString());
             return J(new { ok = true });
         });
@@ -376,9 +377,51 @@ public static class AdminMgmt
             var g = Deny(req, "content"); if (g is not null) return g;
             var b = await H.Body(req);
             db.Execute("UPDATE site_content SET cvalue=?, updated_at=datetime('now') WHERE id=?", H.GetS(b, "cvalue") ?? "", id);
+            PCI.Backend.Core.PageContent.Bump();
             log(null, "content_update", id.ToString());
             return J(new { ok = true });
         });
+
+        // ---- per-page content blocks (fully dynamic content) ----
+        app.MapGet("/api/admin/page-blocks", (HttpRequest req) => gate(req, "pages", _ =>
+        {
+            var slug = req.Query["slug"].ToString();
+            var rows = string.IsNullOrEmpty(slug)
+                ? db.Query("SELECT * FROM page_blocks ORDER BY slug, sort_order, id")
+                : db.Query("SELECT * FROM page_blocks WHERE slug=? ORDER BY sort_order, id", slug);
+            return J(new { rows });
+        }));
+        app.MapPost("/api/admin/page-blocks", (HttpRequest req) => gate(req, "pages", _ =>
+        {
+            var b = H.Body(req).GetAwaiter().GetResult();
+            var slug = (H.GetS(b, "slug") ?? "").Trim();
+            var key = (H.GetS(b, "block_key") ?? "").Trim();
+            if (slug == "" || key == "") return Results.Json(new { error = "slug_and_key_required" }, statusCode: 400);
+            // idempotent upsert on (slug, block_key)
+            var id = db.ExecuteReturningId(@"INSERT OR IGNORE INTO page_blocks(slug,block_key,label,ctype,cvalue,sort_order) VALUES(?,?,?,?,?,?)",
+                slug, key, H.GetS(b, "label"), H.GetS(b, "ctype") ?? "text", H.GetS(b, "cvalue"), (long)(H.GetNum(b, "sort_order") ?? 0));
+            db.Execute("UPDATE page_blocks SET label=COALESCE(?,label), cvalue=?, updated_at=datetime('now') WHERE slug=? AND block_key=?",
+                H.GetS(b, "label"), H.GetS(b, "cvalue"), slug, key);
+            PCI.Backend.Core.PageContent.Bump();
+            log(null, "page_block_upsert", $"{slug}:{key}");
+            return J(new { ok = true, id });
+        }));
+        app.MapPatch("/api/admin/page-blocks/{id}", (HttpRequest req, long id) => gate(req, "pages", _ =>
+        {
+            var b = H.Body(req).GetAwaiter().GetResult();
+            db.Execute("UPDATE page_blocks SET cvalue=?, label=COALESCE(?,label), sort_order=COALESCE(?,sort_order), updated_at=datetime('now') WHERE id=?",
+                H.GetS(b, "cvalue") ?? "", H.GetS(b, "label"), b.ContainsKey("sort_order") ? (object)(long)(H.GetNum(b, "sort_order") ?? 0) : null, id);
+            PCI.Backend.Core.PageContent.Bump();
+            log(null, "page_block_update", id.ToString());
+            return J(new { ok = true });
+        }));
+        app.MapDelete("/api/admin/page-blocks/{id}", (HttpRequest req, long id) => gate(req, "pages", _ =>
+        {
+            db.Execute("DELETE FROM page_blocks WHERE id=?", id);
+            PCI.Backend.Core.PageContent.Bump();
+            log(null, "page_block_delete", id.ToString());
+            return J(new { ok = true });
+        }));
         app.MapGet("/api/admin/subscribers", (HttpRequest req) => gate(req, "subscribers", _ => J(new { rows = db.Query("SELECT * FROM newsletter_subscribers ORDER BY id DESC") })));
         app.MapPatch("/api/admin/subscribers/{id}", async (HttpRequest req, long id) =>
         {

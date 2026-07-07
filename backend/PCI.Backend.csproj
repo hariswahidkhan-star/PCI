@@ -9,6 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.7" />
+    <PackageReference Include="MySqlConnector" Version="2.3.7" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Stripe.net" Version="45.14.0" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.410" />
@@ -19,6 +20,7 @@
          avoids NETSDK1022 duplicate items while keeping the copy-to-output behaviour -->
     <Content Update="wwwroot/**/*" CopyToOutputDirectory="PreserveNewest" />
     <None Include="schema.sql" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="schema.mysql.sql" CopyToOutputDirectory="PreserveNewest" />
     <None Include="emails/**/*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
