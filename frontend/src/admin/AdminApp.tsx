@@ -12,6 +12,11 @@ import Credentials from './pages/Credentials'
 import Tickets from './pages/Tickets'
 import Enrollments from './pages/Enrollments'
 import Codes from './pages/Codes'
+import Enquiries from './pages/Enquiries'
+import Submissions from './pages/Submissions'
+import Reviews from './pages/Reviews'
+import Subscribers from './pages/Subscribers'
+import Audit from './pages/Audit'
 import { ErrorNote } from '../components/ui'
 import type { ReactNode } from 'react'
 
@@ -42,6 +47,11 @@ export default function AdminApp() {
         <Route path="certifications" element={<Perm section="exams"><Certifications /></Perm>} />
         <Route path="codes" element={<Perm section="codes"><Codes /></Perm>} />
         <Route path="pages" element={<Perm section="pages"><Pages /></Perm>} />
+        <Route path="enquiries" element={<Perm section="inquiries"><Enquiries /></Perm>} />
+        <Route path="submissions" element={<Perm section="submissions"><Submissions /></Perm>} />
+        <Route path="reviews" element={<Perm section="content"><Reviews /></Perm>} />
+        <Route path="subscribers" element={<Perm section="subscribers"><Subscribers /></Perm>} />
+        <Route path="audit" element={<Perm section="audit"><Audit /></Perm>} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

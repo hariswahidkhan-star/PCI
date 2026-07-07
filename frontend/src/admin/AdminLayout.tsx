@@ -14,6 +14,11 @@ const NAV: { to: string; label: string; perm: string | null; end?: boolean }[] =
   { to: '/certifications', label: 'Certifications', perm: 'exams' },
   { to: '/codes', label: 'Discount codes', perm: 'codes' },
   { to: '/pages', label: 'Pages & content', perm: 'pages' },
+  { to: '/enquiries', label: 'Enquiries', perm: 'inquiries' },
+  { to: '/submissions', label: 'Form submissions', perm: 'submissions' },
+  { to: '/reviews', label: 'Reviews', perm: 'content' },
+  { to: '/subscribers', label: 'Newsletter', perm: 'subscribers' },
+  { to: '/audit', label: 'Audit log', perm: 'audit' },
 ]
 
 export default function AdminLayout() {

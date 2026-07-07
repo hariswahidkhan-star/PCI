@@ -184,3 +184,59 @@ export interface DiscountCode {
   active?: number | null
   code_type?: string | null
 }
+
+export interface Inquiry {
+  id: number
+  type?: string | null
+  email?: string | null
+  first_name?: string | null
+  topic?: string | null
+  seats?: string | null
+  org?: string | null
+  message?: string | null
+  reference?: string | null
+  status: string
+  created_at?: string | null
+}
+
+export interface FormSubmission {
+  id: number
+  form_type?: string | null
+  name?: string | null
+  email?: string | null
+  subject?: string | null
+  message?: string | null
+  reference?: string | null
+  status?: string | null
+  created_at?: string | null
+}
+
+export interface Review {
+  id: number
+  name?: string | null
+  designation?: string | null
+  company?: string | null
+  country?: string | null
+  title?: string | null
+  body?: string | null
+  rating?: number | null
+  status: string
+  featured?: number | null
+  created_at?: string | null
+}
+
+export interface Subscriber {
+  id: number
+  email: string
+  status?: string | null
+  created_at?: string | null
+}
+
+export interface AuditRow {
+  id: number
+  admin_id?: number | null
+  user_id?: number | null
+  action?: string | null
+  details?: string | null
+  created_at?: string | null
+}
