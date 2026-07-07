@@ -127,10 +127,12 @@ jobs:
       - run: npm ci
       - name: Typecheck
         run: npm run typecheck
-      - name: Production build
+      - name: Production build (student + admin)
         run: npm run build
-      - name: Fail if build produced no assets
-        run: test -f dist/index.html && ls dist/assets/*.js >/dev/null
+      - name: Fail if either app produced no assets
+        run: |
+          test -f dist/index.html && ls dist/assets/*.js >/dev/null
+          test -f dist-admin/admin.html && ls dist-admin/assets/*.js >/dev/null
 
   secureexam-windows:
     runs-on: windows-latest      # WPF client needs Windows to compile

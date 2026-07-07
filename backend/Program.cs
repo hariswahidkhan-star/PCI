@@ -521,22 +521,34 @@ var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProv
 app.UseDefaultFiles(new DefaultFilesOptions { DefaultFileNames = new List<string> { "index.html" } });
 app.UseStaticFiles();
 
-// ================= React SPA (Stage 3) — client-side routing fallback =================
-// The built React app (student portal) lives under wwwroot/app. This is TERMINAL MIDDLEWARE placed
-// AFTER UseStaticFiles on purpose: real asset requests (/app/assets/*.js, etc.) are served — and
-// short-circuited — by static files above, so they never reach here. Only an extension-less GET under
-// /app (a client-side route like /app/cpd) falls through, and we return the SPA shell for React Router
-// to resolve. A missing asset still 404s (extension guard). /api and the classic portals are untouched.
-var spaIndex = Path.Combine(webRoot, "app", "index.html");
+// ================= React SPAs (Stage 3) — client-side routing fallback =================
+// The built React apps live under wwwroot/app (student portal) and wwwroot/admin (admin console).
+// This is TERMINAL MIDDLEWARE placed AFTER UseStaticFiles on purpose: real asset requests
+// (/app/assets/*.js, /admin/assets/*.css, …) are served — and short-circuited — by static files above,
+// so they never reach here. Only an extension-less GET under a mount (a client-side route like
+// /app/cpd or /admin/students) falls through, and we return that app's shell for React Router to
+// resolve. A missing asset still 404s (extension guard). /api/* (incl. /api/admin/*) starts with
+// /api, matches no mount, and reaches its endpoint. The classic .html portals keep their extension
+// and are served by static files, so /admin.html and /student.html are untouched.
+var spaMounts = new[]
+{
+    ("/app", Path.Combine(webRoot, "app", "index.html")),
+    ("/admin", Path.Combine(webRoot, "admin", "index.html")),
+};
 app.Use(async (ctx, next) =>
 {
     var p = ctx.Request.Path.Value ?? "";
-    var isAppRoute = p == "/app" || p.StartsWith("/app/", StringComparison.OrdinalIgnoreCase);
-    if (ctx.Request.Method == "GET" && isAppRoute && !Path.HasExtension(p) && File.Exists(spaIndex))
+    if (ctx.Request.Method == "GET" && !Path.HasExtension(p))
     {
-        ctx.Response.ContentType = "text/html; charset=utf-8";
-        await ctx.Response.SendFileAsync(spaIndex);
-        return;
+        foreach (var (prefix, index) in spaMounts)
+        {
+            if ((p == prefix || p.StartsWith(prefix + "/", StringComparison.OrdinalIgnoreCase)) && File.Exists(index))
+            {
+                ctx.Response.ContentType = "text/html; charset=utf-8";
+                await ctx.Response.SendFileAsync(index);
+                return;
+            }
+        }
     }
     await next();
 });
@@ -548,6 +560,7 @@ Console.WriteLine("│  Project Controls Institute — platform is running    �
 Console.WriteLine("├──────────────────────────────────────────────────────┤");
 Console.WriteLine($"│  Website        {u}/");
 Console.WriteLine($"│  Student (React){u}/app/");
+Console.WriteLine($"│  Admin (React)  {u}/admin/");
 Console.WriteLine($"│  Student Panel  {u}/student.html");
 Console.WriteLine($"│  Admin Panel    {u}/admin.html");
 Console.WriteLine($"│  Exam preview   {u}/exam-ui.html");

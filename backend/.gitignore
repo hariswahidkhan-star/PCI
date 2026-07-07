@@ -5,8 +5,9 @@ obj/
 *.db-shm
 .env
 
-# built React SPA (produced from ../frontend by `npm run build`; assembled in the Docker image)
+# built React SPAs (produced from ../frontend by `npm run build`; assembled in the Docker image)
 wwwroot/app/
+wwwroot/admin/
 
 # integration test artifacts
 tests/_integration.db*

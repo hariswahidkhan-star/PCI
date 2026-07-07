@@ -1,0 +1,17 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import AdminApp from './AdminApp'
+import { AdminAuthProvider } from './AdminAuth'
+import '../styles.css'
+
+// Served by the backend under /admin/ (see backend/Program.cs SPA fallback).
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <BrowserRouter basename="/admin">
+      <AdminAuthProvider>
+        <AdminApp />
+      </AdminAuthProvider>
+    </BrowserRouter>
+  </React.StrictMode>,
+)

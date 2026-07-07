@@ -6,7 +6,10 @@
   "description": "PCI platform React frontend — interactive app screens (student portal, and later admin/exam) on the existing JSON API.",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "dev:admin": "vite --config vite.admin.config.ts",
+    "build": "tsc --noEmit && npm run build:student && npm run build:admin",
+    "build:student": "vite build",
+    "build:admin": "vite build --config vite.admin.config.ts",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview"
   },

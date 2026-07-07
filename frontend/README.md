@@ -1,12 +1,20 @@
-# PCI Frontend — React student portal (Stage 3)
+# PCI Frontend — React apps (Stage 3)
 
-A React + TypeScript (Vite) single-page app for the **interactive** student-facing screens,
-running on the existing JSON API. It is served by the ASP.NET backend under **`/app/`**.
+React + TypeScript (Vite) for the **interactive** screens, running on the existing JSON API and
+served by the ASP.NET backend. Two independent apps share this project (and its components/helpers):
 
-This is the first slice of the Stage 3 "convert the frontend to React" work. It deliberately
-covers the *logged-in application* screens — where a component model genuinely helps — and leaves
-the ~210 SEO-critical marketing/info pages on the fast, server-rendered content system (Stage 2).
-Nothing here changes those pages; the classic `student.html` portal also stays in place and reachable.
+- **Student portal** → served under **`/app/`** (`index.html` → `src/main.tsx`)
+- **Admin console** → served under **`/admin/`** (`admin.html` → `src/admin/main.tsx`)
+
+They build as **separate bundles** (own base path, own bearer token) so students never download admin
+code and vice versa. This is the Stage 3 "convert the frontend to React" work: it covers the
+*logged-in application* screens — where a component model genuinely helps — and leaves the ~210
+SEO-critical marketing/info pages on the fast, server-rendered content system (Stage 2). The classic
+`student.html` and `admin.html` panels also stay in place and reachable.
+
+The admin console ports a first set of sections (Dashboard, Students, Payments, Certifications, Pages
+& content) and links to the classic panel for everything else — nothing is lost. Section visibility
+follows the same role permissions the server enforces.
 
 ## What's here
 
