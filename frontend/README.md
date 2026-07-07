@@ -12,9 +12,12 @@ code and vice versa. This is the Stage 3 "convert the frontend to React" work: i
 SEO-critical marketing/info pages on the fast, server-rendered content system (Stage 2). The classic
 `student.html` and `admin.html` panels also stay in place and reachable.
 
-The admin console ports a first set of sections (Dashboard, Students, Payments, Certifications, Pages
-& content) and links to the classic panel for everything else — nothing is lost. Section visibility
-follows the same role permissions the server enforces.
+The admin console ports the operator's day-to-day surface — Dashboard, Students, Enrolments, Payments,
+Credentials, Support tickets, Certifications, Discount codes, Pages & content, Enquiries, Form
+submissions, Reviews, Site content, Newsletter, Reports (with CSV export), Email log and Audit log —
+and links to the classic panel for the remaining specialised sections (proctoring, question bank,
+media library, team & access, settings). Nothing is lost. Section visibility follows the same role
+permissions the server enforces.
 
 ## What's here
 

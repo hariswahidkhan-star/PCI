@@ -17,7 +17,10 @@ const NAV: { to: string; label: string; perm: string | null; end?: boolean }[] =
   { to: '/enquiries', label: 'Enquiries', perm: 'inquiries' },
   { to: '/submissions', label: 'Form submissions', perm: 'submissions' },
   { to: '/reviews', label: 'Reviews', perm: 'content' },
+  { to: '/content', label: 'Site content', perm: 'content' },
   { to: '/subscribers', label: 'Newsletter', perm: 'subscribers' },
+  { to: '/reports', label: 'Reports', perm: 'reports' },
+  { to: '/emails', label: 'Email log', perm: 'emails' },
   { to: '/audit', label: 'Audit log', perm: 'audit' },
 ]
 

@@ -17,6 +17,9 @@ import Submissions from './pages/Submissions'
 import Reviews from './pages/Reviews'
 import Subscribers from './pages/Subscribers'
 import Audit from './pages/Audit'
+import Reports from './pages/Reports'
+import Emails from './pages/Emails'
+import Content from './pages/Content'
 import { ErrorNote } from '../components/ui'
 import type { ReactNode } from 'react'
 
@@ -50,7 +53,10 @@ export default function AdminApp() {
         <Route path="enquiries" element={<Perm section="inquiries"><Enquiries /></Perm>} />
         <Route path="submissions" element={<Perm section="submissions"><Submissions /></Perm>} />
         <Route path="reviews" element={<Perm section="content"><Reviews /></Perm>} />
+        <Route path="content" element={<Perm section="content"><Content /></Perm>} />
         <Route path="subscribers" element={<Perm section="subscribers"><Subscribers /></Perm>} />
+        <Route path="reports" element={<Perm section="reports"><Reports /></Perm>} />
+        <Route path="emails" element={<Perm section="emails"><Emails /></Perm>} />
         <Route path="audit" element={<Perm section="audit"><Audit /></Perm>} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

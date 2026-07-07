@@ -240,3 +240,33 @@ export interface AuditRow {
   details?: string | null
   created_at?: string | null
 }
+
+export interface EmailLog {
+  id: number
+  user_id?: number | null
+  email?: string | null
+  email_type?: string | null
+  subject?: string | null
+  status?: string | null
+  sent_at?: string | null
+}
+
+export interface SiteContentRow {
+  id: number
+  ckey: string
+  cgroup?: string | null
+  label?: string | null
+  ctype?: string | null
+  cvalue?: string | null
+}
+
+export interface ReportData {
+  from: string
+  to: string
+  totals: { payments: number; revenue: number; code_discounts: number; standard_discounts: number; avg_order: number }
+  revenue_daily: { d: string; revenue: number; n: number }[]
+  by_product: { product_type: string; n: number; revenue: number }[]
+  by_country: { country: string; n: number; revenue: number }[]
+  funnel: { started: number; paid: number }
+  new_members: number
+}
