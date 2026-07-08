@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAdminAuth } from './AdminAuth'
+import { CRUD_SECTIONS } from './crudConfigs'
 import { initials } from '../format'
 
 // Sections ported to the React admin so far. `perm` null = any authenticated admin;
@@ -26,6 +27,8 @@ const NAV: NavItem[] = [
   { to: '/reports', label: 'Reports', perm: 'reports' },
   { to: '/emails', label: 'Email log', perm: 'emails' },
   { to: '/audit', label: 'Audit log', perm: 'audit' },
+  // generic content collections (question bank, media, FAQs, resources, news, BoK, governance, nav)
+  ...CRUD_SECTIONS.map((c) => ({ to: '/' + c.path, label: c.title, perm: c.perm })),
   { to: '/settings', label: 'Settings', anyPerm: ['settings', 'set_web', 'set_sp', 'set_exam'] },
   { to: '/team', label: 'Team & Access', owner: true },
 ]

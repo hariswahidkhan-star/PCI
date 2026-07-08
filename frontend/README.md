@@ -12,12 +12,16 @@ code and vice versa. This is the Stage 3 "convert the frontend to React" work: i
 SEO-critical marketing/info pages on the fast, server-rendered content system (Stage 2). The classic
 `student.html` and `admin.html` panels also stay in place and reachable.
 
-The admin console ports the operator's day-to-day surface — Dashboard, Students, Enrolments, Payments,
-Credentials, Support tickets, Certifications, Discount codes, Pages & content, Enquiries, Form
-submissions, Reviews, Site content, Newsletter, Reports (with CSV export), Email log and Audit log —
-and links to the classic panel for the remaining specialised sections (proctoring, question bank,
-media library, team & access, settings). Nothing is lost. Section visibility follows the same role
-permissions the server enforces.
+The admin console covers the full operator surface (≈29 sections): Dashboard, Students, Enrolments,
+Payments, Credentials, Support tickets, Certifications, Exam registrations, Proctoring & sessions,
+Discount codes, Pages & content, Site content, Enquiries, Form submissions, Reviews, Newsletter,
+Reports (with CSV export), Email log, Audit log, Settings, Team & Access, and the content collections
+(Question bank, Media library, FAQs, Resources, News, Body of Knowledge, Governance, Navigation menus).
+The classic `admin.html` panel remains available and reachable; nothing is lost. Section visibility
+follows the same role permissions the server enforces.
+
+The content collections are driven by a single reusable `CrudSection` component (`crudConfigs.ts`) over
+the backend's uniform `/api/admin/{name}` CRUD factory, so adding another collection is one config entry.
 
 ## What's here
 

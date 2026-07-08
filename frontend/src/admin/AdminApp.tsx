@@ -24,6 +24,8 @@ import Team from './pages/Team'
 import Settings from './pages/Settings'
 import Exams from './pages/Exams'
 import Proctoring from './pages/Proctoring'
+import CrudSection from './CrudSection'
+import { CRUD_SECTIONS } from './crudConfigs'
 import { ErrorNote } from '../components/ui'
 import type { ReactNode } from 'react'
 
@@ -78,6 +80,9 @@ export default function AdminApp() {
         <Route path="proctoring" element={<Perm section="proctoring"><Proctoring /></Perm>} />
         <Route path="settings" element={<AnyPerm sections={['settings', 'set_web', 'set_sp', 'set_exam']}><Settings /></AnyPerm>} />
         <Route path="team" element={<OwnerOnly><Team /></OwnerOnly>} />
+        {CRUD_SECTIONS.map((c) => (
+          <Route key={c.path} path={c.path} element={<Perm section={c.perm}><CrudSection config={c} /></Perm>} />
+        ))}
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
