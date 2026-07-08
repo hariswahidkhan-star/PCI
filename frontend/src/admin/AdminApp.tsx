@@ -23,6 +23,7 @@ import Content from './pages/Content'
 import Team from './pages/Team'
 import Settings from './pages/Settings'
 import Exams from './pages/Exams'
+import Proctoring from './pages/Proctoring'
 import { ErrorNote } from '../components/ui'
 import type { ReactNode } from 'react'
 
@@ -74,6 +75,7 @@ export default function AdminApp() {
         <Route path="emails" element={<Perm section="emails"><Emails /></Perm>} />
         <Route path="audit" element={<Perm section="audit"><Audit /></Perm>} />
         <Route path="exams" element={<Perm section="exams"><Exams /></Perm>} />
+        <Route path="proctoring" element={<Perm section="proctoring"><Proctoring /></Perm>} />
         <Route path="settings" element={<AnyPerm sections={['settings', 'set_web', 'set_sp', 'set_exam']}><Settings /></AnyPerm>} />
         <Route path="team" element={<OwnerOnly><Team /></OwnerOnly>} />
       </Route>

@@ -304,3 +304,59 @@ export interface ExamReg {
 }
 
 export type Settings = Record<string, string>
+
+export interface ExamSessionRow {
+  id: number
+  user_id?: number | null
+  kind?: string | null
+  started_at?: string | null
+  submitted_at?: string | null
+  percent?: number | null
+  result?: string | null
+  status?: string | null
+  violations?: number | null
+  identity_result?: string | null
+  evidence_count?: number | null
+  review_status?: string | null
+  client_kind?: string | null
+  result_status?: string | null
+  hold_reason?: string | null
+  released_at?: string | null
+  email?: string | null
+  first_name?: string | null
+  last_name?: string | null
+  high_events?: number | null
+  // live view only
+  remaining_s?: number | null
+  seconds_since_beat?: number | null
+  candidate_msgs?: number | null
+  last_heartbeat_at?: string | null
+  duration_minutes?: number | null
+}
+
+export interface ProctorEvent {
+  type?: string | null
+  severity?: string | null
+  detail?: string | null
+  evidence_ref?: string | null
+  at?: string | null
+}
+
+export interface ProctorMessage {
+  sender: string
+  body: string
+  created_at?: string | null
+  delivered_at?: string | null
+}
+
+export interface ExamSessionDetail {
+  attempt: Record<string, unknown>
+  user: Record<string, unknown>
+  booking: Record<string, unknown> | null
+  events: ProctorEvent[]
+  evidence: Record<string, unknown>[]
+  identity: Record<string, unknown>[]
+  credential: Record<string, unknown> | null
+  messages: ProctorMessage[]
+  summary: { total_events: number; by_severity: Record<string, number>; answered: number }
+}
