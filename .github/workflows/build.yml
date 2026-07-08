@@ -116,6 +116,24 @@ jobs:
           pip install --quiet --break-system-packages pymysql || pip install --quiet pymysql
           python3 tests/integration_test.py
 
+  frontend:
+    # Stage 3 React student portal: typecheck + production build must both succeed.
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: frontend } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: 'npm', cache-dependency-path: frontend/package-lock.json }
+      - run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Production build (student + admin)
+        run: npm run build
+      - name: Fail if either app produced no assets
+        run: |
+          test -f dist/index.html && ls dist/assets/*.js >/dev/null
+          test -f dist-admin/admin.html && ls dist-admin/assets/*.js >/dev/null
+
   secureexam-windows:
     runs-on: windows-latest      # WPF client needs Windows to compile
     defaults: { run: { working-directory: secureexam } }

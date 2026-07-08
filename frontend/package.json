@@ -1,0 +1,28 @@
+{
+  "name": "pci-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "PCI platform React frontend — interactive app screens (student portal, and later admin/exam) on the existing JSON API.",
+  "scripts": {
+    "dev": "vite",
+    "dev:admin": "vite --config vite.admin.config.ts",
+    "build": "tsc --noEmit && npm run build:student && npm run build:admin",
+    "build:student": "vite build",
+    "build:admin": "vite build --config vite.admin.config.ts",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.8"
+  }
+}
