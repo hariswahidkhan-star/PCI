@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { useQuery } from '../api/hooks'
+import { useQuery, runMutation } from '../api/hooks'
 import { useMe } from '../data/MeContext'
 import { api } from '../api/client'
 import { Card, Spinner, ErrorNote, Empty, StatusBadge } from '../components/ui'
@@ -43,11 +43,8 @@ export default function Cpd() {
     }
   }
 
-  async function remove(id: number) {
-    await api.del(`/api/me/cpd/${id}`)
-    refetch()
-    refetchMe()
-  }
+  const remove = (id: number) =>
+    runMutation(async () => { await api.del(`/api/me/cpd/${id}`); refetch(); refetchMe() })
 
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
@@ -71,22 +68,22 @@ export default function Cpd() {
         <form onSubmit={add}>
           <div className="grid cols-2">
             <div className="field">
-              <label>Activity</label>
-              <input required value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="e.g. EVM masterclass" />
+              <label htmlFor="cpd-activity">Activity</label>
+              <input id="cpd-activity" required value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="e.g. EVM masterclass" />
             </div>
             <div className="field">
-              <label>Category</label>
-              <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+              <label htmlFor="cpd-category">Category</label>
+              <select id="cpd-category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
                 {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
               </select>
             </div>
             <div className="field">
-              <label>Hours</label>
-              <input type="number" step="0.5" min="0" required value={form.hours} onChange={(e) => setForm({ ...form, hours: e.target.value })} />
+              <label htmlFor="cpd-hours">Hours</label>
+              <input id="cpd-hours" type="number" step="0.5" min="0" required value={form.hours} onChange={(e) => setForm({ ...form, hours: e.target.value })} />
             </div>
             <div className="field">
-              <label>Date</label>
-              <input type="date" value={form.activity_date} onChange={(e) => setForm({ ...form, activity_date: e.target.value })} />
+              <label htmlFor="cpd-date">Date</label>
+              <input id="cpd-date" type="date" value={form.activity_date} onChange={(e) => setForm({ ...form, activity_date: e.target.value })} />
             </div>
           </div>
           <button className="btn sm" disabled={busy}>{busy ? 'Saving…' : 'Add entry'}</button>

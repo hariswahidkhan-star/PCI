@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useAdminQuery } from '../hooks'
+import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi, type Inquiry } from '../api'
-import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { Card, StatusBadge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
 import { fmtDate, titleCase } from '../../format'
 
 export default function Enquiries() {
@@ -14,11 +14,8 @@ export default function Enquiries() {
   const qs = params.toString()
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Inquiry[] }>(`/api/admin/inquiries${qs ? '?' + qs : ''}`)
 
-  async function setInqStatus(id: number, s: string) {
-    await adminApi.post(`/api/admin/inquiries/${id}/status`, { status: s })
-    refetch()
-    setOpen(null)
-  }
+  const setInqStatus = (id: number, s: string) =>
+    runMutation(async () => { await adminApi.post(`/api/admin/inquiries/${id}/status`, { status: s }); refetch(); setOpen(null) })
 
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
@@ -50,7 +47,7 @@ export default function Enquiries() {
             </thead>
             <tbody>
               {data.rows.map((r) => (
-                <tr key={r.id} style={{ cursor: 'pointer' }} onClick={() => setOpen(r)}>
+                <tr key={r.id} {...rowActivate(() => setOpen(r))}>
                   <td className="small muted">{fmtDate(r.created_at)}</td>
                   <td>{titleCase(r.type ?? '—')}</td>
                   <td className="small">{r.email}{r.org ? ` · ${r.org}` : ''}</td>

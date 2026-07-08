@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type ExamSessionRow, type ExamSessionDetail } from '../api'
-import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
 import { fmtDateTime, titleCase } from '../../format'
 
 function sevTone(sev?: string | null): 'err' | 'warn' | 'brand' | 'neutral' {
@@ -190,7 +190,7 @@ export default function Proctoring() {
               {data.rows.map((r) => {
                 const stale = (r.seconds_since_beat ?? 0) > 60
                 return (
-                  <tr key={r.id} style={{ cursor: 'pointer' }} onClick={() => setSelected(r.id)}>
+                  <tr key={r.id} {...rowActivate(() => setSelected(r.id))}>
                     <td><strong>{`${r.first_name ?? ''} ${r.last_name ?? ''}`.trim() || r.email}</strong><div className="small muted">{r.email}</div></td>
                     <td>{mmss(r.remaining_s)}</td>
                     <td>{stale ? <Badge tone="err">{r.seconds_since_beat}s ago</Badge> : <Badge tone="ok">live</Badge>}</td>
@@ -211,7 +211,7 @@ export default function Proctoring() {
               {data.rows.map((r) => {
                 const held = r.result_status === 'auto_held'
                 return (
-                  <tr key={r.id} style={{ cursor: 'pointer' }} onClick={() => setSelected(r.id)}>
+                  <tr key={r.id} {...rowActivate(() => setSelected(r.id))}>
                     <td><strong>{`${r.first_name ?? ''} ${r.last_name ?? ''}`.trim() || r.email}</strong><div className="small muted">{r.email}</div></td>
                     <td className="small muted">{fmtDateTime(r.started_at)}</td>
                     <td><StatusBadge status={r.result_status || r.status || ''} /></td>

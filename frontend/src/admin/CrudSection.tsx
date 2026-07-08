@@ -10,6 +10,7 @@ export interface CrudField {
   options?: { value: string; label: string }[]
   inList?: boolean // show as a table column
   placeholder?: string
+  required?: boolean // block save + surface an error when left blank (NOT NULL columns)
 }
 
 export interface CrudConfig {
@@ -38,15 +39,23 @@ function Editor({ config, row, onClose, onSaved }: { config: CrudConfig; row: Ro
   const set = (k: string, v: unknown) => setForm((p) => ({ ...p, [k]: v }))
 
   async function save() {
-    setBusy(true)
     setError(null)
+    // block on empty required fields (NOT NULL columns) before hitting the server
+    const missing = config.fields.find((f) => f.required && !String(form[f.key] ?? '').trim())
+    if (missing) {
+      setError(`${missing.label} is required.`)
+      return
+    }
+    setBusy(true)
     try {
-      // send booleans as-is (server maps true/false -> 1/0); coerce number fields
+      // send booleans as-is (server maps true/false -> 1/0); coerce numbers; blank text -> null so
+      // UNIQUE-but-nullable columns don't collide on empty strings.
       const payload: Record<string, unknown> = {}
       for (const f of config.fields) {
         let v = form[f.key]
         if (f.type === 'checkbox') v = isTruthy(v)
         else if (f.type === 'number') v = v === '' || v == null ? null : Number(v)
+        else if (typeof v === 'string' && v.trim() === '') v = null
         payload[f.key] = v
       }
       if (isNew) await adminApi.post(`/api/admin/${config.name}`, payload)
@@ -70,22 +79,24 @@ function Editor({ config, row, onClose, onSaved }: { config: CrudConfig; row: Ro
         <div className="grid cols-2">
           {config.fields.map((f) => {
             const full = f.type === 'textarea'
+            const id = `crud-${config.name}-${f.key}`
+            const labelText = f.label + (f.required ? ' *' : '')
             return (
               <div className="field" key={f.key} style={full ? { gridColumn: '1 / -1' } : undefined}>
-                <label>{f.label}</label>
+                {f.type !== 'checkbox' && <label htmlFor={id}>{labelText}</label>}
                 {f.type === 'textarea' ? (
-                  <textarea rows={3} value={String(form[f.key] ?? '')} onChange={(e) => set(f.key, e.target.value)} placeholder={f.placeholder} />
+                  <textarea id={id} rows={3} value={String(form[f.key] ?? '')} onChange={(e) => set(f.key, e.target.value)} placeholder={f.placeholder} />
                 ) : f.type === 'checkbox' ? (
                   <label className="row" style={{ fontWeight: 400 }}>
-                    <input type="checkbox" style={{ width: 'auto' }} checked={isTruthy(form[f.key])} onChange={(e) => set(f.key, e.target.checked)} /> {f.label}
+                    <input id={id} type="checkbox" style={{ width: 'auto' }} checked={isTruthy(form[f.key])} onChange={(e) => set(f.key, e.target.checked)} /> {f.label}
                   </label>
                 ) : f.type === 'select' ? (
-                  <select value={String(form[f.key] ?? '')} onChange={(e) => set(f.key, e.target.value)}>
+                  <select id={id} value={String(form[f.key] ?? '')} onChange={(e) => set(f.key, e.target.value)}>
                     <option value="">—</option>
                     {f.options?.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                   </select>
                 ) : (
-                  <input type={f.type === 'number' ? 'number' : 'text'} value={String(form[f.key] ?? '')} onChange={(e) => set(f.key, e.target.value)} placeholder={f.placeholder} />
+                  <input id={id} type={f.type === 'number' ? 'number' : 'text'} value={String(form[f.key] ?? '')} onChange={(e) => set(f.key, e.target.value)} placeholder={f.placeholder} />
                 )}
               </div>
             )

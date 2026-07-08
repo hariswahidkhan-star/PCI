@@ -27,7 +27,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(null)
   const [ready, setReady] = useState(false)
 
-  // On first load, if a token is present, confirm it still resolves to a user.
+  const logout = useCallback(() => {
+    // revoke server-side first (fire-and-forget), then clear local state
+    api.post('/api/logout', {}, { allowUnauthorized: true }).catch(() => {})
+    setToken(null)
+    setUser(null)
+  }, [])
+
+  // A 401 on ANY request (query or mutation) clears the session and returns to login.
+  useEffect(() => {
+    api.onUnauthorized(() => setUser(null))
+    return () => api.onUnauthorized(null)
+  }, [])
+
+  // On first load, if a token is present, confirm it still resolves to a user. A 401 means the token
+  // is dead (clear it); a transient network/5xx error is retried briefly so a backend blip on reload
+  // doesn't bounce a still-valid session to the login screen.
   useEffect(() => {
     let cancelled = false
     async function boot() {
@@ -35,15 +50,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setReady(true)
         return
       }
-      try {
-        const me = await api.get<MeProbe>('/api/me')
-        if (!cancelled)
-          setUser({ id: me.user.id, email: me.user.email, firstName: me.user.first_name, lastName: me.user.last_name })
-      } catch (e) {
-        if (e instanceof UnauthorizedError) setToken(null)
-      } finally {
-        if (!cancelled) setReady(true)
+      for (let attempt = 0; attempt < 3 && !cancelled; attempt++) {
+        try {
+          const me = await api.get<MeProbe>('/api/me')
+          if (!cancelled) setUser({ id: me.user.id, email: me.user.email, firstName: me.user.first_name, lastName: me.user.last_name })
+          break
+        } catch (e) {
+          if (e instanceof UnauthorizedError) { setToken(null); break }
+          if (attempt === 2) break // give up after retries; token retained for a later reload
+          await new Promise((r) => setTimeout(r, 600 * (attempt + 1)))
+        }
       }
+      if (!cancelled) setReady(true)
     }
     boot()
     return () => {
@@ -55,11 +73,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const res = await api.post<LoginResponse>('/api/login', { email, password }, { allowUnauthorized: true })
     setToken(res.token)
     setUser(res.user)
-  }, [])
-
-  const logout = useCallback(() => {
-    setToken(null)
-    setUser(null)
   }, [])
 
   return <AuthContext.Provider value={{ user, ready, login, logout }}>{children}</AuthContext.Provider>

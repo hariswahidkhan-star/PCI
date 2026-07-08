@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAdminQuery } from '../hooks'
+import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi, type Review } from '../api'
 import { Card, Badge, StatusBadge, Stat, Spinner, ErrorNote, Empty } from '../../components/ui'
 import { fmtDate } from '../../format'
@@ -13,18 +13,13 @@ export default function Reviews() {
   const [status, setStatus] = useState('')
   const { data, loading, error, refetch } = useAdminQuery<ReviewsResp>(`/api/admin/reviews${status ? '?status=' + status : ''}`)
 
-  async function setReviewStatus(id: number, s: string) {
-    await adminApi.post(`/api/admin/reviews/${id}/status`, { status: s })
-    refetch()
-  }
-  async function toggleFeatured(r: Review) {
-    await adminApi.patch(`/api/admin/reviews/${r.id}`, { featured: r.featured ? 0 : 1 })
-    refetch()
-  }
-  async function remove(id: number) {
+  const setReviewStatus = (id: number, s: string) =>
+    runMutation(async () => { await adminApi.post(`/api/admin/reviews/${id}/status`, { status: s }); refetch() })
+  const toggleFeatured = (r: Review) =>
+    runMutation(async () => { await adminApi.patch(`/api/admin/reviews/${r.id}`, { featured: r.featured ? 0 : 1 }); refetch() })
+  const remove = (id: number) => {
     if (!confirm('Delete this review permanently?')) return
-    await adminApi.del(`/api/admin/reviews/${id}`)
-    refetch()
+    runMutation(async () => { await adminApi.del(`/api/admin/reviews/${id}`); refetch() })
   }
 
   return (

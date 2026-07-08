@@ -183,8 +183,11 @@ app.Use(async (ctx, next) =>
     if (ctx.Request.Method == "GET")
     {
         var p = ctx.Request.Path.Value ?? "/";
-        var isPage = p == "/" || p.EndsWith(".html");
-        var allowed = p.StartsWith("/api") || p == "/admin.html";
+        // The React student portal (/app, /app/*) is now a primary surface but is extension-less, so it
+        // must be treated as a page for maintenance mode. The React admin (/admin, /admin/*) and the APIs
+        // stay up so staff can still operate during maintenance (parity with the classic /admin.html).
+        var isPage = p == "/" || p.EndsWith(".html") || p == "/app" || p.StartsWith("/app/");
+        var allowed = p.StartsWith("/api") || p == "/admin.html" || p == "/admin" || p.StartsWith("/admin/");
         if (isPage && !allowed && Settings.Bool(db, "web_maintenance_mode", false))
         {
             ctx.Response.StatusCode = 503;
@@ -265,6 +268,15 @@ app.MapPost("/api/login", async (HttpRequest req) =>
         db.Execute("INSERT INTO login_events(user_id,ip,user_agent,device,outcome) VALUES(?,?,?,?,?)", u["id"], ip, ua.Length>300?ua[..300]:ua, dev, "success");
     } catch { }
     return Json(new { ok = true, token = session, user = new { id = u["id"], email = u["email"], firstName = u["first_name"], lastName = u["last_name"] } });
+});
+
+// Student sign-out: revoke the presented session token server-side (mirrors the admin logout, so a
+// captured token stops working immediately rather than staying valid for its 30-day lifetime).
+app.MapPost("/api/logout", (HttpRequest req) =>
+{
+    var h = req.Headers.Authorization.ToString();
+    if (h.StartsWith("Bearer ")) db.Execute("DELETE FROM login_tokens WHERE token=? AND purpose='session'", Security.Sha(h.Substring(7)));
+    return Json(new { ok = true });
 });
 
 // ================= admin auth (login/logout/me/password) =================

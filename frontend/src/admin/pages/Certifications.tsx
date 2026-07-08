@@ -35,7 +35,9 @@ function Editor({ initial, onClose, onSaved }: { initial: Draft | null; onClose:
         duration_minutes: d.duration_minutes,
         expiry_years: d.expiry_years,
         exam_price: d.exam_price,
-        active: d.active ? 1 : 0,
+        // send a real JSON boolean — the backend keys the founding-cert guard and the create default on
+        // JsonValueKind.False, so a numeric 0 would be misread as "active" and defeat both.
+        active: !!d.active,
         sort_order: d.sort_order,
       }
       if (isNew) await adminApi.post('/api/admin/certifications', payload)
@@ -68,7 +70,7 @@ function Editor({ initial, onClose, onSaved }: { initial: Draft | null; onClose:
           <div className="field"><label>Expiry (years)</label><input type="number" value={d.expiry_years ?? ''} onChange={(e) => set('expiry_years', Number(e.target.value))} /></div>
           <div className="field"><label>Sort order</label><input type="number" value={d.sort_order ?? ''} onChange={(e) => set('sort_order', Number(e.target.value))} /></div>
           <div className="field"><label>Active</label>
-            <select value={d.active ? '1' : '0'} onChange={(e) => set('active', Number(e.target.value))}>
+            <select value={d.active ? '1' : '0'} onChange={(e) => set('active', e.target.value === '1')}>
               <option value="1">Active</option>
               <option value="0">Inactive</option>
             </select>

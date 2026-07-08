@@ -41,15 +41,18 @@ function ScheduleForm({ entry, onDone }: { entry: ExamEntry; onDone: () => void 
     }
   }
 
-  const min = new Date(Date.now() + 2 * 3600_000).toISOString().slice(0, 16)
-  const max = entry.deadline ? new Date(String(entry.deadline).replace(' ', 'T')).toISOString().slice(0, 16) : undefined
+  // datetime-local reads its value/min/max as LOCAL wall-clock, so build the bounds in local time
+  // (not via toISOString, which is UTC). The deadline is stored as UTC, so parse it with a 'Z'.
+  const toLocalInput = (d: Date) => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+  const min = toLocalInput(new Date(Date.now() + 2 * 3600_000))
+  const max = entry.deadline ? toLocalInput(new Date(String(entry.deadline).replace(' ', 'T') + 'Z')) : undefined
 
   return (
     <div className="stack" style={{ marginTop: '.75rem' }}>
       {error && <div className="notice err" role="alert">{error}</div>}
       <div className="field" style={{ margin: 0 }}>
-        <label>Choose a date &amp; time ({tz})</label>
-        <input type="datetime-local" value={when} min={min} max={max} onChange={(e) => setWhen(e.target.value)} />
+        <label htmlFor="sched-when">Choose a date &amp; time ({tz})</label>
+        <input id="sched-when" type="datetime-local" value={when} min={min} max={max} onChange={(e) => setWhen(e.target.value)} />
       </div>
       <div className="row">
         <button className="btn sm" disabled={!when || busy} onClick={submit}>{busy ? 'Scheduling…' : 'Confirm slot'}</button>

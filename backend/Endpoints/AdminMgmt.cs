@@ -49,16 +49,25 @@ public static class AdminMgmt
         // Every CRUD verb is gated by the content type's RBAC section (not just "any admin").
         void Crud(string name, string[] cols, string order, string section)
         {
-            app.MapGet($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ => J(new { rows = db.Query($"SELECT * FROM {name} ORDER BY {order}") })));
+            // Backtick identifiers so reserved words (e.g. media_assets.`usage`) are valid on BOTH providers
+            // — SQLite accepts backtick-quoted identifiers for MySQL compatibility. cols/name are code
+            // constants (not request input), so this is not an injection surface.
+            string Q(string c) => "`" + c + "`";
+            var colList = string.Join(",", cols.Select(Q));
+            app.MapGet($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ => J(new { rows = db.Query($"SELECT * FROM `{name}` ORDER BY {order}") })));
             app.MapPost($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ =>
             {
                 var b = H.Body(req).GetAwaiter().GetResult();
                 var vals = cols.Select(c => (object?)(b.TryGetValue(c, out var v) && v.ValueKind != JsonValueKind.Null
                     ? (v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ToString())
                     : null)).ToArray();
-                var id = db.ExecuteReturningId($"INSERT INTO {name}({string.Join(",", cols)}) VALUES({string.Join(",", cols.Select(_ => "?"))})", vals);
-                log(null, name + "_create", id.ToString());
-                return J(new { id });
+                try
+                {
+                    var id = db.ExecuteReturningId($"INSERT INTO `{name}`({colList}) VALUES({string.Join(",", cols.Select(_ => "?"))})", vals);
+                    log(null, name + "_create", id.ToString());
+                    return J(new { id });
+                }
+                catch { return Results.Json(new { error = "constraint", message = "Could not save — a required field is blank or a unique value is already in use." }, statusCode: 409); }
             }));
             app.MapPatch($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, _ =>
             {
@@ -66,13 +75,17 @@ public static class AdminMgmt
                 var set = cols.Where(c => b.ContainsKey(c)).ToList();
                 if (set.Count == 0) return J(new { ok = true });
                 var vals = set.Select(c => { var v = b[c]; return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
-                db.Execute($"UPDATE {name} SET {string.Join(",", set.Select(c => c + "=?"))} WHERE id=?", vals);
-                log(null, name + "_update", id.ToString());
-                return J(new { ok = true });
+                try
+                {
+                    db.Execute($"UPDATE `{name}` SET {string.Join(",", set.Select(c => Q(c) + "=?"))} WHERE id=?", vals);
+                    log(null, name + "_update", id.ToString());
+                    return J(new { ok = true });
+                }
+                catch { return Results.Json(new { error = "constraint", message = "Could not save — a unique value is already in use." }, statusCode: 409); }
             }));
             app.MapDelete($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, _ =>
             {
-                db.Execute($"DELETE FROM {name} WHERE id=?", id);
+                db.Execute($"DELETE FROM `{name}` WHERE id=?", id);
                 log(null, name + "_delete", id.ToString());
                 return J(new { ok = true });
             }));
@@ -240,7 +253,10 @@ public static class AdminMgmt
             long.TryParse(req.Query["limit"], out var limit); if (limit == 0) limit = 200;
             long.TryParse(req.Query["offset"], out var offset);
             var where = new List<string>(); var args = new List<object?>();
-            if (!string.IsNullOrEmpty(status)) { where.Add("session_status=?"); args.Add(status); }
+            // "abandoned" is a computed condition (never a stored session_status), mirroring the overview
+            // KPI: an in-progress session idle for 72h+. Other statuses match the column literally.
+            if (status == "abandoned") where.Add("session_status='in_progress' AND last_activity_at <= datetime('now','-72 hours')");
+            else if (!string.IsNullOrEmpty(status)) { where.Add("session_status=?"); args.Add(status); }
             if (!string.IsNullOrEmpty(q)) { where.Add("email LIKE ?"); args.Add(Like(q)); }
             var w = where.Count > 0 ? "WHERE " + string.Join(" AND ", where) : "";
             var rows = db.Query($"SELECT id,email,current_step,session_status,selected_product,selected_membership,last_activity_at,created_at,reminders_sent,last_reminder_at,(resume_token_hash IS NOT NULL) resume_link_issued FROM enrollment_sessions {w} ORDER BY last_activity_at DESC LIMIT ? OFFSET ?", args.Append((object?)limit).Append((object?)offset).ToArray());

@@ -49,3 +49,13 @@ export function useQuery<T>(path: string | null): QueryState<T> {
   const refetch = useCallback(() => setTick((t) => t + 1), [])
   return { data, loading, error, refetch }
 }
+
+/** Run a mutation, surfacing non-auth failures. A 401 is handled globally (client onUnauthorized). */
+export async function runMutation(fn: () => Promise<void>) {
+  try {
+    await fn()
+  } catch (e) {
+    if (e instanceof UnauthorizedError) return
+    alert(e instanceof Error ? e.message : 'The action could not be completed. Please try again.')
+  }
+}

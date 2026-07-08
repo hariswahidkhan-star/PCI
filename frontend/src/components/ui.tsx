@@ -53,3 +53,20 @@ export function Stat({ n, k }: { n: ReactNode; k: ReactNode }) {
     </div>
   )
 }
+
+/** Props for a clickable table row that is ALSO keyboard-accessible (Enter/Space activate). Spread
+ *  onto a <tr> that opens a detail/edit drawer, so non-mouse users can reach it. */
+export function rowActivate(onActivate: () => void) {
+  return {
+    role: 'button',
+    tabIndex: 0,
+    style: { cursor: 'pointer' } as const,
+    onClick: onActivate,
+    onKeyDown: (e: import('react').KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        onActivate()
+      }
+    },
+  }
+}

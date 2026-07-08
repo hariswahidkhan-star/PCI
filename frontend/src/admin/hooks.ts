@@ -47,3 +47,14 @@ export function useAdminQuery<T>(path: string | null): QueryState<T> {
   const refetch = useCallback(() => setTick((t) => t + 1), [])
   return { data, loading, error, refetch }
 }
+
+/** Run a mutation, surfacing non-auth failures to the user. A 401 is handled globally (the client's
+ *  onUnauthorized handler logs the admin out), so it is intentionally not re-surfaced here. */
+export async function runMutation(fn: () => Promise<void>) {
+  try {
+    await fn()
+  } catch (e) {
+    if (e instanceof UnauthorizedError) return
+    alert(e instanceof Error ? e.message : 'The action could not be completed. Please try again.')
+  }
+}

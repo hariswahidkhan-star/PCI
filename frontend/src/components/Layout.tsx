@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { useMe } from '../data/MeContext'
@@ -17,17 +18,19 @@ export default function Layout() {
   const { user, logout } = useAuth()
   const { me } = useMe()
   const unread = me?.unread ?? 0
+  const [menuOpen, setMenuOpen] = useState(false)
 
   return (
     <div className="shell">
-      <aside className="sidebar">
+      <div className={'nav-backdrop' + (menuOpen ? ' open' : '')} onClick={() => setMenuOpen(false)} />
+      <aside className={'sidebar' + (menuOpen ? ' open' : '')}>
         <div className="brand">
           <img src="/assets/logo.png" alt="PCI" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
           <span>PCI Portal</span>
         </div>
         <nav className="nav">
           {NAV.map((n) => (
-            <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink key={n.to} to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
               <span>{n.label}</span>
               {n.badgeKey === 'unread' && unread > 0 && <span className="pill">{unread}</span>}
             </NavLink>
@@ -40,7 +43,10 @@ export default function Layout() {
 
       <div className="main">
         <header className="topbar">
-          <strong>Student Portal</strong>
+          <div className="row">
+            <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>
+            <strong>Student Portal</strong>
+          </div>
           <div className="row">
             <div className="avatar" title={user?.email}>{initials(user?.firstName, user?.lastName)}</div>
             <div className="small" style={{ lineHeight: 1.2 }}>
