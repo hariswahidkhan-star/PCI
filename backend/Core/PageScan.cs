@@ -29,9 +29,13 @@ public static class PageScan
         "blockquote","figcaption","caption","summary","label","legend","a","button"
     };
 
-    /// <summary>Subtrees that are never content: code, styling, vector art, alternates.</summary>
+    /// <summary>Subtrees that are never content: code, styling, vector art, alternates.
+    /// (select is NOT skipped — its option texts are visitor-facing copy and captured.)</summary>
     static readonly HashSet<string> SkipTags = new(StringComparer.OrdinalIgnoreCase)
-    { "script", "style", "svg", "template", "noscript", "head", "select", "textarea" };
+    { "script", "style", "svg", "template", "noscript", "head", "textarea" };
+
+    /// <summary>Visible/assistive text carried in attributes — captured as editable blocks too.</summary>
+    static readonly string[] TextAttrs = { "placeholder", "aria-label" };
 
     static readonly HashSet<string> VoidTags = new(StringComparer.OrdinalIgnoreCase)
     { "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr" };
@@ -53,6 +57,7 @@ public static class PageScan
         public string Tag = "";
         public string Attrs = "";
         public int TagStart;                               // where the element's own open tag begins
+        public int AttrsStart;                             // absolute offset of Attrs within the page
         public int InnerStart, InnerEnd;
         public List<Node> Children = new();
         public List<(int start, int end)> Texts = new();   // direct text spans
@@ -87,6 +92,8 @@ public static class PageScan
                 // marker are ordinary content.
                 if (InMarker(markers, c.TagStart)) continue;
 
+                CaptureTextAttrs(html, c, regions, occ);                                             // placeholder / aria-label
+
                 if (c.Tag.Equals("h1", StringComparison.OrdinalIgnoreCase) && !firstH1Seen)
                 { firstH1Seen = true; continue; }                                                    // the '_h1' block owns the headline
 
@@ -118,6 +125,30 @@ public static class PageScan
         return regions;
     }
 
+    /// <summary>Attribute text a visitor sees or hears (input placeholders, aria-labels) becomes an
+    /// editable block, keyed by the attribute's own value so identical labels across pages collapse
+    /// into one shared element.</summary>
+    static void CaptureTextAttrs(string html, Node n, List<Region> regions, Dictionary<string, int> occ)
+    {
+        if (n.Tag.Equals("img", StringComparison.OrdinalIgnoreCase)) return;                         // img has its own alt/src handling
+        foreach (var name in TextAttrs)
+        {
+            if (!n.Attrs.Contains(name, StringComparison.OrdinalIgnoreCase)) continue;
+            var span = AttrSpan(html, n, name);
+            if (span is null) continue;
+            var raw = html.Substring(span.Value.start, span.Value.end - span.Value.start);
+            if (raw.Trim().Length == 0) continue;
+            var tag = n.Tag.ToLowerInvariant();
+            var hash = Hash($"attr|{tag}|{name}|{raw}");
+            var occKey = $"{tag}|{hash}|{name}";
+            var nth = occ[occKey] = occ.TryGetValue(occKey, out var k) ? k + 1 : 1;
+            var key = nth == 1 ? $"t:{tag}:{hash}@{name}" : $"t:{tag}:{hash}:{nth}@{name}";
+            regions.Add(new Region(key, $"g:{tag}:{hash}@{name}", "attr",
+                System.Net.WebUtility.HtmlDecode(raw), $"{(name == "placeholder" ? "Placeholder" : "Screen-reader label")}: {Trunc(System.Net.WebUtility.HtmlDecode(raw), 60)}",
+                span.Value.start, span.Value.end, regions.Count));
+        }
+    }
+
     static void CaptureImg(string html, Node img, List<Region> regions, Dictionary<string, int> occ)
     {
         var src = AttrSpan(html, img, "src");
@@ -138,13 +169,12 @@ public static class PageScan
 
     static (int start, int end)? AttrSpan(string html, Node n, string name)
     {
-        // find name="value" inside the tag's attribute source; n.InnerStart is right after '>' for
-        // void tags we store attr text separately, so search the raw attrs with offset bookkeeping
+        // find name="value" inside the tag's attribute source; AttrsStart anchors the span in the
+        // page regardless of how the tag closes ('>' vs '/>').
         var m = Regex.Match(n.Attrs, $@"\b{name}\s*=\s*(""([^""]*)""|'([^']*)')", RegexOptions.IgnoreCase);
         if (!m.Success) return null;
         var g = m.Groups[2].Success && m.Groups[1].Value.StartsWith('"') ? m.Groups[2] : m.Groups[3];
-        var attrsStart = n.InnerStart - 1 - n.Attrs.Length;                                          // '>' sits at InnerStart-1
-        return (attrsStart + g.Index, attrsStart + g.Index + g.Length);
+        return (n.AttrsStart + g.Index, n.AttrsStart + g.Index + g.Length);
     }
 
     // ---- parse ----
@@ -197,7 +227,7 @@ public static class PageScan
                 continue;
             }
 
-            var node = new Node { Tag = tag, Attrs = m.Groups[3].Value, TagStart = m.Index, InnerStart = m.Index + m.Length, InnerEnd = m.Index + m.Length };
+            var node = new Node { Tag = tag, Attrs = m.Groups[3].Value, TagStart = m.Index, AttrsStart = m.Groups[3].Index, InnerStart = m.Index + m.Length, InnerEnd = m.Index + m.Length };
             stack[^1].Children.Add(node);
             if (!selfClose) stack.Add(node);
         }

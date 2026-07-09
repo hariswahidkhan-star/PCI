@@ -14,9 +14,11 @@ namespace PCI.Backend.Core;
 /// </summary>
 public static class PageContent
 {
-    // The single-file apps are not content pages; never inject into them.
+    // The application UIs (portals + exam runner) are not content pages; never inject into them.
+    // The checkout, enrolment wizard and launcher ARE captured: their static copy is editable like
+    // any page — only the JS-rendered parts (order summary, price maths) stay engine-driven.
     static readonly HashSet<string> AppShells = new(StringComparer.OrdinalIgnoreCase)
-    { "student.html", "admin.html", "exam-ui.html", "checkout.html", "enroll.html", "index-launcher.html" };
+    { "student.html", "admin.html", "exam-ui.html" };
 
     static int _version = 1;
     /// <summary>Called by any admin content edit so cached injections refresh on the next request.</summary>
