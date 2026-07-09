@@ -310,7 +310,7 @@ CREATE TABLE IF NOT EXISTS faqs (
 );
 CREATE TABLE IF NOT EXISTS bok_domains (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  code VARCHAR(500) UNIQUE, name TEXT NOT NULL, weight BIGINT DEFAULT 0, description TEXT, sort_order BIGINT DEFAULT 0
+  code VARCHAR(500) UNIQUE, name TEXT NOT NULL, weight BIGINT DEFAULT 0, description TEXT, bullets TEXT, sort_order BIGINT DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS sample_questions (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -350,16 +350,16 @@ CREATE TABLE IF NOT EXISTS governance_roles (
 );
 CREATE TABLE IF NOT EXISTS resources (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  title VARCHAR(500) NOT NULL UNIQUE, category TEXT, doc_type TEXT DEFAULT 'PDF', url TEXT,
+  title VARCHAR(500) NOT NULL, category TEXT, doc_type TEXT DEFAULT 'PDF', url TEXT, description TEXT,
   published BIGINT DEFAULT 1, sort_order BIGINT DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS news (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  title VARCHAR(500) NOT NULL UNIQUE, body TEXT, published_date TEXT, published BIGINT DEFAULT 1, sort_order BIGINT DEFAULT 0
+  title VARCHAR(500) NOT NULL, body TEXT, url TEXT, published_date TEXT, published BIGINT DEFAULT 1, sort_order BIGINT DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS nav_items (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  label TEXT NOT NULL, url VARCHAR(500) UNIQUE, nav_group TEXT DEFAULT 'Footer', sort_order BIGINT DEFAULT 0, visible BIGINT DEFAULT 1
+  label TEXT NOT NULL, url VARCHAR(500), nav_group TEXT DEFAULT 'Footer', sort_order BIGINT DEFAULT 0, visible BIGINT DEFAULT 1
 );
 CREATE TABLE IF NOT EXISTS newsletter_subscribers (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -611,114 +611,6 @@ INSERT IGNORE INTO pages(slug,title,meta_description,nav_group,noindex,published
 INSERT IGNORE INTO pages(slug,title,meta_description,nav_group,noindex,published) VALUES('why-employers.html','Why Employers Value PCP-AI — Project Controls Institute','Why EPC contractors, owners, energy, defence, aerospace and government value the PCP-AI — validating planning, cost, forecasting, risk and AI governance.','Other',0,1);
 INSERT IGNORE INTO pages(slug,title,meta_description,nav_group,noindex,published) VALUES('why-pci.html','Why PCI | Project Controls Institute Global','Why PCI is building a focused certification standard for project controls professionals in the AI era — a distinct capability that matters more as AI.','Explore',0,1);
 INSERT IGNORE INTO pages(slug,title,meta_description,nav_group,noindex,published) VALUES('workforce-development.html','Workforce Development — Project Controls Institute','Build project-controls capability at national, sector and organisational scale through cohort development toward the PCP-AI.','Other',0,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Certifications','certification.html','Header',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Membership','membership.html','Header',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Resources','resources.html','Header',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Platform','certuvo.html','Header',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Organisations','organizations.html','Header',5,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Chapters','chapters.html','Header',6,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Sectors','sectors.html','Header',7,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('About','about.html','Header',8,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Why PCI','why-pci.html','Explore',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('How PCI Is Different','how-pci-is-different.html','Explore',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Candidate Journey','candidate-journey.html','Explore',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('PC Manager Career Path','project-controls-manager-career-path.html','Explore',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('PC Director Career Path','project-controls-director-career-path.html','Explore',5,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('PMP vs AACE vs PCP-AI','pmp-vs-aace-vs-pcp-ai.html','Explore',6,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Saudi Arabia','project-controls-certification-saudi-arabia.html','Certification by Region',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('UAE','project-controls-certification-uae.html','Certification by Region',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('USA','project-controls-certification-usa.html','Certification by Region',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('UK','project-controls-certification-uk.html','Certification by Region',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('India','project-controls-certification-india.html','Certification by Region',5,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Pakistan','project-controls-certification-pakistan.html','Certification by Region',6,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Donate','donate.html','About PCI',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('About PCI','about.html','About PCI',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Founding Status','founding-status.html','About PCI',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Leadership &amp; Governance','leadership.html','About PCI',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Mission &amp; Vision','mission-vision.html','About PCI',5,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Governance Framework','governance.html','About PCI',6,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Accreditation Status','accreditation-status.html','About PCI',7,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Strategic Plan','strategic-plan.html','About PCI',8,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Annual Reports','annual-reports.html','About PCI',9,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Certification Integrity','certification-integrity.html','About PCI',10,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('How PCI Fits','landscape.html','About PCI',11,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('FAQ','faq.html','About PCI',12,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Enrol','enrol.html','Certifications',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('PCP-AI','certification.html','Certifications',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Certification Roadmap','certification-roadmap.html','Certifications',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Eligibility Requirements','eligibility-requirements.html','Certifications',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Exam Structure','exam-structure.html','Certifications',5,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Body of Knowledge','body-of-knowledge.html','Certifications',6,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Sample Questions','sample-questions.html','Certifications',7,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Certification Policies','cert-policies.html','Certifications',8,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Recertification','recert.html','Certifications',9,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Digital Credentials','digital-credentials.html','Certifications',10,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('AI Certificate','ai-cert.html','Certifications',11,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Book an Exam','book.html','Certifications',12,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Student','membership-student.html','Membership',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Associate','membership-associate.html','Membership',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Professional','membership-professional.html','Membership',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Fellow','membership-fellow.html','Membership',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Corporate','membership-corporate.html','Membership',5,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Membership Benefits','membership-benefits.html','Membership',6,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('CPD Framework','cpd-framework.html','Membership',7,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Candidate Handbook','handbook.html','Governance',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Examination Rules','exam-rules.html','Governance',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Certification Policy','cert-policies.html','Governance',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Ethics Code','ethics.html','Governance',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Appeals Policy','appeals.html','Governance',5,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Complaints Policy','complaints.html','Governance',6,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Conflict of Interest','coi.html','Governance',7,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('AI Governance Policy','ai-policy.html','Governance',8,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Impartiality Policy','impartiality-policy.html','Governance',9,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('All policies &amp; documents','policies.html','Governance',10,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Guidelines &amp; Downloads','downloads.html','Resources',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Knowledge Hub','knowledge.html','Resources',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Research','research.html','Resources',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Publications','publications.html','Resources',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('White Papers','white-papers.html','Resources',5,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Industry Reports','industry-reports.html','Resources',6,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Salary Reports','salary-reports.html','Resources',7,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Career Guides','career-guides.html','Resources',8,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Webinars','webinars.html','Resources',9,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Blog &amp; Insights','blog.html','Resources',10,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Certuvo platform','certuvo.html','Resources',11,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('United States','chapter-us.html','Global Chapters',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('United Kingdom','chapter-uk.html','Global Chapters',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Europe','chapter-europe.html','Global Chapters',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Saudi Arabia','chapter-saudi.html','Global Chapters',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('United Arab Emirates','chapter-uae.html','Global Chapters',5,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('India','chapter-india.html','Global Chapters',6,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Pakistan','chapter-pakistan.html','Global Chapters',7,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Canada','chapter-canada.html','Global Chapters',8,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Australia','chapter-australia.html','Global Chapters',9,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Aerospace &amp; Defence','sector-aero.html','Industry Sectors',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Rail &amp; Transportation','sector-rail.html','Industry Sectors',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Energy &amp; Utilities','sector-energy.html','Industry Sectors',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Oil &amp; Gas','sector-oilgas.html','Industry Sectors',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Construction &amp; Infrastructure','sector-construction.html','Industry Sectors',5,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Aviation','sector-aviation.html','Industry Sectors',6,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Manufacturing','sector-manufacturing.html','Industry Sectors',7,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Data Centres','sector-datacenters.html','Industry Sectors',8,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Smart Cities','sector-smartcities.html','Industry Sectors',9,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Government Programmes','sector-government.html','Industry Sectors',10,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Refund Policy','refund-policy.html','Legal',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Privacy Policy','privacy.html','Legal',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Cookie Policy','cookie-policy.html','Legal',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Terms of Use','terms.html','Legal',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Website Disclaimer','website-disclaimer.html','Legal',5,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Copyright Policy','copyright-policy.html','Legal',6,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Accessibility Statement','accessibility-statement.html','Legal',7,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Data Protection Policy','data-protection-policy.html','Legal',8,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Log in','login.html','Verify',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Reset password','reset-password.html','Verify',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Verify Credential','verify.html','Verify',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Digital Badge Registry','digital-badge-registry.html','Verify',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Contact PCI','contact.html','Contact',1,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Request Information','request-info.html','Contact',2,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Corporate Programmes','corporate-programs.html','Contact',3,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('University Partnerships','university-partnerships.html','Contact',4,1);
-INSERT IGNORE INTO nav_items(label,url,nav_group,sort_order,visible) VALUES('Certuvo','certuvo.html','Contact',5,1);
 INSERT IGNORE INTO media_assets(filename,alt,`usage`) VALUES('about-institution.jpg','About Institution','about.html');
 INSERT IGNORE INTO media_assets(filename,alt,`usage`) VALUES('accreditation-building.jpg','Accreditation Building','accreditation-status.html');
 INSERT IGNORE INTO media_assets(filename,alt,`usage`) VALUES('ai-data.jpg','Ai Data','ai-policy.html');
@@ -778,50 +670,6 @@ INSERT IGNORE INTO media_assets(filename,alt,`usage`) VALUES('university-student
 INSERT IGNORE INTO media_assets(filename,alt,`usage`) VALUES('us-capitol.jpg','Us Capitol','chapter-us.html +1 more');
 INSERT IGNORE INTO media_assets(filename,alt,`usage`) VALUES('vision-blocks.jpg','Vision Blocks','mission-vision.html');
 INSERT IGNORE INTO media_assets(filename,alt,`usage`) VALUES('workforce-training.jpg','Workforce Training','workforce-development.html');
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Terms of Enrolment','Enrolment &amp; payment','Page','terms-of-enrollment.html',1,1);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Refund &amp; Cancellation Policy','Enrolment &amp; payment','Page','refund-policy.html',1,2);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Privacy Policy','Enrolment &amp; payment','Page','privacy.html',1,3);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Cookie Policy','Enrolment &amp; payment','Page','cookie-policy.html',1,4);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Data Protection Policy','Enrolment &amp; payment','Page','data-protection-policy.html',1,5);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Exam Structure','Examination','Page','exam-structure.html',1,6);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Examination Rules','Examination','Page','exam-rules.html',1,7);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Certification Policies','Examination','Page','cert-policies.html',1,8);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Eligibility Requirements','Examination','Page','eligibility-requirements.html',1,9);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Candidate Handbook','Examination','Page','handbook.html',1,10);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Certification Roadmap','Examination','Page','certification-roadmap.html',1,11);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Recertification','Membership &amp; CPD','Page','recert.html',1,12);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('CPD Framework','Membership &amp; CPD','Page','cpd-framework.html',1,13);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Membership Benefits','Membership &amp; CPD','Page','membership-benefits.html',1,14);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Accreditation Status','Membership &amp; CPD','Page','accreditation-status.html',1,15);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Code of Ethics','Governance &amp; conduct','Page','ethics.html',1,16);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Conflict of Interest','Governance &amp; conduct','Page','coi.html',1,17);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Appeals Policy','Governance &amp; conduct','Page','appeals.html',1,18);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Complaints Policy','Governance &amp; conduct','Page','complaints.html',1,19);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('Impartiality Policy','Governance &amp; conduct','Page','impartiality-policy.html',1,20);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('AI Governance Policy','Governance &amp; conduct','Page','ai-policy.html',1,21);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('all policies &amp; documents','Governance &amp; conduct','Page','policies.html',1,22);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('contact us','Governance &amp; conduct','Page','contact.html',1,23);
-INSERT IGNORE INTO resources(title,category,doc_type,url,published,sort_order) VALUES('corporate &amp; bulk enrolment','Governance &amp; conduct','Page','corporate-programs.html',1,24);
-INSERT IGNORE INTO faqs(question,answer,category,sort_order,published) VALUES('What is the PCP-AI credential?','The Certified Project Controls Professional — AI (PCP-AI) is a single, rigorous credential covering project controls, cost engineering and project finance, with the governed use of artificial intelligence treated as part of the discipline. It is awarded by the Project Controls Institute and built with reference to  ISO/IEC 17024','General',1,1);
-INSERT IGNORE INTO faqs(question,answer,category,sort_order,published) VALUES('Who is the PCP-AI for?','It is for the people who hold major projects to plan, cost and cash flow: planners, schedulers, cost engineers, project-controls and PMO professionals, and project-finance specialists across construction, energy, infrastructure and software.','General',2,1);
-INSERT IGNORE INTO faqs(question,answer,category,sort_order,published) VALUES('Is the PCP-AI accredited?','PCI is an independent independent certifying body. Our examinations are being developed with reference to ISO/IEC 17024. We describe our status honestly at every stage and make no claims beyond what is true today.','General',3,1);
-INSERT IGNORE INTO faqs(question,answer,category,sort_order,published) VALUES('How do I qualify to sit the exam?','There are two routes: an experience route for practitioners with relevant project-controls experience, and a foundation route for those newer to the field. Full  eligibility','General',4,1);
-INSERT IGNORE INTO faqs(question,answer,category,sort_order,published) VALUES('What does the examination involve?','The exam tests applied judgement rather than recall: scenario-based multiple-choice questions across the ten sections (93 Knowledge Areas), including the governed use of AI. It is proctored, online or at a test centre.','General',5,1);
-INSERT IGNORE INTO faqs(question,answer,category,sort_order,published) VALUES('How is the credential maintained?','The PCP-AI runs on a three-year continuing-professional-development (CPD) cycle. Membership keeps your credential current and tracks your CPD.','General',6,1);
-INSERT IGNORE INTO faqs(question,answer,category,sort_order,published) VALUES('How much does it cost?','Fees for the inaugural cohort are confirmed at enrolment. Members receive reduced rates on examinations and events.','General',7,1);
-INSERT IGNORE INTO faqs(question,answer,category,sort_order,published) VALUES('Why is AI part of a project-controls credential?','Because AI is already in the toolkit. The PCP-AI assesses the applied, governed use of AI across forecasting, risk and reporting — not generic AI literacy. Every output a certified professional relies on must be explainable, validated and owned by a competent human. In short: AI proposes; the professional disposes.','General',8,1);
-INSERT IGNORE INTO faqs(question,answer,category,sort_order,published) VALUES('What does membership include?','Membership provides  recertification','General',9,1);
-INSERT IGNORE INTO faqs(question,answer,category,sort_order,published) VALUES('Can my organisation certify a whole team?','Yes. Employers can upskill an existing function or build a new project-controls capability to one benchmarked standard.  Read more for employers','General',10,1);
-INSERT IGNORE INTO faqs(question,answer,category,sort_order,published) VALUES('Does PCI also sell exam preparation?','No. PCI develops and owns the standard and the examination. Preparation and training are provided separately by Certuvo, our official partner. This separation supports the  impartiality','General',11,1);
-INSERT IGNORE INTO faqs(question,answer,category,sort_order,published) VALUES('How can I verify someone''s credential?','Use the credential lookup on the  Verify page','General',12,1);
-INSERT IGNORE INTO bok_domains(code,name,weight,description,sort_order) VALUES('D1','Governance & Ethics of Project Controls',12,'Frameworks, standards, professional conduct and the governed use of AI.',1);
-INSERT IGNORE INTO bok_domains(code,name,weight,description,sort_order) VALUES('D2','Planning & Scheduling',16,'Schedule development, analysis, acceleration and control.',2);
-INSERT IGNORE INTO bok_domains(code,name,weight,description,sort_order) VALUES('D3','Cost Estimating & Budgeting',14,'Estimating methods, budgeting and cost baselines.',3);
-INSERT IGNORE INTO bok_domains(code,name,weight,description,sort_order) VALUES('D4','Risk & Contingency Management',12,'Qualitative and quantitative risk analysis and contingency.',4);
-INSERT IGNORE INTO bok_domains(code,name,weight,description,sort_order) VALUES('D5','Earned Value & Performance Management',14,'EVM, forecasting, variance analysis and reporting.',5);
-INSERT IGNORE INTO bok_domains(code,name,weight,description,sort_order) VALUES('D6','Governed AI in Project Controls',12,'Applying AI with human oversight, validation and accountability.',6);
-INSERT IGNORE INTO bok_domains(code,name,weight,description,sort_order) VALUES('D7','Data, Systems & Reporting',10,'Project controls data, tooling, integration and reporting.',7);
-INSERT IGNORE INTO bok_domains(code,name,weight,description,sort_order) VALUES('D8','Project Finance & Funding',10,'Funding structures, cash flow and financial controls.',8);
 INSERT IGNORE INTO sample_questions(question,options,answer_index,domain,published,sort_order) VALUES('Which metric best indicates cost efficiency in earned value management?','SPI
 CPI
 BAC
@@ -846,12 +694,6 @@ INSERT IGNORE INTO sample_questions(question,options,answer_index,domain,publish
 The professional reviews, adjusts and owns the decision
 AI must not be used
 Only managers may use AI',1,'Governed AI',1,7);
-INSERT IGNORE INTO governance_roles(role,holder,status,remit,sort_order) VALUES('Chair, Certification Committee',NULL,'open','Oversees examination integrity, eligibility and credentialing policy.',1);
-INSERT IGNORE INTO governance_roles(role,holder,status,remit,sort_order) VALUES('Chair, Standards Board',NULL,'open','Maintains the Body of Knowledge and the governed-AI standard.',2);
-INSERT IGNORE INTO governance_roles(role,holder,status,remit,sort_order) VALUES('Chair, Ethics Panel',NULL,'open','Governs the code of conduct, complaints and appeals.',3);
-INSERT IGNORE INTO governance_roles(role,holder,status,remit,sort_order) VALUES('Registrar',NULL,'open','Owns the credential registry, verification and records.',4);
-INSERT IGNORE INTO governance_roles(role,holder,status,remit,sort_order) VALUES('Academic Advisor (Psychometrics)',NULL,'open','Advises on assessment design, validation and standard-setting.',5);
-INSERT IGNORE INTO governance_roles(role,holder,status,remit,sort_order) VALUES('Independent Public Director',NULL,'open','Provides independent oversight in the public interest.',6);
 INSERT INTO pricing_rules(product_type,standard_price,default_discount_percentage,active)
  SELECT 'renewal',99,0,1 WHERE NOT EXISTS(SELECT 1 FROM pricing_rules WHERE product_type='renewal');
 INSERT INTO pricing_rules(product_type,standard_price,default_discount_percentage,active)

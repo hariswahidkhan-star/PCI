@@ -21,12 +21,16 @@ public static class PageContent
     static int _version = 1;
     /// <summary>Called by any admin content edit so cached injections refresh on the next request.</summary>
     public static void Bump() => Interlocked.Increment(ref _version);
+    /// <summary>Current content version — lets other caches (e.g. the search index) follow content edits.</summary>
+    public static int Version => Volatile.Read(ref _version);
 
     // caches, keyed by content version so a bump transparently invalidates them
     static int _cachedVersion = -1;
-    static Dictionary<string, string> _globalContent = new();                               // ckey → value
+    static Dictionary<string, string> _globalContent = new();                               // ckey → value (data-cms bindings)
+    static Dictionary<string, (string val, string ctype)> _globalElems = new();             // 'g:…' shared element → value
     static Dictionary<string, (string? title, string? meta)> _pageMeta = new();             // slug → title/meta
     static Dictionary<string, Dictionary<string, string>> _pageBlocks = new();              // slug → {block_key → value}
+    static Dictionary<string, Dictionary<string, (string val, string ctype)>> _elemBlocks = new(); // slug → {'t:…' → value}
     static readonly Dictionary<string, (int ver, string html)> _rendered = new(StringComparer.OrdinalIgnoreCase);
     static readonly object _lock = new();
 
@@ -38,19 +42,36 @@ public static class PageContent
         {
             if (_cachedVersion == v) return;
             var gc = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var r in db.Query("SELECT ckey,cvalue FROM site_content WHERE cvalue IS NOT NULL AND cvalue<>''"))
-                gc[H.Str(r["ckey"]) ?? ""] = H.Str(r["cvalue"]) ?? "";
+            var ge = new Dictionary<string, (string, string)>(StringComparer.Ordinal);
+            foreach (var r in db.Query("SELECT ckey,cvalue,ctype FROM site_content WHERE cvalue IS NOT NULL"))
+            {
+                var key = H.Str(r["ckey"]) ?? "";
+                var val = H.Str(r["cvalue"]) ?? "";
+                if (key.StartsWith("g:", StringComparison.Ordinal)) ge[key] = (val, H.Str(r["ctype"]) ?? "text");
+                else if (val.Length > 0) gc[key] = val;
+            }
             var pm = new Dictionary<string, (string?, string?)>(StringComparer.OrdinalIgnoreCase);
             foreach (var r in db.Query("SELECT slug,title,meta_description FROM pages"))
                 pm[H.Str(r["slug"]) ?? ""] = (H.Str(r["title"]), H.Str(r["meta_description"]));
             var pb = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
-            foreach (var r in db.Query("SELECT slug,block_key,cvalue FROM page_blocks WHERE cvalue IS NOT NULL AND cvalue<>''"))
+            var eb = new Dictionary<string, Dictionary<string, (string, string)>>(StringComparer.OrdinalIgnoreCase);
+            foreach (var r in db.Query("SELECT slug,block_key,cvalue,ctype FROM page_blocks WHERE cvalue IS NOT NULL"))
             {
                 var slug = H.Str(r["slug"]) ?? "";
-                if (!pb.TryGetValue(slug, out var m)) pb[slug] = m = new(StringComparer.OrdinalIgnoreCase);
-                m[H.Str(r["block_key"]) ?? ""] = H.Str(r["cvalue"]) ?? "";
+                var key = H.Str(r["block_key"]) ?? "";
+                var val = H.Str(r["cvalue"]) ?? "";
+                if (key.StartsWith("t:", StringComparison.Ordinal))
+                {
+                    if (!eb.TryGetValue(slug, out var em)) eb[slug] = em = new(StringComparer.Ordinal);
+                    em[key] = (val, H.Str(r["ctype"]) ?? "text");
+                }
+                else if (val.Length > 0)
+                {
+                    if (!pb.TryGetValue(slug, out var m)) pb[slug] = m = new(StringComparer.OrdinalIgnoreCase);
+                    m[key] = val;
+                }
             }
-            _globalContent = gc; _pageMeta = pm; _pageBlocks = pb;
+            _globalContent = gc; _globalElems = ge; _pageMeta = pm; _pageBlocks = pb; _elemBlocks = eb;
             _rendered.Clear();
             _cachedVersion = v;
         }
@@ -71,9 +92,9 @@ public static class PageContent
     {
         if (AppShells.Contains(slug)) return false;
         EnsureLoaded(db);
-        if (_globalContent.Count > 0) return true;                        // global data-cms bindings may apply anywhere
+        if (_globalContent.Count > 0 || _globalElems.Count > 0) return true; // global bindings may apply anywhere
         if (_pageMeta.TryGetValue(slug, out var m) && (m.title is not null || m.meta is not null)) return true;
-        return _pageBlocks.ContainsKey(slug);
+        return _pageBlocks.ContainsKey(slug) || _elemBlocks.ContainsKey(slug);
     }
 
     /// <summary>Inject title/meta/data-cms overrides into a page's HTML. Cached per (slug, version);
@@ -93,6 +114,9 @@ public static class PageContent
 
     static readonly Regex RxTitle = new(@"<title>.*?</title>", RegexOptions.Singleline | RegexOptions.IgnoreCase);
     static readonly Regex RxMeta = new("(<meta\\s+name=[\"']description[\"']\\s+content=[\"']).*?([\"'])", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+    // social-card mirrors of title/description: og:title, og:description, twitter:title, twitter:description
+    static readonly Regex RxOgTitle = new("(<meta\\s+(?:property|name)=[\"'](?:og|twitter):title[\"']\\s+content=[\"']).*?([\"'])", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+    static readonly Regex RxOgDesc = new("(<meta\\s+(?:property|name)=[\"'](?:og|twitter):description[\"']\\s+content=[\"']).*?([\"'])", RegexOptions.Singleline | RegexOptions.IgnoreCase);
     // an element carrying a data-cms attribute: g1=open tag, g2=tag name, g4=key, g6=inner, g7=close tag
     static readonly Regex RxCms = new(@"(<([a-zA-Z0-9]+)([^>]*?)\sdata-cms=""([^""]+)""([^>]*)>)(.*?)(</\2>)", RegexOptions.Singleline);
     // the first <h1> on the page (positional headline override, key '_h1' — no HTML tagging needed)
@@ -102,11 +126,32 @@ public static class PageContent
     {
         _pageMeta.TryGetValue(slug, out var meta);
         _pageBlocks.TryGetValue(slug, out var blocks);
+        _elemBlocks.TryGetValue(slug, out var elems);
+
+        // 1) universal element blocks — every text region of the page, resolved page-block first,
+        //    then shared element. Runs on the raw file so region offsets/hashes line up; regions
+        //    whose stored value is unchanged inject nothing (unedited pages stay byte-identical).
+        if ((elems is { Count: > 0 }) || _globalElems.Count > 0)
+        {
+            var globals = _globalElems;
+            html = PageScan.Apply(html, r =>
+            {
+                if (elems is not null && elems.TryGetValue(r.Key, out var pv)) return pv;
+                if (globals.TryGetValue(r.GKey, out var gv)) return gv;
+                return null;
+            });
+        }
 
         if (!string.IsNullOrEmpty(meta.title))
+        {
             html = RxTitle.Replace(html, "<title>" + Esc(meta.title!) + "</title>", 1);
+            html = RxOgTitle.Replace(html, m => m.Groups[1].Value + EscAttr(meta.title!) + m.Groups[2].Value);
+        }
         if (!string.IsNullOrEmpty(meta.meta))
+        {
             html = RxMeta.Replace(html, m => m.Groups[1].Value + EscAttr(meta.meta!) + m.Groups[2].Value, 1);
+            html = RxOgDesc.Replace(html, m => m.Groups[1].Value + EscAttr(meta.meta!) + m.Groups[2].Value);
+        }
 
         // positional headline: replace the first <h1>'s inner text (edits every page's headline with no
         // template tagging). data-cms regions below still take precedence for finer control.
@@ -128,31 +173,18 @@ public static class PageContent
         return html;
     }
 
-    /// <summary>One-time seed (when page_blocks is empty): capture each content page's current headline
-    /// as an editable '_h1' block, so the admin editor is pre-populated with the real current text and
-    /// every page's headline is editable out of the box. Reads the shipped HTML files once.</summary>
+    /// <summary>Idempotent boot seed: capture EVERY text region of every content page as an editable
+    /// block (universal capture via <see cref="PageScan"/>), plus each page's headline ('_h1'). Runs on
+    /// every boot: new regions are added, stale ones removed, operator edits always preserved.</summary>
     public static void SeedFromFiles(Db db, string webRoot)
     {
         try
         {
-            if (db.Scalar<long>("SELECT COUNT(*) FROM page_blocks") > 0) return;
             if (!Directory.Exists(webRoot)) return;
-            var stripTags = new Regex("<[^>]+>", RegexOptions.Singleline);
-            foreach (var file in Directory.EnumerateFiles(webRoot, "*.html"))
-            {
-                var slug = Path.GetFileName(file);
-                if (AppShells.Contains(slug)) continue;
-                string html; try { html = File.ReadAllText(file); } catch { continue; }
-                var m = RxH1.Match(html);
-                if (!m.Success) continue;
-                var text = System.Net.WebUtility.HtmlDecode(stripTags.Replace(m.Groups[2].Value, "")).Trim();
-                if (text.Length == 0 || text.Length > 300) continue;
-                db.Execute("INSERT OR IGNORE INTO page_blocks(slug,block_key,label,ctype,cvalue) VALUES(?,?,?,?,?)",
-                    slug, "_h1", "Headline", "text", text);
-            }
+            PageScan.SeedAll(db, webRoot, AppShells);
             Bump();
         }
-        catch (Exception e) { Console.Error.WriteLine($"[content] headline seed skipped: {e.Message}"); }
+        catch (Exception e) { Console.Error.WriteLine($"[content] page capture seed skipped: {e.Message}"); }
     }
 
     static string Esc(string s) => s.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
