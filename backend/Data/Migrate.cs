@@ -80,6 +80,12 @@ public static class Migrate
         AddCol("student_profiles", "linkedin_url", "linkedin_url TEXT");
         AddCol("student_profiles", "profile_photo", "profile_photo TEXT");
         AddCol("users", "two_factor_enabled", "two_factor_enabled INTEGER DEFAULT 0");
+        // Stage 4: table-backed public sections — extra display fields for pre-existing databases
+        AddCol("resources", "description", "description TEXT");
+        AddCol("bok_domains", "bullets", "bullets TEXT");
+        AddCol("news", "url", "url TEXT");
+        // first-run content for those sections (only when a table is empty — never overwrites edits)
+        SeedContent.Run(db);
 
         // ── Multi-certification upgrade for pre-existing databases ──
         // certifications is created by schema.sql; here we make sure every lifecycle table carries

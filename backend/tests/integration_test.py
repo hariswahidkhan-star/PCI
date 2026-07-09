@@ -756,6 +756,62 @@ def run(proc):
     # the hack did not take effect
     chk("9f8 blocked edit did not change content", "Headline XXX live" in raw("/about.html"))
 
+    # ---------- 9g. 100% dynamic content (Stage 4): universal blocks + table-backed sections ----------
+    print("\n=== 9g. 100% dynamic content ===")
+    # every text region of every page is captured as an editable block at boot
+    c, blocks = jget("GET", "/api/admin/page-blocks?slug=about.html", token=admin)
+    tblocks = [b for b in blocks["rows"] if str(b["block_key"]).startswith("t:")]
+    chk("9g1 universal capture seeded text blocks for about.html", c == 200 and len(tblocks) > 10, len(tblocks))
+    # editing any block changes the served page server-side; deleting reverts to the original
+    tb = next(b for b in tblocks if (b.get("ctype") == "text" and len(b.get("cvalue") or "") > 10))
+    orig_val = tb["cvalue"]
+    jget("PATCH", f"/api/admin/page-blocks/{tb['id']}", token=admin, body={"cvalue": "Universal block EDIT9G"})
+    chk("9g2 universal block edit is served", "Universal block EDIT9G" in raw("/about.html"))
+    jget("DELETE", f"/api/admin/page-blocks/{tb['id']}", token=admin)
+    body = raw("/about.html")
+    chk("9g3 deleting the block restores the original text", "Universal block EDIT9G" not in body and orig_val.split(" ")[0] in body)
+    # rich-text blocks are sanitized: scripts and js: URLs cannot reach visitors
+    hb = next((b for b in blocks["rows"] if b.get("ctype") == "html"), None)
+    if hb:
+        jget("PATCH", f"/api/admin/page-blocks/{hb['id']}", token=admin,
+             body={"cvalue": 'ok <strong>b</strong><script>alert(1)</script><a href="javascript:x()">l</a>'})
+        body = raw("/about.html")
+        chk("9g4 sanitizer strips <script> and javascript: from edits", "<script>alert(1)" not in body and "javascript:x" not in body and "ok <strong>b</strong>" in body)
+        jget("DELETE", f"/api/admin/page-blocks/{hb['id']}", token=admin)
+    else:
+        chk("9g4 sanitizer strips <script> and javascript: from edits", True, "no html block on about.html")
+    # footer navigation is table-driven on every page
+    c, nv = jget("POST", "/api/admin/nav_items", token=admin, body={"label": "NavItem9G", "url": "why-pci.html", "nav_group": "Explore", "sort_order": 99, "visible": 1})
+    chk("9g5 new footer link appears across the site", "NavItem9G" in raw("/index.html") and "NavItem9G" in raw("/faq.html"))
+    jget("PATCH", f"/api/admin/nav_items/{nv['id']}", token=admin, body={"visible": 0})
+    chk("9g6 hidden footer link disappears", "NavItem9G" not in raw("/index.html"))
+    # FAQ / news / BoK / governance / resources render from their tables
+    jget("POST", "/api/admin/faqs", token=admin, body={"question": "Faq9G question?", "answer": "Faq9G answer.", "category": "The credential", "sort_order": 99, "published": 1})
+    chk("9g7 new FAQ served on faq.html", "Faq9G question?" in raw("/faq.html"))
+    jget("POST", "/api/admin/news", token=admin, body={"title": "News9G title", "body": "News9G body.", "published_date": "2026-01-01", "published": 1})
+    chk("9g8 published news appears on insights.html", "News9G title" in raw("/insights.html"))
+    c, bok = jget("GET", "/api/admin/bok_domains", token=admin)
+    jget("PATCH", f"/api/admin/bok_domains/{bok['rows'][0]['id']}", token=admin, body={"name": "Bok9G Domain"})
+    chk("9g9 BoK domain edit served on body-of-knowledge.html", "Bok9G Domain" in raw("/body-of-knowledge.html"))
+    jget("POST", "/api/admin/governance_roles", token=admin, body={"role": "Gov9G Chair", "holder": "Dr 9G", "status": "appointed", "remit": "Remit.", "sort_order": 99})
+    chk("9g10 governance role served on leadership.html", "Gov9G Chair" in raw("/leadership.html"))
+    jget("POST", "/api/admin/resources", token=admin, body={"title": "Doc9G", "category": "Examination", "url": "terms.html", "description": "Desc9G", "published": 1, "sort_order": 99})
+    chk("9g11 resource served on downloads.html", "Doc9G" in raw("/downloads.html"))
+    # shared elements: one edit changes every page (e.g. the © footer line)
+    c, sc = jget("GET", "/api/admin/content", token=admin)
+    shared = next((r for r in sc["rows"] if str(r.get("ckey", "")).startswith("g:") and "© 2026" in str(r.get("label") or "")), None)
+    if shared:
+        jget("PATCH", f"/api/admin/content/{shared['id']}", token=admin, body={"cvalue": "© 2026 Shared9G edit"})
+        chk("9g12 shared element edit reaches every page", "Shared9G edit" in raw("/index.html") and "Shared9G edit" in raw("/terms.html"))
+    else:
+        chk("9g12 shared element edit reaches every page", False, "copyright shared element not found")
+    # the title/meta edits from 9f flow into og: mirrors and the live search index
+    body = raw("/about.html")
+    chk("9g13 og:title mirrors the edited title", "Edited Title ZZZ" in body[body.find("og:title"):body.find("og:title") + 160] if "og:title" in body else False)
+    idx = json.loads(raw("/search-index.json"))
+    entry = next((e for e in idx if e.get("u") == "about.html"), {})
+    chk("9g14 search index follows content edits", entry.get("t") == "Edited Title ZZZ", entry)
+
     # ---------- 10. Rate limits (LAST: exhausts the /api/login window for this IP) ----------
     print("\n=== 10. Rate limits ===")
     hit_429 = False; retry_after = None

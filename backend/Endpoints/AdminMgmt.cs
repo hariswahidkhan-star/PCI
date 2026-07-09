@@ -47,8 +47,11 @@ public static class AdminMgmt
 
         // ---------- generic CRUD factory (mirror of crud() in server.js) ----------
         // Every CRUD verb is gated by the content type's RBAC section (not just "any admin").
+        // Mutations bump the public renderers: several of these tables (faqs, nav_items, news,
+        // resources, bok_domains, governance_roles) are served INTO the public pages server-side.
         void Crud(string name, string[] cols, string order, string section)
         {
+            void Changed() { ListSections.Bump(); PageContent.Bump(); }
             // Backtick identifiers so reserved words (e.g. media_assets.`usage`) are valid on BOTH providers
             // — SQLite accepts backtick-quoted identifiers for MySQL compatibility. cols/name are code
             // constants (not request input), so this is not an injection surface.
@@ -65,6 +68,7 @@ public static class AdminMgmt
                 {
                     var id = db.ExecuteReturningId($"INSERT INTO `{name}`({colList}) VALUES({string.Join(",", cols.Select(_ => "?"))})", vals);
                     log(null, name + "_create", id.ToString());
+                    Changed();
                     return J(new { id });
                 }
                 catch { return Results.Json(new { error = "constraint", message = "Could not save — a required field is blank or a unique value is already in use." }, statusCode: 409); }
@@ -79,6 +83,7 @@ public static class AdminMgmt
                 {
                     db.Execute($"UPDATE `{name}` SET {string.Join(",", set.Select(c => Q(c) + "=?"))} WHERE id=?", vals);
                     log(null, name + "_update", id.ToString());
+                    Changed();
                     return J(new { ok = true });
                 }
                 catch { return Results.Json(new { error = "constraint", message = "Could not save — a unique value is already in use." }, statusCode: 409); }
@@ -87,11 +92,12 @@ public static class AdminMgmt
             {
                 db.Execute($"DELETE FROM `{name}` WHERE id=?", id);
                 log(null, name + "_delete", id.ToString());
+                Changed();
                 return J(new { ok = true });
             }));
         }
         Crud("faqs", new[]{ "question","answer","category","sort_order","published" }, "sort_order, id", "faqs");
-        Crud("bok_domains", new[]{ "code","name","weight","description","sort_order" }, "sort_order, id", "bok");
+        Crud("bok_domains", new[]{ "code","name","weight","description","bullets","sort_order" }, "sort_order, id", "bok");
         Crud("sample_questions", new[]{ "question","options","option_a","option_b","option_c","option_d","answer_index","domain","published","sort_order","is_practice","certification_id" }, "sort_order, id", "sampleq");
 
         // ---------- certifications (multi-credential management; exam section) ----------
@@ -153,8 +159,8 @@ public static class AdminMgmt
             return J(new { ok = true });
         }));
         Crud("governance_roles", new[]{ "role","holder","status","remit","sort_order" }, "sort_order, id", "governance");
-        Crud("resources", new[]{ "title","category","doc_type","url","published","sort_order" }, "sort_order, id", "resources");
-        Crud("news", new[]{ "title","body","published_date","published","sort_order" }, "published_date DESC, id DESC", "news");
+        Crud("resources", new[]{ "title","category","doc_type","url","description","published","sort_order" }, "sort_order, id", "resources");
+        Crud("news", new[]{ "title","body","published_date","url","published","sort_order" }, "published_date DESC, id DESC", "news");
         Crud("nav_items", new[]{ "label","url","nav_group","sort_order","visible" }, "nav_group, sort_order, id", "nav");
         Crud("media_assets", new[]{ "filename","alt","width","height","usage" }, "id DESC", "media");
 

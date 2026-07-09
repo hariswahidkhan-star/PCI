@@ -531,25 +531,34 @@ app.Use(async (ctx, next) =>
     {
         var reqPath = ctx.Request.Path.Value ?? "/";
         var slug = reqPath == "/" ? "index.html" : reqPath.TrimStart('/');
-        var hasContent = slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..")
-            && PCI.Backend.Core.PageContent.HasOverrides(db, slug);
-        var hasCerts = slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..")
-            && PCI.Backend.Core.CertCatalogue.Applies(slug);
+        var isPage = slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..");
+        var hasContent = isPage && PCI.Backend.Core.PageContent.HasOverrides(db, slug);
+        var hasCerts = isPage && PCI.Backend.Core.CertCatalogue.Applies(slug);
         if (hasContent || hasCerts)
         {
             var file = Path.Combine(webRoot, slug.Replace('/', Path.DirectorySeparatorChar));
             if (File.Exists(file))
             {
-                // Content injection (title/meta/data-cms/_h1) is cached per (slug, content version); the live
-                // certification catalogue is then filled from the DB (its cards are cached per cert version).
+                // Content injection (universal text blocks/title/meta/data-cms/_h1) is cached per
+                // (slug, content version); the certification catalogue and the table-backed sections
+                // (nav, FAQs, BoK, governance, resources, news) are then filled from the DB — each
+                // cached per its own version, so steady-state serving stays cheap.
                 var rendered = hasContent
                     ? PCI.Backend.Core.PageContent.Render(db, slug, () => File.ReadAllText(file))
                     : File.ReadAllText(file);
                 if (hasCerts) rendered = PCI.Backend.Core.CertCatalogue.Inject(db, rendered);
+                rendered = PCI.Backend.Core.ListSections.Inject(db, rendered);
                 ctx.Response.ContentType = "text/html; charset=utf-8";
                 await ctx.Response.WriteAsync(rendered);
                 return;
             }
+        }
+        // the site-search index follows content edits: titles/descriptions come from the pages table
+        if (reqPath.Equals("/search-index.json", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.ContentType = "application/json; charset=utf-8";
+            await ctx.Response.WriteAsync(PCI.Backend.Core.SearchIndex.Json(db, webRoot));
+            return;
         }
     }
     await next();

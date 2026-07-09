@@ -10,8 +10,15 @@ function PageEditor({ page, onClose, onSaved }: { page: PageRow; onClose: () => 
   const [noindex, setNoindex] = useState(page.noindex === 1)
   const [savingMeta, setSavingMeta] = useState(false)
   const [metaMsg, setMetaMsg] = useState<string | null>(null)
+  const [blockQ, setBlockQ] = useState('')
 
   const blocks = useAdminQuery<{ rows: PageBlock[] }>(`/api/admin/page-blocks?slug=${encodeURIComponent(page.slug)}`)
+  const visibleBlocks = useMemo(() => {
+    const rows = blocks.data?.rows ?? []
+    const needle = blockQ.trim().toLowerCase()
+    if (!needle) return rows
+    return rows.filter((b) => (b.label ?? '').toLowerCase().includes(needle) || (b.cvalue ?? '').toLowerCase().includes(needle))
+  }, [blocks.data, blockQ])
 
   async function saveMeta() {
     setSavingMeta(true)
@@ -58,9 +65,17 @@ function PageEditor({ page, onClose, onSaved }: { page: PageRow; onClose: () => 
             <Empty>No editable content blocks for this page.</Empty>
           ) : (
             <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-              {blocks.data.rows.map((b) => (
-                <BlockEditor key={b.id} block={b} onSaved={onSaved} />
-              ))}
+              <div>
+                <input placeholder={`Filter ${blocks.data.rows.length} text blocks…`} value={blockQ} onChange={(e) => setBlockQ(e.target.value)} />
+                <div className="small muted" style={{ marginTop: '.35rem' }}>
+                  Every text on this page is editable, in page order. Basic formatting tags (links, bold, lists) are kept; anything unsafe is removed on save.
+                </div>
+              </div>
+              {visibleBlocks.length === 0 ? (
+                <Empty>No blocks match the filter.</Empty>
+              ) : (
+                visibleBlocks.map((b) => <BlockEditor key={b.id} block={b} onSaved={onSaved} onReset={() => blocks.refetch()} />)
+              )}
             </div>
           )}
         </Card>
@@ -69,7 +84,7 @@ function PageEditor({ page, onClose, onSaved }: { page: PageRow; onClose: () => 
   )
 }
 
-function BlockEditor({ block, onSaved }: { block: PageBlock; onSaved: () => void }) {
+function BlockEditor({ block, onSaved, onReset }: { block: PageBlock; onSaved: () => void; onReset: () => void }) {
   const [val, setVal] = useState(block.cvalue ?? '')
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
@@ -90,11 +105,25 @@ function BlockEditor({ block, onSaved }: { block: PageBlock; onSaved: () => void
     }
   }
 
+  // deleting the row reverts the region to the text shipped in the page file
+  async function reset() {
+    if (!confirm('Restore this text to the original shipped with the website?')) return
+    setBusy(true)
+    try {
+      await adminApi.del(`/api/admin/page-blocks/${block.id}`)
+      onSaved()
+      onReset()
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : 'Error')
+      setBusy(false)
+    }
+  }
+
   const label = block.label || (block.block_key === '_h1' ? 'Headline' : block.block_key)
-  const long = (block.cvalue ?? '').length > 80
+  const long = (block.cvalue ?? '').length > 80 || block.ctype === 'html'
   return (
     <div>
-      <label>{label} {block.block_key === '_h1' && <Badge tone="brand">headline</Badge>}</label>
+      <label>{label} {block.block_key === '_h1' && <Badge tone="brand">headline</Badge>} {block.ctype === 'html' && <Badge>rich text</Badge>}</label>
       {long ? (
         <textarea rows={3} value={val} onChange={(e) => setVal(e.target.value)} />
       ) : (
@@ -102,6 +131,7 @@ function BlockEditor({ block, onSaved }: { block: PageBlock; onSaved: () => void
       )}
       <div className="row" style={{ marginTop: '.4rem' }}>
         <button className="btn sm" disabled={busy || !dirty} onClick={save}>{busy ? 'Saving…' : 'Save'}</button>
+        <button className="btn ghost sm" disabled={busy} onClick={reset}>Reset to original</button>
         {msg && <span className="small muted">{msg}</span>}
       </div>
     </div>

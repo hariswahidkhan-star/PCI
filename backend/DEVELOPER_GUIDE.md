@@ -608,7 +608,26 @@ All are dependency-free HTML/CSS/vanilla JS served from `wwwroot/`; they call th
 bearer token kept in memory.
 
 **Public website** — ~215 pages (home, certification, body of knowledge, governance, chapters, sectors,
-knowledge base, policies, blog). Static; reads public content endpoints.
+knowledge base, policies, blog). Every page is served through the dynamic-content pipeline and is 100%
+admin-editable — nothing a visitor reads is hardcoded:
+
+- **Universal text blocks** (`Core/PageScan.cs`): at boot every visible text region of every page (headings,
+  paragraphs, list items, buttons, image alt/src, …) is captured into `page_blocks`, keyed by a stable
+  content hash. Regions identical across ≥20 pages (breadcrumbs, cookie banner, footer legal, …) are stored
+  once in `site_content` as **shared elements** — edited once, changed everywhere. At serve time the same
+  scanner maps blocks back onto the page; an unedited page is served byte-identical, an edited block replaces
+  exactly its region (plain text escaped, rich text through the `Core/HtmlSanitize.cs` whitelist). Deleting a
+  block reverts the region to the shipped text. Edited in **Admin → Pages** (per page) and **Admin → Site
+  content** (shared).
+- **Table-backed sections** (`Core/ListSections.cs`): regions wrapped in `<!--PCI-X-->` markers are replaced
+  server-side from their admin tables — header/footer navigation (`nav_items`), the FAQ accordion (`faqs`),
+  Body-of-Knowledge domains (`bok_domains`), governance roles (`governance_roles`), the Downloads document
+  groups (`resources`), news (`news`) and the certification catalogue (`Core/CertCatalogue.cs`,
+  `certifications`). First-run content for these tables is seeded from the shipped pages by
+  `Data/SeedContent.cs` — only when a table is empty, so operator edits/deletions survive restarts.
+- **Search & SEO**: page `title`/`meta_description` overrides also rewrite `og:`/`twitter:` cards and the
+  dynamically served `/search-index.json` (`Core/SearchIndex.cs`), so site search finds pages by their
+  current names. All rendering is cached per content version and bumped on any admin edit.
 
 **Student portal (`student.html`)** — the signed-in member experience: exam scheduling, the crash-safe secure
 runner, results dial, certificate, CPD log, membership & payments/invoices, messages, and support. Talks to
