@@ -80,6 +80,7 @@ public static class PageScan
             {
                 if (SkipTags.Contains(c.Tag)) continue;
                 if (c.Attrs.Contains("data-cms", StringComparison.OrdinalIgnoreCase)) continue;      // legacy region — already editable
+                if (c.Attrs.Contains("data-price", StringComparison.OrdinalIgnoreCase)) continue;    // pricing-engine-owned (Admin → Pricing)
                 // skip elements whose OWN tag lies inside a server-rendered zone (cert catalogue,
                 // nav, FAQ list, …) — the zone's fallback is replaced from the DB. A container that
                 // merely STARTS its content with a marker still descends: siblings after the close
