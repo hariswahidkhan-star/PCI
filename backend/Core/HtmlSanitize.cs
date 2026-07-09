@@ -35,7 +35,8 @@ public static class HtmlSanitize
         ["th"] = new[] { "colspan", "rowspan" },
         ["time"] = new[] { "datetime" },
     };
-    static readonly string[] GlobalAttrs = { "class", "style" };
+    // data-price survives edits so live price tokens keep binding inside edited blocks
+    static readonly string[] GlobalAttrs = { "class", "style", "data-price" };
 
     static readonly Regex RxTag = new(@"<(/?)([a-zA-Z][a-zA-Z0-9-]*)((?:[^>""']|""[^""]*""|'[^']*')*?)(/?)>|<!--.*?-->",
         RegexOptions.Singleline | RegexOptions.Compiled);

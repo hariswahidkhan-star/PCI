@@ -812,6 +812,29 @@ def run(proc):
     entry = next((e for e in idx if e.get("u") == "about.html"), {})
     chk("9g14 search index follows content edits", entry.get("t") == "Edited Title ZZZ", entry)
 
+    # ---------- 9h. Pricing propagation: one edit updates copy, catalogue and checkout ----------
+    print("\n=== 9h. Pricing propagation ===")
+    c, rules = jget("GET", "/api/admin/pricing_rules", token=admin)
+    chk("9h1 admin Pricing lists the base rules", c == 200 and len(rules["rows"]) >= 4, len(rules.get("rows", [])))
+    exam_rule = next(r for r in rules["rows"] if r["product_type"] == "exam")
+    jget("PATCH", f"/api/admin/pricing_rules/{exam_rule['id']}", token=admin, body={"standard_price": 560})
+    body = raw("/membership.html")
+    chk("9h2 page-copy price tokens update (USD 560 / USD 392)", ">USD 560<" in body and ">USD 392<" in body)
+    c, pj = jget("GET", "/api/pricing")
+    chk("9h3 checkout pricing API reflects the edit", pj["exam"]["standard"] == 560 and pj["exam"]["final"] == 392, pj.get("exam"))
+    cat = raw("/certification.html")
+    chk("9h4 catalogue card price follows the rule", "USD 392" in cat.split("<!--PCI-CERTS-->")[1].split("<!--/PCI-CERTS-->")[0])
+    jget("PATCH", f"/api/admin/pricing_rules/{exam_rule['id']}", token=admin, body={"standard_price": 500})
+    # a certification priced independently flows through catalogue + checkout
+    c, nc = jget("POST", "/api/admin/certifications", token=admin, body={"code": "PCP-9H", "name": "Pricing Prop Cert", "exam_price": 700})
+    c, pub = jget("GET", "/api/certifications")
+    row9h = next((r for r in pub["rows"] if r["code"] == "PCP-9H"), None)
+    chk("9h5 per-cert price on public catalogue API (700-30% = 490)", row9h is not None and row9h["exam_price"] == 490, row9h)
+    c, pj = jget("GET", "/api/pricing?cert=PCP-9H")
+    chk("9h6 checkout prices the selected certification", pj["exam"]["final"] == 490 and pj["cert"]["code"] == "PCP-9H", pj.get("exam"))
+    chk("9h7 viewer BLOCKED from pricing rules (403)",
+        jget("PATCH", f"/api/admin/pricing_rules/{exam_rule['id']}", token=vl.get("token"), body={"standard_price": 1})[0] == 403)
+
     # ---------- 10. Rate limits (LAST: exhausts the /api/login window for this IP) ----------
     print("\n=== 10. Rate limits ===")
     hit_429 = False; retry_after = None
