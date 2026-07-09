@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type MemberRow, type MemberDetail } from '../api'
-import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { Card, StatusBadge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
 import { fmtDate, fmtMoney } from '../../format'
 
 function MemberDrawer({ id, onClose, onChanged }: { id: number; onClose: () => void; onChanged: () => void }) {
@@ -132,7 +132,7 @@ export default function Students() {
             </thead>
             <tbody>
               {data.rows.map((m) => (
-                <tr key={m.id} style={{ cursor: 'pointer' }} onClick={() => setSelected(m.id)}>
+                <tr key={m.id} {...rowActivate(() => setSelected(m.id))}>
                   <td><strong>{`${m.first_name ?? ''} ${m.last_name ?? ''}`.trim() || '—'}</strong></td>
                   <td className="small">{m.email}</td>
                   <td><StatusBadge status={m.status} /></td>

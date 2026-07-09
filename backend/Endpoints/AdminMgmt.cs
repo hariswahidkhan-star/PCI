@@ -49,16 +49,25 @@ public static class AdminMgmt
         // Every CRUD verb is gated by the content type's RBAC section (not just "any admin").
         void Crud(string name, string[] cols, string order, string section)
         {
-            app.MapGet($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ => J(new { rows = db.Query($"SELECT * FROM {name} ORDER BY {order}") })));
+            // Backtick identifiers so reserved words (e.g. media_assets.`usage`) are valid on BOTH providers
+            // — SQLite accepts backtick-quoted identifiers for MySQL compatibility. cols/name are code
+            // constants (not request input), so this is not an injection surface.
+            string Q(string c) => "`" + c + "`";
+            var colList = string.Join(",", cols.Select(Q));
+            app.MapGet($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ => J(new { rows = db.Query($"SELECT * FROM `{name}` ORDER BY {order}") })));
             app.MapPost($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ =>
             {
                 var b = H.Body(req).GetAwaiter().GetResult();
                 var vals = cols.Select(c => (object?)(b.TryGetValue(c, out var v) && v.ValueKind != JsonValueKind.Null
                     ? (v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ToString())
                     : null)).ToArray();
-                var id = db.ExecuteReturningId($"INSERT INTO {name}({string.Join(",", cols)}) VALUES({string.Join(",", cols.Select(_ => "?"))})", vals);
-                log(null, name + "_create", id.ToString());
-                return J(new { id });
+                try
+                {
+                    var id = db.ExecuteReturningId($"INSERT INTO `{name}`({colList}) VALUES({string.Join(",", cols.Select(_ => "?"))})", vals);
+                    log(null, name + "_create", id.ToString());
+                    return J(new { id });
+                }
+                catch { return Results.Json(new { error = "constraint", message = "Could not save — a required field is blank or a unique value is already in use." }, statusCode: 409); }
             }));
             app.MapPatch($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, _ =>
             {
@@ -66,13 +75,17 @@ public static class AdminMgmt
                 var set = cols.Where(c => b.ContainsKey(c)).ToList();
                 if (set.Count == 0) return J(new { ok = true });
                 var vals = set.Select(c => { var v = b[c]; return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
-                db.Execute($"UPDATE {name} SET {string.Join(",", set.Select(c => c + "=?"))} WHERE id=?", vals);
-                log(null, name + "_update", id.ToString());
-                return J(new { ok = true });
+                try
+                {
+                    db.Execute($"UPDATE `{name}` SET {string.Join(",", set.Select(c => Q(c) + "=?"))} WHERE id=?", vals);
+                    log(null, name + "_update", id.ToString());
+                    return J(new { ok = true });
+                }
+                catch { return Results.Json(new { error = "constraint", message = "Could not save — a unique value is already in use." }, statusCode: 409); }
             }));
             app.MapDelete($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, _ =>
             {
-                db.Execute($"DELETE FROM {name} WHERE id=?", id);
+                db.Execute($"DELETE FROM `{name}` WHERE id=?", id);
                 log(null, name + "_delete", id.ToString());
                 return J(new { ok = true });
             }));
@@ -108,6 +121,7 @@ public static class AdminMgmt
                 b.TryGetValue("active", out var av) && av.ValueKind == JsonValueKind.False ? 0 : 1,
                 H.GetNum(b, "sort_order") ?? 0);
             log(adm.Id, "certification_create", $"{codeV} (id {id})");
+            CertCatalogue.Bump();   // the new credential is live on the public site immediately
             return J(new { ok = true, id });
         }));
         app.MapPatch("/api/admin/certifications/{id}", (HttpRequest req, long id) => gate(req, "exams", adm =>
@@ -122,6 +136,7 @@ public static class AdminMgmt
             var vals = set.Select(c => { var v = b[c]; return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
             db.Execute($"UPDATE certifications SET {string.Join(",", set.Select(c => c + "=?"))}, updated_at=datetime('now') WHERE id=?", vals);
             log(adm.Id, "certification_update", id.ToString());
+            CertCatalogue.Bump();
             return J(new { ok = true });
         }));
         app.MapDelete("/api/admin/certifications/{id}", (HttpRequest req, long id) => gate(req, "exams", adm =>
@@ -134,6 +149,7 @@ public static class AdminMgmt
             if (refs > 0) return Results.Json(new { error = "in_use", message = "This certification has history (credentials, attempts, entitlements or a question bank). Deactivate it instead of deleting." }, statusCode: 409);
             db.Execute("DELETE FROM certifications WHERE id=?", id);
             log(adm.Id, "certification_delete", id.ToString());
+            CertCatalogue.Bump();
             return J(new { ok = true });
         }));
         Crud("governance_roles", new[]{ "role","holder","status","remit","sort_order" }, "sort_order, id", "governance");
@@ -229,6 +245,7 @@ public static class AdminMgmt
             object? act = b.ContainsKey("active") ? (H.B(b["active"].GetRawText()) ? 1 : 0) : null;
             db.Execute("UPDATE pricing_rules SET standard_price=COALESCE(?,standard_price), default_discount_percentage=COALESCE(?,default_discount_percentage), active=COALESCE(?,active), updated_at=datetime('now') WHERE id=?",
                 H.GetNum(b, "standard_price"), H.GetNum(b, "default_discount_percentage"), act, id);
+            CertCatalogue.Bump();   // exam pricing feeds the public catalogue cards
             return J(new { ok = true });
         });
         app.MapPost("/api/admin/run-reminders", (HttpRequest req) => gate(req, "enrollments", _ => J(new { ok = true, reminders_sent = 0 })));
@@ -240,7 +257,10 @@ public static class AdminMgmt
             long.TryParse(req.Query["limit"], out var limit); if (limit == 0) limit = 200;
             long.TryParse(req.Query["offset"], out var offset);
             var where = new List<string>(); var args = new List<object?>();
-            if (!string.IsNullOrEmpty(status)) { where.Add("session_status=?"); args.Add(status); }
+            // "abandoned" is a computed condition (never a stored session_status), mirroring the overview
+            // KPI: an in-progress session idle for 72h+. Other statuses match the column literally.
+            if (status == "abandoned") where.Add("session_status='in_progress' AND last_activity_at <= datetime('now','-72 hours')");
+            else if (!string.IsNullOrEmpty(status)) { where.Add("session_status=?"); args.Add(status); }
             if (!string.IsNullOrEmpty(q)) { where.Add("email LIKE ?"); args.Add(Like(q)); }
             var w = where.Count > 0 ? "WHERE " + string.Join(" AND ", where) : "";
             var rows = db.Query($"SELECT id,email,current_step,session_status,selected_product,selected_membership,last_activity_at,created_at,reminders_sent,last_reminder_at,(resume_token_hash IS NOT NULL) resume_link_issued FROM enrollment_sessions {w} ORDER BY last_activity_at DESC LIMIT ? OFFSET ?", args.Append((object?)limit).Append((object?)offset).ToArray());
@@ -289,8 +309,13 @@ public static class AdminMgmt
             var b = await H.Body(req);
             var cid = H.GetS(b, "credential_id"); var holder = H.GetS(b, "holder_name");
             if (string.IsNullOrEmpty(cid) || string.IsNullOrEmpty(holder)) return Results.Json(new { error = "missing_fields" }, statusCode: 400);
-            try { var id = db.ExecuteReturningId("INSERT INTO issued_credentials(credential_id,user_id,holder_name,credential,status,expires_at) VALUES(?,?,?,?, 'active',?)",
-                cid.ToUpperInvariant(), H.GetNum(b, "user_id"), holder, H.GetS(b, "credential") ?? "PCP-AI", H.GetS(b, "expires_at"));
+            // Attribute the credential to the chosen certification (defaults to the founding cert). The
+            // credential label defaults to that certification's prefix so /api/verify shows the right name.
+            var credCertId = Certs.Resolve(db, H.GetS(b, "certification_id", "certification"));
+            var credCert = Certs.ById(db, credCertId);
+            var credLabel = H.GetS(b, "credential") ?? (credCert is not null ? Certs.Prefix(credCert) : "PCP-AI");
+            try { var id = db.ExecuteReturningId("INSERT INTO issued_credentials(credential_id,user_id,certification_id,holder_name,credential,status,expires_at) VALUES(?,?,?,?,?, 'active',?)",
+                cid.ToUpperInvariant(), H.GetNum(b, "user_id"), credCertId, holder, credLabel, H.GetS(b, "expires_at"));
                 log(H.Ln(H.GetNum(b, "user_id")), "credential_issued", cid); return J(new { id }); }
             catch { return Results.Json(new { error = "duplicate_or_invalid" }, statusCode: 400); }
         });

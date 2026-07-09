@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useAdminQuery } from '../hooks'
+import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi, type TicketRow, type TicketDetail } from '../api'
-import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { Card, StatusBadge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
 import { fmtDateTime, titleCase } from '../../format'
 
 const STATUSES = ['open', 'awaiting_student', 'resolved', 'closed']
@@ -19,15 +19,14 @@ function TicketDrawer({ id, onClose, onChanged }: { id: number; onClose: () => v
       setReply('')
       refetch()
       onChanged()
+    } catch (e) {
+      alert(e instanceof Error ? e.message : 'Could not send the reply.')
     } finally {
       setBusy(false)
     }
   }
-  async function setStatus(status: string) {
-    await adminApi.post(`/api/admin/tickets/${id}/status`, { status })
-    refetch()
-    onChanged()
-  }
+  const setStatus = (status: string) =>
+    runMutation(async () => { await adminApi.post(`/api/admin/tickets/${id}/status`, { status }); refetch(); onChanged() })
 
   return (
     <div className="drawer-backdrop" onClick={onClose}>
@@ -108,7 +107,7 @@ export default function Tickets() {
             </thead>
             <tbody>
               {data.rows.map((t) => (
-                <tr key={t.id} style={{ cursor: 'pointer' }} onClick={() => setSelected(t.id)}>
+                <tr key={t.id} {...rowActivate(() => setSelected(t.id))}>
                   <td className="small muted">{t.reference}</td>
                   <td><strong>{t.subject || '—'}</strong></td>
                   <td className="small">{t.email}</td>

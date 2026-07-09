@@ -60,7 +60,7 @@ public static class StudentExam
                     required = Lifecycle.RequiredConsents.Select(c => new { type = c.type, version = c.version }),
                     outstanding = Lifecycle.OutstandingConsents(db, u.Id)
                 },
-                membership = db.QueryOne("SELECT * FROM memberships WHERE user_id=?", u.Id),
+                membership = db.QueryOne("SELECT * FROM memberships WHERE user_id=? ORDER BY id DESC", u.Id),
                 payments = db.Query("SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference,exam_schedule_deadline FROM payments WHERE user_id=? ORDER BY id DESC", u.Id),
                 exam = new { entitled = ent != null, deadline = ent?["exam_schedule_deadline"], payment_ref = ent?["reference"], booking, passed = passAtt != null,
                     certification_id = ent is null ? null : ent["certification_id"],
@@ -75,7 +75,7 @@ public static class StudentExam
                     .Select(r => {
                         var cid = H.L(r["certification_id"]);
                         var cert = Certs.ById(db, cid);
-                        var bk = db.QueryOne("SELECT id,scheduled_at,timezone,status FROM exam_bookings WHERE user_id=? AND payment_id=? ORDER BY id DESC", u.Id, r["payment_id"]);
+                        var bk = db.QueryOne("SELECT id,scheduled_at,timezone,status FROM exam_bookings WHERE user_id=? AND payment_id=? AND status='scheduled' ORDER BY id DESC", u.Id, r["payment_id"]);
                         var att = db.QueryOne("SELECT id,status,result_status,submitted_at FROM exam_attempts WHERE user_id=? AND kind='exam' AND COALESCE(certification_id,1)=? ORDER BY id DESC", u.Id, cid);
                         var cred = db.QueryOne("SELECT credential_id,status,expires_at FROM issued_credentials WHERE user_id=? AND COALESCE(certification_id,1)=? AND status='active' ORDER BY id DESC", u.Id, cid);
                         return new { certification_id = cid, certification_code = cert?["code"], certification_name = cert?["name"],
@@ -92,7 +92,7 @@ public static class StudentExam
                 credentials = db.Query("SELECT credential_id,credential,status,issued_at,expires_at,holder_name FROM issued_credentials WHERE user_id=? ORDER BY id DESC", u.Id),
                 tickets = db.Query("SELECT id,reference,subject,category,status,updated_at FROM tickets WHERE user_id=? ORDER BY updated_at DESC LIMIT 10", u.Id),
                 referral = db.QueryOne("SELECT code FROM discount_codes WHERE owner_user_id=? AND code_type='referral' AND active=1", u.Id),
-                cpd = new { total, target = 60 },
+                cpd = new { total, target = H.D(db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='sp_cpd_target_hours'")) is var _ct && _ct > 0 ? _ct : 60.0 },
                 two_factor = false, two_factor_coming_soon = true,
                 unread,
                 enrollment = db.QueryOne("SELECT current_step,selected_product,last_activity_at FROM enrollment_sessions WHERE email=? AND session_status='in_progress' ORDER BY id DESC", u.Email.ToLowerInvariant()),
@@ -569,7 +569,7 @@ public static class StudentExam
                 ["user_id"] = u.Id,
                 ["description"] = H.GetS(b, "description", "title", "activity") ?? "CPD activity",
                 ["category"] = H.GetS(b, "category") ?? "General",
-                ["hours"] = H.GetNum(b, "hours") ?? 0,
+                ["hours"] = Math.Max(0, H.GetNum(b, "hours") ?? 0),   // never let a client post negative CPD hours
                 ["activity_date"] = H.GetS(b, "activity_date", "date") ?? DateTime.UtcNow.ToString("yyyy-MM-dd")
             };
             var use = map.Keys.Where(k => cols.Contains(k)).ToList();

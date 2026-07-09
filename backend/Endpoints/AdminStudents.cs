@@ -46,21 +46,23 @@ public static class AdminStudents
                 emails = db.Query("SELECT * FROM email_logs WHERE user_id=? OR email=? ORDER BY id DESC LIMIT 50", id, u["email"]) });
         }));
 
-        // status uses bare admin in Node; keep parity (any admin)
-        app.MapPost("/api/admin/members/{id}/status", async (HttpContext ctx, long id) =>
+        // Changing a student's account status is a member-management action; gate it on the 'members'
+        // section like every other member endpoint (previously auth-only, letting any admin — even a
+        // viewer — deactivate/activate any student).
+        app.MapPost("/api/admin/members/{id}/status", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
         {
-            var a = Core.Auth.AdminFromReq(ctx.Request, db); if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
-            var b = await H.Body(ctx.Request);
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var status = H.GetS(b, "status");
             if (status is not ("pending" or "active" or "deactivated")) return Results.Json(new { error = "bad_status" }, statusCode: 400);
             db.Execute("UPDATE users SET status=?, updated_at=datetime('now') WHERE id=?", status, id);
             log(id, "member_status", status);
             return J(new { ok = true });
-        });
+        }));
 
-        app.MapPost("/api/admin/members/{id}/resend-setup", (HttpContext ctx, long id) =>
+        // Minting a password-setup link for a student is account-takeover-capable; gate on 'members'
+        // (previously auth-only — any admin could obtain a set-password link for any account).
+        app.MapPost("/api/admin/members/{id}/resend-setup", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
         {
-            var a = Core.Auth.AdminFromReq(ctx.Request, db); if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
             var u = db.QueryOne("SELECT * FROM users WHERE id=?", id);
             if (u is null) return Results.Json(new { error = "no_user" }, statusCode: 404);
             var token = Security.RandomHex(32);
@@ -72,7 +74,7 @@ public static class AdminStudents
             Mailer.SendWelcome(db, id, (string)u["email"]!, H.Str(u["first_name"]), setupUrl, baseUrl);
             log(id, "resend_setup", "");
             return J(new { ok = true, setup_url = setupUrl });
-        });
+        }));
 
         // Manual onboarding: create a student account without a payment (comps, corporate seats,
         // support cases). Deliberately grants NOTHING beyond the account itself — no membership,
@@ -100,15 +102,15 @@ public static class AdminStudents
             return J(new { ok = true, id = uid, setup_url = setupUrl });
         }));
 
-        app.MapPost("/api/admin/members/{id}/referral-code", (HttpContext ctx, long id) =>
+        // Creating a referral discount code for a student is a member action; gate on 'members'.
+        app.MapPost("/api/admin/members/{id}/referral-code", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
         {
-            var a = Core.Auth.AdminFromReq(ctx.Request, db); if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
             var existing = db.QueryOne("SELECT code FROM discount_codes WHERE owner_user_id=? AND code_type='referral' AND active=1", id);
             if (existing is not null) return J(new { code = existing["code"], existing = true });
             var code = "REF-" + Security.RandomHex(4).ToUpperInvariant();
             try { db.Execute("INSERT INTO discount_codes(code,code_type,owner_user_id,discount_type,discount_value,applies_to,active) VALUES(?, 'referral',?, 'percent',10,'all',1)", code, id); } catch { }
             return J(new { code, existing = false });
-        });
+        }));
 
         // ---- student-360 panel ----
         app.MapGet("/api/admin/students/{id}/panel", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>

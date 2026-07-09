@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { useMe } from '../data/MeContext'
 import { Card, Stat, StatusBadge, Spinner, ErrorNote, Badge } from '../components/ui'
-import { fmtDate, titleCase } from '../format'
+import { fmtDate, titleCase, isPast } from '../format'
 import type { Lifecycle } from '../api/types'
 
 interface Journey {
@@ -58,7 +58,9 @@ export default function Overview() {
 
   const journey = buildJourney(me.lifecycle)
   const next = NEXT_STEP[me.lifecycle.next_step]
-  const activeCreds = me.credentials.filter((c) => c.status === 'active').length
+  // a lapsed-but-not-revoked credential keeps status='active' in the DB (expiry is derived at read time),
+  // so exclude past-expiry ones to match the Credentials page's "Expired" treatment.
+  const activeCreds = me.credentials.filter((c) => c.status === 'active' && !isPast(c.expires_at)).length
   const outstanding = me.consents.outstanding.length
 
   return (
@@ -71,7 +73,7 @@ export default function Overview() {
       {outstanding > 0 && (
         <div className="notice warn">
           You have {outstanding} outstanding consent{outstanding > 1 ? 's' : ''} to review.{' '}
-          <a href="/student.html#consents">Review now</a>
+          <a href="/student.html#exam">Review now</a>
         </div>
       )}
 

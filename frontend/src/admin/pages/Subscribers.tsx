@@ -1,4 +1,4 @@
-import { useAdminQuery } from '../hooks'
+import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi, type Subscriber } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
 import { fmtDate } from '../../format'
@@ -6,10 +6,8 @@ import { fmtDate } from '../../format'
 export default function Subscribers() {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Subscriber[] }>('/api/admin/subscribers')
 
-  async function setStatus(id: number, status: string) {
-    await adminApi.patch(`/api/admin/subscribers/${id}`, { status })
-    refetch()
-  }
+  const setStatus = (id: number, status: string) =>
+    runMutation(async () => { await adminApi.patch(`/api/admin/subscribers/${id}`, { status }); refetch() })
 
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>

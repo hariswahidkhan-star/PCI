@@ -1,4 +1,4 @@
-import { useQuery } from '../api/hooks'
+import { useQuery, runMutation } from '../api/hooks'
 import { useMe } from '../data/MeContext'
 import { api } from '../api/client'
 import { Card, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
@@ -17,16 +17,10 @@ export default function Messages() {
   const { refetch: refetchMe } = useMe()
   const { data, loading, error, refetch } = useQuery<{ rows: Message[] }>('/api/me/messages')
 
-  async function markRead(id: number) {
-    await api.post(`/api/me/messages/${id}/read`)
-    refetch()
-    refetchMe()
-  }
-  async function markAll() {
-    await api.post('/api/me/messages/read-all')
-    refetch()
-    refetchMe()
-  }
+  const markRead = (id: number) =>
+    runMutation(async () => { await api.post(`/api/me/messages/${id}/read`); refetch(); refetchMe() })
+  const markAll = () =>
+    runMutation(async () => { await api.post('/api/me/messages/read-all'); refetch(); refetchMe() })
 
   const rows = data?.rows ?? []
   const unread = rows.filter((m) => !m.read_at).length

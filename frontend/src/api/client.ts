@@ -28,6 +28,9 @@ export interface RequestOptions {
 export interface ApiClient {
   getToken: () => string | null
   setToken: (token: string | null) => void
+  /** Register a handler invoked whenever any request (query OR mutation) gets a 401, so the auth
+   *  layer can clear the stale token and redirect to login from a single place. */
+  onUnauthorized: (fn: (() => void) | null) => void
   get: <T>(path: string) => Promise<T>
   post: <T>(path: string, body?: unknown, extra?: RequestOptions) => Promise<T>
   patch: <T>(path: string, body?: unknown) => Promise<T>
@@ -67,6 +70,7 @@ function humanize(code: string): string {
 export function makeClient(tokenKey: string): ApiClient {
   // In-memory fallback so the app still works if storage is blocked (private mode / kiosk).
   let memToken: string | null = null
+  let unauthorizedHandler: (() => void) | null = null
 
   const getToken = (): string | null => {
     try {
@@ -114,7 +118,11 @@ export function makeClient(tokenKey: string): ApiClient {
 
     if (!res.ok) {
       const msg = humanize(errorCode(data, res.status))
-      if (res.status === 401 && !opts.allowUnauthorized) throw new UnauthorizedError(401, msg, data)
+      if (res.status === 401 && !opts.allowUnauthorized) {
+        // fire the central handler (clear token + redirect) for EVERY 401, mutations included
+        try { unauthorizedHandler?.() } catch { /* ignore */ }
+        throw new UnauthorizedError(401, msg, data)
+      }
       throw new ApiError(res.status, msg, data)
     }
     return data as T
@@ -123,6 +131,7 @@ export function makeClient(tokenKey: string): ApiClient {
   return {
     getToken,
     setToken,
+    onUnauthorized: (fn) => { unauthorizedHandler = fn },
     get: <T>(path: string) => request<T>(path),
     post: <T>(path: string, body?: unknown, extra?: RequestOptions) => request<T>(path, { ...extra, method: 'POST', body }),
     patch: <T>(path: string, body?: unknown) => request<T>(path, { method: 'PATCH', body }),

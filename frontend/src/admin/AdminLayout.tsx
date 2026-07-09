@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAdminAuth } from './AdminAuth'
 import { CRUD_SECTIONS } from './crudConfigs'
@@ -35,6 +36,7 @@ const NAV: NavItem[] = [
 
 export default function AdminLayout() {
   const { me, logout, can } = useAdminAuth()
+  const [menuOpen, setMenuOpen] = useState(false)
   const items = NAV.filter((n) => {
     if (n.owner) return !!me?.is_owner
     if (n.anyPerm) return !!me?.is_owner || n.anyPerm.some((p) => can(p))
@@ -43,14 +45,15 @@ export default function AdminLayout() {
 
   return (
     <div className="shell">
-      <aside className="sidebar">
+      <div className={'nav-backdrop' + (menuOpen ? ' open' : '')} onClick={() => setMenuOpen(false)} />
+      <aside className={'sidebar' + (menuOpen ? ' open' : '')}>
         <div className="brand">
           <img src="/assets/logo.png" alt="PCI" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
           <span>PCI Admin</span>
         </div>
         <nav className="nav">
           {items.map((n) => (
-            <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink key={n.to} to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
               {n.label}
             </NavLink>
           ))}
@@ -63,7 +66,10 @@ export default function AdminLayout() {
 
       <div className="main">
         <header className="topbar">
-          <strong>Admin Console</strong>
+          <div className="row">
+            <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>
+            <strong>Admin Console</strong>
+          </div>
           <div className="row">
             <div className="avatar" title={me?.email}>{initials(me?.name?.split(' ')[0], me?.name?.split(' ')[1])}</div>
             <div className="small" style={{ lineHeight: 1.2 }}>

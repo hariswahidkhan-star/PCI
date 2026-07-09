@@ -68,7 +68,22 @@ public static class Public
         IResult J(object o) => Results.Json(o);
         var rx = new System.Text.RegularExpressions.Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
 
-        app.MapGet("/api/pricing", () => J(new { currency = "USD", membership = Pricing(db, "membership", null), exam = Pricing(db, "exam", null), bundle = Pricing(db, "bundle", null) }));
+        // Effective pricing. An optional ?cert=CODE prices the exam (and bundle) for that specific
+        // certification, so the checkout shows the real price of whichever credential was chosen — no
+        // certification detail is hardcoded on the page. Omitting cert keeps the founding-cert behaviour.
+        app.MapGet("/api/pricing", (HttpRequest req) =>
+        {
+            var certSel = req.Query["cert"].ToString();
+            var cert = string.IsNullOrWhiteSpace(certSel) ? null : Certs.ById(db, Certs.Resolve(db, certSel));
+            return J(new
+            {
+                currency = "USD",
+                membership = Pricing(db, "membership", null),
+                exam = Pricing(db, "exam", null, cert),
+                bundle = Pricing(db, "bundle", null, cert),
+                cert = cert is null ? null : new { code = cert["code"], name = cert["name"] },
+            });
+        });
 
         // Structured content overrides for one page (title, meta description, editable blocks). Used by
         // the client CMS loader and the admin live preview; the same values are also injected server-side.

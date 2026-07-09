@@ -11,7 +11,7 @@ export const QUESTION_BANK: CrudConfig = {
   description: 'Exam and practice questions.',
   addLabel: 'Add question',
   fields: [
-    { key: 'question', label: 'Question', type: 'textarea', inList: true },
+    { key: 'question', label: 'Question', type: 'textarea', inList: true, required: true },
     { key: 'option_a', label: 'Option A' },
     { key: 'option_b', label: 'Option B' },
     { key: 'option_c', label: 'Option C' },
@@ -33,7 +33,7 @@ export const MEDIA: CrudConfig = {
   description: 'Registered media assets and their metadata.',
   addLabel: 'Add asset',
   fields: [
-    { key: 'filename', label: 'Filename', inList: true },
+    { key: 'filename', label: 'Filename', inList: true, required: true },
     { key: 'alt', label: 'Alt text', inList: true },
     { key: 'width', label: 'Width', type: 'number' },
     { key: 'height', label: 'Height', type: 'number' },
@@ -49,7 +49,7 @@ export const FAQS: CrudConfig = {
   description: 'Frequently asked questions shown on the website.',
   addLabel: 'Add FAQ',
   fields: [
-    { key: 'question', label: 'Question', inList: true },
+    { key: 'question', label: 'Question', inList: true, required: true },
     { key: 'answer', label: 'Answer', type: 'textarea' },
     { key: 'category', label: 'Category', inList: true },
     { key: 'sort_order', label: 'Sort order', type: 'number' },
@@ -65,7 +65,7 @@ export const RESOURCES: CrudConfig = {
   description: 'Downloads and documents available to students.',
   addLabel: 'Add resource',
   fields: [
-    { key: 'title', label: 'Title', inList: true },
+    { key: 'title', label: 'Title', inList: true, required: true },
     { key: 'category', label: 'Category', inList: true },
     { key: 'doc_type', label: 'Type' },
     { key: 'url', label: 'URL', inList: true },
@@ -82,7 +82,7 @@ export const NEWS: CrudConfig = {
   description: 'Announcements and news items.',
   addLabel: 'Add news item',
   fields: [
-    { key: 'title', label: 'Title', inList: true },
+    { key: 'title', label: 'Title', inList: true, required: true },
     { key: 'body', label: 'Body', type: 'textarea' },
     { key: 'published_date', label: 'Published date (YYYY-MM-DD)', inList: true },
     { key: 'published', label: 'Published', type: 'checkbox', inList: true },
@@ -99,7 +99,7 @@ export const BOK: CrudConfig = {
   addLabel: 'Add domain',
   fields: [
     { key: 'code', label: 'Code', inList: true },
-    { key: 'name', label: 'Name', inList: true },
+    { key: 'name', label: 'Name', inList: true, required: true },
     { key: 'weight', label: 'Weight (%)', type: 'number', inList: true },
     { key: 'description', label: 'Description', type: 'textarea' },
     { key: 'sort_order', label: 'Sort order', type: 'number' },
@@ -114,7 +114,7 @@ export const GOVERNANCE: CrudConfig = {
   description: 'Governance roles and their holders.',
   addLabel: 'Add role',
   fields: [
-    { key: 'role', label: 'Role', inList: true },
+    { key: 'role', label: 'Role', inList: true, required: true },
     { key: 'holder', label: 'Holder', inList: true },
     { key: 'status', label: 'Status', inList: true },
     { key: 'remit', label: 'Remit', type: 'textarea' },
@@ -130,7 +130,7 @@ export const NAV: CrudConfig = {
   description: 'Header and footer navigation links.',
   addLabel: 'Add link',
   fields: [
-    { key: 'label', label: 'Label', inList: true },
+    { key: 'label', label: 'Label', inList: true, required: true },
     { key: 'url', label: 'URL', inList: true },
     { key: 'nav_group', label: 'Menu group', inList: true },
     { key: 'sort_order', label: 'Sort order', type: 'number' },

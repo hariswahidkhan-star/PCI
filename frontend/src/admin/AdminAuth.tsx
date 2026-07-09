@@ -20,23 +20,32 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false
+    // A 401 on ANY admin request (query or mutation) drops the session and returns to login.
+    adminApi.onUnauthorized(() => setMe(null))
     async function boot() {
       if (!adminApi.getToken()) {
         setReady(true)
         return
       }
-      try {
-        const who = await adminApi.get<AdminMe>('/api/admin/me')
-        if (!cancelled) setMe(who)
-      } catch (e) {
-        if (e instanceof UnauthorizedError) adminApi.setToken(null)
-      } finally {
-        if (!cancelled) setReady(true)
+      // 401 => dead token; transient network/5xx => retry briefly so a backend blip on reload doesn't
+      // bounce a still-valid admin session to the login screen.
+      for (let attempt = 0; attempt < 3 && !cancelled; attempt++) {
+        try {
+          const who = await adminApi.get<AdminMe>('/api/admin/me')
+          if (!cancelled) setMe(who)
+          break
+        } catch (e) {
+          if (e instanceof UnauthorizedError) { adminApi.setToken(null); break }
+          if (attempt === 2) break
+          await new Promise((r) => setTimeout(r, 600 * (attempt + 1)))
+        }
       }
+      if (!cancelled) setReady(true)
     }
     boot()
     return () => {
       cancelled = true
+      adminApi.onUnauthorized(null)
     }
   }, [])
 
