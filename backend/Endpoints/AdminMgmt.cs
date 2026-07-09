@@ -121,6 +121,7 @@ public static class AdminMgmt
                 b.TryGetValue("active", out var av) && av.ValueKind == JsonValueKind.False ? 0 : 1,
                 H.GetNum(b, "sort_order") ?? 0);
             log(adm.Id, "certification_create", $"{codeV} (id {id})");
+            CertCatalogue.Bump();   // the new credential is live on the public site immediately
             return J(new { ok = true, id });
         }));
         app.MapPatch("/api/admin/certifications/{id}", (HttpRequest req, long id) => gate(req, "exams", adm =>
@@ -135,6 +136,7 @@ public static class AdminMgmt
             var vals = set.Select(c => { var v = b[c]; return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
             db.Execute($"UPDATE certifications SET {string.Join(",", set.Select(c => c + "=?"))}, updated_at=datetime('now') WHERE id=?", vals);
             log(adm.Id, "certification_update", id.ToString());
+            CertCatalogue.Bump();
             return J(new { ok = true });
         }));
         app.MapDelete("/api/admin/certifications/{id}", (HttpRequest req, long id) => gate(req, "exams", adm =>
@@ -147,6 +149,7 @@ public static class AdminMgmt
             if (refs > 0) return Results.Json(new { error = "in_use", message = "This certification has history (credentials, attempts, entitlements or a question bank). Deactivate it instead of deleting." }, statusCode: 409);
             db.Execute("DELETE FROM certifications WHERE id=?", id);
             log(adm.Id, "certification_delete", id.ToString());
+            CertCatalogue.Bump();
             return J(new { ok = true });
         }));
         Crud("governance_roles", new[]{ "role","holder","status","remit","sort_order" }, "sort_order, id", "governance");
@@ -242,6 +245,7 @@ public static class AdminMgmt
             object? act = b.ContainsKey("active") ? (H.B(b["active"].GetRawText()) ? 1 : 0) : null;
             db.Execute("UPDATE pricing_rules SET standard_price=COALESCE(?,standard_price), default_discount_percentage=COALESCE(?,default_discount_percentage), active=COALESCE(?,active), updated_at=datetime('now') WHERE id=?",
                 H.GetNum(b, "standard_price"), H.GetNum(b, "default_discount_percentage"), act, id);
+            CertCatalogue.Bump();   // exam pricing feeds the public catalogue cards
             return J(new { ok = true });
         });
         app.MapPost("/api/admin/run-reminders", (HttpRequest req) => gate(req, "enrollments", _ => J(new { ok = true, reminders_sent = 0 })));
@@ -305,8 +309,13 @@ public static class AdminMgmt
             var b = await H.Body(req);
             var cid = H.GetS(b, "credential_id"); var holder = H.GetS(b, "holder_name");
             if (string.IsNullOrEmpty(cid) || string.IsNullOrEmpty(holder)) return Results.Json(new { error = "missing_fields" }, statusCode: 400);
-            try { var id = db.ExecuteReturningId("INSERT INTO issued_credentials(credential_id,user_id,holder_name,credential,status,expires_at) VALUES(?,?,?,?, 'active',?)",
-                cid.ToUpperInvariant(), H.GetNum(b, "user_id"), holder, H.GetS(b, "credential") ?? "PCP-AI", H.GetS(b, "expires_at"));
+            // Attribute the credential to the chosen certification (defaults to the founding cert). The
+            // credential label defaults to that certification's prefix so /api/verify shows the right name.
+            var credCertId = Certs.Resolve(db, H.GetS(b, "certification_id", "certification"));
+            var credCert = Certs.ById(db, credCertId);
+            var credLabel = H.GetS(b, "credential") ?? (credCert is not null ? Certs.Prefix(credCert) : "PCP-AI");
+            try { var id = db.ExecuteReturningId("INSERT INTO issued_credentials(credential_id,user_id,certification_id,holder_name,credential,status,expires_at) VALUES(?,?,?,?,?, 'active',?)",
+                cid.ToUpperInvariant(), H.GetNum(b, "user_id"), credCertId, holder, credLabel, H.GetS(b, "expires_at"));
                 log(H.Ln(H.GetNum(b, "user_id")), "credential_issued", cid); return J(new { id }); }
             catch { return Results.Json(new { error = "duplicate_or_invalid" }, statusCode: 400); }
         });

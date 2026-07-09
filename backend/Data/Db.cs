@@ -49,7 +49,9 @@ public sealed class Db
         {
             // Lenient mode for parity with SQLite's dynamic typing: coerce rather than error on a
             // type/length mismatch, so behaviour matches the SQLite provider exactly.
-            Execute("SET SESSION sql_mode=''");
+            // PIPES_AS_CONCAT makes `||` a string concatenation operator (as on SQLite) instead of logical OR;
+            // strict flags stay off so existing INSERT behaviour is unchanged across both providers.
+            Execute("SET SESSION sql_mode='PIPES_AS_CONCAT'");
         }
     }
 

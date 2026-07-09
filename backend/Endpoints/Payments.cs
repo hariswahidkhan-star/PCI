@@ -89,6 +89,7 @@ public static class Payments
                 {
                   // Fully atomic settlement: user, membership, payment, redemption, tokens all commit
                   // together or roll back together. Combined with INSERT OR IGNORE this is idempotent.
+                  long? welcomeUserId = null; string? welcomeEmail = null, welcomeFirst = null, welcomeLink = null, welcomeBase = null;
                   db.Transaction(() =>
                   {
                     var product = m.GetValueOrDefault("product", "membership");
@@ -142,7 +143,12 @@ public static class Payments
                         }
                         if (product == "recert")
                         {
-                            var cred = db.QueryOne("SELECT * FROM issued_credentials WHERE user_id=? ORDER BY id DESC", userId);
+                            // Extend the credential for the certification that was actually paid to recertify
+                            // (falls back to the most recent credential when the checkout carried no cert).
+                            var recertSel = m.GetValueOrDefault("certification");
+                            var cred = string.IsNullOrWhiteSpace(recertSel)
+                                ? db.QueryOne("SELECT * FROM issued_credentials WHERE user_id=? ORDER BY id DESC", userId)
+                                : db.QueryOne("SELECT * FROM issued_credentials WHERE user_id=? AND COALESCE(certification_id,1)=? ORDER BY id DESC", userId, Certs.Resolve(db, recertSel));
                             if (cred is not null)
                             {
                                 var nowIso = H.IsoNow;
@@ -168,8 +174,12 @@ public static class Payments
                         db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+7 day'))", userId, Security.Sha(token));
                         // Deliver the setup link — without this email the customer has paid but can
                         // never set a password or reach the student panel.
+                        // Defer the email until AFTER the transaction commits. SMTP can block for the .NET
+                        // default 100s and the single shared DB connection holds its lock for the whole
+                        // transaction body, so sending in-transaction would freeze every DB call app-wide.
                         var mailBase = Mailer.BaseUrl(req);
-                        Mailer.SendWelcome(db, userId, email, m.GetValueOrDefault("first_name"), Mailer.SetupLink(mailBase, token), mailBase);
+                        welcomeUserId = userId; welcomeEmail = email; welcomeFirst = m.GetValueOrDefault("first_name");
+                        welcomeLink = Mailer.SetupLink(mailBase, token); welcomeBase = mailBase;
 
                         if (product == "exam" || product == "bundle")
                         {
@@ -183,13 +193,20 @@ public static class Payments
                         }
                     }
                   });
+                  // Deliver the setup email outside the transaction so a slow SMTP server never holds the DB lock.
+                  if (welcomeEmail is not null)
+                      try { Mailer.SendWelcome(db, welcomeUserId!.Value, welcomeEmail, welcomeFirst, welcomeLink!, welcomeBase!); }
+                      catch (Exception mex) { log(welcomeUserId, "welcome_email_failed", mex.Message); }
                 }
             }
             else if (ev.Type is "checkout.session.async_payment_failed" or "payment_intent.payment_failed")
             {
                 var failObj = ev.Data.Object as IHasId;
                 var id = failObj?.Id;
-                db.Execute("INSERT INTO payments(product_type,payment_provider,provider_payment_id,payment_status,payment_date) VALUES('unknown','stripe',?, 'failed', datetime('now'))", id);
+                // Store failed attempts under a distinct key so a later SUCCESS on the same Stripe PaymentIntent
+                // (card retry) still inserts its paid row and activates the account, and so a repeated failure
+                // event can't violate the provider_payment_id unique index (INSERT OR IGNORE swallows the dup).
+                db.Execute("INSERT OR IGNORE INTO payments(product_type,payment_provider,provider_payment_id,payment_status,payment_date) VALUES('unknown','stripe',?, 'failed', datetime('now'))", "failed:" + id);
                 log(null, "payment_failed", ev.Id);
             }
             return J(new { received = true });

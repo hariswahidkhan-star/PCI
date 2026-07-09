@@ -1,9 +1,22 @@
 import { useState } from 'react'
 import { useMe } from '../data/MeContext'
+import { useQuery } from '../api/hooks'
 import { api, ApiError } from '../api/client'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty } from '../components/ui'
-import { fmtDate, fmtDateTime, daysUntil } from '../format'
+import { fmtDate, fmtDateTime, fmtMoney, daysUntil } from '../format'
 import type { ExamEntry } from '../api/types'
+
+/** A certification from the public, backend-controlled catalogue (GET /api/certifications). */
+interface CatalogueCert {
+  id: number
+  code: string
+  name: string
+  description?: string | null
+  expiry_years?: number | null
+  duration_minutes?: number | null
+  pass_mark_pct?: number | null
+  exam_price?: number | null
+}
 
 const BOOK_ERRORS: Record<string, string> = {
   no_entitlement: 'No exam entitlement was found for this certification.',
@@ -99,7 +112,7 @@ function EntryCard({ entry, onChanged }: { entry: ExamEntry; onChanged: () => vo
           Your exam is scheduled for <strong>{fmtDateTime(booking.scheduled_at)}</strong>
           {booking.timezone ? ` (${booking.timezone})` : ''}.
           <div className="row" style={{ marginTop: '.6rem' }}>
-            <a className="btn sm" href="/exam-ui.html">Go to exam</a>
+            <a className="btn sm" href="/student.html#exam">Go to exam</a>
             <a className="btn sm secondary" href="/student.html#exam">Reschedule</a>
           </div>
         </div>
@@ -120,26 +133,83 @@ function EntryCard({ entry, onChanged }: { entry: ExamEntry; onChanged: () => vo
   )
 }
 
+/** Live catalogue of every certification the Institute offers — driven entirely by the backend, so a
+ *  credential added in the admin console appears here automatically. Enrolment links carry the cert code
+ *  so the checkout prices and books that specific credential. */
+function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
+  const { data, loading, error } = useQuery<{ rows: CatalogueCert[] }>('/api/certifications')
+
+  if (loading) return <Card><Spinner /></Card>
+  if (error) return <Card><ErrorNote>{error}</ErrorNote></Card>
+  const rows = data?.rows ?? []
+  if (rows.length === 0) return <Card><Empty>No certifications are open for enrolment right now.</Empty></Card>
+
+  return (
+    <div className="cert-catalogue-grid">
+      {rows.map((c) => {
+        const owned = ownedCodes.has((c.code || '').toUpperCase())
+        return (
+          <div className="cert-tile" key={c.id}>
+            <div className="cert-tile-head">
+              <span className="cert-tile-code">{c.code}</span>
+              {owned && <Badge tone="ok">Enrolled</Badge>}
+            </div>
+            <h3 className="cert-tile-name">{c.name}</h3>
+            {c.description && <p className="muted small cert-tile-desc">{c.description}</p>}
+            <ul className="cert-tile-meta">
+              {c.exam_price != null && <li><strong>{fmtMoney(c.exam_price)}</strong> exam fee</li>}
+              {c.duration_minutes != null && c.pass_mark_pct != null && (
+                <li>{c.duration_minutes} min · {c.pass_mark_pct}% to pass</li>
+              )}
+              {c.expiry_years != null && <li>Valid {c.expiry_years} year{c.expiry_years === 1 ? '' : 's'}</li>}
+            </ul>
+            {owned ? (
+              <span className="btn sm secondary cert-tile-cta" aria-disabled="true" style={{ opacity: 0.6, pointerEvents: 'none' }}>Already enrolled</span>
+            ) : (
+              <a className="btn sm cert-tile-cta" href={`/checkout.html?product=exam&cert=${encodeURIComponent(c.code)}`}>Enrol in this exam</a>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function Certifications() {
   const { me, loading, error, refetch } = useMe()
   if (loading) return <Spinner />
   if (error) return <ErrorNote>{error}</ErrorNote>
   if (!me) return null
 
+  const ownedCodes = new Set(
+    me.exams.map((e) => (e.certification_code || '').toUpperCase()).filter(Boolean),
+  )
+
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+    <div className="stack" style={{ display: 'grid', gap: '1.75rem' }}>
       <div>
         <h1>Certifications &amp; exams</h1>
-        <p className="muted">Schedule your exams and track each credential you have paid for.</p>
+        <p className="muted">Schedule your exams, track each credential you hold, and enrol in more.</p>
       </div>
-      {me.exams.length === 0 ? (
-        <Card>
-          <Empty>You don’t have any exam entitlements yet.</Empty>
-          <a className="btn sm" href="/enroll.html">Explore certifications</a>
-        </Card>
-      ) : (
-        me.exams.map((e) => <EntryCard key={e.payment_id} entry={e} onChanged={refetch} />)
-      )}
+
+      <section className="stack" style={{ display: 'grid', gap: '1rem' }}>
+        <h2 className="section-title">Your certifications</h2>
+        {me.exams.length === 0 ? (
+          <Card>
+            <Empty>You don’t have any exam entitlements yet — explore the certifications below to get started.</Empty>
+          </Card>
+        ) : (
+          me.exams.map((e) => <EntryCard key={e.payment_id} entry={e} onChanged={refetch} />)
+        )}
+      </section>
+
+      <section className="stack" style={{ display: 'grid', gap: '1rem' }}>
+        <div>
+          <h2 className="section-title">Explore certifications</h2>
+          <p className="muted small" style={{ margin: '.25rem 0 0' }}>Every credential the Institute offers, kept current automatically.</p>
+        </div>
+        <Catalogue ownedCodes={ownedCodes} />
+      </section>
     </div>
   )
 }

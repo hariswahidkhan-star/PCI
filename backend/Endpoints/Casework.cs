@@ -201,7 +201,7 @@ public static class Casework
             var r = db.QueryOne("SELECT evidence_name,evidence_data FROM appeals WHERE id=?", id);
             if (r is null || r["evidence_data"] is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var reference = H.Str(r["evidence_data"]);
-            if (reference is not null && reference.StartsWith("local:"))
+            if (reference is not null && (reference.StartsWith("local:") || reference.StartsWith("s3:")))
             {
                 var got = Storage.Get(reference);
                 if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
@@ -235,7 +235,7 @@ public static class Casework
             var r = db.QueryOne("SELECT evidence_name,evidence_data FROM accommodation_requests WHERE id=?", id);
             if (r is null || r["evidence_data"] is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var reference = H.Str(r["evidence_data"]);
-            if (reference is not null && reference.StartsWith("local:"))
+            if (reference is not null && (reference.StartsWith("local:") || reference.StartsWith("s3:")))
             {
                 var got = Storage.Get(reference);
                 if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
@@ -278,7 +278,7 @@ public static class Casework
             var r = db.QueryOne("SELECT evidence_name,evidence_data FROM cpd_entries WHERE id=?", id);
             if (r is null || r["evidence_data"] is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var reference = H.Str(r["evidence_data"]);
-            if (reference is not null && reference.StartsWith("local:"))
+            if (reference is not null && (reference.StartsWith("local:") || reference.StartsWith("s3:")))
             {
                 var got = Storage.Get(reference);
                 if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);

@@ -88,9 +88,18 @@ app.Use(async (ctx, next) =>
     var path = ctx.Request.Path.Value ?? "";
     if (ctx.Request.Method == "POST" && _rlPaths.Any(p => path.Equals(p, StringComparison.OrdinalIgnoreCase)))
     {
-        var ip = ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        // Behind the TLS-terminating proxy every request arrives from the proxy's socket IP, so keying on
+        // RemoteIpAddress would put ALL clients in one bucket (any traffic could 429 the whole platform's
+        // logins). Honour the first X-Forwarded-For hop — the real client — as the login-event code does.
+        var xff = ctx.Request.Headers["X-Forwarded-For"].ToString();
+        var ip = !string.IsNullOrEmpty(xff) ? xff.Split(',')[0].Trim()
+               : (ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown");
         var key = ip + "|" + path;
         var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        // Evict expired windows so the map can't grow unbounded (only sweeps when it gets large).
+        if (_rlHits.Count > 10_000)
+            foreach (var kv in _rlHits)
+                if (now - kv.Value.windowStart >= RL_WINDOW_MS) _rlHits.TryRemove(kv.Key, out _);
         var entry = _rlHits.AddOrUpdate(key, (1, now), (_, cur) =>
             now - cur.windowStart >= RL_WINDOW_MS ? (1, now) : (cur.count + 1, cur.windowStart));
         if (entry.count > RL_LIMIT)
@@ -220,7 +229,7 @@ app.MapGet("/api/admin/system-check", (HttpRequest req) =>
         legacy_admin_token_disabled = !string.Equals(E("ENABLE_LEGACY_ADMIN_TOKEN"), "true", StringComparison.OrdinalIgnoreCase),
         persistent_db = !((E("DATABASE_FILE") ?? "./pci.db").StartsWith("/tmp")),
         owner_password_changed = db.Scalar<long>("SELECT COUNT(*) FROM admin_users WHERE email=? AND must_change_pw=0", (E("ADMIN_OWNER_EMAIL") ?? "owner@pci.local").ToLowerInvariant()) > 0,
-        migrations_applied = db.Scalar<long>("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='exam_score_snapshots'") > 0,
+        migrations_applied = db.Columns("exam_score_snapshots").Count > 0,   // provider-agnostic (sqlite_master is SQLite-only)
         storage_local = PCI.Backend.Core.Storage.UsingLocal,
         security_headers = true,                         // CSP + nosniff + frame-ancestors + referrer-policy
         csp_enforced = !string.Equals(E("CSP_REPORT_ONLY"), "true", StringComparison.OrdinalIgnoreCase),
@@ -235,8 +244,17 @@ app.MapGet("/api/content", () =>
 {
     var content = new Dictionary<string, object?>();
     foreach (var r in db.Query("SELECT ckey,cvalue FROM site_content")) content[(string)r["ckey"]!] = r["cvalue"];
+    // Server-side result-publication policy must never be public: a candidate could otherwise read which
+    // integrity blocks are disabled. These keys are used only by the backend (no client reads them), so
+    // redacting them here changes no page behaviour.
     var settings = new Dictionary<string, object?>();
-    foreach (var r in db.Query("SELECT * FROM site_settings")) settings[(string)r["skey"]!] = r["svalue"];
+    foreach (var r in db.Query("SELECT skey,svalue FROM site_settings"))
+    {
+        var k = (string)r["skey"]!;
+        if (k.StartsWith("auto_block_result", StringComparison.OrdinalIgnoreCase) || k == "critical_violation_threshold"
+            || k.Contains("secret", StringComparison.OrdinalIgnoreCase) || k.Contains("smtp", StringComparison.OrdinalIgnoreCase)) continue;
+        settings[k] = r["svalue"];
+    }
     return Json(new
     {
         content, settings,
@@ -456,6 +474,7 @@ app.MapPatch("/api/admin/settings", async (HttpRequest req) =>
         else rejected.Add(kv.Key);
     }
     PCI.Backend.Core.PageContent.Bump();   // announcement banner + any content-affecting settings
+    PCI.Backend.Core.CertCatalogue.Bump(); // exam_* settings feed the public catalogue's effective prices
     Log(null, "settings_update", string.Join(",", b.Keys));
     return rejected.Count > 0 ? Json(new { ok = true, rejected }) : Json(new { ok = true });
 });
@@ -512,13 +531,21 @@ app.Use(async (ctx, next) =>
     {
         var reqPath = ctx.Request.Path.Value ?? "/";
         var slug = reqPath == "/" ? "index.html" : reqPath.TrimStart('/');
-        if (slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..")
-            && PCI.Backend.Core.PageContent.HasOverrides(db, slug))
+        var hasContent = slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..")
+            && PCI.Backend.Core.PageContent.HasOverrides(db, slug);
+        var hasCerts = slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..")
+            && PCI.Backend.Core.CertCatalogue.Applies(slug);
+        if (hasContent || hasCerts)
         {
             var file = Path.Combine(webRoot, slug.Replace('/', Path.DirectorySeparatorChar));
             if (File.Exists(file))
             {
-                var rendered = PCI.Backend.Core.PageContent.Render(db, slug, () => File.ReadAllText(file));
+                // Content injection (title/meta/data-cms/_h1) is cached per (slug, content version); the live
+                // certification catalogue is then filled from the DB (its cards are cached per cert version).
+                var rendered = hasContent
+                    ? PCI.Backend.Core.PageContent.Render(db, slug, () => File.ReadAllText(file))
+                    : File.ReadAllText(file);
+                if (hasCerts) rendered = PCI.Backend.Core.CertCatalogue.Inject(db, rendered);
                 ctx.Response.ContentType = "text/html; charset=utf-8";
                 await ctx.Response.WriteAsync(rendered);
                 return;
