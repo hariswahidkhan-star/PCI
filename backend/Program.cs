@@ -475,6 +475,7 @@ app.MapPatch("/api/admin/settings", async (HttpRequest req) =>
     }
     PCI.Backend.Core.PageContent.Bump();   // announcement banner + any content-affecting settings
     PCI.Backend.Core.CertCatalogue.Bump(); // exam_* settings feed the public catalogue's effective prices
+    PCI.Backend.Core.PriceTags.Bump();     // pricing-affecting settings flow into page price tokens
     Log(null, "settings_update", string.Join(",", b.Keys));
     return rejected.Count > 0 ? Json(new { ok = true, rejected }) : Json(new { ok = true });
 });
@@ -548,6 +549,7 @@ app.Use(async (ctx, next) =>
                     : File.ReadAllText(file);
                 if (hasCerts) rendered = PCI.Backend.Core.CertCatalogue.Inject(db, rendered);
                 rendered = PCI.Backend.Core.ListSections.Inject(db, rendered);
+                rendered = PCI.Backend.Core.PriceTags.Inject(db, rendered);
                 ctx.Response.ContentType = "text/html; charset=utf-8";
                 await ctx.Response.WriteAsync(rendered);
                 return;

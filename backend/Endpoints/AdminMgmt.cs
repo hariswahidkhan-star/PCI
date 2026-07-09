@@ -51,7 +51,7 @@ public static class AdminMgmt
         // resources, bok_domains, governance_roles) are served INTO the public pages server-side.
         void Crud(string name, string[] cols, string order, string section)
         {
-            void Changed() { ListSections.Bump(); PageContent.Bump(); }
+            void Changed() { ListSections.Bump(); PageContent.Bump(); CertCatalogue.Bump(); PriceTags.Bump(); }
             // Backtick identifiers so reserved words (e.g. media_assets.`usage`) are valid on BOTH providers
             // — SQLite accepts backtick-quoted identifiers for MySQL compatibility. cols/name are code
             // constants (not request input), so this is not an injection surface.
@@ -127,7 +127,7 @@ public static class AdminMgmt
                 b.TryGetValue("active", out var av) && av.ValueKind == JsonValueKind.False ? 0 : 1,
                 H.GetNum(b, "sort_order") ?? 0);
             log(adm.Id, "certification_create", $"{codeV} (id {id})");
-            CertCatalogue.Bump();   // the new credential is live on the public site immediately
+            CertCatalogue.Bump(); PriceTags.Bump();   // the new credential is live on the public site immediately
             return J(new { ok = true, id });
         }));
         app.MapPatch("/api/admin/certifications/{id}", (HttpRequest req, long id) => gate(req, "exams", adm =>
@@ -142,7 +142,7 @@ public static class AdminMgmt
             var vals = set.Select(c => { var v = b[c]; return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
             db.Execute($"UPDATE certifications SET {string.Join(",", set.Select(c => c + "=?"))}, updated_at=datetime('now') WHERE id=?", vals);
             log(adm.Id, "certification_update", id.ToString());
-            CertCatalogue.Bump();
+            CertCatalogue.Bump(); PriceTags.Bump();
             return J(new { ok = true });
         }));
         app.MapDelete("/api/admin/certifications/{id}", (HttpRequest req, long id) => gate(req, "exams", adm =>
@@ -155,7 +155,7 @@ public static class AdminMgmt
             if (refs > 0) return Results.Json(new { error = "in_use", message = "This certification has history (credentials, attempts, entitlements or a question bank). Deactivate it instead of deleting." }, statusCode: 409);
             db.Execute("DELETE FROM certifications WHERE id=?", id);
             log(adm.Id, "certification_delete", id.ToString());
-            CertCatalogue.Bump();
+            CertCatalogue.Bump(); PriceTags.Bump();
             return J(new { ok = true });
         }));
         Crud("governance_roles", new[]{ "role","holder","status","remit","sort_order" }, "sort_order, id", "governance");
@@ -163,6 +163,10 @@ public static class AdminMgmt
         Crud("news", new[]{ "title","body","published_date","url","published","sort_order" }, "published_date DESC, id DESC", "news");
         Crud("nav_items", new[]{ "label","url","nav_group","sort_order","visible" }, "nav_group, sort_order, id", "nav");
         Crud("media_assets", new[]{ "filename","alt","width","height","usage" }, "id DESC", "media");
+        // Base pricing (per product type). A certification's own exam_price still overrides the exam
+        // rule for that credential. Edits flow everywhere: checkout, catalogue cards and every price
+        // mentioned in page copy (data-price tokens).
+        Crud("pricing_rules", new[]{ "currency","product_type","standard_price","default_discount_percentage","active" }, "id", "settings");
 
         // ---------- overview ----------
         app.MapGet("/api/admin/overview", (HttpRequest req) =>

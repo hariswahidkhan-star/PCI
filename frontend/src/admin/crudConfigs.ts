@@ -141,4 +141,21 @@ export const NAV: CrudConfig = {
   ],
 }
 
-export const CRUD_SECTIONS: CrudConfig[] = [QUESTION_BANK, MEDIA, FAQS, RESOURCES, NEWS, BOK, GOVERNANCE, NAV]
+export const PRICING: CrudConfig = {
+  name: 'pricing_rules',
+  path: 'pricing',
+  title: 'Pricing',
+  perm: 'settings',
+  description:
+    'Base prices per product. Changes apply everywhere at once: checkout, the certification cards and every price mentioned in page copy. A certification’s own exam fee (set in Certifications) overrides the exam rule for that credential.',
+  addLabel: 'Add pricing rule',
+  fields: [
+    { key: 'product_type', label: 'Product (membership / exam / bundle / renewal / recert / retake)', inList: true, required: true },
+    { key: 'standard_price', label: 'Standard price (USD)', type: 'number', inList: true },
+    { key: 'default_discount_percentage', label: 'Standing discount (%)', type: 'number', inList: true },
+    { key: 'currency', label: 'Currency', inList: true },
+    { key: 'active', label: 'Active', type: 'checkbox', inList: true },
+  ],
+}
+
+export const CRUD_SECTIONS: CrudConfig[] = [QUESTION_BANK, MEDIA, FAQS, RESOURCES, NEWS, BOK, GOVERNANCE, NAV, PRICING]
