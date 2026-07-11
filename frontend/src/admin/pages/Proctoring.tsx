@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type ExamSessionRow, type ExamSessionDetail } from '../api'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
@@ -162,6 +162,17 @@ export default function Proctoring() {
   const [live, setLive] = useState(false)
   const [selected, setSelected] = useState<number | null>(null)
   const { data, loading, error, refetch } = useAdminQuery<{ rows: ExamSessionRow[] }>(live ? '/api/admin/exam-sessions/live' : '/api/admin/exam-sessions')
+
+  // The Live tab shows server-computed countdowns and heartbeat freshness; without polling they
+  // freeze after load, so a proctor sees stale "time left" and a candidate whose heartbeat has
+  // actually gone stale still shows green. Poll while Live is active; the interval is cleared when
+  // leaving the Live tab or on unmount. The same-path refetch is a background refresh (see
+  // useAdminQuery), so it never blanks the table to a spinner.
+  useEffect(() => {
+    if (!live) return
+    const t = setInterval(() => refetch(), 12000)
+    return () => clearInterval(t)
+  }, [live, refetch])
 
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>

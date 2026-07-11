@@ -90,8 +90,9 @@ export default function Register() {
             {busy ? 'Creating account…' : 'Create free account'}
           </button>
           <p className="muted small" style={{ marginTop: '.75rem', marginBottom: 0 }}>
-            By creating an account you agree to our <a href="/terms-of-use.html" target="_blank" rel="noreferrer">terms</a> and{' '}
-            <a href="/privacy-policy.html" target="_blank" rel="noreferrer">privacy policy</a>.
+            By creating an account you agree to our <a href="/terms.html" target="_blank" rel="noreferrer">terms</a>,{' '}
+            <a href="/terms-of-enrollment.html" target="_blank" rel="noreferrer">terms of enrolment</a> and{' '}
+            <a href="/privacy.html" target="_blank" rel="noreferrer">privacy policy</a>.
           </p>
         </form>
         <div className="spread small" style={{ marginTop: '1rem' }}>

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { useMe } from '../data/MeContext'
-import { Card, Stat, StatusBadge, Spinner, ErrorNote, Badge } from '../components/ui'
+import { Card, Stat, StatusBadge, Spinner, Badge } from '../components/ui'
 import Ring from '../components/Ring'
 import CountUp from '../components/CountUp'
 import ConsentsNotice from '../components/ConsentsNotice'
@@ -72,10 +72,24 @@ function buildChecklist(me: Me): ChecklistItem[] {
 
 export default function Overview() {
   const { user } = useAuth()
-  const { me, loading, error } = useMe()
+  const { me, loading, error, refetch } = useMe()
 
   if (loading) return <Spinner />
-  if (error) return <ErrorNote>{error}</ErrorNote>
+  if (error)
+    return (
+      <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+        <div>
+          <h1>Welcome back, {user?.firstName || 'there'}</h1>
+        </div>
+        <Card>
+          <h3 style={{ marginBottom: '.35rem' }}>We couldn’t load your dashboard</h3>
+          <p className="muted" style={{ marginBottom: '.9rem' }}>
+            Something went wrong while loading your account. This is usually temporary.
+          </p>
+          <button className="btn" onClick={() => refetch()}>Try again</button>
+        </Card>
+      </div>
+    )
   if (!me) return null
 
   const journey = buildJourney(me.lifecycle)

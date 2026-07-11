@@ -46,7 +46,7 @@ public static class Account
                 var ua = req.Headers.UserAgent.ToString();
                 var dev = System.Text.RegularExpressions.Regex.IsMatch(ua, "Mobile|iPhone|Android") ? "Mobile"
                         : System.Text.RegularExpressions.Regex.IsMatch(ua, "iPad|Tablet") ? "Tablet" : "Desktop";
-                var ip = (req.Headers["x-forwarded-for"].ToString() is { Length: > 0 } xf ? xf : req.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "").Split(',')[0];
+                var ip = H.LastHopIp(req.Headers["x-forwarded-for"].ToString(), req.HttpContext.Connection.RemoteIpAddress?.ToString());
                 db.Execute("INSERT INTO login_events(user_id,ip,user_agent,device,outcome) VALUES(?,?,?,?,?)", u["id"], ip, ua.Length > 300 ? ua[..300] : ua, dev, "success");
             }
             catch { }

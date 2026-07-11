@@ -26,7 +26,9 @@ export default function Support() {
   const [busy, setBusy] = useState(false)
   const [openId, setOpenId] = useState<number | null>(null)
   const [reply, setReply] = useState('')
-  const [note, setNote] = useState<string | null>(null)
+  const [replyBusy, setReplyBusy] = useState(false)
+  const [replyErr, setReplyErr] = useState<string | null>(null)
+  const [note, setNote] = useState<{ ok: boolean; text: string } | null>(null)
 
   async function create(e: FormEvent) {
     e.preventDefault()
@@ -36,10 +38,10 @@ export default function Support() {
       const r = await api.post<{ reference: string }>('/api/me/tickets', { subject, category, body })
       setSubject('')
       setBody('')
-      setNote(`Ticket ${r.reference} created — we'll reply here and by email.`)
+      setNote({ ok: true, text: `Ticket ${r.reference} created — we'll reply here and by email.` })
       refetch()
     } catch (e2) {
-      setNote(e2 instanceof Error ? e2.message : 'Could not create the ticket.')
+      setNote({ ok: false, text: e2 instanceof Error ? e2.message : 'Could not create the ticket. Please try again.' })
     } finally {
       setBusy(false)
     }
@@ -47,9 +49,17 @@ export default function Support() {
 
   async function sendReply(id: number) {
     if (!reply.trim()) return
-    await api.post(`/api/me/tickets/${id}/reply`, { body: reply })
-    setReply('')
-    refetch()
+    setReplyBusy(true)
+    setReplyErr(null)
+    try {
+      await api.post(`/api/me/tickets/${id}/reply`, { body: reply })
+      setReply('')
+      refetch()
+    } catch (e2) {
+      setReplyErr(e2 instanceof Error ? e2.message : 'Could not send your reply. Please try again.')
+    } finally {
+      setReplyBusy(false)
+    }
   }
 
   if (loading) return <Spinner />
@@ -64,7 +74,7 @@ export default function Support() {
       </div>
 
       <Card title="New request">
-        {note && <div className="notice" style={{ marginBottom: '.75rem' }}>{note}</div>}
+        {note && <div className={'notice' + (note.ok ? '' : ' err')} role={note.ok ? 'status' : 'alert'} style={{ marginBottom: '.75rem' }}>{note.text}</div>}
         <form onSubmit={create}>
           <div className="grid cols-2">
             <div className="field">
@@ -115,8 +125,9 @@ export default function Support() {
                     ))}
                     <div className="row" style={{ marginTop: '.5rem' }}>
                       <input placeholder="Write a reply…" value={reply} onChange={(e) => setReply(e.target.value)} />
-                      <button className="btn sm" type="button" onClick={() => sendReply(t.id)}>Reply</button>
+                      <button className="btn sm" type="button" disabled={replyBusy} onClick={() => sendReply(t.id)}>{replyBusy ? 'Sending…' : 'Reply'}</button>
                     </div>
+                    {replyErr && <div className="notice err" role="alert" style={{ marginTop: '.5rem' }}>{replyErr}</div>}
                   </div>
                 )}
               </div>

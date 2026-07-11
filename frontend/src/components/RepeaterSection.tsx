@@ -2,7 +2,7 @@ import { useState, type FormEvent, type ReactNode } from 'react'
 import { api } from '../api/client'
 import { useQuery } from '../api/hooks'
 import { useMe } from '../data/MeContext'
-import { Spinner } from './ui'
+import { Spinner, ErrorNote } from './ui'
 
 export interface RepeaterField {
   key: string
@@ -31,7 +31,7 @@ interface Props<T extends { id: number }> {
  * qualifications and held certifications, in both the onboarding wizard and the profile. */
 export default function RepeaterSection<T extends { id: number }>(p: Props<T>) {
   const { refetch: refetchMe } = useMe()
-  const { data, loading, refetch } = useQuery<{ rows: T[] }>(p.route)
+  const { data, loading, error, refetch } = useQuery<{ rows: T[] }>(p.route)
   const [editing, setEditing] = useState<'new' | number | null>(null)
   const [form, setForm] = useState<Record<string, string>>({})
   const [busy, setBusy] = useState(false)
@@ -95,6 +95,13 @@ export default function RepeaterSection<T extends { id: number }>(p: Props<T>) {
 
       {loading ? (
         <Spinner />
+      ) : error && rows.length === 0 && editing === null ? (
+        <ErrorNote>
+          <div className="spread" style={{ gap: '.75rem', alignItems: 'center' }}>
+            <span>We couldn’t load this section. {error}</span>
+            <button className="btn ghost sm" type="button" onClick={refetch}>Try again</button>
+          </div>
+        </ErrorNote>
       ) : rows.length === 0 && editing === null ? (
         <div className="rep-empty">
           <p className="muted small" style={{ margin: 0 }}>{p.emptyHint}</p>

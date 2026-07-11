@@ -10,6 +10,17 @@ namespace PCI.Backend.Endpoints;
 public static class AdminMgmt
 {
     static string Like(string? q) => "%" + System.Text.RegularExpressions.Regex.Replace(q ?? "", "[%_]", "") + "%";
+    // Interpret a JSON value as a boolean flag robustly: true/1/"true"/"1"/"yes" => true; everything
+    // else (false, 0, "false", "0", "", null) => false. A raw JsonValueKind.False check alone lets
+    // {"active":0} or {"active":"false"} slip through as "not false".
+    static bool JsonFlag(JsonElement v) => v.ValueKind switch
+    {
+        JsonValueKind.True => true,
+        JsonValueKind.False => false,
+        JsonValueKind.Number => v.TryGetInt64(out var n) && n != 0,
+        JsonValueKind.String => (v.GetString() ?? "").Trim().ToLowerInvariant() is "1" or "true" or "yes",
+        _ => false,
+    };
     static string CsvEsc(object? v)
     {
         var s = v?.ToString() ?? "";
@@ -58,7 +69,7 @@ public static class AdminMgmt
             string Q(string c) => "`" + c + "`";
             var colList = string.Join(",", cols.Select(Q));
             app.MapGet($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ => J(new { rows = db.Query($"SELECT * FROM `{name}` ORDER BY {order}") })));
-            app.MapPost($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ =>
+            app.MapPost($"/api/admin/{name}", (HttpRequest req) => gate(req, section, adm =>
             {
                 var b = H.Body(req).GetAwaiter().GetResult();
                 var vals = cols.Select(c => (object?)(b.TryGetValue(c, out var v) && v.ValueKind != JsonValueKind.Null
@@ -67,13 +78,13 @@ public static class AdminMgmt
                 try
                 {
                     var id = db.ExecuteReturningId($"INSERT INTO `{name}`({colList}) VALUES({string.Join(",", cols.Select(_ => "?"))})", vals);
-                    log(null, name + "_create", id.ToString());
+                    log(adm.Id, name + "_create", id.ToString());
                     Changed();
                     return J(new { id });
                 }
                 catch { return Results.Json(new { error = "constraint", message = "Could not save — a required field is blank or a unique value is already in use." }, statusCode: 409); }
             }));
-            app.MapPatch($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, _ =>
+            app.MapPatch($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, adm =>
             {
                 var b = H.Body(req).GetAwaiter().GetResult();
                 var set = cols.Where(c => b.ContainsKey(c)).ToList();
@@ -82,16 +93,16 @@ public static class AdminMgmt
                 try
                 {
                     db.Execute($"UPDATE `{name}` SET {string.Join(",", set.Select(c => Q(c) + "=?"))} WHERE id=?", vals);
-                    log(null, name + "_update", id.ToString());
+                    log(adm.Id, name + "_update", id.ToString());
                     Changed();
                     return J(new { ok = true });
                 }
                 catch { return Results.Json(new { error = "constraint", message = "Could not save — a unique value is already in use." }, statusCode: 409); }
             }));
-            app.MapDelete($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, _ =>
+            app.MapDelete($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, adm =>
             {
                 db.Execute($"DELETE FROM `{name}` WHERE id=?", id);
-                log(null, name + "_delete", id.ToString());
+                log(adm.Id, name + "_delete", id.ToString());
                 Changed();
                 return J(new { ok = true });
             }));
@@ -130,7 +141,7 @@ public static class AdminMgmt
                 codeV, nameV, H.GetS(b, "description"), H.GetS(b, "credential_prefix"),
                 H.GetNum(b, "pass_mark_pct"), H.GetNum(b, "duration_minutes"),
                 H.GetNum(b, "expiry_years") ?? 3, H.GetNum(b, "exam_price"),
-                b.TryGetValue("active", out var av) && av.ValueKind == JsonValueKind.False ? 0 : 1,
+                b.TryGetValue("active", out var av) && !JsonFlag(av) ? 0 : 1,
                 H.GetNum(b, "sort_order") ?? 0);
             log(adm.Id, "certification_create", $"{codeV} (id {id})");
             CertCatalogue.Bump(); PriceTags.Bump();   // the new credential is live on the public site immediately
@@ -142,13 +153,13 @@ public static class AdminMgmt
             var b = H.Body(req).GetAwaiter().GetResult();
             var allowed = new[]{ "name","description","credential_prefix","pass_mark_pct","duration_minutes","expiry_years","exam_price","active","sort_order" };
             var set = allowed.Where(c => b.ContainsKey(c)).ToList();
-            if (id == 1 && set.Contains("active") && b["active"].ValueKind == JsonValueKind.False)
+            if (id == 1 && set.Contains("active") && !JsonFlag(b["active"]))
                 return Results.Json(new { error = "founding_cert_permanent", message = "The founding certification cannot be deactivated." }, statusCode: 400);
             if (set.Contains("credential_prefix") && (b["credential_prefix"].ValueKind == JsonValueKind.String
                 && (b["credential_prefix"].GetString() ?? "").Trim().ToUpperInvariant().StartsWith(Honorary.AwardPrefix, StringComparison.Ordinal)))
                 return Results.Json(new { error = "prefix_reserved", message = "PCI-HON is reserved for honorary awards and cannot be used for a certification." }, statusCode: 400);
             if (set.Count == 0) return J(new { ok = true });
-            var vals = set.Select(c => { var v = b[c]; return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
+            var vals = set.Select(c => { var v = b[c]; if (c == "active") return (object?)(JsonFlag(v) ? 1 : 0); return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
             db.Execute($"UPDATE certifications SET {string.Join(",", set.Select(c => c + "=?"))}, updated_at=datetime('now') WHERE id=?", vals);
             log(adm.Id, "certification_update", id.ToString());
             CertCatalogue.Bump(); PriceTags.Bump();
@@ -442,8 +453,11 @@ public static class AdminMgmt
                 ["subscribers"] = "SELECT email,status,created_at FROM newsletter_subscribers ORDER BY id DESC" };
             var entity = req.Query["entity"].ToString();
             if (!map.TryGetValue(entity, out var sql)) return Results.Json(new { error = "bad_entity" }, statusCode: 400);
-            var csv = ToCsv(db.Query(sql));
-            return Results.Text(csv, "text/csv");
+            var rows = db.Query(sql);
+            // Bulk export of PII / financial data is a sensitive action — record who exported what and
+            // how many rows, so a mass data pull is attributable in the audit trail.
+            log(adminFromReq(req)?.Id, "data_export", $"{entity} ({rows.Count} rows)");
+            return Results.Text(ToCsv(rows), "text/csv");
         });
 
         // ---------- pages / content / subscribers / forms ----------
@@ -516,7 +530,10 @@ public static class AdminMgmt
         {
             var g = Deny(req, "subscribers"); if (g is not null) return g;
             var b = await H.Body(req);
-            db.Execute("UPDATE newsletter_subscribers SET status=? WHERE id=?", H.GetS(b, "status"), id);
+            var subStatus = H.GetS(b, "status");
+            if (subStatus is not ("subscribed" or "unsubscribed" or "bounced" or "complained"))
+                return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            db.Execute("UPDATE newsletter_subscribers SET status=? WHERE id=?", subStatus, id);
             return J(new { ok = true });
         });
         app.MapGet("/api/admin/form_submissions", (HttpRequest req) =>
@@ -533,7 +550,10 @@ public static class AdminMgmt
         {
             var g = Deny(req, "submissions"); if (g is not null) return g;
             var b = await H.Body(req);
-            db.Execute("UPDATE form_submissions SET status=? WHERE id=?", H.GetS(b, "status"), id);
+            var fsStatus = H.GetS(b, "status");
+            if (fsStatus is not ("new" or "in_progress" or "resolved" or "archived" or "spam"))
+                return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            db.Execute("UPDATE form_submissions SET status=? WHERE id=?", fsStatus, id);
             return J(new { ok = true });
         });
     }

@@ -107,6 +107,32 @@ public static class Migrate
         // first-run content for those sections (only when a table is empty — never overwrites edits)
         SeedContent.Run(db);
 
+        // Content correction for live DBs: the donate page was seeded asserting PCI *is* a 501(c)(3)
+        // (implying tax-deductible gifts) when it is only *pursuing* recognition. INSERT OR IGNORE
+        // won't rewrite an already-seeded row, so correct it in place. Idempotent (LIKE guard).
+        db.Exec(@"UPDATE pages SET title='Donate — Support the Project Controls Institute (pursuing 501(c)(3))'
+                  WHERE slug='donate.html' AND title LIKE '%(501(c)(3))' AND title NOT LIKE '%pursuing%'");
+
+        // Performance & integrity indexes on hot lookup/join columns. Every /api/me and admin-student
+        // load fans out to these tables by user_id; without indexes they full-scan under the global
+        // write lock. Idempotent; safe on fresh and existing databases (SQLite + MySQL via db.Exec).
+        foreach (var ix in new[]
+        {
+            "CREATE INDEX IF NOT EXISTS ix_payments_user ON payments(user_id)",
+            "CREATE INDEX IF NOT EXISTS ix_entitlements_user ON exam_entitlements(user_id)",
+            "CREATE INDEX IF NOT EXISTS ix_entitlements_booking ON exam_entitlements(booking_id)",
+            "CREATE INDEX IF NOT EXISTS ix_credentials_user ON issued_credentials(user_id)",
+            "CREATE INDEX IF NOT EXISTS ix_memberships_user ON memberships(user_id)",
+            "CREATE INDEX IF NOT EXISTS ix_bookings_payment ON exam_bookings(payment_id)",
+        }) { try { db.Exec(ix); } catch { } }
+        // De-duplicate any accidental duplicate student_profiles rows before enforcing one-per-user,
+        // then add the UNIQUE(user_id) the fresh schema should have carried (idempotent).
+        try { db.Exec("DELETE FROM student_profiles WHERE id NOT IN (SELECT MIN(id) FROM student_profiles GROUP BY user_id)"); } catch { }
+        try { db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_student_profiles_user ON student_profiles(user_id)"); } catch { }
+        // Older DBs whose exam_launch_codes predates the UNIQUE(code_hash) column-constraint: enforce it
+        // as a unique index so a launch code can never resolve to two rows.
+        try { db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_launch_code_hash ON exam_launch_codes(code_hash)"); } catch { }
+
         // ── Multi-certification upgrade for pre-existing databases ──
         // certifications is created by schema.sql; here we make sure every lifecycle table carries
         // certification_id and that legacy rows are attributed to the founding certification (id 1).
@@ -138,8 +164,14 @@ public static class Migrate
         // dashboard; payment remains the only path to anything that matters.
         try
         {
+            // In Production, never auto-create a login-able account with a public default password:
+            // that seeds a real, authenticatable student on the live site. Seed the demo student only
+            // outside Production, OR when the operator explicitly sets DEMO_STUDENT_PASSWORD (an opt-in
+            // that proves intent). Everywhere else, launch starts with zero student accounts.
+            var isProd = string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Production", StringComparison.OrdinalIgnoreCase);
+            var demoOptIn = Environment.GetEnvironmentVariable("DEMO_STUDENT_PASSWORD") is not null;
             var n = db.Scalar<long>("SELECT COUNT(*) FROM users");
-            if (n == 0)
+            if (n == 0 && (!isProd || demoOptIn))
             {
                 var email = (Environment.GetEnvironmentVariable("DEMO_STUDENT_EMAIL") ?? "student@pci.local").ToLowerInvariant();
                 var pw = Environment.GetEnvironmentVariable("DEMO_STUDENT_PASSWORD") ?? "changeme-student";

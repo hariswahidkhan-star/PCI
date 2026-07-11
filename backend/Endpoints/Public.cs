@@ -168,6 +168,11 @@ public static class Public
             if (row is null) return Results.Json(new { error = "invalid_or_expired_token" }, statusCode: 400);
             db.Execute("UPDATE users SET password_hash=?, updated_at=datetime('now') WHERE id=?", BCrypt.Net.BCrypt.HashPassword(password), row["user_id"]);
             db.Execute("UPDATE login_tokens SET used_at=datetime('now') WHERE id=?", row["id"]);
+            // Setting a new password revokes every existing session and burns any other outstanding
+            // set-password/reset link for this user — a password reset means "log me out everywhere",
+            // and a leaked older link must not remain usable after the account is recovered.
+            db.Execute("DELETE FROM login_tokens WHERE user_id=? AND purpose='session'", row["user_id"]);
+            db.Execute("UPDATE login_tokens SET used_at=datetime('now') WHERE user_id=? AND purpose='set_password' AND used_at IS NULL", row["user_id"]);
             log(H.Ln(row["user_id"]), "password_set", "via secure link");
             return J(new { ok = true });
         });

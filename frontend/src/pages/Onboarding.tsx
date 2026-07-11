@@ -32,6 +32,7 @@ export default function Onboarding() {
   const [step, setStep] = useState(0)
   const [form, setForm] = useState<Record<string, string>>({})
   const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
 
   const profile = (me?.profile ?? {}) as Record<string, unknown>
   const completion = Number(profile.profile_completion_percentage ?? 20)
@@ -39,6 +40,7 @@ export default function Onboarding() {
   async function saveAbout(e: FormEvent) {
     e.preventDefault()
     setBusy(true)
+    setErr(null)
     try {
       if (Object.keys(form).length > 0) {
         await api.patch('/api/me/profile', form)
@@ -46,6 +48,8 @@ export default function Onboarding() {
         refetch()
       }
       setStep(2)
+    } catch (e2) {
+      setErr(e2 instanceof Error ? e2.message : 'Could not save your details. Please try again.')
     } finally {
       setBusy(false)
     }
@@ -94,6 +98,7 @@ export default function Onboarding() {
           <div className="card wiz-card">
             <h2>About you</h2>
             <p className="muted small">All fields optional — the more you add, the more complete your profile.</p>
+            {err && <div className="notice err" role="alert" style={{ marginBottom: '.75rem' }}>{err}</div>}
             <form onSubmit={saveAbout}>
               <div className="grid cols-2">
                 {ABOUT_FIELDS.map((f) => (

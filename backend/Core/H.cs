@@ -14,6 +14,19 @@ public static class H
     public static string? Str(object? v) => v?.ToString();
     public static bool B(object? v) => v is not null && (Convert.ToString(v) == "1" || string.Equals(Convert.ToString(v), "true", StringComparison.OrdinalIgnoreCase) || (v is long l && l != 0));
 
+    /// <summary>Trusted client IP for audit/rate-limiting: the LAST X-Forwarded-For hop (appended by
+    /// our own TLS-terminating proxy), falling back to the socket address. NEVER the first hop — that
+    /// value is client-controlled and forgeable, so auditing/keying on it lets an attacker spoof it.</summary>
+    public static string LastHopIp(string? xff, string? remote)
+    {
+        if (!string.IsNullOrEmpty(xff))
+        {
+            var parts = xff.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            if (parts.Length > 0) return parts[^1];
+        }
+        return string.IsNullOrEmpty(remote) ? "unknown" : remote;
+    }
+
     // ---- JSON request body ----
     public static async Task<JsonElement> BodyEl(HttpRequest r)
     {

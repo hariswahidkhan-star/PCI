@@ -226,9 +226,18 @@ public static class Payments
                 // PaymentIntent, flip it to refunded/reversed, and deactivate any UNUSED entitlement or
                 // membership it granted. A credential already earned by a passed exam, and a consumed
                 // entitlement, are left intact — the sitting genuinely happened. Idempotent.
+                // A dispute event carries a Stripe.Dispute, not a Charge — cast to the right concrete
+                // type or the PaymentIntent is null and the whole revocation is silently skipped.
                 var ch = ev.Data.Object as Charge;
-                var pi = ch?.PaymentIntentId;
+                var pi = ch?.PaymentIntentId ?? (ev.Data.Object as Dispute)?.PaymentIntentId;
                 var reversed = ev.Type != "charge.refunded" ? "reversed" : "refunded";
+                // A PARTIAL refund (amount_refunded < amount) leaves the purchase substantially paid —
+                // don't revoke access. Full refunds (ch.Refunded) and disputes/chargebacks do revoke.
+                if (ev.Type == "charge.refunded" && ch is not null && ch.Refunded != true)
+                {
+                    log(0, "partial_refund_ignored", $"{ev.Id} pi={pi}");
+                    pi = null;
+                }
                 if (!string.IsNullOrEmpty(pi))
                     db.Transaction(() =>
                     {

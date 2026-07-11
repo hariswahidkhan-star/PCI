@@ -43,6 +43,10 @@ const HOLD_LABELS: Record<string, string> = {
   booking_closed: 'exam booking is temporarily closed',
 }
 
+// Holds that are states with no student action to take. They read wrongly under the imperative
+// "To unlock scheduling:" frame, so they are shown under a "Scheduling is unavailable:" frame instead.
+const STATE_HOLDS = new Set(['account_hold', 'booking_closed'])
+
 function ScheduleForm({ entry, onDone, mode = 'book' }: { entry: ExamEntry; onDone: () => void; mode?: 'book' | 'reschedule' }) {
   const [when, setWhen] = useState('')
   const [busy, setBusy] = useState(false)
@@ -198,6 +202,8 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
   const attempt = entry.latest_attempt as Record<string, unknown> | null
   const cred = entry.credential
   const deadlineDays = daysUntil(entry.deadline)
+  const actionHolds = holds.filter((h) => !STATE_HOLDS.has(h))
+  const stateHolds = holds.filter((h) => STATE_HOLDS.has(h))
 
   let state: { tone: 'ok' | 'warn' | 'brand' | 'neutral' | 'err'; label: string }
   if (cred?.status === 'active') state = { tone: 'ok', label: 'Certified' }
@@ -252,9 +258,14 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
           ) : (
             <>
               <button className="btn sm" disabled={holds.length > 0} onClick={() => setScheduling(true)}>Schedule exam</button>
-              {holds.length > 0 && (
+              {actionHolds.length > 0 && (
                 <div className="muted small" style={{ marginTop: '.5rem' }}>
-                  To unlock scheduling: {holds.map((h) => HOLD_LABELS[h] ?? h.replace(/_/g, ' ')).join(' · ')}.
+                  To unlock scheduling: {actionHolds.map((h) => HOLD_LABELS[h] ?? h.replace(/_/g, ' ')).join(' · ')}.
+                </div>
+              )}
+              {stateHolds.length > 0 && (
+                <div className="muted small" style={{ marginTop: '.5rem' }}>
+                  Scheduling is unavailable: {stateHolds.map((h) => HOLD_LABELS[h] ?? h.replace(/_/g, ' ')).join(' · ')}.
                 </div>
               )}
             </>

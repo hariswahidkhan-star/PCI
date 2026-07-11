@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type MemberRow, type MemberDetail, type IdentityDocRow } from '../api'
 import { Card, StatusBadge, Badge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
@@ -158,7 +158,7 @@ function MemberDrawer({ id, onClose, onChanged }: { id: number; onClose: () => v
           <ErrorNote>{error}</ErrorNote>
         ) : !data ? null : (
           <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-            <Card title={`${u.first_name ?? ''} ${u.last_name ?? ''}`.trim() || String(u.email ?? '')} action={<StatusBadge status={String(u.status ?? '')} />}>
+            <Card className="entity" title={`${u.first_name ?? ''} ${u.last_name ?? ''}`.trim() || String(u.email ?? '')} action={<StatusBadge status={String(u.status ?? '')} />}>
               <div className="grid cols-2 small">
                 <div><span className="muted">Email</span><div>{String(u.email ?? '—')}</div></div>
                 <div><span className="muted">Registration</span><div>{String(u.registration_no ?? '—')}</div></div>
@@ -221,10 +221,17 @@ function MemberDrawer({ id, onClose, onChanged }: { id: number; onClose: () => v
 
 export default function Students() {
   const [q, setQ] = useState('')
+  const [dq, setDq] = useState('')
   const [status, setStatus] = useState('')
   const [selected, setSelected] = useState<number | null>(null)
+  // Debounce the search term so the query path (and its page-level Spinner) doesn't churn on
+  // every keystroke — the input stays instant while the list refetches once typing settles.
+  useEffect(() => {
+    const t = setTimeout(() => setDq(q), 300)
+    return () => clearTimeout(t)
+  }, [q])
   const params = new URLSearchParams()
-  if (q) params.set('q', q)
+  if (dq) params.set('q', dq)
   if (status) params.set('status', status)
   const qs = params.toString()
   const { data, loading, error, refetch } = useAdminQuery<{ rows: MemberRow[]; total: number }>(`/api/admin/members${qs ? '?' + qs : ''}`)

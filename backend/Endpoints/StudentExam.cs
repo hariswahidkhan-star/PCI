@@ -123,7 +123,9 @@ public static class StudentExam
             var set = allowed.Where(k => b.ContainsKey(k)).ToList();
             if (set.Count > 0)
             {
-                var vals = set.Select(k => (object?)(H.GetS(b, k) ?? "")).Append(u.Id).ToArray();
+                // Cap free-text profile fields so a client can't store unbounded blobs (DoS / storage
+                // abuse). 1000 chars is generous for every field here (roles, company, LinkedIn URL, etc.).
+                var vals = set.Select(k => { var s = H.GetS(b, k) ?? ""; return (object?)(s.Length > 1000 ? s[..1000] : s); }).Append(u.Id).ToArray();
                 db.Execute($"UPDATE student_profiles SET {string.Join(",", set.Select(k => k + "=?"))} WHERE user_id=?", vals);
             }
             Account.RecomputeCompletion(db, u.Id);
@@ -320,6 +322,11 @@ public static class StudentExam
             var certSel = H.GetS(b, "certification_id", "certification", "cert");
             var bk = certSel is null ? ActiveBooking(u.Id) : ActiveBooking(u.Id, Certs.Resolve(db, certSel));
             if (bk is null) return Results.Json(new { error = "no_booking" }, statusCode: 400);
+            // Re-check the trust-critical gates at launch, not only at booking: an admin ID rejection,
+            // a bumped consent version, or an account hold after booking must stop the sitting — the
+            // credential's integrity depends on identity/consent still holding when the candidate sits.
+            var launchBlockers = Lifecycle.LaunchBlockers(db, u.Id);
+            if (launchBlockers.Count > 0) return Results.Json(new { error = "not_eligible", blockers = launchBlockers, message = "Your exam access is on hold. Resolve the outstanding requirement (identity document, consents, or account status) before launching." }, statusCode: 400);
             if (!Lifecycle.ReadinessSatisfied(db, u.Id)) return Results.Json(new { error = "readiness_required", message = "Please complete the system readiness check before launching your exam." }, statusCode: 400);
             var certId = H.L(bk.GetValueOrDefault("certification_id") ?? 1L);
             var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -402,29 +409,37 @@ public static class StudentExam
 
             // Guard the finalisation against a concurrent heartbeat auto-timeout: only this request may
             // move the attempt from in_progress→submitted.
-            var finalized = db.Execute(@"UPDATE exam_attempts SET submitted_at=datetime('now'), answers=?, score=?, max_score=?, percent=?, result=?, domain_breakdown=?, status='submitted', review_status=?, result_status=?, hold_reason=?, released_at=CASE WHEN ?='auto_held' THEN NULL ELSE datetime('now') END WHERE id=? AND status='in_progress'",
-                JsonSerializer.Serialize(answers), r.Score, r.Max, r.Pct, r.Result, JsonSerializer.Serialize(r.Breakdown),
-                clean ? "unreviewed" : "held", resultStatus, holdReason, resultStatus, att["id"]);
-            if (finalized == 0) return Results.Json(new { error = "already_submitted" }, statusCode: 400);
-            db.Execute("UPDATE exam_bookings SET status='completed', updated_at=datetime('now') WHERE id=?", att["booking_id"]);
-            // Immutable score snapshot — protects the result even if questions are later edited.
-            Lifecycle.WriteScoreSnapshot(db, att, r.Score, r.Max, r.Pct, r.Result, JsonSerializer.Serialize(r.Breakdown), unanswered, flagged, durationSeconds);
-            // Mark the entitlement consumed (formal one-attempt-per-entitlement).
-            if (att["booking_id"] is not null)
-                db.Execute("UPDATE exam_entitlements SET status='consumed', attempt_id=? WHERE booking_id=? AND status IN ('available','booked')", att["id"], att["booking_id"]);
-
+            // Finalisation is a set of dependent writes (attempt status, booking, immutable snapshot,
+            // entitlement consumption, credential issue). Run them in ONE transaction so a mid-sequence
+            // failure can't strand a "submitted" attempt with an un-consumed entitlement or a missing
+            // snapshot. The status='in_progress' guard inside is still the single-winner lock.
+            long finalized = 0;
             string? credential = null;
-            // Auto-issue a credential ONLY for a clean pass; held or late attempts issue nothing.
-            if (r.Result == "pass" && clean)
+            db.Transaction(() =>
             {
-                credential = Lifecycle.IssueCredential(db, u.Id, att["id"], ($"{u.FirstName} {u.LastName}").Trim(), H.L(att.GetValueOrDefault("certification_id") ?? 1L));
-                if (credential is not null)
+                finalized = db.Execute(@"UPDATE exam_attempts SET submitted_at=datetime('now'), answers=?, score=?, max_score=?, percent=?, result=?, domain_breakdown=?, status='submitted', review_status=?, result_status=?, hold_reason=?, released_at=CASE WHEN ?='auto_held' THEN NULL ELSE datetime('now') END WHERE id=? AND status='in_progress'",
+                    JsonSerializer.Serialize(answers), r.Score, r.Max, r.Pct, r.Result, JsonSerializer.Serialize(r.Breakdown),
+                    clean ? "unreviewed" : "held", resultStatus, holdReason, resultStatus, att["id"]);
+                if (finalized == 0) return; // another request already submitted — leave everything untouched
+                db.Execute("UPDATE exam_bookings SET status='completed', updated_at=datetime('now') WHERE id=?", att["booking_id"]);
+                // Immutable score snapshot — protects the result even if questions are later edited.
+                Lifecycle.WriteScoreSnapshot(db, att, r.Score, r.Max, r.Pct, r.Result, JsonSerializer.Serialize(r.Breakdown), unanswered, flagged, durationSeconds);
+                // Mark the entitlement consumed (formal one-attempt-per-entitlement).
+                if (att["booking_id"] is not null)
+                    db.Execute("UPDATE exam_entitlements SET status='consumed', attempt_id=? WHERE booking_id=? AND status IN ('available','booked')", att["id"], att["booking_id"]);
+                // Auto-issue a credential ONLY for a clean pass; held or late attempts issue nothing.
+                if (r.Result == "pass" && clean)
                 {
-                    db.Execute("UPDATE exam_attempts SET result_status='credential_issued' WHERE id=?", att["id"]);
-                    resultStatus = "credential_issued";
+                    credential = Lifecycle.IssueCredential(db, u.Id, att["id"], ($"{u.FirstName} {u.LastName}").Trim(), H.L(att.GetValueOrDefault("certification_id") ?? 1L));
+                    if (credential is not null)
+                    {
+                        db.Execute("UPDATE exam_attempts SET result_status='credential_issued' WHERE id=?", att["id"]);
+                        resultStatus = "credential_issued";
+                    }
                 }
-                log(u.Id, "credential_issued", credential ?? "gen_failed");
-            }
+            });
+            if (finalized == 0) return Results.Json(new { error = "already_submitted" }, statusCode: 400);
+            if (r.Result == "pass" && clean) log(u.Id, "credential_issued", credential ?? "gen_failed");
             log(u.Id, clean ? "result_released" : "result_held", $"{resultStatus} {r.Pct}% {holdReason}");
             log(u.Id, "exam_submitted", $"{r.Result} {r.Pct}%");
             var ck = H.GetS(b, "client_kind", "clientKind", "ClientKind");
@@ -476,7 +491,15 @@ public static class StudentExam
                 { try { db.Execute("UPDATE exam_attempts SET client_kind='desktop' WHERE id=?", att["id"]); } catch { } }
             var deadline = H.JsMillis(H.Str(att["started_at"])) + H.L(att["duration_minutes"]) * 60_000;
             var answersEl = H.GetEl(b, "answers", "Answers");
-            if (answersEl is not null) db.Execute("UPDATE exam_attempts SET answers=? WHERE id=?", answersEl.Value.GetRawText(), att["id"]);
+            if (answersEl is not null)
+            {
+                var answersRaw = answersEl.Value.GetRawText();
+                db.Execute("UPDATE exam_attempts SET answers=? WHERE id=?", answersRaw, att["id"]);
+                // Keep the in-memory row in sync: a hard-stop auto-timeout later in THIS request scores
+                // att["answers"], which would otherwise be the pre-heartbeat snapshot — losing the very
+                // answers this heartbeat just saved.
+                att["answers"] = answersRaw;
+            }
             var violations = H.GetNum(b, "violations", "Violations");
             if (violations is not null) db.Execute("UPDATE exam_attempts SET violations=? WHERE id=?", Math.Max(H.L(att["violations"]), (long)violations.Value), att["id"]);
             var eventsEl = H.GetEl(b, "events", "PendingEvents", "pending_events");
