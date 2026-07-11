@@ -1,23 +1,29 @@
 /* ============================================================================
-   PCI MOTION LAYER — animations only, on top of the existing design.
-   The site's at-rest appearance is deliberately unchanged: no recolours, no
-   restyled components, no new surfaces. This layer adds entrance choreography,
-   scroll reveals, and hover/ambient micro-interactions.
+   PCI PREMIUM LAYER — the existing design, elevated.
+   Two systems in one file:
+   1) MOTION — entrance choreography, scroll reveals, micro-interactions.
+   2) AUTHORITY — a synthesis of the strongest moves from the ten-designer
+      competition (Standards Body numbering, Trust Ledger certificate framing,
+      Stripe-light shadow blooms, Linear precision detailing, Consultancy
+      duotone scrims) recoloured to the site's own blue/ink identity.
+   No layout or markup changes; brand, type and structure stay as they are.
    Progressive enhancement: hiding/entrance rules are scoped to html.pv, set by
    premium.js only when IntersectionObserver exists and reduced-motion is off.
-   Without JS the site is fully static and visible.
    ========================================================================== */
 
 :root{
   --ease-premium:cubic-bezier(.22,.61,.36,1);
   --dur-1:240ms; --dur-2:420ms; --dur-3:600ms;
-  --shadow-hover:0 6px 14px rgba(15,23,42,.07),0 22px 52px rgba(29,78,216,.16);
+  --shadow-rest:0 1px 2px rgba(13,32,90,.05),0 10px 28px -20px rgba(29,78,216,.14);
+  --shadow-hover:0 2px 5px rgba(13,32,90,.06),0 26px 56px -24px rgba(29,78,216,.25),0 0 0 1px rgba(29,78,216,.10);
 }
+
+/* ============================== MOTION ================================== */
 
 @media (prefers-reduced-motion: no-preference){
   html{scroll-behavior:smooth;}
 
-  /* the existing gradient heading bar slowly breathes */
+  /* the gradient heading bar slowly breathes */
   .uline{background-size:200% 100%;animation:pv-uline 6s var(--ease-premium) infinite;}
   @keyframes pv-uline{0%,100%{background-position:0% 0;}50%{background-position:100% 0;}}
 
@@ -31,6 +37,10 @@
   /* FAQ content rises softly when opened */
   details.faq[open] .faq-a{animation:pv-rise var(--dur-2) var(--ease-premium) both;}
   @keyframes pv-rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+  /* hero seal rings breathe very slowly */
+  .hero::before{animation:pv-seal 9s ease-in-out infinite;}
+  @keyframes pv-seal{0%,100%{opacity:.7;}50%{opacity:1;}}
 }
 
 /* hover micro-interactions (pointer devices; appearance changes on interaction only) */
@@ -48,9 +58,10 @@
   @keyframes pv-sheen{from{left:-60%;}to{left:120%;}}
 
   .gcard,.qcard,.cert-card,.pcard,.mcard,.dcard,.dl-card,.feat{
-    transition:transform var(--dur-2) var(--ease-premium),box-shadow var(--dur-2) var(--ease-premium);position:relative;}
+    transition:transform var(--dur-2) var(--ease-premium),box-shadow var(--dur-2) var(--ease-premium),
+    border-color var(--dur-2) var(--ease-premium);position:relative;}
   .gcard:hover,.qcard:hover,.cert-card:hover,.pcard:hover,.mcard:hover,.dcard:hover,.dl-card:hover,.feat:hover{
-    transform:translateY(-4px);box-shadow:var(--shadow-hover);}
+    transform:translateY(-4px);box-shadow:var(--shadow-hover);border-color:#C7D6F5;}
   /* cursor-following glow inside cards (coords set by premium.js) */
   .gcard::after,.qcard::after,.cert-card::after,.feat::after{
     content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;
@@ -71,6 +82,13 @@
     background-size:0% 1.5px;background-repeat:no-repeat;background-position:0 96%;
     transition:background-size var(--dur-2) var(--ease-premium);}
   main p a:not(.btn):hover,main li a:not(.btn):hover{background-size:100% 1.5px;}
+
+  /* photo plates: colour returns and a decisive baseline draws on hover */
+  .cover{transition:transform .6s cubic-bezier(.22,1,.36,1),filter .6s ease;}
+  .fcard:hover .cover,.itile:hover .cover,.story:hover .cover{filter:saturate(1) contrast(1.02);}
+  .fcard::after,.itile::after{content:"";position:absolute;left:0;bottom:0;height:4px;width:0;z-index:2;
+    background:linear-gradient(90deg,var(--red),var(--magenta));transition:width .5s var(--ease-premium);}
+  .fcard:hover::after,.itile:hover::after{width:100%;}
 }
 
 /* header elevation on scroll (shadow only — the header keeps its existing style) */
@@ -87,7 +105,7 @@ html.pv details.faq,html.pv .nl-band .wrap,html.pv .ftcols>div,html.pv .notice{
 html.pv .gcard,html.pv .cert-card{transform:translateY(18px) scale(.985);}
 html.pv .pv-in{opacity:1 !important;transform:none !important;}
 html.pv .hblock .uline{width:0;transition:width .8s var(--ease-premium) .15s;}
-html.pv .hblock.pv-in .uline{width:60px;}
+html.pv .hblock.pv-in .uline{width:96px;}
 html.pv .gx>*:nth-child(2),html.pv .ftcols>div:nth-child(2){transition-delay:70ms;}
 html.pv .gx>*:nth-child(3),html.pv .ftcols>div:nth-child(3){transition-delay:140ms;}
 html.pv .gx>*:nth-child(4),html.pv .ftcols>div:nth-child(4){transition-delay:210ms;}
@@ -108,10 +126,196 @@ html.pv .hero-trust,html.pv .hero-iso{animation:pv-enter var(--dur-3) var(--ease
 #pvbar{position:fixed;top:0;left:0;right:0;height:2.5px;z-index:200;pointer-events:none;
   background:linear-gradient(90deg,var(--red),var(--magenta));transform-origin:0 50%;transform:scaleX(0);}
 
-/* safety */
+/* ============================= AUTHORITY ================================= */
+
+/* ---- typography discipline ---- */
+h2,h3,h4{text-wrap:balance;}
+.hblock h2{letter-spacing:-.028em;}
+.phead h1{letter-spacing:-.03em;}
+.hero h1{letter-spacing:-.034em;text-shadow:0 2px 28px rgba(3,8,20,.45);}
+.hblock p,.phead .lead{text-wrap:pretty;}
+.facts .v,.pcard .pprice,.adstat .as b,.dsum b,.wrow .wp,.cmatrix td,.rev .rrow span:last-child{
+  font-variant-numeric:tabular-nums lining-nums;}
+
+/* eyebrow with a chart-tick lead-in (context-coloured: blue on light, white on dark) */
+.eyebrow::before{content:"";display:inline-block;width:26px;height:2px;background:currentColor;
+  opacity:.55;margin-right:11px;vertical-align:.3em;}
+
+/* split-tone engineered rule under headings */
+.uline{width:96px;height:3px;border-radius:2px;box-shadow:none;
+  background:linear-gradient(90deg,var(--red) 0 38px,rgba(29,78,216,.25) 38px 100%);}
+.hero .euline{width:88px;height:3px;
+  background:linear-gradient(90deg,var(--red) 0 34px,rgba(255,255,255,.38) 34px 100%);}
+
+/* ---- header: illuminated hairline + tracked breadcrumb ---- */
+.hdr::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent 6%,rgba(29,78,216,.38) 42%,rgba(59,130,246,.38) 58%,transparent 94%);}
+#crumb{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;}
+
+/* ---- hero: cool navy scrim, seal rings, glass trust plaques ---- */
+.hero{background:#0A1024;}
+.hero::after{background:
+  linear-gradient(90deg,rgba(5,9,22,.95) 0%,rgba(5,9,22,.66) 46%,rgba(6,12,30,.30) 100%),
+  linear-gradient(to top,rgba(5,9,22,.58),transparent 38%),
+  radial-gradient(860px 500px at 84% 20%,rgba(29,78,216,.28),transparent 62%)!important;}
+.hero::before{content:"";position:absolute;right:-180px;top:50%;width:680px;height:680px;z-index:2;
+  transform:translateY(-50%);pointer-events:none;border-radius:50%;
+  background:
+    radial-gradient(circle,transparent 0 296px,rgba(147,180,255,.18) 297px 299px,transparent 300px),
+    repeating-radial-gradient(circle,transparent 0 66px,rgba(147,180,255,.08) 66px 67px,transparent 67px 133px);
+  -webkit-mask-image:radial-gradient(circle,#000 0 55%,transparent 74%);
+  mask-image:radial-gradient(circle,#000 0 55%,transparent 74%);}
+@media (max-width:900px){.hero::before{display:none;}}
+.hero-trust span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+  padding:8px 14px;border-radius:999px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+.hero-iso{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);border-radius:3px;
+  padding:10px 16px;width:fit-content;color:#C7D2E3;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+.phead-dark{background:#0A1024;}
+.phead-dark::after{background:
+  linear-gradient(90deg,rgba(5,9,22,.95),rgba(5,9,22,.58) 60%,rgba(6,12,30,.32)),
+  radial-gradient(720px 420px at 88% 18%,rgba(29,78,216,.24),transparent 60%)!important;}
+
+/* light page headers: engineering grid in the corner + thick-thin base rule */
+.phead:not(.phead-dark){border-bottom:2px solid var(--ink);}
+.phead:not(.phead-dark)::before{inset:0;top:0;right:0;width:auto;height:auto;
+  background:
+    radial-gradient(560px 560px at 100% -60px,rgba(29,78,216,.07),transparent 66%),
+    linear-gradient(rgba(29,78,216,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(29,78,216,.05) 1px,transparent 1px);
+  background-size:auto,44px 44px,44px 44px;
+  -webkit-mask-image:radial-gradient(640px 460px at 92% 0%,#000 32%,transparent 75%);
+  mask-image:radial-gradient(640px 460px at 92% 0%,#000 32%,transparent 75%);}
+.phead:not(.phead-dark)::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:1px;background:var(--line);}
+
+/* ---- photography: graded plates under cool navy scrims ---- */
+.cover{filter:saturate(.68) contrast(1.05);}
+.fcard .sc{background:
+  linear-gradient(to top,rgba(5,10,24,.94) 8%,rgba(5,10,24,.50) 48%,rgba(6,14,36,.10)),
+  linear-gradient(rgba(29,78,216,.10),rgba(29,78,216,.10));}
+.itile .sc{background:
+  linear-gradient(to top,rgba(5,10,24,.88),rgba(6,14,36,.10) 62%),
+  linear-gradient(rgba(29,78,216,.10),rgba(29,78,216,.10));}
+.citytile span{background:linear-gradient(transparent,rgba(4,10,26,.78));}
+
+/* ---- cards: resting depth + the missing global card grid ---- */
+.qcard,.gcard,.cert-card,.pcard,.mcard,.dcard,.dl-card,.feat,.rr-card,.nf-card,.citem,.ctile,.auth-card{
+  box-shadow:var(--shadow-rest);}
+.gx{display:grid;gap:18px;margin-top:34px;}
+.gx.c2{grid-template-columns:1fr 1fr;}
+.gx.c3{grid-template-columns:repeat(3,1fr);}
+@media (max-width:960px){.gx.c3{grid-template-columns:1fr 1fr;}}
+@media (max-width:640px){.gx.c2,.gx.c3{grid-template-columns:1fr;}}
+.gcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;}
+.gcard h4{font-family:var(--display);font-weight:800;font-size:16.5px;margin:0 0 8px;color:var(--ink);letter-spacing:-.01em;}
+.gcard p{font-size:14px;color:var(--slate);margin:0 0 8px;line-height:1.6;}
+.gcard p:last-child{margin-bottom:0;}
+.gcard ul{margin:8px 0 0;padding-left:18px;}
+.gcard li{font-size:13.5px;color:var(--slate);margin:4px 0;line-height:1.55;}
+.gtag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  padding:3px 9px;border-radius:20px;margin-bottom:10px;}
+.gtag.ok{background:#E7F5EC;color:#1a7d3c;}
+.gtag.dev{background:#FFF8E6;color:#8a6d1a;}
+.gtag.wt{background:#EEF3FF;color:#1D4ED8;}
+
+/* certificate inset frame on credential surfaces */
+.cert-card,.verifybox,.obox{position:relative;}
+.cert-card::before,.verifybox::before,.obox::before{content:"";position:absolute;inset:8px;
+  border:1px solid rgba(29,78,216,.14);pointer-events:none;
+  transition:border-color .45s var(--ease-premium);}
+.cert-card:hover::before{border-color:rgba(29,78,216,.38);}
+
+/* ---- the numbering system: boxed index tabs everywhere ---- */
+.qcard .n,.step .sn,.dom .dn,.fnode .fk,.ctile .cn,.citem .cn,.eflow .en{
+  font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.12em;color:var(--red);
+  display:inline-block;padding:6px 10px 5px;line-height:1;background:#fff;
+  border:1px solid #C9D5E8;border-bottom:2px solid var(--red);border-radius:0;
+  font-variant-numeric:tabular-nums;}
+
+/* engraved rules on data blocks (ink cap + blue echo) */
+.facts{border-top:2px solid var(--ink);box-shadow:inset 0 4px 0 -3px rgba(29,78,216,.25);}
+.steps,.doms{box-shadow:inset 0 4px 0 -3px rgba(29,78,216,.25);}
+.quote{box-shadow:inset 0 5px 0 -4px rgba(29,78,216,.22),inset 0 -5px 0 -4px rgba(29,78,216,.22);}
+
+/* ---- FAQ clause register: auto-numbered, spine on open ---- */
+.faqwrap,.faqgroup,.sec{counter-reset:pciq;}
+details.faq summary{justify-content:flex-start;gap:16px;}
+details.faq summary::before{counter-increment:pciq;content:counter(pciq,decimal-leading-zero);
+  flex:0 0 auto;font-weight:700;font-size:11px;letter-spacing:.1em;color:var(--red);
+  border:1px solid #C9D5E8;border-bottom:2px solid var(--red);background:#fff;
+  width:36px;padding:8px 0 6px;text-align:center;line-height:1;font-variant-numeric:tabular-nums;
+  transition:background var(--dur-1) var(--ease-premium),color var(--dur-1) var(--ease-premium);}
+details[open].faq summary::before{background:var(--red);color:#fff;border-color:var(--red);}
+.faq-ic{margin-left:auto;}
+details.faq .faq-a{padding-left:52px;}
+details[open].faq{background:linear-gradient(90deg,rgba(29,78,216,.05),transparent 60%);
+  box-shadow:inset 2px 0 0 var(--red);}
+
+/* ---- buttons & focus: engineered keyline + context-aware rings ---- */
+.btn-red{box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 0 0 1px rgba(23,67,188,.9),
+  0 12px 30px -12px rgba(29,78,216,.5);}
+.btn-red:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 0 0 1px rgba(23,67,188,1),
+  0 18px 44px -14px rgba(29,78,216,.6);}
+.hero :focus-visible,.sec-dark :focus-visible,footer :focus-visible,.redband :focus-visible,
+.nl-band :focus-visible,.phead-dark :focus-visible,.dashbar :focus-visible{outline-color:#fff;}
+
+/* ---- bands: certificate double-frame + blue bloom ---- */
+.redband{position:relative;}
+.redband::after{content:"";position:absolute;inset:14px;pointer-events:none;z-index:0;
+  border:1px solid rgba(255,255,255,.18);outline:1px solid rgba(255,255,255,.08);outline-offset:6px;}
+.nl-band{position:relative;overflow:hidden;}
+.nl-band::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(700px 320px at 88% -60%,rgba(29,78,216,.35),transparent 60%);}
+.nl-in{position:relative;z-index:1;}
+
+/* ---- credential badge: sealed navy plate with ring engraving ---- */
+.badge{position:relative;overflow:hidden;
+  background:radial-gradient(120% 115% at 80% -12%,#152A5E 0%,#0D1834 52%,#0A1024 100%);
+  border:1px solid rgba(125,168,255,.22);outline:1px solid rgba(125,168,255,.14);outline-offset:-9px;}
+.badge::before{content:"";position:absolute;top:-140px;right:-140px;width:420px;height:420px;z-index:0;
+  border-radius:50%;pointer-events:none;
+  background:repeating-radial-gradient(circle,transparent 0 44px,rgba(147,180,255,.10) 44px 45px,transparent 45px 89px);}
+.badge>*{position:relative;z-index:1;}
+.badge .bm{color:#8FA3C8;}
+
+/* ---- footer: branded datum rule + credential chip ---- */
+footer{position:relative;}
+footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--red) 0 180px,rgba(59,130,246,.30) 180px 100%);}
+footer h4{letter-spacing:.14em;}
+.ft-iso{border-color:rgba(147,180,255,.28);color:#8FA3C8;letter-spacing:.06em;}
+.ft-logo .logo-bar{background:#3A4A6B;}
+
+/* ---- section atmosphere: faint blue weather on alternate sections ---- */
+.sec-2{background:
+  radial-gradient(1000px 460px at 92% -160px,rgba(59,130,246,.07),transparent 62%),
+  radial-gradient(920px 520px at -6% 112%,rgba(29,78,216,.06),transparent 60%),
+  linear-gradient(180deg,#F4F7FB 0%,#EEF2F7 100%)!important;}
+
+/* ---- palette coherence: retire warm-grey leftovers for the cool slate family ---- */
+.btn-out{border-color:#CBD5E1;}
+.logo-bar{background:#CBD5E1;}
+.ai p{color:#C2CCDD;}
+.qcard.qcard-link:hover{border-color:#C7D6F5;}
+.feat:hover{border-color:#C7D6F5;}
+.mcard:hover{border-color:#C7D6F5;}
+.ctile{background:#F8FAFC;}
+.fnode:hover{background:#F8FAFC;}
+.admintable tbody tr:hover{background:#F8FAFC;}
+.rev .rtot{background:#F8FAFC;}
+.consent{background:#F8FAFC;}
+.btn-google:hover{background:#F8FAFC;}
+
+/* ---- quiet polish ---- */
+html{scrollbar-width:thin;scrollbar-color:#C4CCDC transparent;}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-thumb{background:#C4CCDC;border-radius:8px;border:2px solid #fff;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ============================== SAFETY =================================== */
 @media (prefers-reduced-motion: reduce){
   *,::before,::after{animation:none !important;transition:none !important;}
 }
 @media print{
-  #pvbar,.btn-red::before{display:none !important;}
+  #pvbar,.btn-red::before,.hero::before,.badge::before{display:none !important;}
+  .cover{filter:none;}
 }

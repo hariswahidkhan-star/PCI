@@ -157,8 +157,12 @@ public static class PageContent
 
         // positional headline: replace the first <h1>'s inner text (edits every page's headline with no
         // template tagging). data-cms regions below still take precedence for finer control.
+        // An unedited headline (stored value == the file h1's own plain-text reading) injects nothing,
+        // preserving inline markup such as <br/> and styled spans.
         if (blocks is not null && blocks.TryGetValue("_h1", out var h1) && !string.IsNullOrEmpty(h1))
-            html = RxH1.Replace(html, m => m.Groups[1].Value + Esc(h1) + m.Groups[3].Value, 1);
+            html = RxH1.Replace(html, m => PageScan.FlattenText(m.Groups[2].Value) == h1
+                ? m.Value
+                : m.Groups[1].Value + Esc(h1) + m.Groups[3].Value, 1);
 
         if ((blocks is { Count: > 0 }) || _globalContent.Count > 0)
         {
