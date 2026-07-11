@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { useMe } from '../data/MeContext'
 import { Card, Stat, StatusBadge, Spinner, ErrorNote, Badge } from '../components/ui'
+import Ring from '../components/Ring'
 import { fmtDate, titleCase, isPast } from '../format'
-import type { Lifecycle } from '../api/types'
+import type { Lifecycle, Me } from '../api/types'
 
 interface Journey {
   label: string
@@ -37,7 +38,7 @@ function buildJourney(lc: Lifecycle): Journey[] {
 }
 
 const NEXT_STEP: Record<string, { title: string; detail: string; cta?: { label: string; to?: string; href?: string } }> = {
-  activate_membership: { title: 'Activate your membership', detail: 'Membership is the first step of the certification journey.', cta: { label: 'Get started', href: '/enroll.html' } },
+  activate_membership: { title: 'Activate your membership', detail: 'Membership is the first step of the certification journey — pay when you are ready.', cta: { label: 'Activate membership' } },
   pay_exam_fee: { title: 'Pay your exam fee', detail: 'Secure your certification exam entitlement to continue.', cta: { label: 'Continue enrolment', href: '/enroll.html' } },
   complete_eligibility: { title: 'Complete your eligibility items', detail: 'A few items are needed before you can schedule your exam.', cta: { label: 'Review profile', to: '/profile' } },
   schedule_exam: { title: 'Schedule your exam', detail: 'You are eligible — choose a slot to sit your certification exam.', cta: { label: 'Schedule now', to: '/certifications' } },
@@ -46,6 +47,25 @@ const NEXT_STEP: Record<string, { title: string; detail: string; cta?: { label: 
   await_review: { title: 'Under review', detail: 'Your attempt is being reviewed. This is routine and results are released once complete.' },
   review_retake: { title: 'Review and retake', detail: 'Review your result and, when ready, schedule a retake.', cta: { label: 'View options', to: '/certifications' } },
   maintain_credential: { title: 'Maintain your credential', detail: 'Keep your certification current by logging continuing professional development.', cta: { label: 'Log CPD', to: '/cpd' } },
+}
+
+interface ChecklistItem {
+  label: string
+  done: boolean
+  to?: string
+  href?: string
+}
+
+function buildChecklist(me: Me): ChecklistItem[] {
+  const p = (me.profile ?? {}) as Record<string, unknown>
+  const buyMembership = `/checkout.html?product=membership&email=${encodeURIComponent(me.user.email)}`
+  return [
+    { label: 'Tell us about yourself', done: Boolean(p.current_role || p.country), to: '/onboarding' },
+    { label: 'Add your work experience', done: me.experiences.length > 0, to: '/profile' },
+    { label: 'Add a qualification', done: me.qualifications.length > 0, to: '/profile' },
+    { label: 'Activate your membership', done: me.lifecycle.membership_status === 'active', href: buyMembership },
+    { label: 'Book your exam', done: ['booked', 'in_progress', 'submitted'].includes(me.lifecycle.exam_status), to: '/certifications' },
+  ]
 }
 
 export default function Overview() {
@@ -58,13 +78,17 @@ export default function Overview() {
 
   const journey = buildJourney(me.lifecycle)
   const next = NEXT_STEP[me.lifecycle.next_step]
+  const buyMembership = `/checkout.html?product=membership&email=${encodeURIComponent(me.user.email)}`
   // a lapsed-but-not-revoked credential keeps status='active' in the DB (expiry is derived at read time),
   // so exclude past-expiry ones to match the Credentials page's "Expired" treatment.
   const activeCreds = me.credentials.filter((c) => c.status === 'active' && !isPast(c.expires_at)).length
   const outstanding = me.consents.outstanding.length
+  const completion = Number((me.profile as Record<string, unknown> | null)?.profile_completion_percentage ?? 20)
+  const checklist = buildChecklist(me)
+  const remaining = checklist.filter((c) => !c.done)
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+    <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
       <div>
         <h1>Welcome back, {user?.firstName || 'there'}</h1>
         <p className="muted">Registration no. {me.user.registration_no} · Member since {fmtDate(me.user.created_at)}</p>
@@ -83,6 +107,34 @@ export default function Overview() {
         <Card><Stat n={me.exams.length} k="Exam entitlements" /></Card>
       </div>
 
+      {remaining.length > 0 && (
+        <Card>
+          <div className="row" style={{ alignItems: 'flex-start', gap: '1.25rem', flexWrap: 'wrap' }}>
+            <Ring value={completion} label="profile" />
+            <div style={{ flex: 1, minWidth: 240 }}>
+              <h3 style={{ marginBottom: '.35rem' }}>Get set up</h3>
+              <p className="muted small" style={{ marginBottom: '.6rem' }}>
+                {remaining.length} step{remaining.length > 1 ? 's' : ''} left — a complete profile speeds up exam eligibility.
+              </p>
+              <ul className="checklist-mini">
+                {checklist.map((c) => (
+                  <li key={c.label} className={c.done ? 'done' : ''}>
+                    <span className="ck">{c.done ? '✓' : ''}</span>
+                    {c.done ? (
+                      <span>{c.label}</span>
+                    ) : c.to ? (
+                      <Link to={c.to}>{c.label}</Link>
+                    ) : (
+                      <a href={c.href}>{c.label}</a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </Card>
+      )}
+
       {next && (
         <Card title="Your next step">
           <div className="spread">
@@ -90,13 +142,22 @@ export default function Overview() {
               <h3 style={{ marginBottom: '.25rem' }}>{next.title}</h3>
               <p className="muted" style={{ margin: 0 }}>{next.detail}</p>
             </div>
-            {next.cta &&
+            {me.lifecycle.next_step === 'activate_membership' ? (
+              <a className="btn" href={buyMembership}>Activate membership</a>
+            ) : (
+              next.cta &&
               (next.cta.to ? (
                 <Link className="btn" to={next.cta.to}>{next.cta.label}</Link>
               ) : (
                 <a className="btn" href={next.cta.href}>{next.cta.label}</a>
-              ))}
+              ))
+            )}
           </div>
+          {me.lifecycle.next_step === 'activate_membership' && (
+            <p className="muted small" style={{ margin: '.6rem 0 0' }}>
+              Pay on the website — your membership appears here automatically once payment completes.
+            </p>
+          )}
         </Card>
       )}
 

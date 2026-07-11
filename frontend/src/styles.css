@@ -272,6 +272,73 @@ table.data tr:last-child td { border-bottom: 0; }
 .cert-tile-meta li strong { color: var(--ink); }
 .cert-tile-cta { margin-top: auto; align-self: flex-start; }
 
+
+/* ---------- portal motion & wizard layer ---------- */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.fade-up { animation: fadeUp .45s var(--ease) both; }
+.fade-stagger > * { animation: fadeUp .5s var(--ease) both; }
+.fade-stagger > *:nth-child(2) { animation-delay: 60ms; }
+.fade-stagger > *:nth-child(3) { animation-delay: 120ms; }
+.fade-stagger > *:nth-child(4) { animation-delay: 180ms; }
+.fade-stagger > *:nth-child(5) { animation-delay: 240ms; }
+.fade-stagger > *:nth-child(n+6) { animation-delay: 300ms; }
+
+/* completeness ring */
+.ring-wrap { position: relative; display: inline-grid; place-items: center; }
+.ring-wrap svg { display: block; }
+.ring-arc { transition: stroke-dashoffset 1s var(--ease); }
+.ring-num { position: absolute; text-align: center; line-height: 1.15; }
+.ring-num strong { display: block; font-size: 1.05rem; letter-spacing: -.01em; }
+
+/* onboarding wizard shell */
+.wizpage { max-width: 780px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+.wiz-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .4rem 0 1rem; }
+.wiz-progress { height: 6px; background: var(--line); border-radius: 6px; overflow: hidden; }
+.wiz-progress i { display: block; height: 100%; background: var(--grad-brand); border-radius: 6px; transition: width .5s var(--ease); }
+.wiz-steps { display: flex; gap: .35rem 1rem; flex-wrap: wrap; list-style: none; margin: .6rem 0 1.25rem; padding: 0; color: var(--mist); }
+.wiz-steps li { display: flex; align-items: center; gap: .35rem; }
+.wiz-steps li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+.wiz-steps li.on { color: var(--ink); font-weight: 600; }
+.wiz-steps li.on::before { background: var(--brand); }
+.wiz-steps li.done { color: var(--slate); }
+.wiz-steps li.done::before { background: var(--ok); }
+.wiz-card { padding: 1.75rem; }
+.wiz-card h1 { margin-bottom: .5rem; }
+
+/* repeaters */
+.rep-list { display: grid; gap: .6rem; margin-top: .9rem; }
+.rep-item { display: flex; justify-content: space-between; gap: .75rem; align-items: flex-start;
+  border: 1px solid var(--line); border-radius: 10px; padding: .8rem .95rem; background: #fff;
+  box-shadow: 0 1px 2px rgba(13, 32, 90, .04); }
+.rep-item-actions { display: flex; gap: .25rem; flex: 0 0 auto; }
+.rep-empty { border: 1.5px dashed var(--line); border-radius: 10px; padding: 1.1rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: .9rem; flex-wrap: wrap; }
+.rep-form { border: 1px solid #c7d6f5; border-radius: 10px; padding: 1rem; margin-top: .9rem; background: #fafcff; }
+.rep-form .field.span2 { grid-column: 1 / -1; }
+
+/* mini checklist (overview) */
+.checklist-mini { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+.checklist-mini li { display: flex; align-items: center; gap: .55rem; font-size: .92rem; }
+.checklist-mini .ck { width: 19px; height: 19px; border-radius: 6px; border: 1.5px solid #c9d5e8; flex: 0 0 auto;
+  display: grid; place-items: center; font-size: .7rem; font-weight: 800; color: #fff; }
+.checklist-mini li.done .ck { background: var(--ok); border-color: var(--ok); }
+.checklist-mini li.done span:last-child { color: var(--mist); text-decoration: line-through; }
+
+/* support tickets */
+.ticket-head { width: 100%; background: none; border: 0; padding: 0; font: inherit; text-align: left; cursor: pointer; color: inherit; }
+.ticket-thread { margin-top: .75rem; border-top: 1px solid var(--line); padding-top: .75rem; display: grid; gap: .55rem; }
+.tmsg { border-radius: 10px; padding: .55rem .75rem; max-width: 92%; }
+.tmsg.mine { background: var(--brand-050); justify-self: end; }
+.tmsg.theirs { background: var(--canvas); border: 1px solid var(--line); }
+
+/* google sign-in slot */
+.gsi-slot { display: flex; justify-content: center; margin-bottom: .35rem; }
+.auth-or-line { display: flex; align-items: center; gap: .8rem; margin: .8rem 0; text-transform: uppercase; letter-spacing: .1em; font-size: .7rem; }
+.auth-or-line::before, .auth-or-line::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+/* sidebar profile pill variant */
+.nav .pill.dim { background: rgba(255, 255, 255, .14); color: #cfd9f0; }
+
 /* ---------- safety ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after { animation: none !important; transition: none !important; }

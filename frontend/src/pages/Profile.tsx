@@ -1,8 +1,13 @@
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { useMe } from '../data/MeContext'
 import { api } from '../api/client'
 import { Card, Spinner, ErrorNote } from '../components/ui'
+import Ring from '../components/Ring'
+import RepeaterSection from '../components/RepeaterSection'
+import { EXPERIENCE_FIELDS, QUALIFICATION_FIELDS, HELD_CERT_FIELDS, monthsCovered } from '../data/wizardFields'
 import { fmtDate } from '../format'
+import type { Experience, Qualification, HeldCertification } from '../api/types'
 
 // Mirrors the allow-list in PATCH /api/me/profile (backend).
 const FIELDS: { key: string; label: string; type?: string }[] = [
@@ -31,6 +36,7 @@ export default function Profile() {
   if (!me) return null
 
   const profile = (me.profile ?? {}) as Record<string, unknown>
+  const completion = Number(profile.profile_completion_percentage ?? 20)
   const val = (k: string) => (k in form ? form[k] : String(profile[k] ?? ''))
 
   async function save(e: FormEvent) {
@@ -51,10 +57,16 @@ export default function Profile() {
   }
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Profile</h1>
-        <p className="muted">Keep your details up to date — some are required before you can schedule an exam.</p>
+    <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
+      <div className="spread" style={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h1>Profile</h1>
+          <p className="muted" style={{ marginBottom: 0 }}>
+            Your professional record — experience, qualifications and credentials in one place.{' '}
+            <Link to="/onboarding">Run the guided setup →</Link>
+          </p>
+        </div>
+        <Ring value={completion} label="complete" />
       </div>
 
       <Card title="Account">
@@ -90,6 +102,54 @@ export default function Profile() {
             {busy ? 'Saving…' : 'Save changes'}
           </button>
         </form>
+      </Card>
+
+      <Card>
+        <RepeaterSection<Experience>
+          title="Work experience"
+          blurb="One entry per role — add as many companies as you need. Overlapping months count once."
+          route="/api/me/experiences"
+          fields={EXPERIENCE_FIELDS}
+          addLabel="Add experience"
+          emptyHint="No roles yet. Your experience record supports exam eligibility."
+          itemTitle={(r) => `${r.title} — ${r.company}`}
+          itemSub={(r) => [r.start_date, r.is_current ? 'present' : r.end_date].filter(Boolean).join(' → ') + (r.country ? ` · ${r.country}` : '')}
+          itemBody={(r) => r.summary}
+          footer={(rows) => {
+            const months = monthsCovered(rows)
+            return months > 0 ? (
+              <p className="muted small" style={{ margin: '.75rem 0 0' }}>
+                Total recorded: <strong>{Math.floor(months / 12)}y {months % 12}m</strong> across {rows.length} role{rows.length === 1 ? '' : 's'} (overlaps counted once).
+              </p>
+            ) : null
+          }}
+        />
+      </Card>
+
+      <Card>
+        <RepeaterSection<Qualification>
+          title="Qualifications"
+          blurb="Degrees, diplomas and academic awards."
+          route="/api/me/qualifications"
+          fields={QUALIFICATION_FIELDS}
+          addLabel="Add qualification"
+          emptyHint="No qualifications recorded yet."
+          itemTitle={(r) => r.degree}
+          itemSub={(r) => [r.institution, r.year_completed, r.country].filter(Boolean).join(' · ')}
+        />
+      </Card>
+
+      <Card>
+        <RepeaterSection<HeldCertification>
+          title="Certifications you hold"
+          blurb="Credentials from other bodies (PMP, CCP, PSP…)."
+          route="/api/me/certifications-held"
+          fields={HELD_CERT_FIELDS}
+          addLabel="Add certification"
+          emptyHint="No external certifications recorded."
+          itemTitle={(r) => r.name}
+          itemSub={(r) => [r.issuer, r.issued_year && `since ${r.issued_year}`, r.expires_year && `expires ${r.expires_year}`].filter(Boolean).join(' · ')}
+        />
       </Card>
     </div>
   )

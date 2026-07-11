@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
+import GoogleButton from '../components/GoogleButton'
 
 export default function Login() {
   const { login } = useAuth()
@@ -27,12 +28,15 @@ export default function Login() {
 
   return (
     <div className="center-page">
-      <div className="card login-card">
+      <div className="card login-card fade-up">
         <div className="logo">
-          <img src="/assets/logo.png" alt="Project Controls Institute" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
+          <img src="/assets/logo.png" alt="PCI Global" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
           <h1 style={{ fontSize: '1.25rem', marginTop: '.5rem' }}>Student Portal</h1>
           <p className="muted small">Sign in to manage your certification journey.</p>
         </div>
+
+        <GoogleButton onError={setError} />
+
         <form onSubmit={submit}>
           {error && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{error}</div>}
           <div className="field">
@@ -49,7 +53,7 @@ export default function Login() {
         </form>
         <div className="spread small" style={{ marginTop: '1rem' }}>
           <a href="/forgot-password.html">Forgot password?</a>
-          <a href="/enroll.html">Create an account</a>
+          <Link to="/register">Create a free account</Link>
         </div>
       </div>
     </div>
