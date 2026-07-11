@@ -99,8 +99,9 @@ def main():
                 body = generic if method in ("POST", "PATCH", "PUT") else None
                 code, txt = req(method, path, token=tok, body=body)
                 n += 1
-                # 503 payments_not_configured is the documented no-Stripe-key response, not a crash
-                if code == 503 and "payments_not_configured" in txt: continue
+                # 503 payments_not_configured / google_not_configured are the documented
+                # responses when the optional provider key is absent, not crashes
+                if code == 503 and ("payments_not_configured" in txt or "google_not_configured" in txt): continue
                 if code >= 500 or code == -1:
                     fails.append((method, path, label, code, txt[:300]))
         print(f"swept {n} calls across {len(routes)} routes x 3 auth contexts")
