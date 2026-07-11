@@ -23,6 +23,9 @@ TP=$(j POST /api/admin/team -H "Authorization: Bearer $OT" -H 'Content-Type: app
 chk "S06 create exam_manager" "$([ -n "$TP" ] && echo 1)"
 T2=$(j POST /api/admin/auth/login -H 'Content-Type: application/json' -d "{\"email\":\"exam.mgr@pci.test\",\"password\":\"$TP\"}" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("token",""))')
 chk "S07 manager login temp pw" "$([ -n "$T2" ] && echo 1)"
+# A freshly-provisioned admin is flagged must_change_pw; the server blocks the console (same gate the
+# SPA enforces) until a new password is set. Clear it so the RBAC probes below exercise real permissions.
+chk "S07b manager password change clears must_change_pw" "$([ "$(j POST /api/admin/me/password -H "Authorization: Bearer $T2" -H 'Content-Type: application/json' -d '{"new_password":"MgrPass99!"}' | grep -c '"ok":true')" = 1 ] && echo 1)"
 chk "S08 manager CAN exam-sessions" "$([ "$(code GET /api/admin/exam-sessions -H "Authorization: Bearer $T2")" = 200 ] && echo 1)"
 chk "S09 manager BLOCKED members 403" "$([ "$(code GET /api/admin/members -H "Authorization: Bearer $T2")" = 403 ] && echo 1)"
 chk "S10 manager BLOCKED team 403" "$([ "$(code GET /api/admin/team -H "Authorization: Bearer $T2")" = 403 ] && echo 1)"
