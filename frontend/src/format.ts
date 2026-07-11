@@ -3,7 +3,11 @@
 export function fmtDate(v: unknown): string {
   if (!v) return '—'
   const s = String(v)
-  const d = new Date(s.includes('T') ? s : s.replace(' ', 'T') + 'Z')
+  // A bare calendar date (YYYY-MM-DD, e.g. a credential expiry or CPD date) is timezone-agnostic —
+  // parse it as LOCAL midnight, not UTC, so viewers west of UTC don't see the previous day.
+  const bare = /^\d{4}-\d{2}-\d{2}$/.exec(s)
+  const d = bare ? new Date(Number(bare[0].slice(0, 4)), Number(bare[0].slice(5, 7)) - 1, Number(bare[0].slice(8, 10)))
+                 : new Date(s.includes('T') ? s : s.replace(' ', 'T') + 'Z')
   if (isNaN(d.getTime())) return s
   return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
 }

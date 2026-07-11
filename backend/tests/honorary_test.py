@@ -37,7 +37,7 @@ def run(admin):
     chk("h1a confer without auth → 401", req("POST", "/api/admin/honorary", body={"recipient_name": "X Y"})[0] == 401)
     c, b = jget("POST", "/api/admin/team", token=admin, body={"email": "smgr-hon@pci.test", "name": "smgr", "role": "student_manager"})
     c, lb = jget("POST", "/api/admin/auth/login", body={"email": "smgr-hon@pci.test", "password": b.get("temp_password")})
-    smgr = lb.get("token")
+    smgr = it.clear_must_change(lb.get("token"))
     chk("h1b confer as student_manager → 403", jget("POST", "/api/admin/honorary", token=smgr, body={"recipient_name": "X Y"})[0] == 403)
     chk("h1c list as student_manager → 403", jget("GET", "/api/admin/honorary", token=smgr)[0] == 403)
 

@@ -20,6 +20,7 @@ export function useQuery<T>(path: string | null): QueryState<T> {
   const [error, setError] = useState<string | null>(null)
   const [tick, setTick] = useState(0)
   const lastPath = useRef<string | null>(null)
+  const dataRef = useRef<T | null>(null)
 
   useEffect(() => {
     if (path === null) return
@@ -27,13 +28,15 @@ export function useQuery<T>(path: string | null): QueryState<T> {
     // A refetch of the SAME path is a background refresh: keep the current data rendered instead
     // of flipping to a page-level spinner (which unmounts children and eats their success notices).
     // A path change is a genuinely new query and shows the loading state as before.
-    if (lastPath.current !== path) setLoading(true)
+    // On a genuine path change this is a fresh query: show the spinner and forget the old path's
+    // data so a first-load failure on the new path still surfaces its error.
+    if (lastPath.current !== path) { setLoading(true); dataRef.current = null }
     lastPath.current = path
     setError(null)
     api
       .get<T>(path)
       .then((d) => {
-        if (!cancelled) setData(d)
+        if (!cancelled) { setData(d); dataRef.current = d; setError(null) }
       })
       .catch((e) => {
         if (cancelled) return
@@ -41,7 +44,10 @@ export function useQuery<T>(path: string | null): QueryState<T> {
           logout()
           return
         }
-        setError(e instanceof Error ? e.message : 'Something went wrong.')
+        // A failed BACKGROUND refresh (we already have data for this path, e.g. a refetch after a
+        // successful mutation) must not blank the page — keep the good data and its success notice.
+        // Only surface a page-level error when there is nothing to show.
+        if (dataRef.current == null) setError(e instanceof Error ? e.message : 'Something went wrong.')
       })
       .finally(() => {
         if (!cancelled) setLoading(false)

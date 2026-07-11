@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAdminQuery } from '../hooks'
+import { useAdminAuth } from '../AdminAuth'
 import { adminApi, type FoundingApplication, type FoundingStat } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
 import { fmtDate } from '../../format'
@@ -53,9 +54,16 @@ function StatsRow() {
 }
 
 export default function Founding() {
+  const { me, can } = useAdminAuth()
+  // The page is reachable with EITHER perm (members or codes), but its two panels hit
+  // separately-gated endpoints: founding-stats needs 'codes', founding-applications needs 'members'.
+  // Render each only for admins who can load it, so a single-perm role sees a working panel
+  // instead of a half-broken page with a permission error where the other panel would be.
+  const canCodes = !!me?.is_owner || can('codes')
+  const canMembers = !!me?.is_owner || can('members')
   const [status, setStatus] = useState('pending_review')
   const { data, loading, error, refetch } = useAdminQuery<{ rows: FoundingApplication[] }>(
-    `/api/admin/founding-applications${status ? `?status=${status}` : ''}`,
+    canMembers ? `/api/admin/founding-applications${status ? `?status=${status}` : ''}` : null,
   )
   const [busy, setBusy] = useState(false)
   const [note, setNote] = useState('')
@@ -99,8 +107,9 @@ export default function Founding() {
         <Link className="btn secondary sm" to="/codes">Manage codes</Link>
       </div>
 
-      <StatsRow />
+      {canCodes && <StatsRow />}
 
+      {canMembers && (
       <Card
         title="Founding applications"
         action={
@@ -169,6 +178,7 @@ export default function Founding() {
           </>
         )}
       </Card>
+      )}
     </div>
   )
 }

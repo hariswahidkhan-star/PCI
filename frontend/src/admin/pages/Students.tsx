@@ -128,13 +128,17 @@ function IdentityDocs({ id, docs, onChanged }: { id: number; docs: IdentityDocRo
 function MemberDrawer({ id, onClose, onChanged }: { id: number; onClose: () => void; onChanged: () => void }) {
   const { data, loading, error, refetch } = useAdminQuery<MemberDetail>(`/api/admin/members/${id}`)
   const [busy, setBusy] = useState(false)
+  const [statusErr, setStatusErr] = useState<string | null>(null)
 
   async function setStatus(status: string) {
     setBusy(true)
+    setStatusErr(null)
     try {
       await adminApi.post(`/api/admin/members/${id}/status`, { status })
       refetch()
       onChanged()
+    } catch (e) {
+      setStatusErr(e instanceof Error ? e.message : 'Could not change the member status.')
     } finally {
       setBusy(false)
     }
@@ -167,6 +171,7 @@ function MemberDrawer({ id, onClose, onChanged }: { id: number; onClose: () => v
                   <button key={s} className="btn sm secondary" disabled={busy || u.status === s} onClick={() => setStatus(s)}>{s}</button>
                 ))}
               </div>
+              {statusErr && <div className="notice err" role="alert" style={{ marginTop: '.6rem' }}>{statusErr}</div>}
             </Card>
 
             <Card title={`Payments (${data.payments.length})`}>

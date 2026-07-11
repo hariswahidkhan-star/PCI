@@ -102,6 +102,20 @@ app.Use(async (ctx, next) =>
     await next();
 });
 
+// Trusted client IP: the LAST X-Forwarded-For hop (appended by our own TLS-terminating proxy),
+// falling back to the socket address. Never the first hop — that value is client-controlled and
+// forgeable, which would let an attacker rotate the rate-limit bucket and spoof the audit IP.
+static string ClientIp(HttpContext ctx)
+{
+    var xff = ctx.Request.Headers["X-Forwarded-For"].ToString();
+    if (!string.IsNullOrEmpty(xff))
+    {
+        var parts = xff.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length > 0) return parts[^1];
+    }
+    return ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+}
+
 // Rate limiting: throttle brute-forceable endpoints (login, password reset, code validation, exam authorize)
 // per client IP with a fixed-window in-memory counter. Applied by path prefix via middleware so it is
 // robust to route-handler shape (no per-endpoint chaining required).
@@ -113,12 +127,9 @@ app.Use(async (ctx, next) =>
     var path = ctx.Request.Path.Value ?? "";
     if (ctx.Request.Method == "POST" && _rlPaths.Any(p => path.Equals(p, StringComparison.OrdinalIgnoreCase)))
     {
-        // Behind the TLS-terminating proxy every request arrives from the proxy's socket IP, so keying on
-        // RemoteIpAddress would put ALL clients in one bucket (any traffic could 429 the whole platform's
-        // logins). Honour the first X-Forwarded-For hop — the real client — as the login-event code does.
-        var xff = ctx.Request.Headers["X-Forwarded-For"].ToString();
-        var ip = !string.IsNullOrEmpty(xff) ? xff.Split(',')[0].Trim()
-               : (ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+        // Key on the trusted proxy-appended IP (ClientIp), not the forgeable first X-Forwarded-For hop,
+        // so an attacker can't rotate the rate-limit bucket per request.
+        var ip = ClientIp(ctx);
         var key = ip + "|" + path;
         var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         // Evict expired windows so the map can't grow unbounded (only sweeps when it gets large).
@@ -132,6 +143,29 @@ app.Use(async (ctx, next) =>
             ctx.Response.StatusCode = 429;
             ctx.Response.Headers["Retry-After"] = "60";
             await ctx.Response.WriteAsJsonAsync(new { error = "rate_limited", message = "Too many attempts. Please wait a minute and try again." });
+            return;
+        }
+    }
+    await next();
+});
+
+// Enforce the forced-password-change server-side, not just in the UI. An admin still flagged
+// must_change_pw (e.g. logged in with the default bootstrap password) can reach ONLY logout,
+// their own profile, and the change-password endpoint until they set a new password — so a
+// direct API caller can't bypass the change the way the SPA gate can't. Read paths and the auth
+// endpoints stay open so the change flow itself works.
+var _mcpAllow = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+{ "/api/admin/auth/login", "/api/admin/auth/logout", "/api/admin/me", "/api/admin/me/password" };
+app.Use(async (ctx, next) =>
+{
+    var path = ctx.Request.Path.Value ?? "";
+    if (path.StartsWith("/api/admin/", StringComparison.OrdinalIgnoreCase) && !_mcpAllow.Contains(path))
+    {
+        var a = Auth.AdminFromReq(ctx.Request, db);
+        if (a is not null && a.MustChangePw)
+        {
+            ctx.Response.StatusCode = 403;
+            await ctx.Response.WriteAsJsonAsync(new { error = "must_change_password", message = "Set a new password before using the console." });
             return;
         }
     }
@@ -386,7 +420,10 @@ app.MapGet("/api/admin/team", (HttpRequest req) =>
             try { perms = JsonSerializer.Deserialize<List<string>>(a["permissions"] as string ?? "[]") ?? new(); } catch { }
             return new Dictionary<string, object?>(a) { ["permissions"] = perms, ["effective"] = Rbac.PermsFor((string)a["role"]!, a["permissions"] as string) };
         }).ToList();
-    return Json(new { rows, roles = Rbac.RoleGrants.Keys.Append("custom").ToArray(), sections = Rbac.Sections, role_grants = Rbac.RoleGrants });
+    // sections is a FLAT list of every permission key (the admin Team permission-picker maps over it).
+    // Rbac.Sections is a grouped dictionary; returning it here serialised to an object and crashed the
+    // picker's sections.map(). AllSections is the flattened string[] the client expects.
+    return Json(new { rows, roles = Rbac.RoleGrants.Keys.Append("custom").ToArray(), sections = Rbac.AllSections, role_grants = Rbac.RoleGrants });
 });
 
 app.MapPost("/api/admin/team", async (HttpRequest req) =>
@@ -472,8 +509,18 @@ app.MapGet("/api/admin/settings", (HttpRequest req) =>
 {
     var a = Auth.AdminFromReq(req, db);
     if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    // Read is scoped to the SAME per-key permissions the PATCH enforces: web_* → set_web, sp_* → set_sp,
+    // exam_* → set_exam, everything else (platform settings) → the owner-only 'settings' perm. Previously
+    // any authenticated admin (even a viewer) could read every section's config, asymmetric with the
+    // deny-by-default write.
+    var perms = a.Perms; var owner = a.IsOwner;
+    bool KeyReadable(string k) => owner
+        || (k.StartsWith("web_") ? perms.Contains("set_web")
+            : k.StartsWith("sp_") ? perms.Contains("set_sp")
+            : k.StartsWith("exam_") ? perms.Contains("set_exam") : perms.Contains("settings"));
     var o = new Dictionary<string, object?>();
-    foreach (var r in db.Query("SELECT skey,svalue FROM site_settings")) o[(string)r["skey"]!] = r["svalue"];
+    foreach (var r in db.Query("SELECT skey,svalue FROM site_settings"))
+    { var k = (string)r["skey"]!; if (KeyReadable(k)) o[k] = r["svalue"]; }
     return Json(o);
 });
 

@@ -103,18 +103,25 @@ public static class Founding
                         db.Execute("UPDATE memberships SET status='active', membership_type='Founding Membership', expiry_date=? WHERE id=?", newExp, existing["id"]);
                 }
             }
-            if (grantsExam)
+            // Only grant a fresh exam entitlement if the user has no UNUSED one already (paid or waived).
+            // Prevents stacking two live entitlements — and thus two sittings — from one fee plus a waiver.
+            // A consumed entitlement doesn't block: the board's founding code may legitimately grant a retake.
+            var hasOpenEntitlement = db.QueryOne(@"SELECT p.id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id
+                WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle') AND p.id<>?
+                AND COALESCE(e.status,'available') IN ('available','booked')", userId, payId) is not null;
+            var grantedExam = grantsExam && !hasOpenEntitlement;
+            if (grantedExam)
             {
                 db.Execute("UPDATE payments SET exam_schedule_deadline=datetime('now','+1 year') WHERE id=?", payId);
                 db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?,?,?, 'available', datetime('now','+1 year'))",
                     userId, payId, product, Certs.DefaultId);
             }
 
-            var what = grantsExam && grantsMembership ? "membership and exam access"
-                : grantsExam ? "exam access" : "membership";
+            var what = grantedExam && grantsMembership ? "membership and exam access"
+                : grantedExam ? "exam access" : "membership";
             db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Founding', 'Founding access granted', ?, 'View', ?)",
                 userId, $"Your founding code {H.Str(code["code"])} has been applied — {what} granted at USD 0. Welcome to the founding cohort.",
-                grantsExam ? "/certifications" : "/billing");
+                grantedExam ? "/certifications" : "/billing");
             result = (true, "granted", reference);
         });
         if (result.granted)

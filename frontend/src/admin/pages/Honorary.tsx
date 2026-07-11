@@ -49,6 +49,7 @@ export default function Honorary() {
   }
 
   async function revoke(id: number) {
+    if (!window.confirm('Revoke this honorary award? This cannot be undone — the award will show as revoked on the public verify page.')) return
     setBusy(true)
     setMsg(null)
     try {

@@ -35,7 +35,10 @@ public static class StudentExam
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             var ent = ExamEntitlement(u.Id);
             var booking = ActiveBooking(u.Id);
-            var passAtt = db.QueryOne("SELECT * FROM exam_attempts WHERE user_id=? AND kind='exam' AND result='pass' ORDER BY id DESC", u.Id);
+            // A held attempt must not disclose pass/fail anywhere — the submit path stores result='pass'
+            // even when result_status='auto_held', so the exam.passed flag must exclude held attempts
+            // (matches the redaction applied to attempts[] and the score report).
+            var passAtt = db.QueryOne("SELECT * FROM exam_attempts WHERE user_id=? AND kind='exam' AND result='pass' AND result_status NOT IN ('auto_held') ORDER BY id DESC", u.Id);
             var cpdRows = db.Query("SELECT hours FROM cpd_entries WHERE user_id=?", u.Id);
             var total = cpdRows.Sum(r => H.D(r["hours"]));
             var unread = db.Scalar<long>("SELECT COUNT(*) FROM notifications WHERE user_id=? AND read_at IS NULL", u.Id);

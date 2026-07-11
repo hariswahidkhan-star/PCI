@@ -274,14 +274,22 @@ public static class AdminMgmt
             var req = ctx.Request;
             var g = Deny(req, "codes"); if (g is not null) return g;
             var b = await H.Body(req);
-            object? Flag(string k) => b.ContainsKey(k) ? (H.B(b[k].GetRawText()) ? 1 : 0) : null;
-            db.Execute(@"UPDATE discount_codes SET active=COALESCE(?,active), start_date=COALESCE(?,start_date), end_date=COALESCE(?,end_date), max_uses=COALESCE(?,max_uses),
-                auto_approve=COALESCE(?,auto_approve), membership_months=COALESCE(?,membership_months), criteria_json=COALESCE(?,criteria_json),
-                grants_membership=COALESCE(?,grants_membership), grants_exam=COALESCE(?,grants_exam), grants_study_access=COALESCE(?,grants_study_access),
-                requires_application=COALESCE(?,requires_application) WHERE id=?",
-                Flag("active"), H.GetS(b, "start_date"), H.GetS(b, "end_date"), H.GetNum(b, "max_uses"),
-                Flag("auto_approve"), H.GetNum(b, "membership_months"), H.GetS(b, "criteria_json"),
-                Flag("grants_membership"), Flag("grants_exam"), Flag("grants_study_access"), Flag("requires_application"), id);
+            // Only a key PRESENT in the body is updated, so an explicit null CLEARS the column
+            // (blanking "Max total uses" → unlimited, clearing an end_date → open-ended window,
+            // clearing criteria_json → drop thresholds). A COALESCE-everything UPDATE silently
+            // ignored nulls, making those un-set affordances a no-op.
+            var set = new List<string>(); var vals = new List<object?>();
+            void Str(string col) { if (b.ContainsKey(col)) { set.Add(col + "=?"); vals.Add(H.GetS(b, col)); } }
+            void Num(string col) { if (b.ContainsKey(col)) { set.Add(col + "=?"); vals.Add(H.GetNum(b, col)); } }
+            void Flag(string col) { if (b.ContainsKey(col)) { set.Add(col + "=?"); vals.Add(H.B(b[col].GetRawText()) ? 1 : 0); } }
+            Flag("active"); Str("start_date"); Str("end_date"); Num("max_uses");
+            Flag("auto_approve"); Num("membership_months"); Str("criteria_json");
+            Flag("grants_membership"); Flag("grants_exam"); Flag("grants_study_access"); Flag("requires_application");
+            if (set.Count > 0)
+            {
+                vals.Add(id);
+                db.Execute($"UPDATE discount_codes SET {string.Join(",", set)} WHERE id=?", vals.ToArray());
+            }
             var adm = adminFromReq(req);
             log(null, "code_updated", $"code {id} by admin {adm?.Id}: {string.Join(",", b.Keys)}");
             return J(new { ok = true });
@@ -360,6 +368,11 @@ public static class AdminMgmt
             var b = await H.Body(req);
             var cid = H.GetS(b, "credential_id"); var holder = H.GetS(b, "holder_name");
             if (string.IsNullOrEmpty(cid) || string.IsNullOrEmpty(holder)) return Results.Json(new { error = "missing_fields" }, statusCode: 400);
+            // PCI-HON is the honorary registry's number space; /api/verify routes that prefix there
+            // first, so a credential issued under it would be unverifiable. Reserved (same rule as the
+            // certifications create/update path).
+            if (cid.Trim().ToUpperInvariant().StartsWith(Honorary.AwardPrefix, StringComparison.Ordinal))
+                return Results.Json(new { error = "prefix_reserved", message = "PCI-HON is reserved for honorary awards." }, statusCode: 400);
             // Attribute the credential to the chosen certification (defaults to the founding cert). The
             // credential label defaults to that certification's prefix so /api/verify shows the right name.
             var credCertId = Certs.Resolve(db, H.GetS(b, "certification_id", "certification"));

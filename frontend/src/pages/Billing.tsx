@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useMe } from '../data/MeContext'
 import { useQuery } from '../api/hooks'
@@ -44,6 +44,12 @@ function PlansCard() {
   const { data: pricing } = useQuery<PricingResp>(pricingPath)
   const { data: certData } = useQuery<{ rows: CatalogueCert[] }>('/api/certifications')
   const certs = certData?.rows
+  // Default the dropdown to the first certification once the catalogue loads, so the visible
+  // selection always matches what "Pay exam fee" actually buys (an empty value silently entitled
+  // the backend's default cert while the browser showed the first option highlighted).
+  useEffect(() => {
+    if (!certSel && certs && certs.length > 0) setCertSel(certs[0].code)
+  }, [certs, certSel])
 
   if (!me) return null
   const memberActive = me.lifecycle.membership_status === 'active'

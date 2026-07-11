@@ -2,12 +2,16 @@ import { useState } from 'react'
 import { api } from '../api/client'
 import { useMe } from '../data/MeContext'
 
+// Keys MUST match Lifecycle.RequiredConsents on the backend, or the label falls through to a
+// generic de-underscored string.
 const CONSENT_LABELS: Record<string, string> = {
+  candidate_handbook: 'Candidate handbook',
   exam_rules: 'Examination rules & candidate agreement',
-  privacy: 'Privacy & data-processing notice',
-  proctoring: 'Remote proctoring & monitoring consent',
-  integrity: 'Academic integrity declaration',
-  terms: 'Terms of use',
+  proctoring_consent: 'Remote proctoring & monitoring consent',
+  privacy_notice: 'Privacy & data-processing notice',
+  refund_policy: 'Refund policy',
+  misconduct_policy: 'Examination misconduct policy',
+  credential_terms: 'Credential terms',
 }
 
 /** In-portal consent review & acceptance — required before an exam can be scheduled.
