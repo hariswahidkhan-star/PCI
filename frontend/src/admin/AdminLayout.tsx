@@ -48,8 +48,8 @@ export default function AdminLayout() {
       <div className={'nav-backdrop' + (menuOpen ? ' open' : '')} onClick={() => setMenuOpen(false)} />
       <aside className={'sidebar' + (menuOpen ? ' open' : '')}>
         <div className="brand">
-          <img src="/assets/logo.png" alt="PCI" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
-          <span>PCI Admin</span>
+          <img src="/assets/logo.png" alt="PCI Global" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
+          <span>PCI Global Admin</span>
         </div>
         <nav className="nav">
           {items.map((n) => (
