@@ -909,3 +909,16 @@ CREATE TABLE IF NOT EXISTS held_certifications (
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_heldcert_user ON held_certifications(user_id);
+
+-- ===== identity documents: a government-issued photo ID is required before booking an exam =====
+CREATE TABLE IF NOT EXISTS identity_documents (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  doc_kind TEXT DEFAULT 'passport',
+  filename TEXT, mime TEXT, size_bytes BIGINT, storage_ref TEXT, sha256 TEXT,
+  status TEXT NOT NULL DEFAULT 'submitted',
+  review_note TEXT, reviewed_by BIGINT, reviewed_at TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_iddoc_user ON identity_documents(user_id);
+INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('sp_require_identity_document','1');

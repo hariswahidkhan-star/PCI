@@ -42,6 +42,7 @@ public static class AdminStudents
                 membership = db.QueryOne("SELECT * FROM memberships WHERE user_id=?", id),
                 payments = db.Query("SELECT * FROM payments WHERE user_id=? ORDER BY id DESC", id),
                 credentials = db.Query("SELECT * FROM issued_credentials WHERE user_id=? ORDER BY id DESC", id),
+                identity_documents = db.Query("SELECT id,doc_kind,filename,mime,size_bytes,status,review_note,reviewed_at,created_at FROM identity_documents WHERE user_id=? ORDER BY id DESC", id),
                 sessions = db.Query("SELECT id,current_step,session_status,selected_product,last_activity_at,reminders_sent FROM enrollment_sessions WHERE user_id=? OR email=? ORDER BY id DESC", id, u["email"]),
                 emails = db.Query("SELECT * FROM email_logs WHERE user_id=? OR email=? ORDER BY id DESC LIMIT 50", id, u["email"]) });
         }));
@@ -126,6 +127,7 @@ public static class AdminStudents
                 payments = db.Query("SELECT * FROM payments WHERE user_id=? ORDER BY id DESC", id),
                 credentials = db.Query("SELECT * FROM issued_credentials WHERE user_id=? ORDER BY id DESC", id),
                 bookings = db.Query("SELECT * FROM exam_bookings WHERE user_id=? ORDER BY id DESC", id),
+                identity_documents = db.Query("SELECT id,doc_kind,filename,mime,size_bytes,status,review_note,reviewed_at,created_at FROM identity_documents WHERE user_id=? ORDER BY id DESC", id),
                 attempts = db.Query("SELECT id,booking_id,kind,status,percent,result,violations,identity_result,evidence_count,review_status,client_kind,started_at,submitted_at,last_heartbeat_at FROM exam_attempts WHERE user_id=? ORDER BY id DESC", id),
                 cpd, cpd_total = cpdTotal,
                 tickets = has("tickets") ? db.Query("SELECT * FROM tickets WHERE user_id=? ORDER BY id DESC", id) : new(),
@@ -219,6 +221,61 @@ public static class AdminStudents
             db.Execute("DELETE FROM login_tokens WHERE user_id=? AND purpose='session'", id);
             log(0, "admin_revoke_sessions", "user " + id);
             return J(new { ok = true });
+        }));
+
+        // ---- exam fee waiver: grant an exam entitlement without payment (scholarships, comps,
+        // corporate seats). Mirrors exactly what the Stripe webhook grants — a paid $0 payment row
+        // plus a formal entitlement — so every downstream gate (booking, launch, submit, one-attempt
+        // -per-entitlement) applies unchanged. Undo = mark the payment refunded in Payments.
+        app.MapPost("/api/admin/students/{id}/exam-waiver", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
+        {
+            if (db.QueryOne("SELECT id FROM users WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var certId = Certs.Resolve(db, H.GetS(b, "certification_id", "certification", "cert"));
+            var cert = Certs.ById(db, certId);
+            if (cert is null) return Results.Json(new { error = "bad_certification" }, statusCode: 400);
+            // One live entitlement per certification: refuse if an unconsumed paid one already exists.
+            var open = db.QueryOne(@"SELECT p.id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id
+                WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle')
+                AND COALESCE(e.certification_id,1)=? AND COALESCE(e.status,'available') IN ('available','booked')", id, certId);
+            if (open is not null) return Results.Json(new { error = "already_entitled" }, statusCode: 409);
+            var reference = "WAIVE-" + Security.RandomHex(5).ToUpperInvariant();
+            var note = (H.GetS(b, "note") ?? "").Trim(); if (note.Length > 300) note = note[..300];
+            var payId = db.ExecuteReturningId(@"INSERT INTO payments(user_id,product_type,standard_amount,final_amount,currency,payment_provider,payment_status,payment_date,reference,exam_schedule_deadline)
+                VALUES(?, 'exam', 0, 0, 'USD', 'admin_waiver', 'paid', datetime('now'), ?, datetime('now','+1 year'))", id, reference);
+            db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?, 'exam', ?, 'available', datetime('now','+1 year'))", id, payId, certId);
+            db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Exams', 'Exam fee waived', ?, 'Schedule your exam', '/certifications')",
+                id, $"The institute has granted you exam access for {H.Str(cert["name"])} at no charge. You can schedule your sitting from the Certifications page once your eligibility items are complete.");
+            log(id, "exam_fee_waived", $"cert {certId} by admin {adm.Id} ref {reference}{(note.Length > 0 ? " note: " + note : "")}");
+            return J(new { ok = true, reference, certification_id = certId, payment_id = payId });
+        }));
+
+        // ---- identity documents: review + view (the student-side gate lives in Lifecycle) ----
+        app.MapPost("/api/admin/students/{id}/identity-document/{docId}/review", (HttpContext ctx, long id, long docId) => gate(ctx.Request, "members", adm =>
+        {
+            var d = db.QueryOne("SELECT * FROM identity_documents WHERE id=? AND user_id=?", docId, id);
+            if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var status = H.GetS(b, "status");
+            if (status is not ("verified" or "rejected")) return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            var note = (H.GetS(b, "note") ?? "").Trim(); if (note.Length > 500) note = note[..500];
+            db.Execute("UPDATE identity_documents SET status=?, review_note=?, reviewed_by=?, reviewed_at=datetime('now') WHERE id=?", status, note, adm.Id, docId);
+            // Tell the student — a rejection re-blocks exam booking until they upload a new document.
+            db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Identity', ?, ?, 'View', '/certifications')",
+                id,
+                status == "verified" ? "Identity document verified" : "Identity document rejected",
+                status == "verified"
+                    ? "Your government-issued ID has been verified. No further action is needed."
+                    : $"Your government-issued ID could not be accepted{(note.Length > 0 ? ": " + note : "")}. Please upload a new document to keep exam scheduling available.");
+            log(id, "identity_document_" + status, $"doc {docId} by admin {adm.Id}");
+            return J(new { ok = true, status });
+        }));
+        app.MapGet("/api/admin/students/{id}/identity-document/{docId}/file", (HttpContext ctx, long id, long docId) => gate(ctx.Request, "members", _ =>
+        {
+            var d = db.QueryOne("SELECT storage_ref FROM identity_documents WHERE id=? AND user_id=?", docId, id);
+            var got = d is null ? null : Storage.Get(H.Str(d["storage_ref"]));
+            if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            return Results.File(got.Value.bytes!, got.Value.mime);
         }));
     }
 }

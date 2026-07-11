@@ -76,6 +76,8 @@ p { margin: 0 0 1em; }
 .btn.ghost:hover { background: var(--brand-050); box-shadow: none; }
 .btn.sm { padding: .4em .8em; font-size: .85rem; }
 .btn.block { width: 100%; }
+.btn.danger { background: var(--err); border-color: transparent; color: #fff; }
+.btn.danger:hover { background: #9a3412; }
 
 /* ---------- forms ---------- */
 label { display: block; font-weight: 600; font-size: .85rem; margin-bottom: .35em; color: var(--slate); }

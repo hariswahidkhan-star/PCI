@@ -94,6 +94,18 @@ export interface Lifecycle {
   blocking_items: string[]
 }
 
+/** Latest government-issued photo ID on file (metadata only; the file lives in Storage). */
+export interface IdentityDocument {
+  id: number
+  doc_kind?: string | null
+  filename?: string | null
+  mime?: string | null
+  size_bytes?: number | null
+  status: string // submitted | verified | rejected
+  review_note?: string | null
+  created_at?: string | null
+}
+
 export interface Me {
   user: MeUser
   profile: Record<string, unknown> | null
@@ -124,6 +136,7 @@ export interface Me {
   experiences: Experience[]
   qualifications: Qualification[]
   certifications_held: HeldCertification[]
+  identity_document: IdentityDocument | null
 }
 
 export interface Message {

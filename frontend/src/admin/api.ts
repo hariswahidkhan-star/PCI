@@ -61,12 +61,25 @@ export interface MemberRow {
   credentials?: number | null
 }
 
+export interface IdentityDocRow {
+  id: number
+  doc_kind?: string | null
+  filename?: string | null
+  mime?: string | null
+  size_bytes?: number | null
+  status: string
+  review_note?: string | null
+  reviewed_at?: string | null
+  created_at?: string | null
+}
+
 export interface MemberDetail {
   user: Record<string, unknown>
   profile: Record<string, unknown> | null
   membership: Record<string, unknown> | null
   payments: Record<string, unknown>[]
   credentials: Record<string, unknown>[]
+  identity_documents: IdentityDocRow[]
   sessions: Record<string, unknown>[]
   emails: Record<string, unknown>[]
 }

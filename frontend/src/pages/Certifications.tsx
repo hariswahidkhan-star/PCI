@@ -5,7 +5,7 @@ import { api, ApiError, getToken } from '../api/client'
 import { startCheckout, checkoutErrorMessage } from '../api/checkout'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty } from '../components/ui'
 import { fmtDate, fmtDateTime, fmtMoney, daysUntil } from '../format'
-import type { ExamEntry } from '../api/types'
+import type { ExamEntry, IdentityDocument } from '../api/types'
 
 /** A certification from the public, backend-controlled catalogue (GET /api/certifications). */
 interface CatalogueCert {
@@ -31,6 +31,16 @@ const BOOK_ERRORS: Record<string, string> = {
   exam_already_taken: 'An exam has already been taken for this entitlement.',
   bad_slot: 'Please choose a time at least 2 hours from now.',
   beyond_window: 'That time is after your scheduling deadline.',
+}
+
+// User-level eligibility holds (from lifecycle.blocking_items) that pause the Schedule button —
+// payment-level items like exam_fee_unpaid are handled by whether an entitlement card exists at all.
+const HOLD_LABELS: Record<string, string> = {
+  identity_document_missing: 'upload your government-issued ID (above)',
+  consents_pending: 'accept the exam consents on your Overview page',
+  profile_incomplete: 'complete your profile (country is required)',
+  account_hold: 'your account is on hold — contact support',
+  booking_closed: 'exam booking is temporarily closed',
 }
 
 function ScheduleForm({ entry, onDone, mode = 'book' }: { entry: ExamEntry; onDone: () => void; mode?: 'book' | 'reschedule' }) {
@@ -78,7 +88,111 @@ function ScheduleForm({ entry, onDone, mode = 'book' }: { entry: ExamEntry; onDo
   )
 }
 
-function EntryCard({ entry, onChanged }: { entry: ExamEntry; onChanged: () => void }) {
+const UPLOAD_ERRORS: Record<string, string> = {
+  file_type_not_allowed: 'Please upload a JPG, PNG, WEBP or PDF file.',
+  file_too_large: 'That file is too large — the maximum is 3 MB.',
+  content_mime_mismatch: 'That file does not appear to be a valid image or PDF.',
+  too_many_uploads: 'Upload limit reached — please contact support to update your ID.',
+}
+
+const DOC_KINDS = [
+  { value: 'passport', label: 'Passport' },
+  { value: 'national_id', label: 'National ID card' },
+  { value: 'driving_licence', label: 'Driving licence' },
+  { value: 'other', label: 'Other government-issued ID' },
+]
+
+/** Government-ID upload + status. A document on file (not rejected) is required before any exam
+ *  can be scheduled — the backend enforces this in Lifecycle.BookingBlockers. */
+function IdentityCard({ doc, onChanged }: { doc: IdentityDocument | null; onChanged: () => void }) {
+  const [kind, setKind] = useState('passport')
+  const [file, setFile] = useState<File | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  const [replacing, setReplacing] = useState(false)
+
+  const showForm = !doc || doc.status === 'rejected' || replacing
+
+  async function submit() {
+    if (!file) return
+    if (file.size > 3_000_000) { setErr(UPLOAD_ERRORS.file_too_large); return }
+    setBusy(true)
+    setErr(null)
+    try {
+      const dataUri = await new Promise<string>((resolve, reject) => {
+        const r = new FileReader()
+        r.onload = () => resolve(String(r.result))
+        r.onerror = () => reject(new Error('Could not read the file — please try again.'))
+        r.readAsDataURL(file)
+      })
+      await api.post('/api/me/identity-document', { doc_kind: kind, filename: file.name, data_uri: dataUri })
+      setFile(null)
+      setReplacing(false)
+      onChanged()
+    } catch (e) {
+      const code = e instanceof ApiError && e.body && typeof e.body === 'object' && 'error' in e.body ? String((e.body as Record<string, unknown>).error) : ''
+      setErr(UPLOAD_ERRORS[code] || (e instanceof Error ? e.message : 'Upload failed.'))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const badge =
+    !doc ? <Badge tone="warn">Required</Badge>
+    : doc.status === 'verified' ? <Badge tone="ok">Verified</Badge>
+    : doc.status === 'rejected' ? <Badge tone="err">Rejected</Badge>
+    : <Badge tone="brand">Submitted</Badge>
+
+  return (
+    <Card title="Identity verification" action={badge}>
+      {!doc && (
+        <p className="muted small" style={{ marginTop: 0 }}>
+          A government-issued photo ID (passport, national ID card or driving licence) is required
+          before you can schedule any exam. It is reviewed by the institute and used only to verify
+          your identity on exam day.
+        </p>
+      )}
+      {doc && doc.status === 'rejected' && (
+        <div className="notice err" role="alert" style={{ marginBottom: '.75rem' }}>
+          Your document could not be accepted{doc.review_note ? ` — ${doc.review_note}` : ''}. Please upload a new one to keep exam scheduling available.
+        </div>
+      )}
+      {doc && doc.status !== 'rejected' && (
+        <div className="small stack" style={{ gap: '.2rem' }}>
+          <div><span className="muted">Document:</span> <strong>{DOC_KINDS.find((k) => k.value === doc.doc_kind)?.label ?? doc.doc_kind}</strong>{doc.filename ? ` · ${doc.filename}` : ''}</div>
+          <div className="muted">Uploaded {fmtDate(doc.created_at)}{doc.status === 'submitted' ? ' · pending review — you can already schedule your exam' : ''}</div>
+        </div>
+      )}
+
+      {showForm ? (
+        <div className="stack" style={{ marginTop: doc ? '.75rem' : 0 }}>
+          {err && <div className="notice err" role="alert">{err}</div>}
+          <div className="field" style={{ margin: 0 }}>
+            <label htmlFor="idd-kind">Document type</label>
+            <select id="idd-kind" value={kind} onChange={(e) => setKind(e.target.value)}>
+              {DOC_KINDS.map((k) => <option key={k.value} value={k.value}>{k.label}</option>)}
+            </select>
+          </div>
+          <div className="field" style={{ margin: 0 }}>
+            <label htmlFor="idd-file">File (JPG, PNG, WEBP or PDF — max 3 MB)</label>
+            <input id="idd-file" type="file" accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
+              onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+          </div>
+          <div className="row">
+            <button className="btn sm" disabled={!file || busy} onClick={submit}>{busy ? 'Uploading…' : 'Submit document'}</button>
+            {replacing && <button className="btn sm secondary" onClick={() => { setReplacing(false); setErr(null) }}>Cancel</button>}
+          </div>
+        </div>
+      ) : (
+        <div className="row" style={{ marginTop: '.75rem' }}>
+          <button className="btn sm secondary" onClick={() => setReplacing(true)}>Replace document</button>
+        </div>
+      )}
+    </Card>
+  )
+}
+
+function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: () => void; holds: string[] }) {
   const [scheduling, setScheduling] = useState(false)
   const booking = entry.booking as Record<string, unknown> | null
   const attempt = entry.latest_attempt as Record<string, unknown> | null
@@ -136,7 +250,14 @@ function EntryCard({ entry, onChanged }: { entry: ExamEntry; onChanged: () => vo
           {scheduling ? (
             <ScheduleForm entry={entry} onDone={() => { setScheduling(false); onChanged() }} />
           ) : (
-            <button className="btn sm" onClick={() => setScheduling(true)}>Schedule exam</button>
+            <>
+              <button className="btn sm" disabled={holds.length > 0} onClick={() => setScheduling(true)}>Schedule exam</button>
+              {holds.length > 0 && (
+                <div className="muted small" style={{ marginTop: '.5rem' }}>
+                  To unlock scheduling: {holds.map((h) => HOLD_LABELS[h] ?? h.replace(/_/g, ' ')).join(' · ')}.
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
@@ -221,6 +342,9 @@ export default function Certifications() {
   const ownedCodes = new Set(
     me.exams.map((e) => (e.certification_code || '').toUpperCase()).filter(Boolean),
   )
+  // User-level holds that pause the Schedule button on every entitlement (payment-level items are
+  // expressed by whether an entitlement card exists at all).
+  const holds = me.lifecycle.blocking_items.filter((b) => b in HOLD_LABELS)
 
   return (
     <div className="stack" style={{ display: 'grid', gap: '1.75rem' }}>
@@ -228,6 +352,8 @@ export default function Certifications() {
         <h1>Certifications &amp; exams</h1>
         <p className="muted">Schedule your exams, track each credential you hold, and enrol in more.</p>
       </div>
+
+      <IdentityCard doc={me.identity_document} onChanged={refetch} />
 
       <section className="stack" style={{ display: 'grid', gap: '1rem' }}>
         <h2 className="section-title">Your certifications</h2>
@@ -245,20 +371,26 @@ export default function Certifications() {
                 <span className="dot">2</span>
                 <span>
                   <span className="label">Complete eligibility</span>
-                  <div className="detail">Accept the exam consents on your Overview page and complete your profile.</div>
+                  <div className="detail">Upload your government-issued ID above, accept the exam consents on your Overview page and complete your profile.</div>
                 </span>
               </li>
               <li>
                 <span className="dot">3</span>
                 <span>
                   <span className="label">Schedule your sitting</span>
-                  <div className="detail">A “Schedule exam” button appears right here — pick any slot up to your deadline, reschedule online if plans change.</div>
+                  <div className="detail">The button below unlocks — pick any slot up to your deadline, reschedule online if plans change.</div>
                 </span>
               </li>
             </ul>
+            <div style={{ marginTop: '1rem' }}>
+              <button className="btn sm" disabled title="Available after your exam fee is paid">Schedule exam</button>
+              <div className="muted small" style={{ marginTop: '.5rem' }}>
+                Unlocks automatically once your exam fee is paid — or waived by the institute.
+              </div>
+            </div>
           </Card>
         ) : (
-          me.exams.map((e) => <EntryCard key={e.payment_id} entry={e} onChanged={refetch} />)
+          me.exams.map((e) => <EntryCard key={e.payment_id} entry={e} onChanged={refetch} holds={holds} />)
         )}
       </section>
 

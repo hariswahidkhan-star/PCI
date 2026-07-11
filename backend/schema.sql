@@ -903,3 +903,18 @@ CREATE TABLE IF NOT EXISTS held_certifications (
   created_at TEXT DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS ix_heldcert_user ON held_certifications(user_id);
+
+-- ===== identity documents: a government-issued photo ID is required before booking an exam =====
+-- The file itself lives in Storage (local/S3); the row holds metadata + the provider reference.
+-- status: submitted (satisfies the booking gate) | verified | rejected (re-blocks until re-upload)
+CREATE TABLE IF NOT EXISTS identity_documents (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  doc_kind TEXT DEFAULT 'passport',            -- passport | national_id | driving_licence | other
+  filename TEXT, mime TEXT, size_bytes INTEGER, storage_ref TEXT, sha256 TEXT,
+  status TEXT NOT NULL DEFAULT 'submitted',
+  review_note TEXT, reviewed_by INTEGER, reviewed_at TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS ix_iddoc_user ON identity_documents(user_id);
+INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('sp_require_identity_document','1');

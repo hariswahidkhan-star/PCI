@@ -16,3 +16,4 @@ tests/_sweep*
 tests/_s3*
 backend/u.db*
 backend/unused.db*
+storage/
