@@ -3,6 +3,8 @@ import { useAuth } from '../auth/AuthContext'
 import { useMe } from '../data/MeContext'
 import { Card, Stat, StatusBadge, Spinner, ErrorNote, Badge } from '../components/ui'
 import Ring from '../components/Ring'
+import CountUp from '../components/CountUp'
+import ConsentsNotice from '../components/ConsentsNotice'
 import { fmtDate, titleCase, isPast } from '../format'
 import type { Lifecycle, Me } from '../api/types'
 
@@ -58,12 +60,11 @@ interface ChecklistItem {
 
 function buildChecklist(me: Me): ChecklistItem[] {
   const p = (me.profile ?? {}) as Record<string, unknown>
-  const buyMembership = `/checkout.html?product=membership&email=${encodeURIComponent(me.user.email)}`
   return [
     { label: 'Tell us about yourself', done: Boolean(p.current_role || p.country), to: '/onboarding' },
     { label: 'Add your work experience', done: me.experiences.length > 0, to: '/profile' },
     { label: 'Add a qualification', done: me.qualifications.length > 0, to: '/profile' },
-    { label: 'Activate your membership', done: me.lifecycle.membership_status === 'active', href: buyMembership },
+    { label: 'Activate your membership', done: me.lifecycle.membership_status === 'active', to: '/billing' },
     { label: 'Book your exam', done: ['booked', 'in_progress', 'submitted'].includes(me.lifecycle.exam_status), to: '/certifications' },
   ]
 }
@@ -78,11 +79,9 @@ export default function Overview() {
 
   const journey = buildJourney(me.lifecycle)
   const next = NEXT_STEP[me.lifecycle.next_step]
-  const buyMembership = `/checkout.html?product=membership&email=${encodeURIComponent(me.user.email)}`
   // a lapsed-but-not-revoked credential keeps status='active' in the DB (expiry is derived at read time),
   // so exclude past-expiry ones to match the Credentials page's "Expired" treatment.
   const activeCreds = me.credentials.filter((c) => c.status === 'active' && !isPast(c.expires_at)).length
-  const outstanding = me.consents.outstanding.length
   const completion = Number((me.profile as Record<string, unknown> | null)?.profile_completion_percentage ?? 20)
   const checklist = buildChecklist(me)
   const remaining = checklist.filter((c) => !c.done)
@@ -94,17 +93,12 @@ export default function Overview() {
         <p className="muted">Registration no. {me.user.registration_no} · Member since {fmtDate(me.user.created_at)}</p>
       </div>
 
-      {outstanding > 0 && (
-        <div className="notice warn">
-          You have {outstanding} outstanding consent{outstanding > 1 ? 's' : ''} to review.{' '}
-          <a href="/student.html#exam">Review now</a>
-        </div>
-      )}
+      <ConsentsNotice />
 
       <div className="grid cols-3">
-        <Card><Stat n={activeCreds} k="Active credentials" /></Card>
-        <Card><Stat n={`${me.cpd.total}/${me.cpd.target}`} k="CPD hours" /></Card>
-        <Card><Stat n={me.exams.length} k="Exam entitlements" /></Card>
+        <Card><Stat n={<CountUp value={activeCreds} />} k="Active credentials" /></Card>
+        <Card><Stat n={<><CountUp value={me.cpd.total} />/{me.cpd.target}</>} k="CPD hours" /></Card>
+        <Card><Stat n={<CountUp value={me.exams.length} />} k="Exam entitlements" /></Card>
       </div>
 
       {remaining.length > 0 && (
@@ -142,22 +136,14 @@ export default function Overview() {
               <h3 style={{ marginBottom: '.25rem' }}>{next.title}</h3>
               <p className="muted" style={{ margin: 0 }}>{next.detail}</p>
             </div>
-            {me.lifecycle.next_step === 'activate_membership' ? (
-              <a className="btn" href={buyMembership}>Activate membership</a>
-            ) : (
-              next.cta &&
+            {next.cta &&
               (next.cta.to ? (
                 <Link className="btn" to={next.cta.to}>{next.cta.label}</Link>
               ) : (
                 <a className="btn" href={next.cta.href}>{next.cta.label}</a>
-              ))
-            )}
+              ))}
           </div>
-          {me.lifecycle.next_step === 'activate_membership' && (
-            <p className="muted small" style={{ margin: '.6rem 0 0' }}>
-              Pay on the website — your membership appears here automatically once payment completes.
-            </p>
-          )}
+
         </Card>
       )}
 

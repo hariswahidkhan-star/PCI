@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import GoogleButton from '../components/GoogleButton'
+import AuthShell from '../components/AuthShell'
 
 export default function Login() {
   const { login } = useAuth()
@@ -27,7 +28,7 @@ export default function Login() {
   }
 
   return (
-    <div className="center-page">
+    <AuthShell>
       <div className="card login-card fade-up">
         <div className="logo">
           <img src="/assets/logo.png" alt="PCI Global" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
@@ -56,6 +57,6 @@ export default function Login() {
           <Link to="/register">Create a free account</Link>
         </div>
       </div>
-    </div>
+    </AuthShell>
   )
 }

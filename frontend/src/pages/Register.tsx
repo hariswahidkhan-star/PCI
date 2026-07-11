@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import GoogleButton from '../components/GoogleButton'
+import AuthShell from '../components/AuthShell'
 
 /** Free account creation — no payment required. Students build their profile first and pay
  * membership or exam fees whenever they choose (from the site or the portal). */
@@ -39,7 +40,7 @@ export default function Register() {
   }
 
   return (
-    <div className="center-page">
+    <AuthShell>
       <div className="card login-card fade-up">
         <div className="logo">
           <img src="/assets/logo.png" alt="PCI Global" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
@@ -88,6 +89,6 @@ export default function Register() {
           <Link to="/login">Sign in</Link>
         </div>
       </div>
-    </div>
+    </AuthShell>
   )
 }

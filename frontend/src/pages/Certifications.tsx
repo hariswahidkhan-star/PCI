@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useMe } from '../data/MeContext'
 import { useQuery } from '../api/hooks'
-import { api, ApiError } from '../api/client'
+import { api, ApiError, getToken } from '../api/client'
 import { startCheckout, checkoutErrorMessage } from '../api/checkout'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty } from '../components/ui'
 import { fmtDate, fmtDateTime, fmtMoney, daysUntil } from '../format'
@@ -20,6 +20,9 @@ interface CatalogueCert {
 }
 
 const BOOK_ERRORS: Record<string, string> = {
+  no_booking: 'No scheduled exam was found to reschedule.',
+  locked: 'Your sitting is too close to reschedule online — please contact support.',
+  max_reschedules: 'This booking has reached its reschedule limit — please contact support.',
   no_entitlement: 'No exam entitlement was found for this certification.',
   not_eligible: 'A few eligibility items must be completed before you can schedule.',
   window_lapsed: 'The scheduling window for this entitlement has closed.',
@@ -30,7 +33,7 @@ const BOOK_ERRORS: Record<string, string> = {
   beyond_window: 'That time is after your scheduling deadline.',
 }
 
-function ScheduleForm({ entry, onDone }: { entry: ExamEntry; onDone: () => void }) {
+function ScheduleForm({ entry, onDone, mode = 'book' }: { entry: ExamEntry; onDone: () => void; mode?: 'book' | 'reschedule' }) {
   const [when, setWhen] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -41,7 +44,7 @@ function ScheduleForm({ entry, onDone }: { entry: ExamEntry; onDone: () => void 
     setBusy(true)
     try {
       // datetime-local yields local wall-clock "YYYY-MM-DDTHH:mm"; send with timezone so the server anchors it.
-      await api.post('/api/me/exam/book', {
+      await api.post(mode === 'reschedule' ? '/api/me/exam/reschedule' : '/api/me/exam/book', {
         certification_id: entry.certification_id,
         scheduled_at: new Date(when).toISOString(),
         timezone: tz,
@@ -112,10 +115,17 @@ function EntryCard({ entry, onChanged }: { entry: ExamEntry; onChanged: () => vo
         <div className="notice" style={{ marginTop: '.75rem' }}>
           Your exam is scheduled for <strong>{fmtDateTime(booking.scheduled_at)}</strong>
           {booking.timezone ? ` (${booking.timezone})` : ''}.
-          <div className="row" style={{ marginTop: '.6rem' }}>
-            <a className="btn sm" href="/student.html#exam">Go to exam</a>
-            <a className="btn sm secondary" href="/student.html#exam">Reschedule</a>
+          <div className="row" style={{ marginTop: '.6rem', flexWrap: 'wrap' }}>
+            <a className="btn sm" href={`/student.html#t=${getToken() ?? ''}`}>Exam day check-in ↗</a>
+            <button className="btn sm secondary" onClick={() => setScheduling((v) => !v)}>
+              {scheduling ? 'Close' : 'Reschedule'}
+            </button>
           </div>
+          {scheduling && (
+            <div style={{ marginTop: '.6rem' }}>
+              <ScheduleForm entry={entry} mode="reschedule" onDone={() => { setScheduling(false); onChanged() }} />
+            </div>
+          )}
         </div>
       ) : attempt ? (
         <div style={{ marginTop: '.75rem' }} className="row">
