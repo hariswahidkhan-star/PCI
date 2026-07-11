@@ -68,6 +68,21 @@
             card.style.setProperty('--mx', ((e.clientX - b.left) / b.width * 100) + '%');
             card.style.setProperty('--my', ((e.clientY - b.top) / b.height * 100) + '%');
           }, { passive: true });
+
+          /* magnetic primary CTAs: the button leans gently toward the cursor */
+          var mags = document.querySelectorAll('.hero-cta .btn, .redband .btn, .cta-row .btn-red');
+          for (var m = 0; m < mags.length; m++) {
+            (function (btn) {
+              btn.classList.add('pv-mag');
+              btn.addEventListener('mousemove', function (e) {
+                var b = btn.getBoundingClientRect();
+                var dx = (e.clientX - b.left - b.width / 2) / (b.width / 2);
+                var dy = (e.clientY - b.top - b.height / 2) / (b.height / 2);
+                btn.style.transform = 'translate(' + (dx * 4).toFixed(1) + 'px,' + (dy * 3).toFixed(1) + 'px)';
+              }, { passive: true });
+              btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
+            })(mags[m]);
+          }
         }
       } catch (e) { /* static page remains fully usable */ }
     };

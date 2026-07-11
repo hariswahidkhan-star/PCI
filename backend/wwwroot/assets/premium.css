@@ -122,6 +122,9 @@ html.pv .hero-trust,html.pv .hero-iso{animation:pv-enter var(--dur-3) var(--ease
 @keyframes pv-enter{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
 @keyframes pv-enter-scale{from{opacity:0;transform:translateY(14px) scale(.97);}to{opacity:1;transform:none;}}
 
+/* magnetic CTAs (transform set by premium.js on fine pointers) */
+.pv-mag{transition:transform .22s var(--ease-premium);will-change:transform;}
+
 /* scroll progress bar (element injected by premium.js) */
 #pvbar{position:fixed;top:0;left:0;right:0;height:2.5px;z-index:200;pointer-events:none;
   background:linear-gradient(90deg,var(--red),var(--magenta));transform-origin:0 50%;transform:scaleX(0);}

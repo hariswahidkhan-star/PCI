@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { useMe } from '../data/MeContext'
 import { initials } from '../format'
@@ -15,11 +15,24 @@ const NAV = [
   { to: '/profile', label: 'Profile', badgeKey: 'profile' as const },
 ]
 
+const TITLES: Record<string, string> = {
+  '/': 'Overview',
+  '/certifications': 'Certifications',
+  '/credentials': 'Credentials',
+  '/cpd': 'CPD',
+  '/billing': 'Billing',
+  '/messages': 'Messages',
+  '/support': 'Support',
+  '/profile': 'Profile',
+}
+
 export default function Layout() {
   const { user, logout } = useAuth()
   const { me } = useMe()
+  const loc = useLocation()
   const unread = me?.unread ?? 0
   const completion = Number((me?.profile as Record<string, unknown> | null)?.profile_completion_percentage ?? 100)
+  const memberActive = me?.lifecycle.membership_status === 'active'
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -30,6 +43,7 @@ export default function Layout() {
           <img src="/assets/logo.png" alt="PCI Global" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
           <span>PCI Global Portal</span>
         </div>
+        <div className="nav-label">Menu</div>
         <nav className="nav">
           {NAV.map((n) => (
             <NavLink key={n.to} to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
@@ -39,8 +53,14 @@ export default function Layout() {
             </NavLink>
           ))}
         </nav>
-        <div style={{ marginTop: '1.5rem' }}>
-          <a className="btn ghost small" href="/student.html">Classic portal ↗</a>
+        <div className="sidebar-foot">
+          <div className={'member-chip' + (memberActive ? ' on' : '')}>
+            <span className="mc-dot" />
+            <span>
+              <strong>{memberActive ? 'Member' : 'Guest account'}</strong>
+              <em>{memberActive ? 'Membership active' : 'Membership not active'}</em>
+            </span>
+          </div>
         </div>
       </aside>
 
@@ -48,7 +68,10 @@ export default function Layout() {
         <header className="topbar">
           <div className="row">
             <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>
-            <strong>Student Portal</strong>
+            <div>
+              <div className="tb-crumb">Student Portal</div>
+              <strong className="tb-title">{TITLES[loc.pathname] ?? 'Student Portal'}</strong>
+            </div>
           </div>
           <div className="row">
             <div className="avatar" title={user?.email}>{initials(user?.firstName, user?.lastName)}</div>
@@ -59,7 +82,7 @@ export default function Layout() {
             <button className="btn secondary sm" onClick={logout}>Sign out</button>
           </div>
         </header>
-        <main className="content">
+        <main className="content route-fade" key={loc.pathname}>
           <Outlet />
         </main>
       </div>
