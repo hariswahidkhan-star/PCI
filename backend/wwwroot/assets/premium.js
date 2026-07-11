@@ -1,7 +1,7 @@
-/* PCI premium motion runtime v2 — progressive enhancement only.
+/* PCI motion runtime — animations on top of the existing design.
    html.pv gates all motion; without JS (or with reduced motion) the site is
-   fully visible and static. Adds: scroll reveals, direction-aware glass
-   header, scroll-progress bar, hero parallax, cursor-following card glow. */
+   fully visible and static. Adds scroll reveals, header shadow, progress bar,
+   gentle hero parallax and cursor-following card glow. */
 (function () {
   'use strict';
   try {
@@ -33,41 +33,36 @@
           }
         }
 
-        /* header (elevate + hide-on-scroll-down), progress bar, hero parallax */
+        /* header shadow, progress bar, gentle hero parallax */
         var hdr = document.querySelector('.hdr');
         var heroBg = document.querySelector('.hero .hero-bg');
         var bar = document.createElement('div');
         bar.id = 'pvbar';
         document.body.appendChild(bar);
-        var lastY = 0, ticking = false;
+        var ticking = false;
         var onScroll = function () {
           if (ticking) return;
           ticking = true;
           requestAnimationFrame(function () {
             var y = window.scrollY || document.documentElement.scrollTop || 0;
-            if (hdr) {
-              hdr.classList.toggle('pv-scrolled', y > 8);
-              hdr.classList.toggle('pv-hidden', y > 340 && y > lastY + 2);
-              if (y < lastY - 2) hdr.classList.remove('pv-hidden');
-            }
+            if (hdr) hdr.classList.toggle('pv-scrolled', y > 8);
             var doc = document.documentElement;
             var max = (doc.scrollHeight - doc.clientHeight) || 1;
             bar.style.transform = 'scaleX(' + Math.min(1, y / max) + ')';
             if (heroBg && y < window.innerHeight * 1.2) {
-              heroBg.style.transform = 'translate3d(0,' + (y * 0.22) + 'px,0) scale(1.06)';
+              heroBg.style.transform = 'translate3d(0,' + (y * 0.18) + 'px,0)';
             }
-            lastY = y;
             ticking = false;
           });
         };
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
 
-        /* cursor-following glow on cards (pointer devices) */
+        /* cursor-following glow inside cards */
         if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
           document.addEventListener('mousemove', function (e) {
             var card = e.target && e.target.closest &&
-              e.target.closest('.gcard,.qcard,.cert-card,.pcard,.mcard,.feat');
+              e.target.closest('.gcard,.qcard,.cert-card,.feat');
             if (!card) return;
             var b = card.getBoundingClientRect();
             card.style.setProperty('--mx', ((e.clientX - b.left) / b.width * 100) + '%');
