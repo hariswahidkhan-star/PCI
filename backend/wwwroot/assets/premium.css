@@ -1,85 +1,90 @@
 /* ============================================================================
-   PCI PREMIUM LAYER — loaded after styles.css as a pure override.
-   Three lanes: [A] foundations (tokens · typography · global polish)
-                [C] components (cards · buttons · forms · chrome)
-                [B] motion (reveals · ambience · micro-interactions)
-   Progressive enhancement: all hiding/entrance rules are scoped to html.pv,
-   which premium.js sets ONLY when IntersectionObserver exists and the visitor
-   does not prefer reduced motion. Without JS the page is fully static+visible.
+   PCI PREMIUM LAYER v2 — loaded after styles.css as a pure override.
+   [A] foundations · [C] components · [B] motion & atmosphere
+   Progressive enhancement: hiding/entrance rules are scoped to html.pv (set by
+   premium.js only when IntersectionObserver exists and reduced-motion is off).
+   Without JS the site is fully static and visible.
    ========================================================================== */
 
 /* ————————————————————————— [A] FOUNDATIONS ————————————————————————— */
 
 :root{
-  /* colour depth */
   --ink:#0B1220;
   --slate:#44546A;
   --line:#E4E9F1;
   --line-strong:#D4DBE7;
   --grad-brand:linear-gradient(135deg,#1D4ED8 0%,#3B82F6 60%,#60A5FA 100%);
   --grad-subtle:linear-gradient(180deg,rgba(29,78,216,.045),rgba(29,78,216,0));
-  /* layered, brand-tinted elevation */
   --shadow-1:0 1px 2px rgba(15,23,42,.05),0 1px 6px rgba(29,78,216,.05);
   --shadow-2:0 2px 4px rgba(15,23,42,.05),0 8px 24px rgba(29,78,216,.08);
   --shadow-3:0 4px 8px rgba(15,23,42,.06),0 18px 44px rgba(29,78,216,.11);
   --shadow-4:0 8px 16px rgba(15,23,42,.08),0 32px 72px rgba(29,78,216,.14);
   --shadow-hover:0 6px 14px rgba(15,23,42,.07),0 22px 52px rgba(29,78,216,.16);
-  /* radius scale */
   --r-1:10px; --r-2:14px; --r-3:20px;
-  /* shared motion tokens */
   --ease-premium:cubic-bezier(.22,.61,.36,1);
   --dur-1:240ms; --dur-2:420ms; --dur-3:600ms;
 }
 
-/* typographic rhythm */
-h1,h2,h3{text-wrap:balance;}
-h1{letter-spacing:-.035em;}
+h2,h3{text-wrap:balance;}
+h1{letter-spacing:-.038em;font-weight:800;line-height:1.01;}
 h2{letter-spacing:-.028em;line-height:1.04;}
 h3,h4{letter-spacing:-.012em;}
 body{text-rendering:optimizeLegibility;font-kerning:normal;}
 p{color:var(--slate);}
 .lead{font-size:clamp(18px,1.6vw,20.5px);line-height:1.65;}
-.eyebrow{letter-spacing:.22em;font-size:12.5px;background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.eyebrow{letter-spacing:.22em;font-size:12.5px;background:var(--grad-brand);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;}
 
-/* global polish */
 ::selection{background:rgba(29,78,216,.16);color:var(--ink);}
 :focus-visible{outline:2px solid #1D4ED8;outline-offset:3px;border-radius:4px;}
 html{scrollbar-width:thin;scrollbar-color:#C3CEE0 transparent;}
+@media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth;}}
 ::-webkit-scrollbar{width:10px;height:10px;}
 ::-webkit-scrollbar-thumb{background:#C3CEE0;border-radius:8px;border:2px solid #fff;}
 ::-webkit-scrollbar-thumb:hover{background:#9FB0CC;}
 body{background-image:radial-gradient(900px 420px at 78% -140px,rgba(59,130,246,.055),transparent 70%);background-repeat:no-repeat;}
 .uline{height:4px;width:64px;background:var(--grad-brand);background-size:200% 100%;border-radius:3px;}
 
+/* film grain — the expensive-print texture */
+body::after{content:"";position:fixed;inset:0;z-index:130;pointer-events:none;opacity:.026;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");}
+
 /* ————————————————————————— [C] COMPONENTS ————————————————————————— */
 
-/* unified premium card language */
 .gcard,.qcard,.cert-card,.pcard,.mcard,.dcard,.dl-card,.donate-card,.feat{
   border:1px solid var(--line);
   border-radius:var(--r-2);
-  background:linear-gradient(180deg,#FFFFFF, #FDFEFF);
+  background:linear-gradient(180deg,#FFFFFF,#FDFEFF);
   box-shadow:var(--shadow-1);
   position:relative;
 }
 .gcard::before,.qcard::before,.cert-card::before,.dl-card::before{
   content:"";position:absolute;inset:0 0 auto 0;height:2px;border-radius:var(--r-2) var(--r-2) 0 0;
   background:var(--grad-brand);opacity:0;transition:opacity var(--dur-1) var(--ease-premium);
-  pointer-events:none;
-}
+  pointer-events:none;}
 .gcard:hover::before,.qcard:hover::before,.cert-card:hover::before,.dl-card:hover::before{opacity:.9;}
 
-/* buttons */
+/* cursor-following glow (coords set by premium.js; pointer devices only) */
+@media (hover:hover) and (pointer:fine){
+  .gcard::after,.qcard::after,.cert-card::after,.pcard::after,.mcard::after,.feat::after{
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;
+    background:radial-gradient(340px circle at var(--mx,50%) var(--my,50%),rgba(59,130,246,.10),transparent 65%);
+    transition:opacity var(--dur-2) var(--ease-premium);}
+  .gcard:hover::after,.qcard:hover::after,.cert-card:hover::after,.pcard:hover::after,.mcard:hover::after,.feat:hover::after{opacity:1;}
+}
+
 .btn{border-radius:12px;position:relative;overflow:hidden;
   transition:background var(--dur-1) var(--ease-premium),color var(--dur-1) var(--ease-premium),
              border-color var(--dur-1) var(--ease-premium),box-shadow var(--dur-1) var(--ease-premium),
              transform var(--dur-1) var(--ease-premium);}
+.btn:active{transform:scale(.975);}
 .btn-red{background:linear-gradient(180deg,#2563EB,#1D4ED8 55%,#1A45C2);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 6px rgba(29,78,216,.28),0 8px 22px rgba(29,78,216,.22);}
 .btn-red:hover{background:linear-gradient(180deg,#2E6BF0,#2153E0 55%,#1D4BCB);}
 .btn-ghost,.btn-out,.btn-white,.btn-light{border-color:var(--line-strong);}
 .btn-ghost:hover,.btn-out:hover{border-color:#1D4ED8;color:#1D4ED8;background:rgba(29,78,216,.05);}
+.btn svg{transition:transform var(--dur-1) var(--ease-premium);}
+.btn:hover svg{transform:translateX(3px);}
 
-/* forms */
 .field input,.field select,.field textarea,.nl-in{
   border-radius:var(--r-1);border:1px solid var(--line-strong);
   box-shadow:inset 0 1px 2px rgba(15,23,42,.04);
@@ -88,74 +93,93 @@ body{background-image:radial-gradient(900px 420px at 78% -140px,rgba(59,130,246,
   border-color:#1D4ED8;box-shadow:inset 0 1px 2px rgba(15,23,42,.03),0 0 0 3px rgba(29,78,216,.14);outline:none;}
 .field input::placeholder,.field textarea::placeholder{color:#94A3B8;}
 
-/* FAQ accordions */
 details.faq{border:1px solid var(--line);border-radius:var(--r-1);margin:10px 0;background:#fff;
   box-shadow:var(--shadow-1);padding:0 18px;transition:border-color var(--dur-1) var(--ease-premium),box-shadow var(--dur-1) var(--ease-premium);}
 details.faq summary{border-radius:var(--r-1);}
 details.faq:hover{border-color:var(--line-strong);}
 details.faq[open]{border-left:3px solid #1D4ED8;box-shadow:var(--shadow-2);}
 
-/* tables */
 table th{letter-spacing:.06em;}
 table tr:hover td{background:rgba(29,78,216,.028);}
 
-/* header & nav */
-.hdr{border-bottom:1px solid rgba(228,233,241,.85);transition:box-shadow var(--dur-2) var(--ease-premium),background var(--dur-2) var(--ease-premium);}
+.hdr{border-bottom:1px solid rgba(228,233,241,.85);
+  transition:box-shadow var(--dur-2) var(--ease-premium),background var(--dur-2) var(--ease-premium),transform var(--dur-2) var(--ease-premium);}
 .hdr.pv-scrolled{background:rgba(255,255,255,.86);box-shadow:0 1px 0 rgba(15,23,42,.05),0 12px 34px rgba(15,23,42,.07);}
+.hdr.pv-hidden{transform:translateY(-100%);}
 .nav a{position:relative;transition:color var(--dur-1) var(--ease-premium);}
 .nav a::after{content:"";position:absolute;left:0;right:100%;bottom:-4px;height:2px;background:var(--grad-brand);border-radius:2px;transition:right var(--dur-2) var(--ease-premium);}
 .nav a:hover::after,.nav a:focus-visible::after{right:0;}
 
-/* footer */
 footer{position:relative;}
 footer::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:var(--grad-brand);background-size:200% 100%;opacity:.75;}
 .ftcols h4{letter-spacing:.14em;color:#8FA3C4;}
-.ftcols a{transition:color var(--dur-1) var(--ease-premium);}
-.ftcols a:hover{color:#BFD3F5;}
+.ftcols a{transition:color var(--dur-1) var(--ease-premium),padding-left var(--dur-1) var(--ease-premium);}
+.ftcols a:hover{color:#BFD3F5;padding-left:4px;}
 .ft-bottom{border-top:1px solid rgba(255,255,255,.08);}
 
-/* chips · badges · notices */
 .chip,.badge,.pip{border-radius:999px;}
 .notice{border-radius:var(--r-1);border:1px solid var(--line);box-shadow:var(--shadow-1);}
-
-/* newsletter band */
 .nl-band{background:linear-gradient(140deg,#0D1220,#101A31 55%,#0D1526);}
 .nl-form{border-radius:999px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.09),0 18px 44px rgba(0,0,0,.35);}
-
-/* breadcrumb */
 .crumbbar{background:linear-gradient(180deg,#FBFCFE,#FFFFFF);}
+.ck-banner{border-radius:var(--r-3);border:1px solid var(--line);box-shadow:var(--shadow-4);backdrop-filter:blur(14px) saturate(160%);}
+
+/* ————————————————— HERO — design-driven atmosphere ————————————————— */
+
+.hero{isolation:isolate;background:#070B16;}
+.hero-in{position:relative;z-index:3;}
+/* the photo becomes a quiet texture beneath a deep branded scrim */
+.hero .hero-bg{filter:saturate(.55) brightness(.55) contrast(1.05);will-change:transform;transform:scale(1.06);}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(112deg,rgba(6,10,20,.96) 0%,rgba(9,15,32,.88) 38%,rgba(10,16,32,.55) 72%,rgba(7,11,22,.75) 100%);}
+/* engineering-grid overlay, fading out to the right */
+.hero::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.13;
+  background-image:linear-gradient(rgba(148,178,255,.22) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(148,178,255,.22) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(72% 90% at 30% 45%,#000 30%,transparent 100%);
+          mask-image:radial-gradient(72% 90% at 30% 45%,#000 30%,transparent 100%);}
+/* floating glow orbs */
+.hero .wrap::before,.hero .wrap::after{content:"";position:absolute;z-index:2;pointer-events:none;border-radius:50%;filter:blur(70px);}
+.hero .wrap::before{width:520px;height:520px;left:-160px;top:-120px;background:radial-gradient(circle,rgba(37,99,235,.34),transparent 65%);}
+.hero .wrap::after{width:420px;height:420px;right:-80px;bottom:-140px;background:radial-gradient(circle,rgba(96,165,250,.22),transparent 65%);}
+/* headline: soft white→ice gradient; the brand dot keeps its colour */
+.hero-in h1{background:linear-gradient(160deg,#FFFFFF 30%,#C6D8FB 90%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+/* the headline accent: a crisp gradient dot hugging the last word */
+.hero-in h1 .dot{display:inline-block;width:.16em;height:.16em;border-radius:50%;
+  background:var(--grad-brand);margin-left:.07em;vertical-align:baseline;
+  color:transparent;-webkit-text-fill-color:transparent;overflow:hidden;}
+/* trust rows become quiet glass chips */
+.hero-trust span,.hero-iso{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10);
+  border-radius:999px;padding:8px 16px;backdrop-filter:blur(6px);}
+.phead{position:relative;overflow:hidden;}
+.phead>*{position:relative;z-index:1;}
 
 /* ————————————————————————— [B] MOTION ————————————————————————— */
 
-/* continuous ambience (gated off under reduced motion) */
 @media (prefers-reduced-motion: no-preference){
   .uline{animation:pv-uline 6s var(--ease-premium) infinite;}
   @keyframes pv-uline{0%,100%{background-position:0% 0;}50%{background-position:100% 0;}}
+  .hero .wrap::before{animation:pv-float 16s ease-in-out infinite alternate;}
+  .hero .wrap::after{animation:pv-float 20s ease-in-out infinite alternate-reverse;}
+  @keyframes pv-float{from{transform:translate3d(0,0,0);}to{transform:translate3d(4%,6%,0);}}
   .hero-bg::after,.phead::after{
     content:"";position:absolute;inset:-20%;pointer-events:none;z-index:0;
-    background:radial-gradient(40% 55% at 25% 30%,rgba(59,130,246,.28),transparent 70%),
-               radial-gradient(35% 50% at 75% 65%,rgba(29,78,216,.22),transparent 70%),
-               radial-gradient(30% 45% at 55% 20%,rgba(96,165,250,.16),transparent 70%);
-    filter:blur(64px);opacity:.32;animation:pv-aurora 26s ease-in-out infinite alternate;}
+    background:radial-gradient(40% 55% at 25% 30%,rgba(59,130,246,.30),transparent 70%),
+               radial-gradient(35% 50% at 75% 65%,rgba(29,78,216,.24),transparent 70%);
+    filter:blur(64px);opacity:.34;animation:pv-aurora 26s ease-in-out infinite alternate;}
   .phead::after{opacity:.14;animation-duration:34s;}
   @keyframes pv-aurora{from{transform:translate3d(-3%,-2%,0) scale(1);}to{transform:translate3d(3%,2%,0) scale(1.06);}}
-  .hero-bg{animation:pv-zoom 22s var(--ease-premium) infinite alternate;}
-  @keyframes pv-zoom{from{transform:scale(1);}to{transform:scale(1.04);}}
   .btn-red::before{
     content:"";position:absolute;inset:-40%;pointer-events:none;border-radius:inherit;
     background:radial-gradient(50% 50% at 50% 50%,rgba(96,165,250,.5),transparent 70%);
     opacity:.14;animation:pv-glow 4.5s ease-in-out infinite;}
   @keyframes pv-glow{0%,100%{opacity:.1;}50%{opacity:.26;}}
-  details.faq .faq-a{animation:none;}
   details.faq[open] .faq-a{animation:pv-rise var(--dur-2) var(--ease-premium) both;}
   @keyframes pv-rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  footer::before{animation:pv-uline 9s var(--ease-premium) infinite;background-size:300% 100%;}
 }
-.phead{position:relative;overflow:hidden;}
-.hero{isolation:isolate;}
-.hero-in{position:relative;z-index:2;}
-.phead>*{position:relative;z-index:1;}
 
-/* micro-interactions */
 @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion: no-preference){
   .btn:hover{transform:translateY(-1px);}
   .btn-red:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 4px 10px rgba(29,78,216,.3),0 14px 34px rgba(29,78,216,.3);}
@@ -175,16 +199,22 @@ footer::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;backgrou
   main p a:not(.btn):hover,main li a:not(.btn):hover{background-size:100% 1.5px;}
 }
 
-/* scroll-reveal choreography (only when premium.js confirms motion is welcome) */
-html.pv .sec>.wrap>.hblock,
+/* scroll-reveal choreography (premium.js gates html.pv) */
+html.pv .sec>.wrap>.hblock{opacity:0;transform:translateY(18px);filter:blur(7px);
+  transition:opacity var(--dur-3) var(--ease-premium),transform var(--dur-3) var(--ease-premium),filter var(--dur-3) var(--ease-premium);}
 html.pv .gcard,html.pv .cert-card,html.pv .pcard,html.pv .mcard,html.pv .dcard,
 html.pv details.faq,html.pv .nl-band .wrap,html.pv .ftcols>div,html.pv .notice{
   opacity:0;transform:translateY(16px);
   transition:opacity var(--dur-3) var(--ease-premium),transform var(--dur-3) var(--ease-premium);
   will-change:opacity,transform;}
 html.pv .gcard,html.pv .cert-card{transform:translateY(18px) scale(.985);}
-html.pv .pv-in{opacity:1 !important;transform:none !important;}
-/* sibling stagger inside grids (capped) */
+html.pv .pv-in{opacity:1 !important;transform:none !important;filter:none !important;}
+/* heading bar draws in; eyebrow shimmers once */
+html.pv .hblock .uline{width:0;transition:width .8s var(--ease-premium) .15s;}
+html.pv .hblock.pv-in .uline{width:64px;}
+html.pv .hblock.pv-in .eyebrow{animation:pv-shimmer 1.4s var(--ease-premium) .1s 1;}
+@keyframes pv-shimmer{from{background-position:120% 0;}to{background-position:0% 0;}}
+/* grid stagger */
 html.pv .gx>*:nth-child(2),html.pv .ftcols>div:nth-child(2){transition-delay:70ms;}
 html.pv .gx>*:nth-child(3),html.pv .ftcols>div:nth-child(3){transition-delay:140ms;}
 html.pv .gx>*:nth-child(4),html.pv .ftcols>div:nth-child(4){transition-delay:210ms;}
@@ -193,14 +223,14 @@ html.pv .gx>*:nth-child(6){transition-delay:350ms;}
 html.pv .gx>*:nth-child(n+7){transition-delay:420ms;}
 
 /* hero entrance sequence */
-html.pv .hero-in h1,html.pv .phead h1{animation:pv-enter var(--dur-3) var(--ease-premium) both;}
-html.pv .hero-in .lead,html.pv .phead .lead{animation:pv-enter var(--dur-3) var(--ease-premium) .14s both;}
-html.pv .hero-in .eyebrow,html.pv .phead .eyebrow{animation:pv-enter var(--dur-2) var(--ease-premium) .04s both;}
-html.pv .hero-cta,html.pv .hero-trust{animation:pv-enter-scale var(--dur-3) var(--ease-premium) .3s both;}
+html.pv .hero-in .eyebrow{animation:pv-enter var(--dur-2) var(--ease-premium) .04s both;}
+html.pv .hero-in h1,html.pv .phead h1{animation:pv-enter var(--dur-3) var(--ease-premium) .12s both;}
+html.pv .hero-in>p,html.pv .phead .lead{animation:pv-enter var(--dur-3) var(--ease-premium) .28s both;}
+html.pv .hero-cta{animation:pv-enter-scale var(--dur-3) var(--ease-premium) .44s both;}
+html.pv .hero-trust,html.pv .hero-iso{animation:pv-enter var(--dur-3) var(--ease-premium) .58s both;}
 @keyframes pv-enter{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
 @keyframes pv-enter-scale{from{opacity:0;transform:translateY(14px) scale(.97);}to{opacity:1;transform:none;}}
 
-/* scroll progress bar (element injected by premium.js) */
 #pvbar{position:fixed;top:0;left:0;right:0;height:2.5px;z-index:200;pointer-events:none;
   background:var(--grad-brand);transform-origin:0 50%;transform:scaleX(0);}
 
@@ -209,7 +239,7 @@ html.pv .hero-cta,html.pv .hero-trust{animation:pv-enter-scale var(--dur-3) var(
   *,::before,::after{animation:none !important;transition:none !important;}
 }
 @media print{
-  #pvbar,.hero-bg::after,.phead::after,.btn-red::before{display:none !important;}
+  #pvbar,.hero-bg::after,.phead::after,.btn-red::before,body::after{display:none !important;}
   .gcard,.qcard,.cert-card,.pcard,.mcard,.dcard,.dl-card,.feat{box-shadow:none;}
   body{background-image:none;}
 }
