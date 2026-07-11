@@ -499,6 +499,12 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   .abp-inner { padding: 2rem 1.5rem; }
 }
 
+
+/* resources library */
+.res-grid { display: grid; gap: .6rem; }
+.res-ic { width: 42px; height: 42px; border-radius: 10px; background: var(--brand-050); color: var(--brand-600);
+  display: grid; place-items: center; flex: 0 0 auto; font-weight: 800; font-size: .66rem; letter-spacing: .04em; }
+
 /* ---------- safety ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after { animation: none !important; transition: none !important; }
