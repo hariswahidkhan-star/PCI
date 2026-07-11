@@ -84,7 +84,7 @@ export default function AdminLayout() {
           ))}
         </nav>
         <div style={{ marginTop: '1.5rem' }}>
-          <a className="btn ghost small" href="/admin.html">Classic admin panel ↗</a>
+          <a className="btn ghost sm" href="/admin.html">Classic admin panel ↗</a>
           <p className="muted small" style={{ marginTop: '.4rem' }}>All other sections live in the classic panel.</p>
         </div>
       </aside>

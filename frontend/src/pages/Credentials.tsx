@@ -13,7 +13,7 @@ export default function Credentials() {
   const certificate = (c: Credential) => {
     const holder = c.holder_name || `${me.user.first_name ?? ''} ${me.user.last_name ?? ''}`.trim()
     openPrintable(`Certificate ${c.credential_id}`, `
-      <div class="brand" style="text-align:center">PROJECT CONTROLS INSTITUTE</div>
+      <div class="brand" style="text-align:center">Project Controls Institute Global, Inc.</div>
       <div class="big">Certificate of Certification</div>
       <p style="text-align:center" class="muted">This certifies that</p>
       <h1 style="text-align:center;font-size:1.8rem">${e(holder)}</h1>

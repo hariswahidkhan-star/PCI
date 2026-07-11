@@ -525,7 +525,7 @@ body{font-size:15px}
  <div class="auth-r"><div class="auth-card">
   <h2>Sign in</h2><p class="sub">Use the email you enrolled with.</p>
   <div class="auth-err" id="aErr"></div>
-  <div class="fld"><label>Backend URL</label><input class="in" id="aApi" placeholder="https://api.yourdomain.com" autocomplete="off" aria-label="https://api.yourdomain.com"/></div>
+  <div class="fld"><label>Backend URL</label><input class="in" id="aApi" placeholder="https://api.yourdomain.com" autocomplete="off" aria-label="Backend URL"/></div>
   <div class="fld"><label>Email</label><input class="in" id="aEmail" type="email" autocomplete="username"/></div>
   <div class="fld"><label>Password</label><input class="in" id="aPass" type="password" autocomplete="current-password"/></div>
   <button class="btn btn-p btn-lg btn-bk" id="aGo">Sign in</button>
@@ -1231,12 +1231,12 @@ async function vSupport(){const d=await api('/api/me/tickets');const rows=d.rows
     const u=(S.me&&S.me.user)||{}, p=(S.me&&S.me.profile)||{};
     rb.onclick=()=>modal('Write a review',
       `<div class="fld"><label>Name <span style="color:#dc2626">*</span></label><input class="in" id="rvNm" value="${esc(((u.first_name||'')+' '+(u.last_name||'')).trim())}"/></div>
-       <div class="grid g2"><div class="fld"><label>Designation / role</label><input class="in" id="rvDes" value="${esc(p.current_role||'')}" placeholder="e.g. Senior Planner" aria-label="e.g. Senior Planner"/></div>
-       <div class="fld"><label>Company</label><input class="in" id="rvCo" value="${esc(p.company||'')}" placeholder="Organisation" aria-label="Organisation"/></div></div>
+       <div class="grid g2"><div class="fld"><label>Designation / role</label><input class="in" id="rvDes" value="${esc(p.current_role||'')}" placeholder="e.g. Senior Planner" aria-label="Designation / role"/></div>
+       <div class="fld"><label>Company</label><input class="in" id="rvCo" value="${esc(p.company||'')}" placeholder="Organisation" aria-label="Company"/></div></div>
        <div class="grid g2"><div class="fld"><label>Country</label><input class="in" id="rvCn" value="${esc(p.country||'')}"/></div>
        <div class="fld"><label>I am a…</label><select class="in" id="rvRel"><option value="student">Student</option><option value="member">Member</option><option value="professional">Professional</option><option value="other">Other</option></select></div></div>
        <div class="fld"><label>Rating</label><select class="in" id="rvRt"><option value="5">★★★★★ Excellent</option><option value="4">★★★★ Very good</option><option value="3">★★★ Good</option><option value="2">★★ Fair</option><option value="1">★ Poor</option></select></div>
-       <div class="fld"><label>Headline (optional)</label><input class="in" id="rvTi" placeholder="A short title" aria-label="A short title"/></div>
+       <div class="fld"><label>Headline (optional)</label><input class="in" id="rvTi" placeholder="A short title" aria-label="Headline (optional)"/></div>
        <div class="fld"><label>Your review <span style="color:#dc2626">*</span></label><textarea class="in" id="rvBd" rows="5" placeholder="Tell others about your experience with the programme (min 10 characters)."></textarea></div>
        <p class="tiny muted">By submitting, you agree your review (name, designation, company, country) may be published on the PCI website.</p>`,
       'Submit for review', async()=>{

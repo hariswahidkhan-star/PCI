@@ -106,6 +106,10 @@ input:focus, select:focus, textarea:focus {
 .row { display: flex; align-items: center; gap: .75rem; }
 .spread { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .stack > * + * { margin-top: .5rem; }
+/* When a .stack is ALSO an inline grid/flex with its own gap, the gap already spaces the
+   children — grid/flex item margins don't collapse and would stack ON TOP of the gap, making
+   page blocks ~50% larger than declared. Let the gap alone own the spacing in that case. */
+.stack[style*="grid"] > * + *, .stack[style*="flex"] > * + * { margin-top: 0; }
 
 /* ---------- badges ---------- */
 .badge {
@@ -174,6 +178,11 @@ table.data td { font-variant-numeric: tabular-nums lining-nums; }
 table.data tbody tr { transition: background .12s; }
 table.data tbody tr:hover { background: #f8fafc; }
 table.data tr:last-child td { border-bottom: 0; }
+/* Wide data tables must scroll inside their own box at ALL widths: .main uses overflow-x:clip,
+   so an unwrapped wide table (Payments/Exams/Proctoring) is silently clipped — with no scrollbar —
+   at iPad-landscape/small-laptop widths. display:block makes the table its own scroll container
+   (CrudSection achieves the same by wrapping its table in an overflow-x:auto div). */
+table.data { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
 /* ---------- lifecycle steps ---------- */
 .steps { list-style: none; margin: 0; padding: 0; }
@@ -193,7 +202,7 @@ table.data tr:last-child td { border-bottom: 0; }
 .notice { padding: .8rem 1rem; border-radius: 10px; border: 1px solid #dbe6ff; border-left: 3px solid var(--brand); background: var(--brand-050); }
 .notice.warn { background: var(--warn-bg); border-color: #fde68a; border-left-color: var(--warn); }
 .notice.err { background: var(--err-bg); border-color: #fecaca; border-left-color: var(--err); color: var(--err); }
-.center-page { display: grid; place-items: center; min-height: 100vh; padding: 1.5rem; }
+.center-page { display: grid; place-items: center; min-height: 100vh; min-height: 100dvh; padding: 1.5rem; }
 .spinner { width: 26px; height: 26px; border: 3px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .skeleton { background: linear-gradient(90deg, #eef2f7 25%, #f6f8fc 50%, #eef2f7 75%); background-size: 200% 100%; animation: sh 1.2s infinite; border-radius: 8px; height: 1em; }
@@ -411,6 +420,13 @@ body::before {
   content: ""; display: inline-block; width: 16px; height: 2px; background: var(--brand);
   opacity: .65; margin-right: 8px; vertical-align: .25em;
 }
+/* Entity cards: the title IS the identifier (student name, credential, message subject), not a
+   section eyebrow — render it as a normal sentence-case heading so it doesn't read smaller than
+   its own body copy. Add className="entity" (or variant='entity') to the shared Card. */
+.card.entity > .spread:first-child h2 {
+  font-size: 1.05rem; font-weight: 700; letter-spacing: -.01em; text-transform: none; color: var(--ink);
+}
+.card.entity > .spread:first-child h2::before { content: none; }
 
 /* stats: gradient numerals */
 .stat .n {
@@ -493,9 +509,6 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .topbar .small { min-width: 0; }
 .topbar .small > div { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
 
-@media (max-width: 860px) {
-  table.data { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-}
 @media (max-width: 700px) {
   .topbar { padding: .65rem 1rem; }
   .topbar .small { display: none; }   /* avatar + Sign out remain; name/email live in Profile */

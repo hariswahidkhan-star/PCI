@@ -153,7 +153,7 @@ export default function Billing() {
   const receipt = (p: Payment) => {
     const name = `${me.user.first_name ?? ''} ${me.user.last_name ?? ''}`.trim() || me.user.email
     openPrintable(`Receipt ${p.reference ?? p.id}`, `
-      <div class="brand">PROJECT CONTROLS INSTITUTE</div>
+      <div class="brand">Project Controls Institute Global, Inc.</div>
       <h1>Payment receipt</h1>
       <p class="muted">Reference ${e(p.reference ?? p.id)}</p>
       <table>

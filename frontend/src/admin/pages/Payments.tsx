@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAdminQuery } from '../hooks'
 import type { PaymentRow } from '../api'
-import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { Card, StatusBadge, Spinner, ErrorNote, Empty, Stat } from '../../components/ui'
 import { fmtDate, fmtMoney, titleCase } from '../../format'
 
 interface PaymentsResp {
@@ -13,10 +13,17 @@ export default function Payments() {
   const [status, setStatus] = useState('')
   const [product, setProduct] = useState('')
   const [q, setQ] = useState('')
+  const [dq, setDq] = useState('')
+  // Debounce the search term so the query path (and its page-level Spinner) doesn't churn on
+  // every keystroke — the input stays instant while the list refetches once typing settles.
+  useEffect(() => {
+    const t = setTimeout(() => setDq(q), 300)
+    return () => clearTimeout(t)
+  }, [q])
   const params = new URLSearchParams()
   if (status) params.set('status', status)
   if (product) params.set('product', product)
-  if (q) params.set('q', q)
+  if (dq) params.set('q', dq)
   const qs = params.toString()
   const { data, loading, error } = useAdminQuery<PaymentsResp>(`/api/admin/payments${qs ? '?' + qs : ''}`)
 
@@ -26,9 +33,9 @@ export default function Payments() {
 
       {data && (
         <div className="grid cols-3">
-          <Card><div className="stat"><span className="n">{fmtMoney(data.totals.paid)}</span><span className="k">Paid (filtered)</span></div></Card>
-          <Card><div className="stat"><span className="n">{fmtMoney(data.totals.refunded)}</span><span className="k">Refunded</span></div></Card>
-          <Card><div className="stat"><span className="n">{data.totals.n}</span><span className="k">Transactions</span></div></Card>
+          <Card><Stat n={fmtMoney(data.totals.paid)} k="Paid (filtered)" /></Card>
+          <Card><Stat n={fmtMoney(data.totals.refunded)} k="Refunded" /></Card>
+          <Card><Stat n={data.totals.n} k="Transactions" /></Card>
         </div>
       )}
 
@@ -59,23 +66,25 @@ export default function Payments() {
         ) : !data || data.rows.length === 0 ? (
           <Empty>No payments match.</Empty>
         ) : (
-          <table className="data">
-            <thead>
-              <tr><th>Date</th><th>Reference</th><th>Customer</th><th>Product</th><th>Amount</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-              {data.rows.map((p) => (
-                <tr key={p.id}>
-                  <td className="small">{fmtDate(p.payment_date)}</td>
-                  <td className="small muted">{p.reference || '—'}</td>
-                  <td className="small">{p.email || '—'}</td>
-                  <td>{titleCase(p.product_type)}</td>
-                  <td>{fmtMoney(p.final_amount, p.currency || 'USD')}</td>
-                  <td><StatusBadge status={p.payment_status} /></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div style={{ overflowX: 'auto' }}>
+            <table className="data">
+              <thead>
+                <tr><th>Date</th><th>Reference</th><th>Customer</th><th>Product</th><th>Amount</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                {data.rows.map((p) => (
+                  <tr key={p.id}>
+                    <td className="small">{fmtDate(p.payment_date)}</td>
+                    <td className="small muted">{p.reference || '—'}</td>
+                    <td className="small">{p.email || '—'}</td>
+                    <td>{titleCase(p.product_type)}</td>
+                    <td>{fmtMoney(p.final_amount, p.currency || 'USD')}</td>
+                    <td><StatusBadge status={p.payment_status} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </Card>
     </div>

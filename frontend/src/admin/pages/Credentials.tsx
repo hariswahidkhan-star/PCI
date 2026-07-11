@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type CredentialRow } from '../api'
 import { ApiError } from '../../api/client'
@@ -46,10 +46,17 @@ function IssueForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => v
 export default function Credentials() {
   const [status, setStatus] = useState('')
   const [q, setQ] = useState('')
+  const [dq, setDq] = useState('')
   const [issuing, setIssuing] = useState(false)
+  // Debounce the search term so the query path (and its page-level Spinner) doesn't churn on
+  // every keystroke — the input stays instant while the list refetches once typing settles.
+  useEffect(() => {
+    const t = setTimeout(() => setDq(q), 300)
+    return () => clearTimeout(t)
+  }, [q])
   const params = new URLSearchParams()
   if (status) params.set('status', status)
-  if (q) params.set('q', q)
+  if (dq) params.set('q', dq)
   const qs = params.toString()
   const { data, loading, error, refetch } = useAdminQuery<{ rows: CredentialRow[] }>(`/api/admin/credentials${qs ? '?' + qs : ''}`)
 
