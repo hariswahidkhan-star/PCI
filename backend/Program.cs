@@ -9,6 +9,31 @@ builder.WebHost.UseUrls($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PO
 // for one legitimate upload while still refusing anything larger up front (Kestrel → 413).
 builder.WebHost.ConfigureKestrel(o => o.Limits.MaxRequestBodySize = 6_000_000);
 
+// ---- Zero-config persistence: adopt a mounted disk at /data automatically ----
+// Render (and the documented Docker run) mount the persistent disk at /data. When it exists and is
+// writable, and no explicit paths were configured, the database and uploaded files go there — so
+// attaching the disk in the dashboard is the ONLY step needed for durable data. Explicit
+// DATABASE_FILE / STORAGE_ROOT always win, and a missing or read-only /data changes nothing.
+try
+{
+    if (Directory.Exists("/data"))
+    {
+        var probe = Path.Combine("/data", ".pci-write-probe");
+        File.WriteAllText(probe, "ok"); File.Delete(probe);
+        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DATABASE_FILE")))
+        {
+            Environment.SetEnvironmentVariable("DATABASE_FILE", "/data/pci.db");
+            Console.WriteLine("[boot] persistent disk detected at /data → DATABASE_FILE=/data/pci.db");
+        }
+        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("STORAGE_ROOT")))
+        {
+            Environment.SetEnvironmentVariable("STORAGE_ROOT", "/data/storage");
+            Console.WriteLine("[boot] persistent disk detected at /data → STORAGE_ROOT=/data/storage");
+        }
+    }
+}
+catch { /* /data exists but is not ours to write — keep the configured defaults */ }
+
 // ---- DB: open + auto-migrate (BEFORE Build so the retention hosted service can depend on it) ----
 var dbPath = Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "./pci.db";
 var db = new Db(dbPath);
@@ -116,7 +141,8 @@ app.Use(async (ctx, next) =>
 var stripeKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
 if(!string.IsNullOrEmpty(stripeKey)) Stripe.StripeConfiguration.ApiKey = stripeKey;
 if (string.IsNullOrEmpty(stripeKey)) Console.WriteLine("[boot] STRIPE_SECRET_KEY not set — payment endpoints will answer 503 until configured.");
-if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SMTP_HOST"))) Console.WriteLine("[boot] SMTP_HOST not set — emails will print to the console instead of sending.");
+if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SMTP_HOST")) && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("RESEND_API_KEY")))
+    Console.WriteLine("[boot] no email provider configured (RESEND_API_KEY or SMTP_HOST) — emails will print to the console instead of sending.");
 {
     var sp = (Environment.GetEnvironmentVariable("STORAGE_PROVIDER") ?? "local").ToLowerInvariant();
     var sr = Environment.GetEnvironmentVariable("STORAGE_ROOT") ?? "./storage";

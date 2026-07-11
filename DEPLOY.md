@@ -33,6 +33,28 @@ website; everything students do appears in the dashboard. There is nothing separ
 6. Verify: log into `/admin.html` and open **System check** (owner-only) — everything should be
    green except Stripe/SMTP if you skipped them.
 
+### Already running WITHOUT the blueprint (service created by hand)?
+If the service was created manually — especially on the **free tier** — the database and every
+uploaded file are erased on each deploy or restart. Fixing it is two dashboard steps, no
+environment variables needed:
+
+1. Service → **Settings → Instance Type** → choose **Starter** (disks need a paid instance).
+2. Service → **Disks → Add Disk** → name it anything, **Mount Path `/data`**, size 5 GB → Save.
+
+The service restarts and the app **detects the disk automatically**, storing the database at
+`/data/pci.db` and uploads under `/data/storage` from then on (the boot log prints
+`persistent disk detected at /data`). Data created before the disk existed was on the ephemeral
+filesystem and cannot be recovered — do this before inviting real users.
+
+### Enabling email (two options)
+- **Easiest — Resend:** create a free account at https://resend.com, add an API key, and set one
+  environment variable: `RESEND_API_KEY`. To send from your own address, verify your domain in
+  Resend and set `MAIL_FROM` (e.g. `PCI Global <no-reply@yourdomain.org>`); until then a built-in
+  test sender is used, which only delivers to the Resend account owner's inbox.
+- **Classic SMTP:** set `SMTP_HOST`, `SMTP_PORT` (587), `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`.
+
+Without either, emails print to the service logs (visible in Admin → Email log as `console`).
+
 ### Custom domain
 Render service → Settings → Custom Domains → add `www.yourdomain.org` and follow the DNS
 instructions. Then update `APP_BASE_URL` and `ALLOWED_ORIGIN` to the new URL and redeploy.
