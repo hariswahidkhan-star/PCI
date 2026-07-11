@@ -269,7 +269,7 @@ public static class PageScan
             var h1 = PageContent.RxH1.Match(html);
             if (h1.Success)
             {
-                var t = Collapse(System.Net.WebUtility.HtmlDecode(RxStripTags.Replace(h1.Groups[2].Value, " ")));
+                var t = FlattenText(h1.Groups[2].Value);
                 if (t.Length is > 0 and <= 300) h1s[slug] = t;
             }
         }
@@ -376,6 +376,12 @@ public static class PageScan
     }
 
     static string Collapse(string s) => RxWs.Replace(s, " ").Trim();
+
+    /// <summary>The plain-text reading of an element's inner HTML — the same transform used when
+    /// seeding '_h1' headline blocks, exposed so render-time injection can recognise an unedited
+    /// headline and leave the file's own markup (line breaks, styled spans) untouched.</summary>
+    public static string FlattenText(string innerHtml) =>
+        Collapse(System.Net.WebUtility.HtmlDecode(RxStripTags.Replace(innerHtml, " ")));
     static string Trunc(string s, int n) => s.Length <= n ? s : s[..(n - 1)] + "…";
     static string Esc(string s) => s.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
     static string AttrEsc(string s)
