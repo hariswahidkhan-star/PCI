@@ -9,7 +9,8 @@ function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => 
   const [f, setF] = useState({
     code: '', discount_type: 'percentage', discount_value: '', applies_to: 'all',
     start_date: '', end_date: '', max_uses: '', single_use_per_email: false, active: true,
-    founding_route: '', grants_membership: true, grants_exam: false, grants_study_access: true,
+    founding_route: '', grants_membership: true, grants_exam: true, grants_study_access: true,
+    requires_application: false,
     auto_approve: true, membership_months: '12', min_years: '', require_qual: false, allowed_roles: '',
   })
   const [busy, setBusy] = useState(false)
@@ -36,13 +37,14 @@ function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => 
         active: f.active,
         ...(founding
           ? {
-              founding_route: f.founding_route,
+              founding_route: 'founding',
               grants_membership: f.grants_membership,
-              grants_exam: f.founding_route === 'founding_candidate' ? true : f.grants_exam,
+              grants_exam: f.grants_exam,
               grants_study_access: f.grants_study_access,
+              requires_application: f.requires_application,
               auto_approve: f.auto_approve,
               membership_months: Number(f.membership_months) || 12,
-              criteria_json: Object.keys(criteria).length > 0 ? JSON.stringify(criteria) : null,
+              criteria_json: f.requires_application && Object.keys(criteria).length > 0 ? JSON.stringify(criteria) : null,
             }
           : {}),
       })
@@ -65,8 +67,7 @@ function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => 
         <div className="field"><label>Kind</label>
           <select value={f.founding_route} onChange={(e) => setF({ ...f, founding_route: e.target.value })}>
             <option value="">Standard discount code</option>
-            <option value="founding_member">Founding member — free membership + study</option>
-            <option value="founding_candidate">Founding candidate — application → free membership + exam</option>
+            <option value="founding">Founding code — waives membership, study and exam fees (time-boxed)</option>
           </select>
         </div>
         <div className="grid cols-2">
@@ -101,12 +102,17 @@ function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => 
 
         {founding && (
           <>
+            <p className="muted small" style={{ marginTop: 0 }}>
+              A founding code grants the full free path to the credential — the exam is the same real
+              exam, only the fees are waived. Untick a grant only if the board wants a narrower code.
+            </p>
             <div className="row" style={{ gap: '1.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
               <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_membership} onChange={(e) => setF({ ...f, grants_membership: e.target.checked })} /> Grants membership</label>
-              <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.founding_route === 'founding_candidate' ? true : f.grants_exam} disabled={f.founding_route === 'founding_candidate'} onChange={(e) => setF({ ...f, grants_exam: e.target.checked })} /> Grants exam entry</label>
+              <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_exam} onChange={(e) => setF({ ...f, grants_exam: e.target.checked })} /> Grants exam entry</label>
               <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_study_access} onChange={(e) => setF({ ...f, grants_study_access: e.target.checked })} /> Grants study access</label>
+              <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.requires_application} onChange={(e) => setF({ ...f, requires_application: e.target.checked })} /> Require an application (evidence + criteria)</label>
             </div>
-            {f.founding_route === 'founding_candidate' && (
+            {f.requires_application && (
               <Card title="Eligibility criteria (board-set — enforced on application)">
                 <div className="grid cols-2">
                   <div className="field"><label>Minimum experience (years)</label><input type="number" value={f.min_years} onChange={(e) => setF({ ...f, min_years: e.target.value })} placeholder="e.g. 3" /></div>
@@ -140,6 +146,10 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
     auto_approve: (code.auto_approve ?? 1) === 1,
     membership_months: String(code.membership_months ?? 12),
     criteria_json: code.criteria_json ?? '',
+    grants_membership: (code.grants_membership ?? 1) === 1,
+    grants_exam: (code.grants_exam ?? 1) === 1,
+    grants_study_access: (code.grants_study_access ?? 1) === 1,
+    requires_application: (code.requires_application ?? 0) === 1,
   })
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -154,7 +164,17 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
         start_date: f.start_date || null,
         end_date: f.end_date || null,
         max_uses: f.max_uses === '' ? null : Number(f.max_uses),
-        ...(founding ? { auto_approve: f.auto_approve, membership_months: Number(f.membership_months) || 12, criteria_json: f.criteria_json.trim() || null } : {}),
+        ...(founding
+          ? {
+              auto_approve: f.auto_approve,
+              membership_months: Number(f.membership_months) || 12,
+              criteria_json: f.criteria_json.trim() || null,
+              grants_membership: f.grants_membership,
+              grants_exam: f.grants_exam,
+              grants_study_access: f.grants_study_access,
+              requires_application: f.requires_application,
+            }
+          : {}),
       })
       onSaved()
     } catch (e) {
@@ -180,7 +200,15 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
             <div className="field"><label>Membership term (months)</label><input type="number" value={f.membership_months} onChange={(e) => setF({ ...f, membership_months: e.target.value })} /></div>
           )}
         </div>
-        {founding && code.founding_route === 'founding_candidate' && (
+        {founding && (
+          <div className="row" style={{ gap: '1.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+            <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_membership} onChange={(e) => setF({ ...f, grants_membership: e.target.checked })} /> Grants membership</label>
+            <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_exam} onChange={(e) => setF({ ...f, grants_exam: e.target.checked })} /> Grants exam entry</label>
+            <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_study_access} onChange={(e) => setF({ ...f, grants_study_access: e.target.checked })} /> Grants study access</label>
+            <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.requires_application} onChange={(e) => setF({ ...f, requires_application: e.target.checked })} /> Require an application</label>
+          </div>
+        )}
+        {founding && f.requires_application && (
           <>
             <div className="row" style={{ marginBottom: '1rem' }}>
               <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.auto_approve} onChange={(e) => setF({ ...f, auto_approve: e.target.checked })} /> Auto-approve applications that meet the criteria</label>
@@ -234,7 +262,7 @@ export default function Codes() {
                   <td>
                     <strong>{c.code}</strong>
                     {c.code_type === 'referral' && <> <Badge tone="brand">referral</Badge></>}
-                    {c.founding_route && <> <Badge tone="warn">{c.founding_route === 'founding_member' ? 'founding member' : 'founding candidate'}</Badge></>}
+                    {c.founding_route && <> <Badge tone="warn">founding{c.requires_application ? ' · application' : ''}</Badge></>}
                   </td>
                   <td className="small">
                     {c.founding_route

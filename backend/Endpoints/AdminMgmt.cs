@@ -119,6 +119,12 @@ public static class AdminMgmt
                 return Results.Json(new { error = "bad_code", message = "Code must be 2–20 characters: letters, digits and hyphens (e.g. PCP-COST)." }, statusCode: 400);
             if (nameV.Length == 0) return Results.Json(new { error = "name_required" }, statusCode: 400);
             if (Certs.ByCode(db, codeV) is not null) return Results.Json(new { error = "code_exists" }, statusCode: 409);
+            // PCI-HON is the honorary-award number space: a certification prefix colliding with it
+            // would make earned credentials unverifiable (/api/verify routes that prefix to the
+            // honorary registry first). Reserved outright.
+            var prefixV = (H.GetS(b, "credential_prefix") ?? "").Trim().ToUpperInvariant();
+            if (codeV.StartsWith(Honorary.AwardPrefix, StringComparison.Ordinal) || prefixV.StartsWith(Honorary.AwardPrefix, StringComparison.Ordinal))
+                return Results.Json(new { error = "prefix_reserved", message = "PCI-HON is reserved for honorary awards and cannot be used for a certification." }, statusCode: 400);
             var id = db.ExecuteReturningId(@"INSERT INTO certifications(code,name,description,credential_prefix,pass_mark_pct,duration_minutes,expiry_years,exam_price,active,sort_order)
                 VALUES(?,?,?,?,?,?,?,?,?,?)",
                 codeV, nameV, H.GetS(b, "description"), H.GetS(b, "credential_prefix"),
@@ -138,6 +144,9 @@ public static class AdminMgmt
             var set = allowed.Where(c => b.ContainsKey(c)).ToList();
             if (id == 1 && set.Contains("active") && b["active"].ValueKind == JsonValueKind.False)
                 return Results.Json(new { error = "founding_cert_permanent", message = "The founding certification cannot be deactivated." }, statusCode: 400);
+            if (set.Contains("credential_prefix") && (b["credential_prefix"].ValueKind == JsonValueKind.String
+                && (b["credential_prefix"].GetString() ?? "").Trim().ToUpperInvariant().StartsWith(Honorary.AwardPrefix, StringComparison.Ordinal)))
+                return Results.Json(new { error = "prefix_reserved", message = "PCI-HON is reserved for honorary awards and cannot be used for a certification." }, statusCode: 400);
             if (set.Count == 0) return J(new { ok = true });
             var vals = set.Select(c => { var v = b[c]; return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
             db.Execute($"UPDATE certifications SET {string.Join(",", set.Select(c => c + "=?"))}, updated_at=datetime('now') WHERE id=?", vals);
@@ -234,10 +243,14 @@ public static class AdminMgmt
             var req = ctx.Request;
             var g = Deny(req, "codes"); if (g is not null) return g;
             var b = await H.Body(req);
+            // Three-route model: ONE founding route. Legacy tier names are accepted and normalised
+            // forward so older clients keep working, but every founding code behaves identically:
+            // membership + study + exam granted together (grants stay editable per code).
             var route = H.GetS(b, "founding_route");
-            if (route is not (null or "" or "founding_member" or "founding_candidate"))
+            if (route is "founding_member" or "founding_candidate") route = "founding";
+            if (route is not (null or "" or "founding"))
                 return Results.Json(new { error = "bad_founding_route" }, statusCode: 400);
-            bool founding = route is "founding_member" or "founding_candidate";
+            bool founding = route == "founding";
             int B(string k, bool dflt = false) => (b.ContainsKey(k) ? H.B(b[k].GetRawText()) : dflt) ? 1 : 0;
             var id = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,single_use_per_email,active,
                 founding_route,grants_membership,grants_exam,grants_study_access,requires_application,auto_approve,membership_months,criteria_json)
@@ -246,9 +259,9 @@ public static class AdminMgmt
                 H.GetS(b, "start_date"), H.GetS(b, "end_date"), H.GetNum(b, "max_uses"), B("single_use_per_email") , B("active"),
                 founding ? route : null,
                 founding ? B("grants_membership", true) : 0,
-                founding ? B("grants_exam", route == "founding_candidate") : 0,
+                founding ? B("grants_exam", true) : 0,
                 founding ? B("grants_study_access", true) : 0,
-                founding ? (route == "founding_candidate" ? 1 : B("requires_application")) : 0,
+                founding ? B("requires_application") : 0,
                 founding ? B("auto_approve", true) : 1,
                 (int)(H.GetNum(b, "membership_months") ?? 12),
                 founding ? H.GetS(b, "criteria_json") : null);
@@ -261,12 +274,14 @@ public static class AdminMgmt
             var req = ctx.Request;
             var g = Deny(req, "codes"); if (g is not null) return g;
             var b = await H.Body(req);
-            object? act = b.ContainsKey("active") ? (H.B(b["active"].GetRawText()) ? 1 : 0) : null;
-            object? autoApr = b.ContainsKey("auto_approve") ? (H.B(b["auto_approve"].GetRawText()) ? 1 : 0) : null;
+            object? Flag(string k) => b.ContainsKey(k) ? (H.B(b[k].GetRawText()) ? 1 : 0) : null;
             db.Execute(@"UPDATE discount_codes SET active=COALESCE(?,active), start_date=COALESCE(?,start_date), end_date=COALESCE(?,end_date), max_uses=COALESCE(?,max_uses),
-                auto_approve=COALESCE(?,auto_approve), membership_months=COALESCE(?,membership_months), criteria_json=COALESCE(?,criteria_json) WHERE id=?",
-                act, H.GetS(b, "start_date"), H.GetS(b, "end_date"), H.GetNum(b, "max_uses"),
-                autoApr, H.GetNum(b, "membership_months"), H.GetS(b, "criteria_json"), id);
+                auto_approve=COALESCE(?,auto_approve), membership_months=COALESCE(?,membership_months), criteria_json=COALESCE(?,criteria_json),
+                grants_membership=COALESCE(?,grants_membership), grants_exam=COALESCE(?,grants_exam), grants_study_access=COALESCE(?,grants_study_access),
+                requires_application=COALESCE(?,requires_application) WHERE id=?",
+                Flag("active"), H.GetS(b, "start_date"), H.GetS(b, "end_date"), H.GetNum(b, "max_uses"),
+                Flag("auto_approve"), H.GetNum(b, "membership_months"), H.GetS(b, "criteria_json"),
+                Flag("grants_membership"), Flag("grants_exam"), Flag("grants_study_access"), Flag("requires_application"), id);
             var adm = adminFromReq(req);
             log(null, "code_updated", $"code {id} by admin {adm?.Id}: {string.Join(",", b.Keys)}");
             return J(new { ok = true });

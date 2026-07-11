@@ -79,10 +79,16 @@ chk "SEC6 exam_mgr can access sample_questions (200)" "$([ "$(code GET /api/admi
 FC="SMOKEFND$$"
 FE="founding-smoke-$$@ex.co"
 FT=$(j POST /api/register -H 'Content-Type: application/json' -d "{\"email\":\"$FE\",\"password\":\"Passw0rd!fnd\",\"first_name\":\"Fnd\",\"last_name\":\"Smoke\"}" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("token",""))')
-chk "F1 create founding code (owner)" "$([ -n "$(j POST /api/admin/codes -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d "{\"code\":\"$FC\",\"founding_route\":\"founding_member\",\"grants_membership\":true,\"grants_study_access\":true,\"end_date\":\"2099-01-01\",\"active\":true}" | grep -o '"id"')" ] && echo 1)"
+chk "F1 create founding code (owner)" "$([ -n "$(j POST /api/admin/codes -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d "{\"code\":\"$FC\",\"founding_route\":\"founding\",\"end_date\":\"2099-01-01\",\"active\":true}" | grep -o '"id"')" ] && echo 1)"
 chk "F2 validate founding code (public)" "$([ "$(j POST /api/founding/validate -H 'Content-Type: application/json' -d "{\"code\":\"$FC\"}" | grep -c '"valid":true')" = 1 ] && echo 1)"
 chk "F3 student redeems at USD 0" "$([ "$(j POST /api/founding/redeem -H "Authorization: Bearer $FT" -H 'Content-Type: application/json' -d "{\"code\":\"$FC\"}" | grep -cE '"ok":true|already_redeemed')" = 1 ] && echo 1)"
-chk "F4 /api/me reflects the founding membership" "$([ "$(j GET /api/me -H "Authorization: Bearer $FT" | grep -c '"membership_status":"active"')" = 1 ] && echo 1)"
+chk "F4 /api/me reflects the full founding grant" "$([ "$(j GET /api/me -H "Authorization: Bearer $FT" | grep -cE '"membership_status":"active".*"candidate_status":"exam_fee_paid"|"candidate_status":"exam_fee_paid".*"membership_status":"active"')" = 1 ] && echo 1)"
+
+# ---- honorary smoke: owner confers → verify shows it as honorary, never a passed exam ----
+HN=$(j POST /api/admin/honorary -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"recipient_name":"Smoke Honoree","citation":"Smoke-test citation"}' | python3 -c 'import sys,json;print(json.load(sys.stdin).get("award_no",""))')
+chk "H1 owner confers an honorary award (PCI-HON number)" "$([ -n "$HN" ] && echo "$HN" | grep -q '^PCI-HON-' && echo 1)"
+chk "H2 verify shows honorary type + designation" "$([ "$(j GET "/api/verify?id=$HN" | grep -c '"type":"honorary"')" = 1 ] && echo 1)"
+chk "H3 confer without auth rejected (401)" "$([ "$(code POST /api/admin/honorary -H 'Content-Type: application/json' -d '{"recipient_name":"X"}')" = 401 ] && echo 1)"
 
 echo ""; echo "  ══ $pass/$((pass+fail)) PASSED ══"
 [ "$fail" = 0 ]

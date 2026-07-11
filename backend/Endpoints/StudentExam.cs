@@ -91,6 +91,11 @@ public static class StudentExam
                     }).ToList(),
                 credentials = db.Query("SELECT credential_id,credential,status,issued_at,expires_at,holder_name FROM issued_credentials WHERE user_id=? ORDER BY id DESC", u.Id),
                 identity_document = db.QueryOne("SELECT id,doc_kind,filename,mime,size_bytes,status,review_note,created_at FROM identity_documents WHERE user_id=? ORDER BY id DESC", u.Id),
+                // Route B state: fees were waived by a founding code (settled as a $0 founding_waiver payment).
+                founding_member = db.Scalar<long>("SELECT COUNT(*) FROM payments WHERE user_id=? AND payment_provider='founding_waiver' AND payment_status='paid'", u.Id) > 0,
+                // Route C state: read-only honorary recognition. Deliberately separate from `credentials`
+                // (exam-earned) — an honorary award never sets any exam/result/credential field.
+                honorary = db.Query("SELECT award_no,designation,citation,status,conferred_at FROM honorary_awards WHERE user_id=? AND status='active' ORDER BY id DESC", u.Id),
                 experiences = db.Query("SELECT * FROM work_experiences WHERE user_id=? ORDER BY is_current DESC, COALESCE(NULLIF(end_date,''),'9999-12') DESC, id DESC", u.Id),
                 qualifications = db.Query("SELECT * FROM qualifications WHERE user_id=? ORDER BY id DESC", u.Id),
                 certifications_held = db.Query("SELECT * FROM held_certifications WHERE user_id=? ORDER BY id DESC", u.Id),

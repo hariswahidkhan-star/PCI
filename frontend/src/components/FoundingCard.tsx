@@ -22,6 +22,8 @@ interface FoundingApp {
   admin_note?: string | null
   created_at?: string | null
   code?: string | null
+  evidence_name?: string | null
+  evidence_size?: number | null
 }
 
 const APP_BADGE: Record<string, { tone: 'ok' | 'err' | 'brand' | 'warn'; label: string }> = {
@@ -147,6 +149,7 @@ export default function FoundingCard() {
       {latest && (
         <div className={'notice' + (latest.status === 'rejected' || latest.status === 'revoked' ? ' err' : '')} style={{ marginBottom: '.75rem' }}>
           Founding application ({latest.code}): <strong>{APP_BADGE[latest.status]?.label ?? latest.status}</strong>
+          {latest.evidence_name ? <> · evidence submitted: {latest.evidence_name}{latest.evidence_size ? ` (${Math.round(Number(latest.evidence_size) / 1024)} KB)` : ''}</> : null}
           {latest.admin_note ? <> — {latest.admin_note}</> : null}
           {latest.status === 'pending_review' && ' — we will notify you of the outcome.'}
         </div>
@@ -171,9 +174,10 @@ export default function FoundingCard() {
       {checked?.valid && (
         <div style={{ marginTop: '.9rem' }}>
           <div className="notice" style={{ marginBottom: '.75rem' }}>
-            <strong>{checked.route === 'founding_candidate' ? 'Founding candidate' : 'Founding membership'} — fee waived.</strong>{' '}
+            <strong>Founding access — fees waived.</strong>{' '}
             This code grants {grantsText(checked.grants)} at USD 0
             {checked.window_ends ? <> — valid until {fmtDate(checked.window_ends)}</> : null}.
+            {checked.grants?.exam ? ' The exam itself is the same real exam — the credential is earned by passing it.' : ''}
           </div>
           {checked.requires_application ? (
             <div className="stack" style={{ display: 'grid', gap: '.6rem' }}>

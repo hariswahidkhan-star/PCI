@@ -33,6 +33,27 @@ export default function Credentials() {
         <h1>Credentials</h1>
         <p className="muted">Your issued certifications and their validity.</p>
       </div>
+
+      {/* Honorary recognition is deliberately separate from exam-earned credentials: it is a
+          board-conferred designation, not the PCP-AI examination credential. */}
+      {me.honorary.length > 0 && (
+        <Card title="Honorary recognition" action={<Badge tone="brand">Board-conferred</Badge>}>
+          {me.honorary.map((h) => (
+            <div key={h.award_no} className="stack small" style={{ gap: '.35rem' }}>
+              <div><strong>{h.designation || 'Honorary Fellow (PCI)'}</strong> · award no. <strong>{h.award_no}</strong></div>
+              {h.citation && <div className="muted">“{h.citation}”</div>}
+              <div className="muted">
+                Conferred {fmtDate(h.conferred_at)} — an honorary recognition of distinguished contribution,
+                distinct from the examined PCP-AI credential.
+              </div>
+              <div className="row" style={{ marginTop: '.4rem' }}>
+                <a className="btn sm secondary" href={`/verify.html?id=${encodeURIComponent(h.award_no)}`} target="_blank" rel="noreferrer">Public verify page</a>
+              </div>
+            </div>
+          ))}
+        </Card>
+      )}
+
       {me.credentials.length === 0 ? (
         <Card><Empty>You have no issued credentials yet. They appear here once you pass an exam.</Empty></Card>
       ) : (

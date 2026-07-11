@@ -137,6 +137,18 @@ export interface Me {
   qualifications: Qualification[]
   certifications_held: HeldCertification[]
   identity_document: IdentityDocument | null
+  /** Route B: fees were waived by a founding code (a $0 founding_waiver payment exists). */
+  founding_member: boolean
+  /** Route C: read-only board-conferred recognition — never an exam credential. */
+  honorary: HonoraryAward[]
+}
+
+export interface HonoraryAward {
+  award_no: string
+  designation?: string | null
+  citation?: string | null
+  status?: string | null
+  conferred_at?: string | null
 }
 
 export interface Message {

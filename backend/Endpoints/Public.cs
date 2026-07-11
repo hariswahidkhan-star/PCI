@@ -123,6 +123,27 @@ public static class Public
         {
             var id = (req.Query["id"].ToString() ?? "").Trim().ToUpperInvariant();
             if (id.Length == 0) return Results.Json(new { error = "missing_id" }, statusCode: 400);
+            // Honorary awards live in their own registry with the PCI-HON prefix — a distinct number
+            // space from every certification prefix, so the two record types can never collide. An
+            // honorary result is explicitly typed and NEVER represented as a passed examination.
+            if (id.StartsWith(Honorary.AwardPrefix + "-", StringComparison.Ordinal))
+            {
+                var hAward = db.QueryOne("SELECT award_no,recipient_name,citation,designation,status,conferred_at FROM honorary_awards WHERE upper(award_no)=?", id);
+                if (hAward is null) return J(new { found = false });
+                return J(new
+                {
+                    found = true,
+                    type = "honorary",
+                    designation = H.Str(hAward["designation"]) ?? "Honorary Fellow (PCI)",
+                    recipient = hAward["recipient_name"],
+                    citation = hAward["citation"],
+                    award_no = hAward["award_no"],
+                    state = H.Str(hAward["status"]) == "revoked" ? "revoked" : "active",
+                    valid = H.Str(hAward["status"]) != "revoked",
+                    conferred_at = hAward["conferred_at"],
+                    note = "Honorary recognition conferred by the board — not an examined PCP-AI credential.",
+                });
+            }
             var c = db.QueryOne(@"SELECT ic.credential_id,ic.holder_name,ic.credential,ic.status,ic.issued_at,ic.expires_at,
                        ct.code certification_code, ct.name certification_name
                 FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)

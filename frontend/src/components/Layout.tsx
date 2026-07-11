@@ -59,8 +59,8 @@ export default function Layout() {
           <div className={'member-chip' + (memberActive ? ' on' : '')}>
             <span className="mc-dot" />
             <span>
-              <strong>{memberActive ? 'Member' : 'Guest account'}</strong>
-              <em>{memberActive ? 'Membership active' : 'Membership not active'}</em>
+              <strong>{memberActive ? (me?.founding_member ? 'Founding member' : 'Member') : 'Guest account'}</strong>
+              <em>{memberActive ? (me?.founding_member ? 'Fees waived — founding cohort' : 'Membership active') : 'Membership not active'}</em>
             </span>
           </div>
         </div>

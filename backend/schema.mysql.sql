@@ -59,11 +59,11 @@ CREATE TABLE IF NOT EXISTS discount_codes (
   batch_id TEXT,                             -- set when generated in bulk
   per_user_limit BIGINT,                    -- max redemptions per email (NULL = unlimited)
   notes TEXT,
-  -- founding-stage access (100% fee waiver layered over the paid flow; start/end_date is the window)
-  founding_route TEXT,                       -- NULL | founding_member | founding_candidate
-  grants_membership BIGINT DEFAULT 0,
-  grants_exam BIGINT DEFAULT 0,
-  grants_study_access BIGINT DEFAULT 0,
+  -- founding-stage access: ONE founding route (grants membership + study + exam together)
+  founding_route TEXT,                       -- NULL | founding
+  grants_membership BIGINT DEFAULT 1,
+  grants_exam BIGINT DEFAULT 1,
+  grants_study_access BIGINT DEFAULT 1,
   requires_application BIGINT DEFAULT 0,
   auto_approve BIGINT DEFAULT 1,
   membership_months BIGINT DEFAULT 12,
@@ -949,3 +949,18 @@ CREATE TABLE IF NOT EXISTS founding_applications (
 );
 CREATE INDEX IF NOT EXISTS ix_founding_app_user ON founding_applications(user_id);
 CREATE INDEX IF NOT EXISTS ix_founding_app_code ON founding_applications(code_id);
+
+-- ===== honorary awards: board-conferred recognition, separate from exam credentials =====
+CREATE TABLE IF NOT EXISTS honorary_awards (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  award_no VARCHAR(191) UNIQUE NOT NULL,
+  recipient_name TEXT NOT NULL,
+  user_id BIGINT,
+  citation TEXT,
+  designation TEXT DEFAULT 'Honorary Fellow (PCI)',
+  status TEXT DEFAULT 'active',
+  conferred_by BIGINT NOT NULL,
+  conferred_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
+  revoked_by BIGINT, revoked_at TEXT, revoke_reason TEXT
+);
+CREATE INDEX IF NOT EXISTS ix_honorary_user ON honorary_awards(user_id);
