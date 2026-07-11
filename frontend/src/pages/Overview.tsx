@@ -64,6 +64,7 @@ function buildChecklist(me: Me): ChecklistItem[] {
     { label: 'Tell us about yourself', done: Boolean(p.current_role || p.country), to: '/onboarding' },
     { label: 'Add your work experience', done: me.experiences.length > 0, to: '/profile' },
     { label: 'Add a qualification', done: me.qualifications.length > 0, to: '/profile' },
+    { label: 'Upload a government-issued ID', done: !!me.identity_document && me.identity_document.status !== 'rejected', to: '/certifications' },
     { label: 'Activate your membership', done: me.lifecycle.membership_status === 'active', to: '/billing' },
     { label: 'Book your exam', done: ['booked', 'in_progress', 'submitted'].includes(me.lifecycle.exam_status), to: '/certifications' },
   ]

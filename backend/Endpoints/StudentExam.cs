@@ -90,6 +90,7 @@ public static class StudentExam
                         return a;
                     }).ToList(),
                 credentials = db.Query("SELECT credential_id,credential,status,issued_at,expires_at,holder_name FROM issued_credentials WHERE user_id=? ORDER BY id DESC", u.Id),
+                identity_document = db.QueryOne("SELECT id,doc_kind,filename,mime,size_bytes,status,review_note,created_at FROM identity_documents WHERE user_id=? ORDER BY id DESC", u.Id),
                 experiences = db.Query("SELECT * FROM work_experiences WHERE user_id=? ORDER BY is_current DESC, COALESCE(NULLIF(end_date,''),'9999-12') DESC, id DESC", u.Id),
                 qualifications = db.Query("SELECT * FROM qualifications WHERE user_id=? ORDER BY id DESC", u.Id),
                 certifications_held = db.Query("SELECT * FROM held_certifications WHERE user_id=? ORDER BY id DESC", u.Id),
@@ -163,6 +164,47 @@ public static class StudentExam
                 foreach (var c in Lifecycle.RequiredConsents) Accept(c.type);
             log(u.Id, "consents_accepted", string.Join(",", accepted));
             return J(new { ok = true, accepted, outstanding = Lifecycle.OutstandingConsents(db, u.Id) });
+        });
+
+        // ── Government-issued photo ID (required before exam booking; see Lifecycle.BookingBlockers) ──
+        app.MapGet("/api/me/identity-document", (HttpContext ctx) =>
+        {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            return J(new
+            {
+                required = Settings.Bool(db, "sp_require_identity_document", true),
+                latest = db.QueryOne("SELECT id,doc_kind,filename,mime,size_bytes,status,review_note,created_at FROM identity_documents WHERE user_id=? ORDER BY id DESC", u.Id)
+            });
+        });
+        app.MapPost("/api/me/identity-document", async (HttpContext ctx) =>
+        {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var b = await H.Body(ctx.Request);
+            var kind = H.GetS(b, "doc_kind", "kind") ?? "passport";
+            if (kind is not ("passport" or "national_id" or "driving_licence" or "other"))
+                return Results.Json(new { error = "bad_doc_kind" }, statusCode: 400);
+            // Storage-abuse cap: identity documents accumulate (history is kept for audit), so bound them.
+            if (db.Scalar<long>("SELECT COUNT(*) FROM identity_documents WHERE user_id=?", u.Id) >= 10)
+                return Results.Json(new { error = "too_many_uploads", message = "Upload limit reached — please contact support to update your ID." }, statusCode: 400);
+            var (bytes, mime, err) = Storage.DecodeDataUri(H.GetS(b, "data_uri", "dataUri"));
+            if (err is not null) return Results.Json(new { error = err }, statusCode: 400);
+            var name = (H.GetS(b, "filename", "name") ?? "identity").Trim();
+            if (name.Length > 120) name = name[..120];
+            name = string.Concat(name.Where(c => !"\\/:*?\"<>|".Contains(c)));
+            var obj = Storage.Put(bytes!, mime, "idd");
+            var id = db.ExecuteReturningId("INSERT INTO identity_documents(user_id,doc_kind,filename,mime,size_bytes,storage_ref,sha256,status) VALUES(?,?,?,?,?,?,?, 'submitted')",
+                u.Id, kind, name, obj.Mime, obj.SizeBytes, obj.Reference, obj.Sha256);
+            log(u.Id, "identity_document_uploaded", $"{kind} {obj.SizeBytes}b");
+            return J(new { ok = true, id, status = "submitted" });
+        });
+        // Stream the caller's OWN latest ID document back (so they can see what is on file).
+        app.MapGet("/api/me/identity-document/file", (HttpContext ctx) =>
+        {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var d = db.QueryOne("SELECT storage_ref,mime FROM identity_documents WHERE user_id=? ORDER BY id DESC", u.Id);
+            var got = d is null ? null : Storage.Get(H.Str(d["storage_ref"]));
+            if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            return Results.File(got.Value.bytes!, got.Value.mime);
         });
 
         // ── Downloadable score report (Section B rule 4) ──

@@ -56,6 +56,16 @@ public static class Lifecycle
         if (profile is null || string.IsNullOrWhiteSpace(H.Str(profile.GetValueOrDefault("country"))))
             blockers.Add("profile_incomplete");
 
+        // Government-issued photo ID on file. The LATEST document governs: none, or a rejected one,
+        // blocks booking until (re-)upload. A freshly submitted document satisfies the gate — admin
+        // verification is an audit action, not an operational bottleneck. Toggleable for deployments
+        // that verify identity exclusively at exam-day check-in.
+        if (Settings.Bool(db, "sp_require_identity_document", true))
+        {
+            var idDoc = db.QueryOne("SELECT status FROM identity_documents WHERE user_id=? ORDER BY id DESC", userId);
+            if (idDoc is null || H.Str(idDoc["status"]) == "rejected") blockers.Add("identity_document_missing");
+        }
+
         // Required consents
         if (OutstandingConsents(db, userId).Count > 0) blockers.Add("consents_pending");
 

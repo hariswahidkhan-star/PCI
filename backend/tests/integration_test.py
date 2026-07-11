@@ -193,8 +193,16 @@ def make_paid_user(email, product="bundle", amount=9900, pi=None, sid=None, real
 def accept_all_consents(token):
     req("POST", "/api/me/consents", token=token, body={"accept_all": True})
 
+# 1×1 PNG — a valid image payload for the government-ID upload gate.
+TINY_PNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+
+def upload_id(token, kind="passport"):
+    return jget("POST", "/api/me/identity-document", token=token,
+                body={"doc_kind": kind, "filename": "id.png", "data_uri": TINY_PNG})
+
 def complete_profile(token):
     req("PATCH", "/api/me/profile", token=token, body={"country": "Pakistan", "city": "Karachi"})
+    upload_id(token)  # a government ID on file is part of standard booking eligibility
 
 def widen_window(admin_tok):
     # open the launch window immediately (booking still requires slot>=now+2h) and set a known duration
@@ -834,6 +842,75 @@ def run(proc):
     chk("9h6 checkout prices the selected certification", pj["exam"]["final"] == 490 and pj["cert"]["code"] == "PCP-9H", pj.get("exam"))
     chk("9h7 viewer BLOCKED from pricing rules (403)",
         jget("PATCH", f"/api/admin/pricing_rules/{exam_rule['id']}", token=vl.get("token"), body={"standard_price": 1})[0] == 403)
+
+    # ---------- 9i. Government-ID gate + admin exam-fee waiver ----------
+    print("\n=== 9i. Government-ID gate + admin fee waiver ===")
+    # A free-signup style user with NO payment (direct insert — same pattern as make_paid_user).
+    con = dbconn()
+    con.execute("INSERT INTO users(email,first_name,last_name,role,status) VALUES(?,?,?,?,?)",
+                ("waiver@ex.co", "Wai", "Ver", "student", "active"))
+    wuid = con.execute("SELECT id FROM users WHERE email=?", ("waiver@ex.co",)).fetchone()[0]
+    con.execute("INSERT INTO student_profiles(user_id) VALUES(?)", (wuid,))
+    wtok = "sess_" + sha256hex("waiver@ex.co")[:24]
+    con.execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'session', datetime('now','+1 day'))",
+                (wuid, sha256hex(wtok)))
+    con.commit(); con.close()
+
+    c, me9 = jget("GET", "/api/me", token=wtok)
+    blk9 = me9["lifecycle"]["blocking_items"]
+    chk("9i1 no-ID user blocked (identity_document_missing + exam_fee_unpaid)",
+        c == 200 and "identity_document_missing" in blk9 and "exam_fee_unpaid" in blk9, blk9)
+    c, up9 = upload_id(wtok, kind="national_id")
+    chk("9i2 ID upload accepted as submitted", c == 200 and up9.get("status") == "submitted", up9)
+    c, bad9 = jget("POST", "/api/me/identity-document", token=wtok,
+                   body={"doc_kind": "passport", "data_uri": "data:text/html;base64,PGI+aGk8L2I+"})
+    chk("9i3 disallowed file type rejected", c == 400 and bad9.get("error") == "file_type_not_allowed", bad9)
+    c, me9 = jget("GET", "/api/me", token=wtok)
+    chk("9i4 identity blocker cleared; /api/me exposes the document",
+        "identity_document_missing" not in me9["lifecycle"]["blocking_items"]
+        and me9["identity_document"]["status"] == "submitted", me9.get("identity_document"))
+
+    chk("9i5 waiver requires admin auth (401)",
+        req("POST", f"/api/admin/students/{wuid}/exam-waiver", body={})[0] == 401)
+    c, wv = jget("POST", f"/api/admin/students/{wuid}/exam-waiver", token=admin, body={"note": "scholarship"})
+    chk("9i6 admin waiver grants entitlement (WAIVE ref)", c == 200 and str(wv.get("reference", "")).startswith("WAIVE-"), wv)
+    c, me9 = jget("GET", "/api/me", token=wtok)
+    chk("9i7 student now exam_fee_paid with a $0 WAIVE payment",
+        me9["lifecycle"]["candidate_status"] == "exam_fee_paid" and len(me9["exams"]) == 1
+        and any(p["final_amount"] == 0 and str(p["reference"]).startswith("WAIVE-") for p in me9["payments"]),
+        me9["lifecycle"])
+    c, dup9 = jget("POST", f"/api/admin/students/{wuid}/exam-waiver", token=admin, body={})
+    chk("9i8 duplicate waiver refused (409 already_entitled)", c == 409 and dup9.get("error") == "already_entitled", dup9)
+
+    # the waived entitlement books end-to-end once the remaining eligibility items are done
+    accept_all_consents(wtok)
+    req("PATCH", "/api/me/profile", token=wtok, body={"country": "Pakistan", "city": "Karachi"})
+    slot9 = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() + 3*3600))
+    c, bk9 = jget("POST", "/api/me/exam/book", token=wtok, body={"scheduled_at": slot9, "timezone": "UTC"})
+    chk("9i9 waived entitlement books an exam", c == 200 and bk9.get("ok") is True, bk9)
+
+    # admin review: rejection re-blocks booking eligibility and notifies the student
+    doc9 = me9["identity_document"]["id"]
+    c, rv9 = jget("POST", f"/api/admin/students/{wuid}/identity-document/{doc9}/review",
+                  token=admin, body={"status": "rejected", "note": "photo unreadable"})
+    chk("9i10 admin can reject the document", c == 200 and rv9.get("status") == "rejected", rv9)
+    c, me9 = jget("GET", "/api/me", token=wtok)
+    chk("9i11 rejection re-blocks + student notified (waiver + rejection notices)",
+        "identity_document_missing" in me9["lifecycle"]["blocking_items"]
+        and me9["identity_document"]["status"] == "rejected" and me9["unread"] >= 2,
+        (me9.get("identity_document"), me9.get("unread")))
+    def binget(path, token):
+        # req() decodes utf-8; ID files are binary (PNG), so fetch raw bytes here
+        r = urllib.request.Request(BASE + path, headers={"Authorization": "Bearer " + token})
+        try:
+            with urllib.request.urlopen(r) as resp:
+                return resp.status, resp.read()
+        except urllib.error.HTTPError as e:
+            return e.code, b""
+    c, png1 = binget("/api/me/identity-document/file", wtok)
+    chk("9i12 student can retrieve own ID file (PNG magic)", c == 200 and png1[:4] == b"\x89PNG", c)
+    c, png2 = binget(f"/api/admin/students/{wuid}/identity-document/{doc9}/file", admin)
+    chk("9i13 admin can retrieve the ID file (PNG magic)", c == 200 and png2[:4] == b"\x89PNG", c)
 
     # ---------- 10. Rate limits (LAST: exhausts the /api/login window for this IP) ----------
     print("\n=== 10. Rate limits ===")
