@@ -935,7 +935,7 @@ CREATE TABLE IF NOT EXISTS founding_applications (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL,
   code_id INTEGER NOT NULL,
-  route TEXT,                                -- founding_member | founding_candidate
+  route TEXT,                                -- founding (legacy tier values migrated forward)
   declared_experience_years INTEGER,
   declared_role TEXT,
   declared_qualification TEXT,

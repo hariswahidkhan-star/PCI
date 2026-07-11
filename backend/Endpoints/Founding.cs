@@ -5,17 +5,22 @@ using PCI.Backend.Data;
 namespace PCI.Backend.Endpoints;
 
 /// <summary>
-/// Founding-Stage access: time-boxed codes that waive fees during the founding period, layered on
-/// the NORMAL paid flow — never a parallel path. Route 1 (founding_member) grants free membership
-/// (+ study access); Route 2 (founding_candidate) requires an application with evidence and, on
-/// approval, grants free membership + a free exam entitlement. Every grant settles through the same
-/// rows a real payment creates (payments + memberships + exam_entitlements), so BookingBlockers,
-/// /api/me, invoices and the one-attempt rule apply unchanged. There is NO honorary route: a
-/// credential is only ever issued by the existing submit path after a passed exam.
+/// Founding-Stage access — Route B of the three-route model (Standard / Founding / Honorary).
+/// ONE founding route: during the window, a valid code grants free membership + study access + a
+/// free exam entitlement together, layered on the NORMAL paid flow — never a parallel path. The
+/// board may optionally gate a code behind an application (evidence + criteria, auto-approved by
+/// default). Every grant settles through the same rows a real payment creates (payments +
+/// memberships + exam_entitlements), so BookingBlockers, /api/me, invoices and the one-attempt rule
+/// apply unchanged, and the credential is still EARNED by passing the real exam — no code path here
+/// ever writes issued_credentials. (The separate honorary recognition lives in Honorary.cs and is
+/// never a PCP-AI credential.)
 /// </summary>
 public static class Founding
 {
-    /// <summary>Windows/caps state of a founding code row. Never leaks internals to callers.</summary>
+    /// <summary>Windows/caps state of a founding code row. Never leaks internals to callers.
+    /// A date-only end_date is INCLUSIVE of that whole day (same semantics as ordinary discount
+    /// codes in Public.ValidateCode) — otherwise a window ending "2026-12-31" would close at
+    /// midnight UTC and lose its final day.</summary>
     static (bool ok, string reason) Usable(Dictionary<string, object?> c)
     {
         if (H.L(c["active"]) != 1) return (false, "inactive");
@@ -23,7 +28,11 @@ public static class Founding
         var from = H.Str(c["start_date"]);
         var until = H.Str(c["end_date"]);
         if (!string.IsNullOrEmpty(from) && H.After(from, now)) return (false, "not_open");
-        if (!string.IsNullOrEmpty(until) && H.After(now, until)) return (false, "window_closed");
+        if (!string.IsNullOrEmpty(until))
+        {
+            var u = until!.Length == 10 ? until + " 23:59:59" : until;
+            if (H.After(now, u)) return (false, "window_closed");
+        }
         var max = c["max_uses"];
         if (max is not null && H.L(c["used_count"]) >= H.L(max)) return (false, "fully_redeemed");
         return (true, "ok");
@@ -39,59 +48,78 @@ public static class Founding
         long userId, Dictionary<string, object?> code, string grantedVia)
     {
         var codeId = H.L(code["id"]);
-        // ── exactly-once gate (runs before any side effect) ──
-        var (_, ledger) = db.ExecuteWithChanges("INSERT OR IGNORE INTO webhook_events(provider,event_id,status) VALUES('founding',?, 'processed')",
-            $"founding:{codeId}:u{userId}");
-        if (ledger == 0) return (false, "already_redeemed", null);
-
-        // ── total-uses cap taken atomically; on failure undo the ledger row and stop ──
-        var used = db.Execute("UPDATE discount_codes SET used_count=used_count+1 WHERE id=? AND (max_uses IS NULL OR used_count<max_uses)", codeId);
-        if (used == 0)
+        (bool granted, string reason, string? reference) result = (false, "failed", null);
+        // The WHOLE grant is one transaction: the idempotency ledger row, the cap take and the
+        // settlement rows commit together or not at all. Without this, a failure between the ledger
+        // insert and the settlement would permanently lock the user out ("already_redeemed" with
+        // nothing granted) and burn a cap slot.
+        db.Transaction(() =>
         {
-            db.Execute("DELETE FROM webhook_events WHERE provider='founding' AND event_id=?", $"founding:{codeId}:u{userId}");
-            return (false, "fully_redeemed", null);
-        }
+            // ── exactly-once gate (runs before any side effect) ──
+            var (_, ledger) = db.ExecuteWithChanges("INSERT OR IGNORE INTO webhook_events(provider,event_id,status) VALUES('founding',?, 'processed')",
+                $"founding:{codeId}:u{userId}");
+            if (ledger == 0) { result = (false, "already_redeemed", null); return; }
 
-        bool grantsMembership = H.L(code.GetValueOrDefault("grants_membership")) == 1;
-        bool grantsExam = H.L(code.GetValueOrDefault("grants_exam")) == 1;
-        var product = grantsExam && grantsMembership ? "bundle" : grantsExam ? "exam" : "membership";
-        var reference = "FOUND-" + Security.RandomHex(5).ToUpperInvariant();
-
-        var payId = db.ExecuteReturningId(@"INSERT INTO payments(user_id,product_type,standard_amount,discount_code,final_amount,currency,payment_provider,payment_status,payment_date,reference)
-            VALUES(?,?,0,?,0,'USD','founding_waiver','paid',datetime('now'),?)", userId, product, H.Str(code["code"]), reference);
-        db.Execute(@"INSERT OR IGNORE INTO code_redemptions(code_id,code,user_id,email,payment_id,product_type,amount_before,discount_amount)
-            VALUES(?,?,?,(SELECT email FROM users WHERE id=?),?,?,0,0)", codeId, H.Str(code["code"]), userId, userId, payId, product);
-
-        if (grantsMembership)
-        {
-            // expiry computed in C# (provider-agnostic), term set by the board per code
-            var months = (int)Math.Max(1, H.L(code.GetValueOrDefault("membership_months") is null or "" ? 12L : code["membership_months"]));
-            var expiry = DateTime.UtcNow.AddMonths(months).ToString("yyyy-MM-dd HH:mm:ss");
-            var existing = db.QueryOne("SELECT id,expiry_date,status FROM memberships WHERE user_id=? ORDER BY id DESC", userId);
-            if (existing is null)
-                db.Execute("INSERT INTO memberships(user_id,membership_type,status,start_date,expiry_date,renewal_fee,renewal_cycle,amount_paid,currency) VALUES(?, 'Founding Membership','active',datetime('now'),?,99,'3 years',0,'USD')", userId, expiry);
-            else
+            // ── total-uses cap taken atomically; on failure undo the ledger row and stop ──
+            var used = db.Execute("UPDATE discount_codes SET used_count=used_count+1 WHERE id=? AND (max_uses IS NULL OR used_count<max_uses)", codeId);
+            if (used == 0)
             {
-                // never shorten an existing membership; reactivate and extend to at least the founding term
-                var cur = H.Str(existing["expiry_date"]);
-                var newExp = !string.IsNullOrEmpty(cur) && H.After(cur, expiry) ? cur : expiry;
-                db.Execute("UPDATE memberships SET status='active', membership_type=COALESCE(NULLIF(membership_type,''),'Founding Membership'), expiry_date=? WHERE id=?", newExp, existing["id"]);
+                db.Execute("DELETE FROM webhook_events WHERE provider='founding' AND event_id=?", $"founding:{codeId}:u{userId}");
+                result = (false, "fully_redeemed", null);
+                return;
             }
-        }
-        if (grantsExam)
-        {
-            db.Execute("UPDATE payments SET exam_schedule_deadline=datetime('now','+1 year') WHERE id=?", payId);
-            db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?,?,?, 'available', datetime('now','+1 year'))",
-                userId, payId, product, Certs.DefaultId);
-        }
 
-        var what = grantsExam && grantsMembership ? "membership and exam access"
-            : grantsExam ? "exam access" : "membership";
-        db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Founding', 'Founding access granted', ?, 'View', ?)",
-            userId, $"Your founding code {H.Str(code["code"])} has been applied — {what} granted at USD 0. Welcome to the founding cohort.",
-            grantsExam ? "/certifications" : "/billing");
-        log(userId, "founding_redeemed", $"code {H.Str(code["code"])} ({grantedVia}) ref {reference}");
-        return (true, "granted", reference);
+            bool grantsMembership = H.L(code.GetValueOrDefault("grants_membership")) == 1;
+            bool grantsExam = H.L(code.GetValueOrDefault("grants_exam")) == 1;
+            var product = grantsExam && grantsMembership ? "bundle" : grantsExam ? "exam" : "membership";
+            var reference = "FOUND-" + Security.RandomHex(5).ToUpperInvariant();
+
+            var payId = db.ExecuteReturningId(@"INSERT INTO payments(user_id,product_type,standard_amount,discount_code,final_amount,currency,payment_provider,payment_status,payment_date,reference)
+                VALUES(?,?,0,?,0,'USD','founding_waiver','paid',datetime('now'),?)", userId, product, H.Str(code["code"]), reference);
+            db.Execute(@"INSERT OR IGNORE INTO code_redemptions(code_id,code,user_id,email,payment_id,product_type,amount_before,discount_amount)
+                VALUES(?,?,?,(SELECT email FROM users WHERE id=?),?,?,0,0)", codeId, H.Str(code["code"]), userId, userId, payId, product);
+
+            if (grantsMembership)
+            {
+                // expiry computed in C# (provider-agnostic), term set by the board per code
+                var months = (int)Math.Max(1, H.L(code.GetValueOrDefault("membership_months") is null or "" ? 12L : code["membership_months"]));
+                var expiry = DateTime.UtcNow.AddMonths(months).ToString("yyyy-MM-dd HH:mm:ss");
+                var existing = db.QueryOne("SELECT id,expiry_date,status FROM memberships WHERE user_id=? ORDER BY id DESC", userId);
+                if (existing is null)
+                    db.Execute("INSERT INTO memberships(user_id,membership_type,status,start_date,expiry_date,renewal_fee,renewal_cycle,amount_paid,currency) VALUES(?, 'Founding Membership','active',datetime('now'),?,99,'3 years',0,'USD')", userId, expiry);
+                else
+                {
+                    // Never shorten an existing membership; reactivate and extend to at least the
+                    // founding term. If the row was NOT live (expired/inactive), this founding grant
+                    // is what makes it active — stamp it 'Founding Membership' so a later revoke can
+                    // find and lapse it. A genuinely live paid membership keeps its own type (revoke
+                    // must never claw back membership the person actually paid for).
+                    var cur = H.Str(existing["expiry_date"]);
+                    var wasLive = H.Str(existing["status"]) == "active" && !H.IsPast(cur);
+                    var newExp = !string.IsNullOrEmpty(cur) && H.After(cur, expiry) ? cur : expiry;
+                    if (wasLive)
+                        db.Execute("UPDATE memberships SET status='active', expiry_date=? WHERE id=?", newExp, existing["id"]);
+                    else
+                        db.Execute("UPDATE memberships SET status='active', membership_type='Founding Membership', expiry_date=? WHERE id=?", newExp, existing["id"]);
+                }
+            }
+            if (grantsExam)
+            {
+                db.Execute("UPDATE payments SET exam_schedule_deadline=datetime('now','+1 year') WHERE id=?", payId);
+                db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?,?,?, 'available', datetime('now','+1 year'))",
+                    userId, payId, product, Certs.DefaultId);
+            }
+
+            var what = grantsExam && grantsMembership ? "membership and exam access"
+                : grantsExam ? "exam access" : "membership";
+            db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Founding', 'Founding access granted', ?, 'View', ?)",
+                userId, $"Your founding code {H.Str(code["code"])} has been applied — {what} granted at USD 0. Welcome to the founding cohort.",
+                grantsExam ? "/certifications" : "/billing");
+            result = (true, "granted", reference);
+        });
+        if (result.granted)
+            log(userId, "founding_redeemed", $"code {H.Str(code["code"])} ({grantedVia}) ref {result.reference}");
+        return result;
     }
 
     static bool CriteriaMet(Dictionary<string, object?> code, long expYears, string role, string qualification)
@@ -134,7 +162,7 @@ public static class Founding
         object PublicShape(Dictionary<string, object?> c, bool usable, string reason) => new
         {
             valid = usable,
-            in_window = reason is not ("not_open" or "window_closed"),
+            in_window = reason is not ("not_open" or "window_closed" or "inactive"),
             route = usable ? H.Str(c["founding_route"]) : null,
             grants = usable ? new { membership = H.L(c["grants_membership"]) == 1, exam = H.L(c["grants_exam"]) == 1, study = H.L(c["grants_study_access"]) == 1 } : null,
             requires_application = usable && H.L(c["requires_application"]) == 1,
@@ -175,7 +203,7 @@ public static class Founding
             // sold-out is reported distinctly (the caller typed a REAL code); window/inactive stay generic
             if (!ok) return Results.Json(new { error = why == "fully_redeemed" ? "fully_redeemed" : "invalid_code" }, statusCode: 400);
             if (H.L(c["requires_application"]) == 1) return J(new { needs_application = true, route = H.Str(c["founding_route"]) });
-            var (granted, reason, reference) = Grant(db, log, u.Id, c, "route1_redeem");
+            var (granted, reason, reference) = Grant(db, log, u.Id, c, "redeem");
             if (!granted) return Results.Json(new { error = reason }, statusCode: reason == "already_redeemed" ? 409 : 400);
             return J(new { ok = true, reference, granted = new { membership = H.L(c["grants_membership"]) == 1, exam = H.L(c["grants_exam"]) == 1, study = H.L(c["grants_study_access"]) == 1 } });
         });
@@ -214,7 +242,7 @@ public static class Founding
 
             if (status == "auto_approved")
             {
-                var (granted, reason, reference) = Grant(db, log, u.Id, c, "route2_auto");
+                var (granted, reason, reference) = Grant(db, log, u.Id, c, "application_auto");
                 if (!granted)
                 {
                     // e.g. the user already redeemed this code — keep the application consistent
@@ -229,7 +257,9 @@ public static class Founding
         app.MapGet("/api/me/founding-application", (HttpContext ctx) =>
         {
             var u = User(ctx.Request); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            var rows = db.Query(@"SELECT fa.id,fa.status,fa.route,fa.declared_experience_years,fa.declared_role,fa.declared_qualification,fa.admin_note,fa.created_at,fa.decided_at,dc.code
+            // evidence_name/size are included so the applicant can see what they submitted (§6.2);
+            // the file itself stays server-side (evidence_ref is never exposed to the client).
+            var rows = db.Query(@"SELECT fa.id,fa.status,fa.route,fa.declared_experience_years,fa.declared_role,fa.declared_qualification,fa.evidence_name,fa.evidence_size,fa.admin_note,fa.created_at,fa.decided_at,dc.code
                 FROM founding_applications fa JOIN discount_codes dc ON dc.id=fa.code_id WHERE fa.user_id=? ORDER BY fa.id DESC", u.Id);
             return J(new { rows, latest = rows.FirstOrDefault() });
         });

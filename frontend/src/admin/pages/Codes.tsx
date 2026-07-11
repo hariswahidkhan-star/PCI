@@ -146,6 +146,10 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
     auto_approve: (code.auto_approve ?? 1) === 1,
     membership_months: String(code.membership_months ?? 12),
     criteria_json: code.criteria_json ?? '',
+    grants_membership: (code.grants_membership ?? 1) === 1,
+    grants_exam: (code.grants_exam ?? 1) === 1,
+    grants_study_access: (code.grants_study_access ?? 1) === 1,
+    requires_application: (code.requires_application ?? 0) === 1,
   })
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -160,7 +164,17 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
         start_date: f.start_date || null,
         end_date: f.end_date || null,
         max_uses: f.max_uses === '' ? null : Number(f.max_uses),
-        ...(founding ? { auto_approve: f.auto_approve, membership_months: Number(f.membership_months) || 12, criteria_json: f.criteria_json.trim() || null } : {}),
+        ...(founding
+          ? {
+              auto_approve: f.auto_approve,
+              membership_months: Number(f.membership_months) || 12,
+              criteria_json: f.criteria_json.trim() || null,
+              grants_membership: f.grants_membership,
+              grants_exam: f.grants_exam,
+              grants_study_access: f.grants_study_access,
+              requires_application: f.requires_application,
+            }
+          : {}),
       })
       onSaved()
     } catch (e) {
@@ -186,7 +200,15 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
             <div className="field"><label>Membership term (months)</label><input type="number" value={f.membership_months} onChange={(e) => setF({ ...f, membership_months: e.target.value })} /></div>
           )}
         </div>
-        {founding && (code.requires_application ?? 0) === 1 && (
+        {founding && (
+          <div className="row" style={{ gap: '1.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+            <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_membership} onChange={(e) => setF({ ...f, grants_membership: e.target.checked })} /> Grants membership</label>
+            <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_exam} onChange={(e) => setF({ ...f, grants_exam: e.target.checked })} /> Grants exam entry</label>
+            <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_study_access} onChange={(e) => setF({ ...f, grants_study_access: e.target.checked })} /> Grants study access</label>
+            <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.requires_application} onChange={(e) => setF({ ...f, requires_application: e.target.checked })} /> Require an application</label>
+          </div>
+        )}
+        {founding && f.requires_application && (
           <>
             <div className="row" style={{ marginBottom: '1rem' }}>
               <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.auto_approve} onChange={(e) => setF({ ...f, auto_approve: e.target.checked })} /> Auto-approve applications that meet the criteria</label>

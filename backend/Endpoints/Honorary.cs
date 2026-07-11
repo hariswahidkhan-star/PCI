@@ -47,13 +47,17 @@ public static class Honorary
             if (userId is not null && db.QueryOne("SELECT id FROM users WHERE id=?", userId) is null)
                 return Results.Json(new { error = "user_not_found" }, statusCode: 404);
 
-            // Distinct number space from every certification prefix: PCI-HON-YYYY-NNNN.
+            // Distinct number space from every certification prefix: PCI-HON-YYYY-NNNN. After ten
+            // collisions in the 4-digit space (only plausible once thousands are conferred in a
+            // year), widen to 5 digits rather than failing the conferral.
             var yr = DateTime.UtcNow.Year;
             string? awardNo = null;
             var rnd = new Random();
             for (int i = 0; i < 20 && awardNo is null; i++)
             {
-                var candidate = $"{AwardPrefix}-{yr}-{1000 + rnd.Next(0, 8999)}";
+                var candidate = i < 10
+                    ? $"{AwardPrefix}-{yr}-{1000 + rnd.Next(0, 8999)}"
+                    : $"{AwardPrefix}-{yr}-{10000 + rnd.Next(0, 89999)}";
                 try
                 {
                     db.Execute("INSERT INTO honorary_awards(award_no,recipient_name,user_id,citation,conferred_by) VALUES(?,?,?,?,?)",

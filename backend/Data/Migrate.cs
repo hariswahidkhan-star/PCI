@@ -72,9 +72,9 @@ public static class Migrate
         AddCol("discount_codes", "notes", "notes TEXT");
         // Founding-stage access: fee-waiver codes layered on the paid flow (see Endpoints/Founding.cs)
         AddCol("discount_codes", "founding_route", "founding_route TEXT");
-        AddCol("discount_codes", "grants_membership", "grants_membership INTEGER DEFAULT 0");
-        AddCol("discount_codes", "grants_exam", "grants_exam INTEGER DEFAULT 0");
-        AddCol("discount_codes", "grants_study_access", "grants_study_access INTEGER DEFAULT 0");
+        AddCol("discount_codes", "grants_membership", "grants_membership INTEGER DEFAULT 1");
+        AddCol("discount_codes", "grants_exam", "grants_exam INTEGER DEFAULT 1");
+        AddCol("discount_codes", "grants_study_access", "grants_study_access INTEGER DEFAULT 1");
         AddCol("discount_codes", "requires_application", "requires_application INTEGER DEFAULT 0");
         AddCol("discount_codes", "auto_approve", "auto_approve INTEGER DEFAULT 1");
         AddCol("discount_codes", "membership_months", "membership_months INTEGER DEFAULT 12");
