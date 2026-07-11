@@ -10,6 +10,17 @@ namespace PCI.Backend.Endpoints;
 public static class AdminMgmt
 {
     static string Like(string? q) => "%" + System.Text.RegularExpressions.Regex.Replace(q ?? "", "[%_]", "") + "%";
+    // Interpret a JSON value as a boolean flag robustly: true/1/"true"/"1"/"yes" => true; everything
+    // else (false, 0, "false", "0", "", null) => false. A raw JsonValueKind.False check alone lets
+    // {"active":0} or {"active":"false"} slip through as "not false".
+    static bool JsonFlag(JsonElement v) => v.ValueKind switch
+    {
+        JsonValueKind.True => true,
+        JsonValueKind.False => false,
+        JsonValueKind.Number => v.TryGetInt64(out var n) && n != 0,
+        JsonValueKind.String => (v.GetString() ?? "").Trim().ToLowerInvariant() is "1" or "true" or "yes",
+        _ => false,
+    };
     static string CsvEsc(object? v)
     {
         var s = v?.ToString() ?? "";
@@ -130,7 +141,7 @@ public static class AdminMgmt
                 codeV, nameV, H.GetS(b, "description"), H.GetS(b, "credential_prefix"),
                 H.GetNum(b, "pass_mark_pct"), H.GetNum(b, "duration_minutes"),
                 H.GetNum(b, "expiry_years") ?? 3, H.GetNum(b, "exam_price"),
-                b.TryGetValue("active", out var av) && av.ValueKind == JsonValueKind.False ? 0 : 1,
+                b.TryGetValue("active", out var av) && !JsonFlag(av) ? 0 : 1,
                 H.GetNum(b, "sort_order") ?? 0);
             log(adm.Id, "certification_create", $"{codeV} (id {id})");
             CertCatalogue.Bump(); PriceTags.Bump();   // the new credential is live on the public site immediately
@@ -142,13 +153,13 @@ public static class AdminMgmt
             var b = H.Body(req).GetAwaiter().GetResult();
             var allowed = new[]{ "name","description","credential_prefix","pass_mark_pct","duration_minutes","expiry_years","exam_price","active","sort_order" };
             var set = allowed.Where(c => b.ContainsKey(c)).ToList();
-            if (id == 1 && set.Contains("active") && b["active"].ValueKind == JsonValueKind.False)
+            if (id == 1 && set.Contains("active") && !JsonFlag(b["active"]))
                 return Results.Json(new { error = "founding_cert_permanent", message = "The founding certification cannot be deactivated." }, statusCode: 400);
             if (set.Contains("credential_prefix") && (b["credential_prefix"].ValueKind == JsonValueKind.String
                 && (b["credential_prefix"].GetString() ?? "").Trim().ToUpperInvariant().StartsWith(Honorary.AwardPrefix, StringComparison.Ordinal)))
                 return Results.Json(new { error = "prefix_reserved", message = "PCI-HON is reserved for honorary awards and cannot be used for a certification." }, statusCode: 400);
             if (set.Count == 0) return J(new { ok = true });
-            var vals = set.Select(c => { var v = b[c]; return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
+            var vals = set.Select(c => { var v = b[c]; if (c == "active") return (object?)(JsonFlag(v) ? 1 : 0); return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
             db.Execute($"UPDATE certifications SET {string.Join(",", set.Select(c => c + "=?"))}, updated_at=datetime('now') WHERE id=?", vals);
             log(adm.Id, "certification_update", id.ToString());
             CertCatalogue.Bump(); PriceTags.Bump();

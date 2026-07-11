@@ -107,6 +107,12 @@ public static class Migrate
         // first-run content for those sections (only when a table is empty — never overwrites edits)
         SeedContent.Run(db);
 
+        // Content correction for live DBs: the donate page was seeded asserting PCI *is* a 501(c)(3)
+        // (implying tax-deductible gifts) when it is only *pursuing* recognition. INSERT OR IGNORE
+        // won't rewrite an already-seeded row, so correct it in place. Idempotent (LIKE guard).
+        db.Exec(@"UPDATE pages SET title='Donate — Support the Project Controls Institute (pursuing 501(c)(3))'
+                  WHERE slug='donate.html' AND title LIKE '%(501(c)(3))' AND title NOT LIKE '%pursuing%'");
+
         // ── Multi-certification upgrade for pre-existing databases ──
         // certifications is created by schema.sql; here we make sure every lifecycle table carries
         // certification_id and that legacy rows are attributed to the founding certification (id 1).
@@ -138,8 +144,14 @@ public static class Migrate
         // dashboard; payment remains the only path to anything that matters.
         try
         {
+            // In Production, never auto-create a login-able account with a public default password:
+            // that seeds a real, authenticatable student on the live site. Seed the demo student only
+            // outside Production, OR when the operator explicitly sets DEMO_STUDENT_PASSWORD (an opt-in
+            // that proves intent). Everywhere else, launch starts with zero student accounts.
+            var isProd = string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Production", StringComparison.OrdinalIgnoreCase);
+            var demoOptIn = Environment.GetEnvironmentVariable("DEMO_STUDENT_PASSWORD") is not null;
             var n = db.Scalar<long>("SELECT COUNT(*) FROM users");
-            if (n == 0)
+            if (n == 0 && (!isProd || demoOptIn))
             {
                 var email = (Environment.GetEnvironmentVariable("DEMO_STUDENT_EMAIL") ?? "student@pci.local").ToLowerInvariant();
                 var pw = Environment.GetEnvironmentVariable("DEMO_STUDENT_PASSWORD") ?? "changeme-student";

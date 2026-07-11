@@ -76,8 +76,8 @@ a{color:inherit;text-decoration:none;cursor:pointer;}img{display:block;max-width
 .quote blockquote{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.2vw,48px);line-height:1.1;letter-spacing:-.022em;margin:18px 0 0;max-width:20ch;}
 .quote blockquote em{font-style:normal;color:var(--red);}
 .quote .src{font-weight:600;font-size:15px;color:var(--slate);margin-top:28px;}
-.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:54px;}
-.feat-2{grid-template-columns:1fr 1fr;}
+/* legacy .feat/.feat-2 grid containers removed — the live container is .feats (below); .feat is now
+   an individual card, so forcing display:grid here stacked every card into 3 stray columns. */
 .fcard{position:relative;overflow:hidden;min-height:460px;display:flex;flex-direction:column;justify-content:flex-end;padding:32px;color:#fff;}
 .fcard .sc{position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(7,5,4,.93) 6%,rgba(7,5,4,.5) 46%,rgba(7,5,4,.12));}
 .fcard .cap{position:relative;z-index:2;}

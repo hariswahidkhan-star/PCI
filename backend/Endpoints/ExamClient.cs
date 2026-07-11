@@ -69,6 +69,10 @@ public static class ExamClient
 
             if (att is null)
             {
+                // Re-check identity/consent/account gates at launch (see Lifecycle.LaunchBlockers): an
+                // admin ID rejection or consent bump after booking must stop the desktop sitting too.
+                var launchBlockers = Lifecycle.LaunchBlockers(db, uid);
+                if (launchBlockers.Count > 0) return Results.Json(new { error = "not_eligible", blockers = launchBlockers }, statusCode: 400);
                 if (!Lifecycle.ReadinessSatisfied(db, uid)) return Results.Json(new { error = "readiness_required" }, statusCode: 400);
                 var dur = cfg.Duration + Lifecycle.ApprovedExtraMinutes(db, uid); // approved accommodations apply on desktop too
                 var itemIds = JsonSerializer.Serialize(items.Select(i => i.Id));

@@ -124,7 +124,10 @@ string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/forgot-passwo
 const int RL_LIMIT = 10; const long RL_WINDOW_MS = 60_000;
 app.Use(async (ctx, next) =>
 {
-    var path = ctx.Request.Path.Value ?? "";
+    // ASP.NET routing is trailing-slash-insensitive, so POST /api/login/ still reaches the handler.
+    // Normalize the trailing slash before matching or the throttle is trivially bypassable with a "/".
+    var path = (ctx.Request.Path.Value ?? "").TrimEnd('/');
+    if (path.Length == 0) path = "/";
     if (ctx.Request.Method == "POST" && _rlPaths.Any(p => path.Equals(p, StringComparison.OrdinalIgnoreCase)))
     {
         // Key on the trusted proxy-appended IP (ClientIp), not the forgeable first X-Forwarded-For hop,
@@ -399,6 +402,12 @@ app.MapPost("/api/admin/me/password", async (HttpRequest req) =>
     var np = S(b, "new_password") ?? "";
     if (np.Length < 8) return Results.Json(new { error = "weak_password" }, statusCode: 400);
     db.Execute("UPDATE admin_users SET password_hash=?, must_change_pw=0 WHERE id=?", BCrypt.Net.BCrypt.HashPassword(np), a.Id);
+    // Changing the password revokes every OTHER admin session for this account (a stolen session must
+    // not survive a password change), while preserving the caller's current session so the console
+    // stays usable. The current bearer is kept by its hash.
+    var authHeader = req.Headers.Authorization.ToString();
+    var curTok = authHeader.StartsWith("Bearer ") ? Security.Sha(authHeader.Substring(7)) : "";
+    db.Execute("DELETE FROM admin_sessions WHERE admin_id=? AND token<>?", a.Id, curTok);
     return Json(new { ok = true });
 });
 

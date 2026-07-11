@@ -320,6 +320,11 @@ public static class StudentExam
             var certSel = H.GetS(b, "certification_id", "certification", "cert");
             var bk = certSel is null ? ActiveBooking(u.Id) : ActiveBooking(u.Id, Certs.Resolve(db, certSel));
             if (bk is null) return Results.Json(new { error = "no_booking" }, statusCode: 400);
+            // Re-check the trust-critical gates at launch, not only at booking: an admin ID rejection,
+            // a bumped consent version, or an account hold after booking must stop the sitting — the
+            // credential's integrity depends on identity/consent still holding when the candidate sits.
+            var launchBlockers = Lifecycle.LaunchBlockers(db, u.Id);
+            if (launchBlockers.Count > 0) return Results.Json(new { error = "not_eligible", blockers = launchBlockers, message = "Your exam access is on hold. Resolve the outstanding requirement (identity document, consents, or account status) before launching." }, statusCode: 400);
             if (!Lifecycle.ReadinessSatisfied(db, u.Id)) return Results.Json(new { error = "readiness_required", message = "Please complete the system readiness check before launching your exam." }, statusCode: 400);
             var certId = H.L(bk.GetValueOrDefault("certification_id") ?? 1L);
             var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();

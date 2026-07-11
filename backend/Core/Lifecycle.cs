@@ -79,6 +79,26 @@ public static class Lifecycle
         return blockers;
     }
 
+    /// <summary>Trust-critical gates re-checked at LAUNCH, not only at booking. Booking eligibility is
+    /// evaluated once when the sitting is scheduled, but an admin can REJECT the identity document, a
+    /// required consent version can bump, or the account can be put on hold AFTER booking — and the
+    /// credential's integrity depends on those still holding at the moment the candidate sits. Returns
+    /// the subset of blockers that can legitimately change post-booking (identity, consents, account
+    /// hold); an empty list means launch may proceed.</summary>
+    public static List<string> LaunchBlockers(Db db, long userId)
+    {
+        var blockers = new List<string>();
+        if (Settings.Bool(db, "sp_require_identity_document", true))
+        {
+            var idDoc = db.QueryOne("SELECT status FROM identity_documents WHERE user_id=? ORDER BY id DESC", userId);
+            if (idDoc is null || H.Str(idDoc["status"]) == "rejected") blockers.Add("identity_document_missing");
+        }
+        if (OutstandingConsents(db, userId).Count > 0) blockers.Add("consents_pending");
+        var status = H.Str(db.Scalar<string>("SELECT status FROM users WHERE id=?", userId));
+        if (status is "deactivated" or "suspended" or "hold") blockers.Add("account_hold");
+        return blockers;
+    }
+
     /// <summary>Readiness gate applied at LAUNCH (not booking): when sp_readiness_required is on, the
     /// candidate must have a passed readiness check on record. Returns true if launch may proceed.</summary>
     public static bool ReadinessSatisfied(Db db, long userId)
