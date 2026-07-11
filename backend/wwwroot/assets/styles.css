@@ -285,8 +285,18 @@ details.faq .faq-a a{color:var(--red);font-weight:600;}
 }
 /* keep only the primary CTA in the bar until the screen is genuinely wide */
 @media (max-width:1300px){ .hdr .btn-ghost{display:none!important;} }
-/* collapse to the clean overlay menu earlier so mid-size laptops aren't cramped */
-@media (max-width:1240px){
+/* Keep the horizontal menu on real laptops (incl. Windows display-scaling, which renders a
+   1366/1920 screen at ~1090–1200 effective CSS px). Only collapse to the overlay menu at ≤1024,
+   and tighten the nav gap/size through the 1025–1240 band so the links stay comfortable. */
+@media (min-width:1081px) and (max-width:1240px){
+  .nav{gap:13px;}
+  .nav a{font-size:13.5px;letter-spacing:-.01em;}
+  .nav a.nav-acct[href="login.html"]{display:none;}   /* redundant: the top bar already shows Log in */
+  .hdr-r{gap:8px;}
+  .hdr-r .btn{padding-left:13px!important;padding-right:13px!important;font-size:13.5px!important;}
+}
+/* Below 1080 the eight-item menu can no longer sit on one row without crowding — collapse it. */
+@media (max-width:1080px){
   .nav{display:none;}
   .burger{display:flex;}
   html.menu-open .nav{display:flex;}
