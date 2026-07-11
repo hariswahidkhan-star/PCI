@@ -35,14 +35,14 @@ var _csp = string.Join("; ", new[]
     "base-uri 'self'",
     "object-src 'none'",
     "frame-ancestors 'none'",
-    "frame-src 'self' blob:",        // admin evidence viewer opens PDFs in a blob: iframe (admin.html openBlob)
+    "frame-src 'self' blob: https://accounts.google.com/gsi/",   // blob: = admin evidence viewer; gsi = Google sign-in button iframe
     "form-action 'self'",
     "img-src 'self' data: blob: https://www.googletagmanager.com",
     "media-src 'self' blob:",
     "font-src 'self' data: https://fonts.gstatic.com",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://plausible.io https://cdnjs.cloudflare.com",
-    "connect-src 'self' https://plausible.io https://www.google-analytics.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style",
+    "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://plausible.io https://cdnjs.cloudflare.com https://accounts.google.com/gsi/client",
+    "connect-src 'self' https://plausible.io https://www.google-analytics.com https://accounts.google.com/gsi/",
 });
 var _cspHeader = string.Equals(Environment.GetEnvironmentVariable("CSP_REPORT_ONLY"), "true", StringComparison.OrdinalIgnoreCase)
     ? "Content-Security-Policy-Report-Only" : "Content-Security-Policy";
@@ -81,7 +81,7 @@ app.Use(async (ctx, next) =>
 // per client IP with a fixed-window in-memory counter. Applied by path prefix via middleware so it is
 // robust to route-handler shape (no per-endpoint chaining required).
 var _rlHits = new System.Collections.Concurrent.ConcurrentDictionary<string, (int count, long windowStart)>();
-string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize" };
+string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google" };
 const int RL_LIMIT = 10; const long RL_WINDOW_MS = 60_000;
 app.Use(async (ctx, next) =>
 {
@@ -498,6 +498,7 @@ PCI.Backend.Endpoints.ExamClient.Map(app, db, logFn);
 PCI.Backend.Endpoints.AdminProctoring.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.AdminStudents.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Public.Map(app, db, logFn);
+PCI.Backend.Endpoints.Account.Map(app, db, logFn);
 PCI.Backend.Endpoints.AdminMgmt.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Payments.Map(app, db, logFn, () => !string.IsNullOrEmpty(stripeKey));
 PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);

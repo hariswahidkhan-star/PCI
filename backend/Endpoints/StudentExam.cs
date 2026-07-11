@@ -90,6 +90,9 @@ public static class StudentExam
                         return a;
                     }).ToList(),
                 credentials = db.Query("SELECT credential_id,credential,status,issued_at,expires_at,holder_name FROM issued_credentials WHERE user_id=? ORDER BY id DESC", u.Id),
+                experiences = db.Query("SELECT * FROM work_experiences WHERE user_id=? ORDER BY is_current DESC, COALESCE(NULLIF(end_date,''),'9999-12') DESC, id DESC", u.Id),
+                qualifications = db.Query("SELECT * FROM qualifications WHERE user_id=? ORDER BY id DESC", u.Id),
+                certifications_held = db.Query("SELECT * FROM held_certifications WHERE user_id=? ORDER BY id DESC", u.Id),
                 tickets = db.Query("SELECT id,reference,subject,category,status,updated_at FROM tickets WHERE user_id=? ORDER BY updated_at DESC LIMIT 10", u.Id),
                 referral = db.QueryOne("SELECT code FROM discount_codes WHERE owner_user_id=? AND code_type='referral' AND active=1", u.Id),
                 cpd = new { total, target = H.D(db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='sp_cpd_target_hours'")) is var _ct && _ct > 0 ? _ct : 60.0 },
@@ -114,6 +117,7 @@ public static class StudentExam
                 var vals = set.Select(k => (object?)(H.GetS(b, k) ?? "")).Append(u.Id).ToArray();
                 db.Execute($"UPDATE student_profiles SET {string.Join(",", set.Select(k => k + "=?"))} WHERE user_id=?", vals);
             }
+            Account.RecomputeCompletion(db, u.Id);
             log(u.Id, "profile_update", string.Join(",", set));
             return J(new { ok = true });
         });

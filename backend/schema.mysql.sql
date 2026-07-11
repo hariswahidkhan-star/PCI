@@ -882,3 +882,30 @@ CREATE TABLE IF NOT EXISTS admin_sessions (
   token VARCHAR(500) UNIQUE NOT NULL, expires_at TEXT, created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_admin_sess ON admin_sessions(token);
+
+-- ===== profile wizard: per-user experience, qualifications, held certifications =====
+CREATE TABLE IF NOT EXISTS work_experiences (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  company TEXT NOT NULL, title TEXT NOT NULL,
+  start_date TEXT, end_date TEXT, is_current INTEGER DEFAULT 0,
+  country TEXT, industry TEXT, hours_per_week TEXT, summary TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_workexp_user ON work_experiences(user_id);
+CREATE TABLE IF NOT EXISTS qualifications (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  institution TEXT NOT NULL, degree TEXT NOT NULL,
+  field TEXT, year_completed TEXT, country TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_qual_user ON qualifications(user_id);
+CREATE TABLE IF NOT EXISTS held_certifications (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  name TEXT NOT NULL,
+  issuer TEXT, credential_ref TEXT, issued_year TEXT, expires_year TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_heldcert_user ON held_certifications(user_id);

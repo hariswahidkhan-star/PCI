@@ -13,6 +13,8 @@ interface AuthState {
   user: SessionUser | null
   ready: boolean // finished the initial token check
   login: (email: string, password: string) => Promise<void>
+  register: (data: { firstName: string; lastName: string; email: string; password: string; country?: string }) => Promise<void>
+  googleSignIn: (credential: string) => Promise<void>
   logout: () => void
 }
 
@@ -75,7 +77,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(res.user)
   }, [])
 
-  return <AuthContext.Provider value={{ user, ready, login, logout }}>{children}</AuthContext.Provider>
+  const register = useCallback(async (data: { firstName: string; lastName: string; email: string; password: string; country?: string }) => {
+    const res = await api.post<LoginResponse>('/api/register', data, { allowUnauthorized: true })
+    setToken(res.token)
+    setUser(res.user)
+  }, [])
+
+  const googleSignIn = useCallback(async (credential: string) => {
+    const res = await api.post<LoginResponse>('/api/auth/google', { credential }, { allowUnauthorized: true })
+    setToken(res.token)
+    setUser(res.user)
+  }, [])
+
+  return <AuthContext.Provider value={{ user, ready, login, register, googleSignIn, logout }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth(): AuthState {

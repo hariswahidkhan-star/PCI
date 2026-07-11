@@ -121,6 +121,9 @@ export interface Me {
   unread: number
   enrollment: Record<string, unknown> | null
   site_base_url: string
+  experiences: Experience[]
+  qualifications: Qualification[]
+  certifications_held: HeldCertification[]
 }
 
 export interface Message {
@@ -130,4 +133,40 @@ export interface Message {
   created_at?: string | null
   read_at?: string | null
   [k: string]: unknown
+}
+
+// ---- profile wizard collections ----
+export interface Experience {
+  id: number
+  company: string
+  title: string
+  start_date?: string | null
+  end_date?: string | null
+  is_current?: number
+  country?: string | null
+  industry?: string | null
+  hours_per_week?: string | null
+  summary?: string | null
+}
+
+export interface Qualification {
+  id: number
+  institution: string
+  degree: string
+  field?: string | null
+  year_completed?: string | null
+  country?: string | null
+}
+
+export interface HeldCertification {
+  id: number
+  name: string
+  issuer?: string | null
+  credential_ref?: string | null
+  issued_year?: string | null
+  expires_year?: string | null
+}
+
+export interface AuthConfig {
+  googleClientId: string | null
 }

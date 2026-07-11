@@ -11,13 +11,15 @@ const NAV = [
   { to: '/cpd', label: 'CPD' },
   { to: '/billing', label: 'Billing' },
   { to: '/messages', label: 'Messages', badgeKey: 'unread' as const },
-  { to: '/profile', label: 'Profile' },
+  { to: '/support', label: 'Support' },
+  { to: '/profile', label: 'Profile', badgeKey: 'profile' as const },
 ]
 
 export default function Layout() {
   const { user, logout } = useAuth()
   const { me } = useMe()
   const unread = me?.unread ?? 0
+  const completion = Number((me?.profile as Record<string, unknown> | null)?.profile_completion_percentage ?? 100)
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -33,6 +35,7 @@ export default function Layout() {
             <NavLink key={n.to} to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
               <span>{n.label}</span>
               {n.badgeKey === 'unread' && unread > 0 && <span className="pill">{unread}</span>}
+              {n.badgeKey === 'profile' && completion < 100 && <span className="pill dim">{completion}%</span>}
             </NavLink>
           ))}
         </nav>
