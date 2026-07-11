@@ -290,7 +290,11 @@ app.MapGet("/api/admin/system-check", (HttpRequest req) =>
         base_url_set = !string.IsNullOrEmpty(E("APP_BASE_URL") ?? E("SITE_BASE_URL")),
         cors_locked = !string.IsNullOrEmpty(E("ALLOWED_ORIGIN")) && E("ALLOWED_ORIGIN") != "*",
         legacy_admin_token_disabled = !string.Equals(E("ENABLE_LEGACY_ADMIN_TOKEN"), "true", StringComparison.OrdinalIgnoreCase),
-        persistent_db = !((E("DATABASE_FILE") ?? "./pci.db").StartsWith("/tmp")),
+        // Durable only when the DB lives on the mounted disk (/data, set by the boot autodetect) or an
+        // operator-configured absolute, non-temp path. The relative default "./pci.db" sits on the
+        // ephemeral container filesystem on Render and is wiped on redeploy — it must NOT report durable.
+        persistent_db = (E("DATABASE_FILE") ?? "./pci.db") is { } _dbf
+            && (_dbf.StartsWith("/data") || (System.IO.Path.IsPathRooted(_dbf) && !_dbf.StartsWith("/tmp") && !_dbf.Contains("Temp"))),
         owner_password_changed = db.Scalar<long>("SELECT COUNT(*) FROM admin_users WHERE email=? AND must_change_pw=0", (E("ADMIN_OWNER_EMAIL") ?? "owner@pci.local").ToLowerInvariant()) > 0,
         migrations_applied = db.Columns("exam_score_snapshots").Count > 0,   // provider-agnostic (sqlite_master is SQLite-only)
         storage_local = PCI.Backend.Core.Storage.UsingLocal,
@@ -345,7 +349,7 @@ app.MapPost("/api/login", async (HttpRequest req) =>
         var ua = req.Headers.UserAgent.ToString();
         var dev = System.Text.RegularExpressions.Regex.IsMatch(ua, "Mobile|iPhone|Android") ? "Mobile"
                 : System.Text.RegularExpressions.Regex.IsMatch(ua, "iPad|Tablet") ? "Tablet" : "Desktop";
-        var ip = (req.Headers["x-forwarded-for"].ToString() is { Length: > 0 } xf ? xf : req.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "").Split(',')[0];
+        var ip = H.LastHopIp(req.Headers["x-forwarded-for"].ToString(), req.HttpContext.Connection.RemoteIpAddress?.ToString());
         db.Execute("INSERT INTO login_events(user_id,ip,user_agent,device,outcome) VALUES(?,?,?,?,?)", u["id"], ip, ua.Length>300?ua[..300]:ua, dev, "success");
     } catch { }
     return Json(new { ok = true, token = session, user = new { id = u["id"], email = u["email"], firstName = u["first_name"], lastName = u["last_name"] } });

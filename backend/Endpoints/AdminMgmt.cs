@@ -69,7 +69,7 @@ public static class AdminMgmt
             string Q(string c) => "`" + c + "`";
             var colList = string.Join(",", cols.Select(Q));
             app.MapGet($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ => J(new { rows = db.Query($"SELECT * FROM `{name}` ORDER BY {order}") })));
-            app.MapPost($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ =>
+            app.MapPost($"/api/admin/{name}", (HttpRequest req) => gate(req, section, adm =>
             {
                 var b = H.Body(req).GetAwaiter().GetResult();
                 var vals = cols.Select(c => (object?)(b.TryGetValue(c, out var v) && v.ValueKind != JsonValueKind.Null
@@ -78,13 +78,13 @@ public static class AdminMgmt
                 try
                 {
                     var id = db.ExecuteReturningId($"INSERT INTO `{name}`({colList}) VALUES({string.Join(",", cols.Select(_ => "?"))})", vals);
-                    log(null, name + "_create", id.ToString());
+                    log(adm.Id, name + "_create", id.ToString());
                     Changed();
                     return J(new { id });
                 }
                 catch { return Results.Json(new { error = "constraint", message = "Could not save — a required field is blank or a unique value is already in use." }, statusCode: 409); }
             }));
-            app.MapPatch($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, _ =>
+            app.MapPatch($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, adm =>
             {
                 var b = H.Body(req).GetAwaiter().GetResult();
                 var set = cols.Where(c => b.ContainsKey(c)).ToList();
@@ -93,16 +93,16 @@ public static class AdminMgmt
                 try
                 {
                     db.Execute($"UPDATE `{name}` SET {string.Join(",", set.Select(c => Q(c) + "=?"))} WHERE id=?", vals);
-                    log(null, name + "_update", id.ToString());
+                    log(adm.Id, name + "_update", id.ToString());
                     Changed();
                     return J(new { ok = true });
                 }
                 catch { return Results.Json(new { error = "constraint", message = "Could not save — a unique value is already in use." }, statusCode: 409); }
             }));
-            app.MapDelete($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, _ =>
+            app.MapDelete($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, adm =>
             {
                 db.Execute($"DELETE FROM `{name}` WHERE id=?", id);
-                log(null, name + "_delete", id.ToString());
+                log(adm.Id, name + "_delete", id.ToString());
                 Changed();
                 return J(new { ok = true });
             }));
@@ -453,8 +453,11 @@ public static class AdminMgmt
                 ["subscribers"] = "SELECT email,status,created_at FROM newsletter_subscribers ORDER BY id DESC" };
             var entity = req.Query["entity"].ToString();
             if (!map.TryGetValue(entity, out var sql)) return Results.Json(new { error = "bad_entity" }, statusCode: 400);
-            var csv = ToCsv(db.Query(sql));
-            return Results.Text(csv, "text/csv");
+            var rows = db.Query(sql);
+            // Bulk export of PII / financial data is a sensitive action — record who exported what and
+            // how many rows, so a mass data pull is attributable in the audit trail.
+            log(adminFromReq(req)?.Id, "data_export", $"{entity} ({rows.Count} rows)");
+            return Results.Text(ToCsv(rows), "text/csv");
         });
 
         // ---------- pages / content / subscribers / forms ----------
@@ -527,7 +530,10 @@ public static class AdminMgmt
         {
             var g = Deny(req, "subscribers"); if (g is not null) return g;
             var b = await H.Body(req);
-            db.Execute("UPDATE newsletter_subscribers SET status=? WHERE id=?", H.GetS(b, "status"), id);
+            var subStatus = H.GetS(b, "status");
+            if (subStatus is not ("subscribed" or "unsubscribed" or "bounced" or "complained"))
+                return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            db.Execute("UPDATE newsletter_subscribers SET status=? WHERE id=?", subStatus, id);
             return J(new { ok = true });
         });
         app.MapGet("/api/admin/form_submissions", (HttpRequest req) =>
@@ -544,7 +550,10 @@ public static class AdminMgmt
         {
             var g = Deny(req, "submissions"); if (g is not null) return g;
             var b = await H.Body(req);
-            db.Execute("UPDATE form_submissions SET status=? WHERE id=?", H.GetS(b, "status"), id);
+            var fsStatus = H.GetS(b, "status");
+            if (fsStatus is not ("new" or "in_progress" or "resolved" or "archived" or "spam"))
+                return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            db.Execute("UPDATE form_submissions SET status=? WHERE id=?", fsStatus, id);
             return J(new { ok = true });
         });
     }

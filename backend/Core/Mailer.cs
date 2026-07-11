@@ -44,8 +44,15 @@ public static class Mailer
         if (!File.Exists(path)) path = Path.Combine("emails", name + ".html");
         if (File.Exists(path)) html = File.ReadAllText(path);
         else html = "<html><body>{{BODY}}</body></html>";
+        // HTML-encode substituted values so user-controlled text (e.g. a name) can't inject markup or
+        // script into the email body. App-constructed URLs and any explicitly-HTML value (_URL / _HTML
+        // suffix, or BODY) are substituted raw — encoding is only skipped for values the app controls.
         foreach (var (k, v) in vars)
-            html = html.Replace("{{" + k + "}}", v).Replace("{" + k + "}", v);
+        {
+            var raw = k == "BODY" || k.EndsWith("_URL", StringComparison.OrdinalIgnoreCase) || k.EndsWith("_HTML", StringComparison.OrdinalIgnoreCase);
+            var val = raw ? v : System.Net.WebUtility.HtmlEncode(v);
+            html = html.Replace("{{" + k + "}}", val).Replace("{" + k + "}", val);
+        }
         return html;
     }
 
