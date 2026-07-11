@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useMe } from '../data/MeContext'
 import { useQuery } from '../api/hooks'
 import { api, ApiError } from '../api/client'
+import { startCheckout, checkoutErrorMessage } from '../api/checkout'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty } from '../components/ui'
 import { fmtDate, fmtDateTime, fmtMoney, daysUntil } from '../format'
 import type { ExamEntry } from '../api/types'
@@ -134,10 +135,31 @@ function EntryCard({ entry, onChanged }: { entry: ExamEntry; onChanged: () => vo
 }
 
 /** Live catalogue of every certification the Institute offers — driven entirely by the backend, so a
- *  credential added in the admin console appears here automatically. Enrolment links carry the cert code
- *  so the checkout prices and books that specific credential. */
+ *  credential added in the admin console appears here automatically. Exam fees are paid right here in
+ *  the portal; Stripe's secure page handles the card and returns to Billing. */
 function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
+  const { me } = useMe()
   const { data, loading, error } = useQuery<{ rows: CatalogueCert[] }>('/api/certifications')
+  const [buying, setBuying] = useState<string | null>(null)
+  const [buyErr, setBuyErr] = useState<string | null>(null)
+
+  async function buy(certCode: string) {
+    if (!me) return
+    setBuyErr(null)
+    setBuying(certCode)
+    try {
+      await startCheckout({
+        product: 'exam',
+        email: me.user.email,
+        cert: certCode,
+        first: me.user.first_name ?? undefined,
+        last: me.user.last_name ?? undefined,
+      })
+    } catch (e) {
+      setBuyErr(checkoutErrorMessage(e))
+      setBuying(null)
+    }
+  }
 
   if (loading) return <Card><Spinner /></Card>
   if (error) return <Card><ErrorNote>{error}</ErrorNote></Card>
@@ -145,6 +167,8 @@ function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
   if (rows.length === 0) return <Card><Empty>No certifications are open for enrolment right now.</Empty></Card>
 
   return (
+    <>
+    {buyErr && <div className="notice err" role="alert">{buyErr}</div>}
     <div className="cert-catalogue-grid">
       {rows.map((c) => {
         const owned = ownedCodes.has((c.code || '').toUpperCase())
@@ -166,12 +190,15 @@ function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
             {owned ? (
               <span className="btn sm secondary cert-tile-cta" aria-disabled="true" style={{ opacity: 0.6, pointerEvents: 'none' }}>Already enrolled</span>
             ) : (
-              <a className="btn sm cert-tile-cta" href={`/checkout.html?product=exam&cert=${encodeURIComponent(c.code)}`}>Enrol in this exam</a>
+              <button className="btn sm cert-tile-cta" disabled={buying !== null} onClick={() => buy(c.code)}>
+                {buying === c.code ? 'Opening checkout…' : 'Pay exam fee'}
+              </button>
             )}
           </div>
         )
       })}
     </div>
+    </>
   )
 }
 

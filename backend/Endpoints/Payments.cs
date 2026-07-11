@@ -61,8 +61,14 @@ public static class Payments
                         ["country"] = H.GetS(d, "country") ?? "", ["discount_code"] = codeVal.Code is null ? "" : (H.Str(codeVal.Code["code"]) ?? ""),
                         ["final_amount"] = pr.final.ToString(), ["code_amount"] = pr.codeAmount.ToString(),
                         ["standard_amount"] = pr.standard.ToString(), ["default_discount"] = pr.defaultDiscount.ToString() },
-                    SuccessUrl = $"{Base}/payment-success.html?ref={{CHECKOUT_SESSION_ID}}&product={Uri.EscapeDataString(PRODUCT_LABEL[product])}",
-                    CancelUrl = $"{Base}/payment-failed.html"
+                    // Purchases started inside the student portal return to the portal's Billing page,
+                    // where the webhook-applied membership/entitlement shows up on reload.
+                    SuccessUrl = (H.GetS(d, "portal") is "1" or "true")
+                        ? $"{Base}/app/billing?paid={{CHECKOUT_SESSION_ID}}"
+                        : $"{Base}/payment-success.html?ref={{CHECKOUT_SESSION_ID}}&product={Uri.EscapeDataString(PRODUCT_LABEL[product])}",
+                    CancelUrl = (H.GetS(d, "portal") is "1" or "true")
+                        ? $"{Base}/app/billing?cancelled=1"
+                        : $"{Base}/payment-failed.html"
                 };
                 var session = await new SessionService().CreateAsync(options);
                 return J(new { url = session.Url });
