@@ -58,7 +58,16 @@ CREATE TABLE IF NOT EXISTS discount_codes (
   owner_user_id BIGINT,                     -- referral: the member who owns this code
   batch_id TEXT,                             -- set when generated in bulk
   per_user_limit BIGINT,                    -- max redemptions per email (NULL = unlimited)
-  notes TEXT
+  notes TEXT,
+  -- founding-stage access (100% fee waiver layered over the paid flow; start/end_date is the window)
+  founding_route TEXT,                       -- NULL | founding_member | founding_candidate
+  grants_membership BIGINT DEFAULT 0,
+  grants_exam BIGINT DEFAULT 0,
+  grants_study_access BIGINT DEFAULT 0,
+  requires_application BIGINT DEFAULT 0,
+  auto_approve BIGINT DEFAULT 1,
+  membership_months BIGINT DEFAULT 12,
+  criteria_json TEXT
 );
 CREATE TABLE IF NOT EXISTS payments (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -922,3 +931,21 @@ CREATE TABLE IF NOT EXISTS identity_documents (
 );
 CREATE INDEX IF NOT EXISTS ix_iddoc_user ON identity_documents(user_id);
 INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('sp_require_identity_document','1');
+
+-- ===== founding-stage applications (Route 2: self-declared eligibility + evidence) =====
+CREATE TABLE IF NOT EXISTS founding_applications (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  code_id BIGINT NOT NULL,
+  route TEXT,
+  declared_experience_years BIGINT,
+  declared_role TEXT,
+  declared_qualification TEXT,
+  evidence_ref TEXT,
+  evidence_name TEXT, evidence_mime TEXT, evidence_size BIGINT,
+  status TEXT NOT NULL DEFAULT 'pending_review',
+  decided_by BIGINT, decided_at TEXT, admin_note TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_founding_app_user ON founding_applications(user_id);
+CREATE INDEX IF NOT EXISTS ix_founding_app_code ON founding_applications(code_id);

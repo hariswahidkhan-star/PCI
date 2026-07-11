@@ -70,6 +70,17 @@ public static class Migrate
         AddCol("discount_codes", "batch_id", "batch_id TEXT");
         AddCol("discount_codes", "per_user_limit", "per_user_limit INTEGER");
         AddCol("discount_codes", "notes", "notes TEXT");
+        // Founding-stage access: fee-waiver codes layered on the paid flow (see Endpoints/Founding.cs)
+        AddCol("discount_codes", "founding_route", "founding_route TEXT");
+        AddCol("discount_codes", "grants_membership", "grants_membership INTEGER DEFAULT 0");
+        AddCol("discount_codes", "grants_exam", "grants_exam INTEGER DEFAULT 0");
+        AddCol("discount_codes", "grants_study_access", "grants_study_access INTEGER DEFAULT 0");
+        AddCol("discount_codes", "requires_application", "requires_application INTEGER DEFAULT 0");
+        AddCol("discount_codes", "auto_approve", "auto_approve INTEGER DEFAULT 1");
+        AddCol("discount_codes", "membership_months", "membership_months INTEGER DEFAULT 12");
+        AddCol("discount_codes", "criteria_json", "criteria_json TEXT");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS founding_applications(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,code_id INTEGER NOT NULL,route TEXT,declared_experience_years INTEGER,declared_role TEXT,declared_qualification TEXT,evidence_ref TEXT,evidence_name TEXT,evidence_mime TEXT,evidence_size INTEGER,status TEXT NOT NULL DEFAULT 'pending_review',decided_by INTEGER,decided_at TEXT,admin_note TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_founding_app_user ON founding_applications(user_id)");
         foreach (var (c, d) in new[]{
             ("violations","violations INTEGER DEFAULT 0"),("identity_result","identity_result TEXT"),
             ("identity_confidence","identity_confidence REAL"),("evidence_count","evidence_count INTEGER DEFAULT 0"),

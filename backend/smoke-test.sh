@@ -75,5 +75,14 @@ chk "SEC4 legacy admin token rejected (401)" "$([ "$(code GET /api/admin/overvie
 chk "SEC5 exam_mgr blocked from CMS faqs write (403)" "$([ "$(code POST /api/admin/faqs -H "Authorization: Bearer $T2" -H 'Content-Type: application/json' -d '{"question":"q","answer":"a"}')" = 403 ] && echo 1)"
 chk "SEC6 exam_mgr can access sample_questions (200)" "$([ "$(code GET /api/admin/sample_questions -H "Authorization: Bearer $T2")" = 200 ] && echo 1)"
 
+# ---- founding-stage smoke: create a code as admin → validate → redeem → confirm /api/me ----
+FC="SMOKEFND$$"
+FE="founding-smoke-$$@ex.co"
+FT=$(j POST /api/register -H 'Content-Type: application/json' -d "{\"email\":\"$FE\",\"password\":\"Passw0rd!fnd\",\"first_name\":\"Fnd\",\"last_name\":\"Smoke\"}" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("token",""))')
+chk "F1 create founding code (owner)" "$([ -n "$(j POST /api/admin/codes -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d "{\"code\":\"$FC\",\"founding_route\":\"founding_member\",\"grants_membership\":true,\"grants_study_access\":true,\"end_date\":\"2099-01-01\",\"active\":true}" | grep -o '"id"')" ] && echo 1)"
+chk "F2 validate founding code (public)" "$([ "$(j POST /api/founding/validate -H 'Content-Type: application/json' -d "{\"code\":\"$FC\"}" | grep -c '"valid":true')" = 1 ] && echo 1)"
+chk "F3 student redeems at USD 0" "$([ "$(j POST /api/founding/redeem -H "Authorization: Bearer $FT" -H 'Content-Type: application/json' -d "{\"code\":\"$FC\"}" | grep -cE '"ok":true|already_redeemed')" = 1 ] && echo 1)"
+chk "F4 /api/me reflects the founding membership" "$([ "$(j GET /api/me -H "Authorization: Bearer $FT" | grep -c '"membership_status":"active"')" = 1 ] && echo 1)"
+
 echo ""; echo "  ══ $pass/$((pass+fail)) PASSED ══"
 [ "$fail" = 0 ]

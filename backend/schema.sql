@@ -52,7 +52,16 @@ CREATE TABLE IF NOT EXISTS discount_codes (
   owner_user_id INTEGER,                     -- referral: the member who owns this code
   batch_id TEXT,                             -- set when generated in bulk
   per_user_limit INTEGER,                    -- max redemptions per email (NULL = unlimited)
-  notes TEXT
+  notes TEXT,
+  -- founding-stage access (100% fee waiver layered over the paid flow; start/end_date is the window)
+  founding_route TEXT,                       -- NULL | founding_member | founding_candidate
+  grants_membership INTEGER DEFAULT 0,
+  grants_exam INTEGER DEFAULT 0,
+  grants_study_access INTEGER DEFAULT 0,
+  requires_application INTEGER DEFAULT 0,    -- founding_candidate = 1
+  auto_approve INTEGER DEFAULT 1,
+  membership_months INTEGER DEFAULT 12,      -- term of the granted membership
+  criteria_json TEXT                         -- board-set thresholds, e.g. {"min_experience_years":3,...}
 );
 CREATE TABLE IF NOT EXISTS payments (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -918,3 +927,21 @@ CREATE TABLE IF NOT EXISTS identity_documents (
 );
 CREATE INDEX IF NOT EXISTS ix_iddoc_user ON identity_documents(user_id);
 INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('sp_require_identity_document','1');
+
+-- ===== founding-stage applications (Route 2: self-declared eligibility + evidence) =====
+CREATE TABLE IF NOT EXISTS founding_applications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  code_id INTEGER NOT NULL,
+  route TEXT,                                -- founding_member | founding_candidate
+  declared_experience_years INTEGER,
+  declared_role TEXT,
+  declared_qualification TEXT,
+  evidence_ref TEXT,                         -- Storage reference (local:/s3:), required
+  evidence_name TEXT, evidence_mime TEXT, evidence_size INTEGER,
+  status TEXT NOT NULL DEFAULT 'pending_review', -- auto_approved | pending_review | approved | rejected | revoked
+  decided_by INTEGER, decided_at TEXT, admin_note TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS ix_founding_app_user ON founding_applications(user_id);
+CREATE INDEX IF NOT EXISTS ix_founding_app_code ON founding_applications(code_id);

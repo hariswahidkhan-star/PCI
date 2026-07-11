@@ -19,6 +19,7 @@ const NAV: NavItem[] = [
   { to: '/exams', label: 'Exam registrations', perm: 'exams' },
   { to: '/proctoring', label: 'Proctoring & sessions', perm: 'proctoring' },
   { to: '/codes', label: 'Discount codes', perm: 'codes' },
+  { to: '/founding', label: 'Founding stage', anyPerm: ['members', 'codes'] },
   { to: '/pages', label: 'Pages & content', perm: 'pages' },
   { to: '/enquiries', label: 'Enquiries', perm: 'inquiries' },
   { to: '/submissions', label: 'Form submissions', perm: 'submissions' },
