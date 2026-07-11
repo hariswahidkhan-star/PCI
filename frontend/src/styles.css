@@ -153,6 +153,7 @@ input:focus, select:focus, textarea:focus {
 }
 .content { padding: 1.5rem; max-width: 1080px; }
 .avatar {
+  flex: 0 0 auto;
   width: 34px; height: 34px; border-radius: 50%; color: #fff;
   background: linear-gradient(135deg, #3b82f6, #1d4ed8 70%);
   box-shadow: 0 4px 12px -6px rgba(29, 78, 216, .6);
@@ -358,7 +359,6 @@ body::before {
 }
 
 /* sidebar: seal engraving + disciplined micro-label + footer chip */
-.sidebar { position: sticky; }
 .sidebar::before {
   content: ""; position: absolute; top: -130px; right: -130px; width: 340px; height: 340px;
   border-radius: 50%; pointer-events: none;
@@ -467,6 +467,36 @@ body::before {
 @media (max-width: 900px) {
   .auth-split { grid-template-columns: 1fr; }
   .auth-brandpane { display: none; }
+}
+
+
+/* ==================== mobile hardening ==================== */
+/* the page must NEVER scroll horizontally — wide content scrolls inside its own box */
+html, body { overflow-x: clip; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+.main, .content, .card, .topbar > .row { min-width: 0; }
+.content { overflow-wrap: break-word; }
+/* rows of [text ... button] wrap instead of forcing the page wider */
+.spread { flex-wrap: wrap; }
+/* identity block in the topbar can shrink + truncate instead of overflowing */
+.topbar .small { min-width: 0; }
+.topbar .small > div { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
+
+@media (max-width: 860px) {
+  table.data { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+@media (max-width: 700px) {
+  .topbar { padding: .65rem 1rem; }
+  .topbar .small { display: none; }   /* avatar + Sign out remain; name/email live in Profile */
+  .topbar .row { gap: .55rem; }
+  .content { padding: 1rem .9rem; }
+  h1 { font-size: 1.35rem; }
+  .stat .n { font-size: 1.7rem; }
+  .plan-row { align-items: flex-start; }
+  .rep-item { flex-direction: column; }
+  .rep-item-actions { align-self: flex-end; }
+  .wiz-card { padding: 1.15rem; }
+  .abp-inner { padding: 2rem 1.5rem; }
 }
 
 /* ---------- safety ---------- */
