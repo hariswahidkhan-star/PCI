@@ -10,6 +10,7 @@ import Certifications from './pages/Certifications'
 import Credentials from './pages/Credentials'
 import Cpd from './pages/Cpd'
 import Billing from './pages/Billing'
+import Resources from './pages/Resources'
 import Messages from './pages/Messages'
 import Support from './pages/Support'
 import Profile from './pages/Profile'
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="credentials" element={<Credentials />} />
           <Route path="cpd" element={<Cpd />} />
           <Route path="billing" element={<Billing />} />
+          <Route path="resources" element={<Resources />} />
           <Route path="messages" element={<Messages />} />
           <Route path="support" element={<Support />} />
           <Route path="profile" element={<Profile />} />

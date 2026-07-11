@@ -232,8 +232,30 @@ export default function Certifications() {
       <section className="stack" style={{ display: 'grid', gap: '1rem' }}>
         <h2 className="section-title">Your certifications</h2>
         {me.exams.length === 0 ? (
-          <Card>
-            <Empty>You don’t have any exam entitlements yet — explore the certifications below to get started.</Empty>
+          <Card title="How exam scheduling works">
+            <ul className="steps">
+              <li className="current">
+                <span className="dot">1</span>
+                <span>
+                  <span className="label">Pay the exam fee</span>
+                  <div className="detail">Choose a certification below — your entitlement appears here immediately after payment.</div>
+                </span>
+              </li>
+              <li>
+                <span className="dot">2</span>
+                <span>
+                  <span className="label">Complete eligibility</span>
+                  <div className="detail">Accept the exam consents on your Overview page and complete your profile.</div>
+                </span>
+              </li>
+              <li>
+                <span className="dot">3</span>
+                <span>
+                  <span className="label">Schedule your sitting</span>
+                  <div className="detail">A “Schedule exam” button appears right here — pick any slot up to your deadline, reschedule online if plans change.</div>
+                </span>
+              </li>
+            </ul>
           </Card>
         ) : (
           me.exams.map((e) => <EntryCard key={e.payment_id} entry={e} onChanged={refetch} />)
