@@ -552,6 +552,7 @@ app.Use(async (ctx, next) =>
                 rendered = PCI.Backend.Core.ListSections.Inject(db, rendered);
                 rendered = PCI.Backend.Core.PriceTags.Inject(db, rendered);
                 ctx.Response.ContentType = "text/html; charset=utf-8";
+                ctx.Response.Headers.CacheControl = "no-cache";   // content is admin-editable — always revalidate
                 await ctx.Response.WriteAsync(rendered);
                 return;
             }
@@ -570,7 +571,28 @@ app.Use(async (ctx, next) =>
 // ================= static site (all four apps) — LAST so /api wins =================
 var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
 app.UseDefaultFiles(new DefaultFilesOptions { DefaultFileNames = new List<string> { "index.html" } });
-app.UseStaticFiles();
+// Explicit cache policy — without it, mobile browsers heuristically cache the SPA shells, and after
+// a deploy the cached HTML points at content-hashed CSS/JS that no longer exists → a completely
+// unstyled portal until the user hard-refreshes. HTML always revalidates (ETag → cheap 304s);
+// hashed SPA assets are immutable; unhashed site css/js revalidate; images cache for a day.
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = sf =>
+    {
+        var path = sf.Context.Request.Path.Value ?? "";
+        var h = sf.Context.Response.Headers;
+        if (path.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+            h.CacheControl = "no-cache";
+        else if (path.StartsWith("/app/assets/", StringComparison.OrdinalIgnoreCase) ||
+                 path.StartsWith("/admin/assets/", StringComparison.OrdinalIgnoreCase))
+            h.CacheControl = "public, max-age=31536000, immutable";
+        else if (path.EndsWith(".css", StringComparison.OrdinalIgnoreCase) ||
+                 path.EndsWith(".js", StringComparison.OrdinalIgnoreCase))
+            h.CacheControl = "no-cache";
+        else
+            h.CacheControl = "public, max-age=86400";
+    }
+});
 
 // ================= React SPAs (Stage 3) — client-side routing fallback =================
 // The built React apps live under wwwroot/app (student portal) and wwwroot/admin (admin console).
@@ -596,6 +618,7 @@ app.Use(async (ctx, next) =>
             if ((p == prefix || p.StartsWith(prefix + "/", StringComparison.OrdinalIgnoreCase)) && File.Exists(index))
             {
                 ctx.Response.ContentType = "text/html; charset=utf-8";
+                ctx.Response.Headers.CacheControl = "no-cache";   // the shell must revalidate every deploy
                 await ctx.Response.SendFileAsync(index);
                 return;
             }
