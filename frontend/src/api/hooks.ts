@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { api, UnauthorizedError } from './client'
 import { useAuth } from '../auth/AuthContext'
 
@@ -19,11 +19,16 @@ export function useQuery<T>(path: string | null): QueryState<T> {
   const [loading, setLoading] = useState<boolean>(path !== null)
   const [error, setError] = useState<string | null>(null)
   const [tick, setTick] = useState(0)
+  const lastPath = useRef<string | null>(null)
 
   useEffect(() => {
     if (path === null) return
     let cancelled = false
-    setLoading(true)
+    // A refetch of the SAME path is a background refresh: keep the current data rendered instead
+    // of flipping to a page-level spinner (which unmounts children and eats their success notices).
+    // A path change is a genuinely new query and shows the loading state as before.
+    if (lastPath.current !== path) setLoading(true)
+    lastPath.current = path
     setError(null)
     api
       .get<T>(path)

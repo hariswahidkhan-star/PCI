@@ -4,6 +4,7 @@ import { useMe } from '../data/MeContext'
 import { useQuery } from '../api/hooks'
 import { startCheckout, checkoutErrorMessage } from '../api/checkout'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
+import FoundingCard from '../components/FoundingCard'
 import { fmtDate, fmtMoney, titleCase } from '../format'
 import { openPrintable, escapeHtml as e } from '../print'
 import type { Payment } from '../api/types'
@@ -170,6 +171,8 @@ export default function Billing() {
       </div>
 
       <PlansCard />
+
+      <FoundingCard />
 
       <Card title="Payment history" action={<span className="muted small">Total paid: <strong>{fmtMoney(total, currency)}</strong></span>}>
         {me.payments.length === 0 ? (

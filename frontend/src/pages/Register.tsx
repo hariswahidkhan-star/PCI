@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import GoogleButton from '../components/GoogleButton'
 import AuthShell from '../components/AuthShell'
@@ -9,6 +9,9 @@ import AuthShell from '../components/AuthShell'
 export default function Register() {
   const { register } = useAuth()
   const nav = useNavigate()
+  const [params] = useSearchParams()
+  // a founding code carried from the public site lands the new account on Billing to redeem it
+  const founding = params.get('founding')
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', country: '' })
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -26,7 +29,7 @@ export default function Register() {
     setBusy(true)
     try {
       await register({ ...form, email: form.email.trim().toLowerCase() })
-      nav('/onboarding', { replace: true })
+      nav(founding ? `/billing?founding=${encodeURIComponent(founding)}` : '/onboarding', { replace: true })
     } catch (err) {
       const msg = err instanceof Error ? err.message : ''
       setError(
@@ -49,6 +52,13 @@ export default function Register() {
             Join in under a minute — build your profile now, pay only when you choose to enrol.
           </p>
         </div>
+
+        {founding && (
+          <div className="notice" style={{ marginBottom: '1rem' }}>
+            Founding code <strong>{founding.toUpperCase()}</strong> — create your free account and
+            you will be taken straight to redeem it.
+          </div>
+        )}
 
         <GoogleButton onError={setError} />
 

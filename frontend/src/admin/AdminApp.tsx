@@ -12,6 +12,7 @@ import Credentials from './pages/Credentials'
 import Tickets from './pages/Tickets'
 import Enrollments from './pages/Enrollments'
 import Codes from './pages/Codes'
+import Founding from './pages/Founding'
 import Enquiries from './pages/Enquiries'
 import Submissions from './pages/Submissions'
 import Reviews from './pages/Reviews'
@@ -67,6 +68,7 @@ export default function AdminApp() {
         <Route path="tickets" element={<Perm section="tickets"><Tickets /></Perm>} />
         <Route path="certifications" element={<Perm section="exams"><Certifications /></Perm>} />
         <Route path="codes" element={<Perm section="codes"><Codes /></Perm>} />
+        <Route path="founding" element={<AnyPerm sections={['members', 'codes']}><Founding /></AnyPerm>} />
         <Route path="pages" element={<Perm section="pages"><Pages /></Perm>} />
         <Route path="enquiries" element={<Perm section="inquiries"><Enquiries /></Perm>} />
         <Route path="submissions" element={<Perm section="submissions"><Submissions /></Perm>} />

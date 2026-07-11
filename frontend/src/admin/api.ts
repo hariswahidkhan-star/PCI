@@ -196,6 +196,48 @@ export interface DiscountCode {
   single_use_per_email?: number | null
   active?: number | null
   code_type?: string | null
+  // founding-stage fields
+  founding_route?: string | null
+  grants_membership?: number | null
+  grants_exam?: number | null
+  grants_study_access?: number | null
+  requires_application?: number | null
+  auto_approve?: number | null
+  membership_months?: number | null
+  criteria_json?: string | null
+}
+
+export interface FoundingApplication {
+  id: number
+  user_id: number
+  code_id: number
+  code?: string | null
+  route?: string | null
+  email?: string | null
+  first_name?: string | null
+  last_name?: string | null
+  declared_experience_years?: number | null
+  declared_role?: string | null
+  declared_qualification?: string | null
+  evidence_name?: string | null
+  has_evidence?: number
+  status: string
+  admin_note?: string | null
+  created_at?: string | null
+  decided_at?: string | null
+}
+
+export interface FoundingStat {
+  id: number
+  code: string
+  route: string
+  grants: { membership: boolean; exam: boolean; study: boolean }
+  auto_approve: boolean
+  window: { from?: string | null; until?: string | null; days_left?: number | null; open: boolean }
+  uses: { redeemed: number; cap?: number | null; remaining?: number | null }
+  applications: Record<string, number>
+  usable: boolean
+  state: string
 }
 
 export interface Inquiry {

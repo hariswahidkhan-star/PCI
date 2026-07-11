@@ -227,22 +227,48 @@ public static class AdminMgmt
 
         // ---------- codes ----------
         app.MapGet("/api/admin/codes", (HttpRequest req) => gate(req, "codes", _ => J(db.Query("SELECT * FROM discount_codes ORDER BY id DESC"))));
-        app.MapPost("/api/admin/codes", async (HttpRequest req) =>
+        // Founding fields ride on discount_codes (route/grants/window/caps/auto-approve/criteria) —
+        // one codes table, one admin surface, audited like every code change.
+        app.MapPost("/api/admin/codes", async (HttpContext ctx) =>
         {
+            var req = ctx.Request;
             var g = Deny(req, "codes"); if (g is not null) return g;
             var b = await H.Body(req);
-            var id = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,single_use_per_email,active) VALUES(?,?,?,?,?,?,?,?,?)",
+            var route = H.GetS(b, "founding_route");
+            if (route is not (null or "" or "founding_member" or "founding_candidate"))
+                return Results.Json(new { error = "bad_founding_route" }, statusCode: 400);
+            bool founding = route is "founding_member" or "founding_candidate";
+            int B(string k, bool dflt = false) => (b.ContainsKey(k) ? H.B(b[k].GetRawText()) : dflt) ? 1 : 0;
+            var id = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,single_use_per_email,active,
+                founding_route,grants_membership,grants_exam,grants_study_access,requires_application,auto_approve,membership_months,criteria_json)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (H.GetS(b, "code") ?? "").ToUpperInvariant(), H.GetS(b, "discount_type"), H.GetNum(b, "discount_value"), H.GetS(b, "applies_to") ?? "all",
-                H.GetS(b, "start_date"), H.GetS(b, "end_date"), H.GetNum(b, "max_uses"), H.B(H.GetEl(b, "single_use_per_email")?.GetRawText()) ? 1 : 0, H.B(H.GetEl(b, "active")?.GetRawText()) ? 1 : 0);
+                H.GetS(b, "start_date"), H.GetS(b, "end_date"), H.GetNum(b, "max_uses"), B("single_use_per_email") , B("active"),
+                founding ? route : null,
+                founding ? B("grants_membership", true) : 0,
+                founding ? B("grants_exam", route == "founding_candidate") : 0,
+                founding ? B("grants_study_access", true) : 0,
+                founding ? (route == "founding_candidate" ? 1 : B("requires_application")) : 0,
+                founding ? B("auto_approve", true) : 1,
+                (int)(H.GetNum(b, "membership_months") ?? 12),
+                founding ? H.GetS(b, "criteria_json") : null);
+            var adm = adminFromReq(req);
+            log(null, "code_created", $"{(H.GetS(b, "code") ?? "").ToUpperInvariant()}{(founding ? " founding:" + route : "")} by admin {adm?.Id}");
             return J(new { id });
         });
-        app.MapPatch("/api/admin/codes/{id}", async (HttpRequest req, long id) =>
+        app.MapPatch("/api/admin/codes/{id}", async (HttpContext ctx, long id) =>
         {
+            var req = ctx.Request;
             var g = Deny(req, "codes"); if (g is not null) return g;
             var b = await H.Body(req);
             object? act = b.ContainsKey("active") ? (H.B(b["active"].GetRawText()) ? 1 : 0) : null;
-            db.Execute("UPDATE discount_codes SET active=COALESCE(?,active), end_date=COALESCE(?,end_date), max_uses=COALESCE(?,max_uses) WHERE id=?",
-                act, H.GetS(b, "end_date"), H.GetNum(b, "max_uses"), id);
+            object? autoApr = b.ContainsKey("auto_approve") ? (H.B(b["auto_approve"].GetRawText()) ? 1 : 0) : null;
+            db.Execute(@"UPDATE discount_codes SET active=COALESCE(?,active), start_date=COALESCE(?,start_date), end_date=COALESCE(?,end_date), max_uses=COALESCE(?,max_uses),
+                auto_approve=COALESCE(?,auto_approve), membership_months=COALESCE(?,membership_months), criteria_json=COALESCE(?,criteria_json) WHERE id=?",
+                act, H.GetS(b, "start_date"), H.GetS(b, "end_date"), H.GetNum(b, "max_uses"),
+                autoApr, H.GetNum(b, "membership_months"), H.GetS(b, "criteria_json"), id);
+            var adm = adminFromReq(req);
+            log(null, "code_updated", $"code {id} by admin {adm?.Id}: {string.Join(",", b.Keys)}");
             return J(new { ok = true });
         });
 

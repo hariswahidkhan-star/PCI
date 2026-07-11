@@ -63,6 +63,9 @@ jobs:
         run: |
           if [ -f tests/integration_test.py ]; then python3 tests/integration_test.py; else echo "no integration suite yet"; fi
 
+      - name: Founding-stage suite (codes, applications, waiver settlement)
+        run: python3 tests/founding_test.py
+
       - name: 500 sweep (every route x anon/student/owner)
         run: python3 tests/sweep_500_test.py
 
@@ -115,6 +118,7 @@ jobs:
         run: |
           pip install --quiet --break-system-packages pymysql || pip install --quiet pymysql
           python3 tests/integration_test.py
+          python3 tests/founding_test.py
 
   frontend:
     # Stage 3 React student portal: typecheck + production build must both succeed.
