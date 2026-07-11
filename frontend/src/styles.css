@@ -12,9 +12,9 @@
   --line: #e3e8ef;
   --paper: #ffffff;
   --canvas: #f4f7fb;
-  --navy-1: #0f1d42;
-  --navy-2: #0c1530;
-  --navy-3: #0a1024;
+  --navy-1: #22366f;
+  --navy-2: #1b2a59;
+  --navy-3: #152147;
   --ok: #15803d;
   --ok-bg: #ecfdf3;
   --warn: #b45309;
@@ -119,41 +119,45 @@ input:focus, select:focus, textarea:focus {
 .badge.brand { background: var(--brand-050); color: var(--brand); }
 
 /* ---------- app shell ---------- */
-.shell { display: flex; min-height: 100%; }
+/* App shell: the page itself never scrolls — .main is the scroll container. This keeps the
+   topbar permanently visible (body-scroll sticky + backdrop-filter flickers/vanishes on iOS
+   Safari and breaks under ancestor overflow clipping) and gives the sidebar its own height. */
+.shell { display: flex; height: 100vh; height: 100dvh; overflow: hidden; }
 /* the navy credential plate — same chrome as the site's hero, badge and footer */
 .sidebar {
-  width: 240px; flex: 0 0 240px; color: #b9c6e3;
-  background: radial-gradient(120% 40% at 80% -8%, rgba(29, 78, 216, .35), transparent 60%),
+  width: 240px; flex: 0 0 240px; color: #d7e0f5;
+  background: radial-gradient(120% 40% at 80% -8%, rgba(59, 108, 246, .38), transparent 60%),
               linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 55%, var(--navy-3) 100%);
-  border-right: 1px solid rgba(125, 168, 255, .16);
-  padding: 1.25rem 1rem; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  border-right: 1px solid rgba(125, 168, 255, .2);
+  padding: 1.25rem 1rem; height: 100%; overflow-y: auto;
   scrollbar-color: rgba(125, 168, 255, .35) transparent;
 }
 .sidebar::-webkit-scrollbar-thumb { background: rgba(125, 168, 255, .35); border-color: transparent; }
 .sidebar .brand { display: flex; align-items: center; gap: .6rem; font-weight: 800; margin-bottom: 1.5rem; color: #fff; }
 .sidebar .brand img { height: 30px; border-radius: 7px; }
 .nav a {
-  display: flex; align-items: center; gap: .6rem; padding: .6em .7em; border-radius: 9px;
-  color: #b9c6e3; font-weight: 600; margin-bottom: .15rem; position: relative;
+  display: flex; align-items: center; gap: .6rem; padding: .62em .75em; border-radius: 9px;
+  color: #dde5f8; font-weight: 700; font-size: .95rem; margin-bottom: .15rem; position: relative;
   transition: background .15s, color .15s;
 }
-.nav a:hover { background: rgba(255, 255, 255, .06); color: #fff; text-decoration: none; }
-.nav a.active { background: rgba(59, 130, 246, .16); color: #fff; box-shadow: inset 2.5px 0 0 #3b82f6; }
+.nav a:hover { background: rgba(255, 255, 255, .09); color: #fff; text-decoration: none; }
+.nav a.active { background: rgba(59, 130, 246, .28); color: #fff; box-shadow: inset 2.5px 0 0 #60a5fa; }
 .nav .pill { margin-left: auto; background: var(--brand); color: #fff; font-size: .7rem; border-radius: 999px; padding: 0 .5em; }
 .sidebar .btn.ghost { color: #9fb4e0; }
 .sidebar .btn.ghost:hover { background: rgba(255, 255, 255, .07); color: #fff; }
-.main { flex: 1; min-width: 0; }
+.main { flex: 1; min-width: 0; height: 100%; overflow-y: auto; overflow-x: clip; }
 .topbar {
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  padding: .9rem 1.5rem; background: rgba(255, 255, 255, .88);
+  padding: .9rem 1.5rem; background: rgba(255, 255, 255, .92);
   -webkit-backdrop-filter: blur(14px) saturate(1.5); backdrop-filter: blur(14px) saturate(1.5);
   border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5;
+  transform: translateZ(0); /* own compositor layer — stops iOS backdrop-filter flicker */
 }
 .topbar::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; pointer-events: none;
   background: linear-gradient(90deg, transparent 4%, rgba(29, 78, 216, .35) 42%, rgba(59, 130, 246, .35) 58%, transparent 96%);
 }
-.content { padding: 1.5rem; max-width: 1080px; }
+.content { padding: 1.5rem; max-width: 1080px; width: 100%; margin-inline: auto; }
 .avatar {
   flex: 0 0 auto;
   width: 34px; height: 34px; border-radius: 50%; color: #fff;
@@ -367,10 +371,12 @@ body::before {
   background: repeating-radial-gradient(circle, transparent 0 38px, rgba(147, 180, 255, .09) 38px 39px, transparent 39px 77px);
 }
 .sidebar > * { position: relative; }
-.nav-label { font-size: .68rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
-  color: #7e90bd; margin: 0 .7rem .45rem; }
-.nav-label::before { content: ""; display: inline-block; width: 12px; height: 2px; background: #3b82f6;
-  opacity: .7; margin-right: 7px; vertical-align: .2em; }
+.nav-label { font-size: .7rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
+  color: #a4b6e2; margin: 0 .7rem .45rem; }
+.nav .nav-label { margin-top: 1.2rem; }
+.nav > .nav-label:first-child, .nav > span:first-child .nav-label { margin-top: 0; }
+.nav-label::before { content: ""; display: inline-block; width: 12px; height: 2px; background: #60a5fa;
+  opacity: .85; margin-right: 7px; vertical-align: .2em; }
 .nav a { transition: background .18s var(--ease), color .18s var(--ease), transform .18s var(--ease); }
 .nav a:hover { transform: translateX(3px); }
 .nav a.active { box-shadow: inset 2.5px 0 0 #3b82f6, 0 6px 18px -10px rgba(59, 130, 246, .55); }

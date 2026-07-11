@@ -1,44 +1,64 @@
-import { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAdminAuth } from './AdminAuth'
 import { CRUD_SECTIONS } from './crudConfigs'
 import { initials } from '../format'
 
 // Sections ported to the React admin so far. `perm` null = any authenticated admin;
 // `owner` = owner-only; `anyPerm` = visible if the admin holds any listed permission.
-// Everything else in the platform remains in the classic panel (linked below), so nothing is lost.
-interface NavItem { to: string; label: string; perm?: string | null; owner?: boolean; anyPerm?: string[]; end?: boolean }
+// Items are segregated into major categories; a category heading renders only when the
+// signed-in admin can see at least one item inside it.
+interface NavItem { to: string; label: string; perm?: string | null; owner?: boolean; anyPerm?: string[]; end?: boolean; group: string }
+const crud = (path: string) => CRUD_SECTIONS.find((c) => c.path === path)!
+const crudItem = (path: string, group: string): NavItem => ({ to: '/' + path, label: crud(path).title, perm: crud(path).perm, group })
 const NAV: NavItem[] = [
-  { to: '/', label: 'Dashboard', perm: null, end: true },
-  { to: '/students', label: 'Students', perm: 'members' },
-  { to: '/enrollments', label: 'Enrolments', perm: 'enrollments' },
-  { to: '/payments', label: 'Payments', perm: 'payments' },
-  { to: '/credentials', label: 'Credentials', perm: 'credentials' },
-  { to: '/tickets', label: 'Support tickets', perm: 'tickets' },
-  { to: '/certifications', label: 'Certifications', perm: 'exams' },
-  { to: '/exams', label: 'Exam registrations', perm: 'exams' },
-  { to: '/proctoring', label: 'Proctoring & sessions', perm: 'proctoring' },
-  { to: '/codes', label: 'Discount codes', perm: 'codes' },
-  { to: '/founding', label: 'Founding stage', anyPerm: ['members', 'codes'] },
-  { to: '/honorary', label: 'Honorary fellows', owner: true },
-  { to: '/pages', label: 'Pages & content', perm: 'pages' },
-  { to: '/enquiries', label: 'Enquiries', perm: 'inquiries' },
-  { to: '/submissions', label: 'Form submissions', perm: 'submissions' },
-  { to: '/reviews', label: 'Reviews', perm: 'content' },
-  { to: '/content', label: 'Site content', perm: 'content' },
-  { to: '/subscribers', label: 'Newsletter', perm: 'subscribers' },
-  { to: '/reports', label: 'Reports', perm: 'reports' },
-  { to: '/emails', label: 'Email log', perm: 'emails' },
-  { to: '/audit', label: 'Audit log', perm: 'audit' },
-  // generic content collections (question bank, media, FAQs, resources, news, BoK, governance, nav)
-  ...CRUD_SECTIONS.map((c) => ({ to: '/' + c.path, label: c.title, perm: c.perm })),
-  { to: '/settings', label: 'Settings', anyPerm: ['settings', 'set_web', 'set_sp', 'set_exam'] },
-  { to: '/team', label: 'Team & Access', owner: true },
+  { to: '/', label: 'Dashboard', perm: null, end: true, group: 'Overview' },
+  { to: '/reports', label: 'Reports', perm: 'reports', group: 'Overview' },
+
+  { to: '/students', label: 'Students', perm: 'members', group: 'Students' },
+  { to: '/enrollments', label: 'Enrolments', perm: 'enrollments', group: 'Students' },
+  { to: '/payments', label: 'Payments', perm: 'payments', group: 'Students' },
+  { to: '/tickets', label: 'Support tickets', perm: 'tickets', group: 'Students' },
+
+  { to: '/certifications', label: 'Certifications', perm: 'exams', group: 'Examinations' },
+  { to: '/exams', label: 'Exam registrations', perm: 'exams', group: 'Examinations' },
+  { to: '/proctoring', label: 'Proctoring & sessions', perm: 'proctoring', group: 'Examinations' },
+  crudItem('questions', 'Examinations'),
+  { to: '/credentials', label: 'Credentials', perm: 'credentials', group: 'Examinations' },
+
+  { to: '/codes', label: 'Discount codes', perm: 'codes', group: 'Access & pricing' },
+  { to: '/founding', label: 'Founding stage', anyPerm: ['members', 'codes'], group: 'Access & pricing' },
+  { to: '/honorary', label: 'Honorary fellows', owner: true, group: 'Access & pricing' },
+  crudItem('pricing', 'Access & pricing'),
+
+  { to: '/pages', label: 'Pages & content', perm: 'pages', group: 'Website' },
+  { to: '/content', label: 'Site content', perm: 'content', group: 'Website' },
+  { to: '/reviews', label: 'Reviews', perm: 'content', group: 'Website' },
+  crudItem('faqs', 'Website'),
+  crudItem('resources', 'Website'),
+  crudItem('news', 'Website'),
+  crudItem('media', 'Website'),
+  crudItem('bok', 'Website'),
+  crudItem('governance', 'Website'),
+  crudItem('navigation', 'Website'),
+
+  { to: '/enquiries', label: 'Enquiries', perm: 'inquiries', group: 'Community' },
+  { to: '/submissions', label: 'Form submissions', perm: 'submissions', group: 'Community' },
+  { to: '/subscribers', label: 'Newsletter', perm: 'subscribers', group: 'Community' },
+
+  { to: '/emails', label: 'Email log', perm: 'emails', group: 'Operations' },
+  { to: '/audit', label: 'Audit log', perm: 'audit', group: 'Operations' },
+  { to: '/settings', label: 'Settings', anyPerm: ['settings', 'set_web', 'set_sp', 'set_exam'], group: 'Operations' },
+  { to: '/team', label: 'Team & Access', owner: true, group: 'Operations' },
 ]
 
 export default function AdminLayout() {
   const { me, logout, can } = useAdminAuth()
   const [menuOpen, setMenuOpen] = useState(false)
+  const loc = useLocation()
+  // .main is the app's scroll container (not the body), so reset it on navigation
+  const mainRef = useRef<HTMLDivElement>(null)
+  useEffect(() => { mainRef.current?.scrollTo(0, 0) }, [loc.pathname])
   const items = NAV.filter((n) => {
     if (n.owner) return !!me?.is_owner
     if (n.anyPerm) return !!me?.is_owner || n.anyPerm.some((p) => can(p))
@@ -54,10 +74,13 @@ export default function AdminLayout() {
           <span>PCI Global Admin</span>
         </div>
         <nav className="nav">
-          {items.map((n) => (
-            <NavLink key={n.to} to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
-              {n.label}
-            </NavLink>
+          {items.map((n, i) => (
+            <span key={n.to} style={{ display: 'contents' }}>
+              {(i === 0 || items[i - 1].group !== n.group) && <div className="nav-label">{n.group}</div>}
+              <NavLink to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
+                {n.label}
+              </NavLink>
+            </span>
           ))}
         </nav>
         <div style={{ marginTop: '1.5rem' }}>
@@ -66,7 +89,7 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      <div className="main">
+      <div className="main" ref={mainRef}>
         <header className="topbar">
           <div className="row">
             <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>

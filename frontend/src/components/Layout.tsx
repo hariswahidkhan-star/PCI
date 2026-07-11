@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { useMe } from '../data/MeContext'
@@ -36,6 +36,9 @@ export default function Layout() {
   const completion = Number((me?.profile as Record<string, unknown> | null)?.profile_completion_percentage ?? 100)
   const memberActive = me?.lifecycle.membership_status === 'active'
   const [menuOpen, setMenuOpen] = useState(false)
+  // .main is the app's scroll container (not the body), so reset it on navigation
+  const mainRef = useRef<HTMLDivElement>(null)
+  useEffect(() => { mainRef.current?.scrollTo(0, 0) }, [loc.pathname])
 
   return (
     <div className="shell">
@@ -66,7 +69,7 @@ export default function Layout() {
         </div>
       </aside>
 
-      <div className="main">
+      <div className="main" ref={mainRef}>
         <header className="topbar">
           <div className="row">
             <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>
