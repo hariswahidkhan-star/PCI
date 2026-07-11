@@ -3,10 +3,13 @@ using PCI.Backend.Data;
 namespace PCI.Backend.Core;
 
 /// <summary>
-/// The platform's one email sender. When SMTP_HOST is configured it sends real mail
-/// (SMTP_PORT/SMTP_USER/SMTP_PASS/SMTP_FROM); otherwise it prints the complete message to the
-/// console — exactly what the boot banner promises. Every attempt is recorded in email_logs
-/// (status: sent | console | failed) so the admin Email-log section reflects reality.
+/// The platform's one email sender, in provider precedence order:
+///   1. RESEND_API_KEY — Resend's HTTPS API (one env var; MAIL_FROM/SMTP_FROM sets the sender,
+///      which must be a verified domain on the Resend account, or their onboarding sender for tests);
+///   2. SMTP_HOST — classic SMTP (SMTP_PORT/SMTP_USER/SMTP_PASS/SMTP_FROM/SMTP_SSL);
+///   3. neither — prints the complete message to the console, exactly as the boot banner promises.
+/// Every attempt is recorded in email_logs (status: sent | console | failed) so the admin
+/// Email-log section reflects reality.
 ///
 /// This class existed in the Node original but was never ported: tokens for welcome/setup and
 /// password-reset links were being minted and then silently lost, so a paying customer could
@@ -15,6 +18,8 @@ namespace PCI.Backend.Core;
 public static class Mailer
 {
     static string? E(string k) => Environment.GetEnvironmentVariable(k);
+    // one shared client (socket hygiene); auth header goes per-request so a key rotation applies live
+    static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(15) };
 
     /// <summary>Public base URL for links in emails: APP_BASE_URL/SITE_BASE_URL, else the
     /// origin of the triggering request (correct for single-service deployments).</summary>
@@ -50,8 +55,34 @@ public static class Mailer
     public static void Send(Db db, long? userId, string to, string emailType, string subject, string html)
     {
         var host = E("SMTP_HOST");
+        var resendKey = E("RESEND_API_KEY");
         string status;
-        if (string.IsNullOrWhiteSpace(host))
+        if (!string.IsNullOrWhiteSpace(resendKey))
+        {
+            // Resend HTTPS API: the simplest production path (no SMTP ports/credentials).
+            try
+            {
+                var from = E("MAIL_FROM") ?? E("SMTP_FROM") ?? "PCI Global <onboarding@resend.dev>";
+                using var reqMsg = new HttpRequestMessage(HttpMethod.Post, "https://api.resend.com/emails");
+                reqMsg.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", resendKey);
+                reqMsg.Content = new StringContent(
+                    System.Text.Json.JsonSerializer.Serialize(new { from, to = new[] { to }, subject, html }),
+                    System.Text.Encoding.UTF8, "application/json");
+                using var resp = _http.Send(reqMsg);
+                status = resp.IsSuccessStatusCode ? "sent" : "failed";
+                if (!resp.IsSuccessStatusCode)
+                {
+                    using var body = new StreamReader(resp.Content.ReadAsStream());
+                    Console.Error.WriteLine($"[email] resend API {(int)resp.StatusCode} for {to} ({emailType}): {body.ReadToEnd()}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"[email] resend send failed to {to} ({emailType}): {ex.Message}");
+                status = "failed";
+            }
+        }
+        else if (string.IsNullOrWhiteSpace(host))
         {
             // Console sink (development / SMTP not yet configured) — print enough to act on,
             // including any links, exactly as the boot message promises.

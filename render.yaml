@@ -40,7 +40,9 @@ services:
         sync: false
       - key: STRIPE_WEBHOOK_SECRET # required as soon as STRIPE_SECRET_KEY is set (whsec_… from the Stripe webhook)
         sync: false
-      - key: SMTP_HOST             # optional; without it, emails print to the service logs
+      - key: RESEND_API_KEY        # easiest email option: one key from resend.com (MAIL_FROM sets the sender)
+        sync: false
+      - key: SMTP_HOST             # classic SMTP alternative; without either, emails print to the service logs
         sync: false
       - key: SMTP_USER
         sync: false

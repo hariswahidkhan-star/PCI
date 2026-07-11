@@ -57,14 +57,15 @@ First-run admin (from `Data/Migrate.cs`): `owner@pci.local` / `changeme-owner` â
 
 | Var | Needed when | Notes |
 |---|---|---|
-| `DATABASE_FILE` | always | use a **persistent** path in prod (not `/tmp`) |
+| `DATABASE_FILE` | always | use a **persistent** path in prod (not `/tmp`). If a writable disk is mounted at `/data` and this is unset, the app adopts `/data/pci.db` automatically |
 | `PORT` | optional | default 8080 |
 | `STRIPE_SECRET_KEY` | payments on | without it, payment endpoints return 503 |
 | `STRIPE_WEBHOOK_SECRET` | payments on | **required in prod**; used to verify webhook signatures |
 | `APP_BASE_URL` / `SITE_BASE_URL` | prod | must be a public HTTPS URL |
 | `ALLOWED_ORIGIN` | prod | explicit origin; **wildcard is rejected in prod** |
-| `SMTP_HOST` (+user/pass/port) | email on | without it, emails print to console |
-| `STORAGE_ROOT` | prod | evidence/attachment files; use durable storage |
+| `RESEND_API_KEY` | email on (easiest) | Resend HTTPS API; `MAIL_FROM` sets the verified sender. Takes precedence over SMTP |
+| `SMTP_HOST` (+user/pass/port) | email on (classic) | without either provider, emails print to console |
+| `STORAGE_ROOT` | prod | evidence/attachment files; use durable storage. Auto-adopts `/data/storage` when a `/data` disk is mounted and this is unset |
 | `STORAGE_PROVIDER` | optional | `local` (default) or `s3` (any S3-compatible store; needs `S3_BUCKET`, optional `S3_ENDPOINT` for MinIO/R2, `S3_REGION`, AWS creds via the standard env vars) |
 | `ENABLE_LEGACY_ADMIN_TOKEN` | never in prod | legacy `x-admin-token`; the app **errors on boot** if this is on in prod |
 | `ALLOW_INSECURE_PRODUCTION` | escape hatch | set `true` to boot despite config errors (**not recommended**) |
