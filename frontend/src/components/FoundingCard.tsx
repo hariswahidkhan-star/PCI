@@ -171,9 +171,10 @@ export default function FoundingCard() {
       {checked?.valid && (
         <div style={{ marginTop: '.9rem' }}>
           <div className="notice" style={{ marginBottom: '.75rem' }}>
-            <strong>{checked.route === 'founding_candidate' ? 'Founding candidate' : 'Founding membership'} — fee waived.</strong>{' '}
+            <strong>Founding access — fees waived.</strong>{' '}
             This code grants {grantsText(checked.grants)} at USD 0
             {checked.window_ends ? <> — valid until {fmtDate(checked.window_ends)}</> : null}.
+            {checked.grants?.exam ? ' The exam itself is the same real exam — the credential is earned by passing it.' : ''}
           </div>
           {checked.requires_application ? (
             <div className="stack" style={{ display: 'grid', gap: '.6rem' }}>

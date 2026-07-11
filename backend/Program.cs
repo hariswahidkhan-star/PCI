@@ -531,6 +531,7 @@ PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, d
 PCI.Backend.Endpoints.Reviews.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Casework.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
+PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
 
 // Purge stored artefacts older than the configured retention window (owner-only). Metadata rows are kept
 // for audit; only the binary artefacts are removed once past retention.

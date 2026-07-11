@@ -66,6 +66,9 @@ jobs:
       - name: Founding-stage suite (codes, applications, waiver settlement)
         run: python3 tests/founding_test.py
 
+      - name: Honorary suite (board-only awards, PCI-HON verify, credential separation)
+        run: python3 tests/honorary_test.py
+
       - name: 500 sweep (every route x anon/student/owner)
         run: python3 tests/sweep_500_test.py
 
@@ -119,6 +122,7 @@ jobs:
           pip install --quiet --break-system-packages pymysql || pip install --quiet pymysql
           python3 tests/integration_test.py
           python3 tests/founding_test.py
+          python3 tests/honorary_test.py
 
   frontend:
     # Stage 3 React student portal: typecheck + production build must both succeed.

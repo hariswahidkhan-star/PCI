@@ -53,12 +53,14 @@ CREATE TABLE IF NOT EXISTS discount_codes (
   batch_id TEXT,                             -- set when generated in bulk
   per_user_limit INTEGER,                    -- max redemptions per email (NULL = unlimited)
   notes TEXT,
-  -- founding-stage access (100% fee waiver layered over the paid flow; start/end_date is the window)
-  founding_route TEXT,                       -- NULL | founding_member | founding_candidate
-  grants_membership INTEGER DEFAULT 0,
-  grants_exam INTEGER DEFAULT 0,
-  grants_study_access INTEGER DEFAULT 0,
-  requires_application INTEGER DEFAULT 0,    -- founding_candidate = 1
+  -- founding-stage access (100% fee waiver layered over the paid flow; start/end_date is the window).
+  -- ONE founding route: a valid code grants membership + study + exam together (three-route model);
+  -- legacy founding_member/founding_candidate values are migrated forward to 'founding'.
+  founding_route TEXT,                       -- NULL | founding
+  grants_membership INTEGER DEFAULT 1,
+  grants_exam INTEGER DEFAULT 1,
+  grants_study_access INTEGER DEFAULT 1,
+  requires_application INTEGER DEFAULT 0,    -- board-optional gating (application + evidence)
   auto_approve INTEGER DEFAULT 1,
   membership_months INTEGER DEFAULT 12,      -- term of the granted membership
   criteria_json TEXT                         -- board-set thresholds, e.g. {"min_experience_years":3,...}
@@ -945,3 +947,20 @@ CREATE TABLE IF NOT EXISTS founding_applications (
 );
 CREATE INDEX IF NOT EXISTS ix_founding_app_user ON founding_applications(user_id);
 CREATE INDEX IF NOT EXISTS ix_founding_app_code ON founding_applications(code_id);
+
+-- ===== honorary awards: board-conferred recognition, deliberately SEPARATE from exam credentials =====
+-- "Honorary Fellow (PCI)" is NOT the PCP-AI credential: no exam, no entitlement, no issued_credentials
+-- row. The PCI-HON award number prefix guarantees it can never be confused with a PCP-AI id.
+CREATE TABLE IF NOT EXISTS honorary_awards (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  award_no TEXT UNIQUE NOT NULL,             -- PCI-HON-YYYY-NNNN
+  recipient_name TEXT NOT NULL,
+  user_id INTEGER,                           -- optional link when the recipient has an account
+  citation TEXT,                             -- the board's reason (shown on certificate/verify)
+  designation TEXT DEFAULT 'Honorary Fellow (PCI)',
+  status TEXT DEFAULT 'active',              -- active | revoked
+  conferred_by INTEGER NOT NULL,             -- admin id (board/owner)
+  conferred_at TEXT DEFAULT (datetime('now')),
+  revoked_by INTEGER, revoked_at TEXT, revoke_reason TEXT
+);
+CREATE INDEX IF NOT EXISTS ix_honorary_user ON honorary_awards(user_id);

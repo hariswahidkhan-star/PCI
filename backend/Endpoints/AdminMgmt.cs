@@ -234,10 +234,14 @@ public static class AdminMgmt
             var req = ctx.Request;
             var g = Deny(req, "codes"); if (g is not null) return g;
             var b = await H.Body(req);
+            // Three-route model: ONE founding route. Legacy tier names are accepted and normalised
+            // forward so older clients keep working, but every founding code behaves identically:
+            // membership + study + exam granted together (grants stay editable per code).
             var route = H.GetS(b, "founding_route");
-            if (route is not (null or "" or "founding_member" or "founding_candidate"))
+            if (route is "founding_member" or "founding_candidate") route = "founding";
+            if (route is not (null or "" or "founding"))
                 return Results.Json(new { error = "bad_founding_route" }, statusCode: 400);
-            bool founding = route is "founding_member" or "founding_candidate";
+            bool founding = route == "founding";
             int B(string k, bool dflt = false) => (b.ContainsKey(k) ? H.B(b[k].GetRawText()) : dflt) ? 1 : 0;
             var id = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,single_use_per_email,active,
                 founding_route,grants_membership,grants_exam,grants_study_access,requires_application,auto_approve,membership_months,criteria_json)
@@ -246,9 +250,9 @@ public static class AdminMgmt
                 H.GetS(b, "start_date"), H.GetS(b, "end_date"), H.GetNum(b, "max_uses"), B("single_use_per_email") , B("active"),
                 founding ? route : null,
                 founding ? B("grants_membership", true) : 0,
-                founding ? B("grants_exam", route == "founding_candidate") : 0,
+                founding ? B("grants_exam", true) : 0,
                 founding ? B("grants_study_access", true) : 0,
-                founding ? (route == "founding_candidate" ? 1 : B("requires_application")) : 0,
+                founding ? B("requires_application") : 0,
                 founding ? B("auto_approve", true) : 1,
                 (int)(H.GetNum(b, "membership_months") ?? 12),
                 founding ? H.GetS(b, "criteria_json") : null);

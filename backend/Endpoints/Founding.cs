@@ -141,6 +141,19 @@ public static class Founding
             window_ends = usable ? H.Str(c["end_date"]) : null,
         };
 
+        // ── PUBLIC: is a founding window open at all? Drives the website's Founding Programme
+        // section (shown only while open, with the honest end date). No code details are leaked.
+        app.MapGet("/api/founding/status", () =>
+        {
+            var open = db.Query("SELECT * FROM discount_codes WHERE founding_route IS NOT NULL AND founding_route!='' AND active=1")
+                .Where(c => Usable(c).ok).ToList();
+            if (open.Count == 0) return J(new { open = false });
+            // the latest end date among open codes (null = open-ended window)
+            var ends = open.Select(c => H.Str(c["end_date"])).ToList();
+            var windowEnds = ends.Any(string.IsNullOrEmpty) ? null : ends.OrderByDescending(H.JsMillis).FirstOrDefault();
+            return J(new { open = true, window_ends = windowEnds, requires_application = open.All(c => H.L(c["requires_application"]) == 1) });
+        });
+
         // ── PUBLIC: validate a code (never reveals why an invalid code failed) ──
         app.MapPost("/api/founding/validate", async (HttpContext ctx) =>
         {

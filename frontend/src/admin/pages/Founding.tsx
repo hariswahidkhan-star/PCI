@@ -32,7 +32,7 @@ function StatsRow() {
           {rows.map((s) => (
             <tr key={s.id}>
               <td><strong>{s.code}</strong></td>
-              <td className="small">{s.route === 'founding_member' ? 'Member' : 'Candidate'}{s.route === 'founding_candidate' && !s.auto_approve ? ' · manual review' : ''}</td>
+              <td className="small">Founding{!s.auto_approve ? ' · manual review' : ''}</td>
               <td className="small">{['membership', 'exam', 'study'].filter((k) => (s.grants as Record<string, boolean>)[k]).join(' + ')}</td>
               <td>{s.uses.redeemed}</td>
               <td>{s.uses.remaining == null ? '∞' : s.uses.remaining}</td>

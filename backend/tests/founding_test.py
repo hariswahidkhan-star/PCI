@@ -3,9 +3,9 @@
 Founding-Stage access suite (spec: founding codes over the paid flow).
 
 Boots the real backend (same harness as integration_test.py) and proves:
-  • Route 1 (founding_member): free membership + study, NO exam entitlement; uses_count++
-  • Route 2 (founding_candidate): application + evidence + criteria + auto-approve →
-    free membership AND exam entitlement through the SAME settlement rows as a paid order
+  • ONE founding route (three-route model): a valid code grants membership + study + exam
+    together through the SAME settlement rows as a paid order; uses_count++
+  • Optional board gating: application + evidence + criteria + auto-approve on a per-code basis
   • redeem-twice is idempotent (no double grant, no duplicate payment)
   • expired window → invalid; the normal PAID flow is untouched (fallback proven)
   • max_total_uses cap enforced
@@ -56,52 +56,66 @@ def run(admin):
     chk, req, jget = it.chk, it.req, it.jget
 
     # ---------- setup: board creates the founding codes from the admin console API ----------
+    # THREE-ROUTE MODEL: one founding route only. A code grants membership + study + exam
+    # together; the board may optionally require an application (evidence + criteria).
     print("\n=== F0. Founding code creation (admin console API) ===")
     def make_code(body):
         c, r = jget("POST", "/api/admin/codes", token=admin, body=body)
         if c != 200: raise SystemExit(f"code create failed: {c} {r}")
         return r["id"]
-    m1 = make_code({"code": "FOUND-M1", "founding_route": "founding_member", "grants_membership": True,
-                    "grants_study_access": True, "end_date": "2099-01-01", "max_uses": 100, "active": True,
-                    "membership_months": 12})
-    c1 = make_code({"code": "FOUND-C1", "founding_route": "founding_candidate", "grants_membership": True,
-                    "grants_exam": True, "end_date": "2099-01-01", "max_uses": 100, "active": True,
+    m1 = make_code({"code": "FOUND-M1", "founding_route": "founding",
+                    "end_date": "2099-01-01", "max_uses": 100, "active": True, "membership_months": 12})
+    c1 = make_code({"code": "FOUND-C1", "founding_route": "founding", "requires_application": True,
+                    "end_date": "2099-01-01", "max_uses": 100, "active": True,
                     "criteria_json": json.dumps({"min_experience_years": 3, "require_qualification": True})})
-    exp = make_code({"code": "FOUND-EXP", "founding_route": "founding_member", "grants_membership": True,
+    exp = make_code({"code": "FOUND-EXP", "founding_route": "founding",
                      "end_date": "2020-01-01", "active": True})
-    cap = make_code({"code": "FOUND-CAP", "founding_route": "founding_member", "grants_membership": True,
+    cap = make_code({"code": "FOUND-CAP", "founding_route": "founding",
                      "end_date": "2099-01-01", "max_uses": 1, "active": True})
-    man = make_code({"code": "FOUND-MAN", "founding_route": "founding_candidate", "grants_membership": True,
-                     "grants_exam": True, "end_date": "2099-01-01", "auto_approve": False, "active": True})
+    man = make_code({"code": "FOUND-MAN", "founding_route": "founding", "requires_application": True,
+                     "end_date": "2099-01-01", "auto_approve": False, "active": True})
     chk("f0a five founding codes created", all([m1, c1, exp, cap, man]))
     chk("f0b RBAC: creating a code without admin auth → 401",
         req("POST", "/api/admin/codes", body={"code": "NOPE"})[0] == 401)
     chk("f0c RBAC: applications queue without admin auth → 401",
         req("GET", "/api/admin/founding-applications")[0] == 401)
+    # legacy tier names are normalised forward to the single route (consolidation contract)
+    legacy = make_code({"code": "FOUND-LEGACY", "founding_route": "founding_member",
+                        "end_date": "2099-01-01", "active": True})
+    con = it.dbconn()
+    lrow = con.execute("SELECT founding_route, grants_exam FROM discount_codes WHERE id=?", (legacy,)).fetchone(); con.close()
+    chk("f0d legacy tier name normalised to 'founding' with full grants", lrow[0] == "founding" and lrow[1] == 1, lrow)
 
-    # ---------- Route 1: founding member ----------
-    print("\n=== F1. Route 1 — founding member (membership + study, NO exam) ===")
+    # ---------- open-access founding code: ALL THREE grants in one step ----------
+    print("\n=== F1. Founding (open access) — membership + study + exam in one redemption ===")
     c, v = jget("POST", "/api/founding/validate", body={"code": "found-m1"})
-    chk("f1a validate: valid, route, grants, no application",
-        c == 200 and v["valid"] and v["route"] == "founding_member"
-        and v["grants"]["membership"] and not v["grants"]["exam"] and not v["requires_application"], v)
+    chk("f1a validate: valid, single route, all grants, no application",
+        c == 200 and v["valid"] and v["route"] == "founding"
+        and v["grants"]["membership"] and v["grants"]["exam"] and v["grants"]["study"]
+        and not v["requires_application"], v)
     atok, auid = free_user("found-a@ex.co")
     c, r = jget("POST", "/api/founding/redeem", token=atok, body={"code": "FOUND-M1"})
-    chk("f1b redeem grants membership (FOUND ref)", c == 200 and r.get("ok") and str(r.get("reference", "")).startswith("FOUND-"), r)
+    chk("f1b redeem grants everything (FOUND ref)", c == 200 and r.get("ok") and str(r.get("reference", "")).startswith("FOUND-")
+        and r["granted"]["membership"] and r["granted"]["exam"], r)
     c, me = jget("GET", "/api/me", token=atok)
-    chk("f1c membership active, candidate_status=member, NO exam entitlement",
-        me["lifecycle"]["membership_status"] == "active" and me["lifecycle"]["candidate_status"] == "member"
-        and len(me["exams"]) == 0, me["lifecycle"])
-    chk("f1d USD 0 waiver payment on record", any(p["final_amount"] == 0 and str(p["reference"]).startswith("FOUND-") for p in me["payments"]))
+    chk("f1c membership active AND exam entitlement present (exam_fee_paid)",
+        me["lifecycle"]["membership_status"] == "active" and me["lifecycle"]["candidate_status"] == "exam_fee_paid"
+        and len(me["exams"]) == 1, me["lifecycle"])
+    chk("f1d USD 0 waiver payment on record + portal founding badge",
+        any(p["final_amount"] == 0 and str(p["reference"]).startswith("FOUND-") for p in me["payments"])
+        and me.get("founding_member") is True)
     con = it.dbconn()
     uses = con.execute("SELECT used_count FROM discount_codes WHERE id=?", (m1,)).fetchone()[0]; con.close()
     chk("f1e uses_count incremented to 1", uses == 1, uses)
     c, r2 = jget("POST", "/api/founding/redeem", token=atok, body={"code": "FOUND-M1"})
     chk("f1f second redeem by same user refused (409, no double grant)", c == 409 and r2.get("error") == "already_redeemed", (c, r2))
     chk("f1g still exactly one waiver payment", waiver_payments(auid) == 1)
+    # public founding-status drives the website's Founding Programme section
+    c, st9 = jget("GET", "/api/founding/status")
+    chk("f1h public founding status reports an open window", c == 200 and st9.get("open") is True, st9)
 
-    # ---------- Route 2: founding candidate (application + evidence + auto-approve) ----------
-    print("\n=== F2. Route 2 — founding candidate (application → membership + exam) ===")
+    # ---------- application-gated founding code (evidence + criteria + auto-approve) ----------
+    print("\n=== F2. Founding with application (evidence + criteria) ===")
     btok, buid = free_user("found-b@ex.co")
     c, r = jget("POST", "/api/me/founding-application", token=btok,
                 body={"code": "FOUND-C1", "experience_years": 6, "role": "Project Controls Lead",
@@ -235,6 +249,17 @@ def run(admin):
     chk("f9a stats list every founding code with uses + window",
         c == 200 and m1_row and m1_row["uses"]["redeemed"] == 1 and cap_row["uses"]["remaining"] == 0, s if c != 200 else "")
     chk("f9b applications-by-status included", any((x.get("applications") or {}) for x in s["rows"]))
+
+    # ---------- HARD INVARIANT: no self-serve path mints a PCP-AI credential without a passed exam ----------
+    print("\n=== F10. Credential-integrity invariant ===")
+    con = it.dbconn()
+    total_creds = con.execute("SELECT COUNT(*) FROM issued_credentials").fetchone()[0]
+    orphan_creds = con.execute("SELECT COUNT(*) FROM issued_credentials WHERE attempt_id IS NULL").fetchone()[0]
+    passed_attempts = con.execute("SELECT COUNT(*) FROM exam_attempts WHERE result='pass' AND status='submitted'").fetchone()[0]
+    con.close()
+    chk("f10a every credential in this run is tied to a passed exam attempt (none orphaned)",
+        orphan_creds == 0 and total_creds == passed_attempts and total_creds >= 1,
+        (total_creds, orphan_creds, passed_attempts))
 
 
 def main():
