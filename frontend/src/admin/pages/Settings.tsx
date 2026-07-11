@@ -19,7 +19,7 @@ export default function Settings() {
   const { data, loading, error, refetch } = useAdminQuery<SettingsMap>('/api/admin/settings')
   const [edits, setEdits] = useState<Record<string, string>>({})
   const [busy, setBusy] = useState(false)
-  const [msg, setMsg] = useState<string | null>(null)
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
 
   const grouped = useMemo(() => {
     const keys = Object.keys(data ?? {}).sort()
@@ -42,9 +42,9 @@ export default function Settings() {
       const res = await adminApi.patch<{ ok: boolean; rejected?: string[] }>('/api/admin/settings', edits)
       setEdits({})
       refetch()
-      setMsg(res.rejected && res.rejected.length > 0 ? `Saved. Some settings were not permitted: ${res.rejected.join(', ')}` : 'Settings saved.')
+      setMsg({ ok: true, text: res.rejected && res.rejected.length > 0 ? `Saved. Some settings were not permitted: ${res.rejected.join(', ')}` : 'Settings saved.' })
     } catch (e) {
-      setMsg(e instanceof Error ? e.message : 'Could not save.')
+      setMsg({ ok: false, text: e instanceof Error ? e.message : 'Could not save.' })
     } finally {
       setBusy(false)
     }
@@ -59,7 +59,7 @@ export default function Settings() {
         <h1>Settings</h1>
         <button className="btn sm" disabled={busy || Object.keys(edits).length === 0} onClick={save}>{busy ? 'Saving…' : `Save changes${Object.keys(edits).length ? ` (${Object.keys(edits).length})` : ''}`}</button>
       </div>
-      {msg && <div className={'notice' + (msg.includes('not permitted') || msg.includes('Could not') ? ' warn' : '')}>{msg}</div>}
+      {msg && <div className={'notice' + (msg.ok ? '' : ' err')} role="status">{msg.text}</div>}
       <p className="muted small">Configuration is stored as key/value pairs. Some keys are restricted to specific roles; the server will report any it does not permit you to change.</p>
 
       {GROUPS.map((g) =>

@@ -326,7 +326,7 @@ CREATE TABLE IF NOT EXISTS sample_questions (
   question VARCHAR(500) NOT NULL UNIQUE, options TEXT, option_a TEXT, option_b TEXT, option_c TEXT, option_d TEXT,
   answer_index BIGINT, domain TEXT,
   published BIGINT DEFAULT 1, sort_order BIGINT,
-  is_practice BIGINT DEFAULT 0 DEFAULT 0,
+  is_practice BIGINT DEFAULT 0,
   certification_id BIGINT DEFAULT 1
 );
 

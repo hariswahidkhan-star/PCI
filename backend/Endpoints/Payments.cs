@@ -80,11 +80,16 @@ public static class Payments
         app.MapPost("/api/webhook", async (HttpRequest req) =>
         {
             if (!stripeReady()) return Stripe503();
+            // Fail CLOSED if the signing secret is unset: ConstructEvent with an empty secret would verify
+            // the HMAC against "" — trivially forgeable — so refuse rather than trust the payload. (The
+            // production boot check also errors on a missing secret; this is defence in depth for dev.)
+            var webhookSecret = Environment.GetEnvironmentVariable("STRIPE_WEBHOOK_SECRET");
+            if (string.IsNullOrEmpty(webhookSecret)) return Results.Json(new { error = "webhook_not_configured" }, statusCode: 503);
             string payload;
             using (var reader = new StreamReader(req.Body)) payload = await reader.ReadToEndAsync();
             Event ev;
-            try { ev = EventUtility.ConstructEvent(payload, req.Headers["stripe-signature"].ToString(), Environment.GetEnvironmentVariable("STRIPE_WEBHOOK_SECRET") ?? ""); }
-            catch (Exception err) { return Results.Text($"Webhook signature error: {err.Message}", "text/plain", statusCode: 400); }
+            try { ev = EventUtility.ConstructEvent(payload, req.Headers["stripe-signature"].ToString(), webhookSecret); }
+            catch { return Results.Text("Webhook signature verification failed", "text/plain", statusCode: 400); }
 
             if (ev.Type == "checkout.session.completed")
             {
@@ -214,6 +219,30 @@ public static class Payments
                 // event can't violate the provider_payment_id unique index (INSERT OR IGNORE swallows the dup).
                 db.Execute("INSERT OR IGNORE INTO payments(product_type,payment_provider,provider_payment_id,payment_status,payment_date) VALUES('unknown','stripe',?, 'failed', datetime('now'))", "failed:" + id);
                 log(null, "payment_failed", ev.Id);
+            }
+            else if (ev.Type is "charge.refunded" or "charge.dispute.created" or "charge.dispute.funds_withdrawn")
+            {
+                // Money returned → revoke the access it bought. Resolve the payment by its Stripe
+                // PaymentIntent, flip it to refunded/reversed, and deactivate any UNUSED entitlement or
+                // membership it granted. A credential already earned by a passed exam, and a consumed
+                // entitlement, are left intact — the sitting genuinely happened. Idempotent.
+                var ch = ev.Data.Object as Charge;
+                var pi = ch?.PaymentIntentId;
+                var reversed = ev.Type != "charge.refunded" ? "reversed" : "refunded";
+                if (!string.IsNullOrEmpty(pi))
+                    db.Transaction(() =>
+                    {
+                        var pay = db.QueryOne("SELECT id,user_id,product_type FROM payments WHERE provider_payment_id=? AND payment_status='paid'", pi);
+                        if (pay is null) return;
+                        var payId = pay["id"]; var uid = pay["user_id"];
+                        db.Execute("UPDATE payments SET payment_status=? WHERE id=?", reversed, payId);
+                        db.Execute("UPDATE exam_entitlements SET status='revoked' WHERE payment_id=? AND status IN ('available','booked')", payId);
+                        db.Execute("UPDATE exam_bookings SET status='cancelled', updated_at=datetime('now') WHERE payment_id=? AND status='scheduled'", payId);
+                        // membership/bundle purchases: lapse the membership this payment activated
+                        if (H.Str(pay["product_type"]) is "membership" or "bundle" or "renewal")
+                            db.Execute("UPDATE memberships SET status='expired', expiry_date=datetime('now') WHERE user_id=? AND status='active'", uid);
+                        log(H.Ln(uid), "payment_" + reversed, $"{ev.Id} pi={pi}");
+                    });
             }
             return J(new { received = true });
         });

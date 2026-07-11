@@ -223,9 +223,15 @@ def answer_key(item_ids):
     con.close()
     return {str(r[0]): r[1] for r in rows}
 
+def clear_must_change(token, newpw="Op3rator!Pw"):
+    """A default/freshly-provisioned admin is flagged must_change_pw; the server blocks the console
+    (same gate the SPA enforces) until a new password is set. Clear it so the token can operate."""
+    jget("POST", "/api/admin/me/password", token=token, body={"new_password": newpw})
+    return token
+
 def admin_login():
     c, b = jget("POST", "/api/admin/auth/login", body={"email": "owner@pci.local", "password": "changeme-owner"})
-    return b["token"]
+    return clear_must_change(b["token"])
 
 # ============================================================================
 def main():
@@ -418,11 +424,22 @@ def run(proc):
 
     # ---------- 7. RBAC probes ----------
     print("\n=== 7. RBAC per role ===")
+    # must_change_password gate: a freshly-provisioned admin (temp password) is blocked from the
+    # console server-side until it sets a password — the SPA gate alone can be bypassed by a direct
+    # API caller, so this is enforced in middleware too.
+    c, mcb = jget("POST", "/api/admin/team", token=admin, body={"email": "mcp@pci.test", "name": "M", "role": "student_manager"})
+    c, mcl = jget("POST", "/api/admin/auth/login", body={"email": "mcp@pci.test", "password": mcb.get("temp_password", "")})
+    mctok = mcl.get("token")
+    c, mcbody = jget("GET", "/api/admin/members", token=mctok)
+    chk("7·mcp1 blocked before password change (403 must_change_password)", c == 403 and mcbody.get("error") == "must_change_password", (c, mcbody))
+    chk("7·mcp2 own profile stays reachable (allow-listed)", jget("GET", "/api/admin/me", token=mctok)[0] == 200)
+    chk("7·mcp3 password change succeeds", jget("POST", "/api/admin/me/password", token=mctok, body={"new_password": "Op3rator!Pw"})[0] == 200)
+    chk("7·mcp4 console reachable after change (200)", jget("GET", "/api/admin/members", token=mctok)[0] == 200)
     def make_admin(role):
         c, b = jget("POST", "/api/admin/team", token=admin, body={"email": f"{role}@pci.test", "name": role, "role": role})
         tp = b.get("temp_password")
         c, lb = jget("POST", "/api/admin/auth/login", body={"email": f"{role}@pci.test", "password": tp})
-        return lb.get("token")
+        return clear_must_change(lb.get("token"))
     # exam_manager: can proctoring, cannot student/website/owner sections
     em = make_admin("exam_manager")
     chk("7a exam_mgr CAN exam-sessions (200)", jget("GET","/api/admin/exam-sessions",token=em)[0]==200)
@@ -589,7 +606,7 @@ def run(proc):
     vtok = None
     c, vb = jget("POST", "/api/admin/team", token=admin, body={"email":"rbacview@pci.test","name":"V","role":"viewer"})
     c, vl = jget("POST", "/api/admin/auth/login", body={"email":"rbacview@pci.test","password":vb.get("temp_password","")})
-    vtok = vl.get("token")
+    vtok = clear_must_change(vl.get("token"))
     c, sw = jget("PATCH", "/api/admin/settings", token=vtok, body={"evidence_retention_days":"1"})
     chk("R7 viewer BLOCKED from platform key (deny-by-default)", "evidence_retention_days" in (sw.get("rejected") or []), sw)
     con = dbconn(); val = con.execute("SELECT svalue FROM site_settings WHERE skey='evidence_retention_days'").fetchone(); con.close()
@@ -633,7 +650,8 @@ def run(proc):
     # RBAC: exam_manager may not create members (members is a student-section permission)
     c, xb = jget("POST", "/api/admin/team", token=admin, body={"email": "exm2@pci.test", "name": "X", "role": "exam_manager"})
     c, xl = jget("POST", "/api/admin/auth/login", body={"email": "exm2@pci.test", "password": xb.get("temp_password", "")})
-    chk("9d7 exam_manager BLOCKED from creating members (403)", jget("POST", "/api/admin/members", token=xl.get("token"), body={"email": "x2@ex.co"})[0] == 403)
+    xtok = clear_must_change(xl.get("token"))
+    chk("9d7 exam_manager BLOCKED from creating members (403)", jget("POST", "/api/admin/members", token=xtok, body={"email": "x2@ex.co"})[0] == 403)
     # resend-setup now returns the link too (previously the token was minted and lost)
     con = dbconn(); mid = con.execute("SELECT id FROM users WHERE email='manual@ex.co'").fetchone()[0]; con.close()
     c, rs = jget("POST", f"/api/admin/members/{mid}/resend-setup", token=admin, body={})
@@ -760,7 +778,8 @@ def run(proc):
     # RBAC: a viewer cannot edit page content (pages section)
     c, vb = jget("POST", "/api/admin/team", token=admin, body={"email": "cview@pci.test", "name": "V", "role": "viewer"})
     c, vl = jget("POST", "/api/admin/auth/login", body={"email": "cview@pci.test", "password": vb.get("temp_password", "")})
-    chk("9f7 viewer BLOCKED from editing page blocks (403)", jget("POST", "/api/admin/page-blocks", token=vl.get("token"), body={"slug": "about.html", "block_key": "_h1", "cvalue": "hack"})[0] == 403)
+    cvtok = clear_must_change(vl.get("token"))
+    chk("9f7 viewer BLOCKED from editing page blocks (403)", jget("POST", "/api/admin/page-blocks", token=cvtok, body={"slug": "about.html", "block_key": "_h1", "cvalue": "hack"})[0] == 403)
     # the hack did not take effect
     chk("9f8 blocked edit did not change content", "Headline XXX live" in raw("/about.html"))
 

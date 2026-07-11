@@ -131,6 +131,8 @@ def main():
         time.sleep(1.2)
         _, ob = req("POST", "/api/admin/auth/login", body={"email": "owner@pci.local", "password": "changeme-owner"})
         otok = json.loads(ob)["token"]
+        # clear the forced-password-change flag so the owner token can operate the console
+        req("POST", "/api/admin/me/password", token=otok, body={"new_password": "Op3rator!Pw"})
         req("PATCH", "/api/admin/settings", token=otok, body={"evidence_retention_days": "0"})
         c4, pg = req("POST", "/api/admin/storage/purge", token=otok, body={})
         pg = json.loads(pg)

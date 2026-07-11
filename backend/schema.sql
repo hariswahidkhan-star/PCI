@@ -322,7 +322,7 @@ CREATE TABLE IF NOT EXISTS sample_questions (
   question TEXT NOT NULL UNIQUE, options TEXT, option_a TEXT, option_b TEXT, option_c TEXT, option_d TEXT,
   answer_index INTEGER, domain TEXT,
   published INTEGER DEFAULT 1, sort_order INTEGER,
-  is_practice INTEGER DEFAULT 0 DEFAULT 0,
+  is_practice INTEGER DEFAULT 0,
   certification_id INTEGER DEFAULT 1 REFERENCES certifications(id)
 );
 

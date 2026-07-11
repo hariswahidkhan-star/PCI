@@ -64,6 +64,8 @@ def main():
         # owner token
         _, ob = req("POST", "/api/admin/auth/login", body={"email": "owner@pci.local", "password": "changeme-owner"})
         otok = json.loads(ob)["token"]
+        # clear the forced-password-change flag so the owner token can operate the console
+        req("POST", "/api/admin/me/password", token=otok, body={"new_password": "Op3rator!Pw"})
         # student with data: create directly (this sweep tests handlers, not signup flow)
         con = sqlite3.connect(DB)
         uid = con.execute("INSERT INTO users(email,first_name,last_name,role,status,password_hash) VALUES('sweep@ex.co','S','W','student','active','x') RETURNING id").fetchone()[0]
