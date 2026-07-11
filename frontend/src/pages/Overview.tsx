@@ -38,8 +38,8 @@ function buildJourney(lc: Lifecycle): Journey[] {
 }
 
 const NEXT_STEP: Record<string, { title: string; detail: string; cta?: { label: string; to?: string; href?: string } }> = {
-  activate_membership: { title: 'Activate your membership', detail: 'Membership is the first step of the certification journey — pay when you are ready.', cta: { label: 'Activate membership' } },
-  pay_exam_fee: { title: 'Pay your exam fee', detail: 'Secure your certification exam entitlement to continue.', cta: { label: 'Continue enrolment', href: '/enroll.html' } },
+  activate_membership: { title: 'Activate your membership', detail: 'Membership is the first step of the certification journey — pay when you are ready, right here in the portal.', cta: { label: 'Activate membership', to: '/billing' } },
+  pay_exam_fee: { title: 'Pay your exam fee', detail: 'Secure your certification exam entitlement to continue — payable from your Billing page.', cta: { label: 'Pay exam fee', to: '/billing' } },
   complete_eligibility: { title: 'Complete your eligibility items', detail: 'A few items are needed before you can schedule your exam.', cta: { label: 'Review profile', to: '/profile' } },
   schedule_exam: { title: 'Schedule your exam', detail: 'You are eligible — choose a slot to sit your certification exam.', cta: { label: 'Schedule now', to: '/certifications' } },
   prepare_launch: { title: 'Prepare for exam day', detail: 'Your exam is booked. Review the requirements and get your launch code when it is time.', cta: { label: 'View exam', to: '/certifications' } },
