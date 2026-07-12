@@ -4,7 +4,7 @@ import { api, ApiError } from './client'
  * after paying, Stripe sends the student back to /app/billing and the webhook applies the
  * membership/entitlement to this same account (matched by email). */
 export async function startCheckout(opts: {
-  product: 'membership' | 'exam' | 'bundle'
+  product: 'membership' | 'exam' | 'bundle' | 'renewal' | 'recert'
   email: string
   cert?: string
   code?: string

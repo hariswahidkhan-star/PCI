@@ -66,6 +66,7 @@ function buildChecklist(me: Me): ChecklistItem[] {
     { label: 'Add a qualification', done: me.qualifications.length > 0, to: '/profile' },
     { label: 'Upload a government-issued ID', done: !!me.identity_document && me.identity_document.status !== 'rejected', to: '/certifications' },
     { label: 'Activate your membership', done: me.lifecycle.membership_status === 'active', to: '/billing' },
+    { label: 'Pay your exam fee', done: me.lifecycle.candidate_status === 'exam_fee_paid' || me.exams.length > 0, to: '/billing' },
     { label: 'Book your exam', done: ['booked', 'in_progress', 'submitted'].includes(me.lifecycle.exam_status), to: '/certifications' },
   ]
 }
