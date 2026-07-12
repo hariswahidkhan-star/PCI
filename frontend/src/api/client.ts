@@ -61,6 +61,8 @@ function humanize(code: string): string {
       return 'You do not have permission to view this.'
     case 'weak_password':
       return 'Password must be at least 8 characters.'
+    case 'password_mismatch':
+      return 'Passwords do not match. Please re-enter them.'
     default:
       return code
   }

@@ -77,6 +77,10 @@ public static class Account
             if (!rx.IsMatch(email)) return Results.Json(new { error = "invalid_email" }, statusCode: 400);
             if (first.Length is 0 or > 80 || last.Length > 80) return Results.Json(new { error = "name_required" }, statusCode: 400);
             if (password.Length < 8) return Results.Json(new { error = "weak_password" }, statusCode: 400);
+            // When the client sends a confirmation (the sign-up form does), re-check the match server-side
+            // so a mismatched pair can never create an account even if the client validation is bypassed.
+            if (H.GetS(b, "confirmPassword", "confirm_password") is { } confirm && confirm != password)
+                return Results.Json(new { error = "password_mismatch" }, statusCode: 400);
             if (db.QueryOne("SELECT id FROM users WHERE email=?", email) is not null)
                 return Results.Json(new { error = "account_exists" }, statusCode: 409);
 

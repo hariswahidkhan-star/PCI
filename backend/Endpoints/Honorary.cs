@@ -13,6 +13,28 @@ public static class Honorary
 {
     public const string AwardPrefix = "PCI-HON";
 
+    /// <summary>Mint a unique PCI-HON award number and insert the honorary_awards row, returning the
+    /// award number (null if generation failed after retries). Shared by manual board conferral and by
+    /// approved honorary-route applications, so both produce identical, publicly-verifiable awards.
+    /// Distinct number space from every certification prefix; widens to 5 digits after collisions.</summary>
+    public static string? ConferAward(Db db, string recipientName, long? userId, string citation, long adminId)
+    {
+        var yr = DateTime.UtcNow.Year;
+        var rnd = new Random();
+        for (int i = 0; i < 20; i++)
+        {
+            var candidate = i < 10 ? $"{AwardPrefix}-{yr}-{1000 + rnd.Next(0, 8999)}" : $"{AwardPrefix}-{yr}-{10000 + rnd.Next(0, 89999)}";
+            try
+            {
+                db.Execute("INSERT INTO honorary_awards(award_no,recipient_name,user_id,citation,conferred_by) VALUES(?,?,?,?,?)",
+                    candidate, recipientName, userId, citation, adminId);
+                return candidate;
+            }
+            catch { /* award_no collision → retry */ }
+        }
+        return null;
+    }
+
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log)
     {
         IResult J(object o) => Results.Json(o);
@@ -47,25 +69,7 @@ public static class Honorary
             if (userId is not null && db.QueryOne("SELECT id FROM users WHERE id=?", userId) is null)
                 return Results.Json(new { error = "user_not_found" }, statusCode: 404);
 
-            // Distinct number space from every certification prefix: PCI-HON-YYYY-NNNN. After ten
-            // collisions in the 4-digit space (only plausible once thousands are conferred in a
-            // year), widen to 5 digits rather than failing the conferral.
-            var yr = DateTime.UtcNow.Year;
-            string? awardNo = null;
-            var rnd = new Random();
-            for (int i = 0; i < 20 && awardNo is null; i++)
-            {
-                var candidate = i < 10
-                    ? $"{AwardPrefix}-{yr}-{1000 + rnd.Next(0, 8999)}"
-                    : $"{AwardPrefix}-{yr}-{10000 + rnd.Next(0, 89999)}";
-                try
-                {
-                    db.Execute("INSERT INTO honorary_awards(award_no,recipient_name,user_id,citation,conferred_by) VALUES(?,?,?,?,?)",
-                        candidate, name, userId, citation, adm!.Id);
-                    awardNo = candidate;
-                }
-                catch { /* award_no collision → retry */ }
-            }
+            var awardNo = ConferAward(db, name, userId, citation, adm!.Id);
             if (awardNo is null) return Results.Json(new { error = "award_no_generation_failed" }, statusCode: 500);
             if (userId is not null)
                 db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Recognition', 'Honorary Fellow (PCI)', ?)",
