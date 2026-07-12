@@ -21,6 +21,15 @@ public static class SeedContent
         IfEmpty("governance_roles", () => { var n = 0; foreach (var r in Roles) db.Execute("INSERT INTO governance_roles(role,holder,status,remit,sort_order) VALUES(?,NULL,'open',?,?)", r[0], r[1], ++n); });
         IfEmpty("resources", () => { var n = 0; foreach (var r in Docs) db.Execute("INSERT INTO resources(title,category,doc_type,url,description,published,sort_order) VALUES(?,?,'Page',?,?,1,?)", r[0], r[1], r[2], r[3], ++n); });
         IfEmpty("nav_items", () => { var n = 0; foreach (var r in Nav) db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) VALUES(?,?,?,?,1)", r[0], r[1], r[2], ++n); });
+        // The three access routes live under the Membership nav group. Add them idempotently on every boot
+        // (AFTER the IfEmpty bulk seed) so databases seeded before the routes existed pick them up too —
+        // the bulk seed only runs on an empty table. WHERE NOT EXISTS keeps it a no-op once present.
+        try
+        {
+            foreach (var (lbl, url, so) in new[] { ("Standard route", "route-standard.html", 1), ("Founding route", "route-founding.html", 2), ("Honorary route", "route-honorary.html", 3) })
+                db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT ?,?, 'Membership', ?, 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url=? AND nav_group='Membership')", lbl, url, so, url);
+        }
+        catch (Exception e) { Console.Error.WriteLine($"[seed] membership routes skipped: {e.Message}"); }
     }
 
     static readonly object?[][] Faqs =

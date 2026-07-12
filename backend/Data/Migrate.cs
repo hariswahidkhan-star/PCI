@@ -100,10 +100,8 @@ public static class Migrate
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_ack_subject','')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_admin_subject','')");
-        // Surface the three access ROUTES as pages under the Membership footer nav (the seed only runs on
-        // an empty table, so add them idempotently for existing databases — leading the group, sort_order 1-3).
-        foreach (var (lbl, url, so) in new[]{ ("Standard route","route-standard.html",1), ("Founding route","route-founding.html",2), ("Honorary route","route-honorary.html",3) })
-            db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT ?,?, 'Membership', ?, 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url=? AND nav_group='Membership')", lbl, url, so, url);
+        // NOTE: the three Membership route nav_items are added in SeedContent AFTER its IfEmpty bulk seed
+        // — adding them here (Migrate runs first) would make nav_items non-empty and suppress that seed.
         foreach (var (c, d) in new[]{
             ("violations","violations INTEGER DEFAULT 0"),("identity_result","identity_result TEXT"),
             ("identity_confidence","identity_confidence REAL"),("evidence_count","evidence_count INTEGER DEFAULT 0"),
