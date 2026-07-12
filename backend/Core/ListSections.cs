@@ -88,7 +88,26 @@ public static class ListSections
         var acct = db.Query("SELECT label,url FROM nav_items WHERE visible=1 AND nav_group='Header account' ORDER BY sort_order,id");
         var sb = new StringBuilder();
         foreach (var r in main)
-            sb.Append("<a href=\"").Append(EscAttr(H.Str(r["url"]) ?? "#")).Append("\">").Append(Esc(H.Str(r["label"]) ?? "")).Append("</a>");
+        {
+            var label = H.Str(r["label"]) ?? "";
+            var url = H.Str(r["url"]) ?? "#";
+            // A top-level item whose label names a nav_group gets a dropdown of that group's pages
+            // (e.g. Membership → Standard/Founding/Honorary routes + tiers). CSS reveals it on hover /
+            // focus on desktop and expanded within the mobile menu; the top item itself stays a link.
+            var subs = string.IsNullOrEmpty(label) ? new List<Dictionary<string, object?>>()
+                : db.Query("SELECT label,url FROM nav_items WHERE visible=1 AND nav_group=? ORDER BY sort_order,id", label);
+            if (subs.Count > 0)
+            {
+                sb.Append("<span class=\"nav-item has-sub\"><a href=\"").Append(EscAttr(url)).Append("\">").Append(Esc(label)).Append("</a><span class=\"submenu\">");
+                foreach (var s in subs)
+                    sb.Append("<a href=\"").Append(EscAttr(H.Str(s["url"]) ?? "#")).Append("\">").Append(Esc(H.Str(s["label"]) ?? "")).Append("</a>");
+                sb.Append("</span></span>");
+            }
+            else
+            {
+                sb.Append("<a href=\"").Append(EscAttr(url)).Append("\">").Append(Esc(label)).Append("</a>");
+            }
+        }
         foreach (var r in acct)
             sb.Append("<a class=\"nav-acct\" href=\"").Append(EscAttr(H.Str(r["url"]) ?? "#")).Append("\">").Append(Esc(H.Str(r["label"]) ?? "")).Append("</a>");
         return sb.ToString();
