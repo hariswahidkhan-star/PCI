@@ -2,35 +2,38 @@ import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { useMe } from '../data/MeContext'
+import { useT } from '../i18n'
+import LanguageSwitcher from './LanguageSwitcher'
 import { initials } from '../format'
 
 const NAV = [
-  { to: '/', label: 'Overview', end: true },
-  { to: '/certifications', label: 'Certifications' },
-  { to: '/credentials', label: 'Credentials' },
-  { to: '/cpd', label: 'CPD' },
-  { to: '/billing', label: 'Billing' },
-  { to: '/resources', label: 'Resources' },
-  { to: '/messages', label: 'Messages', badgeKey: 'unread' as const },
-  { to: '/support', label: 'Support' },
-  { to: '/profile', label: 'Profile', badgeKey: 'profile' as const },
+  { to: '/', tkey: 'nav.overview', end: true },
+  { to: '/certifications', tkey: 'nav.certifications' },
+  { to: '/credentials', tkey: 'nav.credentials' },
+  { to: '/cpd', tkey: 'nav.cpd' },
+  { to: '/billing', tkey: 'nav.billing' },
+  { to: '/resources', tkey: 'nav.resources' },
+  { to: '/messages', tkey: 'nav.messages', badgeKey: 'unread' as const },
+  { to: '/support', tkey: 'nav.support' },
+  { to: '/profile', tkey: 'nav.profile', badgeKey: 'profile' as const },
 ]
 
-const TITLES: Record<string, string> = {
-  '/': 'Overview',
-  '/certifications': 'Certifications',
-  '/credentials': 'Credentials',
-  '/cpd': 'CPD',
-  '/billing': 'Billing',
-  '/resources': 'Resources',
-  '/messages': 'Messages',
-  '/support': 'Support',
-  '/profile': 'Profile',
+const TITLE_KEYS: Record<string, string> = {
+  '/': 'nav.overview',
+  '/certifications': 'nav.certifications',
+  '/credentials': 'nav.credentials',
+  '/cpd': 'nav.cpd',
+  '/billing': 'nav.billing',
+  '/resources': 'nav.resources',
+  '/messages': 'nav.messages',
+  '/support': 'nav.support',
+  '/profile': 'nav.profile',
 }
 
 export default function Layout() {
   const { user, logout } = useAuth()
   const { me } = useMe()
+  const t = useT()
   const loc = useLocation()
   const unread = me?.unread ?? 0
   const completion = Number((me?.profile as Record<string, unknown> | null)?.profile_completion_percentage ?? 100)
@@ -46,13 +49,13 @@ export default function Layout() {
       <aside className={'sidebar' + (menuOpen ? ' open' : '')}>
         <div className="brand">
           <img src="/assets/logo.png" alt="PCI Global" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
-          <span>PCI Global Portal</span>
+          <span>{t('shell.portal')}</span>
         </div>
-        <div className="nav-label">Menu</div>
+        <div className="nav-label">{t('shell.menu')}</div>
         <nav className="nav">
           {NAV.map((n) => (
             <NavLink key={n.to} to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
-              <span>{n.label}</span>
+              <span>{t(n.tkey)}</span>
               {n.badgeKey === 'unread' && unread > 0 && <span className="pill">{unread}</span>}
               {n.badgeKey === 'profile' && completion < 100 && <span className="pill dim">{completion}%</span>}
             </NavLink>
@@ -62,8 +65,8 @@ export default function Layout() {
           <div className={'member-chip' + (memberActive ? ' on' : '')}>
             <span className="mc-dot" />
             <span>
-              <strong>{memberActive ? (me?.founding_member ? 'Founding member' : 'Member') : 'Guest account'}</strong>
-              <em>{memberActive ? (me?.founding_member ? 'Fees waived — founding cohort' : 'Membership active') : 'Membership not active'}</em>
+              <strong>{memberActive ? (me?.founding_member ? t('shell.foundingMember') : t('shell.member')) : t('shell.guest')}</strong>
+              <em>{memberActive ? (me?.founding_member ? t('shell.feesWaived') : t('shell.membershipActive')) : t('shell.membershipNotActive')}</em>
             </span>
           </div>
         </div>
@@ -74,17 +77,18 @@ export default function Layout() {
           <div className="row">
             <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>
             <div>
-              <div className="tb-crumb">Student Portal</div>
-              <strong className="tb-title">{TITLES[loc.pathname] ?? 'Student Portal'}</strong>
+              <div className="tb-crumb">{t('shell.studentPortal')}</div>
+              <strong className="tb-title">{t(TITLE_KEYS[loc.pathname] ?? 'shell.studentPortal')}</strong>
             </div>
           </div>
           <div className="row">
+            <LanguageSwitcher />
             <div className="avatar" title={user?.email}>{initials(user?.firstName, user?.lastName)}</div>
             <div className="small" style={{ lineHeight: 1.2 }}>
               <div style={{ fontWeight: 700 }}>{user ? `${user.firstName} ${user.lastName}`.trim() || user.email : ''}</div>
               <div className="muted">{user?.email}</div>
             </div>
-            <button className="btn secondary sm" onClick={logout}>Sign out</button>
+            <button className="btn secondary sm" onClick={logout}>{t('shell.signOut')}</button>
           </div>
         </header>
         <main className="content route-fade" key={loc.pathname}>

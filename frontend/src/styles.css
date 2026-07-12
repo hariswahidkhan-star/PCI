@@ -533,3 +533,25 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after { animation: none !important; transition: none !important; }
 }
+
+
+/* ===== i18n: language switcher + RTL (Arabic) ===== */
+.lang-switch{display:inline-flex;align-items:center;gap:6px;color:var(--slate,#475569);}
+.lang-switch>svg{flex:none;opacity:.8;}
+.lang-switch select{border:1px solid var(--line,#e2e8f0);border-radius:8px;padding:5px 8px;font-size:13px;background:#fff;color:inherit;cursor:pointer;max-width:140px;}
+.auth-lang{position:absolute;top:16px;right:18px;z-index:30;}
+.auth-lang .lang-switch select{background:rgba(255,255,255,.92);}
+[dir="rtl"] .auth-lang{right:auto;left:18px;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+
+/* Arabic right-to-left: the shell is flex, so the sidebar naturally moves to the right; these rules
+   fix the details physical properties would otherwise get wrong. */
+[dir="rtl"] .content,[dir="rtl"] .card,[dir="rtl"] .tb-title,[dir="rtl"] .tb-crumb{text-align:right;}
+[dir="rtl"] .member-chip{flex-direction:row-reverse;}
+[dir="rtl"] .pill{margin-left:0;margin-right:auto;}
+[dir="rtl"] .nav a{flex-direction:row-reverse;}
+@media (max-width:900px){
+  /* off-canvas sidebar slides in from the right in RTL */
+  [dir="rtl"] .sidebar{left:auto;right:0;transform:translateX(100%);}
+  [dir="rtl"] .sidebar.open{transform:translateX(0);}
+}
