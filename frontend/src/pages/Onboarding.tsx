@@ -6,6 +6,7 @@ import { useMe } from '../data/MeContext'
 import RepeaterSection from '../components/RepeaterSection'
 import Ring from '../components/Ring'
 import { EXPERIENCE_FIELDS, QUALIFICATION_FIELDS, HELD_CERT_FIELDS, monthsCovered } from '../data/wizardFields'
+import { COUNTRIES } from '../data/countries'
 import type { Experience, Qualification, HeldCertification } from '../api/types'
 
 const STEPS = ['Welcome', 'About you', 'Experience', 'Qualifications', 'Certifications', 'Done']
@@ -104,7 +105,16 @@ export default function Onboarding() {
                 {ABOUT_FIELDS.map((f) => (
                   <div className="field" key={f.key}>
                     <label htmlFor={'ob_' + f.key}>{f.label}</label>
-                    <input id={'ob_' + f.key} type={f.type ?? 'text'} value={val(f.key)} onChange={(e) => setForm({ ...form, [f.key]: e.target.value })} />
+                    {f.key === 'country' ? (
+                      <select id="ob_country" value={val('country')} onChange={(e) => setForm({ ...form, country: e.target.value })}>
+                        <option value="">Select your country…</option>
+                        {COUNTRIES.map((c) => (
+                          <option key={c.iso} value={c.name}>{c.name}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input id={'ob_' + f.key} type={f.type ?? 'text'} value={val(f.key)} onChange={(e) => setForm({ ...form, [f.key]: e.target.value })} />
+                    )}
                   </div>
                 ))}
               </div>

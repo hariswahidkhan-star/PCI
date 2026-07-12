@@ -87,6 +87,11 @@ public static class Public
                 membership = Pricing(db, "membership", null),
                 exam = Pricing(db, "exam", null, cert),
                 bundle = Pricing(db, "bundle", null, cert),
+                // Renewal (3-year membership extension) and recertification (3-year credential cycle) are
+                // real purchase products with their own price book rules; the portal surfaces a pay button
+                // for each once a member/credential is inside its renewal window.
+                renewal = Pricing(db, "renewal", null),
+                recert = Pricing(db, "recert", null),
                 cert = cert is null ? null : new { code = cert["code"], name = cert["name"] },
             });
         });

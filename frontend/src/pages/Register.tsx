@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import GoogleButton from '../components/GoogleButton'
 import AuthShell from '../components/AuthShell'
+import { COUNTRIES, DIAL_CODES, dialForCountry } from '../data/countries'
 
 /** Free account creation — no payment required. Students build their profile first and pay
  * membership or exam fees whenever they choose (from the site or the portal). */
@@ -22,12 +23,20 @@ export default function Register() {
     : product
       ? `/billing?product=${encodeURIComponent(product)}${cert ? `&cert=${encodeURIComponent(cert)}` : ''}`
       : '/onboarding'
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', country: '' })
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', country: '', dial: '', phone: '' })
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
-  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm({ ...form, [k]: e.target.value })
+
+  // Selecting a country pre-fills the matching phone dialling code (the student can still override it),
+  // so the two contact fields stay consistent without extra typing.
+  const setCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const name = e.target.value
+    const d = dialForCountry(name)
+    setForm((f) => ({ ...f, country: name, dial: d || f.dial }))
+  }
 
   async function submit(e: FormEvent) {
     e.preventDefault()
@@ -36,9 +45,19 @@ export default function Register() {
       setError('Password must be at least 8 characters.')
       return
     }
+    if (!form.country) {
+      setError('Please select your country.')
+      return
+    }
+    if (!form.dial || !form.phone.trim()) {
+      setError('Please enter your contact phone number, including the country code.')
+      return
+    }
     setBusy(true)
     try {
-      await register({ ...form, email: form.email.trim().toLowerCase() })
+      const { dial, phone, ...rest } = form
+      const mobile = `${dial} ${phone.trim()}`.trim()
+      await register({ ...rest, email: form.email.trim().toLowerCase(), mobile })
       nav(afterSignup, { replace: true })
     } catch (err) {
       const msg = err instanceof Error ? err.message : ''
@@ -99,8 +118,41 @@ export default function Register() {
             <input id="rpassword" type="password" autoComplete="new-password" required minLength={8} value={form.password} onChange={set('password')} />
           </div>
           <div className="field">
-            <label htmlFor="rcountry">Country (optional)</label>
-            <input id="rcountry" autoComplete="country-name" value={form.country} onChange={set('country')} />
+            <label htmlFor="rcountry">Country</label>
+            <select id="rcountry" autoComplete="country-name" required value={form.country} onChange={setCountry}>
+              <option value="" disabled>Select your country…</option>
+              {COUNTRIES.map((c) => (
+                <option key={c.iso} value={c.name}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="rphone">Contact phone</label>
+            <div className="row" style={{ gap: '.5rem' }}>
+              <select
+                aria-label="Country dialling code"
+                style={{ maxWidth: 120 }}
+                required
+                value={form.dial}
+                onChange={set('dial')}
+              >
+                <option value="" disabled>Code</option>
+                {DIAL_CODES.map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+              <input
+                id="rphone"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel-national"
+                required
+                placeholder="Phone number"
+                style={{ flex: 1 }}
+                value={form.phone}
+                onChange={set('phone')}
+              />
+            </div>
           </div>
           <button className="btn block" type="submit" disabled={busy}>
             {busy ? 'Creating account…' : 'Create free account'}

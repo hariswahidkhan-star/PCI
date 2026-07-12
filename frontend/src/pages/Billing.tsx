@@ -20,8 +20,20 @@ interface PricingResp {
   membership: PriceBlock
   exam: PriceBlock
   bundle: PriceBlock
+  renewal: PriceBlock
+  recert: PriceBlock
   cert?: { code: string; name: string } | null
 }
+
+/** Whole days from now until an ISO date (negative once it's in the past); null if unparseable. */
+function daysUntil(iso?: string | null): number | null {
+  if (!iso) return null
+  const t = new Date(iso).getTime()
+  if (Number.isNaN(t)) return null
+  return Math.ceil((t - Date.now()) / 86_400_000)
+}
+// A membership/credential inside this many days of expiry (or already lapsed) surfaces a pay-to-extend row.
+const RENEW_WINDOW_DAYS = 120
 interface CatalogueCert {
   id: number
   code: string
@@ -57,9 +69,26 @@ function PlansCard() {
   const paid = params.get('paid')
   const cancelled = params.get('cancelled')
 
-  async function buy(product: 'membership' | 'exam') {
+  // Renewal (membership) and recertification (per credential) surface a pay-to-extend row only inside
+  // the renewal window or once lapsed — a freshly-activated member/credential sees neither.
+  const membershipExpiry = (me.membership as Record<string, unknown> | null)?.expiry_date as string | undefined
+  const renewDays = daysUntil(membershipExpiry)
+  const renewalDue = me.membership != null && renewDays != null && renewDays <= RENEW_WINDOW_DAYS
+  const seenCert = new Set<string>()
+  const recertsDue = (me.exams ?? [])
+    .map((x) => ({ code: x.certification_code ?? undefined, name: x.certification_name ?? undefined, exp: x.credential?.expires_at, days: daysUntil(x.credential?.expires_at), hasCred: !!x.credential }))
+    .filter((r) => r.hasCred && r.days != null && r.days <= RENEW_WINDOW_DAYS)
+    .filter((r) => { const k = r.code ?? ''; if (seenCert.has(k)) return false; seenCert.add(k); return true })
+
+  // `busyKey` disambiguates concurrent buttons: exam/membership/renewal are unique, but a member may
+  // hold several credentials, so each recert button keys on `recert:<cert code>`.
+  async function buy(
+    product: 'membership' | 'exam' | 'renewal' | 'recert',
+    opts: { cert?: string; busyKey?: string } = {},
+  ) {
+    const busyKey = opts.busyKey ?? product
     setErr(null)
-    setBusy(product)
+    setBusy(busyKey)
     try {
       // Validate a discount/founding code BEFORE opening Stripe, for THIS product — so an invalid or
       // wrong-product code is caught here instead of silently charging full price at checkout.
@@ -75,7 +104,7 @@ function PlansCard() {
       await startCheckout({
         product,
         email: me!.user.email,
-        cert: product === 'exam' ? certSel || undefined : undefined,
+        cert: product === 'exam' ? certSel || undefined : product === 'recert' ? opts.cert : undefined,
         code: c || undefined,
         first: me!.user.first_name ?? undefined,
         last: me!.user.last_name ?? undefined,
@@ -141,6 +170,43 @@ function PlansCard() {
           </button>
         </div>
       </div>
+
+      {renewalDue && pricing && (
+        <div className="plan-row">
+          <div style={{ flex: 1, minWidth: 220 }}>
+            <strong>Renew membership</strong>
+            <div className="muted small">
+              Your 3-year membership {renewDays != null && renewDays < 0 ? 'lapsed on' : 'expires'} {membershipExpiry ? fmtDate(membershipExpiry) : ''}. Renewing extends it another 3-year term.
+            </div>
+          </div>
+          <div className="row">
+            <span className="plan-price">{fmtMoney(pricing.renewal.final, pricing.currency)}</span>
+            <button className="btn sm" disabled={busy !== null} onClick={() => buy('renewal')}>
+              {busy === 'renewal' ? 'Opening checkout…' : 'Renew membership'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {pricing && recertsDue.map((r) => {
+        const key = `recert:${r.code ?? ''}`
+        return (
+          <div className="plan-row" key={key}>
+            <div style={{ flex: 1, minWidth: 220 }}>
+              <strong>Recertify {r.code}</strong>
+              <div className="muted small">
+                Your {r.name || r.code} credential {r.days != null && r.days < 0 ? 'expired on' : 'expires'} {r.exp ? fmtDate(r.exp) : ''}. Recertify for another 3-year cycle.
+              </div>
+            </div>
+            <div className="row">
+              <span className="plan-price">{fmtMoney(pricing.recert.final, pricing.currency)}</span>
+              <button className="btn sm" disabled={busy !== null} onClick={() => buy('recert', { cert: r.code, busyKey: key })}>
+                {busy === key ? 'Opening checkout…' : 'Recertify'}
+              </button>
+            </div>
+          </div>
+        )
+      })}
 
       <div className="row" style={{ marginTop: '.75rem', flexWrap: 'wrap' }}>
         <input
