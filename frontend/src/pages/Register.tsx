@@ -10,8 +10,18 @@ export default function Register() {
   const { register } = useAuth()
   const nav = useNavigate()
   const [params] = useSearchParams()
-  // a founding code carried from the public site lands the new account on Billing to redeem it
-  const founding = params.get('founding')
+  // Deep-link intent carried from the public site so nothing is a dead-end after signup:
+  //  ?founding[=CODE] → Billing to redeem the founding code (FoundingCard);
+  //  ?product=exam&cert=CODE (from the certification catalogue "Enrol" CTA) → Billing to buy it.
+  const foundingPresent = params.has('founding')
+  const founding = params.get('founding') ?? ''
+  const product = params.get('product')
+  const cert = params.get('cert')
+  const afterSignup = foundingPresent
+    ? `/billing?founding=${encodeURIComponent(founding)}`
+    : product
+      ? `/billing?product=${encodeURIComponent(product)}${cert ? `&cert=${encodeURIComponent(cert)}` : ''}`
+      : '/onboarding'
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', country: '' })
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -29,7 +39,7 @@ export default function Register() {
     setBusy(true)
     try {
       await register({ ...form, email: form.email.trim().toLowerCase() })
-      nav(founding ? `/billing?founding=${encodeURIComponent(founding)}` : '/onboarding', { replace: true })
+      nav(afterSignup, { replace: true })
     } catch (err) {
       const msg = err instanceof Error ? err.message : ''
       setError(
@@ -53,14 +63,20 @@ export default function Register() {
           </p>
         </div>
 
-        {founding && (
+        {foundingPresent && (
           <div className="notice" style={{ marginBottom: '1rem' }}>
-            Founding code <strong>{founding.toUpperCase()}</strong> — create your free account and
-            you will be taken straight to redeem it.
+            {founding
+              ? <>Founding code <strong>{founding.toUpperCase()}</strong> — create your free account and you will be taken straight to redeem it.</>
+              : <>Have a founding code? Create your free account and you will be taken straight to the page where you can enter and redeem it.</>}
+          </div>
+        )}
+        {!foundingPresent && product === 'exam' && (
+          <div className="notice" style={{ marginBottom: '1rem' }}>
+            Create your free account first — you will then be taken to pay the exam fee{cert ? <> for <strong>{cert.toUpperCase()}</strong></> : ''} securely.
           </div>
         )}
 
-        <GoogleButton onError={setError} />
+        <GoogleButton onError={setError} destination={afterSignup} />
 
         <form onSubmit={submit}>
           {error && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{error}</div>}

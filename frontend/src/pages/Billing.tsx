@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useMe } from '../data/MeContext'
 import { useQuery } from '../api/hooks'
+import { api } from '../api/client'
 import { startCheckout, checkoutErrorMessage } from '../api/checkout'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
 import FoundingCard from '../components/FoundingCard'
@@ -60,11 +61,22 @@ function PlansCard() {
     setErr(null)
     setBusy(product)
     try {
+      // Validate a discount/founding code BEFORE opening Stripe, for THIS product — so an invalid or
+      // wrong-product code is caught here instead of silently charging full price at checkout.
+      const c = code.trim()
+      if (c) {
+        const v = await api.post<{ valid: boolean; message?: string }>('/api/validate-code', { code: c, product, email: me!.user.email })
+        if (!v.valid) {
+          setErr(v.message || 'That code is not valid for this purchase.')
+          setBusy(null)
+          return
+        }
+      }
       await startCheckout({
         product,
         email: me!.user.email,
         cert: product === 'exam' ? certSel || undefined : undefined,
-        code: code.trim() || undefined,
+        code: c || undefined,
         first: me!.user.first_name ?? undefined,
         last: me!.user.last_name ?? undefined,
       })
@@ -133,12 +145,12 @@ function PlansCard() {
       <div className="row" style={{ marginTop: '.75rem', flexWrap: 'wrap' }}>
         <input
           style={{ maxWidth: 220 }}
-          placeholder="Discount code (optional)"
+          placeholder="Discount or founding code (optional)"
           value={code}
           onChange={(ev) => setCode(ev.target.value)}
-          aria-label="Discount code"
+          aria-label="Discount or founding code"
         />
-        <span className="muted small">Codes are validated and applied at checkout. Payments are processed securely by Stripe.</span>
+        <span className="muted small">A discount code applies to <strong>both membership and exam fees</strong>. It is checked before payment, so an invalid code won&rsquo;t charge you full price. Founding codes are redeemed in the founding card below.</span>
       </div>
     </Card>
   )

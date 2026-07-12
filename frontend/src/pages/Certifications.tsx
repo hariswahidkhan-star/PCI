@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useMe } from '../data/MeContext'
 import { useQuery } from '../api/hooks'
 import { api, ApiError, getToken } from '../api/client'
@@ -248,9 +249,34 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
           )}
         </div>
       ) : attempt ? (
-        <div style={{ marginTop: '.75rem' }} className="row">
-          <span className="muted small">Latest attempt:</span> <StatusBadge status={String(attempt.result_status || attempt.status || '')} />
-        </div>
+        (() => {
+          const rs = String(attempt.result_status || attempt.status || '')
+          const res = String(attempt.result || '')          // redacted to '' while a result is held
+          const passed = rs === 'credential_issued' || res === 'pass'
+          const failed = res === 'fail' && !passed
+          const underReview = !passed && !failed
+          return (
+            <div className="notice" style={{ marginTop: '.75rem' }}>
+              <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
+                <span className="muted small">Latest attempt:</span> <StatusBadge status={rs} />
+              </div>
+              {underReview && (
+                <div className="muted small" style={{ marginTop: '.5rem' }}>
+                  Your result is being finalised — we&rsquo;ll notify you as soon as it&rsquo;s released.
+                </div>
+              )}
+              {failed && (
+                <div className="muted small" style={{ marginTop: '.5rem' }}>
+                  You can retake the examination — buy another exam attempt, then schedule your new sitting here.
+                </div>
+              )}
+              <div className="row" style={{ marginTop: '.6rem', flexWrap: 'wrap' }}>
+                <a className="btn sm secondary" href={`/student.html#t=${getToken() ?? ''}`}>View full result ↗</a>
+                {failed && <Link className="btn sm" to="/billing">Buy a retake →</Link>}
+              </div>
+            </div>
+          )
+        })()
       ) : (
         <div style={{ marginTop: '.75rem' }}>
           {scheduling ? (

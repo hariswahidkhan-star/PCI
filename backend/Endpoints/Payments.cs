@@ -147,7 +147,9 @@ public static class Payments
                             var mrow = db.QueryOne("SELECT * FROM memberships WHERE user_id=?", userId);
                             var nowIso = H.IsoNow;
                             var baseD = mrow is not null && H.Str(mrow["expiry_date"]) is { } ex && H.After(ex, nowIso) ? ex : nowIso;
-                            var newExp = H.IsoFromMillis(H.JsMillis(baseD) + 365L * 86400_000);
+                            // Membership is a 3-YEAR term (matches the initial grant above and renewal_cycle
+                            // = '3 years'); a renewal must extend by 3 years, not 1, or it silently under-grants.
+                            var newExp = H.IsoFromMillis(H.JsMillis(baseD) + 3L * 365L * 86400_000);
                             if (mrow is not null) db.Execute("UPDATE memberships SET expiry_date=?, status='active' WHERE user_id=?", newExp, userId);
                             else db.Execute("INSERT INTO memberships(user_id,membership_type,status,start_date,expiry_date) VALUES(?, 'Student','active',datetime('now'),?)", userId, newExp);
                             log(userId, "membership_renewed", newExp);
