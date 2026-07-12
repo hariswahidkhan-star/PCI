@@ -4,6 +4,7 @@ import { useMe } from '../data/MeContext'
 import { api } from '../api/client'
 import { Card, Spinner, ErrorNote, Empty, StatusBadge } from '../components/ui'
 import { fmtDate } from '../format'
+import { useT } from '../i18n'
 
 interface CpdRow {
   id: number
@@ -17,6 +18,7 @@ interface CpdRow {
 const CATEGORIES = ['General', 'Training course', 'Conference', 'Self-study', 'Mentoring', 'Publication', 'On-the-job']
 
 export default function Cpd() {
+  const t = useT()
   const { me, refetch: refetchMe } = useMe()
   const { data, loading, error, refetch } = useQuery<{ rows: CpdRow[] }>('/api/me/cpd')
   const [form, setForm] = useState({ description: '', category: 'General', hours: '', activity_date: '' })
@@ -37,7 +39,7 @@ export default function Cpd() {
       refetch()
       refetchMe()
     } catch (err) {
-      setMsg(err instanceof Error ? err.message : 'Could not save entry.')
+      setMsg(err instanceof Error ? err.message : t('cpd.saveError'))
     } finally {
       setBusy(false)
     }
@@ -49,13 +51,13 @@ export default function Cpd() {
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       <div>
-        <h1>Continuing professional development</h1>
-        <p className="muted">Log CPD to keep your credential current. Target: {target} hours.</p>
+        <h1>{t('cpd.heading')}</h1>
+        <p className="muted">{t('cpd.subtitle', { target })}</p>
       </div>
 
-      <Card title="Progress">
+      <Card title={t('cpd.progress')}>
         <div className="spread" style={{ marginBottom: '.5rem' }}>
-          <strong>{total} of {target} hours</strong>
+          <strong>{t('cpd.hoursOf', { total, target })}</strong>
           <span className="muted small">{pct}%</span>
         </div>
         <div style={{ height: 10, background: 'var(--canvas)', borderRadius: 999, overflow: 'hidden' }}>
@@ -63,44 +65,44 @@ export default function Cpd() {
         </div>
       </Card>
 
-      <Card title="Add a CPD activity">
+      <Card title={t('cpd.addActivity')}>
         {msg && <div className="notice err" role="alert" style={{ marginBottom: '.75rem' }}>{msg}</div>}
         <form onSubmit={add}>
           <div className="grid cols-2">
             <div className="field">
-              <label htmlFor="cpd-activity">Activity</label>
-              <input id="cpd-activity" required value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="e.g. EVM masterclass" />
+              <label htmlFor="cpd-activity">{t('cpd.activity')}</label>
+              <input id="cpd-activity" required value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder={t('cpd.activityPlaceholder')} />
             </div>
             <div className="field">
-              <label htmlFor="cpd-category">Category</label>
+              <label htmlFor="cpd-category">{t('cpd.category')}</label>
               <select id="cpd-category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
                 {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
               </select>
             </div>
             <div className="field">
-              <label htmlFor="cpd-hours">Hours</label>
+              <label htmlFor="cpd-hours">{t('cpd.hours')}</label>
               <input id="cpd-hours" type="number" step="0.5" min="0" required value={form.hours} onChange={(e) => setForm({ ...form, hours: e.target.value })} />
             </div>
             <div className="field">
-              <label htmlFor="cpd-date">Date</label>
+              <label htmlFor="cpd-date">{t('cpd.date')}</label>
               <input id="cpd-date" type="date" value={form.activity_date} onChange={(e) => setForm({ ...form, activity_date: e.target.value })} />
             </div>
           </div>
-          <button className="btn sm" disabled={busy}>{busy ? 'Saving…' : 'Add entry'}</button>
+          <button className="btn sm" disabled={busy}>{busy ? t('cpd.saving') : t('cpd.addEntry')}</button>
         </form>
       </Card>
 
-      <Card title="Logged activities">
+      <Card title={t('cpd.loggedActivities')}>
         {loading ? (
           <Spinner />
         ) : error ? (
           <ErrorNote>{error}</ErrorNote>
         ) : !data || data.rows.length === 0 ? (
-          <Empty>No CPD logged yet.</Empty>
+          <Empty>{t('cpd.empty')}</Empty>
         ) : (
           <table className="data">
             <thead>
-              <tr><th>Date</th><th>Activity</th><th>Category</th><th>Hours</th><th>Status</th><th></th></tr>
+              <tr><th>{t('cpd.date')}</th><th>{t('cpd.activity')}</th><th>{t('cpd.category')}</th><th>{t('cpd.hours')}</th><th>{t('cpd.status')}</th><th></th></tr>
             </thead>
             <tbody>
               {data.rows.map((r) => (
@@ -110,7 +112,7 @@ export default function Cpd() {
                   <td>{r.category}</td>
                   <td>{r.hours}</td>
                   <td><StatusBadge status={r.status || 'pending'} /></td>
-                  <td><button className="btn ghost sm" onClick={() => remove(r.id)} aria-label="Delete">Remove</button></td>
+                  <td><button className="btn ghost sm" onClick={() => remove(r.id)} aria-label={t('cpd.deleteAria')}>{t('cpd.remove')}</button></td>
                 </tr>
               ))}
             </tbody>
