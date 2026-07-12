@@ -7,7 +7,7 @@ import { renderGoogleButton } from '../auth/google'
 
 /** "Continue with Google" — renders the official button only when the backend reports a configured
  * client id, so the page is clean when Google sign-in is off. */
-export default function GoogleButton({ onError }: { onError: (msg: string) => void }) {
+export default function GoogleButton({ onError, destination = '/' }: { onError: (msg: string) => void; destination?: string }) {
   const { googleSignIn } = useAuth()
   const nav = useNavigate()
   const slot = useRef<HTMLDivElement>(null)
@@ -22,7 +22,9 @@ export default function GoogleButton({ onError }: { onError: (msg: string) => vo
         await renderGoogleButton(slot.current, cfg.googleClientId, async (credential) => {
           try {
             await googleSignIn(credential)
-            nav('/', { replace: true })
+            // Honour the deep-link intent (founding code / exam purchase) carried into signup, so a
+            // Google account isn't dropped straight on the dashboard with its code silently lost.
+            nav(destination, { replace: true })
           } catch (e) {
             onError(e instanceof Error ? e.message : 'Google sign-in failed. Please try again.')
           }
@@ -33,7 +35,7 @@ export default function GoogleButton({ onError }: { onError: (msg: string) => vo
     return () => {
       cancelled = true
     }
-  }, [googleSignIn, nav, onError])
+  }, [googleSignIn, nav, onError, destination])
 
   return (
     <div style={{ display: enabled ? 'block' : 'none' }}>

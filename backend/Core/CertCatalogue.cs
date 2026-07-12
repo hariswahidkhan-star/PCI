@@ -76,8 +76,10 @@ public static class CertCatalogue
                 sb.Append("<li>").Append((int)cfg.Duration).Append(" minutes · ").Append(FmtPct(cfg.Pass)).Append(" to pass</li>");
                 sb.Append("<li>Valid for ").Append(years).Append(years == 1 ? " year" : " years").Append("</li>");
                 sb.Append("</ul>");
-                // Enrolment carries the certification code so the checkout prices and books THIS credential.
-                sb.Append("<a class=\"btn btn-red cert-card-cta\" href=\"checkout.html?product=exam&amp;cert=")
+                // Enrolment happens in the portal: carry the certification code through the free-account
+                // signup so the in-portal purchase prices and books THIS credential (never the retired
+                // public checkout wizard).
+                sb.Append("<a class=\"btn btn-red cert-card-cta\" href=\"/app/register?product=exam&amp;cert=")
                   .Append(Uri.EscapeDataString(code)).Append("\">Enrol in ").Append(Esc(code)).Append("</a>");
                 sb.Append("</article>");
             }

@@ -48,6 +48,11 @@ public static class Public
     {
         var c = db.QueryOne("SELECT * FROM discount_codes WHERE code=?", (code ?? "").ToUpperInvariant());
         if (c is null || !H.B(c["active"])) return new("This discount code is not valid or has expired.", null);
+        // A founding code is not a discount — it opens the free founding route and is redeemed in the
+        // portal's Founding access card. If one is pasted into the discount field, say so plainly rather
+        // than silently accepting it as a 0% code and charging full price.
+        if (!string.IsNullOrEmpty(H.Str(c["founding_route"])))
+            return new("That's a founding code — redeem it in the Founding access card, not as a discount.", null);
         var today = DateTime.UtcNow.ToString("yyyy-MM-dd");
         if (H.Str(c["end_date"]) is { } ed && string.Compare(ed, today, StringComparison.Ordinal) < 0) return new("This discount code has expired.", null);
         if (H.Str(c["start_date"]) is { } sd && string.Compare(sd, today, StringComparison.Ordinal) > 0) return new("This discount code is not yet active.", null);
@@ -59,7 +64,8 @@ public static class Public
             if (used >= lim) return new("This code has already been used with this email address.", null);
         }
         var appliesTo = H.Str(c["applies_to"]);
-        if (appliesTo != "all" && !CatsFor(product).Contains(appliesTo)) return new("This code does not apply to the selected membership or exam fee.", null);
+        if (appliesTo != "all" && !CatsFor(product).Contains(appliesTo))
+            return new($"This code only applies to {(appliesTo == "exam" ? "the exam fee" : "membership")}, not this purchase.", null);
         return new(null, c);
     }
 
@@ -116,7 +122,9 @@ public static class Public
             var v = ValidateCode(db, code, product, email);
             if (v.Error is not null) return J(new { valid = false, message = v.Error });
             var pr = Pricing(db, product, v.Code);
-            return J(new { valid = true, code = v.Code!["code"], discount_type = v.Code["discount_type"], discount_value = v.Code["discount_value"], code_amount = pr.codeAmount, final_amount = pr.final, message = $"Discount applied: {v.Code["code"]}" });
+            var scope = H.Str(v.Code!["applies_to"]) ?? "all";
+            var scopeLabel = scope == "membership" ? "membership" : scope == "exam" ? "the exam fee" : "membership and exam fees";
+            return J(new { valid = true, code = v.Code["code"], applies_to = scope, discount_type = v.Code["discount_type"], discount_value = v.Code["discount_value"], code_amount = pr.codeAmount, final_amount = pr.final, message = $"Code {v.Code["code"]} applies to {scopeLabel}." });
         });
 
         app.MapGet("/api/verify", (HttpRequest req) =>

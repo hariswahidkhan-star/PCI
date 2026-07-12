@@ -27,7 +27,11 @@ export async function startCheckout(opts: {
 export function checkoutErrorMessage(e: unknown): string {
   if (e instanceof ApiError && e.status === 503)
     return 'Online payment is not open yet — you will be able to pay right here as soon as payments go live.'
-  if (e instanceof ApiError && e.status === 400)
+  if (e instanceof ApiError && e.status === 400) {
+    // A rejected discount code carries its own explanation (e.g. scoped to the other product) — show it.
+    const body = e.body as { error?: string; message?: string } | null
+    if (body?.error === 'code_invalid' && body.message) return body.message
     return 'That selection is not available right now. Please refresh and try again.'
+  }
   return e instanceof Error ? e.message : 'Could not start checkout.'
 }

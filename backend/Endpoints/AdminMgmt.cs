@@ -10,6 +10,9 @@ namespace PCI.Backend.Endpoints;
 public static class AdminMgmt
 {
     static string Like(string? q) => "%" + System.Text.RegularExpressions.Regex.Replace(q ?? "", "[%_]", "") + "%";
+    // A discount code's scope: 'all' (membership + exam), 'membership' only, or 'exam' only. Anything
+    // else is coerced to 'all' so a bad value can never widen or silently break a code's applicability.
+    static string NormScope(string? s) => s is "membership" or "exam" ? s : "all";
     // Interpret a JSON value as a boolean flag robustly: true/1/"true"/"1"/"yes" => true; everything
     // else (false, 0, "false", "0", "", null) => false. A raw JsonValueKind.False check alone lets
     // {"active":0} or {"active":"false"} slip through as "not false".
@@ -266,7 +269,7 @@ public static class AdminMgmt
             var id = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,single_use_per_email,active,
                 founding_route,grants_membership,grants_exam,grants_study_access,requires_application,auto_approve,membership_months,criteria_json)
                 VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                (H.GetS(b, "code") ?? "").ToUpperInvariant(), H.GetS(b, "discount_type"), H.GetNum(b, "discount_value"), H.GetS(b, "applies_to") ?? "all",
+                (H.GetS(b, "code") ?? "").ToUpperInvariant(), H.GetS(b, "discount_type"), H.GetNum(b, "discount_value"), NormScope(H.GetS(b, "applies_to")),
                 H.GetS(b, "start_date"), H.GetS(b, "end_date"), H.GetNum(b, "max_uses"), B("single_use_per_email") , B("active"),
                 founding ? route : null,
                 founding ? B("grants_membership", true) : 0,
@@ -294,6 +297,10 @@ public static class AdminMgmt
             void Num(string col) { if (b.ContainsKey(col)) { set.Add(col + "=?"); vals.Add(H.GetNum(b, col)); } }
             void Flag(string col) { if (b.ContainsKey(col)) { set.Add(col + "=?"); vals.Add(H.B(b[col].GetRawText()) ? 1 : 0); } }
             Flag("active"); Str("start_date"); Str("end_date"); Num("max_uses");
+            // Scope + discount are editable so a live promo can be retargeted (e.g. widen from exam-only to
+            // both, or change 20% → 30%) without deleting and re-issuing the code. Scope is normalised.
+            if (b.ContainsKey("applies_to")) { set.Add("applies_to=?"); vals.Add(NormScope(H.GetS(b, "applies_to"))); }
+            Str("discount_type"); Num("discount_value");
             Flag("auto_approve"); Num("membership_months"); Str("criteria_json");
             Flag("grants_membership"); Flag("grants_exam"); Flag("grants_study_access"); Flag("requires_application");
             if (set.Count > 0)
