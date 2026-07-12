@@ -86,10 +86,11 @@ function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => 
           {!founding && (
             <div className="field"><label>Applies to</label>
               <select value={f.applies_to} onChange={(e) => setF({ ...f, applies_to: e.target.value })}>
-                <option value="all">Everything</option>
-                <option value="membership">Membership</option>
-                <option value="exam">Exam</option>
+                <option value="all">Both — membership + exam fee</option>
+                <option value="membership">Membership only</option>
+                <option value="exam">Exam fee only</option>
               </select>
+              <span className="muted small">Scopes the discount. An exam-only code is rejected on a membership purchase, and vice-versa.</span>
             </div>
           )}
           <div className="field"><label>Window opens</label><input type="date" value={f.start_date} onChange={(e) => setF({ ...f, start_date: e.target.value })} /></div>
@@ -143,6 +144,9 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
     start_date: code.start_date ?? '',
     end_date: code.end_date ?? '',
     max_uses: code.max_uses == null ? '' : String(code.max_uses),
+    applies_to: code.applies_to ?? 'all',
+    discount_type: code.discount_type ?? 'percentage',
+    discount_value: code.discount_value == null ? '' : String(code.discount_value),
     auto_approve: (code.auto_approve ?? 1) === 1,
     membership_months: String(code.membership_months ?? 12),
     criteria_json: code.criteria_json ?? '',
@@ -164,6 +168,13 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
         start_date: f.start_date || null,
         end_date: f.end_date || null,
         max_uses: f.max_uses === '' ? null : Number(f.max_uses),
+        ...(founding
+          ? {}
+          : {
+              applies_to: f.applies_to,
+              discount_type: f.discount_type,
+              discount_value: Number(f.discount_value) || 0,
+            }),
         ...(founding
           ? {
               auto_approve: f.auto_approve,
@@ -193,6 +204,26 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
         </div>
         {error && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{error}</div>}
         <div className="grid cols-2">
+          {!founding && (
+            <div className="field"><label>Type</label>
+              <select value={f.discount_type} onChange={(e) => setF({ ...f, discount_type: e.target.value })}>
+                <option value="percentage">Percentage</option>
+                <option value="fixed">Fixed amount</option>
+              </select>
+            </div>
+          )}
+          {!founding && (
+            <div className="field"><label>Value {f.discount_type === 'percentage' ? '(%)' : '(USD)'}</label><input type="number" value={f.discount_value} onChange={(e) => setF({ ...f, discount_value: e.target.value })} /></div>
+          )}
+          {!founding && (
+            <div className="field"><label>Applies to</label>
+              <select value={f.applies_to} onChange={(e) => setF({ ...f, applies_to: e.target.value })}>
+                <option value="all">Both — membership + exam fee</option>
+                <option value="membership">Membership only</option>
+                <option value="exam">Exam fee only</option>
+              </select>
+            </div>
+          )}
           <div className="field"><label>Window opens</label><input type="date" value={f.start_date.slice(0, 10)} onChange={(e) => setF({ ...f, start_date: e.target.value })} /></div>
           <div className="field"><label>Window closes</label><input type="date" value={f.end_date.slice(0, 10)} onChange={(e) => setF({ ...f, end_date: e.target.value })} /></div>
           <div className="field"><label>Max total uses (blank = unlimited)</label><input type="number" value={f.max_uses} onChange={(e) => setF({ ...f, max_uses: e.target.value })} /></div>
@@ -267,7 +298,7 @@ export default function Codes() {
                   <td className="small">
                     {c.founding_route
                       ? ['membership', 'exam', 'study'].filter((_, i) => [c.grants_membership, c.grants_exam, c.grants_study_access][i]).join(' + ') + ' at USD 0'
-                      : `${c.discount_type === 'fixed' ? `$${c.discount_value}` : `${c.discount_value}%`} on ${c.applies_to || 'all'}`}
+                      : `${c.discount_type === 'fixed' ? `$${c.discount_value}` : `${c.discount_value}%`} on ${c.applies_to === 'membership' ? 'membership' : c.applies_to === 'exam' ? 'exam fee' : 'membership + exam'}`}
                   </td>
                   <td>{c.used_count ?? 0}{c.max_uses ? ` / ${c.max_uses}` : ''}</td>
                   <td className="small muted">{c.start_date ? `${fmtDate(c.start_date)} – ` : ''}{c.end_date ? fmtDate(c.end_date) : '—'}</td>

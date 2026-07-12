@@ -150,7 +150,7 @@ function PlansCard() {
           onChange={(ev) => setCode(ev.target.value)}
           aria-label="Discount or founding code"
         />
-        <span className="muted small">A discount code applies to <strong>both membership and exam fees</strong>. It is checked before payment, so an invalid code won&rsquo;t charge you full price. Founding codes are redeemed in the founding card below.</span>
+        <span className="muted small">A discount code may apply to <strong>membership only</strong>, <strong>the exam fee only</strong>, or <strong>both</strong> — depending on the code. It is checked against the purchase you start, so a code that doesn&rsquo;t apply here is caught before payment instead of silently charging you full price. Founding codes are redeemed in the founding card below.</span>
       </div>
     </Card>
   )

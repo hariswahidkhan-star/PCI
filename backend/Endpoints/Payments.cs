@@ -37,7 +37,12 @@ public static class Payments
                 // Which certification the exam seat is for (id or code; PCP-AI when unspecified).
                 var certRow = Certs.ById(db, Certs.Resolve(db, H.GetS(d, "certification_id", "certification", "cert")));
                 if (certRow is not null && !H.B(certRow["active"])) return Results.Json(new { error = "certification_inactive" }, statusCode: 400);
-                var codeVal = H.GetS(d, "code") is { } code ? Public.ValidateCode(db, code, product, email) : new Public.CodeValidation(null, null);
+                // A supplied code is re-validated for THIS product server-side (the browser check is only
+                // advisory). If it's invalid or scoped to the other product, reject the checkout rather than
+                // silently dropping the discount and charging full price.
+                var codeStr = H.GetS(d, "code");
+                var codeVal = !string.IsNullOrWhiteSpace(codeStr) ? Public.ValidateCode(db, codeStr, product, email) : new Public.CodeValidation(null, null);
+                if (codeVal.Error is not null) return Results.Json(new { error = "code_invalid", message = codeVal.Error }, statusCode: 400);
                 var pr = Public.Pricing(db, product, codeVal.Code, certRow);
                 db.Execute("UPDATE enrollment_sessions SET selected_product=?, pricing_snapshot=?, last_activity_at=datetime('now') WHERE email=? AND session_status='in_progress'",
                     product, JsonSerializer.Serialize(pr), (email ?? "").ToLowerInvariant());

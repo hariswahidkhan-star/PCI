@@ -51,6 +51,13 @@ chk "S20 me/config requires auth (401)" "$([ "$(code GET /api/me/config)" = 401 
 # ---- iteration 3: public + CMS + admin management ----
 chk "S21 /api/pricing" "$([ "$(j GET /api/pricing | grep -c currency)" = 1 ] && echo 1)"
 chk "S22 validate-code (invalid→valid:false)" "$([ "$(j POST /api/validate-code -H 'Content-Type: application/json' -d '{"code":"NOPE","product":"membership"}' | grep -c '"valid":false')" = 1 ] && echo 1)"
+# Scoped discount codes (seeded): MEMBER20 = membership-only, EXAM15 = exam-only, SAVE10 = both.
+# A scoped code must be accepted on its own product and rejected on the other.
+chk "S22b MEMBER20 valid on membership" "$([ "$(j POST /api/validate-code -H 'Content-Type: application/json' -d '{"code":"MEMBER20","product":"membership"}' | grep -c '"valid":true')" = 1 ] && echo 1)"
+chk "S22c MEMBER20 REJECTED on exam" "$([ "$(j POST /api/validate-code -H 'Content-Type: application/json' -d '{"code":"MEMBER20","product":"exam"}' | grep -c '"valid":false')" = 1 ] && echo 1)"
+chk "S22d EXAM15 valid on exam" "$([ "$(j POST /api/validate-code -H 'Content-Type: application/json' -d '{"code":"EXAM15","product":"exam"}' | grep -c '"valid":true')" = 1 ] && echo 1)"
+chk "S22e EXAM15 REJECTED on membership" "$([ "$(j POST /api/validate-code -H 'Content-Type: application/json' -d '{"code":"EXAM15","product":"membership"}' | grep -c '"valid":false')" = 1 ] && echo 1)"
+chk "S22f SAVE10 valid on both" "$([ "$(j POST /api/validate-code -H 'Content-Type: application/json' -d '{"code":"SAVE10","product":"membership"}' | grep -c '"valid":true')" = 1 ] && [ "$(j POST /api/validate-code -H 'Content-Type: application/json' -d '{"code":"SAVE10","product":"exam"}' | grep -c '"valid":true')" = 1 ] && echo 1)"
 chk "S23 verify unknown credential (found:false)" "$([ "$(j GET '/api/verify?id=PCP-AI-9999-99999' | grep -c '"found":false')" = 1 ] && echo 1)"
 chk "S24 newsletter subscribe" "$([ "$(j POST /api/newsletter -H 'Content-Type: application/json' -d '{"email":"n@ex.co"}' | grep -c '"ok":true')" = 1 ] && echo 1)"
 chk "S25 inquiry (returns reference)" "$([ "$(j POST /api/inquiry -H 'Content-Type: application/json' -d '{"email":"a@b.co","type":"general"}' | grep -c reference)" = 1 ] && echo 1)"
