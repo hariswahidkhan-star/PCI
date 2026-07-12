@@ -23,7 +23,7 @@ export default function Register() {
     : product
       ? `/billing?product=${encodeURIComponent(product)}${cert ? `&cert=${encodeURIComponent(cert)}` : ''}`
       : '/onboarding'
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', country: '', dial: '', phone: '' })
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '', country: '', dial: '', phone: '' })
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -45,6 +45,10 @@ export default function Register() {
       setError('Password must be at least 8 characters.')
       return
     }
+    if (form.password !== form.confirmPassword) {
+      setError('Passwords do not match. Please re-enter them.')
+      return
+    }
     if (!form.country) {
       setError('Please select your country.')
       return
@@ -55,9 +59,10 @@ export default function Register() {
     }
     setBusy(true)
     try {
-      const { dial, phone, ...rest } = form
+      const { dial, phone, confirmPassword, ...rest } = form
       const mobile = `${dial} ${phone.trim()}`.trim()
-      await register({ ...rest, email: form.email.trim().toLowerCase(), mobile })
+      // confirm_password is also sent so the server can re-check the match (defence in depth).
+      await register({ ...rest, email: form.email.trim().toLowerCase(), mobile, confirmPassword })
       nav(afterSignup, { replace: true })
     } catch (err) {
       const msg = err instanceof Error ? err.message : ''
@@ -116,6 +121,22 @@ export default function Register() {
           <div className="field">
             <label htmlFor="rpassword">Password (8+ characters)</label>
             <input id="rpassword" type="password" autoComplete="new-password" required minLength={8} value={form.password} onChange={set('password')} />
+          </div>
+          <div className="field">
+            <label htmlFor="rconfirm">Confirm password</label>
+            <input
+              id="rconfirm"
+              type="password"
+              autoComplete="new-password"
+              required
+              minLength={8}
+              value={form.confirmPassword}
+              onChange={set('confirmPassword')}
+              aria-invalid={form.confirmPassword.length > 0 && form.password !== form.confirmPassword}
+            />
+            {form.confirmPassword.length > 0 && form.password !== form.confirmPassword && (
+              <span className="muted small" style={{ color: 'var(--err, #dc2626)' }}>Passwords do not match.</span>
+            )}
           </div>
           <div className="field">
             <label htmlFor="rcountry">Country</label>

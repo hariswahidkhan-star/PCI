@@ -964,3 +964,40 @@ CREATE TABLE IF NOT EXISTS honorary_awards (
   revoked_by BIGINT, revoked_at TEXT, revoke_reason TEXT
 );
 CREATE INDEX IF NOT EXISTS ix_honorary_user ON honorary_awards(user_id);
+
+-- honorary-route APPLICATIONS (public apply → board review → conferral)
+CREATE TABLE IF NOT EXISTS honorary_applications (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  reference VARCHAR(191) UNIQUE NOT NULL,
+  first_name TEXT, last_name TEXT, email TEXT, mobile TEXT,
+  country TEXT, city TEXT, nationality TEXT,
+  job_title TEXT, employer TEXT, years_experience BIGINT, industry TEXT,
+  highest_qualification TEXT, professional_certifications TEXT,
+  relevant_experience TEXT, professional_summary TEXT,
+  declaration BIGINT DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'pending_review',
+  award_no VARCHAR(191),
+  decided_by BIGINT, decided_at TEXT, admin_note TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
+  updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_honapp_status ON honorary_applications(status);
+CREATE TABLE IF NOT EXISTS honorary_application_documents (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  application_id BIGINT NOT NULL,
+  doc_kind TEXT DEFAULT 'supporting',
+  filename TEXT, mime TEXT, size_bytes BIGINT, storage_ref TEXT, sha256 TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_honappdoc_app ON honorary_application_documents(application_id);
+CREATE TABLE IF NOT EXISTS notification_history (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  channel TEXT NOT NULL DEFAULT 'email',
+  recipient TEXT, subject TEXT, status TEXT,
+  related_type TEXT, related_id BIGINT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1');
+INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','');
+INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_ack_subject','');
+INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_admin_subject','');

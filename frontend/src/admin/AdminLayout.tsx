@@ -29,6 +29,7 @@ const NAV: NavItem[] = [
   { to: '/codes', label: 'Discount codes', perm: 'codes', group: 'Access & pricing' },
   { to: '/founding', label: 'Founding stage', anyPerm: ['members', 'codes'], group: 'Access & pricing' },
   { to: '/honorary', label: 'Honorary fellows', owner: true, group: 'Access & pricing' },
+  { to: '/honorary-applications', label: 'Honorary applications', owner: true, group: 'Access & pricing' },
   crudItem('pricing', 'Access & pricing'),
 
   { to: '/pages', label: 'Pages & content', perm: 'pages', group: 'Website' },
