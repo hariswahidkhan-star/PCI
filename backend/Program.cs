@@ -640,6 +640,7 @@ app.MapPost("/api/admin/storage/purge", (HttpRequest req) =>
 var webRoot = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
 // one-time: capture each page's current headline as an editable block so every page is editable out of the box
 PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
+PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
 app.Use(async (ctx, next) =>
 {
     if (ctx.Request.Method == "GET")
