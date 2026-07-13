@@ -95,34 +95,65 @@ public static class Integrations
         }
         var integId = H.L(integ["id"]);
         var attempts = (int)H.L(d["attempts"]) + 1;
-        var url = (H.Str(integ["endpoint_url"]) ?? "").Trim();
+        var provider = (H.Str(integ["provider"]) ?? "webhook").Trim().ToLowerInvariant();
         var eventType = H.Str(ev["event_type"]) ?? "";
         var payloadRaw = H.Str(ev["payload"]) ?? "{}";
         var occurredAt = H.Str(ev["created_at"]) ?? "";
+        try
+        {
+            // Build the outbound request per connector type. A connector may return null for an event it
+            // does not represent (e.g. QuickBooks has no object for membership.activated) — that delivery
+            // is terminal ('skipped'), not a failure to retry.
+            HttpRequestMessage req;
+            if (provider == "quickbooks")
+            {
+                var built = await QuickBooksConnector.BuildRequest(http, integ, eventType, payloadRaw);
+                if (built is null)
+                {
+                    db.Execute("UPDATE integration_deliveries SET status='skipped', attempts=?, last_error=?, updated_at=datetime('now') WHERE id=?",
+                        attempts, "event not mapped for QuickBooks", deliveryId);
+                    return;
+                }
+                req = built;
+            }
+            else req = BuildWebhookRequest(integ, ev, deliveryId, eventType, payloadRaw, occurredAt);
+
+            using (req)
+            {
+                using var resp = await http.SendAsync(req);
+                var code = (int)resp.StatusCode;
+                if (resp.IsSuccessStatusCode)
+                {
+                    db.Execute("UPDATE integration_deliveries SET status='delivered', attempts=?, response_code=?, last_error=NULL, updated_at=datetime('now') WHERE id=?", attempts, code, deliveryId);
+                    db.Execute("UPDATE integrations SET status='ok', last_delivery_at=datetime('now'), updated_at=datetime('now') WHERE id=?", integId);
+                }
+                else
+                {
+                    var detail = await resp.Content.ReadAsStringAsync();
+                    Fail(db, deliveryId, attempts, code, $"HTTP {code}" + (detail is { Length: > 0 } ? ": " + detail : ""), integId);
+                }
+            }
+        }
+        catch (Exception e) { Fail(db, deliveryId, attempts, null, e.Message, integId); }
+    }
+
+    /// <summary>The generic-webhook request: the signed envelope POST (Phase 9 behaviour).</summary>
+    static HttpRequestMessage BuildWebhookRequest(Dictionary<string, object?> integ, Dictionary<string, object?> ev, long deliveryId, string eventType, string payloadRaw, string occurredAt)
+    {
+        var url = (H.Str(integ["endpoint_url"]) ?? "").Trim();
+        if (!url.StartsWith("http://") && !url.StartsWith("https://")) throw new Exception("connector has no valid endpoint URL");
         // Envelope: data is inlined as raw JSON (already serialized) so it isn't double-encoded.
         var body = $"{{\"event_id\":{H.L(ev["id"])},\"type\":{JsonSerializer.Serialize(eventType)}," +
                    $"\"occurred_at\":{JsonSerializer.Serialize(occurredAt)},\"data\":{payloadRaw}}}";
-        try
-        {
-            if (!url.StartsWith("http://") && !url.StartsWith("https://")) throw new Exception("connector has no valid endpoint URL");
-            var ts = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-            using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(body, Encoding.UTF8, "application/json") };
-            req.Headers.TryAddWithoutValidation("User-Agent", "PCI-Integrations/1.0");
-            req.Headers.TryAddWithoutValidation("X-PCI-Event", eventType);
-            req.Headers.TryAddWithoutValidation("X-PCI-Delivery", deliveryId.ToString());
-            req.Headers.TryAddWithoutValidation("X-PCI-Timestamp", ts);
-            if (H.Str(integ["secret"]) is { Length: > 0 } secret)
-                req.Headers.TryAddWithoutValidation("X-PCI-Signature", Sign(secret, ts, body));
-            using var resp = await http.SendAsync(req);
-            var code = (int)resp.StatusCode;
-            if (resp.IsSuccessStatusCode)
-            {
-                db.Execute("UPDATE integration_deliveries SET status='delivered', attempts=?, response_code=?, last_error=NULL, updated_at=datetime('now') WHERE id=?", attempts, code, deliveryId);
-                db.Execute("UPDATE integrations SET status='ok', last_delivery_at=datetime('now'), updated_at=datetime('now') WHERE id=?", integId);
-            }
-            else Fail(db, deliveryId, attempts, code, $"HTTP {code}", integId);
-        }
-        catch (Exception e) { Fail(db, deliveryId, attempts, null, e.Message, integId); }
+        var ts = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+        var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(body, Encoding.UTF8, "application/json") };
+        req.Headers.TryAddWithoutValidation("User-Agent", "PCI-Integrations/1.0");
+        req.Headers.TryAddWithoutValidation("X-PCI-Event", eventType);
+        req.Headers.TryAddWithoutValidation("X-PCI-Delivery", deliveryId.ToString());
+        req.Headers.TryAddWithoutValidation("X-PCI-Timestamp", ts);
+        if (H.Str(integ["secret"]) is { Length: > 0 } secret)
+            req.Headers.TryAddWithoutValidation("X-PCI-Signature", Sign(secret, ts, body));
+        return req;
     }
 
     static void Fail(Db db, long deliveryId, int attempts, int? code, string error, long integId)
