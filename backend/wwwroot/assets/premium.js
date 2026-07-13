@@ -91,3 +91,19 @@
     else start();
   } catch (e) { /* no-op */ }
 })();
+
+/* Mobile nav accordion — the header dropdown groups (Membership, Certifications, …) collapse by
+   default in the drawer; the caret button toggles each group. The label itself stays a real link. */
+(function () {
+  try {
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest ? e.target.closest('.nav .sub-toggle') : null;
+      if (!t) return;
+      e.preventDefault();
+      var item = t.closest('.nav-item.has-sub');
+      if (!item) return;
+      var open = item.classList.toggle('open');
+      t.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  } catch (e) { /* no-op */ }
+})();

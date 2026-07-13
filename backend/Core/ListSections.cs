@@ -104,7 +104,11 @@ public static class ListSections
                 : db.Query("SELECT label,url FROM nav_items WHERE visible=1 AND nav_group=? ORDER BY sort_order,id", label);
             if (subs.Count > 0)
             {
-                sb.Append("<span class=\"nav-item has-sub\"><a href=\"").Append(EscAttr(url)).Append("\">").Append(Esc(tlabel)).Append("</a><span class=\"submenu\">");
+                // Desktop: hover reveals the submenu. Mobile: the caret button toggles it (accordion) —
+                // premium.js flips 'open' on .nav-item.has-sub; the parent label stays a real link.
+                sb.Append("<span class=\"nav-item has-sub\"><a href=\"").Append(EscAttr(url)).Append("\">").Append(Esc(tlabel))
+                  .Append("</a><button type=\"button\" class=\"sub-toggle\" aria-expanded=\"false\" aria-label=\"Show ").Append(EscAttr(tlabel))
+                  .Append(" menu\"></button><span class=\"submenu\">");
                 foreach (var s in subs)
                 {
                     var sl = H.Str(s["label"]) ?? "";
