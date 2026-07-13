@@ -28,7 +28,7 @@ interface Audit {
   redirect_chains: { from: string; to: string }[]
 }
 
-const TABS = ['Overview', 'Page SEO', 'Redirects', 'Audit'] as const
+const TABS = ['Overview', 'Page SEO', 'Redirects', 'Search engines', 'Audit'] as const
 
 export default function Seo() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Overview')
@@ -46,6 +46,7 @@ export default function Seo() {
       {tab === 'Overview' && <OverviewTab />}
       {tab === 'Page SEO' && <PagesTab />}
       {tab === 'Redirects' && <RedirectsTab />}
+      {tab === 'Search engines' && <EnginesTab />}
       {tab === 'Audit' && <AuditTab />}
     </div>
   )
@@ -203,6 +204,93 @@ function RedirectsTab() {
         </table>
       )}
     </Card>
+  )
+}
+
+interface Integrations {
+  ga4_measurement_id: string; gtm_container_id: string; clarity_project_id: string
+  google_site_verification: string; bing_site_verification: string; psi_has_key: boolean
+  indexnow_key: string; indexnow_key_url: string
+  submissions: { engine: string; url_count: number; status: string; detail: string; created_at: string }[]
+}
+
+function EnginesTab() {
+  const { data, loading, error, refetch } = useAdminQuery<Integrations>('/api/admin/seo/integrations')
+  const [form, setForm] = useState<Record<string, string>>({})
+  const [busy, setBusy] = useState<string | null>(null)
+  const [note, setNote] = useState<string | null>(null)
+  if (loading && !data) return <Spinner />
+  if (error) return <ErrorNote>{error}</ErrorNote>
+  if (!data) return null
+  const val = (k: keyof Integrations & string) => form[k] ?? String(data[k] ?? '')
+  const field = (k: keyof Integrations & string, label: string, ph: string) => (
+    <label>{label}<input value={val(k)} placeholder={ph} onChange={(e) => setForm({ ...form, [k]: e.target.value })} /></label>
+  )
+  async function save() {
+    setBusy('save'); setNote(null)
+    try { await adminApi.post('/api/admin/seo/integrations', form); setForm({}); setNote('Saved — tags apply to all public pages immediately.'); refetch() }
+    catch (e) { setNote((e as Error).message) } finally { setBusy(null) }
+  }
+  async function submitIndexNow() {
+    setBusy('inx'); setNote(null)
+    try {
+      const r = await adminApi.post<{ ok: boolean; submitted: number; detail: string }>('/api/admin/seo/indexnow/submit', {})
+      setNote(r.ok ? `IndexNow: submitted ${r.submitted} URLs (${r.detail}).` : `IndexNow failed: ${r.detail}`); refetch()
+    } catch (e) { setNote((e as Error).message) } finally { setBusy(null) }
+  }
+  async function runPsi() {
+    setBusy('psi'); setNote(null)
+    try {
+      const r = await adminApi.post<{ ok: boolean; url: string; performance: number; seo: number }>('/api/admin/seo/pagespeed', { url: form.psi_url || undefined })
+      setNote(`PageSpeed (${r.url}): performance ${r.performance}, SEO ${r.seo}`)
+    } catch (e) { setNote(`PageSpeed: ${(e as Error).message}`) } finally { setBusy(null) }
+  }
+  return (
+    <div style={{ display: 'grid', gap: '.9rem' }}>
+      {note && <div className="notice" role="status">{note}</div>}
+      <Card title="Analytics & tag IDs">
+        <p className="muted small" style={{ marginTop: 0 }}>Set an ID to inject the official tag into every public page server-side; clear it to remove. Nothing is emitted while a field is empty.</p>
+        <div style={{ display: 'grid', gap: '.55rem', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))' }}>
+          {field('ga4_measurement_id', 'Google Analytics 4 (measurement ID)', 'G-XXXXXXXXXX')}
+          {field('gtm_container_id', 'Google Tag Manager (container ID)', 'GTM-XXXXXXX')}
+          {field('clarity_project_id', 'Microsoft Clarity (project ID)', 'abcdefghij')}
+        </div>
+      </Card>
+      <Card title="Site verification">
+        <p className="muted small" style={{ marginTop: 0 }}>Paste the token from Google Search Console / Bing Webmaster Tools ("HTML tag" method) — the meta tag is injected on every page. Then verify the property in the provider console. Search-performance imports require API credentials and are activated separately.</p>
+        <div style={{ display: 'grid', gap: '.55rem', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))' }}>
+          {field('google_site_verification', 'google-site-verification', 'token from Search Console')}
+          {field('bing_site_verification', 'msvalidate.01 (Bing)', 'token from Bing Webmaster Tools')}
+        </div>
+      </Card>
+      <div><button className="btn" disabled={busy !== null} onClick={save}>{busy === 'save' ? 'Saving…' : 'Save settings'}</button></div>
+
+      <Card title="IndexNow" action={<Badge tone="ok">Ready</Badge>}>
+        <p className="muted small" style={{ marginTop: 0 }}>Instant URL notification to Bing, Yandex and other IndexNow engines — no account needed. The site key is generated automatically and served at:<br /><code>{data.indexnow_key_url}</code></p>
+        <button className="btn sm" disabled={busy !== null} onClick={submitIndexNow}>{busy === 'inx' ? 'Submitting…' : 'Submit all public URLs'}</button>
+        {data.submissions.length > 0 && (
+          <table className="data" style={{ marginTop: '.7rem' }}>
+            <thead><tr><th>When</th><th>Engine</th><th>URLs</th><th>Status</th><th>Detail</th></tr></thead>
+            <tbody>
+              {data.submissions.map((s, i) => (
+                <tr key={i}><td className="small">{s.created_at}</td><td>{s.engine}</td><td>{s.url_count}</td>
+                  <td><Badge tone={s.status === 'submitted' ? 'ok' : 'err'}>{s.status}</Badge></td>
+                  <td className="small muted">{s.detail}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </Card>
+
+      <Card title="PageSpeed Insights">
+        <p className="muted small" style={{ marginTop: 0 }}>Measures a public URL via Google's API (works without a key at low volume; add an API key for higher quota{data.psi_has_key ? ' — key configured' : ''}). Note: it tests the LIVE site, so results reflect the deployed version.</p>
+        <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
+          <input placeholder="https://projectcontrolsinstitute.org/" value={form.psi_url ?? ''} onChange={(e) => setForm({ ...form, psi_url: e.target.value })} style={{ maxWidth: 320 }} />
+          <input type="password" placeholder={data.psi_has_key ? 'API key set — blank to keep' : 'PSI API key (optional)'} value={form.psi_api_key ?? ''} onChange={(e) => setForm({ ...form, psi_api_key: e.target.value })} style={{ maxWidth: 240 }} />
+          <button className="btn sm" disabled={busy !== null} onClick={runPsi}>{busy === 'psi' ? 'Running…' : 'Run check'}</button>
+        </div>
+      </Card>
+    </div>
   )
 }
 

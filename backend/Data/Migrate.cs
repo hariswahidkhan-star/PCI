@@ -106,6 +106,13 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS seo_redirects(id INTEGER PRIMARY KEY AUTOINCREMENT,from_path TEXT NOT NULL,to_url TEXT NOT NULL,status INTEGER DEFAULT 301,active INTEGER DEFAULT 1,note TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_seo_redirect_from ON seo_redirects(from_path)");
 
+        // Search-engine integrations (master-plan Phase 4): tag/verification settings, IndexNow key
+        // + submission log. IDs/tokens are admin-set in Admin → SEO → Search engines, never hardcoded.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS seo_submissions(id INTEGER PRIMARY KEY AUTOINCREMENT,engine TEXT NOT NULL,url_count INTEGER DEFAULT 0,status TEXT,detail TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        foreach (var k in new[] { "ga4_measurement_id", "gtm_container_id", "clarity_project_id", "google_site_verification", "bing_site_verification", "psi_api_key" })
+            db.Exec($"INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('{k}','')");
+        PCI.Backend.Core.IndexNowService.EnsureKey(db);
+
         // Public-website translations (Phase 3 multilingual): one row per captured region per language.
         db.Exec(@"CREATE TABLE IF NOT EXISTS content_i18n(id INTEGER PRIMARY KEY AUTOINCREMENT,lang TEXT NOT NULL,scope TEXT NOT NULL,slug TEXT NOT NULL DEFAULT '',ckey TEXT NOT NULL,cvalue TEXT,updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_content_i18n ON content_i18n(lang, scope, slug, ckey)");

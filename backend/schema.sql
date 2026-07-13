@@ -1020,6 +1020,16 @@ CREATE TABLE IF NOT EXISTS seo_redirects (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ux_seo_redirect_from ON seo_redirects(from_path);
 
+-- ===== SEO: search-engine submission ledger (IndexNow now; others later). One row per attempt. =====
+CREATE TABLE IF NOT EXISTS seo_submissions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  engine TEXT NOT NULL,                      -- indexnow | google | bing
+  url_count INTEGER DEFAULT 0,
+  status TEXT,                               -- submitted | failed
+  detail TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
 -- ===== Public-website internationalisation: one human-authored translation per captured text
 -- region, per language. scope: 'p' page block (slug + block_key) | 'g' shared/global element (gkey)
 -- | 'nav' navigation label (keyed by its English text) | 'meta' page title/description. English is

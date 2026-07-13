@@ -1017,6 +1017,16 @@ CREATE TABLE IF NOT EXISTS seo_redirects (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ux_seo_redirect_from ON seo_redirects(from_path(191));
 
+-- SEO: search-engine submission ledger (mirrors schema.sql).
+CREATE TABLE IF NOT EXISTS seo_submissions (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  engine TEXT NOT NULL,
+  url_count BIGINT DEFAULT 0,
+  status TEXT,
+  detail TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+
 -- Public-website internationalisation (Phase 3 multilingual): one translation per captured region
 -- per language (mirrors schema.sql; TEXT keys need prefix lengths in the MySQL unique index).
 CREATE TABLE IF NOT EXISTS content_i18n (
