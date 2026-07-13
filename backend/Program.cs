@@ -617,6 +617,7 @@ PCI.Backend.Endpoints.Casework.Map(app, db, logFn, r => Auth.AdminFromReq(r, db)
 PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);
+PCI.Backend.Endpoints.TrainingPartners.Map(app, db, logFn, GateFn);   // Training Partner framework (Phase 7)
 PCI.Backend.Endpoints.AdminI18n.Map(app, db, logFn);
 
 // Purge stored artefacts older than the configured retention window (owner-only). Metadata rows are kept

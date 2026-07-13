@@ -31,7 +31,7 @@ public static class ListSections
     static readonly Dictionary<string, string> _cache = new(StringComparer.Ordinal);
     static readonly object _lock = new();
 
-    static readonly Regex RxMarker = new(@"<!--PCI-(NAV-HEADER|NAV-FOOTER|FAQS|BOK|GOVERNANCE|RESOURCES|NEWS)-->.*?<!--/PCI-\1-->",
+    static readonly Regex RxMarker = new(@"<!--PCI-(NAV-HEADER|NAV-FOOTER|FAQS|BOK|GOVERNANCE|RESOURCES|NEWS|PARTNERS)-->.*?<!--/PCI-\1-->",
         RegexOptions.Singleline | RegexOptions.Compiled);
 
     /// <summary>Replace every known marker region with its table-rendered markup. A section whose
@@ -71,6 +71,7 @@ public static class ListSections
                 "GOVERNANCE" => Governance(db),
                 "RESOURCES" => Resources(db),
                 "NEWS" => News(db),
+                "PARTNERS" => Partners(db),
                 _ => null,
             };
         }
@@ -285,6 +286,48 @@ public static class ListSections
         sb.Append("</div></div></section>");
         return sb.ToString();
     }
+
+    // ---- training partner directory (Phase 7) ----
+    // Published (listed) partners grouped by tier, most prestigious first. Empty ⇒ keep the static
+    // fallback between the markers (e.g. "no partners yet — apply to become one").
+    static readonly (string tier, string label)[] PartnerTiers =
+    { ("premier", "Premier Training Partners"), ("authorized", "Authorized Training Partners"), ("registered", "Registered Training Partners") };
+
+    static string? Partners(Db db)
+    {
+        var rows = db.Query("SELECT name,tier,country,region,city,website,summary,specialties FROM training_partners WHERE listed=1 ORDER BY sort_order, name");
+        if (rows.Count == 0) return null;
+        var sb = new StringBuilder();
+        foreach (var (tier, label) in PartnerTiers)
+        {
+            var inTier = rows.Where(r => (H.Str(r["tier"]) ?? "registered") == tier).ToList();
+            if (inTier.Count == 0) continue;
+            sb.Append("<div class=\"hblock\"><h3>").Append(Esc(label)).Append("</h3><div class=\"uline\"></div></div><div class=\"gx c3\">");
+            foreach (var r in inTier)
+            {
+                var name = Esc(H.Str(r["name"]) ?? "");
+                var loc = string.Join(", ", new[] { H.Str(r["city"]), H.Str(r["region"]), H.Str(r["country"]) }
+                    .Where(x => !string.IsNullOrWhiteSpace(x)));
+                var website = H.Str(r["website"]);
+                sb.Append("<div class=\"gcard\"><span class=\"gtag wt\">").Append(Esc(TierLabel(tier))).Append("</span>");
+                sb.Append("<h4>").Append(website is { Length: > 0 } ? $"<a href=\"{EscAttr(website)}\" rel=\"nofollow noreferrer\" target=\"_blank\">{name}</a>" : name).Append("</h4>");
+                if (loc.Length > 0) sb.Append("<p class=\"muted small\">").Append(Esc(loc)).Append("</p>");
+                if (H.Str(r["summary"]) is { Length: > 0 } s) sb.Append("<p>").Append(Esc(s)).Append("</p>");
+                if (H.Str(r["specialties"]) is { Length: > 0 } sp)
+                {
+                    var tags = sp.Split(new[] { ',', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Take(6);
+                    sb.Append("<ul>");
+                    foreach (var t in tags) sb.Append("<li>").Append(Esc(t)).Append("</li>");
+                    sb.Append("</ul>");
+                }
+                sb.Append("</div>");
+            }
+            sb.Append("</div>");
+        }
+        return sb.ToString();
+    }
+
+    static string TierLabel(string tier) => tier switch { "premier" => "Premier", "authorized" => "Authorized", _ => "Registered" };
 
     static string Esc(string s) => s.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
     static string EscAttr(string s)

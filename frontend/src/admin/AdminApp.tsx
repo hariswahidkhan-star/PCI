@@ -19,6 +19,7 @@ import Translations from './pages/Translations'
 import Seo from './pages/Seo'
 import Analytics from './pages/Analytics'
 import AiVisibility from './pages/AiVisibility'
+import TrainingPartners from './pages/TrainingPartners'
 import Enquiries from './pages/Enquiries'
 import Submissions from './pages/Submissions'
 import Reviews from './pages/Reviews'
@@ -86,6 +87,7 @@ export default function AdminApp() {
         <Route path="seo" element={<Perm section="pages"><Seo /></Perm>} />
         <Route path="analytics" element={<Perm section="reports"><Analytics /></Perm>} />
         <Route path="ai-visibility" element={<Perm section="pages"><AiVisibility /></Perm>} />
+        <Route path="training-partners" element={<Perm section="partners"><TrainingPartners /></Perm>} />
         <Route path="subscribers" element={<Perm section="subscribers"><Subscribers /></Perm>} />
         <Route path="reports" element={<Perm section="reports"><Reports /></Perm>} />
         <Route path="emails" element={<Perm section="emails"><Emails /></Perm>} />

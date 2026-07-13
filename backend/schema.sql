@@ -996,6 +996,54 @@ CREATE TABLE IF NOT EXISTS honorary_application_documents (
 );
 CREATE INDEX IF NOT EXISTS ix_honappdoc_app ON honorary_application_documents(application_id);
 
+-- ===== Training Partner framework (Phase 7): third-party training providers apply to be recognised
+-- as PCI Training Partners. Applications are reviewed in the admin console; on approval a directory
+-- entry (training_partners) is created and, once published (listed=1), rendered on the public site.
+-- Certification stays independent of training — a partner delivers exam-prep, never the exam itself. =====
+CREATE TABLE IF NOT EXISTS training_partners (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE,
+  tier TEXT NOT NULL DEFAULT 'registered',   -- registered | authorized | premier
+  country TEXT, region TEXT, city TEXT,
+  website TEXT, logo_url TEXT,
+  summary TEXT, description TEXT, specialties TEXT,
+  contact_email TEXT,
+  listed INTEGER DEFAULT 0,                   -- 1 = published to the public directory
+  sort_order INTEGER DEFAULT 0,
+  source_application_id INTEGER,             -- set when created from an approved application
+  approved_at TEXT,
+  created_at TEXT DEFAULT (datetime('now')),
+  updated_at TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS ix_partners_listed ON training_partners(listed);
+CREATE INDEX IF NOT EXISTS ix_partners_tier ON training_partners(tier);
+CREATE TABLE IF NOT EXISTS training_partner_applications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  reference TEXT UNIQUE NOT NULL,            -- PCI-TPA-YYYY-NNNN
+  org_name TEXT, website TEXT,
+  contact_name TEXT, contact_email TEXT, contact_phone TEXT,
+  country TEXT, city TEXT, region TEXT,
+  delivery_modes TEXT, specialties TEXT, learners_per_year INTEGER,
+  description TEXT,
+  declaration INTEGER DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'pending_review', -- pending_review | under_review | approved | rejected
+  proposed_tier TEXT,                        -- tier granted on approval
+  partner_id INTEGER,                        -- set on approval (links to training_partners.id)
+  decided_by INTEGER, decided_at TEXT, admin_note TEXT,
+  created_at TEXT DEFAULT (datetime('now')),
+  updated_at TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS ix_tpapp_status ON training_partner_applications(status);
+CREATE TABLE IF NOT EXISTS training_partner_application_documents (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  application_id INTEGER NOT NULL,
+  doc_kind TEXT DEFAULT 'supporting',        -- accreditation | company_profile | curriculum | supporting
+  filename TEXT, mime TEXT, size_bytes INTEGER, storage_ref TEXT, sha256 TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS ix_tpappdoc_app ON training_partner_application_documents(application_id);
+
 -- ===== reusable notification ledger: one row per notification attempt on any channel (email now;
 -- sms / in_app are seams for later). Recipients/sender/enable live in site_settings, never hardcoded. =====
 CREATE TABLE IF NOT EXISTS notification_history (

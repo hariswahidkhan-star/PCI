@@ -993,6 +993,50 @@ CREATE TABLE IF NOT EXISTS honorary_application_documents (
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_honappdoc_app ON honorary_application_documents(application_id);
+-- ===== Training Partner framework (Phase 7) — see schema.sql for the narrative. =====
+CREATE TABLE IF NOT EXISTS training_partners (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name TEXT NOT NULL,
+  slug VARCHAR(191) UNIQUE,
+  tier TEXT NOT NULL DEFAULT 'registered',
+  country TEXT, region TEXT, city TEXT,
+  website TEXT, logo_url TEXT,
+  summary TEXT, description TEXT, specialties TEXT,
+  contact_email TEXT,
+  listed BIGINT DEFAULT 0,
+  sort_order BIGINT DEFAULT 0,
+  source_application_id BIGINT,
+  approved_at TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
+  updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_partners_listed ON training_partners(listed);
+CREATE INDEX IF NOT EXISTS ix_partners_tier ON training_partners(tier(24));
+CREATE TABLE IF NOT EXISTS training_partner_applications (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  reference VARCHAR(191) UNIQUE NOT NULL,
+  org_name TEXT, website TEXT,
+  contact_name TEXT, contact_email TEXT, contact_phone TEXT,
+  country TEXT, city TEXT, region TEXT,
+  delivery_modes TEXT, specialties TEXT, learners_per_year BIGINT,
+  description TEXT,
+  declaration BIGINT DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'pending_review',
+  proposed_tier TEXT,
+  partner_id BIGINT,
+  decided_by BIGINT, decided_at TEXT, admin_note TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
+  updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_tpapp_status ON training_partner_applications(status(24));
+CREATE TABLE IF NOT EXISTS training_partner_application_documents (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  application_id BIGINT NOT NULL,
+  doc_kind TEXT DEFAULT 'supporting',
+  filename TEXT, mime TEXT, size_bytes BIGINT, storage_ref TEXT, sha256 TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_tpappdoc_app ON training_partner_application_documents(application_id);
 CREATE TABLE IF NOT EXISTS notification_history (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   channel TEXT NOT NULL DEFAULT 'email',
