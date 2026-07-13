@@ -7,24 +7,26 @@ import Ring from '../components/Ring'
 import RepeaterSection from '../components/RepeaterSection'
 import { EXPERIENCE_FIELDS, QUALIFICATION_FIELDS, HELD_CERT_FIELDS, monthsCovered } from '../data/wizardFields'
 import { fmtDate } from '../format'
+import { useT } from '../i18n'
 import type { Experience, Qualification, HeldCertification } from '../api/types'
 
-// Mirrors the allow-list in PATCH /api/me/profile (backend).
-const FIELDS: { key: string; label: string; type?: string }[] = [
-  { key: 'mobile', label: 'Mobile' },
-  { key: 'country', label: 'Country' },
-  { key: 'city', label: 'City' },
-  { key: 'preferred_language', label: 'Preferred language' },
-  { key: 'current_role', label: 'Current role' },
-  { key: 'company', label: 'Company' },
-  { key: 'industry_sector', label: 'Industry sector' },
-  { key: 'years_experience', label: 'Years of experience', type: 'number' },
-  { key: 'highest_qualification', label: 'Highest qualification' },
-  { key: 'project_controls_area', label: 'Project controls area' },
-  { key: 'linkedin_url', label: 'LinkedIn URL', type: 'url' },
+// Mirrors the allow-list in PATCH /api/me/profile (backend). `labelKey` resolves via the i18n catalog.
+const FIELDS: { key: string; labelKey: string; type?: string }[] = [
+  { key: 'mobile', labelKey: 'prof.mobile' },
+  { key: 'country', labelKey: 'prof.country' },
+  { key: 'city', labelKey: 'prof.city' },
+  { key: 'preferred_language', labelKey: 'prof.preferredLanguage' },
+  { key: 'current_role', labelKey: 'prof.currentRole' },
+  { key: 'company', labelKey: 'prof.company' },
+  { key: 'industry_sector', labelKey: 'prof.industrySector' },
+  { key: 'years_experience', labelKey: 'prof.yearsExperience', type: 'number' },
+  { key: 'highest_qualification', labelKey: 'prof.highestQualification' },
+  { key: 'project_controls_area', labelKey: 'prof.projectControlsArea' },
+  { key: 'linkedin_url', labelKey: 'prof.linkedinUrl', type: 'url' },
 ]
 
 export default function Profile() {
+  const t = useT()
   const { me, loading, error, refetch } = useMe()
   const [form, setForm] = useState<Record<string, string>>({})
   const [busy, setBusy] = useState(false)
@@ -50,7 +52,7 @@ export default function Profile() {
       setSaved(true)
       refetch()
     } catch (e2) {
-      setErr(e2 instanceof Error ? e2.message : 'Could not save profile.')
+      setErr(e2 instanceof Error ? e2.message : t('prof.saveError'))
     } finally {
       setBusy(false)
     }
@@ -60,35 +62,35 @@ export default function Profile() {
     <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
       <div className="spread" style={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1>Profile</h1>
+          <h1>{t('prof.title')}</h1>
           <p className="muted" style={{ marginBottom: 0 }}>
-            Your professional record — experience, qualifications and credentials in one place.{' '}
-            <Link to="/onboarding">Run the guided setup →</Link>
+            {t('prof.subtitle')}{' '}
+            <Link to="/onboarding">{t('prof.runGuidedSetup')}</Link>
           </p>
         </div>
-        <Ring value={completion} label="complete" />
+        <Ring value={completion} label={t('prof.complete')} />
       </div>
 
-      <Card title="Account">
+      <Card title={t('prof.account')}>
         <div className="grid cols-2 small">
-          <div><span className="muted">Name</span><div><strong>{me.user.first_name} {me.user.last_name}</strong></div></div>
-          <div><span className="muted">Email</span><div>{me.user.email}</div></div>
-          <div><span className="muted">Registration no.</span><div>{me.user.registration_no}</div></div>
-          <div><span className="muted">Member since</span><div>{fmtDate(me.user.created_at)}</div></div>
+          <div><span className="muted">{t('prof.name')}</span><div><strong>{me.user.first_name} {me.user.last_name}</strong></div></div>
+          <div><span className="muted">{t('prof.email')}</span><div>{me.user.email}</div></div>
+          <div><span className="muted">{t('prof.registrationNo')}</span><div>{me.user.registration_no}</div></div>
+          <div><span className="muted">{t('prof.memberSince')}</span><div>{fmtDate(me.user.created_at)}</div></div>
         </div>
         <p className="muted small" style={{ marginTop: '.75rem', marginBottom: 0 }}>
-          To change your name or email, please <a href="/contact.html">contact support</a>.
+          {t('prof.changeNameEmailPre')}<a href="/contact.html">{t('prof.contactSupport')}</a>{t('prof.changeNameEmailPost')}
         </p>
       </Card>
 
-      <Card title="Details">
-        {saved && <div className="notice" style={{ marginBottom: '.75rem' }}>Profile saved.</div>}
+      <Card title={t('prof.details')}>
+        {saved && <div className="notice" style={{ marginBottom: '.75rem' }}>{t('prof.saved')}</div>}
         {err && <div className="notice err" role="alert" style={{ marginBottom: '.75rem' }}>{err}</div>}
         <form onSubmit={save}>
           <div className="grid cols-2">
             {FIELDS.map((f) => (
               <div className="field" key={f.key}>
-                <label htmlFor={f.key}>{f.label}</label>
+                <label htmlFor={f.key}>{t(f.labelKey)}</label>
                 <input
                   id={f.key}
                   type={f.type ?? 'text'}
@@ -99,27 +101,27 @@ export default function Profile() {
             ))}
           </div>
           <button className="btn sm" disabled={busy || Object.keys(form).length === 0}>
-            {busy ? 'Saving…' : 'Save changes'}
+            {busy ? t('prof.saving') : t('prof.saveChanges')}
           </button>
         </form>
       </Card>
 
       <Card>
         <RepeaterSection<Experience>
-          title="Work experience"
-          blurb="One entry per role — add as many companies as you need. Overlapping months count once."
+          title={t('prof.workExperience')}
+          blurb={t('prof.workExperienceBlurb')}
           route="/api/me/experiences"
           fields={EXPERIENCE_FIELDS}
-          addLabel="Add experience"
-          emptyHint="No roles yet. Your experience record supports exam eligibility."
+          addLabel={t('prof.addExperience')}
+          emptyHint={t('prof.noExperience')}
           itemTitle={(r) => `${r.title} — ${r.company}`}
-          itemSub={(r) => [r.start_date, r.is_current ? 'present' : r.end_date].filter(Boolean).join(' → ') + (r.country ? ` · ${r.country}` : '')}
+          itemSub={(r) => [r.start_date, r.is_current ? t('prof.present') : r.end_date].filter(Boolean).join(' → ') + (r.country ? ` · ${r.country}` : '')}
           itemBody={(r) => r.summary}
           footer={(rows) => {
             const months = monthsCovered(rows)
             return months > 0 ? (
               <p className="muted small" style={{ margin: '.75rem 0 0' }}>
-                Total recorded: <strong>{Math.floor(months / 12)}y {months % 12}m</strong> across {rows.length} role{rows.length === 1 ? '' : 's'} (overlaps counted once).
+                {t('prof.totalRecorded')} <strong>{t('prof.yearsMonths', { y: Math.floor(months / 12), m: months % 12 })}</strong> {t('prof.acrossRoles', { count: rows.length })}
               </p>
             ) : null
           }}
@@ -128,12 +130,12 @@ export default function Profile() {
 
       <Card>
         <RepeaterSection<Qualification>
-          title="Qualifications"
-          blurb="Degrees, diplomas and academic awards."
+          title={t('prof.qualifications')}
+          blurb={t('prof.qualificationsBlurb')}
           route="/api/me/qualifications"
           fields={QUALIFICATION_FIELDS}
-          addLabel="Add qualification"
-          emptyHint="No qualifications recorded yet."
+          addLabel={t('prof.addQualification')}
+          emptyHint={t('prof.noQualifications')}
           itemTitle={(r) => r.degree}
           itemSub={(r) => [r.institution, r.year_completed, r.country].filter(Boolean).join(' · ')}
         />
@@ -141,14 +143,14 @@ export default function Profile() {
 
       <Card>
         <RepeaterSection<HeldCertification>
-          title="Certifications you hold"
-          blurb="Credentials from other bodies (PMP, CCP, PSP…)."
+          title={t('prof.certsHeld')}
+          blurb={t('prof.certsHeldBlurb')}
           route="/api/me/certifications-held"
           fields={HELD_CERT_FIELDS}
-          addLabel="Add certification"
-          emptyHint="No external certifications recorded."
+          addLabel={t('prof.addCertification')}
+          emptyHint={t('prof.noCertsHeld')}
           itemTitle={(r) => r.name}
-          itemSub={(r) => [r.issuer, r.issued_year && `since ${r.issued_year}`, r.expires_year && `expires ${r.expires_year}`].filter(Boolean).join(' · ')}
+          itemSub={(r) => [r.issuer, r.issued_year && t('prof.since', { year: r.issued_year }), r.expires_year && t('prof.expires', { year: r.expires_year })].filter(Boolean).join(' · ')}
         />
       </Card>
     </div>

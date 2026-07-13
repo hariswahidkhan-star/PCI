@@ -4,11 +4,13 @@ import { useAuth } from '../auth/AuthContext'
 import GoogleButton from '../components/GoogleButton'
 import AuthShell from '../components/AuthShell'
 import { COUNTRIES, DIAL_CODES, dialForCountry } from '../data/countries'
+import { useT } from '../i18n'
 
 /** Free account creation — no payment required. Students build their profile first and pay
  * membership or exam fees whenever they choose (from the site or the portal). */
 export default function Register() {
   const { register } = useAuth()
+  const t = useT()
   const nav = useNavigate()
   const [params] = useSearchParams()
   // Deep-link intent carried from the public site so nothing is a dead-end after signup:
@@ -42,19 +44,19 @@ export default function Register() {
     e.preventDefault()
     setError(null)
     if (form.password.length < 8) {
-      setError('Password must be at least 8 characters.')
+      setError(t('reg.min8'))
       return
     }
     if (form.password !== form.confirmPassword) {
-      setError('Passwords do not match. Please re-enter them.')
+      setError(t('reg.passwordsNoMatch'))
       return
     }
     if (!form.country) {
-      setError('Please select your country.')
+      setError(t('reg.selectCountryError'))
       return
     }
     if (!form.dial || !form.phone.trim()) {
-      setError('Please enter your contact phone number, including the country code.')
+      setError(t('reg.phoneError'))
       return
     }
     setBusy(true)
@@ -81,10 +83,8 @@ export default function Register() {
       <div className="card login-card fade-up">
         <div className="logo">
           <img src="/assets/logo.png" alt="PCI Global" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
-          <h1 style={{ fontSize: '1.25rem', marginTop: '.5rem' }}>Create your free account</h1>
-          <p className="muted small">
-            Join in under a minute — build your profile now, pay only when you choose to enrol.
-          </p>
+          <h1 style={{ fontSize: '1.25rem', marginTop: '.5rem' }}>{t('reg.title')}</h1>
+          <p className="muted small">{t('reg.subtitle')}</p>
         </div>
 
         {foundingPresent && (
@@ -106,24 +106,24 @@ export default function Register() {
           {error && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{error}</div>}
           <div className="grid cols-2">
             <div className="field">
-              <label htmlFor="firstName">First name</label>
+              <label htmlFor="firstName">{t('reg.firstName')}</label>
               <input id="firstName" autoComplete="given-name" required value={form.firstName} onChange={set('firstName')} />
             </div>
             <div className="field">
-              <label htmlFor="lastName">Last name</label>
+              <label htmlFor="lastName">{t('reg.lastName')}</label>
               <input id="lastName" autoComplete="family-name" required value={form.lastName} onChange={set('lastName')} />
             </div>
           </div>
           <div className="field">
-            <label htmlFor="remail">Email address</label>
+            <label htmlFor="remail">{t('auth.email')}</label>
             <input id="remail" type="email" autoComplete="email" required value={form.email} onChange={set('email')} />
           </div>
           <div className="field">
-            <label htmlFor="rpassword">Password (8+ characters)</label>
+            <label htmlFor="rpassword">{t('reg.password')}</label>
             <input id="rpassword" type="password" autoComplete="new-password" required minLength={8} value={form.password} onChange={set('password')} />
           </div>
           <div className="field">
-            <label htmlFor="rconfirm">Confirm password</label>
+            <label htmlFor="rconfirm">{t('reg.confirmPassword')}</label>
             <input
               id="rconfirm"
               type="password"
@@ -135,29 +135,29 @@ export default function Register() {
               aria-invalid={form.confirmPassword.length > 0 && form.password !== form.confirmPassword}
             />
             {form.confirmPassword.length > 0 && form.password !== form.confirmPassword && (
-              <span className="muted small" style={{ color: 'var(--err, #dc2626)' }}>Passwords do not match.</span>
+              <span className="muted small" style={{ color: 'var(--err, #dc2626)' }}>{t('reg.passwordsNoMatch')}</span>
             )}
           </div>
           <div className="field">
-            <label htmlFor="rcountry">Country</label>
+            <label htmlFor="rcountry">{t('reg.country')}</label>
             <select id="rcountry" autoComplete="country-name" required value={form.country} onChange={setCountry}>
-              <option value="" disabled>Select your country…</option>
+              <option value="" disabled>{t('reg.selectCountry')}</option>
               {COUNTRIES.map((c) => (
                 <option key={c.iso} value={c.name}>{c.name}</option>
               ))}
             </select>
           </div>
           <div className="field">
-            <label htmlFor="rphone">Contact phone</label>
+            <label htmlFor="rphone">{t('reg.contactPhone')}</label>
             <div className="row" style={{ gap: '.5rem' }}>
               <select
-                aria-label="Country dialling code"
+                aria-label={t('reg.contactPhone')}
                 style={{ maxWidth: 120 }}
                 required
                 value={form.dial}
                 onChange={set('dial')}
               >
-                <option value="" disabled>Code</option>
+                <option value="" disabled>{t('reg.code')}</option>
                 {DIAL_CODES.map((d) => (
                   <option key={d} value={d}>{d}</option>
                 ))}
@@ -168,7 +168,7 @@ export default function Register() {
                 inputMode="tel"
                 autoComplete="tel-national"
                 required
-                placeholder="Phone number"
+                placeholder={t('reg.phonePlaceholder')}
                 style={{ flex: 1 }}
                 value={form.phone}
                 onChange={set('phone')}
@@ -176,7 +176,7 @@ export default function Register() {
             </div>
           </div>
           <button className="btn block" type="submit" disabled={busy}>
-            {busy ? 'Creating account…' : 'Create free account'}
+            {busy ? t('reg.creating') : t('reg.createBtn')}
           </button>
           <p className="muted small" style={{ marginTop: '.75rem', marginBottom: 0 }}>
             By creating an account you agree to our <a href="/terms.html" target="_blank" rel="noreferrer">terms</a>,{' '}
@@ -185,8 +185,8 @@ export default function Register() {
           </p>
         </form>
         <div className="spread small" style={{ marginTop: '1rem' }}>
-          <span className="muted">Already have an account?</span>
-          <Link to="/login">Sign in</Link>
+          <span className="muted">{t('reg.haveAccount')}</span>
+          <Link to="/login">{t('auth.signIn')}</Link>
         </div>
       </div>
     </AuthShell>

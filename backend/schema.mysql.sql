@@ -1004,3 +1004,17 @@ INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled',
 INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','');
 INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_ack_subject','');
 INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_admin_subject','');
+
+-- Public-website internationalisation (Phase 3 multilingual): one translation per captured region
+-- per language (mirrors schema.sql; TEXT keys need prefix lengths in the MySQL unique index).
+CREATE TABLE IF NOT EXISTS content_i18n (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  lang TEXT NOT NULL,
+  scope TEXT NOT NULL,
+  slug TEXT NOT NULL,
+  ckey TEXT NOT NULL,
+  cvalue TEXT,
+  updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_content_i18n ON content_i18n(lang(8), scope(8), slug(160), ckey(160));
+CREATE INDEX IF NOT EXISTS ix_content_i18n_lang ON content_i18n(lang(8));

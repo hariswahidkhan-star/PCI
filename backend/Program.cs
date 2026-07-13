@@ -623,9 +623,14 @@ app.Use(async (ctx, next) =>
         var reqPath = ctx.Request.Path.Value ?? "/";
         var slug = reqPath == "/" ? "index.html" : reqPath.TrimStart('/');
         var isPage = slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..");
+        // Active public-website language (?lang= persisted to a cookie, else cookie, else English).
+        // When a non-English language is active every page must be rendered (to inject translations),
+        // even one that has no admin content overrides.
+        var lang = PCI.Backend.Core.I18nContent.ActiveLang(ctx);
+        var needI18n = isPage && PCI.Backend.Core.I18nContent.Applies(lang);
         var hasContent = isPage && PCI.Backend.Core.PageContent.HasOverrides(db, slug);
         var hasCerts = isPage && PCI.Backend.Core.CertCatalogue.Applies(slug);
-        if (hasContent || hasCerts)
+        if (hasContent || hasCerts || needI18n)
         {
             var file = Path.Combine(webRoot, slug.Replace('/', Path.DirectorySeparatorChar));
             if (File.Exists(file))
@@ -637,11 +642,15 @@ app.Use(async (ctx, next) =>
                 var rendered = hasContent
                     ? PCI.Backend.Core.PageContent.Render(db, slug, () => File.ReadAllText(file))
                     : File.ReadAllText(file);
+                // Public-website translation: replace each captured region's text with its translation
+                // for the active language and set <html lang dir>. No-op for English (byte-identical).
+                if (needI18n) rendered = PCI.Backend.Core.I18nContent.Render(db, slug, rendered, lang);
                 if (hasCerts) rendered = PCI.Backend.Core.CertCatalogue.Inject(db, rendered);
-                rendered = PCI.Backend.Core.ListSections.Inject(db, rendered);
+                rendered = PCI.Backend.Core.ListSections.Inject(db, rendered, lang);
                 rendered = PCI.Backend.Core.PriceTags.Inject(db, rendered);
                 ctx.Response.ContentType = "text/html; charset=utf-8";
                 ctx.Response.Headers.CacheControl = "no-cache";   // content is admin-editable — always revalidate
+                ctx.Response.Headers.Vary = "Cookie";             // the language cookie varies the response
                 await ctx.Response.WriteAsync(rendered);
                 return;
             }

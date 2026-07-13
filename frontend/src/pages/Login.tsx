@@ -3,9 +3,11 @@ import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-do
 import { useAuth } from '../auth/AuthContext'
 import GoogleButton from '../components/GoogleButton'
 import AuthShell from '../components/AuthShell'
+import { useT } from '../i18n'
 
 export default function Login() {
   const { login } = useAuth()
+  const t = useT()
   const nav = useNavigate()
   const loc = useLocation() as { state?: { from?: string } }
   const [params] = useSearchParams()
@@ -32,7 +34,7 @@ export default function Login() {
       await login(email.trim().toLowerCase(), password)
       nav(deepDest ?? loc.state?.from ?? '/', { replace: true })
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to sign in.')
+      setError(err instanceof Error ? err.message : t('auth.unableSignIn'))
     } finally {
       setBusy(false)
     }
@@ -43,8 +45,8 @@ export default function Login() {
       <div className="card login-card fade-up">
         <div className="logo">
           <img src="/assets/logo.png" alt="PCI Global" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
-          <h1 style={{ fontSize: '1.25rem', marginTop: '.5rem' }}>Student Portal</h1>
-          <p className="muted small">Sign in to manage your certification journey.</p>
+          <h1 style={{ fontSize: '1.25rem', marginTop: '.5rem' }}>{t('shell.studentPortal')}</h1>
+          <p className="muted small">{t('auth.signInSubtitle')}</p>
         </div>
 
         <GoogleButton onError={setError} destination={deepDest ?? '/'} />
@@ -52,20 +54,20 @@ export default function Login() {
         <form onSubmit={submit}>
           {error && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{error}</div>}
           <div className="field">
-            <label htmlFor="email">Email address</label>
+            <label htmlFor="email">{t('auth.email')}</label>
             <input id="email" type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className="field">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t('auth.password')}</label>
             <input id="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
           <button className="btn block" type="submit" disabled={busy}>
-            {busy ? 'Signing in…' : 'Sign in'}
+            {busy ? t('auth.signingIn') : t('auth.signIn')}
           </button>
         </form>
         <div className="spread small" style={{ marginTop: '1rem' }}>
-          <a href="/forgot-password.html">Forgot password?</a>
-          <Link to="/register">Create a free account</Link>
+          <a href="/forgot-password.html">{t('auth.forgot')}</a>
+          <Link to="/register">{t('auth.createAccount')}</Link>
         </div>
       </div>
     </AuthShell>

@@ -3,6 +3,7 @@ import { api } from '../api/client'
 import { useQuery } from '../api/hooks'
 import { Card, Spinner, ErrorNote, StatusBadge } from '../components/ui'
 import { fmtDate } from '../format'
+import { useT } from '../i18n'
 
 interface TicketMsg { sender: string; body: string; created_at?: string | null }
 interface TicketRow {
@@ -19,6 +20,7 @@ const CATEGORIES = ['general', 'exams', 'membership', 'billing', 'technical']
 
 /** Support centre — real tickets against the same casework queue the admin team answers. */
 export default function Support() {
+  const t = useT()
   const { data, loading, error, refetch } = useQuery<{ rows: TicketRow[] }>('/api/me/tickets')
   const [subject, setSubject] = useState('')
   const [category, setCategory] = useState('general')
@@ -38,10 +40,10 @@ export default function Support() {
       const r = await api.post<{ reference: string }>('/api/me/tickets', { subject, category, body })
       setSubject('')
       setBody('')
-      setNote({ ok: true, text: `Ticket ${r.reference} created — we'll reply here and by email.` })
+      setNote({ ok: true, text: t('sup.ticketCreated', { ref: r.reference }) })
       refetch()
     } catch (e2) {
-      setNote({ ok: false, text: e2 instanceof Error ? e2.message : 'Could not create the ticket. Please try again.' })
+      setNote({ ok: false, text: e2 instanceof Error ? e2.message : t('sup.createError') })
     } finally {
       setBusy(false)
     }
@@ -56,7 +58,7 @@ export default function Support() {
       setReply('')
       refetch()
     } catch (e2) {
-      setReplyErr(e2 instanceof Error ? e2.message : 'Could not send your reply. Please try again.')
+      setReplyErr(e2 instanceof Error ? e2.message : t('sup.replyError'))
     } finally {
       setReplyBusy(false)
     }
@@ -69,63 +71,63 @@ export default function Support() {
   return (
     <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
       <div>
-        <h1>Support</h1>
-        <p className="muted">Questions about exams, membership or billing — answered by the PCI Global team.</p>
+        <h1>{t('sup.title')}</h1>
+        <p className="muted">{t('sup.subtitle')}</p>
       </div>
 
-      <Card title="New request">
+      <Card title={t('sup.newRequest')}>
         {note && <div className={'notice' + (note.ok ? '' : ' err')} role={note.ok ? 'status' : 'alert'} style={{ marginBottom: '.75rem' }}>{note.text}</div>}
         <form onSubmit={create}>
           <div className="grid cols-2">
             <div className="field">
-              <label htmlFor="tsub">Subject</label>
+              <label htmlFor="tsub">{t('sup.subject')}</label>
               <input id="tsub" required maxLength={140} value={subject} onChange={(e) => setSubject(e.target.value)} />
             </div>
             <div className="field">
-              <label htmlFor="tcat">Category</label>
+              <label htmlFor="tcat">{t('sup.category')}</label>
               <select id="tcat" value={category} onChange={(e) => setCategory(e.target.value)}>
-                {CATEGORIES.map((c) => <option key={c} value={c}>{c[0].toUpperCase() + c.slice(1)}</option>)}
+                {CATEGORIES.map((c) => <option key={c} value={c}>{t('sup.cat.' + c)}</option>)}
               </select>
             </div>
           </div>
           <div className="field">
-            <label htmlFor="tbody">How can we help?</label>
+            <label htmlFor="tbody">{t('sup.howCanWeHelp')}</label>
             <textarea id="tbody" rows={4} required value={body} onChange={(e) => setBody(e.target.value)} />
           </div>
-          <button className="btn sm" disabled={busy}>{busy ? 'Sending…' : 'Submit request'}</button>
+          <button className="btn sm" disabled={busy}>{busy ? t('sup.sending') : t('sup.submitRequest')}</button>
         </form>
       </Card>
 
-      <Card title={`Your tickets (${rows.length})`}>
+      <Card title={t('sup.yourTickets', { count: rows.length })}>
         {rows.length === 0 ? (
-          <p className="muted small" style={{ margin: 0 }}>No tickets yet — anything you raise appears here with its full history.</p>
+          <p className="muted small" style={{ margin: 0 }}>{t('sup.noTickets')}</p>
         ) : (
           <div className="stack">
-            {rows.map((t) => (
-              <div className="rep-item" key={t.id} style={{ flexDirection: 'column', alignItems: 'stretch' }}>
+            {rows.map((ticket) => (
+              <div className="rep-item" key={ticket.id} style={{ flexDirection: 'column', alignItems: 'stretch' }}>
                 <button
                   type="button"
                   className="spread ticket-head"
-                  onClick={() => setOpenId(openId === t.id ? null : t.id)}
-                  aria-expanded={openId === t.id}
+                  onClick={() => setOpenId(openId === ticket.id ? null : ticket.id)}
+                  aria-expanded={openId === ticket.id}
                 >
                   <span>
-                    <strong>{t.subject}</strong>
-                    <span className="muted small"> · {t.reference} · {fmtDate(t.updated_at)}</span>
+                    <strong>{ticket.subject}</strong>
+                    <span className="muted small"> · {ticket.reference} · {fmtDate(ticket.updated_at)}</span>
                   </span>
-                  <StatusBadge status={t.status} />
+                  <StatusBadge status={ticket.status} />
                 </button>
-                {openId === t.id && (
+                {openId === ticket.id && (
                   <div className="ticket-thread fade-up">
-                    {t.messages.map((m, i) => (
+                    {ticket.messages.map((m, i) => (
                       <div key={i} className={'tmsg ' + (m.sender === 'user' ? 'mine' : 'theirs')}>
-                        <div className="small muted">{m.sender === 'user' ? 'You' : 'PCI Global'} · {fmtDate(m.created_at)}</div>
+                        <div className="small muted">{m.sender === 'user' ? t('sup.you') : 'PCI Global'} · {fmtDate(m.created_at)}</div>
                         <div>{m.body}</div>
                       </div>
                     ))}
                     <div className="row" style={{ marginTop: '.5rem' }}>
-                      <input placeholder="Write a reply…" value={reply} onChange={(e) => setReply(e.target.value)} />
-                      <button className="btn sm" type="button" disabled={replyBusy} onClick={() => sendReply(t.id)}>{replyBusy ? 'Sending…' : 'Reply'}</button>
+                      <input placeholder={t('sup.replyPlaceholder')} value={reply} onChange={(e) => setReply(e.target.value)} />
+                      <button className="btn sm" type="button" disabled={replyBusy} onClick={() => sendReply(ticket.id)}>{replyBusy ? t('sup.sending') : t('sup.reply')}</button>
                     </div>
                     {replyErr && <div className="notice err" role="alert" style={{ marginTop: '.5rem' }}>{replyErr}</div>}
                   </div>

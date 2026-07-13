@@ -1,5 +1,6 @@
 import { useQuery } from '../api/hooks'
 import { Card, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
+import { useT } from '../i18n'
 
 interface ResourceRow {
   title: string
@@ -11,6 +12,7 @@ interface ResourceRow {
 /** Study & policy downloads — the same admin-managed library the public site shows,
  * available inside the portal (GET /api/me/downloads). */
 export default function Resources() {
+  const t = useT()
   const { data, loading, error } = useQuery<{ rows: ResourceRow[] }>('/api/me/downloads')
 
   if (loading) return <Spinner />
@@ -27,14 +29,14 @@ export default function Resources() {
   return (
     <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
       <div>
-        <h1>Resources</h1>
+        <h1>{t('res.title')}</h1>
         <p className="muted">
-          Handbooks, policies and study documents — everything the institute publishes, in one place.
+          {t('res.subtitle')}
         </p>
       </div>
 
       {rows.length === 0 ? (
-        <Card><Empty>No resources have been published yet — new documents will appear here automatically.</Empty></Card>
+        <Card><Empty>{t('res.empty')}</Empty></Card>
       ) : (
         [...groups.entries()].map(([category, items]) => (
           <Card title={category} key={category}>
@@ -51,10 +53,10 @@ export default function Resources() {
                   <div className="rep-item-actions">
                     {r.url ? (
                       <a className="btn sm" href={r.url} target="_blank" rel="noreferrer" download>
-                        Download
+                        {t('res.download')}
                       </a>
                     ) : (
-                      <Badge>Coming soon</Badge>
+                      <Badge>{t('res.comingSoon')}</Badge>
                     )}
                   </div>
                 </div>

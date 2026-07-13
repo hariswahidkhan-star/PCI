@@ -35,33 +35,37 @@ public static class ListSections
         RegexOptions.Singleline | RegexOptions.Compiled);
 
     /// <summary>Replace every known marker region with its table-rendered markup. A section whose
-    /// table has no rows keeps the static fallback between the markers. Safe on any page.</summary>
-    public static string Inject(Db db, string html)
+    /// table has no rows keeps the static fallback between the markers. Safe on any page. The header
+    /// and footer navigation are rendered in the active <paramref name="lang"/> (labels translated,
+    /// language switcher appended); other sections are language-independent.</summary>
+    public static string Inject(Db db, string html, string lang = "en")
     {
         if (string.IsNullOrEmpty(html) || !html.Contains("<!--PCI-", StringComparison.Ordinal)) return html;
         return RxMarker.Replace(html, m =>
         {
             var name = m.Groups[1].Value;
-            var body = Section(db, name);
+            var body = Section(db, name, lang);
             return body is null ? m.Value : $"<!--PCI-{name}-->{body}<!--/PCI-{name}-->";
         });
     }
 
-    static string? Section(Db db, string name)
+    static string? Section(Db db, string name, string lang)
     {
         var v = Volatile.Read(ref _version);
+        // Only the navigation sections vary by language; cache those per (lang, name), the rest per name.
+        var cacheKey = name is "NAV-HEADER" or "NAV-FOOTER" ? lang + "\n" + name : name;
         lock (_lock)
         {
             if (_cacheVer != v) { _cache.Clear(); _cacheVer = v; }
-            if (_cache.TryGetValue(name, out var hit)) return hit.Length == 0 ? null : hit;
+            if (_cache.TryGetValue(cacheKey, out var hit)) return hit.Length == 0 ? null : hit;
         }
         string? html;
         try
         {
             html = name switch
             {
-                "NAV-HEADER" => NavHeader(db),
-                "NAV-FOOTER" => NavFooter(db),
+                "NAV-HEADER" => NavHeader(db, lang),
+                "NAV-FOOTER" => NavFooter(db, lang),
                 "FAQS" => Faqs(db),
                 "BOK" => Bok(db),
                 "GOVERNANCE" => Governance(db),
@@ -75,13 +79,13 @@ public static class ListSections
             Console.Error.WriteLine($"[sections] {name} render skipped: {e.Message}");
             html = null;                                                   // keep the static fallback
         }
-        lock (_lock) { _cache[name] = html ?? ""; }
+        lock (_lock) { _cache[cacheKey] = html ?? ""; }
         return html;
     }
 
     // ---- navigation ----
 
-    static string? NavHeader(Db db)
+    static string? NavHeader(Db db, string lang)
     {
         var main = db.Query("SELECT label,url FROM nav_items WHERE visible=1 AND nav_group='Header' ORDER BY sort_order,id");
         if (main.Count == 0) return null;
@@ -91,6 +95,7 @@ public static class ListSections
         {
             var label = H.Str(r["label"]) ?? "";
             var url = H.Str(r["url"]) ?? "#";
+            var tlabel = I18nContent.NavLabel(db, lang, label);
             // A top-level item whose label names a nav_group gets a dropdown of that group's pages
             // (e.g. Membership → Standard/Founding/Honorary routes + tiers). CSS reveals it on hover /
             // focus on desktop and expanded within the mobile menu; the top item itself stays a link.
@@ -98,22 +103,29 @@ public static class ListSections
                 : db.Query("SELECT label,url FROM nav_items WHERE visible=1 AND nav_group=? ORDER BY sort_order,id", label);
             if (subs.Count > 0)
             {
-                sb.Append("<span class=\"nav-item has-sub\"><a href=\"").Append(EscAttr(url)).Append("\">").Append(Esc(label)).Append("</a><span class=\"submenu\">");
+                sb.Append("<span class=\"nav-item has-sub\"><a href=\"").Append(EscAttr(url)).Append("\">").Append(Esc(tlabel)).Append("</a><span class=\"submenu\">");
                 foreach (var s in subs)
-                    sb.Append("<a href=\"").Append(EscAttr(H.Str(s["url"]) ?? "#")).Append("\">").Append(Esc(H.Str(s["label"]) ?? "")).Append("</a>");
+                {
+                    var sl = H.Str(s["label"]) ?? "";
+                    sb.Append("<a href=\"").Append(EscAttr(H.Str(s["url"]) ?? "#")).Append("\">").Append(Esc(I18nContent.NavLabel(db, lang, sl))).Append("</a>");
+                }
                 sb.Append("</span></span>");
             }
             else
             {
-                sb.Append("<a href=\"").Append(EscAttr(url)).Append("\">").Append(Esc(label)).Append("</a>");
+                sb.Append("<a href=\"").Append(EscAttr(url)).Append("\">").Append(Esc(tlabel)).Append("</a>");
             }
         }
         foreach (var r in acct)
-            sb.Append("<a class=\"nav-acct\" href=\"").Append(EscAttr(H.Str(r["url"]) ?? "#")).Append("\">").Append(Esc(H.Str(r["label"]) ?? "")).Append("</a>");
+        {
+            var al = H.Str(r["label"]) ?? "";
+            sb.Append("<a class=\"nav-acct\" href=\"").Append(EscAttr(H.Str(r["url"]) ?? "#")).Append("\">").Append(Esc(I18nContent.NavLabel(db, lang, al))).Append("</a>");
+        }
+        sb.Append(LangSwitcher(db, lang));
         return sb.ToString();
     }
 
-    static string? NavFooter(Db db)
+    static string? NavFooter(Db db, string lang)
     {
         var rows = db.Query(@"SELECT label,url,nav_group FROM nav_items
             WHERE visible=1 AND nav_group NOT IN ('Header','Header account')
@@ -127,13 +139,33 @@ public static class ListSections
             if (g != current)
             {
                 if (current is not null) sb.Append("</ul></div>");
-                sb.Append("<div><h4>").Append(Esc(g)).Append("</h4><ul>");
+                sb.Append("<div><h4>").Append(Esc(I18nContent.NavLabel(db, lang, g))).Append("</h4><ul>");
                 current = g;
             }
+            var fl = H.Str(r["label"]) ?? "";
             sb.Append("<li><a href=\"").Append(EscAttr(H.Str(r["url"]) ?? "#")).Append("\">")
-              .Append(Esc(H.Str(r["label"]) ?? "")).Append("</a></li>");
+              .Append(Esc(I18nContent.NavLabel(db, lang, fl))).Append("</a></li>");
         }
         sb.Append("</ul></div>");
+        return sb.ToString();
+    }
+
+    /// <summary>The public language switcher — a native &lt;details&gt; disclosure (works with JS off,
+    /// no inline script for CSP). Each option is a <c>?lang=</c> link the server persists to a cookie.
+    /// Only languages that actually have translations are offered; with none, no switcher is shown.</summary>
+    static string LangSwitcher(Db db, string lang)
+    {
+        var avail = I18nContent.AvailableLangs(db);
+        if (avail.Length <= 1) return "";                          // English only → nothing to switch to
+        var current = avail.FirstOrDefault(x => x.code == lang);
+        if (current.code is null) current = avail[0];
+        var sb = new StringBuilder();
+        sb.Append("<details class=\"langsw\"><summary aria-label=\"Language\"><span class=\"langsw-globe\" aria-hidden=\"true\">🌐</span> <span>")
+          .Append(Esc(current.native)).Append("</span></summary><div class=\"langsw-menu\">");
+        foreach (var (code, native) in avail)
+            sb.Append("<a href=\"?lang=").Append(code).Append('"').Append(code == lang ? " aria-current=\"true\"" : "")
+              .Append('>').Append(Esc(native)).Append("</a>");
+        sb.Append("</div></details>");
         return sb.ToString();
     }
 

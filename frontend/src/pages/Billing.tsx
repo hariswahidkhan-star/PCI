@@ -8,6 +8,7 @@ import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../componen
 import FoundingCard from '../components/FoundingCard'
 import { fmtDate, fmtMoney, titleCase } from '../format'
 import { openPrintable, escapeHtml as e } from '../print'
+import { useT } from '../i18n'
 import type { Payment } from '../api/types'
 
 interface PriceBlock {
@@ -43,6 +44,7 @@ interface CatalogueCert {
 /** In-portal purchasing: membership and exam fees are bought right here — Stripe's secure page
  * handles the card, then returns to this page where the webhook-applied purchase shows up. */
 function PlansCard() {
+  const t = useT()
   const { me, refetch } = useMe()
   const [params] = useSearchParams()
   const [certSel, setCertSel] = useState('')
@@ -96,7 +98,7 @@ function PlansCard() {
       if (c) {
         const v = await api.post<{ valid: boolean; message?: string }>('/api/validate-code', { code: c, product, email: me!.user.email })
         if (!v.valid) {
-          setErr(v.message || 'That code is not valid for this purchase.')
+          setErr(v.message || t('billing.codeInvalid'))
           setBusy(null)
           return
         }
@@ -116,35 +118,34 @@ function PlansCard() {
   }
 
   return (
-    <Card title="Membership & exam fees">
+    <Card title={t('billing.plansTitle')}>
       {paid && (
         <div className="notice" style={{ marginBottom: '.75rem' }}>
-          <strong>Payment received — thank you.</strong> Your purchase is being applied to your
-          account and will appear below within a minute.{' '}
-          <button className="btn ghost sm" onClick={() => refetch()}>Refresh</button>
+          <strong>{t('billing.paymentReceivedThanks')}</strong> {t('billing.purchaseApplying')}{' '}
+          <button className="btn ghost sm" onClick={() => refetch()}>{t('billing.refresh')}</button>
         </div>
       )}
       {cancelled && (
         <div className="notice warn" style={{ marginBottom: '.75rem' }}>
-          Payment was cancelled — nothing was charged. You can try again any time.
+          {t('billing.paymentCancelled')}
         </div>
       )}
       {err && <div className="notice err" role="alert" style={{ marginBottom: '.75rem' }}>{err}</div>}
 
       <div className="plan-row">
         <div>
-          <strong>Student membership</strong>
-          <div className="muted small">3-year membership — the first step of the certification journey.</div>
+          <strong>{t('billing.studentMembership')}</strong>
+          <div className="muted small">{t('billing.studentMembershipDesc')}</div>
         </div>
         <div className="row">
           {pricing && !memberActive && (
             <span className="plan-price">{fmtMoney(pricing.membership.final, pricing.currency)}</span>
           )}
           {memberActive ? (
-            <Badge tone="ok">Active</Badge>
+            <Badge tone="ok">{t('billing.active')}</Badge>
           ) : (
             <button className="btn sm" disabled={busy !== null} onClick={() => buy('membership')}>
-              {busy === 'membership' ? 'Opening checkout…' : 'Activate membership'}
+              {busy === 'membership' ? t('billing.openingCheckout') : t('billing.activateMembership')}
             </button>
           )}
         </div>
@@ -152,11 +153,11 @@ function PlansCard() {
 
       <div className="plan-row">
         <div style={{ flex: 1, minWidth: 220 }}>
-          <strong>Certification exam fee</strong>
+          <strong>{t('billing.examFeeTitle')}</strong>
           <div className="muted small" style={{ marginBottom: '.4rem' }}>
-            Buy an exam entitlement — schedule your sitting from the Certifications page afterwards.
+            {t('billing.examFeeDesc')}
           </div>
-          <select value={certSel} onChange={(ev) => setCertSel(ev.target.value)} aria-label="Certification">
+          <select value={certSel} onChange={(ev) => setCertSel(ev.target.value)} aria-label={t('billing.certificationAria')}>
             {(certs ?? []).map((c) => (
               <option key={c.id} value={c.code}>{c.code} — {c.name}</option>
             ))}
@@ -166,7 +167,7 @@ function PlansCard() {
         <div className="row">
           {pricing && <span className="plan-price">{fmtMoney(pricing.exam.final, pricing.currency)}</span>}
           <button className="btn sm" disabled={busy !== null} onClick={() => buy('exam')}>
-            {busy === 'exam' ? 'Opening checkout…' : 'Pay exam fee'}
+            {busy === 'exam' ? t('billing.openingCheckout') : t('billing.payExamFee')}
           </button>
         </div>
       </div>
@@ -174,15 +175,17 @@ function PlansCard() {
       {renewalDue && pricing && (
         <div className="plan-row">
           <div style={{ flex: 1, minWidth: 220 }}>
-            <strong>Renew membership</strong>
+            <strong>{t('billing.renewMembership')}</strong>
             <div className="muted small">
-              Your 3-year membership {renewDays != null && renewDays < 0 ? 'lapsed on' : 'expires'} {membershipExpiry ? fmtDate(membershipExpiry) : ''}. Renewing extends it another 3-year term.
+              {renewDays != null && renewDays < 0
+                ? t('billing.renewDescLapsed', { date: membershipExpiry ? fmtDate(membershipExpiry) : '' })
+                : t('billing.renewDescExpires', { date: membershipExpiry ? fmtDate(membershipExpiry) : '' })}
             </div>
           </div>
           <div className="row">
             <span className="plan-price">{fmtMoney(pricing.renewal.final, pricing.currency)}</span>
             <button className="btn sm" disabled={busy !== null} onClick={() => buy('renewal')}>
-              {busy === 'renewal' ? 'Opening checkout…' : 'Renew membership'}
+              {busy === 'renewal' ? t('billing.openingCheckout') : t('billing.renewMembership')}
             </button>
           </div>
         </div>
@@ -193,15 +196,17 @@ function PlansCard() {
         return (
           <div className="plan-row" key={key}>
             <div style={{ flex: 1, minWidth: 220 }}>
-              <strong>Recertify {r.code}</strong>
+              <strong>{t('billing.recertifyTitle', { code: r.code ?? '' })}</strong>
               <div className="muted small">
-                Your {r.name || r.code} credential {r.days != null && r.days < 0 ? 'expired on' : 'expires'} {r.exp ? fmtDate(r.exp) : ''}. Recertify for another 3-year cycle.
+                {r.days != null && r.days < 0
+                  ? t('billing.recertDescExpired', { name: r.name || r.code || '', date: r.exp ? fmtDate(r.exp) : '' })
+                  : t('billing.recertDescExpires', { name: r.name || r.code || '', date: r.exp ? fmtDate(r.exp) : '' })}
               </div>
             </div>
             <div className="row">
               <span className="plan-price">{fmtMoney(pricing.recert.final, pricing.currency)}</span>
               <button className="btn sm" disabled={busy !== null} onClick={() => buy('recert', { cert: r.code, busyKey: key })}>
-                {busy === key ? 'Opening checkout…' : 'Recertify'}
+                {busy === key ? t('billing.openingCheckout') : t('billing.recertifyBtn')}
               </button>
             </div>
           </div>
@@ -211,18 +216,19 @@ function PlansCard() {
       <div className="row" style={{ marginTop: '.75rem', flexWrap: 'wrap' }}>
         <input
           style={{ maxWidth: 220 }}
-          placeholder="Discount or founding code (optional)"
+          placeholder={t('billing.discountCodePlaceholder')}
           value={code}
           onChange={(ev) => setCode(ev.target.value)}
-          aria-label="Discount or founding code"
+          aria-label={t('billing.discountCodeAria')}
         />
-        <span className="muted small">A discount code may apply to <strong>membership only</strong>, <strong>the exam fee only</strong>, or <strong>both</strong> — depending on the code. It is checked against the purchase you start, so a code that doesn&rsquo;t apply here is caught before payment instead of silently charging you full price. Founding codes are redeemed in the founding card below.</span>
+        <span className="muted small">{t('billing.discountApplyIntro')}<strong>{t('billing.discountScopeMembership')}</strong>{t('billing.discountSep1')}<strong>{t('billing.discountScopeExam')}</strong>{t('billing.discountSep2')}<strong>{t('billing.discountScopeBoth')}</strong>{t('billing.discountApplyOutro')}</span>
       </div>
     </Card>
   )
 }
 
 export default function Billing() {
+  const t = useT()
   const { me, loading, error } = useMe()
   if (loading) return <Spinner />
   if (error) return <ErrorNote>{error}</ErrorNote>
@@ -230,16 +236,16 @@ export default function Billing() {
 
   const receipt = (p: Payment) => {
     const name = `${me.user.first_name ?? ''} ${me.user.last_name ?? ''}`.trim() || me.user.email
-    openPrintable(`Receipt ${p.reference ?? p.id}`, `
+    openPrintable(t('billing.receiptDocTitle', { ref: p.reference ?? p.id }), `
       <div class="brand">Project Controls Institute Global, Inc.</div>
-      <h1>Payment receipt</h1>
-      <p class="muted">Reference ${e(p.reference ?? p.id)}</p>
+      <h1>${t('billing.receiptHeading')}</h1>
+      <p class="muted">${t('billing.receiptReferenceLabel')} ${e(p.reference ?? p.id)}</p>
       <table>
-        <tr><td>Billed to</td><td class="r">${e(name)} &lt;${e(me.user.email)}&gt;</td></tr>
-        <tr><td>Item</td><td class="r">${e(titleCase(p.product_type))}</td></tr>
-        <tr><td>Date</td><td class="r">${e(fmtDate(p.payment_date))}</td></tr>
-        <tr><td>Status</td><td class="r">${e(p.payment_status)}</td></tr>
-        <tr><td><strong>Amount paid</strong></td><td class="r"><strong>${e(fmtMoney(p.final_amount, p.currency))}</strong></td></tr>
+        <tr><td>${t('billing.receiptBilledTo')}</td><td class="r">${e(name)} &lt;${e(me.user.email)}&gt;</td></tr>
+        <tr><td>${t('billing.receiptItem')}</td><td class="r">${e(titleCase(p.product_type))}</td></tr>
+        <tr><td>${t('billing.receiptDate')}</td><td class="r">${e(fmtDate(p.payment_date))}</td></tr>
+        <tr><td>${t('billing.receiptStatus')}</td><td class="r">${e(p.payment_status)}</td></tr>
+        <tr><td><strong>${t('billing.receiptAmountPaid')}</strong></td><td class="r"><strong>${e(fmtMoney(p.final_amount, p.currency))}</strong></td></tr>
       </table>`)
   }
 
@@ -250,21 +256,21 @@ export default function Billing() {
   return (
     <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
       <div>
-        <h1>Billing</h1>
-        <p className="muted">Buy membership and exam entitlements, and download receipts — all in one place.</p>
+        <h1>{t('billing.title')}</h1>
+        <p className="muted">{t('billing.subtitle')}</p>
       </div>
 
       <PlansCard />
 
       <FoundingCard />
 
-      <Card title="Payment history" action={<span className="muted small">Total paid: <strong>{fmtMoney(total, currency)}</strong></span>}>
+      <Card title={t('billing.paymentHistory')} action={<span className="muted small">{t('billing.totalPaid')} <strong>{fmtMoney(total, currency)}</strong></span>}>
         {me.payments.length === 0 ? (
-          <Empty>No payments on record.</Empty>
+          <Empty>{t('billing.noPayments')}</Empty>
         ) : (
           <table className="data">
             <thead>
-              <tr><th>Date</th><th>Item</th><th>Reference</th><th>Amount</th><th>Status</th><th></th></tr>
+              <tr><th>{t('billing.colDate')}</th><th>{t('billing.colItem')}</th><th>{t('billing.colReference')}</th><th>{t('billing.colAmount')}</th><th>{t('billing.colStatus')}</th><th></th></tr>
             </thead>
             <tbody>
               {me.payments.map((p) => (
@@ -276,7 +282,7 @@ export default function Billing() {
                   <td><StatusBadge status={p.payment_status} /></td>
                   <td>
                     {p.payment_status === 'paid' && (
-                      <button className="btn ghost sm" onClick={() => receipt(p)}>Receipt</button>
+                      <button className="btn ghost sm" onClick={() => receipt(p)}>{t('billing.receipt')}</button>
                     )}
                   </td>
                 </tr>

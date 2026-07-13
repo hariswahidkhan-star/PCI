@@ -6,6 +6,7 @@ import { api, ApiError, getToken } from '../api/client'
 import { startCheckout, checkoutErrorMessage } from '../api/checkout'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty } from '../components/ui'
 import { fmtDate, fmtDateTime, fmtMoney, daysUntil } from '../format'
+import { useT } from '../i18n'
 import type { ExamEntry, IdentityDocument } from '../api/types'
 
 /** A certification from the public, backend-controlled catalogue (GET /api/certifications). */
@@ -20,28 +21,30 @@ interface CatalogueCert {
   exam_price?: number | null
 }
 
+// Maps a backend error code to its i18n key; resolved with t() at the point of display.
 const BOOK_ERRORS: Record<string, string> = {
-  no_booking: 'No scheduled exam was found to reschedule.',
-  locked: 'Your sitting is too close to reschedule online — please contact support.',
-  max_reschedules: 'This booking has reached its reschedule limit — please contact support.',
-  no_entitlement: 'No exam entitlement was found for this certification.',
-  not_eligible: 'A few eligibility items must be completed before you can schedule.',
-  window_lapsed: 'The scheduling window for this entitlement has closed.',
-  already_booked: 'This certification already has a scheduled exam.',
-  payment_already_used: 'This exam payment has already been used for a sitting.',
-  exam_already_taken: 'An exam has already been taken for this entitlement.',
-  bad_slot: 'Please choose a time at least 2 hours from now.',
-  beyond_window: 'That time is after your scheduling deadline.',
+  no_booking: 'cert.bookErr.noBooking',
+  locked: 'cert.bookErr.locked',
+  max_reschedules: 'cert.bookErr.maxReschedules',
+  no_entitlement: 'cert.bookErr.noEntitlement',
+  not_eligible: 'cert.bookErr.notEligible',
+  window_lapsed: 'cert.bookErr.windowLapsed',
+  already_booked: 'cert.bookErr.alreadyBooked',
+  payment_already_used: 'cert.bookErr.paymentAlreadyUsed',
+  exam_already_taken: 'cert.bookErr.examAlreadyTaken',
+  bad_slot: 'cert.bookErr.badSlot',
+  beyond_window: 'cert.bookErr.beyondWindow',
 }
 
 // User-level eligibility holds (from lifecycle.blocking_items) that pause the Schedule button —
 // payment-level items like exam_fee_unpaid are handled by whether an entitlement card exists at all.
+// Values are i18n keys, resolved with t() where the hold is displayed.
 const HOLD_LABELS: Record<string, string> = {
-  identity_document_missing: 'upload your government-issued ID (above)',
-  consents_pending: 'accept the exam consents on your Overview page',
-  profile_incomplete: 'complete your profile (country is required)',
-  account_hold: 'your account is on hold — contact support',
-  booking_closed: 'exam booking is temporarily closed',
+  identity_document_missing: 'cert.hold.identityDocMissing',
+  consents_pending: 'cert.hold.consentsPending',
+  profile_incomplete: 'cert.hold.profileIncomplete',
+  account_hold: 'cert.hold.accountHold',
+  booking_closed: 'cert.hold.bookingClosed',
 }
 
 // Holds that are states with no student action to take. They read wrongly under the imperative
@@ -49,6 +52,7 @@ const HOLD_LABELS: Record<string, string> = {
 const STATE_HOLDS = new Set(['account_hold', 'booking_closed'])
 
 function ScheduleForm({ entry, onDone, mode = 'book' }: { entry: ExamEntry; onDone: () => void; mode?: 'book' | 'reschedule' }) {
+  const t = useT()
   const [when, setWhen] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -67,7 +71,7 @@ function ScheduleForm({ entry, onDone, mode = 'book' }: { entry: ExamEntry; onDo
       onDone()
     } catch (e) {
       const code = e instanceof ApiError && e.body && typeof e.body === 'object' && 'error' in e.body ? String((e.body as Record<string, unknown>).error) : ''
-      setError(BOOK_ERRORS[code] || (e instanceof Error ? e.message : 'Unable to schedule.'))
+      setError(BOOK_ERRORS[code] ? t(BOOK_ERRORS[code]) : (e instanceof Error ? e.message : t('cert.unableToSchedule')))
     } finally {
       setBusy(false)
     }
@@ -83,33 +87,35 @@ function ScheduleForm({ entry, onDone, mode = 'book' }: { entry: ExamEntry; onDo
     <div className="stack" style={{ marginTop: '.75rem' }}>
       {error && <div className="notice err" role="alert">{error}</div>}
       <div className="field" style={{ margin: 0 }}>
-        <label htmlFor="sched-when">Choose a date &amp; time ({tz})</label>
+        <label htmlFor="sched-when">{t('cert.chooseDateTime', { tz })}</label>
         <input id="sched-when" type="datetime-local" value={when} min={min} max={max} onChange={(e) => setWhen(e.target.value)} />
       </div>
       <div className="row">
-        <button className="btn sm" disabled={!when || busy} onClick={submit}>{busy ? 'Scheduling…' : 'Confirm slot'}</button>
+        <button className="btn sm" disabled={!when || busy} onClick={submit}>{busy ? t('cert.scheduling') : t('cert.confirmSlot')}</button>
       </div>
     </div>
   )
 }
 
+// Values are i18n keys, resolved with t() where the error is displayed.
 const UPLOAD_ERRORS: Record<string, string> = {
-  file_type_not_allowed: 'Please upload a JPG, PNG, WEBP or PDF file.',
-  file_too_large: 'That file is too large — the maximum is 3 MB.',
-  content_mime_mismatch: 'That file does not appear to be a valid image or PDF.',
-  too_many_uploads: 'Upload limit reached — please contact support to update your ID.',
+  file_type_not_allowed: 'cert.uploadErr.fileType',
+  file_too_large: 'cert.uploadErr.fileTooLarge',
+  content_mime_mismatch: 'cert.uploadErr.mimeMismatch',
+  too_many_uploads: 'cert.uploadErr.tooMany',
 }
 
 const DOC_KINDS = [
-  { value: 'passport', label: 'Passport' },
-  { value: 'national_id', label: 'National ID card' },
-  { value: 'driving_licence', label: 'Driving licence' },
-  { value: 'other', label: 'Other government-issued ID' },
+  { value: 'passport', labelKey: 'cert.docKind.passport' },
+  { value: 'national_id', labelKey: 'cert.docKind.nationalId' },
+  { value: 'driving_licence', labelKey: 'cert.docKind.drivingLicence' },
+  { value: 'other', labelKey: 'cert.docKind.other' },
 ]
 
 /** Government-ID upload + status. A document on file (not rejected) is required before any exam
  *  can be scheduled — the backend enforces this in Lifecycle.BookingBlockers. */
 function IdentityCard({ doc, onChanged }: { doc: IdentityDocument | null; onChanged: () => void }) {
+  const t = useT()
   const [kind, setKind] = useState('passport')
   const [file, setFile] = useState<File | null>(null)
   const [busy, setBusy] = useState(false)
@@ -120,14 +126,14 @@ function IdentityCard({ doc, onChanged }: { doc: IdentityDocument | null; onChan
 
   async function submit() {
     if (!file) return
-    if (file.size > 3_000_000) { setErr(UPLOAD_ERRORS.file_too_large); return }
+    if (file.size > 3_000_000) { setErr(t(UPLOAD_ERRORS.file_too_large)); return }
     setBusy(true)
     setErr(null)
     try {
       const dataUri = await new Promise<string>((resolve, reject) => {
         const r = new FileReader()
         r.onload = () => resolve(String(r.result))
-        r.onerror = () => reject(new Error('Could not read the file — please try again.'))
+        r.onerror = () => reject(new Error(t('cert.fileReadError')))
         r.readAsDataURL(file)
       })
       await api.post('/api/me/identity-document', { doc_kind: kind, filename: file.name, data_uri: dataUri })
@@ -136,36 +142,34 @@ function IdentityCard({ doc, onChanged }: { doc: IdentityDocument | null; onChan
       onChanged()
     } catch (e) {
       const code = e instanceof ApiError && e.body && typeof e.body === 'object' && 'error' in e.body ? String((e.body as Record<string, unknown>).error) : ''
-      setErr(UPLOAD_ERRORS[code] || (e instanceof Error ? e.message : 'Upload failed.'))
+      setErr(UPLOAD_ERRORS[code] ? t(UPLOAD_ERRORS[code]) : (e instanceof Error ? e.message : t('cert.uploadFailed')))
     } finally {
       setBusy(false)
     }
   }
 
   const badge =
-    !doc ? <Badge tone="warn">Required</Badge>
-    : doc.status === 'verified' ? <Badge tone="ok">Verified</Badge>
-    : doc.status === 'rejected' ? <Badge tone="err">Rejected</Badge>
-    : <Badge tone="brand">Submitted</Badge>
+    !doc ? <Badge tone="warn">{t('cert.badgeRequired')}</Badge>
+    : doc.status === 'verified' ? <Badge tone="ok">{t('cert.badgeVerified')}</Badge>
+    : doc.status === 'rejected' ? <Badge tone="err">{t('cert.badgeRejected')}</Badge>
+    : <Badge tone="brand">{t('cert.badgeSubmitted')}</Badge>
 
   return (
-    <Card title="Identity verification" action={badge}>
+    <Card title={t('cert.identityVerification')} action={badge}>
       {!doc && (
         <p className="muted small" style={{ marginTop: 0 }}>
-          A government-issued photo ID (passport, national ID card or driving licence) is required
-          before you can schedule any exam. It is reviewed by the institute and used only to verify
-          your identity on exam day.
+          {t('cert.idIntro')}
         </p>
       )}
       {doc && doc.status === 'rejected' && (
         <div className="notice err" role="alert" style={{ marginBottom: '.75rem' }}>
-          Your document could not be accepted{doc.review_note ? ` — ${doc.review_note}` : ''}. Please upload a new one to keep exam scheduling available.
+          {t('cert.docRejectedLead')}{doc.review_note ? ` — ${doc.review_note}` : ''}{t('cert.docRejectedTail')}
         </div>
       )}
       {doc && doc.status !== 'rejected' && (
         <div className="small stack" style={{ gap: '.2rem' }}>
-          <div><span className="muted">Document:</span> <strong>{DOC_KINDS.find((k) => k.value === doc.doc_kind)?.label ?? doc.doc_kind}</strong>{doc.filename ? ` · ${doc.filename}` : ''}</div>
-          <div className="muted">Uploaded {fmtDate(doc.created_at)}{doc.status === 'submitted' ? ' · pending review — you can already schedule your exam' : ''}</div>
+          <div><span className="muted">{t('cert.documentLabel')}</span> <strong>{(() => { const dk = DOC_KINDS.find((k) => k.value === doc.doc_kind); return dk ? t(dk.labelKey) : doc.doc_kind })()}</strong>{doc.filename ? ` · ${doc.filename}` : ''}</div>
+          <div className="muted">{t('cert.uploadedOn', { date: fmtDate(doc.created_at) })}{doc.status === 'submitted' ? t('cert.pendingReviewSuffix') : ''}</div>
         </div>
       )}
 
@@ -173,24 +177,24 @@ function IdentityCard({ doc, onChanged }: { doc: IdentityDocument | null; onChan
         <div className="stack" style={{ marginTop: doc ? '.75rem' : 0 }}>
           {err && <div className="notice err" role="alert">{err}</div>}
           <div className="field" style={{ margin: 0 }}>
-            <label htmlFor="idd-kind">Document type</label>
+            <label htmlFor="idd-kind">{t('cert.documentType')}</label>
             <select id="idd-kind" value={kind} onChange={(e) => setKind(e.target.value)}>
-              {DOC_KINDS.map((k) => <option key={k.value} value={k.value}>{k.label}</option>)}
+              {DOC_KINDS.map((k) => <option key={k.value} value={k.value}>{t(k.labelKey)}</option>)}
             </select>
           </div>
           <div className="field" style={{ margin: 0 }}>
-            <label htmlFor="idd-file">File (JPG, PNG, WEBP or PDF — max 3 MB)</label>
+            <label htmlFor="idd-file">{t('cert.fileFieldLabel')}</label>
             <input id="idd-file" type="file" accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
           </div>
           <div className="row">
-            <button className="btn sm" disabled={!file || busy} onClick={submit}>{busy ? 'Uploading…' : 'Submit document'}</button>
-            {replacing && <button className="btn sm secondary" onClick={() => { setReplacing(false); setErr(null) }}>Cancel</button>}
+            <button className="btn sm" disabled={!file || busy} onClick={submit}>{busy ? t('cert.uploading') : t('cert.submitDocument')}</button>
+            {replacing && <button className="btn sm secondary" onClick={() => { setReplacing(false); setErr(null) }}>{t('cert.cancel')}</button>}
           </div>
         </div>
       ) : (
         <div className="row" style={{ marginTop: '.75rem' }}>
-          <button className="btn sm secondary" onClick={() => setReplacing(true)}>Replace document</button>
+          <button className="btn sm secondary" onClick={() => setReplacing(true)}>{t('cert.replaceDocument')}</button>
         </div>
       )}
     </Card>
@@ -198,6 +202,7 @@ function IdentityCard({ doc, onChanged }: { doc: IdentityDocument | null; onChan
 }
 
 function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: () => void; holds: string[] }) {
+  const t = useT()
   const [scheduling, setScheduling] = useState(false)
   const booking = entry.booking as Record<string, unknown> | null
   const attempt = entry.latest_attempt as Record<string, unknown> | null
@@ -207,39 +212,39 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
   const stateHolds = holds.filter((h) => STATE_HOLDS.has(h))
 
   let state: { tone: 'ok' | 'warn' | 'brand' | 'neutral' | 'err'; label: string }
-  if (cred?.status === 'active') state = { tone: 'ok', label: 'Certified' }
-  else if (attempt) state = { tone: 'brand', label: 'Exam taken' }
-  else if (booking) state = { tone: 'warn', label: 'Scheduled' }
-  else state = { tone: 'neutral', label: 'Not scheduled' }
+  if (cred?.status === 'active') state = { tone: 'ok', label: t('cert.stateCertified') }
+  else if (attempt) state = { tone: 'brand', label: t('cert.stateExamTaken') }
+  else if (booking) state = { tone: 'warn', label: t('cert.stateScheduled') }
+  else state = { tone: 'neutral', label: t('cert.stateNotScheduled') }
 
   return (
     <Card
-      title={entry.certification_name || `Certification #${entry.certification_id}`}
+      title={entry.certification_name || t('cert.untitledCert', { id: entry.certification_id })}
       action={<Badge tone={state.tone}>{state.label}</Badge>}
     >
       <div className="small muted stack">
-        {entry.certification_code && <div>Code: <strong>{entry.certification_code}</strong></div>}
-        {entry.reference && <div>Payment ref: {entry.reference}</div>}
+        {entry.certification_code && <div>{t('cert.codeLabel')} <strong>{entry.certification_code}</strong></div>}
+        {entry.reference && <div>{t('cert.paymentRef')} {entry.reference}</div>}
         {entry.deadline && (
           <div>
-            Scheduling deadline: {fmtDate(entry.deadline)}
-            {deadlineDays !== null && deadlineDays >= 0 && <> · {deadlineDays} day{deadlineDays === 1 ? '' : 's'} left</>}
+            {t('cert.schedulingDeadline')} {fmtDate(entry.deadline)}
+            {deadlineDays !== null && deadlineDays >= 0 && <> · {deadlineDays === 1 ? t('cert.oneDayLeft') : t('cert.daysLeft', { n: deadlineDays })}</>}
           </div>
         )}
       </div>
 
       {cred?.status === 'active' ? (
         <div className="notice" style={{ marginTop: '.75rem' }}>
-          Credential <strong>{cred.credential_id}</strong> · expires {fmtDate(cred.expires_at)}
+          {t('cert.credentialLabel')} <strong>{cred.credential_id}</strong> · {t('cert.expiresOn', { date: fmtDate(cred.expires_at) })}
         </div>
       ) : booking ? (
         <div className="notice" style={{ marginTop: '.75rem' }}>
-          Your exam is scheduled for <strong>{fmtDateTime(booking.scheduled_at)}</strong>
+          {t('cert.examScheduledFor')} <strong>{fmtDateTime(booking.scheduled_at)}</strong>
           {booking.timezone ? ` (${booking.timezone})` : ''}.
           <div className="row" style={{ marginTop: '.6rem', flexWrap: 'wrap' }}>
-            <a className="btn sm" href={`/student.html#t=${getToken() ?? ''}`}>Exam day check-in ↗</a>
+            <a className="btn sm" href={`/student.html#t=${getToken() ?? ''}`}>{t('cert.examDayCheckIn')} ↗</a>
             <button className="btn sm secondary" onClick={() => setScheduling((v) => !v)}>
-              {scheduling ? 'Close' : 'Reschedule'}
+              {scheduling ? t('cert.close') : t('cert.reschedule')}
             </button>
           </div>
           {scheduling && (
@@ -258,21 +263,21 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
           return (
             <div className="notice" style={{ marginTop: '.75rem' }}>
               <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
-                <span className="muted small">Latest attempt:</span> <StatusBadge status={rs} />
+                <span className="muted small">{t('cert.latestAttempt')}</span> <StatusBadge status={rs} />
               </div>
               {underReview && (
                 <div className="muted small" style={{ marginTop: '.5rem' }}>
-                  Your result is being finalised — we&rsquo;ll notify you as soon as it&rsquo;s released.
+                  {t('cert.resultFinalising')}
                 </div>
               )}
               {failed && (
                 <div className="muted small" style={{ marginTop: '.5rem' }}>
-                  You can retake the examination — buy another exam attempt, then schedule your new sitting here.
+                  {t('cert.retakeInfo')}
                 </div>
               )}
               <div className="row" style={{ marginTop: '.6rem', flexWrap: 'wrap' }}>
-                <a className="btn sm secondary" href={`/student.html#t=${getToken() ?? ''}`}>View full result ↗</a>
-                {failed && <Link className="btn sm" to="/billing">Buy a retake →</Link>}
+                <a className="btn sm secondary" href={`/student.html#t=${getToken() ?? ''}`}>{t('cert.viewFullResult')} ↗</a>
+                {failed && <Link className="btn sm" to="/billing">{t('cert.buyRetake')} →</Link>}
               </div>
             </div>
           )
@@ -283,15 +288,15 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
             <ScheduleForm entry={entry} onDone={() => { setScheduling(false); onChanged() }} />
           ) : (
             <>
-              <button className="btn sm" disabled={holds.length > 0} onClick={() => setScheduling(true)}>Schedule exam</button>
+              <button className="btn sm" disabled={holds.length > 0} onClick={() => setScheduling(true)}>{t('cert.scheduleExam')}</button>
               {actionHolds.length > 0 && (
                 <div className="muted small" style={{ marginTop: '.5rem' }}>
-                  To unlock scheduling: {actionHolds.map((h) => HOLD_LABELS[h] ?? h.replace(/_/g, ' ')).join(' · ')}.
+                  {t('cert.toUnlockScheduling')} {actionHolds.map((h) => HOLD_LABELS[h] ? t(HOLD_LABELS[h]) : h.replace(/_/g, ' ')).join(' · ')}.
                 </div>
               )}
               {stateHolds.length > 0 && (
                 <div className="muted small" style={{ marginTop: '.5rem' }}>
-                  Scheduling is unavailable: {stateHolds.map((h) => HOLD_LABELS[h] ?? h.replace(/_/g, ' ')).join(' · ')}.
+                  {t('cert.schedulingUnavailable')} {stateHolds.map((h) => HOLD_LABELS[h] ? t(HOLD_LABELS[h]) : h.replace(/_/g, ' ')).join(' · ')}.
                 </div>
               )}
             </>
@@ -306,6 +311,7 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
  *  credential added in the admin console appears here automatically. Exam fees are paid right here in
  *  the portal; Stripe's secure page handles the card and returns to Billing. */
 function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
+  const t = useT()
   const { me } = useMe()
   const { data, loading, error } = useQuery<{ rows: CatalogueCert[] }>('/api/certifications')
   const [buying, setBuying] = useState<string | null>(null)
@@ -332,7 +338,7 @@ function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
   if (loading) return <Card><Spinner /></Card>
   if (error) return <Card><ErrorNote>{error}</ErrorNote></Card>
   const rows = data?.rows ?? []
-  if (rows.length === 0) return <Card><Empty>No certifications are open for enrolment right now.</Empty></Card>
+  if (rows.length === 0) return <Card><Empty>{t('cert.catalogueEmpty')}</Empty></Card>
 
   return (
     <>
@@ -344,22 +350,22 @@ function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
           <div className="cert-tile" key={c.id}>
             <div className="cert-tile-head">
               <span className="cert-tile-code">{c.code}</span>
-              {owned && <Badge tone="ok">Enrolled</Badge>}
+              {owned && <Badge tone="ok">{t('cert.enrolled')}</Badge>}
             </div>
             <h3 className="cert-tile-name">{c.name}</h3>
             {c.description && <p className="muted small cert-tile-desc">{c.description}</p>}
             <ul className="cert-tile-meta">
-              {c.exam_price != null && <li><strong>{fmtMoney(c.exam_price)}</strong> exam fee</li>}
+              {c.exam_price != null && <li><strong>{fmtMoney(c.exam_price)}</strong> {t('cert.examFee')}</li>}
               {c.duration_minutes != null && c.pass_mark_pct != null && (
-                <li>{c.duration_minutes} min · {c.pass_mark_pct}% to pass</li>
+                <li>{c.duration_minutes} {t('cert.minAbbrev')} · {t('cert.passMark', { pct: c.pass_mark_pct })}</li>
               )}
-              {c.expiry_years != null && <li>Valid {c.expiry_years} year{c.expiry_years === 1 ? '' : 's'}</li>}
+              {c.expiry_years != null && <li>{c.expiry_years === 1 ? t('cert.validOneYear') : t('cert.validYears', { n: c.expiry_years })}</li>}
             </ul>
             {owned ? (
-              <span className="btn sm secondary cert-tile-cta" aria-disabled="true" style={{ opacity: 0.6, pointerEvents: 'none' }}>Already enrolled</span>
+              <span className="btn sm secondary cert-tile-cta" aria-disabled="true" style={{ opacity: 0.6, pointerEvents: 'none' }}>{t('cert.alreadyEnrolled')}</span>
             ) : (
               <button className="btn sm cert-tile-cta" disabled={buying !== null} onClick={() => buy(c.code)}>
-                {buying === c.code ? 'Opening checkout…' : 'Pay exam fee'}
+                {buying === c.code ? t('cert.openingCheckout') : t('cert.payExamFee')}
               </button>
             )}
           </div>
@@ -371,6 +377,7 @@ function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
 }
 
 export default function Certifications() {
+  const t = useT()
   const { me, loading, error, refetch } = useMe()
   if (loading) return <Spinner />
   if (error) return <ErrorNote>{error}</ErrorNote>
@@ -386,43 +393,43 @@ export default function Certifications() {
   return (
     <div className="stack" style={{ display: 'grid', gap: '1.75rem' }}>
       <div>
-        <h1>Certifications &amp; exams</h1>
-        <p className="muted">Schedule your exams, track each credential you hold, and enrol in more.</p>
+        <h1>{t('cert.title')}</h1>
+        <p className="muted">{t('cert.subtitle')}</p>
       </div>
 
       <IdentityCard doc={me.identity_document} onChanged={refetch} />
 
       <section className="stack" style={{ display: 'grid', gap: '1rem' }}>
-        <h2 className="section-title">Your certifications</h2>
+        <h2 className="section-title">{t('cert.yourCertifications')}</h2>
         {me.exams.length === 0 ? (
-          <Card title="How exam scheduling works">
+          <Card title={t('cert.howSchedulingWorks')}>
             <ul className="steps">
               <li className="current">
                 <span className="dot">1</span>
                 <span>
-                  <span className="label">Pay the exam fee</span>
-                  <div className="detail">Choose a certification below — your entitlement appears here immediately after payment.</div>
+                  <span className="label">{t('cert.step1Label')}</span>
+                  <div className="detail">{t('cert.step1Detail')}</div>
                 </span>
               </li>
               <li>
                 <span className="dot">2</span>
                 <span>
-                  <span className="label">Complete eligibility</span>
-                  <div className="detail">Upload your government-issued ID above, accept the exam consents on your Overview page and complete your profile.</div>
+                  <span className="label">{t('cert.step2Label')}</span>
+                  <div className="detail">{t('cert.step2Detail')}</div>
                 </span>
               </li>
               <li>
                 <span className="dot">3</span>
                 <span>
-                  <span className="label">Schedule your sitting</span>
-                  <div className="detail">The button below unlocks — pick any slot up to your deadline, reschedule online if plans change.</div>
+                  <span className="label">{t('cert.step3Label')}</span>
+                  <div className="detail">{t('cert.step3Detail')}</div>
                 </span>
               </li>
             </ul>
             <div style={{ marginTop: '1rem' }}>
-              <button className="btn sm" disabled title="Available after your exam fee is paid">Schedule exam</button>
+              <button className="btn sm" disabled title={t('cert.availableAfterPaid')}>{t('cert.scheduleExam')}</button>
               <div className="muted small" style={{ marginTop: '.5rem' }}>
-                Unlocks automatically once your exam fee is paid — or waived by the institute.
+                {t('cert.unlocksAutomatically')}
               </div>
             </div>
           </Card>
@@ -433,8 +440,8 @@ export default function Certifications() {
 
       <section className="stack" style={{ display: 'grid', gap: '1rem' }}>
         <div>
-          <h2 className="section-title">Explore certifications</h2>
-          <p className="muted small" style={{ margin: '.25rem 0 0' }}>Every credential the Institute offers, kept current automatically.</p>
+          <h2 className="section-title">{t('cert.exploreCertifications')}</h2>
+          <p className="muted small" style={{ margin: '.25rem 0 0' }}>{t('cert.exploreSubtitle')}</p>
         </div>
         <Catalogue ownedCodes={ownedCodes} />
       </section>
