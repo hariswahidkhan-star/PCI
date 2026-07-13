@@ -1020,6 +1020,21 @@ CREATE TABLE IF NOT EXISTS seo_redirects (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ux_seo_redirect_from ON seo_redirects(from_path);
 
+-- ===== First-party analytics (Admin -> Analytics): one row per page view / business event.
+-- Cookieless + privacy-first: 'visitor' is a non-reversible daily-rotating hash (never a raw IP);
+-- country only from a trusted CDN geo header; attribution copied from the pci_attr cookie. =====
+CREATE TABLE IF NOT EXISTS analytics_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  event TEXT NOT NULL,
+  path TEXT, visitor TEXT, user_id INTEGER,
+  country TEXT, device TEXT, browser TEXT,
+  utm_source TEXT, utm_medium TEXT, utm_campaign TEXT, referrer TEXT, landing TEXT,
+  value DECIMAL(12,2), currency TEXT, detail TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS ix_analytics_event_time ON analytics_events(event, created_at);
+CREATE INDEX IF NOT EXISTS ix_analytics_time ON analytics_events(created_at);
+
 -- ===== SEO: search-engine submission ledger (IndexNow now; others later). One row per attempt. =====
 CREATE TABLE IF NOT EXISTS seo_submissions (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

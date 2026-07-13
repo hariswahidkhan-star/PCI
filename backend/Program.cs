@@ -375,6 +375,7 @@ app.MapPost("/api/login", async (HttpRequest req) =>
         var ip = H.LastHopIp(req.Headers["x-forwarded-for"].ToString(), req.HttpContext.Connection.RemoteIpAddress?.ToString());
         db.Execute("INSERT INTO login_events(user_id,ip,user_agent,device,outcome) VALUES(?,?,?,?,?)", u["id"], ip, ua.Length>300?ua[..300]:ua, dev, "success");
     } catch { }
+    PCI.Backend.Core.Analytics.Track(db, req.HttpContext, "login", Convert.ToInt64(u["id"]));
     return Json(new { ok = true, token = session, user = new { id = u["id"], email = u["email"], firstName = u["first_name"], lastName = u["last_name"] } });
 });
 
@@ -639,6 +640,7 @@ app.MapPost("/api/admin/storage/purge", (HttpRequest req) =>
 // overrides fall straight through to the static-file middleware, so untouched pages pay nothing.
 var webRoot = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
 PCI.Backend.Endpoints.AdminSeo.Map(app, db, logFn, GateFn, webRoot);   // Admin Console → SEO (/api/admin/seo/...)
+PCI.Backend.Endpoints.AdminAnalytics.Map(app, db, GateFn);             // Admin Console → Analytics (/api/admin/analytics/...)
 // one-time: capture each page's current headline as an editable block so every page is editable out of the box
 PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
 PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
@@ -682,7 +684,8 @@ app.Use(async (ctx, next) =>
                 if (hasCerts) rendered = PCI.Backend.Core.CertCatalogue.Inject(db, rendered);
                 rendered = PCI.Backend.Core.ListSections.Inject(db, rendered, lang);
                 rendered = PCI.Backend.Core.PriceTags.Inject(db, rendered);
-                rendered = PCI.Backend.Core.SeoTags.Inject(db, rendered);   // GA4/GTM/Clarity + verification metas (admin-set)
+                rendered = PCI.Backend.Core.SeoTags.Inject(db, rendered, slug);   // GA4/GTM/Clarity + verification metas (admin-set, consent-gated)
+                PCI.Backend.Core.Analytics.PageView(db, ctx, slug);               // first-party, cookieless page view
                 ctx.Response.ContentType = "text/html; charset=utf-8";
                 ctx.Response.Headers.CacheControl = "no-cache";   // content is admin-editable — always revalidate
                 ctx.Response.Headers.Vary = "Cookie";             // the language cookie varies the response

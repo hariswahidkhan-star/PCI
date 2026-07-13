@@ -1017,6 +1017,19 @@ CREATE TABLE IF NOT EXISTS seo_redirects (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ux_seo_redirect_from ON seo_redirects(from_path(191));
 
+-- First-party analytics (mirrors schema.sql).
+CREATE TABLE IF NOT EXISTS analytics_events (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  event TEXT NOT NULL,
+  path TEXT, visitor TEXT, user_id BIGINT,
+  country TEXT, device TEXT, browser TEXT,
+  utm_source TEXT, utm_medium TEXT, utm_campaign TEXT, referrer TEXT, landing TEXT,
+  value DECIMAL(12,2), currency TEXT, detail TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_analytics_event_time ON analytics_events(event(24), created_at(20));
+CREATE INDEX IF NOT EXISTS ix_analytics_time ON analytics_events(created_at(20));
+
 -- SEO: search-engine submission ledger (mirrors schema.sql).
 CREATE TABLE IF NOT EXISTS seo_submissions (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,

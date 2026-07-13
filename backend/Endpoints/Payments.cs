@@ -142,9 +142,15 @@ public static class Payments
                     }
                     else { userId = existingId.Value; db.Execute("UPDATE users SET status='active', updated_at=datetime('now') WHERE id=?", userId); }
 
+                    // First-party analytics: revenue + activation events (server-to-server — no visitor context).
+                    PCI.Backend.Core.Analytics.Track(db, null, "purchase_completed", userId,
+                        MetaNum("final_amount") != 0 ? MetaNum("final_amount") : amountTotal, "USD", product);
                     if (product == "membership" || product == "bundle")
+                    {
                         db.Execute("INSERT INTO memberships(user_id,membership_type,status,start_date,expiry_date,renewal_fee,renewal_cycle,amount_paid,currency) VALUES(?,?, 'active', datetime('now'), datetime('now','+3 year'), 99, '3 years', ?, 'USD')",
                             userId, "Student Membership", MetaNum("final_amount"));
+                        PCI.Backend.Core.Analytics.Track(db, null, "membership_activated", userId, null, null, product);
+                    }
                     {
                         {
                         if (product == "renewal")
