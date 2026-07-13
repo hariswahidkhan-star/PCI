@@ -94,6 +94,7 @@ public static class Account
                 "and activate your membership when you are ready — there is nothing to pay until you choose to enrol.</p>" +
                 "<p>— Project Controls Institute Global</p>");
             var (token, user) = StartSession(u, req);
+            Analytics.Track(db, req.HttpContext, "registration_completed", H.Ln(u["id"]));
             return J(new { ok = true, token, user });
         });
 
