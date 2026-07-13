@@ -35,6 +35,8 @@ const NAV: NavItem[] = [
   { to: '/pages', label: 'Pages & content', perm: 'pages', group: 'Website' },
   { to: '/content', label: 'Site content', perm: 'content', group: 'Website' },
   { to: '/translations', label: 'Translations', owner: true, group: 'Website' },
+
+  { to: '/seo', label: 'SEO', perm: 'pages', group: 'SEO' },
   { to: '/reviews', label: 'Reviews', perm: 'content', group: 'Website' },
   crudItem('faqs', 'Website'),
   crudItem('resources', 'Website'),

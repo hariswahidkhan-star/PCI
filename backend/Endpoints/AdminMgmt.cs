@@ -475,8 +475,8 @@ public static class AdminMgmt
             var b = await H.Body(req);
             object? noindex = b.ContainsKey("noindex") ? (H.B(b["noindex"].GetRawText()) ? 1 : 0) : null;
             object? published = b.ContainsKey("published") ? (H.B(b["published"].GetRawText()) ? 1 : 0) : null;
-            db.Execute("UPDATE pages SET title=COALESCE(?,title), meta_description=COALESCE(?,meta_description), noindex=COALESCE(?,noindex), published=COALESCE(?,published), updated_at=datetime('now') WHERE id=?",
-                H.GetS(b, "title"), H.GetS(b, "meta_description"), noindex, published, id);
+            db.Execute("UPDATE pages SET title=COALESCE(?,title), meta_description=COALESCE(?,meta_description), noindex=COALESCE(?,noindex), published=COALESCE(?,published), canonical_url=COALESCE(?,canonical_url), og_image=COALESCE(?,og_image), updated_at=datetime('now') WHERE id=?",
+                H.GetS(b, "title"), H.GetS(b, "meta_description"), noindex, published, H.GetS(b, "canonical_url"), H.GetS(b, "og_image"), id);
             PCI.Backend.Core.PageContent.Bump();
             log(null, "page_update", id.ToString());
             return J(new { ok = true });

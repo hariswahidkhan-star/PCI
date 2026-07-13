@@ -32,6 +32,8 @@ public static class PageContent
     static Dictionary<string, (string val, string ctype)> _globalElems = new();             // 'g:…' shared element → value
     static Dictionary<string, (string? title, string? meta)> _pageMeta = new();             // slug → title/meta
     static HashSet<string> _noindex = new(StringComparer.OrdinalIgnoreCase);                 // slugs flagged noindex
+    static Dictionary<string, string> _canonical = new(StringComparer.OrdinalIgnoreCase);    // slug → canonical URL override
+    static Dictionary<string, string> _ogImage = new(StringComparer.OrdinalIgnoreCase);      // slug → og:image override
     static Dictionary<string, Dictionary<string, string>> _pageBlocks = new();              // slug → {block_key → value}
     static Dictionary<string, Dictionary<string, (string val, string ctype)>> _elemBlocks = new(); // slug → {'t:…' → value}
     static readonly Dictionary<string, (int ver, string html)> _rendered = new(StringComparer.OrdinalIgnoreCase);
@@ -55,11 +57,15 @@ public static class PageContent
             }
             var pm = new Dictionary<string, (string?, string?)>(StringComparer.OrdinalIgnoreCase);
             var ni = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var r in db.Query("SELECT slug,title,meta_description,noindex FROM pages"))
+            var can = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var ogi = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var r in db.Query("SELECT slug,title,meta_description,noindex,canonical_url,og_image FROM pages"))
             {
                 var slug = H.Str(r["slug"]) ?? "";
                 pm[slug] = (H.Str(r["title"]), H.Str(r["meta_description"]));
                 if (H.L(r["noindex"]) == 1) ni.Add(slug);
+                if (H.Str(r["canonical_url"]) is { Length: > 0 } cu) can[slug] = cu;
+                if (H.Str(r["og_image"]) is { Length: > 0 } oi) ogi[slug] = oi;
             }
             var pb = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
             var eb = new Dictionary<string, Dictionary<string, (string, string)>>(StringComparer.OrdinalIgnoreCase);
@@ -79,7 +85,8 @@ public static class PageContent
                     m[key] = val;
                 }
             }
-            _globalContent = gc; _globalElems = ge; _pageMeta = pm; _pageBlocks = pb; _elemBlocks = eb; _noindex = ni;
+            _globalContent = gc; _globalElems = ge; _pageMeta = pm; _pageBlocks = pb; _elemBlocks = eb;
+            _noindex = ni; _canonical = can; _ogImage = ogi;
             _rendered.Clear();
             _cachedVersion = v;
         }
@@ -102,7 +109,7 @@ public static class PageContent
         EnsureLoaded(db);
         if (_globalContent.Count > 0 || _globalElems.Count > 0) return true; // global bindings may apply anywhere
         if (_pageMeta.TryGetValue(slug, out var m) && (m.title is not null || m.meta is not null)) return true;
-        if (_noindex.Contains(slug)) return true;                             // a noindex-only page still needs its meta injected
+        if (_noindex.Contains(slug) || _canonical.ContainsKey(slug) || _ogImage.ContainsKey(slug)) return true; // SEO-only overrides still need injection
         return _pageBlocks.ContainsKey(slug) || _elemBlocks.ContainsKey(slug);
     }
 
@@ -132,6 +139,8 @@ public static class PageContent
     public static readonly Regex RxH1 = new(@"(<h1[^>]*>)(.*?)(</h1>)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
     static readonly Regex RxHeadOpen = new(@"<head[^>]*>", RegexOptions.IgnoreCase);
     static readonly Regex RxRobotsNoindex = new(@"<meta\s+name=[""']robots[""'][^>]*noindex", RegexOptions.IgnoreCase);
+    static readonly Regex RxCanonical = new(@"(<link\s+rel=[""']canonical[""']\s+href=[""']).*?([""'])", RegexOptions.IgnoreCase);
+    static readonly Regex RxOgImage = new(@"(<meta\s+(?:property|name)=[""'](?:og|twitter):image[""']\s+content=[""']).*?([""'])", RegexOptions.IgnoreCase);
 
     static string Inject(string slug, string html)
     {
@@ -168,6 +177,12 @@ public static class PageContent
         // actually takes effect on the served page. Skip if the file already declares one.
         if (_noindex.Contains(slug) && !RxRobotsNoindex.IsMatch(html))
             html = RxHeadOpen.Replace(html, m => m.Value + "<meta name=\"robots\" content=\"noindex, nofollow\"/>", 1);
+
+        // Admin SEO overrides: canonical URL and social image (og:image + twitter:image).
+        if (_canonical.TryGetValue(slug, out var canUrl))
+            html = RxCanonical.Replace(html, m => m.Groups[1].Value + EscAttr(canUrl) + m.Groups[2].Value, 1);
+        if (_ogImage.TryGetValue(slug, out var ogUrl))
+            html = RxOgImage.Replace(html, m => m.Groups[1].Value + EscAttr(ogUrl) + m.Groups[2].Value);
 
         // positional headline: replace the first <h1>'s inner text (edits every page's headline with no
         // template tagging). data-cms regions below still take precedence for finer control.
