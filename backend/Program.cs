@@ -71,6 +71,20 @@ var _csp = string.Join("; ", new[]
 });
 var _cspHeader = string.Equals(Environment.GetEnvironmentVariable("CSP_REPORT_ONLY"), "true", StringComparison.OrdinalIgnoreCase)
     ? "Content-Security-Policy-Report-Only" : "Content-Security-Policy";
+// Canonical-domain + HTTPS enforcement (FIRST, before anything serves): 301 the www/pciglobal.ai
+// hosts to https://projectcontrolsinstitute.org, page-to-page. Unknown hosts pass through so the
+// service keeps working on the Render URL / localhost / staging during the DNS transition.
+app.Use(async (ctx, next) =>
+{
+    if (PCI.Backend.Core.Redirects.Target(ctx.Request) is { } target)
+    {
+        ctx.Response.StatusCode = StatusCodes.Status301MovedPermanently;
+        ctx.Response.Headers.Location = target;
+        return;
+    }
+    await next();
+});
+
 app.Use(async (ctx, next) =>
 {
     var h = ctx.Response.Headers;
@@ -79,6 +93,10 @@ app.Use(async (ctx, next) =>
     h["X-Frame-Options"] = "DENY";                       // legacy ally of frame-ancestors 'none'
     h["Cross-Origin-Opener-Policy"] = "same-origin";
     h[_cspHeader] = _csp;
+    // Keep private/authenticated surfaces out of search indexes (defence in depth alongside
+    // auth, the noindex meta tags and robots.txt).
+    if (PCI.Backend.Core.Redirects.IsPrivatePath(ctx.Request.Path.Value ?? ""))
+        h["X-Robots-Tag"] = "noindex, nofollow";
     // Emit HSTS whenever the TLS-terminating proxy reports https. Chained proxies send a comma-list
     // ("https, http"), so match the FIRST hop, not the whole header — an exact-equals check silently
     // dropped HSTS behind a second proxy.
@@ -666,6 +684,14 @@ app.Use(async (ctx, next) =>
         {
             ctx.Response.ContentType = "application/json; charset=utf-8";
             await ctx.Response.WriteAsync(PCI.Backend.Core.SearchIndex.Json(db, webRoot));
+            return;
+        }
+        // Dynamic sitemap.xml from the pages table (published, indexable, canonical host) — overrides
+        // the static file so it always reflects real content and excludes private/noindex pages.
+        if (reqPath.Equals("/sitemap.xml", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.ContentType = "application/xml; charset=utf-8";
+            await ctx.Response.WriteAsync(PCI.Backend.Core.Sitemap.Xml(db));
             return;
         }
     }

@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.projectcontrolsinstitute.org/sitemap.xml
+# Private / authenticated surfaces — kept out of search indexes. Defence in depth:
+# also protected by authentication, noindex meta tags, and an X-Robots-Tag: noindex
+# response header (robots.txt alone is never relied upon for private data).
+Disallow: /admin
+Disallow: /admin/
+Disallow: /admin.html
+Disallow: /app
+Disallow: /app/
+Disallow: /student.html
+Disallow: /exam-ui.html
+Disallow: /api/
+
+Sitemap: https://projectcontrolsinstitute.org/sitemap.xml

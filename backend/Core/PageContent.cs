@@ -31,6 +31,7 @@ public static class PageContent
     static Dictionary<string, string> _globalContent = new();                               // ckey → value (data-cms bindings)
     static Dictionary<string, (string val, string ctype)> _globalElems = new();             // 'g:…' shared element → value
     static Dictionary<string, (string? title, string? meta)> _pageMeta = new();             // slug → title/meta
+    static HashSet<string> _noindex = new(StringComparer.OrdinalIgnoreCase);                 // slugs flagged noindex
     static Dictionary<string, Dictionary<string, string>> _pageBlocks = new();              // slug → {block_key → value}
     static Dictionary<string, Dictionary<string, (string val, string ctype)>> _elemBlocks = new(); // slug → {'t:…' → value}
     static readonly Dictionary<string, (int ver, string html)> _rendered = new(StringComparer.OrdinalIgnoreCase);
@@ -53,8 +54,13 @@ public static class PageContent
                 else if (val.Length > 0) gc[key] = val;
             }
             var pm = new Dictionary<string, (string?, string?)>(StringComparer.OrdinalIgnoreCase);
-            foreach (var r in db.Query("SELECT slug,title,meta_description FROM pages"))
-                pm[H.Str(r["slug"]) ?? ""] = (H.Str(r["title"]), H.Str(r["meta_description"]));
+            var ni = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var r in db.Query("SELECT slug,title,meta_description,noindex FROM pages"))
+            {
+                var slug = H.Str(r["slug"]) ?? "";
+                pm[slug] = (H.Str(r["title"]), H.Str(r["meta_description"]));
+                if (H.L(r["noindex"]) == 1) ni.Add(slug);
+            }
             var pb = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
             var eb = new Dictionary<string, Dictionary<string, (string, string)>>(StringComparer.OrdinalIgnoreCase);
             foreach (var r in db.Query("SELECT slug,block_key,cvalue,ctype FROM page_blocks WHERE cvalue IS NOT NULL"))
@@ -73,7 +79,7 @@ public static class PageContent
                     m[key] = val;
                 }
             }
-            _globalContent = gc; _globalElems = ge; _pageMeta = pm; _pageBlocks = pb; _elemBlocks = eb;
+            _globalContent = gc; _globalElems = ge; _pageMeta = pm; _pageBlocks = pb; _elemBlocks = eb; _noindex = ni;
             _rendered.Clear();
             _cachedVersion = v;
         }
@@ -96,6 +102,7 @@ public static class PageContent
         EnsureLoaded(db);
         if (_globalContent.Count > 0 || _globalElems.Count > 0) return true; // global bindings may apply anywhere
         if (_pageMeta.TryGetValue(slug, out var m) && (m.title is not null || m.meta is not null)) return true;
+        if (_noindex.Contains(slug)) return true;                             // a noindex-only page still needs its meta injected
         return _pageBlocks.ContainsKey(slug) || _elemBlocks.ContainsKey(slug);
     }
 
@@ -123,6 +130,8 @@ public static class PageContent
     static readonly Regex RxCms = new(@"(<([a-zA-Z0-9]+)([^>]*?)\sdata-cms=""([^""]+)""([^>]*)>)(.*?)(</\2>)", RegexOptions.Singleline);
     // the first <h1> on the page (positional headline override, key '_h1' — no HTML tagging needed)
     public static readonly Regex RxH1 = new(@"(<h1[^>]*>)(.*?)(</h1>)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+    static readonly Regex RxHeadOpen = new(@"<head[^>]*>", RegexOptions.IgnoreCase);
+    static readonly Regex RxRobotsNoindex = new(@"<meta\s+name=[""']robots[""'][^>]*noindex", RegexOptions.IgnoreCase);
 
     static string Inject(string slug, string html)
     {
@@ -154,6 +163,11 @@ public static class PageContent
             html = RxMeta.Replace(html, m => m.Groups[1].Value + EscAttr(meta.meta!) + m.Groups[2].Value, 1);
             html = RxOgDesc.Replace(html, m => m.Groups[1].Value + EscAttr(meta.meta!) + m.Groups[2].Value);
         }
+
+        // Admin "hide from search engines" flag → inject a robots noindex meta (once) so the toggle
+        // actually takes effect on the served page. Skip if the file already declares one.
+        if (_noindex.Contains(slug) && !RxRobotsNoindex.IsMatch(html))
+            html = RxHeadOpen.Replace(html, m => m.Value + "<meta name=\"robots\" content=\"noindex, nofollow\"/>", 1);
 
         // positional headline: replace the first <h1>'s inner text (edits every page's headline with no
         // template tagging). data-cms regions below still take precedence for finer control.

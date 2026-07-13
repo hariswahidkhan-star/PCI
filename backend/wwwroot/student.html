@@ -651,7 +651,7 @@ function credStatus(me){const c=me.credentials&&me.credentials[0];if(!c)return n
   if(!cpdOK&&dTo(c.expires_at)<180)return{k:'risk',t:'At risk — CPD shortfall',cls:'a',why:'CPD '+me.cpd.total+' of '+me.cpd.target+' hours with under six months to recertification.'};
   return{k:'active',t:'Active & in good standing',cls:'g',why:''};
 }
-function verifyURL(id){const b=(S.me&&S.me.site_base_url)||'https://www.projectcontrolsinstitute.org';return b.replace(/\/$/,'')+'/verify.html?id='+encodeURIComponent(id)}
+function verifyURL(id){const b=(S.me&&S.me.site_base_url)||'https://projectcontrolsinstitute.org';return b.replace(/\/$/,'')+'/verify.html?id='+encodeURIComponent(id)}
 function credCard(me){const c=me.credentials[0];const name=(me.user.first_name+' '+(me.user.last_name||'')).trim();
   const st=c?{t:'Active credential',w:0}:me.exam.booking?{t:'Exam booked',w:0}:me.exam.entitled?{t:'Window open',w:dTo(me.exam.deadline)<60}:{t:'Awaiting exam fee',w:1};
   const k1=c?['Credential ID',c.credential_id]:me.exam.entitled?['Exam window',Math.max(0,dTo(me.exam.deadline))+' days left']:['Exam fee',money(350)];
@@ -1361,7 +1361,7 @@ function demoME(){const inp=(D._att&&D._att.status!=='done'&&D._att.attempt_id)?
    attempts:inp.concat(D.attempts.slice().reverse()),credentials:D.credentials,
    tickets:D.tickets.map(t=>({id:t.id,reference:t.reference,subject:t.subject,category:t.category,status:t.status,updated_at:t.updated_at})),
    referral:{code:'REF-AMELIA-K7M2'},cpd:{total:D.cpd.reduce((a,r)=>a+(r.hours||0),0),target:60},two_factor:D.twofa,
-   unread:D.msgs.filter(m=>!m.read_at).length,enrollment:null,site_base_url:'https://www.projectcontrolsinstitute.org'};}
+   unread:D.msgs.filter(m=>!m.read_at).length,enrollment:null,site_base_url:'https://projectcontrolsinstitute.org'};}
 function demoAPI(path,opts={}){const m=(opts.method||'GET').toUpperCase(),b=opts.body?JSON.parse(opts.body):{},P=path.split('?')[0],qs=new URLSearchParams(path.split('?')[1]||'');let mm;const ok=x=>Promise.resolve(x||{ok:true});
   if(P==='/api/me')return ok(demoME());
   if(P==='/api/me/profile'&&m==='PATCH'){Object.assign(D.profile,b);persistD();return ok()}
