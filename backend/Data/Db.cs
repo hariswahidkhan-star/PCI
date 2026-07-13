@@ -39,7 +39,7 @@ public sealed class Db
             Provider = Kind.Sqlite;
             _conn = new SqliteConnection($"Data Source={path};Cache=Shared");
         }
-        _conn.Open();
+        OpenWithRetry();
         if (Provider == Kind.Sqlite)
         {
             Execute("PRAGMA journal_mode=WAL");
@@ -55,15 +55,35 @@ public sealed class Db
         }
     }
 
+    /// <summary>Open the connection, retrying transient failures. A managed MySQL can be briefly
+    /// unavailable at boot (deploy, failover); retry with backoff rather than crash the process.
+    /// SQLite opens locally and effectively never transiently fails, so it opens once.</summary>
+    void OpenWithRetry()
+    {
+        if (Provider == Kind.Sqlite) { _conn.Open(); return; }
+        var attempts = int.TryParse(Environment.GetEnvironmentVariable("MYSQL_CONNECT_RETRIES"), out var n) ? Math.Clamp(n, 1, 20) : 6;
+        for (var i = 1; ; i++)
+        {
+            try { _conn.Open(); return; }
+            catch (Exception ex) when (i < attempts)
+            {
+                var wait = Math.Min(1000 * i, 8000);
+                Console.Error.WriteLine($"[db] MySQL connect attempt {i}/{attempts} failed ({ex.Message}); retrying in {wait}ms");
+                Thread.Sleep(wait);
+            }
+        }
+    }
+
     static string MySqlConnectionString()
     {
         var cs = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING");
         if (!string.IsNullOrWhiteSpace(cs)) return cs;
         string E(string k, string def) => Environment.GetEnvironmentVariable(k) is { Length: > 0 } v ? v : def;
+        uint U(string k, uint def) => uint.TryParse(E(k, ""), out var v) ? v : def;
         var b = new MySqlConnectionStringBuilder
         {
             Server = E("MYSQL_HOST", "127.0.0.1"),
-            Port = uint.TryParse(E("MYSQL_PORT", "3306"), out var p) ? p : 3306,
+            Port = U("MYSQL_PORT", 3306),
             Database = E("MYSQL_DATABASE", "pci"),
             UserID = E("MYSQL_USER", "root"),
             Password = Environment.GetEnvironmentVariable("MYSQL_PASSWORD") ?? "",
@@ -71,9 +91,16 @@ public sealed class Db
             // strict types off so an empty string bound to a numeric column coerces like SQLite,
             // matching the app's loose-typing expectations.
             AllowUserVariables = true,
-            ConnectionTimeout = 15,
+            ConnectionTimeout = U("MYSQL_CONNECT_TIMEOUT", 15),          // seconds to establish a connection
+            DefaultCommandTimeout = U("MYSQL_COMMAND_TIMEOUT", 30),      // seconds per command
+            Pooling = true,
+            MinimumPoolSize = U("MYSQL_POOL_MIN", 0),
+            MaximumPoolSize = U("MYSQL_POOL_MAX", 20),
         };
-        if (Environment.GetEnvironmentVariable("MYSQL_SSL") is "false") b.SslMode = MySqlSslMode.Disabled;
+        // SSL: default Preferred; MYSQL_SSL=false disables (local/dev), MYSQL_SSL=required enforces (managed prod).
+        var ssl = Environment.GetEnvironmentVariable("MYSQL_SSL")?.Trim().ToLowerInvariant();
+        if (ssl == "false") b.SslMode = MySqlSslMode.Disabled;
+        else if (ssl is "required" or "true") b.SslMode = MySqlSslMode.Required;
         return b.ConnectionString;
     }
 

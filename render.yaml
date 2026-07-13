@@ -1,13 +1,16 @@
 # Render Blueprint — deploys the whole PCI platform (website + student panel + admin dashboard)
-# as one Docker web service with a persistent disk for the database and uploaded files.
+# as one Docker web service. The DATABASE is MySQL (required); the persistent disk holds only
+# uploaded files (evidence, ID documents, attachments).
 #
 # Use: push this repo to GitHub → Render dashboard → New → Blueprint → select the repo.
 # Render reads this file and provisions everything; you only fill in the env-var values
 # marked sync:false (they are secrets/deployment-specific, never committed).
 #
-# NOTE: persistent disks require a paid instance (Starter or above). Do NOT run this app
-# on the free tier — its filesystem is ephemeral and the SQLite database would be wiped
-# on every deploy/restart.
+# DATABASE (MySQL 8.x / MariaDB 10.11+, InnoDB, utf8mb4): Render does not offer managed MySQL,
+# so use an external managed MySQL (e.g. PlanetScale, Aiven, AWS RDS, DigitalOcean) and set the
+# MYSQL_* values below. SQLite is NOT used in production — the app refuses to boot in Production
+# unless DB_PROVIDER=mysql (there is no silent SQLite fallback). Run the one-time data migration
+# (backend/tools/migrate_sqlite_to_mysql.py) before first cutover; see docs/MYSQL_MIGRATION.md.
 
 services:
   - type: web
@@ -17,16 +20,29 @@ services:
     healthCheckPath: /api/health
     autoDeploy: true
     disk:
-      name: pci-data
+      name: pci-data          # uploaded files only (the database lives in managed MySQL)
       mountPath: /data
       sizeGB: 5
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
-      - key: DATABASE_FILE
-        value: /data/pci.db
       - key: STORAGE_ROOT
         value: /data/storage
+      # ---- database: external managed MySQL (required in production) ----
+      - key: DB_PROVIDER
+        value: mysql
+      - key: MYSQL_HOST          # managed MySQL hostname
+        sync: false
+      - key: MYSQL_PORT
+        value: "3306"
+      - key: MYSQL_DATABASE
+        value: pci
+      - key: MYSQL_USER
+        sync: false
+      - key: MYSQL_PASSWORD
+        sync: false
+      - key: MYSQL_SSL           # "required" for managed providers; "false" only for a private-network DB
+        value: required
       # ---- fill these in on the Render dashboard (Settings → Environment) ----
       - key: APP_BASE_URL          # your public URL, e.g. https://pci-platform.onrender.com or https://www.yourdomain.org
         sync: false

@@ -210,8 +210,13 @@ static List<(string sev, string key, string msg)> ConfigIssues()
         if (string.Equals(E("ENABLE_LEGACY_ADMIN_TOKEN"), "true", StringComparison.OrdinalIgnoreCase)) Err("ENABLE_LEGACY_ADMIN_TOKEN", "legacy admin token must be disabled in production");
         var origin = E("ALLOWED_ORIGIN");
         if (string.IsNullOrEmpty(origin) || origin == "*") Err("ALLOWED_ORIGIN", "CORS must not be wildcard in production; set an explicit origin");
-        var dbFile = E("DATABASE_FILE") ?? "./pci.db";
-        if (dbFile.StartsWith("/tmp") || dbFile.Contains("Temp")) Err("DATABASE_FILE", "database path is temporary; use a persistent volume");
+        // Production MUST run on MySQL — SQLite is not an approved production/staging database, and there
+        // is deliberately no silent fallback: a misconfigured DB_PROVIDER fails the preflight loudly.
+        var dbProvider = (E("DB_PROVIDER") ?? "sqlite").Trim().ToLowerInvariant();
+        if (dbProvider is not ("mysql" or "mariadb"))
+            Err("DB_PROVIDER", "production requires MySQL — set DB_PROVIDER=mysql (SQLite is not approved for production)");
+        else if (string.IsNullOrEmpty(E("MYSQL_CONNECTION_STRING")) && (string.IsNullOrEmpty(E("MYSQL_HOST")) || string.IsNullOrEmpty(E("MYSQL_PASSWORD"))))
+            Err("MYSQL_HOST", "MySQL is selected but connection settings are incomplete (need MYSQL_HOST + MYSQL_PASSWORD, or MYSQL_CONNECTION_STRING)");
         if (string.IsNullOrEmpty(E("ADMIN_OWNER_PASSWORD"))) Warn("ADMIN_OWNER_PASSWORD", "bootstrap owner uses the default password until changed");
     }
     return issues;

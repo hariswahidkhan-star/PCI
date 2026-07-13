@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS student_profiles (
 CREATE TABLE IF NOT EXISTS pricing_rules (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   currency TEXT DEFAULT 'USD', product_type TEXT,           -- membership | exam | renewal | retake
-  standard_price DOUBLE, default_discount_percentage DOUBLE DEFAULT 0,
+  standard_price DECIMAL(12,2), default_discount_percentage DOUBLE DEFAULT 0,
   active BIGINT DEFAULT 1, start_date TEXT, end_date TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS discount_codes (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   code VARCHAR(500) UNIQUE NOT NULL,
   discount_type TEXT,                        -- percentage | fixed
-  discount_value DOUBLE,
+  discount_value DECIMAL(12,2),
   applies_to TEXT DEFAULT 'all',             -- membership | exam | all
   start_date TEXT, end_date TEXT,
   max_uses BIGINT, used_count BIGINT DEFAULT 0,
@@ -72,8 +72,8 @@ CREATE TABLE IF NOT EXISTS discount_codes (
 CREATE TABLE IF NOT EXISTS payments (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT, enrollment_session_id BIGINT,
-  product_type TEXT, standard_amount DOUBLE, default_discount_amount DOUBLE,
-  discount_code TEXT, discount_code_amount DOUBLE, final_amount DOUBLE, currency TEXT DEFAULT 'USD',
+  product_type TEXT, standard_amount DECIMAL(12,2), default_discount_amount DECIMAL(12,2),
+  discount_code TEXT, discount_code_amount DECIMAL(12,2), final_amount DECIMAL(12,2), currency TEXT DEFAULT 'USD',
   payment_provider TEXT, provider_payment_id TEXT,
   payment_status TEXT,                       -- paid | failed | refunded
   payment_date TEXT, invoice_url TEXT, receipt_url TEXT,
@@ -85,8 +85,8 @@ CREATE TABLE IF NOT EXISTS memberships (
   user_id BIGINT NOT NULL,
   membership_type TEXT, status TEXT DEFAULT 'inactive',   -- inactive | active | expired
   start_date TEXT, expiry_date TEXT,
-  renewal_fee DOUBLE DEFAULT 99, renewal_cycle TEXT DEFAULT '3 years',
-  amount_paid DOUBLE, currency TEXT DEFAULT 'USD'
+  renewal_fee DECIMAL(12,2) DEFAULT 99, renewal_cycle TEXT DEFAULT '3 years',
+  amount_paid DECIMAL(12,2), currency TEXT DEFAULT 'USD'
 );
 CREATE TABLE IF NOT EXISTS login_tokens (
   id BIGINT PRIMARY KEY AUTO_INCREMENT, user_id BIGINT NOT NULL,
@@ -345,7 +345,7 @@ CREATE TABLE IF NOT EXISTS certifications (
   pass_mark_pct DOUBLE,                        -- NULL → global exam_pass_mark_pct
   duration_minutes BIGINT,                  -- NULL → global exam_duration_minutes
   expiry_years BIGINT DEFAULT 3,
-  exam_price DOUBLE,                           -- NULL → pricing_rules product_type='exam'
+  exam_price DECIMAL(12,2),                           -- NULL → pricing_rules product_type='exam'
   active BIGINT DEFAULT 1,
   sort_order BIGINT DEFAULT 0,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
@@ -717,7 +717,7 @@ CREATE TABLE IF NOT EXISTS code_redemptions (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   code_id BIGINT, code TEXT, user_id BIGINT, email TEXT,
   payment_id BIGINT UNIQUE,                 -- one redemption per payment (idempotent)
-  product_type TEXT, amount_before DOUBLE, discount_amount DOUBLE,
+  product_type TEXT, amount_before DECIMAL(12,2), discount_amount DECIMAL(12,2),
   redeemed_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_redemptions_code ON code_redemptions(code_id);
