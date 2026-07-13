@@ -1005,6 +1005,18 @@ INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','');
 INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_ack_subject','');
 INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_admin_subject','');
 
+-- SEO: managed path redirects (mirrors schema.sql; TEXT key needs a prefix length in MySQL).
+CREATE TABLE IF NOT EXISTS seo_redirects (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  from_path TEXT NOT NULL,
+  to_url TEXT NOT NULL,
+  status BIGINT DEFAULT 301,
+  active BIGINT DEFAULT 1,
+  note TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_seo_redirect_from ON seo_redirects(from_path(191));
+
 -- Public-website internationalisation (Phase 3 multilingual): one translation per captured region
 -- per language (mirrors schema.sql; TEXT keys need prefix lengths in the MySQL unique index).
 CREATE TABLE IF NOT EXISTS content_i18n (

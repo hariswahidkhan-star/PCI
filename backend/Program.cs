@@ -638,6 +638,7 @@ app.MapPost("/api/admin/storage/purge", (HttpRequest req) =>
 // the HTML with those values injected server-side (SEO-safe, works with JS off). Pages with no
 // overrides fall straight through to the static-file middleware, so untouched pages pay nothing.
 var webRoot = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
+PCI.Backend.Endpoints.AdminSeo.Map(app, db, logFn, GateFn, webRoot);   // Admin Console → SEO (/api/admin/seo/...)
 // one-time: capture each page's current headline as an editable block so every page is editable out of the box
 PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
 PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
@@ -645,6 +646,14 @@ app.Use(async (ctx, next) =>
 {
     if (ctx.Request.Method == "GET")
     {
+        // Managed path redirects (Admin → SEO → Redirects): renamed/retired pages 301 to their
+        // replacement before any serving. Single-hop by construction (chains rejected at write time).
+        if (PCI.Backend.Core.PathRedirects.Target(db, ctx.Request) is { } red)
+        {
+            ctx.Response.StatusCode = red.status;
+            ctx.Response.Headers.Location = red.to;
+            return;
+        }
         var reqPath = ctx.Request.Path.Value ?? "/";
         var slug = reqPath == "/" ? "index.html" : reqPath.TrimStart('/');
         var isPage = slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..");

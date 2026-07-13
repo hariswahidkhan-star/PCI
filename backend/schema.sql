@@ -1006,6 +1006,20 @@ CREATE TABLE IF NOT EXISTS notification_history (
   related_type TEXT, related_id INTEGER,     -- e.g. honorary_application / 42
   created_at TEXT DEFAULT (datetime('now'))
 );
+-- ===== SEO: managed path redirects (Admin → SEO → Redirects). from_path is an absolute site path
+-- ('/old-page.html'); to_url is a path or absolute URL. Applied server-side before page serving;
+-- chains are rejected at write time so every redirect is a single hop. =====
+CREATE TABLE IF NOT EXISTS seo_redirects (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  from_path TEXT NOT NULL,
+  to_url TEXT NOT NULL,
+  status INTEGER DEFAULT 301,
+  active INTEGER DEFAULT 1,
+  note TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_seo_redirect_from ON seo_redirects(from_path);
+
 -- ===== Public-website internationalisation: one human-authored translation per captured text
 -- region, per language. scope: 'p' page block (slug + block_key) | 'g' shared/global element (gkey)
 -- | 'nav' navigation label (keyed by its English text) | 'meta' page title/description. English is
