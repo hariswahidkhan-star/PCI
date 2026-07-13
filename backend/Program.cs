@@ -46,6 +46,8 @@ Migrate.Run(db, schemaPath);
 builder.Services.AddSingleton(db);
 // Scheduled retention: purge stored artefacts past evidence_retention_days, daily (manual endpoint stays).
 builder.Services.AddHostedService<PCI.Backend.Core.RetentionService>();
+// ERP / integrations outbox delivery worker (Phase 9): drains due deliveries and posts them, signed.
+builder.Services.AddHostedService<PCI.Backend.Core.IntegrationDispatcher>();
 
 var app = builder.Build();
 
@@ -618,6 +620,7 @@ PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);
 PCI.Backend.Endpoints.TrainingPartners.Map(app, db, logFn, GateFn);   // Training Partner framework (Phase 7)
+PCI.Backend.Endpoints.Certuvo.Map(app, db, logFn);                    // Certuvo study & practice engine (Phase 8)
 PCI.Backend.Endpoints.AdminI18n.Map(app, db, logFn);
 
 // Purge stored artefacts older than the configured retention window (owner-only). Metadata rows are kept
@@ -643,9 +646,11 @@ var webRoot = app.Environment.WebRootPath ?? Path.Combine(app.Environment.Conten
 PCI.Backend.Endpoints.AdminSeo.Map(app, db, logFn, GateFn, webRoot);   // Admin Console → SEO (/api/admin/seo/...)
 PCI.Backend.Endpoints.AdminAnalytics.Map(app, db, GateFn);             // Admin Console → Analytics (/api/admin/analytics/...)
 PCI.Backend.Endpoints.AdminAiVisibility.Map(app, db, logFn, GateFn, webRoot); // Admin Console → AI Visibility (/api/admin/ai-visibility/...)
+PCI.Backend.Endpoints.AdminIntegrations.Map(app, db, logFn, GateFn);   // Admin Console → Integrations / ERP (/api/admin/integrations/...)
 // one-time: capture each page's current headline as an editable block so every page is editable out of the box
 PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
 PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
+PCI.Backend.Data.CertuvoSeed.Apply(db); // Certuvo starter practice pack (scenario MCQs across BoK domains)
 app.Use(async (ctx, next) =>
 {
     if (ctx.Request.Method == "GET")

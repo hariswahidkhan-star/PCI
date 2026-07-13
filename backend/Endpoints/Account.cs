@@ -95,6 +95,12 @@ public static class Account
                 "<p>— Project Controls Institute Global</p>");
             var (token, user) = StartSession(u, req);
             Analytics.Track(db, req.HttpContext, "registration_completed", H.Ln(u["id"]));
+            // ERP / integrations outbox (Phase 9): a canonical new-member event for CRM/ERP sync.
+            Integrations.Emit(db, "member.registered", "user", H.Ln(u["id"]), new
+            {
+                user_id = H.Ln(u["id"]), email, first_name = first, last_name = last,
+                country = H.GetS(b, "country"), occurred_at = H.IsoNow,
+            });
             return J(new { ok = true, token, user });
         });
 

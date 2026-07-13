@@ -112,7 +112,7 @@ public static class AdminMgmt
         }
         Crud("faqs", new[]{ "question","answer","category","sort_order","published" }, "sort_order, id", "faqs");
         Crud("bok_domains", new[]{ "code","name","weight","description","bullets","sort_order" }, "sort_order, id", "bok");
-        Crud("sample_questions", new[]{ "question","options","option_a","option_b","option_c","option_d","answer_index","domain","published","sort_order","is_practice","certification_id" }, "sort_order, id", "sampleq");
+        Crud("sample_questions", new[]{ "question","options","option_a","option_b","option_c","option_d","answer_index","domain","published","sort_order","is_practice","explanation","difficulty","certification_id" }, "sort_order, id", "sampleq");
 
         // ---------- certifications (multi-credential management; exam section) ----------
         // Deliberately NOT the generic Crud: a certification that has ever issued a credential or

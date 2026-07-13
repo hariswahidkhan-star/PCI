@@ -327,8 +327,48 @@ CREATE TABLE IF NOT EXISTS sample_questions (
   answer_index BIGINT, domain TEXT,
   published BIGINT DEFAULT 1, sort_order BIGINT,
   is_practice BIGINT DEFAULT 0,
+  explanation TEXT, difficulty TEXT,          -- Certuvo (Phase 8): teaching explanation + difficulty band
   certification_id BIGINT DEFAULT 1
 );
+-- Certuvo practice attempts (Phase 8): formative quiz / mock sittings, separate from exam_attempts.
+CREATE TABLE IF NOT EXISTS practice_attempts (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  mode TEXT NOT NULL DEFAULT 'quiz',
+  domain TEXT,
+  question_ids TEXT, answers TEXT,
+  score BIGINT, total BIGINT, domain_breakdown TEXT,
+  status TEXT NOT NULL DEFAULT 'in_progress',
+  duration_seconds BIGINT,
+  started_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), completed_at TEXT
+);
+CREATE INDEX IF NOT EXISTS ix_practice_user ON practice_attempts(user_id);
+-- ERP / integrations foundation (Phase 9) — see schema.sql for the narrative.
+CREATE TABLE IF NOT EXISTS integrations (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  provider TEXT NOT NULL DEFAULT 'webhook',
+  name TEXT, enabled BIGINT DEFAULT 0,
+  endpoint_url TEXT, secret TEXT,
+  event_filter TEXT,
+  config TEXT, status TEXT DEFAULT 'idle', last_delivery_at TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE TABLE IF NOT EXISTS integration_events (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  event_type TEXT NOT NULL,
+  entity_type TEXT, entity_id BIGINT,
+  payload TEXT, created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_intevent_created ON integration_events(created_at(20));
+CREATE TABLE IF NOT EXISTS integration_deliveries (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  event_id BIGINT NOT NULL, integration_id BIGINT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',
+  attempts BIGINT DEFAULT 0, response_code BIGINT, last_error TEXT, next_attempt_at TEXT,
+  created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE INDEX IF NOT EXISTS ix_intdel_pending ON integration_deliveries(status(16), next_attempt_at(20));
+CREATE UNIQUE INDEX IF NOT EXISTS ux_intdel_event_int ON integration_deliveries(event_id, integration_id);
 
 -- ============================================================
 --  CERTIFICATIONS — the platform is multi-credential: every question bank,

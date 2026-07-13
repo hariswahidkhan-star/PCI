@@ -26,6 +26,9 @@ public static class Migrate
             if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
         }
         AddCol("sample_questions", "is_practice", "is_practice INTEGER DEFAULT 0");
+        // Certuvo (Phase 8): practice questions carry a teaching explanation + a difficulty band.
+        AddCol("sample_questions", "explanation", "explanation TEXT");
+        AddCol("sample_questions", "difficulty", "difficulty TEXT");
         AddCol("exam_attempts", "result_status", "result_status TEXT DEFAULT 'not_started'");
         AddCol("exam_attempts", "hold_reason", "hold_reason TEXT");
         AddCol("exam_attempts", "released_at", "released_at TEXT");
@@ -103,6 +106,19 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_tpapp_status ON training_partner_applications(status)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS training_partner_application_documents(id INTEGER PRIMARY KEY AUTOINCREMENT,application_id INTEGER NOT NULL,doc_kind TEXT DEFAULT 'supporting',filename TEXT,mime TEXT,size_bytes INTEGER,storage_ref TEXT,sha256 TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_tpappdoc_app ON training_partner_application_documents(application_id)");
+        // Certuvo practice attempts (Phase 8): one row per practice quiz / mock — formative, un-proctored,
+        // separate from the certifying exam_attempts. Stores the served question set, the answers and the
+        // graded score with a per-domain breakdown.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS practice_attempts(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,mode TEXT NOT NULL DEFAULT 'quiz',domain TEXT,question_ids TEXT,answers TEXT,score INTEGER,total INTEGER,domain_breakdown TEXT,status TEXT NOT NULL DEFAULT 'in_progress',duration_seconds INTEGER,started_at TEXT DEFAULT (datetime('now')),completed_at TEXT)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_practice_user ON practice_attempts(user_id)");
+        // ERP / integrations foundation (Phase 9): a durable event outbox, a connector registry with a
+        // write-only secret, and a per-event-per-connector delivery ledger with retry/backoff.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS integrations(id INTEGER PRIMARY KEY AUTOINCREMENT,provider TEXT NOT NULL DEFAULT 'webhook',name TEXT,enabled INTEGER DEFAULT 0,endpoint_url TEXT,secret TEXT,event_filter TEXT,config TEXT,status TEXT DEFAULT 'idle',last_delivery_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS integration_events(id INTEGER PRIMARY KEY AUTOINCREMENT,event_type TEXT NOT NULL,entity_type TEXT,entity_id INTEGER,payload TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_intevent_created ON integration_events(created_at)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS integration_deliveries(id INTEGER PRIMARY KEY AUTOINCREMENT,event_id INTEGER NOT NULL,integration_id INTEGER NOT NULL,status TEXT NOT NULL DEFAULT 'pending',attempts INTEGER DEFAULT 0,response_code INTEGER,last_error TEXT,next_attempt_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_intdel_pending ON integration_deliveries(status, next_attempt_at)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_intdel_event_int ON integration_deliveries(event_id, integration_id)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS notification_history(id INTEGER PRIMARY KEY AUTOINCREMENT,channel TEXT NOT NULL DEFAULT 'email',recipient TEXT,subject TEXT,status TEXT,related_type TEXT,related_id INTEGER,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','')");

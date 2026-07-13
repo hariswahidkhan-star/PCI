@@ -1,0 +1,37 @@
+using Microsoft.Extensions.Hosting;
+using PCI.Backend.Data;
+
+namespace PCI.Backend.Core;
+
+/// <summary>
+/// Background delivery worker for the integrations outbox (Phase 9). Every ~20 seconds it drains due
+/// deliveries (pending, past their backoff) and POSTs each to its connector's endpoint, signed. Uses
+/// the same <see cref="Integrations.DeliverOne"/> path as the admin test/retry actions, so there is one
+/// delivery code path. Failures are retried with exponential backoff up to the attempt cap; nothing here
+/// throws out of the loop, so a bad connector can never stop the worker.
+/// </summary>
+public sealed class IntegrationDispatcher : BackgroundService
+{
+    private readonly Db _db;
+    private static readonly TimeSpan Interval = TimeSpan.FromSeconds(20);
+    private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(15) };
+
+    public IntegrationDispatcher(Db db) => _db = db;
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        using var timer = new PeriodicTimer(Interval);
+        do
+        {
+            try { await Integrations.DeliverDue(_db, Http, 25); }
+            catch (Exception e) { Console.Error.WriteLine($"[integrations] dispatch failed: {e.Message}"); }
+        }
+        while (await WaitAsync(timer, stoppingToken));
+    }
+
+    private static async Task<bool> WaitAsync(PeriodicTimer timer, CancellationToken ct)
+    {
+        try { return await timer.WaitForNextTickAsync(ct); }
+        catch (OperationCanceledException) { return false; }
+    }
+}

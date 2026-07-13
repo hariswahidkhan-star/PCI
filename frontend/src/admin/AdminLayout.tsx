@@ -52,6 +52,8 @@ const NAV: NavItem[] = [
 
   { to: '/training-partners', label: 'Training Partners', perm: 'partners', group: 'Training Partners' },
 
+  { to: '/integrations', label: 'Integrations & ERP', perm: 'integrations', group: 'Integrations' },
+
   { to: '/enquiries', label: 'Enquiries', perm: 'inquiries', group: 'Community' },
   { to: '/submissions', label: 'Form submissions', perm: 'submissions', group: 'Community' },
   { to: '/subscribers', label: 'Newsletter', perm: 'subscribers', group: 'Community' },

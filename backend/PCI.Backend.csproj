@@ -22,6 +22,7 @@
     <None Include="schema.sql" CopyToOutputDirectory="PreserveNewest" />
     <None Include="schema.mysql.sql" CopyToOutputDirectory="PreserveNewest" />
     <None Include="i18n_seed.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('i18n_seed.json')" />
+    <None Include="certuvo_seed.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('certuvo_seed.json')" />
     <None Include="emails/**/*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
