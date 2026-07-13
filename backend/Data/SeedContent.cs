@@ -30,6 +30,13 @@ public static class SeedContent
                 db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT ?,?, 'Membership', ?, 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url=? AND nav_group='Membership')", lbl, url, so, url);
         }
         catch (Exception e) { Console.Error.WriteLine($"[seed] membership routes skipped: {e.Message}"); }
+        // Training Partner pages (Phase 7) — added idempotently under the Organisations footer group.
+        try
+        {
+            foreach (var (lbl, url, so) in new[] { ("Training Partners", "training-partners.html", 8), ("Become a Training Partner", "become-a-training-partner.html", 9) })
+                db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT ?,?, 'Organisations', ?, 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url=? AND nav_group='Organisations')", lbl, url, so, url);
+        }
+        catch (Exception e) { Console.Error.WriteLine($"[seed] training partner nav skipped: {e.Message}"); }
     }
 
     static readonly object?[][] Faqs =

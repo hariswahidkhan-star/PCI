@@ -50,6 +50,8 @@ const NAV: NavItem[] = [
   { to: '/analytics', label: 'Analytics', perm: 'reports', group: 'Analytics' },
   { to: '/ai-visibility', label: 'AI Visibility', perm: 'pages', group: 'AI Visibility' },
 
+  { to: '/training-partners', label: 'Training Partners', perm: 'partners', group: 'Training Partners' },
+
   { to: '/enquiries', label: 'Enquiries', perm: 'inquiries', group: 'Community' },
   { to: '/submissions', label: 'Form submissions', perm: 'submissions', group: 'Community' },
   { to: '/subscribers', label: 'Newsletter', perm: 'subscribers', group: 'Community' },
