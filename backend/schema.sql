@@ -323,8 +323,22 @@ CREATE TABLE IF NOT EXISTS sample_questions (
   answer_index INTEGER, domain TEXT,
   published INTEGER DEFAULT 1, sort_order INTEGER,
   is_practice INTEGER DEFAULT 0,
+  explanation TEXT, difficulty TEXT,          -- Certuvo (Phase 8): teaching explanation + difficulty band (practice rows)
   certification_id INTEGER DEFAULT 1 REFERENCES certifications(id)
 );
+-- Certuvo practice attempts (Phase 8): formative quiz / mock sittings, separate from exam_attempts.
+CREATE TABLE IF NOT EXISTS practice_attempts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  mode TEXT NOT NULL DEFAULT 'quiz',          -- quiz | mock
+  domain TEXT,                                -- null = mixed
+  question_ids TEXT, answers TEXT,            -- JSON: served id order, and {qid:index}
+  score INTEGER, total INTEGER, domain_breakdown TEXT,
+  status TEXT NOT NULL DEFAULT 'in_progress', -- in_progress | completed
+  duration_seconds INTEGER,
+  started_at TEXT DEFAULT (datetime('now')), completed_at TEXT
+);
+CREATE INDEX IF NOT EXISTS ix_practice_user ON practice_attempts(user_id);
 
 -- ============================================================
 --  CERTIFICATIONS — the platform is multi-credential: every question bank,

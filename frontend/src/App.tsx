@@ -9,6 +9,7 @@ import Overview from './pages/Overview'
 import Certifications from './pages/Certifications'
 import Credentials from './pages/Credentials'
 import Cpd from './pages/Cpd'
+import Certuvo from './pages/Certuvo'
 import Billing from './pages/Billing'
 import Resources from './pages/Resources'
 import Messages from './pages/Messages'
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="certifications" element={<Certifications />} />
           <Route path="credentials" element={<Credentials />} />
           <Route path="cpd" element={<Cpd />} />
+          <Route path="certuvo" element={<Certuvo />} />
           <Route path="billing" element={<Billing />} />
           <Route path="resources" element={<Resources />} />
           <Route path="messages" element={<Messages />} />

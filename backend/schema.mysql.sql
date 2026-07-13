@@ -327,8 +327,22 @@ CREATE TABLE IF NOT EXISTS sample_questions (
   answer_index BIGINT, domain TEXT,
   published BIGINT DEFAULT 1, sort_order BIGINT,
   is_practice BIGINT DEFAULT 0,
+  explanation TEXT, difficulty TEXT,          -- Certuvo (Phase 8): teaching explanation + difficulty band
   certification_id BIGINT DEFAULT 1
 );
+-- Certuvo practice attempts (Phase 8): formative quiz / mock sittings, separate from exam_attempts.
+CREATE TABLE IF NOT EXISTS practice_attempts (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  mode TEXT NOT NULL DEFAULT 'quiz',
+  domain TEXT,
+  question_ids TEXT, answers TEXT,
+  score BIGINT, total BIGINT, domain_breakdown TEXT,
+  status TEXT NOT NULL DEFAULT 'in_progress',
+  duration_seconds BIGINT,
+  started_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), completed_at TEXT
+);
+CREATE INDEX IF NOT EXISTS ix_practice_user ON practice_attempts(user_id);
 
 -- ============================================================
 --  CERTIFICATIONS — the platform is multi-credential: every question bank,
