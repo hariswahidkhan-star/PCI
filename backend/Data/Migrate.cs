@@ -104,6 +104,11 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS content_i18n(id INTEGER PRIMARY KEY AUTOINCREMENT,lang TEXT NOT NULL,scope TEXT NOT NULL,slug TEXT NOT NULL DEFAULT '',ckey TEXT NOT NULL,cvalue TEXT,updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_content_i18n ON content_i18n(lang, scope, slug, ckey)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_content_i18n_lang ON content_i18n(lang)");
+        // Backend-owned translation provider (owner-set in Admin → Translations; never hardcoded).
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('translate_provider','')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('translate_api_key','')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('translate_model','')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('translate_endpoint','')");
         // NOTE: the three Membership route nav_items are added in SeedContent AFTER its IfEmpty bulk seed
         // — adding them here (Migrate runs first) would make nav_items non-empty and suppress that seed.
         foreach (var (c, d) in new[]{

@@ -183,4 +183,106 @@ public static class I18nContent
 
     static string Esc(string s) => s.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
     static string AttrEsc(string s) => Esc(s).Replace("\"", "&quot;");
+
+    // ===== admin-facing translation control (backend-owned) =====
+
+    /// <summary>One translatable source region: the same keys the injector resolves, so a translation
+    /// stored against a Src actually appears on the page.</summary>
+    public sealed record Src(string Scope, string Slug, string Key, string CType, string English);
+
+    static readonly System.Text.RegularExpressions.Regex RxHasLetter = new("[A-Za-z]", System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    /// <summary>Skip strings that carry no translatable prose — URLs/paths, pure numbers/symbols.</summary>
+    static bool Translatable(string? s)
+    {
+        if (string.IsNullOrWhiteSpace(s)) return false;
+        var t = s.Trim();
+        if (t.StartsWith("http://") || t.StartsWith("https://") || t.StartsWith("/") || t.StartsWith("data:")) return false;
+        return RxHasLetter.IsMatch(t);
+    }
+
+    /// <summary>Enumerate every translatable source region. With a slug, only that page's blocks + meta;
+    /// without, the whole site including shared globals and navigation labels.</summary>
+    public static List<Src> Sources(Db db, string? slug = null)
+    {
+        var list = new List<Src>();
+        var pb = slug is null
+            ? db.Query("SELECT slug,block_key,ctype,cvalue FROM page_blocks WHERE cvalue IS NOT NULL AND cvalue<>''")
+            : db.Query("SELECT slug,block_key,ctype,cvalue FROM page_blocks WHERE slug=? AND cvalue IS NOT NULL AND cvalue<>''", slug);
+        foreach (var r in pb)
+        {
+            var bk = H.Str(r["block_key"]) ?? "";
+            if (bk.EndsWith("@src", StringComparison.Ordinal)) continue;
+            if (bk != "_h1" && !bk.StartsWith("t:", StringComparison.Ordinal)) continue;
+            var en = H.Str(r["cvalue"]) ?? "";
+            if (!Translatable(en)) continue;
+            list.Add(new Src("p", H.Str(r["slug"]) ?? "", bk, H.Str(r["ctype"]) ?? "text", en));
+        }
+        if (slug is null)
+        {
+            foreach (var r in db.Query("SELECT ckey,ctype,cvalue FROM site_content WHERE ckey LIKE 'g:%' AND cvalue IS NOT NULL AND cvalue<>''"))
+            {
+                var ck = H.Str(r["ckey"]) ?? "";
+                if (ck.EndsWith("@src", StringComparison.Ordinal)) continue;
+                var en = H.Str(r["cvalue"]) ?? "";
+                if (!Translatable(en)) continue;
+                list.Add(new Src("g", "", ck, H.Str(r["ctype"]) ?? "text", en));
+            }
+            foreach (var r in db.Query("SELECT DISTINCT label FROM nav_items WHERE visible=1 AND label IS NOT NULL AND label<>''"))
+            {
+                var lbl = H.Str(r["label"]) ?? "";
+                if (!Translatable(lbl)) continue;
+                list.Add(new Src("nav", "", lbl, "text", lbl));
+            }
+        }
+        var pg = slug is null
+            ? db.Query("SELECT slug,title,meta_description FROM pages")
+            : db.Query("SELECT slug,title,meta_description FROM pages WHERE slug=?", slug);
+        foreach (var r in pg)
+        {
+            var sl = H.Str(r["slug"]) ?? "";
+            if (H.Str(r["title"]) is { Length: > 0 } tt && Translatable(tt)) list.Add(new Src("meta", sl, "title", "text", tt));
+            if (H.Str(r["meta_description"]) is { Length: > 0 } md && Translatable(md)) list.Add(new Src("meta", sl, "meta", "text", md));
+        }
+        return list;
+    }
+
+    /// <summary>Set/replace one translation and refresh caches. Deletes-then-inserts (provider-agnostic).</summary>
+    public static void Upsert(Db db, string lang, string scope, string slug, string ckey, string? cvalue)
+    {
+        db.Execute("DELETE FROM content_i18n WHERE lang=? AND scope=? AND slug=? AND ckey=?", lang, scope, slug, ckey);
+        if (!string.IsNullOrEmpty(cvalue))
+            db.Execute("INSERT INTO content_i18n(lang,scope,slug,ckey,cvalue) VALUES(?,?,?,?,?)", lang, scope, slug, ckey, cvalue);
+        Bump();
+    }
+
+    /// <summary>Translation coverage per language against the full translatable source set.</summary>
+    public static object Coverage(Db db)
+    {
+        var srcs = Sources(db, null);
+        string SK(string sc, string sl, string k) => sc + "" + sl + "" + k;
+        var langs = new Dictionary<string, object>();
+        foreach (var lang in Langs)
+        {
+            if (lang == "en") continue;
+            var have = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var r in db.Query("SELECT scope,slug,ckey FROM content_i18n WHERE lang=? AND cvalue IS NOT NULL AND cvalue<>''", lang))
+                have.Add(SK(H.Str(r["scope"]) ?? "", H.Str(r["slug"]) ?? "", H.Str(r["ckey"]) ?? ""));
+            var done = srcs.Count(s => have.Contains(SK(s.Scope, s.Slug, s.Key)));
+            langs[lang] = new { done, total = srcs.Count };
+        }
+        return new { total = srcs.Count, langs };
+    }
+
+    /// <summary>Which translations already exist for a language, keyed scopeslugkey → value.</summary>
+    public static Dictionary<string, string> Existing(Db db, string lang, string? slug = null)
+    {
+        var map = new Dictionary<string, string>(StringComparer.Ordinal);
+        var rows = slug is null
+            ? db.Query("SELECT scope,slug,ckey,cvalue FROM content_i18n WHERE lang=?", lang)
+            : db.Query("SELECT scope,slug,ckey,cvalue FROM content_i18n WHERE lang=? AND (slug=? OR scope IN ('g','nav'))", lang, slug);
+        foreach (var r in rows)
+            map[(H.Str(r["scope"]) ?? "") + "" + (H.Str(r["slug"]) ?? "") + "" + (H.Str(r["ckey"]) ?? "")] = H.Str(r["cvalue"]) ?? "";
+        return map;
+    }
 }

@@ -15,6 +15,7 @@ import Codes from './pages/Codes'
 import Founding from './pages/Founding'
 import Honorary from './pages/Honorary'
 import HonoraryApplications from './pages/HonoraryApplications'
+import Translations from './pages/Translations'
 import Enquiries from './pages/Enquiries'
 import Submissions from './pages/Submissions'
 import Reviews from './pages/Reviews'
@@ -78,6 +79,7 @@ export default function AdminApp() {
         <Route path="submissions" element={<Perm section="submissions"><Submissions /></Perm>} />
         <Route path="reviews" element={<Perm section="content"><Reviews /></Perm>} />
         <Route path="content" element={<Perm section="content"><Content /></Perm>} />
+        <Route path="translations" element={<OwnerOnly><Translations /></OwnerOnly>} />
         <Route path="subscribers" element={<Perm section="subscribers"><Subscribers /></Perm>} />
         <Route path="reports" element={<Perm section="reports"><Reports /></Perm>} />
         <Route path="emails" element={<Perm section="emails"><Emails /></Perm>} />
