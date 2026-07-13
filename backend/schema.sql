@@ -1006,6 +1006,22 @@ CREATE TABLE IF NOT EXISTS notification_history (
   related_type TEXT, related_id INTEGER,     -- e.g. honorary_application / 42
   created_at TEXT DEFAULT (datetime('now'))
 );
+-- ===== Public-website internationalisation: one human-authored translation per captured text
+-- region, per language. scope: 'p' page block (slug + block_key) | 'g' shared/global element (gkey)
+-- | 'nav' navigation label (keyed by its English text) | 'meta' page title/description. English is
+-- the source and default; with lang=en nothing is injected and pages are served byte-identical. =====
+CREATE TABLE IF NOT EXISTS content_i18n (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  lang TEXT NOT NULL,                         -- ko | ar | es | fr | zh | ru
+  scope TEXT NOT NULL,                        -- p | g | nav | meta
+  slug TEXT NOT NULL DEFAULT '',              -- page slug for p/meta; '' for g/nav
+  ckey TEXT NOT NULL,                         -- block_key (t:…) | gkey (g:…) | English nav label | title|meta
+  cvalue TEXT,
+  updated_at TEXT DEFAULT (datetime('now'))
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_content_i18n ON content_i18n(lang, scope, slug, ckey);
+CREATE INDEX IF NOT EXISTS ix_content_i18n_lang ON content_i18n(lang);
+
 -- Configurable notification settings (owner-editable in Admin → Settings; never hardcoded).
 INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1');
 INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','');
