@@ -100,6 +100,14 @@ public static class Analytics
         try
         {
             var ua = ctx.Request.Headers.UserAgent.ToString();
+            // Known AI crawlers are recorded on their own event (Admin → AI Visibility) and never
+            // counted as human page views. Checked before IsBot, since their UAs contain "bot"/"spider".
+            if (AiVisibility.Detect(ua) is { } crawler)
+            {
+                db.Execute("INSERT INTO analytics_events(event,path,country,detail) VALUES('ai_crawler',?,?,?)",
+                    "/" + slug, Country(ctx), crawler.Token);
+                return;
+            }
             if (IsBot(ua)) return;
             var (device, browser) = Client(ua);
             var attr = Attribution(ctx, "/" + slug);

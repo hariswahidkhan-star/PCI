@@ -641,6 +641,7 @@ app.MapPost("/api/admin/storage/purge", (HttpRequest req) =>
 var webRoot = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
 PCI.Backend.Endpoints.AdminSeo.Map(app, db, logFn, GateFn, webRoot);   // Admin Console → SEO (/api/admin/seo/...)
 PCI.Backend.Endpoints.AdminAnalytics.Map(app, db, GateFn);             // Admin Console → Analytics (/api/admin/analytics/...)
+PCI.Backend.Endpoints.AdminAiVisibility.Map(app, db, logFn, GateFn, webRoot); // Admin Console → AI Visibility (/api/admin/ai-visibility/...)
 // one-time: capture each page's current headline as an editable block so every page is editable out of the box
 PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
 PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
@@ -706,6 +707,21 @@ app.Use(async (ctx, next) =>
         {
             ctx.Response.ContentType = "application/xml; charset=utf-8";
             await ctx.Response.WriteAsync(PCI.Backend.Core.Sitemap.Xml(db));
+            return;
+        }
+        // Policy-aware robots.txt (Phase 6) — overrides the static file so blocked AI crawlers
+        // (Admin → AI Visibility) are reflected live; allowed answer engines inherit the * group.
+        if (reqPath.Equals("/robots.txt", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.ContentType = "text/plain; charset=utf-8";
+            await ctx.Response.WriteAsync(PCI.Backend.Core.AiVisibility.Robots(db));
+            return;
+        }
+        // llms.txt (llmstxt.org) — a curated Markdown map of indexable content for language models.
+        if (reqPath.Equals("/llms.txt", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.ContentType = "text/plain; charset=utf-8";
+            await ctx.Response.WriteAsync(PCI.Backend.Core.AiVisibility.LlmsTxt(db));
             return;
         }
         // IndexNow ownership proof: serve the site key at /{key}.txt (the protocol's requirement).
