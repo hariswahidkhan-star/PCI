@@ -339,6 +339,32 @@ CREATE TABLE IF NOT EXISTS practice_attempts (
   started_at TEXT DEFAULT (datetime('now')), completed_at TEXT
 );
 CREATE INDEX IF NOT EXISTS ix_practice_user ON practice_attempts(user_id);
+-- ERP / integrations foundation (Phase 9): durable event outbox + connector registry + delivery ledger.
+CREATE TABLE IF NOT EXISTS integrations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  provider TEXT NOT NULL DEFAULT 'webhook',    -- webhook (generic) | future ERP connectors
+  name TEXT, enabled INTEGER DEFAULT 0,
+  endpoint_url TEXT, secret TEXT,              -- secret is write-only via the API (never returned)
+  event_filter TEXT,                           -- JSON array of event types; empty/null = all
+  config TEXT, status TEXT DEFAULT 'idle', last_delivery_at TEXT,
+  created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))
+);
+CREATE TABLE IF NOT EXISTS integration_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  event_type TEXT NOT NULL,                    -- payment.recorded | membership.activated | member.registered | ping
+  entity_type TEXT, entity_id INTEGER,
+  payload TEXT, created_at TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS ix_intevent_created ON integration_events(created_at);
+CREATE TABLE IF NOT EXISTS integration_deliveries (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  event_id INTEGER NOT NULL, integration_id INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',      -- pending | delivered | failed
+  attempts INTEGER DEFAULT 0, response_code INTEGER, last_error TEXT, next_attempt_at TEXT,
+  created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS ix_intdel_pending ON integration_deliveries(status, next_attempt_at);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_intdel_event_int ON integration_deliveries(event_id, integration_id);
 
 -- ============================================================
 --  CERTIFICATIONS — the platform is multi-credential: every question bank,

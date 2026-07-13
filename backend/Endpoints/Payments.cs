@@ -143,13 +143,23 @@ public static class Payments
                     else { userId = existingId.Value; db.Execute("UPDATE users SET status='active', updated_at=datetime('now') WHERE id=?", userId); }
 
                     // First-party analytics: revenue + activation events (server-to-server — no visitor context).
-                    PCI.Backend.Core.Analytics.Track(db, null, "purchase_completed", userId,
-                        MetaNum("final_amount") != 0 ? MetaNum("final_amount") : amountTotal, "USD", product);
+                    var finalAmount = MetaNum("final_amount") != 0 ? MetaNum("final_amount") : amountTotal;
+                    PCI.Backend.Core.Analytics.Track(db, null, "purchase_completed", userId, finalAmount, "USD", product);
+                    // ERP / integrations outbox (Phase 9): a canonical revenue event for accounting/ERP sync.
+                    PCI.Backend.Core.Integrations.Emit(db, "payment.recorded", "payment", payId, new
+                    {
+                        payment_id = payId, user_id = userId, email, amount = finalAmount, currency = "USD",
+                        product, product_type = product, occurred_at = H.IsoNow,
+                    });
                     if (product == "membership" || product == "bundle")
                     {
                         db.Execute("INSERT INTO memberships(user_id,membership_type,status,start_date,expiry_date,renewal_fee,renewal_cycle,amount_paid,currency) VALUES(?,?, 'active', datetime('now'), datetime('now','+3 year'), 99, '3 years', ?, 'USD')",
                             userId, "Student Membership", MetaNum("final_amount"));
                         PCI.Backend.Core.Analytics.Track(db, null, "membership_activated", userId, null, null, product);
+                        PCI.Backend.Core.Integrations.Emit(db, "membership.activated", "user", userId, new
+                        {
+                            user_id = userId, email, membership_type = "Student Membership", occurred_at = H.IsoNow,
+                        });
                     }
                     {
                         {

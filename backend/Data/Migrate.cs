@@ -111,6 +111,14 @@ public static class Migrate
         // graded score with a per-domain breakdown.
         db.Exec(@"CREATE TABLE IF NOT EXISTS practice_attempts(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,mode TEXT NOT NULL DEFAULT 'quiz',domain TEXT,question_ids TEXT,answers TEXT,score INTEGER,total INTEGER,domain_breakdown TEXT,status TEXT NOT NULL DEFAULT 'in_progress',duration_seconds INTEGER,started_at TEXT DEFAULT (datetime('now')),completed_at TEXT)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_practice_user ON practice_attempts(user_id)");
+        // ERP / integrations foundation (Phase 9): a durable event outbox, a connector registry with a
+        // write-only secret, and a per-event-per-connector delivery ledger with retry/backoff.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS integrations(id INTEGER PRIMARY KEY AUTOINCREMENT,provider TEXT NOT NULL DEFAULT 'webhook',name TEXT,enabled INTEGER DEFAULT 0,endpoint_url TEXT,secret TEXT,event_filter TEXT,config TEXT,status TEXT DEFAULT 'idle',last_delivery_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS integration_events(id INTEGER PRIMARY KEY AUTOINCREMENT,event_type TEXT NOT NULL,entity_type TEXT,entity_id INTEGER,payload TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_intevent_created ON integration_events(created_at)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS integration_deliveries(id INTEGER PRIMARY KEY AUTOINCREMENT,event_id INTEGER NOT NULL,integration_id INTEGER NOT NULL,status TEXT NOT NULL DEFAULT 'pending',attempts INTEGER DEFAULT 0,response_code INTEGER,last_error TEXT,next_attempt_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_intdel_pending ON integration_deliveries(status, next_attempt_at)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_intdel_event_int ON integration_deliveries(event_id, integration_id)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS notification_history(id INTEGER PRIMARY KEY AUTOINCREMENT,channel TEXT NOT NULL DEFAULT 'email',recipient TEXT,subject TEXT,status TEXT,related_type TEXT,related_id INTEGER,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','')");
