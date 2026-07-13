@@ -13,7 +13,7 @@ namespace PCI.Backend.Data;
 /// </summary>
 public static class I18nSeed
 {
-    const int Version = 1;
+    const int Version = 2;   // v2: full-site translation pack (every public page, 6 languages)
 
     public static void Apply(Db db)
     {
