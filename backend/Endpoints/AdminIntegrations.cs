@@ -33,21 +33,47 @@ public static class AdminIntegrations
         }
         var http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
 
-        object Redact(Dictionary<string, object?> r) => new
+        // Which QuickBooks secret sub-fields are set (values are NEVER returned — write-only).
+        string[] QboSecretKeys = { "client_secret", "refresh_token", "access_token" };
+        object Redact(Dictionary<string, object?> r)
         {
-            id = H.L(r["id"]), provider = H.Str(r["provider"]), name = H.Str(r["name"]),
-            enabled = H.L(r["enabled"]), endpoint_url = H.Str(r["endpoint_url"]),
-            has_secret = (H.Str(r["secret"]) ?? "").Length > 0,             // the secret itself is never returned
-            event_filter = H.Str(r["event_filter"]), status = H.Str(r["status"]),
-            last_delivery_at = H.Str(r["last_delivery_at"]), created_at = H.Str(r["created_at"]),
-        };
+            var provider = H.Str(r["provider"]) ?? "webhook";
+            var secretRaw = H.Str(r["secret"]) ?? "";
+            var secretFields = new List<string>();
+            if (provider == "quickbooks")
+            {
+                try
+                {
+                    var e = System.Text.Json.JsonDocument.Parse(secretRaw.Length > 0 ? secretRaw : "{}").RootElement;
+                    foreach (var k in QboSecretKeys)
+                        if (e.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.String && (v.GetString() ?? "").Length > 0) secretFields.Add(k);
+                }
+                catch { }
+            }
+            else if (secretRaw.Length > 0) secretFields.Add("secret");
+            object? config = null;
+            if (H.Str(r["config"]) is { Length: > 0 } cfg) { try { config = JsonSerializer.Deserialize<Dictionary<string, object?>>(cfg); } catch { } }
+            return new
+            {
+                id = H.L(r["id"]), provider, name = H.Str(r["name"]),
+                enabled = H.L(r["enabled"]), endpoint_url = H.Str(r["endpoint_url"]),
+                has_secret = secretRaw.Length > 0, secret_fields = secretFields, config,
+                event_filter = H.Str(r["event_filter"]), status = H.Str(r["status"]),
+                last_delivery_at = H.Str(r["last_delivery_at"]), created_at = H.Str(r["created_at"]),
+            };
+        }
 
-        // ---------- list connectors + catalogue of emittable events ----------
+        // ---------- list connectors + catalogues (events, providers) ----------
         app.MapGet("/api/admin/integrations", (HttpRequest req) => gate(req, "integrations", _ =>
             J(new
             {
                 rows = db.Query("SELECT * FROM integrations ORDER BY id").Select(Redact),
                 events = Integrations.KnownEvents,
+                providers = new object[]
+                {
+                    new { key = "webhook", label = "Generic webhook", description = "Signed JSON POST to any HTTPS endpoint or automation bridge." },
+                    new { key = "quickbooks", label = "QuickBooks Online", description = "Members → Customers, payments → Sales Receipts, via the QuickBooks API (OAuth)." },
+                },
             })));
 
         // ---------- create / update ----------
@@ -57,10 +83,12 @@ public static class AdminIntegrations
             var b = await H.Body(ctx.Request);
             var id = (long)(H.GetNum(b, "id") ?? 0);
             var provider = (H.GetS(b, "provider") ?? "webhook").Trim().ToLowerInvariant();
-            if (provider != "webhook") return Results.Json(new { error = "unsupported_provider", message = "Only the generic webhook connector is available in this release." }, statusCode: 400);
-            var name = (H.GetS(b, "name") ?? "").Trim(); if (name.Length == 0) name = "Webhook";
+            if (provider is not ("webhook" or "quickbooks"))
+                return Results.Json(new { error = "unsupported_provider", message = "Supported providers: webhook, quickbooks." }, statusCode: 400);
+            var name = (H.GetS(b, "name") ?? "").Trim();
+            if (name.Length == 0) name = provider == "quickbooks" ? "QuickBooks Online" : "Webhook";
             var endpoint = (H.GetS(b, "endpoint_url") ?? "").Trim();
-            if (endpoint.Length > 0 && !endpoint.StartsWith("http://") && !endpoint.StartsWith("https://"))
+            if (provider == "webhook" && endpoint.Length > 0 && !endpoint.StartsWith("http://") && !endpoint.StartsWith("https://"))
                 return Results.Json(new { error = "bad_endpoint", message = "Endpoint must be an http(s) URL." }, statusCode: 400);
             var enabled = H.GetEl(b, "enabled") is { } en && (en.ValueKind == JsonValueKind.True
                 || (en.ValueKind == JsonValueKind.String && en.GetString() is "1" or "true")
@@ -72,21 +100,52 @@ public static class AdminIntegrations
                 var picked = arr.EnumerateArray().Select(e => e.GetString()).Where(s => s is not null && Integrations.KnownEvents.Contains(s)).ToList();
                 if (picked.Count > 0) filter = JsonSerializer.Serialize(picked);
             }
-
-            if (id > 0 && db.QueryOne("SELECT id FROM integrations WHERE id=?", id) is not null)
+            // QuickBooks: non-secret config (company/realm, environment, sales item, base override) as JSON.
+            string? configJson = null;
+            if (provider == "quickbooks")
             {
-                db.Execute("UPDATE integrations SET provider=?, name=?, endpoint_url=?, event_filter=?, enabled=?, updated_at=datetime('now') WHERE id=?",
-                    provider, name, endpoint, filter, enabled, id);
-                // Secret is only touched when the key is present: allows "set" and "clear" without leaking it.
-                if (H.GetEl(b, "secret") is { } sEl && sEl.ValueKind == JsonValueKind.String)
+                var env = (H.GetS(b, "environment") ?? "production").Trim().ToLowerInvariant();
+                if (env is not ("production" or "sandbox")) env = "production";
+                var cfg = new Dictionary<string, object?>
+                {
+                    ["realm_id"] = (H.GetS(b, "realm_id") ?? "").Trim(),
+                    ["environment"] = env,
+                    ["item_ref"] = (H.GetS(b, "item_ref") is { Length: > 0 } ir ? ir.Trim() : "1"),
+                    ["client_id"] = (H.GetS(b, "client_id") ?? "").Trim(),
+                };
+                if (H.GetS(b, "api_base") is { Length: > 0 } ab) cfg["api_base"] = ab.Trim();
+                configJson = JsonSerializer.Serialize(cfg);
+            }
+            // Secret handling is write-only. Webhook: a plain signing-secret string. QuickBooks: a JSON of
+            // OAuth secrets, merged with what's stored so a single field can be updated without re-entering all.
+            string MergeQbo(string? existing)
+            {
+                Dictionary<string, string> cur = new();
+                try { if (!string.IsNullOrEmpty(existing)) cur = JsonSerializer.Deserialize<Dictionary<string, string>>(existing) ?? new(); } catch { }
+                foreach (var k in QboSecretKeys)
+                    if (H.GetS(b, k) is { } v) { if (v.Length == 0) cur.Remove(k); else cur[k] = v; }
+                return JsonSerializer.Serialize(cur);
+            }
+            bool AnyQboSecretInBody() => QboSecretKeys.Any(k => H.GetEl(b, k) is not null);
+
+            if (id > 0 && db.QueryOne("SELECT secret FROM integrations WHERE id=?", id) is { } existing)
+            {
+                db.Execute("UPDATE integrations SET provider=?, name=?, endpoint_url=?, config=COALESCE(?,config), event_filter=?, enabled=?, updated_at=datetime('now') WHERE id=?",
+                    provider, name, endpoint, configJson, filter, enabled, id);
+                if (provider == "quickbooks")
+                {
+                    if (AnyQboSecretInBody())
+                        db.Execute("UPDATE integrations SET secret=? WHERE id=?", MergeQbo(H.Str(existing["secret"])), id);
+                }
+                else if (H.GetEl(b, "secret") is { ValueKind: JsonValueKind.String } sEl)
                     db.Execute("UPDATE integrations SET secret=? WHERE id=?", sEl.GetString() ?? "", id);
-                log(null, "integration.update", $"{id} {name}");
+                log(null, "integration.update", $"{id} {name} ({provider})");
                 return J(new { ok = true, id });
             }
-            var secret = H.GetS(b, "secret") ?? "";
-            var newId = db.ExecuteReturningId("INSERT INTO integrations(provider,name,endpoint_url,secret,event_filter,enabled) VALUES(?,?,?,?,?,?)",
-                provider, name, endpoint, secret, filter, enabled);
-            log(null, "integration.create", $"{newId} {name}");
+            var secretVal = provider == "quickbooks" ? MergeQbo(null) : (H.GetS(b, "secret") ?? "");
+            var newId = db.ExecuteReturningId("INSERT INTO integrations(provider,name,endpoint_url,secret,config,event_filter,enabled) VALUES(?,?,?,?,?,?,?)",
+                provider, name, endpoint, secretVal, configJson, filter, enabled);
+            log(null, "integration.create", $"{newId} {name} ({provider})");
             return J(new { ok = true, id = newId });
         });
 

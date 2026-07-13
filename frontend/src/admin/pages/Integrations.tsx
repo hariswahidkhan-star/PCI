@@ -9,12 +9,15 @@ import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
 
 interface Connector {
   id: number; provider: string; name: string; enabled: number; endpoint_url: string | null
-  has_secret: boolean; event_filter: string | null; status: string | null; last_delivery_at: string | null
+  has_secret: boolean; secret_fields: string[]; config: Record<string, string> | null
+  event_filter: string | null; status: string | null; last_delivery_at: string | null
 }
+interface ProviderInfo { key: string; label: string; description: string }
 interface EventRow { id: number; event_type: string; entity_type: string | null; entity_id: number | null; payload: string | null; created_at: string }
 interface DeliveryRow { id: number; event_id: number; integration_id: number; integration_name: string | null; event_type: string | null; status: string; attempts: number; response_code: number | null; last_error: string | null; next_attempt_at: string | null; updated_at: string }
 
-const STATUS_TONE: Record<string, 'ok' | 'warn' | 'err' | 'brand' | 'neutral'> = { delivered: 'ok', pending: 'warn', failed: 'err', ok: 'ok', error: 'err', idle: 'neutral' }
+const STATUS_TONE: Record<string, 'ok' | 'warn' | 'err' | 'brand' | 'neutral'> = { delivered: 'ok', pending: 'warn', failed: 'err', skipped: 'neutral', ok: 'ok', error: 'err', idle: 'neutral' }
+const PROVIDER_LABEL: Record<string, string> = { webhook: 'Generic webhook', quickbooks: 'QuickBooks Online' }
 const TABS = ['Connectors', 'Events', 'Deliveries'] as const
 
 export default function Integrations() {
@@ -36,7 +39,7 @@ export default function Integrations() {
 }
 
 function ConnectorsTab() {
-  const { data, loading, error, refetch } = useAdminQuery<{ rows: Connector[]; events: string[] }>('/api/admin/integrations')
+  const { data, loading, error, refetch } = useAdminQuery<{ rows: Connector[]; events: string[]; providers: ProviderInfo[] }>('/api/admin/integrations')
   const [edit, setEdit] = useState<Connector | 'new' | null>(null)
   const [note, setNote] = useState<string | null>(null)
   const [busy, setBusy] = useState<number | null>(null)
@@ -46,7 +49,8 @@ function ConnectorsTab() {
 
   async function toggle(c: Connector) {
     setBusy(c.id); setNote(null)
-    try { await adminApi.post('/api/admin/integrations', { id: c.id, name: c.name, endpoint_url: c.endpoint_url, enabled: !c.enabled }); refetch() }
+    // Include provider so enabling/disabling never rewrites the connector type; config/secret are preserved server-side.
+    try { await adminApi.post('/api/admin/integrations', { id: c.id, provider: c.provider, name: c.name, endpoint_url: c.endpoint_url, enabled: !c.enabled }); refetch() }
     catch (e) { setNote((e as Error).message) } finally { setBusy(null) }
   }
   async function test(c: Connector) {
@@ -69,12 +73,12 @@ function ConnectorsTab() {
       {note && <div className="notice" role="status" style={{ marginBottom: '.6rem' }}>{note}</div>}
       {rows.length === 0 ? <Empty>No connectors yet. Add a webhook to start syncing events.</Empty> : (
         <table className="data">
-          <thead><tr><th>Name</th><th>Endpoint</th><th>Events</th><th>Secret</th><th>Status</th><th /></tr></thead>
+          <thead><tr><th>Name</th><th>Destination</th><th>Events</th><th>Secret</th><th>Status</th><th /></tr></thead>
           <tbody>
             {rows.map((c) => (
               <tr key={c.id}>
-                <td><strong>{c.name}</strong><div className="muted small">{c.provider}{c.enabled ? '' : ' · disabled'}</div></td>
-                <td className="small" style={{ maxWidth: 240, wordBreak: 'break-all' }}>{c.endpoint_url || <span className="muted">—</span>}</td>
+                <td><strong>{c.name}</strong><div className="muted small">{PROVIDER_LABEL[c.provider] || c.provider}{c.enabled ? '' : ' · disabled'}</div></td>
+                <td className="small" style={{ maxWidth: 240, wordBreak: 'break-all' }}>{c.provider === 'quickbooks' ? (c.config?.realm_id ? `company ${c.config.realm_id} (${c.config.environment || 'production'})` : <span className="muted">not configured</span>) : (c.endpoint_url || <span className="muted">—</span>)}</td>
                 <td className="small muted">{c.event_filter ? (JSON.parse(c.event_filter) as string[]).length + ' selected' : 'all'}</td>
                 <td>{c.has_secret ? <Badge tone="ok">signed</Badge> : <Badge tone="warn">unsigned</Badge>}</td>
                 <td>{c.enabled ? <Badge tone={STATUS_TONE[c.status || 'idle'] ?? 'neutral'}>{c.status || 'idle'}</Badge> : <Badge tone="neutral">off</Badge>}</td>
@@ -89,40 +93,87 @@ function ConnectorsTab() {
           </tbody>
         </table>
       )}
-      {edit && <ConnectorEditor connector={edit === 'new' ? null : edit} events={data?.events ?? []}
+      {edit && <ConnectorEditor connector={edit === 'new' ? null : edit} events={data?.events ?? []} providers={data?.providers ?? []}
         onClose={() => setEdit(null)} onSaved={() => { setEdit(null); refetch() }} />}
     </Card>
   )
 }
 
-function ConnectorEditor({ connector, events, onClose, onSaved }:
-  { connector: Connector | null; events: string[]; onClose: () => void; onSaved: () => void }) {
-  const [name, setName] = useState(connector?.name ?? 'Webhook')
+function ConnectorEditor({ connector, events, providers, onClose, onSaved }:
+  { connector: Connector | null; events: string[]; providers: ProviderInfo[]; onClose: () => void; onSaved: () => void }) {
+  const [provider, setProvider] = useState(connector?.provider ?? 'webhook')
+  const [name, setName] = useState(connector?.name ?? '')
   const [endpoint, setEndpoint] = useState(connector?.endpoint_url ?? '')
   const [secret, setSecret] = useState('')
   const [enabled, setEnabled] = useState(!!connector?.enabled)
   const [filter, setFilter] = useState<Set<string>>(new Set(connector?.event_filter ? (JSON.parse(connector.event_filter) as string[]) : []))
+  // QuickBooks fields
+  const cfg = connector?.config ?? {}
+  const [qbo, setQbo] = useState<Record<string, string>>({
+    environment: cfg.environment ?? 'production', realm_id: cfg.realm_id ?? '', item_ref: cfg.item_ref ?? '1',
+    api_base: cfg.api_base ?? '', client_id: cfg.client_id ?? '', client_secret: '', refresh_token: '', access_token: '',
+  })
+  const setQ = (k: string) => (e: { target: { value: string } }) => setQbo({ ...qbo, [k]: e.target.value })
+  const setSF = new Set(connector?.secret_fields ?? [])
   const [err, setErr] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const toggleEv = (e: string) => { const n = new Set(filter); n.has(e) ? n.delete(e) : n.add(e); setFilter(n) }
+  const secretPh = (k: string) => (setSF.has(k) ? '•••••• set — blank to keep' : '')
+
   async function save() {
     setSaving(true); setErr(null)
-    const body: Record<string, unknown> = { name, endpoint_url: endpoint, enabled, event_filter: Array.from(filter) }
+    const body: Record<string, unknown> = { provider, name, enabled, event_filter: Array.from(filter) }
     if (connector) body.id = connector.id
-    if (secret) body.secret = secret            // only send the secret when the admin typed one
+    if (provider === 'quickbooks') {
+      Object.assign(body, { environment: qbo.environment, realm_id: qbo.realm_id, item_ref: qbo.item_ref, api_base: qbo.api_base, client_id: qbo.client_id })
+      // only send secret fields the admin actually typed (write-only, merged server-side)
+      for (const k of ['client_secret', 'refresh_token', 'access_token']) if (qbo[k]) body[k] = qbo[k]
+    } else {
+      body.endpoint_url = endpoint
+      if (secret) body.secret = secret
+    }
     try { await adminApi.post('/api/admin/integrations', body); onSaved() }
     catch (e) { setErr((e as Error).message) } finally { setSaving(false) }
   }
+
   return (
     <div style={{ marginTop: '.9rem', borderTop: '1px solid var(--line,#e2e8f0)', paddingTop: '.9rem' }}>
-      <h3 style={{ marginBottom: '.5rem' }}>{connector ? 'Edit connector' : 'Add webhook connector'}</h3>
+      <h3 style={{ marginBottom: '.5rem' }}>{connector ? 'Edit connector' : 'Add connector'}</h3>
       <div style={{ display: 'grid', gap: '.55rem', maxWidth: 640 }}>
-        <label>Name<input value={name} onChange={(e) => setName(e.target.value)} /></label>
-        <label>Endpoint URL<input value={endpoint} placeholder="https://your-erp-bridge.example/pci-hook" onChange={(e) => setEndpoint(e.target.value)} /></label>
-        <label>Signing secret <span className="muted small">(write-only{connector?.has_secret ? ' — a secret is set; blank keeps it' : ''}). Deliveries are signed HMAC-SHA256 in the X-PCI-Signature header.</span>
-          <input type="password" value={secret} placeholder={connector?.has_secret ? '•••••• set — blank to keep' : 'shared secret for signature verification'} onChange={(e) => setSecret(e.target.value)} /></label>
+        <label>Type
+          <select value={provider} onChange={(e) => setProvider(e.target.value)} disabled={!!connector}>
+            {providers.map((p) => <option key={p.key} value={p.key}>{p.label}</option>)}
+          </select>
+        </label>
+        <p className="muted small" style={{ margin: '-.2rem 0 .2rem' }}>{providers.find((p) => p.key === provider)?.description}</p>
+        <label>Name<input value={name} onChange={(e) => setName(e.target.value)} placeholder={PROVIDER_LABEL[provider]} /></label>
+
+        {provider === 'webhook' ? (
+          <>
+            <label>Endpoint URL<input value={endpoint} placeholder="https://your-erp-bridge.example/pci-hook" onChange={(e) => setEndpoint(e.target.value)} /></label>
+            <label>Signing secret <span className="muted small">(write-only{connector?.has_secret ? ' — set; blank keeps it' : ''}). Deliveries are HMAC-SHA256 signed in X-PCI-Signature.</span>
+              <input type="password" value={secret} placeholder={connector?.has_secret ? '•••••• set — blank to keep' : 'shared secret for signature verification'} onChange={(e) => setSecret(e.target.value)} /></label>
+          </>
+        ) : (
+          <>
+            <div style={{ display: 'grid', gap: '.55rem', gridTemplateColumns: '1fr 1fr' }}>
+              <label>Environment<select value={qbo.environment} onChange={setQ('environment')}><option value="production">Production</option><option value="sandbox">Sandbox</option></select></label>
+              <label>Company (realm) id<input value={qbo.realm_id} onChange={setQ('realm_id')} placeholder="e.g. 4620816365…" /></label>
+              <label>OAuth client id<input value={qbo.client_id} onChange={setQ('client_id')} /></label>
+              <label>Sales item ref<input value={qbo.item_ref} onChange={setQ('item_ref')} placeholder="QBO Item id (default 1)" /></label>
+            </div>
+            <p className="muted small" style={{ margin: 0 }}>OAuth secrets are write-only. Provide a refresh token (recommended) so PCI can mint access tokens, or paste a short-lived access token directly.</p>
+            <div style={{ display: 'grid', gap: '.55rem', gridTemplateColumns: '1fr 1fr' }}>
+              <label>Client secret<input type="password" value={qbo.client_secret} placeholder={secretPh('client_secret')} onChange={setQ('client_secret')} /></label>
+              <label>Refresh token<input type="password" value={qbo.refresh_token} placeholder={secretPh('refresh_token')} onChange={setQ('refresh_token')} /></label>
+              <label>Access token <span className="muted small">(optional)</span><input type="password" value={qbo.access_token} placeholder={secretPh('access_token')} onChange={setQ('access_token')} /></label>
+              <label>API base override <span className="muted small">(optional)</span><input value={qbo.api_base} onChange={setQ('api_base')} placeholder="blank = Intuit host" /></label>
+            </div>
+          </>
+        )}
+
         <div>
-          <div className="muted small" style={{ marginBottom: '.3rem' }}>Events to send (none selected = all)</div>
+          <div className="muted small" style={{ marginBottom: '.3rem' }}>Events to send (none selected = all){provider === 'quickbooks' ? ' — QuickBooks maps member.registered → Customer, payment.recorded → Sales Receipt' : ''}</div>
           <div className="row" style={{ gap: '.8rem', flexWrap: 'wrap' }}>
             {events.map((ev) => (
               <label key={ev} className="row" style={{ gap: '.35rem' }}>
