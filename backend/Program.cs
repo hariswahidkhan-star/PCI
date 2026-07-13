@@ -66,8 +66,8 @@ var _csp = string.Join("; ", new[]
     "media-src 'self' blob:",
     "font-src 'self' data: https://fonts.gstatic.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style",
-    "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://plausible.io https://cdnjs.cloudflare.com https://accounts.google.com/gsi/client",
-    "connect-src 'self' https://plausible.io https://www.google-analytics.com https://accounts.google.com/gsi/",
+    "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://plausible.io https://cdnjs.cloudflare.com https://accounts.google.com/gsi/client https://www.clarity.ms",
+    "connect-src 'self' https://plausible.io https://www.google-analytics.com https://accounts.google.com/gsi/ https://*.clarity.ms",
 });
 var _cspHeader = string.Equals(Environment.GetEnvironmentVariable("CSP_REPORT_ONLY"), "true", StringComparison.OrdinalIgnoreCase)
     ? "Content-Security-Policy-Report-Only" : "Content-Security-Policy";
@@ -682,6 +682,7 @@ app.Use(async (ctx, next) =>
                 if (hasCerts) rendered = PCI.Backend.Core.CertCatalogue.Inject(db, rendered);
                 rendered = PCI.Backend.Core.ListSections.Inject(db, rendered, lang);
                 rendered = PCI.Backend.Core.PriceTags.Inject(db, rendered);
+                rendered = PCI.Backend.Core.SeoTags.Inject(db, rendered);   // GA4/GTM/Clarity + verification metas (admin-set)
                 ctx.Response.ContentType = "text/html; charset=utf-8";
                 ctx.Response.Headers.CacheControl = "no-cache";   // content is admin-editable — always revalidate
                 ctx.Response.Headers.Vary = "Cookie";             // the language cookie varies the response
@@ -702,6 +703,15 @@ app.Use(async (ctx, next) =>
         {
             ctx.Response.ContentType = "application/xml; charset=utf-8";
             await ctx.Response.WriteAsync(PCI.Backend.Core.Sitemap.Xml(db));
+            return;
+        }
+        // IndexNow ownership proof: serve the site key at /{key}.txt (the protocol's requirement).
+        if (reqPath.Length > 5 && reqPath.EndsWith(".txt", StringComparison.OrdinalIgnoreCase)
+            && PCI.Backend.Core.IndexNowService.Key(db) is { Length: > 0 } inKey
+            && reqPath.Equals("/" + inKey + ".txt", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.ContentType = "text/plain; charset=utf-8";
+            await ctx.Response.WriteAsync(inKey);
             return;
         }
     }

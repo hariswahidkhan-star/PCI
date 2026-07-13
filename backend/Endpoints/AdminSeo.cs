@@ -118,6 +118,89 @@ public static class AdminSeo
             return J(new { ok = true });
         }));
 
+        // ---------- search-engine integrations (Phase 4) ----------
+        // Public-facing IDs/tokens (GA4/GTM/Clarity/verification) are returned in full — they end up
+        // in every page's HTML anyway. The PSI API key is a real secret: write-only, has_key status.
+        app.MapGet("/api/admin/seo/integrations", (HttpRequest req) => gate(req, "pages", _ =>
+        {
+            string S(string k) => db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", k) ?? "";
+            var inKey = IndexNowService.Key(db);
+            return J(new
+            {
+                ga4_measurement_id = S("ga4_measurement_id"),
+                gtm_container_id = S("gtm_container_id"),
+                clarity_project_id = S("clarity_project_id"),
+                google_site_verification = S("google_site_verification"),
+                bing_site_verification = S("bing_site_verification"),
+                psi_has_key = S("psi_api_key").Length > 0,
+                indexnow_key = inKey,
+                indexnow_key_url = $"{Redirects.CanonicalBase}/{inKey}.txt",
+                submissions = db.Query("SELECT engine,url_count,status,detail,created_at FROM seo_submissions ORDER BY id DESC LIMIT 20"),
+            });
+        }));
+
+        app.MapPost("/api/admin/seo/integrations", async (HttpContext ctx) =>
+        {
+            var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var b = await H.Body(ctx.Request);
+            void Set(string k, string? v)
+            {
+                if (v is null) return;                                  // only overwrite keys present in the body
+                db.Execute("DELETE FROM site_settings WHERE skey=?", k);
+                db.Execute("INSERT INTO site_settings(skey,svalue) VALUES(?,?)", k, v.Trim());
+            }
+            foreach (var k in new[] { "ga4_measurement_id", "gtm_container_id", "clarity_project_id", "google_site_verification", "bing_site_verification", "psi_api_key" })
+                Set(k, H.GetS(b, k));
+            SeoTags.Bump();
+            log(null, "seo.integrations_update", null);
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/admin/seo/indexnow/submit", async (HttpContext ctx) =>
+        {
+            var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var b = await H.Body(ctx.Request);
+            List<string> urls;
+            if (H.GetEl(b, "urls") is { ValueKind: System.Text.Json.JsonValueKind.Array } arr)
+                urls = arr.EnumerateArray().Select(e => e.GetString() ?? "").Where(u => u.StartsWith(Redirects.CanonicalBase, StringComparison.OrdinalIgnoreCase)).ToList();
+            else
+                urls = IndexNowService.AllPublicUrls(db);
+            var (ok, detail) = IndexNowService.Submit(db, urls);
+            log(null, "seo.indexnow_submit", $"{urls.Count} urls: {detail}");
+            return J(new { ok, submitted = urls.Count, detail });
+        });
+
+        // Google PageSpeed Insights adapter: measures a PUBLIC URL (the live site, not this process).
+        // Works keyless at low volume; psi_api_key raises the quota. Failures return a clear error.
+        var psiHttp = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
+        app.MapPost("/api/admin/seo/pagespeed", async (HttpContext ctx) =>
+        {
+            var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var b = await H.Body(ctx.Request);
+            var url = (H.GetS(b, "url") ?? Redirects.CanonicalBase + "/").Trim();
+            if (!url.StartsWith("https://") && !url.StartsWith("http://"))
+                return Results.Json(new { error = "bad_url" }, statusCode: 400);
+            var key = db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='psi_api_key'") ?? "";
+            var api = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=" + Uri.EscapeDataString(url)
+                    + "&category=performance&category=seo&strategy=mobile" + (key.Length > 0 ? "&key=" + Uri.EscapeDataString(key) : "");
+            try
+            {
+                using var resp = await psiHttp.GetAsync(api);
+                var txt = await resp.Content.ReadAsStringAsync();
+                if (!resp.IsSuccessStatusCode)
+                    return Results.Json(new { error = "psi_failed", status = (int)resp.StatusCode, detail = txt.Length > 300 ? txt[..300] : txt }, statusCode: 502);
+                using var doc = System.Text.Json.JsonDocument.Parse(txt);
+                var cats = doc.RootElement.GetProperty("lighthouseResult").GetProperty("categories");
+                double Score(string c) => cats.TryGetProperty(c, out var el) && el.TryGetProperty("score", out var s) ? Math.Round(s.GetDouble() * 100) : -1;
+                log(null, "seo.pagespeed", url);
+                return J(new { ok = true, url, performance = Score("performance"), seo = Score("seo") });
+            }
+            catch (Exception e)
+            {
+                return Results.Json(new { error = "psi_failed", detail = e.Message }, statusCode: 502);
+            }
+        });
+
         // ---------- practical audit ----------
         var rxH1 = new Regex(@"<h1[\s>]", RegexOptions.IgnoreCase);
         var rxImg = new Regex(@"<img\b[^>]*>", RegexOptions.IgnoreCase);
