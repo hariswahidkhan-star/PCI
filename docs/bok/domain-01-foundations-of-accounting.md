@@ -184,8 +184,8 @@ independent sources (bank statements, the cost ledger, supplier statements) matt
 
 **Worked example 1.1.4b — a suspense account, opened and cleared.**
 
-1. **Setup.** Meridian's trial balance disagrees: debits exceed credits by **USD 900**. A **suspense
-   account** is opened with a 900 credit so period-end work can continue while the difference is traced.
+1. **Setup.** Meridian's trial balance disagrees: credits exceed debits by **USD 900**. A **suspense
+   account** is opened with a 900 debit so period-end work can continue while the difference is traced.
    Investigation finds that a **USD 450 payment** was credited to Cash correctly but was *also credited* —
    instead of debited — to the expense account: a **reversal error**.
 2. **Formula.** A reversal error disturbs the trial balance by **twice** the amount:
