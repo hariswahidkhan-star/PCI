@@ -143,6 +143,29 @@ C and D describe contingency or are simply wrong.
 *Rationale:* `BAC = 9,000,000 + 700,000 = 9,700,000` (contingency is inside the baseline; management reserve
 is not). A omits contingency; C adds management reserve; D is the reserve alone.
 
+**MCQ 3.1-C `[3.1.2 · Recall]`** Which budgeting approach requires every cost to be justified from a zero
+base each cycle rather than rolled forward with an increment?
+- A. Top-down budgeting.
+- B. Bottom-up budgeting.
+- C. Zero-based budgeting. ✅
+- D. Rolling-wave budgeting.
+
+*Rationale:* Zero-based budgeting rebuilds the case for every cost from zero each cycle — rigorous for
+recurring overhead but heavy to run. Top-down apportions an overall figure; bottom-up builds from work
+packages; neither requires re-justification from zero, and D is a planning technique, not a budgeting
+approach defined here.
+
+**MCQ 3.1-D `[3.1.4 · Application]`** A project's cost baseline (`BAC`) is USD 12,400,000, of which USD
+900,000 is contingency reserve; management reserve is USD 600,000. The total authorised project budget is:
+- A. USD 11,500,000
+- B. USD 12,400,000
+- C. USD 13,000,000 ✅
+- D. USD 13,900,000
+
+*Rationale:* `Total budget = BAC + management reserve = 12,400,000 + 600,000 = 13,000,000`; the contingency
+is already inside the baseline. A wrongly strips the contingency out; B forgets the management reserve; D
+double-counts the contingency by adding it again on top of the BAC.
+
 ### Self-check — KA 3.1
 
 1. Contrast contingency reserve and management reserve by *type of uncertainty*, *location* and *controller*.
@@ -289,6 +312,28 @@ bottom-up/definitive.
 *Rationale:* The BoE documents how the estimate was built so it can be challenged and defended. It is not the
 risk register, a threshold, or the contract.
 
+**MCQ 3.2-D `[3.2.2 · Application]`** A pipeline is estimated parametrically at USD 850,000 per km for
+12 km, plus 15 % contingency on the base. The total estimate is:
+- A. USD 1,530,000
+- B. USD 8,670,000
+- C. USD 10,200,000
+- D. USD 11,730,000 ✅
+
+*Rationale:* Base `= 12 × 850,000 = 10,200,000`; with contingency `10,200,000 × 1.15 = 11,730,000`. A is the
+contingency alone (`10,200,000 × 0.15`); B deducts the contingency instead of adding it; C omits the
+contingency step entirely.
+
+**MCQ 3.2-E `[3.2.1 · Recall]`** Under the AACE estimate-classification framework, which class reflects
+near-complete scope definition and suits a definitive bid or check estimate?
+- A. Class 5
+- B. Class 4
+- C. Class 3
+- D. Class 1 ✅
+
+*Rationale:* Classes run from 5 (earliest, concept screening, widest range) to 1 (most mature, narrowest
+range, definitive/check estimate). Class 5 and 4 are concept and feasibility stages; Class 3 supports budget
+authorisation, not a definitive bid.
+
 ### Self-check — KA 3.2
 
 1. As an estimate moves from Class 5 to Class 1, what happens to its accuracy range and why? *(It narrows, as
@@ -376,6 +421,28 @@ slowly. The likely early effect is that the project will:
 
 *Rationale:* A straight line front-loads `PV` relative to a slow real ramp, so early `EV` lags `PV`, showing a
 misleading negative schedule variance. It does not change `BAC` or guarantee zero variance.
+
+**MCQ 3.3-C `[3.3.1 · Recall]`** Spreading the `BAC` across the schedule period by period produces the
+time-phased cost baseline. Which earned-value quantity *is* that cumulative curve?
+- A. Earned Value (`EV`).
+- B. Actual Cost (`AC`).
+- C. Planned Value (`PV`). ✅
+- D. Estimate at Completion (`EAC`).
+
+*Rationale:* The cumulative planned spend to date is Planned Value (`PV`/BCWS) — the baseline curve earned
+value measures against. `EV` measures work accomplished and `AC` cost booked, both from performance data,
+not the plan; `EAC` is a forecast, not the baseline.
+
+**MCQ 3.3-D `[3.3.3 · Application]`** A baseline shows cumulative Planned Value of USD 670,000 at the end of
+Month 6 and USD 900,000 at the end of Month 8. The planned spend for Months 7 and 8 together is:
+- A. USD 230,000 ✅
+- B. USD 670,000
+- C. USD 900,000
+- D. USD 1,570,000
+
+*Rationale:* Cumulative curves are differenced to recover period values: `900,000 − 670,000 = 230,000`. B
+and C are the cumulative readings themselves, not the two-month increment; D adds the two cumulative values
+instead of subtracting them.
 
 ### Self-check — KA 3.3
 
@@ -502,6 +569,26 @@ performance. A assumes the variance was atypical; B reflects cost only; D assume
 
 *Rationale:* A sustained downward *trend* in `CPI` is more diagnostic than any single reading. One month
 below 1.0, or `AC` above `PV` in a month, can be timing; a positive `SV` is not a cost warning at all.
+
+**MCQ 3.4-D `[3.4.2 · Application]`** `BAC` = USD 800,000; `EV` = USD 300,000; `AC` = USD 320,000. The
+variance to date is judged a one-off, so remaining work will proceed at the budgeted rate. The EAC is:
+- A. USD 500,000
+- B. USD 800,000
+- C. USD 820,000 ✅
+- D. USD 853,333
+
+*Rationale:* For an atypical variance, `EAC = AC + (BAC − EV) = 320,000 + 500,000 = 820,000`. A is the
+remaining work (`ETC`) alone, not the completion forecast; B ignores the overrun already incurred; D applies
+the persisting-CPI method (`800,000 / 0.9375`), contradicting the one-off judgement.
+
+**MCQ 3.4-E `[3.4.1 · Recall]`** The Estimate to Complete (`ETC`) is best defined as:
+- A. The forecast total cost of the whole job at completion.
+- B. The current best estimate of the cost of the *remaining* work from now. ✅
+- C. The difference between `BAC` and `EAC`.
+- D. The actual cost incurred to date.
+
+*Rationale:* `ETC` is the forward-looking cost of the work still to be done, linked to the completion
+forecast by `EAC = AC + ETC`. A describes `EAC`; C is `VAC`, the variance at completion; D is `AC`.
 
 ### Self-check — KA 3.4
 
@@ -641,6 +728,29 @@ an advance, and more frequent billing all *lift* the curve.
 
 *Rationale:* Cash out (paying for work) precedes cash in (being paid), so cumulative cash goes negative even
 on a profitable job. Depreciation is non-cash; tax and reserves are not the core timing driver.
+
+**MCQ 3.5-D `[3.5.2 · Application]`** A package pays out costs of USD 150,000, USD 250,000 and USD 200,000
+in Months 1–3, and collects receipts of USD 0, USD 165,000 and USD 275,000 in the same months. Cumulative
+cash at the end of Month 3 is:
+- A. (USD 600,000)
+- B. (USD 235,000)
+- C. (USD 160,000) ✅
+- D. USD 75,000
+
+*Rationale:* Total receipts `165,000 + 275,000 = 440,000` less total costs `600,000` gives `(160,000)` —
+equivalently `(150) + (85) + 75 = (160)` in thousands, month by month. A ignores the receipts entirely; B
+stops at the end of Month 2, missing the Month-3 recovery; D is Month 3's net flow alone, not the cumulative
+position.
+
+**MCQ 3.5-E `[3.5.3 · Recall]`** The peak funding requirement of a project is:
+- A. Its total cost at completion.
+- B. The deepest negative point of the cumulative cash curve — the finance that must be arranged. ✅
+- C. The profit expected in cash at the end of the job.
+- D. The retention withheld by the client over the job.
+
+*Rationale:* The peak funding requirement is the trough of cumulative cash, sized so the project can be
+funded through the gap between paying for work and being paid. A is a cost, not a funding, measure; C is the
+closing positive balance; D is one *driver* of the trough, not the requirement itself.
 
 ### Self-check — KA 3.5
 

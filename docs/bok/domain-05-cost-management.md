@@ -142,6 +142,30 @@ is:
 
 *Rationale:* `200,000 + 50 × 2,000 = 300,000`. A omits fixed cost; B uses 1,000 units; D double-counts fixed.
 
+**MCQ 5.1-C `[5.1.3 · Application]`** Budgeted overhead is USD 480,000 over a budgeted 24,000 labour hours.
+Actual activity is 25,000 hours and actual overhead incurred is USD 490,000. The over/(under)-absorption is:
+- A. USD 10,000 over-absorbed ✅
+- B. USD 10,000 under-absorbed
+- C. USD 20,000 over-absorbed
+- D. USD 490,000 under-absorbed
+
+*Rationale:* `OAR = 480,000 / 24,000 = USD 20/hour`; `absorbed = 20 × 25,000 = 500,000`;
+`500,000 − 490,000 = 10,000` **over**-absorbed — higher-than-planned activity absorbed more than was
+incurred. B has the sign wrong; C compares absorbed with *budgeted* overhead (`500,000 − 480,000`) instead
+of actual; D is the actual overhead itself, not a variance.
+
+**MCQ 5.1-D `[5.1.2 · Analysis]`** Site overhead is driven mainly by project *duration*, but is allocated to
+work packages by *headcount*. The likely consequence is:
+- A. None — the total overhead is unchanged, so the allocation does not matter.
+- B. Labour-heavy packages carry overhead they do not cause, distorting every downstream unit cost. ✅
+- C. The trial balance will no longer balance.
+- D. The overhead becomes a direct cost.
+
+*Rationale:* Allocating on a base that is not the true driver mis-loads cost onto the wrong objects — the
+totals agree but each package's unit cost is distorted, misleading estimates and variances. A ignores the
+distortion at package level; C confuses allocation with double-entry; D misstates the classification, which
+depends on traceability, not the allocation base.
+
 ### Self-check — KA 5.1
 
 1. Give the two cost-classification axes and one use of each. *(Direct/indirect — what must be allocated;
@@ -278,6 +302,29 @@ It is not necessarily smaller, actuals are recorded, and commitments inform (not
 *Rationale:* Omitting accruals understates `AC`; since `CPI = EV/AC`, a lower `AC` inflates `CPI`. It does not
 overstate cost or affect `EV`.
 
+**MCQ 5.2-D `[5.2.1 · Application]`** Purchase orders raised total USD 800,000; invoices processed (actuals)
+are USD 350,000 and goods received but not yet invoiced (accruals) are USD 90,000. The **open commitment**
+is:
+- A. USD 360,000 ✅
+- B. USD 440,000
+- C. USD 450,000
+- D. USD 800,000
+
+*Rationale:* `Open commitment = commitments − actuals − accruals = 800,000 − 350,000 − 90,000 = 360,000` —
+the ordered value not yet received. B is cost-to-date (`350,000 + 90,000`), the opposite portion; C forgets
+to deduct the accruals; D is the total commitment including what has already been received.
+
+**MCQ 5.2-E `[5.2.4 · Recall]`** Which of the following is a data-integrity failure that quietly corrupts
+the cost forecast?
+- A. An approved variation baselined through change control.
+- B. Open commitments left stale — purchase orders never closed after delivery. ✅
+- C. A month-end accrual raised from goods-received records.
+- D. A cost ledger reconciled to the general ledger each period.
+
+*Rationale:* Stale open commitments overstate the spend still to come, corrupting the forecast until they
+are cleansed — data integrity is an ongoing control, not a one-off clean-up. A, C and D are exactly the
+disciplines that *protect* the numbers, not failures.
+
 ### Self-check — KA 5.2
 
 1. Name the three states of cost and which two make up controls cost-to-date. *(Commitment, accrual, actual;
@@ -353,6 +400,28 @@ computed; `BAC` is unaffected; coding is still needed.
 
 *Rationale:* The control account is the designed level for EV measurement and performance management —
 manageable in number, meaningful in scope.
+
+**MCQ 5.3-C `[5.3.1 · Recall]`** The cost breakdown structure (CBS) decomposes a project's cost by:
+- A. Scope deliverable and work package.
+- B. Cost element/type — labour, materials, plant, subcontract, overhead. ✅
+- C. Accountable organisational unit.
+- D. Reporting period.
+
+*Rationale:* The CBS gives the "by cost type" view; crossed with the WBS's "by scope" view it lets one set
+of postings answer both questions. A describes the WBS, C the OBS, and D is a time dimension, not a
+breakdown structure.
+
+**MCQ 5.3-D `[5.3.2 · Application]`** A control account holds near-term work that is fully defined,
+scheduled and costed, plus future work whose detail is not yet developed. The future work should be held as:
+- A. A work package.
+- B. A planning package. ✅
+- C. A trend.
+- D. An open commitment.
+
+*Rationale:* Future work within a control account not yet detailed into schedulable, costable units is
+carried as a planning package until it is defined. A work package requires that detail now; a trend is an
+early warning of *change*; an open commitment is a raised purchase order, a cost state rather than a scope
+element.
 
 ### Self-check — KA 5.3
 
@@ -461,6 +530,30 @@ comes later; a variance (C) is a realised result; risk appetite (D) is unrelated
 
 *Rationale:* Change control governs change so it is transparent, assessed and approved — not to prevent it,
 accelerate delivery, or replace forecasting.
+
+**MCQ 5.4-D `[5.4.2 · Application]`** A control account's budget is USD 1,750,000 and its forecast at
+completion on committed and remaining scope is USD 1,800,000. The trend log holds one probable but
+unformalised change of +USD 120,000. The **potential** variance against budget is:
+- A. (USD 50,000)
+- B. (USD 170,000) ✅
+- C. (USD 290,000)
+- D. USD 120,000
+
+*Rationale:* Potential forecast `= 1,800,000 + 120,000 = 1,920,000`; potential variance
+`= 1,750,000 − 1,920,000 = (170,000)`. A ignores the logged trend — exactly the surprise the trend log
+exists to prevent; C double-counts the trend; D is the trend alone, not the variance against budget.
+
+**MCQ 5.4-E `[5.4.1 · Analysis]`** A project's actual cost steadily diverges from a baseline that has never
+formally changed; investigation finds many small, unlogged scope additions. This situation is best described
+as:
+- A. Normal variance, to be managed by exception.
+- B. Scope creep — uncontrolled change accumulating until variance against the baseline is meaningless. ✅
+- C. An accrual cut-off error.
+- D. Overhead under-absorption.
+
+*Rationale:* Unmanaged additions that bypass change control are scope creep, the most common way a baseline
+is quietly lost — the "variance" no longer measures performance against an agreed scope. A treats a control
+failure as routine; C and D are recognition and allocation issues, not uncontrolled scope growth.
 
 ### Self-check — KA 5.4
 

@@ -93,6 +93,27 @@ tolerance ±0.05. The correct status is:
 *Rationale:* 0.97 is below the 1.00 target but above the 0.95 amber threshold and within the ±0.05 tolerance —
 watch, not escalate. It is not red, not on target, and can be assessed from the cost KPI alone.
 
+**MCQ 4.1-C `[4.1.3 · Recall]`** Management by exception means that management attention is focused on:
+- A. Every control account equally, reviewed in full each period.
+- B. The items outside their tolerance, while in-tolerance items are noted and left alone. ✅
+- C. Only the accounts reporting green.
+- D. Lagging indicators in preference to leading ones.
+
+*Rationale:* Management by exception concentrates scarce attention on out-of-tolerance items — the reds and
+ambers get the narrative and the action. A dilutes attention across everything; C inverts the principle; D
+confuses it with the indicator-type distinction.
+
+**MCQ 4.1-D `[4.1.1 · Analysis]`** A team's reported KPI improves steadily while the underlying performance
+it is meant to reflect does not. The most likely KPI design failure is:
+- A. The indicator is gameable — it can improve on paper without reality improving. ✅
+- B. Too few indicators are being reported.
+- C. The tolerance is set too tight.
+- D. The indicator is leading rather than lagging.
+
+*Rationale:* A measure that moves without the underlying objective moving is the classic gameable-KPI
+failure mode. B and C would produce noise or over-escalation, not a false improvement; D concerns timing of
+the signal, not its integrity.
+
 ### Self-check — KA 4.1
 
 1. Why report both leading and lagging indicators? *(Leading to intervene in time; lagging to confirm the
@@ -266,6 +287,29 @@ professional response is to:
 later. Investigating the cause is the professional response; it is neither automatically a clean saving nor an
 error.
 
+**MCQ 4.2-E `[4.2.4 · Application]`** Budgeted fixed overhead is USD 120,000 over a budgeted output of 6,000
+units. Actual output is 5,500 units and actual fixed overhead is USD 118,000. The fixed-overhead **volume**
+variance is:
+- A. USD 2,000 (F)
+- B. USD 8,000 (A)
+- C. USD 10,000 (A) ✅
+- D. USD 10,000 (F)
+
+*Rationale:* The absorption rate is `120,000 / 6,000 = USD 20/unit`; absorbed `= 20 × 5,500 = 110,000`;
+volume variance `= 110,000 − 120,000 = (10,000)` adverse — fewer units than planned under-absorb fixed cost.
+A is the *expenditure* variance (`120,000 − 118,000`); B is the *total* overhead variance
+(`110,000 − 118,000`); D has the sign wrong — producing less than plan is adverse, not favourable.
+
+**MCQ 4.2-F `[4.2.1 · Recall]`** A variance is classified as **favourable** when:
+- A. Actual differs from budget by any amount.
+- B. It improves profit — actual cost below plan, or actual revenue above plan. ✅
+- C. The quantity variance is larger than the price variance.
+- D. It falls within the reporting tolerance.
+
+*Rationale:* Favourable/adverse is defined by the effect on profit, not by the mere existence, composition
+or size of the difference. A describes any variance; C compares components; D describes an in-tolerance
+variance, which can be favourable or adverse.
+
 ### Self-check — KA 4.2
 
 1. Split a total cost variance into its two generic components and give the formula for each. *(Price/rate:
@@ -378,6 +422,27 @@ reader's time. Completeness for its own sake, length and chart sophistication ar
 *Rationale:* C pairs the number with cause, so-what and now-what. A is a bare fact; B is vague; D buries the
 answer. Numbers plus causal, quantified narrative is the standard.
 
+**MCQ 4.3-C `[4.3.5 · Application]`** A monthly dashboard shows eight control accounts: five green, two
+amber and one red against their tolerances. The exception report should present:
+- A. All eight accounts in equal detail.
+- B. Only the red account.
+- C. The red and the two amber accounts, each with variance, root cause, impact and action/owner. ✅
+- D. The five green accounts, to evidence good performance.
+
+*Rationale:* The exception report carries the out-of-tolerance items — reds *and* ambers — each with cause,
+impact and action, leaving greens noted but unelaborated. A dilutes attention; B ignores the ambers that are
+the earliest recoverable problems; D inverts the principle.
+
+**MCQ 4.3-D `[4.3.4 · Recall]`** Reporting to a *project board* is best characterised as:
+- A. Weekly, granular and action-list focused.
+- B. Monthly, summarised, exception-and-forecast focused. ✅
+- C. Periodic, highly aggregated and cross-project.
+- D. Daily extracts of the raw cost ledger.
+
+*Rationale:* Cadence and detail are matched to the audience: a board steers monthly on summaries, exceptions
+and the forecast. A describes the working team's rhythm; C describes the executive/portfolio view; D serves
+no decision at any level.
+
 ### Self-check — KA 4.3
 
 1. What four questions should a top-level controls dashboard answer at a glance? *(Where are we; where are we
@@ -459,6 +524,27 @@ chart is a:
 
 *Rationale:* A waterfall walks contributions from a start to an end value — exactly a variance bridge. Pies
 show composition, scatters show correlation, and 3-D distorts.
+
+**MCQ 4.4-C `[4.4.3 · Recall]`** The disciplined ordering of a controls "story" for a decision-maker is:
+- A. Action → forecast → status → cause.
+- B. Status → what changed and why → where it takes us (forecast) → the decision (action). ✅
+- C. Forecast → status → action → cause.
+- D. Cause → action → status → forecast.
+
+*Rationale:* The causal arc runs status, then variance/cause, then forecast, then action — true facts ordered
+so the reader reaches the right decision quickly. The other orderings put the conclusion before the evidence
+or the remedy before the problem.
+
+**MCQ 4.4-D `[4.4.2 · Analysis]`** A chart plots cost on the left y-axis and RFI count on a second right
+y-axis, and the two lines track each other closely. The professional concern is that:
+- A. RFIs should never appear on a cost chart.
+- B. Dual axes let the scales be chosen so the apparent relationship is manufactured, not real. ✅
+- C. The chart uses too many colours.
+- D. A pie chart would have been more appropriate.
+
+*Rationale:* With two independent scales, either axis can be stretched or shifted until the lines "correlate"
+— a classic distortion even when every number is correct. A is too absolute (the pairing can be legitimate if
+presented honestly); C and D do not address the scale manipulation at issue.
 
 ### Self-check — KA 4.4
 
