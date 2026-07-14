@@ -114,6 +114,43 @@ against granularity:
   its own plan, a detail invisible in the single project `SPI` of 0.78. Always read the control-account detail
   beneath the aggregate (Domain 5, KA 5.3).
 
+**Physical versus cost percent complete.** Two percentages share the name "percent complete" and answer
+different questions. **Physical percent complete** is measured from the work itself — quantities installed,
+milestones passed, systems turned over — via the earning rules above; it is the basis of `EV`. **Cost percent
+complete** is `AC ÷ EAC`, the input method the revenue accountants use to recognise contract revenue
+(Domain 2, KA 2.2.6); it measures money consumed, not work done. On real projects the two diverge: cost %
+runs **ahead** of physical % when money burns without progress — rework, standing time, price escalation —
+and **behind** it when progress is genuinely cheap. The divergence is a signal, not a nuisance. It is also
+why `EV` must be earned from **physical** measures: earning value from cost consumed makes `EV` track `AC`,
+collapses `CPI` to 1.0 by construction and blinds the index — the self-fulfilling trap. Where the two
+percentages differ materially, the reconciliation belongs in the month-end narrative (Domain 7, KA 7.4.4's
+three progress measures).
+
+**The productivity factor.** On labour-driven scopes the field watches the **productivity factor** `PF =
+earned hours ÷ burned (actual) hours` weekly — the labour-hours twin of `CPI`, available from timesheets and
+quantity reports long before the cost ledger closes. **Earned hours** are the budget hours for the work
+actually done (quantities installed × budget unit rates in hours); **burned hours** are the hours actually
+booked. `PF < 1` means hours are being consumed faster than work is being earned, and the forecast **hours
+at completion** `= budget hours ÷ PF` — the labour analogue of `EAC = BAC / CPI` (KA 6.3). Because hours
+arrive weekly and money monthly, the PF moves weeks before `CPI` does: it is the leading edge of cost
+control (Domain 4, KA 4.1.2's leading indicators), and the measured-mile analysis of disruption claims
+(Domain 7, Advanced 7.A.5) is PF-thinking applied to claims.
+
+**Worked example 6.1.2c — the productivity factor as the early warning.**
+
+1. **Setup.** A piping scope is budgeted at **10,000 labour-hours**. By week 12 the quantity report shows
+   work worth **4,200 earned hours**; timesheets show **4,800 burned hours**. The blended labour rate is
+   **USD 85/hour**.
+2. **Formula.** `PF = earned ÷ burned`; `forecast hours at completion = budget hours ÷ PF`.
+3. **Substitution.** `PF = 4,200 ÷ 4,800 = 0.875`; `forecast = 10,000 ÷ 0.875 ≈ 11,429 hours`.
+4. **Result.** A forecast overrun of `≈ 1,429 hours` — at USD 85/hour, roughly **USD 121,000** of labour
+   EAC growth, visible in week 12 from timesheets alone.
+5. **Interpretation.** The cost ledger will not show this until the month closes and the accruals land; the
+   PF showed it from the field data first. The discipline is to hold earned hours to the **same earning
+   rules** as `EV` — no credit for hours merely worked — and to keep the budget-hours comparator fixed: a
+   PF computed against re-forecast budgets instead of original budgets hides the variance inside the
+   baseline.
+
 ### 6.1.3 The integrated picture
 
 **The principle.** Plotted together on the S-curve canvas (Domain 3, KA 3.3.2), the three measures reveal
@@ -687,6 +724,20 @@ reported.
 **The failure mode** is the *rubber baseline* — repeated re-baselining that resets variances to zero and
 launders a deteriorating `CPI` into a fresh start. The log discipline exists precisely so that a reviewer
 can see how many times the baseline moved, by how much, and on whose authority.
+
+**The over-target baseline (OTB/OTS).** When a baseline is genuinely dead — the remaining budget bears no
+relation to the remaining work, and every index measures history rather than performance — large government
+EVMS programmes have a formal, sanctioned mechanism for the reset: the **over-target baseline**, with its
+schedule twin the **over-target schedule**. In an OTB, budget *above* the contract value is added to the
+performance measurement baseline, so that work packages can again be planned and measured against
+achievable budgets; the accumulated variances are either retained on the record or explicitly adjusted; and
+the whole change is documented, justified and approved by the customer before it takes effect. Practitioners
+will meet the OTB/OTS on US-government-style EVMS programmes, where it is a recognised reprogramming action
+rather than an improvisation. The OTB is the legitimate counterpart of the rubber baseline: the arithmetic
+is the same — new budget, restated `PV`, indices that start again — but the governance is opposite. One is
+an approved, disclosed, one-time reset with an audit trail that preserves how bad things were; the other is
+quiet serial re-planning that erases the record. The test of any re-baseline is not whether the numbers
+moved but whether a reviewer can still reconstruct the journey.
 
 ### Advanced 6.A.2 — EVM lite versus formal EVMS
 
