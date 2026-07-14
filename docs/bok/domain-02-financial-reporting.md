@@ -1523,6 +1523,50 @@ the evidence, come the 2.2.9 disclosures, that management watched the gap all ye
 
 ---
 
+## Exam preparation — Domain 2
+
+**How this domain is examined.** Domain 2 weights toward its flagship, KA 2.2: **recall** covers the five
+steps, the three over-time criteria and the qualitative characteristics; **application** items compute
+cost-to-cost revenue, SSP allocations, financing components and the other-standards arithmetic (NRV, lease
+schedules, borrowing costs); **analysis** items test the judgements — the constraint, the loss rule,
+principal versus agent, offsetting. Numerical items concentrate in KA 2.2 (percentage of completion,
+catch-ups, contract balances) and KA 2.4. The sample MCQs and calculation exercises in this domain are drawn
+from the same blueprint as — but kept strictly separate from — the live examination bank.
+
+**Calculation traps.** The distractors in this domain's items punish specific, recurring mistakes:
+
+- **Using the wrong `PoC` denominator after a cost revision** — striking progress on the superseded
+  estimate, or reporting *cumulative* revenue when the *period's* revenue is asked (MCQ 2.2-I; exercise 2.2).
+- **Including constrained variable consideration** — booking `80 % × 500,000` of a binary bonus when the
+  most-likely amount and the constraint both say exclude it (MCQ 2.2-C; exercise 2.3).
+- **Discounting the advance instead of accreting it** — revenue on transfer is
+  `5,000,000 × 1.06²`, not `5,000,000 / 1.06²`, and never the bare cash received (MCQ 2.2-G).
+- **Netting contract assets and liabilities across contracts** — or reversing the direction, calling an
+  over-billed position a contract asset (MCQs 2.1-B and 2.2-B).
+- **Recognising the advance as revenue** rather than carrying it as a contract liability until performance
+  (KA 2.2.7), and mislabelling a conditional right as a receivable.
+- **Charging only the lifetime loss under the loss rule** — forgetting that profit already recognised must
+  reverse too, so the immediate charge is `2,000,000 + 1,500,000`, not 2,000,000 (MCQ 2.2-J).
+
+**Time management.** Single-strike `PoC` computations and SSP allocations are fast marks — one ratio, one
+multiplication. Multi-year items with a revision, and loss-rule items, need a small cumulative table:
+cumulative revenue at the new estimate, minus prior cumulative, is the period figure. Write the formula
+first — `PoC = cost to date / total estimated cost`; `period revenue = cumulative − prior` — before touching
+the numbers.
+
+**Reflection questions.**
+
+1. On your current contract, which over-time criterion supports recognition — and could you state the
+   supporting facts to an auditor without looking them up?
+2. What variable consideration sits in your project's commercial forecast but is constrained out of
+   recognised revenue, and who tracks that gap each period?
+3. Is your contract's under- or over-billed position trending, and what does the trend say about billing
+   versus performance?
+4. How much headroom sits between your current `EAC` and the contract's allocated price — and who would know
+   first if it halved?
+
+---
+
 ## Domain 2 summary
 
 Financial reporting exists to give external users decision-useful information — relevant and faithfully

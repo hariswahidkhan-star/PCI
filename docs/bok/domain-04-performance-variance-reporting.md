@@ -1035,6 +1035,53 @@ on the same item is a design problem, not a drafting one.
 
 ---
 
+## Exam preparation — Domain 4
+
+**How this domain is examined.** Domain 4 pairs one heavily numerical knowledge area with three
+interpretive ones: **recall** items test the KPI vocabulary (target, threshold, tolerance), the exception
+principle and chart-to-question fit; **application** items decompose variances, build bridges and compute
+fixed-overhead splits; **analysis** items test reading — a favourable variance's cause, a leading
+indicator's warning, a distorted chart's manufactured story. The numerical items sit almost entirely in
+KA 4.2: flexed budgets, price/usage and rate/efficiency splits, expenditure/volume variances and the
+reconciling bridge. The sample MCQs and calculation exercises in this domain are drawn from the same
+blueprint as — but kept strictly separate from — the live examination bank.
+
+**Calculation traps.** The distractors in this domain's items punish specific, recurring mistakes:
+
+- **Skipping the flex before decomposing** — comparing actual cost to the *original* budget folds a volume
+  effect into the variance and blames the team for doing more work (exercise 4.1: a 45,000 "overrun" that is
+  really 15,000).
+- **Using actual instead of standard price in the usage variance** — the split is `(AP − SP) × AQ` for
+  price and `(AQ − SQ) × SP` for usage; crossing the terms gives the 5,200 distractor, not 5,000
+  (MCQs 4.2-A and 4.2-B).
+- **Volume versus expenditure confusion in fixed overheads** — answering the expenditure variance when the
+  volume variance is asked, or reporting the total; and getting the volume *sign* wrong — producing fewer
+  units than plan under-absorbs and is adverse (MCQ 4.2-E; exercise 4.4).
+- **Dropping the `(A)`/`(F)` signs in a bridge** — with offsetting components, an unsigned bridge fails to
+  reconcile to actual (exercise 4.3).
+- **Misreading favourable as good news** — a favourable variance can hide skipped scope or deferred cost;
+  sign alone is never the answer to a cause question (MCQ 4.2-D).
+- **Declaring a status without the tolerance** — `CPI` 0.97 against a 1.00 target is *within* a 0.95 amber
+  threshold: watch, not escalate (MCQ 4.1-B).
+
+**Time management.** Price/usage and rate/efficiency splits are fast once the two formulae are on paper;
+bridges and overhead items need a running total and a sign check at each step. Write the formulae down
+first — `(AP − SP) × AQ`, `(AQ − SQ) × SP`, `absorbed = OAR × actual output` — then substitute; the
+distractors are built from crossed terms.
+
+**Reflection questions.**
+
+1. Which of last month's reported variances on your project were measured against a flexed budget, and
+   which against the original phasing?
+2. What leading indicator on your current project is quietly doubling — the equivalent of the RFI trend
+   nobody escalated in the CA-07 case?
+3. Which KPI on your dashboard could improve on paper without reality improving, and what would you pair it
+   with to make that visible?
+4. What decision did your last exception report ask its readers to take — and did the meeting actually take
+   one?
+
+---
+
 ## Domain 4 summary
 
 Performance management makes measurement matter: KPIs paired with targets, thresholds and tolerances;

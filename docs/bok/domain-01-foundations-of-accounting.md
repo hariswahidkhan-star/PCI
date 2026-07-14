@@ -1684,6 +1684,51 @@ echoes the 1.5.6 mini-case: work performed USD 240,000, invoiced USD 180,000, ac
 
 ---
 
+## Exam preparation — Domain 1
+
+**How this domain is examined.** Domain 1 items span the full cognitive range: **recall** of the
+debit/credit rules, the normal balances and the three IAS 37 recognition tests; **application** of the
+mechanics — posting entries, reconciling a bank statement, computing period-end adjustments and measuring
+provisions; and **analysis** of what the numbers mean — what a balanced trial balance cannot prove, accrual
+versus provision, why profit is not cash. Numerical items concentrate in KAs 1.1, 1.3 and 1.4: transaction
+cycles and reconciliations, depreciation and adjustment arithmetic, and expected-value and discounted
+provisions. The sample MCQs and calculation exercises in this domain are drawn from the same blueprint as —
+but kept strictly separate from — the live examination bank.
+
+**Calculation traps.** The distractors in this domain's items punish specific, recurring mistakes:
+
+- **Applying a debit as an increase to a liability** — or reading "debit" as "increase" everywhere. The
+  sign depends on account type (the trap in MCQs 1.1-A and 1.1-B).
+- **Mis-signing a bank reconciliation** — adding outstanding cheques instead of deducting them, or
+  deducting the deposit in transit (MCQ 1.1-F).
+- **Striking profit before the accruals** — recognising a cost on the invoice date rather than the economic
+  event, so cost-to-date and the margin are both wrong (MCQ 1.3-C; exercise 1.2; the Terrafirm case).
+- **Expensing the whole prepayment** at payment, or reporting the expense recognised to date when the
+  question asks for the *remaining asset* (MCQ 1.3-E).
+- **Discounting the wrong direction** — compounding `20,000 × 1.08³` instead of dividing by `1.08³`, or
+  unwinding a discount with the wrong sign (MCQs 1.4-D and 1.4-F).
+- **Confusing the onerous-contract loss** with cost-to-complete or cost-to-date — and forgetting to net off
+  the loss already booked before sizing the provision (MCQ 1.4-C; exercise 1.4).
+
+**Time management.** Recall items on rules and terms should take seconds; bank reconciliations, adjusted
+profits and discounted provisions with an unwind are multi-step and reward care over speed. Write the
+formula down first — `Adjusted bank = statement − outstanding cheques + deposits in transit`;
+`PV = amount / (1 + r)^n` — and only then substitute; most distractors are correct arithmetic applied to the
+wrong formula.
+
+**Reflection questions.**
+
+1. Which accruals in your current project's cost-to-date are assessments rather than documents, and who
+   reviews them before the close?
+2. When was your project cost report last reconciled to the general ledger, and what unexplained differences
+   remain open?
+3. Which provisions on your project were *considered nils* this period — and where is that consideration
+   recorded?
+4. If this month's accrual pass were skipped, how far would the reported margin move, and who would notice
+   first?
+
+---
+
 ## Domain 1 summary
 
 The accounting model is one identity — `A = L + E` — recorded from both sides (double-entry), producing four

@@ -1219,6 +1219,48 @@ month answers are comparable; only the numbers should change.
 
 ---
 
+## Exam preparation — Domain 3
+
+**How this domain is examined.** Domain 3 is the most numerical of the finance group: **recall** items test
+the reserve definitions, the estimate classes and the `EAC`/`ETC`/`VAC` vocabulary; **application** items
+assemble a `BAC`, scale an analogous or parametric estimate, read a cumulative `PV` curve, compute the three
+formula EACs and build a monthly cash position; **analysis** items test the judgements behind the
+arithmetic — which EAC method matches the cause, what a `CPI` trend signals, which levers move the funding
+trough. Every KA carries numerical items. The sample MCQs and calculation exercises in this domain are drawn
+from the same blueprint as — but kept strictly separate from — the live examination bank.
+
+**Calculation traps.** The distractors in this domain's items punish specific, recurring mistakes:
+
+- **Quoting a point estimate without its class and range** — or mis-applying the range percentages (the low
+  end of −15 % is `× 0.85`, not the high end deducted) (MCQ 3.2-B; exercise 3.2).
+- **Adding management reserve into `BAC`** — or double-counting a contingency that is already inside the
+  baseline (MCQs 3.1-B and 3.1-D).
+- **Confusing monthly and cumulative `PV`** — reading a single month where the cumulative is asked, or
+  *adding* two cumulative readings instead of differencing them (MCQs 3.3-A and 3.3-D).
+- **Using `EAC = BAC / CPI` when the cause was atypical** — the method encodes an assumption, and the stem
+  states the judgement; equally, reporting the `ETC` alone as the completion forecast (MCQ 3.4-D).
+- **Mis-striking the peak funding requirement** — reading a single month's net flow or the closing balance
+  instead of the deepest point of the *cumulative* cash curve (MCQs 3.5-A and 3.5-D).
+- **Dropping retention or the payment lag** from the cash build-up, so the trough and the closing position
+  are both wrong (worked example 3.5.2c; exercise 3.5).
+
+**Time management.** Reserve arithmetic, analogous scaling and parametric rates are fast marks — take them
+quickly and bank the time. EAC items reward writing all three formulae before choosing, and cash items need
+a disciplined month-by-month cumulative table; both punish shortcuts. Write the formula first —
+`BAC = Σ control accounts + contingency`; `EAC = AC + (BAC − EV)` versus `BAC / CPI` — then substitute.
+
+**Reflection questions.**
+
+1. What class is your current project's controlling estimate, and is its accuracy range still quoted
+   anywhere the sponsor actually reads?
+2. Which register risks is your contingency funded to cover, and how much has been drawn against which
+   entries so far?
+3. Would your baseline's phasing survive scrutiny — does the early schedule variance reflect performance, or
+   a straight-lined S-curve?
+4. When did your project's `EAC` last move, and what evidence would make you change the method behind it?
+
+---
+
 ## Domain 3 summary
 
 Budgeting turns a plan into an authorised, time-phased **cost baseline** whose total is the `BAC`, with two
