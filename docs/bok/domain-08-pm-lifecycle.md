@@ -795,6 +795,36 @@ earns its keep when projects' numbers become more trustworthy and their decision
 reporting layer without adding trust is overhead wearing a controls badge — and is, rightly, the first
 thing cut.
 
+### Advanced 8.A.5 — Decision latency: the cost of the gate itself
+
+**The principle.** Governance sections usually price the risk of deciding *wrongly*; they rarely price the
+risk of deciding *slowly*. Between "the pack is ready" and "the decision is made", the programme keeps
+burning at its run rate — often without authorised direction, so the burn buys progress on a plan the gate
+may be about to change. **Decision latency** is that interval, and it is a **governable quantity**: it is
+set by committee cadence, pack cut-off dates and delegation thresholds, all of which are design choices of
+the stage-gate architecture (8.A.3) and the PMO that administers it (8.A.4) — not facts of nature.
+
+**Worked example 8.A.5 — pricing a slow gate.**
+
+1. **Setup.** A programme runs at **USD 1,200,000 a month**. Its investment committee meets on an
+   **eight-week cycle**; a gate pack misses one cut-off, and the decision lands **six weeks** after the
+   programme was ready for it.
+2. **Formula.** `Cost of latency = latency × run rate`.
+3. **Substitution.** `1.5 months × 1,200,000 = USD 1,800,000`.
+4. **Result.** **USD 1,800,000** of burn under a direction the gate may be about to change — in the worst
+   case (a kill decision), 1,800,000 spent on a programme the organisation had already decided, in
+   substance, not to continue.
+5. **Interpretation.** The gate protected the organisation from a bad decision and charged it 1.8 million
+   for a slow one; latency is a real number that belongs in the governance design, not an accident of the
+   calendar.
+
+**The design responses.** Align committee cadence to gate forecast dates — the schedule knows when gates
+are coming (Domain 10), so the calendar can be built around them rather than against them. Set
+**delegation thresholds** so decisions below a defined size do not queue for the main committee (8.A.1's
+tiers, applied to speed). Allow conditional **proceed-at-risk** authorisations with explicit caps, logged
+like any other authorisation (KA 8.4.2). Forecasting gate-readiness dates and flagging cadence mismatches
+is a mechanical scan; deciding what may proceed at risk, and at what cap, is the accountable owner's call.
+
 ---
 
 ## Case study — Domain 8: a city operations centre, gate by gate (smart cities)

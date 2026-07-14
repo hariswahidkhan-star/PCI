@@ -1115,6 +1115,27 @@ cross-check the total authorised budget.
 The change log records one authorised `BAC` movement (the variation); blurring it with the contingency draw
 is how scope growth hides inside "risk".
 
+**Exercise 5.5** — A control account has a budget of **USD 2,000,000**. At the data date: purchase orders
+raised total **USD 1,450,000**; invoices received against them total **USD 830,000**; a further **USD
+190,000** of work has been performed but not yet invoiced; cash paid to date is **USD 640,000**. A remaining
+scope of **USD 500,000** is planned but not yet ordered. (a) Compute the actual cost to date, the open
+commitment, the total exposure and the apparent headroom. (b) Compute the forecast final cost and reconcile
+it against the apparent headroom — what is the "headroom illusion"? (c) Explain in one sentence why cash
+paid (640,000) appears nowhere in (a) or (b).
+
+**Solution 5.5.**
+
+1. (a) `Actual cost = invoiced + accrual = 830,000 + 190,000 = 1,020,000` (5.2.1); `open commitment = PO
+   raised − invoiced = 1,450,000 − 830,000 = 620,000`; `total exposure = actual + open commitment =
+   1,020,000 + 620,000 = 1,640,000`; apparent headroom `= 2,000,000 − 1,640,000 = 360,000`.
+2. (b) `Forecast final cost = exposure + planned-not-ordered = 1,640,000 + 500,000 = 2,140,000` — a forecast
+   **overrun of 140,000** against a screen that shows 360,000 of "headroom".
+3. The illusion is reading headroom against commitments *made* instead of against the full remaining scope —
+   exactly the commitment-blindness case study's failure, at exercise scale (KA 5.2.1).
+4. (c) Cash paid lags actual cost by payables and retention timing (`1,020,000 − 640,000 = 380,000` of
+   timing difference) — cash measures the treasury position (Domain 3, KA 3.5), not cost performance
+   (KA 5.2.2).
+
 ---
 
 ## Practitioner's toolkit — Domain 5
