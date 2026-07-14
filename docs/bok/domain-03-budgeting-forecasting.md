@@ -874,6 +874,33 @@ baseline's meaning. Applied properly, rolling wave is what keeps `PV` honest on 
 3.3 and 6.1): the near-term S-curve reflects the real resource-loaded plan rather than a straight-line
 guess for years an estimator cannot yet see — the phasing trap of 3.3.2 avoided by design.
 
+### Advanced 3.A.5 — Forecast accuracy and bias
+
+**The principle.** A forecast is a product with measurable quality: a function that never measures its
+forecasts against out-turn repeats its errors indefinitely. Two measures matter. **Accuracy** asks how far
+off the forecasts were, regardless of direction — commonly the **mean absolute percentage error (MAPE)**,
+the average of the absolute errors expressed as percentages of the out-turn. **Bias** asks whether they were
+systematically off in *one* direction — the more damaging failure, because it is correctable and usually
+cultural: optimism that under-forecasts, or sandbagging that over-forecasts.
+
+**Worked example 3.A.5 — measuring a forecast series against out-turn.**
+
+1. **Setup.** A package's final out-turn cost was **USD 10,500,000**. The `EAC` reported at Months 1–6
+   (USD 000): **9,800 · 9,900 · 10,100 · 10,300 · 10,450 · 10,500**.
+2. **Formula.** Error = `EAC − out-turn` per month; `MAPE = mean of |error| ÷ out-turn`.
+3. **Substitution.** Errors (USD 000): **−700, −600, −400, −200, −50, 0** — every error on the *same* side.
+   Absolute percentage errors: `700/10,500 ≈ 6.7 %`, `600/10,500 ≈ 5.7 %`, `400/10,500 ≈ 3.8 %`,
+   `200/10,500 ≈ 1.9 %`, `50/10,500 ≈ 0.5 %`.
+4. **Result.** MAPE over the first five months `≈ (6.7 + 5.7 + 3.8 + 1.9 + 0.5) / 5 ≈ ` **3.7 %**.
+5. **Interpretation.** The MAPE is respectable; the **bias** is the finding. Six successive upward revisions
+   is not six independent surprises — it is one systematic under-forecast surfacing slowly, the **ratchet**.
+
+**The discipline.** A ratchet is diagnosed across the `EAC` series (3.4.2) and challenged in the rolling
+forecast cycle (3.4.3) — the point at which the honest-forecast culture of the executive perspective is made
+or broken. An AI model can flag ratchet patterns across a portfolio faster than a review board can — but
+deciding whether the cause is optimism or sandbagging is a human judgement: **AI proposes, the professional
+disposes.**
+
 ---
 
 ## Case study — Domain 3: budgeting and forecasting an offshore-wind package (energy)
@@ -1272,6 +1299,25 @@ closing cash position, and reconcile it with the margin.
 4. Peak funding requirement = **(USD 226,000)** at the end of Month 3.
 5. Closing position = **USD 64,000**. Reconciliation: margin `= 960 − 800 = 160`; cash 64 + retention
    outstanding 96 `= 160`. ✓ The other 96,000 of profit is locked in retention until release (3.5.2c).
+
+**Exercise 3.6** — A site-works package is forecast on a driver basis: a fixed monthly cost of **USD 85,000**
+(site establishment, staff, plant standing) plus a variable cost of **USD 1,250 per unit** installed. The
+next quarter's planned volumes are **320, 360 and 400 units**. (a) Forecast each month and the quarter.
+(b) The supplier signals an **8 %** unit-cost rise effective immediately: restate the quarter and state the
+increase. (c) In one sentence: why does the driver-based restatement beat "add 8 % to last quarter's total"?
+
+**Solution 3.6.**
+1. (a) Month 1: `85,000 + 320 × 1,250 = 85,000 + 400,000 = ` **USD 485,000**; Month 2: `85,000 + 360 ×
+   1,250 = 85,000 + 450,000 = ` **USD 535,000**; Month 3: `85,000 + 400 × 1,250 = 85,000 + 500,000 = `
+   **USD 585,000**.
+2. Quarter `= 485,000 + 535,000 + 585,000 = ` **USD 1,605,000** — check: fixed `3 × 85,000 = 255,000` plus
+   variable `1,080 × 1,250 = 1,350,000`. ✓
+3. (b) New unit rate `= 1,250 × 1.08 = 1,350`; variable `= 1,080 × 1,350 = 1,458,000`; quarter
+   `= 255,000 + 1,458,000 = ` **USD 1,713,000**.
+4. Increase `= 1,713,000 − 1,605,000 = ` **USD 108,000** — 8 % of the *variable* base only.
+5. (c) The fixed USD 255,000 does not inflate with the unit rate: a blanket 8 % on the whole total would
+   overstate the quarter by 8 % of 255,000 = **USD 20,400**, while the driver model applies the escalation
+   only to the cost it actually drives (Advanced 3.A.1).
 
 ---
 
