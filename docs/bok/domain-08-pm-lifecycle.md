@@ -63,6 +63,24 @@ direct input to report design.
 > brand-blue dots in their quadrants. *Animation storyboard (digital-only):* each stakeholder dot drops into
 > its quadrant with its engagement label appearing.
 
+**Worked example 8.1.3 — a RACI for a controls deliverable.** Knowing *who* the stakeholders are leads
+directly to *who does what*. A **RACI** chart (Responsible / Accountable / Consulted / Informed) assigns each
+activity exactly one owner. For producing Northwind's monthly cost report:
+
+| Activity | Cost Engineer | Project Manager | Finance | Sponsor |
+|---|---|---|---|---|
+| Compile cost data | R | A | C | |
+| Raise accruals | R | A | C | |
+| Approve the report | | A | | I |
+| Present at project board | | R | | A |
+
+Reading the chart: every row has **exactly one A** — the single point of accountability. The cost engineer is
+**Responsible** for compiling the data and raising the accruals (Domain 5); the project manager is
+**Accountable** for the report through to its approval, with finance **Consulted** on the numbers; and at the
+project board the accountability shifts — the PM *presents*, but the **sponsor** is Accountable for what the
+board does with it. A RACI built during initiating makes reporting (Domain 4) and sign-off unambiguous before
+the first report is ever due.
+
 ### 8.1.4 Success criteria
 
 **The principle.** **Success criteria** define what "done well" means — and they are broader than the classic
@@ -436,6 +454,22 @@ scope is well-defined and regulated → **predictive** (fixed baseline, earned v
 software** integration is uncertain and change-prone → **adaptive** (sprints, velocity). The programme is
 therefore **hybrid**, with predictive stage-gates over agile software execution — and the controls function
 reports earned value on the civils and AgileEVM/velocity on the software, reconciled at the programme level.
+
+**Worked example 8.6.4b — two project profiles, two approaches.** The same logic applied to three contrasting
+profiles:
+
+| Profile | Requirements certainty | Change rate | Best-fit approach |
+|---|---|---|---|
+| A regulated bridge replacement | High | Low | Predictive (fixed baseline, earned value) |
+| A customer-facing mobile app | Low | High | Adaptive (Scrum, velocity/burnup) |
+| A hospital IT + building programme | Mixed | Mixed | Hybrid (stage-gates over agile execution) |
+
+The approach follows the **conditions**, not preference: high certainty and low change reward a fixed plan;
+low certainty and high change reward short cycles and feedback; a mixed profile takes a mix. The controls
+professional then measures each with the matching method — fixed-baseline earned value for the bridge
+(Domain 6), velocity/AgileEVM for the app (Domain 9), and both reconciled at programme level for the hybrid.
+Choosing the approach to fit the delivery rather than dogmatically is the professional stance (worked example
+8.6.4).
 
 **AI in this KA.** AI assists across the lifecycle (developed fully in Domain 13, KA 13.5): drafting charters
 and plans, generating WBS candidates, analysing stakeholder and communications data, supporting change-impact

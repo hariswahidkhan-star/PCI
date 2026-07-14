@@ -115,6 +115,20 @@ match **fails on price** (PO USD 50 vs invoice USD 55): the USD 500 difference i
 investigation — a price increase to authorise, or an error to reject — **before** payment. Without the match,
 USD 500 of unauthorised cost would flow straight through to the project.
 
+**Worked example 11.2.2b — a three-way match that passes.**
+
+1. **Setup.** A purchase order is for **100 units at USD 50** (USD 5,000). Only **98 units are received**
+   (short delivery); the supplier invoices **98 units at USD 50** (USD 4,900).
+2. **Formula.** The invoice is matched to the **goods-receipt note** (quantity) and the **PO** (price), within
+   tolerance.
+3. **Substitution.** Invoice quantity 98 = goods-receipt 98 ✓; invoice price USD 50 = PO price USD 50 ✓;
+   invoice value `98 × 50 = 4,900`.
+4. **Result.** The match **passes** — the entity pays **USD 4,900** for what was actually received at the
+   agreed price; the 2-unit short delivery is a delivery/expediting matter, not a payment block.
+5. **Interpretation.** The three-way match pays for **goods received at the agreed price**, not for what was
+   ordered — protecting against paying for undelivered units. Contrast worked example 11.2.2, where the price
+   differed and the match failed (cross-ref 11.2.2).
+
 ### 11.2.3 The link to cost, commitments and payables
 
 **The principle.** P2P generates the **commitments, accruals and actuals** a controls professional tracks
@@ -186,6 +200,21 @@ Splitting these duties means a second person's action is required, creating a ch
 themselves with no second check. Segregating **raise / approve / receive / pay** across different people (or
 system roles) removes that single point of failure — the same principle as keeping connector configuration and
 delivery under different admin controls in a system trust boundary.
+
+**11.3.2b Worked example — a segregation-of-duties matrix.** A small matrix makes the design concrete: four
+P2P duties across two clerks and a manager, marking who may perform each.
+
+| Duty | Clerk A | Clerk B | Manager |
+|---|---|---|---|
+| Raise PO | ✔ | | |
+| Approve PO | | | ✔ |
+| Confirm goods receipt | | ✔ | |
+| Approve invoice for payment | | | ✔ |
+
+No single person performs more than one **conflicting** duty in the raise→approve→receive→pay chain; raising
+(Clerk A) is separated from receipt (Clerk B) and from approval/payment (Manager). A matrix like this is how
+SoD is designed into system roles; the control fails the moment one person can both **raise and approve** or
+**receive and pay** (cross-ref 11.3.2).
 
 ### 11.3.3 The audit trail and process mining
 

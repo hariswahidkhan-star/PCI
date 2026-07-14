@@ -322,6 +322,24 @@ disposes" becomes concrete.
 5. **Output.** A verified narrative — drafted in seconds, **owned** by the professional who checked it. The
    time saved is real; the accountability is undiminished.
 
+**Worked workflow 13.3.3b — extracting contract terms, then verifying.**
+
+1. **Input.** A 180-page construction subcontract — a document, so the task is RAG-grounded (13.1.4): the
+   model answers from the contract itself, not from its training.
+2. **Prompt.** "Acting as a commercial manager, from the attached subcontract extract, as a table: payment
+   terms, retention %, liquidated-damages rate, and any variation-pricing clause — with the clause reference
+   for each. If a term is absent, say 'not found'; do not infer."
+3. **AI step.** The RAG-grounded model returns a table of the four terms, each with its clause reference.
+4. **Verification (the professional's step).** Open each cited clause and confirm the extracted value against
+   the document; **reject** any term the model could not ground to a clause; and have legal review any
+   entitlement-bearing term (Domain 7). A model can misread or fabricate a clause — the extraction is a
+   draft, not a fact.
+5. **Output.** A verified terms table, owned by the commercial manager, feeding the contract register
+   (Domain 7).
+
+This is why grounding (RAG) and citation-to-source matter — an ungrounded extraction invites hallucinated
+clauses. **AI proposes, the professional disposes.**
+
 ### 13.3.4 Guardrails
 
 **The principle.** **Guardrails** are the rules of safe use: **never** paste confidential/personal data into
@@ -685,6 +703,19 @@ trail standard. Operationalised as a **verification checklist** applied to AI-as
 
 An output that fails any line is not released until fixed. The checklist is the practical embodiment of the
 governing principle.
+
+**Worked example 13.6.5b — the checklist applied to an AI-extracted contract term.** The same assurance
+discipline applies to a different kind of output — an AI-extracted liquidated-damages rate (13.3.3b):
+
+> - [ ] **Source-checked** — the LD rate is confirmed against the cited clause. ✔
+> - [ ] **Grounded** — the extraction cites a real clause (no hallucinated reference). ✔
+> - [ ] **Confidentiality** — the contract was processed in a governed tool, not a public one. ✔
+> - [ ] **Legal-reviewed** — an entitlement-bearing term reviewed by a qualified person (Domain 7). ✔
+> - [ ] **Signed off** — a named professional approves; AI assistance and verification recorded. ✔
+
+The same "propose → verify → own" discipline applies to *extraction* as to *forecasting* — the risk (a
+hallucinated or misread clause moving a commercial position) is just as real, and the accountability just as
+human.
 
 > **Fig 13.6.1 — AI-governance decision flow.** *Caption:* should this task use AI, and how is it assured?
 > *Underlying data:* the governance tests above. *Render-ready description:* a decision tree — "Deterministic
