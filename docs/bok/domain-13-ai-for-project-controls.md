@@ -1317,6 +1317,117 @@ diminished, and domain knowledge matters more, not less.
 
 ---
 
+## Advanced topics — Domain 13
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 13.A.1 — Agentic AI at awareness level
+
+The workflows of KA 13.5 treat AI as a **single step**: one prompt or model run, one output, one
+verification. **Agentic AI** describes systems that instead **plan and execute a chain of actions** toward a
+goal — retrieve the relevant documents, run a computation, draft an output, check it, decide what to do next
+— rather than answer one prompt. In controls terms: not "draft a variance narrative from the data below,"
+but "produce the month-end exception report" — with the system itself retrieving the extract, computing the
+variances, drafting the commentary and assembling the pack.
+
+The framing here is deliberately honest (KA 13.7.5): this capability is **evolving fast**, and any specific
+claim about what agents reliably can or cannot do would date quickly — the professional validates current
+capability rather than assuming it (KA 13.4.3). What can be stated durably is the governance consequence:
+**the governance need scales with autonomy** (KA 13.6). A single-step tool that errs produces one wrong
+output, caught by one verification. An agent that errs at step two carries the error into every later step,
+each of which builds on it plausibly — the mistake is compounded and *laundered* through the chain, arriving
+in a polished final output whose intermediate workings nobody saw.
+
+Verification therefore moves **from per-output to per-workflow**. The professional assures the *design* of
+the chain — which steps are permitted, which data each step may touch, where the chain must stop — and
+inserts **checkpoints** at which consequential intermediate outputs are inspected before the chain proceeds,
+the workflow analogue of the quality gates in a data pipeline (KA 13.2.3). The sign-off discipline is
+unchanged: a named person is accountable for what the agent produced (KA 13.6.2), and the audit trail must
+now record the **chain**, not just the answer. Autonomy is something the professional grants, in measured
+amounts, with the verification designed in — however many steps the system takes, the governing principle
+holds without amendment.
+
+### Advanced 13.A.2 — Model risk management
+
+Once ML models influence real decisions — a predictive `EAC` (KA 13.5.3), a risk score (KA 13.5.9) — ad-hoc
+checking is not enough; the function needs **model risk management**, a discipline long practised in
+regulated industries and described here generically.
+
+- **Validation before use.** The model is tested on data held back from training, its assumptions and
+  training-data representativeness challenged (KA 13.2), and its limitations documented. Evidence like the
+  case study's 2-of-3 flag precision *is* validation evidence — gathered before reliance, not after.
+- **Monitoring for drift.** The world the model learned changes — portfolio mix, market conditions, coding
+  structures — so live performance is monitored and degradation investigated. A model that was right last
+  year and is silently wrong this year is the hallmark failure this control exists to catch.
+- **Champion–challenger.** A candidate replacement runs alongside the incumbent on the same live data, and is
+  promoted only when it demonstrably outperforms — the model-world analogue of parallel running.
+- **Periodic revalidation.** On a calendar, and on triggers (a data-structure change, a poor quarter) — the
+  quarterly re-validation cadence of KA 13.7.1 extended from tools to the models themselves.
+
+The **model inventory** binds this together: a register of every model influencing a controls output — its
+purpose, data, validation date, known limitations and owner. Like the approved-tool register (KA 13.6.5c) it
+is an **audit artefact**: when an AI-influenced number is challenged, the inventory shows which model touched
+it and who assured it. And ownership is personal: **a named person owns each model's performance** (KA
+13.6.2) — not the vendor, not "the data team" in the abstract — and can answer, at any time, "how do you
+know it still works?" The scale of all this is proportionate to the stakes; for models feeding decisions it
+is never zero.
+
+### Advanced 13.A.3 — Procuring AI capability
+
+A practitioner who leads the function buys AI capability as often as they use it, and procurement is where
+several of this domain's disciplines meet.
+
+**Claims versus capability.** Features change rapidly (KA 13.4.3), so a vendor claim is a hypothesis, not a
+fact: the evaluation tests the tool against **verifiable capability on your own data** — safely prepared
+(KA 13.2.5) — scoring outputs against known correct answers. A glossy demonstration on the vendor's data is
+not evidence; the same discipline that verifies a model's output (KA 13.3.3) verifies a vendor's claim.
+
+**The terms that matter.** Applied contract discipline (Domain 7), turned on the function's own purchases:
+**data residency and handling** — where your data is processed and stored, and whether it is used to train
+the vendor's models (KA 13.6.3); **intellectual property** — who owns the outputs, and any artefact
+fine-tuned or configured on your data; and **exit terms** — the right to extract your data, mappings and
+configuration in usable form. Lock-in through un-exportable data is a risk priced at signing, not discovered
+at exit.
+
+**Pilot before commit.** A bounded pilot with success metrics defined in advance — the agency case study's
+sequencing — precedes any enterprise commitment, and a pilot that fails its metrics is allowed to fail.
+
+**Total cost, honestly netted.** The value case follows KA 13.7.3: licences *plus* integration, data
+preparation (KA 13.2), training, and the **ongoing governance and verification effort** the operating model
+requires (KA 13.6). A vendor's business case typically prices the licence alone; omitting the human
+verification cost is the most common way an AI procurement case flatters itself. The professional evaluates
+the netted figure — and is prepared to find it modest.
+
+### Advanced 13.A.4 — The deskilling risk
+
+If AI drafts every narrative, codes every cost line and proposes every `EAC`, where does the next
+generation's judgement come from? The whole governance model of this domain rests on verification (KA
+13.3.3), and verification presupposes a verifier who **can still do the work**: recompute the forecast, spot
+the wrong `EAC` assumption, recognise an unrealistic duration. Those instincts have always been built by
+*doing* the work — historically by juniors doing precisely the tasks AI now does first. Today's verifiers
+trained before AI; the open question is where tomorrow's come from. Stated honestly: this is an evolving
+concern with no settled best practice, but the direction of the risk is clear, and a function that waits for
+the evidence to arrive in its own error rates has waited too long.
+
+Three mitigations are within any function's reach.
+
+- **Deliberate practice** — regular working of problems *without* AI. That is the intent of this book's
+  calculation exercises: worked by hand, before the solution is read, because the point is not the answer but
+  the fluency that verification later depends on.
+- **Rotation through first-principles work** — periods in which developing professionals build an estimate,
+  a schedule or a reconciliation from source themselves, with AI switched off, so the judgement is formed on
+  the task and not on reviewing a draft of it.
+- **Verification as a skill in itself** — taught and assessed, not assumed: how to recompute a figure, ground
+  an extraction, challenge a causal claim. A reviewer who only rubber-stamps is already deskilled — the
+  "over-trusting" failure of KA 13.7.4 in slow motion.
+
+The optimistic reading of KA 13.7.2 — that the professional's role rises to directing and assuring — is true
+only while the judgement it presumes is maintained. The daily workflow no longer produces that judgement as a
+by-product, so the profession must now produce it on purpose. **AI proposes, the professional disposes.**
+
+---
+
 ## Case study — Domain 13: building an AI-augmented controls function at a transport agency (government)
 
 ### Background

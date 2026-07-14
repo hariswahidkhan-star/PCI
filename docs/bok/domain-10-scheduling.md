@@ -533,6 +533,116 @@ concealment for protection; C and D do not follow from a corrupted update.
 
 ---
 
+## Advanced topics — Domain 10
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 10.A.1 — Schedule health checks
+
+A professional who inherits a schedule — a contractor's, a predecessor's, an AI-proposed one (KA 13.5.5) —
+runs a set of **quality metrics** before trusting a single date. Industry health-check conventions exist for
+exactly this purpose; what follows is the generic core they share, with thresholds set by the organisation
+rather than borrowed from any named standard.
+
+- **Logic density and 'dangles'.** Every activity except the first and last should have at least one
+  predecessor and one successor. Activities without them — **dangles** — float free of the network: their
+  dates do not respond when reality changes, so the forward and backward passes (KA 10.2) quietly stop being
+  true for them.
+- **Constraint counts.** Date constraints should be rare and individually justified. A schedule held together
+  by constraints is a bar chart wearing a network's clothes — it cannot recalculate honestly (KA 10.1.2).
+- **Long lags.** Every lag above an agreed threshold is exposed and justified — the audit developed in
+  Advanced 10.A.3.
+- **Negative float.** A late date earlier than an early date means a constrained date the logic cannot meet:
+  the schedule is already impossible as modelled, and someone has not said so.
+- **High-float concentrations.** Clusters of very large total float usually signal **missing logic** rather
+  than genuine slack — an activity linked to nothing that needs it will show enormous float and mean nothing.
+- **Out-of-sequence progress.** Successors recorded as started before their predecessors finished mean either
+  the logic was wrong or the update is corrupt (KA 10.4.1); either way, the current critical path is suspect.
+
+None of these checks needs more than the scheduling tool itself. The interpretation discipline matters as
+much as the metrics: a schedule that fails its health checks is not necessarily *wrong*, but it cannot be
+*trusted to recalculate* — its dates are assertions, not results. The health check runs before a baseline is
+accepted (KA 10.4.2) and periodically thereafter, because schedules degrade in service.
+
+### Advanced 10.A.2 — Resource-critical paths and buffers
+
+KA 10.3.3 established that resource levelling can extend the duration and produce a **resource-critical
+path** — a pace set by scarce crews and specialists rather than by logic. The worked levelling example
+showed the mechanism: two activities forced into sequence by a single specialist crew. When that happens, a
+professional watching the *logical* critical path is watching the wrong constraint; the path must be
+re-identified **after** levelling, not before.
+
+The **critical-chain** school of scheduling — covered here at awareness level only — starts from a related
+observation about safety. Estimators pad individual durations, and the padding is largely wasted: work
+expands to fill it, and early finishes are rarely passed on. Critical chain therefore schedules aggressive
+durations, identifies the longest resource-constrained chain, and **aggregates the stripped safety into
+buffers** — a **project buffer** at the end of the chain and **feeding buffers** where other chains join it.
+Control is then exercised by watching **buffer burn**: the rate at which the buffer is consumed relative to
+the chain's progress. The full method is a distinct discipline with its own behavioural practices; this book
+neither teaches it end-to-end nor endorses it wholesale, and the examination expects awareness, not
+application.
+
+What transfers cleanly into classical practice is worth having. First, the recognition that resources can set
+the pace — the resource-critical path of KA 10.3.3 taken seriously. Second, **buffer-style contingency on
+the critical path**: the commit-P80/manage-P50 posture of KA 10.3.4 is exactly an aggregated buffer — the
+gap between the internal target and the external commitment, held at the end of the schedule, owned and
+visible rather than smeared invisibly across activities. Third, **managing the burn**: schedule contingency
+consumed faster than progress is earned is an early warning in its own right — the schedule analogue of
+contingency drawdown against realised risk in cost (Domain 12, KA 12.3).
+
+### Advanced 10.A.3 — Calendars, lags and manipulation
+
+KA 10.1.3 warned that hidden lags are a common way schedules are quietly manipulated; this topic covers the
+mechanics and the audit. The starting point is uncomfortable: a Gantt view looks identical whether its dates
+come from sound logic or from steering, and two instruments do most of the steering.
+
+**Lags.** An FS + 15 lag is invisible on the bar chart yet injects fifteen days that no activity owns — no
+resource, no progress measurement, no scrutiny. Stretching or shrinking lags to land a milestone leaves the
+logic *looking* untouched; a lead (a negative lag) can silently overlap work that physically cannot overlap.
+
+**Calendars.** Activities can sit on different calendars (five-day, seven-day, shift-based), and moving an
+activity to a more generous calendar shortens its elapsed time with no visible change to duration or logic.
+Worse, conventions differ on which calendar a *lag* follows, so the same lag can represent different elapsed
+times in different parts of the same schedule. Calendar effects do not show on a printed bar chart at all.
+
+**The audit** is generic and threshold-based. Expose **every lag above an agreed threshold** and require a
+written justification in physical terms (curing, mobilisation); anything that cannot be justified is
+converted into a real activity that is resourced and progressed. **Justify every constraint** or remove it.
+**Reconcile calendars**: list every calendar in use, confirm each assignment is deliberate, and confirm the
+lag-calendar convention once, in writing.
+
+Why the effort is worth it: a **clean-logic schedule is a governance artefact**, not a technical nicety.
+Delay analysis and extension-of-time positions (Domain 7), the P-level commitment (KA 10.3.4) and every
+progressed forecast (KA 10.4) all presume a network that recalculates honestly. A manipulated schedule does
+not merely mislead the team — it defrauds every downstream decision made on its dates.
+
+### Advanced 10.A.4 — Merge bias
+
+The forward pass takes the **latest** arrival at every merge point — `ES = max(EF of predecessors)`, the
+pivotal calculation at activity E in this domain's case study. Deterministically that is correct; under
+uncertainty it makes the deterministic date **optimistic**, an effect known as **merge bias**.
+
+A compact illustration shows why. Two independent parallel paths converge at a milestone, and each path is
+**50 % likely** to finish by day 20. The milestone is achieved by day 20 only if **both** paths arrive by
+day 20: `0.5 × 0.5 = 0.25` — a **25 %** chance, even though either path alone is a coin toss. Checked from
+the other side: the milestone is late if *either* path is late, and `1 − 0.25 = 0.75` — a 75 % chance of
+missing day 20. With four such paths converging, `0.5⁴ = 0.0625` — about **6 %**. Each additional merging
+path multiplies the probabilities together, so uncertainty **accumulates at merges**: the more parallel the
+network, the further the deterministic date drifts from the probable one, *even when every individual path's
+estimate is unbiased*.
+
+This is a structural blind spot of deterministic CPM, not an estimating error, and it is a core part of the
+case for **Monte Carlo schedule-risk analysis** (KA 10.3.4): simulation samples all paths together, so merge
+bias emerges naturally in the completion distribution rather than needing a separate correction. The case
+study showed the effect in miniature — twin 24-day critical paths returned P50 = 24 but P80 = 26, because
+the finish is the *later* of two uncertain chains. The practical instinct to build: look for heavily merged
+nodes — systems testing, commissioning, handover, where many trades converge — and treat a schedule with
+large merges near its end as a candidate for simulation even when a single-chain schedule of the same length
+might not warrant it.
+
+---
+
 ## Case study — Domain 10: scheduling an airport terminal fit-out (aviation)
 
 ### Background
