@@ -564,6 +564,118 @@ failure as routine; C and D are recognition and allocation issues, not uncontrol
 
 ---
 
+## Advanced topics — Domain 5
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 5.A.1 — Activity-based costing at a working level
+
+**The principle.** Blanket absorption (5.1.3) spreads *all* overhead on one base — defensible when overhead
+is genuinely driven by that base, distorting when it is not (5.1.2). **Activity-based costing (ABC)** splits
+overhead into **cost pools** (procurement, inspection, materials handling), each absorbed on its own **cost
+driver** (purchase orders raised, inspections performed) — allocation follows *cause*, pool by pool.
+
+**Worked example 5.A.1 — blanket rate versus ABC.**
+
+1. **Setup.** Overhead **USD 400,000**; blanket base **20,000 labour hours**. Under ABC the same overhead
+   splits into a **procurement pool USD 240,000** (driver: **1,200 purchase orders**) and an **inspection
+   pool USD 160,000** (driver: **800 inspections**). Two jobs each use **1,000 labour hours**; job P raises
+   **20 POs** and **10 inspections**; job Q raises **100 POs** and **70 inspections**.
+2. **Formulae.** `Blanket OAR = overhead / hours`; `pool rate = pool / driver volume`; `absorbed = Σ rate ×
+   the job's driver usage`.
+3. **Substitution.** Blanket: `400,000 / 20,000 = USD 20/hour` → each job absorbs `20 × 1,000 = 20,000`.
+   ABC: procurement `240,000 / 1,200 = USD 200/PO`; inspection `160,000 / 800 = USD 200/inspection`. Job P:
+   `20 × 200 + 10 × 200 = 6,000`. Job Q: `100 × 200 + 70 × 200 = 34,000`.
+4. **Result.** Blanket loads **20,000 on each**; ABC loads **6,000 on P and 34,000 on Q** — the blanket rate
+   over-costs P and under-costs Q by USD 14,000 each.
+5. **Interpretation.** Identical labour hours, radically different overhead *consumption*. Every unit cost,
+   estimate and variance built on the blanket figure inherits the distortion (5.1.2).
+
+**When ABC pays — and when it doesn't.** ABC earns its keep where overhead is large relative to direct
+cost, jobs consume support activities very unevenly, and the resulting unit costs feed pricing, estimating
+norms (3.2.2) or make-or-buy decisions. It does *not* pay where overhead is small or homogeneous: the pools
+and driver counts are themselves an overhead, and a precise allocation of an immaterial number is effort
+without a decision attached. The professional test is the one this book applies everywhere: does the extra
+precision change a decision?
+
+### Advanced 5.A.2 — Commitment accounting edge cases
+
+**The principle.** The commitment state (5.2.1) is simple for a one-off purchase order; real procurement is
+messier, and each edge case has a right answer.
+
+**Frameworks and blanket POs.** A framework agreement (or blanket purchase order) sets terms and a ceiling —
+say USD 5,000,000 — but binds the organisation to nothing until a **call-off** is placed. The commitment is
+recognised **at call-off, not at framework signature**: call-offs to date of USD 1,200,000 mean a commitment
+of 1,200,000, not 5,000,000. Recognising the ceiling would swamp the commitment report with spend that may
+never occur; recognising nothing until invoice reproduces the invoice-only illusion the cycle exists to
+prevent.
+
+**Part-received orders.** As deliveries arrive, cost migrates *along* the states: on a USD 300,000 purchase
+order with USD 180,000 received (now sitting in actuals and accruals), the **open commitment** is `300,000 −
+180,000 = 120,000` (the formula of 5.2.2b). Reporting the full 300,000 as still open double-counts the
+received portion against the accrual.
+
+**Retention.** Retention withheld from a subcontractor — say 5 % of USD 180,000 certified, USD 9,000 — is a
+**cash** matter, not a cost or commitment matter: the work is received, so the full 180,000 belongs in
+cost-to-date, and the commitment reduces by the full amount. Netting retention out of cost understates `AC`
+exactly as a missed accrual does (5.2.2).
+
+**Keeping the report honest.** Open-commitment reports rot through **stale POs** — orders delivered or
+cancelled but never closed (the data-integrity failure of 5.2.4, MCQ 5.2-E). A standing cleanse — ageing
+review, no-movement flags, closure at final invoice — is part of the month-end cycle, because every stale
+commitment overstates the spend still to come and corrupts the forecast.
+
+### Advanced 5.A.3 — Cost transfers and journal discipline
+
+**The principle.** A **cost transfer** — a journal moving cost between control accounts or codes — is
+sometimes necessary: a genuine mis-code found at reconciliation (5.2.3), a scope re-allocation between
+accounts, a correction of a duplicate. But every transfer rewrites history in two places at once: the
+sending account's cost falls and the receiving account's rises, *after* the periods in which the trend,
+the variances and possibly the `CPI` of both accounts were reported. Done silently, a transfer breaks the
+three things this domain exists to protect: **trend** (last month's figure no longer reconciles to this
+month's opening position), **variance attribution** (Domain 4's decomposition was computed on cost that has
+since moved), and **audit** (the ledger says one thing, the controls history another).
+
+**The discipline.** The remedy is the same discipline the domain applies to baseline change: a **transfer
+log**, the direct analogue of the change log (5.4.3). Every transfer carries a **reason** (what was wrong
+and how it arose), an **approval** at a level proportionate to its size, the **two sides** stated (from
+account, to account, amount, period), and a reference that survives into both accounts' histories, so at any
+point each account can answer "how has my cost-to-date moved other than through postings, and why?" — the
+same auditable-movement test as the change log's "how has the baseline moved?". Transfers should be **rare
+and diminishing**: a high transfer volume is not diligence, it is a symptom that coding at source (Domain 1,
+KA 1.5) is failing, and the fix belongs upstream, not in ever-busier journals. Two red flags deserve
+standing scrutiny: transfers that consistently move cost *off* accounts under pressure just before
+month-end (a gaming pattern — see Advanced 4.A.3), and transfers between projects, which can shift cost
+across contracts with commercial and revenue-recognition consequences (Domain 2, KA 2.2) far beyond the
+controls report.
+
+### Advanced 5.A.4 — Integrating cost and schedule data structures
+
+**The principle.** Earned value (Domain 6) demands that `PV`, `EV` and `AC` describe **the same work**. That
+is a *data-structure* property, not a formula property: it holds when every schedule activity is **coded to
+a control account** (5.3.2) through the same WBS that codes the cost (Domain 1, KA 1.5), so cost and
+schedule aggregate to the CA level **by structure** — automatically, repeatably, auditable to source. The
+alternative found on many projects is a **mapping spreadsheet**: a hand-maintained table pairing schedule
+activities with cost codes. It works on day one and decays from day two — every schedule revision and every
+new cost code needs a manual edit nobody owns, and each miss silently mis-states `EV` against `AC` for two
+control accounts at once.
+
+**What breaks when the structures diverge.** When cost and schedule run on **different WBS versions** — the
+schedule re-organised in an update while the cost ledger kept the old coding — the damage is systematic, not
+random. Control-account performance measures compare an `EV` earned on one definition of the work with an
+`AC` collected on another, so `CPI` is wrong in *both* directions with no visible error. Variance analysis
+(Domain 4) attributes causes to accounts whose boundaries no longer match the work being measured. The
+forecast inherits all of it, because `EAC` scales a corrupted `CPI`. And the failure is invisible in each
+system separately — schedule and ledger each reconcile internally; only the *join* is broken.
+
+**The discipline.** Treat the shared structure as configuration under change control: one WBS, version-
+controlled, with schedule and cost updated **together** through the same authorised change (5.4.3) — never
+one system re-structured "to be tidied up in the other later". The integration point is the control account
+(5.3.3); protecting the structure that defines it is what makes everything Domain 6 computes trustworthy.
+
+---
+
 ## Case study — Domain 5: commitment blindness on a mining project
 
 ### Background

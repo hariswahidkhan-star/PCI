@@ -555,6 +555,119 @@ presented honestly); C and D do not address the scale manipulation at issue.
 
 ---
 
+## Advanced topics — Domain 4
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 4.A.1 — Mix and yield variances
+
+**The principle.** When an input is a **blend** — an aggregate mix, a multi-grade labour gang — the usage
+variance of 4.2.3 hides two different stories: the **composition** of the blend may have changed, and the
+**total input per unit of output** may have changed. Splitting them gives the **mix variance** (actual input
+in its actual mix versus the same total input in the *standard* mix, at standard prices) and the **yield
+variance** (actual total input, in standard mix, versus the standard input for the actual output, at the
+weighted standard price). Mix + yield = the usage variance — the decomposition discipline of 4.2.3 applied
+one level deeper.
+
+**Worked example 4.A.1 — mix and yield split.**
+
+1. **Setup.** Standard blend: **60 % material A at USD 10** and **40 % material B at USD 25** — weighted
+   standard price `(600 × 10 + 400 × 25) / 1,000 = USD 16/unit`. Standard yield: **1,000 input units → 800
+   output units** (1.25 input per output). Actual: input **1,100 units** (715 A + 385 B); output **840
+   units**.
+2. **Formulae.** `Mix = Σ (actual qty − standard-mix share of actual input) × standard price`;
+   `Yield = (actual total input − standard input for actual output) × weighted standard price`.
+3. **Substitution.** Standard mix of 1,100 = 660 A + 440 B. Mix: A `(715 − 660) × 10 = 550` adverse-side, B
+   `(385 − 440) × 25 = (1,375)` favourable-side → net **825 (F)**. Standard input for 840 output
+   `= 840 × 1.25 = 1,050`; yield `= (1,100 − 1,050) × 16 = 800` **(A)**.
+4. **Result.** Mix **825 (F)**, yield **800 (A)**, net usage **25 (F)**. Cross-check at standard prices:
+   actual input `715 × 10 + 385 × 25 = 16,775`; standard input for actual output `630 × 10 + 420 × 25 =
+   16,800`; `16,775 − 16,800 = (25)` → 25 (F). ✓
+5. **Interpretation.** The near-zero usage variance is two large, offsetting causes: the blend was cheapened
+   (more A, less B — favourable mix) *and* it took more total input per unit of output (adverse yield).
+   Cheapening a blend often *causes* the yield loss — read the pair together (4.2.5), because "saving" on
+   mix while losing on yield is a real and common false economy.
+
+### Advanced 4.A.2 — Planning versus operational variances
+
+**The principle.** A variance against a standard assumes the standard was *right*. When the environment
+moves — a market rate rise, a revised norm — part of the variance is a **planning variance** (the original
+standard was wrong, measured as revised standard versus original) and only the remainder is an **operational
+variance** (execution against a *realistic* benchmark, measured as actual versus revised standard). The
+benchmark is revised **before** the team is judged.
+
+**Worked example 4.A.2 — splitting a labour rate variance.**
+
+1. **Setup.** Original standard rate **USD 40/hour**; a market movement makes the realistic (revised)
+   standard **USD 44/hour**; actual rate paid **USD 45/hour** over **2,000 actual hours**.
+2. **Formulae.** `Planning = (revised standard − original standard) × actual hours`; `Operational = (actual −
+   revised standard) × actual hours`.
+3. **Substitution.** Planning `= (44 − 40) × 2,000 = 8,000` **(A)**; operational `= (45 − 44) × 2,000 =
+   2,000` **(A)**.
+4. **Result.** Total rate variance `= (45 − 40) × 2,000 = 10,000` **(A)** `= 8,000 + 2,000`. ✓
+5. **Interpretation.** Of the USD 10,000 adverse, USD 8,000 was uncontrollable at site level — the standard,
+   not the team, was wrong — and only USD 2,000 is genuinely operational.
+
+**The fairness and behavioural point.** Holding a team to an unattainable standard does not motivate — it
+destroys the credibility of the whole variance system, and gaming follows (4.1.1). Conversely, planning
+variances discipline the *estimators*: a persistent planning variance says the standards process needs
+fixing. One caution: revising a standard is re-baselining in miniature, so it needs the same authorisation
+and audit trail as any baseline change (Domain 5, KA 5.4.3) — otherwise "the standard was wrong" becomes the
+universal excuse.
+
+### Advanced 4.A.3 — KPI system design and Goodhart's law
+
+**The principle.** **Goodhart's law**: *when a measure becomes a target, it ceases to be a good measure*.
+The moment a KPI carries consequences — bonuses, RAG status, board attention — people optimise the
+**number**, and the number decouples from the reality it was chosen to reflect (the gameable-KPI failure
+mode of 4.1.1, now with a mechanism).
+
+**Gaming patterns in controls.** The recurring ones are worth naming. **Earned-value credit-chasing**:
+claiming progress on easy-to-measure, high-credit work while deferring the awkward remainder, so `EV` (and
+`SPI`/`CPI`, Domain 6) flatter the true position until the deferred work bites. **Deferring accruals to hit
+a month**: holding received-but-uninvoiced cost out of the period understates `AC` and flatters `CPI`
+(Domain 5, KA 5.2.2) — a cut-off manipulation dressed as timing. **Threshold-hugging**: managing a measure
+to sit just inside tolerance, so management by exception (4.1.3) never looks. **Trend-window selection**:
+starting the chart where the story looks best (4.4.2). None of these requires falsifying a number; each
+exploits the gap between the measure and the objective.
+
+**Countermeasures.** First, **paired indicators**: pair every gameable measure with the one it is most
+likely gamed against — cost with quality/rework, schedule progress with remaining-work trend, accrual
+completeness with goods-received records — so improving one at the other's expense is visible. Second,
+**audit the measure**, not just the result: periodic independent checks that EV credit matches physical
+progress and accruals match receipts. Third, **trend over snapshot**: a gamed measure usually reverts, and
+the trend line shows the sawtooth a single month hides. Fourth, **refresh the set**: retire indicators once
+their gaming pattern matures. The professional posture is not cynicism but design: assume Goodhart, and
+build the KPI system so gaming is harder than performing.
+
+### Advanced 4.A.4 — Portfolio reporting cadence
+
+**The principle.** Across a portfolio, reporting is a **pyramid**: weekly at the working level, monthly at
+project boards, quarterly (or periodic) at portfolio/executive level (4.3.4). The pyramid only works when
+all three tiers draw on **one source of truth**, aggregated automatically through the coding structure
+(Domain 1, KA 1.5) — the same control-account postings rolling up from work package to project to portfolio
+without re-keying. Two dashboards that disagree are worse than one that is late: the meeting becomes a
+reconciliation, not a decision.
+
+**What each tier decides.** The **weekly** tier is action-focused: productivity, this week's exceptions,
+next week's lookahead — decisions about *doing the work*. The **monthly** tier is the project board:
+exceptions against tolerance, the forecast (`EAC`/`VAC`), change approvals, recovery plans — decisions about
+*steering the project* (4.3.5). The **quarterly/portfolio** tier is allocation and escalation: which
+projects get resources, reserves and attention; which tolerances or baselines need re-setting; what the
+aggregate exposure means for the business — decisions about *steering the portfolio*.
+
+**What each tier must not re-litigate.** The pyramid fails when tiers reach down. A project board that
+re-works the site team's action list is spending its scarce attention below its decision level — the inverse
+of management by exception (4.1.3). A portfolio review that re-opens a project's variance attribution is
+redoing analysis it should be *testing*: its proper questions are whether the forecast is credible, the
+tolerances still right, and the escalation honest. Equally, tiers must not re-argue what a lower tier
+properly decided within its delegated tolerance — that is what the tolerance *is* (4.1.1). Each tier reads
+the tier below by exception, adds its own decision, and passes only genuine escalations upward. The cadence
+pyramid is management by exception applied vertically.
+
+---
+
 ## Case study — Domain 4: turning a red month into a decision (healthcare)
 
 *This end-of-domain case integrates the whole of Domain 4 on a single month of a single control account:
