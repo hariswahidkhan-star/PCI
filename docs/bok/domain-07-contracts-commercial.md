@@ -657,6 +657,39 @@ this month — and what that says about the project.
    collecting — cash tied up in work done but not billed. The controls professional reads the direction and
    trend of this position as a commercial-and-cash health signal.
 
+**Balance-sheet geography.** A project throws three distinct balances onto the balance sheet, and each answers
+a different question. **Accrued (recognised) revenue** is what performance has *earned* under IFRS 15
+(Domain 2, KA 2.2); **invoiced revenue** is what the billing engine has *asked for* (7.4). They differ in
+timing on almost every project, and the difference lives in one of two places: where recognised revenue
+exceeds billing, a **contract asset** (commonly "unbilled" or "WIP") — a right to consideration still
+conditional on something other than the passage of time; where billing exceeds recognised revenue, a
+**contract liability** — cash or invoices ahead of performance. A **trade receivable** is different from both:
+it arises only when the right to payment becomes *unconditional* (typically on invoicing/certification) — so
+the project's cycle is performance → contract asset (unbilled) → invoice → receivable → cash. The controls
+consequences follow. DSO (Domain 11, Advanced 11.A.1) starts at the *invoice*, so value sitting unbilled is
+invisible to DSO — a project can show pristine DSO while months of earned value sit unbilled; the honest
+monitor pairs DSO with **days unbilled** (the age of the contract asset). And a growing contract asset is
+either a billing-discipline problem (fix the application cycle, 7.4.1) or an early sign that recognised
+revenue is running ahead of what the client will certify (the over-measurement risk of 7.5.2) — the two have
+opposite remedies, so the balance must be *aged* and *explained*, not just reported.
+
+**Worked example 7.5.2b — one contract, three balances.**
+
+1. **Setup.** At month-end, cumulative recognised revenue on a contract is **USD 1,000,000** (over-time, input
+   method). Cumulative applications invoiced and certified: **USD 800,000**, of which the client has paid
+   **USD 650,000**.
+2. **Formula.** `contract asset (unbilled) = recognised − invoiced`; `receivable = invoiced − collected`.
+3. **Substitution.** Contract asset `= 1,000,000 − 800,000 = 200,000`; receivable
+   `= 800,000 − 650,000 = 150,000`.
+4. **Result.** Balance sheet: **contract asset USD 200,000** + **trade receivable USD 150,000** — USD 350,000
+   of performance not yet turned into cash. (Had billing instead run to 1,150,000 against the same 1,000,000
+   recognised, the position would be a **contract liability of 150,000** — billing ahead of performance.)
+5. **Interpretation.** Three balances, three different questions: the contract asset asks "why haven't we
+   billed it?" (7.4.1) or "will the client certify it?" (7.5.2); the receivable asks "why haven't they paid?"
+   (Domain 11, KA 11.1); the contract liability asks "have we borrowed performance from next month?" — and
+   cash-flow forecasting (Domain 3, KA 3.5) must model all three, because each converts to cash on a
+   different clock.
+
 ### 7.5.3 The commercial-to-accounting loop
 
 **The synthesis.** This KA closes the loop that runs through the whole book: **scope** (WBS/BoQ) → **cost**
