@@ -632,6 +632,145 @@ Agile values working product over *comprehensive* documentation, not the absence
 
 ---
 
+## Case study — Domain 9: forecasting a telecom software release two ways
+
+*This case study integrates the domain end-to-end: velocity and burnup forecasting (KAs 9.3.3–9.3.4), the
+inverted iron triangle (KA 9.3.5), run-rate funding (KA 9.5.1), AgileEVM (KA 9.5.3) and hybrid stage-gate
+governance (KA 9.6). Its central lesson is that two legitimate forecasting methods, applied to the same data,
+give different answers — and that the controls professional's job is to reconcile them, not to hide the
+disagreement.*
+
+### Background
+
+A telecom operator is replacing its operations-support software — the systems that provision customer
+services, monitor the network and manage faults. The replacement is delivered as an **agile release inside a
+stage-gated transformation programme**: the programme as a whole passes predictive funding and assurance
+gates, while the software itself is built by a Scrum team in two-week Sprints — **hybrid governance** exactly
+as described in KA 9.6. The stage-gate board thinks in milestones and budgets; the team thinks in Sprints and
+story points; the controls professional sits between the two and must make each legible to the other
+(KA 9.6.2).
+
+The release was baselined as follows:
+
+| Parameter | Value |
+|---|---|
+| Release budget `BAC` | USD 1,200,000 |
+| Planned scope | 400 story points |
+| Planned duration | 10 two-week Sprints |
+| Implied budget per point | USD 3,000 (`= 1,200,000 / 400`) |
+| Funded capacity per Sprint | USD 120,000 (`= 1,200,000 / 10`) |
+
+At the end of **Sprint 6** — the data date, and shortly before a programme gate — the status is: **210 story
+points** complete to the Definition of Done; actual cost **`AC` = USD 780,000**; and the release plan expected
+**240 points** done by now. The board wants a cost and completion forecast. The controls professional prepares
+it **two ways** — once with AgileEVM (KA 9.5.3) and once from velocity and run-rate (KAs 9.3.3 and 9.5.1) —
+knowing the methods encode different assumptions and will not agree exactly.
+
+### Forecast 1 — AgileEVM (KA 9.5.3)
+
+1. **Setup.** `BAC` = USD 1,200,000; total planned scope 400 points; at the end of Sprint 6, 210 points are
+   done, `AC` = USD 780,000, and 240 points were planned to be done. Scope has not been rebaselined, so the
+   AgileEVM precondition — a defined release scope and budget — holds (9.5.3's caveat).
+2. **Formula.** `EV = (points done / total points) × BAC`; `PV = (points planned / total points) × BAC`;
+   `CPI = EV / AC`; `SPI = EV / PV`; `EAC = BAC / CPI`.
+3. **Substitution.** `EV = (210/400) × 1,200,000 = 630,000`; `PV = (240/400) × 1,200,000 = 720,000`;
+   `CPI = 630,000 / 780,000 = 0.8077 → 0.81`; `SPI = 630,000 / 720,000 = 0.875 → 0.88`;
+   `EAC = BAC / CPI = 1,200,000 / 0.8077 ≈ 1,485,700`.
+4. **Result.** The release is **over cost** (`CPI` 0.81 — each dollar spent earns about 81 cents of planned
+   value) and **behind plan** (`SPI` 0.88). AgileEVM projects an `EAC` of **≈ USD 1.49m**, roughly
+   **USD 285,700** over the release budget.
+5. **Interpretation.** `EAC = BAC/CPI` assumes the cost efficiency to date persists to completion — the same
+   assumption as the standard Domain 6 method it reuses. It is equivalent to
+   `AC + (BAC − EV)/CPI = 780,000 + 570,000/0.8077 ≈ 1,485,700`: the remaining 190 points of value are bought
+   at the demonstrated cost per value earned. The standing AgileEVM caveat applies: these metrics hold only
+   against the defined 400-point scope and USD 1,200,000 `BAC`; if the board later flexes scope, the release
+   must be rebaselined transparently and the metrics restated (9.5.3).
+
+### Forecast 2 — velocity and run-rate (KAs 9.3.3, 9.5.1)
+
+1. **Setup.** The same data, read the agile-native way: 210 points completed in 6 Sprints; 400 − 210 = 190
+   points remain; USD 780,000 spent in 6 Sprints against a funded capacity of USD 120,000 per Sprint.
+2. **Formula.** `Velocity = points completed / Sprints elapsed`; `Sprints remaining = remaining points /
+   velocity` (rounded **up** — a partial Sprint is paid in full); `cost per Sprint = AC / Sprints elapsed`;
+   `ETC = Sprints remaining × cost per Sprint`; `EAC = AC + ETC`.
+3. **Substitution.** `Velocity = 210/6 = 35` points/Sprint; `Sprints remaining = 190/35 = 5.4 → ~6` more
+   Sprints, so the release finishes around **Sprint 12** against the planned 10. `Cost per Sprint =
+   780,000/6 = 130,000` — above the USD 120,000 funded capacity, because the team was enlarged early in the
+   release. `ETC = 6 × 130,000 = 780,000`; `EAC = 780,000 + 780,000 = 1,560,000`.
+4. **Result.** The run-rate view projects an `EAC` of **USD 1,560,000** — **USD 360,000** over budget — and a
+   **two-Sprint (roughly one-month) overrun**, finishing Sprint 12 instead of Sprint 10.
+5. **Interpretation.** This is capacity funding read forward (9.5.1): the team costs USD 130,000 per two-week
+   Sprint whether it completes 35 points or 20, so the honest `ETC` is whole Sprints at the actual burn rate,
+   not a fraction. Rounding 5.4 up to 6 is deliberate — the operator cannot buy 0.4 of a Sprint. Note also the
+   two distinct signals inside this forecast: the *schedule* slip comes from velocity (35 achieved vs the 40
+   points/Sprint the plan implied), while the *cost* pressure comes from the run-rate (130,000 vs 120,000
+   funded). They compound.
+
+### Reconciling the two forecasts
+
+| View | Method | `EAC` | Finish | Key assumption |
+|---|---|---|---|---|
+| Forecast 1 | AgileEVM `EAC = BAC/CPI` | ≈ USD 1,485,700 | Behind plan (`SPI` 0.88) | Cost per value earned persists; scope/`BAC` fixed |
+| Forecast 2 | Velocity + run-rate | USD 1,560,000 | Sprint 12 (~1 month late) | Whole-Sprint burn at USD 130,000; Sprints rounded up |
+
+The two methods **bracket** the likely outcome at **≈ USD 1.49m–1.56m**, and the gap between them is
+information, not error. AgileEVM extrapolates a *continuous* quantity — cost per unit of value earned — and so
+implicitly allows the release to stop the moment the 400th point is done, mid-Sprint if need be. The run-rate
+view extrapolates *whole-Sprint* burn with the Sprint count rounded up, recognising that the team is paid for
+full Sprints: the tail end of Sprint 12 is funded even if the last points land early in it. That granularity —
+partial Sprints are paid in full — is a real cash effect that AgileEVM's smooth arithmetic misses, which is
+why the run-rate figure sits above the AgileEVM figure here.
+
+The professional discipline is the one Domain 6 teaches for the `EAC` family (KA 6.3.3): **select methods
+consciously, state each method's assumption, and report the range** rather than a falsely precise single
+number. The report to the gate therefore reads: "forecast at completion **USD 1.49m–1.56m**, method
+assumptions attached", and the range feeds the programme's rolling forecast (Domain 3) so that the corporate
+cost picture moves with the release rather than discovering the overrun at the end.
+
+### The governance conversation
+
+At the gate (KA 9.6.2), the board hears the adaptive work translated into the language it governs by:
+
+- **Value delivered to date:** 210 of 400 planned points — **52.5 %** of the release scope — is done to the
+  Definition of Done and demonstrable as working software.
+- **Forecast:** **USD 1.49m–1.56m** against the **USD 1.2m** release budget; completion moving from Sprint 10
+  to **~Sprint 12**.
+- **Decision options,** priced in scope terms because this is an inverted-triangle delivery (9.3.5) — time and
+  cost are the fixed quantities, so the honest lever is scope:
+
+| Option | What it means | Cost consequence |
+|---|---|---|
+| **(a) Fund the overrun** | Deliver all 400 points by ~Sprint 12 | **+USD 0.29m–0.36m** over `BAC` (`1,485,700 − 1,200,000 ≈ 285,700`; `1,560,000 − 1,200,000 = 360,000`) |
+| **(b) Hold the budget and descope** | Remaining funds `1,200,000 − 780,000 = 420,000` buy **~3.5 Sprints** at the USD 120,000 funded capacity; at velocity 35 that is **~120 points** of the 190-point backlog | Within `BAC`; **~70 points dropped** |
+| **(c) Stop at a viable increment** | Close the release on the working software already delivered | No further spend beyond an orderly close-out |
+
+Under option (b), *which* ~120 points get built is the Product Owner's call, made by re-ordering the backlog —
+MoSCoW's Must/Should before Could, with the ~70 dropped points explicitly recorded as Won't-haves for this
+release (9.3.2). That is the inverted triangle working as designed: scope, not time or cost, absorbs the
+variance, and the least valuable items drop first. (The board should also hear the sharper sub-caveat: at the
+*actual* USD 130,000 burn rather than the funded 120,000, the remaining USD 420,000 buys nearer 3.2 Sprints —
+option (b)'s ~120 points is the optimistic edge, which is exactly why the assumption is stated.)
+
+The controls professional's job at this table is to make the trade-offs **explicit and priced — not to pick
+for the board**. The board owns the value judgement; the professional owns the integrity of the numbers under
+each option, and the audit trail of what was decided and why (9.6.4).
+
+### What the credential expects
+
+A candidate should be able to run this case unaided, because it exercises the domain's core knowledge areas in
+one pass: computing **velocity and a Sprints-remaining forecast** and reading it as a burnup projection
+(9.3.3–9.3.4); translating that into money through **run-rate capacity funding** (9.5.1); running **AgileEVM**
+with the Domain 6 symbols unchanged and its rebaselining caveat stated (9.5.3); reporting both through
+**hybrid stage-gate governance** so adaptive work is legible to a milestone-driven board (9.6.1–9.6.2); and
+framing the decision options through the **inverted iron triangle**, with scope as the honest lever and the
+Product Owner prioritising what remains (9.3.5, 9.3.2). The examinable habits are the quiet ones: rounding
+Sprints **up** because capacity is bought whole; reporting a **range** with each method's assumption attached
+rather than a single confident number; and keeping `EV`, `AC` and the scope baseline transparent so any later
+rebaselining is visible. AI-assisted sprint-forecast models can generate this range from Sprint history in
+seconds — but the professional owns the assumptions behind it (Domain 13, KA 13.5.6).
+
+---
+
 ## Domain 9 summary
 
 Adaptive delivery rests on an **empirical mindset** — transparency, inspection, adaptation — and inverts the
