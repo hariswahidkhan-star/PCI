@@ -871,6 +871,89 @@ not an admission to defer.
 
 ---
 
+## Calculation exercises — Domain 6
+
+Work each exercise before reading its solution; every step uses only this domain's methods.
+
+**Exercise 6.1** — A project has four work packages, each earning under a rule fixed in advance. Package A
+(budget **USD 200,000**, 0/100) is complete. Package B (budget **USD 300,000**, 50/50) has started but not
+finished. Package C (budget **USD 400,000**, units completed) has done **450 of 600 units**. Package D
+(budget **USD 100,000**, weighted milestones) has reached its 30 % milestone. Aggregated `PV` is **USD
+800,000** and aggregated `AC` is **USD 850,000**. Compute each package's `EV`, the project `EV`, and the
+project `CPI` and `SPI`.
+
+**Solution 6.1.**
+1. A (0/100, complete): `EV` = **200,000**.
+2. B (50/50, started): `EV = 0.50 × 300,000 = ` **150,000**.
+3. C (units): `EV = (450 / 600) × 400,000 = 0.75 × 400,000 = ` **300,000**.
+4. D (milestones): `EV = 0.30 × 100,000 = ` **30,000**.
+5. Project `EV = 200,000 + 150,000 + 300,000 + 30,000 = ` **USD 680,000**.
+6. `CPI = EV / AC = 680,000 / 850,000 = ` **0.80**; `SPI = EV / PV = 680,000 / 800,000 = ` **0.85** — a
+   rollup of package-level earning, over cost and behind schedule (6.1.2b).
+
+**Exercise 6.2** — A programme has `BAC` = **USD 5,000,000**. At the data date, `EV` = **2,000,000**, `AC` =
+**2,500,000**, `PV` = **2,200,000**. Compute `CV`, `SV`, `CPI`, `SPI` and the `TCPI` to meet the `BAC`, and
+judge whether the `BAC` remains credible.
+
+**Solution 6.2.**
+1. `CV = EV − AC = 2,000,000 − 2,500,000 = ` **(USD 500,000)** (over cost).
+2. `SV = EV − PV = 2,000,000 − 2,200,000 = ` **(USD 200,000)** (behind schedule).
+3. `CPI = EV / AC = 2,000,000 / 2,500,000 = ` **0.80**; `SPI = EV / PV = 2,000,000 / 2,200,000 = ` **0.91**.
+4. `TCPI (to BAC) = (BAC − EV) / (BAC − AC) = (5,000,000 − 2,000,000) / (5,000,000 − 2,500,000) =
+   3,000,000 / 2,500,000 = ` **1.20**.
+5. Judgement: the remaining work would have to run at **1.20** against **0.80** achieved — a 50 %
+   efficiency swing, sustained. Absent a specific, credible intervention, the `BAC` is no longer credible
+   and the honest position is an `EAC > BAC` (6.2.3).
+
+**Exercise 6.3** — A project has `BAC` = **USD 3,000,000**; at the data date `EV` = **1,200,000**, `AC` =
+**1,500,000**, `PV` = **1,250,000**. The remaining work is dominated by a commissioning phase quite unlike
+the civils performed to date, and a fresh bottom-up estimate of that remainder gives `ETC` = **USD
+2,100,000**. Compute the three formula EACs and the bottom-up `EAC`, select one, defend the selection, and
+state `VAC` on the selected forecast.
+
+**Solution 6.3.**
+1. `CPI = 1,200,000 / 1,500,000 = ` **0.80**; `SPI = 1,200,000 / 1,250,000 = ` **0.96**.
+2. (a) `EAC = AC + (BAC − EV) = 1,500,000 + 1,800,000 = ` **USD 3,300,000**.
+3. (b) `EAC = BAC / CPI = 3,000,000 / 0.80 = ` **USD 3,750,000**.
+4. (c) `EAC = AC + (BAC − EV) / (CPI × SPI) = 1,500,000 + 1,800,000 / 0.768 = 1,500,000 + 2,343,750 = `
+   **USD 3,843,750**.
+5. (d) `EAC = AC + ETC = 1,500,000 + 2,100,000 = ` **USD 3,600,000**.
+6. Select **(d)**: performance to date is not representative of a commissioning-dominated remainder, so the
+   formula methods extrapolate the wrong work (6.3.3); the re-estimate happens to sit inside the fan
+   (3,300,000–3,843,750). `VAC = BAC − EAC = 3,000,000 − 3,600,000 = ` **(USD 600,000)**.
+
+**Exercise 6.4** — A project's baseline shows cumulative `PV` by month (USD 000): **150, 340, 560, 800,
+1,000, 1,150** for Months 1–6. At the end of **Month 5** (`AT` = 5), measurement gives `EV` = **USD
+620,000**. Compute the earned schedule `ES`, then `SV(t)` and `SPI(t)`, and compare `SPI(t)` with the
+cost-based `SPI`.
+
+**Solution 6.4.**
+1. Bracket `EV` = 620,000 on the baseline: cumulative `PV` is 560,000 at Month 3 and 800,000 at Month 4, so
+   `ES` lies between Months 3 and 4.
+2. Interpolate: `ES = 3 + (620,000 − 560,000) / (800,000 − 560,000) = 3 + 60,000 / 240,000 = 3 + 0.25 = `
+   **3.25 months**.
+3. `SV(t) = ES − AT = 3.25 − 5 = ` **(1.75) months** — a month and three quarters behind in time terms.
+4. `SPI(t) = ES / AT = 3.25 / 5 = ` **0.65**.
+5. Cost-based `SPI = EV / PV = 620,000 / 1,000,000 = ` **0.62** — a similar signal today, but only `SPI(t)`
+   will keep reporting the lateness meaningfully as the project completes (6.4.3).
+
+**Exercise 6.5** — A project with `BAC` = **USD 4,000,000** reports two successive periods. **Month 4:**
+`EV` = 900,000, `AC` = 1,000,000, `PV` = 960,000. **Month 5:** `EV` = 1,360,000, `AC` = 1,600,000, `PV` =
+1,700,000. Compute `CPI` and `SPI` for both periods, state the trend, recompute `EAC = BAC / CPI` at each
+data date, and state the movement in the forecast and the Month 5 `VAC`.
+
+**Solution 6.5.**
+1. Month 4: `CPI = 900,000 / 1,000,000 = ` **0.90**; `SPI = 900,000 / 960,000 = ` **0.94** (0.9375).
+2. Month 5: `CPI = 1,360,000 / 1,600,000 = ` **0.85**; `SPI = 1,360,000 / 1,700,000 = ` **0.80**.
+3. Trend: both indices are **deteriorating** (`CPI` 0.90 → 0.85; `SPI` 0.94 → 0.80) — two consecutive
+   readings moving the same way, a stronger warning than either level alone (6.4.5).
+4. Month 4 forecast: `EAC = 4,000,000 / 0.90 ≈ ` **USD 4,444,444**.
+5. Month 5 forecast: `EAC = 4,000,000 / 0.85 ≈ ` **USD 4,705,882** — a rise of **≈ USD 261,438** in one
+   period. `VAC = 4,000,000 − 4,705,882 = ` **(USD 705,882)**; the trend, not the level, is the escalation
+   trigger.
+
+---
+
 ## Domain 6 summary
 
 Earned value integrates three measures in one currency — **`PV`** (planned), **`EV`** (performed, valued at

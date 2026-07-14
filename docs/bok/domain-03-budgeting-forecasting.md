@@ -952,6 +952,93 @@ in the same review as the cost position.
 
 ---
 
+## Calculation exercises — Domain 3
+
+Work each exercise before reading its solution; every step uses only this domain's methods.
+
+**Exercise 3.1** — A pipeline project's control-account budgets total **USD 8,400,000**. A Monte Carlo run
+over the risk register supports a **contingency reserve of USD 600,000**, and the sponsor separately holds a
+**management reserve of USD 450,000**. State the `BAC` and the total authorised budget. At Month 7 an
+unforeseen regulatory requirement is approved through change control and the sponsor releases **USD 200,000**
+of management reserve into the baseline. State the new `BAC`, the remaining management reserve, and the new
+total authorised budget.
+
+**Solution 3.1.**
+1. `BAC = control-account budgets + contingency = 8,400,000 + 600,000 = ` **USD 9,000,000**.
+2. `Total budget = BAC + management reserve = 9,000,000 + 450,000 = ` **USD 9,450,000**.
+3. The release is a baseline *change*, not a variance: new `BAC = 9,000,000 + 200,000 = ` **USD 9,200,000**.
+4. Remaining management reserve `= 450,000 − 200,000 = ` **USD 250,000**.
+5. New total budget `= 9,200,000 + 250,000 = ` **USD 9,450,000** — unchanged. The release moves funds from
+   outside to inside the baseline; it creates no new money. Every `CPI`, `EAC` and `VAC` from Month 7 onward
+   is measured against 9,200,000, never against 9,450,000 (3.1.4).
+
+**Exercise 3.2** — Estimate a warehouse of **8,000 m²** two ways. A parametric rate of **USD 1,500/m²** is
+available from recent regional data. A similar completed warehouse of **6,400 m²** cost **USD 10,240,000**.
+Compute the parametric and the analogous estimates. The team adopts the parametric figure and, given the
+maturity of definition, classifies it as **Class 3 (−15 % / +20 %)**. State the accuracy range around the
+adopted figure.
+
+**Solution 3.2.**
+1. Parametric: `estimate = parameter × rate = 8,000 × 1,500 = ` **USD 12,000,000**.
+2. Analogous: `estimate = past cost × (this driver / past driver) = 10,240,000 × (8,000 / 6,400) =
+   10,240,000 × 1.25 = ` **USD 12,800,000**.
+3. Range on the adopted parametric figure: low `= 12,000,000 × 0.85 = ` **USD 10,200,000**; high
+   `= 12,000,000 × 1.20 = ` **USD 14,400,000**.
+4. Reported result: **USD 12,000,000, Class 3, −15 % / +20 % → USD 10,200,000 to USD 14,400,000**. The
+   analogous figure of 12,800,000 sits inside that band — convergence that increases confidence (3.2.2) —
+   but the number is quoted *with its class and range*, never as a bare point (3.2.1).
+
+**Exercise 3.3** — A control account with `BAC` = **USD 1,200,000** runs over six months to an S-shaped
+monthly plan (USD 000): **100, 200, 300, 300, 200, 100**. Verify the phasing against the `BAC`, build the
+cumulative `PV` curve, read `PV` at a data date at the end of **Month 4**, state what percentage of the
+`BAC` is planned to be accomplished by then, and recover the planned spend for Months 3 and 4 together from
+the cumulative curve.
+
+**Solution 3.3.**
+1. Check: `100 + 200 + 300 + 300 + 200 + 100 = 1,200` (USD 000) = `BAC`. ✓
+2. Cumulative `PV` (USD 000): **100, 300, 600, 900, 1,100, 1,200**.
+3. At the end of Month 4, `PV` = **USD 900,000**.
+4. Share of `BAC`: `900,000 / 1,200,000 = ` **75 %** planned to be accomplished.
+5. Months 3–4 together, by differencing the cumulative curve: `900 − 300 = ` **USD 600,000**. The cumulative
+   row *is* the Planned Value S-curve — the baseline `EV` and `AC` will be measured against (3.3.3).
+
+**Exercise 3.4** — A project has `BAC` = **USD 2,400,000**. At the data date the status is `PV` =
+**1,200,000**, `EV` = **960,000**, `AC` = **1,000,000**. Variance analysis traces the overrun to a systemic
+productivity shortfall expected to persist. Compute `CPI` and `SPI`, then all three formula EACs, choose the
+method matching the cause, and state `VAC` on the chosen method.
+
+**Solution 3.4.**
+1. `CPI = EV / AC = 960,000 / 1,000,000 = ` **0.96**; `SPI = EV / PV = 960,000 / 1,200,000 = ` **0.80**.
+2. (a) Atypical: `EAC = AC + (BAC − EV) = 1,000,000 + 1,440,000 = ` **USD 2,440,000**.
+3. (b) Typical: `EAC = BAC / CPI = 2,400,000 / 0.96 = ` **USD 2,500,000**.
+4. (c) Compounding: `EAC = AC + (BAC − EV) / (CPI × SPI) = 1,000,000 + 1,440,000 / 0.768 = 1,000,000 +
+   1,875,000 = ` **USD 2,875,000**.
+5. A persisting cost cause fits method (b): `EAC` = **USD 2,500,000**; `VAC = BAC − EAC = 2,400,000 −
+   2,500,000 = ` **(USD 100,000)** — a projected overrun, chosen for the *cause*, not by habit (3.4.2).
+
+**Exercise 3.5** — A five-month package pays out costs in the month incurred (USD 000): **100, 200, 250,
+150, 100**. It bills each month at **cost + 20 % margin**, collected **one month in arrears**, and the
+client withholds **10 % retention** on every receipt, released only after this six-month window. Build the
+monthly net and cumulative cash positions for Months 1–6, identify the peak funding requirement, state the
+closing cash position, and reconcile it with the margin.
+
+**Solution 3.5.**
+1. Billings (cost × 1.20, USD 000): 120, 240, 300, 180, 120 = **960** in total against costs of **800**.
+2. Receipts land a month later, net of 10 % retention: gross {120, 240, 300, 180, 120} in Months 2–6, less
+   retention {12, 24, 30, 18, 12} → net **{108, 216, 270, 162, 108}**; total withheld = **96**.
+3. Monthly cash (USD 000):
+
+   | Month | 1 | 2 | 3 | 4 | 5 | 6 |
+   |---|---:|---:|---:|---:|---:|---:|
+   | Net cash in month | (100) | (92) | (34) | 120 | 62 | 108 |
+   | **Cumulative cash** | **(100)** | **(192)** | **(226)** | **(106)** | **(44)** | **64** |
+
+4. Peak funding requirement = **(USD 226,000)** at the end of Month 3.
+5. Closing position = **USD 64,000**. Reconciliation: margin `= 960 − 800 = 160`; cash 64 + retention
+   outstanding 96 `= 160`. ✓ The other 96,000 of profit is locked in retention until release (3.5.2c).
+
+---
+
 ## Domain 3 summary
 
 Budgeting turns a plan into an authorised, time-phased **cost baseline** whose total is the `BAC`, with two
