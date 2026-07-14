@@ -1220,6 +1220,38 @@ query; if they do not, year-end becomes a manual trawl through contract files. T
 order book the business already reports internally (2.5.2). Where the statutory disclosure and the
 management number cannot be tied together, one of them is wrong.
 
+### Advanced 2.A.5 — The significant financing component
+
+**The principle.** Step 3 (2.2.4) adjusts the transaction price where the timing of payment and the
+transfer of goods or services diverge by more than about a year: the contract then contains, in substance,
+a **loan** — *from* the customer when payment runs ahead of transfer (the advance in worked example
+2.2.4c), or *to* the customer when payment is deferred long after it. The **significant financing
+component** adjustment makes revenue reflect the **cash selling price** at the point of transfer, with the
+difference unwinding as **interest** — expense on an advance, income on a deferral — over the gap. A
+**practical expedient** spares the arithmetic where the gap between transfer and payment is twelve months
+or less, which is why routinely progress-billed work rarely adjusts; long deferrals do.
+
+**Worked example 2.A.5 — a two-year deferral (financing the customer).**
+
+1. **Setup.** A contractor transfers a completed performance obligation now; the **USD 1,000,000** payment
+   falls due **two years** later. The applicable rate is **6 %**.
+2. **Formula.** Revenue at transfer is the **present value** of the deferred payment: `Revenue = payment /
+   (1 + r)^n`; the receivable then **accretes** back to face value through interest income.
+3. **Substitution.** `1,000,000 / 1.06² = 1,000,000 / 1.1236 ≈ 889,996`.
+4. **Result.** Revenue at transfer is **USD 889,996**. Year-1 interest income `889,996 × 6 % ≈ 53,400`
+   takes the receivable to `≈ 943,396`; year-2 interest `943,396 × 6 % ≈ 56,604` takes it to **USD
+   1,000,000** at collection.
+5. **Interpretation.** Total income is still 1,000,000 — but **889,996 is revenue and 110,004 is
+   interest**. A margin analysis that measures project profitability off the full 1,000,000 overstates the
+   project margin by the financing element the contractor gave away.
+
+**The controls angle.** The judgement that matters most in project work is the one that goes the *other*
+way: **retentions** (Domain 3, KA 3.5.2; the certified-valuation billing behind this domain's water case
+study) usually do **not** create a financing component, because their purpose is **security for
+performance**, not financing — and that purpose test is a judgement to document in the revenue-recognition
+memo (Toolkit 2.T.1). Controls should care because the split changes the reporting: the project's margin
+and the financing effect must sit on separate lines of the management pack, never blended (KA 2.5).
+
 ---
 
 ## Case study — Domain 2: revenue on a design-build-operate water contract (infrastructure)
@@ -1659,6 +1691,24 @@ gives **100,000**; the right-of-use asset is also 100,000. Step 2 — schedule:
 Step 3 — depreciation: `100,000 / 2 = 50,000` per year, straight-line. Step 4 — total P&L charge:
 year 1 `50,000 + 10,000 = 60,000`; year 2 `50,000 + 5,000 = 55,000`. Total `115,000` equals total
 payments `60,000 + 55,000` — front-loaded relative to a straight rental of 57,500 per year.
+
+**Exercise 2.6** — A contract has a fixed price of USD 800,000 plus a completion incentive of
+USD 100,000 which management assesses at 60% probable (an all-or-nothing bonus). The project is 40%
+complete on an over-time, input-method basis. (a) Estimate the variable consideration under both the
+expected-value and the most-likely-amount methods. (b) Which method does IFRS 15 point to here, and what
+does the constraint then require? (c) Compute revenue to date with the incentive constrained out and with
+it fully in, and state the amount at risk of reversal.
+
+**Solution 2.6.** Step 1 — (a) expected value: `0.60 × 100,000 = 60,000` → transaction price `800,000 +
+60,000 = 860,000`. Most likely amount: the outcome is binary, and the single most likely amount is
+`100,000` (60% > 40%) → transaction price `900,000`. Step 2 — (b) for a binary outcome the
+**most-likely-amount** method better predicts the consideration; but the **constraint** admits variable
+consideration only to the extent it is highly probable a significant revenue reversal will not occur —
+a 40% chance of losing the full 100,000 typically fails that test, so the incentive is excluded until
+the uncertainty resolves. Step 3 — (c) constrained: `800,000 × 40% = 320,000`; unconstrained: `900,000 ×
+40% = 360,000`. Step 4 — the difference, `360,000 − 320,000 = 40,000`, is revenue that would have to be
+reversed if the bonus is missed. The constraint is IFRS 15's institutional scepticism (2.2.4; the
+award-fee treatment in Case study B).
 
 ---
 
