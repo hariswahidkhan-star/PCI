@@ -563,6 +563,186 @@ both, or abandoning baselines, fits neither.
 
 ---
 
+## Case study — Domain 8: a city operations centre, gate by gate (smart cities)
+
+### Background
+
+A city government commits to building an **integrated operations centre** — a single facility from
+which traffic management, emergency dispatch, street lighting and environmental monitoring are
+coordinated in real time. The programme combines three very different kinds of work: the
+**refurbishment of an existing building** to house the centre (civil and building works —
+well-defined, regulated, and therefore **predictive**); a **data and IoT platform** that ingests
+feeds from thousands of sensors and cameras across the city (software — uncertain and change-prone,
+and therefore **adaptive**); and the **systems integration and transition** that turns a building
+and a platform into a working operation. Following KA 8.6.3, delivery is **hybrid**: agile execution
+of the platform wrapped in predictive **stage-gate governance**, with formal gates at which the city
+decides whether the programme proceeds. This case walks that lifecycle gate by gate — a deliberately
+different project from the Northwind mini-case threaded through the KAs — so the reader sees every
+process group exercised once more, this time on a smart-cities programme where the two halves of a
+hybrid must be measured differently yet governed together.
+
+### Initiating (KA 8.1)
+
+The **business case** (8.1.1) rests on measurable benefits, not on the asset itself: a targeted
+reduction in **emergency incident-response times** (dispatch coordinated from a single, live picture
+of the city) and **energy optimisation** across municipal buildings and street lighting
+(sensor-driven control). Feasibility confirms the building can be refurbished within heritage and
+planning constraints, the platform can lawfully ingest the data it needs, and the city's operating
+budget can sustain the centre once built. The **project charter** (8.1.2) then authorises the
+programme and its manager with a high-level funding envelope of **USD 40,000,000** and outline
+milestones — the seed the planning baselines will elaborate.
+
+Stakeholder identification (8.1.3) places the key players on the power/interest grid:
+
+| Stakeholder | Power | Interest | Engagement strategy |
+|---|---|---|---|
+| Mayor's office (sponsor) | High | High | Manage closely |
+| Utility companies (data providers) | High | Low | Keep satisfied |
+| Community groups (privacy concerns) | Low | High | Keep informed |
+
+The mayor's office is managed closely as the political owner of the benefits; the utilities — whose
+cooperation the sensor feeds depend on but whose day-to-day interest is limited — are kept
+satisfied; and community groups concerned about camera data are kept informed through a deliberate
+engagement plan, because a low-power stakeholder with high interest can become a high-power one if
+ignored.
+
+Crucially, the **success criteria** (8.1.4) are written in two registers from day one: *project*
+success (deliver the centre within the envelope and schedule) and *benefit* success (the measured
+response-time and energy improvements the business case promises). The benefit measures are given
+owners and baselines — current response times, current energy consumption — because a benefit that
+is not baselined at initiation cannot be demonstrated after closure. This distinction, set here,
+returns at the end of the case.
+
+### Planning (KA 8.2)
+
+The **WBS** (8.2.1) splits the scope under the 100 % rule into three elements:
+
+```
+1.  Building refurbishment
+2.  Platform & integration
+3.  Commissioning & transition
+```
+
+Each element takes the baseline that fits its nature:
+
+| WBS element | Approach | Baseline |
+|---|---|---|
+| 1. Building refurbishment | Predictive | `BAC` **USD 30,000,000**, milestone earning rules |
+| 2. Platform & integration | Adaptive | **24 two-week Sprints × USD 250,000/Sprint = USD 6,000,000** |
+| 3. Commissioning & transition | Predictive | **USD 4,000,000** |
+| **Programme envelope** | Hybrid | **USD 40,000,000** |
+
+The planning decision that defines this case is that **two measurement systems are designed in from
+the start** — the tailoring decision of KA 8.6.4 made explicit, at planning, not improvised later.
+The civils element carries a fixed, time-phased cost baseline measured by earned value with
+milestone earning rules (Domain 6). The platform is funded by **capacity** — twenty-four two-week
+Sprints at USD 250,000 per Sprint — and measured by **velocity and AgileEVM** against an evolving,
+MoSCoW-prioritised backlog (Domain 9). Neither system is forced onto the other's scope: earned value
+against a fixed software baseline would be fiction, and velocity against a brickwork programme would
+be noise. Both instead report into a single **programme-level reconciliation** that expresses each
+element's position in money and time, so the gates can compare like with like. The subsidiary plans
+(8.2.3) follow: the risk plan feeds contingency, the procurement plan drives the civils packages and
+their commitments (Domains 5, 7), and the communications plan commits the reporting cadence the
+stakeholder grid demands.
+
+### Executing and controlling to Gate 2 (KAs 8.3–8.4)
+
+Executing (8.3) generates the data control runs on. The civils contractor progresses against
+milestones, with cost committed at order placement and accrued as work is done (Domain 5); the
+platform team delivers working software Sprint by Sprint, with the Product Owner continuously
+re-ordering the backlog; quality assurance runs in both registers — inspection-and-test plans on the
+civils, a definition of done and automated testing on the platform. Resource signals are watched as
+leading indicators: a slow-mobilising façade subcontractor and a platform velocity settling below
+plan both show up in the data well before the gate.
+
+**Gate 2**, at mid-programme, is monitoring & controlling (8.4) in governance form: measurement
+against the baselines, a forecast, and a decision that changes the trajectory. The civils element
+reports `CPI` 0.97 and `SPI` 0.95 — broadly healthy, with one façade package on watch as the source
+of most of the variance. The platform's position needs a re-forecast:
+
+**Re-forecasting the platform at Gate 2.**
+
+1. **Setup.** The platform has completed 12 of its 24 funded Sprints at an achieved velocity of
+   **32 points/Sprint against a plan of 40** — 384 points delivered (12 × 32) of a 928-point
+   backlog, leaving 544 points with 12 funded Sprints remaining.
+2. **Formula.** `Sprints needed = remaining backlog ÷ achieved velocity`; `funding gap = extra
+   Sprints × cost per Sprint`.
+3. **Substitution.** `Sprints needed = 544 ÷ 32 = 17`; `extra Sprints = 17 − 12 = 5`; `funding gap
+   = 5 × 250,000 = 1,250,000`.
+4. **Result.** At the current rate the remaining backlog needs **+5 Sprints ≈ +USD 1,250,000**
+   beyond the funded 24 — or a descope of the lowest-priority backlog to fit the funded capacity.
+5. **Interpretation.** This is the adaptive trade in its purest form: capacity is fixed by funding,
+   so the honest flex is scope — the **inverted triangle** of Domain 9 (KA 9.3.5).
+
+The gate pack integrates both elements into one programme position:
+
+| Element | Baseline | Position at Gate 2 | Unmitigated forecast | Gate action |
+|---|---|---|---|---|
+| 1. Building refurbishment (predictive) | `BAC` USD 30,000,000 | `CPI` 0.97, `SPI` 0.95; façade package on watch | `EAC` ≈ USD 30,900,000 (`BAC`/`CPI`) | Recovery plan on the façade package; target return to baseline |
+| 2. Platform & integration (adaptive) | 24 Sprints = USD 6,000,000 | Velocity 32 points/Sprint vs 40 planned | 29 Sprints ≈ USD 7,250,000 | Descope 'Could'-priority backlog to the funded 24 Sprints |
+| 3. Commissioning & transition | USD 4,000,000 | Not started; plan revalidated | USD 4,000,000 | Proceed as planned |
+| **Programme** | **USD 40,000,000** | Recoverable pressure on two elements | ≈ USD 42,150,000 unmitigated | **Hold the envelope; proceed to Gate 3 with conditions** |
+
+**The gate decision.** The board holds the funding envelope at USD 40,000,000. On the platform, the
+Product Owner descopes **'Could'-priority backlog** so the remaining 'Must' and 'Should' scope fits
+the funded 24 Sprints at the achieved velocity — fixed capacity, flexed scope, exactly as the
+inverted triangle prescribes. On the civils, the façade package gets a formal **recovery action**
+with a tightened surveillance regime. The programme proceeds to Gate 3 **with explicit conditions**:
+velocity to be re-reviewed after three further Sprints, and façade recovery to be evidenced in the
+next two periods.
+
+**Integrated change control on the descope (8.4.2).** The descope is a change like any other, and it
+passes through integrated change control *before* approval: its impact is assessed across **scope,
+schedule, cost — and benefit**. The assessment re-checks the business case itself: the 'Could' items
+proposed for removal (secondary analytics dashboards and a deferred citizen-portal release) do not
+touch the sensor-fusion and dispatch features on which the **incident-response benefit** depends, so
+the benefit case survives the descope intact. Had the cut reached into scope carrying the benefit,
+the honest gate answer would have been to fund the five extra Sprints — a visible breach of the
+envelope being cheaper than a silently broken business case. The change log records the decision and
+every affected baseline is updated coherently (Domain 5, KA 5.4).
+
+### Closing and benefits (KA 8.5)
+
+At handover the centre goes live and the programme closes in an orderly sequence. The **final
+account** settles the civils element (Domain 7): final remeasurement, agreed variations — including
+the façade recovery works — and retention released on the defects-period schedule, tracked to zero
+by the controls function. The platform closes by demonstrating its final increment against the
+definition of done; the residual 'Could' backlog transfers to the operating organisation's product
+roadmap rather than lingering as an unclosed liability. **Lessons learned** (8.5.3) capture the
+quantitative record on both sides of the hybrid: the platform's Sprint-by-Sprint velocity history
+and the civils productivity rates and unit costs both feed the city's estimating library for the
+next programme (Domain 3) — and, increasingly, the datasets its forecasting models train on
+(Domain 13).
+
+The closure report then does the thing this case exists to show. It reports **project success** and
+**benefit success** separately. Project success is demonstrable at closure: delivered on time,
+within the USD 40,000,000 envelope after the descope. Benefit success is *not yet knowable*:
+response times and energy consumption must be measured over the **first year of operation** against
+the baselines set at initiation. The programme closes; **benefit realisation is tracked by the
+operating organisation** against the business case, with the benefit owners named at initiation
+reporting the measured improvements to the city. The distinction set at 8.1.4 closes the loop: what
+was defined on day one is exactly what is measured after the last day.
+
+### What the credential expects
+
+This case is Domain 8 in a single pass, and the exam expects the links to be explicit. The business
+case defines **benefit measures** and the charter authorises against them (8.1) — success has two
+registers from the start. Planning turns the charter's envelope into a WBS with **dual baselines**,
+each carrying the measurement system that fits its development approach (8.2), the tailoring
+decision of 8.6.4 made at planning rather than discovered in crisis. The gate is **monitoring &
+controlling in governance form** (8.4): earned value on the predictive element, a velocity
+re-forecast on the adaptive one, reconciled into one programme position and one decision. The
+descope passes through **integrated change control** (8.4.2), assessed across scope, schedule, cost
+*and benefit* before approval. Closure settles the commercial position, captures the performance
+data, and reports the two successes separately, handing benefit tracking to operations (8.5). The
+whole is **hybrid delivery under stage-gate governance** (8.6.3): predictive and adaptive are not
+rivals but tailored fits to their scope, measured each in its own register and governed together.
+Throughout, AI assists — assembling the gate pack, reconciling the two measurement systems, flagging
+the velocity trend early — but the gate decision is human and accountable (Domain 13, KA 13.5):
+**AI proposes, the professional disposes.**
+
+---
+
 ## Domain 8 summary
 
 The project lifecycle runs through five process groups: **initiating** (business case, charter, stakeholders,
