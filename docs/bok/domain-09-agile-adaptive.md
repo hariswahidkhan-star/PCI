@@ -762,6 +762,110 @@ undone; C imposes exactly the false baseline hybrid reporting avoids; D ignores 
 
 ---
 
+## Advanced topics — Domain 9
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 9.A.1 — Definition of Ready, Definition of Done and acceptance criteria
+
+**Three gates, distinguished.** Adaptive delivery controls quality through three distinct gates that are
+often conflated. A **Definition of Ready (DoR)** is an *entry* gate — a team's working agreement on when a
+backlog item is fit to pull into Sprint Planning (clear, sized, dependencies known, acceptance criteria
+drafted); it is a useful convention, not a Scrum commitment (9.2.4). **Acceptance criteria** are *per-story*
+tests: does **this** story do what was asked (9.3.1)? The **Definition of Done (DoD)** is the *exit* gate and
+the Increment's commitment (9.2.4): the quality standard — tested, integrated, documented to the agreed
+level — that **every** item must meet before it counts as part of a usable Increment.
+
+**How a weak DoD inflates "done".** Velocity (9.3.3), the burnup (9.3.4) and AgileEVM (9.5.3) all count
+*completed* points. If "done" quietly excludes integration or testing, points are claimed early: velocity
+flatters, `EV` overstates progress — the agile analogue of `EV` inflated by optimistic progress claims
+(Domain 6, KA 6.1.2) — and the deferred quality returns as rework that taxes later Sprints (technical debt,
+9.A.2). The release looks fast and then stalls in an unplanned "hardening" phase at the end. A strong,
+objective DoD plays the role that objective earning rules play in EVM: it is the main defence against
+optimism in the progress measure itself.
+
+**The quality floor auditors can test.** Because a DoD is written, stable and binary, assurance can sample
+"done" items against it — do the tests exist and pass? was the item integrated? — which is exactly the
+contemporaneous audit trail KA 9.6.4 describes. A controls professional therefore treats a change to the DoD
+as they treat a change to an earning rule: legitimate, but **disclosed**, because it silently changes the
+meaning of every velocity, burnup and AgileEVM figure downstream.
+
+### Advanced 9.A.2 — Technical debt as a controls concept
+
+**Definition.** **Technical debt** is the future work created when a team takes a shortcut — a design or
+implementation good enough to ship now but not good enough to build on. It is **invisible scope**: it appears
+on no backlog burnup, yet it **taxes future velocity** — each subsequent change costs more than it should,
+the "interest" on the debt. In controls terms it is an unrecorded liability: the release looks complete at a
+cost that omits what it will cost to live with.
+
+**Making it visible.** The remedy is the same as for every invisible exposure in this reference: a register.
+A **debt register kept beside the risk register** records each item — the shortcut taken, why, the estimated
+repayment cost (in points), and the interest being paid (velocity drag, defect rate). The symptoms are
+measurable with the domain's own metrics: falling velocity at constant team size and a stable DoD (9.A.1), a
+rising defect ratio, lengthening cycle times (9.3.4). Mature teams service the debt visibly, allocating an
+agreed share of each Sprint's capacity to repayment — a maintenance budget, not a hidden tax.
+
+**Taking debt deliberately.** Deliberate debt can be a rational trade: shortcut now to hit a market window or
+a regulatory date, repay later. The decision discipline is the accelerate-versus-LDs comparison of Domain 7
+in agile clothing: price both sides — the value of the earlier date against the repayment cost *plus* the
+interest paid until repayment — decide consciously, and record the decision in the register. What is never
+acceptable is **invisible** debt: it is the agile analogue of an optimistic `EAC`, a forecast the board acts
+on that omits a cost the team already knows about. The register is what keeps the scope-quality trade honest
+and auditable (9.6.4).
+
+### Advanced 9.A.3 — Flow efficiency and queueing
+
+**Touch time vs wait time.** An item's cycle time (9.3.4) decomposes into **touch time** (someone is actually
+working on it) and **wait time** (it is queued — awaiting review, a test environment, another team). **Flow
+efficiency** is the ratio of touch time to total cycle time, and mature teams measuring it for the first time
+are usually shocked: most of an item's life is spent waiting, which is precisely the Lean waste of 9.4.2.
+
+**Worked example 9.A.3 — flow efficiency.**
+
+1. **Setup.** Time-stamped board data shows an item's cycle time was **20 days**, of which it was actively
+   worked for **4 days** and queued for the rest.
+2. **Formula.** `Flow efficiency = touch time / cycle time`.
+3. **Substitution.** `Flow efficiency = 4 / 20 = 20 %`.
+4. **Result.** **20 % flow efficiency** — the item waited 16 of its 20 days.
+5. **Interpretation.** The biggest lever on cycle time is removing **wait**, not working faster: halving the
+   touch time saves 2 days; halving the wait saves 8.
+
+**Why 100 % utilisation destroys flow.** A team loaded to full utilisation has no capacity to absorb the
+variability that knowledge work always has, so arriving work queues. WIP grows, and by Little's law (9.4.1,
+cycle time ≈ WIP ÷ throughput) cycle time stretches with it — and the queueing effect is non-linear: as
+utilisation approaches capacity, wait times grow disproportionately, which is why the last few points of
+utilisation buy enormous delay. **Slack is therefore a performance feature, not waste**: spare capacity is
+what keeps queues short, absorbs surprises and funds improvement. This is the deliberate logic of the WIP
+limits of 9.4.1, and it is genuinely counter-intuitive for a controls tradition that reads idle capacity as
+inefficiency — in flow systems, chasing 100 % utilisation *is* the inefficiency.
+
+### Advanced 9.A.4 — Scaling metrics and dependency management
+
+**The problem.** When many teams build one product (9.4.3), programme status is not the sum of team statuses.
+Story points are a **relative team measure** — explicitly not comparable across teams (the 9.5.3 caveat) — so
+summing or comparing team velocities produces a number with no meaning, and publishing it invites inflation,
+because points are cheap to reprice. Programme-level control needs programme-level machinery and
+programme-level units.
+
+**The machinery.** Three practices carry most of the weight. A **programme cadence** — synchronised Sprint
+boundaries across teams — creates common inspect-and-adapt points, the release-train idea of 9.4.3 in
+controls terms. **Integrated increment reviews** demonstrate a *combined, working* increment rather than
+per-team demos: at scale, integrated working product is the only honest progress evidence, for the same
+reason the DoD is the quality floor (9.A.1). A **cross-team dependency board** makes every dependency visible
+with its provider, consumer and needed-by date, managed like a schedule interface — and **dependency ageing**
+(how long items sit unresolved on that board) is a leading indicator: an ageing dependency queue predicts a
+missed increment before any single team's velocity moves, the queueing logic of 9.A.3 applied across teams.
+
+**Measure the programme, not the sum of the teams.** The programme's measures are stated in programme units:
+a **feature (capability) burnup** — features completed to the programme's Definition of Done against total
+feature scope, the 9.3.4 burnup one level up — plus dependency ageing and integrated-increment health. Team
+velocity keeps its proper job as each team's private planning input (9.3.3); it is never an aggregation or
+comparison unit. Reported this way, the adaptive programme slots directly into the hybrid gate reporting of
+KA 9.6.2: value delivered, run-rate and forecast, in units a board can govern by.
+
+---
+
 ## Case study — Domain 9: forecasting a telecom software release two ways
 
 *This case study integrates the domain end-to-end: velocity and burnup forecasting (KAs 9.3.3–9.3.4), the

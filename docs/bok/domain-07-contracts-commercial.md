@@ -700,6 +700,121 @@ a designed feature of two rule-sets, not an error; D confuses a billing-timing p
 
 ---
 
+## Advanced topics — Domain 7
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 7.A.1 — Concurrent delay at concept level
+
+**The problem.** The prolongation claim of 7.2.2 assumed a clean cause: a 30-day *client-caused* delay,
+established by records. Real projects are rarely so tidy. **Concurrent delay** arises when both parties cause
+delay over the **same window** — the client's late instruction and the contractor's own resource shortfall
+each, independently, drive the critical path across the same weeks. The apportionment problem follows: how
+much **time** (an extension of time, relieving liquidated damages, 7.2.3) and how much **money** (prolongation
+cost, 7.2.2) is the contractor entitled to when its own default contributed to the very period it claims for?
+
+**Common approaches, described neutrally.** Practice recognises several ways through, and different contracts
+and forums resolve it differently — this reference stays at concept level, consistent with its stance on
+standard forms (7.2.5). Under a **dominant cause** approach, the effective or dominant cause of the delay is
+identified and carries the whole entitlement. Under **apportionment**, time and/or money are divided in
+proportion to each party's causative contribution. Under a **time-but-no-money** outcome, the contractor
+receives the extension of time — relief from LDs for the concurrent period — but not its prolongation cost,
+on the reasoning that it would have incurred those time-related costs anyway because of its own delay. Note
+the commercial asymmetry: an extension of time *without* money is still valuable, because it switches off an
+LD exposure priced per day (7.2.3), even though it recovers nothing.
+
+**Why records decide it.** Whichever approach a contract adopts, the analysis stands or falls on
+**contemporaneous records** (7.2.1–7.2.2): programme updates, daily diaries, instructions and notices that
+show what was actually driving the critical path week by week (Domain 10). Untangling two overlapping causes
+after the fact, from memory, is close to impossible — which is why, in practice, the party with the better
+records shapes the concurrent-delay analysis, and the controls professional's daily discipline is the real
+determinant of the outcome.
+
+### Advanced 7.A.2 — Global claims and their weakness
+
+**Definition.** A **global claim** (or total-cost claim) asserts the whole cost overrun — actual cost minus
+tender — as the composite result of many events, **without linking each cause to its own effect and
+quantum**. It is tempting when disruption arises from dozens of interacting events and the contractor argues
+that separating their effects is impracticable: one global number, one global cause list.
+
+**Why tribunals resist them.** A global claim rests on implicit assumptions that rarely survive scrutiny:
+that the tender was perfectly priced, that the contractor caused none of the overrun, and that no neutral
+events contributed. Because the quantum is a single undifferentiated total, demonstrating *any*
+contractor-caused cost inside it — or any tender underpricing — undermines the whole claim; there is no
+mechanism for removing the bad element from the composite. The form also inverts the discipline of 7.2.2:
+instead of cause → effect → quantum, it offers a quantum in search of causes. In practice such claims are
+heavily discounted in negotiation and rarely succeed intact.
+
+**The antidote.** The **cause–effect–quantum discipline**, applied event by event: each variation,
+instruction and delay event is notified when it occurs (7.2.2), its effect on the critical path is analysed
+(Domain 10), and its cost is isolated and evidenced — as the rail mini-case does with its prolongation head
+(7.5.4: cause, effect, quantum of USD 800,000). The controls professional's contribution is structural and
+early: cost coding fine enough to capture each event's cost separately as it is incurred (Domain 5, with the
+change log of KA 5.4), and the contemporaneous records of 7.2.1. A global claim presented at the final
+account is usually the symptom of a controls failure a year earlier — costs that were never coded to events
+when they could have been.
+
+### Advanced 7.A.3 — On-demand vs conditional securities
+
+**The practical difference.** KA 7.2.4 introduced bonds as instruments; the distinction that matters in
+practice is **how they are called**. An **on-demand** security is payable by the bank or surety on written
+demand, **without proof of default** — pay first, argue later. A **conditional** (default) security pays only
+on **proven default** under its conditions — slower, and harder to call. The difference is a risk allocation:
+on-demand gives the client immediate, liquid security but exposes the contractor to the risk of an unfair
+call that converts instantly into cash; conditional protects the contractor from that risk but gives the
+client weaker, slower security. Each costs a **fee** (a percentage per annum of the bond value), and
+on-demand instruments typically consume the contractor's bank facility headroom much as borrowing does — an
+opportunity cost against working capital (Domain 3, KA 3.5) beyond the visible fee.
+
+**Worked example 7.A.3 — the cost of an unreleased bond.**
+
+1. **Setup.** A performance bond of **10 %** on a **USD 20,000,000** contract, at a fee of **1.5 % per
+   annum** of bond value. Release is conditioned on the defects certificate, which slips **9 months**.
+2. **Formula.** `Bond value = 10 % × contract value`; `fee = 1.5 % p.a. × bond value × time outstanding`.
+3. **Substitution.** Bond value `= 10 % × 20,000,000 = 2,000,000`; annual fee `= 1.5 % × 2,000,000 =
+   30,000`; cost of the slip `= 30,000 × 9/12 = 22,500`.
+4. **Result.** The 9-month slip costs **USD 22,500** in bond fees alone — before counting the facility
+   headroom the instrument occupies for those extra months.
+5. **Interpretation.** Securities cost money for exactly as long as they run — which is why a controls
+   professional tracks **security expiry and release dates like milestones** (7.2.4): a register of each
+   instrument's form (on-demand or conditional), value, beneficiary, expiry and release conditions, with the
+   release triggers (practical completion, the defects certificate) diarised and chased exactly as retention
+   is (7.4.3b). An expired bond leaves the client unsecured; an unreleased one bleeds fees; and an on-demand
+   bond left in force through a dispute is live exposure.
+
+### Advanced 7.A.4 — FX and escalation clauses
+
+**The principle.** The contract type allocates *cost* risk (7.1); specific clauses allocate **price-level**
+and **currency** risk, and they are read the same way — *who pays if it moves?* Under a **firm (fixed)
+price**, the contractor bears inflation risk and must price it at tender, using exactly the escalation
+estimating of Domain 3's advanced topics (3.A.1) — the client buys certainty at a premium. Under a
+**fluctuation provision**, the price is adjusted — usually by a published index applied to defined cost
+elements — so the client bears inflation risk transparently and the contractor stops gambling on indices.
+Currency works the same way: where the currency of cost differs from the currency of payment, the contract's
+FX clause decides who bears the movement — a single-currency price (the contractor bears and may hedge), a
+multi-currency payment schedule, or an exchange-rate adjustment mechanism — and the consequences flow into
+the multi-currency accounting of Domain 1's advanced topics (1.A.1).
+
+**Worked example 7.A.4 — a fluctuation adjustment.**
+
+1. **Setup.** Under a fluctuation provision, the **labour element** of the year's certified value —
+   **USD 4,000,000** — is index-linked; the agreed labour index moves from **100** at the base date to
+   **106** at the valuation date.
+2. **Formula.** `Adjustment = indexed element × (current index − base index) / base index`.
+3. **Substitution.** `Adjustment = 4,000,000 × (106 − 100)/100 = 4,000,000 × 6 % = 240,000`.
+4. **Result.** The client pays a fluctuation adjustment of **USD 240,000** on top of the measured value.
+5. **Interpretation.** Under a firm price the same 240,000 does not vanish — it sits inside the contractor's
+   tendered escalation allowance (3.A.1), paid by the client whether or not the inflation arrives. The clause
+   moves the **bearer** of the risk, not the existence of the cost.
+
+**The controls consequence.** Read the escalation and FX clauses before forecasting: they determine whether
+an index spike is a client-borne adjustment (fluctuation), a contractor variance against a firm price, or an
+exchange difference for the accounts (1.A.1) — and the cost forecast (Domain 3) must escalate and convert on
+the **same basis the contract pays**, or the commercial and controls numbers will diverge for no real reason.
+
+---
+
 ## Case study — Domain 7: the commercial year on a rail megaproject
 
 ### Background
