@@ -58,6 +58,19 @@ is what makes a schedule *dynamic*: change one duration and the network recalcul
 lags model reality (curing time, mobilisation) but should represent genuine logic, not be used to force dates —
 hidden lags are a common way schedules are quietly manipulated.
 
+**Worked example 10.1.3 — dates under an SS + lag.**
+
+- **Setup:** activity **A** (duration **10 days**, starts day 0) drives activity **B** (duration **6 days**)
+  through a **Start-to-Start + 4** link — B may start 4 days after A starts, e.g. following A's first
+  completed section.
+- **Formula:** forward pass under an SS link: `B.ES = A.ES + lag`; `B.EF = B.ES + duration`.
+- **Substitution:** `B.ES = 0 + 4 = 4`; `B.EF = 4 + 6 = 10`. A finishes day 10 too.
+- **Result:** the fragment completes on **day 10** — four days earlier than the FS sequence (A then B:
+  `10 + 6 = 16`).
+- **Interpretation:** SS links model genuine overlap and buy time without crashing — but they also mean B
+  depends on A's **rate** of progress, not just its start; if A's first section is late, B follows. An SS + lag
+  is the controlled form of fast-tracking (cross-ref 10.3.2).
+
 ### 10.1.4 Estimating durations (including PERT)
 
 **The principle.** Activity **durations** are estimated from the work quantity, the assigned resources and
@@ -448,6 +461,20 @@ dates and remaining durations at the **data date**, then recalculating the netwo
 **current** critical path (which may have moved) and the forecast completion. Discipline matters: out-of-sequence
 progress, missing actuals and unjustified constraint changes corrupt the forecast — the schedule equivalent of
 the data-integrity issues in cost (Domain 5, KA 5.2.4).
+
+**Worked example 10.4.1 — out-of-sequence progress, two answers two days apart.**
+
+- **Setup:** activity **C** is linked **FS after B**. At the data date, B's forecast finish is **day 12**, but
+  C has *already* started (day 10) — out-of-sequence progress. C has **4 days** of work remaining.
+- **Formula:** two scheduling conventions give different forecasts — **retained logic** holds C's remaining
+  work until B finishes; **progress override** lets C continue immediately.
+- **Substitution:** retained logic: C finishes `12 + 4 = ` **day 16**; progress override: C finishes
+  `10 + 4 = ` **day 14**.
+- **Result:** the two answers differ by **2 days** `(16 − 14)` — from a software setting, not from the work.
+- **Interpretation:** neither convention is "true" — the question is physical: can C genuinely continue without
+  B? The planner resolves the logic (often by splitting C or correcting the link) rather than letting a software
+  setting silently decide the forecast; unexplained out-of-sequence updates are a schedule health-check item
+  (Advanced 10.A.1).
 
 ### 10.4.2 Schedule variance and baseline comparison
 
