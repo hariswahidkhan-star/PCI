@@ -14,7 +14,9 @@ public sealed class IntegrationDispatcher : BackgroundService
 {
     private readonly Db _db;
     private static readonly TimeSpan Interval = TimeSpan.FromSeconds(20);
-    private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(15) };
+    // Egress-guarded: connector endpoints are admin-supplied, so deliveries must never reach
+    // loopback/private/metadata addresses (see Core/Egress.cs; INTEGRATIONS_ALLOW_PRIVATE_EGRESS opts out).
+    private static readonly HttpClient Http = Egress.CreateClient(TimeSpan.FromSeconds(15));
 
     public IntegrationDispatcher(Db db) => _db = db;
 

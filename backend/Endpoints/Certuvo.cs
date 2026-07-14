@@ -26,6 +26,26 @@ public static class Certuvo
         UserCtx? Auth(HttpContext ctx) => Core.Auth.UserFromReq(ctx.Request, db);
         IResult J(object o) => Results.Json(o);
         bool Enabled() => Settings.Bool(db, "sp_practice_enabled", true);
+
+        // Per-user throttle (Phase 11 security-review hardening): practice start/submit write rows and,
+        // over many start+submit pairs, would let a scripted account enumerate the practice pool's answer
+        // key. Fixed window per user+action, same shape as the per-IP limiter in Program.cs. The limits
+        // are far above any human pace (a quiz takes minutes; the window allows one start every ~40s).
+        var rlHits = new System.Collections.Concurrent.ConcurrentDictionary<string, (int count, long windowStart)>();
+        const int RL_LIMIT = 15; const long RL_WINDOW_MS = 600_000;   // 15 per action per 10 minutes
+        IResult? Throttle(long userId, string action)
+        {
+            var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            if (rlHits.Count > 10_000)   // evict expired windows so the map can't grow unbounded
+                foreach (var kv in rlHits)
+                    if (now - kv.Value.windowStart >= RL_WINDOW_MS) rlHits.TryRemove(kv.Key, out _);
+            var entry = rlHits.AddOrUpdate(userId + "|" + action, (1, now), (_, cur) =>
+                now - cur.windowStart >= RL_WINDOW_MS ? (1, now) : (cur.count + 1, cur.windowStart));
+            if (entry.count <= RL_LIMIT) return null;
+            var retryAfter = Math.Max(1, (RL_WINDOW_MS - (now - entry.windowStart)) / 1000);
+            return Results.Json(new { error = "rate_limited", retry_after = retryAfter,
+                message = "You're practising faster than we can grade — please take a short break and try again." }, statusCode: 429);
+        }
         IResult? Gate(HttpContext ctx, out UserCtx? u)
         {
             u = Auth(ctx);
@@ -98,6 +118,7 @@ public static class Certuvo
         app.MapPost("/api/me/certuvo/start", async (HttpContext ctx) =>
         {
             var deny = Gate(ctx, out var u); if (deny is not null) return deny;
+            if (Throttle(u!.Id, "start") is { } limited) return limited;
             var b = await H.Body(ctx.Request);
             var mode = (H.GetS(b, "mode") ?? "quiz").Trim().ToLowerInvariant();
             if (mode is not ("quiz" or "mock")) mode = "quiz";
@@ -130,6 +151,7 @@ public static class Certuvo
         app.MapPost("/api/me/certuvo/submit", async (HttpContext ctx) =>
         {
             var deny = Gate(ctx, out var u); if (deny is not null) return deny;
+            if (Throttle(u!.Id, "submit") is { } limited) return limited;
             var b = await H.Body(ctx.Request);
             var attemptId = (long)(H.GetNum(b, "attempt_id") ?? 0);
             var att = db.QueryOne("SELECT * FROM practice_attempts WHERE id=? AND user_id=?", attemptId, u!.Id);

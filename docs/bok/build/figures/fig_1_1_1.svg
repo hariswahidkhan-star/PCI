@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="346.32pt" height="179.761875pt" viewBox="0 0 346.32 179.761875" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-07-14T19:07:00.993808</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.0, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 179.761875 
+L 346.32 179.761875 
+L 346.32 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 173.16 138.816 
+L 159.768 165.4272 
+L 186.552 165.4272 
+z
+" clip-path="url(#pb869fbeefd)" style="fill: #64748b"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 17.1432 126.17568 
+L 94.8168 126.17568 
+Q 96.8256 126.17568 96.8256 124.17984 
+L 96.8256 86.92416 
+Q 96.8256 84.92832 94.8168 84.92832 
+L 17.1432 84.92832 
+Q 15.1344 84.92832 15.1344 86.92416 
+L 15.1344 124.17984 
+Q 15.1344 126.17568 17.1432 126.17568 
+z
+" clip-path="url(#pb869fbeefd)" style="fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 251.5032 109.54368 
+L 329.1768 109.54368 
+Q 331.1856 109.54368 331.1856 107.54784 
+L 331.1856 80.27136 
+Q 331.1856 78.27552 329.1768 78.27552 
+L 251.5032 78.27552 
+Q 249.4944 78.27552 249.4944 80.27136 
+L 249.4944 107.54784 
+Q 249.4944 109.54368 251.5032 109.54368 
+z
+" clip-path="url(#pb869fbeefd)" style="fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 251.5032 124.51248 
+L 329.1768 124.51248 
+Q 331.1856 124.51248 331.1856 122.51664 
+L 331.1856 111.87216 
+Q 331.1856 109.87632 329.1768 109.87632 
+L 251.5032 109.87632 
+Q 249.4944 109.87632 249.4944 111.87216 
+L 249.4944 122.51664 
+Q 249.4944 124.51248 251.5032 124.51248 
+z
+" clip-path="url(#pb869fbeefd)" style="fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 55.98 65.6352 
+L 290.34 65.6352 
+" clip-path="url(#pb869fbeefd)" style="fill: none; stroke: #0f172a; stroke-width: 2.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 173.16 138.816 
+L 173.16 65.6352 
+" clip-path="url(#pb869fbeefd)" style="fill: none; stroke: #0f172a; stroke-width: 2.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 55.98 65.6352 
+L 55.98 85.5936 
+" clip-path="url(#pb869fbeefd)" style="fill: none; stroke: #64748b; stroke-width: 1.2; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 290.34 65.6352 
+L 290.34 85.5936 
+" clip-path="url(#pb869fbeefd)" style="fill: none; stroke: #64748b; stroke-width: 1.2; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(40.188594 102.659178)">Assets</text>
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(36.623242 112.860838)">100,000</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="290.34" y="95.988038" transform="rotate(-0 290.34 95.988038)">Equity 100,000</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #64748b" x="290.34" y="119.142935" transform="rotate(-0 290.34 119.142935)">Liabilities 0</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #0f172a" x="173.16" y="25.7184" transform="rotate(-0 173.16 25.7184)">A  =  L  +  E</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #64748b" x="173.16" y="172.08" transform="rotate(-0 173.16 172.08)">The equation holds after every transaction — the beam stays level.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pb869fbeefd">
+   <rect x="5.76" y="5.76" width="334.8" height="166.32"/>
+  </clipPath>
+ </defs>
+</svg>
