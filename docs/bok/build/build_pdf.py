@@ -158,6 +158,36 @@ def main() -> None:
     html_file = BUILD / "_combined.html"
     html_file.write_text(html_body, encoding="utf-8")
 
+    # Alphabetical index: every key term, linked to its KA section, page number resolved at layout.
+    def build_index(html: str, source_md: str) -> str:
+        terms = {}
+        for m in _re.finditer(r'### Key terms — KA (\d+\.\d+)\n\n\| Term \| Meaning \|\n\|[-| ]+\|\n((?:\|.*\|\n)+)', source_md):
+            ka, rows = m.group(1), m.group(2)
+            for row in rows.strip().split('\n'):
+                cells = [c.strip() for c in row.strip('|').split('|')]
+                if len(cells) >= 2:
+                    term = _re.sub(r'[`*]', '', cells[0]).strip()
+                    if term and term.lower() not in terms:
+                        terms[term.lower()] = (term, ka)
+        ka_ids = {m.group(2): m.group(1) for m in _re.finditer(
+            r'<h2\s+id="([^"]+)">Knowledge\s+Area\s+(\d+\.\d+)\s', html, _re.S)}
+        groups: dict[str, list] = {}
+        for term, ka in sorted(terms.values(), key=lambda t: t[0].lower()):
+            hid = ka_ids.get(ka)
+            if not hid:
+                continue
+            letter = term[0].upper() if term[0].isalpha() else '#'
+            groups.setdefault(letter, []).append(f'<div class="ixe"><a href="#{hid}">{term}</a></div>')
+        parts = ['<div class="bookindex"><div class="ixtitle">Index</div><div class="ixcols">']
+        for letter in sorted(groups):
+            parts.append(f'<div class="ixl">{letter}</div>' + ''.join(groups[letter]))
+        parts.append('</div></div>')
+        print(f"index entries: {sum(len(v) for v in groups.values())}")
+        return ''.join(parts)
+
+    html_body = html_body.replace('</body>', build_index(html_body, corpus) + '</body>', 1)
+    html_file.write_text(html_body, encoding="utf-8")
+
     # 3. HTML -> PDF via WeasyPrint.
     from weasyprint import HTML, CSS  # imported late so --help stays fast
     doc = HTML(filename=str(html_file)).render(stylesheets=[CSS(filename=str(BUILD / "print.css"))])

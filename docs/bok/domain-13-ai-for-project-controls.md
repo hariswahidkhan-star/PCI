@@ -832,6 +832,17 @@ boxes.
 - **Value & limit.** Strong for logic-checking and delay prediction; an AI schedule can embed hidden
   constraints or unrealistic durations — validate before trusting.
 
+**Worked workflow 13.5.5b — a logic-check sweep before baselining.**
+
+1. **Input.** A 1,240-activity contractor schedule submitted for baseline acceptance.
+2. **AI step.** The checker flags 37 activities with missing predecessors/successors (dangles), 12 hard
+   constraints, and 5 lags longer than 10 days — Advanced 10.A.1's health checks, run by machine.
+3. **Verification (the professional's step).** The planner works the exception list — re-logics the dangles,
+   justifies or removes each constraint, and replaces the long lags with real activities. On the re-run the
+   critical path **moves** and the finish slips 6 days — a slip a hard constraint had been hiding.
+4. **Output.** A schedule fit to baseline — the AI found the defects in minutes; the planner decided what each
+   one meant (Domain 10, KA 10.4.1).
+
 ### 13.5.6 Agile delivery (Domain 9)
 
 - **Workflow.** Input: backlog + Sprint history → AI step: draft/split stories, forecast velocity and release
@@ -840,6 +851,17 @@ boxes.
   with human accountability.
 - **Value & limit.** Useful for backlog and forecasting; a model that treats story points as absolute or
   ignores rebaselining misleads.
+
+**Worked workflow 13.5.6b — a velocity forecast the professional corrects.**
+
+1. **Input.** Five Sprint velocities — 30, 32, 28, 34, 26 points (mean 30) — and a 240-point remaining
+   backlog.
+2. **AI step.** The model forecasts `240/30 = 8` Sprints, but flags the last two Sprints' decline (34 → 26)
+   and widens its range to 7–10 Sprints.
+3. **Verification (the professional's step).** The delivery lead checks the cause — the dip was two
+   public-holiday Sprints, not a trend — and accepts the central 8 with the range reported, rather than
+   letting the model's trend-widening stand unexamined (Domain 9, KA 9.3.3).
+4. **Output.** An owned range forecast whose assumptions are known, not merely computed.
 
 ### 13.5.7 Contracts & commercial (Domain 7)
 
@@ -868,6 +890,17 @@ boxes.
   attribution, framing and caveats (Domain 4, KA 4.3) → Output: an accurate, decision-ready report.
 - **Value & limit.** Automated commentary and NL querying speed reporting; a drafted narrative can misattribute
   cause or bury a caveat — the professional signs off.
+
+**Worked workflow 13.5.8b — a natural-language query, decomposed and checked.**
+
+1. **Input.** A director asks the controls assistant, "Why did project 1420's EAC move this month?"
+2. **AI step.** The model decomposes the +USD 100,000 movement: +80,000 rate escalation on steel, +40,000
+   rework in containment, −20,000 scope removed by an approved variation
+   (`80,000 + 40,000 − 20,000 = 100,000`).
+3. **Verification (the professional's step).** The professional ties each element to source — the escalation
+   to the procurement record, the rework to the NCR log, the variation to the change log (Domain 5,
+   KA 5.4.3) — before the answer leaves the room.
+4. **Output.** A decision-ready decomposition in seconds, with every number traceable.
 
 ### 13.5.9 Risk (Domain 12)
 
@@ -910,6 +943,16 @@ and `CPI`/`SPI`; confirm which method the model used and whether its assumption 
 (Domain 6, KA 6.3.3); run the `TCPI` reality check; and confirm the figure against the schedule's critical
 path. Only then is the `EAC` reported — with its method, assumption and the note that it is AI-assisted and
 verified (13.6). The AI saved the assembly; the professional owns the forecast.
+
+**Worked workflow 13.5.10b — a pre-publication consistency sweep.**
+
+1. **Input.** The draft annual-report disclosures and the controls order book.
+2. **AI step.** The checker cross-references the remaining-performance-obligation disclosure
+   (USD 107,000,000) against the internal order book (USD 109,000,000) and flags the USD 2,000,000 gap.
+3. **Verification (the professional's step).** The professional traces it — an agreed-but-unsigned variation
+   is in the order book but does not yet qualify for the RPO disclosure (Domain 2, KA 2.2.9) — and documents
+   the reconciling item rather than forcing the numbers to agree.
+4. **Output.** A disclosure that survives audit because the difference is explained, not hidden.
 
 ### Key terms — KA 13.5
 

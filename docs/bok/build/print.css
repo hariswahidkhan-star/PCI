@@ -168,3 +168,21 @@ nav#TOC a::after {
   content: leader(".") " " target-counter(attr(href url), page);
   font-weight: 400; color: #64748B; font-size: 8.2pt;
 }
+
+/* ---------- Alphabetical index ---------- */
+.bookindex { page: plain; page-break-before: always; }
+.bookindex .ixtitle {
+  font-family: Inter, sans-serif; font-size: 19pt; font-weight: 800; color: #0F172A;
+  border-bottom: 1.2pt solid #1D4ED8; padding-bottom: 3mm; margin-bottom: 6mm;
+}
+.bookindex .ixcols { column-count: 2; column-gap: 8mm; }
+.bookindex .ixl {
+  font-family: Inter, sans-serif; font-weight: 800; font-size: 10.5pt; color: #C13329;
+  margin: 3mm 0 1.2mm 0; column-span: none;
+}
+.bookindex .ixe { font-family: Inter, sans-serif; font-size: 8.2pt; color: #334155; margin-bottom: 0.9mm; }
+.bookindex .ixe a { color: inherit; display: block; }
+.bookindex .ixe a::after {
+  content: leader(".") " " target-counter(attr(href url), page);
+  color: #64748B; font-size: 7.8pt;
+}

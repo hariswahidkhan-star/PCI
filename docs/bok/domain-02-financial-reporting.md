@@ -683,6 +683,25 @@ entity applies step 2 (are the promises distinct?) and step 4 (allocate by SSP) 
 relevance is that a single "turnkey" price often contains several performance obligations recognised on
 different patterns — a nuance that a naïve "recognise as billed" approach misses.
 
+**Worked example 2.3.2 — one turnkey price, three recognition patterns.**
+
+1. **Setup.** A "turnkey" monitoring-system contract is priced at **USD 900,000** and comprises three
+   distinct performance obligations (2.2.3): **hardware** (SSP **400,000**), **installation** (SSP
+   **300,000**) and a **three-year support service** (SSP **200,000**) — Σ SSP **900,000**.
+2. **Formula.** `Allocated price_i = Transaction price × (SSP_i / Σ SSP)` (2.2.5); then recognise each
+   obligation on its own step-5 pattern (2.2.6).
+3. **Substitution.** Allocation factor `= 900,000 / 900,000 = 1` — the SSPs sum exactly to the price, so
+   there is **no bundle discount to spread** and each obligation is allocated its SSP: hardware
+   **400,000**, installation **300,000**, support **200,000** (check: `400,000 + 300,000 + 200,000 =
+   900,000` ✓).
+4. **Result.** Hardware recognises **at a point in time** on delivery (400,000); installation recognises
+   **over time** by the cost-to-cost input method across the installation period (300,000); support
+   recognises **over time**, straight-line across its three years at `200,000 / 3 = 66,667` a year.
+5. **Interpretation.** A single invoice-facing price conceals **three different revenue patterns** — one
+   lump on delivery, one S-curve during the install, one flat annuity over three years. A "recognise as
+   billed" shortcut would misstate revenue in *every* period; the bundle must be pulled apart at step 2,
+   allocated at step 4 and recognised pattern by pattern at step 5 (2.2.3, 2.2.5, 2.2.6).
+
 ### 2.3.3 Linking revenue to billing and the BoQ
 
 **The principle.** Revenue (IFRS 15, performance-based) and billing (contractual, often milestone- or
@@ -992,6 +1011,32 @@ value earned/certified) should reconcile to IFRS 15 revenue via the contract ass
 they differ, the difference should be *explained* (timing, accruals, provisions, capitalisation), not
 ignored. A recurring reconciliation discipline is what stops the "two sets of numbers" problem in which the
 board hears one figure from finance and another from the project.
+
+**Worked example 2.5.2 — the management-to-statutory revenue bridge.**
+
+1. **Setup.** For the quarter, the management pack reports "value earned" of **USD 5,200,000**; the
+   statutory IFRS 15 revenue for the same contract is **USD 5,050,000** — a gap of **150,000** to explain,
+   not to ignore.
+2. **Formula.** Bridge the two views item by item: `IFRS 15 revenue + explained differences = management
+   value earned`, with each difference attributed to a specific rule or timing basis.
+3. **Substitution.** Two items explain the gap: (1) a **claim of 100,000** is included in management value
+   but **constrained** out of the transaction price under IFRS 15 (2.2.4); (2) **50,000 of
+   percentage-of-completion timing** — management measures progress on certified quantities, the accounts
+   on the cost-to-cost input method (2.2.6).
+4. **Result.** Check: `5,050,000 + 100,000 + 50,000 = 5,200,000`. ✓
+
+   | Bridge item | USD |
+   |---|---:|
+   | IFRS 15 revenue | 5,050,000 |
+   | + Claim assumed in management value, constrained out of the transaction price (2.2.4) | 100,000 |
+   | + Measurement-basis timing (certified quantities vs cost-to-cost) | 50,000 |
+   | **= Management value earned** | **5,200,000** |
+
+5. **Interpretation.** Neither figure is "wrong" — they answer different questions under different rules:
+   the statutory number obeys the constraint and the cost-to-cost method; the management number reflects
+   the commercial view of value earned. The bridge *is* the reconciliation discipline of this topic — and
+   a constrained-claim line that grows quarter on quarter is commercial information in its own right, a
+   claims position that needs managing (Domain 7), not just a reconciling item.
 
 ### 2.5.3 What a controls professional owns
 
