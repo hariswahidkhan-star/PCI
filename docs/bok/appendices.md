@@ -52,11 +52,13 @@ All symbols are defined once here and used identically across the book (Style Sp
 | `CPI = EV / AC` | Cost performance index | 6.2.2 |
 | `SPI = EV / PV` | Schedule performance index | 6.2.2 |
 | `TCPI (to BAC) = (BAC − EV) / (BAC − AC)` | To-complete performance index | 6.2.3 |
+| `TCPI (to EAC) = (BAC − EV) / (EAC − AC)` | To-complete performance index — to meet a revised EAC | 6.2.3 |
 | `EAC = AC + ETC` | Estimate at completion (identity) | 6.3.1 |
 | `EAC = AC + (BAC − EV)` | EAC — remaining work at budgeted rate | 6.3.2 |
 | `EAC = BAC / CPI` | EAC — remaining work at current CPI | 6.3.2 |
 | `EAC = AC + (BAC − EV) / (CPI × SPI)` | EAC — cost & schedule compound | 6.3.2 |
 | `VAC = BAC − EAC` | Variance at completion | 6.3.4 |
+| `ES = M + (EV − PV_M) / (PV_M+1 − PV_M)` | Earned schedule — interpolate between the months bracketing EV (cumulative PV_M ≤ EV ≤ PV_M+1) | 6.4.3 |
 | `SV(t) = ES − AT`; `SPI(t) = ES / AT` | Earned schedule (time-based) | 6.4.3 |
 | `% complete = points completed / total planned points`; `EV = % complete × BAC` | AgileEVM | 9.5.3 |
 
@@ -79,21 +81,31 @@ All symbols are defined once here and used identically across the book (Style Sp
 | `LD exposure = LD rate × days late` | Liquidated damages | 7.2.3 |
 | `Amount due = (Σ % complete × item amount) − retention − previous payments` | Interim payment application | 7.4.3 |
 
+### A6. Process cycles & working capital (Domain 11)
+
+| Formula | Meaning | Domain |
+|---|---|---|
+| `DSO = Receivables / Daily revenue` | Days sales outstanding | 11.1.3 |
+| `DIO = Inventory / Daily COGS` | Days inventory outstanding | 11.A.1 |
+| `DPO = Payables / Daily COGS` | Days payables outstanding | 11.A.1 |
+| `CCC = DSO + DIO − DPO` | Cash-conversion cycle | 11.A.1 |
+| `Cash freed ≈ DSO reduction (days) × daily revenue` | Working capital released by cutting DSO | 11.A.1 |
+
 ---
 
 ## Appendix B — Global glossary
 
-Consolidated from every domain's key-terms box — **263 terms**, each shown with the KA where it is first defined. Where a term recurs across domains, the first definition governs (Style Spine §3).
+Consolidated from every domain's key-terms box — **255 terms**, each shown with the KA where it is first defined. Where a term recurs across domains, the first definition governs (Style Spine §3).
 
 | Term | Definition | First defined |
 |---|---|---|
 | **100 % rule** | The WBS captures all of the scope and only the scope. | 8.2 |
-| **`CPI` / `SPI`** | Cost / schedule performance index (`EV/AC`, `EV/PV`). | 6.2 |
+| **`CPI` / `SPI`** | Cost / schedule performance index (`EV/AC`, `EV/PV`). | 3.4 |
 | **`CV` / `SV`** | Cost variance (`EV − AC`) / schedule variance (`EV − PV`). | 6.2 |
-| **`EAC` / `ETC`** | Estimate at / to complete; `EAC = AC + ETC`. | 6.3 |
+| **`EAC` / `ETC`** | Estimate at completion / to complete; `EAC = AC + ETC`. | 3.4 |
 | **`SPI` convergence** | The tendency of `SPI` → 1 at completion regardless of lateness. | 6.4 |
 | **`TCPI`** | To-complete performance index — the efficiency remaining work must achieve for a target. | 6.2 |
-| **`VAC`** | Variance at completion (`BAC − EAC`). | 6.3 |
+| **`VAC`** | Variance at completion (`BAC − EAC`). | 3.4 |
 | **Accounting equation** | `Assets = Liabilities + Equity`; holds after every transaction. | 1.1 |
 | **Accrual** | Liability for goods/services received, amount/timing reasonably certain. | 1.4 |
 | **Accrual basis** | Recognise economic events when they occur, not when cash moves. | 1.3 |
@@ -102,7 +114,6 @@ Consolidated from every domain's key-terms box — **263 terms**, each shown wit
 | **Activity** | The unit of work sequenced and durated, traceable to the WBS. | 10.1 |
 | **Actual** | Cost booked once the invoice is processed. | 5.2 |
 | **Actual Cost (`AC`)** | Cost actually incurred (incl. accruals) for the work performed. | 6.1 |
-| **Adaptive vs predictive planning** | Fix time/cost, flex scope vs fix scope, plan up front. | 9.1 |
 | **Agent** | Arranges for another to provide; recognises net fee/commission. | 2.3 |
 | **Agile audit trail** | Backlog/Sprint/Increment records providing contemporaneous evidence. | 9.6 |
 | **Agile contracting** | T&M, capped T&M, target cost — forms that fit variable scope. | 9.6 |
@@ -146,9 +157,7 @@ Consolidated from every domain's key-terms box — **263 terms**, each shown wit
 | **Constraint trade-offs** | Scope/schedule/cost/quality/risk balanced against each other. | 8.4 |
 | **Contingency reserve** | For identified risks; inside the baseline; PM-controlled. | 3.1 |
 | **Contingent liability / asset** | A possible obligation/inflow — disclosed, not recognised (subject to probability). | 1.4 |
-| **Contract asset (under-billing)** | Revenue recognised exceeds billing. | 7.5 |
-| **Contract asset / liability** | Revenue recognised vs amounts billed — under- vs over-billing. | 2.2 |
-| **Contract liability (over-billing)** | Billing exceeds revenue recognised. | 7.5 |
+| **Contract asset / liability** | Revenue recognised vs amounts billed — under-billing (asset) vs over-billing (liability). | 2.2 |
 | **Control account (CA)** | The WBS×OBS intersection where scope, budget, cost and schedule integrate. | 1.5 |
 | **Controls dashboard** | An integrated cost/schedule/forecast/risk view with RAG status and trend. | 4.3 |
 | **Cost baseline / PMB** | The approved, time-phased budget; source of Planned Value; total = BAC. | 3.1 |
@@ -159,7 +168,6 @@ Consolidated from every domain's key-terms box — **263 terms**, each shown wit
 | **Cost-plus (CPFF/CPIF/CPAF)** | Reimburse cost plus a fixed/incentive/award fee; client bears cost risk. | 7.1 |
 | **Cost-schedule integration** | Measuring both from one `EV` so they cannot contradict. | 6.4 |
 | **Cost-to-date (control)** | Actuals + accruals — the figure `AC` should reflect. | 5.2 |
-| **CPI / SPI** | Cost / schedule performance index (`EV/AC`, `EV/PV`). | 3.4 |
 | **Crashing** | Add resources to critical activities (cost for time). | 10.3 |
 | **Credit control** | Assessing/limiting customer credit before committing. | 11.1 |
 | **Critical path** | The longest, zero-float chain; sets the project duration. | 10.2 |
@@ -177,7 +185,6 @@ Consolidated from every domain's key-terms box — **263 terms**, each shown wit
 | **Draw-down / re-baselining** | Consuming contingency as risks occur / escalating beyond it as a baseline change. | 12.3 |
 | **Driver analysis** | AI explanation of *why* a metric is moving (e.g. an EAC). | 13.5 |
 | **EAC (a)–(d)** | Budgeted-rate / current-CPI / CPI×SPI / bottom-up methods, each an assumption. | 6.3 |
-| **EAC / ETC** | Estimate at completion / to complete; `EAC = AC + ETC`. | 3.4 |
 | **Earned schedule (`ES`)** | Earned value expressed as a point on the time axis; gives `SV(t)`, `SPI(t)`. | 6.4 |
 | **Earned Value (`EV`)** | Budgeted cost of work performed — progress valued at budget. | 6.1 |
 | **Earning rule / measurement method** | The rule converting physical progress to `EV` (0/100, 50/50, % complete, units, milestones). | 6.1 |
@@ -205,8 +212,7 @@ Consolidated from every domain's key-terms box — **263 terms**, each shown wit
 | **Guardrails** | Rules of safe use (confidentiality, verification, disclosure, audit trail). | 13.3 |
 | **Hallucination** | Confidently producing false content. | 13.1 |
 | **Hallucination / bias / confidentiality** | The three principal AI risks and their mitigations. | 13.6 |
-| **Hybrid** | Combining predictive governance with adaptive execution. | 8.6 |
-| **Hybrid governance** | Predictive stage-gates around agile execution. | 9.6 |
+| **Hybrid** | Combining predictive governance with adaptive execution (predictive stage-gates around agile delivery). | 8.6 |
 | **IAS 11 (legacy)** | Former construction-contract standard, superseded by IFRS 15. | 2.4 |
 | **IAS 16 / capitalise** | PPE recognised at cost and depreciated; capitalise vs expense judgement. | 2.4 |
 | **IAS 2 / NRV** | Inventories at the lower of cost and net realisable value. | 2.4 |
@@ -258,8 +264,7 @@ Consolidated from every domain's key-terms box — **263 terms**, each shown wit
 | **Performance / advance-payment / retention bond** | Third-party security instruments. | 7.2 |
 | **Performance obligation** | A promise to transfer a distinct good or service. | 2.2 |
 | **PERT (three-point)** | `tE = (O + 4M + P)/6`; `σ = (P − O)/6`. | 10.1 |
-| **Planned Value (`PV`)** | Budgeted cost of work scheduled by the data date. | 6.1 |
-| **Planned Value (`PV`/BCWS)** | Cumulative planned spend to date — the cost-baseline curve. | 3.3 |
+| **Planned Value (`PV`/BCWS)** | Cumulative planned spend to date — the cost-baseline curve; the budgeted cost of work scheduled by the data date. | 3.3 |
 | **Planning package** | Future work within a CA not yet detailed into work packages. | 5.3 |
 | **Power/interest grid** | A tool to classify stakeholders and tailor engagement. | 8.1 |
 | **Predictive / adaptive** | Plan-driven (fixed scope) / change-driven (evolving scope). | 8.6 |
@@ -291,8 +296,8 @@ Consolidated from every domain's key-terms box — **263 terms**, each shown wit
 | **Receivables ageing** | The overdue profile of amounts owed — a cash/revenue leading indicator. | 11.1 |
 | **Reconciliation** | Explaining the tie between the two views from one ledger. | 2.5 |
 | **Relevance / materiality** | Capable of influencing decisions; material if its omission/misstatement would. | 2.1 |
-| **Remeasurement** | Re-pricing at actual quantities. | 7.3 |
-| **Remeasurement / unit-rate** | Priced at rates against re-measured actual quantities. | 7.1 |
+| **Remeasurement (contract form) / unit-rate** | Priced at rates against re-measured actual quantities. | 7.1 |
+| **Remeasurement (of a BoQ)** | Re-pricing at actual quantities. | 7.3 |
 | **Resource levelling / smoothing** | Respect resource limits (may extend) / even peaks within float (no extension). | 10.3 |
 | **Response strategies** | Avoid/transfer/mitigate/accept (threats); exploit/share/enhance/accept (opportunities). | 12.2 |
 | **Retention** | Cash withheld from payments until completion/defects periods pass. | 3.5 |
@@ -306,7 +311,7 @@ Consolidated from every domain's key-terms box — **263 terms**, each shown wit
 | **SAFe / LeSS / Scrum-of-Scrums / release train** | Scaling approaches (awareness level). | 9.4 |
 | **Schedule increment** | A Sprint/release as a time-phased unit mapped to milestones. | 10.4 |
 | **Schedule-risk analysis** | Model duration uncertainty (Monte Carlo) for a completion distribution. | 10.3 |
-| **Scope / WBS** | What will be delivered / its hierarchical decomposition. | 8.2 |
+| **Scope** | What will be delivered. | 8.2 |
 | **Scope creep** | Uncontrolled accumulation of unmanaged change. | 5.4 |
 | **Segregation of duties (SoD)** | No single person controls a whole transaction. | 11.3 |
 | **Small multiples** | Repeated small charts — must share consistent scales. | 4.4 |
@@ -339,7 +344,6 @@ Consolidated from every domain's key-terms box — **263 terms**, each shown wit
 | **Trial balance** | A list of all account balances proving `Σ Dr = Σ Cr` (not correctness). | 1.1 |
 | **Truncated axis** | A non-zero-based axis that exaggerates differences. | 4.4 |
 | **User story / acceptance criteria / INVEST** | A value-framed backlog item, its "done" tests, and quality heuristics. | 9.3 |
-| **VAC** | Variance at completion (`BAC − EAC`). | 3.4 |
 | **Value measurement** | Honest measurement of time/error/warning/accuracy gains vs cost and risk. | 13.7 |
 | **Variable consideration / constraint** | Estimated by expected value or most-likely amount; included only to the extent a significant reversal is highly improbable. | 2.2 |
 | **Variance** | Planned minus actual; favourable (F) improves profit, adverse (A) worsens it. | 4.2 |
