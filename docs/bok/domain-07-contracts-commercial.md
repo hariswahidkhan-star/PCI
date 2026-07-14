@@ -179,9 +179,9 @@ walked deliberately, not drifted).
 **MCQ 7.1-A `[7.1.1 · Analysis]`** Under a **lump-sum** contract with well-defined scope, an unexpected cost
 overrun on that scope is primarily borne by:
 - A. The client.
-- B. The contractor. ✅
+- B. The insurer.
 - C. Shared 50/50.
-- D. The insurer.
+- D. The contractor. ✅
 
 *Rationale:* Lump sum fixes the price for defined scope, so the contractor bears the cost-overrun risk on that
 scope. Cost-plus would put it on the client; target cost would share it.
@@ -189,12 +189,12 @@ scope. Cost-plus would put it on the client; target cost would share it.
 **MCQ 7.1-B `[7.1.3 · Application]`** CPIF: target cost USD 10,000,000, target fee USD 800,000, 50/50 share,
 actual cost USD 9,400,000. The contractor's fee is:
 - A. USD 800,000
-- B. USD 1,100,000 ✅
-- C. USD 1,400,000
+- B. USD 1,400,000
+- C. USD 1,100,000 ✅
 - D. USD 500,000
 
 *Rationale:* Underrun 600,000 × 50 % = 300,000 added to the 800,000 target fee = **1,100,000**. A ignores the
-incentive; C takes the whole underrun; D miscomputes.
+incentive; B takes the whole underrun; D miscomputes.
 
 **MCQ 7.1-C `[7.1.4 · Application]`** Target cost USD 10,000,000, 50/50 pain-share; actual cost USD 10,800,000.
 The contractor's pain-share is:
@@ -319,20 +319,20 @@ wording. (Named at awareness level only, consistent with the citation rules — 
 **MCQ 7.2-A `[7.2.3 · Application]`** LDs are USD 10,000/day; the forecast completion is 20 days late. The LD
 exposure is:
 - A. USD 10,000
-- B. USD 200,000 ✅
-- C. USD 20,000
+- B. USD 20,000
+- C. USD 200,000 ✅
 - D. USD 2,000,000
 
-*Rationale:* `10,000 × 20 = 200,000`. A is one day; C swaps the figures; D misplaces a zero.
+*Rationale:* `10,000 × 20 = 200,000`. A is one day; B swaps the figures; D misplaces a zero.
 
 **MCQ 7.2-B `[7.2.3 · Recall]`** Liquidated damages are enforceable when they represent:
 - A. A punitive penalty to deter breach.
-- B. A genuine pre-estimate of the client's likely loss. ✅
-- C. The contractor's total revenue.
-- D. The retention amount.
+- B. The contractor's total revenue.
+- C. The retention amount.
+- D. A genuine pre-estimate of the client's likely loss. ✅
 
 *Rationale:* In a common-law jurisdiction LDs must be a genuine pre-estimate of loss, not a penalty. A describes an unenforceable penalty;
-C and D are unrelated figures.
+B and C are unrelated figures.
 
 **MCQ 7.2-C `[7.2.4 · Analysis]`** Increasing retention from 5 % to 10 % on a project will, all else equal:
 - A. Improve the contractor's cash position.
@@ -347,12 +347,12 @@ It worsens (not improves) cash, has a clear cash effect, and is unrelated to LDs
 preliminaries at USD 8,000/day and keeps specialist plant on standby at USD 2,000/day. The prolongation
 quantum is:
 - A. USD 360,000
-- B. USD 450,000 ✅
-- C. USD 90,000
-- D. USD 10,000
+- B. USD 90,000
+- C. USD 10,000
+- D. USD 450,000 ✅
 
 *Rationale:* `quantum = Σ (time-related rate × delay days) = 45 × 8,000 + 45 × 2,000 = 360,000 + 90,000 =
-450,000`. A omits the plant standby; C omits the preliminaries; D is the combined daily rate for one day only.
+450,000`. A omits the plant standby; B omits the preliminaries; C is the combined daily rate for one day only.
 
 **MCQ 7.2-E `[7.2.4 · Analysis]`** A contractor substitutes a **retention bond** for 5 % cash retention. The
 main commercial effect is:
@@ -454,11 +454,11 @@ and into every subsequent valuation.
 **MCQ 7.3-A `[7.3.4 · Application]`** Excavation is 5,000 m³ at USD 12/m³. If actual quantity is 5,400 m³, the
 remeasured amount is:
 - A. USD 60,000
-- B. USD 64,800 ✅
-- C. USD 4,800
-- D. USD 66,000
+- B. USD 4,800
+- C. USD 66,000
+- D. USD 64,800 ✅
 
-*Rationale:* `5,400 × 12 = 64,800`. A is the original; C is only the extra; D miscomputes.
+*Rationale:* `5,400 × 12 = 64,800`. A is the original; B is only the extra; C miscomputes.
 
 **MCQ 7.3-B `[7.3.3 · Analysis]`** Preliminaries are significant on a project that is now forecast to finish
 late. The main commercial consequence is:
@@ -484,12 +484,12 @@ subtotal including overheads. The tendered rate is:
 
 **MCQ 7.3-D `[7.3.1 · Recall]`** At tender stage, the principal purpose of issuing a BoQ to bidders is:
 - A. To let each tenderer measure its own quantities.
-- B. To give all tenderers a common set of quantities to price, making bids comparable. ✅
-- C. To fix the final contract sum regardless of quantities.
+- B. To fix the final contract sum regardless of quantities.
+- C. To give all tenderers a common set of quantities to price, making bids comparable. ✅
 - D. To replace the drawings and specification.
 
 *Rationale:* The BoQ provides a common tender basis — every bidder prices the same measured quantities, so
-rates and totals compare like for like. A defeats that purpose; C describes lump sum pricing, not the BoQ's
+rates and totals compare like for like. A defeats that purpose; B describes lump sum pricing, not the BoQ's
 role; D is wrong because the BoQ is prepared *from* the drawings and specification, not instead of them.
 
 ### Self-check — KA 7.3
@@ -617,9 +617,9 @@ USD 90,000. The amount due this application is:
 **MCQ 7.4-B `[7.4.4 · Analysis]`** Earned value, the BoQ valuation and IFRS 15 revenue for the same period
 differ. This is:
 - A. An error to be corrected.
-- B. Expected — they value the same progress at different values under different rules; the differences are reconciled and meaningful. ✅
+- B. Impossible.
 - C. A breach of IFRS 15.
-- D. Impossible.
+- D. Expected — they value the same progress at different values under different rules; the differences are reconciled and meaningful. ✅
 
 *Rationale:* `EV` (budget), valuation (contract rates) and revenue (IFRS 15) measure the same progress
 differently, so they diverge by design; the professional reconciles them. It is neither an error nor a breach.
@@ -756,8 +756,8 @@ off. **AI proposes, the professional disposes.**
 **MCQ 7.5-A `[7.5.2 · Analysis]`** IFRS 15 revenue recognised is USD 6,750,000; certified billing is USD
 7,000,000. The position is:
 - A. A contract asset of USD 250,000.
-- B. A contract liability of USD 250,000. ✅
-- C. A revenue error.
+- B. A revenue error.
+- C. A contract liability of USD 250,000. ✅
 - D. Nil.
 
 *Rationale:* Billing exceeds revenue by 250,000 → **over-billing → contract liability**. A reverses it; it is

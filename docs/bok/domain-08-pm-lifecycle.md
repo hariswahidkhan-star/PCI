@@ -104,16 +104,16 @@ success — the outcome realised) gives the controls function the right things t
 **MCQ 8.1-A `[8.1.2 · Recall]`** The document that formally authorises a project and the project manager is
 the:
 - A. Business case.
-- B. Project charter. ✅
-- C. Work breakdown structure.
+- B. Work breakdown structure.
+- C. Project charter. ✅
 - D. Cost baseline.
 
 *Rationale:* The charter authorises the project and PM. The business case justifies it; the WBS and cost
 baseline are planning artefacts.
 
 **MCQ 8.1-B `[8.1.3 · Application]`** A high-power, low-interest regulator should be:
-- A. Managed closely.
-- B. Kept satisfied. ✅
+- A. Kept satisfied. ✅
+- B. Managed closely.
 - C. Merely monitored.
 - D. Ignored.
 
@@ -123,13 +123,13 @@ high power + high interest; "monitor" is low/low; ignoring a powerful stakeholde
 **MCQ 8.1-C `[8.1.4 · Analysis]`** A project is delivered on time and within budget, but the benefit promised
 in the business case never materialises. The most accurate assessment is:
 - A. Total success — the iron triangle was met.
-- B. Project success without benefit success — the two are distinct registers. ✅
-- C. A failure of the charter to authorise the project.
-- D. Proof that success criteria are irrelevant once delivery starts.
+- B. A failure of the charter to authorise the project.
+- C. Proof that success criteria are irrelevant once delivery starts.
+- D. Project success without benefit success — the two are distinct registers. ✅
 
 *Rationale:* Success criteria distinguish *project* success (delivered to plan) from *product/benefit*
 success (the outcome realised); hitting time and cost while missing the benefit is only the first. A stops at
-the iron triangle; C misreads the charter's role; D inverts the lesson.
+the iron triangle; B misreads the charter's role; C inverts the lesson.
 
 **MCQ 8.1-D `[8.1.3 · Application]`** A RACI chart for the monthly cost report shows two "A"s against the
 activity "Approve the report". The correction required is:
@@ -221,16 +221,16 @@ exercise; it is the assembly of the integrated system the rest of the lifecycle 
 
 **MCQ 8.2-A `[8.2.1 · Recall]`** The "100 % rule" for a WBS means it:
 - A. Must be 100 % complete before work starts.
-- B. Captures 100 % of the scope — no more, no less. ✅
-- C. Guarantees 100 % on-time delivery.
-- D. Requires 100 % resource loading.
+- B. Guarantees 100 % on-time delivery.
+- C. Requires 100 % resource loading.
+- D. Captures 100 % of the scope — no more, no less. ✅
 
 *Rationale:* The 100 % rule concerns scope completeness and non-overlap. It is not about pre-start completion,
 delivery certainty, or resource loading.
 
 **MCQ 8.2-B `[8.2.2 · Analysis]`** Why must the cost baseline be phased over the schedule?
-- A. To reduce the BAC.
-- B. To produce Planned Value for earned-value measurement. ✅
+- A. To produce Planned Value for earned-value measurement. ✅
+- B. To reduce the BAC.
 - C. To satisfy IFRS 15.
 - D. It need not be.
 
@@ -314,13 +314,13 @@ measurement discipline there. The other groups consume comparatively little budg
 
 **MCQ 8.3-B `[8.3.3 · Analysis]`** A package shows a favourable cost variance achieved by cutting quality
 assurance activities. The controls professional should treat this as:
-- A. A genuine saving to be banked in the forecast.
-- B. A false economy likely to return as rework — keep the quality liability visible. ✅
+- A. A false economy likely to return as rework — keep the quality liability visible. ✅
+- B. A genuine saving to be banked in the forecast.
 - C. Evidence that quality assurance was over-scoped.
 - D. Grounds to raise the profit forecast immediately.
 
 *Rationale:* Quality is built into the process, not inspected out; a variance won by cutting assurance hides
-a rework liability. A and D bank a saving that is likely to reverse; C draws a scoping conclusion the
+a rework liability. B and D bank a saving that is likely to reverse; C draws a scoping conclusion the
 variance does not support.
 
 **MCQ 8.3-C `[8.3.2 · Application]`** During executing, a shortfall in skilled resources will typically show
@@ -405,8 +405,8 @@ the artefacts differ from project to project, the loop does not.
 **MCQ 8.4-A `[8.4.2 · Analysis]`** A scope change is approved on its direct cost alone, without assessing
 schedule and risk impact. This violates the principle of:
 - A. The 100 % rule.
-- B. Integrated change control. ✅
-- C. Earned value.
+- B. Earned value.
+- C. Integrated change control. ✅
 - D. Going concern.
 
 *Rationale:* Integrated change control requires assessing a change across *all* constraints. The 100 % rule is
@@ -414,9 +414,9 @@ about WBS scope; earned value and going concern are unrelated to this failure.
 
 **MCQ 8.4-B `[8.4.1 · Recall]`** Monitoring & controlling primarily exists to:
 - A. Observe and document the project.
-- B. Measure against the baselines and act to change the trajectory. ✅
+- B. Produce the charter.
 - C. Replace executing.
-- D. Produce the charter.
+- D. Measure against the baselines and act to change the trajectory. ✅
 
 *Rationale:* Its purpose is corrective — to change the outcome, not merely observe. It runs alongside (not
 instead of) executing, and the charter is an initiating artefact.
@@ -434,8 +434,8 @@ money and can stress quality and risk, so the full trade-off is assessed. A igno
 abdicates the controlling role; D pre-empts a decision that belongs to change control.
 
 **MCQ 8.4-D `[8.4.1 · Recall]`** The repeating monthly cycle of monitoring & controlling runs:
-- A. Report → act → forecast → analyse → measure.
-- B. Measure → analyse → forecast → act → report. ✅
+- A. Measure → analyse → forecast → act → report. ✅
+- B. Report → act → forecast → analyse → measure.
 - C. Forecast → measure → report → analyse → act.
 - D. Act → measure → report → forecast → analyse.
 
@@ -528,9 +528,9 @@ of the quantitative lessons, because it holds the performance data.
 **MCQ 8.5-A `[8.5.3 · Analysis]`** Why is the controls function the natural custodian of quantitative lessons
 learned?
 - A. It writes the contract.
-- B. It holds the performance data (actual CPI, productivity, unit costs) that feeds future estimates and models. ✅
-- C. It approves the charter.
-- D. It runs procurement.
+- B. It approves the charter.
+- C. It runs procurement.
+- D. It holds the performance data (actual CPI, productivity, unit costs) that feeds future estimates and models. ✅
 
 *Rationale:* Controls holds the earned-value and cost performance data that becomes future estimating and
 model-training input. Contracts, charter and procurement are other functions.
@@ -669,17 +669,17 @@ decision and the report. **AI proposes, the professional disposes.**
 **MCQ 8.6-A `[8.6.2 · Analysis]`** Building a product in usable slices, each adding a new working part to the
 whole, describes:
 - A. Iterative delivery.
-- B. Incremental delivery. ✅
-- C. Predictive delivery.
-- D. Waterfall.
+- B. Predictive delivery.
+- C. Waterfall.
+- D. Incremental delivery. ✅
 
 *Rationale:* Incremental delivery adds new working parts (slices) to the whole. Iterative refines the *same*
 product; predictive/waterfall delivers the full scope in sequence.
 
 **MCQ 8.6-B `[8.6.2 · Analysis]`** Refining the *same* product over repeated passes, improving it each time,
 describes:
-- A. Incremental delivery.
-- B. Iterative delivery. ✅
+- A. Iterative delivery. ✅
+- B. Incremental delivery.
 - C. Framework contracting.
 - D. Remeasurement.
 
@@ -699,8 +699,8 @@ both, or abandoning baselines, fits neither.
 **MCQ 8.6-D `[8.6.1 · Recall]`** The two project conditions that determine where a project should sit on the
 predictive-to-adaptive spectrum are:
 - A. Team size and contract value.
-- B. Requirements certainty and change rate. ✅
-- C. Client preference and industry custom.
+- B. Client preference and industry custom.
+- C. Requirements certainty and change rate. ✅
 - D. Budget size and project duration.
 
 *Rationale:* The spectrum is mapped against requirements certainty and change rate — stable, well-understood

@@ -87,8 +87,8 @@ regulated and have no value half-built → **predictive-suited**. The programme 
 ### Sample MCQs — KA 9.1
 
 **MCQ 9.1-A `[9.1.2 · Recall]`** The three pillars of empirical process control are:
-- A. Plan, do, check.
-- B. Transparency, inspection, adaptation. ✅
+- A. Transparency, inspection, adaptation. ✅
+- B. Plan, do, check.
 - C. Scope, time, cost.
 - D. People, process, tools.
 
@@ -107,12 +107,12 @@ delivery. The others have uncertainty and incremental value, suiting adaptive de
 **MCQ 9.1-C `[9.1.3 · Application]`** Under adaptive planning, a programme funds a stable team for **12
 two-week Sprints at USD 90,000 per Sprint**, letting scope flex to fit. The fixed cost envelope is:
 - A. USD 90,000
-- B. USD 1,080,000 ✅
-- C. USD 540,000
-- D. USD 2,160,000
+- B. USD 540,000
+- C. USD 2,160,000
+- D. USD 1,080,000 ✅
 
 *Rationale:* Adaptive planning fixes time and cost: `12 × 90,000 = 1,080,000`, with scope the variable. A is a
-single Sprint; C funds only half the cadence; D wrongly treats the per-Sprint rate as a weekly rate over 24
+single Sprint; B funds only half the cadence; C wrongly treats the per-Sprint rate as a weekly rate over 24
 weeks.
 
 **MCQ 9.1-D `[9.1.1 · Recall]`** The Agile Manifesto's stance on planning is best described as:
@@ -208,8 +208,8 @@ One Sprint, from backlog to usable increment.
 Increment→Definition of Done. Velocity is a metric, not a commitment.
 
 **MCQ 9.2-B `[9.2.2 · Recall]`** Accountability for maximising the value of the product belongs to the:
-- A. Scrum Master.
-- B. Product Owner. ✅
+- A. Product Owner. ✅
+- B. Scrum Master.
 - C. Developers.
 - D. Sponsor.
 
@@ -231,13 +231,13 @@ between Sprints; D assumes four-week Sprints.
 **MCQ 9.2-D `[9.2.2 · Analysis]`** A programme stakeholder asks the Scrum Master to assign this Sprint's tasks
 to individual Developers. The request misreads Scrum because:
 - A. Only the Product Owner assigns tasks.
-- B. The Developers own the Sprint Backlog plan; the Scrum Master is a coach and impediment-remover, not a manager over the team. ✅
-- C. Tasks may only be assigned at the Sprint Review.
-- D. The Scrum Master may assign tasks but only in writing.
+- B. Tasks may only be assigned at the Sprint Review.
+- C. The Scrum Master may assign tasks but only in writing.
+- D. The Developers own the Sprint Backlog plan; the Scrum Master is a coach and impediment-remover, not a manager over the team. ✅
 
 *Rationale:* The Developers are accountable for the Sprint plan and the daily work; the Scrum Master serves the
 team's effectiveness rather than directing it. A shifts the error to the Product Owner (who owns *what and
-why*, not task assignment); C and D invent rules Scrum does not contain.
+why*, not task assignment); B and C invent rules Scrum does not contain.
 
 ### Self-check — KA 9.2
 
@@ -372,17 +372,17 @@ remain. The expected Sprints remaining (at average velocity) is:
 
 **MCQ 9.3-B `[9.3.4 · Analysis]`** Why is a burnup often preferred to a burndown for release forecasting?
 - A. It is simpler.
-- B. It shows scope change (the moving total line), not just progress. ✅
-- C. It hides added scope.
-- D. It requires no velocity.
+- B. It hides added scope.
+- C. It requires no velocity.
+- D. It shows scope change (the moving total line), not just progress. ✅
 
 *Rationale:* A burnup plots completed work against a total-scope line, so scope additions are visible as the
 line rises — a burndown to zero hides them. It is not simpler, does not hide scope, and still uses velocity to
 project.
 
 **MCQ 9.3-C `[9.3.5 · Recall]`** In the agile "inverted" iron triangle, what is fixed?
-- A. Scope.
-- B. Time and cost. ✅
+- A. Time and cost. ✅
+- B. Scope.
 - C. Quality only.
 - D. Nothing.
 
@@ -404,13 +404,13 @@ already done; D uses the original 300 and also forgets the completed work.
 **MCQ 9.3-E `[9.3.4 · Analysis]`** On a cumulative flow diagram, the "in progress" band is steadily widening
 while the "done" band's slope is flat. The best reading is:
 - A. Throughput is rising healthily.
-- B. Work is being started faster than it is finished — WIP is growing at a bottleneck. ✅
-- C. Scope has been removed from the release.
+- B. Scope has been removed from the release.
+- C. Work is being started faster than it is finished — WIP is growing at a bottleneck. ✅
 - D. Cycle time is falling.
 
 *Rationale:* A widening in-progress band with flat completion means items enter the state faster than they
 leave — growing WIP queuing at a bottleneck, which lengthens (not shortens) cycle time. A and D describe the
-opposite pattern; C would narrow the to-do band, not widen in-progress.
+opposite pattern; B would narrow the to-do band, not widen in-progress.
 
 ### Self-check — KA 9.3
 
@@ -481,8 +481,8 @@ across the coordinated teams.
 
 **MCQ 9.4-A `[9.4.1 · Analysis]`** Imposing a WIP limit typically:
 - A. Slows delivery by restricting work.
-- B. Speeds completion by cutting context-switching and queueing. ✅
-- C. Has no effect on cycle time.
+- B. Has no effect on cycle time.
+- C. Speeds completion by cutting context-switching and queueing. ✅
 - D. Increases work in progress.
 
 *Rationale:* Limiting WIP focuses the team so items finish faster (lower cycle time, per Little's Law). It does
@@ -490,9 +490,9 @@ not restrict useful throughput, is not neutral, and by definition lowers WIP.
 
 **MCQ 9.4-B `[9.4.3 · Recall]`** The "Agile Release Train" is a concept most associated with:
 - A. Kanban.
-- B. SAFe. ✅
-- C. Waterfall.
-- D. Little's Law.
+- B. Waterfall.
+- C. Little's Law.
+- D. SAFe. ✅
 
 *Rationale:* The Agile Release Train is a SAFe construct (teams delivering to a common cadence). The others are
 a flow method, a predictive approach, and a flow law.
@@ -632,11 +632,11 @@ disposes.**
 **MCQ 9.5-A `[9.5.3 · Application]`** Release `BAC` USD 600,000; 300 points planned; 120 done; `AC` USD 320,000;
 150 planned done. The `CPI` is:
 - A. 1.33
-- B. 0.75 ✅
-- C. 0.80
+- B. 0.80
+- C. 0.75 ✅
 - D. 0.40
 
-*Rationale:* `EV = (120/300)×600,000 = 240,000`; `CPI = EV/AC = 240,000/320,000 = 0.75`. C is the `SPI`; D is
+*Rationale:* `EV = (120/300)×600,000 = 240,000`; `CPI = EV/AC = 240,000/320,000 = 0.75`. B is the `SPI`; D is
 `% complete`; A inverts the ratio.
 
 **MCQ 9.5-B `[9.5.3 · Analysis]`** The central assumption/limit when applying AgileEVM is that:
@@ -651,8 +651,8 @@ formulae.
 
 **MCQ 9.5-C `[9.5.4 · Analysis]`** AgileEVM `% complete` is 40 % but cost-to-cost `% complete` is 35 % on an
 IFRS 15 over-time contract. The professional should:
-- A. Recognise revenue at 40 %.
-- B. Reconcile the two and recognise on the appropriate input basis (here cost-to-cost 35 %), explaining the difference. ✅
+- A. Reconcile the two and recognise on the appropriate input basis (here cost-to-cost 35 %), explaining the difference. ✅
+- B. Recognise revenue at 40 %.
 - C. Ignore IFRS 15.
 - D. Average them to 37.5 %.
 
@@ -673,12 +673,12 @@ swaps `AC` into the `ETC`; D adds `AC` into the `ETC` and then double-counts it.
 
 **MCQ 9.5-E `[9.5.3 · Recall]`** In AgileEVM, `EV` at a data date is computed as:
 - A. (story points planned by the data date / total planned points) × `BAC`.
-- B. (story points completed / total planned points) × `BAC`. ✅
-- C. story points completed × cost per Sprint.
-- D. `% complete` × `AC`.
+- B. story points completed × cost per Sprint.
+- C. `% complete` × `AC`.
+- D. (story points completed / total planned points) × `BAC`. ✅
 
 *Rationale:* `EV = % complete × BAC`, with `% complete = points completed / total planned points` — progress
-valued against the release budget. A is the `PV` formula; C mixes a scope measure with a capacity cost; D
+valued against the release budget. A is the `PV` formula; B mixes a scope measure with a capacity cost; C
 values progress at actual cost, which is what `EV` must never do.
 
 ### Self-check — KA 9.5
@@ -743,8 +743,8 @@ integrity of the combined picture and the scope-change narrative. **AI proposes,
 
 **MCQ 9.6-A `[9.6.3 · Analysis]`** Which contract form best fits agile's variable scope?
 - A. Fixed-price, fixed-scope lump sum.
-- B. Capped time & materials (pay for capacity, cap exposure). ✅
-- C. Remeasurement of fixed civil quantities.
+- B. Remeasurement of fixed civil quantities.
+- C. Capped time & materials (pay for capacity, cap exposure). ✅
 - D. A performance bond.
 
 *Rationale:* Capped T&M funds capacity while limiting exposure — compatible with flexing scope. Fixed-price/
@@ -773,13 +773,13 @@ D is a single month.
 **MCQ 9.6-D `[9.6.2 · Recall]`** To make agile work legible at a predictive phase gate, the controls
 professional reports:
 - A. Raw Sprint Backlogs for the board to interpret.
-- B. Value delivered, run-rate and forecast completion, mapped from Sprints/releases to the gate's milestones. ✅
-- C. Only the original fixed baseline.
-- D. Nothing — agile work is exempt from gates.
+- B. Only the original fixed baseline.
+- C. Nothing — agile work is exempt from gates.
+- D. Value delivered, run-rate and forecast completion, mapped from Sprints/releases to the gate's milestones. ✅
 
 *Rationale:* Hybrid governance translates Sprints into the milestone language a gate needs — value delivered,
 run-rate, forecast and AgileEVM status — without forcing a false fixed baseline. A leaves the translation
-undone; C imposes exactly the false baseline hybrid reporting avoids; D ignores the governance wrapper.
+undone; B imposes exactly the false baseline hybrid reporting avoids; C ignores the governance wrapper.
 
 ### Self-check — KA 9.6
 

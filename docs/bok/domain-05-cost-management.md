@@ -157,13 +157,13 @@ of actual; D is the actual overhead itself, not a variance.
 **MCQ 5.1-D `[5.1.2 · Analysis]`** Site overhead is driven mainly by project *duration*, but is allocated to
 work packages by *headcount*. The likely consequence is:
 - A. None — the total overhead is unchanged, so the allocation does not matter.
-- B. Labour-heavy packages carry overhead they do not cause, distorting every downstream unit cost. ✅
-- C. The trial balance will no longer balance.
+- B. The trial balance will no longer balance.
+- C. Labour-heavy packages carry overhead they do not cause, distorting every downstream unit cost. ✅
 - D. The overhead becomes a direct cost.
 
 *Rationale:* Allocating on a base that is not the true driver mis-loads cost onto the wrong objects — the
 totals agree but each package's unit cost is distorted, misleading estimates and variances. A ignores the
-distortion at package level; C confuses allocation with double-entry; D misstates the classification, which
+distortion at package level; B confuses allocation with double-entry; D misstates the classification, which
 depends on traceability, not the allocation base.
 
 ### Self-check — KA 5.1
@@ -296,8 +296,8 @@ D add commitments that have not been received.
 
 **MCQ 5.2-B `[5.2.1 · Analysis]`** Why does watching *commitments* improve cost control over watching actuals
 alone?
-- A. Commitments are always smaller.
-- B. Commitments give lead time — they signal future spend before it is received or paid. ✅
+- A. Commitments give lead time — they signal future spend before it is received or paid. ✅
+- B. Commitments are always smaller.
 - C. Actuals are not recorded in the ledger.
 - D. Commitments replace the need for a forecast.
 
@@ -328,12 +328,12 @@ to deduct the accruals; D is the total commitment including what has already bee
 **MCQ 5.2-E `[5.2.4 · Recall]`** Which of the following is a data-integrity failure that quietly corrupts
 the cost forecast?
 - A. An approved variation baselined through change control.
-- B. Open commitments left stale — purchase orders never closed after delivery. ✅
-- C. A month-end accrual raised from goods-received records.
-- D. A cost ledger reconciled to the general ledger each period.
+- B. A month-end accrual raised from goods-received records.
+- C. A cost ledger reconciled to the general ledger each period.
+- D. Open commitments left stale — purchase orders never closed after delivery. ✅
 
 *Rationale:* Stale open commitments overstate the spend still to come, corrupting the forecast until they
-are cleansed — data integrity is an ongoing control, not a one-off clean-up. A, C and D are exactly the
+are cleansed — data integrity is an ongoing control, not a one-off clean-up. A, B and C are exactly the
 disciplines that *protect* the numbers, not failures.
 
 ### Self-check — KA 5.2
@@ -419,9 +419,9 @@ trustworthy — if not, no amount of EVM formula rigour rescues it.
 **MCQ 5.3-A `[5.3.2 · Analysis]`** Control accounts are set far too granular (hundreds of tiny accounts). The
 main consequence is:
 - A. Earned value cannot be computed at all.
-- B. The measurement overhead swamps the value, without improving control. ✅
-- C. The BAC changes.
-- D. Cost coding becomes unnecessary.
+- B. The BAC changes.
+- C. Cost coding becomes unnecessary.
+- D. The measurement overhead swamps the value, without improving control. ✅
 
 *Rationale:* Over-granular CAs create measurement burden disproportionate to insight. EV can still be
 computed; `BAC` is unaffected; coding is still needed.
@@ -447,8 +447,8 @@ breakdown structure.
 
 **MCQ 5.3-D `[5.3.2 · Application]`** A control account holds near-term work that is fully defined,
 scheduled and costed, plus future work whose detail is not yet developed. The future work should be held as:
-- A. A work package.
-- B. A planning package. ✅
+- A. A planning package. ✅
+- B. A work package.
 - C. A trend.
 - D. An open commitment.
 
@@ -539,22 +539,22 @@ authorise it. **AI proposes, the professional disposes.**
 (from management reserve) is baselined, and USD 150,000 of contingency is drawn for a materialised risk. The
 new `BAC` is:
 - A. USD 9,550,000
-- B. USD 10,000,000 ✅
-- C. USD 10,150,000
-- D. USD 9,700,000
+- B. USD 10,150,000
+- C. USD 9,700,000
+- D. USD 10,000,000 ✅
 
 *Rationale:* The variation adds new scope to the baseline (`+300,000 → 10,000,000`); the contingency draw is a
-*use* of reserve already inside the baseline and does not change `BAC`. A subtracts the risk draw; C adds it;
-D ignores the variation.
+*use* of reserve already inside the baseline and does not change `BAC`. A subtracts the risk draw; B adds it;
+C ignores the variation.
 
 **MCQ 5.4-B `[5.4.2 · Recall]`** A "trend" in cost control is best described as:
 - A. A formal, agreed change order.
-- B. An early warning of a potential change, logged for lead time. ✅
-- C. A completed variance.
+- B. A completed variance.
+- C. An early warning of a potential change, logged for lead time. ✅
 - D. A change to the risk appetite.
 
 *Rationale:* A trend is an early signal of possible change — a leading indicator. A formal change order (A)
-comes later; a variance (C) is a realised result; risk appetite (D) is unrelated.
+comes later; a variance (B) is a realised result; risk appetite (D) is unrelated.
 
 **MCQ 5.4-C `[5.4.1 · Analysis]`** The primary purpose of change control is to:
 - A. Prevent all change.
@@ -568,26 +568,26 @@ accelerate delivery, or replace forecasting.
 **MCQ 5.4-D `[5.4.2 · Application]`** A control account's budget is USD 1,750,000 and its forecast at
 completion on committed and remaining scope is USD 1,800,000. The trend log holds one probable but
 unformalised change of +USD 120,000. The **potential** variance against budget is:
-- A. (USD 50,000)
-- B. (USD 170,000) ✅
+- A. (USD 170,000) ✅
+- B. (USD 50,000)
 - C. (USD 290,000)
 - D. USD 120,000
 
 *Rationale:* Potential forecast `= 1,800,000 + 120,000 = 1,920,000`; potential variance
-`= 1,750,000 − 1,920,000 = (170,000)`. A ignores the logged trend — exactly the surprise the trend log
+`= 1,750,000 − 1,920,000 = (170,000)`. B ignores the logged trend — exactly the surprise the trend log
 exists to prevent; C double-counts the trend; D is the trend alone, not the variance against budget.
 
 **MCQ 5.4-E `[5.4.1 · Analysis]`** A project's actual cost steadily diverges from a baseline that has never
 formally changed; investigation finds many small, unlogged scope additions. This situation is best described
 as:
 - A. Normal variance, to be managed by exception.
-- B. Scope creep — uncontrolled change accumulating until variance against the baseline is meaningless. ✅
-- C. An accrual cut-off error.
-- D. Overhead under-absorption.
+- B. An accrual cut-off error.
+- C. Overhead under-absorption.
+- D. Scope creep — uncontrolled change accumulating until variance against the baseline is meaningless. ✅
 
 *Rationale:* Unmanaged additions that bypass change control are scope creep, the most common way a baseline
 is quietly lost — the "variance" no longer measures performance against an agreed scope. A treats a control
-failure as routine; C and D are recognition and allocation issues, not uncontrolled scope growth.
+failure as routine; B and C are recognition and allocation issues, not uncontrolled scope growth.
 
 ### Self-check — KA 5.4
 

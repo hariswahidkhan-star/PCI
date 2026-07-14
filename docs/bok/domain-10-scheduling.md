@@ -108,8 +108,8 @@ three-point estimate over a single guess.
 
 **MCQ 10.1-B `[10.1.2 · Recall]`** "B cannot start until A finishes" is which dependency?
 - A. Start-to-Start
-- B. Finish-to-Start ✅
-- C. Finish-to-Finish
+- B. Finish-to-Finish
+- C. Finish-to-Start ✅
 - D. Start-to-Finish
 
 *Rationale:* Finish-to-Start (the default). SS ties starts; FF ties finishes; SF is the rare start-to-finish.
@@ -117,12 +117,12 @@ three-point estimate over a single guess.
 **MCQ 10.1-C `[10.1.3 · Application]`** Activity A finishes at the end of day 10. Its successor B is linked
 **FS + 3 days** (a lag for curing time). B's earliest start is:
 - A. Day 10
-- B. Day 13 ✅
-- C. Day 7
-- D. Day 3
+- B. Day 7
+- C. Day 3
+- D. Day 13 ✅
 
 *Rationale:* An FS + 3 lag delays the successor three days beyond the predecessor's finish: `10 + 3 = 13`. A
-ignores the lag; C treats the lag as a lead (FS − 3); D reads the lag itself as the start date.
+ignores the lag; B treats the lag as a lead (FS − 3); C reads the lag itself as the start date.
 
 **MCQ 10.1-D `[10.1.2 · Analysis]`** When fast-tracking a schedule, which dependency may legitimately be
 relaxed or overlapped?
@@ -247,8 +247,8 @@ concentrates.
 **MCQ 10.2-A `[10.2.5 · Application]`** In the worked network (A3, B4, C2, D5, E3, F2; A→B→D→F, A→C→E→F), the
 project duration is:
 - A. 12 days
-- B. 14 days ✅
-- C. 10 days
+- B. 10 days
+- C. 14 days ✅
 - D. 8 days
 
 *Rationale:* The longest path A–B–D–F = `3+4+5+2 = 14`. The A–C–E–F path is `3+2+3+2 = 10`; the project takes
@@ -266,9 +266,9 @@ project (until the 4 days are used) and is certainly possible.
 
 **MCQ 10.2-C `[10.2.4 · Application]`** Activity D has `ES` = 7 and `LS` = 7. Its total float is:
 - A. 7
-- B. 0 ✅
+- B. 5
 - C. 14
-- D. 5
+- D. 0 ✅
 
 *Rationale:* `TF = LS − ES = 7 − 7 = 0` — D is critical. The other values confuse dates with float.
 
@@ -391,8 +391,8 @@ scheduling value lies (below).
 
 **MCQ 10.3-A `[10.3.1 · Analysis]`** Crashing is most effective when applied to:
 - A. Any activity with float.
-- B. Critical-path activities with the lowest cost per time saved. ✅
-- C. The longest-duration activity regardless of path.
+- B. The longest-duration activity regardless of path.
+- C. Critical-path activities with the lowest cost per time saved. ✅
 - D. Non-critical activities.
 
 *Rationale:* Only critical-path activities shorten the project; among those, pick the cheapest per time saved.
@@ -400,9 +400,9 @@ Crashing float/non-critical activities adds cost without shortening the project.
 
 **MCQ 10.3-B `[10.3.2 · Analysis]`** Fast-tracking primarily trades:
 - A. Cost for time.
-- B. Time for risk (overlapping raises rework risk). ✅
+- B. Quality for schedule.
 - C. Scope for cost.
-- D. Quality for schedule.
+- D. Time for risk (overlapping raises rework risk). ✅
 
 *Rationale:* Fast-tracking overlaps sequential work, saving time but increasing rework risk. Crashing (not
 fast-tracking) trades cost for time.
@@ -539,8 +539,8 @@ checks of Advanced 10.A.1.
 
 **MCQ 10.4-A `[10.4.2 · Analysis]`** Why read both the network view and the earned-value view of schedule?
 - A. They always agree.
-- B. Each covers the other's blind spot — EVM misses the critical path; the network does not aggregate cost/performance. ✅
-- C. Only one is ever correct.
+- B. Only one is ever correct.
+- C. Each covers the other's blind spot — EVM misses the critical path; the network does not aggregate cost/performance. ✅
 - D. To duplicate effort.
 
 *Rationale:* Aggregate `SPI` can hide critical-path slippage (Domain 6, KA 6.4.2); the network shows the path
@@ -559,24 +559,24 @@ schedule. They complement, not replace, scheduling, and are not cost accounts.
 **critical** activity has finished **3 days late** and a non-critical activity with **5 days of total float**
 has finished **2 days late**. After recalculating the network, the completion forecast is:
 - A. Day 45
-- B. Day 43 ✅
-- C. Day 40
-- D. Day 42
+- B. Day 40
+- C. Day 42
+- D. Day 43 ✅
 
 *Rationale:* A critical slip passes through day for day (`40 + 3 = 43`), while the non-critical slip is
-absorbed within its 5 days of float. A wrongly adds both slips; C ignores the critical slip; D applies the
+absorbed within its 5 days of float. A wrongly adds both slips; B ignores the critical slip; C applies the
 absorbed slip instead of the critical one.
 
 **MCQ 10.4-D `[10.4.1 · Analysis]`** A schedule is updated with several actual finish dates missing and key
 milestones held on fixed date constraints. The main consequence is:
 - A. The forecast is more reliable because the milestone dates are protected.
-- B. The network can no longer recalculate honestly — the forecast completion and current critical path are corrupted. ✅
-- C. Total float increases across the network.
+- B. Total float increases across the network.
+- C. The network can no longer recalculate honestly — the forecast completion and current critical path are corrupted. ✅
 - D. The baseline is automatically re-approved.
 
 *Rationale:* Missing actuals and forced constraints break the logic-driven recalculation, hiding slippage and
 moving critical paths — the schedule analogue of the cost data-integrity failures of Domain 5. A mistakes
-concealment for protection; C and D do not follow from a corrupted update.
+concealment for protection; B and D do not follow from a corrupted update.
 
 ### Self-check — KA 10.4
 

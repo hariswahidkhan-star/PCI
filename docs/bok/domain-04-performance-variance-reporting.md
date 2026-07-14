@@ -100,21 +100,21 @@ final variance are all lagging (already-realised) measures.
 **MCQ 4.1-B `[4.1.1 · Application]`** A KPI reads `CPI` = 0.97 against a target of 1.00, amber threshold 0.95,
 tolerance ±0.05. The correct status is:
 - A. Red — below target.
-- B. Within tolerance (green/watch) — 0.97 is above the 0.95 amber threshold. ✅
-- C. Cannot be assessed without the schedule.
-- D. Green — exactly on target.
+- B. Cannot be assessed without the schedule.
+- C. Green — exactly on target.
+- D. Within tolerance (green/watch) — 0.97 is above the 0.95 amber threshold. ✅
 
 *Rationale:* 0.97 is below the 1.00 target but above the 0.95 amber threshold and within the ±0.05 tolerance —
 watch, not escalate. It is not red, not on target, and can be assessed from the cost KPI alone.
 
 **MCQ 4.1-C `[4.1.3 · Recall]`** Management by exception means that management attention is focused on:
-- A. Every control account equally, reviewed in full each period.
-- B. The items outside their tolerance, while in-tolerance items are noted and left alone. ✅
+- A. The items outside their tolerance, while in-tolerance items are noted and left alone. ✅
+- B. Every control account equally, reviewed in full each period.
 - C. Only the accounts reporting green.
 - D. Lagging indicators in preference to leading ones.
 
 *Rationale:* Management by exception concentrates scarce attention on out-of-tolerance items — the reds and
-ambers get the narrative and the action. A dilutes attention across everything; C inverts the principle; D
+ambers get the narrative and the action. B dilutes attention across everything; C inverts the principle; D
 confuses it with the indicator-type distinction.
 
 **MCQ 4.1-D `[4.1.1 · Analysis]`** A team's reported KPI improves steadily while the underlying performance
@@ -319,9 +319,9 @@ price/efficiency from volume. It is not about inflating the budget, an IFRS matt
 **MCQ 4.2-D `[4.2.5 · Analysis]`** A work package reports a large *favourable* cost variance. The best
 professional response is to:
 - A. Report it as a saving and move on.
-- B. Investigate the cause — a favourable variance can hide skipped scope, deferred cost or quality risk. ✅
-- C. Increase the budget.
-- D. Treat it as an error.
+- B. Increase the budget.
+- C. Treat it as an error.
+- D. Investigate the cause — a favourable variance can hide skipped scope, deferred cost or quality risk. ✅
 
 *Rationale:* Sign alone is not the story; a favourable variance may reflect skipped/deferred work that returns
 later. Investigating the cause is the professional response; it is neither automatically a clean saving nor an
@@ -342,12 +342,12 @@ A is the *expenditure* variance (`120,000 − 118,000`); B is the *total* overhe
 
 **MCQ 4.2-F `[4.2.1 · Recall]`** A variance is classified as **favourable** when:
 - A. Actual differs from budget by any amount.
-- B. It improves profit — actual cost below plan, or actual revenue above plan. ✅
-- C. The quantity variance is larger than the price variance.
+- B. The quantity variance is larger than the price variance.
+- C. It improves profit — actual cost below plan, or actual revenue above plan. ✅
 - D. It falls within the reporting tolerance.
 
 *Rationale:* Favourable/adverse is defined by the effect on profit, not by the mere existence, composition
-or size of the difference. A describes any variance; C compares components; D describes an in-tolerance
+or size of the difference. A describes any variance; B compares components; D describes an in-tolerance
 variance, which can be favourable or adverse.
 
 ### Self-check — KA 4.2
@@ -445,8 +445,8 @@ changes outcomes.
 ### Sample MCQs — KA 4.3
 
 **MCQ 4.3-A `[4.3.1 · Analysis]`** The best test of a management report's design is whether it:
-- A. Contains every available data point.
-- B. Lets the reader see status, direction, exceptions and actions in the time available. ✅
+- A. Lets the reader see status, direction, exceptions and actions in the time available. ✅
+- B. Contains every available data point.
 - C. Is as long as possible.
 - D. Uses the most advanced charts.
 
@@ -563,9 +563,9 @@ story's integrity. **AI proposes, the professional disposes.**
 **MCQ 4.4-A `[4.4.2 · Analysis]`** A bar chart makes a 2 % cost difference look enormous. The most likely
 cause is:
 - A. Too few bars.
-- B. A y-axis that does not start at zero (truncated axis). ✅
-- C. Using brand colours.
-- D. A missing legend.
+- B. Using brand colours.
+- C. A missing legend.
+- D. A y-axis that does not start at zero (truncated axis). ✅
 
 *Rationale:* A truncated y-axis exaggerates small differences on bar charts. Bar count, colour and legend do
 not create that specific distortion.
@@ -574,15 +574,15 @@ not create that specific distortion.
 chart is a:
 - A. Pie chart.
 - B. Scatter plot.
-- C. Waterfall (variance bridge). ✅
-- D. 3-D column chart.
+- C. 3-D column chart.
+- D. Waterfall (variance bridge). ✅
 
 *Rationale:* A waterfall walks contributions from a start to an end value — exactly a variance bridge. Pies
 show composition, scatters show correlation, and 3-D distorts.
 
 **MCQ 4.4-C `[4.4.3 · Recall]`** The disciplined ordering of a controls "story" for a decision-maker is:
-- A. Action → forecast → status → cause.
-- B. Status → what changed and why → where it takes us (forecast) → the decision (action). ✅
+- A. Status → what changed and why → where it takes us (forecast) → the decision (action). ✅
+- B. Action → forecast → status → cause.
 - C. Forecast → status → action → cause.
 - D. Cause → action → status → forecast.
 

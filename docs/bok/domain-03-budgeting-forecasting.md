@@ -147,24 +147,24 @@ C and D describe contingency or are simply wrong.
 
 **MCQ 3.1-B `[3.1.4 · Application]`** Control-account budgets are USD 9,000,000, contingency reserve USD
 700,000, management reserve USD 500,000. The BAC is:
-- A. USD 9,000,000
-- B. USD 9,700,000 ✅
+- A. USD 9,700,000 ✅
+- B. USD 9,000,000
 - C. USD 10,200,000
 - D. USD 500,000
 
 *Rationale:* `BAC = 9,000,000 + 700,000 = 9,700,000` (contingency is inside the baseline; management reserve
-is not). A omits contingency; C adds management reserve; D is the reserve alone.
+is not). B omits contingency; C adds management reserve; D is the reserve alone.
 
 **MCQ 3.1-C `[3.1.2 · Recall]`** Which budgeting approach requires every cost to be justified from a zero
 base each cycle rather than rolled forward with an increment?
 - A. Top-down budgeting.
 - B. Bottom-up budgeting.
-- C. Zero-based budgeting. ✅
-- D. Rolling-wave budgeting.
+- C. Rolling-wave budgeting.
+- D. Zero-based budgeting. ✅
 
 *Rationale:* Zero-based budgeting rebuilds the case for every cost from zero each cycle — rigorous for
 recurring overhead but heavy to run. Top-down apportions an overall figure; bottom-up builds from work
-packages; neither requires re-justification from zero, and D is a planning technique, not a budgeting
+packages; neither requires re-justification from zero, and C is a planning technique, not a budgeting
 approach defined here.
 
 **MCQ 3.1-D `[3.1.4 · Application]`** A project's cost baseline (`BAC`) is USD 12,400,000, of which USD
@@ -306,8 +306,8 @@ overscales.
 
 **MCQ 3.2-B `[3.2.1 · Analysis]`** A concept-stage (Class 5) estimate is quoted to a board as a firm budget
 with no range. The main risk is:
-- A. The estimate is too conservative.
-- B. False precision — a wide-range early figure is treated as a commitment, so later refinement reads as an "overrun." ✅
+- A. False precision — a wide-range early figure is treated as a commitment, so later refinement reads as an "overrun." ✅
+- B. The estimate is too conservative.
 - C. It violates IFRS 15.
 - D. Nothing, provided it was bottom-up.
 
@@ -317,9 +317,9 @@ bottom-up/definitive.
 
 **MCQ 3.2-C `[3.2.3 · Recall]`** The primary purpose of a basis of estimate is to:
 - A. Replace the risk register.
-- B. Make the estimate auditable and defensible by recording scope, assumptions, rates and exclusions. ✅
-- C. Set the pass mark for the estimate.
-- D. Serve as the contract.
+- B. Set the pass mark for the estimate.
+- C. Serve as the contract.
+- D. Make the estimate auditable and defensible by recording scope, assumptions, rates and exclusions. ✅
 
 *Rationale:* The BoE documents how the estimate was built so it can be challenged and defended. It is not the
 risk register, a threshold, or the contract.
@@ -416,12 +416,12 @@ performance at a glance.
 
 **MCQ 3.3-A `[3.3.3 · Application]`** With the monthly plan {40, 70, 110, 140, 160, …} (USD 000), the Planned
 Value at the end of Month 4 is:
-- A. USD 140,000
-- B. USD 360,000 ✅
+- A. USD 360,000 ✅
+- B. USD 140,000
 - C. USD 320,000
 - D. USD 520,000
 
-*Rationale:* `PV` is cumulative: `40 + 70 + 110 + 140 = 360` (USD 000). A is only Month 4; D is Month 5's
+*Rationale:* `PV` is cumulative: `40 + 70 + 110 + 140 = 360` (USD 000). B is only Month 4; D is Month 5's
 cumulative; C miscounts.
 
 **MCQ 3.3-B `[3.3.2 · Analysis]`** A project's baseline is straight-lined even though execution ramps up
@@ -436,9 +436,9 @@ misleading negative schedule variance. It does not change `BAC` or guarantee zer
 
 **MCQ 3.3-C `[3.3.1 · Recall]`** Spreading the `BAC` across the schedule period by period produces the
 time-phased cost baseline. Which earned-value quantity *is* that cumulative curve?
-- A. Earned Value (`EV`).
-- B. Actual Cost (`AC`).
-- C. Planned Value (`PV`). ✅
+- A. Planned Value (`PV`). ✅
+- B. Earned Value (`EV`).
+- C. Actual Cost (`AC`).
 - D. Estimate at Completion (`EAC`).
 
 *Rationale:* The cumulative planned spend to date is Planned Value (`PV`/BCWS) — the baseline curve earned
@@ -612,11 +612,11 @@ is the "atypical" method (a); D is the CPI×SPI method (c).
 compound on the remaining work. The most appropriate EAC method is:
 - A. `EAC = AC + (BAC − EV)`
 - B. `EAC = BAC / CPI`
-- C. `EAC = AC + (BAC − EV)/(CPI × SPI)` ✅
-- D. `EAC = BAC`
+- C. `EAC = BAC`
+- D. `EAC = AC + (BAC − EV)/(CPI × SPI)` ✅
 
 *Rationale:* The CPI×SPI method (c) reflects remaining work being dragged by *both* cost and schedule
-performance. A assumes the variance was atypical; B reflects cost only; D assumes on-budget completion.
+performance. A assumes the variance was atypical; B reflects cost only; C assumes on-budget completion.
 
 **MCQ 3.4-C `[3.4.3 · Analysis]`** Which is the strongest early-warning signal of a systemic cost problem?
 - A. A single month's CPI below 1.0.
@@ -640,12 +640,12 @@ the persisting-CPI method (`800,000 / 0.9375`), contradicting the one-off judgem
 
 **MCQ 3.4-E `[3.4.1 · Recall]`** The Estimate to Complete (`ETC`) is best defined as:
 - A. The forecast total cost of the whole job at completion.
-- B. The current best estimate of the cost of the *remaining* work from now. ✅
-- C. The difference between `BAC` and `EAC`.
-- D. The actual cost incurred to date.
+- B. The difference between `BAC` and `EAC`.
+- C. The actual cost incurred to date.
+- D. The current best estimate of the cost of the *remaining* work from now. ✅
 
 *Rationale:* `ETC` is the forward-looking cost of the work still to be done, linked to the completion
-forecast by `EAC = AC + ETC`. A describes `EAC`; C is `VAC`, the variance at completion; D is `AC`.
+forecast by `EAC = AC + ETC`. A describes `EAC`; B is `VAC`, the variance at completion; C is `AC`.
 
 ### Self-check — KA 3.4
 
@@ -791,9 +791,9 @@ which typically makes the trough deeper than a corporate-funded equivalent.
 Month 2. A and C are shallower points; D is the final positive balance (the profit).
 
 **MCQ 3.5-B `[3.5.3 · Analysis]`** Which change would *deepen* a project's funding trough, all else equal?
-- A. Shorter client payment terms.
-- B. A mobilisation advance from the client.
-- C. Longer client payment terms and higher retention. ✅
+- A. Longer client payment terms and higher retention. ✅
+- B. Shorter client payment terms.
+- C. A mobilisation advance from the client.
 - D. Monthly rather than milestone billing.
 
 *Rationale:* Longer terms and higher retention delay and reduce inflows, deepening the trough. Shorter terms,
