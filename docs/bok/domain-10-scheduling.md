@@ -1,0 +1,436 @@
+# Domain 10 — Project Scheduling (in depth)
+
+> **Group:** Project management. **Target:** ~65 pages.
+> **Binds to:** [`00-style-spine.md`](00-style-spine.md). British English; USD (+SAR where useful). Complements
+> the schedule side of earned value (Domain 6, especially the critical-path limitation, KA 6.4.2).
+
+## Why this domain exists
+
+A schedule is the model of *how the work will happen in time* — and it is the half of project controls that
+earned value, on its own, cannot see (Domain 6, KA 6.4.2). A controls professional must be able to build a
+logic-driven schedule, find its **critical path**, compute **float**, compress it when needed, and control it
+against a baseline. This domain covers schedule development — activities, dependencies, durations (KA 10.1);
+**network analysis and the Critical Path Method** — the forward/backward pass, float and the critical path
+(KA 10.2, worked end-to-end); schedule compression and resourcing — crashing, fast-tracking, levelling, and
+schedule risk (KA 10.3); and progress measurement and schedule control, including how classical scheduling
+relates to agile cadence (KA 10.4).
+
+**Learning objectives.** After this domain a candidate can: define activities, sequence them with the four
+dependency types and leads/lags, and estimate durations (including PERT); run a forward and backward pass to
+find early/late dates, total and free float, and the critical path; apply crashing and fast-tracking and
+explain their trade-offs, and describe resource levelling/smoothing and schedule-risk analysis; and measure
+schedule progress and control it against a baseline, relating it to agile cadence.
+
+---
+
+## Knowledge Area 10.1 — Schedule development
+
+*Topics: 10.1.1 activity definition · 10.1.2 sequencing and dependency types · 10.1.3 leads and lags · 10.1.4
+estimating durations (incl. PERT).*
+
+### 10.1.1 Activity definition
+
+**Definition & purpose.** Scheduling begins by decomposing the **work packages** of the WBS (Domain 8, KA
+8.2.1) into **activities** — the units of work that are sequenced and durated. An activity is small enough to
+estimate and manage, large enough not to swamp the schedule with detail. Well-defined activities, traceable to
+the WBS, are what make the schedule integrate with cost (control accounts, Domain 5) and earned value.
+
+### 10.1.2 Sequencing and dependency types
+
+**The principle.** Activities are linked by **logical dependencies** that define what must precede what. There
+are four types, defined by which ends are tied:
+
+| Dependency | Meaning |
+|---|---|
+| **Finish-to-Start (FS)** | B starts after A finishes (the default, most common) |
+| **Start-to-Start (SS)** | B starts after A starts (parallel with an offset) |
+| **Finish-to-Finish (FF)** | B finishes after A finishes |
+| **Start-to-Finish (SF)** | B finishes after A starts (rare) |
+
+Dependencies may be **mandatory** ("hard logic" — concrete must cure before loading), **discretionary**
+("preferred" sequencing), or **external** (a permit, a client decision). Sound logic — not date constraints —
+is what makes a schedule *dynamic*: change one duration and the network recalculates.
+
+### 10.1.3 Leads and lags
+
+**The principle.** A **lag** is a delay on a dependency (B starts 3 days *after* A finishes: FS + 3); a
+**lead** is an overlap (B starts 2 days *before* A finishes: FS − 2, a form of fast-tracking, 10.3). Leads and
+lags model reality (curing time, mobilisation) but should represent genuine logic, not be used to force dates —
+hidden lags are a common way schedules are quietly manipulated.
+
+### 10.1.4 Estimating durations (including PERT)
+
+**The principle.** Activity **durations** are estimated from the work quantity, the assigned resources and
+productivity. Where duration is uncertain, **three-point (PERT)** estimation captures the range:
+
+```
+Expected duration  tE = (O + 4M + P) / 6
+Standard deviation  σ = (P − O) / 6
+```
+- `O`, `M`, `P` — optimistic, most-likely, pessimistic durations (time units).
+
+**Worked example 10.1.4 — PERT expected duration.** For an activity with `O = 4`, `M = 6`, `P = 14` days:
+`tE = (4 + 4×6 + 14)/6 = (4 + 24 + 14)/6 = 42/6 = ` **7 days**; `σ = (14 − 4)/6 = 1.67` days. The pessimistic
+tail (14 vs a most-likely 6) pulls the expected duration to 7, above the most-likely — the value of a
+three-point estimate over a single guess.
+
+### Key terms — KA 10.1
+
+| Term | Meaning |
+|---|---|
+| **Activity** | The unit of work sequenced and durated, traceable to the WBS. |
+| **Dependency (FS/SS/FF/SF)** | The four logical relationships between activities. |
+| **Lead / lag** | An overlap / a delay on a dependency. |
+| **PERT (three-point)** | `tE = (O + 4M + P)/6`; `σ = (P − O)/6`. |
+
+### Sample MCQs — KA 10.1
+
+**MCQ 10.1-A `[10.1.4 · Application]`** With `O = 4`, `M = 6`, `P = 14`, the PERT expected duration is:
+- A. 6 days
+- B. 7 days ✅
+- C. 8 days
+- D. 24 days
+
+*Rationale:* `(4 + 4×6 + 14)/6 = 42/6 = 7`. A is the most-likely; C misweights; D forgets to divide.
+
+**MCQ 10.1-B `[10.1.2 · Recall]`** "B cannot start until A finishes" is which dependency?
+- A. Start-to-Start
+- B. Finish-to-Start ✅
+- C. Finish-to-Finish
+- D. Start-to-Finish
+
+*Rationale:* Finish-to-Start (the default). SS ties starts; FF ties finishes; SF is the rare start-to-finish.
+
+### Self-check — KA 10.1
+
+1. Name the four dependency types and which is most common. *(FS, SS, FF, SF; FS.)*
+2. Why prefer logic links over hard date constraints? *(Logic makes the schedule dynamic — it recalculates when
+   a duration changes; constraints freeze dates and hide slippage.)*
+
+---
+
+## Knowledge Area 10.2 — Network analysis and the Critical Path Method *(worked in full)*
+
+*Topics: 10.2.1 the network · 10.2.2 the forward pass (early dates) · 10.2.3 the backward pass (late dates) ·
+10.2.4 total and free float · 10.2.5 the critical path.*
+
+### 10.2.1 The network
+
+**Definition & purpose.** A **network** (precedence diagram) shows activities as nodes linked by dependencies.
+Analysing it by the **Critical Path Method (CPM)** finds the **longest path** through the network — which
+determines the **shortest possible project duration** — and the **float** on every other activity. CPM is the
+backbone of predictive scheduling and the thing earned value must be read alongside (Domain 6, KA 6.4.2).
+
+**The worked network.** Six activities (durations in days):
+
+| Activity | Duration | Predecessor(s) |
+|---|---:|---|
+| A | 3 | — (start) |
+| B | 4 | A |
+| C | 2 | A |
+| D | 5 | B |
+| E | 3 | C |
+| F | 2 | D, E (finish) |
+
+### 10.2.2 The forward pass — early dates
+
+**Method.** Working left to right, `ES` (early start) of an activity = the latest `EF` of its predecessors;
+`EF = ES + duration`. Start at time 0.
+
+| Activity | `ES` | `EF` (= ES + dur) |
+|---|---:|---:|
+| A | 0 | 3 |
+| B | 3 | 7 |
+| C | 3 | 5 |
+| D | 7 | 12 |
+| E | 5 | 8 |
+| F | max(12, 8) = 12 | 14 |
+
+**Project duration = 14 days** (the `EF` of the final activity F).
+
+### 10.2.3 The backward pass — late dates
+
+**Method.** Working right to left from the project finish (`LF` of F = 14), `LF` of an activity = the earliest
+`LS` of its successors; `LS = LF − duration`.
+
+| Activity | `LF` | `LS` (= LF − dur) |
+|---|---:|---:|
+| F | 14 | 12 |
+| D | 12 | 7 |
+| E | 12 | 9 |
+| B | 7 | 3 |
+| C | 9 | 7 |
+| A | min(3, 7) = 3 | 0 |
+
+### 10.2.4 Total and free float
+
+**Formulae.**
+```
+Total float (TF) = LS − ES  (= LF − EF)   — delay available without delaying the PROJECT
+Free float  (FF) = min(ES of successors) − EF — delay available without delaying any SUCCESSOR
+```
+
+| Activity | `TF` | `FF` |
+|---|---:|---:|
+| A | 0 | 0 |
+| B | 0 | 0 |
+| C | 7 − 3 = **4** | 5 − 5 = **0** |
+| D | 0 | 0 |
+| E | 9 − 5 = **4** | 12 − 8 = **4** |
+| F | 0 | 0 |
+
+**Interpretation.** Activities with **zero total float** cannot slip without delaying the project — they are
+**critical**. Note C: it has 4 days of *total* float but **0 free** float — delaying C uses up float that E
+then relies on, so C's slack is shared, not private. This total-vs-free distinction is exactly what a controls
+professional needs to answer "can this activity slip, and who does it hurt?"
+
+### 10.2.5 The critical path
+
+**The result.** The **critical path** is the chain of zero-float activities — the longest path — here **A → B
+→ D → F**, length `3 + 4 + 5 + 2 = 14` days, equal to the project duration. Any delay on a critical activity
+delays the whole project day-for-day; managing the critical path is therefore where schedule attention
+concentrates.
+
+> **Fig 10.2.1 — The activity network and critical path.** *Caption:* early/late dates, float and the critical
+> path. *Underlying data:* the tables above. *Render-ready description:* six nodes A–F laid left to right with
+> dependency arrows (A→B, A→C, B→D, C→E, D→F, E→F); each node shows `ES|EF` (top) and `LS|LF` (bottom) and its
+> `TF`; the critical chain A–B–D–F drawn as a bold brand-blue path, non-critical C and E in grey with their
+> float annotated. *Animation storyboard (digital-only):* the forward pass sweeps left-to-right filling `ES/EF`;
+> the backward pass sweeps right-to-left filling `LS/LF`; float is computed per node; finally the zero-float
+> path highlights as the critical path.
+
+### Key terms — KA 10.2
+
+| Term | Meaning |
+|---|---|
+| **Forward / backward pass** | Compute early dates (`ES/EF`) / late dates (`LS/LF`). |
+| **Total float (`TF`)** | Slack without delaying the project (`LS − ES`). |
+| **Free float (`FF`)** | Slack without delaying any successor. |
+| **Critical path** | The longest, zero-float chain; sets the project duration. |
+
+### Sample MCQs — KA 10.2
+
+**MCQ 10.2-A `[10.2.5 · Application]`** In the worked network (A3, B4, C2, D5, E3, F2; A→B→D→F, A→C→E→F), the
+project duration is:
+- A. 12 days
+- B. 14 days ✅
+- C. 10 days
+- D. 8 days
+
+*Rationale:* The longest path A–B–D–F = `3+4+5+2 = 14`. The A–C–E–F path is `3+2+3+2 = 10`; the project takes
+the longer, 14.
+
+**MCQ 10.2-B `[10.2.4 · Analysis]`** Activity C has total float 4 but free float 0. This means delaying C:
+- A. Delays the project by 4 days.
+- B. Delays its successor E (uses shared float), but not the project — up to the limit. ✅
+- C. Has no effect at all.
+- D. Is impossible.
+
+*Rationale:* Free float 0 means any delay to C immediately eats into the float E relies on; total float 4 means
+the project has 4 days' buffer overall, but that slack is shared along the C–E path. It does not delay the
+project (until the 4 days are used) and is certainly possible.
+
+**MCQ 10.2-C `[10.2.4 · Application]`** Activity D has `ES` = 7 and `LS` = 7. Its total float is:
+- A. 7
+- B. 0 ✅
+- C. 14
+- D. 5
+
+*Rationale:* `TF = LS − ES = 7 − 7 = 0` — D is critical. The other values confuse dates with float.
+
+### Self-check — KA 10.2
+
+1. Give the formulae for total and free float and the difference in what each protects. *(`TF = LS − ES`
+   (project); `FF = min successor ES − EF` (successor).)*
+2. What defines the critical path and why does it set the project duration? *(The longest, zero-float chain; any
+   slip on it delays the whole project.)*
+
+---
+
+## Knowledge Area 10.3 — Schedule compression and resourcing
+
+*Topics: 10.3.1 crashing · 10.3.2 fast-tracking · 10.3.3 resource levelling and smoothing · 10.3.4 schedule
+risk (PERT/Monte Carlo).*
+
+### 10.3.1 Crashing
+
+**Definition & purpose.** **Crashing** shortens the schedule by adding resources to **critical** activities,
+choosing those with the **lowest cost per time saved**. It trades **cost for time** and only helps on the
+critical path (crashing a non-critical activity just adds cost and float). Crashing has diminishing returns and
+can shift the critical path to another chain.
+
+**Worked example 10.3.1 — crash the critical path.** In the worked network, activity **B** (on the critical
+path) can be crashed from **4 to 2 days** at **USD 5,000/day**. Crashing B by 2 days costs `2 × 5,000 =
+10,000` and shortens the project from 14 to **12 days** — *provided* A–B–D–F remains the longest path. Check:
+the A–C–E–F path is 10 days, so shortening the critical path to 12 keeps it critical (12 > 10) — the crash is
+effective. If the parallel path had been 13, crashing B by 2 would only save 1 day before that path became
+critical.
+
+### 10.3.2 Fast-tracking
+
+**Definition & purpose.** **Fast-tracking** shortens the schedule by **overlapping** activities normally done
+in sequence (using leads, 10.1.3) — e.g. starting construction before design is fully complete. It trades
+**time for risk**: overlapping increases the chance of rework if the earlier activity changes. Fast-tracking
+costs little directly but raises risk; crashing costs money but keeps the logic. The choice depends on whether
+money or risk tolerance is scarcer.
+
+### 10.3.3 Resource levelling and smoothing
+
+**The principle.**
+
+- **Resource levelling** adjusts the schedule to respect **resource limits** (only three crews available), and
+  **may extend the project duration** and change the critical path (a "resource-critical" path emerges).
+- **Resource smoothing** adjusts activities **within their float** to even out resource peaks **without**
+  extending the duration.
+
+A schedule that ignores resource limits is optimistic fiction; levelling and smoothing make it deliverable.
+
+### 10.3.4 Schedule risk (PERT / Monte Carlo)
+
+**The principle.** Because durations are uncertain (10.1.4), the *deterministic* critical path understates
+completion risk — especially where **near-critical** paths could become critical if their activities slip.
+**Schedule-risk analysis** models duration uncertainty across the network — conceptually via **Monte Carlo
+simulation** (run the network thousands of times with sampled durations to get a **distribution** of completion
+dates and a **probability** of meeting a target) — giving a P50/P80 completion date rather than a single
+deterministic one. This is the schedule analogue of contingency in cost (Domains 3, 12) and where much of AI's
+scheduling value lies (below).
+
+### Key terms — KA 10.3
+
+| Term | Meaning |
+|---|---|
+| **Crashing** | Add resources to critical activities (cost for time). |
+| **Fast-tracking** | Overlap sequential activities (time for risk). |
+| **Resource levelling / smoothing** | Respect resource limits (may extend) / even peaks within float (no extension). |
+| **Schedule-risk analysis** | Model duration uncertainty (Monte Carlo) for a completion distribution. |
+
+### Sample MCQs — KA 10.3
+
+**MCQ 10.3-A `[10.3.1 · Analysis]`** Crashing is most effective when applied to:
+- A. Any activity with float.
+- B. Critical-path activities with the lowest cost per time saved. ✅
+- C. The longest-duration activity regardless of path.
+- D. Non-critical activities.
+
+*Rationale:* Only critical-path activities shorten the project; among those, pick the cheapest per time saved.
+Crashing float/non-critical activities adds cost without shortening the project.
+
+**MCQ 10.3-B `[10.3.2 · Analysis]`** Fast-tracking primarily trades:
+- A. Cost for time.
+- B. Time for risk (overlapping raises rework risk). ✅
+- C. Scope for cost.
+- D. Quality for schedule.
+
+*Rationale:* Fast-tracking overlaps sequential work, saving time but increasing rework risk. Crashing (not
+fast-tracking) trades cost for time.
+
+**MCQ 10.3-C `[10.3.3 · Recall]`** Which technique may extend the project duration?
+- A. Resource smoothing.
+- B. Resource levelling. ✅
+- C. Fast-tracking.
+- D. Crashing.
+
+*Rationale:* Levelling respects hard resource limits and may extend the schedule; smoothing works within float
+(no extension); fast-tracking and crashing shorten it.
+
+### Self-check — KA 10.3
+
+1. Contrast crashing and fast-tracking by what each trades. *(Crashing — cost for time; fast-tracking — time
+   for risk.)*
+2. Why does a deterministic critical path understate completion risk? *(It ignores duration uncertainty and
+   near-critical paths; Monte Carlo gives a completion distribution/probability.)*
+
+---
+
+## Knowledge Area 10.4 — Progress measurement and schedule control
+
+*Topics: 10.4.1 updating and progressing the schedule · 10.4.2 schedule variance and baseline comparison ·
+10.4.3 relating classical scheduling to agile cadence.*
+
+### 10.4.1 Updating and progressing the schedule
+
+**The principle.** A schedule is controlled by **progressing** it each period: recording actual start/finish
+dates and remaining durations at the **data date**, then recalculating the network. Progressing reveals the
+**current** critical path (which may have moved) and the forecast completion. Discipline matters: out-of-sequence
+progress, missing actuals and unjustified constraint changes corrupt the forecast — the schedule equivalent of
+the data-integrity issues in cost (Domain 5, KA 5.2.4).
+
+### 10.4.2 Schedule variance and baseline comparison
+
+**The principle.** Schedule performance is measured by comparing the **progressed** schedule to the
+**baseline**: the movement of key milestones, the current vs baseline critical path, and — in earned-value
+terms — the schedule variance `SV` and index `SPI` (Domain 6), with **earned schedule** (Domain 6, KA 6.4.3)
+giving a time-based measure that stays meaningful late in the project. A controls professional reads *both* the
+network view (which activities and which path) and the earned-value view (how much, in aggregate), because each
+covers the other's blind spot: EVM does not see the critical path; the network does not aggregate cost.
+
+### 10.4.3 Relating classical scheduling to agile cadence
+
+**The bridge.** Classical scheduling and agile cadence are not opposites — they are two ways of expressing
+*time-phased delivery*. Sprints and releases (Domain 9) are **schedule increments**: a release plan maps to
+milestones (Domain 9, KA 9.6.2), and velocity-based forecasting (Domain 9, KA 9.5) is the adaptive analogue of
+critical-path completion forecasting. On a **hybrid** programme the controls professional runs a CPM schedule
+for the predictive scope and a cadence-based forecast for the adaptive scope, and **reconciles both to the same
+milestones** so the programme has one time picture.
+
+**AI in this KA.** Scheduling is a strong AI use case (Domain 13, KA 13.5): AI-assisted schedule generation and
+logic-checking (finding missing links, dangling activities, excessive constraints/lags), delay prediction from
+progress trends and external data, and accelerating Monte Carlo risk analysis. The professional owns the logic
+and the forecast — an AI-proposed schedule can embed hidden constraints or unrealistic durations, and a delay
+prediction is an input to judgement, not a decision. **AI proposes, the professional disposes.**
+
+### Key terms — KA 10.4
+
+| Term | Meaning |
+|---|---|
+| **Progressing / data date** | Recording actuals and remaining durations, then recalculating. |
+| **Baseline comparison** | Current vs baseline milestones and critical path. |
+| **Schedule increment** | A Sprint/release as a time-phased unit mapped to milestones. |
+
+### Sample MCQs — KA 10.4
+
+**MCQ 10.4-A `[10.4.2 · Analysis]`** Why read both the network view and the earned-value view of schedule?
+- A. They always agree.
+- B. Each covers the other's blind spot — EVM misses the critical path; the network does not aggregate cost/performance. ✅
+- C. Only one is ever correct.
+- D. To duplicate effort.
+
+*Rationale:* Aggregate `SPI` can hide critical-path slippage (Domain 6, KA 6.4.2); the network shows the path
+but not aggregate performance. Together they give the full schedule picture.
+
+**MCQ 10.4-B `[10.4.3 · Recall]`** In a hybrid programme, Sprints and releases are best treated as:
+- A. Incompatible with scheduling.
+- B. Schedule increments mapped to milestones. ✅
+- C. A replacement for the critical path.
+- D. Cost accounts.
+
+*Rationale:* Sprints/releases are time-phased increments that map to milestones, reconciled with the CPM
+schedule. They complement, not replace, scheduling, and are not cost accounts.
+
+### Self-check — KA 10.4
+
+1. Why must the critical path be re-identified when progressing a schedule? *(Actual progress can move the
+   critical path to a different chain.)*
+2. How do agile releases relate to a classical schedule? *(As schedule increments mapped to milestones and
+   reconciled with the CPM view.)*
+
+---
+
+## Domain 10 summary
+
+Scheduling models the work in time: activities decomposed from the WBS, sequenced with the four dependency
+types and leads/lags, and durated (three-point/PERT where uncertain). The **Critical Path Method** computes
+early and late dates through a forward and backward pass, derives **total and free float**, and identifies the
+**critical path** — the longest, zero-float chain that sets the project duration and concentrates management
+attention. The schedule is compressed by **crashing** (cost for time, on the critical path) or **fast-tracking**
+(time for risk, by overlap), made deliverable by **resource levelling and smoothing**, and its uncertainty
+quantified by **schedule-risk (Monte Carlo)** analysis. It is controlled by progressing against the baseline
+each period — reading both the network view (path) and the earned-value view (aggregate) because each covers
+the other's blind spot — and it reconciles with agile cadence, treating Sprints and releases as schedule
+increments mapped to milestones.
+
+**Cross-references.** WBS/activities → 8.2; schedule variance/`SPI`/earned schedule and the critical-path
+blind spot → 6.4; the time-phased cost baseline (PV) → 3.3; schedule risk and contingency → Domain 12; hybrid
+Sprint-to-milestone mapping → 9.6; AI-assisted scheduling and delay prediction → 13.5.
+
+*Domain 10 is a first authored draft pending SME technical review before it feeds the exam blueprint.*

@@ -35,7 +35,7 @@ domain binds to it, so notation and depth stay consistent across the whole volum
 | 7 | Contracts, Commercial Management, BoQ, Invoicing & Revenue | [`domain-07-contracts-commercial.md`](domain-07-contracts-commercial.md) | ✅ Draft complete |
 | 8 | Project Management Lifecycle | [`domain-08-pm-lifecycle.md`](domain-08-pm-lifecycle.md) | ✅ Draft complete |
 | 9 | Agile, Scrum & Adaptive Delivery for Project Controls | [`domain-09-agile-adaptive.md`](domain-09-agile-adaptive.md) | ✅ Draft complete |
-| 10 | Project Scheduling (in depth) | `domain-10-scheduling.md` | ⏳ Planned |
+| 10 | Project Scheduling (in depth) | [`domain-10-scheduling.md`](domain-10-scheduling.md) | ✅ Draft complete |
 | 11 | Business Process Cycles (O2C, P2P & control environment) | `domain-11-process-cycles.md` | ⏳ Planned |
 | 12 | Risk Management for Project Controls | `domain-12-risk-management.md` | ⏳ Planned |
 | 13 | AI for Project Controls & PM: Concepts, Tools & Practice | `domain-13-ai/` (KAs 13.1–13.7) | ⏳ Planned |
