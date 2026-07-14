@@ -138,8 +138,8 @@ risk:
 ### Sample MCQs — KA 13.1
 
 **MCQ 13.1-A `[13.1.1 · Recall]`** Which relationship is correct?
-- A. AI ⊂ ML ⊂ GenAI
-- B. GenAI ⊂ ML ⊂ AI ✅
+- A. GenAI ⊂ ML ⊂ AI ✅
+- B. AI ⊂ ML ⊂ GenAI
 - C. ML ⊂ GenAI ⊂ AI
 - D. They are unrelated fields.
 
@@ -147,8 +147,8 @@ risk:
 
 **MCQ 13.1-B `[13.1.6 · Analysis]`** Flagging invoices whose PO price and invoice price differ is best done with:
 - A. Generative AI.
-- B. Rules/automation (deterministic logic). ✅
-- C. Reinforcement learning.
+- B. Reinforcement learning.
+- C. Rules/automation (deterministic logic). ✅
 - D. A large language model.
 
 *Rationale:* The logic is known and deterministic (a three-way match) — a transparent, auditable rule. GenAI/
@@ -166,23 +166,23 @@ retrain (that is fine-tuning), does not remove the need to verify, and is unrela
 **MCQ 13.1-D `[13.1.3 · Recall]`** For a factual controls task such as extracting figures from a document, the
 temperature setting should be:
 - A. High, to maximise creativity.
-- B. Low, to reduce randomness in the output. ✅
+- B. Set equal to the context-window size.
 - C. Irrelevant — temperature only affects cost.
-- D. Set equal to the context-window size.
+- D. Low, to reduce randomness in the output. ✅
 
 *Rationale:* Low temperature suits deterministic, factual tasks; high temperature is for ideation. Temperature
 is a randomness setting, not a cost control, and is unrelated to the context window.
 
 **MCQ 13.1-E `[13.1.5 · Analysis]`** An LLM returns a fluent, confident multi-step cost calculation. The
 professional must still recompute it because:
-- A. LLMs always round figures incorrectly.
-- B. An LLM generates plausible text, not verified text — plausible ≠ correct, especially in multi-step
+- A. An LLM generates plausible text, not verified text — plausible ≠ correct, especially in multi-step
   calculation. ✅
+- B. LLMs always round figures incorrectly.
 - C. Recomputation is only needed when temperature is high.
 - D. The context window truncates all calculations.
 
 *Rationale:* An LLM has no inherent notion of truth, only of likelihood — fluency and confidence do not warrant
-correctness, and there is no true reasoning guarantee. A overstates a specific failure; C and D misapply the
+correctness, and there is no true reasoning guarantee. B overstates a specific failure; C and D misapply the
 concepts — verification is required at any temperature.
 
 ### Self-check — KA 13.1
@@ -284,9 +284,9 @@ initiative, and it is work a controls professional is well-placed to lead.
 **MCQ 13.2-A `[13.2.1 · Analysis]`** An ML cost-forecast model is trained on historically mis-coded project
 cost. The most likely outcome is:
 - A. The model corrects the mis-coding.
-- B. The model learns and reproduces the mis-coding, giving misleading forecasts. ✅
+- B. Better accuracy.
 - C. No effect — models are robust to bad data.
-- D. Better accuracy.
+- D. The model learns and reproduces the mis-coding, giving misleading forecasts. ✅
 
 *Rationale:* Models learn the patterns in their data, including errors — garbage in, garbage out. They do not
 self-correct source errors, and bad data degrades (not improves) accuracy.
@@ -315,8 +315,8 @@ basis in the data. At 11 % failing, the dataset is not yet model-ready — remed
 
 **MCQ 13.2-D `[13.2.3 · Recall]`** Contracts, correspondence and free-form reports — unstructured data — are
 primarily the domain of:
-- A. Supervised ML over tabular features.
-- B. GenAI / RAG. ✅
+- A. GenAI / RAG. ✅
+- B. Supervised ML over tabular features.
 - C. Rules-based validation only.
 - D. No AI category.
 
@@ -478,8 +478,8 @@ approved it (13.6). Guardrails are what let an organisation get AI's benefits wi
 **MCQ 13.3-A `[13.3.3 · Analysis]`** The single non-negotiable step after a GenAI model drafts a variance
 narrative is to:
 - A. Publish it immediately to save time.
-- B. Verify the figures and causal claims against source before use. ✅
-- C. Increase the temperature.
+- B. Increase the temperature.
+- C. Verify the figures and causal claims against source before use. ✅
 - D. Delete the source data.
 
 *Rationale:* Verification is the step that makes "AI proposes, the professional disposes" real — a model can
@@ -509,9 +509,9 @@ them reformats a dataset wholesale.
 **MCQ 13.3-D `[13.3.4 · Analysis]`** To meet a deadline, an analyst pastes a confidential subcontract into a
 public AI tool to extract its terms. The primary guardrail breached is:
 - A. Iterative refinement.
-- B. Confidentiality — sensitive data must never enter ungoverned tools. ✅
+- B. Desired-format specification.
 - C. Temperature control.
-- D. Desired-format specification.
+- D. Confidentiality — sensitive data must never enter ungoverned tools. ✅
 
 *Rationale:* The confidentiality guardrail (13.2.5, 13.3.4) is absolute: pasting sensitive data into an
 ungoverned public tool loses control of it, whatever the time pressure — a governed tool is the remedy.
@@ -691,8 +691,8 @@ document question without RAG grounding) is a common error that invites hallucin
 **MCQ 13.4-A `[13.4.4 · Analysis]`** To answer "what retention and LD terms do our current contracts contain?"
 the best-fitting category is:
 - A. A general LLM with no documents.
-- B. Document / RAG grounded in the contract set. ✅
-- C. A meeting assistant.
+- B. A meeting assistant.
+- C. Document / RAG grounded in the contract set. ✅
 - D. RPA.
 
 *Rationale:* The question is a grounded document query — RAG over the contracts gives cited, source-based
@@ -700,9 +700,9 @@ answers. A general LLM without the documents risks hallucination; the others do 
 
 **MCQ 13.4-B `[13.4.3 · Recall]`** A stated reason to note that "features change" when naming AI tools is:
 - A. Tools never improve.
-- B. Capabilities evolve rapidly, so a professional validates current features rather than assuming claims. ✅
+- B. To avoid using AI.
 - C. All tools are identical.
-- D. To avoid using AI.
+- D. Capabilities evolve rapidly, so a professional validates current features rather than assuming claims. ✅
 
 *Rationale:* AI capabilities change quickly; responsible use validates current capability. The other options
 are false or contrary to the domain's stance.
@@ -719,9 +719,9 @@ tabular arithmetic is the named over-reach error. It is neither good practice no
 and it is unrelated to RAG grounding.
 
 **MCQ 13.4-D `[13.4.2b · Recall]`** The category-specific governance risk of document/RAG tools is that:
-- A. They cannot cite sources.
-- B. The retrieval layer may not respect document permissions, and a stale corpus produces confidently
+- A. The retrieval layer may not respect document permissions, and a stale corpus produces confidently
   outdated answers. ✅
+- B. They cannot cite sources.
 - C. They work only on tabular data.
 - D. They eliminate hallucination entirely.
 
@@ -983,8 +983,8 @@ verified (13.6). The AI saved the assembly; the professional owns the forecast.
 ### Sample MCQs — KA 13.5
 
 **MCQ 13.5-A `[13.5.1 · Recall]`** The universal shape of an AI-in-controls workflow is:
-- A. AI decides → professional observes.
-- B. Input → AI step → professional verification/decision → owned output. ✅
+- A. Input → AI step → professional verification/decision → owned output. ✅
+- B. AI decides → professional observes.
 - C. Professional drafts → AI approves.
 - D. AI both drafts and signs off.
 
@@ -1004,9 +1004,9 @@ verification steps required.
 **MCQ 13.5-C `[13.5.4 · Analysis]`** An AI accrual tool accrues from the invoice date rather than the service
 date. This risks:
 - A. Nothing.
-- B. Reproducing a cut-off error at scale (Domain 1, KA 1.3.5). ✅
+- B. Violating IFRS 15 only.
 - C. Improving cut-off accuracy.
-- D. Violating IFRS 15 only.
+- D. Reproducing a cut-off error at scale (Domain 1, KA 1.3.5). ✅
 
 *Rationale:* Accrual follows the *service* date; keying off the invoice date reproduces a classic cut-off error
 across every accrual — the professional must own the accrual logic.
@@ -1190,9 +1190,9 @@ training at least annually.
 
 **MCQ 13.6-A `[13.6.2 · Analysis]`** When an AI-assisted forecast is later challenged, an acceptable defence is:
 - A. "It was the model's output."
-- B. The documented verification and named sign-off showing how it was checked and owned. ✅
+- B. Deleting the audit trail.
 - C. "The model is very advanced."
-- D. Deleting the audit trail.
+- D. The documented verification and named sign-off showing how it was checked and owned. ✅
 
 *Rationale:* Accountability rests with a named professional; the defence is the documented verification and
 sign-off. Blaming the model, appealing to its sophistication, or destroying the trail all fail governance.
@@ -1207,8 +1207,8 @@ sign-off. Blaming the model, appealing to its sophistication, or destroying the 
 Time-saving, peer use and impressive output are not reasons to override the appropriateness test.
 
 **MCQ 13.6-C `[13.6.3 · Recall]`** The mitigation for hallucination in a controls context is to:
-- A. Trust the model more.
-- B. Verify every figure/citation against source, use RAG grounding and low temperature. ✅
+- A. Verify every figure/citation against source, use RAG grounding and low temperature. ✅
+- B. Trust the model more.
 - C. Increase temperature.
 - D. Paste more confidential data.
 
@@ -1228,8 +1228,8 @@ checklist exists to provide.
 
 **MCQ 13.6-E `[13.6.3 · Recall]`** Bias arises in AI systems primarily because:
 - A. Models are deliberately unfair.
-- B. Models reproduce the biases present in their training data. ✅
-- C. Temperature is set too low.
+- B. Temperature is set too low.
+- C. Models reproduce the biases present in their training data. ✅
 - D. Verification introduces skew.
 
 *Rationale:* Models learn — and therefore reproduce — the patterns in their data, including its biases; the
@@ -1350,8 +1350,8 @@ professional disposes.**
 
 **MCQ 13.7-A `[13.7.1 · Analysis]`** Jumping straight to "AI integrated in the workflow" without governance
 primarily:
-- A. Saves the most time safely.
-- B. Invites the risks of ungoverned AI (hallucination, confidentiality, no audit trail). ✅
+- A. Invites the risks of ungoverned AI (hallucination, confidentiality, no audit trail). ✅
+- B. Saves the most time safely.
 - C. Is required by the maturity model.
 - D. Has no downside.
 
@@ -1383,9 +1383,9 @@ case nets the full tooling *and* governance cost (13.7.3).
 **MCQ 13.7-D `[13.7.2 · Recall]`** As AI is integrated into the controls workflow, the professional's role
 shifts toward:
 - A. Being replaced by the model.
-- B. Directing and assuring AI-assisted production — a higher-judgement role. ✅
+- B. Needing less domain knowledge.
 - C. Producing every number manually to be safe.
-- D. Needing less domain knowledge.
+- D. Directing and assuring AI-assisted production — a higher-judgement role. ✅
 
 *Rationale:* The role moves from *producing* every number to *directing and assuring* AI-assisted production;
 the professionals who thrive pair domain mastery with AI fluency (13.7.2). The role is neither replaced nor

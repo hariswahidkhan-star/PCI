@@ -72,9 +72,9 @@ of the funding curve.
 
 **MCQ 11.1-B `[11.1.3 · Analysis]`** A growing overdue receivables balance is best read as:
 - A. Always an accounting error.
-- B. A leading indicator of cash risk and possible billing/revenue disputes. ✅
+- B. A reason to recognise more revenue.
 - C. Irrelevant to controls.
-- D. A reason to recognise more revenue.
+- D. A leading indicator of cash risk and possible billing/revenue disputes. ✅
 
 *Rationale:* Ageing receivables signal collection risk and can flag disputed valuations or customer distress —
 a leading indicator. It is not automatically an error, is highly relevant, and is not a basis to recognise more
@@ -93,8 +93,8 @@ one day's revenue; C values the whole remaining receivables book (46 days), not 
 old book (60 days).
 
 **MCQ 11.1-D `[11.1.2 · Recall]`** Which O2C control also gates step 1 of the IFRS 15 revenue model?
-- A. Cash application.
-- B. Credit control — the collectability assessment. ✅
+- A. Credit control — the collectability assessment. ✅
+- B. Cash application.
 - C. The dunning cadence.
 - D. The three-way match.
 
@@ -198,8 +198,8 @@ and **cut-off** — late timesheets are the accrual problem of Domain 1, KA 1.3.
 **MCQ 11.2-A `[11.2.2 · Application]`** A PO is 100 units at USD 50; goods receipt 100 units; invoice 100 units
 at USD 55. The three-way match:
 - A. Passes — quantities agree.
-- B. Fails on price — a USD 500 exception is held for investigation before payment. ✅
-- C. Fails on quantity.
+- B. Fails on quantity.
+- C. Fails on price — a USD 500 exception is held for investigation before payment. ✅
 - D. Is unnecessary.
 
 *Rationale:* Quantities agree but the price differs (50 vs 55), so the match fails on price; the USD 500 is
@@ -229,9 +229,9 @@ payable; D confuses holding an exception with permanent rejection.
 **MCQ 11.2-D `[11.2.3 · Analysis]`** A large goods-received-not-invoiced (GRNI) balance at period end
 primarily drives:
 - A. The commitment figure.
-- B. The accrual that makes cost-to-date true. ✅
+- B. A receivable from the supplier.
 - C. The actual cost, since invoices will follow.
-- D. A receivable from the supplier.
+- D. The accrual that makes cost-to-date true. ✅
 
 *Rationale:* Goods received but not yet invoiced represent work/goods consumed without an invoice — the
 accrual basis of true cost-to-date (Domain 5, KA 5.2.2). Commitments arise at PO placement; actuals arise on
@@ -333,8 +333,8 @@ professional disposes.**
 **MCQ 11.3-A `[11.3.2 · Analysis]`** Allowing one clerk to raise a PO, confirm receipt and approve the invoice
 for payment violates:
 - A. The 100 % rule.
-- B. Segregation of duties. ✅
-- C. IFRS 15.
+- B. IFRS 15.
+- C. Segregation of duties. ✅
 - D. The three-point estimate.
 
 *Rationale:* One person controlling raise/receive/approve is a segregation-of-duties failure enabling
@@ -342,8 +342,8 @@ undetected fraud. The other options are unrelated concepts.
 
 **MCQ 11.3-B `[11.3.1 · Recall]`** A three-way match is an example of a ____ control; a monthly reconciliation
 is a ____ control.
-- A. detective; preventive
-- B. preventive; detective ✅
+- A. preventive; detective ✅
+- B. detective; preventive
 - C. preventive; preventive
 - D. detective; detective
 
@@ -353,13 +353,13 @@ errors after the fact (detective).
 **MCQ 11.3-C `[11.3.3 · Application]`** A process-mining pass over the ERP event log shows a number of
 invoices were paid without the three-way match step ever occurring. This finding is best described as:
 - A. A preventive control stopping the payments.
-- B. Detective use of the audit trail, revealing that a control was bypassed. ✅
+- B. A reason to disable the match, since payments went through anyway.
 - C. Conclusive proof of fraud.
-- D. A reason to disable the match, since payments went through anyway.
+- D. Detective use of the audit trail, revealing that a control was bypassed. ✅
 
 *Rationale:* Process mining reconstructs how transactions *actually* flowed from the logged audit trail — a
 detective technique that surfaces skipped matches and bypassed approvals. The payments already happened, so
-nothing was prevented (A); a bypass is the *condition* for fraud, not proof of it (C); D abandons the control
+nothing was prevented (A); a bypass is the *condition* for fraud, not proof of it (C); B abandons the control
 the finding shows is needed.
 
 **MCQ 11.3-D `[11.3.2 · Recall]`** Under segregation of duties in the O2C cycle, the person who bills

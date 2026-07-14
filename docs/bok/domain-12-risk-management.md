@@ -88,8 +88,8 @@ are other concepts.
 
 **MCQ 12.1-B `[12.1.3 · Analysis]`** Setting contingency far below the organisation's risk appetite primarily:
 - A. Ties up capital unnecessarily.
-- B. Exposes the organisation to under-funded risk. ✅
-- C. Has no effect.
+- B. Has no effect.
+- C. Exposes the organisation to under-funded risk. ✅
 - D. Breaches ISO 31000 automatically.
 
 *Rationale:* Too-thin contingency leaves risk under-funded relative to appetite. Excess contingency (not a
@@ -98,9 +98,9 @@ shortfall) ties up capital; the effect is real; it is a calibration issue, not a
 **MCQ 12.1-C `[12.1.1 · Recall]`** An uncertain event that, if it occurs, would have a *positive* effect on
 objectives is:
 - A. An issue.
-- B. An opportunity. ✅
+- B. A constraint.
 - C. A tolerance.
-- D. A constraint.
+- D. An opportunity. ✅
 
 *Rationale:* Risk covers both tails — threats (negative effect) and opportunities (positive effect) — and
 managing the upside deliberately is part of the discipline. An issue is a materialised risk; tolerance and
@@ -108,14 +108,14 @@ constraint are different concepts.
 
 **MCQ 12.1-D `[12.1.2 · Application]`** A team updates its risk register once a quarter as a standalone
 exercise, disconnected from the estimate, schedule and forecast. The ISO 31000 principle chiefly breached is:
-- A. Proportionality — the effort exceeds the stakes.
-- B. Integration — risk management should be part of decision-making, feeding the estimate, schedule and
+- A. Integration — risk management should be part of decision-making, feeding the estimate, schedule and
   forecast. ✅
+- B. Proportionality — the effort exceeds the stakes.
 - C. None — quarterly updates satisfy the standard.
 - D. Appetite — the tolerance thresholds are set too low.
 
 *Rationale:* ISO 31000 treats risk management as integrated into decision-making, not a bolt-on register;
-disconnecting it from the numbers it should inform breaches integration. A misreads the defect as
+disconnecting it from the numbers it should inform breaches integration. B misreads the defect as
 over-effort; C excuses it; D concerns appetite calibration, a different matter.
 
 ### Self-check — KA 12.1
@@ -257,11 +257,11 @@ document — an out-of-date register is worse than none, because it implies a co
 
 **MCQ 12.2-A `[12.2.3 · Application]`** A risk has a 30 % probability and a USD 200,000 impact. Its EMV is:
 - A. USD 200,000
-- B. USD 60,000 ✅
-- C. USD 30,000
+- B. USD 30,000
+- C. USD 60,000 ✅
 - D. USD 230,000
 
-*Rationale:* `EMV = 0.30 × 200,000 = 60,000`. A ignores probability; C and D misapply it.
+*Rationale:* `EMV = 0.30 × 200,000 = 60,000`. A ignores probability; B and D misapply it.
 
 **MCQ 12.2-B `[12.2.3 · Analysis]`** Why is a P80 contingency from Monte Carlo usually higher than the simple
 sum of EMVs?
@@ -276,9 +276,9 @@ double-count, and the two are not equal.
 
 **MCQ 12.2-C `[12.2.4 · Recall]`** Buying insurance against a risk is which response strategy?
 - A. Avoid.
-- B. Transfer. ✅
+- B. Accept.
 - C. Mitigate.
-- D. Accept.
+- D. Transfer. ✅
 
 *Rationale:* Insurance shifts the financial consequence to a third party — **transfer**. Avoid eliminates the
 cause; mitigate reduces probability/impact; accept retains it.
@@ -299,13 +299,13 @@ a test no response strategy requires.
 USD 150,000 — and one opportunity: a 40 % chance of a USD 50,000 saving. The net EMV basis for contingency
 is:
 - A. USD 90,000
-- B. USD 70,000 ✅
-- C. USD 110,000
-- D. USD 400,000
+- B. USD 110,000
+- C. USD 400,000
+- D. USD 70,000 ✅
 
 *Rationale:* Threat EMVs `0.30 × 200,000 = 60,000` and `0.20 × 150,000 = 30,000` sum to 90,000; the
 opportunity contributes `0.40 × 50,000 = 20,000` of expected *saving*, giving `90,000 − 20,000 = 70,000`. A
-ignores the opportunity; C adds it instead of netting it; D sums the impacts with the probabilities omitted.
+ignores the opportunity; B adds it instead of netting it; C sums the impacts with the probabilities omitted.
 
 ### Self-check — KA 12.2
 
@@ -395,8 +395,8 @@ baseline). Management reserve is for unidentified risk, outside the baseline.
 **MCQ 12.3-B `[12.3.1 · Analysis]`** Why might contingency be set at a Monte Carlo P80 rather than the simple
 EMV sum?
 - A. P80 is always lower.
-- B. To fund an 80 %-confidence outcome that reflects risks coinciding, not just the average. ✅
-- C. EMV is not a risk measure.
+- B. EMV is not a risk measure.
+- C. To fund an 80 %-confidence outcome that reflects risks coinciding, not just the average. ✅
 - D. They are identical.
 
 *Rationale:* A P80 funds a higher-confidence outcome accounting for adverse combinations, typically exceeding
@@ -417,12 +417,12 @@ draw-down with an emerging shortfall.
 
 **MCQ 12.3-D `[12.3.2 · Recall]`** The management reserve is best described as funding that is:
 - A. Inside the cost baseline and controlled by the project manager.
-- B. Outside the baseline, management-controlled, for unidentified (unknown-unknown) risk. ✅
+- B. Drawn automatically whenever a register risk materialises.
 - C. Derived directly from the risk register's EMV sum.
-- D. Drawn automatically whenever a register risk materialises.
+- D. Outside the baseline, management-controlled, for unidentified (unknown-unknown) risk. ✅
 
 *Rationale:* Management reserve funds what the register *cannot* foresee, sits outside the baseline, and is
-management-controlled; needing it is a re-baselining event. A and C describe the contingency reserve; D
+management-controlled; needing it is a re-baselining event. A and C describe the contingency reserve; B
 describes a normal contingency draw-down.
 
 ### Self-check — KA 12.3
