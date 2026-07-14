@@ -500,6 +500,33 @@ progress trends and external data, and accelerating Monte Carlo risk analysis. T
 and the forecast — an AI-proposed schedule can embed hidden constraints or unrealistic durations, and a delay
 prediction is an input to judgement, not a decision. **AI proposes, the professional disposes.**
 
+### 10.4.4 Look-ahead planning
+
+**The principle.** The CPM baseline steers the *project*; the **look-ahead schedule** — a rolling two-, four-
+or six-week window extracted from it — steers the *work*. Each cycle, the window's activities are screened
+for **make-ready constraints** — design information, materials on site, access, permits, crews, predecessor
+completion — and only constraint-free work is committed to the field. This is **short-interval production
+planning**: the bridge between the network and what crews actually do this week, and the discipline
+(associated with lean-construction practice, described here in this book's own words) that stops the site
+improvising its own sequence. It complements, not replaces, progressing (KA 10.4.1) and the schedule-quality
+checks of Advanced 10.A.1.
+
+**Worked example 10.4.4 — a four-week look-ahead cycle.**
+
+1. **Setup.** The four-week window holds **24 activities**. Constraint screening finds **6** not make-ready
+   (2 awaiting design revisions, 3 awaiting materials, 1 awaiting access), leaving `24 − 6 = ` **18
+   committed** to the field. At the next cycle, **15** of the 18 are complete.
+2. **Formula.** `commitment reliability = completed ÷ committed` — the percent-plan-complete measure of
+   short-interval planning.
+3. **Substitution.** `15 ÷ 18 ≈ 83 %`.
+4. **Result.** A commitment reliability of **≈ 83 %**, with the 3 misses and the 6 screened-out constraints
+   each carrying a named reason — the reasons list *is* the improvement agenda (materials lead times, design
+   turnaround), not the percentage.
+5. **Interpretation.** The look-ahead protects the CPM from noise — the network keeps the logic; the window
+   absorbs the churn — and produces the most honest leading indicator a site has: a falling commitment
+   reliability precedes a slipping critical path by weeks (Domain 4, KA 4.1.2). Track the reasons, not just
+   the rate.
+
 ### Key terms — KA 10.4
 
 | Term | Meaning |
@@ -592,6 +619,15 @@ much as the metrics: a schedule that fails its health checks is not necessarily 
 *trusted to recalculate* — its dates are assertions, not results. The health check runs before a baseline is
 accepted (KA 10.4.2) and periodically thereafter, because schedules degrade in service.
 
+**The schedule basis document.** The schedule analogue of the basis of estimate (Domain 3, KA 3.2.3) is a
+short controlled document recording what the baseline *assumes*: the calendars and their justification
+(including weather, Advanced 10.A.3), the productivity and crew assumptions behind key durations, the
+sequencing rationale and preferential logic, the exclusions, the interfaces and third-party dependencies,
+and the approvals. Without it, every future health check argues with a ghost: the checker can see *what*
+the schedule says but not *why*, and re-baselines lose the record of what changed. The basis is approved
+with the baseline (KA 10.4.2) and updated at re-baseline — and it is where a reviewer looks first when a
+duration seems heroic.
+
 ### Advanced 10.A.2 — Resource-critical paths and buffers
 
 KA 10.3.3 established that resource levelling can extend the duration and produce a **resource-critical
@@ -644,6 +680,16 @@ Delay analysis and extension-of-time positions (Domain 7), the P-level commitmen
 progressed forecast (KA 10.4) all presume a network that recalculates honestly. A manipulated schedule does
 not merely mislead the team — it defrauds every downstream decision made on its dates.
 
+**Planning calendars: weather and seasonality.** Calendars are also where *realism* lives. Weather-sensitive
+work — earthworks, concrete pours, lifts, marine and high-altitude work — is planned on calendars carrying
+expected non-work days by season, built from historical weather data (e.g. rain days per month, temperature
+or wind thresholds), agreed with the client, and stated in the schedule basis (Advanced 10.A.1). The effects
+are mechanical but material: elapsed durations stretch across bad seasons, float differs by calendar, and a
+critical path can *move* with the season. The commercial edge is sharper still: a contractual weather
+calendar separates **normal** weather (the contractor's risk, already priced into the baseline) from
+**exceptional** weather (a compensable or excusable event) — without one, every storm becomes an argument
+(Domain 7, Advanced 7.A.1; Domain 12 risk register).
+
 ### Advanced 10.A.4 — Merge bias
 
 The forward pass takes the **latest** arrival at every merge point — `ES = max(EF of predecessors)`, the
@@ -691,6 +737,44 @@ crash candidate before any money is spent (KA 10.3.1), and it is the determinist
 (Advanced 10.A.4): a parallel path's float is exactly what caps the gain. Computing drag across a large
 network is mechanical and a good tool task; choosing which drag to buy down — with money, risk or scope —
 is the professional's call.
+
+### Advanced 10.A.6 — Delay analysis methods
+
+When delay becomes a claim (Domain 7, KA 7.2.2 and Advanced 7.A.1), the schedule becomes evidence, and the
+**method** by which delay is measured decides the answer as much as the facts do. At awareness level, the
+recognised families are these.
+
+- **As-planned vs as-built** — compare the intended programme with what actually happened. Simple and
+  cheap, but silent on causation: it shows *that* the project was late, not why or whose.
+- **Impacted as-planned** — insert the delay events into the baseline and re-run it. Prospective in
+  character, but it ignores how the project actually ran.
+- **Collapsed as-built** — the "but-for" method: remove the delay events from the as-built programme to
+  show what would have happened without them.
+- **Time impact analysis (TIA)** — model each delay event as a **fragnet** and insert it into a
+  contemporaneous *updated* programme at the time of the event. The most widely respected method for
+  prospective extension-of-time (EOT) assessment.
+- **Windows analysis** — divide the project into periods and analyse critical-path movement window by
+  window against contemporaneous updates. The most forensically robust retrospective method, and the most
+  expensive.
+
+**Worked example 10.A.6 — one event, by TIA.**
+
+1. **Setup.** At the data date, forecast completion is **day 120**. The client stops work on an area for
+   **10 working days**; the delay is modelled as a fragnet and inserted into the *current* update.
+2. **Formula.** `EOT entitlement = post-impact completion − pre-impact completion`.
+3. **Substitution.** The re-run completes at **day 127**: `127 − 120 = 7 days` — three of the ten days are
+   absorbed by float on the affected path before it goes critical.
+4. **Result.** A **7-working-day** prospective EOT position, evidenced by the update pair.
+5. **Interpretation.** The event lasted 10 days; the *entitlement* is 7 — the difference (`10 − 7 = 3`
+   days) is float, and who owns float (KA 10.2.4) is exactly why the contract's float provisions matter.
+   Method choice is not neutral: the same facts run through impacted-as-planned would claim the full 10.
+
+Method selection is governed by the contract, the records available and the timing — prospective versus
+retrospective. Contemporaneous updates are the raw material of *every* credible method: a project that
+skipped honest updates (KA 10.4.1) has already lost the analysis before it begins, which is why the
+record-keeping discipline of Domain 7 (Toolkit 7.T.2) and the treatment of concurrency (Advanced 7.A.1)
+sit alongside this topic. Fragnet mechanics and window-by-window comparisons are automatable; choosing the
+method the tribunal will accept, and owning the causation story, is the delay analyst's craft.
 
 ---
 
