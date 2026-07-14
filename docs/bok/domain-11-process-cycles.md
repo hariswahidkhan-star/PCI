@@ -270,6 +270,20 @@ event logs of the ERP to reconstruct how transactions *actually* flowed — reve
 skipped, approvals bypassed, SoD violated) and bottlenecks at scale, and is one of the strongest AI-adjacent
 techniques in this area.
 
+**Worked example 11.3.3 — a process-mining finding, run to ground.**
+
+1. **Setup.** Mining one quarter's P2P event log — **4,800 invoice cases** — shows a set of cases where payment
+   executed *before* the three-way match completed.
+2. **Formula.** Exception rate `= exception cases ÷ total cases`; then drill down each exception to its cause.
+3. **Substitution.** `120 ÷ 4,800 = 2.5 %`. Drill-down: **30** cases trace to a documented emergency-payment
+   workaround (controlled, approved, logged); **90** trace to a permissions gap that let one role both release
+   payment and complete the match afterwards (`30 + 90 = 120`).
+4. **Result.** Actions: close the permissions gap (an SoD fix — 11.3.2), retro-match the 90 (two overpayments
+   found, **USD 5,400** recovered), and keep the emergency path but alert on each use (11.A.4).
+5. **Interpretation.** Process mining turns "our controls are configured" into "here is how the process
+   *actually* ran" — the 2.5 % was invisible to policy documents and visible in one query; the finding's value
+   is the **drill-down to cause**, not the headline rate.
+
 **AI in this KA.** AI is well-suited to the control environment (Domain 13, KAs 13.4–13.5): **process mining**
 to find control breaches and bottlenecks; **invoice/PO matching** and exception classification to automate the
 three-way match; **anomaly and duplicate detection** across postings; and continuous-controls monitoring. The

@@ -52,6 +52,20 @@ thresholds at which a risk must be escalated or treated (the risk analogue of th
 KA 4.1.1). A contingency that is too thin for the organisation's appetite exposes it; one too fat ties up
 capital — appetite and tolerance calibrate the balance.
 
+**Worked example 12.1.3 — an appetite statement doing real work.**
+
+1. **Setup.** The board's appetite statement reads: *no single project may put more than 2 % of annual group
+   profit at risk at the P80 level*. Group profit is **USD 40,000,000**. A tender's quantified risk exposure
+   comes out at **P80 = USD 950,000**.
+2. **Formula.** Per-project ceiling `= appetite % × group profit`; the decision rule is `P80 ≤ ceiling`.
+3. **Substitution.** Ceiling `= 2 % × 40,000,000 = 800,000`; the tender's `950,000 > 800,000` — above appetite.
+4. **Result.** The team transfers the two largest risks (a weather LD exposure via insurance, ground risk via a
+   remeasurement clause — Domain 7, KA 7.1) and the re-run **P80 falls to USD 600,000** — `600,000 < 800,000`,
+   inside appetite; the bid proceeds.
+5. **Interpretation.** Appetite is only real when it is *arithmetic* — a stated ceiling, a measured exposure,
+   and a decision rule; without the numbers it is a poster. Note the mechanism: the appetite test changed the
+   **contracting**, not just the register (cross-ref 12.2.4 transfer).
+
 ### Key terms — KA 12.1
 
 | Term | Meaning |
