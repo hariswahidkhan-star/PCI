@@ -909,6 +909,100 @@ is — and retention tracked to the last dollar released.
 
 ---
 
+## Calculation exercises — Domain 7
+
+*Work each exercise before reading its solution; every step uses only this domain's methods.*
+
+**Exercise 7.1** — A CPIF contract sets a target cost of **USD 8,000,000**, a target fee of
+**USD 640,000** and a **60/40** share ratio (client/contractor). On the same terms, compute the
+contractor's fee and the client's total price in two cases: (a) actual cost **USD 7,400,000**;
+(b) actual cost **USD 8,900,000**.
+
+**Solution 7.1.**
+
+1. Formula: `fee = target fee + contractor's share × (target cost − actual cost)`.
+2. Case (a): underrun `= 8,000,000 − 7,400,000 = 600,000`; contractor's share `= 40 % × 600,000 =
+   240,000`; fee `= 640,000 + 240,000 = 880,000`; client pays `7,400,000 + 880,000 = 8,280,000`.
+3. Case (b): overrun `= 8,900,000 − 8,000,000 = 900,000`; fee reduction `= 40 % × 900,000 = 360,000`;
+   fee `= 640,000 − 360,000 = 280,000`; client pays `8,900,000 + 280,000 = 9,180,000`.
+4. Check against the target price of `8,640,000`: the client saves `360,000` (its 60 % of the
+   underrun) in (a) and bears `540,000` extra (its 60 % of the overrun) in (b) — the incentive works
+   symmetrically in both directions.
+
+**Exercise 7.2** — A target-cost contract has a target cost of **USD 12,000,000**, a target fee of
+**USD 900,000**, a **50/50** pain/gain share, and the contractor's pain-share **capped at
+USD 800,000** (a fee floor of USD 100,000). Compute the contractor's pain-share, the resulting fee
+and the client's share of the overrun when actual cost is (a) **USD 13,200,000** and
+(b) **USD 14,500,000**.
+
+**Solution 7.2.**
+
+1. Case (a): overrun `= 13,200,000 − 12,000,000 = 1,200,000`; uncapped pain-share `= 50 % ×
+   1,200,000 = 600,000` — inside the cap, so it stands. Fee `= 900,000 − 600,000 = 300,000`; the
+   client bears the other `600,000`.
+2. Case (b): overrun `= 14,500,000 − 12,000,000 = 2,500,000`; uncapped pain-share `= 50 % ×
+   2,500,000 = 1,250,000` — **beyond the cap**, so the contractor bears only `800,000`. Fee
+   `= 900,000 − 800,000 = 100,000` (the floor); the client bears `2,500,000 − 800,000 = 1,700,000`.
+3. Interpretation: below the cap the parties share pain 50/50; beyond it every further dollar of
+   overrun is the client's — a controls professional forecasting an `EAC` above target must know
+   where the cap bites to state the real exposure.
+
+**Exercise 7.3** — Price the following substructure BoQ. On completion the actual concrete quantity
+is **1,350 m³** (all other quantities are as billed) and the contract is a remeasurement form —
+compute the remeasured total and say who pays the difference.
+
+| Item | Description | Qty | Unit | Rate (USD) |
+|---|---|---:|---|---:|
+| A | Excavation | 4,000 | m³ | 15 |
+| B | Concrete | 1,200 | m³ | 180 |
+| C | Reinforcement | 90 | t | 1,400 |
+| P | Preliminaries | 1 | sum | 78,000 |
+
+**Solution 7.3.**
+
+1. Amounts (`quantity × rate`): A `4,000 × 15 = 60,000`; B `1,200 × 180 = 216,000`; C `90 × 1,400 =
+   126,000`; P `78,000`.
+2. Tender total `= 60,000 + 216,000 + 126,000 + 78,000 = 480,000`.
+3. Remeasured concrete `= 1,350 × 180 = 243,000` — an extra `243,000 − 216,000 = 27,000`.
+4. Remeasured total `= 480,000 + 27,000 = 507,000`. Under remeasurement the client pays the extra
+   **USD 27,000** (quantity risk sits with the client); under lump sum the same volume, if within
+   the defined scope, would have been the contractor's risk.
+
+**Exercise 7.4** — On the BoQ of Exercise 7.3 (item amounts: A USD 60,000; B USD 216,000;
+C USD 126,000; P USD 78,000), a valuation date shows progress of A **100 %**, B **60 %**, C **30 %**
+and P **50 %**. Retention is **5 %** and previous payments total **USD 140,000**. Prepare the
+interim application: gross value, retention, net certified value and amount due.
+
+**Solution 7.4.**
+
+1. Gross value per item: A `100 % × 60,000 = 60,000`; B `60 % × 216,000 = 129,600`; C `30 % ×
+   126,000 = 37,800`; P `50 % × 78,000 = 39,000`.
+2. Gross value `= 60,000 + 129,600 + 37,800 + 39,000 = 266,400`.
+3. Retention `= 5 % × 266,400 = 13,320`; net certified `= 266,400 − 13,320 = 253,080`.
+4. Amount due `= 253,080 − 140,000 = 113,080`.
+5. **Amount due this application: USD 113,080.** The USD 13,320 retained is earned but uncollected
+   cash — part of the funding trough until its staged release.
+
+**Exercise 7.5** — A project carries two delay positions. First, a **25-day client-caused** delay is
+established by contemporaneous records and a critical-path analysis; time-related preliminaries run
+at **USD 7,000/day** and standby craneage at **USD 2,000/day**. Second, the forecast shows
+completion **15 days late** for reasons that are the contractor's own risk; LDs are
+**USD 12,000/day**, and an acceleration package costing **USD 100,000** would recover **10** of the
+15 days. Compute the prolongation quantum, the unmitigated LD exposure, and whether accelerating
+pays.
+
+**Solution 7.5.**
+
+1. Prolongation quantum `= 25 × 7,000 + 25 × 2,000 = 175,000 + 50,000 = 225,000` — presented with
+   its cause, effect and evidence trail.
+2. LD exposure without action `= 15 × 12,000 = 180,000`.
+3. With acceleration: residual delay `= 15 − 10 = 5` days; residual LDs `= 5 × 12,000 = 60,000`;
+   total cost `= 100,000 + 60,000 = 160,000`.
+4. Accelerating saves `180,000 − 160,000 = 20,000` — worth doing, and exactly the
+   accelerate-versus-LDs comparison the board should see priced.
+
+---
+
 ## Domain 7 summary
 
 The contract allocates cost risk along a spectrum — lump sum (contractor), target cost (shared, with pain/gain

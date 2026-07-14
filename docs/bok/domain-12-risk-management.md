@@ -583,6 +583,79 @@ when the sponsor challenges the contingency number, the analysis — not an opin
 
 ---
 
+## Calculation exercises — Domain 12
+
+*Work each exercise before reading its solution; every step uses only this domain's methods.*
+
+**Exercise 12.1** — Quantify this five-risk register: R1 **20 % × USD 400,000**; R2 **35 % ×
+USD 200,000**; R3 **10 % × USD 600,000**; R4 **50 % × USD 90,000**; R5 **25 % × USD 180,000**.
+Compute each EMV and the register total. A Monte Carlo model of the same register returns a **P80
+of USD 415,000**: state the contingency to set, the margin it carries over the EMV sum, and why
+the gap exists.
+
+**Solution 12.1.**
+
+1. EMVs (`probability × impact`): R1 `= 20 % × 400,000 = 80,000`; R2 `= 35 % × 200,000 = 70,000`;
+   R3 `= 10 % × 600,000 = 60,000`; R4 `= 50 % × 90,000 = 45,000`; R5 `= 25 % × 180,000 = 45,000`.
+2. Register EMV `= 80,000 + 70,000 + 60,000 + 45,000 + 45,000 = 300,000`.
+3. Contingency at the P80 `= 415,000`; margin over the EMV sum `= 415,000 − 300,000 = 115,000`.
+4. The EMV sum funds the *average* outcome; the P80 funds an 80 %-confidence outcome in which
+   several risks may coincide — which is why the analysed P-level, not the sum of expectations, is
+   the defensible contingency (12.3.1).
+
+**Exercise 12.2** — On the register of Exercise 12.1 (total EMV USD 300,000), a mitigation is
+proposed for R1 (**20 % × USD 400,000**, EMV 80,000): early vendor qualification costing
+**USD 25,000** would cut the probability to **5 %**. Decide accept versus mitigate on EMV grounds,
+and compute the register's new total EMV if the mitigation is adopted.
+
+**Solution 12.2.**
+
+1. Accept path `= 20 % × 400,000 = 80,000`.
+2. Mitigate path `= mitigation cost + residual EMV = 25,000 + (5 % × 400,000) = 25,000 + 20,000 =
+   45,000`.
+3. The mitigate path is `80,000 − 45,000 = 35,000` cheaper — the response reduces `probability ×
+   impact` by more than it costs, so **mitigate**.
+4. New register EMV `= 300,000 − 80,000 + 20,000 = 240,000` (R1's original EMV out, its residual
+   EMV in). The adopted mitigation must be fed back into the quantification — and the Monte Carlo
+   re-run — or the risk is double-counted and the contingency ask silently overstated.
+
+**Exercise 12.3** — Contingency was set at a Monte Carlo **P80 of USD 415,000**. During delivery,
+two register risks materialise and draw **USD 95,000** and then **USD 70,000**. A re-run of the
+register — closed risks out, live probabilities refreshed — puts the remaining exposure at a **P80
+of USD 265,000**. Compute the remaining contingency, compare it with the remaining exposure, and
+give the adequacy verdict to report.
+
+**Solution 12.3.**
+
+1. Total drawn `= 95,000 + 70,000 = 165,000`.
+2. Remaining contingency `= 415,000 − 165,000 = 250,000`.
+3. Comparison with remaining exposure `= 250,000 − 265,000 = −15,000` — a **USD 15,000 shortfall**.
+4. Verdict: **inadequate** — the fund no longer covers the analysed remaining exposure, so the
+   position is escalated towards the management reserve *now*, as a visible re-baselining
+   conversation (12.3.3). The test is always remaining contingency versus remaining exposure:
+   measured against the opening USD 415,000 the position would have looked comfortable — the
+   opening-figure illusion.
+
+**Exercise 12.4** — A coastal works package faces two sequential uncertainties. There is a **30 %**
+chance the storm season delays the marine works (direct delay cost **USD 120,000**). If — and only
+if — that delay occurs, the works permit lapses and must be renewed: a **70 %** chance of a
+fast-track renewal adding **USD 60,000**, and a **30 %** chance of a full re-application adding
+**USD 250,000**. Work the decision tree through to the overall EMV of the risk.
+
+**Solution 12.4.**
+
+1. Branch outcomes: delay + fast-track `= 120,000 + 60,000 = 180,000`; delay + re-application
+   `= 120,000 + 250,000 = 370,000`; no delay `= 0`.
+2. Expected value at the permit node `= 70 % × 180,000 + 30 % × 370,000 = 126,000 + 111,000 =
+   237,000`.
+3. Roll back to the weather node: `EMV = 30 % × 237,000 + 70 % × 0 = 71,100`.
+4. Cross-check by joint probabilities: `21 % × 180,000 = 37,800`; `9 % × 370,000 = 33,300`; sum
+   `= 71,100`. ✓ The register carries this risk at **USD 71,100** expected — sequential
+   uncertainties multiply along each path and the paths are then summed, never added as if the
+   second uncertainty stood alone.
+
+---
+
 ## Domain 12 summary
 
 Risk management handles the uncertainty every estimate, schedule and forecast is made under. A **risk** is an

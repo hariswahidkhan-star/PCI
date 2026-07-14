@@ -751,6 +751,104 @@ earned-value view each period, and when the date moves it hears about it from th
 
 ---
 
+## Calculation exercises — Domain 10
+
+*Work each exercise before reading its solution; every step uses only this domain's methods.*
+
+**Exercise 10.1** — A six-activity network has the following logic and durations (days): A **2**
+(start); B **5** (after A); C **4** (after A); D **3** (after B); E **6** (after C); F **3** (after
+D and E). Run the forward and backward passes; state the project duration, each activity's
+`ES/EF/LS/LF`, its `TF` and `FF`, and the critical path.
+
+**Solution 10.1.**
+
+1. Forward pass (`ES` = latest predecessor `EF`; `EF = ES + duration`): A 0/2; B 2/7; C 2/6;
+   D 7/10; E 6/12; F `ES = max(10, 12) = 12`, `EF = 15`. **Project duration = 15 days.**
+2. Backward pass (`LF` = earliest successor `LS`; `LS = LF − duration`): F 12/15; E 6/12; D 9/12;
+   B 4/9; C 2/6; A `LF = min(4, 2) = 2`, `LS = 0`.
+3. Floats (`TF = LS − ES`; `FF = min successor ES − EF`):
+
+   | Activity | `ES` | `EF` | `LS` | `LF` | `TF` | `FF` |
+   |---|---:|---:|---:|---:|---:|---:|
+   | A | 0 | 2 | 0 | 2 | 0 | 0 |
+   | B | 2 | 7 | 4 | 9 | 2 | 0 |
+   | C | 2 | 6 | 2 | 6 | 0 | 0 |
+   | D | 7 | 10 | 9 | 12 | 2 | 2 |
+   | E | 6 | 12 | 6 | 12 | 0 | 0 |
+   | F | 12 | 15 | 12 | 15 | 0 | 0 |
+
+4. Critical path — the zero-float chain — is **A → C → E → F** `= 2 + 4 + 6 + 3 = 15` days; the
+   parallel A–B–D–F path (`2 + 5 + 3 + 3 = 13`) carries 2 days of float, all of it free at D but
+   none at B.
+
+**Exercise 10.2** — Activity X has `ES = 8` and a duration of **4 days**; the backward pass gives
+`LS = 11` and `LF = 15`. X has two successors: Y with `ES = 14` and Z with `ES = 16`. Compute X's
+`EF`, its total float (two ways) and its free float, then state how many days X can slip before it
+delays a successor, and before it delays the project.
+
+**Solution 10.2.**
+
+1. `EF = ES + duration = 8 + 4 = 12`.
+2. Total float `TF = LS − ES = 11 − 8 = 3`; cross-check `TF = LF − EF = 15 − 12 = 3`. ✓
+3. Free float `FF = min(ES of successors) − EF = min(14, 16) − 12 = 14 − 12 = 2`.
+4. X can slip **2 days** without touching any successor (its free float); the **3rd** day delays Y —
+   consuming float Y's chain relies on — but still not the project; only beyond **3 days** does the
+   completion date move. Free float is private slack; the `TF − FF = 1` day is shared with the
+   successor chain.
+
+**Exercise 10.3** — Three activities G, H and J run in sequence and are estimated three-point:
+G `O = 3, M = 5, P = 13`; H `O = 2, M = 4, P = 6`; J `O = 5, M = 8, P = 11` (days). A parallel
+chain of fixed duration **17 days** runs alongside. Compute each activity's PERT expected duration
+and `σ`, the chain's expected length, and identify the longest expected path.
+
+**Solution 10.3.**
+
+1. G: `tE = (3 + 4×5 + 13)/6 = 36/6 = 6` days; `σ = (13 − 3)/6 = 1.67` days.
+2. H: `tE = (2 + 4×4 + 6)/6 = 24/6 = 4` days; `σ = (6 − 2)/6 = 0.67` days.
+3. J: `tE = (5 + 4×8 + 11)/6 = 48/6 = 8` days; `σ = (11 − 5)/6 = 1.00` day.
+4. Expected chain length `= 6 + 4 + 8 = 18` days — though the most-likely sum is only
+   `5 + 4 + 8 = 17`.
+5. On most-likely durations the two paths tie at 17 days; on expected durations G–H–J is the
+   **longest expected path at 18 days**. G's pessimistic tail (13 against a most-likely 5) pulls
+   the expectation up — exactly why three-point estimates can change which path deserves attention.
+
+**Exercise 10.4** — A network starts with shared activity P (**4 days**), then splits: path 1 runs
+P → Q (**7**) → R (**9**), 20 days in total; path 2 runs P → T (**6**) → U (**9**), 19 days. Crash
+costs: P **USD 7,000/day** (max 1); Q **USD 4,000/day** (max 2); R **USD 6,000/day** (max 1);
+T **USD 5,000/day** (max 2); U cannot be crashed. Build the cheapest plan to save **2 days**,
+showing the parallel-path check at each step.
+
+**Solution 10.4.**
+
+1. Day 1: crash the cheapest day on the critical path P–Q–R — **Q for 4,000**. Path 1 falls to
+   `4 + 6 + 9 = 19`; the check shows path 2 is also 19, so **both paths are now critical**.
+2. Day 2: every critical path must shorten. Options: Q + T `= 4,000 + 5,000 = 9,000`; R + T
+   `= 6,000 + 5,000 = 11,000`; or **P alone** — it sits on both paths — at `7,000`. Cheapest:
+   **P for 7,000**.
+3. Plan: Q by 1 day, P by 1 day; total cost `= 4,000 + 7,000 = 11,000`; new duration **18 days**
+   (path 1 `3 + 6 + 9 = 18`; path 2 `3 + 6 + 9 = 18`).
+4. The trap: crashing Q twice (`8,000`) looks cheapest on the menu, but the second day saves
+   nothing once path 2 governs at 19 — the parallel-path check is what prices the plan honestly.
+
+**Exercise 10.5** — A baseline network completes at **day 30** via a critical path through activity
+M; a parallel chain through activity N is **26 days** long, giving N **4 days** of total float. At
+the data date, M has finished **2 days late** and N is forecast to finish **3 days late**.
+Recalculate: the new completion date, whether the critical path has moved, and N's float against
+the new finish.
+
+**Solution 10.5.**
+
+1. The critical slip passes through day for day: new completion `= 30 + 2 = 32`.
+2. N's chain after its slip `= 26 + 3 = 29` days — still shorter than 32, so the critical path
+   **has not moved**; N's slip is absorbed within float.
+3. N's float against the new finish `= 32 − 29 = 3` days (the original 4, less the 3 consumed,
+   plus the 2 the critical slip added to the project end).
+4. Reading: the project is 2 days late because of M alone; N cost nothing this period, but its
+   buffer is being consumed — float is re-measured at every data date, never assumed from the
+   baseline.
+
+---
+
 ## Domain 10 summary
 
 Scheduling models the work in time: activities decomposed from the WBS, sequenced with the four dependency
