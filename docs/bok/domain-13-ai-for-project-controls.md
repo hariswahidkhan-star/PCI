@@ -163,6 +163,28 @@ LLM/RL add opacity and risk where a rule suffices.
 *Rationale:* RAG grounds generation in retrieved source material at inference without retraining. It does not
 retrain (that is fine-tuning), does not remove the need to verify, and is unrelated to temperature.
 
+**MCQ 13.1-D `[13.1.3 · Recall]`** For a factual controls task such as extracting figures from a document, the
+temperature setting should be:
+- A. High, to maximise creativity.
+- B. Low, to reduce randomness in the output. ✅
+- C. Irrelevant — temperature only affects cost.
+- D. Set equal to the context-window size.
+
+*Rationale:* Low temperature suits deterministic, factual tasks; high temperature is for ideation. Temperature
+is a randomness setting, not a cost control, and is unrelated to the context window.
+
+**MCQ 13.1-E `[13.1.5 · Analysis]`** An LLM returns a fluent, confident multi-step cost calculation. The
+professional must still recompute it because:
+- A. LLMs always round figures incorrectly.
+- B. An LLM generates plausible text, not verified text — plausible ≠ correct, especially in multi-step
+  calculation. ✅
+- C. Recomputation is only needed when temperature is high.
+- D. The context window truncates all calculations.
+
+*Rationale:* An LLM has no inherent notion of truth, only of likelihood — fluency and confidence do not warrant
+correctness, and there is no true reasoning guarantee. A overstates a specific failure; C and D misapply the
+concepts — verification is required at any temperature.
+
 ### Self-check — KA 13.1
 
 1. Define token, context window and temperature. *(Text unit the model reads/writes; how much text it
@@ -279,6 +301,28 @@ ensure the data is:
 *Rationale:* Fitness (quality) and safety (confidentiality) are the two gates. Size, structure and publicness
 are not the governing tests.
 
+**MCQ 13.2-C `[13.2.2 · Application]`** A 20,000-row cost dataset is profiled before an AI initiative: **4 %**
+of rows have invalid codes, **2 %** are duplicates and **5 %** are missing accrual flags. Assuming no overlap,
+the number of rows failing at least one check is:
+- A. 800
+- B. 1,000
+- C. 2,200 ✅
+- D. 4,000
+
+*Rationale:* With no overlap the failures add: 4 % + 2 % + 5 % = 11 %; `20,000 × 0.11 = 2,200` rows
+(800 + 400 + 1,000). A counts only the invalid codes; B counts only the missing accrual flags; D (20 %) has no
+basis in the data. At 11 % failing, the dataset is not yet model-ready — remediation precedes training (13.2.2).
+
+**MCQ 13.2-D `[13.2.3 · Recall]`** Contracts, correspondence and free-form reports — unstructured data — are
+primarily the domain of:
+- A. Supervised ML over tabular features.
+- B. GenAI / RAG. ✅
+- C. Rules-based validation only.
+- D. No AI category.
+
+*Rationale:* Structured (tabular, coded) data is directly usable by ML; unstructured documents are the domain
+of GenAI/RAG (13.2.3). Rules validate coded fields, and unstructured data is very much within AI's reach.
+
 ### Self-check — KA 13.2
 
 1. Name four data-quality dimensions. *(Accuracy, completeness, consistency, timeliness, validity,
@@ -314,6 +358,64 @@ context-rich prompts get useful ones.
 - **Transformation** — "Convert this raw cost extract into the standard monthly report format."
 
 Giving **examples** (a sample of the desired output) and **context** (definitions, the audience) sharpens each.
+
+### 13.3.2b A worked prompt-pattern library
+
+**Extraction.** *The prompt:*
+
+> "Acting as a quantity surveyor, extract from the attached subcontract (ref SC-014) the payment terms,
+> retention %, defects liability period and LD rate, as a four-row table with the clause reference for each.
+> If a term is absent, return 'not found' — do not infer."
+
+*Good output:* a four-row table in which every value carries a real clause reference or an explicit "not
+found". *Verification:* open each cited clause and check each extracted value against the source; reject any
+value without a grounded reference.
+
+**Analysis.** *The prompt:*
+
+> "Acting as a project cost engineer, analyse the attached month-end extract for control account CA-210.
+> Identify the three largest adverse cost variances, quantify each in USD and as % of budget, and state a
+> likely driver only where the data supports it. Format: a table plus ≤80 words of commentary; flag anything
+> you cannot substantiate."
+
+*Good output:* a ranked variance table whose figures tie to the extract, with drivers tied to evidence and
+unsupported points flagged. *Verification:* recompute the figures — the variances and percentages — from the
+source extract before accepting any driver claim.
+
+**Drafting.** *The prompt:*
+
+> "Acting as a cost engineer reporting to a project board, draft a ≤120-word variance narrative for control
+> account CA-210 from the data below. State the CV and SV, attribute the cost variance between rate and usage,
+> and note the recovery action. Factual tone; no speculation beyond the data. Data: PV 480,000; EV 455,000;
+> AC 492,000; rate variance −22,000; usage variance −15,000; recovery action: revised lift sequence."
+
+*Good output:* a tight, factual narrative whose every figure and cause traces to the supplied data.
+*Verification:* verify the causal claims against the variance analysis itself (and recompute the CV/SV) before
+the narrative is used.
+
+**Summarisation.** *The prompt:*
+
+> "Acting as a PMO analyst, summarise the attached 40-page monthly project report into a one-page exception
+> summary for the project board: out-of-tolerance items only, each with its figure, cause and action. Carry
+> forward every caveat and stated assumption. Audience: non-specialist board members; no new claims."
+
+*Good output:* a one-page exception summary in which every figure, action and caveat traces to the source
+report. *Verification:* confirm nothing material was dropped — especially the caveats and qualifying
+assumptions — by checking the summary against the source's exceptions and caveats.
+
+**Transformation.** *The prompt:*
+
+> "Acting as a cost controller, convert the attached raw ERP cost extract into the standard monthly report
+> format (columns: WBS, cost element, budget, actuals, commitments, variance). Preserve every row; map codes
+> using the attached lookup; and report the row counts and column totals before and after conversion."
+
+*Good output:* the standard-format table with an unchanged row count and totals that match the raw extract.
+*Verification:* reconcile the totals (and row counts) before and after the transformation, and investigate any
+difference before the output is used.
+
+These five entries are starting points, not scripts — the professional adapts the role, data reference, format
+and constraints to the task, the audience and the organisation's standards. However adapted, every pattern
+ends at the same gate: verification against source before the output is used (13.3.3).
 
 ### 13.3.3 Iterative refinement and verification
 
@@ -392,6 +494,28 @@ principle.
 
 *Rationale:* Context-rich, specific prompts yield useful output; vagueness yields generic output. For factual
 tasks, low creativity (temperature) is preferred.
+
+**MCQ 13.3-C `[13.3.2 · Application]`** "Convert this raw cost extract into the standard monthly report
+format" is an instance of which prompt pattern?
+- A. Extraction.
+- B. Summarisation.
+- C. Transformation. ✅
+- D. Analysis.
+
+*Rationale:* Converting content from one format to another is the transformation pattern. Extraction pulls
+specified values out of a source; summarisation condenses; analysis explains variances and drivers — none of
+them reformats a dataset wholesale.
+
+**MCQ 13.3-D `[13.3.4 · Analysis]`** To meet a deadline, an analyst pastes a confidential subcontract into a
+public AI tool to extract its terms. The primary guardrail breached is:
+- A. Iterative refinement.
+- B. Confidentiality — sensitive data must never enter ungoverned tools. ✅
+- C. Temperature control.
+- D. Desired-format specification.
+
+*Rationale:* The confidentiality guardrail (13.2.5, 13.3.4) is absolute: pasting sensitive data into an
+ungoverned public tool loses control of it, whatever the time pressure — a governed tool is the remedy.
+Refinement, temperature and format are prompt-craft matters, not the governance breach at issue.
 
 ### Self-check — KA 13.3
 
@@ -582,6 +706,28 @@ answers. A general LLM without the documents risks hallucination; the others do 
 
 *Rationale:* AI capabilities change quickly; responsible use validates current capability. The other options
 are false or contrary to the domain's stance.
+
+**MCQ 13.4-C `[13.4.4 · Analysis]`** Asking a general LLM assistant to perform precise multi-step arithmetic
+over a large cost table, rather than using spreadsheet/data-analysis AI, is best described as:
+- A. Good practice — one tool for everything.
+- B. Over-reaching: a category-to-task mismatch that invites plausible but wrong computation. ✅
+- C. A governance requirement.
+- D. RAG grounding.
+
+*Rationale:* Matching the task to the category is the judgement of 13.4.4; using a general LLM for precise
+tabular arithmetic is the named over-reach error. It is neither good practice nor a governance requirement,
+and it is unrelated to RAG grounding.
+
+**MCQ 13.4-D `[13.4.2b · Recall]`** The category-specific governance risk of document/RAG tools is that:
+- A. They cannot cite sources.
+- B. The retrieval layer may not respect document permissions, and a stale corpus produces confidently
+  outdated answers. ✅
+- C. They work only on tabular data.
+- D. They eliminate hallucination entirely.
+
+*Rationale:* Source-access control and corpus currency are the RAG-specific risks (13.4.2b) — sources must be
+curated and citations opened. RAG tools do cite sources, work over documents (not tables), and reduce rather
+than eliminate hallucination.
 
 ### Self-check — KA 13.4
 
@@ -805,6 +951,29 @@ date. This risks:
 *Rationale:* Accrual follows the *service* date; keying off the invoice date reproduces a classic cut-off error
 across every accrual — the professional must own the accrual logic.
 
+**MCQ 13.5-D `[13.5.7 · Analysis]`** In an AI claims-exposure sweep across 60 subcontracts, the model's
+distinctive contribution is:
+- A. Deciding entitlement on each claim.
+- B. Coverage — it reads everything, surfacing candidates for the professional's judgement. ✅
+- C. Replacing legal review of material exposures.
+- D. Setting the portfolio contingency.
+
+*Rationale:* The model's value is coverage; judgement on what matters — and entitlement and legal review —
+remain human (13.5.7). A and C delegate judgements the workflow reserves to professionals; D belongs to the
+risk workflow (13.5.9), not a claims sweep.
+
+**MCQ 13.5-E `[13.5.3 · Application]`** A control account has `BAC` USD 1,500,000 and a sustained `CPI` of
+0.96. If the trend holds, the model's projected `EAC = BAC/CPI` is:
+- A. USD 1,440,000
+- B. USD 1,500,000
+- C. USD 1,562,500 ✅
+- D. USD 1,687,500
+
+*Rationale:* `EAC = BAC/CPI = 1,500,000/0.96 = USD 1,562,500` (check: `1,562,500 × 0.96 = 1,500,000`). A
+multiplies by the `CPI` instead of dividing; B assumes the drift away; D has no basis in the data. The
+professional then verifies the assumption against the variance cause and runs the `TCPI` reality check before
+reporting (13.5.3).
+
 ### Self-check — KA 13.5
 
 1. State the three-step AI workflow and what each step contributes. *(Input → AI step (accelerate) →
@@ -894,6 +1063,60 @@ human.
 > *release*. Brand-blue diamonds; the sign-off node emphasised. *Animation storyboard (digital-only):* the
 > EAC task flows down the tree, hitting each gate, and only reaches "release" after the sign-off node.
 
+### 13.6.5c A model AI-use policy for a controls function
+
+The following is a model policy a controls function can adopt and adapt. It is written as policy text — the
+operational form of everything in this knowledge area.
+
+**1. Purpose & scope.** This policy governs the use of artificial-intelligence tools by all staff, contractors
+and secondees working within or on behalf of the project-controls function. It applies to any AI-assisted
+work product that informs a controls output — estimates, forecasts, schedules, reports, reconciliations,
+commercial analyses and disclosures — whether the tool is stand-alone or embedded in a platform. Nothing in
+this policy transfers accountability to a tool: accountability for every output rests with a named
+professional.
+
+**2. Approved tools & data rules.** Staff may use only the tools on the approved register, which records each
+tool, its permitted data classifications and its permitted uses. Confidential, commercially sensitive or
+personal data must not be entered into any tool outside the approved register, and no data may be entered
+into a tool above the data classification for which that tool is approved. Where a governed enterprise
+alternative exists, it must be used in preference to a public tool. Requests to add a tool to the register are
+made to the controls director and assessed for data handling, residency and auditability before approval.
+
+**3. Verification & sign-off.** Every AI-assisted output must be verified against source before it is used or
+circulated: figures recomputed, extractions checked against the cited document, and causal claims confirmed
+against the underlying analysis. A named professional signs off each AI-assisted output and is accountable for
+it; "the model produced it" is not an acceptable basis for release. The AI-output assurance checklist (13.6.5)
+must be applied to material outputs — forecasts, disclosures, commercial positions and board reporting — and
+an output that fails any checklist line is not released until the failure is fixed.
+
+**4. Disclosure & audit trail.** AI assistance must be disclosed wherever the receiving forum, client,
+regulator or contract requires it, and in all board-level and external reporting. For each material
+AI-assisted output, staff must record what the AI produced, who reviewed and approved it, and what was changed
+in review. These records form part of the function's audit trail and must be retained so that any
+AI-influenced number can be traced to source and defended later.
+
+**5. Prohibited uses.** AI tools must not be used to make deterministic control decisions for which an
+approved rule exists — such decisions are made by transparent, auditable rules. No unverified AI-generated
+figure, citation or clause may appear in any report or register. Entitlement, revenue-recognition,
+provisioning and similar professional judgements must not be delegated to a model: AI may assemble and
+summarise the material, but the judgement is made, and owned, by a qualified person with legal or specialist
+review where required.
+
+**6. Incidents & near-misses.** Any AI-related incident or near-miss — a hallucinated figure or clause, a
+confidentiality breach, an unverified output circulated — must be reported to the controls director without
+delay. Each incident is logged, the lesson is shared openly across the function rather than buried, and the
+policy and working practices are updated where the incident shows a gap. Open reporting of near-misses is
+treated as professional conduct, not failure.
+
+**7. Review cadence.** The approved-tool register is re-validated quarterly, because tool capabilities and
+data-handling terms change. This policy is reviewed annually, or immediately after any material incident. All
+staff complete training in prompting, verification and this policy before using AI tools, with refresher
+training at least annually.
+
+*A template to adapt — the policy's force comes from the sign-off discipline it encodes, not the paper.*
+
+**AI proposes, the professional disposes.**
+
 ### Key terms — KA 13.6
 
 | Term | Meaning |
@@ -931,6 +1154,27 @@ Time-saving, peer use and impressive output are not reasons to override the appr
 
 *Rationale:* Hallucination is mitigated by verification, grounding and low temperature. The other options
 increase risk.
+
+**MCQ 13.6-D `[13.6.5 · Application]`** An AI-drafted forecast passes every line of the assurance checklist
+except "cross-checked" — it is inconsistent with the schedule's critical path. The correct action is to:
+- A. Release it with a footnote noting the inconsistency.
+- B. Withhold it until the failure is fixed. ✅
+- C. Release it because most lines passed.
+- D. Remove the cross-check line from the checklist.
+
+*Rationale:* An output that fails **any** checklist line is not released until fixed (13.6.5). Footnoting a
+known inconsistency, releasing on a majority pass, or weakening the checklist all defeat the assurance the
+checklist exists to provide.
+
+**MCQ 13.6-E `[13.6.3 · Recall]`** Bias arises in AI systems primarily because:
+- A. Models are deliberately unfair.
+- B. Models reproduce the biases present in their training data. ✅
+- C. Temperature is set too low.
+- D. Verification introduces skew.
+
+*Rationale:* Models learn — and therefore reproduce — the patterns in their data, including its biases; the
+mitigations are alertness where AI influences decisions about people or resources, testing for skew, and
+keeping a human decision-maker. The other options misstate the mechanism.
 
 ### Self-check — KA 13.6
 
@@ -1039,6 +1283,30 @@ building governance *with* integration, not skipping it.
 
 *Rationale:* Greater capability raises the stakes of assurance; convincing errors are harder to catch. The
 governing principle endures; the model cannot replace accountability.
+
+**MCQ 13.7-C `[13.7.3 · Application]`** AI-assisted reconciliation cuts a three-person month-end close from
+**4 days to 2** (8-hour days, loaded cost **USD 100/hour**). Annual tooling and governance cost is
+**USD 30,000**. The honest **net** annual value is:
+- A. USD 4,800
+- B. USD 27,600 ✅
+- C. USD 57,600
+- D. USD 87,600
+
+*Rationale:* Monthly saving `= 2 days × 3 staff × 8 hours × USD 100 = USD 4,800`; annual
+`= 4,800 × 12 = USD 57,600`; net `= 57,600 − 30,000 = USD 27,600`. A is the monthly saving; C is the gross
+annual figure with the cost not netted; D wrongly adds the cost instead of subtracting it. An honest value
+case nets the full tooling *and* governance cost (13.7.3).
+
+**MCQ 13.7-D `[13.7.2 · Recall]`** As AI is integrated into the controls workflow, the professional's role
+shifts toward:
+- A. Being replaced by the model.
+- B. Directing and assuring AI-assisted production — a higher-judgement role. ✅
+- C. Producing every number manually to be safe.
+- D. Needing less domain knowledge.
+
+*Rationale:* The role moves from *producing* every number to *directing and assuring* AI-assisted production;
+the professionals who thrive pair domain mastery with AI fluency (13.7.2). The role is neither replaced nor
+diminished, and domain knowledge matters more, not less.
 
 ### Self-check — KA 13.7
 
