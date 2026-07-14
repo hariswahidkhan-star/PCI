@@ -297,6 +297,26 @@ quality). The controls professional's integrated view — following a variance f
 its cost, forecast and commercial consequences (Domain 7, KA 7.5.3) — is exactly what monitoring & controlling
 demands.
 
+### 8.4.4 Worked example — one month of monitoring & controlling on Northwind
+
+One monthly cycle on the data-centre fit-out, end to end:
+
+1. **Measure.** Progress is captured against the earning rules for each work package; the cost ledger closes
+   for the month with accruals raised for work done but not yet invoiced (Domain 5); the month's `EV`, `AC`
+   and `PV` roll up by control account.
+2. **Analyse.** Variance analysis attributes the month's adverse cost variance roughly 60/40 between a
+   plant-rate rise and rework in the containment package (Domain 4, KA 4.2).
+3. **Forecast.** The `EAC` is re-struck: the rate rise is now locked into the contract, so it is treated as
+   atypical, but the rework cause persists — a blended forecasting method is chosen and defended (Domain 6,
+   KA 6.3.3).
+4. **Act.** The containment package is given a recovery plan and a tightened inspection regime; the change
+   log records one approved variation from the month's change control (Domain 5, KA 5.4).
+5. **Report.** The dashboard shows RAG status and trend; the exception report carries the two
+   out-of-tolerance control accounts with cause, impact and action (Domain 4, KA 4.3).
+
+This cycle — measure, analyse, forecast, act, report — repeated every period, *is* monitoring & controlling;
+the artefacts differ from project to project, the loop does not.
+
 ### Key terms — KA 8.4
 
 | Term | Meaning |
@@ -352,6 +372,21 @@ are liabilities that linger.
 needed to run it; the **final account** settles the commercial position — final remeasurement, agreed
 variations and claims, retention release (Domain 7, KAs 7.3–7.4). The controls professional is central to the
 final account: it is the last, definitive reconciliation of scope, cost, billing and revenue for the project.
+
+**Worked example 8.5.2 — settling Northwind's final account.**
+
+1. **Setup.** Original contract value **USD 500,000**; approved variations **USD 40,000**; an agreed claim
+   settlement of **USD 15,000**. Retention of **5 %** was withheld through the job, with half released at
+   practical completion and the balance due after the defects period.
+2. **Formula.** `Final account = original value + variations + agreed claims`; `total retention = 5 % ×
+   final account`; the remaining release is half of the total.
+3. **Substitution.** `Final account = 500,000 + 40,000 + 15,000 = 555,000`; `total retention = 5 % × 555,000
+   = 27,750`; released at practical completion `27,750 / 2 = 13,875`; remaining after defects `13,875`.
+4. **Result.** A final account of **USD 555,000**, with **USD 13,875** of retention still to collect after
+   the defects period.
+5. **Interpretation.** The final account is the definitive reconciliation of scope, variations, claims and
+   retention (Domain 7); until the last 13,875 is collected, closing is not finished — it is a real
+   receivable the controls professional tracks to zero.
 
 ### 8.5.3 Lessons learned
 
