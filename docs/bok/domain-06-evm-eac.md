@@ -1122,6 +1122,52 @@ month — a reader should find the `TCPI` in the same place in month 2 and month
 
 ---
 
+## Exam preparation — Domain 6
+
+**How this domain is examined.** As the flagship domain, Domain 6 carries the heaviest concentration of
+application-level numerical items in the PM group: expect to compute `CV`, `SV`, `CPI`, `SPI`, `TCPI`, the
+full `EAC` family and earned schedule from a small data set, often with several questions off one stem.
+Analysis items test method *selection* — matching an `EAC` formula to the cause of a variance — and the
+honest limits of the indices. Pure recall is confined to definitions (`EV` at budget; `ETC` within the
+identity), so the master project's figures are worth rehearsing until each result is automatic.
+
+**Calculation traps.**
+
+- **Computing `EV` at actual cost.** `EV` is progress valued at *budget*, never at `AC` — confusing "value
+  earned" with "cost incurred" collapses the method (MCQ 6.1-A).
+- **Swapped or inverted indices.** `CPI = EV/AC` and `SPI = EV/PV`; distractors routinely swap the pair or
+  invert the ratios (MCQ 6.2-A).
+- **Picking an `EAC` formula without matching the cause.** A one-off, closed event → `AC + (BAC − EV)`; a
+  persisting inefficiency → `BAC/CPI`; schedule drag compounding cost → the `CPI × SPI` divisor;
+  unrepresentative history → bottom-up (MCQ 6.3-B). Multiplying by `CPI` instead of dividing is a favourite
+  distractor (MCQ 6.3-D).
+- **`TCPI` denominator errors.** To meet `BAC`, use `(BAC − EV) / (BAC − AC)`; to meet `EAC`, only the
+  denominator changes to `(EAC − AC)`. Distractors offer the achieved `CPI` or the inverted ratio (MCQ
+  6.2-D).
+- **Reading `SPI` late in a project.** The cost-based `SPI` converges to 1 at completion regardless of
+  lateness — late-project schedule questions want `SPI(t)` (MCQs 6.4-A, 6.4-D).
+- **Earned-schedule interpolation slips.** Bracket `EV` between the correct two cumulative `PV` months before
+  interpolating; rounding `ES` to a whole month, or getting the `SV(t)` sign wrong, are the planted errors
+  (MCQ 6.4-D).
+
+**Time management.** Multi-part EVM stems reward writing the base quantities (`BAC`, `PV`, `EV`, `AC` and
+the target) in the margin before touching any formula — most errors are transcription, not method. Allow two
+to three minutes for an `EAC`-selection item; the arithmetic is quick once the assumption is chosen, and the
+assumption is the marked skill.
+
+**Reflection questions.**
+
+1. Which earning rules produce the `EV` you report today, and which work packages could claim optimistic
+   progress without being caught?
+2. When did you last select an `EAC` method by matching it to the cause of the variance — and could you
+   defend that assumption to a board?
+3. Does your organisation quote the `TCPI` when someone proposes to hold the original budget, or does the
+   `BAC` survive on hope?
+4. How would your current project's schedule story change if you restated it in time units through earned
+   schedule?
+
+---
+
 ## Domain 6 summary
 
 Earned value integrates three measures in one currency — **`PV`** (planned), **`EV`** (performed, valued at

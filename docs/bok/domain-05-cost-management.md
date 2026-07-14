@@ -1000,6 +1000,49 @@ deleting it, so the audit trail survives.
 
 ---
 
+## Exam preparation — Domain 5
+
+**How this domain is examined.** Domain 5 is tested with a fairly even blend of recall (definitions such
+as trend versus variation), application (short calculations) and analysis (reading a control failure from a
+scenario). The numerical items concentrate in three places: **overhead absorption** and over/under-recovery
+(KA 5.1), the **cost-state arithmetic** of commitments, accruals and actuals (KA 5.2), and the effect of
+variations and reserve draws on `BAC` (KA 5.4). Scenario items typically describe a reporting practice — an
+invoice-only extract, an unlogged trend — and ask what it conceals or which discipline it breaches.
+
+**Calculation traps.**
+
+- **Treating open commitments as cost-to-date.** Cost-to-date is *actuals + accruals*; open purchase orders
+  belong in the forecast, not in `AC` (the distractors in MCQ 5.2-A add them in).
+- **Reporting invoices only.** Omitting accruals understates `AC` and flatters `CPI` — and the exam likes
+  asking for the *direction* of that distortion (MCQ 5.2-C).
+- **Absorbing overhead on the wrong figures.** The OAR is *budgeted* overhead ÷ *budgeted* base, applied to
+  **actual** activity; distractors offer the budgeted or actual overhead itself, or the bare rate (MCQ
+  5.1-A).
+- **Comparing absorbed with budgeted rather than actual overhead.** Over/(under)-absorption is absorbed −
+  *actual incurred* (MCQ 5.1-C's distractor C) — and watch the sign.
+- **Adding a contingency draw to `BAC`.** A materialised-risk draw consumes reserve already inside the
+  baseline; only new-scope variations move `BAC` (MCQ 5.4-A).
+- **Ignoring — or double-counting — logged trends.** The potential variance adds each open trend once to the
+  forecast, then compares with budget (MCQ 5.4-D).
+
+**Time management.** The calculations in this domain are short — one or two lines each — so budget roughly a
+minute for recall items and no more than two for the multi-step cost-state builds. If a scenario stem is
+long, read the question line first: it usually asks for a single figure (cost-to-date, open commitment, new
+`BAC`) that the stem's other numbers exist to distract from.
+
+**Reflection questions.**
+
+1. In your organisation's cost reports, is cost-to-date built from actuals plus accruals, or does it quietly
+   default to processed invoices — and how would you prove which?
+2. How stale are your project's open commitments, and when were they last cleansed against goods-received
+   records?
+3. When a risk draws on contingency, does your change log keep that visibly distinct from a scope variation,
+   or do the two mechanisms blur?
+4. Which of your current control accounts is too coarse — or too granular — to support meaningful earned
+   value, and what would you change?
+
+---
+
 ## Domain 5 summary
 
 Cost control begins with the anatomy of cost — direct/indirect and fixed/variable, driven by true cost

@@ -1169,6 +1169,52 @@ final account.
 
 ---
 
+## Exam preparation — Domain 7
+
+**How this domain is examined.** Domain 7 mixes commercial recall (who bears which risk under each contract
+form; what makes LDs enforceable) with a dense band of application arithmetic: **pain/gain and CPIF fee
+adjustments** (KA 7.1), **prolongation and LD quantums** (KA 7.2), **BoQ pricing, rate build-ups and
+remeasurement** (KA 7.3) and the **interim-application cascade** (KA 7.4). Analysis items centre on reading
+the contract asset/liability position and on reconciling the three progress measures. Nearly every
+calculation is a short cascade of two or three steps — the marks are lost in step order, not in the
+multiplication.
+
+**Calculation traps.**
+
+- **Applying the share ratio to the wrong base — or the wrong party.** The contractor's fee moves by *its*
+  share of `(target cost − actual cost)`; a 70/30 client/contractor split means 30 % to the contractor, and
+  an overrun *subtracts* from the fee (MCQ 7.1-D).
+- **Forgetting the cap.** Compute the uncapped pain-share first, then test it against the cap; beyond the
+  cap every further dollar of overrun is the client's (worked example 7.1.4b; Exercise 7.2).
+- **Retention on the wrong base.** Retention applies to the *gross cumulative* value, not to the period
+  movement or the net figure (MCQ 7.4-C's distractor D) — and the amount due nets off *previous payments*
+  after retention, not before.
+- **LD exposure day-counts.** Exposure = LD rate × forecast days late — swapped figures and misplaced zeros
+  are the planted distractors (MCQ 7.2-A); with acceleration, cost the *residual* days plus the acceleration
+  price (Exercise 7.5).
+- **Remeasuring at the tendered instead of the actual quantity.** The remeasured amount is actual quantity ×
+  rate; the "extra" alone, and the original tender amount, are both distractors (MCQ 7.3-A).
+- **Profit on the wrong subtotal.** In a rate build-up, overheads apply to direct cost and profit to the
+  subtotal *including* overheads (MCQ 7.3-C).
+
+**Time management.** Work every payment cascade in ledger order — gross value, retention, net certified,
+previous payments, amount due — writing each line down; skipping a step is where the distractors live.
+Contract-asset/liability items take seconds once the direction rule (billing above revenue → liability) is
+fixed in memory, so bank those marks early and spend the surplus on the pain/gain scenarios.
+
+**Reflection questions.**
+
+1. For the contracts you currently work under, can you state from memory who bears cost risk and where each
+   cap or collar bites?
+2. If your project slipped 30 days tomorrow, how quickly could you substantiate cause, effect and quantum
+   from records that already exist?
+3. What has your certified-versus-applied gap done over the last six months, and what is that trend telling
+   you?
+4. How does your organisation explain the monthly differences between earned value, certified billing and
+   recognised revenue — reconciliation, or force-fit?
+
+---
+
 ## Domain 7 summary
 
 The contract allocates cost risk along a spectrum — lump sum (contractor), target cost (shared, with pain/gain

@@ -1163,6 +1163,51 @@ as failure unless the scope movement is on the record. Together with the burnup'
 
 ---
 
+## Exam preparation — Domain 9
+
+**How this domain is examined.** Domain 9 tests Scrum vocabulary at recall level (accountabilities, events,
+artefacts and their commitments), flow reasoning at analysis level (burnup versus burndown, cumulative flow,
+WIP limits), and concentrates its numerical items in **velocity and release forecasting** (KA 9.3) and
+**AgileEVM with run-rate funding** (KA 9.5). Expect at least one rebaselining calculation and one
+reconciliation item at the IFRS 15 boundary. The recurring theme is honesty of measurement — ranges over
+points, transparent scope movement, and the standing AgileEVM caveat.
+
+**Calculation traps.**
+
+- **Comparing or summing velocity across teams.** Story points are a relative, team-specific measure; a
+  cross-team velocity figure has no meaning, and setting velocity as a target inflates the estimates it is
+  built from (Advanced 9.A.4).
+- **Forecasting from the original scope after scope changed.** Recompute against the *new* total scope minus
+  completed work; distractors use the original total, or divide the whole new scope by velocity and forget
+  the points already done (MCQ 9.3-D; worked example 9.3.3b).
+- **Getting rebaselining wrong.** Adding scope raises `BAC` and `EAC` and lowers `% complete`, but the `EV`
+  of done work and the `CPI` are unchanged — nothing has been un-done (worked example 9.5.3b; Exercise 9.4).
+- **Treating story-point `%` as IFRS 15 progress.** Story-point completion is a proxy for effort/scope;
+  revenue follows the appropriate input basis (usually cost-to-cost), with the difference reconciled and
+  explained, never averaged (MCQ 9.5-C).
+- **`EV` from the wrong points.** `EV` = points *completed* ÷ total planned points × `BAC`; the
+  planned-points version is `PV`, and `% complete × AC` values progress at actual cost — the cardinal EVM
+  error (MCQ 9.5-E).
+- **Fractional Sprints and forgotten caps.** Round Sprints-remaining *up*, because capacity is bought in
+  whole Sprints (Exercise 9.1); and under capped T&M the client pays no more than the cap (MCQ 9.6-C).
+
+**Time management.** Velocity arithmetic is fast; the marked skill is the setup — new total scope, remaining
+points, whole Sprints. Reserve extra time for AgileEVM items that chain `EV → CPI → EAC`, and for any stem
+containing the word "rebaselined", which usually changes two figures and deliberately leaves two unchanged.
+
+**Reflection questions.**
+
+1. Where in your organisation is velocity being compared across teams or set as a target — and what is that
+   doing to the estimates beneath it?
+2. If scope were added to your current release tomorrow, would the `BAC` be rebaselined on the record or
+   absorbed silently?
+3. How strong is your teams' Definition of Done, and what would sampling "done" items against it reveal
+   about the `EV` you report?
+4. Can you reconcile story-point progress, cost-to-cost progress and the billing position on an adaptive
+   contract you know — and explain each gap?
+
+---
+
 ## Domain 9 summary
 
 Adaptive delivery rests on an **empirical mindset** — transparency, inspection, adaptation — and inverts the

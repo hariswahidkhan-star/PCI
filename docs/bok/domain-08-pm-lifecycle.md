@@ -1079,6 +1079,51 @@ operating organisation is what makes the second register measurable at all (8.1.
 
 ---
 
+## Exam preparation — Domain 8
+
+**How this domain is examined.** Domain 8 is the most concept-heavy domain in the PM group: the balance
+tilts towards recall (process groups, charter versus business case, artefact vocabulary) and analysis (which
+principle a described governance failure violates), with a lighter but real numerical strand — `PV` phasing
+(KA 8.2), the final-account and retention arithmetic of closing (KA 8.5), and adaptive funding-gap
+calculations at the Domain 9 boundary (KA 8.6). Scenario stems often describe a defect and ask what it is,
+so precise vocabulary — **integrated change control**, the **100 % rule**, the two registers of success —
+earns direct marks.
+
+**Calculation traps.**
+
+- **Charter versus business case.** The business case *justifies*; the charter *authorises* — distractors
+  swap them or offer planning artefacts such as the WBS (MCQ 8.1-A).
+- **A RACI with two accountables.** Every activity carries exactly one "A"; the fix is to reduce to one, not
+  to share the accountability or convert it to "R"s (MCQ 8.1-D).
+- **Treating a management-reserve release as a variance.** Releasing reserve into the baseline is a formal,
+  logged re-baseline through change control — `BAC` rises — not an adverse variance and never a quiet
+  adjustment (KA 8.4.2; Domain 5, KA 5.4.3).
+- **Retention on the wrong final-account base.** The retention base is the *full* final account — original
+  value plus variations plus agreed claims — and half has usually already been released at practical
+  completion (MCQ 8.5-B's distractors miss one or the other).
+- **Funding-gap denominators.** Compare the Sprints *needed* with the Sprints *remaining* in the funding,
+  not with the total originally funded, and do not net off completed Sprints twice (MCQ 8.6-E).
+- **Project success mistaken for benefit success.** On time and on budget answers the delivery question
+  only; distractors declare "total success" from the iron triangle alone (MCQ 8.1-C).
+
+**Time management.** Recall items here should take well under a minute each — the domain rewards vocabulary
+precision more than computation. Spend the saved time on the scenario-analysis stems, where a single phrase
+("approved on its direct cost alone") carries the answer, and on checking the base of any retention or
+funding-gap calculation before multiplying.
+
+**Reflection questions.**
+
+1. Could you trace your current project's baseline back to its charter through authorised change only — and
+   how long would that take?
+2. Which changes on your project were approved for direct cost alone, with their schedule, risk or benefit
+   impacts arriving unpriced later?
+3. Who owns measuring each benefit in your business case after the project team disbands, and were the
+   baseline measures taken at initiation?
+4. When did a gate in your organisation last stop, descope or recycle a project — and if never, what does
+   that say about the gates?
+
+---
+
 ## Domain 8 summary
 
 The project lifecycle runs through five process groups: **initiating** (business case, charter, stakeholders,
