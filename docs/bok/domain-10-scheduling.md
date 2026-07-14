@@ -101,6 +101,27 @@ three-point estimate over a single guess.
 
 *Rationale:* Finish-to-Start (the default). SS ties starts; FF ties finishes; SF is the rare start-to-finish.
 
+**MCQ 10.1-C `[10.1.3 · Application]`** Activity A finishes at the end of day 10. Its successor B is linked
+**FS + 3 days** (a lag for curing time). B's earliest start is:
+- A. Day 10
+- B. Day 13 ✅
+- C. Day 7
+- D. Day 3
+
+*Rationale:* An FS + 3 lag delays the successor three days beyond the predecessor's finish: `10 + 3 = 13`. A
+ignores the lag; C treats the lag as a lead (FS − 3); D reads the lag itself as the start date.
+
+**MCQ 10.1-D `[10.1.2 · Analysis]`** When fast-tracking a schedule, which dependency may legitimately be
+relaxed or overlapped?
+- A. A mandatory dependency (e.g. concrete curing before loading).
+- B. A discretionary dependency reflecting preferred sequencing. ✅
+- C. An external dependency (e.g. a permit).
+- D. None — all dependencies are equally fixed.
+
+*Rationale:* Discretionary ("preferred") logic is the legitimate target for overlap because nothing physical
+enforces it. Mandatory logic is a physical constraint that cannot be relaxed; an external dependency is outside
+the team's control; D ignores the distinction the three categories exist to make.
+
 ### Self-check — KA 10.1
 
 1. Name the four dependency types and which is most common. *(FS, SS, FF, SF; FS.)*
@@ -238,6 +259,26 @@ project (until the 4 days are used) and is certainly possible.
 
 *Rationale:* `TF = LS − ES = 7 − 7 = 0` — D is critical. The other values confuse dates with float.
 
+**MCQ 10.2-D `[10.2.4 · Application]`** An activity has `EF` = 14; its two successors have `ES` of 17 and 19.
+Its free float is:
+- A. 3 days ✅
+- B. 5 days
+- C. 0 days
+- D. 4 days
+
+*Rationale:* `FF = min(ES of successors) − EF = min(17, 19) − 14 = 17 − 14 = 3` days. B wrongly uses the later
+successor (19); C assumes the activity is critical; D averages the two successor dates.
+
+**MCQ 10.2-E `[10.2.3 · Recall]`** In the backward pass, an activity's `LF` equals:
+- A. The earliest `LS` of its successors. ✅
+- B. The latest `LS` of its successors.
+- C. The latest `EF` of its predecessors.
+- D. The project start date.
+
+*Rationale:* Working right to left, an activity must finish in time for its most demanding successor, so `LF =`
+the **earliest** `LS` among successors, and `LS = LF − duration`. B would let a successor start late; C is the
+forward-pass rule for `ES`; D confuses the two ends of the network.
+
 ### Self-check — KA 10.2
 
 1. Give the formulae for total and free float and the difference in what each protects. *(`TF = LS − ES`
@@ -362,6 +403,30 @@ fast-tracking) trades cost for time.
 *Rationale:* Levelling respects hard resource limits and may extend the schedule; smoothing works within float
 (no extension); fast-tracking and crashing shorten it.
 
+**MCQ 10.3-D `[10.3.1 · Application]`** A project's critical path is 20 days; the parallel path is 17 days.
+Two critical activities can be crashed: **X** at USD 3,000/day (max 2 days) and **Y** at USD 7,000/day (max 2
+days). The least-cost way to save **2 days** is:
+- A. Crash X by 2 days for USD 6,000. ✅
+- B. Crash Y by 2 days for USD 14,000.
+- C. Crash X and Y by 1 day each for USD 10,000.
+- D. Crash X by 1 day for USD 3,000.
+
+*Rationale:* Cheapest critical day first: `2 × 3,000 = 6,000`, and the new 18-day path still exceeds the 17-day
+parallel path, so both crashed days are effective. B and C buy the same 2 days at higher cost; D saves only 1
+day, missing the target.
+
+**MCQ 10.3-E `[10.3.4 · Analysis]`** A Monte Carlo schedule-risk analysis returns **P50 = 30 days** and
+**P80 = 33 days** against a deterministic duration of 30 days. The professional posture is to:
+- A. Commit externally at 33 days, manage internally to 30, and hold the 3-day gap as explicit schedule contingency. ✅
+- B. Commit externally at 30 days, since that is the deterministic answer.
+- C. Commit externally at 27 days to motivate the team.
+- D. Ignore the simulation — the critical path is already known.
+
+*Rationale:* The deterministic date is only about a coin toss (P50), so the external commitment is made at the
+higher-confidence P80 while the team manages to the aggressive date, with the difference held as owned
+contingency. B commits to a 50/50 outcome; C commits to a date *less* likely than the coin toss; D discards
+exactly the uncertainty the analysis quantifies.
+
 ### Self-check — KA 10.3
 
 1. Contrast crashing and fast-tracking by what each trades. *(Crashing — cost for time; fast-tracking — time
@@ -435,6 +500,29 @@ but not aggregate performance. Together they give the full schedule picture.
 
 *Rationale:* Sprints/releases are time-phased increments that map to milestones, reconciled with the CPM
 schedule. They complement, not replace, scheduling, and are not cost accounts.
+
+**MCQ 10.4-C `[10.4.1 · Application]`** A baseline forecasts completion at day 40. At the data date, a
+**critical** activity has finished **3 days late** and a non-critical activity with **5 days of total float**
+has finished **2 days late**. After recalculating the network, the completion forecast is:
+- A. Day 45
+- B. Day 43 ✅
+- C. Day 40
+- D. Day 42
+
+*Rationale:* A critical slip passes through day for day (`40 + 3 = 43`), while the non-critical slip is
+absorbed within its 5 days of float. A wrongly adds both slips; C ignores the critical slip; D applies the
+absorbed slip instead of the critical one.
+
+**MCQ 10.4-D `[10.4.1 · Analysis]`** A schedule is updated with several actual finish dates missing and key
+milestones held on fixed date constraints. The main consequence is:
+- A. The forecast is more reliable because the milestone dates are protected.
+- B. The network can no longer recalculate honestly — the forecast completion and current critical path are corrupted. ✅
+- C. Total float increases across the network.
+- D. The baseline is automatically re-approved.
+
+*Rationale:* Missing actuals and forced constraints break the logic-driven recalculation, hiding slippage and
+moving critical paths — the schedule analogue of the cost data-integrity failures of Domain 5. A mistakes
+concealment for protection; C and D do not follow from a corrupted update.
 
 ### Self-check — KA 10.4
 

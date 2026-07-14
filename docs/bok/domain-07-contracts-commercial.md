@@ -161,6 +161,28 @@ The contractor's pain-share is:
 *Rationale:* Overrun 800,000 × 50 % = **400,000** borne by the contractor. A is the whole overrun; C ignores
 the mechanism; D is the actual cost.
 
+**MCQ 7.1-D `[7.1.3 · Application]`** CPIF: target cost USD 6,000,000, target fee USD 500,000, share ratio
+**70/30** (client/contractor), actual cost USD 6,800,000. The contractor's fee is:
+- A. USD 260,000 ✅
+- B. USD 500,000
+- C. USD 740,000
+- D. USD 100,000
+
+*Rationale:* `Fee = target fee + contractor's share × (target − actual) = 500,000 + 30 % × (6,000,000 −
+6,800,000) = 500,000 − 240,000 = 260,000`. B ignores the incentive adjustment; C adds the share instead of
+subtracting it on an overrun; D wrongly applies a 50 % share.
+
+**MCQ 7.1-E `[7.1.2 · Recall]`** Under a **remeasurement** contract, the client bears ____ risk and the
+contractor bears ____ risk:
+- A. quantity; rate ✅
+- B. rate; quantity
+- C. all cost; no
+- D. no; all cost
+
+*Rationale:* Remeasurement pays agreed rates against actual quantities, so the client pays for whatever
+quantities arise (quantity risk) while the contractor is held to its tendered rates (rate risk). B inverts the
+allocation; C describes cost-plus; D describes lump sum.
+
 ### Self-check — KA 7.1
 
 1. Order lump sum, target cost and cost-plus by who bears cost risk. *(Lump sum → contractor; target cost →
@@ -275,6 +297,28 @@ C and D are unrelated figures.
 *Rationale:* Higher retention withholds more cash for longer, deepening the funding trough (Domain 3, KA 3.5).
 It worsens (not improves) cash, has a clear cash effect, and is unrelated to LDs.
 
+**MCQ 7.2-D `[7.2.2 · Application]`** A substantiated client-caused delay of **45 days** extends time-related
+preliminaries at USD 8,000/day and keeps specialist plant on standby at USD 2,000/day. The prolongation
+quantum is:
+- A. USD 360,000
+- B. USD 450,000 ✅
+- C. USD 90,000
+- D. USD 10,000
+
+*Rationale:* `quantum = Σ (time-related rate × delay days) = 45 × 8,000 + 45 × 2,000 = 360,000 + 90,000 =
+450,000`. A omits the plant standby; C omits the preliminaries; D is the combined daily rate for one day only.
+
+**MCQ 7.2-E `[7.2.4 · Analysis]`** A contractor substitutes a **retention bond** for 5 % cash retention. The
+main commercial effect is:
+- A. The contractor's cash position improves — payments are received in full — at the cost of the bond fee. ✅
+- B. The client loses all security for defects.
+- C. The contractor's cash position worsens.
+- D. Liquidated damages no longer apply.
+
+*Rationale:* A retention bond substitutes third-party security for withheld cash, so the contractor collects
+full value now, shallowing the funding trough, in exchange for the bond's fee. The client still holds security
+(the bond), so B is wrong; C reverses the cash effect; D confuses unrelated instruments.
+
 ### Self-check — KA 7.2
 
 1. What three things must a claim establish? *(Cause, effect and quantum — notified and substantiated.)*
@@ -379,6 +423,28 @@ late. The main commercial consequence is:
 
 *Rationale:* Preliminaries are largely time-related, so a delay extends them (prolongation), a common claim
 head. Delay does not reduce them, change measured rates, or accelerate retention release.
+
+**MCQ 7.3-C `[7.3.3 · Application]`** A unit rate is built up from first principles: labour 3 hours at USD
+40/hour, materials USD 50, plant USD 30; overheads at **10 %** on direct cost; profit at **5 %** on the
+subtotal including overheads. The tendered rate is:
+- A. USD 200
+- B. USD 220
+- C. USD 231 ✅
+- D. USD 230
+
+*Rationale:* Direct cost `= 3 × 40 + 50 + 30 = 200`; overheads `200 × 10 % = 20` → subtotal `220`; profit
+`220 × 5 % = 11` → **231**. A is direct cost only; B forgets profit; D wrongly takes profit on direct cost
+(200 × 5 % = 10) instead of on the subtotal.
+
+**MCQ 7.3-D `[7.3.1 · Recall]`** At tender stage, the principal purpose of issuing a BoQ to bidders is:
+- A. To let each tenderer measure its own quantities.
+- B. To give all tenderers a common set of quantities to price, making bids comparable. ✅
+- C. To fix the final contract sum regardless of quantities.
+- D. To replace the drawings and specification.
+
+*Rationale:* The BoQ provides a common tender basis — every bidder prices the same measured quantities, so
+rates and totals compare like for like. A defeats that purpose; C describes lump sum pricing, not the BoQ's
+role; D is wrong because the BoQ is prepared *from* the drawings and specification, not instead of them.
 
 ### Self-check — KA 7.3
 
@@ -488,6 +554,27 @@ differ. This is:
 *Rationale:* `EV` (budget), valuation (contract rates) and revenue (IFRS 15) measure the same progress
 differently, so they diverge by design; the professional reconciles them. It is neither an error nor a breach.
 
+**MCQ 7.4-C `[7.4.3 · Application]`** Gross value of work done to date is USD 240,000; retention is 5 %;
+previous payments total USD 180,000. The amount due this application is:
+- A. USD 48,000 ✅
+- B. USD 60,000
+- C. USD 228,000
+- D. USD 57,000
+
+*Rationale:* Retention `= 5 % × 240,000 = 12,000`; net certified `= 240,000 − 12,000 = 228,000`; amount due
+`= 228,000 − 180,000 = 48,000`. B ignores retention; C omits previous payments; D wrongly applies retention to
+the period movement (`(240,000 − 180,000) × 95 %`) instead of to the gross value.
+
+**MCQ 7.4-D `[7.4.2 · Recall]`** The amount that actually drives the contractor's cash inflow each period is:
+- A. The applied amount.
+- B. The certified amount. ✅
+- C. The BoQ tender total.
+- D. The earned value.
+
+*Rationale:* The contractor applies, but the client's representative certifies, and the client pays the
+certified sum — so certification, not application, drives cash. C is a tender-stage figure; D values progress
+at budget for performance measurement, not billing.
+
 ### Self-check — KA 7.4
 
 1. Give the steps from gross value to amount due. *(Gross value → less retention → net certified → less
@@ -582,6 +669,27 @@ follows ____:
 
 *Rationale:* Billing follows the contract's payment mechanism (valuations/milestones); revenue follows IFRS 15
 performance (control transfer). The other options invert or conflate the two.
+
+**MCQ 7.5-C `[7.5.2 · Application]`** Cumulative IFRS 15 revenue recognised is USD 4,200,000; cumulative
+certified billing is USD 3,900,000. The balance-sheet position is:
+- A. A contract asset of USD 300,000. ✅
+- B. A contract liability of USD 300,000.
+- C. A contract asset of USD 8,100,000.
+- D. Nil.
+
+*Rationale:* Revenue exceeds billing by `4,200,000 − 3,900,000 = 300,000` → **under-billing → contract
+asset**. B reverses the direction; C wrongly adds the two figures; D ignores the gap.
+
+**MCQ 7.5-D `[7.5.2 · Analysis]`** A project shows a persistent and **growing contract liability**
+(over-billing). The best commercial reading is:
+- A. The project has collected cash ahead of performance and still owes the work to earn it out. ✅
+- B. The project has under-billed and cash is tied up in unbilled work.
+- C. Revenue has been recognised incorrectly.
+- D. The project is certain to be profitable.
+
+*Rationale:* Over-billing means billing runs ahead of IFRS 15 performance — favourable for cash now, but a
+liability to be earned out through future work. B describes a contract *asset*; C is wrong because the gap is
+a designed feature of two rule-sets, not an error; D confuses a billing-timing position with profitability.
 
 ### Self-check — KA 7.5
 

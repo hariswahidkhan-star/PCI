@@ -104,6 +104,27 @@ triangle, and a resourcing triad respectively.
 *Rationale:* Work with stable/regulated requirements and no value in a partial increment fits predictive
 delivery. The others have uncertainty and incremental value, suiting adaptive delivery.
 
+**MCQ 9.1-C `[9.1.3 · Application]`** Under adaptive planning, a programme funds a stable team for **12
+two-week Sprints at USD 90,000 per Sprint**, letting scope flex to fit. The fixed cost envelope is:
+- A. USD 90,000
+- B. USD 1,080,000 ✅
+- C. USD 540,000
+- D. USD 2,160,000
+
+*Rationale:* Adaptive planning fixes time and cost: `12 × 90,000 = 1,080,000`, with scope the variable. A is a
+single Sprint; C funds only half the cadence; D wrongly treats the per-Sprint rate as a weekly rate over 24
+weeks.
+
+**MCQ 9.1-D `[9.1.1 · Recall]`** The Agile Manifesto's stance on planning is best described as:
+- A. Plans are prohibited in agile delivery.
+- B. Responding to change is valued over following a plan, while the plan still has value. ✅
+- C. Following the plan is valued over responding to change.
+- D. Plans must be fixed before any work starts.
+
+*Rationale:* Each Manifesto value statement prefers the left item *while recognising the item on the right
+still has value* — change over plan-following, but not the abolition of plans. A and D overstate in opposite
+directions; C inverts the value statement.
+
 ### Self-check — KA 9.1
 
 1. Why does a fixed-baseline controls system fight an agile delivery? *(Agile expects scope to change; treating
@@ -194,6 +215,29 @@ Increment→Definition of Done. Velocity is a metric, not a commitment.
 
 *Rationale:* The Product Owner maximises product value and orders the Product Backlog. The Scrum Master serves
 effectiveness; the Developers build the Increment.
+
+**MCQ 9.2-C `[9.2.3 · Application]`** A team runs **two-week Sprints**, each producing at least one usable
+Increment, with a new Sprint starting immediately after the previous one. Over a 26-week release window, the
+minimum number of Increments is:
+- A. 26
+- B. 13 ✅
+- C. 12
+- D. 6
+
+*Rationale:* `26 weeks / 2 weeks per Sprint = 13` Sprints, each yielding at least one Increment — and because a
+new Sprint starts immediately, there are no gap weeks. A assumes weekly Increments; C wrongly inserts a gap
+between Sprints; D assumes four-week Sprints.
+
+**MCQ 9.2-D `[9.2.2 · Analysis]`** A programme stakeholder asks the Scrum Master to assign this Sprint's tasks
+to individual Developers. The request misreads Scrum because:
+- A. Only the Product Owner assigns tasks.
+- B. The Developers own the Sprint Backlog plan; the Scrum Master is a coach and impediment-remover, not a manager over the team. ✅
+- C. Tasks may only be assigned at the Sprint Review.
+- D. The Scrum Master may assign tasks but only in writing.
+
+*Rationale:* The Developers are accountable for the Sprint plan and the daily work; the Scrum Master serves the
+team's effectiveness rather than directing it. A shifts the error to the Product Owner (who owns *what and
+why*, not task assignment); C and D invent rules Scrum does not contain.
 
 ### Self-check — KA 9.2
 
@@ -330,6 +374,29 @@ project.
 *Rationale:* Agile fixes time and cost (a cadence of funded Sprints) and flexes scope — the inverse of the
 predictive triangle.
 
+**MCQ 9.3-D `[9.3.3 · Application]`** A team's velocity is **25 points/Sprint**. Original release scope was
+300 points; by the end of Sprint 6, **150 points** are complete and **50 points of new scope** are approved.
+The Sprints remaining are:
+- A. 6
+- B. 8 ✅
+- C. 14
+- D. 12
+
+*Rationale:* New total scope `= 300 + 50 = 350`; remaining `= 350 − 150 = 200`; `200 / 25 = 8` Sprints. A
+ignores the added scope (`150/25`); C divides the whole new scope by velocity, forgetting the 150 points
+already done; D uses the original 300 and also forgets the completed work.
+
+**MCQ 9.3-E `[9.3.4 · Analysis]`** On a cumulative flow diagram, the "in progress" band is steadily widening
+while the "done" band's slope is flat. The best reading is:
+- A. Throughput is rising healthily.
+- B. Work is being started faster than it is finished — WIP is growing at a bottleneck. ✅
+- C. Scope has been removed from the release.
+- D. Cycle time is falling.
+
+*Rationale:* A widening in-progress band with flat completion means items enter the state faster than they
+leave — growing WIP queuing at a bottleneck, which lengthens (not shortens) cycle time. A and D describe the
+opposite pattern; C would narrow the to-do band, not widen in-progress.
+
 ### Self-check — KA 9.3
 
 1. Why report a release forecast as a *range* of Sprints? *(Velocity varies; a range (e.g. optimistic/
@@ -401,6 +468,26 @@ not restrict useful throughput, is not neutral, and by definition lowers WIP.
 
 *Rationale:* The Agile Release Train is a SAFe construct (teams delivering to a common cadence). The others are
 a flow method, a predictive approach, and a flow law.
+
+**MCQ 9.4-C `[9.4.1 · Application]`** A Kanban team carries **12 items** of work in progress and completes
+**3 items per day**. By Little's Law (cycle time ≈ WIP ÷ throughput), the average cycle time is approximately:
+- A. 4 days ✅
+- B. 36 days
+- C. 0.25 days
+- D. 9 days
+
+*Rationale:* `cycle time ≈ WIP / throughput = 12 / 3 = 4` days. B multiplies instead of dividing; C inverts the
+ratio (`3/12`); D subtracts the figures.
+
+**MCQ 9.4-D `[9.4.2 · Recall]`** In Lean thinking, "waste" is best defined as:
+- A. Any activity the customer would not pay for, such as waiting, rework and hand-offs. ✅
+- B. Only physical scrap material.
+- C. Any spending above the original budget.
+- D. All documentation.
+
+*Rationale:* Lean defines waste as non-value work — anything the customer would not pay for — including
+waiting, rework, hand-offs and excess WIP. B is too narrow; C confuses waste with cost variance; D overstates —
+documentation the customer values (or regulation requires) is not waste.
 
 ### Self-check — KA 9.4
 
@@ -545,6 +632,27 @@ IFRS 15 over-time contract. The professional should:
 reconciled, not substituted. The difference (and any resulting contract asset/liability) is explained, not
 averaged away.
 
+**MCQ 9.5-D `[9.5.1 · Application]`** A capacity-funded team costs **USD 75,000 per Sprint**; `AC` to date is
+USD 300,000; the velocity forecast shows **6 Sprints remaining**. The `ETC` and `EAC` are:
+- A. `ETC` USD 450,000; `EAC` USD 750,000 ✅
+- B. `ETC` USD 450,000; `EAC` USD 450,000
+- C. `ETC` USD 300,000; `EAC` USD 750,000
+- D. `ETC` USD 750,000; `EAC` USD 1,050,000
+
+*Rationale:* Under run-rate funding `ETC = cost per Sprint × Sprints remaining = 75,000 × 6 = 450,000`, and
+`EAC = AC + ETC = 300,000 + 450,000 = 750,000`. B confuses `ETC` with `EAC` (forgetting cost already spent); C
+swaps `AC` into the `ETC`; D adds `AC` into the `ETC` and then double-counts it.
+
+**MCQ 9.5-E `[9.5.3 · Recall]`** In AgileEVM, `EV` at a data date is computed as:
+- A. (story points planned by the data date / total planned points) × `BAC`.
+- B. (story points completed / total planned points) × `BAC`. ✅
+- C. story points completed × cost per Sprint.
+- D. `% complete` × `AC`.
+
+*Rationale:* `EV = % complete × BAC`, with `% complete = points completed / total planned points` — progress
+valued against the release budget. A is the `PV` formula; C mixes a scope measure with a capacity cost; D
+values progress at actual cost, which is what `EV` must never do.
+
 ### Self-check — KA 9.5
 
 1. Write the AgileEVM `EV` and `CPI` formulae and the key caveat. *(`EV = %complete × BAC`; `CPI = EV/AC`;
@@ -622,6 +730,28 @@ fixed-scope fights agile; remeasurement suits defined civil work; a bond is secu
 
 *Rationale:* Agile's artefacts provide a rich, contemporaneous audit trail; the controls task is to capture it.
 Agile values working product over *comprehensive* documentation, not the absence of records.
+
+**MCQ 9.6-C `[9.6.3 · Application]`** An agile team is engaged on **capped T&M** at USD 100,000 per month with
+a cap of USD 1,300,000. Delivery takes **14 months**. The client pays:
+- A. USD 1,400,000
+- B. USD 1,300,000 ✅
+- C. USD 1,200,000
+- D. USD 100,000
+
+*Rationale:* Uncapped T&M would be `14 × 100,000 = 1,400,000`, but the cap limits the client's exposure to
+**1,300,000** — the contractor bears the 100,000 beyond it. A forgets the cap; C wrongly bills only 12 months;
+D is a single month.
+
+**MCQ 9.6-D `[9.6.2 · Recall]`** To make agile work legible at a predictive phase gate, the controls
+professional reports:
+- A. Raw Sprint Backlogs for the board to interpret.
+- B. Value delivered, run-rate and forecast completion, mapped from Sprints/releases to the gate's milestones. ✅
+- C. Only the original fixed baseline.
+- D. Nothing — agile work is exempt from gates.
+
+*Rationale:* Hybrid governance translates Sprints into the milestone language a gate needs — value delivered,
+run-rate, forecast and AgileEVM status — without forcing a false fixed baseline. A leaves the translation
+undone; C imposes exactly the false baseline hybrid reporting avoids; D ignores the governance wrapper.
 
 ### Self-check — KA 9.6
 
