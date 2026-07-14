@@ -825,6 +825,48 @@ tiers, applied to speed). Allow conditional **proceed-at-risk** authorisations w
 like any other authorisation (KA 8.4.2). Forecasting gate-readiness dates and flagging cadence mismatches
 is a mechanical scan; deciding what may proceed at risk, and at what cap, is the accountable owner's call.
 
+### Advanced 8.A.6 — Stakeholder and communication management as a controls discipline
+
+**The principle.** KA 8.1.3 answers *who matters*; this topic is the operating discipline that follows —
+assessing stakeholders, planning their engagement, and running communication as a managed process rather
+than an inbox. For a controls function this is not soft-skills garnish. The controls professional's product
+*is* communication — the report, the forecast, the variance narrative (Domain 4) — and most controls
+failures that end in surprise were communication failures first: the number existed; it did not land.
+
+**Assessment at working level.** The **power/interest grid** (8.1.3) gives four engagement postures —
+**manage closely**, **keep satisfied**, **keep informed**, **monitor** — with two honest caveats. First,
+positions move: a regulator dormant for a year moves to "manage closely" the week an incident occurs, and a
+keep-informed operations team becomes manage-closely as handover (8.5.2) approaches. Second, the grid is a
+conversation aid, not a filing system — its value is the argument it forces about who can stop the project,
+not the tidiness of the quadrants. Salience is re-reviewed at gates (8.A.3), because the commitment — and
+therefore who cares — changes with each one.
+
+**The communication plan as a real artefact.** Not a paragraph of intent but a table with owners and
+cadences, in the spirit of the toolkits:
+
+| Audience | What they need | Cadence | Channel | Owner |
+|---|---|---|---|---|
+| Steering board | Decisions and exceptions | Monthly | Gate pack + dashboard | Project manager |
+| Client commercial team | Variations and claims position | Monthly | Commercial report | Commercial manager |
+| Site supervisors | Two-week lookahead | Weekly | Stand-up + plan extract | Planner |
+| Finance | Accruals and forecast movements | Monthly close | Cost pack | Controls lead |
+
+**The rules that make it work.** Each audience gets the decision *they* must take — Domain 4's discipline of
+designing the report for the decision (KA 4.3.1), applied row by row. Cadence promises are kept or
+renegotiated, never silently missed: a report that arrives when it arrives trains its readers to stop
+relying on it. Escalation paths are named people, not job titles in an organisation chart. And bad news
+travels *fastest* — the risk-culture point of Domain 12 (Advanced 12.A.4): how the messenger is treated this
+quarter sets the quality of next quarter's information.
+
+**Engagement is measured, not assumed.** Attendance and read rates are weak signals — a full room proves
+diaries, not engagement. The honest measures are behavioural: decision latency at the forums the plan feeds
+(8.A.5), the age of unanswered actions, and whether stakeholders raise issues *early* — a leading indicator
+(Domain 4, KA 4.1.2) that the channel is trusted, because people escalate into channels they believe will
+act. Drafting stakeholder-tailored versions of one controls truth — a board summary, a client letter and a
+site briefing from the same variance data — is among the stronger and safer AI tasks (Domain 13, KA 13.5.8),
+provided the numbers are locked before the words are drafted and the professional signs what goes out: AI
+proposes, the professional disposes.
+
 ---
 
 ## Case study — Domain 8: a city operations centre, gate by gate (smart cities)
