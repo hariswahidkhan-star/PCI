@@ -32,13 +32,56 @@ ORDER = [
 
 TITLE_HTML = f"""
 <div class="titlepage">
-  <h1>PCP-AI Body of Knowledge</h1>
+  <h1>PCP-AI<br/>Body of Knowledge</h1>
   <div class="subtitle">The reference for the Certified Project Controls Professional — AI<br/>
   Project controls · project finance · the governed use of AI</div>
-  <div class="meta">Version 1 (working draft — pending SME review)<br/>
+  <div class="rule"></div>
+  <div class="meta">FIRST EDITION — Version 1 (working draft, pending SME review)<br/>
   Built {datetime.date.today().isoformat()}<br/><br/>
-  Project Controls Institute Global, Inc.<br/>
+  PROJECT CONTROLS INSTITUTE GLOBAL, INC.<br/>
   <em>AI proposes. The professional disposes.</em></div>
+</div>
+
+<div class="frontmatter">
+  <h2 style="page-break-before: always;">Copyright &amp; edition notice</h2>
+  <p>© {datetime.date.today().year} Project Controls Institute Global, Inc. All rights reserved. No part of this
+  publication may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without
+  the prior written permission of the publisher, except for brief quotations in reviews or as permitted by law.</p>
+  <p><strong>First Edition — working draft.</strong> This volume is a first authored draft pending subject-matter-expert
+  (SME) review in finance, agile delivery and artificial intelligence, and editorial and legal review, before final
+  publication. Content marked as pending review must not be treated as final certification content.</p>
+  <p><strong>Disclaimer.</strong> This reference is an educational publication. It does not constitute accounting, legal,
+  financial or professional advice, and it should not be relied upon as a substitute for advice from qualified
+  professionals on specific matters. Standards and frameworks — including IFRS standards, the PMBOK Guide, the AACE
+  Total Cost Management framework, ISO standards, the Agile Manifesto and the Scrum Guide — are referred to by name and
+  described in this publication's own words; no standard's text is reproduced, and all trademarks remain the property
+  of their respective owners. References to such frameworks do not imply endorsement by, or affiliation with, their
+  publishers. No governmental approval or third-party accreditation of the PCP-AI credential is implied.</p>
+  <p><strong>Original content.</strong> All examples, case studies, figures, templates and examination-style questions in
+  this volume are original. Organisations, projects and figures appearing in examples and case studies are fictional
+  and illustrative; any resemblance to actual organisations or projects is coincidental. Sample questions are study
+  material and are maintained separately from any live examination bank.</p>
+  <p><em>The governing principle of this Body of Knowledge: <strong>AI proposes, the professional disposes.</strong></em></p>
+
+  <h2 style="page-break-before: always;">How to use this reference</h2>
+  <p>The book is organised as <strong>13 domains</strong> in three groups — finance, accounting &amp; reporting
+  (Domains 1–4, 40&nbsp;%), project management (Domains 5–12, 40&nbsp;%), and AI knowledge &amp; practical approach
+  (Domain 13, 20&nbsp;%). Every page sits under a numbered <strong>Domain → Knowledge Area → Topic</strong> hierarchy
+  (e.g. 6.3.2), and cross-references use those numbers throughout. The <strong>Style Spine</strong> (the first
+  chapter) defines the shared symbols, formats and conventions every domain binds to.</p>
+  <p>Each domain follows one shape. The <strong>knowledge areas</strong> build the discipline topic by topic, each with
+  worked examples in a five-step format (Setup → Formula → Substitution → Result → Interpretation), key terms, sample
+  MCQs with rationales, and self-checks. <strong>Advanced topics</strong> extend the domain for practitioners who lead
+  the function. Two <strong>sector case studies</strong> apply the whole domain to realistic projects. The
+  <strong>executive perspective</strong> distils what a director cannot delegate. <strong>Calculation exercises</strong>
+  (quantitative domains) provide multi-step practice with full solutions. The <strong>practitioner's toolkit</strong>
+  offers adoption-ready templates and checklists, and <strong>exam preparation</strong> closes each domain with its
+  known calculation traps and reflection questions. The appendices consolidate the master formula sheet, glossary,
+  standards index, figure index and the sample-MCQ bank.</p>
+  <p>For study, work a domain end to end and attempt every worked example before reading its solution. For practice,
+  go straight to the toolkits and case studies. For examination preparation, use the exam-preparation sections, the
+  MCQ bank and the calculation exercises — and note that these are study materials, kept separate from the live
+  examination bank.</p>
 </div>
 """
 
@@ -79,6 +122,39 @@ def main() -> None:
     # Inject the title page right after <body> and drop pandoc's default header block.
     html_body = html_body.replace("<body>", "<body>" + TITLE_HTML, 1)
     html_body = html_body.replace('<header id="title-block-header">', '<header id="title-block-header" style="display:none">', 1)
+
+    # Premium chapter openers: rewrite each "Domain N — Title" h1 into a styled opener (id kept for TOC links).
+    import re as _re
+    def chap(m):
+        return (f'<div class="chapter"><div class="chapkicker">Domain {m.group(2)}</div>'
+                f'<h1 id="{m.group(1)}">{m.group(3)}</h1>'
+                f'<div class="chaprule"></div><div class="chaprule2"></div></div>')
+    html_body = _re.sub(r'<h1\s+id="([^"]+)">Domain\s+(\d+)\s+—\s+(.+?)</h1>', chap, html_body, flags=_re.S)
+
+    # Mark figure-spec blockquotes so only they carry the FIGURE SPECIFICATION label.
+    html_body = _re.sub(r'<blockquote>(\s*<p><strong>Fig\s)', r'<blockquote class="figspec">\1', html_body)
+
+    # Part dividers before Domains 1, 5 and 13.
+    PARTS = [
+        (1, "Part One", "Finance, Accounting & Reporting",
+         "Domains 1–4 — the accounting model, the standards (IFRS 15 at their heart), budgeting and "
+         "forecasting, and performance measurement: the financial grammar of project controls. Forty per "
+         "cent of the Body of Knowledge."),
+        (5, "Part Two", "Project Management",
+         "Domains 5–12 — cost management, earned value, contracts and commercial management, the lifecycle, "
+         "agile and adaptive delivery, scheduling, business process cycles and risk: the delivery disciplines "
+         "controls serves. Forty per cent of the Body of Knowledge."),
+        (13, "Part Three", "AI Knowledge & Practical Approach",
+         "Domain 13 — concepts, data, prompting, tools, applied workflows, governance and capability: the "
+         "governed use of artificial intelligence across the whole controls lifecycle. Twenty per cent of the "
+         "Body of Knowledge, under one principle: AI proposes, the professional disposes."),
+    ]
+    for dom, num, title, desc in PARTS:
+        kick = f'<div class="chapter"><div class="chapkicker">Domain {dom}</div>'
+        part_html = (f'<div class="partpage"><div class="partnum">{num}</div>'
+                     f'<div class="parttitle">{title}</div><div class="partdesc">{desc}</div>'
+                     f'<div class="partbar"></div></div>')
+        html_body = html_body.replace(kick, part_html + kick, 1)
     html_file = BUILD / "_combined.html"
     html_file.write_text(html_body, encoding="utf-8")
 
