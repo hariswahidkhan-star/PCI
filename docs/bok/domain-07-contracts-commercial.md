@@ -1118,6 +1118,57 @@ pays.
 
 ---
 
+## Practitioner's toolkit — Domain 7
+
+*Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.*
+
+### Toolkit 7.T.1 — Contract commercial summary sheet
+
+| Field | Entry | Worked example — rail tunnelling-and-stations package (case study) |
+|---|---|---|
+| Contract type & risk allocation (7.1) | Who bears cost risk, and why the form was chosen | Target cost — cost risk shared 50/50; ground risk too large for lump sum |
+| Price / target & fee mechanics (7.1.3–7.1.4) | Contract sum or target cost; fee basis | Target cost USD 122,500,000 (original 120,000,000 + agreed variation 2,500,000); target fee USD 8,000,000 |
+| Pain/gain share & caps (7.1.4) | Share ratio; where the cap/collar bites | 50/50 share; contractor pain-share capped at USD 10,000,000 (cap bites at a USD 20,000,000 overrun) |
+| LD rate & cap (7.2.3) | Rate per day, the milestone it attaches to, any cap | USD 25,000/day on the sectional station-handover milestone |
+| Retention % & release (7.2.4, 7.4.3) | Percentage withheld; release triggers | 3 % withheld; half at practical completion, half after the defects period |
+| Bonds & expiry dates (7.2.4, 7.A.3) | Each instrument's form (on-demand/conditional), value, expiry, release condition | Performance bond, on-demand, 10 % of contract value; release at defects certificate — diarised |
+| Key notice periods (7.2.1–7.2.2) | Contractual time limits for claims/variation notices | Claim notice within the contract's stated period of the event; records kept contemporaneously |
+| Variation procedure refs (7.2.2) | Instruction, pricing basis, agreement point, target/baseline adjustment | Instructed in writing; priced from BoQ rates; agreed before work; target adjusted immediately |
+
+**Usage note.** One sheet per contract, completed at award and kept current, so the first commercial fact —
+who bears cost risk (7.1.1) — is never rediscovered mid-crisis. The example column echoes the rail
+megaproject case: on a target-cost form the sheet is what lets the controls team translate an `EAC` into
+fee (every USD 1,000,000 of overrun costs the contractor 500,000 until the cap bites, KA 7.1.4), and the LD
+rate is what prices a forecast delay against acceleration (7.2.3). The bonds and notice-period rows are the
+diary entries: securities cost fees for exactly as long as they run (7.A.3), and entitlement is lost for
+want of a notice served in time (7.2.2). Review the sheet at every variation, since an adjusted target
+moves every downstream calculation.
+
+### Toolkit 7.T.2 — Claim/variation file checklist
+
+- [ ] Instructing event or delay event identified, and the contractual notice served in time (7.2.1–7.2.2).
+- [ ] Contemporaneous records assembled — daily diaries, programme updates, instructions, correspondence, photographs (7.2.1).
+- [ ] Cause established event by event — not a global/total-cost assertion (7.2.2; Advanced 7.A.2).
+- [ ] Effect demonstrated on the critical path by a proper delay analysis, not a bar-chart impression (Domain 10).
+- [ ] Concurrent delay considered — records able to show what drove the path week by week (Advanced 7.A.1).
+- [ ] Quantum built from contract/BoQ rates and time-related preliminaries (7.3.3), each cost isolated and evidenced.
+- [ ] No double-count between the claim's quantum and priced variations (7.2.2).
+- [ ] Extension-of-time and LD relief quantified alongside the money claim (7.2.3).
+- [ ] Commercial forecast, billing and IFRS 15 revenue treatment aligned — the variation treated as a contract modification (Domain 2, KA 2.2.8; 7.5).
+- [ ] File progressed to agreement — status and next action tracked, not parked for the final account.
+
+**Usage note.** The checklist enforces the cause–effect–quantum discipline of 7.2.2: all three, or the
+claim fails — and the antidote to the global claim of Advanced 7.A.2 is exactly this event-by-event build,
+with cost coding fine enough to capture each event's cost as it is incurred (Domain 5, KA 5.4). The
+records items matter most: whichever apportionment approach a concurrent-delay dispute adopts, the party
+with the better contemporaneous records shapes the analysis (7.A.1). The alignment item closes the loop
+this domain exists for — the same event flows through the change log, the target, billing and IFRS 15
+revenue (7.5.4), and a file that agrees in one system but not the others will be argued four times at the
+final account.
+
+---
+
 ## Domain 7 summary
 
 The contract allocates cost risk along a spectrum — lump sum (contractor), target cost (shared, with pain/gain

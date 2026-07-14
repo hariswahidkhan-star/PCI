@@ -984,6 +984,57 @@ The net favourable total conceals an adverse spending problem rescued by higher 
 
 ---
 
+## Practitioner's toolkit — Domain 4
+
+Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.
+
+### Toolkit 4.T.1 — Variance investigation form
+
+One row per out-of-tolerance control account, completed before the exception report is drafted.
+
+| Control account | Variance (F/A) | Flexed? | Split (rate/usage/mix) | Root cause | One-off or systemic | Action | Owner | Date |
+|---|---:|---|---|---|---|---|---|---|
+| CA-04 Fit-out — material | 7,200 (A) | Yes (4.2.2) | Rate 2,200 (A) / usage 5,000 (A) | Supplier price rise on the framework rate; cutting wastage above norm on site | Rate systemic until renegotiated; usage one-off (crew now briefed) | Renegotiate call-off rate; reinstate wastage checks at the saw bench | Procurement lead / site manager | 12 Jul |
+| CA-04 Fit-out — labour | 8,200 (A) | Yes (4.2.2) | Rate 4,200 (A) / efficiency 4,000 (A) | Overtime premium to hold the milestone; learning curve on the new crew | Rate one-off (deliberate acceleration, now ended); efficiency systemic until crew up to speed | Confirm acceleration closed; pair new crew with supervisor for two weeks | Project manager | 12 Jul |
+
+**Usage note.** The form enforces the KA 4.2 sequence: confirm the budget was **flexed** first (4.2.2), so
+volume is not mistaken for inefficiency; then **split** the variance into rate and usage/efficiency (4.2.3),
+because the two go to different owners with different remedies — the example rows carry the 4.2.3 work
+package, where the USD 15,400 adverse total resolves into a USD 6,400 paying-more problem and a USD 9,000
+using-more problem. The **one-off or systemic** column is the judgement the forecast depends on: it decides
+which `EAC` assumption is defensible (3.4.2) and whether a favourable variance is a saving or a warning
+(4.2.5). Completed forms feed the exception report (4.3.5) with cause, impact, action and owner already
+attributed.
+
+### Toolkit 4.T.2 — Report design checklist
+
+Run against every recurring report before it is issued — and again whenever the format is changed.
+
+- [ ] The audience and the **decision the report supports** are named before any content is chosen (4.3.1)
+- [ ] **Status, direction, exceptions and actions** are all visible in one view — the four questions
+      answered on one screen or page (4.3.2)
+- [ ] Overview first, detail on demand — a drill-down exists behind every red (4.3.2)
+- [ ] Every headline number is paired with a short **causal narrative** — why, so-what, now-what (4.3.3)
+- [ ] **Trend** is shown, not just a snapshot — direction is where the early warning lives (4.1.2, 4.3.2)
+- [ ] Exceptions carry **cause, impact and action**, each with a named owner (4.3.5)
+- [ ] Greens are noted but unelaborated — attention concentrates on the reds and ambers (4.3.5)
+- [ ] Cadence and level of detail match the audience's decision rhythm (4.3.4)
+- [ ] **Axes are honest** — zero-based bars, no manufactured dual-axis correlations, consistent scales
+      across small multiples, no cherry-picked windows (4.4.2)
+- [ ] The chart matches the question — S-curve for *how are we tracking*, waterfall for *what moved the
+      number* (4.4.1)
+
+**Usage note.** This is the KA 4.3 discipline as a pre-issue gate: a report that passes all ten lets its
+reader see where they are, where they are heading, what is off-track and what is being done about it — in
+the time they have (4.3.1). The narrative and exception items (4, 6) are where AI-drafted commentary needs
+the closest check, since a fluent draft can misattribute cause or bury a caveat — **AI proposes, the
+professional disposes**. The honesty items (9, 10) hold the 4.4 standard that the picture must tell the same
+truth as the numbers. Keep the checklist stable so failures are comparable across cycles; a recurring failure
+on the same item is a design problem, not a drafting one.
+
+---
+
 ## Domain 4 summary
 
 Performance management makes measurement matter: KPIs paired with targets, thresholds and tolerances;

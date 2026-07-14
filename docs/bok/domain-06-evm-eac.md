@@ -1070,6 +1070,58 @@ data date, and state the movement in the forecast and the Month 5 `VAC`.
 
 ---
 
+## Practitioner's toolkit — Domain 6
+
+*Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.*
+
+### Toolkit 6.T.1 — EVM data-quality checklist
+
+Run before trusting — or publishing — the month's numbers; every unchecked box is a way the arithmetic can
+compute politely about nothing (Advanced 6.A.2).
+
+- [ ] Earning rules fixed in advance per work package and unchanged this period; any change disclosed (6.1.2).
+- [ ] `EV` claims sampled against physical evidence — quantities, verified milestones — not accepted on assertion (6.1.2).
+- [ ] No work package parked at "95 %" across successive periods; closing packages earn under 0/100 or milestone rules (Advanced 6.A.3).
+- [ ] `AC` includes month-end accruals for work received but not yet invoiced (Domain 5, KA 5.2).
+- [ ] Open commitments cleansed — no stale purchase orders corrupting the forecast (Domain 5, KA 5.2.4).
+- [ ] `PV` read from the current controlled baseline, phased over the approved schedule (Domain 3, KA 3.3).
+- [ ] No retro-fitted budget: budgets of open or completed work packages unchanged except authorised error corrections (Advanced 6.A.1).
+- [ ] Rebaselines and reserve releases logged, authorised and dated; control-account budgets plus UB plus contingency reconcile to `BAC` plus authorised changes (Advanced 6.A.1).
+- [ ] `SPI` read beside the critical path — slippage located on or off the driving path before the schedule story is told (6.4.2; Domain 10).
+- [ ] `TCPI` sanity check run: the efficiency the remaining work must achieve compared with the `CPI` actually delivered (6.2.3).
+- [ ] `CPI`/`SPI` trend reviewed over at least three periods — the slide matters more than the level (6.4.5).
+- [ ] Results that look too good (`CPI` and `SPI` both comfortably above 1) interrogated as hard as bad ones (6.2.4).
+
+**Usage note.** The checklist operationalises the domain's honest limits (6.4.2): EVM's outputs are only as
+true as the earning rules, the baseline and the cost data beneath them, so the checks run *before* the
+variances and forecasts are read, not after. The first three items defend `EV` against optimism — the
+classic failure that flatters every index at once (6.1.2, Advanced 6.A.3); the accrual and commitment items
+protect `AC` through Domain 5's data layer; the baseline items guard against the rubber baseline of
+Advanced 6.A.1. Sign it monthly at the same level that signs the report itself, so data quality carries the
+same accountability as the numbers it underwrites.
+
+### Toolkit 6.T.2 — Monthly EV report one-pager layout
+
+| Block | Content | Source |
+|---|---|---|
+| Headline indices | `CPI`, `SPI`, `EAC`, `VAC` with period-on-period trend arrows (↑ ↓ →) | KA 6.2; trend discipline 6.4.5 |
+| Three-curve chart | `PV`/`EV`/`AC` S-curves to the data date, `SV`/`CV` gaps annotated | Fig 6.1.1; KA 6.1.3 |
+| Top-3 exceptions | Out-of-tolerance control accounts, each with cause, impact, action and owner | KA 6.2.4; Domain 4, KA 4.3 |
+| Forecast | `EAC` with method (a)–(d) and its assumption stated; the fan shown where methods diverge | KA 6.3.2–6.3.3; Fig 6.3.1 |
+| Credibility check | `TCPI` to `BAC` against achieved `CPI`; schedule restated in time via `SPI(t)`, critical path confirmed | KA 6.2.3, 6.4.3; Domain 10 |
+| Contingency status | Contingency drawn/remaining vs remaining risk exposure; MR movements logged and dated | Advanced 6.A.1; Domain 3, KA 3.1; Domain 12 |
+
+**Usage note.** One page, six blocks — the layout forces the domain's reporting standard: no `EAC` without
+its method and assumption (6.3.3), no `SPI` without the critical-path and earned-schedule cross-check
+(6.4.2–6.4.3), no headline index without its trend (6.4.5). The exceptions block keeps the pack
+decision-ready (Domain 4, KA 4.3.3): cause, impact and action for the three accounts that matter, rather
+than commentary on every account. The contingency block ties the forecast to the reserves that must fund
+it, so a rising `EAC` is read beside the cover remaining. Keep the blocks and their order stable month to
+month — a reader should find the `TCPI` in the same place in month 2 and month 22.
+
+---
+
 ## Domain 6 summary
 
 Earned value integrates three measures in one currency — **`PV`** (planned), **`EV`** (performed, valued at

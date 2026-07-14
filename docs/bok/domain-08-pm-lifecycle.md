@@ -1023,6 +1023,62 @@ whether the project was worth doing — because they defined the answer before t
 
 ---
 
+## Practitioner's toolkit — Domain 8
+
+*Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.*
+
+### Toolkit 8.T.1 — Gate evidence pack checklist
+
+A gate is a decision to keep investing, and a good one demands evidence, not narrative (Advanced 8.A.3) —
+every item below is an artefact, not an adjective.
+
+- [ ] Estimate class stated (Domain 3, KA 3.2.1) and matched to the commitment this gate makes — sanction demands Class 3 or better.
+- [ ] Estimate presented as a range with its accuracy band and documented basis of estimate (3.2.3) — never a point.
+- [ ] Quantified risk exposure (Domain 12) set against remaining contingency at a stated confidence level (12.3.1, 12.3.3).
+- [ ] Benefit case re-tested at the *current* forecast, not the original (Advanced 8.A.2).
+- [ ] Every benefit carries a named owner in the operating organisation, a baselined measure and a measurement date (8.1.4, 8.A.2).
+- [ ] The three baselines genuinely integrated — cost phased over a schedule built from the WBS (8.2.2).
+- [ ] Change log reconciled — the current baseline traceable to the original through authorised change only (Domain 5, KA 5.4.3).
+- [ ] Forecast (`EAC`) stated with method and assumption (Domain 6, KA 6.3.3); hybrid elements each measured in their own register and reconciled (8.6.4).
+- [ ] Conditions and lessons from the prior gate closed out with evidence — not carried as decoration (8.A.3).
+- [ ] The stop/descope/recycle options genuinely open, with the pack presenting evidence either way — not curated to pass.
+
+**Usage note.** The checklist grades with the gate: an early concept gate can properly proceed on a
+Class 5/4 estimate because the commitment is small and the range honest, while the sanction gate — which
+commits the money — fails on the same evidence however eloquent the pack (Advanced 8.A.3). The benefit
+items keep the two registers of success separate from initiation onwards (8.1.4), and the change-log and
+baseline items are what let the gate compare the current position to what was last authorised (8.2.2,
+5.4.3). Apply the diagnostic question to the process itself: if no gate has stopped, descoped or recycled a
+project in living memory, the checklist is being performed, not used.
+
+### Toolkit 8.T.2 — Project closure checklist
+
+Sequenced from KA 8.5 — closing is real work, and every unchecked box is a liability that lingers.
+
+- [ ] Deliverables formally accepted and the acceptance recorded (8.5.1).
+- [ ] Final account agreed — final remeasurement, approved variations and claim settlements (8.5.2; Domain 7, KAs 7.3–7.4).
+- [ ] Retention release schedule diarised and tracked to zero — including the tranche due after the defects period (8.5.2; Domain 7, KA 7.2.4).
+- [ ] All contracts and subcontracts formally closed; no open commitments left stale (8.5.1; Domain 5, KA 5.2.4).
+- [ ] Bonds and guarantees released, or their expiry and release conditions logged and chased (Domain 7, KA 7.2.4).
+- [ ] Warranties and defects-period obligations logged with owners and dates.
+- [ ] Handover documentation complete and transferred to the operator/client (8.5.2).
+- [ ] Records archived — cost ledger, change log, contemporaneous records, schedule history (8.5.1).
+- [ ] Performance data — actual `CPI`, productivity rates, unit costs — fed into the estimating library (8.5.3; Domain 3, KA 3.2).
+- [ ] Lessons learned captured in both registers, quantitative and qualitative, with the controls function as custodian of the numbers (8.5.3).
+- [ ] Benefits measurement plan handed live to the named benefit owners in operations (Advanced 8.A.2).
+- [ ] Team released in an orderly demobilisation, and the post-implementation review scheduled with a date and owner.
+
+**Usage note.** The sequence matters: acceptance before the final account, the account before contract
+closure, and the data harvest before the team that holds the knowledge disperses — because at closure the
+budget line closes and whatever is not captured now is relearned at the next project's expense (8.5.3).
+The retention and bond items are real receivables and real fees, tracked to zero rather than assumed away
+(worked example 8.5.2; Domain 7, KA 7.A.3). The benefits item is the loop-closer: project success is
+demonstrable at closure, benefit success only afterwards, and the handover to a named owner in the
+operating organisation is what makes the second register measurable at all (8.1.4, 8.A.2).
+
+---
+
 ## Domain 8 summary
 
 The project lifecycle runs through five process groups: **initiating** (business case, charter, stakeholders,

@@ -1154,6 +1154,71 @@ closing cash position, and reconcile it with the margin.
 
 ---
 
+## Practitioner's toolkit — Domain 3
+
+Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.
+
+### Toolkit 3.T.1 — Basis-of-estimate (BoE) template
+
+Complete every section before the estimate is issued; an estimate with a gap in this list is not ready to
+leave the desk.
+
+- [ ] **Scope basis** stated — the drawing/specification revision and date the estimate prices, so a later
+      scope change is traceable to a later estimate change
+- [ ] **Method recorded per section** (analogous / parametric / bottom-up — 3.2.2), not just for the total
+- [ ] **Rates source and date** documented — library entry, base year, location basis and any adjustment
+      factors applied (3.A.2)
+- [ ] **Exclusions** listed explicitly — what the estimate does *not* price
+- [ ] **Assumptions** logged, each with an owner and the estimate's sensitivity to it
+- [ ] **Class and accuracy range** stated (3.2.1) — never a bare point figure
+- [ ] **Contingency logic** recorded — how it was derived and which identified risks it covers
+      (cross-ref 12.3.3)
+- [ ] **Escalation basis** stated — real (base-date) or nominal (out-turn), the rate and the base date
+      (Advanced 3.A.1)
+- [ ] **Reviewer sign-off** — name, date, and the challenge notes retained with the estimate
+
+The method-per-section record, illustrated with the 3.2.2b build-up:
+
+| Section | Method (3.2.2) | Rates source & date | Estimate (USD) |
+|---|---|---|---:|
+| Substructure | Bottom-up: 1,200 h × USD 60/h + materials 80,000 | Agreed labour rate, current-quarter supplier quotes | 152,000 |
+| Superstructure | Bottom-up: 2,000 h × USD 60/h + materials 150,000 | As above | 270,000 |
+| Fit-out | Bottom-up: 1,500 h × USD 55/h + materials 120,000 | Trade-package rate library, base date stated | 202,500 |
+
+Subtotal USD 624,500 + 8 % contingency = **USD 674,460**, stated as **Class 2, −10 % / +15 % → USD 607,000
+to USD 776,000**.
+
+**Usage note.** The BoE is what makes an estimate auditable and defensible (3.2.3): a reviewer challenges the
+hours, the rate source or an assumption — not a single number. Stating class and range on every issue is the
+discipline that lets stakeholders anchor on a *range that tightens* rather than a *point that appears to
+move* (3.2.1, and the data-centre mini-case 3.2.2c). The escalation line closes the 3.A.1 trap — a base-date
+estimate compared with out-turn actuals reads as an "overrun" that is really price movement. Keep the
+completed BoE with the baseline (3.1.3), so every later change request is argued against a recorded basis.
+
+### Toolkit 3.T.2 — Monthly forecast review agenda
+
+A 45-minute standing agenda, run at the same point in every reporting cycle.
+
+| Item | Question | Input |
+|---|---|---|
+| 1. Performance trend (10 min) | Has `CPI`/`SPI` moved against last month, and is the direction sustained over consecutive periods? | Rolling `CPI`/`SPI` by period (3.4.3); two consecutive moves the same way demand a named driver |
+| 2. EAC method (10 min) | Does the `EAC` method still match the *cause* of the variance — atypical, typical, or compounding with schedule? | The three-method comparison on the current status (3.4.2); the method is a defended assumption, not a default |
+| 3. Physical drivers (10 min) | Are quantities, productivity and rates behind the money moving with the forecast, or ahead of it? | Driver-based forecast inputs (3.4.3) — the place a turn shows before it reaches `CPI` |
+| 4. Cash trough (5 min) | Has the peak funding requirement moved, deepened, or shifted in timing? | Cumulative cash curve against last month (3.5); terms, retention and advances as the levers (3.5.3) |
+| 5. Contingency vs remaining risk (5 min) | Is the contingency remaining still sufficient for the risk remaining? | Contingency drawdown against the current risk exposure (cross-ref 12.3.3) |
+| 6. Changes and actions (5 min) | What moved the `EAC` this month, and who owns each action arising? | Forecast movement log; actions with owners and dates; forecast signed off |
+
+**Usage note.** The agenda is the rolling-forecast discipline of 3.4.3 given a fixed shape: the forecast is
+re-produced every period, so the review interrogates the *movement*, not the level — a single month's `CPI`
+can be timing noise, two consecutive readings the same way cannot (worked example 3.4.2b). Item 2 enforces
+the 3.4.2 crux: the `EAC` method encodes an assumption about the variance's cause, and the review is where
+that assumption is defended or changed. Items 4 and 5 keep the two forecasts that boards actually fund — cash
+and contingency — on the same table as the cost forecast. Keep the items and their order stable so month-on-
+month answers are comparable; only the numbers should change.
+
+---
+
 ## Domain 3 summary
 
 Budgeting turns a plan into an authorised, time-phased **cost baseline** whose total is the `BAC`, with two

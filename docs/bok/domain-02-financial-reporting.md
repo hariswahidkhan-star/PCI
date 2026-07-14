@@ -1471,6 +1471,58 @@ payments `60,000 + 55,000` — front-loaded relative to a straight rental of 57,
 
 ---
 
+## Practitioner's toolkit — Domain 2
+
+Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.
+
+### Toolkit 2.T.1 — Revenue-recognition memo template
+
+One memo per contract, struck at inception and re-confirmed at each reporting date — the judgement record
+behind the recognised number.
+
+| Field | Entry | Example (the KA 2.2 contract) |
+|---|---|---|
+| Contract reference & description | Contract ID, customer, scope in one line | Three-year fixed-price construction contract (worked example 2.2.6) |
+| Performance obligations identified (2.2.3) | Each distinct promise; where promises are combined, why | One combined construction obligation — design and build highly integrated |
+| Over-time criterion met — which one (2.2.6) | Criterion 1, 2 or 3, with the supporting facts; if none, point in time | Criterion 2 — the asset is built on the customer's land, so the customer controls it as it is created |
+| Method of measuring progress | Input (cost-to-cost) or output (milestones/survey); exclusions applied (uninstalled materials, abnormal wastage — 2.A.2) | Cost-to-cost input method; uninstalled materials at zero margin, abnormal wastage excluded from the ratio |
+| Transaction price — fixed element (2.2.4) | The fixed consideration | USD 12,000,000 |
+| Variable consideration & constraint decision (2.2.4) | Estimator chosen (expected value / most likely) and the constraint conclusion, re-assessed each period | None in the price; any bonus or claim excluded until highly probable not to reverse |
+| Significant financing component check (2.2.4c) | Gap between payment and transfer > ~12 months? If yes, rate and split | No — progress-billed monthly; ≤ 12-month practical expedient applies |
+| Total estimated cost / EAC and headroom | Current total cost estimate against the transaction price | USD 9,600,000 (as revised in Year 2); headroom USD 2,400,000 |
+| Onerous test & watch-list status (2.A.3) | On/off the watch-list, and why | Not listed — headroom 20.0 % of price, trend stable |
+| Prepared / reviewed by | Names and dates, each reporting period | Cost engineer prepares; project accountant reviews |
+
+**Usage note.** The memo turns the five-step model (2.2.1) into a per-contract record a reviewer or auditor
+can challenge field by field, and it is the raw material for the judgement disclosures of 2.2.9 — how
+obligations were identified, how progress is measured, how variable consideration was estimated and
+constrained. The example column carries the KA 2.2 flagship contract through every field so the completed
+state is unambiguous. Re-confirm the criterion, the constraint decision and the financing check at each
+reporting date, not just at inception — the 2.2.4 bonus is the standing example of an entry that changes as
+uncertainty resolves. A contract whose headroom field is shrinking moves to the watch-list (Toolkit 2.T.2)
+before the sign turns.
+
+### Toolkit 2.T.2 — Onerous-contract watch-list
+
+| Contract | Price (USD) | EAC (USD) | Headroom (USD / %) | Trend (last 3 periods) | Constrained claims excluded? | Owner | Status |
+|---|---:|---:|---|---|---|---|---|
+| C-101 Process plant | 12,000,000 | 9,600,000 | 2,400,000 / 20.0 % | Stable | Yes — none assumed in price | A. Rahman | Healthy |
+| C-214 Pumping station | 5,000,000 | 4,900,000 | 100,000 / 2.0 % | Eroding: 3.2 % → 2.6 % → 2.0 % | Yes — USD 300,000 unagreed claim excluded (2.2.4) | L. Osei | **Watch** — below the 5 % entry threshold |
+| C-377 Depot fit-out | 500,000 | 560,000 | (60,000) / (12.0 %) | Crossed in period | Yes | M. Duarte | **Provided for** — USD 40,000 provision on the remaining loss (IAS 37) |
+
+**Usage note.** This is the Advanced 2.A.3 watch-list made operational: entry criteria are set in advance
+(here, headroom below 5 % of price, or erosion for consecutive periods) so listing is mechanical, not
+discretionary — *watch the gap, not just the sign*. The trend column matters more than the level: C-214's
+2.0 % headroom is survivable, its three-period erosion is the warning. The constrained-claims column keeps
+the test honest — headroom is measured against the *recognised* transaction price, with unagreed variations
+and claims excluded under the constraint (2.2.4), so the margin is not propped up by hoped-for money. C-377
+shows the exit state: once the forecast crosses into loss, the entire remaining loss is provided immediately
+(the 2.2.6 loss rule; the provision computation follows Domain 1, exercise 1.4). A maintained list is also
+the evidence, come the 2.2.9 disclosures, that management watched the gap all year.
+
+---
+
 ## Domain 2 summary
 
 Financial reporting exists to give external users decision-useful information — relevant and faithfully

@@ -959,6 +959,47 @@ is how scope growth hides inside "risk".
 
 ---
 
+## Practitioner's toolkit — Domain 5
+
+*Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.*
+
+### Toolkit 5.T.1 — Control-account status sheet
+
+| CA | Budget (USD) | Commitments (USD) | Accruals (USD) | Actuals (USD) | Cost-to-date (USD) | Open commitment (USD) | Uncommitted (USD) | Forecast (USD) | Variance (USD) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| CA-Civils-Foundations | 400,000 | 250,000 | 30,000 | 90,000 | 120,000 | 130,000 | 150,000 | 400,000 | 0 |
+| CA-MEP-Installation | 900,000 | 600,000 | 70,000 | 280,000 | 350,000 | 250,000 | 320,000 | 920,000 | (20,000) |
+
+**Usage note.** One row per control account (5.3.2), reported every period so all three cost states are
+visible at once — the first row echoes worked example 5.2.2b, where the invoice ledger's USD 90,000 hides a
+true cost-to-date of USD 120,000 and USD 130,000 already committed. The internal checks are fixed:
+`cost-to-date = actuals + accruals` (5.2.1), `open commitment = commitments − actuals − accruals`, and
+`forecast = cost-to-date + open commitment + uncommitted` (5.2.2b); the uncommitted figure is an estimate of
+remaining scope, not a plug. Accruals must be complete at month-end or `AC` is understated and `CPI`
+flattered (5.2.2), and stale open commitments must be cleansed on a standing cycle (5.2.4, Advanced 5.A.2).
+Read the variance column with the trend log beside it — headroom quoted before known probable trends is not
+margin (5.4.2).
+
+### Toolkit 5.T.2 — Change/trend log template
+
+| Ref | Description | Type (trend/variation) | Status | Cost impact (USD) | Schedule impact | Funded from (contingency/MR/client) | Approved by | Baseline updated |
+|---|---|---|---|---:|---|---|---|---|
+| CH-001 | Client-instructed new scope | Variation | Approved | +300,000 | +3 weeks | Management reserve | Project board | Yes — `BAC` 9,700,000 → 10,000,000 |
+| CH-002 | Materialised ground risk | Risk draw (in-scope) | Closed | +150,000 | None | Contingency | PM (within delegation) | No — draw within baseline; contingency 700,000 → 550,000 |
+| CH-003 | Probable instruction — additional access steelwork | Trend | Open | +180,000 (est.) | TBC | Not yet agreed | — | No — not yet approved |
+
+**Usage note.** The log holds every trend, variation and reserve draw so the current baseline reconciles to
+the original at any moment — "how has the `BAC` moved, by how much, and why?" answerable on demand (5.4.3).
+The three rows echo worked example 5.4.3 and the mining case: a management-reserve-funded variation *does*
+move the `BAC`, a contingency draw for a materialised in-scope risk does *not*, and keeping the two
+mechanisms distinct is what stops scope growth hiding inside "risk". Trends are logged the moment they are
+probable, not when they are formalised (5.4.2) — the potential forecast including open trends is the figure
+the pack reports beneath the approved-scope forecast. Close every rejected change explicitly rather than
+deleting it, so the audit trail survives.
+
+---
+
 ## Domain 5 summary
 
 Cost control begins with the anatomy of cost — direct/indirect and fixed/variable, driven by true cost

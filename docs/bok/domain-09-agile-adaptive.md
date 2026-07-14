@@ -1122,6 +1122,47 @@ the rebaseline puts that on the record instead of hiding it.
 
 ---
 
+## Practitioner's toolkit — Domain 9
+
+*Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.*
+
+### Toolkit 9.T.1 — Sprint/release health dashboard spec
+
+| Metric | Definition | Healthy looks like | Source KA |
+|---|---|---|---|
+| Velocity trend | Average story points completed per Sprint over the last N Sprints, plotted period on period | Stable within a band; never a target, never compared across teams | 9.3.3 |
+| Burnup vs scope line | Completed points rising against the (possibly moving) total-scope line | Completed line converging on the scope line; every scope-line step authorised and dated | 9.3.4 |
+| Flow efficiency | Touch time ÷ total cycle time from time-stamped board data | Rising trend, with wait time (not touch time) the improvement target | Advanced 9.A.3 |
+| DoD compliance | Share of sampled "done" items genuinely meeting the Definition of Done | 100 % of the sample; any DoD change disclosed like an earning-rule change | Advanced 9.A.1 |
+| AgileEVM `CPI`/`SPI` | `EV/AC` and `EV/PV` on story-point % against the release `BAC` | Both near 1 and stable; rebaselined transparently whenever scope flexes | 9.5.3 |
+| Dependency ageing | How long unresolved items sit on the cross-team dependency board | Short and falling; no dependency older than one Sprint at programme cadence | Advanced 9.A.4 |
+
+**Usage note.** The six metrics cover the three ways adaptive progress lies: inflated "done" (a weak DoD
+flatters velocity, the burnup and `EV` at once, 9.A.1), hidden scope movement (the burnup's moving total
+line is what a burndown conceals, 9.3.4), and queueing that no per-team measure sees (flow efficiency and
+dependency ageing are the leading indicators, 9.A.3–9.A.4). Read velocity as each team's private planning
+input, never an aggregation unit — programme-level reporting uses feature burnup and programme units
+(9.A.4). The AgileEVM row is only meaningful against a defined release scope and `BAC`; when the scope line
+steps, the rebaselining record (Toolkit 9.T.2) must step with it.
+
+### Toolkit 9.T.2 — Rebaselining record template
+
+| Date | Points added/removed | New total points | New `BAC` (USD) | Rate held? | `EV` of done work (USD, unchanged) | New % complete | New `EAC` (USD) | Approved by |
+|---|---:|---:|---:|---|---:|---:|---:|---|
+| End Sprint 5 | +60 | 360 | 720,000 | Yes — USD 2,000/point | 240,000 | 33.3 % | 960,000 | Product Owner & programme board |
+
+**Usage note.** One row per deliberate scope change, written the moment the change is approved — the row
+above echoes worked example 9.5.3b, where 60 added points move the `BAC` from 600,000 to 720,000 and the
+`EAC` to 960,000 while the `EV` of completed work stays at 240,000 and `CPI` holds at 0.75. The two
+invariant columns are the discipline: the `EV` of done work never changes (adding scope does not un-do
+anything), and the "rate held?" column makes any re-pricing of points explicit rather than silent (9.5.3's
+caveat). The record is what keeps a falling % complete honest — 40 % to 33.3 % with nothing un-done reads
+as failure unless the scope movement is on the record. Together with the burnup's stepped scope line
+(9.3.4) it forms the contemporaneous audit trail hybrid governance relies on (9.6.4).
+
+---
+
 ## Domain 9 summary
 
 Adaptive delivery rests on an **empirical mindset** — transparency, inspection, adaptation — and inverts the

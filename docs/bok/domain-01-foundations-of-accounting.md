@@ -1639,6 +1639,51 @@ generated from operations. Step 3 — deduct interest and tax paid: `87,000 − 
 
 ---
 
+## Practitioner's toolkit — Domain 1
+
+Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.
+
+### Toolkit 1.T.1 — Month-end close checklist
+
+| Step | What | Owner | Done |
+|---|---|---|---|
+| 1 | **Cut-off** — confirm the period-end date; hold late postings to the next period (1.3.5) | Financial accountant | [ ] |
+| 2 | **Accrual pack — subcontract/GRNI** — identify work performed but not invoiced from GRNI reports and site measures; raise accruals (1.5.6) | Cost engineer | [ ] |
+| 3 | **Accrual pack — payroll** — accrue days worked but not yet paid from timesheets | Payroll / project accountant | [ ] |
+| 4 | **Prepayment release** — release this period's share of insurances, licences and other prepaid cover (1.3.3) | Financial accountant | [ ] |
+| 5 | **Depreciation run** — post the period's depreciation on plant and equipment (1.3.4) | Financial accountant | [ ] |
+| 6 | **Provision review** — IAS 37 pass over claims, defects and onerous contracts; record a *considered* nil where nothing is required (1.4) | Project accountant | [ ] |
+| 7 | **Bank reconciliation** — list, explain and age every difference between ledger cash and the bank statement (1.1.4) | Financial accountant | [ ] |
+| 8 | **Cost-to-ledger reconciliation** — tie the project cost ledger back to the general ledger by control account (1.5.2, 1.5.4) | Cost engineer | [ ] |
+| 9 | **Coding-exception clearance** — re-code miscoded items *at source* before any report is cut (1.5.2) | Cost engineer | [ ] |
+| 10 | **Sign-off** — accountant and controls professional jointly sign the close pack | Project accountant + cost engineer | [ ] |
+
+**Usage note.** This is the Terrafirm close (the Domain 1 case study) reduced to a standing sequence: cut-off
+first, because every accrual depends on a fixed period boundary (1.3.5); the adjustment steps (2–6) before
+the reconciliations (7–8), so what is reconciled is the *adjusted* position; and coding-exception clearance
+(9) before sign-off, because a miscode corrected after reports are cut has already propagated (1.5.2). Name
+individuals, not departments, in the owner column, and keep the sequence stable month to month so a skipped
+step is visible. The pack this checklist produces is what keeps both the financial result and the
+earned-value `AC` honest at the same time (1.5.6).
+
+### Toolkit 1.T.2 — Accrual pack template
+
+| Control account | Basis (GRNI / timesheet / assessment) | Service period | Amount (USD) | Reversal date | Approved by |
+|---|---|---|---:|---|---|
+| CA-Civils-Foundations — subcontract | GRNI: certified measure 240,000 less invoiced 180,000 (1.5.6) | 1–30 June | 60,000 | 1 July | R. Adeyemi, project accountant |
+| CA-Civils-Foundations — plant | Assessment: hire days on site × contracted day rate, invoice missing | 16–30 June | 22,000 | 1 July | R. Adeyemi, project accountant |
+| CA-Site establishment — labour | Timesheet: 12 site-operative days worked, unpaid at cut-off | 26–30 June | 18,000 | 1 July | S. Haddad, financial accountant |
+
+**Usage note.** Every accrual is coded to a **control account** (1.5.4), not merely to an expense class, so
+the project cost view and `CPI` stay honest as well as the statutory totals — the 1.5.2 pitfall in reverse.
+The **basis** column is the audit trail: a reviewer challenges the GRNI report, the timesheet count or the
+assessment method, not a bare number. The **reversal date** commits each accrual to automatic reversal on the
+first day of the next period, so the arriving invoice does not double-count the cost (1.3.3). The first row
+echoes the 1.5.6 mini-case: work performed USD 240,000, invoiced USD 180,000, accrual USD 60,000.
+
+---
+
 ## Domain 1 summary
 
 The accounting model is one identity — `A = L + E` — recorded from both sides (double-entry), producing four
