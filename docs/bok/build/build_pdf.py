@@ -31,7 +31,6 @@ ORDER = [
 ]
 
 TITLE_HTML = f"""
-<div class="bookcover"><img src="cover.png"/></div>
 <div class="titlepage">
   <h1>PCP-AI Body of Knowledge</h1>
   <div class="subtitle">The reference for the Certified Project Controls Professional — AI<br/>
@@ -83,11 +82,24 @@ def main() -> None:
     html_file = BUILD / "_combined.html"
     html_file.write_text(html_body, encoding="utf-8")
 
-    # 3. HTML -> PDF via WeasyPrint; report the page count.
+    # 3. HTML -> PDF via WeasyPrint.
     from weasyprint import HTML, CSS  # imported late so --help stays fast
     doc = HTML(filename=str(html_file)).render(stylesheets=[CSS(filename=str(BUILD / "print.css"))])
     doc.write_pdf(str(OUT))
-    print(f"OK {OUT}  pages={len(doc.pages)}")
+
+    # 4. Prepend the full-bleed book cover as a native PDF page (exact A4, no margins).
+    cover = BUILD / "cover.png"
+    pages = len(doc.pages)
+    if cover.exists():
+        import fitz  # PyMuPDF
+        pdf = fitz.open(str(OUT))
+        page = pdf.new_page(pno=0, width=595.276, height=841.890)  # A4 in points
+        page.insert_image(page.rect, filename=str(cover))
+        tmp = OUT.with_suffix(".tmp.pdf")
+        pdf.save(str(tmp)); pdf.close()
+        tmp.replace(OUT)
+        pages += 1
+    print(f"OK {OUT}  pages={pages}")
 
 if __name__ == "__main__":
     main()
