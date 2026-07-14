@@ -397,6 +397,116 @@ describes a normal contingency draw-down.
 
 ---
 
+## Advanced topics — Domain 12
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 12.A.1 — Correlation and portfolio risk
+
+**The principle.** The register arithmetic of 12.2.3 sums EMVs "assuming independence" — and independence
+is exactly what real registers lack, because risks share **drivers**: one monsoon sits behind both the
+earthworks delay and the access-road washout; one overheated fabrication-and-labour market behind both the
+vendor slip and the crew shortage (the case study's R1 and R4); one client behind three contracts' payment
+risk. Independent maths makes joint occurrence look rare — two 20 % risks both landing is a 4 % event *if*
+they are independent. With a shared driver they tend to arrive **together**, and the joint chance is far
+higher than the product suggests.
+
+**What correlation does to the numbers.** It does not move the EMV sum — the expected value of a sum is
+the sum of the expected values, correlated or not. What it changes is the **spread**: coinciding risks
+fatten the upper tail of the distribution, so the **P80 rises while the mean stands still**. That is
+12.3.1's Monte Carlo premium explained: the gap between the EMV sum and the P80 is largely the price of
+coincidence, and a correlated register pays a higher premium than an independent one — which is why the
+case study's simulation correlated R1 and R4 before the contingency was set.
+
+**The qualitative treatment.** No heavy mathematics is needed to be honest about this. For every pair of
+significant risks, ask: *what would make both happen?* A nameable shared cause — weather, one supplier
+market, one commodity, one client — is a correlation to declare to the modeller, or at minimum to record
+against the contingency basis (12.3.1). The same question scales up: ten projects each funded to P80 are
+**not** a P80 portfolio if they share a client, a commodity or a labour market — the diversification a
+portfolio board assumes (Domain 8) exists only where the drivers genuinely differ. Hence the chair's
+question in this domain's executive perspective: which risks are correlated, and what does that do to the
+tail we are funding?
+
+### Advanced 12.A.2 — Opportunity management in practice
+
+**The upside register.** Risk has two tails (12.1.1), yet most workshops hunt only threats — the case
+study's unlogged early FAT pass is the usual result. Managed deliberately, opportunities get the same
+machinery as threats: a cause-event-effect statement, an owner, `probability × impact`, and a response
+chosen from the strategies of 12.2.4 — **exploit** (act to make the gain certain), **share** (bring in a
+partner who improves the odds in exchange for part of the gain — the logic of pain/gain in target-cost
+contracts, Domain 7, KA 7.1.4), **enhance** (spend to raise probability or impact), or **accept** (bank it
+if it comes, chase nothing).
+
+**Worked example 12.A.2 — is an enhancement worth it?**
+
+1. **Setup.** An opportunity worth **+USD 200,000** (early site access would save preliminaries) carries a
+   **30 %** probability — EMV `= 30 % × 200,000 = +60,000`. An **enhancement costing USD 20,000** (paying
+   the incumbent occupier to vacate early) would raise the probability to **50 %**.
+2. **Formula.** Compare the **accept** path (EMV as it stands) with the **enhance** path
+   (`enhanced EMV − enhancement cost`).
+3. **Substitution.** Accept path `= 30 % × 200,000 = 60,000`. Enhanced EMV `= 50 % × 200,000 = 100,000`;
+   enhance path `= 100,000 − 20,000 = 80,000`.
+4. **Result.** The enhance path (**+USD 80,000**) beats accepting (**+USD 60,000**) by **USD 20,000** —
+   the enhancement is worthwhile.
+5. **Interpretation.** This is the mirror image of 12.2.3b's mitigation test: a response is justified when
+   it improves `probability × impact` by more than it costs — cutting it for threats, raising it for
+   opportunities. The adopted enhancement is fed back into the register; opportunity EMVs **net against**
+   threat EMVs in the contingency basis (MCQ 12.2-E); and an exploited opportunity leaves the register for
+   the forecast. A register with no opportunities on it is a narrow workshop, not a project without upside.
+
+### Advanced 12.A.3 — Emerging and systemic risk
+
+**Why the register alone fails.** The register machinery assumes three things: the event can be **named**
+(cause-event-effect, 12.2.1), its probability **judged** against experience or data, and its impact
+**bounded** to identifiable work. **Emerging risks** — regulatory shifts, novel technology, climate
+transition — break the first two: with **no historical base rate**, probability judgements are unanchored
+guesses, and events not yet imagined are simply absent from the workshop's output. **Systemic risks**
+break the third: they strike the whole system at once — project, suppliers, client, insurers — so a
+line-item impact understates them; they are correlation (12.A.1) in its extreme form, one driver moving
+everything. A register that dutifully covers what workshops can imagine implies a coverage that does not
+extend to what they cannot — the same false comfort as an out-of-date register (12.2.5).
+
+**The complements.** **Horizon scanning** keeps a standing watch on regulatory, technological and market
+signals — feeding leading indicators (Domain 4, KA 4.1.2) rather than probabilities. **Scenario planning**
+builds a small set of coherent futures ("the carbon price doubles"; "the anchor client consolidates") and
+tests the plan against each, without pretending to assign likelihoods. **Stress testing** assumes the
+event and sizes survival: what does a 40 % commodity rise, or the client's failure, do to the forecast and
+the funding? None of these yields a contingency line; they inform the **management reserve** judgement
+(12.3.2) — the reserve that exists precisely for what the register cannot foresee.
+
+**AI, honestly (Domain 13, KA 13.5.9).** AI genuinely helps with the scanning — reading regulatory feeds,
+mining analogous histories, surfacing weak signals at a scale no analyst matches. But a model trained on
+history systematically under-weights what history does not contain: the novel event has no base rate to
+learn. AI widens the scan; humans judge the novelty. **AI proposes, the professional disposes.**
+
+### Advanced 12.A.4 — Risk culture and incentives
+
+**Why registers go stale.** The failure is behavioural before it is technical. Where bad news is punished
+and optimism rewarded, raising a risk reads as disloyalty or incompetence — and the project manager with
+the short, green register looks better at the gate than the honest one. Risks then surface late, as
+**issues** (12.1.1), when the options have narrowed to the expensive ones; contingency debates migrate to
+the final account; and the register decays into the out-of-date document 12.2.5 warns is worse than none,
+because it implies a coverage that no longer exists.
+
+**Psychological safety as a controls prerequisite.** Leading indicators (Domain 4, KA 4.1.2) are
+volunteered, not extracted: near-misses, productivity slippage, "I am not confident in this date" travel
+only where the messenger is safe. Shoot one messenger and the early-warning system goes silent — the
+lagging indicators keep reporting, but by the time `CPI` falls the money is spent. Domain 13's case study
+makes the same point at function level: one near-miss openly handled — logged, shared, treated as
+professional conduct rather than failure — did more for reporting discipline than any training deck.
+
+**Incentive design that keeps early warning alive.** Judge forecasts on **reliability**, not on colour —
+reward the manager whose ranges proved honest and whose risks were declared early, not the one whose
+register was shortest. Never score performance on register size or RAG status: both are gameable, in the
+wrong direction. Make gate and board scrutiny attack the risk, not the person who raised it — the
+sponsor's first question is "what is the bad news?", asked as though the answer is welcome. And find ways
+to credit the mitigation that worked, because the risk that never happened is invisible and unrewarded
+prevention decays. The register is a sensor network; culture and incentives are its power supply, and no
+scoring scheme survives their failure.
+
+---
+
 ## Case study — Domain 12: risk-managing a factory retooling (manufacturing)
 
 ### Background

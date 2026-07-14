@@ -341,6 +341,116 @@ different processes and create no O2C conflict.
 
 ---
 
+## Advanced topics — Domain 11
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 11.A.1 — Working-capital management as a controls lever
+
+**The measures.** Three day-count measures describe how the cycles hold cash. **Days sales outstanding
+(DSO)** — the days of revenue sitting in receivables (receivables ÷ daily revenue): how long O2C takes
+from invoice to cash (11.1.3). **Days inventory outstanding (DIO)** — the days cost sits in inventory
+before it is consumed or sold. **Days payables outstanding (DPO)** — the days the organisation takes to
+pay its suppliers. The **cash-conversion cycle (CCC)** combines them:
+
+```
+CCC = DSO + DIO − DPO
+```
+
+— the number of days each unit of money is out of the door before it comes back.
+
+**Worked example 11.A.1 — the cash-conversion cycle.**
+
+1. **Setup.** The business of MCQ 11.1-C: annual revenue **USD 18,250,000** — `18,250,000 ÷ 365 =
+   USD 50,000` a day. DSO **45 days**, DIO **20 days**, DPO **40 days**.
+2. **Formula.** `CCC = DSO + DIO − DPO`.
+3. **Substitution.** `CCC = 45 + 20 − 40 = 25 days`.
+4. **Result.** A cash-conversion cycle of **25 days** — the business funds roughly twenty-five days of its
+   own operations before customers' cash returns.
+5. **Interpretation.** Each day trimmed frees roughly a day's flow: cutting the cycle by five days
+   releases in the order of `5 × 50,000 = USD 250,000` (approximate, since DIO and DPO strictly run on
+   cost rather than revenue) — the case study's USD 520,000 lesson generalised. The levers are this
+   domain's cycles: DSO through billing, dunning and cash application (11.1.2); DIO through procurement
+   and delivery scheduling (11.2); DPO through negotiated payment terms.
+
+**Why extending DPO has limits.** DPO is the tempting lever — someone else's cash — and the most abused.
+Stretched suppliers finance you at *their* cost of capital, reload it into prices, and weaken: a critical
+supplier pushed towards failure returns as your project risk (Domain 12). And there is a line between
+**negotiating** longer terms and simply **paying late** — prompt-payment codes and basic terms ethics sit
+on that line. DPO is extended by agreement, never by arrears.
+
+### Advanced 11.A.2 — Fraud typologies in the cycles
+
+**Fictitious vendors.** An insider creates a vendor and approves invoices for goods or services never
+supplied. The catching controls: **SoD** between vendor creation, PO approval and payment (11.3.2 — the
+exact scenario of its worked example); the **three-way match** (11.2.2) — no PO and no receipt means no
+payment; and **data analytics** (11.3.3) matching vendor bank details and addresses against employee
+records.
+
+**Invoice manipulation.** Prices inflated above the PO, quantities billed beyond receipt, duplicates
+resubmitted, or invoices split to sit below approval thresholds. The match catches price and quantity
+(11.2.2, MCQ 11.2-C); duplicate detection on reference, amount and date catches resubmission (the case
+study's USD 15,600 a quarter); analytics catch the tell-tale clustering just below authorisation limits.
+
+**Kickbacks in O2C credit notes.** The upstream fraud has a mirror on the inflow side: an insider bills
+correctly, then cancels part of a colluding customer's debt with **credit notes** (or write-offs) in
+exchange for a kickback. The catching controls: SoD — billing separated from credit-note approval and
+write-off (11.3.2, MCQ 11.3-D) — and analytics profiling credit-note volume by customer and by user.
+
+**Red flags a controls professional escalates:** a vendor sharing bank details or an address with an
+employee; round-sum invoices clustering just below an approval limit; a supplier used by a single buyer;
+suppliers created and first paid within days; credit notes concentrated on one customer or one user. None
+is proof — each is the *condition* for fraud, which the audit trail then confirms or clears (11.3.3).
+
+### Advanced 11.A.3 — Master-data governance
+
+**The principle.** Transaction controls validate against **master data** — and inherit its quality. The
+three-way match verifies price against the PO, but the payment goes to whatever bank account the **vendor
+master** holds; credit control (11.1.2) checks the limit the **customer master** records. Master data is
+therefore the control surface: corrupt it, and every downstream control diligently validates against a
+lie. **Duplicate vendors enable duplicate payments** — the same supplier keyed twice lets the same invoice
+pass "already paid?" checks once per record, which is where findings like the case study's recurring
+duplicates usually trace. And a fraudulent **bank-detail change** — the classic "please update our
+account" email — turns every properly matched invoice into a payment to the fraudster.
+
+**Who may create and amend — an SoD question (11.3.2).** Master-data maintenance is a duty in the
+raise→approve→receive→pay chain and belongs in the SoD matrix (11.3.2b): the requester of a vendor change
+is never its approver; whoever processes payments can never amend bank details; bank-detail changes are
+verified back through a contact already on file, not the one on the request; and every change is
+audit-trailed with user and timestamp (11.3.3), so a continuous monitor can flag "bank details changed,
+payment followed" within days.
+
+**Cleansing before AI (Domain 13, KA 13.2).** Garbage in, garbage out: an AI matcher or anomaly detector
+trained over a master file full of duplicates and dormant records learns that duplicates are *normal*, and
+stops flagging exactly what it exists to catch. Dedupe, deactivate dormant vendors and verify key fields
+*before* the model arrives — cleansing is unglamorous, and it is the multiplier on every analytic built
+above it.
+
+### Advanced 11.A.4 — Continuous controls monitoring
+
+**From periodic audit to always-on detection.** Traditional assurance is periodic and sampled: an annual
+audit tests a handful of transactions months after the fact — and 14 breaching POs in a year of thousands
+is exactly the needle sampling misses (the case study's lesson). **Continuous controls monitoring (CCM)**
+turns detective controls into standing queries over the **whole population**: the process-mining and
+analytics techniques of 11.3.3 scheduled rather than commissioned. Typical monitors: same-user
+raise-and-approve (the case study's standing query, flagging within a day rather than a year); payments
+with no match event; a bank-detail change followed by a payment (11.A.3); duplicate-payment candidates;
+credit-note activity outside a customer's profile. Detection moves close enough to the event to function
+almost preventively — the exception is caught before the next payment run, not in next year's audit.
+
+**Designing alerts with tolerances.** The failure mode of CCM is drowning. Every alert threshold is a
+tolerance decision, and the threshold discipline of Domain 4 (KA 4.1.3) applies unchanged: set tolerances
+too tight and everything is an exception — alert fatigue buries the real breach in noise, the
+528-exception backlog rebuilt in dashboard form; too loose, and breaches live comfortably inside
+tolerance. The design rules follow from management by exception: every alert has a named owner and a
+defined response path; false-positive rates are measured and thresholds tuned against them; and the
+monitor is itself monitored — an alert stream nobody actions is worse than none, because it implies a
+coverage that does not exist. The machine watches at a scale no clerk can; the professional owns what the
+thresholds are and what happens when one trips (13.5.4). **AI proposes, the professional disposes.**
+
+---
+
 ## Case study — Domain 11: hardening the cycles at a scale-up (technology)
 
 ### Background

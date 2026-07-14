@@ -696,6 +696,107 @@ wrongly nets off the 8 Sprints already completed.
 
 ---
 
+## Advanced topics — Domain 8
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 8.A.1 — Programme and portfolio governance
+
+**The principle.** A **project** delivers outputs. A **programme** coordinates related projects (and the
+business change around them) to realise **benefits none of them could deliver alone** — coordinated
+benefit: the operations centre in this domain's case study needed a building, a platform *and* a
+transition before a single response time improved. A **portfolio** is the organisation's whole set of
+investments, selected and balanced against strategy — **investment selection**. Each tier carries a board
+with distinct decisions. The **project board** decides *within* the project: tolerance breaches, baseline
+changes (Domain 5, KA 5.4), gate proceed/hold (8.4). The **programme board** decides *between* projects:
+sequencing, shared resources and contingency, and benefit trade-offs — accepting pain on one project to
+protect a benefit carried by another. The **portfolio board** decides *whether investments exist at all*:
+entry, exit, prioritisation, and the balance of risk and return across the set — the business-case
+question (8.1.1) asked continuously, not once at authorisation.
+
+**Where controls reports differently to each.** This is Domain 4's cadence-and-audience discipline
+(KA 4.3.4) made structural. The project tier receives granular, exception-and-forecast reporting against
+the baselines. The programme tier receives cross-project reporting: the same data aggregated so
+inter-project dependencies and the benefit position are visible. The portfolio tier receives **comparable**
+reporting — a consistent basis of estimate class, contingency confidence and forecast method across
+projects, because a board choosing between investments is misled the moment one project's P80 is set
+beside another's unstated optimism (the executive perspective's recurring concern). All three views only
+work if data is coded once at source and aggregated automatically (Domain 1, KA 1.5). The tiers fail when
+decisions leak across them: a portfolio board re-litigating a single variation, or a project board quietly
+deciding an investment question, each signals governance that has lost its levels.
+
+### Advanced 8.A.2 — Benefits realisation
+
+**The principle.** KA 8.1.4 distinguishes *project* success (delivered to plan) from *benefit* success
+(the outcome realised); **benefits realisation** is that distinction operationalised. Each benefit in the
+business case gets a **benefit profile**: what the benefit is, the **measure** that will evidence it, the
+**baseline** value of that measure today, the target, the date it becomes measurable — and, above all, a
+named **benefit owner**. The case study did exactly this at initiation: current response times and energy
+consumption baselined on day one, because an improvement with no "before" cannot be demonstrated after.
+
+**Why benefits die without an owner.** Most benefits are realised **after handover** (8.5) — and at
+closure the project team disbands, the budget line closes, and the sponsor moves to the next investment.
+If measurement belongs to nobody who survives closure, it simply stops: the asset operates, but no one can
+say whether the investment paid. The benefit owner must therefore sit in the **operating organisation**,
+with the measures wired into its routine reporting rather than a project artefact that dies with the
+project. The controls function's contributions are concrete: baselining the measures at initiation;
+assessing **benefit impact inside change control** (8.4.2 — the case study's descope was tested against
+the benefit case, not just cost and schedule); reporting project success and benefit success as separate
+registers at closure; and handing a live measurement plan, not a good intention, to the named owners. A
+project can be a delivery triumph and an investment failure; benefit profiles, owners and surviving
+measures are what let the organisation know which it got. A benefit nobody owns is a forecast nobody
+checks.
+
+### Advanced 8.A.3 — Stage-gate design
+
+**What a well-designed gate asks.** A gate is a **decision to keep investing**, and a good one demands
+**evidence, not narrative**: questions whose answers are artefacts, not adjectives. What class is the
+estimate (Domain 3, KA 3.2.1), and does its accuracy range fit the commitment now being made? What is the
+quantified risk exposure (Domain 12), and does remaining contingency cover remaining exposure at the
+stated confidence (12.3.1, 12.3.3)? Are the baselines genuinely integrated (8.2.2)? Is the benefit case
+still positive at the current forecast — not the original one (8.A.2)?
+
+**Criteria tied to maturity and exposure.** Gate criteria should grade with the decision. An early
+concept gate can properly proceed on a Class 5/4 estimate, because the commitment is small and the range
+is honest; the **sanction gate** — which commits the money — demands Class 3 or better, with the basis of
+estimate documented (3.2.3). A project seeking full sanction on a Class 5 estimate fails the gate however
+eloquent its pack, because the evidence cannot support the commitment. Risk works the same way: exposure
+quantified against the register and a P-level, not a reassuring paragraph. Gates may pass **with
+conditions** — as the case study's Gate 2 did — but conditions are tracked to closure, or they were
+decoration.
+
+**The failure mode: gates as theatre.** The date fixed by the schedule, the decision pre-made, the pack
+curated to pass, the kill option never exercised. The diagnostic question is uncomfortable and simple:
+*when did a gate last stop, descope or recycle a project?* A gate that cannot say no is a milestone
+wearing governance clothing — all of the cost of a control, none of the function.
+
+### Advanced 8.A.4 — The PMO as a controls institution
+
+**Three postures.** A **project management office (PMO)** comes in three broad forms. An **enabling**
+(supportive) PMO provides templates, methods, training, coaching and the lessons library — influence
+without authority. A **controlling** PMO adds compliance: mandated methods, baseline and change-control
+standards, gate assurance and independent review. A **directive** PMO goes further and runs delivery —
+project managers report into it. The right posture is a tailoring decision (8.6.4): higher stakes and
+lower organisational maturity justify more control.
+
+**The PMO as owner of the methods in this book.** Someone must own the standards no single project can:
+baseline discipline and change control (Domain 5, KA 5.4), reporting standards and tolerances (Domain 4),
+estimating norms, and the **lessons and performance data** of 8.5.3 — the actual `CPI`s, productivities
+and unit costs that turn one project's history into the next project's estimate (Domain 3, KA 3.2) and,
+increasingly, into the datasets forecasting models train on (Domain 13). The PMO is the natural
+institution for that ownership, and — serving 8.A.1's tiers — the aggregation engine for programme and
+portfolio reporting.
+
+**What makes PMOs fail.** Policing without value: collecting reports that feed no decision, enforcing
+template compliance while forecast quality rots, measuring its own success by adherence rather than by
+decision quality. The test is the one this book applies everywhere: *does it change a decision?* A PMO
+earns its keep when projects' numbers become more trustworthy and their decisions faster; one that adds a
+reporting layer without adding trust is overhead wearing a controls badge — and is, rightly, the first
+thing cut.
+
+---
+
 ## Case study — Domain 8: a city operations centre, gate by gate (smart cities)
 
 ### Background
