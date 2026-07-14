@@ -663,9 +663,9 @@ closure, and the completion date is pinned to a season: the airline that ordered
 selling seats for next summer. The programme's risk manager runs the Domain 12 cycle across the delivery
 year — a register in cause-event-effect form (12.2.1), quantification with the correlations declared
 (12.2.3, Advanced 12.A.1), an opportunity managed as deliberately as any threat (Advanced 12.A.2), and the
-quarterly reviews (12.3.3) in which, this year, the honest answer is the uncomfortable one. The case is
-about the fourth item: what a live register does when the year goes badly, which is the only time anyone
-finds out whether it was live at all.
+quarterly reviews (12.3.3) in which, this year, the honest answer is the uncomfortable one. The case turns
+on the last of these: what a live register does when the year goes badly — the only time anyone finds out
+whether it was live at all.
 
 ### The register, and the cluster with one cause (KAs 12.2.1–12.2.2, Advanced 12.A.1)
 
@@ -692,8 +692,7 @@ notices before any arithmetic, share a single driver:
 R1, R2 and R3 are the textbook cluster of Advanced 12.A.1: three different workstreams, three different
 owners — **one wet season** behind all of them. The qualitative treatment costs nothing but the question
 *what would make both happen?*, and the answer ("the same autumn") is recorded against the register before
-any model runs, so the modeller correlates the trio rather than treating three faces of one risk as
-independent dice.
+any model runs, so the modeller correlates the trio instead of rolling three independent dice on one risk.
 
 ### EMV, correlation and the P80 (KAs 12.2.3, 12.3.1)
 
@@ -767,10 +766,9 @@ versus remaining exposure**.
    granted at USD 130,000, the basis is re-documented, and the programme enters the paving season with
    cover that matches exposure — thin, declared, and owned.
 
-The alternative behaviour — reporting draws against the opening USD 880,000, waving at the "healthy"
-30 %-spent figure from Q1, and letting the shortfall surface in the final account — would have shown the
-same numbers for two more quarters. That is the opening-figure illusion this domain's executive
-perspective warns about, and the only defence against it is a register that is re-run, not merely re-dated.
+The alternative — reporting draws against the opening USD 880,000 and letting the shortfall surface in the
+final account — is the opening-figure illusion this domain's executive perspective warns about; the only
+defence against it is a register that is re-run, not merely re-dated.
 
 ### What the credential expects
 
@@ -783,8 +781,8 @@ one (12.2.3, 12.3.1). **Opportunity management** (Advanced 12.A.2) applies the s
 mirror image — exploit at 40,000 to convert a 140,000 expectation into a 310,000 near-certainty — and then
 routes the realised gain to the forecast through change control, where governance can see it. The
 **quarterly draw-down test** (12.3.3) is the case's spine: remaining contingency against remaining
-exposure, never draws against the opening figure, with new risks admitted to the register even in a bad
-quarter — especially in a bad quarter. And the **management reserve** (12.3.2) works only because it was
+exposure, never draws against the opening figure, with new risks admitted even in a bad quarter —
+especially then. And the **management reserve** (12.3.2) works only because it was
 kept distinct: the escalation was a documented re-baselining with evidence, not a quiet top-up. A
 simulation engine ran the correlated model three times this year in minutes (Domain 13, KA 13.5.9); the
 probability judgements, the correlation call, the exploit decision and the escalation conversation were the

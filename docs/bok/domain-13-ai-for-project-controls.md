@@ -1600,20 +1600,19 @@ runs some **70 live commissions** at any time, supported by a fourteen-person pr
 Its delivery raw material is documents and hours: specifications, national standards, terms of engagement,
 and roughly **9,600 timesheet lines a week** whose free-text narratives drive client billing. Fee margins
 are thin enough that a mis-coded week or a two-day hunt through a specification library is real money. The
-firm's AI adoption year, told here, produced three results worth teaching: a tool-category decision made the
-right way round (13.4), a pilot that **failed** and was reported as a failure (13.2, 13.7.3), and a second
-pilot that worked for reasons the failure had just taught. Professional services sharpens the governance
-stakes in its own way: the firm's outputs are advice under professional indemnity, its data is *clients'*
-data under confidentiality agreements, and a hallucinated clause in a deliverable is a liability event, not
-an embarrassment (13.6.3).
+firm's AI adoption year produced three results worth teaching: a tool-category decision made the right way
+round (13.4), a pilot that **failed** and was reported as a failure (13.2, 13.7.3), and a second pilot that
+worked for reasons the failure had just taught. Professional services sharpens the governance stakes: the
+firm's outputs are advice under professional indemnity, its data is *clients'* data under confidentiality
+agreements, and a hallucinated clause in a deliverable is a liability event, not an embarrassment (13.6.3).
 
 ### Choosing the category before the tool (KA 13.4)
 
 The programme's first decision was not which product to buy but **which category fits the practice**
 (13.4.4). The workflow map showed where the hours actually went: engineers and bid teams answering
-"what does the standard require?", "what did we commit to on the comparable job?", "which spec clause
-governs this test?" — retrieval questions over the firm's own document estate, asked hundreds of times a
-month and answered by whoever could remember which project the answer lived in. That profile points at one
+"what does the standard require?" and "what did we commit to on the comparable job?" — retrieval questions
+over the firm's own document estate, asked hundreds of times a month and answered by whoever could remember
+which project the answer lived in. That profile points at one
 category on the 13.4.1 map: **document/RAG and knowledge tools** — grounded answers over a governed corpus,
 with citations — not a predictive platform, not a fleet of ungoverned assistants. The category-specific
 governance (13.4.2b) was designed in before rollout: the retrieval layer enforces document permissions so a
@@ -1641,7 +1640,7 @@ fee basis, early burn rate. The training set was every completed commission with
 **34 projects**. The model looked plausible in development — with a holdout of five projects, almost
 anything does — and was run in shadow mode for two quarters. Live, it flagged **9 commissions** as
 margin-erosion risks; commission reviews confirmed **2** and dismissed **7**: precision of `2 ÷ 9 ≈ ` **22 %**,
-worse than the monthly review meeting it was meant to sharpen, and expensive in partner attention each false
+worse than the review meeting it was meant to sharpen, and expensive in the partner attention each false
 alarm consumed.
 
 The post-mortem found nothing exotic — it found 13.2. The failure was **representativeness**, the limit
@@ -1660,19 +1659,18 @@ confidently mislead.
 
 What the firm did next is the teachable part. The pilot was **retired**, not quietly extended; the
 post-mortem was published internally with the 22 % figure in it; the assembled dataset — the first clean,
-consistent commission history the firm had ever built — was **kept** and maintained, because in a decade it
-will be an asset; and margin-risk flagging reverted to rules and ratios (burn rate against stage, unbilled
-WIP ageing) that a 34-project firm can actually support — the honest answer to 13.1.6's
-rules-versus-ML question at this data scale. A failed pilot honestly measured and cleanly killed is the
-value-measurement discipline of 13.7.3 working, and it bought the programme credibility that a
-quietly-buried failure would have spent.
+consistent commission history the firm had ever built — was **kept** and maintained as the asset it will
+become; and margin-risk flagging reverted to rules and ratios (burn rate against stage, unbilled WIP
+ageing) that a 34-project firm can actually support — the honest answer to 13.1.6's rules-versus-ML
+question at this data scale. A failed pilot honestly measured and cleanly killed is 13.7.3's value
+discipline working, and it bought the programme credibility a buried failure would have spent.
 
 ### The pilot that worked — timesheet narratives (KAs 13.5.4, 13.1.6)
 
 The failure re-aimed the programme at a problem with the opposite data profile. Every week, **9,600
 timesheet lines** of free-text narrative must be coded to commission, task and billable status before
 billing runs — at roughly half a minute a line, **80 hours a week** of coding effort spread across team
-leads, done grudgingly and late. As a classification task it is everything the forecaster was not: a
+leads. As a classification task it is everything the forecaster was not: a
 labelled example arrives with every line ever coded — about **480,000 a year** `(9,600 × 50)` — the
 categories are stable, and an error is cheap to catch and correct. The deployment followed the 13.5.1
 pattern — AI step inside a governed workflow, professional verification on the output. A first trial
@@ -1695,7 +1693,7 @@ scale), lifting first-pass confidence to **94 %**.
   so the high-confidence population is audited on a cycle, and every code stream that bills a client gets
   periodic human eyes (13.6.2 — a named professional stands behind the invoice, not the classifier). The
   unpriced benefit is stated as unpriced: narratives coded the same day they are written, so WIP and
-  billing cut-off improve in ways the team can see but chose not to monetise in the case.
+  billing cut-off improve in ways the team saw but did not monetise.
 
 Set side by side, the two pilots taught the firm the domain's data lesson better than any course: the same
 technique family failed at 34 examples and succeeded at 480,000. **The data decided; the tool never had a
@@ -1706,9 +1704,9 @@ vote** (13.2.1).
 Against the 13.7.1 maturity ladder, the firm ended the year at **standardised**: an approved-tool register
 and AI-use policy (13.6.5) covering client-confidentiality classifications; the RAG assistant and the
 timesheet coder embedded in daily work; the forecaster formally retired with its post-mortem on record; and
-value measured quarterly, gross and net. **Integrated** is claimed only for the two working deployments;
-nothing above that is claimed at all, and the failed pilot is cited internally as evidence the claims can
-be trusted. The scaling plan runs category by category along the 13.4 map — contract-analytics for terms of
+value measured quarterly, gross and net. **Integrated** is claimed only for the two working deployments —
+nothing above it is claimed, and the failed pilot is cited internally as evidence the claims can be
+trusted. The scaling plan runs category by category along the 13.4 map — contract-analytics for terms of
 engagement next — each with the same governance floor.
 
 One design choice guards the long game. Because auto-coding removes the drudgery that once taught juniors
@@ -1724,7 +1722,7 @@ tool** (13.4.4): a document-heavy practice maps to document/RAG on the 13.4.1 gr
 category-specific governance — permission-aware retrieval, curated corpus, citations, "not found" — designed
 in, not bolted on. **Representativeness as a hard limit** (13.2, 13.1.2): 34 projects across six service
 lines is not a training set, and clean data does not rescue thin coverage; the professional response is
-13.1.6's — match the technique to the data actually held, and let rules beat ML where the history is short.
+13.1.6's — let rules beat ML where the history is short.
 **Honest failure as programme capital** (13.7.3): the 22 % precision was published, the pilot retired, the
 dataset kept — value measurement that permits failure is what makes its successes believable. **The
 governed-workflow pattern** (13.5.1, 13.5.4) carried the winning pilot: data cleaned first, machine coding

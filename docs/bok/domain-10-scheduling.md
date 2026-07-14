@@ -941,7 +941,8 @@ outcome to buy certainty — the same commit-at-P80 logic the first case study a
 compressed here into a decision taken at hour 21 of 54. The de-scope is agreed with the client's possession
 manager, logged with its price, and the tamp moves to midweek.
 
-The weekend ends undramatically, which is the point: hand-back at **hour 48:40**, speed restriction posted,
+The weekend ends undramatically, which is the point: hand-back **20 minutes inside the hour-49 forecast**,
+speed restriction posted,
 tamping completed Tuesday and Wednesday nights, penalty **nil**.
 
 ### What the credential expects

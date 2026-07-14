@@ -9,6 +9,12 @@
 }
 @page :first { @top-left { content: none; } @top-right { content: none; } @bottom-center { content: none; } }
 
+/* Full-bleed book cover */
+@page coverpage { size: A4; margin: 0; @top-left { content: none; } @top-right { content: none; } @bottom-center { content: none; } }
+@page coverpage:first { margin: 0; @top-left { content: none; } @top-right { content: none; } @bottom-center { content: none; } }
+.bookcover { page: coverpage; page-break-after: always; width: 210mm; height: 297mm; }
+.bookcover img { width: 210mm; height: 297mm; object-fit: cover; display: block; }
+
 html { string-set: booktitle "PCP-AI Body of Knowledge"; }
 
 body {

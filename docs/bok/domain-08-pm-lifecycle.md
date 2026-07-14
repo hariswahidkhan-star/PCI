@@ -977,6 +977,123 @@ the velocity trend early — but the gate decision is human and accountable (Dom
 
 ---
 
+## Case study B — Domain 8: a hospital programme at Gate 3 (healthcare construction)
+
+### Background
+
+A regional health authority is building a new **acute hospital** to replace a century-old estate: clinical
+wards, theatres, emergency department, imaging and the supporting energy centre. The business case was
+approved with an original baseline of **USD 460,000,000**, and its benefits were written as measures, not
+aspirations — chief among them a **ward-capacity benefit**: the new estate adds **120 acute beds**, which at
+the authority's planned occupancy and average length of stay translates to **6,000 additional admissions per
+year** (50 admissions per bed per year), baselined at initiation against the current estate's throughput
+(KA 8.1.4).
+
+The programme is mid-delivery, approaching **Gate 3** — the gate that releases the fit-out and
+medical-equipment tranche, the largest remaining commitment. The gate board has adopted the discipline of
+Advanced 8.A.3: evidence, not narrative, with the pack examined against the checklist of Toolkit 8.T.1. This
+case follows the gate itself — what passes, what fails, and what the failures set in motion — because a gate
+review is monitoring & controlling in governance form (KA 8.4), and a checklist only matters when it is
+*used* rather than performed.
+
+### The evidence pack, item by item (Toolkit 8.T.1)
+
+| Checklist item (8.T.1) | Evidence offered | Verdict |
+|---|---|---|
+| Estimate class matched to commitment | Remaining works estimated at **Class 3**, basis of estimate documented (3.2.3) | **Pass** |
+| Estimate as a range, not a point | **−10 %/+15 %** band stated and carried into the funding decision | **Pass** |
+| Risk exposure vs contingency | QRA exposure **USD 42,000,000 (P80)** vs remaining contingency **USD 36,000,000** | **Fail — USD 6,000,000 gap** |
+| Benefit case re-tested at current forecast | Ward-capacity benefit has **drifted** (below); other benefits intact | **Fail — condition** |
+| Named benefit owners with baselined measures | Two of three benefits owned; the **capacity benefit's owner was lost** in a clinical reorganisation | **Fail — condition** |
+| Baselines integrated | Cost phased over a schedule built from the WBS (8.2.2) | Pass |
+| Change log reconciled | `460,000,000 → 471,300,000` through **14 authorised changes**, each traceable (5.4.3) | Pass |
+| `EAC` with method and assumption | **USD 474,500,000** — bottom-up remaining work, cross-checked against `CPI` (6.3.3); `VAC` **(3,200,000)** | Pass |
+| Prior-gate conditions closed | Gate 2 conditions evidenced and signed off | Pass |
+| Stop/descope options genuinely open | Pack presents the bed-restoration options both ways (below) | Pass |
+
+The risk item fails on arithmetic, not on narrative: a QRA refreshed for market escalation on the mechanical
+and electrical packages puts remaining exposure at 42,000,000 against 36,000,000 of contingency — a
+**USD 6,000,000** shortfall at the stated confidence. The board's response is the checklist working as
+designed: the gate **passes with conditions** — a contingency-replenishment or descope plan within one
+reporting period, and the two benefit items below — each condition dated, owned, and tracked to closure at
+Gate 4, because a condition that is not tracked is decoration (Advanced 8.A.3).
+
+### The drifting ward-capacity benefit (Advanced 8.A.2, KA 8.1.4)
+
+The benefit re-test — the 8.T.1 item that examines the business case at the *current* forecast, not the
+original — finds the capacity benefit quietly eroded by design development:
+
+1. **Setup.** Business-case benefit: **+120 beds → 6,000 admissions/year** (50 admissions per bed-year).
+   The approved clinical change CR-041 (below) reduced the design to **+104 beds**.
+2. **Formula.** `Benefit now = beds now × admissions per bed-year`; `drift = planned benefit − benefit now`.
+3. **Substitution.** `104 × 50 = 5,200`; `6,000 − 5,200 = 800`.
+4. **Result.** The forecast benefit is **5,200 admissions/year** — a drift of **800 admissions/year**,
+   **13.3 %** of the headline benefit the investment was approved to buy.
+5. **Interpretation.** Nothing about the drift was hidden; it simply had no owner watching it — the benefit's
+   named owner had been lost in a reorganisation, and a benefit nobody owns is a forecast nobody checks
+   (Advanced 8.A.2). The gate catches it only because the checklist forces the re-test. The conditions
+   attached are exactly 8.A.2's remedy: a **benefit owner re-appointed in the operating organisation** (the
+   authority's director of operations, not the project), and the restoration decision below taken against
+   the benefit's value rather than inside the project team.
+
+### Integrated change control — the clinical change's knock-ons (KA 8.4.2)
+
+CR-041, processed two months before the gate, is why the bed count moved. An infection-control review —
+prompted by updated national guidance — required the proportion of **single rooms to rise from 50 % to
+70 %**. The change is clinically mandatory, but integrated change control did its work *before* approval,
+assessing the knock-ons across every baseline **and the benefit case**:
+
+| Impact dimension | Assessment |
+|---|---|
+| Scope/cost — ward reconfiguration | **USD 6,800,000** |
+| Knock-on — HVAC uprating (air-change rates, en-suite extracts) | **USD 1,900,000** |
+| Schedule — fit-out prolongation, two months, with time-related cost | **USD 900,000** |
+| **CR-041 total** | **USD 9,600,000** |
+| Benefit — bed count | **−16 beds → −800 admissions/year** |
+
+The USD 9,600,000 was authorised from programme reserve and is the largest of the fourteen changes in the
+reconciled log (`460.0m + 9.6m + 1.7m of thirteen smaller changes = 471.3m`). The benefit line is the one an
+undisciplined change process omits: a change assessed only on cost and schedule would have sailed through
+approval with the business case silently holed. Because the benefit impact was quantified at assessment, the
+gate pack could price the **restoration options** honestly: accept the −16 beds (benefit down 800
+admissions/year), or add a shelled ward floor at **USD 28,000,000** — `28,000,000 / 16 = ` **USD 1,750,000
+per restored bed** — a figure the authority can now weigh against what an admission is worth, at board level,
+where that judgement belongs. The gate's condition is that the decision be taken within three months, by the
+benefit owner and the board — not defaulted by the passage of time.
+
+### Setting up closure years early (KA 8.5, Toolkit 8.T.2)
+
+The final Gate 3 artefact looks far ahead: a **closure and transition plan**, drafted while the fit-out
+tranche is only now being released. Hospitals punish improvised handover — a building can be finished while
+the *hospital* is not — so the plan establishes now what 8.T.2 will demand at the end: **clinical
+commissioning as its own WBS element** (staff training, equipment qualification, the phased migration of
+live patients from the old estate); the benefit **measurement plan wired into the authority's routine
+reporting** — admissions, occupancy and length-of-stay feeds agreed with the re-appointed owner — so
+realisation tracking survives the project team's disbandment; **retention and defects-period tracking**
+assigned to the estates function with release dates diarised (Domain 7, KA 7.2.4); the **data harvest**
+committed in advance — cost per bed, rates per m², actual `CPI` by package — into the estimating library
+(Domain 3); and the **post-opening benefits review diarised at twelve months** with a named chair. None of
+this is closure brought forward as bureaucracy; it is the recognition that everything on that list is cheap
+to arrange now and near-impossible to reconstruct after the budget line closes (KA 8.5.3).
+
+### What the credential expects
+
+This case examines the governance half of Domain 8, and the credential expects the candidate to run it as
+evidence-work, not ceremony. From **Toolkit 8.T.1 and Advanced 8.A.3**, a gate pack examined item by item —
+estimate class matched to the commitment, risk exposure set against contingency at a stated confidence, the
+change log reconciling 460.0m to 471.3m — with the failures producing dated, owned, tracked conditions
+rather than a softened narrative. From **KA 8.1.4 and Advanced 8.A.2**, benefits realisation as arithmetic:
+a benefit baselined at initiation (6,000 admissions/year), re-tested at the current forecast, its 13.3 %
+drift caught mid-programme while restoration is still buyable, and its ownership repaired in the operating
+organisation. From **KA 8.4.2**, integrated change control assessing a clinically unavoidable change across
+scope, schedule, cost *and benefit* — the fourth dimension being the one that preserved the business case's
+honesty. And from **KA 8.5**, closure set up years early, because handover of a hospital is a project inside
+the project. AI can assemble the pack, reconcile the log and flag the benefit drift from the design data long
+before a human reviewer would (Domain 13, KA 13.5) — but the gate decision, and the accountability for it,
+stay human. **AI proposes, the professional disposes.**
+
+---
+
 ## Executive perspective — Domain 8
 
 **What the executive must hold onto.** The baseline is set in **planning** and only measured afterwards —

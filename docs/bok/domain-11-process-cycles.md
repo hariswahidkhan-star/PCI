@@ -660,9 +660,9 @@ store draws on it, so the commitment report carries the call-off total, never th
 Every one of those 1,600 invoices a month is matched, and every match validates against the **vendor master** —
 which is where the programme's one genuine incident lived. The chain's shopfitting subcontractor had been keyed
 into the vendor master **twice**, as "Fenwick Shopfitting Ltd" and "Fenwick Shopfitting Limited", created
-months apart by two regional coordinators, each unaware of the other's record. Both records were real, both
-pointed at the same legitimate supplier — and the duplicate quietly disabled the "already paid?" check, because
-an invoice keyed against one record never matched payment history on the other. Exactly as Advanced 11.A.3
+months apart by two regional coordinators. Both records pointed at the same legitimate supplier — and the
+duplicate quietly disabled the "already paid?" check, because an invoice keyed against one record never
+matched payment history on the other. Exactly as Advanced 11.A.3
 predicts, **duplicate vendors enabled duplicate payments**: when the supplier chased a statement mismatch, the
 reconciliation found **three invoices paid on both records — USD 12,400, 15,700 and 19,000, totalling
 USD 47,100** paid twice across two regions.
@@ -670,8 +670,8 @@ USD 47,100** paid twice across two regions.
 The response is master-data governance, not blame. The records are **merged** and the survivor verified; a
 **dedupe rule at creation** (match on name, bank account and tax ID) blocks the next twin; vendor creation and
 amendment are placed in the SoD matrix (11.3.2b) so no regional coordinator can both create a vendor and pass
-its invoices; and the recovery — the full USD 47,100, agreed with an embarrassed but cooperative supplier — is
-credited within the quarter. The detective layer earns its keep almost immediately: a **fourth** duplicate
+its invoices; and the recovery — the full USD 47,100 — is agreed with the supplier and credited within the
+quarter. The detective layer earns its keep almost immediately: a **fourth** duplicate
 candidate, **USD 21,300**, is flagged by the new duplicate-payment monitor and stopped **before the payment
 run**. The lesson is the section's principle verbatim: transaction controls inherit the quality of the master
 data they validate against, and forty sites keying data independently is how a master file rots — the control
@@ -681,10 +681,9 @@ surface was the vendor file, not the match.
 
 Refits are mostly outflow, but not entirely: **12 of the 40 stores** attract **landlord contributions** —
 capital sums the property owner pays towards works that improve the landlord's asset, totalling
-**USD 1,825,000**, each payable on certified practical completion of the store. On previous programmes these
-were treated as an afterthought: invoices raised weeks after completion, unsupported, then queried by the
-landlord's agent and re-aged from the date of the corrected invoice. Cash arrived, on average, **75 days**
-after completion. The controls fix is O2C discipline (11.1.2) applied to a receivable nobody thought of as one:
+**USD 1,825,000**, each payable on certified practical completion of the store. Historically these were billed
+weeks late and unsupported, queried by the landlord's agent, and re-aged from the corrected invoice: cash
+arrived, on average, **75 days** after completion. The controls fix is O2C discipline (11.1.2) applied to a receivable nobody thought of as one:
 **billing hygiene** — the invoice raised within five days of the completion certificate, with the certificate
 and the agreed contribution schedule attached, so there is nothing to query; a **dunning cadence** run weekly
 against every open contribution; and **cash application** on receipt so the ageing tells the truth. Average
@@ -698,10 +697,10 @@ collection falls to **30 days** after completion.
 3. **Substitution.** `1,825,000 × 10 % ÷ 365 = 500` a day; `(75 − 30) × 500 = 45 × 500 = 22,500`.
 4. **Result.** **USD 22,500** of financing cost avoided — and USD 1,825,000 of cash in the programme's account
    forty-five days earlier.
-5. **Interpretation.** The money is modest; the control point is not. An unbilled contribution is not an
-   entitlement anyone is defending — it is a number in a spreadsheet ageing towards the landlord's year-end,
-   where it becomes a negotiation. Billing tied to the certificate (the billing-hygiene analogue of certified
-   milestones, cross-ref 1.3.5) converts it into a receivable the dunning cadence can actually chase.
+5. **Interpretation.** The money is modest; the control point is not. An unbilled contribution is a number in
+   a spreadsheet ageing towards the landlord's year-end, where it becomes a negotiation. Billing tied to the
+   certificate (the billing-hygiene analogue of certified milestones, cross-ref 1.3.5) converts it into a
+   receivable the dunning cadence can actually chase.
 
 ### Monitors tuned from noise to signal (Advanced 11.A.4)
 
@@ -710,8 +709,8 @@ outset: six standing queries over the whole transaction population — same-user
 with no match event, duplicate-payment candidates, bank-detail change followed by payment, call-offs missing a
 store code, invoices clustering below approval limits. The first month demonstrates CCM's classic failure
 mode: the monitors fire **1,200 alerts**, of which investigation confirms **24** as genuine exceptions. By week
-three the queue is being skimmed, then ignored — alert fatigue burying the real signal, the noisy dashboard
-that Advanced 11.A.4 warns re-creates the unread exception backlog in modern form.
+three the queue is being skimmed, then ignored — the alert fatigue Advanced 11.A.4 warns about, the unread
+exception backlog rebuilt in dashboard form.
 
 The retune treats every threshold as a **tolerance decision** (KA 4.1.3 discipline). Price-variance alerts get
 a floor (outside 1 % or USD 25, matching the match tolerances); the duplicate monitor stops matching on exact
@@ -742,9 +741,9 @@ over vendor create-and-amend (11.3.2). **O2C** (KA 11.1) appears where candidate
 capital programme — and the landlord-contribution numbers show the same billing-dunning-application levers
 moving real cash. And **continuous controls monitoring** (Advanced 11.A.4) is only as good as its thresholds:
 2 %-precision alerting is a broken control pretending to be coverage, and the tuning discipline — tolerances,
-owners, measured false positives, zero-tolerance where zero is right — is the professional content, exactly as
-it was for the match tolerances in the first case study. Forty identical refits multiplied the spend; the
-cycles, the master data and the monitors are what stopped them multiplying the leakage.
+owners, measured false positives, zero-tolerance where zero is right — is the professional content. Forty
+identical refits multiplied the spend; the cycles, the master data and the monitors are what stopped them
+multiplying the leakage.
 
 ---
 

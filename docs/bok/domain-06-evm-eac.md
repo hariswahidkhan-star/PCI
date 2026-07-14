@@ -942,6 +942,133 @@ remain the professional's to own and defend.
 
 ---
 
+## Case study B — Domain 6: a mid-build review on a vessel programme (shipbuilding)
+
+### Background
+
+A commercial yard is building the first of two **roll-on/roll-off passenger ferries** under a
+**`BAC` = USD 120,000,000** budget on a **36-month** build. The hull is erected block by block on the berth;
+outfitting — pipework, cabling, HVAC, accommodation — proceeds zone by zone inside the blocks as they close.
+The programme is at **Month 18**, and the owner has commissioned a mid-build review after three consecutive
+months of deteriorating cost performance. The controls manager must present the full EVM position to the
+**yard director**, whose opening position — repeated at every review this year — is that "steel is nearly
+done and outfitting will claw it back." The review runs the whole of this domain: earning rules examined
+first (because every index stands on them), the three-period trend, the `TCPI` credibility test, and an
+`EAC` whose method is selected to match the *cause* of the variance rather than the convenience of the
+answer.
+
+### Earning rules on the berth (KA 6.1.2)
+
+The review starts where a sceptical reviewer should: how is `EV` earned? Two rules, fixed at baseline, one
+per kind of work:
+
+- **Hull steelwork — units completed.** The hull is 72 blocks of broadly similar work content, budgeted at
+  **USD 500,000 per block** (total **USD 36,000,000**), earned in full when a block is erected and faired on
+  the berth. At Month 18, **40 blocks** are erected: `EV = 40 × 500,000 = 20,000,000`. Nothing is claimed for
+  blocks part-fabricated in the shops — the rule is deliberately blunt, because "85 % of a block" is exactly
+  the subjective claim units-completed exists to prevent.
+- **Outfitting — weighted milestones per zone.** Each zone's budget earns against four objective milestones:
+  **pipe installed 30 %, cable pulled 25 %, equipment set 25 %, flush & test 20 %**. A zone budgeted at
+  USD 2,400,000 that has passed "pipe installed" and "equipment set" has earned `(30 % + 25 %) × 2,400,000 =
+  1,320,000` — and earns nothing further for cable half-pulled. Discrete milestones resist optimism; the
+  price is coarseness, accepted knowingly.
+
+Because both rules are objective, the deteriorating indices that follow cannot be argued away as measurement
+noise — which is precisely why the earning rules are agreed *before* the trend turns (KA 6.1.2).
+
+### The Month 18 status and the three-period trend (KA 6.2)
+
+| Period | Cum. `EV` (USD) | Cum. `AC` (USD) | Cum. `CPI` | In-period `EV` | In-period `AC` | In-period `CPI` |
+|---|---:|---:|---:|---:|---:|---:|
+| Month 16 | 48,000,000 | 50,000,000 | 0.96 | — | — | — |
+| Month 17 | 51,700,000 | 55,000,000 | 0.94 | 3,700,000 | 5,000,000 | 0.74 |
+| Month 18 | 55,200,000 | 60,000,000 | 0.92 | 3,500,000 | 5,000,000 | 0.70 |
+
+The cumulative `CPI` is falling two points a month — but the sharper signal is in the right-hand column: the
+**in-period** `CPI` is 0.74, then 0.70. The cumulative index is an average over eighteen months of history,
+and the healthy early months are still propping it up; the work being done *now* earns seventy cents on the
+dollar. A review that read only the cumulative column would understate how bad the current rate is.
+
+**The full status at Month 18.**
+
+- **Setup.** `PV` = 58,000,000; `EV` = 55,200,000; `AC` = 60,000,000; `BAC` = 120,000,000.
+- **Formula.** `CV = EV − AC`; `SV = EV − PV`; `CPI = EV / AC`; `SPI = EV / PV`.
+- **Substitution.** `CV = 55,200,000 − 60,000,000`; `SV = 55,200,000 − 58,000,000`;
+  `CPI = 55,200,000 / 60,000,000`; `SPI = 55,200,000 / 58,000,000`.
+- **Result.** `CV` = **(USD 4,800,000)**; `SV` = **(USD 2,800,000)**; `CPI` = **0.92**; `SPI` = **0.95**.
+- **Interpretation.** Over cost and modestly behind schedule — and, per the trend table, getting worse at an
+  accelerating rate. The question the review must answer is no longer "what is the variance?" but "is the
+  `BAC` still credible?" — which is the `TCPI`'s question.
+
+### The TCPI conversation with the yard director (KA 6.2.3)
+
+- **Setup.** `BAC` = 120,000,000; `EV` = 55,200,000; `AC` = 60,000,000.
+- **Formula.** `TCPI (to BAC) = (BAC − EV) / (BAC − AC)`.
+- **Substitution.** `TCPI = (120,000,000 − 55,200,000) / (120,000,000 − 60,000,000) = 64,800,000 /
+  60,000,000`.
+- **Result.** `TCPI` = **1.08**.
+- **Interpretation.** To land on the 120,000,000, the remaining USD 64,800,000 of work must be bought for
+  USD 60,000,000 — a sustained efficiency of 1.08 against 0.92 achieved cumulatively and **0.70 in the
+  latest period**: roughly a **17 %** swing, held for eighteen months.
+
+This arithmetic reframes the director's "outfitting will claw it back". The variance analysis (Domain 4)
+shows the productivity shortfall is **concentrated in outfitting** — a regional shortage of pipefitters and
+welders has the zones running well below budgeted norms — while the steelwork, the part that ran close to
+plan, is 40 blocks into 72 and will be finished within months. So the claim is not that a healthy activity
+will dilute a sick one; it is that the *very work causing the shortfall* will suddenly outperform its budget
+by eight points. The controls manager's answer is the discipline of KA 6.2.3 and 6.4.5: a `TCPI` this far
+above the achieved `CPI` is not met by drift or averages, only by a **specific, credible intervention** — a
+named cause, an owner, a date and a measurable claw-back. The yard has none on the table. The honest
+conclusion is that the `BAC` is no longer a credible forecast, and the conversation moves to the `EAC`.
+
+### A defended, blended EAC (KA 6.3)
+
+The variance decomposition gives the `EAC` its assumption. Of the **(4,800,000)** cumulative `CV`:
+
+- **USD 2,500,000** is a **steel-plate price spike** — a supply shock that hit the final plate batches
+  bought in Months 14–18. It is genuinely **atypical**: the remaining plate is on fixed-price contracts, the
+  exposure hedged, and the steelwork itself nearly complete. (It also explains part of why the recent
+  in-period `CPI`s look so grim.)
+- The remaining **USD 2,300,000** is the **outfitting productivity shortfall** — structural, unresolved, and
+  attached to the majority of the work still to come. It **persists**.
+
+Neither pure formula fits: method (a) (remainder to budget) wrongly treats the productivity problem as
+closed; method (b) (`EAC = BAC/CPI = 120,000,000 / 0.92 ≈ 130,400,000`) wrongly projects the hedged steel
+spike onto every future dollar. The team therefore computes a **blended** `EAC`: strip the one-off from the
+history, and project the remaining work at the efficiency actually achieved on everything else.
+
+1. **Setup.** `AC` = 60,000,000, of which 2,500,000 is the non-recurring spike; `EV` = 55,200,000;
+   `BAC` = 120,000,000.
+2. **Formula.** `Adjusted CPI = EV / (AC − atypical cost)`; `EAC = AC + (BAC − EV) / adjusted CPI`.
+3. **Substitution.** `Adjusted CPI = 55,200,000 / (60,000,000 − 2,500,000) = 55,200,000 / 57,500,000 =
+   0.96`; `EAC = 60,000,000 + 64,800,000 / 0.96 = 60,000,000 + 67,500,000`.
+4. **Result.** **`EAC` = USD 127,500,000**; `VAC = 120,000,000 − 127,500,000 = ` **(USD 7,500,000)**.
+5. **Interpretation.** The full spike stays in the cost-to-date — it was spent — but is not projected
+   forward. The fan is reported around the blended central case: method (a) gives 124,800,000 (indefensible —
+   the productivity cause is open), method (b) gives ≈ 130,400,000 (kept visible as the **downside**, and not
+   idly: the remaining work is outfitting-heavy, so the 0.96 blended efficiency — which still averages in the
+   well-performing steelwork — may prove generous). Central case **127.5m**, defended by cause; downside
+   **130.4m**; and the `TCPI` of 1.08 already told the same story from the other end.
+
+### What the credential expects
+
+This case is Domain 6 exercised the way examiners like to test it — through judgement, not formula recall.
+From **KA 6.1.2**, earning rules matched to the work: units for repetitive, countable steel blocks; weighted
+milestones for heterogeneous outfitting; both objective, both fixed in advance, so the indices are evidence
+rather than negotiation. From **KA 6.2**, the reading of **cumulative against in-period** indices — the
+cumulative `CPI`'s eighteen-month memory smooths exactly the deterioration the in-period figures expose. From
+**KA 6.2.3**, the `TCPI` as the credibility instrument: 1.08 required against 0.70 being achieved *now* turns
+"outfitting will claw it back" from an assertion into a testable — and failed — claim. From **KA 6.3**, the
+heart of the domain: the `EAC` fan computed, the **method selected to match the cause**, and a **blended
+computation** shown in full when the causal analysis says the variance is part atypical (the hedged steel
+spike, left in `AC` but not projected) and part persisting (the outfitting productivity, projected). And
+behind it, **Domain 4's** variance decomposition, without which the blend has no defensible split. An
+anomaly-detection model watching in-period `CPI` by zone would have flagged the outfitting drift months
+before the cumulative index moved (Domain 13, KA 13.5.3) — but the blend, and the conversation with the yard
+director, are the professional's to own. **AI proposes, the professional disposes.**
+
+---
+
 ## Executive perspective — Domain 6
 
 **What the executive must hold onto.** `EV` — physical progress valued at budget, never at actual cost —

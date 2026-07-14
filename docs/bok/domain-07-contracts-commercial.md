@@ -976,6 +976,153 @@ entitlement judgements and the pain/gain conversation stay human: **AI proposes,
 
 ---
 
+## Case study B — Domain 7: a compensation-event season on a gas-plant EPC package (oil & gas)
+
+### Background
+
+An EPC contractor is delivering a **brownfield gas-dehydration train and its tie-ins** into a live gas plant,
+under a reimbursable **target-cost contract**: target cost **USD 85,000,000**, fee **USD 6,000,000**, with
+pain and gain shared **60/40 client/contractor** and the contractor's pain **capped at the fee** — beyond
+that point the client carries the overrun alone. The contract calls its changes **compensation events (CEs)**,
+and the brownfield setting breeds them: tie-ins into forty-year-old pipework reveal conditions no survey
+fully caught, and much of the hot work is compressed into a fixed plant-shutdown window. **Provisional
+acceptance** is roughly five months away.
+
+The commercial quarter this case follows is unglamorous and typical: three CEs to price under three
+different pricing routes, a prolongation claim the client disputes on concurrency grounds, a
+retention-and-bond position that turns the acceptance dossier into a cash instrument, and the quarterly
+pain/gain update that converts the controls team's `EAC` (Domain 6) into the contractor's fee. Running
+beneath all four is the discipline the outcome actually turns on: **contemporaneous records** — daily
+diaries, signed daywork sheets, weekly programme updates (KA 7.2.1).
+
+### Three compensation events, three pricing routes (KA 7.3)
+
+**CE-014 — instructed pipe-rack extension, priced at BoQ rates.** The scope is measurable and the BoQ has
+rates for all of it, so the pricing is quantities × tendered rates plus the time-related element:
+
+| Item | Qty | Unit | Rate (USD) | Amount (USD) |
+|---|---:|---|---:|---:|
+| Structural steel, supply and erect | 150 | t | 4,800 | 720,000 |
+| Pipework, fabricate and erect | 600 | dia-in | 850 | 510,000 |
+| Cable, supply, pull and terminate | 12,000 | m | 35 | 420,000 |
+| Time-related preliminaries | 6 | week | 75,000 | 450,000 |
+| **CE-014 total** | | | | **2,100,000** |
+
+Because the rates were agreed at tender, the negotiation is confined to quantities and method — no re-opening
+of the pricing basis (KA 7.3.4). Note the preliminaries line: six weeks of extended time-related cost is part
+of the change's *full* impact, not an afterthought to claim later.
+
+**CE-019 — emergent work, priced on dayworks.** During the shutdown window the crews open up the rack and
+find **corroded pipe supports** that must be replaced immediately — no drawings, no BoQ item, no time to
+pre-price. The site instruction puts the work on **dayworks**: recorded resources at the contract's daywork
+schedule.
+
+1. **Setup.** Recorded and signed daily: **2,400 labour hours** at USD 95/hour; **20 crane-days** at
+   USD 3,600/day; materials at invoiced cost **USD 80,000** plus the schedule's **10 %** handling allowance.
+2. **Formula.** `CE value = Σ (recorded resource × schedule rate) + materials at cost × 1.10`.
+3. **Substitution.** Labour `2,400 × 95 = 228,000`; crane `20 × 3,600 = 72,000`; materials `80,000 × 1.10 =
+   88,000`.
+4. **Result.** **CE-019 = USD 388,000.**
+5. **Interpretation.** Dayworks trade pricing certainty for record dependency: the value *is* the records.
+   Every sheet here was signed by the client's supervisor at the end of each shift — which is why the number
+   settled in a week. An unsigned daywork claim assembled after demobilisation is not a price; it is an
+   argument.
+
+**CE-023 — a star rate.** A corrosive service line must be re-specified from carbon steel to **duplex
+stainless**, for which the BoQ simply has no item. The parties build a **star rate** — a new rate constructed
+from first principles on the same anatomy as a tendered rate (KA 7.3.3): labour `2.8 h × 100 = 280`;
+materials `870`; plant and consumables `50` — direct cost **USD 1,200 per dia-in** — plus site overheads at
+**15 %** giving **USD 1,380/dia-in**. No separate profit element is added: on this target-cost form the
+margin lives in the fee, not in the rates. Agreed for **450 dia-in**: `450 × 1,380 = ` **USD 621,000**.
+
+The three agreed CEs total `2,100,000 + 388,000 + 621,000 = ` **USD 3,109,000**, and the mechanism folds them
+into the target: **adjusted target cost = 85,000,000 + 3,109,000 = USD 88,109,000** — so the pain/gain
+calculation at quarter end runs against a target that reflects the authorised scope (the commercial twin of
+Domain 5's change control).
+
+### The disputed prolongation claim (KA 7.2.2, Advanced 7.A.1)
+
+The contractor claims **45 days** of prolongation — cause: the client's late release of revised P&IDs and
+delayed permit-to-work access at the tie-in points — at the contract's time-related rate of **USD 60,000/day**:
+a claimed quantum of `45 × 60,000 = ` **USD 2,700,000**, built cause → effect → quantum with a critical-path
+analysis attached (KA 7.2.2).
+
+The client's review does not attack the cause; it attacks the *window*. The weekly programme updates and both
+parties' diaries show that for **20 of the 45 days**, the contractor's own fabricated spools were late from
+its vendor — a contractor-risk delay independently driving the same critical path over the same weeks:
+**concurrent delay** (Advanced 7.A.1). The contract resolves concurrency on the **time-but-no-money**
+principle, and the assessment follows:
+
+- **Extension of time: the full 45 days** — relieving liquidated damages across the whole window. At the
+  sectional LD rate of USD 30,000/day, the EOT on the 20 concurrent days alone switches off `20 × 30,000 =
+  600,000` of exposure — valuable even though it recovers nothing (the commercial asymmetry 7.A.1 notes).
+- **Prolongation money: the 25 clean days only** — `25 × 60,000 = ` **USD 1,500,000**, on the reasoning that
+  the time-related costs of the concurrent 20 days would have been incurred anyway through the contractor's
+  own delay.
+
+The instructive point is *how* the answer was reached: not advocacy, but records. The client's diaries proved
+the late P&IDs; the contractor's own expediting reports proved the spool delay. Because both parties kept
+contemporaneous records, untangling the overlap was arithmetic rather than litigation — the party with better
+records shapes a concurrency analysis, and here the records were good enough that neither side could shape it
+unfairly (Advanced 7.A.1).
+
+### Retention and bonds at the approach to provisional acceptance (KA 7.2.4)
+
+With provisional acceptance five months out, the securities register becomes a forecasting instrument.
+Certified value to date is **USD 78,000,000**; retention is withheld at **5 %** — **USD 3,900,000** held —
+with **half (1,950,000) releasing at provisional acceptance** and half at final acceptance after the defects
+period. The **performance bond** of 10 % (`8,500,000`) steps down to 5 % at provisional acceptance, and costs
+**1.2 % per annum** of its outstanding value.
+
+1. **Setup.** Retention release at PA **USD 1,950,000**; contractor's cost of capital **8 %**; bond
+   step-down at PA **USD 4,250,000** at 1.2 % p.a.
+2. **Formula.** `Monthly cost of PA slippage = retention release × 8 % / 12 + step-down value × 1.2 % / 12`.
+3. **Substitution.** Retention financing `= 1,950,000 × 8 % / 12 = 13,000`; bond fee
+   `= 4,250,000 × 1.2 % = 51,000` per annum `→ 4,250` per month.
+4. **Result.** Every month provisional acceptance slips costs the contractor about **USD 17,250** in cash —
+   before counting the bank-facility headroom the un-stepped bond occupies (Advanced 7.A.3).
+5. **Interpretation.** The punch list and the acceptance dossier are commercial documents, not engineering
+   tidiness: the controls team diarises the PA triggers and chases them exactly as it chases milestones,
+   because retention and bond releases are receivables with dates (KA 7.2.4).
+
+### The pain/gain forecast update (KA 7.1.4)
+
+At quarter end the `EAC` and the commercial position are presented as one table:
+
+| Position | Last quarter (USD) | This quarter (USD) |
+|---|---:|---:|
+| Target cost (adjusted) | 85,000,000 | 88,109,000 |
+| Forecast actual cost (`EAC`) | 86,200,000 | 89,609,000 |
+| Forecast overrun | 1,200,000 | 1,500,000 |
+| Contractor pain-share (40 %) | 480,000 | 600,000 |
+| Forecast fee (target fee 6,000,000 − pain) | 5,520,000 | 5,400,000 |
+
+The decomposition of the movement is the professional content. The target rose 3,109,000 through the agreed
+CEs; the `EAC` rose 3,409,000 — the CE work at forecast cost **plus USD 300,000 of genuine performance
+deterioration** on the tie-in productivity. It is only that 300,000 that costs fee: `40 % × 300,000 =
+120,000`, taking the forecast fee from 5,520,000 to 5,400,000. An update that reported "EAC up 3.4m" without
+splitting change from performance would tell the board nothing it can act on. The cap check completes the
+picture: pain is capped at the 6,000,000 fee, so the cap bites at an overrun of `6,000,000 / 40 % =
+15,000,000` — against a current forecast overrun of 1,500,000, the contractor's remaining fee exposure is
+real but far from exhausted, and every dollar saved on the remaining work still returns forty cents of fee.
+
+### What the credential expects
+
+This is Domain 7 as it is actually practised — season by season, not clause by clause. From **KA 7.1**, the
+target-cost mechanics run in both directions: the fee forecast moved by the pain-share, the 60/40 split, and
+the cap located (`overrun of 15,000,000`) so the board knows where the exposure regime changes. From
+**KA 7.3**, three pricing routes chosen to fit three changes — tendered BoQ rates where items exist, dayworks
+where emergent work must start before it can be priced, a star rate built from first principles where the
+bill is silent — and the discipline of knowing which route applies, including why the star rate carries no
+profit element on this form. From **KA 7.2.2 and Advanced 7.A.1**, the claim: cause–effect–quantum on the way
+up, concurrency on the way down, time-but-no-money applied, and the whole thing decided by whichever records
+existed — the strongest possible advertisement for the daily diary. From **KA 7.2.4**, securities as live
+cash items with dates, priced monthly. AI earns its keep on the paperwork — extracting CE clauses, digitising
+and totalling daywork sheets, flagging rate misapplications (Domain 13, KA 13.5.7) — but entitlement,
+concurrency and the pain/gain conversation are judgements. **AI proposes, the professional disposes.**
+
+---
+
 ## Executive perspective — Domain 7
 
 **What the executive must hold onto.** The **contract type** decides who pays for an overrun before the

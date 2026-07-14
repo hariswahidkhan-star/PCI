@@ -31,6 +31,7 @@ ORDER = [
 ]
 
 TITLE_HTML = f"""
+<div class="bookcover"><img src="cover.png"/></div>
 <div class="titlepage">
   <h1>PCP-AI Body of Knowledge</h1>
   <div class="subtitle">The reference for the Certified Project Controls Professional — AI<br/>

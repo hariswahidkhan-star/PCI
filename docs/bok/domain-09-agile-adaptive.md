@@ -1005,6 +1005,138 @@ seconds — but the professional owns the assumptions behind it (Domain 13, KA 1
 
 ---
 
+## Case study B — Domain 9: a regulated payments platform under quarterly gates (banking)
+
+### Background
+
+A retail bank is replacing its **payments platform** — ISO 20022 messaging, sanctions screening, fraud
+monitoring — under the active scrutiny of its financial regulator. Delivery is adaptive: a Scrum team working
+in **two-week Sprints** against a MoSCoW-prioritised backlog. Governance is not: the bank's risk function and
+the regulator require **quarterly gates**, each releasing the next quarter's funding against an evidence pack —
+hybrid stage-gate governance exactly as KA 9.6.1 describes, with the controls professional translating between
+the Sprint cadence and the gate cadence (9.6.2). The release baseline:
+
+| Parameter | Value |
+|---|---|
+| Release budget `BAC` | USD 4,800,000 |
+| Planned scope | 800 story points |
+| Planned duration | 24 two-week Sprints (four quarterly gates of 6 Sprints each) |
+| Implied budget per point | USD 6,000 (`= 4,800,000 / 800`) |
+| Funded capacity per Sprint | USD 200,000 (`= 4,800,000 / 24`) |
+
+In a regulated environment the domain's quiet disciplines stop being optional: "done" must be provable to an
+auditor, technical shortcuts are risk items, and any re-baselining must be transparent enough to show a
+supervisor. This case follows the release through its first two gates.
+
+### A Definition of Done that carries compliance evidence (Advanced 9.A.1)
+
+The team's **Definition of Done** goes beyond "tested and integrated": every item must also have an
+independent code review, a clean security scan, audit-trail logging verified, and a **compliance evidence
+pack** — test results, approvals, traceability to the regulatory requirement — archived where internal audit
+can find it. The DoD is the exit gate that makes every downstream metric mean something (9.A.1).
+
+At the first quarterly gate, internal audit samples the "done" stories and finds that items totalling
+**24 points** of the claimed work have no archived evidence packs. Under the DoD they are not done, and the
+metrics are restated:
+
+1. **Setup.** Sprints 1–6 claimed **216 points** (a reported velocity of 36/Sprint); **24 points** fail the
+   evidence sample; `AC` at Sprint 6 = **USD 1,280,000**.
+2. **Formula.** `EV = points done × budget per point`; `CPI = EV / AC`; `velocity = points done / Sprints`.
+3. **Substitution.** Claimed: `EV = 216 × 6,000 = 1,296,000`; `CPI = 1,296,000 / 1,280,000 = 1.01`.
+   Restated: points `= 216 − 24 = 192`; `EV = 192 × 6,000 = 1,152,000`; `CPI = 1,152,000 / 1,280,000 = 0.90`;
+   velocity `= 192 / 6 = 32`.
+4. **Result.** The release is not slightly ahead on cost (`CPI` 1.01) but meaningfully behind (**`CPI` 0.90**),
+   at a true velocity of **32 points/Sprint**, not 36.
+5. **Interpretation.** A weak "done" was flattering every metric — the agile analogue of `EV` inflated by
+   optimistic progress claims (Domain 6, KA 6.1.2). The reverted items return to the backlog, the evidence
+   discipline is fixed at source, and the team's DoD is placed under change control: any future amendment is
+   disclosed like a change to an earning rule, because it silently redefines every velocity, burnup and
+   AgileEVM figure downstream (9.A.1).
+
+### The technical-debt drawdown decision (Advanced 9.A.2)
+
+The debt register — kept beside the risk register — holds one dominant item: an **expedient adapter to the
+legacy general ledger**, taken deliberately in Sprint 3 to hit a pilot date, recorded at the time with its
+estimated repayment cost. It is now charging interest: defect rework traced to the adapter consumes about
+**6 points of every Sprint** — a velocity tax of `6 × 6,000 = ` **USD 36,000 per Sprint** at budget value.
+The second-quarter gate takes the drawdown decision, priced on both sides as 9.A.2 requires:
+
+1. **Setup.** Repayment estimated at **24 points**, scheduled as ~6 points/Sprint across Sprints 9–12;
+   interest ends when repayment completes; 12 funded Sprints (13–24) then remain.
+2. **Formula.** `Cost = repayment points × budget per point`; `benefit = tax per Sprint × Sprints relieved`;
+   `payback = repayment points / tax per Sprint`.
+3. **Substitution.** Cost `= 24 × 6,000 = 144,000`; benefit `= 6 × 12 = 72` points `= 72 × 6,000 = 432,000`;
+   payback `= 24 / 6 = 4` Sprints.
+4. **Result.** Spending **24 points (USD 144,000)** of capacity now recovers **72 points (USD 432,000)** of
+   taxed capacity across the remaining funded Sprints — net **+48 points**, breaking even four Sprints after
+   repayment completes.
+5. **Interpretation.** The debt was acceptable because it was *visible and deliberate* — taken for a dated
+   reason, registered, and repaid by an explicit, priced decision recorded in the register (9.6.4). The same
+   shortcut left invisible would have surfaced only as unexplained velocity decay and a forecast the board
+   could not trust (9.A.2).
+
+### The regulator's scope injection — AgileEVM re-baselined (KA 9.5.3)
+
+At the end of **Sprint 12** the position is: **312 points done** (DoD-verified — Sprints 7–12 netted
+20 points/Sprint, the raw ~32 less the ~6-point rework tax and ~6 points/Sprint of debt repayment);
+`AC` = **USD 2,496,000** (an average burn of 208,000/Sprint — compliance engineers were added above the
+funded rate); the original plan expected 400 points by now, so `SPI = 1,872,000 / 2,400,000 = 0.78` and
+`CPI = 1,872,000 / 2,496,000 = 0.75`. Then the regulator lands new mandatory scope: enhanced
+sanctions-screening coverage sized at **120 points**, with the board approving a funding uplift of
+`120 × 6,000 = ` **USD 720,000**. The release is re-baselined transparently, on the record 9.T.2 prescribes:
+
+| Parameter | Before injection | After re-baseline |
+|---|---:|---:|
+| Total planned scope | 800 points | 920 points |
+| `BAC` | USD 4,800,000 | USD 5,520,000 |
+| Points complete | 312 | 312 |
+| `%` complete | 39.0 % | 33.9 % |
+| `EV` | USD 1,872,000 | USD 1,872,000 |
+| `AC` | USD 2,496,000 | USD 2,496,000 |
+| `CPI` | 0.75 | 0.75 |
+| `EAC = BAC / CPI` | USD 6,400,000 | USD 7,360,000 |
+
+The mechanics are the 9.5.3b discipline: the **`EV` of work already done is untouched** (312 points at the
+USD 6,000 per-point rate), `CPI` is therefore unchanged, `% complete` falls because the denominator grew, and
+`EAC` rises because there is genuinely more to build — no pretence that the metrics were unaffected, and no
+quiet absorption of 120 points into a fixed baseline. A velocity cross-check brackets the formula: with the
+debt repaid and the tax gone, the team expects **~30 points/Sprint**, so the remaining `920 − 312 = 608`
+points need `608 / 30 = 20.3 → ` **21 more Sprints** (rounded up — capacity is bought whole, 9.5.1), and
+`ETC = 21 × 208,000 = 4,368,000` gives `EAC = 2,496,000 + 4,368,000 = ` **USD 6,864,000**. The gate hears a
+**range — USD 6.86m–7.36m** — with each method's assumption attached: the `BAC/CPI` figure carries the
+debt-and-rework-depressed history forward; the velocity figure assumes the post-repayment 30 points/Sprint
+holds (KA 6.3.3 applied in agile clothing).
+
+### Reporting through the quarterly gate (KA 9.6)
+
+The gate pack renders the Sprint-level truth in the language the board and the supervisor govern by: value
+delivered (**312 of 920 points — 33.9 % — done to a DoD whose evidence packs are archived and sampled**), the
+forecast range against the uplifted envelope, and the decision options priced in scope terms, because this is
+an inverted-triangle delivery (9.3.5). With one asymmetry: the injected 120 points are regulatory
+**Must-haves**, so the flexible margin is the bank's own discretionary backlog — the Product Owner re-orders
+so that any descope falls on the bank's 'Could' features, never the mandate. The audit trail behind the pack —
+the DoD restatement, the debt register and drawdown decision, the re-baselining record — is precisely the
+contemporaneous evidence 9.6.4 demands, and it is what lets two-week empiricism live comfortably under
+quarterly regulatory governance: the team inspects and adapts every Sprint; the institution gets a defensible,
+restatement-proof record every quarter.
+
+### What the credential expects
+
+This case is the domain's controls crux under regulatory pressure. From **Advanced 9.A.1**, the Definition of
+Done as the integrity of the progress measure itself: compliance evidence inside the DoD, "done" sampled by
+audit, and a restatement (`CPI` 1.01 → 0.90) that shows why a weak DoD is the agile route to a flattering
+lie. From **Advanced 9.A.2**, technical debt as a controls object — registered, its interest quantified as a
+velocity tax (6 points/Sprint; USD 36,000), and repaid through a priced drawdown decision with a four-Sprint
+payback. From **KA 9.5.3**, AgileEVM re-baselined the only honest way: `EV` constant, `BAC` and scope moved
+together, `EAC` restated, all on the record — plus the velocity cross-check and a **range reported with
+assumptions**, Domain 6's method discipline transplanted whole. And from **KA 9.6**, hybrid governance made
+to work: quarterly gates fed by Sprint-level evidence, the inverted triangle flexing only the scope that is
+legally flexible. AI-assisted forecasting can produce the range, and evidence-pack tooling can flag the
+missing compliance artefacts before audit does (Domain 13, KA 13.5.6) — but the DoD, the drawdown call and
+the re-baselining conversation belong to the professional. **AI proposes, the professional disposes.**
+
+---
+
 ## Executive perspective — Domain 9
 
 **What the executive must hold onto.** Agile inverts the iron triangle: time and cost are fixed — a funded
