@@ -828,6 +828,37 @@ an index spike is a client-borne adjustment (fluctuation), a contractor variance
 exchange difference for the accounts (1.A.1) — and the cost forecast (Domain 3) must escalate and convert on
 the **same basis the contract pays**, or the commercial and controls numbers will diverge for no real reason.
 
+### Advanced 7.A.5 — Disruption and the measured mile
+
+**The principle.** **Disruption** is distinct from **delay** (Advanced 7.A.1): the work may still finish on
+time, but it costs more because productivity was degraded — out-of-sequence working, congestion, piecemeal
+access, repeated remobilisation. Disruption claims fail for the same reason global claims fail (Advanced
+7.A.2): asserting a lump of lost money without a causal chain. The **measured mile** is the accepted
+antidote: compare the claimant's own achieved productivity in an un-impacted period (the "mile") with
+productivity in the impacted period, and price the difference. The benchmark is the contractor's own
+performance on the same work — not a theoretical norm — which is precisely what makes it persuasive.
+
+**Worked example 7.A.5 — a measured-mile disruption claim.**
+
+1. **Setup.** Cable-pulling on the same spread, with the same crews. Un-impacted period: **1,200 m**
+   installed in **3,000 labour-hours**. Impacted period (piecemeal access after the client's late release of
+   work fronts): **800 m** in **2,600 labour-hours**. Demonstrated cost rate: **USD 85/hour**.
+2. **Formula.** `Productivity = hours / quantity`; `disruption hours = (impacted rate − mile rate) ×
+   impacted quantity`; `quantum = disruption hours × cost rate`.
+3. **Substitution.** Mile `= 3,000 / 1,200 = 2.5 h/m`; impacted `= 2,600 / 800 = 3.25 h/m`; excess
+   `= 3.25 − 2.5 = 0.75 h/m`; disruption hours `= 0.75 × 800 = 600 h`; quantum `= 600 × 85 = 51,000`.
+4. **Result.** A disruption claim of **USD 51,000**, priced entirely from the contractor's own records.
+5. **Interpretation.** Cause (late access, evidenced), effect (productivity degradation, measured), quantum
+   (priced from records) — the claim structure of 7.2.2 satisfied with the contractor's own data.
+
+**The caveats that make it honest.** The mile must be genuinely comparable — same work type, same crews,
+same conditions; an early mile flattered by the learning curve overstates the claim. Records make or break
+it: the method needs timesheets coded to areas and periods, which is exactly the data-integrity discipline
+of Domain 5 (KA 5.2.4) applied a year before anyone knew a claim was coming. And where no clean mile exists,
+the fallback is a properly evidenced bottom-up build of the lost hours — never a global assertion (7.A.2).
+Pattern-finding productivity dips across coded timesheet data is a strong machine task; choosing the
+defensible mile and owning the causal story is the commercial professional's.
+
 ---
 
 ## Case study — Domain 7: the commercial year on a rail megaproject

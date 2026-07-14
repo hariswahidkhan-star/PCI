@@ -1280,6 +1280,24 @@ The **`EV` of work already done is unchanged at 200,000** and `CPI` stays 0.80 �
 the value or efficiency of past work; it raises `BAC` and `EAC` because there is genuinely more to build, and
 the rebaseline puts that on the record instead of hiding it.
 
+**Exercise 9.5** — A delivery board carries **24 items** of work in progress, and measured throughput is
+**8 items per week**. Time-stamped board data shows an average of **4 working days** of active work ("touch
+time") per item; use a 5-day working week. (a) Apply Little's Law to find the average cycle time. (b) Compute
+the flow efficiency and interpret it. (c) The team halves WIP to **12 items** with throughput unchanged:
+state the new cycle time and — the controls point — what does *not* improve automatically.
+
+**Solution 9.5.**
+
+1. (a) `Cycle time = WIP / throughput = 24 / 8 = 3` weeks, i.e. **15 working days** (Little's Law, 9.4.1).
+2. (b) `Flow efficiency = touch time / cycle time = 4 / 15 ≈ 27 %` — nearly three-quarters of each item's
+   life is spent queuing, not being worked (Advanced 9.A.3).
+3. (c) New cycle time `= 12 / 8 = 1.5` weeks — cycle time halves and feedback arrives twice as fast.
+4. What does not improve: **throughput does not rise** — it is still 8 items/week.
+
+Cutting WIP buys speed of learning and earlier value, not more output — the improvement target the flow
+efficiency exposes is the *wait*, not the workers (Advanced 9.A.3) — and any business case claiming that
+halving WIP doubles delivery has confused cycle time with throughput (9.4.1).
+
 ---
 
 ## Practitioner's toolkit — Domain 9
