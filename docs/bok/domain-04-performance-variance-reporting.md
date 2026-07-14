@@ -469,6 +469,195 @@ show composition, scatters show correlation, and 3-D distorts.
 
 ---
 
+## Case study — Domain 4: turning a red month into a decision (healthcare)
+
+*This end-of-domain case integrates the whole of Domain 4 on a single month of a single control account:
+KPIs, tolerances and management by exception (KA 4.1); the flexed budget, the price/usage and
+rate/efficiency decomposition and the variance bridge (KA 4.2); cause-based exception reporting and the
+board narrative (KA 4.3); and honest presentation (KA 4.4). Every figure reconciles — work it through with a
+calculator before reading the commentary.*
+
+### Background
+
+Al-Noor Health Estates is delivering the fit-out of a new **hospital wing**: four storeys of wards,
+treatment rooms and clinical support space above a ground-floor imaging suite. The programme is controlled
+through control accounts reporting on a monthly cadence to a project board (KA 4.3.4). The account at the
+centre of this case is **CA-07 Clinical fit-out** — metal-stud partitions, hygienic ceilings, specialist
+wall protection, containment for medical-gas and data services, and clinical-grade finishes. Its cost KPI is
+measured against a **flexed budget** for each month's actual output, with a target variance of zero and RAG
+thresholds of ±5 % of standard cost (green within ±5 %, amber beyond it, red beyond ±10 %) — a target, a
+threshold and a tolerance exactly as KA 4.1.1 prescribes.
+
+For five months CA-07 has run green and, under management by exception (KA 4.1.3), has earned nothing more
+than a status line. This month the dashboard turns **red**: actual cost of USD 367,600 against a flexed
+standard cost of USD 330,000 — **USD 37,600 adverse**, an 11.4 % breach of the ±10 % red threshold. A red
+status is not a verdict; it is a work order. Before the board meets in six working days, the controls team
+must **decompose** the variance into its price, usage, rate, efficiency and overhead components;
+**attribute** each component to a cause precise enough to have an owner; **assess** the consequence for the
+forecast; and **propose** the action. One further fact, filed and forgotten, will matter at the end: last
+month's report noted — without escalation — that RFIs querying services coordination in the ceiling voids
+had doubled. That was a leading indicator (KA 4.1.2), and nobody acted on it.
+
+### The month's data
+
+The first discipline is the flex (KA 4.2.2). CA-07 delivered more installed output this month than the
+original phasing assumed, so comparing actual cost with the *original* monthly budget would fold a volume
+effect into the variance and mis-blame the team for doing more work. The budget is therefore flexed to the
+month's **actual output**, priced at standard: 2,000 standard material units at USD 75 per unit; 3,000
+standard labour hours at USD 50 per hour; and fixed overhead absorbed at USD 10 per standard labour hour.
+Everything below is measured against that flexed standard cost of **USD 330,000**.
+
+| Element | Flexed budget (standard) | USD | Actual | USD | Variance |
+|---|---|---:|---|---:|---:|
+| Materials | 2,000 units × USD 75 | 150,000 | 2,150 units × USD 78 | 167,700 | 17,700 (A) |
+| Labour | 3,000 hours × USD 50 | 150,000 | 3,200 hours × USD 52 | 166,400 | 16,400 (A) |
+| Fixed overhead | 3,000 hours × USD 10 | 30,000 | Incurred | 33,500 | 3,500 (A) |
+| **Total** | | **330,000** | | **367,600** | **37,600 (A)** |
+
+Every line is adverse, and the total — USD 37,600 (A) — is the number that turned the dashboard red. But
+"37,600 over" is arithmetic, not analysis (KA 4.2.1): it says nothing about *which lever to pull*. The
+materials line alone mixes two different problems — paying more per unit and using more units — and the
+labour line does the same. The decomposition separates them.
+
+### The decomposition
+
+**Worked decomposition — CA-07, this month.**
+
+1. **Setup.** Standards and actuals as tabled above: materials standard **2,000 units at USD 75**, actual
+   **2,150 units at USD 78**; labour standard **3,000 hours at USD 50**, actual **3,200 hours at USD 52**;
+   overhead absorbed **30,000** (USD 10 × 3,000 standard hours), incurred **33,500**.
+2. **Formulae.** `Price/rate variance = (Actual price − Standard price) × Actual quantity`;
+   `Usage/efficiency variance = (Actual quantity − Standard quantity) × Standard price` (KA 4.2.3);
+   `Overhead variance = Actual overhead incurred − Overhead absorbed` (cf. 4.2.4b).
+3. **Substitution.**
+   - Material price: `(78 − 75) × 2,150 = 6,450` **(A)**
+   - Material usage: `(2,150 − 2,000) × 75 = 11,250` **(A)**
+   - Labour rate: `(52 − 50) × 3,200 = 6,400` **(A)**
+   - Labour efficiency: `(3,200 − 3,000) × 50 = 10,000` **(A)**
+   - Fixed overhead: `33,500 − 30,000 = 3,500` **(A)**
+4. **Result.** The five components sum to `6,450 + 11,250 + 6,400 + 10,000 + 3,500 = 37,600` **(A)** —
+   reconciling exactly to actual minus standard: `367,600 − 330,000 = 37,600` **(A)**. ✓ Element checks:
+   materials `6,450 + 11,250 = 17,700 = 167,700 − 150,000` ✓; labour `6,400 + 10,000 = 16,400 = 166,400 −
+   150,000` ✓; overhead `3,500 = 33,500 − 30,000` ✓.
+5. **Interpretation.** The single red number is five numbers — and, as the cause analysis shows, the five
+   numbers are **two causes and one consequence**. Note what honest decomposition prevents: without it, the
+   largest single component (material usage, 11,250 (A)) could plausibly be presented as a "materials
+   procurement problem" — wrong cause, wrong owner, wrong remedy.
+
+### The variance bridge
+
+For the board pack, the decomposition becomes a **variance bridge** (KA 4.2.4) — a walk from the flexed
+standard cost to actual cost, one component at a time, so the reader sees *what moved the number and by how
+much*:
+
+| Step | USD | Running total |
+|---|---:|---:|
+| **Flexed budget (standard cost)** | | 330,000 |
+| Material price | 6,450 (A) | 336,450 |
+| Material usage | 11,250 (A) | 347,700 |
+| Labour rate | 6,400 (A) | 354,100 |
+| Labour efficiency | 10,000 (A) | 364,100 |
+| Fixed overhead | 3,500 (A) | 367,600 |
+| **Actual cost** | | **367,600** |
+
+The bridge reconciles exactly: `330,000 + 6,450 + 11,250 + 6,400 + 10,000 + 3,500 = 367,600`. Rendered as a
+waterfall (KA 4.4.1) — zero-based axis, no decoration, adverse steps in the warning colour (KA 4.4.2) — it
+tells the story the headline figure hides.
+
+> **Fig CS4.1 — CA-07 flexed budget to actual, current month.** *Caption:* what drove the USD 37,600 (A)
+> month. *Underlying data:* the bridge table above. *Render-ready description:* a waterfall chart — starting
+> bar "Flexed budget 330,000"; five rising red floating bars (Material price 6,450; Material usage 11,250;
+> Labour rate 6,400; Labour efficiency 10,000; Overhead 3,500); ending bar "Actual 367,600"; connectors
+> between bars, values labelled. *Animation storyboard (digital-only):* each floating bar rises in sequence
+> with its label, the running total ticking up from 330,000 to 367,600.
+
+### The cause analysis
+
+The decomposition's five lines are still organised **by account line** — materials, labour, overhead. Causes
+do not respect account lines, and neither should the report (KA 4.3.1). Investigated on the floor, the five
+components regroup into three:
+
+| Cause group | Components | USD | Share | Owner |
+|---|---|---:|---:|---|
+| Rework — ceiling-void services clash | Material usage 11,250 (A) + labour efficiency 10,000 (A) | 21,250 (A) | ~57 % | Design manager |
+| Market movement — copper and agency labour | Material price 6,450 (A) + labour rate 6,400 (A) | 12,850 (A) | ~34 % | Procurement lead |
+| Consequential overhead under-recovery | Fixed overhead 3,500 (A) | 3,500 (A) | ~9 % | — (consequence) |
+| **Total** | | **37,600 (A)** | **100 %** | |
+
+**Rework — 21,250 (A), ~57 %.** The material usage variance (150 extra units) and the labour efficiency
+variance (200 extra hours) share one root cause: a **services design clash in the ceiling void**. The
+medical-gas containment and the ventilation ductwork were coordinated into the same zone above the ward
+corridors; installed partition heads and ceiling grid had to be stripped out and rebuilt once the clash
+surfaced on site. Extra materials and extra hours are the *same event wearing two account codes*. This is a
+**coordination failure**, and its owner is the **design manager** — not the site team whose productivity
+figures carry the damage. It is also where the leading indicator returns: the doubling RFI trend on services
+coordination *was* this clash, visible a month before it reached the cost ledger.
+
+**Market movement — 12,850 (A), ~34 %.** The material price variance (USD 3 per unit across 2,150 units)
+traces to **copper-driven price rises** on containment and cabling components; the labour rate variance (USD
+2 per hour across 3,200 hours) traces to **agency labour** engaged at premium rates in a tight regional
+market. Neither is a site failure; both are market facts. The owner is **procurement**, and the exposure is
+**partially mitigable**: forward-ordering copper-based components for the remaining floors locks in today's
+price against further movement, and reducing agency reliance at the next crew rotation trims the rate
+premium — though neither action recovers the money already spent.
+
+**Consequential overhead — 3,500 (A), ~9 %.** The overhead variance is **under-recovery driven by the extra
+hours**: supervision, plant and site running costs were held on the floor for the extended working, taking
+incurred overhead to 33,500 against the 30,000 absorbed at standard. It is a **consequence, not a cause** —
+resolve the rework and the rate exposure, and this line largely resolves itself. Giving it its own "action"
+in the report would be noise dressed as diligence.
+
+### The exception report entry
+
+The dashboard shows the red; the exception report (KA 4.3.5) carries the entry — short, causal, quantified
+and actionable, in the form a board member actually reads:
+
+> **CA-07 Clinical fit-out — RED.** Month cost variance **USD 37,600 (A)** against a flexed budget of USD
+> 330,000 (11.4 %; red threshold ±10 %). Causes: ~57 % rework following a services design clash in the
+> ceiling void (21,250 (A)); ~34 % market movement on copper components and agency labour rates
+> (12,850 (A)); ~9 % consequential overhead under-recovery (3,500 (A)). Actions: clash resolution complete
+> and signed off; copper components forward-ordered for remaining floors; agency reliance reduced from next
+> rotation. Recovery to green expected over two months. Owners: design manager (rework); procurement lead
+> (rates). Date: 14 July 2026.
+
+### The board narrative
+
+At the board, the entry becomes two spoken paragraphs — numbers, cause, forecast and action in one causal
+arc (KA 4.3.3, 4.4.3), decision-ready and without spin:
+
+> "CA-07 Clinical fit-out is red this month: USD 367,600 actual against a flexed budget of USD 330,000 —
+> USD 37,600 adverse. About 57 % of that (USD 21,250) is rework: a design clash between the medical-gas
+> containment and the ductwork in the ceiling void forced strip-out and re-installation along the ward
+> corridors. About 34 % (USD 12,850) is market movement — copper prices and agency labour rates — and the
+> remaining 9 % (USD 3,500) is overhead under-recovered on the extra hours: a consequence of the rework, not
+> a separate problem.
+>
+> "The clash is resolved and signed off, so the rework component should not repeat. We have forward-ordered
+> copper components for the remaining floors, which caps the price exposure, though agency rates remain a
+> live risk we cannot fully control, and we have reflected that residual exposure in the EAC. We expect
+> CA-07 back within tolerance over the next two months and will report the trend monthly until it is. The
+> uncomfortable lesson is ours to own: the RFI trend flagged this clash a month early, and we have now added
+> services-coordination RFIs to the leading-indicator panel with an amber trigger."
+
+Nothing here is spin: the numbers are exact, the causes are attributed, the forecast is stated with its
+uncertainty, and the team's own miss — the unescalated RFI trend — is on the table rather than under it.
+
+### What the credential expects
+
+This case is Domain 4 end-to-end, and the credential examines every step of it. The comparison was made
+against a **flexed budget** (KA 4.2.2), so the volume of work done never contaminated the variance. The red
+total was **decomposed** into price, usage, rate, efficiency and overhead components that reconcile to the
+penny (KA 4.2.3) and were communicated as a **variance bridge** (KA 4.2.4). The components were then
+**regrouped by cause, not by account**, each with an owner and an action, and reported by **exception** —
+one red entry, not forty green pages (KA 4.3.5, 4.1.3). The board heard **numbers plus causal narrative plus
+forecast plus action** (KA 4.3.3), illustrated honestly (KA 4.4). And the lasting lesson is the earliest one:
+the design-clash RFI trend was a **leading indicator** (KA 4.1.2) visible a month before the cost landed —
+the cheapest point of intervention is always before the variance exists. A candidate who can compute these
+five variances, reconcile the bridge, attribute the causes and draft that exception entry has demonstrated
+the professional core of this domain.
+
+---
+
 ## Domain 4 summary
 
 Performance management makes measurement matter: KPIs paired with targets, thresholds and tolerances;
