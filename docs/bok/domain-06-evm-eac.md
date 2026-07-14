@@ -574,6 +574,174 @@ critical path — it must accompany CPM (Domain 10). It does not prove an `EV` e
 
 ---
 
+## Case study — Domain 6: a full EVM cycle on a highways programme (government/infrastructure)
+
+### Background
+
+The Ministry of Transport has appropriated **`BAC` = USD 80,000,000** for a publicly funded highways
+upgrade — widening a strategic corridor, replacing three structures and renewing the drainage and pavement
+along 40 km of carriageway — on a **30-month schedule**. The programme is now reporting at **Month 12**, and
+the controls team is running the full EVM cycle this domain teaches: the three measures (KA 6.1), the
+variances and indices (KA 6.2), the `EAC` fan and its defended method selection (KA 6.3), and the
+earned-schedule and critical-path reads that keep the schedule picture honest (KA 6.4).
+
+The government context sharpens everything. The 80m is a **fixed appropriation**, voted and gazetted — not a
+commercial budget that a board can quietly extend. On this programme an `EAC` above 80,000,000 is not just a
+forecast; it is a **ministerial conversation**: a formal request for a funding uplift, a descoping decision, or
+a recovery plan, each with public accountability attached. The controls professional's numbers will be read
+by people who did not build them and cannot re-derive them — so every figure must arrive with its assumption
+stated and its arithmetic checkable (Domain 4, KA 4.3.3).
+
+### The three measures at Month 12 (KA 6.1)
+
+At the Month 12 data date the three measures, all in the same budget currency, are:
+
+| Measure | Value (USD) | Source and basis |
+|---|---:|---|
+| `PV` | 32,000,000 | The cost-baseline S-curve (Domain 3, KA 3.3) — the budgeted cost of work scheduled by Month 12 |
+| `EV` | 28,800,000 | Earned **bottom-up** at control-account level under earning rules fixed in advance (KA 6.1.2) |
+| `AC` | 31,300,000 | The true cost-to-date from the ledger, **including month-end accruals** (Domain 5, KA 5.2) |
+
+Each figure carries the discipline of an earlier domain. The `PV` of 32,000,000 is simply the baseline read at
+Month 12 — no judgement involved, provided the baseline is under change control (Domain 3). The `EV` of
+28,800,000 is the sum of the control accounts, each earning under its own pre-agreed rule: units completed
+for the earthworks (cubic metres moved against budget), weighted milestones for the structures, percent
+complete with an objective quantity basis for the drainage. No account was allowed to claim subjective
+progress — the defence against optimistic `EV` that flatters both indices (KA 6.1.2). The `AC` of 31,300,000
+includes the month-end accruals for work done but not yet invoiced — without them, `AC` would be understated
+and the `CPI` flattered, the classic data-quality failure Domain 5 exists to prevent. At a glance, the
+integrated picture (KA 6.1.3) is already uncomfortable: `EV` sits below `PV` (behind schedule) **and** below
+`AC` (over cost).
+
+### Variances and indices (KA 6.2)
+
+- **Setup.** `PV` = 32,000,000; `EV` = 28,800,000; `AC` = 31,300,000; `BAC` = 80,000,000.
+- **Formula.** `CV = EV − AC`; `SV = EV − PV`; `CPI = EV / AC`; `SPI = EV / PV`;
+  `TCPI (to BAC) = (BAC − EV) / (BAC − AC)`.
+- **Substitution.** `CV = 28,800,000 − 31,300,000`; `SV = 28,800,000 − 32,000,000`;
+  `CPI = 28,800,000 / 31,300,000`; `SPI = 28,800,000 / 32,000,000`;
+  `TCPI = (80,000,000 − 28,800,000) / (80,000,000 − 31,300,000) = 51,200,000 / 48,700,000`.
+- **Result.** `CV` = **(USD 2,500,000)**; `SV` = **(USD 3,200,000)**; `CPI` = **0.92**; `SPI` = **0.90**;
+  `TCPI (to BAC)` = **1.05**.
+- **Interpretation.** The programme is **over cost and behind schedule** — the most serious quadrant of the
+  KA 6.2.4 table. For every dollar spent, USD 0.92 of budgeted value is being earned; work is progressing at
+  90 % of the planned rate. The `TCPI` is the reality check: to finish within the 80,000,000 appropriation,
+  the remaining work must run at a cost efficiency of **1.05** against the **0.92** actually achieved — a
+  swing of roughly **14 %**, sustained across eighteen months of remaining work. That is not impossible, but
+  it does not happen by drift or by hoping the average improves; it happens only through a **specific,
+  credible intervention** with a named cause, an owner and a date (compare KA 6.4.5). Absent such an
+  intervention, the honest position is that the `BAC` is no longer a credible forecast of the outcome, and
+  the analysis must move to the `EAC` family.
+
+### The EAC fan (KA 6.3)
+
+The team computes the three formula methods on the identity `EAC = AC + ETC` (KA 6.3.1–6.3.2), each encoding
+a different assumption about the remaining work:
+
+| Method | Assumption | Computation | `EAC` (USD) |
+|---|---|---|---:|
+| (a) budgeted rate | Month 1–12 variance was atypical; remainder runs to budget | `31,300,000 + (80,000,000 − 28,800,000) = 31,300,000 + 51,200,000` | **82,500,000** |
+| (b) current `CPI` | the cost inefficiency persists | `80,000,000 / 0.9201` | **≈ 86,940,000** |
+| (c) `CPI × SPI` | schedule drag compounds the cost inefficiency | `31,300,000 + 51,200,000 / (0.9201 × 0.90) = 31,300,000 + 51,200,000 / 0.8281 ≈ 31,300,000 + 61,830,000` | **≈ 93,130,000** |
+
+The fan runs from **82.5m to 93.1m** — a spread of more than USD 10,000,000 that is not imprecision but
+**three different assumptions** about the work ahead. The professional's job (KA 6.3.3) is to select the
+assumption that matches the **cause** of the variance, and to defend the selection.
+
+The variance analysis (Domain 4, KA 4.2) traces the overrun to two drivers. First, a **systemic productivity
+shortfall on the earthworks**: haul distances are longer than the estimate assumed and ground conditions have
+been consistently poorer than the site investigation indicated, so the units-completed control accounts have
+been earning below their budgeted rate month after month — a **persisting** cause, and the earthworks continue
+for another year. Second, a **schedule-driven prolongation element**: the delay is extending time-related
+preliminaries (site establishment, traffic management, supervision), so being behind schedule is itself adding
+cost. On that causal analysis, method (a) is not defensible — nothing about the variance is a closed, one-off
+event. Method (b), the persisting-`CPI` forecast, is defended as the **central case**: **`EAC` ≈ USD 86.9m**.
+Method (c) is reported alongside it as the **downside scenario** — the outcome if the prolongation element is
+not arrested and schedule drag continues to compound the cost inefficiency. The variance at completion on the
+central case:
+
+`VAC = BAC − EAC = 80,000,000 − 86,940,000 = ` **(USD 6,940,000)** — a projected overrun of just under 9 %
+against the appropriation.
+
+Note what the team did *not* do: it did not pick the lowest number because it was the most comfortable, and it
+did not run one formula mechanically because it always has. It matched method to cause, kept the alternatives
+visible, and checked the result against the `TCPI` — an `EAC` of 86.9m is exactly what a required 1.05
+against an achieved 0.92 was already signalling.
+
+### Earned schedule (KA 6.4.3)
+
+The `SV` of (3,200,000) and `SPI` of 0.90 state the schedule position in **currency**, and — as KA 6.4.2
+warns — the cost-based `SPI` will drift back towards 1.0 as the programme completes, whatever happens. The
+team therefore also computes the position in **time**. The baseline S-curve shows cumulative `PV` of
+**26,000,000 at Month 10** and **29,000,000 at Month 11** — so the plan expected the current `EV` of
+28,800,000 to have been earned between Months 10 and 11.
+
+- **Setup.** Actual time `AT` = 12 months; `EV` = 28,800,000; cumulative `PV` = 26,000,000 at Month 10 and
+  29,000,000 at Month 11.
+- **Formula.** Interpolate `ES` between the bracketing months; then `SV(t) = ES − AT` and `SPI(t) = ES / AT`.
+- **Substitution.** `ES = 10 + (28,800,000 − 26,000,000) / (29,000,000 − 26,000,000) = 10 + 2,800,000 /
+  3,000,000 = 10 + 0.93`.
+- **Result.** `ES` = **10.93 months**; `SV(t) = 10.93 − 12 = ` **(1.07) months**; `SPI(t) = 10.93 / 12 = `
+  **0.91**.
+- **Interpretation.** The programme is about **a month behind in time terms** — the work done by Month 12 is
+  the work the baseline expected shortly before Month 11. On a 30-month schedule that is material, and unlike
+  the cost-based `SPI`, `SPI(t)` **stays honest to the end** (KA 6.4.2–6.4.3): it will keep reporting the
+  lateness meaningfully through the back half of the programme, when the cost-based index would be converging
+  to 1.0 and quietly going blind.
+
+### The critical-path cross-check (KA 6.4.2)
+
+Earned schedule says the programme is about a month behind *in aggregate* — but EVM does not see the critical
+path, and an aggregate delay can be noise if it sits on activities with float. The schedule team therefore
+cross-checks against the network (Domain 10), and confirms that the slippage sits **on the critical path**:
+the structures works have missed their planned possession dates, and the possessions drive the corridor
+opening. The one-month aggregate delay is therefore a real one-month threat to completion, not non-critical
+work running late around a healthy spine. This is the two-way discipline KA 6.4.2 requires — EVM read **with**
+the network, each covering the other's blind spot: earned value quantifies the size and cost of the drift the
+network cannot price, and the network confirms whether the drift matters to the end date, which the aggregate
+indices cannot tell.
+
+### The governance conversation (government angle)
+
+The Month 12 report now goes up the line with a central **`EAC` ≈ USD 86.9m against the USD 80m
+appropriation**. Because the appropriation is fixed, the (6,940,000) `VAC` is not an internal reforecast — it
+forces a decision, and the report frames the three options honestly:
+
+1. **A funding uplift request** of approximately USD 6.9m — politically costly, slow, and requiring the
+   programme to show that the forecast is robust and the causes understood, not simply that money ran out.
+2. **Descoping a later phase** — deferring, say, the final pavement-renewal sections to a future programme,
+   bringing the remaining scope's cost inside the appropriation, with the trade-offs made explicit.
+3. **A recovery plan targeting the earthworks productivity driver** — revised haul routes, re-sequenced cut
+   and fill, additional plant — which carries its **own cost and its own risk**, and whose case must be tested
+   against the `TCPI`: recovery means sustaining a remaining-work efficiency near 1.05 against 0.92 achieved,
+   so the plan must credibly explain *what changes* to produce a ~14 % swing.
+
+The controls professional does not make that choice — ministers and the programme board do. The professional's
+contribution is what this domain has built: the **honest fan** (82.5m / 86.9m / 93.1m) rather than a single
+false-precision number; the **defended assumption** behind the 86.9m central case (persisting earthworks
+productivity, traced to cause); the **`TCPI` reality check** that quantifies what recovery would actually
+demand; and the **earned-schedule time picture**, cross-checked against the critical path, so the schedule
+story is stated in months as well as dollars. Decision-ready, no spin (Domain 4, KA 4.3.3): the likely
+outcome, the assumption behind it, the alternatives, and why the original figure no longer holds — delivered
+at Month 12, early enough for every option to still be open.
+
+### What the credential expects
+
+This case study is the whole of Domain 6 run once, end to end. From **KA 6.1**, the three measures — a `PV`
+read from a controlled baseline, an `EV` earned bottom-up under fixed earning rules, an `AC` complete with
+accruals from **Domain 5's data layer**, because a `CPI` computed on an understated `AC` is a flattering lie.
+From **KA 6.2**, the variances and indices read together, and the `TCPI` used as the quantified test of
+whether the `BAC` remains credible. From **KA 6.3**, the `EAC` fan computed in full, the method **selected to
+match the cause** and defended, and the `VAC` stated against the target that matters — here, a fixed public
+appropriation. From **KA 6.4**, the earned-schedule translation into time and the critical-path cross-check
+that keeps the aggregate indices honest. And from **Domain 4**, the reporting standard that turns the
+arithmetic into a decision: options, assumptions, and consequences, not just numbers. A predictive `EAC` model
+(KA 13.5.3) would likely have surfaced the earthworks drift a month or two earlier from the control-account
+trend — a genuine advantage — but the assumption behind the forecast, and the conversation with the ministry,
+remain the professional's to own and defend.
+
+---
+
 ## Domain 6 summary
 
 Earned value integrates three measures in one currency — **`PV`** (planned), **`EV`** (performed, valued at
