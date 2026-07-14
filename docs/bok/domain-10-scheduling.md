@@ -668,6 +668,30 @@ nodes — systems testing, commissioning, handover, where many trades converge �
 large merges near its end as a candidate for simulation even when a single-chain schedule of the same length
 might not warrant it.
 
+### Advanced 10.A.5 — Critical-path drag
+
+Float answers one question precisely and another not at all. It measures how far a **non-critical** activity
+can slip before it matters (KA 10.2.4); it says nothing about how much a **critical** activity is actually
+costing the finish date — on the critical path, float is zero for every activity, however long or short.
+**Drag** is the complement: the amount of time an activity on the critical path is *adding* to the project
+duration — equivalently, the most the project could gain by shortening that activity alone. For a critical
+activity with a parallel path, `drag = min(activity duration, total float of the most-constraining parallel
+path)`; where no parallel path exists, the drag is the activity's own duration.
+
+A compact example shows the mechanics. Start → **A (5 d)** → **C (10 d)** → End, with **B (9 d)** running
+Start → End in parallel. The critical path A–C is **15 days**; B carries `15 − 9 = 6` days of total float.
+C's drag `= min(10, 6) = 6`: shorten C by 6 days (to 4) and the path becomes `5 + 4 = 9` days — equal to B,
+which goes critical, so further shortening of C buys nothing. A's drag `= min(5, 6) = 5`: remove A entirely
+and the project is `max(10, 9) = 10` days, a 5-day gain. Compression effort therefore ranks C first (6 days
+available) and A second (5 days) — a ranking float cannot give, because float is **zero for both**.
+
+The reading: drag turns "which activities are critical" into "which critical activities are worth
+attacking", and it is the missing number in most compression workshops. It prices the *ceiling* on each
+crash candidate before any money is spent (KA 10.3.1), and it is the deterministic cousin of merge bias
+(Advanced 10.A.4): a parallel path's float is exactly what caps the gain. Computing drag across a large
+network is mechanical and a good tool task; choosing which drag to buy down — with money, risk or scope —
+is the professional's call.
+
 ---
 
 ## Case study — Domain 10: scheduling an airport terminal fit-out (aviation)
@@ -1128,6 +1152,27 @@ the new finish.
 4. Reading: the project is 2 days late because of M alone; N cost nothing this period, but its
    buffer is being consumed — float is re-measured at every data date, never assumed from the
    baseline.
+
+**Exercise 10.6** — A package has two paths from start to finish: path 1 is **A (6 d) → B (8 d)** —
+14 days and critical; path 2 is **C (11 d)**, carrying 3 days of total float. Crash costs and
+limits: A **USD 2,000/day** (max 2 days); B **USD 3,500/day** (max 3 days); C **USD 1,500/day**
+(max 2 days). (a) Find the cheapest way to deliver at **day 11** and its total cost. (b) What would
+the next day — day 10 — cost, and why does the answer change character?
+
+**Solution 10.6.**
+
+1. (a) The finish is set by path 1 (`6 + 8 = 14` days), so only A and B help until path 2 binds
+   (C's float `= 14 − 11 = 3` days). Cheapest first: crash **A by 2 days** at `2 × 2,000 = 4,000`
+   — path 1 falls to 12 days. A is exhausted; crash **B by 1 day** for `3,500` — path 1 = 11 days
+   = path 2: C's float is used up and **both paths are now critical**.
+2. Total cost `= 4,000 + 3,500 = USD 7,500`. Check: path 1 had to lose 3 days, and its three
+   cheapest days are A, A, B — no cheaper combination exists.
+3. (b) Day 10 requires **both** critical paths to lose a day: B (`3,500`; 2 of its max 3 days
+   remain) **and** C (`1,500`) — `3,500 + 1,500 = 5,000` for that single day, against 3,500 for
+   the day before.
+4. The character change: once the paths merge at criticality, every further day must be bought on
+   **every** critical path at once — the marginal cost of compression steps up (KA 10.3.1; and
+   Advanced 10.A.5: at day 11, B's remaining drag is exactly what C caps).
 
 ---
 
