@@ -111,6 +111,18 @@ Total project budget  = Cost baseline (BAC) + management reserve
 > (BAC) 9.7m" in brand blue, a further step "+ Management reserve 0.5m" (grey, dashed, "outside baseline")
 > to "Total budget 10.2m". Bracket labels distinguish what is inside vs outside the baseline.
 
+**Funded versus authorised.** In many organisations — client-funded programmes, government work, JVs —
+**funding** is a control layer above the budget: the budget may be authorised in full while cash or spending
+authority is *released* in tranches against milestones, gate decisions (Domain 8, 8.A.3) or fiscal years.
+The controls consequence is that commitments and spend must be tested against the **funded ceiling**, not
+just the budget — a project 40 % through its budget but 95 % through its released funding tranche is about
+to stop, however healthy its `CPI` (cross-ref Domain 5's exposure discipline, Exercise 5.5). The **funding
+drawdown schedule** also joins the cash-flow forecast (KA 3.5) as a constraint, since the funder's release
+calendar, not the project's burn plan, sets when money exists. The discipline: track authorised budget,
+released funding, committed and forecast against *each other*, and escalate when the forecast breaches the
+release profile *early* — asking for the next tranche after the money runs out is not controls, it is
+archaeology.
+
 ### Key terms — KA 3.1
 
 | Term | Meaning |
@@ -745,6 +757,17 @@ dates. Neither changes project *cost* (both wash through balance-sheet accounts,
 change *when* cash moves, and therefore the funding requirement (3.5.3). The discipline: model gross-of-VAT
 flows with their remittance dates, model net-plus-remit for WHT — and never let a VAT-inclusive invoice value
 contaminate the cost ledger (Domain 5, KA 5.2.4).
+
+**Project bank accounts and ring-fenced cash.** Some funding structures put the project's cash in a
+**dedicated project bank account**. The pattern is common on JVs (each partner funds calls into the joint
+account), on government frameworks (statutory project bank accounts paying the supply chain directly, so a
+main contractor's insolvency does not trap subcontractors' money) and on escrowed retentions (retention held
+in trust rather than as the client's working capital, Domain 7, KA 7.2.4). For controls the consequences are
+practical. First, the project's bank reconciliation (Domain 1, KA 1.1.4) becomes a *project* duty, not just
+a corporate one. Second, **funding calls** on partners follow the cash-flow forecast (3.5.2) and its trough
+— a mis-forecast trough is a missed capital call, with governance consequences. Third, ring-fenced cash is
+not fungible: group treasury cannot sweep it, so the funding requirement must be met *inside the fence* —
+which typically makes the trough deeper than a corporate-funded equivalent.
 
 ### Key terms — KA 3.5
 

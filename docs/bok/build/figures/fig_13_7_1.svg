@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-07-14T19:07:01.504336</dc:date>
+    <dc:date>2026-07-14T20:53:19.845252</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -40,7 +40,7 @@ Q 17.7756 140.8488 17.7756 142.5624
 L 17.7756 178.8336 
 Q 17.7756 180.5472 19.6728 180.5472 
 z
-" clip-path="url(#p6350c9d37b)" style="fill: #c6dbef; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+" clip-path="url(#p6bd3c8c299)" style="fill: #c6dbef; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_3">
     <path d="M 93.9798 150.5592 
@@ -53,7 +53,7 @@ Q 92.0826 110.8608 92.0826 112.5744
 L 92.0826 148.8456 
 Q 92.0826 150.5592 93.9798 150.5592 
 z
-" clip-path="url(#p6350c9d37b)" style="fill: #91c3de; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+" clip-path="url(#p6bd3c8c299)" style="fill: #91c3de; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_4">
     <path d="M 168.2868 120.5712 
@@ -66,7 +66,7 @@ Q 166.3896 80.8728 166.3896 82.5864
 L 166.3896 118.8576 
 Q 166.3896 120.5712 168.2868 120.5712 
 z
-" clip-path="url(#p6350c9d37b)" style="fill: #549fcd; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+" clip-path="url(#p6bd3c8c299)" style="fill: #549fcd; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_5">
     <path d="M 242.5938 90.5832 
@@ -79,7 +79,7 @@ Q 240.6966 50.8848 240.6966 52.5984
 L 240.6966 88.8696 
 Q 240.6966 90.5832 242.5938 90.5832 
 z
-" clip-path="url(#p6350c9d37b)" style="fill: #2676b8; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+" clip-path="url(#p6bd3c8c299)" style="fill: #2676b8; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_6">
     <path d="M 316.9008 60.5952 
@@ -92,48 +92,48 @@ Q 315.0036 20.8968 315.0036 22.6104
 L 315.0036 58.8816 
 Q 315.0036 60.5952 316.9008 60.5952 
 z
-" clip-path="url(#p6350c9d37b)" style="fill: #084d96; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+" clip-path="url(#p6bd3c8c299)" style="fill: #084d96; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
    </g>
    <g id="text_1">
-    <text style="font-weight: 700; font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #0f172a" x="52.3995" y="162.776437" transform="rotate(-0 52.3995 162.776437)">Ad-hoc</text>
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #0f172a" x="52.3995" y="163.608156" transform="rotate(-0 52.3995 163.608156)">Ad-hoc</text>
    </g>
    <g id="text_2">
-    <text style="font-size: 6.6px; font-family: 'DejaVu Sans'; fill: #64748b" transform="translate(13.454541 181.765111)">individual experiments,</text>
-    <text style="font-size: 6.6px; font-family: 'DejaVu Sans'; fill: #64748b" transform="translate(27.635259 189.6864)">no governance</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(16.273463 181.700658)">individual experiments,</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(28.8774 189.6864)">no governance</text>
    </g>
    <g id="text_3">
-    <text style="font-weight: 700; font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #0f172a" x="126.7065" y="132.788437" transform="rotate(-0 126.7065 132.788437)">Piloting</text>
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #0f172a" x="126.7065" y="133.620156" transform="rotate(-0 126.7065 133.620156)">Piloting</text>
    </g>
    <g id="text_4">
-    <text style="font-size: 6.6px; font-family: 'DejaVu Sans'; fill: #64748b" transform="translate(95.834681 151.776595)">defined use cases,</text>
-    <text style="font-size: 6.6px; font-family: 'DejaVu Sans'; fill: #64748b" transform="translate(102.517697 159.6984)">first guardrails</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(97.087134 151.712658)">defined use cases,</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(104.064056 159.6984)">first guardrails</text>
    </g>
    <g id="text_5">
-    <text style="font-weight: 700; font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="201.0135" y="102.800437" transform="rotate(-0 201.0135 102.800437)">Standardised</text>
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="201.0135" y="103.632156" transform="rotate(-0 201.0135 103.632156)">Standardised</text>
    </g>
    <g id="text_6">
-    <text style="font-size: 6.6px; font-family: 'DejaVu Sans'; fill: #64748b" transform="translate(163.382869 121.788595)">approved tools, policy,</text>
-    <text style="font-size: 6.6px; font-family: 'DejaVu Sans'; fill: #64748b" transform="translate(163.627275 129.7104)">verification embedded</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(165.690806 121.724658)">approved tools, policy,</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(165.7764 129.7104)">verification embedded</text>
    </g>
    <g id="text_7">
-    <text style="font-weight: 700; font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="275.3205" y="72.812437" transform="rotate(-0 275.3205 72.812437)">Integrated</text>
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="275.3205" y="73.644156" transform="rotate(-0 275.3205 73.644156)">Integrated</text>
    </g>
    <g id="text_8">
-    <text style="font-size: 6.6px; font-family: 'DejaVu Sans'; fill: #64748b" transform="translate(245.579447 91.800595)">AI in the workflow</text>
-    <text style="font-size: 6.6px; font-family: 'DejaVu Sans'; fill: #64748b" transform="translate(256.552978 99.7224)">and tooling</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(247.1454 91.736658)">AI in the workflow</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(257.833275 99.7224)">and tooling</text>
    </g>
    <g id="text_9">
-    <text style="font-weight: 700; font-size: 8px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(322.99875 38.023344)">Governed &amp;</text>
-    <text style="font-weight: 700; font-size: 8px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(327.236875 47.625531)">optimised</text>
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; fill: #ffffff" transform="translate(326.848125 38.816312)">Governed &amp;</text>
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; fill: #ffffff" transform="translate(330.225625 48.496)">optimised</text>
    </g>
    <g id="text_10">
-    <text style="font-size: 6.6px; font-family: 'DejaVu Sans'; fill: #64748b" transform="translate(321.870572 61.812595)">measured value,</text>
-    <text style="font-size: 6.6px; font-family: 'DejaVu Sans'; fill: #64748b" transform="translate(327.359916 69.7344)">full audit trail</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(323.699494 61.748658)">measured value,</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(329.364666 69.7344)">full audit trail</text>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="p6350c9d37b">
+  <clipPath id="p6bd3c8c299">
    <rect x="5.76" y="5.76" width="379.44" height="188.496"/>
   </clipPath>
  </defs>

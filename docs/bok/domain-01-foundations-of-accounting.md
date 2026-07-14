@@ -1208,6 +1208,21 @@ cost figure honest (cross-ref 1.3.5 on cut-off, and Domain 6). A disciplined mon
 every known-but-uninvoiced cost identified, estimated and coded to the right control accounts (1.5.4) — is
 the bridge between the ledger and trustworthy project cost.
 
+**From payment certificate to the ledgers.** The document behind most of that subcontract accrual is the
+**interim payment certificate**, and its structure drives a posting flow every contractor controller
+reconciles monthly. A certificate is built as `gross value of work done to date − retention − previously
+certified = net payable now`: with gross work done to date of **USD 500,000**, retention at 5 %
+(`500,000 × 5 % = 25,000`) and **USD 380,000** previously certified net, this certificate is
+`500,000 − 25,000 − 380,000 = 95,000`. One document then produces four ledger effects. The *movement* in
+gross work done — this period's certified work — drives **cost**: Dr project cost/WIP. The retention
+movement sits as a **retention receivable/payable** depending on which side of the certificate the entity
+stands (Domain 7, KA 7.2.4). The net certificate becomes the **payables** entry the subcontractor's invoice
+will clear. And any certified-but-not-invoiced balance is exactly the GRNI accrual of this mini-case. The
+reconciliation discipline follows: the certificate register, the retention ledger and the payables ledger
+must agree with the cost ledger every period (KA 1.5.2; Domain 5, KA 5.2.3) — a certificate posted to cost
+but missing from payables (or vice versa) is exactly the kind of one-sided error the trial balance cannot
+catch (1.1.4).
+
 ### Key terms — KA 1.5
 
 | Term | Meaning |
@@ -1320,6 +1335,19 @@ a constant rate (or isolate the retranslation line) before attributing cause. A 
 ignores FX **misattributes cause** — a "cost increase" that is wholly a rate movement gets chased as a
 productivity or price problem, exactly the attribution failure variance analysis exists to prevent
 (cross-ref Domain 4, KA 4.2).
+
+**The currency of control.** The accounting above leaves a controls decision open: which currency the
+budget, EAC and cost report are *managed* in. The rule that works: control in the currency of the
+**contract's dominant cash flows**, report in the group's presentation currency, and never mix the two
+inside one number. The exposure that matters to the project — not just to the accounts — is that where
+revenue and cost currencies differ, margin moves with the rate. A USD-priced contract with
+`EAC = 10,000,000` of which **USD 4,000,000 is EUR-denominated cost**: if the EUR strengthens **8 %**, that
+cost rises `4,000,000 × 8 % = 320,000` in USD terms — **3.2 % of EAC** (`320,000 / 10,000,000`), often more
+than the contingency's headroom — with no change in scope, productivity or quantity. The controls response:
+state each package's currency in the estimate basis (Domain 3, KA 3.2.3); forecast in the currency of spend
+and convert at forecast rates; log rate movements as their own EAC bridge line (Domain 3, KA 3.4.3 — never
+blended into "escalation"); and flag material mismatches for treasury hedging — a decision that belongs to
+treasury, not the project (cross-ref Domain 7, Advanced 7.A.4 for the contractual side).
 
 ### Advanced 1.A.2 — Intercompany and joint-venture cost flows
 
