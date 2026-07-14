@@ -182,6 +182,22 @@ independent sources (bank statements, the cost ledger, supplier statements) matt
    unexplained difference, not a timing item. The same tie-to-independent-source discipline runs through
    cost reconciliation (1.5.2, Domain 5).
 
+**Worked example 1.1.4b — a suspense account, opened and cleared.**
+
+1. **Setup.** Meridian's trial balance disagrees: debits exceed credits by **USD 900**. A **suspense
+   account** is opened with a 900 credit so period-end work can continue while the difference is traced.
+   Investigation finds that a **USD 450 payment** was credited to Cash correctly but was *also credited* —
+   instead of debited — to the expense account: a **reversal error**.
+2. **Formula.** A reversal error disturbs the trial balance by **twice** the amount:
+   `Trial balance difference = 2 × amount posted to the wrong side`.
+3. **Substitution.** `2 × 450 = 900` — the single error explains the whole difference.
+4. **Result.** Correction: `Dr Expense 900 / Cr Suspense 900`. The 900 debit removes the wrong-side 450
+   credit *and* supplies the missing 450 debit; the suspense account returns to **nil**.
+5. **Interpretation.** A suspense account is a workflow device, never a resting place — anything left in
+   suspense at period-end is an unexplained number in the statements. And reversal errors always throw the
+   trial balance out by **twice** the amount, a signature worth knowing when chasing differences (cross-ref
+   the limits of the trial balance, 1.1.4).
+
 ### 1.1.5 A full transaction cycle, worked end-to-end
 
 This flagship worked example threads through the whole domain: it produces the trial balance used to build
@@ -387,6 +403,26 @@ KA 3.5).
 showing each mover: profit or loss for the period (added to retained earnings), other comprehensive income,
 new capital contributed, and distributions to owners. It is where the **profit from the SOPL flows into the
 SOFP** — the clearest single view of the articulation described in 1.2.6.
+
+**Worked example 1.2.4 — Meridian's second month SOCE.**
+
+1. **Setup.** Meridian opens Month 2 with equity of **USD 117,000** (Month 1's closing SOFP, 1.2.6). During
+   Month 2 it earns a profit of **USD 14,000**, declares and pays a dividend of **USD 5,000**, and raises no
+   new capital.
+2. **Formula.** `Closing equity = Opening equity + Profit for the period − Dividends`.
+3. **Substitution.** `117,000 + 14,000 − 5,000 = 126,000`.
+4. **Result.** Closing equity **USD 126,000**, reconciled line by line:
+
+   | SOCE line | USD |
+   |---|---:|
+   | Opening equity | 117,000 |
+   | Profit for the period | 14,000 |
+   | Dividends | (5,000) |
+   | **Closing equity** | **126,000** |
+
+5. **Interpretation.** The SOCE is where performance (SOPL) and distributions meet the balance sheet. A
+   dividend is **not** an expense — it never touches profit; it reduces equity directly, a return of
+   resources to owners (the entity concept again, 1.1.1).
 
 ### 1.2.5 The notes
 
