@@ -193,6 +193,21 @@ contract's rules (the commercial side of change control, Domain 5, KA 5.4; the r
 quantum) and **assessed**. The discipline is the same: identify early, record contemporaneously, quantify the
 full impact (direct + disruption + prolongation), and progress to agreement.
 
+**Worked example 7.2.2 — building up a prolongation claim's quantum.**
+
+1. **Setup.** A **30-day** client-caused delay (cause established by contemporaneous records and a delay
+   analysis). Time-related preliminaries run at **USD 6,000/day**; specialist equipment on standby costs
+   **USD 1,500/day**.
+2. **Formula.** `quantum = Σ (time-related cost rate × delay days)` — for costs actually incurred *because*
+   of the delay, evidenced, with no double-count against variations.
+3. **Substitution.** Preliminaries `30 × 6,000 = 180,000`; equipment standby `30 × 1,500 = 45,000`.
+4. **Result.** A substantiated quantum of **USD 225,000**, presented with its cause (the instruction/event),
+   effect (the critical-path delay — Domain 10) and evidence trail.
+5. **Interpretation.** Cause, effect, quantum — all three, or the claim fails. The rates come from the
+   contract/BoQ preliminaries (7.3.3); the delay days from a critical-path analysis, not a bar-chart
+   impression; and the records from the discipline of 7.2.1. A claim assembled after the fact from memory is
+   worth a fraction of one built contemporaneously.
+
 ### 7.2.3 Liquidated damages
 
 **Definition & purpose.** **Liquidated damages (LDs)** are a pre-agreed sum payable by the contractor for a
@@ -296,6 +311,20 @@ and into every subsequent valuation.
   supervision, temporary works, welfare). Often a substantial lump or time-related sum; a controls
   professional watches preliminaries closely because they are **time-related** — a delay extends them
   (prolongation cost, linking to claims, 7.2.2).
+
+**Worked example 7.3.3 — building up a unit rate from first principles.**
+
+1. **Setup.** Build the rate for one unit of installed pipework. Inputs per unit: **labour 2.5 hours at
+   USD 45/hour**; **materials USD 60**; **plant USD 18**. Company overheads are recovered at **12 %** on
+   direct cost, and profit at **8 %** on cost including overheads.
+2. **Formula.** `direct cost = labour + materials + plant`; `+ overheads (12 %)`; `+ profit (8 % of the
+   subtotal)`.
+3. **Substitution.** Labour `2.5 × 45 = 112.50`; direct cost `112.50 + 60 + 18 = 190.50`; overheads
+   `190.50 × 12 % = 22.86` → subtotal `213.36`; profit `213.36 × 8 % = 17.07`.
+4. **Result.** A tendered rate of **USD 230.43 per unit** (≈ USD 230).
+5. **Interpretation.** Every BoQ rate decomposes into labour, materials, plant, overhead and profit — which
+   is exactly how a controls professional interrogates a rate in negotiation (which element moved?) and how
+   variance analysis later splits a rate problem from a usage problem (Domain 4, KA 4.2.3).
 
 ### 7.3.4 Pricing and remeasuring a BoQ — worked
 
