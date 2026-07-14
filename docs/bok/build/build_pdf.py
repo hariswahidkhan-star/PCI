@@ -88,7 +88,7 @@ def main() -> None:
     doc.write_pdf(str(OUT))
 
     # 4. Prepend the full-bleed book cover as a native PDF page (exact A4, no margins).
-    cover = BUILD / "cover.png"
+    cover = next((p for p in (BUILD / "cover.jpg", BUILD / "cover.png") if p.exists()), BUILD / "cover.png")
     pages = len(doc.pages)
     if cover.exists():
         import fitz  # PyMuPDF
