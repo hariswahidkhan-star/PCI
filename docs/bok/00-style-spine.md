@@ -28,11 +28,10 @@ and the volume grows edition by edition under that rule rather than toward a pag
 
 Per-section depth may flex as content genuinely demands, provided the 40/40/20 split holds.
 
-> **Relationship to the live credential framework.** This BoK is authored as a **standalone study
-> reference**. It is deliberately *not* reconciled line-by-line with the eight-domain competency framework
-> published on the Institute's website or the Certuvo practice domains; those serve exam-blueprint and
-> self-assessment purposes. Keeping them separate lets this reference go far deeper (e.g. full IFRS 15 and
-> AgileEVM treatments) without being constrained to the exam's coarser groupings.
+> **Relationship to the live credential framework.** This BoK *is* the credential framework: the
+> Institute's website, examination blueprint and practice materials are aligned to these thirteen domains
+> and their 40/40/20 weighting. Practice environments may group content for drill purposes, but the domain
+> numbering and Knowledge-Area structure defined here govern everywhere.
 
 ---
 

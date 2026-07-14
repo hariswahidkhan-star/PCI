@@ -17,9 +17,9 @@ shared authoring standard lives in **[`00-style-spine.md`](00-style-spine.md)** 
 formula-symbol table, worked-example format, figure/MCQ formats, citation rules and conventions. Every
 domain binds to it, so notation and depth stay consistent across the whole volume.
 
-> This BoK is a **standalone study reference**. It is intentionally *not* line-by-line reconciled with the
-> eight-domain competency framework on the Institute's public site or the Certuvo practice domains — those
-> serve exam-blueprint and self-assessment purposes; this reference goes deeper.
+> This BoK **is** the credential framework. The Institute's public site, examination blueprint and
+> practice materials are aligned to its thirteen domains and the 40/40/20 weighting; the domain numbering
+> and Knowledge-Area structure defined here govern everywhere.
 
 ## Status & contents
 
