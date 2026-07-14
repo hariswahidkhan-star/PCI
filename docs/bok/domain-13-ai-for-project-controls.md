@@ -1519,6 +1519,46 @@ arithmetic disciplines both directions: it blocks premature automation *and* ret
 the break-even itself moves — precision drift shifts the error rate, so the model-risk monitoring of
 13.A.2 feeds the pricing here.
 
+### Advanced 13.A.6 — APIs, integration and the automated dashboard
+
+Every AI ambition in this domain stands on a plumbing decision: how data moves from the systems where the
+work happens — ERP, scheduling tool, timesheets, document control (KA 13.2.4) — to the place where it is
+analysed and reported. At awareness level, three patterns cover the field. **Manual export/import** —
+spreadsheets and email — is fragile, unlogged, and where version chaos lives. **Batch ETL/file transfer** —
+scheduled extracts on a defined cadence — is robust and auditable, but the data is hours to days old. **API
+integration** — systems queried programmatically — is the freshest and the foundation of live dashboards, at
+the price of real engineering and governance. The professional's rule: the right pattern is set by the
+**decision cadence** the data serves (Domain 4, KA 4.3.4) — a monthly cost pack does not need a real-time
+feed, and a daily site dashboard cannot run on a monthly extract.
+
+The **automated dashboard** is KA 4.3.2 made live, and its value case is worth working through.
+
+**Worked example 13.A.6 — the month-end pack, automated.**
+
+1. **Setup.** A controls team assembles its monthly pack by manual export and reconciliation: **4 working
+   days** of one controller each month.
+2. **Formula.** `annual effort = days per cycle × cycles per year`.
+3. **Substitution.** Manual: `4 × 12 = 48` controller-days a year. An API-fed model with automated refresh
+   and validation checks cuts the human step to a **half-day review** of exceptions and narrative:
+   `0.5 × 12 = 6` days a year.
+4. **Result.** `48 − 6 = 42` controller-days a year returned to analysis.
+5. **Interpretation.** The saving is real, but the **quality** change is bigger: the controller's days move
+   from assembling numbers to interrogating them. And the review half-day is not optional — an automated
+   pipeline fails silently where a human assembler would have noticed, so the deskilling caution of 13.A.4
+   applies to pipelines too.
+
+For the integration to be trustworthy, four things must be governed. A **data contract** per feed — fields,
+definitions, units, update cadence, owner — is the lineage discipline of KA 13.2.3 applied at the interface.
+**Validation at the boundary** — row counts, control totals, referential checks — because a dashboard that
+renders stale or partial data confidently is worse than a late pack. **Change management on schemas** — the
+silent upstream field change is the classic failure mode (the master-data governance of Domain 11, Advanced
+11.A.3). And **one source of truth per number** — two dashboards disagreeing on actual cost costs more
+credibility than either earns. Access control matters doubly once AI agents consume the APIs (13.A.1).
+
+AI can draft the integration mappings, flag anomalies at the boundary and even narrate the dashboard (KA
+13.5.8) — but the data contract, the validation thresholds and the single-source decision are governance
+choices a named professional owns. AI proposes, the professional disposes.
+
 ---
 
 ## Case study — Domain 13: building an AI-augmented controls function at a transport agency (government)
