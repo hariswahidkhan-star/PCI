@@ -167,6 +167,21 @@ trial balance in balance while the numbers are wrong. This limitation is exactly
 independent sources (bank statements, the cost ledger, supplier statements) matters — a theme picked up in
 1.5.2 and Domain 11.
 
+**Worked example 1.1.4 — a bank reconciliation.**
+
+1. **Setup.** Meridian's ledger shows cash of **USD 129,000** (per 1.1.5). The bank statement shows
+   **USD 131,500**. Investigation finds **outstanding cheques of USD 4,500** (written, not yet presented)
+   and a **deposit in transit of USD 2,000** (banked, not yet credited by the bank).
+2. **Formula.** `Adjusted bank balance = statement balance − outstanding cheques + deposits in transit`; it
+   must equal the ledger balance.
+3. **Substitution.** `131,500 − 4,500 + 2,000 = 129,000`.
+4. **Result.** The adjusted bank balance **USD 129,000** agrees with the ledger — reconciled; the
+   differences are purely timing.
+5. **Interpretation.** Reconciliation to an *independent* source is the control that covers the trial
+   balance's blind spots (1.1.4) — a wholly omitted or duplicated cash entry would surface here as an
+   unexplained difference, not a timing item. The same tie-to-independent-source discipline runs through
+   cost reconciliation (1.5.2, Domain 5).
+
 ### 1.1.5 A full transaction cycle, worked end-to-end
 
 This flagship worked example threads through the whole domain: it produces the trial balance used to build
@@ -328,6 +343,20 @@ adjusted for non-cash items and working-capital movements). Both reach the same 
 controls professional this statement is the bridge between the *accrual* story of the SOPL and the *cash*
 reality that funds the project — the same bridge cash-flow forecasting builds forward (cross-ref Domain 3,
 KA 3.5).
+
+**Worked example 1.2.3 — the indirect method, line by line.**
+
+1. **Setup.** Derive net operating cash by the **indirect method** from Meridian's profit of **USD 17,000**
+   (the month-one figures of 1.2.6: receivables up 10,000, office supplies up 6,000, payables up 2,000; no
+   depreciation in the pre-adjustment view).
+2. **Formula.** `Operating cash = profit + non-cash expenses − increases in current assets + increases in
+   current liabilities`.
+3. **Substitution.** `17,000 + 0 − 10,000 (receivables) − 6,000 (supplies) + 2,000 (payables) = 3,000`.
+4. **Result.** **USD 3,000** — identical to the direct method's total in 1.2.6, as it must be.
+5. **Interpretation.** The indirect method explains the profit-to-cash gap line by line: 10,000 is sitting
+   in unpaid invoices, 6,000 in unused supplies, offset by 2,000 not yet paid to suppliers. Boards are
+   usually shown the indirect form precisely because it makes the working-capital story visible (cross-ref
+   1.2.6).
 
 ### 1.2.4 The statement of changes in equity (SOCE)
 

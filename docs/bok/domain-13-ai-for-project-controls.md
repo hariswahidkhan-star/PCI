@@ -427,6 +427,103 @@ organisation's contracts, standards and project records), and **spreadsheet/data
 the tabular cost/schedule data controls lives in). A professional who is fluent in these three, with
 verification and guardrails, covers a large share of practical use.
 
+### 13.4.2b The ten categories in depth
+
+**General LLM assistants.** *What it does:* drafts, summarises, extracts, classifies and analyses text
+conversationally, applying the prompt patterns of 13.3.2 to whatever the professional supplies. *Typical
+inputs → outputs:* a prompt plus pasted or attached text/data → a drafted narrative, summary, extracted table
+or first-cut analysis. *Where it earns its keep in controls:* first-draft variance narratives and exception
+commentary (Domain 4), drafting estimate bases and assumptions (Domain 3), and condensing long reports for
+boards. *Limits & governance:* hallucination is the defining risk — a fluent draft can contain fabricated
+figures, causes or citations — so every figure and claim is verified against source (13.3.3), and no
+confidential data enters an ungoverned tool (13.2.5).
+
+**Document / RAG & knowledge.** *What it does:* answers questions over the organisation's own documents —
+contracts, standards, procedures, project records — grounding each answer in retrieved, cited source material
+(13.1.4). *Typical inputs → outputs:* a question plus a governed document set → a cited answer or extracted
+terms table. *Where it earns its keep in controls:* contract-term and claims queries across a portfolio
+(Domain 7) and "what does the policy or standard require?" checks (Domains 1–2). *Limits & governance:*
+source-access control is the category-specific risk — the retrieval layer must respect document permissions,
+or the assistant answers from material a user should not see; a stale corpus produces confidently outdated
+answers, so sources are curated and citations opened.
+
+**Spreadsheet / data-analysis AI.** *What it does:* works over tabular data — generating formulas, cleaning
+and transforming extracts, running analyses and explaining results — inside the tools controls already lives
+in. *Typical inputs → outputs:* a cost/schedule/quantity table plus an instruction → a transformed table,
+formula, chart or analytical summary. *Where it earns its keep in controls:* preparing month-end extracts and
+reconciliations (Domain 5), variance breakdowns and EVM working (Domains 4, 6), and normalising estimating
+data (Domain 3). *Limits & governance:* generated formulas and computations can be plausibly wrong — a
+mis-ranged formula or silent unit error propagates downstream — so computations are checked against
+hand-worked cases before the output is trusted.
+
+**BI & analytics AI.** *What it does:* builds and augments dashboards, answers natural-language queries over
+governed datasets, and surfaces trends and anomalies in performance data. *Typical inputs → outputs:* a
+governed dataset plus a natural-language question → a chart, dashboard element or narrative insight. *Where it
+earns its keep in controls:* performance dashboards, out-of-tolerance detection and NL querying for
+decision-ready reporting (Domain 4), drawing on cost and earned-value data (Domains 5, 6). *Limits &
+governance:* metric-definition drift is the category's quiet failure — an NL query answered from a subtly
+different definition of "cost" or "% complete" than the report's — so metric definitions are governed centrally
+(13.2.3) and AI-generated figures reconciled to the controlled ones.
+
+**Scheduling & PM-suite AI.** *What it does:* assists schedule development, checks network logic (missing
+links, dangling activities, excess constraints and lags) and predicts slippage from progress data within
+PM/planning platforms. *Typical inputs → outputs:* WBS, activities, logic and progress → a proposed or
+health-checked schedule and delay warnings. *Where it earns its keep in controls:* schedule quality and logic
+checks, and progress-based delay prediction (Domain 10), feeding time-cost integration (Domain 6). *Limits &
+governance:* an AI-assisted schedule can embed hidden constraints or unrealistic durations that make it look
+achievable while quietly fixing dates — so the professional inspects constraints, validates durations and
+re-identifies the critical path before relying on it.
+
+**Risk & forecasting / ML platforms.** *What it does:* learns from historical and current project data to
+predict outcomes (cost, delay, overrun likelihood), score and rank risks, and run or interpret simulations.
+*Typical inputs → outputs:* governed historical/current data and a quantified register → forecasts, risk
+scores, simulation distributions and driver analyses. *Where it earns its keep in controls:* predictive EAC
+and early warning (Domain 6), estimate ranges (Domain 3), and Monte Carlo-based contingency (Domain 12).
+*Limits & governance:* explainability is the category-specific test — a prediction that cannot be explained
+cannot be defended to a board or an auditor — so the professional demands driver visibility, checks training-
+data representativeness (13.2), and owns the number.
+
+**RPA / process mining.** *What it does:* robotic process automation executes defined, repetitive workflows
+across systems; process mining reconstructs how a process actually ran from system event logs. *Typical
+inputs → outputs:* transaction and event data plus process rules → automated matching/postings and a map of
+actual process flows with deviations flagged. *Where it earns its keep in controls:* three-way match
+automation (Domain 11), month-end reconciliation flows (Domain 5), and detecting control breaches such as
+approvals bypassed. *Limits & governance:* over-wide matching tolerances are the classic failure — set loosely
+to reduce exceptions, they wave through the very mismatches the control exists to catch — so tolerances are
+owned, justified and periodically re-tested.
+
+**Contract analytics / CLM AI.** *What it does:* extracts and analyses terms, obligations and dates across
+contract sets, and supports variation and claims review within contract-lifecycle-management workflows.
+*Typical inputs → outputs:* contracts, variations and correspondence → extracted terms tables, obligation and
+date registers, and flagged risk language. *Where it earns its keep in controls:* portfolio-wide term
+extraction, notification-window tracking and claims analysis (Domain 7), feeding commercial valuation and
+revenue treatment (Domains 1–2). *Limits & governance:* extraction is a draft, not a legal position —
+entitlement-bearing terms require legal review before they move a commercial position, and every extracted
+term is confirmed against its cited clause (13.3.3b).
+
+**Transcription / meeting assistants.** *What it does:* transcribes meetings and drafts minutes, summaries,
+decisions and action lists from the discussion. *Typical inputs → outputs:* a recorded or live meeting → a
+transcript, summary, decision log and proposed action register. *Where it earns its keep in controls:*
+capturing progress-review actions and decisions that feed reporting (Domain 4), and surfacing risks and issues
+raised in discussion for the register (Domain 12). *Limits & governance:* accuracy of the captured actions is
+the specific risk — a misheard owner, date or commitment propagates into the action register as if agreed — so
+actions are confirmed with owners before circulation, and recording/confidentiality rules are respected before
+any meeting is captured.
+
+**AI coding / automation.** *What it does:* generates and explains scripts, queries and small automations —
+data transformations, report assembly, recurring checks — from natural-language descriptions. *Typical
+inputs → outputs:* a task description plus sample data → working code or query, with an explanation. *Where it
+earns its keep in controls:* automating repetitive data preparation and reconciliation steps (Domain 5),
+recurring EVM and variance calculations (Domains 4, 6), and one-off analyses that would otherwise be manual.
+*Limits & governance:* generated code can be subtly wrong while looking correct — so it is tested against
+known cases before use, reviewed like any other code, and never run against production data untested; the
+professional owns what the automation does.
+
+Across all ten, capabilities evolve quickly: the professional validates a tool's **current** features rather
+than assuming vendor claims or last year's experience. The category-to-task fit (13.4.4) and the verification
+discipline (13.3.3, 13.6) apply unchanged across every category — whatever the tool proposes, the professional
+disposes.
+
 ### 13.4.3 Domain and platform AI
 
 **The principle.** Beyond general tools, AI is increasingly **embedded** in the platforms controls already use
