@@ -917,6 +917,27 @@ fast-track renewal adding **USD 60,000**, and a **30 %** chance of a full re-app
    uncertainties multiply along each path and the paths are then summed, never added as if the
    second uncertainty stood alone.
 
+**Exercise 12.5** — A register holds three risks, each **30 % probable** with a **USD 300,000**
+impact. (a) Compute the register's EMV. (b) Assuming the risks are fully independent, derive the
+outcome distribution and read off the **P80**. (c) Now assume all three share one driver — a single
+supplier failing — and are perfectly correlated: give the distribution and the P80. (d) In one
+sentence: what changed, and what did not?
+
+**Solution 12.5.**
+
+1. (a) Register EMV `= 3 × 0.30 × 300,000 = 270,000`.
+2. (b) Independent — the number of hits follows a binomial: `P(0) = 0.7³ = 0.343`;
+   `P(1) = 3 × 0.3 × 0.7² = 0.441` (cumulative `0.784`); `P(2) = 3 × 0.3² × 0.7 = 0.189` (cumulative
+   `0.973`); `P(3) = 0.3³ = 0.027`. The P80 is the smallest outcome whose cumulative probability
+   reaches 0.80: one hit reaches only 0.784, so **P80 = 2 hits = USD 600,000**.
+3. (c) Perfectly correlated — two outcomes only: nothing happens (`0.70`) or all three hit (`0.30`,
+   costing `3 × 300,000 = 900,000`). The cumulative probability at zero is 0.70 < 0.80, so
+   **P80 = USD 900,000**.
+4. (d) The EMV — 270,000 — did not move at all; the P80 contingency rose by half, from 600,000 to
+   900,000: correlation changes the *tail*, not the mean, which is why a register that prices risks
+   one by one and ignores shared drivers understates the funding the appetite test needs (12.2.3,
+   12.3.1, Advanced 12.A.1, and the appetite arithmetic of 12.1.3).
+
 ---
 
 ## Practitioner's toolkit — Domain 12

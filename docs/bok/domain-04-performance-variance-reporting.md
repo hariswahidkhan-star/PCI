@@ -695,6 +695,34 @@ properly decided within its delegated tolerance — that is what the tolerance *
 the tier below by exception, adds its own decision, and passes only genuine escalations upward. The cadence
 pyramid is management by exception applied vertically.
 
+### Advanced 4.A.5 — Signal and noise: control-chart thinking for variance review
+
+**The principle.** Every cost series wobbles. A variance-review culture that demands an explanation for
+every wobble manufactures narrative — and teaches people to invent causes for noise — while one that
+ignores everything misses the genuine shift. **Statistical process control**, applied here at awareness
+level, resolves the dilemma: characterise the *normal* variation of the series first, then investigate only
+what falls outside it. That is management by exception (4.1.3) with the exception line drawn from the data
+rather than negotiated — the same discipline as the data-derived thresholds of 4.1.1.
+
+**Worked example 4.A.5 — a control limit from six months of history.**
+
+1. **Setup.** A control account's monthly cost variance, as a percentage of budget, over six months:
+   **+1.2, −0.8, +0.6, −1.5, +0.9, −0.4**.
+2. **Formulae.** `σ = √(Σ (x − mean)² / n)`; investigation band `= mean ± 2σ`.
+3. **Substitution.** Mean `= 0.0 %`; the squared deviations sum to `5.66`, giving `σ = √(5.66 / 6) ≈ 0.97`
+   percentage points; a ±2σ band is therefore about **±1.9 %**.
+4. **Result.** Month 7 lands at **−2.6 %** — outside the band: investigate. Note the counterpart: the
+   −1.5 % in month 4 was *inside* the band, so demanding a root-cause memo for it that month would have
+   been narrative about noise.
+5. **Interpretation.** The account's investigation threshold is ≈ ±1.9 %, reviewed as the history grows.
+
+**The discipline, not the precision.** Six points is a short history and the limits are rough — the point
+is the *discipline* (limits from data, revised as data accrues), not false precision. The tie to Goodhart
+(Advanced 4.A.3) is direct: a negotiated threshold invites gaming; a data-derived one invites improvement.
+What crosses the line feeds the exception report (4.3.5). On AI: fitting and refreshing control limits
+across hundreds of accounts is a machine task; deciding what a genuine signal *means* — and resisting the
+urge to explain noise — stays with the professional.
+
 ---
 
 ## Case study — Domain 4: turning a red month into a decision (healthcare)
