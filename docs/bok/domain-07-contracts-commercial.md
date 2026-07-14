@@ -592,6 +592,167 @@ performance (control transfer). The other options invert or conflate the two.
 
 ---
 
+## Case study — Domain 7: the commercial year on a rail megaproject
+
+### Background
+
+A joint-venture contractor holds the **tunnelling-and-stations package** on a metropolitan rail megaproject —
+twin-bored running tunnels, two underground stations and the cross-passages between them. The package is
+delivered under a collaborative **target-cost contract**: target cost **USD 120,000,000**, target fee
+**USD 8,000,000**, with a **50/50** pain/gain share on any difference between the adjusted target and the
+final actual cost, and the contractor's pain-share **capped at USD 10,000,000**. The client chose the form
+deliberately (KA 7.1.4): the ground risk on a bored-tunnel job is too large for a sensible lump sum — a
+fixed-price tenderer would either load the price with contingency or gamble on the geology — while pure
+cost-plus would leave the client carrying every inefficiency. Sharing the risk 50/50 keeps both parties
+leaning on the same side of the cost line, and the cap bounds the contractor's downside so that a
+catastrophic overrun cannot destroy it.
+
+The commercial team and the project-controls team sit in the same weekly meeting — a deliberate arrangement,
+because on a target-cost contract the controls forecast *is* a commercial number. This case study follows one
+commercial year on the package through four connected events: an instructed **variation** that adjusts the
+target; a routine **interim application for payment**; an emerging **liquidated-damages exposure** on a
+sectional milestone; and the **year-end pain/gain position** that ties the earned-value forecast (Domain 6)
+directly to the contractor's fee. A closing section reconciles the three measures of the same physical
+progress — earned value, the BoQ valuation and IFRS 15 revenue — that the year produces.
+
+### The variation (KA 7.2.2, Domain 2 KA 2.2.8)
+
+In the second quarter the client's fire-and-life-safety review requires an **additional cross-passage**
+between the running tunnels. The client issues a formal instruction; the contractor prices the change from
+the BoQ-derived rates for excavation, lining, mechanical fit-out and the associated time-related
+preliminaries (KA 7.3), and the parties agree the variation at **USD 2,500,000** — *before* the work is put
+in hand. Under the contract's mechanism the agreed variation **adjusts the target cost** from
+USD 120,000,000 to **USD 122,500,000**; the target fee is unchanged in this case, and the pain/gain
+calculation at year end will run against the adjusted figure.
+
+The discipline matters more than the arithmetic. The variation is priced from rates the parties already
+agreed at tender, so the negotiation is about quantities and method, not about re-opening the pricing basis;
+it is agreed before the work wherever possible, so neither party carries an unpriced exposure into the
+ground; and it is folded into the target immediately, so that the controls team's variance analysis
+(Domain 6) is always measured against a target that reflects the *authorised* scope. This is the commercial
+counterpart of change control (Domain 5, KA 5.4) — the same instructed change flows through the change log,
+the baseline, the target and, on the revenue side, is treated as a **contract modification** under IFRS 15
+(Domain 2, KA 2.2.8), adjusting the transaction price and the measure of progress. One event, four
+disciplined entries; an undisciplined project records it in none of them and argues about all four at the
+final account.
+
+### An interim application (KA 7.4)
+
+At the October valuation date the quantity surveyors assess the value of work done to date against the BoQ
+and the milestone schedule, and the contractor submits its interim application.
+
+**Worked example CS7-1 — the October interim application.**
+
+1. **Setup.** Gross value of work done to date **USD 62,000,000** (measured at contract rates against the
+   BoQ, KA 7.3); retention **3 %**; **previous payments** total **USD 55,400,000**.
+2. **Formula.** `Retention = 3 % × gross value`; `amount due = gross value − retention − previous payments`.
+3. **Substitution.** Retention `= 3 % × 62,000,000 = 1,860,000`; amount due `= 62,000,000 − 1,860,000 −
+   55,400,000 = 4,740,000`.
+4. **Result.** **Amount due this application: USD 4,740,000** — gross value 62,000,000, less cumulative
+   retention 1,860,000, less previous payments 55,400,000.
+5. **Interpretation.** The USD 1,860,000 of retention is cash the contractor has earned but cannot yet
+   collect (KA 7.2.4) — it sits in the funding trough (Domain 3, KA 3.5) until release at completion and
+   after defects. The cumulative structure of the calculation is the point: each application values *all*
+   work to date and nets off *all* prior payments, so an error in any month self-corrects in the next.
+
+One line of professional caution attaches to every application: it is the **certified** amount, not the
+applied amount, that drives cash (KA 7.4.2). The contractor applies for 4,740,000; the engineer certifies
+what it agrees; and the controls team tracks the **certified-versus-applied gap** month by month as a
+commercial signal — a small, stable gap is normal negotiating friction, while a widening gap flags a valuation
+dispute, an unagreed variation or a deteriorating relationship long before it reaches a formal claim.
+
+### The LD exposure (KA 7.2.3)
+
+In the same quarter the integrated schedule (Domain 10) delivers unwelcome news: the eastern station box is
+running late, and the critical path shows a possible **60-day** late completion against a **sectional
+milestone** — handover of the station structure to the systems contractor — which carries liquidated damages
+of **USD 25,000/day**. The exposure is quantified immediately: `60 × 25,000 = 1,500,000`. This
+**USD 1,500,000** is not left in the scheduler's report; it is carried in the **commercial forecast alongside
+the EAC**, because a forecastable LD liability is as real a cost as a forecastable quantity overrun.
+
+Quantifying the exposure also enables the decision it exists to inform: an **acceleration-versus-LDs
+comparison**. The planners price a recovery plan — additional shifts on the station fit-out and resequenced
+mechanical works — at **USD 900,000** of acceleration cost. Accepting the delay costs 1,500,000 in LDs;
+accelerating costs 900,000; accelerating **saves USD 600,000** — *provided the acceleration genuinely
+recovers the 60 days*. That proviso is the analytical heart of the decision, and it belongs to the crashing
+logic of Domain 10: acceleration money only buys time on the **critical path**, recovery plans suffer
+diminishing returns as crews stack up, and a plan that recovers only 30 of the 60 days changes the
+arithmetic entirely. The commercial team supplies the LD rate and the exposure; the planning team supplies
+an honest answer on recoverability; neither can make the decision alone.
+
+### The year-end pain/gain position (KA 7.1.3–7.1.4)
+
+At year end the controls team's estimate at completion (`EAC`, Domain 6) — built bottom-up from performance
+to date, the remaining quantities and the recovery plan — is presented to the project board alongside the
+commercial team's pain/gain calculation. On this contract they are two halves of one number.
+
+**Worked example CS7-2 — the year-end pain/gain position.**
+
+1. **Setup.** Forecast actual cost (`EAC`) **USD 129,000,000**; adjusted target cost **USD 122,500,000**
+   (the original 120,000,000 plus the agreed 2,500,000 variation); target fee **USD 8,000,000**; pain-share
+   **50/50**, capped at **USD 10,000,000**.
+2. **Formula.** `Overrun = EAC − adjusted target`; `pain-share = 50 % × overrun` (subject to the cap);
+   `forecast fee = target fee − pain-share`.
+3. **Substitution.** Overrun `= 129,000,000 − 122,500,000 = 6,500,000`; pain-share `= 50 % × 6,500,000 =
+   3,250,000` — below the 10,000,000 cap, so it applies in full; forecast fee `= 8,000,000 − 3,250,000 =
+   4,750,000`.
+4. **Result.** The contractor's forecast fee falls from 8,000,000 to **USD 4,750,000**; the client's
+   forecast total is `cost 129,000,000 + fee 4,750,000 = 133,750,000`, of which the client's own share of
+   the pain is the other 3,250,000 of the overrun.
+5. **Interpretation.** On a target-cost megaproject the `EAC` **is** a commercial number: every 1,000,000 of
+   forecast overrun costs the contractor 500,000 of fee, until the cap bites — here at an overrun of
+   20,000,000 (where `50 % × 20,000,000 = 10,000,000` exhausts the cap). This is why the controls forecast
+   and the commercial position must be **one conversation**: an optimistic `EAC` understates the pain-share
+   the board is already committed to, and a controls professional who reports `CPI` without translating it
+   into fee is answering half the question.
+
+The board's response illustrates the incentive working as designed. With 3,250,000 of fee already forecast
+to be lost and 6,750,000 of headroom before the cap, every cost-saving and every recovered day has a
+measurable owner on both sides of the table. The 600,000 saved by the acceleration decision above, if the
+recovery holds, flows straight through this calculation — which is precisely the alignment the collaborative
+form was chosen to create.
+
+### Reconciling the three progress measures (KA 7.4.4–7.5)
+
+The year closes with the reconciliation that KA 7.4.4 makes the controls professional's own. Three systems
+have each measured the same physical progress under a different rule-set:
+
+| Measure | Rule-set | Values progress at | Year-end position |
+|---|---|---|---|
+| Earned value (`EV`) | Performance baseline (Domain 6) | Budget | **52 %** complete |
+| BoQ valuation | Contract payment mechanism (KA 7.3–7.4) | Contract rates | **USD 62,000,000** certified |
+| IFRS 15 revenue | Cost-to-cost over time (Domain 2, KA 2.2) | Recognised revenue | A slightly different cumulative figure; billing-vs-revenue gap held as a contract asset/liability (Domain 2, KA 2.2.7) |
+
+These are **three values of the same physical progress under three rule-sets**, and they will not — and
+should not — agree. Earned value prices progress at budget to answer a *performance* question; the BoQ
+valuation prices it at contract rates to answer a *cash* question; IFRS 15 recognises revenue on a
+cost-to-cost measure to answer an *accounting* question, with the difference between cumulative billing and
+cumulative revenue sitting on the balance sheet as a contract asset or liability. The project reconciles the
+three **monthly**: each difference is explained (rate versus budget differentials, unbilled variations,
+retention, the modification's effect on the transaction price), the direction and trend of the contract
+asset/liability position is read as a health signal (KA 7.5.2), and the numbers are **never forced to
+match** — a project that "aligns" them by adjustment has destroyed three independent signals to manufacture
+one false one.
+
+### What the credential expects
+
+This case study is Domain 7 in miniature, and the credential expects a candidate to move through it without
+changing gear. From **KA 7.1**, read the contract type first: identify who bears cost risk under a
+target-cost form, run the pain/gain arithmetic in both directions, and know where the cap bites — because
+the cap defines the real exposure the board is managing. From **KA 7.2**, administer the instruments:
+a variation instructed, priced and agreed before the work; an LD exposure quantified from the LD rate and
+the forecast delay, and weighed against the cost of acceleration; and behind both, the contemporaneous
+records that protect entitlement. From **KA 7.3**, price from the bill: the variation and the valuation both
+stand on BoQ-derived rates, which is what makes them negotiable on quantities and method rather than
+first principles. From **KA 7.4**, run the payment cycle: gross value, less retention, less previous
+payments, and the certified-versus-applied gap watched as a signal. And from **KA 7.5**, close the loop:
+billing, earned value and IFRS 15 revenue reconciled monthly, with the contract asset/liability explaining
+the gap. AI accelerates the paperwork throughout — contract-analytics tools that extract terms and variation
+clauses, and billing-anomaly checks that flag a mispriced application in seconds (KA 13.5.7) — but the
+entitlement judgements and the pain/gain conversation stay human: **AI proposes, the professional disposes.**
+
+---
+
 ## Domain 7 summary
 
 The contract allocates cost risk along a spectrum — lump sum (contractor), target cost (shared, with pain/gain
