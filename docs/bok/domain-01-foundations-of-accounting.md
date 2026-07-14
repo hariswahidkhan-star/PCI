@@ -1123,6 +1123,162 @@ whole job; `6100` is the cost *type*; `210` is the resource — none of these is
 
 ---
 
+## Case study — Domain 1: a groundworks contractor's month-end close (construction)
+
+### Background
+
+*Terrafirm Groundworks* is a fictional groundworks subcontractor — earthworks, drainage and site
+establishment packages delivered for main contractors on commercial developments. Its work is certified
+monthly by the main contractor's surveyor, its subcontractors invoice when their own paperwork allows, and
+its plant is hired in from external suppliers whose invoices routinely arrive weeks after the machines have
+left site. In other words, it lives with exactly the gap this domain keeps returning to: the gap between
+when work is *performed* and when documents *arrive*.
+
+This case study follows Terrafirm's finance-and-controls team through one month-end close. Nothing in it is
+exotic; that is the point. The close is where Domain 1's foundations stop being theory and start doing real
+work: the accrual basis and matching concept (KA 1.3) decide what the month's revenue and cost actually are;
+cost coding and control accounts (KA 1.5) decide *where* those costs land; and reconciliation (1.1.4, 1.5.2)
+is the control that catches what the trial balance alone never could. Alongside the close that was actually
+run, the case shows the close that *would* have been reported if the accrual pass had been skipped — because
+the difference between the two is the clearest demonstration in this domain of why any of it matters.
+
+### The raw position
+
+At the close of the month, before any period-end adjustments, the ledger shows:
+
+| Raw ledger position (before adjustments) | USD |
+|---|---:|
+| Certified valuations invoiced this month (revenue) | 780,000 |
+| Supplier and subcontractor invoices received (costs) | 520,000 |
+| **Naive profit for the month** | **260,000** |
+| **Naive margin** | **33.3 %** |
+
+This is the "documents on file" view of the month: revenue is what has been certified and invoiced, cost is
+what suppliers have got around to invoicing. It is arithmetically sound — the trial balance behind it
+balances — and, as 1.1.4 warned, that proves nothing about whether it is *right*. A 33.3 % margin on a
+groundworks package would be remarkable; the controls team's first instinct is not celebration but
+suspicion, and the accrual pass tells them why.
+
+### The accrual pass (KA 1.3)
+
+The cost engineer and the accountant work through the month's cut-off together, applying the accrual basis
+(1.3.1): recognition follows the **economic event** — work performed, plant used — not the arrival of a
+certificate or an invoice. Three adjustments emerge:
+
+| # | Adjustment | Type (1.3.3) | USD | Journal entry |
+|---|---|---|---:|---|
+| 1 | Work performed but not yet certified/billed | Accrued income | 60,000 | `Dr Accrued income / Cr Revenue 60,000` |
+| 2 | Subcontractor work performed, not yet invoiced | Accrued expense | 95,000 | `Dr Subcontract cost / Cr Accrued liabilities 95,000` |
+| 3 | Plant hire used on site, invoice missing | Accrued expense | 22,000 | `Dr Plant cost / Cr Accrued liabilities 22,000` |
+
+Adjustment 1 is the revenue-side mirror of the cost accruals: earthworks completed in the last days of the
+month sit outside this month's certificate, but the work has been performed and the entitlement earned, so
+accrued income is recognised (the "earned, not yet billed" quadrant of the 1.3.3 matrix). Adjustments 2 and
+3 are the classic contractor's cut-off items — the paperwork is behind the shovels, exactly as in the
+sector mini-case at 1.5.6, and the accrual is what keeps cost-to-date honest.
+
+The adjusted position:
+
+- **Adjusted revenue** = 780,000 + 60,000 = **USD 840,000**.
+- **Cost accruals raised** = 95,000 + 22,000 = **USD 117,000**.
+- **Adjusted cost** = 520,000 + 117,000 = **USD 637,000**.
+- **Adjusted profit** = 840,000 − 637,000 = **USD 203,000**.
+- **Adjusted margin** = 203,000 / 840,000 = **24.2 %**.
+
+A 24.2 % margin is a number the team can defend: it reflects the work performed and the resources consumed
+in earning it, matched into the same period (1.3.2), regardless of which documents happen to have arrived.
+
+### What skipping the accruals would have said
+
+1. **Setup.** Compare the naive month (no accrual pass) with the adjusted month, and quantify what the
+   skipped close would have told the business.
+2. **Formula.** `Overstatement = naive profit − adjusted profit`; margin distortion = naive margin −
+   adjusted margin.
+3. **Substitution.** `Overstatement = 260,000 − 203,000 = 57,000`; margin distortion = `33.3 % − 24.2 %`
+   ≈ 9 percentage points.
+4. **Result.** The naive close overstates the month's true profit by **USD 57,000** and flatters the margin
+   by nearly **9 points** — and the error is not permanent, only *borrowed*: next month, when the missing
+   subcontractor and plant invoices land, the same 117,000 hits cost with no matching work, and the reported
+   margin swings violently the other way.
+5. **Interpretation.** Matching (1.3.2) is not pedantry; it is the difference between a real margin and an
+   artefact of invoice timing. A board shown 33.3 % this month and something far below trend next month
+   would chase a "deterioration" that never happened — the performance was 24.2 % all along. The earned-value
+   echo makes the stakes concrete: the 117,000 of unaccrued cost would also have understated `AC` (actual
+   cost), flattering `CPI` and corrupting the forecast built on it, exactly the failure mode described at
+   1.3.5 and 1.5.6 and developed in Domain 6. The accrual pass is one month-end discipline protecting two
+   sets of numbers at once — the financial result and the earned-value result.
+
+### The coding-and-reconciliation pass (KA 1.5)
+
+Getting the *total* right is only half the close. The adjusted cost of USD 637,000 must also sit in the
+right places: each posting coded at source to its project, work package and cost element (1.5.5), rolling
+up into the control accounts (1.5.4) against which the project is actually managed. Terrafirm's month
+resolves into three control-account totals:
+
+| Control account | USD |
+|---|---:|
+| Earthworks | 302,000 |
+| Drainage | 214,000 |
+| Site establishment | 121,000 |
+| **Total (ties to adjusted cost)** | **637,000** |
+
+Reconciling the project cost ledger back to the general ledger — the tie-to-independent-source discipline of
+1.5.2 — surfaces one exception: a cost of **USD 18,000** coded to the right account class but the **wrong
+project** — the classic 1.5.2 pitfall. The trial balance never flinched, and the statutory accounts would
+have been perfectly correct, because the cost is the right *type*; but one job was carrying another job's
+cost, its margin understated and the other's flattered, and any `CPI` derived from either would have been
+wrong. The item is **re-coded at source** before any report is cut — correction at the point of entry, not
+reclassification after the reports have propagated the error downstream.
+
+The bank reconciliation (in the 1.1.4 pattern) closes cleanly: the differences between the ledger cash
+balance and the bank statement are timing items only — cheques written but not yet presented, and a receipt
+banked but not yet credited — each one listed, explained and expected to clear. No unexplained differences
+means no omitted or duplicated cash entries hiding behind a balanced trial balance.
+
+### The close, reported
+
+| Month-end close — reported | USD |
+|---|---:|
+| Revenue (certified 780,000 + accrued income 60,000) | 840,000 |
+| Cost (invoiced 520,000 + accruals 117,000) | 637,000 |
+| **Profit for the month** | **203,000** |
+| **Margin** | **24.2 %** |
+| Cost accruals raised | 117,000 |
+| Accrued income raised | 60,000 |
+| Miscodes corrected (re-coded at source) | 18,000 |
+
+The narrative that accompanies the pack is two sentences, in the decision-ready style of Domain 4: *The
+month closed at a 24.2 % margin on USD 840,000 of revenue, stated on an accrual basis with USD 117,000 of
+uninvoiced subcontract and plant cost recognised; the margin is genuine and comparable with prior months,
+not a timing artefact. One USD 18,000 cross-project miscode was identified and corrected at source before
+reporting; no provisions were required; recommend no action beyond continued monitoring of subcontractor
+invoicing lag.*
+
+### What the credential expects
+
+Every knowledge area in this domain did a shift in this close, and a candidate should be able to name each
+one at work. The **double-entry model and the ledger (KA 1.1)** carried every posting — each accrual a
+balanced entry, the trial balance arithmetically tight, and the bank reconciliation covering the blind spots
+the trial balance cannot see. The **accrual basis, matching and cut-off (KA 1.3)** converted a
+documents-on-file position into a performance measure: recognition followed the economic event, and the
+57,000 the naive view would have overstated is the measurable cost of getting that wrong. **Provisions
+awareness (KA 1.4)** appears in this close precisely as an *absence*: the team reviewed the position and
+concluded that no obligation of uncertain timing or amount — no probable claim, no onerous contract —
+required recognition this month, and recording that conclusion is itself a control; an unconsidered nil and
+a considered nil look identical on the face of the accounts and are entirely different in substance.
+**Coding, control accounts and reconciliation (KA 1.5)** put the right total in the right places and caught
+the 18,000 that classification alone would never have caught. And the whole exercise feeds the **statements
+of KA 1.2**: the accruals become current assets and current liabilities on the statement of financial
+position, the adjusted revenue and cost flow through profit or loss into equity, and the profit-to-cash gap
+the accruals create is exactly what the cash-flow statement will explain.
+
+One sentence on AI completes the picture: accrual-proposal tools scanning goods-received-not-invoiced
+reports and auto-coding assistants mapping invoice narratives to cost codes would accelerate every step of
+this close, with the professional owning the service dates, the coding rules and the sign-off (13.5.4) —
+**AI proposes, the professional disposes.**
+
+---
+
 ## Domain 1 summary
 
 The accounting model is one identity — `A = L + E` — recorded from both sides (double-entry), producing four
