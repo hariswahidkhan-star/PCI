@@ -1,0 +1,783 @@
+# Domain 2 — Financial Reporting & the Standards
+
+> **Group:** Finance, accounting & reporting (Domain 2 of 4). **Target:** ~150 pages.
+> **Binds to:** [`00-style-spine.md`](00-style-spine.md). Builds directly on Domain 1 (the accounting model,
+> the statements, accrual/matching, IAS 37). British English; USD (+SAR where useful); five-line worked
+> examples.
+
+## Why this domain exists
+
+Domain 1 built the *mechanics* — how transactions are recorded and how the statements articulate. This
+domain builds the *rules* that decide **what** number is recorded and **when**: the reporting framework and
+its qualitative characteristics (KA 2.1); **IFRS 15**, the revenue standard that governs how a long-term
+contract's revenue and profit emerge over its life (KA 2.2 — the flagship); the wider revenue questions of
+principal-versus-agent and bundling (KA 2.3); the other standards a controls professional meets — inventories,
+property, leases, borrowing costs, and the legacy construction-contract model IFRS 15 replaced (KA 2.4); and
+the difference between the **statutory** accounts the standards govern and the **management** accounts a
+controls function actually runs on (KA 2.5). Revenue recognition is the beating heart of the domain: it is
+where the schedule, the cost ledger and the earned-value forecast all cash out into the profit the board
+sees, and it is the single most important accounting judgement in project-based businesses.
+
+**Learning objectives.** After this domain a candidate can: explain the purpose and qualitative
+characteristics of financial reporting and the role of IAS 1; apply the IFRS 15 five-step model to a
+multi-year construction contract, including over-time recognition by the input (cost-to-cost) method,
+variable consideration and the constraint, allocation across performance obligations, and the resulting
+contract asset/liability; distinguish principal from agent; describe the project-relevant principles of IAS
+2, IAS 16, IFRS 16 and IAS 23, and why IFRS 15 superseded IAS 11; and reconcile management reporting to
+statutory reporting.
+
+---
+
+## Knowledge Area 2.1 — The reporting framework
+
+*Topics: 2.1.1 the purpose of financial reporting · 2.1.2 the qualitative characteristics · 2.1.3 IFRS vs
+local GAAP · 2.1.4 IAS 1 and the presentation principles.*
+
+### 2.1.1 The purpose of financial reporting
+
+**Definition & purpose.** The objective of general-purpose financial reporting is to provide financial
+information about an entity that is **useful to existing and potential investors, lenders and other
+creditors** in making decisions about providing resources to the entity. Everything else in the framework —
+the qualitative characteristics, recognition, measurement — serves that objective. For a controls
+professional the point is orientation: statutory reporting answers an *external* user's questions
+(is this entity solvent, profitable, well-governed?), which is why it is standardised and audited, whereas
+the management reporting a controls function produces answers an *internal* decision-maker's questions
+(is this project on track?) and is tailored, timely and forward-looking (KA 2.5).
+
+### 2.1.2 The qualitative characteristics
+
+**The principle.** Useful financial information has two **fundamental** qualitative characteristics, and four
+**enhancing** ones:
+
+- **Fundamental:**
+  - **Relevance** — capable of making a difference to a decision (it has predictive and/or confirmatory
+    value); bounded by **materiality** (information is material if omitting or misstating it could influence
+    users' decisions).
+  - **Faithful representation** — complete, neutral and free from error (it depicts the economic substance,
+    not merely the legal form).
+- **Enhancing:** **comparability** (across entities and over time), **verifiability** (independent observers
+  could reach consensus), **timeliness** (available in time to influence decisions), and **understandability**
+  (classified and presented clearly).
+
+**Why it matters here.** Two of these are quietly central to project controls. **Substance over form** (part
+of faithful representation) is why an arrangement that is legally a "service contract" but economically a
+lease is accounted for as a lease (IFRS 16, 2.4). **Comparability** is why a business must apply its revenue
+policy *consistently* across contracts and periods — a controls professional comparing margin across projects
+is relying on it.
+
+### 2.1.3 IFRS versus local GAAP
+
+**The principle.** **IFRS** (International Financial Reporting Standards, issued by the IASB) is the most
+widely used global framework; many jurisdictions require or permit it for listed entities. **Local GAAP**
+(Generally Accepted Accounting Principles) — national frameworks — may apply to private entities and can
+differ in detail. This reference is written to IFRS because it is the common global language of project-based
+business, but a controls professional working across borders should confirm which framework a given entity
+reports under, since recognition timing (especially revenue) can differ. Where a difference is material to
+project reporting it should be surfaced, not assumed away.
+
+### 2.1.4 IAS 1 and the presentation principles
+
+**Definition & purpose.** **IAS 1 (presentation of financial statements)** sets how the statements are
+presented. Its principles recur throughout the domain:
+
+- **Going concern** — statements are prepared assuming the entity will continue in operation, unless
+  management intends or is forced to liquidate.
+- **Accrual basis** — as in Domain 1, KA 1.3.
+- **Materiality and aggregation** — material classes are presented separately; immaterial items may be
+  aggregated.
+- **Offsetting** — assets and liabilities, income and expenses, are **not** offset unless a standard requires
+  or permits it (e.g. you do not net a receivable from one customer against a payable to another).
+- **Comparative information** and **consistency of presentation** — prior-period figures are shown, and
+  presentation is kept consistent period to period.
+
+**Common pitfall — offsetting project balances.** Netting a contract asset on one contract against a contract
+liability on another (2.2.7) to show a single "net" figure breaches IAS 1's no-offset principle and hides
+information users need. Each contract's position is assessed and presented on its own.
+
+### Key terms — KA 2.1
+
+| Term | Meaning |
+|---|---|
+| **Relevance / materiality** | Capable of influencing decisions; material if its omission/misstatement would. |
+| **Faithful representation** | Complete, neutral, error-free; substance over form. |
+| **Enhancing characteristics** | Comparability, verifiability, timeliness, understandability. |
+| **IFRS / local GAAP** | The global standards / national frameworks. |
+| **Going concern** | The assumption the entity continues in operation. |
+| **Offsetting** | Netting assets/liabilities or income/expenses — generally prohibited. |
+
+### Sample MCQs — KA 2.1
+
+**MCQ 2.1-A `[2.1.2 · Recall]`** The two *fundamental* qualitative characteristics of useful financial
+information are:
+- A. Comparability and timeliness.
+- B. Relevance and faithful representation. ✅
+- C. Verifiability and understandability.
+- D. Prudence and consistency.
+
+*Rationale:* Relevance and faithful representation are fundamental; comparability, verifiability, timeliness
+and understandability are *enhancing*. Prudence supports neutrality but is not itself one of the two
+fundamentals.
+
+**MCQ 2.1-B `[2.1.4 · Application]`** A contractor shows one project's contract asset of USD 400,000 netted
+against another project's contract liability of USD 250,000, presenting USD 150,000. Under IAS 1 this is:
+- A. Correct — both are contract balances.
+- B. Correct if the same customer.
+- C. Incorrect — offsetting is generally prohibited; each contract is presented separately. ✅
+- D. Incorrect only if the projects are in different segments.
+
+*Rationale:* IAS 1 prohibits offsetting unless a standard requires/permits it. Separate contracts' positions
+are presented gross. Even a single customer does not automatically permit netting across distinct contracts.
+
+### Self-check — KA 2.1
+
+1. Name the two fundamental and four enhancing qualitative characteristics. *(Fundamental: relevance,
+   faithful representation. Enhancing: comparability, verifiability, timeliness, understandability.)*
+2. What does "substance over form" mean, with an example? *(Account for economic reality not legal label —
+   e.g. a lease dressed as a service contract is accounted for as a lease.)*
+
+---
+
+## Knowledge Area 2.2 — IFRS 15 Revenue from Contracts with Customers *(flagship — target ~35 pp)*
+
+*Topics: 2.2.1 the five-step model · 2.2.2 step 1, the contract · 2.2.3 step 2, performance obligations ·
+2.2.4 step 3, the transaction price (variable consideration, constraint, financing) · 2.2.5 step 4,
+allocation · 2.2.6 step 5, recognition — over time vs point in time, input vs output methods · 2.2.7 contract
+assets and liabilities (over/under-billing) · 2.2.8 contract modifications · 2.2.9 disclosures.*
+
+### 2.2.1 The five-step model
+
+**Definition & purpose.** **IFRS 15** establishes a single, principles-based model for recognising revenue
+from contracts with customers. Its core principle: an entity recognises revenue **to depict the transfer of
+promised goods or services to a customer in an amount that reflects the consideration to which the entity
+expects to be entitled** in exchange. That principle is operationalised through **five steps**:
+
+1. **Identify the contract** with the customer.
+2. **Identify the performance obligations** (the distinct promises) in the contract.
+3. **Determine the transaction price.**
+4. **Allocate the transaction price** to the performance obligations.
+5. **Recognise revenue** when (or as) each performance obligation is satisfied.
+
+The control-transfer idea is the standard's centre of gravity: revenue follows **control**, not cash and not
+invoicing. For project-based businesses the consequential judgement is *step 5* — whether an obligation is
+satisfied **over time** or **at a point in time** — because that decides whether a three-year contract books
+profit steadily across its life or all at the end.
+
+> **Fig 2.2.1 — The IFRS 15 five-step model.** *Caption:* the path from contract to recognised revenue.
+> *Render-ready description:* five numbered brand-blue nodes left to right — Contract → Performance
+> obligations → Transaction price → Allocate → Recognise — with a lower band showing the two step-5 outcomes
+> ("Over time" / "Point in time"). *Animation storyboard (digital-only):* the worked construction contract
+> (2.2.6) travels through each node, its transaction price splitting at "Allocate" and a revenue S-curve
+> building under "Recognise (over time)".
+
+### 2.2.2 Step 1 — Identify the contract
+
+**The principle.** A contract exists for IFRS 15 when it has commercial substance, the parties have approved
+it and are committed, each party's rights and payment terms are identifiable, and it is **probable the entity
+will collect** the consideration it is entitled to. Where collectability is not probable, revenue is not
+recognised until it is (or until cash is received and non-refundable). For controls this connects to the
+commercial cycle (Domain 7): a signed, approved contract with clear payment terms is the starting gun.
+
+### 2.2.3 Step 2 — Identify the performance obligations
+
+**Definition & purpose.** A **performance obligation** is a promise to transfer a **distinct** good or
+service (or a series of substantially the same ones). A good or service is *distinct* if the customer can
+benefit from it on its own or with readily available resources, **and** it is separately identifiable from
+other promises in the contract. Where promises are highly interdependent or integrated (design-and-build of
+a single asset), they may form **one** combined performance obligation.
+
+**Why it matters.** Splitting a contract into the right performance obligations decides how the price is
+allocated (step 4) and when each piece is recognised (step 5). A common contract — *design, build, and
+two-year maintenance* — may be two or three performance obligations depending on how integrated design and
+build are; the maintenance is typically distinct and recognised over its own two years.
+
+### 2.2.4 Step 3 — Determine the transaction price
+
+**Definition & purpose.** The **transaction price** is the consideration the entity expects to be entitled to
+in exchange for transferring the promised goods or services. It includes **fixed** amounts and **variable
+consideration**, adjusted for any **significant financing component**, non-cash consideration and
+consideration payable to the customer.
+
+**Variable consideration** — bonuses, penalties, incentives, rebates, liquidated damages, claims — is
+estimated by whichever better predicts the amount the entity will be entitled to:
+
+```
+Expected value      =  Σ (probability_i × outcome_i)      (better for a large number of outcomes)
+Most likely amount  =  the single most likely outcome     (better for a binary/all-or-nothing outcome)
+```
+
+**The constraint.** Variable consideration is included in the transaction price **only to the extent that it
+is highly probable a significant reversal of cumulative revenue will not occur** when the uncertainty
+resolves. This is deliberately cautious: it stops entities booking optimistic incentive revenue that later
+evaporates.
+
+**Worked example 2.2.4 — a completion bonus under the constraint.**
+
+1. **Setup.** A controls-and-delivery contract has a fixed price of **USD 5,000,000** plus a **USD 500,000**
+   bonus, earned in full **only if** the asset is handed over by a target date (an all-or-nothing outcome).
+   Management assesses an **80 %** chance of earning the bonus.
+2. **Method.** Because the bonus is binary, the **most likely amount** (USD 500,000 — it is more likely than
+   not to be earned) is the better estimate — *then* apply the constraint.
+3. **Constraint test.** Is it **highly probable** that including USD 500,000 will not cause a significant
+   later reversal? At 80 %, and with the outcome dependent on a single future date and factors partly outside
+   the entity's control, management concludes it is **not** highly probable, and **constrains** the bonus.
+4. **Result.** Transaction price = **USD 5,000,000** (bonus excluded for now). It is re-assessed each period;
+   once completion by the target date becomes highly probable, the USD 500,000 is added and recognised.
+5. **Interpretation.** The constraint is why a forecast that *assumes* the bonus (in the project's commercial
+   case) can legitimately differ from *recognised* revenue (which excludes it until near-certain) — a gap a
+   controls professional must be able to explain to a board.
+
+**Significant financing component.** Where the timing of payments provides the customer or the entity with a
+significant financing benefit (typically when the gap between payment and transfer exceeds ~12 months), the
+transaction price is adjusted to reflect the **time value of money**, and the financing element is presented
+as interest income/expense, separate from revenue. For most progress-billed construction the practical
+expedient (no adjustment when the period is ≤ 12 months) often applies, but long up-front or deferred
+payments trigger it.
+
+### 2.2.5 Step 4 — Allocate the transaction price
+
+**The principle.** The transaction price is allocated to each performance obligation in proportion to its
+**standalone selling price** (SSP) — the price at which the entity would sell that good or service
+separately. Where a bundle is sold at a discount, the discount is spread across the obligations pro-rata to
+SSP (unless evidence shows it relates to specific ones).
+
+**Worked example 2.2.5 — allocate a bundled design/build/maintenance contract.**
+
+1. **Setup.** A contract bundles **design**, **build**, and **two-year maintenance** for a total of **USD
+   10,000,000**. Standalone selling prices: design **1,000,000**, build **8,000,000**, maintenance
+   **1,500,000** (total SSP **10,500,000**).
+2. **Formula.** `Allocated price_i = Transaction price × (SSP_i / Σ SSP)`.
+3. **Substitution.** Allocation factor `= 10,000,000 / 10,500,000 = 0.952381`.
+   - Design: `1,000,000 × 0.952381 = 952,381`
+   - Build: `8,000,000 × 0.952381 = 7,619,048`
+   - Maintenance: `1,500,000 × 0.952381 = 1,428,571`
+4. **Result.** `952,381 + 7,619,048 + 1,428,571 = 10,000,000`. ✓ The USD 500,000 bundle discount is spread
+   pro-rata to SSP.
+5. **Interpretation.** Each obligation now carries its share of the price, recognised on its own pattern:
+   design typically **at a point in time** (on acceptance), build **over time** (2.2.6), maintenance **over
+   time** on a straight-line basis across the two years.
+
+### 2.2.6 Step 5 — Recognise revenue: over time vs point in time; input vs output methods
+
+**The principle — over time vs point in time.** An entity recognises revenue **over time** if **any one** of
+three criteria is met:
+
+1. the customer **simultaneously receives and consumes** the benefits as the entity performs (e.g. a routine
+   service); or
+2. the entity's performance **creates or enhances an asset the customer controls** as it is created; or
+3. the entity's performance creates an asset with **no alternative use** to the entity, **and** the entity
+   has an **enforceable right to payment** for performance completed to date.
+
+If none is met, revenue is recognised **at a point in time** — when control transfers (typically delivery/
+acceptance). Most construction and bespoke-asset contracts meet criterion 2 or 3 and recognise **over time**;
+the sale of standard goods recognises at a point in time.
+
+**Measuring progress — input vs output methods.** For over-time recognition, progress toward complete
+satisfaction is measured by an **output method** (units delivered, milestones, surveys of work performed) or
+an **input method** (the entity's efforts/inputs relative to total expected inputs). The most common input
+method is **cost-to-cost**:
+
+```
+Percentage of completion (PoC) = Costs incurred to date / Total estimated costs
+Cumulative revenue             = PoC × Transaction price
+Period revenue                 = Cumulative revenue − revenue recognised in prior periods
+```
+- `PoC` — percentage of completion (%).
+- Costs used in the ratio should reflect performance — abnormal wastage and uninstalled materials are
+  excluded so PoC is not overstated.
+
+**Worked example 2.2.6 — a three-year construction contract by the cost-to-cost input method.**
+
+1. **Setup.** Fixed-price contract, **transaction price USD 12,000,000**; total estimated cost at inception
+   **USD 9,000,000** (expected profit 3,000,000). Recognise **over time** (the asset is built on the
+   customer's land — criterion 2). Actual progression:
+
+   | Year | Cost incurred in year | Cumulative cost | Total estimated cost (as revised) |
+   |---|---:|---:|---:|
+   | 1 | 1,800,000 | 1,800,000 | 9,000,000 |
+   | 2 | 3,600,000 | 5,400,000 | 9,600,000 (overrun identified) |
+   | 3 | 4,200,000 | 9,600,000 | 9,600,000 (actual) |
+
+2. **Formula.** `PoC = cumulative cost / total estimated cost`; `cumulative revenue = PoC × 12,000,000`;
+   `period revenue = cumulative revenue − prior cumulative`.
+3. **Substitution & Result.**
+
+   | Year | PoC | Cumulative revenue | Revenue in year | Cost in year | Profit in year |
+   |---|---:|---:|---:|---:|---:|
+   | 1 | 1,800,000/9,000,000 = **20.00 %** | 2,400,000 | 2,400,000 | 1,800,000 | **600,000** |
+   | 2 | 5,400,000/9,600,000 = **56.25 %** | 6,750,000 | 4,350,000 | 3,600,000 | **750,000** |
+   | 3 | 9,600,000/9,600,000 = **100 %** | 12,000,000 | 5,250,000 | 4,200,000 | **1,050,000** |
+   | **Total** | | | **12,000,000** | **9,600,000** | **2,400,000** |
+
+   Check: total profit `12,000,000 − 9,600,000 = 2,400,000`, matching the sum of yearly profits. ✓
+4. **Interpretation.** Revenue and profit emerge **as the work is performed**, and the Year-2 cost overrun
+   (total cost revised 9.0m → 9.6m) is absorbed through a *lower* PoC and margin that year — the estimate
+   revision is accounted for **prospectively** (a change in estimate), not by restating Year 1. This is the
+   exact mechanism by which a controls professional's revised **estimate at completion** (Domain 6) flows
+   into reported revenue and margin.
+
+> **Fig 2.2.2 — Revenue and cost S-curves over the contract.** *Caption:* cumulative revenue tracks PoC while
+> cost accumulates beneath it; the gap is cumulative profit. *Underlying data:* cumulative revenue
+> {2.40m, 6.75m, 12.00m}; cumulative cost {1.80m, 5.40m, 9.60m} over Years 1–3. *Render-ready description:*
+> an x-axis Years 1–3; two rising curves — revenue (brand blue) above cost (grey); vertical bars showing the
+> widening cumulative-profit gap {0.60m, 1.35m, 2.40m}. *Animation storyboard (digital-only):* the two curves
+> draw left to right year by year; at Year 2 the cost curve visibly steepens (the overrun) and the profit gap
+> narrows for that step before widening again at completion.
+
+**Over-time vs point-in-time — the loss rule.** If at any point the contract becomes **loss-making**
+(forecast total cost exceeds transaction price), the **entire expected loss is recognised immediately** as an
+onerous-contract provision under IAS 37 (Domain 1, KA 1.4.5) — revenue recognition over time does **not**
+let a known loss be spread. This links the revenue model straight to the provisions domain.
+
+### 2.2.7 Contract assets and contract liabilities (over- and under-billing)
+
+**Definition & purpose.** Revenue recognised (a performance measure) and amounts **billed** (a commercial/
+cash measure) rarely move in lockstep. IFRS 15 nets them per contract into one of:
+
+- a **contract asset** — revenue recognised **exceeds** amounts billed (the entity has earned more than it has
+  invoiced; "under-billing" / work in progress the customer will pay for); or
+- a **contract liability** — amounts billed **exceed** revenue recognised (the customer has paid/been billed
+  ahead of performance; "over-billing" / deferred revenue).
+
+*(A receivable is distinct: it arises once the entity's right to consideration is unconditional — i.e. only
+the passage of time is required before payment.)*
+
+**Worked example 2.2.7 — contract asset/liability across the contract.** Using 2.2.6, with billings of
+**Year 1: 2,000,000; Year 2: 5,000,000; Year 3: 5,000,000** (total 12,000,000):
+
+| Year-end | Cumulative revenue | Cumulative billed | Net position |
+|---|---:|---:|---|
+| 1 | 2,400,000 | 2,000,000 | **Contract asset 400,000** (under-billed) |
+| 2 | 6,750,000 | 7,000,000 | **Contract liability 250,000** (over-billed) |
+| 3 | 12,000,000 | 12,000,000 | **Nil** |
+
+**Interpretation.** At the end of Year 1 the entity has earned USD 400,000 more than it has billed — a
+contract asset. By the end of Year 2 it has billed USD 250,000 ahead of what it has earned — a contract
+liability. A controls professional reconciling *revenue* to *billing* is computing exactly this position; a
+persistent, growing contract asset can be an early warning that billing is lagging performance and cash is
+being tied up (cross-ref Domain 7, KA 7.4 and 7.5).
+
+### 2.2.8 Contract modifications
+
+**The principle.** A **contract modification** (variation/change order) is a change in scope or price approved
+by the parties. IFRS 15 treats it as either: (a) a **separate contract**, if it adds distinct goods/services
+at their standalone selling price; (b) a **termination of the old and creation of a new contract** (prospective
+catch-up), if remaining goods are distinct; or (c) **part of the existing contract** (a cumulative
+catch-up adjustment to revenue), if the remaining goods are not distinct (typical for a single
+construction obligation). For construction, most variations fall into (c): the transaction price and total
+cost estimate are updated and PoC re-struck, with a catch-up to revenue in the period of modification. This
+is the accounting counterpart of the change-control process in Domain 5 (KA 5.4) and Domain 7 (KA 7.2).
+
+### 2.2.9 Disclosures
+
+**The principle.** IFRS 15 requires disclosures that let users understand the **nature, amount, timing and
+uncertainty** of revenue and cash flows from contracts: disaggregated revenue, information about contract
+balances (opening/closing contract assets and liabilities and the revenue recognised from them), remaining
+performance obligations (the order book not yet recognised), and the significant judgements made — how
+performance obligations are identified, when they are satisfied, and how the transaction price and any
+variable consideration are estimated. For project businesses these disclosures are where the *judgement* in
+the numbers is exposed to scrutiny.
+
+**AI in this KA.** AI genuinely helps with the *mechanics and the paperwork* of IFRS 15: extracting
+performance obligations, payment terms and variable-consideration clauses from long contracts; maintaining
+the PoC schedule as cost estimates update; drafting the disaggregation and remaining-performance-obligation
+disclosures; and flagging contracts whose forecast cost is approaching price (an onerous-contract trigger).
+It does **not** make the recognition *judgements* — whether promises are distinct, whether recognition is
+over time or at a point, whether variable consideration passes the constraint. Those are accounting
+judgements, auditable and signed off by a person, and a plausible-but-wrong machine reading of a clause can
+move reported profit by millions. **AI proposes, the professional disposes.**
+
+### Key terms — KA 2.2
+
+| Term | Meaning |
+|---|---|
+| **Performance obligation** | A promise to transfer a distinct good or service. |
+| **Transaction price** | Consideration the entity expects to be entitled to (incl. variable consideration). |
+| **Variable consideration / constraint** | Estimated by expected value or most-likely amount; included only to the extent a significant reversal is highly improbable. |
+| **Standalone selling price (SSP)** | The price of a good/service sold separately; the basis for allocation. |
+| **Over time vs point in time** | Whether an obligation is satisfied progressively or at a moment of control transfer. |
+| **Input (cost-to-cost) / output method** | Ways of measuring progress toward complete satisfaction. |
+| **Contract asset / liability** | Revenue recognised vs amounts billed — under- vs over-billing. |
+
+### Sample MCQs — KA 2.2
+
+**MCQ 2.2-A `[2.2.6 · Application]`** A contract has a price of USD 12,000,000 and total estimated cost of USD
+9,600,000. Cumulative cost to date is USD 5,400,000. Under the cost-to-cost method, cumulative revenue is:
+- A. USD 5,400,000
+- B. USD 6,750,000 ✅
+- C. USD 6,000,000
+- D. USD 7,000,000
+
+*Rationale:* `PoC = 5,400,000/9,600,000 = 56.25 %`; `cumulative revenue = 56.25 % × 12,000,000 = 6,750,000`.
+A confuses cost with revenue; C and D use the wrong PoC.
+
+**MCQ 2.2-B `[2.2.7 · Analysis]`** At a year-end, cumulative revenue recognised is USD 6,750,000 and
+cumulative amounts billed are USD 7,000,000. The contract shows:
+- A. A contract asset of USD 250,000.
+- B. A contract liability of USD 250,000. ✅
+- C. A receivable of USD 6,750,000.
+- D. Nil, since both exceed USD 6m.
+
+*Rationale:* Billing exceeds revenue by USD 250,000 — the customer has been billed ahead of performance, a
+**contract liability**. A reverses the direction; C mislabels the position; D ignores the difference.
+
+**MCQ 2.2-C `[2.2.4 · Analysis]`** An all-or-nothing completion bonus of USD 500,000 has an assessed 80 %
+chance of being earned; management judges a significant reversal is *not* highly improbable. The transaction
+price should:
+- A. Include the full USD 500,000.
+- B. Include USD 400,000 (80 %).
+- C. Exclude the bonus until it becomes highly probable. ✅
+- D. Include USD 250,000 (half).
+
+*Rationale:* The constraint excludes variable consideration unless a significant reversal is highly
+improbable; at 80 % management has judged it is not, so the bonus is excluded until that threshold is met.
+B applies expected value to a binary outcome and ignores the constraint; A and D breach the constraint.
+
+**MCQ 2.2-D `[2.2.5 · Application]`** A bundle priced at USD 10,000,000 comprises items with standalone
+selling prices of 1,000,000 / 8,000,000 / 1,500,000. The amount allocated to the USD 8,000,000 item is:
+- A. USD 8,000,000
+- B. USD 7,619,048 ✅
+- C. USD 7,500,000
+- D. USD 8,400,000
+
+*Rationale:* Allocation factor `10,000,000/10,500,000 = 0.952381`; `8,000,000 × 0.952381 = 7,619,048`. A
+ignores the bundle discount; C and D miscompute the pro-rata share.
+
+**MCQ 2.2-E `[2.2.6 · Recall]`** Which condition, on its own, is sufficient for revenue to be recognised
+*over time*?
+- A. The contract lasts more than 12 months.
+- B. The entity's performance creates an asset the customer controls as it is created. ✅
+- C. The customer has paid a deposit.
+- D. The entity expects to make a profit.
+
+*Rationale:* Over-time recognition needs any one of the three IFRS 15 criteria; "asset the customer controls
+as created" is one. Contract length, deposits and expected profit are irrelevant to the over-time test.
+
+### Self-check — KA 2.2
+
+1. List the five steps of the IFRS 15 model. *(Identify contract; identify performance obligations; determine
+   transaction price; allocate; recognise as/when satisfied.)*
+2. A contract's cost estimate is revised upward mid-life. How is the change handled? *(Prospectively — as a
+   change in estimate; PoC is re-struck on the new total cost, with a catch-up in the current period; prior
+   periods are not restated. If total cost now exceeds price, recognise the whole loss immediately per IAS
+   37.)*
+3. Distinguish a contract asset from a receivable. *(A contract asset is a conditional right to consideration
+   for work performed but not yet billed; a receivable is an unconditional right — only time stands between it
+   and payment.)*
+
+---
+
+## Knowledge Area 2.3 — Revenue recognition beyond the basics
+
+*Topics: 2.3.1 principal vs agent · 2.3.2 bundled goods and services · 2.3.3 linking revenue to billing and
+the BoQ.*
+
+### 2.3.1 Principal versus agent
+
+**Definition & purpose.** When another party is involved in providing goods or services to a customer, the
+entity must decide whether it is a **principal** (it controls the good/service before transfer, and
+recognises **gross** revenue) or an **agent** (it arranges for another party to provide it, and recognises
+only the **net** fee/commission). The test is **control** before transfer, indicated by the entity being
+primarily responsible for fulfilment, bearing inventory/price risk, and having discretion over pricing.
+
+**Why it matters.** The principal/agent call does not change *profit*, but it dramatically changes reported
+**revenue** — and therefore every margin percentage and revenue-based KPI a controls professional reports. A
+contractor that sub-lets a package may be principal (gross) if it controls and is responsible for that scope,
+or agent (net) if it merely arranges it. Mislabelling inflates or deflates headline revenue.
+
+**Worked example 2.3.1 — gross vs net.** A firm arranges USD 2,000,000 of specialist works performed by a
+subcontractor, adding a **10 %** margin, billing the client **USD 2,200,000**.
+- **As principal** (controls the works, responsible for delivery): revenue **2,200,000**, cost of sales
+  **2,000,000**, gross profit **200,000**.
+- **As agent** (merely arranges): revenue **200,000** (the net fee), no sub-let cost of sales, profit
+  **200,000**.
+Profit is 200,000 either way; reported revenue differs by USD 2,000,000, and gross margin reads 9.1 % vs
+100 %. The classification must reflect who controls the works.
+
+### 2.3.2 Bundled goods and services
+
+**The principle.** Where a contract bundles goods and services (equipment plus installation plus support), the
+entity applies step 2 (are the promises distinct?) and step 4 (allocate by SSP) from KA 2.2. The controls
+relevance is that a single "turnkey" price often contains several performance obligations recognised on
+different patterns — a nuance that a naïve "recognise as billed" approach misses.
+
+### 2.3.3 Linking revenue to billing and the BoQ
+
+**The principle.** Revenue (IFRS 15, performance-based) and billing (contractual, often milestone- or
+valuation-based against a **bill of quantities**) are different measures that must be **reconciled** — the
+reconciliation *is* the contract asset/liability (2.2.7). This KA is the accounting hinge to the commercial
+cycle: BoQ pricing and interim valuations are developed in Domain 7 (KAs 7.3–7.5), and the over-/under-billing
+position ties revenue recognition to the cash the project actually draws.
+
+### Key terms — KA 2.3
+
+| Term | Meaning |
+|---|---|
+| **Principal** | Controls the good/service before transfer; recognises gross revenue. |
+| **Agent** | Arranges for another to provide; recognises net fee/commission. |
+| **Gross vs net revenue** | Whole consideration vs only the entity's margin/fee. |
+| **Bundle** | Multiple promises in one contract, allocated by SSP and recognised on their own patterns. |
+
+### Sample MCQs — KA 2.3
+
+**MCQ 2.3-A `[2.3.1 · Analysis]`** A firm bills a client USD 2,200,000 for subcontracted works costing USD
+2,000,000, on which it added a 10 % margin. If it is an **agent**, it recognises revenue of:
+- A. USD 2,200,000
+- B. USD 2,000,000
+- C. USD 200,000 ✅
+- D. USD 220,000
+
+*Rationale:* An agent recognises only its net fee — USD 200,000. A is the gross (principal) figure; B is the
+subcontract cost; D miscomputes the margin.
+
+**MCQ 2.3-B `[2.3.1 · Recall]`** The key indicator that an entity is a *principal* is that it:
+- A. Issues the invoice to the customer.
+- B. Controls the good or service before it is transferred to the customer. ✅
+- C. Earns a margin on the transaction.
+- D. Is larger than the other party.
+
+*Rationale:* Control before transfer is the determining principle. Invoicing, earning a margin and relative
+size are not determinative.
+
+### Self-check — KA 2.3
+
+1. Why does the principal/agent classification matter if profit is unchanged? *(It changes reported revenue
+   and every margin/KPI derived from it, even though profit is identical.)*
+2. What accounting figure *is* the reconciliation between revenue and billing? *(The contract asset or
+   contract liability.)*
+
+---
+
+## Knowledge Area 2.4 — Other relevant standards for project controls
+
+*Topics: 2.4.1 IAS 2 inventories/WIP · 2.4.2 IAS 16 property, plant & equipment · 2.4.3 IFRS 16 leases ·
+2.4.4 IAS 23 borrowing costs · 2.4.5 IAS 37 (recap) · 2.4.6 IAS 11 legacy context — why IFRS 15 superseded
+it.* Each is kept to principle + project relevance + a short example.
+
+### 2.4.1 IAS 2 — Inventories
+
+**Principle & relevance.** **IAS 2** requires inventories to be measured at the **lower of cost and net
+realisable value (NRV)**. Cost includes purchase, conversion and other costs of bringing inventory to its
+present location and condition; NRV is the estimated selling price less costs to complete and sell. For
+project controls this touches **materials on site** and any **work in progress** not accounted for under
+IFRS 15 — and the NRV test is a reason unused/obsolete materials may be written down.
+
+**Short example.** Materials cost USD 300,000; due to a design change their NRV is USD 220,000. Inventory is
+written down to **220,000**, an **80,000** expense — a cost a controls professional should anticipate when a
+change strands committed materials.
+
+### 2.4.2 IAS 16 — Property, plant and equipment
+
+**Principle & relevance.** **IAS 16** requires items of property, plant and equipment to be **capitalised** at
+cost (purchase price plus directly attributable costs of getting the asset ready for use) and **depreciated**
+over their useful lives (Domain 1, KA 1.3.4), with residual value and useful life reviewed periodically.
+Subsequent costs are capitalised only if they meet the asset-recognition criteria; routine repairs are
+expensed. The **capitalise-vs-expense** judgement directly affects both the balance sheet and the profile of
+cost hitting the project's profit.
+
+**Short example.** A USD 24,000 machine plus USD 2,000 of installation is capitalised at **26,000** and
+depreciated; a later USD 1,500 routine service is **expensed**.
+
+### 2.4.3 IFRS 16 — Leases
+
+**Principle & relevance.** **IFRS 16** brings most leases **on balance sheet** for the lessee: a
+**right-of-use asset** and a corresponding **lease liability** are recognised, the asset depreciated and the
+liability unwound with interest — replacing the old "operating lease = off balance sheet" treatment. For
+project-based businesses with substantial leased plant, equipment and site accommodation, this materially
+affects assets, liabilities, gearing and the split of cost between depreciation and finance cost.
+
+**Short example.** A 5-year plant lease with payments giving a present value of **USD 1,000,000** is recognised
+as a right-of-use asset and lease liability of **USD 1,000,000**; the asset depreciates over 5 years while the
+liability accrues interest and reduces as payments are made.
+
+### 2.4.4 IAS 23 — Borrowing costs
+
+**Principle & relevance.** **IAS 23** requires **borrowing costs directly attributable to the acquisition,
+construction or production of a qualifying asset** (one that necessarily takes a substantial period to get
+ready for use) to be **capitalised** as part of the asset's cost; other borrowing costs are expensed. On large
+capital projects this can capitalise significant interest into the asset rather than charging it to profit
+during construction.
+
+**Worked example 2.4.4 — capitalise borrowing costs.**
+
+1. **Setup.** A qualifying asset is under construction for a full year; the **weighted-average expenditure**
+   during the year is **USD 4,000,000**, funded by borrowings at **8 %**.
+2. **Formula.** `Capitalised borrowing cost = weighted-average qualifying expenditure × capitalisation rate`.
+3. **Substitution.** `4,000,000 × 8 % = 320,000`.
+4. **Result.** **USD 320,000** of interest is **added to the asset's cost** (not expensed this year).
+5. **Interpretation.** During construction, interest becomes part of the asset and is later depreciated,
+   rather than hitting current profit — a real difference to the reported cost profile of a capital project.
+
+### 2.4.5 IAS 37 — Provisions (recap)
+
+**Principle & relevance.** Fully developed in Domain 1, KA 1.4 — provisions (present obligation from a past
+event, probable outflow, reliable estimate), contingencies (disclose, don't recognise), onerous contracts
+(recognise the loss immediately), measurement by best estimate/expected value and discounting. It reappears
+here because it is the standard behind the **contract-loss** rule in IFRS 15 over-time recognition (2.2.6).
+
+### 2.4.6 IAS 11 — legacy context, and why IFRS 15 superseded it
+
+**Principle & relevance.** **IAS 11 (construction contracts)** was the pre-IFRS-15 standard governing
+long-term construction revenue, using a **percentage-of-completion** approach broadly similar in *arithmetic*
+to the cost-to-cost method in 2.2.6. IFRS 15 **superseded** IAS 11 to bring construction into a **single,
+control-based revenue model** applied consistently across all industries — replacing a
+"percentage-of-completion by default" rule with the **over-time-if-criteria-met** test (2.2.6). In practice a
+typical construction contract that met IAS 11's percentage-of-completion still recognises over time under
+IFRS 15, but the *reasoning* now runs through control and enforceable rights to payment, and the disclosures
+and the treatment of variable consideration and modifications are more rigorous. A controls professional
+reading older references or legacy contracts should recognise IAS 11 terminology but apply the IFRS 15 model.
+
+### Key terms — KA 2.4
+
+| Term | Meaning |
+|---|---|
+| **IAS 2 / NRV** | Inventories at the lower of cost and net realisable value. |
+| **IAS 16 / capitalise** | PPE recognised at cost and depreciated; capitalise vs expense judgement. |
+| **IFRS 16 / right-of-use** | Most leases on balance sheet as a right-of-use asset and lease liability. |
+| **IAS 23 / qualifying asset** | Capitalise borrowing costs directly attributable to a qualifying asset. |
+| **IAS 11 (legacy)** | Former construction-contract standard, superseded by IFRS 15. |
+
+### Sample MCQs — KA 2.4
+
+**MCQ 2.4-A `[2.4.4 · Application]`** Weighted-average qualifying expenditure on a project under construction
+all year is USD 4,000,000, funded at 8 %. Borrowing costs to capitalise are:
+- A. USD 0 — all interest is expensed.
+- B. USD 320,000 ✅
+- C. USD 4,000,000
+- D. USD 32,000
+
+*Rationale:* `4,000,000 × 8 % = 320,000`, capitalised into the qualifying asset under IAS 23. A ignores the
+standard; C confuses expenditure with cost; D misplaces a decimal.
+
+**MCQ 2.4-B `[2.4.3 · Recall]`** Under IFRS 16, a lessee typically recognises:
+- A. Nothing until payments are made.
+- B. Only a footnote disclosure.
+- C. A right-of-use asset and a lease liability. ✅
+- D. Rent expense only, straight-line.
+
+*Rationale:* IFRS 16 brings most leases on balance sheet as a right-of-use asset and lease liability. D and A
+describe the superseded operating-lease treatment; B understates the requirement.
+
+**MCQ 2.4-C `[2.4.1 · Application]`** Materials cost USD 300,000; after a design change their net realisable
+value is USD 220,000. Under IAS 2 they are carried at:
+- A. USD 300,000
+- B. USD 260,000
+- C. USD 220,000 ✅
+- D. USD 80,000
+
+*Rationale:* Lower of cost (300,000) and NRV (220,000) = **220,000**, with an 80,000 write-down. A ignores
+the NRV test; B averages; D is the write-down, not the carrying amount.
+
+### Self-check — KA 2.4
+
+1. State the IAS 2 measurement rule. *(Lower of cost and net realisable value.)*
+2. What does IAS 23 require for interest on a qualifying asset under construction? *(Capitalise directly
+   attributable borrowing costs into the asset's cost.)*
+3. Why did IFRS 15 supersede IAS 11? *(To bring construction into a single control-based revenue model
+   applied consistently across industries, replacing the percentage-of-completion-by-default rule.)*
+
+---
+
+## Knowledge Area 2.5 — Management reporting versus statutory reporting
+
+*Topics: 2.5.1 the two reporting worlds · 2.5.2 reconciling management to statutory numbers · 2.5.3 what a
+controls professional owns.*
+
+### 2.5.1 The two reporting worlds
+
+**Definition & purpose.** **Statutory (external) reporting** is the standards-compliant, audited, historical
+account prepared for outside users under IFRS/GAAP — comparable, verifiable, and constrained by the rules in
+this domain. **Management (internal) reporting** is prepared for decision-makers inside the entity: it is
+**flexible** (structured by project, cost element, control account — Domain 1, KA 1.5), **timely** (weekly or
+monthly, not annual), and **forward-looking** (forecasts, run-rates, EAC — Domains 3 and 6). A controls
+professional lives mostly in the second world but must understand how it ties to the first.
+
+| Dimension | Statutory | Management |
+|---|---|---|
+| Audience | External (investors, lenders, regulators) | Internal (project boards, executives) |
+| Framework | IFRS / local GAAP, audited | Whatever informs the decision |
+| Orientation | Historical | Historical **and** forecast |
+| Cadence | Periodic (annual, half-year, quarterly) | Frequent (weekly/monthly) |
+| Structure | By statement/note | By project, WBS, control account, cost element |
+
+### 2.5.2 Reconciling management to statutory numbers
+
+**The principle.** The two must **reconcile** — the same underlying ledger produces both. A project's
+management cost-to-date should tie to the statutory cost of sales for that work; management "revenue" (often
+value earned/certified) should reconcile to IFRS 15 revenue via the contract asset/liability (2.2.7). Where
+they differ, the difference should be *explained* (timing, accruals, provisions, capitalisation), not
+ignored. A recurring reconciliation discipline is what stops the "two sets of numbers" problem in which the
+board hears one figure from finance and another from the project.
+
+### 2.5.3 What a controls professional owns
+
+**The professional angle.** The controls professional typically **owns the management view and its
+reconciliation to the statutory view** — ensuring cost is coded correctly (1.5), accruals and cut-off are
+right (1.3), provisions and contract losses are flagged (1.4, 2.2.6), and revenue-vs-billing is understood
+(2.2.7). Doing this well means the statutory close is faster and less surprising, and the management reports
+the business steers by are consistent with what it will eventually report externally.
+
+**AI in this KA.** AI assists by automating the *reconciliation and commentary*: matching management and
+statutory balances, flagging unexplained differences, and drafting variance narratives for management packs
+(cross-ref Domain 4, KA 4.3–4.4). The professional owns the explanation and the sign-off — a drafted
+narrative that misattributes a difference (calling a timing accrual a "cost overrun") can mislead a board.
+**AI proposes, the professional disposes.**
+
+### Key terms — KA 2.5
+
+| Term | Meaning |
+|---|---|
+| **Statutory reporting** | Standards-compliant, audited external reporting. |
+| **Management reporting** | Internal, flexible, timely, forward-looking reporting. |
+| **Reconciliation** | Explaining the tie between the two views from one ledger. |
+
+### Sample MCQs — KA 2.5
+
+**MCQ 2.5-A `[2.5.1 · Recall]`** Which is a distinguishing feature of *management* (vs statutory) reporting?
+- A. It must comply with IFRS.
+- B. It is audited annually.
+- C. It is flexible, frequent and forward-looking. ✅
+- D. It is only historical.
+
+*Rationale:* Management reporting is tailored, timely and forecast-oriented. Compliance and audit
+characterise statutory reporting; being "only historical" describes statutory, not management, reporting.
+
+**MCQ 2.5-B `[2.5.2 · Analysis]`** A project's management revenue (value earned) differs from its IFRS 15
+statutory revenue. The most appropriate response is to:
+- A. Adjust the management figure to match, always.
+- B. Reconcile and explain the difference (e.g. via the contract asset/liability and timing). ✅
+- C. Report only the statutory figure.
+- D. Treat them as unrelated.
+
+*Rationale:* Both come from one ledger and should reconcile; the professional explains the difference rather
+than forcing a match, suppressing a view, or ignoring the link.
+
+### Self-check — KA 2.5
+
+1. Give three ways management reporting differs from statutory reporting. *(Audience; framework/audit;
+   orientation — historical vs forecast; cadence; structure.)*
+2. What figure typically reconciles management "value earned" to IFRS 15 revenue? *(The contract
+   asset/liability and timing/accrual differences.)*
+
+---
+
+## Domain 2 summary
+
+Financial reporting exists to give external users decision-useful information — relevant and faithfully
+represented, made comparable and verifiable — and IAS 1 governs how it is presented (going concern, accrual,
+no offsetting, comparatives). At the domain's core, **IFRS 15** recognises revenue as control of promised
+goods/services transfers, through five steps: identify the contract and the distinct performance obligations;
+determine the transaction price (estimating variable consideration and applying the constraint); allocate it
+by standalone selling price; and recognise it over time (by an input or output method) or at a point in time.
+For construction, over-time cost-to-cost recognition makes revenue and profit emerge as work is performed,
+estimate revisions flow through prospectively, a known loss is recognised immediately (IAS 37), and the gap
+between revenue and billing is a contract asset or liability. Around IFRS 15 sit the principal/agent and
+bundling questions, and the other standards a controls professional meets — IAS 2, IAS 16, IFRS 16, IAS 23,
+and the superseded IAS 11 — before the domain closes on the difference between the statutory accounts the
+standards govern and the management accounts a controls function runs on.
+
+**Cross-references.** Provisions and onerous contracts → 1.4; depreciation → 1.3.4; cost coding and control
+accounts → 1.5; budgeting and cash-flow forecasting → Domain 3; EVM and EAC feeding revenue → Domain 6;
+contract types, BoQ, interim valuations and over-/under-billing → Domain 7; change control → 5.4, 7.2;
+variance narratives and management packs → Domain 4.
+
+*Domain 2 is a first authored draft pending SME technical review before it feeds the exam blueprint.*

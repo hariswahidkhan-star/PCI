@@ -27,7 +27,7 @@ domain binds to it, so notation and depth stay consistent across the whole volum
 |---|---|---|---|
 | 0 | Style Spine (authoring standard) | [`00-style-spine.md`](00-style-spine.md) | ✅ Complete |
 | 1 | Foundations of Accounting for Project Controls | [`domain-01-foundations-of-accounting.md`](domain-01-foundations-of-accounting.md) | ✅ Draft complete |
-| 2 | Financial Reporting & the Standards (IFRS 15 flagship) | `domain-02-financial-reporting.md` | ⏳ Planned |
+| 2 | Financial Reporting & the Standards (IFRS 15 flagship) | [`domain-02-financial-reporting.md`](domain-02-financial-reporting.md) | ✅ Draft complete |
 | 3 | Budgeting & Forecasting | `domain-03-budgeting-forecasting.md` | ⏳ Planned |
 | 4 | Performance Management, Variance Analysis & Reporting | `domain-04-performance-variance-reporting.md` | ⏳ Planned |
 | 5 | Cost Management & Cost Control | `domain-05-cost-management.md` | ⏳ Planned |
