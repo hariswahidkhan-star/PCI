@@ -901,6 +901,53 @@ seconds — but the professional owns the assumptions behind it (Domain 13, KA 1
 
 ---
 
+## Executive perspective — Domain 9
+
+**What the executive must hold onto.** Agile inverts the iron triangle: time and cost are fixed — a funded
+cadence of Sprints — and **scope flexes** to fit, so "is it on the original scope?" is the wrong question;
+the right one is what value the fixed capacity will deliver by the fixed date (KA 9.3). Cost control in
+this world is a **run-rate**: the budget buys whole Sprints of a stable team, and the forecast is how many
+Sprints the remaining work needs against how many the remaining money buys (KA 9.5). AgileEVM gives the
+board the familiar `CPI`/`SPI`/`EAC` language — but its numbers hold only against a defined release scope
+and `BAC`, and every deliberate scope change must be **rebaselined transparently**, not absorbed silently.
+
+**Six questions to ask from the chair.**
+
+1. What value will the fixed capacity deliver by the fixed date — and which items are explicitly dropping
+   to the Won't-have list?
+2. Is this forecast a range or a point, and what velocity assumptions bracket it?
+3. When scope was added, was the `BAC` rebaselined transparently — or are we still reporting progress
+   against the old total?
+4. What is the actual burn per Sprint against the funded rate, and how many whole Sprints does the
+   remaining budget really buy?
+5. Is the burnup's total-scope line moving, and who approved each movement?
+6. How do story-point `%` complete, cost-to-cost `%` and the billing position reconcile this period —
+   and what explains the gaps?
+
+**The traps at board level.**
+
+- **Velocity treated as comparable — or as a target.** Story points are a relative, team-specific measure;
+  comparing velocity across teams is meaningless, and setting it as a target simply inflates the estimates
+  it is built from.
+- **Hybrid programmes reported in two untranslated languages.** Earned value on the predictive scope and
+  velocity on the adaptive scope must be reconciled into one programme position — or, worse, the agile work
+  is forced into a false fixed baseline to look governable (KA 9.6).
+- **The burndown that hides added scope.** A burndown to zero conceals a rising total; the burnup's moving
+  scope line is what keeps "on track" honest when scope is deliberately flexed.
+- **Smooth arithmetic missing whole-Sprint cash.** Capacity is bought in whole Sprints — a forecast that
+  lets the release stop mid-Sprint understates the cash a partial final Sprint still costs.
+
+**What good looks like.** Gates hear the adaptive work in the language they govern by — value delivered to
+the Definition of Done, run-rate, and a ranged forecast with each method's assumption attached — without
+the work being forced into a fixed-scope fiction. Scope change is routine and visible: the burnup's total
+line moves, the `BAC` is rebaselined on the record, and the Product Owner's re-prioritisation shows which
+value was traded away. The backlog, Sprint records and rebaselining decisions form a contemporaneous audit
+trail that assurance can walk without translation. And when capacity and ambition diverge, the board
+chooses between funding, descoping and stopping at a viable increment — with each option priced, because
+scope is the honest lever.
+
+---
+
 ## Domain 9 summary
 
 Adaptive delivery rests on an **empirical mindset** — transparency, inspection, adaptation — and inverts the
