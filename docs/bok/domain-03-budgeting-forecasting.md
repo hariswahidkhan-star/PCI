@@ -52,6 +52,21 @@ it. A budget nobody is accountable to, or that is never compared to actuals, is 
 In practice most project budgets are **bottom-up against a top-down affordability constraint** — the two are
 reconciled, and the gap is where scope, contingency or ambition is adjusted.
 
+**Worked example 3.1.2 — reconciling bottom-up to a top-down constraint.**
+
+1. **Setup.** The bottom-up estimate totals **USD 10,600,000**; the sponsor's affordability limit is **USD
+   10,000,000** — a **USD 600,000** gap.
+2. **Formula.** Close the gap through explicit, owned decisions — descoping, value engineering, and a
+   risk-based contingency review — never by silently shaving numbers.
+3. **Substitution.** Deferred scope (a non-essential phase-2 fit-out) **(250,000)**; value engineering
+   (respecified materials at equal function) **(200,000)**; contingency re-derived after mitigations (Domain
+   12) **(150,000)** → total **(600,000)**.
+4. **Result.** A reconciled budget of **USD 10,000,000**, with every reduction traceable to a decision and an
+   owner in the basis of estimate (3.2.3).
+5. **Interpretation.** The reconciliation IS the value of meeting in the middle — the gap is closed by visible
+   trade-offs the sponsor approves, not by optimism. A budget cut without a matching scope/risk decision is
+   simply a future overrun booked early.
+
 ### 3.1.3 The project budget baseline
 
 **Definition & purpose.** The **cost baseline** (also **performance measurement baseline**, PMB, on its cost
@@ -208,6 +223,17 @@ commitments.
    work-package build-up — a reviewer can challenge the hours, the rate or the materials allowance, not just
    the total. And it is reported **with its class and range**, not as a bare point, consistent with the
    discipline of 3.2.1.
+
+**3.2.2c Sector mini-case — a data-centre estimate maturing through the classes.**
+
+A hyperscale data-centre programme illustrates the estimate journey of 3.2.1. At concept (**Class 5**), a
+capacity-scaled figure of **USD 50m** carries roughly **−30 %/+50 %** (≈ USD 35m–75m) — and is quoted to the
+board *with* that range. After feasibility (**Class 3**), improved definition supports **USD 58m** at
+**−15 %/+20 %** (**USD 49.3m–69.6m**). At the definitive stage (**Class 1**), the bottom-up estimate is **USD
+61m** at **−8 %/+8 %** (**USD 56.1m–65.9m**). The point is that the estimate did not "grow" from 50m to 61m —
+the **range narrowed** as definition matured, and the final figure sits inside every earlier range.
+Presenting each stage with its class and range (3.2.1) is what prevented the concept figure being treated as
+a commitment — the false-precision pitfall of quoting an early point number without its band.
 
 ### 3.2.3 The basis of estimate (BoE)
 
@@ -545,6 +571,22 @@ the project can be **funded**, not merely *shown to be profitable*.
    **without changing profit** — it is pure timing. Conversely, higher retention or longer client payment
    terms would deepen the trough (3.5.3). This is why the funding trough is a **lever** a controls/commercial
    professional actively manages — through advances, terms, retention and billing cadence — not a fixed fact.
+
+**Worked example 3.5.2c — retention's effect on the same forecast.**
+
+1. **Setup.** Take the base forecast of worked example 3.5.2 (receipts {220, 330, 330, 220, 110} in Months
+   2–6; trough **(280,000)** at Month 2; final cumulative cash **+110,000**). The client now withholds **10 %
+   retention** on every receipt, released only after the defects period — beyond this six-month window.
+2. **Formula.** `Withheld each month = 10 % × receipt`; the cumulative cash curve falls by the cumulative
+   amount withheld.
+3. **Substitution.** Withheld = {22, 33, 33, 22, 11} (USD 000) = **121** in total. By the end of Month 2 only
+   the Month-2 receipt of 220 has arrived, so cumulative withheld = 22 → trough = (280) − 22 = **(302)**. By
+   Month 6, cumulative withheld = 121, so closing cash = 110 − 121 = **(11)**.
+4. **Result.** The trough deepens to **(USD 302,000)** and the job ends the window **cash-negative at
+   (USD 11,000)** despite its USD 110,000 profit — the profit is locked in retention until release.
+5. **Interpretation.** Retention converts profit into a deferred receivable (Domain 7, KA 7.4.3b); the
+   forecast must model its release explicitly or the job appears to "lose" cash it has actually earned.
+   Retention and payment terms are the two heaviest levers on the funding trough (3.5.3).
 
 ### 3.5.3 The funding requirement and its drivers
 
