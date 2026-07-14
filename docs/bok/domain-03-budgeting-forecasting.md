@@ -651,6 +651,152 @@ on a profitable job. Depreciation is non-cash; tax and reserves are not the core
 
 ---
 
+## Case study — Domain 3: budgeting and forecasting an offshore-wind package (energy)
+
+### Background
+
+A developer is building an offshore-wind farm, and this case follows one of its critical-path packages:
+the **onshore substation** — the civils, structures, electrical plant and commissioning work that connect
+the export cable to the grid. The package is let to a contractor whose project controls team must do, in
+order, everything this domain teaches: **assemble** an authorised budget with its reserves correctly placed
+(KA 3.1), **phase** that budget across the schedule into the Planned Value curve (KA 3.3), **forecast**
+honestly when performance data starts to disagree with the plan (KA 3.4), keep the **cash** consequences in
+view alongside the cost ones (KA 3.5), and manage the **reserves** with discipline when the forecast
+overruns them (KAs 3.1.4 and 12.3). The numbers are simplified but the sequence — and the decisions at each
+step — are exactly what the credential expects a professional to walk through end-to-end.
+
+### Assembling the budget (KA 3.1)
+
+The estimate is bottom-up (3.2.2), built from a defined WBS and recorded in a basis of estimate (3.2.3).
+The **control-account budgets** total **USD 14,000,000**. The project's quantified risk register (Domain 12)
+is run through a Monte Carlo simulation, and the sponsor's policy is to fund contingency at the **P80**
+confidence level: a **contingency reserve of USD 1,200,000**. Because contingency covers *identified* risks,
+it sits **inside** the cost baseline, under the project manager's control. The sponsor separately holds a
+**management reserve of USD 800,000** for unknown-unknowns — **outside** the baseline, released only through
+change control (Domain 5, KA 5.4).
+
+| Component | USD | Position |
+|---|---:|---|
+| Control-account budgets | 14,000,000 | Inside the baseline |
+| Contingency reserve (Monte Carlo P80) | 1,200,000 | Inside the baseline |
+| **Cost baseline → `BAC`** | **15,200,000** | The earned-value baseline |
+| Management reserve | 800,000 | Outside the baseline |
+| **Total authorised budget** | **16,000,000** | |
+
+The **P80** deserves a sentence, because it is where Domain 3 meets Domain 12. Funding contingency at P80
+means the simulation says there is an 80 % chance the identified risks will cost no more than the funded
+amount — and, by the same token, a 20 % chance they will cost more. The sponsor chose that confidence level
+deliberately: funding to P50 would make contingency exhaustion an even-money bet, while funding to P95 would
+tie up capital the portfolio needs elsewhere. The reserve is therefore *expected* to be drawn on, and *may*
+legitimately be exceeded — which is exactly the situation this case will reach, and why the escalation route
+in the final section exists by design rather than as an admission of failure.
+
+In waterfall terms (Fig 3.1.1's pattern): control accounts 14,000,000 + contingency 1,200,000 = **`BAC`
+15,200,000** *inside* the baseline; + management reserve 800,000 = **total budget 16,000,000**, with the
+final step *outside* the baseline. Every `CPI`, `EAC` and `VAC` that follows is measured against the
+15,200,000 — never the 16,000,000. Blurring that boundary is the classic error of 3.1.4: it either hides
+funds the project is entitled to draw, or corrupts every variance reported from here on.
+
+### Phasing the baseline (KA 3.3)
+
+The 15,200,000 is then spread across the 12-month schedule to an S-curve: a slow start while the site
+mobilises and piling begins, a steep middle through peak civils and electrical installation, and a taper
+through testing and commissioning. The phasing came **from the resource-loaded schedule, not a straight
+line** — so any early variance against it will mean performance, not a phasing artefact (the trap of MCQ
+3.3-B). The monthly plan (USD 000):
+
+| Month | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Monthly PV | 400 | 700 | 1,100 | 1,500 | 1,800 | 1,800 | 1,900 | 1,750 | 1,450 | 1,150 | 900 | 750 |
+| Cumulative PV | 400 | 1,100 | 2,200 | 3,700 | 5,500 | 7,300 | 9,200 | 10,950 | 12,400 | 13,550 | 14,450 | 15,200 |
+
+Monthly values sum to **15,200** (= `BAC`). ✓ By the end of **Month 6** the plan says `PV` =
+**USD 7,300,000** should have been accomplished. Because the phasing is honest, the Month 6 comparison that
+follows is meaningful: had the baseline been straight-lined at 15,200/12 ≈ 1,267 per month, the plan would
+have claimed `PV` = 7,600,000 at Month 6 and part of the apparent shortfall would have been an artefact of
+lazy phasing rather than of the contractor's performance. That cumulative curve is the canvas on which the
+next section draws `EV` and `AC`.
+
+### The forecast at Month 6 (KA 3.4)
+
+At the Month 6 data date, progress measurement (Domain 4) and the cost ledger report trouble: piling
+productivity is below tender assumptions and electrical materials prices have risen.
+
+1. **Setup.** `BAC` = **USD 15,200,000**; at Month 6, `PV` = **7,300,000**, `EV` = **USD 7,000,000**
+   earned, `AC` = **USD 7,900,000** spent.
+2. **Formula.** `CPI = EV / AC`; `EAC = BAC / CPI` (method (b) — the variance is judged typical);
+   `VAC = BAC − EAC`.
+3. **Substitution.** `CPI = 7,000,000 / 7,900,000 = 0.8861 ≈ 0.89`; `EAC = 15,200,000 / 0.8861 ≈
+   17,154,000`; `VAC = 15,200,000 − 17,154,000 = (1,954,000)`.
+4. **Result.** **`EAC` ≈ USD 17,154,000** — a projected overrun of **USD 1,954,000** against the baseline.
+5. **Interpretation.** Why the persisting-`CPI` method? Because of the **trend**: `CPI` has read **0.94,
+   0.91, 0.89** over the last three months (3.4.3). A single soft month could be timing noise; three
+   consecutive readings moving the same way point to a **systemic** driver — ground conditions and market
+   prices that will keep applying to the remaining work — so assuming the variance is atypical (method (a))
+   would be optimism, not analysis. The professional chooses the assumption that matches the *cause* of the
+   variance and defends it (Domain 6, KA 6.3.3). The forecast's value is that it lands at Month 6, while
+   there is still time to act — not at Month 12, as a post-mortem.
+
+### Cash and funding (KA 3.5)
+
+The same Month 6 review re-runs the cash-flow forecast, because cost and cash are different questions
+(3.5.1). The contract pays on **45-day terms** with **5 % retention** withheld until the defects period:
+the contractor pays labour weekly and suppliers monthly, but collects certified billing a month and a half
+later, and 5 % of every certificate later still. The cash model shows a **peak funding requirement of
+USD 3,400,000 at Month 7** — the deepest point of the cumulative cash curve, sitting just after the spend
+peak of the S-curve, where outflows have crested but the matching receipts are still in transit. Crucially,
+the cost overrun **worsens the trough**: every month of `CPI` at 0.89 means more cash paid out for the same
+certified billing, so the funding requirement deepens even though the client-side flows are unchanged. The
+treasury facility is therefore **re-confirmed alongside the `EAC`** — the controls team reports the revised
+cost forecast and the revised funding trough in the same review, because a project that arranges finance for
+the baseline trough and then overruns its costs discovers the profitable-but-unfunded trap of 3.5.3 in the
+worst possible month. The levers of 3.5.3 are also on the table: the commercial team examines whether
+milestone billing can be brought forward or supplier terms extended to lift the curve, while the downside
+scenario — the client slipping certification by a month while `CPI` stays at 0.89 — is modelled explicitly
+so the facility headroom covers it. Cost and cash forecasts move together, not separately.
+
+### The reserves decision (KAs 3.1.4, 12.3)
+
+Now the budgeting discipline of KA 3.1 is tested. The projected overrun is **USD 1,954,000**. Of the
+original 1,200,000 contingency, **USD 350,000** has already been drawn against register risks that
+materialised earlier in the job, leaving `1,200,000 − 350,000 = ` **USD 850,000** available. The `VAC`
+therefore **exceeds the remaining contingency**, and the response comes in two disciplined steps:
+
+1. **Draw the remaining contingency — legitimately.** The **850,000** is drawn against the materialised
+   register risks it exists to cover — the ground-conditions and materials-price risks were both *identified*
+   risks, quantified in the Monte Carlo model that set the P80 in the first place. This is contingency doing
+   its job: drawn down inside the baseline, under the project manager's authority, logged against specific
+   register entries (Domain 12, KA 12.3). Uncovered balance: `1,954,000 − 850,000 = ` **USD 1,104,000**.
+2. **Take the uncovered balance to the sponsor — visibly.** The **1,104,000** cannot be absorbed silently.
+   It goes to the sponsor as a **re-baselining case** through change control (Domain 5, KA 5.4): a request to
+   release management reserve of up to **800,000** against genuinely unforeseen severity, plus a
+   **scope/value-engineering review** to close the remainder of `1,104,000 − 800,000 = ` **≈ USD 304,000** —
+   respecified equipment, resequenced commissioning, or descoped non-essential work, each a visible, owned
+   decision in the pattern of worked example 3.1.2.
+
+The discipline matters more than the arithmetic. **Contingency draw-down is normal** — it was funded at P80
+precisely because risks were expected to materialise. **Exceeding it is a re-baselining event** — a formal,
+visible change that resets the `BAC` so future variances stay meaningful, never a silent overspend smeared
+across the remaining control accounts (Domain 12, KA 12.3.3). A team that quietly books the overrun without
+the sponsor conversation has not saved the project embarrassment; it has destroyed the baseline's integrity
+and everyone's ability to trust the next forecast.
+
+### What the credential expects
+
+This case is the Domain 3 chain in one pass. The candidate should be able to: assemble the budget with
+**contingency inside and management reserve outside** the baseline, and state why `CPI` is measured against
+15,200,000, not 16,000,000 (3.1.4); explain that the phased baseline *is* `PV`, and that its S-curve shape
+must come from the schedule (3.3); compute `CPI`, `EAC` and `VAC` from a status, and **defend the choice of
+EAC method from the trend**, not pick a formula mechanically (3.4.2–3.4.3, Domain 6); read the **peak
+funding requirement** and explain why a cost overrun deepens it (3.5); and run the two-step reserves
+response — draw contingency against the register, escalate the excess as a visible re-baselining case
+(3.1.4, 12.3). On the AI dimension: predictive `EAC` models and cash-collection models (Domain 13,
+KA 13.5.3) would likely have flagged both the `CPI` drift and the deepening trough a month or two earlier —
+but the professional still owns the persisting-variance assumption, the reserve arithmetic and the sponsor
+conversation. **AI proposes, the professional disposes.**
+
+---
+
 ## Domain 3 summary
 
 Budgeting turns a plan into an authorised, time-phased **cost baseline** whose total is the `BAC`, with two
