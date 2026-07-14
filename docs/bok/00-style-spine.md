@@ -178,7 +178,9 @@ Author each KA to this checklist; a KA is complete only when every applicable li
 - [ ] **A second example or mini-case** for any non-trivial topic.
 - [ ] **≥ 1 numbered figure spec** (§6) and, where motion helps, a digital-only animation storyboard.
 - [ ] **Common pitfalls / misconceptions.**
-- [ ] **"AI in this topic"** — how AI assists and its governance limits ("AI proposes, the professional disposes").
+- [ ] **"AI in this KA or domain"** — how AI assists and its governance limits ("AI proposes, the
+      professional disposes"): at least one substantive AI section per domain, plus per-KA boxes wherever
+      the AI use is distinct (Domain 13, KA 13.5 carries the systematic per-domain coverage).
 - [ ] **Key-terms box.**
 - [ ] **3–6 sample MCQs** (§8) with answers, rationales and topic/level tags.
 - [ ] **2–4 self-check questions** with answers.
