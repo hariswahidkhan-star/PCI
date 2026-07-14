@@ -555,6 +555,25 @@ persistent. The certified amount, not the applied amount, drives cash.
    professional includes the phased release in the cash-flow forecast (Domain 3, KA 3.5) rather than treating
    the job as "paid" at completion.
 
+**Advance payment and its recovery.** Many EPC and Gulf-region contracts pay the contractor a **mobilisation
+advance** — commonly **5–15 % of the contract price**, secured by the advance-payment bond of 7.2.4 — before
+significant work is measured. The advance is then **recovered pro-rata** as a deduction on each interim
+certificate, typically `recovery = advance % × gross value certified this period`, so the valuation cascade
+becomes gross value − retention − advance recovery − previous certificates.
+
+**Worked example 7.4.3c — recovering a mobilisation advance in the valuation.**
+
+1. **Setup.** A contract of **USD 8,000,000** pays a mobilisation advance of **10 % = USD 800,000**,
+   recovered pro-rata at 10 % of each gross certificate; retention is **5 %**. A period certificate certifies
+   gross work of **USD 500,000** (no previous deductions on this slice).
+2. **Formula.** `retention = 5 % × gross`; `advance recovery = 10 % × gross`; `net for the period = gross −
+   retention − advance recovery`.
+3. **Substitution.** Retention `= 5 % × 500,000 = 25,000`; advance recovery `= 10 % × 500,000 = 50,000`.
+4. **Result.** Net for the period `= 500,000 − 25,000 − 50,000 = 425,000`.
+5. **Interpretation.** The advance is a **loan repaid through the measure**: the cash-flow forecast
+   (Domain 3, KA 3.5) must carry both the early inflow and the reduced net certificates that repay it, and by
+   the time the advance is fully recovered the advance-payment bond steps down and is released (7.2.4).
+
 ### 7.4.4 Linking BoQ/EVM progress to billing
 
 **The professional angle.** Three progress measures must be **reconciled**, and a controls professional owns
@@ -946,6 +965,32 @@ of Domain 5 (KA 5.2.4) applied a year before anyone knew a claim was coming. And
 the fallback is a properly evidenced bottom-up build of the lost hours — never a global assertion (7.A.2).
 Pattern-finding productivity dips across coded timesheet data is a strong machine task; choosing the
 defensible mile and owning the causal story is the commercial professional's.
+
+### Advanced 7.A.6 — When agreement fails: the dispute-resolution ladder
+
+**The principle.** Most variations and claims settle through the contract machinery of 7.2.2; a **dispute**
+is what remains when they do not. Contracts arrange what happens next as an **escalating ladder**, each rung
+slower, costlier and less controllable than the one below it:
+
+- **Structured negotiation.** Commercial teams first; failing that, escalation to executives who are not
+  personally invested in the positions taken below. Cheap, fast, relationship-preserving — and where the
+  great majority of disputes end.
+- **Standing dispute boards / adjudication.** An independent board or adjudicator — appointed at the outset
+  or on referral — gives a decision that is **binding at least temporarily**: the parties must comply while
+  the underlying dispute resolves or is escalated. The design intent is to keep the project moving — a
+  decision in weeks, not years.
+- **Arbitration or litigation.** The final rung: a binding award or judgment. Final, slow and costly — and
+  by the time a claim reaches this rung, the records discipline of 7.2.2 and the claim file of Toolkit 7.T.2
+  **is** the case, because the tribunal sees only what was recorded at the time.
+
+**The controls angles.** Each rung up costs more and takes longer, so pricing settlement against escalation
+is an **expected-value decision** (Domain 12, KA 12.2.3): a probability-weighted recovery, net of the costs
+and delay of climbing, compared with the offer on the table. Disputed sums need **consistent treatment** in
+the EAC and in revenue — recognised only within the variable-consideration constraint (7.5.1), never booked
+at the claimed figure merely because the ladder exists. And the ladder changes behaviour before anyone climbs
+it: where the next rung is fast and cheap (adjudication), parties negotiate harder and settle earlier; where
+it is an arbitration years away, weak positions can be held for leverage. Securities interact too — a
+formal dispute is precisely when an on-demand bond call becomes a live risk (Advanced 7.A.3, 7.2.4).
 
 ---
 

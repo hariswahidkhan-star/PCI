@@ -63,6 +63,13 @@ against granularity:
 | **Percent complete** | Earn the assessed % complete | Longer packages; needs an objective basis |
 | **Units completed** | (units done / total units) × budget | Repetitive, measurable work (e.g. metres, welds) |
 | **Weighted milestones** | Earn defined value at each milestone | Long packages with objective interim milestones |
+| **Level of effort (LOE)** | `EV` is set equal to `PV` as time passes — it can never show schedule variance | Support work with no discrete output (e.g. project controls itself, site management) |
+
+**Level of effort earns by the calendar**, so `EV ≡ PV` and `SV = 0` by construction — it dilutes the indices
+of whatever it is mixed into, which is why formal EVMS practice keeps LOE segregated in its own work packages
+and caps its share of a control account. A baseline heavy with LOE reads healthier than it is: the same
+earning-rule integrity that guards against optimistic progress claims (this KA, and the baseline discipline of
+Advanced 6.A.1) applies to how much of the baseline is allowed to earn itself.
 
 **Worked example 6.1.2 — the same package, five methods.**
 
