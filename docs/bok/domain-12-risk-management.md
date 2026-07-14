@@ -176,7 +176,7 @@ value (EMV)**:
 EMV = probability × impact
 ```
 
-Summed across a register (assuming independence), the total EMV is a first estimate of the **contingency**
+Summed across a register — a sum that is valid whatever the correlations — the total EMV is a first estimate of the **contingency**
 needed for identified risks. For interacting risks and schedule uncertainty, **Monte Carlo simulation** (Domain
 10, KA 10.3.4) models the combined effect and gives a **distribution** — a P50 (median) and P80 outcome — that
 a single EMV sum cannot.
@@ -441,8 +441,8 @@ lightly, practice does not.*
 
 ### Advanced 12.A.1 — Correlation and portfolio risk
 
-**The principle.** The register arithmetic of 12.2.3 sums EMVs "assuming independence" — and independence
-is exactly what real registers lack, because risks share **drivers**: one monsoon sits behind both the
+**The principle.** The register arithmetic of 12.2.3 sums EMVs — valid whatever the correlations — but
+independence is exactly what real registers lack, because risks share **drivers**: one monsoon sits behind both the
 earthworks delay and the access-road washout; one overheated fabrication-and-labour market behind both the
 vendor slip and the crew shortage (the case study's R1 and R4); one client behind three contracts' payment
 risk. Independent maths makes joint occurrence look rare — two 20 % risks both landing is a 4 % event *if*

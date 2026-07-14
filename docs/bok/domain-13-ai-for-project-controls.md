@@ -654,7 +654,7 @@ rapidly; a professional chooses the **category** that fits the task, then a gove
 
 | Category | What it does | Representative tools (illustrative) | Governance note |
 |---|---|---|---|
-| **General LLM assistants** | Draft, extract, summarise, analyse text | Claude, ChatGPT, Gemini, assistant-class (e.g. Claude, ChatGPT, Gemini, Microsoft Copilot) | Confidentiality; verify outputs |
+| **General LLM assistants** | Draft, extract, summarise, analyse text | Assistant-class tools (e.g. Claude, ChatGPT, Gemini, Microsoft Copilot) | Confidentiality; verify outputs |
 | **Document / RAG & knowledge** | Answer over your documents, grounded | Enterprise RAG/search platforms | Source access control; citations |
 | **Spreadsheet / data-analysis AI** | Analyse/transform tabular data, formulas | AI features in spreadsheet/analysis tools | Check computations |
 | **BI & analytics AI** | Dashboards, NL queries over data | AI features in BI/analytics platforms | Definition/consistency of metrics |

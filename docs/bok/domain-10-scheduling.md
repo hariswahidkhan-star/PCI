@@ -337,12 +337,12 @@ critical.
 
 **Worked example 10.3.3 — resource levelling extends a duration.**
 
-- **Setup:** two 4-day activities, **C and E**, were planned in **parallel** but both need the **same single
+- **Setup:** two 4-day activities, **X and Y**, were planned in **parallel** but both need the **same single
   specialist crew** (only one available).
 - **Formula:** with one crew they must run **in sequence**; the added duration is the second activity's
   duration, constrained by available float.
-- **Substitution:** C then E in sequence adds up to **4 days** of work that cannot overlap; C has 4 days of
-  total float (from the network), so if E is the constrained one, part of the delay is absorbed by float, but
+- **Substitution:** X then Y in sequence adds up to **4 days** of work that cannot overlap; X has 4 days of
+  total float, so if Y is the constrained one, part of the delay is absorbed by float, but
   any excess pushes the finish out.
 - **Result:** resource levelling can **extend the project duration** and create a **resource-critical path**
   distinct from the logical critical path when float is exhausted.

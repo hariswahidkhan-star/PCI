@@ -433,9 +433,10 @@ because it reduces context-switching and queueing. Kanban's flow metrics (cycle 
 give a controls professional a cadence-independent way to measure and forecast adaptive work.
 
 **Worked example 9.4.1 — WIP limits and flow.** A team with no WIP limit has 15 items "in progress" and a
-cycle time of 20 days. Imposing a WIP limit of 5 focuses the team; cycle time falls to ~8 days and throughput
-rises, because items finish instead of stalling — illustrating **Little's Law** conceptually (average cycle
-time ≈ WIP ÷ throughput): cut WIP and cycle time falls for the same throughput.
+cycle time of 20 days. Imposing a WIP limit of 5 focuses the team; at the same throughput (15 ÷ 20 = 0.75
+items/day), cycle time falls to `5 ÷ 0.75 ≈ 6.7 days`, because items finish instead of stalling —
+illustrating **Little's Law** (average cycle time ≈ WIP ÷ throughput): cut WIP and cycle time falls for the
+same throughput.
 
 **Worked example 9.4.1b — Little's Law with numbers.**
 
