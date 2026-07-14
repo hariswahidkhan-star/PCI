@@ -1364,4 +1364,3 @@ value in controlling → Domain 6; variance and reporting → Domain 4; integrat
 account → 7.3–7.4; adaptive delivery and AgileEVM → Domain 9; risk in planning/controlling → Domain 12;
 AI across the lifecycle → 13.5.
 
-*Domain 8 is a first authored draft pending SME technical review before it feeds the exam blueprint.*

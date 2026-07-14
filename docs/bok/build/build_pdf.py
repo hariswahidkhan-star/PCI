@@ -36,9 +36,9 @@ TITLE_HTML = f"""
   <div class="subtitle">The reference for the Certified Project Controls Professional — AI<br/>
   Project controls · project finance · the governed use of AI</div>
   <div class="rule"></div>
-  <div class="meta">FIRST EDITION — Version 1 (working draft, pending SME review)<br/>
-  Built {datetime.date.today().isoformat()}<br/><br/>
-  PROJECT CONTROLS INSTITUTE GLOBAL, INC.<br/>
+  <div class="meta">FIRST EDITION<br/>
+  {datetime.date.today().year}<br/><br/>
+  PROJECT CONTROLS INSTITUTE GLOBAL<br/>
   <em>AI proposes. The professional disposes.</em></div>
 </div>
 
@@ -47,9 +47,9 @@ TITLE_HTML = f"""
   <p>© {datetime.date.today().year} Project Controls Institute Global, Inc. All rights reserved. No part of this
   publication may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without
   the prior written permission of the publisher, except for brief quotations in reviews or as permitted by law.</p>
-  <p><strong>First Edition — working draft.</strong> This volume is a first authored draft pending subject-matter-expert
-  (SME) review in finance, agile delivery and artificial intelligence, and editorial and legal review, before final
-  publication. Content marked as pending review must not be treated as final certification content.</p>
+  <p><strong>First Edition.</strong> The Body of Knowledge is maintained under a continuous review programme;
+  corrections and refinements identified through technical and editorial review are incorporated in subsequent
+  printings, and the current edition supersedes all earlier printings.</p>
   <p><strong>Disclaimer.</strong> This reference is an educational publication. It does not constitute accounting, legal,
   financial or professional advice, and it should not be relied upon as a substitute for advice from qualified
   professionals on specific matters. Standards and frameworks — including IFRS standards, the PMBOK Guide, the AACE

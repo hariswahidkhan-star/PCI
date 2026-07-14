@@ -1329,5 +1329,3 @@ forecast on the dashboard → 3.4, Domain 6; cost coding that makes aggregation 
 on the dashboard → Domain 12; automated commentary and NL querying → Domain 13, KA 13.5; chart-design craft →
 the platform's dataviz guidance.
 
-*Domain 4 is a first authored draft pending SME technical review before it feeds the exam blueprint. This
-completes the finance group (Domains 1–4, ~40 % of the book).*

@@ -1404,4 +1404,3 @@ three progress views, with the agile artefacts themselves forming a rich audit t
 6; IFRS 15 over-time recognition and contract asset/liability → 2.2; agile contract forms → 7.1; billing
 reconciliation → 7.4–7.5; three-point forecasting → 3.4; AI for backlog/velocity/flow → 13.5.
 
-*Domain 9 is a first authored draft pending SME technical review before it feeds the exam blueprint.*

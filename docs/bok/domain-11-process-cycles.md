@@ -994,4 +994,3 @@ tells a controls professional where their numbers come from and where they can f
 2.3; the commitment→accrual→actual cost cycle → 5.2; interim valuations and billing → 7.4; cash-flow and the
 funding trough → 3.5; process mining and matching AI → 13.4–13.5.
 
-*Domain 11 is a first authored draft pending SME technical review before it feeds the exam blueprint.*

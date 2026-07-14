@@ -1524,4 +1524,3 @@ inflow side) → 2.2.7, 7.4–7.5; performance measurement and variance → Doma
 Domain 6; contract types, retention and payment terms → Domain 7; risk and contingency derivation → Domain 12;
 predictive forecasting → Domain 13, KA 13.5.
 
-*Domain 3 is a first authored draft pending SME technical review before it feeds the exam blueprint.*

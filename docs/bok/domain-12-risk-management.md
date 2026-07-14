@@ -1072,5 +1072,3 @@ the contingency in Domain 3, the schedule stress-test in Domain 10, and the rang
 change control/re-baselining → 5.4; lessons-learned feeding identification → 8.5; AI risk scoring/simulation →
 13.5.
 
-*Domain 12 is a first authored draft pending SME technical review before it feeds the exam blueprint. This
-completes the project-management group (Domains 5–12, ~40 % of the book).*

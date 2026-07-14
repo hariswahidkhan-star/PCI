@@ -2049,5 +2049,3 @@ cost coding/control → 1.5, 5.2; scheduling → 10; agile/AgileEVM → 9.5; con
 risk → 12; financial reporting/IFRS 15/IAS 37 → 1–2. The "AI in this domain" boxes throughout the book are the
 per-chapter instances of the workflows collected here.
 
-*Domain 13 is a first authored draft pending SME (finance, agile and AI) review before it feeds the exam
-blueprint. This completes the AI group (Domain 13, ~20 % of the book).*

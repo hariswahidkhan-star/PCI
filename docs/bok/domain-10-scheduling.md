@@ -1374,4 +1374,3 @@ increments mapped to milestones.
 blind spot → 6.4; the time-phased cost baseline (PV) → 3.3; schedule risk and contingency → Domain 12; hybrid
 Sprint-to-milestone mapping → 9.6; AI-assisted scheduling and delay prediction → 13.5.
 
-*Domain 10 is a first authored draft pending SME technical review before it feeds the exam blueprint.*

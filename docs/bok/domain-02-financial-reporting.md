@@ -1852,4 +1852,3 @@ accounts → 1.5; budgeting and cash-flow forecasting → Domain 3; EVM and EAC 
 contract types, BoQ, interim valuations and over-/under-billing → Domain 7; change control → 5.4, 7.2;
 variance narratives and management packs → Domain 4.
 
-*Domain 2 is a first authored draft pending SME technical review before it feeds the exam blueprint.*

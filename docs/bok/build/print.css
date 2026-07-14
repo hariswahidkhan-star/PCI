@@ -161,11 +161,9 @@ blockquote {
   padding: 3mm 4mm 2.6mm 4mm; margin: 3.5mm 0; font-size: 8.4pt; line-height: 1.5;
   page-break-inside: avoid;
 }
-blockquote.figspec::before {
-  content: "FIGURE SPECIFICATION";
-  display: block; font-family: Inter, sans-serif; font-size: 6.4pt; font-weight: 700;
-  letter-spacing: 0.22em; color: #1D4ED8; margin-bottom: 1.6mm;
-}
+/* Figure production specs stay in the source corpus but are not printed —
+   the reader sees the rendered figure and its caption only. */
+blockquote.figspec { display: none; }
 blockquote p { text-align: left; margin-bottom: 1.6mm; }
 
 /* ---------- Rendered figures ---------- */

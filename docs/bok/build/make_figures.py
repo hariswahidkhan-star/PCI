@@ -43,6 +43,15 @@ def _premium(fig):
         leg = ax.get_legend()
         if leg is not None:
             leg.set_frame_on(False)
+        for cont in getattr(ax, "containers", []):
+            for patch in cont:
+                if hasattr(patch, "set_linewidth"):
+                    patch.set_linewidth(0)
+        from matplotlib.ticker import ScalarFormatter, FuncFormatter
+        if isinstance(ax.yaxis.get_major_formatter(), ScalarFormatter):
+            ticks = ax.get_yticks()
+            if len(ticks) and max(abs(t) for t in ticks) >= 1000:
+                ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:,.0f}"))
 
 def newfig(w=7.0, h=3.4):
     fig, ax = plt.subplots(figsize=(w, h))

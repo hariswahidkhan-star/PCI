@@ -1291,4 +1291,3 @@ modifications in revenue → 2.2.8; the flexed budget → 4.2.2; reserves and th
 treatment → Domain 6; variations and commercial change → 7.2; risk and contingency → Domain 12; automated
 coding/reconciliation/change detection → Domain 13, KA 13.5.
 
-*Domain 5 is a first authored draft pending SME technical review before it feeds the exam blueprint.*

@@ -1513,4 +1513,3 @@ principal/agent (gross/net) → 2.3; cash-flow and the funding trough → 3.5; t
 Domain 6; change control → 5.4; delay forecasting and LDs → Domains 6 and 10; process cycles (O2C billing) →
 Domain 11; contract-analytics AI → 13.4–13.5.
 
-*Domain 7 is a first authored draft pending SME technical review before it feeds the exam blueprint.*

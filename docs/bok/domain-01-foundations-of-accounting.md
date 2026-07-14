@@ -2005,4 +2005,3 @@ and *accrual/cut-off proposal* (KA 1.3); it is genuinely useful but higher-judge
 1.4) and *disclosure drafting* (KA 1.2). In every case the same principle governs: **AI proposes, the
 professional disposes** — the professional remains accountable for the entry, the estimate and the sign-off.
 
-*Domain 1 is a first authored draft pending SME technical review before it feeds the exam blueprint.*

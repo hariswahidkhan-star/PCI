@@ -1411,4 +1411,3 @@ established here is the language reused for adaptive delivery in Domain 9.
 control accounts → 5.2–5.3; variance reading and reporting → 4.2–4.3; revenue recognition that EAC feeds →
 2.2.6; critical path → Domain 10; AgileEVM → 9.5; predictive EAC and driver analysis → 13.5.
 
-*Domain 6 is a first authored draft pending SME technical review before it feeds the exam blueprint.*
