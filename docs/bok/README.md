@@ -2,7 +2,7 @@
 
 The authoritative study reference underpinning the **Certified Project Controls Professional (AI)** —
 `PCP-AI`. This is the deep reference from which examination items are written and against which candidates
-study: a **~1,500-page**, thirteen-domain treatment of project controls, project finance and the governed
+study: a thirteen-domain treatment of project controls, project finance and the governed
 use of AI, weighted **40 % finance / 40 % project management / 20 % AI**.
 
 It is written to the standard expected of a professional certification handbook — authoritative, technically

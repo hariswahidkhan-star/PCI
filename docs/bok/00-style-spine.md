@@ -2,7 +2,7 @@
 
 > **Status:** foundation document. Every domain of the PCP-AI Body of Knowledge (BoK) is authored against
 > this spine so that terminology, notation, worked-example format, figures and MCQs stay consistent across
-> the whole ~1,500-page volume. Author nothing before reading this; restate any symbol you use.
+> the whole volume. Author nothing before reading this; restate any symbol you use.
 
 This spine fixes the seven things that make parallel/serial authoring cohere instead of drifting into
 "thirteen different books": (1) terminology & seed glossary, (2) the master formula-symbol table,
@@ -17,17 +17,16 @@ checklist.
 The BoK is weighted **40 % finance / 40 % project management / 20 % AI**. The AI weighting is carried by
 Domain 13 together with the "AI in this domain/KA" sections embedded in every non-AI chapter and KA 13.5's
 systematic per-domain coverage — the 20 % is measured across that whole surface, not Domain 13's page count
-alone. The full volume targets **~1,500 pages** of genuine
-content — breadth of real material, never padding.
+alone. Depth is governed by one rule: **genuine content only — breadth of real material, never padding** —
+and the volume grows edition by edition under that rule rather than toward a page quota.
 
-| Domain group | Share | ~Pages (of ~1,500) |
-|---|---|---|
-| Finance, accounting & reporting (Domains 1–4) | 40 % | ~600 |
-| Project management — lifecycle, agile, scheduling, cost/EVM, contracts, risk, process cycles (Domains 5–12) | 40 % | ~600 |
-| AI knowledge & practical approach (Domain 13) | 20 % | ~300 |
+| Domain group | Share |
+|---|---|
+| Finance, accounting & reporting (Domains 1–4) | 40 % |
+| Project management — lifecycle, agile, scheduling, cost/EVM, contracts, risk, process cycles (Domains 5–12) | 40 % |
+| AI knowledge & practical approach (Domain 13) | 20 % |
 
-Per-section budgets in the outline may flex ±15 % as content genuinely demands, provided the 40/40/20 split
-and the ~1,500-page target hold.
+Per-section depth may flex as content genuinely demands, provided the 40/40/20 split holds.
 
 > **Relationship to the live credential framework.** This BoK is authored as a **standalone study
 > reference**. It is deliberately *not* reconciled line-by-line with the eight-domain competency framework
@@ -194,24 +193,23 @@ Author each KA to this checklist; a KA is complete only when every applicable li
 
 ## 11. The domain map — the thirteen domains
 
-| # | Domain | Group | ~Pages |
-|---|---|---|---|
-| 1 | Foundations of Accounting for Project Controls | Finance | ~110 |
-| 2 | Financial Reporting & the Standards (incl. IFRS 15 flagship) | Finance | ~150 |
-| 3 | Budgeting & Forecasting | Finance | ~125 |
-| 4 | Performance Management, Variance Analysis & Management Reporting | Finance | ~115 |
-| 5 | Cost Management & Cost Control | PM | ~90 |
-| 6 | Earned Value Management & Forecasting (EVM/EAC) — flagship | PM | ~90 |
-| 7 | Contracts, Commercial Management, BoQ, Invoicing & Revenue | PM | ~135 |
-| 8 | Project Management Lifecycle | PM | ~120 |
-| 9 | Agile, Scrum & Adaptive Delivery for Project Controls | PM | ~90 |
-| 10 | Project Scheduling (in depth) | PM | ~65 |
-| 11 | Business Process Cycles (O2C, P2P & the control environment) | PM | ~45 |
-| 12 | Risk Management for Project Controls | PM | ~50 |
-| 13 | AI for Project Controls & PM: Concepts, Tools & Practice | AI | ~300 |
-| — | Appendices (glossary · master formula sheet · self-check answers · standards index · figure/animation index · MCQ bank) | — | ~55 |
+| # | Domain | Group |
+| --- | --- | --- |
+| 1 | Foundations of Accounting for Project Controls | Finance |
+| 2 | Financial Reporting & the Standards (incl. IFRS 15 flagship) | Finance |
+| 3 | Budgeting & Forecasting | Finance |
+| 4 | Performance Management, Variance Analysis & Management Reporting | Finance |
+| 5 | Cost Management & Cost Control | PM |
+| 6 | Earned Value Management & Forecasting (EVM/EAC) — flagship | PM |
+| 7 | Contracts, Commercial Management, BoQ, Invoicing & Revenue | PM |
+| 8 | Project Management Lifecycle | PM |
+| 9 | Agile, Scrum & Adaptive Delivery for Project Controls | PM |
+| 10 | Project Scheduling (in depth) | PM |
+| 11 | Business Process Cycles (O2C, P2P & the control environment) | PM |
+| 12 | Risk Management for Project Controls | PM |
+| 13 | AI for Project Controls & PM: Concepts, Tools & Practice | AI |
+| — | Appendices (glossary · master formula sheet · self-check answers · standards index · figure/animation index · MCQ bank) | — |
 
-Totals to ~**1,585 pages** before front/back-matter trimming — comfortably meeting the ~1,500-page target
-through genuine content. Author finance domains (1–4) first to lock the notation and worked-example style,
+Author finance domains (1–4) first to lock the notation and worked-example style,
 then the PM domains, authoring the Agile domain (9) after EVM (6) since it reuses the EV/CPI/EAC machinery,
 then the AI domain (13).
