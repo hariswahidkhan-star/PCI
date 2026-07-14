@@ -94,6 +94,21 @@ delivery.
 financial*: an `EAC` above target signals a pain-share the contractor will bear, quantifiable now — one of the
 clearest places where an earned-value forecast becomes a commercial number a board acts on.
 
+**Worked example 7.1.4b — a target-cost pain-share with a cap.**
+
+1. **Setup.** Target cost **USD 10,000,000**; target fee **USD 800,000**; share ratio **50/50**; but the
+   contractor's pain-share is **capped at USD 600,000** (a fee floor of USD 200,000). Actual cost turns out to
+   be **USD 12,000,000**.
+2. **Formula.** `Uncapped pain-share = share ratio × overrun`, then apply the cap.
+3. **Substitution.** Overrun `= 12,000,000 − 10,000,000 = 2,000,000`; uncapped pain-share `= 50 % × 2,000,000 =
+   1,000,000`; **capped at 600,000**.
+4. **Result.** The contractor bears **USD 600,000** (the fee falls from 800,000 to the 200,000 floor); the
+   client bears the remaining **USD 1,400,000** of the overrun. Without the cap the contractor would have borne
+   USD 1,000,000.
+5. **Interpretation.** Caps/collars bound each party's exposure — protecting the contractor from catastrophic
+   overruns but also weakening the incentive beyond the cap. A controls professional forecasting an `EAC` above
+   target (Domain 6) must know where the cap bites to quantify the real commercial exposure.
+
 ### 7.1.5 T&M, unit-rate, framework and EPC
 
 - **Time & materials (T&M)** — pay for time (labour rates) and materials used; client bears cost risk; suits
@@ -385,6 +400,20 @@ persistent. The certified amount, not the applied amount, drives cash.
    contractor has earned but cannot yet collect, part of the funding trough. The valuation is a direct
    application of the BoQ (7.3) to progress measured in the field.
 
+**Worked example 7.4.3b — retention release at completion and defects.**
+
+1. **Setup.** Over the job, retention of **5 %** was withheld on a final contract value of **USD 300,000**,
+   i.e. **USD 15,000** held. The contract releases **half at practical completion** and **half after the
+   12-month defects period**.
+2. **Formula.** `Retention held = 5 % × final value`; released in two tranches.
+3. **Substitution.** `Retention held = 5 % × 300,000 = 15,000`; release `= 7,500` at completion and `7,500`
+   after defects.
+4. **Result.** **USD 7,500** is released at practical completion and the final **USD 7,500** after the defects
+   period — cash the contractor earned early but collects late.
+5. **Interpretation.** Retention is a real receivable to track and chase to full recovery; a controls
+   professional includes the phased release in the cash-flow forecast (Domain 3, KA 3.5) rather than treating
+   the job as "paid" at completion.
+
 ### 7.4.4 Linking BoQ/EVM progress to billing
 
 **The professional angle.** Three progress measures must be **reconciled**, and a controls professional owns
@@ -475,6 +504,18 @@ statements** (Domains 1–2) → **management reporting** (Domain 4). Each is a 
 physical progress; a controls professional who can trace a slipped activity all the way through this loop —
 to its cost, its billing, its revenue, its contract asset/liability, and the board narrative — is exercising
 exactly the integrated judgement the credential certifies.
+
+### 7.5.4 Sector mini-case — a rail contract variation and claim
+
+A light-rail contractor on a lump-sum contract priced at **USD 80,000,000** hits changed ground conditions.
+The client instructs a **variation** adding **USD 3,000,000** of priced scope — a contract modification in
+revenue terms (Domain 2, KA 2.2.8). The contractor also lodges a **claim** for **prolongation**: time-related
+preliminaries running at **USD 200,000/month** for an assessed **4 months** = **USD 800,000** (cause: the
+client-caused delay; effect: extended preliminaries; quantum: 800,000). Certified interim billing continues
+against the updated contract value while IFRS 15 revenue is recognised on performance — the difference sitting
+in the contract asset/liability (7.5.2). Throughout, the controls professional keeps the contemporaneous
+records that substantiate the claim and reconciles the variation, the claim, billing and revenue — the
+integrated commercial-to-accounting judgement the credential certifies.
 
 **AI in this KA.** AI supports the commercial cycle: extracting terms and variation clauses from contracts,
 analysing claims/variations, checking valuations and flagging billing anomalies, and reconciling billing to

@@ -184,6 +184,22 @@ the single "USD 15,400 over" figure hides.
 > between bars, values labelled. *Animation storyboard (digital-only):* each floating bar rises in sequence
 > with its label, the running total ticking up from 130,000 to 145,400.
 
+**Worked example 4.2.4b — fixed-overhead expenditure and volume variances.**
+
+1. **Setup.** Budgeted fixed overhead is **USD 200,000** over a budgeted output of **10,000 units** — an
+   overhead absorption rate (OAR) of USD 20/unit. Actual output is **9,000 units**; actual fixed overhead is
+   **USD 205,000**.
+2. **Formula.** `Overhead absorbed = OAR × actual output`; `Expenditure variance = Budgeted overhead − Actual
+   overhead`; `Volume variance = Absorbed − Budgeted overhead`.
+3. **Substitution.** `Absorbed = 20 × 9,000 = 180,000`; `Expenditure = 200,000 − 205,000 = (5,000)` **(A)**;
+   `Volume = 180,000 − 200,000 = (20,000)` **(A)**.
+4. **Result.** Total fixed-overhead variance `= Absorbed 180,000 − Actual 205,000 = (25,000)` **(A)**, which
+   splits into a (5,000) expenditure variance (spent more than budget) and a (20,000) volume variance
+   (produced fewer units than planned, under-absorbing fixed cost).
+5. **Interpretation.** The two adverse causes are different — spending versus volume (under-absorption,
+   cross-ref Domain 5, KA 5.1.3) — and go to different owners. Splitting them, not reporting a single
+   (25,000), is the value of variance analysis.
+
 ### 4.2.5 Reading favourable and adverse well
 
 **The professional angle.** A favourable variance is not automatically good news, nor an adverse one
@@ -312,6 +328,25 @@ natural-language questions over controls data ("why did project 1420's `EAC` mov
 professional owns accuracy and framing: a drafted narrative can misattribute cause or bury a caveat, and a
 natural-language answer can be confidently wrong on a definition. Reports drive decisions and sometimes
 external disclosure — so the human signs off. **AI proposes, the professional disposes.**
+
+### 4.3.6 Worked example — an exception report from a RAG dashboard
+
+A monthly dashboard shows six control accounts with RAG status against a tolerance of `CPI` 0.95 (amber) /
+0.90 (red):
+
+| Control account | CPI | Status |
+|---|---:|---|
+| CA-01 Foundations | 1.02 | Green |
+| CA-02 Structure | 0.98 | Green |
+| CA-03 M&E | 0.93 | Amber |
+| CA-04 Fit-out | 0.88 | Red |
+| CA-05 External works | 1.01 | Green |
+| CA-06 Commissioning | 0.86 | Red |
+
+Management by exception (4.1.3) means the exception report focuses on the two reds (CA-04, CA-06) and the
+amber (CA-03) — each with its variance, root cause, impact and action — and leaves the greens noted but
+unelaborated. This turns a six-account status into a three-line action list, concentrating attention where it
+changes outcomes.
 
 ### Key terms — KA 4.3
 

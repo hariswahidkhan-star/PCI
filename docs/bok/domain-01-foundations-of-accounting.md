@@ -767,6 +767,21 @@ Present value   =  Future amount / (1 + r)^n
    money reduces the present obligation from 20,000 to ~15,877. As settlement approaches, the discount
    *unwinds* — the provision is increased each year through a finance cost until it reaches 20,000 (1.4.6).
 
+**Worked example 1.4.3c — a decommissioning provision and its discount unwind.**
+
+1. **Setup.** Meridian has a **legal obligation** to decommission a facility at the end of its use,
+   estimated at **USD 500,000** payable in **4 years**; discount rate **7 %**.
+2. **Formula.** `Present value = Future amount / (1 + r)^n`. On recognition the discounted amount is added
+   both to the **asset** (PPE) and to a **provision**; each year thereafter the discount **unwinds** as a
+   finance cost.
+3. **Substitution.** `1.07^4 = 1.310796`; `PV = 500,000 / 1.310796 = 381,447`. Entry: `Dr Decommissioning
+   asset 381,447 / Cr Provision 381,447`.
+4. **Result.** Provision recognised at **USD 381,447**. Year-1 unwind: `381,447 × 7 % = 26,701`, so the
+   provision grows to **USD 408,148** at the end of Year 1 (`Dr Finance cost 26,701 / Cr Provision 26,701`).
+5. **Interpretation.** The provision rises each year through the discount unwind until it reaches USD
+   500,000 at settlement. A controls professional tracking such a provision should expect its carrying
+   amount to move from **both** re-estimation and unwind, and be able to explain each movement (1.4.6).
+
 ### 1.4.4 Contingent liabilities and contingent assets
 
 **The principle.** Where an obligation is only **possible** (not probable), or is present but **cannot be
@@ -1006,6 +1021,22 @@ reconciliation** by matching extracted cost to ledger balances and flagging the 
 line still holds: an auto-coded cost must be reviewable and correctable, mis-coding propagates into every
 report downstream, and the professional owns the mapping rules and the exceptions. **AI proposes, the
 professional disposes.**
+
+### 1.5.6 Sector mini-case — a contractor's month-end accrual pack
+
+At month-end a civils contractor's cost engineer finds that a subcontractor has **performed USD 240,000**
+of work on a package but has **invoiced only USD 180,000** — the paperwork is a month behind the shovels.
+If only the USD 180,000 of invoices on file is recorded, cost-to-date is understated by **USD 60,000**: the
+ledger says the work was cheaper than it was, purely because of invoice timing. The cost engineer raises a
+**USD 60,000 accrual** (`Dr Subcontract cost 60,000 / Cr Accrued liabilities 60,000`) so that cost-to-date
+reflects work *performed*, not work *invoiced*.
+
+The earned-value consequence makes the stakes concrete: with `AC` understated by 60,000, `CPI = EV/AC`
+would be flattered — the job would look more cost-efficient than it is, and the truth would surface later
+as an unexplained deterioration when the invoices caught up. The accrual is what keeps the earned-value
+cost figure honest (cross-ref 1.3.5 on cut-off, and Domain 6). A disciplined month-end accrual pack —
+every known-but-uninvoiced cost identified, estimated and coded to the right control accounts (1.5.4) — is
+the bridge between the ledger and trustworthy project cost.
 
 ### Key terms — KA 1.5
 
