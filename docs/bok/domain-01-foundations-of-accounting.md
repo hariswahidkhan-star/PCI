@@ -732,6 +732,23 @@ often needs professional estimation (how much of a part-delivered service was pe
 accrues from a document date rather than a service date will reproduce the very pitfall above. **AI proposes,
 the professional disposes.**
 
+**Worked example 1.3.5 — a missed accrual distorts CPI.**
+
+1. **Setup.** Month-end cost report for a control account. Earned value **EV = USD 2,200,000**.
+   Invoiced-to-date cost is **USD 1,850,000**; a subcontractor has performed a further **USD 240,000** of
+   work not yet invoiced.
+2. **Formula.** `CPI = EV / AC`, where the true `AC` = invoiced cost **plus** the accrual for work performed
+   but not yet invoiced.
+3. **Substitution.** True AC = `1,850,000 + 240,000 = 2,090,000`, so `CPI = 2,200,000 / 2,090,000 ≈ 1.05`.
+   With the accrual missed, `AC = 1,850,000` and `CPI = 2,200,000 / 1,850,000 ≈ 1.19` — flattering by
+   fourteen points.
+4. **Result.** Report **CPI ≈ 1.05** on the accrued basis. Next month, when the USD 240,000 invoice lands,
+   the un-accrued version would show a false "overrun" spike of exactly that amount.
+5. **Interpretation.** The cut-off is not bookkeeping hygiene — it is the difference between a performance
+   index that means something and one that whipsaws with invoice timing; earned value (Domain 6) is only as
+   honest as the accruals beneath its `AC`. Cross-ref the contractor's accrual pack in 1.5.6 and `CPI` in
+   Domain 6 (KA 6.2).
+
 ### Key terms — KA 1.3
 
 | Term | Meaning |

@@ -823,6 +823,23 @@ boxes.
 4. **Output.** A coded, reconciled month-end in hours instead of days, with human attention concentrated on
    the 10 % that needs it.
 
+**Worked example 13.5.4c — evaluating an invoice-coding model honestly.**
+
+1. **Setup.** A controls function pilots an ML classifier that proposes cost codes for **1,000 invoices a
+   month**. Above a confidence threshold the model auto-codes **800**; an audit of those 800 finds **780
+   correct**. The remaining **200** low-confidence invoices route to humans as before. Manual coding takes
+   **3 minutes** per invoice; reviewing an auto-coded line takes **0.5 minutes**.
+2. **Formula.** `precision = correct auto-codes ÷ total auto-codes`; time saved = baseline minutes − minutes
+   with the model.
+3. **Substitution.** Precision `780 ÷ 800 = 97.5 %`. Baseline `1,000 × 3 = 3,000` minutes; with the model
+   `(800 × 0.5) + (200 × 3) = 400 + 600 = 1,000` minutes — a saving of `3,000 − 1,000 = 2,000` minutes
+   (**≈ 33 hours**) a month, a **66.7 %** reduction.
+4. **Result.** Adopt, with the human review step retained.
+5. **Interpretation.** The honest evaluation names all three numbers — precision at the threshold (97.5 %),
+   the residual **20 miscodes** a month that the review step and the reconciliation discipline of KA 1.5.2
+   must catch, and the measured (not vendor-claimed) time saving; "AI proposes, the professional disposes"
+   is operationalised here as a threshold, a review step and an audit sample, not a slogan.
+
 ### 13.5.5 Scheduling (Domain 10)
 
 - **Workflow.** Input: WBS/activities/logic → AI step: propose a schedule, check logic (missing links, dangling
