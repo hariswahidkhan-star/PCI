@@ -1234,6 +1234,130 @@ taking the difference.
 
 ---
 
+## Advanced topics — Domain 1
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 1.A.1 — Multi-currency project accounting
+
+**The working-level rules.** An entity keeps its books in its **functional currency** — the currency of the
+primary economic environment in which it operates — and may present its statements in a different
+**presentation currency**. A foreign-currency transaction is recorded at the exchange rate on the
+**transaction date**; at each period-end, **monetary balances** (cash, receivables, payables, accruals) are
+**retranslated at the closing rate**, with the difference taken to profit or loss; non-monetary items
+(equipment, prepayments) remain at their historic rate.
+
+**Worked example 1.A.1 — retranslating a foreign-currency receivable.**
+
+1. **Setup.** Meridian (functional currency USD) invoices a Saudi client **SAR 375,000** when USD 1 =
+   SAR 3.75. At period-end the invoice is unpaid and the closing rate is USD 1 = SAR 3.80.
+2. **Formula.** Record at the transaction-date rate; retranslate the monetary receivable at the closing
+   rate; take the difference to profit or loss.
+3. **Substitution.** On invoicing: `375,000 / 3.75 = 100,000` → `Dr Accounts receivable 100,000 / Cr
+   Service revenue 100,000`. At the close: `375,000 / 3.80 = 98,684`.
+4. **Result.** A retranslation loss of **USD 1,316**: `Dr Foreign exchange loss 1,316 / Cr Accounts
+   receivable 1,316`.
+5. **Interpretation.** Nothing about the work or the client changed — the movement is currency, not
+   performance.
+
+**The controls angle.** On an international project, period-on-period cost movements mix genuine variance
+with FX movement, and the reconciliation discipline of 1.5.2 must separate them: restate the comparison at
+a constant rate (or isolate the retranslation line) before attributing cause. A variance analysis that
+ignores FX **misattributes cause** — a "cost increase" that is wholly a rate movement gets chased as a
+productivity or price problem, exactly the attribution failure variance analysis exists to prevent
+(cross-ref Domain 4, KA 4.2).
+
+### Advanced 1.A.2 — Intercompany and joint-venture cost flows
+
+**Recharges and the elimination principle.** Large projects are rarely delivered by a single legal entity:
+a parent incurs cost (staff, insurance, licences) and **recharges** it to the project entity. Each entity
+records its own side of the flow — but **group accounts eliminate intra-group balances and profit**: a sale
+from one group member to another is not income to the group, so any margin in a recharge rate is
+**unrealised at group level** until earned from an outside party.
+
+**Worked example 1.A.2 — a recharge with embedded margin.**
+
+1. **Setup.** Meridian (parent) seconds engineers to its project subsidiary, incurring **USD 100,000** of
+   payroll, and recharges at **cost + 10 %**.
+2. **Formula.** `Recharge = cost × 1.10`; each entity records its own side; consolidation eliminates the
+   intra-group pair and the unrealised margin.
+3. **Substitution.** `100,000 × 1.10 = 110,000`. Parent: `Dr Intercompany receivable 110,000 / Cr Recharge
+   income 110,000` (having borne 100,000 of payroll cost). Subsidiary: `Dr Project cost 110,000 / Cr
+   Intercompany payable 110,000`.
+4. **Result.** The subsidiary's project cost is **110,000**; the group's cost is **100,000** — the 10,000
+   margin is eliminated on consolidation.
+5. **Interpretation.** "Project cost" is entity-dependent: each ledger is right for its own entity (the
+   entity concept, 1.1.1), but only one basis matches a group-level budget.
+
+**Joint ventures.** Where the project vehicle is a JV, the operator incurs cost and bills each venturer its
+**proportionate share** — a 60/40 venture splits a USD 1,000,000 cost as 600,000/400,000 — and each
+venturer records only its share.
+
+**The controls trap.** Two failures recur: **double-counting** recharged cost (once in the parent's ledger,
+again when the recharge lands in the project entity — reconciliation per 1.5.2 must net the pair, or
+cost-to-date is overstated) and **missing the margin embedded in intercompany rates** (comparing an
+at-cost-plus project ledger to a baseline set at group cost manufactures an apparent overrun equal to the
+margin). The basis of every recharge rate belongs in the coding rules so comparisons are like-for-like.
+
+### Advanced 1.A.3 — Accounting policy versus estimate — and why restatement differs
+
+Under **IAS 8 (accounting policies, changes in accounting estimates and errors)** three superficially
+similar changes receive three different treatments:
+
+- A change in **accounting policy** — the principles and bases applied — is made **retrospectively**:
+  comparatives are **restated** as if the new policy had always applied, so like is compared with like.
+- A change in **accounting estimate** — a useful life (1.3.4), a provision amount (1.4.6), a total contract
+  cost — applies **prospectively**: it changes the current and future periods only, never the past.
+- An **error** — a misapplication of policy, a mistake in the numbers — is corrected by **restatement** of
+  the prior-period figures.
+
+The logic of the asymmetry matters more than the labels. An estimate made honestly on the information then
+available was not *wrong*; new information produces a *new estimate*, not a corrected old one. A policy
+change or an error, by contrast, means the prior figures were prepared on a basis now abandoned, or were
+simply misstated — so the past is rewritten to restore comparability.
+
+The controls professional's forecasts feed **estimates**. A revised cost-to-complete changes the
+total-contract-cost estimate that drives percentage-of-completion revenue, and the effect is absorbed
+through the current period's margin — the prospective catch-up of 2.2.6 — never by restating last year. A
+remeasured provision moves through the current period (1.4.6); a revised useful life changes *future*
+depreciation only. That is why estimate revisions flow through current and future periods without rewriting
+the past — why a board demanding that prior margins be "restated" after a forecast deterioration is making a
+category error, and, conversely, why a genuine mis-posting is an error to correct visibly, not an estimate
+revision to absorb quietly.
+
+### Advanced 1.A.4 — Period-end discipline at scale
+
+**The close calendar.** At scale, the month-end close is run as a **controlled process**, not a monthly
+scramble: a published **close calendar** sequences cut-off (1.3.5), the accrual pack (1.5.6),
+reconciliations to independent sources (1.1.4, 1.5.2) and review/sign-off, each step with a named owner and
+a deadline. Repeatability is the control: the same steps, in the same order, evidenced the same way, so an
+omission is visible as a missed step rather than discovered later as a misstatement.
+
+**Materiality-tiered accrual thresholds.** Not every uninvoiced cost deserves the same effort. A tiered
+policy accrues large items individually from evidence and estimates the small tail in aggregate, so effort
+concentrates where misstatement matters.
+
+**Worked example 1.A.4 — a tiered accrual pack.**
+
+1. **Setup.** Close policy: items **≥ USD 25,000** are individually evidenced and accrued; below that, an
+   aggregate run-rate estimate. This month: **14** large items totalling **USD 1,340,000**; the small tail
+   is estimated at **USD 90,000** from a three-month run rate.
+2. **Formula.** `Total accrual = Σ individually evidenced items + aggregate estimate`.
+3. **Substitution.** `1,340,000 + 90,000 = 1,430,000`.
+4. **Result.** **USD 1,430,000**: `Dr Project costs 1,430,000 / Cr Accrued liabilities 1,430,000`, coded to
+   the relevant control accounts (1.5.4).
+5. **Interpretation.** About 94 % of the accrual value sits in 14 evidenced items; the tiering buys accuracy
+   where it matters and speed where it does not.
+
+**What a 3-day close needs that a 10-day close does not.** Compression comes from removing manual work, not
+from working faster: automated **coding and matching** of invoices and goods receipts (cross-ref 13.5.4),
+standing accrual templates driven by open commitments, earlier sub-cut-offs for low-risk feeds, and
+exception-based review against thresholds instead of line-by-line checking. The prize is a controls
+dividend: the fresher the close, the earlier the true cost position reaches the forecast (1.3.5).
+
+---
+
 ## Case study — Domain 1: a groundworks contractor's month-end close (construction)
 
 ### Background
