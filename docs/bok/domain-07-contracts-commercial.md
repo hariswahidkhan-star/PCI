@@ -119,6 +119,21 @@ clearest places where an earned-value forecast becomes a commercial number a boa
 - **EPC (engineer-procure-construct) / turnkey** — a single contractor delivers the whole asset, often lump
   sum, transferring integration risk to the contractor.
 
+**Worked example 7.1.5 — a capped T&M engagement.**
+
+1. **Setup.** Specialist commissioning support engaged on T&M at **USD 120/hour**, estimated effort
+   **2,000 hours** (USD 240,000); the contract caps total T&M charges at **USD 260,000**. Actual effort runs
+   to **2,300 hours**.
+2. **Formula.** `Charge = min(hours × rate, cap)`.
+3. **Substitution.** Uncapped charge `= 2,300 × 120 = 276,000`; this exceeds the cap, so the charge is
+   **260,000**.
+4. **Result.** The client pays the **cap (USD 260,000)**; the provider bears the **USD 16,000** above it
+   (`276,000 − 260,000`). Had actual effort been 2,100 hours (`2,100 × 120 = 252,000`), the client would have
+   paid 252,000 — the cap only bites above it.
+5. **Interpretation.** Capped T&M shares risk asymmetrically: the client bears cost risk *up to* the cap, the
+   provider beyond it. The cap converts open-ended T&M exposure into a budgetable ceiling — which is why
+   capped T&M suits undefined scope, and agile delivery in particular (see 9.6.3).
+
 ### Key terms — KA 7.1
 
 | Term | Meaning |

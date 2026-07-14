@@ -356,6 +356,20 @@ managed**: high enough to be manageable in number, low enough to be meaningful. 
 level well is a real skill — too granular and the overhead of measurement swamps the value; too coarse and
 problems hide inside a big account.
 
+**Worked example 5.3.2 — choosing the control-account level.**
+
+1. **Setup.** A **USD 9,600,000** project could be structured as **12 control accounts** (~USD 800,000 each)
+   or **96 control accounts** (~USD 100,000 each). Monthly review effort is roughly **30 minutes per CA**.
+2. **Formula.** `Monthly review effort = number of CAs × 0.5 hours`.
+3. **Substitution.** 12-CA design: `12 × 0.5 = 6 hours` a month. 96-CA design: `96 × 0.5 = 48 hours` a month —
+   more than a full working week, every month, before any analysis is done. But a single USD 800,000 CA can
+   hide a USD 100,000 problem inside itself for months.
+4. **Result.** Most organisations land between the extremes — here, say **~25 control accounts** aligned to
+   the WBS's natural work-package boundaries.
+5. **Interpretation.** The control-account level is a *designed* trade between visibility and measurement cost
+   — 5.3.2's "too granular vs too coarse" made quantitative. The test is whether a variance of the size you
+   care about would surface at the level you chose.
+
 ### 5.3.3 The integration point for earned value
 
 **The principle.** The control account is the hinge between this domain and Domain 6: each CA has a
