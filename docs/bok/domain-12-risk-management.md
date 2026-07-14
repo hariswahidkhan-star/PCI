@@ -141,6 +141,18 @@ vaguely ("weather") cannot be managed; written as cause-event-effect ("*because*
 season, *there is a risk that* rain halts earthworks, *leading to* schedule delay and prolongation cost") it
 can be.
 
+**Running the identification workshop.** Identification quality is made or broken in the workshop, and
+facilitation is a controls skill. The mechanics that work: the right attendees (the people who will do the
+work, not their managers alone); a **risk breakdown structure (RBS)** as the prompt taxonomy — technical,
+external, organisational, commercial, delivery — walked category by category, so the register is not just the
+last incident repeated; and techniques that counter the room's biases: anonymous written elicitation before
+open discussion (counters anchoring and hierarchy), the **pre-mortem** ("it is two years from now and the
+project has failed — write its history"), which legitimises the pessimism the forward question suppresses,
+and reference to outside data (the estimating-bias point of Domain 3, KA 3.2). The output standard is the
+register's cause–event–effect discipline above, each entry owned — and the workshop repeats at gates and
+phase transitions (Domain 8, 8.A.3), because the risk profile the project started with is not the one it
+carries.
+
 ### 12.2.2 Qualitative analysis
 
 **The principle.** **Qualitative analysis** rates each risk by **probability** and **impact** on defined
@@ -201,6 +213,17 @@ a single EMV sum cannot.
 5. **Interpretation.** A response is justified when it reduces `probability × impact` by **more than it
    costs**. Quantifying the decision — not just listing a response — is what turns a risk register into a
    basis for action (cross-ref 12.2.4). Not every mitigation passes this test.
+
+**QSRA, QCRA and risk loading.** On major projects the Monte Carlo above is formalised as two named
+deliverables — the **quantitative schedule risk analysis (QSRA)**, run on the schedule (duration uncertainty
+plus risk events loaded onto activities, Domain 10, KA 10.3.4), and the **quantitative cost risk analysis
+(QCRA)**, run on the estimate (this section). The connecting discipline is **risk loading**: register entries
+are mapped onto the specific activities and cost lines they would strike (the risk-driver approach), so the
+model inherits the register instead of a parallel set of assumptions — and schedule-driven cost
+(prolongation: time-related costs × delay) is captured by linking the two, since a P80 schedule and a P80
+cost that ignore each other understate the joint tail (the correlation lesson of Advanced 12.A.1 applied
+between models, not just within one). The practical outputs are P-dates and P-costs (12.3.1), tornado charts
+of which risks drive the tail, and — the real value — a ranked case for the mitigations that shrink it.
 
 ### 12.2.4 Response planning
 

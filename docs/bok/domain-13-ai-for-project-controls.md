@@ -1293,6 +1293,29 @@ sustainable capability from hype.
   governance model requires (13.6) — against measured time savings, not vendor claims. "We use AI" is not
   value; a faster, verified close is (13.7.3).
 
+**Per-use economics.** Licence fees are only one AI cost shape; API-metered use is priced per token (13.1.3),
+and at volume the per-use arithmetic decides deployability. Three numbers govern it: tokens in, tokens out,
+and the price per million of each — multiplied by volume. Two honest observations follow. First, per-use
+compute cost is usually small against the human review labour it sits beside (Advanced 13.A.5 prices that
+side). Second, it scales linearly with volume while a licence is a step function — so the crossover volume,
+not fashion, should pick the commercial shape (Advanced 13.A.3's procurement lens).
+
+**Worked example 13.7.3b — pricing a document-extraction workflow.**
+
+1. **Setup.** A controls function extracts key terms from **60,000 documents a year**. Each run averages
+   **3,000 tokens in** and **500 tokens out**; the model is priced at **USD 3.00 per million input tokens**
+   and **USD 15.00 per million output tokens** (illustrative rates — check current pricing).
+2. **Formula.** `annual cost = volume × [(in ÷ 1M) × price_in + (out ÷ 1M) × price_out]`.
+3. **Substitution.** Per document: `(3,000 ÷ 1M) × 3.00 + (500 ÷ 1M) × 15.00 = 0.009 + 0.0075 ≈ USD 0.0165`.
+   Annual: `60,000 × 0.0165 ≈ 990`.
+4. **Result.** About **USD 1,000 a year** of compute — while the half-day-per-month review labour beside it
+   costs tens of times more (13.A.5), and a fixed per-seat licence for the same workflow might cost seventy
+   times more.
+5. **Interpretation.** The number that matters is rarely the compute; it is the review labour and the error
+   cost (13.A.5) — but the per-use arithmetic still earns its keep, because it exposes the crossover where
+   metered beats licensed (and vice versa), keeps vendor quotes honest (13.A.3), and scales the value case of
+   13.7.3 from pilot to fleet without a step of faith.
+
 ### 13.7.4 Pitfalls and change management
 
 **The pitfalls.** Common failure modes: **skipping data quality** (13.2) so outputs mislead; **skipping
