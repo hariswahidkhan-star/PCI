@@ -512,6 +512,29 @@ Variance at completion:   VAC = BAC − EAC
    single period's `CPI` could be timing noise, but two consecutive readings moving the same way demand
    investigation of the driver behind them (3.4.3, and Domain 6, KA 6.3).
 
+**Method (d): the bottom-up ETC.** The index methods above are *derived* forecasts; the forecast a controller
+actually defends at review is a **bottom-up estimate to complete**: re-estimating the *remaining* work package
+by package — remaining quantities × current rates, remaining durations × current burn, open commitments at
+their committed values, plus an allowance for remaining risk — and then `EAC = AC + bottom-up ETC`. The index
+methods then serve as *cross-checks*: a bottom-up EAC far below `BAC / CPI` is claiming a performance
+improvement someone must be able to name (the credibility test of Domain 6, Advanced 6.A.5). Bottom-up is
+slower and therefore periodic (typically quarterly, or at trigger events); the index methods are monthly.
+
+**Worked example 3.4.2c — a bottom-up ETC against its index cross-check.**
+
+1. **Setup.** A control account: `BAC` = **USD 600,000**; at the data date `EV` = **380,000**, `AC` =
+   **420,000** (`CPI = 380,000 / 420,000 ≈ 0.90`). The package-by-package review of the remaining work finds:
+   remaining labour **1,900 hours × USD 90 = 171,000**; open commitments still to be consumed **40,000**;
+   residual risk allowance **20,000**.
+2. **Formula.** `EAC = AC + ETC (bottom-up)`; cross-check `EAC = BAC / CPI`.
+3. **Substitution.** `ETC = 171,000 + 40,000 + 20,000 = 231,000`; `EAC = 420,000 + 231,000 = 651,000`.
+   Cross-check: `600,000 / 0.905 ≈ 663,000`.
+4. **Result.** Bottom-up `EAC` = **USD 651,000**, about 2 % below the index cross-check — close enough to
+   corroborate; the small gap is explained by the completed rework not recurring.
+5. **Interpretation.** When the two methods agree, the forecast is strong; when they diverge materially, the
+   *difference* is the review agenda — either the bottom-up has missed something the indices remember, or the
+   team can name the change the indices cannot yet see. Neither number is "the answer"; the reconciliation is.
+
 ### 3.4.3 Rolling forecasts and trend analysis
 
 **The principle.** A **rolling forecast** is re-produced every period (rather than once a year), always
@@ -528,6 +551,28 @@ The limits are equally real: models trained on unrepresentative history mislead;
 wrong; and a forecast is an input to a professional's judgement, not a substitute for it — the person remains
 accountable for the number defended to the board. **AI proposes, the professional disposes.** (Predictive EAC
 and driver analysis are developed in Domain 6 and Domain 13, KA 13.5.)
+
+**The EAC movement bridge (the forecast change log).** The first question any review board asks is "why did
+the EAC move since last period?" — and the disciplined answer is a **forecast change log**: every `EAC`
+movement itemised with a reason code and an owner, presented as a bridge (the waterfall convention of Domain
+4, KA 4.2.4) from opening `EAC` to closing `EAC`. Movements group into a stable set of codes: approved
+changes/variations, productivity, rates and escalation, quantity growth (Domain 5, Advanced 5.A.5), risk
+drawdown or release, and correction of estimating error. A forecast that moves without a log is drift; a
+logged movement is a decision trail.
+
+**Worked example 3.4.3 — one period's EAC bridge.**
+
+1. **Setup.** Opening `EAC` = **USD 10,200,000**. During the period: an approved variation adds **150,000**;
+   measured productivity deterioration adds **90,000**; a risk that expired unspent releases **60,000**; a
+   rate escalation on the steel package adds **40,000**.
+2. **Formula.** `closing EAC = opening EAC + Σ movements`, each movement coded and owned.
+3. **Substitution.** `10,200,000 + 150,000 + 90,000 − 60,000 + 40,000 = 10,420,000`.
+4. **Result.** Closing `EAC` = **USD 10,420,000** — a net movement of **+220,000**, fully attributed across
+   four coded lines.
+5. **Interpretation.** The bridge converts "the forecast went up again" into four owned facts, each with its
+   remedy in a different room — the variation is priced (Domain 7), the productivity trend has a recovery
+   plan or it does not (Domain 6), the risk release is banked (Domain 12), and the escalation goes to
+   procurement. The net (**+220,000**) is the *least* informative number on the page.
 
 ### Key terms — KA 3.4
 
@@ -689,6 +734,17 @@ late, seasonal effects), generating scenario ranges for the funding trough, and 
 collections drift from forecast. As ever, the professional owns the assumptions (a model that assumes
 historic payment behaviour continues can badly misjudge a distressed client) and the decision. **AI proposes,
 the professional disposes.**
+
+**Indirect taxes and withholding in the cash forecast.** The cash forecast runs on *invoice* values, not
+contract values — and invoices carry **VAT/GST**. At 15 %, a certified 500,000 bills as `500,000 × 1.15 =
+575,000` gross: the 75,000 arrives as cash and leaves again on the remittance date — a pure *timing* effect,
+but one that can be material at the trough. Cross-border payments to suppliers may also suffer **withholding
+tax**: at 5 % on a 200,000 invoice, the project pays `200,000 − 10,000 = 190,000` to the supplier and remits
+`10,000` to the tax authority — the same total cash, but different counterparties and possibly different
+dates. Neither changes project *cost* (both wash through balance-sheet accounts, Domain 1, KA 1.1) — but both
+change *when* cash moves, and therefore the funding requirement (3.5.3). The discipline: model gross-of-VAT
+flows with their remittance dates, model net-plus-remit for WHT — and never let a VAT-inclusive invoice value
+contaminate the cost ledger (Domain 5, KA 5.2.4).
 
 ### Key terms — KA 3.5
 
