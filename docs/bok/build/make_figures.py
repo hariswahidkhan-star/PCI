@@ -554,6 +554,68 @@ def fig_13_7_1():
         ax.text(x + 1.07, y - 0.34, d, ha="center", fontsize=6.6, color=SLATE)
     save(fig, "fig_13_7_1")
 
+
+def fig_5_2_2():
+    fig, ax = plt.subplots(figsize=(6.8, 3.2))
+    m = list(range(1, 9))
+    commit = [200,450,640,760,880,950,990,1000]
+    vowd   = [60,160,300,460,620,760,870,950]
+    inv    = [20,90,200,340,490,640,760,860]
+    ax.step(m, commit, where="post", color=INK, lw=2.0, label="Commitment")
+    ax.plot(m, vowd, color=BLUE, lw=2.2, label="VOWD (work performed)")
+    ax.plot(m, inv, color=SLATE, lw=1.8, ls="--", label="Invoiced")
+    ax.fill_between(m, inv, vowd, color=BLUE, alpha=0.08)
+    ax.annotate("accrual", xy=(6, 700), fontsize=7.5, color=BLUE)
+    ax.annotate("open commitment", xy=(3.1, 700), fontsize=7.5, color=SLATE)
+    ax.set_xlabel("Month"); ax.set_ylabel("USD 000"); ax.legend(loc="lower right")
+    save(fig, "fig_5_2_2")
+
+def fig_7_2_1():
+    fig, ax = newfig(7.4, 1.9)
+    ax.set_xlim(0, 15); ax.set_ylim(0, 3.4)
+    steps = ["Form\n(award, terms)", "Mobilise\n(bonds, advance)", "Administer\n(variations, claims,\ncertificates)",
+             "Complete\n(punch, handover)", "Close\n(final account,\nretention release)"]
+    for i, s in enumerate(steps):
+        bx(ax, 0.3 + i*3.0, 1.0, 2.4, 1.6, s, fc=BLUE if i == 2 else LIGHT,
+           ec=BLUE, tc="white" if i == 2 else INK, bold=(i == 2), fs=7.5)
+        if i < 4: ar(ax, 2.75 + i*3.0, 1.8, 3.25 + i*3.0, 1.8, color=BLUE)
+    ax.text(7.5, 0.3, "Records made while administering are the claims evidence at close (7.2.2, 7.T.2).",
+            ha="center", fontsize=7.5, color=SLATE)
+    save(fig, "fig_7_2_1")
+
+def fig_8_2_2():
+    fig, ax = plt.subplots(figsize=(6.6, 3.0))
+    m = list(range(1, 11)); crew = [8,14,22,30,36,38,34,26,16,8]
+    cols = [RED if c > 32 else BLUE for c in crew]
+    ax.bar(m, crew, color=cols, width=0.72)
+    ax.axhline(32, color=INK, lw=1.4, ls="--")
+    ax.text(9.6, 33, "available: 32", fontsize=7.5, color=INK, ha="right")
+    ax.set_xlabel("Month"); ax.set_ylabel("Headcount")
+    save(fig, "fig_8_2_2")
+
+def fig_9_3_4():
+    fig, ax = plt.subplots(figsize=(6.6, 3.2))
+    s = list(range(0, 11))
+    scope = [250]*6 + [290]*5
+    done = [0,22,48,72,95,120,150,172,196,222,248]
+    ax.step(s, scope, where="post", color=INK, lw=2.0, label="Scope (points)")
+    ax.plot(s, done, color=BLUE, lw=2.2, marker="o", ms=3.5, label="Done (cumulative)")
+    ax.annotate("scope +40 at Sprint 6\n(rebaseline logged)", xy=(6, 290), xytext=(3.2, 300),
+                fontsize=7.5, color=RED, arrowprops=dict(arrowstyle="->", color=RED, lw=1.1))
+    ax.set_xlabel("Sprint"); ax.set_ylabel("Story points"); ax.legend(loc="lower right")
+    save(fig, "fig_9_3_4")
+
+def fig_10_3_1():
+    fig, ax = plt.subplots(figsize=(6.4, 3.2))
+    days = [14,13,12,11,10]; cost = [0,2000,4000,7500,12500]
+    ax.plot(days, cost, color=BLUE, lw=2.2, marker="o", ms=4)
+    for d, c, t in [(13,2000,"crash A (2,000/d)"),(12,4000,"crash A again"),(11,7500,"crash B (3,500)"),(10,12500,"B + C: both paths\n(5,000/d)")]:
+        ax.annotate(t, xy=(d, c), xytext=(d-0.05, c+900), fontsize=7, color=SLATE)
+    ax.invert_xaxis()
+    ax.set_xlabel("Project duration (days)"); ax.set_ylabel("Cumulative crash cost (USD)")
+    save(fig, "fig_10_3_1")
+
+
 ALL = {n[4:].replace("_", "."): f for n, f in list(globals().items()) if n.startswith("fig_")}
 
 if __name__ == "__main__":

@@ -118,6 +118,21 @@ exercise, disconnected from the estimate, schedule and forecast. The ISO 31000 p
 disconnecting it from the numbers it should inform breaches integration. B misreads the defect as
 over-effort; C excuses it; D concerns appetite calibration, a different matter.
 
+**MCQ 12.1-E `[12.1.3 · Application]`** The board's appetite statement caps any single project's P80 risk
+exposure at **1.5 %** of group profit of **USD 60,000,000**. A tender's quantified exposure comes out at
+**P80 = USD 1,020,000**. The correct conclusion is:
+- A. Within appetite — USD 1,020,000 is far below the USD 60,000,000 profit.
+- B. Above appetite — the ceiling is `1.5 % × 60,000,000 = USD 900,000`, so risks must be treated or
+  transferred to bring the re-run P80 inside it before the bid proceeds. ✅
+- C. Within appetite — the register's EMV sum, not the P80, is tested against the ceiling.
+- D. Indeterminate — appetite statements are qualitative and cannot be tested numerically.
+
+*Rationale:* Appetite is arithmetic: ceiling `= 1.5 % × 60,000,000 = 900,000`; the tender's `1,020,000 >
+900,000`, so the exposure exceeds appetite and the treatment path — transfer or mitigate, then re-run —
+applies (12.1.3). A compares the exposure to the whole profit instead of the stated ceiling; C tests the
+wrong measure — the statement is written at P80; D is exactly the "poster" an appetite statement becomes
+without the numbers.
+
 ### Self-check — KA 12.1
 
 1. Distinguish risk, uncertainty and issue. *(Risk — uncertain event affecting objectives; uncertainty — lack
@@ -307,6 +322,20 @@ is:
 opportunity contributes `0.40 × 50,000 = 20,000` of expected *saving*, giving `90,000 − 20,000 = 70,000`. A
 ignores the opportunity; B adds it instead of netting it; C sums the impacts with the probabilities omitted.
 
+**MCQ 12.2-F `[12.2.3 · Analysis]`** Two register risks — an earthworks delay and a paving-window loss —
+share one driver: the same wet season. When the Monte Carlo model correlates them instead of treating them
+as independent, the effect on the results is:
+- A. The EMV sum rises and the P80 falls.
+- B. Both the EMV sum and the P80 are unchanged.
+- C. The EMV sum falls, because one risk now absorbs the other.
+- D. The EMV sum is unchanged, but the P80 rises — coinciding risks fatten the upper tail. ✅
+
+*Rationale:* Correlation does not move the expected value — the expected value of a sum is the sum of the
+expected values — but risks sharing a driver tend to land *together*, fattening the upper tail, so the P80
+rises while the mean stands still (12.2.3's Monte Carlo premium; Advanced 12.A.1). A and C move the EMV sum,
+which correlation cannot do; B misses the tail effect that is the whole point of declaring the shared driver
+to the modeller.
+
 ### Self-check — KA 12.2
 
 1. Write a risk in cause-event-effect form and give its EMV formula. *("Because X, risk that Y, leading to Z";
@@ -424,6 +453,34 @@ draw-down with an emerging shortfall.
 *Rationale:* Management reserve funds what the register *cannot* foresee, sits outside the baseline, and is
 management-controlled; needing it is a re-baselining event. A and C describe the contingency reserve; B
 describes a normal contingency draw-down.
+
+**MCQ 12.3-E `[12.3.1 · Application]`** A quantified register has an EMV sum of **USD 220,000**; a Monte
+Carlo run of the same register returns a **P80 of USD 310,000**. The organisation's appetite requires
+contingency at the P80. The contingency to set is:
+- A. USD 310,000 — the P80, funding an 80 %-confidence outcome rather than the average. ✅
+- B. USD 220,000 — the EMV sum is the analysed figure.
+- C. USD 90,000 — the difference between the two.
+- D. USD 530,000 — the EMV sum plus the P80.
+
+*Rationale:* Contingency is set at the P-level the appetite requires — here the P80 of USD 310,000, which
+funds an 80 %-confidence outcome reflecting risks coinciding, and is documented against the register and the
+model (12.3.1). B funds only the *average* outcome, under-funded in the futures where risks coincide; C is
+the Monte Carlo premium, not a contingency; D double-counts by adding the average to the percentile.
+
+**MCQ 12.3-F `[12.3.3 · Application]`** Contingency was set at a Monte Carlo **P80 of USD 400,000**.
+Materialised risks have drawn **USD 120,000** and then **USD 90,000**; a re-run of the register puts the
+remaining exposure at a **P80 of USD 240,000**. The correct governance action is to:
+- A. Report adequate cover — the original USD 400,000 exceeds the USD 240,000 exposure.
+- B. Report remaining contingency of USD 280,000 and comfortable headroom.
+- C. Report remaining contingency of USD 190,000 against USD 240,000 of remaining exposure — a USD 50,000
+  shortfall — and escalate towards the management reserve as a re-baselining event. ✅
+- D. Say nothing — drawing down contingency is normal and needs no report.
+
+*Rationale:* Remaining contingency `= 400,000 − 120,000 − 90,000 = 190,000` against remaining exposure of
+240,000 — a `240,000 − 190,000 = 50,000` shortfall, escalated *before* it bites, as a documented
+re-baselining rather than a silent overspend (12.3.3, 12.3.2). A tests against the opening figure — the
+opening-figure illusion; B nets only the first draw; D confuses a normal draw-down with an emerging
+shortfall that must be visible in reporting.
 
 ### Self-check — KA 12.3
 

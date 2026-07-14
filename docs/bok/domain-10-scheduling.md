@@ -308,6 +308,8 @@ risk (PERT/Monte Carlo).*
 
 ### 10.3.1 Crashing
 
+> **Fig 10.3.1 — The crash time–cost curve.** *Caption:* cheapest day first; the curve steepens at day 11 where both paths must be bought at once (Exercise 10.6's data). *Data:* 14→10 days; cumulative 0/2,000/4,000/7,500/12,500.
+
 **Definition & purpose.** **Crashing** shortens the schedule by adding resources to **critical** activities,
 choosing those with the **lowest cost per time saved**. It trades **cost for time** and only helps on the
 critical path (crashing a non-critical activity just adds cost and float). Crashing has diminishing returns and

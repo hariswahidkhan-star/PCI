@@ -436,8 +436,10 @@ print/PDF edition, the inline answers are collected here by KA number and remove
 
 ## Appendix F — Sample-MCQ bank
 
-Every Knowledge Area ends with **3–6 sample MCQs** (four options, correct answer marked, rationale, tagged with
-topic number and cognitive level), per Style Spine §8. Consolidated counts (draft):
+Every Knowledge Area ends with **3–8 sample MCQs** (four options, correct answer marked, rationale, tagged with
+topic number and cognitive level), per Style Spine §8; Domains 11–13 carry additional items following the
+review board's blueprint-alignment recommendation (the AI domain examines at 20 %). Consolidated counts
+(draft):
 
 | Domain | KAs | Sample MCQs |
 |---|---:|---:|
@@ -451,10 +453,10 @@ topic number and cognitive level), per Style Spine §8. Consolidated counts (dra
 | 8 PM Lifecycle | 6 | 23 |
 | 9 Agile & Adaptive | 6 | 26 |
 | 10 Scheduling | 4 | 18 |
-| 11 Process Cycles | 3 | 12 |
-| 12 Risk Management | 3 | 13 |
-| 13 AI for Project Controls | 7 | 31 |
-| **Total (draft)** | **61** | **280** |
+| 11 Process Cycles | 3 | 16 |
+| 12 Risk Management | 3 | 17 |
+| 13 AI for Project Controls | 7 | 52 |
+| **Total (draft)** | **61** | **309** |
 
 > **Blueprint separation.** These are **study/sample items** drawn from the same blueprint as, but kept
 > **separate from**, the live examination bank; they are **not** to be reused verbatim as live exam questions

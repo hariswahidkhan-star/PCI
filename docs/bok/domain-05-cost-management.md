@@ -247,6 +247,8 @@ accrual and the open commitment, made visible. The arithmetic is exactly Exercis
 follow **physical** performance (quantity reports, progress certificates), not invoice arrival — a VOWD curve
 that steps upward on invoice dates is just the bottom curve wearing the middle curve's label (KA 5.2.4).
 
+> **Fig 5.2.2 — The three-curve cost report.** *Caption:* commitment steps ahead, VOWD follows performance, invoiced lags by payment terms; the vertical gaps are the open commitment and the accrual. *Data:* illustrative eight-month package to USD 1.0m.
+
 ### 5.2.3 Cost extraction and reconciliation
 
 **The principle.** Cost is **extracted** from the ERP/source systems, **coded** to the project structure (if

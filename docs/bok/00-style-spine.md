@@ -141,7 +141,7 @@ table plus an **Interpretation** line — the interpretation is never optional.
 
 ## 8. The MCQ format
 
-Each KA ends with **3–6 sample MCQs** to certification standard:
+Each KA ends with **3–8 sample MCQs** to certification standard:
 
 - Exactly **four options** (A–D), **one correct**, with the correct option **marked** and a **1–3 sentence
   rationale** explaining why it is right *and* why the plausible distractors are wrong.

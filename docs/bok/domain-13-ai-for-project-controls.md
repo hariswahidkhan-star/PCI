@@ -185,6 +185,42 @@ professional must still recompute it because:
 correctness, and there is no true reasoning guarantee. B overstates a specific failure; C and D misapply the
 concepts — verification is required at any temperature.
 
+**MCQ 13.1-F `[13.1.2 · Application]`** A controls team wants to group thousands of anomalous cost postings
+into families of similar cases, with no predefined categories or labelled examples. The best-fit approach is:
+- A. Rules/automation.
+- B. Supervised ML.
+- C. Unsupervised ML — finding structure in unlabelled data. ✅
+- D. Reinforcement learning.
+
+*Rationale:* With no labels and no known logic, the task is finding structure in unlabelled data — unsupervised
+learning (13.1.2, and the classification table of 13.1.6). A rule needs the logic to be known and
+deterministic; supervised ML needs labelled examples; reinforcement learning learns by trial and reward in an
+environment, which this task does not offer.
+
+**MCQ 13.1-G `[13.1.4 · Application]`** A commercial team wants an assistant that answers questions from a
+contract set that changes weekly, with each answer citing its source clause. Between fine-tuning and RAG, the
+better fit is:
+- A. Fine-tuning, because it permanently teaches the model the contracts.
+- B. RAG — the current documents are retrieved and supplied at inference, so answers are grounded in this
+  week's contract set and cited to source. ✅
+- C. Fine-tuning, because it removes hallucination.
+- D. Neither — LLMs cannot work over documents.
+
+*Rationale:* RAG supplies the documents at inference, so a weekly-changing corpus stays current without
+retraining and answers can cite retrieved sources (13.1.4). A would bake in a snapshot that goes stale with
+every change; C is false — no technique removes hallucination or the need to verify; D contradicts 13.2.3 —
+unstructured documents are exactly the domain of GenAI/RAG.
+
+**MCQ 13.1-H `[13.1.3 · Recall]`** The context window of an LLM is:
+- A. The amount of text (in tokens) the model can consider at once — everything it "knows" for a task must fit
+  in it or be retrieved into it. ✅
+- B. The setting that controls randomness in the output.
+- C. The period after which a model's training data goes stale.
+- D. The screen area of the assistant's interface.
+
+*Rationale:* The context window is the model's working span in tokens (13.1.3). B describes temperature; C
+describes the knowledge cutoff; D has nothing to do with the concept.
+
 ### Self-check — KA 13.1
 
 1. Define token, context window and temperature. *(Text unit the model reads/writes; how much text it
@@ -322,6 +358,41 @@ primarily the domain of:
 
 *Rationale:* Structured (tabular, coded) data is directly usable by ML; unstructured documents are the domain
 of GenAI/RAG (13.2.3). Rules validate coded fields, and unstructured data is very much within AI's reach.
+
+**MCQ 13.2-E `[13.2.2 · Application]`** A 15,000-row cost dataset is profiled before an AI initiative: **2 %**
+of rows have invalid codes, **3 %** are duplicates and **4 %** are missing accrual flags. Assuming no overlap,
+the number of rows failing at least one check is:
+- A. 300
+- B. 600
+- C. 900
+- D. 1,350 ✅
+
+*Rationale:* With no overlap the failure rates add: 2 % + 3 % + 4 % = 9 %; `15,000 × 0.09 = 1,350` rows
+(300 + 450 + 600). A counts only the invalid codes; B counts only the missing accrual flags; C adds the
+invalid and missing-flag rates but omits the duplicates. At 9 % failing, remediation precedes any training
+(13.2.2).
+
+**MCQ 13.2-F `[13.2.2 · Application]`** Profiling finds that (i) the controls system and the ledger disagree
+on several cost totals, and (ii) a number of postings appear twice. The data-quality dimensions failing are:
+- A. Accuracy and timeliness.
+- B. Validity and completeness.
+- C. Consistency and uniqueness. ✅
+- D. Timeliness and validity.
+
+*Rationale:* Agreement across systems is **consistency**; freedom from duplicates is **uniqueness** (13.2.2).
+Accuracy asks whether data reflects reality, timeliness whether it is current, validity whether it conforms to
+rules/format, completeness whether anything is missing — none of which is what these two findings describe.
+
+**MCQ 13.2-G `[13.2.3 · Analysis]`** An auditor challenges a figure in an AI-assisted forecast. The discipline
+that lets the team trace that number back through its transformations to its source is:
+- A. Temperature control.
+- B. Data lineage. ✅
+- C. Fine-tuning.
+- D. Prompt patterns.
+
+*Rationale:* Lineage traces where a data point came from and how it was transformed — essential for
+auditability when an AI-influenced number is challenged (13.2.3). Temperature is a randomness setting;
+fine-tuning specialises a model; prompt patterns shape instructions — none provides traceability to source.
 
 ### Self-check — KA 13.2
 
@@ -632,6 +703,42 @@ public AI tool to extract its terms. The primary guardrail breached is:
 ungoverned public tool loses control of it, whatever the time pressure — a governed tool is the remedy.
 Refinement, temperature and format are prompt-craft matters, not the governance breach at issue.
 
+**MCQ 13.3-E `[13.3.1 · Application]`** A commercial manager must extract retention % and the LD rate from a
+subcontract for the contract register. Which prompt best follows the domain's prompt discipline?
+- A. "Acting as a commercial manager, extract from the attached subcontract the retention % and LD rate as a
+  two-row table with the clause reference for each; if a term is absent, return 'not found' — do not infer." ✅
+- B. "Tell me everything important about this contract."
+- C. "Extract the retention % and LD rate; if either is missing, estimate a typical market value."
+- D. "Be as creative as possible and summarise the contract's vibe."
+
+*Rationale:* A supplies the full anatomy of 13.3.1 — role, task, data reference, format, constraints — plus the
+grounding rule of 13.3.2b: cite the clause, and return 'not found' rather than infer. B is the vague prompt
+that gets a vague answer; C invites the model to fabricate a value for an entitlement-bearing term; D applies
+creativity to a factual extraction, the opposite of the low-temperature, verified norm.
+
+**MCQ 13.3-F `[13.3.2b · Application]`** In the red-team "attack my EAC" pattern, the model's output must
+**not** contain:
+- A. The strongest reason each assumption may not hold.
+- B. The evidence that would falsify each assumption.
+- C. A list of data it needed but was not given.
+- D. A proposed new EAC figure. ✅
+
+*Rationale:* The red-team challenge is a critique task, not a forecasting one — the model returns questions,
+never a number, and the `EAC` that survives is selected and owned by the professional (13.3.2b). A, B and C
+are exactly what the pattern asks the model to produce.
+
+**MCQ 13.3-G `[13.3.3 · Application]`** A minutes-to-actions extraction returns an action table in which one
+action carries an owner's name that appears nowhere in the minutes. The correct handling is to:
+- A. Keep the name — the model probably knows the team.
+- B. Circulate the list immediately to save time.
+- C. Replace it with 'not stated' and resolve the owner with the meeting chair before circulating. ✅
+- D. Delete the action from the list.
+
+*Rationale:* An owner the minutes do not state is recorded as 'not stated' — never a guessed name — and every
+'not stated' is resolved with the chair before the list circulates (13.3.2b): an invented owner is a
+hallucination entering the action register. A trusts an ungrounded claim; B circulates unverified output; D
+throws away a real action instead of verifying it.
+
 ### Self-check — KA 13.3
 
 1. List the components of a good professional prompt. *(Role/context, task, data, format, constraints.)*
@@ -843,6 +950,43 @@ and it is unrelated to RAG grounding.
 *Rationale:* Source-access control and corpus currency are the RAG-specific risks (13.4.2b) — sources must be
 curated and citations opened. RAG tools do cite sources, work over documents (not tables), and reduce rather
 than eliminate hallucination.
+
+**MCQ 13.4-E `[13.4.4 · Application]`** A portfolio office wants to predict, from its governed historical
+data, which of its live projects are most likely to overrun. The best-fitting tool category is:
+- A. A general LLM assistant.
+- B. A risk & forecasting / ML platform. ✅
+- C. A transcription / meeting assistant.
+- D. Document / RAG.
+
+*Rationale:* Predicting outcomes from historical data is the risk & forecasting / ML category's job (13.4.1,
+13.4.2b) — with explainability and training-data representativeness as its governance tests. A general LLM
+over-reaches on a prediction-from-data task; a meeting assistant captures discussions; RAG answers document
+questions.
+
+**MCQ 13.4-F `[13.4.2b · Application]`** A director's natural-language query to the BI assistant returns a
+"% complete" figure that differs from the controlled monthly report. The category-specific failure most likely
+at work is:
+- A. Metric-definition drift — the query was answered from a subtly different definition than the report's. ✅
+- B. A missing goods-receipt note.
+- C. Too low a temperature setting.
+- D. An expired tool licence.
+
+*Rationale:* Metric-definition drift is the named quiet failure of BI & analytics AI (13.4.2b): the remedy is
+centrally governed metric definitions (13.2.3) and reconciling AI-generated figures to the controlled ones. B
+belongs to the P2P cycle, not BI; C affects randomness, not metric definitions; D would stop the tool, not
+skew its answer.
+
+**MCQ 13.4-G `[13.A.6 · Application]`** A controls team assembles a **monthly** cost pack for the board. Of
+the three integration patterns, the proportionate choice is:
+- A. Manual export/import — spreadsheets and email are simplest.
+- B. API integration — the freshest data is always best.
+- C. No integration — retype the figures each month.
+- D. Batch ETL/file transfer — a scheduled, auditable extract matches the monthly decision cadence. ✅
+
+*Rationale:* The right pattern is set by the decision cadence the data serves (13.A.6): a monthly pack does
+not need a real-time feed, and batch ETL is robust and auditable. A is fragile, unlogged and where version
+chaos lives; B pays real engineering and governance cost for freshness the decision cannot use; C is the
+manual failure mode, not a pattern.
 
 ### Self-check — KA 13.4
 
@@ -1149,6 +1293,46 @@ multiplies by the `CPI` instead of dividing; B assumes the drift away; D has no 
 professional then verifies the assumption against the variance cause and runs the `TCPI` reality check before
 reporting (13.5.3).
 
+**MCQ 13.5-F `[13.5.4 · Application]`** An ML classifier auto-codes **900** of a month's **1,200** invoices
+above its confidence threshold; an audit of the 900 finds **855** correct. The model's precision at the
+threshold is:
+- A. 71.25 %
+- B. 75 %
+- C. 95 % ✅
+- D. 5 %
+
+*Rationale:* `Precision = correct auto-codes ÷ total auto-codes = 855 ÷ 900 = 95 %` (13.5.4c). A divides the
+correct codes by all 1,200 invoices, including the 300 the model never coded; B is the automation rate
+(900 ÷ 1,200), not precision; D is the error rate at the threshold (45 ÷ 900), the complement of the answer.
+The 45 residual miscodes are what the review step and reconciliation discipline must catch.
+
+**MCQ 13.5-G `[13.A.7 · Application]`** A duplicate-invoice detector is scored on a golden set of **300**
+invoices containing **60** known duplicates. It flags **50** invoices, of which **36** are genuine duplicates.
+Its precision and recall are:
+- A. Precision 60 %, recall 72 %.
+- B. Precision 72 %, recall 60 %. ✅
+- C. Precision 83.3 %, recall 83.3 %.
+- D. Precision 12 %, recall 16.7 %.
+
+*Rationale:* `Precision = true hits ÷ total flags = 36 ÷ 50 = 72 %`; `recall = true hits ÷ total true cases =
+36 ÷ 60 = 60 %` (13.A.7). A swaps the two denominators; C divides flags by true cases (50 ÷ 60), a ratio that
+measures neither; D divides both counts by the whole 300-invoice set. At 60 % recall the detector misses 40 %
+of duplicates, so it screens but cannot replace the month-end duplicate review.
+
+**MCQ 13.5-H `[13.5.5 · Application]`** An AI logic-check on a contractor schedule flags dangling activities
+and a hard constraint. After the planner re-logics the dangles and removes the constraint, the recalculated
+finish slips 6 days. The best reading is:
+- A. The constraint had been hiding a genuine slip — the repaired schedule is the honest one to take
+  forward. ✅
+- B. The repair introduced the slip, so the constrained version should be restored to protect the date.
+- C. The AI fabricated the defects, since the original schedule showed the earlier date.
+- D. Dangling activities are cosmetic and the exercise was unnecessary.
+
+*Rationale:* A hard constraint can fix a date the network no longer supports — removing it reveals, not
+creates, the slip (13.5.5b; Domain 10). B restores the concealment; C mistakes a date the constraint
+manufactured for evidence against the checker; D ignores that dangles break the schedule's ability to
+recalculate. The AI found the defects; the planner decided what each meant.
+
 ### Self-check — KA 13.5
 
 1. State the three-step AI workflow and what each step contributes. *(Input → AI step (accelerate) →
@@ -1351,6 +1535,48 @@ checklist exists to provide.
 mitigations are alertness where AI influences decisions about people or resources, testing for skew, and
 keeping a human decision-maker. The other options misstate the mechanism.
 
+**MCQ 13.6-F `[13.6.5 · Application]`** An AI extraction reports an LD rate citing clause 14.3. The reviewer
+opens clause 14.3: the clause exists, but states a different rate. Applying the assurance checklist, the
+correct conclusion is:
+- A. The output passes — the citation is real, so the grounding line is satisfied.
+- B. Release it with a footnote recording the difference.
+- C. Skip the checklist — legal review will catch it later.
+- D. The source-check line fails — the value does not match the cited clause — so the output is withheld
+  until fixed. ✅
+
+*Rationale:* Source-checking means confirming the extracted **value** against the cited clause, not merely
+that the clause exists (13.6.5b, 13.3.3b) — a real citation with a wrong value is still a failed check, and an
+output that fails any line is not released until fixed. A confuses citation existence with verification; B
+footnotes a known failure; C substitutes a later control for the one that just failed.
+
+**MCQ 13.6-G `[13.A.1 · Application]`** A controls function deploys an agentic system that retrieves the
+month-end extract, computes the variances, drafts commentary and assembles the exception pack. The
+verification discipline should:
+- A. Move from per-output to per-workflow — assure the chain's design and insert checkpoints where
+  consequential intermediate outputs are inspected before the chain proceeds. ✅
+- B. Apply only to the final pack, since that is all anyone reads.
+- C. Be dropped — an agent that checks its own work needs no reviewer.
+- D. Be replaced by an annual audit of the vendor.
+
+*Rationale:* The governance need scales with autonomy: an agent's early error is compounded and laundered
+through every later step, so the professional assures the chain design and checkpoints, and the audit trail
+records the chain, not just the answer (13.A.1). B lets a step-two error arrive polished in the final pack; C
+removes the accountable human; D is far too infrequent and aimed at the wrong object.
+
+**MCQ 13.6-H `[13.6.4 · Application]`** A one-off, high-stakes external disclosure would take longer to
+verify line-by-line than to draft manually, and the drafting data is highly confidential. Under the "when not
+to use AI" tests, the professional should:
+- A. Use AI anyway — it is the modern approach.
+- B. Not use AI for this task — the verification burden negates the time saving and the stakes demand
+  certainty the model cannot give. ✅
+- C. Use AI and skip verification to preserve the saving.
+- D. Use a public tool, since the task is a one-off.
+
+*Rationale:* Responsible practice includes not using AI where the stakes demand certainty that only heavy
+verification could give, negating the saving (13.6.4) — knowing when *not* to reach for AI is as professional
+as knowing how. A is fashion, not judgement; C abandons the non-negotiable step; D adds a confidentiality
+breach (13.2.5) to the wrong call.
+
 ### Self-check — KA 13.6
 
 1. State the governing principle and why a model cannot satisfy accountability. *(AI proposes, the professional
@@ -1505,6 +1731,45 @@ shifts toward:
 *Rationale:* The role moves from *producing* every number to *directing and assuring* AI-assisted production;
 the professionals who thrive pair domain mastery with AI fluency (13.7.2). The role is neither replaced nor
 diminished, and domain knowledge matters more, not less.
+
+**MCQ 13.7-E `[13.A.5 · Application]`** Reviewing one auto-coded line costs **USD 2**; an uncaught miscode
+costs **USD 400** downstream. Measured precision is **99.0 %**. Pricing the review step:
+- A. Per-item review still pays — expected uncaught-error cost is `1 % × 400 = USD 4` per line, above the
+  USD 2 review cost; break-even sits at a precision of 99.5 %. ✅
+- B. Per-item review no longer pays — a 1 % error rate is negligible.
+- C. Per-item review no longer pays — 99.0 % precision exceeds the USD 2 review cost.
+- D. Per-item review always pays, whatever the precision.
+
+*Rationale:* Per-item review pays while `error rate × error cost > review cost`: `0.01 × 400 = 4 > 2`
+(13.A.5). Break-even is an error rate of `2 ÷ 400 = 0.5 %` — precision 99.5 % — above which assurance moves
+to sampling. B ignores the error cost that makes 1 % expensive; C compares a percentage to a dollar figure,
+a category error; D makes the review a permanent fixture rather than a priced control.
+
+**MCQ 13.7-F `[13.7.3 · Application]`** An extraction workflow runs **20,000 documents a year**, averaging
+**2,000 tokens in** and **500 tokens out**, priced at **USD 3.00 per million input tokens** and **USD 15.00
+per million output tokens**. The annual compute cost is approximately:
+- A. USD 120
+- B. USD 150
+- C. USD 2,700
+- D. USD 270 ✅
+
+*Rationale:* Per document: `(2,000 ÷ 1M) × 3.00 + (500 ÷ 1M) × 15.00 = 0.006 + 0.0075 = USD 0.0135`; annual:
+`20,000 × 0.0135 = USD 270` (13.7.3b). A prices the input tokens only; B prices the output tokens only; C is
+a tenfold decimal slip. The compute is small against the review labour beside it — but the arithmetic is what
+exposes the metered-vs-licensed crossover.
+
+**MCQ 13.7-G `[13.A.4 · Analysis]`** A function whose AI now drafts most narratives and codes most cost lines
+still requires analysts to work problems by hand on a regular rotation, with AI switched off. The primary
+purpose is to:
+- A. Punish over-reliance on the tools.
+- B. Reduce licence costs during the rotation.
+- C. Maintain the first-principles judgement that verification of AI output depends on. ✅
+- D. Comply with a data-residency requirement.
+
+*Rationale:* Verification presupposes a verifier who can still do the work — recompute the forecast, spot the
+wrong assumption — and that judgement is built by doing, so the function now produces it on purpose (13.A.4).
+A misreads deliberate practice as sanction; B and D are unrelated to the deskilling risk the rotation
+mitigates.
 
 ### Self-check — KA 13.7
 

@@ -200,6 +200,8 @@ is also the origin of the time-phased labour budget (Domain 3, KA 3.3): hours ×
 labour `PV`. Where no resource loading exists, the baseline's phasing is an assertion (Domain 10, Advanced
 10.A.1's health check asks exactly this).
 
+> **Fig 8.2.2 — A manpower histogram against availability.** *Caption:* the planned crew ramp breaches the 32-head availability line in months 5–6 — visible at baseline, not in month 5. *Data:* heads 8→38→8 over ten months; limit 32.
+
 ### 8.2.3 The subsidiary plans
 
 **The principle.** Around the three baselines sit the subsidiary management plans — **quality, resource, risk,

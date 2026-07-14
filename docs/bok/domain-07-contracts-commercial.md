@@ -244,6 +244,8 @@ retention, bonds and guarantees · 7.2.5 standard forms (FIDIC awareness).*
 
 ### 7.2.1 The contract lifecycle
 
+> **Fig 7.2.1 — The contract lifecycle.** *Caption:* form, mobilise, administer, complete, close — administration is where the money and the records move. *Data:* five stages; administer highlighted.
+
 **The principle.** A contract is managed from **formation** (negotiation, award, mobilisation) through
 **administration** (obligations, milestones, payments, variations, records) to **closure** (final account,
 release of retention, warranties). The controls professional's role runs throughout: maintaining the records

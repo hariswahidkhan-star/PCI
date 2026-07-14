@@ -321,6 +321,8 @@ Sprints remaining      = remaining backlog points / velocity
 
 ### 9.3.4 Burndown, burnup and flow metrics
 
+> **Fig 9.3.4 — A burnup chart with a scope change.** *Caption:* the done line climbs; the scope line steps up 40 points at Sprint 6 — burnup shows scope growth that burndown hides. *Data:* scope 250→290; done 0→248 over ten Sprints.
+
 **The measures.**
 
 - **Sprint burndown** — remaining work in the Sprint plotted down to zero; shows within-Sprint progress.

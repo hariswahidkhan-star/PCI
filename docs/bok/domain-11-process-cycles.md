@@ -102,6 +102,18 @@ old book (60 days).
 pass before an IFRS 15 contract exists (Domain 2, KA 2.2.2). Cash application and dunning act after
 invoicing; the three-way match is a P2P control.
 
+**MCQ 11.1-E `[11.A.1 · Application]`** A business runs a DSO of **50 days**, a DIO of **25 days** and a DPO
+of **35 days**. Its cash-conversion cycle is:
+- A. 15 days
+- B. 40 days ✅
+- C. 60 days
+- D. 110 days
+
+*Rationale:* `CCC = DSO + DIO − DPO = 50 + 25 − 35 = 40 days` (Advanced 11.A.1) — DPO is *subtracted*,
+because payables are someone else's cash funding you. A omits the inventory days (50 − 35); C swaps the signs,
+subtracting DIO and adding DPO (50 − 25 + 35); D adds all three, treating payables as cash tied up rather
+than funding received.
+
 ### Self-check — KA 11.1
 
 1. List the O2C stages in order. *(Order → credit check → fulfil → invoice → collect → apply cash.)*
@@ -236,6 +248,35 @@ primarily drives:
 *Rationale:* Goods received but not yet invoiced represent work/goods consumed without an invoice — the
 accrual basis of true cost-to-date (Domain 5, KA 5.2.2). Commitments arise at PO placement; actuals arise on
 the matched invoice; GRNI is owed *to* the supplier, not by them.
+
+**MCQ 11.2-E `[11.2.2 · Application]`** A PO orders **300 units at USD 40** (USD 12,000). The goods-receipt
+note records **280 units received**; the supplier invoices **300 units at USD 42** (USD 12,600). The amount
+properly payable once the exceptions are resolved is:
+- A. USD 12,600
+- B. USD 12,000
+- C. USD 11,760
+- D. USD 11,200 ✅
+
+*Rationale:* The match pays for **goods received at the PO price**: `280 × 40 = 11,200` (11.2.2). A pays the
+invoice as billed — 20 undelivered units at an unauthorised price; B pays the PO value for units that were
+ordered but not received; C prices the received quantity at the invoice's USD 42 rather than the agreed PO
+price, paying the unauthorised USD 2 uplift. Both the quantity leg and the price leg are held as exceptions
+before payment.
+
+**MCQ 11.2-F `[11.2.3 · Application]`** GRNI of **USD 180,000** was accrued at month-end. Next month,
+matched invoices arrive covering **USD 150,000** of it. The correct treatment of the remaining USD 30,000 is
+to:
+- A. Investigate it — reverse it if it is an over-accrual, let it stand if the supplier is simply slow to
+  invoice. ✅
+- B. Release the full USD 180,000 accrual, since invoices have started arriving.
+- C. Reclassify it as a commitment.
+- D. Write it off to a cost variance.
+
+*Rationale:* The accrual is released only against the invoices that post as actuals; the `180,000 − 150,000 =
+30,000` residue is investigated, not rolled forward blind — either an over-accrual to reverse or goods
+genuinely received and not yet billed, in which case the accrual stands (11.2.3; Toolkit 11.T.2). B
+un-accrues USD 30,000 of received goods and understates cost-to-date; C confuses the accrual with the PO
+commitment state; D buries an open question in a variance.
 
 ### Self-check — KA 11.2
 
@@ -372,6 +413,21 @@ customers should not also:
 *Rationale:* Billing combined with cash application and write-off lets one person control a whole O2C
 transaction — receipts could be misapplied and the gap written off undetected. The other duties sit in
 different processes and create no O2C conflict.
+
+**MCQ 11.3-E `[11.A.4 · Analysis]`** A duplicate-payment monitor fires 800 alerts a month, of which 16 are
+confirmed duplicates (2 % precision), and the team has begun skimming the queue. The best response is to:
+- A. Switch the monitor off — 2 % precision proves the risk is not real.
+- B. Widen the matching criteria so no duplicate can possibly be missed.
+- C. Treat each threshold as a tolerance decision: measure the false-positive rate, retune the detection
+  logic, and give every monitor a named owner and response path. ✅
+- D. Instruct the team to work all 800 alerts harder each month.
+
+*Rationale:* CCM's failure mode is drowning — alert fatigue buries the real breach in noise — and the remedy
+is the threshold discipline of Advanced 11.A.4: tune against measured false positives, with owners and
+response paths (the retune trade-off: tighten too far and true duplicates slip through unflagged). A abandons
+coverage because the *threshold* failed; B moves the trade-off to the noisy extreme and rebuilds the backlog;
+D scales effort instead of fixing the tolerance decision, and an alert stream nobody actions implies a
+coverage that does not exist.
 
 ### Self-check — KA 11.3
 
