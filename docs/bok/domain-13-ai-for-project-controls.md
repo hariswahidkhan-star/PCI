@@ -1636,6 +1636,51 @@ proposes, the professional disposes.**
 
 ---
 
+## Practitioner's toolkit — Domain 13
+
+*Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.*
+
+### Toolkit 13.T.1 — AI tool register template
+
+The approved-tool register the model policy requires (13.6.5c, §2): each tool, its permitted data classes and
+uses, and its assurance standard. Three illustrative rows — an assistant, a RAG system, an ML forecaster.
+
+| Tool | Category (13.4) | Approved data classes | Grounding required? | Verification standard | Owner | Last validated | Status |
+|---|---|---|---|---|---|---|---|
+| Enterprise LLM assistant (governed) | General LLM assistant | Internal; no personal or client-confidential data | N/A — no document claims accepted without a source | 13.6.5 checklist on material outputs; every figure recomputed against source | Controls director | Q2 2026 | Approved |
+| Contract knowledge base | Document / RAG | Confidential (permission-aware corpus) | Yes — every answer cited to a clause | Citations opened and confirmed (13.3.3b); legal review of entitlement-bearing terms | Commercial manager | Q2 2026 | Approved |
+| Cost-forecast model | Risk & forecasting / ML | Internal (governed cost history, 13.2.3) | N/A — driver visibility required (explainability) | `EAC` recomputed; method vs variance cause; `TCPI` reality check (13.5.3) | Head of estimating | Q1 2026 | Revalidation due |
+
+**Usage note.** The register is the operational form of the policy's approved-tools rule: no data may enter a
+tool above the data classification for which that tool is approved, and a governed enterprise alternative is
+used in preference to a public tool (13.2.5, 13.6.5c §2). The category column ties each tool to its
+category-specific governance risk from 13.4.2b — hallucination for assistants, source-access control and
+corpus currency for RAG, explainability and training-data representativeness for ML. The last-validated
+column enforces the quarterly re-validation cadence (13.6.5c §7), because capabilities and data-handling
+terms change: the forecaster's "Revalidation due" status means its outputs carry extra scrutiny until the
+owner re-validates. Keep the columns stable so the register can be audited period over period.
+
+### Toolkit 13.T.2 — AI-output verification record
+
+The 13.6.5 assurance checklist as a reusable form — one row per material AI-assisted output, filed as part of
+the audit trail (13.6.2). The example row is the AI-drafted `EAC` of worked example 13.5.10a.
+
+| Output | Source-checked | Method/assumption sound | Grounded (no hallucination) | Confidentiality | Cross-checked | Signed off by | Date |
+|---|---|---|---|---|---|---|---|
+| AI-drafted `EAC` USD 1,180,000, master project (13.5.10a) | ✔ recomputed from `AC`/`EV`/`BAC` and indices | ✔ method matches the variance cause; `TCPI` reality-checked | ✔ every claim traces to data; no fabricated figures | ✔ produced in a governed, registered tool | ✔ consistent with the critical path and prior period | Lead cost engineer (named) | 30 Jun 2026 |
+
+**Usage note.** The form turns the verification checklist from a habit into a record: for each material
+output — forecasts, disclosures, commercial positions, board reporting — it captures what the AI produced,
+who verified it, and on what basis, which is exactly the audit trail the policy requires and the defence a
+challenged number needs (13.6.2, 13.6.5c §4). An output that fails any column is not released until the
+failure is fixed — footnoting a known inconsistency defeats the assurance the record exists to provide
+(MCQ 13.6-D). The columns flex slightly by output type (an extracted contract term adds a legal-review
+column, 13.6.5b) but the shape — propose, verify line by line, sign off by name — never does. **AI proposes,
+the professional disposes.**
+
+---
+
 ## Domain 13 summary
 
 AI is a major, practical part of modern project controls — and the governing principle, **"AI proposes, the

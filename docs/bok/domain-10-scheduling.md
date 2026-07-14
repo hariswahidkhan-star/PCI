@@ -959,6 +959,60 @@ the new finish.
 
 ---
 
+## Practitioner's toolkit — Domain 10
+
+*Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.*
+
+### Toolkit 10.T.1 — Schedule health-check sheet
+
+Per Advanced 10.A.1, the health check runs before a baseline is accepted and periodically thereafter. Record
+the organisational threshold once, then score every schedule against it.
+
+| Check | Threshold (organisational) | This schedule | Pass? |
+|---|---|---|---|
+| Dangling activities (missing predecessor/successor) | 0, excluding start and finish | 3 dangles found | ✘ |
+| Date constraints | ≤ 5, each justified in writing | 4, all justified | ✔ |
+| Lags above threshold | None > 10 days without written physical justification | 1 × FS + 15 unjustified | ✘ |
+| Negative float | 0 activities | | |
+| High-float concentration | ≤ 5 % of activities with total float > 44 days | | |
+| Out-of-sequence progress at last update | 0 unresolved | | |
+| Calendars reconciled | Every assignment deliberate; lag-calendar convention confirmed in writing | | |
+
+**Usage note.** This sheet is Advanced 10.A.1 made operational: run it on any inherited schedule — a
+contractor's, a predecessor's, an AI-proposed one (KA 13.5.5) — before trusting a single date. A schedule
+that fails is not necessarily wrong, but it cannot be trusted to *recalculate* (KA 10.2): its dates are
+assertions, not results, so a failed line (the dangles and the unjustified lag above) blocks baseline
+acceptance until fixed or justified. Set the thresholds once, at organisational level, and keep them stable so
+scores compare across schedules and across periods. The lag and calendar lines are the audit of Advanced
+10.A.3 in summary form — every exposed lag is justified in physical terms or converted into a real activity.
+
+### Toolkit 10.T.2 — Progress-update checklist
+
+Applied at every data date (KA 10.4.1), before the period's schedule report is issued.
+
+- [ ] Data date set; actual start/finish dates recorded for all work started or finished in the period.
+- [ ] Remaining durations reassessed for every in-progress activity — not inferred from % complete alone.
+- [ ] Out-of-sequence progress identified and resolved: logic corrected, or the update queried.
+- [ ] No new date constraints introduced; existing constraints re-justified or removed (Advanced 10.A.1).
+- [ ] Network recalculated and the current critical path re-identified — it may have moved.
+- [ ] Total and free float re-read; float consumption against last period noted, with who is consuming it.
+- [ ] Forecast completion compared with the baseline and the committed P-level date (KA 10.3.4); schedule
+      contingency burn noted (Advanced 10.A.2).
+- [ ] Key milestone movement against baseline recorded (KA 10.4.2).
+- [ ] Network view read alongside the earned-value view (`SV`/`SPI`, earned schedule) — each covers the
+      other's blind spot (KA 10.4.2).
+- [ ] Variance narrative drafted to Domain 4 standards — figure, cause, action — and signed off.
+
+**Usage note.** This checklist is KA 10.4.1's progressing discipline as a repeatable routine: the schedule
+equivalent of month-end cut-off in cost (Domain 5, KA 5.2.4). The remaining-duration line matters most —
+updating % complete without reassessing remaining duration is how forecasts quietly stop being true. The
+critical-path line encodes the case study's lesson: the path moved when the schedule was crashed and again
+when actuals arrived, so a professional still watching last month's path is watching the wrong activities.
+The P-level comparison keeps the commit-P80/manage-P50 posture honest, period after period.
+
+---
+
 ## Domain 10 summary
 
 Scheduling models the work in time: activities decomposed from the WBS, sequenced with the four dependency

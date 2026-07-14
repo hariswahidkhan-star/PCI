@@ -766,6 +766,54 @@ fast-track renewal adding **USD 60,000**, and a **30 %** chance of a full re-app
 
 ---
 
+## Practitioner's toolkit — Domain 12
+
+*Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.*
+
+### Toolkit 12.T.1 — Risk register column standard
+
+The columns a register needs to support this domain's process end-to-end — no fewer, and rarely many more.
+Two example rows echo the register of 12.2.3.
+
+| ID | Cause–event–effect statement (12.2.1) | Owner | Probability | Impact (USD) | EMV (USD) | Response & cost (12.2.4) | Residual P/I | Contingency drawn (USD) | Review date |
+|---|---|---|---:|---:|---:|---|---|---:|---|
+| R-01 | *Because* the works are over made ground with incomplete records, *there is a risk that* adverse ground conditions are found, *leading to* redesign and delay cost. | Engineering manager | 30 % | 200,000 | 60,000 | Mitigate — pre-start ground survey, USD 30,000 | 10 % / 200,000 | 0 | 31 Aug 2026 |
+| R-02 | *Because* the works permit is still with the authority, *there is a risk that* it is granted late, *leading to* standing time and prolongation cost. | Project manager | 40 % | 100,000 | 40,000 | Mitigate — early submission and weekly expediting, USD 8,000 | 20 % / 100,000 | 0 | 31 Aug 2026 |
+
+**Usage note.** Each column carries a piece of the domain's discipline: the cause–event–effect statement makes
+the risk ownable and priceable (12.2.1); `EMV = probability × impact` gives the quantitative building block
+(12.2.3); the response-and-cost column forces the mitigation economics — worthwhile only if it cuts
+`probability × impact` by more than it costs (12.2.4, worked example 12.2.3b); and the residual P/I column is
+what gets fed back into the quantification so the risk is not double-counted. The contingency-drawn column is
+what makes the remaining-contingency-vs-remaining-exposure test possible at every review (12.3.3), and the
+review date keeps the register living rather than filed (12.2.5). Keep the columns stable — a register whose
+shape changes each quarter cannot be trended, audited or trusted as the basis of the contingency it justifies
+(12.3.1).
+
+### Toolkit 12.T.2 — Quarterly risk review agenda
+
+A standing agenda; the questions do not change, only the answers.
+
+| Item | Question | Input |
+|---|---|---|
+| Register currency | Which risks are new, closed or stale since last quarter — and does any entry no longer have a live owner or review date? (12.2.5) | Register change log; workshop output |
+| Contingency adequacy | Does remaining contingency still cover remaining exposure at the stated P-level — not the opening figure? (12.3.3) | Draw-down record; re-run Monte Carlo P80 |
+| Draw-downs | Does every draw trace to a materialised register risk — and did any risk materialise without a draw or an issue entry? (12.3.3) | Draw-down log against the issues log |
+| Opportunities | Which opportunities were exploited, shared or enhanced this quarter, and what did each return? (Advanced 12.A.2) | Opportunity entries; netted EMV movement |
+| Emerging risks | What has horizon scanning surfaced — regulatory, technological, market — and which scenarios or stress tests follow? (Advanced 12.A.3) | Scanning log; scenario and stress-test notes |
+| Culture check | What bad news surfaced early this quarter, and how was the messenger treated? (Advanced 12.A.4) | Near-miss and early-warning log |
+
+**Usage note.** The agenda operationalises the monitoring KA (12.2.5) and the executive perspective's chair
+questions: contingency is tested against *remaining* exposure every quarter, never against the opening figure
+— the opening-figure illusion is how shortfalls reach the final account unannounced. The opportunities and
+emerging-risk items keep the review from narrowing into a threats-only exercise, and they feed the management
+reserve judgement for what the register cannot foresee (12.3.2, 12.A.3). The culture item is deliberately
+last and never skipped: the register is a sensor network, and culture is its power supply (12.A.4). A review
+that produces no register changes has not reviewed — it has re-filed.
+
+---
+
 ## Domain 12 summary
 
 Risk management handles the uncertainty every estimate, schedule and forecast is made under. A **risk** is an
