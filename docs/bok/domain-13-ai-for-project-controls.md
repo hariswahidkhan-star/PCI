@@ -201,6 +201,20 @@ helps or harms in project controls. Data quality is therefore a *prerequisite*, 
 A controls professional already manages several of these through reconciliation and cut-off (Domains 1, 5) —
 which is exactly why controls data, well-governed, is a strong foundation for AI.
 
+**Worked example 13.2.2 — a data-quality assessment before an AI initiative.**
+
+- **Setup.** Before training a cost-forecast model, a controls team profiles its **12,000-row** historical cost
+  dataset against the quality dimensions above.
+- **Method.** Automated checks per dimension — validity (cost codes tested against the chart of accounts),
+  uniqueness (duplicate detection), completeness (accrual flags present).
+- **Substitution.** Invalid codes **3 % = 360 rows**; duplicates **1.5 % = 180 rows**; missing accrual flags
+  **6 % = 720 rows** — up to **1,260 rows (10.5 %)** failing at least one check (assuming no overlap).
+- **Result.** The dataset is **not yet model-ready**; a remediation pass (re-coding, de-duplication, accrual
+  back-fill) precedes any training.
+- **Interpretation.** Profiling *before* building is the discipline — a model trained on the raw set would
+  learn the 10.5 % of noise as if it were signal (13.2.1). The remediation work is classic controls hygiene
+  (Domains 1, 5), which is why the controls professional is well-placed to lead data preparation.
+
 ### 13.2.3 Structure, governance and lineage
 
 **The principle.** **Structured** data (tables, coded fields) is directly usable by ML; **unstructured** data
@@ -960,6 +974,20 @@ who pair domain mastery (Domains 1–12) with AI fluency.
 forecast accuracy improvement — against cost and risk, honestly. Vanity metrics ("we use AI") are not value;
 a faster, more accurate month-end, or an earlier-warned overrun, is. Measuring value is what separates a
 sustainable capability from hype.
+
+**Worked example 13.7.3 — a value case that is honest about cost.**
+
+- **Setup.** AI-assisted coding and reconciliation (13.5.4) cuts a four-person month-end close from **5 days
+  to 2**. Loaded cost **USD 90/hour**, 8-hour days.
+- **Formula.** `annual saving = days saved × staff × hours × rate × 12`; compare with the tooling + governance
+  cost.
+- **Substitution.** `3 × 4 × 8 × 90 = USD 8,640` per month; `× 12 = USD 103,680` per year. Tool licences plus
+  governance/verification effort: **USD 60,000** per year.
+- **Result.** **Net value ≈ USD 43,680 per year**, before the harder-to-price benefits (earlier reporting,
+  earlier warnings).
+- **Interpretation.** An honest value case nets the *real* costs — licences *and* the human verification the
+  governance model requires (13.6) — against measured time savings, not vendor claims. "We use AI" is not
+  value; a faster, verified close is (13.7.3).
 
 ### 13.7.4 Pitfalls and change management
 
