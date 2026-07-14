@@ -761,6 +761,121 @@ closing positive balance; D is one *driver* of the trough, not the requirement i
 
 ---
 
+## Advanced topics — Domain 3
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 3.A.1 — Escalation and real versus nominal estimates
+
+**The principle.** Every estimate is priced at a moment in time. A **base-date estimate** states cost at
+the price level of a stated date — the basis recorded in the BoE (3.2.3). An **out-turn estimate**
+("money of the day") adds **escalation** to the price level of the years in which the money will actually
+be spent. Converting one to the other uses the **time-phased budget** (3.3): each period's phased cost is
+escalated by the factor for its **year of expenditure**, so the phasing that produces the `PV` curve also
+prices the escalation.
+
+**Worked example 3.A.1 — escalating a base-date estimate to out-turn.**
+
+1. **Setup.** A base-date estimate of **USD 10,000,000** is phased **4.0m / 3.5m / 2.5m** over Years 1–3
+   (per the 3.3 baseline); escalation is **4 % per annum** from the base date.
+2. **Formula.** `Out-turn = Σ (year's phased cost × (1 + e)^n)`, where `e` is the annual escalation rate
+   and `n` the years from base date to expenditure.
+3. **Substitution.** Year 1: `4,000,000 × 1.04 = 4,160,000`; Year 2: `3,500,000 × 1.0816 = 3,785,600`;
+   Year 3: `2,500,000 × 1.124864 = 2,812,160`.
+4. **Result.** Out-turn estimate **≈ USD 10,757,760** — an escalation allowance of **≈ USD 757,760** on top
+   of the base-date figure.
+5. **Interpretation.** The two numbers answer different questions: the base-date estimate compares options
+   at a consistent price level; the out-turn estimate is what must actually be funded.
+
+**The trap.** Comparing a *base-date* estimate to *out-turn* actuals and calling the ≈ 758,000 difference an
+"overrun". It is price movement, not performance — a cousin of the false-precision pitfall of 3.2.1, where
+an apparent overrun was never an overrun at all. The remedy is documentary: state the basis (real or
+nominal, base date, escalation assumptions) with every estimate, exactly as class and range are stated.
+
+### Advanced 3.A.2 — Currency and location factors in parametric estimating
+
+**The principle.** A parametric rate (3.2.2) is only valid for the place, time and scope it was derived
+from. Before a historical rate is applied elsewhere it must be adjusted for **location** — productivity
+(labour skill and norms), logistics (remoteness, import content) and market conditions (how heated the
+local market is) — for **currency**, converted at a stated basis rather than an incidental daily rate, and
+for **time** (escalation from the rate's base year, 3.A.1).
+
+**Worked example 3.A.2 — adjusting a library rate.**
+
+1. **Setup.** Estimate a **5,000 m²** office using a library rate of **USD 2,000/m²** derived **two years
+   ago** in a different market. Location factor for the destination market: **1.15**; escalation **5 % per
+   annum** for two years.
+2. **Formula.** `Estimate = parameter × rate × location factor × (1 + e)^n`.
+3. **Substitution.** `2,000 × 1.15 = 2,300`; `2,300 × 1.05² = 2,300 × 1.1025 = 2,535.75`;
+   `5,000 × 2,535.75 = 12,678,750`.
+4. **Result.** **≈ USD 12.68m**, against **USD 10.0m** from the raw rate — the adjustments move the answer
+   by roughly a quarter.
+5. **Interpretation.** The adjustments are as material as the rate itself, so each factor must be evidenced
+   and recorded, not asserted.
+
+**The library needs its own BoE.** A rate library whose entries do not document their **basis** — base year,
+location, and scope (what the rate includes and excludes) — silently misleads: an all-in rate applied as if
+it excluded preliminaries, or a 2019 rate applied unescalated, produces a confident wrong answer. This is
+the BoE discipline of 3.2.3 applied to the library itself; an undocumented rate is a Class 5 input dressed
+up as Class 2 (3.2.1).
+
+### Advanced 3.A.3 — Probabilistic cost estimating
+
+**From a point to a distribution.** A bottom-up estimate (3.2.2) can carry a **range per line item**
+(typically three-point: optimistic, most likely, pessimistic), plus stated **correlations** between items
+that share drivers (market prices, weather, productivity). A **Monte Carlo** simulation samples the lines
+together and returns a distribution of the total, read at **P-levels** (cross-ref 12.2.3 and 12.3.1): a
+**P80** total is one the out-turn has an 80 % chance of not exceeding.
+
+**Why summing per-item P80s does not give a P80 total.** Unless the items are perfectly correlated, they do
+not all land at their bad end in the same run — the **portfolio effect**. The sum of conservative line items
+is therefore *more* conservative than the portfolio.
+
+**Worked example 3.A.3 — the portfolio effect.**
+
+1. **Setup.** Ten independent packages, each with mean **USD 100,000** and item-level **P80 = USD 112,000**.
+2. **Formula.** `Σ item P80s ≥ P80 of the total`, with equality only under perfect correlation.
+3. **Substitution.** Sum of item P80s: `10 × 112,000 = 1,120,000`. Simulating the ten packages together
+   returns a total-distribution **P80 ≈ 1,038,000** against a mean of 1,000,000.
+4. **Result.** Line-item conservatism overstates the portfolio P80 by **≈ USD 82,000**.
+5. **Interpretation.** Contingency built by stacking per-line conservatism is over-funded and unauditable;
+   contingency is derived at **portfolio level** from the simulation (12.3.1), with correlations stated —
+   correlation pushes the total's P80 back towards the sum of the item P80s.
+
+**Funding level is policy, not mathematics.** Funding contingency at **P50** makes exhaustion an even-money
+bet; **P80** accepts a 20 % chance of exceedance; higher levels tie up capital the portfolio needs
+elsewhere — the deliberate sponsor choice this domain's case study walks through.
+
+### Advanced 3.A.4 — Rolling-wave budgeting and undistributed budget
+
+**The principle.** On a long programme, detailing every far-term work package at authorisation is false
+precision (3.2.1). **Rolling-wave budgeting** details the near-term scope into work packages with
+distributed, time-phased budgets, and holds far-term scope as **planning packages** whose budget sits as
+**undistributed budget (UB)** — already inside the baseline in the 3.1.4 identity (`PMB = Σ control-account
+budgets + undistributed budget + contingency reserve`). UB is budget for *defined scope not yet
+decomposed*; it is not a reserve, and distributing it to control accounts changes no `BAC`.
+
+**Worked example 3.A.4 — assembling a rolling-wave baseline.**
+
+1. **Setup.** A four-year programme with `BAC` = **USD 20,000,000**: Year-1 scope detailed into
+   control-account budgets of **USD 7,500,000**; later waves held as planning packages with **UB of USD
+   11,300,000**; contingency reserve **USD 1,200,000**.
+2. **Formula.** `PMB = Σ control-account budgets + UB + contingency` (3.1.4).
+3. **Substitution.** `7,500,000 + 11,300,000 + 1,200,000 = 20,000,000`.
+4. **Result.** **`BAC` = USD 20,000,000**, of which 11,300,000 awaits distribution as each wave is planned.
+5. **Interpretation.** The whole 20,000,000 is inside the baseline and phased into `PV` — near-term at
+   work-package fidelity, far-term at planning-package level — so earned value can run from day one.
+
+**The discipline.** Budget is distributed from UB to control accounts **before the work starts** — through
+baseline change control (3.1.3, and Domain 5, KA 5.4) — and never retro-fitted to actuals. A budget matched
+to actuals after the fact makes variance vanish by construction (`CPI` is driven to 1) and destroys the
+baseline's meaning. Applied properly, rolling wave is what keeps `PV` honest on long programmes (cross-ref
+3.3 and 6.1): the near-term S-curve reflects the real resource-loaded plan rather than a straight-line
+guess for years an estimator cannot yet see — the phasing trap of 3.3.2 avoided by design.
+
+---
+
 ## Case study — Domain 3: budgeting and forecasting an offshore-wind package (energy)
 
 ### Background
