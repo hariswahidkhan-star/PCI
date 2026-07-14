@@ -1049,6 +1049,169 @@ governing principle endures; the model cannot replace accountability.
 
 ---
 
+## Case study — Domain 13: building an AI-augmented controls function at a transport agency (government)
+
+### Background
+
+A government transport agency runs a portfolio of road and rail projects — corridor upgrades, structure
+renewals, a light-rail extension — through a central project-controls function of around thirty staff. Over
+**18 months**, that function moved from ad-hoc AI experimentation to a governed, measured, AI-augmented
+capability: the maturity ladder of KA 13.7.1 walked for real, rung by rung. This case study follows the walk —
+the unglamorous data work, two pilots with honest numbers, one instructive failure, and the governance that
+turned a near-miss into the strongest adoption argument the function ever had. The public-sector context
+sharpens everything: the agency's numbers feed ministerial reporting and audit, its contracts carry public
+money, and "the model said so" is not a defence anyone in the chain can offer (13.6.2). Every stage below is
+the operational form of the credential's governing principle: **AI proposes, the professional disposes.**
+
+### Where they started (13.7.1)
+
+The starting point was the bottom rung of the KA 13.7.1 ladder, and it looked exactly as the model predicts:
+**ad-hoc**. Individual analysts, entirely well-intentioned, were pasting cost extracts, schedule narratives and
+— in at least one case — draft contract correspondence into **public AI tools** to speed their work. Nobody had
+assessed the confidentiality exposure (13.2.5, 13.6.3): commercially sensitive rates and claim positions were
+leaving the agency's control with every paste. There was no policy, no approved-tool list, and no verification
+norm — outputs were being reused on the strength of looking plausible, which is precisely what an LLM
+guarantees and precisely what it does not warrant (13.1.3).
+
+The function's first act was therefore **not a pilot but a stop**. The controls director issued an **interim
+AI-use policy** (13.6.5): governed, approved tools only; **no sensitive data in public tools**; and **every
+AI-assisted output verified against source before use**, with the verification recorded. Some momentum was
+lost and a few enthusiasts grumbled — but the sequencing was deliberate. Jumping to integration without
+governance invites the risks of 13.6 (it is the failure mode KA 13.7.1 warns against by name); the stop
+created the safe floor on which everything after it was built.
+
+### The data reckoning (13.2)
+
+Before any model was trained or any assistant deployed, the team profiled the portfolio's cost data against
+the quality dimensions of 13.2.2 — and the profile, not a vendor demo, set the programme's real agenda. The
+portfolio generates about **18,000 cost lines a month** across the ERP feeds. A trial of AI-assisted
+auto-coding (13.5.4) showed first-pass coding confidence holding for **85 %** of lines — leaving **15 %** as
+exceptions needing human handling every month.
+
+- **Setup.** 18,000 cost lines a month; first-pass auto-coding confidence 85 %, so 15 % fall to exceptions.
+- **Formula.** `exceptions per month = lines × exception rate`.
+- **Substitution.** `18,000 × 15 % = 18,000 × 0.15`.
+- **Result.** **2,700 exceptions a month.**
+- **Interpretation.** At 2,700 exceptions a month the "automation" would have manufactured a new manual
+  workload. Tracing the exceptions showed the cause was not the classifier but the data: **inconsistent legacy
+  coding** — old cost-code structures from predecessor projects, free-text descriptions, codes valid in one
+  system and not another (13.2.2's validity and consistency dimensions failing at once).
+
+The response was six months of remediation nobody would call glamorous: mapping rules from legacy codes to the
+current structure, cleaning and retiring dead codes, tightening validation at the point of entry — classic
+controls hygiene (Domains 1, 5) led by the controls team itself, because it is the team that understands the
+coding (13.2.1). The result:
+
+- **Setup.** Post-remediation first-pass confidence **93 %**, so 7 % fall to exceptions.
+- **Formula.** `exceptions per month = lines × exception rate`.
+- **Substitution.** `18,000 × 7 % = 18,000 × 0.07`.
+- **Result.** **1,260 exceptions a month** — down from 2,700.
+- **Interpretation.** The remediation more than halved the exception load, and it did so before any further AI
+  spend. The lesson the team internalised is the lesson of 13.2.1: **the unglamorous data work *was* the AI
+  programme.** Garbage in, garbage out is not a caveat to the business case; it is the business case's first
+  line item.
+
+### The first governed pilot — month-end (13.5.4)
+
+With coding data remediated, an approved tool in place and the verification norm operating, the function ran
+its first formal pilot on the highest-value, lowest-risk workflow in the map: **month-end cost control and
+extraction** (13.5.4). The AI step auto-coded the 18,000 monthly lines, matched them to the ledger, flagged
+duplicates and proposed accruals; the professionals worked the 1,260-line exception queue, sampled the
+high-confidence population periodically, and checked that accrual proposals used **service dates, not invoice
+dates** (Domain 1, KA 1.3.5 — the cut-off error an ungoverned tool would reproduce at scale). The close for
+the portfolio's central reporting shortened from **6 days to 3** across the five-person month-end team. The
+value case was built the honest way (13.7.3) — measured time, loaded rates, and the *full* cost of tooling
+**and** governance netted against it:
+
+- **Setup.** Close shortened from 6 days to 3 (3 days saved) across a five-person team; 8-hour days; loaded
+  cost **USD 80/hour**. Tooling plus governance and verification effort: **USD 70,000 a year**.
+- **Formula.** `monthly saving = days saved × staff × hours × rate`; `annual saving = monthly × 12`;
+  `net = annual saving − annual cost`.
+- **Substitution.** `3 × 5 × 8 × 80 = 9,600` per month; `9,600 × 12 = 115,200`; `115,200 − 70,000`.
+- **Result.** **USD 115,200 a year** gross; **net ≈ USD 45,200 a year**.
+- **Interpretation.** A real but modest net figure — deliberately stated without inflation. The team resisted
+  the temptation to claim the gross number and hide the governance cost: the USD 70,000 includes the licences
+  *and* the human verification the governance model requires, because a saving that evaporates when you price
+  the checking is not a saving (13.7.3). The unpriced benefit sat alongside, honestly labelled as unpriced:
+  reporting landing **three days earlier** every month, which moved decision meetings forward and gave every
+  downstream forecast an extra three days of currency. "We use AI" was never the metric; a faster, *verified*
+  close was.
+
+### The second pilot — predictive EAC (13.5.3)
+
+The second pilot moved up the value chain and up the risk chain: a **predictive EAC model** (13.5.3) run over
+the **12 live projects** in the portfolio, trained on the now-remediated cost history with schedule progress
+and commitment data alongside. In its first full quarter the model flagged **3 projects** as likely to
+overrun beyond their current EACs.
+
+The professionals then did what the workflow shape of 13.5.1 requires — verification before action. Reviewing
+each flag against the variance's cause (Domain 6, KA 6.3.3) and the `TCPI` reality check, they **confirmed 2**
+of the three: both had genuine, persisting cost drivers the monthly cycle had not yet escalated, caught early
+enough to act — one produced a funded **recovery plan**, the other an honest **re-baseline** taken to the
+project board before the position hardened. The third flag was **rejected as a false positive**: a data
+artefact from a **re-phased schedule**, where the re-timing of planned work made spend look anomalous against
+a baseline that no longer applied. The model could not know the re-phasing was approved; the reviewer did.
+
+The function reported the result exactly as it happened: **2 of 3 flags useful** — no rounding up, no
+suppression of the miss. That honesty mattered twice over. First, precision of 2-in-3 on early overrun
+warning is *genuinely valuable* — two interventions months earlier than the reporting cycle would have forced
+them — and stating it plainly kept expectations calibrated for the quarters ahead. Second, the false positive
+was caught **because** the verification norm existed: the model widened the professionals' attention; the
+professionals decided. Had the ad-hoc culture of month zero still prevailed, the third flag might have
+travelled upward as fact and burned the model's credibility on its first outing.
+
+### The incident that proved the governance (13.6)
+
+Mid-programme, the governance was tested by the failure it was designed for. A drafted claims summary,
+produced with AI assistance for a commercial review, **cited a contract clause that did not exist** — a
+hallucinated reference from an ungrounded prompt, exactly the failure mode 13.6.3 names and 13.3.3b guards
+against. The verification checklist (13.6.5) caught it: the reviewer opened the cited clause to confirm it,
+found no such clause, and stopped the summary **before it left the team**. The response followed the policy
+rather than improvisation: **RAG grounding was made mandatory** for all contract work (13.3.3b — extraction
+must cite a real clause or return "not found"); the incident was **logged and shared** across the function,
+not buried; and the policy was updated and re-briefed. One near-miss, openly handled, did more for adoption
+discipline than any training deck — and the audit trail it generated (**what** the AI produced, **who** caught
+it, **what** changed as a result) is precisely the record KA 13.6.2 requires a function to be able to show.
+
+### Where they landed (13.7)
+
+Eighteen months in, an honest reading of the KA 13.7.1 ladder puts the function at **standardised, moving into
+integrated**: an approved tool list and AI-use policy in force; verification checklists **embedded in the
+month-end and reporting workflows** rather than bolted on; value measured **quarterly** against the 13.7.3
+discipline (time, exceptions, warning lead-time — netted against full cost); and **upskilling** — prompting
+(13.3) and verification norms (13.3.3, 13.6.5) — written into the controls competency framework, so the
+capability lives in the function rather than in a few enthusiasts (13.7.2). The claim stops there: the top
+rung is not claimed, because parts of the workflow remain manual and the value evidence is only quarters deep.
+
+| Ladder stage (13.7.1) | The agency's evidence at month 18 |
+|---|---|
+| Ad-hoc → stopped | Interim policy ended ungoverned public-tool use (month 1) |
+| Piloting | Month-end (13.5.4) and predictive EAC (13.5.3) pilots, measured honestly |
+| **Standardised** ✔ | Approved tools, policy, embedded verification checklists, incident process |
+| **Integrated** (partial) | AI embedded in month-end and reporting; contracts RAG-grounded by mandate |
+| Governed & optimised | Not yet claimed — quarterly value measurement and re-validation building toward it |
+
+The outlook is stated the way 13.7.5 demands — honestly. AI capability keeps evolving, so the agency
+re-validates its approved tools **quarterly** and expects the workflow map to change. What does not change is
+the centre of the design: the professional's sign-off on every AI-influenced number. **AI proposes, the
+professional disposes.**
+
+### What the credential expects
+
+A candidate should be able to trace each turn of this case to its knowledge area, because the case is the
+domain in miniature. The **maturity ladder** (13.7.1) supplied the sequencing — and the discipline to stop
+before piloting, and to claim only the rung the evidence supports. **Data as the fuel** (13.2) explains why
+six months of coding remediation, not a model, was the programme's real first investment: 2,700 exceptions a
+month became 1,260 only through data work. The **governed workflows** (13.3, 13.5.3–13.5.4) show the one
+pattern — input → AI step → professional verification → owned output — applied to month-end and to predictive
+EAC, with the false positive caught by the verification step working as designed. **Governance** (13.6)
+turned a hallucinated clause into a logged incident, a mandatory grounding rule and an audit trail — assurance
+functioning, not failing. **Honest value measurement** (13.7.3) netted USD 115,200 of measured saving against
+USD 70,000 of full cost and reported 2-of-3 precision without varnish. And through all of it runs the enduring
+principle the credential certifies: **AI proposes, the professional disposes.**
+
+---
+
 ## Domain 13 summary
 
 AI is a major, practical part of modern project controls — and the governing principle, **"AI proposes, the
