@@ -40,6 +40,20 @@ know the target is 1.00, the amber threshold is 0.95 and the tolerance is ±0.05
 indicators (noise, no focus) and **gameable** ones (measures that improve on paper without improving
 reality).
 
+**Worked example 4.1.1 — setting thresholds from the data, not from habit.**
+
+1. **Setup.** A portfolio's monthly `CPI` readings over two stable years average **1.00**, with observed
+   variability of about **±0.03** in a normal month.
+2. **Formula.** Set the amber threshold one variability-step from target and red at two steps:
+   `amber = target − 1 step`; `red = target − 2 steps`.
+3. **Substitution.** Amber `= 1.00 − 0.03 = 0.97`; red `= 1.00 − 0.06 = 0.94`.
+4. **Result.** A new reading of **0.95** lands between amber (0.97) and red (0.94) → investigate with
+   priority, but do not treat as red.
+5. **Interpretation.** Thresholds derived from the measure's *own* normal variability separate signal from
+   noise: a ±0.05 band chosen by habit would have called 0.95 "within tolerance" and missed the early
+   signal, while a ±0.01 band would alarm monthly on noise — the twin failure modes of 4.1.3, made
+   quantitative. The same discipline sets tolerances per control account, not one band for all.
+
 ### 4.1.2 Leading versus lagging indicators
 
 **The principle.**
@@ -465,6 +479,21 @@ contributions → a waterfall (as in 4.2.4); distribution/uncertainty → a rang
 The default for project controls is the **S-curve** (PV/EV/AC over time) and the **waterfall** (variance
 bridges) because they answer the two questions controls asks most: *how are we tracking* and *what moved the
 number*.
+
+**Worked example 4.4.1 — the same four numbers, three ways.**
+
+1. **Setup.** Monthly `CPI` readings: **0.98, 0.97, 0.96, 0.95** — one hundredth lost each month.
+2. **Formula.** Chart-to-question fit (4.4.1): present the same data as (1) a table, (2) a line chart on an
+   honest axis, (3) a bar chart with a truncated axis, and compare the message each sends.
+3. **Substitution.** (1) In a **table**, the drift is arithmetic the reader must do — most won't. (2) As a
+   **line chart** on an honest axis (say 0.90–1.05), a clear, gentle downward slope appears — the right
+   choice for a trend question (4.4.1). (3) As a **bar chart** with the axis truncated at 0.94, the last bar
+   looks a quarter the height of the first — a fabricated cliff (4.4.2).
+4. **Result.** Same data, three different messages; only the line-with-honest-axis answers "how are we
+   trending?" without editorialising.
+5. **Interpretation.** Chart choice *is* an analytical decision; the reader experiences the chart, not the
+   data. The controls professional chooses the form that lets the data speak — and the reviewer checks the
+   axes before believing any picture.
 
 ### 4.4.2 Common distortions to avoid
 
