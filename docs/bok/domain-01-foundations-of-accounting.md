@@ -301,7 +301,7 @@ trial balance *would* reveal.
 - A. USD 108,000
 - B. USD 129,000 ✅
 - C. USD 134,000
-- D. USD 159,000
+- D. USD 153,000
 
 *Rationale:* `100,000 − 24,000 + 50,000 − 18,000 + 30,000 − 4,000 − 5,000 = 129,000`. A stops before the
 client receipt and later payments; C omits the rent payment; D ignores the equipment purchase.
@@ -903,7 +903,7 @@ Present value   =  Future amount / (1 + r)^n
    probable across the population, and it is reliably estimable, so a provision — not a mere disclosure — is
    required this period, matched against the revenue from the sales.
 
-**Worked example 1.4.3b — single obligation, most-likely with discounting.**
+**Worked example 1.4.3b — single obligation: probability-weighted best estimate, discounted.**
 
 1. **Setup.** Meridian faces one disputed claim. Outcomes: **75 %** it settles for **USD 0**, **20 %** for
    **USD 50,000**, **5 %** for **USD 200,000**; expected settlement in **3 years**; discount rate **8 %**.
@@ -912,7 +912,9 @@ Present value   =  Future amount / (1 + r)^n
    Discount: `1.08^3 = 1.259712`; `PV = 20,000 / 1.259712`.
 4. **Result.** Undiscounted best estimate **USD 20,000**; discounted **USD 15,877** (`20,000 / 1.259712 =
    15,876.6`). The provision is carried at **USD 15,877**.
-5. **Interpretation.** Because settlement is three years out and the amounts are material, the time value of
+5. **Interpretation.** The *most likely* single outcome here is nil (75 %) — used alone it would understate
+   the obligation, so the estimate is adjusted for the other possible outcomes by probability-weighting
+   them. Because settlement is three years out and the amounts are material, the time value of
    money reduces the present obligation from 20,000 to ~15,877. As settlement approaches, the discount
    *unwinds* — the provision is increased each year through a finance cost until it reaches 20,000 (1.4.6).
 

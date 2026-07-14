@@ -1169,7 +1169,8 @@ is how scope growth hides inside "risk".
 
 **Exercise 5.5** — A control account has a budget of **USD 2,000,000**. At the data date: purchase orders
 raised total **USD 1,450,000**; invoices received against them total **USD 830,000**; a further **USD
-190,000** of work has been performed but not yet invoiced; cash paid to date is **USD 640,000**. A remaining
+190,000** of directly employed site labour (outside the purchase orders) has been performed but not yet
+invoiced; cash paid to date is **USD 640,000**. A remaining
 scope of **USD 500,000** is planned but not yet ordered. (a) Compute the actual cost to date, the open
 commitment, the total exposure and the apparent headroom. (b) Compute the forecast final cost and reconcile
 it against the apparent headroom — what is the "headroom illusion"? (c) Explain in one sentence why cash
