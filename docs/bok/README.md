@@ -33,7 +33,7 @@ domain binds to it, so notation and depth stay consistent across the whole volum
 | 5 | Cost Management & Cost Control | [`domain-05-cost-management.md`](domain-05-cost-management.md) | ✅ Draft complete |
 | 6 | Earned Value Management & Forecasting (EVM/EAC) | [`domain-06-evm-eac.md`](domain-06-evm-eac.md) | ✅ Draft complete |
 | 7 | Contracts, Commercial Management, BoQ, Invoicing & Revenue | [`domain-07-contracts-commercial.md`](domain-07-contracts-commercial.md) | ✅ Draft complete |
-| 8 | Project Management Lifecycle | `domain-08-pm-lifecycle.md` | ⏳ Planned |
+| 8 | Project Management Lifecycle | [`domain-08-pm-lifecycle.md`](domain-08-pm-lifecycle.md) | ✅ Draft complete |
 | 9 | Agile, Scrum & Adaptive Delivery for Project Controls | `domain-09-agile-adaptive.md` | ⏳ Planned |
 | 10 | Project Scheduling (in depth) | `domain-10-scheduling.md` | ⏳ Planned |
 | 11 | Business Process Cycles (O2C, P2P & control environment) | `domain-11-process-cycles.md` | ⏳ Planned |
