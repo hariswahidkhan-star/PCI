@@ -821,6 +821,150 @@ the professional disposes.**
 
 ---
 
+## Case study B — Domain 10: a 54-hour track-renewal possession (rail)
+
+### Background
+
+A national railway grants a track-renewal contractor a **54-hour weekend possession** of a twin-track main
+line: the route closes to traffic at **02:00 Saturday (hour 0)** and must be handed back, safe and fit for
+line-speed or agreed-restriction running, by **08:00 Monday (hour 54)**. Inside that window the contractor
+strips a life-expired section of track, renews the ballast, lays new sleepers and rail, welds and stresses it,
+tamps it to line and level and hands the railway back. The scheduling problem differs from an ordinary project
+in one structural way: **the deadline is absolute**. Monday's first trains are sold, crewed and pathed; an
+overrun does not slip a milestone, it stops a railway. The access agreement prices that reality at
+**USD 40,000 per hour, or part hour, of late hand-back** — and money is the smaller consequence, because a
+contractor who overruns argues from weakness for every future possession it requests. Everything in this case —
+the units, the float, the mid-possession decision — is Domain 10's machinery run in **hours instead of days**,
+against a finish line that cannot move.
+
+### The possession network, built backwards from hand-back (KAs 10.1–10.2)
+
+The planner defines **eight activities** (10.1.1), linked Finish-to-Start (10.1.2), with durations in hours
+estimated from machine outputs and unit rates per metre of track (10.1.4):
+
+| Activity | Duration (h) | Predecessor(s) |
+|---|---:|---|
+| **A** Take possession, isolate and protect | 3 | — |
+| **B** Strip old track | 9 | A |
+| **C** Excavate and renew ballast | 12 | B |
+| **D** Lay new sleepers and rail | 11 | C |
+| **E** Weld, stress and clip | 7 | D |
+| **G** Renew cess drainage | 14 | A |
+| **F** Tamp, line and level | 5 | E, G |
+| **H** Test, inspect and hand back | 4 | F |
+
+The renewal chain A–B–C–D–E is hard logic — nothing lays rail into unexcavated ballast. The **drainage renewal
+G** is a separable work item running in parallel off the same possession take-up, added to the weekend because
+the access was available; it must finish before final tamping because the tamper works over the completed cess.
+Rail planning runs this network **backwards before it runs it forwards**: hand-back at hour 54 is fixed, so the
+backward pass (10.2.3) is anchored on `LF(H) = 54` and the question the plan must answer is not "when do we
+finish?" but "**how late can each activity start and still hand back?**" — and, once the forward pass is laid
+alongside, "how much margin does the plan hold against the one date that cannot move?"
+
+**Forward pass** (hours from possession start; `ES` = latest `EF` of predecessors; `EF = ES + duration`):
+
+| Activity | `ES` | `EF` |
+|---|---:|---:|
+| A | 0 | 3 |
+| B | 3 | 12 |
+| C | 12 | 24 |
+| D | 24 | 35 |
+| E | 35 | 42 |
+| G | 3 | 17 |
+| F | max(42, 17) = 42 | 47 |
+| H | 47 | 51 |
+
+Planned duration **51 hours**: the renewal chain A–B–C–D–E–F–H `= 3 + 9 + 12 + 11 + 7 + 5 + 4 = 51`, against
+the drainage path A–G–F–H `= 3 + 14 + 5 + 4 = 26`.
+
+**Backward pass**, anchored on the hand-back constraint `LF(H) = 54`, not on the early finish of 51:
+
+| Activity | `LF` | `LS` |
+|---|---:|---:|
+| H | 54 | 50 |
+| F | 50 | 45 |
+| E | 45 | 38 |
+| D | 38 | 27 |
+| C | 27 | 15 |
+| B | 15 | 6 |
+| G | 45 | 31 |
+| A | min(6, 31) = 6 | 3 |
+
+**Float in hours.** `TF = LS − ES` (10.2.4) gives every activity on the renewal chain **3 hours** — not
+activity float in the ordinary sense but a single shared **hand-back margin**, the 54 − 51 gap, which any one
+of them can consume exactly once. G carries `TF = 31 − 3 = ` **28 hours**, of which `FF = 42 − 17 = ` **25
+hours** is free float — G can slip a full shift without touching anything. The planner prices the margin
+before the weekend starts: 3 hours of buffer standing between the plan and a penalty running at USD 40,000 an
+hour means every hour of it is worth USD 40,000 of avoided downside at the margin — which is why possession
+plans report float in hours, by name, to the person who owns the hand-back.
+
+### Hour 20: the wet bed (KA 10.4)
+
+At the **hour-20 progress review** — Saturday evening — the excavation (C) has hit a **wet bed**: saturated
+formation that must be dug out deeper and geotextiled. C started on time at hour 12 and should have 4 hours of
+work left; the site engineer's re-estimate is **7 hours left** — a **3-hour slip**. The controls professional
+re-runs the network from the data date (10.4.1) rather than arguing about it: C now finishes at hour 27, D runs
+27→38, E 38→45, F 45→50, H 50→54.
+
+**Setup:** at hour 20, remaining critical work `= 7 (C) + 11 (D) + 7 (E) + 5 (F) + 4 (H) = 34` hours; time
+remaining to hand-back `= 54 − 20 = 34` hours.
+**Formula:** `margin = time remaining − remaining critical work`.
+**Substitution:** `34 − 34 = 0`.
+**Result:** forecast hand-back **exactly 54:00** — the 3-hour margin is **fully consumed** with 34 hours of
+single-shift-fragile work still to run.
+**Interpretation:** the deterministic forecast still "meets" the deadline, and that is precisely what makes it
+dangerous: a zero-margin plan against an absolute deadline is a coin toss, not a plan (10.3.4).
+
+### De-scope or press on — pricing the decision (KAs 10.3, 10.3.4)
+
+Two options go to the possession manager at hour 21, each priced. **Option 1 — de-scope a work item:** omit
+the final tamp (F, 5 hours), hand back at hour 49 with a **temporary speed restriction** over the renewed
+section, and complete tamping in two midweek night-time possessions already available in the access plan. Cost:
+two night shifts at USD 32,000 `= 64,000`, plus USD 16,000 of speed-restriction delay charges — **USD 80,000,
+near-certain**, and hand-back margin restored to `54 − 49 = ` **5 hours** (H follows E directly at 45→49).
+**Option 2 — press on at full scope** and accept the overrun risk. A quick Monte Carlo over three-point
+estimates for the remaining activities (10.1.4, 10.3.4) puts the probability of overrunning hour 54 at
+**50 %**, with a mean overrun of about 2 hours when it happens, and a **P80 hand-back of hour 57**.
+
+**Setup:** Option 2's exposure: `P(overrun) = 50 %`, mean overrun given overrun **2 hours**, penalty
+**USD 40,000/hour**.
+**Formula:** `EMV = probability × mean overrun × penalty rate`; compare with Option 1's near-certain cost.
+**Substitution:** Option 2 EMV `= 50 % × 2 × 40,000 = 40,000`; Option 1 `= 80,000`.
+**Result:** on **EMV**, pressing on is **USD 40,000 cheaper** (40,000 vs 80,000).
+**Interpretation:** and the professional recommends **de-scoping anyway** — because EMV is the wrong sole test
+against an absolute deadline. At **P80** the press-on case costs `3 × 40,000 = ` **USD 120,000** against the
+de-scope's 80,000, and the tail carries what no rate card prices: Monday commuters stranded, the regulator's
+attention, and the railway's willingness to grant the next possession. The de-scope, re-simulated, hands back
+by hour 52 even at P80. This is risk appetite applied honestly (Domain 12, KA 12.1.3): a 50 % chance of
+stopping a railway sits outside anyone's tolerance, so the organisation pays USD 40,000 above the average
+outcome to buy certainty — the same commit-at-P80 logic the first case study applied to a completion date,
+compressed here into a decision taken at hour 21 of 54. The de-scope is agreed with the client's possession
+manager, logged with its price, and the tamp moves to midweek.
+
+The weekend ends undramatically, which is the point: hand-back at **hour 48:40**, speed restriction posted,
+tamping completed Tuesday and Wednesday nights, penalty **nil**.
+
+### What the credential expects
+
+The case re-runs Domain 10 with the units changed and one constraint hardened, and the candidate should be
+able to name what survives the translation. The **network and passes** (10.1–10.2) work identically in hours:
+forward pass to 51, backward pass anchored on the constrained `LF = 54`, and float read as `LS − ES` — with
+the professional gloss that the renewal chain's uniform 3 hours is a **shared hand-back margin**, consumable
+once, not slack scattered per activity. **Working backwards from hand-back** is the backward pass promoted to
+the primary planning direction, which is exactly what an immovable deadline does to scheduling. The **hour-20
+recompute** is KA 10.4.1's discipline at possession tempo: progress the network from the data date, and read a
+zero-margin forecast as risk, not success. The **de-scope decision** joins this domain to Domain 12: price
+both options, compute the EMV, then refuse to let the average decide when the distribution's tail is
+intolerable — the P80 case, not the P50 case, is what justifies paying for certainty against an absolute
+deadline. And the standing lesson generalises well beyond rail: wherever hand-back is absolute — a runway
+re-opening, a plant restart, a retail trading date — schedule control is margin management in small units,
+re-computed every few hours, with the de-scope option priced **before** it is needed. An AI scheduling
+assistant (KA 13.5.5) could have re-run the network and the simulation in seconds at hour 20; the decision to
+give up scope to protect the railway belonged, as always, to the professional. **AI proposes, the professional
+disposes.**
+
+---
+
 ## Executive perspective — Domain 10
 
 **What the executive must hold onto.** The **critical path** sets the completion date, and it **moves** — it

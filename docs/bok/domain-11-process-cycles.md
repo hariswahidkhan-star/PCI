@@ -613,6 +613,141 @@ next. **AI proposes, the professional disposes.**
 
 ---
 
+## Case study B — Domain 11: forty refits, one vendor master (retail)
+
+### Background
+
+A national retail chain is running a **store-refit programme**: **40 stores** re-fitted over twelve months at
+an average of **USD 480,000** each — a **USD 19,200,000** programme of shopfitting, lighting, flooring,
+refrigeration and signage, delivered store by store while the rest of the estate trades. The transaction
+profile is what makes the case: not one large project's procurement but the **same refit bought forty times**,
+peaking at around **1,600 supplier invoices a month**, raised by regional delivery teams against a small set of
+national suppliers. The programme office's controls brief is this domain applied at volume: keep the
+procure-to-pay cycle honest across forty concurrent sites (KA 11.2), keep the master data that every control
+validates against clean (Advanced 11.A.3), collect the money the programme is owed — landlords contribute to
+several refits (KA 11.1) — and watch the whole population continuously without drowning the team in alerts
+(Advanced 11.A.4). Repetition is the theme throughout: what forty identical refits multiply is not just spend
+but every weakness in the cycle that processes it.
+
+### Blanket purchase orders and call-off discipline (KA 11.2)
+
+Buying the same lighting package forty times does not need forty negotiations. The programme sets **blanket
+purchase orders** with its national suppliers — terms, rates and a ceiling agreed once — against which each
+regional team places a **call-off** per store. The commitment rule is the framework rule of Advanced 5.A.2:
+the organisation is committed **at call-off, not at ceiling** — the blanket binds nobody to anything until a
+store draws on it, so the commitment report carries the call-off total, never the headline ceiling.
+
+**Worked example CS11B-1 — headroom on the lighting blanket.**
+
+1. **Setup.** Lighting-and-fittings blanket PO ceiling **USD 2,400,000** covering all 40 stores. Call-offs
+   placed to date: **32 stores × USD 55,000 = 1,760,000**. A mid-programme specification change (LED emergency
+   packs) adds **USD 5,000 per store** to the **8 stores** not yet called off.
+2. **Formula.** `projected total = call-offs to date + remaining stores × revised call-off`;
+   `headroom = ceiling − projected total`.
+3. **Substitution.** `1,760,000 + (8 × 60,000) = 1,760,000 + 480,000 = 2,240,000`;
+   `2,400,000 − 2,240,000 = 160,000`.
+4. **Result.** Projected drawdown **USD 2,240,000** against a 2,400,000 ceiling — **USD 160,000** of headroom,
+   and today's commitment figure is **USD 1,760,000**, not the ceiling.
+5. **Interpretation.** The blanket is only as honest as its **call-off discipline**. Every call-off carries the
+   store number and the blanket line, so cost lands against the right store (Domain 5 coding) and the headroom
+   calculation stays computable. The failure mode the review polices is the "informal draw" — a regional team
+   ordering against the blanket by phone with the paperwork to follow: cost with no commitment record,
+   invisible to the headroom check until the invoice arrives, which is the invoice-only illusion rebuilt one
+   convenience at a time.
+
+### The vendor who existed twice (KA 11.3, Advanced 11.A.3)
+
+Every one of those 1,600 invoices a month is matched, and every match validates against the **vendor master** —
+which is where the programme's one genuine incident lived. The chain's shopfitting subcontractor had been keyed
+into the vendor master **twice**, as "Fenwick Shopfitting Ltd" and "Fenwick Shopfitting Limited", created
+months apart by two regional coordinators, each unaware of the other's record. Both records were real, both
+pointed at the same legitimate supplier — and the duplicate quietly disabled the "already paid?" check, because
+an invoice keyed against one record never matched payment history on the other. Exactly as Advanced 11.A.3
+predicts, **duplicate vendors enabled duplicate payments**: when the supplier chased a statement mismatch, the
+reconciliation found **three invoices paid on both records — USD 12,400, 15,700 and 19,000, totalling
+USD 47,100** paid twice across two regions.
+
+The response is master-data governance, not blame. The records are **merged** and the survivor verified; a
+**dedupe rule at creation** (match on name, bank account and tax ID) blocks the next twin; vendor creation and
+amendment are placed in the SoD matrix (11.3.2b) so no regional coordinator can both create a vendor and pass
+its invoices; and the recovery — the full USD 47,100, agreed with an embarrassed but cooperative supplier — is
+credited within the quarter. The detective layer earns its keep almost immediately: a **fourth** duplicate
+candidate, **USD 21,300**, is flagged by the new duplicate-payment monitor and stopped **before the payment
+run**. The lesson is the section's principle verbatim: transaction controls inherit the quality of the master
+data they validate against, and forty sites keying data independently is how a master file rots — the control
+surface was the vendor file, not the match.
+
+### Billing the landlord: the O2C side (KA 11.1)
+
+Refits are mostly outflow, but not entirely: **12 of the 40 stores** attract **landlord contributions** —
+capital sums the property owner pays towards works that improve the landlord's asset, totalling
+**USD 1,825,000**, each payable on certified practical completion of the store. On previous programmes these
+were treated as an afterthought: invoices raised weeks after completion, unsupported, then queried by the
+landlord's agent and re-aged from the date of the corrected invoice. Cash arrived, on average, **75 days**
+after completion. The controls fix is O2C discipline (11.1.2) applied to a receivable nobody thought of as one:
+**billing hygiene** — the invoice raised within five days of the completion certificate, with the certificate
+and the agreed contribution schedule attached, so there is nothing to query; a **dunning cadence** run weekly
+against every open contribution; and **cash application** on receipt so the ageing tells the truth. Average
+collection falls to **30 days** after completion.
+
+**Worked example CS11B-2 — what collecting 45 days sooner is worth.**
+
+1. **Setup.** Contributions **USD 1,825,000**; programme cost of funds **10 %**; collection accelerated from
+   **75 to 30 days** after completion.
+2. **Formula.** `daily carrying cost = balance × rate ÷ 365`; `saving = daily carrying cost × days accelerated`.
+3. **Substitution.** `1,825,000 × 10 % ÷ 365 = 500` a day; `(75 − 30) × 500 = 45 × 500 = 22,500`.
+4. **Result.** **USD 22,500** of financing cost avoided — and USD 1,825,000 of cash in the programme's account
+   forty-five days earlier.
+5. **Interpretation.** The money is modest; the control point is not. An unbilled contribution is not an
+   entitlement anyone is defending — it is a number in a spreadsheet ageing towards the landlord's year-end,
+   where it becomes a negotiation. Billing tied to the certificate (the billing-hygiene analogue of certified
+   milestones, cross-ref 1.3.5) converts it into a receivable the dunning cadence can actually chase.
+
+### Monitors tuned from noise to signal (Advanced 11.A.4)
+
+With 1,600 invoices a month across forty sites, the programme runs **continuous controls monitoring** from the
+outset: six standing queries over the whole transaction population — same-user raise-and-approve, payments
+with no match event, duplicate-payment candidates, bank-detail change followed by payment, call-offs missing a
+store code, invoices clustering below approval limits. The first month demonstrates CCM's classic failure
+mode: the monitors fire **1,200 alerts**, of which investigation confirms **24** as genuine exceptions. By week
+three the queue is being skimmed, then ignored — alert fatigue burying the real signal, the noisy dashboard
+that Advanced 11.A.4 warns re-creates the unread exception backlog in modern form.
+
+The retune treats every threshold as a **tolerance decision** (KA 4.1.3 discipline). Price-variance alerts get
+a floor (outside 1 % or USD 25, matching the match tolerances); the duplicate monitor stops matching on exact
+invoice reference only and starts matching on reference *or* amount-date-vendor (which is what catches the
+USD 21,300 Fenwick candidate); the same-user raise-and-approve query stays at **zero tolerance**, because some
+controls admit no threshold; and every monitor gets a named owner and a 48-hour response path.
+
+1. **Setup.** Before tuning: **1,200 alerts** a month, **24** confirmed. After: **150 alerts** a month, **45**
+   confirmed.
+2. **Formula.** `precision = confirmed exceptions ÷ alerts`.
+3. **Substitution.** Before: `24 ÷ 1,200 = 2 %`. After: `45 ÷ 150 = 30 %`.
+4. **Result.** Precision rises **fifteen-fold**, from 2 % to 30 % — a queue small enough to work and rich
+   enough to matter, with confirmed catches *rising* (24 → 45) because the detection logic improved as the
+   noise fell.
+5. **Interpretation.** The machine watches all 1,600 invoices at forty sites in a way no clerk can; the
+   professional owns the thresholds, measures the false-positive rate, and monitors the monitor — an alert
+   stream nobody actions implies a coverage that does not exist. **AI proposes, the professional disposes.**
+
+### What the credential expects
+
+The candidate should read this case as the first one's mirror: same domain, different transaction geometry.
+**Blanket POs and call-offs** (KA 11.2, Advanced 5.A.2) are how P2P scales across repetitive procurement — and
+the commitment is recognised at call-off, never at ceiling, with call-off discipline carrying the store coding
+that Domain 5 needs downstream. **Master-data governance** (Advanced 11.A.3) is the case's centre of gravity:
+a duplicate vendor is not clerical untidiness but a disabled control, and USD 47,100 of double payment is what
+it costs when the "already paid?" check validates against a lie; the fix is merge, dedupe-at-creation, and SoD
+over vendor create-and-amend (11.3.2). **O2C** (KA 11.1) appears where candidates least expect it — on a
+capital programme — and the landlord-contribution numbers show the same billing-dunning-application levers
+moving real cash. And **continuous controls monitoring** (Advanced 11.A.4) is only as good as its thresholds:
+2 %-precision alerting is a broken control pretending to be coverage, and the tuning discipline — tolerances,
+owners, measured false positives, zero-tolerance where zero is right — is the professional content, exactly as
+it was for the match tolerances in the first case study. Forty identical refits multiplied the spend; the
+cycles, the master data and the monitors are what stopped them multiplying the leakage.
+
+---
+
 ## Executive perspective — Domain 11
 
 **What the executive must hold onto.** Every number the board relies on is manufactured by a business process:

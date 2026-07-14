@@ -833,6 +833,150 @@ the funding decision (Domain 13, KA 13.5.4). **AI proposes, the professional dis
 
 ---
 
+## Case study B — Domain 5: eighteen-month lead times on a sterile-facility build (pharmaceuticals)
+
+### Background
+
+A pharmaceutical manufacturer is building a **sterile fill–finish facility** — two cleanroom filling
+suites, a lyophiliser, and the water-for-injection (WFI) and HVAC infrastructure that keeps them classified —
+with a **`BAC` of USD 58,000,000**, of which **USD 2,400,000 is contingency** inside the baseline. The civil
+and building works are conventional; what makes the cost control distinctive is the equipment and the
+end-game. The filling line, the lyophiliser, the isolator and the air-handling units are bespoke,
+vendor-engineered packages with **lead times of up to eighteen months**: they are ordered near the start of a
+thirty-month project, paid against vendor fabrication milestones, and arrive long after most of the concrete
+is poured. And the project does not end at mechanical completion — a **validation phase** of commissioning,
+qualification and validation (CQV) consultancy runs through the final six months, because a sterile facility
+that is built but not qualified cannot release a single saleable vial.
+
+Both features push cost away from the invoice ledger, in opposite directions. Long-lead equipment means
+**commitments run far ahead of actuals** for most of the project; the validation phase means the last months'
+cost arrives as **services whose invoices lag the work** by two months or more. The controls lead builds the
+month-end pack accordingly — by cost state, not by invoice date (KA 5.2.1).
+
+### The commitment ledger at Month 12 (KA 5.2)
+
+The process-equipment control account carries a budget of **USD 18,000,000**. At Month 12 the purchase orders
+for the four long-lead packages were placed months ago, the vendors are deep in fabrication, and almost
+nothing has been delivered to site. The commitment ledger:
+
+| Package | PO value (USD) | Actuals (USD) | Accruals (USD) | Open commitment (USD) |
+|---|---:|---:|---:|---:|
+| Filling line | 6,000,000 | 1,800,000 | 600,000 | 3,600,000 |
+| Lyophiliser | 4,500,000 | 900,000 | 450,000 | 3,150,000 |
+| Isolator | 2,500,000 | 500,000 | 0 | 2,000,000 |
+| Air-handling units | 3,000,000 | 600,000 | 300,000 | 2,100,000 |
+| **Total** | **16,000,000** | **3,800,000** | **1,350,000** | **10,850,000** |
+
+The actuals are milestone payments already invoiced — down payments and design-approval milestones. The
+accruals are vendor fabrication milestones **achieved but not yet invoiced**, evidenced by the inspection and
+expediting reports rather than by paperwork in accounts payable (KA 5.2.2).
+
+**Worked calculation — the control account by cost state.**
+
+1. **Setup.** Actuals **USD 3,800,000**; accruals **USD 1,350,000**; total commitments **USD 16,000,000**;
+   uncommitted remaining scope (site installation labour and commissioning spares, not yet ordered) estimated
+   at **USD 1,700,000**.
+2. **Formulae.** `Cost-to-date = actuals + accruals`; `open commitments = commitments − cost-to-date`;
+   `forecast = cost-to-date + open commitments + uncommitted remaining scope` (KA 5.2.1).
+3. **Substitution.** Cost-to-date `= 3,800,000 + 1,350,000 = 5,150,000`; open commitments `= 16,000,000 −
+   5,150,000 = 10,850,000`; forecast `= 5,150,000 + 10,850,000 + 1,700,000 = 17,700,000`.
+4. **Result.** Cost-to-date **USD 5,150,000**; open commitments **USD 10,850,000**; forecast
+   **USD 17,700,000** against the USD 18,000,000 budget — headroom **USD 300,000**.
+5. **Interpretation.** An invoice-only report would show USD 3,800,000 — **21.1 %** of budget "spent" — at
+   the project's mid-point. The truth is that **88.9 %** of the budget (16,000,000) is already bound and
+   **98.3 %** is spoken for; the project's remaining discretion is the USD 1,700,000 not yet on purchase
+   orders. On an eighteen-month-lead procurement, the commitment *is* the decision: once the vendor cuts
+   steel, descoping and re-tendering are gone, and the control account can only be managed forwards from the
+   register — which is why the commitment ledger, not the invoice ledger, is this project's early-warning
+   instrument.
+
+### The validation accrual problem (KA 5.2.2)
+
+Fast-forward to Month 27, deep in the validation phase. The CQV consultancy charges **USD 150 per hour** and
+invoices roughly sixty days in arrears. At the September period end, the invoices processed cover **service
+dates only up to the end of July** and total **USD 380,000**. The consultancy's approved timesheets show
+**1,600 hours worked in August** and **1,400 hours in September**. The earned value claimed for the
+validation control account, under its milestone earning rules, is **USD 810,000**.
+
+**Worked calculation — accruing by service date, not invoice date.**
+
+1. **Setup.** Invoiced actuals (service dates to July) **USD 380,000**; August timesheets `1,600 × 150 =
+   240,000`; September timesheets `1,400 × 150 = 210,000`; `EV` **USD 810,000**.
+2. **Formulae.** `Accrual = value of services received but not invoiced, by service date`; `AC = actuals +
+   accruals`; `CPI = EV / AC`.
+3. **Substitution.** Accrual `= 240,000 + 210,000 = 450,000`; `AC = 380,000 + 450,000 = 830,000`;
+   `CPI = 810,000 / 830,000 = 0.976`; invoice-only "CPI" `= 810,000 / 380,000 = 2.13`.
+4. **Result.** A **USD 450,000 accrual**; true `AC` **USD 830,000**; `CPI` **0.98** — not the absurd 2.13 the
+   invoice ledger implies.
+5. **Interpretation.** It is the **service date**, not the invoice date, that fixes which period a cost
+   belongs to (Domain 1, KA 1.3). Two months of qualification work is real, incurred cost with no paperwork
+   yet in accounts payable; omit it and the account looks spectacularly efficient in exactly the phase where
+   consultancy burn is at its peak. Note the AI trap of KA 5.2.4 in live form: an auto-accrual tool keyed to
+   **document dates** would accrue nothing here, reproducing the cut-off error at scale — the accrual
+   judgement (which services, to which date, at which rate) stays with the professional.
+
+### Sharing the cleanroom utilities — an ABC question (Advanced 5.A.1)
+
+During the qualification quarter both filling suites draw on the same central utilities — cleanroom HVAC and
+the WFI/clean-steam plant — at a shared cost of **USD 800,000** for the quarter. Suite 1 (the owner's vial
+line) occupies **2,400 m²**; Suite 2 (a pre-filled-syringe suite being qualified for an external partner
+under a **cost-reimbursable tolling agreement**) occupies **1,600 m²**. The allocation is not cosmetic: Suite
+2's share lands on a real third-party invoice.
+
+A blanket allocation by floor area gives `800,000 / 4,000 = USD 200/m²` → Suite 1 **480,000**, Suite 2
+**320,000**. The ABC view splits the overhead into pools, each on its causal driver:
+
+| Pool | Cost (USD) | Driver | Volume | Rate | Suite 1 | Suite 2 |
+|---|---:|---|---:|---:|---:|---:|
+| HVAC & filtration | 500,000 | Air-handler operating hours | 10,000 h | 50/h | 4,000 h → 200,000 | 6,000 h → 300,000 |
+| WFI & clean steam | 300,000 | Water drawn | 6,000 m³ | 50/m³ | 1,500 m³ → 75,000 | 4,500 m³ → 225,000 |
+| **Total** | **800,000** | | | | **275,000** | **525,000** |
+
+Suite 2 runs its Grade B rooms around the clock through media trials and draws three-quarters of the water —
+its *consumption* of the utilities bears no relation to its floor area. The blanket rate over-costs the
+owner's suite by **USD 205,000** (`480,000 − 275,000`) and under-charges the partner by the same amount. The
+professional test of Advanced 5.A.1 — does the extra precision change a decision? — is met emphatically: a
+mis-based allocation here is a USD 205,000 transfer from the partner to the owner every quarter, and the
+driver data (air-handler hours, water meters) already exists in the building-management system.
+
+### One change, two funding routes (KA 5.4.3)
+
+In Month 14 the partner's new product requires a **modified isolator interface and additional
+environmental-monitoring points** — priced at **USD 640,000**. In engineering the modification, the designer
+also finds that the existing glove-port arrangement fails the ergonomic assessment and must be corrected
+**regardless of the partner's change** — a materialised design-development risk priced at **USD 360,000**.
+One physical work package of USD 1,000,000; two causes; two funding routes, kept traceably distinct:
+
+- The **USD 640,000** is a **client variation** — new scope, instructed and priced — so it is added to the
+  baseline: `new BAC = 58,000,000 + 640,000 = 58,640,000`, funded by the client.
+- The **USD 360,000** is an **in-scope risk** drawing on contingency: `contingency remaining = 2,400,000 −
+  360,000 = 2,040,000`; the `BAC` does not move for it.
+
+The change log carries **one change number with two funding lines**, and the discipline is the point. Fund
+the whole USD 1,000,000 from contingency and scope growth hides inside "risk" while the partner escapes a
+bill it owes; fund it all as a variation and the partner is charged for the contractor's own design
+development. Either blur survives the month unnoticed — and surfaces a year later at the final account, or in
+an audit, as an untraceable baseline movement (KA 5.4.3).
+
+### What the credential expects
+
+The pharmaceutical setting stresses every mechanism this domain teaches, at its extreme. The **commitment →
+accrual → actual cycle** (KA 5.2.1) is the whole story of long-lead procurement: with eighteen-month lead
+times, an invoice-only view is not months but *years* behind the decisions, and the commitment ledger is
+where control lives. The **accrual by service date** (KA 5.2.2, Domain 1 KA 1.3) is what keeps `AC` truthful
+through a service-heavy validation phase — and is precisely the judgement an auto-accrual tool gets wrong
+when it reads document dates (KA 5.2.4). The **ABC allocation** (Advanced 5.A.1) earns its keep because
+consumption of the shared utilities is radically uneven *and* a chargeable third-party cost depends on the
+answer — cause-based drivers changing a real invoice, not decorating a report. And the **change split**
+(KA 5.4.2–5.4.3) shows the reserve architecture working: variation to the baseline, risk to contingency, one
+change number reconciling both in the log, so the `BAC`'s movement from 58.00m to 58.64m has exactly one
+authorised explanation. AI could keep the commitment ledger current from the procurement register, propose
+the CQV accruals from timesheet feeds and meter the utilities allocation automatically — with the
+professional owning the accrual cut-off, the driver choice and the funding split (Domain 13, KA 13.5.4).
+**AI proposes, the professional disposes.**
+
+---
+
 ## Executive perspective — Domain 5
 
 **What the executive must hold onto.** An invoice-only cost view is months out of date: cost is real from

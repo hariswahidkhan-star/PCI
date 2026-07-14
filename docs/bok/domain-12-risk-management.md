@@ -651,6 +651,147 @@ auditable and owned (Domain 13, KA 13.5.9).
 
 ---
 
+## Case study B — Domain 12: the risk year of a runway extension (airport expansion)
+
+### Background
+
+A regional airport is extending its runway by 450 metres to take larger aircraft — bulk earthworks at the
+extension strip, concrete paving, airfield ground lighting (AGL), the diversion of utilities crossing the
+strip, and the recalibration of navigation aids before the extended runway can be declared operational. The
+work runs alongside a live airfield, so access is rationed into night closures and one long-planned taxiway
+closure, and the completion date is pinned to a season: the airline that ordered the larger aircraft starts
+selling seats for next summer. The programme's risk manager runs the Domain 12 cycle across the delivery
+year — a register in cause-event-effect form (12.2.1), quantification with the correlations declared
+(12.2.3, Advanced 12.A.1), an opportunity managed as deliberately as any threat (Advanced 12.A.2), and the
+quarterly reviews (12.3.3) in which, this year, the honest answer is the uncomfortable one. The case is
+about the fourth item: what a live register does when the year goes badly, which is the only time anyone
+finds out whether it was live at all.
+
+### The register, and the cluster with one cause (KAs 12.2.1–12.2.2, Advanced 12.A.1)
+
+The identification workshop — delivery team, airfield operations, the paving contractor, the air navigation
+service provider — writes five significant threats in cause-event-effect form. Three of them, the team
+notices before any arithmetic, share a single driver:
+
+- **R1 — Wet season stops earthworks.** *Because* the extension strip's bulk earthworks run through the
+  autumn, *there is a risk that* an extended wet season halts muck-shift and softens the formation,
+  *leading to* standing plant, re-work of the formation and prolonged preliminaries.
+- **R2 — Paving weather windows lost.** *Because* runway-grade concrete cannot be placed in heavy rain or
+  low temperatures, *there is a risk that* paving slots inside the night closures are lost to weather,
+  *leading to* extended closures bought back from the airline schedule at premium.
+- **R3 — AGL trenches flood.** *Because* the lighting circuits run in open trenches across the strip,
+  *there is a risk that* storm flooding collapses or silts the trenches, *leading to* re-excavation and
+  cable re-pulls.
+- **R4 — Unexpected ground.** *Because* the strip overlies a wartime airfield boundary with incomplete
+  records, *there is a risk that* unexploded-ordnance or archaeological finds stop excavation, *leading to*
+  specialist attendance and a suspended work front.
+- **R5 — Flight-check slot missed.** *Because* navaid recalibration needs a nationally shared flight-check
+  aircraft, *there is a risk that* the programme misses its booked slot and re-queues, *leading to* a
+  delayed operational declaration with the works complete.
+
+R1, R2 and R3 are the textbook cluster of Advanced 12.A.1: three different workstreams, three different
+owners — **one wet season** behind all of them. The qualitative treatment costs nothing but the question
+*what would make both happen?*, and the answer ("the same autumn") is recorded against the register before
+any model runs, so the modeller correlates the trio rather than treating three faces of one risk as
+independent dice.
+
+### EMV, correlation and the P80 (KAs 12.2.3, 12.3.1)
+
+All five risks clear the probability-impact screening (12.2.2) and are quantified:
+
+| Risk | Probability | Impact (USD) | EMV (USD) |
+|---|---:|---:|---:|
+| R1 Wet season stops earthworks | 40 % | 600,000 | 240,000 |
+| R2 Paving weather windows lost | 35 % | 400,000 | 140,000 |
+| R3 AGL trenches flood | 25 % | 200,000 | 50,000 |
+| R4 Unexpected ground | 10 % | 900,000 | 90,000 |
+| R5 Flight-check slot missed | 30 % | 300,000 | 90,000 |
+| **Total EMV** | | | **610,000** |
+
+The Monte Carlo run is done twice, deliberately, to make the correlation visible to the sponsor. Treating
+all five risks as independent returns a **P80 of USD 810,000**. Correlating R1–R3 on the shared
+weather driver returns a **P50 of USD 640,000** and a **P80 of USD 880,000** — the EMV sum barely moves,
+because correlation does not change expected values, but the upper tail fattens: in the futures where the
+wet season lands, it lands on earthworks, paving and AGL **together**. The **USD 70,000** gap between the
+two P80s `(880,000 − 810,000)` is the price of coincidence, and it belongs in the contingency, not in a
+footnote. Contingency is set at the correlated **P80 — USD 880,000** — documented against the register, the
+probability and impact judgements and the correlation assumption (12.3.1), with the management reserve held
+separately by the sponsor for the unknown-unknowns no workshop surfaced (12.3.2).
+
+### The opportunity in the taxiway closure (Advanced 12.A.2)
+
+One register entry has the sign the workshop almost missed. The utility diversion — a fuel main and
+telecoms duct crossing the extension strip — is planned as standalone night works late in the year. But
+airfield operations hold a **long-planned taxiway closure** mid-year for pavement maintenance; if the
+diversion could be executed inside that closure, the programme saves the standalone closures, the repeat
+mobilisations and the out-of-hours premiums: an opportunity worth **+USD 350,000**, assessed at **40 %**
+likely if left to chance, because the diversion design and long-lead ducting would be ready only if
+everything upstream ran to plan.
+
+1. **Setup.** Opportunity value **+USD 350,000** at **40 %** if unmanaged. An **exploit** response —
+   accelerating the diversion design and early-ordering the ducting so the closure window *cannot* be
+   missed — costs **USD 40,000** and makes the gain effectively certain (12.2.4).
+2. **Formula.** Compare the **accept** path (EMV as it stands) with the **exploit** path
+   (`opportunity value − exploit cost`).
+3. **Substitution.** Accept path `= 40 % × 350,000 = 140,000`. Exploit path `= 350,000 − 40,000 = 310,000`.
+4. **Result.** Exploiting beats accepting by `310,000 − 140,000 = ` **USD 170,000** — the acceleration is
+   instructed, and the diversion goes into the taxiway closure.
+5. **Interpretation.** The exploit response spends money to move probability to certainty — the upside
+   mirror of mitigation (Advanced 12.A.2). Once realised, the **USD 310,000** net saving leaves the
+   register for the **forecast**, as a budget change on the utilities package through change control. It
+   does not linger in the risk model flattering the exposure, and — the point the quarterly review will
+   shortly make sharp — it does not become an undeclared slush fund inside contingency.
+
+### The quarterly review that told the truth (KAs 12.3.3, 12.3.2)
+
+Then the wet season arrives, hard. **R1 materialises** — six weeks of lost and re-worked earthworks; the
+recovery (re-sequenced muck-shift, additional plant, extended preliminaries) draws **USD 520,000**. **R2
+materialises in part** — four paving nights lost and re-bought at premium — drawing **USD 180,000**. At the
+second quarterly review the risk manager runs the only test that matters (12.3.3): **remaining contingency
+versus remaining exposure**.
+
+1. **Setup.** Contingency set at **USD 880,000**; drawn to date `520,000 + 180,000 = 700,000`. The register
+   is re-run for what *remains*: R1 and R2 closed as issues, R3 residual, R4 and R5 still ahead (the
+   flight-check queue has lengthened, and a new risk **R6 — weather-affected pours need retesting**,
+   `30 % × 250,000`, EMV 75,000, is admitted). The re-run returns a remaining **P80 of USD 310,000**.
+2. **Formula.** `remaining contingency = original − drawn`; compare with remaining exposure at P80.
+3. **Substitution.** `880,000 − 700,000 = 180,000` remaining, against exposure of `310,000`.
+4. **Result.** A **shortfall of USD 130,000** `(310,000 − 180,000)` — remaining cover is **less than**
+   remaining exposure, for the first time in the programme's life.
+5. **Interpretation.** The honest move is the escalation, made *now*: a request against the sponsor-held
+   **management reserve**, presented as the re-baselining event it is (12.3.2), with the register, the
+   draws and the re-run model as evidence. The sponsor's first question is the predictable one — "didn't
+   the taxiway-closure saving cover this?" — and the answer is the discipline of the previous section: the
+   USD 310,000 went to the forecast through change control, visibly, where the board already counted it;
+   netting it silently against a contingency shortfall would spend the same money twice. The reserve is
+   granted at USD 130,000, the basis is re-documented, and the programme enters the paving season with
+   cover that matches exposure — thin, declared, and owned.
+
+The alternative behaviour — reporting draws against the opening USD 880,000, waving at the "healthy"
+30 %-spent figure from Q1, and letting the shortfall surface in the final account — would have shown the
+same numbers for two more quarters. That is the opening-figure illusion this domain's executive
+perspective warns about, and the only defence against it is a register that is re-run, not merely re-dated.
+
+### What the credential expects
+
+Each turn of this case lands on a knowledge area the examination tests. **Cause-event-effect** writing
+(12.2.1) is what let three weather risks be seen as one cluster: the shared cause sat in the first clause
+of each statement. **Correlation** (Advanced 12.A.1) is handled qualitatively — name the shared driver,
+declare it to the modeller — and its quantitative signature is read correctly: EMV unmoved, tail fattened,
+P80 up by USD 70,000, and the contingency set at the *correlated* P80 of USD 880,000, not the independent
+one (12.2.3, 12.3.1). **Opportunity management** (Advanced 12.A.2) applies the same response economics in
+mirror image — exploit at 40,000 to convert a 140,000 expectation into a 310,000 near-certainty — and then
+routes the realised gain to the forecast through change control, where governance can see it. The
+**quarterly draw-down test** (12.3.3) is the case's spine: remaining contingency against remaining
+exposure, never draws against the opening figure, with new risks admitted to the register even in a bad
+quarter — especially in a bad quarter. And the **management reserve** (12.3.2) works only because it was
+kept distinct: the escalation was a documented re-baselining with evidence, not a quiet top-up. A
+simulation engine ran the correlated model three times this year in minutes (Domain 13, KA 13.5.9); the
+probability judgements, the correlation call, the exploit decision and the escalation conversation were the
+professional's. **AI proposes, the professional disposes.**
+
+---
+
 ## Executive perspective — Domain 12
 
 **What the executive must hold onto.** **Contingency is bought confidence**: it is derived from analysed risk —

@@ -1591,6 +1591,151 @@ principle the credential certifies: **AI proposes, the professional disposes.**
 
 ---
 
+## Case study B — Domain 13: two pilots and one honest failure at an engineering consultancy (professional services)
+
+### Background
+
+An engineering consultancy of around six hundred staff — civil, structural and environmental practices —
+runs some **70 live commissions** at any time, supported by a fourteen-person project-controls and PMO team.
+Its delivery raw material is documents and hours: specifications, national standards, terms of engagement,
+and roughly **9,600 timesheet lines a week** whose free-text narratives drive client billing. Fee margins
+are thin enough that a mis-coded week or a two-day hunt through a specification library is real money. The
+firm's AI adoption year, told here, produced three results worth teaching: a tool-category decision made the
+right way round (13.4), a pilot that **failed** and was reported as a failure (13.2, 13.7.3), and a second
+pilot that worked for reasons the failure had just taught. Professional services sharpens the governance
+stakes in its own way: the firm's outputs are advice under professional indemnity, its data is *clients'*
+data under confidentiality agreements, and a hallucinated clause in a deliverable is a liability event, not
+an embarrassment (13.6.3).
+
+### Choosing the category before the tool (KA 13.4)
+
+The programme's first decision was not which product to buy but **which category fits the practice**
+(13.4.4). The workflow map showed where the hours actually went: engineers and bid teams answering
+"what does the standard require?", "what did we commit to on the comparable job?", "which spec clause
+governs this test?" — retrieval questions over the firm's own document estate, asked hundreds of times a
+month and answered by whoever could remember which project the answer lived in. That profile points at one
+category on the 13.4.1 map: **document/RAG and knowledge tools** — grounded answers over a governed corpus,
+with citations — not a predictive platform, not a fleet of ungoverned assistants. The category-specific
+governance (13.4.2b) was designed in before rollout: the retrieval layer enforces document permissions so a
+commission's confidential material answers only its own team; the corpus is curated, with superseded
+standards flagged; and two rules are mandatory — every answer **cites the clause it came from**, and where
+the corpus does not contain the answer the assistant says **"not found"** rather than improvising (13.3.3b).
+The value case, measured over a quarter and stated the honest 13.7.3 way:
+
+- **Setup.** **450** retrieval queries a month; average time to a verified answer falls from 22 to 6
+  minutes — **16 minutes saved** per query; loaded rate **USD 95/hour**. Tooling plus curation and
+  governance effort: **USD 60,000 a year**.
+- **Formula.** `annual saving = queries × minutes saved ÷ 60 × rate × 12`; `net = saving − full cost`.
+- **Substitution.** `450 × 16 = 7,200` minutes `= 120` hours a month; `120 × 95 = 11,400`;
+  `11,400 × 12 = 136,800`; `136,800 − 60,000`.
+- **Result.** **USD 136,800 a year** gross; **net ≈ USD 76,800 a year**.
+- **Interpretation.** Real, modest, and honestly netted against the curation the category demands — a stale
+  corpus produces confidently outdated answers, so keeping it current is part of the price of the saving,
+  not an overhead to hide.
+
+### The pilot that failed — and said so (KAs 13.2, 13.5.3, 13.7.3)
+
+The second initiative was the ambitious one: a supervised **ML forecaster** (13.5.3) to predict
+margin-at-completion for live commissions from features of past ones — sector, service line, client type,
+fee basis, early burn rate. The training set was every completed commission with clean enough records:
+**34 projects**. The model looked plausible in development — with a holdout of five projects, almost
+anything does — and was run in shadow mode for two quarters. Live, it flagged **9 commissions** as
+margin-erosion risks; commission reviews confirmed **2** and dismissed **7**: precision of `2 ÷ 9 ≈ ` **22 %**,
+worse than the monthly review meeting it was meant to sharpen, and expensive in partner attention each false
+alarm consumed.
+
+The post-mortem found nothing exotic — it found 13.2. The failure was **representativeness**, the limit
+KA 13.1.2 states as the universal truth: a supervised model trained on unrepresentative history will
+confidently mislead.
+
+- **Setup.** **34** completed commissions spanning **6** service lines; the history covers boom years only,
+  and one sector (water) supplies nearly half the examples.
+- **Formula.** `examples per service line = projects ÷ service lines`.
+- **Substitution.** `34 ÷ 6 ≈ 5.7`.
+- **Result.** Fewer than **six examples per service line** — and zero examples of a down-cycle.
+- **Interpretation.** No supervised learner generalises from six examples of anything (13.1.2); the model
+  had memorised the water sector's good years and projected them onto everything else. The data-quality
+  dimensions of 13.2.2 were individually fine — accurate, complete, valid — and the dataset still could not
+  carry the use case, because representativeness is a property of coverage, not cleanliness.
+
+What the firm did next is the teachable part. The pilot was **retired**, not quietly extended; the
+post-mortem was published internally with the 22 % figure in it; the assembled dataset — the first clean,
+consistent commission history the firm had ever built — was **kept** and maintained, because in a decade it
+will be an asset; and margin-risk flagging reverted to rules and ratios (burn rate against stage, unbilled
+WIP ageing) that a 34-project firm can actually support — the honest answer to 13.1.6's
+rules-versus-ML question at this data scale. A failed pilot honestly measured and cleanly killed is the
+value-measurement discipline of 13.7.3 working, and it bought the programme credibility that a
+quietly-buried failure would have spent.
+
+### The pilot that worked — timesheet narratives (KAs 13.5.4, 13.1.6)
+
+The failure re-aimed the programme at a problem with the opposite data profile. Every week, **9,600
+timesheet lines** of free-text narrative must be coded to commission, task and billable status before
+billing runs — at roughly half a minute a line, **80 hours a week** of coding effort spread across team
+leads, done grudgingly and late. As a classification task it is everything the forecaster was not: a
+labelled example arrives with every line ever coded — about **480,000 a year** `(9,600 × 50)` — the
+categories are stable, and an error is cheap to catch and correct. The deployment followed the 13.5.1
+pattern — AI step inside a governed workflow, professional verification on the output. A first trial
+auto-coded **88 %** of lines confidently; tracing the exceptions showed dead and duplicated task codes
+confusing the classifier, so the code list was cleaned *first* (the 13.2.1 lesson re-learned at small
+scale), lifting first-pass confidence to **94 %**.
+
+- **Setup.** 9,600 lines a week. Before: manual coding at 0.5 min/line. After: machine codes; humans work
+  the **6 %** exception queue at 2 min/line plus **4.8 hours** a week of sampling the high-confidence
+  population. Loaded rate **USD 75/hour**; tooling plus verification cost **USD 85,000 a year**;
+  50 working weeks.
+- **Formula.** `hours before = lines × 0.5 ÷ 60`; `hours after = (lines × 6 % × 2 ÷ 60) + sampling`;
+  `net = (hours saved × weeks × rate) − full cost`.
+- **Substitution.** Before: `9,600 × 0.5 ÷ 60 = 80` hours. After: `9,600 × 6 % = 576` lines;
+  `576 × 2 ÷ 60 = 19.2` hours; `19.2 + 4.8 = 24` hours. Saved: `80 − 24 = 56` hours a week;
+  `56 × 50 = 2,800` hours; `2,800 × 75 = 210,000`; `210,000 − 85,000`.
+- **Result.** **USD 210,000 a year** gross; **net ≈ USD 125,000 a year** — the programme's largest verified
+  saving.
+- **Interpretation.** The sampling line in the cost is not optional: coded time drives **client invoices**,
+  so the high-confidence population is audited on a cycle, and every code stream that bills a client gets
+  periodic human eyes (13.6.2 — a named professional stands behind the invoice, not the classifier). The
+  unpriced benefit is stated as unpriced: narratives coded the same day they are written, so WIP and
+  billing cut-off improve in ways the team can see but chose not to monetise in the case.
+
+Set side by side, the two pilots taught the firm the domain's data lesson better than any course: the same
+technique family failed at 34 examples and succeeded at 480,000. **The data decided; the tool never had a
+vote** (13.2.1).
+
+### Scaling on the ladder — and keeping the judgement (KAs 13.7.1–13.7.4)
+
+Against the 13.7.1 maturity ladder, the firm ended the year at **standardised**: an approved-tool register
+and AI-use policy (13.6.5) covering client-confidentiality classifications; the RAG assistant and the
+timesheet coder embedded in daily work; the forecaster formally retired with its post-mortem on record; and
+value measured quarterly, gross and net. **Integrated** is claimed only for the two working deployments;
+nothing above that is claimed at all, and the failed pilot is cited internally as evidence the claims can
+be trusted. The scaling plan runs category by category along the 13.4 map — contract-analytics for terms of
+engagement next — each with the same governance floor.
+
+One design choice guards the long game. Because auto-coding removes the drudgery that once taught juniors
+what the codes *mean*, every controls analyst still hand-codes **one week per quarter**, and exception-queue
+duty rotates — deliberate friction, kept on purpose, so the judgement that verification depends on keeps
+being produced (13.7.4). A team that can no longer code a timesheet cannot audit a classifier that codes
+half a million of them.
+
+### What the credential expects
+
+A candidate should be able to defend every decision in this case from the syllabus. **Category before
+tool** (13.4.4): a document-heavy practice maps to document/RAG on the 13.4.1 grid, with the
+category-specific governance — permission-aware retrieval, curated corpus, citations, "not found" — designed
+in, not bolted on. **Representativeness as a hard limit** (13.2, 13.1.2): 34 projects across six service
+lines is not a training set, and clean data does not rescue thin coverage; the professional response is
+13.1.6's — match the technique to the data actually held, and let rules beat ML where the history is short.
+**Honest failure as programme capital** (13.7.3): the 22 % precision was published, the pilot retired, the
+dataset kept — value measurement that permits failure is what makes its successes believable. **The
+governed-workflow pattern** (13.5.1, 13.5.4) carried the winning pilot: data cleaned first, machine coding
+inside tolerances, an owned exception queue, sampling wherever the output touches a client invoice
+(13.6.2). And **maturity claimed on evidence** (13.7.1) with **judgement deliberately maintained** (13.7.4)
+closes the loop: the ladder is climbed rung by rung, and the humans stay skilled enough to check the
+machine. Through both pilots, the failure and the scaling, one line governed every sign-off: **AI proposes,
+the professional disposes.**
+
+---
+
 ## Executive perspective — Domain 13
 
 **What the executive must hold onto.** AI changes the **economics** of controls work — coverage no team of
