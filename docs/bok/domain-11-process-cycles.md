@@ -718,6 +718,49 @@ honestly.
 
 ---
 
+## Exam preparation — Domain 11
+
+**How this domain is examined.** Domain 11 is short but examinable end-to-end: recall items test the O2C and
+P2P sequences, the control vocabulary (preventive vs detective) and the three documents of the match;
+application items compute match outcomes and working-capital effects; analysis items probe segregation of
+duties and what a process-mining finding does and does not prove (KA 11.3). The numerical items concentrate in
+two places — **match arithmetic** (what is properly payable) and **cash arithmetic** (DSO reductions and the
+cash-conversion cycle).
+
+**Calculation traps.**
+
+- **Confusing the cycle sequences.** Requisition → PO → receipt → invoice → match → pay is **P2P**; order →
+  credit check → fulfil → invoice → collect → apply cash is **O2C** — a P2P sequence is a standing distractor
+  on O2C items (MCQ 11.1-A).
+- **Passing a match that fails on price.** Quantities agreeing does not pass the match — a PO at USD 50
+  invoiced at USD 55 fails on price, and the difference is held as an exception before payment (MCQ 11.2-A).
+- **Paying for what was ordered, not received.** The properly payable amount is **received quantity × PO
+  price** (`190 × 30 = 5,700`), not the invoice's ordered quantity (MCQ 11.2-C).
+- **Valuing the whole book instead of the reduction.** Cash freed by a DSO improvement is `reduction × daily
+  revenue` — valuing the remaining 46-day book, or the old 60-day book, are both distractors (MCQ 11.1-C).
+- **The CCC sign.** `CCC = DSO + DIO − DPO` — DPO is *subtracted*, because payables are someone else's cash
+  funding you (Advanced 11.A.1).
+- **SoD conflicts missed because the duties look unrelated.** Billing plus cash application plus write-off is
+  a whole O2C transaction in one person's hands; the items test the conflict pairs, not the job titles (MCQ
+  11.3-D, Toolkit 11.T.1).
+
+**Time management.** Sequence and definition items are pure recall — answer them in seconds and move on. For
+match items, write the three documents' quantity and price side by side before choosing; the failing leg then
+identifies itself, and the payable follows as received × PO price.
+
+**Reflection questions.**
+
+1. In your ERP's actual role assignments — not the procedure manual — who could raise and approve the same
+   transaction today?
+2. Who set the tolerances behind your three-way match, and when were they last re-tested against what they
+   wave through?
+3. What is DSO doing in your organisation, and how much cash would ten days of billing, dunning and
+   cash-application discipline release?
+4. When did anyone last analyse your whole event log — process mining rather than a sample — and who would
+   own the response to what it found?
+
+---
+
 ## Domain 11 summary
 
 Money flows in through **order-to-cash** (order → credit → fulfil → invoice → collect → apply cash) and out

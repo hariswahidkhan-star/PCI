@@ -814,6 +814,50 @@ that produces no register changes has not reviewed — it has re-filed.
 
 ---
 
+## Exam preparation — Domain 12
+
+**How this domain is examined.** Recall items cover the framework vocabulary — risk vs issue, appetite vs
+tolerance, the response strategies, contingency vs management reserve; analysis items test why a P-level
+exceeds the EMV sum, what correlation does to the tail, and where the two reserves differ. The numerical items
+concentrate in KAs 12.2.3–12.2.4 and 12.3.3: **EMV arithmetic**, **mitigation economics** and the
+**draw-down test**. Expect at least one item that chains a register total through a mitigation decision to the
+contingency figure.
+
+**Calculation traps.**
+
+- **EMV without the probability.** `EMV = probability × impact` — quoting the impact alone, or summing impacts
+  across a register with the probabilities dropped, are both standing distractors (MCQs 12.2-A, 12.2-E).
+- **Expecting the P80 to equal the EMV sum.** The sum funds the *average*; a P80 funds an 80 %-confidence
+  outcome in which risks coincide, so it is typically higher — and correlation widens the gap (MCQ 12.3-B,
+  Advanced 12.A.1).
+- **Mis-building the mitigate path.** Mitigate path `= mitigation cost + residual EMV` — adding the
+  *unmitigated* EMV to the cost, omitting the probability cut, wrongly kills a worthwhile response (MCQ
+  12.2-D).
+- **Testing draw-down against the opening figure.** The test is always **remaining contingency vs remaining
+  exposure**; measured against the opening contingency, an emerging shortfall looks comfortable — the
+  opening-figure illusion (MCQ 12.3-C, Exercise 12.3).
+- **Double-counting a mitigated risk.** Once a response is adopted, the register carries the **residual** EMV
+  only — a paid-for mitigation left at pre-response values silently inflates the contingency ask (Exercise
+  12.2).
+- **Netting errors with opportunities.** Opportunity EMVs **net against** threat EMVs in the contingency basis
+  — adding them, or ignoring them, are both distractors (MCQ 12.2-E).
+
+**Time management.** EMV items are fast once the formula is written — do the multiplication before reading the
+options, then match. For decision trees, work each path end-to-end and roll back node by node (Exercise 12.4);
+for draw-down items, compute remaining contingency and remaining exposure separately before comparing.
+
+**Reflection questions.**
+
+1. Could every risk on your current register be read aloud as cause → event → effect — and would each owner
+   recognise it as theirs?
+2. What confidence level is your contingency — P-what — and could you produce the register and model it
+   derives from if the sponsor challenged it tomorrow?
+3. When contingency was last drawn on your project, was the remaining fund re-tested against remaining
+   exposure, or against the opening figure?
+4. Where are the opportunities on your register — and if there are none, was that the project or the workshop?
+
+---
+
 ## Domain 12 summary
 
 Risk management handles the uncertainty every estimate, schedule and forecast is made under. A **risk** is an

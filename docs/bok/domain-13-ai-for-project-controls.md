@@ -1681,6 +1681,53 @@ the professional disposes.**
 
 ---
 
+## Exam preparation — Domain 13
+
+**How this domain is examined.** As the 20 % AI domain, Domain 13 is examined more by **recall and analysis**
+than by arithmetic: the nesting (GenAI ⊂ ML ⊂ AI), the LLM vocabulary, RAG vs fine-tuning, category-to-task
+fit, and — above all — the governance reasoning of KA 13.6. Where numbers appear they concentrate in three
+places: **data-quality percentages** (KA 13.2), **value cases** (KA 13.7.3) and **`EAC` arithmetic embedded in
+verification scenarios** (KA 13.5.3). The scenario items almost always hinge on identifying the professional's
+verification step, not the AI's capability.
+
+**Calculation traps.**
+
+- **Data-quality percentages mis-combined.** With no overlap stated, failure rates **add** across dimensions:
+  4 % + 2 % + 5 % of 20,000 rows is 2,200 — counting a single dimension gives the distractors (MCQ 13.2-C).
+- **Value claimed gross.** An honest value case **nets** tooling *and* governance/verification cost from the
+  measured saving — the gross annual figure, and the figure with the cost *added*, both sit among the options
+  (MCQ 13.7-C, worked example 13.7.3).
+- **`EAC` arithmetic inside AI items.** `EAC = BAC/CPI` — dividing, not multiplying: at a `CPI` of 0.96 the
+  forecast *rises* above `BAC` (MCQ 13.5-E). The AI framing does not change the Domain 6 arithmetic.
+- **"The model said so" as a defence.** It never is — the credited answer is always the documented
+  verification and named sign-off (MCQs 13.5-B, 13.6-A); any option that releases an unchecked output is
+  wrong.
+- **Majority-pass reasoning on the checklist.** An output that fails **any** assurance-checklist line is
+  withheld until fixed — footnoting the failure, or releasing because most lines passed, are distractors (MCQ
+  13.6-D).
+- **RAG confused with fine-tuning.** RAG supplies documents **at inference**; fine-tuning **retrains**.
+  Neither removes the need to verify (MCQ 13.1-C).
+
+**Time management.** Definitional items — tokens, temperature, the maturity ladder — are quick: clear them
+early. For scenario items, ask one question before reading the options: *where is the professional's
+verification step?* The option containing it is nearly always the key, and the options that skip it eliminate
+themselves.
+
+**Reflection questions.**
+
+1. Which AI tools touch your controls outputs today, and would each survive the approved-register tests —
+   data classification, grounding, auditability?
+2. Where in your own workflow is the unglamorous data work — coding, de-duplication, lineage — on which any AI
+   initiative would actually depend?
+3. If an AI-assisted number you signed off were challenged a year from now, could you produce the trail —
+   what the model proposed, who reviewed it, what changed?
+4. When you last accepted an AI-drafted figure, extraction or narrative, what did you actually recompute or
+   open to source — and would your own verification discipline survive the scrutiny you apply to others'?
+
+**AI proposes, the professional disposes.**
+
+---
+
 ## Domain 13 summary
 
 AI is a major, practical part of modern project controls — and the governing principle, **"AI proposes, the

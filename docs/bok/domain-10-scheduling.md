@@ -1013,6 +1013,49 @@ The P-level comparison keeps the commit-P80/manage-P50 posture honest, period af
 
 ---
 
+## Exam preparation — Domain 10
+
+**How this domain is examined.** Domain 10 leans towards **application**: recall items cover the four
+dependency types, the float definitions and the compression vocabulary, but the marks concentrate on working a
+network — forward and backward passes, total and free float, PERT and crash economics (KAs 10.2–10.3).
+Analysis items test interpretation: what total-vs-free float means for who a slip hurts, what compression does
+to the parallel chain, and why the network and earned-value views are read together (KA 10.4). Expect at least
+one multi-step item that chains the pass, the float and the critical path from a single small network.
+
+**Calculation traps.**
+
+- **Taking the shorter path as the project duration.** The critical path is the **longest** path; the 10-day
+  A–C–E–F chain in the worked network is a distractor, not the answer (MCQ 10.2-A).
+- **Float sign errors.** `TF = LS − ES` (equivalently `LF − EF`) — computed early-minus-late, the float comes
+  out negative and every later step is wrong from there.
+- **Free float against the wrong successor.** `FF = min(ES of successors) − EF`: using the *later* successor,
+  or averaging the successors, both appear as distractors (MCQ 10.2-D).
+- **Crashing off the critical path.** Only critical activities shorten the project; crashing a floated
+  activity adds cost and buys nothing (MCQ 10.3-A — and the fit-out case's activity C).
+- **Skipping the parallel-path check.** After each crashed day, re-test whether a parallel chain has become
+  critical — the cheapest activity's second day can be worthless once the other path governs (Exercise 10.4).
+- **PERT weighting and lag direction.** `tE = (O + 4M + P)/6` — not `/3`, and not forgetting to divide (MCQ
+  10.1-A); and FS + 3 *delays* the successor — reading the lag as a lead gives day 7 instead of day 13 (MCQ
+  10.1-C).
+
+**Time management.** For any network item, **draw the network before computing anything** — a thirty-second
+sketch of nodes and arrows prevents nearly every merge and path error. Run the forward pass completely, then
+the backward pass, then float; recomputing piecemeal wastes time. Recall items (dependency types, levelling vs
+smoothing) should take seconds — bank them and spend the balance on the multi-step network.
+
+**Reflection questions.**
+
+1. Is your current schedule driven by logic, or held together by date constraints and hidden lags — and how
+   would you demonstrate the difference to an auditor?
+2. Where does the float live on your project this period, who is consuming it, and which near-critical path
+   worries you most?
+3. When your organisation last compressed a schedule, was the decision priced cheapest-critical-day-first with
+   the parallel-path check shown — or bought on instinct?
+4. At what P-level are your completion commitments made, and does the gap to the internal target exist as
+   owned, visible schedule contingency?
+
+---
+
 ## Domain 10 summary
 
 Scheduling models the work in time: activities decomposed from the WBS, sequenced with the four dependency
