@@ -189,6 +189,26 @@ commitments.
    the number to bid or baseline. Presenting the bottom-up figure **with its class and range** (e.g. USD
    11.30m, Class 2, −10 % / +15 % → USD 10.17m to USD 13.00m) is the professional output.
 
+**Worked example 3.2.2b — a bottom-up build-up with contingency and range.**
+
+1. **Setup.** Build a bottom-up estimate from three work packages: **substructure** (1,200 labour hours at
+   USD 60/hour plus USD 80,000 materials), **superstructure** (2,000 hours at USD 60/hour plus USD 150,000
+   materials) and **fit-out** (1,500 hours at USD 55/hour plus USD 120,000 materials), with an **8 %
+   contingency** on the subtotal, reported as a Class 2 estimate at −10 % / +15 %.
+2. **Formula.** Per package: `estimate = (hours × rate) + materials`; then `subtotal = Σ packages`;
+   `total = subtotal × 1.08`; range = `total × 0.90` to `total × 1.15`.
+3. **Substitution.** Substructure `= 1,200 × 60 + 80,000 = 72,000 + 80,000 = 152,000`; superstructure
+   `= 2,000 × 60 + 150,000 = 120,000 + 150,000 = 270,000`; fit-out `= 1,500 × 55 + 120,000 = 82,500 +
+   120,000 = 202,500`. Subtotal `= 152,000 + 270,000 + 202,500 = 624,500`; contingency `= 624,500 × 0.08 =
+   49,960`; total `= 624,500 + 49,960 = 674,460`. Range: `674,460 × 0.90 = 607,014`; `674,460 × 1.15 =
+   775,629`.
+4. **Result.** Total estimate **≈ USD 674,000**, stated as **Class 2, −10 % / +15 % → USD 607,000 to USD
+   776,000**.
+5. **Interpretation.** A bottom-up estimate is defensible because every line traces to a quantity × rate or a
+   work-package build-up — a reviewer can challenge the hours, the rate or the materials allowance, not just
+   the total. And it is reported **with its class and range**, not as a bare point, consistent with the
+   discipline of 3.2.1.
+
 ### 3.2.3 The basis of estimate (BoE)
 
 **Definition & purpose.** The **basis of estimate** is the document that records *how* the estimate was
@@ -385,6 +405,20 @@ Variance at completion:   VAC = BAC − EAC
    mechanically; they choose the assumption that matches the *cause* of the variance and defend it. This is
    the crux developed in Domain 6, KA 6.3.
 
+**Worked example 3.4.2b — a rolling forecast across two periods (the CPI trend).**
+
+1. **Setup.** The same project, `BAC` = **USD 1,000,000**, forecast by method (b) at two successive data
+   dates. **Period 1 (Month 4):** `EV` = 350,000; `AC` = 370,000; `PV` = 360,000. **Period 2 (Month 5):**
+   `EV` = 480,000; `AC` = 530,000; `PV` = 520,000.
+2. **Formula.** Each period: `CPI = EV / AC`; `EAC = BAC / CPI`.
+3. **Substitution.** Period 1: `CPI = 350,000 / 370,000 = 0.95`; `EAC = 1,000,000 / CPI ≈ 1,057,000`.
+   Period 2: `CPI = 480,000 / 530,000 = 0.91`; `EAC = 1,000,000 / CPI ≈ 1,104,000`.
+4. **Result.** `CPI` **0.95 → 0.91**; `EAC` **≈ USD 1,057,000 → ≈ USD 1,104,000** in a single month.
+5. **Interpretation.** Re-produced each period, the forecast reveals a deteriorating `CPI` trend (0.95 →
+   0.91) and a rising `EAC` (1,057,000 → 1,104,000). The **trend across periods** is the early warning — a
+   single period's `CPI` could be timing noise, but two consecutive readings moving the same way demand
+   investigation of the driver behind them (3.4.3, and Domain 6, KA 6.3).
+
 ### 3.4.3 Rolling forecasts and trend analysis
 
 **The principle.** A **rolling forecast** is re-produced every period (rather than once a year), always
@@ -496,6 +530,21 @@ the project can be **funded**, not merely *shown to be profitable*.
 > shaded to signal the funding need. *Animation storyboard (digital-only):* the curve draws month by month;
 > the shaded funding area fills as the line goes negative and drains as it recovers, with the trough value
 > pulsing at its lowest point.
+
+**Worked example 3.5.2b — how a mobilisation advance reshapes the trough.**
+
+1. **Setup.** Take the base forecast of worked example 3.5.2, whose cumulative-cash trough is **(USD
+   280,000)** at the end of Month 2. Now suppose the client pays a **USD 150,000 mobilisation advance** at
+   the start of the job (Month 0), all other flows unchanged.
+2. **Formula.** An advance received before the flows begin lifts the *entire* cumulative-cash curve by its
+   amount: `new cumulative cash (each month) = base cumulative cash + advance`; in particular `new trough =
+   base trough + advance`.
+3. **Substitution.** `New trough = (280,000) + 150,000`.
+4. **Result.** New peak funding requirement = **(USD 130,000)**, still at the end of Month 2.
+5. **Interpretation.** The advance more than halves the peak funding requirement (from 280,000 to 130,000)
+   **without changing profit** — it is pure timing. Conversely, higher retention or longer client payment
+   terms would deepen the trough (3.5.3). This is why the funding trough is a **lever** a controls/commercial
+   professional actively manages — through advances, terms, retention and billing cadence — not a fixed fact.
 
 ### 3.5.3 The funding requirement and its drivers
 

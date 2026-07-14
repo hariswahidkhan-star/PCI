@@ -82,6 +82,38 @@ against granularity:
    the classic EVM failure: **`EV` inflated by optimistic progress claims**, which flatters both `SPI` and
    `CPI`.
 
+**Worked example 6.1.2b — aggregating earned value across a portfolio of work packages.**
+
+- **Setup.** A project has four work packages, each with its own earning rule fixed in advance. At the data
+  date:
+
+  | Work package | Budget | Earning rule | Status | `EV` |
+  |---|---:|---|---|---:|
+  | A | 100,000 | 0/100 | complete | 100,000 |
+  | B | 200,000 | percent complete | 60 % | 120,000 |
+  | C | 150,000 | units | 300/500 units | 90,000 |
+  | D | 50,000 | 0/100 | not started | 0 |
+  | **Total** | **500,000** | | | **310,000** |
+
+  The plan and the cost ledger give, per package:
+
+  | Work package | `PV` | `AC` |
+  |---|---:|---:|
+  | A | 100,000 | 105,000 |
+  | B | 150,000 | 130,000 |
+  | C | 120,000 | 100,000 |
+  | D | 30,000 | 0 |
+  | **Total** | **400,000** | **335,000** |
+
+- **Formula.** `CPI = EV / AC`; `SPI = EV / PV` — computed on the **aggregated** `EV`, `AC` and `PV`.
+- **Substitution.** `CPI = 310,000 / 335,000`; `SPI = 310,000 / 400,000`.
+- **Result.** `CPI` = **0.93**; `SPI` = **0.78**.
+- **Interpretation.** Earned value is measured **bottom-up** at the work-package level, each package under its
+  own fixed earning rule, and then aggregated — the project-level `CPI` and `SPI` are **rollups**. A rollup
+  can hide a struggling package: here package C has earned 90,000 against a `PV` of 120,000 and is well behind
+  its own plan, a detail invisible in the single project `SPI` of 0.78. Always read the control-account detail
+  beneath the aggregate (Domain 5, KA 5.3).
+
 ### 6.1.3 The integrated picture
 
 **The principle.** Plotted together on the S-curve canvas (Domain 3, KA 3.3.2), the three measures reveal
@@ -300,6 +332,21 @@ about *what assumption* to make regarding the remaining work.
 The methods bracket the outcome from **1.05m to 1.15m** — a USD 100,000 range that is *not* imprecision but
 *different assumptions* about the remaining work.
 
+**Worked example 6.3.2b — a bottom-up ETC (method d).**
+
+- **Setup.** The master project (`BAC` = 1,000,000; `AC` = 530,000; `EV` = 480,000). The remaining work is a
+  **commissioning phase** quite unlike the work performed to date, so performance to date is **not
+  representative** of the remainder — the team re-estimates the remaining work from the bottom up. The fresh
+  bottom-up estimate of the commissioning work gives `ETC` = **610,000**.
+- **Formula.** `EAC = AC + ETC`.
+- **Substitution.** `EAC = 530,000 + 610,000`.
+- **Result.** `EAC` = **USD 1,140,000**.
+- **Interpretation.** Method (d) is chosen precisely because the formula methods — which all **extrapolate
+  past performance** — would misforecast a phase of different work. The bottom-up `EAC` of 1,140,000 happens
+  to sit within the range of the formula methods (1,050,000 / 1,104,167 / 1,152,010), but it rests on a
+  **re-estimate of the work ahead**, not an extrapolation of the work behind — a materially stronger basis
+  when the character of the remaining work has changed.
+
 ### 6.3.3 Selecting a method
 
 **The professional judgement.** The method is chosen to match the **cause** of the variance, and defended:
@@ -387,7 +434,7 @@ C is the current `CV`; D ignores the forecast.
 ## Knowledge Area 6.4 — Integrating cost & schedule; limitations; earned schedule
 
 *Topics: 6.4.1 EVM as cost-schedule integration · 6.4.2 the limitations of EVM · 6.4.3 earned schedule ·
-6.4.4 EVM and adaptive delivery.*
+6.4.4 EVM and adaptive delivery · 6.4.5 sector mini-case — a deteriorating trend.*
 
 ### 6.4.1 EVM as cost-schedule integration
 
@@ -425,6 +472,21 @@ at completion — it keeps reporting lateness meaningfully to the end. In the ma
 corresponds to a point on the baseline curve **before** Month 5 (the plan reached 480 partway through the
 month), so `ES < AT` and `SPI(t) < 1` — confirming the delay in time terms.
 
+**Worked example 6.4.3b — computing earned schedule.**
+
+- **Setup.** The master project at the end of Month 5, so actual time `AT` = 5 months; `EV` = 480,000. The
+  Planned Value S-curve (Domain 3) has cumulative `PV` of **360,000 at Month 4** and **520,000 at Month 5**.
+  `ES` is the time on the baseline at which cumulative `PV` equals the current `EV` (480,000) — it lies
+  between Month 4 (360,000) and Month 5 (520,000).
+- **Formula.** Interpolate `ES` between the bracketing months; then `SV(t) = ES − AT` and `SPI(t) = ES / AT`.
+- **Substitution.** `ES = 4 + (480,000 − 360,000) / (520,000 − 360,000) = 4 + 120,000/160,000 = 4 + 0.75`.
+- **Result.** `ES` = **4.75 months**; `SV(t) = 4.75 − 5 = ` **(0.25) months** (about a quarter-month behind);
+  `SPI(t) = 4.75 / 5 = ` **0.95**.
+- **Interpretation.** Compare with the cost-based `SPI = EV / PV = 480,000 / 520,000 = ` **0.92**: earned
+  schedule expresses the same lateness in **time** (~0.25 month behind) rather than in currency, and — unlike
+  the cost-based index — `SPI(t)` will not drift to 1.0 as the project completes, so it keeps reporting the
+  delay meaningfully to the end.
+
 ### 6.4.4 EVM and adaptive delivery
 
 **The bridge to Domain 9.** Classical EVM assumes a **fixed scope baseline**, which is exactly what adaptive/
@@ -432,6 +494,29 @@ agile delivery does not have. Domain 9 (KA 9.5) develops **AgileEVM** — applyi
 where scope is variable, using release/sprint budgets and story-point progress — together with its assumptions
 and limitations, and reconciles it back to these formulae and to IFRS 15 revenue (Domain 2). The notation
 here is deliberately the notation used there, so the classical and adaptive treatments stay one language.
+
+### 6.4.5 Sector mini-case — a defence programme's deteriorating trend
+
+A defence systems programme with **`BAC` = USD 50,000,000** reports the following at two successive data
+dates:
+
+| Data date | `PV` | `EV` | `AC` | `CPI` | `SPI` |
+|---|---:|---:|---:|---:|---:|
+| Month 3 | 12,000,000 | 11,000,000 | 11,500,000 | 0.96 | 0.92 |
+| Month 6 | 24,000,000 | 21,000,000 | 23,000,000 | 0.91 | 0.88 |
+
+Neither month's `CPI` is catastrophic in isolation; the signal is the **trend** — `CPI` deteriorating from
+0.96 to 0.91 (and `SPI` from 0.92 to 0.88) — which is a stronger warning than either single value (Domain 4,
+KA 4.1.2 on leading vs lagging indicators; Domain 3, KA 3.4.3 on trend analysis). Forecasting on the Month 6
+performance: `EAC = BAC / CPI = 50,000,000 / 0.91 = ` **54,945,000** (approx. USD 54.9m), so `VAC =
+50,000,000 − 54,945,000 = ` **(4,945,000)**. The reality check confirms the picture: `TCPI` to recover to
+`BAC` `= (BAC − EV) / (BAC − AC) = (50,000,000 − 21,000,000) / (50,000,000 − 23,000,000) = 29,000,000 /
+27,000,000 = ` **1.07** — the remaining work would have to run at 1.07 against the 0.91 achieved, which,
+combined with the **worsening** trend, makes the `BAC` not credible.
+
+The controls professional's response: **escalate early on the trend** rather than waiting for a single bad
+month; re-baseline expectations to the ~USD 54.9m `EAC`; and drive a **specific recovery action** (a named
+cause, an owner, a date) rather than hoping the average improves.
 
 **AI in this KA.** EVM forecasting is a leading AI use case (Domains 3.4, 13.5): predictive `EAC` models,
 early-warning systems that fuse `CPI`/`SPI` trends with leading indicators, and driver analysis that explains
