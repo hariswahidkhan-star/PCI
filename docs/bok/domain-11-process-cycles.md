@@ -936,6 +936,75 @@ honestly.
 
 ---
 
+## Calculation exercises — Domain 11
+
+*Work each exercise before reading its solution; every step uses only this domain's methods.*
+
+**Exercise 11.1** — A purchase order is for **200 units at USD 50** (USD 10,000). The goods-receipt note
+records **190 units received**; the supplier's invoice arrives for **200 units at USD 52** (USD 10,400).
+(a) Compute the amount approvable under the match rules. (b) Decompose the amount held, and check it against
+the invoice-vs-approvable difference. (c) In one sentence: which parts of the hold are exceptions to
+disposition, and which are errors?
+
+**Solution 11.1.**
+
+1. (a) The match pays for **goods received at the PO price** (11.2.2): approvable `= 190 × 50 = 9,500`.
+2. (b) Held `= 10,400 − 9,500 = 900`, in two legs. The **price variance** on the received units
+   `= 190 × (52 − 50) = 190 × 2 = 380` — queried, and approved only within tolerance (11.2.2). The
+   **not-received** leg `= 10 × 52 = 520` — held until a goods receipt or a credit note arrives.
+3. Check: `380 + 520 = 900 = 10,400 − 9,500`. ✓
+4. (c) The price variance is an **exception** requiring a disposition — a price rise to authorise or reject;
+   billing ten undelivered units is an **error** on the invoice, corrected by credit note or by the receipt
+   catching up, never by payment.
+
+**Exercise 11.2** — At month-end, goods received but not yet invoiced (GRNI) total **USD 240,000** across the
+P2P ledger. (a) State the closing entry. (b) Next month, invoices arrive for **USD 225,000** of it: state the
+release, and what happens to the residue. (c) In one sentence: why was cost-to-date right in both months?
+
+**Solution 11.2.**
+
+1. (a) Accrue the receipts: **Dr project cost / Cr GRNI accrual — USD 240,000** — the accrual discipline of
+   Domain 1 (KA 1.3) applied to the P2P cycle, and the entry that makes cost-to-date true (Domain 5,
+   KA 5.2.2; 11.2.3).
+2. (b) As the matched invoices post as actuals, the accrual is released against them:
+   `240,000 − 225,000 = 15,000` remains accrued. The residue is investigated, not rolled forward blind:
+   either an **over-accrual** (a receipt posted in error or over-valued — reverse it) or **slow invoicing**
+   (goods genuinely received, supplier yet to bill — the accrual stands).
+3. (c) Cost-to-date was right in both months because each month carried `actuals + accruals` for what had
+   actually been received — the invoice's arrival moved value between the two states without changing their
+   sum.
+
+**Exercise 11.3** — A business has annual revenue of **USD 10,950,000**, receivables of **USD 1,650,000**,
+annual cost of goods sold of **USD 5,475,000**, inventory of **USD 300,000** and payables of
+**USD 750,000**. (a) Compute DSO, DIO, DPO and the cash-conversion cycle. (b) How much cash is freed if
+billing and dunning discipline cut DSO by five days?
+
+**Solution 11.3.**
+
+1. Daily revenue `= 10,950,000 ÷ 365 = 30,000`; DSO `= 1,650,000 ÷ 30,000 = 55 days` (11.1.3).
+2. Daily COGS `= 5,475,000 ÷ 365 = 15,000`; DIO `= 300,000 ÷ 15,000 = 20 days`;
+   DPO `= 750,000 ÷ 15,000 = 50 days` — inventory and payables run on cost, not revenue (Advanced 11.A.1).
+3. `CCC = DSO + DIO − DPO = 55 + 20 − 50 = 25 days` — DPO is *subtracted*, because payables are someone
+   else's cash funding you (Advanced 11.A.1).
+4. (b) Cash freed `≈ DSO reduction × daily revenue = 5 × 30,000 = 150,000` — working capital released by
+   process discipline alone (Advanced 11.A.1).
+
+**Exercise 11.4** — A duplicate-payment monitor flags **14 candidate duplicates** in a quarter. Investigation
+confirms **3** true duplicates, of **USD 4,200**, **USD 5,800** and **USD 12,000**. (a) Compute the recovery
+raised and the monitor's false-positive rate. (b) In one sentence: what trade-off does re-tuning the
+threshold involve?
+
+**Solution 11.4.**
+
+1. (a) Recovery `= 4,200 + 5,800 + 12,000 = 22,000`; false positives `= 14 − 3 = 11`, so the false-positive
+   rate `= 11 ÷ 14 ≈ 79 %`.
+2. (b) Tighten the threshold and true duplicates start slipping through unflagged; loosen it and the alert
+   queue drowns the team in noise — every threshold is a tolerance decision whose false-positive rate is
+   measured and tuned (Advanced 11.A.4), exactly as a golden set evaluates a classifier's precision and
+   recall (Domain 13, Advanced 13.A.7).
+
+---
+
 ## Exam preparation — Domain 11
 
 **How this domain is examined.** Domain 11 is short but examinable end-to-end: recall items test the O2C and
