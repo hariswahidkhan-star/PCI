@@ -304,6 +304,21 @@ Sprints remaining      = remaining backlog points / velocity
    controls professional reports the moved forecast rather than a false "on track against the original"
    (cross-ref 9.3.4).
 
+**Worked example 9.3.3c — capacity planning is not velocity.**
+
+1. **Setup.** A team of **5 Developers** has **9 working days** available each Sprint (10 days less
+   ceremonies) at **6 focus-hours** a day; historical velocity is **30 points**. Next Sprint, two members
+   are each out **2 days**.
+2. **Formula.** `Planned capacity = people × days × focus-hours`; `adjusted commitment = velocity ×
+   (adjusted capacity / normal capacity)`.
+3. **Substitution.** Normal capacity `= 5 × 9 × 6 = 270 hours`; adjusted capacity `= 270 − (2 × 2 × 6) =
+   246 hours`; commitment `= 30 × 246/270 ≈ 27 points` (round down).
+4. **Result.** The team plans **246 hours** of capacity and commits **~27 points**, not its usual 30.
+5. **Interpretation.** **Capacity** (hours available) and **velocity** (points delivered) are different
+   instruments — capacity adjusts the commitment for known absences, while velocity remains the empirical
+   forecast basis (9.3.3). Committing 30 points into a 246-hour Sprint is how teams start failing Sprints
+   and inflating estimates to compensate.
+
 ### 9.3.4 Burndown, burnup and flow metrics
 
 **The measures.**
@@ -421,6 +436,19 @@ give a controls professional a cadence-independent way to measure and forecast a
 cycle time of 20 days. Imposing a WIP limit of 5 focuses the team; cycle time falls to ~8 days and throughput
 rises, because items finish instead of stalling — illustrating **Little's Law** conceptually (average cycle
 time ≈ WIP ÷ throughput): cut WIP and cycle time falls for the same throughput.
+
+**Worked example 9.4.1b — Little's Law with numbers.**
+
+1. **Setup.** A support/flow team carries **WIP = 12 items** with a **throughput of 3 items per week**;
+   it then halves WIP to **6 items** at the same throughput.
+2. **Formula.** `Average cycle time ≈ WIP / throughput`.
+3. **Substitution.** Before: `12 / 3 = 4 weeks`. After: `6 / 3 = 2 weeks`.
+4. **Result.** Average cycle time falls from **4 weeks to 2 weeks** — items complete in half the time
+   with **no** extra capacity.
+5. **Interpretation.** This is the counter-intuitive core of flow — starting less finishes faster, and the
+   lever is the WIP limit, not working harder. The professional's check: throughput held at 3/week after
+   the change (if the WIP cut also cut throughput, the gain evaporates). Cross-ref the qualitative
+   treatment above and Advanced 9.A.3 (flow efficiency).
 
 ### 9.4.2 Lean and waste
 
