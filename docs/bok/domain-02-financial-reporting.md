@@ -226,12 +226,46 @@ evaporates.
    case) can legitimately differ from *recognised* revenue (which excludes it until near-certain) — a gap a
    controls professional must be able to explain to a board.
 
+**Worked example 2.2.4b — variable consideration by expected value (a range of outcomes).** Where variable
+consideration has *many* possible outcomes, the **expected-value** method predicts it better than a single
+most-likely amount.
+
+1. **Setup.** A three-year remeasurement contract carries a **performance-adjustment** mechanism tied to
+   measured output: management assesses **four** outcomes for the adjustment above a base price of **USD
+   8,000,000** — `+600,000` (25 %), `+300,000` (35 %), `0` (30 %), `−200,000` (10 %).
+2. **Method.** Many outcomes → **expected value** `= Σ (probability × outcome)`.
+3. **Substitution.** `0.25×600,000 + 0.35×300,000 + 0.30×0 + 0.10×(−200,000) = 150,000 + 105,000 + 0 − 20,000
+   = 235,000`.
+4. **Constraint.** Because the estimate is spread across many partially-offsetting outcomes (no single large
+   binary risk of reversal), management judges it **highly probable** that including **USD 235,000** will not
+   cause a significant reversal → transaction price **= 8,000,000 + 235,000 = USD 8,235,000**.
+5. **Interpretation.** Expected value suits a *portfolio* of outcomes (this adjustment, or a large population of
+   rebates/claims); the binary bonus in 2.2.4 suited most-likely-amount. Choosing the right estimator, then
+   applying the constraint, is the two-step discipline — and the expected value is **re-estimated each period**
+   as outcomes resolve, catching up cumulative revenue prospectively.
+
 **Significant financing component.** Where the timing of payments provides the customer or the entity with a
 significant financing benefit (typically when the gap between payment and transfer exceeds ~12 months), the
 transaction price is adjusted to reflect the **time value of money**, and the financing element is presented
 as interest income/expense, separate from revenue. For most progress-billed construction the practical
 expedient (no adjustment when the period is ≤ 12 months) often applies, but long up-front or deferred
 payments trigger it.
+
+**Worked example 2.2.4c — a significant financing component (advance payment).**
+
+1. **Setup.** A customer pays **USD 5,000,000 in advance** for equipment the entity will transfer control of
+   in **2 years**. A financing rate reflecting the customer's credit of **6 %** applies. The advance is, in
+   substance, the customer *financing* the entity.
+2. **Formula.** The revenue recognised on transfer is the advance **accreted** for the financing benefit:
+   `Revenue = advance × (1 + r)^n`; the uplift is **interest expense** (the entity has, in effect, borrowed
+   from the customer).
+3. **Substitution.** `5,000,000 × 1.06^2 = 5,000,000 × 1.1236 = 5,618,000`.
+4. **Result.** Over the two years the entity accretes the contract liability from 5,000,000 to **USD
+   5,618,000** through **USD 618,000 of interest expense**; **revenue** recognised on transfer is **USD
+   5,618,000** — *not* the 5,000,000 cash received.
+5. **Interpretation.** Ignoring the financing component would understate both revenue and finance cost and
+   misstate the margin. A controls professional on a contract with a large advance (common on mobilisation-
+   heavy work) must flag the financing split — the cash received is not the revenue.
 
 ### 2.2.5 Step 4 — Allocate the transaction price
 
@@ -367,6 +401,24 @@ construction obligation). For construction, most variations fall into (c): the t
 cost estimate are updated and PoC re-struck, with a catch-up to revenue in the period of modification. This
 is the accounting counterpart of the change-control process in Domain 5 (KA 5.4) and Domain 7 (KA 7.2).
 
+**Worked example 2.2.8 — a construction variation (cumulative catch-up).** Continuing the KA 2.2.6 contract
+(price 12,000,000; total estimated cost 9,600,000): at the **end of Year 2** (56.25 % complete, cumulative
+revenue 6,750,000), an approved variation adds scope worth **USD 1,000,000** of price and **USD 700,000** of
+cost, **not distinct** from the single construction obligation → treatment (c), a cumulative catch-up.
+
+1. **Update the contract.** New transaction price `= 12,000,000 + 1,000,000 = 13,000,000`; new total estimated
+   cost `= 9,600,000 + 700,000 = 10,300,000`; cumulative cost to date is unchanged at **5,400,000**.
+2. **Re-strike PoC.** `PoC = 5,400,000 / 10,300,000 = 52.43 %` (the extra *cost* is not yet incurred, so PoC
+   *falls* against the larger cost base).
+3. **New cumulative revenue.** `52.43 % × 13,000,000 = 6,816,000` (to the nearest thousand).
+4. **Catch-up.** `Cumulative revenue 6,816,000 − revenue already recognised 6,750,000 = ` **+USD 66,000**
+   catch-up adjustment recognised **in the period of modification**.
+5. **Interpretation.** The variation is folded into the existing obligation — not booked as a separate contract
+   — and its effect flows through a single re-struck PoC with a modest catch-up. Contrast treatment **(a)**: had
+   the added scope been **distinct and priced at its standalone selling price**, it would have been a **separate
+   contract**, recognised on its own, leaving the original schedule untouched. Getting the treatment right is
+   what keeps reported revenue faithful when scope changes — the accounting face of Domain 5's change control.
+
 ### 2.2.9 Disclosures
 
 **The principle.** IFRS 15 requires disclosures that let users understand the **nature, amount, timing and
@@ -376,6 +428,41 @@ performance obligations (the order book not yet recognised), and the significant
 performance obligations are identified, when they are satisfied, and how the transaction price and any
 variable consideration are estimated. For project businesses these disclosures are where the *judgement* in
 the numbers is exposed to scrutiny.
+
+### 2.2.10 Sector mini-case — an oil & gas EPC that turns onerous
+
+*This mini-case threads steps 1–5, the loss rule, and the contract asset/liability through one realistic
+contract, and is representative of the sector cases the flagship KA carries.*
+
+**Background.** An engineering-procure-construct (EPC) contractor wins a **USD 40,000,000** fixed-price
+offshore facility. At award: one combined performance obligation (an integrated asset built on the customer's
+site → **over time**, criterion 2); total estimated cost **USD 33,000,000** (expected margin 7,000,000);
+36-month build; billing by monthly certified valuation with **10 % retention** (Domain 7).
+
+**Year 1 (on plan).** Cost incurred **8,250,000**; total cost estimate unchanged. `PoC = 8,250,000 /
+33,000,000 = 25 %`; cumulative revenue `25 % × 40,000,000 = 10,000,000`; profit `10,000,000 − 8,250,000 =
+1,750,000`. Billed (net of the mechanics) **9,000,000** → **contract asset 1,000,000** (under-billed).
+
+**Year 2 (cost pressure).** A subsea installation problem pushes the **total cost estimate to USD
+39,000,000** (from 33,000,000). Cumulative cost to date **24,180,000**. `PoC = 24,180,000 / 39,000,000 =
+62 %`; cumulative revenue `62 % × 40,000,000 = 24,800,000`; revenue in year `24,800,000 − 10,000,000 =
+14,800,000`; cost in year `24,180,000 − 8,250,000 = 15,930,000` → **a Year-2 loss of (1,130,000)** as the
+overrun is absorbed prospectively through a lower margin. The contract is still *forecast-profitable*
+(40,000,000 − 39,000,000 = 1,000,000), so **no onerous provision** yet.
+
+**Year 2 revised forecast (the turn).** A late reassessment lifts the **total cost estimate to USD
+42,000,000** — now **above** the 40,000,000 price. The contract is **onerous**: forecast loss `40,000,000 −
+42,000,000 = (2,000,000)`. Under the **loss rule** (2.2.6) and **IAS 37** (Domain 1, KA 1.4.5) the *entire*
+remaining expected loss is recognised **immediately**. Profit recognised to date across Years 1–2 is
+`1,750,000 − 1,130,000 = 620,000`; the total contract will lose 2,000,000; so the loss to book now is
+`(2,000,000) − 620,000 = (2,620,000)` — recognised in Year 2 as the revenue catch-up **plus an
+onerous-contract provision** for the portion relating to future work.
+
+**What the controls professional does.** The `EAC` breaching contract value (Domain 6) is the *trigger*: the
+moment the forecast total cost crosses the 40,000,000 price, the accounting consequence is a full, immediate
+loss — not a loss spread over the remaining two years. Spotting that turn early, quantifying it, and flagging
+it to finance **before** year-end is exactly the integrated judgement (Domain 7, KA 7.5.3) the credential
+certifies: a forecast number (`EAC`) becoming a reported number (an onerous provision) via IFRS 15 and IAS 37.
 
 **AI in this KA.** AI genuinely helps with the *mechanics and the paperwork* of IFRS 15: extracting
 performance obligations, payment terms and variable-consideration clauses from long contracts; maintaining
@@ -451,6 +538,36 @@ ignores the bundle discount; C and D miscompute the pro-rata share.
 
 *Rationale:* Over-time recognition needs any one of the three IFRS 15 criteria; "asset the customer controls
 as created" is one. Contract length, deposits and expected profit are irrelevant to the over-time test.
+
+**MCQ 2.2-F `[2.2.4 · Application]`** A performance adjustment has outcomes `+600,000` (25 %), `+300,000`
+(35 %), `0` (30 %), `−200,000` (10 %). By the expected-value method the variable consideration is:
+- A. USD 600,000
+- B. USD 235,000 ✅
+- C. USD 300,000
+- D. USD 175,000
+
+*Rationale:* `0.25×600,000 + 0.35×300,000 + 0.30×0 + 0.10×(−200,000) = 150,000 + 105,000 + 0 − 20,000 =
+235,000`. A takes the best case; C the most-likely single value; D omits a term.
+
+**MCQ 2.2-G `[2.2.4 · Application]`** A customer pays USD 5,000,000 two years before control transfers; the
+financing rate is 6 %. Revenue recognised on transfer is closest to:
+- A. USD 5,000,000
+- B. USD 5,618,000 ✅
+- C. USD 4,450,000
+- D. USD 5,300,000
+
+*Rationale:* A significant financing component accretes the advance: `5,000,000 × 1.06² = 5,618,000`, with
+USD 618,000 as interest expense. A ignores financing; C discounts (wrong direction); D applies one year only.
+
+**MCQ 2.2-H `[2.2.8 · Analysis]`** Added scope that is **not distinct** from a single construction obligation
+is accounted for as:
+- A. A separate contract.
+- B. A cumulative catch-up to the existing contract (re-strike PoC). ✅
+- C. Deferred until completion.
+- D. Other comprehensive income.
+
+*Rationale:* Non-distinct added scope is folded into the existing obligation with a cumulative catch-up
+(treatment c). Distinct scope at SSP would be a separate contract (a); the others are not IFRS 15 treatments.
 
 ### Self-check — KA 2.2
 
@@ -588,6 +705,23 @@ affects assets, liabilities, gearing and the split of cost between depreciation 
 **Short example.** A 5-year plant lease with payments giving a present value of **USD 1,000,000** is recognised
 as a right-of-use asset and lease liability of **USD 1,000,000**; the asset depreciates over 5 years while the
 liability accrues interest and reduces as payments are made.
+
+**Worked example 2.4.3 — a lease's first two years.** A 5-year lease has an annual payment of **USD 231,000**
+in arrears; the incremental borrowing rate is **5 %**; the present value of the payments (the lease liability
+and right-of-use asset at inception) is **USD 1,000,000**. Straight-line depreciation of the asset is
+`1,000,000 / 5 = 200,000` per year.
+
+| Year | Opening liability | Interest @5 % | Payment | Closing liability | Depreciation | Total P&L charge |
+|---|---:|---:|---:|---:|---:|---:|
+| 1 | 1,000,000 | 50,000 | (231,000) | 819,000 | 200,000 | 250,000 |
+| 2 | 819,000 | 40,950 | (231,000) | 628,950 | 200,000 | 240,950 |
+
+- The liability **unwinds**: interest is charged on the opening balance and the payment reduces it.
+- The P&L charge is **front-loaded** — interest is higher early — so the total charge (250,000 then 240,950)
+  *exceeds* the cash payment (231,000) in early years and falls below it later. Under the superseded
+  operating-lease model the charge would have been a flat 231,000. This front-loading, and the on-balance-sheet
+  asset and liability, are the material effects a controls professional must anticipate when a project leases
+  significant plant.
 
 ### 2.4.4 IAS 23 — Borrowing costs
 
