@@ -1168,6 +1168,24 @@ reconcile them to the total fixed-overhead variance.
 The net favourable total conceals an adverse spending problem rescued by higher volume — splitting the two
 (4.2.4b) is what sends each to its owner.
 
+**Exercise 4.5** — A package's original standard price for a key material is **USD 30 per unit**. During the
+period, the market price of the material moved to **USD 33 per unit** (a general, documented market movement).
+The project actually paid **USD 34 per unit** for **10,000 units**. (a) Compute the total price variance
+against the original standard. (b) Split it into a planning variance and an operational variance (Advanced
+4.A.2). (c) In one sentence: who should answer for each part?
+
+**Solution 4.5.**
+
+1. Total price variance `= (34 − 30) × 10,000 = 40,000` **(A)**.
+2. Planning variance `= (33 − 30) × 10,000 = 30,000` **(A)** — the market moved; the original standard is
+   stale.
+3. Operational variance `= (34 − 33) × 10,000 = 10,000` **(A)** — paid above even the current market.
+   Check: `30,000 + 10,000 = 40,000`. ✓
+4. The planning variance belongs to whoever owns estimating assumptions and escalation provisions (Domain 3,
+   Advanced 3.A.1) — it is information, not blame; the operational variance belongs to procurement — it is
+   the controllable part, and judging buyers against the stale 30 rather than the current 33 would punish
+   them for the market and hide the real 10,000 (Advanced 4.A.2; Goodhart, Advanced 4.A.3).
+
 ---
 
 ## Practitioner's toolkit — Domain 4

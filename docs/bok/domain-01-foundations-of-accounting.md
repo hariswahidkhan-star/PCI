@@ -1844,6 +1844,25 @@ generated from operations. Step 3 — deduct interest and tax paid: `87,000 − 
 72,000** net cash from operating activities. Note the gap: profit 75,000 versus operating cash 72,000
 — the 3,000 difference is the net effect of the add-backs and the working-capital absorption.
 
+**Exercise 1.6** — At month-end, the general ledger shows total costs booked to project P-201 of
+USD 1,240,000. The project cost ledger shows: direct labour USD 780,000; subcontract USD 310,000;
+plant USD 95,000; and a suspense/unallocated code holding USD 40,000. Investigation also finds
+USD 15,000 of P-201 costs posted in the GL to sister project P-202's cost centre. (a) Reconcile the
+cost ledger to the GL and isolate the difference. (b) State the correcting actions for the suspense
+balance and the misposting. (c) In one sentence: why must this reconciliation net to zero every period
+before the cost report is issued?
+
+**Solution 1.6.** Step 1 — (a) cost ledger total: `780,000 + 310,000 + 95,000 + 40,000 = 1,225,000`;
+the GL shows `1,240,000`; difference `= 1,240,000 − 1,225,000 = 15,000` — exactly the P-201 cost
+sitting in P-202's cost centre, so the ledgers reconcile once the misposting is identified:
+`1,225,000 + 15,000 = 1,240,000`. Step 2 — (b) the misposting is corrected by a coded journal
+transferring 15,000 from P-202 to P-201 (with narrative and approval — the journal discipline of
+Domain 5, Advanced 5.A.3); the 40,000 suspense must be investigated and recoded to its true cost codes
+before close — a suspense balance is a question, not a home (worked example 1.1.4b). Step 3 — (c)
+because the cost report inherits the coding: an unreconciled difference means either the GL or the
+cost ledger is wrong, and every downstream number — actual cost, CPI, the forecast — is built on
+whichever one it is (1.5.2; Domain 5, KA 5.2.3).
+
 ---
 
 ## Practitioner's toolkit — Domain 1
