@@ -949,6 +949,178 @@ than forcing a match, suppressing a view, or ignoring the link.
 
 ---
 
+## Case study — Domain 2: revenue on a design-build-operate water contract (infrastructure)
+
+*This end-of-domain case study runs the full IFRS 15 five-step model across a single multi-obligation,
+multi-year contract — the steps working together, not in isolation. It is deliberately fuller than the
+sector mini-case in KA 2.2.10 (an oil & gas EPC that turned onerous): here the emphasis is on a healthy
+contract done properly — two performance obligations, two recognition patterns, one allocation, and the
+contract asset that falls out of the reconciliation — together with the year-1 checklist a controls
+professional would actually run.*
+
+### Background
+
+A regional water utility awards a contractor a **design-build (D&B)** contract for a new water-treatment
+works, bundled with a **five-year operate-and-maintain (O&M)** service that begins once the works are
+commissioned. The total contract price is **USD 200,000,000**, fixed, with milestone billing during the
+construction phase and a fixed annual fee mechanism during operations. The works are built on the utility's
+own land; design and construction are procured as one integrated scope because the process design (membrane
+filtration, chemical dosing, sludge handling) and the civil and mechanical build are developed together and
+each is continually reshaped by the other. The O&M service is a routine, repeating obligation — staffing,
+consumables, planned maintenance and performance monitoring to a defined service standard.
+
+This is a common infrastructure shape — design-build-operate — and it exercises every step of the IFRS 15
+model in KA 2.2: the contract test (step 1), the distinct-or-not judgement (step 2), the transaction price
+(step 3), the allocation across obligations (step 4), and two different over-time recognition patterns
+running side by side (step 5), reconciled to billing through a contract asset (2.2.7). Work through it
+slowly: the arithmetic is simple, and the judgements are where the marks — and the risks — sit.
+
+### Steps 1–2 — the contract and its obligations (KAs 2.2.2–2.2.3)
+
+**Step 1 — is there a contract?** Yes. The contract has commercial substance; both parties have approved it
+and are committed; each party's rights and the payment terms (milestone billing in construction, an annual
+fee in operations) are identifiable; and collectability is **probable** — the customer is a rated,
+regulated utility with a statutory revenue base. Step 1 is rarely the hard step on infrastructure work, but
+it is never skipped: a letter of intent without approved terms, or a counterparty whose ability to pay is
+genuinely doubtful, would stop revenue at the gate (2.2.2).
+
+**Step 2 — how many performance obligations?** This is the first real judgement, and the case turns on it.
+The candidate promises are design, construction, and five years of operations. Applying the *distinct* test
+(2.2.3):
+
+- **Design and build are one combined performance obligation.** The utility could, in principle, buy design
+  alone from an engineer — so design is capable of being distinct — but within *this* contract the design
+  and construction are **highly interrelated**: the contractor provides a significant integration service,
+  transforming design and build inputs into a single functioning treatment works. They are not separately
+  identifiable in the context of the contract, so they combine into **one D&B obligation**.
+- **The O&M service is distinct.** The utility could run the completed works itself or hire any competent
+  operator; the service is separately identifiable from the build and is a **series** of substantially the
+  same daily/monthly services with the same pattern of transfer. It is a **second performance obligation**.
+
+Both obligations are satisfied **over time**, but under *different* criteria (2.2.6). The D&B qualifies
+under **criterion 2**: the works are constructed on the customer's land, so the customer controls the asset
+as it is created — every metre of pipework and every commissioned filter bed belongs to the utility as the
+work proceeds. The O&M qualifies under **criterion 1**: the customer **simultaneously receives and
+consumes** the benefit of operations as the contractor performs — treated water today cannot be stored up
+as an asset; it is consumed as delivered. Same standard, same contract, two different routes into over-time
+recognition — and, as step 5 will show, two different *measures of progress*.
+
+### Steps 3–4 — price and allocation (KAs 2.2.4–2.2.5)
+
+**Step 3 — the transaction price** is **USD 200,000,000**. In year 1 there is no variable consideration to
+estimate — no bonus, no performance adjustment yet in scope, and liquidated-damages exposure is assessed as
+remote — so no constraint analysis is needed (2.2.4). There is no significant financing component either:
+milestone billing keeps the gap between performance and payment inside the practical expedient. (In later
+years, incentive mechanisms in the O&M fee would bring 2.2.4's estimators and the constraint into play; the
+discipline is to re-assess each period, not to decide once at award.)
+
+**Step 4 — allocate the price by standalone selling price (SSP).** The contractor has observable evidence
+of what it would charge for each obligation sold separately: D&B of a comparable works, **USD
+170,000,000**; a five-year O&M service of this scale, **USD 40,000,000**. The SSPs sum to **USD
+210,000,000** against a contract price of 200,000,000 — the customer has negotiated a **USD 10,000,000
+bundle discount**, and with no evidence tying the discount to one obligation, it spreads **pro-rata to
+SSP** (2.2.5).
+
+1. **Setup.** Transaction price **USD 200,000,000**; SSPs — D&B **170,000,000**, O&M **40,000,000**
+   (Σ SSP **210,000,000**).
+2. **Formula.** `Allocated price_i = Transaction price × (SSP_i / Σ SSP)`.
+3. **Substitution.** Allocation factor `= 200,000,000 / 210,000,000 = 0.952381`.
+   - D&B: `170,000,000 × 0.952381 = 161,904,762`
+   - O&M: `40,000,000 × 0.952381 = 38,095,238`
+4. **Result.** Check: `161,904,762 + 38,095,238 = 200,000,000`. ✓ Each obligation carries its pro-rata
+   share of the 10,000,000 discount (D&B bears 8,095,238 of it; O&M bears 1,904,762).
+5. **Interpretation.** Allocation is not cosmetic — it fixes *how much* revenue each recognition pattern
+   will deliver. Had the contractor loaded the whole 200,000,000 price onto the D&B (recognising it faster,
+   over the build) and treated the O&M as free, it would have pulled roughly 38,000,000 of revenue forward
+   out of the operating years. SSP-based allocation is the standard's defence against exactly that.
+
+### Step 5 — year-1 recognition (KA 2.2.6)
+
+Year 1 is entirely construction. The D&B obligation is measured by the **cost-to-cost input method**: total
+estimated cost at completion for the D&B scope is **USD 140,000,000**, and cost incurred in year 1 —
+reconciled to the cost ledger, including accruals, and excluding uninstalled materials and abnormal wastage
+— is **USD 42,000,000**.
+
+1. **Setup.** D&B allocated price **161,904,762**; total estimated D&B cost **140,000,000**; year-1 cost
+   incurred **42,000,000**.
+2. **Formula.** `PoC = cost incurred to date / total estimated cost`; `revenue = PoC × allocated price`.
+3. **Substitution.** `PoC = 42,000,000 / 140,000,000 = 30 %`; year-1 D&B revenue
+   `= 30 % × 161,904,762 = 48,571,429`.
+4. **Result.** Year-1 revenue **USD 48,571,429**, against year-1 cost of 42,000,000 — a recognised margin
+   of 6,571,429, consistent with the D&B obligation's expected margin
+   (`161,904,762 − 140,000,000 = 21,904,762` over the build).
+5. **Interpretation.** The revenue figure is a *derived* number: it is only as good as the two inputs — the
+   cost incurred (Domain 1's accrual and coding discipline) and the estimate at completion (Domain 6's
+   forecasting discipline). Neither is produced by the finance function alone; both run through the
+   controls professional.
+
+The **O&M obligation recognises nothing in year 1** — the service has not started, and its allocated
+**38,095,238** waits on the balance of the contract. Once operations begin, it recognises **straight-line
+over the five years** — the output of a series of substantially uniform services — at
+`38,095,238 / 5 = 7,619,048` a year.
+
+Pause on what step 2 bought. Two obligations, two patterns, one contract: the D&B books revenue on the
+S-curve of construction cost over roughly three years; the O&M books a flat 7,619,048 a year for five years
+after that. Had step 2 wrongly combined everything into one obligation, a single blended PoC would have
+smeared O&M revenue into the construction phase (cost-to-cost would front-load it, because construction
+carries most of the cost) and misstated the margin in every year of an eight-year contract. Had it wrongly
+split design from build, the design fee would have raced ahead of an integration effort that was not
+separable. The five steps are a chain, and step 2 sets the links.
+
+### The contract asset (KA 2.2.7)
+
+Billing follows the *commercial* milestone schedule, not the accounting PoC. Year-1 certified milestones
+total **USD 45,000,000**.
+
+1. **Setup.** Cumulative revenue recognised **48,571,429**; cumulative amounts billed **45,000,000**.
+2. **Formula.** `Contract asset (liability) = cumulative revenue − cumulative billed`, per contract.
+3. **Substitution.** `48,571,429 − 45,000,000 = 3,571,429`.
+4. **Result.** A **contract asset of USD 3,571,429** — the entity is **under-billed**, having earned ahead
+   of what it has invoiced.
+5. **Interpretation.** The position is *normal* for a milestone-billed construction phase: performance is
+   continuous, milestones are lumpy, and a modest under-billing between certificates is the expected
+   texture of the balance. But normal is not free — a contract asset is working capital the contractor is
+   financing. The controls discipline is the **trend**: a contract asset that grows month on month, or
+   milestones that persistently certify below the value of work performed, is an early warning that billing
+   is lagging performance and cash is being tied up (Domain 7, KAs 7.4–7.5) — and it feeds directly into
+   the project's cash-flow forecast (Domain 3, KA 3.5). The number is small against a 200,000,000 contract;
+   the habit of reading it is not.
+
+### The controls professional's year-1 checklist
+
+What does "controls" actually do with this accounting at the year-1 close? Four things, each cross-wired to
+another domain:
+
+| # | Check | What it involves | Cross-reference |
+|---|---|---|---|
+| 1 | **PoC inputs reconciled** | The 42,000,000 of cost incurred ties to the cost ledger, including accruals for work done but not yet invoiced by subcontractors, coded to the right control accounts; uninstalled materials and abnormal wastage excluded from the ratio. | Domain 1 (KAs 1.3, 1.5); Domain 5 |
+| 2 | **Total-cost estimate reviewed** | The 140,000,000 D&B estimate agreed to the current estimate at completion (EAC). If the forecast cost rises, PoC falls against the larger base and revenue catches up **prospectively** — no restatement of prior periods, but a visible margin step in the period of revision (as in 2.2.6). | Domain 6 |
+| 3 | **Onerous test** | Forecast D&B cost 140,000,000 against allocated price 161,904,762 → forecast margin **+21,904,762**, comfortably positive; **no provision**. But the trigger level is known *in advance*: the moment the D&B EAC approaches 161,904,762, the whole remaining loss recognises immediately. Watch the gap, not just the sign. | Domain 1 (KA 1.4.5); 2.2.6 |
+| 4 | **Disclosures prepared** | The **remaining performance obligations** — the unrecognised balance of the transaction price (the unearned D&B plus the entire 38,095,238 of O&M) — is a reportable disclosure, alongside the contract asset movement and the significant judgements (one combined D&B obligation; over-time recognition). | 2.2.9; KA 2.1 |
+
+The checklist is the case study's real lesson: none of these checks is "an accounting task" a controls
+professional can wave past. The revenue number the board sees in year 1 — 48,571,429 — is manufactured
+entirely from controls artefacts: a reconciled cost ledger, a reviewed EAC, and a billing position someone
+is watching.
+
+### What the credential expects
+
+A candidate presented with this case should be able to: run **steps 1–5 in order and explain each
+judgement**, not just the arithmetic (KAs 2.2.2–2.2.6) — why collectability passes, why design and build
+combine but O&M is distinct, why each obligation is over time and under *which* criterion; **allocate by
+SSP** and show the pro-rata discount check-summing to the transaction price (2.2.5); compute a **cost-to-cost
+PoC** and derive period revenue, then state the O&M pattern that has not yet started (2.2.6); derive and
+*read* the **contract asset** (2.2.7), applying KA 2.1's presentation discipline (per-contract positions,
+no offsetting, materiality by size and nature); trace the **data lineage** back to Domain 1 (accruals and
+cost coding feeding the PoC numerator; IAS 37 behind the onerous trigger) and forward to Domains 6 and 7
+(the EAC behind the denominator; the billing and valuation cycle behind the contract asset). On AI: the
+extraction of the contract's obligations, payment terms and milestone schedule, and the routine maintenance
+of the PoC schedule as costs and estimates update, are exactly the mechanical work AI now assists — but the
+distinct-or-not call at step 2 and the over-time judgements at step 5 remain human, auditable and signed
+for (13.5.10): **AI proposes, the professional disposes.**
+
+---
+
 ## Domain 2 summary
 
 Financial reporting exists to give external users decision-useful information — relevant and faithfully
