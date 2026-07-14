@@ -3,7 +3,7 @@
 > Back-matter assembled from the finished domains, per the Style Spine (§4, §9) and the consolidation plan.
 > As further domains are revised through SME review, these indexes are regenerated from the source chapters.
 > Contents: A) master formula sheet · B) global glossary · C) standards & frameworks referenced · D) figure &
-> animation index · E) self-check answers · F) sample-MCQ bank.
+> animation index · E) self-check answers · F) sample-MCQ bank · G) the integrated capstone.
 
 ---
 
@@ -460,6 +460,193 @@ topic number and cognitive level), per Style Spine §8. Consolidated counts (dra
 > **separate from**, the live examination bank; they are **not** to be reused verbatim as live exam questions
 > (Style Spine §8). On consolidation they are tagged to topic numbers and cognitive levels to map to the exam
 > blueprint, and reviewed by SMEs (finance, agile, AI) before any use.
+
+---
+
+## Appendix G — The integrated capstone: one project, thirteen domains
+
+The domains teach the machinery one discipline at a time; a real month-end exercises all of it at once. This
+capstone follows a single project — the **master project** of Domain 6, with its baseline first phased in
+Domain 3 (KA 3.3.3): `BAC` **USD 1,000,000** over **ten months** — through one full reporting cycle at the
+end of **Month 5**, extended here with the commercial, revenue, risk and AI facts the other domains supply.
+Every figure either comes from a domain worked example or is derived by that domain's method, and every step
+is cross-referenced by topic number; nothing is introduced that the domains have not already taught. Work the
+eight stations in order — each is what the professional actually does, in the order a close actually runs.
+
+### Station 1 — Budget and baseline (Domain 3)
+
+**What the professional does.** Assemble the budget bottom-up and make it a control. The control-account
+budgets are summed; the **contingency reserve** — funding the identified risks of Station 6 — sits **inside**
+the baseline; the **management reserve** sits **outside** it, management-controlled (3.1.4; 12.3.2). The
+`BAC` is then phased across the ten-month schedule to the S-curve of 3.3.3, which *is* the Planned Value.
+
+```
+BAC           = Σ control-account budgets + contingency = 915,000 + 85,000 = 1,000,000     (3.1.4)
+Total budget  = BAC + management reserve = 1,000,000 + 50,000 = 1,050,000                  (3.1.4)
+PV at Month 5 = 40 + 70 + 110 + 140 + 160 = 520 (USD 000) → PV = 520,000                   (3.3.3)
+```
+
+The Month-5 `PV` of USD 520,000 is read straight off the 3.3.3 phasing table — the same S-curve on which
+Domain 6 later draws `EV` and `AC` (6.1.3), and whose cash consequences Domain 3 forecasts separately (3.5).
+
+### Station 2 — The cost states (Domain 5)
+
+**What the professional does.** Before computing any index, make cost-to-date *true*. At Month 5 the cost
+ledger shows purchase orders and subcontracts raised (commitments) of **USD 640,000**; invoices processed
+(actuals) of **USD 410,000**; and goods/services received but not yet invoiced (accruals) of **USD 120,000**.
+*Assumption (stated per the Style Spine §5): all accrued work is under the raised POs, so the accrual reduces
+the open commitment.*
+
+```
+AC (cost-to-date)  = actuals + accruals = 410,000 + 120,000 = 530,000            (5.2.1–5.2.2)
+Open commitment    = commitments − actuals − accruals
+                   = 640,000 − 410,000 − 120,000 = 110,000                       (5.2.2)
+Forecast committed = 530,000 + 110,000 + estimate for uncommitted scope          (5.2.1)
+```
+
+This is the `AC` = 530,000 that Domain 6 uses (6.1.1) — the accrual discipline is what makes it true. An
+invoice-only view would report 410,000 and flatter the cost index to `480,000 / 410,000 = 1.17`; the
+disciplined figure tells the real story at Station 3.
+
+### Station 3 — Earned value and the forecast (Domain 6)
+
+**What the professional does.** Measure `EV` from physical progress under the fixed earning rules (6.1.2) —
+at Month 5, `EV` = **480,000** — then compute, exactly as Domain 6 publishes them:
+
+```
+CV  = EV − AC = 480,000 − 530,000 = (50,000)   over cost                          (6.2.1)
+SV  = EV − PV = 480,000 − 520,000 = (40,000)   behind schedule                    (6.2.1)
+CPI = 480,000 / 530,000 = 0.91 (0.9057 unrounded);  SPI = 480,000 / 520,000 = 0.92   (6.2.2)
+EAC (a) budgeted rate = 530,000 + (1,000,000 − 480,000) = 1,050,000               (6.3.2)
+EAC (b) current CPI   = 1,000,000 / 0.9057 = 1,104,167                            (6.3.2)
+EAC (c) CPI × SPI     ≈ 1,152,010                                                 (6.3.2)
+TCPI (to BAC) = 520,000 / 470,000 = 1.11;  VAC = 1,000,000 − 1,104,167 = (104,167)  (6.2.3, 6.3.4)
+```
+
+The cost inefficiency is systemic (a stable, sliding `CPI` trend), so method (b) is the defended forecast
+(6.3.3): **`EAC` = USD 1,104,167**. The `TCPI` of 1.11 against a delivered 0.91 says the `BAC` is no longer
+credible (6.2.3) — the number Stations 5 and 7 must now carry, not hide.
+
+### Station 4 — The commercial position (Domain 7)
+
+**What the professional does.** Run the payment cycle. The client contract is **remeasured** (7.1.2) at a
+contract price of **USD 1,250,000**, with **5 % retention** and a **10 % mobilisation advance** recovered
+pro-rata on each certificate (7.4.3). At Month 5 the client's QS certifies gross work done of **USD 460,000**
+(7.4.2 — the certified measure, not the application, drives cash).
+
+```
+Retention        = 5 % × 460,000 = 23,000                                        (7.4.3)
+Advance recovery = 10 % × 460,000 = 46,000                                       (7.4.3)
+Net certified    = 460,000 − 23,000 − 46,000 = 391,000                           (7.4.3)
+EV − certified gross = 480,000 − 460,000 = 20,000                                (7.4.4)
+```
+
+The USD 20,000 by which `EV` runs ahead of certification is work performed but not yet certified — unbilled
+performance pointing to a **contract asset** (7.5.2), measured at accounting values in Station 5. `EV` (at
+budget) and the valuation (at contract rates) are different measures of the same progress, so the gap is read
+through the three-way reconciliation of 7.4.4, never forced to zero.
+
+### Station 5 — Revenue recognised (Domain 2)
+
+**What the professional does.** Hand finance a defensible input-method ratio. Revenue is recognised over time
+by **cost-to-cost** (2.2.6), and the denominator is the controls forecast — the Station 3 `EAC` — so the
+professional's forecast flows straight into reported revenue.
+
+```
+PoC            = costs to date / total estimated cost = 530,000 / 1,104,167 = 48.0 %   (2.2.6)
+Revenue        = 48.0 % × 1,250,000 ≈ 600,000  (0.4800 × 1,250,000 = 600,000)          (2.2.6)
+Contract asset = 600,000 − 460,000 = 140,000   (under-billed)                          (2.2.7, 7.5.2)
+Margin to date = 600,000 − 530,000 = 70,000 (11.7 %)
+Margin at completion = 1,250,000 − 1,104,167 = 145,833 (11.7 %)
+```
+
+The margin check ties: cost-to-cost makes the to-date margin equal the forecast completion margin — if they
+diverge, the ratio and the `EAC` have come apart. The contract remains profitable, so no onerous-contract
+provision arises (2.2.6 loss rule; 1.4.5); but the USD 140,000 contract asset — performance ahead of billing —
+is aged and explained, not just reported (7.5.2).
+
+### Station 6 — Risk and the contingency test (Domain 12)
+
+**What the professional does.** Re-run the register, not the opening story. Contingency was set at sanction
+at the Monte Carlo **P80 of USD 85,000** (12.3.1) — the Station 1 figure inside the `BAC` — and materialised
+risks have drawn **USD 25,000** through change control (5.4). The Month-5 re-run prices the remaining
+register at an **EMV of USD 45,000** (12.2.3) and a **P80 of USD 70,000** — the P80 sits above the EMV
+because the register's risks share drivers, and correlation moves the tail, not the mean (12.3.1;
+Exercise 12.5).
+
+```
+Remaining contingency = 85,000 − 25,000 = 60,000                                 (12.3.3)
+Remaining exposure    = P80 70,000  (register EMV 45,000)                        (12.2.3, 12.3.1)
+Adequacy test: 60,000 < 70,000 → shortfall (10,000) — flag and escalate          (12.3.3)
+```
+
+The test is always **remaining contingency versus remaining exposure** (12.3.3). The fund no longer covers
+the analysed exposure, so the position is escalated visibly; if the register outgrows contingency, reaching
+for the management reserve is a re-baselining event, not a silent overspend (12.3.2; 5.4).
+
+### Station 7 — The report and the decisions (Domains 4 and 8)
+
+**What the professional does.** Turn the numbers into a decision. Against the reporting tolerances declared
+in advance — `CPI` amber at 0.95, red at 0.90 (4.1.1) — the month-end pack reports by exception (4.1.3, 4.3.5):
+
+```
+Exception entry : CPI 0.91 breaches the 0.95 amber threshold (just above the 0.90 red line)
+                  — variance (50,000), cause, impact, action/owner                (4.1.1, 4.3.5)
+EAC bridge line : BAC 1,000,000 → EAC 1,104,167 on the persisting-CPI basis; VAC (104,167)   (6.3.4)
+Contingency line: remaining 60,000 vs remaining exposure 70,000 — escalation flagged         (12.3.3)
+```
+
+The narrative is decision-ready, not merely descriptive (4.3.3): status, cause, forecast, action. The gate
+implication (8.4; Advanced 8.A.3) follows: the next gate cannot proceed on the `BAC` — the pack presents the
+`EAC` with its method and assumption, the `TCPI` reality-check on any recovery claim, and the choice the
+board actually owns: fund a specific recovery, or re-baseline through the management reserve.
+
+### Station 8 — The AI-assisted close (Domain 13)
+
+**What the professional does.** Run the same cycle faster — and sign it. Each station above used a governed
+AI step, and at each one a named professional disposed of what the AI proposed (13.6.1):
+
+| Station | Governed AI step | The professional signed |
+|---|---|---|
+| 1–2 | Auto-coding of cost, proposed month-end accruals, duplicate/anomaly flags (13.5.4) | The accrual judgements and every flagged exception |
+| 3 | `EAC` driver analysis and the `CPI`-trend early warning (13.5.3) | The method choice (b) and the defended forecast |
+| 4 | Extraction of certificate, retention and advance terms from the contract documents (13.5.7) | The certified measure and the valuation cascade |
+| 5 | Drafted revenue workings and consistency checks tying cost, billing and revenue (13.5.10) | The PoC ratio, its `EAC` denominator and the recognition judgement |
+| 6 | Register scoring and the Monte Carlo re-run (13.5.9) | The adequacy verdict and the escalation |
+| 7 | Drafted exception narratives and dashboard assembly (13.5.8) | Accuracy, framing and the final sign-off |
+
+Every step ran inside the guardrails: verified against source before use (13.6.5's checklist), with the audit
+trail of what the AI produced, who approved it and what changed (13.6.2). **AI proposes, the professional
+disposes** — at every station, without exception.
+
+### The PCI control cycle
+
+Read back-to-back, the eight stations show why the thirteen domains are one body of knowledge rather than a
+shelf of techniques. A single month of one project generated every number above, and each domain valued the
+*same physical progress* under its own rules: the budget phased it (Domain 3), the ledger costed it with
+commitments and accruals (Domains 1, 5, 11), earned value measured it at budget (Domain 6) against a schedule
+that sequenced it (Domains 8, 10), the valuation billed it at contract rates (Domain 7), IFRS 15 recognised it
+as revenue (Domain 2), the register funded its uncertainty (Domain 12), the report turned it into a decision
+(Domain 4), and AI accelerated every step under governance (Domain 13). The figures differ by design — `EV`
+480,000, certified 460,000, revenue 600,000 — and the professional's craft is the reconciliation between them
+(7.4.4; 7.5.3's commercial-to-accounting loop), not the pretence that they should agree. Notice, too, how the
+forecast is the hinge: the `EAC` chosen in Station 3 set the revenue ratio in Station 5, sized the gate
+conversation in Station 7, and framed the contingency question in Station 6. One defensible forecast,
+consistently applied, is what makes the whole cycle honest; a flattered one corrupts every station downstream.
+That interlock — cost, schedule, commercial, accounting, risk, reporting and AI governance meeting in one
+data date — is precisely the integrated judgement the credential certifies.
+
+### Reflection questions
+
+1. The invoice-only ledger showed `AC` = 410,000 (a `CPI` of 1.17); the accrued figure showed 530,000 (0.91).
+   Trace every later station that would have been corrupted by the flattering figure — forecast, revenue,
+   margin, gate — and name the domain discipline that prevented it. *(5.2; then 6.3, 2.2.6, 4.3.5, 8.4.)*
+2. `EV` (480,000), certified billing (460,000) and recognised revenue (600,000) all measure Month 5's
+   progress. State what each values, why none is "wrong", and which balance-sheet line carries the gap
+   between the last two. *(7.4.4; 2.2.7 / 7.5.2 — a USD 140,000 contract asset.)*
+3. Remaining contingency (60,000) fails the test against remaining exposure (P80 70,000) even though it
+   comfortably exceeds the register's EMV (45,000). Explain, using Exercise 12.5's logic, why the P80 — not
+   the EMV — is the right comparator, and what governance route the shortfall takes. *(12.3.1, 12.3.3, 12.3.2.)*
 
 ---
 
