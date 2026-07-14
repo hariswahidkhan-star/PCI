@@ -417,6 +417,121 @@ These five entries are starting points, not scripts — the professional adapts 
 and constraints to the task, the audience and the organisation's standards. However adapted, every pattern
 ends at the same gate: verification against source before the output is used (13.3.3).
 
+**Six further worked patterns.** The five shapes above cover the everyday tasks; the entries below extend the
+library into the judgement-heavy corners of the discipline — challenging a forecast, auditing an artefact
+against a standard, and turning a completed control sheet into decision-ready prose. Each prompt carries the
+full 13.3.1 anatomy — role, inputs, constraints, output format — plus an explicit **verification instruction**
+written into the prompt itself, and each ends where every pattern ends: at the professional's check (13.3.3).
+
+**Red-team challenge — "attack my EAC".** Used *before* a forecast is tabled, not after: an `EAC` is only as
+good as its assumptions (KA 6.3.2), and the cheapest place to find a weak one is in private, before the board
+does (KA 6.3.3; 13.5.3). This is a critique task, not a forecasting one — the model is asked to argue against
+the forecast, and it returns questions, never a number.
+
+```
+Acting as an independent cost-assurance reviewer, challenge my forecast for control account CA-310. Inputs:
+my EAC, the method used (EAC = AC + (BAC − EV) ÷ CPI), and my stated assumptions — steel escalation settles
+by Q3; productivity recovers to plan; no further design change. For each assumption, state the strongest
+reason it may not hold, what evidence in the cost data would falsify it, and which EAC method (KA 6.3.2) its
+failure would point to instead. Do not propose a new EAC figure. Output: a table — assumption | challenge |
+falsifying evidence | alternative method. Close by listing any data you would have needed but were not given.
+```
+
+*What to verify before use:* every challenge is a question to investigate, not a finding — test each against
+the actual cost data, and the `EAC` that survives is selected and owned by the professional (KA 6.3.3): AI
+proposes, the professional disposes.
+
+**Schema-bound extraction — contract clauses into a fixed schema.** Used when the destination is a governed
+artefact with fixed columns — a contract register or obligations tracker — where the freeform extraction
+pattern above would return whatever table shape the model chose. The schema is dictated, every value must cite
+its clause, and the task is RAG-grounded (13.1.4) so the model answers from the contract, not its training.
+
+```
+Acting as a commercial manager, populate the fixed schema below from the attached subcontract (ref SC-021)
+only — use no outside knowledge. One row per field: field | value | clause reference. Fields, in this order:
+payment terms; retention %; defects liability period; LD rate and cap (KA 7.2.3); variation-valuation rule
+(KA 7.2.2); bond and guarantee requirements (KA 7.2.4). Rules: a value you cannot tie to a clause number is
+recorded as 'not found' — never infer; do not add, rename or reorder fields. Output as a pipe-delimited
+table ready for the contract records (KA 7.2.1), and state which fields returned 'not found'.
+```
+
+*What to verify before use:* open every cited clause and check the value against the source; reject any row
+without a grounded reference; and route entitlement-bearing terms (KA 7.2.2) through legal review before the
+register is updated.
+
+**Critique against a standard — risk-register quality check.** Registers drift: statements decay into vague
+labels, responses lose their costs, review dates go stale. The Toolkit 12.T.1 column standard is the yardstick,
+and the model's job is critique only — flagging defects entry by entry, never rewriting a risk it does not own.
+
+```
+Acting as a risk-management reviewer, assess the attached risk register against the Toolkit 12.T.1 column
+standard. For each entry, flag: statements not in cause–event–effect form (KA 12.2.1); missing or
+non-numeric probability, impact or EMV values; responses with no stated cost (KA 12.2.4); absent residual
+P/I; review dates missing or more than a quarter old (KA 12.2.5); entries without a live owner. Do not
+rewrite any entry; do not add or delete risks. Output: one finding per line — risk ID | column | defect |
+12.T.1 rule breached — then a three-line conformance summary. State the number of entries checked.
+```
+
+*What to verify before use:* confirm each flag against the register itself — a model can miss defects as well
+as invent them — and the corrections, like the risks, belong to the risk owners (KA 12.2.1), not the reviewer
+and not the model.
+
+**Sheet-to-narrative — schedule health for a decision-maker.** Used when a completed 10.T.1 health-check sheet
+must become prose for the baseline-acceptance decision (Advanced 10.A.1): the classic numbers-to-narrative
+task (KA 4.3.3; 13.5.5). The model drafts the story the sheet already tells; the acceptance recommendation is
+not delegated with it.
+
+```
+Acting as a planning engineer reporting to a project manager, draft a ≤150-word narrative from the completed
+schedule health-check sheet below (format: Toolkit 10.T.1). State which checks passed and which failed, what
+each failed line means for the schedule's ability to recalculate (KA 10.2), and close with the decisions the
+sheet could support — accept, accept with conditions, return for repair — presented as options, not a
+recommendation. Use only the sheet; do not soften a failed line or omit one. Sheet: [paste 10.T.1 rows].
+```
+
+*What to verify before use:* read the narrative against the sheet line by line — no failed check dropped or
+softened, no pass invented — and make the acceptance decision yourself: the sheet informs it, the model drafts
+it, the planner owns it (Advanced 10.A.1).
+
+**Minutes-to-actions extraction.** Used after any progress or risk review: actions buried in prose minutes die
+quietly, and the monitoring cycle (KA 8.4) runs on a tracked list with owners and dates. This pairs naturally
+with a governed transcription tool (13.4.2b) — and the confidentiality guardrail (13.2.5) applies to a meeting
+record as much as to any contract.
+
+```
+Acting as a PMO analyst, extract every action from the attached progress-meeting minutes (Northwind monthly
+review, 12 June) into a table: action (original wording) | owner | due date | source paragraph. Rules: an
+owner or date the minutes do not state is recorded as 'not stated' — never guess a name or infer a date;
+decisions and discussion points are not actions unless someone is to do something. Close with a count of
+actions found and a list of any passages that may contain an action but are ambiguous.
+```
+
+*What to verify before use:* check the table against the minutes, resolve every 'not stated' with the meeting
+chair, and circulate only once each owner has confirmed the action — an unconfirmed action list controls
+nothing (KA 8.4).
+
+**Gap-flagged drafting — a claim-substantiation skeleton.** A claim must be notified and substantiated —
+cause, effect, quantum — from contemporaneous records (KAs 7.2.1, 7.2.2). The model can organise the records
+into that structure and expose the holes; it cannot create evidence, and a gap found before submission is
+curable in a way a gap found by the other side is not.
+
+```
+Acting as a quantity surveyor preparing a claim file for internal review, assemble a claim-substantiation
+skeleton from the attached event records only (site diaries, instructions and correspondence for the June
+flooding event). Structure: three sections — cause, effect, quantum (KA 7.2.2) — with each record reference
+placed under the section it supports. Where a section lacks support, write 'GAP:' and state what evidence is
+missing. Do not draft entitlement arguments, estimate quantum figures, or infer facts not in the records.
+Output: the three-section skeleton, then a numbered gap list.
+```
+
+*What to verify before use:* confirm every record reference against the file, treat the gap list as the work
+plan, and remember the skeleton is not the claim — entitlement is argued, quantified and owned by the
+professional, with legal review before any notice is issued (KA 7.2.2).
+
+Six patterns, one gate: the model challenges, extracts, critiques and drafts, but the forecast, the register,
+the baseline decision, the action list and the claim remain the professional's — verified against source
+before use (13.3.3).
+
 ### 13.3.3 Iterative refinement and verification
 
 **The principle.** GenAI is used **iteratively**: prompt, review, refine. And — the non-negotiable step — every
