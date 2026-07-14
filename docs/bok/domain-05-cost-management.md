@@ -768,6 +768,85 @@ after the invoices land.
 
 ---
 
+## Calculation exercises — Domain 5
+
+Work each exercise before reading its solution; every step uses only this domain's methods.
+
+**Exercise 5.1** — A site's monthly cost is semi-variable: **USD 150,000 fixed** plus **USD 40 per unit**
+produced. The plan for next quarter shows one month at **2,500 units** and one at **4,000 units**. Forecast
+the total cost for each month, split each into its fixed and variable elements, and compute the cost per unit
+at each volume.
+
+**Solution 5.1.**
+
+1. `Total cost = Fixed + Variable per unit × Volume` (5.1.1).
+2. At 2,500 units: variable `= 40 × 2,500 = 100,000`; total `= 150,000 + 100,000 = 250,000`.
+3. At 4,000 units: variable `= 40 × 4,000 = 160,000`; total `= 150,000 + 160,000 = 310,000`.
+4. Cost per unit: `250,000 / 2,500 = USD 100` at the lower volume; `310,000 / 4,000 = USD 77.50` at the
+   higher.
+5. Check the behaviour: volume rises 60 % (`2,500 → 4,000`) but total cost rises only 24 %
+   (`60,000 / 250,000`), because the USD 150,000 fixed element is spread over more units.
+
+Recognising the split is what lets the forecast scale correctly with volume — and what feeds the flexed
+budget (4.2.2).
+
+**Exercise 5.2** — Budgeted overhead is **USD 720,000** over a budgeted **36,000 machine hours**. The period
+delivers **33,000 actual hours**, and actual overhead incurred is **USD 735,000**. Compute the OAR, the
+overhead absorbed and the over/(under)-absorption — then split the under-absorption into its activity and
+spending effects.
+
+**Solution 5.2.**
+
+1. `OAR = 720,000 / 36,000 = USD 20/hour` (5.1.3).
+2. `Absorbed = 20 × 33,000 = 660,000`.
+3. `Over/(under)-absorption = absorbed − actual incurred = 660,000 − 735,000 = (75,000)` —
+   **under-absorbed USD 75,000**.
+4. Activity effect: `(36,000 − 33,000) × 20 = 60,000` — 3,000 hours below plan under-recover fixed overhead.
+5. Spending effect: `735,000 − 720,000 = 15,000` — overhead itself overspent. Split reconciles:
+   `60,000 + 15,000 = 75,000`. ✓
+
+The single under-recovery figure hides two different problems — activity below plan and spend above it —
+which a controls professional splits and explains exactly as a variance (Domain 4).
+
+**Exercise 5.3** — A control account has a budget of **USD 900,000**. To date, purchase orders raised
+(commitments) total **USD 600,000**; of these, invoices processed (actuals) are **USD 280,000** and goods
+received but not yet invoiced (accruals) are **USD 70,000**. The estimator prices the remaining uncommitted
+scope at **USD 320,000**. Compute the controls cost-to-date, the open commitment and the forecast cost — and
+the forecast variance against budget.
+
+**Solution 5.3.**
+
+1. `Cost-to-date = actuals + accruals = 280,000 + 70,000 = 350,000` (5.2.1) — not the 280,000 in the invoice
+   ledger.
+2. `Open commitment = commitments − actuals − accruals = 600,000 − 280,000 − 70,000 = 250,000`.
+3. `Forecast = cost-to-date + open commitment + uncommitted remaining scope = 350,000 + 250,000 + 320,000 =
+   920,000`.
+4. Forecast variance `= 900,000 − 920,000 = (20,000)` **(A)**.
+
+Note the uncommitted estimate (320,000) exceeds the budget headroom (`900,000 − 600,000 = 300,000`) by
+exactly the USD 20,000 overrun — visible now, while the scope is still uncommitted and the levers (descope,
+re-specify, re-tender) still exist.
+
+**Exercise 5.4** — A project's `BAC` is **USD 6,400,000**, which includes a **USD 400,000 contingency
+reserve**; a **USD 350,000 management reserve** sits above it (total authorised budget **USD 6,750,000**). An
+approved variation adds new scope costing **USD 250,000**, funded from the management reserve; separately, a
+materialised risk draws **USD 120,000** of contingency. Compute the new `BAC`, both remaining reserves, and
+cross-check the total authorised budget.
+
+**Solution 5.4.**
+
+1. The variation is a **baseline change** (new scope) → `new BAC = 6,400,000 + 250,000 = 6,650,000` (5.4.3).
+2. The risk draw is a *use* of contingency already inside the baseline → `BAC` unaffected; contingency
+   remaining `= 400,000 − 120,000 = 280,000`.
+3. Management reserve remaining `= 350,000 − 250,000 = 100,000`.
+4. Cross-check: total authorised budget `= new BAC 6,650,000 + remaining management reserve 100,000 =
+   6,750,000` — unchanged, because the variation moved money *from* reserve *into* the baseline. ✓
+
+The change log records one authorised `BAC` movement (the variation); blurring it with the contingency draw
+is how scope growth hides inside "risk".
+
+---
+
 ## Domain 5 summary
 
 Cost control begins with the anatomy of cost — direct/indirect and fixed/variable, driven by true cost

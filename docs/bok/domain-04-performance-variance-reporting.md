@@ -788,6 +788,89 @@ what the reporting was designed for (4.3.1).
 
 ---
 
+## Calculation exercises — Domain 4
+
+Work each exercise before reading its solution; every step uses only this domain's methods.
+
+**Exercise 4.1** — A work package's budget assumes **8,000 units** of output at a variable cost of **USD 30
+per unit**, plus **USD 100,000** of fixed cost. The month actually produces **9,000 units** at a total actual
+cost of **USD 385,000**. Compute the original (unflexed) budget, the flexed budget for the actual output, and
+the variance on each comparison — and show how much of the raw budget-to-actual gap is purely a volume effect.
+
+**Solution 4.1.**
+
+1. Original budget `= 100,000 + 30 × 8,000 = 340,000`.
+2. Flexed budget (4.2.2) `= 100,000 + 30 × 9,000 = 370,000` — what the cost *should* have been for 9,000
+   units.
+3. Unflexed comparison: `385,000 − 340,000 = 45,000` **(A)**.
+4. Flexed comparison: `385,000 − 370,000 = 15,000` **(A)** — the genuine price/efficiency variance.
+5. Volume effect `= 370,000 − 340,000 = 30,000`: the extra 1,000 units *should* cost `30 × 1,000 = 30,000`
+   more. Reconciliation: `30,000 + 15,000 = 45,000`. ✓
+
+Without the flex, the team would be blamed for a USD 45,000 "overrun" of which USD 30,000 is simply more work
+done.
+
+**Exercise 4.2** — For a work package's actual output, standards and actuals are: **material** — standard
+**2,000 kg at USD 12/kg**; actual **2,200 kg at USD 11/kg**. **Labour** — standard **1,500 hours at USD
+36/hour**; actual **1,400 hours at USD 40/hour**. Decompose the total cost variance into material price,
+material usage, labour rate and labour efficiency variances, and reconcile the four components to the total.
+
+**Solution 4.2.**
+
+1. Standard cost: material `2,000 × 12 = 24,000`; labour `1,500 × 36 = 54,000`; total **78,000**. Actual
+   cost: material `2,200 × 11 = 24,200`; labour `1,400 × 40 = 56,000`; total **80,200**.
+2. Material price `= (11 − 12) × 2,200 = 2,200` **(F)**; material usage `= (2,200 − 2,000) × 12 = 2,400`
+   **(A)**. Total material `= 24,200 − 24,000 = 200` **(A)** `= 2,400 (A) − 2,200 (F)`. ✓
+3. Labour rate `= (40 − 36) × 1,400 = 5,600` **(A)**; labour efficiency `= (1,400 − 1,500) × 36 = 3,600`
+   **(F)**. Total labour `= 56,000 − 54,000 = 2,000` **(A)** `= 5,600 (A) − 3,600 (F)`. ✓
+4. Grand total `= 80,200 − 78,000 = 2,200` **(A)** `= 200 (A) + 2,000 (A)`. ✓
+
+The small headline variance hides offsetting causes — a cheaper but more wasteful material, and faster but
+dearer labour — each with a different owner.
+
+**Exercise 4.3** — A control account's budget cost is **USD 500,000**; its actual cost is **USD 527,500**.
+Variance analysis attributes the gap to five components: material price **12,000 (A)**, material usage
+**4,500 (F)**, labour rate **6,000 (A)**, labour efficiency **9,000 (A)** and overhead expenditure **5,000
+(A)**. Build the five-step variance bridge from budget to actual with running totals, confirm it reconciles,
+and state the net variance.
+
+**Solution 4.3.**
+
+| Step | USD | Running total |
+|---|---:|---:|
+| **Budget cost** | | 500,000 |
+| Material price | 12,000 (A) | 512,000 |
+| Material usage | 4,500 (F) | 507,500 |
+| Labour rate | 6,000 (A) | 513,500 |
+| Labour efficiency | 9,000 (A) | 522,500 |
+| Overhead expenditure | 5,000 (A) | 527,500 |
+| **Actual cost** | | **527,500** |
+
+Net variance `= 12,000 − 4,500 + 6,000 + 9,000 + 5,000 = 27,500` **(A)**, and the bridge reconciles:
+`500,000 + 27,500 = 527,500`. ✓ The bridge (4.2.4) shows the favourable usage variance *partly offsetting*
+three adverse causes — the story a single "27,500 over" hides. The largest single driver (material price,
+12,000) is where attention goes first.
+
+**Exercise 4.4** — Budgeted fixed overhead is **USD 360,000** over a budgeted output of **12,000 units**.
+Actual output is **12,500 units** and actual fixed overhead is **USD 372,000**. Derive the overhead
+absorption rate (OAR), the overhead absorbed, and the fixed-overhead expenditure and volume variances — and
+reconcile them to the total fixed-overhead variance.
+
+**Solution 4.4.**
+
+1. `OAR = 360,000 / 12,000 = USD 30/unit`.
+2. `Absorbed = OAR × actual output = 30 × 12,500 = 375,000`.
+3. Expenditure variance `= Budgeted overhead − Actual overhead = 360,000 − 372,000 = (12,000)` **(A)** —
+   spent more than budget.
+4. Volume variance `= Absorbed − Budgeted overhead = 375,000 − 360,000 = 15,000` **(F)** — 500 more units
+   than planned, over-absorbing fixed cost.
+5. Total `= Absorbed − Actual = 375,000 − 372,000 = 3,000` **(F)** `= 15,000 (F) − 12,000 (A)`. ✓
+
+The net favourable total conceals an adverse spending problem rescued by higher volume — splitting the two
+(4.2.4b) is what sends each to its owner.
+
+---
+
 ## Domain 4 summary
 
 Performance management makes measurement matter: KPIs paired with targets, thresholds and tolerances;

@@ -948,6 +948,76 @@ scope is the honest lever.
 
 ---
 
+## Calculation exercises — Domain 9
+
+Work each exercise before reading its solution; every step uses only this domain's methods.
+
+**Exercise 9.1** — A team's completed story points over its last five Sprints are **22, 26, 24, 25, 23**. The
+remaining release backlog is **216 points**. Compute the average velocity and the likely Sprints remaining;
+then express the forecast as a range using a pessimistic velocity of **20** and an optimistic velocity of
+**27** points per Sprint.
+
+**Solution 9.1.**
+
+1. `Velocity = (22 + 26 + 24 + 25 + 23) / 5 = 120 / 5 = 24` points/Sprint (9.3.3).
+2. Likely: `Sprints remaining = 216 / 24 = 9` Sprints.
+3. Pessimistic (velocity 20): `216 / 20 = 10.8` → **11 Sprints** — round *up*, because capacity is bought in
+   whole Sprints and the release cannot stop mid-Sprint.
+4. Optimistic (velocity 27): `216 / 27 = 8` Sprints.
+
+Report **8–11 Sprints, likely 9** — a range, not a false-precise point (9.3.3), because velocity is an
+empirical measure that varies Sprint to Sprint.
+
+**Exercise 9.2** — A team's velocity is **25 points per Sprint** and the initial release scope is **250
+points**. By the end of **Sprint 6** the team has completed **150 points**, and **75 points of new scope**
+are approved and added to the release. Compute the original forecast finish, the new total scope, the
+remaining work and the new forecast finish Sprint.
+
+**Solution 9.2.**
+
+1. Original forecast `= 250 / 25 = 10` Sprints.
+2. New total scope `= 250 + 75 = 325` points — the burnup's total-scope line steps up (9.3.4).
+3. Remaining `= 325 − 150 = 175` points.
+4. Sprints remaining `= 175 / 25 = 7` → new forecast finish **Sprint 13** (6 done + 7 remaining), versus
+   Sprint 10 originally.
+
+The burnup shows the three extra Sprints as a rising scope line; a burndown to zero would have hidden the
+addition and reported a team "falling behind" a plan that no longer exists (9.3.3b).
+
+**Exercise 9.3** — A release has a `BAC` of **USD 720,000** and **480 story points** planned over **10
+Sprints**. At the end of **Sprint 5**, **216 points** are complete, the plan expected **240 points** done by
+now, and `AC` is **USD 405,000**. Compute `% complete`, `EV`, `PV`, `CPI`, `SPI`, `EAC` and `VAC`.
+
+**Solution 9.3.**
+
+1. `% complete = 216 / 480 = 45 %` → `EV = 45 % × 720,000 = 324,000` (9.5.3).
+2. `Planned % = 240 / 480 = 50 %` → `PV = 50 % × 720,000 = 360,000`.
+3. `CPI = EV / AC = 324,000 / 405,000 = 0.80`; `SPI = EV / PV = 324,000 / 360,000 = 0.90`.
+4. `EAC = BAC / CPI = 720,000 / 0.80 = 900,000`; `VAC = 720,000 − 900,000 = (180,000)`.
+
+The release is over cost (`CPI` 0.80) and mildly behind (`SPI` 0.90), forecasting a **USD 180,000** overrun —
+valid only against this defined release scope and `BAC`, and to be rebaselined transparently if scope flexes
+(the 9.5.3 caveat).
+
+**Exercise 9.4** — A release is baselined at `BAC` **USD 500,000** for **250 story points** (USD 2,000 per
+point). At the end of Sprint 4, **100 points** are done and `AC` is **USD 250,000**. Now **50 points of new
+scope** are approved, with the per-point rate held. Compute the new `BAC`, the `% complete` before and after,
+`CPI`, and the `EAC` before and after the rebaseline.
+
+**Solution 9.4.**
+
+1. `EV = 100 × 2,000 = 200,000`; `CPI = 200,000 / 250,000 = 0.80`. Before the change: `% complete =
+   100 / 250 = 40 %`; `EAC = 500,000 / 0.80 = 625,000`.
+2. Rebaseline (9.5.3b): new total points `= 250 + 50 = 300`; `new BAC = 300 × 2,000 = 600,000`.
+3. New `% complete = 100 / 300 = 33.3 %` — lower, though nothing has been un-done.
+4. New `EAC = 600,000 / 0.80 = 750,000`.
+
+The **`EV` of work already done is unchanged at 200,000** and `CPI` stays 0.80 — adding scope does not change
+the value or efficiency of past work; it raises `BAC` and `EAC` because there is genuinely more to build, and
+the rebaseline puts that on the record instead of hiding it.
+
+---
+
 ## Domain 9 summary
 
 Adaptive delivery rests on an **empirical mindset** — transparency, inspection, adaptation — and inverts the
