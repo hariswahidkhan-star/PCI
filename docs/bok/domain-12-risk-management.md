@@ -327,6 +327,150 @@ the EMV average. P80 is higher (not lower), EMV *is* a risk measure, and the two
 
 ---
 
+## Case study — Domain 12: risk-managing a factory retooling (manufacturing)
+
+### Background
+
+A consumer-goods manufacturer is retooling a two-line packaging hall during its planned two-week annual
+shutdown. The old filling and capping equipment on lines 1 and 2 is stripped out, the foundations are checked
+and adapted, new tooling is installed, utilities are reconnected and the lines are commissioned — all inside a
+window fixed a year in advance around the sales calendar. The schedule stakes could not be plainer: every day
+the shutdown over-runs is a day of lost production that no later efficiency recovers, so the cost of delay
+dwarfs most of the direct cost of the work itself. The project controls lead is asked to run the full
+Domain 12 process before the shutdown opens: build a risk register in cause-event-effect form (12.2.1),
+quantify it (12.2.3), test the proposed responses economically (12.2.4), set a defensible contingency
+(12.3.1), and then — the part most registers never survive — track the draw-down against the *remaining*
+exposure while the shutdown is live (12.3.3). The case that follows walks that chain end to end.
+
+### The register, quantified (KAs 12.2.1–12.2.3)
+
+A half-day workshop with the maintenance manager, the tooling vendor and the commissioning engineer — seeded
+with lessons learned from the previous retooling (Domain 8, KA 8.5.3) — surfaces six threats. Each is written
+as **cause → risk event → effect**, because a register entry that just says "supplier risk" cannot be owned,
+priced or responded to:
+
+- **R1 — Late tooling delivery.** *Because* the tooling vendor's fabrication shop is running at capacity,
+  *there is a risk that* the new filling heads arrive after the shutdown opens, *leading to* idle installation
+  crews and a compressed commissioning period.
+- **R2 — Foundation rework on line 2.** *Because* line 2's foundations date from an earlier machine generation
+  and the as-built records are incomplete, *there is a risk that* the slab cannot take the new tooling loads,
+  *leading to* structural rework inside the shutdown window.
+- **R3 — Commissioning software faults.** *Because* the new line-control software must integrate with a legacy
+  plant system, *there is a risk that* interface faults emerge at commissioning, *leading to* debugging time
+  and a delayed production restart.
+- **R4 — Specialist-crew availability.** *Because* the regional pool of certified installation technicians is
+  small and other plants shut down in the same season, *there is a risk that* the specialist crew is not
+  available for the full window, *leading to* overtime and re-sequencing cost.
+- **R5 — Utility outage during changeover.** *Because* the switchover to the upgraded power feed happens
+  mid-shutdown, *there is a risk that* an outage interrupts precision alignment work, *leading to* rework of
+  the affected installation steps.
+- **R6 — Material price movement.** *Because* the stainless-steel line components are priced at order rather
+  than fixed, *there is a risk that* prices move before the final call-off, *leading to* direct cost growth.
+
+Qualitative screening on the probability–impact matrix (12.2.2) puts all six above the treatment threshold, so
+all six progress to quantitative analysis:
+
+| Risk | Probability | Impact (USD) | EMV (USD) |
+|---|---:|---:|---:|
+| R1 Late tooling delivery | 40 % | 150,000 | 60,000 |
+| R2 Foundation rework on line 2 | 25 % | 400,000 | 100,000 |
+| R3 Commissioning software faults | 20 % | 250,000 | 50,000 |
+| R4 Specialist-crew availability | 50 % | 60,000 | 30,000 |
+| R5 Utility outage during changeover | 15 % | 200,000 | 30,000 |
+| R6 Material price movement | 30 % | 100,000 | 30,000 |
+| **Total EMV** | | | **300,000** |
+
+The EMV sum of **USD 300,000** is the *expected* cost of the register — but the shutdown will not experience
+the average. Some risks will pass at zero cost; others may land together. The team therefore runs a Monte
+Carlo model of the register and — critically — **correlates R1 and R4**, because both are driven by the same
+overheated labour-and-fabrication market: a vendor slipping for capacity reasons and a crew shortage are more
+likely to strike in the same season than independence would suggest. The simulation returns a **P50 of
+USD 330,000** and a **P80 of USD 420,000**. Both sit above the EMV sum, and the correlation is part of why:
+coinciding risks fatten the upper tail, which is exactly what an 80 %-confidence figure must capture and a
+simple sum of averages cannot (12.2.3).
+
+### Is the mitigation worth it? (KA 12.2.4)
+
+R2 carries the largest EMV on the register, and it is also the most responsive to early action: the foundation
+question can be answered *before* the shutdown opens, while the line is still running.
+
+1. **Setup.** R2 stands at **25 % probability × USD 400,000 impact** (EMV = 100,000). A pre-shutdown ground
+   survey and trial pit costs **USD 45,000** and would cut the probability of in-window rework from **25 % to
+   10 %** — either confirming the slab or moving any strengthening works ahead of the window.
+2. **Formula.** Compare the **accept** path (EMV) with the **mitigate** path (`mitigation cost + residual EMV`).
+3. **Substitution.** Accept path `= 25 % × 400,000 = 100,000`; mitigate path
+   `= 45,000 + (10 % × 400,000) = 45,000 + 40,000 = 85,000`.
+4. **Result.** The mitigate path (**USD 85,000**) is **USD 15,000 cheaper** than accepting the risk
+   (**USD 100,000**) — the survey is commissioned.
+5. **Interpretation.** The response is justified because it reduces `probability × impact` by more than it
+   costs (12.2.4) — and the register must now *reflect* it, or the risk is double-counted. Register EMV falls
+   to `300,000 − 100,000 + 40,000 = 240,000` (R2's original EMV out, its residual EMV in), and the re-run
+   Monte Carlo **P80 falls to USD 350,000**. A mitigation that is paid for but never fed back into the
+   quantification quietly inflates the contingency ask.
+
+### Setting contingency (KA 12.3.1)
+
+Contingency is set at the post-mitigation **P80 of USD 350,000** — not at the 240,000 EMV sum. The distinction
+matters and must be defensible in front of the sponsor: the EMV sum funds the *average* outcome, and a project
+funded to the average is under-funded in the many simulated futures where risks coincide. The P80 funds an
+80 %-confidence outcome, which is what the organisation's risk appetite (12.1.3) has been judged to require for
+a shutdown this exposed. The figure is **documented against the register and the model** — which risks, which
+probability and impact judgements, which correlation assumptions — exactly as a basis of estimate documents an
+estimate (Domain 3, KA 3.2.3), so that when the number is challenged the analysis, not an opinion, answers.
+Contingency sits inside the cost baseline under the project manager's control, to be drawn down as register
+risks materialise. The **management reserve** is a separate, sponsor-held judgement for unknown-unknowns
+(12.3.2) — the regulatory surprise or plant event no workshop foresaw — and needing it is a re-baselining
+event, not a quiet top-up.
+
+### Draw-down under fire (KA 12.3.3)
+
+Mid-shutdown, **R1 materialises**: the vendor confirms the filling heads will miss the opening of the window.
+The pre-agreed recovery — airfreighting the remaining tooling and working the installation crew on overtime to
+re-sequence — costs **USD 130,000**, drawn from contingency. The controls lead now runs the test that
+distinguishes a live register from a filed one.
+
+1. **Setup.** Contingency was set at **USD 350,000**; R1's materialisation draws **USD 130,000**. The register
+   is re-run for the **remaining** exposure: R1 is closed (it is now an issue, not a risk) and R2 is mitigated,
+   and the remaining risks return a **P80 of USD 210,000**.
+2. **Formula.** `remaining contingency = original − drawn`; compare with the remaining exposure.
+3. **Substitution.** Remaining contingency `= 350,000 − 130,000 = 220,000`; remaining exposure (P80)
+   `= 210,000`.
+4. **Result.** Remaining contingency **USD 220,000** still covers the remaining exposure **USD 210,000** —
+   adequate, with **USD 10,000** of headroom, and that headroom is **reported explicitly**, not assumed.
+5. **Interpretation.** The test is always **remaining contingency vs remaining exposure**, never the opening
+   figure (12.3.3). Contrast the failure mode: had the recovery cost **USD 160,000**, remaining contingency of
+   190,000 against the same 210,000 exposure would have been a visible shortfall — one to escalate towards the
+   management reserve *before* it bites, exactly the discipline of worked example 12.3.1b, rather than a
+   surprise discovered in the final account. Ten thousand dollars of headroom on a live shutdown is thin; the
+   report says so, and the sponsor decides with eyes open.
+
+### The opportunity nobody logged (KA 12.1.1)
+
+One entry never made the register, because the workshop — like most — hunted only for threats. The **factory
+acceptance test (FAT)** on the line-1 tooling passed **two weeks early**, an uncertain event with a *positive*
+effect on objectives: an **opportunity**, the upside tail of the same definition of risk (12.1.1). Because the
+controls lead treated it deliberately rather than as luck — the **exploit** response (12.2.4): pull the line-1
+changeover forward, re-sequence the crews, bank the gain — the project recovered **3 shutdown days** against
+the plan. Risk management manages **both tails** of uncertainty, and a register with no opportunities on it is
+usually a sign of a narrow workshop, not a project without upside.
+
+### What the credential expects
+
+This case is Domain 12 in miniature, and the exam tests every link in its chain. Candidates should be able to
+write a risk as **cause-event-effect** so it can be owned and priced (12.2.1); compute **EMV** and explain why
+a **Monte Carlo P-level** — especially with correlated risks — exceeds the EMV sum (12.2.3); run the
+**mitigation economics**, comparing the accept path with `mitigation cost + residual EMV` and feeding the
+result back into the register (12.2.4); set **contingency at a P-level** and document its basis rather than
+defaulting to a flat percentage or the average (12.3.1); track **remaining contingency against remaining
+exposure** at every draw-down, reporting headroom or shortfall explicitly (12.3.3); keep the **management
+reserve** distinct as sponsor-held funding for unknown-unknowns (12.3.2); and manage **opportunities** as
+deliberately as threats (12.1.1). One AI note closes the loop: risk-scoring models and simulation engines
+accelerate the arithmetic — the register maths, the correlation runs, the re-runs after every draw — but the
+probability judgements, the correlation assumptions and the sponsor conversation remain the professional's,
+auditable and owned (Domain 13, KA 13.5.9).
+
+---
+
 ## Domain 12 summary
 
 Risk management handles the uncertainty every estimate, schedule and forecast is made under. A **risk** is an
