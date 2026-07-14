@@ -14,8 +14,10 @@ checklist.
 
 ## 1. Scope & weighting
 
-The BoK is weighted **40 % finance / 40 % project management / 20 % AI**, with an "AI in this domain"
-section additionally embedded in every non-AI chapter. The full volume targets **~1,500 pages** of genuine
+The BoK is weighted **40 % finance / 40 % project management / 20 % AI**. The AI weighting is carried by
+Domain 13 together with the "AI in this domain/KA" sections embedded in every non-AI chapter and KA 13.5's
+systematic per-domain coverage — the 20 % is measured across that whole surface, not Domain 13's page count
+alone. The full volume targets **~1,500 pages** of genuine
 content — breadth of real material, never padding.
 
 | Domain group | Share | ~Pages (of ~1,500) |
