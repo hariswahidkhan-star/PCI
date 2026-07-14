@@ -857,6 +857,135 @@ the professional core of this domain.
 
 ---
 
+## Case study B — Domain 4: five projects, thirty minutes (energy utility portfolio)
+
+*The first Domain 4 case study went deep on one control account. This one goes wide: a utility's monthly
+performance pack across five capital projects, where the disciplines change scale but not nature — a
+portfolio RAG dashboard with declared tolerances (KA 4.1.1), one red project decomposed flex-first
+(KAs 4.2.2–4.2.3), a misleading chart caught before it reached the board (KA 4.4.2), and an exception
+discipline that spends a board's thirty minutes where they change outcomes (KAs 4.1.3, 4.3.5; Advanced
+4.A.4). Every figure reconciles.*
+
+### Background
+
+*Gridholm Networks*, a fictional energy utility, runs a rolling capital portfolio. This month's pack covers
+five projects: **P1** a 132 kV substation refurbishment, **P2** an overhead-line renewal campaign, **P3** an
+underground cable replacement, **P4** a smart-meter rollout and **P5** a peaking-plant turbine overhaul.
+Each project's monthly cost KPI is its variance against a **flexed budget** for the month's actual output,
+with portfolio-standard tolerances declared in advance (4.1.1): **green** within ±5 % of flexed standard
+cost, **amber** beyond ±5 %, **red** beyond ±10 %. The portfolio board meets monthly for thirty minutes —
+which is not a constraint to be lamented but the design assumption the whole pack is built around: under
+management by exception (4.1.3), those minutes belong to the projects outside tolerance, and to nothing
+else.
+
+### The dashboard (KA 4.1.1)
+
+The month's portfolio position, flexed budgets against actuals (USD 000):
+
+| Project | Flexed budget | Actual | Variance | % of flexed | RAG |
+|---|---:|---:|---:|---:|---|
+| P1 Substation refurbishment | 820 | 807 | 13 (F) | 1.6 % | Green |
+| P2 Overhead-line renewal | 640 | 692 | 52 (A) | 8.1 % | Amber |
+| P3 Cable replacement | 450 | 513 | 63 (A) | 14.0 % | Red |
+| P4 Smart-meter rollout | 380 | 371 | 9 (F) | 2.4 % | Green |
+| P5 Turbine overhaul | 510 | 498 | 12 (F) | 2.4 % | Green |
+| **Portfolio** | **2,800** | **2,881** | **81 (A)** | **2.9 %** | — |
+
+The rows and totals reconcile ✓ — and the totals row is the dashboard's first lesson. At portfolio level
+the month is **2.9 % adverse**: inside the ±5 % band, nominally green. A pack that reported only the
+aggregate would have shown the board a calm month while P3 breached the red line, because three favourable
+projects part-net against one failing one. **Aggregation is where exceptions go to hide** — the portfolio
+row is context, never the verdict, and the RAG discipline is applied per project, against tolerances each
+project's board agreed in advance rather than negotiated after the fact (4.1.1; Advanced 4.A.3's gaming
+warning applies to tolerances as much as to targets).
+
+### The red, decomposed — flex first (KAs 4.2.2, 4.2.3)
+
+P3 laid **1,500 metres** of cable this month against an original phasing assumption of 1,400 m, so the
+first discipline is the flex (4.2.2). The original monthly budget was `1,400 m × USD 300/m = 420,000`;
+comparing actual cost with *that* would report `513,000 − 420,000 = 93,000` (A) — 22.1 % — of which
+`100 m × 300 = 30,000` is simply the cost of doing more work. The budget is flexed to actual output at the
+standard **USD 300/m** (materials 180 + labour 2.0 hours at 50 = 100 + plant absorbed 20):
+`1,500 × 300 = ` **USD 450,000**, and the true variance is **USD 63,000 (A)** — 14.0 %, still red, but now
+all performance, no volume.
+
+**Worked decomposition — P3, this month.**
+
+1. **Setup.** Flexed standards: materials **1,500 m at USD 180**; labour **3,000 hours at USD 50**; plant
+   absorbed **USD 30,000** (20 × 1,500 m). Actuals: **1,590 m** of cable at **USD 185**; **3,300 hours** at
+   **USD 54**; plant incurred **USD 40,650**. Actual total `294,150 + 178,200 + 40,650 = 513,000`.
+2. **Formulae.** `Price/rate = (actual price − standard price) × actual quantity`;
+   `usage/efficiency = (actual quantity − standard quantity) × standard price` (4.2.3);
+   `plant = incurred − absorbed`.
+3. **Substitution.**
+   - Material price: `(185 − 180) × 1,590 = 7,950` **(A)**
+   - Material usage: `(1,590 − 1,500) × 180 = 16,200` **(A)**
+   - Labour rate: `(54 − 50) × 3,300 = 13,200` **(A)**
+   - Labour efficiency: `(3,300 − 3,000) × 50 = 15,000` **(A)**
+   - Plant: `40,650 − 30,000 = 10,650` **(A)**
+4. **Result.** `7,950 + 16,200 + 13,200 + 15,000 + 10,650 = 63,000` **(A)** ✓ — reconciling to
+   `513,000 − 450,000`. Element checks: materials `7,950 + 16,200 = 24,150 = 294,150 − 270,000` ✓; labour
+   `13,200 + 15,000 = 28,200 = 178,200 − 150,000` ✓.
+5. **Interpretation.** Regrouped by cause (4.3.1), five components become three: **ground conditions —
+   USD 31,200 (A), ~50 %** (usage + efficiency: uncharted services forced hand-digging and re-routes, which
+   lengthened cable runs and slowed crews — one event wearing two account codes, owner: the engineering
+   manager, with a ground-survey action for the remaining sections); **market movement — USD 21,150 (A),
+   ~34 %** (copper in the cable price, agency jointers in the labour rate, owner: procurement, partially
+   mitigable by forward-ordering the remaining drums); and **consequential plant — USD 10,650 (A), ~17 %**
+   (excavator hire extended by the slow going: a consequence, not a cause, needing no action of its own).
+
+### The chart that nearly misled the board (KA 4.4.2)
+
+P2's amber comes with a recovery claim. Its submission includes a bar chart of erection productivity —
+poles per week over the last four weeks: **25.0, 25.5, 26.0, 26.5** — drawn with the y-axis starting at
+**24.5**. On that axis the bars stand 0.5, 1.0, 1.5 and 2.0 units tall: the last bar is **four times** the
+first, and the visual says *productivity has surged; no escalation needed*. The portfolio analyst applies
+4.4.2's first check — a truncated axis on a bar chart — and redraws it zero-based with the standard rate
+marked. The redrawn picture says something different: a real but modest **6 %** improvement, against a
+required run-rate of **28 poles per week** to hold the flexed budget. The recovery is progress, not
+recovery. P2 keeps its amber, with a dated trend checkpoint next month instead of the quiet downgrade to
+green the original chart was drafted to support. Nobody had faked a number — every figure on the truncated
+chart was correct — which is precisely 4.4.2's point: **the picture must tell the same truth as the
+numbers**, and chart review is part of pack assurance, not decoration.
+
+### Thirty minutes, spent by exception (KAs 4.1.3, 4.3.5; Advanced 4.A.4)
+
+The pack the board receives is one dashboard page, one red exception entry, one amber watch note — and
+three green status lines that earn no narrative at all (4.1.3). The exception entry, in the 4.3.5 form:
+
+> **P3 Cable replacement — RED.** Month cost variance **USD 63,000 (A)** against a flexed budget of USD
+> 450,000 (14.0 %; red threshold ±10 %). Causes: ~50 % ground conditions — uncharted services forcing
+> hand-digging and re-routes (31,200 (A)); ~34 % market movement on copper and agency jointer rates
+> (21,150 (A)); ~17 % consequential plant hire (10,650 (A)). Actions: ground-penetrating survey of
+> remaining sections commissioned; remaining cable drums forward-ordered; EAC updated for residual rate
+> exposure. Owners: engineering manager (ground); procurement lead (rates). Recovery to amber expected in
+> two months.
+
+The thirty minutes then spend themselves: roughly twenty on P3 — testing the attribution, approving the
+survey cost against contingency and the revised EAC — and ten on P2's watch note and the portfolio trend.
+The board does not re-work P3's variance arithmetic or re-open the site team's action list: in the cadence
+pyramid of Advanced 4.A.4, the portfolio tier *tests* the analysis and takes the decisions only it can
+take; re-litigating the tier below is management by exception inverted. And the greens cost nothing —
+which is the entire economics of the discipline: attention flows to the 63,000 that needs a decision, not
+the 2,800,000 that does not.
+
+### What the credential expects
+
+A candidate should be able to run this pack end-to-end at portfolio scale: set and read **KPIs with
+targets, thresholds and tolerances** declared in advance, and explain why per-project RAG beats the
+aggregate row — netting is where exceptions hide (4.1.1); **flex before decomposing**, quantifying the
+30,000 volume effect the unflexed comparison would have mis-blamed (4.2.2); decompose the red into
+price/rate, usage/efficiency and plant components that **reconcile exactly**, then regroup them by cause
+with owners and actions (4.2.3, 4.3.1); catch a **truncated-axis** chart whose every number is true and
+whose message is false, and redraw it against the required run-rate (4.4.2); and write the **exception
+entry** that lets a board govern five projects in thirty minutes, each tier of the cadence pyramid deciding
+at its own level (4.3.5; Advanced 4.A.4). On AI: anomaly detection can rank the portfolio's variances,
+draft the decomposition and even flag distorted charts in a submitted pack — but tolerance-setting, cause
+attribution and the decision to keep P2 amber are professional judgements, owned and signed (13.5.6):
+**AI proposes, the professional disposes.**
+
+---
+
 ## Executive perspective — Domain 4
 
 **What the executive must hold onto.** **Variance without cause is noise**: a total variance means nothing

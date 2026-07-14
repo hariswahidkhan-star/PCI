@@ -1514,6 +1514,160 @@ this close, with the professional owning the service dates, the coding rules and
 
 ---
 
+## Case study B — Domain 1: capitalising the canning line (manufacturing)
+
+### Background
+
+*Keldan Foods* is a fictional mid-sized food manufacturer. Its capital programme this year is the
+installation of a second high-speed canning line — **Line 2** — in an existing plant: a filler-seamer
+bought from a European vendor, new conveyors and guarding, a control system, and the civil works to carry
+it all. The project is run by the engineering function, but its quarter-end lands on the controls
+professional's desk, because every decision the quarter forces is an accounting decision wearing overalls:
+which costs become an **asset** and which become this quarter's **expense** (the capitalise-vs-expense
+boundary of IAS 16, developed at Domain 2, KA 2.4.2, resting on the matching concept of KA 1.3); how the
+capitalised total is **componentised** and what depreciation that sets (1.3.4); what happens when an
+existing asset's **useful life is revised** (Advanced 1.A.3); what the same vendor announcement does to a
+store of **spares** (IAS 2, cross-ref 2.4.1); and how the quarter's **accrual pack** keeps all of it in the
+right period (1.3.5, 1.5.6). Where the first Domain 1 case study was a contractor's revenue-and-cost close,
+this one is the mirror image: a quarter in which almost nothing is revenue and every judgement is about
+*which side of the balance sheet* a cost belongs on.
+
+### Capitalise or expense — drawing the boundary (KA 1.3; IAS 16)
+
+The project ledger holds seven cost lines for Line 2 at quarter-end. Under IAS 16 an item of plant is
+capitalised at its purchase price **plus the costs directly attributable to bringing it to the location and
+condition needed to operate** — and nothing else. The team's boundary call, line by line:
+
+| Cost line | USD | Decision | Why |
+|---|---:|---|---|
+| Filler-seamer purchase price | 1,800,000 | Capitalise | The asset itself |
+| Freight and transit insurance | 60,000 | Capitalise | Getting it to location |
+| Installation labour (riggers + own engineers) | 140,000 | Capitalise | Getting it to working condition |
+| Foundations and civil works | 100,000 | Capitalise | Site preparation, directly attributable |
+| Commissioning trial runs | 40,000 | Capitalise | Testing that the asset functions |
+| Operator retraining for the line crew | 35,000 | Expense | Trained staff are not a controlled asset |
+| Relocating the old conveyor to clear the bay | 25,000 | Expense | Reorganisation, not attributable to Line 2 |
+
+1. **Setup.** Sum the lines that pass the directly-attributable test; expense the rest in the quarter.
+2. **Formula.** `Capitalised cost = purchase price + Σ directly attributable costs`.
+3. **Substitution.** `1,800,000 + 60,000 + 140,000 + 100,000 + 40,000 = 2,140,000`; expensed:
+   `35,000 + 25,000 = 60,000`.
+4. **Result.** Line 2 is capitalised at **USD 2,140,000**; **USD 60,000** hits this quarter's profit.
+5. **Interpretation.** The two rejected lines are the ones candidates (and project managers) most want to
+   capitalise. Training fails because the entity does not *control* the future benefit — the trained
+   operator can resign; relocation of existing kit is a cost of rearranging the factory, not of readying
+   the new asset. Note what mis-capitalising the 60,000 would do: it would not save the cost, only smear it
+   forward as roughly **USD 500 a month** of extra depreciation for a decade — a small permanent lie in
+   every future period in exchange for one flattered quarter. The boundary is matching (1.3.2) applied to
+   the balance sheet.
+
+### Componentisation — the depreciation the boundary sets (KA 1.3.4)
+
+The 2,140,000 is not one asset for depreciation purposes. Its significant parts have different lives, so
+under IAS 16 they are depreciated **separately** (componentisation — worked in the same pattern at 2.4.2):
+
+| Component | Cost (USD) | Life | Annual depreciation (USD) |
+|---|---:|---:|---:|
+| Filler-seamer unit | 1,200,000 | 8 years | 150,000 |
+| Conveyors and guarding | 500,000 | 10 years | 50,000 |
+| Control system (PLC and drives) | 340,000 | 5 years | 68,000 |
+| Foundations and civils | 100,000 | 20 years | 5,000 |
+| **Total** | **2,140,000** | | **273,000** |
+
+The component costs re-sum to the capitalised total ✓, and the annual charge is **USD 273,000** — **USD
+22,750 a month** once the line is available for use, which it becomes in the final month of the quarter, so
+this quarter bears one month: **22,750**. A single blended "10-year plant life" would have charged only
+`2,140,000 / 10 = 214,000` a year — under-depreciating by **59,000** annually and, worse, hiding the fact
+that the control system will need replacing at year 5, an event the componentised schedule *plans for* and
+the blended one discovers as a surprise. Depreciation is an estimate built from other estimates, and the
+component structure is what makes each estimate visible and reviewable.
+
+### A life revised — the estimate change (Advanced 1.A.3)
+
+Mid-quarter, the control-system vendor announces **end of support** for the PLC platform running the
+plant's existing **Line 1**. Line 1's control system cost **USD 300,000** with a six-year life
+(`300,000 / 6 = 50,000` a year); it is exactly three years old, so accumulated depreciation is **150,000**
+and the carrying amount **150,000**, with three years originally remaining. Engineering now judges it will
+be replaced in **two** years, not three.
+
+1. **Setup.** Carrying amount **USD 150,000**; remaining useful life revised from 3 years to **2 years**
+   at the start of the quarter.
+2. **Formula.** A revised life is a **change in accounting estimate** (IAS 8, per 1.A.3): apply
+   **prospectively** — `new annual depreciation = carrying amount / revised remaining life`. No restatement.
+3. **Substitution.** `150,000 / 2 = 75,000` a year; quarterly `75,000 / 4 = 18,750`, against `12,500`
+   under the old life.
+4. **Result.** This quarter's Line 1 charge is **USD 18,750** — an uplift of **USD 6,250** per quarter for
+   the remaining two years.
+5. **Interpretation.** Nothing was *wrong* with the old estimate: on the information then available, six
+   years was honest. New information produces a **new estimate**, absorbed in current and future periods —
+   never a rewriting of the past (1.A.3). A board member demanding prior quarters be "corrected" for the
+   shorter life is making the category error that section exists to prevent; equally, a team quietly using
+   the revision to explain away an unrelated overspend is misusing it. The estimate changes; the audit
+   trail says why.
+
+### The stranded spares — cost or NRV (IAS 2)
+
+The same vendor announcement strands the stores: Keldan holds **USD 90,000** (at cost) of spares specific
+to the end-of-life PLC platform. Under IAS 2 inventories are carried at the **lower of cost and net
+realisable value**, and these spares now fail the test: a broker will pay an estimated **USD 30,000**, with
+**USD 6,000** of costs to sell (testing, certification, carriage). `NRV = 30,000 − 6,000 = 24,000`, which
+is below cost, so the spares are written down: `Dr Inventory write-down expense 66,000 / Cr Inventories
+66,000` (`90,000 − 24,000`). The write-down belongs in **this** quarter — the period the obsolescence
+became known — not the period the spares are eventually sold; and it is the third consequence of a single
+economic event, which is the case study's quiet lesson: one vendor letter moved a depreciation estimate, an
+inventory value and (next section) an accrual reviewer's checklist. Events, not documents, drive the books.
+
+### The quarter's accrual pack (KAs 1.3.5, 1.5.6)
+
+Cut-off closes the quarter. Work performed for Line 2 but not yet invoiced is accrued in the 1.5.6 pattern
+— and here the pack has a twist worth examining: most of it is **capital**, not expense.
+
+| # | Accrual | USD | Treatment |
+|---|---|---:|---|
+| 1 | Rigging contractor — final installation milestone, uninvoiced | 48,000 | Capital: `Dr Line 2 asset / Cr Accrued liabilities` |
+| 2 | Commissioning consultants, uninvoiced | 12,000 | Capital: `Dr Line 2 asset / Cr Accrued liabilities` |
+| 3 | Trial-run utilities, estimated | 8,000 | Expense |
+| 4 | Small-item tail (run-rate estimate) | 7,000 | Expense |
+| | **Total accruals** | **75,000** | |
+
+Items 1 and 2 (**60,000**) are already inside the 2,140,000 capitalised above — the 140,000 of installation
+labour includes the accrued 48,000, and the 40,000 of commissioning includes the accrued 12,000. Skipping
+them would not have flattered profit (they are balance-sheet costs); it would have **understated the
+asset**, and with it every future period's depreciation — proof that cut-off discipline protects both sides
+of the equation, not just the P&L. The quarter's income-statement effect assembles as:
+
+| Quarter charge to profit | USD |
+|---|---:|
+| Training and relocation expensed | 60,000 |
+| Line 2 depreciation (one month) | 22,750 |
+| Line 1 depreciation (revised life) | 18,750 |
+| Spares write-down to NRV | 66,000 |
+| Accrued utilities and small-item tail | 15,000 |
+| **Total** | **182,500** |
+
+A naive close — everything capitalised, life unrevised, spares at cost — would have charged
+`22,750 + 12,500 + 15,000 = ` **USD 50,250**: a difference of **USD 132,250**, none of it avoided, all of
+it deferred into future periods where it would surface as unexplained depreciation and a disposal loss.
+
+### What the credential expects
+
+A candidate should be able to walk this quarter end-to-end and name the principle behind each call. The
+**capitalise-vs-expense boundary** is the matching concept (KA 1.3.2) applied through IAS 16's
+directly-attributable test — installation labour in, training and relocation out — and the candidate should
+be able to defend each line, not just total them. **Componentisation** (1.3.4; 2.4.2) turns one capitalised
+figure into a depreciation schedule with reviewable estimates, and the **life revision** exercises Advanced
+1.A.3: a change in estimate, applied prospectively, never a restatement. The **NRV write-down** (IAS 2;
+2.4.1) shows the same event-driven recognition discipline reaching inventory, and the **accrual pack**
+(1.3.5, 1.5.6) shows cut-off protecting the balance sheet as well as the P&L — an unaccrued capital cost
+understates the asset and every future depreciation charge built on it. Every entry posted was a balanced
+double entry through the coding structure of KA 1.5, and the quarter's 182,500 charge reconciles to its
+components exactly. On AI: invoice-classification assistants can propose the capitalise-vs-expense split
+from purchase-order text and flag spares whose parent asset has been end-of-lifed — genuinely useful — but
+the directly-attributable judgement, the revised life and the NRV estimate are professional calls to be
+evidenced and signed (13.5.4): **AI proposes, the professional disposes.**
+
+---
+
 ## Executive perspective — Domain 1
 
 **What the executive must hold onto.** Two ideas in this domain cannot be delegated. First, **profit is a

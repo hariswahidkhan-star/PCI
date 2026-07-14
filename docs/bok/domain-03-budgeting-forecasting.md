@@ -1022,6 +1022,127 @@ conversation. **AI proposes, the professional disposes.**
 
 ---
 
+## Case study B — Domain 3: budgeting a three-site rollout (data-centre programme)
+
+### Background
+
+*Voltaine Digital*, a fictional data-centre operator, has board approval in principle for a three-site
+rollout: **Site A (20 MW)** in its home market, **Site B (30 MW)** in a heated coastal market, and **Site C
+(40 MW)** in a lower-cost inland region. Where the first Domain 3 case study followed a single package from
+budget to reserves decision, this one works at **programme** level, where the domain's advanced tools earn
+their keep: a **parametric estimate per MW** adjusted by location factors (3.2.2; Advanced 3.A.2), three
+phased site baselines summing to a **programme PV** (KA 3.3), **escalation** carrying a base-date estimate
+to the out-turn the board must actually fund (Advanced 3.A.1), and the **funding trough** that appears when
+sites overlap (KA 3.5) — a programme-level fact that no single site's cash curve contains. The controls
+team's brief is blunt: one authorised number, stated on a defensible basis, with the funding consequences
+attached.
+
+### Parametric estimates with location factors (KA 3.2.2; Advanced 3.A.2)
+
+At this stage of definition (Class 4, and stated as such — 3.2.1), a bottom-up estimate would be false
+precision. The estimating library holds a rate of **USD 9,000,000 per MW**, base-dated this year and
+derived from Voltaine's last completed campus in the home market, with its basis — scope, base year,
+location — documented as 3.A.2 demands. Site A is that reference market (factor **1.00**); Site B's coastal
+market is heated and logistics-constrained (factor **1.10**); Site C's inland region prices below reference
+(factor **0.95**). Each factor is evidenced from market surveys and recent bid returns, not asserted.
+
+1. **Setup.** Site B: **30 MW** at the library rate of **USD 9,000,000 per MW**, location factor **1.10**,
+   base-date prices (escalation handled separately below).
+2. **Formula.** `Estimate = capacity × rate per MW × location factor` (3.A.2's pattern, with the time
+   adjustment deferred to the escalation step).
+3. **Substitution.** `30 × 9,000,000 = 270,000,000`; `270,000,000 × 1.10 = 297,000,000`.
+4. **Result.** Site B base-date estimate **USD 297,000,000**.
+5. **Interpretation.** The location factor moves the answer by 27,000,000 — material enough that an
+   unevidenced factor would be the estimate's weakest link. The same arithmetic gives Site A
+   `20 × 9,000,000 × 1.00 = ` **180,000,000** and Site C `40 × 9,000,000 × 0.95 = ` **342,000,000**: a
+   programme base-date total of **USD 819,000,000**. Note the per-MW out-turn is *not* uniform — Site C is
+   the biggest site but the cheapest per MW — which is exactly the comparison a parametric basis makes
+   visible and a lump-sum ask would bury.
+
+### Three baselines, one programme PV (KA 3.3)
+
+Each site's estimate is phased across its own schedule — A starting now, B mobilising in parallel with a
+year-2 peak, C starting in year 2 — and the three phased baselines **sum by period** into the programme's
+time-phased budget, the curve programme-level `PV` will be measured against (USD m, base-date):
+
+| Year of expenditure | Site A | Site B | Site C | Programme | Cumulative |
+|---|---:|---:|---:|---:|---:|
+| Year 1 | 120 | 60 | — | 180 | 180 |
+| Year 2 | 60 | 180 | 152 | 392 | 572 |
+| Year 3 | — | 57 | 190 | 247 | 819 |
+| **Total** | **180** | **297** | **342** | **819** | |
+
+Every row and column re-sums ✓. The programme curve is nothing more than the three site curves added
+period by period — but the *shape* it reveals is new information: **year 2 carries USD 392,000,000**,
+nearly half the programme, because A's tail, B's peak and C's ramp-up land together. That single row drives
+both of the sections that follow: it is where escalation bites hardest and where the funding trough forms.
+The phasing came from each site's resource-loaded schedule, not a straight line (3.3.1) — a programme
+office that straight-lined 819 over three years (273 a year) would understate year 2 by 119,000,000 and
+manufacture a phantom variance the moment reality diverged.
+
+### Escalating to out-turn (Advanced 3.A.1)
+
+The 819,000,000 is a **base-date** figure. The board cannot fund a price level; it funds **money of the
+day**, so each year's phased cost is escalated at the programme's assessed **4 % per annum** to its year of
+expenditure:
+
+1. **Setup.** Phased base-date costs **180m / 392m / 247m** over Years 1–3; escalation **4 % per annum**
+   from the base date, compounding to each year of expenditure.
+2. **Formula.** `Out-turn = Σ (year's phased cost × (1 + e)^n)`, `n` = years from base date.
+3. **Substitution.** Year 1: `180,000,000 × 1.04 = 187,200,000`; Year 2: `392,000,000 × 1.0816 =
+   423,987,200`; Year 3: `247,000,000 × 1.124864 = 277,841,408`.
+4. **Result.** Out-turn programme budget **USD 889,028,608** — an escalation allowance of **USD
+   70,028,608** (≈ 8.6 %) on the base-date total.
+5. **Interpretation.** The allowance is not contingency and must not be pooled with it: it is a *price*
+   adjustment, sized by the phasing itself — the year-2 concentration of spend is what makes the programme's
+   escalation bill bigger than a flat profile would suggest. Both numbers are kept and labelled: the
+   base-date 819.0m for comparing options and sites at one price level, the out-turn 889.0m for funding
+   (3.A.1's trap — calling the 70.0m an "overrun" when actuals are compared against the base-date figure —
+   is pre-empted by stating the basis on the face of every table). The authorised phased baseline is the
+   out-turn profile: cumulative `PV` of **187.2m / 611.2m / 889.0m**, with risk-based contingency then set
+   at programme level from the quantified risk register (3.A.3, 12.3.1), not by stacking per-site prudence.
+
+### The overlap trough (KAs 3.5, 3.5.3)
+
+Sized on the single-site precedent, treasury's standing release for the rollout is **USD 30,000,000 a
+month**. Site-level cash curves never challenged that: no individual site peaks above **20m** in any month.
+But the programme curve is the sum, and in the overlap window — months 15 to 20, when A is finishing, B is
+at peak and C is ramping — the sum tells a different story (USD m, out-turn):
+
+| Month | 15 | 16 | 17 | 18 | 19 | 20 |
+|---|---:|---:|---:|---:|---:|---:|
+| Site A | 6 | 5 | 4 | 3 | 2 | 1 |
+| Site B | 18 | 19 | 20 | 20 | 19 | 18 |
+| Site C | 8 | 10 | 12 | 14 | 16 | 18 |
+| **Programme spend** | **32** | **34** | **36** | **37** | **37** | **37** |
+| Excess over 30/month release | 2 | 4 | 6 | 7 | 7 | 7 |
+| **Cumulative funding gap** | **2** | **6** | **12** | **19** | **26** | **33** |
+
+The monthly excesses of `2 + 4 + 6 + 7 + 7 + 7` accumulate to a **peak funding gap of USD 33,000,000 at
+month 20** — the programme's funding trough, produced entirely by *overlap*: every site is individually
+inside the facility, and the programme is 33m outside it. The controls team takes the trough to the board
+alongside the budget, with the 3.5.3 levers costed — re-profiling treasury releases to match the programme
+curve (the cheap fix), negotiating supplier payment terms through the peak, or slipping Site C's start by a
+quarter, which flattens the trough but delays revenue-earning capacity and re-prices C's escalation
+(3.A.1). Funding is arranged for the programme's curve, not for three sites' curves filed separately — the
+portfolio cousin of the profitable-but-unfunded trap of 3.5.3.
+
+### What the credential expects
+
+This case is the programme-level application of the domain. A candidate should be able to: build a
+**parametric estimate** from a library rate and defend each **location factor** as an evidenced adjustment,
+stating the estimate's class and basis (3.2.1–3.2.3; Advanced 3.A.2); **sum phased site baselines into a
+programme PV** and read the shape — the year-2 concentration — as information, not arithmetic (KA 3.3);
+convert base-date to **out-turn** with compounding escalation, keep the two bases labelled and separate,
+and refuse to let the escalation allowance masquerade as contingency or as overrun (Advanced 3.A.1); and
+derive the **overlap funding trough**, explaining why a programme can be unfundable on a facility that
+covers every one of its sites (3.5.3). On AI: rate-library assistants can propose location factors from
+market data and cash-curve models can flag the trough months earlier than a spreadsheet pass — but the
+factor evidence, the escalation assumption and the conversation with treasury are owned by the professional
+(13.5.3): **AI proposes, the professional disposes.**
+
+---
+
 ## Executive perspective — Domain 3
 
 **What the executive must hold onto.** An estimate is a **range that narrows as definition matures** (3.2.1);

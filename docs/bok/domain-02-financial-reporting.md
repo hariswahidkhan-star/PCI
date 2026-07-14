@@ -1349,6 +1349,152 @@ for (13.5.10): **AI proposes, the professional disposes.**
 
 ---
 
+## Case study B — Domain 2: developing and delivering a maritime radar (aerospace & defence)
+
+*The first case study ran the five-step model on a healthy infrastructure contract. This second case moves
+to a sector where the model's other branches live: a defence contract with one obligation recognised **over
+time under criterion 3** (no alternative use plus a right to payment), a second recognised **at a point in
+time** on delivery, a milestone schedule that swings the contract position from liability to asset and back
+(2.2.7), an **award fee** held under the constraint and re-assessed each period (2.2.4), and the
+remaining-performance-obligation disclosure a defence investor reads as the order book (2.2.9).*
+
+### Background
+
+*Aldervane Systems*, a fictional defence electronics contractor, signs a contract with a ministry of
+defence to **develop** a maritime patrol radar to the customer's classified specification and then
+**produce twenty units**. The development phase is priced at a fixed **USD 60,000,000**; production units
+at **USD 4,500,000 each** (**USD 90,000,000** for twenty), both at their standalone selling prices, so
+allocation under step 4 is direct and no bundle discount arises. The contract adds an **award fee of up to
+USD 10,000,000**, assessed by the customer at development completion against schedule and technical-maturity
+criteria. Development work happens in Aldervane's own facility; the design authority and all intellectual
+property transfer to the customer, and export of the design to any other party is prohibited. Milestones
+are billed per a fixed schedule: a **USD 10,000,000** advance at signature and **USD 12,000,000** at
+preliminary design review (PDR), with further milestones beyond the window this case examines. Production
+units are invoiced only on formal acceptance.
+
+### One contract, two recognition patterns (KAs 2.2.3, 2.2.6)
+
+Step 2 finds **two performance obligations**, and step 5 gives them **different patterns** — the judgement
+this case turns on.
+
+**Development — over time, under criterion 3.** The radar design is built in Aldervane's facility, so the
+customer controls no asset as it is created (criterion 2 fails), and a design programme is not consumed as
+it is performed (criterion 1 fails). But criterion 3 passes on both limbs: the asset has **no alternative
+use** — the specification is customer-unique and the contract prohibits redirecting the design to anyone
+else — **and** the termination clauses give an **enforceable right to payment for performance completed to
+date**, costs plus a reasonable margin, if the customer cancels for convenience. Development revenue is
+therefore recognised **over time**, measured by cost-to-cost against an estimated development cost at
+completion of **USD 48,000,000** (an expected development margin of 12,000,000 — comfortably clear of the
+onerous trigger, and watched, not assumed, per 2.2.6).
+
+**Production — point in time.** The twenty units are also bespoke, but the payment terms change the answer:
+Aldervane is paid for units **only on acceptance**, with no right to payment for work in progress. Criterion
+3's second limb fails, and criteria 1 and 2 fail as before — so each unit's revenue is recognised **at the
+point** the customer accepts it, and the shop floor can be full of near-complete radars carrying **no
+revenue at all**. Same contract, same customer, opposite patterns; the difference is not the hardware but
+the **contractual rights**. A candidate who reasons from "it's bespoke, so over time" has skipped the limb
+that actually decides it.
+
+### Milestones versus performance — the swinging position (KA 2.2.7)
+
+Billing follows the milestone schedule; performance follows engineering effort. Each quarter of year 1 the
+contract position is `cumulative revenue − cumulative billed` — a **contract asset** when positive, a
+**contract liability** when negative:
+
+| Quarter | Cumulative dev cost (USD) | PoC | Cumulative revenue (USD) | Cumulative billed (USD) | Position (USD) |
+|---|---:|---:|---:|---:|---|
+| Q1 | 2,400,000 | 5 % | 3,000,000 | 10,000,000 | Liability 7,000,000 |
+| Q2 | 9,600,000 | 20 % | 12,000,000 | 10,000,000 | Asset 2,000,000 |
+| Q3 | 16,800,000 | 35 % | 21,000,000 | 22,000,000 | Liability 1,000,000 |
+| Q4 | 24,000,000 | 50 % | 30,000,000 | 22,000,000 | Asset 8,000,000 |
+
+1. **Setup.** At Q4: cumulative cost **USD 24,000,000** against an estimate at completion of
+   **48,000,000**; cumulative billing **22,000,000** (advance 10,000,000 + PDR 12,000,000, certified
+   in Q3).
+2. **Formula.** `PoC = cost to date / total estimated cost`; `revenue = PoC × transaction price`;
+   `position = cumulative revenue − cumulative billed`.
+3. **Substitution.** `PoC = 24,000,000 / 48,000,000 = 50 %`; `revenue = 50 % × 60,000,000 = 30,000,000`;
+   `position = 30,000,000 − 22,000,000 = 8,000,000`.
+4. **Result.** A **contract asset of USD 8,000,000** at Q4 — after a year in which the position read
+   **liability 7,000,000 → asset 2,000,000 → liability 1,000,000 → asset 8,000,000**.
+5. **Interpretation.** Nothing pathological produced the swings: performance accrues smoothly while
+   milestones land in lumps, so the sign flips whenever a certificate leapfrogs the PoC line. The controls
+   reading is twofold. First, an advance-heavy start (the Q1 liability) is *customer money financing the
+   contractor* — cheap funding that the cash-flow forecast (Domain 3, KA 3.5) should exploit, not ignore.
+   Second, the Q4 asset of 8,000,000 is the mirror: Aldervane is now financing the customer until the next
+   milestone certifies, and a controls professional who tracks only the *current* sign misses the working-
+   capital cycle the schedule builds in. The trend and the next milestone date belong in the same report as
+   the revenue (Domain 7, KAs 7.4–7.5).
+
+### The award fee under the constraint (KA 2.2.4)
+
+The award fee is **variable consideration** with an essentially judgemental outcome — the customer scores
+performance at development completion. At contract inception, management estimates the **most likely
+amount** (the fee is banded, not binary, but the discipline is the same) yet **constrains it to nil**:
+outcomes on comparable programmes are mixed, the assessment is years away and partly outside Aldervane's
+control, so it is *not* highly probable that recognising fee revenue now would avoid a significant later
+reversal. The transaction price for development stays at 60,000,000 through year 1 — and the estimate is
+**re-assessed every period**, not filed.
+
+By the end of year 2 the picture has changed: interim customer assessments have scored consistently high,
+the qualification-test programme is complete, and the residual criteria are within Aldervane's control.
+Management now judges **USD 8,000,000** the most likely fee and — the separate, second test — that its
+inclusion is highly probable not to reverse significantly.
+
+1. **Setup.** At re-assessment, development `PoC = 75 %` (cost to date 36,000,000 of 48,000,000);
+   cumulative revenue recognised to date **USD 45,000,000** (= 75 % × 60,000,000); award fee of
+   **8,000,000** now passes the constraint.
+2. **Formula.** `Revised transaction price = fixed price + constrained variable consideration`; cumulative
+   catch-up: `catch-up = PoC × revised price − revenue recognised to date`.
+3. **Substitution.** Revised price `= 60,000,000 + 8,000,000 = 68,000,000`; entitlement
+   `= 75 % × 68,000,000 = 51,000,000`; catch-up `= 51,000,000 − 45,000,000 = 6,000,000`.
+4. **Result.** **USD 6,000,000** of additional revenue lands in the period of re-assessment — a visible
+   step in the quarter's margin with no corresponding cost.
+5. **Interpretation.** The step is *correct* accounting, prospectively applied (Advanced 1.A.3's estimate
+   logic), but it is exactly the kind of movement a board will query — and the answer must be "the
+   constraint lifted, on this evidence", not "we needed the margin". The mirror discipline matters as much:
+   had assessments deteriorated, the fee stays constrained and the commercial forecast (which may still
+   *assume* fee for bidding and cash purposes) legitimately diverges from recognised revenue — a gap the
+   controls professional must be able to reconcile on one page (2.2.4; KA 2.5).
+
+### Deliveries, and the order book disclosed (KAs 2.2.6, 2.2.9)
+
+In year 3 the first **four** production units pass acceptance: revenue of `4 × 4,500,000 = ` **USD
+18,000,000** is recognised at the acceptance dates — while units five to eight, physically complete on the
+shop floor, carry nil. Costs of unaccepted units sit in inventory, not cost of sales; margin emerges
+unit-by-unit, not on an S-curve. Meanwhile the disclosure of **remaining performance obligations** at the
+end of year 2 tells the outside world what is left:
+
+| Obligation | Transaction price (USD) | Recognised to date (USD) | Remaining (USD) |
+|---|---:|---:|---:|
+| Development (incl. award fee) | 68,000,000 | 51,000,000 | 17,000,000 |
+| Production — 20 units | 90,000,000 | — | 90,000,000 |
+| **Total** | **158,000,000** | **51,000,000** | **107,000,000** |
+
+That **USD 107,000,000**, with the expected timing of its recognition, is the audited backbone of what a
+defence contractor's investors call the **order book** — and note that the constrained award fee was
+*excluded* from it until year 2's re-assessment, so the constraint disciplines the disclosure as well as
+the revenue line.
+
+### What the credential expects
+
+A candidate should be able to argue **both step-5 patterns from the contractual rights**: development over
+time under **criterion 3** — no alternative use *and* an enforceable right to payment with margin for work
+to date — and production **at a point in time** because the right-to-payment limb fails for units in
+progress (2.2.6); compute the quarterly **contract asset/liability** positions and read the swings as a
+working-capital cycle rather than an anomaly (2.2.7); apply the **two-step variable-consideration
+discipline** — estimate, then constrain — and compute the **cumulative catch-up** when the constraint lifts,
+defending the margin step it creates (2.2.4); and assemble the **remaining performance obligations**
+disclosure and connect it to the order book a board and the market actually watch (2.2.9). The data lineage
+runs through the other domains: the PoC numerator is Domain 1's accrual and coding discipline, the
+48,000,000 denominator is Domain 6's estimate at completion, and the milestone schedule drives Domain 3's
+cash-flow forecast. On AI: extraction of milestone schedules and termination clauses, and the quarterly
+re-computation of PoC and contract positions, are exactly what contract-analytics and close-automation
+tools now draft — but the criterion 3 judgement, the constraint call and the catch-up's justification are
+human, evidenced and signed (13.5.10): **AI proposes, the professional disposes.**
+
+---
+
 ## Executive perspective — Domain 2
 
 **What the executive must hold onto.** Revenue on a long contract is **manufactured, not observed**: under
