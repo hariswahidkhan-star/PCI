@@ -428,6 +428,30 @@ liability. A controls professional reconciling *revenue* to *billing* is computi
 persistent, growing contract asset can be an early warning that billing is lagging performance and cash is
 being tied up (cross-ref Domain 7, KA 7.4 and 7.5).
 
+**The contractor's WIP schedule.** The single-contract position scales to the whole book of work through
+the **work-in-progress (WIP) schedule** — the monthly management artefact that lists, per contract:
+estimated total cost, cost to date, percent complete (input method), contract price, revenue earned,
+billed to date, and the over/(under)-billing. It reconciles three worlds on one page: the cost ledger
+(Domain 5), revenue recognition (this KA) and billing (Domain 7, KA 7.4) — and its totals must tie to the
+contract-asset and contract-liability lines on the balance sheet (7.5.2's geography, aggregated).
+
+| Contract | Est. total cost | Cost to date | % complete | Price | Revenue earned | Billed | Over/(under) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| A | 1,000,000 | 800,000 | 80 % | 1,300,000 | 1,040,000 | 1,100,000 | 60,000 |
+| B | 900,000 | 450,000 | 50 % | 1,200,000 | 600,000 | 480,000 | (120,000) |
+| C | 400,000 | 200,000 | 50 % | 500,000 | 250,000 | 250,000 | — |
+| **Total** | **2,300,000** | **1,450,000** | | **3,000,000** | **1,890,000** | **1,830,000** | **(60,000)** |
+
+**Reading the schedule.** A is over-billed by 60,000 (a contract liability — cash ahead of performance,
+good for funding, but it is next quarter's revenue already invoiced); B is under-billed by 120,000 (a
+contract asset — performance ahead of billing: a billing-discipline or certification question, 7.5.2); C is
+level. The book nets to 60,000 under-billed, but the *net* is not the story — the balance sheet shows the
+120,000 asset and 60,000 liability *gross* (contracts do not offset), and the review works the outliers:
+why is B's billing lagging, and is A's over-billing a mobilisation advance unwinding on schedule or
+measured work the client will dispute? Margin check per row: A earns `1,300,000 − 1,000,000 = 300,000`
+(23.1 %); B `1,200,000 − 900,000 = 300,000` (25 %); C `500,000 − 400,000 = 100,000` (20 %) — forecast
+margins the fade analysis of Domain 4, KA 4.2.6 trends period on period.
+
 ### 2.2.8 Contract modifications
 
 **The principle.** A **contract modification** (variation/change order) is a change in scope or price approved

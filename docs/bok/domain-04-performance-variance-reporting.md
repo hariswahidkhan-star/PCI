@@ -250,6 +250,32 @@ attribution and the judgement — an AI narrative that labels a deliberate accel
 misses that a favourable variance hides skipped scope, misleads a board. **AI proposes, the professional
 disposes.**
 
+### 4.2.6 Margin fade
+
+**The principle.** **Margin fade** is the erosion of the forecast margin at completion across a contract's
+life — the contractor's headline health metric, watched period by period at portfolio level. It is variance
+analysis applied to the *forecast* rather than the period: each period's forecast margin (contract price
+less `EAC`, as a percentage of price) is trended, and every step down is attributed through the EAC
+movement bridge (Domain 3, KA 3.4.3). Fade has a characteristic signature: won at a competitive margin,
+held through early procurement wins, eroded by execution (productivity, quantity growth), and crystallised
+late by claims and closeout costs. A book of contracts that all fade tells you the *estimating* or the
+*bidding* is wrong, not the delivery (cross-ref the ratchet of Advanced 3.A.5).
+
+**Worked example 4.2.6 — reading a fade curve.**
+
+1. **Setup.** A **USD 20,000,000** contract's forecast margin at completion, quarter by quarter:
+   **12.0 % → 11.4 % → 10.1 % → 9.0 % → 8.2 %**.
+2. **Formula.** `forecast margin = price − EAC`; fade per period = margin-% step × price.
+3. **Substitution.** In money: `2,400,000 → 2,280,000 → 2,020,000 → 1,800,000 → 1,640,000`; steps of
+   `120,000, 260,000, 220,000, 160,000` — total fade `= 2,400,000 − 1,640,000 = 760,000`.
+4. **Result.** Nearly a *third* of the bid margin gone in four quarters, with the largest single step
+   (260,000) in the quarter the structural quantities were remeasured.
+5. **Interpretation.** Four one-sided steps is the ratchet signature (Advanced 3.A.5): treat it as one
+   systematic under-forecast, not four surprises. The board question is not "what is the margin?" but
+   "what is the *fade rate*, and what changed in the quarter it accelerated?" — and each step must
+   reconcile to that quarter's EAC bridge (Domain 3, KA 3.4.3): fade with no bridge lines is unexplained
+   drift, the worst kind.
+
 ### Key terms — KA 4.2
 
 | Term | Meaning |
