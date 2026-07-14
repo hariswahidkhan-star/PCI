@@ -761,7 +761,7 @@ calculator before reading the commentary.*
 
 ### Background
 
-Al-Noor Health Estates is delivering the fit-out of a new **hospital wing**: four storeys of wards,
+Amberwell Health Estates (a fictional healthcare-estates company) is delivering the fit-out of a new **hospital wing**: four storeys of wards,
 treatment rooms and clinical support space above a ground-floor imaging suite. The programme is controlled
 through control accounts reporting on a monthly cadence to a project board (KA 4.3.4). The account at the
 centre of this case is **CA-07 Clinical fit-out** — metal-stud partitions, hygienic ceilings, specialist

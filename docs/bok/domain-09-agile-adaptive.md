@@ -38,10 +38,10 @@ predictive planning · 9.1.4 when agile is (and isn't) appropriate.*
 
 **Definition & purpose.** Agile is a **mindset** — favouring working outcomes, collaboration, customer value
 and responsiveness to change over rigid, up-front plans — expressed in the **Agile Manifesto** (four value
-statements and twelve supporting principles). Described in this reference's own words: agile values **working
-product over comprehensive documentation, collaboration over contract negotiation, individuals and interactions
-over process and tools, and responding to change over following a plan** — while recognising the items on the
-right still have value. The controls consequence is profound: if scope is expected to *change*, a controls
+statements and twelve supporting principles). Described in this reference's own words: agile prizes **people
+and their interactions** above processes and tooling; a **working product** above exhaustive documentation;
+**ongoing collaboration with the customer** above negotiating the contract's letter; and **adapting to
+change** above adhering to a plan — while acknowledging that the second item in each pair retains worth. The controls consequence is profound: if scope is expected to *change*, a controls
 system that treats change as failure (variance against a fixed baseline) fights the delivery model. Agile
 controls measure **flow and value delivered**, not adherence to a fixed plan.
 
@@ -147,9 +147,9 @@ inspect-and-adapt points. (Described from the current Scrum Guide's concepts, in
 
 ### 9.2.2 The three accountabilities
 
-- **Product Owner** — accountable for **maximising the value** of the product; owns and orders the **Product
+- **Product Owner** — accountable for the **value the product delivers**; owns and orders the **Product
   Backlog**; the single voice of "what and why."
-- **Scrum Master** — accountable for the team's **effectiveness** and for the framework being understood and
+- **Scrum Master** — accountable for **how effectively the team works** and for the framework being understood and
   enacted; a coach and impediment-remover, not a project manager over the team.
 - **Developers** — the professionals who do the work of creating a usable **Increment** each Sprint;
   accountable for the plan (Sprint Backlog), quality (Definition of Done) and the daily work.

@@ -44,18 +44,21 @@ TITLE_HTML = f"""
 
 <div class="frontmatter">
   <h2 style="page-break-before: always;">Copyright &amp; edition notice</h2>
-  <p>© {datetime.date.today().year} Project Controls Institute Global, Inc. All rights reserved. No part of this
+  <p>© {datetime.date.today().year} Project Controls Institute Global. All rights reserved. No part of this
   publication may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without
   the prior written permission of the publisher, except for brief quotations in reviews or as permitted by law.</p>
   <p><strong>First Edition.</strong> The Body of Knowledge is maintained under a continuous review programme;
   corrections and refinements identified through technical and editorial review are incorporated in subsequent
   printings, and the current edition supersedes all earlier printings.</p>
-  <p><strong>Disclaimer.</strong> This reference is an educational publication. It does not constitute accounting, legal,
-  financial or professional advice, and it should not be relied upon as a substitute for advice from qualified
-  professionals on specific matters. Standards and frameworks — including IFRS standards, the PMBOK Guide, the AACE
+  <p><strong>Disclaimer.</strong> This reference is an educational publication. It does not constitute accounting, tax, legal,
+  financial or other professional advice, and it should not be relied upon as a substitute for advice from qualified
+  professionals on specific matters. Tax rates, contract-law rules and regulatory requirements vary by jurisdiction and
+  over time; all rates and legal rules appearing in examples are illustrative only. Standards and frameworks — including IFRS standards, the PMBOK Guide, the AACE
   Total Cost Management framework, ISO standards, the Agile Manifesto and the Scrum Guide — are referred to by name and
-  described in this publication's own words; no standard's text is reproduced, and all trademarks remain the property
-  of their respective owners. References to such frameworks do not imply endorsement by, or affiliation with, their
+  described in this publication's own words; no standard's text is reproduced, and all trademarks remain the property of their
+  respective owners — including PMBOK, PMI and PMP (Project Management Institute, Inc.), IFRS and IAS (IFRS
+  Foundation), AACE (AACE International), FIDIC (Fédération Internationale des Ingénieurs-Conseils), the
+  Scrum Guide (its authors), and SAFe (Scaled Agile, Inc.). References to such frameworks do not imply endorsement by, or affiliation with, their
   publishers. No governmental approval or third-party accreditation of the PCP-AI credential is implied.</p>
   <p><strong>Original content.</strong> All examples, case studies, figures, templates and examination-style questions in
   this volume are original. Organisations, projects and figures appearing in examples and case studies are fictional
@@ -80,7 +83,7 @@ TITLE_HTML = f"""
   standards index, figure index and the sample-MCQ bank.</p>
   <p>For study, work a domain end to end and attempt every worked example before reading its solution. For practice,
   go straight to the toolkits and case studies. For examination preparation, use the exam-preparation sections, the
-  MCQ bank and the calculation exercises — and note that these are study materials, kept separate from the live
+  MCQ bank and the calculation exercises — and note that these are study materials, kept separate from any live
   examination bank.</p>
 </div>
 """

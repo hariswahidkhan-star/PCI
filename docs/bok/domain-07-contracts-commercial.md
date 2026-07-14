@@ -278,8 +278,9 @@ full impact (direct + disruption + prolongation), and progress to agreement.
 ### 7.2.3 Liquidated damages
 
 **Definition & purpose.** **Liquidated damages (LDs)** are a pre-agreed sum payable by the contractor for a
-defined breach — usually **late completion** — set as a **genuine pre-estimate** of the client's loss, not a
-penalty. They give certainty (both parties know the cost of delay in advance) and cap the contractor's delay
+defined breach — usually **late completion**. In common-law jurisdictions LDs must be set as a **genuine
+pre-estimate** of the client's loss — a punitive "penalty" is unenforceable; many civil-law systems instead
+enforce penalty clauses subject to judicial adjustment, so the governing law must be checked. They give certainty (both parties know the cost of delay in advance) and cap the contractor's delay
 exposure at the agreed rate. A controls professional forecasting a late finish (Domain 6/10) can quantify the
 LD exposure directly: `LD exposure = LD rate × forecast days late`.
 
@@ -330,7 +331,7 @@ exposure is:
 - C. The contractor's total revenue.
 - D. The retention amount.
 
-*Rationale:* LDs must be a genuine pre-estimate of loss, not a penalty. A describes an unenforceable penalty;
+*Rationale:* In a common-law jurisdiction LDs must be a genuine pre-estimate of loss, not a penalty. A describes an unenforceable penalty;
 C and D are unrelated figures.
 
 **MCQ 7.2-C `[7.2.4 · Analysis]`** Increasing retention from 5 % to 10 % on a project will, all else equal:

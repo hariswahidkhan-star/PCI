@@ -748,10 +748,10 @@ historic payment behaviour continues can badly misjudge a distressed client) and
 the professional disposes.**
 
 **Indirect taxes and withholding in the cash forecast.** The cash forecast runs on *invoice* values, not
-contract values — and invoices carry **VAT/GST**. At 15 %, a certified 500,000 bills as `500,000 × 1.15 =
+contract values — and invoices carry **VAT/GST**. At an illustrative 15 %, a certified 500,000 bills as `500,000 × 1.15 =
 575,000` gross: the 75,000 arrives as cash and leaves again on the remittance date — a pure *timing* effect,
 but one that can be material at the trough. Cross-border payments to suppliers may also suffer **withholding
-tax**: at 5 % on a 200,000 invoice, the project pays `200,000 − 10,000 = 190,000` to the supplier and remits
+tax**: at, say, 5 % on a 200,000 invoice, the project pays `200,000 − 10,000 = 190,000` to the supplier and remits
 `10,000` to the tax authority — the same total cash, but different counterparties and possibly different
 dates. Neither changes project *cost* (both wash through balance-sheet accounts, Domain 1, KA 1.1) — but both
 change *when* cash moves, and therefore the funding requirement (3.5.3). The discipline: model gross-of-VAT

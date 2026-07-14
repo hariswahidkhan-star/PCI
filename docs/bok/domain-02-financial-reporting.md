@@ -185,9 +185,10 @@ assets and liabilities (over/under-billing) · 2.2.8 contract modifications · 2
 ### 2.2.1 The five-step model
 
 **Definition & purpose.** **IFRS 15** establishes a single, principles-based model for recognising revenue
-from contracts with customers. Its core principle: an entity recognises revenue **to depict the transfer of
-promised goods or services to a customer in an amount that reflects the consideration to which the entity
-expects to be entitled** in exchange. That principle is operationalised through **five steps**:
+from contracts with customers. Its core principle, stated in this book's words: **revenue follows the
+transfer** — an entity recognises revenue as the promised goods or services pass to the customer, and it
+measures that revenue at **what it expects to become entitled to** for them, not at cash received or billed.
+That principle is operationalised through **five steps**:
 
 1. **Identify the contract** with the customer.
 2. **Identify the performance obligations** (the distinct promises) in the contract.
@@ -243,10 +244,10 @@ Expected value      =  Σ (probability_i × outcome_i)      (better for a large 
 Most likely amount  =  the single most likely outcome     (better for a binary/all-or-nothing outcome)
 ```
 
-**The constraint.** Variable consideration is included in the transaction price **only to the extent that it
-is highly probable a significant reversal of cumulative revenue will not occur** when the uncertainty
-resolves. This is deliberately cautious: it stops entities booking optimistic incentive revenue that later
-evaporates.
+**The constraint.** Variable consideration enters the transaction price only where the entity is confident,
+to the standard's demanding **"highly probable"** threshold, that recognising it now will not later have to
+be **significantly reversed** once the uncertainty resolves. This is deliberately cautious: it stops entities
+booking optimistic incentive revenue that later evaporates.
 
 **Worked example 2.2.4 — a completion bonus under the constraint.**
 
@@ -333,11 +334,12 @@ SSP (unless evidence shows it relates to specific ones).
 **The principle — over time vs point in time.** An entity recognises revenue **over time** if **any one** of
 three criteria is met:
 
-1. the customer **simultaneously receives and consumes** the benefits as the entity performs (e.g. a routine
-   service); or
-2. the entity's performance **creates or enhances an asset the customer controls** as it is created; or
-3. the entity's performance creates an asset with **no alternative use** to the entity, **and** the entity
-   has an **enforceable right to payment** for performance completed to date.
+1. the customer uses up the benefit of the work as fast as it is performed — the paradigm is a routine
+   service, where the term of art is that the customer **simultaneously receives and consumes** the benefit; or
+2. the work builds or improves something the customer already **controls** as it takes shape — the classic
+   construction-on-the-client's-land case; or
+3. what is being built has **no alternative use** to the builder (bespoke, or contractually restricted),
+   *and* the contract gives an **enforceable right to payment** for the performance completed so far.
 
 If none is met, revenue is recognised **at a point in time** — when control transfers (typically delivery/
 acceptance). Most construction and bespoke-asset contracts meet criterion 2 or 3 and recognise **over time**;
