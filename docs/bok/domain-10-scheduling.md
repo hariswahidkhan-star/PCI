@@ -445,6 +445,184 @@ schedule. They complement, not replace, scheduling, and are not cost accounts.
 
 ---
 
+## Case study — Domain 10: scheduling an airport terminal fit-out (aviation)
+
+### Background
+
+An international airport is reconfiguring two contact gates in an operating terminal — an airside fit-out
+covering structural modifications, mechanical/electrical/plumbing (MEP) services, drywall partitions, ceilings
+and the systems testing that airport operations require before passengers can be boarded through the gates.
+The airline that leases the gates has a **hard operational deadline**: a seasonal schedule change on which its
+aircraft rotations depend. Airside work compounds the pressure — escorted access, night-shift restrictions and
+security screening mean lost days are hard to buy back informally.
+
+The contractor's controls professional is asked to do exactly what this domain teaches, in order: build a
+**logic-driven network** from the defined activities (KA 10.1), run the **forward and backward pass** to find
+the dates, float and critical path (KA 10.2), **compress** the schedule to the airline's deadline at least cost
+(KA 10.3), **quantify the risk** in the compressed schedule (KA 10.3.4), and then **progress and control** it
+as actuals arrive (KA 10.4). The case runs that full chain end-to-end, and — as in any real compression exercise
+— the most important finding is not the answer to the first question but what the compression does to the
+network afterwards.
+
+### The network (KA 10.1–10.2)
+
+Decomposing the fit-out work packages (Domain 8, KA 8.2.1) gives **eight activities**, all linked
+Finish-to-Start (10.1.2), with durations estimated from crew productivity and airside access constraints
+(10.1.4):
+
+| Activity | Duration (days) | Predecessor(s) |
+|---|---:|---|
+| **A** Mobilise | 2 | — |
+| **B** Structural mods | 6 | A |
+| **C** MEP first fix | 8 | A |
+| **D** Drywall | 5 | B |
+| **E** MEP second fix | 6 | C, D |
+| **F** Ceilings | 4 | E |
+| **G** Systems test | 3 | F |
+| **H** Handover | 1 | G |
+
+The logic is sound construction sequence, not dates: structural modifications must precede drywall (mandatory,
+"hard logic"); MEP first fix runs **in parallel** with the structural/drywall chain off the same mobilisation;
+MEP second fix needs *both* the first fix (C) and closed walls (D); ceilings follow second fix; systems test
+follows ceilings; handover closes the job. Two paths therefore run from A to E: **A–B–D** (the structural
+chain) and **A–C** (the services chain), merging at E and continuing through F–G–H to handover. Because the
+network is built on logic rather than constraints, it will recalculate honestly at every step that follows —
+which is the property the whole case depends on.
+
+### Forward and backward pass (KA 10.2)
+
+**Forward pass** (left to right; `ES` = latest `EF` of predecessors; `EF = ES + duration`; start at time 0):
+
+| Activity | `ES` | `EF` (= ES + dur) |
+|---|---:|---:|
+| A | 0 | 2 |
+| B | 2 | 8 |
+| C | 2 | 10 |
+| D | 8 | 13 |
+| E | max(10, 13) = 13 | 19 |
+| F | 19 | 23 |
+| G | 23 | 26 |
+| H | 26 | 27 |
+
+The merge at E is the pivotal calculation: E cannot start until *both* predecessors finish, so
+`ES(E) = max(EF of C, EF of D) = max(10, 13) = 13`. **Project duration = 27 days** (the `EF` of H).
+
+**Backward pass** (right to left from `LF` of H = 27; `LF` = earliest `LS` of successors; `LS = LF − duration`):
+
+| Activity | `LF` | `LS` (= LF − dur) |
+|---|---:|---:|
+| H | 27 | 26 |
+| G | 26 | 23 |
+| F | 23 | 19 |
+| E | 19 | 13 |
+| D | 13 | 8 |
+| C | 13 | 5 |
+| B | 8 | 2 |
+| A | 2 | 0 |
+
+**Float.** `TF = LS − ES` (10.2.4). Every activity has `TF = 0` **except C**: `TF(C) = 5 − 2 = ` **3 days**.
+The services chain can absorb three days of slippage before it touches the project finish; nothing else can
+absorb any.
+
+**The critical path** is the zero-float chain **A–B–D–E–F–G–H** `= 2 + 6 + 5 + 6 + 4 + 3 + 1 = ` **27 days**,
+equal to the project duration (10.2.5). The parallel services path A–C–E–F–G–H is 24 days — three days shorter,
+which is exactly where C's 3 days of float come from. Note the structure for later: the two chains differ
+*only* in their middle segment (B–D at 11 days versus C at 8 days); everything from E onwards is **shared**.
+
+### Compressing to the deadline (KA 10.3)
+
+The airline's schedule change lands the deadline at **24 days** — **3 days** must come out of a 27-day
+programme. Fast-tracking (10.3.2) is examined first and largely rejected: overlapping drywall into unfinished
+structural work airside, or second fix into open first-fix zones, raises rework risk the operating terminal
+cannot tolerate. The professional turns to **crashing** (10.3.1), and prices the crashable **critical**
+activities (crashing C, the only floated activity, would buy nothing — it would merely add cost and reduce
+float):
+
+| Activity | Max crash (days) | Crash cost (USD/day) |
+|---|---:|---:|
+| **B** Structural mods | 2 | 4,000 |
+| **D** Drywall | 1 | 6,000 |
+| **E** MEP second fix | 2 | 9,000 |
+
+**Setup:** shorten the 27-day critical path A–B–D–E–F–G–H by 3 days to meet the 24-day deadline; parallel path
+A–C–E–F–G–H currently 24 days.
+**Formula:** crash the **cheapest critical day first**, re-checking after each step whether the parallel path
+has become critical (10.3.1).
+**Substitution:** crash **B by 2 days** at 4,000/day `= 2 × 4,000 = ` **USD 8,000** (27 → 25 days); then crash
+**D by 1 day** at 6,000/day `= ` **USD 6,000** (25 → 24 days).
+**Result:** 3 days saved for **USD 14,000** `(8,000 + 6,000)`, avoiding E entirely at 9,000/day — the most
+expensive option. New project duration `27 − 3 = ` **24 days**. Deadline met.
+**Interpretation:** cheapest-first is only half the discipline; the other half is the re-check that follows.
+
+**The twist — re-run the parallel path.** The compressed structural chain now reads A–B–D–E–F–G–H
+`= 2 + 4 + 4 + 6 + 4 + 3 + 1 = 24` days. The services path was never touched: **A–C–E–F–G–H
+`= 2 + 8 + 6 + 4 + 3 + 1 = ` 24 days.** C's total float is now `TF(C) = 2 − 2 = ` **zero** — the project has
+**two parallel critical paths**. This is the shift the syllabus warns about (10.3.1, "crashing can shift the
+critical path"): compression did not create time from nothing, it **consumed the float of the non-critical
+chain**. Two consequences follow. First, any *further* compression must shorten **both** paths at once — which
+in this network means the **shared** activities E, F, G or H, precisely the segment where crashing is most
+expensive (E at USD 9,000/day) or operationally hardest (compressing a 3-day systems test or a 1-day handover
+airside). The cheap days are gone; the marginal cost of time has stepped up. Second, the schedule is now
+**brittle**: with every activity on a critical path, a one-day slip on **either** chain — a structural crew
+short-staffed *or* a first-fix material delay — goes straight through to handover, day for day. A 27-day
+schedule with 3 days of float on one chain and a 24-day schedule with none are very different risk positions,
+even though only the second meets the deadline. That observation is what forces the next step.
+
+### Quantifying the risk (KA 10.3.4)
+
+A deterministic 24 days now says nothing about the *probability* of achieving 24 days — and with twin critical
+paths, that probability is worse than either path alone would suggest, because the project finishes on the
+**later** of two uncertain chains (the merge-point pessimism that deterministic CPM cannot see, 10.3.4). The
+professional puts **three-point durations** (10.1.4) on every activity in the compressed network and runs a
+**Monte Carlo simulation**: thousands of recalculations with sampled durations, yielding a distribution of
+completion dates rather than a single number. The run returns **P50 = 24 days** — the deterministic date is
+only a coin toss — but **P80 = 26 days**, the spread driven directly by the twin-critical-path brittleness:
+in roughly half the iterations one chain or the other slips and drags handover with it.
+
+The professional's move is the one this Body of Knowledge teaches for cost and repeats here for time: **commit
+26 days externally** — the P80 date goes into the deadline conversation with the airline, with the reasoning
+shown — while **managing to 24 internally**, and holding the 2-day difference **explicitly as schedule
+contingency**, owned, visible and released only against realised risk. This is the schedule analogue of cost
+contingency (Domain 12, KA 12.3): the gap between the aggressive internal target and the probabilistic external
+commitment is not padding, it is priced risk. An airline told 24 days and delivered in 26 has a broken rotation
+plan; an airline told 26 days and delivered in 25 has a day in hand. Same schedule — entirely different
+professional outcome.
+
+### Progressing it (KA 10.4)
+
+At the **data date** of day 10, actuals show **B finished 1 day late** (structural surprises behind existing
+finishes — the classic airside unknown). The network is **re-run**, not eyeballed: the B-side chain now reads
+**25 days**, the C-side still **24** — the critical path has **moved** back to a **single chain** (the
+structural side), and C has recovered a day of float it did not have the day before. The finding writes its own
+action: the lost day must be **recovered on the B side** — resequencing drywall crews, weekend access — or the
+external 26-day commitment starts absorbing contingency for a realised risk, logged as such. This is KA 10.4.1
+in practice: progress and recalculate **every period**, because the critical path is a **living thing** — it
+moved when the schedule was crashed, and it moved again when reality arrived. A controls professional who is
+still watching last month's critical path is watching the wrong activities.
+
+### What the credential expects
+
+The case is the domain in miniature, and each step is a knowledge area doing its job. A **logic-driven
+network** (10.1) is what made every later recalculation possible: eight activities, mandatory FS logic, a
+parallel services chain — no date constraints to freeze the model. The **forward and backward pass** (10.2)
+turned that logic into dates, exposed the merge at E as the governing calculation, and located all the float in
+one place: `TF(C) = 3`, everything else critical on the 27-day path A–B–D–E–F–G–H. **Cheapest-first crashing
+with the parallel-path check** (10.3.1) bought 3 days for USD 14,000 — and the check, not the arithmetic, was
+the professional content: compression consumed C's float and left twin 24-day critical paths, so further
+compression must attack the shared chain and the schedule is brittle. **Monte Carlo and P-level commitment**
+(10.3.4) converted that brittleness into a number — P50 = 24, P80 = 26 — and into the commit-P80/manage-P50
+posture, with the difference held as explicit schedule contingency. **Progressing** (10.4) then showed the
+critical path moving under actuals, and the period-by-period recalculate-and-recover discipline that keeps the
+forecast honest. Two closing connections complete the picture. Earned value alone would have missed most of
+this story: an aggregate `SPI` near 1.0 can coexist with a critical-path slip on one of two parallel chains —
+the **EVM blind spot** this domain exists to cover (Domain 6, KA 6.4.2). And AI-assisted scheduling (KA
+13.5.5) would have earned its keep at three points — logic-checking the network for missing links and hidden
+constraints, accelerating the Monte Carlo run, and predicting the day-10 delay from progress trends — but at
+each one the logic, the P-level commitment and the recovery decision remain the professional's: **AI proposes,
+the professional disposes.**
+
+---
+
 ## Domain 10 summary
 
 Scheduling models the work in time: activities decomposed from the WBS, sequenced with the four dependency
