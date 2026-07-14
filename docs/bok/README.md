@@ -31,7 +31,7 @@ domain binds to it, so notation and depth stay consistent across the whole volum
 | 3 | Budgeting & Forecasting | [`domain-03-budgeting-forecasting.md`](domain-03-budgeting-forecasting.md) | ✅ Draft complete |
 | 4 | Performance Management, Variance Analysis & Reporting | [`domain-04-performance-variance-reporting.md`](domain-04-performance-variance-reporting.md) | ✅ Draft complete |
 | 5 | Cost Management & Cost Control | [`domain-05-cost-management.md`](domain-05-cost-management.md) | ✅ Draft complete |
-| 6 | Earned Value Management & Forecasting (EVM/EAC) | `domain-06-evm-eac.md` | ⏳ Planned |
+| 6 | Earned Value Management & Forecasting (EVM/EAC) | [`domain-06-evm-eac.md`](domain-06-evm-eac.md) | ✅ Draft complete |
 | 7 | Contracts, Commercial Management, BoQ, Invoicing & Revenue | `domain-07-contracts-commercial.md` | ⏳ Planned |
 | 8 | Project Management Lifecycle | `domain-08-pm-lifecycle.md` | ⏳ Planned |
 | 9 | Agile, Scrum & Adaptive Delivery for Project Controls | `domain-09-agile-adaptive.md` | ⏳ Planned |
