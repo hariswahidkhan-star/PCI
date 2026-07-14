@@ -29,7 +29,7 @@ domain binds to it, so notation and depth stay consistent across the whole volum
 | 1 | Foundations of Accounting for Project Controls | [`domain-01-foundations-of-accounting.md`](domain-01-foundations-of-accounting.md) | ✅ Draft complete |
 | 2 | Financial Reporting & the Standards (IFRS 15 flagship) | [`domain-02-financial-reporting.md`](domain-02-financial-reporting.md) | ✅ Draft complete |
 | 3 | Budgeting & Forecasting | [`domain-03-budgeting-forecasting.md`](domain-03-budgeting-forecasting.md) | ✅ Draft complete |
-| 4 | Performance Management, Variance Analysis & Reporting | `domain-04-performance-variance-reporting.md` | ⏳ Planned |
+| 4 | Performance Management, Variance Analysis & Reporting | [`domain-04-performance-variance-reporting.md`](domain-04-performance-variance-reporting.md) | ✅ Draft complete |
 | 5 | Cost Management & Cost Control | `domain-05-cost-management.md` | ⏳ Planned |
 | 6 | Earned Value Management & Forecasting (EVM/EAC) | `domain-06-evm-eac.md` | ⏳ Planned |
 | 7 | Contracts, Commercial Management, BoQ, Invoicing & Revenue | `domain-07-contracts-commercial.md` | ⏳ Planned |
