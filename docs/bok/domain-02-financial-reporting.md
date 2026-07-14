@@ -145,8 +145,8 @@ are presented gross. Even a single customer does not automatically permit nettin
 
 **MCQ 2.1-C `[2.1.1 · Recall]`** The objective of general-purpose financial reporting is to provide
 information useful to:
-- A. Management for day-to-day project decisions.
-- B. Existing and potential investors, lenders and other creditors. ✅
+- A. Existing and potential investors, lenders and other creditors. ✅
+- B. Management for day-to-day project decisions.
 - C. Tax authorities computing taxable profit.
 - D. Employees negotiating remuneration.
 
@@ -158,13 +158,13 @@ information useful to:
 entity the right to control an identified crane for three years. Faithful representation requires it to be
 accounted for as:
 - A. A service contract, because that is its legal title.
-- B. A lease, because substance over form depicts the economic reality. ✅
-- C. Whichever treatment produces the lower reported liabilities.
-- D. A contingent liability disclosed in the notes.
+- B. Whichever treatment produces the lower reported liabilities.
+- C. A contingent liability disclosed in the notes.
+- D. A lease, because substance over form depicts the economic reality. ✅
 
 *Rationale:* Faithful representation depicts economic substance, not legal form — control of an identified
-asset for a period is a lease (IFRS 16, KA 2.4.3). A elevates the label over the economics; C breaches
-neutrality; D misapplies IAS 37 to an exchange arrangement.
+asset for a period is a lease (IFRS 16, KA 2.4.3). A elevates the label over the economics; B breaches
+neutrality; C misapplies IAS 37 to an exchange arrangement.
 
 ### Self-check — KA 2.1
 
@@ -563,13 +563,13 @@ A confuses cost with revenue; C and D use the wrong PoC.
 
 **MCQ 2.2-B `[2.2.7 · Analysis]`** At a year-end, cumulative revenue recognised is USD 6,750,000 and
 cumulative amounts billed are USD 7,000,000. The contract shows:
-- A. A contract asset of USD 250,000.
-- B. A contract liability of USD 250,000. ✅
+- A. A contract liability of USD 250,000. ✅
+- B. A contract asset of USD 250,000.
 - C. A receivable of USD 6,750,000.
 - D. Nil, since both exceed USD 6m.
 
 *Rationale:* Billing exceeds revenue by USD 250,000 — the customer has been billed ahead of performance, a
-**contract liability**. A reverses the direction; C mislabels the position; D ignores the difference.
+**contract liability**. B reverses the direction; C mislabels the position; D ignores the difference.
 
 **MCQ 2.2-C `[2.2.4 · Analysis]`** An all-or-nothing completion bonus of USD 500,000 has an assessed 80 %
 chance of being earned; management judges a significant reversal is *not* highly improbable. The transaction
@@ -596,22 +596,22 @@ ignores the bundle discount; C and D miscompute the pro-rata share.
 **MCQ 2.2-E `[2.2.6 · Recall]`** Which condition, on its own, is sufficient for revenue to be recognised
 *over time*?
 - A. The contract lasts more than 12 months.
-- B. The entity's performance creates an asset the customer controls as it is created. ✅
-- C. The customer has paid a deposit.
-- D. The entity expects to make a profit.
+- B. The customer has paid a deposit.
+- C. The entity expects to make a profit.
+- D. The entity's performance creates an asset the customer controls as it is created. ✅
 
 *Rationale:* Over-time recognition needs any one of the three IFRS 15 criteria; "asset the customer controls
 as created" is one. Contract length, deposits and expected profit are irrelevant to the over-time test.
 
 **MCQ 2.2-F `[2.2.4 · Application]`** A performance adjustment has outcomes `+600,000` (25 %), `+300,000`
 (35 %), `0` (30 %), `−200,000` (10 %). By the expected-value method the variable consideration is:
-- A. USD 600,000
-- B. USD 235,000 ✅
+- A. USD 235,000 ✅
+- B. USD 600,000
 - C. USD 300,000
 - D. USD 175,000
 
 *Rationale:* `0.25×600,000 + 0.35×300,000 + 0.30×0 + 0.10×(−200,000) = 150,000 + 105,000 + 0 − 20,000 =
-235,000`. A takes the best case; C the most-likely single value; D omits a term.
+235,000`. B takes the best case; C the most-likely single value; D omits a term.
 
 **MCQ 2.2-G `[2.2.4 · Application]`** A customer pays USD 5,000,000 two years before control transfers; the
 financing rate is 6 %. Revenue recognised on transfer is closest to:
@@ -626,9 +626,9 @@ USD 618,000 as interest expense. A ignores financing; C discounts (wrong directi
 **MCQ 2.2-H `[2.2.8 · Analysis]`** Added scope that is **not distinct** from a single construction obligation
 is accounted for as:
 - A. A separate contract.
-- B. A cumulative catch-up to the existing contract (re-strike PoC). ✅
-- C. Deferred until completion.
-- D. Other comprehensive income.
+- B. Deferred until completion.
+- C. Other comprehensive income.
+- D. A cumulative catch-up to the existing contract (re-strike PoC). ✅
 
 *Rationale:* Non-distinct added scope is folded into the existing obligation with a cumulative catch-up
 (treatment c). Distinct scope at SSP would be a separate contract (a); the others are not IFRS 15 treatments.
@@ -948,12 +948,12 @@ reading older references or legacy contracts should recognise IAS 11 terminology
 
 **MCQ 2.4-A `[2.4.4 · Application]`** Weighted-average qualifying expenditure on a project under construction
 all year is USD 4,000,000, funded at 8 %. Borrowing costs to capitalise are:
-- A. USD 0 — all interest is expensed.
-- B. USD 320,000 ✅
+- A. USD 320,000 ✅
+- B. USD 0 — all interest is expensed.
 - C. USD 4,000,000
 - D. USD 32,000
 
-*Rationale:* `4,000,000 × 8 % = 320,000`, capitalised into the qualifying asset under IAS 23. A ignores the
+*Rationale:* `4,000,000 × 8 % = 320,000`, capitalised into the qualifying asset under IAS 23. B ignores the
 standard; C confuses expenditure with cost; D misplaces a decimal.
 
 **MCQ 2.4-B `[2.4.3 · Recall]`** Under IFRS 16, a lessee typically recognises:
@@ -989,13 +989,13 @@ operating-lease charge); B and C are single components of the total.
 
 **MCQ 2.4-E `[2.4.6 · Recall]`** IFRS 15 superseded IAS 11 principally in order to:
 - A. Abolish over-time recognition for construction contracts.
-- B. Apply a single control-based revenue model consistently across all industries. ✅
-- C. Allow contractors to choose between the two standards.
-- D. Require all construction revenue to be recognised on completion.
+- B. Allow contractors to choose between the two standards.
+- C. Require all construction revenue to be recognised on completion.
+- D. Apply a single control-based revenue model consistently across all industries. ✅
 
 *Rationale:* IFRS 15 replaced percentage-of-completion-by-default with a single control-based model and the
-over-time-if-criteria-met test; a typical construction contract still recognises over time under it. A and D
-misstate the outcome; C is not permitted — IAS 11 is withdrawn.
+over-time-if-criteria-met test; a typical construction contract still recognises over time under it. A and C
+misstate the outcome; B is not permitted — IAS 11 is withdrawn.
 
 ### Self-check — KA 2.4
 
@@ -1109,26 +1109,26 @@ than forcing a match, suppressing a view, or ignoring the link.
 
 **MCQ 2.5-C `[2.5.3 · Recall]`** In the split between statutory and management reporting, the controls
 professional typically owns:
-- A. The audit opinion on the statutory accounts.
-- B. The management view and its reconciliation to the statutory view. ✅
+- A. The management view and its reconciliation to the statutory view. ✅
+- B. The audit opinion on the statutory accounts.
 - C. Only the statutory disclosures.
 - D. Neither — both belong exclusively to the finance function.
 
 *Rationale:* The controls professional owns the management view — correct cost coding, accruals, flagged
 provisions and the revenue-versus-billing position — and its reconciliation to the statutory view. The audit
-opinion belongs to the external auditor (A); C and D misplace the responsibility.
+opinion belongs to the external auditor (B); C and D misplace the responsibility.
 
 **MCQ 2.5-D `[2.5.2 · Analysis]`** A project's management "value earned" is USD 7,500,000 but its statutory
 IFRS 15 revenue is USD 7,100,000. The most likely explanation is that:
 - A. The ledger has been corrupted and must be rebuilt.
-- B. The management figure includes an assumed incentive that the constraint excludes from recognised
+- B. The statutory figure should be increased to match the management view.
+- C. The two figures are unrelated and need no reconciliation.
+- D. The management figure includes an assumed incentive that the constraint excludes from recognised
   revenue. ✅
-- C. The statutory figure should be increased to match the management view.
-- D. The two figures are unrelated and need no reconciliation.
 
 *Rationale:* Both views come from one ledger and differ for explainable reasons — variable consideration
 assumed in the commercial case but constrained out of recognised revenue (KA 2.2.4) is a classic
-timing/judgement gap. A and D deny the reconciliation discipline; C reverses the direction of authority —
+timing/judgement gap. A and C deny the reconciliation discipline; B reverses the direction of authority —
 statutory revenue follows IFRS 15, not the management pack.
 
 ### Self-check — KA 2.5

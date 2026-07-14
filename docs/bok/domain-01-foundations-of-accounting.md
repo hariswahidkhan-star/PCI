@@ -270,31 +270,31 @@ it is correct because a professional has checked it against the equation, the po
 
 **MCQ 1.1-A `[1.1.2 · Recall]`** Which statement about debits is correct?
 - A. A debit always increases an account.
-- B. A debit increases assets and expenses, and decreases liabilities, equity and income. ✅
-- C. A debit always means a decrease.
-- D. Debits and credits are interchangeable labels for increases.
+- B. A debit always means a decrease.
+- C. Debits and credits are interchangeable labels for increases.
+- D. A debit increases assets and expenses, and decreases liabilities, equity and income. ✅
 
 *Rationale:* Whether a debit increases or decreases depends on account type. Debits increase assets and
-expenses (their normal balance) and decrease liabilities, equity and income. A and C over-generalise; D is
+expenses (their normal balance) and decrease liabilities, equity and income. A and B over-generalise; C is
 false — the two sides are not interchangeable.
 
 **MCQ 1.1-B `[1.1.3 · Application]`** A firm buys equipment for USD 24,000, paying cash. The correct entry is:
-- A. Dr Equipment 24,000; Cr Share capital 24,000
+- A. Dr Equipment 24,000; Cr Cash 24,000 ✅
 - B. Dr Cash 24,000; Cr Equipment 24,000
-- C. Dr Equipment 24,000; Cr Cash 24,000 ✅
+- C. Dr Equipment 24,000; Cr Share capital 24,000
 - D. Dr Equipment 24,000; Cr Accounts payable 24,000
 
-*Rationale:* One asset (equipment) rises and another (cash) falls — effect type 1. C records that. B reverses
-the sign; A and D misstate the funding source (no capital injected, no payable created since cash was paid).
+*Rationale:* One asset (equipment) rises and another (cash) falls — effect type 1. A records that. B reverses
+the sign; C and D misstate the funding source (no capital injected, no payable created since cash was paid).
 
 **MCQ 1.1-C `[1.1.4 · Analysis]`** A trial balance balances. Which error would it still fail to detect?
 - A. A debit of 500 posted as 5,000 with no matching credit change.
-- B. A sales invoice omitted from the ledger entirely. ✅
-- C. Total debits of 192,000 against total credits of 191,500.
+- B. Total debits of 192,000 against total credits of 191,500.
+- C. A sales invoice omitted from the ledger entirely. ✅
 - D. A credit balance recorded in the debit column.
 
 *Rationale:* An entirely omitted transaction leaves both columns understated equally, so the trial balance
-still balances — it proves arithmetic, not completeness. A, C and D each create a debit/credit inequality the
+still balances — it proves arithmetic, not completeness. A, B and D each create a debit/credit inequality the
 trial balance *would* reveal.
 
 **MCQ 1.1-D `[1.1.5 · Application]`** Using Meridian's month, what is the cash balance after transactions 1–9?
@@ -540,17 +540,17 @@ profit, not lower.
 
 **MCQ 1.2-B `[1.2.3 · Application]`** Purchasing equipment for cash appears in the cash-flow statement as:
 - A. An operating outflow.
-- B. An investing outflow. ✅
-- C. A financing outflow.
-- D. It does not appear, being non-cash.
+- B. A financing outflow.
+- C. It does not appear, being non-cash.
+- D. An investing outflow. ✅
 
-*Rationale:* Buying a long-term asset is an investing activity. It is a genuine cash outflow, so B. A and C
-misclassify it; D is wrong because cash did move.
+*Rationale:* Buying a long-term asset is an investing activity. It is a genuine cash outflow, so D. A and B
+misclassify it; C is wrong because cash did move.
 
 **MCQ 1.2-C `[1.2.6 · Recall]`** Through which statement does the period's profit reach equity on the SOFP?
-- A. The statement of cash flows.
-- B. The notes.
-- C. The statement of changes in equity. ✅
+- A. The statement of changes in equity. ✅
+- B. The statement of cash flows.
+- C. The notes.
 - D. The trial balance.
 
 *Rationale:* The SOCE reconciles opening to closing equity and is where profit is added to retained
@@ -559,8 +559,8 @@ primary statement.
 
 **MCQ 1.2-D `[1.2.1 · Recall]`** Under IAS 1, the SOFP normally classifies assets and liabilities as:
 - A. Tangible vs intangible.
-- B. Current vs non-current. ✅
-- C. Monetary vs non-monetary.
+- B. Monetary vs non-monetary.
+- C. Current vs non-current. ✅
 - D. Operating vs financing.
 
 *Rationale:* IAS 1's normal presentation splits by current/non-current (a liquidity view). The others are
@@ -767,21 +767,21 @@ the professional disposes.**
 The monthly depreciation is:
 - A. USD 8,000
 - B. USD 2,000
-- C. USD 667 ✅
-- D. USD 24,000
+- C. USD 24,000
+- D. USD 667 ✅
 
-*Rationale:* `(24,000 − 0)/3 = 8,000` per year; `8,000/12 ≈ 667` per month. A is the *annual* charge; B and D
+*Rationale:* `(24,000 − 0)/3 = 8,000` per year; `8,000/12 ≈ 667` per month. A is the *annual* charge; B and C
 confuse the period or expense the whole cost at once.
 
 **MCQ 1.3-B `[1.3.3 · Application]`** A client pays USD 4,000 in advance for a workshop not yet delivered. On
 receipt the entry is:
-- A. Dr Cash 4,000; Cr Service revenue 4,000
-- B. Dr Cash 4,000; Cr Deferred income 4,000 ✅
+- A. Dr Cash 4,000; Cr Deferred income 4,000 ✅
+- B. Dr Cash 4,000; Cr Service revenue 4,000
 - C. Dr Deferred income 4,000; Cr Cash 4,000
 - D. Dr Accrued income 4,000; Cr Cash 4,000
 
 *Rationale:* Cash received before the service is earned creates a **liability** (deferred income), released to
-revenue only on delivery. A recognises revenue too early; C and D reverse or misname the accounts.
+revenue only on delivery. B recognises revenue too early; C and D reverse or misname the accounts.
 
 **MCQ 1.3-C `[1.3.5 · Analysis]`** A subcontractor performed work on 29 March, invoiced 5 April, paid 30
 April. On the accrual basis the cost belongs in:
@@ -797,12 +797,12 @@ the accrual a cost engineer must raise to state true cost-to-date.
 **MCQ 1.3-D `[1.3.1 · Analysis]`** Meridian's accrual profit is USD 17,000 but operating cash is USD 3,000.
 On a pure **cash basis**, the period's profit would be closest to:
 - A. USD 17,000
-- B. USD 3,000 ✅
-- C. USD 20,000
-- D. USD 14,000
+- B. USD 20,000
+- C. USD 14,000
+- D. USD 3,000 ✅
 
-*Rationale:* Cash-basis profit approximates net operating cash — here USD 3,000. A is the accrual figure; D is
-the *gap* between the two, not either measure; C double-counts.
+*Rationale:* Cash-basis profit approximates net operating cash — here USD 3,000. A is the accrual figure; C is
+the *gap* between the two, not either measure; B double-counts.
 
 **MCQ 1.3-E `[1.3.3 · Application]`** A firm pays USD 12,000 at the start of a month for a twelve-month
 insurance policy. Three months later, the prepaid insurance asset remaining on the SOFP is:
@@ -1008,32 +1008,32 @@ over-provisioning (booking a loss the standard would not permit). **AI proposes,
 **MCQ 1.4-A `[1.4.3 · Application]`** 2,000 units are sold under warranty; 5 % are expected to need a repair
 costing USD 120 on average. The warranty provision is:
 - A. USD 240,000
-- B. USD 12,000 ✅
-- C. USD 120
+- B. USD 120
+- C. USD 12,000 ✅
 - D. USD 6,000
 
-*Rationale:* `2,000 × 0.05 × 120 = 12,000` (expected value). A ignores the 5 % probability; C is a single
+*Rationale:* `2,000 × 0.05 × 120 = 12,000` (expected value). A ignores the 5 % probability; B is a single
 repair; D halves the rate or the cost in error.
 
 **MCQ 1.4-B `[1.4.2 · Analysis]`** Which is **not** permitted to be recognised as a provision under IAS 37?
 - A. A warranty obligation on units already sold.
-- B. Expected operating losses of the next financial year. ✅
-- C. A probable, reliably estimable legal claim from a past event.
-- D. The unavoidable loss on an onerous contract already signed.
+- B. A probable, reliably estimable legal claim from a past event.
+- C. The unavoidable loss on an onerous contract already signed.
+- D. Expected operating losses of the next financial year. ✅
 
 *Rationale:* IAS 37 prohibits provisioning for **future operating losses** — there is no present obligation
-from a past event. A, C and D all arise from past events (sales, an incident, signing a contract) and can
+from a past event. A, B and C all arise from past events (sales, an incident, signing a contract) and can
 meet the tests.
 
 **MCQ 1.4-C `[1.4.5 · Application]`** A fixed-price contract has a price of USD 500,000, cost to date USD
 300,000 and estimated cost to complete USD 280,000. The loss to recognise now is:
-- A. USD 0 — recognise it as costs are incurred.
-- B. USD 80,000 ✅
+- A. USD 80,000 ✅
+- B. USD 0 — recognise it as costs are incurred.
 - C. USD 280,000
 - D. USD 200,000
 
 *Rationale:* Forecast total cost `300,000 + 280,000 = 580,000` exceeds the price by **80,000**, an onerous
-contract — the whole expected loss is recognised now. A defers a known loss (not permitted); C and D confuse
+contract — the whole expected loss is recognised now. B defers a known loss (not permitted); C and D confuse
 cost-to-complete or cost-to-date with the loss.
 
 **MCQ 1.4-D `[1.4.3 · Application]`** A single obligation's best estimate is USD 20,000, payable in 3 years;
@@ -1048,9 +1048,9 @@ discounting; D discounts only one year (`20,000/1.08`).
 
 **MCQ 1.4-E `[1.4.4 · Recall]`** A contingent asset is recognised in the financial statements when an inflow
 is:
-- A. Possible.
-- B. Probable.
-- C. Virtually certain. ✅
+- A. Virtually certain. ✅
+- B. Possible.
+- C. Probable.
 - D. Merely estimable.
 
 *Rationale:* Prudence means a contingent asset is only *recognised* when the inflow is virtually certain
@@ -1069,12 +1069,12 @@ carrying amount; B applies the unwind with the wrong sign; C ignores the unwind 
 
 **MCQ 1.4-G `[1.4.1 · Analysis]`** Which of the following is an **accrual** rather than a provision?
 - A. A warranty obligation on units already sold, based on expected failure rates.
-- B. Electricity consumed last month for which no invoice has yet arrived. ✅
-- C. A probable legal claim whose settlement amount is uncertain.
-- D. A legal obligation to decommission a facility in several years' time.
+- B. A probable legal claim whose settlement amount is uncertain.
+- C. A legal obligation to decommission a facility in several years' time.
+- D. Electricity consumed last month for which no invoice has yet arrived. ✅
 
 *Rationale:* The electricity has been received and its amount and timing are readily estimable — a classic
-accrual. A, C and D are all liabilities of uncertain timing or amount, so they fall under IAS 37 as
+accrual. A, B and C are all liabilities of uncertain timing or amount, so they fall under IAS 37 as
 provisions and must pass its recognition and measurement tests.
 
 ### Self-check — KA 1.4
@@ -1237,13 +1237,13 @@ catch (1.1.4).
 ### Sample MCQs — KA 1.5
 
 **MCQ 1.5-A `[1.5.4 · Recall]`** A control account is best described as the intersection of:
-- A. A cost element and a resource.
-- B. A WBS element and an OBS element. ✅
+- A. A WBS element and an OBS element. ✅
+- B. A cost element and a resource.
 - C. Two ledger accounts.
 - D. A project and a company code.
 
 *Rationale:* A control account is where scope (WBS) meets accountability (OBS) and is the level at which
-earned value is managed. A describes a coding detail; C and D are aggregations, not the control-account
+earned value is managed. B describes a coding detail; C and D are aggregations, not the control-account
 definition.
 
 **MCQ 1.5-B `[1.5.2 · Analysis]`** A labour cost is correctly coded to account 6100 (labour) but to the wrong
