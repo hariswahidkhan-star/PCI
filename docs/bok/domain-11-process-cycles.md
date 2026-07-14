@@ -80,6 +80,28 @@ of the funding curve.
 a leading indicator. It is not automatically an error, is highly relevant, and is not a basis to recognise more
 revenue.
 
+**MCQ 11.1-C `[11.1.3 · Application]`** A business with annual revenue of USD 18,250,000 (USD 50,000 a day)
+reduces its days sales outstanding (DSO) from 60 to 46 days through billing and dunning discipline. The cash
+freed is approximately:
+- A. USD 50,000
+- B. USD 700,000 ✅
+- C. USD 2,300,000
+- D. USD 3,000,000
+
+*Rationale:* `Cash freed ≈ DSO reduction × daily revenue = (60 − 46) × 50,000 = 14 × 50,000 = 700,000`. A is
+one day's revenue; C values the whole remaining receivables book (46 days), not the reduction; D values the
+old book (60 days).
+
+**MCQ 11.1-D `[11.1.2 · Recall]`** Which O2C control also gates step 1 of the IFRS 15 revenue model?
+- A. Cash application.
+- B. Credit control — the collectability assessment. ✅
+- C. The dunning cadence.
+- D. The three-way match.
+
+*Rationale:* Credit control assesses whether collection is probable — the same collectability test that must
+pass before an IFRS 15 contract exists (Domain 2, KA 2.2.2). Cash application and dunning act after
+invoicing; the three-way match is a P2P control.
+
 ### Self-check — KA 11.1
 
 1. List the O2C stages in order. *(Order → credit check → fulfil → invoice → collect → apply cash.)*
@@ -164,6 +186,29 @@ held as an exception. Quantity is fine, and the match is exactly the control tha
 
 *Rationale:* Raising a PO creates a **commitment** (Domain 5). The receipt supports the accrual; the matched
 invoice becomes the actual.
+
+**MCQ 11.2-C `[11.2.2 · Application]`** A PO orders 200 units at USD 30 (USD 6,000). The goods-receipt note
+records 190 units received; the supplier invoices 200 units at USD 30 (USD 6,000). The amount properly
+payable once the exception is resolved is:
+- A. USD 6,000
+- B. USD 5,700 ✅
+- C. USD 300
+- D. Nil — the whole invoice is rejected permanently.
+
+*Rationale:* The match fails on quantity (invoice 200 vs receipt 190); the entity pays for goods received at
+the agreed price: `190 × 30 = 5,700`. A pays for 10 undelivered units; C is the USD 300 difference, not the
+payable; D confuses holding an exception with permanent rejection.
+
+**MCQ 11.2-D `[11.2.3 · Analysis]`** A large goods-received-not-invoiced (GRNI) balance at period end
+primarily drives:
+- A. The commitment figure.
+- B. The accrual that makes cost-to-date true. ✅
+- C. The actual cost, since invoices will follow.
+- D. A receivable from the supplier.
+
+*Rationale:* Goods received but not yet invoiced represent work/goods consumed without an invoice — the
+accrual basis of true cost-to-date (Domain 5, KA 5.2.2). Commitments arise at PO placement; actuals arise on
+the matched invoice; GRNI is owed *to* the supplier, not by them.
 
 ### Self-check — KA 11.2
 
@@ -263,6 +308,29 @@ is a ____ control.
 
 *Rationale:* The match *prevents* a bad payment before it happens (preventive); a reconciliation *detects*
 errors after the fact (detective).
+
+**MCQ 11.3-C `[11.3.3 · Application]`** A process-mining pass over the ERP event log shows a number of
+invoices were paid without the three-way match step ever occurring. This finding is best described as:
+- A. A preventive control stopping the payments.
+- B. Detective use of the audit trail, revealing that a control was bypassed. ✅
+- C. Conclusive proof of fraud.
+- D. A reason to disable the match, since payments went through anyway.
+
+*Rationale:* Process mining reconstructs how transactions *actually* flowed from the logged audit trail — a
+detective technique that surfaces skipped matches and bypassed approvals. The payments already happened, so
+nothing was prevented (A); a bypass is the *condition* for fraud, not proof of it (C); D abandons the control
+the finding shows is needed.
+
+**MCQ 11.3-D `[11.3.2 · Recall]`** Under segregation of duties in the O2C cycle, the person who bills
+customers should not also:
+- A. Receive and apply the cash and write off debts. ✅
+- B. Prepare the monthly cost report.
+- C. Raise purchase requisitions.
+- D. Maintain the schedule baseline.
+
+*Rationale:* Billing combined with cash application and write-off lets one person control a whole O2C
+transaction — receipts could be misapplied and the gap written off undetected. The other duties sit in
+different processes and create no O2C conflict.
 
 ### Self-check — KA 11.3
 

@@ -143,6 +143,29 @@ against another project's contract liability of USD 250,000, presenting USD 150,
 *Rationale:* IAS 1 prohibits offsetting unless a standard requires/permits it. Separate contracts' positions
 are presented gross. Even a single customer does not automatically permit netting across distinct contracts.
 
+**MCQ 2.1-C `[2.1.1 · Recall]`** The objective of general-purpose financial reporting is to provide
+information useful to:
+- A. Management for day-to-day project decisions.
+- B. Existing and potential investors, lenders and other creditors. ✅
+- C. Tax authorities computing taxable profit.
+- D. Employees negotiating remuneration.
+
+*Rationale:* The framework's objective centres on capital providers — investors, lenders and other creditors
+— deciding whether to provide resources. Management's internal needs are served by management reporting
+(KA 2.5); tax authorities and employees are not the stated primary users.
+
+**MCQ 2.1-D `[2.1.2 · Analysis]`** An arrangement is legally titled a "service agreement" but gives the
+entity the right to control an identified crane for three years. Faithful representation requires it to be
+accounted for as:
+- A. A service contract, because that is its legal title.
+- B. A lease, because substance over form depicts the economic reality. ✅
+- C. Whichever treatment produces the lower reported liabilities.
+- D. A contingent liability disclosed in the notes.
+
+*Rationale:* Faithful representation depicts economic substance, not legal form — control of an identified
+asset for a period is a lease (IFRS 16, KA 2.4.3). A elevates the label over the economics; C breaches
+neutrality; D misapplies IAS 37 to an exchange arrangement.
+
 ### Self-check — KA 2.1
 
 1. Name the two fundamental and four enhancing qualitative characteristics. *(Fundamental: relevance,
@@ -584,6 +607,34 @@ is accounted for as:
 *Rationale:* Non-distinct added scope is folded into the existing obligation with a cumulative catch-up
 (treatment c). Distinct scope at SSP would be a separate contract (a); the others are not IFRS 15 treatments.
 
+**MCQ 2.2-I `[2.2.6 · Application]`** A contract has a price of USD 20,000,000. At the end of Year 1,
+cumulative cost was USD 4,000,000 against a total estimated cost of USD 16,000,000, and revenue of USD
+5,000,000 was recognised. During Year 2 the total estimated cost is revised to USD 18,000,000 and cumulative
+cost reaches USD 9,900,000. Year-2 revenue under the cost-to-cost method is:
+- A. USD 6,000,000 ✅
+- B. USD 11,000,000
+- C. USD 7,375,000
+- D. USD 5,900,000
+
+*Rationale:* `PoC = 9,900,000/18,000,000 = 55 %`; cumulative revenue `55 % × 20,000,000 = 11,000,000`;
+Year-2 revenue `11,000,000 − 5,000,000 = 6,000,000` — the revision is absorbed prospectively. B is the
+cumulative figure, not the period's; C uses the superseded USD 16,000,000 cost base; D is the cost incurred
+in the year, not revenue.
+
+**MCQ 2.2-J `[2.2.6 · Analysis]`** A contract priced at USD 30,000,000 has recognised cumulative profit of
+USD 1,500,000 to date. A revised forecast puts total cost at completion at USD 32,000,000. Applying the loss
+rule (IAS 37), the charge to recognise immediately is:
+- A. USD 2,000,000
+- B. USD 500,000
+- C. USD 3,500,000 ✅
+- D. Nil — the loss is spread over the remaining work.
+
+*Rationale:* The lifetime result is now a loss of `30,000,000 − 32,000,000 = (2,000,000)`; since USD
+1,500,000 of profit is already on the books, the immediate charge is `2,000,000 + 1,500,000 = 3,500,000`
+(revenue catch-up plus an onerous-contract provision for future work). A ignores the profit already
+recognised; B nets in the wrong direction; D breaches the rule that a known loss is recognised in full,
+immediately.
+
 ### Self-check — KA 2.2
 
 1. List the five steps of the IFRS 15 model. *(Identify contract; identify performance obligations; determine
@@ -669,6 +720,29 @@ subcontract cost; D miscomputes the margin.
 
 *Rationale:* Control before transfer is the determining principle. Invoicing, earning a margin and relative
 size are not determinative.
+
+**MCQ 2.3-C `[2.3.1 · Application]`** An entity engages a subcontractor for USD 4,500,000 of specialist
+works and bills its client USD 4,950,000. It controls the works before transfer and is responsible for their
+delivery. It reports:
+- A. Revenue USD 4,950,000 and gross profit USD 450,000. ✅
+- B. Revenue USD 450,000 and gross profit USD 450,000.
+- C. Revenue USD 4,950,000 and gross profit USD 4,950,000.
+- D. Revenue USD 4,500,000 and gross profit USD 450,000.
+
+*Rationale:* Control before transfer makes the entity a principal: gross revenue 4,950,000, cost of sales
+4,500,000, gross profit `4,950,000 − 4,500,000 = 450,000`. B is the agent (net) presentation; C ignores the
+subcontract cost of sales; D reports the cost, not the consideration, as revenue.
+
+**MCQ 2.3-D `[2.3.3 · Recall]`** The accounting figure that reconciles IFRS 15 revenue to amounts billed
+against the bill of quantities is:
+- A. The trade receivable.
+- B. The contract asset or contract liability. ✅
+- C. Retained earnings.
+- D. The onerous-contract provision.
+
+*Rationale:* Revenue (performance-based) and billing (commercial) net per contract into a contract asset
+(revenue exceeds billing) or contract liability (billing exceeds revenue). A receivable is the unconditional
+right that arises once only time stands before payment; C and D play no part in the reconciliation.
 
 ### Self-check — KA 2.3
 
@@ -856,6 +930,28 @@ value is USD 220,000. Under IAS 2 they are carried at:
 *Rationale:* Lower of cost (300,000) and NRV (220,000) = **220,000**, with an 80,000 write-down. A ignores
 the NRV test; B averages; D is the write-down, not the carrying amount.
 
+**MCQ 2.4-D `[2.4.3 · Application]`** A five-year plant lease is recognised at inception as a right-of-use
+asset and lease liability of USD 800,000; the rate is 5 % and the annual payment of USD 180,000 is made in
+arrears. The total P&L charge in Year 1 is:
+- A. USD 180,000
+- B. USD 160,000
+- C. USD 40,000
+- D. USD 200,000 ✅
+
+*Rationale:* Interest `800,000 × 5 % = 40,000` plus straight-line depreciation `800,000 / 5 = 160,000` gives
+a front-loaded Year-1 charge of USD 200,000, above the cash payment. A is the cash payment (the superseded
+operating-lease charge); B and C are single components of the total.
+
+**MCQ 2.4-E `[2.4.6 · Recall]`** IFRS 15 superseded IAS 11 principally in order to:
+- A. Abolish over-time recognition for construction contracts.
+- B. Apply a single control-based revenue model consistently across all industries. ✅
+- C. Allow contractors to choose between the two standards.
+- D. Require all construction revenue to be recognised on completion.
+
+*Rationale:* IFRS 15 replaced percentage-of-completion-by-default with a single control-based model and the
+over-time-if-criteria-met test; a typical construction contract still recognises over time under it. A and D
+misstate the outcome; C is not permitted — IAS 11 is withdrawn.
+
 ### Self-check — KA 2.4
 
 1. State the IAS 2 measurement rule. *(Lower of cost and net realisable value.)*
@@ -939,6 +1035,30 @@ statutory revenue. The most appropriate response is to:
 
 *Rationale:* Both come from one ledger and should reconcile; the professional explains the difference rather
 than forcing a match, suppressing a view, or ignoring the link.
+
+**MCQ 2.5-C `[2.5.3 · Recall]`** In the split between statutory and management reporting, the controls
+professional typically owns:
+- A. The audit opinion on the statutory accounts.
+- B. The management view and its reconciliation to the statutory view. ✅
+- C. Only the statutory disclosures.
+- D. Neither — both belong exclusively to the finance function.
+
+*Rationale:* The controls professional owns the management view — correct cost coding, accruals, flagged
+provisions and the revenue-versus-billing position — and its reconciliation to the statutory view. The audit
+opinion belongs to the external auditor (A); C and D misplace the responsibility.
+
+**MCQ 2.5-D `[2.5.2 · Analysis]`** A project's management "value earned" is USD 7,500,000 but its statutory
+IFRS 15 revenue is USD 7,100,000. The most likely explanation is that:
+- A. The ledger has been corrupted and must be rebuilt.
+- B. The management figure includes an assumed incentive that the constraint excludes from recognised
+  revenue. ✅
+- C. The statutory figure should be increased to match the management view.
+- D. The two figures are unrelated and need no reconciliation.
+
+*Rationale:* Both views come from one ledger and differ for explainable reasons — variable consideration
+assumed in the commercial case but constrained out of recognised revenue (KA 2.2.4) is a classic
+timing/judgement gap. A and D deny the reconciliation discipline; C reverses the direction of authority —
+statutory revenue follows IFRS 15, not the management pack.
 
 ### Self-check — KA 2.5
 

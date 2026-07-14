@@ -120,6 +120,28 @@ baseline are planning artefacts.
 *Rationale:* On the power/interest grid, high power + low interest = "keep satisfied". "Manage closely" is for
 high power + high interest; "monitor" is low/low; ignoring a powerful stakeholder is never appropriate.
 
+**MCQ 8.1-C `[8.1.4 · Analysis]`** A project is delivered on time and within budget, but the benefit promised
+in the business case never materialises. The most accurate assessment is:
+- A. Total success — the iron triangle was met.
+- B. Project success without benefit success — the two are distinct registers. ✅
+- C. A failure of the charter to authorise the project.
+- D. Proof that success criteria are irrelevant once delivery starts.
+
+*Rationale:* Success criteria distinguish *project* success (delivered to plan) from *product/benefit*
+success (the outcome realised); hitting time and cost while missing the benefit is only the first. A stops at
+the iron triangle; C misreads the charter's role; D inverts the lesson.
+
+**MCQ 8.1-D `[8.1.3 · Application]`** A RACI chart for the monthly cost report shows two "A"s against the
+activity "Approve the report". The correction required is:
+- A. Add a third "A" so approval is shared.
+- B. Reduce it to exactly one Accountable — a single point of accountability per activity. ✅
+- C. Replace both with "R"s.
+- D. Delete the activity from the chart.
+
+*Rationale:* A RACI assigns each activity exactly one Accountable owner; duplicated "A"s dissolve
+accountability. A worsens the defect; C leaves no one accountable; D removes a real deliverable instead of
+fixing its ownership.
+
 ### Self-check — KA 8.1
 
 1. Distinguish the business case from the project charter. *(Business case justifies; charter authorises.)*
@@ -204,6 +226,26 @@ delivery certainty, or resource loading.
 *Rationale:* Phasing the cost baseline over the schedule creates `PV` (Domain 3, KA 3.3), the basis of earned
 value. It does not change `BAC`, is not an IFRS requirement, and is essential (not optional) for EVM.
 
+**MCQ 8.2-C `[8.2.2 · Application]`** A cost baseline of USD 2,400,000 is phased evenly over a 12-month
+schedule. At the end of month 4, Planned Value (`PV`) is:
+- A. USD 2,400,000
+- B. USD 200,000
+- C. USD 800,000 ✅
+- D. USD 600,000
+
+*Rationale:* Even phasing gives `2,400,000 / 12 = 200,000` per month; `PV` at month 4 `= 4 × 200,000 =
+800,000`. A is the whole `BAC`; B is a single month; D stops at three months.
+
+**MCQ 8.2-D `[8.2.3 · Recall]`** Which subsidiary management plan feeds the project's contingency?
+- A. The communications plan.
+- B. The risk plan. ✅
+- C. The quality plan.
+- D. The procurement plan.
+
+*Rationale:* The risk plan feeds contingency (Domains 3 and 12). The communications plan drives reporting,
+the procurement plan drives commitments, and the quality plan defines how quality is managed — none of them
+sets contingency.
+
 ### Self-check — KA 8.2
 
 1. Why is the WBS called the backbone of the plan? *(Schedule, cost coding, control accounts and earned value
@@ -258,6 +300,28 @@ rework (Domain 4, KA 4.2.5) — a link the controls professional must keep visib
 
 *Rationale:* Executing is where the work is performed and most cost is incurred — hence the emphasis on
 measurement discipline there. The other groups consume comparatively little budget.
+
+**MCQ 8.3-B `[8.3.3 · Analysis]`** A package shows a favourable cost variance achieved by cutting quality
+assurance activities. The controls professional should treat this as:
+- A. A genuine saving to be banked in the forecast.
+- B. A false economy likely to return as rework — keep the quality liability visible. ✅
+- C. Evidence that quality assurance was over-scoped.
+- D. Grounds to raise the profit forecast immediately.
+
+*Rationale:* Quality is built into the process, not inspected out; a variance won by cutting assurance hides
+a rework liability. A and D bank a saving that is likely to reverse; C draws a scoping conclusion the
+variance does not support.
+
+**MCQ 8.3-C `[8.3.2 · Application]`** During executing, a shortfall in skilled resources will typically show
+up first in:
+- A. The reported `CPI`.
+- B. Productivity — a leading indicator that precedes the cost indices. ✅
+- C. The final account.
+- D. The project charter.
+
+*Rationale:* Resource availability is a leading indicator: the shortfall degrades productivity before it
+flows through to `CPI` (a lagging measure). The final account is a closing artefact and the charter is fixed
+at initiating.
 
 ### Self-check — KA 8.3
 
@@ -346,6 +410,28 @@ about WBS scope; earned value and going concern are unrelated to this failure.
 *Rationale:* Its purpose is corrective — to change the outcome, not merely observe. It runs alongside (not
 instead of) executing, and the charter is an initiating artefact.
 
+**MCQ 8.4-C `[8.4.3 · Application]`** A project manager proposes accelerating the works to recover schedule
+slippage. Before approval, the controls professional should:
+- A. Assess only the schedule benefit — schedule is the priority.
+- B. Assess the acceleration's cost, quality and risk impacts alongside the schedule gain — the constraints
+  trade off. ✅
+- C. Decline any assessment, since acceleration is an executing matter.
+- D. Reduce scope automatically to fund the acceleration.
+
+*Rationale:* Controlling treats the constraints as one integrated activity: accelerating schedule costs
+money and can stress quality and risk, so the full trade-off is assessed. A ignores the trade-offs; C
+abdicates the controlling role; D pre-empts a decision that belongs to change control.
+
+**MCQ 8.4-D `[8.4.1 · Recall]`** The repeating monthly cycle of monitoring & controlling runs:
+- A. Report → act → forecast → analyse → measure.
+- B. Measure → analyse → forecast → act → report. ✅
+- C. Forecast → measure → report → analyse → act.
+- D. Act → measure → report → forecast → analyse.
+
+*Rationale:* The loop starts from measured `EV`/`AC`/`PV`, attributes variances, re-strikes the forecast,
+triggers corrective action, and reports the position. The other orderings act or report before anything has
+been measured or analysed.
+
 ### Self-check — KA 8.4
 
 1. Why is change control called "integrated"? *(Every change is assessed across all constraints and updates
@@ -415,6 +501,29 @@ learned?
 
 *Rationale:* Controls holds the earned-value and cost performance data that becomes future estimating and
 model-training input. Contracts, charter and procurement are other functions.
+
+**MCQ 8.5-B `[8.5.2 · Application]`** A contract closes with an original value of USD 800,000, approved
+variations of USD 60,000 and an agreed claim of USD 20,000. Retention of 5 % was withheld, with half released
+at practical completion. The retention still to collect after the defects period is:
+- A. USD 44,000
+- B. USD 22,000 ✅
+- C. USD 21,500
+- D. USD 20,000
+
+*Rationale:* `Final account = 800,000 + 60,000 + 20,000 = 880,000`; `total retention = 5 % × 880,000 =
+44,000`; half was released at practical completion, leaving `44,000 / 2 = 22,000`. A forgets the
+practical-completion release; C omits the agreed claim from the retention base; D computes retention on the
+original value only.
+
+**MCQ 8.5-C `[8.5.1 · Recall]`** Orderly closure matters chiefly because:
+- A. It guarantees the project made a profit.
+- B. Unclosed contracts and unresolved claims are liabilities that linger. ✅
+- C. It removes the need for lessons learned.
+- D. It allows the baselines to be revised retrospectively.
+
+*Rationale:* Closing protects the organisation — releasing retention, resolving claims and closing contracts
+so no liabilities linger. It cannot manufacture profit (A), lessons learned are part of closing rather than
+replaced by it (C), and baselines are never revised retrospectively (D).
 
 ### Self-check — KA 8.5
 
@@ -553,6 +662,30 @@ change-prone software is best delivered:
 
 *Rationale:* Mixed requirements certainty calls for a hybrid tailored to each part. Forcing one approach on
 both, or abandoning baselines, fits neither.
+
+**MCQ 8.6-D `[8.6.1 · Recall]`** The two project conditions that determine where a project should sit on the
+predictive-to-adaptive spectrum are:
+- A. Team size and contract value.
+- B. Requirements certainty and change rate. ✅
+- C. Client preference and industry custom.
+- D. Budget size and project duration.
+
+*Rationale:* The spectrum is mapped against requirements certainty and change rate — stable, well-understood
+scope suits predictive; uncertain, evolving scope suits adaptive. Team size, value, duration and preference
+do not determine the fit.
+
+**MCQ 8.6-E `[8.6.4 · Application]`** An adaptive work stream is funded for 20 Sprints at USD 200,000 per
+Sprint. After 8 Sprints, achieved velocity is 25 points per Sprint and 600 backlog points remain. If velocity
+holds and no scope is cut, the funding gap is:
+- A. USD 2,400,000 ✅
+- B. USD 800,000
+- C. USD 4,800,000
+- D. USD 3,200,000
+
+*Rationale:* `Sprints needed = 600 ÷ 25 = 24` against `20 − 8 = 12` funded Sprints remaining; `extra Sprints
+= 24 − 12 = 12`; `gap = 12 × 200,000 = 2,400,000`. B compares the 24 Sprints needed with the 20 funded in
+total rather than the 12 remaining; C funds all 24 remaining Sprints, ignoring the 12 already funded; D
+wrongly nets off the 8 Sprints already completed.
 
 ### Self-check — KA 8.6
 
