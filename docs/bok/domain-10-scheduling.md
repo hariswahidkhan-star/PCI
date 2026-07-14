@@ -266,6 +266,35 @@ the A–C–E–F path is 10 days, so shortening the critical path to 12 keeps i
 effective. If the parallel path had been 13, crashing B by 2 would only save 1 day before that path became
 critical.
 
+**Worked example 10.3.1b — choosing the cheapest crash sequence.**
+
+- **Setup:** to shorten the 14-day project (critical path A–B–D–F; parallel path A–C–E–F = 10 days), crash
+  costs on the critical activities are: **B USD 5,000/day (max 2 days), D USD 8,000/day (max 3 days), F USD
+  12,000/day (max 1 day)**. Target: shorten by **3 days** to 11 days.
+- **Formula:** crash the **cheapest** critical day first, re-checking the parallel path does not become
+  critical.
+- **Substitution:** crash **B by 2 days** at 5,000/day = **10,000** (14 → 12 days); then crash **D by 1 day**
+  at 8,000/day = **8,000** (12 → 11 days). Parallel path is still 10 days (< 11), so A–B–D–F stays critical.
+- **Result:** 3 days saved for **USD 18,000** — the first 2 days at 5,000/day, the third at 8,000/day (rising
+  marginal cost). Crashing F (12,000/day) is avoided as the most expensive.
+- **Interpretation:** crashing follows the **marginal cost** of time, cheapest first, while watching for the
+  critical path shifting to the parallel chain (here it would at 10 days). This is how a controls professional
+  compresses a schedule at least cost (cross-ref 10.3.1).
+
+**Worked example 10.3.3 — resource levelling extends a duration.**
+
+- **Setup:** two 4-day activities, **C and E**, were planned in **parallel** but both need the **same single
+  specialist crew** (only one available).
+- **Formula:** with one crew they must run **in sequence**; the added duration is the second activity's
+  duration, constrained by available float.
+- **Substitution:** C then E in sequence adds up to **4 days** of work that cannot overlap; C has 4 days of
+  total float (from the network), so if E is the constrained one, part of the delay is absorbed by float, but
+  any excess pushes the finish out.
+- **Result:** resource levelling can **extend the project duration** and create a **resource-critical path**
+  distinct from the logical critical path when float is exhausted.
+- **Interpretation:** a schedule that ignores resource limits is optimistic fiction; levelling (respecting
+  limits, may extend) and smoothing (within float, no extension) make it deliverable (cross-ref 10.3.3).
+
 ### 10.3.2 Fast-tracking
 
 **Definition & purpose.** **Fast-tracking** shortens the schedule by **overlapping** activities normally done

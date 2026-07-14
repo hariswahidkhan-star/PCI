@@ -152,6 +152,19 @@ a single EMV sum cannot.
    which is why EMV is a starting point, not the final contingency (12.3). The professional also avoids
    double-counting where a *response* (12.2.4) already reduces a risk.
 
+**Worked example 12.2.3b — is a mitigation worth it? (a decision-tree EMV).**
+
+1. **Setup.** A risk has a **30 % probability** and a **USD 200,000 impact** (EMV = 60,000). A proposed
+   **mitigation costs USD 30,000** and would cut the probability to **10 %**.
+2. **Formula.** Compare the **accept** path (EMV) with the **mitigate** path (`mitigation cost + residual EMV`).
+3. **Substitution.** Accept path `= 30 % × 200,000 = 60,000`; mitigate path
+   `= 30,000 + (10 % × 200,000) = 30,000 + 20,000 = 50,000`.
+4. **Result.** The mitigate path (**USD 50,000**) is **USD 10,000 cheaper** than accepting the risk
+   (**USD 60,000**), so the mitigation is worthwhile.
+5. **Interpretation.** A response is justified when it reduces `probability × impact` by **more than it
+   costs**. Quantifying the decision — not just listing a response — is what turns a risk register into a
+   basis for action (cross-ref 12.2.4). Not every mitigation passes this test.
+
 ### 12.2.4 Response planning
 
 **The strategies.** Each significant risk gets a planned response:
@@ -236,6 +249,21 @@ Carlo model of the same register (capturing coincidence) might indicate a **P80 
 sets contingency at the P80 (**USD 260,000**) — higher than the EMV sum, because it funds an 80 %-confidence
 outcome, not merely the average — and documents the basis (the register and the model), exactly as a basis of
 estimate documents an estimate (Domain 3, KA 3.2.3).
+
+**Worked example 12.3.1b — tracking contingency draw-down.**
+
+1. **Setup.** Contingency was set at the Monte Carlo **P80 of USD 260,000** (from 12.3.1). Part-way through,
+   a materialised risk draws **USD 100,000**, and a re-run of the register shows remaining risk exposure at a
+   **P80 of USD 180,000**.
+2. **Formula.** `remaining contingency = original − drawn`; compare with the remaining exposure.
+3. **Substitution.** Remaining contingency `= 260,000 − 100,000 = 160,000`; remaining exposure (P80)
+   `= 180,000`.
+4. **Result.** Remaining contingency **USD 160,000** is now **below** the remaining exposure **USD 180,000**
+   — a **USD 20,000 shortfall** that must be visible in reporting.
+5. **Interpretation.** The test is always **remaining contingency vs remaining exposure**, not the opening
+   figure. A project that has drawn its contingency but still carries major open risk is exposed; where the
+   register outgrows contingency, escalation to the management reserve is a re-baselining event, not a silent
+   overspend (cross-ref 12.3.3 and Domain 5, KA 5.4).
 
 ### 12.3.2 Contingency vs management reserve
 

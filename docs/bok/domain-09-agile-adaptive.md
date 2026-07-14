@@ -246,6 +246,20 @@ Sprints remaining      = remaining backlog points / velocity
 5. **Range.** Forecasting a *range* is more honest than a point: at a pessimistic velocity of 25 → `240/25 ≈
    10` Sprints; optimistic 35 → `240/35 ≈ 7` Sprints. Report **7–10 Sprints**, not a false-precise 8.
 
+**Worked example 9.3.3b — a burnup when scope is added mid-release.**
+
+1. **Setup.** A team's velocity is **20 story points per Sprint**; the initial release scope is **200 points**
+   (so an original forecast of `200 / 20 = 10` Sprints). By the end of Sprint 4 the team has completed **80
+   points**, and **40 points of new scope** are approved and added.
+2. **Formula.** `remaining = new total scope − completed`; `Sprints remaining = remaining / velocity`.
+3. **Substitution.** New total scope `= 200 + 40 = 240`; remaining `= 240 − 80 = 160`; Sprints remaining
+   `= 160 / 20 = 8`.
+4. **Result.** The forecast finish moves from Sprint 10 to **Sprint 12** (4 done + 8 remaining) — the burnup's
+   rising total-scope line makes this visible; a burndown to zero would have hidden the added scope.
+5. **Interpretation.** In adaptive delivery scope change is expected; the burnup shows it honestly, and the
+   controls professional reports the moved forecast rather than a false "on track against the original"
+   (cross-ref 9.3.4).
+
 ### 9.3.4 Burndown, burnup and flow metrics
 
 **The measures.**
@@ -451,6 +465,22 @@ CPI = EV / AC     SPI = EV / PV    EAC = BAC / CPI   (and the other Domain 6 met
    measure**, not an absolute one — they cannot be compared across teams, and re-estimation must be handled
    consistently. Stated with these caveats, AgileEVM gives adaptive delivery a genuine cost-and-schedule
    forecast; asserted without them, it is misleading.
+
+**Worked example 9.5.3b — AgileEVM when scope is rebaselined.**
+
+1. **Setup.** Continuing the release (`BAC` USD 600,000; 300 planned points at USD 2,000/point). At the end of
+   Sprint 5, **120 points** are done and `AC` = **USD 320,000**. Now **60 points of new scope** are approved.
+2. **Formula.** Rebaseline transparently — `new BAC = new total points × per-point rate`; `EV` of completed
+   work is unchanged (`points done × rate`); `CPI = EV/AC`; `EAC = new BAC / CPI`.
+3. **Substitution.** New total points `= 300 + 60 = 360`; `new BAC = 360 × 2,000 = 720,000`; `EV = 120 × 2,000
+   = 240,000` (unchanged); `% complete = 120/360 = 33.3 %`; `CPI = 240,000/320,000 = 0.75`;
+   `EAC = 720,000/0.75 = 960,000`.
+4. **Result.** Adding scope raises `BAC` (600,000 → 720,000) and `EAC` (to **USD 960,000**), and lowers
+   `% complete` (40 % → 33.3 %), but the **`EV` of work already done is constant at 240,000** and `CPI` stays
+   0.75.
+5. **Interpretation.** This is the AgileEVM discipline — deliberate scope change is handled by **transparent
+   rebaselining** of `BAC` and planned points, not by pretending the metrics are unaffected (cross-ref 9.5.3's
+   caveat). The `EAC` rises because there is genuinely more to build.
 
 ### 9.5.4 Reconciling story points to % complete and IFRS 15
 

@@ -98,6 +98,19 @@ above plan) worth investigating.
    10,000). A controls professional splits and explains that shortfall exactly as a variance (Domain 4),
    rather than reporting a single under-recovery figure.
 
+**Worked example 5.1.3b — the activity base changes the absorption.**
+
+1. **Setup.** Budgeted overhead **USD 600,000**. Base A = **30,000 labour hours**; Base B = **20,000 machine
+   hours**. A job uses **500 labour hours** and **200 machine hours**.
+2. **Formula.** `OAR = budgeted overhead / base`; `absorbed = OAR × the job's activity on that base`.
+3. **Substitution.** Base A: `OAR = 600,000 / 30,000 = USD 20/labour-hour` → job absorbs `20 × 500 = 10,000`.
+   Base B: `OAR = 600,000 / 20,000 = USD 30/machine-hour` → job absorbs `30 × 200 = 6,000`.
+4. **Result.** The **same job** absorbs **USD 10,000** under a labour-hour base but **USD 6,000** under a
+   machine-hour base.
+5. **Interpretation.** The choice of activity base materially changes the cost loaded onto a job. The base
+   should reflect the true cost driver (5.1.2); a base that does not drive the cost mis-allocates it into
+   every unit cost.
+
 ### Key terms — KA 5.1
 
 | Term | Meaning |
@@ -183,6 +196,21 @@ Domain 1, KA 1.3.5, and used in Domain 6). A disciplined month-end accrual proce
 5. **Interpretation.** Reporting only the USD 300,000 of invoices understates cost by USD 40,000 and ignores
    USD 120,000 already committed — a USD 160,000 blind spot. The commitment/accrual view turns that blind spot
    into a forecast the project can act on.
+
+**Worked example 5.2.2b — a control account's cost states.**
+
+1. **Setup.** A control account with budget **USD 400,000**. To date: purchase orders raised (commitments)
+   **USD 250,000**; of these, invoices processed (actuals) **USD 90,000** and goods received but not invoiced
+   (accruals) **USD 30,000**.
+2. **Formulae.** `Open commitment = commitments − actuals − accruals`; `cost-to-date = actuals + accruals`;
+   `forecast = cost-to-date + open commitment + uncommitted remaining scope`.
+3. **Substitution.** Open commitment `= 250,000 − 90,000 − 30,000 = 130,000`; cost-to-date `= 90,000 + 30,000
+   = 120,000`; uncommitted `= 400,000 − 250,000 = 150,000`; forecast `= 120,000 + 130,000 + 150,000 =
+   400,000`.
+4. **Result.** Cost-to-date **USD 120,000** (not the 90,000 of invoices), open commitment **USD 130,000**,
+   forecast **USD 400,000**.
+5. **Interpretation.** Reporting only the USD 90,000 of invoices hides USD 30,000 of accrued cost and USD
+   130,000 already committed — a USD 160,000 blind spot the commitment/accrual view turns into a forecast.
 
 ### 5.2.3 Cost extraction and reconciliation
 
