@@ -273,6 +273,168 @@ errors after the fact (detective).
 
 ---
 
+## Case study — Domain 11: hardening the cycles at a scale-up (technology)
+
+### Background
+
+A fast-growing technology company delivers **hardware-plus-installation projects** — networking and
+edge-computing equipment supplied, configured and installed at customer sites under fixed-price contracts. The
+business has roughly tripled in three years, and its processes have not kept up: purchasing grew out of an
+engineering team that "just ordered what it needed", billing grew out of a founder's spreadsheet, and the ERP
+was implemented quickly with default roles. Nothing is on fire — but the finance director knows the symptoms:
+payment runs are chaotic, receivables are drifting out, and nobody can say with confidence that every invoice
+paid was for goods actually ordered and received.
+
+A controls-led review is commissioned. Its brief is exactly this domain: harden the **procure-to-pay** cycle
+(KA 11.2), harden **order-to-cash** (KA 11.1), and fix the **control environment** — segregation of duties and
+the audit trail (KA 11.3). The review is deliberately unglamorous. It buys no new revenue and launches no
+product. What it produces instead is measurable: fewer exceptions, closed control breaches, recovered cash, and
+working capital released. This case study follows the numbers through.
+
+### P2P: from manual matching to governed automation (KA 11.2)
+
+The company processes **2,400 supplier invoices a month** — components, freight, subcontracted installation
+labour. Before the review, the three-way match (11.2.2) is performed **manually**: an accounts-payable clerk
+compares each invoice to its purchase order and goods-receipt note by eye. The first-pass match rate is
+**78 %** — meaning **22 %** of invoices fail on first attempt, usually for trivial reasons: a freight charge
+not on the PO, a unit price a few cents adrift, a receipt posted a day late. That is **528 exceptions a month**
+clogging the payment runs, each needing a human to chase, and each delaying a supplier who has done nothing
+wrong.
+
+The review does two things, in the right order. **First**, it agrees **tolerance rules** with the finance
+director: price variances within 1 % or USD 25 (whichever is lower), and quantity variances within 2 %, may
+pass automatically; everything outside tolerance is a genuine exception. **Second**, it deploys an
+**AI-assisted matcher** that reads invoices, matches them to POs and receipts, applies the agreed tolerances,
+and classifies the residual exceptions by cause — operating *within governed tolerances*, exactly the
+honest-automation pattern of Domain 13 (KA 13.5.4). The first-pass match rate rises to **92 %**.
+
+**Worked example CS11-1 — the exception workload, before and after.**
+
+1. **Setup.** Invoice volume **2,400 a month**. First-pass match rate **78 %** before hardening; **92 %**
+   after tolerance rules and AI-assisted matching.
+2. **Formula.** `monthly exceptions = volume × (1 − first-pass match rate)`.
+3. **Substitution.** Before: `2,400 × 22 % = 528` exceptions a month. After: `2,400 × 8 % = 192` exceptions a
+   month.
+4. **Result.** **528 → 192** exceptions a month — **336 fewer**, a **64 %** reduction in exception workload.
+5. **Interpretation.** The freed effort is not headcount removed; it is **redirected to the exceptions that
+   matter**. The 192 that remain are disproportionately the real ones — unauthorised price rises, short
+   deliveries, suspect invoices — and each now gets proper investigation instead of a hurried glance in a
+   backlog of 528.
+
+The caution belongs in the same breath as the benefit. The tolerances are the control's **design parameters**:
+set them too wide and the match auto-approves the very discrepancies it exists to catch — a 5 % price
+tolerance on high-volume components would wave through exactly the USD 50-vs-USD 55 exception of worked
+example 11.2.2. An automated match with too-wide tolerances **re-creates the risk the control exists to
+prevent** (11.3, KA 13.6). The professional owns the tolerance decision; the machine only applies it.
+
+### The SoD breach process mining found (KA 11.3)
+
+Hardening the match improves the **preventive** side. The review also runs a **detective** pass: a
+**process-mining** analysis over the ERP's event log (11.3.3), reconstructing how the last year of P2P
+transactions *actually* flowed — not how the procedure manual says they flow.
+
+Most of the picture is reassuring. One finding is not: **14 purchase orders**, totalling **USD 86,000**, were
+**raised and approved by the same user**. The ERP's default roles, never tightened since implementation, let a
+senior buyer both create a PO and approve it — and under deadline pressure, fourteen times, they did. This is
+a **segregation-of-duties breach** (11.3.2): not necessarily fraud, but the *condition* for it. One person
+controlled the commit-the-company step end-to-end, with no second check.
+
+The response follows the domain's playbook. The **system roles are corrected** using an SoD matrix of the
+11.3.2b form — raise, approve, receive and pay mapped to different roles, with the raise-and-approve conflict
+made impossible in the system rather than merely discouraged in the manual. The **14 POs are audited**
+individually: two contain errors (a duplicated line item and a wrong cost code, both corrected), and **no
+fraud** is found. And a **continuous-controls monitor** is left running — a standing query over the event log
+that flags any future same-user raise-and-approve within a day, not a year.
+
+The lesson the credential wants drawn: the **audit trail made the breach findable** — every raise and approval
+was logged with user and timestamp, which is why the breach could be reconstructed at all (11.3.3). **Process
+mining made finding it cheap** — one analytical pass over the log did what a manual sample-based audit might
+have missed entirely, because 14 POs in a year of thousands is exactly the kind of needle sampling does not
+reliably hit.
+
+### Duplicate payments (KA 11.2/11.3)
+
+The same detective pass surfaces a second, smaller finding: **3 duplicate payments a quarter**, averaging
+**USD 5,200 each** — suppliers paid twice, typically when an emailed invoice copy was keyed in alongside the
+original. That is `3 × 5,200 = 15,600` — **USD 15,600 a quarter** now recovered from suppliers and, once the
+hardened match checks invoice references against payment history, prevented at source.
+
+The numbers are small against a USD 14.6 million business, and honest reporting says so. But they are
+**recurring** — roughly USD 62,000 a year left uncorrected — and they are **symptomatic**: duplicates slip
+through where matching is weak and references are not checked, and where duplicates pass, worse things can
+pass. A duplicate-detection routine is a classic detective control (11.3.1) and one of the cheapest AI-adjacent
+wins in the cycle.
+
+### O2C: collecting what was earned (KA 11.1)
+
+The review then turns to the inflow side. Annual revenue is **USD 14,600,000** — approximately
+**USD 40,000 a day** (`14,600,000 ÷ 365 = 40,000`). Receivables are drifting: **days sales outstanding (DSO)**
+stands at **61 days**, and the ageing report shows the causes are process, not customers. Invoices go out late
+and occasionally wrong (an installation milestone billed before it was certified, a hardware line at a
+superseded price), disputes sit unchased, receipts sit **unapplied** so customers are dunned for invoices they
+have already paid.
+
+The fixes are the KA 11.1.2 controls, applied with discipline: **billing hygiene** — the right amount, in the
+right period, tied to certified milestones (cross-ref 1.3.5); a **dunning cadence** — a standard escalation
+timetable from reminder to hold, run every week without exception; and prompt **cash application**, so the
+ageing report tells the truth and effort chases genuinely overdue balances. Within three quarters, **DSO falls
+from 61 to 48 days**.
+
+**Worked example CS11-2 — cash freed by DSO reduction.**
+
+1. **Setup.** Annual revenue **USD 14,600,000**, so daily revenue `14,600,000 ÷ 365 = USD 40,000`. DSO falls
+   from **61 days** to **48 days**.
+2. **Formula.** `cash freed ≈ DSO reduction (days) × daily revenue`.
+3. **Substitution.** `(61 − 48) × 40,000 = 13 × 40,000 = 520,000`.
+4. **Result.** ≈ **USD 520,000** of cash permanently freed — receivables now carry thirteen fewer days of
+   revenue than before.
+5. **Interpretation.** This is **working capital released by process discipline alone** — no new revenue, no
+   price rise, no financing. Half a million dollars that was sitting in other people's accounts is now in the
+   company's, available to fund the next project's trough (cross-ref Domain 3, KA 3.5 — the funding trough
+   shallows because cash arrives sooner).
+
+For a scale-up funding its own growth, this is the headline number. It is also the domain's point in
+miniature: O2C is not "sales admin" — it is the operational engine of the cash-inflow curve, and tightening it
+moves cash the way no forecasting exercise can.
+
+### The controls scorecard
+
+The review closes with a one-page scorecard — the domain's cycles and controls, before and after:
+
+| Measure | Before | After |
+|---|---|---|
+| First-pass three-way match rate | 78 % | 92 % |
+| Match exceptions a month | 528 | 192 |
+| SoD breaches open (same-user raise + approve) | 14 POs (USD 86,000) | 0 |
+| Duplicate payments a quarter | 3 (≈ USD 15,600) | ~0 |
+| DSO | 61 days | 48 days |
+| Working capital freed | — | ≈ USD 520,000 |
+
+Every line traces to a control in this domain: the match and its tolerances, the SoD matrix, the audit trail
+mined at scale, and the O2C disciplines of billing, dunning and cash application.
+
+### What the credential expects
+
+A candidate reading this case should be able to name where each result came from. The **P2P cycle and the
+three-way match** (KA 11.2) produced the exception reduction — and the crucial point is *what changed*: agreed
+tolerances plus assisted matching, not the abolition of the control. **Segregation of duties and the audit
+trail** (KA 11.3) produced the breach finding — SoD defines the conflict (raise versus approve), the audit
+trail records who actually did what, and the 11.3.2b matrix is how the fix is designed into system roles.
+**Process mining as a detective control at scale** (11.3.3) is what made a year of transactions auditable in
+one pass — 14 breaching POs and 3-a-quarter duplicates are precisely the low-frequency patterns that
+whole-population analysis catches and sampling misses. **O2C and receivables as cash** (KA 11.1) produced the
+biggest number: DSO is days of revenue trapped in receivables, and thirteen days at USD 40,000 a day is
+USD 520,000.
+
+And running through all of it, the honest-automation caveat (KAs 13.5.4, 13.6): the AI matcher works *because*
+the tolerances were set by a professional who understood what the match protects, and *because* every residual
+exception lands with a human who owns the response. Set the tolerances wide to make the exception count look
+good, and the 92 % becomes a vanity metric hiding unauthorised cost. The machine matches, mines and flags at a
+scale no clerk can; the professional decides what tolerable means, what an exception costs, and what happens
+next. **AI proposes, the professional disposes.**
+
+---
+
 ## Domain 11 summary
 
 Money flows in through **order-to-cash** (order → credit → fulfil → invoice → collect → apply cash) and out
