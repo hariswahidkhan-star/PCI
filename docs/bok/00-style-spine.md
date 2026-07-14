@@ -107,7 +107,9 @@ the book:
 5. **Interpretation** — one or two sentences on what the number *means* for the professional's decision.
 
 Numbers **must actually add up** — re-check every calculation. Where an assumption is needed, state it
-explicitly rather than glossing over it.
+explicitly rather than glossing over it. Where a computation is inherently tabular (a network
+forward/backward pass, a multi-scenario comparison), the five-line skeleton may be replaced by a labelled
+table plus an **Interpretation** line — the interpretation is never optional.
 
 ---
 

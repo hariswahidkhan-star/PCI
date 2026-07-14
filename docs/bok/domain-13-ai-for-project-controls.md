@@ -225,17 +225,17 @@ which is exactly why controls data, well-governed, is a strong foundation for AI
 
 **Worked example 13.2.2 — a data-quality assessment before an AI initiative.**
 
-- **Setup.** Before training a cost-forecast model, a controls team profiles its **12,000-row** historical cost
-  dataset against the quality dimensions above.
-- **Method.** Automated checks per dimension — validity (cost codes tested against the chart of accounts),
-  uniqueness (duplicate detection), completeness (accrual flags present).
-- **Substitution.** Invalid codes **3 % = 360 rows**; duplicates **1.5 % = 180 rows**; missing accrual flags
-  **6 % = 720 rows** — up to **1,260 rows (10.5 %)** failing at least one check (assuming no overlap).
-- **Result.** The dataset is **not yet model-ready**; a remediation pass (re-coding, de-duplication, accrual
-  back-fill) precedes any training.
-- **Interpretation.** Profiling *before* building is the discipline — a model trained on the raw set would
-  learn the 10.5 % of noise as if it were signal (13.2.1). The remediation work is classic controls hygiene
-  (Domains 1, 5), which is why the controls professional is well-placed to lead data preparation.
+1. **Setup.** Before training a cost-forecast model, a controls team profiles its **12,000-row** historical cost
+   dataset against the quality dimensions above.
+2. **Method.** Automated checks per dimension — validity (cost codes tested against the chart of accounts),
+   uniqueness (duplicate detection), completeness (accrual flags present).
+3. **Substitution.** Invalid codes **3 % = 360 rows**; duplicates **1.5 % = 180 rows**; missing accrual flags
+   **6 % = 720 rows** — up to **1,260 rows (10.5 %)** failing at least one check (assuming no overlap).
+4. **Result.** The dataset is **not yet model-ready**; a remediation pass (re-coding, de-duplication, accrual
+   back-fill) precedes any training.
+5. **Interpretation.** Profiling *before* building is the discipline — a model trained on the raw set would
+   learn the 10.5 % of noise as if it were signal (13.2.1). The remediation work is classic controls hygiene
+   (Domains 1, 5), which is why the controls professional is well-placed to lead data preparation.
 
 ### 13.2.3 Structure, governance and lineage
 
@@ -1396,17 +1396,17 @@ sustainable capability from hype.
 
 **Worked example 13.7.3 — a value case that is honest about cost.**
 
-- **Setup.** AI-assisted coding and reconciliation (13.5.4) cuts a four-person month-end close from **5 days
-  to 2**. Loaded cost **USD 90/hour**, 8-hour days.
-- **Formula.** `annual saving = days saved × staff × hours × rate × 12`; compare with the tooling + governance
-  cost.
-- **Substitution.** `3 × 4 × 8 × 90 = USD 8,640` per month; `× 12 = USD 103,680` per year. Tool licences plus
-  governance/verification effort: **USD 60,000** per year.
-- **Result.** **Net value ≈ USD 43,680 per year**, before the harder-to-price benefits (earlier reporting,
-  earlier warnings).
-- **Interpretation.** An honest value case nets the *real* costs — licences *and* the human verification the
-  governance model requires (13.6) — against measured time savings, not vendor claims. "We use AI" is not
-  value; a faster, verified close is (13.7.3).
+1. **Setup.** AI-assisted coding and reconciliation (13.5.4) cuts a four-person month-end close from **5 days
+   to 2**. Loaded cost **USD 90/hour**, 8-hour days.
+2. **Formula.** `annual saving = days saved × staff × hours × rate × 12`; compare with the tooling + governance
+   cost.
+3. **Substitution.** `3 × 4 × 8 × 90 = USD 8,640` per month; `× 12 = USD 103,680` per year. Tool licences plus
+   governance/verification effort: **USD 60,000** per year.
+4. **Result.** **Net value ≈ USD 43,680 per year**, before the harder-to-price benefits (earlier reporting,
+   earlier warnings).
+5. **Interpretation.** An honest value case nets the *real* costs — licences *and* the human verification the
+   governance model requires (13.6) — against measured time savings, not vendor claims. "We use AI" is not
+   value; a faster, verified close is (13.7.3).
 
 **Per-use economics.** Licence fees are only one AI cost shape; API-metered use is priced per token (13.1.3),
 and at volume the per-use arithmetic decides deployability. Three numbers govern it: tokens in, tokens out,
@@ -1773,28 +1773,28 @@ portfolio generates about **18,000 cost lines a month** across the ERP feeds. A 
 auto-coding (13.5.4) showed first-pass coding confidence holding for **85 %** of lines — leaving **15 %** as
 exceptions needing human handling every month.
 
-- **Setup.** 18,000 cost lines a month; first-pass auto-coding confidence 85 %, so 15 % fall to exceptions.
-- **Formula.** `exceptions per month = lines × exception rate`.
-- **Substitution.** `18,000 × 15 % = 18,000 × 0.15`.
-- **Result.** **2,700 exceptions a month.**
-- **Interpretation.** At 2,700 exceptions a month the "automation" would have manufactured a new manual
-  workload. Tracing the exceptions showed the cause was not the classifier but the data: **inconsistent legacy
-  coding** — old cost-code structures from predecessor projects, free-text descriptions, codes valid in one
-  system and not another (13.2.2's validity and consistency dimensions failing at once).
+1. **Setup.** 18,000 cost lines a month; first-pass auto-coding confidence 85 %, so 15 % fall to exceptions.
+2. **Formula.** `exceptions per month = lines × exception rate`.
+3. **Substitution.** `18,000 × 15 % = 18,000 × 0.15`.
+4. **Result.** **2,700 exceptions a month.**
+5. **Interpretation.** At 2,700 exceptions a month the "automation" would have manufactured a new manual
+   workload. Tracing the exceptions showed the cause was not the classifier but the data: **inconsistent legacy
+   coding** — old cost-code structures from predecessor projects, free-text descriptions, codes valid in one
+   system and not another (13.2.2's validity and consistency dimensions failing at once).
 
 The response was six months of remediation nobody would call glamorous: mapping rules from legacy codes to the
 current structure, cleaning and retiring dead codes, tightening validation at the point of entry — classic
 controls hygiene (Domains 1, 5) led by the controls team itself, because it is the team that understands the
 coding (13.2.1). The result:
 
-- **Setup.** Post-remediation first-pass confidence **93 %**, so 7 % fall to exceptions.
-- **Formula.** `exceptions per month = lines × exception rate`.
-- **Substitution.** `18,000 × 7 % = 18,000 × 0.07`.
-- **Result.** **1,260 exceptions a month** — down from 2,700.
-- **Interpretation.** The remediation more than halved the exception load, and it did so before any further AI
-  spend. The lesson the team internalised is the lesson of 13.2.1: **the unglamorous data work *was* the AI
-  programme.** Garbage in, garbage out is not a caveat to the business case; it is the business case's first
-  line item.
+1. **Setup.** Post-remediation first-pass confidence **93 %**, so 7 % fall to exceptions.
+2. **Formula.** `exceptions per month = lines × exception rate`.
+3. **Substitution.** `18,000 × 7 % = 18,000 × 0.07`.
+4. **Result.** **1,260 exceptions a month** — down from 2,700.
+5. **Interpretation.** The remediation more than halved the exception load, and it did so before any further AI
+   spend. The lesson the team internalised is the lesson of 13.2.1: **the unglamorous data work *was* the AI
+   programme.** Garbage in, garbage out is not a caveat to the business case; it is the business case's first
+   line item.
 
 ### The first governed pilot — month-end (13.5.4)
 
@@ -1808,19 +1808,19 @@ the portfolio's central reporting shortened from **6 days to 3** across the five
 value case was built the honest way (13.7.3) — measured time, loaded rates, and the *full* cost of tooling
 **and** governance netted against it:
 
-- **Setup.** Close shortened from 6 days to 3 (3 days saved) across a five-person team; 8-hour days; loaded
-  cost **USD 80/hour**. Tooling plus governance and verification effort: **USD 70,000 a year**.
-- **Formula.** `monthly saving = days saved × staff × hours × rate`; `annual saving = monthly × 12`;
-  `net = annual saving − annual cost`.
-- **Substitution.** `3 × 5 × 8 × 80 = 9,600` per month; `9,600 × 12 = 115,200`; `115,200 − 70,000`.
-- **Result.** **USD 115,200 a year** gross; **net ≈ USD 45,200 a year**.
-- **Interpretation.** A real but modest net figure — deliberately stated without inflation. The team resisted
-  the temptation to claim the gross number and hide the governance cost: the USD 70,000 includes the licences
-  *and* the human verification the governance model requires, because a saving that evaporates when you price
-  the checking is not a saving (13.7.3). The unpriced benefit sat alongside, honestly labelled as unpriced:
-  reporting landing **three days earlier** every month, which moved decision meetings forward and gave every
-  downstream forecast an extra three days of currency. "We use AI" was never the metric; a faster, *verified*
-  close was.
+1. **Setup.** Close shortened from 6 days to 3 (3 days saved) across a five-person team; 8-hour days; loaded
+   cost **USD 80/hour**. Tooling plus governance and verification effort: **USD 70,000 a year**.
+2. **Formula.** `monthly saving = days saved × staff × hours × rate`; `annual saving = monthly × 12`;
+   `net = annual saving − annual cost`.
+3. **Substitution.** `3 × 5 × 8 × 80 = 9,600` per month; `9,600 × 12 = 115,200`; `115,200 − 70,000`.
+4. **Result.** **USD 115,200 a year** gross; **net ≈ USD 45,200 a year**.
+5. **Interpretation.** A real but modest net figure — deliberately stated without inflation. The team resisted
+   the temptation to claim the gross number and hide the governance cost: the USD 70,000 includes the licences
+   *and* the human verification the governance model requires, because a saving that evaporates when you price
+   the checking is not a saving (13.7.3). The unpriced benefit sat alongside, honestly labelled as unpriced:
+   reporting landing **three days earlier** every month, which moved decision meetings forward and gave every
+   downstream forecast an extra three days of currency. "We use AI" was never the metric; a faster, *verified*
+   close was.
 
 ### The second pilot — predictive EAC (13.5.3)
 
@@ -1927,16 +1927,16 @@ standards flagged; and two rules are mandatory — every answer **cites the clau
 the corpus does not contain the answer the assistant says **"not found"** rather than improvising (13.3.3b).
 The value case, measured over a quarter and stated the honest 13.7.3 way:
 
-- **Setup.** **450** retrieval queries a month; average time to a verified answer falls from 22 to 6
-  minutes — **16 minutes saved** per query; loaded rate **USD 95/hour**. Tooling plus curation and
-  governance effort: **USD 60,000 a year**.
-- **Formula.** `annual saving = queries × minutes saved ÷ 60 × rate × 12`; `net = saving − full cost`.
-- **Substitution.** `450 × 16 = 7,200` minutes `= 120` hours a month; `120 × 95 = 11,400`;
-  `11,400 × 12 = 136,800`; `136,800 − 60,000`.
-- **Result.** **USD 136,800 a year** gross; **net ≈ USD 76,800 a year**.
-- **Interpretation.** Real, modest, and honestly netted against the curation the category demands — a stale
-  corpus produces confidently outdated answers, so keeping it current is part of the price of the saving,
-  not an overhead to hide.
+1. **Setup.** **450** retrieval queries a month; average time to a verified answer falls from 22 to 6
+   minutes — **16 minutes saved** per query; loaded rate **USD 95/hour**. Tooling plus curation and
+   governance effort: **USD 60,000 a year**.
+2. **Formula.** `annual saving = queries × minutes saved ÷ 60 × rate × 12`; `net = saving − full cost`.
+3. **Substitution.** `450 × 16 = 7,200` minutes `= 120` hours a month; `120 × 95 = 11,400`;
+   `11,400 × 12 = 136,800`; `136,800 − 60,000`.
+4. **Result.** **USD 136,800 a year** gross; **net ≈ USD 76,800 a year**.
+5. **Interpretation.** Real, modest, and honestly netted against the curation the category demands — a stale
+   corpus produces confidently outdated answers, so keeping it current is part of the price of the saving,
+   not an overhead to hide.
 
 ### The pilot that failed — and said so (KAs 13.2, 13.5.3, 13.7.3)
 
@@ -1953,15 +1953,15 @@ The post-mortem found nothing exotic — it found 13.2. The failure was **repres
 KA 13.1.2 states as the universal truth: a supervised model trained on unrepresentative history will
 confidently mislead.
 
-- **Setup.** **34** completed commissions spanning **6** service lines; the history covers boom years only,
-  and one sector (water) supplies nearly half the examples.
-- **Formula.** `examples per service line = projects ÷ service lines`.
-- **Substitution.** `34 ÷ 6 ≈ 5.7`.
-- **Result.** Fewer than **six examples per service line** — and zero examples of a down-cycle.
-- **Interpretation.** No supervised learner generalises from six examples of anything (13.1.2); the model
-  had memorised the water sector's good years and projected them onto everything else. The data-quality
-  dimensions of 13.2.2 were individually fine — accurate, complete, valid — and the dataset still could not
-  carry the use case, because representativeness is a property of coverage, not cleanliness.
+1. **Setup.** **34** completed commissions spanning **6** service lines; the history covers boom years only,
+   and one sector (water) supplies nearly half the examples.
+2. **Formula.** `examples per service line = projects ÷ service lines`.
+3. **Substitution.** `34 ÷ 6 ≈ 5.7`.
+4. **Result.** Fewer than **six examples per service line** — and zero examples of a down-cycle.
+5. **Interpretation.** No supervised learner generalises from six examples of anything (13.1.2); the model
+   had memorised the water sector's good years and projected them onto everything else. The data-quality
+   dimensions of 13.2.2 were individually fine — accurate, complete, valid — and the dataset still could not
+   carry the use case, because representativeness is a property of coverage, not cleanliness.
 
 What the firm did next is the teachable part. The pilot was **retired**, not quietly extended; the
 post-mortem was published internally with the 22 % figure in it; the assembled dataset — the first clean,
@@ -1984,22 +1984,22 @@ auto-coded **88 %** of lines confidently; tracing the exceptions showed dead and
 confusing the classifier, so the code list was cleaned *first* (the 13.2.1 lesson re-learned at small
 scale), lifting first-pass confidence to **94 %**.
 
-- **Setup.** 9,600 lines a week. Before: manual coding at 0.5 min/line. After: machine codes; humans work
-  the **6 %** exception queue at 2 min/line plus **4.8 hours** a week of sampling the high-confidence
-  population. Loaded rate **USD 75/hour**; tooling plus verification cost **USD 85,000 a year**;
-  50 working weeks.
-- **Formula.** `hours before = lines × 0.5 ÷ 60`; `hours after = (lines × 6 % × 2 ÷ 60) + sampling`;
-  `net = (hours saved × weeks × rate) − full cost`.
-- **Substitution.** Before: `9,600 × 0.5 ÷ 60 = 80` hours. After: `9,600 × 6 % = 576` lines;
-  `576 × 2 ÷ 60 = 19.2` hours; `19.2 + 4.8 = 24` hours. Saved: `80 − 24 = 56` hours a week;
-  `56 × 50 = 2,800` hours; `2,800 × 75 = 210,000`; `210,000 − 85,000`.
-- **Result.** **USD 210,000 a year** gross; **net ≈ USD 125,000 a year** — the programme's largest verified
-  saving.
-- **Interpretation.** The sampling line in the cost is not optional: coded time drives **client invoices**,
-  so the high-confidence population is audited on a cycle, and every code stream that bills a client gets
-  periodic human eyes (13.6.2 — a named professional stands behind the invoice, not the classifier). The
-  unpriced benefit is stated as unpriced: narratives coded the same day they are written, so WIP and
-  billing cut-off improve in ways the team saw but did not monetise.
+1. **Setup.** 9,600 lines a week. Before: manual coding at 0.5 min/line. After: machine codes; humans work
+   the **6 %** exception queue at 2 min/line plus **4.8 hours** a week of sampling the high-confidence
+   population. Loaded rate **USD 75/hour**; tooling plus verification cost **USD 85,000 a year**;
+   50 working weeks.
+2. **Formula.** `hours before = lines × 0.5 ÷ 60`; `hours after = (lines × 6 % × 2 ÷ 60) + sampling`;
+   `net = (hours saved × weeks × rate) − full cost`.
+3. **Substitution.** Before: `9,600 × 0.5 ÷ 60 = 80` hours. After: `9,600 × 6 % = 576` lines;
+   `576 × 2 ÷ 60 = 19.2` hours; `19.2 + 4.8 = 24` hours. Saved: `80 − 24 = 56` hours a week;
+   `56 × 50 = 2,800` hours; `2,800 × 75 = 210,000`; `210,000 − 85,000`.
+4. **Result.** **USD 210,000 a year** gross; **net ≈ USD 125,000 a year** — the programme's largest verified
+   saving.
+5. **Interpretation.** The sampling line in the cost is not optional: coded time drives **client invoices**,
+   so the high-confidence population is audited on a cycle, and every code stream that bills a client gets
+   periodic human eyes (13.6.2 — a named professional stands behind the invoice, not the classifier). The
+   unpriced benefit is stated as unpriced: narratives coded the same day they are written, so WIP and
+   billing cut-off improve in ways the team saw but did not monetise.
 
 Set side by side, the two pilots taught the firm the domain's data lesson better than any course: the same
 technique family failed at 34 examples and succeeded at 480,000. **The data decided; the tool never had a

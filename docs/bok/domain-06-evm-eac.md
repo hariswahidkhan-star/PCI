@@ -91,35 +91,35 @@ Advanced 6.A.1) applies to how much of the baseline is allowed to earn itself.
 
 **Worked example 6.1.2b — aggregating earned value across a portfolio of work packages.**
 
-- **Setup.** A project has four work packages, each with its own earning rule fixed in advance. At the data
-  date:
+1. **Setup.** A project has four work packages, each with its own earning rule fixed in advance. At the data
+   date:
 
-  | Work package | Budget | Earning rule | Status | `EV` |
-  |---|---:|---|---|---:|
-  | A | 100,000 | 0/100 | complete | 100,000 |
-  | B | 200,000 | percent complete | 60 % | 120,000 |
-  | C | 150,000 | units | 300/500 units | 90,000 |
-  | D | 50,000 | 0/100 | not started | 0 |
-  | **Total** | **500,000** | | | **310,000** |
+   | Work package | Budget | Earning rule | Status | `EV` |
+   |---|---:|---|---|---:|
+   | A | 100,000 | 0/100 | complete | 100,000 |
+   | B | 200,000 | percent complete | 60 % | 120,000 |
+   | C | 150,000 | units | 300/500 units | 90,000 |
+   | D | 50,000 | 0/100 | not started | 0 |
+   | **Total** | **500,000** | | | **310,000** |
 
-  The plan and the cost ledger give, per package:
+   The plan and the cost ledger give, per package:
 
-  | Work package | `PV` | `AC` |
-  |---|---:|---:|
-  | A | 100,000 | 105,000 |
-  | B | 150,000 | 130,000 |
-  | C | 120,000 | 100,000 |
-  | D | 30,000 | 0 |
-  | **Total** | **400,000** | **335,000** |
+   | Work package | `PV` | `AC` |
+   |---|---:|---:|
+   | A | 100,000 | 105,000 |
+   | B | 150,000 | 130,000 |
+   | C | 120,000 | 100,000 |
+   | D | 30,000 | 0 |
+   | **Total** | **400,000** | **335,000** |
 
-- **Formula.** `CPI = EV / AC`; `SPI = EV / PV` — computed on the **aggregated** `EV`, `AC` and `PV`.
-- **Substitution.** `CPI = 310,000 / 335,000`; `SPI = 310,000 / 400,000`.
-- **Result.** `CPI` = **0.93**; `SPI` = **0.78**.
-- **Interpretation.** Earned value is measured **bottom-up** at the work-package level, each package under its
-  own fixed earning rule, and then aggregated — the project-level `CPI` and `SPI` are **rollups**. A rollup
-  can hide a struggling package: here package C has earned 90,000 against a `PV` of 120,000 and is well behind
-  its own plan, a detail invisible in the single project `SPI` of 0.78. Always read the control-account detail
-  beneath the aggregate (Domain 5, KA 5.3).
+2. **Formula.** `CPI = EV / AC`; `SPI = EV / PV` — computed on the **aggregated** `EV`, `AC` and `PV`.
+3. **Substitution.** `CPI = 310,000 / 335,000`; `SPI = 310,000 / 400,000`.
+4. **Result.** `CPI` = **0.93**; `SPI` = **0.78**.
+5. **Interpretation.** Earned value is measured **bottom-up** at the work-package level, each package under its
+   own fixed earning rule, and then aggregated — the project-level `CPI` and `SPI` are **rollups**. A rollup
+   can hide a struggling package: here package C has earned 90,000 against a `PV` of 120,000 and is well behind
+   its own plan, a detail invisible in the single project `SPI` of 0.78. Always read the control-account detail
+   beneath the aggregate (Domain 5, KA 5.3).
 
 **Physical versus cost percent complete.** Two percentages share the name "percent complete" and answer
 different questions. **Physical percent complete** is measured from the work itself — quantities installed,
@@ -420,18 +420,18 @@ The methods bracket the outcome from **1.05m to 1.15m** — a USD 100,000 range 
 
 **Worked example 6.3.2b — a bottom-up ETC (method d).**
 
-- **Setup.** The master project (`BAC` = 1,000,000; `AC` = 530,000; `EV` = 480,000). The remaining work is a
-  **commissioning phase** quite unlike the work performed to date, so performance to date is **not
-  representative** of the remainder — the team re-estimates the remaining work from the bottom up. The fresh
-  bottom-up estimate of the commissioning work gives `ETC` = **610,000**.
-- **Formula.** `EAC = AC + ETC`.
-- **Substitution.** `EAC = 530,000 + 610,000`.
-- **Result.** `EAC` = **USD 1,140,000**.
-- **Interpretation.** Method (d) is chosen precisely because the formula methods — which all **extrapolate
-  past performance** — would misforecast a phase of different work. The bottom-up `EAC` of 1,140,000 happens
-  to sit within the range of the formula methods (1,050,000 / 1,104,167 / 1,152,010), but it rests on a
-  **re-estimate of the work ahead**, not an extrapolation of the work behind — a materially stronger basis
-  when the character of the remaining work has changed.
+1. **Setup.** The master project (`BAC` = 1,000,000; `AC` = 530,000; `EV` = 480,000). The remaining work is a
+   **commissioning phase** quite unlike the work performed to date, so performance to date is **not
+   representative** of the remainder — the team re-estimates the remaining work from the bottom up. The fresh
+   bottom-up estimate of the commissioning work gives `ETC` = **610,000**.
+2. **Formula.** `EAC = AC + ETC`.
+3. **Substitution.** `EAC = 530,000 + 610,000`.
+4. **Result.** `EAC` = **USD 1,140,000**.
+5. **Interpretation.** Method (d) is chosen precisely because the formula methods — which all **extrapolate
+   past performance** — would misforecast a phase of different work. The bottom-up `EAC` of 1,140,000 happens
+   to sit within the range of the formula methods (1,050,000 / 1,104,167 / 1,152,010), but it rests on a
+   **re-estimate of the work ahead**, not an extrapolation of the work behind — a materially stronger basis
+   when the character of the remaining work has changed.
 
 ### 6.3.3 Selecting a method
 
@@ -580,18 +580,18 @@ month), so `ES < AT` and `SPI(t) < 1` — confirming the delay in time terms.
 
 **Worked example 6.4.3b — computing earned schedule.**
 
-- **Setup.** The master project at the end of Month 5, so actual time `AT` = 5 months; `EV` = 480,000. The
-  Planned Value S-curve (Domain 3) has cumulative `PV` of **360,000 at Month 4** and **520,000 at Month 5**.
-  `ES` is the time on the baseline at which cumulative `PV` equals the current `EV` (480,000) — it lies
-  between Month 4 (360,000) and Month 5 (520,000).
-- **Formula.** Interpolate `ES` between the bracketing months; then `SV(t) = ES − AT` and `SPI(t) = ES / AT`.
-- **Substitution.** `ES = 4 + (480,000 − 360,000) / (520,000 − 360,000) = 4 + 120,000/160,000 = 4 + 0.75`.
-- **Result.** `ES` = **4.75 months**; `SV(t) = 4.75 − 5 = ` **(0.25) months** (about a quarter-month behind);
-  `SPI(t) = 4.75 / 5 = ` **0.95**.
-- **Interpretation.** Compare with the cost-based `SPI = EV / PV = 480,000 / 520,000 = ` **0.92**: earned
-  schedule expresses the same lateness in **time** (~0.25 month behind) rather than in currency, and — unlike
-  the cost-based index — `SPI(t)` will not drift to 1.0 as the project completes, so it keeps reporting the
-  delay meaningfully to the end.
+1. **Setup.** The master project at the end of Month 5, so actual time `AT` = 5 months; `EV` = 480,000. The
+   Planned Value S-curve (Domain 3) has cumulative `PV` of **360,000 at Month 4** and **520,000 at Month 5**.
+   `ES` is the time on the baseline at which cumulative `PV` equals the current `EV` (480,000) — it lies
+   between Month 4 (360,000) and Month 5 (520,000).
+2. **Formula.** Interpolate `ES` between the bracketing months; then `SV(t) = ES − AT` and `SPI(t) = ES / AT`.
+3. **Substitution.** `ES = 4 + (480,000 − 360,000) / (520,000 − 360,000) = 4 + 120,000/160,000 = 4 + 0.75`.
+4. **Result.** `ES` = **4.75 months**; `SV(t) = 4.75 − 5 = ` **(0.25) months** (about a quarter-month behind);
+   `SPI(t) = 4.75 / 5 = ` **0.95**.
+5. **Interpretation.** Compare with the cost-based `SPI = EV / PV = 480,000 / 520,000 = ` **0.92**: earned
+   schedule expresses the same lateness in **time** (~0.25 month behind) rather than in currency, and — unlike
+   the cost-based index — `SPI(t)` will not drift to 1.0 as the project completes, so it keeps reporting the
+   delay meaningfully to the end.
 
 ### 6.4.4 EVM and adaptive delivery
 
@@ -903,23 +903,23 @@ integrated picture (KA 6.1.3) is already uncomfortable: `EV` sits below `PV` (be
 
 ### Variances and indices (KA 6.2)
 
-- **Setup.** `PV` = 32,000,000; `EV` = 28,800,000; `AC` = 31,300,000; `BAC` = 80,000,000.
-- **Formula.** `CV = EV − AC`; `SV = EV − PV`; `CPI = EV / AC`; `SPI = EV / PV`;
-  `TCPI (to BAC) = (BAC − EV) / (BAC − AC)`.
-- **Substitution.** `CV = 28,800,000 − 31,300,000`; `SV = 28,800,000 − 32,000,000`;
-  `CPI = 28,800,000 / 31,300,000`; `SPI = 28,800,000 / 32,000,000`;
-  `TCPI = (80,000,000 − 28,800,000) / (80,000,000 − 31,300,000) = 51,200,000 / 48,700,000`.
-- **Result.** `CV` = **(USD 2,500,000)**; `SV` = **(USD 3,200,000)**; `CPI` = **0.92**; `SPI` = **0.90**;
-  `TCPI (to BAC)` = **1.05**.
-- **Interpretation.** The programme is **over cost and behind schedule** — the most serious quadrant of the
-  KA 6.2.4 table. For every dollar spent, USD 0.92 of budgeted value is being earned; work is progressing at
-  90 % of the planned rate. The `TCPI` is the reality check: to finish within the 80,000,000 appropriation,
-  the remaining work must run at a cost efficiency of **1.05** against the **0.92** actually achieved — a
-  swing of roughly **14 %**, sustained across eighteen months of remaining work. That is not impossible, but
-  it does not happen by drift or by hoping the average improves; it happens only through a **specific,
-  credible intervention** with a named cause, an owner and a date (compare KA 6.4.5). Absent such an
-  intervention, the honest position is that the `BAC` is no longer a credible forecast of the outcome, and
-  the analysis must move to the `EAC` family.
+1. **Setup.** `PV` = 32,000,000; `EV` = 28,800,000; `AC` = 31,300,000; `BAC` = 80,000,000.
+2. **Formula.** `CV = EV − AC`; `SV = EV − PV`; `CPI = EV / AC`; `SPI = EV / PV`;
+   `TCPI (to BAC) = (BAC − EV) / (BAC − AC)`.
+3. **Substitution.** `CV = 28,800,000 − 31,300,000`; `SV = 28,800,000 − 32,000,000`;
+   `CPI = 28,800,000 / 31,300,000`; `SPI = 28,800,000 / 32,000,000`;
+   `TCPI = (80,000,000 − 28,800,000) / (80,000,000 − 31,300,000) = 51,200,000 / 48,700,000`.
+4. **Result.** `CV` = **(USD 2,500,000)**; `SV` = **(USD 3,200,000)**; `CPI` = **0.92**; `SPI` = **0.90**;
+   `TCPI (to BAC)` = **1.05**.
+5. **Interpretation.** The programme is **over cost and behind schedule** — the most serious quadrant of the
+   KA 6.2.4 table. For every dollar spent, USD 0.92 of budgeted value is being earned; work is progressing at
+   90 % of the planned rate. The `TCPI` is the reality check: to finish within the 80,000,000 appropriation,
+   the remaining work must run at a cost efficiency of **1.05** against the **0.92** actually achieved — a
+   swing of roughly **14 %**, sustained across eighteen months of remaining work. That is not impossible, but
+   it does not happen by drift or by hoping the average improves; it happens only through a **specific,
+   credible intervention** with a named cause, an owner and a date (compare KA 6.4.5). Absent such an
+   intervention, the honest position is that the `BAC` is no longer a credible forecast of the outcome, and
+   the analysis must move to the `EAC` family.
 
 ### The EAC fan (KA 6.3)
 
@@ -964,18 +964,18 @@ team therefore also computes the position in **time**. The baseline S-curve show
 **26,000,000 at Month 10** and **29,000,000 at Month 11** — so the plan expected the current `EV` of
 28,800,000 to have been earned between Months 10 and 11.
 
-- **Setup.** Actual time `AT` = 12 months; `EV` = 28,800,000; cumulative `PV` = 26,000,000 at Month 10 and
-  29,000,000 at Month 11.
-- **Formula.** Interpolate `ES` between the bracketing months; then `SV(t) = ES − AT` and `SPI(t) = ES / AT`.
-- **Substitution.** `ES = 10 + (28,800,000 − 26,000,000) / (29,000,000 − 26,000,000) = 10 + 2,800,000 /
-  3,000,000 = 10 + 0.93`.
-- **Result.** `ES` = **10.93 months**; `SV(t) = 10.93 − 12 = ` **(1.07) months**; `SPI(t) = 10.93 / 12 = `
-  **0.91**.
-- **Interpretation.** The programme is about **a month behind in time terms** — the work done by Month 12 is
-  the work the baseline expected shortly before Month 11. On a 30-month schedule that is material, and unlike
-  the cost-based `SPI`, `SPI(t)` **stays honest to the end** (KA 6.4.2–6.4.3): it will keep reporting the
-  lateness meaningfully through the back half of the programme, when the cost-based index would be converging
-  to 1.0 and quietly going blind.
+1. **Setup.** Actual time `AT` = 12 months; `EV` = 28,800,000; cumulative `PV` = 26,000,000 at Month 10 and
+   29,000,000 at Month 11.
+2. **Formula.** Interpolate `ES` between the bracketing months; then `SV(t) = ES − AT` and `SPI(t) = ES / AT`.
+3. **Substitution.** `ES = 10 + (28,800,000 − 26,000,000) / (29,000,000 − 26,000,000) = 10 + 2,800,000 /
+   3,000,000 = 10 + 0.93`.
+4. **Result.** `ES` = **10.93 months**; `SV(t) = 10.93 − 12 = ` **(1.07) months**; `SPI(t) = 10.93 / 12 = `
+   **0.91**.
+5. **Interpretation.** The programme is about **a month behind in time terms** — the work done by Month 12 is
+   the work the baseline expected shortly before Month 11. On a 30-month schedule that is material, and unlike
+   the cost-based `SPI`, `SPI(t)` **stays honest to the end** (KA 6.4.2–6.4.3): it will keep reporting the
+   lateness meaningfully through the back half of the programme, when the cost-based index would be converging
+   to 1.0 and quietly going blind.
 
 ### The critical-path cross-check (KA 6.4.2)
 
@@ -1079,25 +1079,25 @@ dollar. A review that read only the cumulative column would understate how bad t
 
 **The full status at Month 18.**
 
-- **Setup.** `PV` = 58,000,000; `EV` = 55,200,000; `AC` = 60,000,000; `BAC` = 120,000,000.
-- **Formula.** `CV = EV − AC`; `SV = EV − PV`; `CPI = EV / AC`; `SPI = EV / PV`.
-- **Substitution.** `CV = 55,200,000 − 60,000,000`; `SV = 55,200,000 − 58,000,000`;
-  `CPI = 55,200,000 / 60,000,000`; `SPI = 55,200,000 / 58,000,000`.
-- **Result.** `CV` = **(USD 4,800,000)**; `SV` = **(USD 2,800,000)**; `CPI` = **0.92**; `SPI` = **0.95**.
-- **Interpretation.** Over cost and modestly behind schedule — and, per the trend table, getting worse at an
-  accelerating rate. The question the review must answer is no longer "what is the variance?" but "is the
-  `BAC` still credible?" — which is the `TCPI`'s question.
+1. **Setup.** `PV` = 58,000,000; `EV` = 55,200,000; `AC` = 60,000,000; `BAC` = 120,000,000.
+2. **Formula.** `CV = EV − AC`; `SV = EV − PV`; `CPI = EV / AC`; `SPI = EV / PV`.
+3. **Substitution.** `CV = 55,200,000 − 60,000,000`; `SV = 55,200,000 − 58,000,000`;
+   `CPI = 55,200,000 / 60,000,000`; `SPI = 55,200,000 / 58,000,000`.
+4. **Result.** `CV` = **(USD 4,800,000)**; `SV` = **(USD 2,800,000)**; `CPI` = **0.92**; `SPI` = **0.95**.
+5. **Interpretation.** Over cost and modestly behind schedule — and, per the trend table, getting worse at an
+   accelerating rate. The question the review must answer is no longer "what is the variance?" but "is the
+   `BAC` still credible?" — which is the `TCPI`'s question.
 
 ### The TCPI conversation with the yard director (KA 6.2.3)
 
-- **Setup.** `BAC` = 120,000,000; `EV` = 55,200,000; `AC` = 60,000,000.
-- **Formula.** `TCPI (to BAC) = (BAC − EV) / (BAC − AC)`.
-- **Substitution.** `TCPI = (120,000,000 − 55,200,000) / (120,000,000 − 60,000,000) = 64,800,000 /
-  60,000,000`.
-- **Result.** `TCPI` = **1.08**.
-- **Interpretation.** To land on the 120,000,000, the remaining USD 64,800,000 of work must be bought for
-  USD 60,000,000 — a sustained efficiency of 1.08 against 0.92 achieved cumulatively and **0.70 in the
-  latest period**: roughly a **17 %** swing, held for eighteen months.
+1. **Setup.** `BAC` = 120,000,000; `EV` = 55,200,000; `AC` = 60,000,000.
+2. **Formula.** `TCPI (to BAC) = (BAC − EV) / (BAC − AC)`.
+3. **Substitution.** `TCPI = (120,000,000 − 55,200,000) / (120,000,000 − 60,000,000) = 64,800,000 /
+   60,000,000`.
+4. **Result.** `TCPI` = **1.08**.
+5. **Interpretation.** To land on the 120,000,000, the remaining USD 64,800,000 of work must be bought for
+   USD 60,000,000 — a sustained efficiency of 1.08 against 0.92 achieved cumulatively and **0.70 in the
+   latest period**: roughly a **17 %** swing, held for eighteen months.
 
 This arithmetic reframes the director's "outfitting will claw it back". The variance analysis (Domain 4)
 shows the productivity shortfall is **concentrated in outfitting** — a regional shortage of pipefitters and
