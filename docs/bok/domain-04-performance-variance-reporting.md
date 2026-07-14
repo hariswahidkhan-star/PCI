@@ -744,6 +744,50 @@ the professional core of this domain.
 
 ---
 
+## Executive perspective — Domain 4
+
+**What the executive must hold onto.** **Variance without cause is noise**: a total variance means nothing
+until it is measured against a flexed budget (4.2.2), decomposed into price/rate and quantity/efficiency
+components, and regrouped by cause with an owner and an action — anything less is a number to worry about,
+not a decision to take. And **leading indicators buy the time that lagging ones cannot** (4.1.2): by the
+time `CPI` falls, the cost is spent, so the cheapest point of intervention is always before the variance
+exists. Management by exception (4.1.3) is how the board's scarce attention gets spent where it changes
+outcomes.
+
+**Six questions to ask from the chair.**
+
+1. Was this variance measured against a flexed budget, or is the volume of work contaminating the number?
+2. What are the causes, in proportions that reconcile to the total — and who owns the action on each?
+3. Which leading indicator would have shown this a month earlier, and is it on the panel with a trigger now?
+4. What does the trend say — is this a single red month, or the third of three?
+5. What sits behind this favourable variance — a genuine saving, skipped scope, or cost deferred into next
+   quarter?
+6. What decision is this report asking us to take — and if none, why is it on the agenda?
+
+**The traps at board level.**
+
+- **Reading a favourable variance as good news.** A favourable cost or efficiency variance may be corners
+  cut — a quality liability that returns as rework — while an adverse one may be the right decision, such as
+  accelerating to protect a critical milestone; sign alone tells a board nothing (4.2.5).
+- **The snapshot instead of the trend.** A single red month treated as a crisis, or a slow drift that stays
+  just inside tolerance ignored for a year — thresholds catch levels, but only trend reporting catches
+  direction.
+- **The pack as reassurance.** Forty green pages, gameable KPIs and dashboards with no decision attached
+  bury the one entry that matters; volume of reporting is not quality of control (4.3).
+- **Persuasive pictures.** Truncated axes, unanchored dual axes and cherry-picked windows can make the same
+  data tell opposite stories; a board that never questions the chart is delegating its judgement to the
+  chart-maker (4.4.2).
+
+**What good looks like.** The board receives a short, exception-driven pack: an integrated dashboard with
+RAG status *and* trend, and an exception report in which every out-of-tolerance entry is causal, quantified,
+actioned, owned and dated — the CA-07 pattern of the Domain 4 case study — rather than pages of undifferentiated
+green. A leading-indicator panel sits beside the lagging measures, with amber triggers that escalate before
+cost lands. Narratives pair numbers with cause, forecast and action, and include the team's own misses;
+charts answer the question asked and distort nothing. Above all, meetings end in decisions, because that is
+what the reporting was designed for (4.3.1).
+
+---
+
 ## Domain 4 summary
 
 Performance management makes measurement matter: KPIs paired with targets, thresholds and tolerances;

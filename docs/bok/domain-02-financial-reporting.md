@@ -1241,6 +1241,52 @@ for (13.5.10): **AI proposes, the professional disposes.**
 
 ---
 
+## Executive perspective — Domain 2
+
+**What the executive must hold onto.** Revenue on a long contract is **manufactured, not observed**: under
+over-time cost-to-cost recognition (2.2.6) it emerges from a ratio whose denominator is a forecast — the
+estimate of total cost — so the revenue line the board reads rests on controls artefacts, and its
+assumptions are the board's business. And a **loss known is a loss booked now**: the onerous-contract test
+recognises the entire remaining loss immediately, not as the work proceeds — the trigger level is knowable
+in advance, so a surprise loss is a monitoring failure before it is an accounting event.
+
+**Six questions to ask from the chair.**
+
+1. Which recognition method drives each major contract's revenue, and what judgement made it over time
+   rather than at a point in time?
+2. What total-cost estimate sits under the cost-to-cost ratio, and when was it last agreed to the controls
+   team's EAC?
+3. How much variable consideration is inside reported revenue, and how has the constraint been applied
+   (2.2.4)?
+4. How far is each contract's forecast cost from its onerous trigger, and who is watching the gap rather
+   than the sign?
+5. Which contract assets are growing month on month — where is billing lagging the work we are financing
+   (2.2.7)?
+6. Where do this pack's management numbers differ from the statutory accounts, and can we see the
+   reconciliation (2.5)?
+
+**The traps at board level.**
+
+- **An estimate revision read as performance.** A margin step up — or down — in the period a total-cost
+  estimate is revised is a prospective catch-up, not a change in how the work is going; the question is what
+  changed in the estimate, not who to congratulate.
+- **Suspiciously smooth margins.** A troubled contract whose reported margin never moves usually means the
+  EAC is not being revised; on a percentage-of-completion contract, stability can be the warning sign.
+- **Contract-asset growth read as strength.** "Revenue ahead of billing" is unbilled work-in-progress the
+  business is financing — working capital tied up, and an early warning for the cash-flow forecast.
+- **The onerous test treated as a year-end formality.** By the time the auditors ask, the loss has already
+  happened; the moment the forecast margin turns negative, the whole remaining loss lands at once.
+
+**What good looks like.** Each significant contract has its judgements documented and standing: the distinct
+performance obligations, the over-time criterion relied on, the standalone selling prices used to allocate,
+and the variable-consideration positions with the constraint applied. The percentage-of-completion schedule
+is reconciled every period to the cost ledger and the current EAC — the checklist discipline of the Domain 2
+case study — and contract asset and liability trends appear on the management dashboard, not only in the
+statutory notes. The management-to-statutory reconciliation is routine and boring, and year-end brings no
+revenue or loss-recognition surprises, because the gaps that produce them were being watched all year.
+
+---
+
 ## Domain 2 summary
 
 Financial reporting exists to give external users decision-useful information — relevant and faithfully

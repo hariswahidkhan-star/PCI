@@ -907,6 +907,51 @@ conversation. **AI proposes, the professional disposes.**
 
 ---
 
+## Executive perspective — Domain 3
+
+**What the executive must hold onto.** An estimate is a **range that narrows as definition matures** (3.2.1);
+a single-point figure quoted without its class and accuracy range is a risk decision in disguise, and a
+budget approved without the matching scope and risk decisions is a future overrun with a signature on it.
+Contingency sits **inside** the baseline for identified risk; management reserve sits **outside** it, and its
+release is the sponsor's decision, not the project's (3.1.4). And the **funding trough is as
+decision-relevant as the profit line**: a profitable project can still be unfunded, and the peak funding
+requirement (3.5.3) is a number the board must arrange, not merely note.
+
+**Six questions to ask from the chair.**
+
+1. What class is this estimate, what accuracy range comes with it, and where is the basis of estimate?
+2. What confidence level set the contingency, and which register risks is it funded to cover?
+3. Does the phasing of this baseline come from the schedule, or was the S-curve spread by formula (3.3)?
+4. Which EAC method is this forecast built on, and why is that assumption right for the cause of the
+   variance?
+5. How much contingency has been drawn, against which risks — and at what point does the shortfall come to
+   us as a re-baselining case rather than a silent overspend?
+6. What is the peak funding requirement, in which month does it bite, and does the facility headroom cover
+   the downside scenario?
+
+**The traps at board level.**
+
+- **Treating a Class 5 estimate as a commitment.** An early concept figure carries a range of roughly −30 %
+  to +50 %; quoted as a promise, it manufactures "overruns" that were never overruns — merely maturity being
+  ignored.
+- **Reserves misread in both directions.** Contingency draw-down is normal — it was funded because risks
+  were expected to materialise — while management reserve is not the project's cushion; alarm at legitimate
+  draws and comfort at silent ones are equally wrong.
+- **The forecast that never moves.** An EAC held at budget month after month, then corrected at the end, was
+  never a forecast; boards should be more suspicious of a static EAC than of an honest deterioration.
+- **Reading profit and ignoring cash.** Approving the cost forecast without re-confirming the funding trough
+  invites the profitable-but-unfunded trap — cost and cash forecasts must move together.
+
+**What good looks like.** Every estimate arrives with its class, range and a basis of estimate that states
+scope, method, rates, assumptions and exclusions (3.2.3). The baseline is time-phased from the schedule,
+change-controlled, and never silently reshaped; contingency draws are logged against specific register
+entries, and an exhausted contingency triggers a visible sponsor conversation, not a smeared overspend. The
+forecast is re-produced every period as a rolling forecast, with the EAC method defended from the trend
+rather than picked mechanically (3.4), and the cash-flow forecast and peak funding requirement are reported
+in the same review as the cost position.
+
+---
+
 ## Domain 3 summary
 
 Budgeting turns a plan into an authorised, time-phased **cost baseline** whose total is the `BAC`, with two

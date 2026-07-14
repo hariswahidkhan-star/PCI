@@ -1390,6 +1390,45 @@ this close, with the professional owning the service dates, the coding rules and
 
 ---
 
+## Executive perspective — Domain 1
+
+**What the executive must hold onto.** Two ideas in this domain cannot be delegated. First, **profit is a
+judgement-laden construct**: the month's margin depends on accruals, cut-off calls and provision decisions
+someone made — and **profit is not cash** (1.2.6). Second, the **ledger's integrity is the foundation of
+every number the board sees**: double-entry, the trial balance, reconciliation and cost coding (KA 1.5) are
+not clerical hygiene but the reason a reported margin can be believed at all — a single miscode corrupts two
+projects' margins at once.
+
+**Six questions to ask from the chair.**
+
+1. What accruals are in this month's number, and what would the margin be without them?
+2. When was the cost ledger last reconciled to the project reports, and what unexplained differences remain?
+3. Were provisions and onerous contracts actively considered this period, or is the nil an unconsidered nil?
+4. What is the gap between this month's profit and its cash movement, and what explains it?
+5. Who signed off the cut-off — and how much of the margin would move if service dates slipped a week?
+6. Are miscodes corrected at source before reports are cut, or reclassified after the error has propagated?
+
+**The traps at board level.**
+
+- **Profit/cash conflation.** A profitable month is read as a funded one; the accrual basis guarantees the
+  two diverge, and only the cash-flow statement (1.2.3) says by how much.
+- **A balanced trial balance read as assurance.** Arithmetic balance cannot see omitted, duplicated or
+  miscoded entries (1.1.4); only reconciliation — bank, ledger-to-report, code-to-WBS — closes those blind
+  spots, and a board that never asks about reconciliations is trusting balance alone.
+- **A margin that is a timing artefact.** A "good month" manufactured by unbooked subcontractor and plant
+  accruals (1.3.5) reverses in the next period — the flattering number is borrowed, not earned.
+- **The unconsidered nil.** No provision on the face of the accounts is read as no exposure; a considered
+  nil and an unconsidered nil look identical and are entirely different in substance (1.4).
+
+**What good looks like.** The month-end close runs to a fixed timetable and produces a documented accrual
+pack — each accrual sourced to a delivery record or valuation, reviewed and reversed on schedule — with
+bank and ledger reconciliations showing explained timing differences only. Cost codes map one-for-one to
+the WBS and control accounts, so aggregation is automatic and miscodes are caught and corrected at source.
+The pack the board receives carries a short decision-ready narrative that states the accrual content of the
+margin, and the provision review is minuted even when — especially when — the answer is nil.
+
+---
+
 ## Domain 1 summary
 
 The accounting model is one identity — `A = L + E` — recorded from both sides (double-entry), producing four
