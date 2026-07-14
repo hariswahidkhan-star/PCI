@@ -160,6 +160,26 @@ not finished), `EV` is:
 *Rationale:* 50/50 earns 50 % on start — **50,000** — regardless of the 40 % physical progress. A is 0/100; B
 is percent-complete; D is complete.
 
+**MCQ 6.1-C `[6.1.2 · Application]`** A work package with a budget of USD 250,000 earns under the **units
+completed** rule. At the data date **600 of 800 units** are done. `EV` is:
+- A. USD 150,000
+- B. USD 187,500 ✅
+- C. USD 125,000
+- D. USD 250,000
+
+*Rationale:* `EV = (600/800) × 250,000 = 0.75 × 250,000 = 187,500`. A uses a wrong denominator of 1,000 units
+(60 %); C is the 50/50 rule's start credit; D would require all units complete.
+
+**MCQ 6.1-D `[6.1.3 · Analysis]`** At the data date a project shows `EV` **above** `PV` but `AC` **above**
+`EV`. The integrated picture is:
+- A. Behind schedule and over cost.
+- B. Ahead of schedule but over cost. ✅
+- C. Ahead of schedule and under cost.
+- D. Behind schedule but under cost.
+
+*Rationale:* `EV > PV` means more work done than planned (ahead of schedule); `AC > EV` means the work cost
+more than its budgeted value (over cost). A reverses both reads; C and D each misread one of the two gaps.
+
 ### Self-check — KA 6.1
 
 1. Why must `EV` be measured at budget rather than actual cost? *(So it is comparable to `PV` for schedule and
@@ -277,6 +297,28 @@ itself imply an `EV` error.
 
 *Rationale:* `SV = EV − PV = 480,000 − 520,000 = (40,000)` — behind schedule. A has the wrong sign; C is the
 cost variance; D ignores the gap.
+
+**MCQ 6.2-D `[6.2.3 · Application]`** `BAC` = 2,000,000; `EV` = 900,000; `AC` = 1,000,000. The `TCPI` to meet
+the `BAC` is:
+- A. 0.90
+- B. 1.10 ✅
+- C. 0.91
+- D. 1.00
+
+*Rationale:* `TCPI(BAC) = (BAC − EV)/(BAC − AC) = (2,000,000 − 900,000)/(2,000,000 − 1,000,000) =
+1,100,000/1,000,000 = 1.10`. A is the `CPI` achieved to date (`900,000/1,000,000`); C inverts the `TCPI`
+ratio; D assumes remaining work runs exactly to budget.
+
+**MCQ 6.2-E `[6.2.4 · Analysis]`** A project reports `CPI` = 0.88 and `SPI` = 1.06. The most likely reading
+is:
+- A. The project is efficient but under-resourced.
+- B. The project is buying schedule with cost — accelerating at a cost premium. ✅
+- C. The project is over cost and behind schedule.
+- D. The `EV` must be inflated.
+
+*Rationale:* `CPI < 1` with `SPI > 1` is the over-cost-but-ahead quadrant, which often signals acceleration —
+schedule gained at a cost premium. A describes the `CPI > 1`, `SPI < 1` quadrant; C describes both indices
+below 1; D is a check reserved for results that look *too good* on both indices, not this pattern.
 
 ### Self-check — KA 6.2
 
@@ -422,6 +464,26 @@ above budget.
 *Rationale:* `VAC = BAC − EAC = 1,000,000 − 1,104,167 = (104,167)` — a projected overrun. A has the wrong sign;
 C is the current `CV`; D ignores the forecast.
 
+**MCQ 6.3-D `[6.3.2 · Application]`** `BAC` = 800,000; `EV` = 300,000; `AC` = 375,000. Assuming the cost
+variance **persists**, the `EAC` is:
+- A. USD 875,000
+- B. USD 1,000,000 ✅
+- C. USD 640,000
+- D. USD 800,000
+
+*Rationale:* A persisting variance calls for `EAC = BAC/CPI`; `CPI = 300,000/375,000 = 0.80`, so `EAC =
+800,000/0.80 = 1,000,000`. A is the budgeted-rate method (`AC + (BAC − EV)`), which assumes the variance was
+atypical; C multiplies by `CPI` instead of dividing; D simply restates the `BAC`.
+
+**MCQ 6.3-E `[6.3.1 · Recall]`** In the identity `EAC = AC + ETC`, the `ETC` is:
+- A. The total forecast cost of the project.
+- B. The forecast cost of the remaining work. ✅
+- C. The cost actually incurred to date.
+- D. The variance between budget and forecast at completion.
+
+*Rationale:* `ETC` is the estimate to complete — the forecast cost of the work still to be done; the methods
+differ only in how it is derived. A is the `EAC` itself; C is `AC`; D is the `VAC`.
+
 ### Self-check — KA 6.3
 
 1. State `EAC = AC + ETC` and the four ways to derive `ETC`. *(Budgeted rate; current `CPI`; `CPI × SPI`;
@@ -563,6 +625,28 @@ slipping. This illustrates that:
 
 *Rationale:* Aggregate `SPI` can be healthy while a critical activity slips, because EVM does not model logic/
 critical path — it must accompany CPM (Domain 10). It does not prove an `EV` error or on-time completion.
+
+**MCQ 6.4-D `[6.4.3 · Application]`** At the end of Month 8 (`AT` = 8), `EV` = 440,000. The baseline shows
+cumulative `PV` of 400,000 at Month 6 and 480,000 at Month 7. `ES` and `SV(t)` are:
+- A. `ES` = 6.5 months; `SV(t)` = (1.5) months ✅
+- B. `ES` = 6.5 months; `SV(t)` = +1.5 months
+- C. `ES` = 7.0 months; `SV(t)` = (1.0) month
+- D. `ES` = 6.0 months; `SV(t)` = (2.0) months
+
+*Rationale:* `ES = 6 + (440,000 − 400,000)/(480,000 − 400,000) = 6 + 40,000/80,000 = 6.5` months; `SV(t) = ES
+− AT = 6.5 − 8 = (1.5)` months behind. B has the wrong sign; C rounds `ES` up to the next month; D omits the
+interpolation entirely.
+
+**MCQ 6.4-E `[6.4.5 · Analysis]`** A programme's `CPI` moves from 0.96 at Month 3 to 0.91 at Month 6, with
+neither value catastrophic in isolation. The strongest warning signal is:
+- A. The Month 6 `CPI` level of 0.91 on its own.
+- B. The deteriorating period-on-period trend, which warrants escalation before a single bad month arrives. ✅
+- C. Nothing — both values round to about 1.
+- D. The Month 3 `CPI`, because earlier data is always more reliable.
+
+*Rationale:* A `CPI` sliding period on period matters more than its level — the trend is the earlier, stronger
+warning, prompting escalation and a specific recovery action. A and D each fixate on a single reading; C
+dismisses a real ~5-point deterioration.
 
 ### Self-check — KA 6.4
 

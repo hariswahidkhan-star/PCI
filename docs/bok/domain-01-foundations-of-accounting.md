@@ -290,6 +290,29 @@ trial balance *would* reveal.
 *Rationale:* `100,000 − 24,000 + 50,000 − 18,000 + 30,000 − 4,000 − 5,000 = 129,000`. A stops before the
 client receipt and later payments; C omits the rent payment; D ignores the equipment purchase.
 
+**MCQ 1.1-E `[1.1.1 · Application]`** A business controls assets of USD 250,000 and owes liabilities of
+USD 90,000. Its equity is:
+- A. USD 90,000
+- B. USD 160,000 ✅
+- C. USD 250,000
+- D. USD 340,000
+
+*Rationale:* Rearranging `A = L + E` gives `E = 250,000 − 90,000 = 160,000` — the owners' residual claim.
+A is the liabilities figure itself; C ignores the outside claims entirely; D adds liabilities to assets
+instead of deducting them.
+
+**MCQ 1.1-F `[1.1.4 · Analysis]`** A bank statement shows USD 86,500. Outstanding cheques total USD 5,000
+and a deposit in transit is USD 2,500. If the differences are purely timing, the ledger cash balance the
+reconciliation should agree to is:
+- A. USD 79,000
+- B. USD 84,000 ✅
+- C. USD 89,000
+- D. USD 94,000
+
+*Rationale:* `Adjusted bank balance = 86,500 − 5,000 + 2,500 = 84,000`, which must equal the ledger if only
+timing items exist. A subtracts the deposit in transit as well as the cheques; C adds the cheques instead of
+deducting them; D adds both adjustments.
+
 ### Self-check — KA 1.1
 
 1. State the accounting equation and explain why an owner's cash injection increases equity rather than
@@ -507,6 +530,29 @@ primary statement.
 *Rationale:* IAS 1's normal presentation splits by current/non-current (a liquidity view). The others are
 real distinctions but not the standard face-of-SOFP classification.
 
+**MCQ 1.2-E `[1.2.3 · Application]`** A company reports profit of USD 25,000, depreciation of USD 4,000, an
+increase in receivables of USD 9,000 and an increase in payables of USD 3,000. Under the indirect method,
+net operating cash is:
+- A. USD 17,000
+- B. USD 19,000
+- C. USD 23,000 ✅
+- D. USD 41,000
+
+*Rationale:* `25,000 + 4,000 (non-cash) − 9,000 (receivables up) + 3,000 (payables up) = 23,000`. A deducts
+the payables increase instead of adding it; B omits the depreciation add-back; D adds the receivables
+increase instead of deducting it.
+
+**MCQ 1.2-F `[1.2.5 · Recall]`** A controls professional wants to know *how* revenue was recognised on a
+long-term contract. That accounting policy is set out in:
+- A. The face of the statement of profit or loss.
+- B. The statement of changes in equity.
+- C. The notes to the financial statements. ✅
+- D. The statement of cash flows.
+
+*Rationale:* The notes disclose the accounting policies applied and the detail behind the face numbers, and
+under IFRS they are an integral part of the statements. The SOPL shows the revenue *figure*, not the policy;
+the SOCE and the cash-flow statement carry equity movements and cash, not policies.
+
 ### Self-check — KA 1.2
 
 1. Name the four primary financial statements and what each communicates. *(SOFP — position at a point;
@@ -704,6 +750,27 @@ On a pure **cash basis**, the period's profit would be closest to:
 
 *Rationale:* Cash-basis profit approximates net operating cash — here USD 3,000. A is the accrual figure; D is
 the *gap* between the two, not either measure; C double-counts.
+
+**MCQ 1.3-E `[1.3.3 · Application]`** A firm pays USD 12,000 at the start of a month for a twelve-month
+insurance policy. Three months later, the prepaid insurance asset remaining on the SOFP is:
+- A. USD 0
+- B. USD 3,000
+- C. USD 9,000 ✅
+- D. USD 12,000
+
+*Rationale:* The monthly charge is `12,000 / 12 = 1,000`; after three months `3,000` has been expensed,
+leaving a prepaid asset of `12,000 − 3,000 = 9,000`. B is the *expense* recognised to date, not the asset;
+A expenses the whole policy immediately; D releases nothing despite three months' cover being consumed.
+
+**MCQ 1.3-F `[1.3.2 · Recall]`** The matching concept requires that an expense be recognised:
+- A. In the period the related cash is paid.
+- B. In the same period as the income it helps to earn. ✅
+- C. In the period the supplier's invoice is received.
+- D. In whichever period gives the smoothest profit trend.
+
+*Rationale:* Matching ties expense recognition to the income the cost helps generate, which is what makes
+profit a measure of performance rather than cash timing. A is the cash basis; C confuses recognition with
+document arrival; D describes profit smoothing, which the concept exists to prevent, not permit.
 
 ### Self-check — KA 1.3
 
@@ -936,6 +1003,27 @@ is:
 *Rationale:* Prudence means a contingent asset is only *recognised* when the inflow is virtually certain
 (and thus no longer contingent); it is *disclosed* when probable, and ignored when only possible.
 
+**MCQ 1.4-F `[1.4.6 · Application]`** A discounted provision is carried at USD 100,000 at the start of the
+year; the discount rate is 6 % and the estimate is unchanged. Its carrying amount at the year-end is:
+- A. USD 6,000
+- B. USD 94,000
+- C. USD 100,000
+- D. USD 106,000 ✅
+
+*Rationale:* The discount unwinds as settlement nears: `100,000 × 6 % = 6,000` is charged as a finance cost
+and added to the provision, giving `100,000 + 6,000 = 106,000`. A is the finance cost alone, not the
+carrying amount; B applies the unwind with the wrong sign; C ignores the unwind entirely.
+
+**MCQ 1.4-G `[1.4.1 · Analysis]`** Which of the following is an **accrual** rather than a provision?
+- A. A warranty obligation on units already sold, based on expected failure rates.
+- B. Electricity consumed last month for which no invoice has yet arrived. ✅
+- C. A probable legal claim whose settlement amount is uncertain.
+- D. A legal obligation to decommission a facility in several years' time.
+
+*Rationale:* The electricity has been received and its amount and timing are readily estimable — a classic
+accrual. A, C and D are all liabilities of uncertain timing or amount, so they fall under IAS 37 as
+provisions and must pass its recognition and measurement tests.
+
 ### Self-check — KA 1.4
 
 1. State the three IAS 37 recognition tests. *(Present obligation from a past event; probable outflow;
@@ -1110,6 +1198,29 @@ the cost belongs to?
 
 *Rationale:* The WBS segment (`120`, Foundations) pins the cost to a piece of *scope*. The project is the
 whole job; `6100` is the cost *type*; `210` is the resource — none of these is the scope element.
+
+**MCQ 1.5-D `[1.5.3 · Recall]`** Which question does a **CBS** view of project cost answer that a WBS view
+does not?
+- A. How much has been spent on the Foundations work package?
+- B. How much has been spent on subcontract labour across the whole project? ✅
+- C. Which organisational unit is accountable for a piece of scope?
+- D. Whether total debits equal total credits.
+
+*Rationale:* The CBS decomposes cost by *element/type*, so it answers cross-project questions such as total
+subcontract spend. A is a WBS (scope) view; C is the OBS; D is what the trial balance tests, not a coding
+structure.
+
+**MCQ 1.5-E `[1.5.2 · Application]`** At month-end a subcontractor has performed USD 150,000 of work on a
+package, but invoices on file total only USD 110,000. For project cost-to-date to reflect work performed,
+the accrual to raise is:
+- A. USD 40,000 ✅
+- B. USD 110,000
+- C. USD 150,000
+- D. USD 260,000
+
+*Rationale:* The accrual covers the performed-but-uninvoiced gap: `150,000 − 110,000 = 40,000`. B is the
+invoiced cost already recorded; C would double-count the invoiced portion; D adds the two figures instead of
+taking the difference.
 
 ### Self-check — KA 1.5
 
