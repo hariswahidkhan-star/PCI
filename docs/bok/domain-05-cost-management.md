@@ -236,6 +236,17 @@ Domain 1, KA 1.3.5, and used in Domain 6). A disciplined month-end accrual proce
 5. **Interpretation.** Reporting only the USD 90,000 of invoices hides USD 30,000 of accrued cost and USD
    130,000 already committed — a USD 160,000 blind spot the commitment/accrual view turns into a forecast.
 
+**Value of work done (VOWD).** In oil-and-gas and EPC practice the number this section builds carries a field
+name: **value of work done (VOWD)** — the cost of work *performed* to date, regardless of what has been
+invoiced: `VOWD = invoiced-to-date + accrual for work done not invoiced`. The name matters because the monthly
+cost report in those sectors is drawn as **three curves on one chart**: **commitment** at the top (stepping up
+as purchase orders are placed), **VOWD** in the middle (smooth, following physical performance), and
+**invoiced/paid** at the bottom (lagging by payment terms) — the vertical gaps between the curves *are* the
+accrual and the open commitment, made visible. The arithmetic is exactly Exercise 5.5's: there, VOWD
+`= 830,000 + 190,000 = 1,020,000` — the same actual-cost number, under its field name. One caveat: VOWD must
+follow **physical** performance (quantity reports, progress certificates), not invoice arrival — a VOWD curve
+that steps upward on invoice dates is just the bottom curve wearing the middle curve's label (KA 5.2.4).
+
 ### 5.2.3 Cost extraction and reconciliation
 
 **The principle.** Cost is **extracted** from the ERP/source systems, **coded** to the project structure (if
@@ -369,6 +380,15 @@ problems hide inside a big account.
 5. **Interpretation.** The control-account level is a *designed* trade between visibility and measurement cost
    — 5.3.2's "too granular vs too coarse" made quantitative. The test is whether a variance of the size you
    care about would surface at the level you chose.
+
+**Work authorisation.** In a formal EVMS the budget in a control account is not spendable merely because it
+exists — it must be **released**. A **work authorisation document (WAD)** opens the work package: it states
+the scope, the budget, the period of performance and the charge codes, and carries the control-account
+manager's signature before charging opens. The discipline this buys is threefold: no cost can be booked
+without an authorised home (so mischarging becomes visible, KA 5.2.4); no work can start "on account" of a
+change that has not been approved (KA 5.4.3); and every booked hour traces back through an auditable chain to
+an authorised budget. The WAD is where the paper baseline meets the timesheet — the change-control analogue
+is Domain 8, KA 8.4.2, and authorisation as a control is Domain 11, KA 11.3.1.
 
 ### 5.3.3 The integration point for earned value
 
@@ -687,6 +707,38 @@ system separately — schedule and ledger each reconcile internally; only the *j
 controlled, with schedule and cost updated **together** through the same authorised change (5.4.3) — never
 one system re-structured "to be tidied up in the other later". The integration point is the control account
 (5.3.3); protecting the structure that defines it is what makes everything Domain 6 computes trustworthy.
+
+### Advanced 5.A.5 — Quantity control: the discipline beneath the money
+
+**The principle.** Cost control watches money, but on measured work the money is `quantity × rate` — and the
+two components fail differently. Rate variances are visible in procurement: a tender comes in above the
+estimate and everyone sees it. **Quantity growth** — design development, remeasurement, site conditions —
+arrives quietly, line by line, and is the classic slow killer of measured-work budgets. Quantity control
+therefore tracks three numbers per line: **budget quantity**, **installed quantity** to date, and **forecast
+final quantity** — with growth `= forecast final − budget quantity`, priced and reported monthly. It is the
+trend discipline of KA 5.4.2 applied to quantities rather than money.
+
+**Worked example 5.A.5 — quantity growth, caught and priced.**
+
+1. **Setup.** A concrete line is budgeted at **2,400 m³ × USD 320/m³ = USD 768,000**. By month 8, **1,500 m³**
+   is installed; design development has raised the forecast final quantity to **2,650 m³**.
+2. **Formulae.** `growth = forecast final − budget quantity`; `forecast cost = forecast final × rate`;
+   `% complete = installed ÷ forecast final`.
+3. **Substitution.** Growth `= 2,650 − 2,400 = 250 m³` (`250 ÷ 2,400 ≈ 10.4 %`); forecast cost
+   `= 2,650 × 320 = 848,000` — **USD 80,000** over budget before any rate variance;
+   `% complete = 1,500 ÷ 2,650 ≈ 56.6 %`.
+4. **Result.** An 80,000 trend raised this month against quantity growth (KA 5.4.2), and a percent-complete of
+   **56.6 %** — not the flattering `1,500 ÷ 2,400 = 62.5 %` that dividing by the budget quantity would give.
+5. **Interpretation.** Dividing installed by *budget* quantity overstates progress the moment quantities grow —
+   the same denominator error the rubber baseline makes with money (Domain 6, Advanced 6.A.1). Quantity control
+   is also where the claim record starts: a re-measured line with a documented growth history prices itself
+   (Domain 7, KA 7.3.4).
+
+**Where the quantities come from.** Budget quantities come from take-offs and the bill of quantities (BoQ);
+installed and final quantities from the quantity surveyor's remeasure and, increasingly, from 3D-model
+quantity extraction. Extracting installed quantities from models, drone surveys and daily reports is a
+fast-maturing machine task (Domain 13, KA 13.5.4) — but the forecast *final* quantity is a judgement about
+design and ground still to come, and it belongs to the professional.
 
 ---
 
