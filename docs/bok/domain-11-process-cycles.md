@@ -158,6 +158,33 @@ USD 500 of unauthorised cost would flow straight through to the project.
 lead time; watching **goods-received-not-invoiced** drives the accruals that make cost-to-date true (Domain 5,
 KA 5.2.2). The P2P cycle is the operational engine behind the cost side of the project.
 
+### 11.2.4 The time-and-expense cycle
+
+**The principle.** Most project cost is not invoices — it is **labour**, and labour reaches the ledger through
+the **timesheet cycle**: time booked against charge codes → line-manager approval → **burdening** (base pay
+grossed up for employment on-costs, benefits and payroll overheads at a defined burden rate) → posting to the
+WBS/cost ledger (Domain 5, KA 5.2) → and, on reimbursable work, out to the client invoice (Domain 7,
+KA 7.1.5's MDMH schedule). The parallel **expense cycle** (travel, subsistence, small purchases) follows the
+same shape with receipts and policy checks. The controls are the P2P controls in miniature: authorisation —
+only open, authorised codes accept bookings (the WAD discipline of Domain 5, KA 5.3.2); approval by someone
+who knows what the person actually worked on; SoD between booking, approval and rate maintenance (11.3.2);
+and **cut-off** — late timesheets are the accrual problem of Domain 1, KA 1.3.5 wearing overalls.
+
+**Worked example 11.2.4 — one timesheet line, booked to billed.**
+
+1. **Setup.** An engineer books **40 hours** to charge code P-201-ENG at a base rate of **USD 30/hour**. The
+   employment burden rate is **32 %**. The contract bills this grade at **USD 72/hour** (a man-hour schedule,
+   Domain 7, KA 7.1.5).
+2. **Formula.** `cost = hours × base × (1 + burden)`; `billing = hours × schedule rate`.
+3. **Substitution.** Cost `= 40 × 30 × 1.32 = 1,584`; billing `= 40 × 72 = 2,880`.
+4. **Result.** **USD 1,584** posts to the cost ledger; **USD 2,880** goes to the application for payment; the
+   `2,880 − 1,584 = 1,296` gross margin on the line is what the rate build-up negotiated (7.1.5's rate
+   transparency).
+5. **Interpretation.** Three different numbers ride one timesheet line — hours (progress and PF, Domain 6,
+   KA 6.1.2), burdened cost (the ledger) and billed value (the application). One late or miscoded timesheet
+   corrupts all three at once, which is why timesheet cut-off and code hygiene sit in the month-end checklist
+   (Toolkit 11.T.2), not in HR.
+
 ### Key terms — KA 11.2
 
 | Term | Meaning |
@@ -393,6 +420,17 @@ Stretched suppliers finance you at *their* cost of capital, reload it into price
 supplier pushed towards failure returns as your project risk (Domain 12). And there is a line between
 **negotiating** longer terms and simply **paying late** — prompt-payment codes and basic terms ethics sit
 on that line. DPO is extended by agreement, never by arrears.
+
+**The payables side: approval SLAs and the discount arithmetic.** DPO is set less by policy than by the P2P
+workflow's speed — an invoice that spends three weeks in an approval queue forfeits every option. Run the
+approval workflow against **service levels** (days from receipt to approval, tracked like any cycle time) and
+age the payables ledger with the same discipline this topic gives receivables. Then the options have value:
+an early-payment discount of **2 % for payment in 10 days rather than 30** is `2 ÷ 98 × 365 ÷ 20 ≈ 37 %`
+annualised — cheaper than almost any working-capital facility, but capturable only by a function whose
+approval cycle reliably beats ten days. The decision is a genuine trade (cash tied up early vs return
+earned), priced against the organisation's cost of funds — but the option exists only where the workflow is
+fast, which is why approval cycle time belongs on the controls scorecard (11.A.4's monitors), not just in
+AP's private metrics.
 
 ### Advanced 11.A.2 — Fraud typologies in the cycles
 
