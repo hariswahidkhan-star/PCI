@@ -471,6 +471,163 @@ accelerate delivery, or replace forecasting.
 
 ---
 
+## Case study — Domain 5: commitment blindness on a mining project
+
+### Background
+
+A copper-mining development in a remote region includes a **mine-processing-plant package** — structural,
+mechanical and piping works for the primary crushing and flotation circuits — managed as a single control
+account with a budget of **USD 2,400,000**. The package is nine months into an eighteen-month duration.
+Procurement is heavy and long-lead: major equipment and fabricated steel are ordered many months before they
+arrive at site, and the remote location means invoices routinely lag deliveries by six to ten weeks.
+
+For those nine months the monthly cost report has shown the package comfortably "on budget". The report was
+built the way many are built under pressure: a straight extract of **invoices processed** from the accounts-
+payable ledger, set against the control-account budget. Nobody had falsified anything — the invoice figure was
+accurate — but the report answered the question "what have we *paid for*?" when the question that matters for
+control is "what have we *incurred and committed*?" (KA 5.2.1).
+
+A new controls lead joins the project and, before signing the next month-end pack, rebuilds the control
+account through the full cost-state model: commitments, accruals, actuals, and an estimate for the scope not
+yet committed. The exercise takes two days with the procurement register, the goods-received records and the
+invoice ledger. What it reveals changes the project's understanding of its own position.
+
+### Rebuilding the cost states
+
+The controls lead works through the three states of cost in order — commitment, accrual, actual (KA 5.2.1) —
+and then adds the one figure no ledger holds: the estimate for remaining uncommitted scope.
+
+| Cost state | Source | Amount (USD) |
+|---|---|---|
+| Invoices processed (actuals) | Accounts-payable ledger | 780,000 |
+| Goods/services received, not yet invoiced (accruals) | Goods-received records vs invoice ledger | 140,000 |
+| **True cost-to-date (actuals + accruals)** | | **920,000** |
+| Purchase orders raised (total commitments) | Procurement register | 1,970,000 |
+| Open commitments (raised, not yet received) | 1,970,000 − 920,000 | 1,050,000 |
+| Uncommitted remaining scope (estimated) | Quantity take-off of residual scope | 380,000 |
+| **Forecast cost at completion** | 920,000 + 1,050,000 + 380,000 | **2,350,000** |
+
+**Worked calculation — the control account rebuilt.**
+
+1. **Setup.** Control-account budget **USD 2,400,000**. Invoices processed (actuals) **USD 780,000**; goods
+   and services received but not yet invoiced (accruals) **USD 140,000**; total purchase orders raised
+   (commitments) **USD 1,970,000**; uncommitted remaining scope estimated at **USD 380,000**.
+2. **Formulae.** `Cost-to-date = actuals + accruals`; `open commitments = total commitments − cost-to-date`;
+   `forecast = cost-to-date + open commitments + uncommitted remaining scope` (KA 5.2.1).
+3. **Substitution.** Cost-to-date `= 780,000 + 140,000 = 920,000`; open commitments `= 1,970,000 − 920,000 =
+   1,050,000`; forecast `= 920,000 + 1,050,000 + 380,000 = 2,350,000`.
+4. **Result.** True **cost-to-date USD 920,000** (not the 780,000 in the invoice ledger); **open commitments
+   USD 1,050,000**; **forecast USD 2,350,000** against a budget of USD 2,400,000 — apparent headroom of
+   **USD 50,000**.
+5. **Interpretation.** The accrual of USD 140,000 is real cost of work already received — steel delivered to
+   the laydown area, vendor engineering completed — that simply has no invoice yet; omitting it understates
+   `AC` and flatters `CPI` (KA 5.2.2). The USD 1,050,000 of open commitments is money the organisation is
+   already bound to pay: the purchase orders are signed, and the only question is *when* the goods arrive and
+   the invoices land. Only the final USD 380,000 remains genuinely within the project's discretion.
+
+Note what the rebuild does *not* change: not a single posting moved, and no cost was "found" that the
+accounting system lacked. Every figure came from records that already existed — the procurement register, the
+goods-received log, the invoice ledger. What changed is that the figures were assembled into the shape that
+control requires (KA 5.2.3): by state, at the control-account level (KA 5.3.2), reconciled to one another.
+
+### The invoice-only illusion
+
+Set the two pictures side by side. The old report showed **USD 780,000 spent against USD 2,400,000** — 32.5 %
+of budget, "only a third used" at the halfway point of the schedule, a message of comfort. The rebuilt picture
+shows a committed-and-forecast position of **USD 2,350,000** — roughly **98 % of the budget already spoken
+for**, with half the duration still to run.
+
+**Worked calculation — quantifying the blind spot.**
+
+1. **Setup.** Invoice-only "spend" **USD 780,000**; true committed-and-forecast position **USD 2,350,000**.
+2. **Formula.** `Blind spot = forecast position − invoice-only view`.
+3. **Substitution.** `2,350,000 − 780,000 = 1,570,000`.
+4. **Result.** **USD 1,570,000** — accruals of 140,000, open commitments of 1,050,000 and uncommitted
+   remaining scope of 380,000 — was invisible to the invoice-only report.
+5. **Interpretation.** Nearly two-thirds of the control account's forecast cost existed only in documents the
+   invoice report never read. The blind spot is largest on exactly the projects where control matters most:
+   long procurement lead times and slow invoice cycles push cost *backwards* through the states, so an
+   invoice-only view is not merely late — it is systematically, predictably optimistic.
+
+The illusion is worth dwelling on because nothing about it involved bad data. Each month's invoice total was
+correct; the reconciliation to the accounts-payable ledger would have passed. The failure was structural: the
+report measured the *last* state of cost — the one with the least lead time and the least control value — and
+presented it as the position. A cost engineer watching only actuals is always looking at the past (KA 5.2.1);
+on this package, the past was two cost states and USD 1,570,000 behind the present.
+
+### The trend that changes the answer
+
+The rebuild also forces a conversation the old report never prompted. In reviewing the package with the area
+engineer, the controls lead learns that the client's review of the flotation-circuit layout is likely to
+instruct additional access steelwork and platform modifications. No variation has been issued, but the
+engineering team regards the instruction as probable and estimates its cost at **+USD 180,000**. Under KA
+5.4.2 this is precisely a **trend**: an early warning of a potential change, not yet a formal variation — and
+it belongs in the trend log now, not in next quarter's surprise.
+
+**Worked calculation — the forecast with the pending trend.**
+
+1. **Setup.** Forecast on committed and remaining scope **USD 2,350,000**; logged trend for the probable
+   variation **+USD 180,000**; control-account budget **USD 2,400,000**.
+2. **Formula.** `Potential forecast = forecast + pending trends`; `variance vs budget = budget − potential
+   forecast`.
+3. **Substitution.** `2,350,000 + 180,000 = 2,530,000`; `2,400,000 − 2,530,000 = (130,000)`.
+4. **Result.** Potential forecast **USD 2,530,000** — a projected overrun of **USD (130,000)** against the
+   USD 2,400,000 budget if the variation is instructed without additional funding.
+5. **Interpretation.** The apparent USD 50,000 of headroom was never real margin — it was headroom *before*
+   a known, probable change. The trend log converts a future surprise into a present decision.
+
+That decision has to be made **now**, while options still exist, and it runs through the change-control
+machinery of KA 5.4. If the variation is client-instructed new scope, the project should seek a priced
+variation and a corresponding baseline change — funding flowing through the authorised reserve structure of
+Domain 3 (management reserve for out-of-scope change, contingency for in-scope risk), with the change log
+keeping the movement traceable (KA 5.4.3). If additional funding will not be granted, the remaining
+discretion is the **USD 380,000 of uncommitted scope**: it is the only part of the forecast the project can
+still descope, re-specify or re-tender, and every week of delay converts more of it into commitments. Had the
+trend surfaced after the residual scope was on purchase orders, the project would have discovered a
+USD 130,000 overrun with no levers left to pull.
+
+### The month-end pack
+
+The controls lead replaces the invoice extract with a control-account statement showing every cost state and
+the trend position — the shape in which this control account should always have been reported:
+
+| Line | Amount (USD) |
+|---|---|
+| Control-account budget | 2,400,000 |
+| Cost-to-date (actuals 780,000 + accruals 140,000) | 920,000 |
+| Open commitments | 1,050,000 |
+| Uncommitted remaining scope (estimate) | 380,000 |
+| **Forecast at completion** | **2,350,000** |
+| Pending trends (probable variation) | +180,000 |
+| **Potential forecast at completion** | **2,530,000** |
+| **Variance vs budget (potential)** | **(130,000)** |
+
+One page, eight lines — and every question a reviewer should ask is answerable from it. How much is truly
+incurred? 920,000. How much is already bound? A further 1,050,000. Where does discretion remain? 380,000. What
+is coming that is not yet formal? 180,000. Is the account in trouble? Not yet on approved scope (2,350,000 vs
+2,400,000), but **yes** if the probable variation lands unfunded — and the pack says so a quarter before the
+invoices would have.
+
+### What the credential expects
+
+This case is Domain 5 in miniature. The engine is the **commitment → accrual → actual** cycle (KA 5.2.1):
+cost was visible in the procurement register the day each purchase order was signed, and the project's
+blindness lasted exactly as long as its reporting ignored the earlier states. The **true cost-to-date** of
+actuals plus accruals (KA 5.2.2) is what `AC` should carry into earned value — omitting the USD 140,000 of
+accruals would understate `AC` and flatter `CPI`, corrupting every forecast built on it. The distinction
+between a **trend and a variation** (KA 5.4.2) is what bought the project its lead time: logging the probable
+USD 180,000 instruction turned a future overrun into a present funding decision. **Protecting the baseline**
+(KA 5.4.3) then governs how that decision is executed — a priced variation and an authorised baseline change,
+reconciled in the change log, rather than a quiet absorption that leaves the budget meaning nothing. And the
+whole exercise worked because it was done at the **control account** (KA 5.3.3), the integration point where
+scope, budget, cost states and schedule meet — the data layer on which trustworthy earned value stands or
+falls. Finally, the AI dimension: auto-coding, commitment-tracking and accrual-proposal tools reading the
+procurement register and goods-received data would have surfaced this position months earlier and kept it
+current every month since — with the professional owning the accrual judgements, the trend assessments and
+the funding decision (Domain 13, KA 13.5.4). **AI proposes, the professional disposes.**
+
+---
+
 ## Domain 5 summary
 
 Cost control begins with the anatomy of cost — direct/indirect and fixed/variable, driven by true cost
