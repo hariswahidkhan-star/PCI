@@ -15,7 +15,34 @@ BLUE, INK, SLATE, LIGHT, GREY = "#1D4ED8", "#0F172A", "#64748B", "#EEF3FF", "#CB
 RED, GREEN, AMBER, PALE = "#C13329", "#16A34A", "#D97706", "#F1F5F9"
 OUT = pathlib.Path(__file__).resolve().parent / "figures"
 OUT.mkdir(exist_ok=True)
-plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 9, "svg.fonttype": "none"})
+plt.rcParams.update({
+    "font.family": ["Inter", "DejaVu Sans"], "font.size": 9, "svg.fonttype": "none",
+    "axes.edgecolor": GREY, "axes.linewidth": 0.8,
+    "axes.titlesize": 10, "axes.titleweight": "bold", "axes.titlecolor": INK,
+    "axes.labelcolor": SLATE, "axes.labelsize": 8.5,
+    "xtick.color": SLATE, "ytick.color": SLATE,
+    "xtick.labelsize": 8, "ytick.labelsize": 8,
+    "lines.linewidth": 2.2, "lines.solid_capstyle": "round",
+    "legend.frameon": False, "legend.fontsize": 8,
+})
+CHART_GRID = "#EDF1F7"
+
+def _premium(fig):
+    """Uniform premium pass applied to every figure at save time."""
+    for ax in fig.get_axes():
+        if not ax.axison:
+            continue
+        for s in ("top", "right"):
+            ax.spines[s].set_visible(False)
+        for s in ("left", "bottom"):
+            ax.spines[s].set_color(GREY)
+            ax.spines[s].set_linewidth(0.8)
+        ax.tick_params(colors=SLATE, width=0.8, length=3)
+        ax.set_axisbelow(True)
+        ax.grid(axis="y", color=CHART_GRID, linewidth=0.7)
+        leg = ax.get_legend()
+        if leg is not None:
+            leg.set_frame_on(False)
 
 def newfig(w=7.0, h=3.4):
     fig, ax = plt.subplots(figsize=(w, h))
@@ -23,6 +50,7 @@ def newfig(w=7.0, h=3.4):
     return fig, ax
 
 def save(fig, name):
+    _premium(fig)
     fig.savefig(OUT / f"{name}.svg", bbox_inches="tight", pad_inches=0.08)
     plt.close(fig)
     print("made", name)

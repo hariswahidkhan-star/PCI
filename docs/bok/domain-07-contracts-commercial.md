@@ -568,6 +568,30 @@ They measure the *same physical progress* but at different *values* and under di
 differ — and the difference is meaningful, not error. Reconciling `EV`, valuation and revenue is how a project
 knows simultaneously how it is performing (cost), what it can bill (cash), and what it can recognise (profit).
 
+**The downstream side: subcontractor applications.** Everything this KA describes also runs **downstream**:
+subcontractors apply to the main contractor, who values, certifies and pays on the same discipline — usually
+**back-to-back** with the main contract (retention percentages, payment terms and certification timing
+mirrored down, so the main contractor is not funding the gap between what it pays and what it collects). The
+controls: certify against **measured** work, not the application (the sub's optimism is the same
+over-measurement risk as 7.5.2, one tier down); hold back-to-back retention; keep payment terms aligned
+(paying subs in 30 while collecting in 60 is a working-capital leak, Domain 11, Advanced 11.A.1); and mirror
+the main-contract notice regimes, because a sub's claim un-passed-up in time becomes the main contractor's
+own cost (7.2.2).
+
+**Worked example 7.4.4 — certifying a subcontractor's application.**
+
+1. **Setup.** A subcontractor applies for **USD 300,000** gross work done to date. The QS measure supports
+   **280,000**. Retention is **5 %** back-to-back; previously certified net is **190,000**.
+2. **Formula.** `net certified to date = certified gross × (1 − retention)`; `this certificate = net to date −
+   previously certified net`.
+3. **Substitution.** `280,000 × 0.95 = 266,000`; `266,000 − 190,000 = 76,000`.
+4. **Result.** Certify **USD 76,000** this period — against an application implying `300,000 × 0.95 − 190,000
+   = 95,000`; the 19,000 difference is the over-application the measure removed.
+5. **Interpretation.** The certificate, not the application, drives the accrual (Domain 1, KA 1.3.5) and the
+   cost ledger — book the accrual at the **certified** measure and the P2P three-way-match discipline
+   (Domain 11, KA 11.2.2) holds one tier down. The 20,000 gross over-application is not an insult; it is
+   Tuesday — which is why the measure, not the paperwork, is the control.
+
 ### Key terms — KA 7.4
 
 | Term | Meaning |

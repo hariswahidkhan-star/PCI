@@ -189,6 +189,17 @@ schedule to give `PV`, Domain 3). "Integrated" is the operative word: a schedule
 or a cost baseline not phased over the schedule, cannot support earned value. The controls professional is
 typically the guardian of this integration.
 
+**The resource-loaded schedule and the manpower histogram.** A schedule whose activities carry crew and hours
+requirements is a **resource-loaded schedule**, and its summation per period is the **manpower histogram** —
+the everyday bridge between schedule and cost. Three uses: the **ramp** (can the site actually mobilise from
+40 to 120 in eight weeks — recruitment, camp, inductions?); the **peak** (a histogram peaking at 120 against
+95 demonstrably available is a plan that fails before it starts — level it now, Domain 10, KA 10.3.3, or
+re-sequence); and the **leading indicator** (actual headcount tracking below plan predicts a productivity and
+progress shortfall weeks before `CPI` moves — Domain 4, KA 4.1.2; Domain 6's `PF`, KA 6.1.2). The histogram
+is also the origin of the time-phased labour budget (Domain 3, KA 3.3): hours × rates per period *is* the
+labour `PV`. Where no resource loading exists, the baseline's phasing is an assertion (Domain 10, Advanced
+10.A.1's health check asks exactly this).
+
 ### 8.2.3 The subsidiary plans
 
 **The principle.** Around the three baselines sit the subsidiary management plans — **quality, resource, risk,
@@ -473,6 +484,28 @@ final account: it is the last, definitive reconciliation of scope, cost, billing
 5. **Interpretation.** The final account is the definitive reconciliation of scope, variations, claims and
    retention (Domain 7); until the last 13,875 is collected, closing is not finished — it is a real
    receivable the controls professional tracks to zero.
+
+**Completions and turnover on systems-based projects.** On industrial and process projects, the end-game is
+not run on WBS percentages but on a **completions system**: the plant is decomposed into **systems and
+subsystems**, each walked down against checklists to **mechanical completion**, then pre-commissioned,
+commissioned and **turned over** to the client/operations with a certificate and its **punch list** (A-items
+blocking turnover; B-items completable after). Progress in the last 15 % of a project is honestly measured
+here — subsystems turned over, punch items open/closed per system — not in earned value, which plateaus
+exactly when this matters (the 90 %-complete plateau of Domain 6, Advanced 6.A.3). The completions database,
+not the schedule, becomes the single source of truth for what remains.
+
+**Worked example 8.5.2b — reading a turnover dashboard.**
+
+1. **Setup.** A plant has **42 subsystems**. At the data date **28** are mechanically complete, of which
+   **17** are turned over; open punch items: **61 A-items**, **214 B-items**.
+2. **Formula.** Progress by count: `MC % = MC subsystems ÷ total`; `turnover % = turned over ÷ total`.
+3. **Substitution.** `28 ÷ 42 ≈ 67 %` mechanically complete; `17 ÷ 42 ≈ 40 %` turned over.
+4. **Result.** The gap between 67 % and 40 % — eleven subsystems stuck between MC and turnover — *is* the
+   end-game workload, and the 61 A-items are its critical path.
+5. **Interpretation.** A project reporting "94 % complete" by EV while only 40 % of subsystems have turned
+   over is not lying — it is measuring the wrong thing for this phase. From MC onward, walk-downs, punch
+   burn-down rate and A-item ageing are the honest progress measures (cross-ref Domain 4, KA 4.1.2 leading
+   indicators; Domain 6, Advanced 6.A.3).
 
 ### 8.5.3 Lessons learned
 
