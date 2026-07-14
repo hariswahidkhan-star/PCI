@@ -1486,6 +1486,39 @@ The optimistic reading of KA 13.7.2 — that the professional's role rises to di
 only while the judgement it presumes is maintained. The daily workflow no longer produces that judgement as a
 by-product, so the profession must now produce it on purpose. **AI proposes, the professional disposes.**
 
+### Advanced 13.A.5 — Pricing the error: expected-value thinking for AI controls
+
+"AI proposes, the professional disposes" (KA 13.6.1) states *who* decides; this topic prices *when* the
+disposing step earns its cost. Every AI-in-the-loop design carries two costs: the cost of **checking** an
+output, and the expected cost of an **uncaught error** — the error's downstream cost weighted by its
+probability. Per-item review is worth mandating while `error rate × error cost > review cost`; below that
+line, per-item review destroys value, and assurance should move to sampling and monitoring — the
+audit-sample logic of KA 13.6.5.
+
+**Worked example 13.A.5 — pricing the review step.**
+
+1. **Setup.** The invoice-coding deployment of KA 13.5.4c. Reviewing one auto-coded line costs about
+   **USD 1**; an uncaught miscode costs about **USD 150** to find and fix downstream (reconciliation
+   time, restated reports). Measured precision: **97.5 %**.
+2. **Formula.** `expected uncaught-error cost per unreviewed line = error rate × error cost`; per-item
+   review pays while that figure exceeds the review cost.
+3. **Substitution.** At 97.5 % precision: `2.5 % × 150 = 3.75` per line — nearly four times the USD 1
+   review cost, so per-item review pays clearly. Were precision to reach **99.5 %**: `0.5 % × 150 =
+   0.75` — below the review cost, and the per-item mandate stops paying.
+4. **Result.** Break-even sits at an error rate of `1 ÷ 150 ≈ 0.67 %` — a precision of about **99.3 %**.
+5. **Interpretation.** The review step is not a permanent fixture but a **priced control**: as measured
+   precision improves, the honest response is to re-price the loop — per-item review giving way to
+   risk-based sampling — with the change logged like any control change (KA 13.6.5c).
+
+The honesty belongs in the inputs. Both figures are estimates and should be **measured, not assumed** —
+and error cost varies wildly by use: a miscoded invoice is USD 150; a miscited contract clause in a
+dispute is not. **Asymmetric, fat-tailed error costs** — rare but catastrophic — break the simple
+per-item arithmetic and justify review far past the naive break-even, which is why high-stakes uses keep
+human sign-off regardless of the expected-value sums (KA 13.6.4, when not to use AI). Used honestly, the
+arithmetic disciplines both directions: it blocks premature automation *and* retires review theatre. And
+the break-even itself moves — precision drift shifts the error rate, so the model-risk monitoring of
+13.A.2 feeds the pricing here.
+
 ---
 
 ## Case study — Domain 13: building an AI-augmented controls function at a transport agency (government)

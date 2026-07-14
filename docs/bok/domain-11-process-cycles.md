@@ -463,6 +463,38 @@ monitor is itself monitored — an alert stream nobody actions is worse than non
 coverage that does not exist. The machine watches at a scale no clerk can; the professional owns what the
 thresholds are and what happens when one trips (13.5.4). **AI proposes, the professional disposes.**
 
+### Advanced 11.A.5 — The cost of the control itself
+
+**The principle.** A control is not free. It consumes hours, delays the cycle it sits in, and — when it
+is all friction and no yield — trains people to route around it. Internal control doctrine already holds
+that controls should be **proportionate** to the risk they address (11.3.1); this topic makes that
+proportionality arithmetic. The test of a control portfolio is not effort expended but **exception
+yield**: what the control actually catches per unit of what it costs. Over-controlling is a real failure
+mode, not a safe default — the money spent reviewing clean transactions is unavailable for the risky
+ones.
+
+**Worked example 11.A.5 — pricing a control redesign.**
+
+1. **Setup.** A function manually reviews **every** supplier invoice against its three-way match:
+   **4,800 invoices a quarter × 6 minutes = 480 hours**, at a loaded rate of **USD 55/hour**.
+2. **Formula.** `control cost = review hours × rate`, before and after redesigning on risk.
+3. **Substitution.** Before: `480 × 55 = 26,400` a quarter. After: the automated match (11.2.2) clears
+   **90 %** untouched; the **10 %** exceptions — `4,800 × 10 % = 480` invoices — get a deeper
+   **15-minute** review: `480 × 15 = 7,200` minutes `= 120` hours; `120 × 55 = 6,600` a quarter.
+4. **Result.** A saving of `26,400 − 6,600 = USD 19,800` a quarter — while the review hours now sit
+   entirely on the transactions the match itself flagged as risky, so detection is concentrated, not
+   diluted.
+5. **Interpretation.** Same assurance objective, a quarter of the cost, and better-aimed scrutiny — the
+   redesign passes the proportionality test with numbers rather than adjectives.
+
+The caveats belong in the same breath. The 90 % clear rate must itself be assured — the match tolerances
+of 11.2.2 and the continuous monitors of 11.A.4 are what make "untouched" safe. **Exception yield should
+be tracked** per control and per period: a control that has caught nothing for years is either deterring
+silently or dead — find out which. And the deterrence value of a visible control is real, but it should
+be argued, not assumed. Measuring clear rates, yields and unit costs across a control portfolio is a
+machine task; deciding how much residual risk the organisation will carry for USD 19,800 a quarter is a
+governance decision (11.3.1; Domain 12, KA 12.1.3).
+
 ---
 
 ## Case study — Domain 11: hardening the cycles at a scale-up (technology)
