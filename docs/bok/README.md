@@ -38,8 +38,8 @@ domain binds to it, so notation and depth stay consistent across the whole volum
 | 10 | Project Scheduling (in depth) | [`domain-10-scheduling.md`](domain-10-scheduling.md) | ✅ Draft complete |
 | 11 | Business Process Cycles (O2C, P2P & control environment) | [`domain-11-process-cycles.md`](domain-11-process-cycles.md) | ✅ Draft complete |
 | 12 | Risk Management for Project Controls | [`domain-12-risk-management.md`](domain-12-risk-management.md) | ✅ Draft complete |
-| 13 | AI for Project Controls & PM: Concepts, Tools & Practice | `domain-13-ai/` (KAs 13.1–13.7) | ⏳ Planned |
-| — | Appendices (glossary · formula sheet · self-check answers · standards & figure indexes · MCQ bank) | `appendices/` | ⏳ Assembled last |
+| 13 | AI for Project Controls & PM: Concepts, Tools & Practice | [`domain-13-ai-for-project-controls.md`](domain-13-ai-for-project-controls.md) | ✅ Draft complete |
+| — | Appendices (glossary · formula sheet · self-check answers · standards & figure indexes · MCQ bank) | [`appendices.md`](appendices.md) | 🚧 Assembled from finished domains |
 
 Legend: ✅ complete · 🚧 in progress · ⏳ planned. Each domain is authored to the per-KA checklist in the
 Style Spine (§10) and is a **first authored draft** pending subject-matter-expert (SME) review before it is
