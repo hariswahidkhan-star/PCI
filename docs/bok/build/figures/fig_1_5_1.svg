@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="402.12pt" height="200.016pt" viewBox="0 0 402.12 200.016" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-07-14T15:23:46.082631</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.0, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 200.016 
+L 402.12 200.016 
+L 402.12 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 90.39 76.808492 
+L 152.235 76.808492 
+L 152.235 47.809108 
+L 90.39 47.809108 
+z
+" clip-path="url(#p4bad729541)" style="fill: #1d4ed8; stroke: #cbd5e1; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 155.49 76.808492 
+L 217.335 76.808492 
+L 217.335 47.809108 
+L 155.49 47.809108 
+z
+" clip-path="url(#p4bad729541)" style="fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 220.59 76.808492 
+L 282.435 76.808492 
+L 282.435 47.809108 
+L 220.59 47.809108 
+z
+" clip-path="url(#p4bad729541)" style="fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 285.69 76.808492 
+L 347.535 76.808492 
+L 347.535 47.809108 
+L 285.69 47.809108 
+z
+" clip-path="url(#p4bad729541)" style="fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 90.39 111.607754 
+L 152.235 111.607754 
+L 152.235 82.608369 
+L 90.39 82.608369 
+z
+" clip-path="url(#p4bad729541)" style="fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 155.49 111.607754 
+L 217.335 111.607754 
+L 217.335 82.608369 
+L 155.49 82.608369 
+z
+" clip-path="url(#p4bad729541)" style="fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 220.59 111.607754 
+L 282.435 111.607754 
+L 282.435 82.608369 
+L 220.59 82.608369 
+z
+" clip-path="url(#p4bad729541)" style="fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 285.69 111.607754 
+L 347.535 111.607754 
+L 347.535 82.608369 
+L 285.69 82.608369 
+z
+" clip-path="url(#p4bad729541)" style="fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 90.39 146.407015 
+L 152.235 146.407015 
+L 152.235 117.407631 
+L 90.39 117.407631 
+z
+" clip-path="url(#p4bad729541)" style="fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 155.49 146.407015 
+L 217.335 146.407015 
+L 217.335 117.407631 
+L 155.49 117.407631 
+z
+" clip-path="url(#p4bad729541)" style="fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 220.59 146.407015 
+L 282.435 146.407015 
+L 282.435 117.407631 
+L 220.59 117.407631 
+z
+" clip-path="url(#p4bad729541)" style="fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 285.69 146.407015 
+L 347.535 146.407015 
+L 347.535 117.407631 
+L 285.69 117.407631 
+z
+" clip-path="url(#p4bad729541)" style="fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 151.652501 163.342955 
+Q 139.2147 122.481538 127.232697 83.117535 
+" clip-path="url(#p4bad729541)" style="fill: none; stroke: #1d4ed8; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 126.334459 88.408392 
+L 127.232697 83.117535 
+L 130.92644 87.010639 
+z
+" clip-path="url(#p4bad729541)" style="fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #64748b" x="122.94" y="37.659323" transform="rotate(-0 122.94 37.659323)">Labour</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #64748b" x="188.04" y="37.659323" transform="rotate(-0 188.04 37.659323)">Materials</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #64748b" x="253.14" y="37.659323" transform="rotate(-0 253.14 37.659323)">Subcontract</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #64748b" x="318.24" y="37.659323" transform="rotate(-0 318.24 37.659323)">Plant</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #64748b" x="77.37" y="63.758769" transform="rotate(-0 77.37 63.758769)">Foundations</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="121.3125" y="64.386925" transform="rotate(-0 121.3125 64.386925)">USD 12,000</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #64748b" x="77.37" y="98.558031" transform="rotate(-0 77.37 98.558031)">Structure</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #64748b" x="77.37" y="133.357292" transform="rotate(-0 77.37 133.357292)">Fit-out</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #0f172a" x="217.335" y="14.459815" transform="rotate(-0 217.335 14.459815)">CBS — cost element →</text>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #0f172a" transform="translate(25.238008 135.689085) rotate(-90)">WBS — scope ↓</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #1d4ed8" x="217.335" y="179.756308" transform="rotate(-0 217.335 179.756308)">OBS: Civils team  →  control account CA-Civils-Foundations</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p4bad729541">
+   <rect x="5.76" y="5.76" width="390.6" height="188.496"/>
+  </clipPath>
+ </defs>
+</svg>

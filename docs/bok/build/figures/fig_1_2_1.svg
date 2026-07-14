@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="413.28pt" height="211.600275pt" viewBox="0 0 413.28 211.600275" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-07-14T15:23:45.933939</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.0, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 211.600275 
+L 413.28 211.600275 
+L 413.28 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 23.8392 86.16384 
+L 141.6888 86.16384 
+Q 143.6976 86.16384 143.6976 84.45312 
+L 143.6976 29.71008 
+Q 143.6976 27.99936 141.6888 27.99936 
+L 23.8392 27.99936 
+Q 21.8304 27.99936 21.8304 29.71008 
+L 21.8304 84.45312 
+Q 21.8304 86.16384 23.8392 86.16384 
+z
+" clip-path="url(#pd3ec3e9db4)" style="fill: #eef3ff; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 271.5912 86.16384 
+L 389.4408 86.16384 
+Q 391.4496 86.16384 391.4496 84.45312 
+L 391.4496 29.71008 
+Q 391.4496 27.99936 389.4408 27.99936 
+L 271.5912 27.99936 
+Q 269.5824 27.99936 269.5824 29.71008 
+L 269.5824 84.45312 
+Q 269.5824 86.16384 271.5912 86.16384 
+z
+" clip-path="url(#pd3ec3e9db4)" style="fill: #eef3ff; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 271.5912 188.80704 
+L 389.4408 188.80704 
+Q 391.4496 188.80704 391.4496 187.09632 
+L 391.4496 132.35328 
+Q 391.4496 130.64256 389.4408 130.64256 
+L 271.5912 130.64256 
+Q 269.5824 130.64256 269.5824 132.35328 
+L 269.5824 187.09632 
+Q 269.5824 188.80704 271.5912 188.80704 
+z
+" clip-path="url(#pd3ec3e9db4)" style="fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 23.8392 188.80704 
+L 141.6888 188.80704 
+Q 143.6976 188.80704 143.6976 187.09632 
+L 143.6976 132.35328 
+Q 143.6976 130.64256 141.6888 130.64256 
+L 23.8392 130.64256 
+Q 21.8304 130.64256 21.8304 132.35328 
+L 21.8304 187.09632 
+Q 21.8304 188.80704 23.8392 188.80704 
+z
+" clip-path="url(#pd3ec3e9db4)" style="fill: #eef3ff; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 148.373275 57.0816 
+Q 206.638462 57.0816 262.667581 57.0816 
+" clip-path="url(#pd3ec3e9db4)" style="fill: none; stroke: #1d4ed8; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 257.867581 54.6816 
+L 262.667581 57.0816 
+L 257.867581 59.4816 
+z
+" clip-path="url(#pd3ec3e9db4)" style="fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 330.516 90.447462 
+Q 330.516 108.402528 330.516 124.121525 
+" clip-path="url(#pd3ec3e9db4)" style="fill: none; stroke: #1d4ed8; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 332.916 119.321525 
+L 330.516 124.121525 
+L 328.116 119.321525 
+z
+" clip-path="url(#pd3ec3e9db4)" style="fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 148.373275 159.7248 
+Q 206.638462 159.7248 262.667581 159.7248 
+" clip-path="url(#pd3ec3e9db4)" style="fill: none; stroke: #1d4ed8; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 257.867581 157.3248 
+L 262.667581 159.7248 
+L 257.867581 162.1248 
+z
+" clip-path="url(#pd3ec3e9db4)" style="fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #0f172a" transform="translate(70.267008 54.188446)">SOPL</text>
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #0f172a" transform="translate(51.57232 64.39077)">Profit 17,000</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #0f172a" transform="translate(317.819789 49.087616)">SOCE</text>
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #0f172a" transform="translate(286.648695 59.28994)">Retained earnings</text>
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #0f172a" transform="translate(314.116312 69.4916)">17,000</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(317.823773 151.730484)">SOFP</text>
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(294.450102 161.932808)">Equity 117,000</text>
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(298.137641 172.135132)">Cash 129,000</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #0f172a" transform="translate(57.216187 151.731148)">Cash flows</text>
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #0f172a" transform="translate(52.553141 161.933472)">Net increase</text>
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; fill: #0f172a" transform="translate(63.407242 172.135132)">129,000</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #1d4ed8" x="206.64" y="48.528" transform="rotate(-0 206.64 48.528)">profit</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #1d4ed8" x="350.604" y="108.4032" transform="rotate(-0 350.604 108.4032)">to equity</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #1d4ed8" x="206.64" y="151.1712" transform="rotate(-0 206.64 151.1712)">closing cash</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #64748b" x="206.64" y="203.9184" transform="rotate(-0 206.64 203.9184)">The statements articulate — shared figures lock them together.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pd3ec3e9db4">
+   <rect x="5.76" y="5.76" width="401.76" height="199.584"/>
+  </clipPath>
+ </defs>
+</svg>

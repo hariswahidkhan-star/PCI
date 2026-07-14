@@ -42,9 +42,32 @@ TITLE_HTML = f"""
 </div>
 """
 
+def inject_figures(corpus: str) -> str:
+    """Insert each rendered SVG immediately before its figure-spec blockquote.
+
+    Spec lines look like:  > **Fig 6.3.1 — The EAC fan.** ...
+    The spec block remains beneath the image as its extended caption.
+    """
+    import re
+    out, injected = [], 0
+    for line in corpus.split("\n"):
+        m = re.match(r"> \*\*Fig (\d+\.\d+\.\d+) — ([^.*]+)", line)
+        if m:
+            fid, title = m.group(1), m.group(2).strip().rstrip(".")
+            svg = BUILD / "figures" / f"fig_{fid.replace('.', '_')}.svg"
+            if svg.exists():
+                out.append(f'<figure><img src="figures/{svg.name}"/>'
+                           f"<figcaption>Fig {fid} — {title}</figcaption></figure>\n")
+                injected += 1
+        out.append(line)
+    print(f"figures injected: {injected}")
+    return "\n".join(out)
+
+
 def main() -> None:
-    # 1. Concatenate the corpus in reading order.
+    # 1. Concatenate the corpus in reading order; inject rendered figures.
     corpus = "\n\n".join((BOK / name).read_text(encoding="utf-8") for name in ORDER)
+    corpus = inject_figures(corpus)
     combined = BUILD / "_combined.md"
     combined.write_text(corpus, encoding="utf-8")
 
