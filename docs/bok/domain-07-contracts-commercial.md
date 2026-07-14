@@ -134,6 +134,35 @@ clearest places where an earned-value forecast becomes a commercial number a boa
    provider beyond it. The cap converts open-ended T&M exposure into a budgetable ceiling — which is why
    capped T&M suits undefined scope, and agile delivery in particular (see 9.6.3).
 
+**Man-day / man-hour (MDMH) rate contracts** are the labour-schedule variant of T&M, dominant in manpower
+supply, consultancy secondment, commissioning support and EPC site-services packages — and a fixture of
+Gulf-region contracting. The schedule prices each **grade** (senior engineer, technician, …) per approved
+man-day or man-hour, with the contract defining the working day (8 or 10 hours), overtime multipliers, and
+mobilisation/demobilisation terms. The commercial essence: the client buys **input, not output** — a man-day
+is earned by attendance, not progress — so **productivity risk sits wholly with the client**. That drives the
+controls that matter: **timesheet verification** against approved attendance; **grade audit** (is the person
+billed at the grade actually mobilised?); rate build-up transparency (base salary, burdens, overheads,
+margin); and **productivity tracking** — man-hours consumed mapped to deliverables or earned progress
+(Domain 6), because nothing in the payment mechanism does that mapping for you. Distinguish from unit-rate
+(7.1.2/7.3): unit-rate pays per unit of *output*; MDMH pays per unit of *input*. As scope firms up, the
+professional move is conversion — to capped T&M, deliverable-based milestones or lump sum (7.1.1's spectrum
+walked deliberately, not drifted).
+
+**Worked example 7.1.5b — a month on man-day rates, verified.**
+
+1. **Setup.** A commissioning-support contract prices a senior engineer at **USD 720 per man-day** and a
+   technician at **USD 360 per man-day** (10-hour site day defined in the schedule). In the month, **2 senior
+   engineers** and **5 technicians** each work **22 approved days**.
+2. **Formula.** `invoice = Σ (heads × approved days × grade rate)`.
+3. **Substitution.** Senior: `2 × 22 = 44` man-days; `44 × 720 = 31,680`. Technician: `5 × 22 = 110` man-days;
+   `110 × 360 = 39,600`.
+4. **Result.** Month invoice `= 31,680 + 39,600 =` **USD 71,280** — payable on verified timesheets and grade
+   evidence.
+5. **Interpretation.** The invoice check is attendance arithmetic, but the *control* question is different:
+   what did 154 man-days buy? If commissioning progress (Domain 6's EV, or a deliverable log) does not move in
+   step with man-days consumed, the client is funding presence, not progress — the MDMH form only works when
+   someone owns that comparison every month.
+
 ### Key terms — KA 7.1
 
 | Term | Meaning |
@@ -143,6 +172,7 @@ clearest places where an earned-value forecast becomes a commercial number a boa
 | **Cost-plus (CPFF/CPIF/CPAF)** | Reimburse cost plus a fixed/incentive/award fee; client bears cost risk. |
 | **Target cost / pain-gain** | Shared cost risk against a target, within a cap/collar. |
 | **EPC / turnkey** | Single-contractor delivery of the whole asset. |
+| **Man-day / man-hour (MDMH) rates** | Labour billed per approved day/hour at graded rates — input bought; productivity risk stays with the client. |
 
 ### Sample MCQs — KA 7.1
 
