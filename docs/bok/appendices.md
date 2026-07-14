@@ -203,22 +203,22 @@ print/PDF edition, the inline answers are collected here by KA number and remove
 Every Knowledge Area ends with **3–6 sample MCQs** (four options, correct answer marked, rationale, tagged with
 topic number and cognitive level), per Style Spine §8. Consolidated counts (draft):
 
-| Domain | KAs | Approx. sample MCQs |
+| Domain | KAs | Sample MCQs |
 |---|---:|---:|
-| 1 Foundations of Accounting | 5 | ~15 |
-| 2 Financial Reporting (IFRS 15) | 5 | ~13 |
-| 3 Budgeting & Forecasting | 5 | ~11 |
-| 4 Performance/Variance/Reporting | 4 | ~10 |
-| 5 Cost Management | 4 | ~8 |
-| 6 EVM/EAC | 4 | ~10 |
-| 7 Contracts & Commercial | 5 | ~11 |
-| 8 PM Lifecycle | 6 | ~8 |
-| 9 Agile & Adaptive | 6 | ~13 |
-| 10 Scheduling | 4 | ~8 |
-| 11 Process Cycles | 3 | ~6 |
-| 12 Risk Management | 3 | ~7 |
-| 13 AI for Project Controls | 7 | ~18 |
-| **Total (draft)** | **61** | **~145** |
+| 1 Foundations of Accounting | 5 | 30 |
+| 2 Financial Reporting (IFRS 15) | 5 | 27 |
+| 3 Budgeting & Forecasting | 5 | 23 |
+| 4 Performance/Variance/Reporting | 4 | 18 |
+| 5 Cost Management | 4 | 18 |
+| 6 EVM/EAC | 4 | 19 |
+| 7 Contracts & Commercial | 5 | 22 |
+| 8 PM Lifecycle | 6 | 23 |
+| 9 Agile & Adaptive | 6 | 26 |
+| 10 Scheduling | 4 | 18 |
+| 11 Process Cycles | 3 | 12 |
+| 12 Risk Management | 3 | 13 |
+| 13 AI for Project Controls | 7 | 31 |
+| **Total (draft)** | **61** | **280** |
 
 > **Blueprint separation.** These are **study/sample items** drawn from the same blueprint as, but kept
 > **separate from**, the live examination bank; they are **not** to be reused verbatim as live exam questions

@@ -81,6 +81,29 @@ are other concepts.
 *Rationale:* Too-thin contingency leaves risk under-funded relative to appetite. Excess contingency (not a
 shortfall) ties up capital; the effect is real; it is a calibration issue, not an automatic standard breach.
 
+**MCQ 12.1-C `[12.1.1 · Recall]`** An uncertain event that, if it occurs, would have a *positive* effect on
+objectives is:
+- A. An issue.
+- B. An opportunity. ✅
+- C. A tolerance.
+- D. A constraint.
+
+*Rationale:* Risk covers both tails — threats (negative effect) and opportunities (positive effect) — and
+managing the upside deliberately is part of the discipline. An issue is a materialised risk; tolerance and
+constraint are different concepts.
+
+**MCQ 12.1-D `[12.1.2 · Application]`** A team updates its risk register once a quarter as a standalone
+exercise, disconnected from the estimate, schedule and forecast. The ISO 31000 principle chiefly breached is:
+- A. Proportionality — the effort exceeds the stakes.
+- B. Integration — risk management should be part of decision-making, feeding the estimate, schedule and
+  forecast. ✅
+- C. None — quarterly updates satisfy the standard.
+- D. Appetite — the tolerance thresholds are set too low.
+
+*Rationale:* ISO 31000 treats risk management as integrated into decision-making, not a bolt-on register;
+disconnecting it from the numbers it should inform breaches integration. A misreads the defect as
+over-effort; C excuses it; D concerns appetite calibration, a different matter.
+
 ### Self-check — KA 12.1
 
 1. Distinguish risk, uncertainty and issue. *(Risk — uncertain event affecting objectives; uncertainty — lack
@@ -223,6 +246,30 @@ double-count, and the two are not equal.
 *Rationale:* Insurance shifts the financial consequence to a third party — **transfer**. Avoid eliminates the
 cause; mitigate reduces probability/impact; accept retains it.
 
+**MCQ 12.2-D `[12.2.4 · Application]`** A risk has a 40 % probability and a USD 250,000 impact. A proposed
+mitigation costs USD 35,000 and would cut the probability to 20 %. On EMV grounds the mitigation is:
+- A. Worthwhile — the mitigate path costs USD 85,000 against USD 100,000 for accepting. ✅
+- B. Not worthwhile — it costs USD 35,000 with no return.
+- C. Not worthwhile — the mitigate path costs USD 135,000.
+- D. Worthwhile only if the probability falls to zero.
+
+*Rationale:* Accept path `= 40 % × 250,000 = 100,000`; mitigate path `= 35,000 + (20 % × 250,000) = 35,000 +
+50,000 = 85,000` — USD 15,000 cheaper, so the response reduces `probability × impact` by more than it costs.
+B ignores the EMV reduction; C adds the *unmitigated* EMV to the cost, omitting the probability cut; D sets
+a test no response strategy requires.
+
+**MCQ 12.2-E `[12.2.3 · Analysis]`** A register holds two threats — 30 % × USD 200,000 and 20 % ×
+USD 150,000 — and one opportunity: a 40 % chance of a USD 50,000 saving. The net EMV basis for contingency
+is:
+- A. USD 90,000
+- B. USD 70,000 ✅
+- C. USD 110,000
+- D. USD 400,000
+
+*Rationale:* Threat EMVs `0.30 × 200,000 = 60,000` and `0.20 × 150,000 = 30,000` sum to 90,000; the
+opportunity contributes `0.40 × 50,000 = 20,000` of expected *saving*, giving `90,000 − 20,000 = 70,000`. A
+ignores the opportunity; C adds it instead of netting it; D sums the impacts with the probabilities omitted.
+
 ### Self-check — KA 12.2
 
 1. Write a risk in cause-event-effect form and give its EMV formula. *("Because X, risk that Y, leading to Z";
@@ -317,6 +364,29 @@ EMV sum?
 
 *Rationale:* A P80 funds a higher-confidence outcome accounting for adverse combinations, typically exceeding
 the EMV average. P80 is higher (not lower), EMV *is* a risk measure, and the two differ.
+
+**MCQ 12.3-C `[12.3.3 · Application]`** Contingency was set at a Monte Carlo P80 of USD 300,000. Materialised
+risks have drawn USD 80,000 and then USD 60,000, and a re-run of the register puts the remaining exposure at
+a P80 of USD 175,000. The position to report is:
+- A. Remaining contingency USD 160,000 — a USD 15,000 shortfall against remaining exposure, to escalate. ✅
+- B. Remaining contingency USD 160,000 — adequate, since the original USD 300,000 exceeded USD 175,000.
+- C. Remaining contingency USD 220,000 — comfortable headroom.
+- D. No reporting needed — drawing down contingency is normal.
+
+*Rationale:* Remaining contingency `= 300,000 − 80,000 − 60,000 = 160,000` against remaining exposure of
+175,000 — a USD 15,000 shortfall to make visible and escalate towards the management reserve. B tests
+against the *opening* figure, not the remaining one; C nets only the first draw; D confuses a normal
+draw-down with an emerging shortfall.
+
+**MCQ 12.3-D `[12.3.2 · Recall]`** The management reserve is best described as funding that is:
+- A. Inside the cost baseline and controlled by the project manager.
+- B. Outside the baseline, management-controlled, for unidentified (unknown-unknown) risk. ✅
+- C. Derived directly from the risk register's EMV sum.
+- D. Drawn automatically whenever a register risk materialises.
+
+*Rationale:* Management reserve funds what the register *cannot* foresee, sits outside the baseline, and is
+management-controlled; needing it is a re-baselining event. A and C describe the contingency reserve; D
+describes a normal contingency draw-down.
 
 ### Self-check — KA 12.3
 
