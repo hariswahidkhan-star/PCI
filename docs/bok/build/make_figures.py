@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Polygon, Circle, Rectangle
 
 BLUE, INK, SLATE, LIGHT, GREY = "#1D4ED8", "#0F172A", "#64748B", "#EEF3FF", "#CBD5E1"
-RED, GREEN, AMBER, PALE = "#DC2626", "#16A34A", "#D97706", "#F1F5F9"
+RED, GREEN, AMBER, PALE = "#C13329", "#16A34A", "#D97706", "#F1F5F9"
 OUT = pathlib.Path(__file__).resolve().parent / "figures"
 OUT.mkdir(exist_ok=True)
 plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 9, "svg.fonttype": "none"})

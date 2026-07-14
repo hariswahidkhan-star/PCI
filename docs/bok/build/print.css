@@ -1,5 +1,5 @@
 /* PCP-AI Body of Knowledge — premium print stylesheet (A4 certification handbook)
-   Typography: IBM Plex Serif (body) + Inter (display/labels). Brand: #1D4ED8 / #0F172A / #DC2626. */
+   Typography: IBM Plex Serif (body) + Inter (display/labels). Brand: #1D4ED8 / #0F172A / #C13329. */
 
 @page {
   size: A4;
@@ -43,7 +43,7 @@ body {
   font-family: Inter, sans-serif; font-size: 12pt; font-weight: 500; color: #1D4ED8;
   line-height: 1.5; margin-bottom: 10mm;
 }
-.titlepage .rule { width: 34mm; height: 1.4mm; background: #DC2626; margin: 10mm 0; }
+.titlepage .rule { width: 34mm; height: 1.4mm; background: #C13329; margin: 10mm 0; }
 .titlepage .meta { font-family: Inter, sans-serif; font-size: 9pt; color: #64748B; line-height: 1.8; }
 
 /* ---------- Front matter ---------- */
@@ -58,7 +58,7 @@ body {
 }
 .partpage .partnum {
   font-family: Inter, sans-serif; font-size: 10pt; font-weight: 700; letter-spacing: 0.32em;
-  text-transform: uppercase; color: #DC2626; margin-bottom: 6mm;
+  text-transform: uppercase; color: #C13329; margin-bottom: 6mm;
 }
 .partpage .parttitle {
   font-family: Inter, sans-serif; font-size: 24pt; font-weight: 800; letter-spacing: -0.015em;
@@ -71,14 +71,14 @@ body {
 .chapter { page-break-before: always; margin-bottom: 9mm; }
 .chapter .chapkicker {
   font-family: Inter, sans-serif; font-size: 9pt; font-weight: 700; letter-spacing: 0.3em;
-  text-transform: uppercase; color: #1D4ED8; margin-bottom: 3mm;
+  text-transform: uppercase; color: #C13329; margin-bottom: 3mm;
 }
 .chapter h1 {
   font-family: Inter, sans-serif; font-weight: 800; font-size: 21pt; letter-spacing: -0.015em;
   line-height: 1.22; color: #0F172A; border: none; padding: 0; margin: 0 0 4mm 0;
   page-break-before: avoid; string-set: chaptertitle content();
 }
-.chapter .chaprule { height: 1.5mm; width: 34mm; background: #DC2626; margin-bottom: 2mm; }
+.chapter .chaprule { height: 1.5mm; width: 34mm; background: #C13329; margin-bottom: 2mm; }
 .chapter .chaprule2 { height: 0.5mm; width: 100%; background: #1D4ED8; }
 
 /* ---------- Headings ---------- */
@@ -89,9 +89,10 @@ h1 {  /* non-domain h1s (Style Spine, Appendices) */
   line-height: 1.25; border-bottom: 1.2pt solid #1D4ED8; padding-bottom: 3mm; margin: 0 0 7mm 0;
 }
 h2 {
-  font-size: 12.5pt; font-weight: 700; color: #1D4ED8; margin: 8.5mm 0 3mm 0;
+  font-size: 12.5pt; font-weight: 700; color: #0F172A; margin: 8.5mm 0 3mm 0;
   border-bottom: 0.5pt solid #DBEAFE; padding-bottom: 1.4mm;
 }
+h2::before { content: ""; display: inline-block; width: 5.2mm; height: 1.1mm; background: #C13329; margin-right: 2.4mm; vertical-align: 0.55mm; }
 h3 { font-size: 10.3pt; font-weight: 700; margin: 6mm 0 2.2mm 0; }
 h4 { font-size: 9.4pt; font-weight: 600; }
 
@@ -140,7 +141,7 @@ img { max-width: 100%; }
 figcaption {
   font-family: Inter, sans-serif; font-size: 8pt; font-weight: 600; color: #334155; margin-top: 2mm;
 }
-figcaption::before { content: ""; display: block; width: 14mm; height: 0.7mm; background: #DC2626; margin: 0 auto 1.6mm auto; }
+figcaption::before { content: ""; display: block; width: 14mm; height: 0.7mm; background: #C13329; margin: 0 auto 1.6mm auto; }
 
 /* ---------- Lists ---------- */
 ul, ol { margin: 1.4mm 0 2.8mm 0; padding-left: 5.6mm; }
