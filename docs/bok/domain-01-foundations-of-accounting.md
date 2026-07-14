@@ -1429,6 +1429,92 @@ margin, and the provision review is minuted even when — especially when — th
 
 ---
 
+## Calculation exercises — Domain 1
+
+Work each exercise before reading its solution; every step uses only this domain's methods.
+
+**Exercise 1.1** — Kestrel Surveys Ltd begins trading on 1 June with seven transactions: (1) owners
+inject USD 80,000 cash as share capital; (2) equipment is bought for USD 30,000 cash; (3) materials
+costing USD 12,000 are bought on credit; (4) a client is invoiced USD 25,000 for completed survey work;
+(5) wages of USD 9,000 are paid in cash; (6) the client pays USD 15,000 on account; (7) the supplier is
+paid USD 7,000. Post each transaction, balance the ledger accounts, and prepare the trial balance at
+30 June.
+
+**Solution 1.1.** Step 1 — post: (1) `Dr Cash 80,000 / Cr Share capital 80,000`; (2) `Dr Equipment
+30,000 / Cr Cash 30,000`; (3) `Dr Materials 12,000 / Cr Accounts payable 12,000`; (4) `Dr Accounts
+receivable 25,000 / Cr Revenue 25,000`; (5) `Dr Wages expense 9,000 / Cr Cash 9,000`; (6) `Dr Cash
+15,000 / Cr Accounts receivable 15,000`; (7) `Dr Accounts payable 7,000 / Cr Cash 7,000`. Step 2 —
+balance: Cash `80,000 − 30,000 − 9,000 + 15,000 − 7,000 = 49,000 Dr`; receivables `25,000 − 15,000 =
+10,000 Dr`; payables `12,000 − 7,000 = 5,000 Cr`. Step 3 — trial balance:
+
+| Account | Dr | Cr |
+|---|---|---|
+| Cash | 49,000 | |
+| Equipment | 30,000 | |
+| Materials | 12,000 | |
+| Accounts receivable | 10,000 | |
+| Wages expense | 9,000 | |
+| Accounts payable | | 5,000 |
+| Share capital | | 80,000 |
+| Revenue | | 25,000 |
+| **Total** | **110,000** | **110,000** |
+
+`Σ Dr = Σ Cr = 110,000` — the ledger balances.
+
+**Exercise 1.2** — A contractor's draft profit for the year to 31 December is USD 40,000, before three
+period-end items. (a) Subcontractor work of USD 6,000 was performed in December, but no invoice has
+arrived. (b) On 1 March, USD 12,000 was paid for twelve months' insurance cover from that date, and the
+whole amount was expensed. (c) Plant costing USD 60,000, with a USD 12,000 residual value and an
+eight-year life, held throughout the year, has not been depreciated. Compute the adjusted profit,
+showing each journal entry.
+
+**Solution 1.2.** Step 1 — accrual: `Dr Subcontractor expense 6,000 / Cr Accrued liabilities 6,000`;
+profit falls by 6,000. Step 2 — prepayment: cover runs 1 March to 28 February, so `12,000 × 10/12 =
+10,000` belongs to this year and `12,000 − 10,000 = 2,000` is prepaid: `Dr Prepaid insurance 2,000 /
+Cr Insurance expense 2,000`; profit rises by 2,000. Step 3 — depreciation: `(60,000 − 12,000) / 8 =
+6,000`: `Dr Depreciation expense 6,000 / Cr Accumulated depreciation 6,000`; profit falls by 6,000.
+Step 4 — adjusted profit: `40,000 − 6,000 + 2,000 − 6,000 =` **USD 30,000**.
+
+**Exercise 1.3** — At 31 December, counsel assesses a defect claim expected to be settled in exactly
+two years. The possible outcomes are: 50% probability of paying USD 100,000; 30% probability of paying
+USD 35,000; 20% probability of paying nil. A 10% discount rate applies and the time value of money is
+material. Compute the expected value, the initial provision, and the unwinding of the discount in each
+of the two years.
+
+**Solution 1.3.** Step 1 — expected value: `0.50 × 100,000 = 50,000`; `0.30 × 35,000 = 10,500`;
+`0.20 × 0 = 0`; total `50,000 + 10,500 = 60,500`. Step 2 — discount two years at 10%: `1.10² = 1.21`;
+`60,500 / 1.21 = 50,000`. Recognise `Dr Provision expense 50,000 / Cr Provision 50,000`. Step 3 —
+year-1 unwinding: `50,000 × 10% = 5,000`, `Dr Finance cost 5,000 / Cr Provision 5,000`; carrying
+amount `50,000 + 5,000 = 55,000`. Step 4 — year-2 unwinding: `55,000 × 10% = 5,500`; carrying amount
+`55,000 + 5,500 = 60,500`, which equals the expected settlement — the schedule proves itself.
+
+**Exercise 1.4** — A fixed-price contract has a price of USD 500,000. At the reporting date, costs
+incurred to date are USD 320,000 and revenue recognised to date is USD 300,000. The estimate of cost
+to complete has just been revised to USD 240,000. Test whether the contract is onerous and compute the
+provision required under IAS 37.
+
+**Solution 1.4.** Step 1 — total forecast cost: `320,000 + 240,000 = 560,000`. Step 2 — total forecast
+loss: `500,000 − 560,000 = −60,000`; the contract is onerous. Step 3 — loss already in the P&L:
+`300,000 − 320,000 = −20,000`. Step 4 — future loss: remaining revenue `500,000 − 300,000 = 200,000`
+against cost to complete `240,000` gives `200,000 − 240,000 = −40,000`, so a provision of
+**USD 40,000** is required: `Dr Onerous contract loss 40,000 / Cr Provision 40,000`. Check: loss booked
+to date 20,000 plus provision 40,000 equals the 60,000 total forecast loss.
+
+**Exercise 1.5** — A contractor's profit before tax is USD 75,000. The year's non-cash and
+working-capital items are: depreciation USD 12,000; a loss on disposal of plant USD 3,000; receivables
+increased by USD 18,000; inventory decreased by USD 6,000; payables increased by USD 9,000. Interest
+paid was USD 4,000 and tax paid USD 11,000. Compute net cash from operating activities by the indirect
+method.
+
+**Solution 1.5.** Step 1 — add back non-cash items: `75,000 + 12,000 + 3,000 = 90,000`. Step 2 —
+working-capital movements: receivables up absorbs cash, `90,000 − 18,000 = 72,000`; inventory down
+releases cash, `72,000 + 6,000 = 78,000`; payables up releases cash, `78,000 + 9,000 = 87,000` — cash
+generated from operations. Step 3 — deduct interest and tax paid: `87,000 − 4,000 − 11,000 = ` **USD
+72,000** net cash from operating activities. Note the gap: profit 75,000 versus operating cash 72,000
+— the 3,000 difference is the net effect of the add-backs and the working-capital absorption.
+
+---
+
 ## Domain 1 summary
 
 The accounting model is one identity — `A = L + E` — recorded from both sides (double-entry), producing four

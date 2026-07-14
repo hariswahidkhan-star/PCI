@@ -1287,6 +1287,82 @@ revenue or loss-recognition surprises, because the gaps that produce them were b
 
 ---
 
+## Calculation exercises — Domain 2
+
+Work each exercise before reading its solution; every step uses only this domain's methods.
+
+**Exercise 2.1** — A contractor signs a single contract priced at USD 540,000 covering three distinct
+performance obligations: design (standalone selling price USD 120,000), construction (SSP USD 400,000)
+and a maintenance period (SSP USD 80,000). The price reflects a bundle discount on the package as a
+whole. Allocate the transaction price to each obligation under IFRS 15 and state the discount borne by
+each.
+
+**Solution 2.1.** Step 1 — sum the SSPs: `120,000 + 400,000 + 80,000 = 600,000`. Step 2 — allocation
+ratio: `540,000 / 600,000 = 0.90`, i.e. a 10% bundle discount applied pro rata. Step 3 — allocate:
+design `120,000 × 0.90 = 108,000`; construction `400,000 × 0.90 = 360,000`; maintenance `80,000 × 0.90
+= 72,000`. Step 4 — prove: `108,000 + 360,000 + 72,000 = 540,000`. The 60,000 discount is borne
+12,000 / 40,000 / 8,000 — in proportion to SSP, because no evidence ties it to a specific obligation.
+
+**Exercise 2.2** — A contract is priced at USD 1,000,000 with an original total cost estimate of
+USD 800,000, recognised over time by the cost-to-cost input method. Year-1 costs incurred are
+USD 320,000. In year 2, cumulative costs reach USD 630,000 and the estimate of total cost is revised
+to USD 900,000. Compute revenue and profit for each year separately.
+
+**Solution 2.2.** Step 1 — year-1 progress: `320,000 / 800,000 = 40%`. Step 2 — year-1 revenue
+`1,000,000 × 40% = 400,000`; profit `400,000 − 320,000 = 80,000`. Step 3 — year-2 progress on the
+revised estimate: `630,000 / 900,000 = 70%`; cumulative revenue `1,000,000 × 70% = 700,000`. Step 4 —
+year-2 period revenue: `700,000 − 400,000 = 300,000`. Step 5 — cumulative profit `700,000 − 630,000 =
+70,000`, so year-2 period profit is `70,000 − 80,000 = −10,000`: the revision's cumulative catch-up
+lands wholly in year 2, prospectively. The contract still forecasts a `1,000,000 − 900,000 = 100,000`
+profit, so no onerous-contract provision arises.
+
+**Exercise 2.3** — A contract has a fixed price of USD 2,000,000 plus an early-completion bonus with
+three outcomes: 60% probability of USD 300,000, 30% probability of USD 100,000, 10% probability of
+nil. The outcome depends on weather over the remaining programme. The entity judges it highly probable
+that at least USD 100,000 will not reverse, but not the larger amount. The contract is 40% complete.
+Compute the expected value, the constrained transaction price, and revenue to date.
+
+**Solution 2.3.** Step 1 — expected value of the bonus: `0.60 × 300,000 = 180,000`; `0.30 × 100,000 =
+30,000`; `0.10 × 0 = 0`; total `210,000`. Step 2 — constraint: 210,000 is not itself a possible
+outcome and the 300,000 layer could reverse, so only the amount highly probable not to reverse is
+included — 100,000 (there is a `60% + 30% = 90%` cumulative probability of receiving at least that).
+Step 3 — transaction price: `2,000,000 + 100,000 = 2,100,000`. Step 4 — revenue to date: `2,100,000 ×
+40% = 840,000`. Unconstrained, it would have been `2,210,000 × 40% = 884,000` — the constraint holds
+back 44,000 until the uncertainty resolves.
+
+**Exercise 2.4** — On an over-time contract, revenue recognised and amounts billed are: period 1 —
+revenue USD 200,000, billings USD 150,000; period 2 — revenue USD 250,000, billings USD 350,000;
+period 3 — revenue USD 300,000, billings USD 220,000. Determine the contract asset or contract
+liability at the end of each period and explain each movement.
+
+**Solution 2.4.** Work on cumulative figures. Step 1 — period 1: revenue 200,000 versus billings
+150,000 → **contract asset 50,000** (work performed ahead of billing). Step 2 — period 2: cumulative
+revenue `200,000 + 250,000 = 450,000`; cumulative billings `150,000 + 350,000 = 500,000` → **contract
+liability 50,000**: the heavy billing swings the position by 100,000, from financing the client to
+being financed. Step 3 — period 3: cumulative revenue `450,000 + 300,000 = 750,000`; cumulative
+billings `500,000 + 220,000 = 720,000` → **contract asset 30,000** — work has again outrun billing,
+by 80,000 in the period. One net position is presented per contract at each date; the trend, not the
+sign alone, is what the dashboard should show.
+
+**Exercise 2.5** — A contractor leases an excavator for two years, paying USD 60,000 at the end of
+year 1 and USD 55,000 at the end of year 2. The interest rate implicit in the lease is 10% and there
+are no initial direct costs. Under IFRS 16, compute the initial lease liability, the two-year
+liability schedule, the annual depreciation, and the total P&L charge each year.
+
+**Solution 2.5.** Step 1 — initial liability: `60,000 / 1.10 = 54,545` plus `55,000 / 1.21 = 45,455`
+gives **100,000**; the right-of-use asset is also 100,000. Step 2 — schedule:
+
+| Year | Opening | Interest at 10% | Payment | Closing |
+|---|---|---|---|---|
+| 1 | 100,000 | 10,000 | (60,000) | 50,000 |
+| 2 | 50,000 | 5,000 | (55,000) | 0 |
+
+Step 3 — depreciation: `100,000 / 2 = 50,000` per year, straight-line. Step 4 — total P&L charge:
+year 1 `50,000 + 10,000 = 60,000`; year 2 `50,000 + 5,000 = 55,000`. Total `115,000` equals total
+payments `60,000 + 55,000` — front-loaded relative to a straight rental of 57,500 per year.
+
+---
+
 ## Domain 2 summary
 
 Financial reporting exists to give external users decision-useful information — relevant and faithfully
