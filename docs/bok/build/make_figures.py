@@ -76,18 +76,15 @@ def ar(ax, x1, y1, x2, y2, color=SLATE, lw=1.4, style="-|>"):
 
 # ---------------- Domain 1 ----------------
 def fig_1_1_1():
-    fig, ax = newfig(6, 3)
-    ax.set_xlim(0, 10); ax.set_ylim(0, 5)
-    ax.add_patch(Polygon([(5, 1), (4.6, 0.2), (5.4, 0.2)], fc=SLATE))          # fulcrum
-    ax.plot([1.5, 8.5], [3.2, 3.2], color=INK, lw=2.5)                          # beam
-    ax.plot([5, 5], [1, 3.2], color=INK, lw=2.5)
-    for xp in (1.5, 8.5): ax.plot([xp, xp], [3.2, 2.6], color=SLATE, lw=1.2)
-    bx(ax, 0.3, 1.4, 2.4, 1.2, "Assets\n100,000", fc=BLUE, ec=BLUE, tc="white", bold=True)
-    bx(ax, 7.3, 1.9, 2.4, 0.9, "Equity 100,000", fc=BLUE, ec=BLUE, tc="white", bold=True, fs=8)
-    bx(ax, 7.3, 1.45, 2.4, 0.4, "Liabilities 0", fc=PALE, ec=GREY, tc=SLATE, fs=7.5)
-    ax.text(5, 4.4, "A  =  L  +  E", ha="center", fontsize=13, color=INK, fontweight="bold")
-    ax.text(5, 0.0, "The equation holds after every transaction — the beam stays level.",
-            ha="center", fontsize=8, color=SLATE)
+    fig, ax = newfig(6.6, 3.2)
+    ax.set_xlim(0, 12); ax.set_ylim(0, 6)
+    ax.text(6, 5.45, "A  =  L  +  E", ha="center", fontsize=15, color=INK, fontweight="bold")
+    ax.plot([2, 10], [4.2, 4.2], color=INK, lw=3, solid_capstyle="round")   # beam
+    ax.add_patch(Polygon([(6, 4.2), (5.45, 2.9), (6.55, 2.9)], fc=SLATE))   # fulcrum
+    for xp in (2.6, 9.4): ax.plot([xp, xp], [4.2, 3.6], color=GREY, lw=1.4)
+    bx(ax, 0.9, 2.2, 3.4, 1.4, "Assets\n100,000", fc=BLUE, ec=BLUE, tc="white", bold=True, fs=9.5)
+    bx(ax, 7.7, 2.5, 3.4, 1.1, "Equity  100,000", fc=BLUE, ec=BLUE, tc="white", bold=True, fs=9)
+    bx(ax, 7.7, 1.7, 3.4, 0.65, "Liabilities  0", fc=PALE, ec=GREY, tc=SLATE, fs=8)
     save(fig, "fig_1_1_1")
 
 def fig_1_1_2():
@@ -104,17 +101,18 @@ def fig_1_1_2():
     save(fig, "fig_1_1_2")
 
 def fig_1_2_1():
-    fig, ax = newfig(7.2, 3.6)
+    fig, ax = newfig(7.2, 3.5)
     ax.set_xlim(0, 12); ax.set_ylim(0, 7)
-    bx(ax, 0.5, 4.2, 3.6, 2.0, "SOPL\nProfit 17,000", bold=True)
-    bx(ax, 7.9, 4.2, 3.6, 2.0, "SOCE\nRetained earnings\n17,000", bold=True)
-    bx(ax, 7.9, 0.6, 3.6, 2.0, "SOFP\nEquity 117,000\nCash 129,000", fc=BLUE, ec=BLUE, tc="white", bold=True)
-    bx(ax, 0.5, 0.6, 3.6, 2.0, "Cash flows\nNet increase\n129,000", bold=True)
-    ar(ax, 4.2, 5.2, 7.8, 5.2, color=BLUE, lw=2); ax.text(6, 5.5, "profit", ha="center", fontsize=8, color=BLUE)
-    ar(ax, 9.7, 4.1, 9.7, 2.7, color=BLUE, lw=2); ax.text(10.3, 3.4, "to equity", fontsize=8, color=BLUE)
-    ar(ax, 4.2, 1.6, 7.8, 1.6, color=BLUE, lw=2); ax.text(6, 1.9, "closing cash", ha="center", fontsize=8, color=BLUE)
-    ax.text(6, 0.05, "The statements articulate — shared figures lock them together.",
-            ha="center", fontsize=8, color=SLATE)
+    bx(ax, 0.5, 4.4, 3.9, 2.1, "SOPL\nProfit 17,000", bold=True, fs=9.5)
+    bx(ax, 7.6, 4.4, 3.9, 2.1, "SOCE\nRetained earnings\n17,000", bold=True, fs=9.5)
+    bx(ax, 7.6, 0.7, 3.9, 2.1, "SOFP\nEquity 117,000\nCash 129,000", fc=BLUE, ec=BLUE, tc="white", bold=True, fs=9.5)
+    bx(ax, 0.5, 0.7, 3.9, 2.1, "Cash flows\nNet increase\n129,000", bold=True, fs=9.5)
+    ar(ax, 4.55, 5.45, 7.45, 5.45, color=BLUE, lw=2)
+    ax.text(6, 5.8, "profit", ha="center", fontsize=8.5, color=BLUE, fontweight="bold")
+    ar(ax, 9.55, 4.25, 9.55, 3.0, color=BLUE, lw=2)
+    ax.text(10.05, 3.62, "to equity", fontsize=8.5, color=BLUE, fontweight="bold")
+    ar(ax, 4.55, 1.75, 7.45, 1.75, color=BLUE, lw=2)
+    ax.text(6, 2.1, "closing cash", ha="center", fontsize=8.5, color=BLUE, fontweight="bold")
     save(fig, "fig_1_2_1")
 
 def fig_1_3_1():
