@@ -658,6 +658,122 @@ dismisses a real ~5-point deterioration.
 
 ---
 
+## Advanced topics — Domain 6
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 6.A.1 — Management reserve and the EVM baseline
+
+**The principle.** **Management reserve (MR)** sits **outside** the performance measurement baseline
+(Domain 3, KA 3.1.4): `BAC` is the sum of the control-account budgets, any undistributed budget and the
+contingency reserve — MR is above that line, held by management for unknown-unknowns. Two consequences
+follow. First, **variances are never computed against MR**: `CV`, `CPI` and `VAC` measure performance
+against the baseline the project committed to, and quietly padding the comparator with reserve would make
+every index a flattering lie. Second, **using MR re-baselines**: releasing reserve into the PMB is a formal
+baseline change — logged, authorised, dated — after which `BAC` rises and every subsequent `PV`, `TCPI` and
+`VAC` is read against the new figure. A reserve release is a decision, not an adjustment.
+
+**The formal discipline.** On large programmes the baseline stays auditable through two mechanisms. The
+**undistributed budget (UB)** holds budget for authorised scope not yet assigned to control accounts — a
+temporary parking place, drawn down as work is defined, so that authorised scope never floats outside the
+baseline unaccounted for. **Control-account budget logs** record every movement into and out of each
+control account — scope transfers, contingency draw-downs, authorised changes — so that at any data date
+the sum of control-account budgets plus UB plus remaining contingency reconciles exactly to the original
+`BAC` plus authorised changes. Retroactive changes to the budgets of open or completed work packages are
+prohibited except to correct errors: rewriting history rewrites `PV`, and with it every variance ever
+reported.
+
+**The failure mode** is the *rubber baseline* — repeated re-baselining that resets variances to zero and
+launders a deteriorating `CPI` into a fresh start. The log discipline exists precisely so that a reviewer
+can see how many times the baseline moved, by how much, and on whose authority.
+
+### Advanced 6.A.2 — EVM lite versus formal EVMS
+
+**The principle.** A full **earned-value management system (EVMS)** — formal system guidelines and
+criteria, documented procedures, independent surveillance, integrated baseline reviews — is the apparatus
+of major government programmes, where a public funder mandates demonstrable compliance (the world of KA
+6.4.5's defence programme and this domain's highways case). Most commercial projects need the *method*
+without the *apparatus*: a scaled **'EVM-lite'** with fewer, larger control accounts (Domain 5, KA 5.3);
+deliberately simple earning rules — 0/100, 50/50 and units completed in preference to subjective
+percent-complete (6.1.2); a monthly cadence aligned to the ledger close so `AC` arrives accrual-complete;
+and a report built around a handful of measures — `CPI`, `SPI`, `EAC`, `TCPI` — rather than a full formal
+data set.
+
+**What can be scaled away** is ceremony and granularity: the number of control accounts, the depth of the
+reporting formats, the independent surveillance function. **What cannot be scaled away** are the three
+things that make the arithmetic mean anything: **earning rules fixed in advance** per work package —
+otherwise `EV` is negotiable and every index inherits the optimism (6.1.2); **a controlled baseline** —
+otherwise `PV` is whatever this month's plan says and `SV` measures nothing (Domain 3; Advanced 6.A.1); and
+**honest `AC`**, complete with accruals — otherwise `CPI` is computed on an understated denominator, the
+classic flattering failure (Domain 5, KA 5.2). Strip those and the formulae still compute — EVM fails
+politely, producing plausible numbers about nothing.
+
+**The professional judgement** is proportionality: matching the weight of the system to the size and risk
+of the project, while refusing to trade away the three invariants. A small project run on ten control
+accounts and 0/100 rules can be more honest than a large one drowning in unverified percent-complete.
+
+### Advanced 6.A.3 — The percent-complete plateau and 'watermelon' reporting
+
+**The pattern.** Many projects race to "90 % complete" and then stay there for months — the
+**percent-complete plateau**. The tail work (punch lists, testing, commissioning documentation, closeout)
+consumes time and cost while little budgeted value remains to earn, so reported progress barely moves. The
+cost-based `SPI` is at its blindest here — converging to 1 regardless of lateness (6.4.2) — and subjective
+percent-complete claims are at their most optimistic, because "nearly done" is the easiest claim to make
+and the hardest to falsify. The companion pathology is **'watermelon' reporting**: green on the outside,
+red on the inside — RAG statuses that stay green while the underlying indices slide, usually because status
+is self-assessed and no one reconciles the colour to the numbers.
+
+**The countermeasures** are all applications of this domain's own discipline:
+
+- **0/100 or milestone rules for closing work packages** (6.1.2) — nothing is allowed to sit at "95 %"
+  indefinitely; the final tranche of value is earned only on verified completion, so the plateau becomes
+  visible as an `EV` curve that has genuinely stalled.
+- **Quantity-based `EV` wherever the work allows** — units completed against budget resist optimism in a
+  way assessed percentages do not.
+- **Trend review** (Domain 4, KA 4.1.2) — an `EV` curve flat across successive periods while `AC` climbs is
+  a leading indicator of a troubled tail, and a status that stays green against a sliding `CPI`/`SPI` trend
+  is the watermelon signature; the reconciliation of narrative to numbers is a standing check.
+- **Separate tracking of punch-list and closeout effort** — giving the tail its own control account or work
+  packages, with their own budget and earning rules, so closeout is measured work rather than an untracked
+  residue smeared across finished accounts.
+
+The through-line: the plateau is not a measurement curiosity, it is where inflated `EV` and unfunded tail
+effort hide. The professional interrogates a long-standing "nearly done" as hard as any overrun (6.2.4).
+
+### Advanced 6.A.4 — Earned schedule beyond the basics
+
+**`SPI(t)` as a trend.** A single `SPI(t)` reading is a position; the **trend across periods** is the
+signal — exactly the logic of the deteriorating `CPI` in KA 6.4.5. Because `SPI(t)` does not converge to 1
+at completion (6.4.3), its trend stays meaningful through the back half of a project, when the cost-based
+`SPI` has gone quiet: an `SPI(t)` sliding period on period late in a programme is reporting a real,
+worsening delay that the conventional index can no longer see.
+
+**Forecasting the completion date.** Earned schedule extends naturally from measuring lateness to
+forecasting it: as a first cut, forecast duration = planned duration / `SPI(t)` — the time-domain analogue
+of `EAC = BAC / CPI`.
+
+1. **Setup.** The master project: planned duration **10 months**; at Month 5, `ES` = 4.75 months and
+   `SPI(t)` = **0.95** (6.4.3b).
+2. **Formula.** `Forecast duration = planned duration / SPI(t)`.
+3. **Substitution.** `10 / 0.95 = 10.53`.
+4. **Result.** Forecast duration ≈ **10.5 months** — roughly half a month late.
+5. **Interpretation.** The forecast assumes the schedule performance achieved to date **persists uniformly**
+   across the remaining work — the same assumption family as the `EAC` methods (6.3.2), and it must be
+   stated with the number. If the remaining work differs in character, or a recovery action is genuinely
+   funded and resourced, the extrapolation is the wrong basis, just as method (b) is the wrong `EAC` for an
+   atypical variance.
+
+**The standing limit.** Earned schedule aggregates all work into one time measure; it still **cannot see
+the critical path**. A healthy `SPI(t)` can coexist with a critical activity slipping while float-rich work
+runs ahead — the same blindness as the cost-based indices (6.4.2). The completion date is determined on the
+network, through schedule progressing and baseline comparison (Domain 10, KA 10.4.2), which is why the case
+study cross-checks its earned-schedule read against the critical path before believing it. Earned schedule
+**complements — never replaces — CPM**: it prices and trends the drift the network cannot quantify; the
+network says whether the drift moves the end date.
+
+---
+
 ## Case study — Domain 6: a full EVM cycle on a highways programme (government/infrastructure)
 
 ### Background

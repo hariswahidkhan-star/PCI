@@ -1069,6 +1069,114 @@ statutory revenue follows IFRS 15, not the management pack.
 
 ---
 
+## Advanced topics — Domain 2
+
+*These topics extend the domain for practitioners who lead the function; the examination samples them
+lightly, practice does not.*
+
+### Advanced 2.A.1 — Warranties: assurance-type versus service-type
+
+**The principle.** Under IFRS 15 a warranty is analysed by what it *promises*. An **assurance-type warranty**
+promises only that the product works as specified — it assures the quality already delivered, adds no new
+service, and is **not** a performance obligation. It is accounted for as a **cost provision** under IAS 37:
+a present obligation from a past event (the delivery), measured at the best estimate — for a large
+population, the expected value across the failure rates (Domain 1, worked example 1.4.3a is exactly this
+computation). A **service-type warranty** promises something *beyond* that assurance — an additional
+service, such as extended cover past the standard defect period, or maintenance bundled into the warranty
+terms. That promise is a **separate performance obligation** (step 2, KA 2.2.3): it is allocated its share
+of the transaction price by standalone selling price (2.2.5) and recognised **over the warranty period**,
+typically straight-line, exactly as the O&M obligation runs in this domain's case study.
+
+**A short contrast.** A contractor hands over process plant carrying the statutory twelve-month defects
+warranty, and separately sells the customer an optional three-year extended cover. The twelve-month
+warranty changes no revenue: the full equipment price is recognised on the equipment's pattern, and a
+warranty **provision** is booked at handover for the expected repair outflow. The extended cover is a
+**second obligation**: its allocated price is deferred as a contract liability (2.2.7) and recognised across
+the three years it runs — none of it belongs to the handover period. Indicators pointing to service-type
+include cover the law does not require, unusually long duration, and promised tasks beyond fixing defects
+(inspections, servicing).
+
+**The controls angle.** The classification moves both lines a controls professional owns: the revenue
+schedule (how much price waits on the warranty years) and the provisions balance (what the defects period
+will cost). A defects-liability period priced into the contract but treated as "free" is the classic
+mis-split — it pulls revenue forward and understates the tail.
+
+### Advanced 2.A.2 — Uninstalled materials and the integrity of PoC
+
+**The principle.** Cost-to-cost measurement (2.2.6) rests on one assumption: that cost incurred is a
+faithful proxy for **performance**. Any cost that does not represent progress breaks the proxy, and IFRS 15
+requires it to be kept out of the measure. The two standing examples are **uninstalled materials** —
+delivered to site, paid for, but not yet built into the works — and **abnormal wastage** (including
+significant rework). Including either in the numerator inflates `PoC`, pulls revenue and margin forward,
+and then unwinds in a later period when the ratio catches up with reality — an overstatement, not a timing
+nicety.
+
+**The treatments.** Costs of abnormal wastage are **excluded from the ratio** altogether — they measure
+inefficiency, not progress. For uninstalled materials that the customer nonetheless controls (long-lead
+equipment delivered to site ahead of installation), the standard's answer is **zero-margin recognition**:
+revenue is recognised only to the extent of the cost of those materials, with no profit attached, and the
+margin is earned later as the installation work — the actual performance — is done. Either way, the goods
+do not manufacture progress by arriving.
+
+**The controls angle.** This line — between *cost incurred* and *progress achieved* — is policed by the
+controls function, not by the finance function reading the ledger. It is item 1 of the case-study
+checklist: reconciling the `PoC` numerator means matching goods-received records against installation and
+quantity records (the materials-on-site position from the valuation cycle, Domain 7), applying wastage
+norms so the abnormal excess is identified, and coding rework so it is visible (Domain 5). A large
+month-end delivery that spikes the cost ledger is the standing test case: if `PoC` jumps with it, the
+control has failed. The revenue number is only as honest as this reconciliation.
+
+### Advanced 2.A.3 — Loss-making versus low-margin contracts: the disclosure boundary
+
+**The principle.** The onerous-contract test (2.2.6; IAS 37, Domain 1, KA 1.4.5) bites at expected
+**loss** — forecast total cost exceeding the transaction price — not at thin margin. A contract forecasting
+a 1 % margin books no provision, however uncomfortable it feels; a contract forecasting a 1 % loss books
+the *entire* remaining loss immediately. The boundary is binary, and that is exactly why the run-up to it
+must not be: the 2.2.10 mini-case shows how a contract crosses from thin margin to full loss recognition
+within a single reporting period.
+
+**The watch-list.** A contract trending toward the trigger belongs on a formal watch-list before the sign
+turns. A robust one has, per contract: the current `EAC` (Domain 6) against the contract's allocated price;
+the **headroom** in currency and in margin percentage; the headroom **trend** over the last three periods
+(the direction matters more than the level — the same leading-indicator logic as Domain 4); the estimate
+assumptions the margin depends on and their sensitivity (which single risk, if it lands, closes the gap);
+unagreed variations or claims assumed in the price but constrained out of recognised revenue (2.2.4); and a
+named owner with a review date. Entry criteria are set in advance — margin below a defined threshold, or
+headroom eroding for consecutive periods — so listing is mechanical, not discretionary. The case-study
+checklist's instruction is the summary: *watch the gap, not just the sign.*
+
+**The disclosure boundary.** The judgement disclosures (2.2.9) are where auditors and users will probe —
+how progress is measured, how variable consideration was estimated and constrained, and what the remaining
+performance obligations hold. A maintained watch-list is the evidence that management watched the gap all
+year; its absence is what turns a period-end loss into a question about when management *knew*.
+
+### Advanced 2.A.4 — Portfolio effects and disaggregation
+
+**The principle.** IFRS 15 is applied contract by contract, and IAS 1's no-offset principle (2.1.4) keeps
+it that way in presentation: one contract's **contract asset** cannot be netted against another contract's
+**contract liability**, even for the same customer — each contract's cumulative revenue-versus-billing
+position (2.2.7) is struck and presented on its own. A portfolio *view* is legitimate and useful for
+management — the aggregate under- and over-billing position drives the cash-flow forecast (Domain 3) — but
+the statutory presentation stays gross per contract, and a management pack that quietly nets the two is
+storing up a reconciliation problem (2.5.2).
+
+**Disaggregation.** The disclosure requirements (2.2.9) include **disaggregated revenue** — revenue split
+into categories that show how its nature, amount, timing and uncertainty differ. For a project business the
+revealing cuts are **contract type** (fixed-price versus cost-plus and the remeasurement forms — Domain 7's
+pricing spectrum, each carrying a different risk profile), **recognition pattern** (over time versus point
+in time, 2.2.6), and market or geography. The split tells users what kind of revenue this is: a book of
+cost-plus work over time is a different risk animal from lump-sum turnkey, at the same headline number.
+
+**The controls angle.** A controls function should be able to produce that split **from its own coding,
+without a fire drill**. If the project and contract-master data carry contract type, pricing basis and
+recognition pattern as standing attributes (the coding discipline of Domain 1, KA 1.5), disaggregation is a
+query; if they do not, year-end becomes a manual trawl through contract files. The same applies to the
+**remaining performance obligations** disclosure — it is the order book, and it should reconcile to the
+order book the business already reports internally (2.5.2). Where the statutory disclosure and the
+management number cannot be tied together, one of them is wrong.
+
+---
+
 ## Case study — Domain 2: revenue on a design-build-operate water contract (infrastructure)
 
 *This end-of-domain case study runs the full IFRS 15 five-step model across a single multi-obligation,
