@@ -1697,6 +1697,41 @@ AI can draft the integration mappings, flag anomalies at the boundary and even n
 13.5.8) — but the data contract, the validation thresholds and the single-source decision are governance
 choices a named professional owns. AI proposes, the professional disposes.
 
+### Advanced 13.A.7 — Evaluating AI outputs: golden sets, precision and recall, and drift
+
+"Measure, don't trust" (KA 13.3.3) is a principle; this topic is its machinery. The test instrument is the
+**golden set** — a sample of inputs whose correct answers were established by professionals and are kept
+under version control — against which any AI step in the controls workflow is scored, before reliance and on
+a cadence thereafter. Two complementary error rates come out of every such run. **Precision** asks: of what
+the model flagged or produced, how much was right? — it is the cost of **false alarms**. **Recall** asks: of
+what was truly there, how much did the model find? — it is the cost of **misses**. Which matters more is not
+a technical question but an economic one, priced by the error arithmetic of 13.A.5: a fraud monitor lives on
+recall, because a miss is expensive; an auto-coder lives on precision, because a false code pollutes the
+ledger.
+
+**Worked example 13.A.7 — a golden-set evaluation, run and re-run.**
+
+1. **Setup.** A duplicate-invoice detector (KA 13.5.4) is evaluated on a golden set of **200 invoices**
+   containing **50 known duplicates**. The model flags **40** invoices, of which **30** are genuine
+   duplicates.
+2. **Formula.** `precision = true hits ÷ total flags`; `recall = true hits ÷ total true cases`; balanced
+   summary `F1 = 2 × (precision × recall) ÷ (precision + recall)`.
+3. **Substitution.** Precision `= 30 ÷ 40 = 75 %`; recall `= 30 ÷ 50 = 60 %`;
+   `F1 = 2 × (0.75 × 0.60) ÷ (0.75 + 0.60) = 0.90 ÷ 1.35 ≈ 0.67`.
+4. **Result.** Fit for use as a *screening* aid — 75 % of its alerts are real — but not as the only line of
+   defence: it misses 40 % of duplicates, so the month-end duplicate review of Toolkit 11.T.2 stays.
+5. **Interpretation.** The evaluation is re-run quarterly on the versioned set. Next quarter the same **30**
+   genuine hits need **48 flags** — precision `30 ÷ 48 = 62.5 %` — **drift**, investigated per 13.A.2 before
+   anyone re-tunes thresholds. One number is never enough: precision without recall rewards a model that
+   flags almost nothing; recall without precision rewards one that flags everything; and any score without a
+   dated golden set and a re-run cadence is a claim, not a measurement.
+
+The governance is the point. The golden set is **versioned**; its provenance is documented — who judged the
+answers, and when; and it is **never used to train or tune the model it tests** — the exam-integrity
+principle applied to machines. Its results feed the model inventory (13.A.2) and the review-step pricing
+(13.A.5). Stated honestly: building and refreshing golden sets is unglamorous professional work — and it is
+exactly the work that separates governed AI from vibes.
+
 ---
 
 ## Case study — Domain 13: building an AI-augmented controls function at a transport agency (government)
