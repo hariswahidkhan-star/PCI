@@ -1,4 +1,4 @@
-# Batch 0 — Style Spine (the shared authoring standard)
+# The Style Spine — Conventions of This Reference
 
 > **Status:** foundation document. Every domain of the PCP-AI Body of Knowledge (BoK) is authored against
 > this spine so that terminology, notation, worked-example format, figures and MCQs stay consistent across
@@ -12,7 +12,7 @@ checklist.
 
 ---
 
-## 1. Scope, weighting & page budget (v1)
+## 1. Scope & weighting
 
 The BoK is weighted **40 % finance / 40 % project management / 20 % AI**, with an "AI in this domain"
 section additionally embedded in every non-AI chapter. The full volume targets **~1,500 pages** of genuine
@@ -35,7 +35,7 @@ and the ~1,500-page target hold.
 
 ---
 
-## 2. Three-level structure (use everywhere)
+## 2. The three-level structure
 
 - **DOMAIN** — the major pillar (e.g. *Foundations of Accounting for Project Controls*).
 - **KNOWLEDGE AREA (KA)** — a coherent body within a domain (e.g. *The accounting model*).
@@ -47,7 +47,7 @@ content.
 
 ---
 
-## 3. Seed glossary (extend, never redefine)
+## 3. The seed glossary
 
 Terms are defined **once** here and used identically everywhere. Where a domain introduces a new term, it
 is added to this glossary in the consolidation pass; it must not be silently redefined in a later chapter.
@@ -66,7 +66,7 @@ is added to this glossary in the consolidation pass; it must not be silently red
 
 ---
 
-## 4. Master formula-symbol table (defined once; restate on use)
+## 4. The master formula-symbol table
 
 Every symbol below means the same thing in every chapter. When a chapter uses a symbol, it restates the
 definition inline, but never changes it. Finance/EVM symbols are seeded here even though they are first
@@ -95,7 +95,7 @@ used deeply in Domains 3–6, so the classical and agile treatments (Domain 9) s
 
 ---
 
-## 5. Worked-example format (mandatory shape)
+## 5. The worked-example format
 
 Every worked example uses this five-line skeleton so a reader can follow any calculation identically across
 the book:
@@ -111,7 +111,7 @@ explicitly rather than glossing over it.
 
 ---
 
-## 6. Figure & animation spec format
+## 6. Figure & animation specifications
 
 - **Figures (print + digital).** Every KA specifies at least one figure where a diagram/chart/table aids
   understanding. Each figure has: a **number** (`Fig 1.2.1` = Domain 1, KA 2, figure 1), a **caption**, the
@@ -137,7 +137,7 @@ explicitly rather than glossing over it.
 
 ---
 
-## 8. MCQ format (every Knowledge Area)
+## 8. The MCQ format
 
 Each KA ends with **3–6 sample MCQs** to certification standard:
 
@@ -152,7 +152,7 @@ Each KA ends with **3–6 sample MCQs** to certification standard:
 
 ---
 
-## 9. Citation rules (non-negotiable)
+## 9. Citation rules
 
 - **Name real frameworks; never fabricate.** Reference standards by name and principle — IFRS 15, IAS 1,
   IAS 2, IAS 16, IAS 23, IAS 37, IFRS 16; PMBOK, AACE TCM Framework; ISO 31000, ISO/IEC 17024; the Agile
@@ -167,7 +167,7 @@ Each KA ends with **3–6 sample MCQs** to certification standard:
 
 ---
 
-## 10. Per–Knowledge-Area authoring checklist
+## 10. The per–Knowledge-Area checklist
 
 Author each KA to this checklist; a KA is complete only when every applicable line is satisfied.
 
@@ -186,7 +186,7 @@ Author each KA to this checklist; a KA is complete only when every applicable li
 
 ---
 
-## 11. Domain map (v1 outline — the thirteen domains)
+## 11. The domain map — the thirteen domains
 
 | # | Domain | Group | ~Pages |
 |---|---|---|---|

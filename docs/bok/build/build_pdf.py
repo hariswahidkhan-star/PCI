@@ -126,13 +126,40 @@ def main() -> None:
     # Premium chapter openers: rewrite each "Domain N — Title" h1 into a styled opener (id kept for TOC links).
     import re as _re
     def chap(m):
-        return (f'<div class="chapter"><div class="chapkicker">Domain {m.group(2)}</div>'
+        return (f'<div class="chapter"><div class="chapnum">{int(m.group(2)):02d}</div>'
+                f'<div class="chapkicker">Domain {m.group(2)}</div>'
                 f'<h1 id="{m.group(1)}">{m.group(3)}</h1>'
                 f'<div class="chaprule"></div><div class="chaprule2"></div></div>')
     html_body = _re.sub(r'<h1\s+id="([^"]+)">Domain\s+(\d+)\s+—\s+(.+?)</h1>', chap, html_body, flags=_re.S)
 
     # Mark figure-spec blockquotes so only they carry the FIGURE SPECIFICATION label.
     html_body = _re.sub(r'<blockquote>(\s*<p><strong>Fig\s)', r'<blockquote class="figspec">\1', html_body)
+
+    # Premium KA openers: split "Knowledge Area N.N — Title" h2s into kicker + title lines.
+    html_body = _re.sub(
+        r'<h2\s+id="([^"]+)">Knowledge\s+Area\s+(\d+\.\d+)\s+—\s+(.+?)</h2>',
+        r'<h2 class="ka" id="\1"><span class="kanum">Knowledge Area \2</span>'
+        r'<span class="katitle">\3</span></h2>',
+        html_body, flags=_re.S)
+
+    # Recurring apparatus headings become small-cap mini-heads.
+    html_body = _re.sub(
+        r'<h3\s+id="([^"]+)">((?:Key terms|Sample MCQs|Self-check)[^<]*)</h3>',
+        r'<h3 class="minihead" id="\1">\2</h3>', html_body)
+
+    # Worked examples: wrap the heading paragraph plus its numbered steps in a labelled panel.
+    wex_pat = _re.compile(
+        r'<p><strong>Worked example ([^<]+)</strong>((?:(?!</p>).)*)</p>\s*'
+        r'<ol((?:(?!</ol>).)*)</ol>', _re.S)
+    n_wex = len(wex_pat.findall(html_body))
+    html_body = wex_pat.sub(
+        r'<div class="wex"><p class="wexhead"><strong>Worked example \1</strong>\2</p>'
+        r'<ol\3</ol></div>', html_body)
+    print(f"worked-example panels: {n_wex}")
+
+    # Exercises: accent the problem statement.
+    html_body = _re.sub(r'<p><strong>Exercise (\d+\.\d+)</strong>',
+                        r'<p class="exhead"><strong>Exercise \1</strong>', html_body)
 
     # Part dividers before Domains 1, 5 and 13.
     PARTS = [
@@ -149,9 +176,10 @@ def main() -> None:
          "governed use of artificial intelligence across the whole controls lifecycle. Twenty per cent of the "
          "Body of Knowledge, under one principle: AI proposes, the professional disposes."),
     ]
-    for dom, num, title, desc in PARTS:
-        kick = f'<div class="chapter"><div class="chapkicker">Domain {dom}</div>'
-        part_html = (f'<div class="partpage"><div class="partnum">{num}</div>'
+    for i, (dom, num, title, desc) in enumerate(PARTS, start=1):
+        kick = f'<div class="chapter"><div class="chapnum">{dom:02d}</div>'
+        part_html = (f'<div class="partpage"><div class="partghost">{i:02d}</div>'
+                     f'<div class="partnum">{num}</div>'
                      f'<div class="parttitle">{title}</div><div class="partdesc">{desc}</div>'
                      f'<div class="partbar"></div></div>')
         html_body = html_body.replace(kick, part_html + kick, 1)
@@ -170,7 +198,7 @@ def main() -> None:
                     if term and term.lower() not in terms:
                         terms[term.lower()] = (term, ka)
         ka_ids = {m.group(2): m.group(1) for m in _re.finditer(
-            r'<h2\s+id="([^"]+)">Knowledge\s+Area\s+(\d+\.\d+)\s', html, _re.S)}
+            r'<h2 class="ka" id="([^"]+)"><span class="kanum">Knowledge Area (\d+\.\d+)</span>', html)}
         groups: dict[str, list] = {}
         for term, ka in sorted(terms.values(), key=lambda t: t[0].lower()):
             hid = ka_ids.get(ka)
