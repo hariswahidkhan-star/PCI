@@ -826,6 +826,51 @@ remain the professional's to own and defend.
 
 ---
 
+## Executive perspective — Domain 6
+
+**What the executive must hold onto.** `EV` — physical progress valued at budget, never at actual cost —
+is the one honest progress currency, and it is only as honest as the earning rules and progress claims
+behind it (KA 6.1). An `EAC` is not a prediction handed down; it is **an assumption made visible** — each
+method encodes a different view of the remaining work, and the professional's job is to defend the
+assumption, not the arithmetic (KA 6.3). And the `TCPI` is the board's credibility test: when the
+efficiency the remaining work must achieve diverges sharply from the `CPI` actually being delivered, the
+budget has stopped being credible and the honest number is a higher `EAC`.
+
+**Six questions to ask from the chair.**
+
+1. What earning rules produced this `EV`, and who verified the progress claims behind it?
+2. Does the `AC` include accruals, or are we computing `CPI` on an understated cost?
+3. Which `EAC` method is this, what assumption does it encode, and why does that assumption match the
+   *cause* of the variance?
+4. What `TCPI` does holding the `BAC` now require, and is that efficiency credible against the `CPI`
+   achieved to date?
+5. Is the slippage behind that `SPI` on the critical path, or non-critical work running late around a
+   healthy spine?
+6. What is the `CPI` trend over the last three periods — stable, or sliding?
+
+**The traps at board level.**
+
+- **Aggregate `SPI` hiding a critical-path slip.** EVM does not see the critical path, and the cost-based
+  `SPI` drifts to 1.0 as any project — however late — completes; insist on the network cross-check and the
+  earned-schedule view in time units (KA 6.4).
+- **Optimistic `EV`.** Inflated progress claims flatter every variance, index and forecast at once; a
+  `CPI` and `SPI` both comfortably above 1 deserve as much interrogation as a bad result.
+- **The single confident number.** A lone `EAC` with no method stated is false precision; the spread of the
+  fan is not imprecision but different assumptions about the remaining work, and the board should see it.
+- **Treating `VAC` as an internal reforecast.** Against a fixed appropriation or funding envelope, a
+  negative `VAC` is not a bookkeeping update — it forces a decision on funding, descope or recovery, and
+  a recovery plan must answer to the `TCPI`.
+
+**What good looks like.** The monthly pack carries `PV`, `EV` and `AC` from controlled baselines, fixed
+earning rules and an accrual-complete ledger, so nobody in the room is debating whether the inputs are
+true. Forecasts arrive as a fan with the central case defended — method, assumption, cause — and the
+`TCPI` is quoted whenever anyone proposes to hold the original budget. Schedule health is stated in months
+as well as currency, cross-checked against the critical path. Above all, a deteriorating trend surfaces
+while every option is still open, because the organisation treats a rising `EAC` as information to act on,
+not an admission to defer.
+
+---
+
 ## Domain 6 summary
 
 Earned value integrates three measures in one currency — **`PV`** (planned), **`EV`** (performed, valued at

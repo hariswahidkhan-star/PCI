@@ -721,6 +721,53 @@ the funding decision (Domain 13, KA 13.5.4). **AI proposes, the professional dis
 
 ---
 
+## Executive perspective — Domain 5
+
+**What the executive must hold onto.** An invoice-only cost view is months out of date: cost is real from
+the moment a purchase order is signed, and **commitments** are the early warning that buys a board time to
+act (KA 5.2). The true cost-to-date is actuals **plus accruals** — leave the accruals out and `AC` is
+understated, `CPI` flattered, and every forecast built on them corrupted. And a baseline is only meaningful
+while every movement of the `BAC` is authorised and traceable through the **change log**; a dozen small,
+unmanaged changes are how a budget quietly stops meaning anything (KA 5.4).
+
+**Six questions to ask from the chair.**
+
+1. How much is committed but not yet in the cost report — and what share of the budget is already spoken
+   for?
+2. Are this month's accruals complete, or is the reported cost-to-date simply the invoices that happen to
+   have arrived?
+3. How much of the forecast remains genuinely uncommitted — where do we still hold levers to descope,
+   re-specify or re-tender?
+4. What is in the trend log, and what does the forecast become if the probable trends land unfunded?
+5. How has the `BAC` moved since the original baseline, and can every movement be traced to one authorised
+   change?
+6. When was the project cost ledger last reconciled to the general ledger, and which exceptions are still
+   open?
+
+**The traps at board level.**
+
+- **The invoice-only illusion.** "Only a third of the budget spent" can coexist with nearly all of it
+  committed; on long-lead, slow-invoicing projects the invoice view is not merely late but systematically
+  optimistic.
+- **Headroom that is pre-trend.** Apparent margin against budget, quoted before known probable changes, is
+  not margin at all — it is the gap the trend log exists to close early.
+- **Reserves and scope conflated.** A draw on contingency (in-scope risk) and a management-reserve-funded
+  variation (new scope) are different mechanisms; blur them and scope growth hides inside "risk".
+- **Comfort from accurate-but-wrong reports.** Every figure can reconcile to the accounts-payable ledger and
+  still measure the wrong state of cost — the report was answering "what have we paid for?", not "what have
+  we incurred and committed?".
+
+**What good looks like.** Each control account is reported on one page showing every cost state —
+actuals, accruals, open commitments, uncommitted scope — with pending trends priced beneath the forecast,
+and the pack is read as a forecast, not a record of spend. Accruals are a routine month-end discipline, and
+the cost ledger reconciles to the general ledger on a standing cycle with exceptions worked, not parked.
+The change log reconciles the current baseline to the original at any moment, so "how has the `BAC` moved,
+by how much, and why?" is answerable on demand. Boards in such organisations discuss decisions with lead
+time — funding a probable variation, descoping while discretion remains — rather than explaining overruns
+after the invoices land.
+
+---
+
 ## Domain 5 summary
 
 Cost control begins with the anatomy of cost — direct/indirect and fixed/variable, driven by true cost

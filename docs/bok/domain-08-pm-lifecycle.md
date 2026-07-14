@@ -876,6 +876,52 @@ the velocity trend early — but the gate decision is human and accountable (Dom
 
 ---
 
+## Executive perspective — Domain 8
+
+**What the executive must hold onto.** The baseline is set in **planning** and only measured afterwards —
+by the time monitoring & controlling reports a variance, the decisions that caused it were taken months
+earlier, so governance attention belongs early, where it is cheapest (KA 8.2). **Integrated change
+control** is where scope creep dies or thrives: every change assessed across scope, schedule, cost,
+quality and risk before approval, or approved for its direct cost while its knock-ons arrive unpriced
+(KA 8.4). And success has two registers — delivered to plan and benefit realised — a project can hit time
+and budget and still fail the business case it was authorised against (KA 8.1).
+
+**Six questions to ask from the chair.**
+
+1. What benefit does the business case promise, who owns measuring it, and against which success criteria —
+   beyond time and cost?
+2. Are the three baselines genuinely integrated — does the cost baseline phase over a schedule built from
+   the WBS, or do we hold three documents that cannot support earned value?
+3. For each change approved this period, was the full cross-constraint impact — including schedule, risk
+   and benefit — assessed before approval, not after?
+4. Who is the single accountable owner — the one "A" — for this report, this decision, this deliverable?
+5. Which parts of the programme are predictive and which adaptive, and is each measured in the register
+   that fits it — with the tailoring decision made at planning, not discovered in crisis?
+6. What is still open from closing — unresolved claims, uncollected retention, unharvested lessons — and
+   who is tracking each to zero?
+
+**The traps at board level.**
+
+- **Attention arriving too late.** Boards engage hardest in execution, when the levers are fewest; the
+  charter, the WBS and the integrated baselines are where the outcome was largely set.
+- **Change approved by instalments.** A dozen individually reasonable changes, each assessed only for
+  direct cost, accumulate into an unpriced re-scope — the failure integrated change control exists to
+  prevent.
+- **Project success mistaken for benefit success.** "On time, on budget" answers the delivery question,
+  not the investment question; the benefit measures defined at initiation are what close that loop.
+- **Closure allowed to drift.** Unclosed contracts, unresolved claims and unreleased retention are
+  liabilities that linger, and lessons never captured are paid for again on the next project (KA 8.5).
+
+**What good looks like.** The organisation invests its scrutiny where the leverage is: business cases with
+measurable benefits, charters that authorise against them, and planning that produces one integrated
+system rather than a shelf of documents. Monitoring & controlling runs the same loop every period —
+measure, analyse, forecast, act, report — and changes pass through one gate with their full impact priced.
+Closure is treated as real work: final accounts settled, retention collected, performance data fed to the
+next estimate, and benefits handed to named owners in operations. Such organisations can say, years later,
+whether the project was worth doing — because they defined the answer before they started.
+
+---
+
 ## Domain 8 summary
 
 The project lifecycle runs through five process groups: **initiating** (business case, charter, stakeholders,

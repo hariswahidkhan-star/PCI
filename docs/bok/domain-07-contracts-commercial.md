@@ -861,6 +861,54 @@ entitlement judgements and the pain/gain conversation stay human: **AI proposes,
 
 ---
 
+## Executive perspective — Domain 7
+
+**What the executive must hold onto.** The **contract type** decides who pays for an overrun before the
+first variance exists — lump sum puts the risk on the contractor, cost-plus on the client, target cost
+shares it — so it is the first commercial fact a board should establish, not the last (KA 7.1). On
+incentivised forms the `EAC` **is** a commercial number: every unit of forecast overrun moves fee through
+the pain/gain mechanism until the cap bites, which makes the controls forecast and the commercial position
+one conversation. And billing, earned value and IFRS 15 revenue are **three values of the same physical
+progress under three rule-sets** — they should reconcile with explanations, never be forced to match
+(KA 7.5).
+
+**Six questions to ask from the chair.**
+
+1. Under this contract, who pays for the next dollar of overrun — and at what point does the cap or collar
+   bite?
+2. What does the current `EAC` do to our forecast fee and pain/gain position?
+3. What is the liquidated-damages exposure at the forecast completion date, and how does it compare with
+   the cost of acceleration?
+4. Which variations and claims are notified but not yet agreed, and are the contemporaneous records in
+   place to substantiate them?
+5. What is the gap between applied and certified this period, and which way is the contract
+   asset/liability position trending?
+6. How much retention is outstanding, and when — and against what conditions — is it due for release?
+
+**The traps at board level.**
+
+- **Pain/gain caps misunderstood.** A 50/50 share reads as symmetric risk, but beyond the cap the exposure
+  is no longer shared — knowing where the cap bites is knowing the real exposure being managed.
+- **An optimistic `EAC` as a hidden commercial position.** On a target-cost form, understating the forecast
+  understates a pain-share the organisation is already committed to; reporting `CPI` without translating it
+  into fee answers half the question.
+- **The three numbers forced to agree.** "Aligning" earned value, certified billing and recognised revenue
+  by adjustment destroys three independent signals to manufacture one false one; the differences are the
+  information.
+- **Entitlement lost for want of records.** Claims are decided on notices and contemporaneous evidence
+  (cause, effect, quantum); a claim assembled after the fact from memory is worth a fraction of one built
+  as events occurred (KA 7.2).
+
+**What good looks like.** The board can state, for each major contract, who bears cost risk, where the
+caps bite, and what the current `EAC` means for fee — because the controls forecast and the commercial
+calculation are presented as two halves of one number. Variations are instructed, priced and agreed before
+the work; claims run on contemporaneous records; LD exposure is quantified against the schedule forecast
+and weighed against recovery options. Billing, earned value and revenue are reconciled monthly, each
+difference explained, with the contract asset/liability read as the cash-and-performance health signal it
+is — and retention tracked to the last dollar released.
+
+---
+
 ## Domain 7 summary
 
 The contract allocates cost risk along a spectrum — lump sum (contractor), target cost (shared, with pain/gain

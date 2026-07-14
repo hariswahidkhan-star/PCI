@@ -503,6 +503,47 @@ next. **AI proposes, the professional disposes.**
 
 ---
 
+## Executive perspective — Domain 11
+
+**What the executive must hold onto.** Every number the board relies on is manufactured by a business process:
+cash comes in through **order-to-cash**, goes out through **procure-to-pay**, and the figures are only as good
+as the cycles that produce them. **Segregation of duties** is cheap insurance against expensive failures — the
+condition for fraud is one person controlling a whole transaction, and the control either exists in the system
+roles or it does not exist at all. And working capital lives in these cycles: every day of **DSO** is a day of
+revenue sitting in other people's bank accounts, recoverable by process discipline alone.
+
+**Six questions to ask from the chair.**
+
+1. Who can raise and approve the same transaction today — in the system's roles, not the procedure manual?
+2. What is our first-pass three-way match rate, and who set — and owns — the tolerances behind it?
+3. What is DSO doing, and what does the receivables ageing say is driving it — process or customers?
+4. When did we last run process mining over the whole ERP event log, rather than audit a sample?
+5. What are duplicate payments and match exceptions costing us each quarter, and is the number falling?
+6. Which of our key controls are preventive, which detective — and which are assumed rather than tested?
+
+**The traps at board level.**
+
+- **Controls assumed because a system exists.** An ERP implemented with default roles can let the same user
+  raise and approve purchase orders for years; the manual says otherwise, the system does not (KA 11.3). The
+  audit trail only protects you if someone reads it.
+- **Sampling comfort.** A handful of breaching POs in a year of thousands of transactions is exactly the needle
+  a sample-based review misses; whole-population analysis — process mining over the event log — is what
+  reliably finds it (KA 11.3.3).
+- **Automation rates read as control strength.** A high first-pass match rate is a vanity metric if the
+  tolerances were widened to achieve it — an automated match with too-wide tolerances re-creates the very risk
+  the control exists to prevent (KA 11.2).
+- **Receivables treated as sales admin.** DSO is days of revenue trapped in receivables; a dozen days of
+  billing, dunning and cash-application discipline can release more cash than a year of cost-cutting.
+
+**What good looks like.** Duties are segregated by design — an SoD matrix mapped into system roles, with the
+raise-and-approve conflict made impossible rather than discouraged — and a continuous-controls monitor watches
+the event log so a breach surfaces in days, not years. The three-way match runs on tolerances a professional
+set and owns, exceptions are investigated rather than backlogged, and billing, dunning and cash application
+keep the ageing report honest. The board sees a controls scorecard — match rate, exceptions, breaches,
+duplicates, DSO — and every line on it traces to a named control that someone is accountable for.
+
+---
+
 ## Domain 11 summary
 
 Money flows in through **order-to-cash** (order → credit → fulfil → invoice → collect → apply cash) and out

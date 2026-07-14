@@ -541,6 +541,48 @@ auditable and owned (Domain 13, KA 13.5.9).
 
 ---
 
+## Executive perspective — Domain 12
+
+**What the executive must hold onto.** **Contingency is bought confidence**: it is derived from analysed risk —
+a quantified register and, better, a Monte Carlo **P-level** — not from a flat percentage, and cutting it
+re-prices the organisation's confidence without saying so. Spending contingency is normal — draw-down against
+materialised register risks is what the fund is for; exceeding it **silently** is the sin, because escalation to
+the **management reserve** is a re-baselining event, not a quiet top-up (KA 12.3). And risk has **both tails**:
+a register with no opportunities on it is usually the sign of a narrow workshop, not of a project without
+upside.
+
+**Six questions to ask from the chair.**
+
+1. What confidence level is this contingency — P-what — and which register and model is it derived from?
+2. What is remaining contingency against remaining exposure — not against the opening figure?
+3. Which mitigations have we paid for, and did each cut probability × impact by more than it cost?
+4. Which risks are correlated, and what does that do to the tail we are funding?
+5. Where are the opportunities on this register, and who is exploiting them?
+6. When did the register last change the estimate, the schedule or the forecast — or is it a quarterly bolt-on?
+
+**The traps at board level.**
+
+- **Contingency read as fat to cut.** A P80 contingency is a priced confidence level tuned to the
+  organisation's risk appetite (KA 12.1.3); trimming it to "sharpen" the budget converts analysed risk into
+  unfunded exposure while the paperwork still looks prudent.
+- **The opening-figure illusion.** Reporting draws against the original contingency hides the moment remaining
+  cover falls below remaining exposure — the shortfall then surfaces in the final account instead of the board
+  pack (KA 12.3.3).
+- **Funding the average.** The EMV sum funds the *expected* outcome; in the many futures where risks coincide —
+  especially correlated ones — the average is under-funded, which is exactly why the P-level exists (KA 12.2.3).
+- **A quiet register mistaken for a safe project.** An out-of-date register is worse than none, because it
+  implies a coverage that no longer exists; point forecasts presented without ranges carry the same false
+  comfort.
+
+**What good looks like.** Risks are written cause-event-effect with named owners, quantified, and fed back into
+the estimate, schedule and forecast rather than filed. Contingency is set at a documented P-level, drawn down
+against materialised risks, and reported every period as remaining contingency versus remaining exposure — with
+headroom or shortfall stated explicitly, and escalation to the sponsor-held management reserve treated as the
+baseline change it is. Opportunities are logged and exploited as deliberately as threats are mitigated, and
+when the sponsor challenges the contingency number, the analysis — not an opinion — answers.
+
+---
+
 ## Domain 12 summary
 
 Risk management handles the uncertainty every estimate, schedule and forecast is made under. A **risk** is an

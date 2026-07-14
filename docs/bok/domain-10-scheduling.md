@@ -711,6 +711,46 @@ the professional disposes.**
 
 ---
 
+## Executive perspective — Domain 10
+
+**What the executive must hold onto.** The **critical path** sets the completion date, and it **moves** — it
+moves when the schedule is compressed and again when actuals arrive, so the standing question is never "what is
+the date" but "what is the path this period, and how confident is the date". A single deterministic finish is a
+fiction: the honest commitment is a **P-level** from schedule-risk analysis (KA 10.3.4) — commit externally at
+P80, manage internally to the aggressive date, and hold the difference as owned, visible schedule contingency.
+And compression is never free: **crashing** trades money for time, **fast-tracking** trades risk for time, and
+every day bought consumes float that was quietly making the schedule resilient.
+
+**Six questions to ask from the chair.**
+
+1. What P-level is this completion date — and what would P80 say?
+2. Where is the critical path this period, and where was it last period?
+3. How much float remains, who is consuming it, and which near-critical paths could take the lead if they slip?
+4. If we must go faster, what does a day cost — in money (crashing) or in rework risk (fast-tracking)?
+5. Is this schedule driven by logic, or held together by date constraints and hidden lags?
+6. Has the schedule been resource-levelled — or does it assume crews and specialists we do not have?
+
+**The traps at board level.**
+
+- **A bar chart is not a schedule.** A Gantt view looks identical whether it is driven by sound logic or forced
+  by constraints and hidden lags — and only the logic-driven version recalculates honestly when reality arrives
+  (KA 10.1). Ask what is holding the dates up.
+- **A healthy aggregate hides a critical slip.** An `SPI` near 1.0 can coexist with a slipping critical path —
+  the earned-value blind spot (KA 10.4.2) — so insist on the network view alongside the aggregate one.
+- **A compressed schedule is not the same schedule, shorter.** Compression consumes the float of the parallel
+  chains; a schedule crashed to the deadline with twin critical paths is a far more brittle risk position than
+  the longer schedule it replaced, even though only the shorter one "meets the date".
+- **Deterministic precision reads as confidence.** A single completion day sounds firmer than a P-level range,
+  but the deterministic date is typically about a coin toss — the P80 is the commitment.
+
+**What good looks like.** The schedule is progressed at every data date and the critical path re-identified,
+with its movement reported rather than smoothed away. External commitments are made at a stated P-level, the
+gap to the internal target is held as explicit schedule contingency, and compression decisions arrive priced —
+cheapest critical day first, with the parallel-path check shown. The board sees both the network view and the
+earned-value view each period, and when the date moves it hears about it from the schedule, not from the site.
+
+---
+
 ## Domain 10 summary
 
 Scheduling models the work in time: activities decomposed from the WBS, sequenced with the four dependency

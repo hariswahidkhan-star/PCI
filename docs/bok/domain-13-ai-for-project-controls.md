@@ -1480,6 +1480,51 @@ principle the credential certifies: **AI proposes, the professional disposes.**
 
 ---
 
+## Executive perspective — Domain 13
+
+**What the executive must hold onto.** AI changes the **economics** of controls work — coverage no team of
+readers can match, month-ends in hours rather than days, warnings months before the reporting cycle would force
+them — but it does not change the **accountability**: a model cannot sign off, so a named professional must,
+and "the model said so" is not a defence anyone in the chain can offer (KA 13.6.2). **Capability without
+governance is risk**, and the sequencing matters — policy and verification first, pilots second, integration
+only on that floor. And read incidents correctly: the near-miss you hear about is the governance working; the
+one you never hear about is the risk.
+
+**Six questions to ask from the chair.**
+
+1. What did our verification checklists catch last quarter — and what changed as a result?
+2. Which tools are on the approved register, for which data classifications — and where is our confidential
+   data actually going?
+3. What is the net value of the AI programme, with tooling *and* governance/verification costs netted against
+   measured savings?
+4. Who signed off this AI-assisted forecast, and can we produce the trail — what the model proposed, who
+   reviewed it, what changed?
+5. Which rung of the maturity ladder are we actually on, and what evidence supports the claim?
+6. Where have we decided *not* to use AI, and why?
+
+**The traps at board level.**
+
+- **Value claimed gross.** A saving that evaporates when you price the checking is not a saving; an honest case
+  nets the licences and the human verification the governance model requires (KA 13.7.3). "We use AI" is not
+  value — a faster, verified close is.
+- **Precision mistaken for truth.** A model's output is plausible, not verified — and a more capable model that
+  is wrong is more *convincingly* wrong, so advancing capability raises the stakes of assurance rather than
+  lowering them (KA 13.7.5).
+- **The data work skipped.** The unglamorous remediation of coding and quality *is* the AI programme; garbage
+  in, garbage out is the business case's first line item, not a footnote (KA 13.2).
+- **Silence read as safety.** A function reporting no AI incidents is more likely ungoverned than infallible —
+  in an ad-hoc culture the hallucinated clause travels upward as fact instead of landing in an incident log.
+
+**What good looks like.** An approved-tool register and AI-use policy are in force and re-validated as
+capabilities change; verification checklists are embedded in the month-end, reporting and commercial workflows
+rather than bolted on; and every material AI-assisted output carries a named sign-off with its audit trail.
+Value is measured quarterly and reported without varnish — two useful flags in three is stated as exactly that
+— and near-misses are logged, shared and turned into policy rather than buried. The professionals have moved
+up, not out: directing and assuring AI-assisted production, pairing domain mastery with AI fluency. **AI
+proposes, the professional disposes.**
+
+---
+
 ## Domain 13 summary
 
 AI is a major, practical part of modern project controls — and the governing principle, **"AI proposes, the
