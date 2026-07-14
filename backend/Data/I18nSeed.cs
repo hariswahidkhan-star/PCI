@@ -28,24 +28,42 @@ public static class I18nSeed
 
             using var doc = JsonDocument.Parse(File.ReadAllText(path));
             var langs = new[] { "ko", "ar", "es", "fr", "zh", "ru" };
-            int n = 0;
+            // Flatten to (lang,scope,slug,ckey,value) rows first, then bulk-insert in multi-row batches.
+            // The full pack is ~84k rows; one INSERT per row makes boot slow enough to trip the MySQL
+            // boot timeout, so batch ~300 rows per statement (~280 round-trips instead of ~84k).
+            var rows = new List<(string lang, string scope, string slug, string ckey, string val)>();
+            foreach (var el in doc.RootElement.EnumerateArray())
+            {
+                var scope = el.GetProperty("scope").GetString() ?? "";
+                var slug = el.TryGetProperty("slug", out var sl) ? sl.GetString() ?? "" : "";
+                var ckey = el.GetProperty("ckey").GetString() ?? "";
+                if (scope.Length == 0 || ckey.Length == 0) continue;
+                foreach (var lang in langs)
+                {
+                    if (!el.TryGetProperty(lang, out var tv)) continue;
+                    var val = tv.GetString();
+                    if (string.IsNullOrWhiteSpace(val)) continue;
+                    rows.Add((lang, scope, slug, ckey, val));
+                }
+            }
+            int n = rows.Count;
+            const int chunk = 300;   // 300 rows * 5 params = 1500 bound params/statement — well within limits
             db.Transaction(() =>
             {
-                foreach (var el in doc.RootElement.EnumerateArray())
+                for (int i = 0; i < rows.Count; i += chunk)
                 {
-                    var scope = el.GetProperty("scope").GetString() ?? "";
-                    var slug = el.TryGetProperty("slug", out var sl) ? sl.GetString() ?? "" : "";
-                    var ckey = el.GetProperty("ckey").GetString() ?? "";
-                    if (scope.Length == 0 || ckey.Length == 0) continue;
-                    foreach (var lang in langs)
+                    var take = Math.Min(chunk, rows.Count - i);
+                    var sb = new System.Text.StringBuilder("INSERT OR IGNORE INTO content_i18n(lang,scope,slug,ckey,cvalue) VALUES ");
+                    var args = new object?[take * 5];
+                    for (int j = 0; j < take; j++)
                     {
-                        if (!el.TryGetProperty(lang, out var tv)) continue;
-                        var val = tv.GetString();
-                        if (string.IsNullOrWhiteSpace(val)) continue;
-                        db.Execute("INSERT OR IGNORE INTO content_i18n(lang,scope,slug,ckey,cvalue) VALUES(?,?,?,?,?)",
-                            lang, scope, slug, ckey, val);
-                        n++;
+                        if (j > 0) sb.Append(',');
+                        sb.Append("(?,?,?,?,?)");
+                        var r = rows[i + j];
+                        args[j * 5 + 0] = r.lang; args[j * 5 + 1] = r.scope; args[j * 5 + 2] = r.slug;
+                        args[j * 5 + 3] = r.ckey; args[j * 5 + 4] = r.val;
                     }
+                    db.Execute(sb.ToString(), args);
                 }
                 db.Execute("DELETE FROM site_settings WHERE skey='i18n_seed_version'");
                 db.Execute("INSERT INTO site_settings(skey,svalue) VALUES('i18n_seed_version',?)", Version.ToString());
