@@ -772,6 +772,36 @@ study cross-checks its earned-schedule read against the critical path before bel
 **complements — never replaces — CPM**: it prices and trends the drift the network cannot quantify; the
 network says whether the drift moves the end date.
 
+### Advanced 6.A.5 — CPI stability and the credibility test for recovery claims
+
+**The principle.** Published studies of large US defence programmes — the research line associated with
+Christensen and colleagues, working on DoD contract data — report that the cumulative `CPI` tends to
+**stabilise early**: by roughly the **20 %-complete** point, it rarely improves by more than about **10 %**
+by completion, and more often worsens. This is an empirical regularity from a specific population of large
+programmes, not a law of nature — but that is precisely its use. It shifts the **burden of proof**: a team
+claiming that a poor cumulative `CPI` will recover to budget is claiming to be the exception to a
+well-documented pattern, and the claim needs evidence, not optimism.
+
+**Worked example 6.A.5 — testing a "claw back to budget" claim.**
+
+1. **Setup.** `BAC` = **USD 12,000,000**; the project is **25 % complete**: `EV = 3,000,000`, cumulative
+   `CPI = 0.85`, so `AC = 3,000,000 / 0.85 ≈ 3,529,412`. The team asserts it will "claw back to budget".
+2. **Formula.** `EAC = BAC / CPI` for the persisting-performance forecast; `TCPI(BAC) = (BAC − EV) /
+   (BAC − AC)` for the credibility test (6.2.3).
+3. **Substitution.** `EAC = 12,000,000 / 0.85 ≈ 14,117,647`; `TCPI(BAC) = (12,000,000 − 3,000,000) /
+   (12,000,000 − 3,529,412) = 9,000,000 / 8,470,588 ≈ 1.06`.
+4. **Result.** The remaining work must run at a `CPI` of **1.06** when performance to date is **0.85** — a
+   **25 %** improvement, sustained. Even granting the stability record's outer bound (~10 % improvement,
+   `CPI` → `0.85 × 1.1 = 0.935`), the best credible forecast is `EAC = 12,000,000 / 0.935 ≈ 12,834,000`.
+5. **Interpretation.** Report an `EAC` **range** of ≈ **USD 12.83–14.12 million**, and reject the to-budget
+   claim unless management can name the specific, funded changes that would break the historical pattern.
+
+The stability finding gives the `TCPI` conversation (6.2.3) its teeth and disciplines method selection
+(6.3.3): once the cumulative `CPI` has settled, "the variance was atypical" becomes the claim that needs
+defending, not the default. It is also the quantitative cousin of Advanced 6.A.3's plateau — the same
+optimism in a different disguise. Screening a portfolio for `CPI` trends against the stability pattern is a
+natural machine task; judging whether *this* project has a genuine break-the-pattern story is not.
+
 ---
 
 ## Case study — Domain 6: a full EVM cycle on a highways programme (government/infrastructure)
@@ -1194,6 +1224,24 @@ data date, and state the movement in the forecast and the Month 5 `VAC`.
 5. Month 5 forecast: `EAC = 4,000,000 / 0.85 ≈ ` **USD 4,705,882** — a rise of **≈ USD 261,438** in one
    period. `VAC = 4,000,000 − 4,705,882 = ` **(USD 705,882)**; the trend, not the level, is the escalation
    trigger.
+
+**Exercise 6.6** — A **10-month** project's baseline shows cumulative `PV` by month (USD 000): **200, 500,
+900, 1,400, 2,000** for Months 1–5. At the end of **Month 4** (`AT` = 4), measurement gives `EV` = **USD
+1,150,000**. (a) Compute the earned schedule `ES`, then `SV(t)` and `SPI(t)`. (b) Compute the classical
+`SPI` and explain the difference in what the two indices say. (c) Given the **10-month** planned duration,
+give the SPI(t)-based forecast duration.
+
+**Solution 6.6.**
+1. (a) Bracket `EV` = 1,150,000 on the baseline: cumulative `PV` is 900,000 at Month 3 and 1,400,000 at
+   Month 4, so `ES` lies between Months 3 and 4.
+2. Interpolate: `ES = 3 + (1,150,000 − 900,000) / (1,400,000 − 900,000) = 3 + 250,000 / 500,000 = 3 + 0.5 = `
+   **3.5 months**.
+3. `SV(t) = ES − AT = 3.5 − 4 = ` **(0.5) months**; `SPI(t) = ES / AT = 3.5 / 4 = ` **0.875**.
+4. (b) Classical `SPI = EV / PV = 1,150,000 / 1,400,000 ≈ ` **0.82** — the classical index compares **value**
+   earned against value planned, and will drift to 1.0 at completion regardless of lateness (6.4.3); `SPI(t)`
+   speaks in **time**: the project is half a month behind and progressing at **87.5 %** of the planned tempo.
+5. (c) `Forecast duration = planned duration / SPI(t) = 10 / 0.875 ≈ ` **11.4 months** — about six weeks late
+   on the current tempo (Advanced 6.A.4 for the caveats near completion).
 
 ---
 
