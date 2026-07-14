@@ -1,0 +1,76 @@
+/* PCP-AI Body of Knowledge — print stylesheet (A4 professional reference) */
+
+@page {
+  size: A4;
+  margin: 22mm 18mm 20mm 18mm;
+  @bottom-center { content: counter(page); font-family: 'DejaVu Sans', sans-serif; font-size: 8.5pt; color: #64748B; }
+  @top-left { content: string(booktitle); font-family: 'DejaVu Sans', sans-serif; font-size: 8pt; color: #94A3B8; }
+  @top-right { content: string(chaptertitle); font-family: 'DejaVu Sans', sans-serif; font-size: 8pt; color: #94A3B8; }
+}
+@page :first { @top-left { content: none; } @top-right { content: none; } @bottom-center { content: none; } }
+
+html { string-set: booktitle "PCP-AI Body of Knowledge"; }
+
+body {
+  font-family: 'DejaVu Serif', Georgia, serif;
+  font-size: 10pt;
+  line-height: 1.55;
+  color: #1E293B;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Title page */
+.titlepage { page-break-after: always; text-align: center; padding-top: 60mm; }
+.titlepage h1 { font-size: 26pt; border: none; color: #0F172A; margin-bottom: 6mm; }
+.titlepage .subtitle { font-size: 13pt; color: #1D4ED8; font-family: 'DejaVu Sans', sans-serif; margin-bottom: 18mm; }
+.titlepage .meta { font-size: 9.5pt; color: #64748B; }
+
+/* Headings — sans, brand blue accents */
+h1, h2, h3, h4 { font-family: 'DejaVu Sans', sans-serif; color: #0F172A; text-align: left; page-break-after: avoid; }
+h1 {
+  string-set: chaptertitle content();
+  page-break-before: always;
+  font-size: 19pt; line-height: 1.25;
+  border-bottom: 2.5pt solid #1D4ED8;
+  padding-bottom: 3mm; margin-top: 0; margin-bottom: 7mm;
+}
+h2 { font-size: 13.5pt; color: #1D4ED8; margin-top: 9mm; }
+h3 { font-size: 11pt; margin-top: 6mm; }
+h4 { font-size: 10pt; }
+
+p { margin: 0 0 2.4mm 0; orphans: 2; widows: 2; }
+strong { color: #0F172A; }
+
+/* Tables */
+table { border-collapse: collapse; width: 100%; margin: 3mm 0 4mm 0; font-size: 8.8pt; page-break-inside: avoid; font-family: 'DejaVu Sans', sans-serif; }
+th { background: #EEF3FF; color: #0F172A; border: 0.5pt solid #CBD5E1; padding: 1.6mm 2mm; text-align: left; }
+td { border: 0.5pt solid #E2E8F0; padding: 1.4mm 2mm; text-align: left; vertical-align: top; }
+tr:nth-child(even) td { background: #F8FAFC; }
+
+/* Code / formulae */
+pre { background: #F1F5F9; border-left: 2.5pt solid #1D4ED8; padding: 2.5mm 3.5mm; font-size: 8.6pt; line-height: 1.45; page-break-inside: avoid; white-space: pre-wrap; margin: 3mm 0; }
+code { font-family: 'DejaVu Sans Mono', monospace; font-size: 0.92em; background: #F1F5F9; padding: 0 1px; }
+pre code { background: none; padding: 0; }
+
+/* Figure-spec blockquotes rendered as figure boxes */
+blockquote { border: 0.6pt solid #BFDBFE; background: #F5F8FF; border-radius: 2mm; padding: 3mm 4mm; margin: 3.5mm 0; font-size: 9pt; page-break-inside: avoid; }
+blockquote p { text-align: left; }
+
+/* Figures (rendered SVG/PNG images) */
+figure, .figure { text-align: center; margin: 4mm 0; page-break-inside: avoid; }
+img { max-width: 100%; }
+figcaption { font-family: 'DejaVu Sans', sans-serif; font-size: 8.5pt; color: #475569; margin-top: 1.5mm; }
+
+ul, ol { margin: 1.5mm 0 3mm 0; padding-left: 6mm; }
+li { margin-bottom: 1mm; }
+
+hr { border: none; border-top: 0.5pt solid #CBD5E1; margin: 6mm 0; }
+
+a { color: #1D4ED8; text-decoration: none; }
+
+/* Table of contents */
+nav#TOC { page-break-after: always; }
+nav#TOC ul { list-style: none; padding-left: 4mm; }
+nav#TOC > ul > li { font-family: 'DejaVu Sans', sans-serif; font-weight: bold; margin-top: 2mm; }
+nav#TOC > ul > li li { font-weight: normal; font-size: 9pt; }

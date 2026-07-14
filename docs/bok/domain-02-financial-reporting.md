@@ -65,6 +65,21 @@ lease is accounted for as a lease (IFRS 16, 2.4). **Comparability** is why a bus
 policy *consistently* across contracts and periods — a controls professional comparing margin across projects
 is relying on it.
 
+**Worked example 2.1.2 — a materiality judgement.**
+
+1. **Setup.** An entity with profit before tax of **USD 8,000,000** discovers a **USD 60,000** expense
+   classified in the wrong line (both lines within operating costs), and separately a **USD 60,000**
+   unrecorded liability to a related party.
+2. **Formula.** Materiality is judged by whether the omission/misstatement **could influence users'
+   decisions** — size relative to benchmarks (e.g. ~0.5–1 % of profit as a common starting range, a
+   judgement not a rule) **and** nature.
+3. **Substitution.** `60,000 / 8,000,000 = 0.75 %` of profit for both items.
+4. **Result.** The misclassification (same subtotal, small %) is likely **immaterial**; the related-party
+   liability of the same size may well be **material by nature** — related-party dealings influence users
+   regardless of size.
+5. **Interpretation.** Materiality is size **and** nature, a judgement not a formula; identical amounts can
+   fall on opposite sides of the line. A controls professional escalates by nature as well as by value.
+
 ### 2.1.3 IFRS versus local GAAP
 
 **The principle.** **IFRS** (International Financial Reporting Standards, issued by the IASB) is the most
@@ -682,6 +697,19 @@ IFRS 15 — and the NRV test is a reason unused/obsolete materials may be writte
 written down to **220,000**, an **80,000** expense — a cost a controls professional should anticipate when a
 change strands committed materials.
 
+**Worked example 2.4.1 — NRV with costs to complete and sell.**
+
+1. **Setup.** Materials cost **USD 300,000**; estimated selling price in their current condition
+   **USD 250,000**; estimated costs to complete and sell **USD 40,000**.
+2. **Formula.** `NRV = estimated selling price − costs to complete and sell`; carry at the
+   `lower of cost and NRV`.
+3. **Substitution.** `NRV = 250,000 − 40,000 = 210,000`; compare with cost 300,000.
+4. **Result.** Carry at **USD 210,000**; write-down expense **USD 90,000** (`300,000 − 210,000`).
+5. **Interpretation.** NRV is the **net** amount recoverable, not the gross selling price — omitting the
+   40,000 of completion/selling costs would understate the write-down by 40,000. The stranded-materials
+   scenario after a design change (cross-ref the short example above) is where a controls professional most
+   often meets this test.
+
 ### 2.4.2 IAS 16 — Property, plant and equipment
 
 **Principle & relevance.** **IAS 16** requires items of property, plant and equipment to be **capitalised** at
@@ -693,6 +721,19 @@ cost hitting the project's profit.
 
 **Short example.** A USD 24,000 machine plus USD 2,000 of installation is capitalised at **26,000** and
 depreciated; a later USD 1,500 routine service is **expensed**.
+
+**Worked example 2.4.2 — componentisation.**
+
+1. **Setup.** A machine is capitalised at **USD 26,000** (per the short example above). Its **engine** (cost
+   USD 12,000) has a **4-year** life; its **frame** (cost USD 14,000) has a **7-year** life.
+2. **Formula.** Under IAS 16, significant parts with different useful lives are depreciated **separately**
+   (componentisation); straight-line, nil residual.
+3. **Substitution.** Engine `12,000 / 4 = 3,000` per year; frame `14,000 / 7 = 2,000` per year.
+4. **Result.** Total depreciation **USD 5,000 per year** for the first four years (then 2,000/yr for the
+   frame's remaining life), rather than a single blended rate over one assumed life.
+5. **Interpretation.** Componentisation matches each part's cost to the periods it serves and anticipates the
+   engine's replacement at year 4 (capitalised as a new component). On plant-heavy projects this changes both
+   the depreciation profile and the replacement planning a controls professional models.
 
 ### 2.4.3 IFRS 16 — Leases
 
@@ -740,6 +781,20 @@ during construction.
 4. **Result.** **USD 320,000** of interest is **added to the asset's cost** (not expensed this year).
 5. **Interpretation.** During construction, interest becomes part of the asset and is later depreciated,
    rather than hitting current profit — a real difference to the reported cost profile of a capital project.
+
+**Worked example 2.4.4b — a partial-year capitalisation window.**
+
+1. **Setup.** Qualifying expenditure of **USD 4,000,000** (weighted average) is funded at **8 %**, but active
+   development runs only **9 months** of the year — capitalisation is **suspended** during a 3-month period
+   when development pauses.
+2. **Formula.** `Capitalised borrowing cost = weighted-average expenditure × rate × (active months / 12)`;
+   borrowing costs during suspension are **expensed**.
+3. **Substitution.** `4,000,000 × 8 % × 9/12 = 240,000` capitalised; the remaining
+   `4,000,000 × 8 % × 3/12 = 80,000` is expensed.
+4. **Result.** **USD 240,000** capitalised into the asset; **USD 80,000** to finance costs.
+5. **Interpretation.** Capitalisation runs only while development is active — extended suspensions switch
+   borrowing costs to expense. A controls professional tracking a paused project should expect the interest
+   treatment to change with the pause.
 
 ### 2.4.5 IAS 37 — Provisions (recap)
 

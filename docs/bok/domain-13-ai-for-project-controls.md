@@ -510,6 +510,19 @@ boxes.
 - **Value & limit.** Speeds estimating and improves consistency; limited by data representativeness — a model
   trained on dissimilar projects misleads.
 
+**Worked workflow 13.5.2b — a parametric check estimate from history.**
+
+1. **Input.** A governed history of 12 analogous completed buildings with normalised cost/m² (13.2.3); the new
+   project is 4,800 m².
+2. **AI step.** The model derives a rate of USD 2,150/m² — the median of the analogues, adjusted for location
+   factors — giving a check estimate `2,150 × 4,800 = USD 10,320,000`, with a model range of ±12 % →
+   ~USD 9.08m–11.56m.
+3. **Verification (the professional's step).** The estimator confirms the analogues are genuinely comparable
+   (sector, spec level, year basis), checks the location adjustment, and reconciles the parametric figure
+   against the bottom-up estimate before presenting both with their class and range (Domain 3, KA 3.2).
+4. **Output.** A check estimate the estimator owns — used to **challenge**, not replace, the bottom-up figure.
+   **AI proposes, the professional disposes.**
+
 ### 13.5.3 Forecasting & EVM/EAC (Domains 3, 6)
 
 - **Workflow.** Input: `PV`/`EV`/`AC` trends + leading indicators → AI step: a model projects `EAC` and an
@@ -520,6 +533,19 @@ boxes.
   cannot see the critical path unless given the schedule, and can be confidently wrong — the professional owns
   the number.
 
+**Worked workflow 13.5.3b — an early-warning trigger from a CPI trend.**
+
+1. **Input.** Monthly `CPI` readings 0.97, 0.95, 0.92 on a control account with `BAC` USD 2,000,000, plus
+   productivity and supply-chain leading indicators.
+2. **AI step.** The model flags a sustained three-period decline and attributes ~70 % of the drift to a falling
+   installed-quantity productivity driver; if the trend holds, projected
+   `EAC = BAC/CPI = 2,000,000/0.92 = USD 2,173,913`.
+3. **Verification (the professional's step).** The professional confirms the driver against site data, checks
+   whether the cause is closed or persisting (Domain 6, KA 6.3.3), and decides which `EAC` assumption to
+   defend.
+4. **Output.** An early escalation with a quantified forecast — raised on the **trend**, months before a single
+   bad period would have forced it.
+
 ### 13.5.4 Cost control & extraction (Domains 1, 5)
 
 - **Workflow.** Input: invoices/POs/ledger feeds → AI step: auto-code cost to project/WBS/cost element, match
@@ -528,6 +554,17 @@ boxes.
   5.2) → Output: coded, reconciled cost with a true cost-to-date.
 - **Value & limit.** High value, relatively low risk (Domain 1, KA 1.5); an auto-accrual from a document date
   rather than a service date reproduces a real cut-off error at scale.
+
+**Worked workflow 13.5.4b — month-end auto-coding at scale.**
+
+1. **Input.** 4,200 invoice/PO lines from the ERP month-end feed.
+2. **AI step.** The classifier codes 3,780 lines (90 %) to project/WBS/cost element with high confidence,
+   routes 420 to an exception queue, and flags 37 probable duplicates totalling USD 214,000.
+3. **Verification (the professional's step).** The cost engineer reviews the exception queue and the flagged
+   duplicates — not the 3,780 high-confidence lines, which are sampled periodically instead — and confirms
+   that accrual proposals use service dates, not invoice dates (Domain 1, KA 1.3.5).
+4. **Output.** A coded, reconciled month-end in hours instead of days, with human attention concentrated on
+   the 10 % that needs it.
 
 ### 13.5.5 Scheduling (Domain 10)
 
@@ -556,6 +593,17 @@ boxes.
 - **Value & limit.** Contract analytics saves large amounts of reading; entitlement and recognition judgements
   remain human and legally reviewable.
 
+**Worked workflow 13.5.7b — a claims-exposure sweep across a portfolio.**
+
+1. **Input.** 60 live subcontracts and their correspondence/RFI logs, RAG-grounded (13.1.4).
+2. **AI step.** The model surfaces 9 subcontracts with delay-notice language and expiring notification
+   windows, and drafts a summary of each potential claim's cause and window date.
+3. **Verification (the professional's step).** The commercial manager reads each cited clause and notice,
+   confirms the window dates against the contract, and involves legal on the two with material exposure
+   (Domain 7).
+4. **Output.** No notification window silently missed — the model's value is **coverage** (it reads
+   everything); the professional's value is judgement on what matters.
+
 ### 13.5.8 Reporting & performance (Domain 4)
 
 - **Workflow.** Input: cost/schedule/risk data → AI step: assemble the dashboard, detect out-of-tolerance
@@ -572,6 +620,17 @@ boxes.
   → Output: a defensible register and contingency.
 - **Value & limit.** Speeds identification and simulation; a model under-scoring a tail risk, or contingency set
   by an unexamined algorithm, can leave a project exposed.
+
+**Worked workflow 13.5.9b — simulation-assisted contingency at P80.**
+
+1. **Input.** The quantified risk register, with an EMV sum of USD 185,000 (Domain 12, KA 12.2.3).
+2. **AI step.** A Monte Carlo engine runs the register with correlations, returning P50 USD 205,000 and P80
+   USD 260,000, and a tornado ranking showing two risks drive most of the spread.
+3. **Verification (the professional's step).** The professional sanity-checks the correlation assumptions,
+   confirms the two driver risks' probabilities and impacts with their owners, and recommends the P80
+   (USD 260,000) as the contingency consistent with the organisation's appetite (Domain 12, KA 12.3.1).
+4. **Output.** A defensible, documented contingency — the model did the simulation; the professional owns the
+   number.
 
 ### 13.5.10 Financial reporting & standards (Domains 1, 2)
 
