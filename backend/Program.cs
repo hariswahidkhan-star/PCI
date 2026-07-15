@@ -625,6 +625,7 @@ PCI.Backend.Endpoints.TrainingPartners.Map(app, db, logFn, GateFn);   // Trainin
 PCI.Backend.Endpoints.Certuvo.Map(app, db, logFn);                    // Certuvo study & practice engine (Phase 8)
 PCI.Backend.Endpoints.AdminI18n.Map(app, db, logFn);
 PCI.Backend.Endpoints.Social.Map(app, db, logFn, GateFn);              // footer social-media links (admin-controlled)
+PCI.Backend.Endpoints.Notifications.Map(app, db, logFn, GateFn);       // owner alert recipients + per-event toggles
 
 // Purge stored artefacts older than the configured retention window (owner-only). Metadata rows are kept
 // for audit; only the binary artefacts are removed once past retention.

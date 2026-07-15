@@ -105,7 +105,7 @@ public static class Payments
                 {
                   // Fully atomic settlement: user, membership, payment, redemption, tokens all commit
                   // together or roll back together. Combined with INSERT OR IGNORE this is idempotent.
-                  long? welcomeUserId = null; string? welcomeEmail = null, welcomeFirst = null, welcomeLink = null, welcomeBase = null;
+                  long? welcomeUserId = null; string? welcomeEmail = null, welcomeFirst = null, welcomeLink = null, welcomeBase = null, welcomeRef = null;
                   db.Transaction(() =>
                   {
                     var product = m.GetValueOrDefault("product", "membership");
@@ -212,7 +212,7 @@ public static class Payments
                         // default 100s and the single shared DB connection holds its lock for the whole
                         // transaction body, so sending in-transaction would freeze every DB call app-wide.
                         var mailBase = Mailer.BaseUrl(req);
-                        welcomeUserId = userId; welcomeEmail = email; welcomeFirst = m.GetValueOrDefault("first_name");
+                        welcomeUserId = userId; welcomeEmail = email; welcomeFirst = m.GetValueOrDefault("first_name"); welcomeRef = reference;
                         welcomeLink = Mailer.SetupLink(mailBase, token); welcomeBase = mailBase;
 
                         if (product == "exam" || product == "bundle")
@@ -231,6 +231,15 @@ public static class Payments
                   if (welcomeEmail is not null)
                       try { Mailer.SendWelcome(db, welcomeUserId!.Value, welcomeEmail, welcomeFirst, welcomeLink!, welcomeBase!); }
                       catch (Exception mex) { log(welcomeUserId, "welcome_email_failed", mex.Message); }
+                  // Alert the notification recipients about the completed enrolment/payment.
+                  try {
+                      var eName = System.Net.WebUtility.HtmlEncode(welcomeFirst ?? "");
+                      var eMail = System.Net.WebUtility.HtmlEncode(welcomeEmail ?? "");
+                      Notify.Alert(db, "enrollment", $"New PCI enrolment — {welcomeRef}",
+                          $"<p>A payment has completed and an enrolment is confirmed.</p>" +
+                          $"<p><strong>Reference:</strong> {System.Net.WebUtility.HtmlEncode(welcomeRef ?? "")}<br/>" +
+                          $"<strong>Name:</strong> {eName}<br/><strong>Email:</strong> {eMail}</p>", "payment", null);
+                  } catch { /* alerts never break the webhook */ }
                 }
             }
             else if (ev.Type is "checkout.session.async_payment_failed" or "payment_intent.payment_failed")

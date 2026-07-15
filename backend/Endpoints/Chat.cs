@@ -102,6 +102,13 @@ public static class Chat
                         status = "waiting";
                         var mid = db.ExecuteReturningId("INSERT INTO chat_messages(session_id,sender,body) VALUES(?, 'bot', ?)", sid, QUEUE_MSG);
                         replies.Add(new { id = mid, sender = "bot", body = QUEUE_MSG });
+                        // Alert the notification recipients that a visitor is waiting for a live person.
+                        var vName = System.Net.WebUtility.HtmlEncode(db.Scalar<string>("SELECT visitor_name FROM chat_sessions WHERE id=?", sid) ?? "A visitor");
+                        var vMsg = System.Net.WebUtility.HtmlEncode(body);
+                        Notify.Alert(db, "chat", $"Live chat request from {vName}",
+                            $"<p><strong>{vName}</strong> has asked to speak with a person in the website chat.</p>" +
+                            $"<p><strong>Their message:</strong><br/>{vMsg}</p>" +
+                            "<p>Open the live-chat console to reply.</p>", "chat_session", sid);
                     }
                     else
                     {
