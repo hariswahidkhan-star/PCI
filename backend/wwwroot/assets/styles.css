@@ -877,15 +877,12 @@ footer .logo-pci,.ft-logo .logo-pci{
 /* keep the footer subtitle legible on dark */
 .ft-logo .logo-name{color:#fff;}
 
-/* ===== Premium brand divider line — thin crimson→blue gradient that fades at both ends ===== */
+/* ===== Premium divider line — a single precise crimson hairline (solid, no gradient) ===== */
 .logo-bar{
-  width:1.5px!important;height:30px;border-radius:2px;flex:0 0 auto;opacity:1;
-  background:linear-gradient(180deg,rgba(193,51,41,0) 0%,var(--crimson) 26%,#6E5BC9 60%,var(--blue,#1D4ED8) 88%,rgba(29,78,216,0) 100%)!important;
+  width:1px!important;height:30px;border-radius:0;flex:0 0 auto;opacity:1;
+  background:var(--crimson)!important;margin:0 15px;
 }
-.ft-logo .logo-bar{
-  background:linear-gradient(180deg,rgba(224,87,75,0) 0%,#E0574B 24%,#B564C6 58%,#6E9BFF 90%,rgba(110,155,255,0) 100%)!important;
-  opacity:.95;
-}
+.ft-logo .logo-bar{background:#E0574B!important;opacity:.95;}
 
 /* de-clutter the header actions: Donate is now a light text link, not a bordered button */
 .hdr-donate{margin-left:2px;}
