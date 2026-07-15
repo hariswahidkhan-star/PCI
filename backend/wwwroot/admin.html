@@ -340,6 +340,7 @@ const SECTIONS=[
   {id:'sitesettings',label:'Header/footer content',icon:'sliders',render:renderSiteSettings},
   {id:'social',label:'Social media',icon:'globe',render:renderSocial,perm:'content'},   /* ADDED: Social media management section */
   {id:'notifications',label:'Notifications',icon:'mail',render:renderNotifications,perm:'content'},   /* ADDED: Notifications */
+  {id:'campaigns',label:'Email campaigns',icon:'send',render:renderCampaigns,perm:'subscribers'},   /* ADDED: Email campaigns */
   {id:'subscribers',label:'Newsletter',icon:'mail',render:renderSubscribers},
   {id:'submissions',label:'Form submissions',icon:'send',render:renderSubmissions},
   {id:'chatconsole',label:'Live chat',icon:'send',href:'admin-chat.html',perm:'content'},   /* ADDED: link to the site chat console (admin-chat.html) */
@@ -1902,6 +1903,161 @@ async function renderNotifications(){
       else if(res.error==='no_recipients'){ st.textContent=res.message||'Add at least one email address first.'; toast('No recipients configured','err'); }
       else { st.textContent='Could not send test email.'; toast('Could not send test email','err'); } }
     catch(e){ st.textContent='Could not send test email ('+e.message+')'; toast('Could not send test email','err'); }
+  };
+}
+
+/* ============ ADDED: Email campaigns ============
+   Bulk / marketing email. Backend in Endpoints/Campaigns.cs (gate "subscribers"):
+     GET  /api/admin/campaigns            -> {rows:[{id,name,subject,audience,status,total,sent,failed,suppressed,created_at,sent_at}]}
+     POST /api/admin/campaigns            {name,subject,body,audience} -> {id}
+     GET  /api/admin/campaigns/{id}       -> {campaign, recipients:[..20], counts:{total,sent,failed,pending}}
+     POST /api/admin/campaigns/audience-preview {audience} -> {count, suppressed}
+     POST /api/admin/campaigns/{id}/test  {to} -> {ok,status}
+     POST /api/admin/campaigns/{id}/send  -> {ok,total,suppressed}  (draft only; 409 not_draft otherwise)
+     GET/POST /api/admin/suppression      {email, action:'add'|'remove'}
+   Every server-supplied value (names, subjects, emails, counts) is written via textContent / .value —
+   never innerHTML — so the campaign list, recipient emails and live counts stay injection-safe.
+   The only innerHTML used is the static page shell.
+   ============ */
+const CAMP_AUD={students:'Students',subscribers:'Newsletter subscribers',all:'All'};
+async function renderCampaigns(){
+  let list={rows:[]}, supp={rows:[]};
+  try{ list=await api('/api/admin/campaigns'); }catch(_){ }
+  try{ supp=await api('/api/admin/suppression'); }catch(_){ }
+  let html='<div class="inline-note" style="margin-bottom:16px">Bulk email is sent only to your students and to visitors who opted in to the newsletter. Every message carries a one-click unsubscribe link and the suppression list is always honoured. If your region requires it, add a postal mailing address under the <strong>Notifications</strong> settings.</div>';
+  // COMPOSE panel
+  html+='<div class="panel"><div class="panel-h"><h3>New campaign</h3></div><div class="panel-b">';
+  html+='<div class="form-row"><label>Campaign name (internal label)</label><input id="campName" placeholder="e.g. July newsletter"/></div>';
+  html+='<div class="form-row"><label>Audience</label><select id="campAudience"><option value="students">Students</option><option value="subscribers">Newsletter subscribers</option><option value="all">All</option></select></div>';
+  html+='<div class="form-row"><button class="btn" id="campPreview">Preview audience</button> <span id="campPreviewOut" class="em"></span></div>';
+  html+='<div class="form-row"><label>Subject</label><input id="campSubject" placeholder="Subject line"/></div>';
+  html+='<div class="form-row"><label>Body</label><textarea id="campBody" rows="8" placeholder="Write your email…"></textarea><span class="em">HTML allowed. Use {{first_name}} to personalise. An unsubscribe footer is added automatically.</span></div>';
+  html+='<div style="margin-top:8px;display:flex;gap:12px;align-items:center"><button class="btn btn-primary" id="campSave">Save as draft</button><span id="campSaveOut" class="em"></span></div>';
+  html+='</div></div>';
+  // CAMPAIGNS LIST panel
+  html+='<div class="panel" style="margin-top:20px"><div class="panel-h"><h3>Campaigns</h3></div><div class="panel-b"><div class="tablewrap"><table><thead><tr><th>Name</th><th>Audience</th><th>Status</th><th>Total</th><th>Sent</th><th>Failed</th><th>Created</th></tr></thead><tbody id="campRows"></tbody></table></div></div></div>';
+  // SUPPRESSION panel
+  html+='<div class="panel" style="margin-top:20px"><div class="panel-h"><h3>Suppression list</h3></div><div class="panel-b">';
+  html+='<div class="inline-note" style="margin-bottom:12px">Addresses here never receive bulk email. Unsubscribes are added automatically; you can also add or remove entries manually.</div>';
+  html+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px"><input id="suppEmail" type="email" placeholder="email@example.com" style="flex:1"/><button class="btn" id="suppAdd">Add</button><span id="suppOut" class="em"></span></div>';
+  html+='<div class="tablewrap"><table><thead><tr><th>Email</th><th>Reason</th><th>Added</th><th></th></tr></thead><tbody id="suppRows"></tbody></table></div>';
+  html+='</div></div>';
+  $('#view').innerHTML=html;   // static shell only — no server data in innerHTML
+  // populate campaigns table via DOM + textContent; newest first is guaranteed by the endpoint (ORDER BY id DESC)
+  const cb=$('#campRows');
+  if(!(list.rows&&list.rows.length)){
+    const tr=document.createElement('tr'),td=document.createElement('td');
+    td.colSpan=7; td.className='em'; td.textContent='No campaigns yet.'; tr.appendChild(td); cb.appendChild(tr);
+  } else list.rows.forEach(c=>{
+    const tr=document.createElement('tr'); tr.className='clickable'; tr.style.cursor='pointer';
+    [c.name, CAMP_AUD[c.audience]||c.audience, c.status, c.total==null?'0':String(c.total), c.sent==null?'0':String(c.sent), c.failed==null?'0':String(c.failed), fmtDT(c.created_at)].forEach(v=>{
+      const td=document.createElement('td'); td.textContent=v; tr.appendChild(td);
+    });
+    tr.onclick=()=>openCampaign(c.id);
+    cb.appendChild(tr);
+  });
+  renderSuppRows(supp.rows||[]);
+  // handlers
+  $('#campPreview').onclick=async()=>{
+    const out=$('#campPreviewOut'); out.textContent='Checking…';
+    try{ const r=await api('/api/admin/campaigns/audience-preview',{method:'POST',body:JSON.stringify({audience:$('#campAudience').value})});
+      out.textContent=(r.count||0)+' recipients ('+(r.suppressed||0)+' suppressed)'; }
+    catch(e){ out.textContent='Could not preview ('+e.message+')'; }
+  };
+  $('#campSave').onclick=async()=>{
+    const out=$('#campSaveOut'); out.textContent='Saving…';
+    const body={name:$('#campName').value.trim(),subject:$('#campSubject').value.trim(),body:$('#campBody').value,audience:$('#campAudience').value};
+    try{ const r=await api('/api/admin/campaigns',{method:'POST',body:JSON.stringify(body)});
+      out.textContent='Saved.'; toast('Draft saved','ok'); openCampaign(r.id); }
+    catch(e){ out.textContent='Could not save ('+e.message+')'; toast('Could not save draft','err'); }
+  };
+  $('#suppAdd').onclick=()=>suppAction($('#suppEmail').value.trim(),'add');
+}
+function renderSuppRows(rows){
+  const sb=$('#suppRows'); if(!sb) return; sb.innerHTML='';   // clearing only — no server data
+  if(!rows.length){
+    const tr=document.createElement('tr'),td=document.createElement('td');
+    td.colSpan=4; td.className='em'; td.textContent='No suppressed addresses.'; tr.appendChild(td); sb.appendChild(tr); return;
+  }
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    [r.email, r.reason||'—', fmtDT(r.created_at)].forEach(v=>{ const td=document.createElement('td'); td.textContent=v; tr.appendChild(td); });
+    const td=document.createElement('td'); const btn=document.createElement('button'); btn.className='btn btn-sm'; btn.textContent='Remove';
+    btn.onclick=()=>suppAction(r.email,'remove'); td.appendChild(btn); tr.appendChild(td);
+    sb.appendChild(tr);
+  });
+}
+async function suppAction(email,action){
+  const out=$('#suppOut'); if(!email){ if(out) out.textContent='Enter an email address.'; return; }
+  try{ await api('/api/admin/suppression',{method:'POST',body:JSON.stringify({email,action})});
+    toast(action==='add'?'Added to suppression list':'Removed from suppression list','ok');
+    const supp=await api('/api/admin/suppression'); renderSuppRows(supp.rows||[]);
+    const inp=$('#suppEmail'); if(inp&&action==='add') inp.value='';
+    if(out) out.textContent='';
+  }catch(e){ if(out) out.textContent='Could not update ('+e.message+')'; toast('Could not update suppression list','err'); }
+}
+function campApplyCounts(counts){
+  counts=counts||{};
+  const set=(id,v)=>{ const el=$('#'+id); if(el) el.textContent=(v==null?'0':String(v)); };
+  set('campCntTotal',counts.total); set('campCntSent',counts.sent); set('campCntFailed',counts.failed); set('campCntPending',counts.pending);
+}
+let campPollTimer=null;
+function startCampaignPoll(id){
+  if(campPollTimer) clearInterval(campPollTimer);
+  campPollTimer=setInterval(async()=>{
+    if(!$('#campCntTotal')){ clearInterval(campPollTimer); campPollTimer=null; return; }   // navigated away
+    let d; try{ d=await api('/api/admin/campaigns/'+id); }catch(_){ return; }
+    campApplyCounts(d.counts||{});
+    const st=(d.campaign&&d.campaign.status)||'';
+    const sEl=$('#campDetailStatus'); if(sEl) sEl.textContent=st||'—';
+    if(st==='sent'||st==='failed'){
+      clearInterval(campPollTimer); campPollTimer=null;
+      const out=$('#campSendOut'); if(out) out.textContent=(st==='sent'?'All sent.':'Sending failed.');
+    }
+  },3000);
+}
+async function openCampaign(id){
+  let d; try{ d=await api('/api/admin/campaigns/'+id); }catch(e){ toast('Could not load campaign','err'); return; }
+  const c=d.campaign||{};
+  let html='<div style="margin-bottom:16px"><button class="btn btn-sm" id="campBack">← Back to campaigns</button></div>';
+  html+='<div class="panel"><div class="panel-h"><h3 id="campDetailName"></h3></div><div class="panel-b">';
+  html+='<div class="form-row"><span class="em">Audience: <span id="campDetailAud"></span> · Status: <span id="campDetailStatus"></span></span></div>';
+  html+='<div class="form-row"><label>Subject</label><div id="campDetailSubject"></div></div>';
+  html+='<div class="form-row"><span class="em">Total <span id="campCntTotal">0</span> · Sent <span id="campCntSent">0</span> · Failed <span id="campCntFailed">0</span> · Pending <span id="campCntPending">0</span></span></div>';
+  html+='</div></div>';
+  html+='<div class="panel" style="margin-top:20px"><div class="panel-h"><h3>Send</h3></div><div class="panel-b">';
+  html+='<div class="form-row"><label>Send test to</label><div style="display:flex;gap:8px;align-items:center"><input id="campTestTo" type="email" placeholder="you@example.com" style="flex:1"/><button class="btn" id="campTestBtn">Send test</button></div><span id="campTestOut" class="em"></span></div>';
+  html+='<div style="margin-top:8px;display:flex;gap:12px;align-items:center"><button class="btn btn-primary" id="campSendBtn">Send campaign</button><span id="campSendOut" class="em"></span></div>';
+  html+='</div></div>';
+  $('#view').innerHTML=html;   // static shell only — no server data in innerHTML
+  // populate — every value via textContent
+  $('#campDetailName').textContent=c.name||'Campaign';
+  $('#campDetailAud').textContent=CAMP_AUD[c.audience]||c.audience||'—';
+  $('#campDetailStatus').textContent=c.status||'—';
+  $('#campDetailSubject').textContent=c.subject||'—';
+  campApplyCounts(d.counts||{});
+  $('#campBack').onclick=()=>{ if(campPollTimer){ clearInterval(campPollTimer); campPollTimer=null; } renderCampaigns(); };
+  $('#campTestBtn').onclick=async()=>{
+    const out=$('#campTestOut'), to=$('#campTestTo').value.trim();
+    if(!to){ out.textContent='Enter an email address.'; return; }
+    out.textContent='Sending…';
+    try{ const r=await api('/api/admin/campaigns/'+id+'/test',{method:'POST',body:JSON.stringify({to})});
+      out.textContent=r.ok?('Test sent ('+(r.status||'ok')+').'):'Could not send test.'; }
+    catch(e){ out.textContent='Could not send test ('+e.message+')'; }
+  };
+  const sendBtn=$('#campSendBtn');
+  if((c.status||'')!=='draft'){ sendBtn.disabled=true; if((c.status||'')==='sending') startCampaignPoll(id); }
+  sendBtn.onclick=async()=>{
+    const out=$('#campSendOut');
+    let n=(d.counts&&d.counts.total)||0;
+    try{ const p=await api('/api/admin/campaigns/audience-preview',{method:'POST',body:JSON.stringify({audience:c.audience})}); n=p.count||0; }catch(_){ }
+    if(!window.confirm('Send this campaign to '+n+' recipient'+(n===1?'':'s')+'? This cannot be undone.')) return;
+    out.textContent='Sending…'; sendBtn.disabled=true;
+    try{ const r=await api('/api/admin/campaigns/'+id+'/send',{method:'POST'});
+      out.textContent='Sending to '+(r.total||0)+' recipients…'; toast('Campaign sending','ok');
+      const sEl=$('#campDetailStatus'); if(sEl) sEl.textContent='sending';
+      startCampaignPoll(id);
+    }catch(e){ out.textContent='Could not send ('+e.message+')'; sendBtn.disabled=false; toast('Could not send campaign','err'); }
   };
 }
 
