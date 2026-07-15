@@ -859,30 +859,31 @@ img{height:auto;}
 .pci-social svg{width:18px;height:18px;}
 
 
-/* ===== Gradient wordmark logo (no shape) — brand crimson → blue ===== */
+/* ===== Wordmark logo — BLUE at the top, turns CRIMSON on scroll ===== */
 .brand{gap:12px;}
-/* gradient applied to the whole "PCI Global"; use background-image so text-clip survives */
 .logo-pci{
-  background-image:linear-gradient(95deg,var(--crimson) 0%,#8A2E86 50%,var(--blue,#1D4ED8) 100%);
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;color:transparent;
+  background:none!important;
+  color:var(--red)!important;            /* --red is the brand blue #1D4ED8 */
+  -webkit-text-fill-color:var(--red)!important;
+  transition:color .35s ease,-webkit-text-fill-color .35s ease;
 }
-.logo-pci .lp-p,.logo-pci .lp-g{background:none;-webkit-text-fill-color:transparent;color:transparent;}
-/* footer: brighten the gradient ends so it reads on the dark navy bar */
+.logo-pci .lp-p,.logo-pci .lp-g{background:none!important;color:inherit!important;-webkit-text-fill-color:inherit!important;}
+/* scrolled header → wordmark + divider go crimson */
+.hdr.pv-scrolled .logo-pci{color:var(--crimson)!important;-webkit-text-fill-color:var(--crimson)!important;}
+.hdr.pv-scrolled .logo-bar{background:var(--crimson)!important;}
+/* footer: brighter blue so the wordmark reads on the dark navy bar */
 footer .logo-pci,.ft-logo .logo-pci{
-  background-image:linear-gradient(95deg,#E0574B 0%,#B564C6 50%,#6E9BFF 100%);
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;color:transparent;
+  background:none!important;color:#6E9BFF!important;-webkit-text-fill-color:#6E9BFF!important;
 }
 /* keep the footer subtitle legible on dark */
 .ft-logo .logo-name{color:#fff;}
 
-/* ===== Premium divider line — a single precise crimson hairline (solid, no gradient) ===== */
+/* ===== Premium divider line — a single precise hairline (blue at top, crimson on scroll) ===== */
 .logo-bar{
   width:1px!important;height:30px;border-radius:0;flex:0 0 auto;opacity:1;
-  background:var(--crimson)!important;margin:0 15px;
+  background:var(--red)!important;margin:0 15px;transition:background .35s ease;
 }
-.ft-logo .logo-bar{background:#E0574B!important;opacity:.95;}
+.ft-logo .logo-bar{background:#6E9BFF!important;opacity:.9;}
 
 /* de-clutter the header actions: Donate is now a light text link, not a bordered button */
 .hdr-donate{margin-left:2px;}
