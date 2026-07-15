@@ -863,11 +863,12 @@ img{height:auto;}
 .logo-mk{width:38px;height:38px;flex:0 0 auto;margin-right:2px;transition:transform .3s var(--ease-premium,ease);}
 .brand:hover .logo-mk{transform:translateY(-1px) rotate(-2deg);}
 .brand{gap:11px;}
-/* footer logo reads on the dark navy footer: white wordmark + brighter mark strokes */
+/* footer logo reads on the dark navy footer: white wordmark (mark is a self-contained tile) */
 footer .logo-pci,.ft-logo .logo-pci{color:#fff!important;-webkit-text-fill-color:#fff!important;}
-.ft-logo .logo-mk rect,.ft-logo .logo-mk path{stroke:#9CC0FF;}
 .ft-logo .logo-mk{transition:transform .3s var(--ease-premium,ease);}
 .ft-logo:hover .logo-mk{transform:translateY(-1px) rotate(-2deg);}
+.logo-mk{border-radius:11px;}
+.brand:hover .logo-mk,.ft-logo:hover .logo-mk{box-shadow:0 6px 16px -6px rgba(29,78,216,.55);}
 /* a little more red, tastefully */
 .btn-red,.btn-primary{--btnbg:var(--crimson);}          /* keep existing where set; harmless token */
 .eyebrow{color:var(--crimson);}                          /* section eyebrows in crimson */
