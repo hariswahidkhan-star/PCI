@@ -626,6 +626,7 @@ PCI.Backend.Endpoints.Certuvo.Map(app, db, logFn);                    // Certuvo
 PCI.Backend.Endpoints.AdminI18n.Map(app, db, logFn);
 PCI.Backend.Endpoints.Social.Map(app, db, logFn, GateFn);              // footer social-media links (admin-controlled)
 PCI.Backend.Endpoints.Notifications.Map(app, db, logFn, GateFn);       // owner alert recipients + per-event toggles
+PCI.Backend.Endpoints.Campaigns.Map(app, db, logFn, GateFn);           // bulk / marketing email campaigns + unsubscribe
 
 // Purge stored artefacts older than the configured retention window (owner-only). Metadata rows are kept
 // for audit; only the binary artefacts are removed once past retention.

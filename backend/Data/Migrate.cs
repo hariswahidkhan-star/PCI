@@ -128,6 +128,16 @@ public static class Migrate
         // Footer social-media links (Endpoints/Social.cs) — admin-set URLs + master toggle, off by default.
         foreach (var k in new[] { "social_enabled", "social_linkedin", "social_x", "social_facebook", "social_instagram", "social_youtube", "social_whatsapp" })
             db.Exec($"INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('{k}','')");
+        // Bulk / marketing email campaigns (Endpoints/Campaigns.cs): one campaign row, a per-recipient
+        // delivery ledger, and a global suppression list (one-click unsubscribes + manual entries).
+        // Anti-spam/CAN-SPAM/GDPR is enforced in code: every send carries an auto-appended footer with a
+        // one-click unsubscribe link, and suppression is always honoured before any address is mailed.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS email_campaigns(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,subject TEXT,body_html TEXT,audience TEXT,status TEXT DEFAULT 'draft',total INTEGER DEFAULT 0,sent INTEGER DEFAULT 0,failed INTEGER DEFAULT 0,suppressed INTEGER DEFAULT 0,created_at TEXT DEFAULT (datetime('now')),sent_at TEXT)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS campaign_recipients(id INTEGER PRIMARY KEY AUTOINCREMENT,campaign_id INTEGER,email TEXT,first_name TEXT,status TEXT DEFAULT 'pending',error TEXT,sent_at TEXT)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_campaign_recipients_campaign ON campaign_recipients(campaign_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS email_suppression(id INTEGER PRIMARY KEY AUTOINCREMENT,email TEXT UNIQUE NOT NULL,reason TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        // Optional postal address shown in the campaign footer (CAN-SPAM). Empty ⇒ line is omitted.
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('org_postal_address','')");
         // SEO (master-plan Phase 3): per-page canonical/OG overrides + a managed redirect table.
         AddCol("pages", "canonical_url", "canonical_url TEXT");
         AddCol("pages", "og_image", "og_image TEXT");
