@@ -43,6 +43,9 @@ public static class Notifications
             foreach (var (key, _) in Events) toggles[key] = Notify.Enabled(db, key);
             var recips = Notify.Recipients(db);           // the resolved, de-duplicated list actually used
             var recent = db.Query("SELECT channel,recipient,subject,status,related_type,created_at FROM notification_history ORDER BY id DESC LIMIT 15");
+            // Is a mail provider actually wired? If not, alerts are logged but not delivered to an inbox.
+            var mailReady = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("RESEND_API_KEY"))
+                         || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SMTP_HOST"));
             return J(new
             {
                 recipients = S("notify_recipients"),
@@ -51,6 +54,7 @@ public static class Notifications
                 events = Events.Select(e => new { e.key, e.label }),
                 toggles,
                 recent,
+                mail_configured = mailReady,
             });
         }));
 

@@ -1850,6 +1850,14 @@ async function renderNotifications(){
   const d=await api('/api/admin/notifications');
   const EVENTS=(d.events&&d.events.length)?d.events:[{key:'chat',label:'Live chat requests'},{key:'enrollment',label:'Enrolments & payments'},{key:'inquiry',label:'Website inquiries'}];
   let html='<div class="inline-note" style="margin-bottom:16px">Add the email address(es) that should receive alerts for new live-chat requests, enrolments and website inquiries. Multiple addresses allowed — separate with a comma, semicolon or new line (e.g. to alert an assistant too).</div>';
+  // ADDED: mail-provider setup note — shown only when no provider is wired, so alerts are recorded but not delivered.
+  if(d.mail_configured===false){
+    html+='<div class="inline-note" id="mailSetup" style="margin-bottom:16px;border-left:3px solid var(--crimson,#C13329);background:#FEF3F2">'+
+      '<strong>Email delivery is not switched on yet.</strong> Notifications are being recorded (see the log below) '+
+      'but will not reach an inbox until a mail provider is configured. Set <code>RESEND_API_KEY</code> '+
+      '(simplest — one value from resend.com) <em>or</em> the <code>SMTP_HOST</code>/<code>SMTP_USER</code>/'+
+      '<code>SMTP_PASS</code> variables in your hosting environment, then use <strong>Send test email</strong> to confirm.</div>';
+  }
   html+='<div class="panel"><div class="panel-h"><h3>Notifications</h3></div><div class="panel-b">';
   html+='<div class="form-row"><label>Recipient email address(es)</label><textarea id="notifyRecipients" rows="3" placeholder="owner@example.com, assistant@example.com"></textarea></div>';
   html+='<div class="form-row"><span class="em">Currently alerting: <span id="notifyResolved"></span></span></div>';
