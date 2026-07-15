@@ -877,15 +877,29 @@ footer .logo-pci,.ft-logo .logo-pci{
 /* keep the footer subtitle legible on dark */
 .ft-logo .logo-name{color:#fff;}
 
+/* ===== Premium brand divider line — thin crimson→blue gradient that fades at both ends ===== */
+.logo-bar{
+  width:1.5px!important;height:30px;border-radius:2px;flex:0 0 auto;opacity:1;
+  background:linear-gradient(180deg,rgba(193,51,41,0) 0%,var(--crimson) 26%,#6E5BC9 60%,var(--blue,#1D4ED8) 88%,rgba(29,78,216,0) 100%)!important;
+}
+.ft-logo .logo-bar{
+  background:linear-gradient(180deg,rgba(224,87,75,0) 0%,#E0574B 24%,#B564C6 58%,#6E9BFF 90%,rgba(110,155,255,0) 100%)!important;
+  opacity:.95;
+}
+
+/* de-clutter the header actions: Donate is now a light text link, not a bordered button */
+.hdr-donate{margin-left:2px;}
+
 /* show the "Project Controls Institute Global, Inc." line in the HEADER too (wide desktop only, so the nav never crowds) */
 @media(min-width:1440px){
   .hdr .logo-name,.hdr .logo-bar{display:inline-block!important;}
   .hdr .logo-name{vertical-align:middle;line-height:1.14;font-size:11.5px;}
-  .hdr .logo-bar{height:28px;}
-  .hdr .brand{gap:9px;}
+  .hdr .logo-bar{height:26px;}
+  .hdr .brand{gap:10px;}
   /* give the wide header more room so the subtitle + full nav breathe */
-  .hdr>.wrap{max-width:1580px;}
-  .hdr .nav{gap:17px;}
+  .hdr>.wrap{max-width:1560px;}
+  .hdr .nav{gap:24px;}
+  .hdr .nav a{font-weight:500;}
 }
 /* a little more red, tastefully */
 .btn-red,.btn-primary{--btnbg:var(--crimson);}          /* keep existing where set; harmless token */
