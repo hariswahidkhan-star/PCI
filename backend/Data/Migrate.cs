@@ -138,6 +138,16 @@ public static class Migrate
             db.Exec($"INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('{k}','')");
         PCI.Backend.Core.IndexNowService.EnsureKey(db);
 
+        // Public discussion forum (community): anonymous display-name threads/posts, community
+        // flagging with auto-hold, and a rate-limit action ledger keyed by a salted truncated IP hash.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_threads(id INTEGER PRIMARY KEY AUTOINCREMENT,category TEXT NOT NULL,title TEXT NOT NULL,author_name TEXT NOT NULL,status TEXT DEFAULT 'live',reply_count INTEGER DEFAULT 0,created_at TEXT DEFAULT (datetime('now')),last_post_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_threads_list ON forum_threads(status, last_post_at)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_threads_cat ON forum_threads(category, status)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_posts(id INTEGER PRIMARY KEY AUTOINCREMENT,thread_id INTEGER NOT NULL,author_name TEXT NOT NULL,body TEXT NOT NULL,status TEXT DEFAULT 'live',flags INTEGER DEFAULT 0,ip_hash TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_posts_thread ON forum_posts(thread_id, status)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_actions(id INTEGER PRIMARY KEY AUTOINCREMENT,ip_hash TEXT NOT NULL,action TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_actions_lookup ON forum_actions(ip_hash, action, created_at)");
+
         // First-party analytics (master-plan Phase 5): privacy-first event ledger.
         db.Exec(@"CREATE TABLE IF NOT EXISTS analytics_events(id INTEGER PRIMARY KEY AUTOINCREMENT,event TEXT NOT NULL,path TEXT,visitor TEXT,user_id INTEGER,country TEXT,device TEXT,browser TEXT,utm_source TEXT,utm_medium TEXT,utm_campaign TEXT,referrer TEXT,landing TEXT,value DECIMAL(12,2),currency TEXT,detail TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_analytics_event_time ON analytics_events(event, created_at)");

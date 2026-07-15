@@ -615,6 +615,7 @@ PCI.Backend.Endpoints.AdminMgmt.Map(app, db, logFn, r => Auth.AdminFromReq(r, db
 PCI.Backend.Endpoints.Payments.Map(app, db, logFn, () => !string.IsNullOrEmpty(stripeKey));
 PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Reviews.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
+PCI.Backend.Endpoints.Forum.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);   // public discussion forum
 PCI.Backend.Endpoints.Casework.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
