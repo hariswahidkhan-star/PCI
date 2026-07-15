@@ -116,13 +116,6 @@ a:not(.btn):not(.brand):not(.qcard-link):not([class*="card"]):not([class*="tile"
 /* hero: no lead-in dash — keep only the eyebrow text and the heading period */
 .hero .eyebrow::before,.hero-in .eyebrow::before{display:none!important;}
 
-/* the primary "Enrol now" button turns crimson once the header is scrolled — same cue as the logo */
-.hdr .btn-red{transition:background .35s var(--ease-premium),box-shadow .35s var(--ease-premium),color .2s;}
-.hdr.pv-scrolled .btn-red{
-  background:var(--crimson)!important;background-image:none!important;border-color:transparent!important;color:#fff!important;
-  box-shadow:0 10px 24px -12px rgba(193,51,41,.6),inset 0 1px 0 rgba(255,255,255,.18)!important;
-}
-.hdr.pv-scrolled .btn-red:hover{background:#9E2A22!important;background-image:none!important;}
 
 /* scroll-reveal choreography (premium.js gates html.pv) */
 html.pv .sec>.wrap>.hblock,
