@@ -339,6 +339,7 @@ const SECTIONS=[
   {id:'nav',label:'Navigation menus',icon:'globe',render:renderNav},
   {id:'sitesettings',label:'Header/footer content',icon:'sliders',render:renderSiteSettings},
   {id:'social',label:'Social media',icon:'globe',render:renderSocial,perm:'content'},   /* ADDED: Social media management section */
+  {id:'notifications',label:'Notifications',icon:'mail',render:renderNotifications,perm:'content'},   /* ADDED: Notifications */
   {id:'subscribers',label:'Newsletter',icon:'mail',render:renderSubscribers},
   {id:'submissions',label:'Form submissions',icon:'send',render:renderSubmissions},
   {id:'chatconsole',label:'Live chat',icon:'send',href:'admin-chat.html',perm:'content'},   /* ADDED: link to the site chat console (admin-chat.html) */
@@ -1835,6 +1836,64 @@ async function renderSocial(){
     document.querySelectorAll('.soc-input').forEach(i=>body[i.dataset.k]=i.value.trim());
     try{ await api('/api/admin/social',{method:'POST',body:JSON.stringify(body)}); st.textContent='Saved.'; toast('Social links saved','ok'); }
     catch(e){ st.textContent='Could not save ('+e.message+')'; toast('Could not save social links','err'); }
+  };
+}
+
+/* ============ ADDED: Notifications ============
+   Reads/writes GET/POST /api/admin/notifications and POST /api/admin/notifications/test. GET returns
+   {recipients:"<multiline>", admin_email, resolved:[emails...], events:[{key,label}],
+   toggles:{chat,enrollment,inquiry}, recent:[{channel,recipient,subject,status,related_type,created_at}]}.
+   Every server-supplied value is placed via textContent / property assignment — never innerHTML — so the
+   recipient list and the delivery log stay injection-safe.
+   ============ */
+async function renderNotifications(){
+  const d=await api('/api/admin/notifications');
+  const EVENTS=(d.events&&d.events.length)?d.events:[{key:'chat',label:'Live chat requests'},{key:'enrollment',label:'Enrolments & payments'},{key:'inquiry',label:'Website inquiries'}];
+  let html='<div class="inline-note" style="margin-bottom:16px">Add the email address(es) that should receive alerts for new live-chat requests, enrolments and website inquiries. Multiple addresses allowed — separate with a comma, semicolon or new line (e.g. to alert an assistant too).</div>';
+  html+='<div class="panel"><div class="panel-h"><h3>Notifications</h3></div><div class="panel-b">';
+  html+='<div class="form-row"><label>Recipient email address(es)</label><textarea id="notifyRecipients" rows="3" placeholder="owner@example.com, assistant@example.com"></textarea></div>';
+  html+='<div class="form-row"><span class="em">Currently alerting: <span id="notifyResolved"></span></span></div>';
+  html+='<div class="form-row"><label>Alert me about</label>';
+  EVENTS.forEach(e=>{ html+='<label style="display:flex;gap:8px;align-items:center;cursor:pointer;margin-bottom:6px"><input type="checkbox" class="notify-ev" data-k="'+esc(e.key)+'" style="width:auto"/> <span class="notify-ev-label" data-k="'+esc(e.key)+'"></span></label>'; });
+  html+='</div>';
+  html+='<div style="margin-top:8px;display:flex;gap:12px;align-items:center"><button class="btn btn-primary" id="saveNotify">Save</button><button class="btn" id="testNotify">Send test email</button><span id="notifyStatus" class="em"></span></div>';
+  html+='</div></div>';
+  html+='<div class="panel" style="margin-top:20px"><div class="panel-h"><h3>Recent notifications</h3></div><div class="panel-b"><div class="tablewrap"><table><thead><tr><th>Subject</th><th>Recipient</th><th>Status</th><th>Type</th><th>Time</th></tr></thead><tbody id="notifyRecent"></tbody></table></div></div></div>';
+  $('#view').innerHTML=html;
+  /* populate from server via safe property assignment / textContent — never innerHTML with server-supplied values */
+  $('#notifyRecipients').value=d.recipients||'';
+  $('#notifyResolved').textContent=(d.resolved&&d.resolved.length)?d.resolved.join(', '):'—';
+  EVENTS.forEach(e=>{
+    const lab=document.querySelector('.notify-ev-label[data-k="'+e.key+'"]'); if(lab) lab.textContent=e.label;
+    const cb=document.querySelector('.notify-ev[data-k="'+e.key+'"]'); if(cb) cb.checked=!!(d.toggles&&d.toggles[e.key]);
+  });
+  const tb=$('#notifyRecent');
+  if(!(d.recent&&d.recent.length)){
+    const tr=document.createElement('tr'), td=document.createElement('td');
+    td.colSpan=5; td.className='em'; td.textContent='No notifications sent yet.'; tr.appendChild(td); tb.appendChild(tr);
+  } else d.recent.forEach(r=>{                                  // endpoint returns ORDER BY id DESC — newest first
+    const tr=document.createElement('tr');
+    [r.subject||'—', r.recipient||'—', r.status||'—', r.related_type||'—', fmtDT(r.created_at)].forEach(v=>{
+      const td=document.createElement('td'); td.textContent=v; tr.appendChild(td);
+    });
+    tb.appendChild(tr);
+  });
+  $('#saveNotify').onclick=async()=>{
+    const st=$('#notifyStatus'); st.textContent='Saving…';
+    const body={recipients:$('#notifyRecipients').value};
+    document.querySelectorAll('.notify-ev').forEach(cb=>{ body[cb.dataset.k]=cb.checked; });
+    try{ const res=await api('/api/admin/notifications',{method:'POST',body:JSON.stringify(body)});
+      st.textContent='Saved.'; $('#notifyResolved').textContent=(res.resolved&&res.resolved.length)?res.resolved.join(', '):'—';
+      toast('Notification settings saved','ok'); }
+    catch(e){ st.textContent='Could not save ('+e.message+')'; toast('Could not save notification settings','err'); }
+  };
+  $('#testNotify').onclick=async()=>{
+    const st=$('#notifyStatus'); st.textContent='Sending test…';
+    try{ const res=await api('/api/admin/notifications/test',{method:'POST'});
+      if(res.ok){ const n=res.sent||0; st.textContent='Sent to '+n+' address'+(n===1?'':'es')+'.'; toast('Test email sent','ok'); }
+      else if(res.error==='no_recipients'){ st.textContent=res.message||'Add at least one email address first.'; toast('No recipients configured','err'); }
+      else { st.textContent='Could not send test email.'; toast('Could not send test email','err'); } }
+    catch(e){ st.textContent='Could not send test email ('+e.message+')'; toast('Could not send test email','err'); }
   };
 }
 
