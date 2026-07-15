@@ -859,15 +859,34 @@ img{height:auto;}
 .pci-social svg{width:18px;height:18px;}
 
 
-/* ===== Two-tone wordmark logo (no shape) — crimson "PCI" + ink "Global" ===== */
+/* ===== Gradient wordmark logo (no shape) — brand crimson → blue ===== */
 .brand{gap:12px;}
-.logo-pci .lp-p{color:var(--crimson);-webkit-text-fill-color:var(--crimson);}
-.logo-pci .lp-g{color:var(--ink);-webkit-text-fill-color:var(--ink);}
-/* on the dark footer: crimson "PCI" stays, "Global" turns white */
-footer .logo-pci .lp-g,.ft-logo .logo-pci .lp-g{color:#fff;-webkit-text-fill-color:#fff;}
-footer .logo-pci .lp-p,.ft-logo .logo-pci .lp-p{color:var(--crimson);-webkit-text-fill-color:var(--crimson);}
-/* keep the footer subtitle + divider legible on dark */
+/* gradient applied to the whole "PCI Global"; use background-image so text-clip survives */
+.logo-pci{
+  background-image:linear-gradient(95deg,var(--crimson) 0%,#8A2E86 50%,var(--blue,#1D4ED8) 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+.logo-pci .lp-p,.logo-pci .lp-g{background:none;-webkit-text-fill-color:transparent;color:transparent;}
+/* footer: brighten the gradient ends so it reads on the dark navy bar */
+footer .logo-pci,.ft-logo .logo-pci{
+  background-image:linear-gradient(95deg,#E0574B 0%,#B564C6 50%,#6E9BFF 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+/* keep the footer subtitle legible on dark */
 .ft-logo .logo-name{color:#fff;}
+
+/* show the "Project Controls Institute Global, Inc." line in the HEADER too (wide desktop only, so the nav never crowds) */
+@media(min-width:1440px){
+  .hdr .logo-name,.hdr .logo-bar{display:inline-block!important;}
+  .hdr .logo-name{vertical-align:middle;line-height:1.14;font-size:11.5px;}
+  .hdr .logo-bar{height:28px;}
+  .hdr .brand{gap:9px;}
+  /* give the wide header more room so the subtitle + full nav breathe */
+  .hdr>.wrap{max-width:1580px;}
+  .hdr .nav{gap:17px;}
+}
 /* a little more red, tastefully */
 .btn-red,.btn-primary{--btnbg:var(--crimson);}          /* keep existing where set; harmless token */
 .eyebrow{color:var(--crimson);}                          /* section eyebrows in crimson */
