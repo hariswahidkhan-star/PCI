@@ -13,8 +13,9 @@ namespace PCI.Backend.Core;
 ///
 /// The active language comes from <c>?lang=</c> (persisted to a cookie) or the cookie, else English.
 /// Body regions are translated with the SAME scan the English injector runs, so a region's stable key
-/// lines up 1:1 with its translation; an untranslated region simply stays English. The switcher and
-/// nav-label translation live in <see cref="ListSections"/> (the shared header is table-rendered there).
+/// lines up 1:1 with its translation; an untranslated region simply stays English. Nav-label
+/// translation lives in <see cref="ListSections"/> (the shared header is table-rendered there);
+/// the public switcher is the top-bar language button injected by assets/premium.js (PCI-LANGBAR).
 /// </summary>
 public static class I18nContent
 {

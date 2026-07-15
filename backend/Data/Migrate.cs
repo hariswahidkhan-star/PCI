@@ -125,6 +125,9 @@ public static class Migrate
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_ack_subject','')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_admin_subject','')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_partners_enabled','1')");
+        // Footer social-media links (Endpoints/Social.cs) — admin-set URLs + master toggle, off by default.
+        foreach (var k in new[] { "social_enabled", "social_linkedin", "social_x", "social_facebook", "social_instagram", "social_youtube", "social_whatsapp" })
+            db.Exec($"INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('{k}','')");
         // SEO (master-plan Phase 3): per-page canonical/OG overrides + a managed redirect table.
         AddCol("pages", "canonical_url", "canonical_url TEXT");
         AddCol("pages", "og_image", "og_image TEXT");
@@ -147,6 +150,68 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_posts_thread ON forum_posts(thread_id, status)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS forum_actions(id INTEGER PRIMARY KEY AUTOINCREMENT,ip_hash TEXT NOT NULL,action TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_actions_lookup ON forum_actions(ip_hash, action, created_at)");
+
+        // Self-hosted site chat (Endpoints/Chat.cs): a bot answers first from the admin-managed
+        // knowledge base (chat_kb); the visitor can escalate to a live person; every conversation is
+        // kept as a full transcript for admin review. No third-party chat services involved.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS chat_sessions(id INTEGER PRIMARY KEY AUTOINCREMENT,token TEXT UNIQUE NOT NULL,visitor_name TEXT,status TEXT DEFAULT 'bot',created_at TEXT DEFAULT (datetime('now')),last_activity_at TEXT DEFAULT (datetime('now')),ip_hash TEXT)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_chat_sessions_status ON chat_sessions(status, last_activity_at)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS chat_messages(id INTEGER PRIMARY KEY AUTOINCREMENT,session_id INTEGER NOT NULL,sender TEXT NOT NULL,body TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_chat_messages_session ON chat_messages(session_id, id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS chat_kb(id INTEGER PRIMARY KEY AUTOINCREMENT,question TEXT NOT NULL,answer TEXT NOT NULL,keywords TEXT,enabled INTEGER DEFAULT 1,sort_order INTEGER DEFAULT 0)");
+        // First-run knowledge base (only when empty — never overwrites admin edits). Answers are taken
+        // from the site's published content (faq.html / handbook / footer legal), British English,
+        // honest about founding status; the exam is described in the future tense, as on the site.
+        try
+        {
+            if (db.Scalar<long>("SELECT COUNT(*) FROM chat_kb") == 0)
+            {
+                var kbSeed = new (string Q, string A, string K)[]
+                {
+                    ("What is the PCP-AI credential?",
+                     "The Certified Project Controls Professional — AI (PCP-AI) is a single, rigorous credential covering project controls, cost engineering and project finance, with the governed use of artificial intelligence treated as part of the discipline. It is awarded by the Project Controls Institute and built with reference to ISO/IEC 17024 personnel-certification principles.",
+                     "pcp-ai,pcp,credential,certification,what is pcp,certified project controls professional"),
+                    ("What are the thirteen domains and how are they weighted?",
+                     "The PCP-AI Body of Knowledge spans thirteen domains (61 Knowledge Areas), weighted 40% project accounting and finance, 40% project management principles and 20% governed AI. The Body of Knowledge page on the website describes each domain.",
+                     "domains,domain,weighting,weighted,body of knowledge,knowledge areas,syllabus,thirteen,13,40"),
+                    ("Am I eligible to sit the exam?",
+                     "There are two routes: an experience route for practitioners with relevant project-controls experience, and a foundation route for those newer to the field. Full eligibility criteria are confirmed during enrolment — see the Eligibility Requirements page.",
+                     "eligible,eligibility,qualify,qualification,requirements,experience route,foundation route,prerequisites"),
+                    ("How much does it cost?",
+                     "Fees are published on the website and confirmed at enrolment; fees for the inaugural cohort are confirmed when you enrol. Members receive reduced rates on examinations and events — see the fees and policies pages for the current schedule.",
+                     "cost,price,pricing,fees,fee,how much,pay,payment"),
+                    ("How do I enrol?",
+                     "Enrolment is online: start on the Enrol page, create your account and follow the application steps. Make sure the name you enrol under matches your official identification, as identity is checked before the examination.",
+                     "enrol,enroll,enrolment,enrollment,apply,application,register,sign up,begin"),
+                    ("What will the examination involve?",
+                     "The examination will test applied judgement rather than recall: scenario-based multiple-choice questions across the thirteen domains, weighted 40% project accounting and finance, 40% project management principles and 20% governed AI. It will be proctored, online or at a test centre.",
+                     "exam,examination,format,proctored,proctoring,test,questions,multiple choice,duration,sit"),
+                    ("Can I retake the exam if I do not pass?",
+                     "Yes. The retake policy on the website sets out how attempts work, the interval between them and how to rebook. A near-miss usually calls for targeted revision of specific domains rather than repeating your whole preparation.",
+                     "retake,retakes,resit,fail,failed,did not pass,rebook,attempts"),
+                    ("What does student membership include?",
+                     "Student membership enrolment is now open. Membership provides recertification and CPD tracking, a verifiable digital credential designed for recognition by employers, body-of-knowledge and AI-practice updates, and member rates on examinations and events.",
+                     "membership,member,student,join,benefits,cpd,grades"),
+                    ("Where can I find the candidate handbook and downloads?",
+                     "The Candidate Handbook and other guidelines are on the Guidelines & Downloads page, and the governing policies (examination rules, ethics code, appeals and complaints) are collected on the Policies page.",
+                     "handbook,download,downloads,guidelines,documents,pdf,policies,rules"),
+                    ("How can I contact the team?",
+                     "You can email hello@projectcontrolsinstitute.org or use the Contact page on the website. If you would rather continue here, ask for a member of the team and this chat will be passed to them.",
+                     "contact,email,phone,reach,enquiry,inquiries,support,address"),
+                    ("Is PCI accredited?",
+                     "PCI is an independent certifying body — a Delaware Non-Stock Corporation pursuing 501(c)(3) tax-exempt recognition, not yet granted. It is not currently accredited by ANAB, IAS or any ISO/IEC 17024 accreditation body; the certification framework is being developed with reference to ISO/IEC 17024 personnel-certification principles. We describe our status honestly at every stage.",
+                     "accredited,accreditation,iso,17024,nonprofit,501,founding,status,recognised,recognized,legitimate"),
+                    ("Why is AI part of a project-controls credential?",
+                     "Because AI is already in the toolkit. The PCP-AI assesses the applied, governed use of AI across forecasting, risk and reporting — not generic AI literacy. Every output a certified professional relies on must be explainable, validated and owned by a competent human. In short: AI proposes; the professional disposes.",
+                     "ai,artificial intelligence,ai policy,governed ai,ai standard,governance,automation"),
+                };
+                var kbOrder = 0;
+                foreach (var (q, a, k) in kbSeed)
+                    db.Execute("INSERT INTO chat_kb(question,answer,keywords,enabled,sort_order) VALUES(?,?,?,1,?)", q, a, k, kbOrder += 10);
+                Console.WriteLine($"[seed] chat knowledge base seeded: {kbSeed.Length} answers");
+            }
+        }
+        catch { /* chat_kb may not exist on a very first pass; ignored */ }
 
         // First-party analytics (master-plan Phase 5): privacy-first event ledger.
         db.Exec(@"CREATE TABLE IF NOT EXISTS analytics_events(id INTEGER PRIMARY KEY AUTOINCREMENT,event TEXT NOT NULL,path TEXT,visitor TEXT,user_id INTEGER,country TEXT,device TEXT,browser TEXT,utm_source TEXT,utm_medium TEXT,utm_campaign TEXT,referrer TEXT,landing TEXT,value DECIMAL(12,2),currency TEXT,detail TEXT,created_at TEXT DEFAULT (datetime('now')))");

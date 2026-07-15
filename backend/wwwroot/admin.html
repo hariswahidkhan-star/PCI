@@ -338,8 +338,10 @@ const SECTIONS=[
   {id:'media',label:'Media library',icon:'image',render:renderMedia},
   {id:'nav',label:'Navigation menus',icon:'globe',render:renderNav},
   {id:'sitesettings',label:'Header/footer content',icon:'sliders',render:renderSiteSettings},
+  {id:'social',label:'Social media',icon:'globe',render:renderSocial,perm:'content'},   /* ADDED: Social media management section */
   {id:'subscribers',label:'Newsletter',icon:'mail',render:renderSubscribers},
   {id:'submissions',label:'Form submissions',icon:'send',render:renderSubmissions},
+  {id:'chatconsole',label:'Live chat',icon:'send',href:'admin-chat.html',perm:'content'},   /* ADDED: link to the site chat console (admin-chat.html) */
   {id:'inquiries',label:'Enquiries',icon:'mail',render:renderInquiries,badge:'openInq'},
   {id:'reviews',label:'Reviews',icon:'star',render:renderReviews,badge:'pendingReviews'},
 
@@ -403,10 +405,11 @@ function buildNav(){
       while(j<SECTIONS.length && !SECTIONS[j].g){ if(canSee(SECTIONS[j].id)) items.push(SECTIONS[j]); j++; }
       if(items.length){
         const d=document.createElement('div'); d.className='nav-group'+(/[①②③]/.test(sec.g)?' app':''); d.textContent=sec.g; nav.appendChild(d);
-        items.forEach(s=>{ const a=document.createElement('a'); a.href='#'+s.id; a.dataset.id=s.id;
+        items.forEach(s=>{ const a=document.createElement('a'); a.dataset.id=s.id;
           const bd=s.badge&&counts[s.badge]?`<span class="badge">${counts[s.badge]}</span>`:'';
-          a.innerHTML=sico(s.icon,'ico')+'<span>'+s.label+'</span>'+bd;
-          a.onclick=e=>{e.preventDefault();navigate(s.id);$('#rail').classList.remove('open');};
+          if(s.href){ a.href=s.href; a.innerHTML=sico(s.icon,'ico')+'<span>'+s.label+'</span>'; /* external page: a real link, no SPA navigate */ }
+          else { a.href='#'+s.id; a.innerHTML=sico(s.icon,'ico')+'<span>'+s.label+'</span>'+bd;
+            a.onclick=e=>{e.preventDefault();navigate(s.id);$('#rail').classList.remove('open');}; }
           nav.appendChild(a); });
       }
       i=j;
@@ -1801,6 +1804,38 @@ async function renderSiteSettings(){
   html+='<button class="btn btn-primary" id="saveSettings">Save all settings</button>';
   $('#view').innerHTML=html;
   $('#saveSettings').onclick=async()=>{ const body={}; document.querySelectorAll('.s-input').forEach(i=>body[i.dataset.k]=i.value); await api('/api/admin/settings',{method:'PATCH',body:JSON.stringify(body)}); toast('Settings saved','ok'); };
+}
+
+/* ============ ADDED: Social media section ============
+   Reads/writes GET/POST /api/admin/social. GET returns {social_enabled:bool, linkedin,x,
+   facebook,instagram,youtube,whatsapp (URL strings)}. POST accepts the same network keys plus
+   social_enabled. Only enabled + http(s) links are surfaced publicly via GET /api/social.
+   Status line uses textContent only (never innerHTML with server data). */
+async function renderSocial(){
+  const NETS=[['linkedin','LinkedIn','https://www.linkedin.com/company/your-org'],
+    ['x','X (Twitter)','https://x.com/your-handle'],
+    ['facebook','Facebook','https://www.facebook.com/your-page'],
+    ['instagram','Instagram','https://www.instagram.com/your-handle'],
+    ['youtube','YouTube','https://www.youtube.com/@your-channel'],
+    ['whatsapp','WhatsApp','https://wa.me/1234567890']];
+  const d=await api('/api/admin/social');
+  let html='<div class="inline-note" style="margin-bottom:16px">Social media links shown in the public site footer. Only enabled links that start with http(s) appear on the website. Turn the master switch off to hide all of them.</div>';
+  html+='<div class="panel"><div class="panel-h"><h3>Social media</h3></div><div class="panel-b">';
+  html+='<div class="form-row"><label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="socEnabled" style="width:auto"/> Show social links on the website</label></div>';
+  NETS.forEach(([k,l,ph])=>{ html+='<div class="form-row"><label>'+l+'</label><input class="soc-input" data-k="'+k+'" type="url" placeholder="'+esc(ph)+'"/></div>'; });
+  html+='<div style="margin-top:8px;display:flex;gap:12px;align-items:center"><button class="btn btn-primary" id="saveSocial">Save social links</button><span id="socStatus" class="em"></span></div>';
+  html+='</div></div>';
+  $('#view').innerHTML=html;
+  /* populate from server via safe property assignment — never innerHTML with server-supplied values */
+  $('#socEnabled').checked=!!d.social_enabled;
+  NETS.forEach(([k])=>{ const inp=document.querySelector('.soc-input[data-k="'+k+'"]'); if(inp) inp.value=d[k]||''; });
+  $('#saveSocial').onclick=async()=>{
+    const st=$('#socStatus'); st.textContent='Saving…';
+    const body={social_enabled:$('#socEnabled').checked?1:0};
+    document.querySelectorAll('.soc-input').forEach(i=>body[i.dataset.k]=i.value.trim());
+    try{ await api('/api/admin/social',{method:'POST',body:JSON.stringify(body)}); st.textContent='Saved.'; toast('Social links saved','ok'); }
+    catch(e){ st.textContent='Could not save ('+e.message+')'; toast('Could not save social links','err'); }
+  };
 }
 
 /* ============ CMS SAMPLE DATA + MOCK API ============ */

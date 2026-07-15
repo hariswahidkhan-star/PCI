@@ -126,7 +126,8 @@ public static class ListSections
             var al = H.Str(r["label"]) ?? "";
             sb.Append("<a class=\"nav-acct\" href=\"").Append(EscAttr(H.Str(r["url"]) ?? "#")).Append("\">").Append(Esc(I18nContent.NavLabel(db, lang, al))).Append("</a>");
         }
-        sb.Append(LangSwitcher(db, lang));
+        // NOTE: the language switcher no longer renders here — it lives on the top promo bar,
+        // injected client-side by assets/premium.js (PCI-LANGBAR block).
         return sb.ToString();
     }
 
@@ -152,25 +153,6 @@ public static class ListSections
               .Append(Esc(I18nContent.NavLabel(db, lang, fl))).Append("</a></li>");
         }
         sb.Append("</ul></div>");
-        return sb.ToString();
-    }
-
-    /// <summary>The public language switcher — a native &lt;details&gt; disclosure (works with JS off,
-    /// no inline script for CSP). Each option is a <c>?lang=</c> link the server persists to a cookie.
-    /// Only languages that actually have translations are offered; with none, no switcher is shown.</summary>
-    static string LangSwitcher(Db db, string lang)
-    {
-        var avail = I18nContent.AvailableLangs(db);
-        if (avail.Length <= 1) return "";                          // English only → nothing to switch to
-        var current = avail.FirstOrDefault(x => x.code == lang);
-        if (current.code is null) current = avail[0];
-        var sb = new StringBuilder();
-        sb.Append("<details class=\"langsw\"><summary aria-label=\"Language\"><span class=\"langsw-globe\" aria-hidden=\"true\">🌐</span> <span>")
-          .Append(Esc(current.native)).Append("</span></summary><div class=\"langsw-menu\">");
-        foreach (var (code, native) in avail)
-            sb.Append("<a href=\"?lang=").Append(code).Append('"').Append(code == lang ? " aria-current=\"true\"" : "")
-              .Append('>').Append(Esc(native)).Append("</a>");
-        sb.Append("</div></details>");
         return sb.ToString();
     }
 

@@ -835,3 +835,25 @@ img{height:auto;}
   html.menu-open .nav .langsw-menu{position:static;display:block;min-width:0;border:0;border-radius:0;box-shadow:none;padding:0;background:var(--paper-2,#f1f5f9);}
   html.menu-open .nav .langsw-menu a{padding:12px 30px 12px 46px;font-size:15px;color:var(--ink,#0f172a);border-bottom:1px solid var(--line,#e2e8f0);}
 }
+
+/* ===== PCI-LANGBAR: top-bar language button (added for the top-of-page language switcher) ===== */
+.promo.has-langbtn{position:relative;}
+.pci-langwrap{position:relative;display:inline-flex;margin-left:14px;vertical-align:middle;}
+.promo .pci-langwrap{position:absolute;right:14px;top:50%;transform:translateY(-50%);margin:0;}
+.pci-langfixed{position:fixed;top:8px;right:10px;z-index:1200;}
+.pci-langbtn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:999px;font-family:var(--sans);font-size:11.5px;font-weight:600;letter-spacing:.03em;padding:4px 9px;cursor:pointer;line-height:1;transition:background .18s,border-color .18s;}
+.pci-langbtn:hover{background:rgba(255,255,255,.2);border-color:var(--crimson);}
+.pci-langbtn svg{width:13px;height:13px;opacity:.9;}
+.pci-langcaret{font-size:8px;opacity:.75;}
+.pci-langfixed .pci-langbtn{background:var(--ink);border-color:rgba(255,255,255,.25);box-shadow:0 6px 18px -8px rgba(0,0,0,.5);}
+.pci-langmenu{position:absolute;right:0;top:calc(100% + 6px);background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 20px 44px -20px rgba(15,23,42,.4);padding:5px;min-width:150px;display:none;z-index:1250;}
+.pci-langmenu.open{display:block;}
+.pci-langmenu a{display:block;padding:7px 11px;font-family:var(--sans);font-size:13px;color:var(--ink);text-decoration:none;border-radius:5px;white-space:nowrap;}
+.pci-langmenu a:hover{background:#F1F5F9;}
+.pci-langmenu a[aria-current="true"]{color:var(--crimson);font-weight:700;}
+
+/* ===== PCI-SOCIAL: footer social-media icons (admin-controlled) ===== */
+.pci-social{display:inline-flex;align-items:center;gap:12px;}
+.pci-social a{display:inline-flex;color:#8A93A1;transition:color .18s,transform .18s;}
+.pci-social a:hover{color:var(--crimson);transform:translateY(-2px);}
+.pci-social svg{width:18px;height:18px;}
