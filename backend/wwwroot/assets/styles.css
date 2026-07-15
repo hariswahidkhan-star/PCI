@@ -859,16 +859,15 @@ img{height:auto;}
 .pci-social svg{width:18px;height:18px;}
 
 
-/* ===== Premium logo mark + a touch more crimson ===== */
-.logo-mk{width:38px;height:38px;flex:0 0 auto;margin-right:2px;transition:transform .3s var(--ease-premium,ease);}
-.brand:hover .logo-mk{transform:translateY(-1px) rotate(-2deg);}
-.brand{gap:11px;}
-/* footer logo reads on the dark navy footer: white wordmark (mark is a self-contained tile) */
-footer .logo-pci,.ft-logo .logo-pci{color:#fff!important;-webkit-text-fill-color:#fff!important;}
-.ft-logo .logo-mk{transition:transform .3s var(--ease-premium,ease);}
-.ft-logo:hover .logo-mk{transform:translateY(-1px) rotate(-2deg);}
-.logo-mk{border-radius:11px;}
-.brand:hover .logo-mk,.ft-logo:hover .logo-mk{box-shadow:0 6px 16px -6px rgba(29,78,216,.55);}
+/* ===== Two-tone wordmark logo (no shape) — crimson "PCI" + ink "Global" ===== */
+.brand{gap:12px;}
+.logo-pci .lp-p{color:var(--crimson);-webkit-text-fill-color:var(--crimson);}
+.logo-pci .lp-g{color:var(--ink);-webkit-text-fill-color:var(--ink);}
+/* on the dark footer: crimson "PCI" stays, "Global" turns white */
+footer .logo-pci .lp-g,.ft-logo .logo-pci .lp-g{color:#fff;-webkit-text-fill-color:#fff;}
+footer .logo-pci .lp-p,.ft-logo .logo-pci .lp-p{color:var(--crimson);-webkit-text-fill-color:var(--crimson);}
+/* keep the footer subtitle + divider legible on dark */
+.ft-logo .logo-name{color:#fff;}
 /* a little more red, tastefully */
 .btn-red,.btn-primary{--btnbg:var(--crimson);}          /* keep existing where set; harmless token */
 .eyebrow{color:var(--crimson);}                          /* section eyebrows in crimson */
