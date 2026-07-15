@@ -117,6 +117,23 @@ def main():
               s == 200 and ("person" in reply3 or "team" in reply3),
               f"status={s} reply={reply3!r}")
 
+        # (3b) small talk: a friendly greeting gets a friendly reply, NOT the "no answer" fallback
+        s, j = send(primary, "hi", ip="10.20.0.1")
+        g = (j.get("replies") or [{}])[0].get("body", "").lower()
+        check("3b. greeting gets a friendly reply (not the fallback)",
+              s == 200 and "sorry" not in g and ("hello" in g or "hi" in g or "help" in g), f"reply={g!r}")
+
+        # (3c) "how are you" is handled conversationally
+        s, j = send(primary, "how are you?", ip="10.20.0.1")
+        h = (j.get("replies") or [{}])[0].get("body", "").lower()
+        check("3c. 'how are you' handled conversationally", s == 200 and "sorry" not in h, f"reply={h!r}")
+
+        # (3d) a greeting that ALSO asks a real question still reaches the knowledge base
+        s, j = send(primary, "hi, what are the fees?", ip="10.20.0.1")
+        f = (j.get("replies") or [{}])[0].get("body", "").lower()
+        check("3d. greeting + real question still answers from the KB",
+              s == 200 and "sorry" not in f and ("fee" in f or "enrol" in f or "website" in f), f"reply={f!r}")
+
         # (4) ask for a person -> session moves to 'waiting'
         s, j = start("Handoff Tester", ip="10.20.0.2")
         htok = j.get("token")

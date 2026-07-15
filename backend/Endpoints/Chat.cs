@@ -112,7 +112,9 @@ public static class Chat
                     }
                     else
                     {
-                        var answer = MatchKb(db, body) ?? FALLBACK_MSG;
+                        // Small talk first (greetings / thanks / farewells), then the knowledge base,
+                        // then a helpful fallback — so a friendly "hi" never gets the "no answer" reply.
+                        var answer = SmallTalk(body) ?? MatchKb(db, body) ?? FALLBACK_MSG;
                         var mid = db.ExecuteReturningId("INSERT INTO chat_messages(session_id,sender,body) VALUES(?, 'bot', ?)", sid, answer);
                         replies.Add(new { id = mid, sender = "bot", body = answer });
                     }
@@ -251,6 +253,36 @@ public static class Chat
     // Case-insensitive keyword scoring over enabled chat_kb rows: single-word keywords must match a
     // whole token of the message; multi-word keywords count when the message contains the phrase;
     // a message that contains (or is contained by) the row's question gets a bonus. Best score >= 1 wins.
+    const string SMALLTALK_MENU = " I can help with the PCP-AI credential, the thirteen domains, eligibility, fees, enrolment, the exam or membership — what would you like to know? You can also ask to talk to a person any time.";
+
+    /// <summary>Handle greetings, thanks and farewells conversationally so a friendly "hi" or "how are you"
+    /// never gets the "no answer" fallback. Returns null when the message isn't small talk (so the KB runs).</summary>
+    internal static string? SmallTalk(string message)
+    {
+        var msg = message.ToLowerInvariant().Trim().TrimEnd('!', '.', '?', ' ');
+        var tokens = Tokens(msg);
+        bool Has(params string[] ws) => ws.Any(w => tokens.Contains(w));
+        // Thanks
+        if (Has("thanks", "thank", "thankyou", "cheers", "appreciated", "ta"))
+            return "You're very welcome. Is there anything else I can help you with?";
+        // Farewells
+        if (Has("bye", "goodbye", "cya") || msg is "see you" or "see ya")
+            return "Thanks for chatting — take care, and come back any time.";
+        // "how are you" / wellbeing
+        if (msg.Contains("how are you") || msg.Contains("how's it going") || msg.Contains("how you doing") || msg.Contains("hows it going"))
+            return "I'm doing well, thank you — ready to help." + SMALLTALK_MENU;
+        // "who/what are you"
+        if (msg.Contains("who are you") || msg.Contains("what are you") || msg.Contains("your name"))
+            return "I'm the PCI Assistant — an automated helper for the Project Controls Institute." + SMALLTALK_MENU;
+        // Bare greetings (only when the message is essentially just a greeting, so "hi, what are the fees?" still hits the KB)
+        if (tokens.Count <= 3 && Has("hi", "hello", "hey", "hiya", "heya", "yo", "greetings", "morning", "afternoon", "evening", "salaam", "salam", "hola"))
+            return "Hello! 👋" + SMALLTALK_MENU;
+        // Open-ended help asks with no specific topic
+        if (tokens.Count <= 4 && (msg.Contains("help") || msg.Contains("hi there")) && !msg.Contains("exam") && !msg.Contains("fee") && !msg.Contains("enrol"))
+            return "Happy to help." + SMALLTALK_MENU;
+        return null;
+    }
+
     internal static string? MatchKb(Db db, string message)
     {
         var msg = message.ToLowerInvariant();
