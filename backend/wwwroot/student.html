@@ -590,6 +590,7 @@ en:{
 'picker.statusNotBooked':'Not yet booked',
 'picker.windowEnds':'window ends {date}',
 'picker.manage':'Manage',
+'picker.certFallback':'Certification',
 'noEnt.title':'No exam entitlement yet',
 'noEnt.body':'The examination fee ({amount}) opens a 12-month scheduling window. Pay via the PCI website checkout — it appears here automatically.',
 'sched.titleReschedule':'Choose a new date',
@@ -808,6 +809,7 @@ ko:{
 'picker.statusNotBooked':'아직 예약되지 않음',
 'picker.windowEnds':'신청 기간 종료: {date}',
 'picker.manage':'관리',
+'picker.certFallback':'자격증',
 'noEnt.title':'아직 시험 응시 자격이 없습니다',
 'noEnt.body':'시험 응시료({amount})를 결제하면 12개월간의 예약 기간이 열립니다. PCI 웹사이트 결제를 통해 지불하시면 여기에 자동으로 표시됩니다.',
 'sched.titleReschedule':'새 날짜 선택',
@@ -1026,6 +1028,7 @@ ar:{
 'picker.statusNotBooked':'لم يُحجز بعد',
 'picker.windowEnds':'تنتهي المهلة في {date}',
 'picker.manage':'إدارة',
+'picker.certFallback':'الشهادة',
 'noEnt.title':'لا توجد أهلية للامتحان بعد',
 'noEnt.body':'تفتح رسوم الامتحان ({amount}) نافذة جدولة مدتها 12 شهرًا. ادفع عبر صفحة الدفع في موقع PCI، وستظهر هنا تلقائيًا.',
 'sched.titleReschedule':'اختر تاريخًا جديدًا',
@@ -1244,6 +1247,7 @@ es:{
 'picker.statusNotBooked':'Aún no reservado',
 'picker.windowEnds':'la ventana finaliza el {date}',
 'picker.manage':'Gestionar',
+'picker.certFallback':'Certificación',
 'noEnt.title':'Aún no tiene derecho a examen',
 'noEnt.body':'La tasa de examen ({amount}) abre una ventana de programación de 12 meses. Pague a través del proceso de pago del sitio web de PCI; aparecerá aquí automáticamente.',
 'sched.titleReschedule':'Elija una nueva fecha',
@@ -1462,6 +1466,7 @@ fr:{
 'picker.statusNotBooked':'Pas encore réservé',
 'picker.windowEnds':'la fenêtre se termine le {date}',
 'picker.manage':'Gérer',
+'picker.certFallback':'Certification',
 'noEnt.title':'Aucun droit d’examen pour le moment',
 'noEnt.body':'Les frais d’examen ({amount}) ouvrent une fenêtre de planification de 12 mois. Payez via le paiement du site PCI ; cela apparaît ici automatiquement.',
 'sched.titleReschedule':'Choisir une nouvelle date',
@@ -1680,6 +1685,7 @@ zh:{
 'picker.statusNotBooked':'尚未预约',
 'picker.windowEnds':'窗口截止于 {date}',
 'picker.manage':'管理',
+'picker.certFallback':'认证',
 'noEnt.title':'尚未获得考试资格',
 'noEnt.body':'缴纳考试费（{amount}）即可开启为期 12 个月的预约窗口。请通过 PCI 官网结账付款，付款后将自动显示于此。',
 'sched.titleReschedule':'选择新日期',
@@ -1898,6 +1904,7 @@ ru:{
 'picker.statusNotBooked':'Ещё не забронировано',
 'picker.windowEnds':'окно закрывается {date}',
 'picker.manage':'Управление',
+'picker.certFallback':'Сертификация',
 'noEnt.title':'Пока нет права на экзамен',
 'noEnt.body':'Экзаменационный взнос ({amount}) открывает 12-месячное окно для записи. Оплатите через оформление заказа на сайте PCI — оно появится здесь автоматически.',
 'sched.titleReschedule':'Выберите новую дату',
@@ -2407,7 +2414,7 @@ function renderExamPicker(list){
   $('#view').innerHTML=`<div class="card"><div class="ch"><h3>${T('picker.title')}</h3><div class="sp"></div>${langSwitcherHTML()}</div><div class="cb">
     <p class="muted tiny" style="margin-top:0">${T('picker.intro',{n:list.length})}</p>
     ${list.map(e=>{const st=e.credential?[T('picker.statusCertified'),'g']:(e.latest_attempt&&e.latest_attempt.status==='submitted')?[T('picker.statusSubmitted'),'b']:(e.booking&&e.booking.status==='scheduled')?[T('picker.statusBooked',{when:fDT(e.booking.scheduled_at)}),'b']:[T('picker.statusNotBooked'),'a'];
-      return `<div class="srow" style="align-items:center"><div><b>${esc(e.certification_name||e.certification_code||'Certification')}</b><div class="tiny muted">${T('picker.windowEnds',{date:fD(e.deadline)})}${e.credential?' · '+esc(e.credential.credential_id):''}</div></div>
+      return `<div class="srow" style="align-items:center"><div><b>${esc(e.certification_name||e.certification_code||T('picker.certFallback'))}</b><div class="tiny muted">${T('picker.windowEnds',{date:fD(e.deadline)})}${e.credential?' · '+esc(e.credential.credential_id):''}</div></div>
         <span class="tag ${st[1]}"><span class="dot"></span>${st[0]}</span> <button class="btn btn-sm btn-p" data-pick="${e.certification_id}">${T('picker.manage')}</button></div>`}).join('')}
   </div></div>`;
   document.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{S.selCert=+b.dataset.pick;vExam()});
