@@ -311,6 +311,14 @@ select.in{appearance:auto}
 .langsw-item{display:block;width:100%;text-align:start;background:none;border:none;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:600;color:var(--t2)}
 .langsw-item:hover{background:var(--brand-tint);color:var(--ink)}
 .langsw-item.on{background:var(--brand-tint);color:var(--brand-deep)}
+/* ---------- RTL (Arabic) — runner/palette/nav/toast/calculator physical-side fixes ---------- */
+/* Most of the runner already flips correctly via dir-aware logical properties (margin-inline-*,
+   inset-inline-*, text-align:start) set above; this block only covers the handful of remaining
+   hard-coded physical left/right declarations that logical properties don't reach. */
+[dir="rtl"] #calc{right:auto;left:20px}
+[dir="rtl"] .opt{text-align:right}
+[dir="rtl"] .pgrid{direction:rtl}
+[dir="rtl"] .vcard{text-align:center}
 .timer.low{background:var(--red-bg);color:var(--red);animation:tp 1.1s infinite}
 @keyframes tp{50%{opacity:.55}}
 .rbody{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 248px;gap:22px;padding:clamp(14px,3vw,26px);max-width:1120px;width:100%;margin:0 auto;overflow:auto;align-content:start}
@@ -375,7 +383,7 @@ select.in{appearance:auto}
 #calc{position:fixed;right:20px;bottom:20px;width:250px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh3);z-index:75;overflow:hidden;display:none}
 #calc.open{display:block;animation:mup .18s both}
 #calc .ch2{background:var(--ink);color:#fff;padding:11px 15px;font-size:12.5px;font-weight:600;display:flex;align-items:center}
-#calc .ch2 button{margin-left:auto;background:none;border:none;color:#9DB4FF;font-size:16px}
+#calc .ch2 button{margin-inline-start:auto;background:none;border:none;color:#9DB4FF;font-size:16px}
 #calc .cd2{padding:14px 15px;text-align:right}
 #calc .ce{font-size:12px;color:var(--t3);min-height:16px;word-break:break-all}
 #calc .cv{font-family:var(--disp);font-size:26px;font-weight:800;min-height:32px}
