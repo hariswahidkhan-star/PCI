@@ -1,0 +1,838 @@
+<title>Domain 1 — Foundations of Accounting · PCP-AI Lecture</title>
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:"SFMono-Regular",ui-monospace,"Cascadia Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,monospace;
+  --paper:#F7F4ED; --surface:#FFFFFF; --ink:#14202E; --muted:#5B6672;
+  --line:#E4DFD3; --line2:#EFEBE1; --blue:#1D4ED8; --blue-ink:#153a9e; --blue-soft:rgba(29,78,216,.10);
+  --debit:#B0392E; --debit-soft:rgba(176,57,46,.10); --credit:#0F7A6B; --credit-soft:rgba(15,122,107,.10);
+  --gold:#B7791F; --shadow:0 14px 46px rgba(20,32,46,.12); --radius:16px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#0E1826; --surface:#17243B; --ink:#EAF0F7; --muted:#94A3B7;
+    --line:#27374F; --line2:#1B2942; --blue:#6C97F0; --blue-ink:#a9c3ff; --blue-soft:rgba(108,151,240,.16);
+    --debit:#E27568; --debit-soft:rgba(226,117,104,.14); --credit:#42C1A9; --credit-soft:rgba(66,193,169,.14);
+    --gold:#D9A441; --shadow:0 16px 50px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="light"]{
+  --paper:#F7F4ED; --surface:#FFFFFF; --ink:#14202E; --muted:#5B6672; --line:#E4DFD3; --line2:#EFEBE1;
+  --blue:#1D4ED8; --blue-ink:#153a9e; --blue-soft:rgba(29,78,216,.10); --debit:#B0392E; --debit-soft:rgba(176,57,46,.10);
+  --credit:#0F7A6B; --credit-soft:rgba(15,122,107,.10); --gold:#B7791F; --shadow:0 14px 46px rgba(20,32,46,.12);
+}
+:root[data-theme="dark"]{
+  --paper:#0E1826; --surface:#17243B; --ink:#EAF0F7; --muted:#94A3B7; --line:#27374F; --line2:#1B2942;
+  --blue:#6C97F0; --blue-ink:#a9c3ff; --blue-soft:rgba(108,151,240,.16); --debit:#E27568; --debit-soft:rgba(226,117,104,.14);
+  --credit:#42C1A9; --credit-soft:rgba(66,193,169,.14); --gold:#D9A441; --shadow:0 16px 50px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+body{line-height:1.5}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.dr{color:var(--debit)} .cr{color:var(--credit)} .bl{color:var(--blue)}
+
+/* ============ STAGE ============ */
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:70px 40px 64px}
+.slide{position:absolute;width:min(1120px,94vw);max-height:calc(100vh - 150px);opacity:0;visibility:hidden;
+  transform:translateY(14px) scale(.995);transition:opacity .5s ease,transform .5s cubic-bezier(.4,0,.2,1);
+  pointer-events:none}
+.slide.active{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+.eyebrow{font:600 12.5px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--blue);
+  display:flex;gap:10px;align-items:center;margin-bottom:16px}
+.eyebrow .tick{width:22px;height:1.5px;background:var(--blue);opacity:.6}
+h1,h2,h3{font-family:var(--serif);font-weight:600;text-wrap:balance;margin:0}
+.slide h2{font-size:clamp(26px,4.2vw,44px);line-height:1.1;letter-spacing:-.01em}
+.slide h3{font-size:clamp(19px,2.4vw,26px);line-height:1.2}
+.lead{color:var(--muted);font-size:clamp(15px,1.7vw,19px);max-width:64ch;margin:14px 0 0}
+.body{margin-top:22px}
+.muted{color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:7px;font:600 12px/1 var(--sans);letter-spacing:.04em;
+  padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted)}
+.pill.k{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 40%,var(--line))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.grid{display:grid;gap:18px}
+
+/* fragments */
+.frag{opacity:0;transform:translateY(8px);transition:opacity .45s ease,transform .45s ease}
+.frag.on{opacity:1;transform:none}
+.frag.pop{transform:scale(.96)} .frag.pop.on{transform:none}
+
+/* objective / bullet lists */
+ul.obj{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:12px;max-width:70ch}
+ul.obj li{display:flex;gap:14px;align-items:flex-start;font-size:clamp(15px,1.7vw,18.5px)}
+ul.obj li .b{flex:0 0 auto;width:26px;height:26px;border-radius:7px;background:var(--blue-soft);color:var(--blue);
+  display:grid;place-items:center;font:700 13px/1 var(--mono);margin-top:1px}
+
+/* key insight callout */
+.callout{border-left:3px solid var(--blue);background:var(--blue-soft);padding:16px 20px;border-radius:0 12px 12px 0;
+  font-size:clamp(15px,1.7vw,18px)}
+.callout.warn{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 12%,transparent)}
+.callout b{color:var(--ink)}
+
+/* data tables */
+table.led{border-collapse:collapse;width:100%;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:14px}
+table.led th,table.led td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:right}
+table.led th:first-child,table.led td:first-child{text-align:left;font-family:var(--sans)}
+table.led th{color:var(--muted);font-weight:600;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1.5px solid var(--line)}
+table.led tr:last-child td{border-bottom:none}
+.tot td{border-top:2px solid var(--ink);font-weight:700;border-bottom:none!important}
+
+/* ============ PROGRESS RAIL ============ */
+#rail{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;gap:14px;
+  padding:0 22px;background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line2);z-index:20}
+#rail .brand{font:600 12.5px/1 var(--sans);letter-spacing:.02em;color:var(--ink);display:flex;gap:9px;align-items:center;white-space:nowrap}
+#rail .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--blue)}
+#rail .brand span{color:var(--muted);font-weight:500}
+#segs{display:flex;gap:6px;flex:1;margin:0 8px}
+#segs .seg{flex:1;position:relative;height:5px;border-radius:3px;background:var(--line);overflow:hidden;cursor:pointer}
+#segs .seg i{position:absolute;inset:0;width:0;background:var(--blue);border-radius:3px;transition:width .4s ease}
+#segs .seg.done i{width:100%} #segs .seg.cur i{width:var(--p,0%)}
+#segs .seg .lbl{position:absolute;top:9px;left:0;font:600 10px/1 var(--sans);letter-spacing:.04em;color:var(--muted);white-space:nowrap;opacity:0;transition:opacity .2s}
+#segs .seg:hover .lbl{opacity:1}
+.ctrls{display:flex;gap:6px;align-items:center}
+.iconbtn{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--muted);
+  cursor:pointer;display:grid;place-items:center;font-size:13px;transition:.15s}
+.iconbtn:hover{color:var(--blue);border-color:var(--blue)}
+.iconbtn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* ============ CAPTION BAR ============ */
+#caption{position:fixed;left:0;right:0;bottom:0;min-height:56px;display:flex;align-items:center;gap:18px;
+  padding:10px 22px;background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line2);z-index:20}
+#cap-text{flex:1;font-size:14.5px;color:var(--muted);max-width:none}
+#cap-text b{color:var(--ink);font-weight:600}
+.counter{font:600 12px/1 var(--mono);color:var(--muted);white-space:nowrap;letter-spacing:.02em}
+.hint{font:500 11.5px/1.4 var(--sans);color:var(--muted);opacity:.8;white-space:nowrap}
+kbd{font:600 11px/1 var(--mono);background:var(--surface);border:1px solid var(--line);border-bottom-width:2px;
+  border-radius:5px;padding:3px 6px;color:var(--ink)}
+
+/* ============ COVER ============ */
+#cover .wrap{text-align:center;max-width:820px}
+#cover h1{font-size:clamp(38px,7vw,74px);line-height:1.02;letter-spacing:-.02em}
+#cover .kick{justify-content:center}
+#cover .sub{color:var(--muted);font-size:clamp(16px,2vw,21px);margin:22px auto 0;max-width:56ch}
+#cover .rule{width:64px;height:3px;background:var(--blue);margin:30px auto}
+#cover .meta{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:30px;color:var(--muted);font-size:14px}
+#cover .meta b{color:var(--ink)}
+.startcue{margin-top:36px;color:var(--muted);font-size:13.5px;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+/* section divider slides */
+.divider{display:flex;flex-direction:column;justify-content:center;min-height:52vh}
+.divider .kanum{font-family:var(--mono);font-size:clamp(52px,10vw,120px);font-weight:700;color:var(--blue-soft);
+  line-height:.9;letter-spacing:-.03em;-webkit-text-stroke:1.5px var(--blue);color:transparent}
+.divider h2{margin-top:6px}
+
+/* ============ SIGNATURE VISUALS ============ */
+/* balance scale */
+.scale{width:100%;max-width:560px;margin:6px auto 0}
+.scale svg{width:100%;height:auto;overflow:visible}
+.beam{transform-origin:280px 70px;transition:transform .6s cubic-bezier(.34,1.56,.64,1)}
+.pan{transition:transform .5s ease}
+.wt{opacity:0;transform:translateY(-26px);transition:opacity .5s ease,transform .6s cubic-bezier(.34,1.56,.64,1)}
+.wt.on{opacity:1;transform:none}
+.scale text{font-family:var(--mono);font-variant-numeric:tabular-nums}
+/* T-account */
+.tacc{max-width:560px;margin:0 auto}
+.tacc .head{text-align:center;font-family:var(--serif);font-size:20px;padding-bottom:6px;border-bottom:2px solid var(--ink)}
+.tacc .cols{display:grid;grid-template-columns:1fr 1fr}
+.tacc .col{padding:10px 4px}
+.tacc .col.d{border-right:2px solid var(--ink)}
+.tacc .col h4{margin:0 0 6px;font:600 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;text-align:center}
+.tacc .col.d h4{color:var(--debit)} .tacc .col.c h4{color:var(--credit)}
+.tacc .row{display:flex;justify-content:space-between;font-family:var(--mono);font-variant-numeric:tabular-nums;
+  font-size:14px;padding:5px 8px;opacity:0;transform:translateX(var(--dx,0));transition:opacity .4s ease,transform .4s ease}
+.tacc .row.on{opacity:1;transform:none}
+.tacc .col.d .row{--dx:-14px} .tacc .col.c .row{--dx:14px}
+.tacc .row span:first-child{color:var(--muted)}
+.tbal{text-align:center;margin-top:14px;font-family:var(--mono);font-size:15px;opacity:0;transition:opacity .5s}
+.tbal.on{opacity:1}
+.tbal b{color:var(--blue);font-size:19px}
+/* equality bars */
+.eqbars{display:flex;gap:40px;align-items:flex-end;justify-content:center;height:230px;margin-top:10px}
+.eqcol{display:flex;flex-direction:column;align-items:center;gap:10px;width:150px}
+.bar{width:96px;background:var(--blue);border-radius:8px 8px 0 0;height:0;transition:height .9s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.bar.split{background:transparent}
+.bar .seg{width:100%;display:grid;place-items:center;color:#fff;font:600 12px/1 var(--mono);height:0;transition:height .9s cubic-bezier(.4,0,.2,1) .2s}
+.bar .seg.liab{background:var(--gold)} .bar .seg.eq{background:var(--blue)}
+.eqcol .cap{font:600 13px/1 var(--sans);color:var(--muted);text-align:center}
+.eqcol .val{font-family:var(--mono);font-weight:700;font-size:17px}
+.eqbadge{opacity:0;transition:opacity .5s .6s;text-align:center;margin-top:16px;font-family:var(--serif);font-size:22px}
+.eqbadge.on{opacity:1}
+/* IAS37 gate */
+.gate{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+.gate .g{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:18px;transition:.5s}
+.gate .g .n{width:30px;height:30px;border-radius:8px;background:var(--line2);color:var(--muted);display:grid;place-items:center;
+  font:700 14px/1 var(--mono);margin-bottom:12px;transition:.4s}
+.gate .g .t{font-family:var(--serif);font-size:18px;margin-bottom:6px}
+.gate .g .s{font-size:13.5px;color:var(--muted)}
+.gate .g.pass{border-color:var(--credit);background:var(--credit-soft)}
+.gate .g.pass .n{background:var(--credit);color:#fff}
+.verdict{margin-top:18px;display:flex;gap:14px;align-items:center;opacity:0;transform:translateY(8px);transition:.5s}
+.verdict.on{opacity:1;transform:none}
+.verdict .tag{font:700 13px/1 var(--sans);letter-spacing:.05em;padding:9px 15px;border-radius:999px;background:var(--credit);color:#fff}
+/* cost code anatomy */
+.codebox{display:flex;gap:8px;justify-content:center;align-items:stretch;flex-wrap:wrap;margin-top:8px}
+.codeseg{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:16px 18px;text-align:center;
+  min-width:104px;opacity:.4;transform:translateY(8px);transition:.45s}
+.codeseg.on{opacity:1;transform:none;border-color:var(--blue)}
+.codeseg .code{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--blue)}
+.codeseg .lab{font:600 11px/1.3 var(--sans);letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+.codeseg .ex{font-size:12px;color:var(--muted);margin-top:5px}
+.codedot{align-self:center;font-family:var(--mono);font-size:26px;font-weight:700;color:var(--muted)}
+/* MCQ */
+.mcq .q{font-family:var(--serif);font-size:clamp(18px,2.2vw,23px);margin-bottom:18px}
+.opts{display:grid;gap:10px;max-width:74ch}
+.opt{display:flex;gap:14px;align-items:flex-start;text-align:left;padding:13px 16px;border:1.5px solid var(--line);
+  border-radius:12px;background:var(--surface);cursor:pointer;font-size:15.5px;color:var(--ink);transition:.18s;font-family:var(--sans)}
+.opt:hover{border-color:var(--blue)} .opt:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.opt .k{flex:0 0 auto;width:24px;height:24px;border-radius:6px;border:1.5px solid var(--line);display:grid;place-items:center;
+  font:700 12px/1 var(--mono);color:var(--muted)}
+.opt.correct{border-color:var(--credit);background:var(--credit-soft)} .opt.correct .k{background:var(--credit);color:#fff;border-color:var(--credit)}
+.opt.wrong{border-color:var(--debit);background:var(--debit-soft)} .opt.wrong .k{background:var(--debit);color:#fff;border-color:var(--debit)}
+.rationale{margin-top:16px;opacity:0;transition:.4s;font-size:14.5px;color:var(--muted);max-width:74ch}
+.rationale.on{opacity:1} .rationale b{color:var(--ink)}
+/* two-col */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:center}
+@media (max-width:820px){.two{grid-template-columns:1fr}}
+.statecard{padding:18px 20px}
+.statecard .st{font:600 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.statecard h3{margin:8px 0 4px;font-family:var(--serif)}
+.flowrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:8px}
+.flowrow .node{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:12px 16px;text-align:center;min-width:120px}
+.flowrow .node .t{font-family:var(--serif);font-size:16px} .flowrow .node .s{font-size:11.5px;color:var(--muted);margin-top:3px}
+.flowrow .arw{color:var(--blue);font-size:20px}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.001ms!important;animation-duration:.001ms!important}
+  .frag{opacity:1;transform:none}
+}
+
+/* ============ PRINT (PDF export) — all slides stacked, one per page, all builds shown ============ */
+@media print{
+  @page{size:1280px 720px;margin:0}
+  html,body{overflow:visible;height:auto;background:#fff}
+  #rail,#caption{display:none!important}
+  #stage{position:static;display:block;padding:0}
+  .slide{position:static!important;opacity:1!important;visibility:visible!important;transform:none!important;
+    width:1280px;max-height:none;min-height:720px;height:720px;display:flex;flex-direction:column;justify-content:center;
+    padding:64px 88px;page-break-after:always;border-bottom:1px solid #eee}
+  .frag{opacity:1!important;transform:none!important}
+  .wt,.tacc .row,.tbal,.eqbadge,.verdict,.codeseg,.rationale{opacity:1!important;transform:none!important}
+  .bar{height:var(--ph,180px)!important} .bar .seg{height:var(--sh,0)!important}
+  .gate .g{border-color:var(--credit)} .beam{transform:none}
+}
+</style>
+
+<div id="rail">
+  <div class="brand"><span class="dot"></span>PCP-AI Lecture Series&nbsp;<span>· Project Controls Institute</span></div>
+  <div id="segs"></div>
+  <div class="ctrls">
+    <button class="iconbtn" id="btnNotes" title="Speaker notes (N)" aria-label="Toggle speaker notes">≣</button>
+    <button class="iconbtn" id="btnPlay" title="Auto-play (P)" aria-label="Toggle auto-play">▶</button>
+    <button class="iconbtn" id="btnTheme" title="Light / dark (T)" aria-label="Toggle theme">◐</button>
+  </div>
+</div>
+
+<div id="stage"><!-- SLIDES injected below --></div>
+
+<div id="caption">
+  <div class="counter" id="cap-count">01 / 37</div>
+  <div id="cap-text"></div>
+  <div class="hint"><kbd>→</kbd>/<kbd>Space</kbd> next · <kbd>←</kbd> back · <kbd>N</kbd> notes</div>
+</div>
+
+<!-- =================== SLIDE SOURCE =================== -->
+<template id="src">
+
+<section class="slide" id="cover" data-ka="0" data-note="Welcome. This is Domain 1 of the PCP-AI programme — the foundations of accounting, taught for project-controls professionals. Not to make you an accountant, but so that every cost report, earned-value curve and forecast you produce is grounded in the record it ultimately comes from. Press the right arrow, or the space bar, to advance — the slides build one step at a time, at your pace.">
+  <div class="wrap">
+    <div class="eyebrow kick"><span class="tick"></span>Domain 1 · Foundations<span class="tick"></span></div>
+    <h1>Foundations of<br>Accounting</h1>
+    <div class="rule"></div>
+    <p class="sub">The one record behind every cost report, invoice and forecast — built from first principles, for the project-controls professional.</p>
+    <div class="meta"><div>5 Knowledge Areas</div><div><b>~55 min</b> lecture</div><div>Certified Project Controls Professional — <b>AI</b></div></div>
+    <div class="startcue">↓ &nbsp;Press <kbd>→</kbd> or <kbd>Space</kbd> to begin&nbsp; ↓</div>
+  </div>
+</section>
+
+<section class="slide" data-ka="0" data-note="A quick orientation. The bar along the top tracks the five Knowledge Areas of this domain — you can click any segment to jump. The lecture is paced by you: each press reveals the next step, which is exactly how people learn a process best — one idea at a time, not a wall of text. Press N at any point to read the speaker notes for the current slide, and T to switch between light and dark.">
+  <div class="eyebrow"><span class="tick"></span>How this lecture works</div>
+  <h2>Paced by you, one idea at a time</h2>
+  <p class="lead">Built the way the evidence says people actually learn from lecture video — short segments, revealed step by step, each concept paired with a picture, and a quick check to make it stick.</p>
+  <ul class="obj">
+    <li><span class="b">→</span><div><b>Advance a step</b> — <kbd>→</kbd> or <kbd>Space</kbd>. Go back with <kbd>←</kbd>. Each slide builds; take your time.</div></li>
+    <li><span class="b">≣</span><div><b>Speaker notes</b> — press <kbd>N</kbd> for the narration behind every slide (record it, or read along).</div></li>
+    <li><span class="b">◐</span><div><b>Light or dark</b> — press <kbd>T</kbd>. The whole deck is designed for both.</div></li>
+    <li><span class="b">✓</span><div><b>Knowledge checks</b> close each Knowledge Area — answer before you move on.</div></li>
+  </ul>
+</section>
+
+<section class="slide" data-ka="0" data-note="Why does a planner, a cost engineer or a quantity surveyor need accounting? Because every artefact you produce — the cost report, the earned-value curve, the payment application, the estimate at completion — is, in the end, a particular view into one underlying record: the double-entry ledger. Understand that record and the numbers stop being someone else's black box. This domain builds it in five steps.">
+  <div class="eyebrow"><span class="tick"></span>Why this matters to project controls</div>
+  <h2>Every number you report is a view into one record</h2>
+  <p class="lead">Cost reports, EV curves, invoice applications, forecasts — all of them draw, ultimately, on the same double-entry ledger. Domain 1 builds that record so the figures stop being a black box.</p>
+  <div class="grid body" style="grid-template-columns:repeat(5,1fr);gap:12px">
+    <div class="card frag" style="padding:16px"><div class="pill k">KA 1.1</div><h3 style="font-size:17px;margin-top:10px">The accounting model</h3><p class="muted" style="font-size:13px;margin:6px 0 0">Equation, debits & credits, journal → ledger → trial balance.</p></div>
+    <div class="card frag" style="padding:16px"><div class="pill k">KA 1.2</div><h3 style="font-size:17px;margin-top:10px">The statements</h3><p class="muted" style="font-size:13px;margin:6px 0 0">The four financial statements and how they lock together.</p></div>
+    <div class="card frag" style="padding:16px"><div class="pill k">KA 1.3</div><h3 style="font-size:17px;margin-top:10px">Accrual & matching</h3><p class="muted" style="font-size:13px;margin:6px 0 0">Recording economic events, not cash movements.</p></div>
+    <div class="card frag" style="padding:16px"><div class="pill k">KA 1.4</div><h3 style="font-size:17px;margin-top:10px">Provisions & accruals</h3><p class="muted" style="font-size:13px;margin:6px 0 0">Cost you know is coming — the IAS 37 judgement.</p></div>
+    <div class="card frag" style="padding:16px"><div class="pill k">KA 1.5</div><h3 style="font-size:17px;margin-top:10px">Chart of accounts</h3><p class="muted" style="font-size:13px;margin:6px 0 0">Cost coding, the CBS and mapping to the WBS.</p></div>
+  </div>
+</section>
+
+<!-- ================= KA 1.1 ================= -->
+<section class="slide divider" data-ka="1" data-note="Knowledge Area 1.1 — the accounting model. This is the load-bearing chapter of the whole domain: the accounting equation, the rules for debiting and crediting each kind of account, and the cycle that turns raw transactions into a checked set of figures. We build it around one running company, Meridian Rail Contracting, so the journal, the ledger and the trial balance are seen as one connected system.">
+  <div class="kanum">1.1</div>
+  <h2>The accounting model</h2>
+  <p class="lead">By the end you will be able to:</p>
+  <ul class="obj">
+    <li><span class="b">1</span><div>State the accounting equation and explain why every transaction keeps it in balance.</div></li>
+    <li><span class="b">2</span><div>Apply debit and credit rules across the five account types.</div></li>
+    <li><span class="b">3</span><div>Follow one transaction cycle: journal → ledger → trial balance → equation.</div></li>
+    <li><span class="b">4</span><div>Explain what a trial balance proves — and, crucially, what it cannot.</div></li>
+  </ul>
+</section>
+
+<section class="slide" data-ka="1" data-note="Here is the whole of accounting on one line. Assets equal liabilities plus equity. Assets are the resources the entity controls. Liabilities are what it owes. Equity is the residual — what's left for the owners once the liabilities are met. Picture a balance scale: assets on one pan, liabilities and equity stacked on the other. The genius of double-entry is that the scale is level by construction — every transaction is recorded twice, once on each side, so it can never tip.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.1 · The accounting equation</div>
+  <h2>Assets = Liabilities + Equity</h2>
+  <p class="lead">The identity underlying the IFRS Conceptual Framework — true for a company, a joint venture, or a single-project vehicle. It holds because of <b>double aspect</b>: every event is recorded twice, once on each side of the scale.</p>
+  <div class="scale body">
+    <svg viewBox="0 0 560 260" role="img" aria-label="Balance scale of the accounting equation">
+      <line x1="280" y1="30" x2="280" y2="70" stroke="var(--muted)" stroke-width="3"/>
+      <g class="beam" id="beam1">
+        <line x1="120" y1="70" x2="440" y2="70" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+        <line x1="120" y1="70" x2="120" y2="120" stroke="var(--muted)" stroke-width="2"/>
+        <line x1="440" y1="70" x2="440" y2="120" stroke="var(--muted)" stroke-width="2"/>
+        <!-- left pan: assets -->
+        <g class="pan">
+          <path d="M70 120 h100 l-16 34 h-68 z" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="2"/>
+          <text x="120" y="112" text-anchor="middle" fill="var(--blue)" font-size="13" font-weight="700">ASSETS</text>
+          <g class="wt" data-w="1"><rect x="86" y="126" width="68" height="9" rx="2" fill="var(--blue)"/><text x="120" y="145" text-anchor="middle" font-size="10" fill="#fff">500,000</text></g>
+        </g>
+        <!-- right pan: L + E -->
+        <g class="pan">
+          <path d="M390 120 h100 l-16 34 h-68 z" fill="var(--surface)" stroke="var(--muted)" stroke-width="2"/>
+          <text x="440" y="112" text-anchor="middle" fill="var(--muted)" font-size="12" font-weight="700">LIABILITIES + EQUITY</text>
+          <g class="wt" data-w="1"><rect x="406" y="126" width="68" height="9" rx="2" fill="var(--blue)"/><text x="440" y="145" text-anchor="middle" font-size="10" fill="#fff">Equity 500k</text></g>
+        </g>
+      </g>
+      <path d="M250 235 h60 l-30 -26 z" fill="var(--muted)"/>
+    </svg>
+  </div>
+  <p class="callout frag" style="margin-top:20px"><b>Double aspect.</b> Borrow cash → an asset <i>and</i> a liability rise together. Buy kit for cash → one asset falls, another rises. The scale never tips.</p>
+</section>
+
+<section class="slide" data-ka="1" data-note="Watch Meridian Rail Contracting's first three days. One: owners put in five hundred thousand of share capital — cash rises, equity rises, scale level. Two: a two-hundred-thousand bank loan — cash rises, a liability rises, still level. Three, and this is the one that trips people up: they spend a hundred and fifty thousand cash on site equipment. Cash falls, equipment rises by the same amount — total assets are unchanged, and nothing on the other side moves. Not every transaction touches profit. Many just change the mix of what you own.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.1 · Worked example — Meridian Rail Contracting</div>
+  <h2>Three transactions, one level scale</h2>
+  <div class="two body">
+    <div>
+      <table class="led">
+        <tr><th>Day-one events</th><th>USD</th></tr>
+        <tr class="frag"><td>1 · Share capital paid in cash</td><td class="num cr">500,000</td></tr>
+        <tr class="frag"><td>2 · Bank loan drawn in cash</td><td class="num cr">200,000</td></tr>
+        <tr class="frag"><td>3 · Site equipment bought for cash</td><td class="num">150,000</td></tr>
+        <tr class="tot frag"><td>Total assets</td><td class="num bl">700,000</td></tr>
+      </table>
+      <p class="callout warn frag" style="margin-top:18px"><b>The classic trap.</b> Transaction 3 swaps cash for equipment — assets’ <i>composition</i> changes, the <i>total</i> doesn’t. Not every entry hits profit.</p>
+    </div>
+    <div class="scale">
+      <svg viewBox="0 0 560 250" role="img" aria-label="Balance scale accumulating three transactions">
+        <line x1="280" y1="24" x2="280" y2="64" stroke="var(--muted)" stroke-width="3"/>
+        <g class="beam">
+          <line x1="120" y1="64" x2="440" y2="64" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="120" y1="64" x2="120" y2="108" stroke="var(--muted)" stroke-width="2"/>
+          <line x1="440" y1="64" x2="440" y2="108" stroke="var(--muted)" stroke-width="2"/>
+          <g class="pan"><path d="M66 108 h108 l-16 40 h-76 z" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="2"/>
+            <text x="120" y="100" text-anchor="middle" fill="var(--blue)" font-size="12" font-weight="700">ASSETS</text>
+            <g class="wt" data-w="1"><rect x="80" y="116" width="80" height="8" rx="2" fill="var(--blue)"/></g>
+            <g class="wt" data-w="2"><rect x="82" y="126" width="76" height="7" rx="2" fill="var(--blue)" opacity=".8"/></g>
+            <g class="wt" data-w="3"><rect x="84" y="135" width="72" height="7" rx="2" fill="var(--credit)"/><text x="120" y="141" text-anchor="middle" font-size="8" fill="#fff">↔ equipment</text></g>
+          </g>
+          <g class="pan"><path d="M386 108 h108 l-16 40 h-76 z" fill="var(--surface)" stroke="var(--muted)" stroke-width="2"/>
+            <text x="440" y="100" text-anchor="middle" fill="var(--muted)" font-size="11" font-weight="700">LIAB. + EQUITY</text>
+            <g class="wt" data-w="1"><rect x="400" y="116" width="80" height="8" rx="2" fill="var(--blue)"/><text x="440" y="122.5" text-anchor="middle" font-size="7" fill="#fff">Equity 500k</text></g>
+            <g class="wt" data-w="2"><rect x="402" y="126" width="76" height="7" rx="2" fill="var(--gold)"/><text x="440" y="132" text-anchor="middle" font-size="7" fill="#fff">Loan 200k</text></g>
+          </g>
+        </g>
+        <path d="M250 225 h60 l-30 -26 z" fill="var(--muted)"/>
+      </svg>
+      <p class="muted num" style="text-align:center;margin-top:6px;font-size:15px" ><span class="bl">700,000</span> = <span class="bl">700,000</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ka="1" data-note="To record two effects we use two columns: debit — conventionally the left — and credit, the right. Debit does not mean bad, and credit does not mean good; it's just a consistent labelling system that's been in use since the fifteenth century. The trick is that each of the five account types has a normal side. Assets and expenses — the uses of resources — increase on the debit side. Liabilities, equity and income — the sources — increase on the credit side. Learn this table once and posting becomes mechanical.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.1 · Debits & credits</div>
+  <h2>Five account types, one rule each</h2>
+  <p class="lead"><b>Debit</b> (Dr, left) and <b>credit</b> (Cr, right) carry no moral meaning — they’re a labelling system. What matters is each account type’s <b>normal balance</b>: the side on which it increases.</p>
+  <table class="led body" style="max-width:760px">
+    <tr><th>Account type</th><th>Increases with</th><th>Normal balance</th><th style="text-align:left">Examples</th></tr>
+    <tr class="frag"><td>Asset</td><td class="dr">Debit</td><td class="dr">Debit</td><td style="text-align:left">Cash, receivables, equipment</td></tr>
+    <tr class="frag"><td>Expense</td><td class="dr">Debit</td><td class="dr">Debit</td><td style="text-align:left">Labour, materials, depreciation</td></tr>
+    <tr class="frag"><td>Liability</td><td class="cr">Credit</td><td class="cr">Credit</td><td style="text-align:left">Loans, payables, provisions</td></tr>
+    <tr class="frag"><td>Equity</td><td class="cr">Credit</td><td class="cr">Credit</td><td style="text-align:left">Share capital, retained earnings</td></tr>
+    <tr class="frag"><td>Income</td><td class="cr">Credit</td><td class="cr">Credit</td><td style="text-align:left">Contract revenue, interest income</td></tr>
+  </table>
+  <p class="callout frag" style="margin-top:18px"><b>Hold it as one idea:</b> <span class="dr">uses of resources (assets, expenses) are debit-normal</span>; <span class="cr">sources (liabilities, equity, income) are credit-normal</span>. And every entry obeys <span class="num">Σ Dr = Σ Cr</span>.</p>
+</section>
+
+<section class="slide" data-ka="1" data-note="Now the cycle. A transaction is first written in the journal — the diary, in date order, with a narration. It's then posted to the ledger, where each account collects its own debits and credits. At period end we list every ledger balance in a trial balance, and finally we roll the income and expense accounts into equity and confirm the equation holds. Same four steps, every entity, every period. Let's run Meridian's full first month through it.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.1 · The cycle</div>
+  <h2>Journal → ledger → trial balance → equation</h2>
+  <p class="lead">Four steps turn raw events into checked figures. Capture first, classify second, prove third, close fourth — the same mechanism for a single-project vehicle or a multinational.</p>
+  <div class="flowrow body">
+    <div class="node frag"><div class="t">Journal</div><div class="s">every event, in date order</div></div>
+    <div class="arw frag">→</div>
+    <div class="node frag"><div class="t">Ledger</div><div class="s">accounts collect Dr / Cr</div></div>
+    <div class="arw frag">→</div>
+    <div class="node frag"><div class="t">Trial balance</div><div class="s">Σ Dr = Σ Cr</div></div>
+    <div class="arw frag">→</div>
+    <div class="node frag"><div class="t">Equation</div><div class="s">A = L + E holds</div></div>
+  </div>
+  <p class="callout frag" style="margin-top:22px">Meridian records <b>11 transactions</b> in March 2026 — capital, a loan, equipment, materials, wages, a subcontractor, a client invoice, a receipt, a supplier payment and depreciation. Watch one account fill.</p>
+</section>
+
+<section class="slide" data-ka="1" data-note="Here is Meridian's Cash account as a T. Debits — money in — on the left; credits — money out — on the right. Capital brings in five hundred thousand, the loan two hundred, the client pays a hundred and fifty. Out goes a hundred and fifty for equipment, forty-five for wages, fifty to the supplier. Left total eight-fifty, right total two-forty-five, so the closing balance is six hundred and five thousand, on the debit side, because cash is an asset. Every line still traces back to its journal entry — that trail is the whole point.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.1 · Posting to the ledger</div>
+  <h2>The Cash T-account, filling</h2>
+  <div class="two body">
+    <div class="card statecard tacc">
+      <div class="head">Cash <span class="muted" style="font-size:13px;font-family:var(--sans)">(asset)</span></div>
+      <div class="cols">
+        <div class="col d"><h4>Debit · in</h4>
+          <div class="row"><span>Share capital</span><span>500,000</span></div>
+          <div class="row"><span>Loan drawn</span><span>200,000</span></div>
+          <div class="row"><span>Client receipt</span><span>150,000</span></div>
+        </div>
+        <div class="col c"><h4>Credit · out</h4>
+          <div class="row"><span>Equipment</span><span>150,000</span></div>
+          <div class="row"><span>Wages</span><span>45,000</span></div>
+          <div class="row"><span>Supplier paid</span><span>50,000</span></div>
+        </div>
+      </div>
+      <div class="tbal">850,000 − 245,000 = closing balance <b>605,000 Dr</b></div>
+    </div>
+    <div>
+      <p class="lead" style="margin-top:0">Posting is <b>purely mechanical</b> once the entry is classified: each line lands in its named account, tagged with a reference back to the journal.</p>
+      <p class="callout frag" style="margin-top:16px"><b>Control accounts.</b> Where volume is high, a subsidiary ledger holds supplier-level detail and a single control account carries the total — the two must reconcile every period.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ka="1" data-note="List every ledger balance in two columns and total them. For Meridian the debits sum to one million twenty-two thousand five hundred, and so do the credits. They agree — the ledger is mechanically in balance. But hold that word 'mechanically' — it's about to matter.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.1 · The trial balance</div>
+  <h2>Both columns prove equal</h2>
+  <p class="lead">Every ledger balance, split Dr / Cr. If the two totals agree, the double-entry was applied consistently across the whole ledger.</p>
+  <div class="body">
+    <div class="eqbars">
+      <div class="eqcol"><div class="bar" id="tbBarD" style="--ph:190px"></div><div class="cap">Total debits</div><div class="val num bl">$1,022,500</div></div>
+      <div class="eqcol"><div class="bar" id="tbBarC" style="--ph:190px"></div><div class="cap">Total credits</div><div class="val num bl">$1,022,500</div></div>
+    </div>
+    <p class="eqbadge" id="tbBadge">Equal, to the dollar — the books are <b>in balance</b>.</p>
+  </div>
+</section>
+
+<section class="slide" data-ka="1" data-note="This is the single most examined idea in the whole domain, so slow down. A trial balance proves debits equal credits — nothing more. Suppose a sixty-thousand materials cost was posted to Labour cost instead of Direct project cost. Both are debit-normal expense accounts, so the totals are completely unchanged — the trial balance still says one-oh-two-two-five. It is blind to it. Errors of principle, of omission, of commission, and compensating errors all survive a balanced trial balance. It is a necessary check, never a sufficient one.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.1 · The limit — read this twice</div>
+  <h2>What a balanced trial balance cannot catch</h2>
+  <p class="lead">It proves only that <span class="num">Σ Dr = Σ Cr</span>. Any error that preserves that identity slips straight through.</p>
+  <div class="grid body" style="grid-template-columns:1fr 1fr;gap:16px;max-width:900px">
+    <div class="card frag" style="padding:16px 18px"><b class="dr">Error of principle</b><p class="muted" style="margin:6px 0 0;font-size:14px">Right amount, wrong account of the <i>same</i> normal side (materials → labour). Totals unchanged.</p></div>
+    <div class="card frag" style="padding:16px 18px"><b class="dr">Omission</b><p class="muted" style="margin:6px 0 0;font-size:14px">A transaction never recorded at all. Both sides simply lower together.</p></div>
+    <div class="card frag" style="padding:16px 18px"><b class="dr">Commission</b><p class="muted" style="margin:6px 0 0;font-size:14px">Posted to the wrong account of the same type — say, the wrong supplier.</p></div>
+    <div class="card frag" style="padding:16px 18px"><b class="dr">Compensating</b><p class="muted" style="margin:6px 0 0;font-size:14px">Two unrelated errors that happen to offset each other exactly.</p></div>
+  </div>
+  <p class="callout warn frag" style="margin-top:18px"><b>Exam-critical:</b> a balanced trial balance is <b>necessary but not sufficient</b>. In project controls these errors surface not from the trial balance but from cost-code and WBS reconciliation (KA 1.5).</p>
+</section>
+
+<section class="slide" data-ka="1" data-note="Close the loop. Meridian's revenue was two-twenty; its costs — materials, labour, subcontractor and depreciation — total one-seventy-seven and a half. So net profit is forty-two thousand five hundred. That profit rolls into equity: five hundred of capital plus forty-two-five is five hundred and forty-two thousand five hundred. Assets net of depreciation are eight-forty-two-five; liabilities are three hundred thousand. And there it is — eight-forty-two-five equals three hundred plus five-forty-two-five. The equation we started with holds exactly, on the real numbers. That is the professional's period-end check.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.1 · Closing the loop</div>
+  <h2>Profit becomes equity; the equation holds</h2>
+  <div class="two body">
+    <div>
+      <table class="led">
+        <tr><th>Roll-up, March 2026</th><th>USD</th></tr>
+        <tr class="frag"><td>Contract revenue</td><td class="num cr">220,000</td></tr>
+        <tr class="frag"><td>Less all costs</td><td class="num dr">(177,500)</td></tr>
+        <tr class="tot frag"><td>Net profit</td><td class="num bl">42,500</td></tr>
+        <tr class="frag"><td>Opening equity (capital)</td><td class="num">500,000</td></tr>
+        <tr class="tot frag"><td>Closing equity</td><td class="num bl">542,500</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="eqbars" style="height:200px">
+        <div class="eqcol"><div class="bar" id="loopA" style="--ph:180px"></div><div class="cap">Assets</div><div class="val num bl">842,500</div></div>
+        <div class="eqcol"><div class="bar split" id="loopLE" style="height:180px"><div class="seg liab" style="--sh:64px;height:0"></div><div class="seg eq" style="--sh:116px;height:0"></div></div><div class="cap">Liab. + Equity</div><div class="val num"><span style="color:var(--gold)">300k</span> + <span class="bl">542.5k</span></div></div>
+      </div>
+      <p class="eqbadge" id="loopBadge" style="font-size:19px">842,500 = 300,000 + 542,500 ✓</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide mcq" data-ka="1" data-note="Quick check — this is the exam favourite. A trial balance balances, but a fifteen-thousand subcontract cost was posted in full to Labour cost. Why did the trial balance miss it? Take a moment, then choose.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.1 · Knowledge check</div>
+  <div class="mcq">
+    <div class="q">A trial balance balances, yet a $15,000 subcontract cost was posted in full to “Labour cost.” Why did the trial balance <i>not</i> catch it?</div>
+    <div class="opts" data-answer="B">
+      <button class="opt" data-k="A"><span class="k">A</span><span>The trial balance only checks liabilities, not expenses.</span></button>
+      <button class="opt" data-k="B"><span class="k">B</span><span>Both accounts are debit-normal expenses, so total debits were unchanged.</span></button>
+      <button class="opt" data-k="C"><span class="k">C</span><span>It caused an equal, opposite understatement of accounts payable.</span></button>
+      <button class="opt" data-k="D"><span class="k">D</span><span>A trial balance can’t be prepared when such an error exists.</span></button>
+    </div>
+    <p class="rationale"><b>B is correct.</b> Moving an amount between two accounts on the <i>same</i> normal side leaves Σ Dr = Σ Cr untouched — an error of principle the trial balance is blind to. It’s found by account-level or cost-code review, not the trial balance.</p>
+  </div>
+</section>
+
+<!-- ================= KA 1.2 ================= -->
+<section class="slide divider" data-ka="2" data-note="Knowledge Area 1.2 — the financial statements. The trial balance we just built isn't a report anyone reads. It becomes four connected statements, each answering a different question, plus the notes that explain them.">
+  <div class="kanum">1.2</div>
+  <h2>Components of the financial statements</h2>
+  <ul class="obj">
+    <li><span class="b">1</span><div>Name the four primary statements and the question each answers.</div></li>
+    <li><span class="b">2</span><div>Read a Statement of Financial Position as the accounting equation, frozen in time.</div></li>
+    <li><span class="b">3</span><div>Explain how the statements <b>articulate</b> — lock together into one coherent picture.</div></li>
+  </ul>
+</section>
+
+<section class="slide" data-ka="2" data-note="Four statements, four questions. The Statement of Financial Position — the balance sheet — asks 'what do we own and owe at a point in time?' The Statement of Profit or Loss asks 'how did we perform over the period?' The Statement of Cash Flows asks 'where did the cash actually move?' — because profit is not cash. The Statement of Changes in Equity reconciles the owners' stake. And the notes explain the judgements behind all four.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.2 · Overview</div>
+  <h2>Four statements, four questions</h2>
+  <div class="grid body" style="grid-template-columns:1fr 1fr;gap:16px;max-width:960px">
+    <div class="card frag" style="padding:18px 20px"><div class="pill k">IAS 1</div><h3 style="margin-top:10px">Statement of Financial Position</h3><p class="muted" style="margin:6px 0 0">What we <b>own and owe</b> at a point in time — the equation, frozen.</p></div>
+    <div class="card frag" style="padding:18px 20px"><div class="pill k">IAS 1</div><h3 style="margin-top:10px">Profit or Loss & OCI</h3><p class="muted" style="margin:6px 0 0">How we <b>performed</b> over the period — income less expenses.</p></div>
+    <div class="card frag" style="padding:18px 20px"><div class="pill k">IAS 7</div><h3 style="margin-top:10px">Cash Flows</h3><p class="muted" style="margin:6px 0 0">Where <b>cash</b> moved — operating, investing, financing. Profit ≠ cash.</p></div>
+    <div class="card frag" style="padding:18px 20px"><div class="pill k">IAS 1</div><h3 style="margin-top:10px">Changes in Equity</h3><p class="muted" style="margin:6px 0 0">How the <b>owners’ stake</b> moved — profit, and distributions.</p></div>
+  </div>
+  <p class="callout frag" style="margin-top:16px"><b>Plus the notes.</b> Basis of preparation, accounting policies and the judgements behind the numbers — where the real story of a construction contract often lives.</p>
+</section>
+
+<section class="slide" data-ka="2" data-note="The statements aren't four separate documents — they articulate. The profit from the income statement flows into retained earnings, which is part of equity, which sits on the balance sheet. The bottom line of the cash flow statement is the cash figure on the balance sheet. Pull one thread and the others move. For Meridian: the forty-two-five profit becomes part of the five-forty-two-five equity, and the six-oh-five-thousand closing cash is exactly the cash on its balance sheet. One coherent picture, four windows onto it.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.2 · Articulation</div>
+  <h2>They lock together</h2>
+  <p class="lead">The statements share figures by design — this is why a set that “articulates” is internally consistent, and why an error in one surfaces in another.</p>
+  <div class="flowrow body">
+    <div class="node frag"><div class="t">Profit</div><div class="s">$42,500</div></div>
+    <div class="arw frag">→</div>
+    <div class="node frag"><div class="t">Retained earnings</div><div class="s">into equity</div></div>
+    <div class="arw frag">→</div>
+    <div class="node frag"><div class="t">Equity</div><div class="s">$542,500</div></div>
+    <div class="arw frag">→</div>
+    <div class="node frag"><div class="t">Balance sheet</div><div class="s">A = L + E</div></div>
+  </div>
+  <p class="callout frag" style="margin-top:22px">And separately: the <b>cash flow</b> statement’s closing figure — Meridian’s <span class="num bl">$605,000</span> — <i>is</i> the cash line on the balance sheet. Same number, two windows.</p>
+</section>
+
+<!-- ================= KA 1.3 ================= -->
+<section class="slide divider" data-ka="3" data-note="Knowledge Area 1.3 — accrual accounting and matching. This is where accounting and cash part ways, and it's the single most important idea for anyone who reports cost. We record economic events when they happen, not when the money moves.">
+  <div class="kanum">1.3</div>
+  <h2>Accrual accounting & matching</h2>
+  <ul class="obj">
+    <li><span class="b">1</span><div>Contrast the cash basis with the accrual basis.</div></li>
+    <li><span class="b">2</span><div>Apply the matching principle — cost recognised with the revenue it earns.</div></li>
+    <li><span class="b">3</span><div>Post an accrual for work done but not yet invoiced, and reverse it.</div></li>
+  </ul>
+</section>
+
+<section class="slide" data-ka="3" data-note="Two ways to keep score. On the cash basis you record only when money moves — simple, but it lies about performance: a month with a big subcontractor bill unpaid looks profitable, then crashes when you settle it. The accrual basis records the economic event when it occurs — the cost when the work is done, the revenue when it's earned — regardless of cash. IFRS requires the accrual basis, and it's the only basis that gives a true cost report. Cash still matters, but it's a separate statement.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.3 · Two bases</div>
+  <h2>When do you record it?</h2>
+  <div class="two body">
+    <div class="card statecard frag"><div class="st">Cash basis</div><h3>When money moves</h3><p class="muted" style="margin-top:8px">Record on receipt or payment. Simple — but it distorts performance: an unpaid subcontractor bill makes a bad month look good.</p></div>
+    <div class="card statecard frag" style="border-color:var(--blue)"><div class="st bl">Accrual basis · required by IFRS</div><h3>When the event occurs</h3><p class="muted" style="margin-top:8px">Record the cost when work is done and the revenue when it’s earned — whatever the cash is doing. The only basis that gives a true cost report.</p></div>
+  </div>
+  <p class="callout frag" style="margin-top:18px"><b>The matching principle</b> ties them: recognise a cost <i>in the same period</i> as the revenue it helped earn — not when its invoice happens to arrive.</p>
+</section>
+
+<section class="slide" data-ka="3" data-note="Here's the move that keeps a cost report honest. At month-end, Meridian's subcontractor has done eighteen thousand of verified work but hasn't invoiced yet. On the cash basis you'd record nothing — and understate the month's cost by eighteen thousand. The accrual fixes it: debit subcontract cost, credit accrued expenses, eighteen thousand, so the cost lands in the right period. Then, cleanly, you reverse it at the start of next month, so when the real invoice arrives it isn't double-counted. Cost done, cost recorded — that's the discipline behind every reliable earned-value report.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.3 · Worked example — the accrual</div>
+  <h2>Cost done, invoice not yet arrived</h2>
+  <div class="two body">
+    <div>
+      <p class="lead" style="margin-top:0">Month-end: Meridian’s subcontractor has completed <span class="num bl">$18,000</span> of verified work but has not invoiced. Cash basis records nothing — and understates the month.</p>
+      <p class="callout frag" style="margin-top:16px"><b>Why controls care:</b> value of work done, not cash paid, is what earned value and the cost report must reflect. Missing accruals are the classic cause of a “great month” that reverses.</p>
+    </div>
+    <div class="card statecard">
+      <div class="st">Period-end adjusting entry</div>
+      <table class="led" style="margin-top:10px">
+        <tr class="frag"><td class="dr">Dr Subcontract cost</td><td class="num dr">18,000</td></tr>
+        <tr class="frag"><td class="cr">Cr Accrued expenses</td><td class="num cr">18,000</td></tr>
+      </table>
+      <div class="st frag" style="margin-top:16px">Reversed on day 1 next period</div>
+      <table class="led frag" style="margin-top:8px">
+        <tr><td class="cr">Dr Accrued expenses</td><td class="num">18,000</td></tr>
+        <tr><td class="dr">Cr Subcontract cost</td><td class="num">18,000</td></tr>
+      </table>
+      <p class="muted frag" style="font-size:12.5px;margin-top:10px">…so the real invoice, when it lands, isn’t counted twice.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= KA 1.4 ================= -->
+<section class="slide divider" data-ka="4" data-note="Knowledge Area 1.4 — provisions and cost accruals. This is where accounting meets judgement. Some costs you know are coming but you're not certain of the timing or the amount — a warranty, a dispute, a loss-making contract. IAS 37 governs when and how you put those on the books.">
+  <div class="kanum">1.4</div>
+  <h2>Cost provisions & accruals</h2>
+  <ul class="obj">
+    <li><span class="b">1</span><div>Place an item on the certainty spectrum: payable → accrual → provision.</div></li>
+    <li><span class="b">2</span><div>Apply the IAS 37 three-part recognition test.</div></li>
+    <li><span class="b">3</span><div>Recognise a contract-loss (onerous-contract) provision — a real project risk.</div></li>
+  </ul>
+</section>
+
+<section class="slide" data-ka="4" data-note="Think of a certainty spectrum. A trade payable is an invoice you've received — certain amount, certain timing. An accrual is work done but not yet invoiced — near-certain amount, estimated. A provision sits furthest out: a liability of uncertain timing OR amount — a warranty claim you know will come but can't size precisely. As certainty falls, judgement rises, and IAS 37 draws the line for when a provision is allowed onto the books at all.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.4 · The certainty spectrum</div>
+  <h2>From invoice to informed estimate</h2>
+  <p class="lead">The same idea — a cost the entity owes — at three levels of certainty. As certainty falls, judgement rises.</p>
+  <div class="flowrow body">
+    <div class="node frag" style="min-width:170px;border-color:var(--credit)"><div class="t">Trade payable</div><div class="s">invoice received — amount & timing <b>certain</b></div></div>
+    <div class="arw frag">›</div>
+    <div class="node frag" style="min-width:170px"><div class="t">Accrual</div><div class="s">work done, not invoiced — amount <b>estimated</b></div></div>
+    <div class="arw frag">›</div>
+    <div class="node frag" style="min-width:170px;border-color:var(--gold)"><div class="t">Provision</div><div class="s">uncertain <b>timing or amount</b> — IAS 37 judgement</div></div>
+  </div>
+  <p class="callout frag" style="margin-top:22px"><b>IAS 37 defines a provision</b> as “a liability of uncertain timing or amount.” The question is: when are you <i>allowed</i> to recognise one?</p>
+</section>
+
+<section class="slide" data-ka="4" data-note="IAS 37 sets three gates, and all three must open. One: is there a present obligation from a past event? If the obligating event hasn't happened, you stop here — a future operating loss fails this outright, however likely it is. Two: is an outflow of resources probable — more likely than not? Three: can you make a reliable estimate of the amount? Pass all three and you recognise a provision. Fail on probability and it becomes a contingent liability — disclosed in the notes, not booked. This gate is the most examined judgement in the domain.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.4 · IAS 37 recognition</div>
+  <h2>Three gates — all must open</h2>
+  <div class="gate body" id="ias37">
+    <div class="g" data-g="1"><div class="n">1</div><div class="t">Present obligation</div><div class="s">A legal or constructive duty <b>from a past event</b>. No past event → stop.</div></div>
+    <div class="g" data-g="2"><div class="n">2</div><div class="t">Probable outflow</div><div class="s">Settlement will <b>probably</b> require resources (more likely than not).</div></div>
+    <div class="g" data-g="3"><div class="n">3</div><div class="t">Reliable estimate</div><div class="s">The amount can be <b>reliably estimated</b>.</div></div>
+  </div>
+  <div class="verdict" id="ias37v"><span class="tag">✓ Recognise a provision</span><span class="muted" style="font-size:14px">Fail gate 2 → <b>contingent liability</b> (disclose in the notes, don’t book). Fail gate 1 → nothing at all.</span></div>
+</section>
+
+<section class="slide" data-ka="4" data-note="Two provisions matter most on projects. A warranty: Meridian expects rectification claims after handover — measured at expected value and, because it's settled in the future, discounted to present value, giving a figure like ninety-five thousand two hundred and thirty-eight. And the big one for controls: the onerous, or loss-making, contract. The moment a contract's unavoidable costs to finish exceed the revenue left to earn, IAS 37 makes you provide for the whole expected loss now — you cannot spread bad news. Spotting that tipping point early, from the cost forecast, is exactly the controls professional's job.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.4 · Two provisions that matter on projects</div>
+  <h2>Warranty, and the loss-making contract</h2>
+  <div class="two body">
+    <div class="card statecard frag"><div class="st">Warranty provision</div><h3>Expected value, discounted</h3><p class="muted" style="margin-top:8px">Post-handover rectification is probable and estimable. Measure at expected value; discount for timing → e.g. <span class="num bl">$95,238</span> today.</p></div>
+    <div class="card statecard frag" style="border-color:var(--gold)"><div class="st" style="color:var(--gold)">Onerous contract</div><h3>Provide the whole loss, now</h3><p class="muted" style="margin-top:8px">When unavoidable costs to finish <b>exceed</b> revenue left to earn, the full expected loss is provided for <b>immediately</b>. You can’t spread bad news.</p></div>
+  </div>
+  <p class="callout frag" style="margin-top:18px"><b>AI in this topic.</b> Models can flag a contract trending onerous from the cost forecast — a genuine early-warning use. But recognising the provision is a judgement the professional owns. <i>AI proposes; the professional disposes.</i></p>
+</section>
+
+<!-- ================= KA 1.5 ================= -->
+<section class="slide divider" data-ka="5" data-note="Knowledge Area 1.5 — the chart of accounts and cost coding. This is where accounting becomes usable for project controls: the structure that lets a single ledger answer 'how much has this work package cost?' The cost code is the bridge between the accountant's ledger and the project's work breakdown.">
+  <div class="kanum">1.5</div>
+  <h2>Chart of accounts & cost coding</h2>
+  <ul class="obj">
+    <li><span class="b">1</span><div>Read a project cost code and what each segment means.</div></li>
+    <li><span class="b">2</span><div>Connect the cost breakdown structure to the WBS and the control account.</div></li>
+    <li><span class="b">3</span><div>Judge where AI genuinely helps with coding — and where it must not decide.</div></li>
+  </ul>
+</section>
+
+<section class="slide" data-ka="5" data-note="A cost code is a little address. Read this one left to right. Zero-seven is the work-breakdown element — the pipeline segment. Thirty is the cost element within it — say, mechanical. Zero-three is the sub-element — pipe-laying. Five-thirty is the natural account — the kind of cost, here labour. String them together and one ledger line can be sliced by work package, by cost type, or by natural account, all at once. That's what lets the same record feed both the statutory accounts and the earned-value report.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.5 · Anatomy of a cost code</div>
+  <h2>One code, many views</h2>
+  <p class="lead">Each segment is an address. Together they let a single ledger line be sliced by work package, cost type <i>and</i> natural account.</p>
+  <div class="codebox body">
+    <div class="codeseg" data-c="1"><div class="code">07</div><div class="lab">WBS element</div><div class="ex">Pipeline Seg. 4B</div></div>
+    <div class="codedot" >.</div>
+    <div class="codeseg" data-c="2"><div class="code">30</div><div class="lab">Cost element</div><div class="ex">Mechanical</div></div>
+    <div class="codedot">.</div>
+    <div class="codeseg" data-c="3"><div class="code">03</div><div class="lab">Sub-element</div><div class="ex">Pipe-laying</div></div>
+    <div class="codedot">.</div>
+    <div class="codeseg" data-c="4"><div class="code">530</div><div class="lab">Natural account</div><div class="ex">Site labour</div></div>
+  </div>
+  <p class="callout frag" style="margin-top:22px"><b>Control account = WBS × OBS.</b> Where a slice of work meets the team accountable for it, you get the control account — the cell where scope, cost and schedule are actually managed, and where cost coding, the CBS and the WBS all reconcile.</p>
+</section>
+
+<section class="slide" data-ka="5" data-note="Coding is also where AI earns its place — carefully. Two capabilities are genuinely established today: auto-classification, where a model suggests the cost code for an incoming invoice from past patterns; and anomaly detection, which flags a posting that doesn't fit — a labour code with no matching timesheet hours, exactly the error the trial balance missed back in 1.1. Both are strong at surfacing candidates for review. Neither knows why a break exists, and both learn past mistakes as readily as past good practice. So they route to a human for anything material. AI proposes the code; the professional disposes.">
+  <div class="eyebrow"><span class="tick"></span>KA 1.5 · AI in cost coding</div>
+  <h2>Where AI helps — and where it stops</h2>
+  <div class="two body">
+    <div class="card statecard frag"><div class="st bl">Genuinely useful</div><h3>Auto-classify & flag</h3><p class="muted" style="margin-top:8px">Suggest a cost code from past patterns; surface anomalies — a labour code with no timesheet hours (the very error the trial balance missed).</p></div>
+    <div class="card statecard frag" style="border-color:var(--gold)"><div class="st" style="color:var(--gold)">The governance limit</div><h3>It doesn’t know <i>why</i></h3><p class="muted" style="margin-top:8px">It learns past mistakes as readily as good practice, and can’t explain a break. Material or novel items route to a human.</p></div>
+  </div>
+  <p class="callout frag" style="margin-top:18px;border-color:var(--gold);background:color-mix(in srgb,var(--gold) 12%,transparent)"><b>The principle of the whole programme:</b> <i>AI proposes; the professional disposes.</i></p>
+</section>
+
+<!-- ================= CLOSE ================= -->
+<section class="slide" data-ka="5" data-note="Step back and see the through-line. One ledger, built from the equation and double-entry. It becomes four statements that articulate. Timing — accrual and matching — decides which period a cost belongs to. Judgement — provisions under IAS 37 — handles the costs you know are coming. And cost coding threads it all onto the work breakdown so a project-controls professional can actually use it. Five Knowledge Areas, one connected system.">
+  <div class="eyebrow"><span class="tick"></span>Domain 1 · The through-line</div>
+  <h2>One connected system</h2>
+  <div class="flowrow body" style="gap:8px">
+    <div class="node frag"><div class="t">1.1 Record</div><div class="s">equation, double-entry</div></div>
+    <div class="arw frag">→</div>
+    <div class="node frag"><div class="t">1.2 Report</div><div class="s">four statements</div></div>
+    <div class="arw frag">→</div>
+    <div class="node frag"><div class="t">1.3 Timing</div><div class="s">accrual & matching</div></div>
+    <div class="arw frag">→</div>
+    <div class="node frag"><div class="t">1.4 Judgement</div><div class="s">provisions (IAS 37)</div></div>
+    <div class="arw frag">→</div>
+    <div class="node frag"><div class="t">1.5 Code</div><div class="s">onto the WBS</div></div>
+  </div>
+  <p class="callout frag" style="margin-top:24px">You don’t need to be an accountant. You need to read the record with confidence — and now you can trace any reported number back to where it came from.</p>
+</section>
+
+<section class="slide" data-ka="5" data-note="That completes Domain 1. Next is Domain 2 — financial reporting and the standards — where these foundations meet IFRS in depth, including IFRS 15 and how revenue is recognised on a construction contract. Thank you.">
+  <div class="wrap" style="text-align:center;max-width:760px;margin:0 auto">
+    <div class="eyebrow kick" style="justify-content:center"><span class="tick"></span>End of Domain 1<span class="tick"></span></div>
+    <h2 style="font-size:clamp(28px,5vw,52px)">“AI proposes;<br>the professional disposes.”</h2>
+    <div class="rule" style="width:64px;height:3px;background:var(--blue);margin:26px auto"></div>
+    <p class="lead" style="margin:0 auto;text-align:center">Next — <b>Domain 2: Financial Reporting &amp; the Standards.</b> The foundations you’ve just built meet IFRS in depth, including revenue recognition on construction contracts under IFRS 15.</p>
+    <p class="muted" style="margin-top:28px;font-size:13px">Certified Project Controls Professional — AI · Project Controls Institute</p>
+  </div>
+</section>
+
+</template>
+
+<script>
+(function(){
+  "use strict";
+  var KA_LABELS = ["","1.1 Model","1.2 Statements","1.3 Accrual","1.4 Provisions","1.5 Coding"];
+  var root=document.documentElement, stage=document.getElementById('stage');
+  // move templated slides into the stage
+  var tpl=document.getElementById('src');
+  var frag=tpl.content.cloneNode(true); stage.appendChild(frag);
+  var slides=[].slice.call(stage.querySelectorAll('.slide'));
+  var reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  // build progress rail segments (5 KAs)
+  var segsEl=document.getElementById('segs'), segEls=[];
+  for(var k=1;k<=5;k++){
+    var s=document.createElement('div'); s.className='seg';
+    s.innerHTML='<i></i><span class="lbl">'+KA_LABELS[k]+'</span>';
+    (function(kk){ s.addEventListener('click',function(){ jumpKA(kk); }); })(k);
+    segsEl.appendChild(s); segEls.push(s);
+  }
+
+  var cur=0, step=0, steps=[];
+  slides.forEach(function(sl){ steps.push(sl.querySelectorAll('.frag').length); });
+
+  var capText=document.getElementById('cap-text'), capCount=document.getElementById('cap-count');
+  var notesOn=false;
+
+  function fragsOf(i){ return slides[i].querySelectorAll('.frag'); }
+
+  function render(){
+    slides.forEach(function(sl,i){ sl.classList.toggle('active', i===cur); });
+    var fr=fragsOf(cur);
+    fr.forEach(function(f,idx){ f.classList.toggle('on', idx<step); });
+    // caption
+    capCount.textContent = pad(cur+1)+' / '+slides.length;
+    var note=slides[cur].getAttribute('data-note')||'';
+    capText.innerHTML = notesOn ? ('<b>Speaker note · </b>'+note) : shortTitle(cur);
+    // rail
+    var ka=parseInt(slides[cur].getAttribute('data-ka')||'0',10);
+    segEls.forEach(function(se,idx){
+      var kk=idx+1; se.classList.remove('done','cur');
+      if(ka>kk) se.classList.add('done');
+      else if(ka===kk){ se.classList.add('cur'); se.style.setProperty('--p', progressWithinKA(ka)+'%'); }
+    });
+    triggerVisuals();
+  }
+  function shortTitle(i){
+    var h=slides[i].querySelector('h2, h1'); var eye=slides[i].querySelector('.eyebrow');
+    var t=h?h.innerHTML.replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim():'';
+    return (eye?'<b>'+eye.textContent.replace(/\s+/g,' ').trim()+'</b> — ':'')+t;
+  }
+  function progressWithinKA(ka){
+    var idxs=[]; slides.forEach(function(sl,i){ if(parseInt(sl.getAttribute('data-ka'),10)===ka) idxs.push(i); });
+    if(!idxs.length) return 0; var pos=idxs.indexOf(cur); if(pos<0) pos=idxs.length-1;
+    return Math.round(((pos+1)/idxs.length)*100);
+  }
+  function pad(n){ return (n<10?'0':'')+n; }
+
+  function next(){
+    if(step < steps[cur]){ step++; render(); return; }
+    if(cur < slides.length-1){ cur++; step=0; render(); }
+  }
+  function prev(){
+    if(step>0){ step--; render(); return; }
+    if(cur>0){ cur--; step=steps[cur]; render(); }
+  }
+  function jumpKA(ka){
+    for(var i=0;i<slides.length;i++){ if(parseInt(slides[i].getAttribute('data-ka'),10)===ka){ cur=i; step=0; render(); return; } }
+  }
+
+  // ---- signature visual triggers ----
+  var played={};
+  function triggerVisuals(){
+    var sl=slides[cur], key=cur+'-'+step;
+    // balance scales: reveal weights up to current step
+    sl.querySelectorAll('.wt').forEach(function(w){
+      var need=parseInt(w.getAttribute('data-w')||'1',10);
+      w.classList.toggle('on', step>=need);
+    });
+    // trial-balance bars
+    if(sl.querySelector('#tbBarD') && step>=1){
+      setBar('tbBarD'); setBar('tbBarC');
+      var b=document.getElementById('tbBadge'); if(b) setTimeout(function(){b.classList.add('on');},700);
+    }
+    // closing-loop bars
+    if(sl.querySelector('#loopA')){
+      if(step>=3){ setBar('loopA'); }
+      if(step>=5){ var le=document.getElementById('loopLE'); if(le){ le.querySelectorAll('.seg').forEach(function(sg){ sg.style.height=sg.style.getPropertyValue('--sh'); }); }
+        var lb=document.getElementById('loopBadge'); if(lb) setTimeout(function(){lb.classList.add('on');},700); }
+    }
+    // IAS 37 gates (each frag opens a gate)
+    var g=document.getElementById('ias37');
+    if(g){ g.querySelectorAll('.g').forEach(function(gg){ gg.classList.toggle('pass', parseInt(gg.getAttribute('data-g'),10)<=step); });
+      var v=document.getElementById('ias37v'); if(v) v.classList.toggle('on', step>=3); }
+    // cost-code segments
+    sl.querySelectorAll('.codeseg').forEach(function(cseg){ cseg.classList.toggle('on', parseInt(cseg.getAttribute('data-c'),10)<=step); });
+  }
+  function setBar(id){ var el=document.getElementById(id); if(el){ el.style.height=el.style.getPropertyValue('--ph'); } }
+
+  // ---- MCQ interactivity ----
+  stage.addEventListener('click', function(e){
+    var opt=e.target.closest('.opt'); if(!opt) return;
+    var box=opt.closest('.opts'); if(box.getAttribute('data-done')) return;
+    var ans=box.getAttribute('data-answer');
+    box.setAttribute('data-done','1');
+    box.querySelectorAll('.opt').forEach(function(o){
+      if(o.getAttribute('data-k')===ans) o.classList.add('correct');
+      else if(o===opt) o.classList.add('wrong');
+    });
+    var r=opt.closest('.mcq').querySelector('.rationale'); if(r) r.classList.add('on');
+  });
+
+  // ---- controls ----
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); prev(); }
+    else if(e.key==='Home'){ cur=0;step=0;render(); }
+    else if(e.key==='End'){ cur=slides.length-1;step=steps[cur];render(); }
+    else if(e.key==='n'||e.key==='N'){ toggleNotes(); }
+    else if(e.key==='t'||e.key==='T'){ toggleTheme(); }
+    else if(e.key==='p'||e.key==='P'){ togglePlay(); }
+    else if(e.key>='1'&&e.key<='5'){ jumpKA(parseInt(e.key,10)); }
+  });
+  // click zones (ignore clicks on interactive elements)
+  stage.addEventListener('click',function(e){
+    if(e.target.closest('.opt,button,a,kbd')) return;
+    var x=e.clientX, w=innerWidth; if(x < w*0.32) prev(); else if(x> w*0.68) next();
+  });
+
+  function toggleNotes(){ notesOn=!notesOn; document.getElementById('btnNotes').style.color=notesOn?'var(--blue)':''; render(); }
+  document.getElementById('btnNotes').addEventListener('click',toggleNotes);
+
+  function currentTheme(){ return root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'); }
+  function toggleTheme(){ root.setAttribute('data-theme', currentTheme()==='dark'?'light':'dark'); }
+  document.getElementById('btnTheme').addEventListener('click',toggleTheme);
+
+  var playTimer=null;
+  function togglePlay(){
+    var btn=document.getElementById('btnPlay');
+    if(playTimer){ clearInterval(playTimer); playTimer=null; btn.textContent='▶'; btn.style.color=''; return; }
+    btn.textContent='❚❚'; btn.style.color='var(--blue)';
+    playTimer=setInterval(function(){ if(cur===slides.length-1 && step===steps[cur]){ togglePlay(); return; } next(); }, 4200);
+  }
+  document.getElementById('btnPlay').addEventListener('click',togglePlay);
+
+  render();
+})();
+</script>
