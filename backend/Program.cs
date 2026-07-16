@@ -651,6 +651,7 @@ PCI.Backend.Endpoints.AdminIntegrations.Map(app, db, logFn, GateFn);   // Admin 
 PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
 PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
 PCI.Backend.Data.CertuvoSeed.Apply(db); // Certuvo starter practice pack (scenario MCQs across BoK domains)
+PCI.Backend.Data.DemoExamSeed.Apply(db); // optional demo LIVE-exam bank — only when SEED_DEMO_EXAM=true (fresh-deploy testing)
 app.Use(async (ctx, next) =>
 {
     if (ctx.Request.Method == "GET")
