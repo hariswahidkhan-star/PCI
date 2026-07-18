@@ -144,6 +144,26 @@ public static class MultiCert
             delivery);
 
         EnsureRoutes(db);
+        EnsureDocuments(db);
+    }
+
+    /// <summary>Default Certuvo product mapping (per credential) and a starter document set (candidate
+    /// handbook + Body of Knowledge) for each certification. Idempotent: never overwrites admin edits.</summary>
+    public static void EnsureDocuments(Db db)
+    {
+        // Certuvo product defaults to the certification code; admin can remap per credential.
+        db.Execute("UPDATE certifications SET certuvo_product=code WHERE certuvo_product IS NULL OR certuvo_product=''");
+        foreach (var cert in db.Query("SELECT id,code,acronym FROM certifications"))
+        {
+            var cid = Convert.ToInt64(cert["id"]);
+            var have = db.Scalar<long>("SELECT COUNT(*) FROM cert_documents WHERE certification_id=?", cid);
+            if (have > 0) continue;
+            var acr = (cert["acronym"] as string) ?? (cert["code"] as string) ?? "";
+            db.Execute("INSERT INTO cert_documents(certification_id,kind,title,description,published,sort_order) VALUES(?,?,?,?,1,10)",
+                cid, "handbook", $"{acr} Candidate Handbook", "Eligibility, application, examination rules and conduct for this credential.");
+            db.Execute("INSERT INTO cert_documents(certification_id,kind,title,description,watermark,published,sort_order) VALUES(?,?,?,?,1,1,20)",
+                cid, "bok", $"{acr} Body of Knowledge", "The competency framework and study syllabus — delivered as a personalised watermarked copy.");
+        }
     }
 
     // The default application-route set (Phase 4). Every certification offers these; the admin enables,

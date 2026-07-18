@@ -177,7 +177,9 @@ public static class AdminMgmt
                 // catalogue / public-page / SEO configuration (Phase 3)
                 "acronym","short_name","public_title","tagline","short_description","category","level","status","slug","audience",
                 "membership_required","application_fee","overview","next_exam_note",
-                "meta_title","meta_description","keywords","og_title","og_description","social_image","canonical_url","content_json" };
+                "meta_title","meta_description","keywords","og_title","og_description","social_image","canonical_url","content_json",
+                // Certuvo mapping (Phase 8)
+                "certuvo_enabled","certuvo_product" };
             var set = allowed.Where(c => b.ContainsKey(c)).ToList();
             if (id == 1 && set.Contains("active") && !JsonFlag(b["active"]))
                 return Results.Json(new { error = "founding_cert_permanent", message = "The founding certification cannot be deactivated." }, statusCode: 400);
@@ -233,6 +235,8 @@ public static class AdminMgmt
             return J(new { ok = true });
         }));
 
+        // Per-certification documents, books & study materials (Phase 8).
+        Crud("cert_documents", new[]{ "certification_id","kind","title","description","url","route_key","watermark","published","sort_order" }, "certification_id, sort_order, id", "resources");
         Crud("governance_roles", new[]{ "role","holder","status","remit","sort_order" }, "sort_order, id", "governance");
         Crud("resources", new[]{ "title","category","doc_type","url","description","published","sort_order" }, "sort_order, id", "resources");
         Crud("news", new[]{ "title","body","published_date","url","published","sort_order" }, "published_date DESC, id DESC", "news");

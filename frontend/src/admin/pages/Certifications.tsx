@@ -32,7 +32,7 @@ function withCompetencies(json: string | null | undefined, text: string): string
 function Editor({ initial, onClose, onSaved }: { initial: Draft | null; onClose: () => void; onSaved: () => void }) {
   const isNew = !initial?.id
   const [d, setD] = useState<Draft>(
-    initial ?? { code: '', name: '', expiry_years: 3, pass_mark_pct: 70, duration_minutes: 90, active: 1, status: 'Active', level: 'Professional' },
+    initial ?? { code: '', name: '', expiry_years: 3, pass_mark_pct: 70, duration_minutes: 90, active: 1, status: 'Active', level: 'Professional', certuvo_enabled: 1 },
   )
   const [comps, setComps] = useState(competenciesFrom(initial?.content_json))
   const [busy, setBusy] = useState(false)
@@ -67,6 +67,8 @@ function Editor({ initial, onClose, onSaved }: { initial: Draft | null; onClose:
         meta_title: d.meta_title,
         meta_description: d.meta_description,
         keywords: d.keywords,
+        certuvo_enabled: !!d.certuvo_enabled,
+        certuvo_product: d.certuvo_product,
         content_json: withCompetencies(d.content_json, comps),
         // send a real JSON boolean — the backend keys the founding-cert guard and the create default on
         // JsonValueKind.False, so a numeric 0 would be misread as "active".
@@ -135,6 +137,17 @@ function Editor({ initial, onClose, onSaved }: { initial: Draft | null; onClose:
               <option value="0">Inactive</option>
             </select>
           </div>
+        </div>
+
+        <h3 className="section-label">Certuvo (study &amp; practice)</h3>
+        <div className="grid cols-2">
+          <div className="field"><label>Certuvo enabled</label>
+            <select value={d.certuvo_enabled ? '1' : '0'} onChange={(e) => set('certuvo_enabled', e.target.value === '1' ? 1 : 0)}>
+              <option value="1">Enabled</option>
+              <option value="0">Disabled</option>
+            </select>
+          </div>
+          <div className="field"><label>Certuvo product (mapping)</label><input value={d.certuvo_product ?? ''} onChange={(e) => set('certuvo_product', e.target.value)} placeholder="PCL-AI" /></div>
         </div>
 
         <h3 className="section-label">SEO</h3>

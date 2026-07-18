@@ -139,6 +139,24 @@ public static class StudentExam
             return J(new { rows = db.Query("SELECT title,category,doc_type,url FROM resources WHERE published=1 ORDER BY sort_order,id") });
         });
 
+        // Per-certification documents & books: the student sees general documents plus the documents for
+        // every certification they are enrolled in (an entitlement or an issued credential). Grouped by
+        // certification so a PCL-AI candidate never sees PFL-AI/PDL-AI materials they are not entitled to.
+        app.MapGet("/api/me/documents", (HttpContext ctx) =>
+        {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var mine = db.Query(@"SELECT DISTINCT COALESCE(certification_id,1) cid FROM exam_entitlements WHERE user_id=?
+                                  UNION SELECT DISTINCT COALESCE(certification_id,1) FROM issued_credentials WHERE user_id=?", u.Id, u.Id)
+                .Select(r => H.L(r["cid"])).ToList();
+            var inList = mine.Count > 0 ? string.Join(",", mine) : "-1";
+            var rows = db.Query($@"SELECT d.id,d.certification_id,d.kind,d.title,d.description,d.url,d.watermark,d.sort_order,
+                    c.acronym cert_acronym, c.name cert_name
+                FROM cert_documents d LEFT JOIN certifications c ON c.id=d.certification_id
+                WHERE d.published=1 AND (d.certification_id IS NULL OR d.certification_id IN ({inList}))
+                ORDER BY (d.certification_id IS NULL), d.certification_id, d.sort_order, d.id");
+            return J(new { rows });
+        });
+
         // ── Candidate consents (Section B rule 3) ──
         app.MapGet("/api/me/consents", (HttpContext ctx) =>
         {

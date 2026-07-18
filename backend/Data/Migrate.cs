@@ -304,8 +304,25 @@ public static class Migrate
             ("meta_title","meta_title TEXT"), ("meta_description","meta_description TEXT"), ("keywords","keywords TEXT"),
             ("og_title","og_title TEXT"), ("og_description","og_description TEXT"), ("social_image","social_image TEXT"),
             ("canonical_url","canonical_url TEXT"), ("content_json","content_json TEXT"),
+            // Certuvo mapping (Phase 8): which Certuvo prep product this credential maps to, and whether enabled.
+            ("certuvo_enabled","certuvo_enabled INTEGER DEFAULT 1"), ("certuvo_product","certuvo_product TEXT"),
         })
             AddCol("certifications", col, ddl);
+
+        // ── Per-certification documents, books & study materials (Phase 8) ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cert_documents(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            certification_id INTEGER,                 -- NULL = applies to all certifications
+            kind TEXT DEFAULT 'general',              -- handbook | bok | study_guide | book | form | policy | general
+            title TEXT NOT NULL,
+            description TEXT,
+            url TEXT,                                 -- link or storage reference to the file
+            route_key TEXT,                           -- NULL = all routes; else limit to one application route
+            watermark INTEGER DEFAULT 0,              -- 1 = deliver as a personalised watermarked copy
+            published INTEGER DEFAULT 1,
+            sort_order INTEGER DEFAULT 0,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cert_documents_cert ON cert_documents(certification_id)");
 
         // ── Discount codes: certification / route / fee scoping (Phase 5) ──
         // certification_id NULL = valid for every certification; route_key NULL = every route.

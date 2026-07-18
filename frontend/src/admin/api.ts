@@ -129,6 +129,8 @@ export interface CertRow {
   meta_description?: string | null
   keywords?: string | null
   content_json?: string | null
+  certuvo_enabled?: number | null
+  certuvo_product?: string | null
 }
 
 export const CERT_STATUSES = [
