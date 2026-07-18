@@ -175,3 +175,130 @@ Real-money Stripe charges (test-mode signatures only), the real Certuvo vendor (
 ---
 
 *All numeric results in this report are from runs executed on 18 July 2026 on this branch: integration 378/378 (SQLite) + 378/378 (MySQL), founding 46/46, honorary 19/19, storage 10/10, lifecycle/casework/settings/release/publication suites green, 500-sweep 1,131 calls / 378 routes / 0 server errors, CI 5/5 green, live screenshots: admin documents, upload drawer, student documents (desktop+mobile), marketing dashboard, partner documents tab, rasterised watermarked page.*
+
+---
+
+# Part 2 — Post-merge audit of the Suite modules (18 July 2026, evening)
+
+Continuation of the audit on the merged tree (PR #52 head), covering the modules the parallel main
+work stream added and the naming-spec sections that needed functional verification. Method unchanged:
+every verdict is backed by a code citation, a live API run against a freshly seeded server, a test
+run, or a screenshot. Two read-only exploration passes mapped the subsystems; every load-bearing
+claim below was then re-confirmed against the source or exercised live.
+
+## 2.1 Marketing-partner sponsorship & commission ledger — ✅ working, with model deviations
+
+**Live end-to-end run (fresh DB):** created partner "Audit Academy" (20% commission, sponsorship
+enabled) → partner finance user → partner-linked code `INST-0321D3A0` (25%) → student paid a
+PFL-AI exam with the code (Stripe-shaped signed webhook, USD 262.50) → redemption attributed →
+ledger showed **attributed revenue 262.50 / accrued 52.50 / balance 52.50** identically on the
+partner portal and the admin drawer → admin recorded a USD 52.50 payout (audited
+`partner_payout_recorded`) → balance 0, payout visible partner-side. Screenshot: partner portal
+Commissions tab. Sponsorship: partner sponsored a PDL-AI candidate → account created + approved
+`sponsored` application (`PCI-APP-…`) + sponsor-funded entitlement + in-app notification + live
+progress row (`Partners.cs:92-167`), unique per (partner, candidate, certification).
+
+**Deviations vs the naming spec §14 (by design, documented in `Migrate.cs:123-127`):**
+- Commission is a **derived running balance** (paid redemptions × `commission_pct` at read time,
+  `Partners.cs:35-63`) — there are **no per-transaction commission records** with
+  Due → Partially Paid → Paid statuses. "Due" exists only as `balance > 0`.
+- **Payment proof is a free-text payout note**, not a file upload (`Partners.cs:194-197`).
+- **The ledger is not filterable by certification** (no `certification_id` in the query,
+  `Partners.cs:39-49`) and one `commission_pct` applies across all three credentials. Candidate
+  tracking IS per-certification (`Partners.cs:68-77`).
+
+One earlier probe artefact worth recording: passing the discount code under the wrong webhook
+metadata key silently skips attribution — the real checkout always sends `discount_code`
+(`Payments.cs:209-219`), which correctly records the redemption, increments `used_count`, and runs
+fraud checks.
+
+## 2.2 Certification applications & routes — ✅ working end-to-end
+
+All **eight routes** are seeded per certification (`MultiCert.cs:204-214`): standard, founding,
+honorary, sponsored, complimentary, waived_full, waived_partial, test (internal). Live run:
+`GET /api/certifications/2/routes` returned the seven public routes; a student submitted a
+**standard** PFL-AI application (`PCI-APP-2026-100001`, status `submitted`); the admin list showed
+it (cert-scope filtered, `Applications.cs:63`); admin approved; the student saw `approved`. Free
+and sponsored routes auto-grant a paid-at-zero entitlement on approval; fee-bearing routes
+correctly do not (`Applications.cs:99-111`). Route provenance is stamped on the entitlement and the
+credential wording snapshot (`Migrate.cs:515-517`). Admin UI: Applications page with certification/
+status filters and a review drawer (approve / reject / request info / under review). Student UI:
+apply + track inside the portal Certifications page.
+
+## 2.3 Books / per-certification documents — ⚠️ partial
+
+Working and live-verified: `cert_documents` schema (kind handbook|bok|study_guide|book|…,
+per-certification, per-route, `watermark` flag), admin CRUD at `/api/admin/cert_documents`
+(perm `resources`, **cert-scope enforced**, `AdminMgmt.cs:259`), per-cert Candidate Handbook + Body
+of Knowledge rows seeded for every certification (`MultiCert.cs:185-200`), and the student endpoint
+`GET /api/me/cert-documents` correctly **isolating by entitlement/credential** — the live probe's
+PFL-AI student saw the PFL-AI book, the seeded PFL-AI handbook/BoK and the general guide, and never
+the PDL-AI handbook.
+
+**Gaps:** (1) the `watermark` flag on cert documents is **inert** — rows are URL passthrough; no
+download endpoint stamps books (real watermarking exists only in the assigned-documents module,
+`Documents.cs:616-624`); (2) **no UI consumes the endpoint yet** — neither portal renders books, and
+there is no admin Books page (API + seeds only).
+
+## 2.4 Certuvo per-certification mapping — ❌ schema/UI only (dead code)
+
+`certifications.certuvo_product` and per-cert `certuvo_enabled` exist (`Migrate.cs:533`), are
+admin-editable (`Certifications.tsx:150`), and are backfilled to the cert code — but **nothing
+reads them**: provisioning is global and membership-driven (`Provisioning.cs:109-118, 321-337`,
+gated on the global `certuvo_enabled` setting), and the provision request carries no
+certification/product field. Spec §16 is not met in behaviour.
+
+## 2.5 Emails & notifications — ⚠️ partial, one violation found & fixed
+
+The file-based template engine substitutes `{{VARS}}` (`Mailer.cs:40-57`) but has **no
+`{{certification_name}}` variable**, no DB-backed template editor (the admin "Emails" page is a
+log viewer), and three shipped templates (`exam-confirmation`, `payment-confirmation`,
+`credentials`) are **dormant** — no code path sends them. Code-composed notifications that name a
+certification are dynamic (e.g. `Applications.cs:44` uses the cert row's acronym). **Found during
+this audit and fixed on this branch:** the *live* welcome email and two other templates still said
+"PCP-AI" (8 occurrences across `backend/emails/*.html`) — the naming sweep had missed this
+directory; all templates are now certification-neutral.
+
+## 2.6 Per-certification admin scoping (`cert_scope`) — ✅ implemented and enforced
+
+Owner-managed via Team & Access (`Team.tsx:40-57`, persisted `Program.cs:560-607`, owners forced
+unrestricted). Enforced server-side via `CanCert`/`CertFilterSql` (`Auth.cs:13-36`) on: generic
+cert-scoped CRUD (question bank, cert documents), certification edits, proctoring/session lists,
+credential release, the applications list + decisions, and both per-certification report blocks
+(`AdminExtra.cs:156,160`).
+
+## 2.7 Recertification & reports — ⚠️ one defect found & fixed; reports per-cert ✅
+
+Issuance honours per-certification `expiry_years` (`Lifecycle.cs:203,237`). **Defect found by this
+audit:** the recert webhook branch extended credentials by a **hardcoded 3 years** regardless of the
+certification's cycle (`Payments.cs:204`) — a 2-year credential would silently gain 3. **Fixed on
+this branch**: recert now extends by the paid certification's own `expiry_years` (falls back to 3),
+and still never resurrects a revoked credential (regression R10 passing). Admin reports break down
+revenue and issued certificates **by certification**, cert-scope filtered (`AdminExtra.cs:153-160`,
+rendered in Reports.tsx); AdminAnalytics has no per-cert breakdown (site analytics only).
+
+## 2.8 Updated verdict
+
+With the Suite merged and the defects above fixed, the platform now covers substantially more of
+the specification than Part 1's ~55-60%: the three certifications are live together end-to-end
+(section-18 regression: one candidate, three credentials, zero leakage), applications/routes,
+sponsorship + commissions, per-cert scoping, documents/watermarking (assigned-documents module) and
+reports all verify. **Estimated completion vs the Suite specification: ~80%.** The remaining
+material gaps, in priority order:
+
+1. **Books delivery** — a download endpoint for `cert_documents` that applies the existing
+   PdfWatermark engine (the flag is stored but unused) + portal/admin UI.
+2. **Certuvo per-certification products** — read `certifications.certuvo_product`/`certuvo_enabled`
+   in the provisioning path; today the stored mapping has no effect.
+3. **Commission ledger statuses** — per-transaction commission records (Due → Partially Paid →
+   Paid), payment-proof upload, per-certification filtering, if the aggregate-balance model is not
+   acceptable to Finance.
+4. **Email templates** — `{{certification_name}}`-family variables + wiring the dormant
+   exam/payment/credential templates (or a DB-backed template editor).
+5. **Certificate-template editor & digital badges** — unchanged from Part 1's gap list (route
+   wording is admin-configurable per route; a visual template editor and standalone badge artifacts
+   are not built).
+
+*Numbers for Part 2: integration 395/395 on SQLite AND MySQL after the fixes (includes the new
+section 18 Suite regression); live probes and screenshots as described; CI green through commit
+`92e6170`, later commits pending at the time of writing.*
