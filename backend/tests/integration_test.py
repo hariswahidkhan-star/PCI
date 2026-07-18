@@ -1030,6 +1030,167 @@ def test_certificate_pdf(admin):
     con = dbconn(); dln = con.execute("SELECT COUNT(*) FROM certificate_downloads WHERE credential_id=? AND result='ok'", (cid,)).fetchone()[0]; con.close()
     chk("16r every certificate download is audited", dln >= 2, dln)
 
+def _mk_student(email):
+    """Create an active student + a session token directly in the DB (fast; avoids the /api/register
+    rate limiter). Returns (session_token, user_id)."""
+    con = dbconn()
+    con.execute("INSERT INTO users(email,first_name,last_name,role,status,password_hash) VALUES(?,?,?, 'student','active','x')", (email, "Doc", email[:4]))
+    con.commit()
+    uid = con.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()[0]
+    con.execute("INSERT INTO student_profiles(user_id,country) VALUES(?,?)", (uid, "United Kingdom"))
+    tok = "docsess_" + sha256hex(email)[:24]
+    con.execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'session', datetime('now','+1 day'))", (uid, sha256hex(tok)))
+    con.commit(); con.close()
+    return tok, uid
+
+def _pdf_uri(marker):
+    body = ("%PDF-1.4\n% " + marker + "\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n").encode("latin1")
+    return "data:application/pdf;base64," + base64.b64encode(body).decode(), hashlib.sha256(body).hexdigest()
+
+def test_documents_module(admin):
+    """Section 17 — Student Documents & Resources: secure admin upload, group/individual assignment,
+    publish → per-student grants + notification, isolation, secure authenticated download, versioning
+    (never overwrites), acknowledgement gating, restriction window, revocation, signed links, audit,
+    and file-validation rejection."""
+    print("\n=== 17. Student Documents & Resources module ===")
+
+    # Default categories were seeded; admin can add one.
+    c, cats = jget("GET", "/api/admin/document-categories", token=admin)
+    chk("17a default document categories seeded", c == 200 and len(cats.get("rows", [])) >= 5, len(cats.get("rows", [])))
+    c, nc = jget("POST", "/api/admin/document-categories", token=admin, body={"name": "Onboarding"})
+    chk("17b admin creates a category", c == 200 and nc.get("id"), nc)
+
+    a_tok, a_uid = _mk_student("doc_a@ex.co")
+    b_tok, b_uid = _mk_student("doc_b@ex.co")
+
+    # ---- upload assigned to ONE student (draft) ----
+    uri, sha = _pdf_uri("individual doc for A")
+    c, up = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "Welcome Letter A", "description": "Personal", "category": "Personal Documents",
+        "doc_type": "letter", "file": uri, "filename": "welcome.pdf",
+        "assignment_type": "student", "user_id": a_uid})
+    chk("17c admin uploads a document (draft)", c == 200 and up.get("id") and up.get("status") == "draft", up)
+    doc_id = up.get("id")
+
+    c, prev = jget("POST", "/api/admin/documents/preview-recipients", token=admin, body={"assignment_type": "student", "user_id": a_uid})
+    chk("17d recipient preview resolves exactly the one student", c == 200 and prev.get("count") == 1, prev)
+
+    # Not visible to the student until published.
+    c, myd = jget("GET", "/api/me/documents", token=a_tok)
+    chk("17e draft document is NOT visible to the student yet", c == 200 and not any(r["id"] == doc_id for r in myd.get("rows", [])), myd)
+
+    c, pub = jget("POST", f"/api/admin/documents/{doc_id}/publish", token=admin, body={})
+    chk("17f publish grants access + notifies", c == 200 and pub.get("recipients_granted") == 1, pub)
+
+    # in-app notification created for the assignee.
+    con = dbconn(); nn = con.execute("SELECT COUNT(*) FROM notifications WHERE user_id=? AND category='Documents'", (a_uid,)).fetchone()[0]; con.close()
+    chk("17g assignee received an in-app notification", nn >= 1, nn)
+
+    # Student A sees it and it is downloadable.
+    c, myd = jget("GET", "/api/me/documents", token=a_tok)
+    mine = next((r for r in myd.get("rows", []) if r["id"] == doc_id), None)
+    chk("17h assigned student sees the published document (downloadable)", mine is not None and mine.get("downloadable") is True, mine)
+
+    # Student B does NOT see it (isolation).
+    c, otherd = jget("GET", "/api/me/documents", token=b_tok)
+    chk("17i non-assigned student cannot see the document (isolation)", not any(r["id"] == doc_id for r in otherd.get("rows", [])))
+
+    # Secure download — bytes match exactly.
+    st, body, ctype = _raw_get(f"/api/me/documents/{doc_id}/download", token=a_tok)
+    chk("17j assigned student downloads the real file (200, %PDF, exact bytes)",
+        st == 200 and body[:5] == b"%PDF-" and hashlib.sha256(body).hexdigest() == sha, (st, body[:5]))
+
+    # Student B is refused the file by id (not assigned).
+    chk("17k non-assigned student is refused the download (403)", _raw_get(f"/api/me/documents/{doc_id}/download", token=b_tok)[0] == 403)
+    chk("17l download requires authentication (401)", _raw_get(f"/api/me/documents/{doc_id}/download")[0] == 401)
+
+    # ---- signed, time-limited link (no Authorization header) ----
+    c, lk = jget("POST", f"/api/me/documents/{doc_id}/link", token=a_tok, body={})
+    chk("17m student mints a signed download link", c == 200 and lk.get("url", "").startswith("/api/documents/download?t="))
+    st, lbody, _ = _raw_get(lk.get("url", ""))
+    chk("17n signed link downloads without a token", st == 200 and lbody[:5] == b"%PDF-", st)
+    chk("17o tampered link is rejected (401)", _raw_get("/api/documents/download?t=1.2.3.bad")[0] == 401)
+
+    # ---- acknowledgement gating ----
+    uri2, _ = _pdf_uri("policy needing ack")
+    c, up2 = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "Code of Conduct", "file": uri2, "assignment_type": "student", "user_id": a_uid,
+        "ack_required": True, "publish": True})
+    ack_id = up2.get("id")
+    chk("17p ack-required document publishes", up2.get("status") in ("published", "active"), up2)
+    chk("17q download blocked until acknowledged (403)", _raw_get(f"/api/me/documents/{ack_id}/download", token=a_tok)[0] == 403)
+    c, ackr = jget("POST", f"/api/me/documents/{ack_id}/acknowledge", token=a_tok, body={})
+    chk("17r student acknowledges the document", c == 200 and ackr.get("acknowledged_at"), ackr)
+    chk("17s after acknowledgement the download succeeds (200)", _raw_get(f"/api/me/documents/{ack_id}/download", token=a_tok)[0] == 200)
+    con = dbconn(); ackn = con.execute("SELECT COUNT(*) FROM document_acknowledgements WHERE document_id=? AND user_id=?", (ack_id, a_uid)).fetchone()[0]; con.close()
+    chk("17t acknowledgement is recorded", ackn == 1, ackn)
+
+    # ---- versioning: never overwrites; old becomes 'replaced', student gets the new bytes ----
+    nuri, nsha = _pdf_uri("welcome doc A v2")
+    c, ver = jget("POST", f"/api/admin/documents/{doc_id}/version", token=admin, body={"file": nuri, "filename": "welcome-v2.pdf"})
+    chk("17u admin uploads a new version", c == 200 and ver.get("version") == 2 and ver.get("id") != doc_id, ver)
+    new_id = ver.get("id")
+    con = dbconn(); oldstat = con.execute("SELECT status FROM documents WHERE id=?", (doc_id,)).fetchone()[0]; con.close()
+    chk("17v the prior version is retained + marked replaced (never overwritten)", oldstat == "replaced", oldstat)
+    st, vbody, _ = _raw_get(f"/api/me/documents/{new_id}/download", token=a_tok)
+    chk("17w student now downloads the NEW version bytes", st == 200 and hashlib.sha256(vbody).hexdigest() == nsha, st)
+    c, det = jget("GET", f"/api/admin/documents/{new_id}", token=admin)
+    chk("17x version history lists both versions", len(det.get("versions", [])) == 2, len(det.get("versions", [])))
+
+    # ---- restriction window: listed but not downloadable until a future date ----
+    ruri, _ = _pdf_uri("restricted future doc")
+    future = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time() + 30 * 86400))
+    c, rdoc = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "Future Release", "file": ruri, "assignment_type": "student", "user_id": a_uid,
+        "restricted_until": future, "publish": True})
+    rid = rdoc.get("id")
+    c, myd = jget("GET", "/api/me/documents", token=a_tok)
+    rrow = next((r for r in myd.get("rows", []) if r["id"] == rid), None)
+    chk("17y restricted document is visible but locked", rrow is not None and rrow.get("restricted") is True and rrow.get("downloadable") is False, rrow)
+    chk("17z restricted document download is blocked (403)", _raw_get(f"/api/me/documents/{rid}/download", token=a_tok)[0] == 403)
+
+    # ---- group assignment (all) reaches both students ----
+    guri, _ = _pdf_uri("all-students notice")
+    c, gdoc = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "All Students Notice", "file": guri, "assignment_type": "all", "publish": True})
+    gid = gdoc.get("id")
+    chk("17aa 'all' assignment grants many recipients", gdoc.get("recipients_granted", 0) >= 2, gdoc)
+    c, bd = jget("GET", "/api/me/documents", token=b_tok)
+    chk("17bb previously-excluded student now sees the all-students document", any(r["id"] == gid for r in bd.get("rows", [])))
+
+    # ---- revocation preserves the audit but removes access ----
+    c, rev = jget("POST", f"/api/admin/documents/{gid}/revoke", token=admin, body={"user_id": b_uid, "reason": "test"})
+    chk("17cc admin revokes one student's access", c == 200 and rev.get("revoked") == 1, rev)
+    c, bd = jget("GET", "/api/me/documents", token=b_tok)
+    chk("17dd revoked student loses visibility", not any(r["id"] == gid for r in bd.get("rows", [])))
+    chk("17ee revoked student is refused download (403)", _raw_get(f"/api/me/documents/{gid}/download", token=b_tok)[0] == 403)
+    con = dbconn(); rvr = con.execute("SELECT status,revoke_reason FROM document_assignments WHERE document_id=? AND user_id=?", (gid, b_uid)).fetchone(); con.close()
+    chk("17ff revocation is retained in the audit (status revoked + reason)", rvr and rvr[0] == "revoked" and rvr[1] == "test", rvr)
+
+    # ---- admin student-profile documents tab + student-specific upload ----
+    c, sp = jget("GET", f"/api/admin/students/{a_uid}/documents", token=admin)
+    chk("17gg admin reads a student's documents from the profile", c == 200 and len(sp.get("rows", [])) >= 2, len(sp.get("rows", [])))
+    puri, psha = _pdf_uri("student-specific from profile")
+    c, spd = jget("POST", f"/api/admin/students/{a_uid}/documents", token=admin, body={"title": "Your ID copy", "file": puri})
+    chk("17hh student-specific document auto-publishes to that student", c == 200 and spd.get("status") in ("published", "active"), spd)
+    c, myd = jget("GET", "/api/me/documents", token=a_tok)
+    chk("17ii the student-specific document appears in the student's panel", any(r["title"] == "Your ID copy" for r in myd.get("rows", [])))
+
+    # ---- audit report ----
+    c, aud = jget("GET", f"/api/admin/documents/{new_id}/audit", token=admin)
+    chk("17jj audit report exposes download/ack/grant totals", c == 200 and int(aud.get("summary", {}).get("total_downloads", 0)) >= 1, aud.get("summary"))
+
+    # ---- file-validation rejection ----
+    bad_uri = "data:application/pdf;base64," + base64.b64encode(b"NOT-A-REAL-PDF-CONTENT").decode()
+    c, badr = jget("POST", "/api/admin/documents", token=admin, body={"title": "Fake", "file": bad_uri, "assignment_type": "all"})
+    chk("17kk a file whose bytes don't match its type is rejected", c == 400 and badr.get("error") == "content_mime_mismatch", badr)
+    exe_uri = "data:application/x-msdownload;base64," + base64.b64encode(b"MZ\x90\x00malware").decode()
+    c, exr = jget("POST", "/api/admin/documents", token=admin, body={"title": "Evil", "file": exe_uri, "assignment_type": "all"})
+    chk("17ll a disallowed file type is rejected", c == 400 and exr.get("error") == "file_type_not_allowed", exr)
+
+    # ---- RBAC: a student token cannot reach the admin document surface ----
+    chk("17mm student token is refused the admin document API (401/403)", jget("GET", "/api/admin/documents", token=a_tok)[0] in (401, 403))
+
 def H0(v):
     try: return int(v or 0)
     except Exception: return 0
@@ -1794,6 +1955,7 @@ def run(proc):
     test_support_and_institutions(admin)
     test_certuvo_integration(admin)
     test_certificate_pdf(admin)
+    test_documents_module(admin)
 
     print("\n(assertions complete)")
 

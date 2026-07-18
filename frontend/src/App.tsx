@@ -12,6 +12,7 @@ import Cpd from './pages/Cpd'
 import Certuvo from './pages/Certuvo'
 import Billing from './pages/Billing'
 import Resources from './pages/Resources'
+import Documents from './pages/Documents'
 import Messages from './pages/Messages'
 import Support from './pages/Support'
 import Profile from './pages/Profile'
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="certuvo" element={<Certuvo />} />
           <Route path="billing" element={<Billing />} />
           <Route path="resources" element={<Resources />} />
+          <Route path="documents" element={<Documents />} />
           <Route path="messages" element={<Messages />} />
           <Route path="support" element={<Support />} />
           <Route path="profile" element={<Profile />} />

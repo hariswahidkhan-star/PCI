@@ -391,6 +391,64 @@ public static class Migrate
         db.Exec(@"UPDATE pages SET title='Donate — Support the Project Controls Institute (pursuing 501(c)(3))'
                   WHERE slug='donate.html' AND title LIKE '%(501(c)(3))' AND title NOT LIKE '%pursuing%'");
 
+        // ============ Student Documents & Resources module ============
+        // Admin-uploaded documents made available to selected students/groups, with versioning,
+        // acknowledgement, secure authenticated download, and a full download/view audit. Distinct
+        // from the existing URL-based `resources` list (public links): these are private, per-student
+        // assigned FILES in content-addressed storage. All columns are additive/idempotent; indexed
+        // columns use VARCHAR (MySQL cannot index bare TEXT).
+        //   document_categories       — configurable categories (admin-managed)
+        //   documents                 — the master record (metadata + stored file + lifecycle + version chain)
+        //   document_assignments      — the concrete per-student grants (who can see each document)
+        //   document_downloads        — immutable view/download audit
+        //   document_acknowledgements — recorded acknowledgements (one per student per document)
+        db.Exec(@"CREATE TABLE IF NOT EXISTS document_categories(id INTEGER PRIMARY KEY AUTOINCREMENT,name VARCHAR(120) NOT NULL,slug VARCHAR(120),description TEXT,active INTEGER DEFAULT 1,sort_order INTEGER DEFAULT 0,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS documents(id INTEGER PRIMARY KEY AUTOINCREMENT,title VARCHAR(255) NOT NULL,description TEXT,category VARCHAR(120),doc_type VARCHAR(60) DEFAULT 'general',
+            status VARCHAR(20) NOT NULL DEFAULT 'draft',
+            storage_ref TEXT,filename VARCHAR(255),mime VARCHAR(120),size_bytes INTEGER,sha256 VARCHAR(64),
+            version INTEGER DEFAULT 1,root_id INTEGER,supersedes_id INTEGER,superseded_by INTEGER,
+            assignment_type VARCHAR(40) DEFAULT 'all',assignment_config TEXT,
+            view_only INTEGER DEFAULT 0,restricted_until TEXT,ack_required INTEGER DEFAULT 0,watermark INTEGER DEFAULT 0,include_test INTEGER DEFAULT 0,
+            publish_at TEXT,expires_at TEXT,published_at TEXT,archived_at TEXT,visible_to_cs INTEGER DEFAULT 1,
+            created_by INTEGER,updated_by INTEGER,reject_reason TEXT,is_test INTEGER DEFAULT 0,
+            created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_documents_status ON documents(status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_documents_root ON documents(root_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS document_assignments(id INTEGER PRIMARY KEY AUTOINCREMENT,document_id INTEGER NOT NULL,user_id INTEGER NOT NULL,
+            assignment_type VARCHAR(40),source VARCHAR(20) DEFAULT 'auto',status VARCHAR(20) DEFAULT 'active',
+            assigned_by INTEGER,assigned_at TEXT DEFAULT (datetime('now')),revoked_by INTEGER,revoked_at TEXT,revoke_reason TEXT)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_docassign ON document_assignments(document_id, user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_docassign_user ON document_assignments(user_id, status)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS document_downloads(id INTEGER PRIMARY KEY AUTOINCREMENT,document_id INTEGER,user_id INTEGER,actor TEXT,role VARCHAR(20),
+            ip VARCHAR(64),action VARCHAR(20),result VARCHAR(30),version INTEGER,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_docdl_doc ON document_downloads(document_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS document_acknowledgements(id INTEGER PRIMARY KEY AUTOINCREMENT,document_id INTEGER NOT NULL,user_id INTEGER NOT NULL,
+            ip VARCHAR(64),acknowledged_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_docack ON document_acknowledgements(document_id, user_id)");
+        // First-run category set (only when empty — never overwrites admin edits).
+        try
+        {
+            if (db.Scalar<long>("SELECT COUNT(*) FROM document_categories") == 0)
+            {
+                var seed = new (string Name, string Slug, string Desc)[]
+                {
+                    ("Certificates & Credentials", "certificates", "Official certificate copies and credential letters."),
+                    ("Study & Exam Materials", "study", "Handbooks, syllabi and preparation resources."),
+                    ("Policies & Agreements", "policies", "Policies, terms and agreements requiring acknowledgement."),
+                    ("Invoices & Receipts", "billing", "Financial documents issued to the student."),
+                    ("Personal Documents", "personal", "Student-specific documents shared privately."),
+                    ("General", "general", "General resources and announcements."),
+                };
+                var so = 0;
+                foreach (var (nm, sl, de) in seed)
+                    db.Execute("INSERT INTO document_categories(name,slug,description,active,sort_order) VALUES(?,?,?,1,?)", nm, sl, de, so += 10);
+            }
+        }
+        catch { /* table may not exist on a very first pass; ignored */ }
+        // Documents module notification settings (owner-configurable in Admin → Notifications).
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_documents_enabled','1')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('doc_email_notify_cap','500')");
+
         // Performance & integrity indexes on hot lookup/join columns. Every /api/me and admin-student
         // load fans out to these tables by user_id; without indexes they full-scan under the global
         // write lock. Idempotent; safe on fresh and existing databases (SQLite + MySQL via db.Exec).
