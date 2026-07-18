@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useQuery } from '../api/hooks'
-import { api } from '../api/client'
+import { api, ApiError } from '../api/client'
 import { Card, Badge, Spinner, ErrorNote, Empty, Stat } from '../components/ui'
+import { fmtDate } from '../format'
 
 // Certuvo — the study & practice engine (Phase 8). Reuses the practice pool via /api/me/certuvo/*.
 // Formative only: immediate feedback + explanations; the real credential is still earned on the exam.
@@ -24,6 +25,76 @@ interface SubmitResult {
 }
 
 const tone = (pct: number, pass: number): 'ok' | 'warn' | 'err' => (pct >= pass + 10 ? 'ok' : pct >= pass ? 'warn' : 'err')
+
+// The member's external Certuvo practice-platform account (credentials shared automatically after membership).
+interface CertuvoAccess {
+  enabled: boolean
+  status?: string
+  /** friendly student-facing copy set whenever the account is not active — never a raw error */
+  message?: string | null
+  username?: string | null
+  password?: string | null
+  login_url?: string | null
+  provisioned_at?: string | null
+  activated_at?: string | null
+  credentials_sent_at?: string | null
+  expires?: string | null
+}
+function CertuvoAccessPanel() {
+  const { data } = useQuery<CertuvoAccess>('/api/me/certuvo/access')
+  const [resending, setResending] = useState(false)
+  const [resendNote, setResendNote] = useState<{ ok: boolean; text: string } | null>(null)
+  if (!data || !data.enabled) return null
+  const status = data.status ?? ''
+  const active = status === 'active'
+  const badge = active
+    ? <Badge tone="ok">Ready</Badge>
+    : status === 'suspended' || status === 'revoked'
+      ? <Badge tone="warn">Unavailable</Badge>
+      : <Badge tone="warn">{status === 'not_provisioned' ? 'After membership' : 'Being set up'}</Badge>
+
+  async function resend() {
+    setResending(true)
+    setResendNote(null)
+    try {
+      await api.post('/api/me/certuvo/resend', {})
+      setResendNote({ ok: true, text: 'Access instructions sent to your email.' })
+    } catch (e) {
+      const body = e instanceof ApiError && e.body && typeof e.body === 'object' ? (e.body as Record<string, unknown>) : null
+      setResendNote({
+        ok: false,
+        text: e instanceof ApiError && e.status === 429
+          ? 'Please wait a while before resending.'
+          : (typeof body?.message === 'string' && body.message) || 'Could not resend the instructions. Please try again later.',
+      })
+    } finally {
+      setResending(false)
+    }
+  }
+
+  return (
+    <Card title="Your Certuvo practice access" action={badge}>
+      {active ? (
+        <div style={{ display: 'grid', gap: '.4rem' }}>
+          <p className="muted small" style={{ margin: 0 }}>Practice on the Certuvo platform with the account we created for you. Your progress there is separate from this portal.</p>
+          <div className="small">Username: <strong>{data.username}</strong></div>
+          {data.password && <div className="small">Password: <strong>{data.password}</strong></div>}
+          {data.provisioned_at && <div className="small muted">Access granted {fmtDate(data.provisioned_at)}</div>}
+          {data.expires && <div className="small muted">Membership valid until {fmtDate(data.expires)}</div>}
+          <div className="row" style={{ marginTop: '.4rem', flexWrap: 'wrap' }}>
+            {data.login_url && <a className="btn sm" href={data.login_url} target="_blank" rel="noreferrer">Open Certuvo ↗</a>}
+            <button className="btn sm secondary" disabled={resending} onClick={resend}>{resending ? 'Sending…' : 'Resend access instructions'}</button>
+          </div>
+          {resendNote && <div className={'small' + (resendNote.ok ? ' muted' : '')} style={resendNote.ok ? undefined : { color: 'var(--err, #c2410c)' }} role="status">{resendNote.text}</div>}
+        </div>
+      ) : data.message ? (
+        <p className="muted small" style={{ margin: 0 }}>{data.message}</p>
+      ) : (
+        <p className="muted small" style={{ margin: 0 }}>Your Certuvo practice account is set up automatically once your membership is active. It will appear here shortly after payment.</p>
+      )}
+    </Card>
+  )
+}
 
 export default function Certuvo() {
   const { data, loading, error, refetch } = useQuery<Overview>('/api/me/certuvo/overview')
@@ -153,6 +224,8 @@ export default function Certuvo() {
         <p className="muted">PCI's official study &amp; practice for the PCP-AI — scenario-based practice that mirrors the exam, with instant feedback and explanations. Practice is formative; the credential is still earned on the real examination.</p>
       </div>
       {err && <ErrorNote>{err}</ErrorNote>}
+
+      <CertuvoAccessPanel />
 
       <div style={{ display: 'grid', gap: '.8rem', gridTemplateColumns: 'repeat(auto-fit,minmax(160px,1fr))' }}>
         <Stat n={<Badge tone={r && r.attempts ? tone(r.overall_pct, data!.pass_mark) : 'neutral'}>{r?.label ?? 'Not started'}</Badge>} k="Readiness" />

@@ -17,7 +17,18 @@ public static class SeedContent
             catch (Exception e) { Console.Error.WriteLine($"[seed] {table} skipped: {e.Message}"); }
         }
         IfEmpty("faqs", () => { var n = 0; foreach (var r in Faqs) db.Execute("INSERT INTO faqs(question,answer,category,sort_order,published) VALUES(?,?,?,?,1)", r[0], r[1], r[2], ++n); });
-        IfEmpty("bok_domains", () => { var n = 0; foreach (var r in Bok) db.Execute("INSERT INTO bok_domains(code,name,weight,description,bullets,sort_order) VALUES(?,?,?,?,?,?)", "D" + (n + 1), r[1], long.Parse((string)r[0]!), r[2], r[3], ++n); });
+        void SeedBok() { var n = 0; foreach (var r in Bok) db.Execute("INSERT INTO bok_domains(code,name,weight,description,bullets,sort_order) VALUES(?,?,?,?,?,?)", r[0], r[2], r[1] is string w ? (object)long.Parse(w) : null, r[3], r[4], ++n); }
+        IfEmpty("bok_domains", SeedBok);
+        // Upgrade path: databases seeded before the thirteen-domain PCP-AI BoK still carry the original
+        // eight-domain set. If (and only if) the table is byte-for-byte that untouched old seed, replace it
+        // with the current one; any operator-edited table is left alone.
+        try
+        {
+            var oldSeed = db.Scalar<long>("SELECT COUNT(*) FROM bok_domains") == 8
+                       && db.Scalar<long>("SELECT COUNT(*) FROM bok_domains WHERE name IN ('Project Controls Foundations & Governance','Planning & Scheduling','Cost Estimating & Control','Earned Value & Performance Management','Risk & Contingency Management','Change & Configuration Management','Data, Reporting & Analytics','Governed AI in Project Controls')") == 8;
+            if (oldSeed) { db.Transaction(() => { db.Execute("DELETE FROM bok_domains"); SeedBok(); }); Console.WriteLine("[seed] bok_domains: upgraded to the thirteen-domain PCP-AI set"); }
+        }
+        catch (Exception e) { Console.Error.WriteLine($"[seed] bok_domains upgrade skipped: {e.Message}"); }
         IfEmpty("governance_roles", () => { var n = 0; foreach (var r in Roles) db.Execute("INSERT INTO governance_roles(role,holder,status,remit,sort_order) VALUES(?,NULL,'open',?,?)", r[0], r[1], ++n); });
         IfEmpty("resources", () => { var n = 0; foreach (var r in Docs) db.Execute("INSERT INTO resources(title,category,doc_type,url,description,published,sort_order) VALUES(?,?,'Page',?,?,1,?)", r[0], r[1], r[2], r[3], ++n); });
         IfEmpty("nav_items", () => { var n = 0; foreach (var r in Nav) db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) VALUES(?,?,?,?,1)", r[0], r[1], r[2], ++n); });
@@ -55,32 +66,53 @@ public static class SeedContent
         new object?[]{ @"How can I verify someone's credential?", @"<p>Use the credential lookup on the <a href=""verify.html"">Verify page</a> to confirm a professional's PCP-AI status.</p>", @"Independence & verification" },
     };
 
+    // The PCP-AI BoK: three weighted groups (40/40/20) over thirteen domains — mirrors docs/bok.
+    // Rows are {code, weight, name, description, bullets}; a row with no code is a group header
+    // (its weight is the group percentage) and a row with a code (D1..D13) is a domain card.
     static readonly object?[][] Bok =
     {
-        new object?[]{ @"10", @"Project Controls Foundations & Governance", @"The role, frameworks and governance of project controls across the asset and project lifecycle.", @"Apply project-controls frameworks and terminology
-Establish a controls baseline and governance cadence
-Align controls with stakeholder and assurance needs" },
-        new object?[]{ @"16", @"Planning & Scheduling", @"Developing, maintaining and analysing schedules that reflect reality.", @"Build logic-driven, resource-loaded schedules
-Apply critical-path and schedule-risk analysis
-Maintain schedule integrity and progress measurement" },
-        new object?[]{ @"16", @"Cost Estimating & Control", @"Estimating, budgeting and controlling cost with integrity.", @"Develop and classify estimates
-Establish and manage the cost baseline
-Analyse variances and forecast cost at completion" },
-        new object?[]{ @"14", @"Earned Value & Performance Management", @"Integrating cost and schedule to measure true performance.", @"Compute and interpret EVM indices
-Forecast EAC/ETC from performance trends
-Communicate performance to decision-makers" },
-        new object?[]{ @"12", @"Risk & Contingency Management", @"Identifying, quantifying and managing uncertainty.", @"Run qualitative and quantitative risk analysis
-Derive and manage cost/schedule contingency
-Integrate risk into forecasts and decisions" },
-        new object?[]{ @"8", @"Change & Configuration Management", @"Controlling change to the baseline with auditability.", @"Operate a disciplined change-control process
-Maintain baseline configuration and traceability
-Assess change impact across cost and schedule" },
-        new object?[]{ @"12", @"Data, Reporting & Analytics", @"Turning controls data into trustworthy insight.", @"Ensure data quality and a single source of truth
-Design clear, decision-useful reporting
-Apply analytics to surface trends and exceptions" },
-        new object?[]{ @"12", @"Governed AI in Project Controls", @"Using AI to augment — never replace — professional judgement.", @"Apply AI to forecasting, scheduling and analytics responsibly
-Govern models, data integrity and human-in-the-loop assurance
-Uphold ethics, accountability and explainability" },
+        new object?[]{ null, @"40", @"Project accounting & finance", @"Domains 1–4 · the financial grammar of project controls.", null },
+        new object?[]{ @"D1", null, @"Foundations of Accounting for Project Controls", @"The double-entry model, the financial statements, accruals and project cost coding.", @"Apply the accounting equation and double-entry mechanics
+Build and read the four financial statements
+Run accruals, provisions and project cost coding" },
+        new object?[]{ @"D2", null, @"Financial Reporting & the Standards", @"Revenue from contracts (IFRS 15 at its heart) and the standards that shape project numbers.", @"Apply the five-step revenue model to project contracts
+Account for contract assets, liabilities and onerous contracts
+Bridge management reporting and statutory reporting" },
+        new object?[]{ @"D3", null, @"Budgeting & Forecasting", @"Estimates, baselines, forecasts and project cash flow.", @"Build classed estimates and time-phased budgets
+Forecast EAC top-down and bottom-up, with a governed change log
+Model project cash flow, funding and indirect taxes" },
+        new object?[]{ @"D4", null, @"Performance, Variance & Reporting", @"Turning numbers into decisions — variances, KPIs and reporting.", @"Decompose variances with flexed budgets and bridges
+Design KPI systems with data-derived thresholds
+Report by exception to the decision each audience must take" },
+        new object?[]{ null, @"40", @"Project management principles", @"Domains 5–12 · the delivery disciplines controls serves.", null },
+        new object?[]{ @"D5", null, @"Cost Management & Cost Control", @"The cost engine: commitments, accruals, actuals and control accounts.", @"Run the commitment → accrual → actual cycle
+Structure control accounts with work authorisation
+Track quantities, trends and the true cost exposure" },
+        new object?[]{ @"D6", null, @"Earned Value Management & Forecasting", @"The flagship: EV, indices and defensible forecasts.", @"Measure EV with sound earning rules and the productivity factor
+Select and defend the EAC method, not just compute it
+Apply earned schedule and credibility tests to recovery claims" },
+        new object?[]{ @"D7", null, @"Contracts & Commercial Management", @"Contract types, variations, claims, BoQ and the billing cycle.", @"Work the risk-allocation spectrum from lump sum to MDMH rates
+Manage variations, claims, LDs, retention and securities
+Run BoQ measurement, certificates and the revenue loop" },
+        new object?[]{ @"D8", null, @"Project Management Lifecycle", @"Initiating to closing — gates, benefits and governance.", @"Operate stage gates on evidence, pricing decision latency
+Manage stakeholders and communication as a controls discipline
+Close projects with completions, final accounts and lessons" },
+        new object?[]{ @"D9", null, @"Agile & Adaptive Delivery", @"Scrum, Kanban, flow metrics and AgileEVM for controls.", @"Measure velocity, flow and cycle time honestly
+Apply AgileEVM and reconcile story points to % complete
+Govern hybrid delivery through gates without breaking flow" },
+        new object?[]{ @"D10", null, @"Project Scheduling", @"CPM in full — networks, float, compression and delay.", @"Run forward and backward passes, float and the critical path
+Compress with crash economics, drag and resource limits
+Progress schedules and analyse delay defensibly" },
+        new object?[]{ @"D11", null, @"Business Process Cycles", @"O2C, P2P, time-and-expense and the control environment.", @"Operate three-way match, SoD and the audit trail
+Read process mining and continuous monitoring output
+Manage working capital: DSO, DPO, DIO and the cash cycle" },
+        new object?[]{ @"D12", null, @"Risk Management", @"Uncertainty quantified — registers, contingency and appetite.", @"Quantify risk with EMV, decision trees and Monte Carlo
+Set and govern contingency against P-levels and appetite
+Manage correlation, draw-down and opportunity" },
+        new object?[]{ null, @"20", @"AI knowledge & practical approach", @"Domain 13 · governed AI across the controls lifecycle.", null },
+        new object?[]{ @"D13", null, @"AI for Project Controls & PM", @"Concepts, data, prompting, tools, applied workflows, governance and capability — the governed use of AI across the whole controls lifecycle.", @"Apply AI to estimating, forecasting, scheduling, commercial and reporting workflows
+Evaluate outputs with golden sets, precision/recall and priced review steps
+Govern models, data and accountability — AI proposes, the professional disposes" },
     };
 
     static readonly object?[][] Roles =

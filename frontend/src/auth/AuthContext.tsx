@@ -7,6 +7,8 @@ interface SessionUser {
   email: string
   firstName: string
   lastName: string
+  /** staff support view (admin impersonation) — set from the /api/me probe, never from a normal login */
+  impersonated?: boolean
 }
 
 interface AuthState {
@@ -22,7 +24,7 @@ const AuthContext = createContext<AuthState | null>(null)
 
 // A lightweight endpoint to confirm an existing token is still valid on reload.
 interface MeProbe {
-  user: { id: number; email: string; first_name: string; last_name: string }
+  user: { id: number; email: string; first_name: string; last_name: string; impersonated?: boolean }
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -38,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // A 401 on ANY request (query or mutation) clears the session and returns to login.
   useEffect(() => {
-    api.onUnauthorized(() => setUser(null))
+    api.onUnauthorized(() => { setToken(null); setUser(null) })
     return () => api.onUnauthorized(null)
   }, [])
 
@@ -47,6 +49,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // doesn't bounce a still-valid session to the login screen.
   useEffect(() => {
     let cancelled = false
+    // Support-view / test-user hand-off: the admin console links to /app/#t=<token> with a ready
+    // session token (impersonation or test account). Adopt it — replacing any existing session —
+    // and scrub it from the URL so the token never lingers in the address bar or history.
+    try {
+      const h = window.location.hash
+      if (h.startsWith('#t=')) {
+        const t = decodeURIComponent(h.slice(3))
+        if (t) setToken(t)
+        history.replaceState(null, '', window.location.pathname + window.location.search)
+      }
+    } catch { /* malformed hash — ignore */ }
     async function boot() {
       if (!getToken()) {
         setReady(true)
@@ -55,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       for (let attempt = 0; attempt < 3 && !cancelled; attempt++) {
         try {
           const me = await api.get<MeProbe>('/api/me')
-          if (!cancelled) setUser({ id: me.user.id, email: me.user.email, firstName: me.user.first_name, lastName: me.user.last_name })
+          if (!cancelled) setUser({ id: me.user.id, email: me.user.email, firstName: me.user.first_name, lastName: me.user.last_name, impersonated: me.user.impersonated })
           break
         } catch (e) {
           if (e instanceof UnauthorizedError) { setToken(null); break }

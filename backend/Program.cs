@@ -51,6 +51,29 @@ builder.Services.AddHostedService<PCI.Backend.Core.IntegrationDispatcher>();
 
 var app = builder.Build();
 
+// Friendly, branded 404 for unknown WEBSITE pages. UseStatusCodePages fires only when a downstream
+// handler produced a 404 WITHOUT writing a body, so it never touches the JSON 404s from /api/* (those
+// write their own body → HasStarted) nor any real static file. A GET for an .html/extension-less path
+// that matched no endpoint, static file or SPA mount gets 404.html with a proper 404 status instead of
+// the browser's blank error page.
+app.UseStatusCodePages(async context =>
+{
+    var ctx = context.HttpContext;
+    if (ctx.Response.StatusCode != 404 || ctx.Response.HasStarted || ctx.Request.Method != "GET") return;
+    if (ctx.Request.Path.StartsWithSegments("/api")) return;
+    var ext = Path.GetExtension(ctx.Request.Path.Value ?? "");
+    var wantsHtml = ext.Length == 0 || ext.Equals(".html", StringComparison.OrdinalIgnoreCase)
+                    || ctx.Request.Headers.Accept.ToString().Contains("text/html", StringComparison.OrdinalIgnoreCase);
+    if (!wantsHtml) return;
+    var root = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
+    var page = Path.Combine(root, "404.html");
+    if (File.Exists(page))
+    {
+        ctx.Response.ContentType = "text/html; charset=utf-8";
+        await ctx.Response.SendFileAsync(page);
+    }
+});
+
 // ================= security response headers + CORS (OUTERMOST middleware) =================
 // Registered first so EVERY response — including the rate-limiter 429, the maintenance 503 and the
 // CORS 204 preflight — carries these headers. Scoped for single-file apps with inline <script>/<style>
@@ -652,10 +675,14 @@ PCI.Backend.Endpoints.AdminSeo.Map(app, db, logFn, GateFn, webRoot);   // Admin 
 PCI.Backend.Endpoints.AdminAnalytics.Map(app, db, GateFn);             // Admin Console → Analytics (/api/admin/analytics/...)
 PCI.Backend.Endpoints.AdminAiVisibility.Map(app, db, logFn, GateFn, webRoot); // Admin Console → AI Visibility (/api/admin/ai-visibility/...)
 PCI.Backend.Endpoints.AdminIntegrations.Map(app, db, logFn, GateFn);   // Admin Console → Integrations / ERP (/api/admin/integrations/...)
+PCI.Backend.Core.ExamDeliveryConnectors.Register();                    // register the 5 exam-delivery vendor connectors
+PCI.Backend.Endpoints.AdminExamDelivery.Map(app, db, logFn, GateFn);   // Admin Console → Exam Delivery (/api/admin/exam-delivery/...) + inbound callbacks
+PCI.Backend.Endpoints.AdminOps.Map(app, db, logFn, GateFn);            // operator toolkit: mark-paid, test users, student journey, Certuvo config
 // one-time: capture each page's current headline as an editable block so every page is editable out of the box
 PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
 PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
 PCI.Backend.Data.CertuvoSeed.Apply(db); // Certuvo starter practice pack (scenario MCQs across BoK domains)
+PCI.Backend.Data.DemoExamSeed.Apply(db); // optional demo LIVE-exam bank — only when SEED_DEMO_EXAM=true (fresh-deploy testing)
 app.Use(async (ctx, next) =>
 {
     if (ctx.Request.Method == "GET")

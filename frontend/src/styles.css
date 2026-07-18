@@ -150,6 +150,15 @@ input:focus, select:focus, textarea:focus {
 .sidebar .btn.ghost { color: #9fb4e0; }
 .sidebar .btn.ghost:hover { background: rgba(255, 255, 255, .07); color: #fff; }
 .main { flex: 1; min-width: 0; height: 100%; overflow-y: auto; overflow-x: clip; }
+/* Column wrapper so the permanent support-view (impersonation) banner sits ABOVE the scroll
+   area (.main) and can never scroll away or be dismissed. */
+.main-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; }
+.main-col > .main { height: auto; flex: 1; min-height: 0; }
+.impersonation-banner {
+  flex: 0 0 auto; padding: .55rem 1rem; text-align: center;
+  background: var(--warn); color: #fff; font-weight: 700; font-size: .85rem; letter-spacing: .01em;
+  border-bottom: 1px solid #92400e;
+}
 .topbar {
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
   padding: .9rem 1.5rem; background: rgba(255, 255, 255, .92);

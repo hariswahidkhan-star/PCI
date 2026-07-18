@@ -189,9 +189,21 @@ public static class ListSections
         var sb = new StringBuilder();
         foreach (var r in rows)
         {
+            // A row without a code is a group header (weight = the group's exam percentage);
+            // a row with a code (D1..D13) is a domain card. Matches the shipped page design.
+            if (string.IsNullOrEmpty(H.Str(r["code"])))
+            {
+                sb.Append("<div style=\"grid-column:1/-1\"><h3 style=\"margin:6px 0 2px\">").Append(Esc(H.Str(r["name"]) ?? ""));
+                if (r["weight"] is not null && H.L(r["weight"]) > 0)
+                    sb.Append(" — <span style=\"color:var(--crimson)\">").Append(H.L(r["weight"])).Append("&nbsp;%</span>");
+                sb.Append("</h3>");
+                if (H.Str(r["description"]) is { Length: > 0 } hd)
+                    sb.Append("<p class=\"muted\" style=\"margin:0 0 8px\">").Append(Esc(hd)).Append("</p>");
+                sb.Append("</div>");
+                continue;
+            }
             sb.Append("<div class=\"gcard\">");
-            if (r["weight"] is not null && H.L(r["weight"]) > 0)
-                sb.Append("<span class=\"gtag wt\">").Append(H.L(r["weight"])).Append("%</span>");
+            sb.Append("<span class=\"gtag wt\">").Append(Esc(H.Str(r["code"])!)).Append("</span>");
             sb.Append("<h4>").Append(Esc(H.Str(r["name"]) ?? "")).Append("</h4>");
             if (H.Str(r["description"]) is { Length: > 0 } d) sb.Append("<p>").Append(Esc(d)).Append("</p>");
             var bullets = (H.Str(r["bullets"]) ?? "").Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);

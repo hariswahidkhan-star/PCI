@@ -27,6 +27,10 @@ public sealed class IntegrationDispatcher : BackgroundService
         {
             try { await Integrations.DeliverDue(_db, Http, 25); }
             catch (Exception e) { Console.Error.WriteLine($"[integrations] dispatch failed: {e.Message}"); }
+            // Certuvo provisioning retries ride the same loop: failed accounts whose backoff has
+            // elapsed are re-attempted here, so a transient Certuvo outage heals without operator action.
+            try { await CertuvoLink.RetryDue(_db, CertuvoLink.Http, 5); }
+            catch (Exception e) { Console.Error.WriteLine($"[certuvo] retry sweep failed: {e.Message}"); }
         }
         while (await WaitAsync(timer, stoppingToken));
     }

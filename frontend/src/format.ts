@@ -12,12 +12,19 @@ export function fmtDate(v: unknown): string {
   return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
-export function fmtDateTime(v: unknown): string {
+export function fmtDateTime(v: unknown, tz?: unknown): string {
   if (!v) return '—'
   const s = String(v)
   const d = new Date(s.includes('T') ? s : s.replace(' ', 'T') + 'Z')
   if (isNaN(d.getTime())) return s
-  return d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+  // When a timezone is supplied (e.g. an exam booking's tz) format the instant IN that zone, so the
+  // displayed clock matches the "(America/New_York)" label instead of the viewer's local time.
+  const zone = typeof tz === 'string' && tz ? tz : undefined
+  try {
+    return d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short', ...(zone ? { timeZone: zone } : {}) })
+  } catch {
+    return d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+  }
 }
 
 export function fmtMoney(amount: unknown, currency = 'USD'): string {

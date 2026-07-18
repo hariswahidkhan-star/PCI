@@ -66,6 +66,31 @@ public static class Public
         var appliesTo = H.Str(c["applies_to"]);
         if (appliesTo != "all" && !CatsFor(product).Contains(appliesTo))
             return new($"This code only applies to {(appliesTo == "exam" ? "the exam fee" : "membership")}, not this purchase.", null);
+        // A partial-waiver code is issued to one named student: it only validates for that email.
+        if (H.Str(c["code_type"]) == "waiver" && H.Str(c["criteria_json"]) is { Length: > 0 } cj)
+        {
+            try
+            {
+                var doc = System.Text.Json.JsonDocument.Parse(cj);
+                if (doc.RootElement.TryGetProperty("email", out var em) && em.GetString() is { Length: > 0 } lockEmail
+                    && !string.Equals(lockEmail, email ?? "", StringComparison.OrdinalIgnoreCase))
+                    return new("This code was issued to a specific student account and cannot be used here.", null);
+            }
+            catch { }
+        }
+        // An institution (training-partner) code stops honouring redemptions once the partner's total
+        // allocation is spent, even if this individual code still has headroom.
+        if (c["partner_id"] is not null)
+        {
+            var pid = H.L(c["partner_id"]);
+            var partner = db.QueryOne("SELECT total_allocation FROM training_partners WHERE id=?", pid);
+            if (partner?["total_allocation"] is not null)
+            {
+                var usedTotal = db.Scalar<long>("SELECT COALESCE(SUM(dc.used_count),0) FROM discount_codes dc WHERE dc.partner_id=?", pid);
+                if (usedTotal >= H.L(partner["total_allocation"]))
+                    return new("This institution's sponsorship allocation has been fully used.", null);
+            }
+        }
         return new(null, c);
     }
 
@@ -157,10 +182,13 @@ public static class Public
                     note = "Honorary recognition conferred by the board — not an examined PCP-AI credential.",
                 });
             }
+            // Test-account credentials are workflow artefacts, never real certifications: the public
+            // register reports them as not found so a test run can never mint a verifiable credential.
             var c = db.QueryOne(@"SELECT ic.credential_id,ic.holder_name,ic.credential,ic.status,ic.issued_at,ic.expires_at,
                        ct.code certification_code, ct.name certification_name
                 FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)
-                WHERE upper(ic.credential_id)=?", id);
+                LEFT JOIN users tu ON tu.id=ic.user_id
+                WHERE upper(ic.credential_id)=? AND COALESCE(tu.is_test,0)=0", id);
             if (c is null) return J(new { found = false });
             // Compute the real verification state: a credential whose expiry has passed is NOT valid even
             // if the stored status column still says 'active' (statuses are not batch-updated on expiry).
