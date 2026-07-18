@@ -476,7 +476,7 @@ public static class AdminMgmt
             if (adminFromReq(req) is { } cadm && !cadm.CanCert(credCertId))
                 return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
             var credCert = Certs.ById(db, credCertId);
-            var credLabel = H.GetS(b, "credential") ?? (credCert is not null ? Certs.Prefix(credCert) : "PCP-AI");
+            var credLabel = H.GetS(b, "credential") ?? (credCert is not null ? Certs.Prefix(credCert) : "PCL-AI");
             try { var id = db.ExecuteReturningId("INSERT INTO issued_credentials(credential_id,user_id,certification_id,holder_name,credential,status,expires_at) VALUES(?,?,?,?,?, 'active',?)",
                 cid.ToUpperInvariant(), H.GetNum(b, "user_id"), credCertId, holder, credLabel, H.GetS(b, "expires_at"));
                 log(H.Ln(H.GetNum(b, "user_id")), "credential_issued", cid); return J(new { id }); }

@@ -59,7 +59,17 @@ public static class CertPdf
         // gold rule under the name
         cs.Append("0.80 0.68 0.36 RG 1.5 w ").Append(Rect(W / 2 - 160, y - 12, 320, 0, stroke: true));
 
-        if (!string.IsNullOrWhiteSpace(d.Body)) { y -= 40; Centered(cs, d.Body!, 12.5, bold: false, y, 0.30, 0.30, 0.30); }
+        if (!string.IsNullOrWhiteSpace(d.Body))
+        {
+            // Word-wrap the certification sentence to the frame's content width (long official
+            // names + designation don't fit one line), centred, up to four lines.
+            y -= 40;
+            foreach (var line in Wrap(d.Body!, 12.5, W - 160, maxLines: 4))
+            {
+                Centered(cs, line, 12.5, bold: false, y, 0.30, 0.30, 0.30);
+                y -= 18;
+            }
+        }
 
         // ── footer: id + dates (left), QR (right) ──
         double fy = 120;
@@ -175,13 +185,46 @@ public static class CertPdf
         return total / 1000.0 * size;
     }
 
+    /// <summary>Greedy word-wrap against real Helvetica advance widths; last permitted line is
+    /// hard-truncated rather than overflowing the frame.</summary>
+    static List<string> Wrap(string s, double size, double maxWidth, int maxLines)
+    {
+        var lines = new List<string>();
+        var cur = "";
+        foreach (var word in s.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var probe = cur.Length == 0 ? word : cur + " " + word;
+            if (TextWidth(probe, size, bold: false) <= maxWidth || cur.Length == 0) { cur = probe; continue; }
+            lines.Add(cur); cur = word;
+            if (lines.Count == maxLines - 1) break;
+        }
+        if (cur.Length > 0)
+        {
+            while (TextWidth(cur, size, bold: false) > maxWidth && cur.Length > 1) cur = cur[..^1];
+            lines.Add(cur);
+        }
+        return lines;
+    }
+
     static string Esc(string s)
     {
         var sb = new StringBuilder(s.Length + 8);
         foreach (var ch in s)
         {
             if (ch is '(' or ')' or '\\') sb.Append('\\').Append(ch);
-            else if (ch < 32 || ch > 255) sb.Append('?');   // outside Latin-1 → placeholder (name flagged elsewhere)
+            // The fonts are declared /WinAnsiEncoding, so common CP1252 punctuation outside
+            // Latin-1 maps to its WinAnsi byte instead of being lost (™ is the important one —
+            // every certification title carries it).
+            else if (ch == '™') sb.Append((char)0x99);      // ™
+            else if (ch == '’') sb.Append((char)0x92);      // ’
+            else if (ch == '‘') sb.Append((char)0x91);      // ‘
+            else if (ch == '“') sb.Append((char)0x93);      // “
+            else if (ch == '”') sb.Append((char)0x94);      // ”
+            else if (ch == '–') sb.Append((char)0x96);      // –
+            else if (ch == '—') sb.Append((char)0x97);      // —
+            else if (ch == '…') sb.Append((char)0x85);      // …
+            else if (ch == '€') sb.Append((char)0x80);      // €
+            else if (ch < 32 || ch > 255) sb.Append('?');   // outside WinAnsi → placeholder (name flagged elsewhere)
             else sb.Append(ch);
         }
         return sb.ToString();

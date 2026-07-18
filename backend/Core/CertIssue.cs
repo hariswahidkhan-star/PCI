@@ -27,23 +27,31 @@ public static class CertIssue
     {
         try
         {
-            var c = db.QueryOne("SELECT id,credential_id,user_id,holder_name,certification_id,status,issued_at,expires_at,pdf_ref,pdf_sha256,verify_token FROM issued_credentials WHERE credential_id=?", credentialId);
+            var c = db.QueryOne("SELECT id,credential_id,user_id,holder_name,certification_id,status,issued_at,expires_at,pdf_ref,pdf_sha256,verify_token,certificate_wording FROM issued_credentials WHERE credential_id=?", credentialId);
             if (c is null) return null;
             var name = "certificate-" + credentialId + ".pdf";
             if (!force && H.Str(c["pdf_ref"]) is { Length: > 0 } exRef && Storage.Get(exRef) is { } got && got.bytes is not null)
                 return (got.bytes, H.Str(c["pdf_sha256"]) ?? "", name);
 
             var cert = Certs.ById(db, c["certification_id"]);
-            var title = H.Str(cert?["name"]) ?? "Certified Project Controls Professional";
+            var title = H.Str(cert?["name"]) ?? "PCI AI Project Controls Leader™";
+            var designation = H.Str(cert?["acronym"]) is { Length: > 0 } acr ? acr : H.Str(cert?["code"]) ?? "";
             var isTest = H.L(db.QueryOne("SELECT is_test FROM users WHERE id=?", c["user_id"])?["is_test"]) == 1;
             var token = H.Str(c["verify_token"]); if (string.IsNullOrEmpty(token)) token = Security.RandomHex(16);
 
+            // Route-specific wording (founding/sponsored/…) was snapshotted onto the credential at
+            // issuance; ordinary examination credentials use the standard sentence with the official
+            // certification name and designation.
+            var body = H.Str(c["certificate_wording"]) is { Length: > 0 } w ? w :
+                $"has successfully fulfilled the eligibility, assessment and professional requirements for the {title} credential" +
+                (designation.Length > 0 ? $" and is authorised to use the designation {designation}." : ".");
             var pdf = CertPdf.Render(new CertDoc
             {
                 Title = title,
+                Subtitle = designation,
                 LeadIn = "This is to certify that",
                 Recipient = H.Str(c["holder_name"]) ?? "",
-                Body = $"has satisfied the requirements of the examination and is hereby certified as a {title}.",
+                Body = body,
                 CertificateId = credentialId,
                 IssueDate = H.Str(c["issued_at"]),
                 ValidUntil = H.Str(c["expires_at"]),

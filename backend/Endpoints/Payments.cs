@@ -12,10 +12,10 @@ public static class Payments
     static readonly Dictionary<string, string> PRODUCT_LABEL = new()
     {
         ["membership"] = "Student Membership / Registration",
-        ["exam"] = "PCP-AI Certification Exam",
+        ["exam"] = "PCL-AI Certification Exam",
         ["bundle"] = "Membership + Exam Bundle",
         ["renewal"] = "Annual Membership Renewal",
-        ["recert"] = "PCP-AI Recertification (3-year cycle)"
+        ["recert"] = "PCL-AI Recertification (3-year cycle)"
     };
     static string Base => Environment.GetEnvironmentVariable("APP_BASE_URL") ?? "";
     static string Fmt(double n) => "USD " + (n == Math.Floor(n) ? ((long)n).ToString() : n.ToString("0.00"));
@@ -34,7 +34,7 @@ public static class Payments
                 var d = await H.Body(req);
                 var product = PRODUCT_LABEL.ContainsKey(H.GetS(d, "product") ?? "") ? H.GetS(d, "product")! : "membership";
                 var email = H.GetS(d, "email");
-                // Which certification the exam seat is for (id or code; PCP-AI when unspecified).
+                // Which certification the exam seat is for (id or code; PCL-AI when unspecified).
                 var certRow = Certs.ById(db, Certs.Resolve(db, H.GetS(d, "certification_id", "certification", "cert")));
                 if (certRow is not null && !H.B(certRow["active"])) return Results.Json(new { error = "certification_inactive" }, statusCode: 400);
                 // A supplied code is re-validated for THIS product server-side (the browser check is only
@@ -52,7 +52,7 @@ public static class Payments
 
                 var label = PRODUCT_LABEL[product];
                 if (product is "exam" or "bundle" && certRow is not null)
-                    label = label.Replace("PCP-AI", H.Str(certRow["code"]) ?? "PCP-AI");
+                    label = label.Replace("PCL-AI", H.Str(certRow["code"]) ?? "PCL-AI");
                 var options = new SessionCreateOptions
                 {
                     Mode = "payment",
@@ -64,7 +64,7 @@ public static class Payments
                     CustomerEmail = email,
                     Metadata = new Dictionary<string, string> {
                         ["product"] = product, ["plan_label"] = label,
-                        ["certification"] = certRow is null ? "PCP-AI" : (H.Str(certRow["code"]) ?? "PCP-AI"),
+                        ["certification"] = certRow is null ? "PCL-AI" : (H.Str(certRow["code"]) ?? "PCL-AI"),
                         ["first_name"] = H.GetS(d, "first") ?? "", ["last_name"] = H.GetS(d, "last") ?? "",
                         ["country"] = H.GetS(d, "country") ?? "", ["discount_code"] = codeVal.Code is null ? "" : (H.Str(codeVal.Code["code"]) ?? ""),
                         ["final_amount"] = pr.final.ToString(), ["code_amount"] = pr.codeAmount.ToString(),

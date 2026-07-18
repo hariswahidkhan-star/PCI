@@ -247,7 +247,7 @@ public static class Public
                     conferred_at = hAward["conferred_at"],
                     document_hash = hHash,
                     has_pdf = !string.IsNullOrEmpty(hHash),
-                    note = "Honorary recognition conferred by the board — not an examined PCP-AI credential.",
+                    note = "Honorary recognition conferred by the board — not an examined certification credential.",
                 });
             }
             // Test-account credentials are workflow artefacts, never real certifications: the public

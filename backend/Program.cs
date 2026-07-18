@@ -799,10 +799,37 @@ app.Use(async (ctx, next) =>
             ctx.Response.Headers.Location = reqPath.Contains("students", StringComparison.OrdinalIgnoreCase) ? "/admin/students" : "/admin/";
             return;
         }
+        // Public verification clean URL: /verify-certificate is the canonical alias of the verify page.
+        if (reqPath.Equals("/verify-certificate", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.StatusCode = 301;
+            ctx.Response.Headers.Location = "/verify.html" + ctx.Request.QueryString;
+            return;
+        }
         // ── Multi-certification clean URLs: /certifications (catalogue) and /certifications/{slug} (per credential) ──
         if (reqPath.StartsWith("/certifications", StringComparison.OrdinalIgnoreCase))
         {
             var rest = reqPath.Length > 15 ? reqPath.Substring(15).Trim('/') : "";  // "/certifications".Length == 15
+            // Catalogue-level aliases: stable URLs for compare/routes/fees/exams that forward to the
+            // page (or anchored section) currently carrying that content. Query string is preserved
+            // ahead of any fragment.
+            var certAlias = rest.ToLowerInvariant() switch
+            {
+                "compare" => "/certifications",
+                "routes" => "/certification.html#routes",
+                "fees" => "/certification.html#fees",
+                "exams" => "/exam-structure.html",
+                _ => null,
+            };
+            if (certAlias is not null && certAlias != reqPath)
+            {
+                var hash = certAlias.IndexOf('#');
+                var target = hash < 0 ? certAlias + ctx.Request.QueryString
+                                      : certAlias[..hash] + ctx.Request.QueryString + certAlias[hash..];
+                ctx.Response.StatusCode = 301;
+                ctx.Response.Headers.Location = target;
+                return;
+            }
             // Permanent redirects from previous credential slugs to the final Project Leadership Suite slugs.
             var certRedirect = rest.ToLowerInvariant() switch
             {
