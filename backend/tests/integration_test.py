@@ -944,6 +944,92 @@ def test_certuvo_integration(admin):
         srv.shutdown()
         jget("POST", "/api/admin/certuvo", token=admin, body={"enabled": False})   # leave Certuvo off for later sections
 
+def _raw_get(path, token=None):
+    import urllib.request
+    r = urllib.request.Request(BASE + path, method="GET", headers={"Authorization": "Bearer " + token} if token else {})
+    try:
+        with urllib.request.urlopen(r) as resp: return resp.status, resp.read(), resp.headers.get("Content-Type", "")
+    except urllib.error.HTTPError as e:
+        return e.code, e.read(), e.headers.get("Content-Type", "")
+
+def _pdf_text(data):
+    try:
+        from pypdf import PdfReader; import io
+        return " ".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(data)).pages).replace("\n", " ")
+    except Exception:
+        return data.decode("latin1", "ignore")
+
+def test_certificate_pdf(admin):
+    """Section 16 — verifiable PDF certificates: real downloadable PDF with QR + verification URL, a
+    SHA-256 tamper hash the public verifier can recompute, authenticated + audited download, honorary
+    certificates that never claim a passed exam, status gating, and test-certificate isolation."""
+    print("\n=== 16. Verifiable PDF certificates (PDF + QR + tamper hash + download + verification) ===")
+    import hashlib as _hl
+
+    # Auto-generation at issuance: the earlier real exam pass (section 2) minted a credential whose PDF was
+    # rendered and hashed at issuance time.
+    con = dbconn(); autorow = con.execute("SELECT credential_id,pdf_ref,pdf_sha256 FROM issued_credentials WHERE pdf_ref IS NOT NULL AND pdf_sha256 IS NOT NULL ORDER BY id LIMIT 1").fetchone(); con.close()
+    chk("16a exam pass auto-generates the certificate PDF (ref + hash stored at issuance)", autorow is not None and autorow[1] and len(str(autorow[2])) == 64, autorow)
+
+    # A dedicated student + an admin-issued credential (exercises on-demand generation on first download).
+    stok, suid = register_student("certpdf@ex.co")
+    cid = "PCI-CPPC-2026-77021"
+    fut = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time() + 3 * 365 * 86400))
+    c, iss = jget("POST", "/api/admin/credentials", token=admin, body={"credential_id": cid, "holder_name": "Certy McTest", "user_id": suid, "expires_at": fut})
+    chk("16b admin issues a credential", c == 200 and iss.get("id"), iss)
+    rowid = iss.get("id")
+
+    st, body, ctype = _raw_get("/api/me/certificate/pdf", token=stok)
+    chk("16c student downloads a real PDF (200, application/pdf, %PDF magic)", st == 200 and "application/pdf" in ctype and body[:5] == b"%PDF-", (st, ctype, body[:5]))
+    txt = _pdf_text(body)
+    chk("16d PDF carries the certificate id + recipient name", cid in txt.replace(" ", "") or cid in txt, "Certy McTest" in txt and ("Verify" in txt or "verify" in txt))
+    dl_sha = _hl.sha256(body).hexdigest()
+
+    c, v = jget("GET", "/api/verify?id=" + cid)
+    chk("16e public verify exposes a tamper hash matching the downloaded file", v.get("has_pdf") is True and v.get("document_hash") == dl_sha, (v.get("has_pdf"), v.get("document_hash") == dl_sha))
+    chk("16f verify reports the credential valid/active", v.get("found") is True and v.get("valid") is True and v.get("state") == "active", v.get("state"))
+
+    st2, body2, _ = _raw_get("/api/me/certificate/pdf", token=stok)
+    chk("16g re-download is byte-stable (deterministic render → stable hash)", _hl.sha256(body2).hexdigest() == dl_sha)
+
+    c, rg = jget("POST", f"/api/admin/credentials/{cid}/regenerate-pdf", token=admin, body={})
+    chk("16h admin regenerate-pdf returns a sha256", c == 200 and len(str(rg.get("sha256"))) == 64, rg)
+
+    chk("16i download requires auth (401 without a token)", _raw_get("/api/me/certificate/pdf")[0] == 401)
+
+    # Revoke → student can no longer download it as a valid certificate; verify flips to revoked.
+    jget("POST", f"/api/admin/credentials/{rowid}/status", token=admin, body={"status": "revoked"})
+    chk("16j revoked certificate is not downloadable (403)", _raw_get("/api/me/certificate/pdf?id=" + cid, token=stok)[0] == 403)
+    c, v2 = jget("GET", "/api/verify?id=" + cid)
+    chk("16k verify shows revoked + not valid", v2.get("state") == "revoked" and v2.get("valid") is not True, v2.get("state"))
+
+    # Honorary certificate: clearly honorary, never an exam claim.
+    htok, huid = register_student("certhon@ex.co")
+    c, ha = jget("POST", "/api/admin/honorary", token=admin, body={"recipient_name": "Grace Hopper", "citation": "For distinguished lifetime contribution.", "user_id": huid})
+    award = ha.get("award_no")
+    chk("16l honorary award conferred + linked", c == 200 and award, ha)
+    sh, hbody, hctype = _raw_get("/api/me/honorary-certificate/pdf", token=htok)
+    chk("16m student downloads the honorary PDF", sh == 200 and "application/pdf" in hctype and hbody[:5] == b"%PDF-", (sh, hctype))
+    htxt = _pdf_text(hbody).lower()
+    chk("16n honorary PDF says 'honorary' and NEVER claims a passed examination",
+        "honorary" in htxt and "passed the examination" not in htxt and "satisfied the requirements of the examination" not in htxt, htxt[:120])
+    c, hv = jget("GET", "/api/verify?id=" + award)
+    chk("16o honorary verify is typed honorary + carries a document hash", hv.get("type") == "honorary" and hv.get("has_pdf") is True and hv.get("document_hash") == _hl.sha256(hbody).hexdigest(), hv.get("type"))
+
+    # Test-certificate isolation: a test account's credential carries a TEST watermark and never verifies publicly.
+    c, tu = jget("POST", "/api/admin/test-users", token=admin, body={"scenario": "ready"})
+    tuid = tu.get("id")
+    tcid = "PCI-CPPC-2026-77099"
+    jget("POST", "/api/admin/credentials", token=admin, body={"credential_id": tcid, "holder_name": "Testy Test", "user_id": tuid, "expires_at": fut})
+    ts, tbody, _ = _raw_get(f"/api/admin/credentials/{tcid}/pdf", token=admin)
+    chk("16p test-account certificate PDF carries a TEST watermark", ts == 200 and "TEST CERTIFICATE" in _pdf_text(tbody), ts)
+    c, tv = jget("GET", "/api/verify?id=" + tcid)
+    chk("16q test-account certificate is NOT publicly verifiable (found:false)", tv.get("found") is False, tv)
+
+    # Download audit trail.
+    con = dbconn(); dln = con.execute("SELECT COUNT(*) FROM certificate_downloads WHERE credential_id=? AND result='ok'", (cid,)).fetchone()[0]; con.close()
+    chk("16r every certificate download is audited", dln >= 2, dln)
+
 def H0(v):
     try: return int(v or 0)
     except Exception: return 0
@@ -1707,6 +1793,7 @@ def run(proc):
     test_finance_and_certuvo_hardening(admin)
     test_support_and_institutions(admin)
     test_certuvo_integration(admin)
+    test_certificate_pdf(admin)
 
     print("\n(assertions complete)")
 

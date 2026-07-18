@@ -214,6 +214,9 @@ public static class Lifecycle
                 var expires = DateTime.UtcNow.AddYears(years).ToString("yyyy-MM-dd HH:mm:ss");
                 db.Execute("INSERT INTO issued_credentials(credential_id,user_id,attempt_id,holder_name,credential,certification_id,status,expires_at) VALUES(?,?,?,?,?,?, 'active', ?)",
                     cid, userId, attemptId, holderName, prefix, H.L(cert["id"]), expires);
+                // Render the verifiable PDF certificate (best-effort; the record is authoritative and the PDF
+                // is regenerated on first download if this fails).
+                CertIssue.EnsureCredentialPdf(db, cid);
                 return cid;
             }
             catch { /* credential_id collision → retry; attempt_id duplicate → loop exits via existing check next call */ }

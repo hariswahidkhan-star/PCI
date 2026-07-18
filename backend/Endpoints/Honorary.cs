@@ -28,6 +28,8 @@ public static class Honorary
             {
                 db.Execute("INSERT INTO honorary_awards(award_no,recipient_name,user_id,citation,conferred_by) VALUES(?,?,?,?,?)",
                     candidate, recipientName, userId, citation, adminId);
+                // Render the honorary certificate PDF (best-effort; regenerated on first download if it fails).
+                CertIssue.EnsureHonoraryPdf(db, candidate);
                 return candidate;
             }
             catch { /* award_no collision → retry */ }

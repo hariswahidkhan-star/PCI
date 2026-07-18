@@ -37,6 +37,13 @@ public static class Migrate
         AddCol("exam_attempts", "bank_version", "bank_version TEXT");
         AddCol("issued_credentials", "attempt_id", "attempt_id INTEGER");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_credential_attempt ON issued_credentials(attempt_id) WHERE attempt_id IS NOT NULL");
+        // Verifiable PDF certificate: private storage reference, a SHA-256 tamper hash the public verifier can
+        // recompute, a non-guessable verification token, and the render timestamp. The PDF is a rendering of
+        // the authoritative record — it can always be regenerated, so these are additive and never a blocker.
+        AddCol("issued_credentials", "pdf_ref", "pdf_ref TEXT");
+        AddCol("issued_credentials", "pdf_sha256", "pdf_sha256 TEXT");
+        AddCol("issued_credentials", "verify_token", "verify_token TEXT");
+        AddCol("issued_credentials", "pdf_generated_at", "pdf_generated_at TEXT");
         // Phase 2: casework tables + CPD evidence columns for pre-existing databases
         db.Exec(@"CREATE TABLE IF NOT EXISTS appeals(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,attempt_id INTEGER,credential_id TEXT,type TEXT NOT NULL,reason TEXT NOT NULL,evidence_name TEXT,evidence_data TEXT,status TEXT DEFAULT 'submitted',submitted_at TEXT DEFAULT (datetime('now')),decision TEXT,decided_by INTEGER,decided_at TEXT)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_appeals_user ON appeals(user_id)");
@@ -93,6 +100,12 @@ public static class Migrate
         db.Exec("UPDATE founding_applications SET route='founding' WHERE route IN ('founding_member','founding_candidate')");
         // Honorary awards: board-conferred recognition, deliberately separate from issued_credentials.
         db.Exec(@"CREATE TABLE IF NOT EXISTS honorary_awards(id INTEGER PRIMARY KEY AUTOINCREMENT,award_no TEXT UNIQUE NOT NULL,recipient_name TEXT NOT NULL,user_id INTEGER,citation TEXT,designation TEXT DEFAULT 'Honorary Fellow (PCI)',status TEXT DEFAULT 'active',conferred_by INTEGER NOT NULL,conferred_at TEXT DEFAULT (datetime('now')),revoked_by INTEGER,revoked_at TEXT,revoke_reason TEXT)");
+        // Honorary certificate PDF (clearly an HONORARY certificate — never an examined credential).
+        AddCol("honorary_awards", "pdf_ref", "pdf_ref TEXT");
+        AddCol("honorary_awards", "pdf_sha256", "pdf_sha256 TEXT");
+        AddCol("honorary_awards", "pdf_generated_at", "pdf_generated_at TEXT");
+        // Immutable download audit for every certificate PDF fetch (student or admin).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS certificate_downloads(id INTEGER PRIMARY KEY AUTOINCREMENT,credential_id VARCHAR(64),user_id INTEGER,actor TEXT,role TEXT,ip TEXT,kind TEXT,result TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_honorary_user ON honorary_awards(user_id)");
         // Honorary-route public applications (apply → board review → conferral) + reusable notification ledger.
         db.Exec(@"CREATE TABLE IF NOT EXISTS honorary_applications(id INTEGER PRIMARY KEY AUTOINCREMENT,reference TEXT UNIQUE NOT NULL,first_name TEXT,last_name TEXT,email TEXT,mobile TEXT,country TEXT,city TEXT,nationality TEXT,job_title TEXT,employer TEXT,years_experience INTEGER,industry TEXT,highest_qualification TEXT,professional_certifications TEXT,relevant_experience TEXT,professional_summary TEXT,declaration INTEGER DEFAULT 0,status TEXT NOT NULL DEFAULT 'pending_review',award_no TEXT,decided_by INTEGER,decided_at TEXT,admin_note TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");

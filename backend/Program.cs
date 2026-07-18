@@ -711,6 +711,7 @@ PCI.Backend.Endpoints.Casework.Map(app, db, logFn, r => Auth.AdminFromReq(r, db)
 PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);
+PCI.Backend.Endpoints.Certificates.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.TrainingPartners.Map(app, db, logFn, GateFn);   // Training Partner framework (Phase 7)
 PCI.Backend.Endpoints.Certuvo.Map(app, db, logFn);                    // Certuvo study & practice engine (Phase 8)
 PCI.Backend.Endpoints.AdminI18n.Map(app, db, logFn);

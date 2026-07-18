@@ -30,6 +30,22 @@ export default function Credentials() {
       <p class="muted" style="text-align:center;margin-top:1.5rem">${t('cred.verifyAt', { url: verifyUrl })}</p>`)
   }
 
+  // Fetch the official, QR-bearing PDF certificate (authenticated) and save it. This is the real
+  // downloadable document; the printable above remains as a quick on-screen view.
+  const downloadPdf = async (id: string, honorary = false) => {
+    const tok = sessionStorage.getItem('pci.session.token')
+    const url = honorary ? '/api/me/honorary-certificate/pdf' : `/api/me/certificate/pdf?id=${encodeURIComponent(id)}`
+    try {
+      const r = await fetch(url, { headers: tok ? { Authorization: 'Bearer ' + tok } : {} })
+      if (!r.ok) { alert('Could not download the certificate right now. Please try again shortly or contact support.'); return }
+      const blob = await r.blob()
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(blob)
+      a.download = `${honorary ? 'honorary-certificate' : 'certificate'}-${id}.pdf`
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href)
+    } catch { alert('Could not download the certificate right now. Please try again shortly or contact support.') }
+  }
+
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       <div>
@@ -48,7 +64,8 @@ export default function Credentials() {
               <div className="muted">
                 {t('cred.honoraryConferred', { date: fmtDate(h.conferred_at) })}
               </div>
-              <div className="row" style={{ marginTop: '.4rem' }}>
+              <div className="row" style={{ marginTop: '.4rem', flexWrap: 'wrap' }}>
+                <button className="btn sm" onClick={() => downloadPdf(h.award_no, true)}>Download PDF</button>
                 <a className="btn sm secondary" href={`/verify.html?id=${encodeURIComponent(h.award_no)}`} target="_blank" rel="noreferrer">{t('cred.publicVerifyPage')}</a>
               </div>
             </div>
@@ -75,8 +92,9 @@ export default function Credentials() {
                 <div><span className="muted">{t('cred.expires')}</span><div>{fmtDate(c.expires_at)}{dleft !== null && dleft >= 0 && dleft < 90 && <> <Badge tone="warn">{t('cred.daysLeftShort', { n: dleft })}</Badge></>}</div></div>
               </div>
               {c.status === 'active' && !lapsed && (
-                <div className="row" style={{ marginTop: '.9rem' }}>
-                  <button className="btn sm" onClick={() => certificate(c)}>{t('cred.downloadCertificate')}</button>
+                <div className="row" style={{ marginTop: '.9rem', flexWrap: 'wrap' }}>
+                  <button className="btn sm" onClick={() => downloadPdf(c.credential_id)}>Download PDF</button>
+                  <button className="btn sm secondary" onClick={() => certificate(c)}>{t('cred.downloadCertificate')}</button>
                   <a className="btn sm secondary" href={`/verify.html?id=${encodeURIComponent(c.credential_id)}`} target="_blank" rel="noreferrer">{t('cred.publicVerifyPage')}</a>
                 </div>
               )}

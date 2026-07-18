@@ -13,6 +13,10 @@
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Stripe.net" Version="45.14.0" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.410" />
+    <!-- Pure-managed QR generation (no native/System.Drawing deps): we read QRCodeData.ModuleMatrix
+         and draw the modules directly into our self-contained PDF, so there is nothing to install on
+         the host and the certificate engine works identically on any OS. -->
+    <PackageReference Include="QRCoder" Version="1.6.0" />
   </ItemGroup>
   <ItemGroup>
     <!-- reuse the SAME schema + email templates + static site as the Node app -->
