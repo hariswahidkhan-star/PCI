@@ -765,6 +765,15 @@ app.Use(async (ctx, next) =>
             return;
         }
         var reqPath = ctx.Request.Path.Value ?? "/";
+        // The classic HTML admin pages are retired — the React admin at /admin/ is the single console.
+        // Permanently forward the old URLs (and any lingering links/bookmarks) to the new console.
+        if (reqPath.Equals("/admin.html", StringComparison.OrdinalIgnoreCase)
+            || reqPath.Equals("/admin-students.html", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.StatusCode = 301;
+            ctx.Response.Headers.Location = reqPath.Contains("students", StringComparison.OrdinalIgnoreCase) ? "/admin/students" : "/admin/";
+            return;
+        }
         var slug = reqPath == "/" ? "index.html" : reqPath.TrimStart('/');
         var isPage = slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..");
         // Active public-website language (?lang= persisted to a cookie, else cookie, else English).
@@ -910,9 +919,8 @@ Console.WriteLine("│  Project Controls Institute — platform is running    �
 Console.WriteLine("├──────────────────────────────────────────────────────┤");
 Console.WriteLine($"│  Website        {u}/");
 Console.WriteLine($"│  Student (React){u}/app/");
-Console.WriteLine($"│  Admin (React)  {u}/admin/");
+Console.WriteLine($"│  Admin console  {u}/admin/");
 Console.WriteLine($"│  Student Panel  {u}/student.html");
-Console.WriteLine($"│  Admin Panel    {u}/admin.html");
 Console.WriteLine($"│  Exam preview   {u}/exam-ui.html");
 Console.WriteLine("└──────────────────────────────────────────────────────┘");
 
