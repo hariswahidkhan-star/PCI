@@ -83,12 +83,60 @@ public static class Applications
                 "request_info" => "info_requested", "under_review" => "under_review", _ => null,
             };
             if (status is null) return Results.Json(new { error = "bad_action" }, statusCode: 400);
-            if (db.QueryOne("SELECT id FROM certification_applications WHERE id=?", id) is null)
-                return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var appRow = db.QueryOne("SELECT * FROM certification_applications WHERE id=?", id);
+            if (appRow is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+
+            var stage = status;
+            string? grantRef = null;
+            if (action == "approve")
+            {
+                var userId = H.L(appRow["user_id"]);
+                var certId = H.L(appRow["certification_id"]);
+                var routeKey = H.Str(appRow["route_key"]) ?? "standard";
+                var route = Routes.Get(db, certId, routeKey);
+                // Approval opens an exam entitlement automatically only when the route leads to an exam
+                // AND no candidate payment is due (fully-waived, complimentary or sponsor-funded). Fee-
+                // bearing routes (standard / partial waiver / custom) are cleared to pay through the
+                // normal checkout instead of being handed a free sitting. The non-exam honorary route
+                // is conferred through its own dedicated award flow, never here.
+                if (route is not null && H.B(route["exam_required"]))
+                {
+                    var feeMode = (H.Str(route["fee_mode"]) ?? "standard").ToLowerInvariant();
+                    if (feeMode is "free" or "sponsored")
+                    {
+                        grantRef = GrantExamEntitlement(db, userId, certId, feeMode);
+                        if (grantRef is not null) stage = "exam_access_granted";
+                    }
+                }
+            }
+
             db.Execute("UPDATE certification_applications SET status=?, workflow_stage=?, admin_note=?, decided_by=?, decided_at=datetime('now'), updated_at=datetime('now') WHERE id=?",
-                status, status, note, adm.Id, id);
-            log(adm.Id, "application_decision", $"{id} -> {status}");
-            return J(new { ok = true, status });
+                status, stage, note, adm.Id, id);
+            log(adm.Id, "application_decision", $"{id} -> {status}{(grantRef is not null ? $" (exam entitlement {grantRef})" : "")}");
+            if (grantRef is not null)
+                try { db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Application', 'Application approved', ?, 'Schedule exam', '/certifications')",
+                    H.L(appRow["user_id"]), $"Your application {H.Str(appRow["application_no"])} has been approved and your exam access is now open."); } catch { }
+            return J(new { ok = true, status, workflow_stage = stage, exam_entitlement = grantRef });
         }));
+    }
+
+    /// <summary>Grant a fresh, fully-waived exam entitlement scoped to a certification (mirrors the
+    /// founding-waiver grant: a paid-at-zero payments row plus an exam_entitlements ledger row with a
+    /// one-year scheduling window). Guarded so a candidate never stacks two open entitlements for the
+    /// same certification. Returns the payment reference, or null if an open entitlement already exists.</summary>
+    static string? GrantExamEntitlement(Db db, long userId, long certId, string feeMode)
+    {
+        var hasOpen = db.QueryOne(@"SELECT p.id FROM payments p
+                JOIN exam_entitlements e ON e.payment_id=p.id
+                WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle')
+                AND e.certification_id=? AND COALESCE(e.status,'available') IN ('available','booked')", userId, certId) is not null;
+        if (hasOpen) return null;
+        var reference = "APP-" + Security.RandomHex(5).ToUpperInvariant();
+        var provider = feeMode == "sponsored" ? "application_sponsored" : "application_waiver";
+        var payId = db.ExecuteReturningId(@"INSERT INTO payments(user_id,product_type,standard_amount,final_amount,currency,payment_provider,payment_status,payment_date,reference,exam_schedule_deadline)
+            VALUES(?, 'exam',0,0,'USD',?, 'paid', datetime('now'), ?, datetime('now','+1 year'))", userId, provider, reference);
+        db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?, 'exam', ?, 'available', datetime('now','+1 year'))",
+            userId, payId, certId);
+        return reference;
     }
 }
