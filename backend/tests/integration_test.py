@@ -1395,6 +1395,21 @@ def test_leadership_suite(admin):
     con.close()
     chk("18s downloads are audited with per-copy ids", dl[0] >= 2 and dl[1] >= 2, dl)
 
+    # the authored Body of Knowledge PDFs ship with the app (books/<code>-bok.pdf) and attach to the
+    # seeded BoK rows at boot; an entitled candidate downloads a personalised copy immediately.
+    # (Guarded: the assertions arm themselves once the authored books are committed under backend/books/.)
+    if not os.path.exists(os.path.join(BACKEND, "books", "pfl-ai-bok.pdf")):
+        print("  SKIP  18t/18u shipped-BoK assertions (backend/books not present yet)")
+        return
+    c, bl2 = jget("GET", "/api/me/cert-documents", token=stok)
+    seeded_bok = next((r for r in bl2.get("rows", []) if r.get("kind") == "bok" and "Body of Knowledge" in (r.get("title") or "") and r.get("id") != bid), None)
+    chk("18t the authored PFL-AI Body of Knowledge is attached at boot", seeded_bok is not None and seeded_bok.get("has_file") == 1,
+        [(r.get("title"), r.get("kind"), r.get("has_file")) for r in bl2.get("rows", [])])
+    if seeded_bok is not None:
+        stb, bokbody, _ = _raw_get(f"/api/me/cert-documents/{seeded_bok['id']}/download", token=stok)
+        chk("18u the shipped BoK downloads as a personalised watermarked PDF",
+            stb == 200 and bokbody[:5] == b"%PDF-" and "Personal Copy" in _pdf_text(bokbody), (stb, len(bokbody)))
+
 def H0(v):
     try: return int(v or 0)
     except Exception: return 0
