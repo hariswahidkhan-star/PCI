@@ -56,7 +56,7 @@ export default function Credentials() {
       </div>
 
       {/* Honorary recognition is deliberately separate from exam-earned credentials: it is a
-          board-conferred designation, not the PCP-AI examination credential. */}
+          board-conferred designation, not an examined certification credential. */}
       {me.honorary.length > 0 && (
         <Card title={t('cred.honoraryTitle')} action={<Badge tone="brand">{t('cred.boardConferred')}</Badge>}>
           {me.honorary.map((h) => (

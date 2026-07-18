@@ -81,7 +81,7 @@ Return ONLY a JSON array of strings, the SAME length and order as the input — 
 
 Rules:
 - Natural, fluent, professional human-quality translation.
-- Do NOT translate brand/proper nouns: PCI, PCP-AI, Project Controls Institute, Project Controls Institute Global, Inc., and standard/product codes (ISO/IEC, PMP, CCP, PSP, PRINCE2, EVM). Keep URLs, emails and numbers verbatim.
+- Do NOT translate brand/proper nouns: PCI, PCL-AI, PFL-AI, PDL-AI, Project Controls Institute, Project Controls Institute Global, Inc., and standard/product codes (ISO/IEC, PMP, CCP, PSP, PRINCE2, EVM). Keep URLs, emails and numbers verbatim.
 - Keep symbols such as ·, —, →, %, © and any {{placeholder}} tokens exactly as they appear.
 - If a string contains HTML tags, translate ONLY the human-visible text and keep every tag, attribute, href/src and entity EXACTLY as in the source.
 

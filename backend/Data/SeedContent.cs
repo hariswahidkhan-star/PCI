@@ -26,7 +26,7 @@ public static class SeedContent
         {
             var oldSeed = db.Scalar<long>("SELECT COUNT(*) FROM bok_domains") == 8
                        && db.Scalar<long>("SELECT COUNT(*) FROM bok_domains WHERE name IN ('Project Controls Foundations & Governance','Planning & Scheduling','Cost Estimating & Control','Earned Value & Performance Management','Risk & Contingency Management','Change & Configuration Management','Data, Reporting & Analytics','Governed AI in Project Controls')") == 8;
-            if (oldSeed) { db.Transaction(() => { db.Execute("DELETE FROM bok_domains"); SeedBok(); }); Console.WriteLine("[seed] bok_domains: upgraded to the thirteen-domain PCP-AI set"); }
+            if (oldSeed) { db.Transaction(() => { db.Execute("DELETE FROM bok_domains"); SeedBok(); }); Console.WriteLine("[seed] bok_domains: upgraded to the thirteen-domain PCL-AI set"); }
         }
         catch (Exception e) { Console.Error.WriteLine($"[seed] bok_domains upgrade skipped: {e.Message}"); }
         IfEmpty("governance_roles", () => { var n = 0; foreach (var r in Roles) db.Execute("INSERT INTO governance_roles(role,holder,status,remit,sort_order) VALUES(?,NULL,'open',?,?)", r[0], r[1], ++n); });
@@ -65,24 +65,41 @@ public static class SeedContent
                 db.Execute("UPDATE nav_items SET url=?, label=? WHERE nav_group='Certifications' AND url=?", newUrl, newLbl, oldUrl);
             // Replace the retired acronym in any nav label (e.g. "PMP vs AACE vs PCP-AI") across every group.
             db.Execute("UPDATE nav_items SET label=REPLACE(label,'PCP-AI','PCL-AI') WHERE label LIKE '%PCP-AI%'");
+            // The comparison article moved with the acronym rename; keep any old nav row pointing at it.
+            db.Execute("UPDATE nav_items SET url='pmp-vs-aace-vs-pcl-ai.html' WHERE url='pmp-vs-aace-vs-pcp-ai.html'");
+            // 301 for the renamed article path so the old URL keeps its SEO value.
+            db.Execute("INSERT OR IGNORE INTO seo_redirects(from_path,to_url,status,active,note) VALUES('/pmp-vs-aace-vs-pcp-ai.html','/pmp-vs-aace-vs-pcl-ai.html',301,1,'Master Naming Update')");
         }
         catch (Exception e) { Console.Error.WriteLine($"[seed] certification nav skipped: {e.Message}"); }
+        // Master Naming Update: databases seeded before the Project Leadership Suite still carry the
+        // retired names inside admin-editable content (FAQs, resource descriptions). Rewrite in place —
+        // long names first so the bare acronym replace never mangles them; a no-op once clean.
+        try
+        {
+            foreach (var tc in new[] { ("faqs", "question"), ("faqs", "answer"), ("resources", "description"), ("resources", "title") })
+            {
+                db.Execute($"UPDATE {tc.Item1} SET {tc.Item2}=REPLACE({tc.Item2},'Certified Project Controls Professional — AI (PCP-AI)','PCI AI Project Controls Leader™ (PCI PCL-AI™)') WHERE {tc.Item2} LIKE '%Certified Project Controls Professional%'");
+                db.Execute($"UPDATE {tc.Item1} SET {tc.Item2}=REPLACE({tc.Item2},'Certified Project Controls Professional','PCI AI Project Controls Leader™') WHERE {tc.Item2} LIKE '%Certified Project Controls Professional%'");
+                db.Execute($"UPDATE {tc.Item1} SET {tc.Item2}=REPLACE({tc.Item2},'PCP-AI','PCL-AI') WHERE {tc.Item2} LIKE '%PCP-AI%'");
+            }
+        }
+        catch (Exception e) { Console.Error.WriteLine($"[seed] naming upgrade skipped: {e.Message}"); }
     }
 
     static readonly object?[][] Faqs =
     {
-        new object?[]{ @"What is the PCP-AI credential?", @"<p>The Certified Project Controls Professional — AI (PCP-AI) is a single, rigorous credential covering project controls, cost engineering and project finance, with the governed use of artificial intelligence treated as part of the discipline. It is awarded by the Project Controls Institute and built with reference to <a href=""accreditation-status.html"">ISO/IEC 17024</a> personnel-certification principles.</p>", @"The credential" },
-        new object?[]{ @"Who is the PCP-AI for?", @"<p>It is for the people who hold major projects to plan, cost and cash flow: planners, schedulers, cost engineers, project-controls and PMO professionals, and project-finance specialists across construction, energy, infrastructure and software.</p>", @"The credential" },
-        new object?[]{ @"Is the PCP-AI accredited?", @"<p>PCI is an independent independent certifying body. Our examinations are being developed with reference to ISO/IEC 17024. We describe our status honestly at every stage and make no claims beyond what is true today.</p>", @"The credential" },
+        new object?[]{ @"What is the PCI PCL-AI™ credential?", @"<p>The PCI AI Project Controls Leader™ (PCI PCL-AI™) is a rigorous credential covering project controls, cost engineering, forecasting and performance — with the governed use of artificial intelligence treated as part of the discipline. It is part of the PCI AI Project Leadership Certification Suite, awarded by the Project Controls Institute and built with reference to <a href=""accreditation-status.html"">ISO/IEC 17024</a> personnel-certification principles.</p>", @"The credential" },
+        new object?[]{ @"Who is the PCI PCL-AI™ for?", @"<p>It is for the people who hold major projects to plan, cost and cash flow: planners, schedulers, cost engineers, project-controls and PMO professionals, and project-finance specialists across construction, energy, infrastructure and software.</p>", @"The credential" },
+        new object?[]{ @"Is the PCI PCL-AI™ accredited?", @"<p>PCI is an independent independent certifying body. Our examinations are being developed with reference to ISO/IEC 17024. We describe our status honestly at every stage and make no claims beyond what is true today.</p>", @"The credential" },
         new object?[]{ @"How do I qualify to sit the exam?", @"<p>There are two routes: an experience route for practitioners with relevant project-controls experience, and a foundation route for those newer to the field. Full <a href=""eligibility-requirements.html"">eligibility</a> criteria are confirmed during enrolment.</p>", @"Exam & enrolment" },
         new object?[]{ @"What does the examination involve?", @"<p>The exam tests applied judgement rather than recall: scenario-based multiple-choice questions across the ten sections (93 Knowledge Areas), including the governed use of AI. It is proctored, online or at a test centre.</p>", @"Exam & enrolment" },
-        new object?[]{ @"How is the credential maintained?", @"<p>The PCP-AI runs on a three-year continuing-professional-development (CPD) cycle. Membership keeps your credential current and tracks your CPD.</p>", @"Exam & enrolment" },
+        new object?[]{ @"How is the credential maintained?", @"<p>PCI credentials run on a three-year continuing-professional-development (CPD) cycle. Membership keeps your credential current and tracks your CPD.</p>", @"Exam & enrolment" },
         new object?[]{ @"How much does it cost?", @"<p>Fees for the inaugural cohort are confirmed at enrolment. Members receive reduced rates on examinations and events.</p>", @"Exam & enrolment" },
-        new object?[]{ @"Why is AI part of a project-controls credential?", @"<p>Because AI is already in the toolkit. The PCP-AI assesses the applied, governed use of AI across forecasting, risk and reporting — not generic AI literacy. Every output a certified professional relies on must be explainable, validated and owned by a competent human. In short: AI proposes; the professional disposes.</p>", @"The AI standard" },
+        new object?[]{ @"Why is AI part of a project-controls credential?", @"<p>Because AI is already in the toolkit. Each PCI credential assesses the applied, governed use of AI across forecasting, risk and reporting — not generic AI literacy. Every output a certified professional relies on must be explainable, validated and owned by a competent human. In short: AI proposes; the professional disposes.</p>", @"The AI standard" },
         new object?[]{ @"What does membership include?", @"<p>Membership provides <a href=""recert.html"">recertification</a> and CPD tracking, a verifiable digital credential designed for recognition by employers, body-of-knowledge and AI-practice updates, and member rates on examinations and events.</p>", @"Membership & employers" },
         new object?[]{ @"Can my organisation certify a whole team?", @"<p>Yes. Employers can upskill an existing function or build a new project-controls capability to one benchmarked standard. <a href=""employers.html"">Read more for employers</a> or <a href=""contact.html"">contact us</a> about team enrolment.</p>", @"Membership & employers" },
         new object?[]{ @"Does PCI also sell exam preparation?", @"<p>No. PCI develops and owns the standard and the examination. Preparation and training are provided separately by Certuvo, our official partner. This separation supports the <a href=""impartiality-policy.html"">impartiality</a> expected of a body developed with reference to ISO/IEC 17024 personnel-certification principles.</p>", @"Independence & verification" },
-        new object?[]{ @"How can I verify someone's credential?", @"<p>Use the credential lookup on the <a href=""verify.html"">Verify page</a> to confirm a professional's PCP-AI status.</p>", @"Independence & verification" },
+        new object?[]{ @"How can I verify someone's credential?", @"<p>Use the credential lookup on the <a href=""verify.html"">Verify page</a> to confirm a professional's PCI credential status.</p>", @"Independence & verification" },
     };
 
     // The PCP-AI BoK: three weighted groups (40/40/20) over thirteen domains — mirrors docs/bok.
@@ -151,7 +168,7 @@ Govern models, data and accountability — AI proposes, the professional dispose
         new object?[]{ @"Privacy Policy", @"Enrolment & payment", @"privacy.html", @"How we handle your personal data" },
         new object?[]{ @"Cookie Policy", @"Enrolment & payment", @"cookie-policy.html", @"Cookies used on this site" },
         new object?[]{ @"Data Protection Policy", @"Enrolment & payment", @"data-protection-policy.html", @"Our data-protection commitments" },
-        new object?[]{ @"Exam Structure", @"Examination", @"exam-structure.html", @"Format, domains and weighting of the PCP-AI exam" },
+        new object?[]{ @"Exam Structure", @"Examination", @"exam-structure.html", @"Format, domains and weighting of the PCI certification exams" },
         new object?[]{ @"Examination Rules", @"Examination", @"exam-rules.html", @"Conduct and rules on exam day" },
         new object?[]{ @"Certification Policies", @"Examination", @"cert-policies.html", @"How certification decisions are made" },
         new object?[]{ @"Eligibility Requirements", @"Examination", @"eligibility-requirements.html", @"Who can sit the exam" },
@@ -186,7 +203,7 @@ Govern models, data and accountability — AI proposes, the professional dispose
         new object?[]{ @"Candidate Journey", @"candidate-journey.html", @"Explore" },
         new object?[]{ @"PC Manager Career Path", @"project-controls-manager-career-path.html", @"Explore" },
         new object?[]{ @"PC Director Career Path", @"project-controls-director-career-path.html", @"Explore" },
-        new object?[]{ @"PMP vs AACE vs PCP-AI", @"pmp-vs-aace-vs-pcp-ai.html", @"Explore" },
+        new object?[]{ @"PMP vs AACE vs PCL-AI", @"pmp-vs-aace-vs-pcl-ai.html", @"Explore" },
         new object?[]{ @"Saudi Arabia", @"project-controls-certification-saudi-arabia.html", @"Certification by Region" },
         new object?[]{ @"UAE", @"project-controls-certification-uae.html", @"Certification by Region" },
         new object?[]{ @"USA", @"project-controls-certification-usa.html", @"Certification by Region" },
@@ -206,7 +223,7 @@ Govern models, data and accountability — AI proposes, the professional dispose
         new object?[]{ @"How PCI Fits", @"landscape.html", @"About PCI" },
         new object?[]{ @"FAQ", @"faq.html", @"About PCI" },
         new object?[]{ @"Enrol", @"enrol.html", @"Certifications" },
-        new object?[]{ @"PCP-AI", @"certification.html", @"Certifications" },
+        new object?[]{ @"PCI PCL-AI™", @"/certifications/pcl-ai", @"Certifications" },
         new object?[]{ @"Certification Roadmap", @"certification-roadmap.html", @"Certifications" },
         new object?[]{ @"Eligibility Requirements", @"eligibility-requirements.html", @"Certifications" },
         new object?[]{ @"Exam Structure", @"exam-structure.html", @"Certifications" },
