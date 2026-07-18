@@ -63,7 +63,7 @@ public static class AdminMgmt
         // Every CRUD verb is gated by the content type's RBAC section (not just "any admin").
         // Mutations bump the public renderers: several of these tables (faqs, nav_items, news,
         // resources, bok_domains, governance_roles) are served INTO the public pages server-side.
-        void Crud(string name, string[] cols, string order, string section)
+        void Crud(string name, string[] cols, string order, string section, string? certCol = null)
         {
             void Changed() { ListSections.Bump(); PageContent.Bump(); CertCatalogue.Bump(); PriceTags.Bump(); }
             // Backtick identifiers so reserved words (e.g. media_assets.`usage`) are valid on BOTH providers
@@ -71,10 +71,18 @@ public static class AdminMgmt
             // constants (not request input), so this is not an injection surface.
             string Q(string c) => "`" + c + "`";
             var colList = string.Join(",", cols.Select(Q));
-            app.MapGet($"/api/admin/{name}", (HttpRequest req) => gate(req, section, _ => J(new { rows = db.Query($"SELECT * FROM `{name}` ORDER BY {order}") })));
+            // certCol names the table's certification_id column when the content is certification-scoped
+            // (question bank, cert documents): lists filter to the admin's cert scope, and mutations on
+            // (or into) an out-of-scope certification 403.
+            bool RowAllowed(AdminCtx adm, long id) =>
+                certCol is null || adm.CanCert(db.Scalar<object>($"SELECT COALESCE({Q(certCol)},1) FROM `{name}` WHERE id=?", id));
+            app.MapGet($"/api/admin/{name}", (HttpRequest req) => gate(req, section, adm =>
+                J(new { rows = db.Query($"SELECT * FROM `{name}` WHERE 1=1{(certCol is null ? "" : adm.CertFilterSql(Q(certCol)))} ORDER BY {order}") })));
             app.MapPost($"/api/admin/{name}", (HttpRequest req) => gate(req, section, adm =>
             {
                 var b = H.Body(req).GetAwaiter().GetResult();
+                if (certCol is not null && !adm.CanCert(H.GetNum(b, certCol) is { } cv ? (long)cv : null))
+                    return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
                 var vals = cols.Select(c => (object?)(b.TryGetValue(c, out var v) && v.ValueKind != JsonValueKind.Null
                     ? (v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ToString())
                     : null)).ToArray();
@@ -90,6 +98,9 @@ public static class AdminMgmt
             app.MapPatch($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, adm =>
             {
                 var b = H.Body(req).GetAwaiter().GetResult();
+                if (!RowAllowed(adm, id)) return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
+                if (certCol is not null && b.ContainsKey(certCol) && !adm.CanCert(H.GetNum(b, certCol) is { } cv ? (long)cv : null))
+                    return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
                 var set = cols.Where(c => b.ContainsKey(c)).ToList();
                 if (set.Count == 0) return J(new { ok = true });
                 var vals = set.Select(c => { var v = b[c]; return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)id).ToArray();
@@ -104,6 +115,7 @@ public static class AdminMgmt
             }));
             app.MapDelete($"/api/admin/{name}/{{id}}", (HttpRequest req, long id) => gate(req, section, adm =>
             {
+                if (!RowAllowed(adm, id)) return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
                 db.Execute($"DELETE FROM `{name}` WHERE id=?", id);
                 log(adm.Id, name + "_delete", id.ToString());
                 Changed();
@@ -112,20 +124,22 @@ public static class AdminMgmt
         }
         Crud("faqs", new[]{ "question","answer","category","sort_order","published" }, "sort_order, id", "faqs");
         Crud("bok_domains", new[]{ "code","name","weight","description","bullets","sort_order" }, "sort_order, id", "bok");
-        Crud("sample_questions", new[]{ "question","options","option_a","option_b","option_c","option_d","answer_index","domain","published","sort_order","is_practice","explanation","difficulty","certification_id" }, "sort_order, id", "sampleq");
+        Crud("sample_questions", new[]{ "question","options","option_a","option_b","option_c","option_d","answer_index","domain","published","sort_order","is_practice","explanation","difficulty","certification_id" }, "sort_order, id", "sampleq", certCol: "certification_id");
 
         // ---------- certifications (multi-credential management; exam section) ----------
         // Deliberately NOT the generic Crud: a certification that has ever issued a credential or
         // has a question bank must never be hard-deleted — deactivate instead (active=0). The
         // founding certification (id 1) is permanent.
-        app.MapGet("/api/admin/certifications", (HttpRequest req) => gate(req, "exams", _ =>
-            J(new { rows = db.Query(@"SELECT c.*,
+        app.MapGet("/api/admin/certifications", (HttpRequest req) => gate(req, "exams", adm =>
+            J(new { rows = db.Query($@"SELECT c.*,
                     (SELECT COUNT(*) FROM sample_questions q WHERE COALESCE(q.certification_id,1)=c.id AND q.is_practice=0) bank_size,
                     (SELECT COUNT(*) FROM exam_entitlements e WHERE COALESCE(e.certification_id,1)=c.id) entitlements,
                     (SELECT COUNT(*) FROM issued_credentials ic WHERE COALESCE(ic.certification_id,1)=c.id) credentials
-                FROM certifications c ORDER BY c.sort_order, c.id") })));
+                FROM certifications c WHERE 1=1{adm.CertFilterSql("c.id")} ORDER BY c.sort_order, c.id") })));
         app.MapPost("/api/admin/certifications", (HttpRequest req) => gate(req, "exams", adm =>
         {
+            // Creating a certification is inherently out of any per-certification scope.
+            if (adm.CertScope is not null) return Results.Json(new { error = "cert_forbidden", message = "Your account is limited to specific certifications and cannot create new ones." }, statusCode: 403);
             var b = H.Body(req).GetAwaiter().GetResult();
             var codeV = (H.GetS(b, "code") ?? "").Trim().ToUpperInvariant();
             var nameV = (H.GetS(b, "name") ?? "").Trim();
@@ -172,6 +186,7 @@ public static class AdminMgmt
         app.MapPatch("/api/admin/certifications/{id}", (HttpRequest req, long id) => gate(req, "exams", adm =>
         {
             if (Certs.ById(db, id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (!adm.CanCert(id)) return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
             var b = H.Body(req).GetAwaiter().GetResult();
             var allowed = new[]{ "name","description","credential_prefix","pass_mark_pct","duration_minutes","expiry_years","exam_price","active","sort_order",
                 // catalogue / public-page / SEO configuration (Phase 3)
@@ -208,6 +223,7 @@ public static class AdminMgmt
         app.MapDelete("/api/admin/certifications/{id}", (HttpRequest req, long id) => gate(req, "exams", adm =>
         {
             if (id == 1) return Results.Json(new { error = "founding_cert_permanent" }, statusCode: 400);
+            if (!adm.CanCert(id)) return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
             var refs = db.Scalar<long>(@"SELECT (SELECT COUNT(*) FROM issued_credentials WHERE certification_id=?)
                 + (SELECT COUNT(*) FROM exam_attempts WHERE certification_id=?)
                 + (SELECT COUNT(*) FROM exam_entitlements WHERE certification_id=?)
@@ -220,10 +236,14 @@ public static class AdminMgmt
         }));
 
         // ── Per-certification application routes (Phase 4) ──
-        app.MapGet("/api/admin/certifications/{id}/routes", (HttpRequest req, long id) => gate(req, "exams", _ =>
-            J(new { rows = db.Query("SELECT * FROM certification_routes WHERE certification_id=? ORDER BY sort_order, id", id) })));
+        app.MapGet("/api/admin/certifications/{id}/routes", (HttpRequest req, long id) => gate(req, "exams", adm =>
+            !adm.CanCert(id) ? Results.Json(new { error = "cert_forbidden" }, statusCode: 403)
+            : J(new { rows = db.Query("SELECT * FROM certification_routes WHERE certification_id=? ORDER BY sort_order, id", id) })));
         app.MapPatch("/api/admin/certification-routes/{rid}", (HttpRequest req, long rid) => gate(req, "exams", adm =>
         {
+            var routeRow = db.QueryOne("SELECT certification_id FROM certification_routes WHERE id=?", rid);
+            if (routeRow is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (!adm.CanCert(routeRow["certification_id"])) return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
             var b = H.Body(req).GetAwaiter().GetResult();
             var allowed = new[]{ "label","description","enabled","public","exam_required","requires_approval","fee_mode","fee_amount","discount_pct","opens_at","closes_at","max_applications","max_approvals","certificate_wording","sort_order" };
             var set = allowed.Where(c => b.ContainsKey(c)).ToList();
@@ -236,7 +256,7 @@ public static class AdminMgmt
         }));
 
         // Per-certification documents, books & study materials (Phase 8).
-        Crud("cert_documents", new[]{ "certification_id","kind","title","description","url","route_key","watermark","published","sort_order" }, "certification_id, sort_order, id", "resources");
+        Crud("cert_documents", new[]{ "certification_id","kind","title","description","url","route_key","watermark","published","sort_order" }, "certification_id, sort_order, id", "resources", certCol: "certification_id");
         Crud("governance_roles", new[]{ "role","holder","status","remit","sort_order" }, "sort_order, id", "governance");
         Crud("resources", new[]{ "title","category","doc_type","url","description","published","sort_order" }, "sort_order, id", "resources");
         Crud("news", new[]{ "title","body","published_date","url","published","sort_order" }, "published_date DESC, id DESC", "news");
@@ -426,17 +446,17 @@ public static class AdminMgmt
         }));
 
         // ---------- exams ----------
-        app.MapGet("/api/admin/exams", (HttpRequest req) => gate(req, "exams", _ => J(new { rows = db.Query(
-            "SELECT p.id,p.reference,p.product_type,p.payment_date,p.exam_schedule_deadline,u.email,u.first_name,u.last_name, CAST(julianday(p.exam_schedule_deadline)-julianday('now') AS INT) days_left FROM payments p LEFT JOIN users u ON u.id=p.user_id WHERE p.product_type IN ('exam','bundle') AND p.payment_status='paid' ORDER BY p.exam_schedule_deadline ASC") })));
+        app.MapGet("/api/admin/exams", (HttpRequest req) => gate(req, "exams", adm => J(new { rows = db.Query(
+            $"SELECT p.id,p.reference,p.product_type,p.payment_date,p.exam_schedule_deadline,u.email,u.first_name,u.last_name, CAST(julianday(p.exam_schedule_deadline)-julianday('now') AS INT) days_left FROM payments p LEFT JOIN users u ON u.id=p.user_id WHERE p.product_type IN ('exam','bundle') AND p.payment_status='paid'{adm.CertFilterSql("(SELECT e.certification_id FROM exam_entitlements e WHERE e.payment_id=p.id)")} ORDER BY p.exam_schedule_deadline ASC") })));
 
         // ---------- credentials ----------
-        app.MapGet("/api/admin/credentials", (HttpRequest req) => gate(req, "credentials", _ =>
+        app.MapGet("/api/admin/credentials", (HttpRequest req) => gate(req, "credentials", adm =>
         {
             var status = req.Query["status"].ToString(); var q = req.Query["q"].ToString();
-            var where = new List<string>(); var args = new List<object?>();
+            var where = new List<string> { "1=1" + adm.CertFilterSql("certification_id") }; var args = new List<object?>();
             if (!string.IsNullOrEmpty(status)) { where.Add("status=?"); args.Add(status); }
             if (!string.IsNullOrEmpty(q)) { where.Add("(credential_id LIKE ? OR holder_name LIKE ?)"); args.Add(Like(q)); args.Add(Like(q)); }
-            var w = where.Count > 0 ? "WHERE " + string.Join(" AND ", where) : "";
+            var w = "WHERE " + string.Join(" AND ", where);
             return J(new { rows = db.Query($"SELECT * FROM issued_credentials {w} ORDER BY id DESC", args.ToArray()) });
         }));
         app.MapPost("/api/admin/credentials", async (HttpRequest req) =>
@@ -453,6 +473,8 @@ public static class AdminMgmt
             // Attribute the credential to the chosen certification (defaults to the founding cert). The
             // credential label defaults to that certification's prefix so /api/verify shows the right name.
             var credCertId = Certs.Resolve(db, H.GetS(b, "certification_id", "certification"));
+            if (adminFromReq(req) is { } cadm && !cadm.CanCert(credCertId))
+                return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
             var credCert = Certs.ById(db, credCertId);
             var credLabel = H.GetS(b, "credential") ?? (credCert is not null ? Certs.Prefix(credCert) : "PCP-AI");
             try { var id = db.ExecuteReturningId("INSERT INTO issued_credentials(credential_id,user_id,certification_id,holder_name,credential,status,expires_at) VALUES(?,?,?,?,?, 'active',?)",
@@ -465,6 +487,10 @@ public static class AdminMgmt
             var g = Deny(req, "credentials"); if (g is not null) return g;
             var b = await H.Body(req); var status = H.GetS(b, "status");
             if (status is not ("active" or "expired" or "revoked")) return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            var credRow = db.QueryOne("SELECT certification_id FROM issued_credentials WHERE id=?", id);
+            if (credRow is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (adminFromReq(req) is { } sadm && !sadm.CanCert(credRow["certification_id"]))
+                return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
             db.Execute("UPDATE issued_credentials SET status=? WHERE id=?", status, id);
             log(null, "credential_" + status, id.ToString());
             return J(new { ok = true });

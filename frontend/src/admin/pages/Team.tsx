@@ -28,27 +28,33 @@ function PermissionPicker({ sections, roleGrants, role, permissions, onChange }:
   )
 }
 
+interface CertOpt { id: number; code: string; acronym?: string | null }
+
 function Editor({ member, meta, onClose, onSaved }: { member: TeamMember | null; meta: TeamResponse; onClose: () => void; onSaved: () => void }) {
   const isNew = !member
+  const { data: certData } = useAdminQuery<{ rows: CertOpt[] }>('/api/admin/certifications')
   const [email, setEmail] = useState(member?.email ?? '')
   const [name, setName] = useState(member?.name ?? '')
   const [role, setRole] = useState(member?.role ?? 'viewer')
   const [permissions, setPermissions] = useState<string[]>(member?.permissions ?? [])
+  const [certScope, setCertScope] = useState<number[]>(member?.cert_scope ?? [])
   const [status, setStatus] = useState(member?.status ?? 'active')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [tempPw, setTempPw] = useState<string | null>(null)
+
+  const toggleCert = (id: number) => setCertScope(certScope.includes(id) ? certScope.filter((x) => x !== id) : [...certScope, id])
 
   async function save() {
     setBusy(true)
     setError(null)
     try {
       if (isNew) {
-        const res = await adminApi.post<{ ok: boolean; temp_password: string }>('/api/admin/team', { email: email.trim().toLowerCase(), name, role, permissions })
+        const res = await adminApi.post<{ ok: boolean; temp_password: string }>('/api/admin/team', { email: email.trim().toLowerCase(), name, role, permissions, cert_scope: certScope })
         setTempPw(res.temp_password)
         onSaved()
       } else {
-        await adminApi.patch(`/api/admin/team/${member!.id}`, { name, role, permissions, status })
+        await adminApi.patch(`/api/admin/team/${member!.id}`, { name, role, permissions, status, cert_scope: certScope })
         onSaved()
         onClose()
       }
@@ -102,6 +108,23 @@ function Editor({ member, meta, onClose, onSaved }: { member: TeamMember | null;
           <label>Permissions</label>
           <PermissionPicker sections={meta.sections} roleGrants={meta.role_grants} role={role} permissions={permissions} onChange={setPermissions} />
         </div>
+        {role !== 'owner' && (
+          <div className="field">
+            <label>Certification scope</label>
+            <p className="muted small" style={{ margin: '0 0 .35rem' }}>
+              Restrict this member to specific certifications — their exam sessions, applications, credentials,
+              question banks and reports are limited to the ticked credentials. Leave all unticked for access to
+              every certification.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(150px,1fr))', gap: '.35rem' }}>
+              {certData?.rows.map((c) => (
+                <label key={c.id} className="row small" style={{ fontWeight: 400, gap: '.4rem' }}>
+                  <input type="checkbox" style={{ width: 'auto' }} checked={certScope.includes(c.id)} onChange={() => toggleCert(c.id)} /> {c.acronym || c.code}
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="row" style={{ marginTop: '.5rem', flexWrap: 'wrap' }}>
           <button className="btn" disabled={busy || (isNew && !email)} onClick={save}>{busy ? 'Saving…' : isNew ? 'Create member' : 'Save changes'}</button>
@@ -151,7 +174,12 @@ export default function Team() {
                   <td><strong>{m.email}</strong></td>
                   <td>{m.name || '—'}</td>
                   <td>{titleCase(m.role)}{m.role === 'owner' && <> <Badge tone="brand">owner</Badge></>}</td>
-                  <td className="small muted">{m.effective.length >= data.sections.length ? 'All' : `${m.effective.length} section${m.effective.length === 1 ? '' : 's'}`}</td>
+                  <td className="small muted">
+                    {m.effective.length >= data.sections.length ? 'All' : `${m.effective.length} section${m.effective.length === 1 ? '' : 's'}`}
+                    {(m.cert_scope?.length ?? 0) > 0 && m.role !== 'owner' && (
+                      <div><Badge tone="warn">{m.cert_scope!.length} cert{m.cert_scope!.length === 1 ? '' : 's'} only</Badge></div>
+                    )}
+                  </td>
                   <td className="small muted">{m.last_login_at ? fmtDateTime(m.last_login_at) : 'Never'}</td>
                   <td><StatusBadge status={m.status} /></td>
                   <td><button className="btn ghost sm" onClick={() => setEditing(m)}>Edit</button></td>

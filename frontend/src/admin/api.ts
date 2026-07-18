@@ -386,6 +386,7 @@ export interface TeamMember {
   role: string
   permissions: string[]
   effective: string[]
+  cert_scope?: number[]
   status: string
   must_change_pw?: number | null
   last_login_at?: string | null

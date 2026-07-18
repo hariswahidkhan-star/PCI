@@ -453,11 +453,13 @@ IResult? OwnerGate(HttpRequest req, out AdminCtx? a)
 app.MapGet("/api/admin/team", (HttpRequest req) =>
 {
     var gate = OwnerGate(req, out _); if (gate is not null) return gate;
-    var rows = db.Query("SELECT id,email,name,role,permissions,status,must_change_pw,last_login_at,created_at FROM admin_users ORDER BY id ASC")
+    var rows = db.Query("SELECT id,email,name,role,permissions,status,must_change_pw,last_login_at,created_at,cert_scope FROM admin_users ORDER BY id ASC")
         .Select(a => {
             var perms = new List<string>();
             try { perms = JsonSerializer.Deserialize<List<string>>(a["permissions"] as string ?? "[]") ?? new(); } catch { }
-            return new Dictionary<string, object?>(a) { ["permissions"] = perms, ["effective"] = Rbac.PermsFor((string)a["role"]!, a["permissions"] as string) };
+            var scope = new List<long>();
+            try { scope = JsonSerializer.Deserialize<List<long>>(a["cert_scope"] as string ?? "[]") ?? new(); } catch { }
+            return new Dictionary<string, object?>(a) { ["permissions"] = perms, ["effective"] = Rbac.PermsFor((string)a["role"]!, a["permissions"] as string), ["cert_scope"] = scope };
         }).ToList();
     // sections is a FLAT list of every permission key (the admin Team permission-picker maps over it).
     // Rbac.Sections is a grouped dictionary; returning it here serialised to an object and crashed the
@@ -477,9 +479,17 @@ app.MapPost("/api/admin/team", async (HttpRequest req) =>
     var role = S(b, "role") ?? "viewer";
     var perms = "[]";
     if (b.TryGetValue("permissions", out var pv) && pv.ValueKind == JsonValueKind.Array) perms = pv.GetRawText();
+    // Optional per-certification scope: an array of certification ids. Empty/absent (and any owner)
+    // means unrestricted. Values are validated to longs, so the stored JSON is always well-formed.
+    string? certScope = null;
+    if (role != "owner" && b.TryGetValue("cert_scope", out var csv) && csv.ValueKind == JsonValueKind.Array)
+    {
+        var ids = csv.EnumerateArray().Where(e => e.ValueKind == JsonValueKind.Number).Select(e => e.GetInt64()).Distinct().ToArray();
+        if (ids.Length > 0) certScope = JsonSerializer.Serialize(ids);
+    }
     var tempPw = S(b, "password") ?? Security.RandomHex(5);
-    var id = db.ExecuteReturningId("INSERT INTO admin_users(email,name,password_hash,role,permissions,status,must_change_pw,created_by) VALUES(?,?,?,?,?, 'active',1,?)",
-        email, S(b, "name") ?? "", BCrypt.Net.BCrypt.HashPassword(tempPw), role, perms, admin!.Id == 0 ? (object?)null : admin.Id);
+    var id = db.ExecuteReturningId("INSERT INTO admin_users(email,name,password_hash,role,permissions,status,must_change_pw,created_by,cert_scope) VALUES(?,?,?,?,?, 'active',1,?,?)",
+        email, S(b, "name") ?? "", BCrypt.Net.BCrypt.HashPassword(tempPw), role, perms, admin!.Id == 0 ? (object?)null : admin.Id, certScope);
     Log(0, "admin_created", $"{email} ({role})");
     return Json(new { ok = true, id, temp_password = tempPw });
 });
@@ -494,6 +504,17 @@ app.MapPatch("/api/admin/team/{id}", async (HttpRequest req, long id) =>
     if (b.ContainsKey("name")) { sets.Add("name=?"); vals.Add(S(b, "name")); }
     if (b.ContainsKey("role")) { sets.Add("role=?"); vals.Add(S(b, "role")); }
     if (b.TryGetValue("permissions", out var pv) && pv.ValueKind == JsonValueKind.Array) { sets.Add("permissions=?"); vals.Add(pv.GetRawText()); }
+    if (b.TryGetValue("cert_scope", out var csv) && csv.ValueKind is JsonValueKind.Array or JsonValueKind.Null)
+    {
+        // An empty array or explicit null clears the restriction (all certifications).
+        string? scope = null;
+        if (csv.ValueKind == JsonValueKind.Array)
+        {
+            var ids = csv.EnumerateArray().Where(e => e.ValueKind == JsonValueKind.Number).Select(e => e.GetInt64()).Distinct().ToArray();
+            if (ids.Length > 0) scope = JsonSerializer.Serialize(ids);
+        }
+        sets.Add("cert_scope=?"); vals.Add(scope);
+    }
     if (b.TryGetValue("status", out var sv))
     {
         var status = sv.GetString();

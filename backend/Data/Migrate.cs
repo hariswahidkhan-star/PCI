@@ -386,6 +386,10 @@ public static class Migrate
         AddCol("discount_codes", "min_transaction", "min_transaction REAL");
         AddCol("discount_codes", "max_discount", "max_discount REAL");
 
+        // Granular per-certification admin permissions: JSON array of certification ids an admin is
+        // restricted to (NULL/empty = all certifications — the default, and forced for owners).
+        AddCol("admin_users", "cert_scope", "cert_scope TEXT");
+
         MultiCert.Seed(db);
 
         // bootstrap owner admin on first run (parity with db.js seed)

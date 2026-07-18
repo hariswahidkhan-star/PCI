@@ -56,10 +56,11 @@ public static class Applications
                 WHERE a.user_id=? ORDER BY a.id DESC", u.Id) });
         });
 
-        // ── Admin: list applications (filterable by certification + status) ──
-        app.MapGet("/api/admin/applications", (HttpRequest req) => gate(req, "members", _ =>
+        // ── Admin: list applications (filterable by certification + status; always limited to the
+        // admin's certification scope) ──
+        app.MapGet("/api/admin/applications", (HttpRequest req) => gate(req, "members", adm =>
         {
-            var w = new List<string>(); var args = new List<object?>();
+            var w = new List<string> { "1=1" + adm.CertFilterSql("a.certification_id") }; var args = new List<object?>();
             if (long.TryParse(req.Query["certification_id"].ToString(), out var cid)) { w.Add("a.certification_id=?"); args.Add(cid); }
             var st = req.Query["status"].ToString();
             if (!string.IsNullOrEmpty(st)) { w.Add("a.status=?"); args.Add(st); }
@@ -85,6 +86,7 @@ public static class Applications
             if (status is null) return Results.Json(new { error = "bad_action" }, statusCode: 400);
             var appRow = db.QueryOne("SELECT * FROM certification_applications WHERE id=?", id);
             if (appRow is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (!adm.CanCert(appRow["certification_id"])) return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
 
             var stage = status;
             string? grantRef = null;
