@@ -44,6 +44,9 @@ public static class Payments
                 var codeVal = !string.IsNullOrWhiteSpace(codeStr) ? Public.ValidateCode(db, codeStr, product, email) : new Public.CodeValidation(null, null);
                 if (codeVal.Error is not null) return Results.Json(new { error = "code_invalid", message = codeVal.Error }, statusCode: 400);
                 var pr = Public.Pricing(db, product, codeVal.Code, certRow);
+                // A code with a configured floor cannot push the payable amount below it.
+                if (codeVal.Code is not null && Public.MinPayableViolation(codeVal.Code, pr.final) is { } floorMsg)
+                    return Results.Json(new { error = "code_invalid", message = floorMsg }, statusCode: 400);
                 db.Execute("UPDATE enrollment_sessions SET selected_product=?, pricing_snapshot=?, last_activity_at=datetime('now') WHERE email=? AND session_status='in_progress'",
                     product, JsonSerializer.Serialize(pr), (email ?? "").ToLowerInvariant());
 
@@ -106,6 +109,7 @@ public static class Payments
                   // Fully atomic settlement: user, membership, payment, redemption, tokens all commit
                   // together or roll back together. Combined with INSERT OR IGNORE this is idempotent.
                   long? welcomeUserId = null; string? welcomeEmail = null, welcomeFirst = null, welcomeLink = null, welcomeBase = null, welcomeRef = null;
+                  long? provisionCertuvoUserId = null;
                   db.Transaction(() =>
                   {
                     var product = m.GetValueOrDefault("product", "membership");
@@ -160,6 +164,13 @@ public static class Payments
                         {
                             user_id = userId, email, membership_type = "Student Membership", occurred_at = H.IsoNow,
                         });
+                        // Auto-provision the student's Certuvo external practice account AFTER the transaction
+                        // commits (see the setup-email note below). Provision() is a sync-over-async blocking
+                        // HTTP call whose continuation re-enters the shared DB connection on a threadpool thread;
+                        // running it here — while db.Transaction holds the connection's single reentrant lock —
+                        // deadlocks (the continuation waits for a lock the blocked webhook thread owns), wedging
+                        // every DB call app-wide. Defer it to post-commit where no lock is held.
+                        provisionCertuvoUserId = userId;
                     }
                     {
                         {
@@ -180,9 +191,12 @@ public static class Payments
                             // Extend the credential for the certification that was actually paid to recertify
                             // (falls back to the most recent credential when the checkout carried no cert).
                             var recertSel = m.GetValueOrDefault("certification");
+                            // Never resurrect a REVOKED credential: recertification may extend an active or
+                            // lapsed credential, but a credential an admin revoked for misconduct must stay
+                            // revoked — paying for recert must not reactivate it.
                             var cred = string.IsNullOrWhiteSpace(recertSel)
-                                ? db.QueryOne("SELECT * FROM issued_credentials WHERE user_id=? ORDER BY id DESC", userId)
-                                : db.QueryOne("SELECT * FROM issued_credentials WHERE user_id=? AND COALESCE(certification_id,1)=? ORDER BY id DESC", userId, Certs.Resolve(db, recertSel));
+                                ? db.QueryOne("SELECT * FROM issued_credentials WHERE user_id=? AND status!='revoked' ORDER BY id DESC", userId)
+                                : db.QueryOne("SELECT * FROM issued_credentials WHERE user_id=? AND status!='revoked' AND COALESCE(certification_id,1)=? ORDER BY id DESC", userId, Certs.Resolve(db, recertSel));
                             if (cred is not null)
                             {
                                 var nowIso = H.IsoNow;
@@ -195,12 +209,13 @@ public static class Payments
                         var discountCode = m.GetValueOrDefault("discount_code");
                         if (!string.IsNullOrEmpty(discountCode))
                         {
-                            var codeRow = db.QueryOne("SELECT id,max_uses FROM discount_codes WHERE code=?", discountCode);
+                            var codeRow = db.QueryOne("SELECT id,max_uses,partner_id FROM discount_codes WHERE code=?", discountCode);
                             if (codeRow is not null)
                             {
                                 db.Execute("UPDATE discount_codes SET used_count=used_count+1 WHERE id=? AND (max_uses IS NULL OR used_count<max_uses)", codeRow["id"]);
                                 db.Execute(@"INSERT OR IGNORE INTO code_redemptions(code_id,code,user_id,email,payment_id,product_type,amount_before,discount_amount) VALUES(?,?,?,?,?,?,?,?)",
                                     codeRow["id"], discountCode, userId, email, payId, product, MetaNum("standard_amount"), MetaNum("code_amount"));
+                                try { FraudChecks.OnRedemption(db, H.L(codeRow["id"]), discountCode!, email, codeRow["partner_id"] is null ? null : H.L(codeRow["partner_id"])); } catch { }
                             }
                         }
                         if (sess is not null) db.Execute("UPDATE enrollment_sessions SET session_status='paid', last_activity_at=datetime('now') WHERE id=?", sess["id"]);
@@ -231,6 +246,12 @@ public static class Payments
                   if (welcomeEmail is not null)
                       try { Mailer.SendWelcome(db, welcomeUserId!.Value, welcomeEmail, welcomeFirst, welcomeLink!, welcomeBase!); }
                       catch (Exception mex) { log(welcomeUserId, "welcome_email_failed", mex.Message); }
+                  // Provision Certuvo outside the transaction: this is a blocking outbound HTTP call whose async
+                  // continuation re-enters the shared DB connection, so running it here (no lock held) avoids the
+                  // deadlock that an in-transaction call would cause. Best-effort — the retry worker recovers failures.
+                  if (provisionCertuvoUserId is { } certuvoUid)
+                      try { PCI.Backend.Core.CertuvoLink.Provision(db, PCI.Backend.Core.CertuvoLink.Http, certuvoUid).GetAwaiter().GetResult(); }
+                      catch (Exception cex) { log(provisionCertuvoUserId, "certuvo_provision_failed", cex.Message); }
                   // Alert the notification recipients about the completed enrolment/payment.
                   try {
                       var eName = System.Net.WebUtility.HtmlEncode(welcomeFirst ?? "");

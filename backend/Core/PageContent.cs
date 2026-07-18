@@ -18,7 +18,7 @@ public static class PageContent
     // The checkout, enrolment wizard and launcher ARE captured: their static copy is editable like
     // any page — only the JS-rendered parts (order summary, price maths) stay engine-driven.
     static readonly HashSet<string> AppShells = new(StringComparer.OrdinalIgnoreCase)
-    { "student.html", "admin.html", "exam-ui.html", "partner-portal.html" };
+    { "student.html", "admin.html", "exam-ui.html", "partner.html" };
 
     static int _version = 1;
     /// <summary>Called by any admin content edit so cached injections refresh on the next request.</summary>

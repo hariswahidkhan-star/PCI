@@ -51,6 +51,29 @@ builder.Services.AddHostedService<PCI.Backend.Core.IntegrationDispatcher>();
 
 var app = builder.Build();
 
+// Friendly, branded 404 for unknown WEBSITE pages. UseStatusCodePages fires only when a downstream
+// handler produced a 404 WITHOUT writing a body, so it never touches the JSON 404s from /api/* (those
+// write their own body → HasStarted) nor any real static file. A GET for an .html/extension-less path
+// that matched no endpoint, static file or SPA mount gets 404.html with a proper 404 status instead of
+// the browser's blank error page.
+app.UseStatusCodePages(async context =>
+{
+    var ctx = context.HttpContext;
+    if (ctx.Response.StatusCode != 404 || ctx.Response.HasStarted || ctx.Request.Method != "GET") return;
+    if (ctx.Request.Path.StartsWithSegments("/api")) return;
+    var ext = Path.GetExtension(ctx.Request.Path.Value ?? "");
+    var wantsHtml = ext.Length == 0 || ext.Equals(".html", StringComparison.OrdinalIgnoreCase)
+                    || ctx.Request.Headers.Accept.ToString().Contains("text/html", StringComparison.OrdinalIgnoreCase);
+    if (!wantsHtml) return;
+    var root = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
+    var page = Path.Combine(root, "404.html");
+    if (File.Exists(page))
+    {
+        ctx.Response.ContentType = "text/html; charset=utf-8";
+        await ctx.Response.SendFileAsync(page);
+    }
+});
+
 // ================= security response headers + CORS (OUTERMOST middleware) =================
 // Registered first so EVERY response — including the rate-limiter 429, the maintenance 503 and the
 // CORS 204 preflight — carries these headers. Scoped for single-file apps with inline <script>/<style>
@@ -73,6 +96,26 @@ var _csp = string.Join("; ", new[]
 });
 var _cspHeader = string.Equals(Environment.GetEnvironmentVariable("CSP_REPORT_ONLY"), "true", StringComparison.OrdinalIgnoreCase)
     ? "Content-Security-Policy-Report-Only" : "Content-Security-Policy";
+// Error-reference net (outermost): any unhandled API exception becomes a logged error_report with a
+// PCI-YYYY-NNNNNN reference and a clean JSON body the student can quote to support — never a stack
+// trace. Website pages keep the framework's default handling (branded 404/500 pages).
+app.Use(async (ctx, next) =>
+{
+    try { await next(); }
+    catch (Exception ex) when (ctx.Request.Path.StartsWithSegments("/api"))
+    {
+        var reference = PCI.Backend.Core.ErrorRefs.Capture(db, null, ctx.Request.Path.ToString(), "server",
+            "We could not complete your request.", $"{ex.GetType().Name}: {ex.Message}", ctx.Request.Headers.UserAgent.ToString());
+        Console.Error.WriteLine($"[error {reference}] {ctx.Request.Method} {ctx.Request.Path}: {ex}");
+        if (!ctx.Response.HasStarted)
+        {
+            ctx.Response.StatusCode = 500;
+            await ctx.Response.WriteAsJsonAsync(new { error = "server_error", reference,
+                message = $"We could not complete your request. Please contact support and quote Error Reference: {reference}." });
+        }
+    }
+});
+
 // Canonical-domain + HTTPS enforcement (FIRST, before anything serves): 301 the www/pciglobal.ai
 // hosts to https://projectcontrolsinstitute.org, page-to-page. Unknown hosts pass through so the
 // service keeps working on the Render URL / localhost / staging during the DNS transition.
@@ -140,7 +183,7 @@ static string ClientIp(HttpContext ctx)
 // per client IP with a fixed-window in-memory counter. Applied by path prefix via middleware so it is
 // robust to route-handler shape (no per-endpoint chaining required).
 var _rlHits = new System.Collections.Concurrent.ConcurrentDictionary<string, (int count, long windowStart)>();
-string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application" };
+string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login" };
 const int RL_LIMIT = 10; const long RL_WINDOW_MS = 60_000;
 app.Use(async (ctx, next) =>
 {
@@ -399,12 +442,59 @@ app.MapPost("/api/admin/auth/login", async (HttpRequest req) =>
     var a = db.QueryOne("SELECT * FROM admin_users WHERE lower(email)=?", email);
     if (a is null || (a["status"] as string) != "active" || !Security.VerifyPassword(password, a["password_hash"] as string))
         return Results.Json(new { error = "invalid_credentials" }, statusCode: 401);
+    // Optional MFA for privileged accounts: once an admin has enrolled a TOTP secret, every login
+    // requires the 6-digit code as a second factor.
+    if (a["totp_secret"] is string totp && totp.Length > 0 && !totp.StartsWith("pending:"))
+    {
+        var code = S(b, "totp") ?? "";
+        if (code.Length == 0) return Results.Json(new { error = "totp_required" }, statusCode: 401);
+        if (!Security.VerifyTotp(totp, code)) return Results.Json(new { error = "totp_invalid" }, statusCode: 401);
+    }
     var tok = Security.RandomHex(24);
     db.Execute("INSERT INTO admin_sessions(admin_id,token,expires_at) VALUES(?,?,datetime('now','+12 hours'))", a["id"], Security.Sha(tok));
     db.Execute("UPDATE admin_users SET last_login_at=datetime('now') WHERE id=?", a["id"]);
     var ctx = Auth.ToAdmin(a);
     Log(0, "admin_login", ctx.Email);
     return Json(new { token = tok, admin = new { id = ctx.Id, email = ctx.Email, name = ctx.Name, role = ctx.Role, must_change_pw = ctx.MustChangePw }, permissions = ctx.Perms });
+});
+
+// ---- optional TOTP MFA for privileged accounts: enrol (pending) → verify (active) → disable ----
+app.MapPost("/api/admin/me/2fa/setup", (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    var secret = Security.NewTotpSecret();
+    // Stored as pending until the admin proves their authenticator works — enabling MFA can never lock
+    // an account out on a mis-scanned QR.
+    db.Execute("UPDATE admin_users SET totp_secret=? WHERE id=?", "pending:" + secret, a.Id);
+    Log(0, "admin_2fa_setup", a.Email);
+    return Json(new { secret, otpauth = $"otpauth://totp/PCI%20Admin:{Uri.EscapeDataString(a.Email)}?secret={secret}&issuer=PCI" });
+});
+
+app.MapPost("/api/admin/me/2fa/verify", async (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    var b = await Body(req);
+    var stored = db.Scalar<string>("SELECT totp_secret FROM admin_users WHERE id=?", a.Id) ?? "";
+    if (!stored.StartsWith("pending:")) return Results.Json(new { error = "nothing_pending" }, statusCode: 409);
+    if (!Security.VerifyTotp(stored["pending:".Length..], S(b, "code"))) return Results.Json(new { error = "totp_invalid" }, statusCode: 400);
+    db.Execute("UPDATE admin_users SET totp_secret=? WHERE id=?", stored["pending:".Length..], a.Id);
+    Log(0, "admin_2fa_enabled", a.Email);
+    return Json(new { ok = true, enabled = true });
+});
+
+app.MapPost("/api/admin/me/2fa/disable", async (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    var b = await Body(req);
+    var stored = db.Scalar<string>("SELECT totp_secret FROM admin_users WHERE id=?", a.Id) ?? "";
+    if (stored.Length > 0 && !stored.StartsWith("pending:") && !Security.VerifyTotp(stored, S(b, "code")))
+        return Results.Json(new { error = "totp_invalid", message = "Enter a current code to disable MFA." }, statusCode: 400);
+    db.Execute("UPDATE admin_users SET totp_secret=NULL WHERE id=?", a.Id);
+    Log(0, "admin_2fa_disabled", a.Email);
+    return Json(new { ok = true, enabled = false });
 });
 
 app.MapPost("/api/admin/auth/logout", (HttpRequest req) =>
@@ -675,10 +765,16 @@ PCI.Backend.Endpoints.AdminSeo.Map(app, db, logFn, GateFn, webRoot);   // Admin 
 PCI.Backend.Endpoints.AdminAnalytics.Map(app, db, GateFn);             // Admin Console → Analytics (/api/admin/analytics/...)
 PCI.Backend.Endpoints.AdminAiVisibility.Map(app, db, logFn, GateFn, webRoot); // Admin Console → AI Visibility (/api/admin/ai-visibility/...)
 PCI.Backend.Endpoints.AdminIntegrations.Map(app, db, logFn, GateFn);   // Admin Console → Integrations / ERP (/api/admin/integrations/...)
+PCI.Backend.Core.ExamDeliveryConnectors.Register();                    // register the 5 exam-delivery vendor connectors
+PCI.Backend.Endpoints.AdminExamDelivery.Map(app, db, logFn, GateFn);   // Admin Console → Exam Delivery (/api/admin/exam-delivery/...) + inbound callbacks
+PCI.Backend.Endpoints.AdminOps.Map(app, db, logFn, GateFn);            // operator toolkit: mark-paid, test users, student journey, Certuvo config
+PCI.Backend.Endpoints.Support.Map(app, db, logFn, GateFn);             // customer-service portal: error refs, unified inbox, SLA, templates, KB
+PCI.Backend.Endpoints.PartnerPortal.Map(app, db, logFn, GateFn);       // institution portal + code approvals + fraud review queue
 // one-time: capture each page's current headline as an editable block so every page is editable out of the box
 PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
 PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
 PCI.Backend.Data.CertuvoSeed.Apply(db); // Certuvo starter practice pack (scenario MCQs across BoK domains)
+PCI.Backend.Data.DemoExamSeed.Apply(db); // optional demo LIVE-exam bank — only when SEED_DEMO_EXAM=true (fresh-deploy testing)
 app.Use(async (ctx, next) =>
 {
     if (ctx.Request.Method == "GET")

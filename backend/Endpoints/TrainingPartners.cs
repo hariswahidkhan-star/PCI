@@ -307,6 +307,18 @@ public static class TrainingPartners
             if (H.GetEl(b, "sponsor_enabled") is not null) { sets.Add("sponsor_enabled=?"); args.Add(Flag(b, "sponsor_enabled") ? 1 : 0); }
             if (H.GetEl(b, "listed") is not null) { sets.Add("listed=?"); args.Add(Flag(b, "listed") ? 1 : 0); }
             if (H.GetEl(b, "sort_order") is not null) { sets.Add("sort_order=?"); args.Add((int)(H.GetNum(b, "sort_order") ?? 0)); }
+            // Sponsorship limits — the ceilings inside which this institution's discount codes operate.
+            if (H.GetEl(b, "max_discount_percent") is not null) { sets.Add("max_discount_percent=?"); args.Add(H.GetNum(b, "max_discount_percent") is { } mp ? Math.Clamp(mp, 0, 100) : null); }
+            if (H.GetEl(b, "max_codes") is not null) { sets.Add("max_codes=?"); args.Add(H.GetNum(b, "max_codes") is { } mc ? (long)mc : null); }
+            if (H.GetEl(b, "max_uses_per_code") is not null) { sets.Add("max_uses_per_code=?"); args.Add(H.GetNum(b, "max_uses_per_code") is { } mu ? (long)mu : null); }
+            if (H.GetEl(b, "total_allocation") is not null) { sets.Add("total_allocation=?"); args.Add(H.GetNum(b, "total_allocation") is { } ta ? (long)ta : null); }
+            if (H.GetEl(b, "allow_full_sponsorship") is not null) { sets.Add("allow_full_sponsorship=?"); args.Add(Flag(b, "allow_full_sponsorship") ? 1 : 0); }
+            // Agreement + privacy scope.
+            if (H.GetS(b, "status") is { } stt && stt is "active" or "suspended" or "terminated") { sets.Add("status=?"); args.Add(stt); }
+            Str("institution_type", "institution_type", 80);
+            Str("agreement_start", "agreement_start", 20); Str("agreement_end", "agreement_end", 20);
+            if (H.GetEl(b, "auto_approve_codes") is not null) { sets.Add("auto_approve_codes=?"); args.Add(Flag(b, "auto_approve_codes") ? 1 : 0); }
+            Str("privacy_fields", "privacy_fields", 500); Str("eligible_countries", "eligible_countries", 500);
             if (sets.Count == 0) return J(new { ok = true, unchanged = true });
             sets.Add("updated_at=datetime('now')");
             args.Add(id);
@@ -322,6 +334,65 @@ public static class TrainingPartners
             ListSections.Bump();
             log(adm.Id, "training_partner_delete", id.ToString());
             return J(new { ok = true });
+        }));
+
+        // ---- institution sponsorship: partner-linked discount codes, enforced against the partner's limits ----
+        app.MapPost("/api/admin/training-partners/{id}/codes", async (HttpContext ctx, long id) =>
+        {
+            var (adm, deny) = Admin(ctx.Request); if (deny is not null) return deny;
+            var p = db.QueryOne("SELECT * FROM training_partners WHERE id=?", id);
+            if (p is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var b = await H.Body(ctx.Request);
+            var percent = Math.Clamp(H.GetNum(b, "percent") ?? 0, 1, 100);
+            var maxUses = (long)Math.Max(1, H.GetNum(b, "max_uses") ?? 1);
+            var appliesTo = (H.GetS(b, "applies_to") ?? "all").Trim().ToLowerInvariant();
+            if (appliesTo is not ("all" or "membership" or "exam")) appliesTo = "all";
+            var endDate = (H.GetS(b, "end_date") ?? "").Trim();
+
+            // Enforce every admin-defined ceiling; institutions can never exceed them.
+            if (p["max_discount_percent"] is not null && percent > H.D(p["max_discount_percent"]))
+                return Results.Json(new { error = "over_percent_limit", limit = H.D(p["max_discount_percent"]) }, statusCode: 422);
+            if (percent >= 100 && H.L(p["allow_full_sponsorship"]) != 1)
+                return Results.Json(new { error = "full_sponsorship_not_allowed" }, statusCode: 422);
+            if (p["max_uses_per_code"] is not null && maxUses > H.L(p["max_uses_per_code"]))
+                return Results.Json(new { error = "over_uses_limit", limit = H.L(p["max_uses_per_code"]) }, statusCode: 422);
+            var codeCount = db.Scalar<long>("SELECT COUNT(*) FROM discount_codes WHERE partner_id=?", id);
+            if (p["max_codes"] is not null && codeCount >= H.L(p["max_codes"]))
+                return Results.Json(new { error = "over_code_limit", limit = H.L(p["max_codes"]) }, statusCode: 422);
+            if (p["total_allocation"] is not null)
+            {
+                var committed = db.Scalar<long>("SELECT COALESCE(SUM(COALESCE(max_uses,0)),0) FROM discount_codes WHERE partner_id=? AND active=1", id);
+                if (committed + maxUses > H.L(p["total_allocation"]))
+                    return Results.Json(new { error = "over_total_allocation", limit = H.L(p["total_allocation"]), committed }, statusCode: 422);
+            }
+
+            var codeStr = (H.GetS(b, "code") ?? "").Trim().ToUpperInvariant();
+            if (codeStr.Length == 0) codeStr = "INST-" + Security.RandomHex(4).ToUpperInvariant();
+            if (db.QueryOne("SELECT id FROM discount_codes WHERE code=?", codeStr) is not null)
+                return Results.Json(new { error = "code_taken" }, statusCode: 409);
+            var codeId = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,end_date,max_uses,active,code_type,org_name,partner_id,notes)
+                VALUES(?, 'percentage', ?, ?, ?, ?, 1, 'institution', ?, ?, ?)",
+                codeStr, percent, appliesTo, endDate.Length > 0 ? endDate : null, maxUses, H.Str(p["name"]), id, Clip(H.GetS(b, "notes") ?? "", 300));
+            log(adm!.Id, "partner_code_created", $"partner {id} code {codeStr} {percent:0.#}% x{maxUses}");
+            return J(new { ok = true, id = codeId, code = codeStr, percent, max_uses = maxUses, applies_to = appliesTo });
+        });
+
+        // Usage view: the partner's codes, redemption totals, remaining allocation and sponsored students.
+        app.MapGet("/api/admin/training-partners/{id}/usage", (HttpRequest req, long id) => gate(req, "partners", _ =>
+        {
+            var p = db.QueryOne("SELECT id,name,max_discount_percent,max_codes,max_uses_per_code,total_allocation,allow_full_sponsorship FROM training_partners WHERE id=?", id);
+            if (p is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var codes = db.Query("SELECT id,code,discount_value,applies_to,max_uses,used_count,active,end_date FROM discount_codes WHERE partner_id=? ORDER BY id DESC", id);
+            var usedTotal = codes.Sum(c => H.L(c["used_count"]));
+            var students = db.Query(@"SELECT DISTINCT u.id,u.email,u.first_name,u.last_name,r.redeemed_at,r.code
+                FROM code_redemptions r JOIN discount_codes dc ON dc.id=r.code_id LEFT JOIN users u ON u.id=r.user_id
+                WHERE dc.partner_id=? ORDER BY r.redeemed_at DESC LIMIT 200", id);
+            var allocation = p["total_allocation"] is null ? (long?)null : H.L(p["total_allocation"]);
+            // Nearing-limit alert (>=80% of the allocation consumed) so PCI and the institution can react.
+            if (allocation is { } cap && cap > 0 && usedTotal >= cap * 0.8)
+                try { Notify.Alert(db, "partners", $"Institution allocation nearing its limit: {H.Str(p["name"])}",
+                    $"<p>{H.Str(p["name"])} has used {usedTotal} of {cap} sponsored registrations.</p>", "training_partner", id); } catch { }
+            return J(new { partner = p, codes, used_total = usedTotal, allocation, remaining = allocation is { } a ? Math.Max(0, a - usedTotal) : (long?)null, students });
         }));
     }
 }

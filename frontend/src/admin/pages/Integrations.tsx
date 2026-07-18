@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
@@ -18,7 +18,7 @@ interface DeliveryRow { id: number; event_id: number; integration_id: number; in
 
 const STATUS_TONE: Record<string, 'ok' | 'warn' | 'err' | 'brand' | 'neutral'> = { delivered: 'ok', pending: 'warn', failed: 'err', skipped: 'neutral', ok: 'ok', error: 'err', idle: 'neutral' }
 const PROVIDER_LABEL: Record<string, string> = { webhook: 'Generic webhook', quickbooks: 'QuickBooks Online' }
-const TABS = ['Connectors', 'Events', 'Deliveries'] as const
+const TABS = ['Connectors', 'Events', 'Deliveries', 'Certuvo'] as const
 
 export default function Integrations() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Connectors')
@@ -34,6 +34,143 @@ export default function Integrations() {
       {tab === 'Connectors' && <ConnectorsTab />}
       {tab === 'Events' && <EventsTab />}
       {tab === 'Deliveries' && <DeliveriesTab />}
+      {tab === 'Certuvo' && <CertuvoTab />}
+    </div>
+  )
+}
+
+// Certuvo external practice-platform integration — auto-provision a member's Certuvo account on membership.
+interface CertuvoAccount {
+  user_id: number; email: string; is_test?: number | null; status: string; username: string | null; external_id?: string | null
+  member_type?: string | null; email_conflict?: number | null; must_change_password?: number | null
+  provisioned_at: string | null; activated_at?: string | null; credentials_sent_at?: string | null; last_error: string | null
+  retry_count?: number | null; next_retry_at?: string | null; suspended_at?: string | null; revoked_at?: string | null
+}
+interface CertuvoConfig {
+  enabled: boolean; api_base: string; provision_path: string; deactivate_path: string; login_url: string; auth_header: string
+  has_api_key: boolean; has_webhook_secret: boolean; requires: string; retry_max: number
+  username_prefix?: string; password_length?: number; email_conflict?: string; honorary_grants_membership?: boolean
+  accounts: CertuvoAccount[]
+}
+function CertuvoTab() {
+  const { data, loading, error, refetch } = useAdminQuery<CertuvoConfig>('/api/admin/certuvo')
+  const [f, setF] = useState<Record<string, string>>({})
+  const [enabled, setEnabled] = useState(false)
+  const [honorary, setHonorary] = useState(true)
+  const [apiKey, setApiKey] = useState('')
+  const [webhookSecret, setWebhookSecret] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [note, setNote] = useState<string | null>(null)
+  const seeded = useRef(false)
+  if (data && !seeded.current) {
+    seeded.current = true
+    setEnabled(data.enabled)
+    setHonorary(data.honorary_grants_membership !== false)
+    setF({ api_base: data.api_base, provision_path: data.provision_path, deactivate_path: data.deactivate_path, login_url: data.login_url, auth_header: data.auth_header, requires: data.requires, retry_max: String(data.retry_max), username_prefix: data.username_prefix ?? 'PCI', password_length: String(data.password_length ?? 14), email_conflict: data.email_conflict ?? 'dedicated' })
+  }
+  if (loading && !data) return <Spinner />
+  if (error) return <ErrorNote>{error}</ErrorNote>
+  const set = (k: string) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value })
+  async function save() {
+    setBusy(true); setNote(null)
+    try {
+      const body: Record<string, unknown> = { enabled, api_base: f.api_base, provision_path: f.provision_path, deactivate_path: f.deactivate_path, login_url: f.login_url, auth_header: f.auth_header, requires: f.requires, username_prefix: f.username_prefix, email_conflict: f.email_conflict, honorary_grants_membership: honorary }
+      if ((f.retry_max ?? '') !== '') body.retry_max = Number(f.retry_max)
+      if ((f.password_length ?? '') !== '') body.password_length = Number(f.password_length)
+      if (apiKey) body.api_key = apiKey
+      if (webhookSecret) body.webhook_secret = webhookSecret
+      await adminApi.post('/api/admin/certuvo', body); setApiKey(''); setWebhookSecret(''); setNote('Saved.'); refetch()
+    } catch (e) { setNote((e as Error).message) } finally { setBusy(false) }
+  }
+  async function reprovision(uid: number, reactivate: boolean) {
+    setBusy(true); setNote(null)
+    try { const r = await adminApi.post<{ ok: boolean; status: string; error: string | null }>(`/api/admin/certuvo/${uid}/provision`, reactivate ? { reactivate: true } : {}); setNote(r.ok ? `Provisioned (${r.status}).` : `Failed: ${r.error || r.status}`); refetch() }
+    catch (e) { setNote((e as Error).message) } finally { setBusy(false) }
+  }
+  async function act(uid: number, action: 'suspend' | 'revoke' | 'resend' | 'regenerate-username' | 'new-password') {
+    setBusy(true); setNote(null)
+    try {
+      const r = await adminApi.post<{ username?: string; ok?: boolean }>(`/api/admin/certuvo/${uid}/${action}`, {})
+      setNote(
+        action === 'suspend' ? 'Access suspended.'
+        : action === 'revoke' ? 'Access revoked.'
+        : action === 'resend' ? 'Access instructions re-sent.'
+        : action === 'regenerate-username' ? `New username assigned${r.username ? ` (${r.username})` : ''}.`
+        : 'New temporary password issued — the student can see it on their Certuvo page.')
+      refetch()
+    } catch (e) { setNote((e as Error).message) } finally { setBusy(false) }
+  }
+  return (
+    <div style={{ display: 'grid', gap: '1rem' }}>
+      <Card title="Certuvo practice-platform integration">
+        <p className="muted small" style={{ marginTop: 0 }}>When a student's membership is settled, PCI provisions them a Certuvo account through Certuvo's API and shares the credentials in the student panel. Set the base URL + API key from your Certuvo onboarding; point <em>API base</em> at a mock to validate first.</p>
+        {note && <div className="notice" role="status" style={{ marginBottom: '.6rem' }}>{note}</div>}
+        <div style={{ display: 'grid', gap: '.55rem', maxWidth: 640 }}>
+          <label className="row" style={{ gap: '.4rem' }}><input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} style={{ width: 'auto' }} /> Enabled (auto-provision on membership)</label>
+          <div style={{ display: 'grid', gap: '.55rem', gridTemplateColumns: '1fr 1fr' }}>
+            <label>API base<input value={f.api_base ?? ''} onChange={set('api_base')} placeholder="https://api.certuvo.example" /></label>
+            <label>Provision path<input value={f.provision_path ?? ''} onChange={set('provision_path')} placeholder="/api/accounts" /></label>
+            <label>Deactivation path<input value={f.deactivate_path ?? ''} onChange={set('deactivate_path')} placeholder="/api/accounts/deactivate" /></label>
+            <label>Student login URL<input value={f.login_url ?? ''} onChange={set('login_url')} placeholder="https://app.certuvo.example/login" /></label>
+            <label>Auth header<input value={f.auth_header ?? ''} onChange={set('auth_header')} placeholder="Authorization" /></label>
+            <label>API key <span className="muted small">(write-only{data?.has_api_key ? ' — set' : ''})</span><input type="password" value={apiKey} placeholder={data?.has_api_key ? '•••••• set — blank to keep' : ''} onChange={(e) => setApiKey(e.target.value)} /></label>
+            <label>Webhook secret <span className="muted small">(write-only{data?.has_webhook_secret ? ' — set' : ''})</span><input type="password" value={webhookSecret} placeholder={data?.has_webhook_secret ? '•••••• set — blank to keep' : ''} onChange={(e) => setWebhookSecret(e.target.value)} /></label>
+            <label>Access rule
+              <select value={f.requires ?? 'membership'} onChange={set('requires')}>
+                <option value="membership">Active membership</option>
+                <option value="membership_and_enrolment">Membership + certification enrolment</option>
+              </select>
+            </label>
+            <label>Max automatic retries<input type="number" min="0" max="50" value={f.retry_max ?? ''} onChange={set('retry_max')} /></label>
+            <label>Username prefix <span className="muted small">(PCI-generated, e.g. PCI-2026-000001)</span><input value={f.username_prefix ?? ''} onChange={set('username_prefix')} placeholder="PCI" maxLength={12} /></label>
+            <label>Temp-password length<input type="number" min="10" max="64" value={f.password_length ?? ''} onChange={set('password_length')} /></label>
+            <label>Email-conflict rule
+              <select value={f.email_conflict ?? 'dedicated'} onChange={set('email_conflict')}>
+                <option value="dedicated">Dedicated PCI login (proceed on the PCI username)</option>
+                <option value="manual">Park for manual review (never overwrite)</option>
+              </select>
+            </label>
+          </div>
+          <label className="row" style={{ gap: '.4rem' }}><input type="checkbox" checked={honorary} onChange={(e) => setHonorary(e.target.checked)} style={{ width: 'auto' }} /> Honorary approval grants a full student membership + Certuvo</label>
+          <p className="muted small" style={{ margin: 0 }}>PCI generates and owns each Certuvo login — a unique username (never the student's email) and an encrypted temporary password, pushed to Certuvo. An existing Certuvo account under the same email is never overwritten.</p>
+          <div className="row"><button className="btn sm" disabled={busy} onClick={save}>{busy ? 'Saving…' : 'Save'}</button></div>
+          <p className="muted small" style={{ margin: 0 }}>Inbound webhook: <code>POST /api/certuvo/webhook</code> with header <code>X-Certuvo-Secret</code>.</p>
+        </div>
+      </Card>
+      <Card title={`Provisioned accounts (${data?.accounts.length ?? 0})`}>
+        {(data?.accounts.length ?? 0) === 0 ? <Empty>No Certuvo accounts provisioned yet.</Empty> : (
+          <div style={{ overflowX: 'auto' }}>
+            <table className="data">
+              <thead><tr><th>Member</th><th>Type</th><th>Status</th><th>PCI username</th><th>Provisioned</th><th>Retries</th><th /></tr></thead>
+              <tbody>
+                {data!.accounts.map((a) => {
+                  const suspendedOrRevoked = a.status === 'suspended' || a.status === 'revoked'
+                  return (
+                    <tr key={a.user_id}>
+                      <td className="small">{a.email}{a.is_test ? <> <Badge tone="warn">TEST</Badge></> : null}{a.email_conflict ? <> <Badge tone="warn">EMAIL CONFLICT</Badge></> : null}</td>
+                      <td className="small muted">{a.member_type || '—'}</td>
+                      <td><Badge tone={a.status === 'active' ? 'ok' : a.status === 'error' || a.status === 'conflict' ? 'err' : 'warn'}>{a.status}</Badge>{a.last_error ? <div className="muted small">{a.last_error}</div> : null}</td>
+                      <td className="small">{a.username || '—'}{a.must_change_password ? <div className="muted small">must change on first login</div> : null}</td>
+                      <td className="small muted">{a.provisioned_at || '—'}{a.activated_at ? <div className="muted small">1st login {a.activated_at}</div> : null}</td>
+                      <td className="small">{a.retry_count ?? 0}{a.next_retry_at ? <div className="muted small">next {a.next_retry_at}</div> : null}</td>
+                      <td>
+                        <div className="row" style={{ gap: '.3rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                          <button className="btn ghost sm" disabled={busy} onClick={() => reprovision(a.user_id, suspendedOrRevoked)}>Re-provision</button>
+                          <button className="btn ghost sm" disabled={busy} onClick={() => act(a.user_id, 'regenerate-username')}>New username</button>
+                          <button className="btn ghost sm" disabled={busy} onClick={() => act(a.user_id, 'new-password')}>New password</button>
+                          {!suspendedOrRevoked && <button className="btn ghost sm" disabled={busy} onClick={() => act(a.user_id, 'suspend')}>Suspend</button>}
+                          {a.status !== 'revoked' && <button className="btn ghost sm danger" disabled={busy} onClick={() => act(a.user_id, 'revoke')}>Revoke</button>}
+                          {a.status === 'active' && <button className="btn ghost sm" disabled={busy} onClick={() => act(a.user_id, 'resend')}>Resend</button>}
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
     </div>
   )
 }

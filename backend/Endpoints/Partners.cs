@@ -4,13 +4,18 @@ using PCI.Backend.Data;
 namespace PCI.Backend.Endpoints;
 
 /// <summary>
-/// Partner / institution / sponsor dashboards. A training_partners row doubles as the portal account:
-/// the partner authenticates with a bearer access token (stored hashed, shown once at generation) and
-/// can sponsor candidates in bulk (creating the account, an approved sponsored application and a
-/// sponsor-funded exam entitlement per certification), track their candidates' progress, and view a
-/// commission ledger. Commissions are DERIVED from paid redemptions of discount codes attributed to
-/// the partner (discount_codes.partner_id) at the partner's commission_pct — nothing hooks into the
-/// payment path. Payouts are the only materialized rows; balance = accrued − paid out.
+/// Partner sponsorship + commissions, riding on the institution portal's own auth
+/// (partner_users / partner_sessions — see <see cref="PartnerPortal"/>). Two capabilities on top of
+/// the code-based portal:
+///
+///   Bulk candidate sponsorship — an enabled institution registers candidates directly: each row
+///   creates the account if new (set-password welcome email), an approved sponsored application and a
+///   sponsor-funded exam entitlement for the chosen certification, then tracks per-candidate progress
+///   (application → exam access → result → credential), always scoped per certification.
+///
+///   Commission ledger — DERIVED from paid redemptions of discount codes attributed to the partner
+///   (discount_codes.partner_id) at the partner's commission_pct; nothing hooks into the payment
+///   path. Payouts are the only materialized rows; balance = accrued − paid out.
 /// </summary>
 public static class Partners
 {
@@ -20,14 +25,10 @@ public static class Partners
         Func<HttpRequest, string, Func<AdminCtx, IResult>, IResult> gate)
     {
         IResult J(object o) => Results.Json(o);
-
-        Dictionary<string, object?>? PartnerFromReq(HttpRequest req)
+        IResult? Need(HttpContext ctx, out PartnerCtx? p)
         {
-            var h = req.Headers.Authorization.ToString();
-            if (!h.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)) return null;
-            var tok = h["Bearer ".Length..].Trim();
-            if (tok.Length < 16) return null;
-            return db.QueryOne("SELECT * FROM training_partners WHERE access_token_hash=?", Security.Sha(tok));
+            p = Auth.PartnerFromReq(ctx.Request, db);
+            return p is null ? Results.Json(new { error = "unauthorized" }, statusCode: 401) : null;
         }
 
         // Shared commission ledger builder (partner portal + admin see identical numbers).
@@ -62,7 +63,8 @@ public static class Partners
         }
 
         // Candidate progress for a partner: sponsorship rows enriched with the live application /
-        // entitlement / attempt / credential state, always scoped per certification.
+        // entitlement / attempt / credential state, always scoped per certification. The institution
+        // registered these candidates itself, so their identity is not privacy-masked here.
         object CandidateRows(long pid) => db.Query(@"SELECT s.id, s.candidate_email, s.candidate_name, s.route_key, s.created_at,
                 c.acronym cert_acronym, c.code cert_code,
                 a.status application_status,
@@ -74,50 +76,29 @@ public static class Partners
             LEFT JOIN certification_applications a ON a.id=s.application_id
             WHERE s.partner_id=? ORDER BY s.id DESC LIMIT 1000", pid);
 
-        // ── Partner portal: profile + headline stats ──
-        app.MapGet("/api/partner/me", (HttpRequest req) =>
-        {
-            var p = PartnerFromReq(req);
-            if (p is null) return Results.Json(new { error = "bad_token" }, statusCode: 401);
-            var pid = H.L(p["id"]);
-            var candidates = db.Scalar<long>("SELECT COUNT(*) FROM partner_sponsorships WHERE partner_id=?", pid);
-            var certified = db.Scalar<long>(@"SELECT COUNT(*) FROM partner_sponsorships s
-                WHERE s.partner_id=? AND EXISTS(SELECT 1 FROM issued_credentials ic WHERE ic.user_id=s.user_id AND ic.certification_id=s.certification_id AND ic.status='active')", pid);
-            return J(new
-            {
-                partner = new
-                {
-                    id = p["id"], name = p["name"], tier = p["tier"], partner_type = p["partner_type"],
-                    contact_name = p["contact_name"], contact_email = p["contact_email"],
-                    country = p["country"], website = p["website"],
-                    sponsor_enabled = H.B(p["sponsor_enabled"]), commission_pct = p["commission_pct"],
-                },
-                stats = new { candidates, certified },
-                commissions = CommissionLedger(p),
-            });
-        });
-
         // ── Partner portal: sponsored candidates + progress ──
-        app.MapGet("/api/partner/candidates", (HttpRequest req) =>
+        app.MapGet("/api/partner/candidates", (HttpContext ctx) =>
         {
-            var p = PartnerFromReq(req);
-            if (p is null) return Results.Json(new { error = "bad_token" }, statusCode: 401);
-            return J(new { rows = CandidateRows(H.L(p["id"])) });
+            if (Need(ctx, out var p) is { } deny) return deny;
+            var partner = db.QueryOne("SELECT sponsor_enabled FROM training_partners WHERE id=?", p!.PartnerId);
+            return J(new { sponsor_enabled = partner is not null && H.B(partner["sponsor_enabled"]), rows = CandidateRows(p.PartnerId) });
         });
 
         // ── Partner portal: bulk-sponsor candidates ──
         // For each {email, first_name, last_name, certification}: create the account if new (with a
         // set-password welcome email), record an approved sponsored application and grant a sponsor-
         // funded exam entitlement — all scoped to the requested certification. Per-row results; a
-        // failure in one row never blocks the rest.
-        app.MapPost("/api/partner/candidates", async (HttpRequest req) =>
+        // failure in one row never blocks the rest. Institution admin/finance roles only.
+        app.MapPost("/api/partner/candidates", async (HttpContext ctx) =>
         {
-            var p = PartnerFromReq(req);
-            if (p is null) return Results.Json(new { error = "bad_token" }, statusCode: 401);
-            if (!H.B(p["sponsor_enabled"]))
-                return Results.Json(new { error = "sponsorship_disabled", message = "Candidate sponsorship is not enabled for this partner account. Contact PCI to enable it." }, statusCode: 403);
-            var pid = H.L(p["id"]);
-            var body = await H.BodyEl(req);
+            if (Need(ctx, out var p) is { } deny) return deny;
+            if (p!.Role is not ("admin" or "finance"))
+                return Results.Json(new { error = "role_forbidden", message = "Only institution admin/finance users can sponsor candidates." }, statusCode: 403);
+            var partner = db.QueryOne("SELECT * FROM training_partners WHERE id=?", p.PartnerId);
+            if (partner is null || !H.B(partner["sponsor_enabled"]))
+                return Results.Json(new { error = "sponsorship_disabled", message = "Direct candidate sponsorship is not enabled in your agreement. Contact PCI to enable it." }, statusCode: 403);
+            var pid = p.PartnerId;
+            var body = await H.BodyEl(ctx.Request);
             if (body.ValueKind != System.Text.Json.JsonValueKind.Object
                 || !body.TryGetProperty("candidates", out var list)
                 || list.ValueKind != System.Text.Json.JsonValueKind.Array)
@@ -125,7 +106,7 @@ public static class Partners
             if (list.GetArrayLength() > MaxBatch)
                 return Results.Json(new { error = "batch_too_large", message = $"At most {MaxBatch} candidates per request." }, statusCode: 400);
 
-            var baseUrl = Mailer.BaseUrl(req);
+            var baseUrl = Mailer.BaseUrl(ctx.Request);
             var results = new List<object>();
             int granted = 0;
             foreach (var el in list.EnumerateArray())
@@ -170,47 +151,29 @@ public static class Partners
                 // when the candidate already holds an open entitlement for this certification).
                 var appId = db.ExecuteReturningId(@"INSERT INTO certification_applications(user_id,certification_id,route_key,status,workflow_stage,data_json)
                     VALUES(?,?, 'sponsored', 'approved', 'exam_access_granted', ?)",
-                    uid, certId, System.Text.Json.JsonSerializer.Serialize(new { sponsored_by = H.Str(p["name"]), partner_id = pid }));
+                    uid, certId, System.Text.Json.JsonSerializer.Serialize(new { sponsored_by = H.Str(partner["name"]), partner_id = pid, registered_by = p.Email }));
                 db.Execute("UPDATE certification_applications SET application_no=? WHERE id=?", $"PCI-APP-{DateTime.UtcNow.Year}-{100000 + appId}", appId);
                 var entRef = Applications.GrantExamEntitlement(db, uid, certId, "sponsored", "sponsored");
                 db.Execute(@"INSERT INTO partner_sponsorships(partner_id,user_id,application_id,certification_id,route_key,candidate_email,candidate_name)
                     VALUES(?,?,?,?, 'sponsored', ?, ?)", pid, uid, appId, certId, email, name);
                 try { db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Sponsorship', 'Exam access sponsored', ?, 'Schedule exam', '/certifications')",
-                    uid, $"{H.Str(p["name"])} has sponsored your {H.Str(cert["acronym"]) ?? H.Str(cert["code"])} examination. Your exam access is open."); } catch { }
+                    uid, $"{H.Str(partner["name"])} has sponsored your {H.Str(cert["acronym"]) ?? H.Str(cert["code"])} examination. Your exam access is open."); } catch { }
                 if (entRef is not null) granted++;
                 results.Add(new { email, status = entRef is not null ? "sponsored" : "sponsored_already_entitled", account = created ? "created" : "existing", certification = cert["code"] });
             }
-            log(null, "partner_bulk_sponsor", $"partner {pid} sponsored {granted}/{list.GetArrayLength()} candidates");
-            try { Notify.Alert(db, "partner", $"{H.Str(p["name"])} sponsored candidates", $"<p><strong>{H.Str(p["name"])}</strong> registered {granted} sponsored candidate(s) through the partner portal.</p>", "partner", pid, null); } catch { }
+            log(null, "partner_bulk_sponsor", $"partner {pid} sponsored {granted}/{list.GetArrayLength()} candidates (by {p.Email})");
+            try { Notify.Alert(db, "partners", $"{H.Str(partner["name"])} sponsored candidates", $"<p><strong>{System.Net.WebUtility.HtmlEncode(H.Str(partner["name"]) ?? "")}</strong> registered {granted} sponsored candidate(s) through the partner portal.</p>", "partner", pid, null); } catch { }
             return J(new { ok = true, results });
         });
 
         // ── Partner portal: commission ledger ──
-        app.MapGet("/api/partner/commissions", (HttpRequest req) =>
+        app.MapGet("/api/partner/commissions", (HttpContext ctx) =>
         {
-            var p = PartnerFromReq(req);
-            if (p is null) return Results.Json(new { error = "bad_token" }, statusCode: 401);
-            return J(CommissionLedger(p));
+            if (Need(ctx, out var p) is { } deny) return deny;
+            var partner = db.QueryOne("SELECT * FROM training_partners WHERE id=?", p!.PartnerId);
+            if (partner is null) return Results.Json(new { error = "institution_not_found" }, statusCode: 404);
+            return J(CommissionLedger(partner));
         });
-
-        // ── Admin: issue / revoke a partner's portal token ──
-        app.MapPost("/api/admin/training-partners/{id}/token", (HttpRequest req, long id) => gate(req, "partners", adm =>
-        {
-            if (db.QueryOne("SELECT id FROM training_partners WHERE id=?", id) is null)
-                return Results.Json(new { error = "not_found" }, statusCode: 404);
-            var token = "pp_" + Security.RandomHex(24);
-            db.Execute("UPDATE training_partners SET access_token_hash=?, updated_at=datetime('now') WHERE id=?", Security.Sha(token), id);
-            log(adm.Id, "partner_token_issued", id.ToString());
-            // Plaintext returned exactly once; only the hash is stored.
-            return J(new { ok = true, token });
-        }));
-
-        app.MapPost("/api/admin/training-partners/{id}/token/revoke", (HttpRequest req, long id) => gate(req, "partners", adm =>
-        {
-            db.Execute("UPDATE training_partners SET access_token_hash=NULL, updated_at=datetime('now') WHERE id=?", id);
-            log(adm.Id, "partner_token_revoked", id.ToString());
-            return J(new { ok = true });
-        }));
 
         // ── Admin: the same ledgers the partner sees, plus payouts ──
         app.MapGet("/api/admin/training-partners/{id}/commissions", (HttpRequest req, long id) => gate(req, "partners", _ =>

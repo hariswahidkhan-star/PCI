@@ -311,7 +311,163 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
   )
 }
 
+// ---------------- Approvals: institution codes awaiting a PCI decision ----------------
+interface ApprovalRow {
+  id: number
+  code: string
+  discount_value?: number | null
+  applies_to?: string | null
+  max_uses?: number | null
+  start_date?: string | null
+  end_date?: string | null
+  campaign_name?: string | null
+  notes?: string | null
+  created_at?: string | null
+  institution?: string | null
+  requested_by?: string | null
+}
+
+function ApprovalsTab() {
+  const { data, loading, error, refetch } = useAdminQuery<{ rows: ApprovalRow[] }>('/api/admin/code-approvals')
+  const [rejecting, setRejecting] = useState<number | null>(null)
+  const [reason, setReason] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
+  const rows = data?.rows ?? []
+
+  async function approve(r: ApprovalRow) {
+    setBusy(true); setMsg(null)
+    try { await adminApi.post(`/api/admin/code-approvals/${r.id}/approve`, {}); setMsg({ ok: true, text: `Code ${r.code} approved and live.` }); refetch() }
+    catch (e) { setMsg({ ok: false, text: (e as Error).message }) } finally { setBusy(false) }
+  }
+  async function reject(r: ApprovalRow) {
+    if (!reason.trim()) { setMsg({ ok: false, text: 'A rejection reason is required — it is sent to the institution.' }); return }
+    setBusy(true); setMsg(null)
+    try {
+      await adminApi.post(`/api/admin/code-approvals/${r.id}/reject`, { reason: reason.trim() })
+      setMsg({ ok: true, text: `Code ${r.code} rejected.` }); setRejecting(null); setReason(''); refetch()
+    } catch (e) { setMsg({ ok: false, text: (e as Error).message }) } finally { setBusy(false) }
+  }
+
+  return (
+    <Card title={`Pending institution codes (${rows.length})`}>
+      <p className="muted small" style={{ marginTop: 0 }}>Codes submitted by training partners that need a PCI decision before they go live. The institution is notified either way.</p>
+      {msg && <div className={'notice' + (msg.ok ? '' : ' err')} role="status" style={{ marginBottom: '.6rem' }}>{msg.text}</div>}
+      {loading && !data ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : rows.length === 0 ? (
+        <Empty>Nothing awaiting approval.</Empty>
+      ) : (
+        <table className="data">
+          <thead><tr><th>Code</th><th>Institution</th><th>%</th><th>Uses</th><th>Requested by</th><th>Window</th><th /></tr></thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.id}>
+                <td><strong>{r.code}</strong>{r.campaign_name && <div className="muted small">{r.campaign_name}</div>}</td>
+                <td className="small">{r.institution || '—'}</td>
+                <td className="small">{r.discount_value ?? 0}%{r.applies_to && r.applies_to !== 'all' ? ` (${r.applies_to})` : ''}</td>
+                <td className="small">{r.max_uses ?? '∞'}</td>
+                <td className="small">{r.requested_by || '—'}<div className="muted">{fmtDate(r.created_at)}</div></td>
+                <td className="small muted">{r.start_date ? `${fmtDate(r.start_date)} – ` : ''}{r.end_date ? fmtDate(r.end_date) : '—'}</td>
+                <td>
+                  {rejecting === r.id ? (
+                    <div className="row" style={{ gap: '.3rem', flexWrap: 'wrap' }}>
+                      <input placeholder="Reason (sent to the institution)" value={reason} onChange={(e) => setReason(e.target.value)} style={{ maxWidth: 220 }} />
+                      <button className="btn sm danger" disabled={busy} onClick={() => reject(r)}>Reject</button>
+                      <button className="btn ghost sm" onClick={() => { setRejecting(null); setReason('') }}>Cancel</button>
+                    </div>
+                  ) : (
+                    <div className="row" style={{ gap: '.3rem', flexWrap: 'wrap' }}>
+                      <button className="btn sm" disabled={busy} onClick={() => approve(r)}>Approve</button>
+                      <button className="btn ghost sm danger" disabled={busy} onClick={() => { setRejecting(r.id); setReason('') }}>Reject…</button>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </Card>
+  )
+}
+
+// ---------------- Review queue: automatic abuse flags on code usage ----------------
+interface FraudFlag {
+  id: number
+  kind: string
+  code_id?: number | null
+  code?: string | null
+  user_id?: number | null
+  email?: string | null
+  detail?: string | null
+  status?: string | null
+  created_at?: string | null
+}
+
+function ReviewQueueTab() {
+  const { data, loading, error, refetch } = useAdminQuery<{ rows: FraudFlag[] }>('/api/admin/fraud-flags')
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
+  const rows = data?.rows ?? []
+
+  async function act(f: FraudFlag, action: 'clear' | 'suspend_code') {
+    setBusy(true); setMsg(null)
+    try {
+      await adminApi.post(`/api/admin/fraud-flags/${f.id}/action`, { action })
+      setMsg({ ok: true, text: action === 'clear' ? 'Flag cleared.' : `Flag actioned — code ${f.code ?? ''} suspended.` })
+      refetch()
+    } catch (e) { setMsg({ ok: false, text: (e as Error).message }) } finally { setBusy(false) }
+  }
+
+  return (
+    <Card title={`Review queue (${rows.length})`}>
+      <p className="muted small" style={{ marginTop: 0 }}>Automatic abuse flags on discount-code usage. Clear a false positive, or suspend the code while you investigate.</p>
+      {msg && <div className={'notice' + (msg.ok ? '' : ' err')} role="status" style={{ marginBottom: '.6rem' }}>{msg.text}</div>}
+      {loading && !data ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : rows.length === 0 ? (
+        <Empty>No open flags — nothing to review.</Empty>
+      ) : (
+        <table className="data">
+          <thead><tr><th>Kind</th><th>Code</th><th>Email</th><th>Detail</th><th>Created</th><th /></tr></thead>
+          <tbody>
+            {rows.map((f) => (
+              <tr key={f.id}>
+                <td><Badge tone="warn">{f.kind.replace(/_/g, ' ')}</Badge></td>
+                <td className="small"><strong>{f.code || '—'}</strong></td>
+                <td className="small">{f.email || '—'}</td>
+                <td className="small">{f.detail || '—'}</td>
+                <td className="small muted">{fmtDate(f.created_at)}</td>
+                <td>
+                  <div className="row" style={{ gap: '.3rem', flexWrap: 'wrap' }}>
+                    <button className="btn sm secondary" disabled={busy} onClick={() => act(f, 'clear')}>Clear</button>
+                    <button className="btn sm danger" disabled={busy || !f.code_id} onClick={() => act(f, 'suspend_code')}>Suspend code</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </Card>
+  )
+}
+
+const CODE_TABS = ['Codes', 'Approvals', 'Review queue'] as const
+
 export default function Codes() {
+  const [tab, setTab] = useState<(typeof CODE_TABS)[number]>('Codes')
+  return (
+    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+      <h1>Discount &amp; founding codes</h1>
+      <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
+        {CODE_TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>)}
+      </div>
+      {tab === 'Codes' && <CodesTab />}
+      {tab === 'Approvals' && <ApprovalsTab />}
+      {tab === 'Review queue' && <ReviewQueueTab />}
+    </div>
+  )
+}
+
+function CodesTab() {
   const { data, loading, error, refetch } = useAdminQuery<DiscountCode[]>('/api/admin/codes')
   const [creating, setCreating] = useState(false)
   const [editing, setEditing] = useState<DiscountCode | null>(null)
@@ -324,7 +480,7 @@ export default function Codes() {
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       <div className="spread">
-        <h1>Discount &amp; founding codes</h1>
+        <span className="muted small">Codes created by PCI, plus approved institution codes.</span>
         <div className="row">
           <Link className="btn secondary sm" to="/founding">Founding dashboard</Link>
           <button className="btn sm" onClick={() => setCreating(true)}>New code</button>

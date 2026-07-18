@@ -37,6 +37,9 @@ public static class AdminStudents
         {
             var u = db.QueryOne("SELECT * FROM users WHERE id=?", id);
             if (u is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            // Credential hygiene: the password hash never leaves the database — not to dashboards,
+            // logs, APIs or exports. Support resets credentials; it never reads them.
+            u.Remove("password_hash");
             return J(new { user = u,
                 profile = db.QueryOne("SELECT * FROM student_profiles WHERE user_id=?", id),
                 membership = db.QueryOne("SELECT * FROM memberships WHERE user_id=?", id),
@@ -55,7 +58,10 @@ public static class AdminStudents
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var status = H.GetS(b, "status");
             if (status is not ("pending" or "active" or "deactivated")) return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            var prev = db.Scalar<string>("SELECT status FROM users WHERE id=?", id);
             db.Execute("UPDATE users SET status=?, updated_at=datetime('now') WHERE id=?", status, id);
+            if (prev == "deactivated" && status == "active")
+                try { db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Account', 'Your account has been unlocked', 'Your PCI account is active again — you can sign in as normal.')", id); } catch { }
             log(id, "member_status", status);
             return J(new { ok = true });
         }));
@@ -236,14 +242,18 @@ public static class AdminStudents
             if (cert is null) return Results.Json(new { error = "bad_certification" }, statusCode: 400);
             // One live entitlement per certification: refuse if an unconsumed paid one already exists.
             var open = db.QueryOne(@"SELECT p.id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id
-                WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle')
+                WHERE p.user_id=? AND p.payment_status IN ('paid','waived') AND p.product_type IN ('exam','bundle')
                 AND COALESCE(e.certification_id,1)=? AND COALESCE(e.status,'available') IN ('available','booked')", id, certId);
             if (open is not null) return Results.Json(new { error = "already_entitled" }, statusCode: 409);
             var reference = "WAIVE-" + Security.RandomHex(5).ToUpperInvariant();
             var note = (H.GetS(b, "note") ?? "").Trim(); if (note.Length > 300) note = note[..300];
-            var payId = db.ExecuteReturningId(@"INSERT INTO payments(user_id,product_type,standard_amount,final_amount,currency,payment_provider,payment_status,payment_date,reference,exam_schedule_deadline)
-                VALUES(?, 'exam', 0, 0, 'USD', 'admin_waiver', 'paid', datetime('now'), ?, datetime('now','+1 year'))", id, reference);
+            // A waiver is recorded as payment_status='waived' — never a fabricated 'paid' transaction.
+            var listPrice = Settlement.ListPrice(db, "exam");
+            var payId = db.ExecuteReturningId(@"INSERT INTO payments(user_id,product_type,standard_amount,final_amount,currency,payment_provider,payment_status,payment_date,reference,exam_schedule_deadline,waived_amount,note,recorded_by)
+                VALUES(?, 'exam', ?, 0, 'USD', 'admin_waiver', 'waived', datetime('now'), ?, datetime('now','+1 year'),?,?,?)", id, listPrice, reference, listPrice, note.Length > 0 ? note : null, adm.Id);
             db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?, 'exam', ?, 'available', datetime('now','+1 year'))", id, payId, certId);
+            db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,payment_id) VALUES(?, 'exam', ?, 'full', ?, ?, 0, 'exam_fee_waiver', ?, ?, ?)",
+                id, certId, listPrice, listPrice, note.Length > 0 ? note : null, adm.Id, payId);
             db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Exams', 'Exam fee waived', ?, 'Schedule your exam', '/certifications')",
                 id, $"The institute has granted you exam access for {H.Str(cert["name"])} at no charge. You can schedule your sitting from the Certifications page once your eligibility items are complete.");
             log(id, "exam_fee_waived", $"cert {certId} by admin {adm.Id} ref {reference}{(note.Length > 0 ? " note: " + note : "")}");

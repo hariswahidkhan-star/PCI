@@ -280,9 +280,9 @@ public static class AdminMgmt
                 inProgress = n("SELECT COUNT(*) FROM enrollment_sessions WHERE session_status='in_progress'"),
                 paidSessions = n("SELECT COUNT(*) FROM enrollment_sessions WHERE session_status='paid'"),
                 abandoned = n("SELECT COUNT(*) FROM enrollment_sessions WHERE session_status='in_progress' AND last_activity_at <= datetime('now','-72 hours')"),
-                payCount = n("SELECT COUNT(*) FROM payments WHERE payment_status='paid'"),
-                revenue = s("SELECT COALESCE(SUM(final_amount),0) FROM payments WHERE payment_status='paid'"),
-                revenueMonth = s("SELECT COALESCE(SUM(final_amount),0) FROM payments WHERE payment_status='paid' AND payment_date >= date('now','start of month')"),
+                payCount = n("SELECT COUNT(*) FROM payments WHERE payment_status='paid' AND COALESCE(user_id,0) NOT IN (SELECT id FROM users WHERE is_test=1)"),
+                revenue = s("SELECT COALESCE(SUM(final_amount),0) FROM payments WHERE payment_status='paid' AND COALESCE(user_id,0) NOT IN (SELECT id FROM users WHERE is_test=1)"),
+                revenueMonth = s("SELECT COALESCE(SUM(final_amount),0) FROM payments WHERE payment_status='paid' AND payment_date >= date('now','start of month') AND COALESCE(user_id,0) NOT IN (SELECT id FROM users WHERE is_test=1)"),
                 refunded = n("SELECT COUNT(*) FROM payments WHERE payment_status='refunded'"),
                 failedPay = n("SELECT COUNT(*) FROM payments WHERE payment_status='failed'"),
                 credActive = n("SELECT COUNT(*) FROM issued_credentials WHERE status='active'"),
@@ -290,9 +290,9 @@ public static class AdminMgmt
                 openInq = n("SELECT COUNT(*) FROM inquiries WHERE status!='closed'"),
                 examsDue = n("SELECT COUNT(*) FROM payments WHERE product_type IN ('exam','bundle') AND payment_status='paid' AND exam_schedule_deadline >= datetime('now')"),
             };
-            var revSeries = db.Query("SELECT strftime('%Y-%m', payment_date) ym, COALESCE(SUM(final_amount),0) amount, COUNT(*) n FROM payments WHERE payment_status='paid' AND payment_date IS NOT NULL GROUP BY ym ORDER BY ym DESC LIMIT 12");
+            var revSeries = db.Query("SELECT strftime('%Y-%m', payment_date) ym, COALESCE(SUM(final_amount),0) amount, COUNT(*) n FROM payments WHERE payment_status='paid' AND payment_date IS NOT NULL AND COALESCE(user_id,0) NOT IN (SELECT id FROM users WHERE is_test=1) GROUP BY ym ORDER BY ym DESC LIMIT 12");
             revSeries.Reverse();
-            var productMix = db.Query("SELECT product_type, COUNT(*) n, COALESCE(SUM(final_amount),0) amount FROM payments WHERE payment_status='paid' GROUP BY product_type");
+            var productMix = db.Query("SELECT product_type, COUNT(*) n, COALESCE(SUM(final_amount),0) amount FROM payments WHERE payment_status='paid' AND COALESCE(user_id,0) NOT IN (SELECT id FROM users WHERE is_test=1) GROUP BY product_type");
             var funnel = new { started = n("SELECT COUNT(*) FROM enrollment_sessions"), in_progress = k.inProgress, paid = k.paidSessions };
             var recent = db.Query("SELECT created_at ts, action, details FROM audit_logs ORDER BY id DESC LIMIT 12");
             return J(new { kpis = k, revSeries, productMix, funnel, recent });

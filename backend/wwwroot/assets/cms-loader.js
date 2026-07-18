@@ -3,7 +3,14 @@
    With no value set, this script does nothing and the site remains fully static. */
 (function(){
   var BASE=(window.PCI_API_BASE||'').replace(/\/$/,'');
+  /* Served by the PCI backend (the real deployment topology): the API is same-origin, so default to
+     it when no explicit backend is configured. This makes the newsletter and the contact/corporate
+     forms (which read window.PCI_API_BASE at submit time) and managed content work without pinning
+     the <meta name="pci-api"> on all 200+ pages. A local file:// open (no server) stays fully static. */
+  if(!BASE && (location.protocol==='http:'||location.protocol==='https:')) BASE=location.origin;
   if(!BASE) return;
+  /* publish the resolved base so inline form handlers on this page pick up the same-origin default */
+  window.PCI_API_BASE=BASE;
   var ctrl=('AbortController' in window)?new AbortController():null;
   if(ctrl) setTimeout(function(){ctrl.abort();},3000);
   fetch(BASE+'/api/content',{signal:ctrl&&ctrl.signal}).then(function(r){return r.json();}).then(function(d){

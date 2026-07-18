@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="color-scheme" content="light only"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>PCI · Institution Partner Portal</title>
+<style>
+:root{
+  --navy:#0E1525; --navy-2:#151F35; --blue:#1D4ED8; --blue-700:#1E3A8A; --blue-2:#3B82F6; --blue-50:#EEF3FE;
+  --ink:#0F172A; --slate:#475569; --mist:#64748B; --line:#E3E8EF; --line-2:#EEF1F5; --bg:#F4F6F9; --card:#FFFFFF;
+  --ok:#1A7D3C; --ok-50:#EAF6EE; --warn:#B45309; --warn-50:#FDF4E7; --err:#B91C1C; --err-50:#FDECEC;
+  --grey:#5B6B80; --grey-50:#EEF1F5;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --display:'Archivo','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --shadow:0 1px 2px rgba(15,23,42,.04),0 8px 24px rgba(15,23,42,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--display);font-weight:800;letter-spacing:-.02em;margin:0}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--blue);text-decoration:none}
+
+/* ---- buttons / fields ---- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:600;transition:background .15s,border-color .15s}
+.btn:hover{background:#F7F9FC}
+.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-700);border-color:var(--blue-700)}
+.btn-danger{border-color:#F1C1C1;color:var(--err)}
+.btn-danger:hover{background:var(--err-50)}
+.btn-sm{padding:5px 11px;font-size:12.5px;border-radius:7px}
+.btn:disabled{opacity:.5;cursor:default}
+.fld{margin-bottom:14px;min-width:0}
+.fld label{display:block;font-size:12px;font-weight:600;color:var(--slate);margin-bottom:6px}
+.fld input,.fld select,.fld textarea{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:10px 12px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink)}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50)}
+.fld .hint{font-size:11.5px;color:var(--mist);margin-top:4px}
+.note{border-radius:9px;padding:11px 14px;font-size:13px;margin-bottom:14px;line-height:1.5}
+.note.err{background:var(--err-50);color:var(--err);border:1px solid #F2CACA}
+.note.ok{background:var(--ok-50);color:var(--ok);border:1px solid #C8E6D2}
+
+/* ---- gate (login / password) ---- */
+#gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#EAF1FE 0%,#F6F9FF 55%,#EEF6FF 100%);padding:20px;z-index:50;overflow:auto}
+.gcard{width:100%;max-width:430px;background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(29,78,216,.16);border:1px solid #E3E9F4;overflow:hidden;margin:auto}
+.ghead{background:linear-gradient(135deg,#1D4ED8,#3B82F6);padding:28px 34px 24px}
+.ghead .wm{font-family:var(--display);font-weight:900;font-size:26px;color:#fff;letter-spacing:-.02em}
+.ghead .sub{margin-top:6px;font-size:10px;letter-spacing:3.2px;text-transform:uppercase;color:#DBE6FF;font-weight:600}
+.gbody{padding:26px 34px 30px}
+.gbody h1{font-size:21px;margin:0 0 6px}
+.gbody p.lead{margin:0 0 20px;color:var(--mist);font-size:13px}
+.gbody .btn-primary{width:100%;margin-top:4px;padding:11px 16px}
+.galt{margin-top:16px;text-align:center;font-size:13px;color:var(--mist)}
+
+/* ---- app shell ---- */
+#app{display:none;min-height:100vh;flex-direction:column}
+.hd{background:var(--navy);color:#fff;position:sticky;top:0;z-index:20;box-shadow:0 2px 10px rgba(14,21,37,.28)}
+.hd-in{max-width:1180px;margin:0 auto;padding:0 22px;height:58px;display:flex;align-items:center;gap:13px}
+.hd .mk{font-family:var(--display);font-weight:900;font-size:21px;letter-spacing:-.02em;color:#fff}
+.hd .bar{width:2px;height:24px;background:var(--blue-2);border-radius:2px;flex:0 0 auto;opacity:.9}
+.hd .bt{font-size:13.5px;font-weight:600;color:#C9D4E8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hd .spacer{flex:1}
+.hd .who{font-size:12px;color:#8FA0BC;text-align:right;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn-dark{background:transparent;border:1.5px solid #33415C;color:#DDE6F5}
+.btn-dark:hover{background:var(--navy-2);border-color:#4A5A7A}
+.tabs{max-width:1180px;margin:0 auto;padding:0 14px;display:flex;gap:2px}
+.tabs button{background:none;border:0;color:#9DACC6;font-size:13.5px;font-weight:600;padding:11px 14px;border-bottom:2.5px solid transparent}
+.tabs button:hover{color:#fff}
+.tabs button.on{color:#fff;border-bottom-color:var(--blue-2)}
+main{flex:1;width:100%;max-width:1180px;margin:0 auto;padding:26px 22px 60px}
+.tab{display:none}
+.tab.on{display:block;animation:fadein .3s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---- cards / layout ---- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;box-shadow:var(--shadow);margin-bottom:20px;min-width:0}
+.card h3{font-size:15px;margin-bottom:14px}
+.bar-row{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.bar-row h2{font-size:20px}
+.bar-row .spacer{flex:1}
+.inst{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between}
+.inst h2{font-size:22px}
+.inst .agree{color:var(--slate);font-size:13px;margin-top:6px}
+.inst .chips{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.limits{background:var(--blue-50);border:1px solid #D8E4FB;border-radius:10px;padding:12px 16px;font-size:13px;font-weight:600;color:var(--blue-700);max-width:420px}
+.limits .t{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+.tile .k{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mist)}
+.tile .v{font-family:var(--display);font-weight:800;font-size:28px;margin-top:8px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.tile .s{font-size:12px;color:var(--slate);margin-top:4px;font-variant-numeric:tabular-nums}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+@media (max-width:820px){.grid2{grid-template-columns:1fr}}
+.trend{width:100%;height:76px;display:block}
+.cap{font-size:11.5px;color:var(--mist);margin-top:8px;display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+.tclist .row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-2)}
+.tclist .row:last-child{border-bottom:0}
+.tclist .rk{font-size:11px;font-weight:700;color:var(--mist);width:16px;flex:0 0 auto}
+.tclist .cd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tclist .track{flex:1;height:6px;background:var(--line-2);border-radius:4px;overflow:hidden;min-width:40px}
+.tclist .fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-2));border-radius:4px}
+.tclist .n{font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;flex:0 0 auto}
+.nrow{padding:13px 0;border-bottom:1px solid var(--line-2)}
+.nrow:last-child{border-bottom:0}
+.nrow .nt{font-weight:700;font-size:13.5px}
+.nrow .nd{font-size:11.5px;color:var(--mist);margin-left:8px;font-weight:500}
+.nrow .nb{color:var(--slate);font-size:13px;margin-top:4px;white-space:pre-wrap}
+.empty{padding:18px 4px;color:var(--mist);font-size:12.5px}
+
+/* ---- tables / chips ---- */
+.tblwrap{padding:6px 0;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:680px;font-variant-numeric:tabular-nums}
+th{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mist);text-align:left;padding:10px 14px;border-bottom:1.5px solid var(--line)}
+td{padding:11px 14px;border-bottom:1px solid var(--line-2);font-size:13px;vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;font-weight:600}
+.subline{font-size:11.5px;color:var(--mist);margin-top:3px;max-width:34ch}
+.reject{font-size:11.5px;color:var(--err);margin-top:4px;max-width:30ch}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:2.5px 9px;border-radius:20px;white-space:nowrap;text-transform:capitalize}
+.chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.c-ok{background:var(--ok-50);color:var(--ok)}
+.c-warn{background:var(--warn-50);color:var(--warn)}
+.c-err{background:var(--err-50);color:var(--err)}
+.c-grey{background:var(--grey-50);color:var(--grey)}
+.c-blue{background:var(--blue-50);color:var(--blue-700)}
+
+/* ---- new-code form ---- */
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:0 16px}
+@media (max-width:860px){.fgrid{grid-template-columns:1fr 1fr}}
+@media (max-width:540px){.fgrid{grid-template-columns:1fr}}
+.fgrid .span-all{grid-column:1 / -1}
+.frow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:4px}
+.frow label.chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);font-weight:500}
+.frow input[type=checkbox]{width:16px;height:16px;accent-color:var(--blue)}
+.formhint{font-size:12px;color:var(--mist);margin:-6px 0 16px}
+
+.toast-wrap{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:80;display:flex;flex-direction:column;gap:8px;align-items:center}
+.toast{background:var(--ink);color:#fff;padding:9px 16px;border-radius:9px;font-size:12.5px;box-shadow:var(--shadow)}
+.toast.err{background:var(--err)}
+
+@media (max-width:640px){
+  .hd-in{padding:0 14px;height:54px;gap:10px}
+  .hd .who{display:none}
+  main{padding:18px 14px 50px}
+  .card{padding:16px 16px}
+  .gbody,.ghead{padding-left:24px;padding-right:24px}
+  .tile .v{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <!-- Login -->
+  <div class="gcard" id="viewLogin">
+    <div class="ghead"><div class="wm">PCI</div><div class="sub">Project Controls Institute</div></div>
+    <div class="gbody">
+      <h1>Institution Partner Portal</h1>
+      <p class="lead">Sign in with the partner account issued to your institution by PCI.</p>
+      <div class="note err" id="loginErr" hidden></div>
+      <form id="loginForm" novalidate>
+        <div class="fld"><label for="inEmail">Email</label><input id="inEmail" type="email" autocomplete="username" placeholder="you@institution.edu"/></div>
+        <div class="fld"><label for="inPass">Password</label><input id="inPass" type="password" autocomplete="current-password" placeholder="Your password"/></div>
+        <button class="btn btn-primary" id="btnLogin" type="submit">Sign in</button>
+      </form>
+      <div class="galt">Trouble signing in? Contact your PCI partnership manager.</div>
+    </div>
+  </div>
+  <!-- Forced password change -->
+  <div class="gcard" id="viewPw" style="display:none">
+    <div class="ghead"><div class="wm">PCI</div><div class="sub">Project Controls Institute</div></div>
+    <div class="gbody">
+      <h1>Set a new password</h1>
+      <p class="lead">For security you must choose a new password before continuing. It must be at least 10 characters.</p>
+      <div class="note err" id="pwErr" hidden></div>
+      <form id="pwForm" novalidate>
+        <div class="fld"><label for="inPw1">New password</label><input id="inPw1" type="password" autocomplete="new-password"/></div>
+        <div class="fld"><label for="inPw2">Confirm new password</label><input id="inPw2" type="password" autocomplete="new-password"/></div>
+        <button class="btn btn-primary" id="btnPw" type="submit">Save and continue</button>
+      </form>
+      <div class="galt"><a href="#" id="pwBack">Sign in as someone else</a></div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <header class="hd">
+    <div class="hd-in">
+      <span class="mk">PCI</span><span class="bar"></span><span class="bt">Institution Partner Portal</span>
+      <span class="spacer"></span>
+      <span class="who" id="who"></span>
+      <button class="btn btn-dark btn-sm" id="btnOut">Sign out</button>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Portal sections">
+      <button data-tab="overview" class="on">Overview</button>
+      <button data-tab="codes">Codes</button>
+      <button data-tab="students">Students</button>
+      <button data-tab="sponsor">Sponsorships</button>
+      <button data-tab="commissions">Commissions</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- OVERVIEW -->
+    <section class="tab on" id="tab-overview">
+      <div class="card inst">
+        <div style="min-width:0">
+          <h2 id="instName">Loading…</h2>
+          <div class="agree" id="instAgree"></div>
+          <div class="chips" id="instChips"></div>
+        </div>
+        <div class="limits" id="instLimits" style="display:none"><span class="t">Your agreement</span><span id="instLimitsTxt"></span></div>
+      </div>
+      <div class="tiles" id="tiles"></div>
+      <div class="grid2">
+        <div class="card"><h3>Usage trend</h3><div id="trendBox"><div class="empty">Loading…</div></div><div class="cap" id="trendCap"></div></div>
+        <div class="card"><h3>Top codes</h3><div class="tclist" id="topCodes"><div class="empty">Loading…</div></div></div>
+      </div>
+      <div class="card"><h3>Notices from PCI</h3><div id="notices"><div class="empty">Loading…</div></div></div>
+    </section>
+
+    <!-- CODES -->
+    <section class="tab" id="tab-codes">
+      <div class="bar-row"><h2>Discount codes</h2><span class="spacer"></span><button class="btn btn-primary" id="btnNew">New code</button></div>
+      <div class="card" id="codeFormCard" hidden>
+        <h3>Create a code</h3>
+        <div class="formhint" id="codeFormHint"></div>
+        <div class="note err" id="codeErr" hidden></div>
+        <div class="note ok" id="codeOk" hidden></div>
+        <form id="codeForm" novalidate>
+          <div class="fgrid">
+            <div class="fld"><label for="cPercent">Discount %</label><input id="cPercent" type="number" min="1" max="100" step="1" placeholder="e.g. 15"/></div>
+            <div class="fld"><label for="cMaxUses">Maximum uses</label><input id="cMaxUses" type="number" min="1" step="1" placeholder="e.g. 50"/></div>
+            <div class="fld"><label for="cApplies">Applies to</label>
+              <select id="cApplies"><option value="all">All products</option><option value="membership">Membership only</option><option value="exam">Exam only</option></select>
+            </div>
+            <div class="fld"><label for="cStart">Start date <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="cStart" type="date"/></div>
+            <div class="fld"><label for="cEnd">End date <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="cEnd" type="date"/></div>
+            <div class="fld"><label for="cCode">Custom code <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="cCode" maxlength="40" placeholder="Leave blank to auto-generate" autocomplete="off"/></div>
+            <div class="fld"><label for="cCampaign">Campaign name <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="cCampaign" maxlength="120" placeholder="e.g. Autumn intake 2026"/></div>
+            <div class="fld span-all"><label for="cNotes">Notes <span style="font-weight:400;color:var(--mist)">(optional, internal)</span></label><textarea id="cNotes" rows="2"></textarea></div>
+          </div>
+          <div class="frow">
+            <label class="chk"><input type="checkbox" id="cDraft"/> Save as draft (do not submit yet)</label>
+            <span class="spacer" style="flex:1"></span>
+            <button class="btn" type="button" id="btnCodeCancel">Close</button>
+            <button class="btn btn-primary" type="submit" id="btnCodeSave">Create code</button>
+          </div>
+        </form>
+      </div>
+      <div class="card tblwrap">
+        <table id="codesTbl" aria-label="Your discount codes">
+          <thead><tr><th>Code</th><th>Status</th><th>Discount</th><th>Applies to</th><th class="num">Used / Max</th><th>Validity</th><th>Campaign</th><th></th></tr></thead>
+          <tbody><tr><td colspan="8"><span class="empty">Loading…</span></td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- STUDENTS -->
+    <section class="tab" id="tab-students">
+      <div class="bar-row"><h2>Registered students</h2></div>
+      <p style="color:var(--slate);font-size:13px;margin:-6px 0 16px;max-width:70ch">You see only registrations generated by your own codes, with data limited to your agreement with PCI.</p>
+      <div class="card tblwrap">
+        <table id="studentsTbl" aria-label="Students registered with your codes">
+          <thead></thead>
+          <tbody><tr><td colspan="8"><span class="empty">Loading…</span></td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SPONSORSHIPS (direct candidate sponsorship, when enabled by PCI) -->
+    <section class="tab" id="tab-sponsor">
+      <div class="bar-row"><h2>Sponsored candidates</h2><span class="spacer"></span><button class="btn btn-primary" id="btnSponsor" hidden>Sponsor candidates</button></div>
+      <p style="color:var(--slate);font-size:13px;margin:-6px 0 16px;max-width:72ch" id="sponsorIntro">Candidates your organisation registers directly. Each receives an account, an approved sponsored application and immediate exam access — funded by your organisation.</p>
+      <div class="note err" id="sponsorDisabled" hidden>Direct candidate sponsorship is not enabled in your agreement with PCI. Contact your partnership manager to enable it.</div>
+      <div class="card" id="sponsorFormCard" hidden>
+        <h3>Sponsor candidates in bulk</h3>
+        <p style="color:var(--slate);font-size:13px;margin:4px 0 12px">One candidate per line: <code>email, first name, last name</code>. New candidates receive a set-password welcome email.</p>
+        <div class="note err" id="spErr" hidden></div>
+        <div class="note ok" id="spOk" hidden></div>
+        <form id="sponsorForm" novalidate>
+          <div class="fgrid">
+            <div class="fld"><label for="spCert">Certification</label><select id="spCert"></select></div>
+            <div class="fld span-all"><label for="spRows">Candidates</label><textarea id="spRows" rows="5" placeholder="jane.doe@example.com, Jane, Doe&#10;omar.khan@example.com, Omar, Khan"></textarea></div>
+          </div>
+          <div class="frow">
+            <span class="spacer" style="flex:1"></span>
+            <button class="btn" type="button" id="btnSponsorCancel">Close</button>
+            <button class="btn btn-primary" type="submit" id="btnSponsorGo">Sponsor candidates</button>
+          </div>
+        </form>
+      </div>
+      <div class="card tblwrap">
+        <table id="sponsorTbl" aria-label="Your sponsored candidates">
+          <thead><tr><th>Candidate</th><th>Certification</th><th>Exam access</th><th>Result</th><th>Credential</th><th>Since</th></tr></thead>
+          <tbody><tr><td colspan="6"><span class="empty">Loading…</span></td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- COMMISSIONS -->
+    <section class="tab" id="tab-commissions">
+      <div class="bar-row"><h2>Commission ledger</h2></div>
+      <p style="color:var(--slate);font-size:13px;margin:-6px 0 16px;max-width:72ch">Commissions accrue at your agreed rate on payments made with your organisation's discount codes. Payouts are recorded by PCI.</p>
+      <div class="tiles" id="commTiles"></div>
+      <div class="grid2">
+        <div class="card tblwrap"><h3>Attributed payments</h3>
+          <table id="commPayTbl"><thead><tr><th>Date</th><th>Reference</th><th>Code</th><th class="num">Amount</th></tr></thead>
+            <tbody><tr><td colspan="4"><span class="empty">Loading…</span></td></tr></tbody></table>
+        </div>
+        <div class="card tblwrap"><h3>Payouts</h3>
+          <table id="commOutTbl"><thead><tr><th>Date</th><th>Note</th><th class="num">Amount</th></tr></thead>
+            <tbody><tr><td colspan="3"><span class="empty">Loading…</span></td></tr></tbody></table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s);};
+var KEY='pci.partner.token', mem=null;
+var store={
+  get:function(){try{return sessionStorage.getItem(KEY);}catch(e){return mem;}},
+  set:function(v){try{sessionStorage.setItem(KEY,v);}catch(e){mem=v;}},
+  del:function(){try{sessionStorage.removeItem(KEY);}catch(e){mem=null;}}
+};
+var st={token:store.get()||'', me:null, whoTxt:'', tab:'overview'};
+
+function el(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n;}
+function toast(msg,kind){
+  var t=el('div','toast '+(kind||''),msg); $('#toasts').appendChild(t);
+  setTimeout(function(){t.style.transition='opacity .3s';t.style.opacity='0';
+    setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},300);},2800);
+}
+function fmtN(n){return (n==null||isNaN(Number(n)))?'—':Number(n).toLocaleString('en-GB');}
+function fmtMoney(n){return (n==null||isNaN(Number(n)))?'—':Number(n).toLocaleString('en-GB',{minimumFractionDigits:0,maximumFractionDigits:2});}
+function parseD(s){
+  if(!s)return null;
+  var d=new Date(String(s).replace(' ','T')+(String(s).indexOf('Z')<0&&String(s).length>10?'Z':''));
+  if(isNaN(d.getTime()))d=new Date(String(s));
+  return isNaN(d.getTime())?null:d;
+}
+function fmtDate(s){var d=parseD(s);return d?d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'—';}
+
+/* ---- API ---- */
+function api(path,opts){
+  opts=opts||{};
+  var headers={};
+  if(st.token)headers['Authorization']='Bearer '+st.token;
+  if(opts.body!==undefined)headers['Content-Type']='application/json';
+  return fetch(path,{method:opts.method||'GET',headers:headers,body:opts.body}).then(function(r){
+    if(r.status===401){signOut(false);var e=new Error('unauthorised');e.silent=true;throw e;}
+    return r.json().catch(function(){return {};}).then(function(j){
+      if(!r.ok){var e=new Error((j&&j.error)||('http_'+r.status));e.status=r.status;e.data=j||{};throw e;}
+      return j;
+    });
+  });
+}
+function loadFail(e,what){if(!e.silent)toast('Could not load '+what+'.','err');}
+
+/* ---- views ---- */
+function showView(name){
+  $('#gate').style.display=(name==='app')?'none':'flex';
+  $('#app').style.display=(name==='app')?'flex':'none';
+  $('#viewLogin').style.display=(name==='login')?'block':'none';
+  $('#viewPw').style.display=(name==='pw')?'block':'none';
+  if(name==='login'){$('#loginErr').hidden=true;setTimeout(function(){$('#inEmail').focus();},50);}
+  if(name==='pw'){$('#pwErr').hidden=true;$('#inPw1').value='';$('#inPw2').value='';setTimeout(function(){$('#inPw1').focus();},50);}
+}
+function signOut(callServer){
+  if(callServer&&st.token){api('/api/partner/auth/logout',{method:'POST',body:'{}'}).catch(function(){});}
+  store.del();st.token='';st.me=null;
+  showView('login');
+}
+
+/* ---- chips / badges ---- */
+function chip(text,kind){var c=el('span','chip '+kind);c.appendChild(el('span','dot'));c.appendChild(document.createTextNode(text));return c;}
+function codeState(r){
+  var s=String(r.status||'').toLowerCase().trim();
+  if(!s)s=(r.active===1||r.active===true||r.active==='1')?'active':'inactive';
+  return s;
+}
+function codeChip(s){
+  var kind='c-grey';
+  if(s==='active')kind='c-ok';
+  else if(s==='pending'||s==='pending_approval')kind='c-warn';
+  else if(s==='suspended'||s==='rejected'||s==='cancelled'||s==='inactive')kind='c-err';
+  return chip(s.replace(/_/g,' '),kind);
+}
+function payChip(v){
+  var s=String(v||'').toLowerCase();var k='c-grey';
+  if(/paid|succeed|complete|settl/.test(s))k='c-ok';
+  else if(/pend|await|process|due/.test(s))k='c-warn';
+  else if(/fail|refund|cancel|declin|void/.test(s))k='c-err';
+  return chip(s?s.replace(/_/g,' '):'unknown',k);
+}
+function memChip(v){
+  var s=String(v||'').toLowerCase();var k='c-grey';
+  if(/active|current/.test(s))k='c-ok';
+  else if(/pend|process|provisional/.test(s))k='c-warn';
+  else if(/laps|expir|cancel|suspend/.test(s))k='c-err';
+  return chip(s?s.replace(/_/g,' '):'—',k);
+}
+
+/* ---- overview ---- */
+function renderWho(){$('#who').textContent=st.whoTxt||'';}
+function renderInstitution(inst){
+  inst=inst||{};
+  $('#instName').textContent=inst.name||'Your institution';
+  var win='';
+  if(inst.agreement_start||inst.agreement_end)
+    win='Agreement '+fmtDate(inst.agreement_start)+' – '+fmtDate(inst.agreement_end);
+  $('#instAgree').textContent=win;
+  var chips=$('#instChips');chips.textContent='';
+  if(inst.tier)chips.appendChild(chip(String(inst.tier),'c-blue'));
+  if(inst.status)chips.appendChild(chip(String(inst.status),String(inst.status).toLowerCase()==='active'?'c-ok':'c-warn'));
+  var parts=[];
+  if(inst.max_discount_percent!=null)parts.push('Codes up to '+inst.max_discount_percent+'%');
+  if(inst.max_codes!=null)parts.push('max '+fmtN(inst.max_codes)+' codes');
+  if(inst.total_allocation!=null)parts.push('allocation '+fmtN(inst.total_allocation));
+  if(inst.allow_full_sponsorship)parts.push('full sponsorship permitted');
+  $('#instLimits').style.display=parts.length?'block':'none';
+  $('#instLimitsTxt').textContent=parts.join(' · ');
+}
+function tile(label,val,sub){
+  var t=el('div','tile');t.appendChild(el('div','k',label));t.appendChild(el('div','v',val));
+  if(sub)t.appendChild(el('div','s',sub));return t;
+}
+function renderTiles(d){
+  var box=$('#tiles');box.textContent='';
+  box.appendChild(tile('Active codes',fmtN(d.codes_active),'of '+fmtN(d.codes_total)+' total · '+fmtN(d.codes_expired)+' expired'));
+  box.appendChild(tile('Uses',fmtN(d.used_total),'of '+fmtN(d.allocation)+' allocation · '+fmtN(d.remaining)+' remaining'));
+  box.appendChild(tile('Discount given',fmtMoney(d.discount_given),'total funded through your codes'));
+  box.appendChild(tile('Registrations',fmtN(d.registrations),'students via your codes'));
+}
+function svgEl(n,attrs){
+  var e=document.createElementNS('http://www.w3.org/2000/svg',n);
+  for(var k in attrs)e.setAttribute(k,attrs[k]);return e;
+}
+function renderTrend(data){
+  var box=$('#trendBox'),cap=$('#trendCap');box.textContent='';cap.textContent='';
+  data=Array.isArray(data)?data:[];
+  if(!data.length){box.appendChild(el('div','empty','No usage recorded for this period yet.'));return;}
+  var H=76,BW=8,G=2,W=data.length*(BW+G);
+  var max=1,i;for(i=0;i<data.length;i++){var v=Number(data[i].n)||0;if(v>max)max=v;}
+  var svg=svgEl('svg',{viewBox:'0 0 '+W+' '+H,preserveAspectRatio:'none','class':'trend',role:'img','aria-label':'Daily code usage'});
+  svg.appendChild(svgEl('line',{x1:0,y1:H-0.5,x2:W,y2:H-0.5,stroke:'#E3E8EF','stroke-width':1}));
+  data.forEach(function(p,idx){
+    var v=Number(p.n)||0;
+    var h=v?Math.max((v/max)*(H-12),2):1;
+    var r=svgEl('rect',{x:idx*(BW+G),y:H-h,width:BW,height:h,rx:1.5,fill:v?'#1D4ED8':'#D8E0EC'});
+    var t=svgEl('title',{});t.textContent=(p.d||'')+': '+fmtN(v)+(v===1?' use':' uses');
+    r.appendChild(t);svg.appendChild(r);
+  });
+  box.appendChild(svg);
+  cap.appendChild(el('span',null,fmtDate(data[0].d)));
+  cap.appendChild(el('span',null,fmtDate(data[data.length-1].d)));
+}
+function renderTopCodes(rows){
+  var box=$('#topCodes');box.textContent='';
+  rows=Array.isArray(rows)?rows:[];
+  if(!rows.length){box.appendChild(el('div','empty','No code usage yet.'));return;}
+  var max=1;rows.forEach(function(r){if((Number(r.uses)||0)>max)max=Number(r.uses);});
+  rows.forEach(function(r,i){
+    var row=el('div','row');
+    row.appendChild(el('span','rk',String(i+1)));
+    row.appendChild(el('span','cd',r.code||''));
+    var tr=el('span','track'),f=el('span','fill');
+    f.style.width=Math.max(((Number(r.uses)||0)/max)*100,3)+'%';
+    tr.appendChild(f);row.appendChild(tr);
+    row.appendChild(el('span','n',fmtN(r.uses)));
+    box.appendChild(row);
+  });
+}
+function renderNotices(rows){
+  var box=$('#notices');box.textContent='';
+  rows=Array.isArray(rows)?rows:[];
+  if(!rows.length){box.appendChild(el('div','empty','No notices from PCI at the moment.'));return;}
+  rows.forEach(function(n){
+    var r=el('div','nrow'),t=el('div');
+    t.appendChild(el('span','nt',n.title||'Notice'));
+    t.appendChild(el('span','nd',fmtDate(n.created_at)));
+    r.appendChild(t);
+    if(n.body)r.appendChild(el('div','nb',n.body));
+    box.appendChild(r);
+  });
+}
+function loadOverview(){
+  Promise.all([api('/api/partner/me'),api('/api/partner/dashboard')]).then(function(res){
+    var me=res[0]||{},d=res[1]||{};
+    st.me=me;
+    var u=me.user||{},inst=me.institution||{};
+    st.whoTxt=(u.Name||'')+(inst.name?(' · '+inst.name):'');
+    renderWho();renderInstitution(inst);
+    renderTiles(d);renderTrend(d.trend);renderTopCodes(d.top_codes);renderNotices(d.notices);
+  }).catch(function(e){loadFail(e,'the overview');});
+}
+
+/* ---- codes ---- */
+function appliesLabel(v){
+  var s=String(v||'all').toLowerCase();
+  return s==='membership'?'Membership':(s==='exam'?'Exam':'All products');
+}
+function discountLabel(r){
+  var t=String(r.discount_type||'percent').toLowerCase();
+  if(t==='percent'||t==='percentage')return fmtN(r.discount_value)+'%';
+  return fmtMoney(r.discount_value);
+}
+function validityLabel(r){
+  if(r.start_date&&r.end_date)return fmtDate(r.start_date)+' – '+fmtDate(r.end_date);
+  if(r.end_date)return 'until '+fmtDate(r.end_date);
+  if(r.start_date)return 'from '+fmtDate(r.start_date);
+  return 'Open';
+}
+function renderCodes(rows){
+  var tb=$('#codesTbl tbody');tb.textContent='';
+  rows=Array.isArray(rows)?rows:[];
+  if(!rows.length){
+    var tr0=el('tr'),td0=el('td');td0.colSpan=8;
+    td0.appendChild(el('span','empty','No codes yet. Use "New code" to create your first discount code.'));
+    tr0.appendChild(td0);tb.appendChild(tr0);return;
+  }
+  rows.forEach(function(r){
+    var s=codeState(r),tr=el('tr');
+    var tdC=el('td');tdC.appendChild(el('div','mono',r.code||'—'));
+    if(r.notes)tdC.appendChild(el('div','subline',r.notes));
+    tr.appendChild(tdC);
+    var tdS=el('td');tdS.appendChild(codeChip(s));
+    if(r.rejection_reason)tdS.appendChild(el('div','reject',r.rejection_reason));
+    tr.appendChild(tdS);
+    tr.appendChild(el('td',null,discountLabel(r)));
+    tr.appendChild(el('td',null,appliesLabel(r.applies_to)));
+    tr.appendChild(el('td','num',fmtN(r.used_count||0)+' / '+fmtN(r.max_uses)));
+    tr.appendChild(el('td',null,validityLabel(r)));
+    tr.appendChild(el('td',null,r.campaign_name||'—'));
+    var tdA=el('td');
+    var unused=(Number(r.used_count)||0)===0;
+    var cancellable=unused&&['cancelled','rejected','expired'].indexOf(s)<0;
+    if(cancellable){
+      var b=el('button','btn btn-sm btn-danger','Cancel');
+      b.addEventListener('click',function(){
+        if(!confirm('Cancel code '+(r.code||'')+'? This cannot be undone.'))return;
+        b.disabled=true;
+        api('/api/partner/codes/'+encodeURIComponent(r.id)+'/cancel',{method:'POST',body:'{}'})
+          .then(function(){toast('Code cancelled.');loadCodes();})
+          .catch(function(e){b.disabled=false;if(!e.silent)toast('Could not cancel this code.','err');});
+      });
+      tdA.appendChild(b);
+    }
+    tr.appendChild(tdA);
+    tb.appendChild(tr);
+  });
+}
+function loadCodes(){
+  api('/api/partner/codes').then(function(d){renderCodes(d.rows||d||[]);})
+    .catch(function(e){loadFail(e,'your codes');});
+  var p=st.me?Promise.resolve(st.me):api('/api/partner/me').then(function(m){st.me=m;return m;});
+  p.then(function(me){
+    var inst=(me&&me.institution)||{};
+    var bits=[];
+    if(inst.max_discount_percent!=null)bits.push('up to '+inst.max_discount_percent+'%');
+    if(inst.max_uses_per_code!=null)bits.push('up to '+fmtN(inst.max_uses_per_code)+' uses per code');
+    if(inst.max_codes!=null)bits.push('max '+fmtN(inst.max_codes)+' codes');
+    var s=bits.length?('Your agreement: '+bits.join(' · ')+'. '):'';
+    if(!inst.auto_approve_codes)s+='New codes are reviewed by PCI before they go live.';
+    $('#codeFormHint').textContent=s;
+  }).catch(function(){});
+}
+function codeErrText(e){
+  var d=e.data||{},lim=d.limit,code=d.error||e.message;
+  switch(code){
+    case 'over_percent_limit':
+      return lim!=null?('Your agreement allows codes up to '+lim+'%.'):(d.message||'That discount is above the limit in your agreement.');
+    case 'full_sponsorship_not_allowed':
+      return 'Your agreement does not include fully sponsored (100%) codes. Choose a lower percentage.';
+    case 'over_uses_limit':
+      return lim!=null?('Your agreement allows at most '+fmtN(lim)+' uses per code.'):(d.message||'That exceeds the per-code use limit in your agreement.');
+    case 'over_code_limit':
+      return (lim!=null?('Your agreement allows at most '+fmtN(lim)+' codes. '):'You have reached your code limit. ')+'Cancel an unused code to free a slot.';
+    case 'over_total_allocation':
+      return lim!=null?('This code would take you past your total allocation of '+fmtN(lim)+' uses.'):(d.message||'This code would exceed your remaining allocation.');
+    case 'code_taken':
+      return 'That code is already taken — please choose a different one.';
+    case 'role_forbidden':
+      return 'Your account role does not permit creating codes. Ask your institution’s lead contact.';
+    default:
+      return d.message||'The code could not be created. Please check the details and try again.';
+  }
+}
+function submitCode(ev){
+  ev.preventDefault();
+  var errBox=$('#codeErr'),okBox=$('#codeOk');
+  errBox.hidden=true;okBox.hidden=true;
+  var percent=Number($('#cPercent').value),maxUses=Number($('#cMaxUses').value);
+  if(!percent||percent<1||percent>100){errBox.textContent='Enter a discount percentage between 1 and 100.';errBox.hidden=false;return;}
+  if(!maxUses||maxUses<1){errBox.textContent='Enter how many times the code may be used (at least 1).';errBox.hidden=false;return;}
+  var payload={percent:percent,max_uses:maxUses,applies_to:$('#cApplies').value};
+  if($('#cStart').value)payload.start_date=$('#cStart').value;
+  if($('#cEnd').value)payload.end_date=$('#cEnd').value;
+  if($('#cStart').value&&$('#cEnd').value&&$('#cEnd').value<$('#cStart').value){
+    errBox.textContent='The end date must be on or after the start date.';errBox.hidden=false;return;}
+  var custom=$('#cCode').value.trim();if(custom)payload.code=custom;
+  var camp=$('#cCampaign').value.trim();if(camp)payload.campaign_name=camp;
+  var notes=$('#cNotes').value.trim();if(notes)payload.notes=notes;
+  if($('#cDraft').checked)payload.draft=true;
+  var btn=$('#btnCodeSave');btn.disabled=true;btn.textContent='Creating…';
+  api('/api/partner/codes',{method:'POST',body:JSON.stringify(payload)}).then(function(d){
+    var msg='Code '+(d.code||'')+' created — status: '+String(d.status||'pending').replace(/_/g,' ')+'.';
+    if(d.note)msg+=' '+d.note;
+    okBox.textContent=msg;okBox.hidden=false;
+    $('#codeForm').reset();
+    loadCodes();
+  }).catch(function(e){
+    if(e.silent)return;
+    errBox.textContent=codeErrText(e);errBox.hidden=false;
+  }).then(function(){btn.disabled=false;btn.textContent='Create code';});
+}
+
+/* ---- students ---- */
+function renderStudents(d){
+  var rows=(d&&d.rows)||[];
+  var showName=rows.some(function(r){return r.name!=null&&r.name!=='';});
+  var thead=$('#studentsTbl thead'),tb=$('#studentsTbl tbody');
+  thead.textContent='';tb.textContent='';
+  var cols=[];
+  if(showName)cols.push('Name');
+  cols=cols.concat(['Registered','Code','Programme','Email','Discount','Payment','Membership']);
+  var trh=el('tr');
+  cols.forEach(function(c){trh.appendChild(el('th',c==='Discount'?'num':null,c));});
+  thead.appendChild(trh);
+  if(!rows.length){
+    var tr0=el('tr'),td0=el('td');td0.colSpan=cols.length;
+    td0.appendChild(el('span','empty','No registrations through your codes yet.'));
+    tr0.appendChild(td0);tb.appendChild(tr0);return;
+  }
+  rows.forEach(function(r){
+    var tr=el('tr');
+    if(showName)tr.appendChild(el('td',null,r.name||'—'));
+    tr.appendChild(el('td',null,fmtDate(r.registered_at)));
+    var tdC=el('td');tdC.appendChild(el('span','mono',r.code||'—'));tr.appendChild(tdC);
+    tr.appendChild(el('td',null,r.programme||'—'));
+    tr.appendChild(el('td',null,r.email_masked||'—'));
+    tr.appendChild(el('td','num',fmtMoney(r.discount_amount)));
+    var tdP=el('td');tdP.appendChild(payChip(r.payment_status));tr.appendChild(tdP);
+    var tdM=el('td');tdM.appendChild(memChip(r.membership_status));tr.appendChild(tdM);
+    tb.appendChild(tr);
+  });
+}
+function loadStudents(){
+  api('/api/partner/students').then(renderStudents)
+    .catch(function(e){loadFail(e,'your students');});
+}
+
+/* ---- sponsorships (direct candidate sponsorship, when enabled by PCI) ---- */
+function progChip(s){
+  s=String(s||'').toLowerCase();
+  var kind=s==='available'?'c-ok':(s==='booked'?'c-warn':(s==='consumed'?'c-grey':'c-grey'));
+  return s?chip(s.replace(/_/g,' '),kind):document.createTextNode('—');
+}
+function renderSponsored(d){
+  var enabled=!!(d&&d.sponsor_enabled);
+  $('#btnSponsor').hidden=!enabled;
+  $('#sponsorDisabled').hidden=enabled;
+  var tb=$('#sponsorTbl tbody');tb.textContent='';
+  var rows=(d&&d.rows)||[];
+  if(!rows.length){var tr0=el('tr'),td0=el('td');td0.colSpan=6;td0.appendChild(el('span','empty',enabled?'No sponsored candidates yet.':'—'));tr0.appendChild(td0);tb.appendChild(tr0);return;}
+  rows.forEach(function(r){
+    var tr=el('tr');
+    var tdN=el('td');tdN.appendChild(el('div',null,r.candidate_name||r.candidate_email||''));var sm=el('div',null,r.candidate_email||'');sm.style.cssText='color:var(--mist);font-size:12px';tdN.appendChild(sm);tr.appendChild(tdN);
+    tr.appendChild(el('td',null,r.cert_acronym||r.cert_code||'—'));
+    var tdE=el('td');tdE.appendChild(progChip(r.entitlement_status));tr.appendChild(tdE);
+    var tdR=el('td');tdR.appendChild(r.exam_result?chip(String(r.exam_result),r.exam_result==='pass'?'c-ok':'c-err'):document.createTextNode('—'));tr.appendChild(tdR);
+    tr.appendChild(el('td',null,r.credential_id||'—'));
+    tr.appendChild(el('td',null,fmtDate(r.created_at)));
+    tb.appendChild(tr);
+  });
+}
+function loadSponsor(){
+  api('/api/partner/candidates').then(renderSponsored).catch(function(e){loadFail(e,'your sponsored candidates');});
+  fetch('/api/certifications').then(function(r){return r.json();}).then(function(d){
+    var sel=$('#spCert');sel.textContent='';
+    ((d&&d.rows)||[]).forEach(function(c){var o=el('option',null,(c.acronym||c.code)+' — '+(c.name||''));o.value=c.code;sel.appendChild(o);});
+  }).catch(function(){});
+}
+function submitSponsor(ev){
+  ev.preventDefault();
+  var errB=$('#spErr'),okB=$('#spOk');errB.hidden=true;okB.hidden=true;
+  var lines=$('#spRows').value.split('\n').map(function(l){return l.trim();}).filter(Boolean);
+  if(!lines.length){errB.textContent='Enter at least one candidate.';errB.hidden=false;return;}
+  var cands=lines.map(function(l){var p=l.split(',').map(function(x){return x.trim();});return{email:p[0]||'',first_name:p[1]||'',last_name:p[2]||'',certification:$('#spCert').value};});
+  var btn=$('#btnSponsorGo');btn.disabled=true;btn.textContent='Sponsoring…';
+  api('/api/partner/candidates',{method:'POST',body:JSON.stringify({candidates:cands})})
+    .then(function(d){
+      var res=(d&&d.results)||[],okn=res.filter(function(r){return String(r.status).indexOf('sponsored')===0;}).length;
+      okB.textContent=okn+' of '+res.length+' candidate(s) sponsored.'+(okn<res.length?' Skipped: '+res.filter(function(r){return String(r.status).indexOf('sponsored')!==0;}).map(function(r){return r.email+' ('+String(r.status).replace(/_/g,' ')+')';}).join(', '):'');
+      okB.hidden=false;$('#spRows').value='';loadSponsor();
+    })
+    .catch(function(e){if(!e.silent){errB.textContent=(e.data&&e.data.message)||'Sponsorship failed. Please try again.';errB.hidden=false;}})
+    .then(function(){btn.disabled=false;btn.textContent='Sponsor candidates';});
+}
+
+/* ---- commissions ---- */
+function loadCommissions(){
+  api('/api/partner/commissions').then(function(c){
+    var box=$('#commTiles');box.textContent='';
+    box.appendChild(tile('Attributed revenue','USD '+fmtMoney(c.attributed_revenue),'paid via your codes'));
+    box.appendChild(tile('Accrued','USD '+fmtMoney(c.accrued),'at '+fmtN(c.commission_pct)+'%'));
+    box.appendChild(tile('Paid out','USD '+fmtMoney(c.paid_out),''));
+    box.appendChild(tile('Balance due','USD '+fmtMoney(c.balance),''));
+    var tp=$('#commPayTbl tbody');tp.textContent='';
+    var pays=c.payments||[];
+    if(!pays.length){var tr0=el('tr'),td0=el('td');td0.colSpan=4;td0.appendChild(el('span','empty','No attributed payments yet.'));tr0.appendChild(td0);tp.appendChild(tr0);}
+    pays.forEach(function(p){
+      var tr=el('tr');tr.appendChild(el('td',null,fmtDate(p.payment_date)));tr.appendChild(el('td',null,p.reference||'—'));tr.appendChild(el('td',null,p.code||'—'));
+      var td=el('td','num','USD '+fmtMoney(p.final_amount));tr.appendChild(td);tp.appendChild(tr);
+    });
+    var to=$('#commOutTbl tbody');to.textContent='';
+    var outs=c.payouts||[];
+    if(!outs.length){var tr1=el('tr'),td1=el('td');td1.colSpan=3;td1.appendChild(el('span','empty','No payouts recorded yet.'));tr1.appendChild(td1);to.appendChild(tr1);}
+    outs.forEach(function(p){
+      var tr=el('tr');tr.appendChild(el('td',null,fmtDate(p.paid_at)));tr.appendChild(el('td',null,p.note||'—'));
+      var td=el('td','num','USD '+fmtMoney(p.amount));tr.appendChild(td);to.appendChild(tr);
+    });
+  }).catch(function(e){loadFail(e,'your commission ledger');});
+}
+
+/* ---- tabs ---- */
+var loaders={overview:loadOverview,codes:loadCodes,students:loadStudents,sponsor:loadSponsor,commissions:loadCommissions};
+function setTab(name){
+  st.tab=name;
+  Array.prototype.forEach.call($('#tabs').children,function(b){b.classList.toggle('on',b.dataset.tab===name);});
+  ['overview','codes','students','sponsor','commissions'].forEach(function(t){$('#tab-'+t).classList.toggle('on',t===name);});
+  if(loaders[name])loaders[name]();
+}
+$('#tabs').addEventListener('click',function(ev){
+  var b=ev.target.closest('button');if(b&&b.dataset.tab)setTab(b.dataset.tab);
+});
+
+/* ---- auth flows ---- */
+function enterApp(){renderWho();showView('app');setTab('overview');}
+function doLogin(ev){
+  ev.preventDefault();
+  var email=$('#inEmail').value.trim(),pass=$('#inPass').value,box=$('#loginErr');
+  box.hidden=true;
+  if(!email||!pass){box.textContent='Enter your email and password.';box.hidden=false;return;}
+  var btn=$('#btnLogin');btn.disabled=true;btn.textContent='Signing in…';
+  fetch('/api/partner/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pass})})
+    .then(function(r){return r.json().catch(function(){return {};}).then(function(j){return {r:r,j:j};});})
+    .then(function(x){
+      if(x.r.ok){
+        st.token=x.j.token||'';store.set(st.token);
+        st.whoTxt=(x.j.name||email)+(x.j.institution?(' · '+x.j.institution):'');
+        $('#inPass').value='';
+        if(x.j.must_change_pw)showView('pw');else enterApp();
+      }else if(x.r.status===401){box.textContent='Invalid email or password.';box.hidden=false;}
+      else if(x.r.status===403){box.textContent=x.j.message||'Your institution’s agreement with PCI is not currently active. Please contact your partnership manager.';box.hidden=false;}
+      else{box.textContent='Sign-in failed. Please try again.';box.hidden=false;}
+    })
+    .catch(function(){box.textContent='Could not reach the server. Check your connection and try again.';box.hidden=false;})
+    .then(function(){btn.disabled=false;btn.textContent='Sign in';});
+}
+function doPw(ev){
+  ev.preventDefault();
+  var p1=$('#inPw1').value,p2=$('#inPw2').value,box=$('#pwErr');
+  box.hidden=true;
+  if(p1.length<10){box.textContent='Your new password must be at least 10 characters.';box.hidden=false;return;}
+  if(p1!==p2){box.textContent='The two passwords do not match.';box.hidden=false;return;}
+  var btn=$('#btnPw');btn.disabled=true;btn.textContent='Saving…';
+  api('/api/partner/auth/password',{method:'POST',body:JSON.stringify({new_password:p1})})
+    .then(function(){toast('Password updated.');enterApp();})
+    .catch(function(e){
+      if(!e.silent){box.textContent=(e.data&&e.data.message)||'The password could not be changed. Please try again.';box.hidden=false;}
+    })
+    .then(function(){btn.disabled=false;btn.textContent='Save and continue';});
+}
+
+/* ---- wire up ---- */
+$('#loginForm').addEventListener('submit',doLogin);
+$('#pwForm').addEventListener('submit',doPw);
+$('#pwBack').addEventListener('click',function(ev){ev.preventDefault();signOut(false);});
+$('#btnOut').addEventListener('click',function(){signOut(true);});
+$('#btnNew').addEventListener('click',function(){
+  var c=$('#codeFormCard');c.hidden=!c.hidden;
+  if(!c.hidden){$('#codeErr').hidden=true;$('#codeOk').hidden=true;$('#cPercent').focus();}
+});
+$('#btnCodeCancel').addEventListener('click',function(){$('#codeFormCard').hidden=true;});
+$('#codeForm').addEventListener('submit',submitCode);
+$('#btnSponsor').addEventListener('click',function(){
+  var c=$('#sponsorFormCard');c.hidden=!c.hidden;
+  if(!c.hidden){$('#spErr').hidden=true;$('#spOk').hidden=true;$('#spRows').focus();}
+});
+$('#btnSponsorCancel').addEventListener('click',function(){$('#sponsorFormCard').hidden=true;});
+$('#sponsorForm').addEventListener('submit',submitSponsor);
+
+/* ---- boot ---- */
+if(st.token){
+  api('/api/partner/me').then(function(me){
+    st.me=me;
+    var u=me.user||{},inst=me.institution||{};
+    st.whoTxt=(u.Name||u.Email||'')+(inst.name?(' · '+inst.name):'');
+    if(u.must_change_pw)showView('pw');else enterApp();
+  }).catch(function(e){if(!e.silent)showView('login');});
+}else{
+  showView('login');
+}
+})();
+</script>
+</body>
+</html>

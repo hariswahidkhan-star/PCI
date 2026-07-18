@@ -21,8 +21,8 @@ public static class StudentExam
         // formal exam_entitlements ledger; legacy rows without one belong to certification 1.
         Dictionary<string, object?>? ExamEntitlement(long uid, long? certId = null) =>
             certId is null
-            ? db.QueryOne("SELECT p.*, COALESCE(e.certification_id,1) certification_id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle') ORDER BY p.id DESC", uid)
-            : db.QueryOne("SELECT p.*, COALESCE(e.certification_id,1) certification_id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle') AND COALESCE(e.certification_id,1)=? ORDER BY p.id DESC", uid, certId);
+            ? db.QueryOne("SELECT p.*, COALESCE(e.certification_id,1) certification_id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id WHERE p.user_id=? AND p.payment_status IN ('paid','waived') AND p.product_type IN ('exam','bundle') ORDER BY p.id DESC", uid)
+            : db.QueryOne("SELECT p.*, COALESCE(e.certification_id,1) certification_id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id WHERE p.user_id=? AND p.payment_status IN ('paid','waived') AND p.product_type IN ('exam','bundle') AND COALESCE(e.certification_id,1)=? ORDER BY p.id DESC", uid, certId);
         // Bookings are per certification: holding a slot for one credential must not block another.
         Dictionary<string, object?>? ActiveBooking(long uid, long? certId = null) =>
             certId is null
@@ -51,7 +51,7 @@ public static class StudentExam
             }
             return J(new
             {
-                user = new { id = u.Id, email = u.Email, first_name = u.FirstName, last_name = u.LastName, registration_no = regNo, created_at = db.Scalar<string>("SELECT created_at FROM users WHERE id=?", u.Id) },
+                user = new { id = u.Id, email = u.Email, first_name = u.FirstName, last_name = u.LastName, registration_no = regNo, created_at = db.Scalar<string>("SELECT created_at FROM users WHERE id=?", u.Id), impersonated = u.Impersonated },
                 profile = db.QueryOne("SELECT * FROM student_profiles WHERE user_id=?", u.Id),
                 lifecycle = Lifecycle.BuildLifecycle(db, u.Id,
                     db.QueryOne("SELECT * FROM memberships WHERE user_id=? ORDER BY id DESC", u.Id),
@@ -74,7 +74,7 @@ public static class StudentExam
                 exams = db.Query(@"SELECT p.id payment_id, p.reference, p.exam_schedule_deadline, p.payment_status,
                         COALESCE(e.certification_id,1) certification_id, e.status entitlement_status
                         FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id
-                        WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle') ORDER BY p.id DESC", u.Id)
+                        WHERE p.user_id=? AND p.payment_status IN ('paid','waived') AND p.product_type IN ('exam','bundle') ORDER BY p.id DESC", u.Id)
                     .Select(r => {
                         var cid = H.L(r["certification_id"]);
                         var cert = Certs.ById(db, cid);
@@ -174,6 +174,8 @@ public static class StudentExam
         app.MapPost("/api/me/consents", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            // Consent is a personal legal act — a staff "view as student" session may never perform it.
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             // Accept either a single {consent_type,policy_version} or {accept:[...types]} against current versions.
             var accepted = new List<string>();
@@ -210,6 +212,8 @@ public static class StudentExam
         app.MapPost("/api/me/identity-document", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            // Identity evidence must come from the candidate themselves, never a support session.
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             var kind = H.GetS(b, "doc_kind", "kind") ?? "passport";
             if (kind is not ("passport" or "national_id" or "driving_licence" or "other"))
@@ -308,6 +312,10 @@ public static class StudentExam
             // by booking_id (one-attempt-per-entitlement).
             db.Execute("UPDATE exam_entitlements SET status='booked', booking_id=? WHERE payment_id=? AND status IN ('available','booked')", id, ent["id"]);
             log(u.Id, "exam_booked", $"{scheduledAt} (cert {certId})");
+            // Route to the configured third-party exam-delivery vendor (Pearson VUE/OnVUE, Kryterion, PSI,
+            // TestReach, Questionmark) if one is set as default and the certification is mapped. Best-effort:
+            // never blocks or fails the PCI booking; unrouted/failed orders are retryable from the admin.
+            await PCI.Backend.Core.ExamDelivery.RouteBooking(db, id, u.Id, certId, scheduledAt, timezone);
             return J(new { ok = true, id, scheduled_at = scheduledAt, certification_id = certId });
         });
 
@@ -332,7 +340,40 @@ public static class StudentExam
             if (dl is not null && H.After(scheduledAt, dl)) return Results.Json(new { error = "beyond_window" }, statusCode: 400);
             db.Execute("UPDATE exam_bookings SET scheduled_at=?, timezone=?, reschedule_count=reschedule_count+1, updated_at=datetime('now') WHERE id=?", scheduledAt, timezone ?? H.Str(bk["timezone"]), bk["id"]);
             log(u.Id, "exam_rescheduled", scheduledAt);
+            await PCI.Backend.Core.ExamDelivery.RescheduleBooking(db, H.L(bk["id"]), scheduledAt, timezone ?? H.Str(bk["timezone"]));
             return J(new { ok = true, free = hoursTo >= H.FREE_RESCHED_H, reschedule_count = H.L(bk["reschedule_count"]) + 1 });
+        });
+
+        // The candidate's third-party delivery status, when their booking is routed to an external vendor
+        // (Pearson VUE, Kryterion, PSI, TestReach, Questionmark). Returns the provider, lifecycle status and
+        // any confirmation number; for vendors where the candidate self-schedules, `awaiting_candidate_schedule`
+        // tells the portal to surface the "book your slot with <vendor>" step. Empty when delivery is in-house.
+        app.MapGet("/api/me/exam/delivery", (HttpContext ctx) =>
+        {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var certSel = ctx.Request.Query["certification_id"].ToString();
+            var certId = string.IsNullOrEmpty(certSel) ? 0 : Certs.Resolve(db, certSel);
+            var o = certId > 0
+                ? db.QueryOne(@"SELECT o.status,o.delivery_type,o.confirmation_code,o.external_appointment_id,o.result_status,o.scheduled_at,o.timezone,
+                                       p.name provider_name, p.provider
+                                FROM exam_delivery_orders o LEFT JOIN exam_delivery_providers p ON p.id=o.provider_id
+                                WHERE o.user_id=? AND o.certification_id=? ORDER BY o.id DESC LIMIT 1", u.Id, certId)
+                : db.QueryOne(@"SELECT o.status,o.delivery_type,o.confirmation_code,o.external_appointment_id,o.result_status,o.scheduled_at,o.timezone,
+                                       p.name provider_name, p.provider
+                                FROM exam_delivery_orders o LEFT JOIN exam_delivery_providers p ON p.id=o.provider_id
+                                WHERE o.user_id=? ORDER BY o.id DESC LIMIT 1", u.Id);
+            if (o is null) return J(new { routed = false });
+            var st = H.Str(o["status"]);
+            return J(new
+            {
+                routed = true,
+                provider = H.Str(o["provider"]), provider_name = H.Str(o["provider_name"]),
+                status = st, delivery_type = H.Str(o["delivery_type"]),
+                self_schedule = st == "awaiting_candidate_schedule",
+                confirmation = H.Str(o["confirmation_code"]) ?? H.Str(o["external_appointment_id"]),
+                result_status = H.Str(o["result_status"]),
+                scheduled_at = H.Str(o["scheduled_at"]), timezone = H.Str(o["timezone"]),
+            });
         });
 
         // ---------------- exam start (create-or-resume; certification-aware) ----------------
@@ -343,13 +384,23 @@ public static class StudentExam
             var certSel = H.GetS(b, "certification_id", "certification", "cert");
             var bk = certSel is null ? ActiveBooking(u.Id) : ActiveBooking(u.Id, Certs.Resolve(db, certSel));
             if (bk is null) return Results.Json(new { error = "no_booking" }, statusCode: 400);
+            var certId = H.L(bk.GetValueOrDefault("certification_id") ?? 1L);
+            // Delivery-mode switch: if this certification is delivered by an external vendor (and this booking
+            // was routed to one), the in-house SecureExam launch is disabled — the candidate sits the exam with
+            // the vendor, not here. Checked first so the two delivery paths can never collide.
+            if (PCI.Backend.Core.ExamDelivery.IsExternal(db, certId))
+            {
+                var extOrder = db.QueryOne("SELECT status FROM exam_delivery_orders WHERE booking_id=? AND status NOT IN ('cancelled','failed') ORDER BY id DESC", bk["id"]);
+                if (extOrder is not null)
+                    return Results.Json(new { error = "external_delivery", provider = PCI.Backend.Core.ExamDelivery.ModeFor(db, certId),
+                        message = "This examination is delivered by an external test provider. Use the scheduling details in your portal to sit it — the in-app exam is not used for this certification." }, statusCode: 400);
+            }
             // Re-check the trust-critical gates at launch, not only at booking: an admin ID rejection,
             // a bumped consent version, or an account hold after booking must stop the sitting — the
             // credential's integrity depends on identity/consent still holding when the candidate sits.
             var launchBlockers = Lifecycle.LaunchBlockers(db, u.Id);
             if (launchBlockers.Count > 0) return Results.Json(new { error = "not_eligible", blockers = launchBlockers, message = "Your exam access is on hold. Resolve the outstanding requirement (identity document, consents, or account status) before launching." }, statusCode: 400);
             if (!Lifecycle.ReadinessSatisfied(db, u.Id)) return Results.Json(new { error = "readiness_required", message = "Please complete the system readiness check before launching your exam." }, statusCode: 400);
-            var certId = H.L(bk.GetValueOrDefault("certification_id") ?? 1L);
             var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             var slot = H.JsMillis(H.Str(bk["scheduled_at"]));
             var ec = Certs.Cfg(db, certId);   // duration/pass per certification; windows stay global
@@ -511,8 +562,16 @@ public static class StudentExam
             if (!System.Text.RegularExpressions.Regex.IsMatch(idStr, @"^\d+$") && (att["client_kind"] as string) != "desktop")
                 { try { db.Execute("UPDATE exam_attempts SET client_kind='desktop' WHERE id=?", att["id"]); } catch { } }
             var deadline = H.JsMillis(H.Str(att["started_at"])) + H.L(att["duration_minutes"]) * 60_000;
+            var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            // The hard stop the manual submit honours: duration + 1 min network grace.
+            var hardStop = deadline + 60_000;
             var answersEl = H.GetEl(b, "answers", "Answers");
-            if (answersEl is not null)
+            // SECURITY: accept answer writes only up to the hard stop. Past time-up the timer has
+            // expired, so a heartbeat's `answers` payload is ignored — otherwise a candidate could let
+            // the clock run out, look up the key at leisure, then inject a winning payload in one
+            // heartbeat that the force-submit below would score and pass. Mirrors the /submit path,
+            // which finalises on the answers saved BEFORE the deadline.
+            if (answersEl is not null && nowMs <= hardStop)
             {
                 var answersRaw = answersEl.Value.GetRawText();
                 db.Execute("UPDATE exam_attempts SET answers=? WHERE id=?", answersRaw, att["id"]);
@@ -551,12 +610,10 @@ public static class StudentExam
             // cannot bind to the desktop's DateTimeOffset — an un-converted value throws and fails the
             // ENTIRE HeartbeatResponse deserialization whenever a proctor message is pending.
             var messages = undelivered.Select(m => new { from = "PCI Support", body = m["body"], at = H.IsoFromMillis(H.JsMillis(H.Str(m["created_at"]))) }).ToList();
-            var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             // Fire server-side finalisation only past the SAME hard stop the manual submit honours
-            // (duration + 1 min network grace), so a heartbeat can't finalise an attempt while the
-            // candidate's own on-time submit is still in flight. The DISPLAYED deadline stays at
-            // exactly `duration`, so the clock the candidate sees is unchanged.
-            var hardStop = deadline + 60_000;
+            // (duration + 1 min network grace, computed above), so a heartbeat can't finalise an attempt
+            // while the candidate's own on-time submit is still in flight. The DISPLAYED deadline stays
+            // at exactly `duration`, so the clock the candidate sees is unchanged.
             var forceSubmit = nowMs >= hardStop;
             // #3 — once the hard stop passes, finalise the attempt on the server using the answers saved
             // so far. This closes abandoned/disconnected sittings and blocks any further answer writes.
@@ -711,7 +768,7 @@ public static class StudentExam
         app.MapPost("/api/me/delete-request", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             log(u.Id, "delete_request", u.Email); return J(new { ok = true, note = "A data deletion request has been recorded." }); });
         app.MapGet("/api/me/invoices", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            var rows = db.Query("SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference FROM payments WHERE user_id=? AND payment_status='paid' ORDER BY id DESC", u.Id);
+            var rows = db.Query("SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference,waived_amount FROM payments WHERE user_id=? AND payment_status IN ('paid','waived') ORDER BY id DESC", u.Id);
             return J(new { rows }); });
         app.MapGet("/api/me/faqs", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             return J(new { rows = db.Query("SELECT question,answer,category FROM faqs WHERE published=1 ORDER BY sort_order,id") }); });

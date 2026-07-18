@@ -15,6 +15,8 @@ export interface MeUser {
   last_name: string
   registration_no: string
   created_at: string
+  /** true when this session is a staff support view (admin impersonation) — the portal shows a permanent banner. */
+  impersonated?: boolean
 }
 
 export interface Certification {

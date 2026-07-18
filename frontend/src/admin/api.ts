@@ -59,6 +59,8 @@ export interface MemberRow {
   profile?: number | null
   paid_total?: number | null
   credentials?: number | null
+  /** 1 when this is a test account — excluded from reports and the public register */
+  is_test?: number | null
 }
 
 export interface IdentityDocRow {

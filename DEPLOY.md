@@ -111,3 +111,24 @@ wildcard), the database path must not be temporary, and `STRIPE_WEBHOOK_SECRET` 
 2. Admin → Settings: confirm pricing, pass mark, retention days.
 3. Create your real team accounts (roles: website/student/exam manager, viewer) and stop using
    the owner account for daily work.
+
+## Testing the exam software end-to-end
+
+The exam runs two ways off the same backend: **in the browser** (the exam-day check-in page
+`/student.html`, via `/api/me/exam/start` → heartbeat → submit) and via the **Windows desktop
+client** (SecureExam: `pciexam://` launch → `/api/exam/authorize` → heartbeat → submit). Both draw
+their questions from the *live* exam bank (`published`, not marked *practice*). A fresh install ships
+with a handful of live questions, so the exam is sittable immediately — but it is thin.
+
+- **To try a realistic sitting on a test deployment**, set the environment variable
+  `SEED_DEMO_EXAM=true` before boot. This loads ~24 extra generic project-controls questions into the
+  live bank (bringing it to ~30 across ~15 domains) so you can complete a full, meaningful exam and see
+  a real domain breakdown. To also create a login-able test candidate, set `DEMO_STUDENT_PASSWORD` (the
+  account is `student@pci.local`). Both flags are **opt-in and never fire in `Production` by default**.
+- **For a real certification launch**, leave `SEED_DEMO_EXAM` unset and author the confidential live
+  bank privately in **Admin Console → Questions** (leave *Practice question* unchecked, tick
+  *Published*). Real exam answers must never live in source control — the demo pack is deliberately
+  generic, publicly-known fundamentals, not the certification's live items.
+- **The desktop client is Windows-only** (WPF); it cannot run on Render/Linux. Render hosts the
+  backend + browser exam. To exercise the desktop client, build `secureexam/PCI.SecureExam.App` on
+  Windows and point its `ApiBaseUrl` (or the `api=` launch parameter) at your deployed URL.

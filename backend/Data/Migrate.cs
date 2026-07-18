@@ -25,6 +25,7 @@ public static class Migrate
             var have = db.Columns(table);
             if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
         }
+        AddCol("users", "is_test", "is_test INTEGER DEFAULT 0");   // admin-created test accounts (excluded from real reporting)
         AddCol("sample_questions", "is_practice", "is_practice INTEGER DEFAULT 0");
         // Certuvo (Phase 8): practice questions carry a teaching explanation + a difficulty band.
         AddCol("sample_questions", "explanation", "explanation TEXT");
@@ -106,14 +107,13 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_tpapp_status ON training_partner_applications(status)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS training_partner_application_documents(id INTEGER PRIMARY KEY AUTOINCREMENT,application_id INTEGER NOT NULL,doc_kind TEXT DEFAULT 'supporting',filename TEXT,mime TEXT,size_bytes INTEGER,storage_ref TEXT,sha256 TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_tpappdoc_app ON training_partner_application_documents(application_id)");
-        // Partner dashboards: portal access (hashed token, shown once), commission attribution and
-        // candidate sponsorship. partner_type widens the directory to institutions/sponsors; a
-        // discount code carrying partner_id attributes its paid redemptions to that partner, from
-        // which commission accrual is DERIVED on demand (no hook in the payment path). Payouts are
-        // the only materialized ledger rows; balance = accrued − paid out.
+        // Partner dashboards: commission attribution and candidate sponsorship, riding on the
+        // institution portal's partner_users auth. partner_type widens the directory to
+        // institutions/sponsors; a discount code carrying partner_id attributes its paid redemptions
+        // to that partner, from which commission accrual is DERIVED on demand (no hook in the payment
+        // path). Payouts are the only materialized ledger rows; balance = accrued − paid out.
         AddCol("training_partners", "partner_type", "partner_type TEXT DEFAULT 'training'");
         AddCol("training_partners", "contact_name", "contact_name TEXT");
-        AddCol("training_partners", "access_token_hash", "access_token_hash TEXT");
         AddCol("training_partners", "commission_pct", "commission_pct REAL DEFAULT 0");
         AddCol("training_partners", "sponsor_enabled", "sponsor_enabled INTEGER DEFAULT 0");
         AddCol("discount_codes", "partner_id", "partner_id INTEGER");
@@ -152,6 +152,118 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS integration_deliveries(id INTEGER PRIMARY KEY AUTOINCREMENT,event_id INTEGER NOT NULL,integration_id INTEGER NOT NULL,status TEXT NOT NULL DEFAULT 'pending',attempts INTEGER DEFAULT 0,response_code INTEGER,last_error TEXT,next_attempt_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_intdel_pending ON integration_deliveries(status, next_attempt_at)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_intdel_event_int ON integration_deliveries(event_id, integration_id)");
+        // Exam Delivery integrations: connect the platform to third-party certification exam-delivery /
+        // proctoring vendors (Pearson VUE/OnVUE, Kryterion Webassessor, PSI, TestReach, Questionmark).
+        //   exam_delivery_providers   — one configured connector per vendor (write-only secret, sandbox/prod,
+        //                               per-provider config incl. certification→vendor-exam-code mapping)
+        //   exam_delivery_orders      — one row per booking routed to a vendor: the external candidate /
+        //                               registration / appointment ids and the lifecycle status + result
+        //   exam_delivery_log         — an append-only audit of every vendor API operation (op, code, ok)
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_delivery_providers(id INTEGER PRIMARY KEY AUTOINCREMENT,provider VARCHAR(40) NOT NULL,name TEXT,enabled INTEGER DEFAULT 0,is_default INTEGER DEFAULT 0,environment TEXT DEFAULT 'sandbox',config TEXT,secret TEXT,status TEXT DEFAULT 'idle',last_sync_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_exdelprov_provider ON exam_delivery_providers(provider)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_delivery_orders(id INTEGER PRIMARY KEY AUTOINCREMENT,provider_id INTEGER NOT NULL,provider TEXT NOT NULL,user_id INTEGER NOT NULL,booking_id INTEGER,attempt_id INTEGER,certification_id INTEGER,vendor_exam_code TEXT,delivery_type TEXT DEFAULT 'online',status VARCHAR(32) NOT NULL DEFAULT 'pending',external_candidate_id TEXT,external_registration_id TEXT,external_appointment_id TEXT,confirmation_code TEXT,scheduled_at TEXT,timezone TEXT,result_status TEXT,score REAL,max_score REAL,raw_result TEXT,last_error TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_exdelorder_booking ON exam_delivery_orders(booking_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_exdelorder_status ON exam_delivery_orders(status)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_exdelorder_booking_prov ON exam_delivery_orders(booking_id, provider_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_delivery_log(id INTEGER PRIMARY KEY AUTOINCREMENT,order_id INTEGER,provider_id INTEGER,provider TEXT,operation TEXT NOT NULL,ok INTEGER DEFAULT 0,response_code INTEGER,detail TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_exdellog_order ON exam_delivery_log(order_id)");
+        // Certuvo external practice platform: an account provisioned for a member (credentials shared in the
+        // student panel). Provisioned automatically when a membership is settled, or manually by an admin.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS certuvo_accounts(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL UNIQUE,external_id TEXT,username TEXT,secret TEXT,login_url TEXT,status TEXT DEFAULT 'pending',last_error TEXT,provisioned_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        // Certuvo hardening: retry queue with backoff, suspend/revoke lifecycle, first-login confirmation
+        // (webhook), per-account idempotency key so repeated settlements/webhooks can never double-create.
+        AddCol("certuvo_accounts", "retry_count", "retry_count INTEGER DEFAULT 0");
+        AddCol("certuvo_accounts", "next_retry_at", "next_retry_at TEXT");
+        AddCol("certuvo_accounts", "suspended_at", "suspended_at TEXT");
+        AddCol("certuvo_accounts", "revoked_at", "revoked_at TEXT");
+        AddCol("certuvo_accounts", "activated_at", "activated_at TEXT");
+        AddCol("certuvo_accounts", "credentials_sent_at", "credentials_sent_at TEXT");
+        AddCol("certuvo_accounts", "idempotency_key", "idempotency_key TEXT");
+        // PCI-generated, PCI-controlled login: a unique username independent of the student's email, a
+        // temporary password (stored encrypted, never the email), first-login-change tracking, and an
+        // email-conflict marker so an existing Certuvo account under the same email is flagged, never
+        // overwritten. eligible_reason records WHY a member qualified (paid/waived/honorary/…).
+        AddCol("certuvo_accounts", "must_change_password", "must_change_password INTEGER DEFAULT 1");
+        AddCol("certuvo_accounts", "email_conflict", "email_conflict INTEGER DEFAULT 0");
+        AddCol("certuvo_accounts", "eligible_reason", "eligible_reason TEXT");
+        AddCol("certuvo_accounts", "member_type", "member_type TEXT");
+        AddCol("certuvo_accounts", "username_regenerated_at", "username_regenerated_at TEXT");
+        AddCol("certuvo_accounts", "password_reset_at", "password_reset_at TEXT");
+        // Finance controls: structured metadata on payments (offline settlements, waivers, reversals) so
+        // manual money movements carry the same evidence a gateway payment does.
+        AddCol("payments", "method", "method TEXT");                       // bank_transfer | cheque | invoice | gateway | other
+        AddCol("payments", "bank_reference", "bank_reference TEXT");
+        AddCol("payments", "gateway_reference", "gateway_reference TEXT");
+        AddCol("payments", "receipt_no", "receipt_no TEXT");
+        AddCol("payments", "note", "note TEXT");
+        AddCol("payments", "recorded_by", "recorded_by INTEGER");          // admin_users.id for manual entries
+        AddCol("payments", "waived_amount", "waived_amount REAL");
+        AddCol("payments", "reversed_at", "reversed_at TEXT");
+        AddCol("payments", "reversed_by", "reversed_by INTEGER");
+        AddCol("payments", "reversal_reason", "reversal_reason TEXT");
+        // Waiver ledger: every full/partial waiver as a first-class record (who, what, why, how much).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS fee_waivers(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,product_type VARCHAR(24),certification_id INTEGER,kind VARCHAR(16) DEFAULT 'full',original_amount REAL,waived_amount REAL,final_amount REAL,currency VARCHAR(8) DEFAULT 'USD',reason TEXT,note TEXT,approved_by INTEGER,code_id INTEGER,payment_id INTEGER,expires_at TEXT,status VARCHAR(16) DEFAULT 'granted',created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_fee_waivers_user ON fee_waivers(user_id)");
+        // Institution (training-partner) sponsorship limits + partner-linked discount codes.
+        AddCol("training_partners", "max_discount_percent", "max_discount_percent REAL");
+        AddCol("training_partners", "max_codes", "max_codes INTEGER");
+        AddCol("training_partners", "max_uses_per_code", "max_uses_per_code INTEGER");
+        AddCol("training_partners", "total_allocation", "total_allocation INTEGER");
+        AddCol("training_partners", "allow_full_sponsorship", "allow_full_sponsorship INTEGER DEFAULT 0");
+        AddCol("discount_codes", "partner_id", "partner_id INTEGER");
+
+        // ============ Support, institutions & discount-engine v2 ============
+        // Student-facing error references: every important failure gets a PCI-YYYY-NNNNNN reference the
+        // student can quote and support can search. Never stores passwords/tokens/card data.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS error_reports(id INTEGER PRIMARY KEY AUTOINCREMENT,reference VARCHAR(24) UNIQUE NOT NULL,user_id INTEGER,page TEXT,category VARCHAR(40) DEFAULT 'general',user_message TEXT,tech_summary TEXT,browser TEXT,os TEXT,app_version TEXT,related_type VARCHAR(32),related_id INTEGER,status VARCHAR(16) DEFAULT 'open',resolution_note TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_error_reports_user ON error_reports(user_id)");
+        // Impersonation ledger: who acted as whom, why, when — plus every page the staff session touched.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS impersonation_sessions(id INTEGER PRIMARY KEY AUTOINCREMENT,token_sha VARCHAR(64) UNIQUE NOT NULL,admin_id INTEGER NOT NULL,user_id INTEGER NOT NULL,reason TEXT,started_at TEXT DEFAULT (datetime('now')),ended_at TEXT,last_seen_at TEXT)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS impersonation_events(id INTEGER PRIMARY KEY AUTOINCREMENT,session_id INTEGER NOT NULL,method VARCHAR(8),path TEXT,at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_imp_events_session ON impersonation_events(session_id)");
+        // Customer-service layer on tickets: assignment, tags, escalation, SLA stamps, internal notes,
+        // canned templates, satisfaction rating.
+        AddCol("tickets", "assigned_to", "assigned_to INTEGER");            // admin_users.id
+        AddCol("tickets", "tags", "tags TEXT");
+        AddCol("tickets", "escalated", "escalated INTEGER DEFAULT 0");
+        AddCol("tickets", "first_response_at", "first_response_at TEXT");
+        AddCol("tickets", "resolved_at", "resolved_at TEXT");
+        AddCol("tickets", "rating", "rating INTEGER");                      // 1-5 CSAT, student-set after resolve
+        AddCol("tickets", "followup_at", "followup_at TEXT");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS ticket_notes(id INTEGER PRIMARY KEY AUTOINCREMENT,ticket_id INTEGER NOT NULL,admin_id INTEGER NOT NULL,body TEXT NOT NULL,mentions TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_ticket_notes_ticket ON ticket_notes(ticket_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS support_templates(id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT NOT NULL,body TEXT NOT NULL,category VARCHAR(40),active INTEGER DEFAULT 1,created_by INTEGER,created_at TEXT DEFAULT (datetime('now')))");
+        // (chat_sessions.assigned_to / linked_user_id are added just after that table is created, below.)
+        // Institution portal accounts: each institution gets its own logins, wholly separate from both
+        // admin_users and students. Sessions mirror admin_sessions (sha token + expiry).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_users(id INTEGER PRIMARY KEY AUTOINCREMENT,partner_id INTEGER NOT NULL,email VARCHAR(255) UNIQUE NOT NULL,name TEXT,role VARCHAR(24) DEFAULT 'admin',password_hash TEXT,status VARCHAR(16) DEFAULT 'active',must_change_pw INTEGER DEFAULT 1,last_login_at TEXT,created_by INTEGER,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_partner_users_partner ON partner_users(partner_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_sessions(id INTEGER PRIMARY KEY AUTOINCREMENT,partner_user_id INTEGER NOT NULL,token VARCHAR(64) UNIQUE NOT NULL,expires_at TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_notices(id INTEGER PRIMARY KEY AUTOINCREMENT,partner_id INTEGER NOT NULL,title TEXT,body TEXT,read_at TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_partner_notices_partner ON partner_notices(partner_id)");
+        // Institution agreement + privacy scope.
+        AddCol("training_partners", "status", "status VARCHAR(16) DEFAULT 'active'");   // active | suspended | terminated
+        AddCol("training_partners", "institution_type", "institution_type TEXT");
+        AddCol("training_partners", "agreement_start", "agreement_start TEXT");
+        AddCol("training_partners", "agreement_end", "agreement_end TEXT");
+        AddCol("training_partners", "auto_approve_codes", "auto_approve_codes INTEGER DEFAULT 0");
+        AddCol("training_partners", "privacy_fields", "privacy_fields TEXT");            // JSON list of extra fields the partner may see
+        AddCol("training_partners", "eligible_countries", "eligible_countries TEXT");
+        // Discount-engine v2: full lifecycle + constraints. Legacy rows keep status NULL and are governed
+        // by the existing `active` flag; new engine rows use the status column as the source of truth.
+        AddCol("discount_codes", "status", "status VARCHAR(20)");                        // draft|pending_approval|active|suspended|rejected|cancelled
+        AddCol("discount_codes", "created_by_partner_user", "created_by_partner_user INTEGER");
+        AddCol("discount_codes", "approved_by", "approved_by INTEGER");
+        AddCol("discount_codes", "approved_at", "approved_at TEXT");
+        AddCol("discount_codes", "rejection_reason", "rejection_reason TEXT");
+        AddCol("discount_codes", "campaign_name", "campaign_name TEXT");
+        AddCol("discount_codes", "min_payable", "min_payable REAL");
+        AddCol("discount_codes", "eligible_countries", "eligible_countries TEXT");       // CSV of ISO/plain names; NULL = all
+        // Fraud/abuse review queue — nothing is auto-blocked without a human path.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS fraud_flags(id INTEGER PRIMARY KEY AUTOINCREMENT,kind VARCHAR(40) NOT NULL,code_id INTEGER,user_id INTEGER,email TEXT,detail TEXT,status VARCHAR(16) DEFAULT 'open',actioned_by INTEGER,actioned_at TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_fraud_flags_status ON fraud_flags(status)");
+        // Optional TOTP MFA for admin accounts (privileged logins).
+        AddCol("admin_users", "totp_secret", "totp_secret TEXT");
         db.Exec(@"CREATE TABLE IF NOT EXISTS notification_history(id INTEGER PRIMARY KEY AUTOINCREMENT,channel TEXT NOT NULL DEFAULT 'email',recipient TEXT,subject TEXT,status TEXT,related_type TEXT,related_id INTEGER,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','')");
@@ -168,7 +280,7 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS email_campaigns(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,subject TEXT,body_html TEXT,audience TEXT,status TEXT DEFAULT 'draft',total INTEGER DEFAULT 0,sent INTEGER DEFAULT 0,failed INTEGER DEFAULT 0,suppressed INTEGER DEFAULT 0,created_at TEXT DEFAULT (datetime('now')),sent_at TEXT)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS campaign_recipients(id INTEGER PRIMARY KEY AUTOINCREMENT,campaign_id INTEGER,email TEXT,first_name TEXT,status TEXT DEFAULT 'pending',error TEXT,sent_at TEXT)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_campaign_recipients_campaign ON campaign_recipients(campaign_id)");
-        db.Exec(@"CREATE TABLE IF NOT EXISTS email_suppression(id INTEGER PRIMARY KEY AUTOINCREMENT,email TEXT UNIQUE NOT NULL,reason TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS email_suppression(id INTEGER PRIMARY KEY AUTOINCREMENT,email VARCHAR(255) UNIQUE NOT NULL,reason TEXT,created_at TEXT DEFAULT (datetime('now')))");
         // Optional postal address shown in the campaign footer (CAN-SPAM). Empty ⇒ line is omitted.
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('org_postal_address','')");
         // SEO (master-plan Phase 3): per-page canonical/OG overrides + a managed redirect table.
@@ -186,18 +298,21 @@ public static class Migrate
 
         // Public discussion forum (community): anonymous display-name threads/posts, community
         // flagging with auto-hold, and a rate-limit action ledger keyed by a salted truncated IP hash.
-        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_threads(id INTEGER PRIMARY KEY AUTOINCREMENT,category TEXT NOT NULL,title TEXT NOT NULL,author_name TEXT NOT NULL,status TEXT DEFAULT 'live',reply_count INTEGER DEFAULT 0,created_at TEXT DEFAULT (datetime('now')),last_post_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_threads(id INTEGER PRIMARY KEY AUTOINCREMENT,category VARCHAR(64) NOT NULL,title TEXT NOT NULL,author_name TEXT NOT NULL,status VARCHAR(24) DEFAULT 'live',reply_count INTEGER DEFAULT 0,created_at TEXT DEFAULT (datetime('now')),last_post_at VARCHAR(32) DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_threads_list ON forum_threads(status, last_post_at)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_threads_cat ON forum_threads(category, status)");
-        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_posts(id INTEGER PRIMARY KEY AUTOINCREMENT,thread_id INTEGER NOT NULL,author_name TEXT NOT NULL,body TEXT NOT NULL,status TEXT DEFAULT 'live',flags INTEGER DEFAULT 0,ip_hash TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_posts(id INTEGER PRIMARY KEY AUTOINCREMENT,thread_id INTEGER NOT NULL,author_name TEXT NOT NULL,body TEXT NOT NULL,status VARCHAR(24) DEFAULT 'live',flags INTEGER DEFAULT 0,ip_hash TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_posts_thread ON forum_posts(thread_id, status)");
-        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_actions(id INTEGER PRIMARY KEY AUTOINCREMENT,ip_hash TEXT NOT NULL,action TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_actions(id INTEGER PRIMARY KEY AUTOINCREMENT,ip_hash VARCHAR(64) NOT NULL,action VARCHAR(32) NOT NULL,created_at VARCHAR(32) DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_actions_lookup ON forum_actions(ip_hash, action, created_at)");
 
         // Self-hosted site chat (Endpoints/Chat.cs): a bot answers first from the admin-managed
         // knowledge base (chat_kb); the visitor can escalate to a live person; every conversation is
         // kept as a full transcript for admin review. No third-party chat services involved.
-        db.Exec(@"CREATE TABLE IF NOT EXISTS chat_sessions(id INTEGER PRIMARY KEY AUTOINCREMENT,token TEXT UNIQUE NOT NULL,visitor_name TEXT,status TEXT DEFAULT 'bot',created_at TEXT DEFAULT (datetime('now')),last_activity_at TEXT DEFAULT (datetime('now')),ip_hash TEXT)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS chat_sessions(id INTEGER PRIMARY KEY AUTOINCREMENT,token VARCHAR(64) UNIQUE NOT NULL,visitor_name TEXT,status VARCHAR(24) DEFAULT 'bot',created_at TEXT DEFAULT (datetime('now')),last_activity_at VARCHAR(32) DEFAULT (datetime('now')),ip_hash TEXT)");
+        // Support-inbox additions to the (Migrate-created) chat table — added here, after the table exists.
+        AddCol("chat_sessions", "assigned_to", "assigned_to INTEGER");
+        AddCol("chat_sessions", "linked_user_id", "linked_user_id INTEGER");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_chat_sessions_status ON chat_sessions(status, last_activity_at)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS chat_messages(id INTEGER PRIMARY KEY AUTOINCREMENT,session_id INTEGER NOT NULL,sender TEXT NOT NULL,body TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_chat_messages_session ON chat_messages(session_id, id)");

@@ -53,7 +53,16 @@ public static class Public
     public static CodeValidation ValidateCode(Db db, string? code, string product, string? email, long? certId = null)
     {
         var c = db.QueryOne("SELECT * FROM discount_codes WHERE code=?", (code ?? "").ToUpperInvariant());
-        if (c is null || !H.B(c["active"])) return new("This discount code is not valid or has expired.", null);
+        if (c is null) return new("This discount code is not valid or has expired.", null);
+        // Discount-engine lifecycle: engine-managed rows carry a status; legacy rows (status NULL) are
+        // governed by the active flag alone.
+        switch (H.Str(c["status"]))
+        {
+            case "draft": case "pending_approval": return new("This code is not active yet.", null);
+            case "suspended": return new("This code is currently suspended. Contact support if you believe this is an error.", null);
+            case "rejected": case "cancelled": return new("This discount code is no longer available.", null);
+        }
+        if (!H.B(c["active"])) return new("This discount code is not valid or has expired.", null);
         // Per-certification scope: a code tied to one credential is rejected for any other. NULL = all certs.
         if (c["certification_id"] is not null && certId is not null && H.L(c["certification_id"]) != certId.Value)
         {
@@ -79,7 +88,54 @@ public static class Public
         var appliesTo = H.Str(c["applies_to"]);
         if (appliesTo != "all" && !CatsFor(product).Contains(appliesTo))
             return new($"This code only applies to {(appliesTo == "exam" ? "the exam fee" : "membership")}, not this purchase.", null);
+        // A partial-waiver code is issued to one named student: it only validates for that email.
+        if (H.Str(c["code_type"]) == "waiver" && H.Str(c["criteria_json"]) is { Length: > 0 } cj)
+        {
+            try
+            {
+                var doc = System.Text.Json.JsonDocument.Parse(cj);
+                if (doc.RootElement.TryGetProperty("email", out var em) && em.GetString() is { Length: > 0 } lockEmail
+                    && !string.Equals(lockEmail, email ?? "", StringComparison.OrdinalIgnoreCase))
+                    return new("This code was issued to a specific student account and cannot be used here.", null);
+            }
+            catch { }
+        }
+        // An institution (training-partner) code stops honouring redemptions once the partner's total
+        // allocation is spent, even if this individual code still has headroom — and it only works at
+        // all while the institution itself is active and within its agreement dates.
+        if (c["partner_id"] is not null)
+        {
+            var pid = H.L(c["partner_id"]);
+            var partner = db.QueryOne("SELECT status,agreement_end,total_allocation FROM training_partners WHERE id=?", pid);
+            if (partner is null || (H.Str(partner["status"]) ?? "active") != "active")
+                return new("This institution's codes are not currently available.", null);
+            if (H.Str(partner["agreement_end"]) is { Length: > 0 } ae && string.Compare(ae, DateTime.UtcNow.ToString("yyyy-MM-dd"), StringComparison.Ordinal) < 0)
+                return new("This institution's agreement has ended; the code can no longer be used.", null);
+            if (partner["total_allocation"] is not null)
+            {
+                var usedTotal = db.Scalar<long>("SELECT COALESCE(SUM(dc.used_count),0) FROM discount_codes dc WHERE dc.partner_id=?", pid);
+                if (usedTotal >= H.L(partner["total_allocation"]))
+                    return new("This institution's sponsorship allocation has been fully used.", null);
+            }
+        }
+        // Country eligibility: when a code names eligible countries, the student's profile country must
+        // match (checked by email so it also works at public checkout).
+        if (H.Str(c["eligible_countries"]) is { Length: > 0 } ec && !string.IsNullOrEmpty(email))
+        {
+            var country = db.Scalar<string>(@"SELECT sp.country FROM users u2 JOIN student_profiles sp ON sp.user_id=u2.id WHERE u2.email=?", email!.ToLowerInvariant());
+            var allowed = ec.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            if (country is { Length: > 0 } && !allowed.Contains(country, StringComparer.OrdinalIgnoreCase))
+                return new("This code is not available in your country.", null);
+        }
         return new(null, c);
+    }
+
+    /// <summary>Enforce the code's minimum-payable floor against a computed price. Call after Pricing().</summary>
+    public static string? MinPayableViolation(Dictionary<string, object?> code, double finalAmount)
+    {
+        if (code["min_payable"] is null) return null;
+        var min = H.D(code["min_payable"]);
+        return finalAmount < min ? $"This code cannot reduce the amount payable below ${min:0.##}." : null;
     }
 
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log)
@@ -191,10 +247,13 @@ public static class Public
                     note = "Honorary recognition conferred by the board — not an examined PCP-AI credential.",
                 });
             }
+            // Test-account credentials are workflow artefacts, never real certifications: the public
+            // register reports them as not found so a test run can never mint a verifiable credential.
             var c = db.QueryOne(@"SELECT ic.credential_id,ic.holder_name,ic.credential,ic.status,ic.issued_at,ic.expires_at,ic.certificate_wording,
                        ct.code certification_code, ct.name certification_name, ct.acronym certification_acronym
                 FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)
-                WHERE upper(ic.credential_id)=?", id);
+                LEFT JOIN users tu ON tu.id=ic.user_id
+                WHERE upper(ic.credential_id)=? AND COALESCE(tu.is_test,0)=0", id);
             if (c is null) return J(new { found = false });
             // Compute the real verification state: a credential whose expiry has passed is NOT valid even
             // if the stored status column still says 'active' (statuses are not batch-updated on expiry).
