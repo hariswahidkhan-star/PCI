@@ -17,6 +17,9 @@
          and draw the modules directly into our self-contained PDF, so there is nothing to install on
          the host and the certificate engine works identically on any OS. -->
     <PackageReference Include="QRCoder" Version="1.6.0" />
+    <!-- PDFsharp: pure-managed PDF read/modify (no native libs) — used ONLY to stamp per-recipient
+         watermarks onto admin-uploaded PDF documents. Certificates keep the hand-written CertPdf. -->
+    <PackageReference Include="PDFsharp" Version="6.1.1" />
   </ItemGroup>
   <ItemGroup>
     <!-- reuse the SAME schema + email templates + static site as the Node app -->

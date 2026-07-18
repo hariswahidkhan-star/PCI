@@ -196,6 +196,7 @@ td.num,th.num{text-align:right}
       <button data-tab="overview" class="on">Overview</button>
       <button data-tab="codes">Codes</button>
       <button data-tab="students">Students</button>
+      <button data-tab="documents">Documents</button>
     </nav>
   </header>
 
@@ -263,6 +264,18 @@ td.num,th.num{text-align:right}
         <table id="studentsTbl" aria-label="Students registered with your codes">
           <thead></thead>
           <tbody><tr><td colspan="8"><span class="empty">Loading…</span></td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- DOCUMENTS -->
+    <section class="tab" id="tab-documents">
+      <div class="bar-row"><h2>Documents from PCI</h2></div>
+      <p style="color:var(--slate);font-size:13px;margin:-6px 0 16px;max-width:70ch">Agreements, invoices and materials PCI has shared with your institution. Downloads are logged; licensed documents carry your institution's watermark.</p>
+      <div class="card tblwrap">
+        <table id="docsTbl" aria-label="Documents shared with your institution">
+          <thead><tr><th>Document</th><th>Category</th><th>Type</th><th>Version</th><th>Published</th><th></th></tr></thead>
+          <tbody><tr><td colspan="6"><span class="empty">Loading…</span></td></tr></tbody>
         </table>
       </div>
     </section>
@@ -608,12 +621,72 @@ function loadStudents(){
     .catch(function(e){loadFail(e,'your students');});
 }
 
+/* ---- documents shared with the institution ---- */
+function fmtBytes(n){
+  n=Number(n)||0;
+  if(n>=1048576)return (n/1048576).toFixed(1)+' MB';
+  if(n>=1024)return Math.round(n/1024)+' KB';
+  return n+' B';
+}
+function dlDoc(id,name,btn){
+  btn.disabled=true;btn.textContent='Preparing…';
+  fetch('/api/partner/documents/'+id+'/download',{headers:{'Authorization':'Bearer '+st.token}})
+    .then(function(r){
+      if(!r.ok)throw new Error('http_'+r.status);
+      return r.blob();
+    })
+    .then(function(blob){
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);a.download=name||('document-'+id);
+      document.body.appendChild(a);a.click();a.remove();
+      setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+    })
+    .catch(function(){toast('Could not download the document.','err');})
+    .then(function(){btn.disabled=false;btn.textContent='Download';});
+}
+function renderDocs(j){
+  var tb=$('#docsTbl tbody');tb.textContent='';
+  var rows=(j&&j.rows)||[];
+  if(!rows.length){
+    var tr=el('tr'),td=el('td');td.colSpan=6;td.appendChild(el('span','empty','No documents have been shared with your institution yet.'));
+    tr.appendChild(td);tb.appendChild(tr);return;
+  }
+  rows.forEach(function(d){
+    var tr=el('tr');
+    var t1=el('td');t1.appendChild(el('div',null,d.title||('Document '+d.id)));
+    if(d.description){var s=el('div',null,d.description);s.style.cssText='font-size:12px;color:var(--slate)';t1.appendChild(s);}
+    var meta=el('div',null,(d.filename||'')+(d.size_bytes?' · '+fmtBytes(d.size_bytes):''));
+    meta.style.cssText='font-size:11.5px;color:var(--mist)';t1.appendChild(meta);
+    tr.appendChild(t1);
+    tr.appendChild(el('td',null,d.category||'—'));
+    tr.appendChild(el('td',null,d.doc_type||'—'));
+    tr.appendChild(el('td',null,'v'+(d.version||1)));
+    tr.appendChild(el('td',null,fmtDate(d.published_at)));
+    var act=el('td');
+    if(d.downloadable){
+      var b=el('button','btn btn-primary btn-sm','Download');
+      b.addEventListener('click',function(){dlDoc(d.id,d.filename,b);});
+      act.appendChild(b);
+    }else{
+      var why=d.lock_reason==='restricted'?('Available '+fmtDate(d.restricted_until)):(d.lock_reason||'Unavailable');
+      var chip=el('span',null,why);chip.style.cssText='font-size:12px;color:var(--mist)';
+      act.appendChild(chip);
+    }
+    tr.appendChild(act);
+    tb.appendChild(tr);
+  });
+}
+function loadDocuments(){
+  api('/api/partner/documents').then(renderDocs)
+    .catch(function(e){loadFail(e,'your documents');});
+}
+
 /* ---- tabs ---- */
-var loaders={overview:loadOverview,codes:loadCodes,students:loadStudents};
+var loaders={overview:loadOverview,codes:loadCodes,students:loadStudents,documents:loadDocuments};
 function setTab(name){
   st.tab=name;
   Array.prototype.forEach.call($('#tabs').children,function(b){b.classList.toggle('on',b.dataset.tab===name);});
-  ['overview','codes','students'].forEach(function(t){$('#tab-'+t).classList.toggle('on',t===name);});
+  ['overview','codes','students','documents'].forEach(function(t){$('#tab-'+t).classList.toggle('on',t===name);});
   if(loaders[name])loaders[name]();
 }
 $('#tabs').addEventListener('click',function(ev){

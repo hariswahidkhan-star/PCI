@@ -1191,6 +1191,78 @@ def test_documents_module(admin):
     # ---- RBAC: a student token cannot reach the admin document surface ----
     chk("17mm student token is refused the admin document API (401/403)", jget("GET", "/api/admin/documents", token=a_tok)[0] in (401, 403))
 
+    # ================= watermark rendering (per-recipient stamp on flagged PDFs) =================
+    def _real_pdf_uri():
+        """A REAL parseable PDF (blank page via pypdf) — the watermarker must be able to open it."""
+        from pypdf import PdfWriter; import io
+        w = PdfWriter(); w.add_blank_page(612, 792)
+        buf = io.BytesIO(); w.write(buf)
+        raw = buf.getvalue()
+        return "data:application/pdf;base64," + base64.b64encode(raw).decode(), raw
+
+    wm_uri, wm_raw = _real_pdf_uri()
+    c, wdoc = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "Licensed Study Guide", "file": wm_uri, "filename": "study-guide.pdf",
+        "assignment_type": "student", "user_id": a_uid, "watermark": True, "publish": True})
+    wid = wdoc.get("id")
+    chk("17nn watermark-flagged document publishes", c == 200 and wid, wdoc)
+    st, wbody, wtype = _raw_get(f"/api/me/documents/{wid}/download", token=a_tok)
+    chk("17oo watermarked download is a valid PDF with DIFFERENT bytes to the master",
+        st == 200 and wbody[:5] == b"%PDF-" and hashlib.sha256(wbody).hexdigest() != hashlib.sha256(wm_raw).hexdigest(), st)
+    wtxt = _pdf_text(wbody)
+    chk("17pp watermark carries the recipient's identity on the page",
+        "doc_a@ex.co" in wtxt and "not for redistribution" in wtxt, wtxt[:120])
+    sa, abody, _ = _raw_get(f"/api/admin/documents/{wid}/download", token=admin)
+    chk("17qq the stored MASTER is untouched (admin download = original bytes)",
+        sa == 200 and hashlib.sha256(abody).hexdigest() == hashlib.sha256(wm_raw).hexdigest(), sa)
+    # Fallback: a watermark-flagged file the engine cannot parse still downloads (original bytes) and
+    # the audit records it as unwatermarked rather than silently claiming a stamp.
+    c, fdoc = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "Unparseable but flagged", "file": _pdf_uri("not really parseable")[0],
+        "assignment_type": "student", "user_id": a_uid, "watermark": True, "publish": True})
+    fid = fdoc.get("id")
+    chk("17rr unparseable flagged PDF still downloads (graceful fallback)", _raw_get(f"/api/me/documents/{fid}/download", token=a_tok)[0] == 200)
+    con = dbconn(); fb = con.execute("SELECT COUNT(*) FROM document_downloads WHERE document_id=? AND result='ok_unwatermarked'", (fid,)).fetchone()[0]; con.close()
+    chk("17ss fallback is honestly audited as unwatermarked", fb >= 1, fb)
+
+    # ================= institution (partner) portal documents =================
+    def _mk_partner(name):
+        con = dbconn()
+        con.execute("INSERT INTO training_partners(name,tier,listed) VALUES(?, 'registered', 0)", (name,))
+        con.commit()
+        pid = con.execute("SELECT id FROM training_partners WHERE name=?", (name,)).fetchone()[0]
+        email = name.lower().replace(" ", ".") + "@inst.example"
+        con.execute("INSERT INTO partner_users(partner_id,email,name,role,password_hash,status,must_change_pw) VALUES(?,?,?, 'admin','x','active',0)", (pid, email, name))
+        con.commit()
+        puid = con.execute("SELECT id FROM partner_users WHERE email=?", (email,)).fetchone()[0]
+        tok = "ptok_" + sha256hex(email)[:20]
+        con.execute("INSERT INTO partner_sessions(partner_user_id,token,expires_at) VALUES(?,?, datetime('now','+1 day'))", (puid, sha256hex(tok)))
+        con.commit(); con.close()
+        return pid, tok
+
+    p1_id, p1_tok = _mk_partner("Northfield College")
+    p2_id, p2_tok = _mk_partner("Eastgate Institute")
+    inst_uri, inst_raw = _real_pdf_uri()
+    c, idoc = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "Partnership Agreement 2026", "category": "Policies & Agreements", "doc_type": "agreement",
+        "file": inst_uri, "filename": "agreement.pdf",
+        "assignment_type": "institution", "partner_id": p1_id, "watermark": True, "publish": True})
+    inst_id = idoc.get("id")
+    chk("17tt institution-audience document publishes", c == 200 and inst_id, idoc)
+    c, plist = jget("GET", "/api/partner/documents", token=p1_tok)
+    chk("17uu the targeted institution sees it in its portal",
+        c == 200 and any(r["id"] == inst_id and r.get("downloadable") for r in plist.get("rows", [])), plist)
+    c, plist2 = jget("GET", "/api/partner/documents", token=p2_tok)
+    chk("17vv another institution cannot see it (isolation)", c == 200 and not any(r["id"] == inst_id for r in plist2.get("rows", [])))
+    chk("17ww unauthenticated partner list is refused (401)", jget("GET", "/api/partner/documents")[0] == 401)
+    sp1, pbody, _ = _raw_get(f"/api/partner/documents/{inst_id}/download", token=p1_tok)
+    ptxt = _pdf_text(pbody) if sp1 == 200 else ""
+    chk("17xx the institution downloads a copy watermarked with ITS name",
+        sp1 == 200 and pbody[:5] == b"%PDF-" and "Northfield College" in ptxt and hashlib.sha256(pbody).hexdigest() != hashlib.sha256(inst_raw).hexdigest(), (sp1, ptxt[:80]))
+    chk("17yy the other institution is refused the download (404)", _raw_get(f"/api/partner/documents/{inst_id}/download", token=p2_tok)[0] == 404)
+    con = dbconn(); pdl = con.execute("SELECT COUNT(*) FROM document_downloads WHERE document_id=? AND role='partner' AND result LIKE ?", (inst_id, "ok%")).fetchone()[0]; con.close()
+    chk("17zz partner downloads are audited with the partner role", pdl >= 1, pdl)
+
 def H0(v):
     try: return int(v or 0)
     except Exception: return 0

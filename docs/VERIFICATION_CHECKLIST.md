@@ -74,13 +74,35 @@ one real (or test) student account.
 23. Revoke the credential in Admin → Credentials. ✅ The student can no longer download it and the
     public verify page shows revoked/not valid.
 
+## E. Watermark rendering
+
+24. Upload a real PDF with **Watermark** ticked, assign + publish to a student, then download it AS the
+    student. ✅ Every page carries a semi-transparent diagonal "{student name} – {email}" plus a footer
+    "Issued to … via the PCI student portal … not for redistribution". The file's bytes differ from the
+    upload (it's a stamped copy).
+25. Download the same document from Admin → Documents → Detail → Download. ✅ You get the ORIGINAL,
+    unstamped master — the stored file is never modified.
+26. Upload a corrupted/odd PDF with Watermark ticked and download as the student. ✅ It still downloads
+    (original bytes) and the document's audit shows the download as *unwatermarked* — no silent claims.
+
+## F. Partner (institution) portal documents
+
+27. In Admin → Documents, upload a PDF with Audience = **By institution** (pick the partner), Watermark
+    ticked, and publish. ✅ Publish succeeds (student grants = that partner's registered students, which
+    may be 0 — fine).
+28. Log in to the partner portal (`/partner.html`) as that institution. ✅ A **Documents** tab lists the
+    document with a Download button.
+29. Download it. ✅ The PDF is stamped "Licensed to {institution name}" diagonally + a footer, and the
+    admin audit for the document shows the download with the *partner* role.
+30. Log in as a DIFFERENT institution. ✅ The document is not listed, and fetching it by id is refused.
+
 ---
 
 ## Known gaps (by design, scoped for later phases — do NOT expect these to pass)
 
-- **Watermark**: the flag is stored and shown, but the per-student watermark is **not yet rendered**
-  onto the PDF (needs a PDF-overlay library; planned with the book-watermarking phase).
-- **Partner portal**: institutions have no documents page — "institution" is only an *audience* an
-  admin can target. A partner-facing documents view is a separate add-on if wanted.
+- **View-only viewer**: view-only documents open inline in the browser; there is no dedicated
+  no-download viewer (true copy-prevention of a delivered file isn't possible — the protections are
+  authentication, watermark traceability and the audit trail).
 - **Scheduled auto-publish**: a future-dated document sits in *scheduled* until an admin publishes at
   that time (no background scheduler yet).
+- **Watermarking is PDF-only**: Office/CSV/image/ZIP files are delivered as uploaded.

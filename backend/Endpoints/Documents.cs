@@ -157,7 +157,7 @@ public static class Documents
             var rows = db.Query($@"SELECT d.*,
                 (SELECT COUNT(*) FROM document_assignments a WHERE a.document_id=d.id AND a.status='active') assigned_count,
                 (SELECT COUNT(*) FROM document_acknowledgements k WHERE k.document_id=d.id) ack_count,
-                (SELECT COUNT(*) FROM document_downloads dl WHERE dl.document_id=d.id AND dl.action='download' AND dl.result='ok') download_count
+                (SELECT COUNT(*) FROM document_downloads dl WHERE dl.document_id=d.id AND dl.action='download' AND dl.result LIKE 'ok%') download_count
                 FROM documents d {w} ORDER BY d.id DESC", args.ToArray());
             return J(new { rows });
         }));
@@ -170,7 +170,7 @@ public static class Documents
             var recipients = db.Query(@"SELECT a.user_id, a.assignment_type, a.source, a.status, a.assigned_at, a.revoked_at,
                     u.first_name, u.last_name, u.email,
                     (SELECT acknowledged_at FROM document_acknowledgements k WHERE k.document_id=a.document_id AND k.user_id=a.user_id) acknowledged_at,
-                    (SELECT MAX(created_at) FROM document_downloads dl WHERE dl.document_id=a.document_id AND dl.user_id=a.user_id AND dl.action='download' AND dl.result='ok') last_download
+                    (SELECT MAX(created_at) FROM document_downloads dl WHERE dl.document_id=a.document_id AND dl.user_id=a.user_id AND dl.action='download' AND dl.result LIKE 'ok%') last_download
                 FROM document_assignments a JOIN users u ON u.id=a.user_id WHERE a.document_id=? ORDER BY a.status, a.id DESC", id);
             return J(new { document = d, versions, recipients });
         }));
@@ -411,8 +411,8 @@ public static class Documents
                 (SELECT COUNT(*) FROM document_assignments a WHERE a.document_id=? AND a.status='active') active_grants,
                 (SELECT COUNT(*) FROM document_assignments a WHERE a.document_id=? AND a.status='revoked') revoked_grants,
                 (SELECT COUNT(*) FROM document_acknowledgements k WHERE k.document_id=?) acknowledgements,
-                (SELECT COUNT(DISTINCT user_id) FROM document_downloads dl WHERE dl.document_id=? AND dl.action='download' AND dl.result='ok') distinct_downloaders,
-                (SELECT COUNT(*) FROM document_downloads dl WHERE dl.document_id=? AND dl.action='download' AND dl.result='ok') total_downloads,
+                (SELECT COUNT(DISTINCT user_id) FROM document_downloads dl WHERE dl.document_id=? AND dl.action='download' AND dl.result LIKE 'ok%') distinct_downloaders,
+                (SELECT COUNT(*) FROM document_downloads dl WHERE dl.document_id=? AND dl.action='download' AND dl.result LIKE 'ok%') total_downloads,
                 (SELECT COUNT(*) FROM document_downloads dl WHERE dl.document_id=? AND dl.action='view') total_views",
                 id, id, id, id, id, id);
             var recent = db.Query("SELECT user_id,actor,role,action,result,version,created_at FROM document_downloads WHERE document_id=? ORDER BY id DESC LIMIT 200", id);
@@ -524,6 +524,76 @@ public static class Documents
             return ServeToStudent(ctx, v.Value.docId, v.Value.uid, email, "student_link");
         });
 
+        // ═══════════════════════════ Institution (partner) portal ═══════════════════════════
+        // A document whose audience is `institution` targets a partner two ways at once: its REGISTERED
+        // STUDENTS get personal grants on publish (existing behaviour), and the institution's own portal
+        // logins can see/download it here — so agreements, invoices and marketing kits reach the partner
+        // even before they have any students. Strictly scoped to the partner's own id; nothing else leaks.
+        List<Dictionary<string, object?>> PartnerDocs(long partnerId) =>
+            db.Query(@"SELECT id,title,description,category,doc_type,status,filename,mime,size_bytes,version,
+                       view_only,watermark,restricted_until,publish_at,expires_at,published_at,assignment_config
+                       FROM documents WHERE assignment_type='institution'
+                       AND status IN ('published','active','scheduled','expired') ORDER BY id DESC")
+              .Where(d => ConfigPartnerId(H.Str(d["assignment_config"])) == partnerId).ToList();
+
+        app.MapGet("/api/partner/documents", (HttpContext ctx) =>
+        {
+            var p = Auth.PartnerFromReq(ctx.Request, db);
+            if (p is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+            var rows = PartnerDocs(p.PartnerId).Select(d =>
+            {
+                var (ok, reason) = Available(d);
+                var ru = H.Str(d["restricted_until"]);
+                var restricted = ru is { Length: > 0 } && !H.IsPast(ru);
+                return new
+                {
+                    id = H.L(d["id"]), title = H.Str(d["title"]), description = H.Str(d["description"]),
+                    category = H.Str(d["category"]), doc_type = H.Str(d["doc_type"]),
+                    filename = H.Str(d["filename"]), mime = H.Str(d["mime"]), size_bytes = H.Ln(d["size_bytes"]),
+                    version = H.Ln(d["version"]), view_only = H.L(d["view_only"]) == 1,
+                    restricted_until = ru, restricted, published_at = H.Str(d["published_at"]),
+                    downloadable = ok && !restricted, locked = !ok || restricted,
+                    lock_reason = restricted ? "restricted" : reason,
+                };
+            }).ToList();
+            return J(new { rows });
+        });
+
+        app.MapGet("/api/partner/documents/{id}/download", (HttpContext ctx, long id) =>
+        {
+            var p = Auth.PartnerFromReq(ctx.Request, db);
+            if (p is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+            var d = db.QueryOne("SELECT * FROM documents WHERE id=?", id);
+            if (d is null || H.Str(d["assignment_type"]) != "institution" || ConfigPartnerId(H.Str(d["assignment_config"])) != p.PartnerId)
+            { DlAudit(id, null, p.Email, "partner", Ip(ctx), "download", "not_assigned"); return Results.Json(new { error = "not_found" }, statusCode: 404); }
+            var (ok, reason) = Available(d);
+            if (!ok) { DlAudit(id, null, p.Email, "partner", Ip(ctx), "download", "blocked_" + reason); return Results.Json(new { error = reason, message = BlockMessage(reason) }, statusCode: 403); }
+            if (H.Str(d["restricted_until"]) is { Length: > 0 } ru && !H.IsPast(ru))
+            { DlAudit(id, null, p.Email, "partner", Ip(ctx), "download", "restricted"); return Results.Json(new { error = "restricted", available_from = ru }, statusCode: 403); }
+            var bytes = DocStore.Get(H.Str(d["storage_ref"]));
+            if (bytes is null) { DlAudit(id, null, p.Email, "partner", Ip(ctx), "download", "file_missing"); return Results.Json(new { error = "file_missing" }, statusCode: 500); }
+            var mime = H.Str(d["mime"]) ?? "application/octet-stream";
+            // Institution watermark: flagged PDFs carry the licensee's identity, exactly as for students.
+            var wmResult = "ok";
+            if (H.L(d["watermark"]) == 1 && mime == "application/pdf")
+            {
+                var pname = H.Str(db.QueryOne("SELECT name FROM training_partners WHERE id=?", p.PartnerId)?["name"]) ?? ("institution #" + p.PartnerId);
+                var wm = PdfWatermark.Apply(bytes,
+                    $"Licensed to {pname}",
+                    $"Issued to {pname} (institution #{p.PartnerId}) via the PCI partner portal - {DateTime.UtcNow:yyyy-MM-dd} - not for redistribution");
+                if (wm is not null) bytes = wm; else wmResult = "ok_unwatermarked";
+            }
+            var viewOnly = H.L(d["view_only"]) == 1;
+            DlAudit(id, null, p.Email, "partner", Ip(ctx), viewOnly ? "view" : "download", wmResult, H.Ln(d["version"]));
+            var name = H.Str(d["filename"]) ?? ("document-" + id);
+            if (viewOnly)
+            {
+                ctx.Response.Headers["Content-Disposition"] = "inline; filename=\"" + name.Replace("\"", "") + "\"";
+                return Results.Bytes(bytes, mime);
+            }
+            return Results.Bytes(bytes, mime, name);
+        });
+
         IResult ServeToStudent(HttpContext ctx, long id, long uid, string actorEmail, string role)
         {
             var d = db.QueryOne("SELECT * FROM documents WHERE id=?", id);
@@ -538,9 +608,23 @@ public static class Documents
             { DlAudit(id, uid, actorEmail, role, Ip(ctx), "download", "ack_required"); return Results.Json(new { error = "acknowledgement_required", message = "Please acknowledge this document before downloading." }, statusCode: 403); }
             var bytes = DocStore.Get(H.Str(d["storage_ref"]));
             if (bytes is null) { DlAudit(id, uid, actorEmail, role, Ip(ctx), "download", "file_missing"); return Results.Json(new { error = "file_missing" }, statusCode: 500); }
-            var viewOnly = H.L(d["view_only"]) == 1;
-            DlAudit(id, uid, actorEmail, role, Ip(ctx), viewOnly ? "view" : "download", "ok", H.Ln(d["version"]));
             var mime = H.Str(d["mime"]) ?? "application/octet-stream";
+            // Per-recipient watermark: flagged PDFs are stamped with the recipient's identity on every
+            // page at download time — the stored master is never modified and never exposed. Best-effort:
+            // an unparseable/encrypted PDF falls back to the original, and the audit records that.
+            var wmResult = "ok";
+            if (H.L(d["watermark"]) == 1 && mime == "application/pdf")
+            {
+                var u2 = db.QueryOne("SELECT first_name,last_name,email FROM users WHERE id=?", uid);
+                var fullName = ((H.Str(u2?["first_name"]) ?? "") + " " + (H.Str(u2?["last_name"]) ?? "")).Trim();
+                if (fullName.Length == 0) fullName = actorEmail;
+                var wm = PdfWatermark.Apply(bytes,
+                    $"{fullName} - {H.Str(u2?["email"]) ?? actorEmail}",
+                    $"Issued to {fullName} (member #{uid}) via the PCI student portal - {DateTime.UtcNow:yyyy-MM-dd} - not for redistribution");
+                if (wm is not null) bytes = wm; else wmResult = "ok_unwatermarked";
+            }
+            var viewOnly = H.L(d["view_only"]) == 1;
+            DlAudit(id, uid, actorEmail, role, Ip(ctx), viewOnly ? "view" : "download", wmResult, H.Ln(d["version"]));
             var name = H.Str(d["filename"]) ?? ("document-" + id);
             // View-only documents are served for INLINE display (no attachment prompt). True copy-prevention
             // is not achievable for a downloaded file; the master is never exposed and access stays audited.
@@ -577,6 +661,24 @@ public static class Documents
             if (ids.Count > 0) cfg["user_ids"] = ids;
         }
         return JsonSerializer.Serialize(cfg);
+    }
+
+    /// <summary>The partner_id an `institution` assignment targets, from its config JSON. Exact-parse
+    /// (never a LIKE match) so partner 1 can never see partner 12's documents.</summary>
+    static long? ConfigPartnerId(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return null;
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.ValueKind == JsonValueKind.Object && doc.RootElement.TryGetProperty("partner_id", out var v))
+            {
+                if (v.ValueKind == JsonValueKind.Number && v.TryGetInt64(out var n)) return n;
+                if (v.ValueKind == JsonValueKind.String && long.TryParse(v.GetString(), out var n2)) return n2;
+            }
+        }
+        catch { }
+        return null;
     }
 
     static string DocErrorMessage(string? error) => error switch

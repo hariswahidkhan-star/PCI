@@ -124,20 +124,44 @@ admin surface.
 Results: **integration suite 365/365 on SQLite and 365/365 on MySQL**; **500-sweep 0 server errors** (1125
 calls across 376 routes × 3 auth contexts); both SPAs build.
 
-## 6. Known limitations / scoped for a later phase
+## 6. Watermark rendering (delivered)
 
-- **Per-student PDF watermarking** — the `watermark` flag is stored and surfaced, but the actual per-page
-  watermark render needs a PDF-manipulation library and is deferred (it aligns with the still-pending
-  personalised-book watermarking phase). The master file is always private and never exposed.
+**`Core/PdfWatermark.cs`** (PDFsharp — pure managed, no native libs) stamps every page of a
+watermark-flagged PDF at download time with the recipient's identity: a semi-transparent diagonal
+"{name} – {email}" plus a footer line "Issued to {name} (member #id) via the PCI student portal –
+{date} – not for redistribution", so a leaked copy is traceable to who received it. The stored
+**master is never modified and never exposed** — each download renders a fresh copy. The watermark is
+drawn as raw content-stream operators with standard Helvetica (no font files needed on the server);
+a prepended/appended `q`/`Q` pair keeps placement correct even when the original content leaves the
+graphics state unbalanced, and inherited page resources are preserved. Institution downloads are
+stamped with the institution's name instead ("Licensed to {institution}"). **Best-effort by design**:
+an encrypted/unparseable PDF falls back to the original bytes and the download audit honestly records
+`ok_unwatermarked` (never a silent claim). Non-PDF types are served unmodified.
+
+## 7. Institution (partner) portal documents (delivered)
+
+A document with the **institution** audience now reaches the partner two ways at once: the partner's
+registered students get personal grants on publish (unchanged), and the institution's own portal
+logins see it under a new **Documents** tab in the partner portal (`partner.html`) — so agreements,
+invoices and marketing kits reach a partner even before it has students.
+`GET /api/partner/documents` lists only documents whose config targets that partner's id (exact JSON
+parse — never a substring match), with the same status/schedule/expiry gating as students;
+`GET /api/partner/documents/{id}/download` serves the file (watermarked with the institution name when
+flagged) and audits with `role='partner'`. Another institution can neither list nor fetch it.
+
+## 8. Known limitations / scoped for a later phase
+
 - **In-browser view-only viewer** — view-only documents are served inline; a dedicated no-download viewer is a
   later enhancement. (True copy-prevention is not achievable for a downloaded file; the security guarantees are
-  private storage + per-request authorisation + full audit.)
+  private storage + per-request authorisation + per-recipient watermarking + full audit.)
 - **Scheduled auto-publish** and **background bulk-assignment jobs** — a scheduled document is created and
   locked until its date; going live at that moment (and very large group fan-outs) would benefit from a
   background worker, deferred. Assignment resolution + notification currently run synchronously with a capped
   email fan-out.
 - **Automatic workflow-rule engine** — assignment is by explicit audience today; a fully configurable
   event-driven rule engine ("on exam pass, auto-attach document X") is a later phase.
+- **Watermarking applies to PDFs** — Office/CSV/image/zip files are served as uploaded (stamping those formats
+  is a different problem per format and out of scope).
 
 ## 7. Configuration & deployment
 
