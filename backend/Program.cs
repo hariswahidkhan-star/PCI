@@ -669,12 +669,13 @@ app.Use(async (ctx, next) =>
             return;
         }
         var reqPath = ctx.Request.Path.Value ?? "/";
-        // The classic /admin.html console is retired — the React admin at /admin/ is the single console.
-        // Permanently forward the old URL (and any lingering links/bookmarks) to the new one.
-        if (reqPath.Equals("/admin.html", StringComparison.OrdinalIgnoreCase))
+        // The classic HTML admin pages are retired — the React admin at /admin/ is the single console.
+        // Permanently forward the old URLs (and any lingering links/bookmarks) to the new console.
+        if (reqPath.Equals("/admin.html", StringComparison.OrdinalIgnoreCase)
+            || reqPath.Equals("/admin-students.html", StringComparison.OrdinalIgnoreCase))
         {
             ctx.Response.StatusCode = 301;
-            ctx.Response.Headers.Location = "/admin/";
+            ctx.Response.Headers.Location = reqPath.Contains("students", StringComparison.OrdinalIgnoreCase) ? "/admin/students" : "/admin/";
             return;
         }
         // ── Multi-certification clean URLs: /certifications (catalogue) and /certifications/{slug} (per credential) ──
