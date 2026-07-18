@@ -6,7 +6,7 @@ import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/u
 import { fmtDate, isPast } from '../../format'
 
 function IssueForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
-  const [f, setF] = useState({ credential_id: '', holder_name: '', credential: 'PCP-AI', expires_at: '' })
+  const [f, setF] = useState({ credential_id: '', holder_name: '', credential: 'PCL-AI', expires_at: '' })
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const set = (k: keyof typeof f, v: string) => setF((p) => ({ ...p, [k]: v }))
@@ -33,7 +33,7 @@ function IssueForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => v
           <button className="btn secondary sm" onClick={onClose}>Close</button>
         </div>
         {error && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{error}</div>}
-        <div className="field"><label>Credential ID</label><input value={f.credential_id} onChange={(e) => set('credential_id', e.target.value.toUpperCase())} placeholder="PCP-AI-2026-0001" /></div>
+        <div className="field"><label>Credential ID</label><input value={f.credential_id} onChange={(e) => set('credential_id', e.target.value.toUpperCase())} placeholder="PCI-PCLAI-2026-000001" /></div>
         <div className="field"><label>Holder name</label><input value={f.holder_name} onChange={(e) => set('holder_name', e.target.value)} /></div>
         <div className="field"><label>Credential</label><input value={f.credential} onChange={(e) => set('credential', e.target.value)} /></div>
         <div className="field"><label>Expires</label><input type="date" value={f.expires_at} onChange={(e) => set('expires_at', e.target.value)} /></div>

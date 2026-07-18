@@ -74,7 +74,7 @@ public static class Certs
     }
 
     public static string Prefix(Dictionary<string, object?> cert) =>
-        H.Str(cert["credential_prefix"]) is { Length: > 0 } p ? p : (H.Str(cert["code"]) ?? "PCP-AI");
+        H.Str(cert["credential_prefix"]) is { Length: > 0 } p ? p : (H.Str(cert["code"]) ?? "PCL-AI");
 
     public static int ExpiryYears(Dictionary<string, object?> cert) =>
         cert["expiry_years"] is null ? 3 : (int)H.L(cert["expiry_years"]);

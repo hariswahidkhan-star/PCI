@@ -797,6 +797,13 @@ app.Use(async (ctx, next) =>
             ctx.Response.Headers.Location = reqPath.Contains("students", StringComparison.OrdinalIgnoreCase) ? "/admin/students" : "/admin/";
             return;
         }
+        // Public certificate verification clean URL.
+        if (reqPath.Equals("/verify-certificate", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.StatusCode = 301;
+            ctx.Response.Headers.Location = "/verify.html" + ctx.Request.QueryString;
+            return;
+        }
         // ── Multi-certification clean URLs: /certifications (catalogue) and /certifications/{slug} (per credential) ──
         if (reqPath.StartsWith("/certifications", StringComparison.OrdinalIgnoreCase))
         {
@@ -813,6 +820,21 @@ app.Use(async (ctx, next) =>
             {
                 ctx.Response.StatusCode = 301;
                 ctx.Response.Headers.Location = "/certifications/" + certRedirect + ctx.Request.QueryString;
+                return;
+            }
+            // Suite auxiliary URLs → the pages that carry that content today (permanent, query preserved).
+            var auxTarget = rest.ToLowerInvariant() switch
+            {
+                "compare" => "/certification.html",
+                "routes" => "/certification-application.html",
+                "fees" => "/enrol.html",
+                "exams" => "/exam-structure.html",
+                _ => null,
+            };
+            if (auxTarget is not null)
+            {
+                ctx.Response.StatusCode = 301;
+                ctx.Response.Headers.Location = auxTarget + ctx.Request.QueryString;
                 return;
             }
             if (rest.Length > 0 && !rest.Contains('/') && !rest.Contains('.'))

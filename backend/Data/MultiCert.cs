@@ -161,13 +161,22 @@ public static class MultiCert
             ("Certified Project Controls Professional — AI", "PCI AI Project Controls Leader™"),
             ("Certified Project Controls Professional – AI", "PCI AI Project Controls Leader™"),
             ("Certified Project Controls Professional", "PCI AI Project Controls Leader™"),
-            ("PCP-AI", "PCL-AI"),
+            ("Certified Project Finance & Infrastructure Professional – AI", "PCI AI Project Finance Leader™"),
+            ("Certified Project Finance Professional – AI", "PCI AI Project Finance Leader™"),
+            ("Project Finance Leader – AI", "PCI AI Project Finance Leader™"),
+            ("Project Management Leader – AI", "PCI AI Project Delivery Leader™"),
+            ("PCI Project Management Leader", "PCI AI Project Delivery Leader™"),
+            ("Project Management Leader", "Project Delivery Leader"),
+            ("PCP-AI", "PCL-AI"), ("PFIP-AI", "PFL-AI"), ("PFIP", "PFL-AI"),
+            ("CPMD-AI", "PDL-AI"), ("CPMD", "PDL-AI"), ("PML-AI", "PDL-AI"),
         };
         (string table, string col)[] targets =
         {
             ("page_blocks", "cvalue"), ("pages", "title"), ("pages", "meta_description"),
-            ("faqs", "question"), ("faqs", "answer"), ("bok_domains", "name"), ("bok_domains", "description"),
+            ("faqs", "question"), ("faqs", "answer"),
+            ("bok_domains", "name"), ("bok_domains", "description"), ("bok_domains", "bullets"),
             ("news", "title"), ("news", "body"), ("resources", "title"), ("resources", "description"),
+            ("site_content", "cvalue"), ("cert_documents", "title"), ("cert_documents", "description"),
         };
         foreach (var (table, col) in targets)
         {

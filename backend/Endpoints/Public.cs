@@ -244,7 +244,7 @@ public static class Public
                     state = H.Str(hAward["status"]) == "revoked" ? "revoked" : "active",
                     valid = H.Str(hAward["status"]) != "revoked",
                     conferred_at = hAward["conferred_at"],
-                    note = "Honorary recognition conferred by the board — not an examined PCP-AI credential.",
+                    note = "Honorary recognition conferred by the board — not an examined PCI credential.",
                 });
             }
             // Test-account credentials are workflow artefacts, never real certifications: the public

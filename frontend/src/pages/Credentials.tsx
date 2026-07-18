@@ -23,7 +23,11 @@ export default function Credentials() {
       <p style="text-align:center">${t('cred.hasBeenAwarded')}</p>
       <h2 style="text-align:center;color:#1d4ed8">${e(c.certification_name || c.credential || c.credential_id)}</h2>
       ${c.certification_acronym ? `<p style="text-align:center;margin-top:-.4rem" class="muted">${e(c.certification_acronym)}</p>` : ''}
-      ${c.certificate_wording ? `<p style="text-align:center;font-style:italic;max-width:34rem;margin:1rem auto 0">${e(c.certificate_wording)}</p>` : ''}
+      ${c.certificate_wording
+        ? `<p style="text-align:center;font-style:italic;max-width:34rem;margin:1rem auto 0">${e(c.certificate_wording)}</p>`
+        : c.certification_name && c.certification_acronym
+          ? `<p style="text-align:center;max-width:36rem;margin:1rem auto 0">This certifies that ${e(holder)} has successfully fulfilled the eligibility, assessment and professional requirements for the ${e(c.certification_name)} credential and is authorised to use the designation ${e(c.certification_acronym)}.</p>`
+          : ''}
       <table>
         <tr><td>${t('cred.credentialId')}</td><td class="r">${e(c.credential_id)}</td></tr>
         <tr><td>${t('cred.issued')}</td><td class="r">${e(fmtDate(c.issued_at))}</td></tr>
@@ -40,7 +44,7 @@ export default function Credentials() {
       </div>
 
       {/* Honorary recognition is deliberately separate from exam-earned credentials: it is a
-          board-conferred designation, not the PCP-AI examination credential. */}
+          board-conferred designation, not an examined PCI credential. */}
       {me.honorary.length > 0 && (
         <Card title={t('cred.honoraryTitle')} action={<Badge tone="brand">{t('cred.boardConferred')}</Badge>}>
           {me.honorary.map((h) => (

@@ -15,7 +15,7 @@ const CERT_ERRORS: Record<string, string> = {
   bad_status: 'Status must be one of the defined lifecycle statuses.',
   bad_slug: 'Slug must contain letters or digits (a–z, 0–9, hyphens).',
   prefix_reserved: 'PCI-HON is reserved for honorary awards.',
-  founding_cert_permanent: 'The founding certification (PCP-AI) cannot be deactivated.',
+  founding_cert_permanent: 'The founding certification (PCL-AI) cannot be deactivated.',
 }
 
 // competency areas are stored inside content_json; edit them as one-per-line text
