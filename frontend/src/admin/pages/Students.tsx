@@ -192,6 +192,10 @@ function MemberDrawer({ id, onClose, onChanged }: { id: number; onClose: () => v
               )}
             </Card>
 
+            <JourneyCard id={id} />
+
+            <MarkPaidCard id={id} onDone={() => { refetch(); onChanged() }} />
+
             <WaiverCard id={id} onGranted={() => { refetch(); onChanged() }} />
 
             <IdentityDocs id={id} docs={data.identity_documents ?? []} onChanged={refetch} />
@@ -219,6 +223,99 @@ function MemberDrawer({ id, onClose, onChanged }: { id: number; onClose: () => v
   )
 }
 
+// The student's end-to-end pipeline — where they are and, if stuck, why.
+interface JourneyStage { key: string; label: string; status: string; detail: string }
+const STAGE_TONE: Record<string, 'ok' | 'warn' | 'err' | 'brand' | 'neutral'> = { done: 'ok', pending: 'neutral', action_required: 'warn', blocked: 'err' }
+function JourneyCard({ id }: { id: number }) {
+  const { data, loading, error } = useAdminQuery<{ stages: JourneyStage[]; stuck_at: string | null; stuck_reason: string | null; membership_status: string; delivery_mode: string }>(`/api/admin/members/${id}/journey`)
+  return (
+    <Card title="Student journey">
+      {loading && !data ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : data ? (
+        <>
+          {data.stuck_at
+            ? <div className="notice" style={{ marginBottom: '.6rem', borderLeft: '3px solid var(--err,#dc2626)' }}><strong>Stuck at: {data.stuck_at}</strong> — {data.stuck_reason}</div>
+            : <div className="notice" style={{ marginBottom: '.6rem' }}>No blockers — the student can proceed.</div>}
+          <div style={{ display: 'grid', gap: '.35rem' }}>
+            {data.stages.map((s) => (
+              <div key={s.key} className="row" style={{ gap: '.6rem', alignItems: 'center' }}>
+                <Badge tone={STAGE_TONE[s.status] ?? 'neutral'}>{s.status === 'action_required' ? 'action' : s.status}</Badge>
+                <span style={{ minWidth: 150 }}><strong>{s.label}</strong></span>
+                <span className="small muted">{s.detail}</span>
+              </div>
+            ))}
+          </div>
+          <div className="small muted" style={{ marginTop: '.5rem' }}>Delivery: {data.delivery_mode === 'in_house' ? 'in-house SecureExam' : data.delivery_mode} · Membership: {data.membership_status}</div>
+        </>
+      ) : null}
+    </Card>
+  )
+}
+
+// Mark a fee as paid offline (real payment that didn't reflect) or grant it free (amount 0 = waiver).
+function MarkPaidCard({ id, onDone }: { id: number; onDone: () => void }) {
+  const [product, setProduct] = useState('exam')
+  const [amount, setAmount] = useState('0')
+  const [note, setNote] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
+  async function go() {
+    setBusy(true); setMsg(null)
+    try {
+      const r = await adminApi.post<{ reference: string; free: boolean }>(`/api/admin/students/${id}/mark-paid`, { product, amount: parseFloat(amount) || 0, note: note || undefined })
+      setMsg({ ok: true, text: `${product} recorded (${r.free ? 'free / waived' : 'ref ' + r.reference}). The student can now proceed.` })
+      onDone()
+    } catch (e) { setMsg({ ok: false, text: (e as Error).message }) } finally { setBusy(false) }
+  }
+  return (
+    <Card title="Mark as paid / waive fee">
+      <p className="muted small" style={{ marginTop: 0 }}>Record an offline payment, or set amount 0 to grant it free. Creates the same paid entitlement a card payment would, so the student can schedule immediately.</p>
+      <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+        <label>Product<select value={product} onChange={(e) => setProduct(e.target.value)}><option value="exam">Exam</option><option value="membership">Membership</option><option value="bundle">Bundle (membership + exam)</option></select></label>
+        <label>Amount (USD)<input type="number" min="0" value={amount} onChange={(e) => setAmount(e.target.value)} style={{ maxWidth: 120 }} /></label>
+        <label style={{ flex: 1, minWidth: 160 }}>Note (optional)<input value={note} onChange={(e) => setNote(e.target.value)} placeholder="e.g. bank transfer received" /></label>
+        <button className="btn sm" disabled={busy} onClick={go}>{busy ? 'Recording…' : (parseFloat(amount) > 0 ? 'Mark paid' : 'Grant free')}</button>
+      </div>
+      {msg && <div className={'notice' + (msg.ok ? '' : ' err')} style={{ marginTop: '.5rem' }}>{msg.text}</div>}
+    </Card>
+  )
+}
+
+// One-click fully-unlocked test account (no payment needed) — returns login credentials + a ready session.
+function TestUserButton({ onCreated }: { onCreated: () => void }) {
+  const [busy, setBusy] = useState(false)
+  const [res, setRes] = useState<{ email: string; password: string; token: string } | null>(null)
+  const [err, setErr] = useState<string | null>(null)
+  async function create() {
+    setBusy(true); setErr(null); setRes(null)
+    try { setRes(await adminApi.post('/api/admin/test-users', {})); onCreated() }
+    catch (e) { setErr((e as Error).message) } finally { setBusy(false) }
+  }
+  return (
+    <>
+      <button className="btn sm" disabled={busy} onClick={create}>{busy ? 'Creating…' : '+ Test user'}</button>
+      {(res || err) && (
+        <div className="drawer-backdrop" onClick={() => { setRes(null); setErr(null) }}>
+          <div className="drawer" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
+            <div className="spread" style={{ marginBottom: '.8rem' }}><h2 style={{ margin: 0 }}>Test user</h2><button className="btn secondary sm" onClick={() => { setRes(null); setErr(null) }}>Close</button></div>
+            {err ? <ErrorNote>{err}</ErrorNote> : res ? (
+              <Card title="Fully-unlocked account created">
+                <p className="muted small" style={{ marginTop: 0 }}>Consents accepted, profile complete, ID approved, membership + exam granted — ready to test every feature without paying.</p>
+                <div className="small" style={{ display: 'grid', gap: '.35rem' }}>
+                  <div>Email: <strong>{res.email}</strong></div>
+                  <div>Password: <strong>{res.password}</strong></div>
+                </div>
+                <div className="row" style={{ marginTop: '.7rem' }}>
+                  <a className="btn sm" href={`/app/#t=${res.token}`} target="_blank" rel="noreferrer">Open portal as this user ↗</a>
+                </div>
+              </Card>
+            ) : null}
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
 export default function Students() {
   const [q, setQ] = useState('')
   const [dq, setDq] = useState('')
@@ -240,7 +337,10 @@ export default function Students() {
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       <div className="spread">
         <h1>Students</h1>
-        {data && <span className="muted small">{data.total} total</span>}
+        <div className="row" style={{ gap: '.5rem', alignItems: 'center' }}>
+          {data && <span className="muted small">{data.total} total</span>}
+          <TestUserButton onCreated={refetch} />
+        </div>
       </div>
 
       <Card>

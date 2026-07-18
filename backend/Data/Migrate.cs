@@ -25,6 +25,7 @@ public static class Migrate
             var have = db.Columns(table);
             if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
         }
+        AddCol("users", "is_test", "is_test INTEGER DEFAULT 0");   // admin-created test accounts (excluded from real reporting)
         AddCol("sample_questions", "is_practice", "is_practice INTEGER DEFAULT 0");
         // Certuvo (Phase 8): practice questions carry a teaching explanation + a difficulty band.
         AddCol("sample_questions", "explanation", "explanation TEXT");
@@ -134,6 +135,9 @@ public static class Migrate
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_exdelorder_booking_prov ON exam_delivery_orders(booking_id, provider_id)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS exam_delivery_log(id INTEGER PRIMARY KEY AUTOINCREMENT,order_id INTEGER,provider_id INTEGER,provider TEXT,operation TEXT NOT NULL,ok INTEGER DEFAULT 0,response_code INTEGER,detail TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_exdellog_order ON exam_delivery_log(order_id)");
+        // Certuvo external practice platform: an account provisioned for a member (credentials shared in the
+        // student panel). Provisioned automatically when a membership is settled, or manually by an admin.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS certuvo_accounts(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL UNIQUE,external_id TEXT,username TEXT,secret TEXT,login_url TEXT,status TEXT DEFAULT 'pending',last_error TEXT,provisioned_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec(@"CREATE TABLE IF NOT EXISTS notification_history(id INTEGER PRIMARY KEY AUTOINCREMENT,channel TEXT NOT NULL DEFAULT 'email',recipient TEXT,subject TEXT,status TEXT,related_type TEXT,related_id INTEGER,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','')");

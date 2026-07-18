@@ -25,6 +25,28 @@ interface SubmitResult {
 
 const tone = (pct: number, pass: number): 'ok' | 'warn' | 'err' => (pct >= pass + 10 ? 'ok' : pct >= pass ? 'warn' : 'err')
 
+// The member's external Certuvo practice-platform account (credentials shared automatically after membership).
+interface CertuvoAccess { enabled: boolean; status?: string; username?: string; password?: string; login_url?: string; error?: string }
+function CertuvoAccessPanel() {
+  const { data } = useQuery<CertuvoAccess>('/api/me/certuvo/access')
+  if (!data || !data.enabled) return null
+  const active = data.status === 'active'
+  return (
+    <Card title="Your Certuvo practice access" action={<Badge tone={active ? 'ok' : 'warn'}>{active ? 'Ready' : data.status === 'not_provisioned' ? 'After membership' : (data.status ?? 'pending')}</Badge>}>
+      {active ? (
+        <div style={{ display: 'grid', gap: '.4rem' }}>
+          <p className="muted small" style={{ margin: 0 }}>Practice on the Certuvo platform with the account we created for you. Your progress there is separate from this portal.</p>
+          <div className="small">Username: <strong>{data.username}</strong></div>
+          {data.password && <div className="small">Password: <strong>{data.password}</strong></div>}
+          {data.login_url && <div className="row" style={{ marginTop: '.4rem' }}><a className="btn sm" href={data.login_url} target="_blank" rel="noreferrer">Open Certuvo ↗</a></div>}
+        </div>
+      ) : (
+        <p className="muted small" style={{ margin: 0 }}>Your Certuvo practice account is set up automatically once your membership is active. It will appear here shortly after payment.</p>
+      )}
+    </Card>
+  )
+}
+
 export default function Certuvo() {
   const { data, loading, error, refetch } = useQuery<Overview>('/api/me/certuvo/overview')
   const [session, setSession] = useState<Session | null>(null)
@@ -153,6 +175,8 @@ export default function Certuvo() {
         <p className="muted">PCI's official study &amp; practice for the PCP-AI — scenario-based practice that mirrors the exam, with instant feedback and explanations. Practice is formative; the credential is still earned on the real examination.</p>
       </div>
       {err && <ErrorNote>{err}</ErrorNote>}
+
+      <CertuvoAccessPanel />
 
       <div style={{ display: 'grid', gap: '.8rem', gridTemplateColumns: 'repeat(auto-fit,minmax(160px,1fr))' }}>
         <Stat n={<Badge tone={r && r.attempts ? tone(r.overall_pct, data!.pass_mark) : 'neutral'}>{r?.label ?? 'Not started'}</Badge>} k="Readiness" />

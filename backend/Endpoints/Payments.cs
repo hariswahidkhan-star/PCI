@@ -160,6 +160,8 @@ public static class Payments
                         {
                             user_id = userId, email, membership_type = "Student Membership", occurred_at = H.IsoNow,
                         });
+                        // Auto-provision the student's Certuvo external practice account (best-effort; no-op if disabled).
+                        try { PCI.Backend.Core.CertuvoLink.Provision(db, PCI.Backend.Core.CertuvoLink.Http, userId).GetAwaiter().GetResult(); } catch { }
                     }
                     {
                         {

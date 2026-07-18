@@ -34,6 +34,14 @@ public static class Certuvo
             return null;
         }
 
+        // ---------------- external Certuvo practice-platform access (credentials shared after membership) ----
+        app.MapGet("/api/me/certuvo/access", (HttpContext ctx) =>
+        {
+            var u = Auth(ctx);
+            if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            return J(Core.CertuvoLink.AccessFor(db, u.Id));
+        });
+
         // ---------------- overview: domains, readiness, recent ----------------
         app.MapGet("/api/me/certuvo/overview", (HttpContext ctx) =>
         {

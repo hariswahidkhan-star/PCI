@@ -261,6 +261,8 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
         if "/Participants" in self.path: return self._send(201, {"ID": 4242})            # Questionmark participant
         if "/Schedules" in self.path: return self._send(201, {"ID": 88})                # Questionmark schedule
         if "/candidates" in self.path: return self._send(201, {"psi_eligiblity_id": "ELIG-1"})  # PSI eligibility
+        if "certuvo" in self.path or "/accounts" in self.path:                          # Certuvo account provisioning
+            return self._send(201, {"id": "CV-100", "username": "cv_user", "password": "cv_pass_9", "login_url": "https://certuvo.example/login"})
         return self._send(200, {"ok": True})
     def do_PATCH(self):
         ln = int(self.headers.get("Content-Length") or 0);  self.rfile.read(ln) if ln else None
@@ -353,6 +355,7 @@ def test_exam_delivery(admin):
         c, vb = jget("POST", "/api/admin/team", token=admin, body={"email": "exdview@pci.test", "name": "V", "role": "viewer"})
         c, vl = jget("POST", "/api/admin/auth/login", body={"email": "exdview@pci.test", "password": vb.get("temp_password", "")})
         vtok = clear_must_change(vl.get("token"))
+        globals()["_VIEWER_TOK"] = vtok   # reused by section 12's RBAC checks (avoids another login)
         c, _ = jget("GET", "/api/admin/exam-delivery", token=vtok)
         chk("11y viewer BLOCKED from exam delivery (403)", c == 403, c)
         c, _ = jget("POST", "/api/admin/exam-delivery/mode", token=vtok, body={"mode": "questionmark"})
@@ -360,6 +363,70 @@ def test_exam_delivery(admin):
     finally:
         srv.shutdown()
         set_mode(mode="in_house")   # leave the platform on the default in-house delivery
+
+def register_student(email, pw="Passw0rd!"):
+    c, r = jget("POST", "/api/register", body={"firstName": "Jo", "lastName": "Doe", "email": email, "password": pw, "confirmPassword": pw, "country": "United Kingdom"})
+    return r.get("token"), r.get("user", {}).get("id")
+
+def test_operator_toolkit(admin):
+    print("\n=== 12. Operator toolkit: mark-paid / test users / journey / Certuvo ===")
+    srv, mport = start_mock_vendor()
+    mock = f"http://127.0.0.1:{mport}"
+    try:
+        # ---- Student journey shows where a fresh student is stuck ----
+        stok, suid = register_student("journey1@ex.co")
+        c, jr = jget("GET", f"/api/admin/members/{suid}/journey", token=admin)
+        chk("12a journey: fresh student is stuck at Consents", c == 200 and jr.get("stuck_at") == "Consents", jr.get("stuck_at"))
+        accept_all_consents(stok); complete_profile(stok)   # consents + profile + (submitted) ID
+        c, jr = jget("GET", f"/api/admin/members/{suid}/journey", token=admin)
+        chk("12b journey: after consents/profile, stuck at Exam fee", jr.get("stuck_at") == "Exam fee", jr.get("stuck_at"))
+
+        # ---- Mark paid (waive, amount 0) unblocks the exam ----
+        c, mp = jget("POST", f"/api/admin/students/{suid}/mark-paid", token=admin, body={"product": "exam", "amount": 0})
+        chk("12c mark-paid exam (free) succeeds", c == 200 and mp.get("ok") and mp.get("free") is True, mp)
+        c, jr = jget("GET", f"/api/admin/members/{suid}/journey", token=admin)
+        chk("12d journey: exam fee now done, not stuck on payment", jr.get("stuck_at") in (None, "Exam scheduled"), jr.get("stuck_at"))
+        slot = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() + 72 * 3600))
+        c, bk = jget("POST", "/api/me/exam/book", token=stok, body={"scheduled_at": slot, "timezone": "UTC"})
+        chk("12e student can schedule after mark-paid", c == 200 and bk.get("ok"), bk)
+
+        # ---- Mark paid membership activates the membership ----
+        mtok, muid = register_student("journey2@ex.co")
+        c, mm = jget("POST", f"/api/admin/students/{muid}/mark-paid", token=admin, body={"product": "membership", "amount": 149})
+        chk("12f mark-paid membership succeeds", c == 200 and mm.get("ok"), mm)
+        c, jr = jget("GET", f"/api/admin/members/{muid}/journey", token=admin)
+        chk("12g membership now active", jr.get("membership_status") == "active", jr.get("membership_status"))
+
+        # ---- One-click test user: fully unlocked, no payment, ready session, can sit the exam immediately ----
+        c, tu = jget("POST", "/api/admin/test-users", token=admin, body={})
+        chk("12h test user created with credentials + ready session token", c == 200 and tu.get("email") and tu.get("password") and tu.get("token"), tu)
+        ttok = tu.get("token")   # the endpoint returns a ready student session — no login needed
+        c, bk2, st2 = book_and_start(ttok, admin)
+        chk("12i test user session works (books + launches exam, fully unblocked)", c == 200 and bool(st2) and len(st2.get("items", [])) > 0, (c, st2 and len(st2.get("items", []) or [])))
+        c, tlist = jget("GET", "/api/admin/test-users", token=admin)
+        chk("12k test user appears in the test-user list", any(r["email"] == tu["email"] for r in tlist.get("rows", [])), len(tlist.get("rows", [])))
+        c, td = jget("POST", f"/api/admin/test-users/{tu['id']}/delete", token=admin)
+        chk("12l test user can be deleted", c == 200 and td.get("ok"), td)
+
+        # ---- Certuvo external practice integration: configure → membership provisions the account ----
+        c, cc = jget("POST", "/api/admin/certuvo", token=admin, body={"enabled": True, "api_base": mock, "provision_path": "/certuvo/accounts", "api_key": "cv_key", "login_url": "https://certuvo.example"})
+        chk("12m configure Certuvo integration", c == 200 and cc.get("ok"), cc)
+        c, cg = jget("GET", "/api/admin/certuvo", token=admin)
+        chk("12n Certuvo config saved (key write-only)", cg.get("enabled") is True and cg.get("has_api_key") is True, cg)
+        ctok, cuid = register_student("certuvo1@ex.co")
+        jget("POST", f"/api/admin/students/{cuid}/mark-paid", token=admin, body={"product": "membership", "amount": 0})  # membership → auto-provision
+        c, acc = jget("GET", "/api/me/certuvo/access", token=ctok)
+        chk("12o membership auto-provisions Certuvo access", c == 200 and acc.get("status") == "active" and acc.get("username") == "cv_user", acc)
+        chk("12p student receives the Certuvo password", acc.get("password") == "cv_pass_9", acc.get("password"))
+
+        # ---- RBAC: a viewer cannot use the operator toolkit (reuse the viewer from section 11 to avoid a
+        #      post-rate-limit-test login) ----
+        vtok = globals().get("_VIEWER_TOK")
+        chk("12q viewer BLOCKED from mark-paid (403)", jget("POST", f"/api/admin/students/{suid}/mark-paid", token=vtok, body={"product": "exam"})[0] == 403)
+        chk("12r viewer BLOCKED from test-user creation (403)", jget("POST", "/api/admin/test-users", token=vtok, body={})[0] == 403)
+        chk("12s viewer BLOCKED from the student journey (403)", jget("GET", f"/api/admin/members/{suid}/journey", token=vtok)[0] == 403)
+    finally:
+        srv.shutdown()
 
 # ============================================================================
 def main():
@@ -1116,6 +1183,7 @@ def run(proc):
     chk("10c 429 still carries security headers", 'nosniff_429' in dir() and nosniff_429 == "nosniff", locals().get("nosniff_429"))
 
     test_exam_delivery(admin)
+    test_operator_toolkit(admin)
 
     print("\n(assertions complete)")
 
