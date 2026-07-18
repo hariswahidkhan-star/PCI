@@ -106,7 +106,7 @@ export default function HonoraryApplications() {
       </div>
       <p className="muted" style={{ margin: 0 }}>
         Public applications for the board-conferred <strong>Honorary Fellow (PCI)</strong> recognition. Approving an
-        application confers a real, verifiable PCI-HON award — it never issues an examined PCI credential.
+        application confers a real, verifiable PCI-HON award — it never issues an examined certification credential.
       </p>
 
       <Card

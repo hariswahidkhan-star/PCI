@@ -10,6 +10,7 @@ import Certifications from './pages/Certifications'
 import Pages from './pages/Pages'
 import Credentials from './pages/Credentials'
 import Tickets from './pages/Tickets'
+import Documents from './pages/Documents'
 import SupportInbox from './pages/SupportInbox'
 import ErrorReports from './pages/ErrorReports'
 import Enrollments from './pages/Enrollments'
@@ -24,6 +25,7 @@ import Analytics from './pages/Analytics'
 import AiVisibility from './pages/AiVisibility'
 import TrainingPartners from './pages/TrainingPartners'
 import Integrations from './pages/Integrations'
+import Marketing from './pages/Marketing'
 import ExamDelivery from './pages/ExamDelivery'
 import Enquiries from './pages/Enquiries'
 import Submissions from './pages/Submissions'
@@ -78,6 +80,7 @@ export default function AdminApp() {
         <Route path="payments" element={<Perm section="payments"><Payments /></Perm>} />
         <Route path="credentials" element={<Perm section="credentials"><Credentials /></Perm>} />
         <Route path="tickets" element={<Perm section="tickets"><Tickets /></Perm>} />
+        <Route path="documents" element={<Perm section="documents"><Documents /></Perm>} />
         <Route path="support-inbox" element={<Perm section="inbox"><SupportInbox /></Perm>} />
         <Route path="errors" element={<Perm section="inbox"><ErrorReports /></Perm>} />
         <Route path="certifications" element={<Perm section="exams"><Certifications /></Perm>} />
@@ -97,6 +100,7 @@ export default function AdminApp() {
         <Route path="ai-visibility" element={<Perm section="pages"><AiVisibility /></Perm>} />
         <Route path="training-partners" element={<Perm section="partners"><TrainingPartners /></Perm>} />
         <Route path="integrations" element={<Perm section="integrations"><Integrations /></Perm>} />
+        <Route path="marketing" element={<AnyPerm sections={['subscribers', 'reports']}><Marketing /></AnyPerm>} />
         <Route path="exam-delivery" element={<Perm section="exam_delivery"><ExamDelivery /></Perm>} />
         <Route path="subscribers" element={<Perm section="subscribers"><Subscribers /></Perm>} />
         <Route path="reports" element={<Perm section="reports"><Reports /></Perm>} />

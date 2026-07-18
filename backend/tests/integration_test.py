@@ -299,7 +299,7 @@ def test_exam_delivery(admin):
         # configure Questionmark (enabled + mapped) — but the delivery mode stays in-house for now
         c, r = jget("POST", "/api/admin/exam-delivery", token=admin, body={
             "provider": "questionmark", "name": "QM", "environment": "sandbox", "enabled": True,
-            "api_base": mock, "customer_id": "123456", "username": "svc", "password": "pw", "exam_map": {"PCP-AI": "9962"}})
+            "api_base": mock, "customer_id": "123456", "username": "svc", "password": "pw", "exam_map": {"PCL-AI": "9962"}})
         qmid = r.get("id"); chk("11c create Questionmark vendor", c == 200 and r.get("ok"), r)
         c, tr = jget("POST", f"/api/admin/exam-delivery/{qmid}/test", token=admin)
         chk("11d vendor connection test ok", c == 200 and tr.get("ok"), tr)
@@ -329,7 +329,7 @@ def test_exam_delivery(admin):
         c, sy2 = jget("POST", f"/api/admin/exam-delivery/orders/{o[0]}/sync", token=admin)
         chk("11n vendor: re-sync is idempotent (no duplicate credential)", sy2.get("credential") == sy.get("credential"), (sy.get("credential"), sy2.get("credential")))
 
-        # ---- PER-CERT OVERRIDE: force PCP-AI back to in-house while the global default stays Questionmark ----
+        # ---- PER-CERT OVERRIDE: force PCL-AI (cert 1) back to in-house while the global default stays Questionmark ----
         set_mode(certification_id=1, cert_mode="in_house")
         tov, uov = make_paid_user("override@ex.co"); accept_all_consents(tov); complete_profile(tov)
         c, bko, sto = book_and_start(tov, admin)
@@ -341,7 +341,7 @@ def test_exam_delivery(admin):
         # ---- SWITCH to PSI: eligibility push + candidate self-schedule + inbound result callback → credential ----
         c, pr = jget("POST", "/api/admin/exam-delivery", token=admin, body={
             "provider": "psi", "name": "PSI", "environment": "sandbox", "enabled": True,
-            "api_base": mock, "account_code": "ACC1", "access_token": "tok123", "callback_secret": "cbsecret", "exam_map": {"PCP-AI": "PCP-EXAM"}})
+            "api_base": mock, "account_code": "ACC1", "access_token": "tok123", "callback_secret": "cbsecret", "exam_map": {"PCL-AI": "PCP-EXAM"}})
         chk("11q create PSI vendor", c == 200 and pr.get("ok"), pr)
         c, sm = set_mode(mode="psi"); chk("11r admin switch: deliver via PSI", c == 200 and sm.get("mode") == "psi", sm)
         tpsi, upsi = make_paid_user("psi@ex.co"); accept_all_consents(tpsi); complete_profile(tpsi)
@@ -944,6 +944,414 @@ def test_certuvo_integration(admin):
         srv.shutdown()
         jget("POST", "/api/admin/certuvo", token=admin, body={"enabled": False})   # leave Certuvo off for later sections
 
+def _raw_get(path, token=None):
+    import urllib.request
+    r = urllib.request.Request(BASE + path, method="GET", headers={"Authorization": "Bearer " + token} if token else {})
+    try:
+        with urllib.request.urlopen(r) as resp: return resp.status, resp.read(), resp.headers.get("Content-Type", "")
+    except urllib.error.HTTPError as e:
+        return e.code, e.read(), e.headers.get("Content-Type", "")
+
+def _pdf_text(data):
+    try:
+        from pypdf import PdfReader; import io
+        return " ".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(data)).pages).replace("\n", " ")
+    except Exception:
+        # pypdf unavailable/failed: latin1-decode the raw bytes AND best-effort zlib-inflate every
+        # stream object, so FlateDecode-compressed content (e.g. PDFsharp output) is still searchable.
+        import re as _re, zlib as _zlib
+        txt = data.decode("latin1", "ignore")
+        for m in _re.finditer(rb"stream\r?\n(.*?)endstream", data, _re.S):
+            # decompressobj tolerates the trailing EOL bytes before `endstream` that plain
+            # zlib.decompress rejects with "incorrect header check"/trailing-data errors.
+            try: txt += " " + _zlib.decompressobj().decompress(m.group(1)).decode("latin1", "ignore")
+            except Exception: pass
+        return txt
+
+def test_certificate_pdf(admin):
+    """Section 16 — verifiable PDF certificates: real downloadable PDF with QR + verification URL, a
+    SHA-256 tamper hash the public verifier can recompute, authenticated + audited download, honorary
+    certificates that never claim a passed exam, status gating, and test-certificate isolation."""
+    print("\n=== 16. Verifiable PDF certificates (PDF + QR + tamper hash + download + verification) ===")
+    import hashlib as _hl
+
+    # Auto-generation at issuance: the earlier real exam pass (section 2) minted a credential whose PDF was
+    # rendered and hashed at issuance time.
+    con = dbconn(); autorow = con.execute("SELECT credential_id,pdf_ref,pdf_sha256 FROM issued_credentials WHERE pdf_ref IS NOT NULL AND pdf_sha256 IS NOT NULL ORDER BY id LIMIT 1").fetchone(); con.close()
+    chk("16a exam pass auto-generates the certificate PDF (ref + hash stored at issuance)", autorow is not None and autorow[1] and len(str(autorow[2])) == 64, autorow)
+
+    # A dedicated student + an admin-issued credential (exercises on-demand generation on first download).
+    stok, suid = register_student("certpdf@ex.co")
+    cid = "PCI-CPPC-2026-77021"
+    fut = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time() + 3 * 365 * 86400))
+    c, iss = jget("POST", "/api/admin/credentials", token=admin, body={"credential_id": cid, "holder_name": "Certy McTest", "user_id": suid, "expires_at": fut})
+    chk("16b admin issues a credential", c == 200 and iss.get("id"), iss)
+    rowid = iss.get("id")
+
+    st, body, ctype = _raw_get("/api/me/certificate/pdf", token=stok)
+    chk("16c student downloads a real PDF (200, application/pdf, %PDF magic)", st == 200 and "application/pdf" in ctype and body[:5] == b"%PDF-", (st, ctype, body[:5]))
+    txt = _pdf_text(body)
+    chk("16d PDF carries the certificate id + recipient name", cid in txt.replace(" ", "") or cid in txt, "Certy McTest" in txt and ("Verify" in txt or "verify" in txt))
+    dl_sha = _hl.sha256(body).hexdigest()
+
+    c, v = jget("GET", "/api/verify?id=" + cid)
+    chk("16e public verify exposes a tamper hash matching the downloaded file", v.get("has_pdf") is True and v.get("document_hash") == dl_sha, (v.get("has_pdf"), v.get("document_hash") == dl_sha))
+    chk("16f verify reports the credential valid/active", v.get("found") is True and v.get("valid") is True and v.get("state") == "active", v.get("state"))
+
+    st2, body2, _ = _raw_get("/api/me/certificate/pdf", token=stok)
+    chk("16g re-download is byte-stable (deterministic render → stable hash)", _hl.sha256(body2).hexdigest() == dl_sha)
+
+    c, rg = jget("POST", f"/api/admin/credentials/{cid}/regenerate-pdf", token=admin, body={})
+    chk("16h admin regenerate-pdf returns a sha256", c == 200 and len(str(rg.get("sha256"))) == 64, rg)
+
+    chk("16i download requires auth (401 without a token)", _raw_get("/api/me/certificate/pdf")[0] == 401)
+
+    # Revoke → student can no longer download it as a valid certificate; verify flips to revoked.
+    jget("POST", f"/api/admin/credentials/{rowid}/status", token=admin, body={"status": "revoked"})
+    chk("16j revoked certificate is not downloadable (403)", _raw_get("/api/me/certificate/pdf?id=" + cid, token=stok)[0] == 403)
+    c, v2 = jget("GET", "/api/verify?id=" + cid)
+    chk("16k verify shows revoked + not valid", v2.get("state") == "revoked" and v2.get("valid") is not True, v2.get("state"))
+
+    # Honorary certificate: clearly honorary, never an exam claim.
+    htok, huid = register_student("certhon@ex.co")
+    c, ha = jget("POST", "/api/admin/honorary", token=admin, body={"recipient_name": "Grace Hopper", "citation": "For distinguished lifetime contribution.", "user_id": huid})
+    award = ha.get("award_no")
+    chk("16l honorary award conferred + linked", c == 200 and award, ha)
+    sh, hbody, hctype = _raw_get("/api/me/honorary-certificate/pdf", token=htok)
+    chk("16m student downloads the honorary PDF", sh == 200 and "application/pdf" in hctype and hbody[:5] == b"%PDF-", (sh, hctype))
+    htxt = _pdf_text(hbody).lower()
+    chk("16n honorary PDF says 'honorary' and NEVER claims a passed examination",
+        "honorary" in htxt and "passed the examination" not in htxt and "satisfied the requirements of the examination" not in htxt, htxt[:120])
+    c, hv = jget("GET", "/api/verify?id=" + award)
+    chk("16o honorary verify is typed honorary + carries a document hash", hv.get("type") == "honorary" and hv.get("has_pdf") is True and hv.get("document_hash") == _hl.sha256(hbody).hexdigest(), hv.get("type"))
+
+    # Test-certificate isolation: a test account's credential carries a TEST watermark and never verifies publicly.
+    c, tu = jget("POST", "/api/admin/test-users", token=admin, body={"scenario": "ready"})
+    tuid = tu.get("id")
+    tcid = "PCI-CPPC-2026-77099"
+    jget("POST", "/api/admin/credentials", token=admin, body={"credential_id": tcid, "holder_name": "Testy Test", "user_id": tuid, "expires_at": fut})
+    ts, tbody, _ = _raw_get(f"/api/admin/credentials/{tcid}/pdf", token=admin)
+    chk("16p test-account certificate PDF carries a TEST watermark", ts == 200 and "TEST CERTIFICATE" in _pdf_text(tbody), ts)
+    c, tv = jget("GET", "/api/verify?id=" + tcid)
+    chk("16q test-account certificate is NOT publicly verifiable (found:false)", tv.get("found") is False, tv)
+
+    # Download audit trail.
+    con = dbconn(); dln = con.execute("SELECT COUNT(*) FROM certificate_downloads WHERE credential_id=? AND result='ok'", (cid,)).fetchone()[0]; con.close()
+    chk("16r every certificate download is audited", dln >= 2, dln)
+
+def _mk_student(email):
+    """Create an active student + a session token directly in the DB (fast; avoids the /api/register
+    rate limiter). Returns (session_token, user_id)."""
+    con = dbconn()
+    con.execute("INSERT INTO users(email,first_name,last_name,role,status,password_hash) VALUES(?,?,?, 'student','active','x')", (email, "Doc", email[:4]))
+    con.commit()
+    uid = con.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()[0]
+    con.execute("INSERT INTO student_profiles(user_id,country) VALUES(?,?)", (uid, "United Kingdom"))
+    tok = "docsess_" + sha256hex(email)[:24]
+    con.execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'session', datetime('now','+1 day'))", (uid, sha256hex(tok)))
+    con.commit(); con.close()
+    return tok, uid
+
+def _pdf_uri(marker):
+    body = ("%PDF-1.4\n% " + marker + "\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n").encode("latin1")
+    return "data:application/pdf;base64," + base64.b64encode(body).decode(), hashlib.sha256(body).hexdigest()
+
+def test_documents_module(admin):
+    """Section 17 — Student Documents & Resources: secure admin upload, group/individual assignment,
+    publish → per-student grants + notification, isolation, secure authenticated download, versioning
+    (never overwrites), acknowledgement gating, restriction window, revocation, signed links, audit,
+    and file-validation rejection."""
+    print("\n=== 17. Student Documents & Resources module ===")
+
+    # Default categories were seeded; admin can add one.
+    c, cats = jget("GET", "/api/admin/document-categories", token=admin)
+    chk("17a default document categories seeded", c == 200 and len(cats.get("rows", [])) >= 5, len(cats.get("rows", [])))
+    c, nc = jget("POST", "/api/admin/document-categories", token=admin, body={"name": "Onboarding"})
+    chk("17b admin creates a category", c == 200 and nc.get("id"), nc)
+
+    a_tok, a_uid = _mk_student("doc_a@ex.co")
+    b_tok, b_uid = _mk_student("doc_b@ex.co")
+
+    # ---- upload assigned to ONE student (draft) ----
+    uri, sha = _pdf_uri("individual doc for A")
+    c, up = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "Welcome Letter A", "description": "Personal", "category": "Personal Documents",
+        "doc_type": "letter", "file": uri, "filename": "welcome.pdf",
+        "assignment_type": "student", "user_id": a_uid})
+    chk("17c admin uploads a document (draft)", c == 200 and up.get("id") and up.get("status") == "draft", up)
+    doc_id = up.get("id")
+
+    c, prev = jget("POST", "/api/admin/documents/preview-recipients", token=admin, body={"assignment_type": "student", "user_id": a_uid})
+    chk("17d recipient preview resolves exactly the one student", c == 200 and prev.get("count") == 1, prev)
+
+    # Not visible to the student until published.
+    c, myd = jget("GET", "/api/me/documents", token=a_tok)
+    chk("17e draft document is NOT visible to the student yet", c == 200 and not any(r["id"] == doc_id for r in myd.get("rows", [])), myd)
+
+    c, pub = jget("POST", f"/api/admin/documents/{doc_id}/publish", token=admin, body={})
+    chk("17f publish grants access + notifies", c == 200 and pub.get("recipients_granted") == 1, pub)
+
+    # in-app notification created for the assignee.
+    con = dbconn(); nn = con.execute("SELECT COUNT(*) FROM notifications WHERE user_id=? AND category='Documents'", (a_uid,)).fetchone()[0]; con.close()
+    chk("17g assignee received an in-app notification", nn >= 1, nn)
+
+    # Student A sees it and it is downloadable.
+    c, myd = jget("GET", "/api/me/documents", token=a_tok)
+    mine = next((r for r in myd.get("rows", []) if r["id"] == doc_id), None)
+    chk("17h assigned student sees the published document (downloadable)", mine is not None and mine.get("downloadable") is True, mine)
+
+    # Student B does NOT see it (isolation).
+    c, otherd = jget("GET", "/api/me/documents", token=b_tok)
+    chk("17i non-assigned student cannot see the document (isolation)", not any(r["id"] == doc_id for r in otherd.get("rows", [])))
+
+    # Secure download — bytes match exactly.
+    st, body, ctype = _raw_get(f"/api/me/documents/{doc_id}/download", token=a_tok)
+    chk("17j assigned student downloads the real file (200, %PDF, exact bytes)",
+        st == 200 and body[:5] == b"%PDF-" and hashlib.sha256(body).hexdigest() == sha, (st, body[:5]))
+
+    # Student B is refused the file by id (not assigned).
+    chk("17k non-assigned student is refused the download (403)", _raw_get(f"/api/me/documents/{doc_id}/download", token=b_tok)[0] == 403)
+    chk("17l download requires authentication (401)", _raw_get(f"/api/me/documents/{doc_id}/download")[0] == 401)
+
+    # ---- signed, time-limited link (no Authorization header) ----
+    c, lk = jget("POST", f"/api/me/documents/{doc_id}/link", token=a_tok, body={})
+    chk("17m student mints a signed download link", c == 200 and lk.get("url", "").startswith("/api/documents/download?t="))
+    st, lbody, _ = _raw_get(lk.get("url", ""))
+    chk("17n signed link downloads without a token", st == 200 and lbody[:5] == b"%PDF-", st)
+    chk("17o tampered link is rejected (401)", _raw_get("/api/documents/download?t=1.2.3.bad")[0] == 401)
+
+    # ---- acknowledgement gating ----
+    uri2, _ = _pdf_uri("policy needing ack")
+    c, up2 = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "Code of Conduct", "file": uri2, "assignment_type": "student", "user_id": a_uid,
+        "ack_required": True, "publish": True})
+    ack_id = up2.get("id")
+    chk("17p ack-required document publishes", up2.get("status") in ("published", "active"), up2)
+    chk("17q download blocked until acknowledged (403)", _raw_get(f"/api/me/documents/{ack_id}/download", token=a_tok)[0] == 403)
+    c, ackr = jget("POST", f"/api/me/documents/{ack_id}/acknowledge", token=a_tok, body={})
+    chk("17r student acknowledges the document", c == 200 and ackr.get("acknowledged_at"), ackr)
+    chk("17s after acknowledgement the download succeeds (200)", _raw_get(f"/api/me/documents/{ack_id}/download", token=a_tok)[0] == 200)
+    con = dbconn(); ackn = con.execute("SELECT COUNT(*) FROM document_acknowledgements WHERE document_id=? AND user_id=?", (ack_id, a_uid)).fetchone()[0]; con.close()
+    chk("17t acknowledgement is recorded", ackn == 1, ackn)
+
+    # ---- versioning: never overwrites; old becomes 'replaced', student gets the new bytes ----
+    nuri, nsha = _pdf_uri("welcome doc A v2")
+    c, ver = jget("POST", f"/api/admin/documents/{doc_id}/version", token=admin, body={"file": nuri, "filename": "welcome-v2.pdf"})
+    chk("17u admin uploads a new version", c == 200 and ver.get("version") == 2 and ver.get("id") != doc_id, ver)
+    new_id = ver.get("id")
+    con = dbconn(); oldstat = con.execute("SELECT status FROM documents WHERE id=?", (doc_id,)).fetchone()[0]; con.close()
+    chk("17v the prior version is retained + marked replaced (never overwritten)", oldstat == "replaced", oldstat)
+    st, vbody, _ = _raw_get(f"/api/me/documents/{new_id}/download", token=a_tok)
+    chk("17w student now downloads the NEW version bytes", st == 200 and hashlib.sha256(vbody).hexdigest() == nsha, st)
+    c, det = jget("GET", f"/api/admin/documents/{new_id}", token=admin)
+    chk("17x version history lists both versions", len(det.get("versions", [])) == 2, len(det.get("versions", [])))
+
+    # ---- restriction window: listed but not downloadable until a future date ----
+    ruri, _ = _pdf_uri("restricted future doc")
+    future = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time() + 30 * 86400))
+    c, rdoc = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "Future Release", "file": ruri, "assignment_type": "student", "user_id": a_uid,
+        "restricted_until": future, "publish": True})
+    rid = rdoc.get("id")
+    c, myd = jget("GET", "/api/me/documents", token=a_tok)
+    rrow = next((r for r in myd.get("rows", []) if r["id"] == rid), None)
+    chk("17y restricted document is visible but locked", rrow is not None and rrow.get("restricted") is True and rrow.get("downloadable") is False, rrow)
+    chk("17z restricted document download is blocked (403)", _raw_get(f"/api/me/documents/{rid}/download", token=a_tok)[0] == 403)
+
+    # ---- group assignment (all) reaches both students ----
+    guri, _ = _pdf_uri("all-students notice")
+    c, gdoc = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "All Students Notice", "file": guri, "assignment_type": "all", "publish": True})
+    gid = gdoc.get("id")
+    chk("17aa 'all' assignment grants many recipients", gdoc.get("recipients_granted", 0) >= 2, gdoc)
+    c, bd = jget("GET", "/api/me/documents", token=b_tok)
+    chk("17bb previously-excluded student now sees the all-students document", any(r["id"] == gid for r in bd.get("rows", [])))
+
+    # ---- revocation preserves the audit but removes access ----
+    c, rev = jget("POST", f"/api/admin/documents/{gid}/revoke", token=admin, body={"user_id": b_uid, "reason": "test"})
+    chk("17cc admin revokes one student's access", c == 200 and rev.get("revoked") == 1, rev)
+    c, bd = jget("GET", "/api/me/documents", token=b_tok)
+    chk("17dd revoked student loses visibility", not any(r["id"] == gid for r in bd.get("rows", [])))
+    chk("17ee revoked student is refused download (403)", _raw_get(f"/api/me/documents/{gid}/download", token=b_tok)[0] == 403)
+    con = dbconn(); rvr = con.execute("SELECT status,revoke_reason FROM document_assignments WHERE document_id=? AND user_id=?", (gid, b_uid)).fetchone(); con.close()
+    chk("17ff revocation is retained in the audit (status revoked + reason)", rvr and rvr[0] == "revoked" and rvr[1] == "test", rvr)
+
+    # ---- admin student-profile documents tab + student-specific upload ----
+    c, sp = jget("GET", f"/api/admin/students/{a_uid}/documents", token=admin)
+    chk("17gg admin reads a student's documents from the profile", c == 200 and len(sp.get("rows", [])) >= 2, len(sp.get("rows", [])))
+    puri, psha = _pdf_uri("student-specific from profile")
+    c, spd = jget("POST", f"/api/admin/students/{a_uid}/documents", token=admin, body={"title": "Your ID copy", "file": puri})
+    chk("17hh student-specific document auto-publishes to that student", c == 200 and spd.get("status") in ("published", "active"), spd)
+    c, myd = jget("GET", "/api/me/documents", token=a_tok)
+    chk("17ii the student-specific document appears in the student's panel", any(r["title"] == "Your ID copy" for r in myd.get("rows", [])))
+
+    # ---- audit report ----
+    c, aud = jget("GET", f"/api/admin/documents/{new_id}/audit", token=admin)
+    chk("17jj audit report exposes download/ack/grant totals", c == 200 and int(aud.get("summary", {}).get("total_downloads", 0)) >= 1, aud.get("summary"))
+
+    # ---- file-validation rejection ----
+    bad_uri = "data:application/pdf;base64," + base64.b64encode(b"NOT-A-REAL-PDF-CONTENT").decode()
+    c, badr = jget("POST", "/api/admin/documents", token=admin, body={"title": "Fake", "file": bad_uri, "assignment_type": "all"})
+    chk("17kk a file whose bytes don't match its type is rejected", c == 400 and badr.get("error") == "content_mime_mismatch", badr)
+    exe_uri = "data:application/x-msdownload;base64," + base64.b64encode(b"MZ\x90\x00malware").decode()
+    c, exr = jget("POST", "/api/admin/documents", token=admin, body={"title": "Evil", "file": exe_uri, "assignment_type": "all"})
+    chk("17ll a disallowed file type is rejected", c == 400 and exr.get("error") == "file_type_not_allowed", exr)
+
+    # ---- RBAC: a student token cannot reach the admin document surface ----
+    chk("17mm student token is refused the admin document API (401/403)", jget("GET", "/api/admin/documents", token=a_tok)[0] in (401, 403))
+
+    # ================= watermark rendering (per-recipient stamp on flagged PDFs) =================
+    def _real_pdf_uri():
+        """A REAL parseable single-page PDF built with the stdlib only (correct xref offsets), so the
+        suite has no third-party dependency — CI runners without pypdf must still run this section.
+        PDFsharp (the watermarker) and pypdf (when present) both open it."""
+        content = b"BT /F1 12 Tf 72 720 Td (PCI test document) Tj ET\n"
+        objs = [
+            b"<</Type/Catalog/Pages 2 0 R>>",
+            b"<</Type/Pages/Kids[3 0 R]/Count 1>>",
+            b"<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<</Font<</F1 4 0 R>>>>/Contents 5 0 R>>",
+            b"<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>",
+        ]
+        out = bytearray(b"%PDF-1.4\n")
+        offsets = []
+        for i, body in enumerate(objs, start=1):
+            offsets.append(len(out))
+            out += ("%d 0 obj" % i).encode() + body + b"endobj\n"
+        offsets.append(len(out))
+        out += ("5 0 obj<</Length %d>>stream\n" % len(content)).encode() + content + b"endstream\nendobj\n"
+        xref_pos = len(out)
+        out += b"xref\n0 6\n0000000000 65535 f \n"
+        for off in offsets:
+            out += ("%010d 00000 n \n" % off).encode()
+        out += ("trailer<</Size 6/Root 1 0 R>>\nstartxref\n%d\n%%%%EOF\n" % xref_pos).encode()
+        raw = bytes(out)
+        return "data:application/pdf;base64," + base64.b64encode(raw).decode(), raw
+
+    wm_uri, wm_raw = _real_pdf_uri()
+    c, wdoc = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "Licensed Study Guide", "file": wm_uri, "filename": "study-guide.pdf",
+        "assignment_type": "student", "user_id": a_uid, "watermark": True, "publish": True})
+    wid = wdoc.get("id")
+    chk("17nn watermark-flagged document publishes", c == 200 and wid, wdoc)
+    st, wbody, wtype = _raw_get(f"/api/me/documents/{wid}/download", token=a_tok)
+    chk("17oo watermarked download is a valid PDF with DIFFERENT bytes to the master",
+        st == 200 and wbody[:5] == b"%PDF-" and hashlib.sha256(wbody).hexdigest() != hashlib.sha256(wm_raw).hexdigest(), st)
+    wtxt = _pdf_text(wbody)
+    chk("17pp watermark carries the recipient's identity on the page",
+        "doc_a@ex.co" in wtxt and "not for redistribution" in wtxt, wtxt[:120])
+    sa, abody, _ = _raw_get(f"/api/admin/documents/{wid}/download", token=admin)
+    chk("17qq the stored MASTER is untouched (admin download = original bytes)",
+        sa == 200 and hashlib.sha256(abody).hexdigest() == hashlib.sha256(wm_raw).hexdigest(), sa)
+    # Fallback: a watermark-flagged file the engine cannot parse still downloads (original bytes) and
+    # the audit records it as unwatermarked rather than silently claiming a stamp.
+    c, fdoc = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "Unparseable but flagged", "file": _pdf_uri("not really parseable")[0],
+        "assignment_type": "student", "user_id": a_uid, "watermark": True, "publish": True})
+    fid = fdoc.get("id")
+    chk("17rr unparseable flagged PDF still downloads (graceful fallback)", _raw_get(f"/api/me/documents/{fid}/download", token=a_tok)[0] == 200)
+    con = dbconn(); fb = con.execute("SELECT COUNT(*) FROM document_downloads WHERE document_id=? AND result='ok_unwatermarked'", (fid,)).fetchone()[0]; con.close()
+    chk("17ss fallback is honestly audited as unwatermarked", fb >= 1, fb)
+
+    # ================= institution (partner) portal documents =================
+    def _mk_partner(name):
+        con = dbconn()
+        con.execute("INSERT INTO training_partners(name,tier,listed) VALUES(?, 'registered', 0)", (name,))
+        con.commit()
+        pid = con.execute("SELECT id FROM training_partners WHERE name=?", (name,)).fetchone()[0]
+        email = name.lower().replace(" ", ".") + "@inst.example"
+        con.execute("INSERT INTO partner_users(partner_id,email,name,role,password_hash,status,must_change_pw) VALUES(?,?,?, 'admin','x','active',0)", (pid, email, name))
+        con.commit()
+        puid = con.execute("SELECT id FROM partner_users WHERE email=?", (email,)).fetchone()[0]
+        tok = "ptok_" + sha256hex(email)[:20]
+        con.execute("INSERT INTO partner_sessions(partner_user_id,token,expires_at) VALUES(?,?, datetime('now','+1 day'))", (puid, sha256hex(tok)))
+        con.commit(); con.close()
+        return pid, tok
+
+    p1_id, p1_tok = _mk_partner("Northfield College")
+    p2_id, p2_tok = _mk_partner("Eastgate Institute")
+    inst_uri, inst_raw = _real_pdf_uri()
+    c, idoc = jget("POST", "/api/admin/documents", token=admin, body={
+        "title": "Partnership Agreement 2026", "category": "Policies & Agreements", "doc_type": "agreement",
+        "file": inst_uri, "filename": "agreement.pdf",
+        "assignment_type": "institution", "partner_id": p1_id, "watermark": True, "publish": True})
+    inst_id = idoc.get("id")
+    chk("17tt institution-audience document publishes", c == 200 and inst_id, idoc)
+    c, plist = jget("GET", "/api/partner/documents", token=p1_tok)
+    chk("17uu the targeted institution sees it in its portal",
+        c == 200 and any(r["id"] == inst_id and r.get("downloadable") for r in plist.get("rows", [])), plist)
+    c, plist2 = jget("GET", "/api/partner/documents", token=p2_tok)
+    chk("17vv another institution cannot see it (isolation)", c == 200 and not any(r["id"] == inst_id for r in plist2.get("rows", [])))
+    chk("17ww unauthenticated partner list is refused (401)", jget("GET", "/api/partner/documents")[0] == 401)
+    sp1, pbody, _ = _raw_get(f"/api/partner/documents/{inst_id}/download", token=p1_tok)
+    ptxt = _pdf_text(pbody) if sp1 == 200 else ""
+    chk("17xx the institution downloads a copy watermarked with ITS name",
+        sp1 == 200 and pbody[:5] == b"%PDF-" and "Northfield College" in ptxt and hashlib.sha256(pbody).hexdigest() != hashlib.sha256(inst_raw).hexdigest(), (sp1, ptxt[:80]))
+    chk("17yy the other institution is refused the download (404)", _raw_get(f"/api/partner/documents/{inst_id}/download", token=p2_tok)[0] == 404)
+    con = dbconn(); pdl = con.execute("SELECT COUNT(*) FROM document_downloads WHERE document_id=? AND role='partner' AND result LIKE ?", (inst_id, "ok%")).fetchone()[0]; con.close()
+    chk("17zz partner downloads are audited with the partner role", pdl >= 1, pdl)
+
+def test_leadership_suite(admin):
+    """Section 18 — the PCI AI Project Leadership Certification Suite: the three credentials are live
+    together with their final names, and ONE candidate can pursue all three independently — three
+    entitlements, three bookings, three attempts, three credentials with the correct number prefixes,
+    with zero cross-certification leakage."""
+    print("\n=== 18. Leadership Suite: one candidate, three certifications ===")
+    NAMES = {"PCL-AI": "PCI AI Project Controls Leader™",
+             "PFL-AI": "PCI AI Project Finance Leader™",
+             "PDL-AI": "PCI AI Project Delivery Leader™"}
+    c, cat = jget("GET", "/api/certifications")
+    rows = {r.get("code"): r for r in cat.get("rows", [])}
+    chk("18a all three Suite certifications are live together", c == 200 and all(k in rows for k in NAMES), sorted(rows))
+    chk("18b official certification names", all(rows[k]["name"] == v for k, v in NAMES.items()),
+        {k: rows.get(k, {}).get("name") for k in NAMES})
+    ids = {k: rows[k]["id"] for k in NAMES}
+
+    # PFL-AI and PDL-AI need question banks (PCL-AI uses the seeded bank).
+    for code in ("PFL-AI", "PDL-AI"):
+        csv = "question,option_a,option_b,option_c,option_d,answer,domain\n" + "\n".join(
+            f"{code} Q{i}: pick A,RightA{i},WrongB{i},WrongC{i},WrongD{i},A,Core" for i in range(1, 4))
+        c, bu = jget("POST", "/api/admin/sample_questions/bulk", token=admin, body={"csv": csv, "certification": code})
+        chk(f"18c bank uploaded for {code}", c == 200 and bu.get("inserted") == 3, bu)
+
+    # One candidate buys all three examinations (webhook metadata routes each entitlement).
+    stok, suid = make_paid_user("suite3@ex.co", product="exam", metadata={"certification": "PCL-AI"})
+    sign_and_send_webhook("cs_suite3_pfl", "suite3@ex.co", "exam", "pi_suite3_pfl", metadata={"certification": "PFL-AI"})
+    sign_and_send_webhook("cs_suite3_pdl", "suite3@ex.co", "exam", "pi_suite3_pdl", metadata={"certification": "PDL-AI"})
+    accept_all_consents(stok); complete_profile(stok)
+    con = dbconn()
+    ents = {r[0] for r in con.execute("SELECT certification_id FROM exam_entitlements WHERE user_id=?", (suid,))}
+    pays = con.execute("SELECT COUNT(*) FROM payments WHERE user_id=?", (suid,)).fetchone()[0]
+    con.close()
+    chk("18d three separate entitlements, one per certification", ents == set(ids.values()), (ents, ids))
+    chk("18e three separate payment records", pays == 3, pays)
+
+    # Sit and pass each examination; the credential must carry that certification's prefix.
+    creds = {}
+    slot = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() + 3 * 3600))
+    for code, prefix in (("PCL-AI", "PCI-PCLAI-"), ("PFL-AI", "PCI-PFLAI-"), ("PDL-AI", "PCI-PDLAI-")):
+        cid = ids[code]
+        c, bk = jget("POST", "/api/me/exam/book", token=stok, body={"scheduled_at": slot, "timezone": "UTC", "certification_id": cid})
+        req("POST", "/api/me/readiness", token=stok, body={"camera": True, "microphone": True, "network": True})
+        c, st = jget("POST", "/api/me/exam/start", token=stok, body={"certification_id": cid})
+        items = [i["id"] for i in st.get("items", [])]
+        con = dbconn()
+        bank = {r[0] for r in con.execute("SELECT id FROM sample_questions WHERE certification_id=?", (cid,))}
+        con.close()
+        chk(f"18f {code}: issued items come only from its own bank", len(items) > 0 and set(items) <= bank, (code, len(items)))
+        c, sub = jget("POST", "/api/me/exam/submit", token=stok, body={"attempt_id": st.get("attempt_id"), "answers": answer_key(items)})
+        cred = sub.get("credential") or ""
+        chk(f"18g {code}: pass issues a credential with the {prefix} prefix", c == 200 and cred.startswith(prefix), sub.get("credential"))
+        creds[code] = cred
+
+    chk("18h three distinct credentials, no cross-certification overwriting", len(set(creds.values())) == 3, creds)
+    for code, cred in creds.items():
+        c, v = jget("GET", f"/api/verify?id={cred}")
+        chk(f"18i {code}: public verification names the right certification",
+            v.get("valid") is True and v.get("certification_code") == code, (v.get("certification_code"), v.get("valid")))
+    c, me = jget("GET", "/api/me", token=stok)
+    mecodes = {e.get("certification_code") for e in me.get("exams", [])}
+    chk("18j /api/me shows all three certification journeys", mecodes == set(NAMES), mecodes)
+
 def H0(v):
     try: return int(v or 0)
     except Exception: return 0
@@ -1460,7 +1868,7 @@ def run(proc):
     key = answer_key(ids)
     c, sub = jget("POST", "/api/me/exam/submit", token=ctok, body={"attempt_id": st["attempt_id"], "answers": key})
     cred = sub.get("credential") or ""
-    chk("9e8 pass issues credential with the certification's prefix", c==200 and cred.startswith("PCP-COST-"), sub)
+    chk("9e8 pass issues credential with the certification's prefix", c==200 and cred.startswith("PCI-PCPCOST-"), sub)
     c, v = jget("GET", f"/api/verify?id={cred}")
     chk("9e9 verify shows the certification", v.get("valid") is True and v.get("certification_code") == "PCP-COST", v)
     con = dbconn()
@@ -1498,7 +1906,7 @@ def run(proc):
     c2, b2 = jget("POST", "/api/me/exam/book", token=dtok, body={"scheduled_at": slot, "timezone": "UTC", "certification_id": 1})
     chk("9e13 bookings for two certifications coexist", c1 == 200 and c2 == 200, (b1, b2))
     c, me2 = jget("GET", "/api/me", token=dtok)
-    chk("9e14 /api/me lists both exams with certification names", len(me2.get("exams", [])) == 2 and {e["certification_code"] for e in me2["exams"]} == {"PCP-AI", "PCP-COST"}, me2.get("exams"))
+    chk("9e14 /api/me lists both exams with certification names", len(me2.get("exams", [])) == 2 and {e["certification_code"] for e in me2["exams"]} == {"PCL-AI", "PCP-COST"}, me2.get("exams"))
 
     # ---------- 9f. Fully dynamic content (Stage 2): server-side injection ----------
     print("\n=== 9f. Dynamic content injection ===")
@@ -1707,6 +2115,9 @@ def run(proc):
     test_finance_and_certuvo_hardening(admin)
     test_support_and_institutions(admin)
     test_certuvo_integration(admin)
+    test_certificate_pdf(admin)
+    test_documents_module(admin)
+    test_leadership_suite(admin)
 
     print("\n(assertions complete)")
 

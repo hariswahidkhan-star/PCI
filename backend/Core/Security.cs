@@ -192,7 +192,7 @@ public static class Rbac
     {
         ["platform"] = new[]{ "overview","reports","audit","emails","settings","team","integrations" },
         ["website"]  = new[]{ "set_web","pricing","codes","content","pages","news","faqs","bok","governance","resources","media","nav","partners","sitesettings","subscribers","submissions","inquiries" },
-        ["student"]  = new[]{ "set_sp","members","enrollments","payments","credentials","tickets" },
+        ["student"]  = new[]{ "set_sp","members","enrollments","payments","credentials","tickets","documents" },
         ["exam"]     = new[]{ "set_exam","exams","proctoring","sampleq","exam_delivery" },
         // High-privilege operator capabilities. Deliberately NOT part of any named role bundle
         // (owner excepted): they are granted individually via a custom role or a permissions

@@ -231,8 +231,9 @@ public static class Public
             // honorary result is explicitly typed and NEVER represented as a passed examination.
             if (id.StartsWith(Honorary.AwardPrefix + "-", StringComparison.Ordinal))
             {
-                var hAward = db.QueryOne("SELECT award_no,recipient_name,citation,designation,status,conferred_at FROM honorary_awards WHERE upper(award_no)=?", id);
+                var hAward = db.QueryOne("SELECT award_no,recipient_name,citation,designation,status,conferred_at,pdf_sha256 FROM honorary_awards WHERE upper(award_no)=?", id);
                 if (hAward is null) return J(new { found = false });
+                var hHash = H.Str(hAward["pdf_sha256"]);
                 return J(new
                 {
                     found = true,
@@ -244,12 +245,14 @@ public static class Public
                     state = H.Str(hAward["status"]) == "revoked" ? "revoked" : "active",
                     valid = H.Str(hAward["status"]) != "revoked",
                     conferred_at = hAward["conferred_at"],
-                    note = "Honorary recognition conferred by the board — not an examined PCI credential.",
+                    document_hash = hHash,
+                    has_pdf = !string.IsNullOrEmpty(hHash),
+                    note = "Honorary recognition conferred by the board — not an examined certification credential.",
                 });
             }
             // Test-account credentials are workflow artefacts, never real certifications: the public
             // register reports them as not found so a test run can never mint a verifiable credential.
-            var c = db.QueryOne(@"SELECT ic.credential_id,ic.holder_name,ic.credential,ic.status,ic.issued_at,ic.expires_at,ic.certificate_wording,
+            var c = db.QueryOne(@"SELECT ic.credential_id,ic.holder_name,ic.credential,ic.status,ic.issued_at,ic.expires_at,ic.pdf_sha256,ic.certificate_wording,
                        ct.code certification_code, ct.name certification_name, ct.acronym certification_acronym
                 FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)
                 LEFT JOIN users tu ON tu.id=ic.user_id
@@ -261,7 +264,11 @@ public static class Public
             var expires = H.Str(c["expires_at"]);
             var lapsed = status == "active" && H.IsPast(expires);
             var state = status == "revoked" ? "revoked" : (lapsed || status == "expired") ? "expired" : "active";
-            var copy = new Dictionary<string, object?>(c) { ["found"] = true, ["state"] = state, ["valid"] = state == "active" };
+            // document_hash lets anyone independently confirm a downloaded PDF is the exact one PCI issued
+            // (recompute SHA-256 of the file and compare) — tamper-evidence without trusting the visual.
+            var docHash = H.Str(c["pdf_sha256"]);
+            c.Remove("pdf_sha256");
+            var copy = new Dictionary<string, object?>(c) { ["found"] = true, ["state"] = state, ["valid"] = state == "active", ["document_hash"] = docHash, ["has_pdf"] = !string.IsNullOrEmpty(docHash) };
             return J(copy);
         });
 

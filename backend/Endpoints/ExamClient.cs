@@ -99,7 +99,7 @@ public static class ExamClient
                 SessionToken = examSession, session_token = examSession,
                 AttemptToken = code, CandidateName = candidateName, CandidateEmail = candidateEmail,
                 ExamCode = H.Str(cert?["code"]) ?? "PCL-AI",
-                ExamTitle = (H.Str(cert?["name"]) ?? "PCL-AI") + " Examination",
+                ExamTitle = (H.Str(cert?["name"]) ?? "PCI AI Project Controls Leader™") + " Examination",
                 DurationMinutes = att["duration_minutes"],
                 RemainingSeconds = Math.Max(0, (int)((deadline - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()) / 1000)),
                 SavedAnswers = savedAnswers, Resumed = !string.IsNullOrEmpty(H.Str(att["answers"])),

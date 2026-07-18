@@ -61,6 +61,9 @@ jobs:
 
       - name: Integration suite (adversarial end-to-end)
         run: |
+          # pypdf enables full text-extraction assertions on generated/watermarked PDFs
+          # (the suite degrades gracefully without it, but CI runs the strong form)
+          pip install --quiet --break-system-packages pypdf || pip install --quiet pypdf || true
           if [ -f tests/integration_test.py ]; then python3 tests/integration_test.py; else echo "no integration suite yet"; fi
 
       - name: Founding-stage suite (codes, applications, waiver settlement)
@@ -122,7 +125,7 @@ jobs:
           MYSQL_DATABASE: pci
           MYSQL_SSL: 'false'
         run: |
-          pip install --quiet --break-system-packages pymysql || pip install --quiet pymysql
+          pip install --quiet --break-system-packages pymysql pypdf || pip install --quiet pymysql pypdf
           python3 tests/integration_test.py
           python3 tests/founding_test.py
           python3 tests/honorary_test.py

@@ -733,6 +733,8 @@ PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Applications.Map(app, db, logFn, GateFn);        // per-certification application submission + review (Phase 4b)
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);
+PCI.Backend.Endpoints.Certificates.Map(app, db, logFn, GateFn);
+PCI.Backend.Endpoints.Documents.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);   // Student Documents & Resources module
 PCI.Backend.Endpoints.TrainingPartners.Map(app, db, logFn, GateFn);   // Training Partner framework (Phase 7)
 PCI.Backend.Endpoints.Partners.Map(app, db, logFn, GateFn);           // Partner dashboards: portal token, sponsorship, commissions
 PCI.Backend.Endpoints.Certuvo.Map(app, db, logFn);                    // Certuvo study & practice engine (Phase 8)
@@ -797,7 +799,7 @@ app.Use(async (ctx, next) =>
             ctx.Response.Headers.Location = reqPath.Contains("students", StringComparison.OrdinalIgnoreCase) ? "/admin/students" : "/admin/";
             return;
         }
-        // Public certificate verification clean URL.
+        // Public verification clean URL: /verify-certificate is the canonical alias of the verify page.
         if (reqPath.Equals("/verify-certificate", StringComparison.OrdinalIgnoreCase))
         {
             ctx.Response.StatusCode = 301;
@@ -808,6 +810,26 @@ app.Use(async (ctx, next) =>
         if (reqPath.StartsWith("/certifications", StringComparison.OrdinalIgnoreCase))
         {
             var rest = reqPath.Length > 15 ? reqPath.Substring(15).Trim('/') : "";  // "/certifications".Length == 15
+            // Catalogue-level aliases: stable URLs for compare/routes/fees/exams that forward to the
+            // page (or anchored section) currently carrying that content. Query string is preserved
+            // ahead of any fragment.
+            var certAlias = rest.ToLowerInvariant() switch
+            {
+                "compare" => "/certifications",
+                "routes" => "/certification.html#routes",
+                "fees" => "/certification.html#fees",
+                "exams" => "/exam-structure.html",
+                _ => null,
+            };
+            if (certAlias is not null && certAlias != reqPath)
+            {
+                var hash = certAlias.IndexOf('#');
+                var target = hash < 0 ? certAlias + ctx.Request.QueryString
+                                      : certAlias[..hash] + ctx.Request.QueryString + certAlias[hash..];
+                ctx.Response.StatusCode = 301;
+                ctx.Response.Headers.Location = target;
+                return;
+            }
             // Permanent redirects from previous credential slugs to the final Project Leadership Suite slugs.
             var certRedirect = rest.ToLowerInvariant() switch
             {
@@ -820,21 +842,6 @@ app.Use(async (ctx, next) =>
             {
                 ctx.Response.StatusCode = 301;
                 ctx.Response.Headers.Location = "/certifications/" + certRedirect + ctx.Request.QueryString;
-                return;
-            }
-            // Suite auxiliary URLs → the pages that carry that content today (permanent, query preserved).
-            var auxTarget = rest.ToLowerInvariant() switch
-            {
-                "compare" => "/certification.html",
-                "routes" => "/certification-application.html",
-                "fees" => "/enrol.html",
-                "exams" => "/exam-structure.html",
-                _ => null,
-            };
-            if (auxTarget is not null)
-            {
-                ctx.Response.StatusCode = 301;
-                ctx.Response.Headers.Location = auxTarget + ctx.Request.QueryString;
                 return;
             }
             if (rest.Length > 0 && !rest.Contains('/') && !rest.Contains('.'))

@@ -34,7 +34,7 @@ public static class Payments
                 var d = await H.Body(req);
                 var product = PRODUCT_LABEL.ContainsKey(H.GetS(d, "product") ?? "") ? H.GetS(d, "product")! : "membership";
                 var email = H.GetS(d, "email");
-                // Which certification the exam seat is for (id or code; PCP-AI when unspecified).
+                // Which certification the exam seat is for (id or code; PCL-AI when unspecified).
                 var certRow = Certs.ById(db, Certs.Resolve(db, H.GetS(d, "certification_id", "certification", "cert")));
                 if (certRow is not null && !H.B(certRow["active"])) return Results.Json(new { error = "certification_inactive" }, statusCode: 400);
                 // A supplied code is re-validated for THIS product server-side (the browser check is only
@@ -201,7 +201,11 @@ public static class Payments
                             {
                                 var nowIso = H.IsoNow;
                                 var baseD = H.Str(cred["expires_at"]) is { } ex && H.After(ex, nowIso) ? ex : nowIso;
-                                var newExp = H.IsoFromMillis(H.JsMillis(baseD) + 3L * 365 * 86400_000);
+                                // Extend by the CERTIFICATION's own cycle (expiry_years), matching issuance —
+                                // a 2-year credential must not silently gain a 3-year recert extension.
+                                var recertCert = Certs.ById(db, cred["certification_id"] is null ? Certs.DefaultId : H.L(cred["certification_id"]));
+                                var years = recertCert is null ? 3 : Certs.ExpiryYears(recertCert);
+                                var newExp = H.IsoFromMillis(H.JsMillis(baseD) + years * 365L * 86400_000);
                                 db.Execute("UPDATE issued_credentials SET expires_at=?, status='active' WHERE id=?", newExp, cred["id"]);
                                 log(userId, "recertified", newExp);
                             }

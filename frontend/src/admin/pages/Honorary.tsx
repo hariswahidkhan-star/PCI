@@ -20,7 +20,7 @@ interface HonoraryRow {
 }
 
 /** Honorary Fellow (PCI) — board/owner-only. A separate recognition registry: no exam, no
- *  entitlement, never an examined PCI credential. The server enforces owner-only on every call. */
+ *  entitlement, never an examined certification credential. The server enforces owner-only on every call. */
 export default function Honorary() {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: HonoraryRow[] }>('/api/admin/honorary')
   const [f, setF] = useState({ recipient_name: '', citation: '', user_email: '' })
@@ -71,7 +71,7 @@ export default function Honorary() {
         <h1>Honorary Fellows</h1>
         <p className="muted">
           A board-conferred recognition of distinguished contribution. It is <strong>not</strong> the
-          examined PCI credentials, involves no exam, and lives in its own registry (PCI-HON numbers) —
+          examined certification credentials, involves no exam, and lives in its own registry (PCI-HON numbers) —
           it can never appear as a passed examination.
         </p>
       </div>

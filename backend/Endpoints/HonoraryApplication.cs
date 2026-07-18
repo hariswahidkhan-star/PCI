@@ -128,7 +128,7 @@ public static class HonoraryApplication
                     $"<p>Thank you for applying for consideration as an <strong>Honorary Fellow (PCI)</strong>. " +
                     $"Your application has been received and is <strong>under review</strong> by the board.</p>" +
                     $"<p>Your application reference is <strong>{WebUtility.HtmlEncode(reference)}</strong> — please quote it in any correspondence.</p>" +
-                    $"<p>Honorary recognition is conferred at the board's discretion. It involves no examination and is separate from PCI's examined credentials. We will email you once a decision has been made.</p>" +
+                    $"<p>Honorary recognition is conferred at the board's discretion. It involves no examination and is separate from PCI's examined certification credentials. We will email you once a decision has been made.</p>" +
                     $"<p>— Project Controls Institute Global</p>",
                     "honorary_application", appId);
 
@@ -269,7 +269,7 @@ public static class HonoraryApplication
                     "approved" => ("Congratulations — Honorary Fellow (PCI) conferred",
                         $"<p>Dear {WebUtility.HtmlEncode(H.Str(a["first_name"]))},</p>" +
                         $"<p>The board has conferred on you the designation <strong>Honorary Fellow (PCI)</strong>. Your award number is <strong>{WebUtility.HtmlEncode(awardNo)}</strong>.</p>" +
-                        $"<p>You can verify it any time at <a href=\"{baseUrl}/verify.html?id={WebUtility.HtmlEncode(awardNo)}\">{baseUrl}/verify.html?id={WebUtility.HtmlEncode(awardNo)}</a>. This is an honorary recognition, distinct from PCI's examined credentials.</p><p>— Project Controls Institute Global</p>"),
+                        $"<p>You can verify it any time at <a href=\"{baseUrl}/verify.html?id={WebUtility.HtmlEncode(awardNo)}\">{baseUrl}/verify.html?id={WebUtility.HtmlEncode(awardNo)}</a>. This is an honorary recognition, distinct from PCI's examined certification credentials.</p><p>— Project Controls Institute Global</p>"),
                     "rejected" => ("An update on your Honorary Fellow (PCI) application",
                         $"<p>Dear {WebUtility.HtmlEncode(H.Str(a["first_name"]))},</p>" +
                         $"<p>Thank you for your interest in the Honorary Fellow (PCI) recognition. After careful review, the board is not taking your application forward at this time.</p>" +

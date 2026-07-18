@@ -228,7 +228,7 @@ export default function Certuvo() {
     <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
       <div>
         <h1>Certuvo</h1>
-        <p className="muted">PCI's official study &amp; practice for its certifications — scenario-based practice that mirrors the exam, with instant feedback and explanations. Practice is formative; the credential is still earned on the real examination.</p>
+        <p className="muted">PCI's official study &amp; practice for your PCI certification — scenario-based practice that mirrors the exam, with instant feedback and explanations. Practice is formative; the credential is still earned on the real examination.</p>
       </div>
       {err && <ErrorNote>{err}</ErrorNote>}
 

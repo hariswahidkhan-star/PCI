@@ -28,6 +28,8 @@ public static class Honorary
             {
                 db.Execute("INSERT INTO honorary_awards(award_no,recipient_name,user_id,citation,conferred_by) VALUES(?,?,?,?,?)",
                     candidate, recipientName, userId, citation, adminId);
+                // Render the honorary certificate PDF (best-effort; regenerated on first download if it fails).
+                CertIssue.EnsureHonoraryPdf(db, candidate);
                 return candidate;
             }
             catch { /* award_no collision → retry */ }
@@ -73,7 +75,7 @@ public static class Honorary
             if (awardNo is null) return Results.Json(new { error = "award_no_generation_failed" }, statusCode: 500);
             if (userId is not null)
                 db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Recognition', 'Honorary Fellow (PCI)', ?)",
-                    userId, $"The board has conferred on you the designation Honorary Fellow (PCI) — award number {awardNo}. This is an honorary recognition, distinct from PCI's examined credentials.");
+                    userId, $"The board has conferred on you the designation Honorary Fellow (PCI) — award number {awardNo}. This is an honorary recognition, distinct from PCI's examined certification credentials.");
             log(userId, "honorary_conferred", $"{awardNo} to \"{name}\" by admin {adm!.Id}");
             return J(new { ok = true, award_no = awardNo, designation = "Honorary Fellow (PCI)" });
         });

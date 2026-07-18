@@ -23,17 +23,29 @@ export default function Credentials() {
       <p style="text-align:center">${t('cred.hasBeenAwarded')}</p>
       <h2 style="text-align:center;color:#1d4ed8">${e(c.certification_name || c.credential || c.credential_id)}</h2>
       ${c.certification_acronym ? `<p style="text-align:center;margin-top:-.4rem" class="muted">${e(c.certification_acronym)}</p>` : ''}
-      ${c.certificate_wording
-        ? `<p style="text-align:center;font-style:italic;max-width:34rem;margin:1rem auto 0">${e(c.certificate_wording)}</p>`
-        : c.certification_name && c.certification_acronym
-          ? `<p style="text-align:center;max-width:36rem;margin:1rem auto 0">This certifies that ${e(holder)} has successfully fulfilled the eligibility, assessment and professional requirements for the ${e(c.certification_name)} credential and is authorised to use the designation ${e(c.certification_acronym)}.</p>`
-          : ''}
+      ${c.certificate_wording ? `<p style="text-align:center;font-style:italic;max-width:34rem;margin:1rem auto 0">${e(c.certificate_wording)}</p>` : ''}
       <table>
         <tr><td>${t('cred.credentialId')}</td><td class="r">${e(c.credential_id)}</td></tr>
         <tr><td>${t('cred.issued')}</td><td class="r">${e(fmtDate(c.issued_at))}</td></tr>
         <tr><td>${t('cred.validUntil')}</td><td class="r">${e(fmtDate(c.expires_at))}</td></tr>
       </table>
       <p class="muted" style="text-align:center;margin-top:1.5rem">${t('cred.verifyAt', { url: verifyUrl })}</p>`)
+  }
+
+  // Fetch the official, QR-bearing PDF certificate (authenticated) and save it. This is the real
+  // downloadable document; the printable above remains as a quick on-screen view.
+  const downloadPdf = async (id: string, honorary = false) => {
+    const tok = sessionStorage.getItem('pci.session.token')
+    const url = honorary ? '/api/me/honorary-certificate/pdf' : `/api/me/certificate/pdf?id=${encodeURIComponent(id)}`
+    try {
+      const r = await fetch(url, { headers: tok ? { Authorization: 'Bearer ' + tok } : {} })
+      if (!r.ok) { alert('Could not download the certificate right now. Please try again shortly or contact support.'); return }
+      const blob = await r.blob()
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(blob)
+      a.download = `${honorary ? 'honorary-certificate' : 'certificate'}-${id}.pdf`
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href)
+    } catch { alert('Could not download the certificate right now. Please try again shortly or contact support.') }
   }
 
   return (
@@ -44,7 +56,7 @@ export default function Credentials() {
       </div>
 
       {/* Honorary recognition is deliberately separate from exam-earned credentials: it is a
-          board-conferred designation, not an examined PCI credential. */}
+          board-conferred designation, not an examined certification credential. */}
       {me.honorary.length > 0 && (
         <Card title={t('cred.honoraryTitle')} action={<Badge tone="brand">{t('cred.boardConferred')}</Badge>}>
           {me.honorary.map((h) => (
@@ -54,7 +66,8 @@ export default function Credentials() {
               <div className="muted">
                 {t('cred.honoraryConferred', { date: fmtDate(h.conferred_at) })}
               </div>
-              <div className="row" style={{ marginTop: '.4rem' }}>
+              <div className="row" style={{ marginTop: '.4rem', flexWrap: 'wrap' }}>
+                <button className="btn sm" onClick={() => downloadPdf(h.award_no, true)}>Download PDF</button>
                 <a className="btn sm secondary" href={`/verify.html?id=${encodeURIComponent(h.award_no)}`} target="_blank" rel="noreferrer">{t('cred.publicVerifyPage')}</a>
               </div>
             </div>
@@ -84,8 +97,9 @@ export default function Credentials() {
                 <p className="muted small" style={{ margin: '.6rem 0 0', fontStyle: 'italic' }}>{c.certificate_wording}</p>
               )}
               {c.status === 'active' && !lapsed && (
-                <div className="row" style={{ marginTop: '.9rem' }}>
-                  <button className="btn sm" onClick={() => certificate(c)}>{t('cred.downloadCertificate')}</button>
+                <div className="row" style={{ marginTop: '.9rem', flexWrap: 'wrap' }}>
+                  <button className="btn sm" onClick={() => downloadPdf(c.credential_id)}>Download PDF</button>
+                  <button className="btn sm secondary" onClick={() => certificate(c)}>{t('cred.downloadCertificate')}</button>
                   <a className="btn sm secondary" href={`/verify.html?id=${encodeURIComponent(c.credential_id)}`} target="_blank" rel="noreferrer">{t('cred.publicVerifyPage')}</a>
                 </div>
               )}

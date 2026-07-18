@@ -4,7 +4,7 @@ namespace PCI.Backend.Core;
 
 /// <summary>
 /// Certification resolution + per-certification exam configuration. The platform supports any
-/// number of credentials; PCP-AI is certification id 1. A certification row's columns override
+/// number of credentials; PCL-AI is certification id 1. A certification row's columns override
 /// the global exam_* settings (NULL column → global setting → hard default), so existing
 /// single-certification deployments keep behaving identically.
 /// </summary>

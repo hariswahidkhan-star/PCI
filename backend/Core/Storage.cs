@@ -153,19 +153,37 @@ public static class Storage
             return n;
         }
         if (!Directory.Exists(Root)) return 0;
+        var rootFull = Path.GetFullPath(Root);
         foreach (var f in Directory.EnumerateFiles(Root, "*", SearchOption.AllDirectories))
         {
             // Only delete files this app wrote — content-addressed names are "<64-hex-sha><ext>".
             // Skipping anything else means a stray operator file dropped under STORAGE_ROOT is never
             // purged by the retention sweep (STORAGE_ROOT should still be a dedicated volume).
             if (!ArtefactName.IsMatch(Path.GetFileName(f))) continue;
+            // Retention is for transient EVIDENCE/ATTACHMENTS. Never sweep protected categories:
+            // admin-uploaded student documents cannot be regenerated (permanent loss), and certificate
+            // PDFs are authoritative artefacts. Both live under their own top-level category folder.
+            if (InProtectedCategory(rootFull, f)) continue;
             try { if (File.GetLastWriteTimeUtc(f) < cutoff) { File.Delete(f); n++; } } catch { }
         }
         return n;
     }
 
     static readonly System.Text.RegularExpressions.Regex ArtefactName =
-        new(@"^[0-9a-f]{64}\.(jpg|png|webp|pdf|bin)$", System.Text.RegularExpressions.RegexOptions.Compiled);
+        new(@"^[0-9a-f]{64}\.(jpg|png|webp|pdf|bin|docx|doc|xlsx|xls|pptx|ppt|csv|txt|zip)$", System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    // Top-level category folders whose contents the retention sweep must never delete.
+    static readonly HashSet<string> ProtectedCategories = new(StringComparer.OrdinalIgnoreCase) { "documents", "certificates" };
+    static bool InProtectedCategory(string rootFull, string file)
+    {
+        try
+        {
+            var rel = Path.GetRelativePath(rootFull, Path.GetFullPath(file));
+            var top = rel.Replace('\\', '/').Split('/', 2)[0];
+            return ProtectedCategories.Contains(top);
+        }
+        catch { return false; }
+    }
 
     // Minimal magic-byte sniff so a mislabeled/renamed payload is rejected (defence in depth vs. the header).
     static bool SniffMatches(byte[] b, string mime)
