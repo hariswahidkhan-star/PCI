@@ -669,6 +669,28 @@ app.Use(async (ctx, next) =>
             return;
         }
         var reqPath = ctx.Request.Path.Value ?? "/";
+        // ── Multi-certification clean URLs: /certifications (catalogue) and /certifications/{slug} (per credential) ──
+        if (reqPath.StartsWith("/certifications", StringComparison.OrdinalIgnoreCase))
+        {
+            var rest = reqPath.Length > 15 ? reqPath.Substring(15).Trim('/') : "";  // "/certifications".Length == 15
+            if (rest.Length > 0 && !rest.Contains('/') && !rest.Contains('.'))
+            {
+                var page = PCI.Backend.Core.CertPage.Render(db, webRoot, rest, PCI.Backend.Core.I18nContent.ActiveLang(ctx));
+                if (page is not null)
+                {
+                    ctx.Response.ContentType = "text/html; charset=utf-8";
+                    ctx.Response.Headers.CacheControl = "no-cache";
+                    ctx.Response.Headers.Vary = "Cookie";
+                    await ctx.Response.WriteAsync(page);
+                    return;
+                }
+                // unknown certification slug → fall through to normal 404 handling
+            }
+            else if (rest.Length == 0)
+            {
+                reqPath = "/certifications.html";  // render the catalogue landing through the normal pipeline
+            }
+        }
         var slug = reqPath == "/" ? "index.html" : reqPath.TrimStart('/');
         var isPage = slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..");
         // Active public-website language (?lang= persisted to a cookie, else cookie, else English).

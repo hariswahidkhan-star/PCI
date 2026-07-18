@@ -37,6 +37,17 @@ public static class SeedContent
                 db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT ?,?, 'Organisations', ?, 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url=? AND nav_group='Organisations')", lbl, url, so, url);
         }
         catch (Exception e) { Console.Error.WriteLine($"[seed] training partner nav skipped: {e.Message}"); }
+        // Multi-certification (Phase 2): point the header "Certifications" menu at the DB-driven catalogue
+        // hub, and list every credential in the footer "Certifications" group. Conditional on the old
+        // default URL so an operator who re-points a link keeps their choice (no clobbering on reboot).
+        try
+        {
+            db.Execute("UPDATE nav_items SET url='/certifications' WHERE nav_group='Header' AND label='Certifications' AND url='certification.html'");
+            db.Execute("UPDATE nav_items SET url='/certifications/pcp-ai' WHERE nav_group='Certifications' AND label='PCP-AI' AND url='certification.html'");
+            foreach (var (lbl, url, so) in new[] { ("PFIP", "/certifications/pfip", 20), ("CPMD", "/certifications/cpmd", 21), ("All certifications", "/certifications", 22) })
+                db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT ?,?, 'Certifications', ?, 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url=? AND nav_group='Certifications')", lbl, url, so, url);
+        }
+        catch (Exception e) { Console.Error.WriteLine($"[seed] certification nav skipped: {e.Message}"); }
     }
 
     static readonly object?[][] Faqs =
