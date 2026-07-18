@@ -318,10 +318,11 @@ public static class AdminMgmt
                 return Results.Json(new { error = "bad_founding_route" }, statusCode: 400);
             bool founding = route == "founding";
             int B(string k, bool dflt = false) => (b.ContainsKey(k) ? H.B(b[k].GetRawText()) : dflt) ? 1 : 0;
-            var id = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,single_use_per_email,active,
+            var id = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,certification_id,route_key,min_transaction,max_discount,start_date,end_date,max_uses,single_use_per_email,active,
                 founding_route,grants_membership,grants_exam,grants_study_access,requires_application,auto_approve,membership_months,criteria_json)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (H.GetS(b, "code") ?? "").ToUpperInvariant(), H.GetS(b, "discount_type"), H.GetNum(b, "discount_value"), NormScope(H.GetS(b, "applies_to")),
+                H.GetNum(b, "certification_id"), H.GetS(b, "route_key"), H.GetNum(b, "min_transaction"), H.GetNum(b, "max_discount"),
                 H.GetS(b, "start_date"), H.GetS(b, "end_date"), H.GetNum(b, "max_uses"), B("single_use_per_email") , B("active"),
                 founding ? route : null,
                 founding ? B("grants_membership", true) : 0,
@@ -353,6 +354,8 @@ public static class AdminMgmt
             // both, or change 20% → 30%) without deleting and re-issuing the code. Scope is normalised.
             if (b.ContainsKey("applies_to")) { set.Add("applies_to=?"); vals.Add(NormScope(H.GetS(b, "applies_to"))); }
             Str("discount_type"); Num("discount_value");
+            // Per-certification / route / transaction scoping (Phase 5).
+            Num("certification_id"); Str("route_key"); Num("min_transaction"); Num("max_discount");
             Flag("auto_approve"); Num("membership_months"); Str("criteria_json");
             Flag("grants_membership"); Flag("grants_exam"); Flag("grants_study_access"); Flag("requires_application");
             if (set.Count > 0)

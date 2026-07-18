@@ -306,6 +306,14 @@ public static class Migrate
             ("canonical_url","canonical_url TEXT"), ("content_json","content_json TEXT"),
         })
             AddCol("certifications", col, ddl);
+
+        // ── Discount codes: certification / route / fee scoping (Phase 5) ──
+        // certification_id NULL = valid for every certification; route_key NULL = every route.
+        AddCol("discount_codes", "certification_id", "certification_id INTEGER");
+        AddCol("discount_codes", "route_key", "route_key TEXT");
+        AddCol("discount_codes", "min_transaction", "min_transaction REAL");
+        AddCol("discount_codes", "max_discount", "max_discount REAL");
+
         MultiCert.Seed(db);
 
         // bootstrap owner admin on first run (parity with db.js seed)

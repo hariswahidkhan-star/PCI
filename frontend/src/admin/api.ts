@@ -211,6 +211,10 @@ export interface DiscountCode {
   discount_type: string
   discount_value: number
   applies_to?: string | null
+  certification_id?: number | null
+  route_key?: string | null
+  min_transaction?: number | null
+  max_discount?: number | null
   start_date?: string | null
   end_date?: string | null
   max_uses?: number | null

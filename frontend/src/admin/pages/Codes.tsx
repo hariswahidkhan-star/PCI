@@ -5,9 +5,12 @@ import { adminApi, type DiscountCode } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
 import { fmtDate } from '../../format'
 
+interface CertOpt { id: number; code: string; acronym?: string | null }
 function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
+  const { data: certData } = useAdminQuery<{ rows: CertOpt[] }>('/api/admin/certifications')
   const [f, setF] = useState({
     code: '', discount_type: 'percentage', discount_value: '', applies_to: 'all',
+    certification_id: '', max_discount: '',
     start_date: '', end_date: '', max_uses: '', single_use_per_email: false, active: true,
     founding_route: '', grants_membership: true, grants_exam: true, grants_study_access: true,
     requires_application: false,
@@ -30,6 +33,8 @@ function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => 
         discount_type: f.discount_type,
         discount_value: Number(f.discount_value) || 0,
         applies_to: f.applies_to,
+        certification_id: f.certification_id === '' ? null : Number(f.certification_id),
+        max_discount: f.max_discount === '' ? null : Number(f.max_discount),
         start_date: f.start_date || null,
         end_date: f.end_date || null,
         max_uses: f.max_uses === '' ? null : Number(f.max_uses),
@@ -93,6 +98,18 @@ function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => 
               <span className="muted small">Scopes the discount. An exam-only code is rejected on a membership purchase, and vice-versa.</span>
             </div>
           )}
+          {!founding && (
+            <div className="field"><label>Certification</label>
+              <select value={f.certification_id} onChange={(e) => setF({ ...f, certification_id: e.target.value })}>
+                <option value="">All certifications</option>
+                {certData?.rows.map((c) => <option key={c.id} value={c.id}>{c.acronym || c.code}</option>)}
+              </select>
+              <span className="muted small">Restrict the code to one credential, or leave as “All certifications”.</span>
+            </div>
+          )}
+          {!founding && (
+            <div className="field"><label>Max discount (USD, blank = none)</label><input type="number" value={f.max_discount} onChange={(e) => setF({ ...f, max_discount: e.target.value })} /></div>
+          )}
           <div className="field"><label>Window opens</label><input type="date" value={f.start_date} onChange={(e) => setF({ ...f, start_date: e.target.value })} /></div>
           <div className="field"><label>Window closes {founding ? '(the founding end date)' : ''}</label><input type="date" value={f.end_date} onChange={(e) => setF({ ...f, end_date: e.target.value })} /></div>
           <div className="field"><label>Max total uses (blank = unlimited)</label><input type="number" value={f.max_uses} onChange={(e) => setF({ ...f, max_uses: e.target.value })} /></div>
@@ -140,11 +157,14 @@ function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => 
 
 /** Window/caps/approval editor — lets the board extend the founding window with one edit. */
 function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () => void; onSaved: () => void }) {
+  const { data: certData } = useAdminQuery<{ rows: CertOpt[] }>('/api/admin/certifications')
   const [f, setF] = useState({
     start_date: code.start_date ?? '',
     end_date: code.end_date ?? '',
     max_uses: code.max_uses == null ? '' : String(code.max_uses),
     applies_to: code.applies_to ?? 'all',
+    certification_id: code.certification_id == null ? '' : String(code.certification_id),
+    max_discount: code.max_discount == null ? '' : String(code.max_discount),
     discount_type: code.discount_type ?? 'percentage',
     discount_value: code.discount_value == null ? '' : String(code.discount_value),
     auto_approve: (code.auto_approve ?? 1) === 1,
@@ -174,6 +194,8 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
               applies_to: f.applies_to,
               discount_type: f.discount_type,
               discount_value: Number(f.discount_value) || 0,
+              certification_id: f.certification_id === '' ? null : Number(f.certification_id),
+              max_discount: f.max_discount === '' ? null : Number(f.max_discount),
             }),
         ...(founding
           ? {
@@ -223,6 +245,17 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
                 <option value="exam">Exam fee only</option>
               </select>
             </div>
+          )}
+          {!founding && (
+            <div className="field"><label>Certification</label>
+              <select value={f.certification_id} onChange={(e) => setF({ ...f, certification_id: e.target.value })}>
+                <option value="">All certifications</option>
+                {certData?.rows.map((c) => <option key={c.id} value={c.id}>{c.acronym || c.code}</option>)}
+              </select>
+            </div>
+          )}
+          {!founding && (
+            <div className="field"><label>Max discount (USD, blank = none)</label><input type="number" value={f.max_discount} onChange={(e) => setF({ ...f, max_discount: e.target.value })} /></div>
           )}
           <div className="field"><label>Window opens</label><input type="date" value={f.start_date.slice(0, 10)} onChange={(e) => setF({ ...f, start_date: e.target.value })} /></div>
           <div className="field"><label>Window closes</label><input type="date" value={f.end_date.slice(0, 10)} onChange={(e) => setF({ ...f, end_date: e.target.value })} /></div>
