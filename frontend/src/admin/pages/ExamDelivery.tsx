@@ -49,7 +49,7 @@ export default function ExamDelivery() {
 }
 
 function ProvidersTab() {
-  const { data, loading, error, refetch } = useAdminQuery<{ rows: Provider[]; connectors: ConnectorInfo[]; certifications: Cert[] }>('/api/admin/exam-delivery')
+  const { data, loading, error, refetch } = useAdminQuery<{ rows: Provider[]; connectors: ConnectorInfo[]; certifications: Cert[]; mode: string; cert_modes: Record<string, string> }>('/api/admin/exam-delivery')
   const [edit, setEdit] = useState<Provider | 'new' | null>(null)
   const [note, setNote] = useState<string | null>(null)
   const [busy, setBusy] = useState<number | null>(null)
@@ -79,6 +79,8 @@ function ProvidersTab() {
   }
 
   return (
+    <div style={{ display: 'grid', gap: '1rem' }}>
+    <DeliveryModeCard mode={data?.mode ?? 'in_house'} certModes={data?.cert_modes ?? {}} providers={rows} certs={data?.certifications ?? []} onSaved={refetch} />
     <Card title={`Vendors (${rows.length})`} action={<button className="btn sm" onClick={() => setEdit('new')}>Add vendor</button>}>
       {note && <div className="notice" role="status" style={{ marginBottom: '.6rem' }}>{note}</div>}
       {rows.length === 0 ? <Empty>No exam-delivery vendors configured. Add one to route bookings to Pearson VUE, Kryterion, PSI, TestReach or Questionmark.</Empty> : (
@@ -107,6 +109,64 @@ function ProvidersTab() {
       )}
       {edit && <ProviderEditor provider={edit === 'new' ? null : edit} connectors={connectors} certs={data?.certifications ?? []}
         onClose={() => setEdit(null)} onSaved={() => { setEdit(null); refetch() }} />}
+    </Card>
+    </div>
+  )
+}
+
+// The delivery-mode switch — the control the operator uses to deliver each certification's exam through
+// PCI's own SecureExam software OR an enabled vendor. A per-certification choice overrides the global one.
+function DeliveryModeCard({ mode, certModes, providers, certs, onSaved }:
+  { mode: string; certModes: Record<string, string>; providers: Provider[]; certs: Cert[]; onSaved: () => void }) {
+  const [busy, setBusy] = useState(false)
+  const [note, setNote] = useState<string | null>(null)
+  const enabled = providers.filter((p) => p.enabled)
+  const optionsFor = (p: Provider) => p.name || p.label || p.provider
+  const globalOpts = [{ v: 'in_house', l: 'Our SecureExam software (in-house)' }, ...enabled.map((p) => ({ v: p.provider, l: optionsFor(p) }))]
+  const disabled = enabled.length === 0
+
+  async function setGlobal(v: string) {
+    setBusy(true); setNote(null)
+    try { await adminApi.post('/api/admin/exam-delivery/mode', { mode: v }); setNote(`Default delivery: ${globalOpts.find((o) => o.v === v)?.l ?? v}.`); onSaved() }
+    catch (e) { setNote((e as Error).message) } finally { setBusy(false) }
+  }
+  async function setCert(id: number, v: string) {
+    setBusy(true); setNote(null)
+    try { await adminApi.post('/api/admin/exam-delivery/mode', { certification_id: id, cert_mode: v }); onSaved() }
+    catch (e) { setNote((e as Error).message) } finally { setBusy(false) }
+  }
+
+  return (
+    <Card title="Delivery mode — SecureExam vs vendor">
+      <p className="muted small" style={{ marginTop: 0 }}>Choose how examinations are delivered. Bookings for a certification route automatically to the selected channel. Only enabled, configured vendors appear as options.{disabled ? ' Add and enable a vendor above to unlock vendor delivery.' : ''}</p>
+      {note && <div className="notice" role="status" style={{ marginBottom: '.6rem' }}>{note}</div>}
+      <label className="row" style={{ gap: '.6rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <strong style={{ minWidth: 130 }}>Default for all</strong>
+        <select value={mode} disabled={busy} onChange={(e) => setGlobal(e.target.value)} style={{ maxWidth: 340 }}>
+          {globalOpts.map((o) => <option key={o.v} value={o.v}>{o.l}</option>)}
+        </select>
+        <Badge tone={mode === 'in_house' ? 'brand' : 'ok'}>{mode === 'in_house' ? 'In-house' : 'Vendor'}</Badge>
+      </label>
+      {certs.length > 0 && (
+        <div style={{ marginTop: '.8rem' }}>
+          <div className="muted small" style={{ marginBottom: '.35rem' }}>Per-certification override</div>
+          <div style={{ display: 'grid', gap: '.4rem' }}>
+            {certs.map((c) => {
+              const cm = certModes[String(c.id)] ?? 'inherit'
+              return (
+                <label key={c.id} className="row" style={{ gap: '.6rem', alignItems: 'center' }}>
+                  <span className="small" style={{ minWidth: 200 }}>{c.name} <span className="muted">({c.code})</span></span>
+                  <select value={cm} disabled={busy} onChange={(e) => setCert(c.id, e.target.value)} style={{ maxWidth: 340 }}>
+                    <option value="inherit">Use default ({globalOpts.find((o) => o.v === mode)?.l ?? mode})</option>
+                    <option value="in_house">Our SecureExam software (in-house)</option>
+                    {enabled.map((p) => <option key={p.provider} value={p.provider}>{optionsFor(p)}</option>)}
+                  </select>
+                </label>
+              )
+            })}
+          </div>
+        </div>
+      )}
     </Card>
   )
 }

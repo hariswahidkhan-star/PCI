@@ -23,6 +23,17 @@ public static class Settings
         if (v is null) return def;
         return v == "1" || v.Equals("true", StringComparison.OrdinalIgnoreCase);
     }
+    public static string Str(Db db, string key, string def)
+    {
+        var v = db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", key);
+        return string.IsNullOrEmpty(v) ? def : v!;
+    }
+    /// <summary>Upsert a setting, provider-safely (delete + insert — no ON CONFLICT dialect differences).</summary>
+    public static void Put(Db db, string key, string? value)
+    {
+        db.Execute("DELETE FROM site_settings WHERE skey=?", key);
+        db.Execute("INSERT INTO site_settings(skey,svalue) VALUES(?,?)", key, value ?? "");
+    }
 }
 
 public static class Auth

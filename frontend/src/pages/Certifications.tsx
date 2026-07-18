@@ -207,6 +207,10 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
   const booking = entry.booking as Record<string, unknown> | null
   const attempt = entry.latest_attempt as Record<string, unknown> | null
   const cred = entry.credential
+  // Is this certification's exam delivered by an external vendor? (Delivery-mode switch in the admin.)
+  const delivery = useQuery<{ routed: boolean; provider_name?: string; provider?: string; status?: string; self_schedule?: boolean; confirmation?: string | null; result_status?: string | null }>(
+    booking ? `/api/me/exam/delivery?certification_id=${entry.certification_id}` : null)
+  const vendor = delivery.data?.routed ? delivery.data : null
   const deadlineDays = daysUntil(entry.deadline)
   const actionHolds = holds.filter((h) => !STATE_HOLDS.has(h))
   const stateHolds = holds.filter((h) => STATE_HOLDS.has(h))
@@ -241,12 +245,33 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
         <div className="notice" style={{ marginTop: '.75rem' }}>
           {t('cert.examScheduledFor')} <strong>{fmtDateTime(booking.scheduled_at, booking.timezone)}</strong>
           {booking.timezone ? ` (${booking.timezone})` : ''}.
-          <div className="row" style={{ marginTop: '.6rem', flexWrap: 'wrap' }}>
-            <a className="btn sm" href={`/student.html#t=${getToken() ?? ''}`}>{t('cert.examDayCheckIn')} ↗</a>
-            <button className="btn sm secondary" onClick={() => setScheduling((v) => !v)}>
-              {scheduling ? t('cert.close') : t('cert.reschedule')}
-            </button>
-          </div>
+          {vendor ? (
+            <div style={{ marginTop: '.55rem' }}>
+              <div className="small">Delivered by <strong>{vendor.provider_name || vendor.provider}</strong>
+                {vendor.confirmation ? <> · confirmation <strong>{vendor.confirmation}</strong></> : null}
+              </div>
+              {vendor.self_schedule && (
+                <div className="small muted" style={{ marginTop: '.3rem' }}>
+                  Your exam eligibility has been sent to {vendor.provider_name || 'the test provider'}. Book your seat or online slot using the scheduling link they email you; your result posts back here automatically.
+                </div>
+              )}
+              {vendor.result_status && (
+                <div className="small" style={{ marginTop: '.3rem' }}>Vendor result: <strong>{vendor.result_status}</strong></div>
+              )}
+              <div className="row" style={{ marginTop: '.6rem', flexWrap: 'wrap' }}>
+                <button className="btn sm secondary" onClick={() => setScheduling((v) => !v)}>
+                  {scheduling ? t('cert.close') : t('cert.reschedule')}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="row" style={{ marginTop: '.6rem', flexWrap: 'wrap' }}>
+              <a className="btn sm" href={`/student.html#t=${getToken() ?? ''}`}>{t('cert.examDayCheckIn')} ↗</a>
+              <button className="btn sm secondary" onClick={() => setScheduling((v) => !v)}>
+                {scheduling ? t('cert.close') : t('cert.reschedule')}
+              </button>
+            </div>
+          )}
           {scheduling && (
             <div style={{ marginTop: '.6rem' }}>
               <ScheduleForm entry={entry} mode="reschedule" onDone={() => { setScheduling(false); onChanged() }} />

@@ -274,62 +274,92 @@ def start_mock_vendor():
     return srv, srv.server_address[1]
 
 def test_exam_delivery(admin):
-    print("\n=== 11. Exam delivery vendors (Pearson VUE / Kryterion / PSI / TestReach / Questionmark) ===")
+    print("\n=== 11. Exam delivery vendors + the SecureExam ↔ vendor switch ===")
     srv, mport = start_mock_vendor()
     mock = f"http://127.0.0.1:{mport}"
+    def set_mode(**kw): return jget("POST", "/api/admin/exam-delivery/mode", token=admin, body=kw)
+    slot = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() + 72 * 3600))
     try:
         c, cat = jget("GET", "/api/admin/exam-delivery", token=admin)
         keys = sorted(x["key"] for x in cat.get("connectors", []))
         chk("11a all 5 vendor connectors registered", keys == ["kryterion", "pearsonvue", "psi", "questionmark", "testreach"], keys)
+        chk("11b default delivery mode is in-house (our SecureExam)", cat.get("mode") == "in_house", cat.get("mode"))
 
-        # ---- Questionmark: fully API-driven (candidate → schedule → results pull → credential) ----
+        # configure Questionmark (enabled + mapped) — but the delivery mode stays in-house for now
         c, r = jget("POST", "/api/admin/exam-delivery", token=admin, body={
-            "provider": "questionmark", "name": "QM", "environment": "sandbox", "enabled": True, "is_default": True,
+            "provider": "questionmark", "name": "QM", "environment": "sandbox", "enabled": True,
             "api_base": mock, "customer_id": "123456", "username": "svc", "password": "pw", "exam_map": {"PCP-AI": "9962"}})
-        chk("11b create Questionmark provider (default)", c == 200 and r.get("ok"), r)
-        qmid = r.get("id")
+        qmid = r.get("id"); chk("11c create Questionmark vendor", c == 200 and r.get("ok"), r)
         c, tr = jget("POST", f"/api/admin/exam-delivery/{qmid}/test", token=admin)
-        chk("11c test connection ok", c == 200 and tr.get("ok"), tr)
-        tok, uid = make_paid_user("qm@ex.co"); accept_all_consents(tok); complete_profile(tok)
-        slot = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() + 72 * 3600))
-        c, bk = jget("POST", "/api/me/exam/book", token=tok, body={"scheduled_at": slot, "timezone": "UTC"})
-        chk("11d booking accepted", c == 200 and bk.get("ok"), bk)
-        con = dbconn(); o = con.execute("SELECT id,status,external_candidate_id,external_appointment_id FROM exam_delivery_orders WHERE user_id=?", (uid,)).fetchone(); con.close()
-        chk("11e booking auto-routed + provisioned to scheduled", o is not None and o[1] == "scheduled", o)
-        chk("11f candidate + appointment ids captured from vendor", bool(o and o[2] and o[3]), o)
-        c, ds = jget("GET", "/api/me/exam/delivery", token=tok)
-        chk("11g candidate sees vendor delivery status", c == 200 and ds.get("routed") and ds.get("provider") == "questionmark", ds)
+        chk("11d vendor connection test ok", c == 200 and tr.get("ok"), tr)
+
+        # ---- IN-HOUSE mode: the exam launches in SecureExam and the booking is NOT routed ----
+        tih, uih = make_paid_user("inhouse@ex.co"); accept_all_consents(tih); complete_profile(tih)
+        c, bk, st = book_and_start(tih, admin)
+        chk("11e in-house: exam launches in SecureExam (items served)", c == 200 and bool(st) and len(st.get("items", [])) > 0, (c, st and len(st.get("items", []) or [])))
+        con = dbconn(); n = con.execute("SELECT COUNT(*) FROM exam_delivery_orders WHERE user_id=?", (uih,)).fetchone()[0]; con.close()
+        chk("11f in-house: booking NOT routed to a vendor", n == 0, n)
+
+        # ---- SWITCH the whole platform to Questionmark ----
+        c, sm = set_mode(mode="questionmark")
+        chk("11g admin switch: deliver via Questionmark", c == 200 and sm.get("mode") == "questionmark", sm)
+        tqm, uqm = make_paid_user("qm@ex.co"); accept_all_consents(tqm); complete_profile(tqm)
+        c, bkq = jget("POST", "/api/me/exam/book", token=tqm, body={"scheduled_at": slot, "timezone": "UTC"})
+        chk("11h vendor: booking accepted", c == 200 and bkq.get("ok"), bkq)
+        con = dbconn(); o = con.execute("SELECT id,status,external_candidate_id,external_appointment_id FROM exam_delivery_orders WHERE user_id=?", (uqm,)).fetchone(); con.close()
+        chk("11i vendor: booking auto-routed + provisioned to scheduled", bool(o) and o[1] == "scheduled", o)
+        chk("11j vendor: candidate + appointment ids captured from vendor", bool(o and o[2] and o[3]), o)
+        c, sblock = jget("POST", "/api/me/exam/start", token=tqm, body={})
+        chk("11k vendor: in-house SecureExam launch is blocked", c == 400 and sblock.get("error") == "external_delivery", sblock)
+        c, ds = jget("GET", "/api/me/exam/delivery", token=tqm)
+        chk("11l student dashboard shows vendor delivery", c == 200 and ds.get("routed") and ds.get("provider") == "questionmark", ds)
         c, sy = jget("POST", f"/api/admin/exam-delivery/orders/{o[0]}/sync", token=admin)
-        chk("11h sync pulls a pass and issues the credential", c == 200 and sy.get("result_status") == "pass" and bool(sy.get("credential")), sy)
-        con = dbconn(); cred = con.execute("SELECT status FROM issued_credentials WHERE credential_id=?", (sy.get("credential"),)).fetchone(); con.close()
-        chk("11i issued credential is active", bool(cred) and cred[0] == "active", cred)
+        chk("11m vendor: sync pulls a pass and issues the credential", c == 200 and sy.get("result_status") == "pass" and bool(sy.get("credential")), sy)
         c, sy2 = jget("POST", f"/api/admin/exam-delivery/orders/{o[0]}/sync", token=admin)
-        chk("11j re-sync is idempotent (no duplicate credential)", sy2.get("credential") == sy.get("credential"), (sy.get("credential"), sy2.get("credential")))
+        chk("11n vendor: re-sync is idempotent (no duplicate credential)", sy2.get("credential") == sy.get("credential"), (sy.get("credential"), sy2.get("credential")))
 
-        # ---- PSI: eligibility push + candidate self-schedule + inbound result callback → credential ----
+        # ---- PER-CERT OVERRIDE: force PCP-AI back to in-house while the global default stays Questionmark ----
+        set_mode(certification_id=1, cert_mode="in_house")
+        tov, uov = make_paid_user("override@ex.co"); accept_all_consents(tov); complete_profile(tov)
+        c, bko, sto = book_and_start(tov, admin)
+        chk("11o per-cert override → in-house: exam launches in SecureExam", c == 200 and bool(sto) and len(sto.get("items", [])) > 0, (c, sto and len(sto.get("items", []) or [])))
+        con = dbconn(); no = con.execute("SELECT COUNT(*) FROM exam_delivery_orders WHERE user_id=?", (uov,)).fetchone()[0]; con.close()
+        chk("11p per-cert override: booking NOT routed", no == 0, no)
+        set_mode(certification_id=1, cert_mode="inherit")   # clear the override
+
+        # ---- SWITCH to PSI: eligibility push + candidate self-schedule + inbound result callback → credential ----
         c, pr = jget("POST", "/api/admin/exam-delivery", token=admin, body={
-            "provider": "psi", "name": "PSI", "environment": "sandbox", "enabled": True, "is_default": True,
-            "api_base": mock, "account_code": "ACC1", "access_token": "tok123", "callback_secret": "cbsecret",
-            "exam_map": {"PCP-AI": "PCP-EXAM"}})
-        chk("11k create PSI provider (now default)", c == 200 and pr.get("ok"), pr)
-        tok2, uid2 = make_paid_user("psi@ex.co"); accept_all_consents(tok2); complete_profile(tok2)
-        c, bk2 = jget("POST", "/api/me/exam/book", token=tok2, body={"scheduled_at": slot, "timezone": "UTC"})
-        chk("11l PSI booking accepted", c == 200 and bk2.get("ok"), bk2)
-        con = dbconn(); o2 = con.execute("SELECT id,status,external_registration_id FROM exam_delivery_orders WHERE user_id=? AND provider='psi'", (uid2,)).fetchone(); con.close()
-        chk("11m PSI eligibility pushed → awaiting candidate self-schedule", bool(o2) and o2[1] == "awaiting_candidate_schedule", o2)
+            "provider": "psi", "name": "PSI", "environment": "sandbox", "enabled": True,
+            "api_base": mock, "account_code": "ACC1", "access_token": "tok123", "callback_secret": "cbsecret", "exam_map": {"PCP-AI": "PCP-EXAM"}})
+        chk("11q create PSI vendor", c == 200 and pr.get("ok"), pr)
+        c, sm = set_mode(mode="psi"); chk("11r admin switch: deliver via PSI", c == 200 and sm.get("mode") == "psi", sm)
+        tpsi, upsi = make_paid_user("psi@ex.co"); accept_all_consents(tpsi); complete_profile(tpsi)
+        c, bkp = jget("POST", "/api/me/exam/book", token=tpsi, body={"scheduled_at": slot, "timezone": "UTC"})
+        chk("11s PSI booking accepted", c == 200 and bkp.get("ok"), bkp)
+        con = dbconn(); o2 = con.execute("SELECT id,status,external_registration_id FROM exam_delivery_orders WHERE user_id=? AND provider='psi'", (upsi,)).fetchone(); con.close()
+        chk("11t PSI: eligibility pushed → awaiting candidate self-schedule", bool(o2) and o2[1] == "awaiting_candidate_schedule", o2)
         c, cbbad = jget("POST", "/api/exam-delivery/callback/psi", body={"client_eligibility_id": o2[2], "result": "pass"})
-        chk("11n inbound callback rejected without the shared secret", c in (400, 401), c)
-        c, cb = jget("POST", "/api/exam-delivery/callback/psi?token=cbsecret", body={"client_eligibility_id": o2[2], "candidate_id": str(uid2), "result": "pass", "score": 80})
-        chk("11o PSI result callback issues the credential", c == 200 and cb.get("result_status") == "pass" and bool(cb.get("credential")), cb)
+        chk("11u inbound callback rejected without the shared secret", c in (400, 401), c)
+        c, cb = jget("POST", "/api/exam-delivery/callback/psi?token=cbsecret", body={"client_eligibility_id": o2[2], "candidate_id": str(upsi), "result": "pass", "score": 80})
+        chk("11v PSI result callback issues the credential", c == 200 and cb.get("result_status") == "pass" and bool(cb.get("credential")), cb)
 
-        # ---- RBAC: a viewer cannot reach exam delivery ----
+        # ---- SWITCH BACK to our own SecureExam ----
+        c, sm = set_mode(mode="in_house"); chk("11w admin switch back to SecureExam (in-house)", c == 200 and sm.get("mode") == "in_house", sm)
+        tbk, ubk = make_paid_user("backagain@ex.co"); accept_all_consents(tbk); complete_profile(tbk)
+        c, bkb, stb = book_and_start(tbk, admin)
+        chk("11x in-house again: exam launches, not routed", c == 200 and bool(stb) and len(stb.get("items", [])) > 0, (c, stb and len(stb.get("items", []) or [])))
+
+        # ---- RBAC: a viewer cannot reach exam delivery or the mode switch ----
         c, vb = jget("POST", "/api/admin/team", token=admin, body={"email": "exdview@pci.test", "name": "V", "role": "viewer"})
         c, vl = jget("POST", "/api/admin/auth/login", body={"email": "exdview@pci.test", "password": vb.get("temp_password", "")})
         vtok = clear_must_change(vl.get("token"))
         c, _ = jget("GET", "/api/admin/exam-delivery", token=vtok)
-        chk("11p viewer BLOCKED from exam delivery (403)", c == 403, c)
+        chk("11y viewer BLOCKED from exam delivery (403)", c == 403, c)
+        c, _ = jget("POST", "/api/admin/exam-delivery/mode", token=vtok, body={"mode": "questionmark"})
+        chk("11z viewer BLOCKED from the delivery-mode switch (403)", c == 403, c)
     finally:
         srv.shutdown()
+        set_mode(mode="in_house")   # leave the platform on the default in-house delivery
 
 # ============================================================================
 def main():

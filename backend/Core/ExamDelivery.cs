@@ -180,16 +180,37 @@ public static class ExamDelivery
         };
     }
 
-    /// <summary>Route a PCI exam booking to the configured default delivery vendor: create the order and
-    /// run the candidate→authorize→schedule pipeline. Best-effort and idempotent — if no default provider
-    /// is enabled, or the certification isn't mapped to a vendor exam code, this is a no-op and the PCI
-    /// booking stands on its own. Never throws into the booking path.</summary>
+    public const string InHouse = "in_house";
+
+    /// <summary>The delivery mode for a certification: "in_house" (PCI's own SecureExam) or a vendor slug.
+    /// A per-certification override (exam_delivery_mode:{certId}) wins over the global default
+    /// (exam_delivery_mode); the platform default is in-house.</summary>
+    public static string ModeFor(Db db, long certId)
+    {
+        var perCert = PCI.Backend.Core.Settings.Str(db, $"exam_delivery_mode:{certId}", "");
+        if (perCert is { Length: > 0 } && perCert != "inherit") return perCert;
+        return PCI.Backend.Core.Settings.Str(db, "exam_delivery_mode", InHouse);
+    }
+
+    /// <summary>True when this certification's exam is delivered by an external vendor rather than in-house.</summary>
+    public static bool IsExternal(Db db, long certId)
+    {
+        var mode = ModeFor(db, certId);
+        return mode != InHouse && Get(mode) is not null;
+    }
+
+    /// <summary>Route a PCI exam booking to the selected delivery vendor (per the delivery-mode switch): create
+    /// the order and run the candidate→authorize→schedule pipeline. Best-effort and idempotent — if the mode
+    /// is in-house, the vendor isn't enabled, or the certification isn't mapped to a vendor exam code, this is
+    /// a no-op and the PCI booking is delivered in-house. Never throws into the booking path.</summary>
     public static async Task RouteBooking(Db db, long bookingId, long userId, long certId, string? scheduledAt, string? timezone)
     {
         try
         {
-            var prov = db.QueryOne("SELECT * FROM exam_delivery_providers WHERE enabled=1 AND is_default=1 ORDER BY id DESC LIMIT 1");
-            if (prov is null) return;
+            var mode = ModeFor(db, certId);
+            if (mode == InHouse || Get(mode) is null) return;                    // in-house delivery — no external routing
+            var prov = db.QueryOne("SELECT * FROM exam_delivery_providers WHERE enabled=1 AND provider=? ORDER BY is_default DESC, id DESC LIMIT 1", mode);
+            if (prov is null) return;                                            // selected vendor not configured/enabled → stay in-house
             var providerId = H.L(prov["id"]);
             if (db.QueryOne("SELECT id FROM exam_delivery_orders WHERE booking_id=? AND provider_id=?", bookingId, providerId) is not null) return;
             var p = CtxFor(prov);

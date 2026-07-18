@@ -326,10 +326,17 @@ public static class StudentExam
         app.MapGet("/api/me/exam/delivery", (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            var o = db.QueryOne(@"SELECT o.status,o.delivery_type,o.confirmation_code,o.external_appointment_id,o.result_status,o.scheduled_at,o.timezone,
-                                         p.name provider_name, p.provider
-                                  FROM exam_delivery_orders o LEFT JOIN exam_delivery_providers p ON p.id=o.provider_id
-                                  WHERE o.user_id=? ORDER BY o.id DESC LIMIT 1", u.Id);
+            var certSel = ctx.Request.Query["certification_id"].ToString();
+            var certId = string.IsNullOrEmpty(certSel) ? 0 : Certs.Resolve(db, certSel);
+            var o = certId > 0
+                ? db.QueryOne(@"SELECT o.status,o.delivery_type,o.confirmation_code,o.external_appointment_id,o.result_status,o.scheduled_at,o.timezone,
+                                       p.name provider_name, p.provider
+                                FROM exam_delivery_orders o LEFT JOIN exam_delivery_providers p ON p.id=o.provider_id
+                                WHERE o.user_id=? AND o.certification_id=? ORDER BY o.id DESC LIMIT 1", u.Id, certId)
+                : db.QueryOne(@"SELECT o.status,o.delivery_type,o.confirmation_code,o.external_appointment_id,o.result_status,o.scheduled_at,o.timezone,
+                                       p.name provider_name, p.provider
+                                FROM exam_delivery_orders o LEFT JOIN exam_delivery_providers p ON p.id=o.provider_id
+                                WHERE o.user_id=? ORDER BY o.id DESC LIMIT 1", u.Id);
             if (o is null) return J(new { routed = false });
             var st = H.Str(o["status"]);
             return J(new
@@ -352,13 +359,23 @@ public static class StudentExam
             var certSel = H.GetS(b, "certification_id", "certification", "cert");
             var bk = certSel is null ? ActiveBooking(u.Id) : ActiveBooking(u.Id, Certs.Resolve(db, certSel));
             if (bk is null) return Results.Json(new { error = "no_booking" }, statusCode: 400);
+            var certId = H.L(bk.GetValueOrDefault("certification_id") ?? 1L);
+            // Delivery-mode switch: if this certification is delivered by an external vendor (and this booking
+            // was routed to one), the in-house SecureExam launch is disabled — the candidate sits the exam with
+            // the vendor, not here. Checked first so the two delivery paths can never collide.
+            if (PCI.Backend.Core.ExamDelivery.IsExternal(db, certId))
+            {
+                var extOrder = db.QueryOne("SELECT status FROM exam_delivery_orders WHERE booking_id=? AND status NOT IN ('cancelled','failed') ORDER BY id DESC", bk["id"]);
+                if (extOrder is not null)
+                    return Results.Json(new { error = "external_delivery", provider = PCI.Backend.Core.ExamDelivery.ModeFor(db, certId),
+                        message = "This examination is delivered by an external test provider. Use the scheduling details in your portal to sit it — the in-app exam is not used for this certification." }, statusCode: 400);
+            }
             // Re-check the trust-critical gates at launch, not only at booking: an admin ID rejection,
             // a bumped consent version, or an account hold after booking must stop the sitting — the
             // credential's integrity depends on identity/consent still holding when the candidate sits.
             var launchBlockers = Lifecycle.LaunchBlockers(db, u.Id);
             if (launchBlockers.Count > 0) return Results.Json(new { error = "not_eligible", blockers = launchBlockers, message = "Your exam access is on hold. Resolve the outstanding requirement (identity document, consents, or account status) before launching." }, statusCode: 400);
             if (!Lifecycle.ReadinessSatisfied(db, u.Id)) return Results.Json(new { error = "readiness_required", message = "Please complete the system readiness check before launching your exam." }, statusCode: 400);
-            var certId = H.L(bk.GetValueOrDefault("certification_id") ?? 1L);
             var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             var slot = H.JsMillis(H.Str(bk["scheduled_at"]));
             var ec = Certs.Cfg(db, certId);   // duration/pass per certification; windows stay global

@@ -60,9 +60,12 @@ public static class AdminExamDelivery
             };
         }
 
-        // ---------- list providers + connector catalogue + certifications ----------
+        // ---------- list providers + connector catalogue + certifications + the delivery-mode switch ----------
         app.MapGet("/api/admin/exam-delivery", (HttpRequest req) => gate(req, "exam_delivery", _ =>
-            J(new
+        {
+            var certs = db.Query("SELECT id,code,name FROM certifications WHERE COALESCE(active,1)=1 ORDER BY id").ToList();
+            var certModes = certs.ToDictionary(c => H.L(c["id"]).ToString(), c => Core.Settings.Str(db, $"exam_delivery_mode:{H.L(c["id"])}", "inherit"));
+            return J(new
             {
                 rows = db.Query("SELECT * FROM exam_delivery_providers ORDER BY id").Select(Redact),
                 connectors = ExamDelivery.All.Select(c => new
@@ -70,8 +73,36 @@ public static class AdminExamDelivery
                     key = c.Slug, label = c.Label, description = c.Description,
                     config_fields = c.ConfigFields, secret_fields = c.SecretFields,
                 }),
-                certifications = db.Query("SELECT id,code,name FROM certifications WHERE COALESCE(active,1)=1 ORDER BY id"),
-            })));
+                certifications = certs,
+                mode = Core.Settings.Str(db, "exam_delivery_mode", ExamDelivery.InHouse),   // global: in_house or a vendor slug
+                cert_modes = certModes,                                                       // per-cert: slug | in_house | inherit
+            });
+        }));
+
+        // ---------- the delivery-mode switch: choose PCI's own SecureExam or a vendor (global + per-cert) ----------
+        app.MapPost("/api/admin/exam-delivery/mode", async (HttpContext ctx) =>
+        {
+            var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var b = await H.Body(ctx.Request);
+            bool Valid(string m) => m == ExamDelivery.InHouse || m == "inherit" || ExamDelivery.Get(m) is not null;
+            if (H.GetS(b, "mode") is { } gm)
+            {
+                var m = gm.Trim().ToLowerInvariant(); if (m == "inherit") m = ExamDelivery.InHouse;
+                if (!Valid(m)) return Results.Json(new { error = "bad_mode" }, statusCode: 400);
+                Core.Settings.Put(db, "exam_delivery_mode", m);
+                // keep the provider is_default flag coherent with the global choice
+                if (m != ExamDelivery.InHouse) { db.Execute("UPDATE exam_delivery_providers SET is_default=0"); db.Execute("UPDATE exam_delivery_providers SET is_default=1 WHERE provider=?", m); }
+                log(null, "exam_delivery.mode", $"global={m}");
+            }
+            if (H.GetNum(b, "certification_id") is { } cidn && H.GetS(b, "cert_mode") is { } cmRaw)
+            {
+                var cid = (long)cidn; var cm = cmRaw.Trim().ToLowerInvariant();
+                if (!Valid(cm)) return Results.Json(new { error = "bad_mode" }, statusCode: 400);
+                Core.Settings.Put(db, $"exam_delivery_mode:{cid}", cm);   // 'inherit' clears the override
+                log(null, "exam_delivery.mode", $"cert {cid}={cm}");
+            }
+            return J(new { ok = true, mode = Core.Settings.Str(db, "exam_delivery_mode", ExamDelivery.InHouse) });
+        });
 
         // ---------- create / update a provider ----------
         app.MapPost("/api/admin/exam-delivery", async (HttpContext ctx) =>
