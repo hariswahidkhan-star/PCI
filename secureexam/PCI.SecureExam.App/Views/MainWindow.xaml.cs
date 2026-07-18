@@ -55,6 +55,15 @@ public partial class MainWindow : Window
                   ?? Environment.GetEnvironmentVariable("PCI_LAUNCH") ?? "";
         var launch = PCI.SecureExam.Core.LaunchParameters.Parse(raw);
         var cfg = App.Config.WithLaunch(launch);
+        // Defence in depth: WithLaunch already ignores an untrusted launch api=, but if the installed
+        // appsettings.json itself was tampered to point at a rogue endpoint, refuse to start rather than
+        // hand a secure launch code + session token to an unapproved server.
+        try { cfg.EnsureTrustedOrThrow(); }
+        catch (Exception ex)
+        {
+            ShowMessage("Untrusted configuration", ex.Message + " Reinstall the PCI Secure Exam client from the official portal.");
+            return;
+        }
         var baseUrl = cfg.ApiBaseUrl;
         var token = launch.Token ?? "";
         var code = launch.Code ?? "";
@@ -71,6 +80,11 @@ public partial class MainWindow : Window
         _flow.ConnectivityChanged += on => Dispatcher.Invoke(() => SetConn(on));
         _flow.EventRaised += ev => Dispatcher.Invoke(() => OnEvent(ev));
         _flow.ChatReceived += m => Dispatcher.Invoke(() => AppendChat(m));
+        _flow.SubmitFailed += () => Dispatcher.Invoke(NotifySubmitFailed);
+        // Focus loss the keyboard hook cannot pre-empt (a stealing popup, a touch gesture, a second
+        // input device) still fires the window's Deactivated event — record it as a proctor signal.
+        Deactivated += (_, _) => _flow?.ReportFocus(true);
+        Activated += (_, _) => _flow?.ReportFocus(false);
 
         ShowMessage("Authorizing", "Validating your secure launch code…");
         var ok = await _flow.AuthorizeAsync();
@@ -334,7 +348,16 @@ public partial class MainWindow : Window
         var msg = parts.Count > 0 ? string.Join(" and ", parts) + ". Submit anyway?" : "Submit your examination? This is final.";
         if (MessageBox.Show(this, msg, "Submit examination", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         var res = await _flow.SubmitAsync(auto: false);
+        if (res is null) NotifySubmitFailed();   // did not reach the server — stay on the exam so the candidate can retry
     }
+
+    // Shown when a submit attempt does not reach the server (manual retry or the deadline auto-submit).
+    // The answers are safe: the heartbeat keeps syncing and the server finalises at the hard stop.
+    private void NotifySubmitFailed()
+        => MessageBox.Show(this,
+            "Your submission could not be delivered to the PCI server — this is usually a temporary network problem. "
+          + "Your answers are saved and are still syncing automatically. Please check your connection and press Submit again.",
+            "Submission not delivered", MessageBoxButton.OK, MessageBoxImage.Warning);
 
     private void RenderSubmitted()
     {

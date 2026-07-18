@@ -24,7 +24,9 @@ export default function Submissions() {
           <option value="">All statuses</option>
           <option value="new">New</option>
           <option value="in_progress">In progress</option>
-          <option value="closed">Closed</option>
+          <option value="resolved">Resolved</option>
+          <option value="archived">Archived</option>
+          <option value="spam">Spam</option>
         </select>
       </Card>
 
@@ -67,7 +69,7 @@ export default function Submissions() {
               {open.message && <p style={{ marginTop: '.75rem', whiteSpace: 'pre-wrap' }}>{open.message}</p>}
               <div className="row" style={{ marginTop: '.75rem', flexWrap: 'wrap' }}>
                 <span className="muted small">Set status:</span>
-                {['new', 'in_progress', 'closed'].map((s) => (
+                {['new', 'in_progress', 'resolved', 'archived', 'spam'].map((s) => (
                   <button key={s} className="btn sm secondary" disabled={(open.status || 'new') === s} onClick={() => setSubStatus(open.id, s)}>{s.replace(/_/g, ' ')}</button>
                 ))}
               </div>

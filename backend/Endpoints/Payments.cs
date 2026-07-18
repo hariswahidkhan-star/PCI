@@ -180,9 +180,12 @@ public static class Payments
                             // Extend the credential for the certification that was actually paid to recertify
                             // (falls back to the most recent credential when the checkout carried no cert).
                             var recertSel = m.GetValueOrDefault("certification");
+                            // Never resurrect a REVOKED credential: recertification may extend an active or
+                            // lapsed credential, but a credential an admin revoked for misconduct must stay
+                            // revoked — paying for recert must not reactivate it.
                             var cred = string.IsNullOrWhiteSpace(recertSel)
-                                ? db.QueryOne("SELECT * FROM issued_credentials WHERE user_id=? ORDER BY id DESC", userId)
-                                : db.QueryOne("SELECT * FROM issued_credentials WHERE user_id=? AND COALESCE(certification_id,1)=? ORDER BY id DESC", userId, Certs.Resolve(db, recertSel));
+                                ? db.QueryOne("SELECT * FROM issued_credentials WHERE user_id=? AND status!='revoked' ORDER BY id DESC", userId)
+                                : db.QueryOne("SELECT * FROM issued_credentials WHERE user_id=? AND status!='revoked' AND COALESCE(certification_id,1)=? ORDER BY id DESC", userId, Certs.Resolve(db, recertSel));
                             if (cred is not null)
                             {
                                 var nowIso = H.IsoNow;

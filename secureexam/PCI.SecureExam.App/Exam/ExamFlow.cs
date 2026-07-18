@@ -52,6 +52,10 @@ public sealed class ExamFlow : IDisposable
     public event Action<bool>? ConnectivityChanged;
     public event Action<ChatMessage>? ChatReceived;
     public event Action<string>? Terminated;
+    /// <summary>Raised when a submit attempt did NOT reach the server (network error or non-2xx). The
+    /// local answer cache is preserved and the candidate is NOT advanced to the Submitted screen, so the
+    /// UI can offer a retry while the heartbeat keeps syncing.</summary>
+    public event Action? SubmitFailed;
 
     private readonly PCI.SecureExam.Core.ClientConfig _cfg;
 
@@ -108,8 +112,15 @@ public sealed class ExamFlow : IDisposable
             _display.IsMultiMonitor() ? "More than one display detected. Disconnect additional monitors." : "Single display.");
 
         var vm = VmDetector.Check();
-        Add("Environment", vm is null ? SystemCheckStatus.Pass : SystemCheckStatus.Warn,
-            vm?.Detail ?? "No virtual machine or remote session detected.");
+        // A REMOTE session voids the entire secure-kiosk model — another machine can view and drive the
+        // screen, so no amount of local lockdown protects the exam. It is a hard FAIL that blocks the
+        // start (previously only a Warn, which SystemChecksPassed ignores → the candidate proceeded). A
+        // virtualization hint is a softer signal (some managed fleets are legitimately virtualized), so
+        // it stays a Warn for proctor review rather than blocking outright.
+        var envStatus = vm is null ? SystemCheckStatus.Pass
+                      : vm.Type == ProctorEventType.RemoteDesktopDetected ? SystemCheckStatus.Fail
+                      : SystemCheckStatus.Warn;
+        Add("Environment", envStatus, vm?.Detail ?? "No virtual machine or remote session detected.");
 
         _procGuard = new ProcessGuard();
         var blocking = _procGuard.PreflightBlockingProcesses();
@@ -205,6 +216,19 @@ public sealed class ExamFlow : IDisposable
         RaiseEvent(new ProctorEvent(ProctorEventType.AnswerSaved, ProctorSeverity.Info, DateTimeOffset.UtcNow, $"Q{itemId}"));
     }
 
+    /// <summary>Report an OS-level focus change during the secured exam, raised from the host window's
+    /// Deactivated/Activated events. These fire even when the KeyboardHook cannot pre-empt the switch
+    /// (a stealing popup, a touch gesture, a second input device), so window focus loss is recorded for
+    /// proctor review. FocusLost is Medium (streamed, not auto-counted as a violation); no-op outside
+    /// the live Exam screen so the app's own pre-exam dialogs don't generate noise.</summary>
+    public void ReportFocus(bool lost)
+    {
+        if (Screen != ExamScreen.Exam) return;
+        RaiseEvent(new ProctorEvent(
+            lost ? ProctorEventType.FocusLost : ProctorEventType.FocusRegained,
+            lost ? ProctorSeverity.Medium : ProctorSeverity.Info, DateTimeOffset.UtcNow));
+    }
+
     public async Task SendChatAsync(string body)
     {
         var mine = new ChatMessage("You", body, DateTimeOffset.UtcNow);
@@ -218,7 +242,22 @@ public sealed class ExamFlow : IDisposable
     {
         if (Result is not null) return Result; // idempotent
         var answers = Heartbeat?.Answers ?? new Dictionary<int,int>();
-        Result = await _api.SubmitAsync(new SubmitRequest(Auth!.AttemptToken, answers, Violations));
+        SubmitResult? res;
+        // A non-2xx returns null; a network failure/timeout throws. Treat BOTH as "did not reach the
+        // server" — never let an exception escape this method either (the auto path is fired from a
+        // heartbeat callback, where an unobserved exception would tear down the process).
+        try { res = await _api.SubmitAsync(new SubmitRequest(Auth!.AttemptToken, answers, Violations)); }
+        catch { res = null; }
+        if (res is null)
+        {
+            // The submission was NOT recorded. Do NOT clear the encrypted local answer cache and do NOT
+            // advance to the Submitted screen — that previously wiped recoverable answers and told the
+            // candidate they were finished when nothing had been saved. The heartbeat keeps retrying and,
+            // past the server hard stop, the server itself finalises on the answers saved so far.
+            SubmitFailed?.Invoke();
+            return null;
+        }
+        Result = res;
         RaiseEvent(new ProctorEvent(ProctorEventType.ExamSubmitted, ProctorSeverity.Info, DateTimeOffset.UtcNow, auto ? "auto/deadline" : "candidate"));
         _store?.Clear();
         Go(ExamScreen.Submitted);

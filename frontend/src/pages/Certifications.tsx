@@ -239,7 +239,7 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
         </div>
       ) : booking ? (
         <div className="notice" style={{ marginTop: '.75rem' }}>
-          {t('cert.examScheduledFor')} <strong>{fmtDateTime(booking.scheduled_at)}</strong>
+          {t('cert.examScheduledFor')} <strong>{fmtDateTime(booking.scheduled_at, booking.timezone)}</strong>
           {booking.timezone ? ` (${booking.timezone})` : ''}.
           <div className="row" style={{ marginTop: '.6rem', flexWrap: 'wrap' }}>
             <a className="btn sm" href={`/student.html#t=${getToken() ?? ''}`}>{t('cert.examDayCheckIn')} ↗</a>

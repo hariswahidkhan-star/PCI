@@ -592,6 +592,26 @@ def run(proc):
     chk("R3 auto-timeout publishes result_status", rs in ("credential_issued","released_pass"), rs)
     chk("R3' auto-timeout issues credential on clean pass", ncred == 1, ncred)
 
+    # R3b (heartbeat post-deadline answer injection MUST be ignored): let the clock run past the hard
+    # stop with NO answers saved, then push the full answer key in the heartbeat payload. The write is
+    # rejected (past time-up), the auto-finalise scores the empty saved answers → fail, no credential.
+    # Without the time-gate this heartbeat would inject a winning payload and hand out a credential.
+    itok, iuid = make_paid_user("rinject@ex.co")
+    accept_all_consents(itok); complete_profile(itok)
+    c, ibk, ist = book_and_start(itok, admin)
+    iaid = ist["attempt_id"]; ikey = answer_key([i["id"] for i in ist["items"]])
+    con = dbconn()
+    con.execute("UPDATE exam_attempts SET answers=NULL, started_at=datetime('now','-3 hours') WHERE id=?", (iaid,))
+    con.commit(); con.close()
+    jget("POST", "/api/me/exam/heartbeat", token=itok, body={"attempt_id": iaid, "answers": ikey})  # past hard stop
+    con = dbconn()
+    irow = con.execute("SELECT result_status, result, answers FROM exam_attempts WHERE id=?", (iaid,)).fetchone()
+    icred = con.execute("SELECT COUNT(*) FROM issued_credentials WHERE attempt_id=?", (iaid,)).fetchone()[0]
+    con.close()
+    chk("R3b post-deadline heartbeat answers NOT written", irow[2] in (None, "", "{}"), irow[2])
+    chk("R3b' injected key did not produce a pass", irow[1] != "pass", (irow[0], irow[1]))
+    chk("R3b'' no credential from injected answers", icred == 0, icred)
+
     # R4 (entitlement expiry space-vs-T): a same-day deadline a few hours ahead must NOT read expired
     e4tok, e4uid = make_paid_user("rexpiry@ex.co")
     accept_all_consents(e4tok); complete_profile(e4tok)
@@ -616,6 +636,22 @@ def run(proc):
     r = urllib.request.Request(BASE + "/index.html")
     with urllib.request.urlopen(r) as resp: csp = resp.headers.get("Content-Security-Policy","")
     chk("R9 CSP allows blob: in frame-src (admin evidence viewer)", "frame-src 'self' blob:" in csp, csp[:120])
+
+    # R10 (recert must NOT resurrect a REVOKED credential): a credential an admin revoked for misconduct
+    # stays revoked even when the holder later pays to recertify. Guards the recert branch, which
+    # previously extended+reactivated the most-recent credential unconditionally (status flipped to
+    # 'active'), silently overturning a disciplinary revocation for the price of a renewal.
+    rrtok, rruid = make_paid_user("rrevoke@ex.co")
+    con = dbconn()
+    con.execute("INSERT INTO issued_credentials(credential_id,user_id,attempt_id,holder_name,credential,certification_id,status,issued_at,expires_at) "
+                "VALUES(?,?,?,?,?,?, 'revoked', datetime('now','-1 year'), datetime('now','-1 day'))",
+                ("PCP-REVK-TEST", rruid, None, "R Revoke", "PCP-AI", 1))
+    con.commit(); con.close()
+    sign_and_send_webhook("cs_recert_revk", "rrevoke@ex.co", "recert", "pi_recert_revk", amount=39200)
+    con = dbconn()
+    rrc = con.execute("SELECT status FROM issued_credentials WHERE user_id=?", (rruid,)).fetchone()[0]
+    con.close()
+    chk("R10 recert does NOT reactivate a revoked credential", rrc == "revoked", rrc)
 
     # ---------- 9c2. Demo student seed (first-run only, like the bootstrap owner) ----------
     print("\n=== 9c2. Demo student seed ===")

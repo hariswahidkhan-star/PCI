@@ -51,6 +51,29 @@ builder.Services.AddHostedService<PCI.Backend.Core.IntegrationDispatcher>();
 
 var app = builder.Build();
 
+// Friendly, branded 404 for unknown WEBSITE pages. UseStatusCodePages fires only when a downstream
+// handler produced a 404 WITHOUT writing a body, so it never touches the JSON 404s from /api/* (those
+// write their own body → HasStarted) nor any real static file. A GET for an .html/extension-less path
+// that matched no endpoint, static file or SPA mount gets 404.html with a proper 404 status instead of
+// the browser's blank error page.
+app.UseStatusCodePages(async context =>
+{
+    var ctx = context.HttpContext;
+    if (ctx.Response.StatusCode != 404 || ctx.Response.HasStarted || ctx.Request.Method != "GET") return;
+    if (ctx.Request.Path.StartsWithSegments("/api")) return;
+    var ext = Path.GetExtension(ctx.Request.Path.Value ?? "");
+    var wantsHtml = ext.Length == 0 || ext.Equals(".html", StringComparison.OrdinalIgnoreCase)
+                    || ctx.Request.Headers.Accept.ToString().Contains("text/html", StringComparison.OrdinalIgnoreCase);
+    if (!wantsHtml) return;
+    var root = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
+    var page = Path.Combine(root, "404.html");
+    if (File.Exists(page))
+    {
+        ctx.Response.ContentType = "text/html; charset=utf-8";
+        await ctx.Response.SendFileAsync(page);
+    }
+});
+
 // ================= security response headers + CORS (OUTERMOST middleware) =================
 // Registered first so EVERY response — including the rate-limiter 429, the maintenance 503 and the
 // CORS 204 preflight — carries these headers. Scoped for single-file apps with inline <script>/<style>

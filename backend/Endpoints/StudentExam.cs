@@ -490,8 +490,16 @@ public static class StudentExam
             if (!System.Text.RegularExpressions.Regex.IsMatch(idStr, @"^\d+$") && (att["client_kind"] as string) != "desktop")
                 { try { db.Execute("UPDATE exam_attempts SET client_kind='desktop' WHERE id=?", att["id"]); } catch { } }
             var deadline = H.JsMillis(H.Str(att["started_at"])) + H.L(att["duration_minutes"]) * 60_000;
+            var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            // The hard stop the manual submit honours: duration + 1 min network grace.
+            var hardStop = deadline + 60_000;
             var answersEl = H.GetEl(b, "answers", "Answers");
-            if (answersEl is not null)
+            // SECURITY: accept answer writes only up to the hard stop. Past time-up the timer has
+            // expired, so a heartbeat's `answers` payload is ignored — otherwise a candidate could let
+            // the clock run out, look up the key at leisure, then inject a winning payload in one
+            // heartbeat that the force-submit below would score and pass. Mirrors the /submit path,
+            // which finalises on the answers saved BEFORE the deadline.
+            if (answersEl is not null && nowMs <= hardStop)
             {
                 var answersRaw = answersEl.Value.GetRawText();
                 db.Execute("UPDATE exam_attempts SET answers=? WHERE id=?", answersRaw, att["id"]);
@@ -530,12 +538,10 @@ public static class StudentExam
             // cannot bind to the desktop's DateTimeOffset — an un-converted value throws and fails the
             // ENTIRE HeartbeatResponse deserialization whenever a proctor message is pending.
             var messages = undelivered.Select(m => new { from = "PCI Support", body = m["body"], at = H.IsoFromMillis(H.JsMillis(H.Str(m["created_at"]))) }).ToList();
-            var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             // Fire server-side finalisation only past the SAME hard stop the manual submit honours
-            // (duration + 1 min network grace), so a heartbeat can't finalise an attempt while the
-            // candidate's own on-time submit is still in flight. The DISPLAYED deadline stays at
-            // exactly `duration`, so the clock the candidate sees is unchanged.
-            var hardStop = deadline + 60_000;
+            // (duration + 1 min network grace, computed above), so a heartbeat can't finalise an attempt
+            // while the candidate's own on-time submit is still in flight. The DISPLAYED deadline stays
+            // at exactly `duration`, so the clock the candidate sees is unchanged.
             var forceSubmit = nowMs >= hardStop;
             // #3 — once the hard stop passes, finalise the attempt on the server using the answers saved
             // so far. This closes abandoned/disconnected sittings and blocks any further answer writes.

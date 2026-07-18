@@ -63,8 +63,14 @@ function PlansCard() {
   // selection always matches what "Pay exam fee" actually buys (an empty value silently entitled
   // the backend's default cert while the browser showed the first option highlighted).
   useEffect(() => {
-    if (!certSel && certs && certs.length > 0) setCertSel(certs[0].code)
-  }, [certs, certSel])
+    if (!certSel && certs && certs.length > 0) {
+      // Honour a deep-linked ?cert=CODE (from the public "Enrol in <CERT>" CTA, carried through
+      // register/login) so the buyer pays for the certification they clicked — not the first one.
+      const wanted = params.get('cert')
+      const match = wanted ? certs.find((c) => c.code.toLowerCase() === wanted.toLowerCase()) : undefined
+      setCertSel((match ?? certs[0]).code)
+    }
+  }, [certs, certSel, params])
 
   if (!me) return null
   const memberActive = me.lifecycle.membership_status === 'active'

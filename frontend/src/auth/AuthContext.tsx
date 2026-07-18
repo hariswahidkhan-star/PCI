@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // A 401 on ANY request (query or mutation) clears the session and returns to login.
   useEffect(() => {
-    api.onUnauthorized(() => setUser(null))
+    api.onUnauthorized(() => { setToken(null); setUser(null) })
     return () => api.onUnauthorized(null)
   }, [])
 
