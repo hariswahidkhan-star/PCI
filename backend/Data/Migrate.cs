@@ -147,6 +147,16 @@ public static class Migrate
         AddCol("certuvo_accounts", "activated_at", "activated_at TEXT");
         AddCol("certuvo_accounts", "credentials_sent_at", "credentials_sent_at TEXT");
         AddCol("certuvo_accounts", "idempotency_key", "idempotency_key TEXT");
+        // PCI-generated, PCI-controlled login: a unique username independent of the student's email, a
+        // temporary password (stored encrypted, never the email), first-login-change tracking, and an
+        // email-conflict marker so an existing Certuvo account under the same email is flagged, never
+        // overwritten. eligible_reason records WHY a member qualified (paid/waived/honorary/…).
+        AddCol("certuvo_accounts", "must_change_password", "must_change_password INTEGER DEFAULT 1");
+        AddCol("certuvo_accounts", "email_conflict", "email_conflict INTEGER DEFAULT 0");
+        AddCol("certuvo_accounts", "eligible_reason", "eligible_reason TEXT");
+        AddCol("certuvo_accounts", "member_type", "member_type TEXT");
+        AddCol("certuvo_accounts", "username_regenerated_at", "username_regenerated_at TEXT");
+        AddCol("certuvo_accounts", "password_reset_at", "password_reset_at TEXT");
         // Finance controls: structured metadata on payments (offline settlements, waivers, reversals) so
         // manual money movements carry the same evidence a gateway payment does.
         AddCol("payments", "method", "method TEXT");                       // bank_transfer | cheque | invoice | gateway | other

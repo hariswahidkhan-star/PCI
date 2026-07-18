@@ -263,7 +263,15 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
         if "/candidates" in self.path: return self._send(201, {"psi_eligiblity_id": "ELIG-1"})  # PSI eligibility
         if "/nope" in self.path: return self._send(500, {"error": "simulated outage"})   # forced failure (retry tests)
         if "certuvo" in self.path or "/accounts" in self.path:                          # Certuvo account provisioning
-            return self._send(201, {"id": "CV-100", "username": "cv_user", "password": "cv_pass_9", "login_url": "https://certuvo.example/login"})
+            # PCI now OWNS the login: it sends its own username + temp_password. The vendor just opens the
+            # account under those credentials and returns an opaque account id + login URL. An email marked
+            # for conflict simulates an existing Certuvo account under that email (never overwritten by PCI).
+            em = (body.get("email") or "").lower()
+            if "conflict" in em or "existing" in em:
+                return self._send(409, {"email_exists": True, "error": "email already registered"})
+            self._last_certuvo = body                                                    # so tests can assert what PCI sent
+            _MockVendor.last_certuvo_body = body
+            return self._send(201, {"id": "CV-" + str(abs(hash(body.get("username") or "x")) % 10000), "login_url": "https://certuvo.example/login"})
         return self._send(200, {"ok": True})
     def do_PATCH(self):
         ln = int(self.headers.get("Content-Length") or 0);  self.rfile.read(ln) if ln else None
@@ -430,8 +438,11 @@ def test_operator_toolkit(admin):
         ctok, cuid = register_student("certuvo1@ex.co")
         jget("POST", f"/api/admin/students/{cuid}/mark-paid", token=admin, body={"product": "membership", "amount": 0})  # membership → auto-provision
         c, acc = jget("GET", "/api/me/certuvo/access", token=ctok)
-        chk("12o membership auto-provisions Certuvo access", c == 200 and acc.get("status") == "active" and acc.get("username") == "cv_user", acc)
-        chk("12p student receives the Certuvo password", acc.get("password") == "cv_pass_9", acc.get("password"))
+        # PCI now OWNS the login: the username is a PCI-generated identifier (never the email) and the
+        # temporary password is a PCI-generated secret — neither is dictated by Certuvo's response.
+        chk("12o membership auto-provisions Certuvo access", c == 200 and acc.get("status") == "active" and str(acc.get("username", "")).startswith("PCI-"), acc)
+        chk("12p Certuvo username is NOT the student email", acc.get("username") and "@" not in acc.get("username"), acc.get("username"))
+        chk("12p2 student receives a PCI-generated temp password", isinstance(acc.get("password"), str) and len(acc.get("password")) >= 10, acc.get("password"))
 
         # ---- RBAC: a viewer cannot use the operator toolkit (reuse the viewer from section 11 to avoid a
         #      post-rate-limit-test login) ----
@@ -816,6 +827,122 @@ def test_support_and_institutions(admin):
         jget("GET", "/api/support/inbox", token=agtok)[0] == 200
         and jget("POST", f"/api/admin/students/{suid}/mark-paid", token=agtok, body={"product": "exam"})[0] == 403
         and jget("GET", "/api/admin/code-approvals", token=agtok)[0] == 403)
+
+_HON_PDF = "data:application/pdf;base64," + base64.b64encode(
+    b"%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF").decode()
+def _hon_app(email):
+    return {"first_name": "Ada", "last_name": "Lovelace", "email": email, "mobile": "+44 7700 900000",
+            "country": "United Kingdom", "city": "London", "nationality": "British", "job_title": "Analyst",
+            "employer": "Analytical Society", "years_experience": 30, "industry": "Computing",
+            "highest_qualification": "DSc", "relevant_experience": "Foundational work on computation.",
+            "professional_summary": "A distinguished lifetime contribution to the profession.",
+            "declaration": True, "documents": [{"doc_kind": "resume", "filename": "cv.pdf", "data_uri": _HON_PDF}]}
+
+def test_certuvo_integration(admin):
+    """Section 15 — the PCI ↔ Certuvo provisioning integration end to end: PCI-generated usernames &
+    temporary passwords (never the email), credential encryption at rest, admin/CS password masking,
+    email-conflict handling that never overwrites, every eligible member type auto-provisioned, honorary
+    approval that builds a full student account + membership + Certuvo, and admin lifecycle actions."""
+    print("\n=== 15. PCI ↔ Certuvo integration (provisioning, credentials, honorary, conflict, security) ===")
+    srv, mport = start_mock_vendor()
+    mock = f"http://127.0.0.1:{mport}"
+    try:
+        jget("POST", "/api/admin/certuvo", token=admin, body={"enabled": True, "api_base": mock,
+            "provision_path": "/certuvo/accounts", "api_key": "cv_key", "login_url": "https://certuvo.example",
+            "email_conflict": "dedicated", "username_prefix": "PCI", "password_length": 14})
+
+        # ── Scenario 1 (paid): webhook settles a membership → Certuvo auto-provisioned with PCI creds ──
+        ptok, puid = make_paid_user("cv.paid@ex.co", product="membership", amount=14900)
+        c, acc = jget("GET", "/api/me/certuvo/access", token=ptok)
+        uname = acc.get("username") or ""
+        chk("15a paid member auto-provisioned + active", c == 200 and acc.get("status") == "active", acc)
+        chk("15b PCI username format, independent of email", uname.startswith("PCI-") and "@" not in uname, uname)
+        chk("15c temp password is a PCI secret (>=10 chars)", isinstance(acc.get("password"), str) and len(acc["password"]) >= 10, len(acc.get("password") or ""))
+        chk("15d must-change-on-first-login flagged", acc.get("must_change_password") is True, acc.get("must_change_password"))
+        chk("15e student card carries the 'Certuvo is external' notice", "external practice platform" in (acc.get("notice") or ""), acc.get("notice"))
+
+        # PCI actually SENT its own username + temp password to Certuvo (not the email).
+        sent = getattr(_MockVendor, "last_certuvo_body", {}) or {}
+        chk("15f PCI pushed username + temp_password to Certuvo (not email as login)",
+            sent.get("username", "").startswith("PCI-") and bool(sent.get("temp_password")) and sent.get("username") != "cv.paid@ex.co", {k: sent.get(k) for k in ("username", "email")})
+
+        # Encryption at rest: the stored secret is ciphertext, never the plaintext the student sees.
+        con = dbconn(); row = con.execute("SELECT secret FROM certuvo_accounts WHERE user_id=?", (puid,)).fetchone(); con.close()
+        stored = row[0] if row else ""
+        chk("15g temp password stored ENCRYPTED at rest (enc:v1:)", str(stored).startswith("enc:v1:") and acc["password"] not in str(stored), str(stored)[:12])
+
+        # Idempotency / immutability: re-provision keeps ONE row and the SAME username.
+        jget("POST", f"/api/admin/certuvo/{puid}/provision", token=admin, body={})
+        con = dbconn(); cnt = con.execute("SELECT COUNT(*) FROM certuvo_accounts WHERE user_id=?", (puid,)).fetchone()[0]
+        u2 = con.execute("SELECT username FROM certuvo_accounts WHERE user_id=?", (puid,)).fetchone()[0]; con.close()
+        chk("15h re-provision is idempotent (one row, immutable username)", cnt == 1 and u2 == uname, (cnt, u2))
+
+        # ── Admin/CS never see an active password ──
+        c, cfg = jget("GET", "/api/admin/certuvo", token=admin)
+        acct = next((a for a in cfg.get("accounts", []) if a.get("user_id") == puid), {})
+        chk("15i admin/CS account list exposes username but NEVER a password/secret",
+            acct.get("username") == uname and "secret" not in acct and "password" not in acct, list(acct.keys()))
+
+        # Password never written to the audit log.
+        pw_plain = acc.get("password") or ""
+        con = dbconn(); leaked = con.execute("SELECT COUNT(*) FROM audit_logs WHERE details LIKE ?", ("%" + pw_plain + "%",)).fetchone()[0] if pw_plain else -1; con.close()
+        chk("15j temp password never appears in the audit log", leaked == 0, leaked)
+
+        # ── Admin lifecycle: regenerate username, new temp password, resend ──
+        c, rg = jget("POST", f"/api/admin/certuvo/{puid}/regenerate-username", token=admin, body={})
+        chk("15k regenerate-username assigns a NEW PCI username", c == 200 and rg.get("username", "").startswith("PCI-") and rg.get("username") != uname, rg)
+        c, acc2 = jget("GET", "/api/me/certuvo/access", token=ptok)
+        chk("15l student sees the regenerated username", acc2.get("username") == rg.get("username"), acc2.get("username"))
+        c, np = jget("POST", f"/api/admin/certuvo/{puid}/new-password", token=admin, body={})
+        c, acc3 = jget("GET", "/api/me/certuvo/access", token=ptok)
+        chk("15m new-password succeeds and rotates the student's temp password", np.get("ok") and acc3.get("password") and acc3.get("password") != acc.get("password"), np)
+        chk("15n resend access instructions works", jget("POST", f"/api/admin/certuvo/{puid}/resend", token=admin)[1].get("ok") is True)
+
+        # ── Waived, complimentary, test members all auto-provision (same workflow) ──
+        wtok, wuid = register_student("cv.waived@ex.co")
+        jget("POST", f"/api/admin/students/{wuid}/waive", token=admin, body={"product": "membership", "reason": "scholarship"})
+        chk("15o waived member auto-provisioned", jget("GET", "/api/me/certuvo/access", token=wtok)[1].get("status") == "active")
+        mtok, muid = register_student("cv.comp@ex.co")
+        jget("POST", f"/api/admin/students/{muid}/mark-paid", token=admin, body={"product": "membership", "amount": 0})
+        chk("15p complimentary member auto-provisioned", jget("GET", "/api/me/certuvo/access", token=mtok)[1].get("status") == "active")
+        c, tu = jget("POST", "/api/admin/test-users", token=admin, body={"scenario": "member"})
+        tuid = tu.get("id")
+        con = dbconn(); ts = con.execute("SELECT status,member_type FROM certuvo_accounts WHERE user_id=?", (tuid,)).fetchone(); con.close()
+        chk("15q test user auto-provisioned + labelled test", ts and ts[0] == "active" and ts[1] == "test", ts)
+
+        # ── Scenario 3: existing Certuvo email → PCI never overwrites; parked for review (manual rule) ──
+        jget("POST", "/api/admin/certuvo", token=admin, body={"email_conflict": "manual"})
+        xtok, xuid = register_student("cv.conflict@ex.co")            # "conflict" makes the mock return 409
+        jget("POST", f"/api/admin/students/{xuid}/mark-paid", token=admin, body={"product": "membership", "amount": 0})
+        con = dbconn(); cf = con.execute("SELECT status,email_conflict FROM certuvo_accounts WHERE user_id=?", (xuid,)).fetchone(); con.close()
+        chk("15r existing-email conflict is parked (never overwritten) + flagged", cf and cf[0] == "conflict" and H0(cf[1]) == 1, cf)
+        chk("15s conflicted student sees a reassuring message, no credentials", (lambda a: a.get("status") == "conflict" and not a.get("password"))(jget("GET", "/api/me/certuvo/access", token=xtok)[1]))
+        jget("POST", "/api/admin/certuvo", token=admin, body={"email_conflict": "dedicated"})  # restore default
+
+        # ── Scenario 2 (honorary): approval builds a full student account + membership + Certuvo ──
+        hemail = "cv.honorary@ex.co"
+        c, ha = jget("POST", "/api/honorary-application", body=_hon_app(hemail))
+        chk("15t honorary application accepted", c == 200 and (ha.get("ok") or ha.get("reference")), ha)
+        con = dbconn(); before = con.execute("SELECT COUNT(*) FROM users WHERE email=?", (hemail,)).fetchone()[0]; con.close()
+        con = dbconn(); aid = con.execute("SELECT id FROM honorary_applications WHERE email=? ORDER BY id DESC LIMIT 1", (hemail,)).fetchone()[0]; con.close()
+        c, dec = jget("POST", f"/api/admin/honorary-applications/{aid}/decide", token=admin, body={"status": "approved", "note": "Distinguished lifetime contribution."})
+        chk("15u honorary approval succeeds", c == 200, dec)
+        con = dbconn()
+        hrow = con.execute("SELECT id FROM users WHERE email=?", (hemail,)).fetchone()
+        huid = hrow[0] if hrow else None
+        mem = con.execute("SELECT status FROM memberships WHERE user_id=? AND status='active'", (huid,)).fetchone() if huid else None
+        cvr = con.execute("SELECT status,username,member_type FROM certuvo_accounts WHERE user_id=?", (huid,)).fetchone() if huid else None
+        con.close()
+        chk("15v honorary approval CREATES a full student account (none existed before)", before == 0 and huid is not None, (before, huid))
+        chk("15w honorary member gets an ACTIVE membership", mem is not None and mem[0] == "active", mem)
+        chk("15x honorary member auto-provisioned in Certuvo with a PCI username", cvr and cvr[0] == "active" and str(cvr[1]).startswith("PCI-") and cvr[2] == "honorary", cvr)
+
+        # ── Suspend / revoke still work (regression) ──
+        chk("15y suspend sets status suspended", jget("POST", f"/api/admin/certuvo/{puid}/suspend", token=admin)[1].get("status") == "suspended")
+        chk("15z revoke sets status revoked", jget("POST", f"/api/admin/certuvo/{puid}/revoke", token=admin)[1].get("status") == "revoked")
+    finally:
+        srv.shutdown()
+        jget("POST", "/api/admin/certuvo", token=admin, body={"enabled": False})   # leave Certuvo off for later sections
 
 def H0(v):
     try: return int(v or 0)
@@ -1579,6 +1706,7 @@ def run(proc):
     test_operator_toolkit(admin)
     test_finance_and_certuvo_hardening(admin)
     test_support_and_institutions(admin)
+    test_certuvo_integration(admin)
 
     print("\n(assertions complete)")
 

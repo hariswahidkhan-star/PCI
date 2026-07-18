@@ -202,17 +202,50 @@ public static class HonoraryApplication
 
             if (status == "approved")
             {
-                // Link the recognition to an account only if one already exists for the applicant email.
                 var u = db.QueryOne("SELECT id FROM users WHERE email=?", email);
                 long? userId = u is null ? null : H.L(u["id"]);
+
+                // Honorary members receive the SAME student experience as any other member (spec §10–12):
+                // approval automatically provisions a complete PCI student account (with login credentials),
+                // activates an honorary membership, and — via the normal settlement path — hands off to
+                // Certuvo. Gated by a configurable rule so an operator can keep honorary purely ceremonial.
+                var grantsMembership = Settings.Bool(db, "honorary_grants_membership", true);
+                string? setupUrl = null;
+                if (grantsMembership)
+                {
+                    if (userId is null)
+                    {
+                        var newId = db.ExecuteReturningId("INSERT INTO users(email,first_name,last_name,role,status) VALUES(?,?,?, 'student','active')",
+                            email, H.Str(a["first_name"]), H.Str(a["last_name"]));
+                        db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", newId);
+                        // Deliver login credentials the same way a new member gets them: a single-use set-password link.
+                        var token = Security.RandomHex(32);
+                        db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+14 day'))", newId, Security.Sha(token));
+                        var baseUrl = Mailer.BaseUrl(ctx.Request);
+                        setupUrl = Mailer.SetupLink(baseUrl, token);
+                        try { Mailer.SendWelcome(db, newId, email, H.Str(a["first_name"]), setupUrl, baseUrl); } catch { }
+                        userId = newId;
+                        log(newId, "honorary_account_created", $"{H.Str(a["reference"])} by admin {adm!.Id}");
+                    }
+                }
+
                 var citation = note.Length > 0 ? note : $"Conferred following honorary application {H.Str(a["reference"])}.";
                 awardNo = Honorary.ConferAward(db, fullName, userId, citation, adm!.Id);
                 if (awardNo is null) return Results.Json(new { error = "award_no_generation_failed" }, statusCode: 500);
                 db.Execute("UPDATE honorary_applications SET status='approved', award_no=?, decided_by=?, decided_at=datetime('now'), admin_note=?, updated_at=datetime('now') WHERE id=?",
                     awardNo, adm.Id, note, id);
+
+                // Activate the honorary membership (a waived, non-revenue settlement) — this drives membership
+                // activation AND the Certuvo hand-off through the shared downstream path, so honorary members
+                // get practice access with no separate process.
+                if (grantsMembership && userId is not null && db.QueryOne("SELECT id FROM memberships WHERE user_id=? AND status='active'", userId) is null)
+                {
+                    try { Settlement.Grant(db, userId.Value, email, "membership", 0, 0, "HON-" + awardNo, "admin_honorary"); } catch { }
+                }
+
                 if (userId is not null)
-                    db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Recognition', 'Honorary Fellow (PCI)', ?)",
-                        userId, $"The board has conferred on you the designation Honorary Fellow (PCI) — award number {awardNo}.");
+                    db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Recognition', 'Honorary Fellow (PCI)', ?, 'View membership', '/credentials')",
+                        userId, $"The board has conferred on you the designation Honorary Fellow (PCI) — award number {awardNo}. Your membership and practice access are being set up.");
                 log(userId, "honorary_application_approved", $"{H.Str(a["reference"])} → {awardNo} by admin {adm.Id}");
             }
             else if (status.Length > 0)

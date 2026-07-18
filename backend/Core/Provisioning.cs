@@ -42,7 +42,9 @@ public static class Settlement
     {
         product = (product ?? "membership").Trim().ToLowerInvariant();
         var isExam = product is "exam" or "bundle";
-        var waived = provider == "admin_waiver" && amount <= 0;
+        // Honorary grants are recorded as waived (non-revenue) settlements, exactly like fee waivers — an
+        // honorary member's access is genuine but no money changed hands, so it is never disguised as paid.
+        var waived = amount <= 0 && provider is "admin_waiver" or "admin_honorary";
         var status = waived ? "waived" : "paid";
         var original = meta?.OriginalAmount ?? (waived ? ListPrice(db, product) : amount);
         var waivedAmount = waived ? original : (original > amount ? original - amount : 0);
@@ -187,6 +189,72 @@ public static class CertuvoLink
 
     static int RetryMax(Db db) => (int)Settings.Num(db, "certuvo_retry_max", 8);
 
+    /// <summary>Generate the next globally-unique, PCI-identifiable Certuvo username. Format is configurable
+    /// via `certuvo_username_prefix` (default "PCI") and a monotonic counter `certuvo_username_seq`, yielding
+    /// e.g. PCI-2026-000001. Independent of the student's email and immutable once stored. Collisions (from a
+    /// reused DB, or a manual regenerate) bump the counter until a free value is found.</summary>
+    public static string NextUsername(Db db, long userId)
+    {
+        var prefix = Settings.Str(db, "certuvo_username_prefix", "PCI").Trim();
+        if (prefix.Length == 0) prefix = "PCI";
+        var year = H.IsoNow.Length >= 4 ? H.IsoNow[..4] : "2026";
+        for (var attempt = 0; attempt < 50; attempt++)
+        {
+            long seq;
+            lock (_seqGate)
+            {
+                seq = (long)Settings.Num(db, "certuvo_username_seq", 0) + 1;
+                Settings.Put(db, "certuvo_username_seq", seq.ToString());
+            }
+            var candidate = $"{prefix}-{year}-{seq:D6}";
+            if (db.QueryOne("SELECT id FROM certuvo_accounts WHERE username=?", candidate) is null) return candidate;
+        }
+        // Extremely unlikely fallback: guarantee uniqueness off the immutable user id.
+        return $"{prefix}-{year}-U{userId:D6}";
+    }
+    static readonly object _seqGate = new();
+
+    /// <summary>Coarse member category for admin visibility (paid / waived / sponsored / complimentary /
+    /// honorary / test). Every category is eligible for Certuvo the moment its membership is active — this is
+    /// only a label, never a gate.</summary>
+    public static string DetectMemberType(Db db, long userId)
+    {
+        if (H.L(db.QueryOne("SELECT is_test FROM users WHERE id=?", userId)?["is_test"]) == 1) return "test";
+        if (db.QueryOne("SELECT id FROM honorary_awards WHERE user_id=? AND status='active'", userId) is not null) return "honorary";
+        var pay = db.QueryOne(@"SELECT payment_provider,final_amount,payment_status,discount_code FROM payments
+            WHERE user_id=? AND product_type IN ('membership','bundle','renewal') ORDER BY id DESC LIMIT 1", userId);
+        if (pay is null) return "member";
+        var provider = H.Str(pay["payment_provider"]) ?? "";
+        var status = H.Str(pay["payment_status"]) ?? "";
+        var amount = H.D(pay["final_amount"]);
+        if (status == "waived" || provider == "admin_waiver") return "waived";
+        if (!string.IsNullOrEmpty(H.Str(pay["discount_code"])) && db.QueryOne("SELECT dc.partner_id FROM code_redemptions cr JOIN discount_codes dc ON dc.id=cr.code_id WHERE cr.user_id=? AND dc.partner_id IS NOT NULL LIMIT 1", userId) is not null) return "sponsored";
+        if (amount <= 0) return "complimentary";
+        return "paid";
+    }
+
+    /// <summary>Admin action: assign a brand-new PCI username and re-push it to Certuvo. The old username is
+    /// discarded (regeneration is the only way it ever changes). Returns the new username.</summary>
+    public static async Task<string> RegenerateUsername(Db db, HttpClient http, long userId)
+    {
+        var fresh = NextUsername(db, userId);
+        db.Execute("UPDATE certuvo_accounts SET username=?, external_id=NULL, status='pending', last_error=NULL, retry_count=0, next_retry_at=NULL, username_regenerated_at=datetime('now'), updated_at=datetime('now') WHERE user_id=?", fresh, userId);
+        await Provision(db, http, userId, reactivate: true);
+        return fresh;
+    }
+
+    /// <summary>Admin/self action: mint a fresh temporary password, re-push it to Certuvo, and re-send the
+    /// access instructions. The new secret is stored encrypted; the old one is replaced.</summary>
+    public static async Task<bool> NewTempPassword(Db db, HttpClient http, long userId)
+    {
+        var pw = Security.GenPassword((int)Settings.Num(db, "certuvo_password_length", 14));
+        db.Execute("UPDATE certuvo_accounts SET secret=?, must_change_password=1, password_reset_at=datetime('now'), status='pending', last_error=NULL, retry_count=0, next_retry_at=NULL, updated_at=datetime('now') WHERE user_id=?",
+            Security.EncryptSecret(pw), userId);
+        await Provision(db, http, userId, reactivate: true);
+        var a = db.QueryOne("SELECT status FROM certuvo_accounts WHERE user_id=?", userId);
+        return H.Str(a?["status"]) == "active";
+    }
+
     /// <summary>Provision (or refresh) a member's Certuvo account. No-op if disabled, already active,
     /// suspended/revoked (unless <paramref name="reactivate"/>), or not eligible under the configured rule.</summary>
     public static async Task Provision(Db db, HttpClient http, long userId, bool reactivate = false)
@@ -194,7 +262,7 @@ public static class CertuvoLink
         if (!Enabled(db)) return;
         if (!Eligible(db, userId)) return;
         db.Execute("INSERT OR IGNORE INTO certuvo_accounts(user_id,status) VALUES(?, 'pending')", userId);
-        var cur = db.QueryOne("SELECT status,idempotency_key FROM certuvo_accounts WHERE user_id=?", userId);
+        var cur = db.QueryOne("SELECT status,idempotency_key,username FROM certuvo_accounts WHERE user_id=?", userId);
         var curStatus = H.Str(cur?["status"]);
         if (curStatus == "active") return;
         if (curStatus is "suspended" or "revoked" && !reactivate) return;
@@ -212,6 +280,29 @@ public static class CertuvoLink
         if (user is null) return;
         var apiBase = Settings.Str(db, "certuvo_api_base", "").TrimEnd('/');
         var loginUrl = Settings.Str(db, "certuvo_login_url", "");
+
+        // ── PCI-controlled credentials ──────────────────────────────────────────────────────────────
+        // PCI generates and owns the Certuvo login. The username is NEVER the student's email (they may
+        // already hold a Certuvo account under that email for another institution) and is immutable once
+        // assigned. The temporary password is a fresh cryptographically-secure secret, stored encrypted.
+        // Both are generated ONCE and reused across retries so what the student sees always matches what
+        // was pushed to Certuvo.
+        var pciUsername = H.Str(cur?["username"]);
+        if (string.IsNullOrEmpty(pciUsername))
+        {
+            pciUsername = NextUsername(db, userId);
+            db.Execute("UPDATE certuvo_accounts SET username=?, member_type=?, eligible_reason=?, updated_at=datetime('now') WHERE user_id=?",
+                pciUsername, DetectMemberType(db, userId), Settings.Str(db, "certuvo_requires", "membership"), userId);
+        }
+        var storedSecret = H.Str(db.QueryOne("SELECT secret FROM certuvo_accounts WHERE user_id=?", userId)?["secret"]);
+        var tempPassword = Security.DecryptSecret(storedSecret);
+        if (string.IsNullOrEmpty(tempPassword))
+        {
+            tempPassword = Security.GenPassword((int)Settings.Num(db, "certuvo_password_length", 14));
+            db.Execute("UPDATE certuvo_accounts SET secret=?, must_change_password=1, updated_at=datetime('now') WHERE user_id=?",
+                Security.EncryptSecret(tempPassword), userId);
+        }
+
         if (apiBase.Length == 0)
         {
             db.Execute("UPDATE certuvo_accounts SET status='pending', last_error=?, updated_at=datetime('now') WHERE user_id=?",
@@ -222,18 +313,26 @@ public static class CertuvoLink
         {
             var path = Settings.Str(db, "certuvo_provision_path", "/api/accounts");
             var profile = db.QueryOne("SELECT country FROM student_profiles WHERE user_id=?", userId);
-            var membership = db.QueryOne("SELECT start_date,expiry_date FROM memberships WHERE user_id=? AND status='active'", userId);
-            // Documented data mapping — only what Certuvo needs to open the account. Never passwords,
-            // card data, support messages, or admin notes.
+            var membership = db.QueryOne("SELECT membership_type,status,start_date,expiry_date FROM memberships WHERE user_id=? AND status='active'", userId);
+            // Documented data mapping — only what Certuvo needs to open a PCI-controlled account. PCI pushes
+            // the username + temporary password it generated; never the student's own password, card data,
+            // support messages, or admin notes. `membership_number` is the PCI username (the PCI-side member
+            // identifier), keeping Certuvo's login independent of email.
             var body = new
             {
                 external_ref = userId.ToString(),
+                username = pciUsername,
+                temp_password = tempPassword,
+                must_change_password = true,
+                membership_number = pciUsername,
                 email = H.Str(user["email"]),
                 first_name = H.Str(user["first_name"]),
                 last_name = H.Str(user["last_name"]),
                 country = H.Str(profile?["country"]),
+                membership_status = H.Str(membership?["status"]),
                 membership_start = H.Str(membership?["start_date"]),
                 membership_expiry = H.Str(membership?["expiry_date"]),
+                member_type = DetectMemberType(db, userId),
                 is_test = H.L(user["is_test"]) == 1,
             };
             var req = new HttpRequestMessage(HttpMethod.Post, apiBase + "/" + path.TrimStart('/'))
@@ -248,20 +347,41 @@ public static class CertuvoLink
             }
             using var resp = await http.SendAsync(req);
             var txt = await resp.Content.ReadAsStringAsync();
+            string? Str(params string[] names) { try { var root = JsonDocument.Parse(txt).RootElement; foreach (var n in names) if (root.TryGetProperty(n, out var v) && v.ValueKind == JsonValueKind.String) return v.GetString(); } catch { } return null; }
+            bool Flag(params string[] names) { try { var root = JsonDocument.Parse(txt).RootElement; foreach (var n in names) if (root.TryGetProperty(n, out var v) && (v.ValueKind == JsonValueKind.True || (v.ValueKind == JsonValueKind.String && v.GetString() is "1" or "true"))) return true; } catch { } return false; }
+
+            // ── Email-conflict handling ──────────────────────────────────────────────────────────────
+            // If Certuvo reports the email already belongs to an account (HTTP 409, or an explicit conflict
+            // flag), PCI NEVER overwrites or merges it. Because PCI already sends a unique PCI username, the
+            // configured rule decides what happens: "dedicated" (default) proceeds on the PCI username so the
+            // student still gets a PCI-linked account; "manual" parks it for an administrator. Either way the
+            // conflict is recorded and support is alerted.
+            var conflict = resp.StatusCode == System.Net.HttpStatusCode.Conflict || Flag("email_exists", "conflict", "duplicate_email");
+            if (conflict && Settings.Str(db, "certuvo_email_conflict", "dedicated") != "dedicated")
+            {
+                db.Execute("UPDATE certuvo_accounts SET status='conflict', email_conflict=1, last_error=?, next_retry_at=NULL, updated_at=datetime('now') WHERE user_id=?",
+                    "Email already exists in Certuvo — parked for manual review (never overwritten).", userId);
+                try { Notify.Alert(db, "certuvo", "Certuvo email conflict needs review",
+                    $"<p>Member #{userId} ({System.Net.WebUtility.HtmlEncode(H.Str(user["email"]) ?? "")}) already has a Certuvo account under this email. PCI did not overwrite it. Review it in Admin → Integrations → Certuvo.</p>",
+                    "certuvo_account", userId); } catch { }
+                return;
+            }
+            if (conflict) db.Execute("UPDATE certuvo_accounts SET email_conflict=1 WHERE user_id=?", userId);
+
             if (!resp.IsSuccessStatusCode)
             {
                 RecordFailure(db, userId, $"HTTP {(int)resp.StatusCode}: {(txt.Length > 200 ? txt[..200] : txt)}");
                 return;
             }
-            string? Str(params string[] names) { try { foreach (var n in names) if (JsonDocument.Parse(txt).RootElement.TryGetProperty(n, out var v) && v.ValueKind == JsonValueKind.String) return v.GetString(); } catch { } return null; }
-            var username = Str("username", "login", "user") ?? H.Str(user["email"]);
-            var password = Str("password", "temp_password", "secret");
+            // Keep the PCI username + PCI temp password authoritative; only take Certuvo's opaque account id
+            // and (optionally) a login URL from the response. If Certuvo echoes a different username we still
+            // honour ours — PCI owns the login identity.
             var extId = Str("id", "account_id", "external_id");
             var url = Str("login_url", "url") ?? loginUrl;
-            db.Execute(@"UPDATE certuvo_accounts SET external_id=?, username=?, secret=?, login_url=?, status='active', last_error=NULL,
+            db.Execute(@"UPDATE certuvo_accounts SET external_id=?, login_url=?, status='active', last_error=NULL,
                 retry_count=0, next_retry_at=NULL, suspended_at=NULL, revoked_at=NULL,
-                provisioned_at=datetime('now'), credentials_sent_at=datetime('now'), updated_at=datetime('now') WHERE user_id=?",
-                extId, username, password, url, userId);
+                provisioned_at=COALESCE(provisioned_at, datetime('now')), credentials_sent_at=datetime('now'), updated_at=datetime('now') WHERE user_id=?",
+                extId, url, userId);
             SendAccessInstructions(db, userId, first: true);
         }
         catch (Exception ex)
@@ -357,25 +477,31 @@ public static class CertuvoLink
     public static object AccessFor(Db db, long userId)
     {
         if (!Enabled(db)) return new { enabled = false };
-        var a = db.QueryOne("SELECT external_id,username,secret,login_url,status,provisioned_at,activated_at,credentials_sent_at FROM certuvo_accounts WHERE user_id=?", userId);
+        var a = db.QueryOne("SELECT external_id,username,secret,login_url,status,must_change_password,provisioned_at,activated_at,credentials_sent_at FROM certuvo_accounts WHERE user_id=?", userId);
         var expiry = H.Str(db.QueryOne("SELECT expiry_date FROM memberships WHERE user_id=? AND status='active'", userId)?["expiry_date"]);
-        if (a is null) return new { enabled = true, status = "not_provisioned", expires = expiry };
+        // The mandated notice: PCI shows only the access card; everything practice-related lives in Certuvo.
+        const string notice = "Certuvo is an external practice platform. All practice questions, mock examinations, study tools, AI coaching, progress tracking and learning activities are available directly within Certuvo.";
+        if (a is null) return new { enabled = true, status = "not_provisioned", expires = expiry, notice };
         var status = H.Str(a["status"]);
         var active = status == "active";
         return new
         {
             enabled = true,
             status,
+            notice,
             // "We're still setting it up" — the student never sees an API error.
             message = status switch
             {
                 "active" => (string?)null,
                 "suspended" => "Your Certuvo access is currently suspended. Contact support if you believe this is an error.",
                 "revoked" => "Your Certuvo access has ended.",
+                "conflict" => "We are finalising your Certuvo practice access. Our team has been notified and will confirm shortly.",
                 _ => "Your PCI membership is active. We are still setting up your Certuvo practice access — you will be notified once it is ready.",
             },
+            // The temporary password is decrypted for the student's own view only, and only while active.
             username = active ? H.Str(a["username"]) : null,
-            password = active ? H.Str(a["secret"]) : null,
+            password = active ? Security.DecryptSecret(H.Str(a["secret"])) : null,
+            must_change_password = active && H.L(a["must_change_password"]) == 1,
             login_url = active ? H.Str(a["login_url"]) : null,
             provisioned_at = H.Str(a["provisioned_at"]),
             activated_at = H.Str(a["activated_at"]),
