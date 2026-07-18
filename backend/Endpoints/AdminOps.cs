@@ -315,7 +315,9 @@ public static class AdminOps
             var reason = (H.GetS(b, "reason") ?? "").Trim();
             if (reason.Length == 0) return Err(400, "reason_required", "State why you need to view this account (e.g. the ticket reference).");
             var token = Security.RandomHex(32);
-            db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'impersonation', datetime('now','+1 hours'))", id, Security.Sha(token));
+            var tokenSha = Security.Sha(token);
+            db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'impersonation', datetime('now','+1 hours'))", id, tokenSha);
+            db.Execute("INSERT INTO impersonation_sessions(token_sha,admin_id,user_id,reason) VALUES(?,?,?,?)", tokenSha, adm.Id, id, reason);
             log(id, "impersonation_started", $"admin {adm.Id} ({adm.Email}) — {reason}");
             return J(new { ok = true, token, login_url = "/app/#t=" + token, expires_minutes = 60,
                 note = "The portal shows a permanent support-view banner; payment and password actions are disabled for this session." });
@@ -324,8 +326,19 @@ public static class AdminOps
         app.MapPost("/api/admin/members/{id}/impersonate/end", (HttpContext ctx, long id) => gate(ctx.Request, "impersonate", adm =>
         {
             var n = db.ExecuteWithChanges("DELETE FROM login_tokens WHERE user_id=? AND purpose='impersonation'", id);
+            db.Execute("UPDATE impersonation_sessions SET ended_at=datetime('now') WHERE user_id=? AND ended_at IS NULL", id);
             log(id, "impersonation_ended", $"admin {adm.Id} revoked {n} session(s)");
             return J(new { ok = true, revoked = n });
+        }));
+
+        // The impersonation ledger: sessions with who/why/when + every page the staff session touched.
+        app.MapGet("/api/admin/members/{id}/impersonations", (HttpContext ctx, long id) => gate(ctx.Request, "impersonate", _ =>
+        {
+            var sessions = db.Query(@"SELECT s.id,s.admin_id,a.email admin_email,s.reason,s.started_at,s.ended_at,s.last_seen_at,
+                (SELECT COUNT(*) FROM impersonation_events e WHERE e.session_id=s.id) events
+                FROM impersonation_sessions s LEFT JOIN admin_users a ON a.id=s.admin_id WHERE s.user_id=? ORDER BY s.id DESC LIMIT 20", id);
+            var latest = sessions.Count > 0 ? db.Query("SELECT method,path,at FROM impersonation_events WHERE session_id=? ORDER BY id DESC LIMIT 100", sessions[0]["id"]) : new();
+            return J(new { sessions, latest_session_events = latest });
         }));
 
         // ================= student journey: where are they / where are they stuck =================
@@ -418,7 +431,23 @@ public static class AdminOps
 
         // ================= Certuvo external-practice integration =================
         app.MapGet("/api/admin/certuvo", (HttpContext ctx) => gate(ctx.Request, "integrations", _ =>
-            J(new
+        {
+            // Optional search by PCI student id / membership-username / Certuvo username / email.
+            var q = (ctx.Request.Query["q"].ToString() ?? "").Trim();
+            var where = ""; var args = new List<object?>();
+            if (q.Length > 0)
+            {
+                where = " WHERE (u.email LIKE ? OR c.username LIKE ? OR c.external_id LIKE ?" + (long.TryParse(q, out var qid) ? " OR u.id=?" : "") + ")";
+                var like = "%" + q + "%"; args.Add(like); args.Add(like); args.Add(like);
+                if (long.TryParse(q, out var qid2)) args.Add(qid2);
+            }
+            // NOTE: the secret (temp password) is deliberately NOT selected — it never reaches an admin/CS
+            // screen. Only the student sees their own temporary password, on their own dashboard.
+            var accounts = db.Query(@"SELECT u.id user_id,u.email,u.is_test,c.status,c.username,c.external_id,c.member_type,c.email_conflict,
+                c.must_change_password,c.provisioned_at,c.activated_at,c.credentials_sent_at,
+                c.last_error,c.retry_count,c.next_retry_at,c.suspended_at,c.revoked_at,c.username_regenerated_at,c.password_reset_at
+                FROM certuvo_accounts c JOIN users u ON u.id=c.user_id" + where + " ORDER BY c.id DESC LIMIT 100", args.ToArray());
+            return J(new
             {
                 enabled = Settings.Bool(db, "certuvo_enabled", false),
                 api_base = Settings.Str(db, "certuvo_api_base", ""),
@@ -430,10 +459,13 @@ public static class AdminOps
                 has_webhook_secret = Settings.Str(db, "certuvo_webhook_secret", "").Length > 0,
                 requires = Settings.Str(db, "certuvo_requires", "membership"),
                 retry_max = (int)Settings.Num(db, "certuvo_retry_max", 8),
-                accounts = db.Query(@"SELECT u.id user_id,u.email,u.is_test,c.status,c.username,c.external_id,c.provisioned_at,c.activated_at,c.credentials_sent_at,
-                    c.last_error,c.retry_count,c.next_retry_at,c.suspended_at,c.revoked_at
-                    FROM certuvo_accounts c JOIN users u ON u.id=c.user_id ORDER BY c.id DESC LIMIT 100"),
-            })));
+                username_prefix = Settings.Str(db, "certuvo_username_prefix", "PCI"),
+                password_length = (int)Settings.Num(db, "certuvo_password_length", 14),
+                email_conflict = Settings.Str(db, "certuvo_email_conflict", "dedicated"),
+                honorary_grants_membership = Settings.Bool(db, "honorary_grants_membership", true),
+                accounts,
+            });
+        }));
 
         app.MapPost("/api/admin/certuvo", (HttpContext ctx) => gate(ctx.Request, "integrations", adm =>
         {
@@ -445,6 +477,11 @@ public static class AdminOps
             Put("certuvo_login_url", "login_url"); Put("certuvo_auth_header", "auth_header");
             if (H.GetS(b, "requires") is { } rq && rq is "membership" or "membership_and_enrolment") Settings.Put(db, "certuvo_requires", rq);
             if (H.GetNum(b, "retry_max") is { } rm) Settings.Put(db, "certuvo_retry_max", ((int)Math.Clamp(rm, 0, 50)).ToString());
+            // PCI credential policy: username prefix, temp-password length, and email-conflict rule.
+            if (H.GetS(b, "username_prefix") is { } up && up.Trim().Length is > 0 and <= 12) Settings.Put(db, "certuvo_username_prefix", up.Trim());
+            if (H.GetNum(b, "password_length") is { } pl) Settings.Put(db, "certuvo_password_length", ((int)Math.Clamp(pl, 10, 64)).ToString());
+            if (H.GetS(b, "email_conflict") is { } ec && ec is "dedicated" or "manual") Settings.Put(db, "certuvo_email_conflict", ec);
+            if (H.GetEl(b, "honorary_grants_membership") is { } hg) Settings.Put(db, "honorary_grants_membership", (hg.ValueKind == JsonValueKind.True || (hg.ValueKind == JsonValueKind.String && hg.GetString() is "1" or "true")) ? "1" : "0");
             if (H.GetS(b, "api_key") is { } k && k.Length > 0) Settings.Put(db, "certuvo_api_key", k);                     // write-only
             if (H.GetS(b, "webhook_secret") is { } ws && ws.Length > 0) Settings.Put(db, "certuvo_webhook_secret", ws);    // write-only
             log(null, "certuvo.config", $"by {adm.Id}");
@@ -481,6 +518,28 @@ public static class AdminOps
             var ok = CertuvoLink.SendAccessInstructions(db, userId);
             log(userId, "certuvo.resend", $"by {adm.Id} → {(ok ? "sent" : "not_active")}");
             return ok ? J(new { ok = true }) : Err(409, "not_active", "Instructions can only be re-sent for an active account.");
+        }));
+
+        // Assign a brand-new PCI username (the only way it ever changes) and re-push it to Certuvo.
+        app.MapPost("/api/admin/certuvo/{userId}/regenerate-username", (HttpContext ctx, long userId) => gate(ctx.Request, "members", adm =>
+        {
+            if (db.QueryOne("SELECT id FROM users WHERE id=?", userId) is null) return Err(404, "not_found");
+            var name = CertuvoLink.RegenerateUsername(db, CertuvoLink.Http, userId).GetAwaiter().GetResult();
+            var a = db.QueryOne("SELECT status,last_error FROM certuvo_accounts WHERE user_id=?", userId);
+            log(userId, "certuvo.regenerate_username", $"by {adm.Id} → {name}");
+            return J(new { ok = H.Str(a?["status"]) == "active", username = name, status = H.Str(a?["status"]), error = H.Str(a?["last_error"]) });
+        }));
+
+        // Mint a fresh temporary password, re-push it to Certuvo, and re-send access instructions. The
+        // password itself is never returned to the admin — only whether it succeeded (the student reads it
+        // from their own dashboard). This keeps active passwords off support/admin screens.
+        app.MapPost("/api/admin/certuvo/{userId}/new-password", (HttpContext ctx, long userId) => gate(ctx.Request, "members", adm =>
+        {
+            if (db.QueryOne("SELECT id FROM users WHERE id=?", userId) is null) return Err(404, "not_found");
+            var ok = CertuvoLink.NewTempPassword(db, CertuvoLink.Http, userId).GetAwaiter().GetResult();
+            var a = db.QueryOne("SELECT status,last_error FROM certuvo_accounts WHERE user_id=?", userId);
+            log(userId, "certuvo.new_password", $"by {adm.Id} → {(ok ? "ok" : "failed")}");
+            return J(new { ok, status = H.Str(a?["status"]), error = H.Str(a?["last_error"]) });
         }));
 
         // Inbound Certuvo webhook — shared-secret checked. Lets Certuvo confirm activation / first login

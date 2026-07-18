@@ -26,6 +26,8 @@ public static class Notifications
         ("finance", "Manual payments, waivers & mismatches"),
         ("certuvo", "Certuvo provisioning failures"),
         ("partners", "Institution allocation warnings"),
+        ("support", "Escalated support cases"),
+        ("fraud", "Suspicious discount activity"),
     };
 
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log,

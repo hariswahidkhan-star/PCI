@@ -138,7 +138,7 @@ public static class Chat
 
         // ─────────────────────────── ADMIN: tracing (gated: content, like Forum/Reviews) ───────────────────────────
         // ip_hash (and the visitor's bearer token) are NEVER selected — not even for admins.
-        app.MapGet("/api/admin/chat/sessions", (HttpRequest req) => gate(req, "content", _ =>
+        app.MapGet("/api/admin/chat/sessions", (HttpRequest req) => gate(req, "inbox", _ =>
         {
             var status = req.Query["status"].ToString();
             var hasStatus = status is "bot" or "waiting" or "live" or "closed";
@@ -164,7 +164,7 @@ public static class Chat
             });
         }));
 
-        app.MapGet("/api/admin/chat/sessions/{id}", (HttpRequest req, long id) => gate(req, "content", _ =>
+        app.MapGet("/api/admin/chat/sessions/{id}", (HttpRequest req, long id) => gate(req, "inbox", _ =>
         {
             var s = db.QueryOne("SELECT id,visitor_name,status,created_at,last_activity_at FROM chat_sessions WHERE id=?", id);
             if (s is null) return Err("not_found", 404);
@@ -172,7 +172,7 @@ public static class Chat
             return J(new { session = s, messages });
         }));
 
-        app.MapPost("/api/admin/chat/sessions/{id}/reply", (HttpRequest req, long id) => gate(req, "content", a =>
+        app.MapPost("/api/admin/chat/sessions/{id}/reply", (HttpRequest req, long id) => gate(req, "inbox", a =>
         {
             var b = H.Body(req).GetAwaiter().GetResult();
             var body = Clean(H.GetS(b, "body") ?? "");
@@ -189,7 +189,7 @@ public static class Chat
             return J(new { ok = true, id = mid, status = "live" });
         }));
 
-        app.MapPost("/api/admin/chat/sessions/{id}/close", (HttpRequest req, long id) => gate(req, "content", a =>
+        app.MapPost("/api/admin/chat/sessions/{id}/close", (HttpRequest req, long id) => gate(req, "inbox", a =>
         {
             var s = db.QueryOne("SELECT id,status FROM chat_sessions WHERE id=?", id);
             if (s is null) return Err("not_found", 404);
@@ -204,10 +204,10 @@ public static class Chat
         }));
 
         // ─────────────────────────── ADMIN: knowledge base CRUD (gated: content) ───────────────────────────
-        app.MapGet("/api/admin/chat/kb", (HttpRequest req) => gate(req, "content", _ =>
+        app.MapGet("/api/admin/chat/kb", (HttpRequest req) => gate(req, "inbox", _ =>
             J(new { rows = db.Query("SELECT id,question,answer,keywords,enabled,sort_order FROM chat_kb ORDER BY sort_order, id") })));
 
-        app.MapPost("/api/admin/chat/kb", (HttpRequest req) => gate(req, "content", a =>
+        app.MapPost("/api/admin/chat/kb", (HttpRequest req) => gate(req, "inbox", a =>
         {
             var b = H.Body(req).GetAwaiter().GetResult();
             var question = Clean(H.GetS(b, "question") ?? "");
@@ -222,7 +222,7 @@ public static class Chat
             return J(new { ok = true, id });
         }));
 
-        app.MapPost("/api/admin/chat/kb/{id}", (HttpRequest req, long id) => gate(req, "content", a =>
+        app.MapPost("/api/admin/chat/kb/{id}", (HttpRequest req, long id) => gate(req, "inbox", a =>
         {
             var b = H.Body(req).GetAwaiter().GetResult();
             var action = H.GetS(b, "action");

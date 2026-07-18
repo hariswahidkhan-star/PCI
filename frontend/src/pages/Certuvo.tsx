@@ -34,6 +34,8 @@ interface CertuvoAccess {
   message?: string | null
   username?: string | null
   password?: string | null
+  must_change_password?: boolean
+  notice?: string | null
   login_url?: string | null
   provisioned_at?: string | null
   activated_at?: string | null
@@ -78,7 +80,8 @@ function CertuvoAccessPanel() {
         <div style={{ display: 'grid', gap: '.4rem' }}>
           <p className="muted small" style={{ margin: 0 }}>Practice on the Certuvo platform with the account we created for you. Your progress there is separate from this portal.</p>
           <div className="small">Username: <strong>{data.username}</strong></div>
-          {data.password && <div className="small">Password: <strong>{data.password}</strong></div>}
+          {data.password && <div className="small">Temporary password: <strong>{data.password}</strong></div>}
+          {data.must_change_password && <div className="small muted">You'll be asked to set your own password the first time you sign in to Certuvo.</div>}
           {data.provisioned_at && <div className="small muted">Access granted {fmtDate(data.provisioned_at)}</div>}
           {data.expires && <div className="small muted">Membership valid until {fmtDate(data.expires)}</div>}
           <div className="row" style={{ marginTop: '.4rem', flexWrap: 'wrap' }}>
@@ -92,6 +95,10 @@ function CertuvoAccessPanel() {
       ) : (
         <p className="muted small" style={{ margin: 0 }}>Your Certuvo practice account is set up automatically once your membership is active. It will appear here shortly after payment.</p>
       )}
+      {/* Mandated notice: PCI shows only the access card; all practice lives in Certuvo. */}
+      <p className="muted small" style={{ margin: '.6rem 0 0', borderTop: '1px solid var(--border,#e5e7eb)', paddingTop: '.5rem' }}>
+        {data.notice ?? 'Certuvo is an external practice platform. All practice questions, mock examinations, study tools, AI coaching, progress tracking and learning activities are available directly within Certuvo.'}
+      </p>
     </Card>
   )
 }

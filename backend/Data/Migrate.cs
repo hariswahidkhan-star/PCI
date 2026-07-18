@@ -147,6 +147,16 @@ public static class Migrate
         AddCol("certuvo_accounts", "activated_at", "activated_at TEXT");
         AddCol("certuvo_accounts", "credentials_sent_at", "credentials_sent_at TEXT");
         AddCol("certuvo_accounts", "idempotency_key", "idempotency_key TEXT");
+        // PCI-generated, PCI-controlled login: a unique username independent of the student's email, a
+        // temporary password (stored encrypted, never the email), first-login-change tracking, and an
+        // email-conflict marker so an existing Certuvo account under the same email is flagged, never
+        // overwritten. eligible_reason records WHY a member qualified (paid/waived/honorary/…).
+        AddCol("certuvo_accounts", "must_change_password", "must_change_password INTEGER DEFAULT 1");
+        AddCol("certuvo_accounts", "email_conflict", "email_conflict INTEGER DEFAULT 0");
+        AddCol("certuvo_accounts", "eligible_reason", "eligible_reason TEXT");
+        AddCol("certuvo_accounts", "member_type", "member_type TEXT");
+        AddCol("certuvo_accounts", "username_regenerated_at", "username_regenerated_at TEXT");
+        AddCol("certuvo_accounts", "password_reset_at", "password_reset_at TEXT");
         // Finance controls: structured metadata on payments (offline settlements, waivers, reversals) so
         // manual money movements carry the same evidence a gateway payment does.
         AddCol("payments", "method", "method TEXT");                       // bank_transfer | cheque | invoice | gateway | other
@@ -169,6 +179,59 @@ public static class Migrate
         AddCol("training_partners", "total_allocation", "total_allocation INTEGER");
         AddCol("training_partners", "allow_full_sponsorship", "allow_full_sponsorship INTEGER DEFAULT 0");
         AddCol("discount_codes", "partner_id", "partner_id INTEGER");
+
+        // ============ Support, institutions & discount-engine v2 ============
+        // Student-facing error references: every important failure gets a PCI-YYYY-NNNNNN reference the
+        // student can quote and support can search. Never stores passwords/tokens/card data.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS error_reports(id INTEGER PRIMARY KEY AUTOINCREMENT,reference VARCHAR(24) UNIQUE NOT NULL,user_id INTEGER,page TEXT,category VARCHAR(40) DEFAULT 'general',user_message TEXT,tech_summary TEXT,browser TEXT,os TEXT,app_version TEXT,related_type VARCHAR(32),related_id INTEGER,status VARCHAR(16) DEFAULT 'open',resolution_note TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_error_reports_user ON error_reports(user_id)");
+        // Impersonation ledger: who acted as whom, why, when — plus every page the staff session touched.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS impersonation_sessions(id INTEGER PRIMARY KEY AUTOINCREMENT,token_sha VARCHAR(64) UNIQUE NOT NULL,admin_id INTEGER NOT NULL,user_id INTEGER NOT NULL,reason TEXT,started_at TEXT DEFAULT (datetime('now')),ended_at TEXT,last_seen_at TEXT)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS impersonation_events(id INTEGER PRIMARY KEY AUTOINCREMENT,session_id INTEGER NOT NULL,method VARCHAR(8),path TEXT,at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_imp_events_session ON impersonation_events(session_id)");
+        // Customer-service layer on tickets: assignment, tags, escalation, SLA stamps, internal notes,
+        // canned templates, satisfaction rating.
+        AddCol("tickets", "assigned_to", "assigned_to INTEGER");            // admin_users.id
+        AddCol("tickets", "tags", "tags TEXT");
+        AddCol("tickets", "escalated", "escalated INTEGER DEFAULT 0");
+        AddCol("tickets", "first_response_at", "first_response_at TEXT");
+        AddCol("tickets", "resolved_at", "resolved_at TEXT");
+        AddCol("tickets", "rating", "rating INTEGER");                      // 1-5 CSAT, student-set after resolve
+        AddCol("tickets", "followup_at", "followup_at TEXT");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS ticket_notes(id INTEGER PRIMARY KEY AUTOINCREMENT,ticket_id INTEGER NOT NULL,admin_id INTEGER NOT NULL,body TEXT NOT NULL,mentions TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_ticket_notes_ticket ON ticket_notes(ticket_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS support_templates(id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT NOT NULL,body TEXT NOT NULL,category VARCHAR(40),active INTEGER DEFAULT 1,created_by INTEGER,created_at TEXT DEFAULT (datetime('now')))");
+        // (chat_sessions.assigned_to / linked_user_id are added just after that table is created, below.)
+        // Institution portal accounts: each institution gets its own logins, wholly separate from both
+        // admin_users and students. Sessions mirror admin_sessions (sha token + expiry).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_users(id INTEGER PRIMARY KEY AUTOINCREMENT,partner_id INTEGER NOT NULL,email VARCHAR(255) UNIQUE NOT NULL,name TEXT,role VARCHAR(24) DEFAULT 'admin',password_hash TEXT,status VARCHAR(16) DEFAULT 'active',must_change_pw INTEGER DEFAULT 1,last_login_at TEXT,created_by INTEGER,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_partner_users_partner ON partner_users(partner_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_sessions(id INTEGER PRIMARY KEY AUTOINCREMENT,partner_user_id INTEGER NOT NULL,token VARCHAR(64) UNIQUE NOT NULL,expires_at TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_notices(id INTEGER PRIMARY KEY AUTOINCREMENT,partner_id INTEGER NOT NULL,title TEXT,body TEXT,read_at TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_partner_notices_partner ON partner_notices(partner_id)");
+        // Institution agreement + privacy scope.
+        AddCol("training_partners", "status", "status VARCHAR(16) DEFAULT 'active'");   // active | suspended | terminated
+        AddCol("training_partners", "institution_type", "institution_type TEXT");
+        AddCol("training_partners", "agreement_start", "agreement_start TEXT");
+        AddCol("training_partners", "agreement_end", "agreement_end TEXT");
+        AddCol("training_partners", "auto_approve_codes", "auto_approve_codes INTEGER DEFAULT 0");
+        AddCol("training_partners", "privacy_fields", "privacy_fields TEXT");            // JSON list of extra fields the partner may see
+        AddCol("training_partners", "eligible_countries", "eligible_countries TEXT");
+        // Discount-engine v2: full lifecycle + constraints. Legacy rows keep status NULL and are governed
+        // by the existing `active` flag; new engine rows use the status column as the source of truth.
+        AddCol("discount_codes", "status", "status VARCHAR(20)");                        // draft|pending_approval|active|suspended|rejected|cancelled
+        AddCol("discount_codes", "created_by_partner_user", "created_by_partner_user INTEGER");
+        AddCol("discount_codes", "approved_by", "approved_by INTEGER");
+        AddCol("discount_codes", "approved_at", "approved_at TEXT");
+        AddCol("discount_codes", "rejection_reason", "rejection_reason TEXT");
+        AddCol("discount_codes", "campaign_name", "campaign_name TEXT");
+        AddCol("discount_codes", "min_payable", "min_payable REAL");
+        AddCol("discount_codes", "eligible_countries", "eligible_countries TEXT");       // CSV of ISO/plain names; NULL = all
+        // Fraud/abuse review queue — nothing is auto-blocked without a human path.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS fraud_flags(id INTEGER PRIMARY KEY AUTOINCREMENT,kind VARCHAR(40) NOT NULL,code_id INTEGER,user_id INTEGER,email TEXT,detail TEXT,status VARCHAR(16) DEFAULT 'open',actioned_by INTEGER,actioned_at TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_fraud_flags_status ON fraud_flags(status)");
+        // Optional TOTP MFA for admin accounts (privileged logins).
+        AddCol("admin_users", "totp_secret", "totp_secret TEXT");
         db.Exec(@"CREATE TABLE IF NOT EXISTS notification_history(id INTEGER PRIMARY KEY AUTOINCREMENT,channel TEXT NOT NULL DEFAULT 'email',recipient TEXT,subject TEXT,status TEXT,related_type TEXT,related_id INTEGER,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','')");
@@ -215,6 +278,9 @@ public static class Migrate
         // knowledge base (chat_kb); the visitor can escalate to a live person; every conversation is
         // kept as a full transcript for admin review. No third-party chat services involved.
         db.Exec(@"CREATE TABLE IF NOT EXISTS chat_sessions(id INTEGER PRIMARY KEY AUTOINCREMENT,token VARCHAR(64) UNIQUE NOT NULL,visitor_name TEXT,status VARCHAR(24) DEFAULT 'bot',created_at TEXT DEFAULT (datetime('now')),last_activity_at VARCHAR(32) DEFAULT (datetime('now')),ip_hash TEXT)");
+        // Support-inbox additions to the (Migrate-created) chat table — added here, after the table exists.
+        AddCol("chat_sessions", "assigned_to", "assigned_to INTEGER");
+        AddCol("chat_sessions", "linked_user_id", "linked_user_id INTEGER");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_chat_sessions_status ON chat_sessions(status, last_activity_at)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS chat_messages(id INTEGER PRIMARY KEY AUTOINCREMENT,session_id INTEGER NOT NULL,sender TEXT NOT NULL,body TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_chat_messages_session ON chat_messages(session_id, id)");

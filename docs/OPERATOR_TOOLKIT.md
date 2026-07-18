@@ -161,3 +161,68 @@ Per-partner admin-defined ceilings — max discount %, max codes, max uses per c
 and whether 100% sponsorship is allowed — enforced when partner-linked codes are created **and** at
 redemption (a spent allocation stops honouring codes). The *Codes & usage* view shows codes,
 redemptions, remaining allocation and sponsored registrations; an alert fires at 80% consumption.
+
+---
+
+# v3 — Customer service, error references, institution portal, discount engine v2
+
+## Error references (student-facing error visibility)
+
+Any important failure — an unhandled server exception (caught by the outermost middleware) or a
+client-reported problem via `POST /api/errors` — becomes an `error_reports` row with a quotable
+reference (`PCI-YYYY-NNNNNN`). The student sees *"…quote Error Reference: PCI-2026-000123"*; support
+finds it under **Admin → Support → Error reports** (`GET /api/admin/errors?ref=`), with the page,
+category, browser/OS and a technical summary. Passwords, tokens and card data are never captured.
+
+## Customer service portal (permission: `inbox`; `support_admin` for templates/SLA)
+
+**Admin → Support → Support inbox** is one queue over support tickets, live chats and website
+enquiries. Agents reply, add internal notes (never shown to the student) with @mentions, assign /
+transfer, set status (new/open/awaiting-student/pending-internal/escalated/resolved/closed/spam),
+priority, and tags; escalation alerts supervisors. A KPI strip shows counts, unassigned/overdue vs the
+configurable SLA targets, average first-response/resolution times and CSAT. Canned templates and a
+knowledge-base search (with draft-only "suggest article") speed replies. Students rate a resolved
+conversation 1–5 (`POST /api/me/tickets/{id}/rate`). Two named roles ship: **support_agent**
+(inbox + tickets + member context) and **support_supervisor** (adds `support_admin` + reports) —
+neither carries finance/impersonate/test_users.
+
+## Impersonation ledger
+
+Every "view as student" session now records, in `impersonation_sessions` / `impersonation_events`,
+the admin, reason, start/end and **every page/API the staff session touched** — surfaced at
+`GET /api/admin/members/{id}/impersonations` and in the Students → Security card.
+
+## Credential safety
+
+The member-detail API no longer returns `password_hash` (nor does any support screen). Support acts
+on credentials, never reads them: send a reset link, revoke sessions, lock/unlock — the password is
+hashed, never decryptable, never displayed.
+
+## Institution partner portal (`/partner.html`)
+
+Each institution gets its own logins (`partner_users`, roles admin/finance/reporting/support), created
+and reset by PCI (**Admin → Training partners → Portal logins**). Partners sign in at `/partner.html`
+to their own dashboard — code/usage/registration metrics, notices — and see **only their own**
+registrations, privacy-masked (masked email + programme + status; names only when PCI switches the
+field on). Cross-institution access is impossible: every partner read is scoped to the session's
+`partner_id`, and a suspended/terminated institution (or one past its agreement end) locks all its
+logins out and stops its codes validating.
+
+## Discount engine v2 (admin `codes`; partners via the portal)
+
+Partners create codes **within** the PCI-set ceilings (max %, max codes, max uses/code, total
+allocation, 100%-sponsorship flag); anything over is refused with the exact limit. Codes have a
+lifecycle — draft → pending approval → active → suspended/rejected/cancelled. When a partner's
+`auto_approve_codes` is off, new codes land in **Admin → Discount codes → Approvals** (approve, or
+reject with a reason that returns to the institution). Checkout validation enforces status, validity
+window, per-email and total limits, product/country eligibility, institution status/agreement, and a
+minimum-payable floor. Abuse signals (plus-alias duplicates, domain bursts, velocity) raise
+`fraud_flags` for the **Review queue** — nothing auto-blocks a student; suspension is an explicit
+admin action. Discount utilisation is reportable and CSV-exportable (`GET /api/admin/reports/discounts`,
+export is itself audited).
+
+## Admin MFA
+
+Admins can enrol optional TOTP two-factor (`/api/admin/me/2fa/setup` → verify with a code → active);
+once enabled, login requires the 6-digit code. Enrolment is pending until proven, so a mis-scanned
+secret can never lock an account out.

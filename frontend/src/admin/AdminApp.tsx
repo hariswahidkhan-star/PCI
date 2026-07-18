@@ -10,6 +10,8 @@ import Certifications from './pages/Certifications'
 import Pages from './pages/Pages'
 import Credentials from './pages/Credentials'
 import Tickets from './pages/Tickets'
+import SupportInbox from './pages/SupportInbox'
+import ErrorReports from './pages/ErrorReports'
 import Enrollments from './pages/Enrollments'
 import Codes from './pages/Codes'
 import Founding from './pages/Founding'
@@ -75,6 +77,8 @@ export default function AdminApp() {
         <Route path="payments" element={<Perm section="payments"><Payments /></Perm>} />
         <Route path="credentials" element={<Perm section="credentials"><Credentials /></Perm>} />
         <Route path="tickets" element={<Perm section="tickets"><Tickets /></Perm>} />
+        <Route path="support-inbox" element={<Perm section="inbox"><SupportInbox /></Perm>} />
+        <Route path="errors" element={<Perm section="inbox"><ErrorReports /></Perm>} />
         <Route path="certifications" element={<Perm section="exams"><Certifications /></Perm>} />
         <Route path="codes" element={<Perm section="codes"><Codes /></Perm>} />
         <Route path="founding" element={<AnyPerm sections={['members', 'codes']}><Founding /></AnyPerm>} />
