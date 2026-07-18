@@ -324,6 +324,22 @@ public static class Migrate
             created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_cert_documents_cert ON cert_documents(certification_id)");
 
+        // ── Per-certification applications (Phase 4b): one record per (candidate, certification, route) ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS certification_applications(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            application_no TEXT UNIQUE,
+            user_id INTEGER NOT NULL,
+            certification_id INTEGER NOT NULL,
+            route_key TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'submitted',   -- submitted | under_review | info_requested | approved | rejected | withdrawn
+            workflow_stage TEXT DEFAULT 'application_submitted',
+            data_json TEXT,                              -- route-specific captured fields
+            blocker TEXT,
+            decided_by INTEGER, decided_at TEXT, admin_note TEXT,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cert_apps_user ON certification_applications(user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cert_apps_cert ON certification_applications(certification_id, status)");
+
         // ── Discount codes: certification / route / fee scoping (Phase 5) ──
         // certification_id NULL = valid for every certification; route_key NULL = every route.
         AddCol("discount_codes", "certification_id", "certification_id INTEGER");
