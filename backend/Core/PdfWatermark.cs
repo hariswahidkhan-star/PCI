@@ -150,11 +150,26 @@ public static class PdfWatermark
 
     static string F(double v) => v.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
 
-    /// <summary>Coerce to Latin-1 (WinAnsi): non-representable characters become '?', same policy as CertPdf.</summary>
+    /// <summary>Coerce to the WinAnsi byte range the embedded font declares. CP1252 punctuation
+    /// above Latin-1 maps to its WinAnsi byte — ™ (in every certification designation) most
+    /// importantly — and anything else non-representable becomes '?', same policy as CertPdf.</summary>
     static string Latin1(string s)
     {
         var sb = new StringBuilder(s.Length);
-        foreach (var c in s) sb.Append(c <= 0xFF ? c : '?');
+        foreach (var c in s)
+            sb.Append(c switch
+            {
+                '™' => (char)0x99,
+                '’' => (char)0x92,
+                '‘' => (char)0x91,
+                '“' => (char)0x93,
+                '”' => (char)0x94,
+                '–' => (char)0x96,
+                '—' => (char)0x97,
+                '…' => (char)0x85,
+                '€' => (char)0x80,
+                _ => c <= 0xFF ? c : '?',
+            });
         return sb.ToString();
     }
 
