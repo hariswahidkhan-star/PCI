@@ -145,6 +145,39 @@ public static class MultiCert
 
         EnsureRoutes(db);
         EnsureDocuments(db);
+        NameSweep(db);
+    }
+
+    /// <summary>Replace the retired project-controls credential names in stored content so no old name is
+    /// served from the database (parallel to the static-HTML sweep). Case-sensitive REPLACE leaves lowercase
+    /// slugs/hrefs (pcp-ai) intact; idempotent — once swept, the LIKE-guarded updates are no-ops.</summary>
+    public static void NameSweep(Db db)
+    {
+        // (old, new) — longest/most-specific first so the acronym pass doesn't pre-empt the full title.
+        var maps = new (string a, string b)[]
+        {
+            ("Certified Project Controls Professional — AI (PCP-AI)", "PCI AI Project Controls Leader™ (PCI PCL-AI™)"),
+            ("Certified Project Controls Professional – AI (PCP-AI)", "PCI AI Project Controls Leader™ (PCI PCL-AI™)"),
+            ("Certified Project Controls Professional — AI", "PCI AI Project Controls Leader™"),
+            ("Certified Project Controls Professional – AI", "PCI AI Project Controls Leader™"),
+            ("Certified Project Controls Professional", "PCI AI Project Controls Leader™"),
+            ("PCP-AI", "PCL-AI"),
+        };
+        (string table, string col)[] targets =
+        {
+            ("page_blocks", "cvalue"), ("pages", "title"), ("pages", "meta_description"),
+            ("faqs", "question"), ("faqs", "answer"), ("bok_domains", "name"), ("bok_domains", "description"),
+            ("news", "title"), ("news", "body"), ("resources", "title"), ("resources", "description"),
+        };
+        foreach (var (table, col) in targets)
+        {
+            try
+            {
+                foreach (var (a, b) in maps)
+                    db.Execute($"UPDATE {table} SET {col}=REPLACE({col},?,?) WHERE {col} LIKE ?", a, b, "%" + a + "%");
+            }
+            catch { /* table/column may not exist on an older DB — skip */ }
+        }
     }
 
     /// <summary>Default Certuvo product mapping (per credential) and a starter document set (candidate
