@@ -24,6 +24,7 @@ import Analytics from './pages/Analytics'
 import AiVisibility from './pages/AiVisibility'
 import TrainingPartners from './pages/TrainingPartners'
 import Integrations from './pages/Integrations'
+import Marketing from './pages/Marketing'
 import ExamDelivery from './pages/ExamDelivery'
 import Enquiries from './pages/Enquiries'
 import Submissions from './pages/Submissions'
@@ -97,6 +98,7 @@ export default function AdminApp() {
         <Route path="ai-visibility" element={<Perm section="pages"><AiVisibility /></Perm>} />
         <Route path="training-partners" element={<Perm section="partners"><TrainingPartners /></Perm>} />
         <Route path="integrations" element={<Perm section="integrations"><Integrations /></Perm>} />
+        <Route path="marketing" element={<AnyPerm sections={['subscribers', 'reports']}><Marketing /></AnyPerm>} />
         <Route path="exam-delivery" element={<Perm section="exam_delivery"><ExamDelivery /></Perm>} />
         <Route path="subscribers" element={<Perm section="subscribers"><Subscribers /></Perm>} />
         <Route path="reports" element={<Perm section="reports"><Reports /></Perm>} />
