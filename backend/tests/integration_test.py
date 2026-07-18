@@ -22,7 +22,7 @@ which is the standard way to make such cases fast and deterministic.
 
 Exit code 0 iff every assertion passes.  Run from backend/:  python3 tests/integration_test.py
 """
-import base64, hashlib, hmac, json, os, socket, sqlite3, subprocess, sys, time, urllib.error, urllib.request
+import base64, hashlib, hmac, http.server, json, os, socket, sqlite3, subprocess, sys, threading, time, urllib.error, urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BACKEND = os.path.dirname(HERE)
@@ -232,6 +232,104 @@ def clear_must_change(token, newpw="Op3rator!Pw"):
 def admin_login():
     c, b = jget("POST", "/api/admin/auth/login", body={"email": "owner@pci.local", "password": "changeme-owner"})
     return clear_must_change(b["token"])
+
+# ---- Mock exam-delivery vendor server: mimics the documented request/response shapes for Questionmark
+#      (Delivery OData), Kryterion (JSON-RPC), and PSI (Atlas eligibility), so the whole exam-delivery
+#      pipeline (candidate → authorize → schedule → results / callback → credential) runs end-to-end.
+class _MockVendor(http.server.BaseHTTPRequestHandler):
+    def _send(self, code, obj):
+        b = json.dumps(obj).encode()
+        self.send_response(code); self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(b))); self.end_headers(); self.wfile.write(b)
+    def do_GET(self):
+        if "/Results" in self.path: return self._send(200, {"value": [{"ScoreBandTitle": "Pass", "PercentageScore": 82, "MaxScore": 100}]})
+        if "/Participants" in self.path: return self._send(200, {"value": []})           # Questionmark test-connection
+        if "/eligibilities" in self.path: return self._send(200, {"status": "eligible", "eligible_to_schedule": True})
+        return self._send(200, {"ok": True})
+    def do_POST(self):
+        ln = int(self.headers.get("Content-Length") or 0)
+        try: body = json.loads(self.rfile.read(ln) or b"{}") if ln else {}
+        except Exception: body = {}
+        rt = body.get("requestType")
+        if rt:                                                                          # Kryterion EWS JSON-RPC
+            return self._send(200, {
+                "ping": {"success": "true", "message": "Ping Successful!"},
+                "Add User": {"id": "U999", "success": "true"},
+                "Add Registration": {"confirmationNumber": "KRY-777", "success": "true"},
+                "Get Registrations": {"progress": "COMPLETED", "passed": "true", "score": 88, "success": "true"},
+            }.get(rt, {"success": "true"}))
+        if "/Participants" in self.path: return self._send(201, {"ID": 4242})            # Questionmark participant
+        if "/Schedules" in self.path: return self._send(201, {"ID": 88})                # Questionmark schedule
+        if "/candidates" in self.path: return self._send(201, {"psi_eligiblity_id": "ELIG-1"})  # PSI eligibility
+        return self._send(200, {"ok": True})
+    def do_PATCH(self):
+        ln = int(self.headers.get("Content-Length") or 0);  self.rfile.read(ln) if ln else None
+        return self._send(200, {"ok": True})
+    def do_DELETE(self): return self._send(200, {"ok": True})
+    def log_message(self, *a): pass
+
+def start_mock_vendor():
+    srv = http.server.HTTPServer(("127.0.0.1", 0), _MockVendor)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv, srv.server_address[1]
+
+def test_exam_delivery(admin):
+    print("\n=== 11. Exam delivery vendors (Pearson VUE / Kryterion / PSI / TestReach / Questionmark) ===")
+    srv, mport = start_mock_vendor()
+    mock = f"http://127.0.0.1:{mport}"
+    try:
+        c, cat = jget("GET", "/api/admin/exam-delivery", token=admin)
+        keys = sorted(x["key"] for x in cat.get("connectors", []))
+        chk("11a all 5 vendor connectors registered", keys == ["kryterion", "pearsonvue", "psi", "questionmark", "testreach"], keys)
+
+        # ---- Questionmark: fully API-driven (candidate → schedule → results pull → credential) ----
+        c, r = jget("POST", "/api/admin/exam-delivery", token=admin, body={
+            "provider": "questionmark", "name": "QM", "environment": "sandbox", "enabled": True, "is_default": True,
+            "api_base": mock, "customer_id": "123456", "username": "svc", "password": "pw", "exam_map": {"PCP-AI": "9962"}})
+        chk("11b create Questionmark provider (default)", c == 200 and r.get("ok"), r)
+        qmid = r.get("id")
+        c, tr = jget("POST", f"/api/admin/exam-delivery/{qmid}/test", token=admin)
+        chk("11c test connection ok", c == 200 and tr.get("ok"), tr)
+        tok, uid = make_paid_user("qm@ex.co"); accept_all_consents(tok); complete_profile(tok)
+        slot = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() + 72 * 3600))
+        c, bk = jget("POST", "/api/me/exam/book", token=tok, body={"scheduled_at": slot, "timezone": "UTC"})
+        chk("11d booking accepted", c == 200 and bk.get("ok"), bk)
+        con = dbconn(); o = con.execute("SELECT id,status,external_candidate_id,external_appointment_id FROM exam_delivery_orders WHERE user_id=?", (uid,)).fetchone(); con.close()
+        chk("11e booking auto-routed + provisioned to scheduled", o is not None and o[1] == "scheduled", o)
+        chk("11f candidate + appointment ids captured from vendor", bool(o and o[2] and o[3]), o)
+        c, ds = jget("GET", "/api/me/exam/delivery", token=tok)
+        chk("11g candidate sees vendor delivery status", c == 200 and ds.get("routed") and ds.get("provider") == "questionmark", ds)
+        c, sy = jget("POST", f"/api/admin/exam-delivery/orders/{o[0]}/sync", token=admin)
+        chk("11h sync pulls a pass and issues the credential", c == 200 and sy.get("result_status") == "pass" and bool(sy.get("credential")), sy)
+        con = dbconn(); cred = con.execute("SELECT status FROM issued_credentials WHERE credential_id=?", (sy.get("credential"),)).fetchone(); con.close()
+        chk("11i issued credential is active", bool(cred) and cred[0] == "active", cred)
+        c, sy2 = jget("POST", f"/api/admin/exam-delivery/orders/{o[0]}/sync", token=admin)
+        chk("11j re-sync is idempotent (no duplicate credential)", sy2.get("credential") == sy.get("credential"), (sy.get("credential"), sy2.get("credential")))
+
+        # ---- PSI: eligibility push + candidate self-schedule + inbound result callback → credential ----
+        c, pr = jget("POST", "/api/admin/exam-delivery", token=admin, body={
+            "provider": "psi", "name": "PSI", "environment": "sandbox", "enabled": True, "is_default": True,
+            "api_base": mock, "account_code": "ACC1", "access_token": "tok123", "callback_secret": "cbsecret",
+            "exam_map": {"PCP-AI": "PCP-EXAM"}})
+        chk("11k create PSI provider (now default)", c == 200 and pr.get("ok"), pr)
+        tok2, uid2 = make_paid_user("psi@ex.co"); accept_all_consents(tok2); complete_profile(tok2)
+        c, bk2 = jget("POST", "/api/me/exam/book", token=tok2, body={"scheduled_at": slot, "timezone": "UTC"})
+        chk("11l PSI booking accepted", c == 200 and bk2.get("ok"), bk2)
+        con = dbconn(); o2 = con.execute("SELECT id,status,external_registration_id FROM exam_delivery_orders WHERE user_id=? AND provider='psi'", (uid2,)).fetchone(); con.close()
+        chk("11m PSI eligibility pushed → awaiting candidate self-schedule", bool(o2) and o2[1] == "awaiting_candidate_schedule", o2)
+        c, cbbad = jget("POST", "/api/exam-delivery/callback/psi", body={"client_eligibility_id": o2[2], "result": "pass"})
+        chk("11n inbound callback rejected without the shared secret", c in (400, 401), c)
+        c, cb = jget("POST", "/api/exam-delivery/callback/psi?token=cbsecret", body={"client_eligibility_id": o2[2], "candidate_id": str(uid2), "result": "pass", "score": 80})
+        chk("11o PSI result callback issues the credential", c == 200 and cb.get("result_status") == "pass" and bool(cb.get("credential")), cb)
+
+        # ---- RBAC: a viewer cannot reach exam delivery ----
+        c, vb = jget("POST", "/api/admin/team", token=admin, body={"email": "exdview@pci.test", "name": "V", "role": "viewer"})
+        c, vl = jget("POST", "/api/admin/auth/login", body={"email": "exdview@pci.test", "password": vb.get("temp_password", "")})
+        vtok = clear_must_change(vl.get("token"))
+        c, _ = jget("GET", "/api/admin/exam-delivery", token=vtok)
+        chk("11p viewer BLOCKED from exam delivery (403)", c == 403, c)
+    finally:
+        srv.shutdown()
 
 # ============================================================================
 def main():
@@ -986,6 +1084,8 @@ def run(proc):
     chk("10b 429 carries Retry-After", retry_after is not None, retry_after)
     # R10 (finding #10): security headers are outermost, so even a short-circuited 429 carries them
     chk("10c 429 still carries security headers", 'nosniff_429' in dir() and nosniff_429 == "nosniff", locals().get("nosniff_429"))
+
+    test_exam_delivery(admin)
 
     print("\n(assertions complete)")
 

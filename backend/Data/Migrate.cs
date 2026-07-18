@@ -119,6 +119,21 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS integration_deliveries(id INTEGER PRIMARY KEY AUTOINCREMENT,event_id INTEGER NOT NULL,integration_id INTEGER NOT NULL,status TEXT NOT NULL DEFAULT 'pending',attempts INTEGER DEFAULT 0,response_code INTEGER,last_error TEXT,next_attempt_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_intdel_pending ON integration_deliveries(status, next_attempt_at)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_intdel_event_int ON integration_deliveries(event_id, integration_id)");
+        // Exam Delivery integrations: connect the platform to third-party certification exam-delivery /
+        // proctoring vendors (Pearson VUE/OnVUE, Kryterion Webassessor, PSI, TestReach, Questionmark).
+        //   exam_delivery_providers   — one configured connector per vendor (write-only secret, sandbox/prod,
+        //                               per-provider config incl. certification→vendor-exam-code mapping)
+        //   exam_delivery_orders      — one row per booking routed to a vendor: the external candidate /
+        //                               registration / appointment ids and the lifecycle status + result
+        //   exam_delivery_log         — an append-only audit of every vendor API operation (op, code, ok)
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_delivery_providers(id INTEGER PRIMARY KEY AUTOINCREMENT,provider TEXT NOT NULL,name TEXT,enabled INTEGER DEFAULT 0,is_default INTEGER DEFAULT 0,environment TEXT DEFAULT 'sandbox',config TEXT,secret TEXT,status TEXT DEFAULT 'idle',last_sync_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_exdelprov_provider ON exam_delivery_providers(provider)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_delivery_orders(id INTEGER PRIMARY KEY AUTOINCREMENT,provider_id INTEGER NOT NULL,provider TEXT NOT NULL,user_id INTEGER NOT NULL,booking_id INTEGER,attempt_id INTEGER,certification_id INTEGER,vendor_exam_code TEXT,delivery_type TEXT DEFAULT 'online',status TEXT NOT NULL DEFAULT 'pending',external_candidate_id TEXT,external_registration_id TEXT,external_appointment_id TEXT,confirmation_code TEXT,scheduled_at TEXT,timezone TEXT,result_status TEXT,score REAL,max_score REAL,raw_result TEXT,last_error TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_exdelorder_booking ON exam_delivery_orders(booking_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_exdelorder_status ON exam_delivery_orders(status)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_exdelorder_booking_prov ON exam_delivery_orders(booking_id, provider_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_delivery_log(id INTEGER PRIMARY KEY AUTOINCREMENT,order_id INTEGER,provider_id INTEGER,provider TEXT,operation TEXT NOT NULL,ok INTEGER DEFAULT 0,response_code INTEGER,detail TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_exdellog_order ON exam_delivery_log(order_id)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS notification_history(id INTEGER PRIMARY KEY AUTOINCREMENT,channel TEXT NOT NULL DEFAULT 'email',recipient TEXT,subject TEXT,status TEXT,related_type TEXT,related_id INTEGER,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','')");

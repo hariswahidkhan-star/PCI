@@ -670,6 +670,8 @@ PCI.Backend.Endpoints.AdminSeo.Map(app, db, logFn, GateFn, webRoot);   // Admin 
 PCI.Backend.Endpoints.AdminAnalytics.Map(app, db, GateFn);             // Admin Console → Analytics (/api/admin/analytics/...)
 PCI.Backend.Endpoints.AdminAiVisibility.Map(app, db, logFn, GateFn, webRoot); // Admin Console → AI Visibility (/api/admin/ai-visibility/...)
 PCI.Backend.Endpoints.AdminIntegrations.Map(app, db, logFn, GateFn);   // Admin Console → Integrations / ERP (/api/admin/integrations/...)
+PCI.Backend.Core.ExamDeliveryConnectors.Register();                    // register the 5 exam-delivery vendor connectors
+PCI.Backend.Endpoints.AdminExamDelivery.Map(app, db, logFn, GateFn);   // Admin Console → Exam Delivery (/api/admin/exam-delivery/...) + inbound callbacks
 // one-time: capture each page's current headline as an editable block so every page is editable out of the box
 PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
 PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)

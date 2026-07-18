@@ -287,6 +287,10 @@ public static class StudentExam
             // by booking_id (one-attempt-per-entitlement).
             db.Execute("UPDATE exam_entitlements SET status='booked', booking_id=? WHERE payment_id=? AND status IN ('available','booked')", id, ent["id"]);
             log(u.Id, "exam_booked", $"{scheduledAt} (cert {certId})");
+            // Route to the configured third-party exam-delivery vendor (Pearson VUE/OnVUE, Kryterion, PSI,
+            // TestReach, Questionmark) if one is set as default and the certification is mapped. Best-effort:
+            // never blocks or fails the PCI booking; unrouted/failed orders are retryable from the admin.
+            await PCI.Backend.Core.ExamDelivery.RouteBooking(db, id, u.Id, certId, scheduledAt, timezone);
             return J(new { ok = true, id, scheduled_at = scheduledAt, certification_id = certId });
         });
 
@@ -311,7 +315,33 @@ public static class StudentExam
             if (dl is not null && H.After(scheduledAt, dl)) return Results.Json(new { error = "beyond_window" }, statusCode: 400);
             db.Execute("UPDATE exam_bookings SET scheduled_at=?, timezone=?, reschedule_count=reschedule_count+1, updated_at=datetime('now') WHERE id=?", scheduledAt, timezone ?? H.Str(bk["timezone"]), bk["id"]);
             log(u.Id, "exam_rescheduled", scheduledAt);
+            await PCI.Backend.Core.ExamDelivery.RescheduleBooking(db, H.L(bk["id"]), scheduledAt, timezone ?? H.Str(bk["timezone"]));
             return J(new { ok = true, free = hoursTo >= H.FREE_RESCHED_H, reschedule_count = H.L(bk["reschedule_count"]) + 1 });
+        });
+
+        // The candidate's third-party delivery status, when their booking is routed to an external vendor
+        // (Pearson VUE, Kryterion, PSI, TestReach, Questionmark). Returns the provider, lifecycle status and
+        // any confirmation number; for vendors where the candidate self-schedules, `awaiting_candidate_schedule`
+        // tells the portal to surface the "book your slot with <vendor>" step. Empty when delivery is in-house.
+        app.MapGet("/api/me/exam/delivery", (HttpContext ctx) =>
+        {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var o = db.QueryOne(@"SELECT o.status,o.delivery_type,o.confirmation_code,o.external_appointment_id,o.result_status,o.scheduled_at,o.timezone,
+                                         p.name provider_name, p.provider
+                                  FROM exam_delivery_orders o LEFT JOIN exam_delivery_providers p ON p.id=o.provider_id
+                                  WHERE o.user_id=? ORDER BY o.id DESC LIMIT 1", u.Id);
+            if (o is null) return J(new { routed = false });
+            var st = H.Str(o["status"]);
+            return J(new
+            {
+                routed = true,
+                provider = H.Str(o["provider"]), provider_name = H.Str(o["provider_name"]),
+                status = st, delivery_type = H.Str(o["delivery_type"]),
+                self_schedule = st == "awaiting_candidate_schedule",
+                confirmation = H.Str(o["confirmation_code"]) ?? H.Str(o["external_appointment_id"]),
+                result_status = H.Str(o["result_status"]),
+                scheduled_at = H.Str(o["scheduled_at"]), timezone = H.Str(o["timezone"]),
+            });
         });
 
         // ---------------- exam start (create-or-resume; certification-aware) ----------------

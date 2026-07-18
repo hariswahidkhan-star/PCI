@@ -41,7 +41,7 @@ public static class Rbac
         ["platform"] = new[]{ "overview","reports","audit","emails","settings","team","integrations" },
         ["website"]  = new[]{ "set_web","pricing","codes","content","pages","news","faqs","bok","governance","resources","media","nav","partners","sitesettings","subscribers","submissions","inquiries" },
         ["student"]  = new[]{ "set_sp","members","enrollments","payments","credentials","tickets" },
-        ["exam"]     = new[]{ "set_exam","exams","proctoring","sampleq" },
+        ["exam"]     = new[]{ "set_exam","exams","proctoring","sampleq","exam_delivery" },
     };
 
     public static string[] AllSections => Sections.Values.SelectMany(x => x).ToArray();
