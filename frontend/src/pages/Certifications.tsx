@@ -14,6 +14,9 @@ interface CatalogueCert {
   id: number
   code: string
   name: string
+  acronym?: string | null
+  short_description?: string | null
+  slug?: string | null
   description?: string | null
   expiry_years?: number | null
   duration_minutes?: number | null
@@ -349,11 +352,11 @@ function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
         return (
           <div className="cert-tile" key={c.id}>
             <div className="cert-tile-head">
-              <span className="cert-tile-code">{c.code}</span>
+              <span className="cert-tile-code">{c.acronym || c.code}</span>
               {owned && <Badge tone="ok">{t('cert.enrolled')}</Badge>}
             </div>
             <h3 className="cert-tile-name">{c.name}</h3>
-            {c.description && <p className="muted small cert-tile-desc">{c.description}</p>}
+            {(c.short_description || c.description) && <p className="muted small cert-tile-desc">{c.short_description || c.description}</p>}
             <ul className="cert-tile-meta">
               {c.exam_price != null && <li><strong>{fmtMoney(c.exam_price)}</strong> {t('cert.examFee')}</li>}
               {c.duration_minutes != null && c.pass_mark_pct != null && (
