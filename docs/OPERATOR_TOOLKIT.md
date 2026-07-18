@@ -102,3 +102,62 @@ The whole toolkit is covered by the integration suite (section 12): journey stuc
 (free + membership) unblocking scheduling, test-user create / session / list / delete, Certuvo
 auto-provision on membership and credential delivery to the student, and RBAC on every endpoint. All admin
 endpoints are gated (`members` / `integrations`) and refuse view-only roles with `403`.
+
+---
+
+# v2 — Finance controls, impersonation, scenarios, Certuvo hardening, institution limits
+
+The toolkit above was extended into a full operator/finance layer. Everything below is enforced
+server-side, audit-logged, and covered by integration suite section 13 (SQLite **and** MySQL).
+
+## Finance (permission: `finance` — explicit, never bundled into a named role)
+
+- **Waive fee** (Students → drawer → *Waive fee*): full waiver settles immediately as
+  `payment_status='waived'` (never a fabricated paid transaction; excluded from revenue); partial
+  waiver issues a single-use percentage code **locked to that student's email**, so the balance flows
+  through the normal checkout. Reason is mandatory; every waiver lands in the `fee_waivers` ledger
+  (original / waived / payable, approver, expiry).
+- **Mark as paid** now carries evidence — method, bank reference, gateway reference, receipt number,
+  paid-on date, recorder — and refuses duplicate gateway references (409) and already-live grants
+  unless explicitly overridden (`allow_duplicate`). List-price mismatches are flagged, not blocked.
+- **Reverse** (Payments → Reconciliation): admin-recorded settlements can be reversed with a mandatory
+  reason — the payment becomes `refunded`, the unconsumed entitlement is revoked, scheduled bookings
+  cancel, and the membership lapses only if no other settlement supports it. Stripe money is refunded
+  at the gateway (webhook applies it here).
+- **Reconciliation** (Payments → Reconciliation): every payment with its downstream state
+  (entitlement / membership / Certuvo) and an exception reason; **Reprocess** idempotently re-applies
+  missing downstream effects — safe to click any number of times, never double-grants.
+
+## Impersonation — "View as student" (permission: `impersonate`)
+
+Students → drawer → *View as student*: a reason is required, a 60-minute session opens the portal
+exactly as the student sees it, under a permanent amber banner. Consent acceptance and identity
+uploads are refused in support view. Start and end are audit-logged; *End session* revokes it.
+
+## Test users v2 (permission: `test_users`)
+
+Scenario presets: `ready`, `unpaid`, `member`, `waived`, `incomplete_profile`, `no_id`,
+`certuvo_failed` — plus **reset** to re-run any scenario on the same account. Test accounts wear a
+TEST badge everywhere, never reach revenue reports, and their credentials are invisible to the
+public verification register.
+
+## Certuvo integration v2
+
+- Idempotency keys on every provisioning call; repeated settlements/webhooks can never double-create.
+- Automatic retries with exponential backoff (5 min → 6 h cap, configurable maximum) run on the
+  background dispatcher; support is alerted when retries are exhausted. Membership activation is
+  never blocked by a Certuvo failure, and the student sees a plain-language "still setting up"
+  message — never an API error.
+- Admin actions per account: re-provision (with `reactivate` for suspended/revoked), suspend, revoke
+  (best-effort remote deactivation via the configurable endpoint), resend instructions.
+- Inbound webhook `POST /api/certuvo/webhook` (header `X-Certuvo-Secret`) records activation /
+  first-login so the tracker shows "first login confirmed".
+- Configurable business rule: access on active membership alone, or membership + certification
+  enrolment (`Admin → Integrations → Certuvo → Access rule`).
+
+## Institution sponsorship (Training partners)
+
+Per-partner admin-defined ceilings — max discount %, max codes, max uses per code, total allocation,
+and whether 100% sponsorship is allowed — enforced when partner-linked codes are created **and** at
+redemption (a spent allocation stops honouring codes). The *Codes & usage* view shows codes,
+redemptions, remaining allocation and sponsored registrations; an alert fires at 80% consumption.

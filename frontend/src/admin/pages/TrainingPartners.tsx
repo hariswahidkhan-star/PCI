@@ -3,6 +3,7 @@ import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
 import { fmtDate } from '../../format'
+import { ApiError } from '../../api/client'
 
 // Admin Console → Training Partners (Phase 7). Two tabs:
 //   Directory   — CRUD over published/unpublished partner entries; publishing (listed) renders them
@@ -17,6 +18,9 @@ interface Partner {
   website?: string | null; logo_url?: string | null; summary?: string | null
   description?: string | null; specialties?: string | null; contact_email?: string | null
   listed: number; sort_order?: number | null; created_at?: string | null
+  // sponsorship limits — ceilings inside which this institution's discount codes operate
+  max_discount_percent?: number | null; max_codes?: number | null; max_uses_per_code?: number | null
+  total_allocation?: number | null; allow_full_sponsorship?: number | null
 }
 interface TPApp {
   id: number; reference: string; org_name?: string | null; website?: string | null
@@ -55,6 +59,7 @@ export default function TrainingPartners() {
 function DirectoryTab() {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Partner[] }>('/api/admin/training-partners')
   const [edit, setEdit] = useState<Partner | 'new' | null>(null)
+  const [usageFor, setUsageFor] = useState<Partner | null>(null)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const rows = data?.rows ?? []
@@ -87,6 +92,7 @@ function DirectoryTab() {
                 <td className="small">{[p.city, p.region, p.country].filter(Boolean).join(', ') || '—'}</td>
                 <td>{p.listed ? <Badge tone="ok">published</Badge> : <Badge tone="warn">draft</Badge>}</td>
                 <td className="row" style={{ gap: '.3rem', justifyContent: 'flex-end' }}>
+                  <button className="btn ghost sm" onClick={() => setUsageFor(p)}>Codes &amp; usage</button>
                   <button className="btn ghost sm" onClick={() => setEdit(p)}>Edit</button>
                   <button className="btn ghost sm" onClick={() => togglePublish(p)}>{p.listed ? 'Unpublish' : 'Publish'}</button>
                   <button className="btn ghost sm danger" onClick={() => del(p)}>Delete</button>
@@ -98,6 +104,7 @@ function DirectoryTab() {
       )}
       {edit && <PartnerEditor partner={edit === 'new' ? null : edit} busy={busy} setBusy={setBusy}
         onClose={() => setEdit(null)} onSaved={() => { setEdit(null); refetch() }} />}
+      {usageFor && <PartnerUsage partner={usageFor} onClose={() => setUsageFor(null)} />}
     </Card>
   )
 }
@@ -110,11 +117,16 @@ function PartnerEditor({ partner, busy, setBusy, onClose, onSaved }:
   async function save() {
     if (!(f.name ?? '').trim()) { setErr('A name is required.'); return }
     setBusy(true); setErr(null)
+    // blank limit → null (no limit); the limits only apply on PATCH — the create POST ignores them
+    const num = (v: unknown) => (v === '' || v == null ? null : Number(v))
     const body = {
       name: f.name, tier: f.tier, country: f.country ?? '', region: f.region ?? '', city: f.city ?? '',
       website: f.website ?? '', logo_url: f.logo_url ?? '', summary: f.summary ?? '',
       description: f.description ?? '', specialties: f.specialties ?? '', contact_email: f.contact_email ?? '',
       listed: !!f.listed, sort_order: Number(f.sort_order ?? 0),
+      max_discount_percent: num(f.max_discount_percent), max_codes: num(f.max_codes),
+      max_uses_per_code: num(f.max_uses_per_code), total_allocation: num(f.total_allocation),
+      allow_full_sponsorship: !!f.allow_full_sponsorship,
     }
     try {
       if (partner) await adminApi.patch(`/api/admin/training-partners/${partner.id}`, body)
@@ -148,6 +160,19 @@ function PartnerEditor({ partner, busy, setBusy, onClose, onSaved }:
           <label>Specialties <span className="muted small">(comma or newline separated)</span><textarea rows={2} value={f.specialties ?? ''} onChange={set('specialties')} /></label>
           <label>Description<textarea rows={4} value={f.description ?? ''} onChange={set('description')} /></label>
           <label>Contact email<input value={f.contact_email ?? ''} onChange={set('contact_email')} /></label>
+          <fieldset style={{ border: '1px solid var(--line,#e2e8f0)', borderRadius: 10, padding: '.75rem', margin: 0 }}>
+            <legend className="small" style={{ fontWeight: 700, padding: '0 .3rem' }}>Sponsorship limits</legend>
+            <p className="muted small" style={{ marginTop: 0 }}>Ceilings for this institution's sponsorship codes. Leave a field blank for no limit.</p>
+            <div style={{ display: 'grid', gap: '.55rem', gridTemplateColumns: 'repeat(auto-fit,minmax(140px,1fr))' }}>
+              <label>Max discount %<input type="number" min="0" max="100" value={String(f.max_discount_percent ?? '')} onChange={set('max_discount_percent')} /></label>
+              <label>Max codes<input type="number" min="0" value={String(f.max_codes ?? '')} onChange={set('max_codes')} /></label>
+              <label>Max uses per code<input type="number" min="0" value={String(f.max_uses_per_code ?? '')} onChange={set('max_uses_per_code')} /></label>
+              <label>Total allocation<input type="number" min="0" value={String(f.total_allocation ?? '')} onChange={set('total_allocation')} /></label>
+            </div>
+            <label className="row" style={{ gap: '.4rem', marginTop: '.5rem' }}>
+              <input type="checkbox" checked={!!f.allow_full_sponsorship} onChange={(e) => setF({ ...f, allow_full_sponsorship: e.target.checked ? 1 : 0 })} style={{ width: 'auto' }} /> Allow 100% sponsorship
+            </label>
+          </fieldset>
           <div style={{ display: 'grid', gap: '.55rem', gridTemplateColumns: '1fr 1fr' }}>
             <label>Sort order<input type="number" value={String(f.sort_order ?? 0)} onChange={set('sort_order')} /></label>
             <label className="row" style={{ gap: '.4rem', alignItems: 'center', marginTop: '1.5rem' }}>
@@ -159,6 +184,136 @@ function PartnerEditor({ partner, busy, setBusy, onClose, onSaved }:
           <button className="btn" disabled={busy} onClick={save}>{busy ? 'Saving…' : 'Save'}</button>
           <button className="btn ghost" onClick={onClose}>Cancel</button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+// ---------------- Codes & usage (institution sponsorship) ----------------
+interface PartnerCode {
+  id: number; code: string; discount_value: number; applies_to?: string | null
+  max_uses?: number | null; used_count?: number | null; active?: number | null
+  end_date?: string | null; created_at?: string | null
+}
+interface SponsoredStudent { id?: number | null; email?: string | null; first_name?: string | null; last_name?: string | null; redeemed_at?: string | null; code?: string | null }
+interface PartnerUsageResp {
+  partner: Record<string, unknown>
+  codes: PartnerCode[]
+  used_total: number
+  allocation: number | null
+  remaining: number | null
+  students: SponsoredStudent[]
+}
+
+// The 422s the code-creation endpoint returns when a request breaches the partner's ceilings.
+function codeCreateError(e: unknown): string {
+  const body = e instanceof ApiError && e.body && typeof e.body === 'object' ? (e.body as Record<string, unknown>) : null
+  const code = typeof body?.error === 'string' ? body.error : ''
+  const limit = body?.limit != null ? String(body.limit) : ''
+  switch (code) {
+    case 'over_percent_limit': return `Over the partner's discount limit (max ${limit}%).`
+    case 'full_sponsorship_not_allowed': return '100% sponsorship is not allowed for this partner.'
+    case 'over_uses_limit': return `Over the per-code uses limit (max ${limit}).`
+    case 'over_code_limit': return `This partner has reached its code limit (max ${limit}).`
+    case 'over_total_allocation': return `Over the partner's total allocation (${limit} sponsored registrations).`
+    case 'code_taken': return 'That code already exists — choose another.'
+    default: return e instanceof Error ? e.message : 'Could not create the code.'
+  }
+}
+
+function PartnerUsage({ partner, onClose }: { partner: Partner; onClose: () => void }) {
+  const { data, loading, error, refetch } = useAdminQuery<PartnerUsageResp>(`/api/admin/training-partners/${partner.id}/usage`)
+  const [percent, setPercent] = useState('10')
+  const [maxUses, setMaxUses] = useState('1')
+  const [appliesTo, setAppliesTo] = useState('all')
+  const [endDate, setEndDate] = useState('')
+  const [customCode, setCustomCode] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
+
+  async function createCode() {
+    setBusy(true); setMsg(null)
+    try {
+      const body: Record<string, unknown> = { percent: Number(percent) || 0, max_uses: Number(maxUses) || 1, applies_to: appliesTo }
+      if (endDate) body.end_date = endDate
+      if (customCode.trim()) body.code = customCode.trim()
+      const r = await adminApi.post<{ code: string }>(`/api/admin/training-partners/${partner.id}/codes`, body)
+      setMsg({ ok: true, text: `Code ${r.code} created.` })
+      setCustomCode('')
+      refetch()
+    } catch (e) {
+      setMsg({ ok: false, text: codeCreateError(e) })
+    } finally { setBusy(false) }
+  }
+
+  return (
+    <div className="drawer-backdrop" onClick={onClose}>
+      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+        <div className="spread" style={{ marginBottom: '1rem' }}>
+          <h2 style={{ margin: 0 }}>{partner.name} — codes &amp; usage</h2>
+          <button className="btn secondary sm" onClick={onClose}>Close</button>
+        </div>
+        {loading && !data ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : !data ? null : (
+          <>
+            <p className="small" style={{ marginTop: 0 }}>
+              <strong>{data.allocation != null ? `Used ${data.used_total} of ${data.allocation} (${data.remaining ?? 0} remaining)` : `Used ${data.used_total}`}</strong>
+            </p>
+
+            <Section title={`Codes (${data.codes.length})`}>
+              {data.codes.length === 0 ? <p className="muted small">No codes yet.</p> : (
+                <table className="data">
+                  <thead><tr><th>Code</th><th>%</th><th>Uses</th><th>Active</th><th>Expiry</th></tr></thead>
+                  <tbody>
+                    {data.codes.map((c) => (
+                      <tr key={c.id}>
+                        <td className="small"><strong>{c.code}</strong>{c.applies_to && c.applies_to !== 'all' ? <div className="muted small">{c.applies_to}</div> : null}</td>
+                        <td className="small">{c.discount_value}%</td>
+                        <td className="small">{c.used_count ?? 0}/{c.max_uses ?? '∞'}</td>
+                        <td>{c.active ? <Badge tone="ok">active</Badge> : <Badge tone="neutral">off</Badge>}</td>
+                        <td className="small muted">{c.end_date ? fmtDate(c.end_date) : '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </Section>
+
+            <Section title="Create a code">
+              {msg && <div className={'notice' + (msg.ok ? '' : ' err')} role="status" style={{ marginBottom: '.5rem' }}>{msg.text}</div>}
+              <div className="row" style={{ flexWrap: 'wrap', alignItems: 'flex-end', gap: '.5rem' }}>
+                <label>Discount %<input type="number" min="1" max="100" value={percent} onChange={(e) => setPercent(e.target.value)} style={{ maxWidth: 110 }} /></label>
+                <label>Max uses<input type="number" min="1" value={maxUses} onChange={(e) => setMaxUses(e.target.value)} style={{ maxWidth: 100 }} /></label>
+                <label>Applies to
+                  <select value={appliesTo} onChange={(e) => setAppliesTo(e.target.value)} style={{ maxWidth: 150 }}>
+                    <option value="all">All products</option>
+                    <option value="membership">Membership</option>
+                    <option value="exam">Exam</option>
+                  </select>
+                </label>
+                <label>End date<input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} style={{ maxWidth: 160 }} /></label>
+                <label>Custom code <span className="muted small">(optional)</span><input value={customCode} onChange={(e) => setCustomCode(e.target.value)} placeholder="auto-generated" style={{ maxWidth: 150 }} /></label>
+                <button className="btn sm" disabled={busy} onClick={createCode}>{busy ? 'Creating…' : 'Create code'}</button>
+              </div>
+            </Section>
+
+            <Section title="Sponsored registrations">
+              {data.students.length === 0 ? <p className="muted small">No sponsored registrations yet.</p> : (
+                <table className="data">
+                  <thead><tr><th>Student</th><th>Code</th><th>Date</th></tr></thead>
+                  <tbody>
+                    {data.students.map((s, i) => (
+                      <tr key={i}>
+                        <td className="small">{s.email || '—'}</td>
+                        <td className="small">{s.code || '—'}</td>
+                        <td className="small muted">{fmtDate(s.redeemed_at)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </Section>
+          </>
+        )}
       </div>
     </div>
   )

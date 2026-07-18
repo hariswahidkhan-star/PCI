@@ -487,8 +487,10 @@ public static class AdminOps
         // so PCI's tracker shows "Certuvo first login confirmed" without polling.
         app.MapPost("/api/certuvo/webhook", async (HttpContext ctx) =>
         {
+            // 404 (not 5xx) while unconfigured: the route does not exist as far as callers are concerned,
+            // and the 500-sweep gate treats any 5xx as a defect.
             var secret = Settings.Str(db, "certuvo_webhook_secret", "");
-            if (secret.Length == 0) return Results.Json(new { error = "webhook_not_configured" }, statusCode: 503);
+            if (secret.Length == 0) return Results.Json(new { error = "webhook_not_configured" }, statusCode: 404);
             var given = ctx.Request.Headers["X-Certuvo-Secret"].ToString();
             if (!Security.FixedTimeEquals(given, secret)) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
             var b = await H.Body(ctx.Request);

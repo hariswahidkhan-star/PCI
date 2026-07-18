@@ -40,6 +40,8 @@ export default function Layout() {
   const unread = me?.unread ?? 0
   const completion = Number((me?.profile as Record<string, unknown> | null)?.profile_completion_percentage ?? 100)
   const memberActive = me?.lifecycle.membership_status === 'active'
+  // Staff support view (admin impersonation): a permanent, non-dismissible banner on every page.
+  const impersonated = !!(user?.impersonated || me?.user.impersonated)
   const [menuOpen, setMenuOpen] = useState(false)
   // .main is the app's scroll container (not the body), so reset it on navigation
   const mainRef = useRef<HTMLDivElement>(null)
@@ -74,28 +76,35 @@ export default function Layout() {
         </div>
       </aside>
 
-      <div className="main" ref={mainRef}>
-        <header className="topbar">
-          <div className="row">
-            <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>
-            <div>
-              <div className="tb-crumb">{t('shell.studentPortal')}</div>
-              <strong className="tb-title">{t(TITLE_KEYS[loc.pathname] ?? 'shell.studentPortal')}</strong>
-            </div>
+      <div className="main-col">
+        {impersonated && (
+          <div className="impersonation-banner" role="status">
+            Support view — you are viewing this account as PCI staff. Actions that belong to the student are disabled.
           </div>
-          <div className="row">
-            <LanguageSwitcher />
-            <div className="avatar" title={user?.email}>{initials(user?.firstName, user?.lastName)}</div>
-            <div className="small" style={{ lineHeight: 1.2 }}>
-              <div style={{ fontWeight: 700 }}>{user ? `${user.firstName} ${user.lastName}`.trim() || user.email : ''}</div>
-              <div className="muted">{user?.email}</div>
+        )}
+        <div className="main" ref={mainRef}>
+          <header className="topbar">
+            <div className="row">
+              <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>
+              <div>
+                <div className="tb-crumb">{t('shell.studentPortal')}</div>
+                <strong className="tb-title">{t(TITLE_KEYS[loc.pathname] ?? 'shell.studentPortal')}</strong>
+              </div>
             </div>
-            <button className="btn secondary sm" onClick={logout}>{t('shell.signOut')}</button>
-          </div>
-        </header>
-        <main className="content route-fade" key={loc.pathname}>
-          <Outlet />
-        </main>
+            <div className="row">
+              <LanguageSwitcher />
+              <div className="avatar" title={user?.email}>{initials(user?.firstName, user?.lastName)}</div>
+              <div className="small" style={{ lineHeight: 1.2 }}>
+                <div style={{ fontWeight: 700 }}>{user ? `${user.firstName} ${user.lastName}`.trim() || user.email : ''}</div>
+                <div className="muted">{user?.email}</div>
+              </div>
+              <button className="btn secondary sm" onClick={logout}>{t('shell.signOut')}</button>
+            </div>
+          </header>
+          <main className="content route-fade" key={loc.pathname}>
+            <Outlet />
+          </main>
+        </div>
       </div>
     </div>
   )
