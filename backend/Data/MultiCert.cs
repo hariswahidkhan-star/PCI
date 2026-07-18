@@ -142,6 +142,59 @@ public static class MultiCert
             "The PCI AI Project Delivery Leader™ (PCI PDL-AI™) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.",
             "pdl-ai, pci pdl-ai, project delivery leader, project management certification, project leadership, agile, hybrid delivery",
             delivery);
+
+        EnsureRoutes(db);
+    }
+
+    // The default application-route set (Phase 4). Every certification offers these; the admin enables,
+    // disables, prices and dates each independently. Identifiers (route_key) are clean and stable.
+    static readonly (string key, string label, string desc, int exam, int approval, int pub, string feeMode)[] DefaultRoutes =
+    {
+        ("standard","Standard Route","For candidates meeting the education and professional-experience requirements.",1,1,1,"standard"),
+        ("founding","Founding Route","For early applicants approved under PCI's founding-professional criteria.",1,1,1,"custom"),
+        ("honorary","Honorary Route","Recognising distinguished contribution to the profession — assessed, not examination-based.",0,1,1,"free"),
+        ("sponsored","Sponsored Route","Employer-, institution-, government- or scholarship-funded applications.",1,0,1,"sponsored"),
+        ("complimentary","Complimentary Route","A complimentary application approved by PCI.",1,1,1,"free"),
+        ("waived_full","Fully Waived Route","A full fee waiver approved by PCI.",1,1,1,"free"),
+        ("waived_partial","Partially Waived Route","A partial fee waiver approved by PCI.",1,1,1,"waived_partial"),
+        ("test","Test User Route","Internal test applications — not shown on the public website.",1,0,0,"free"),
+    };
+
+    /// <summary>Create the per-certification routes table and ensure every active certification carries the
+    /// full default route set (idempotent; existing/edited routes are never overwritten).</summary>
+    public static void EnsureRoutes(Db db)
+    {
+        db.Exec(@"CREATE TABLE IF NOT EXISTS certification_routes(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            certification_id INTEGER NOT NULL DEFAULT 1,
+            route_key TEXT NOT NULL,
+            label TEXT, description TEXT,
+            enabled INTEGER DEFAULT 1,
+            public INTEGER DEFAULT 1,
+            exam_required INTEGER DEFAULT 1,
+            requires_approval INTEGER DEFAULT 1,
+            fee_mode TEXT DEFAULT 'standard',
+            fee_amount REAL,
+            discount_pct REAL,
+            opens_at TEXT, closes_at TEXT,
+            max_applications INTEGER, max_approvals INTEGER,
+            certificate_wording TEXT,
+            sort_order INTEGER DEFAULT 0,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_cert_route ON certification_routes(certification_id, route_key)");
+        foreach (var cert in db.Query("SELECT id FROM certifications"))
+        {
+            var cid = Convert.ToInt64(cert["id"]);
+            int so = 0;
+            foreach (var r in DefaultRoutes)
+            {
+                so += 10;
+                db.Execute(@"INSERT OR IGNORE INTO certification_routes
+                    (certification_id,route_key,label,description,enabled,public,exam_required,requires_approval,fee_mode,sort_order)
+                    VALUES(?,?,?,?,1,?,?,?,?,?)",
+                    cid, r.key, r.label, r.desc, r.pub, r.exam, r.approval, r.feeMode, so);
+            }
+        }
     }
 
     static void MigrateCert(Db db, long id, string[] oldCodes, string code, string name, string designation, string shortName,

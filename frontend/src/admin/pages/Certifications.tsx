@@ -156,9 +156,59 @@ function statusTone(s?: string | null): 'ok' | 'warn' | 'err' | 'neutral' {
   return 'warn'
 }
 
+interface RouteRow {
+  id: number; route_key: string; label: string; description?: string | null
+  enabled?: number; public?: number; exam_required?: number; requires_approval?: number
+  fee_mode?: string | null; sort_order?: number
+}
+const FEE_MODES = ['standard', 'free', 'waived_partial', 'sponsored', 'custom'] as const
+
+// Per-certification application routes: Standard / Founding / Honorary / Sponsored / Complimentary /
+// Fully & Partially Waived / Test User — each toggled, gated and priced independently.
+function RoutesDrawer({ cert, onClose }: { cert: CertRow; onClose: () => void }) {
+  const { data, loading, error, refetch } = useAdminQuery<{ rows: RouteRow[] }>(`/api/admin/certifications/${cert.id}/routes`)
+  async function patch(rid: number, body: Record<string, unknown>) {
+    try { await adminApi.patch(`/api/admin/certification-routes/${rid}`, body); refetch() }
+    catch (e) { alert(e instanceof Error ? e.message : 'Could not save.') }
+  }
+  return (
+    <div className="drawer-backdrop" onClick={onClose}>
+      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+        <div className="spread" style={{ marginBottom: '1rem' }}>
+          <h2 style={{ margin: 0 }}>Application routes — {cert.acronym || cert.code}</h2>
+          <button className="btn secondary sm" onClick={onClose}>Close</button>
+        </div>
+        <p className="muted" style={{ marginTop: 0 }}>Enable, expose publicly, require an exam or approval, and set the fee mode for each route — independently for this certification.</p>
+        {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : (
+          <table className="data">
+            <thead><tr><th>Route</th><th>Enabled</th><th>Public</th><th>Exam</th><th>Approval</th><th>Fee mode</th></tr></thead>
+            <tbody>
+              {data?.rows.map((r) => (
+                <tr key={r.id}>
+                  <td><strong>{r.label}</strong><br /><span className="muted" style={{ fontSize: '.8em' }}>{r.route_key}</span></td>
+                  <td><input type="checkbox" checked={!!r.enabled} onChange={(e) => patch(r.id, { enabled: e.target.checked })} /></td>
+                  <td><input type="checkbox" checked={!!r.public} onChange={(e) => patch(r.id, { public: e.target.checked })} /></td>
+                  <td><input type="checkbox" checked={!!r.exam_required} onChange={(e) => patch(r.id, { exam_required: e.target.checked })} /></td>
+                  <td><input type="checkbox" checked={!!r.requires_approval} onChange={(e) => patch(r.id, { requires_approval: e.target.checked })} /></td>
+                  <td>
+                    <select value={r.fee_mode ?? 'standard'} onChange={(e) => patch(r.id, { fee_mode: e.target.value })}>
+                      {FEE_MODES.map((m) => <option key={m} value={m}>{m}</option>)}
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function Certifications() {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: CertRow[] }>('/api/admin/certifications')
   const [editing, setEditing] = useState<Draft | null | undefined>(undefined) // undefined = closed
+  const [routesCert, setRoutesCert] = useState<CertRow | null>(null)
 
   async function remove(c: CertRow) {
     if (!confirm(`Delete certification "${c.name}"? This cannot be undone.`)) return
@@ -187,7 +237,7 @@ export default function Certifications() {
         ) : (
           <table className="data">
             <thead>
-              <tr><th>Code</th><th>Name</th><th>Status</th><th>Price</th><th>Pass</th><th>Bank</th><th>Entitlements</th><th>Creds</th><th></th><th></th></tr>
+              <tr><th>Code</th><th>Name</th><th>Status</th><th>Price</th><th>Pass</th><th>Bank</th><th>Entitlements</th><th>Creds</th><th></th><th></th><th></th></tr>
             </thead>
             <tbody>
               {data.rows.map((c) => (
@@ -200,6 +250,7 @@ export default function Certifications() {
                   <td>{c.bank_size ?? 0}</td>
                   <td>{c.entitlements ?? 0}</td>
                   <td>{c.credentials ?? 0}</td>
+                  <td><button className="btn ghost sm" onClick={() => setRoutesCert(c)}>Routes</button></td>
                   <td><button className="btn ghost sm" onClick={() => setEditing(c)}>Edit</button></td>
                   <td>{c.id === 1 ? null : <button className="btn ghost sm" onClick={() => remove(c)}>Delete</button>}</td>
                 </tr>
@@ -210,6 +261,7 @@ export default function Certifications() {
       </Card>
 
       {editing !== undefined && <Editor initial={editing} onClose={() => setEditing(undefined)} onSaved={() => { setEditing(undefined); refetch() }} />}
+      {routesCert && <RoutesDrawer cert={routesCert} onClose={() => setRoutesCert(null)} />}
     </div>
   )
 }

@@ -216,6 +216,23 @@ public static class AdminMgmt
             CertCatalogue.Bump(); PriceTags.Bump();
             return J(new { ok = true });
         }));
+
+        // ── Per-certification application routes (Phase 4) ──
+        app.MapGet("/api/admin/certifications/{id}/routes", (HttpRequest req, long id) => gate(req, "exams", _ =>
+            J(new { rows = db.Query("SELECT * FROM certification_routes WHERE certification_id=? ORDER BY sort_order, id", id) })));
+        app.MapPatch("/api/admin/certification-routes/{rid}", (HttpRequest req, long rid) => gate(req, "exams", adm =>
+        {
+            var b = H.Body(req).GetAwaiter().GetResult();
+            var allowed = new[]{ "label","description","enabled","public","exam_required","requires_approval","fee_mode","fee_amount","discount_pct","opens_at","closes_at","max_applications","max_approvals","certificate_wording","sort_order" };
+            var set = allowed.Where(c => b.ContainsKey(c)).ToList();
+            if (set.Count == 0) return J(new { ok = true });
+            var vals = set.Select(c => { var v = b[c]; return (object?)(v.ValueKind == JsonValueKind.String ? v.GetString() : v.ValueKind == JsonValueKind.True ? 1 : v.ValueKind == JsonValueKind.False ? 0 : v.ValueKind == JsonValueKind.Null ? null : v.ToString()); }).Append((object?)rid).ToArray();
+            db.Execute($"UPDATE certification_routes SET {string.Join(",", set.Select(c => c + "=?"))}, updated_at=datetime('now') WHERE id=?", vals);
+            log(adm.Id, "cert_route_update", rid.ToString());
+            CertCatalogue.Bump();
+            return J(new { ok = true });
+        }));
+
         Crud("governance_roles", new[]{ "role","holder","status","remit","sort_order" }, "sort_order, id", "governance");
         Crud("resources", new[]{ "title","category","doc_type","url","description","published","sort_order" }, "sort_order, id", "resources");
         Crud("news", new[]{ "title","body","published_date","url","published","sort_order" }, "published_date DESC, id DESC", "news");

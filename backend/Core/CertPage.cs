@@ -150,14 +150,18 @@ public static class CertPage
         }
         sb.Append("</div></div></section>");
 
-        // ── routes & how to apply ──
+        // ── routes & how to apply (from the per-certification routes configuration) ──
         sb.Append("<section class=\"sec\"><div class=\"wrap\"><span class=\"eyebrow\">Application routes</span><div class=\"uline\"></div>");
-        sb.Append("<p class=\"lead\">PCI offers configurable application routes for each credential:</p>");
+        sb.Append("<p class=\"lead\">").Append(Esc(acronym)).Append(" offers the following application routes:</p>");
         sb.Append("<ul class=\"cert-routes\">");
-        sb.Append("<li><strong>Standard route</strong> — for candidates meeting the education and professional-experience requirements.</li>");
-        sb.Append("<li><strong>Founding route</strong> — for early applicants approved under PCI's founding-professional criteria.</li>");
-        sb.Append("<li><strong>Honorary route</strong> — recognising distinguished contribution to the profession (assessed, not examination-based).</li>");
-        sb.Append("<li><strong>Sponsored &amp; complimentary</strong> — employer-, institution- or scholarship-funded applications.</li>");
+        foreach (var rt in Routes.For(db, id, publicOnly: true))
+        {
+            var rl = H.Str(rt["label"]) ?? "";
+            var rd = H.Str(rt["description"]) ?? "";
+            sb.Append("<li><strong>").Append(Esc(rl)).Append("</strong>");
+            if (rd.Length > 0) sb.Append(" — ").Append(Esc(rd));
+            sb.Append("</li>");
+        }
         sb.Append("</ul>");
         if (id == Certs.DefaultId)
             // PCP-AI has dedicated public resource pages
