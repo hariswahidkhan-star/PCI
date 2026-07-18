@@ -115,7 +115,9 @@ public static class Partners
                 var email = (H.GetS(row, "email") ?? "").Trim().ToLowerInvariant();
                 if (!System.Text.RegularExpressions.Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
                 { results.Add(new { email, status = "invalid_email" }); continue; }
-                var certId = Certs.Resolve(db, H.GetS(row, "certification") ?? H.GetS(row, "certification_id"));
+                var certSel = Certs.TryResolve(db, H.GetS(row, "certification") ?? H.GetS(row, "certification_id"));
+                if (certSel is null) { results.Add(new { email, status = "bad_certification" }); continue; }
+                var certId = certSel.Value;
                 var cert = Certs.ById(db, certId);
                 if (cert is null) { results.Add(new { email, status = "bad_certification" }); continue; }
                 var route = Routes.Get(db, certId, "sponsored");

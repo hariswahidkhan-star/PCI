@@ -34,8 +34,11 @@ public static class Payments
                 var d = await H.Body(req);
                 var product = PRODUCT_LABEL.ContainsKey(H.GetS(d, "product") ?? "") ? H.GetS(d, "product")! : "membership";
                 var email = H.GetS(d, "email");
-                // Which certification the exam seat is for (id or code; PCL-AI when unspecified).
-                var certRow = Certs.ById(db, Certs.Resolve(db, H.GetS(d, "certification_id", "certification", "cert")));
+                // Which certification the exam seat is for (id or code; the founding certification when
+                // unspecified). An EXPLICIT but unknown value is rejected — never silently converted.
+                var certSelIn = Certs.TryResolve(db, H.GetS(d, "certification_id", "certification", "cert"));
+                if (certSelIn is null) return Results.Json(new { error = "bad_certification", message = "Unknown certification." }, statusCode: 400);
+                var certRow = Certs.ById(db, certSelIn.Value);
                 if (certRow is not null && !H.B(certRow["active"])) return Results.Json(new { error = "certification_inactive" }, statusCode: 400);
                 // A supplied code is re-validated for THIS product server-side (the browser check is only
                 // advisory). If it's invalid or scoped to the other product, reject the checkout rather than

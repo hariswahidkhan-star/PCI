@@ -22,7 +22,8 @@ public static class CertCatalogue
     // Pages that carry a catalogue marker. The render path reads only these few files when they have no
     // other content overrides, and the result is cached — so steady-state serving stays cheap.
     static readonly HashSet<string> Pages = new(StringComparer.OrdinalIgnoreCase)
-    { "certification.html", "certification-scheme.html", "certifications.html", "index.html", "enrol.html", "enroll.html" };
+    { "certification.html", "certification-scheme.html", "certifications.html", "index.html", "enrol.html", "enroll.html",
+      "route-standard.html", "route-founding.html", "route-honorary.html", "exam-structure.html", "certification-roadmap.html" };
 
     public static bool Applies(string slug) => Pages.Contains(slug);
 

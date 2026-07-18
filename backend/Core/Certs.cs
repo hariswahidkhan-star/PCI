@@ -60,6 +60,19 @@ public static class Certs
         return byCode is not null ? H.L(byCode["id"]) : DefaultId;
     }
 
+    /// <summary>STRICT resolve for state-changing intake (applications, sponsorship, checkout): a
+    /// certification value that was explicitly supplied but matches nothing returns null instead of
+    /// silently falling back to the founding certification — an invalid certification in an API
+    /// request must be rejected, never quietly converted into a PCL-AI record. An EMPTY value still
+    /// yields the default so legacy single-certification clients keep working.</summary>
+    public static long? TryResolve(Db db, string? idOrCode)
+    {
+        if (string.IsNullOrWhiteSpace(idOrCode)) return DefaultId;
+        if (long.TryParse(idOrCode, out var n)) return ById(db, n) is not null ? n : null;
+        var byCode = ByCode(db, idOrCode);
+        return byCode is not null ? H.L(byCode["id"]) : (long?)null;
+    }
+
     /// <summary>Per-certification exam configuration: certification column when set, else the
     /// global exam_* setting, else the built-in default. Timing windows (open-before/grace) and
     /// proctoring requirements stay global — they are operational policy, not credential design.</summary>

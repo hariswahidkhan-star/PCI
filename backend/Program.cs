@@ -810,15 +810,28 @@ app.Use(async (ctx, next) =>
         if (reqPath.StartsWith("/certifications", StringComparison.OrdinalIgnoreCase))
         {
             var rest = reqPath.Length > 15 ? reqPath.Substring(15).Trim('/') : "";  // "/certifications".Length == 15
-            // Catalogue-level aliases: stable URLs for compare/routes/fees/exams that forward to the
-            // page (or anchored section) currently carrying that content. Query string is preserved
-            // ahead of any fragment.
+            // The dynamic suite comparison page — rendered live from the certifications, routes and
+            // pricing tables, with #compare/#routes/#fees/#exams anchors as the canonical home of
+            // that content. The aliases below deep-link into it.
+            if (rest.Equals("compare", StringComparison.OrdinalIgnoreCase))
+            {
+                var cmp = PCI.Backend.Core.CertCompare.Render(db, webRoot, PCI.Backend.Core.I18nContent.ActiveLang(ctx));
+                if (cmp is not null)
+                {
+                    ctx.Response.ContentType = "text/html; charset=utf-8";
+                    ctx.Response.Headers.CacheControl = "no-cache";
+                    ctx.Response.Headers.Vary = "Cookie";
+                    await ctx.Response.WriteAsync(cmp);
+                    return;
+                }
+            }
+            // Catalogue-level aliases: stable URLs for routes/fees/exams deep-linking into the live
+            // comparison page's anchored sections. Query string is preserved ahead of any fragment.
             var certAlias = rest.ToLowerInvariant() switch
             {
-                "compare" => "/certifications",
-                "routes" => "/certification.html#routes",
-                "fees" => "/certification.html#fees",
-                "exams" => "/exam-structure.html",
+                "routes" => "/certifications/compare#routes",
+                "fees" => "/certifications/compare#fees",
+                "exams" => "/certifications/compare#exams",
                 _ => null,
             };
             if (certAlias is not null && certAlias != reqPath)

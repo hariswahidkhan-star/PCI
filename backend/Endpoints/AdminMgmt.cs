@@ -179,6 +179,11 @@ public static class AdminMgmt
                 H.GetS(b, "meta_title"), H.GetS(b, "meta_description"), H.GetS(b, "keywords"),
                 H.GetS(b, "og_title"), H.GetS(b, "og_description"), H.GetS(b, "social_image"),
                 H.GetS(b, "canonical_url"), H.GetS(b, "content_json"));
+            // A brand-new certification must be immediately operable: seed its default application
+            // routes and starter document set (both idempotent — existing certs are never touched).
+            // Without this, a certification created after boot had zero routes until the next restart,
+            // so nobody could apply to it.
+            try { PCI.Backend.Data.MultiCert.EnsureRoutes(db); PCI.Backend.Data.MultiCert.EnsureDocuments(db); } catch { }
             log(adm.Id, "certification_create", $"{codeV} (id {id})");
             CertCatalogue.Bump(); PriceTags.Bump();   // the new credential is live on the public site immediately
             return J(new { ok = true, id });
@@ -472,7 +477,9 @@ public static class AdminMgmt
                 return Results.Json(new { error = "prefix_reserved", message = "PCI-HON is reserved for honorary awards." }, statusCode: 400);
             // Attribute the credential to the chosen certification (defaults to the founding cert). The
             // credential label defaults to that certification's prefix so /api/verify shows the right name.
-            var credCertId = Certs.Resolve(db, H.GetS(b, "certification_id", "certification"));
+            var credCertSel = Certs.TryResolve(db, H.GetS(b, "certification_id", "certification"));
+            if (credCertSel is null) return Results.Json(new { error = "bad_certification" }, statusCode: 400);
+            var credCertId = credCertSel.Value;
             if (adminFromReq(req) is { } cadm && !cadm.CanCert(credCertId))
                 return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
             var credCert = Certs.ById(db, credCertId);

@@ -195,8 +195,9 @@ public static class Public
         // (e.g. Test User) are filtered out; each entry says whether the route requires review or an exam.
         app.MapGet("/api/certifications/{id}/routes", (string id) =>
         {
-            var certId = Certs.Resolve(db, id);
-            if (certId == 0 || Certs.ById(db, certId) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var certSel = Certs.TryResolve(db, id);
+            if (certSel is null || Certs.ById(db, certSel.Value) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var certId = certSel.Value;
             var rows = Routes.For(db, certId, publicOnly: true).Select(r => new
             {
                 route_key = r["route_key"], label = r["label"], description = r["description"],
@@ -212,7 +213,10 @@ public static class Public
             var code = H.GetS(b, "code"); var product = H.GetS(b, "product") ?? "membership"; var email = H.GetS(b, "email");
             // The selected certification scopes both the code validity and the exam price.
             var certSel = H.GetS(b, "cert");
-            var certRow = string.IsNullOrWhiteSpace(certSel) ? null : Certs.ById(db, Certs.Resolve(db, certSel));
+            var certResolved = string.IsNullOrWhiteSpace(certSel) ? null : Certs.TryResolve(db, certSel);
+            if (!string.IsNullOrWhiteSpace(certSel) && certResolved is null)
+                return J(new { valid = false, message = "Unknown certification." });
+            var certRow = certResolved is null ? null : Certs.ById(db, certResolved.Value);
             var certId = certRow is null ? (long?)null : H.L(certRow["id"]);
             var v = ValidateCode(db, code, product, email, certId);
             if (v.Error is not null) return J(new { valid = false, message = v.Error });

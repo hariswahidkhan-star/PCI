@@ -24,7 +24,9 @@ public static class Applications
             var u = Auth.UserFromReq(ctx.Request, db);
             if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             var b = await H.Body(ctx.Request);
-            var certId = Certs.Resolve(db, H.GetS(b, "certification") ?? H.GetS(b, "certification_id"));
+            var certSel = Certs.TryResolve(db, H.GetS(b, "certification") ?? H.GetS(b, "certification_id"));
+            if (certSel is null) return Results.Json(new { error = "bad_certification", message = "Unknown certification." }, statusCode: 400);
+            var certId = certSel.Value;
             var cert = Certs.ById(db, certId);
             if (cert is null) return Results.Json(new { error = "bad_certification" }, statusCode: 400);
             var routeKey = (H.GetS(b, "route") ?? H.GetS(b, "route_key") ?? "standard").Trim().ToLowerInvariant();
