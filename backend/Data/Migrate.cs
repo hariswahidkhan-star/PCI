@@ -120,6 +120,38 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_tpapp_status ON training_partner_applications(status)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS training_partner_application_documents(id INTEGER PRIMARY KEY AUTOINCREMENT,application_id INTEGER NOT NULL,doc_kind TEXT DEFAULT 'supporting',filename TEXT,mime TEXT,size_bytes INTEGER,storage_ref TEXT,sha256 TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_tpappdoc_app ON training_partner_application_documents(application_id)");
+        // Partner dashboards: commission attribution and candidate sponsorship, riding on the
+        // institution portal's partner_users auth. partner_type widens the directory to
+        // institutions/sponsors; a discount code carrying partner_id attributes its paid redemptions
+        // to that partner, from which commission accrual is DERIVED on demand (no hook in the payment
+        // path). Payouts are the only materialized ledger rows; balance = accrued − paid out.
+        AddCol("training_partners", "partner_type", "partner_type TEXT DEFAULT 'training'");
+        AddCol("training_partners", "contact_name", "contact_name TEXT");
+        AddCol("training_partners", "commission_pct", "commission_pct REAL DEFAULT 0");
+        AddCol("training_partners", "sponsor_enabled", "sponsor_enabled INTEGER DEFAULT 0");
+        AddCol("discount_codes", "partner_id", "partner_id INTEGER");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_sponsorships(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            partner_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            application_id INTEGER,
+            certification_id INTEGER NOT NULL DEFAULT 1,
+            route_key TEXT DEFAULT 'sponsored',
+            candidate_email TEXT,
+            candidate_name TEXT,
+            status TEXT DEFAULT 'registered',
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_sponsorships_partner ON partner_sponsorships(partner_id)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_sponsorship_candidate ON partner_sponsorships(partner_id, user_id, certification_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_payouts(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            partner_id INTEGER NOT NULL,
+            amount REAL NOT NULL,
+            currency TEXT DEFAULT 'USD',
+            note TEXT,
+            paid_by INTEGER,
+            paid_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_payouts_partner ON partner_payouts(partner_id)");
         // Certuvo practice attempts (Phase 8): one row per practice quiz / mock — formative, un-proctored,
         // separate from the certifying exam_attempts. Stores the served question set, the answers and the
         // graded score with a per-domain breakdown.
@@ -477,6 +509,74 @@ public static class Migrate
             AddCol(t, "certification_id", "certification_id INTEGER DEFAULT 1");
             db.Exec($"UPDATE {t} SET certification_id=1 WHERE certification_id IS NULL");
         }
+        // Application-route provenance: the route an entitlement was granted through (NULL for ordinary
+        // paid entitlements), and the certificate wording snapshotted onto a credential at issue time so
+        // it never drifts if the route's wording is later edited.
+        AddCol("exam_entitlements", "route_key", "route_key TEXT");
+        AddCol("issued_credentials", "route_key", "route_key TEXT");
+        AddCol("issued_credentials", "certificate_wording", "certificate_wording TEXT");
+
+        // ── Multi-certification catalogue fields (Phase 1) ──
+        // Additive columns that make each certification fully self-describing for the public catalogue,
+        // per-certification landing pages and SEO. Idempotent on both providers; no existing data touched.
+        foreach (var (col, ddl) in new (string, string)[]
+        {
+            ("acronym","acronym TEXT"), ("short_name","short_name TEXT"), ("public_title","public_title TEXT"),
+            ("tagline","tagline TEXT"), ("short_description","short_description TEXT"), ("category","category TEXT"),
+            ("level","level TEXT"), ("status","status TEXT"), ("slug","slug TEXT"), ("audience","audience TEXT"),
+            ("overview","overview TEXT"), ("application_fee","application_fee REAL"),
+            ("membership_required","membership_required INTEGER DEFAULT 0"), ("next_exam_note","next_exam_note TEXT"),
+            ("meta_title","meta_title TEXT"), ("meta_description","meta_description TEXT"), ("keywords","keywords TEXT"),
+            ("og_title","og_title TEXT"), ("og_description","og_description TEXT"), ("social_image","social_image TEXT"),
+            ("canonical_url","canonical_url TEXT"), ("content_json","content_json TEXT"),
+            // Certuvo mapping (Phase 8): which Certuvo prep product this credential maps to, and whether enabled.
+            ("certuvo_enabled","certuvo_enabled INTEGER DEFAULT 1"), ("certuvo_product","certuvo_product TEXT"),
+        })
+            AddCol("certifications", col, ddl);
+
+        // ── Per-certification documents, books & study materials (Phase 8) ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cert_documents(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            certification_id INTEGER,                 -- NULL = applies to all certifications
+            kind TEXT DEFAULT 'general',              -- handbook | bok | study_guide | book | form | policy | general
+            title TEXT NOT NULL,
+            description TEXT,
+            url TEXT,                                 -- link or storage reference to the file
+            route_key TEXT,                           -- NULL = all routes; else limit to one application route
+            watermark INTEGER DEFAULT 0,              -- 1 = deliver as a personalised watermarked copy
+            published INTEGER DEFAULT 1,
+            sort_order INTEGER DEFAULT 0,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cert_documents_cert ON cert_documents(certification_id)");
+
+        // ── Per-certification applications (Phase 4b): one record per (candidate, certification, route) ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS certification_applications(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            application_no VARCHAR(40) UNIQUE,
+            user_id INTEGER NOT NULL,
+            certification_id INTEGER NOT NULL,
+            route_key TEXT NOT NULL,
+            status VARCHAR(24) NOT NULL DEFAULT 'submitted',   -- submitted | under_review | info_requested | approved | rejected | withdrawn
+            workflow_stage TEXT DEFAULT 'application_submitted',
+            data_json TEXT,                              -- route-specific captured fields
+            blocker TEXT,
+            decided_by INTEGER, decided_at TEXT, admin_note TEXT,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cert_apps_user ON certification_applications(user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cert_apps_cert ON certification_applications(certification_id, status)");
+
+        // ── Discount codes: certification / route / fee scoping (Phase 5) ──
+        // certification_id NULL = valid for every certification; route_key NULL = every route.
+        AddCol("discount_codes", "certification_id", "certification_id INTEGER");
+        AddCol("discount_codes", "route_key", "route_key TEXT");
+        AddCol("discount_codes", "min_transaction", "min_transaction REAL");
+        AddCol("discount_codes", "max_discount", "max_discount REAL");
+
+        // Granular per-certification admin permissions: JSON array of certification ids an admin is
+        // restricted to (NULL/empty = all certifications — the default, and forced for owners).
+        AddCol("admin_users", "cert_scope", "cert_scope TEXT");
+
+        MultiCert.Seed(db);
 
         // bootstrap owner admin on first run (parity with db.js seed)
         try

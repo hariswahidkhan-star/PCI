@@ -12,6 +12,37 @@ public static class Certs
 {
     public const long DefaultId = 1;
 
+    /// <summary>The certification lifecycle statuses. Only Active / Open for Applications expose a public
+    /// Enrol/Apply path; the rest present as not-yet-open or withdrawn.</summary>
+    public static readonly string[] Statuses =
+    {
+        "Draft", "Under Development", "Coming Soon", "Open for Applications",
+        "Active", "Temporarily Suspended", "Closed", "Archived",
+    };
+
+    public static bool ValidStatus(string? s) =>
+        s is not null && Array.Exists(Statuses, x => string.Equals(x, s.Trim(), StringComparison.OrdinalIgnoreCase));
+
+    public static bool IsOpen(string? status) =>
+        string.Equals(status?.Trim(), "Active", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(status?.Trim(), "Open for Applications", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>Normalise a URL slug: lowercase, spaces/underscores→hyphens, strip anything but a-z0-9-.</summary>
+    public static string NormalizeSlug(string? s)
+    {
+        s = (s ?? "").Trim().ToLowerInvariant().Replace(' ', '-').Replace('_', '-');
+        var sb = new System.Text.StringBuilder(s.Length);
+        char prev = '\0';
+        foreach (var ch in s)
+        {
+            var ok = (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || ch == '-';
+            if (!ok) continue;
+            if (ch == '-' && prev == '-') continue;   // collapse repeats
+            sb.Append(ch); prev = ch;
+        }
+        return sb.ToString().Trim('-');
+    }
+
     public static Dictionary<string, object?>? ById(Db db, object? id) =>
         db.QueryOne("SELECT * FROM certifications WHERE id=?", id ?? DefaultId);
 

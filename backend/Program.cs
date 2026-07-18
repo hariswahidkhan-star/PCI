@@ -543,11 +543,13 @@ IResult? OwnerGate(HttpRequest req, out AdminCtx? a)
 app.MapGet("/api/admin/team", (HttpRequest req) =>
 {
     var gate = OwnerGate(req, out _); if (gate is not null) return gate;
-    var rows = db.Query("SELECT id,email,name,role,permissions,status,must_change_pw,last_login_at,created_at FROM admin_users ORDER BY id ASC")
+    var rows = db.Query("SELECT id,email,name,role,permissions,status,must_change_pw,last_login_at,created_at,cert_scope FROM admin_users ORDER BY id ASC")
         .Select(a => {
             var perms = new List<string>();
             try { perms = JsonSerializer.Deserialize<List<string>>(a["permissions"] as string ?? "[]") ?? new(); } catch { }
-            return new Dictionary<string, object?>(a) { ["permissions"] = perms, ["effective"] = Rbac.PermsFor((string)a["role"]!, a["permissions"] as string) };
+            var scope = new List<long>();
+            try { scope = JsonSerializer.Deserialize<List<long>>(a["cert_scope"] as string ?? "[]") ?? new(); } catch { }
+            return new Dictionary<string, object?>(a) { ["permissions"] = perms, ["effective"] = Rbac.PermsFor((string)a["role"]!, a["permissions"] as string), ["cert_scope"] = scope };
         }).ToList();
     // sections is a FLAT list of every permission key (the admin Team permission-picker maps over it).
     // Rbac.Sections is a grouped dictionary; returning it here serialised to an object and crashed the
@@ -567,9 +569,17 @@ app.MapPost("/api/admin/team", async (HttpRequest req) =>
     var role = S(b, "role") ?? "viewer";
     var perms = "[]";
     if (b.TryGetValue("permissions", out var pv) && pv.ValueKind == JsonValueKind.Array) perms = pv.GetRawText();
+    // Optional per-certification scope: an array of certification ids. Empty/absent (and any owner)
+    // means unrestricted. Values are validated to longs, so the stored JSON is always well-formed.
+    string? certScope = null;
+    if (role != "owner" && b.TryGetValue("cert_scope", out var csv) && csv.ValueKind == JsonValueKind.Array)
+    {
+        var ids = csv.EnumerateArray().Where(e => e.ValueKind == JsonValueKind.Number).Select(e => e.GetInt64()).Distinct().ToArray();
+        if (ids.Length > 0) certScope = JsonSerializer.Serialize(ids);
+    }
     var tempPw = S(b, "password") ?? Security.RandomHex(5);
-    var id = db.ExecuteReturningId("INSERT INTO admin_users(email,name,password_hash,role,permissions,status,must_change_pw,created_by) VALUES(?,?,?,?,?, 'active',1,?)",
-        email, S(b, "name") ?? "", BCrypt.Net.BCrypt.HashPassword(tempPw), role, perms, admin!.Id == 0 ? (object?)null : admin.Id);
+    var id = db.ExecuteReturningId("INSERT INTO admin_users(email,name,password_hash,role,permissions,status,must_change_pw,created_by,cert_scope) VALUES(?,?,?,?,?, 'active',1,?,?)",
+        email, S(b, "name") ?? "", BCrypt.Net.BCrypt.HashPassword(tempPw), role, perms, admin!.Id == 0 ? (object?)null : admin.Id, certScope);
     Log(0, "admin_created", $"{email} ({role})");
     return Json(new { ok = true, id, temp_password = tempPw });
 });
@@ -584,6 +594,17 @@ app.MapPatch("/api/admin/team/{id}", async (HttpRequest req, long id) =>
     if (b.ContainsKey("name")) { sets.Add("name=?"); vals.Add(S(b, "name")); }
     if (b.ContainsKey("role")) { sets.Add("role=?"); vals.Add(S(b, "role")); }
     if (b.TryGetValue("permissions", out var pv) && pv.ValueKind == JsonValueKind.Array) { sets.Add("permissions=?"); vals.Add(pv.GetRawText()); }
+    if (b.TryGetValue("cert_scope", out var csv) && csv.ValueKind is JsonValueKind.Array or JsonValueKind.Null)
+    {
+        // An empty array or explicit null clears the restriction (all certifications).
+        string? scope = null;
+        if (csv.ValueKind == JsonValueKind.Array)
+        {
+            var ids = csv.EnumerateArray().Where(e => e.ValueKind == JsonValueKind.Number).Select(e => e.GetInt64()).Distinct().ToArray();
+            if (ids.Length > 0) scope = JsonSerializer.Serialize(ids);
+        }
+        sets.Add("cert_scope=?"); vals.Add(scope);
+    }
     if (b.TryGetValue("status", out var sv))
     {
         var status = sv.GetString();
@@ -709,11 +730,13 @@ PCI.Backend.Endpoints.Forum.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), G
 PCI.Backend.Endpoints.Chat.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);    // self-hosted bot + live chat
 PCI.Backend.Endpoints.Casework.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
+PCI.Backend.Endpoints.Applications.Map(app, db, logFn, GateFn);        // per-certification application submission + review (Phase 4b)
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);
 PCI.Backend.Endpoints.Certificates.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Documents.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);   // Student Documents & Resources module
 PCI.Backend.Endpoints.TrainingPartners.Map(app, db, logFn, GateFn);   // Training Partner framework (Phase 7)
+PCI.Backend.Endpoints.Partners.Map(app, db, logFn, GateFn);           // Partner dashboards: portal token, sponsorship, commissions
 PCI.Backend.Endpoints.Certuvo.Map(app, db, logFn);                    // Certuvo study & practice engine (Phase 8)
 PCI.Backend.Endpoints.AdminI18n.Map(app, db, logFn);
 PCI.Backend.Endpoints.Social.Map(app, db, logFn, GateFn);              // footer social-media links (admin-controlled)
@@ -767,6 +790,51 @@ app.Use(async (ctx, next) =>
             return;
         }
         var reqPath = ctx.Request.Path.Value ?? "/";
+        // The classic HTML admin pages are retired — the React admin at /admin/ is the single console.
+        // Permanently forward the old URLs (and any lingering links/bookmarks) to the new console.
+        if (reqPath.Equals("/admin.html", StringComparison.OrdinalIgnoreCase)
+            || reqPath.Equals("/admin-students.html", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.StatusCode = 301;
+            ctx.Response.Headers.Location = reqPath.Contains("students", StringComparison.OrdinalIgnoreCase) ? "/admin/students" : "/admin/";
+            return;
+        }
+        // ── Multi-certification clean URLs: /certifications (catalogue) and /certifications/{slug} (per credential) ──
+        if (reqPath.StartsWith("/certifications", StringComparison.OrdinalIgnoreCase))
+        {
+            var rest = reqPath.Length > 15 ? reqPath.Substring(15).Trim('/') : "";  // "/certifications".Length == 15
+            // Permanent redirects from previous credential slugs to the final Project Leadership Suite slugs.
+            var certRedirect = rest.ToLowerInvariant() switch
+            {
+                "pcp-ai" or "pcp" => "pcl-ai",
+                "pfip" or "pfip-ai" => "pfl-ai",
+                "cpmd" or "cpmd-ai" or "pml-ai" => "pdl-ai",
+                _ => null,
+            };
+            if (certRedirect is not null)
+            {
+                ctx.Response.StatusCode = 301;
+                ctx.Response.Headers.Location = "/certifications/" + certRedirect + ctx.Request.QueryString;
+                return;
+            }
+            if (rest.Length > 0 && !rest.Contains('/') && !rest.Contains('.'))
+            {
+                var page = PCI.Backend.Core.CertPage.Render(db, webRoot, rest, PCI.Backend.Core.I18nContent.ActiveLang(ctx));
+                if (page is not null)
+                {
+                    ctx.Response.ContentType = "text/html; charset=utf-8";
+                    ctx.Response.Headers.CacheControl = "no-cache";
+                    ctx.Response.Headers.Vary = "Cookie";
+                    await ctx.Response.WriteAsync(page);
+                    return;
+                }
+                // unknown certification slug → fall through to normal 404 handling
+            }
+            else if (rest.Length == 0)
+            {
+                reqPath = "/certifications.html";  // render the catalogue landing through the normal pipeline
+            }
+        }
         var slug = reqPath == "/" ? "index.html" : reqPath.TrimStart('/');
         var isPage = slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..");
         // Active public-website language (?lang= persisted to a cookie, else cookie, else English).
@@ -912,9 +980,8 @@ Console.WriteLine("│  Project Controls Institute — platform is running    �
 Console.WriteLine("├──────────────────────────────────────────────────────┤");
 Console.WriteLine($"│  Website        {u}/");
 Console.WriteLine($"│  Student (React){u}/app/");
-Console.WriteLine($"│  Admin (React)  {u}/admin/");
+Console.WriteLine($"│  Admin console  {u}/admin/");
 Console.WriteLine($"│  Student Panel  {u}/student.html");
-Console.WriteLine($"│  Admin Panel    {u}/admin.html");
 Console.WriteLine($"│  Exam preview   {u}/exam-ui.html");
 Console.WriteLine("└──────────────────────────────────────────────────────┘");
 

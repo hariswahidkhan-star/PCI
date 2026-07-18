@@ -20,6 +20,7 @@ const NAV: NavItem[] = [
   { to: '/payments', label: 'Payments', perm: 'payments', group: 'Students' },
   { to: '/tickets', label: 'Support tickets', perm: 'tickets', group: 'Students' },
   { to: '/documents', label: 'Documents', perm: 'documents', group: 'Students' },
+  { to: '/applications', label: 'Applications', perm: 'members', group: 'Students' },
 
   { to: '/support-inbox', label: 'Support inbox', perm: 'inbox', group: 'Support' },
   { to: '/errors', label: 'Error reports', perm: 'inbox', group: 'Support' },
@@ -102,10 +103,6 @@ export default function AdminLayout() {
             </span>
           ))}
         </nav>
-        <div style={{ marginTop: '1.5rem' }}>
-          <a className="btn ghost sm" href="/admin.html">Classic admin panel ↗</a>
-          <p className="muted small" style={{ marginTop: '.4rem' }}>All other sections live in the classic panel.</p>
-        </div>
       </aside>
 
       <div className="main" ref={mainRef}>

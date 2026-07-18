@@ -9,19 +9,24 @@ public static class AdminProctoring
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log, Func<HttpRequest, string, Func<AdminCtx, IResult>, IResult> gate)
     {
         IResult J(object o) => Results.Json(o);
+        // Per-certification admin scope: a scoped reviewer only ever sees or touches attempts for
+        // their certifications; anything else 404s in lists and 403s on direct access.
+        IResult? DenyCert(AdminCtx adm, Dictionary<string, object?> attempt) =>
+            adm.CanCert(attempt.GetValueOrDefault("certification_id")) ? null
+            : Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
 
-        app.MapGet("/api/admin/exam-sessions", (HttpContext ctx) => gate(ctx.Request, "proctoring", _ =>
-            J(new { rows = db.Query(@"
+        app.MapGet("/api/admin/exam-sessions", (HttpContext ctx) => gate(ctx.Request, "proctoring", adm =>
+            J(new { rows = db.Query($@"
                 SELECT a.id, a.user_id, a.kind, a.started_at, a.submitted_at, a.percent, a.result, a.status,
                        a.violations, a.identity_result, a.identity_confidence, a.evidence_count, a.review_status, a.client_kind,
-                       a.result_status, a.hold_reason, a.released_at,
+                       a.result_status, a.hold_reason, a.released_at, a.certification_id,
                        u.email, u.first_name, u.last_name,
                        (SELECT COUNT(*) FROM proctor_events pe WHERE pe.attempt_id=a.id AND pe.severity IN ('High','Critical')) high_events
                 FROM exam_attempts a LEFT JOIN users u ON u.id=a.user_id
-                WHERE a.kind='exam' ORDER BY a.id DESC") })));
+                WHERE a.kind='exam'{adm.CertFilterSql("a.certification_id")} ORDER BY a.id DESC") })));
 
-        app.MapGet("/api/admin/exam-sessions/live", (HttpContext ctx) => gate(ctx.Request, "proctoring", _ =>
-            J(new { rows = db.Query(@"
+        app.MapGet("/api/admin/exam-sessions/live", (HttpContext ctx) => gate(ctx.Request, "proctoring", adm =>
+            J(new { rows = db.Query($@"
                 SELECT a.id, a.user_id, a.started_at, a.duration_minutes, a.violations, a.identity_result,
                        a.evidence_count, a.client_kind, a.last_heartbeat_at,
                        u.email, u.first_name, u.last_name,
@@ -30,12 +35,13 @@ public static class AdminProctoring
                        (SELECT COUNT(*) FROM proctor_events pe WHERE pe.attempt_id=a.id AND pe.severity IN ('High','Critical')) high_events,
                        (SELECT COUNT(*) FROM proctor_messages pm WHERE pm.attempt_id=a.id AND pm.sender='candidate') candidate_msgs
                 FROM exam_attempts a LEFT JOIN users u ON u.id=a.user_id
-                WHERE a.kind='exam' AND a.status='in_progress' ORDER BY a.id DESC"), now = H.IsoNow })));
+                WHERE a.kind='exam' AND a.status='in_progress'{adm.CertFilterSql("a.certification_id")} ORDER BY a.id DESC"), now = H.IsoNow })));
 
-        app.MapPost("/api/admin/exam-sessions/{id}/message", (HttpContext ctx, long id) => gate(ctx.Request, "proctoring", _ =>
+        app.MapPost("/api/admin/exam-sessions/{id}/message", (HttpContext ctx, long id) => gate(ctx.Request, "proctoring", adm =>
         {
             var a = db.QueryOne("SELECT * FROM exam_attempts WHERE id=?", id);
             if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (DenyCert(adm, a) is { } deny) return deny;
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var body = (H.GetS(b, "body") ?? "").Trim();
             if (body.Length > 1000) body = body[..1000];
@@ -47,10 +53,12 @@ public static class AdminProctoring
 
         // Stream a single evidence artefact by id (proctoring-gated). Serves from blob storage via the
         // stored reference; falls back to the legacy inline data URI for pre-migration rows.
-        app.MapGet("/api/admin/evidence/{id}", (HttpContext ctx, long id) => gate(ctx.Request, "proctoring", _ =>
+        app.MapGet("/api/admin/evidence/{id}", (HttpContext ctx, long id) => gate(ctx.Request, "proctoring", adm =>
         {
-            var e = db.QueryOne("SELECT mime,storage_ref,data_uri FROM exam_evidence WHERE id=?", id);
+            var e = db.QueryOne(@"SELECT ev.mime, ev.storage_ref, ev.data_uri, a.certification_id
+                FROM exam_evidence ev LEFT JOIN exam_attempts a ON a.id=ev.attempt_id WHERE ev.id=?", id);
             if (e is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (DenyCert(adm, e) is { } deny) return deny;
             var reference = H.Str(e["storage_ref"]);
             if (!string.IsNullOrEmpty(reference))
             {
@@ -63,10 +71,11 @@ public static class AdminProctoring
             return Results.Json(new { error = "not_found" }, statusCode: 404);
         }));
 
-        app.MapGet("/api/admin/exam-sessions/{id}", (HttpContext ctx, long id) => gate(ctx.Request, "proctoring", _ =>
+        app.MapGet("/api/admin/exam-sessions/{id}", (HttpContext ctx, long id) => gate(ctx.Request, "proctoring", adm =>
         {
             var a = db.QueryOne("SELECT * FROM exam_attempts WHERE id=?", id);
             if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (DenyCert(adm, a) is { } deny) return deny;
             var user = db.QueryOne("SELECT id,email,first_name,last_name FROM users WHERE id=?", a["user_id"]) ?? new();
             var booking = a["booking_id"] is not null ? db.QueryOne("SELECT * FROM exam_bookings WHERE id=?", a["booking_id"]) : null;
             var events = db.Query("SELECT type,severity,detail,evidence_ref,at FROM proctor_events WHERE attempt_id=? ORDER BY id ASC", id);
@@ -90,6 +99,7 @@ public static class AdminProctoring
         {
             var a = db.QueryOne("SELECT * FROM exam_attempts WHERE id=?", id);
             if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (DenyCert(adm, a) is { } deny) return deny;
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var action = H.GetS(b, "action") ?? "";
             var note = H.GetS(b, "note") ?? ""; if (note.Length > 1000) note = note[..1000];
@@ -153,13 +163,14 @@ public static class AdminProctoring
             return J(new { ok = true });
         }));
 
-        app.MapPost("/api/admin/exam-sessions/launch-code", (HttpContext ctx) => gate(ctx.Request, "proctoring", _ =>
+        app.MapPost("/api/admin/exam-sessions/launch-code", (HttpContext ctx) => gate(ctx.Request, "proctoring", adm =>
         {
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var uid = (long)(H.GetNum(b, "user_id") ?? 0);
             if (uid == 0) return Results.Json(new { error = "user_id_required" }, statusCode: 400);
             var bk = db.QueryOne("SELECT * FROM exam_bookings WHERE user_id=? AND status='scheduled' ORDER BY id DESC", uid);
             if (bk is null) return Results.Json(new { error = "no_booking" }, statusCode: 400);
+            if (DenyCert(adm, bk) is { } deny) return deny;
             var code = "PCI-" + Security.RandomHex(20).ToUpperInvariant();
             db.Execute("INSERT INTO exam_launch_codes(code_hash,user_id,booking_id,expires_at) VALUES(?,?,?,datetime('now','+15 minutes'))", Security.Sha(code), uid, bk["id"]);
             return J(new { code, uri = "pciexam://start?code=" + code, expires_in_seconds = 900 });

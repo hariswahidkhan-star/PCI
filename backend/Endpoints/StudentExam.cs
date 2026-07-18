@@ -92,7 +92,10 @@ public static class StudentExam
                         if (H.Str(a["result_status"]) == "auto_held") { a["percent"] = null; a["result"] = null; a["domain_breakdown"] = null; }
                         return a;
                     }).ToList(),
-                credentials = db.Query("SELECT credential_id,credential,status,issued_at,expires_at,holder_name FROM issued_credentials WHERE user_id=? ORDER BY id DESC", u.Id),
+                credentials = db.Query(@"SELECT ic.credential_id,ic.credential,ic.status,ic.issued_at,ic.expires_at,ic.holder_name,ic.certificate_wording,
+                        ct.name certification_name, ct.acronym certification_acronym
+                    FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)
+                    WHERE ic.user_id=? ORDER BY ic.id DESC", u.Id),
                 identity_document = db.QueryOne("SELECT id,doc_kind,filename,mime,size_bytes,status,review_note,created_at FROM identity_documents WHERE user_id=? ORDER BY id DESC", u.Id),
                 // Route B state: fees were waived by a founding code (settled as a $0 founding_waiver payment).
                 founding_member = db.Scalar<long>("SELECT COUNT(*) FROM payments WHERE user_id=? AND payment_provider='founding_waiver' AND payment_status='paid'", u.Id) > 0,
@@ -137,6 +140,25 @@ public static class StudentExam
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             return J(new { rows = db.Query("SELECT title,category,doc_type,url FROM resources WHERE published=1 ORDER BY sort_order,id") });
+        });
+
+        // Per-certification documents & books: the student sees general documents plus the documents for
+        // every certification they are enrolled in (an entitlement or an issued credential). Grouped by
+        // certification so a PCL-AI candidate never sees PFL-AI/PDL-AI materials they are not entitled to.
+        // (/api/me/documents is the per-student assigned-documents module in Endpoints/Documents.cs.)
+        app.MapGet("/api/me/cert-documents", (HttpContext ctx) =>
+        {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var mine = db.Query(@"SELECT DISTINCT COALESCE(certification_id,1) cid FROM exam_entitlements WHERE user_id=?
+                                  UNION SELECT DISTINCT COALESCE(certification_id,1) FROM issued_credentials WHERE user_id=?", u.Id, u.Id)
+                .Select(r => H.L(r["cid"])).ToList();
+            var inList = mine.Count > 0 ? string.Join(",", mine) : "-1";
+            var rows = db.Query($@"SELECT d.id,d.certification_id,d.kind,d.title,d.description,d.url,d.watermark,d.sort_order,
+                    c.acronym cert_acronym, c.name cert_name
+                FROM cert_documents d LEFT JOIN certifications c ON c.id=d.certification_id
+                WHERE d.published=1 AND (d.certification_id IS NULL OR d.certification_id IN ({inList}))
+                ORDER BY (d.certification_id IS NULL), d.certification_id, d.sort_order, d.id");
+            return J(new { rows });
         });
 
         // ── Candidate consents (Section B rule 3) ──

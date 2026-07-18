@@ -299,7 +299,7 @@ def test_exam_delivery(admin):
         # configure Questionmark (enabled + mapped) — but the delivery mode stays in-house for now
         c, r = jget("POST", "/api/admin/exam-delivery", token=admin, body={
             "provider": "questionmark", "name": "QM", "environment": "sandbox", "enabled": True,
-            "api_base": mock, "customer_id": "123456", "username": "svc", "password": "pw", "exam_map": {"PCP-AI": "9962"}})
+            "api_base": mock, "customer_id": "123456", "username": "svc", "password": "pw", "exam_map": {"PCL-AI": "9962"}})
         qmid = r.get("id"); chk("11c create Questionmark vendor", c == 200 and r.get("ok"), r)
         c, tr = jget("POST", f"/api/admin/exam-delivery/{qmid}/test", token=admin)
         chk("11d vendor connection test ok", c == 200 and tr.get("ok"), tr)
@@ -329,7 +329,7 @@ def test_exam_delivery(admin):
         c, sy2 = jget("POST", f"/api/admin/exam-delivery/orders/{o[0]}/sync", token=admin)
         chk("11n vendor: re-sync is idempotent (no duplicate credential)", sy2.get("credential") == sy.get("credential"), (sy.get("credential"), sy2.get("credential")))
 
-        # ---- PER-CERT OVERRIDE: force PCP-AI back to in-house while the global default stays Questionmark ----
+        # ---- PER-CERT OVERRIDE: force PCL-AI (cert 1) back to in-house while the global default stays Questionmark ----
         set_mode(certification_id=1, cert_mode="in_house")
         tov, uov = make_paid_user("override@ex.co"); accept_all_consents(tov); complete_profile(tov)
         c, bko, sto = book_and_start(tov, admin)
@@ -341,7 +341,7 @@ def test_exam_delivery(admin):
         # ---- SWITCH to PSI: eligibility push + candidate self-schedule + inbound result callback → credential ----
         c, pr = jget("POST", "/api/admin/exam-delivery", token=admin, body={
             "provider": "psi", "name": "PSI", "environment": "sandbox", "enabled": True,
-            "api_base": mock, "account_code": "ACC1", "access_token": "tok123", "callback_secret": "cbsecret", "exam_map": {"PCP-AI": "PCP-EXAM"}})
+            "api_base": mock, "account_code": "ACC1", "access_token": "tok123", "callback_secret": "cbsecret", "exam_map": {"PCL-AI": "PCP-EXAM"}})
         chk("11q create PSI vendor", c == 200 and pr.get("ok"), pr)
         c, sm = set_mode(mode="psi"); chk("11r admin switch: deliver via PSI", c == 200 and sm.get("mode") == "psi", sm)
         tpsi, upsi = make_paid_user("psi@ex.co"); accept_all_consents(tpsi); complete_profile(tpsi)
@@ -1806,7 +1806,7 @@ def run(proc):
     key = answer_key(ids)
     c, sub = jget("POST", "/api/me/exam/submit", token=ctok, body={"attempt_id": st["attempt_id"], "answers": key})
     cred = sub.get("credential") or ""
-    chk("9e8 pass issues credential with the certification's prefix", c==200 and cred.startswith("PCP-COST-"), sub)
+    chk("9e8 pass issues credential with the certification's prefix", c==200 and cred.startswith("PCI-PCPCOST-"), sub)
     c, v = jget("GET", f"/api/verify?id={cred}")
     chk("9e9 verify shows the certification", v.get("valid") is True and v.get("certification_code") == "PCP-COST", v)
     con = dbconn()
@@ -1844,7 +1844,7 @@ def run(proc):
     c2, b2 = jget("POST", "/api/me/exam/book", token=dtok, body={"scheduled_at": slot, "timezone": "UTC", "certification_id": 1})
     chk("9e13 bookings for two certifications coexist", c1 == 200 and c2 == 200, (b1, b2))
     c, me2 = jget("GET", "/api/me", token=dtok)
-    chk("9e14 /api/me lists both exams with certification names", len(me2.get("exams", [])) == 2 and {e["certification_code"] for e in me2["exams"]} == {"PCP-AI", "PCP-COST"}, me2.get("exams"))
+    chk("9e14 /api/me lists both exams with certification names", len(me2.get("exams", [])) == 2 and {e["certification_code"] for e in me2["exams"]} == {"PCL-AI", "PCP-COST"}, me2.get("exams"))
 
     # ---------- 9f. Fully dynamic content (Stage 2): server-side injection ----------
     print("\n=== 9f. Dynamic content injection ===")

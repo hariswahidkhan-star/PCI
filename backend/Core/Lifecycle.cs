@@ -195,31 +195,54 @@ public static class Lifecycle
     /// guarantees at most one credential per attempt — if one is already linked, its id is returned
     /// rather than issuing a duplicate. Returns null only if generation failed (astronomically
     /// unlikely) — callers should log that case.</summary>
-    public static string? IssueCredential(Db db, long userId, object? attemptId, string holderName, long certificationId = Certs.DefaultId)
+    public static string? IssueCredential(Db db, long userId, object? attemptId, string holderName, long certificationId = Certs.DefaultId, string? routeMarker = null)
     {
         var existing = attemptId is null ? null : db.QueryOne("SELECT credential_id FROM issued_credentials WHERE attempt_id=?", attemptId);
         if (existing is not null) return H.Str(existing["credential_id"]);
         var cert = Certs.ById(db, certificationId) ?? Certs.ById(db, Certs.DefaultId)!;
-        var prefix = Certs.Prefix(cert);
         var years = Certs.ExpiryYears(cert);
         var yr = DateTime.UtcNow.Year;
-        var rnd = new Random();
-        for (int i = 0; i < 20; i++)
+        // Certificate number: PCI-<PREFIX>-[MARKER-]<YEAR>-<6 digits>, e.g. PCI-PCLAI-2026-000001,
+        // PCI-PCLAI-FND-2026-000001 (founding), PCI-PCLAI-HON-2026-000001 (honorary). PREFIX is the
+        // certification's credential prefix with hyphens removed (PCL-AI → PCLAI) so numbers stay clean.
+        var cleanPrefix = Certs.Prefix(cert).Replace("-", "").ToUpperInvariant();
+        var mk = string.IsNullOrWhiteSpace(routeMarker) ? "" : routeMarker!.Trim().ToUpperInvariant() + "-";
+        var stem = $"PCI-{cleanPrefix}-{mk}{yr}-";
+
+        // Route provenance: an entitlement granted through an application route (e.g. sponsored,
+        // complimentary) carries its route_key. Snapshot that route's certificate wording onto the
+        // credential so the certificate reads correctly for its route and never drifts if the route
+        // wording is later edited. Ordinary paid entitlements have no route_key ⇒ default wording.
+        string? routeKey = null, wording = null;
+        if (attemptId is not null)
         {
-            var cid = $"{prefix}-{yr}-{10000 + rnd.Next(0, 89999)}";
+            var ent = db.QueryOne("SELECT route_key FROM exam_entitlements WHERE attempt_id=? AND route_key IS NOT NULL ORDER BY id DESC", attemptId);
+            routeKey = ent is null ? null : H.Str(ent["route_key"]);
+            if (!string.IsNullOrWhiteSpace(routeKey))
+            {
+                var route = db.QueryOne("SELECT certificate_wording FROM certification_routes WHERE certification_id=? AND route_key=?", H.L(cert["id"]), routeKey);
+                wording = route is null ? null : H.Str(route["certificate_wording"]);
+            }
+        }
+
+        // sequential within this (certification, marker, year) space; retry on the unique-index collision.
+        var start = db.Scalar<long>("SELECT COUNT(*) FROM issued_credentials WHERE credential_id LIKE ?", stem + "%") + 1;
+        for (int i = 0; i < 50; i++)
+        {
+            var cid = stem + (start + i).ToString("D6");
             try
             {
                 // expiry computed in C# (SQLite-format string) so it is provider-agnostic — no SQL
                 // string concatenation, which does not translate to MySQL.
                 var expires = DateTime.UtcNow.AddYears(years).ToString("yyyy-MM-dd HH:mm:ss");
-                db.Execute("INSERT INTO issued_credentials(credential_id,user_id,attempt_id,holder_name,credential,certification_id,status,expires_at) VALUES(?,?,?,?,?,?, 'active', ?)",
-                    cid, userId, attemptId, holderName, prefix, H.L(cert["id"]), expires);
+                db.Execute("INSERT INTO issued_credentials(credential_id,user_id,attempt_id,holder_name,credential,certification_id,route_key,certificate_wording,status,expires_at) VALUES(?,?,?,?,?,?,?,?, 'active', ?)",
+                    cid, userId, attemptId, holderName, Certs.Prefix(cert), H.L(cert["id"]), routeKey, wording, expires);
                 // Render the verifiable PDF certificate (best-effort; the record is authoritative and the PDF
                 // is regenerated on first download if this fails).
                 CertIssue.EnsureCredentialPdf(db, cid);
                 return cid;
             }
-            catch { /* credential_id collision → retry; attempt_id duplicate → loop exits via existing check next call */ }
+            catch { /* credential_id collision → next sequential number; attempt_id duplicate → loop exits via existing check next call */ }
         }
         return null;
     }

@@ -114,7 +114,31 @@ export interface CertRow {
   bank_size?: number
   entitlements?: number
   credentials?: number
+  // multi-certification catalogue / public-page / SEO fields
+  acronym?: string | null
+  short_name?: string | null
+  public_title?: string | null
+  tagline?: string | null
+  short_description?: string | null
+  category?: string | null
+  level?: string | null
+  status?: string | null
+  slug?: string | null
+  audience?: string | null
+  membership_required?: number | null
+  application_fee?: number | null
+  meta_title?: string | null
+  meta_description?: string | null
+  keywords?: string | null
+  content_json?: string | null
+  certuvo_enabled?: number | null
+  certuvo_product?: string | null
 }
+
+export const CERT_STATUSES = [
+  'Draft', 'Under Development', 'Coming Soon', 'Open for Applications',
+  'Active', 'Temporarily Suspended', 'Closed', 'Archived',
+] as const
 
 export interface PageRow {
   id: number
@@ -191,6 +215,11 @@ export interface DiscountCode {
   discount_type: string
   discount_value: number
   applies_to?: string | null
+  certification_id?: number | null
+  route_key?: string | null
+  min_transaction?: number | null
+  max_discount?: number | null
+  partner_id?: number | null
   start_date?: string | null
   end_date?: string | null
   max_uses?: number | null
@@ -227,6 +256,28 @@ export interface FoundingApplication {
   admin_note?: string | null
   created_at?: string | null
   decided_at?: string | null
+}
+
+export interface CertApplication {
+  id: number
+  application_no?: string | null
+  user_id: number
+  certification_id: number
+  route_key: string
+  status: string
+  workflow_stage?: string | null
+  data_json?: string | null
+  blocker?: string | null
+  decided_by?: number | null
+  decided_at?: string | null
+  admin_note?: string | null
+  created_at?: string | null
+  updated_at?: string | null
+  cert_acronym?: string | null
+  cert_name?: string | null
+  email?: string | null
+  first_name?: string | null
+  last_name?: string | null
 }
 
 export interface FoundingStat {
@@ -324,6 +375,8 @@ export interface ReportData {
   revenue_daily: { d: string; revenue: number; n: number }[]
   by_product: { product_type: string; n: number; revenue: number }[]
   by_country: { country: string; n: number; revenue: number }[]
+  by_certification?: { certification: string; n: number; revenue: number }[]
+  certificates_by_certification?: { certification: string; issued: number }[]
   funnel: { started: number; paid: number }
   new_members: number
 }
@@ -335,6 +388,7 @@ export interface TeamMember {
   role: string
   permissions: string[]
   effective: string[]
+  cert_scope?: number[]
   status: string
   must_change_pw?: number | null
   last_login_at?: string | null

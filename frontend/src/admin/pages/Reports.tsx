@@ -92,6 +92,33 @@ export default function Reports() {
               )}
             </Card>
           </div>
+
+          <div className="grid cols-2">
+            <Card title="Revenue by certification">
+              {(!data.by_certification || data.by_certification.length === 0) ? <Empty>No paid transactions in range.</Empty> : (
+                <table className="data">
+                  <thead><tr><th>Certification</th><th>Count</th><th style={{ textAlign: 'right' }}>Revenue</th></tr></thead>
+                  <tbody>
+                    {data.by_certification.map((c) => (
+                      <tr key={c.certification}><td>{c.certification}</td><td>{c.n}</td><td style={{ textAlign: 'right' }}>{fmtMoney(c.revenue)}</td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </Card>
+            <Card title="Certificates issued by certification">
+              {(!data.certificates_by_certification || data.certificates_by_certification.length === 0) ? <Empty>No certificates issued in range.</Empty> : (
+                <table className="data">
+                  <thead><tr><th>Certification</th><th style={{ textAlign: 'right' }}>Issued</th></tr></thead>
+                  <tbody>
+                    {data.certificates_by_certification.map((c) => (
+                      <tr key={c.certification}><td>{c.certification}</td><td style={{ textAlign: 'right' }}>{c.issued}</td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </Card>
+          </div>
         </>
       )}
 

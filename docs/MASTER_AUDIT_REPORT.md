@@ -29,6 +29,19 @@ What the repository actually contains is a **single live certification — PCP-A
 
 ---
 
+## 0a. Post-audit addendum (18 July 2026, later the same day) — the Suite landed on `main`
+
+The findings in §0 were accurate for the tree audited (`628ec25`). **Hours later, `main` moved forward by 23 commits** (a parallel work stream) that build a large part of the Leadership Suite, and that work has since been **merged into this branch**. The §0 zero-occurrence table is therefore **no longer true of the current tree**. What the merged tree now contains, re-verified by test runs on this branch:
+
+- **The three Suite certifications are seeded**: id 1 renamed in place PCP-AI → **PCL-AI** ("PCI AI Project Controls Leader™"), plus **PFL-AI** and **PDL-AI** rows, with the portfolio name and the "Finance intelligently. Control predictively. Deliver successfully." tagline (`backend/Data/MultiCert.cs`).
+- **Credential numbering** moved to `PCI-<PREFIX>-[ROUTE-]<YEAR>-<seq>` with route markers (FND/HON), route-key provenance and per-route certificate wording snapshots (`Core/Lifecycle.cs`).
+- **Partner sponsorship + commission ledger** (`/api/partner/candidates`, `/api/partner/commissions`, payouts) and per-certification admin scoping (`admin_users.cert_scope`).
+- **Per-certification applications** (admin Applications page) and per-certification documents/books scaffolding (`cert_documents`, now exposed at `/api/me/cert-documents`).
+
+The merge also surfaced (and this branch fixes) defects that arrived with that work — main's own CI was red at its head `e2e7c25`: stale test expectations from the rename (old `PCP-AI` exam-delivery `exam_map` keys, old credential-format and `/api/me` assertions), `smoke-test.sh` probing the deleted classic `/admin.html`, a route collision on `GET /api/me/documents`, and a MySQL boot failure (unindexable `TEXT` columns in the new `certification_applications` table). After those fixes, **this merged branch passes everything main could not**: integration 378/378 on SQLite **and** MySQL, smoke 65/65, founding 46/46, honorary 19/19, honorary-application 20/20, 6/6 logic suites, 0-error 500-sweep (1,173 calls / 392 routes). Remaining Suite gaps (books content, certificate-template editor, per-certification email templates) still stand from §0's gap analysis.
+
+---
+
 ## 1. Technology-stack verification (§2 of the spec)
 
 | Layer | Claimed | Verified | Evidence |

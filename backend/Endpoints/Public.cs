@@ -34,9 +34,15 @@ public static class Public
             var appliesTo = H.Str(codeRow["applies_to"]);
             var applicable = items.Where(it => appliesTo == "all" || appliesTo == it.cat).ToList();
             var baseAmt = applicable.Sum(it => it.payable);
+            // Below the minimum transaction the code simply does not apply.
+            if (codeRow.TryGetValue("min_transaction", out var mt) && mt is not null && baseAmt < H.D(mt))
+                baseAmt = 0;
             codeAmount = (H.Str(codeRow["discount_type"]) == "fixed")
                 ? Math.Min(H.D(codeRow["discount_value"]), baseAmt)
                 : baseAmt * (H.D(codeRow["discount_value"]) / 100.0);
+            // Cap the discount when a maximum is configured.
+            if (codeRow.TryGetValue("max_discount", out var md) && md is not null)
+                codeAmount = Math.Min(codeAmount, H.D(md));
             codeAmount = Math.Round(codeAmount * 100) / 100;
         }
         var final = Math.Max(0, standard - defDisc - codeAmount);
@@ -44,7 +50,7 @@ public static class Public
     }
 
     public record CodeValidation(string? Error, Dictionary<string, object?>? Code);
-    public static CodeValidation ValidateCode(Db db, string? code, string product, string? email)
+    public static CodeValidation ValidateCode(Db db, string? code, string product, string? email, long? certId = null)
     {
         var c = db.QueryOne("SELECT * FROM discount_codes WHERE code=?", (code ?? "").ToUpperInvariant());
         if (c is null) return new("This discount code is not valid or has expired.", null);
@@ -57,6 +63,13 @@ public static class Public
             case "rejected": case "cancelled": return new("This discount code is no longer available.", null);
         }
         if (!H.B(c["active"])) return new("This discount code is not valid or has expired.", null);
+        // Per-certification scope: a code tied to one credential is rejected for any other. NULL = all certs.
+        if (c["certification_id"] is not null && certId is not null && H.L(c["certification_id"]) != certId.Value)
+        {
+            var scoped = Certs.ById(db, c["certification_id"]);
+            var label = scoped is null ? "another certification" : (H.Str(scoped["acronym"]) ?? H.Str(scoped["code"]) ?? "another certification");
+            return new($"This code is only valid for {label}, not the certification you selected.", null);
+        }
         // A founding code is not a discount — it opens the free founding route and is redeemed in the
         // portal's Founding access card. If one is pasted into the discount field, say so plainly rather
         // than silently accepting it as a 0% code and charging full price.
@@ -166,23 +179,44 @@ public static class Public
         // Each entry carries its effective exam price and headline exam parameters.
         app.MapGet("/api/certifications", () => J(new
         {
-            rows = db.Query("SELECT id,code,name,description,expiry_years,sort_order FROM certifications WHERE active=1 ORDER BY sort_order,id")
+            rows = db.Query("SELECT id,code,name,acronym,short_description,slug,category,status,description,expiry_years,sort_order FROM certifications WHERE active=1 ORDER BY sort_order,id")
                 .Select(c => {
                     var cert = Certs.ById(db, c["id"]);
                     var cfg = Certs.Cfg(db, H.L(c["id"]));
-                    return new { id = c["id"], code = c["code"], name = c["name"], description = c["description"],
+                    return new { id = c["id"], code = c["code"], name = c["name"],
+                        acronym = c["acronym"], short_description = c["short_description"], slug = c["slug"],
+                        category = c["category"], status = c["status"], description = c["description"],
                         expiry_years = c["expiry_years"], duration_minutes = (int)cfg.Duration, pass_mark_pct = cfg.Pass,
                         exam_price = Pricing(db, "exam", null, cert).final };
                 }).ToList()
         }));
 
+        // Public application routes for a certification (used by the student apply form). Internal routes
+        // (e.g. Test User) are filtered out; each entry says whether the route requires review or an exam.
+        app.MapGet("/api/certifications/{id}/routes", (string id) =>
+        {
+            var certId = Certs.Resolve(db, id);
+            if (certId == 0 || Certs.ById(db, certId) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var rows = Routes.For(db, certId, publicOnly: true).Select(r => new
+            {
+                route_key = r["route_key"], label = r["label"], description = r["description"],
+                requires_approval = H.B(r["requires_approval"]), exam_required = H.B(r["exam_required"]),
+                fee_mode = r["fee_mode"],
+            }).ToList();
+            return J(new { certification_id = certId, rows });
+        });
+
         app.MapPost("/api/validate-code", async (HttpRequest req) =>
         {
             var b = await H.Body(req);
             var code = H.GetS(b, "code"); var product = H.GetS(b, "product") ?? "membership"; var email = H.GetS(b, "email");
-            var v = ValidateCode(db, code, product, email);
+            // The selected certification scopes both the code validity and the exam price.
+            var certSel = H.GetS(b, "cert");
+            var certRow = string.IsNullOrWhiteSpace(certSel) ? null : Certs.ById(db, Certs.Resolve(db, certSel));
+            var certId = certRow is null ? (long?)null : H.L(certRow["id"]);
+            var v = ValidateCode(db, code, product, email, certId);
             if (v.Error is not null) return J(new { valid = false, message = v.Error });
-            var pr = Pricing(db, product, v.Code);
+            var pr = Pricing(db, product, v.Code, certRow);
             var scope = H.Str(v.Code!["applies_to"]) ?? "all";
             var scopeLabel = scope == "membership" ? "membership" : scope == "exam" ? "the exam fee" : "membership and exam fees";
             return J(new { valid = true, code = v.Code["code"], applies_to = scope, discount_type = v.Code["discount_type"], discount_value = v.Code["discount_value"], code_amount = pr.codeAmount, final_amount = pr.final, message = $"Code {v.Code["code"]} applies to {scopeLabel}." });
@@ -218,8 +252,8 @@ public static class Public
             }
             // Test-account credentials are workflow artefacts, never real certifications: the public
             // register reports them as not found so a test run can never mint a verifiable credential.
-            var c = db.QueryOne(@"SELECT ic.credential_id,ic.holder_name,ic.credential,ic.status,ic.issued_at,ic.expires_at,ic.pdf_sha256,
-                       ct.code certification_code, ct.name certification_name
+            var c = db.QueryOne(@"SELECT ic.credential_id,ic.holder_name,ic.credential,ic.status,ic.issued_at,ic.expires_at,ic.pdf_sha256,ic.certificate_wording,
+                       ct.code certification_code, ct.name certification_name, ct.acronym certification_acronym
                 FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)
                 LEFT JOIN users tu ON tu.id=ic.user_id
                 WHERE upper(ic.credential_id)=? AND COALESCE(tu.is_test,0)=0", id);

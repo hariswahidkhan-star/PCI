@@ -196,6 +196,8 @@ td.num,th.num{text-align:right}
       <button data-tab="overview" class="on">Overview</button>
       <button data-tab="codes">Codes</button>
       <button data-tab="students">Students</button>
+      <button data-tab="sponsor">Sponsorships</button>
+      <button data-tab="commissions">Commissions</button>
       <button data-tab="documents">Documents</button>
     </nav>
   </header>
@@ -265,6 +267,53 @@ td.num,th.num{text-align:right}
           <thead></thead>
           <tbody><tr><td colspan="8"><span class="empty">Loading…</span></td></tr></tbody>
         </table>
+      </div>
+    </section>
+
+    <!-- SPONSORSHIPS (direct candidate sponsorship, when enabled by PCI) -->
+    <section class="tab" id="tab-sponsor">
+      <div class="bar-row"><h2>Sponsored candidates</h2><span class="spacer"></span><button class="btn btn-primary" id="btnSponsor" hidden>Sponsor candidates</button></div>
+      <p style="color:var(--slate);font-size:13px;margin:-6px 0 16px;max-width:72ch" id="sponsorIntro">Candidates your organisation registers directly. Each receives an account, an approved sponsored application and immediate exam access — funded by your organisation.</p>
+      <div class="note err" id="sponsorDisabled" hidden>Direct candidate sponsorship is not enabled in your agreement with PCI. Contact your partnership manager to enable it.</div>
+      <div class="card" id="sponsorFormCard" hidden>
+        <h3>Sponsor candidates in bulk</h3>
+        <p style="color:var(--slate);font-size:13px;margin:4px 0 12px">One candidate per line: <code>email, first name, last name</code>. New candidates receive a set-password welcome email.</p>
+        <div class="note err" id="spErr" hidden></div>
+        <div class="note ok" id="spOk" hidden></div>
+        <form id="sponsorForm" novalidate>
+          <div class="fgrid">
+            <div class="fld"><label for="spCert">Certification</label><select id="spCert"></select></div>
+            <div class="fld span-all"><label for="spRows">Candidates</label><textarea id="spRows" rows="5" placeholder="jane.doe@example.com, Jane, Doe&#10;omar.khan@example.com, Omar, Khan"></textarea></div>
+          </div>
+          <div class="frow">
+            <span class="spacer" style="flex:1"></span>
+            <button class="btn" type="button" id="btnSponsorCancel">Close</button>
+            <button class="btn btn-primary" type="submit" id="btnSponsorGo">Sponsor candidates</button>
+          </div>
+        </form>
+      </div>
+      <div class="card tblwrap">
+        <table id="sponsorTbl" aria-label="Your sponsored candidates">
+          <thead><tr><th>Candidate</th><th>Certification</th><th>Exam access</th><th>Result</th><th>Credential</th><th>Since</th></tr></thead>
+          <tbody><tr><td colspan="6"><span class="empty">Loading…</span></td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- COMMISSIONS -->
+    <section class="tab" id="tab-commissions">
+      <div class="bar-row"><h2>Commission ledger</h2></div>
+      <p style="color:var(--slate);font-size:13px;margin:-6px 0 16px;max-width:72ch">Commissions accrue at your agreed rate on payments made with your organisation's discount codes. Payouts are recorded by PCI.</p>
+      <div class="tiles" id="commTiles"></div>
+      <div class="grid2">
+        <div class="card tblwrap"><h3>Attributed payments</h3>
+          <table id="commPayTbl"><thead><tr><th>Date</th><th>Reference</th><th>Code</th><th class="num">Amount</th></tr></thead>
+            <tbody><tr><td colspan="4"><span class="empty">Loading…</span></td></tr></tbody></table>
+        </div>
+        <div class="card tblwrap"><h3>Payouts</h3>
+          <table id="commOutTbl"><thead><tr><th>Date</th><th>Note</th><th class="num">Amount</th></tr></thead>
+            <tbody><tr><td colspan="3"><span class="empty">Loading…</span></td></tr></tbody></table>
+        </div>
       </div>
     </section>
 
@@ -621,6 +670,80 @@ function loadStudents(){
     .catch(function(e){loadFail(e,'your students');});
 }
 
+/* ---- sponsorships (direct candidate sponsorship, when enabled by PCI) ---- */
+function progChip(s){
+  s=String(s||'').toLowerCase();
+  var kind=s==='available'?'c-ok':(s==='booked'?'c-warn':(s==='consumed'?'c-grey':'c-grey'));
+  return s?chip(s.replace(/_/g,' '),kind):document.createTextNode('—');
+}
+function renderSponsored(d){
+  var enabled=!!(d&&d.sponsor_enabled);
+  $('#btnSponsor').hidden=!enabled;
+  $('#sponsorDisabled').hidden=enabled;
+  var tb=$('#sponsorTbl tbody');tb.textContent='';
+  var rows=(d&&d.rows)||[];
+  if(!rows.length){var tr0=el('tr'),td0=el('td');td0.colSpan=6;td0.appendChild(el('span','empty',enabled?'No sponsored candidates yet.':'—'));tr0.appendChild(td0);tb.appendChild(tr0);return;}
+  rows.forEach(function(r){
+    var tr=el('tr');
+    var tdN=el('td');tdN.appendChild(el('div',null,r.candidate_name||r.candidate_email||''));var sm=el('div',null,r.candidate_email||'');sm.style.cssText='color:var(--mist);font-size:12px';tdN.appendChild(sm);tr.appendChild(tdN);
+    tr.appendChild(el('td',null,r.cert_acronym||r.cert_code||'—'));
+    var tdE=el('td');tdE.appendChild(progChip(r.entitlement_status));tr.appendChild(tdE);
+    var tdR=el('td');tdR.appendChild(r.exam_result?chip(String(r.exam_result),r.exam_result==='pass'?'c-ok':'c-err'):document.createTextNode('—'));tr.appendChild(tdR);
+    tr.appendChild(el('td',null,r.credential_id||'—'));
+    tr.appendChild(el('td',null,fmtDate(r.created_at)));
+    tb.appendChild(tr);
+  });
+}
+function loadSponsor(){
+  api('/api/partner/candidates').then(renderSponsored).catch(function(e){loadFail(e,'your sponsored candidates');});
+  fetch('/api/certifications').then(function(r){return r.json();}).then(function(d){
+    var sel=$('#spCert');sel.textContent='';
+    ((d&&d.rows)||[]).forEach(function(c){var o=el('option',null,(c.acronym||c.code)+' — '+(c.name||''));o.value=c.code;sel.appendChild(o);});
+  }).catch(function(){});
+}
+function submitSponsor(ev){
+  ev.preventDefault();
+  var errB=$('#spErr'),okB=$('#spOk');errB.hidden=true;okB.hidden=true;
+  var lines=$('#spRows').value.split('\n').map(function(l){return l.trim();}).filter(Boolean);
+  if(!lines.length){errB.textContent='Enter at least one candidate.';errB.hidden=false;return;}
+  var cands=lines.map(function(l){var p=l.split(',').map(function(x){return x.trim();});return{email:p[0]||'',first_name:p[1]||'',last_name:p[2]||'',certification:$('#spCert').value};});
+  var btn=$('#btnSponsorGo');btn.disabled=true;btn.textContent='Sponsoring…';
+  api('/api/partner/candidates',{method:'POST',body:JSON.stringify({candidates:cands})})
+    .then(function(d){
+      var res=(d&&d.results)||[],okn=res.filter(function(r){return String(r.status).indexOf('sponsored')===0;}).length;
+      okB.textContent=okn+' of '+res.length+' candidate(s) sponsored.'+(okn<res.length?' Skipped: '+res.filter(function(r){return String(r.status).indexOf('sponsored')!==0;}).map(function(r){return r.email+' ('+String(r.status).replace(/_/g,' ')+')';}).join(', '):'');
+      okB.hidden=false;$('#spRows').value='';loadSponsor();
+    })
+    .catch(function(e){if(!e.silent){errB.textContent=(e.data&&e.data.message)||'Sponsorship failed. Please try again.';errB.hidden=false;}})
+    .then(function(){btn.disabled=false;btn.textContent='Sponsor candidates';});
+}
+
+/* ---- commissions ---- */
+function loadCommissions(){
+  api('/api/partner/commissions').then(function(c){
+    var box=$('#commTiles');box.textContent='';
+    box.appendChild(tile('Attributed revenue','USD '+fmtMoney(c.attributed_revenue),'paid via your codes'));
+    box.appendChild(tile('Accrued','USD '+fmtMoney(c.accrued),'at '+fmtN(c.commission_pct)+'%'));
+    box.appendChild(tile('Paid out','USD '+fmtMoney(c.paid_out),''));
+    box.appendChild(tile('Balance due','USD '+fmtMoney(c.balance),''));
+    var tp=$('#commPayTbl tbody');tp.textContent='';
+    var pays=c.payments||[];
+    if(!pays.length){var tr0=el('tr'),td0=el('td');td0.colSpan=4;td0.appendChild(el('span','empty','No attributed payments yet.'));tr0.appendChild(td0);tp.appendChild(tr0);}
+    pays.forEach(function(p){
+      var tr=el('tr');tr.appendChild(el('td',null,fmtDate(p.payment_date)));tr.appendChild(el('td',null,p.reference||'—'));tr.appendChild(el('td',null,p.code||'—'));
+      var td=el('td','num','USD '+fmtMoney(p.final_amount));tr.appendChild(td);tp.appendChild(tr);
+    });
+    var to=$('#commOutTbl tbody');to.textContent='';
+    var outs=c.payouts||[];
+    if(!outs.length){var tr1=el('tr'),td1=el('td');td1.colSpan=3;td1.appendChild(el('span','empty','No payouts recorded yet.'));tr1.appendChild(td1);to.appendChild(tr1);}
+    outs.forEach(function(p){
+      var tr=el('tr');tr.appendChild(el('td',null,fmtDate(p.paid_at)));tr.appendChild(el('td',null,p.note||'—'));
+      var td=el('td','num','USD '+fmtMoney(p.amount));tr.appendChild(td);to.appendChild(tr);
+    });
+  }).catch(function(e){loadFail(e,'your commission ledger');});
+}
+
+/* ---- tabs ---- */
 /* ---- documents shared with the institution ---- */
 function fmtBytes(n){
   n=Number(n)||0;
@@ -669,8 +792,8 @@ function renderDocs(j){
       act.appendChild(b);
     }else{
       var why=d.lock_reason==='restricted'?('Available '+fmtDate(d.restricted_until)):(d.lock_reason||'Unavailable');
-      var chip=el('span',null,why);chip.style.cssText='font-size:12px;color:var(--mist)';
-      act.appendChild(chip);
+      var chip2=el('span',null,why);chip2.style.cssText='font-size:12px;color:var(--mist)';
+      act.appendChild(chip2);
     }
     tr.appendChild(act);
     tb.appendChild(tr);
@@ -681,12 +804,11 @@ function loadDocuments(){
     .catch(function(e){loadFail(e,'your documents');});
 }
 
-/* ---- tabs ---- */
-var loaders={overview:loadOverview,codes:loadCodes,students:loadStudents,documents:loadDocuments};
+var loaders={overview:loadOverview,codes:loadCodes,students:loadStudents,sponsor:loadSponsor,commissions:loadCommissions,documents:loadDocuments};
 function setTab(name){
   st.tab=name;
   Array.prototype.forEach.call($('#tabs').children,function(b){b.classList.toggle('on',b.dataset.tab===name);});
-  ['overview','codes','students','documents'].forEach(function(t){$('#tab-'+t).classList.toggle('on',t===name);});
+  ['overview','codes','students','sponsor','commissions','documents'].forEach(function(t){$('#tab-'+t).classList.toggle('on',t===name);});
   if(loaders[name])loaders[name]();
 }
 $('#tabs').addEventListener('click',function(ev){
@@ -742,6 +864,12 @@ $('#btnNew').addEventListener('click',function(){
 });
 $('#btnCodeCancel').addEventListener('click',function(){$('#codeFormCard').hidden=true;});
 $('#codeForm').addEventListener('submit',submitCode);
+$('#btnSponsor').addEventListener('click',function(){
+  var c=$('#sponsorFormCard');c.hidden=!c.hidden;
+  if(!c.hidden){$('#spErr').hidden=true;$('#spOk').hidden=true;$('#spRows').focus();}
+});
+$('#btnSponsorCancel').addEventListener('click',function(){$('#sponsorFormCard').hidden=true;});
+$('#sponsorForm').addEventListener('submit',submitSponsor);
 
 /* ---- boot ---- */
 if(st.token){

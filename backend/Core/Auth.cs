@@ -2,10 +2,38 @@ using PCI.Backend.Data;
 
 namespace PCI.Backend.Core;
 
-public record AdminCtx(long Id, string Email, string? Name, string Role, string? PermissionsJson, string Status, bool MustChangePw)
+public record AdminCtx(long Id, string Email, string? Name, string Role, string? PermissionsJson, string Status, bool MustChangePw, string? CertScopeJson = null)
 {
     public List<string> Perms => Rbac.PermsFor(Role, PermissionsJson);
     public bool IsOwner => Role == "owner";
+
+    /// <summary>Certifications this admin may see and act on. null = unrestricted (all certifications,
+    /// the default and the only possible state for owners). A non-empty array restricts every
+    /// certification-scoped admin surface — lists filter to these ids, mutations on anything else 403.</summary>
+    public long[]? CertScope
+    {
+        get
+        {
+            if (IsOwner || string.IsNullOrWhiteSpace(CertScopeJson)) return null;
+            try
+            {
+                var ids = System.Text.Json.JsonSerializer.Deserialize<long[]>(CertScopeJson!);
+                return ids is { Length: > 0 } ? ids : null;
+            }
+            catch { return null; }
+        }
+    }
+
+    /// <summary>May this admin act on the given certification? Legacy rows with a NULL
+    /// certification_id belong to the founding certification (id 1).</summary>
+    public bool CanCert(object? certId) =>
+        CertScope is not { } s || s.Contains(certId is null ? 1L : Convert.ToInt64(certId));
+
+    /// <summary>SQL fragment (starting with " AND ") restricting a query to this admin's scope, or ""
+    /// when unrestricted. The ids come from a parsed long[] — never from request text — so inlining
+    /// them is not an injection surface.</summary>
+    public string CertFilterSql(string colExpr) =>
+        CertScope is { } s ? $" AND COALESCE({colExpr},1) IN ({string.Join(",", s)})" : "";
 }
 
 public record UserCtx(long Id, string Email, string? FirstName, string? LastName, string Status, bool Impersonated = false);
@@ -64,7 +92,8 @@ public static class Auth
     public static AdminCtx ToAdmin(Dictionary<string, object?> a) => new(
         Convert.ToInt64(a["id"]), (string)a["email"]!, a["name"] as string, (string)a["role"]!,
         a["permissions"] as string ?? "[]", (string)a["status"]!,
-        a.TryGetValue("must_change_pw", out var m) && m is not null && Convert.ToInt64(m) == 1);
+        a.TryGetValue("must_change_pw", out var m) && m is not null && Convert.ToInt64(m) == 1,
+        a.TryGetValue("cert_scope", out var cs) ? cs as string : null);
 
     /// <summary>Bearer student session token. Parity with student() middleware.</summary>
     public static UserCtx? UserFromReq(HttpRequest req, Db db)
