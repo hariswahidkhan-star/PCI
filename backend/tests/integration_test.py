@@ -261,6 +261,7 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
         if "/Participants" in self.path: return self._send(201, {"ID": 4242})            # Questionmark participant
         if "/Schedules" in self.path: return self._send(201, {"ID": 88})                # Questionmark schedule
         if "/candidates" in self.path: return self._send(201, {"psi_eligiblity_id": "ELIG-1"})  # PSI eligibility
+        if "/nope" in self.path: return self._send(500, {"error": "simulated outage"})   # forced failure (retry tests)
         if "certuvo" in self.path or "/accounts" in self.path:                          # Certuvo account provisioning
             return self._send(201, {"id": "CV-100", "username": "cv_user", "password": "cv_pass_9", "login_url": "https://certuvo.example/login"})
         return self._send(200, {"ok": True})
@@ -366,6 +367,9 @@ def test_exam_delivery(admin):
 
 def register_student(email, pw="Passw0rd!"):
     c, r = jget("POST", "/api/register", body={"firstName": "Jo", "lastName": "Doe", "email": email, "password": pw, "confirmPassword": pw, "country": "United Kingdom"})
+    if c == 429:   # /api/register is rate-limited (10/min/IP); the suite legitimately crosses that
+        time.sleep(61)
+        c, r = jget("POST", "/api/register", body={"firstName": "Jo", "lastName": "Doe", "email": email, "password": pw, "confirmPassword": pw, "country": "United Kingdom"})
     return r.get("token"), r.get("user", {}).get("id")
 
 def test_operator_toolkit(admin):
@@ -425,6 +429,197 @@ def test_operator_toolkit(admin):
         chk("12q viewer BLOCKED from mark-paid (403)", jget("POST", f"/api/admin/students/{suid}/mark-paid", token=vtok, body={"product": "exam"})[0] == 403)
         chk("12r viewer BLOCKED from test-user creation (403)", jget("POST", "/api/admin/test-users", token=vtok, body={})[0] == 403)
         chk("12s viewer BLOCKED from the student journey (403)", jget("GET", f"/api/admin/members/{suid}/journey", token=vtok)[0] == 403)
+    finally:
+        srv.shutdown()
+
+# ============================================================================
+def test_finance_and_certuvo_hardening(admin):
+    """Section 13 — the operator finance & Certuvo hardening pass: honest waived settlements, partial
+    waivers, payment evidence + duplicate guards, reversal, reconciliation/reprocess, impersonation,
+    test-user scenarios & report isolation, Certuvo retry/suspend/revoke/webhook, institution limits."""
+    print("\n=== 13. Finance controls / impersonation / test scenarios / Certuvo hardening / institutions ===")
+    srv, mport = start_mock_vendor()
+    mock = f"http://127.0.0.1:{mport}"
+    try:
+        # Point Certuvo at THIS section's live mock up front (section 12's mock is gone) so downstream
+        # provisioning during settlements/reprocess works until 13q deliberately breaks it.
+        jget("POST", "/api/admin/certuvo", token=admin, body={"enabled": True, "api_base": mock, "provision_path": "/certuvo/accounts", "api_key": "cv_key", "login_url": "https://certuvo.example"})
+
+        # ---- 13a-d. Full waiver is an honest 'waived' settlement, never a fake paid transaction ----
+        wtok, wuid = register_student("waive13@ex.co")
+        accept_all_consents(wtok); complete_profile(wtok)
+        c, w = jget("POST", f"/api/admin/students/{wuid}/waive", token=admin, body={"product": "exam", "percent": 100, "reason": "scholarship"})
+        chk("13a full waiver grants immediately", c == 200 and w.get("kind") == "full" and w.get("payable") == 0, w)
+        con = dbconn()
+        row = con.execute("SELECT payment_status, final_amount, waived_amount FROM payments WHERE id=?", (w["payment_id"],)).fetchone()
+        con.close()
+        chk("13b waiver stored as status 'waived', amount 0, waived amount recorded",
+            row is not None and row[0] == "waived" and float(row[1] or 0) == 0 and float(row[2] or 0) > 0, row)
+        c, nw = jget("POST", f"/api/admin/students/{wuid}/waive", token=admin, body={"product": "membership"})
+        chk("13c waiver without a reason refused (400)", c == 400 and nw.get("error") == "reason_required", nw)
+        c, inv = jget("GET", "/api/me/invoices", token=wtok)
+        chk("13d student billing shows the waived settlement", any(r.get("payment_status") == "waived" for r in inv.get("rows", inv if isinstance(inv, list) else [])), inv)
+
+        # ---- 13e-f. Partial waiver → a single-use code locked to that student ----
+        c, pw = jget("POST", f"/api/admin/students/{wuid}/waive", token=admin, body={"product": "membership", "percent": 50, "reason": "institutional sponsorship"})
+        chk("13e partial waiver issues a personal code", c == 200 and pw.get("kind") == "partial" and pw.get("code", "").startswith("WVR-"), pw)
+        c, v1 = jget("POST", "/api/validate-code", body={"code": pw["code"], "product": "membership", "email": "someoneelse@ex.co"})
+        c2, v2 = jget("POST", "/api/validate-code", body={"code": pw["code"], "product": "membership", "email": "waive13@ex.co"})
+        chk("13f partial-waiver code only validates for its student",
+            (v1.get("valid") is not True) and (v2.get("valid") is True or v2.get("ok") is True or v2.get("error") is None), (v1, v2))
+
+        # ---- 13g-i. Mark-paid evidence, duplicate guards, mismatch flag ----
+        mtok, muid = register_student("manual13@ex.co")
+        c, mp = jget("POST", f"/api/admin/students/{muid}/mark-paid", token=admin,
+                     body={"product": "exam", "amount": 149, "method": "bank_transfer", "bank_reference": "BR-13", "gateway_reference": "GW-13", "receipt_no": "R-13", "note": "wire received"})
+        chk("13g mark-paid records offline evidence", c == 200 and mp.get("ok"), mp)
+        con = dbconn(); mrow = con.execute("SELECT method, bank_reference, gateway_reference, receipt_no FROM payments WHERE id=?", (mp["payment_id"],)).fetchone(); con.close()
+        chk("13g2 evidence persisted on the payment row", mrow == ("bank_transfer", "BR-13", "GW-13", "R-13"), mrow)
+        c, dup = jget("POST", f"/api/admin/students/{muid}/mark-paid", token=admin, body={"product": "membership", "amount": 100, "gateway_reference": "GW-13"})
+        chk("13h duplicate gateway reference refused (409)", c == 409 and dup.get("error") == "duplicate_reference", dup)
+        c, dup2 = jget("POST", f"/api/admin/students/{muid}/mark-paid", token=admin, body={"product": "exam", "amount": 10})
+        chk("13i duplicate exam entitlement refused (409)", c == 409 and dup2.get("error") == "already_entitled", dup2)
+        c, ov = jget("POST", f"/api/admin/students/{muid}/mark-paid", token=admin, body={"product": "exam", "amount": 10, "allow_duplicate": True})
+        chk("13i2 explicit override records it anyway, flags the price mismatch", c == 200 and ov.get("ok") and ov.get("mismatch") is True, ov)
+
+        # ---- 13j-k. Reversal (mandatory reason; revokes what the payment granted) ----
+        c, rv0 = jget("POST", f"/api/admin/payments/{ov['payment_id']}/reverse", token=admin, body={})
+        chk("13j reversal without a reason refused (400)", c == 400 and rv0.get("error") == "reason_required", rv0)
+        c, rv = jget("POST", f"/api/admin/payments/{ov['payment_id']}/reverse", token=admin, body={"reason": "entered in error"})
+        chk("13j2 reversal succeeds and records prev/new status", c == 200 and rv.get("ok") and rv.get("previous_status") in ("paid", "waived") and rv.get("new_status") == "refunded", rv)
+        con = dbconn()
+        prow = con.execute("SELECT payment_status, reversal_reason FROM payments WHERE id=?", (ov["payment_id"],)).fetchone()
+        erow = con.execute("SELECT status FROM exam_entitlements WHERE payment_id=?", (ov["payment_id"],)).fetchone()
+        con.close()
+        chk("13k reversal refunds the row + revokes the unconsumed entitlement",
+            prow == ("refunded", "entered in error") and (erow is None or erow[0] == "revoked"), (prow, erow))
+
+        # ---- 13l. Reconciliation catches a settled payment with missing downstream + reprocess heals it ----
+        rtok, ruid = register_student("recon13@ex.co")
+        con = dbconn()
+        con.execute("INSERT INTO payments(user_id,product_type,standard_amount,final_amount,currency,payment_provider,payment_status,payment_date,reference) VALUES(?, 'membership', 149, 149, 'USD', 'stripe', 'paid', datetime('now'), 'RECON-13')", (ruid,))
+        con.commit(); con.close()
+        c, rec = jget("GET", "/api/admin/payments/reconciliation", token=admin)
+        bad = next((r for r in rec.get("rows", []) if r.get("reference") == "RECON-13"), None)
+        chk("13l reconciliation flags the orphaned settlement", bad is not None and bad.get("exception") == "membership_not_active", bad)
+        c, rp = jget("POST", f"/api/admin/payments/{bad['id']}/reprocess", token=admin)
+        chk("13l2 reprocess idempotently applies the missing downstream", c == 200 and rp.get("ok") and "membership_created" in (rp.get("ensured") or []), rp)
+        c, rp2 = jget("POST", f"/api/admin/payments/{bad['id']}/reprocess", token=admin)
+        chk("13l3 second reprocess is a no-op (idempotent)", c == 200 and rp2.get("already_complete") is True, rp2)
+        c, rec2 = jget("GET", "/api/admin/payments/reconciliation", token=admin)
+        bad2 = next((r for r in rec2.get("rows", []) if r.get("reference") == "RECON-13"), None)
+        chk("13l4 reconciliation is clean after reprocess", bad2 is not None and bad2.get("reconciled") is True, bad2)
+
+        # ---- 13m. Impersonation: reason required, banner flag, restricted actions, audited, revocable ----
+        c, im0 = jget("POST", f"/api/admin/members/{ruid}/impersonate", token=admin, body={})
+        chk("13m impersonation without a reason refused (400)", c == 400 and im0.get("error") == "reason_required", im0)
+        c, im = jget("POST", f"/api/admin/members/{ruid}/impersonate", token=admin, body={"reason": "ticket PCI-1042"})
+        chk("13m2 impersonation session minted", c == 200 and im.get("token"), im)
+        c, me = jget("GET", "/api/me", token=im.get("token"))
+        chk("13m3 /api/me flags the support view", c == 200 and me.get("user", {}).get("impersonated") is True, me.get("user"))
+        c, cons = jget("POST", "/api/me/consents", token=im.get("token"), body={"accept_all": True})
+        chk("13m4 consent is refused in support view (403)", c == 403 and cons.get("error") == "impersonation_readonly", cons)
+        con = dbconn(); arow = con.execute("SELECT COUNT(*) FROM audit_logs WHERE action='impersonation_started' AND user_id=?", (ruid,)).fetchone(); con.close()
+        chk("13m5 impersonation start is audited", arow is not None and arow[0] >= 1, arow)
+        c, ie = jget("POST", f"/api/admin/members/{ruid}/impersonate/end", token=admin)
+        chk("13m6 end-session revokes the token", c == 200 and jget("GET", "/api/me", token=im.get("token"))[0] == 401, ie)
+
+        # ---- 13n-p. Test-user scenarios + report/verify isolation ----
+        c, t1 = jget("POST", "/api/admin/test-users", token=admin, body={"scenario": "incomplete_profile"})
+        c, j1 = jget("GET", f"/api/admin/members/{t1['id']}/journey", token=admin)
+        chk("13n scenario 'incomplete_profile' parks the account at Profile", j1.get("stuck_at") == "Profile", j1.get("stuck_at"))
+        chk("13n2 journey marks the account as a test account", j1.get("user", {}).get("is_test") is True, j1.get("user"))
+        c, t1r = jget("POST", f"/api/admin/test-users/{t1['id']}/reset", token=admin, body={"scenario": "ready"})
+        c, j2 = jget("GET", f"/api/admin/members/{t1['id']}/journey", token=admin)
+        chk("13n3 reset re-applies a scenario (ready → schedulable)", t1r.get("ok") and j2.get("stuck_at") in (None, "Exam scheduled"), (t1r.get("ok"), j2.get("stuck_at")))
+
+        c, rep0 = jget("GET", "/api/admin/reports", token=admin)
+        before = (rep0.get("totals", {}).get("payments"), rep0.get("totals", {}).get("revenue"))
+        jget("POST", f"/api/admin/students/{t1['id']}/mark-paid", token=admin, body={"product": "membership", "amount": 500, "allow_duplicate": True})
+        c, rep1 = jget("GET", "/api/admin/reports", token=admin)
+        after = (rep1.get("totals", {}).get("payments"), rep1.get("totals", {}).get("revenue"))
+        chk("13o test-user money never reaches revenue reports", before == after, (before, after))
+
+        con = dbconn()
+        con.execute("INSERT INTO issued_credentials(credential_id,user_id,holder_name,credential,status) VALUES('PCI-TEST-13P', ?, 'Test User', 'PCP-AI', 'active')", (t1["id"],))
+        con.execute("INSERT INTO issued_credentials(credential_id,user_id,holder_name,credential,status) VALUES('PCI-REAL-13P', ?, 'Real Person', 'PCP-AI', 'active')", (ruid,))
+        con.commit(); con.close()
+        chk("13p test-account credentials invisible to the public register",
+            jget("GET", "/api/verify?id=PCI-TEST-13P")[1].get("found") is False
+            and jget("GET", "/api/verify?id=PCI-REAL-13P")[1].get("found") is True)
+
+        # ---- 13q-s. Certuvo: failure → retry state; suspend/revoke/resend; webhook ----
+        jget("POST", "/api/admin/certuvo", token=admin, body={"enabled": True, "api_base": mock, "provision_path": "/nope-404", "api_key": "cv_key", "login_url": "https://certuvo.example", "webhook_secret": "whsec_cv_13"})
+        ctok, cuid = register_student("certuvo13@ex.co")
+        jget("POST", f"/api/admin/students/{cuid}/mark-paid", token=admin, body={"product": "membership", "amount": 0})
+        con = dbconn(); crow = con.execute("SELECT status, retry_count, next_retry_at FROM certuvo_accounts WHERE user_id=?", (cuid,)).fetchone(); con.close()
+        chk("13q failed provisioning schedules an automatic retry", crow is not None and crow[0] == "error" and (crow[1] or 0) >= 1 and crow[2] is not None, crow)
+        c, acc = jget("GET", "/api/me/certuvo/access", token=ctok)
+        chk("13q2 student sees a plain-language delay message, no API error",
+            acc.get("status") == "error" and acc.get("message") and "HTTP" not in (acc.get("message") or "") and acc.get("password") is None, acc)
+        jget("POST", "/api/admin/certuvo", token=admin, body={"provision_path": "/certuvo/accounts"})
+        c, pr = jget("POST", f"/api/admin/certuvo/{cuid}/provision", token=admin, body={})
+        chk("13q3 manual retry after fixing the config provisions the account", c == 200 and pr.get("ok") and pr.get("status") == "active", pr)
+
+        c, sus = jget("POST", f"/api/admin/certuvo/{cuid}/suspend", token=admin)
+        c, acc2 = jget("GET", "/api/me/certuvo/access", token=ctok)
+        chk("13r suspend removes the student's credentials view", sus.get("status") == "suspended" and acc2.get("password") is None and acc2.get("status") == "suspended", (sus, acc2.get("status")))
+        chk("13r2 resend refused while suspended (409)", jget("POST", f"/api/admin/certuvo/{cuid}/resend", token=admin)[0] == 409)
+        c, re1 = jget("POST", f"/api/admin/certuvo/{cuid}/provision", token=admin, body={"reactivate": True})
+        chk("13r3 re-provision with reactivate restores access", c == 200 and re1.get("status") == "active", re1)
+        chk("13r4 resend works when active", jget("POST", f"/api/admin/certuvo/{cuid}/resend", token=admin)[1].get("ok") is True)
+
+        c, wh0 = jget("POST", "/api/certuvo/webhook", body={"type": "account.activated", "external_ref": str(cuid)}, headers={"X-Certuvo-Secret": "wrong"})
+        chk("13s webhook rejects a bad secret (401)", c == 401, wh0)
+        c, wh = jget("POST", "/api/certuvo/webhook", body={"type": "account.activated", "external_ref": str(cuid)}, headers={"X-Certuvo-Secret": "whsec_cv_13"})
+        con = dbconn(); act = con.execute("SELECT activated_at FROM certuvo_accounts WHERE user_id=?", (cuid,)).fetchone(); con.close()
+        chk("13s2 activation webhook records first login", c == 200 and wh.get("ok") and act is not None and act[0] is not None, (wh, act))
+
+        # ---- 13t-u. Institution (training partner) limits ----
+        c, tp = jget("POST", "/api/admin/training-partners", token=admin, body={"name": "Metro Institute 13"})
+        pid = tp.get("id")
+        c, _ = jget("PATCH", f"/api/admin/training-partners/{pid}", token=admin,
+                    body={"max_discount_percent": 50, "max_codes": 2, "max_uses_per_code": 5, "total_allocation": 6, "allow_full_sponsorship": False})
+        chk("13t partner sponsorship limits saved", c == 200)
+        chk("13t2 over-percent code refused (422)", jget("POST", f"/api/admin/training-partners/{pid}/codes", token=admin, body={"percent": 60, "max_uses": 1})[0] == 422)
+        chk("13t3 full sponsorship refused when not allowed (422)", jget("POST", f"/api/admin/training-partners/{pid}/codes", token=admin, body={"percent": 100, "max_uses": 1})[0] == 422)
+        chk("13t4 over-uses code refused (422)", jget("POST", f"/api/admin/training-partners/{pid}/codes", token=admin, body={"percent": 50, "max_uses": 10})[0] == 422)
+        c, code1 = jget("POST", f"/api/admin/training-partners/{pid}/codes", token=admin, body={"percent": 50, "max_uses": 5})
+        chk("13t5 code inside the limits is created", c == 200 and code1.get("code"), code1)
+        chk("13t6 allocation ceiling enforced across codes (422)", jget("POST", f"/api/admin/training-partners/{pid}/codes", token=admin, body={"percent": 50, "max_uses": 2})[0] == 422)
+        c, code2 = jget("POST", f"/api/admin/training-partners/{pid}/codes", token=admin, body={"percent": 50, "max_uses": 1})
+        chk("13t7 remaining allocation can still be issued", c == 200 and code2.get("code"), code2)
+        chk("13t8 max_codes ceiling enforced (422)", jget("POST", f"/api/admin/training-partners/{pid}/codes", token=admin, body={"percent": 10, "max_uses": 1})[0] == 422)
+        c, usage = jget("GET", f"/api/admin/training-partners/{pid}/usage", token=admin)
+        chk("13t9 usage view reports allocation and codes", usage.get("allocation") == 6 and len(usage.get("codes", [])) == 2, usage)
+        con = dbconn()
+        con.execute("UPDATE discount_codes SET used_count=5 WHERE code=?", (code1["code"],))
+        con.execute("UPDATE discount_codes SET used_count=1 WHERE code=?", (code2["code"],))
+        con.commit(); con.close()
+        c, vfull = jget("POST", "/api/validate-code", body={"code": code2["code"], "product": "membership", "email": "any13@ex.co"})
+        chk("13u redemption stops once the institution allocation is spent", vfull.get("valid") is not True, vfull)
+
+        # ---- 13v. RBAC: the new privileges are explicit, never bundled ----
+        vtok = globals().get("_VIEWER_TOK")
+        chk("13v viewer BLOCKED from waive (403)", jget("POST", f"/api/admin/students/{wuid}/waive", token=vtok, body={"reason": "x"})[0] == 403)
+        chk("13v2 viewer BLOCKED from reversal (403)", jget("POST", f"/api/admin/payments/{mp['payment_id']}/reverse", token=vtok, body={"reason": "x"})[0] == 403)
+        chk("13v3 viewer BLOCKED from reconciliation (403)", jget("GET", "/api/admin/payments/reconciliation", token=vtok)[0] == 403)
+        chk("13v4 viewer BLOCKED from impersonation (403)", jget("POST", f"/api/admin/members/{ruid}/impersonate", token=vtok, body={"reason": "x"})[0] == 403)
+        c, sm = jget("POST", "/api/admin/team", token=admin, body={"email": "smgr13@pci.test", "role": "student_manager"})
+        # Mint the manager's session directly (the login endpoint's rate-limit window may still be hot
+        # from section 10's flood test) — same pattern the student helpers use.
+        smtok = "smgrsess_" + sha256hex("smgr13")[:20]
+        con = dbconn()
+        aid = con.execute("SELECT id FROM admin_users WHERE email=?", ("smgr13@pci.test",)).fetchone()[0]
+        con.execute("UPDATE admin_users SET must_change_pw=0 WHERE id=?", (aid,))
+        con.execute("INSERT INTO admin_sessions(admin_id,token,expires_at) VALUES(?,?, datetime('now','+1 day'))", (aid, sha256hex(smtok)))
+        con.commit(); con.close()
+        j_c = jget("GET", f"/api/admin/members/{wuid}/journey", token=smtok)[0] if smtok else None
+        m_c = jget("POST", f"/api/admin/students/{wuid}/mark-paid", token=smtok, body={"product": "exam"})[0] if smtok else None
+        i_c = jget("POST", f"/api/admin/members/{wuid}/impersonate", token=smtok, body={"reason": "x"})[0] if smtok else None
+        chk("13v5 student_manager can see the journey but NOT move money (finance is explicit)",
+            smtok is not None and j_c == 200 and m_c == 403 and i_c == 403,
+            {"team": sm if not sm.get("ok") else "ok", "journey": j_c, "markpaid": m_c, "impersonate": i_c})
     finally:
         srv.shutdown()
 
@@ -1184,6 +1379,7 @@ def run(proc):
 
     test_exam_delivery(admin)
     test_operator_toolkit(admin)
+    test_finance_and_certuvo_hardening(admin)
 
     print("\n(assertions complete)")
 

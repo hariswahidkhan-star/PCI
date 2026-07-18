@@ -137,8 +137,10 @@ public static class AdminExtra
             var toQ = req.Query["to"].ToString(); var fromQ = req.Query["from"].ToString();
             var to = dOK.IsMatch(toQ) ? toQ : DateTime.UtcNow.ToString("yyyy-MM-dd");
             var from = dOK.IsMatch(fromQ) ? fromQ : DateTime.UtcNow.AddDays(-29).ToString("yyyy-MM-dd");
-            const string P = "payment_status='paid' AND date(payment_date) BETWEEN ? AND ?";
-            var Pp = P.Replace("payment_", "p.payment_");
+            // Test accounts (users.is_test=1) never reach financial reporting — their settlements are
+            // real rows for workflow purposes but must not count as revenue, orders, or funnel results.
+            string P0(string a) => $"{a}payment_status='paid' AND date({a}payment_date) BETWEEN ? AND ? AND COALESCE({a}user_id,0) NOT IN (SELECT id FROM users WHERE is_test=1)";
+            var P = P0(""); var Pp = P0("p.");
             return J(new
             {
                 from, to,
@@ -153,7 +155,7 @@ public static class AdminExtra
                     started = db.Scalar<long>("SELECT COUNT(*) FROM enrollment_sessions WHERE date(created_at) BETWEEN ? AND ?", from, to),
                     paid = db.Scalar<long>($"SELECT COUNT(*) FROM payments WHERE {P}", from, to)
                 },
-                new_members = db.Scalar<long>("SELECT COUNT(*) FROM users WHERE date(created_at) BETWEEN ? AND ?", from, to)
+                new_members = db.Scalar<long>("SELECT COUNT(*) FROM users WHERE date(created_at) BETWEEN ? AND ? AND COALESCE(is_test,0)=0", from, to)
             });
         });
 

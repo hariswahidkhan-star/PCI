@@ -21,6 +21,13 @@ public static class Security
         return sb.ToString();
     }
 
+    /// <summary>Constant-time secret comparison (webhook shared secrets etc.).</summary>
+    public static bool FixedTimeEquals(string? a, string? b)
+    {
+        if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b)) return false;
+        return CryptographicOperations.FixedTimeEquals(Encoding.UTF8.GetBytes(a), Encoding.UTF8.GetBytes(b));
+    }
+
     /// <summary>Constant-behaviour password check: false for null/malformed stored hashes instead of
     /// throwing. BCrypt.Verify raises SaltParseException on a non-bcrypt hash value, which turned the
     /// public login endpoints into a 500 for any row with a legacy/corrupted hash — an auth endpoint
@@ -42,6 +49,11 @@ public static class Rbac
         ["website"]  = new[]{ "set_web","pricing","codes","content","pages","news","faqs","bok","governance","resources","media","nav","partners","sitesettings","subscribers","submissions","inquiries" },
         ["student"]  = new[]{ "set_sp","members","enrollments","payments","credentials","tickets" },
         ["exam"]     = new[]{ "set_exam","exams","proctoring","sampleq","exam_delivery" },
+        // High-privilege operator capabilities. Deliberately NOT part of any named role bundle
+        // (owner excepted): they are granted individually via a custom role or a permissions
+        // override, so "who can move money / act as a student / mint test accounts" is always an
+        // explicit decision, never a side-effect of a job title.
+        ["operations"] = new[]{ "finance","impersonate","test_users" },
     };
 
     public static string[] AllSections => Sections.Values.SelectMany(x => x).ToArray();

@@ -127,9 +127,9 @@ public static class Migrate
         //   exam_delivery_orders      — one row per booking routed to a vendor: the external candidate /
         //                               registration / appointment ids and the lifecycle status + result
         //   exam_delivery_log         — an append-only audit of every vendor API operation (op, code, ok)
-        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_delivery_providers(id INTEGER PRIMARY KEY AUTOINCREMENT,provider TEXT NOT NULL,name TEXT,enabled INTEGER DEFAULT 0,is_default INTEGER DEFAULT 0,environment TEXT DEFAULT 'sandbox',config TEXT,secret TEXT,status TEXT DEFAULT 'idle',last_sync_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_delivery_providers(id INTEGER PRIMARY KEY AUTOINCREMENT,provider VARCHAR(40) NOT NULL,name TEXT,enabled INTEGER DEFAULT 0,is_default INTEGER DEFAULT 0,environment TEXT DEFAULT 'sandbox',config TEXT,secret TEXT,status TEXT DEFAULT 'idle',last_sync_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_exdelprov_provider ON exam_delivery_providers(provider)");
-        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_delivery_orders(id INTEGER PRIMARY KEY AUTOINCREMENT,provider_id INTEGER NOT NULL,provider TEXT NOT NULL,user_id INTEGER NOT NULL,booking_id INTEGER,attempt_id INTEGER,certification_id INTEGER,vendor_exam_code TEXT,delivery_type TEXT DEFAULT 'online',status TEXT NOT NULL DEFAULT 'pending',external_candidate_id TEXT,external_registration_id TEXT,external_appointment_id TEXT,confirmation_code TEXT,scheduled_at TEXT,timezone TEXT,result_status TEXT,score REAL,max_score REAL,raw_result TEXT,last_error TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_delivery_orders(id INTEGER PRIMARY KEY AUTOINCREMENT,provider_id INTEGER NOT NULL,provider TEXT NOT NULL,user_id INTEGER NOT NULL,booking_id INTEGER,attempt_id INTEGER,certification_id INTEGER,vendor_exam_code TEXT,delivery_type TEXT DEFAULT 'online',status VARCHAR(32) NOT NULL DEFAULT 'pending',external_candidate_id TEXT,external_registration_id TEXT,external_appointment_id TEXT,confirmation_code TEXT,scheduled_at TEXT,timezone TEXT,result_status TEXT,score REAL,max_score REAL,raw_result TEXT,last_error TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_exdelorder_booking ON exam_delivery_orders(booking_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_exdelorder_status ON exam_delivery_orders(status)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_exdelorder_booking_prov ON exam_delivery_orders(booking_id, provider_id)");
@@ -138,6 +138,37 @@ public static class Migrate
         // Certuvo external practice platform: an account provisioned for a member (credentials shared in the
         // student panel). Provisioned automatically when a membership is settled, or manually by an admin.
         db.Exec(@"CREATE TABLE IF NOT EXISTS certuvo_accounts(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL UNIQUE,external_id TEXT,username TEXT,secret TEXT,login_url TEXT,status TEXT DEFAULT 'pending',last_error TEXT,provisioned_at TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        // Certuvo hardening: retry queue with backoff, suspend/revoke lifecycle, first-login confirmation
+        // (webhook), per-account idempotency key so repeated settlements/webhooks can never double-create.
+        AddCol("certuvo_accounts", "retry_count", "retry_count INTEGER DEFAULT 0");
+        AddCol("certuvo_accounts", "next_retry_at", "next_retry_at TEXT");
+        AddCol("certuvo_accounts", "suspended_at", "suspended_at TEXT");
+        AddCol("certuvo_accounts", "revoked_at", "revoked_at TEXT");
+        AddCol("certuvo_accounts", "activated_at", "activated_at TEXT");
+        AddCol("certuvo_accounts", "credentials_sent_at", "credentials_sent_at TEXT");
+        AddCol("certuvo_accounts", "idempotency_key", "idempotency_key TEXT");
+        // Finance controls: structured metadata on payments (offline settlements, waivers, reversals) so
+        // manual money movements carry the same evidence a gateway payment does.
+        AddCol("payments", "method", "method TEXT");                       // bank_transfer | cheque | invoice | gateway | other
+        AddCol("payments", "bank_reference", "bank_reference TEXT");
+        AddCol("payments", "gateway_reference", "gateway_reference TEXT");
+        AddCol("payments", "receipt_no", "receipt_no TEXT");
+        AddCol("payments", "note", "note TEXT");
+        AddCol("payments", "recorded_by", "recorded_by INTEGER");          // admin_users.id for manual entries
+        AddCol("payments", "waived_amount", "waived_amount REAL");
+        AddCol("payments", "reversed_at", "reversed_at TEXT");
+        AddCol("payments", "reversed_by", "reversed_by INTEGER");
+        AddCol("payments", "reversal_reason", "reversal_reason TEXT");
+        // Waiver ledger: every full/partial waiver as a first-class record (who, what, why, how much).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS fee_waivers(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,product_type VARCHAR(24),certification_id INTEGER,kind VARCHAR(16) DEFAULT 'full',original_amount REAL,waived_amount REAL,final_amount REAL,currency VARCHAR(8) DEFAULT 'USD',reason TEXT,note TEXT,approved_by INTEGER,code_id INTEGER,payment_id INTEGER,expires_at TEXT,status VARCHAR(16) DEFAULT 'granted',created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_fee_waivers_user ON fee_waivers(user_id)");
+        // Institution (training-partner) sponsorship limits + partner-linked discount codes.
+        AddCol("training_partners", "max_discount_percent", "max_discount_percent REAL");
+        AddCol("training_partners", "max_codes", "max_codes INTEGER");
+        AddCol("training_partners", "max_uses_per_code", "max_uses_per_code INTEGER");
+        AddCol("training_partners", "total_allocation", "total_allocation INTEGER");
+        AddCol("training_partners", "allow_full_sponsorship", "allow_full_sponsorship INTEGER DEFAULT 0");
+        AddCol("discount_codes", "partner_id", "partner_id INTEGER");
         db.Exec(@"CREATE TABLE IF NOT EXISTS notification_history(id INTEGER PRIMARY KEY AUTOINCREMENT,channel TEXT NOT NULL DEFAULT 'email',recipient TEXT,subject TEXT,status TEXT,related_type TEXT,related_id INTEGER,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','')");
@@ -154,7 +185,7 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS email_campaigns(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,subject TEXT,body_html TEXT,audience TEXT,status TEXT DEFAULT 'draft',total INTEGER DEFAULT 0,sent INTEGER DEFAULT 0,failed INTEGER DEFAULT 0,suppressed INTEGER DEFAULT 0,created_at TEXT DEFAULT (datetime('now')),sent_at TEXT)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS campaign_recipients(id INTEGER PRIMARY KEY AUTOINCREMENT,campaign_id INTEGER,email TEXT,first_name TEXT,status TEXT DEFAULT 'pending',error TEXT,sent_at TEXT)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_campaign_recipients_campaign ON campaign_recipients(campaign_id)");
-        db.Exec(@"CREATE TABLE IF NOT EXISTS email_suppression(id INTEGER PRIMARY KEY AUTOINCREMENT,email TEXT UNIQUE NOT NULL,reason TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS email_suppression(id INTEGER PRIMARY KEY AUTOINCREMENT,email VARCHAR(255) UNIQUE NOT NULL,reason TEXT,created_at TEXT DEFAULT (datetime('now')))");
         // Optional postal address shown in the campaign footer (CAN-SPAM). Empty ⇒ line is omitted.
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('org_postal_address','')");
         // SEO (master-plan Phase 3): per-page canonical/OG overrides + a managed redirect table.
@@ -172,18 +203,18 @@ public static class Migrate
 
         // Public discussion forum (community): anonymous display-name threads/posts, community
         // flagging with auto-hold, and a rate-limit action ledger keyed by a salted truncated IP hash.
-        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_threads(id INTEGER PRIMARY KEY AUTOINCREMENT,category TEXT NOT NULL,title TEXT NOT NULL,author_name TEXT NOT NULL,status TEXT DEFAULT 'live',reply_count INTEGER DEFAULT 0,created_at TEXT DEFAULT (datetime('now')),last_post_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_threads(id INTEGER PRIMARY KEY AUTOINCREMENT,category VARCHAR(64) NOT NULL,title TEXT NOT NULL,author_name TEXT NOT NULL,status VARCHAR(24) DEFAULT 'live',reply_count INTEGER DEFAULT 0,created_at TEXT DEFAULT (datetime('now')),last_post_at VARCHAR(32) DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_threads_list ON forum_threads(status, last_post_at)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_threads_cat ON forum_threads(category, status)");
-        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_posts(id INTEGER PRIMARY KEY AUTOINCREMENT,thread_id INTEGER NOT NULL,author_name TEXT NOT NULL,body TEXT NOT NULL,status TEXT DEFAULT 'live',flags INTEGER DEFAULT 0,ip_hash TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_posts(id INTEGER PRIMARY KEY AUTOINCREMENT,thread_id INTEGER NOT NULL,author_name TEXT NOT NULL,body TEXT NOT NULL,status VARCHAR(24) DEFAULT 'live',flags INTEGER DEFAULT 0,ip_hash TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_posts_thread ON forum_posts(thread_id, status)");
-        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_actions(id INTEGER PRIMARY KEY AUTOINCREMENT,ip_hash TEXT NOT NULL,action TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS forum_actions(id INTEGER PRIMARY KEY AUTOINCREMENT,ip_hash VARCHAR(64) NOT NULL,action VARCHAR(32) NOT NULL,created_at VARCHAR(32) DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_forum_actions_lookup ON forum_actions(ip_hash, action, created_at)");
 
         // Self-hosted site chat (Endpoints/Chat.cs): a bot answers first from the admin-managed
         // knowledge base (chat_kb); the visitor can escalate to a live person; every conversation is
         // kept as a full transcript for admin review. No third-party chat services involved.
-        db.Exec(@"CREATE TABLE IF NOT EXISTS chat_sessions(id INTEGER PRIMARY KEY AUTOINCREMENT,token TEXT UNIQUE NOT NULL,visitor_name TEXT,status TEXT DEFAULT 'bot',created_at TEXT DEFAULT (datetime('now')),last_activity_at TEXT DEFAULT (datetime('now')),ip_hash TEXT)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS chat_sessions(id INTEGER PRIMARY KEY AUTOINCREMENT,token VARCHAR(64) UNIQUE NOT NULL,visitor_name TEXT,status VARCHAR(24) DEFAULT 'bot',created_at TEXT DEFAULT (datetime('now')),last_activity_at VARCHAR(32) DEFAULT (datetime('now')),ip_hash TEXT)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_chat_sessions_status ON chat_sessions(status, last_activity_at)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS chat_messages(id INTEGER PRIMARY KEY AUTOINCREMENT,session_id INTEGER NOT NULL,sender TEXT NOT NULL,body TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_chat_messages_session ON chat_messages(session_id, id)");

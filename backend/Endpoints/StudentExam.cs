@@ -21,8 +21,8 @@ public static class StudentExam
         // formal exam_entitlements ledger; legacy rows without one belong to certification 1.
         Dictionary<string, object?>? ExamEntitlement(long uid, long? certId = null) =>
             certId is null
-            ? db.QueryOne("SELECT p.*, COALESCE(e.certification_id,1) certification_id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle') ORDER BY p.id DESC", uid)
-            : db.QueryOne("SELECT p.*, COALESCE(e.certification_id,1) certification_id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle') AND COALESCE(e.certification_id,1)=? ORDER BY p.id DESC", uid, certId);
+            ? db.QueryOne("SELECT p.*, COALESCE(e.certification_id,1) certification_id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id WHERE p.user_id=? AND p.payment_status IN ('paid','waived') AND p.product_type IN ('exam','bundle') ORDER BY p.id DESC", uid)
+            : db.QueryOne("SELECT p.*, COALESCE(e.certification_id,1) certification_id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id WHERE p.user_id=? AND p.payment_status IN ('paid','waived') AND p.product_type IN ('exam','bundle') AND COALESCE(e.certification_id,1)=? ORDER BY p.id DESC", uid, certId);
         // Bookings are per certification: holding a slot for one credential must not block another.
         Dictionary<string, object?>? ActiveBooking(long uid, long? certId = null) =>
             certId is null
@@ -51,7 +51,7 @@ public static class StudentExam
             }
             return J(new
             {
-                user = new { id = u.Id, email = u.Email, first_name = u.FirstName, last_name = u.LastName, registration_no = regNo, created_at = db.Scalar<string>("SELECT created_at FROM users WHERE id=?", u.Id) },
+                user = new { id = u.Id, email = u.Email, first_name = u.FirstName, last_name = u.LastName, registration_no = regNo, created_at = db.Scalar<string>("SELECT created_at FROM users WHERE id=?", u.Id), impersonated = u.Impersonated },
                 profile = db.QueryOne("SELECT * FROM student_profiles WHERE user_id=?", u.Id),
                 lifecycle = Lifecycle.BuildLifecycle(db, u.Id,
                     db.QueryOne("SELECT * FROM memberships WHERE user_id=? ORDER BY id DESC", u.Id),
@@ -74,7 +74,7 @@ public static class StudentExam
                 exams = db.Query(@"SELECT p.id payment_id, p.reference, p.exam_schedule_deadline, p.payment_status,
                         COALESCE(e.certification_id,1) certification_id, e.status entitlement_status
                         FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id
-                        WHERE p.user_id=? AND p.payment_status='paid' AND p.product_type IN ('exam','bundle') ORDER BY p.id DESC", u.Id)
+                        WHERE p.user_id=? AND p.payment_status IN ('paid','waived') AND p.product_type IN ('exam','bundle') ORDER BY p.id DESC", u.Id)
                     .Select(r => {
                         var cid = H.L(r["certification_id"]);
                         var cert = Certs.ById(db, cid);
@@ -153,6 +153,8 @@ public static class StudentExam
         app.MapPost("/api/me/consents", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            // Consent is a personal legal act — a staff "view as student" session may never perform it.
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             // Accept either a single {consent_type,policy_version} or {accept:[...types]} against current versions.
             var accepted = new List<string>();
@@ -189,6 +191,8 @@ public static class StudentExam
         app.MapPost("/api/me/identity-document", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            // Identity evidence must come from the candidate themselves, never a support session.
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             var kind = H.GetS(b, "doc_kind", "kind") ?? "passport";
             if (kind is not ("passport" or "national_id" or "driving_licence" or "other"))
@@ -743,7 +747,7 @@ public static class StudentExam
         app.MapPost("/api/me/delete-request", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             log(u.Id, "delete_request", u.Email); return J(new { ok = true, note = "A data deletion request has been recorded." }); });
         app.MapGet("/api/me/invoices", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            var rows = db.Query("SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference FROM payments WHERE user_id=? AND payment_status='paid' ORDER BY id DESC", u.Id);
+            var rows = db.Query("SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference,waived_amount FROM payments WHERE user_id=? AND payment_status IN ('paid','waived') ORDER BY id DESC", u.Id);
             return J(new { rows }); });
         app.MapGet("/api/me/faqs", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             return J(new { rows = db.Query("SELECT question,answer,category FROM faqs WHERE published=1 ORDER BY sort_order,id") }); });

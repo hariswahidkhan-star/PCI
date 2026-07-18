@@ -23,6 +23,9 @@ public static class Notifications
         ("chat", "Live chat requests"),
         ("enrollment", "Enrolments & payments"),
         ("inquiry", "Website inquiries"),
+        ("finance", "Manual payments, waivers & mismatches"),
+        ("certuvo", "Certuvo provisioning failures"),
+        ("partners", "Institution allocation warnings"),
     };
 
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log,

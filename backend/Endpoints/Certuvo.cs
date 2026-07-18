@@ -62,6 +62,16 @@ public static class Certuvo
             return J(Core.CertuvoLink.AccessFor(db, u.Id));
         });
 
+        // Re-send the access instructions to the student's own inbox (throttled).
+        app.MapPost("/api/me/certuvo/resend", (HttpContext ctx) =>
+        {
+            var u = Auth(ctx);
+            if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (Throttle(u.Id, "certuvo_resend") is { } limited) return limited;
+            var ok = Core.CertuvoLink.SendAccessInstructions(db, u.Id);
+            return ok ? J(new { ok = true }) : Results.Json(new { error = "not_active", message = "Your Certuvo access is not active yet." }, statusCode: 409);
+        });
+
         // ---------------- overview: domains, readiness, recent ----------------
         app.MapGet("/api/me/certuvo/overview", (HttpContext ctx) =>
         {
