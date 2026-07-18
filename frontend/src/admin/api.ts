@@ -350,6 +350,8 @@ export interface ReportData {
   revenue_daily: { d: string; revenue: number; n: number }[]
   by_product: { product_type: string; n: number; revenue: number }[]
   by_country: { country: string; n: number; revenue: number }[]
+  by_certification?: { certification: string; n: number; revenue: number }[]
+  certificates_by_certification?: { certification: string; issued: number }[]
   funnel: { started: number; paid: number }
   new_members: number
 }

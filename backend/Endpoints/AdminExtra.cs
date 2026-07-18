@@ -145,6 +145,16 @@ public static class AdminExtra
                 totals = db.QueryOne($"SELECT COUNT(*) payments, COALESCE(SUM(final_amount),0) revenue, COALESCE(SUM(discount_code_amount),0) code_discounts, COALESCE(SUM(default_discount_amount),0) standard_discounts, COALESCE(AVG(final_amount),0) avg_order FROM payments WHERE {P}", from, to),
                 revenue_daily = db.Query($"SELECT date(payment_date) d, COALESCE(SUM(final_amount),0) revenue, COUNT(*) n FROM payments WHERE {P} GROUP BY d ORDER BY d", from, to),
                 by_product = db.Query($"SELECT product_type, COUNT(*) n, COALESCE(SUM(final_amount),0) revenue FROM payments WHERE {P} GROUP BY product_type ORDER BY revenue DESC", from, to),
+                // Revenue attributed to each certification (payments carry it through exam_entitlements; one
+                // entitlement per payment, so the sum is exact). Payments with no entitlement show as Unattributed.
+                by_certification = db.Query($@"SELECT COALESCE(c.acronym, c.code, 'Unattributed (membership/other)') certification,
+                        COUNT(*) n, COALESCE(SUM(p.final_amount),0) revenue
+                    FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id LEFT JOIN certifications c ON c.id=e.certification_id
+                    WHERE {Pp} GROUP BY COALESCE(e.certification_id,0) ORDER BY revenue DESC", from, to),
+                // Certificates issued per credential in the window.
+                certificates_by_certification = db.Query(@"SELECT COALESCE(c.acronym, c.code, '—') certification, COUNT(*) issued
+                    FROM issued_credentials ic LEFT JOIN certifications c ON c.id=ic.certification_id
+                    WHERE date(ic.issued_at) BETWEEN ? AND ? GROUP BY ic.certification_id ORDER BY issued DESC", from, to),
                 codes_perf = db.Query("SELECT c.code, c.code_type, c.org_name, COUNT(r.id) uses, COALESCE(SUM(r.discount_amount),0) discount_given, COALESCE(SUM(p.final_amount),0) revenue FROM code_redemptions r JOIN discount_codes c ON c.id=r.code_id JOIN payments p ON p.id=r.payment_id WHERE date(r.redeemed_at) BETWEEN ? AND ? GROUP BY c.id ORDER BY revenue DESC LIMIT 25", from, to),
                 top_referrers = db.Query("SELECT u.first_name||' '||u.last_name name, u.email, c.code, COUNT(r.id) referrals, COALESCE(SUM(p.final_amount),0) revenue FROM discount_codes c JOIN users u ON u.id=c.owner_user_id LEFT JOIN code_redemptions r ON r.code_id=c.id LEFT JOIN payments p ON p.id=r.payment_id WHERE c.code_type='referral' GROUP BY c.id HAVING referrals>0 ORDER BY referrals DESC LIMIT 15"),
                 by_country = db.Query($"SELECT COALESCE(NULLIF(sp.country,''),'Unknown') country, COUNT(*) n, COALESCE(SUM(p.final_amount),0) revenue FROM payments p LEFT JOIN student_profiles sp ON sp.user_id=p.user_id WHERE {Pp} GROUP BY country ORDER BY revenue DESC LIMIT 12", from, to),
