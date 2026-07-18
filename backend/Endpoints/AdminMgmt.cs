@@ -139,13 +139,32 @@ public static class AdminMgmt
             var prefixV = (H.GetS(b, "credential_prefix") ?? "").Trim().ToUpperInvariant();
             if (codeV.StartsWith(Honorary.AwardPrefix, StringComparison.Ordinal) || prefixV.StartsWith(Honorary.AwardPrefix, StringComparison.Ordinal))
                 return Results.Json(new { error = "prefix_reserved", message = "PCI-HON is reserved for honorary awards and cannot be used for a certification." }, statusCode: 400);
-            var id = db.ExecuteReturningId(@"INSERT INTO certifications(code,name,description,credential_prefix,pass_mark_pct,duration_minutes,expiry_years,exam_price,active,sort_order)
-                VALUES(?,?,?,?,?,?,?,?,?,?)",
+            // status (defined lifecycle; defaults Active so a new credential is live unless set otherwise)
+            var statusV = (H.GetS(b, "status") ?? "").Trim();
+            if (statusV.Length > 0 && !Certs.ValidStatus(statusV))
+                return Results.Json(new { error = "bad_status", message = "Status must be one of: " + string.Join(", ", Certs.Statuses) + "." }, statusCode: 400);
+            if (statusV.Length == 0) statusV = "Active";
+            // slug (public URL) — from body or derived from the code; must be unique
+            var slugV = Certs.NormalizeSlug(H.GetS(b, "slug") is { Length: > 0 } sg ? sg : codeV);
+            if (slugV.Length == 0) slugV = codeV.ToLowerInvariant();
+            if (db.Scalar<long>("SELECT COUNT(*) FROM certifications WHERE lower(slug)=?", slugV) > 0)
+                return Results.Json(new { error = "slug_exists", message = $"The slug '{slugV}' is already in use." }, statusCode: 409);
+            var id = db.ExecuteReturningId(@"INSERT INTO certifications(code,name,description,credential_prefix,pass_mark_pct,duration_minutes,expiry_years,exam_price,active,sort_order,
+                    acronym,short_name,public_title,tagline,short_description,category,level,status,slug,audience,membership_required,application_fee,
+                    meta_title,meta_description,keywords,og_title,og_description,social_image,canonical_url,content_json)
+                VALUES(?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?)",
                 codeV, nameV, H.GetS(b, "description"), H.GetS(b, "credential_prefix"),
                 H.GetNum(b, "pass_mark_pct"), H.GetNum(b, "duration_minutes"),
                 H.GetNum(b, "expiry_years") ?? 3, H.GetNum(b, "exam_price"),
                 b.TryGetValue("active", out var av) && !JsonFlag(av) ? 0 : 1,
-                H.GetNum(b, "sort_order") ?? 0);
+                H.GetNum(b, "sort_order") ?? 0,
+                H.GetS(b, "acronym") ?? codeV, H.GetS(b, "short_name") ?? codeV, H.GetS(b, "public_title") ?? nameV,
+                H.GetS(b, "tagline"), H.GetS(b, "short_description"), H.GetS(b, "category"), H.GetS(b, "level") ?? "Professional",
+                statusV, slugV, H.GetS(b, "audience"),
+                b.TryGetValue("membership_required", out var mv) && JsonFlag(mv) ? 1 : 0, H.GetNum(b, "application_fee"),
+                H.GetS(b, "meta_title"), H.GetS(b, "meta_description"), H.GetS(b, "keywords"),
+                H.GetS(b, "og_title"), H.GetS(b, "og_description"), H.GetS(b, "social_image"),
+                H.GetS(b, "canonical_url"), H.GetS(b, "content_json"));
             log(adm.Id, "certification_create", $"{codeV} (id {id})");
             CertCatalogue.Bump(); PriceTags.Bump();   // the new credential is live on the public site immediately
             return J(new { ok = true, id });
@@ -154,10 +173,26 @@ public static class AdminMgmt
         {
             if (Certs.ById(db, id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var b = H.Body(req).GetAwaiter().GetResult();
-            var allowed = new[]{ "name","description","credential_prefix","pass_mark_pct","duration_minutes","expiry_years","exam_price","active","sort_order" };
+            var allowed = new[]{ "name","description","credential_prefix","pass_mark_pct","duration_minutes","expiry_years","exam_price","active","sort_order",
+                // catalogue / public-page / SEO configuration (Phase 3)
+                "acronym","short_name","public_title","tagline","short_description","category","level","status","slug","audience",
+                "membership_required","application_fee","overview","next_exam_note",
+                "meta_title","meta_description","keywords","og_title","og_description","social_image","canonical_url","content_json" };
             var set = allowed.Where(c => b.ContainsKey(c)).ToList();
             if (id == 1 && set.Contains("active") && !JsonFlag(b["active"]))
                 return Results.Json(new { error = "founding_cert_permanent", message = "The founding certification cannot be deactivated." }, statusCode: 400);
+            // validate status against the defined lifecycle
+            if (set.Contains("status") && b["status"].ValueKind == JsonValueKind.String && !Certs.ValidStatus(b["status"].GetString()))
+                return Results.Json(new { error = "bad_status", message = "Status must be one of: " + string.Join(", ", Certs.Statuses) + "." }, statusCode: 400);
+            // normalise slug + enforce uniqueness (a slug collision would make two credentials share a public URL)
+            if (set.Contains("slug") && b["slug"].ValueKind == JsonValueKind.String)
+            {
+                var ns = Certs.NormalizeSlug(b["slug"].GetString());
+                if (ns.Length == 0) return Results.Json(new { error = "bad_slug", message = "Slug must contain letters or digits (a–z, 0–9, hyphens)." }, statusCode: 400);
+                if (db.Scalar<long>("SELECT COUNT(*) FROM certifications WHERE lower(slug)=? AND id<>?", ns, id) > 0)
+                    return Results.Json(new { error = "slug_exists", message = $"The slug '{ns}' is already used by another certification." }, statusCode: 409);
+                b["slug"] = System.Text.Json.JsonSerializer.SerializeToElement(ns);
+            }
             if (set.Contains("credential_prefix") && (b["credential_prefix"].ValueKind == JsonValueKind.String
                 && (b["credential_prefix"].GetString() ?? "").Trim().ToUpperInvariant().StartsWith(Honorary.AwardPrefix, StringComparison.Ordinal)))
                 return Results.Json(new { error = "prefix_reserved", message = "PCI-HON is reserved for honorary awards and cannot be used for a certification." }, statusCode: 400);

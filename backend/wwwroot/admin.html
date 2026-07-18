@@ -1612,7 +1612,7 @@ async function renderCertifications(){
     <td>${c.exam_price==null?'<span class="em">standard</span>':money(c.exam_price)}</td>
     <td class="num">${c.bank_size||0}</td>
     <td class="num">${c.credentials||0}</td>
-    <td>${Number(c.active)?badge('active'):badge('deactivated')}</td>
+    <td>${c.status?esc(c.status):(Number(c.active)?'Active':'Deactivated')}${Number(c.active)?'':' <span class="badge b-grey"><span class="dot"></span>off</span>'}</td>
     <td class="actions"><button class="btn btn-sm" data-certedit="${c.id}">Edit</button>${c.id===1?'':` <button class="btn btn-sm" data-certtoggle="${c.id}" data-on="${Number(c.active)}">${Number(c.active)?'Deactivate':'Reactivate'}</button>`}</td></tr>`).join('')
     :emptyRow(cols.length,'No certifications yet.');
   $('#view').innerHTML='<div class="inline-note" style="margin-bottom:16px">Each certification has its own question bank, entitlements, bookings and credential prefix. Blank pass mark, duration or price means the global exam setting applies. Certifications with history can be deactivated but never deleted.</div>'
@@ -1627,23 +1627,52 @@ async function renderCertifications(){
     toast(on?'Deactivated':'Reactivated','ok'); CERTS_CACHE=null; renderCertifications();
   });
 }
+const CERT_STATUSES=['Draft','Under Development','Coming Soon','Open for Applications','Active','Temporarily Suspended','Closed','Archived'];
 function editCert(row){
   const F=(l,k,v,ph,type)=>`<div class="form-row"><label>${l}</label><input id="c_${k}" type="${type||'text'}" value="${v==null?'':esc(String(v))}" placeholder="${ph||''}"/></div>`;
+  const T=(l,k,v,ph)=>`<div class="form-row"><label>${l}</label><textarea id="c_${k}" rows="2" placeholder="${ph||''}">${v==null?'':esc(String(v))}</textarea></div>`;
+  const SEL=(l,k,cur,opts)=>`<div class="form-row"><label>${l}</label><select id="c_${k}">${opts.map(o=>`<option${String(cur)===o?' selected':''}>${o}</option>`).join('')}</select></div>`;
+  const CHK=(l,k,on)=>`<div class="form-row"><label>${l}</label><input id="c_${k}" type="checkbox"${on?' checked':''}/></div>`;
+  let cj={}; try{ cj=JSON.parse((row&&row.content_json)||'{}')||{}; }catch(e){ cj={}; }
+  const comps=(cj.competencies||[]).join('\n');
   modal(row?('Edit '+esc(row.code)):'New certification',
-    (row?'':F('Code (permanent, e.g. PCP-COST)','code','','PCP-COST'))
+    '<div class="inline-note" style="margin-bottom:12px">Identity &amp; public catalogue</div>'
+    +(row?'':F('Code (permanent, e.g. PCP-COST)','code','','PCP-COST'))
     +F('Name','name',row?row.name:'','Certified Cost Engineering Professional')
-    +F('Description','description',row?row.description:'')
+    +F('Acronym','acronym',row?row.acronym:'','PCP-COST')
+    +F('Public title','public_title',row?row.public_title:'')
+    +SEL('Status','status',(row&&row.status)||'Active',CERT_STATUSES)
+    +F('URL slug (public page /certifications/…)','slug',row?row.slug:'','pcp-cost')
+    +F('Category','category',row?row.category:'','Cost Engineering')
+    +F('Level','level',row?row.level:'Professional','Professional')
+    +T('Tagline','tagline',row?row.tagline:'')
+    +T('Short description (catalogue card)','short_description',row?row.short_description:'')
+    +T('Overview / description','description',row?row.description:'')
+    +T('Who it’s for (audience)','audience',row?row.audience:'')
+    +T('Competency areas — one per line','competencies',comps,'Investment appraisal\nFinancial modelling\n…')
+    +'<div class="inline-note" style="margin:14px 0 12px">Examination, fees &amp; membership</div>'
     +F('Pass mark % (blank = global setting)','pass_mark_pct',row?row.pass_mark_pct:'','65','number')
     +F('Duration minutes (blank = global setting)','duration_minutes',row?row.duration_minutes:'','90','number')
     +F('Credential validity (years)','expiry_years',row?row.expiry_years:3,'3','number')
     +F('Exam price USD (blank = standard exam pricing)','exam_price',row?row.exam_price:'','299','number')
-    +F('Sort order','sort_order',row?row.sort_order:0,'0','number'),
+    +F('Application fee USD','application_fee',row?row.application_fee:'','0','number')
+    +CHK('Membership required','membership_required',row&&Number(row.membership_required))
+    +F('Sort order','sort_order',row?row.sort_order:0,'0','number')
+    +'<div class="inline-note" style="margin:14px 0 12px">SEO</div>'
+    +F('Meta title','meta_title',row?row.meta_title:'')
+    +T('Meta description','meta_description',row?row.meta_description:'')
+    +F('Keywords','keywords',row?row.keywords:''),
     row?'Save changes':'Create', async()=>{
-    const val=k=>{const el=$('#c_'+k);return el?el.value.trim():'';};
+    const val=k=>{const el=$('#c_'+k);return el?(el.type==='checkbox'?el.checked:el.value.trim()):'';};
     const num=k=>{const v=val(k);return v===''?null:+v;};
-    const b={name:val('name'),description:val('description'),pass_mark_pct:num('pass_mark_pct'),
-             duration_minutes:num('duration_minutes'),expiry_years:num('expiry_years')??3,
-             exam_price:num('exam_price'),sort_order:num('sort_order')??0};
+    cj.competencies=(val('competencies')||'').split('\n').map(s=>s.trim()).filter(Boolean);
+    const b={name:val('name'),acronym:val('acronym'),public_title:val('public_title'),status:val('status'),
+             slug:val('slug'),category:val('category'),level:val('level'),tagline:val('tagline'),
+             short_description:val('short_description'),description:val('description'),audience:val('audience'),
+             pass_mark_pct:num('pass_mark_pct'),duration_minutes:num('duration_minutes'),expiry_years:num('expiry_years')??3,
+             exam_price:num('exam_price'),application_fee:num('application_fee'),membership_required:!!val('membership_required'),
+             sort_order:num('sort_order')??0,meta_title:val('meta_title'),meta_description:val('meta_description'),
+             keywords:val('keywords'),content_json:JSON.stringify(cj)};
     if(!row)b.code=val('code');
     if(!b.name){toast('Name is required','err');return false;}
     if(!row&&!b.code){toast('Code is required','err');return false;}
@@ -1651,7 +1680,7 @@ function editCert(row){
       if(row)await api('/api/admin/certifications/'+row.id,{method:'PATCH',body:JSON.stringify(b)});
       else await api('/api/admin/certifications',{method:'POST',body:JSON.stringify(b)});
       toast(row?'Saved':'Certification created','ok'); CERTS_CACHE=null; renderCertifications(); return true;
-    }catch(e){toast(e.message==='code_exists'?'That code already exists':e.message==='bad_code'?'Code must be letters/digits/hyphens (2–20 chars)':'Save failed: '+e.message,'err');return false;}
+    }catch(e){toast(e.message==='code_exists'?'That code already exists':e.message==='bad_code'?'Code must be letters/digits/hyphens (2–20 chars)':e.message==='slug_exists'?'That slug is already in use':e.message==='bad_status'?'Invalid status':'Save failed: '+e.message,'err');return false;}
   });
 }
 function renderGovernance(){ return renderCrud(C_GOV); }
