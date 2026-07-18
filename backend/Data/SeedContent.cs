@@ -43,9 +43,17 @@ public static class SeedContent
         try
         {
             db.Execute("UPDATE nav_items SET url='/certifications' WHERE nav_group='Header' AND label='Certifications' AND url='certification.html'");
-            db.Execute("UPDATE nav_items SET url='/certifications/pcp-ai' WHERE nav_group='Certifications' AND label='PCP-AI' AND url='certification.html'");
-            foreach (var (lbl, url, so) in new[] { ("PFIP", "/certifications/pfip", 20), ("CPMD", "/certifications/cpmd", 21), ("All certifications", "/certifications", 22) })
+            // Final Project Leadership Suite credentials in the footer "Certifications" group.
+            foreach (var (lbl, url, so) in new[] { ("PCI PCL-AI™", "/certifications/pcl-ai", 20), ("PCI PFL-AI™", "/certifications/pfl-ai", 21), ("PCI PDL-AI™", "/certifications/pdl-ai", 22), ("All certifications", "/certifications", 23) })
                 db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT ?,?, 'Certifications', ?, 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url=? AND nav_group='Certifications')", lbl, url, so, url);
+            // Migrate any earlier (temporary) credential nav rows to the final slugs + designations.
+            foreach (var (oldUrl, newUrl, newLbl) in new[] {
+                ("/certifications/pcp-ai", "/certifications/pcl-ai", "PCI PCL-AI™"),
+                ("/certifications/pfip", "/certifications/pfl-ai", "PCI PFL-AI™"),
+                ("/certifications/cpmd", "/certifications/pdl-ai", "PCI PDL-AI™") })
+                db.Execute("UPDATE nav_items SET url=?, label=? WHERE nav_group='Certifications' AND url=?", newUrl, newLbl, oldUrl);
+            // Replace the retired acronym in any nav label (e.g. "PMP vs AACE vs PCP-AI") across every group.
+            db.Execute("UPDATE nav_items SET label=REPLACE(label,'PCP-AI','PCL-AI') WHERE label LIKE '%PCP-AI%'");
         }
         catch (Exception e) { Console.Error.WriteLine($"[seed] certification nav skipped: {e.Message}"); }
     }

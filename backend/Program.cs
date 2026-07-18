@@ -682,6 +682,20 @@ app.Use(async (ctx, next) =>
         if (reqPath.StartsWith("/certifications", StringComparison.OrdinalIgnoreCase))
         {
             var rest = reqPath.Length > 15 ? reqPath.Substring(15).Trim('/') : "";  // "/certifications".Length == 15
+            // Permanent redirects from previous credential slugs to the final Project Leadership Suite slugs.
+            var certRedirect = rest.ToLowerInvariant() switch
+            {
+                "pcp-ai" or "pcp" => "pcl-ai",
+                "pfip" or "pfip-ai" => "pfl-ai",
+                "cpmd" or "cpmd-ai" or "pml-ai" => "pdl-ai",
+                _ => null,
+            };
+            if (certRedirect is not null)
+            {
+                ctx.Response.StatusCode = 301;
+                ctx.Response.Headers.Location = "/certifications/" + certRedirect + ctx.Request.QueryString;
+                return;
+            }
             if (rest.Length > 0 && !rest.Contains('/') && !rest.Contains('.'))
             {
                 var page = PCI.Backend.Core.CertPage.Render(db, webRoot, rest, PCI.Backend.Core.I18nContent.ActiveLang(ctx));
