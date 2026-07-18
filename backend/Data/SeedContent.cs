@@ -67,6 +67,17 @@ public static class SeedContent
             db.Execute("UPDATE nav_items SET label=REPLACE(label,'PCP-AI','PCL-AI') WHERE label LIKE '%PCP-AI%'");
             // The comparison article moved with the acronym rename; keep any old nav row pointing at it.
             db.Execute("UPDATE nav_items SET url='pmp-vs-aace-vs-pcl-ai.html' WHERE url='pmp-vs-aace-vs-pcp-ai.html'");
+            // Deterministic order for the Certifications menu: the suite first (All → PCL → PFL → PDL),
+            // then the journey pages. Existing rows kept their pre-suite sort_orders, which interleaved
+            // the three credentials oddly mid-menu; this pins the canonical order on every boot (keyed
+            // by URL, so renamed labels stay put and admin-added rows sort after by their own order).
+            foreach (var (url, so) in new (string, int)[] {
+                ("/certifications", 1), ("/certifications/pcl-ai", 2), ("/certifications/pfl-ai", 3), ("/certifications/pdl-ai", 4),
+                ("certification-roadmap.html", 5), ("eligibility-requirements.html", 6), ("exam-structure.html", 7),
+                ("body-of-knowledge.html", 8), ("sample-questions.html", 9), ("cert-policies.html", 10),
+                ("recert.html", 11), ("digital-credentials.html", 12), ("ai-cert.html", 13),
+                ("book.html", 14), ("enrol.html", 15) })
+                db.Execute("UPDATE nav_items SET sort_order=? WHERE nav_group='Certifications' AND url=?", so, url);
             // 301 for the renamed article path so the old URL keeps its SEO value.
             db.Execute("INSERT OR IGNORE INTO seo_redirects(from_path,to_url,status,active,note) VALUES('/pmp-vs-aace-vs-pcp-ai.html','/pmp-vs-aace-vs-pcl-ai.html',301,1,'Master Naming Update')");
         }
