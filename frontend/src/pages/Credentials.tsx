@@ -21,7 +21,9 @@ export default function Credentials() {
       <p style="text-align:center" class="muted">${t('cred.thisCertifies')}</p>
       <h1 style="text-align:center;font-size:1.8rem">${e(holder)}</h1>
       <p style="text-align:center">${t('cred.hasBeenAwarded')}</p>
-      <h2 style="text-align:center;color:#1d4ed8">${e(c.credential || c.credential_id)}</h2>
+      <h2 style="text-align:center;color:#1d4ed8">${e(c.certification_name || c.credential || c.credential_id)}</h2>
+      ${c.certification_acronym ? `<p style="text-align:center;margin-top:-.4rem" class="muted">${e(c.certification_acronym)}</p>` : ''}
+      ${c.certificate_wording ? `<p style="text-align:center;font-style:italic;max-width:34rem;margin:1rem auto 0">${e(c.certificate_wording)}</p>` : ''}
       <table>
         <tr><td>${t('cred.credentialId')}</td><td class="r">${e(c.credential_id)}</td></tr>
         <tr><td>${t('cred.issued')}</td><td class="r">${e(fmtDate(c.issued_at))}</td></tr>
@@ -74,6 +76,9 @@ export default function Credentials() {
                 <div><span className="muted">{t('cred.issued')}</span><div>{fmtDate(c.issued_at)}</div></div>
                 <div><span className="muted">{t('cred.expires')}</span><div>{fmtDate(c.expires_at)}{dleft !== null && dleft >= 0 && dleft < 90 && <> <Badge tone="warn">{t('cred.daysLeftShort', { n: dleft })}</Badge></>}</div></div>
               </div>
+              {c.certificate_wording && (
+                <p className="muted small" style={{ margin: '.6rem 0 0', fontStyle: 'italic' }}>{c.certificate_wording}</p>
+              )}
               {c.status === 'active' && !lapsed && (
                 <div className="row" style={{ marginTop: '.9rem' }}>
                   <button className="btn sm" onClick={() => certificate(c)}>{t('cred.downloadCertificate')}</button>

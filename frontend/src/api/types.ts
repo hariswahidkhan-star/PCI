@@ -60,6 +60,9 @@ export interface Credential {
   issued_at?: string | null
   expires_at?: string | null
   holder_name?: string | null
+  certification_name?: string | null
+  certification_acronym?: string | null
+  certificate_wording?: string | null
 }
 
 export interface Payment {

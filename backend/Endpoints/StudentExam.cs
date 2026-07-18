@@ -92,7 +92,10 @@ public static class StudentExam
                         if (H.Str(a["result_status"]) == "auto_held") { a["percent"] = null; a["result"] = null; a["domain_breakdown"] = null; }
                         return a;
                     }).ToList(),
-                credentials = db.Query("SELECT credential_id,credential,status,issued_at,expires_at,holder_name FROM issued_credentials WHERE user_id=? ORDER BY id DESC", u.Id),
+                credentials = db.Query(@"SELECT ic.credential_id,ic.credential,ic.status,ic.issued_at,ic.expires_at,ic.holder_name,ic.certificate_wording,
+                        ct.name certification_name, ct.acronym certification_acronym
+                    FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)
+                    WHERE ic.user_id=? ORDER BY ic.id DESC", u.Id),
                 identity_document = db.QueryOne("SELECT id,doc_kind,filename,mime,size_bytes,status,review_note,created_at FROM identity_documents WHERE user_id=? ORDER BY id DESC", u.Id),
                 // Route B state: fees were waived by a founding code (settled as a $0 founding_waiver payment).
                 founding_member = db.Scalar<long>("SELECT COUNT(*) FROM payments WHERE user_id=? AND payment_provider='founding_waiver' AND payment_status='paid'", u.Id) > 0,
