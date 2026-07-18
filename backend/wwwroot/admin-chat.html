@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="color-scheme" content="light only"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>PCI · Chat Console</title>
+<style>
+:root{
+  --navy:#0E1525; --blue:#1D4ED8; --blue-700:#1E3A8A; --blue-50:#eef3fe;
+  --crimson:#C13329; --crimson-50:#fbeceb;
+  --ink:#0F172A; --slate:#475569; --mist:#64748B; --line:#E3E8EF; --line-2:#eef1f5;
+  --bg:#f4f6f9; --card:#ffffff; --ok:#1a7d3c; --ok-50:#eaf6ee; --warn:#B45309; --warn-50:#fdf4e7;
+  --err:#C2410C; --err-50:#fdefe8; --muted:#94a3b8;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --serif:Georgia,'Times New Roman',serif;
+  --shadow:0 1px 2px rgba(15,23,42,.04),0 8px 24px rgba(15,23,42,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5}
+a{color:var(--blue);text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:8px;border:2px solid var(--bg)}
+
+/* ---- login gate (same look as admin.html) ---- */
+#login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#eaf1fe 0%,#f6f9ff 55%,#eef6ff 100%);padding:20px;z-index:50}
+.login-card{width:100%;max-width:420px;background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(29,78,216,.16);border:1px solid #e3e9f4;overflow:hidden}
+.login-head{background:linear-gradient(135deg,#1D4ED8,#3B82F6);padding:30px 34px 26px}
+.login-head .wm{font-family:var(--serif);font-weight:700;font-size:26px;color:#fff;letter-spacing:1px}
+.login-head .sub{margin-top:7px;font-size:10px;letter-spacing:3.5px;text-transform:uppercase;color:#dbe6ff;font-weight:600}
+.login-body{padding:28px 34px 30px}
+.login-body h1{font-family:var(--serif);font-size:20px;margin:0 0 4px;color:var(--ink)}
+.login-body p.hint{margin:0 0 20px;color:var(--mist);font-size:13px}
+.fld{margin-bottom:14px}
+.fld label{display:block;font-size:12px;font-weight:600;color:var(--slate);margin-bottom:6px}
+.fld input{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:11px 13px;font-size:14px;font-family:inherit}
+.fld input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50)}
+.login-body .btn-primary{width:100%;justify-content:center;margin-top:6px}
+.login-alt{margin-top:16px;text-align:center;font-size:13px;color:var(--mist)}
+.login-err{background:var(--err-50);color:var(--err);border:1px solid #f6d3c2;border-radius:9px;padding:10px 12px;font-size:12.5px;margin-bottom:14px;display:none}
+
+.btn{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:9px;padding:8px 14px;font-size:13px;font-weight:600}
+.btn:hover{background:#f7f9fc}
+.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-700)}
+.btn-danger{border-color:#f2c6b7;color:var(--err)}
+.btn-danger:hover{background:var(--err-50)}
+.btn-sm{padding:5px 9px;font-size:12px;border-radius:7px}
+.btn:disabled{opacity:.5;cursor:default}
+
+/* ---- app shell ---- */
+#app{display:none;min-height:100vh;flex-direction:column}
+.topbar{background:#fff;border-bottom:1px solid var(--line);padding:0 22px;height:60px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:20}
+.topbar .wm{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--blue);letter-spacing:.6px}
+.topbar h2{font-family:var(--serif);font-size:17px;margin:0;font-weight:700;color:var(--ink)}
+.topbar .crumb{color:var(--mist);font-size:12.5px}
+.topbar .spacer{flex:1}
+.topbar a.back{font-size:12.5px;font-weight:600}
+.topbar .who{font-size:12px;color:var(--mist)}
+
+.wrap{display:grid;grid-template-columns:320px 1fr 340px;gap:0;flex:1;min-height:0}
+@media (max-width:1100px){.wrap{grid-template-columns:280px 1fr}.kbcol{display:none}.kbcol.show{display:flex;position:fixed;inset:60px 0 0 auto;width:min(420px,100%);z-index:30;box-shadow:-8px 0 30px rgba(15,23,42,.14)}}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0;background:#fff;border-right:1px solid var(--line)}
+.col-h{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:9px;flex:0 0 auto}
+.col-h h3{margin:0;font-size:13.5px;font-weight:700;color:var(--ink)}
+.col-h .spacer{flex:1}
+.col-b{flex:1;overflow-y:auto;min-height:0}
+
+/* ---- session list ---- */
+.filters{display:flex;flex-wrap:wrap;gap:5px;padding:9px 12px;border-bottom:1px solid var(--line-2)}
+.filters button{border:1px solid var(--line);background:#fff;color:var(--slate);border-radius:16px;padding:4px 11px;font-size:11.5px;font-weight:600}
+.filters button.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.filters button .n{opacity:.7;margin-left:4px}
+.srow{padding:11px 14px;border-bottom:1px solid var(--line-2);cursor:pointer;display:flex;flex-direction:column;gap:3px}
+.srow:hover{background:#f7f9fc}
+.srow.sel{background:var(--blue-50);box-shadow:inset 3px 0 0 var(--blue)}
+.srow.waiting{background:var(--warn-50);box-shadow:inset 3px 0 0 var(--warn)}
+.srow.waiting.sel{background:#fdeccf}
+.srow .r1{display:flex;align-items:center;gap:8px}
+.srow .nm{font-weight:700;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow .tm{margin-left:auto;font-size:10.5px;color:var(--mist);flex:0 0 auto}
+.srow .snip{font-size:12px;color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:capitalize}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.b-bot{background:var(--blue-50);color:var(--blue-700)}
+.b-waiting{background:var(--warn-50);color:var(--warn)}
+.b-live{background:var(--ok-50);color:var(--ok)}
+.b-closed{background:#eef1f5;color:var(--mist)}
+.empty{padding:26px 16px;text-align:center;color:var(--mist);font-size:12.5px}
+
+/* ---- transcript ---- */
+.tcol{background:#f6f8fc}
+.tlog{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;min-height:0}
+.msg{max-width:74%;padding:9px 12px;border-radius:14px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere;font-size:13px}
+.msg .meta{display:block;font-size:10px;opacity:.62;margin-top:4px}
+.msg .who{display:block;font-size:10.5px;font-weight:700;margin-bottom:2px;opacity:.85}
+.msg.visitor{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:#fff;border:1px solid var(--line);color:var(--ink);border-bottom-left-radius:4px}
+.msg.agent{align-self:flex-start;background:#fff;border:1px solid var(--crimson);color:var(--ink);border-bottom-left-radius:4px}
+.msg.agent .who{color:var(--crimson)}
+.msg.bot .who{color:var(--slate)}
+.treply{flex:0 0 auto;border-top:1px solid var(--line);background:#fff;padding:10px 12px}
+.treply textarea{width:100%;resize:none;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;font-family:inherit;font-size:13.5px;line-height:1.4;max-height:120px}
+.treply textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50)}
+.treply .row{display:flex;gap:8px;margin-top:8px;align-items:center}
+.treply .row .spacer{flex:1}
+.tplace{flex:1;display:flex;align-items:center;justify-content:center;color:var(--mist);font-size:13px;text-align:center;padding:30px}
+
+/* ---- KB manager ---- */
+.kbcol{background:#fff}
+.kbrow{border-bottom:1px solid var(--line-2);padding:11px 14px}
+.kbrow .q{font-weight:700;font-size:12.5px;color:var(--ink)}
+.kbrow .kw{font-size:11.5px;color:var(--mist);margin-top:3px;word-break:break-word}
+.kbrow .a{font-size:12px;color:var(--slate);margin-top:4px;display:none}
+.kbrow.open .a{display:block}
+.kbrow .acts{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.kbrow.off{opacity:.55}
+.kbadd{padding:12px 14px;border-bottom:1px solid var(--line);background:#f9fbfd}
+.kbadd input,.kbadd textarea{width:100%;border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;font-family:inherit;font-size:12.5px;margin-bottom:7px;resize:vertical}
+.kbadd input:focus,.kbadd textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50)}
+.kbadd label{font-size:11px;font-weight:600;color:var(--slate);display:block;margin-bottom:4px}
+.pill-on{font-size:10px;font-weight:700;color:var(--ok);background:var(--ok-50);padding:1px 7px;border-radius:12px}
+.pill-off{font-size:10px;font-weight:700;color:var(--mist);background:#eef1f5;padding:1px 7px;border-radius:12px}
+
+.toast-wrap{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:80;display:flex;flex-direction:column;gap:8px;align-items:center}
+.toast{background:var(--ink);color:#fff;padding:9px 16px;border-radius:9px;font-size:12.5px;box-shadow:var(--shadow)}
+.toast.err{background:var(--err)}
+.toast.ok{background:var(--ok)}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="login-card">
+    <div class="login-head"><div class="wm">PCI</div><div class="sub">Project Controls Institute</div></div>
+    <div class="login-body">
+      <h1>Chat console</h1>
+      <p class="hint">Sign in to answer live website chats and manage the assistant's knowledge base.</p>
+      <div class="login-err" id="loginErr"></div>
+      <div class="fld"><label>Backend URL</label><input id="inApi" placeholder="https://api.yourdomain.com" autocomplete="off" aria-label="Backend URL"/></div>
+      <div class="fld"><label>Email</label><input id="inEmail" type="email" placeholder="you@pci.org" autocomplete="username" aria-label="Email"/></div>
+      <div class="fld"><label>Password</label><input id="inPass" type="password" placeholder="Your password" autocomplete="current-password" aria-label="Password"/></div>
+      <button class="btn btn-primary" id="btnLogin">Sign in</button>
+      <div class="login-alt">Looking for the full dashboard? <a href="admin.html">Open the Admin Console &rarr;</a></div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <span class="wm">PCI</span>
+    <h2>Chat Console</h2>
+    <span class="crumb">Live website chat</span>
+    <div class="spacer"></div>
+    <button class="btn btn-sm" id="kbToggle" style="display:none">Knowledge base</button>
+    <a class="back" href="admin.html">&larr; Admin Console</a>
+    <span class="who" id="whoAmI"></span>
+    <button class="btn btn-sm" id="btnLogout">Sign out</button>
+  </div>
+
+  <div class="wrap">
+    <!-- LEFT: sessions -->
+    <section class="col scol">
+      <div class="col-h"><h3>Conversations</h3><div class="spacer"></div><span class="crumb" id="listMeta"></span></div>
+      <div class="filters" id="filters"></div>
+      <div class="col-b" id="sessionList"><div class="empty">Loading…</div></div>
+    </section>
+
+    <!-- CENTER: transcript -->
+    <section class="col tcol">
+      <div class="col-h">
+        <h3 id="tTitle">Select a conversation</h3>
+        <span class="badge b-bot" id="tBadge" style="display:none"></span>
+        <div class="spacer"></div>
+        <button class="btn btn-sm btn-danger" id="btnClose" style="display:none">Close chat</button>
+      </div>
+      <div class="tplace" id="tPlace">Choose a conversation on the left to view the full transcript and reply.</div>
+      <div class="tlog" id="tLog" style="display:none" role="log" aria-live="polite" aria-label="Conversation transcript"></div>
+      <div class="treply" id="tReply" style="display:none">
+        <textarea id="replyText" rows="2" placeholder="Type a reply to the visitor…" aria-label="Reply to visitor"></textarea>
+        <div class="row"><span class="crumb" id="replyHint">Sending marks the chat as live.</span><span class="spacer"></span><button class="btn btn-primary btn-sm" id="btnSend">Send reply</button></div>
+      </div>
+    </section>
+
+    <!-- RIGHT: KB manager -->
+    <section class="col kbcol" id="kbCol">
+      <div class="col-h"><h3>Knowledge base</h3><div class="spacer"></div><button class="btn btn-sm" id="kbAddToggle">+ Add</button></div>
+      <div class="kbadd" id="kbAdd" style="display:none">
+        <label>Question / topic</label>
+        <input id="kbQ" placeholder="e.g. How much does it cost?" aria-label="Question"/>
+        <label>Answer</label>
+        <textarea id="kbA" rows="3" placeholder="The answer the bot will send." aria-label="Answer"></textarea>
+        <label>Keywords (comma-separated)</label>
+        <input id="kbK" placeholder="cost, price, fees" aria-label="Keywords"/>
+        <div class="row" style="display:flex;gap:8px;margin-top:2px"><button class="btn btn-primary btn-sm" id="kbSave">Add answer</button><button class="btn btn-sm" id="kbCancel">Cancel</button></div>
+      </div>
+      <div class="col-b" id="kbList"><div class="empty">Loading…</div></div>
+    </section>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+(function(){
+  'use strict';
+  var $=function(s,r){return (r||document).querySelector(s);};
+
+  // ---- storage: share the admin session with admin.html (sessionStorage keys) ----
+  var mem={};
+  var store={
+    get:function(k){try{return sessionStorage.getItem(k);}catch(e){return mem[k]==null?null:mem[k];}},
+    set:function(k,v){try{sessionStorage.setItem(k,v);}catch(e){mem[k]=v;}},
+    del:function(k){try{sessionStorage.removeItem(k);}catch(e){delete mem[k];}}
+  };
+
+  var st={ apiBase:store.get('pci_api')||'', token:store.get('pci_tok')||'', me:null,
+           filter:'', sessions:[], counts:{}, selId:null, selStatus:null,
+           listTimer:null, txTimer:null };
+
+  function toast(msg,kind){
+    var t=document.createElement('div'); t.className='toast '+(kind||''); t.textContent=msg;
+    $('#toasts').appendChild(t);
+    setTimeout(function(){ t.style.transition='opacity .3s'; t.style.opacity='0'; setTimeout(function(){ if(t.parentNode)t.parentNode.removeChild(t); },300); },2600);
+  }
+  function authHeaders(){ return {'Authorization':'Bearer '+st.token}; }
+
+  // ---- API ----
+  function api(path,opts){
+    opts=opts||{};
+    var headers={};
+    var k; for(k in authHeaders()) headers[k]=authHeaders()[k];
+    if(opts.body!==undefined){ headers['Content-Type']='application/json'; }
+    if(opts.headers){ for(k in opts.headers) headers[k]=opts.headers[k]; }
+    return fetch(st.apiBase.replace(/\/$/,'')+path,{method:opts.method||'GET',headers:headers,body:opts.body})
+      .then(function(r){
+        if(r.status===401){ signOut(); throw new Error('unauthorized'); }
+        return r.json().catch(function(){return {};}).then(function(j){
+          if(!r.ok){ var e=new Error((j&&j.error)||('http_'+r.status)); e.code=r.status; throw e; }
+          return j;
+        });
+      });
+  }
+
+  // ---- formatting ----
+  function fmtDT(s){
+    if(!s) return '—';
+    var d=new Date(String(s).replace(' ','T')+(String(s).indexOf('Z')<0?'Z':''));
+    if(isNaN(d.getTime())) d=new Date(String(s).replace(' ','T'));
+    if(isNaN(d.getTime())) return String(s);
+    try{ return d.toLocaleDateString([], {day:'2-digit',month:'short'})+', '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }catch(e){ return String(s); }
+  }
+  function ago(s){
+    if(!s) return '';
+    var d=new Date(String(s).replace(' ','T')+(String(s).indexOf('Z')<0?'Z':''));
+    var m=Math.floor((Date.now()-d.getTime())/60000);
+    if(isNaN(m)) return '';
+    if(m<1) return 'now'; if(m<60) return m+'m'; var h=Math.floor(m/60); if(h<24) return h+'h'; return Math.floor(h/24)+'d';
+  }
+  function el(tag,cls,text){ var n=document.createElement(tag); if(cls)n.className=cls; if(text!=null)n.textContent=text; return n; }
+  function badgeEl(status){
+    var map={bot:'b-bot',waiting:'b-waiting',live:'b-live',closed:'b-closed'};
+    var b=el('span','badge '+(map[status]||'b-bot'));
+    b.appendChild(el('span','dot'));
+    b.appendChild(document.createTextNode(status||'bot'));
+    return b;
+  }
+
+  // ---- session list ----
+  var FILTERS=[['','All'],['waiting','Waiting'],['live','Live'],['bot','Bot'],['closed','Closed']];
+  function buildFilters(){
+    var box=$('#filters'); box.textContent='';
+    FILTERS.forEach(function(f){
+      var b=el('button',null); b.dataset.status=f[0];
+      b.appendChild(document.createTextNode(f[1]));
+      var n=el('span','n'); b.appendChild(n); b._n=n;
+      if(f[0]===st.filter) b.classList.add('active');
+      b.addEventListener('click',function(){ st.filter=f[0]; buildFilters(); loadSessions(); });
+      box.appendChild(b);
+    });
+  }
+  function updateFilterCounts(){
+    var box=$('#filters');
+    Array.prototype.forEach.call(box.children,function(b){
+      var s=b.dataset.status;
+      var c = s===''? '' : (st.counts&&st.counts[s]!=null? String(st.counts[s]) : '');
+      if(b._n) b._n.textContent = c? '('+c+')' : '';
+    });
+  }
+  function loadSessions(){
+    return api('/api/admin/chat/sessions'+(st.filter?('?status='+encodeURIComponent(st.filter)):''))
+      .then(function(d){
+        st.sessions=d.sessions||[]; st.counts=d.counts||{};
+        updateFilterCounts(); renderSessions();
+        $('#listMeta').textContent=st.sessions.length+' shown';
+      }).catch(function(e){ if(e.message!=='unauthorized') toast('Could not load conversations','err'); });
+  }
+  function renderSessions(){
+    var list=$('#sessionList'); list.textContent='';
+    if(!st.sessions.length){ list.appendChild(el('div','empty','No conversations'+(st.filter?' with this status.':' yet.'))); return; }
+    st.sessions.forEach(function(s){
+      var row=el('div','srow');
+      if(s.status==='waiting') row.classList.add('waiting');
+      if(s.id===st.selId) row.classList.add('sel');
+      var r1=el('div','r1');
+      r1.appendChild(el('span','nm', s.visitor_name || ('Visitor #'+s.id)));
+      r1.appendChild(el('span','tm', ago(s.last_activity_at)));
+      row.appendChild(r1);
+      var r2=el('div','r1');
+      r2.appendChild(badgeEl(s.status));
+      var snip=el('span','snip');
+      var pre = s.last_sender==='agent'?'You: ' : (s.last_sender==='visitor'?'': (s.last_sender==='bot'?'Bot: ':''));
+      snip.textContent = pre + (s.last_message||'');
+      r2.appendChild(snip);
+      row.appendChild(r2);
+      row.addEventListener('click',function(){ selectSession(s.id,s.status); });
+      list.appendChild(row);
+    });
+  }
+
+  // ---- transcript ----
+  function selectSession(id,status){
+    st.selId=id; st.selStatus=status;
+    renderSessions();
+    $('#tPlace').style.display='none';
+    $('#tLog').style.display='flex';
+    $('#tReply').style.display='block';
+    $('#btnClose').style.display='inline-flex';
+    loadTranscript(true);
+    startTxPolling();
+  }
+  function loadTranscript(scroll){
+    if(!st.selId) return Promise.resolve();
+    var id=st.selId;
+    return api('/api/admin/chat/sessions/'+id)
+      .then(function(d){
+        if(st.selId!==id) return; // selection changed while loading
+        var sess=d.session||{}; var msgs=d.messages||[];
+        st.selStatus=sess.status;
+        $('#tTitle').textContent = (sess.visitor_name || ('Visitor #'+id));
+        var badge=$('#tBadge'); badge.style.display='inline-flex';
+        badge.className='badge '+({bot:'b-bot',waiting:'b-waiting',live:'b-live',closed:'b-closed'}[sess.status]||'b-bot');
+        badge.textContent=sess.status||'bot';
+        var log=$('#tLog');
+        var stick=(log.scrollHeight-log.scrollTop-log.clientHeight)<80;
+        log.textContent='';
+        msgs.forEach(function(m){
+          var kind=m.sender==='visitor'?'visitor':(m.sender==='agent'?'agent':'bot');
+          var w=el('div','msg '+kind);
+          if(kind!=='visitor') w.appendChild(el('span','who', kind==='agent'?'Team':'Assistant'));
+          w.appendChild(el('span',null,m.body==null?'':String(m.body)));
+          w.appendChild(el('span','meta', fmtDT(m.created_at)));
+          log.appendChild(w);
+        });
+        if(scroll||stick) log.scrollTop=log.scrollHeight;
+        var closed=sess.status==='closed';
+        $('#btnClose').disabled=closed;
+        $('#btnClose').textContent=closed?'Closed':'Close chat';
+        $('#replyText').disabled=closed;
+        $('#replyText').placeholder=closed?'This chat is closed.':'Type a reply to the visitor…';
+        $('#btnSend').disabled=closed;
+      }).catch(function(e){ if(e.message!=='unauthorized') toast('Could not load transcript','err'); });
+  }
+  function sendReply(){
+    var id=st.selId; if(!id) return;
+    var box=$('#replyText'); var body=box.value.trim();
+    if(!body){ box.focus(); return; }
+    $('#btnSend').disabled=true;
+    api('/api/admin/chat/sessions/'+id+'/reply',{method:'POST',body:JSON.stringify({body:body})})
+      .then(function(){ box.value=''; loadTranscript(true); loadSessions(); })
+      .catch(function(e){ if(e.message!=='unauthorized') toast('Could not send reply','err'); })
+      .then(function(){ $('#btnSend').disabled=false; });
+  }
+  function closeChat(){
+    var id=st.selId; if(!id) return;
+    api('/api/admin/chat/sessions/'+id+'/close',{method:'POST',body:JSON.stringify({})})
+      .then(function(){ toast('Chat closed','ok'); loadTranscript(false); loadSessions(); })
+      .catch(function(e){ if(e.message!=='unauthorized') toast('Could not close chat','err'); });
+  }
+  function startTxPolling(){
+    stopTxPolling();
+    st.txTimer=setInterval(function(){ if(st.selId) loadTranscript(false); else stopTxPolling(); },4000);
+  }
+  function stopTxPolling(){ if(st.txTimer){ clearInterval(st.txTimer); st.txTimer=null; } }
+
+  // ---- KB manager ----
+  function loadKb(){
+    return api('/api/admin/chat/kb').then(function(d){ renderKb(d.rows||[]); })
+      .catch(function(e){ if(e.message!=='unauthorized') toast('Could not load knowledge base','err'); });
+  }
+  function renderKb(rows){
+    var list=$('#kbList'); list.textContent='';
+    if(!rows.length){ list.appendChild(el('div','empty','No answers yet. Add one above.')); return; }
+    rows.forEach(function(r){
+      var enabled = r.enabled==1 || r.enabled===true || r.enabled==='1';
+      var row=el('div','kbrow'+(enabled?'':' off'));
+      var qline=el('div','q'); qline.textContent=r.question||'';
+      var pill=el('span',enabled?'pill-on':'pill-off', enabled?'on':'off');
+      pill.style.marginLeft='7px'; qline.appendChild(pill);
+      row.appendChild(qline);
+      if(r.keywords){ row.appendChild(el('div','kw','Keywords: '+r.keywords)); }
+      row.appendChild(el('div','a', r.answer||''));
+      var acts=el('div','acts');
+      var view=el('button','btn btn-sm','View'); view.addEventListener('click',function(){ row.classList.toggle('open'); view.textContent=row.classList.contains('open')?'Hide':'View'; });
+      var tog=el('button','btn btn-sm', enabled?'Disable':'Enable'); tog.addEventListener('click',function(){ kbAction(r.id,{action:'toggle'}); });
+      var edit=el('button','btn btn-sm','Edit'); edit.addEventListener('click',function(){ startEdit(row,r); });
+      var del=el('button','btn btn-sm btn-danger','Delete'); del.addEventListener('click',function(){ if(confirm('Delete this answer?')) kbAction(r.id,{action:'delete'}); });
+      acts.appendChild(view); acts.appendChild(tog); acts.appendChild(edit); acts.appendChild(del);
+      row.appendChild(acts);
+      list.appendChild(row);
+    });
+  }
+  function startEdit(row,r){
+    row.textContent='';
+    var qi=el('input'); qi.value=r.question||''; qi.setAttribute('aria-label','Edit question');
+    var ai=el('textarea'); ai.rows=3; ai.value=r.answer||''; ai.setAttribute('aria-label','Edit answer');
+    var ki=el('input'); ki.value=r.keywords||''; ki.setAttribute('aria-label','Edit keywords');
+    [qi,ai,ki].forEach(function(n){ n.style.width='100%'; n.style.marginBottom='7px'; n.style.border='1.5px solid var(--line)'; n.style.borderRadius='8px'; n.style.padding='8px 10px'; n.style.fontFamily='inherit'; n.style.fontSize='12.5px'; });
+    row.appendChild(el('label',null,'Question')); row.children[0].style.cssText='font-size:11px;font-weight:600;color:var(--slate);display:block;margin-bottom:4px';
+    row.appendChild(qi);
+    var la=el('label',null,'Answer'); la.style.cssText=row.children[0].style.cssText; row.appendChild(la); row.appendChild(ai);
+    var lk=el('label',null,'Keywords'); lk.style.cssText=row.children[0].style.cssText; row.appendChild(lk); row.appendChild(ki);
+    var acts=el('div','acts');
+    var save=el('button','btn btn-primary btn-sm','Save'); save.addEventListener('click',function(){ kbAction(r.id,{action:'update',question:qi.value.trim(),answer:ai.value.trim(),keywords:ki.value.trim()}); });
+    var cancel=el('button','btn btn-sm','Cancel'); cancel.addEventListener('click',function(){ loadKb(); });
+    acts.appendChild(save); acts.appendChild(cancel); row.appendChild(acts);
+  }
+  function kbAction(id,payload){
+    api('/api/admin/chat/kb/'+id,{method:'POST',body:JSON.stringify(payload)})
+      .then(function(){ toast('Saved','ok'); loadKb(); })
+      .catch(function(e){ if(e.message!=='unauthorized') toast('Could not save ('+e.message+')','err'); });
+  }
+  function addKb(){
+    var q=$('#kbQ').value.trim(), a=$('#kbA').value.trim(), k=$('#kbK').value.trim();
+    if(q.length<3||a.length<3){ toast('Question and answer are required','err'); return; }
+    api('/api/admin/chat/kb',{method:'POST',body:JSON.stringify({question:q,answer:a,keywords:k})})
+      .then(function(){ toast('Answer added','ok'); $('#kbQ').value='';$('#kbA').value='';$('#kbK').value=''; $('#kbAdd').style.display='none'; loadKb(); })
+      .catch(function(e){ if(e.message!=='unauthorized') toast('Could not add ('+e.message+')','err'); });
+  }
+
+  // ---- refresh loop for the session list ----
+  function startListPolling(){ stopListPolling(); st.listTimer=setInterval(loadSessions,6000); }
+  function stopListPolling(){ if(st.listTimer){ clearInterval(st.listTimer); st.listTimer=null; } }
+
+  // ---- auth ----
+  function enterApp(){
+    $('#login').style.display='none';
+    $('#app').style.display='flex';
+    if(st.me){ $('#whoAmI').textContent=st.me.email||''; }
+    buildFilters();
+    loadSessions(); loadKb();
+    startListPolling();
+  }
+  function signOut(){
+    stopListPolling(); stopTxPolling();
+    store.del('pci_tok'); st.token=''; st.me=null;
+    $('#app').style.display='none'; $('#login').style.display='flex';
+  }
+  function verifyAndEnter(){
+    // Clone admin.html's check: hit /api/admin/me with the stored bearer token.
+    return api('/api/admin/me').then(function(me){ st.me=me; enterApp(); return true; })
+      .catch(function(){ return false; });
+  }
+  function doLogin(){
+    var a=($('#inApi').value.trim()||(location.protocol.indexOf('http')===0?location.origin:''));
+    var email=$('#inEmail').value.trim(), pass=$('#inPass').value, err=$('#loginErr');
+    err.style.display='none';
+    if(!a||!email||!pass){ err.textContent='Enter the backend URL, email and password.'; err.style.display='block'; return; }
+    var btn=$('#btnLogin'); btn.disabled=true; btn.textContent='Signing in…';
+    fetch(a.replace(/\/$/,'')+'/api/admin/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pass})})
+      .then(function(r){ if(!r.ok) throw new Error(r.status===401?'bad':'err'); return r.json(); })
+      .then(function(d){
+        st.apiBase=a; st.token=d.token; st.me=d.admin||{email:email};
+        store.set('pci_api',a); store.set('pci_tok',d.token);
+        enterApp();
+      })
+      .catch(function(e){ err.textContent=(e.message==='bad')?'Invalid email or password.':'Could not reach the backend. Check the URL.'; err.style.display='block'; })
+      .then(function(){ btn.disabled=false; btn.textContent='Sign in'; });
+  }
+
+  // ---- wire up ----
+  function autosize(t){ t.style.height='auto'; t.style.height=Math.min(120,t.scrollHeight)+'px'; }
+  $('#btnLogin').addEventListener('click',doLogin);
+  $('#inPass').addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
+  $('#btnLogout').addEventListener('click',signOut);
+  $('#btnSend').addEventListener('click',sendReply);
+  $('#btnClose').addEventListener('click',closeChat);
+  $('#replyText').addEventListener('input',function(){ autosize(this); });
+  $('#replyText').addEventListener('keydown',function(e){ if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); sendReply(); } });
+  $('#kbAddToggle').addEventListener('click',function(){ var a=$('#kbAdd'); a.style.display=a.style.display==='none'?'block':'none'; });
+  $('#kbSave').addEventListener('click',addKb);
+  $('#kbCancel').addEventListener('click',function(){ $('#kbAdd').style.display='none'; });
+  $('#kbToggle').addEventListener('click',function(){ $('#kbCol').classList.toggle('show'); });
+
+  // prefill backend URL
+  try{ var o=location.protocol.indexOf('http')===0?location.origin:''; $('#inApi').value=store.get('pci_api')||o; }catch(e){}
+
+  // ---- boot: if we already have a token (from admin.html this session), verify & enter ----
+  if(st.token && st.apiBase!==null){
+    st.apiBase=st.apiBase||(location.protocol.indexOf('http')===0?location.origin:'');
+    verifyAndEnter().then(function(ok){ if(!ok){ $('#login').style.display='flex'; } });
+  }
+})();
+</script>
+</body>
+</html>

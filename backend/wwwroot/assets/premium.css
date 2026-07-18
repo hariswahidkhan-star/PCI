@@ -74,7 +74,7 @@
 
   .nav a{position:relative;}
   .nav a::after{content:"";position:absolute;left:0;right:100%;bottom:-4px;height:2px;
-    background:linear-gradient(90deg,var(--red),var(--magenta));border-radius:2px;
+    background:linear-gradient(90deg,var(--crimson),#E0574B);border-radius:2px;
     transition:right var(--dur-2) var(--ease-premium);}
   .nav a:hover::after,.nav a:focus-visible::after{right:0;}
 
@@ -91,9 +91,31 @@
   .fcard:hover::after,.itile:hover::after{width:100%;}
 }
 
-/* header elevation on scroll (shadow only — the header keeps its existing style) */
-.hdr{transition:box-shadow var(--dur-2) var(--ease-premium);}
-.hdr.pv-scrolled{box-shadow:0 1px 0 rgba(15,23,42,.05),0 12px 34px rgba(15,23,42,.08);}
+/* header changes colour + elevates on scroll */
+.hdr{transition:background var(--dur-2) var(--ease-premium),box-shadow var(--dur-2) var(--ease-premium),border-color var(--dur-2) var(--ease-premium);}
+.hdr.pv-scrolled{
+  background:rgba(255,255,255,.985);
+  -webkit-backdrop-filter:saturate(1.6) blur(16px);backdrop-filter:saturate(1.6) blur(16px);
+  border-bottom:1px solid rgba(193,51,41,.35);
+  box-shadow:0 1px 0 rgba(193,51,41,.10),0 14px 40px -20px rgba(15,23,42,.35);
+}
+/* thin crimson accent line under the bar once scrolled */
+.hdr.pv-scrolled::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;
+  background:linear-gradient(90deg,var(--crimson) 0%,var(--crimson) 22%,transparent 60%);opacity:.9;}
+.hdr{position:sticky;}
+
+/* nav items change colour on hover */
+.nav a{color:var(--ink);transition:color .2s var(--ease-premium);}
+.nav a:hover{color:var(--crimson);}
+.hdr-login{transition:color .2s var(--ease-premium);}
+.hdr-login:hover{color:var(--crimson);}
+
+/* every text link turns crimson on hover (block card/tile wrappers and buttons excluded) */
+a:not(.btn):not(.brand):not(.qcard-link):not([class*="card"]):not([class*="tile"]):not(.ic):hover{color:var(--crimson)!important;}
+
+/* hero: no lead-in dash — keep only the eyebrow text and the heading period */
+.hero .eyebrow::before,.hero-in .eyebrow::before{display:none!important;}
+
 
 /* scroll-reveal choreography (premium.js gates html.pv) */
 html.pv .sec>.wrap>.hblock,
@@ -146,9 +168,9 @@ h2,h3,h4{text-wrap:balance;}
 
 /* split-tone engineered rule under headings */
 .uline{width:96px;height:3px;border-radius:2px;box-shadow:none;
-  background:linear-gradient(90deg,var(--red) 0 38px,rgba(29,78,216,.25) 38px 100%);}
+  background:linear-gradient(90deg,var(--crimson) 0 38px,rgba(29,78,216,.25) 38px 100%);}
 .hero .euline{width:88px;height:3px;
-  background:linear-gradient(90deg,var(--red) 0 34px,rgba(255,255,255,.38) 34px 100%);}
+  background:linear-gradient(90deg,var(--crimson) 0 34px,rgba(255,255,255,.38) 34px 100%);}
 
 /* ---- header: illuminated hairline + tracked breadcrumb ---- */
 .hdr::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;pointer-events:none;

@@ -28,6 +28,49 @@ public static class Notify
     /// <summary>Per-event on/off switch, e.g. Enabled(db, "honorary") reads notify_honorary_enabled.</summary>
     public static bool Enabled(Db db, string eventKey) => Settings.Bool(db, "notify_" + eventKey + "_enabled", true);
 
+    static readonly System.Text.RegularExpressions.Regex EmailRx =
+        new(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    /// <summary>The full set of operational-alert recipients: the multi-address <c>notify_recipients</c>
+    /// list (comma / semicolon / newline separated) merged with the single <see cref="AdminEmail"/>.
+    /// De-duplicated case-insensitively, validated, capped. This is how an owner "adds their email" and
+    /// how work is fanned out to assignees — put every address that should hear about events here.</summary>
+    public static List<string> Recipients(Db db, IEnumerable<string>? extra = null)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var outp = new List<string>();
+        void Add(string? raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return;
+            foreach (var part in raw.Split(new[] { ',', ';', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            {
+                var e = part.Trim();
+                if (EmailRx.IsMatch(e) && seen.Add(e) && outp.Count < 25) outp.Add(e);
+            }
+        }
+        Add(db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", "notify_recipients"));
+        Add(AdminEmail(db));
+        if (extra is not null) foreach (var x in extra) Add(x);
+        return outp;
+    }
+
+    /// <summary>Fan an operational alert out to every configured recipient (plus any per-item assignees).
+    /// Honours the per-event enable flag, records each attempt, and NEVER throws — a mail failure must not
+    /// break the triggering request. Returns how many messages were dispatched (0 if disabled / no recipients).</summary>
+    public static int Alert(Db db, string eventKey, string subject, string html, string relatedType, long? relatedId, IEnumerable<string>? assignees = null)
+    {
+        if (!Enabled(db, eventKey)) return 0;
+        var recips = Recipients(db, assignees);
+        var sent = 0;
+        foreach (var to in recips)
+        {
+            try { Mailer.Send(db, null, to, "notification", subject, html); Record(db, "email", to, subject, "sent", relatedType, relatedId); sent++; }
+            catch { Record(db, "email", to, subject, "failed", relatedType, relatedId); }
+        }
+        if (recips.Count == 0) Record(db, "email", null, subject, "skipped", relatedType, relatedId);
+        return sent;
+    }
+
     /// <summary>Deliver an email notification and record it. Never throws — a mail failure must not break
     /// the triggering request. Returns the recorded status (sent | failed | skipped).</summary>
     public static string Email(Db db, long? userId, string? to, string subject, string html, string relatedType, long? relatedId)

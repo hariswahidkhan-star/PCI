@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="390.96pt" height="200.016pt" viewBox="0 0 390.96 200.016" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-07-14T23:17:36.891672</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.0, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 200.016 
+L 390.96 200.016 
+L 390.96 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 19.6728 180.5472 
+L 85.1262 180.5472 
+Q 87.0234 180.5472 87.0234 178.8336 
+L 87.0234 142.5624 
+Q 87.0234 140.8488 85.1262 140.8488 
+L 19.6728 140.8488 
+Q 17.7756 140.8488 17.7756 142.5624 
+L 17.7756 178.8336 
+Q 17.7756 180.5472 19.6728 180.5472 
+z
+" clip-path="url(#pa741ffb1c2)" style="fill: #c6dbef; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 93.9798 150.5592 
+L 159.4332 150.5592 
+Q 161.3304 150.5592 161.3304 148.8456 
+L 161.3304 112.5744 
+Q 161.3304 110.8608 159.4332 110.8608 
+L 93.9798 110.8608 
+Q 92.0826 110.8608 92.0826 112.5744 
+L 92.0826 148.8456 
+Q 92.0826 150.5592 93.9798 150.5592 
+z
+" clip-path="url(#pa741ffb1c2)" style="fill: #91c3de; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 168.2868 120.5712 
+L 233.7402 120.5712 
+Q 235.6374 120.5712 235.6374 118.8576 
+L 235.6374 82.5864 
+Q 235.6374 80.8728 233.7402 80.8728 
+L 168.2868 80.8728 
+Q 166.3896 80.8728 166.3896 82.5864 
+L 166.3896 118.8576 
+Q 166.3896 120.5712 168.2868 120.5712 
+z
+" clip-path="url(#pa741ffb1c2)" style="fill: #549fcd; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 242.5938 90.5832 
+L 308.0472 90.5832 
+Q 309.9444 90.5832 309.9444 88.8696 
+L 309.9444 52.5984 
+Q 309.9444 50.8848 308.0472 50.8848 
+L 242.5938 50.8848 
+Q 240.6966 50.8848 240.6966 52.5984 
+L 240.6966 88.8696 
+Q 240.6966 90.5832 242.5938 90.5832 
+z
+" clip-path="url(#pa741ffb1c2)" style="fill: #2676b8; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 316.9008 60.5952 
+L 382.3542 60.5952 
+Q 384.2514 60.5952 384.2514 58.8816 
+L 384.2514 22.6104 
+Q 384.2514 20.8968 382.3542 20.8968 
+L 316.9008 20.8968 
+Q 315.0036 20.8968 315.0036 22.6104 
+L 315.0036 58.8816 
+Q 315.0036 60.5952 316.9008 60.5952 
+z
+" clip-path="url(#pa741ffb1c2)" style="fill: #084d96; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #0f172a" x="52.3995" y="163.608156" transform="rotate(-0 52.3995 163.608156)">Ad-hoc</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(16.273463 181.700658)">individual experiments,</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(28.8774 189.6864)">no governance</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #0f172a" x="126.7065" y="133.620156" transform="rotate(-0 126.7065 133.620156)">Piloting</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(97.087134 151.712658)">defined use cases,</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(104.064056 159.6984)">first guardrails</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="201.0135" y="103.632156" transform="rotate(-0 201.0135 103.632156)">Standardised</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(165.690806 121.724658)">approved tools, policy,</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(165.7764 129.7104)">verification embedded</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="275.3205" y="73.644156" transform="rotate(-0 275.3205 73.644156)">Integrated</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(247.1454 91.736658)">AI in the workflow</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(257.833275 99.7224)">and tooling</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; fill: #ffffff" transform="translate(326.848125 38.816312)">Governed &amp;</text>
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; fill: #ffffff" transform="translate(330.225625 48.496)">optimised</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(323.699494 61.748658)">measured value,</text>
+    <text style="font-size: 6.6px; font-family: 'Inter', 'DejaVu Sans'; fill: #64748b" transform="translate(329.364666 69.7344)">full audit trail</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pa741ffb1c2">
+   <rect x="5.76" y="5.76" width="379.44" height="188.496"/>
+  </clipPath>
+ </defs>
+</svg>

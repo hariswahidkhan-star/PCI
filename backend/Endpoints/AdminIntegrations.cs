@@ -31,7 +31,9 @@ public static class AdminIntegrations
             var r = gate(req, "integrations", _ => Results.Ok());
             return r is Microsoft.AspNetCore.Http.HttpResults.Ok ? null : r;
         }
-        var http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
+        // Egress-guarded like the dispatcher's client — the admin "test" action uses the same
+        // delivery path and must obey the same private-address restrictions (Core/Egress.cs).
+        var http = Egress.CreateClient(TimeSpan.FromSeconds(15));
 
         // Which QuickBooks secret sub-fields are set (values are NEVER returned — write-only).
         string[] QboSecretKeys = { "client_secret", "refresh_token", "access_token" };
@@ -88,8 +90,8 @@ public static class AdminIntegrations
             var name = (H.GetS(b, "name") ?? "").Trim();
             if (name.Length == 0) name = provider == "quickbooks" ? "QuickBooks Online" : "Webhook";
             var endpoint = (H.GetS(b, "endpoint_url") ?? "").Trim();
-            if (provider == "webhook" && endpoint.Length > 0 && !endpoint.StartsWith("http://") && !endpoint.StartsWith("https://"))
-                return Results.Json(new { error = "bad_endpoint", message = "Endpoint must be an http(s) URL." }, statusCode: 400);
+            if (provider == "webhook" && endpoint.Length > 0 && Egress.UrlProblem(endpoint) is { } prob)
+                return Results.Json(new { error = "bad_endpoint", message = prob }, statusCode: 400);
             var enabled = H.GetEl(b, "enabled") is { } en && (en.ValueKind == JsonValueKind.True
                 || (en.ValueKind == JsonValueKind.String && en.GetString() is "1" or "true")
                 || (en.ValueKind == JsonValueKind.Number && en.TryGetInt32(out var ei) && ei != 0)) ? 1 : 0;
@@ -113,7 +115,13 @@ public static class AdminIntegrations
                     ["item_ref"] = (H.GetS(b, "item_ref") is { Length: > 0 } ir ? ir.Trim() : "1"),
                     ["client_id"] = (H.GetS(b, "client_id") ?? "").Trim(),
                 };
-                if (H.GetS(b, "api_base") is { Length: > 0 } ab) cfg["api_base"] = ab.Trim();
+                if (H.GetS(b, "api_base") is { Length: > 0 } ab)
+                {
+                    // The api_base override is an outbound URL too — same egress rules as a webhook endpoint.
+                    if (Egress.UrlProblem(ab.Trim()) is { } abProb)
+                        return Results.Json(new { error = "bad_api_base", message = abProb }, statusCode: 400);
+                    cfg["api_base"] = ab.Trim();
+                }
                 configJson = JsonSerializer.Serialize(cfg);
             }
             // Secret handling is write-only. Webhook: a plain signing-secret string. QuickBooks: a JSON of

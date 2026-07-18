@@ -638,6 +638,8 @@ PCI.Backend.Endpoints.AdminMgmt.Map(app, db, logFn, r => Auth.AdminFromReq(r, db
 PCI.Backend.Endpoints.Payments.Map(app, db, logFn, () => !string.IsNullOrEmpty(stripeKey));
 PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Reviews.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
+PCI.Backend.Endpoints.Forum.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);   // public discussion forum
+PCI.Backend.Endpoints.Chat.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);    // self-hosted bot + live chat
 PCI.Backend.Endpoints.Casework.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
@@ -645,6 +647,9 @@ PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);
 PCI.Backend.Endpoints.TrainingPartners.Map(app, db, logFn, GateFn);   // Training Partner framework (Phase 7)
 PCI.Backend.Endpoints.Certuvo.Map(app, db, logFn);                    // Certuvo study & practice engine (Phase 8)
 PCI.Backend.Endpoints.AdminI18n.Map(app, db, logFn);
+PCI.Backend.Endpoints.Social.Map(app, db, logFn, GateFn);              // footer social-media links (admin-controlled)
+PCI.Backend.Endpoints.Notifications.Map(app, db, logFn, GateFn);       // owner alert recipients + per-event toggles
+PCI.Backend.Endpoints.Campaigns.Map(app, db, logFn, GateFn);           // bulk / marketing email campaigns + unsubscribe
 
 // Purge stored artefacts older than the configured retention window (owner-only). Metadata rows are kept
 // for audit; only the binary artefacts are removed once past retention.

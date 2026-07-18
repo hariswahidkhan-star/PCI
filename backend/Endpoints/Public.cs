@@ -218,6 +218,16 @@ public static class Public
             var reference = "PCI-INQ-" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString("X");
             try { db.Execute("INSERT INTO inquiries(type,email,first_name,topic,seats,org,message,reference) VALUES(?,?,?,?,?,?,?,?)",
                 H.GetS(b, "type") ?? "general", email, H.GetS(b, "first_name"), H.GetS(b, "topic"), H.GetS(b, "seats"), H.GetS(b, "org"), H.GetS(b, "message"), reference); } catch { }
+            // Alert the notification recipients (owner + any assignees) about the new inquiry.
+            var iType = System.Net.WebUtility.HtmlEncode(H.GetS(b, "type") ?? "general");
+            var iMsg = System.Net.WebUtility.HtmlEncode(H.GetS(b, "message") ?? "");
+            var iName = System.Net.WebUtility.HtmlEncode(H.GetS(b, "first_name") ?? "");
+            var iOrg = System.Net.WebUtility.HtmlEncode(H.GetS(b, "org") ?? "");
+            Notify.Alert(db, "inquiry", $"New PCI inquiry ({iType}) — {reference}",
+                $"<p>A new inquiry has been submitted.</p><p><strong>Reference:</strong> {reference}<br/>" +
+                $"<strong>Type:</strong> {iType}<br/><strong>From:</strong> {iName} &lt;{System.Net.WebUtility.HtmlEncode(email)}&gt;<br/>" +
+                $"<strong>Organisation:</strong> {iOrg}</p><p><strong>Message:</strong><br/>{iMsg}</p>",
+                "inquiry", null);
             return J(new { ok = true, reference });
         });
 

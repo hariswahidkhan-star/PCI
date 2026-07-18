@@ -1,168 +1,214 @@
-# PCP‑AI Body of Knowledge v1 — Batch 0: Style Spine
+# The Style Spine — Conventions of This Reference
 
-*This is the governing style spine for the Project Controls Institute (PCI) **Certified Project Controls
-Professional — AI (PCP‑AI) Body of Knowledge, v1**. Every chapter binds to it so the parallel‑authored
-batches read as one book, not thirteen. Author teams and authoring agents must ingest this file first and
-follow it exactly. This is an **SME‑verifiable draft**: an AI first draft is a strong starting point, not
-the final certified text — every worked number, standard reference and AI claim must be checked by a
-qualified subject‑matter expert before the content is finalised into the exam blueprint.*
+> **Status:** foundation document. Every domain of the PCP-AI Body of Knowledge (BoK) is authored against
+> this spine so that terminology, notation, worked-example format, figures and MCQs stay consistent across
+> the whole volume. Author nothing before reading this; restate any symbol you use.
+
+This spine fixes the seven things that make parallel/serial authoring cohere instead of drifting into
+"thirteen different books": (1) terminology & seed glossary, (2) the master formula-symbol table,
+(3) worked-example format, (4) figure & animation spec format, (5) MCQ format, (6) citation rules, and
+(7) language & currency conventions. It closes with the numbering scheme and the per–Knowledge-Area
+checklist.
 
 ---
 
-## 0. What the book is
+## 1. Scope & weighting
 
-The PCP‑AI BoK is the authoritative reference defining what a Certified Project Controls Professional (AI)
-must know. It reads like a professional certification handbook (the depth of PMI's PMBOK, AACE's Total
-Cost Management framework, or an ACCA study text) — **not a blog or a summary**. It is the source from
-which exam items are written and against which candidates study.
+The BoK is weighted **40 % finance / 40 % project management / 20 % AI**. The AI weighting is carried by
+Domain 13 together with the "AI in this domain/KA" sections embedded in every non-AI chapter and KA 13.5's
+systematic per-domain coverage — the 20 % is measured across that whole surface, not Domain 13's page count
+alone. Depth is governed by one rule: **genuine content only — breadth of real material, never padding** —
+and the volume grows edition by edition under that rule rather than toward a page quota.
 
-**Weighting (v1):** 40% financial reporting & accounting · 40% project management (lifecycle, agile/scrum,
-scheduling, cost/EVM, contracts, risk, process cycles) · 20% AI knowledge & practical approach — with AI
-also woven in as an *"AI in this domain / AI in this topic"* section in every chapter.
+| Domain group | Share |
+|---|---|
+| Finance, accounting & reporting (Domains 1–4) | 40 % |
+| Project management — lifecycle, agile, scheduling, cost/EVM, contracts, risk, process cycles (Domains 5–12) | 40 % |
+| AI knowledge & practical approach (Domain 13) | 20 % |
 
-**Governing principle, everywhere AI appears:** **"AI proposes; the professional disposes."** The human
-professional remains accountable for every estimate, commitment, forecast and decision.
+Per-section depth may flex as content genuinely demands, provided the 40/40/20 split holds.
 
-## 1. Three‑level structure (use everywhere)
+> **Relationship to the live credential framework.** This BoK *is* the credential framework: the
+> Institute's website, examination blueprint and practice materials are aligned to these thirteen domains
+> and their 40/40/20 weighting. Practice environments may group content for drill purposes, but the domain
+> numbering and Knowledge-Area structure defined here govern everywhere.
 
-- **DOMAIN** — the major pillar (e.g. *Financial Reporting & the Standards*).
-- **KNOWLEDGE AREA (KA)** — a coherent body within a domain (e.g. *IFRS 15 Revenue from Contracts with
-  Customers*).
-- **TOPIC** — the atomic, teachable/testable unit (e.g. *the five‑step model applied to a construction
-  contract with variable consideration*).
+---
 
-Every page of content sits under **Domain → Knowledge Area → Topic** and is numbered `N.M.k`
-(Domain.KnowledgeArea.Topic — e.g. `6.3.2`) for cross‑referencing and exam‑blueprint mapping. Number
-figures `Fig N.M.k`, MCQs `MCQ N.M.k`, and worked examples `Example N.M.k`.
+## 2. The three-level structure
 
-## 2. Per‑topic depth standard (apply to EVERY topic, where relevant)
+- **DOMAIN** — the major pillar (e.g. *Foundations of Accounting for Project Controls*).
+- **KNOWLEDGE AREA (KA)** — a coherent body within a domain (e.g. *The accounting model*).
+- **TOPIC** — the atomic, teachable/testable unit (e.g. *Debit and credit rules by account type*).
 
-1. **Definition & purpose** — precise, professional, with the standard/framework named.
-2. **Underlying principle / the "why."**
-3. **Formula(e)** — stated, defined variable‑by‑variable, with units (see §5 for canonical symbols).
-4. **At least one fully worked numerical example** with realistic figures, shown step by step to the
-   answer. The numbers **must actually add up** — re‑check every calculation.
-5. **A second example or mini‑case** for non‑trivial topics (scenario → analysis → conclusion).
-6. **At least one figure spec** where a diagram/chart/table aids understanding (numbered, captioned, with
-   the underlying data and a render‑ready description). Add an **animation storyboard** flagged *digital‑
-   only* where motion helps.
-7. **Common pitfalls / misconceptions.**
-8. **"AI in this topic"** — how AI assists this specific task *and its governance limits*, consistent with
-   *"AI proposes; the professional disposes."*
-9. **Key‑terms box**, **sample MCQs** (§6), and **2–4 self‑check questions** (answers in the appendix) per
-   Knowledge Area.
-10. **Cross‑references** to related topics by number (do not repeat content — point to it).
+Every page sits under Domain → KA → Topic and is **numbered** `Domain.KA.Topic` (e.g. `1.1.2`) for
+cross-referencing and exam-blueprint mapping. Cross-reference by number ("see 6.3.1"), never by repeating
+content.
 
-## 3. Non‑negotiable authoring rules
+---
 
-- **Accuracy over volume. Never pad.** If a topic needs four pages, write four good pages, not ten thin
-  ones. The page target is met by *breadth of genuine content*, not filler.
-- **Cite the standard, not a fabricated source.** Reference real frameworks **by name** — IFRS 15, IAS 37,
-  IAS 1, IAS 2, IAS 16, IFRS 16, IAS 23, PMBOK, AACE TCM, ISO 31000, ISO/IEC 17024, the Agile Manifesto,
-  the Scrum Guide, Kanban, Lean, SAFe/LeSS (awareness level). **Do NOT invent citations, clause numbers,
-  page numbers or quotes.** Where you summarise a standard, describe the principle *in your own words*
-  (e.g. "under the Scrum Guide, the Sprint is time‑boxed to…"); never reproduce copyrighted text (the
-  Manifesto / Scrum Guide wording included) verbatim.
-- **British English throughout**; consistent notation and terminology across all chapters (maintain the
-  running glossary and formula‑symbol table so, e.g., EAC is defined identically everywhere).
-- **Examples must be internally correct** — the numbers must add up; re‑check every calculation.
-- **AI content must be honest** — describe real, current AI capabilities and their limits and risks
-  (hallucination, data quality, bias, governance, auditability), not hype. Name tool **categories and
-  representative tools** without fabricating features. Mark anything genuinely uncertain or evolving as
-  such rather than overstating it.
-- **Flag for SME sign‑off.** End each Knowledge Area with any items that a finance / agile / AI SME must
-  verify before the content is finalised.
+## 3. The seed glossary
 
-## 4. Currency, number and date conventions
+Terms are defined **once** here and used identically everywhere. Where a domain introduces a new term, it
+is added to this glossary in the consolidation pass; it must not be silently redefined in a later chapter.
 
-- Primary currency **USD ($)**; where the sponsor's context helps, also give **SAR** (Saudi Riyal) at an
-  illustrative rate stated in the example (e.g. "at an illustrative SAR 3.75 = USD 1"). Never imply a live
-  FX rate.
-- Thousands separator with commas ($1,250,000). Percentages to one decimal unless precision demands more
-  (CPI 0.92). Negative variances in parentheses where a table convention needs it, with the sign stated in
-  prose.
-- Dates in British form (31 March 2026). Periods as "Month N" for schedule examples.
+| Term | Definition (as used throughout the BoK) |
+|---|---|
+| **Accrual basis** | Recognising the effects of transactions when they occur, not when cash moves. |
+| **Baseline** | The approved, version-controlled plan (scope, schedule or cost) against which performance is measured. |
+| **Control account (CA)** | A management-control point where scope, budget, actual cost and schedule integrate — the intersection of a WBS element and an organisational (OBS) element. |
+| **Cost breakdown structure (CBS)** | The hierarchical decomposition of a project's cost by cost element/type. |
+| **Provision** | A liability of uncertain timing or amount, recognised under IAS 37 when the recognition tests are met. |
+| **Recognition** | Recording an item in the financial statements (as an asset, liability, income or expense). |
+| **Work breakdown structure (WBS)** | The hierarchical decomposition of the total scope of work into deliverables and work packages. |
 
-## 5. Canonical formula symbols (define once — use identically everywhere)
+*(The consolidated global glossary in the appendices is assembled from every domain's key-terms boxes.)*
 
-Earned Value & forecasting (Domains 3, 6, 9):
+---
 
-| Symbol | Term | Definition |
+## 4. The master formula-symbol table
+
+Every symbol below means the same thing in every chapter. When a chapter uses a symbol, it restates the
+definition inline, but never changes it. Finance/EVM symbols are seeded here even though they are first
+used deeply in Domains 3–6, so the classical and agile treatments (Domain 9) share one notation.
+
+| Symbol | Meaning | Unit |
 |---|---|---|
-| PV (BCWS) | Planned Value | Budgeted cost of work scheduled to date |
-| EV (BCWP) | Earned Value | Budgeted cost of work performed to date |
-| AC (ACWP) | Actual Cost | Actual cost of work performed to date |
-| BAC | Budget at Completion | Total budgeted cost of the project |
-| CV | Cost Variance | `CV = EV − AC` |
-| SV | Schedule Variance | `SV = EV − PV` |
-| CPI | Cost Performance Index | `CPI = EV / AC` |
-| SPI | Schedule Performance Index | `SPI = EV / PV` |
-| EAC | Estimate at Completion | Forecast total cost (several formulae — see KA 6.3) |
-| ETC | Estimate to Complete | `ETC = EAC − AC` |
-| VAC | Variance at Completion | `VAC = BAC − EAC` |
-| TCPI | To‑Complete Performance Index | `TCPI = (BAC − EV) / (BAC − AC)` (or `/(EAC − AC)`) |
+| `A`, `L`, `E` | Assets, Liabilities, Equity | currency |
+| `Rev`, `Exp` | Income/Revenue, Expenses | currency |
+| `PV` (BCWS) | Planned Value / Budgeted Cost of Work Scheduled | currency |
+| `EV` (BCWP) | Earned Value / Budgeted Cost of Work Performed | currency |
+| `AC` (ACWP) | Actual Cost / Actual Cost of Work Performed | currency |
+| `BAC` | Budget at Completion | currency |
+| `CV`, `SV` | Cost Variance (`EV − AC`), Schedule Variance (`EV − PV`) | currency |
+| `CPI`, `SPI` | Cost Performance Index (`EV/AC`), Schedule Performance Index (`EV/PV`) | ratio |
+| `EAC`, `ETC` | Estimate at Completion, Estimate to Complete | currency |
+| `VAC` | Variance at Completion (`BAC − EAC`) | currency |
+| `TCPI` | To-Complete Performance Index | ratio |
+| `PoC` | Percentage of completion | % |
+| `r`, `n` | Discount rate per period; number of periods | ratio; count |
+| `PV(x)` | Present value of amount `x` (context-flagged to avoid clash with Planned Value) | currency |
 
-Common EAC formulae (state assumptions each time):
-`EAC = AC + (BAC − EV)` (future work at budget) · `EAC = BAC / CPI` (past efficiency continues) ·
-`EAC = AC + (BAC − EV) / (CPI × SPI)` (cost and schedule pressure continue).
+> **Notation clash rule.** `PV` denotes **Planned Value** in EVM contexts and **present value** in
+> discounting contexts. Always write **"present value"** in words, or `PV(x)`, when discounting, so the two
+> never collide on a page.
 
-Accounting & finance (Domains 1–7): the accounting equation `Assets = Liabilities + Equity`; POC (input
-method) `% complete = costs incurred to date / total estimated costs`; contract asset/liability = revenue
-recognised − amounts billed (sign convention stated in KA 7.5). Agile (Domain 9): velocity = story points
-completed per sprint; AgileEVM reuses EV/CPI/SPI/EAC with scope‑variable assumptions stated (KA 9.5).
+---
 
-New symbols introduced in a chapter must be added to the glossary and this table during consolidation.
+## 5. The worked-example format
 
-## 6. Worked‑example, figure, animation and MCQ formats
+Every worked example uses this five-line skeleton so a reader can follow any calculation identically across
+the book:
 
-**Worked example** — `Example N.M.k — <title>`: *Scenario* (given data as a small table) → *Required* →
-*Working* (each step shown, formula → substitution → result, units carried) → *Answer* (boxed) →
-*Interpretation* (one or two sentences on what it means for the professional).
+1. **Setup** — the scenario in one or two sentences, with the given data listed.
+2. **Formula** — the formula stated, each variable named with its unit.
+3. **Substitution** — the numbers substituted in, shown explicitly.
+4. **Result** — the computed answer, rounded per §7 and stated with its unit.
+5. **Interpretation** — one or two sentences on what the number *means* for the professional's decision.
 
-**Figure spec** — `Fig N.M.k — <caption>`: chart/diagram type; axes/series/labels; the **underlying data**
-(a small table) so it is reproducible; a render‑ready description (an illustrator or tool can draw it).
-Illustration style: brand blue `#1D4ED8`, clean professional diagrams, sans‑serif labels.
+Numbers **must actually add up** — re-check every calculation. Where an assumption is needed, state it
+explicitly rather than glossing over it. Where a computation is inherently tabular (a network
+forward/backward pass, a multi-scenario comparison), the five-line skeleton may be replaced by a labelled
+table plus an **Interpretation** line — the interpretation is never optional.
 
-**Animation storyboard (digital/LMS only)** — `Animation N.M.k — <caption> [digital‑only]`: frames/steps,
-what changes each frame, and a narration cue. The print/PDF edition uses the corresponding static figure.
+---
 
-**MCQ** — `MCQ N.M.k [level: recall|application|analysis]`: a stem, **four options (A–D)**, the **correct
-answer marked**, and a **1–3 sentence rationale** explaining why it is right and why the distractors are
-wrong. Distractors must be plausible (common errors), not filler. Include **numerical MCQs** for
-finance/EVM/agile‑metrics topics (candidate computes, then selects). Tag each with its topic number and
-cognitive level. These are **study/sample items** — drawn from the same blueprint as, but kept **separate
-from**, the live exam bank (never reused verbatim as live questions).
+## 6. Figure & animation specifications
 
-## 7. Chapter file skeleton (every KA file follows this)
+- **Figures (print + digital).** Every KA specifies at least one figure where a diagram/chart/table aids
+  understanding. Each figure has: a **number** (`Fig 1.2.1` = Domain 1, KA 2, figure 1), a **caption**, the
+  **underlying data** (so it is reproducible), and a **render-ready description** (axes, series, labels,
+  sample values). Illustration style: clean, professional, brand blue `#1D4ED8`, Plus Jakarta Sans labels.
+- **Animations (digital/LMS edition only).** Where motion aids understanding (an S-curve building, a CPM
+  forward/backward pass, a sprint looping), specify an **animation storyboard** — frames/steps, what
+  changes each step, and the narration cue — clearly marked **"digital-only."** The print/PDF uses the
+  static figure rendered from the same spec.
 
-```
-# Domain N — <Domain title>
-## KA N.M — <Knowledge Area title>
-<one‑paragraph orientation: what this KA covers and why it matters to a project‑controls professional>
+---
 
-### N.M.1 <Topic> … (definition · principle · formula · worked example(s) · figure/animation ·
-                      pitfalls · AI in this topic · cross‑refs)
-### N.M.2 <Topic> …
-…
-### Key terms
-### AI in this domain / topic
-### Sample MCQs
-### Self‑check questions (answers in Appendix C)
-### For SME verification
-```
+## 7. Numbers, language & currency conventions
 
-## 8. Domain map & page budget (targets — meet by genuine content, ±15% per section)
+- **British English** throughout (e.g. *recognise*, *organisation*, *utilisation*).
+- **Currency:** primary examples in **USD**; where the sponsor's context helps, a parallel **SAR** figure
+  (indicative rate stated at point of use, e.g. `USD 1 ≈ SAR 3.75`). Never imply a live/precise FX rate.
+- **Rounding:** money to the nearest whole currency unit unless the topic needs cents; ratios/indices to
+  **two decimal places**; percentages to **one decimal place** unless precision matters. State the rounding
+  where it affects the answer.
+- **Thousands separators:** comma (`1,250,000`). Negative/adverse amounts in parentheses `(80,000)` in
+  statements; a leading minus elsewhere.
 
-1. Foundations of Accounting for Project Controls (~90 pp) · 2. Financial Reporting & the Standards
-(~120 pp) · 3. Budgeting & Forecasting (~100 pp) · 4. Performance Management, Variance Analysis &
-Management Reporting (~90 pp) · 5. Cost Management & Cost Control (~70 pp) · 6. **Earned Value Management &
-Forecasting** *(flagship, ~70 pp)* · 7. Contracts, Commercial Management, BoQ, Invoicing & Revenue
-(~110 pp) · 8. Project Management Lifecycle (~95 pp) · 9. Agile, Scrum & Adaptive Delivery *(new, ~70 pp)* ·
-10. Project Scheduling (~50 pp) · 11. Business Process Cycles — O2C/P2P & controls (~35 pp) · 12. Risk
-Management (~40 pp) · 13. **AI for Project Controls & PM** *(major, ~240 pp)* · Appendices (~40 pp:
-glossary · master formula sheet · self‑check answers · standards referenced · figure/animation index ·
-worked‑example index).
+---
 
-Finance domains (1–7) are authored first so the notation and worked‑example style lock there; the Agile
-domain (9) is authored after EVM (6) because AgileEVM reuses EV/CPI/SPI/EAC and IFRS 15 — the notation must
-stay identical across the classical and agile treatments.
+## 8. The MCQ format
+
+Each KA ends with **3–8 sample MCQs** to certification standard:
+
+- Exactly **four options** (A–D), **one correct**, with the correct option **marked** and a **1–3 sentence
+  rationale** explaining why it is right *and* why the plausible distractors are wrong.
+- A **mix of cognitive levels** — *Recall*, *Application*, *Analysis* — tagged on each item, plus the
+  **topic number** it maps to (e.g. `[1.4.2 · Application]`).
+- **Numerical items** wherever the topic is quantitative (the candidate computes, then selects).
+  Distractors must be *plausible* — the results of common errors — never filler.
+- These are **study/sample items** drawn from the same blueprint as, but kept **separate from**, the live
+  exam bank; do not reuse verbatim as live questions.
+
+---
+
+## 9. Citation rules
+
+- **Name real frameworks; never fabricate.** Reference standards by name and principle — IFRS 15, IAS 1,
+  IAS 2, IAS 16, IAS 23, IAS 37, IFRS 16; PMBOK, AACE TCM Framework; ISO 31000, ISO/IEC 17024; the Agile
+  Manifesto, the Scrum Guide, Kanban, Lean. **Do not invent citations, clause numbers, page numbers or
+  quotes.**
+- **Never reproduce copyrighted text.** Summarise a standard's principle in your **own words** (e.g. "under
+  IAS 37 a provision is recognised when…"); do **not** paste Manifesto/Scrum-Guide/standard wording
+  verbatim. Examples, tables, diagrams and MCQs must be **original**.
+- **Honesty about AI.** Describe real, current AI capabilities *and their limits and risks* (hallucination,
+  data quality, bias, confidentiality, auditability) — never hype. Mark evolving capabilities as such. The
+  governing principle throughout: **"AI proposes, the professional disposes."**
+
+---
+
+## 10. The per–Knowledge-Area checklist
+
+Author each KA to this checklist; a KA is complete only when every applicable line is satisfied.
+
+- [ ] **Definition & purpose** for each topic — precise, professional, with the real standard named.
+- [ ] **Underlying principle / the "why."**
+- [ ] **Formulae** stated, every variable and unit defined (restating spine symbols).
+- [ ] **≥ 1 fully worked example** in the §5 five-line format, numbers re-checked, realistic USD (+SAR where useful).
+- [ ] **A second example or mini-case** for any non-trivial topic.
+- [ ] **≥ 1 numbered figure spec** (§6) and, where motion helps, a digital-only animation storyboard.
+- [ ] **Common pitfalls / misconceptions.**
+- [ ] **"AI in this KA or domain"** — how AI assists and its governance limits ("AI proposes, the
+      professional disposes"): at least one substantive AI section per domain, plus per-KA boxes wherever
+      the AI use is distinct (Domain 13, KA 13.5 carries the systematic per-domain coverage).
+- [ ] **Key-terms box.**
+- [ ] **3–6 sample MCQs** (§8) with answers, rationales and topic/level tags.
+- [ ] **2–4 self-check questions** with answers.
+- [ ] **Cross-references** by number to related topics.
+
+---
+
+## 11. The domain map — the thirteen domains
+
+| # | Domain | Group |
+| --- | --- | --- |
+| 1 | Foundations of Accounting for Project Controls | Finance |
+| 2 | Financial Reporting & the Standards (incl. IFRS 15 flagship) | Finance |
+| 3 | Budgeting & Forecasting | Finance |
+| 4 | Performance Management, Variance Analysis & Management Reporting | Finance |
+| 5 | Cost Management & Cost Control | PM |
+| 6 | Earned Value Management & Forecasting (EVM/EAC) — flagship | PM |
+| 7 | Contracts, Commercial Management, BoQ, Invoicing & Revenue | PM |
+| 8 | Project Management Lifecycle | PM |
+| 9 | Agile, Scrum & Adaptive Delivery for Project Controls | PM |
+| 10 | Project Scheduling (in depth) | PM |
+| 11 | Business Process Cycles (O2C, P2P & the control environment) | PM |
+| 12 | Risk Management for Project Controls | PM |
+| 13 | AI for Project Controls & PM: Concepts, Tools & Practice | AI |
+| — | Appendices (glossary · master formula sheet · self-check answers · standards index · figure/animation index · MCQ bank) | — |
+
+Author finance domains (1–4) first to lock the notation and worked-example style,
+then the PM domains, authoring the Agile domain (9) after EVM (6) since it reuses the EV/CPI/EAC machinery,
+then the AI domain (13).
