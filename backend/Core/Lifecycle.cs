@@ -208,6 +208,23 @@ public static class Lifecycle
         var cleanPrefix = Certs.Prefix(cert).Replace("-", "").ToUpperInvariant();
         var mk = string.IsNullOrWhiteSpace(routeMarker) ? "" : routeMarker!.Trim().ToUpperInvariant() + "-";
         var stem = $"PCI-{cleanPrefix}-{mk}{yr}-";
+
+        // Route provenance: an entitlement granted through an application route (e.g. sponsored,
+        // complimentary) carries its route_key. Snapshot that route's certificate wording onto the
+        // credential so the certificate reads correctly for its route and never drifts if the route
+        // wording is later edited. Ordinary paid entitlements have no route_key ⇒ default wording.
+        string? routeKey = null, wording = null;
+        if (attemptId is not null)
+        {
+            var ent = db.QueryOne("SELECT route_key FROM exam_entitlements WHERE attempt_id=? AND route_key IS NOT NULL ORDER BY id DESC", attemptId);
+            routeKey = ent is null ? null : H.Str(ent["route_key"]);
+            if (!string.IsNullOrWhiteSpace(routeKey))
+            {
+                var route = db.QueryOne("SELECT certificate_wording FROM certification_routes WHERE certification_id=? AND route_key=?", H.L(cert["id"]), routeKey);
+                wording = route is null ? null : H.Str(route["certificate_wording"]);
+            }
+        }
+
         // sequential within this (certification, marker, year) space; retry on the unique-index collision.
         var start = db.Scalar<long>("SELECT COUNT(*) FROM issued_credentials WHERE credential_id LIKE ?", stem + "%") + 1;
         for (int i = 0; i < 50; i++)
@@ -218,8 +235,8 @@ public static class Lifecycle
                 // expiry computed in C# (SQLite-format string) so it is provider-agnostic — no SQL
                 // string concatenation, which does not translate to MySQL.
                 var expires = DateTime.UtcNow.AddYears(years).ToString("yyyy-MM-dd HH:mm:ss");
-                db.Execute("INSERT INTO issued_credentials(credential_id,user_id,attempt_id,holder_name,credential,certification_id,status,expires_at) VALUES(?,?,?,?,?,?, 'active', ?)",
-                    cid, userId, attemptId, holderName, Certs.Prefix(cert), H.L(cert["id"]), expires);
+                db.Execute("INSERT INTO issued_credentials(credential_id,user_id,attempt_id,holder_name,credential,certification_id,route_key,certificate_wording,status,expires_at) VALUES(?,?,?,?,?,?,?,?, 'active', ?)",
+                    cid, userId, attemptId, holderName, Certs.Prefix(cert), H.L(cert["id"]), routeKey, wording, expires);
                 return cid;
             }
             catch { /* credential_id collision → next sequential number; attempt_id duplicate → loop exits via existing check next call */ }

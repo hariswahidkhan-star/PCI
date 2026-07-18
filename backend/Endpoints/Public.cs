@@ -191,8 +191,8 @@ public static class Public
                     note = "Honorary recognition conferred by the board — not an examined PCP-AI credential.",
                 });
             }
-            var c = db.QueryOne(@"SELECT ic.credential_id,ic.holder_name,ic.credential,ic.status,ic.issued_at,ic.expires_at,
-                       ct.code certification_code, ct.name certification_name
+            var c = db.QueryOne(@"SELECT ic.credential_id,ic.holder_name,ic.credential,ic.status,ic.issued_at,ic.expires_at,ic.certificate_wording,
+                       ct.code certification_code, ct.name certification_name, ct.acronym certification_acronym
                 FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)
                 WHERE upper(ic.credential_id)=?", id);
             if (c is null) return J(new { found = false });

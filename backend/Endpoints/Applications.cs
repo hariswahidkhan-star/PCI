@@ -104,7 +104,7 @@ public static class Applications
                     var feeMode = (H.Str(route["fee_mode"]) ?? "standard").ToLowerInvariant();
                     if (feeMode is "free" or "sponsored")
                     {
-                        grantRef = GrantExamEntitlement(db, userId, certId, feeMode);
+                        grantRef = GrantExamEntitlement(db, userId, certId, feeMode, routeKey);
                         if (grantRef is not null) stage = "exam_access_granted";
                     }
                 }
@@ -124,7 +124,7 @@ public static class Applications
     /// founding-waiver grant: a paid-at-zero payments row plus an exam_entitlements ledger row with a
     /// one-year scheduling window). Guarded so a candidate never stacks two open entitlements for the
     /// same certification. Returns the payment reference, or null if an open entitlement already exists.</summary>
-    static string? GrantExamEntitlement(Db db, long userId, long certId, string feeMode)
+    static string? GrantExamEntitlement(Db db, long userId, long certId, string feeMode, string routeKey)
     {
         var hasOpen = db.QueryOne(@"SELECT p.id FROM payments p
                 JOIN exam_entitlements e ON e.payment_id=p.id
@@ -135,8 +135,8 @@ public static class Applications
         var provider = feeMode == "sponsored" ? "application_sponsored" : "application_waiver";
         var payId = db.ExecuteReturningId(@"INSERT INTO payments(user_id,product_type,standard_amount,final_amount,currency,payment_provider,payment_status,payment_date,reference,exam_schedule_deadline)
             VALUES(?, 'exam',0,0,'USD',?, 'paid', datetime('now'), ?, datetime('now','+1 year'))", userId, provider, reference);
-        db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?, 'exam', ?, 'available', datetime('now','+1 year'))",
-            userId, payId, certId);
+        db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,route_key,status,valid_until) VALUES(?,?, 'exam', ?, ?, 'available', datetime('now','+1 year'))",
+            userId, payId, certId, routeKey);
         return reference;
     }
 }

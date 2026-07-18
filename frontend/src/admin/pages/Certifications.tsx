@@ -172,7 +172,7 @@ function statusTone(s?: string | null): 'ok' | 'warn' | 'err' | 'neutral' {
 interface RouteRow {
   id: number; route_key: string; label: string; description?: string | null
   enabled?: number; public?: number; exam_required?: number; requires_approval?: number
-  fee_mode?: string | null; sort_order?: number
+  fee_mode?: string | null; sort_order?: number; certificate_wording?: string | null
 }
 const FEE_MODES = ['standard', 'free', 'waived_partial', 'sponsored', 'custom'] as const
 
@@ -212,6 +212,29 @@ function RoutesDrawer({ cert, onClose }: { cert: CertRow; onClose: () => void })
               ))}
             </tbody>
           </table>
+        )}
+        {!loading && !error && data && (
+          <div style={{ marginTop: '1.25rem' }}>
+            <h4 style={{ margin: '0 0 .25rem' }}>Certificate wording</h4>
+            <p className="muted small" style={{ margin: '0 0 .6rem' }}>
+              Optional wording printed on the certificate for candidates who qualify through each route (e.g. a
+              sponsored or complimentary place). It is snapshotted onto the credential when it is issued, so later
+              edits never change already-issued certificates. Leave blank for the standard wording.
+            </p>
+            <div style={{ display: 'grid', gap: '.6rem' }}>
+              {data.rows.map((r) => (
+                <label key={r.id} className="field" style={{ margin: 0 }}>
+                  <span className="muted small">{r.label} <span style={{ opacity: 0.6 }}>({r.route_key})</span></span>
+                  <textarea
+                    rows={2}
+                    defaultValue={r.certificate_wording ?? ''}
+                    placeholder="Standard certificate wording"
+                    onBlur={(e) => { const v = e.target.value.trim(); if (v !== (r.certificate_wording ?? '')) patch(r.id, { certificate_wording: v }) }}
+                  />
+                </label>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>

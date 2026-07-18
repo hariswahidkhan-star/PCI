@@ -290,6 +290,12 @@ public static class Migrate
             AddCol(t, "certification_id", "certification_id INTEGER DEFAULT 1");
             db.Exec($"UPDATE {t} SET certification_id=1 WHERE certification_id IS NULL");
         }
+        // Application-route provenance: the route an entitlement was granted through (NULL for ordinary
+        // paid entitlements), and the certificate wording snapshotted onto a credential at issue time so
+        // it never drifts if the route's wording is later edited.
+        AddCol("exam_entitlements", "route_key", "route_key TEXT");
+        AddCol("issued_credentials", "route_key", "route_key TEXT");
+        AddCol("issued_credentials", "certificate_wording", "certificate_wording TEXT");
 
         // ── Multi-certification catalogue fields (Phase 1) ──
         // Additive columns that make each certification fully self-describing for the public catalogue,
