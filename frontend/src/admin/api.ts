@@ -255,6 +255,28 @@ export interface FoundingApplication {
   decided_at?: string | null
 }
 
+export interface CertApplication {
+  id: number
+  application_no?: string | null
+  user_id: number
+  certification_id: number
+  route_key: string
+  status: string
+  workflow_stage?: string | null
+  data_json?: string | null
+  blocker?: string | null
+  decided_by?: number | null
+  decided_at?: string | null
+  admin_note?: string | null
+  created_at?: string | null
+  updated_at?: string | null
+  cert_acronym?: string | null
+  cert_name?: string | null
+  email?: string | null
+  first_name?: string | null
+  last_name?: string | null
+}
+
 export interface FoundingStat {
   id: number
   code: string

@@ -135,6 +135,21 @@ public static class Public
                 }).ToList()
         }));
 
+        // Public application routes for a certification (used by the student apply form). Internal routes
+        // (e.g. Test User) are filtered out; each entry says whether the route requires review or an exam.
+        app.MapGet("/api/certifications/{id}/routes", (string id) =>
+        {
+            var certId = Certs.Resolve(db, id);
+            if (certId == 0 || Certs.ById(db, certId) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var rows = Routes.For(db, certId, publicOnly: true).Select(r => new
+            {
+                route_key = r["route_key"], label = r["label"], description = r["description"],
+                requires_approval = H.B(r["requires_approval"]), exam_required = H.B(r["exam_required"]),
+                fee_mode = r["fee_mode"],
+            }).ToList();
+            return J(new { certification_id = certId, rows });
+        });
+
         app.MapPost("/api/validate-code", async (HttpRequest req) =>
         {
             var b = await H.Body(req);

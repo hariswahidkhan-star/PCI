@@ -8,7 +8,8 @@ namespace PCI.Backend.Endpoints;
 /// Per-certification application submission + review (Phase 4b). A candidate applies for a specific
 /// certification through a specific route; the record is keyed by (user, certification_id, route_key)
 /// so an application for one credential can never be confused with another. Routes that require approval
-/// enter review; auto-approved routes are approved on submit.
+/// enter review; auto-approved routes are approved on submit. Admin surface is gated on "members"
+/// (the same section as the Students admin area).
 /// </summary>
 public static class Applications
 {
@@ -56,7 +57,7 @@ public static class Applications
         });
 
         // ── Admin: list applications (filterable by certification + status) ──
-        app.MapGet("/api/admin/applications", (HttpRequest req) => gate(req, "students", _ =>
+        app.MapGet("/api/admin/applications", (HttpRequest req) => gate(req, "members", _ =>
         {
             var w = new List<string>(); var args = new List<object?>();
             if (long.TryParse(req.Query["certification_id"].ToString(), out var cid)) { w.Add("a.certification_id=?"); args.Add(cid); }
@@ -71,7 +72,7 @@ public static class Applications
         }));
 
         // ── Admin: decide an application ──
-        app.MapPost("/api/admin/applications/{id}/decision", (HttpRequest req, long id) => gate(req, "students", adm =>
+        app.MapPost("/api/admin/applications/{id}/decision", (HttpRequest req, long id) => gate(req, "members", adm =>
         {
             var b = H.Body(req).GetAwaiter().GetResult();
             var action = (H.GetS(b, "action") ?? "").ToLowerInvariant();
