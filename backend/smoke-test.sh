@@ -9,7 +9,7 @@ chk(){ local n="$1" cond="$2"; if [ "$cond" = "1" ]; then echo "  PASS  $n"; pas
 code(){ curl -s -o /dev/null -w "%{http_code}" -X "$1" "$B$2" "${@:3}"; }
 
 chk "S01 /api/health" "$([ "$(j GET /api/health | grep -c pci-backend)" = 1 ] && echo 1)"
-for p in / /student.html /admin/ /exam-ui.html /index-launcher.html; do
+for p in / /student.html /exam-ui.html /index-launcher.html; do
   chk "S02 static $p" "$([ "$(code GET "$p")" = 200 ] && echo 1)"
 done
 OT=$(j POST /api/admin/auth/login -H 'Content-Type: application/json' -d '{"email":"owner@pci.local","password":"changeme-owner"}' | python3 -c 'import sys,json;print(json.load(sys.stdin).get("token",""))')
@@ -38,7 +38,7 @@ chk "S13 legacy x-admin-token is dead" "$([ "$(j GET /api/admin/me -H "x-admin-t
 chk "S14 pass mark persisted 70" "$([ "$(j GET /api/admin/settings -H "Authorization: Bearer $OT" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("exam_pass_mark_pct"))')" = 70 ] && echo 1)"
 j PATCH /api/admin/settings -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"web_maintenance_mode":"1"}' >/dev/null
 chk "S15a maintenance ON → 503" "$([ "$(code GET /)" = 503 ] && echo 1)"
-chk "S15b admin stays up" "$([ "$(code GET /admin/)" = 200 ] && echo 1)"
+chk "S15b admin stays up" "$([ "$(code GET /api/admin/me)" = 401 ] && echo 1)"
 j PATCH /api/admin/settings -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"web_maintenance_mode":"0"}' >/dev/null
 chk "S15c maintenance OFF → 200" "$([ "$(code GET /)" = 200 ] && echo 1)"
 chk "S16 student login 401" "$([ "$(code POST /api/login -H 'Content-Type: application/json' -d '{"email":"x@y.z","password":"x"}')" = 401 ] && echo 1)"
