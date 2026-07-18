@@ -957,7 +957,16 @@ def _pdf_text(data):
         from pypdf import PdfReader; import io
         return " ".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(data)).pages).replace("\n", " ")
     except Exception:
-        return data.decode("latin1", "ignore")
+        # pypdf unavailable/failed: latin1-decode the raw bytes AND best-effort zlib-inflate every
+        # stream object, so FlateDecode-compressed content (e.g. PDFsharp output) is still searchable.
+        import re as _re, zlib as _zlib
+        txt = data.decode("latin1", "ignore")
+        for m in _re.finditer(rb"stream\r?\n(.*?)endstream", data, _re.S):
+            # decompressobj tolerates the trailing EOL bytes before `endstream` that plain
+            # zlib.decompress rejects with "incorrect header check"/trailing-data errors.
+            try: txt += " " + _zlib.decompressobj().decompress(m.group(1)).decode("latin1", "ignore")
+            except Exception: pass
+        return txt
 
 def test_certificate_pdf(admin):
     """Section 16 — verifiable PDF certificates: real downloadable PDF with QR + verification URL, a
@@ -1193,11 +1202,29 @@ def test_documents_module(admin):
 
     # ================= watermark rendering (per-recipient stamp on flagged PDFs) =================
     def _real_pdf_uri():
-        """A REAL parseable PDF (blank page via pypdf) — the watermarker must be able to open it."""
-        from pypdf import PdfWriter; import io
-        w = PdfWriter(); w.add_blank_page(612, 792)
-        buf = io.BytesIO(); w.write(buf)
-        raw = buf.getvalue()
+        """A REAL parseable single-page PDF built with the stdlib only (correct xref offsets), so the
+        suite has no third-party dependency — CI runners without pypdf must still run this section.
+        PDFsharp (the watermarker) and pypdf (when present) both open it."""
+        content = b"BT /F1 12 Tf 72 720 Td (PCI test document) Tj ET\n"
+        objs = [
+            b"<</Type/Catalog/Pages 2 0 R>>",
+            b"<</Type/Pages/Kids[3 0 R]/Count 1>>",
+            b"<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<</Font<</F1 4 0 R>>>>/Contents 5 0 R>>",
+            b"<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>",
+        ]
+        out = bytearray(b"%PDF-1.4\n")
+        offsets = []
+        for i, body in enumerate(objs, start=1):
+            offsets.append(len(out))
+            out += ("%d 0 obj" % i).encode() + body + b"endobj\n"
+        offsets.append(len(out))
+        out += ("5 0 obj<</Length %d>>stream\n" % len(content)).encode() + content + b"endstream\nendobj\n"
+        xref_pos = len(out)
+        out += b"xref\n0 6\n0000000000 65535 f \n"
+        for off in offsets:
+            out += ("%010d 00000 n \n" % off).encode()
+        out += ("trailer<</Size 6/Root 1 0 R>>\nstartxref\n%d\n%%%%EOF\n" % xref_pos).encode()
+        raw = bytes(out)
         return "data:application/pdf;base64," + base64.b64encode(raw).decode(), raw
 
     wm_uri, wm_raw = _real_pdf_uri()
