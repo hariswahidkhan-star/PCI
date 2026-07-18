@@ -54,7 +54,7 @@ public static class CertCatalogue
         string html;
         try
         {
-            var rows = db.Query("SELECT id,code,name,description,expiry_years FROM certifications WHERE active=1 ORDER BY sort_order, id");
+            var rows = db.Query("SELECT id,code,name,description,short_description,acronym,status,slug,expiry_years FROM certifications WHERE active=1 ORDER BY sort_order, id");
             var sb = new StringBuilder();
             foreach (var r in rows)
             {
@@ -64,23 +64,43 @@ public static class CertCatalogue
                 var price = cert is null ? 0 : Public.Pricing(db, "exam", null, cert).final;
                 var code = H.Str(r["code"]) ?? "";
                 var name = H.Str(r["name"]) ?? code;
-                var desc = H.Str(r["description"]) ?? "";
+                // prefer the concise catalogue blurb; fall back to the long description
+                var desc = H.Str(r["short_description"]) ?? H.Str(r["description"]) ?? "";
                 var years = r["expiry_years"] is null ? 3 : (int)H.L(r["expiry_years"]);
+                var status = (H.Str(r["status"]) ?? "Active").Trim();
+                var slug = H.Str(r["slug"]) ?? code.ToLowerInvariant();
+                // A credential is enrolable only when the operator has opened it. Draft / Under Development /
+                // Coming Soon / Suspended / Closed / Archived never expose an Enrol button or a fee.
+                var openForEnrol = status is "Active" or "Open for Applications";
 
                 sb.Append("<article class=\"qcard cert-card\">");
-                sb.Append("<div class=\"cert-card-code\">").Append(Esc(code)).Append("</div>");
+                sb.Append("<div class=\"cert-card-top\"><span class=\"cert-card-code\">").Append(Esc(code)).Append("</span>");
+                if (!openForEnrol) sb.Append("<span class=\"cert-card-status\">").Append(Esc(status)).Append("</span>");
+                sb.Append("</div>");
                 sb.Append("<h3 class=\"cert-card-name\">").Append(Esc(name)).Append("</h3>");
                 if (desc.Length > 0) sb.Append("<p class=\"cert-card-desc\">").Append(Esc(desc)).Append("</p>");
                 sb.Append("<ul class=\"cert-card-meta\">");
-                sb.Append("<li><strong>").Append(FmtPrice(price)).Append("</strong> exam fee</li>");
-                sb.Append("<li>").Append((int)cfg.Duration).Append(" minutes · ").Append(FmtPct(cfg.Pass)).Append(" to pass</li>");
-                sb.Append("<li>Valid for ").Append(years).Append(years == 1 ? " year" : " years").Append("</li>");
+                if (openForEnrol)
+                {
+                    sb.Append("<li><strong>").Append(FmtPrice(price)).Append("</strong> exam fee</li>");
+                    sb.Append("<li>").Append((int)cfg.Duration).Append(" minutes · ").Append(FmtPct(cfg.Pass)).Append(" to pass</li>");
+                    sb.Append("<li>Valid for ").Append(years).Append(years == 1 ? " year" : " years").Append("</li>");
+                }
+                else
+                {
+                    sb.Append("<li>Examination and enrolment opening soon</li>");
+                    sb.Append("<li>Register your interest to be notified</li>");
+                }
                 sb.Append("</ul>");
-                // Enrolment happens in the portal: carry the certification code through the free-account
-                // signup so the in-portal purchase prices and books THIS credential (never the retired
-                // public checkout wizard).
-                sb.Append("<a class=\"btn btn-red cert-card-cta\" href=\"/app/register?product=exam&amp;cert=")
-                  .Append(Uri.EscapeDataString(code)).Append("\">Enrol in ").Append(Esc(code)).Append("</a>");
+                var learn = "certifications/" + Uri.EscapeDataString(slug) + ".html";
+                if (openForEnrol)
+                    // Enrolment happens in the portal: carry the certification code through the free-account
+                    // signup so the in-portal purchase prices and books THIS credential.
+                    sb.Append("<a class=\"btn btn-red cert-card-cta\" href=\"/app/register?product=exam&amp;cert=")
+                      .Append(Uri.EscapeDataString(code)).Append("\">Enrol in ").Append(Esc(code)).Append("</a>");
+                else
+                    sb.Append("<a class=\"btn btn-ghost cert-card-cta\" href=\"request-info.html?cert=")
+                      .Append(Uri.EscapeDataString(code)).Append("\">Register interest</a>");
                 sb.Append("</article>");
             }
             html = sb.ToString();

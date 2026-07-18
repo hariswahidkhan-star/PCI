@@ -778,7 +778,9 @@ img{height:auto;}
 /* ---- Certification catalogue (backend-driven; injected server-side into #certifications) ---- */
 .cert-cat{grid-template-columns:repeat(3,1fr);}
 .cert-card{display:flex;flex-direction:column;gap:14px;}
+.cert-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
 .cert-card-code{align-self:flex-start;font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.06em;color:var(--red);background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.18);padding:5px 11px;border-radius:999px;}
+.cert-card-status{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--crimson);background:rgba(193,51,41,.08);border:1px solid rgba(193,51,41,.22);padding:5px 10px;border-radius:999px;white-space:nowrap;}
 .cert-card-name{font-family:var(--display);font-weight:700;font-size:20px;line-height:1.25;color:var(--ink);margin:0;}
 .cert-card-desc{color:var(--slate);font-size:15px;line-height:1.55;margin:0;}
 .cert-card-meta{list-style:none;margin:0;padding:14px 0 0;border-top:1px solid var(--line);display:grid;gap:7px;}

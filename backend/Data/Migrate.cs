@@ -291,6 +291,23 @@ public static class Migrate
             db.Exec($"UPDATE {t} SET certification_id=1 WHERE certification_id IS NULL");
         }
 
+        // ── Multi-certification catalogue fields (Phase 1) ──
+        // Additive columns that make each certification fully self-describing for the public catalogue,
+        // per-certification landing pages and SEO. Idempotent on both providers; no existing data touched.
+        foreach (var (col, ddl) in new (string, string)[]
+        {
+            ("acronym","acronym TEXT"), ("short_name","short_name TEXT"), ("public_title","public_title TEXT"),
+            ("tagline","tagline TEXT"), ("short_description","short_description TEXT"), ("category","category TEXT"),
+            ("level","level TEXT"), ("status","status TEXT"), ("slug","slug TEXT"), ("audience","audience TEXT"),
+            ("overview","overview TEXT"), ("application_fee","application_fee REAL"),
+            ("membership_required","membership_required INTEGER DEFAULT 0"), ("next_exam_note","next_exam_note TEXT"),
+            ("meta_title","meta_title TEXT"), ("meta_description","meta_description TEXT"), ("keywords","keywords TEXT"),
+            ("og_title","og_title TEXT"), ("og_description","og_description TEXT"), ("social_image","social_image TEXT"),
+            ("canonical_url","canonical_url TEXT"), ("content_json","content_json TEXT"),
+        })
+            AddCol("certifications", col, ddl);
+        MultiCert.Seed(db);
+
         // bootstrap owner admin on first run (parity with db.js seed)
         try
         {
