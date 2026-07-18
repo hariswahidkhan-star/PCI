@@ -17,6 +17,20 @@ interface Partner {
   website?: string | null; logo_url?: string | null; summary?: string | null
   description?: string | null; specialties?: string | null; contact_email?: string | null
   listed: number; sort_order?: number | null; created_at?: string | null
+  // partner-dashboard fields
+  partner_type?: string | null; contact_name?: string | null
+  commission_pct?: number | null; sponsor_enabled?: number | null
+  access_token_hash?: string | null
+}
+interface CommLedger {
+  commission_pct: number; attributed_revenue: number; accrued: number; paid_out: number; balance: number
+  payments: { reference?: string | null; product_type?: string | null; final_amount: number; payment_date?: string | null; code?: string | null }[]
+  payouts: { amount: number; note?: string | null; paid_at?: string | null }[]
+}
+interface SponsoredRow {
+  id: number; candidate_email: string; candidate_name?: string | null; created_at?: string | null
+  cert_acronym?: string | null; cert_code?: string | null; application_status?: string | null
+  entitlement_status?: string | null; exam_result?: string | null; credential_id?: string | null
 }
 interface TPApp {
   id: number; reference: string; org_name?: string | null; website?: string | null
@@ -40,7 +54,7 @@ export default function TrainingPartners() {
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       <div>
         <h1>Training Partners</h1>
-        <p className="muted">Recognised organisations that deliver PCP-AI examination preparation. Certification stays independent of training — partners prepare candidates; PCI owns the examination and the certification decision.</p>
+        <p className="muted">Recognised organisations that deliver examination preparation, plus institutions and sponsors. Certification stays independent of training — partners prepare or fund candidates; PCI owns the examination and the certification decision. Use <strong>Portal</strong> on a directory row to issue portal access, enable sponsorship and manage commissions.</p>
       </div>
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
         {TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>)}
@@ -55,6 +69,7 @@ export default function TrainingPartners() {
 function DirectoryTab() {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Partner[] }>('/api/admin/training-partners')
   const [edit, setEdit] = useState<Partner | 'new' | null>(null)
+  const [portal, setPortal] = useState<Partner | null>(null)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const rows = data?.rows ?? []
@@ -87,6 +102,7 @@ function DirectoryTab() {
                 <td className="small">{[p.city, p.region, p.country].filter(Boolean).join(', ') || '—'}</td>
                 <td>{p.listed ? <Badge tone="ok">published</Badge> : <Badge tone="warn">draft</Badge>}</td>
                 <td className="row" style={{ gap: '.3rem', justifyContent: 'flex-end' }}>
+                  <button className="btn ghost sm" onClick={() => setPortal(p)}>Portal</button>
                   <button className="btn ghost sm" onClick={() => setEdit(p)}>Edit</button>
                   <button className="btn ghost sm" onClick={() => togglePublish(p)}>{p.listed ? 'Unpublish' : 'Publish'}</button>
                   <button className="btn ghost sm danger" onClick={() => del(p)}>Delete</button>
@@ -98,7 +114,132 @@ function DirectoryTab() {
       )}
       {edit && <PartnerEditor partner={edit === 'new' ? null : edit} busy={busy} setBusy={setBusy}
         onClose={() => setEdit(null)} onSaved={() => { setEdit(null); refetch() }} />}
+      {portal && <PortalDrawer partner={portal} onClose={() => { setPortal(null); refetch() }} />}
     </Card>
+  )
+}
+
+// ---------------- Portal drawer: access token, sponsorship, commissions ----------------
+function PortalDrawer({ partner, onClose }: { partner: Partner; onClose: () => void }) {
+  const ledger = useAdminQuery<CommLedger>(`/api/admin/training-partners/${partner.id}/commissions`)
+  const cands = useAdminQuery<{ rows: SponsoredRow[] }>(`/api/admin/training-partners/${partner.id}/candidates`)
+  const [token, setToken] = useState<string | null>(null)
+  const [hasToken, setHasToken] = useState(!!partner.access_token_hash)
+  const [payAmount, setPayAmount] = useState('')
+  const [payNote, setPayNote] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  async function issueToken() {
+    setBusy(true); setErr(null)
+    try {
+      const d = await adminApi.post<{ token: string }>(`/api/admin/training-partners/${partner.id}/token`)
+      setToken(d.token); setHasToken(true)
+    } catch (e) { setErr(e instanceof Error ? e.message : 'Could not issue a token.') } finally { setBusy(false) }
+  }
+  async function revokeToken() {
+    if (!confirm('Revoke this partner’s portal access token? They will be signed out immediately.')) return
+    setBusy(true); setErr(null)
+    try { await adminApi.post(`/api/admin/training-partners/${partner.id}/token/revoke`); setToken(null); setHasToken(false) }
+    catch (e) { setErr(e instanceof Error ? e.message : 'Could not revoke the token.') } finally { setBusy(false) }
+  }
+  async function recordPayout() {
+    const amount = Number(payAmount)
+    if (!(amount > 0)) { setErr('Enter a payout amount greater than zero.'); return }
+    setBusy(true); setErr(null)
+    try {
+      await adminApi.post(`/api/admin/training-partners/${partner.id}/payouts`, { amount, note: payNote })
+      setPayAmount(''); setPayNote(''); ledger.refetch()
+    } catch (e) { setErr(e instanceof Error ? e.message : 'Could not record the payout.') } finally { setBusy(false) }
+  }
+
+  const L = ledger.data
+  const money = (v?: number) => `USD ${Number(v ?? 0).toFixed(2)}`
+  return (
+    <div className="drawer-backdrop" onClick={onClose}>
+      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+        <div className="spread" style={{ marginBottom: '1rem' }}>
+          <h2 style={{ margin: 0 }}>Partner portal — {partner.name}</h2>
+          <button className="btn secondary sm" onClick={onClose}>Close</button>
+        </div>
+        {err && <div className="notice err" role="alert" style={{ marginBottom: '.6rem' }}>{err}</div>}
+
+        <Section title="Portal access">
+          <p className="muted small" style={{ margin: 0 }}>
+            The partner signs in at <strong>/partner-portal.html</strong> with a bearer access token. Only a hash is
+            stored — the token is shown once, here, when issued.
+          </p>
+          {token && (
+            <div className="notice ok" role="status" style={{ margin: '.4rem 0', wordBreak: 'break-all' }}>
+              New token (copy it now — it will not be shown again): <strong>{token}</strong>
+            </div>
+          )}
+          <div className="row" style={{ gap: '.4rem', marginTop: '.4rem' }}>
+            <button className="btn sm" disabled={busy} onClick={issueToken}>{hasToken ? 'Regenerate token' : 'Issue token'}</button>
+            {hasToken && <button className="btn sm danger" disabled={busy} onClick={revokeToken}>Revoke access</button>}
+            {!hasToken && !token && <span className="muted small" style={{ alignSelf: 'center' }}>No token issued yet.</span>}
+          </div>
+        </Section>
+
+        <Section title="Commissions">
+          {ledger.loading ? <Spinner /> : ledger.error ? <ErrorNote>{ledger.error}</ErrorNote> : L && (
+            <>
+              <div className="grid cols-2 small" style={{ gap: '.3rem' }}>
+                <div><span className="muted">Attributed revenue</span><div><strong>{money(L.attributed_revenue)}</strong></div></div>
+                <div><span className="muted">Accrued ({L.commission_pct}%)</span><div><strong>{money(L.accrued)}</strong></div></div>
+                <div><span className="muted">Paid out</span><div><strong>{money(L.paid_out)}</strong></div></div>
+                <div><span className="muted">Balance due</span><div><strong>{money(L.balance)}</strong></div></div>
+              </div>
+              <div className="row" style={{ gap: '.4rem', marginTop: '.6rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                <label className="small" style={{ display: 'grid', gap: '.15rem' }}>Payout amount (USD)
+                  <input type="number" min="0" step="0.01" value={payAmount} onChange={(e) => setPayAmount(e.target.value)} style={{ maxWidth: 140 }} />
+                </label>
+                <label className="small" style={{ display: 'grid', gap: '.15rem', flex: 1, minWidth: 160 }}>Note
+                  <input value={payNote} onChange={(e) => setPayNote(e.target.value)} placeholder="e.g. Q3 settlement, wire ref…" />
+                </label>
+                <button className="btn sm" disabled={busy} onClick={recordPayout}>Record payout</button>
+              </div>
+              {L.payments.length > 0 && (
+                <table className="data" style={{ marginTop: '.7rem' }}>
+                  <thead><tr><th>Date</th><th>Reference</th><th>Code</th><th style={{ textAlign: 'right' }}>Amount</th></tr></thead>
+                  <tbody>
+                    {L.payments.slice(0, 15).map((p, i) => (
+                      <tr key={i}>
+                        <td className="small muted">{fmtDate(p.payment_date)}</td>
+                        <td className="small">{p.reference || '—'}</td>
+                        <td className="small">{p.code || '—'}</td>
+                        <td className="small" style={{ textAlign: 'right' }}>{money(p.final_amount)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </>
+          )}
+        </Section>
+
+        <Section title={`Sponsored candidates (${cands.data?.rows.length ?? 0})`}>
+          {cands.loading ? <Spinner /> : cands.error ? <ErrorNote>{cands.error}</ErrorNote> : (cands.data?.rows.length ?? 0) === 0 ? (
+            <p className="muted small" style={{ margin: 0 }}>No sponsored candidates yet.</p>
+          ) : (
+            <table className="data">
+              <thead><tr><th>Candidate</th><th>Certification</th><th>Access</th><th>Result</th><th>Credential</th></tr></thead>
+              <tbody>
+                {cands.data!.rows.map((r) => (
+                  <tr key={r.id}>
+                    <td className="small"><strong>{r.candidate_name || r.candidate_email}</strong><div className="muted">{r.candidate_email}</div></td>
+                    <td className="small">{r.cert_acronym || r.cert_code || '—'}</td>
+                    <td><Badge tone={r.entitlement_status === 'available' ? 'brand' : r.entitlement_status === 'consumed' ? 'ok' : 'neutral'}>{(r.entitlement_status || '—').replace(/_/g, ' ')}</Badge></td>
+                    <td>{r.exam_result ? <Badge tone={r.exam_result === 'pass' ? 'ok' : 'err'}>{r.exam_result}</Badge> : <span className="muted small">—</span>}</td>
+                    <td className="small">{r.credential_id || <span className="muted">—</span>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </Section>
+      </div>
+    </div>
   )
 }
 
@@ -115,6 +256,8 @@ function PartnerEditor({ partner, busy, setBusy, onClose, onSaved }:
       website: f.website ?? '', logo_url: f.logo_url ?? '', summary: f.summary ?? '',
       description: f.description ?? '', specialties: f.specialties ?? '', contact_email: f.contact_email ?? '',
       listed: !!f.listed, sort_order: Number(f.sort_order ?? 0),
+      partner_type: f.partner_type ?? 'training', contact_name: f.contact_name ?? '',
+      commission_pct: Number(f.commission_pct ?? 0), sponsor_enabled: !!f.sponsor_enabled,
     }
     try {
       if (partner) await adminApi.patch(`/api/admin/training-partners/${partner.id}`, body)
@@ -147,7 +290,25 @@ function PartnerEditor({ partner, busy, setBusy, onClose, onSaved }:
           <label>Summary <span className="muted small">(one line, shown on the directory card)</span><input value={f.summary ?? ''} onChange={set('summary')} /></label>
           <label>Specialties <span className="muted small">(comma or newline separated)</span><textarea rows={2} value={f.specialties ?? ''} onChange={set('specialties')} /></label>
           <label>Description<textarea rows={4} value={f.description ?? ''} onChange={set('description')} /></label>
-          <label>Contact email<input value={f.contact_email ?? ''} onChange={set('contact_email')} /></label>
+          <div style={{ display: 'grid', gap: '.55rem', gridTemplateColumns: '1fr 1fr' }}>
+            <label>Contact name<input value={f.contact_name ?? ''} onChange={set('contact_name')} /></label>
+            <label>Contact email<input value={f.contact_email ?? ''} onChange={set('contact_email')} /></label>
+          </div>
+          <div style={{ display: 'grid', gap: '.55rem', gridTemplateColumns: '1fr 1fr' }}>
+            <label>Partner type
+              <select value={f.partner_type ?? 'training'} onChange={set('partner_type')}>
+                <option value="training">Training provider</option>
+                <option value="institution">Institution</option>
+                <option value="sponsor">Sponsor / employer</option>
+              </select>
+            </label>
+            <label>Commission % <span className="muted small">(on attributed payments)</span>
+              <input type="number" min="0" max="100" step="0.5" value={String(f.commission_pct ?? 0)} onChange={set('commission_pct')} />
+            </label>
+          </div>
+          <label className="row" style={{ gap: '.4rem', alignItems: 'center' }}>
+            <input type="checkbox" checked={!!f.sponsor_enabled} onChange={(e) => setF({ ...f, sponsor_enabled: e.target.checked ? 1 : 0 })} style={{ width: 'auto' }} /> Can sponsor candidates through the partner portal
+          </label>
           <div style={{ display: 'grid', gap: '.55rem', gridTemplateColumns: '1fr 1fr' }}>
             <label>Sort order<input type="number" value={String(f.sort_order ?? 0)} onChange={set('sort_order')} /></label>
             <label className="row" style={{ gap: '.4rem', alignItems: 'center', marginTop: '1.5rem' }}>

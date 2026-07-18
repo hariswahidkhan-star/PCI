@@ -106,6 +106,39 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_tpapp_status ON training_partner_applications(status)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS training_partner_application_documents(id INTEGER PRIMARY KEY AUTOINCREMENT,application_id INTEGER NOT NULL,doc_kind TEXT DEFAULT 'supporting',filename TEXT,mime TEXT,size_bytes INTEGER,storage_ref TEXT,sha256 TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_tpappdoc_app ON training_partner_application_documents(application_id)");
+        // Partner dashboards: portal access (hashed token, shown once), commission attribution and
+        // candidate sponsorship. partner_type widens the directory to institutions/sponsors; a
+        // discount code carrying partner_id attributes its paid redemptions to that partner, from
+        // which commission accrual is DERIVED on demand (no hook in the payment path). Payouts are
+        // the only materialized ledger rows; balance = accrued − paid out.
+        AddCol("training_partners", "partner_type", "partner_type TEXT DEFAULT 'training'");
+        AddCol("training_partners", "contact_name", "contact_name TEXT");
+        AddCol("training_partners", "access_token_hash", "access_token_hash TEXT");
+        AddCol("training_partners", "commission_pct", "commission_pct REAL DEFAULT 0");
+        AddCol("training_partners", "sponsor_enabled", "sponsor_enabled INTEGER DEFAULT 0");
+        AddCol("discount_codes", "partner_id", "partner_id INTEGER");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_sponsorships(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            partner_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            application_id INTEGER,
+            certification_id INTEGER NOT NULL DEFAULT 1,
+            route_key TEXT DEFAULT 'sponsored',
+            candidate_email TEXT,
+            candidate_name TEXT,
+            status TEXT DEFAULT 'registered',
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_sponsorships_partner ON partner_sponsorships(partner_id)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_sponsorship_candidate ON partner_sponsorships(partner_id, user_id, certification_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_payouts(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            partner_id INTEGER NOT NULL,
+            amount REAL NOT NULL,
+            currency TEXT DEFAULT 'USD',
+            note TEXT,
+            paid_by INTEGER,
+            paid_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_payouts_partner ON partner_payouts(partner_id)");
         // Certuvo practice attempts (Phase 8): one row per practice quiz / mock — formative, un-proctored,
         // separate from the certifying exam_attempts. Stores the served question set, the answers and the
         // graded score with a per-domain breakdown.

@@ -300,6 +300,11 @@ public static class TrainingPartners
             Str("country", "country", 80); Str("region", "region", 80); Str("city", "city", 80);
             Str("website", "website", 200); Str("logo_url", "logo_url", 300); Str("summary", "summary", 300);
             Str("description", "description", 6000); Str("specialties", "specialties", 2000); Str("contact_email", "contact_email", 160);
+            // Partner-dashboard fields: portal role, sponsorship capability and commission rate.
+            Str("contact_name", "contact_name", 160);
+            if (H.GetS(b, "partner_type") is { } pt && pt is "training" or "institution" or "sponsor") { sets.Add("partner_type=?"); args.Add(pt); }
+            if (H.GetEl(b, "commission_pct") is not null) { sets.Add("commission_pct=?"); args.Add(Math.Clamp(H.GetNum(b, "commission_pct") ?? 0, 0, 100)); }
+            if (H.GetEl(b, "sponsor_enabled") is not null) { sets.Add("sponsor_enabled=?"); args.Add(Flag(b, "sponsor_enabled") ? 1 : 0); }
             if (H.GetEl(b, "listed") is not null) { sets.Add("listed=?"); args.Add(Flag(b, "listed") ? 1 : 0); }
             if (H.GetEl(b, "sort_order") is not null) { sets.Add("sort_order=?"); args.Add((int)(H.GetNum(b, "sort_order") ?? 0)); }
             if (sets.Count == 0) return J(new { ok = true, unchanged = true });

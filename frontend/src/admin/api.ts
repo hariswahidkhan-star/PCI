@@ -217,6 +217,7 @@ export interface DiscountCode {
   route_key?: string | null
   min_transaction?: number | null
   max_discount?: number | null
+  partner_id?: number | null
   start_date?: string | null
   end_date?: string | null
   max_uses?: number | null

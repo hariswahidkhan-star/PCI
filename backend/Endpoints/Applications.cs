@@ -124,7 +124,7 @@ public static class Applications
     /// founding-waiver grant: a paid-at-zero payments row plus an exam_entitlements ledger row with a
     /// one-year scheduling window). Guarded so a candidate never stacks two open entitlements for the
     /// same certification. Returns the payment reference, or null if an open entitlement already exists.</summary>
-    static string? GrantExamEntitlement(Db db, long userId, long certId, string feeMode, string routeKey)
+    public static string? GrantExamEntitlement(Db db, long userId, long certId, string feeMode, string routeKey)
     {
         var hasOpen = db.QueryOne(@"SELECT p.id FROM payments p
                 JOIN exam_entitlements e ON e.payment_id=p.id

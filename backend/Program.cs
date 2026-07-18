@@ -623,6 +623,7 @@ PCI.Backend.Endpoints.Applications.Map(app, db, logFn, GateFn);        // per-ce
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);
 PCI.Backend.Endpoints.TrainingPartners.Map(app, db, logFn, GateFn);   // Training Partner framework (Phase 7)
+PCI.Backend.Endpoints.Partners.Map(app, db, logFn, GateFn);           // Partner dashboards: portal token, sponsorship, commissions
 PCI.Backend.Endpoints.Certuvo.Map(app, db, logFn);                    // Certuvo study & practice engine (Phase 8)
 PCI.Backend.Endpoints.AdminI18n.Map(app, db, logFn);
 PCI.Backend.Endpoints.Social.Map(app, db, logFn, GateFn);              // footer social-media links (admin-controlled)
