@@ -13,6 +13,8 @@ interface TicketRow {
   category: string
   status: string
   updated_at?: string | null
+  resolved_at?: string | null
+  rating?: number | null
   messages: TicketMsg[]
 }
 
@@ -31,6 +33,9 @@ export default function Support() {
   const [replyBusy, setReplyBusy] = useState(false)
   const [replyErr, setReplyErr] = useState<string | null>(null)
   const [note, setNote] = useState<{ ok: boolean; text: string } | null>(null)
+  const [rateBusy, setRateBusy] = useState(false)
+  const [rateErr, setRateErr] = useState<string | null>(null)
+  const [justRated, setJustRated] = useState<number | null>(null)
 
   async function create(e: FormEvent) {
     e.preventDefault()
@@ -61,6 +66,20 @@ export default function Support() {
       setReplyErr(e2 instanceof Error ? e2.message : t('sup.replyError'))
     } finally {
       setReplyBusy(false)
+    }
+  }
+
+  async function rate(id: number, rating: number) {
+    setRateBusy(true)
+    setRateErr(null)
+    try {
+      await api.post(`/api/me/tickets/${id}/rate`, { rating })
+      setJustRated(id)
+      refetch()
+    } catch (e2) {
+      setRateErr(e2 instanceof Error ? e2.message : t('sup.rateError'))
+    } finally {
+      setRateBusy(false)
     }
   }
 
@@ -130,6 +149,33 @@ export default function Support() {
                       <button className="btn sm" type="button" disabled={replyBusy} onClick={() => sendReply(ticket.id)}>{replyBusy ? t('sup.sending') : t('sup.reply')}</button>
                     </div>
                     {replyErr && <div className="notice err" role="alert" style={{ marginTop: '.5rem' }}>{replyErr}</div>}
+                    {(ticket.status === 'resolved' || ticket.status === 'closed') && ticket.rating == null && (
+                      <div style={{ marginTop: '.7rem' }}>
+                        <div className="small muted">{t('sup.ratePrompt')}</div>
+                        <div className="row" style={{ gap: '.2rem', marginTop: '.25rem' }}>
+                          {[1, 2, 3, 4, 5].map((n) => (
+                            <button
+                              key={n}
+                              type="button"
+                              className="btn ghost sm"
+                              disabled={rateBusy}
+                              aria-label={t('sup.rateStar', { n })}
+                              onClick={() => rate(ticket.id, n)}
+                              style={{ fontSize: '1.15rem', lineHeight: 1, padding: '.25rem .45rem' }}
+                            >
+                              ★
+                            </button>
+                          ))}
+                        </div>
+                        {rateErr && <div className="notice err" role="alert" style={{ marginTop: '.4rem' }}>{rateErr}</div>}
+                      </div>
+                    )}
+                    {(ticket.rating != null || justRated === ticket.id) && (
+                      <div className="small muted" role="status" style={{ marginTop: '.5rem' }}>
+                        {ticket.rating != null && <span aria-hidden="true" style={{ color: 'var(--warn,#d97706)' }}>{'★'.repeat(ticket.rating)}{'☆'.repeat(5 - ticket.rating)} </span>}
+                        {t('sup.rateThanks')}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

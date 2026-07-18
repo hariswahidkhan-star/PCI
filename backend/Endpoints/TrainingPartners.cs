@@ -308,6 +308,12 @@ public static class TrainingPartners
             if (H.GetEl(b, "max_uses_per_code") is not null) { sets.Add("max_uses_per_code=?"); args.Add(H.GetNum(b, "max_uses_per_code") is { } mu ? (long)mu : null); }
             if (H.GetEl(b, "total_allocation") is not null) { sets.Add("total_allocation=?"); args.Add(H.GetNum(b, "total_allocation") is { } ta ? (long)ta : null); }
             if (H.GetEl(b, "allow_full_sponsorship") is not null) { sets.Add("allow_full_sponsorship=?"); args.Add(Flag(b, "allow_full_sponsorship") ? 1 : 0); }
+            // Agreement + privacy scope.
+            if (H.GetS(b, "status") is { } stt && stt is "active" or "suspended" or "terminated") { sets.Add("status=?"); args.Add(stt); }
+            Str("institution_type", "institution_type", 80);
+            Str("agreement_start", "agreement_start", 20); Str("agreement_end", "agreement_end", 20);
+            if (H.GetEl(b, "auto_approve_codes") is not null) { sets.Add("auto_approve_codes=?"); args.Add(Flag(b, "auto_approve_codes") ? 1 : 0); }
+            Str("privacy_fields", "privacy_fields", 500); Str("eligible_countries", "eligible_countries", 500);
             if (sets.Count == 0) return J(new { ok = true, unchanged = true });
             sets.Add("updated_at=datetime('now')");
             args.Add(id);

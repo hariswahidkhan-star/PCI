@@ -5,7 +5,9 @@ import { UnauthorizedError } from '../api/client'
 interface AdminAuthState {
   me: AdminMe | null
   ready: boolean
-  login: (email: string, password: string) => Promise<void>
+  /** `totp` is the optional 6-digit authenticator code — required once the account has enrolled 2FA
+   *  (the server answers 401 {error:'totp_required'} until it is supplied). */
+  login: (email: string, password: string, totp?: string) => Promise<void>
   logout: () => void
   changePassword: (newPassword: string) => Promise<void>
   /** owners see everything; otherwise the section must be in the permissions list */
@@ -49,8 +51,8 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const login = useCallback(async (email: string, password: string) => {
-    const res = await adminApi.post<AdminLoginResponse>('/api/admin/auth/login', { email, password }, { allowUnauthorized: true })
+  const login = useCallback(async (email: string, password: string, totp?: string) => {
+    const res = await adminApi.post<AdminLoginResponse>('/api/admin/auth/login', { email, password, ...(totp ? { totp } : {}) }, { allowUnauthorized: true })
     adminApi.setToken(res.token)
     setMe({
       id: res.admin.id,

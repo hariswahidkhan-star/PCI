@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type MemberRow, type MemberDetail, type IdentityDocRow } from '../api'
 import { Card, StatusBadge, Badge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
-import { fmtDate, fmtMoney } from '../../format'
+import { fmtDate, fmtDateTime, fmtMoney } from '../../format'
 import { ApiError } from '../../api/client'
 
 /** Fee waiver: grant an exam entitlement without payment (mirrors the webhook grant server-side). */
@@ -253,6 +253,8 @@ function MemberDrawer({ id, onClose, onChanged }: { id: number; onClose: () => v
 
             <JourneyCard id={id} />
 
+            <SecurityCard id={id} />
+
             <MarkPaidCard id={id} onDone={() => { refetch(); onChanged() }} />
 
             <WaiveCard id={id} onDone={() => { refetch(); onChanged() }} />
@@ -328,6 +330,168 @@ function JourneyCard({ id }: { id: number }) {
           {(data.open_tickets ?? 0) > 0 && <div className="small" style={{ marginTop: '.35rem' }}>Open support tickets: {data.open_tickets}</div>}
         </>
       ) : null}
+    </Card>
+  )
+}
+
+// Security & access diagnostics: everything support needs to answer "why can't this student log
+// in / what happened on this account" — plus the account-recovery and session-revocation actions.
+interface SecurityData {
+  logins: Record<string, unknown>[]
+  security_events: Record<string, unknown>[]
+  active_sessions: number
+  impersonation_sessions: number
+  pending_setup_links: number
+  notifications: Record<string, unknown>[]
+  error_reports: Record<string, unknown>[]
+  open_tickets: Record<string, unknown>[]
+}
+const sv = (v: unknown): string => (v == null ? '' : String(v))
+
+function ImpersonationHistory({ id }: { id: number }) {
+  const [open, setOpen] = useState(false)
+  // Fetch lazily — the ledger is gated on the 'impersonate' permission, so only load when opened.
+  const { data, loading, error } = useAdminQuery<{ sessions: Record<string, unknown>[] }>(open ? `/api/admin/members/${id}/impersonations` : null)
+  return (
+    <div style={{ marginTop: '.75rem' }}>
+      <button className="btn ghost sm" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+        {open ? 'Hide impersonation history' : 'Impersonation history'}
+      </button>
+      {open && (
+        loading && !data ? <Spinner /> : error ? <div className="notice err" role="alert" style={{ marginTop: '.5rem' }}>{error}</div> : !data ? null : (
+          data.sessions.length === 0 ? <Empty>No staff has viewed this account as the student.</Empty> : (
+            <table className="data" style={{ marginTop: '.5rem' }}>
+              <thead><tr><th>Admin</th><th>Reason</th><th>Started</th><th>Ended</th><th>Events</th></tr></thead>
+              <tbody>
+                {data.sessions.map((r, i) => (
+                  <tr key={i}>
+                    <td className="small">{sv(r.admin_email) || `admin #${sv(r.admin_id)}`}</td>
+                    <td className="small">{sv(r.reason) || '—'}</td>
+                    <td className="small muted">{fmtDateTime(r.started_at)}</td>
+                    <td className="small muted">{r.ended_at ? fmtDateTime(r.ended_at) : 'active'}</td>
+                    <td className="small">{sv(r.events) || '0'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )
+        )
+      )}
+    </div>
+  )
+}
+
+function SecurityCard({ id }: { id: number }) {
+  const { data, loading, error, refetch } = useAdminQuery<SecurityData>(`/api/admin/members/${id}/security`)
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
+
+  async function resendSetup() {
+    setBusy(true); setMsg(null)
+    try {
+      const r = await adminApi.post<{ ok: boolean; setup_url?: string }>(`/api/admin/members/${id}/resend-setup`, {})
+      setMsg({ ok: true, text: 'Password-reset link sent to the student.' + (r.setup_url ? ` Direct link (share securely): ${r.setup_url}` : '') })
+      refetch()
+    } catch (e) {
+      setMsg({ ok: false, text: e instanceof Error ? e.message : 'Could not send the link.' })
+    } finally { setBusy(false) }
+  }
+  async function revokeSessions() {
+    setBusy(true); setMsg(null)
+    try {
+      await adminApi.post(`/api/admin/students/${id}/revoke-sessions`, {})
+      setMsg({ ok: true, text: 'All active sessions revoked — the student must sign in again.' })
+      refetch()
+    } catch (e) {
+      setMsg({ ok: false, text: e instanceof Error ? e.message : 'Could not revoke the sessions.' })
+    } finally { setBusy(false) }
+  }
+
+  // login_events rows can vary by deployment — pick the common columns defensively.
+  const loginWhen = (r: Record<string, unknown>) => fmtDateTime(r.created_at ?? r.at ?? r.ts)
+
+  return (
+    <Card title="Security & access">
+      {loading && !data ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : !data ? null : (
+        <>
+          <div className="grid cols-2 small" style={{ marginBottom: '.6rem' }}>
+            <div><span className="muted">Active sessions</span><div><strong>{data.active_sessions}</strong></div></div>
+            <div><span className="muted">Pending setup links</span><div><strong>{data.pending_setup_links}</strong></div></div>
+            <div><span className="muted">Impersonation sessions (live)</span><div><strong>{data.impersonation_sessions}</strong></div></div>
+            <div><span className="muted">Open tickets</span><div><strong>{data.open_tickets.length}</strong></div></div>
+          </div>
+          <div className="row" style={{ flexWrap: 'wrap', gap: '.4rem' }}>
+            <button className="btn sm secondary" disabled={busy} onClick={resendSetup}>Send password-reset link</button>
+            <button className="btn sm danger" disabled={busy} onClick={revokeSessions}>Revoke sessions</button>
+          </div>
+          {msg && <div className={'notice' + (msg.ok ? '' : ' err')} role="status" style={{ marginTop: '.5rem', overflowWrap: 'anywhere' }}>{msg.text}</div>}
+
+          <h4 style={{ margin: '.9rem 0 .3rem' }}>Last logins</h4>
+          {data.logins.length === 0 ? <Empty>No logins recorded.</Empty> : (
+            <table className="data">
+              <thead><tr><th>When</th><th>IP</th><th>Device</th><th>Outcome</th></tr></thead>
+              <tbody>
+                {data.logins.slice(0, 5).map((r, i) => (
+                  <tr key={i}>
+                    <td className="small muted">{loginWhen(r)}</td>
+                    <td className="small">{sv(r.ip) || '—'}</td>
+                    <td className="small">{sv(r.device) || sv(r.user_agent).slice(0, 40) || '—'}</td>
+                    <td><StatusBadge status={sv(r.outcome) || 'success'} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {data.security_events.length > 0 && (
+            <>
+              <h4 style={{ margin: '.9rem 0 .3rem' }}>Security events</h4>
+              <table className="data">
+                <thead><tr><th>When</th><th>Kind</th><th>Detail</th></tr></thead>
+                <tbody>
+                  {data.security_events.slice(0, 5).map((r, i) => (
+                    <tr key={i}>
+                      <td className="small muted">{fmtDateTime(r.created_at ?? r.at)}</td>
+                      <td className="small">{sv(r.kind) || '—'}</td>
+                      <td className="small">{sv(r.detail) || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+
+          {data.error_reports.length > 0 && (
+            <>
+              <h4 style={{ margin: '.9rem 0 .3rem' }}>Recent error reports</h4>
+              <div style={{ display: 'grid', gap: '.25rem' }}>
+                {data.error_reports.slice(0, 5).map((r, i) => (
+                  <div key={i} className="small">
+                    <span style={{ fontFamily: 'monospace' }}>{sv(r.reference)}</span>
+                    <span className="muted"> · {sv(r.page) || '—'} · </span>
+                    <StatusBadge status={sv(r.status)} />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {data.open_tickets.length > 0 && (
+            <>
+              <h4 style={{ margin: '.9rem 0 .3rem' }}>Open tickets</h4>
+              <div style={{ display: 'grid', gap: '.25rem' }}>
+                {data.open_tickets.map((t, i) => (
+                  <div key={i} className="small">
+                    <strong>{sv(t.reference)}</strong> {sv(t.subject) || '—'} · <StatusBadge status={sv(t.status)} />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          <ImpersonationHistory id={id} />
+        </>
+      )}
     </Card>
   )
 }

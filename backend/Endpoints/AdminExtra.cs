@@ -61,7 +61,7 @@ public static class AdminExtra
             if (string.IsNullOrEmpty(message)) return Results.Json(new { error = "missing_message" }, statusCode: 400);
             if (message.Length > 4000) message = message[..4000];
             db.Execute("INSERT INTO ticket_messages(ticket_id,sender,body) VALUES(?,?,?)", id, "admin", message);
-            db.Execute("UPDATE tickets SET status='awaiting_student', updated_at=datetime('now') WHERE id=?", id);
+            db.Execute("UPDATE tickets SET status='awaiting_student', updated_at=datetime('now'), first_response_at=COALESCE(first_response_at, datetime('now')) WHERE id=?", id);
             log(null, "ticket_replied", id.ToString());
             return J(new { ok = true });
         });

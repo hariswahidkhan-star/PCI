@@ -37,6 +37,9 @@ public static class AdminStudents
         {
             var u = db.QueryOne("SELECT * FROM users WHERE id=?", id);
             if (u is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            // Credential hygiene: the password hash never leaves the database — not to dashboards,
+            // logs, APIs or exports. Support resets credentials; it never reads them.
+            u.Remove("password_hash");
             return J(new { user = u,
                 profile = db.QueryOne("SELECT * FROM student_profiles WHERE user_id=?", id),
                 membership = db.QueryOne("SELECT * FROM memberships WHERE user_id=?", id),
@@ -55,7 +58,10 @@ public static class AdminStudents
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var status = H.GetS(b, "status");
             if (status is not ("pending" or "active" or "deactivated")) return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            var prev = db.Scalar<string>("SELECT status FROM users WHERE id=?", id);
             db.Execute("UPDATE users SET status=?, updated_at=datetime('now') WHERE id=?", status, id);
+            if (prev == "deactivated" && status == "active")
+                try { db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Account', 'Your account has been unlocked', 'Your PCI account is active again — you can sign in as normal.')", id); } catch { }
             log(id, "member_status", status);
             return J(new { ok = true });
         }));

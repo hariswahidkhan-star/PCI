@@ -315,7 +315,9 @@ public static class AdminOps
             var reason = (H.GetS(b, "reason") ?? "").Trim();
             if (reason.Length == 0) return Err(400, "reason_required", "State why you need to view this account (e.g. the ticket reference).");
             var token = Security.RandomHex(32);
-            db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'impersonation', datetime('now','+1 hours'))", id, Security.Sha(token));
+            var tokenSha = Security.Sha(token);
+            db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'impersonation', datetime('now','+1 hours'))", id, tokenSha);
+            db.Execute("INSERT INTO impersonation_sessions(token_sha,admin_id,user_id,reason) VALUES(?,?,?,?)", tokenSha, adm.Id, id, reason);
             log(id, "impersonation_started", $"admin {adm.Id} ({adm.Email}) — {reason}");
             return J(new { ok = true, token, login_url = "/app/#t=" + token, expires_minutes = 60,
                 note = "The portal shows a permanent support-view banner; payment and password actions are disabled for this session." });
@@ -324,8 +326,19 @@ public static class AdminOps
         app.MapPost("/api/admin/members/{id}/impersonate/end", (HttpContext ctx, long id) => gate(ctx.Request, "impersonate", adm =>
         {
             var n = db.ExecuteWithChanges("DELETE FROM login_tokens WHERE user_id=? AND purpose='impersonation'", id);
+            db.Execute("UPDATE impersonation_sessions SET ended_at=datetime('now') WHERE user_id=? AND ended_at IS NULL", id);
             log(id, "impersonation_ended", $"admin {adm.Id} revoked {n} session(s)");
             return J(new { ok = true, revoked = n });
+        }));
+
+        // The impersonation ledger: sessions with who/why/when + every page the staff session touched.
+        app.MapGet("/api/admin/members/{id}/impersonations", (HttpContext ctx, long id) => gate(ctx.Request, "impersonate", _ =>
+        {
+            var sessions = db.Query(@"SELECT s.id,s.admin_id,a.email admin_email,s.reason,s.started_at,s.ended_at,s.last_seen_at,
+                (SELECT COUNT(*) FROM impersonation_events e WHERE e.session_id=s.id) events
+                FROM impersonation_sessions s LEFT JOIN admin_users a ON a.id=s.admin_id WHERE s.user_id=? ORDER BY s.id DESC LIMIT 20", id);
+            var latest = sessions.Count > 0 ? db.Query("SELECT method,path,at FROM impersonation_events WHERE session_id=? ORDER BY id DESC LIMIT 100", sessions[0]["id"]) : new();
+            return J(new { sessions, latest_session_events = latest });
         }));
 
         // ================= student journey: where are they / where are they stuck =================

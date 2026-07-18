@@ -10,6 +10,10 @@ public record AdminCtx(long Id, string Email, string? Name, string Role, string?
 
 public record UserCtx(long Id, string Email, string? FirstName, string? LastName, string Status, bool Impersonated = false);
 
+/// <summary>An institution-portal login — wholly separate from admin_users and students. Everything a
+/// partner session can see is scoped to its own PartnerId; there is no cross-institution read path.</summary>
+public record PartnerCtx(long Id, long PartnerId, string Email, string? Name, string Role, string Status, bool MustChangePw);
+
 public static class Settings
 {
     public static double Num(Db db, string key, double def)
@@ -70,11 +74,47 @@ public static class Auth
         // An 'impersonation' token is a short-lived staff session minted by an authorised admin
         // ("view as student"): same read access as the student, flagged so the UI shows a permanent
         // banner and sensitive endpoints can refuse it.
-        var row = db.QueryOne("SELECT * FROM login_tokens WHERE token=? AND purpose IN ('session','impersonation') AND expires_at>datetime('now')", Security.Sha(bearer));
+        var sha = Security.Sha(bearer);
+        var row = db.QueryOne("SELECT * FROM login_tokens WHERE token=? AND purpose IN ('session','impersonation') AND expires_at>datetime('now')", sha);
         if (row is null) return null;
         var u = db.QueryOne("SELECT * FROM users WHERE id=?", row["user_id"]);
         if (u is null || (u["status"] as string) != "active") return null;
+        var impersonated = (row["purpose"] as string) == "impersonation";
+        if (impersonated)
+        {
+            // The impersonation ledger records every page/API the staff session touches ("pages
+            // visited, actions taken"), best-effort so auditing never breaks the request itself.
+            try
+            {
+                var sess = db.QueryOne("SELECT id FROM impersonation_sessions WHERE token_sha=?", sha);
+                if (sess is not null)
+                {
+                    db.Execute("UPDATE impersonation_sessions SET last_seen_at=datetime('now') WHERE id=?", sess["id"]);
+                    db.Execute("INSERT INTO impersonation_events(session_id,method,path) VALUES(?,?,?)",
+                        sess["id"], req.Method, req.Path.ToString());
+                }
+            }
+            catch { }
+        }
         return new UserCtx(Convert.ToInt64(u["id"]), (string)u["email"]!, u["first_name"] as string, u["last_name"] as string, (string)u["status"]!,
-            (row["purpose"] as string) == "impersonation");
+            impersonated);
+    }
+
+    /// <summary>Bearer institution-portal session. Requires an active partner user AND an active,
+    /// in-agreement institution — a suspended/terminated institution locks all of its logins out.</summary>
+    public static PartnerCtx? PartnerFromReq(HttpRequest req, Db db)
+    {
+        var bearer = Bearer(req);
+        if (bearer is null) return null;
+        var sess = db.QueryOne("SELECT * FROM partner_sessions WHERE token=? AND expires_at>datetime('now')", Security.Sha(bearer));
+        if (sess is null) return null;
+        var pu = db.QueryOne("SELECT * FROM partner_users WHERE id=?", sess["partner_user_id"]);
+        if (pu is null || (pu["status"] as string) != "active") return null;
+        var partner = db.QueryOne("SELECT status,agreement_end FROM training_partners WHERE id=?", pu["partner_id"]);
+        if (partner is null || (partner["status"] as string ?? "active") != "active") return null;
+        if (partner["agreement_end"] is string ae && ae.Length > 0 && string.Compare(ae, DateTime.UtcNow.ToString("yyyy-MM-dd"), StringComparison.Ordinal) < 0) return null;
+        return new PartnerCtx(Convert.ToInt64(pu["id"]), Convert.ToInt64(pu["partner_id"]), (string)pu["email"]!,
+            pu["name"] as string, pu["role"] as string ?? "admin", (string)pu["status"]!,
+            pu.TryGetValue("must_change_pw", out var m) && m is not null && Convert.ToInt64(m) == 1);
     }
 }

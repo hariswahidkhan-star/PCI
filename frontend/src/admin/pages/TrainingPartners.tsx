@@ -21,6 +21,14 @@ interface Partner {
   // sponsorship limits — ceilings inside which this institution's discount codes operate
   max_discount_percent?: number | null; max_codes?: number | null; max_uses_per_code?: number | null
   total_allocation?: number | null; allow_full_sponsorship?: number | null
+  // agreement / portal fields
+  status?: string | null; institution_type?: string | null
+  agreement_start?: string | null; agreement_end?: string | null
+  auto_approve_codes?: number | null; privacy_fields?: string | null; eligible_countries?: string | null
+}
+interface PartnerUser {
+  id: number; email: string; name?: string | null; role: string; status?: string | null
+  must_change_pw?: number | null; last_login_at?: string | null; created_at?: string | null
 }
 interface TPApp {
   id: number; reference: string; org_name?: string | null; website?: string | null
@@ -60,6 +68,7 @@ function DirectoryTab() {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Partner[] }>('/api/admin/training-partners')
   const [edit, setEdit] = useState<Partner | 'new' | null>(null)
   const [usageFor, setUsageFor] = useState<Partner | null>(null)
+  const [loginsFor, setLoginsFor] = useState<Partner | null>(null)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const rows = data?.rows ?? []
@@ -93,6 +102,7 @@ function DirectoryTab() {
                 <td>{p.listed ? <Badge tone="ok">published</Badge> : <Badge tone="warn">draft</Badge>}</td>
                 <td className="row" style={{ gap: '.3rem', justifyContent: 'flex-end' }}>
                   <button className="btn ghost sm" onClick={() => setUsageFor(p)}>Codes &amp; usage</button>
+                  <button className="btn ghost sm" onClick={() => setLoginsFor(p)}>Portal logins</button>
                   <button className="btn ghost sm" onClick={() => setEdit(p)}>Edit</button>
                   <button className="btn ghost sm" onClick={() => togglePublish(p)}>{p.listed ? 'Unpublish' : 'Publish'}</button>
                   <button className="btn ghost sm danger" onClick={() => del(p)}>Delete</button>
@@ -105,13 +115,121 @@ function DirectoryTab() {
       {edit && <PartnerEditor partner={edit === 'new' ? null : edit} busy={busy} setBusy={setBusy}
         onClose={() => setEdit(null)} onSaved={() => { setEdit(null); refetch() }} />}
       {usageFor && <PartnerUsage partner={usageFor} onClose={() => setUsageFor(null)} />}
+      {loginsFor && <PartnerLogins partner={loginsFor} onClose={() => setLoginsFor(null)} />}
     </Card>
+  )
+}
+
+// ---------------- Portal logins (institution users of the partner portal) ----------------
+const PARTNER_ROLES = ['admin', 'finance', 'reporting', 'support'] as const
+
+function PartnerLogins({ partner, onClose }: { partner: Partner; onClose: () => void }) {
+  const { data, loading, error, refetch } = useAdminQuery<{ rows: PartnerUser[] }>(`/api/admin/training-partners/${partner.id}/users`)
+  const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
+  const [role, setRole] = useState<string>('admin')
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  // The one-off temp password (create or reset) — shown once, never retrievable again.
+  const [created, setCreated] = useState<{ email: string; temp_password: string; portal_url?: string } | null>(null)
+  const rows = data?.rows ?? []
+
+  async function create() {
+    if (!email.trim().includes('@')) { setErr('A valid email address is required.'); return }
+    setBusy(true); setErr(null); setCreated(null)
+    try {
+      const r = await adminApi.post<{ email: string; temp_password: string; portal_url?: string }>(
+        `/api/admin/training-partners/${partner.id}/users`,
+        { email: email.trim().toLowerCase(), name: name.trim() || undefined, role },
+      )
+      setCreated(r); setEmail(''); setName(''); refetch()
+    } catch (e) {
+      const body = e instanceof ApiError && e.body && typeof e.body === 'object' ? (e.body as Record<string, unknown>) : null
+      setErr(body?.error === 'email_taken' ? 'That email already has a partner login.' : (e as Error).message)
+    } finally { setBusy(false) }
+  }
+  async function resetPassword(u: PartnerUser) {
+    setBusy(true); setErr(null); setCreated(null)
+    try {
+      const r = await adminApi.post<{ temp_password: string }>(`/api/admin/partner-users/${u.id}/reset-password`, {})
+      setCreated({ email: u.email, temp_password: r.temp_password })
+    } catch (e) { setErr((e as Error).message) } finally { setBusy(false) }
+  }
+  async function toggleStatus(u: PartnerUser) {
+    setBusy(true); setErr(null)
+    try {
+      await adminApi.post(`/api/admin/partner-users/${u.id}/status`, { status: u.status === 'suspended' ? 'active' : 'suspended' })
+      refetch()
+    } catch (e) { setErr((e as Error).message) } finally { setBusy(false) }
+  }
+
+  return (
+    <div className="drawer-backdrop" onClick={onClose}>
+      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+        <div className="spread" style={{ marginBottom: '1rem' }}>
+          <h2 style={{ margin: 0 }}>{partner.name} — portal logins</h2>
+          <button className="btn secondary sm" onClick={onClose}>Close</button>
+        </div>
+        {err && <div className="notice err" role="alert" style={{ marginBottom: '.6rem' }}>{err}</div>}
+        {created && (
+          <div className="notice" role="status" style={{ marginBottom: '.8rem' }}>
+            <strong>Temporary password for {created.email}: <span style={{ fontFamily: 'monospace' }}>{created.temp_password}</span></strong>
+            <div className="small" style={{ marginTop: '.25rem' }}>Share it securely — it is shown once and cannot be retrieved again. The user must change it on first sign-in.</div>
+            {created.portal_url && <div className="small" style={{ marginTop: '.2rem' }}>Portal: <a href={created.portal_url} target="_blank" rel="noreferrer">{created.portal_url}</a></div>}
+          </div>
+        )}
+
+        <Section title={`Logins (${rows.length})`}>
+          {loading && !data ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : rows.length === 0 ? (
+            <p className="muted small">No portal logins yet — create the institution's first admin below.</p>
+          ) : (
+            <table className="data">
+              <thead><tr><th>Email</th><th>Name</th><th>Role</th><th>Status</th><th>Last login</th><th /></tr></thead>
+              <tbody>
+                {rows.map((u) => (
+                  <tr key={u.id}>
+                    <td className="small"><strong>{u.email}</strong></td>
+                    <td className="small">{u.name || '—'}</td>
+                    <td className="small">{u.role}</td>
+                    <td>{u.status === 'suspended' ? <Badge tone="err">suspended</Badge> : <Badge tone="ok">active</Badge>}{u.must_change_pw ? <div className="muted small">must change pw</div> : null}</td>
+                    <td className="small muted">{u.last_login_at ? fmtDate(u.last_login_at) : 'never'}</td>
+                    <td>
+                      <div className="row" style={{ gap: '.3rem', flexWrap: 'wrap' }}>
+                        <button className="btn ghost sm" disabled={busy} onClick={() => resetPassword(u)}>Reset password</button>
+                        <button className={'btn ghost sm' + (u.status === 'suspended' ? '' : ' danger')} disabled={busy} onClick={() => toggleStatus(u)}>
+                          {u.status === 'suspended' ? 'Reactivate' : 'Suspend'}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </Section>
+
+        <Section title="Create a login">
+          <div className="row" style={{ flexWrap: 'wrap', alignItems: 'flex-end', gap: '.5rem' }}>
+            <label>Email<input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@institution.edu" style={{ maxWidth: 220 }} /></label>
+            <label>Name<input value={name} onChange={(e) => setName(e.target.value)} style={{ maxWidth: 180 }} /></label>
+            <label>Role
+              <select value={role} onChange={(e) => setRole(e.target.value)} style={{ maxWidth: 140 }}>
+                {PARTNER_ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
+              </select>
+            </label>
+            <button className="btn sm" disabled={busy} onClick={create}>{busy ? 'Creating…' : 'Create login'}</button>
+          </div>
+        </Section>
+      </div>
+    </div>
   )
 }
 
 function PartnerEditor({ partner, busy, setBusy, onClose, onSaved }:
   { partner: Partner | null; busy: boolean; setBusy: (b: boolean) => void; onClose: () => void; onSaved: () => void }) {
   const [f, setF] = useState<Partial<Partner>>(partner ?? { tier: 'registered', listed: 0 })
+  // "Share student names" drives privacy_fields: '["name"]' authorises names, '[]' masks them.
+  const [shareNames, setShareNames] = useState<boolean>((partner?.privacy_fields ?? '').includes('name'))
   const [err, setErr] = useState<string | null>(null)
   const set = (k: keyof Partner) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value })
   async function save() {
@@ -127,6 +245,12 @@ function PartnerEditor({ partner, busy, setBusy, onClose, onSaved }:
       max_discount_percent: num(f.max_discount_percent), max_codes: num(f.max_codes),
       max_uses_per_code: num(f.max_uses_per_code), total_allocation: num(f.total_allocation),
       allow_full_sponsorship: !!f.allow_full_sponsorship,
+      // agreement / portal fields
+      status: f.status ?? 'active', institution_type: f.institution_type ?? '',
+      agreement_start: f.agreement_start ?? '', agreement_end: f.agreement_end ?? '',
+      auto_approve_codes: !!f.auto_approve_codes,
+      privacy_fields: shareNames ? '["name"]' : '[]',
+      eligible_countries: f.eligible_countries ?? '',
     }
     try {
       if (partner) await adminApi.patch(`/api/admin/training-partners/${partner.id}`, body)
@@ -160,6 +284,30 @@ function PartnerEditor({ partner, busy, setBusy, onClose, onSaved }:
           <label>Specialties <span className="muted small">(comma or newline separated)</span><textarea rows={2} value={f.specialties ?? ''} onChange={set('specialties')} /></label>
           <label>Description<textarea rows={4} value={f.description ?? ''} onChange={set('description')} /></label>
           <label>Contact email<input value={f.contact_email ?? ''} onChange={set('contact_email')} /></label>
+          <fieldset style={{ border: '1px solid var(--line,#e2e8f0)', borderRadius: 10, padding: '.75rem', margin: 0 }}>
+            <legend className="small" style={{ fontWeight: 700, padding: '0 .3rem' }}>Agreement &amp; portal</legend>
+            <div style={{ display: 'grid', gap: '.55rem', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))' }}>
+              <label>Status
+                <select value={f.status ?? 'active'} onChange={set('status')}>
+                  <option value="active">Active</option>
+                  <option value="suspended">Suspended</option>
+                  <option value="terminated">Terminated</option>
+                </select>
+              </label>
+              <label>Institution type<input value={f.institution_type ?? ''} onChange={set('institution_type')} placeholder="university / bootcamp / employer…" /></label>
+              <label>Agreement start<input type="date" value={(f.agreement_start ?? '').slice(0, 10)} onChange={set('agreement_start')} /></label>
+              <label>Agreement end<input type="date" value={(f.agreement_end ?? '').slice(0, 10)} onChange={set('agreement_end')} /></label>
+            </div>
+            <label style={{ marginTop: '.5rem', display: 'block' }}>Eligible countries <span className="muted small">(comma-separated, blank = all)</span>
+              <input value={f.eligible_countries ?? ''} onChange={set('eligible_countries')} placeholder="e.g. GB, IE, AE" />
+            </label>
+            <label className="row" style={{ gap: '.4rem', marginTop: '.5rem' }}>
+              <input type="checkbox" checked={!!f.auto_approve_codes} onChange={(e) => setF({ ...f, auto_approve_codes: e.target.checked ? 1 : 0 })} style={{ width: 'auto' }} /> Auto-approve this institution's codes (skip the PCI approval queue)
+            </label>
+            <label className="row" style={{ gap: '.4rem', marginTop: '.35rem' }}>
+              <input type="checkbox" checked={shareNames} onChange={(e) => setShareNames(e.target.checked)} style={{ width: 'auto' }} /> Share student names with this institution (otherwise only masked emails)
+            </label>
+          </fieldset>
           <fieldset style={{ border: '1px solid var(--line,#e2e8f0)', borderRadius: 10, padding: '.75rem', margin: 0 }}>
             <legend className="small" style={{ fontWeight: 700, padding: '0 .3rem' }}>Sponsorship limits</legend>
             <p className="muted small" style={{ marginTop: 0 }}>Ceilings for this institution's sponsorship codes. Leave a field blank for no limit.</p>
