@@ -112,7 +112,29 @@ export interface CertRow {
   bank_size?: number
   entitlements?: number
   credentials?: number
+  // multi-certification catalogue / public-page / SEO fields
+  acronym?: string | null
+  short_name?: string | null
+  public_title?: string | null
+  tagline?: string | null
+  short_description?: string | null
+  category?: string | null
+  level?: string | null
+  status?: string | null
+  slug?: string | null
+  audience?: string | null
+  membership_required?: number | null
+  application_fee?: number | null
+  meta_title?: string | null
+  meta_description?: string | null
+  keywords?: string | null
+  content_json?: string | null
 }
+
+export const CERT_STATUSES = [
+  'Draft', 'Under Development', 'Coming Soon', 'Open for Applications',
+  'Active', 'Temporarily Suspended', 'Closed', 'Archived',
+] as const
 
 export interface PageRow {
   id: number

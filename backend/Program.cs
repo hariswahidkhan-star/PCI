@@ -669,6 +669,14 @@ app.Use(async (ctx, next) =>
             return;
         }
         var reqPath = ctx.Request.Path.Value ?? "/";
+        // The classic /admin.html console is retired — the React admin at /admin/ is the single console.
+        // Permanently forward the old URL (and any lingering links/bookmarks) to the new one.
+        if (reqPath.Equals("/admin.html", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.StatusCode = 301;
+            ctx.Response.Headers.Location = "/admin/";
+            return;
+        }
         // ── Multi-certification clean URLs: /certifications (catalogue) and /certifications/{slug} (per credential) ──
         if (reqPath.StartsWith("/certifications", StringComparison.OrdinalIgnoreCase))
         {
@@ -836,9 +844,8 @@ Console.WriteLine("│  Project Controls Institute — platform is running    �
 Console.WriteLine("├──────────────────────────────────────────────────────┤");
 Console.WriteLine($"│  Website        {u}/");
 Console.WriteLine($"│  Student (React){u}/app/");
-Console.WriteLine($"│  Admin (React)  {u}/admin/");
+Console.WriteLine($"│  Admin console  {u}/admin/");
 Console.WriteLine($"│  Student Panel  {u}/student.html");
-Console.WriteLine($"│  Admin Panel    {u}/admin.html");
 Console.WriteLine($"│  Exam preview   {u}/exam-ui.html");
 Console.WriteLine("└──────────────────────────────────────────────────────┘");
 
