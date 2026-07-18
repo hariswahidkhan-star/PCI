@@ -145,7 +145,8 @@ public static class StudentExam
         // Per-certification documents & books: the student sees general documents plus the documents for
         // every certification they are enrolled in (an entitlement or an issued credential). Grouped by
         // certification so a PCL-AI candidate never sees PFL-AI/PDL-AI materials they are not entitled to.
-        app.MapGet("/api/me/documents", (HttpContext ctx) =>
+        // (/api/me/documents is the per-student assigned-documents module in Endpoints/Documents.cs.)
+        app.MapGet("/api/me/cert-documents", (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             var mine = db.Query(@"SELECT DISTINCT COALESCE(certification_id,1) cid FROM exam_entitlements WHERE user_id=?

@@ -37,6 +37,13 @@ public static class Migrate
         AddCol("exam_attempts", "bank_version", "bank_version TEXT");
         AddCol("issued_credentials", "attempt_id", "attempt_id INTEGER");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_credential_attempt ON issued_credentials(attempt_id) WHERE attempt_id IS NOT NULL");
+        // Verifiable PDF certificate: private storage reference, a SHA-256 tamper hash the public verifier can
+        // recompute, a non-guessable verification token, and the render timestamp. The PDF is a rendering of
+        // the authoritative record — it can always be regenerated, so these are additive and never a blocker.
+        AddCol("issued_credentials", "pdf_ref", "pdf_ref TEXT");
+        AddCol("issued_credentials", "pdf_sha256", "pdf_sha256 TEXT");
+        AddCol("issued_credentials", "verify_token", "verify_token TEXT");
+        AddCol("issued_credentials", "pdf_generated_at", "pdf_generated_at TEXT");
         // Phase 2: casework tables + CPD evidence columns for pre-existing databases
         db.Exec(@"CREATE TABLE IF NOT EXISTS appeals(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,attempt_id INTEGER,credential_id TEXT,type TEXT NOT NULL,reason TEXT NOT NULL,evidence_name TEXT,evidence_data TEXT,status TEXT DEFAULT 'submitted',submitted_at TEXT DEFAULT (datetime('now')),decision TEXT,decided_by INTEGER,decided_at TEXT)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_appeals_user ON appeals(user_id)");
@@ -93,6 +100,12 @@ public static class Migrate
         db.Exec("UPDATE founding_applications SET route='founding' WHERE route IN ('founding_member','founding_candidate')");
         // Honorary awards: board-conferred recognition, deliberately separate from issued_credentials.
         db.Exec(@"CREATE TABLE IF NOT EXISTS honorary_awards(id INTEGER PRIMARY KEY AUTOINCREMENT,award_no TEXT UNIQUE NOT NULL,recipient_name TEXT NOT NULL,user_id INTEGER,citation TEXT,designation TEXT DEFAULT 'Honorary Fellow (PCI)',status TEXT DEFAULT 'active',conferred_by INTEGER NOT NULL,conferred_at TEXT DEFAULT (datetime('now')),revoked_by INTEGER,revoked_at TEXT,revoke_reason TEXT)");
+        // Honorary certificate PDF (clearly an HONORARY certificate — never an examined credential).
+        AddCol("honorary_awards", "pdf_ref", "pdf_ref TEXT");
+        AddCol("honorary_awards", "pdf_sha256", "pdf_sha256 TEXT");
+        AddCol("honorary_awards", "pdf_generated_at", "pdf_generated_at TEXT");
+        // Immutable download audit for every certificate PDF fetch (student or admin).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS certificate_downloads(id INTEGER PRIMARY KEY AUTOINCREMENT,credential_id VARCHAR(64),user_id INTEGER,actor TEXT,role TEXT,ip TEXT,kind TEXT,result TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_honorary_user ON honorary_awards(user_id)");
         // Honorary-route public applications (apply → board review → conferral) + reusable notification ledger.
         db.Exec(@"CREATE TABLE IF NOT EXISTS honorary_applications(id INTEGER PRIMARY KEY AUTOINCREMENT,reference TEXT UNIQUE NOT NULL,first_name TEXT,last_name TEXT,email TEXT,mobile TEXT,country TEXT,city TEXT,nationality TEXT,job_title TEXT,employer TEXT,years_experience INTEGER,industry TEXT,highest_qualification TEXT,professional_certifications TEXT,relevant_experience TEXT,professional_summary TEXT,declaration INTEGER DEFAULT 0,status TEXT NOT NULL DEFAULT 'pending_review',award_no TEXT,decided_by INTEGER,decided_at TEXT,admin_note TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
@@ -410,6 +423,64 @@ public static class Migrate
         db.Exec(@"UPDATE pages SET title='Donate — Support the Project Controls Institute (pursuing 501(c)(3))'
                   WHERE slug='donate.html' AND title LIKE '%(501(c)(3))' AND title NOT LIKE '%pursuing%'");
 
+        // ============ Student Documents & Resources module ============
+        // Admin-uploaded documents made available to selected students/groups, with versioning,
+        // acknowledgement, secure authenticated download, and a full download/view audit. Distinct
+        // from the existing URL-based `resources` list (public links): these are private, per-student
+        // assigned FILES in content-addressed storage. All columns are additive/idempotent; indexed
+        // columns use VARCHAR (MySQL cannot index bare TEXT).
+        //   document_categories       — configurable categories (admin-managed)
+        //   documents                 — the master record (metadata + stored file + lifecycle + version chain)
+        //   document_assignments      — the concrete per-student grants (who can see each document)
+        //   document_downloads        — immutable view/download audit
+        //   document_acknowledgements — recorded acknowledgements (one per student per document)
+        db.Exec(@"CREATE TABLE IF NOT EXISTS document_categories(id INTEGER PRIMARY KEY AUTOINCREMENT,name VARCHAR(120) NOT NULL,slug VARCHAR(120),description TEXT,active INTEGER DEFAULT 1,sort_order INTEGER DEFAULT 0,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS documents(id INTEGER PRIMARY KEY AUTOINCREMENT,title VARCHAR(255) NOT NULL,description TEXT,category VARCHAR(120),doc_type VARCHAR(60) DEFAULT 'general',
+            status VARCHAR(20) NOT NULL DEFAULT 'draft',
+            storage_ref TEXT,filename VARCHAR(255),mime VARCHAR(120),size_bytes INTEGER,sha256 VARCHAR(64),
+            version INTEGER DEFAULT 1,root_id INTEGER,supersedes_id INTEGER,superseded_by INTEGER,
+            assignment_type VARCHAR(40) DEFAULT 'all',assignment_config TEXT,
+            view_only INTEGER DEFAULT 0,restricted_until TEXT,ack_required INTEGER DEFAULT 0,watermark INTEGER DEFAULT 0,include_test INTEGER DEFAULT 0,
+            publish_at TEXT,expires_at TEXT,published_at TEXT,archived_at TEXT,visible_to_cs INTEGER DEFAULT 1,
+            created_by INTEGER,updated_by INTEGER,reject_reason TEXT,is_test INTEGER DEFAULT 0,
+            created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_documents_status ON documents(status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_documents_root ON documents(root_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS document_assignments(id INTEGER PRIMARY KEY AUTOINCREMENT,document_id INTEGER NOT NULL,user_id INTEGER NOT NULL,
+            assignment_type VARCHAR(40),source VARCHAR(20) DEFAULT 'auto',status VARCHAR(20) DEFAULT 'active',
+            assigned_by INTEGER,assigned_at TEXT DEFAULT (datetime('now')),revoked_by INTEGER,revoked_at TEXT,revoke_reason TEXT)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_docassign ON document_assignments(document_id, user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_docassign_user ON document_assignments(user_id, status)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS document_downloads(id INTEGER PRIMARY KEY AUTOINCREMENT,document_id INTEGER,user_id INTEGER,actor TEXT,role VARCHAR(20),
+            ip VARCHAR(64),action VARCHAR(20),result VARCHAR(30),version INTEGER,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_docdl_doc ON document_downloads(document_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS document_acknowledgements(id INTEGER PRIMARY KEY AUTOINCREMENT,document_id INTEGER NOT NULL,user_id INTEGER NOT NULL,
+            ip VARCHAR(64),acknowledged_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_docack ON document_acknowledgements(document_id, user_id)");
+        // First-run category set (only when empty — never overwrites admin edits).
+        try
+        {
+            if (db.Scalar<long>("SELECT COUNT(*) FROM document_categories") == 0)
+            {
+                var seed = new (string Name, string Slug, string Desc)[]
+                {
+                    ("Certificates & Credentials", "certificates", "Official certificate copies and credential letters."),
+                    ("Study & Exam Materials", "study", "Handbooks, syllabi and preparation resources."),
+                    ("Policies & Agreements", "policies", "Policies, terms and agreements requiring acknowledgement."),
+                    ("Invoices & Receipts", "billing", "Financial documents issued to the student."),
+                    ("Personal Documents", "personal", "Student-specific documents shared privately."),
+                    ("General", "general", "General resources and announcements."),
+                };
+                var so = 0;
+                foreach (var (nm, sl, de) in seed)
+                    db.Execute("INSERT INTO document_categories(name,slug,description,active,sort_order) VALUES(?,?,?,1,?)", nm, sl, de, so += 10);
+            }
+        }
+        catch { /* table may not exist on a very first pass; ignored */ }
+        // Documents module notification settings (owner-configurable in Admin → Notifications).
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_documents_enabled','1')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('doc_email_notify_cap','500')");
+
         // Performance & integrity indexes on hot lookup/join columns. Every /api/me and admin-student
         // load fans out to these tables by user_id; without indexes they full-scan under the global
         // write lock. Idempotent; safe on fresh and existing databases (SQLite + MySQL via db.Exec).
@@ -481,11 +552,11 @@ public static class Migrate
         // ── Per-certification applications (Phase 4b): one record per (candidate, certification, route) ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS certification_applications(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            application_no TEXT UNIQUE,
+            application_no VARCHAR(40) UNIQUE,
             user_id INTEGER NOT NULL,
             certification_id INTEGER NOT NULL,
             route_key TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'submitted',   -- submitted | under_review | info_requested | approved | rejected | withdrawn
+            status VARCHAR(24) NOT NULL DEFAULT 'submitted',   -- submitted | under_review | info_requested | approved | rejected | withdrawn
             workflow_stage TEXT DEFAULT 'application_submitted',
             data_json TEXT,                              -- route-specific captured fields
             blocker TEXT,

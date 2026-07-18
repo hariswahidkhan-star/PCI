@@ -4,7 +4,7 @@ namespace PCI.Backend.Core;
 
 /// <summary>
 /// Certification resolution + per-certification exam configuration. The platform supports any
-/// number of credentials; PCP-AI is certification id 1. A certification row's columns override
+/// number of credentials; PCL-AI is certification id 1. A certification row's columns override
 /// the global exam_* settings (NULL column → global setting → hard default), so existing
 /// single-certification deployments keep behaving identically.
 /// </summary>
@@ -74,7 +74,7 @@ public static class Certs
     }
 
     public static string Prefix(Dictionary<string, object?> cert) =>
-        H.Str(cert["credential_prefix"]) is { Length: > 0 } p ? p : (H.Str(cert["code"]) ?? "PCP-AI");
+        H.Str(cert["credential_prefix"]) is { Length: > 0 } p ? p : (H.Str(cert["code"]) ?? "PCL-AI");
 
     public static int ExpiryYears(Dictionary<string, object?> cert) =>
         cert["expiry_years"] is null ? 3 : (int)H.L(cert["expiry_years"]);

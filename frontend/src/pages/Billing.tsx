@@ -167,7 +167,7 @@ function PlansCard() {
             {(certs ?? []).map((c) => (
               <option key={c.id} value={c.code}>{c.code} — {c.name}</option>
             ))}
-            {(certs ?? []).length === 0 && <option value="">PCP-AI</option>}
+            {(certs ?? []).length === 0 && <option value="">PCL-AI</option>}
           </select>
         </div>
         <div className="row">

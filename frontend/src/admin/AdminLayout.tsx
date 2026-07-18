@@ -19,6 +19,7 @@ const NAV: NavItem[] = [
   { to: '/enrollments', label: 'Enrolments', perm: 'enrollments', group: 'Students' },
   { to: '/payments', label: 'Payments', perm: 'payments', group: 'Students' },
   { to: '/tickets', label: 'Support tickets', perm: 'tickets', group: 'Students' },
+  { to: '/documents', label: 'Documents', perm: 'documents', group: 'Students' },
   { to: '/applications', label: 'Applications', perm: 'members', group: 'Students' },
 
   { to: '/support-inbox', label: 'Support inbox', perm: 'inbox', group: 'Support' },
@@ -58,6 +59,8 @@ const NAV: NavItem[] = [
   { to: '/training-partners', label: 'Training Partners', perm: 'partners', group: 'Training Partners' },
 
   { to: '/integrations', label: 'Integrations & ERP', perm: 'integrations', group: 'Integrations' },
+
+  { to: '/marketing', label: 'Marketing dashboard', anyPerm: ['subscribers', 'reports'], group: 'Marketing' },
 
   { to: '/enquiries', label: 'Enquiries', perm: 'inquiries', group: 'Community' },
   { to: '/submissions', label: 'Form submissions', perm: 'submissions', group: 'Community' },
@@ -100,10 +103,6 @@ export default function AdminLayout() {
             </span>
           ))}
         </nav>
-        <div style={{ marginTop: '1.5rem' }}>
-          <a className="btn ghost sm" href="/admin.html">Classic admin panel ↗</a>
-          <p className="muted small" style={{ marginTop: '.4rem' }}>All other sections live in the classic panel.</p>
-        </div>
       </aside>
 
       <div className="main" ref={mainRef}>
