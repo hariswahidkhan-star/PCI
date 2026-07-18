@@ -159,10 +159,13 @@ public static class CertPage
         sb.Append("<li><strong>Honorary route</strong> — recognising distinguished contribution to the profession (assessed, not examination-based).</li>");
         sb.Append("<li><strong>Sponsored &amp; complimentary</strong> — employer-, institution- or scholarship-funded applications.</li>");
         sb.Append("</ul>");
-        if (open)
+        if (id == Certs.DefaultId)
+            // PCP-AI has dedicated public resource pages
             sb.Append("<p class=\"lead\">See <a href=\"eligibility-requirements.html\">eligibility requirements</a>, the <a href=\"exam-structure.html\">exam structure</a>, the <a href=\"body-of-knowledge.html\">Body of Knowledge</a> and the <a href=\"handbook.html\">candidate handbook</a>.</p>");
+        else if (open)
+            sb.Append("<p class=\"lead\">Full eligibility criteria, the examination blueprint and the ").Append(Esc(acronym)).Append(" Body of Knowledge are confirmed during application. <a href=\"/app/register?product=exam&amp;cert=").Append(Uri.EscapeDataString(code)).Append("\">Begin your application</a> or <a href=\"request-info.html?cert=").Append(Uri.EscapeDataString(code)).Append("\">request more information</a>.</p>");
         else
-            sb.Append("<p class=\"lead\">The Body of Knowledge, candidate handbook and examination blueprint for ").Append(Esc(acronym)).Append(" are in development. <a href=\"request-info.html?cert=").Append(Uri.EscapeDataString(code)).Append("\">Register your interest</a> to be notified when applications open.</p>");
+            sb.Append("<p class=\"lead\">Applications for ").Append(Esc(acronym)).Append(" are not open yet. <a href=\"request-info.html?cert=").Append(Uri.EscapeDataString(code)).Append("\">Register your interest</a> to be notified.</p>");
         sb.Append("</div></section>");
 
         // ── FAQs ──

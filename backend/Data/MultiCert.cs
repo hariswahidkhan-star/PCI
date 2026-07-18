@@ -81,7 +81,7 @@ public static class MultiCert
                'PFIP','PFIP','Project Finance & Infrastructure Professional',
                'Structure, model and finance the infrastructure the world builds.',
                'Investment appraisal, financial modelling, capital structure, DSCR/LLCR/PLCR, PPP and project risk — with AI-assisted analytics.',
-               'Project Finance','Professional','Coming Soon','pfip',
+               'Project Finance','Professional','Active','pfip',
                'Project finance, infrastructure investment and financial-modelling professionals.',
                0,
                'PFIP — Project Finance & Infrastructure Professional | PCI',
@@ -116,12 +116,16 @@ public static class MultiCert
                'CPMD','CPMD','Certified Project Management & Delivery Professional',
                'Lead and deliver projects end to end.',
                'Initiation, governance, planning, execution, integrated cost/schedule/risk, leadership, procurement, agile/hybrid delivery and AI-assisted PM.',
-               'Project Management','Professional','Coming Soon','cpmd',
+               'Project Management','Professional','Active','cpmd',
                'Project managers, delivery leads and PMO professionals.',
                0,
                'CPMD — Certified Project Management & Delivery Professional | PCI',
                'The CPMD credential covers project initiation, governance, planning, execution, integrated cost/schedule/risk control, agile and hybrid delivery, benefits realization and AI-assisted project management.',
                'cpmd, project management certification, project delivery, agile, hybrid delivery, pmo, benefits realization',
                ?)", cpmdContent);
+
+        // All three credentials launch together — no "Coming Soon". Flip any row still seeded as
+        // Coming Soon to Active (idempotent; leaves any other admin-chosen status untouched).
+        db.Execute("UPDATE certifications SET status='Active' WHERE id IN (2,3) AND status='Coming Soon'");
     }
 }
