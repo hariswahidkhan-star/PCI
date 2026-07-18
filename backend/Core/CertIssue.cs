@@ -13,9 +13,13 @@ public static class CertIssue
 {
     static string VerifyUrl(Db db, string credId)
     {
+        // The QR must encode an ABSOLUTE URL to be scannable. Prefer the deployment's configured base
+        // (APP_BASE_URL / SITE_BASE_URL, or the public_base_url setting); fall back to the canonical public
+        // domain so the code always resolves even before an operator sets the base explicitly.
         var b = Mailer.BaseUrl();
         if (string.IsNullOrEmpty(b)) b = Settings.Str(db, "public_base_url", "");
-        return (string.IsNullOrEmpty(b) ? "" : b.TrimEnd('/')) + "/verify.html?id=" + credId;
+        if (string.IsNullOrEmpty(b)) b = "https://projectcontrolsinstitute.org";
+        return b.TrimEnd('/') + "/verify.html?id=" + credId;
     }
 
     /// <summary>Ensure the examination/credential PDF exists; returns (bytes, sha256, filename) or null.</summary>

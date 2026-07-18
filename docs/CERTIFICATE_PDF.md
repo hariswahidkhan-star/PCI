@@ -42,9 +42,15 @@ generation** — no downloadable certificate, no QR code, and no tamper-evident 
   - `GET /api/me/honorary-certificate/pdf` — the student's honorary certificate.
   - `POST /api/admin/credentials/{id}/regenerate-pdf` and `GET /api/admin/credentials/{id}/pdf` — admin
     regenerate / fetch (gated `credentials`). The PDF is never emailed by default; delivery is the portal link.
-- **Verification** — `GET /api/verify` now returns `document_hash` (the SHA-256) and `has_pdf`, so anyone can
-  independently confirm a downloaded PDF is exactly the one PCI issued (recompute + compare) without trusting
-  the visual — tamper-evidence per the spec.
+- **Verification** — `GET /api/verify` now returns `document_hash` (the SHA-256) and `has_pdf`. The public
+  **`verify.html`** page surfaces this with a **"Check a downloaded certificate file"** widget: the verifier
+  picks the PDF, the browser computes its SHA-256 (`crypto.subtle`, entirely client-side — the file never
+  leaves the browser) and compares it to the registry, showing **"✓ Authentic — matches the official record"**
+  or **"✗ does not match — it may have been altered."** This makes the credential tamper-evident and
+  independently verifiable, not reliant on the visual PDF — verified live (genuine → authentic, one flipped
+  byte → rejected).
+- **QR URL** — always absolute (from `APP_BASE_URL`/`SITE_BASE_URL`, the `public_base_url` setting, or the
+  canonical domain fallback) so the QR always resolves; confirmed to decode to the correct verify URL.
 - **Honorary correctness** — the honorary PDF is titled **"Honorary Certificate"**, shows the recognition,
   and **never** states a passed examination. The examination PDF states the examination was satisfied.
 - **Test isolation** — a test-account certificate carries a diagonal **"TEST CERTIFICATE"** watermark and is
