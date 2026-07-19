@@ -595,6 +595,17 @@ public static class Migrate
         // restricted to (NULL/empty = all certifications — the default, and forced for owners).
         AddCol("admin_users", "cert_scope", "cert_scope TEXT");
 
+        // Self-service admin password reset: single-use, expiring tokens (stored hashed) issued by the
+        // "Forgot password" flow and consumed by the reset page.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS admin_reset_tokens(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            admin_id INTEGER NOT NULL,
+            token TEXT NOT NULL,
+            expires_at TEXT NOT NULL,
+            used_at TEXT,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_admin_reset_token ON admin_reset_tokens(token)");
+
         MultiCert.Seed(db);
 
         // bootstrap owner admin on first run (parity with db.js seed)
