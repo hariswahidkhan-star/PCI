@@ -548,6 +548,25 @@ public static class Migrate
             sort_order INTEGER DEFAULT 0,
             created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_cert_documents_cert ON cert_documents(certification_id)");
+        // File-backed books: uploaded materials live in private storage and are served through the
+        // authenticated download endpoint (personalised watermark when flagged); `url` remains for
+        // plain external links. The master file is never exposed directly.
+        AddCol("cert_documents", "storage_ref", "storage_ref TEXT");
+        AddCol("cert_documents", "filename", "filename TEXT");
+        AddCol("cert_documents", "mime", "mime VARCHAR(80)");
+        AddCol("cert_documents", "size_bytes", "size_bytes INTEGER");
+        AddCol("cert_documents", "sha256", "sha256 VARCHAR(64)");
+        // Immutable download audit for books/study materials — separate from document_downloads,
+        // whose document_id keys the assigned-documents module.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cert_document_downloads(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            cert_document_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            copy_id VARCHAR(16),
+            result VARCHAR(30),
+            ip VARCHAR(64),
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_certdocdl_doc ON cert_document_downloads(cert_document_id)");
 
         // ── Per-certification applications (Phase 4b): one record per (candidate, certification, route) ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS certification_applications(

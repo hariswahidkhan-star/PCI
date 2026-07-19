@@ -20,6 +20,7 @@ const NAV: NavItem[] = [
   { to: '/payments', label: 'Payments', perm: 'payments', group: 'Students' },
   { to: '/tickets', label: 'Support tickets', perm: 'tickets', group: 'Students' },
   { to: '/documents', label: 'Documents', perm: 'documents', group: 'Students' },
+  { to: '/books', label: 'Books & materials', perm: 'resources', group: 'Students' },
   { to: '/applications', label: 'Applications', perm: 'members', group: 'Students' },
 
   { to: '/support-inbox', label: 'Support inbox', perm: 'inbox', group: 'Support' },

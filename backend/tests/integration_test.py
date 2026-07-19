@@ -1056,6 +1056,32 @@ def _pdf_uri(marker):
     body = ("%PDF-1.4\n% " + marker + "\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n").encode("latin1")
     return "data:application/pdf;base64," + base64.b64encode(body).decode(), hashlib.sha256(body).hexdigest()
 
+def _real_pdf_uri():
+    """A REAL parseable single-page PDF built with the stdlib only (correct xref offsets), so the
+    suite has no third-party dependency — CI runners without pypdf must still run this section.
+    PDFsharp (the watermarker) and pypdf (when present) both open it."""
+    content = b"BT /F1 12 Tf 72 720 Td (PCI test document) Tj ET\n"
+    objs = [
+        b"<</Type/Catalog/Pages 2 0 R>>",
+        b"<</Type/Pages/Kids[3 0 R]/Count 1>>",
+        b"<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<</Font<</F1 4 0 R>>>>/Contents 5 0 R>>",
+        b"<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>",
+    ]
+    out = bytearray(b"%PDF-1.4\n")
+    offsets = []
+    for i, body in enumerate(objs, start=1):
+        offsets.append(len(out))
+        out += ("%d 0 obj" % i).encode() + body + b"endobj\n"
+    offsets.append(len(out))
+    out += ("5 0 obj<</Length %d>>stream\n" % len(content)).encode() + content + b"endstream\nendobj\n"
+    xref_pos = len(out)
+    out += b"xref\n0 6\n0000000000 65535 f \n"
+    for off in offsets:
+        out += ("%010d 00000 n \n" % off).encode()
+    out += ("trailer<</Size 6/Root 1 0 R>>\nstartxref\n%d\n%%%%EOF\n" % xref_pos).encode()
+    raw = bytes(out)
+    return "data:application/pdf;base64," + base64.b64encode(raw).decode(), raw
+
 def test_documents_module(admin):
     """Section 17 — Student Documents & Resources: secure admin upload, group/individual assignment,
     publish → per-student grants + notification, isolation, secure authenticated download, versioning
@@ -1201,31 +1227,6 @@ def test_documents_module(admin):
     chk("17mm student token is refused the admin document API (401/403)", jget("GET", "/api/admin/documents", token=a_tok)[0] in (401, 403))
 
     # ================= watermark rendering (per-recipient stamp on flagged PDFs) =================
-    def _real_pdf_uri():
-        """A REAL parseable single-page PDF built with the stdlib only (correct xref offsets), so the
-        suite has no third-party dependency — CI runners without pypdf must still run this section.
-        PDFsharp (the watermarker) and pypdf (when present) both open it."""
-        content = b"BT /F1 12 Tf 72 720 Td (PCI test document) Tj ET\n"
-        objs = [
-            b"<</Type/Catalog/Pages 2 0 R>>",
-            b"<</Type/Pages/Kids[3 0 R]/Count 1>>",
-            b"<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<</Font<</F1 4 0 R>>>>/Contents 5 0 R>>",
-            b"<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>",
-        ]
-        out = bytearray(b"%PDF-1.4\n")
-        offsets = []
-        for i, body in enumerate(objs, start=1):
-            offsets.append(len(out))
-            out += ("%d 0 obj" % i).encode() + body + b"endobj\n"
-        offsets.append(len(out))
-        out += ("5 0 obj<</Length %d>>stream\n" % len(content)).encode() + content + b"endstream\nendobj\n"
-        xref_pos = len(out)
-        out += b"xref\n0 6\n0000000000 65535 f \n"
-        for off in offsets:
-            out += ("%010d 00000 n \n" % off).encode()
-        out += ("trailer<</Size 6/Root 1 0 R>>\nstartxref\n%d\n%%%%EOF\n" % xref_pos).encode()
-        raw = bytes(out)
-        return "data:application/pdf;base64," + base64.b64encode(raw).decode(), raw
 
     wm_uri, wm_raw = _real_pdf_uri()
     c, wdoc = jget("POST", "/api/admin/documents", token=admin, body={
@@ -1351,6 +1352,63 @@ def test_leadership_suite(admin):
     c, me = jget("GET", "/api/me", token=stok)
     mecodes = {e.get("certification_code") for e in me.get("exams", [])}
     chk("18j /api/me shows all three certification journeys", mecodes == set(NAMES), mecodes)
+
+    # ---- Books: upload → per-certification isolation → personalised watermarked download ----
+    buri, braw = _real_pdf_uri()
+    c, up = jget("POST", "/api/admin/cert-documents/upload", token=admin, body={
+        "certification": "PFL-AI", "kind": "book", "title": "PFL-AI Financial Modelling Handbook",
+        "watermark": True, "file": buri, "filename": "pfl-handbook.pdf"})
+    bid = (up.get("row") or {}).get("id")
+    chk("18k admin uploads a watermarked book (stored privately)", c == 200 and bid and (up.get("row") or {}).get("sha256"), up)
+    c, plain = jget("POST", "/api/admin/cert-documents/upload", token=admin, body={
+        "certification": "PFL-AI", "kind": "study_guide", "title": "PFL-AI Formula Sheet",
+        "watermark": False, "file": buri, "filename": "formulas.pdf"})
+    pid2 = (plain.get("row") or {}).get("id")
+
+    # the suite3 candidate is entitled to PFL-AI; the list shows the file as downloadable
+    c, bl = jget("GET", "/api/me/cert-documents", token=stok)
+    brow = next((r for r in bl.get("rows", []) if r.get("id") == bid), None)
+    chk("18l book appears in the student's list with a file", brow is not None and brow.get("has_file") == 1, brow)
+
+    st1, body1, _ = _raw_get(f"/api/me/cert-documents/{bid}/download", token=stok)
+    txt = _pdf_text(body1)
+    chk("18m watermarked download carries the student identity + designation",
+        st1 == 200 and body1[:5] == b"%PDF-" and body1 != braw and "Personal Copy" in txt and "PCI Student ID" in txt, (st1, len(body1)))
+    st2, body2, _ = _raw_get(f"/api/me/cert-documents/{pid2}/download", token=stok)
+    chk("18n unwatermarked book is served byte-identical to the master", st2 == 200 and body2 == braw, (st2, len(body2)))
+
+    # master untouched in storage; a second entitled student gets a DIFFERENT personalised copy
+    con = dbconn(); msha = con.execute("SELECT sha256 FROM cert_documents WHERE id=?", (bid,)).fetchone()[0]; con.close()
+    chk("18o stored master is never modified", msha == hashlib.sha256(braw).hexdigest(), msha)
+    tok2, uid2 = make_paid_user("suite3b@ex.co", product="exam", metadata={"certification": "PFL-AI"})
+    st3, body3, _ = _raw_get(f"/api/me/cert-documents/{bid}/download", token=tok2)
+    chk("18p each recipient gets their own personalised copy", st3 == 200 and body3 != body1, (st3, body3 == body1))
+
+    # isolation + auth: a student without a PFL-AI entitlement is refused; anonymous is 401
+    otok, ouid = register_student("nobooks@ex.co")
+    chk("18q non-entitled student is refused the book (403)", _raw_get(f"/api/me/cert-documents/{bid}/download", token=otok)[0] == 403)
+    chk("18r download requires authentication (401)", _raw_get(f"/api/me/cert-documents/{bid}/download")[0] == 401)
+
+    # every download is audited with a stable per-copy id
+    con = dbconn()
+    dl = con.execute("SELECT COUNT(*), COUNT(DISTINCT copy_id) FROM cert_document_downloads WHERE cert_document_id=? AND result='ok_watermarked'", (bid,)).fetchone()
+    con.close()
+    chk("18s downloads are audited with per-copy ids", dl[0] >= 2 and dl[1] >= 2, dl)
+
+    # the authored Body of Knowledge PDFs ship with the app (books/<code>-bok.pdf) and attach to the
+    # seeded BoK rows at boot; an entitled candidate downloads a personalised copy immediately.
+    # (Guarded: the assertions arm themselves once the authored books are committed under backend/books/.)
+    if not os.path.exists(os.path.join(BACKEND, "books", "pfl-ai-bok.pdf")):
+        print("  SKIP  18t/18u shipped-BoK assertions (backend/books not present yet)")
+        return
+    c, bl2 = jget("GET", "/api/me/cert-documents", token=stok)
+    seeded_bok = next((r for r in bl2.get("rows", []) if r.get("kind") == "bok" and "PFL-AI" in (r.get("title") or "") and "Body of Knowledge" in (r.get("title") or "")), None)
+    chk("18t the authored PFL-AI Body of Knowledge is attached at boot", seeded_bok is not None and seeded_bok.get("has_file") == 1,
+        [(r.get("title"), r.get("kind"), r.get("has_file")) for r in bl2.get("rows", [])])
+    if seeded_bok is not None:
+        stb, bokbody, _ = _raw_get(f"/api/me/cert-documents/{seeded_bok['id']}/download", token=stok)
+        chk("18u the shipped BoK downloads as a personalised watermarked PDF",
+            stb == 200 and bokbody[:5] == b"%PDF-" and "Personal Copy" in _pdf_text(bokbody), (stb, len(bokbody)))
 
 def H0(v):
     try: return int(v or 0)
