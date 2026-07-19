@@ -144,8 +144,12 @@ public static class Storage
                     var page = s3.ListObjectsV2Async(new Amazon.S3.Model.ListObjectsV2Request
                     { BucketName = S3Bucket, ContinuationToken = token }).GetAwaiter().GetResult();
                     foreach (var o in page.S3Objects)
+                    {
+                        if (!ArtefactName.IsMatch(Path.GetFileName(o.Key))) continue;
+                        if (ProtectedCategories.Contains(o.Key.Split('/', 2)[0])) continue;
                         if (o.LastModified.ToUniversalTime() < cutoff)
                         { try { s3.DeleteObjectAsync(S3Bucket, o.Key).GetAwaiter().GetResult(); n++; } catch { } }
+                    }
                     token = page.IsTruncated ? page.NextContinuationToken : null;
                 } while (token is not null);
             }
@@ -161,8 +165,9 @@ public static class Storage
             // purged by the retention sweep (STORAGE_ROOT should still be a dedicated volume).
             if (!ArtefactName.IsMatch(Path.GetFileName(f))) continue;
             // Retention is for transient EVIDENCE/ATTACHMENTS. Never sweep protected categories:
-            // admin-uploaded student documents cannot be regenerated (permanent loss), and certificate
-            // PDFs are authoritative artefacts. Both live under their own top-level category folder.
+            // these are permanent artefacts (books/documents cannot be regenerated; certificates are
+            // authoritative; partner/founding/honorary uploads are business records, not case evidence).
+            // Each lives under its own top-level category folder.
             if (InProtectedCategory(rootFull, f)) continue;
             try { if (File.GetLastWriteTimeUtc(f) < cutoff) { File.Delete(f); n++; } } catch { }
         }
@@ -172,8 +177,11 @@ public static class Storage
     static readonly System.Text.RegularExpressions.Regex ArtefactName =
         new(@"^[0-9a-f]{64}\.(jpg|png|webp|pdf|bin|docx|doc|xlsx|xls|pptx|ppt|csv|txt|zip)$", System.Text.RegularExpressions.RegexOptions.Compiled);
 
-    // Top-level category folders whose contents the retention sweep must never delete.
-    static readonly HashSet<string> ProtectedCategories = new(StringComparer.OrdinalIgnoreCase) { "documents", "certificates" };
+    // Top-level category folders whose contents the retention sweep must never delete (both backends).
+    // Purgeable categories stay implicit: evidence, idd, appeal, accommodation, support, cpd — all
+    // candidate-submitted case/identity evidence, which is what evidence_retention_days governs.
+    static readonly HashSet<string> ProtectedCategories = new(StringComparer.OrdinalIgnoreCase)
+        { "documents", "certificates", "books", "founding", "honorary", "partners" };
     static bool InProtectedCategory(string rootFull, string file)
     {
         try

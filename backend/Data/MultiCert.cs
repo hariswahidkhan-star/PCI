@@ -406,6 +406,33 @@ public static class MultiCert
             db.Execute("INSERT INTO cert_documents(certification_id,kind,title,description,watermark,published,sort_order) VALUES(?,?,?,?,1,1,20)",
                 cid, "bok", $"{acr} Body of Knowledge", "The competency framework and study syllabus — delivered as a personalised watermarked copy.");
         }
+        EnsureBookFiles(db);
+    }
+
+    /// <summary>Attach the authored Body of Knowledge PDFs shipped with the app (books/&lt;code&gt;-bok.pdf)
+    /// to their seeded cert_documents rows. Runs on every boot but only fills rows whose file is still
+    /// missing, so an admin who replaces a book through the console is never clobbered. The bytes go
+    /// through content-addressed private storage — the file itself is never web-served from disk.</summary>
+    public static void EnsureBookFiles(Db db)
+    {
+        try
+        {
+            foreach (var cert in db.Query("SELECT id,code FROM certifications"))
+            {
+                var code = (cert["code"] as string) ?? "";
+                if (code.Length == 0) continue;
+                var path = Path.Combine("books", code.ToLowerInvariant() + "-bok.pdf");
+                if (!File.Exists(path)) continue;
+                var row = db.QueryOne("SELECT id FROM cert_documents WHERE certification_id=? AND kind='bok' AND (storage_ref IS NULL OR storage_ref='') ORDER BY id LIMIT 1", cert["id"]);
+                if (row is null) continue;
+                var bytes = File.ReadAllBytes(path);
+                var stored = Core.Storage.Put(bytes, "application/pdf", "books");
+                db.Execute("UPDATE cert_documents SET storage_ref=?, filename=?, mime='application/pdf', size_bytes=?, sha256=?, watermark=1, updated_at=datetime('now') WHERE id=?",
+                    stored.Reference, code.ToLowerInvariant() + "-bok.pdf", bytes.LongLength, stored.Sha256, row["id"]);
+                Console.WriteLine($"[seed] book attached: {code} Body of Knowledge ({bytes.LongLength / 1024} KB)");
+            }
+        }
+        catch (Exception e) { Console.Error.WriteLine($"[seed] book files skipped: {e.Message}"); }
     }
 
     // The default application-route set (Phase 4). Every certification offers these; the admin enables,

@@ -32,5 +32,6 @@
     <None Include="certuvo_seed.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('certuvo_seed.json')" />
     <None Include="demo_exam_seed.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('demo_exam_seed.json')" />
     <None Include="emails/**/*" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="books/**/*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

@@ -154,6 +154,8 @@ public static class StudentExam
                 .Select(r => H.L(r["cid"])).ToList();
             var inList = mine.Count > 0 ? string.Join(",", mine) : "-1";
             var rows = db.Query($@"SELECT d.id,d.certification_id,d.kind,d.title,d.description,d.url,d.watermark,d.sort_order,
+                    (CASE WHEN d.storage_ref IS NOT NULL AND d.storage_ref != '' THEN 1 ELSE 0 END) has_file,
+                    d.filename, d.size_bytes,
                     c.acronym cert_acronym, c.name cert_name
                 FROM cert_documents d LEFT JOIN certifications c ON c.id=d.certification_id
                 WHERE d.published=1 AND (d.certification_id IS NULL OR d.certification_id IN ({inList}))
