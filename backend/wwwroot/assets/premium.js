@@ -277,6 +277,7 @@
     var path = (location.pathname || '').toLowerCase();
     if (path.indexOf('admin') !== -1 || path.indexOf('exam-ui') !== -1 || path.indexOf('/app') === 0 ||
         path.indexOf('student') !== -1 || path.indexOf('launcher') !== -1) return;
+    if (window.PCI_NO_ANNOUNCE) return;   // pages can opt out (e.g. a focused, personal-link flow)
     if (window.__pciAnnounceLoaded || document.getElementById('pciAnx')) return;
     window.__pciAnnounceLoaded = true;
 

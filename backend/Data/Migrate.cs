@@ -31,6 +31,27 @@ public static class Migrate
         AddCol("honorary_applications", "eligibility_confirmed", "eligibility_confirmed INTEGER DEFAULT 0");
         AddCol("honorary_applications", "terms_accepted", "terms_accepted INTEGER DEFAULT 0");
         AddCol("honorary_applications", "terms_accepted_at", "terms_accepted_at TEXT");
+        // Shortlist-gated identity verification (IDV): only shortlisted candidates are invited, via a
+        // one-time time-limited token, to submit a passport-style photo + one government ID and a
+        // background/truthfulness declaration. Data minimisation: no ID numbers are stored — only the
+        // document image, held in a protected category with its own retention/deletion, plus attestation
+        // booleans. idv_status: none | invited | submitted | verified | rejected | deleted.
+        AddCol("honorary_applications", "shortlisted", "shortlisted INTEGER DEFAULT 0");
+        AddCol("honorary_applications", "shortlisted_at", "shortlisted_at TEXT");
+        AddCol("honorary_applications", "idv_token", "idv_token VARCHAR(64)");
+        AddCol("honorary_applications", "idv_token_expires", "idv_token_expires TEXT");
+        AddCol("honorary_applications", "idv_status", "idv_status VARCHAR(16) DEFAULT 'none'");
+        AddCol("honorary_applications", "idv_submitted_at", "idv_submitted_at TEXT");
+        AddCol("honorary_applications", "background_declaration", "background_declaration INTEGER DEFAULT 0");
+        AddCol("honorary_applications", "background_declared_at", "background_declared_at TEXT");
+        AddCol("honorary_applications", "idv_deleted_at", "idv_deleted_at TEXT");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS honorary_idv_documents (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            application_id INTEGER NOT NULL,
+            doc_kind VARCHAR(20),                      -- photo | government_id
+            filename TEXT, mime VARCHAR(80), size_bytes INTEGER, storage_ref TEXT, sha256 VARCHAR(64),
+            created_at TEXT DEFAULT (datetime('now')));");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_honidv_app ON honorary_idv_documents(application_id)");
         AddCol("sample_questions", "is_practice", "is_practice INTEGER DEFAULT 0");
         // Certuvo (Phase 8): practice questions carry a teaching explanation + a difficulty band.
         AddCol("sample_questions", "explanation", "explanation TEXT");

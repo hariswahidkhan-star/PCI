@@ -174,7 +174,9 @@ public static class HonoraryApplication
             if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             // Never expose storage_ref/sha to the client — only safe metadata + the download id.
             var docs = db.Query("SELECT id,doc_kind,filename,mime,size_bytes,created_at FROM honorary_application_documents WHERE application_id=? ORDER BY id", id);
-            return J(new { application = a, documents = docs });
+            // Shortlist-stage identity-verification documents (owner-only surface), same safe-metadata rule.
+            var idvDocs = db.Query("SELECT id,doc_kind,filename,mime,size_bytes,created_at FROM honorary_idv_documents WHERE application_id=? ORDER BY id", id);
+            return J(new { application = a, documents = docs, idv_documents = idvDocs });
         });
 
         app.MapGet("/api/admin/honorary-applications/{id}/documents/{docId}/file", (HttpContext ctx, long id, long docId) =>

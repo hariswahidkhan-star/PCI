@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="UTF-8"/><meta name="color-scheme" content="light only"/><meta name="pci-api" content=""/><script>window.PCI_API_BASE=(document.querySelector('meta[name="pci-api"]')||{}).content||window.PCI_API_BASE||"";window.PCI_NO_ANNOUNCE=true;</script><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Secure identity verification — Honorary Fellow (PCI) | Project Controls Institute</title><meta name="description" content="Secure identity verification for shortlisted Honorary Fellow (PCI) candidates."/><meta name="robots" content="noindex, nofollow"/><link rel="icon" href="favicon.ico" sizes="any"/><link rel="stylesheet" href="assets/styles.css"/><link rel="stylesheet" href="assets/premium.css"/><script defer src="assets/premium.js"></script></head><body>
+<header class="hdr"><div class="wrap hdr-in">
+<a aria-label="Project Controls Institute Global home" class="brand" href="index.html"><span class="logo-pci"><span class="lp-p">PCI</span> <span class="lp-g">Global</span></span><span class="logo-bar"></span><span class="logo-name">Project Controls<br/>Institute Global, Inc.</span></a>
+</div></header>
+<section class="sec" style="padding-top:40px;">
+<div class="wrap" style="max-width:760px;">
+<div class="hblock"><span class="eyebrow">Honorary Route · Secure verification</span><h1>Identity verification</h1><div class="uline"></div></div>
+
+<div id="vLoading" class="lead">Checking your secure link…</div>
+
+<div id="vInvalid" style="display:none;" class="notice err" role="alert"><strong>This link is not valid.</strong><br/>It may have expired, already been used, or been mistyped. Personal verification links expire after 14 days and can be used once. If you believe this is an error, please reply to the email you received from the Institute.</div>
+
+<div id="vDone" style="display:none;padding:16px 18px;border-radius:12px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;" role="status"><strong>Thank you — your verification has been received securely.</strong><br/>The board will continue its review and be in touch. You may now close this page.</div>
+
+<div id="vForm" style="display:none;">
+  <p class="lead" id="vHello"></p>
+  <p style="color:var(--slate);">You have been <strong>shortlisted</strong> for the board-conferred <strong>Honorary Fellow (PCI)</strong> recognition. To continue, please provide the following. This step exists only to verify your identity; it does not involve any fee and does not guarantee recognition.</p>
+
+  <div style="margin:18px 0;padding:20px 22px;border:1px solid var(--line);border-left:4px solid #C9A24B;border-radius:12px;background:#FBFAF6;">
+    <h2 style="margin:0 0 8px;font-size:19px;">How your information is handled</h2>
+    <ul style="margin:0;padding-left:20px;color:var(--slate);font-size:14.5px;">
+      <li style="margin-bottom:6px;"><strong>Purpose &amp; minimisation.</strong> Your photograph and ID are used solely to verify your identity for honorary recognition. We do not record any ID number or document detail — only the image is retained, and only for as long as needed for this purpose.</li>
+      <li style="margin-bottom:6px;"><strong>Secure storage &amp; access.</strong> Documents are stored securely and are accessible only to the Institute&rsquo;s board/reviewers on a strict need-to-know basis, and handled confidentially.</li>
+      <li style="margin-bottom:6px;"><strong>Retention &amp; deletion.</strong> Your documents are deleted after the verification decision (or sooner on request), subject to any legal retention obligation.</li>
+      <li style="margin-bottom:6px;"><strong>International processing.</strong> The Institute operates globally; your information may be processed or stored in other countries with appropriate safeguards. If you are in Saudi Arabia, the United States, Pakistan or elsewhere, this is done in line with applicable data-protection law and our <a href="privacy.html" target="_blank" rel="noreferrer">Privacy Policy</a> and <a href="data-protection-policy.html" target="_blank" rel="noreferrer">Data Protection Policy</a>.</li>
+      <li><strong>Your choice.</strong> Providing these is voluntary; you may decline or withdraw at any time, in which case your honorary application may not proceed.</li>
+    </ul>
+  </div>
+
+  <div id="vErr" style="display:none;" class="notice err" role="alert"></div>
+
+  <form id="vfForm" onsubmit="return vSubmit(event)">
+    <h3 style="margin:20px 0 6px;">Documents</h3>
+    <p class="small" style="color:var(--slate);margin-top:0;">Accepted: PDF, JPG, PNG or WEBP, up to 3&nbsp;MB each.</p>
+    <div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div class="field"><label>Recent passport-style photograph *</label><input type="file" id="vPhoto" accept=".jpg,.jpeg,.png,.webp,.pdf" required/></div>
+      <div class="field"><label>One valid government-issued ID *</label><input type="file" id="vGovId" accept=".jpg,.jpeg,.png,.webp,.pdf" required/></div>
+    </div>
+
+    <h3 style="margin:22px 0 6px;">Declarations</h3>
+    <div class="field" style="margin-top:4px;"><label style="display:flex;gap:10px;align-items:flex-start;font-weight:400;"><input type="checkbox" id="vTruthful" required style="width:auto;margin-top:4px;"/><span>I declare that all information and documents I have provided to the Institute are <strong>true, accurate and complete</strong>, and are my own. *</span></label></div>
+    <div class="field" style="margin-top:12px;"><label style="display:flex;gap:10px;align-items:flex-start;font-weight:400;"><input type="checkbox" id="vBackground" required style="width:auto;margin-top:4px;"/><span>I declare that, to the best of my knowledge, I have <strong>not</strong> been involved in, convicted of, or currently facing undisclosed legal proceedings for, serious criminal activity that is materially relevant to PCI&rsquo;s honorary recognition. I understand PCI does not require details of any such matter here, that I may raise anything I wish the board to consider by contacting the Institute directly, and that a misleading declaration may lead to refusal or withdrawal of recognition. *</span></label></div>
+    <div class="field" style="margin-top:12px;"><label style="display:flex;gap:10px;align-items:flex-start;font-weight:400;"><input type="checkbox" id="vConsent" required style="width:auto;margin-top:4px;"/><span>I consent to the Project Controls Institute collecting and processing my photograph and government-issued ID for the purpose of verifying my identity for honorary recognition, as described above and in the <a href="privacy.html" target="_blank" rel="noreferrer">Privacy Policy</a> and <a href="data-protection-policy.html" target="_blank" rel="noreferrer">Data Protection Policy</a>. *</span></label></div>
+
+    <button class="btn btn-red" type="submit" id="vBtn" style="margin-top:16px;">Submit securely <svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+  </form>
+</div>
+</div>
+</section>
+
+<script>
+(function(){
+  var api=window.PCI_API_BASE||'';
+  var params=new URLSearchParams(location.search);
+  var token=(params.get('token')||'').trim();
+  var byId=function(x){return document.getElementById(x);};
+  function show(id){['vLoading','vInvalid','vDone','vForm'].forEach(function(k){byId(k).style.display=(k===id)?'':'none';});}
+  if(!token){show('vInvalid');return;}
+  fetch(api+'/api/honorary-idv/'+encodeURIComponent(token)).then(function(r){return r.json().then(function(j){return {r:r,j:j};});}).then(function(o){
+    if(o.j&&o.j.already_submitted){show('vDone');return;}
+    if(!o.r.ok||!o.j.ok){show('vInvalid');return;}
+    byId('vHello').innerHTML='Dear <strong>'+(o.j.first_name?String(o.j.first_name).replace(/[<>&]/g,''):'applicant')+'</strong>,';
+    show('vForm');
+  }).catch(function(){show('vInvalid');});
+
+  var MAX=3000000, OK=['application/pdf','image/jpeg','image/png','image/webp'];
+  function readFile(input){return new Promise(function(res,rej){var f=input&&input.files&&input.files[0];if(!f){res(null);return;}if(f.size>MAX){rej(new Error((f.name||'File')+' is larger than 3 MB.'));return;}var r=new FileReader();r.onload=function(){var du=r.result;var mt=(du.split(';')[0]||'').split(':')[1]||'';if(OK.indexOf(mt)<0){rej(new Error((f.name||'File')+' must be a PDF, JPG, PNG or WEBP.'));return;}res({data_uri:du,filename:f.name});};r.onerror=function(){rej(new Error('Could not read '+(f.name||'the file')+'.'));};r.readAsDataURL(f);});}
+
+  window.vSubmit=function(e){
+    e.preventDefault();
+    var er=byId('vErr');er.style.display='none';
+    var btn=byId('vBtn');
+    if(!byId('vTruthful').checked||!byId('vBackground').checked||!byId('vConsent').checked){er.textContent='Please complete all three declarations to submit.';er.style.display='block';return false;}
+    btn.disabled=true;btn.textContent='Submitting securely…';
+    Promise.all([readFile(byId('vPhoto')),readFile(byId('vGovId'))]).then(function(files){
+      if(!files[0]){throw new Error('Please attach a passport-style photograph.');}
+      if(!files[1]){throw new Error('Please attach one government-issued ID.');}
+      var payload={photo:files[0].data_uri,photo_filename:files[0].filename,government_id:files[1].data_uri,government_id_filename:files[1].filename,declaration_truthful:true,background_declaration:true,consent:true};
+      return fetch(api+'/api/honorary-idv/'+encodeURIComponent(token),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json().then(function(j){return {r:r,j:j};});});
+    }).then(function(o){
+      btn.disabled=false;btn.innerHTML='Submit securely';
+      if(o.r.ok&&o.j.ok){show('vDone');window.scrollTo({top:0,behavior:'smooth'});}
+      else{er.textContent=(o.j&&(o.j.message||o.j.error))?('Could not submit: '+(o.j.message||o.j.error)):'Could not submit. Please check the form and try again.';er.style.display='block';}
+    }).catch(function(err){btn.disabled=false;btn.innerHTML='Submit securely';er.textContent=err.message||'Could not submit.';er.style.display='block';});
+    return false;
+  };
+})();
+</script>
+<footer><div class="wrap"><div class="ft-bottom" style="padding:24px 0;color:var(--mist);font-size:13px;">&copy; Project Controls Institute Global, Inc. This is a secure, personal verification page. Please do not share your link.</div></div></footer>
+</body></html>

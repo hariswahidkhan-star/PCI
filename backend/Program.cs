@@ -733,6 +733,7 @@ PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Applications.Map(app, db, logFn, GateFn);        // per-certification application submission + review (Phase 4b)
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);
+PCI.Backend.Endpoints.HonoraryIdv.Map(app, db, logFn);   // shortlist-gated identity verification (photo + gov ID + background declaration)
 PCI.Backend.Endpoints.Certificates.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Documents.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);   // Student Documents & Resources module
 PCI.Backend.Endpoints.Books.Map(app, db, logFn, GateFn);              // Books & study materials: upload + watermarked download
