@@ -62,6 +62,18 @@ public static class HonoraryApplication
             var eligibilityConfirmed = Flag("eligibility_confirmed") || Flag("eligibilityConfirmed");
             var termsAccepted = Flag("terms_accepted") || Flag("termsAccepted");
 
+            // Optional certification/discipline the applicant is aligned to. Honorary recognition is not
+            // tied to an examination, so this is not required — but if a value is sent it must resolve to a
+            // real, active certification (never silently defaulted), so the board sees an accurate record.
+            var certSel = S("certification", 40, "certification_id", "certificationId", "cert");
+            long? certId = null;
+            if (certSel.Length > 0)
+            {
+                certId = Certs.TryResolve(db, certSel);
+                if (certId is null || Certs.ById(db, certId.Value) is null)
+                    return Results.Json(new { error = "invalid_certification", message = "The selected certification is not recognised." }, statusCode: 400);
+            }
+
             // ---- required-field + format validation (server-side; the form also checks client-side) ----
             if (first.Length == 0 || last.Length == 0) return Results.Json(new { error = "name_required" }, statusCode: 400);
             if (!EmailRx.IsMatch(email)) return Results.Json(new { error = "invalid_email" }, statusCode: 400);
@@ -107,9 +119,9 @@ public static class HonoraryApplication
                 try
                 {
                     appId = db.ExecuteReturningId(@"INSERT INTO honorary_applications
-                        (reference,first_name,last_name,email,mobile,country,city,nationality,job_title,employer,years_experience,industry,highest_qualification,professional_certifications,relevant_experience,professional_summary,declaration,eligibility_confirmed,terms_accepted,terms_accepted_at,status)
-                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,1,1,datetime('now'),'pending_review')",
-                        cand, first, last, email, mobile, country, city, nationality, jobTitle, employer, yearsExp, industry, highestQual, profCerts, relevantExp, summary);
+                        (reference,first_name,last_name,email,mobile,country,city,nationality,job_title,employer,years_experience,industry,highest_qualification,professional_certifications,relevant_experience,professional_summary,certification_id,declaration,eligibility_confirmed,terms_accepted,terms_accepted_at,status)
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,1,1,datetime('now'),'pending_review')",
+                        cand, first, last, email, mobile, country, city, nationality, jobTitle, employer, yearsExp, industry, highestQual, profCerts, relevantExp, summary, certId);
                     reference = cand;
                 }
                 catch { /* reference collision → retry */ }
@@ -145,6 +157,8 @@ public static class HonoraryApplication
                     $"<table cellpadding='4'><tr><td><strong>Applicant</strong></td><td>{WebUtility.HtmlEncode(fullName)}</td></tr>" +
                     $"<tr><td><strong>Email</strong></td><td>{WebUtility.HtmlEncode(email)}</td></tr>" +
                     $"<tr><td><strong>Country</strong></td><td>{WebUtility.HtmlEncode(country)}</td></tr>" +
+                    (certId is not null && Certs.ById(db, certId.Value) is { } cRow
+                        ? $"<tr><td><strong>Certification of interest</strong></td><td>{WebUtility.HtmlEncode(H.Str(cRow["name"]))}</td></tr>" : "") +
                     $"<tr><td><strong>Reference</strong></td><td>{WebUtility.HtmlEncode(reference)}</td></tr>" +
                     $"<tr><td><strong>Submitted</strong></td><td>{when}</td></tr>" +
                     $"<tr><td><strong>Documents</strong></td><td>{toStore.Count} attached</td></tr></table>" +
@@ -161,16 +175,19 @@ public static class HonoraryApplication
             var (_, deny) = Owner(ctx.Request); if (deny is not null) return deny;
             var status = ctx.Request.Query["status"].ToString();
             var where = string.IsNullOrEmpty(status) ? "" : "WHERE a.status=?";
+            const string sel = @"SELECT a.*, (SELECT COUNT(*) FROM honorary_application_documents d WHERE d.application_id=a.id) AS doc_count,
+                (SELECT c.name FROM certifications c WHERE c.id=a.certification_id) AS certification_name FROM honorary_applications a ";
             var rows = string.IsNullOrEmpty(status)
-                ? db.Query(@"SELECT a.*, (SELECT COUNT(*) FROM honorary_application_documents d WHERE d.application_id=a.id) AS doc_count FROM honorary_applications a ORDER BY a.id DESC LIMIT 500")
-                : db.Query(@"SELECT a.*, (SELECT COUNT(*) FROM honorary_application_documents d WHERE d.application_id=a.id) AS doc_count FROM honorary_applications a " + where + " ORDER BY a.id DESC LIMIT 500", status);
+                ? db.Query(sel + "ORDER BY a.id DESC LIMIT 500")
+                : db.Query(sel + where + " ORDER BY a.id DESC LIMIT 500", status);
             return J(new { rows });
         });
 
         app.MapGet("/api/admin/honorary-applications/{id}", (HttpContext ctx, long id) =>
         {
             var (_, deny) = Owner(ctx.Request); if (deny is not null) return deny;
-            var a = db.QueryOne("SELECT * FROM honorary_applications WHERE id=?", id);
+            var a = db.QueryOne(@"SELECT a.*, (SELECT c.name FROM certifications c WHERE c.id=a.certification_id) AS certification_name
+                FROM honorary_applications a WHERE a.id=?", id);
             if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             // Never expose storage_ref/sha to the client — only safe metadata + the download id.
             var docs = db.Query("SELECT id,doc_kind,filename,mime,size_bytes,created_at FROM honorary_application_documents WHERE application_id=? ORDER BY id", id);

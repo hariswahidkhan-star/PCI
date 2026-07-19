@@ -3,6 +3,7 @@ import RequireAdmin from './RequireAdmin'
 import AdminLayout from './AdminLayout'
 import { useAdminAuth } from './AdminAuth'
 import AdminLogin from './pages/AdminLogin'
+import AdminResetPassword from './pages/AdminResetPassword'
 import Dashboard from './pages/Dashboard'
 import Students from './pages/Students'
 import Payments from './pages/Payments'
@@ -69,6 +70,7 @@ export default function AdminApp() {
   return (
     <Routes>
       <Route path="/login" element={<AdminLogin />} />
+      <Route path="/reset-password" element={<AdminResetPassword />} />
       <Route
         element={
           <RequireAdmin>

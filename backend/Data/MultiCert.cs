@@ -5,7 +5,7 @@ namespace PCI.Backend.Data;
 /// <summary>
 /// The PCI AI Project Leadership Certification Suite — the three co-launching credentials.
 ///
-/// Naming rules (Master Naming Update): identifiers are stored CLEAN (no ™) — code, slug and
+/// Naming rules (Master Naming Update): identifiers are stored CLEAN (no ) — code, slug and
 /// credential_prefix are PCL-AI / PFL-AI / PDL-AI and pcl-ai / pfl-ai / pdl-ai. Trademark symbols
 /// live only in DISPLAY fields (name, public_title, acronym designation, short_name).
 ///
@@ -40,8 +40,8 @@ public static class MultiCert
             },
             faqs = new[]
             {
-                new { q = "Who is PCI PCL-AI™ for?", a = "Project controls, cost and planning leaders responsible for governing schedule, cost, risk, forecasting and performance — with the governed use of AI." },
-                new { q = "Is an examination required?", a = "Yes — the PCI AI Project Controls Leader™ is examination-based. Founding and honorary routes have their own defined criteria." },
+                new { q = "Who is PCI PCL-AI for?", a = "Project controls, cost and planning leaders responsible for governing schedule, cost, risk, forecasting and performance — with the governed use of AI." },
+                new { q = "Is an examination required?", a = "Yes — the PCI AI Project Controls Leader is examination-based. Founding and honorary routes have their own defined criteria." },
             },
         });
         var finance = Json(new
@@ -57,8 +57,8 @@ public static class MultiCert
             },
             faqs = new[]
             {
-                new { q = "Who is PCI PFL-AI™ for?", a = "Professionals structuring, modelling, financing or advising on infrastructure and capital projects — analysts, lenders, developers and advisers." },
-                new { q = "What does PCI PFL-AI™ cover?", a = "Investment appraisal, financial modelling, capital structure, coverage ratios (DSCR/LLCR/PLCR), bankability, PPP and concession structures, financial close and AI-enabled analysis." },
+                new { q = "Who is PCI PFL-AI for?", a = "Professionals structuring, modelling, financing or advising on infrastructure and capital projects — analysts, lenders, developers and advisers." },
+                new { q = "What does PCI PFL-AI cover?", a = "Investment appraisal, financial modelling, capital structure, coverage ratios (DSCR/LLCR/PLCR), bankability, PPP and concession structures, financial close and AI-enabled analysis." },
             },
         });
         var delivery = Json(new
@@ -75,8 +75,8 @@ public static class MultiCert
             },
             faqs = new[]
             {
-                new { q = "Who is PCI PDL-AI™ for?", a = "Project and delivery leaders who take projects end to end — initiation, governance, planning, execution and closure across predictive, agile and hybrid approaches." },
-                new { q = "Is PCI PDL-AI™ a project-management credential?", a = "Yes. PCI PDL-AI™ is a comprehensive project management, leadership and delivery credential; its official title is PCI AI Project Delivery Leader™." },
+                new { q = "Who is PCI PDL-AI for?", a = "Project and delivery leaders who take projects end to end — initiation, governance, planning, execution and closure across predictive, agile and hybrid approaches." },
+                new { q = "Is PCI PDL-AI a project-management credential?", a = "Yes. PCI PDL-AI is a comprehensive project management, leadership and delivery credential; its official title is PCI AI Project Delivery Leader." },
             },
         });
 
@@ -85,61 +85,61 @@ public static class MultiCert
               (id,code,name,description,credential_prefix,expiry_years,active,sort_order,
                acronym,short_name,public_title,short_description,category,level,status,slug,audience,
                membership_required,meta_title,meta_description,keywords,content_json)
-            VALUES(2,'PFL-AI','PCI AI Project Finance Leader™',
+            VALUES(2,'PFL-AI','PCI AI Project Finance Leader',
                'Project and infrastructure finance leadership: financial modelling, investment appraisal, capital structure, bankability, coverage ratios, PPPs and financial close — with AI-enabled analysis and human validation.',
                'PFL-AI',3,1,2,
-               'PCI PFL-AI™','PFL-AI™','PCI AI Project Finance Leader™',
+               'PCI PFL-AI','PFL-AI','PCI AI Project Finance Leader',
                'Project finance, financial modelling, investment appraisal, capital structure, bankability, DSCR/LLCR/PLCR, PPPs and financial close — with AI-enabled analysis.',
                'Project Finance','Leader','Active','pfl-ai',
                'Project and infrastructure finance leaders — analysts, modellers, lenders, advisers and developers.',
-               0,'PCI PFL-AI™ | PCI AI Project Finance Leader™',
-               'The PCI AI Project Finance Leader™ (PCI PFL-AI™) credential covers project finance, financial modelling, capital structure, bankability, coverage ratios, PPP structures and financial close.',
+               0,'PCI PFL-AI | PCI AI Project Finance Leader',
+               'The PCI AI Project Finance Leader (PCI PFL-AI) credential covers project finance, financial modelling, capital structure, bankability, coverage ratios, PPP structures and financial close.',
                'pfl-ai, pci pfl-ai, project finance leader, project finance certification, financial modelling, dscr, ppp, bankability',
                ?)", finance);
         db.Execute(@"INSERT OR IGNORE INTO certifications
               (id,code,name,description,credential_prefix,expiry_years,active,sort_order,
                acronym,short_name,public_title,short_description,category,level,status,slug,audience,
                membership_required,meta_title,meta_description,keywords,content_json)
-            VALUES(3,'PDL-AI','PCI AI Project Delivery Leader™',
+            VALUES(3,'PDL-AI','PCI AI Project Delivery Leader',
                'Comprehensive project management, leadership and delivery: initiation, governance, planning, execution, integrated cost/schedule/risk, agile and hybrid delivery, benefits realization and AI-enabled project management with human accountability.',
                'PDL-AI',3,1,3,
-               'PCI PDL-AI™','PDL-AI™','PCI AI Project Delivery Leader™',
+               'PCI PDL-AI','PDL-AI','PCI AI Project Delivery Leader',
                'Comprehensive project management, leadership and delivery — initiation, governance, planning, execution, integrated cost/schedule/risk, agile/hybrid delivery and AI-enabled project management.',
                'Project Delivery','Leader','Active','pdl-ai',
                'Project managers, delivery and programme leaders.',
-               0,'PCI PDL-AI™ | PCI AI Project Delivery Leader™',
-               'The PCI AI Project Delivery Leader™ (PCI PDL-AI™) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.',
+               0,'PCI PDL-AI | PCI AI Project Delivery Leader',
+               'The PCI AI Project Delivery Leader (PCI PDL-AI) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.',
                'pdl-ai, pci pdl-ai, project delivery leader, project management certification, project leadership, agile, hybrid delivery, benefits realization',
                ?)", delivery);
 
         // ── Migrate-once renames to the final Project Leadership Suite names (keyed on the prior code,
         //    id-stable, no duplicates, admin edits preserved once renamed). Per-cert taglines are cleared:
         //    the Suite uses a single portfolio tagline unless an admin sets one later. ──
-        MigrateCert(db, 1, new[] { "PCP-AI", "PCL-AI" }, "PCL-AI", "PCI AI Project Controls Leader™", "PCI PCL-AI™", "PCL-AI™",
+        MigrateCert(db, 1, new[] { "PCP-AI", "PCL-AI" }, "PCL-AI", "PCI AI Project Controls Leader", "PCI PCL-AI", "PCL-AI",
             "pcl-ai", "PCL-AI", "Project Controls",
             "Project controls governance, cost, planning, EVM, forecasting, risk and predictive analytics — with AI-enabled project controls and human validation.",
             "The integrated project-controls leadership credential: governance, cost, planning, earned value, forecasting, risk and performance — with AI-enabled project controls and human validation.",
             "Project controls, cost, planning and PMO leaders.",
-            "PCI PCL-AI™ | PCI AI Project Controls Leader™",
-            "The PCI AI Project Controls Leader™ (PCI PCL-AI™) credential unites project-controls governance, cost, planning, earned value, forecasting and risk with AI-enabled project controls.",
+            "PCI PCL-AI | PCI AI Project Controls Leader",
+            "The PCI AI Project Controls Leader (PCI PCL-AI) credential unites project-controls governance, cost, planning, earned value, forecasting and risk with AI-enabled project controls.",
             "pcl-ai, pci pcl-ai, project controls leader, project controls certification, earned value, forecasting, ai project controls",
             controls);
-        MigrateCert(db, 2, new[] { "PFIP", "PFIP-AI" }, "PFL-AI", "PCI AI Project Finance Leader™", "PCI PFL-AI™", "PFL-AI™",
+        MigrateCert(db, 2, new[] { "PFIP", "PFIP-AI" }, "PFL-AI", "PCI AI Project Finance Leader", "PCI PFL-AI", "PFL-AI",
             "pfl-ai", "PFL-AI", "Project Finance",
             "Project finance, financial modelling, investment appraisal, capital structure, bankability, DSCR/LLCR/PLCR, PPPs and financial close — with AI-enabled analysis.",
             "Project and infrastructure finance leadership: financial modelling, investment appraisal, capital structure, bankability, coverage ratios, PPPs and financial close — with AI-enabled analysis and human validation.",
             "Project and infrastructure finance leaders — analysts, modellers, lenders, advisers and developers.",
-            "PCI PFL-AI™ | PCI AI Project Finance Leader™",
-            "The PCI AI Project Finance Leader™ (PCI PFL-AI™) credential covers project finance, financial modelling, capital structure, bankability, coverage ratios, PPP structures and financial close.",
+            "PCI PFL-AI | PCI AI Project Finance Leader",
+            "The PCI AI Project Finance Leader (PCI PFL-AI) credential covers project finance, financial modelling, capital structure, bankability, coverage ratios, PPP structures and financial close.",
             "pfl-ai, pci pfl-ai, project finance leader, project finance certification, financial modelling, dscr, ppp, bankability",
             finance);
-        MigrateCert(db, 3, new[] { "CPMD", "CPMD-AI", "PML-AI" }, "PDL-AI", "PCI AI Project Delivery Leader™", "PCI PDL-AI™", "PDL-AI™",
+        MigrateCert(db, 3, new[] { "CPMD", "CPMD-AI", "PML-AI" }, "PDL-AI", "PCI AI Project Delivery Leader", "PCI PDL-AI", "PDL-AI",
             "pdl-ai", "PDL-AI", "Project Delivery",
             "Comprehensive project management, leadership and delivery — initiation, governance, planning, execution, integrated cost/schedule/risk, agile/hybrid delivery and AI-enabled project management.",
             "Comprehensive project management, leadership and delivery: initiation, governance, planning, execution, integrated cost/schedule/risk, agile and hybrid delivery, benefits realization and AI-enabled project management with human accountability.",
             "Project managers, delivery and programme leaders.",
-            "PCI PDL-AI™ | PCI AI Project Delivery Leader™",
-            "The PCI AI Project Delivery Leader™ (PCI PDL-AI™) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.",
+            "PCI PDL-AI | PCI AI Project Delivery Leader",
+            "The PCI AI Project Delivery Leader (PCI PDL-AI) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.",
             "pdl-ai, pci pdl-ai, project delivery leader, project management certification, project leadership, agile, hybrid delivery",
             delivery);
 
@@ -156,16 +156,16 @@ public static class MultiCert
         // (old, new) — longest/most-specific first so the acronym pass doesn't pre-empt the full title.
         var maps = new (string a, string b)[]
         {
-            ("Certified Project Controls Professional — AI (PCP-AI)", "PCI AI Project Controls Leader™ (PCI PCL-AI™)"),
-            ("Certified Project Controls Professional – AI (PCP-AI)", "PCI AI Project Controls Leader™ (PCI PCL-AI™)"),
-            ("Certified Project Controls Professional — AI", "PCI AI Project Controls Leader™"),
-            ("Certified Project Controls Professional – AI", "PCI AI Project Controls Leader™"),
-            ("Certified Project Controls Professional", "PCI AI Project Controls Leader™"),
-            ("Certified Project Finance & Infrastructure Professional – AI", "PCI AI Project Finance Leader™"),
-            ("Certified Project Finance Professional – AI", "PCI AI Project Finance Leader™"),
-            ("Project Finance Leader – AI", "PCI AI Project Finance Leader™"),
-            ("Project Management Leader – AI", "PCI AI Project Delivery Leader™"),
-            ("PCI Project Management Leader", "PCI AI Project Delivery Leader™"),
+            ("Certified Project Controls Professional — AI (PCP-AI)", "PCI AI Project Controls Leader (PCI PCL-AI)"),
+            ("Certified Project Controls Professional – AI (PCP-AI)", "PCI AI Project Controls Leader (PCI PCL-AI)"),
+            ("Certified Project Controls Professional — AI", "PCI AI Project Controls Leader"),
+            ("Certified Project Controls Professional – AI", "PCI AI Project Controls Leader"),
+            ("Certified Project Controls Professional", "PCI AI Project Controls Leader"),
+            ("Certified Project Finance & Infrastructure Professional – AI", "PCI AI Project Finance Leader"),
+            ("Certified Project Finance Professional – AI", "PCI AI Project Finance Leader"),
+            ("Project Finance Leader – AI", "PCI AI Project Finance Leader"),
+            ("Project Management Leader – AI", "PCI AI Project Delivery Leader"),
+            ("PCI Project Management Leader", "PCI AI Project Delivery Leader"),
             ("Project Management Leader", "Project Delivery Leader"),
             ("PCP-AI", "PCL-AI"), ("PFIP-AI", "PFL-AI"), ("PFIP", "PFL-AI"),
             ("CPMD-AI", "PDL-AI"), ("CPMD", "PDL-AI"), ("PML-AI", "PDL-AI"),
@@ -193,15 +193,49 @@ public static class MultiCert
             }
             catch { /* table/column may not exist on an older DB — skip */ }
         }
+        TrademarkStrip(db);
+    }
+
+    /// <summary>Remove every trademark symbol (™ and its HTML entities, plus stray ®) from stored,
+    /// user-visible content. PCI has not instructed the platform to display registered or unregistered
+    /// trademark symbols, so no PCI credential name may carry one. This runs unconditionally on every boot
+    /// (idempotent — once stripped, the LIKE-guarded REPLACE is a no-op) so it heals production rows that a
+    /// prior deployment seeded WITH the symbol, independent of whether MigrateCert re-runs for that cert.
+    /// Internal codes (PCL-AI/PFL-AI/PDL-AI) never contain a symbol, so they are untouched.</summary>
+    static void TrademarkStrip(Db db)
+    {
+        // (table, column) covering every surface that can hold a rendered credential name.
+        (string table, string col)[] cols =
+        {
+            ("certifications", "name"), ("certifications", "public_title"), ("certifications", "acronym"),
+            ("certifications", "short_name"), ("certifications", "designation"), ("certifications", "short_description"),
+            ("certifications", "description"), ("certifications", "audience"), ("certifications", "meta_title"),
+            ("certifications", "meta_description"), ("certifications", "keywords"), ("certifications", "content_json"),
+            ("certifications", "tagline"),
+            ("page_blocks", "cvalue"), ("pages", "title"), ("pages", "meta_description"),
+            ("faqs", "question"), ("faqs", "answer"),
+            ("bok_domains", "name"), ("bok_domains", "description"), ("bok_domains", "bullets"),
+            ("news", "title"), ("news", "body"), ("resources", "title"), ("resources", "description"),
+            ("site_content", "cvalue"), ("cert_documents", "title"), ("cert_documents", "description"),
+            ("nav_items", "label"), ("public_documents", "title"), ("public_documents", "description"),
+        };
+        // Each symbol/entity to erase. Case-sensitive REPLACE; the ™ glyph is U+2122.
+        string[] marks = { "™", "&trade;", "&#8482;", "&#x2122;" };
+        foreach (var (table, col) in cols)
+            foreach (var m in marks)
+            {
+                try { db.Execute($"UPDATE {table} SET {col}=REPLACE({col},?,'') WHERE {col} LIKE ?", m, "%" + m + "%"); }
+                catch { /* table/column may not exist on this DB — skip */ }
+            }
     }
 
     static readonly (string a, string b)[] SingularMaps =
     {
-            (@"Enrolment for the PCL-AI is now open.", @"Enrolment for the PCI certifications — PCL-AI™, PFL-AI™ and PDL-AI™ — is now open."),
-            (@"The step-by-step roadmap to the PCL-AI: eligibility", @"The step-by-step roadmap to a PCI certification — PCL-AI™, PFL-AI™ or PDL-AI™: eligibility"),
-            (@"Your step-by-step path to the PCL-AI — from eligibility to credential.", @"Your step-by-step path to a PCI certification — PCL-AI™, PFL-AI™ or PDL-AI™ — from eligibility to credential."),
-            (@"Earning the PCL-AI follows a clear path", @"Earning a PCI certification — PCL-AI™, PFL-AI™ or PDL-AI™ — follows a clear path"),
-            (@"separate from the examined PCL-AI credential", @"separate from PCI's examined certifications — PCL-AI™, PFL-AI™ and PDL-AI™"),
+            (@"Enrolment for the PCL-AI is now open.", @"Enrolment for the PCI certifications — PCL-AI, PFL-AI and PDL-AI — is now open."),
+            (@"The step-by-step roadmap to the PCL-AI: eligibility", @"The step-by-step roadmap to a PCI certification — PCL-AI, PFL-AI or PDL-AI: eligibility"),
+            (@"Your step-by-step path to the PCL-AI — from eligibility to credential.", @"Your step-by-step path to a PCI certification — PCL-AI, PFL-AI or PDL-AI — from eligibility to credential."),
+            (@"Earning the PCL-AI follows a clear path", @"Earning a PCI certification — PCL-AI, PFL-AI or PDL-AI — follows a clear path"),
+            (@"separate from the examined PCL-AI credential", @"separate from PCI's examined certifications — PCL-AI, PFL-AI and PDL-AI"),
             (@"never the examined PCL-AI credential", @"never an examined PCI credential"),
             (@"You do not need to hold the PCL-AI credential", @"You do not need to hold a PCI credential"),
             (@"the PCL-AI rests on an independent", @"every PCI certification rests on an independent"),
@@ -379,7 +413,7 @@ public static class MultiCert
             (@"The PCL-AI assesses the applied, governed use of AI", @"The PCI certifications assess the applied, governed use of AI"),
             (@"Explore the PCL-AI", @"Explore the PCI certifications"),
             (@"pay the exam fee and earn the PCL-AI credential", @"pay the exam fee and earn your PCI credential"),
-            (@"The draft competency framework the PCL-AI credential assesses", @"The draft competency framework the PCI PCL-AI™ credential assesses"),
+            (@"The draft competency framework the PCL-AI credential assesses", @"The draft competency framework the PCI PCL-AI credential assesses"),
             (@"Sit the PCL-AI or AIPC online", @"Sit a PCI examination or the AIPC online"),
             (@"student membership, the PCL-AI exam, or both", @"student membership, your PCI certification exam, or both"),
             (@"the style and format of the PCL-AI examination", @"the style and format of the PCI examinations"),

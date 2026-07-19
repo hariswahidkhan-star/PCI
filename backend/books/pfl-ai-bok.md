@@ -1,11 +1,11 @@
-# PCI AI Project Finance Leader™ — Body of Knowledge
+# PCI AI Project Finance Leader — Body of Knowledge
 
 
 ## Foreword
 
 The financing of projects and infrastructure sits at the point where capital meets the built world. Every power plant, toll road, hospital, port and transmission line that reaches financial close does so because a structure was designed, a model was built, risks were identified and allocated, and lenders and investors were persuaded that the projected cash flows would hold. The professionals who lead that work carry a distinctive responsibility: their judgement shapes commitments that endure for decades.
 
-The Project Controls Institute (PCI) publishes this Body of Knowledge as the authoritative reference for the PCI AI Project Finance Leader™ (PFL-AI™) credential. It reflects the Institute's conviction that project finance leadership now demands two literacies at once: mastery of the enduring disciplines — modelling, appraisal, structuring, bankability and close — and a governed command of artificial intelligence, which is changing how financial analysis is produced, tested and reviewed.
+The Project Controls Institute (PCI) publishes this Body of Knowledge as the authoritative reference for the PCI AI Project Finance Leader (PFL-AI) credential. It reflects the Institute's conviction that project finance leadership now demands two literacies at once: mastery of the enduring disciplines — modelling, appraisal, structuring, bankability and close — and a governed command of artificial intelligence, which is changing how financial analysis is produced, tested and reviewed.
 
 On AI, the Institute's doctrine is deliberately plain: **AI proposes; the professional disposes.** Machine-generated analysis may accelerate the work, but every output relied upon must be explainable, validated and owned by a competent human. This volume teaches both the acceleration and the governance, because a leader who cannot interrogate an AI-produced model has no business signing it.
 
@@ -15,7 +15,7 @@ This Body of Knowledge is issued in the Institute's name and represents the coll
 
 ## About This Credential
 
-The PCI AI Project Finance Leader™ (PFL-AI™) is an examination-based professional credential. It is awarded to candidates who demonstrate, through the PFL-AI™ examination, competence across the domains defined in this Body of Knowledge. There is no portfolio or interview route: the examination is the sole instrument of assessment, and this volume defines what it assesses.
+The PCI AI Project Finance Leader (PFL-AI) is an examination-based professional credential. It is awarded to candidates who demonstrate, through the PFL-AI examination, competence across the domains defined in this Body of Knowledge. There is no portfolio or interview route: the examination is the sole instrument of assessment, and this volume defines what it assesses.
 
 The credential's scope is project and infrastructure finance leadership. Its core disciplines are financial modelling, investment appraisal, capital structure and leverage, debt and equity instruments, project bankability, coverage ratios (DSCR, LLCR and PLCR), public–private partnerships and concession structures, the contractual matrix, financial close, and commercial and financial risk management, together with sustainable and Islamic project finance. To these the credential adds a governed AI dimension: AI-enabled financial modelling, predictive cash-flow analysis, digital due diligence, responsible AI and the human validation of AI outputs.
 
@@ -35,11 +35,11 @@ Candidates should read the chapters in sequence on a first pass, since later cha
 
 ## Examination Overview
 
-The PFL-AI™ examination is a competency-based, multiple-choice examination delivered under secure, invigilated conditions. Items are drawn from an examination blueprint aligned to the chapters of this Body of Knowledge, so that no domain can be safely neglected.
+The PFL-AI examination is a competency-based, multiple-choice examination delivered under secure, invigilated conditions. Items are drawn from an examination blueprint aligned to the chapters of this Body of Knowledge, so that no domain can be safely neglected.
 
 The examination tests competence at three levels: recall of principles and terminology; application of methods to realistic project data, including numerical items in which the candidate computes a result before selecting an answer; and analysis of scenarios in which a project finance leader must weigh structure, risk and evidence — including scenarios in which AI-generated analysis must be scrutinised, validated or challenged before it is relied upon. Distractors are constructed from plausible professional errors, so sound method, not elimination technique, is the reliable route to a correct answer.
 
-Practical arrangements — scheduling, delivery, results, retakes and reasonable adjustments — are governed by the Institute's published examination policies, which candidates should consult alongside this volume. Success in the examination leads to the award of the PCI AI Project Finance Leader™ credential, subject to the Institute's certification terms in force at the time of the award.
+Practical arrangements — scheduling, delivery, results, retakes and reasonable adjustments — are governed by the Institute's published examination policies, which candidates should consult alongside this volume. Success in the examination leads to the award of the PCI AI Project Finance Leader credential, subject to the Institute's certification terms in force at the time of the award.
 
 
 
@@ -1190,7 +1190,7 @@ The leader automates the mechanical layer: clause extraction and summarisation, 
 
 Contract analytics carries specific model-risk exposures. Language models can hallucinate clause references or paraphrase with a fluency that quietly loses legal precision — a summary rendering "reasonable endeavours" as "best endeavours" has changed the risk allocation. Benchmarking tools trained on published precedents under-represent bespoke positions, non-standard jurisdictions and governing-law nuance. Version control is a governance discipline in its own right: analysis of a superseded draft is worse than no analysis. Confidentiality obligations constrain what may be submitted to external tools — the leader must know where the data goes before any contract is uploaded. Finally, contracts operate as systems: conditions precedent, notice regimes and cure periods interact, so clause-level extraction can miss behaviour that only emerges from the whole.
 
-Under the Institute's doctrine, AI-assisted contract review is decision support, not legal advice: it substitutes for neither counsel's opinion nor the finance leader's bankability judgement. Every AI-derived entry in the matrix presented to a credit committee must be traceable to the executed text, validated by a named professional and owned by that professional when challenged. The PFL-AI™ examination tests this directly: candidates must interrogate an AI-generated risk-allocation summary, identify what it has missed or mis-stated, and defend the corrected position.
+Under the Institute's doctrine, AI-assisted contract review is decision support, not legal advice: it substitutes for neither counsel's opinion nor the finance leader's bankability judgement. Every AI-derived entry in the matrix presented to a credit committee must be traceable to the executed text, validated by a named professional and owned by that professional when challenged. The PFL-AI examination tests this directly: candidates must interrogate an AI-generated risk-allocation summary, identify what it has missed or mis-stated, and defend the corrected position.
 
 > **AI proposes; the professional disposes.** A model may assemble the contractual matrix, extract the clauses and flag the mismatches — but only a competent professional, advised by counsel, may conclude that a risk has truly passed to a creditworthy counterparty. The signature beneath the risk-allocation summary is human, and it carries the accountability no machine can bear.
 
@@ -1877,7 +1877,7 @@ Project finance is a hostile environment for prediction: assets are one-off, his
 
 ### Human accountability
 
-A distribution does not diffuse accountability; it concentrates it. The professional who presents probabilistic coverage analysis to a credit committee owns the P50 and the P90 alike — including the prior choice of method, since a simulation is not automatically superior to an honest deterministic sensitivity when the decision requires only a bounded answer. Every AI-assisted forecast entering a bankability discussion must be explainable to a non-specialist decision-maker, validated against independent reasoning or data before use, and traceable to a named, competent owner. The PFL-AI™ examination tests the critique competency directly: candidates are assessed on their ability to identify when a predictive forecast fails, not merely on their ability to run one.
+A distribution does not diffuse accountability; it concentrates it. The professional who presents probabilistic coverage analysis to a credit committee owns the P50 and the P90 alike — including the prior choice of method, since a simulation is not automatically superior to an honest deterministic sensitivity when the decision requires only a bounded answer. Every AI-assisted forecast entering a bankability discussion must be explainable to a non-specialist decision-maker, validated against independent reasoning or data before use, and traceable to a named, competent owner. The PFL-AI examination tests the critique competency directly: candidates are assessed on their ability to identify when a predictive forecast fails, not merely on their ability to run one.
 
 > **AI proposes; the professional disposes.** The machine may propose the forecast, the distribution and the breach probability; only a competent professional may dispose — accepting, amending or rejecting each output on explainable grounds. When a lender asks why the model says the project holds at P90, the answer must come from a person, not a process.
 
@@ -2300,7 +2300,7 @@ D. "The financial model passed an independent model audit at financial close"
 
 ### Purpose of this capstone
 
-This closing chapter draws the strands of the PCI PFL-AI™ Body of Knowledge together into a single, realistic transaction. It introduces no new syllabus content; its purpose is integrative — to show how investment appraisal, financial modelling, capital structure, debt and equity, coverage ratios, bankability, contract structuring and PPP mechanics interlock on a live deal, and how artificial intelligence is applied at each stage under the Institute's governing doctrine: **AI proposes; the professional disposes.** Every AI output here is explainable, validated and owned by a competent, accountable human. Candidates should pause at each decision point to form their own view before reading on: the examination routinely tests this kind of cross-domain synthesis, and while the figures are illustrative, the reasoning is the examinable substance.
+This closing chapter draws the strands of the PCI PFL-AI Body of Knowledge together into a single, realistic transaction. It introduces no new syllabus content; its purpose is integrative — to show how investment appraisal, financial modelling, capital structure, debt and equity, coverage ratios, bankability, contract structuring and PPP mechanics interlock on a live deal, and how artificial intelligence is applied at each stage under the Institute's governing doctrine: **AI proposes; the professional disposes.** Every AI output here is explainable, validated and owned by a competent, accountable human. Candidates should pause at each decision point to form their own view before reading on: the examination routinely tests this kind of cross-domain synthesis, and while the figures are illustrative, the reasoning is the examinable substance.
 
 ### The scenario
 
@@ -2370,7 +2370,7 @@ At every stage, AI widened the field of vision — screening data, reading contr
 
 ### Closing note
 
-A candidate who can navigate Meridian Water — appraising it, structuring it, modelling it, banking it, closing it and stewarding it, with AI as a disciplined instrument rather than a delegated judgement — has integrated this Body of Knowledge as the examination intends. That integration, demonstrated under examination conditions, is what the PCI PFL-AI™ credential attests.
+A candidate who can navigate Meridian Water — appraising it, structuring it, modelling it, banking it, closing it and stewarding it, with AI as a disciplined instrument rather than a delegated judgement — has integrated this Body of Knowledge as the examination intends. That integration, demonstrated under examination conditions, is what the PCI PFL-AI credential attests.
 
 
 
@@ -2379,7 +2379,7 @@ A candidate who can navigate Meridian Water — appraising it, structuring it, m
 
 # Glossary
 
-Terms are defined here as they are used throughout the PCI PFL-AI™ Body of Knowledge and in the Institute's examination materials for the credential. Where a term recurs across chapters, the definition below governs. Terms relating to artificial intelligence are defined in accordance with the Institute's doctrine that AI proposes and the professional disposes: every AI output must be explainable, validated and owned by a competent human before it informs a professional decision.
+Terms are defined here as they are used throughout the PCI PFL-AI Body of Knowledge and in the Institute's examination materials for the credential. Where a term recurs across chapters, the definition below governs. Terms relating to artificial intelligence are defined in accordance with the Institute's doctrine that AI proposes and the professional disposes: every AI output must be explainable, validated and owned by a competent human before it informs a professional decision.
 
 **AI-enabled financial modelling** — The application of artificial intelligence techniques to the construction, review and interrogation of project finance models, including automated formula checking, assumption testing and natural-language querying of model outputs. Such tools accelerate the modeller's work; they never displace the modeller's judgement or accountability.
 

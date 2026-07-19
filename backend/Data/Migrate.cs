@@ -136,6 +136,9 @@ public static class Migrate
         // Honorary-route public applications (apply → board review → conferral) + reusable notification ledger.
         db.Exec(@"CREATE TABLE IF NOT EXISTS honorary_applications(id INTEGER PRIMARY KEY AUTOINCREMENT,reference TEXT UNIQUE NOT NULL,first_name TEXT,last_name TEXT,email TEXT,mobile TEXT,country TEXT,city TEXT,nationality TEXT,job_title TEXT,employer TEXT,years_experience INTEGER,industry TEXT,highest_qualification TEXT,professional_certifications TEXT,relevant_experience TEXT,professional_summary TEXT,declaration INTEGER DEFAULT 0,status TEXT NOT NULL DEFAULT 'pending_review',award_no TEXT,decided_by INTEGER,decided_at TEXT,admin_note TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_honapp_status ON honorary_applications(status)");
+        // Certification/discipline the applicant is aligned to (optional — honorary recognition is not tied
+        // to an examination, but the board records which of the PCI credentials the contribution relates to).
+        AddCol("honorary_applications", "certification_id", "certification_id INTEGER");
         db.Exec(@"CREATE TABLE IF NOT EXISTS honorary_application_documents(id INTEGER PRIMARY KEY AUTOINCREMENT,application_id INTEGER NOT NULL,doc_kind TEXT DEFAULT 'supporting',filename TEXT,mime TEXT,size_bytes INTEGER,storage_ref TEXT,sha256 TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_honappdoc_app ON honorary_application_documents(application_id)");
         // Training Partner framework (Phase 7): provider directory + public application + review workflow.
@@ -621,6 +624,17 @@ public static class Migrate
         // restricted to (NULL/empty = all certifications — the default, and forced for owners).
         AddCol("admin_users", "cert_scope", "cert_scope TEXT");
 
+        // Self-service admin password reset: single-use, expiring tokens (stored hashed) issued by the
+        // "Forgot password" flow and consumed by the reset page.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS admin_reset_tokens(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            admin_id INTEGER NOT NULL,
+            token TEXT NOT NULL,
+            expires_at TEXT NOT NULL,
+            used_at TEXT,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_admin_reset_token ON admin_reset_tokens(token)");
+
         MultiCert.Seed(db);
 
         // Public announcement modal defaults (idempotent: only fills absent keys, never overwrites
@@ -641,6 +655,39 @@ public static class Migrate
             }
         }
         catch { /* admin_users may not exist on a very first pass; ignored */ }
+
+        // Break-glass owner recovery: if ADMIN_OWNER_RESET_PASSWORD is set at boot, (re)activate the
+        // owner account and set its password to that value, forcing a change on next login. This lets
+        // an operator who is locked out regain access by setting one Render environment variable and
+        // redeploying — no database console needed. It targets ADMIN_OWNER_EMAIL if that owner exists,
+        // otherwise the earliest owner; if no owner exists at all it creates one. REMOVE the env var
+        // after logging in — while it is set, every boot re-applies it. Setting the env var already
+        // implies full control of the deployment, so this is not a new trust boundary.
+        try
+        {
+            var resetPw = Environment.GetEnvironmentVariable("ADMIN_OWNER_RESET_PASSWORD");
+            if (!string.IsNullOrWhiteSpace(resetPw))
+            {
+                var email = (Environment.GetEnvironmentVariable("ADMIN_OWNER_EMAIL") ?? "").Trim().ToLowerInvariant();
+                var hash = BCrypt.Net.BCrypt.HashPassword(resetPw);
+                var target = (email.Length > 0 ? db.QueryOne("SELECT id FROM admin_users WHERE lower(email)=? AND role='owner'", email) : null)
+                             ?? db.QueryOne("SELECT id FROM admin_users WHERE role='owner' ORDER BY id LIMIT 1");
+                if (target is not null)
+                {
+                    db.Execute("UPDATE admin_users SET password_hash=?, status='active', must_change_pw=1 WHERE id=?", hash, target["id"]);
+                    db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", target["id"]);   // invalidate any stale sessions
+                    Console.WriteLine("[seed] ADMIN_OWNER_RESET_PASSWORD applied — owner password reset (must change on next login). REMOVE this env var now.");
+                }
+                else
+                {
+                    var newEmail = email.Length > 0 ? email : "owner@pci.local";
+                    db.Execute("INSERT INTO admin_users(email,name,password_hash,role,status,must_change_pw) VALUES(?,?,?,?, 'active',1)",
+                        newEmail, "Owner", hash, "owner");
+                    Console.WriteLine($"[seed] ADMIN_OWNER_RESET_PASSWORD created a new owner ({newEmail}). REMOVE this env var now.");
+                }
+            }
+        }
+        catch (Exception e) { Console.Error.WriteLine($"[seed] owner reset skipped: {e.Message}"); }
 
         // Demo student on first run (users table empty): lets the operator try the student panel
         // before payments/SMTP are configured. Mirrors the bootstrap-owner pattern: known default
