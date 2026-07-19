@@ -1402,7 +1402,7 @@ def test_leadership_suite(admin):
         print("  SKIP  18t/18u shipped-BoK assertions (backend/books not present yet)")
         return
     c, bl2 = jget("GET", "/api/me/cert-documents", token=stok)
-    seeded_bok = next((r for r in bl2.get("rows", []) if r.get("kind") == "bok" and "Body of Knowledge" in (r.get("title") or "") and r.get("id") != bid), None)
+    seeded_bok = next((r for r in bl2.get("rows", []) if r.get("kind") == "bok" and "PFL-AI" in (r.get("title") or "") and "Body of Knowledge" in (r.get("title") or "")), None)
     chk("18t the authored PFL-AI Body of Knowledge is attached at boot", seeded_bok is not None and seeded_bok.get("has_file") == 1,
         [(r.get("title"), r.get("kind"), r.get("has_file")) for r in bl2.get("rows", [])])
     if seeded_bok is not None:
