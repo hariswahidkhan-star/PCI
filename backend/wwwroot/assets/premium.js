@@ -253,8 +253,14 @@
 (function () {
   'use strict';
   try {
+    // Exact-match the app surfaces (same rule as the announcement below): a substring test would
+    // wrongly hide the visitor chat on public pages like membership-student.html.
     var path = (location.pathname || '').toLowerCase();
-    if (path.indexOf('admin') !== -1 || path.indexOf('exam-ui') !== -1 || path.indexOf('student') !== -1) return;
+    var file = path.split('/').pop() || '';
+    var APP_SHELLS = { 'admin.html': 1, 'admin-chat.html': 1, 'exam-ui.html': 1, 'index-launcher.html': 1,
+      'student.html': 1, 'student-login.html': 1, 'student-registration.html': 1,
+      'student-dashboard.html': 1, 'student-welcome.html': 1 };
+    if (path.indexOf('/app') === 0 || path === '/admin' || path.indexOf('/admin/') === 0 || APP_SHELLS[file]) return;
     if (window.__pciChatLoaded || document.querySelector('script[data-pci-chat]')) return;
     var s = document.createElement('script');
     s.src = 'assets/chat.js';
@@ -274,9 +280,15 @@
 (function () {
   'use strict';
   try {
+    // Skip ONLY true application surfaces (portal, console, exam client, legacy portal shells).
+    // Deliberately exact-match — a substring test like indexOf('student') would wrongly hide the
+    // announcement on PUBLIC pages such as membership-student.html or examination-administration.html.
     var path = (location.pathname || '').toLowerCase();
-    if (path.indexOf('admin') !== -1 || path.indexOf('exam-ui') !== -1 || path.indexOf('/app') === 0 ||
-        path.indexOf('student') !== -1 || path.indexOf('launcher') !== -1) return;
+    var file = path.split('/').pop() || '';
+    var APP_SHELLS = { 'admin.html': 1, 'admin-chat.html': 1, 'exam-ui.html': 1, 'index-launcher.html': 1,
+      'student.html': 1, 'student-login.html': 1, 'student-registration.html': 1,
+      'student-dashboard.html': 1, 'student-welcome.html': 1 };
+    if (path.indexOf('/app') === 0 || path === '/admin' || path.indexOf('/admin/') === 0 || APP_SHELLS[file]) return;
     if (window.PCI_NO_ANNOUNCE) return;   // pages can opt out (e.g. a focused, personal-link flow)
     if (window.__pciAnnounceLoaded || document.getElementById('pciAnx')) return;
     window.__pciAnnounceLoaded = true;
