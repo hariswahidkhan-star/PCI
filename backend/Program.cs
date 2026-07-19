@@ -183,7 +183,7 @@ static string ClientIp(HttpContext ctx)
 // per client IP with a fixed-window in-memory counter. Applied by path prefix via middleware so it is
 // robust to route-handler shape (no per-endpoint chaining required).
 var _rlHits = new System.Collections.Concurrent.ConcurrentDictionary<string, (int count, long windowStart)>();
-string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login" };
+string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login" };
 const int RL_LIMIT = 10; const long RL_WINDOW_MS = 60_000;
 app.Use(async (ctx, next) =>
 {
@@ -221,7 +221,7 @@ app.Use(async (ctx, next) =>
 // direct API caller can't bypass the change the way the SPA gate can't. Read paths and the auth
 // endpoints stay open so the change flow itself works.
 var _mcpAllow = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-{ "/api/admin/auth/login", "/api/admin/auth/logout", "/api/admin/me", "/api/admin/me/password", "/api/admin/auth/forgot", "/api/admin/auth/reset" };
+{ "/api/admin/auth/login", "/api/admin/auth/logout", "/api/admin/me", "/api/admin/me/password", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover" };
 app.Use(async (ctx, next) =>
 {
     var path = ctx.Request.Path.Value ?? "";
@@ -505,6 +505,38 @@ app.MapPost("/api/admin/auth/reset", async (HttpRequest req) =>
     db.Execute("DELETE FROM admin_reset_tokens WHERE admin_id=? AND used_at IS NULL", adminId);  // invalidate other outstanding links
     db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", adminId);                           // sign out everywhere
     Log(adminId as long? ?? 0, "admin_password_reset_completed", null);
+    return Json(new { ok = true });
+});
+
+// ---- recovery-code reset: reset an admin password with a shared recovery code, no email needed ----
+// Enabled only when the ADMIN_RECOVERY_CODE environment variable is set (a secret the operator holds).
+// Anyone presenting the correct code can set a new password for the named active admin — so the code
+// is a master recovery secret and must be kept private. Constant-time compared and rate-limited.
+// Distinct from the email flow (no inbox required) and the ADMIN_OWNER_RESET_PASSWORD env reset (no
+// redeploy required — set the code once, then reset on demand from the login page).
+app.MapPost("/api/admin/auth/recover", async (HttpRequest req) =>
+{
+    var configured = Environment.GetEnvironmentVariable("ADMIN_RECOVERY_CODE");
+    if (string.IsNullOrWhiteSpace(configured))
+        return Results.Json(new { error = "recovery_disabled", message = "Recovery-code reset is not enabled for this instance." }, statusCode: 400);
+    var b = await Body(req);
+    var email = (S(b, "email") ?? "").Trim().ToLowerInvariant();
+    var code = S(b, "code") ?? "";
+    var newPw = S(b, "new_password") ?? "";
+    if (newPw.Length < 8) return Results.Json(new { error = "weak_password", message = "Use at least 8 characters." }, statusCode: 400);
+    // Constant-time code check first; a generic failure is returned for a bad code OR unknown email so
+    // the endpoint reveals nothing about which is wrong.
+    var codeOk = Security.FixedTimeEquals(code, configured);
+    var a = codeOk ? db.QueryOne("SELECT id,email FROM admin_users WHERE lower(email)=? AND status='active'", email) : null;
+    if (!codeOk || a is null)
+    {
+        Log(0, "admin_recovery_failed", email);
+        return Results.Json(new { error = "recovery_invalid", message = "The recovery code or email is not valid." }, statusCode: 400);
+    }
+    db.Execute("UPDATE admin_users SET password_hash=?, must_change_pw=0, status='active' WHERE id=?", BCrypt.Net.BCrypt.HashPassword(newPw), a["id"]);
+    db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", a["id"]);               // sign out everywhere
+    db.Execute("DELETE FROM admin_reset_tokens WHERE admin_id=? AND used_at IS NULL", a["id"]);   // void any pending email links
+    Log(a["id"] as long? ?? 0, "admin_recovery_completed", email);
     return Json(new { ok = true });
 });
 

@@ -15,9 +15,12 @@ export default function AdminLogin() {
   const [totp, setTotp] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
-  // Forgot-password sub-flow (request a reset link).
-  const [mode, setMode] = useState<'login' | 'forgot'>('login')
+  // Password-recovery sub-flows: 'forgot' emails a link; 'recover' uses a shared recovery code.
+  const [mode, setMode] = useState<'login' | 'forgot' | 'recover'>('login')
   const [sent, setSent] = useState(false)
+  const [code, setCode] = useState('')
+  const [newPw, setNewPw] = useState('')
+  const [recovered, setRecovered] = useState(false)
 
   async function requestReset(e: FormEvent) {
     e.preventDefault()
@@ -29,6 +32,24 @@ export default function AdminLogin() {
     } catch {
       // The endpoint always succeeds; only a network error lands here.
       setSent(true)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function recoverWithCode(e: FormEvent) {
+    e.preventDefault()
+    setError(null)
+    if (newPw.length < 8) { setError('Use at least 8 characters for the new password.'); return }
+    setBusy(true)
+    try {
+      await adminApi.post('/api/admin/auth/recover', { email: email.trim().toLowerCase(), code: code.trim(), new_password: newPw })
+      setRecovered(true)
+    } catch (err) {
+      const msg = err instanceof ApiError && err.body && typeof err.body === 'object' && 'message' in err.body
+        ? String((err.body as Record<string, unknown>).message)
+        : (err instanceof Error ? err.message : 'Recovery failed.')
+      setError(msg)
     } finally {
       setBusy(false)
     }
@@ -86,13 +107,48 @@ export default function AdminLogin() {
               </div>
             )}
             <button className="btn block" type="submit" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
-            <div style={{ textAlign: 'center', marginTop: '.9rem' }}>
-              <button type="button" className="linkish" style={{ background: 'none', border: 0, color: 'var(--brand,#1D4ED8)', cursor: 'pointer', font: 'inherit', fontSize: '.85rem' }}
+            <div style={{ textAlign: 'center', marginTop: '.9rem', display: 'flex', gap: '.9rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button type="button" style={{ background: 'none', border: 0, color: 'var(--brand,#1D4ED8)', cursor: 'pointer', font: 'inherit', fontSize: '.85rem' }}
                 onClick={() => { setMode('forgot'); setError(null); setSent(false) }}>
                 Forgot password?
               </button>
+              <button type="button" style={{ background: 'none', border: 0, color: 'var(--brand,#1D4ED8)', cursor: 'pointer', font: 'inherit', fontSize: '.85rem' }}
+                onClick={() => { setMode('recover'); setError(null); setRecovered(false); setCode(''); setNewPw('') }}>
+                Use a recovery code
+              </button>
             </div>
           </form>
+        ) : mode === 'recover' ? (
+          recovered ? (
+            <div>
+              <div className="notice ok" role="status" style={{ marginBottom: '1rem' }}>Your password has been reset. You can sign in now.</div>
+              <button className="btn block" onClick={() => { setMode('login'); setRecovered(false); setPassword('') }}>Back to sign in</button>
+            </div>
+          ) : (
+            <form onSubmit={recoverWithCode}>
+              {error && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{error}</div>}
+              <p className="muted small" style={{ marginBottom: '1rem' }}>Enter your admin email, the recovery code set for this instance, and a new password.</p>
+              <div className="field">
+                <label htmlFor="remail">Email address</label>
+                <input id="remail" type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} />
+              </div>
+              <div className="field">
+                <label htmlFor="rcode">Recovery code</label>
+                <input id="rcode" type="text" autoComplete="off" required value={code} onChange={(e) => setCode(e.target.value)} />
+              </div>
+              <div className="field">
+                <label htmlFor="rnp">New password</label>
+                <input id="rnp" type="password" autoComplete="new-password" required value={newPw} onChange={(e) => setNewPw(e.target.value)} />
+              </div>
+              <button className="btn block" type="submit" disabled={busy}>{busy ? 'Resetting…' : 'Reset password'}</button>
+              <div style={{ textAlign: 'center', marginTop: '.9rem' }}>
+                <button type="button" style={{ background: 'none', border: 0, color: 'var(--brand,#1D4ED8)', cursor: 'pointer', font: 'inherit', fontSize: '.85rem' }}
+                  onClick={() => { setMode('login'); setError(null) }}>
+                  Back to sign in
+                </button>
+              </div>
+            </form>
+          )
         ) : sent ? (
           <div>
             <div className="notice ok" role="status" style={{ marginBottom: '1rem' }}>
