@@ -35,6 +35,12 @@ public sealed class RetentionService : BackgroundService
                 var removed = Storage.PurgeOlderThan(days);
                 if (removed > 0)
                     Console.WriteLine($"[retention] purged {removed} artefact(s) older than {days}d");
+
+                // Honorary identity documents have their OWN retention window (they live in a purge-protected
+                // category, so the sweep above never touches them). Off unless an operator sets a positive
+                // value — data-minimisation policy is manual review + delete-on-decision by default.
+                var idvDays = (int)Settings.Num(_db, "honorary_idv_retention_days", 0);
+                if (idvDays > 0) PCI.Backend.Endpoints.HonoraryIdv.PurgeExpired(_db, idvDays);
             }
             catch (Exception e)
             {

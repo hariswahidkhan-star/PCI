@@ -28,7 +28,7 @@ BASE_APP = {
     "years_experience": 40, "industry": "Computing", "highest_qualification": "PhD",
     "relevant_experience": "Pioneered compilers and standardisation.",
     "professional_summary": "A foundational contributor to the profession.",
-    "declaration": True,
+    "declaration": True, "eligibility_confirmed": True, "terms_accepted": True,
     "documents": [{"doc_kind": "resume", "filename": "cv.pdf", "data_uri": PDF}],
 }
 
@@ -47,6 +47,12 @@ def run(admin):
 
     no_decl = dict(BASE_APP, email="x2@ex.co", declaration=False)
     chk("ha1c missing declaration → 400", jget("POST", "/api/honorary-application", body=no_decl)[1].get("error") == "declaration_required")
+
+    no_elig = dict(BASE_APP, email="x2b@ex.co", eligibility_confirmed=False)
+    chk("ha1c2 missing eligibility confirmation → 400", jget("POST", "/api/honorary-application", body=no_elig)[1].get("error") == "eligibility_required")
+
+    no_terms = dict(BASE_APP, email="x2c@ex.co", terms_accepted=False)
+    chk("ha1c3 missing terms acceptance → 400", jget("POST", "/api/honorary-application", body=no_terms)[1].get("error") == "terms_required")
 
     bad_file = dict(BASE_APP, email="x3@ex.co", documents=[{"doc_kind": "resume", "filename": "x.txt", "data_uri": "data:text/plain;base64,aGVsbG8="}])
     chk("ha1d disallowed file type → 400 file_type_not_allowed", jget("POST", "/api/honorary-application", body=bad_file)[1].get("error") == "file_type_not_allowed")
@@ -94,6 +100,49 @@ def run(admin):
     c, det2 = jget("GET", f"/api/admin/honorary-applications/{aid}", token=admin)
     chk("ha3g application now marked approved with the award number", det2["application"]["status"] == "approved" and det2["application"]["award_no"] == award, det2["application"].get("status"))
     chk("ha3h re-approve refused (409 already decided)", jget("POST", f"/api/admin/honorary-applications/{aid}/decide", token=admin, body={"status": "approved"})[0] == 409)
+
+    # ---------- shortlist-gated identity verification ----------
+    print("\n=== HA3i. Shortlist → secure identity verification (photo + gov ID + background declaration) ===")
+    idv_app = dict(BASE_APP, email="idv.candidate@example.com")
+    c, ib = jget("POST", "/api/honorary-application", body=idv_app)
+    iref = ib.get("reference")
+    c, ilst = jget("GET", "/api/admin/honorary-applications?status=pending_review", token=admin)
+    iaid = next(r["id"] for r in ilst["rows"] if r.get("reference") == iref)
+
+    chk("ha3i-a public IDV with a bogus token → 404", req("GET", "/api/honorary-idv/deadbeefdeadbeefdeadbeef")[0] == 404)
+    chk("ha3i-b shortlist requires owner (student_manager 403)", jget("POST", f"/api/admin/honorary-applications/{iaid}/shortlist", token=smgr)[0] == 403)
+    chk("ha3i-c shortlist requires auth (401)", req("POST", f"/api/admin/honorary-applications/{iaid}/shortlist")[0] == 401)
+
+    c, sl = jget("POST", f"/api/admin/honorary-applications/{iaid}/shortlist", token=admin)
+    chk("ha3i-d owner shortlist returns a secure link", c == 200 and "token=" in str(sl.get("link", "")), sl)
+    tok = str(sl["link"]).split("token=")[1]
+
+    c, ctx = jget("GET", f"/api/honorary-idv/{tok}")
+    chk("ha3i-e candidate opens the link (name returned, not submitted)", c == 200 and ctx.get("first_name") == "Grace" and ctx.get("already_submitted") is False, ctx)
+
+    base_idv = {"photo": PDF, "government_id": PDF, "declaration_truthful": True, "background_declaration": True, "consent": True}
+    chk("ha3i-f missing photo → 400", jget("POST", f"/api/honorary-idv/{tok}", body=dict(base_idv, photo=""))[1].get("error") == "photo_required")
+    chk("ha3i-g missing government ID → 400", jget("POST", f"/api/honorary-idv/{tok}", body=dict(base_idv, government_id=""))[1].get("error") == "government_id_required")
+    chk("ha3i-h missing background declaration → 400", jget("POST", f"/api/honorary-idv/{tok}", body=dict(base_idv, background_declaration=False))[1].get("error") == "background_required")
+    chk("ha3i-i missing consent → 400", jget("POST", f"/api/honorary-idv/{tok}", body=dict(base_idv, consent=False))[1].get("error") == "consent_required")
+
+    c, sub = jget("POST", f"/api/honorary-idv/{tok}", body=base_idv)
+    chk("ha3i-j valid submission accepted", c == 200 and sub.get("ok") is True, sub)
+    chk("ha3i-k the one-time token is burned (reuse → 404)", jget("POST", f"/api/honorary-idv/{tok}", body=base_idv)[0] == 404)
+
+    c, idet = jget("GET", f"/api/admin/honorary-applications/{iaid}", token=admin)
+    kinds = sorted(d["doc_kind"] for d in idet.get("idv_documents", []))
+    chk("ha3i-l admin sees exactly the photo + government ID", kinds == ["government_id", "photo"], kinds)
+    chk("ha3i-m application marked idv submitted with background declaration", idet["application"]["idv_status"] == "submitted" and idet["application"]["background_declaration"] == 1, idet["application"].get("idv_status"))
+    idvdoc = idet["idv_documents"][0]["id"]
+    chk("ha3i-n owner downloads an IDV document (200)", req("GET", f"/api/admin/honorary-applications/{iaid}/idv/{idvdoc}/file", token=admin)[0] == 200)
+    chk("ha3i-o non-owner refused the IDV document (403)", req("GET", f"/api/admin/honorary-applications/{iaid}/idv/{idvdoc}/file", token=smgr)[0] == 403)
+    chk("ha3i-p anon refused the IDV document (401)", req("GET", f"/api/admin/honorary-applications/{iaid}/idv/{idvdoc}/file")[0] == 401)
+
+    c, dl = jget("POST", f"/api/admin/honorary-applications/{iaid}/idv/delete", token=admin)
+    chk("ha3i-q owner deletes identity documents (data minimisation)", c == 200 and dl.get("deleted") == 2, dl)
+    c, idet2 = jget("GET", f"/api/admin/honorary-applications/{iaid}", token=admin)
+    chk("ha3i-r documents gone + status 'deleted' after deletion", len(idet2.get("idv_documents", [])) == 0 and idet2["application"]["idv_status"] == "deleted", idet2["application"].get("idv_status"))
 
     # ---------- notification ledger ----------
     print("\n=== HA4. Reusable notification ledger records every attempt ===")

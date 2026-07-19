@@ -41,6 +41,7 @@ const NAV: NavItem[] = [
 
   { to: '/pages', label: 'Pages & content', perm: 'pages', group: 'Website' },
   { to: '/content', label: 'Site content', perm: 'content', group: 'Website' },
+  { to: '/announcement', label: 'Announcement', perm: 'content', group: 'Website' },
   { to: '/translations', label: 'Translations', owner: true, group: 'Website' },
 
 

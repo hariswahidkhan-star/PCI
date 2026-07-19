@@ -181,7 +181,27 @@ public static class Storage
     // Purgeable categories stay implicit: evidence, idd, appeal, accommodation, support, cpd — all
     // candidate-submitted case/identity evidence, which is what evidence_retention_days governs.
     static readonly HashSet<string> ProtectedCategories = new(StringComparer.OrdinalIgnoreCase)
-        { "documents", "certificates", "books", "founding", "honorary", "partners" };
+        { "documents", "certificates", "books", "founding", "honorary", "honorary-idv", "partners" };
+
+    /// <summary>Delete a SINGLE stored object by reference (used for targeted, policy-driven deletion of
+    /// sensitive artefacts such as honorary identity documents — not the blanket retention sweep). Returns
+    /// true if the object was removed (or already absent).</summary>
+    public static bool DeleteOne(string? reference)
+    {
+        if (string.IsNullOrEmpty(reference)) return false;
+        var colon = reference.IndexOf(':');
+        if (colon < 0) return false;
+        var provider = reference[..colon];
+        var rel = reference[(colon + 1)..];
+        if (rel.Contains("..") || rel.StartsWith('/') || rel.Contains('\\')) return false;
+        if (provider == "s3")
+        {
+            if (string.IsNullOrEmpty(S3Bucket)) return false;
+            try { S3Client().DeleteObjectAsync(S3Bucket, rel).GetAwaiter().GetResult(); return true; } catch { return false; }
+        }
+        var full = Path.Combine(Root, rel);
+        try { if (File.Exists(full)) File.Delete(full); return true; } catch { return false; }
+    }
     static bool InProtectedCategory(string rootFull, string file)
     {
         try

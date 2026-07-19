@@ -56,8 +56,11 @@ public static class HonoraryApplication
             var profCerts = S("professional_certifications", 4000, "professionalCertifications");
             var relevantExp = S("relevant_experience", 6000, "relevantExperience");
             var summary = S("professional_summary", 6000, "professionalSummary");
-            var declaration = (H.GetEl(b, "declaration") is { } de && (de.ValueKind == JsonValueKind.True
-                || (de.ValueKind == JsonValueKind.String && de.GetString() is "1" or "true" or "yes")));
+            bool Flag(string key) => H.GetEl(b, key) is { } e && (e.ValueKind == JsonValueKind.True
+                || (e.ValueKind == JsonValueKind.String && e.GetString() is "1" or "true" or "yes"));
+            var declaration = Flag("declaration");
+            var eligibilityConfirmed = Flag("eligibility_confirmed") || Flag("eligibilityConfirmed");
+            var termsAccepted = Flag("terms_accepted") || Flag("termsAccepted");
 
             // Optional certification/discipline the applicant is aligned to. Honorary recognition is not
             // tied to an examination, so this is not required — but if a value is sent it must resolve to a
@@ -81,6 +84,8 @@ public static class HonoraryApplication
                 (summary, "professional_summary_required") })
                 if (val.Length == 0) return Results.Json(new { error = code }, statusCode: 400);
             if (!declaration) return Results.Json(new { error = "declaration_required", message = "The applicant declaration must be accepted." }, statusCode: 400);
+            if (!eligibilityConfirmed) return Results.Json(new { error = "eligibility_required", message = "Please confirm you meet the eligibility criteria." }, statusCode: 400);
+            if (!termsAccepted) return Results.Json(new { error = "terms_required", message = "The terms and conditions must be accepted." }, statusCode: 400);
 
             // ---- validate + store documents (Storage enforces MIME allow-list + 3 MB magic-byte check) ----
             var docsEl = H.GetEl(b, "documents");
@@ -114,8 +119,8 @@ public static class HonoraryApplication
                 try
                 {
                     appId = db.ExecuteReturningId(@"INSERT INTO honorary_applications
-                        (reference,first_name,last_name,email,mobile,country,city,nationality,job_title,employer,years_experience,industry,highest_qualification,professional_certifications,relevant_experience,professional_summary,certification_id,declaration,status)
-                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,'pending_review')",
+                        (reference,first_name,last_name,email,mobile,country,city,nationality,job_title,employer,years_experience,industry,highest_qualification,professional_certifications,relevant_experience,professional_summary,certification_id,declaration,eligibility_confirmed,terms_accepted,terms_accepted_at,status)
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,1,1,datetime('now'),'pending_review')",
                         cand, first, last, email, mobile, country, city, nationality, jobTitle, employer, yearsExp, industry, highestQual, profCerts, relevantExp, summary, certId);
                     reference = cand;
                 }
@@ -186,7 +191,9 @@ public static class HonoraryApplication
             if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             // Never expose storage_ref/sha to the client — only safe metadata + the download id.
             var docs = db.Query("SELECT id,doc_kind,filename,mime,size_bytes,created_at FROM honorary_application_documents WHERE application_id=? ORDER BY id", id);
-            return J(new { application = a, documents = docs });
+            // Shortlist-stage identity-verification documents (owner-only surface), same safe-metadata rule.
+            var idvDocs = db.Query("SELECT id,doc_kind,filename,mime,size_bytes,created_at FROM honorary_idv_documents WHERE application_id=? ORDER BY id", id);
+            return J(new { application = a, documents = docs, idv_documents = idvDocs });
         });
 
         app.MapGet("/api/admin/honorary-applications/{id}/documents/{docId}/file", (HttpContext ctx, long id, long docId) =>

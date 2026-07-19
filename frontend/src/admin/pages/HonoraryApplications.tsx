@@ -29,6 +29,10 @@ interface HonApp {
   admin_note?: string | null
   created_at?: string | null
   doc_count?: number | null
+  shortlisted?: number | null
+  idv_status?: string | null
+  idv_submitted_at?: string | null
+  background_declaration?: number | null
 }
 interface HonDoc {
   id: number
@@ -37,12 +41,14 @@ interface HonDoc {
   mime?: string | null
   size_bytes?: number | null
 }
+interface HonDetail { application: HonApp; documents: HonDoc[]; idv_documents: HonDoc[] }
 
 const TONE: Record<string, 'ok' | 'err' | 'brand' | 'warn'> = {
   approved: 'ok', pending_review: 'brand', under_review: 'warn', rejected: 'err',
 }
 const DOC_LABEL: Record<string, string> = {
   resume: 'Résumé / CV', academic: 'Academic qualification', certifications: 'Professional certification', supporting: 'Supporting document',
+  photo: 'Passport-style photograph', government_id: 'Government-issued ID',
 }
 
 /** Board review of public Honorary Fellow (PCI) applications: view the applicant, download their
@@ -52,20 +58,54 @@ export default function HonoraryApplications() {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: HonApp[] }>(
     `/api/admin/honorary-applications${status ? `?status=${status}` : ''}`,
   )
-  const [open, setOpen] = useState<{ application: HonApp; documents: HonDoc[] } | null>(null)
+  const [open, setOpen] = useState<HonDetail | null>(null)
   const [note, setNote] = useState('')
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const [idvLink, setIdvLink] = useState<string | null>(null)
+  const [linkMsg, setLinkMsg] = useState<string | null>(null)
 
   async function view(id: number) {
-    setErr(null)
+    setErr(null); setIdvLink(null); setLinkMsg(null)
     try {
-      const d = await adminApi.get<{ application: HonApp; documents: HonDoc[] }>(`/api/admin/honorary-applications/${id}`)
+      const d = await adminApi.get<HonDetail>(`/api/admin/honorary-applications/${id}`)
       setOpen(d)
       setNote(d.application.admin_note ?? '')
     } catch (e) {
       setErr(e instanceof Error ? e.message : 'Could not load the application.')
     }
+  }
+
+  async function shortlist(id: number) {
+    setBusy(true); setErr(null); setLinkMsg(null)
+    try {
+      const r = await adminApi.post<{ link: string; emailed: boolean; expires_days: number }>(`/api/admin/honorary-applications/${id}/shortlist`, {})
+      setIdvLink(r.link)
+      setLinkMsg(r.emailed ? `Secure link emailed to the applicant (expires in ${r.expires_days} days). You can also copy it below.` : `Secure link generated (expires in ${r.expires_days} days). Email is off — copy and send it to the applicant.`)
+      await view(id)
+    } catch (e) { setErr(e instanceof Error ? e.message : 'Could not shortlist.') }
+    finally { setBusy(false) }
+  }
+
+  async function idvAction(id: number, path: string, confirmMsg?: string) {
+    if (confirmMsg && !window.confirm(confirmMsg)) return
+    setBusy(true); setErr(null)
+    try { await adminApi.post(`/api/admin/honorary-applications/${id}/${path}`, {}); setIdvLink(null); setLinkMsg(null); await view(id) }
+    catch (e) { setErr(e instanceof Error ? e.message : 'Action failed.') }
+    finally { setBusy(false) }
+  }
+
+  async function downloadIdv(appId: number, docId: number) {
+    setErr(null)
+    try {
+      const res = await fetch(`/api/admin/honorary-applications/${appId}/idv/${docId}/file`, {
+        headers: { Authorization: 'Bearer ' + (adminApi.getToken() ?? '') },
+      })
+      if (!res.ok) throw new Error('Could not load the file.')
+      const url = URL.createObjectURL(await res.blob())
+      window.open(url, '_blank', 'noopener')
+      setTimeout(() => URL.revokeObjectURL(url), 60_000)
+    } catch (e) { setErr(e instanceof Error ? e.message : 'Could not load the file.') }
   }
 
   async function download(appId: number, docId: number) {
@@ -189,6 +229,55 @@ export default function HonoraryApplications() {
               <KV k="Professional certifications" v={open.application.professional_certifications} />
               <KV k="Relevant experience" v={open.application.relevant_experience} block />
               <KV k="Professional summary" v={open.application.professional_summary} block />
+            </Section>
+
+            <Section title="Identity verification (shortlist stage)">
+              <div className="small" style={{ marginBottom: '.4rem' }}>
+                Status:{' '}
+                <Badge tone={open.application.idv_status === 'submitted' ? 'ok' : open.application.idv_status === 'deleted' ? 'err' : open.application.idv_status === 'invited' ? 'warn' : 'brand'}>
+                  {(open.application.idv_status || 'none').replace(/_/g, ' ')}
+                </Badge>
+                {open.application.idv_submitted_at && <span className="muted"> · submitted {fmtDate(open.application.idv_submitted_at)}</span>}
+              </div>
+              {open.application.idv_status === 'submitted' && (
+                <div className="small muted" style={{ marginBottom: '.4rem' }}>
+                  Background &amp; truthfulness declaration: {open.application.background_declaration ? 'accepted' : '—'}.
+                </div>
+              )}
+              <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap', marginBottom: '.5rem' }}>
+                <button className="btn ghost sm" disabled={busy} onClick={() => shortlist(open.application.id)}>
+                  {open.application.shortlisted ? 'Regenerate secure link' : 'Shortlist & generate secure link'}
+                </button>
+                {open.application.idv_status === 'invited' && (
+                  <button className="btn ghost sm" disabled={busy} onClick={() => idvAction(open.application.id, 'idv/revoke')}>Revoke link</button>
+                )}
+                {open.idv_documents.length > 0 && (
+                  <button className="btn ghost sm danger" disabled={busy}
+                    onClick={() => idvAction(open.application.id, 'idv/delete', 'Delete the applicant’s identity documents? This permanently removes the photo and ID (data minimisation).')}>
+                    Delete identity documents
+                  </button>
+                )}
+              </div>
+              {linkMsg && <div className="notice small" style={{ marginBottom: '.4rem' }}>{linkMsg}</div>}
+              {idvLink && (
+                <div className="field" style={{ marginBottom: '.5rem' }}>
+                  <input readOnly value={idvLink} onFocus={(e) => e.currentTarget.select()} style={{ fontSize: '.8rem' }} />
+                  <button className="btn ghost sm" type="button" style={{ marginTop: '.3rem' }}
+                    onClick={() => { navigator.clipboard?.writeText(idvLink); setLinkMsg('Link copied to clipboard.') }}>Copy link</button>
+                </div>
+              )}
+              {open.idv_documents.length === 0 ? (
+                <p className="muted small">No identity documents submitted yet.</p>
+              ) : (
+                <ul className="clean" style={{ display: 'grid', gap: '.4rem', paddingLeft: 0, listStyle: 'none' }}>
+                  {open.idv_documents.map((d) => (
+                    <li key={d.id} className="row" style={{ justifyContent: 'space-between' }}>
+                      <span className="small">{DOC_LABEL[d.doc_kind] || d.doc_kind}{d.filename ? ` — ${d.filename}` : ''}</span>
+                      <button className="btn ghost sm" onClick={() => downloadIdv(open.application.id, d.id)}>View</button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </Section>
 
             <Section title={`Documents (${open.documents.length})`}>
