@@ -340,7 +340,7 @@ app.Use(async (ctx, next) =>
 });
 
 // ================= health =================
-app.MapGet("/api/health", () => Json(new { ok = true, service = "pci-backend", time = DateTime.UtcNow.ToString("o") }));
+app.MapGet("/api/health", () => Json(new { ok = true, service = "pci-backend", time = DateTime.UtcNow.ToString("o"), recovery_configured = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ADMIN_RECOVERY_CODE")) }));
 
 // Operational readiness for admins (owner-only). Reports booleans/severities only — never the secret values.
 app.MapGet("/api/admin/system-check", (HttpRequest req) =>
