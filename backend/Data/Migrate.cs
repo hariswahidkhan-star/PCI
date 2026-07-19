@@ -139,6 +139,9 @@ public static class Migrate
         // Certification/discipline the applicant is aligned to (optional — honorary recognition is not tied
         // to an examination, but the board records which of the PCI credentials the contribution relates to).
         AddCol("honorary_applications", "certification_id", "certification_id INTEGER");
+        // Optional applicant explanation for the limited suitability declaration. Sensitive — surfaced only
+        // in the owner-only application detail, never in lists, and covered by limited retention.
+        AddCol("honorary_applications", "suitability_note", "suitability_note TEXT");
         db.Exec(@"CREATE TABLE IF NOT EXISTS honorary_application_documents(id INTEGER PRIMARY KEY AUTOINCREMENT,application_id INTEGER NOT NULL,doc_kind TEXT DEFAULT 'supporting',filename TEXT,mime TEXT,size_bytes INTEGER,storage_ref TEXT,sha256 TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_honappdoc_app ON honorary_application_documents(application_id)");
         // Training Partner framework (Phase 7): provider directory + public application + review workflow.

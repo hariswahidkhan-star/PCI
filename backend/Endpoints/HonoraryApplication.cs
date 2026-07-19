@@ -61,6 +61,7 @@ public static class HonoraryApplication
             var declaration = Flag("declaration");
             var eligibilityConfirmed = Flag("eligibility_confirmed") || Flag("eligibilityConfirmed");
             var termsAccepted = Flag("terms_accepted") || Flag("termsAccepted");
+            var suitabilityNote = S("suitability_note", 2000, "suitabilityNote");
 
             // Optional certification/discipline the applicant is aligned to. Honorary recognition is not
             // tied to an examination, so this is not required — but if a value is sent it must resolve to a
@@ -119,9 +120,9 @@ public static class HonoraryApplication
                 try
                 {
                     appId = db.ExecuteReturningId(@"INSERT INTO honorary_applications
-                        (reference,first_name,last_name,email,mobile,country,city,nationality,job_title,employer,years_experience,industry,highest_qualification,professional_certifications,relevant_experience,professional_summary,certification_id,declaration,eligibility_confirmed,terms_accepted,terms_accepted_at,status)
-                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,1,1,datetime('now'),'pending_review')",
-                        cand, first, last, email, mobile, country, city, nationality, jobTitle, employer, yearsExp, industry, highestQual, profCerts, relevantExp, summary, certId);
+                        (reference,first_name,last_name,email,mobile,country,city,nationality,job_title,employer,years_experience,industry,highest_qualification,professional_certifications,relevant_experience,professional_summary,certification_id,suitability_note,declaration,eligibility_confirmed,terms_accepted,terms_accepted_at,status)
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,1,1,datetime('now'),'pending_review')",
+                        cand, first, last, email, mobile, country, city, nationality, jobTitle, employer, yearsExp, industry, highestQual, profCerts, relevantExp, summary, certId, suitabilityNote);
                     reference = cand;
                 }
                 catch { /* reference collision → retry */ }

@@ -24,6 +24,7 @@ interface HonApp {
   professional_certifications?: string | null
   relevant_experience?: string | null
   professional_summary?: string | null
+  suitability_note?: string | null
   status: string
   award_no?: string | null
   admin_note?: string | null
@@ -230,6 +231,12 @@ export default function HonoraryApplications() {
               <KV k="Relevant experience" v={open.application.relevant_experience} block />
               <KV k="Professional summary" v={open.application.professional_summary} block />
             </Section>
+            {open.application.suitability_note && (
+              <Section title="Suitability declaration (confidential)">
+                <p className="muted small" style={{ margin: '0 0 .3rem' }}>Reviewed confidentially, in context; not published; limited retention.</p>
+                <KV k="Applicant explanation" v={open.application.suitability_note} block />
+              </Section>
+            )}
 
             <Section title="Identity verification (shortlist stage)">
               <div className="small" style={{ marginBottom: '.4rem' }}>
