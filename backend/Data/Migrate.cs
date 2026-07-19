@@ -26,6 +26,11 @@ public static class Migrate
             if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
         }
         AddCol("users", "is_test", "is_test INTEGER DEFAULT 0");   // admin-created test accounts (excluded from real reporting)
+        // Honorary application: explicit eligibility self-confirmation + terms & conditions acceptance,
+        // recorded per applicant for audit (in addition to the existing truthfulness declaration).
+        AddCol("honorary_applications", "eligibility_confirmed", "eligibility_confirmed INTEGER DEFAULT 0");
+        AddCol("honorary_applications", "terms_accepted", "terms_accepted INTEGER DEFAULT 0");
+        AddCol("honorary_applications", "terms_accepted_at", "terms_accepted_at TEXT");
         AddCol("sample_questions", "is_practice", "is_practice INTEGER DEFAULT 0");
         // Certuvo (Phase 8): practice questions carry a teaching explanation + a difficulty band.
         AddCol("sample_questions", "explanation", "explanation TEXT");
@@ -596,6 +601,10 @@ public static class Migrate
         AddCol("admin_users", "cert_scope", "cert_scope TEXT");
 
         MultiCert.Seed(db);
+
+        // Public announcement modal defaults (idempotent: only fills absent keys, never overwrites
+        // an admin edit or an explicit hide). Editable end-to-end from the admin console.
+        try { PCI.Backend.Endpoints.Announcement.Seed(db); } catch { /* site_settings present on first pass */ }
 
         // bootstrap owner admin on first run (parity with db.js seed)
         try

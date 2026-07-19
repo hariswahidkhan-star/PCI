@@ -28,7 +28,7 @@ BASE_APP = {
     "years_experience": 40, "industry": "Computing", "highest_qualification": "PhD",
     "relevant_experience": "Pioneered compilers and standardisation.",
     "professional_summary": "A foundational contributor to the profession.",
-    "declaration": True,
+    "declaration": True, "eligibility_confirmed": True, "terms_accepted": True,
     "documents": [{"doc_kind": "resume", "filename": "cv.pdf", "data_uri": PDF}],
 }
 
@@ -47,6 +47,12 @@ def run(admin):
 
     no_decl = dict(BASE_APP, email="x2@ex.co", declaration=False)
     chk("ha1c missing declaration → 400", jget("POST", "/api/honorary-application", body=no_decl)[1].get("error") == "declaration_required")
+
+    no_elig = dict(BASE_APP, email="x2b@ex.co", eligibility_confirmed=False)
+    chk("ha1c2 missing eligibility confirmation → 400", jget("POST", "/api/honorary-application", body=no_elig)[1].get("error") == "eligibility_required")
+
+    no_terms = dict(BASE_APP, email="x2c@ex.co", terms_accepted=False)
+    chk("ha1c3 missing terms acceptance → 400", jget("POST", "/api/honorary-application", body=no_terms)[1].get("error") == "terms_required")
 
     bad_file = dict(BASE_APP, email="x3@ex.co", documents=[{"doc_kind": "resume", "filename": "x.txt", "data_uri": "data:text/plain;base64,aGVsbG8="}])
     chk("ha1d disallowed file type → 400 file_type_not_allowed", jget("POST", "/api/honorary-application", body=bad_file)[1].get("error") == "file_type_not_allowed")

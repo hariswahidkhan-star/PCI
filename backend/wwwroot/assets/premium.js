@@ -277,15 +277,24 @@
     var path = (location.pathname || '').toLowerCase();
     if (path.indexOf('admin') !== -1 || path.indexOf('exam-ui') !== -1 || path.indexOf('/app') === 0 ||
         path.indexOf('student') !== -1 || path.indexOf('launcher') !== -1) return;
-
-    var ANX_KEY = 'pci.anx.dismissed.2026-09-15';   // bump to re-announce
-    try { if (sessionStorage.getItem(ANX_KEY) === '1') return; } catch (e) { /* private mode: still show */ }
     if (window.__pciAnnounceLoaded || document.getElementById('pciAnx')) return;
     window.__pciAnnounceLoaded = true;
 
     var reduce = false;
     try { reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
 
+    // The whole announcement — whether it shows, the date and every line of copy — is admin-controlled.
+    // Fetch the resolved config; render nothing if disabled or on any error. The dismissal key includes
+    // the version + date so any admin change re-shows the notice to visitors who dismissed the old one.
+    var base = (window.PCI_API_BASE || '').replace(/\/$/, '');
+    fetch(base + '/api/announcement').then(function (r) { return r.json(); }).then(function (cfg) {
+      if (!cfg || !cfg.enabled) return;
+      var ANX_KEY = 'pci.anx.' + (cfg.version || '') + '.' + (cfg.date || '');
+      try { if (sessionStorage.getItem(ANX_KEY) === '1') return; } catch (e) { /* private mode: still show */ }
+      buildAndShow(cfg, ANX_KEY);
+    }).catch(function () { /* backend unreachable: no announcement, page unaffected */ });
+
+    function buildAndShow(cfg, ANX_KEY) {
     var css = ''
       + '#pciAnx{position:fixed;inset:0;z-index:2147483600;display:flex;align-items:center;justify-content:center;'
       + 'padding:24px;opacity:0;transition:opacity .45s ease;}'
@@ -344,47 +353,62 @@
     style.textContent = css;
     document.head.appendChild(style);
 
-    var xIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
     var arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+    // Build the card from the admin config. All copy is set via textContent (never innerHTML), so an
+    // admin-entered string can never inject markup into the page.
+    function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
 
     var wrap = document.createElement('div');
     wrap.id = 'pciAnx';
     wrap.setAttribute('role', 'dialog');
     wrap.setAttribute('aria-modal', 'true');
     wrap.setAttribute('aria-labelledby', 'pciAnxTitle');
-    wrap.setAttribute('aria-describedby', 'pciAnxBody');
-    wrap.innerHTML = ''
-      + '<div class="pci-anx-back" data-anx-close></div>'
-      + '<div class="pci-anx-card">'
-      +   '<div class="pci-anx-glow"></div>'
-      +   '<button class="pci-anx-x" type="button" aria-label="Dismiss announcement" data-anx-close>' + xIcon + '</button>'
-      +   '<p class="pci-anx-eyebrow"><span class="pci-anx-pip"></span>Project Controls Institute · Announcement</p>'
-      +   '<h2 class="pci-anx-h" id="pciAnxTitle">Certifications open for examination on 15 September 2026</h2>'
-      +   '<div class="pci-anx-date">Applications are open now — Honorary Fellowship only</div>'
-      +   '<div class="pci-anx-rule"></div>'
-      +   '<p class="pci-anx-body" id="pciAnxBody">The <strong>PCI AI Project Leadership Certification Suite</strong> — PCI PCL-AI™, '
-      +     'PFL-AI™ and PDL-AI™ — is scheduled to open for enrolment and examination on <strong>15 September 2026</strong>. '
-      +     'Ahead of that date, the Institute is accepting applications for <strong>Honorary Fellow (PCI)</strong> '
-      +     'recognition only.</p>'
-      +   '<ul class="pci-anx-list">'
-      +     '<li class="pci-anx-li"><span class="pci-anx-mk"></span><span><strong>Review times.</strong> Owing to the current '
-      +       'volume of applications, a decision may take approximately <strong>15 to 30 days</strong> from the date your '
-      +       'complete application is received.</span></li>'
-      +     '<li class="pci-anx-li"><span class="pci-anx-mk"></span><span><strong>If your application is successful.</strong> '
-      +       'Accepted applicants are issued personal access credentials to the PCI student portal, together with access to '
-      +       'the Institute&rsquo;s learning resources and study materials.</span></li>'
-      +     '<li class="pci-anx-li"><span class="pci-anx-mk"></span><span><strong>No fees.</strong> The Institute does not '
-      +       'charge any fee to apply, and its study materials are provided at no cost.</span></li>'
-      +   '</ul>'
-      +   '<p class="pci-anx-note">Honorary Fellow (PCI) is a board-conferred recognition of distinguished contribution to the '
-      +     'profession. It involves no examination, is awarded at the Institute&rsquo;s discretion on the merits of each '
-      +     'application, and is not an examined PCI certification. Dates, eligibility and benefits may change and do not form '
-      +     'a contract or guarantee.</p>'
-      +   '<div class="pci-anx-cta">'
-      +     '<a class="pci-anx-primary" href="honorary-application.html">Apply for Honorary Fellow (PCI) ' + arrow + '</a>'
-      +     '<button class="pci-anx-secondary" type="button" data-anx-close>Continue browsing</button>'
-      +   '</div>'
-      + '</div>';
+
+    var back = el('div', 'pci-anx-back'); back.setAttribute('data-anx-close', '');
+    var card = el('div', 'pci-anx-card');
+    card.appendChild(el('div', 'pci-anx-glow'));
+
+    var x = el('button', 'pci-anx-x'); x.type = 'button'; x.setAttribute('aria-label', 'Dismiss announcement');
+    x.setAttribute('data-anx-close', '');
+    x.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    card.appendChild(x);
+
+    if (cfg.eyebrow) {
+      var eb = el('p', 'pci-anx-eyebrow'); eb.appendChild(el('span', 'pci-anx-pip'));
+      eb.appendChild(document.createTextNode(cfg.eyebrow)); card.appendChild(eb);
+    }
+    if (cfg.title) { var h = el('h2', 'pci-anx-h', cfg.title); h.id = 'pciAnxTitle'; card.appendChild(h); }
+    if (cfg.subtitle) card.appendChild(el('div', 'pci-anx-date', cfg.subtitle));
+    card.appendChild(el('div', 'pci-anx-rule'));
+    if (cfg.intro) card.appendChild(el('p', 'pci-anx-body', cfg.intro));
+
+    if (cfg.points && cfg.points.length) {
+      var ul = el('ul', 'pci-anx-list');
+      for (var i = 0; i < cfg.points.length; i++) {
+        var p = cfg.points[i] || {};
+        var li = el('li', 'pci-anx-li'); li.appendChild(el('span', 'pci-anx-mk'));
+        var span = el('span');
+        if (p.title) { span.appendChild(el('strong', null, p.title)); span.appendChild(document.createTextNode(' ')); }
+        if (p.text) span.appendChild(document.createTextNode(p.text));
+        li.appendChild(span); ul.appendChild(li);
+      }
+      card.appendChild(ul);
+    }
+    if (cfg.note) card.appendChild(el('p', 'pci-anx-note', cfg.note));
+
+    var cta = el('div', 'pci-anx-cta');
+    if (cfg.cta && cfg.cta.href) {
+      var a = el('a', 'pci-anx-primary'); a.href = cfg.cta.href;
+      a.appendChild(document.createTextNode((cfg.cta.label || 'Learn more') + ' '));
+      var sv = document.createElement('span'); sv.innerHTML = arrow; a.appendChild(sv);
+      cta.appendChild(a);
+    }
+    var sec = el('button', 'pci-anx-secondary', 'Continue browsing'); sec.type = 'button';
+    sec.setAttribute('data-anx-close', ''); cta.appendChild(sec);
+    card.appendChild(cta);
+
+    wrap.appendChild(back); wrap.appendChild(card);
 
     var lastFocus = document.activeElement;
 
@@ -423,6 +447,7 @@
     var start = function () { setTimeout(open, reduce ? 0 : 650); };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
     else start();
+    }  /* end buildAndShow */
   } catch (e) { /* no-op: an announcement must never break the page */ }
 })();
 /* ===== /PCI-ANNOUNCE ===== */

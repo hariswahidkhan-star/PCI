@@ -736,6 +736,7 @@ PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);
 PCI.Backend.Endpoints.Certificates.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Documents.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);   // Student Documents & Resources module
 PCI.Backend.Endpoints.Books.Map(app, db, logFn, GateFn);              // Books & study materials: upload + watermarked download
+PCI.Backend.Endpoints.Announcement.Map(app, db, logFn, GateFn);       // Admin-controlled public announcement modal
 PCI.Backend.Endpoints.TrainingPartners.Map(app, db, logFn, GateFn);   // Training Partner framework (Phase 7)
 PCI.Backend.Endpoints.Partners.Map(app, db, logFn, GateFn);           // Partner dashboards: portal token, sponsorship, commissions
 PCI.Backend.Endpoints.Certuvo.Map(app, db, logFn);                    // Certuvo study & practice engine (Phase 8)

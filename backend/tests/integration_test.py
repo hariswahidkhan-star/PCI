@@ -836,7 +836,8 @@ def _hon_app(email):
             "employer": "Analytical Society", "years_experience": 30, "industry": "Computing",
             "highest_qualification": "DSc", "relevant_experience": "Foundational work on computation.",
             "professional_summary": "A distinguished lifetime contribution to the profession.",
-            "declaration": True, "documents": [{"doc_kind": "resume", "filename": "cv.pdf", "data_uri": _HON_PDF}]}
+            "declaration": True, "eligibility_confirmed": True, "terms_accepted": True,
+            "documents": [{"doc_kind": "resume", "filename": "cv.pdf", "data_uri": _HON_PDF}]}
 
 def test_certuvo_integration(admin):
     """Section 15 — the PCI ↔ Certuvo provisioning integration end to end: PCI-generated usernames &

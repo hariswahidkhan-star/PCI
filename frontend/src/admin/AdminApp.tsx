@@ -36,6 +36,7 @@ import Audit from './pages/Audit'
 import Reports from './pages/Reports'
 import Emails from './pages/Emails'
 import Content from './pages/Content'
+import Announcement from './pages/Announcement'
 import Team from './pages/Team'
 import Settings from './pages/Settings'
 import Exams from './pages/Exams'
@@ -96,6 +97,7 @@ export default function AdminApp() {
         <Route path="submissions" element={<Perm section="submissions"><Submissions /></Perm>} />
         <Route path="reviews" element={<Perm section="content"><Reviews /></Perm>} />
         <Route path="content" element={<Perm section="content"><Content /></Perm>} />
+        <Route path="announcement" element={<Perm section="content"><Announcement /></Perm>} />
         <Route path="translations" element={<OwnerOnly><Translations /></OwnerOnly>} />
         <Route path="seo" element={<Perm section="pages"><Seo /></Perm>} />
         <Route path="analytics" element={<Perm section="reports"><Analytics /></Perm>} />
