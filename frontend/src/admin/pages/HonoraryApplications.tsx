@@ -19,6 +19,7 @@ interface HonApp {
   employer?: string | null
   years_experience?: number | null
   industry?: string | null
+  certification_name?: string | null
   highest_qualification?: string | null
   professional_certifications?: string | null
   relevant_experience?: string | null
@@ -181,6 +182,7 @@ export default function HonoraryApplications() {
               <KV k="Employer / organisation" v={open.application.employer} />
               <KV k="Years of experience" v={open.application.years_experience != null ? String(open.application.years_experience) : null} />
               <KV k="Industry" v={open.application.industry} />
+              <KV k="Certification of interest" v={open.application.certification_name} />
             </Section>
             <Section title="Qualifications">
               <KV k="Highest qualification" v={open.application.highest_qualification} />
