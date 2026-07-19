@@ -63,12 +63,19 @@ public static class HonoraryIdv
             var first = H.Str(a["first_name"]) ?? "";
             var email = H.Str(a["email"]) ?? "";
 
+            // The invite reads correctly at either stage: shortlisted (pre-decision) or approved
+            // (the board has decided and identity verification finalises the recognition).
+            var approved = H.Str(a["status"]) == "approved";
             if (Notify.Enabled(db, "honorary") && email.Length > 0)
                 try
                 {
-                    Notify.Email(db, null, email, "Next step for your Honorary Fellow (PCI) application",
-                        $"<p>Dear {WebUtility.HtmlEncode(first)},</p>" +
-                        $"<p>Your application has been <strong>shortlisted</strong> for consideration. To continue, please complete a short, secure identity verification: a recent passport-style photograph and one valid government-issued ID, together with a brief declaration.</p>" +
+                    var opening = approved
+                        ? "<p>Congratulations — the board has approved your application for <strong>Honorary Fellow (PCI)</strong>. To finalise your recognition, please complete a short, secure identity verification: a recent passport-style photograph and one valid government-issued ID, together with a brief declaration.</p>"
+                        : "<p>Your application has been <strong>shortlisted</strong> for consideration. To continue, please complete a short, secure identity verification: a recent passport-style photograph and one valid government-issued ID, together with a brief declaration.</p>";
+                    Notify.Email(db, null, email, approved
+                            ? "Final step for your Honorary Fellow (PCI) recognition"
+                            : "Next step for your Honorary Fellow (PCI) application",
+                        $"<p>Dear {WebUtility.HtmlEncode(first)},</p>" + opening +
                         $"<p><a href=\"{WebUtility.HtmlEncode(link)}\">Complete your secure verification</a> (this personal link expires in {TokenDays} days and can be used once).</p>" +
                         $"<p>We collect this only to verify your identity for the honorary recognition. It is stored securely, accessible only to the board, and you may withdraw at any time. Please do not share this link.</p>" +
                         $"<p>— Project Controls Institute Global</p>",
@@ -129,7 +136,9 @@ public static class HonoraryIdv
             var a = LookupByToken(db, token, out var reason);
             if (a is null) return Results.Json(new { error = reason }, statusCode: reason == "expired" ? 410 : 404);
             var already = H.Str(a["idv_status"]) == "submitted";
-            return J(new { ok = true, first_name = H.Str(a["first_name"]), reference = H.Str(a["reference"]), already_submitted = already });
+            // stage lets the page word itself correctly: pre-decision shortlist vs post-approval finalisation.
+            var stage = H.Str(a["status"]) == "approved" ? "approved" : "shortlisted";
+            return J(new { ok = true, first_name = H.Str(a["first_name"]), reference = H.Str(a["reference"]), already_submitted = already, stage });
         });
 
         // Accept the photo + government ID + declarations, store securely, and burn the token.

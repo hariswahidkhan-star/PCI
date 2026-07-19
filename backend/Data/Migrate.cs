@@ -31,6 +31,13 @@ public static class Migrate
         AddCol("honorary_applications", "eligibility_confirmed", "eligibility_confirmed INTEGER DEFAULT 0");
         AddCol("honorary_applications", "terms_accepted", "terms_accepted INTEGER DEFAULT 0");
         AddCol("honorary_applications", "terms_accepted_at", "terms_accepted_at TEXT");
+        // Structured applicant history (repeatable rows captured on the public form, shown to the board):
+        // qualifications [{qualification,institution,year}], certifications [{name,issuer,year}],
+        // experience [{role,employer,from_year,to_year}] — sanitised JSON; the legacy flat text columns
+        // are still composed server-side so older admin views and exports keep working.
+        AddCol("honorary_applications", "qualifications_json", "qualifications_json TEXT");
+        AddCol("honorary_applications", "certifications_json", "certifications_json TEXT");
+        AddCol("honorary_applications", "experience_json", "experience_json TEXT");
         // Shortlist-gated identity verification (IDV): only shortlisted candidates are invited, via a
         // one-time time-limited token, to submit a passport-style photo + one government ID and a
         // background/truthfulness declaration. Data minimisation: no ID numbers are stored — only the

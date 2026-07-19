@@ -27,9 +27,11 @@ def req(method, path, token=None, body=None):
     if token: hdr["Authorization"] = "Bearer " + token
     r = urllib.request.Request(BASE + path, data=data, method=method, headers=hdr)
     try:
-        with urllib.request.urlopen(r, timeout=15) as resp: return resp.status, resp.read().decode()
+        # decode tolerantly: the sweep judges STATUS CODES only, and some routes legitimately
+        # serve binary bytes (e.g. seeded PDFs from the public Downloads Centre)
+        with urllib.request.urlopen(r, timeout=15) as resp: return resp.status, resp.read().decode(errors="replace")
     except urllib.error.HTTPError as e:
-        return e.code, e.read().decode()
+        return e.code, e.read().decode(errors="replace")
     except Exception as e:
         return -1, str(e)[:200]
 

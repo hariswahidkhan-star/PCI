@@ -20,6 +20,9 @@ interface HonApp {
   years_experience?: number | null
   industry?: string | null
   certification_name?: string | null
+  qualifications_json?: string | null
+  certifications_json?: string | null
+  experience_json?: string | null
   highest_qualification?: string | null
   professional_certifications?: string | null
   relevant_experience?: string | null
@@ -43,6 +46,17 @@ interface HonDoc {
   size_bytes?: number | null
 }
 interface HonDetail { application: HonApp; documents: HonDoc[]; idv_documents: HonDoc[] }
+
+/** Parse a structured-history JSON column ([{...}]) defensively; anything unparseable renders as absent. */
+function parseRows(json?: string | null): Record<string, string | number | null>[] {
+  try {
+    const v = JSON.parse(json || '[]')
+    return Array.isArray(v) ? v : []
+  } catch { return [] }
+}
+const yearSpan = (r: Record<string, string | number | null>) =>
+  r.from_year || r.to_year ? ` (${r.from_year ?? '…'}–${r.to_year ?? 'present'})` : ''
+const yearOf = (r: Record<string, string | number | null>) => (r.year ? ` (${r.year})` : '')
 
 const TONE: Record<string, 'ok' | 'err' | 'brand' | 'warn'> = {
   approved: 'ok', pending_review: 'brand', under_review: 'warn', rejected: 'err',
@@ -226,8 +240,37 @@ export default function HonoraryApplications() {
               <KV k="Certification of interest" v={open.application.certification_name} />
             </Section>
             <Section title="Qualifications">
-              <KV k="Highest qualification" v={open.application.highest_qualification} />
-              <KV k="Professional certifications" v={open.application.professional_certifications} />
+              {parseRows(open.application.qualifications_json).length > 0 ? (
+                <ul className="clean small" style={{ margin: 0, paddingLeft: '1rem' }}>
+                  {parseRows(open.application.qualifications_json).map((q, i) => (
+                    <li key={i}>{q.qualification}{q.institution ? ` — ${q.institution}` : ''}{yearOf(q)}</li>
+                  ))}
+                </ul>
+              ) : (
+                <KV k="Highest qualification" v={open.application.highest_qualification} />
+              )}
+              {parseRows(open.application.certifications_json).length > 0 ? (
+                <div>
+                  <div className="muted small" style={{ marginTop: '.35rem' }}>Professional certifications</div>
+                  <ul className="clean small" style={{ margin: 0, paddingLeft: '1rem' }}>
+                    {parseRows(open.application.certifications_json).map((c, i) => (
+                      <li key={i}>{c.name}{c.issuer ? ` — ${c.issuer}` : ''}{yearOf(c)}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <KV k="Professional certifications" v={open.application.professional_certifications} />
+              )}
+              {parseRows(open.application.experience_json).length > 0 && (
+                <div>
+                  <div className="muted small" style={{ marginTop: '.35rem' }}>Career history</div>
+                  <ul className="clean small" style={{ margin: 0, paddingLeft: '1rem' }}>
+                    {parseRows(open.application.experience_json).map((e, i) => (
+                      <li key={i}>{[e.role, e.employer].filter(Boolean).join(' — ')}{yearSpan(e)}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <KV k="Relevant experience" v={open.application.relevant_experience} block />
               <KV k="Professional summary" v={open.application.professional_summary} block />
             </Section>
@@ -253,7 +296,9 @@ export default function HonoraryApplications() {
               )}
               <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap', marginBottom: '.5rem' }}>
                 <button className="btn ghost sm" disabled={busy} onClick={() => shortlist(open.application.id)}>
-                  {open.application.shortlisted ? 'Regenerate secure link' : 'Shortlist & generate secure link'}
+                  {open.application.status === 'approved'
+                    ? (open.application.shortlisted ? 'Resend ID verification link' : 'Send ID verification link (photo + government ID)')
+                    : (open.application.shortlisted ? 'Regenerate secure link' : 'Shortlist & generate secure link')}
                 </button>
                 {open.application.idv_status === 'invited' && (
                   <button className="btn ghost sm" disabled={busy} onClick={() => idvAction(open.application.id, 'idv/revoke')}>Revoke link</button>

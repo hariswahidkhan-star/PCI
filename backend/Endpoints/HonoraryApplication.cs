@@ -63,6 +63,73 @@ public static class HonoraryApplication
             var termsAccepted = Flag("terms_accepted") || Flag("termsAccepted");
             var suitabilityNote = S("suitability_note", 2000, "suitabilityNote");
 
+            // ---- structured history: repeatable qualification / certification / experience rows ----
+            // Each row is sanitised field-by-field (clip + year clamp), capped at 10 rows per section,
+            // and stored as JSON for the board. The legacy flat text columns are composed from the rows
+            // when the flat field is absent, so older admin views and exports keep working.
+            string ES(JsonElement e, params string[] keys)
+            {
+                foreach (var k in keys)
+                    if (e.ValueKind == JsonValueKind.Object && e.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.String)
+                        return Clip(v.GetString(), 200);
+                return "";
+            }
+            int? EY(JsonElement e, params string[] keys)
+            {
+                foreach (var k in keys)
+                    if (e.ValueKind == JsonValueKind.Object && e.TryGetProperty(k, out var v))
+                    {
+                        var s = v.ValueKind == JsonValueKind.Number ? v.GetRawText()
+                              : v.ValueKind == JsonValueKind.String ? v.GetString() : null;
+                        if (int.TryParse((s ?? "").Trim(), out var y) && y >= 1940 && y <= DateTime.UtcNow.Year + 1) return y;
+                    }
+                return null;
+            }
+            List<Dictionary<string, object?>> Rows(string key, Func<JsonElement, Dictionary<string, object?>?> shape)
+            {
+                var list = new List<Dictionary<string, object?>>();
+                if (H.GetEl(b, key) is { ValueKind: JsonValueKind.Array } arr2)
+                    foreach (var e in arr2.EnumerateArray())
+                    {
+                        if (list.Count >= 10) break;
+                        var row = shape(e);
+                        if (row is not null) list.Add(row);
+                    }
+                return list;
+            }
+            var quals = Rows("qualifications", e =>
+            {
+                var t = ES(e, "qualification", "title");
+                if (t.Length == 0) return null;
+                return new Dictionary<string, object?> { ["qualification"] = t, ["institution"] = ES(e, "institution"), ["year"] = EY(e, "year") };
+            });
+            var certRows = Rows("certifications", e =>
+            {
+                var n = ES(e, "name", "certification");
+                if (n.Length == 0) return null;
+                return new Dictionary<string, object?> { ["name"] = n, ["issuer"] = ES(e, "issuer", "issuing_body"), ["year"] = EY(e, "year") };
+            });
+            var expRows = Rows("experience", e =>
+            {
+                var r = ES(e, "role", "job_title", "title"); var emp = ES(e, "employer", "organisation", "organization");
+                if (r.Length == 0 && emp.Length == 0) return null;
+                return new Dictionary<string, object?> { ["role"] = r, ["employer"] = emp, ["from_year"] = EY(e, "from_year", "from"), ["to_year"] = EY(e, "to_year", "to") };
+            });
+            static string RowLine(Dictionary<string, object?> r, string mainKey, string subKey)
+            {
+                var s = (string?)r[mainKey] ?? "";
+                if (r[subKey] is string sub && sub.Length > 0) s += ", " + sub;
+                if (r["year"] is int y) s += $" ({y})";
+                return s;
+            }
+            if (highestQual.Length == 0 && quals.Count > 0)
+                highestQual = Clip(string.Join("; ", quals.Select(q => RowLine(q, "qualification", "institution"))), 200);
+            if (profCerts.Length == 0 && certRows.Count > 0)
+                profCerts = Clip(string.Join("; ", certRows.Select(c => RowLine(c, "name", "issuer"))), 4000);
+            var qualJson = quals.Count > 0 ? JsonSerializer.Serialize(quals) : null;
+            var certJson = certRows.Count > 0 ? JsonSerializer.Serialize(certRows) : null;
+            var expJson = expRows.Count > 0 ? JsonSerializer.Serialize(expRows) : null;
+
             // Optional certification/discipline the applicant is aligned to. Honorary recognition is not
             // tied to an examination, so this is not required — but if a value is sent it must resolve to a
             // real, active certification (never silently defaulted), so the board sees an accurate record.
@@ -120,9 +187,9 @@ public static class HonoraryApplication
                 try
                 {
                     appId = db.ExecuteReturningId(@"INSERT INTO honorary_applications
-                        (reference,first_name,last_name,email,mobile,country,city,nationality,job_title,employer,years_experience,industry,highest_qualification,professional_certifications,relevant_experience,professional_summary,certification_id,suitability_note,declaration,eligibility_confirmed,terms_accepted,terms_accepted_at,status)
-                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,1,1,datetime('now'),'pending_review')",
-                        cand, first, last, email, mobile, country, city, nationality, jobTitle, employer, yearsExp, industry, highestQual, profCerts, relevantExp, summary, certId, suitabilityNote);
+                        (reference,first_name,last_name,email,mobile,country,city,nationality,job_title,employer,years_experience,industry,highest_qualification,professional_certifications,relevant_experience,professional_summary,qualifications_json,certifications_json,experience_json,certification_id,suitability_note,declaration,eligibility_confirmed,terms_accepted,terms_accepted_at,status)
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,1,1,datetime('now'),'pending_review')",
+                        cand, first, last, email, mobile, country, city, nationality, jobTitle, employer, yearsExp, industry, highestQual, profCerts, relevantExp, summary, qualJson, certJson, expJson, certId, suitabilityNote);
                     reference = cand;
                 }
                 catch { /* reference collision → retry */ }

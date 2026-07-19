@@ -63,6 +63,36 @@ def run(admin):
     bad_email = dict(BASE_APP, email="not-an-email")
     chk("ha1f invalid email → 400 invalid_email", jget("POST", "/api/honorary-application", body=bad_email)[1].get("error") == "invalid_email")
 
+    # ---------- structured qualifications / certifications / career history ----------
+    print("\n=== HA1s. Repeatable qualification/certification/experience rows ===")
+    sq = dict(BASE_APP, email="structured@example.com")
+    sq.pop("highest_qualification", None); sq.pop("professional_certifications", None)
+    sq["qualifications"] = [
+        {"qualification": "PhD Engineering", "institution": "MIT", "year": 2001},
+        {"qualification": "MSc Project Management", "institution": "UCL", "year": "1898"},  # invalid year → dropped
+    ]
+    sq["certifications"] = [{"name": "PMP", "issuer": "PMI", "year": 2010}, {"name": "CCP", "issuer": "AACE"}]
+    sq["experience"] = [
+        {"role": "Programme Director", "employer": "Acme Infrastructure", "from_year": 2015},
+        {"role": "", "employer": ""},  # empty row → skipped
+    ]
+    c, sb = jget("POST", "/api/honorary-application", body=sq)
+    chk("ha1s-a structured submission accepted", c == 200 and sb.get("ok") is True, sb)
+    c, slst = jget("GET", "/api/admin/honorary-applications?status=pending_review", token=admin)
+    srow = next(r for r in slst["rows"] if r.get("reference") == sb.get("reference"))
+    c, sdet = jget("GET", f"/api/admin/honorary-applications/{srow['id']}", token=admin)
+    sapp = sdet["application"]
+    import json as _j
+    qj = _j.loads(sapp.get("qualifications_json") or "[]")
+    cj = _j.loads(sapp.get("certifications_json") or "[]")
+    ej = _j.loads(sapp.get("experience_json") or "[]")
+    chk("ha1s-b two qualification rows stored; invalid year dropped to null",
+        len(qj) == 2 and qj[0]["year"] == 2001 and qj[1]["year"] is None, qj)
+    chk("ha1s-c certification rows stored with issuer + year", len(cj) == 2 and cj[0] == {"name": "PMP", "issuer": "PMI", "year": 2010}, cj)
+    chk("ha1s-d empty career row skipped, real one kept", len(ej) == 1 and ej[0]["role"] == "Programme Director" and ej[0]["from_year"] == 2015, ej)
+    chk("ha1s-e flat highest_qualification composed from rows", "PhD Engineering, MIT (2001)" in (sapp.get("highest_qualification") or ""), sapp.get("highest_qualification"))
+    chk("ha1s-f flat professional_certifications composed from rows", "PMP, PMI (2010)" in (sapp.get("professional_certifications") or ""), sapp.get("professional_certifications"))
+
     # ---------- RBAC: board/owner only ----------
     print("\n=== HA2. Admin review is owner-only ===")
     chk("ha2a list without auth → 401", req("GET", "/api/admin/honorary-applications")[0] == 401)
@@ -100,6 +130,13 @@ def run(admin):
     c, det2 = jget("GET", f"/api/admin/honorary-applications/{aid}", token=admin)
     chk("ha3g application now marked approved with the award number", det2["application"]["status"] == "approved" and det2["application"]["award_no"] == award, det2["application"].get("status"))
     chk("ha3h re-approve refused (409 already decided)", jget("POST", f"/api/admin/honorary-applications/{aid}/decide", token=admin, body={"status": "approved"})[0] == 409)
+
+    # After approval the board can still send the ID-verification link; the page is told the stage.
+    c, apsl = jget("POST", f"/api/admin/honorary-applications/{aid}/shortlist", token=admin)
+    chk("ha3h2 verification link can be sent AFTER approval", c == 200 and "token=" in str(apsl.get("link", "")), apsl)
+    aptok = str(apsl["link"]).split("token=")[1]
+    c, apctx = jget("GET", f"/api/honorary-idv/{aptok}")
+    chk("ha3h3 token GET reports stage=approved for congratulatory wording", c == 200 and apctx.get("stage") == "approved", apctx)
 
     # ---------- shortlist-gated identity verification ----------
     print("\n=== HA3i. Shortlist → secure identity verification (photo + gov ID + background declaration) ===")
