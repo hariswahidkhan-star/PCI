@@ -593,6 +593,39 @@ public static class Migrate
         }
         catch { /* admin_users may not exist on a very first pass; ignored */ }
 
+        // Break-glass owner recovery: if ADMIN_OWNER_RESET_PASSWORD is set at boot, (re)activate the
+        // owner account and set its password to that value, forcing a change on next login. This lets
+        // an operator who is locked out regain access by setting one Render environment variable and
+        // redeploying — no database console needed. It targets ADMIN_OWNER_EMAIL if that owner exists,
+        // otherwise the earliest owner; if no owner exists at all it creates one. REMOVE the env var
+        // after logging in — while it is set, every boot re-applies it. Setting the env var already
+        // implies full control of the deployment, so this is not a new trust boundary.
+        try
+        {
+            var resetPw = Environment.GetEnvironmentVariable("ADMIN_OWNER_RESET_PASSWORD");
+            if (!string.IsNullOrWhiteSpace(resetPw))
+            {
+                var email = (Environment.GetEnvironmentVariable("ADMIN_OWNER_EMAIL") ?? "").Trim().ToLowerInvariant();
+                var hash = BCrypt.Net.BCrypt.HashPassword(resetPw);
+                var target = (email.Length > 0 ? db.QueryOne("SELECT id FROM admin_users WHERE lower(email)=? AND role='owner'", email) : null)
+                             ?? db.QueryOne("SELECT id FROM admin_users WHERE role='owner' ORDER BY id LIMIT 1");
+                if (target is not null)
+                {
+                    db.Execute("UPDATE admin_users SET password_hash=?, status='active', must_change_pw=1 WHERE id=?", hash, target["id"]);
+                    db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", target["id"]);   // invalidate any stale sessions
+                    Console.WriteLine("[seed] ADMIN_OWNER_RESET_PASSWORD applied — owner password reset (must change on next login). REMOVE this env var now.");
+                }
+                else
+                {
+                    var newEmail = email.Length > 0 ? email : "owner@pci.local";
+                    db.Execute("INSERT INTO admin_users(email,name,password_hash,role,status,must_change_pw) VALUES(?,?,?,?, 'active',1)",
+                        newEmail, "Owner", hash, "owner");
+                    Console.WriteLine($"[seed] ADMIN_OWNER_RESET_PASSWORD created a new owner ({newEmail}). REMOVE this env var now.");
+                }
+            }
+        }
+        catch (Exception e) { Console.Error.WriteLine($"[seed] owner reset skipped: {e.Message}"); }
+
         // Demo student on first run (users table empty): lets the operator try the student panel
         // before payments/SMTP are configured. Mirrors the bootstrap-owner pattern: known default
         // password, loudly logged, and expected to be changed or deactivated before launch. The
