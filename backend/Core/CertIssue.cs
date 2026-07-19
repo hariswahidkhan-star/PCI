@@ -34,7 +34,7 @@ public static class CertIssue
                 return (got.bytes, H.Str(c["pdf_sha256"]) ?? "", name);
 
             var cert = Certs.ById(db, c["certification_id"]);
-            var title = H.Str(cert?["name"]) ?? "PCI AI Project Controls Leader™";
+            var title = H.Str(cert?["name"]) ?? "PCI AI Project Controls Leader";
             var designation = H.Str(cert?["acronym"]) is { Length: > 0 } acr ? acr : H.Str(cert?["code"]) ?? "";
             var isTest = H.L(db.QueryOne("SELECT is_test FROM users WHERE id=?", c["user_id"])?["is_test"]) == 1;
             var token = H.Str(c["verify_token"]); if (string.IsNullOrEmpty(token)) token = Security.RandomHex(16);

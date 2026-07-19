@@ -65,7 +65,7 @@ public static class CertCatalogue
                 var price = cert is null ? 0 : Public.Pricing(db, "exam", null, cert).final;
                 var code = H.Str(r["code"]) ?? "";
                 var name = H.Str(r["name"]) ?? code;
-                var designation = H.Str(r["acronym"]) ?? code;   // e.g. "PCI PCL-AI™"
+                var designation = H.Str(r["acronym"]) ?? code;   // e.g. "PCI PCL-AI"
                 // prefer the concise catalogue blurb; fall back to the long description
                 var desc = H.Str(r["short_description"]) ?? H.Str(r["description"]) ?? "";
                 var years = r["expiry_years"] is null ? 3 : (int)H.L(r["expiry_years"]);

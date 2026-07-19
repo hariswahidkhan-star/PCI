@@ -125,7 +125,7 @@ export default function Books() {
             </select>
           </div>
           <div className="field" style={{ minWidth: 220 }}><label>Title</label>
-            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="PCI PFL-AI™ Body of Knowledge" />
+            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="PCI PFL-AI Body of Knowledge" />
           </div>
           <div className="field" style={{ minWidth: 220 }}><label>Description</label>
             <input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />

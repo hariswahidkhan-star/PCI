@@ -8,7 +8,7 @@
 
 **The specification audited against describes a platform this repository does not yet contain.**
 
-The spec requires the **PCI AI Project Leadership Certification Suite** — three live certifications (PCI PCL-AI™, PCI PFL-AI™, PCI PDL-AI™), the portfolio name, and the tagline *"Finance intelligently. Control predictively. Deliver successfully."* A full-repository search (source, schema, seeds, content, config, tests) found:
+The spec requires the **PCI AI Project Leadership Certification Suite** — three live certifications (PCI PCL-AI, PCI PFL-AI, PCI PDL-AI), the portfolio name, and the tagline *"Finance intelligently. Control predictively. Deliver successfully."* A full-repository search (source, schema, seeds, content, config, tests) found:
 
 | Spec term | Occurrences in source |
 |---|---|
@@ -33,7 +33,7 @@ What the repository actually contains is a **single live certification — PCP-A
 
 The findings in §0 were accurate for the tree audited (`628ec25`). **Hours later, `main` moved forward by 23 commits** (a parallel work stream) that build a large part of the Leadership Suite, and that work has since been **merged into this branch**. The §0 zero-occurrence table is therefore **no longer true of the current tree**. What the merged tree now contains, re-verified by test runs on this branch:
 
-- **The three Suite certifications are seeded**: id 1 renamed in place PCP-AI → **PCL-AI** ("PCI AI Project Controls Leader™"), plus **PFL-AI** and **PDL-AI** rows, with the portfolio name and the "Finance intelligently. Control predictively. Deliver successfully." tagline (`backend/Data/MultiCert.cs`).
+- **The three Suite certifications are seeded**: id 1 renamed in place PCP-AI → **PCL-AI** ("PCI AI Project Controls Leader"), plus **PFL-AI** and **PDL-AI** rows, with the portfolio name and the "Finance intelligently. Control predictively. Deliver successfully." tagline (`backend/Data/MultiCert.cs`).
 - **Credential numbering** moved to `PCI-<PREFIX>-[ROUTE-]<YEAR>-<seq>` with route markers (FND/HON), route-key provenance and per-route certificate wording snapshots (`Core/Lifecycle.cs`).
 - **Partner sponsorship + commission ledger** (`/api/partner/candidates`, `/api/partner/commissions`, payouts) and per-certification admin scoping (`admin_users.cert_scope`).
 - **Per-certification applications** (admin Applications page) and per-certification documents/books scaffolding (`cert_documents`, now exposed at `/api/me/cert-documents`).

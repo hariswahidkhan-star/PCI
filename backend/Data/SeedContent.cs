@@ -55,13 +55,13 @@ public static class SeedContent
         {
             db.Execute("UPDATE nav_items SET url='/certifications' WHERE nav_group='Header' AND label='Certifications' AND url='certification.html'");
             // Final Project Leadership Suite credentials in the footer "Certifications" group.
-            foreach (var (lbl, url, so) in new[] { ("PCI PCL-AI™", "/certifications/pcl-ai", 20), ("PCI PFL-AI™", "/certifications/pfl-ai", 21), ("PCI PDL-AI™", "/certifications/pdl-ai", 22), ("All certifications", "/certifications", 23) })
+            foreach (var (lbl, url, so) in new[] { ("PCI PCL-AI", "/certifications/pcl-ai", 20), ("PCI PFL-AI", "/certifications/pfl-ai", 21), ("PCI PDL-AI", "/certifications/pdl-ai", 22), ("All certifications", "/certifications", 23) })
                 db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT ?,?, 'Certifications', ?, 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url=? AND nav_group='Certifications')", lbl, url, so, url);
             // Migrate any earlier (temporary) credential nav rows to the final slugs + designations.
             foreach (var (oldUrl, newUrl, newLbl) in new[] {
-                ("/certifications/pcp-ai", "/certifications/pcl-ai", "PCI PCL-AI™"),
-                ("/certifications/pfip", "/certifications/pfl-ai", "PCI PFL-AI™"),
-                ("/certifications/cpmd", "/certifications/pdl-ai", "PCI PDL-AI™") })
+                ("/certifications/pcp-ai", "/certifications/pcl-ai", "PCI PCL-AI"),
+                ("/certifications/pfip", "/certifications/pfl-ai", "PCI PFL-AI"),
+                ("/certifications/cpmd", "/certifications/pdl-ai", "PCI PDL-AI") })
                 db.Execute("UPDATE nav_items SET url=?, label=? WHERE nav_group='Certifications' AND url=?", newUrl, newLbl, oldUrl);
             // Replace the retired acronym in any nav label (e.g. "PMP vs AACE vs PCP-AI") across every group.
             db.Execute("UPDATE nav_items SET label=REPLACE(label,'PCP-AI','PCL-AI') WHERE label LIKE '%PCP-AI%'");
@@ -89,8 +89,8 @@ public static class SeedContent
         {
             foreach (var tc in new[] { ("faqs", "question"), ("faqs", "answer"), ("resources", "description"), ("resources", "title") })
             {
-                db.Execute($"UPDATE {tc.Item1} SET {tc.Item2}=REPLACE({tc.Item2},'Certified Project Controls Professional — AI (PCP-AI)','PCI AI Project Controls Leader™ (PCI PCL-AI™)') WHERE {tc.Item2} LIKE '%Certified Project Controls Professional%'");
-                db.Execute($"UPDATE {tc.Item1} SET {tc.Item2}=REPLACE({tc.Item2},'Certified Project Controls Professional','PCI AI Project Controls Leader™') WHERE {tc.Item2} LIKE '%Certified Project Controls Professional%'");
+                db.Execute($"UPDATE {tc.Item1} SET {tc.Item2}=REPLACE({tc.Item2},'Certified Project Controls Professional — AI (PCP-AI)','PCI AI Project Controls Leader (PCI PCL-AI)') WHERE {tc.Item2} LIKE '%Certified Project Controls Professional%'");
+                db.Execute($"UPDATE {tc.Item1} SET {tc.Item2}=REPLACE({tc.Item2},'Certified Project Controls Professional','PCI AI Project Controls Leader') WHERE {tc.Item2} LIKE '%Certified Project Controls Professional%'");
                 db.Execute($"UPDATE {tc.Item1} SET {tc.Item2}=REPLACE({tc.Item2},'PCP-AI','PCL-AI') WHERE {tc.Item2} LIKE '%PCP-AI%'");
             }
         }
@@ -99,9 +99,9 @@ public static class SeedContent
 
     static readonly object?[][] Faqs =
     {
-        new object?[]{ @"What is the PCI PCL-AI™ credential?", @"<p>The PCI AI Project Controls Leader™ (PCI PCL-AI™) is a rigorous credential covering project controls, cost engineering, forecasting and performance — with the governed use of artificial intelligence treated as part of the discipline. It is part of the PCI AI Project Leadership Certification Suite, awarded by the Project Controls Institute and built with reference to <a href=""accreditation-status.html"">ISO/IEC 17024</a> personnel-certification principles.</p>", @"The credential" },
-        new object?[]{ @"Who is the PCI PCL-AI™ for?", @"<p>It is for the people who hold major projects to plan, cost and cash flow: planners, schedulers, cost engineers, project-controls and PMO professionals, and project-finance specialists across construction, energy, infrastructure and software.</p>", @"The credential" },
-        new object?[]{ @"Is the PCI PCL-AI™ accredited?", @"<p>PCI is an independent independent certifying body. Our examinations are being developed with reference to ISO/IEC 17024. We describe our status honestly at every stage and make no claims beyond what is true today.</p>", @"The credential" },
+        new object?[]{ @"What is the PCI PCL-AI credential?", @"<p>The PCI AI Project Controls Leader (PCI PCL-AI) is a rigorous credential covering project controls, cost engineering, forecasting and performance — with the governed use of artificial intelligence treated as part of the discipline. It is part of the PCI AI Project Leadership Certification Suite, awarded by the Project Controls Institute and built with reference to <a href=""accreditation-status.html"">ISO/IEC 17024</a> personnel-certification principles.</p>", @"The credential" },
+        new object?[]{ @"Who is the PCI PCL-AI for?", @"<p>It is for the people who hold major projects to plan, cost and cash flow: planners, schedulers, cost engineers, project-controls and PMO professionals, and project-finance specialists across construction, energy, infrastructure and software.</p>", @"The credential" },
+        new object?[]{ @"Is the PCI PCL-AI accredited?", @"<p>PCI is an independent independent certifying body. Our examinations are being developed with reference to ISO/IEC 17024. We describe our status honestly at every stage and make no claims beyond what is true today.</p>", @"The credential" },
         new object?[]{ @"How do I qualify to sit the exam?", @"<p>There are two routes: an experience route for practitioners with relevant project-controls experience, and a foundation route for those newer to the field. Full <a href=""eligibility-requirements.html"">eligibility</a> criteria are confirmed during enrolment.</p>", @"Exam & enrolment" },
         new object?[]{ @"What does the examination involve?", @"<p>The exam tests applied judgement rather than recall: scenario-based multiple-choice questions across the ten sections (93 Knowledge Areas), including the governed use of AI. It is proctored, online or at a test centre.</p>", @"Exam & enrolment" },
         new object?[]{ @"How is the credential maintained?", @"<p>PCI credentials run on a three-year continuing-professional-development (CPD) cycle. Membership keeps your credential current and tracks your CPD.</p>", @"Exam & enrolment" },
@@ -234,7 +234,7 @@ Govern models, data and accountability — AI proposes, the professional dispose
         new object?[]{ @"How PCI Fits", @"landscape.html", @"About PCI" },
         new object?[]{ @"FAQ", @"faq.html", @"About PCI" },
         new object?[]{ @"Enrol", @"enrol.html", @"Certifications" },
-        new object?[]{ @"PCI PCL-AI™", @"/certifications/pcl-ai", @"Certifications" },
+        new object?[]{ @"PCI PCL-AI", @"/certifications/pcl-ai", @"Certifications" },
         new object?[]{ @"Certification Roadmap", @"certification-roadmap.html", @"Certifications" },
         new object?[]{ @"Eligibility Requirements", @"eligibility-requirements.html", @"Certifications" },
         new object?[]{ @"Exam Structure", @"exam-structure.html", @"Certifications" },

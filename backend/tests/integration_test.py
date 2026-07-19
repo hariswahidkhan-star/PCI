@@ -1297,9 +1297,9 @@ def test_leadership_suite(admin):
     entitlements, three bookings, three attempts, three credentials with the correct number prefixes,
     with zero cross-certification leakage."""
     print("\n=== 18. Leadership Suite: one candidate, three certifications ===")
-    NAMES = {"PCL-AI": "PCI AI Project Controls Leader™",
-             "PFL-AI": "PCI AI Project Finance Leader™",
-             "PDL-AI": "PCI AI Project Delivery Leader™"}
+    NAMES = {"PCL-AI": "PCI AI Project Controls Leader",
+             "PFL-AI": "PCI AI Project Finance Leader",
+             "PDL-AI": "PCI AI Project Delivery Leader"}
     c, cat = jget("GET", "/api/certifications")
     rows = {r.get("code"): r for r in cat.get("rows", [])}
     chk("18a all three Suite certifications are live together", c == 200 and all(k in rows for k in NAMES), sorted(rows))
