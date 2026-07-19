@@ -14,7 +14,7 @@
 
 <div id="vForm" style="display:none;">
   <p class="lead" id="vHello"></p>
-  <p style="color:var(--slate);">You have been <strong>shortlisted</strong> for the board-conferred <strong>Honorary Fellow (PCI)</strong> recognition. To continue, please provide the following. This step exists only to verify your identity; it does not involve any fee and does not guarantee recognition.</p>
+  <p style="color:var(--slate);" id="vStage">You have been <strong>shortlisted</strong> for the board-conferred <strong>Honorary Fellow (PCI)</strong> recognition. To continue, please provide the following. This step exists only to verify your identity; it does not involve any fee and does not guarantee recognition.</p>
 
   <div style="margin:18px 0;padding:20px 22px;border:1px solid var(--line);border-left:4px solid #C9A24B;border-radius:12px;background:#FBFAF6;">
     <h2 style="margin:0 0 8px;font-size:19px;">How your information is handled</h2>
@@ -60,6 +60,7 @@
     if(o.j&&o.j.already_submitted){show('vDone');return;}
     if(!o.r.ok||!o.j.ok){show('vInvalid');return;}
     byId('vHello').innerHTML='Dear <strong>'+(o.j.first_name?String(o.j.first_name).replace(/[<>&]/g,''):'applicant')+'</strong>,';
+    if(o.j.stage==='approved')byId('vStage').innerHTML='Congratulations — the board has <strong>approved</strong> your application for the board-conferred <strong>Honorary Fellow (PCI)</strong> recognition. To finalise it, please provide the following. This step exists only to verify your identity and does not involve any fee.';
     show('vForm');
   }).catch(function(){show('vInvalid');});
 

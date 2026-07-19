@@ -70,9 +70,21 @@
     <p class="small" style="color:var(--slate);margin-top:6px;">Optional. Honorary Fellow (PCI) is a board-conferred recognition and involves no examination — this simply tells the board which discipline your contribution relates to.</p>
   </div>
   <h3 style="margin:22px 0 8px;">Qualifications</h3>
-  <div class="field"><label>Highest qualification *</label><input name="highest_qualification" required maxlength="200"/></div>
-  <div class="field"><label>Professional certifications</label><input name="professional_certifications" maxlength="1000" placeholder="e.g. PMP, CCP, PSP"/></div>
-  <div class="field"><label>Relevant experience *</label><textarea name="relevant_experience" rows="4" required maxlength="6000" placeholder="Summarise the contribution and experience relevant to this recognition."></textarea></div>
+  <p class="small" style="color:var(--slate);margin:0 0 8px;">List your academic qualifications, starting with the highest, with the institution and year of pass. Add as many as apply.</p>
+  <div id="honQualRows"></div>
+  <button type="button" class="btn btn-out" style="padding:9px 16px;font-size:14px;" onclick="honAddRow('qual')">+ Add another qualification</button>
+
+  <h3 style="margin:22px 0 8px;">Professional certifications</h3>
+  <p class="small" style="color:var(--slate);margin:0 0 8px;">Optional — e.g. PMP, CCP, PSP — with the issuing body and the year obtained.</p>
+  <div id="honCertRows"></div>
+  <button type="button" class="btn btn-out" style="padding:9px 16px;font-size:14px;" onclick="honAddRow('cert')">+ Add another certification</button>
+
+  <h3 style="margin:22px 0 8px;">Career history</h3>
+  <p class="small" style="color:var(--slate);margin:0 0 8px;">Optional — the roles most relevant to this recognition, with the years held (leave &ldquo;To&rdquo; empty for a current role).</p>
+  <div id="honExpRows"></div>
+  <button type="button" class="btn btn-out" style="padding:9px 16px;font-size:14px;" onclick="honAddRow('exp')">+ Add another role</button>
+
+  <div class="field" style="margin-top:16px;"><label>Relevant experience *</label><textarea name="relevant_experience" rows="4" required maxlength="6000" placeholder="Summarise the contribution and experience relevant to this recognition."></textarea></div>
   <div class="field"><label>Brief professional summary *</label><textarea name="professional_summary" rows="4" required maxlength="6000"></textarea></div>
   <h3 style="margin:22px 0 8px;">Upload documents</h3>
   <p class="small" style="color:var(--slate);margin-top:0;">Accepted: PDF, JPG, PNG or WEBP, up to 3&nbsp;MB each.</p>
@@ -100,6 +112,41 @@ fetch(api+'/api/certifications').then(function(r){return r.json();}).then(functi
   var rows=(j&&j.rows)||[];rows.forEach(function(c){var o=document.createElement('option');o.value=c.code||c.slug||c.id;
   o.textContent=c.name+(c.acronym?(' ('+c.acronym+')'):'');sel.appendChild(o);});
 }).catch(function(){/* leave the single placeholder — the field is optional */});})();
+/* ---- repeatable qualification / certification / career rows ---- */
+var HON_YMIN=1940,HON_YMAX=new Date().getFullYear()+1;
+function honRowHtml(kind,removable){
+  var yr=function(cls,ph){return '<input type="number" class="'+cls+'" min="'+HON_YMIN+'" max="'+HON_YMAX+'" placeholder="'+ph+'" style="flex:0 0 110px;min-width:0;"/>';};
+  var rm=removable?'<button type="button" aria-label="Remove this row" onclick="this.parentNode.remove()" style="flex:0 0 auto;background:none;border:1px solid var(--line);border-radius:8px;cursor:pointer;padding:8px 12px;color:var(--slate);">&#10005;</button>':'';
+  var wrap='<div class="hon-row" data-kind="'+kind+'" style="display:flex;gap:10px;margin-bottom:10px;align-items:center;flex-wrap:wrap;">';
+  if(kind==='qual')return wrap+'<input class="hr-a" placeholder="Qualification / degree'+(removable?'':' *')+'" maxlength="200" style="flex:2;min-width:180px;"'+(removable?'':' required')+'/><input class="hr-b" placeholder="Institution" maxlength="200" style="flex:2;min-width:160px;"/>'+yr('hr-year','Year of pass')+rm+'</div>';
+  if(kind==='cert')return wrap+'<input class="hr-a" placeholder="Certification (e.g. PMP)" maxlength="200" style="flex:2;min-width:180px;"/><input class="hr-b" placeholder="Issuing body" maxlength="200" style="flex:2;min-width:160px;"/>'+yr('hr-year','Year obtained')+rm+'</div>';
+  return wrap+'<input class="hr-a" placeholder="Job title / role" maxlength="200" style="flex:2;min-width:180px;"/><input class="hr-b" placeholder="Employer / organisation" maxlength="200" style="flex:2;min-width:160px;"/>'+yr('hr-from','From (year)')+yr('hr-to','To (year)')+rm+'</div>';
+}
+function honAddRow(kind){
+  var host=document.getElementById(kind==='qual'?'honQualRows':kind==='cert'?'honCertRows':'honExpRows');
+  if(host.children.length>=10)return;
+  host.insertAdjacentHTML('beforeend',honRowHtml(kind,!(kind==='qual'&&host.children.length===0)));
+}
+honAddRow('qual');honAddRow('cert');honAddRow('exp');
+function honRows(kind){
+  var out=[];
+  document.querySelectorAll('.hon-row[data-kind='+kind+']').forEach(function(r){
+    var a=((r.querySelector('.hr-a')||{}).value||'').trim(),b=((r.querySelector('.hr-b')||{}).value||'').trim();
+    if(kind==='exp'){
+      if(!a&&!b)return;
+      var f=(r.querySelector('.hr-from')||{}).value||'',t=(r.querySelector('.hr-to')||{}).value||'';
+      out.push({role:a,employer:b,from_year:f?+f:null,to_year:t?+t:null});
+    }else{
+      if(!a)return;
+      var y=(r.querySelector('.hr-year')||{}).value||'';
+      var o=kind==='qual'?{qualification:a,institution:b}:{name:a,issuer:b};
+      if(y)o.year=+y;
+      out.push(o);
+    }
+  });
+  return out;
+}
+
 var HON_MAX=3000000,HON_OK=['application/pdf','image/jpeg','image/png','image/webp'];
 function honReadFile(input,kind){return new Promise(function(res,rej){var f=input&&input.files&&input.files[0];if(!f){res(null);return;}if(f.size>HON_MAX){rej(new Error((f.name||'File')+' is larger than 3 MB.'));return;}var r=new FileReader();r.onload=function(){var du=r.result;var mt=(du.split(';')[0]||'').split(':')[1]||'';if(HON_OK.indexOf(mt)<0){rej(new Error((f.name||'File')+' must be a PDF, JPG, PNG or WEBP.'));return;}res({doc_kind:kind,filename:f.name,data_uri:du});};r.onerror=function(){rej(new Error('Could not read '+(f.name||'the file')+'.'));};r.readAsDataURL(f);});}
 function honSubmit(e){e.preventDefault();var ok=document.getElementById('honOk'),er=document.getElementById('honErr'),btn=document.getElementById('honBtn');ok.style.display='none';er.style.display='none';
@@ -111,7 +158,7 @@ if(!dial||!phone){er.textContent='Please enter your mobile number including the 
 btn.disabled=true;btn.textContent='Submitting…';
 Promise.all([honReadFile(document.getElementById('doc_resume'),'resume'),honReadFile(document.getElementById('doc_academic'),'academic'),honReadFile(document.getElementById('doc_certifications'),'certifications'),honReadFile(document.getElementById('doc_supporting'),'supporting')]).then(function(docs){
 var f=document.getElementById('honForm');function V(n){return (f.querySelector('[name='+n+']')||{}).value||'';}
-var payload={first_name:V('first_name'),last_name:V('last_name'),email:V('email'),mobile:dial+' '+phone,country:V('country'),city:V('city'),nationality:V('nationality'),job_title:V('job_title'),employer:V('employer'),years_experience:+V('years_experience')||0,industry:V('industry'),certification:V('certification'),highest_qualification:V('highest_qualification'),professional_certifications:V('professional_certifications'),relevant_experience:V('relevant_experience'),professional_summary:V('professional_summary'),declaration:true,eligibility_confirmed:true,terms_accepted:true,documents:docs.filter(Boolean)};
+var payload={first_name:V('first_name'),last_name:V('last_name'),email:V('email'),mobile:dial+' '+phone,country:V('country'),city:V('city'),nationality:V('nationality'),job_title:V('job_title'),employer:V('employer'),years_experience:+V('years_experience')||0,industry:V('industry'),certification:V('certification'),qualifications:honRows('qual'),certifications:honRows('cert'),experience:honRows('exp'),relevant_experience:V('relevant_experience'),professional_summary:V('professional_summary'),declaration:true,eligibility_confirmed:true,terms_accepted:true,documents:docs.filter(Boolean)};
 var api=window.PCI_API_BASE||'';
 return fetch(api+'/api/honorary-application',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json().then(function(j){return {r:r,j:j};});});
 }).then(function(o){btn.disabled=false;btn.innerHTML='Submit application';if(o.r.ok&&o.j.ok){document.getElementById('honForm').style.display='none';ok.innerHTML='<strong>Thank you — your application has been received.</strong><br/>Your reference is <strong>'+o.j.reference+'</strong>. We have emailed you a confirmation. The board will review your application and be in touch.';ok.style.display='block';window.scrollTo({top:0,behavior:'smooth'});}else{er.textContent=(o.j&&(o.j.message||o.j.error))?('Could not submit: '+(o.j.message||o.j.error)):'Could not submit your application. Please check the form and try again.';er.style.display='block';}}).catch(function(err){btn.disabled=false;btn.innerHTML='Submit application';er.textContent=err.message||'Could not submit your application.';er.style.display='block';});
