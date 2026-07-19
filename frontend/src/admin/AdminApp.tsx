@@ -12,6 +12,7 @@ import Pages from './pages/Pages'
 import Credentials from './pages/Credentials'
 import Tickets from './pages/Tickets'
 import Documents from './pages/Documents'
+import PublicDownloads from './pages/PublicDownloads'
 import Books from './pages/Books'
 import SupportInbox from './pages/SupportInbox'
 import ErrorReports from './pages/ErrorReports'
@@ -94,6 +95,7 @@ export default function AdminApp() {
         <Route path="founding" element={<AnyPerm sections={['members', 'codes']}><Founding /></AnyPerm>} />
         <Route path="honorary" element={<OwnerOnly><Honorary /></OwnerOnly>} />
         <Route path="honorary-applications" element={<OwnerOnly><HonoraryApplications /></OwnerOnly>} />
+        <Route path="public-downloads" element={<Perm section="documents"><PublicDownloads /></Perm>} />
         <Route path="pages" element={<Perm section="pages"><Pages /></Perm>} />
         <Route path="enquiries" element={<Perm section="inquiries"><Enquiries /></Perm>} />
         <Route path="submissions" element={<Perm section="submissions"><Submissions /></Perm>} />

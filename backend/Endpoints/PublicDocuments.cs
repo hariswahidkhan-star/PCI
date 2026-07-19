@@ -188,7 +188,7 @@ public static class PublicDocuments
         });
 
         // Update metadata / lifecycle fields on a specific version row.
-        app.MapPut("/api/admin/public-documents/{id:long}", async (HttpContext ctx, long id) =>
+        app.MapMethods("/api/admin/public-documents/{id:long}", new[] { "PATCH", "PUT" }, async (HttpContext ctx, long id) =>
         {
             var b = await H.Body(ctx.Request);
             return gate(ctx.Request, SECTION, adm =>

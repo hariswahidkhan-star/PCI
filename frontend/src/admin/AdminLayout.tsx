@@ -40,6 +40,7 @@ const NAV: NavItem[] = [
   crudItem('pricing', 'Access & pricing'),
 
   { to: '/pages', label: 'Pages & content', perm: 'pages', group: 'Website' },
+  { to: '/public-downloads', label: 'Downloads Centre', perm: 'documents', group: 'Website' },
   { to: '/content', label: 'Site content', perm: 'content', group: 'Website' },
   { to: '/announcement', label: 'Announcement', perm: 'content', group: 'Website' },
   { to: '/translations', label: 'Translations', owner: true, group: 'Website' },
