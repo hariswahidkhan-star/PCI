@@ -597,6 +597,45 @@ public static class Migrate
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_certdocdl_doc ON cert_document_downloads(cert_document_id)");
 
+        // ── Public Downloads Centre: governance/legal/policy documents distributed to anyone, no login. ──
+        // Version-chained: every version is its own row sharing a stable doc_group (the public "document ID");
+        // is_current flags the live version. A public request only ever sees status='published' + visibility
+        // ='public' rows, so drafts, internal, withdrawn and archived documents are never distributed.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS public_documents(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            doc_group VARCHAR(64) NOT NULL,            -- stable public identifier shared across versions
+            title TEXT NOT NULL,
+            description TEXT,
+            category VARCHAR(60) DEFAULT 'general',    -- policies | certification-governance | candidate-handbooks | application-routes | exams | privacy-and-legal | fees-and-refunds | marketing-partners | institutions | accessibility | general
+            certification_id INTEGER,                  -- NULL = all certifications / general
+            route_key VARCHAR(40),                     -- NULL = all routes; else standard|founding|honorary|sponsored|complimentary
+            language VARCHAR(10) DEFAULT 'en',
+            version VARCHAR(20) DEFAULT '1.0',
+            status VARCHAR(30) NOT NULL DEFAULT 'draft',  -- draft|under_review|legal_review_required|approved|scheduled|published|superseded|archived|withdrawn
+            legal_review_status VARCHAR(40) DEFAULT 'draft', -- draft|internal_review_completed|external_legal_review_pending|external_legal_review_completed|approved_for_publication
+            visibility VARCHAR(12) DEFAULT 'public',    -- public|internal
+            owner TEXT, approver TEXT,
+            effective_date TEXT, published_at TEXT, scheduled_at TEXT, next_review_date TEXT,
+            storage_ref TEXT, filename TEXT, mime VARCHAR(80), size_bytes INTEGER, sha256 VARCHAR(64),
+            is_current INTEGER DEFAULT 0,
+            supersedes_id INTEGER,                      -- previous version row this one replaces
+            related_groups TEXT,                        -- comma-separated doc_group ids of related documents
+            sort_order INTEGER DEFAULT 0,
+            download_count INTEGER DEFAULT 0,
+            created_by INTEGER,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_pubdoc_group ON public_documents(doc_group)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_pubdoc_status ON public_documents(status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_pubdoc_cat ON public_documents(category)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS public_document_downloads(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            document_id INTEGER NOT NULL,
+            doc_group VARCHAR(64),
+            ip VARCHAR(64),
+            ua VARCHAR(255),
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_pubdocdl_doc ON public_document_downloads(document_id)");
+
         // ── Per-certification applications (Phase 4b): one record per (candidate, certification, route) ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS certification_applications(
             id INTEGER PRIMARY KEY AUTOINCREMENT,

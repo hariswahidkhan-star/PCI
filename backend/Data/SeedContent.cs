@@ -80,6 +80,11 @@ public static class SeedContent
                 db.Execute("UPDATE nav_items SET sort_order=? WHERE nav_group='Certifications' AND url=?", so, url);
             // 301 for the renamed article path so the old URL keeps its SEO value.
             db.Execute("INSERT OR IGNORE INTO seo_redirects(from_path,to_url,status,active,note) VALUES('/pmp-vs-aace-vs-pcp-ai.html','/pmp-vs-aace-vs-pcl-ai.html',301,1,'Master Naming Update')");
+            // Public Downloads Centre: a top-level header link, placed just after Resources (ties break by id
+            // so it sorts immediately after). Idempotent — inserted once, then left for an operator to move.
+            db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT 'Downloads','/downloads','Header', COALESCE((SELECT sort_order FROM nav_items WHERE nav_group='Header' AND label='Resources'),90), 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE nav_group='Header' AND url='/downloads')");
+            // …and in the footer "Resources" column, next to the existing Guidelines & Downloads link.
+            db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT 'Downloads Centre','/downloads','Resources', COALESCE((SELECT sort_order FROM nav_items WHERE nav_group='Resources' AND url='downloads.html'),1), 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE nav_group='Resources' AND url='/downloads')");
         }
         catch (Exception e) { Console.Error.WriteLine($"[seed] certification nav skipped: {e.Message}"); }
         // Master Naming Update: databases seeded before the Project Leadership Suite still carry the
