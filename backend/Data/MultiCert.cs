@@ -169,6 +169,16 @@ public static class MultiCert
             ("Project Management Leader", "Project Delivery Leader"),
             ("PCP-AI", "PCL-AI"), ("PFIP-AI", "PFL-AI"), ("PFIP", "PFL-AI"),
             ("CPMD-AI", "PDL-AI"), ("CPMD", "PDL-AI"), ("PML-AI", "PDL-AI"),
+            // Bare retired acronym LAST: by this point every "PCP-AI" is already "PCL-AI", so any
+            // remaining "PCP" is a standalone use — "(PCP)", "the PCP…" (truncated card copy) — that the
+            // hyphenated map could never match.
+            ("PCP", "PCL-AI"),
+            // Lowercase variants: SQL REPLACE is case-sensitive, and translated content, hrefs
+            // (pmp-vs-aace-vs-pcp-ai.html) and chat keywords store the retired names in lowercase.
+            ("pcp-ai", "pcl-ai"), ("pfip-ai", "pfl-ai"), ("pfip", "pfl-ai"),
+            ("cpmd-ai", "pdl-ai"), ("cpmd", "pdl-ai"), ("pml-ai", "pdl-ai"),
+            ("pcp", "pcl-ai"),
+            ("certified project controls professional", "pci ai project controls leader"),
         };
         (string table, string col)[] targets =
         {
@@ -177,6 +187,16 @@ public static class MultiCert
             ("bok_domains", "name"), ("bok_domains", "description"), ("bok_domains", "bullets"),
             ("news", "title"), ("news", "body"), ("resources", "title"), ("resources", "description"),
             ("site_content", "cvalue"), ("cert_documents", "title"), ("cert_documents", "description"),
+            // Content surfaces that predate the sweep and can also carry retired credential names:
+            // chat knowledge base, support reply templates, student-document titles, document categories,
+            // stored translations, public download-centre documents and nav labels.
+            ("chat_kb", "question"), ("chat_kb", "answer"), ("chat_kb", "keywords"),
+            ("support_templates", "title"), ("support_templates", "body"),
+            ("documents", "title"), ("documents", "description"),
+            ("document_categories", "name"),
+            ("content_i18n", "cvalue"),
+            ("public_documents", "title"), ("public_documents", "description"),
+            ("nav_items", "label"),
         };
         foreach (var (table, col) in targets)
         {

@@ -8,7 +8,7 @@ import { fmtMoney } from '../../format'
 type Draft = Partial<CertRow>
 
 const CERT_ERRORS: Record<string, string> = {
-  bad_code: 'Code must be 2–20 characters: letters, digits and hyphens (e.g. PCP-COST).',
+  bad_code: 'Code must be 2–20 characters: letters, digits and hyphens (e.g. PCI-COST).',
   name_required: 'A name is required.',
   code_exists: 'A certification with that code already exists.',
   slug_exists: 'That slug is already used by another certification.',
@@ -97,8 +97,8 @@ function Editor({ initial, onClose, onSaved }: { initial: Draft | null; onClose:
 
         <h3 className="section-label">Identity &amp; public catalogue</h3>
         <div className="grid cols-2">
-          <div className="field"><label>Code {isNew ? '' : '(permanent)'}</label><input value={d.code ?? ''} disabled={!isNew} onChange={(e) => set('code', e.target.value.toUpperCase())} placeholder="PCP-COST" /></div>
-          <div className="field"><label>Acronym</label><input value={d.acronym ?? ''} onChange={(e) => set('acronym', e.target.value)} placeholder="PCP-COST" /></div>
+          <div className="field"><label>Code {isNew ? '' : '(permanent)'}</label><input value={d.code ?? ''} disabled={!isNew} onChange={(e) => set('code', e.target.value.toUpperCase())} placeholder="PCI-COST" /></div>
+          <div className="field"><label>Acronym</label><input value={d.acronym ?? ''} onChange={(e) => set('acronym', e.target.value)} placeholder="PCI-COST" /></div>
           <div className="field"><label>Name</label><input value={d.name ?? ''} onChange={(e) => set('name', e.target.value)} /></div>
           <div className="field"><label>Public title</label><input value={d.public_title ?? ''} onChange={(e) => set('public_title', e.target.value)} /></div>
           <div className="field"><label>Status</label>
@@ -118,7 +118,7 @@ function Editor({ initial, onClose, onSaved }: { initial: Draft | null; onClose:
 
         <h3 className="section-label">Examination, fees &amp; membership</h3>
         <div className="grid cols-2">
-          <div className="field"><label>Credential prefix</label><input value={d.credential_prefix ?? ''} onChange={(e) => set('credential_prefix', e.target.value)} placeholder="PCP" /></div>
+          <div className="field"><label>Credential prefix</label><input value={d.credential_prefix ?? ''} onChange={(e) => set('credential_prefix', e.target.value)} placeholder="PCL" /></div>
           <div className="field"><label>Exam price (USD) — blank = standard</label><input type="number" step="1" value={d.exam_price ?? ''} onChange={(e) => set('exam_price', num(e.target.value))} /></div>
           <div className="field"><label>Application fee (USD)</label><input type="number" step="1" value={d.application_fee ?? ''} onChange={(e) => set('application_fee', num(e.target.value))} /></div>
           <div className="field"><label>Pass mark (%) — blank = global</label><input type="number" value={d.pass_mark_pct ?? ''} onChange={(e) => set('pass_mark_pct', num(e.target.value))} /></div>
