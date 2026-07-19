@@ -61,6 +61,7 @@ public static class HonoraryApplication
             var declaration = Flag("declaration");
             var eligibilityConfirmed = Flag("eligibility_confirmed") || Flag("eligibilityConfirmed");
             var termsAccepted = Flag("terms_accepted") || Flag("termsAccepted");
+            var suitabilityNote = S("suitability_note", 2000, "suitabilityNote");
 
             // ---- structured history: repeatable qualification / certification / experience rows ----
             // Each row is sanitised field-by-field (clip + year clamp), capped at 10 rows per section,
@@ -186,9 +187,9 @@ public static class HonoraryApplication
                 try
                 {
                     appId = db.ExecuteReturningId(@"INSERT INTO honorary_applications
-                        (reference,first_name,last_name,email,mobile,country,city,nationality,job_title,employer,years_experience,industry,highest_qualification,professional_certifications,relevant_experience,professional_summary,qualifications_json,certifications_json,experience_json,certification_id,declaration,eligibility_confirmed,terms_accepted,terms_accepted_at,status)
-                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,1,1,datetime('now'),'pending_review')",
-                        cand, first, last, email, mobile, country, city, nationality, jobTitle, employer, yearsExp, industry, highestQual, profCerts, relevantExp, summary, qualJson, certJson, expJson, certId);
+                        (reference,first_name,last_name,email,mobile,country,city,nationality,job_title,employer,years_experience,industry,highest_qualification,professional_certifications,relevant_experience,professional_summary,qualifications_json,certifications_json,experience_json,certification_id,suitability_note,declaration,eligibility_confirmed,terms_accepted,terms_accepted_at,status)
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,1,1,datetime('now'),'pending_review')",
+                        cand, first, last, email, mobile, country, city, nationality, jobTitle, employer, yearsExp, industry, highestQual, profCerts, relevantExp, summary, qualJson, certJson, expJson, certId, suitabilityNote);
                     reference = cand;
                 }
                 catch { /* reference collision → retry */ }

@@ -805,6 +805,7 @@ PCI.Backend.Endpoints.AdminStudents.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Public.Map(app, db, logFn);
 PCI.Backend.Endpoints.Account.Map(app, db, logFn);
 PCI.Backend.Endpoints.AdminMgmt.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
+PCI.Backend.Endpoints.PublicDocuments.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Payments.Map(app, db, logFn, () => !string.IsNullOrEmpty(stripeKey));
 PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Reviews.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
@@ -848,6 +849,7 @@ app.MapPost("/api/admin/storage/purge", (HttpRequest req) =>
 // the HTML with those values injected server-side (SEO-safe, works with JS off). Pages with no
 // overrides fall straight through to the static-file middleware, so untouched pages pay nothing.
 var webRoot = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
+try { PCI.Backend.Data.PublicDocsSeed.Ensure(db, webRoot); } catch { } // Public Downloads Centre core documents (idempotent)
 PCI.Backend.Endpoints.AdminSeo.Map(app, db, logFn, GateFn, webRoot);   // Admin Console → SEO (/api/admin/seo/...)
 PCI.Backend.Endpoints.AdminAnalytics.Map(app, db, GateFn);             // Admin Console → Analytics (/api/admin/analytics/...)
 PCI.Backend.Endpoints.AdminAiVisibility.Map(app, db, logFn, GateFn, webRoot); // Admin Console → AI Visibility (/api/admin/ai-visibility/...)
@@ -890,6 +892,21 @@ app.Use(async (ctx, next) =>
             ctx.Response.StatusCode = 301;
             ctx.Response.Headers.Location = "/verify.html" + ctx.Request.QueryString;
             return;
+        }
+        // ── Public Downloads Centre clean URLs: /downloads and /downloads/{category} both serve the
+        //    dynamic centre page (a single file that reads the category from the path and pre-filters via
+        //    the /api/public/documents feed). Real files under /downloads/*.pdf are left to static serving. ──
+        if (reqPath.Equals("/downloads", StringComparison.OrdinalIgnoreCase) ||
+            (reqPath.StartsWith("/downloads/", StringComparison.OrdinalIgnoreCase) && !reqPath.Contains('.')))
+        {
+            var centre = System.IO.Path.Combine(webRoot, "downloads-centre.html");
+            if (System.IO.File.Exists(centre))
+            {
+                ctx.Response.ContentType = "text/html; charset=utf-8";
+                ctx.Response.Headers.CacheControl = "no-cache";
+                await ctx.Response.SendFileAsync(centre);
+                return;
+            }
         }
         // ── Multi-certification clean URLs: /certifications (catalogue) and /certifications/{slug} (per credential) ──
         if (reqPath.StartsWith("/certifications", StringComparison.OrdinalIgnoreCase))
