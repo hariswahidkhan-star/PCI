@@ -98,6 +98,7 @@ public static class AdminAiVisibility
         app.MapPost("/api/admin/ai-visibility/policy", async (HttpContext ctx) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             var valid = AiVisibility.Crawlers.Select(c => c.Token).ToHashSet(StringComparer.OrdinalIgnoreCase);
             var tokens = new List<string>();
@@ -110,7 +111,7 @@ public static class AdminAiVisibility
             db.Execute("DELETE FROM site_settings WHERE skey='ai_bot_blocklist'");
             db.Execute("INSERT INTO site_settings(skey,svalue) VALUES('ai_bot_blocklist',?)", csv);
             AiVisibility.Bump();
-            log(null, "ai_visibility.policy", tokens.Count == 0 ? "all allowed" : "blocked: " + csv);
+            log(actorId, "ai_visibility.policy", tokens.Count == 0 ? "all allowed" : "blocked: " + csv);
             return J(new { ok = true, blocked = tokens });
         });
     }

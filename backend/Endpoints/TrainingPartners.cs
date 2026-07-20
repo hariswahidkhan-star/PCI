@@ -226,13 +226,13 @@ public static class TrainingPartners
                 db.Execute("UPDATE training_partner_applications SET status='approved', proposed_tier=?, partner_id=?, decided_by=?, decided_at=datetime('now'), admin_note=?, updated_at=datetime('now') WHERE id=?",
                     tier, partnerId, adm!.Id, note, id);
                 ListSections.Bump();
-                log(null, "training_partner_application_approved", $"{H.Str(a["reference"])} → partner {partnerId} ({tier}) by admin {adm.Id}");
+                log(adm!.Id, "training_partner_application_approved", $"{H.Str(a["reference"])} → partner {partnerId} ({tier}) by admin {adm.Id}");
             }
             else if (status.Length > 0)
             {
                 db.Execute("UPDATE training_partner_applications SET status=?, decided_by=?, decided_at=datetime('now'), admin_note=?, updated_at=datetime('now') WHERE id=?",
                     status, adm!.Id, note, id);
-                log(null, "training_partner_application_" + status, $"{H.Str(a["reference"])} by admin {adm.Id}");
+                log(adm!.Id, "training_partner_application_" + status, $"{H.Str(a["reference"])} by admin {adm.Id}");
             }
             else
             {

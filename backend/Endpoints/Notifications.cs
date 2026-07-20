@@ -68,6 +68,7 @@ public static class Notifications
         {
             var denied = gate(ctx.Request, "content", _ => Results.Ok());
             if (denied is not Microsoft.AspNetCore.Http.HttpResults.Ok) return denied;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             if (H.GetS(b, "recipients") is { } r) Set("notify_recipients", r.Trim());
             foreach (var (key, _) in Events)
@@ -83,12 +84,12 @@ public static class Notifications
                     };
                     Set("notify_" + key + "_enabled", on ? "1" : "0");
                 }
-            log(null, "notifications_update", string.Join(",", b.Keys));
+            log(actorId, "notifications_update", string.Join(",", b.Keys));
             return J(new { ok = true, resolved = Notify.Recipients(db) });
         });
 
         // ---------- send a test alert (prove delivery end-to-end) ----------
-        app.MapPost("/api/admin/notifications/test", (HttpRequest req) => gate(req, "content", _ =>
+        app.MapPost("/api/admin/notifications/test", (HttpRequest req) => gate(req, "content", adm =>
         {
             var recips = Notify.Recipients(db);
             if (recips.Count == 0)
@@ -102,7 +103,7 @@ public static class Notifications
                       Notify.Record(db, "email", to, "PCI test notification", "sent", "test", null); sent++; }
                 catch { Notify.Record(db, "email", to, "PCI test notification", "failed", "test", null); }
             }
-            log(null, "notifications_test", sent.ToString());
+            log(adm.Id, "notifications_test", sent.ToString());
             return J(new { ok = true, sent, recipients = recips });
         }));
     }

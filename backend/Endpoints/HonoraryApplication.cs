@@ -344,7 +344,7 @@ public static class HonoraryApplication
             {
                 db.Execute("UPDATE honorary_applications SET status=?, decided_by=?, decided_at=datetime('now'), admin_note=?, updated_at=datetime('now') WHERE id=?",
                     status, adm!.Id, note, id);
-                log(null, "honorary_application_" + status, $"{H.Str(a["reference"])} by admin {adm.Id}");
+                log(adm!.Id, "honorary_application_" + status, $"{H.Str(a["reference"])} by admin {adm.Id}");
             }
             else
             {

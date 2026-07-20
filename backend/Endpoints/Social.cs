@@ -53,6 +53,7 @@ public static class Social
         {
             var denied = gate(ctx.Request, "content", _ => Results.Ok());
             if (denied is not Microsoft.AspNetCore.Http.HttpResults.Ok) return denied;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             void Set(string skey, string v)
             {
@@ -73,7 +74,7 @@ public static class Social
                 };
                 Set("social_enabled", on ? "1" : "0");
             }
-            log(null, "social_update", string.Join(",", b.Keys));
+            log(actorId, "social_update", string.Join(",", b.Keys));
             return J(new { ok = true });
         });
     }

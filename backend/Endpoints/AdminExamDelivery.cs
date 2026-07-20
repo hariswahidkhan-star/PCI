@@ -83,6 +83,7 @@ public static class AdminExamDelivery
         app.MapPost("/api/admin/exam-delivery/mode", async (HttpContext ctx) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             bool Valid(string m) => m == ExamDelivery.InHouse || m == "inherit" || ExamDelivery.Get(m) is not null;
             if (H.GetS(b, "mode") is { } gm)
@@ -92,14 +93,14 @@ public static class AdminExamDelivery
                 Core.Settings.Put(db, "exam_delivery_mode", m);
                 // keep the provider is_default flag coherent with the global choice
                 if (m != ExamDelivery.InHouse) { db.Execute("UPDATE exam_delivery_providers SET is_default=0"); db.Execute("UPDATE exam_delivery_providers SET is_default=1 WHERE provider=?", m); }
-                log(null, "exam_delivery.mode", $"global={m}");
+                log(actorId, "exam_delivery.mode", $"global={m}");
             }
             if (H.GetNum(b, "certification_id") is { } cidn && H.GetS(b, "cert_mode") is { } cmRaw)
             {
                 var cid = (long)cidn; var cm = cmRaw.Trim().ToLowerInvariant();
                 if (!Valid(cm)) return Results.Json(new { error = "bad_mode" }, statusCode: 400);
                 Core.Settings.Put(db, $"exam_delivery_mode:{cid}", cm);   // 'inherit' clears the override
-                log(null, "exam_delivery.mode", $"cert {cid}={cm}");
+                log(actorId, "exam_delivery.mode", $"cert {cid}={cm}");
             }
             return J(new { ok = true, mode = Core.Settings.Str(db, "exam_delivery_mode", ExamDelivery.InHouse) });
         });
@@ -108,6 +109,7 @@ public static class AdminExamDelivery
         app.MapPost("/api/admin/exam-delivery", async (HttpContext ctx) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             var id = (long)(H.GetNum(b, "id") ?? 0);
             var provider = (H.GetS(b, "provider") ?? "").Trim().ToLowerInvariant();
@@ -154,33 +156,34 @@ public static class AdminExamDelivery
                     provider, name, env, configJson, enabled, isDefault, id);
                 if (AnySecretInBody()) db.Execute("UPDATE exam_delivery_providers SET secret=? WHERE id=?", MergeSecret(H.Str(existing["secret"])), id);
                 ApplyDefault(id);
-                log(null, "exam_delivery.update", $"{id} {name} ({provider})");
+                log(actorId, "exam_delivery.update", $"{id} {name} ({provider})");
                 return J(new { ok = true, id });
             }
             var newId = db.ExecuteReturningId("INSERT INTO exam_delivery_providers(provider,name,environment,config,secret,enabled,is_default) VALUES(?,?,?,?,?,?,?)",
                 provider, name, env, configJson, MergeSecret(null), enabled, isDefault);
             ApplyDefault(newId);
-            log(null, "exam_delivery.create", $"{newId} {name} ({provider})");
+            log(actorId, "exam_delivery.create", $"{newId} {name} ({provider})");
             return J(new { ok = true, id = newId });
         });
 
-        app.MapPost("/api/admin/exam-delivery/{id}/delete", (HttpRequest req, long id) => gate(req, "exam_delivery", _ =>
+        app.MapPost("/api/admin/exam-delivery/{id}/delete", (HttpRequest req, long id) => gate(req, "exam_delivery", adm =>
         {
             db.Execute("DELETE FROM exam_delivery_providers WHERE id=?", id);
-            log(null, "exam_delivery.delete", id.ToString());
+            log(adm.Id, "exam_delivery.delete", id.ToString());
             return J(new { ok = true });
         }));
 
         app.MapPost("/api/admin/exam-delivery/{id}/test", async (HttpContext ctx, long id) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var prov = db.QueryOne("SELECT * FROM exam_delivery_providers WHERE id=?", id);
             if (prov is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var connector = ExamDelivery.Get(H.Str(prov["provider"]));
             if (connector is null) return Results.Json(new { error = "no_connector" }, statusCode: 400);
             ConnResult r; try { r = await connector.TestConnection(http, ExamDelivery.CtxFor(prov)); } catch (Exception ex) { r = ConnResult.Fail(ex.Message); }
             db.Execute("UPDATE exam_delivery_providers SET status=? WHERE id=?", r.Ok ? "ok" : "error", id);
-            log(null, "exam_delivery.test", $"{id} → {(r.Ok ? "ok" : "error")}");
+            log(actorId, "exam_delivery.test", $"{id} → {(r.Ok ? "ok" : "error")}");
             return J(new { ok = r.Ok, code = r.Code, detail = r.Detail });
         });
 
@@ -198,8 +201,9 @@ public static class AdminExamDelivery
         app.MapPost("/api/admin/exam-delivery/orders/{id}/provision", async (HttpContext ctx, long id) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var r = await ExamDelivery.Provision(db, http, id);
-            log(null, "exam_delivery.provision", $"order {id} → {(r.Ok ? "ok" : "fail")}");
+            log(actorId, "exam_delivery.provision", $"order {id} → {(r.Ok ? "ok" : "fail")}");
             var row = db.QueryOne("SELECT status FROM exam_delivery_orders WHERE id=?", id);
             return J(new { ok = r.Ok, status = H.Str(row?["status"]), detail = r.Detail });
         });
@@ -207,16 +211,18 @@ public static class AdminExamDelivery
         app.MapPost("/api/admin/exam-delivery/orders/{id}/sync", async (HttpContext ctx, long id) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             await ExamDelivery.Sync(db, http, id);
             var cred = ExamDeliveryCredits.MaybeIssue(db, id);   // issue the PCI credential if the vendor graded a pass
             var row = db.QueryOne("SELECT status,result_status,score FROM exam_delivery_orders WHERE id=?", id);
-            log(null, "exam_delivery.sync", $"order {id} → {H.Str(row?["result_status"])}");
+            log(actorId, "exam_delivery.sync", $"order {id} → {H.Str(row?["result_status"])}");
             return J(new { ok = true, status = H.Str(row?["status"]), result_status = H.Str(row?["result_status"]), credential = cred });
         });
 
         app.MapPost("/api/admin/exam-delivery/orders/{id}/cancel", async (HttpContext ctx, long id) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var row = db.QueryOne("SELECT * FROM exam_delivery_orders WHERE id=?", id);
             if (row is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var prov = db.QueryOne("SELECT * FROM exam_delivery_providers WHERE id=?", row["provider_id"]);
@@ -224,7 +230,7 @@ public static class AdminExamDelivery
             if (connector is null || prov is null) return Results.Json(new { error = "no_connector" }, statusCode: 400);
             ConnResult r; try { r = await connector.Cancel(http, ExamDelivery.CtxFor(prov), ExamDelivery.OrderFor(db, row)); } catch (Exception ex) { r = ConnResult.Fail(ex.Message); }
             if (r.Ok) db.Execute("UPDATE exam_delivery_orders SET status='cancelled', updated_at=datetime('now') WHERE id=?", id);
-            log(null, "exam_delivery.cancel", $"order {id} → {(r.Ok ? "ok" : "fail")}");
+            log(actorId, "exam_delivery.cancel", $"order {id} → {(r.Ok ? "ok" : "fail")}");
             return J(new { ok = r.Ok, detail = r.Detail });
         });
 

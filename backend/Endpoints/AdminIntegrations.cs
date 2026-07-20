@@ -82,6 +82,7 @@ public static class AdminIntegrations
         app.MapPost("/api/admin/integrations", async (HttpContext ctx) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             var id = (long)(H.GetNum(b, "id") ?? 0);
             var provider = (H.GetS(b, "provider") ?? "webhook").Trim().ToLowerInvariant();
@@ -147,21 +148,21 @@ public static class AdminIntegrations
                 }
                 else if (H.GetEl(b, "secret") is { ValueKind: JsonValueKind.String } sEl)
                     db.Execute("UPDATE integrations SET secret=? WHERE id=?", sEl.GetString() ?? "", id);
-                log(null, "integration.update", $"{id} {name} ({provider})");
+                log(actorId, "integration.update", $"{id} {name} ({provider})");
                 return J(new { ok = true, id });
             }
             var secretVal = provider == "quickbooks" ? MergeQbo(null) : (H.GetS(b, "secret") ?? "");
             var newId = db.ExecuteReturningId("INSERT INTO integrations(provider,name,endpoint_url,secret,config,event_filter,enabled) VALUES(?,?,?,?,?,?,?)",
                 provider, name, endpoint, secretVal, configJson, filter, enabled);
-            log(null, "integration.create", $"{newId} {name} ({provider})");
+            log(actorId, "integration.create", $"{newId} {name} ({provider})");
             return J(new { ok = true, id = newId });
         });
 
-        app.MapPost("/api/admin/integrations/{id}/delete", (HttpRequest req, long id) => gate(req, "integrations", _ =>
+        app.MapPost("/api/admin/integrations/{id}/delete", (HttpRequest req, long id) => gate(req, "integrations", adm =>
         {
             db.Execute("DELETE FROM integration_deliveries WHERE integration_id=?", id);
             db.Execute("DELETE FROM integrations WHERE id=?", id);
-            log(null, "integration.delete", id.ToString());
+            log(adm.Id, "integration.delete", id.ToString());
             return J(new { ok = true });
         }));
 
@@ -169,6 +170,7 @@ public static class AdminIntegrations
         app.MapPost("/api/admin/integrations/{id}/test", async (HttpContext ctx, long id) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var integ = db.QueryOne("SELECT * FROM integrations WHERE id=?", id);
             if (integ is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var eventId = db.ExecuteReturningId("INSERT INTO integration_events(event_type,entity_type,entity_id,payload) VALUES('ping','test',?,?)",
@@ -177,7 +179,7 @@ public static class AdminIntegrations
             var del = db.QueryOne("SELECT * FROM integration_deliveries WHERE event_id=? AND integration_id=?", eventId, id);
             if (del is not null) await Integrations.DeliverOne(db, http, del);
             var after = db.QueryOne("SELECT status,response_code,last_error FROM integration_deliveries WHERE event_id=? AND integration_id=?", eventId, id);
-            log(null, "integration.test", id.ToString());
+            log(actorId, "integration.test", id.ToString());
             return J(new { ok = H.Str(after?["status"]) == "delivered", status = H.Str(after?["status"]),
                 response_code = after?["response_code"], error = H.Str(after?["last_error"]) });
         });
@@ -194,12 +196,12 @@ public static class AdminIntegrations
                                       LEFT JOIN integrations i ON i.id=d.integration_id
                                       ORDER BY d.id DESC LIMIT 100") })));
 
-        app.MapPost("/api/admin/integrations/deliveries/{id}/retry", (HttpRequest req, long id) => gate(req, "integrations", _ =>
+        app.MapPost("/api/admin/integrations/deliveries/{id}/retry", (HttpRequest req, long id) => gate(req, "integrations", adm =>
         {
             var d = db.QueryOne("SELECT id FROM integration_deliveries WHERE id=?", id);
             if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             db.Execute("UPDATE integration_deliveries SET status='pending', next_attempt_at=datetime('now'), last_error=NULL, updated_at=datetime('now') WHERE id=?", id);
-            log(null, "integration.retry", id.ToString());
+            log(adm.Id, "integration.retry", id.ToString());
             return J(new { ok = true });   // the dispatcher will pick it up on its next tick
         }));
     }

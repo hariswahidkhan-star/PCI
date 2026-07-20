@@ -347,7 +347,10 @@ public static class AdminMgmt
                 return Results.Json(new { error = "bad_founding_route" }, statusCode: 400);
             bool founding = route == "founding";
             int B(string k, bool dflt = false) => (b.ContainsKey(k) ? H.B(b[k].GetRawText()) : dflt) ? 1 : 0;
-            var id = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,certification_id,route_key,min_transaction,max_discount,partner_id,start_date,end_date,max_uses,single_use_per_email,active,
+            long id;
+            try
+            {
+                id = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,certification_id,route_key,min_transaction,max_discount,partner_id,start_date,end_date,max_uses,single_use_per_email,active,
                 founding_route,grants_membership,grants_exam,grants_study_access,requires_application,auto_approve,membership_months,criteria_json)
                 VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (H.GetS(b, "code") ?? "").ToUpperInvariant(), H.GetS(b, "discount_type"), H.GetNum(b, "discount_value"), NormScope(H.GetS(b, "applies_to")),
@@ -361,8 +364,11 @@ public static class AdminMgmt
                 founding ? B("auto_approve", true) : 1,
                 (int)(H.GetNum(b, "membership_months") ?? 12),
                 founding ? H.GetS(b, "criteria_json") : null);
+            }
+            // A duplicate `code` violates the UNIQUE constraint — return a clean 409 rather than a 500.
+            catch { return Results.Json(new { error = "code_exists", message = "That code already exists." }, statusCode: 409); }
             var adm = adminFromReq(req);
-            log(null, "code_created", $"{(H.GetS(b, "code") ?? "").ToUpperInvariant()}{(founding ? " founding:" + route : "")} by admin {adm?.Id}");
+            log(adm?.Id, "code_created", $"{(H.GetS(b, "code") ?? "").ToUpperInvariant()}{(founding ? " founding:" + route : "")} by admin {adm?.Id}");
             return J(new { id });
         });
         app.MapPatch("/api/admin/codes/{id}", async (HttpContext ctx, long id) =>
@@ -393,7 +399,7 @@ public static class AdminMgmt
                 db.Execute($"UPDATE discount_codes SET {string.Join(",", set)} WHERE id=?", vals.ToArray());
             }
             var adm = adminFromReq(req);
-            log(null, "code_updated", $"code {id} by admin {adm?.Id}: {string.Join(",", b.Keys)}");
+            log(adm?.Id, "code_updated", $"code {id} by admin {adm?.Id}: {string.Join(",", b.Keys)}");
             return J(new { ok = true });
         });
 
@@ -407,6 +413,7 @@ public static class AdminMgmt
             db.Execute("UPDATE pricing_rules SET standard_price=COALESCE(?,standard_price), default_discount_percentage=COALESCE(?,default_discount_percentage), active=COALESCE(?,active), updated_at=datetime('now') WHERE id=?",
                 H.GetNum(b, "standard_price"), H.GetNum(b, "default_discount_percentage"), act, id);
             CertCatalogue.Bump();   // exam pricing feeds the public catalogue cards
+            log(adminFromReq(req)?.Id, "pricing_update", $"rule {id}: {string.Join(",", b.Keys)}");
             return J(new { ok = true });
         });
         app.MapPost("/api/admin/run-reminders", (HttpRequest req) => gate(req, "enrollments", _ => J(new { ok = true, reminders_sent = 0 })));
@@ -499,7 +506,7 @@ public static class AdminMgmt
             if (adminFromReq(req) is { } sadm && !sadm.CanCert(credRow["certification_id"]))
                 return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
             db.Execute("UPDATE issued_credentials SET status=? WHERE id=?", status, id);
-            log(null, "credential_" + status, id.ToString());
+            log(adminFromReq(req)?.Id, "credential_" + status, id.ToString());
             return J(new { ok = true });
         });
 
@@ -520,7 +527,7 @@ public static class AdminMgmt
             var b = await H.Body(req); var status = H.GetS(b, "status");
             if (status is not ("new" or "in_progress" or "closed")) return Results.Json(new { error = "bad_status" }, statusCode: 400);
             db.Execute("UPDATE inquiries SET status=? WHERE id=?", status, id);
-            log(null, "inquiry_" + status, id.ToString());
+            log(adminFromReq(req)?.Id, "inquiry_" + status, id.ToString());
             return J(new { ok = true });
         });
 
@@ -570,7 +577,7 @@ public static class AdminMgmt
             db.Execute("UPDATE pages SET title=COALESCE(?,title), meta_description=COALESCE(?,meta_description), noindex=COALESCE(?,noindex), published=COALESCE(?,published), canonical_url=COALESCE(?,canonical_url), og_image=COALESCE(?,og_image), updated_at=datetime('now') WHERE id=?",
                 H.GetS(b, "title"), H.GetS(b, "meta_description"), noindex, published, H.GetS(b, "canonical_url"), H.GetS(b, "og_image"), id);
             PCI.Backend.Core.PageContent.Bump();
-            log(null, "page_update", id.ToString());
+            log(adminFromReq(req)?.Id, "page_update", id.ToString());
             return J(new { ok = true });
         });
         app.MapGet("/api/admin/content", (HttpRequest req) => gate(req, "content", _ => J(new { rows = db.Query("SELECT * FROM site_content ORDER BY cgroup, id") })));
@@ -580,7 +587,7 @@ public static class AdminMgmt
             var b = await H.Body(req);
             db.Execute("UPDATE site_content SET cvalue=?, updated_at=datetime('now') WHERE id=?", H.GetS(b, "cvalue") ?? "", id);
             PCI.Backend.Core.PageContent.Bump();
-            log(null, "content_update", id.ToString());
+            log(adminFromReq(req)?.Id, "content_update", id.ToString());
             return J(new { ok = true });
         });
 
@@ -593,7 +600,7 @@ public static class AdminMgmt
                 : db.Query("SELECT * FROM page_blocks WHERE slug=? ORDER BY sort_order, id", slug);
             return J(new { rows });
         }));
-        app.MapPost("/api/admin/page-blocks", (HttpRequest req) => gate(req, "pages", _ =>
+        app.MapPost("/api/admin/page-blocks", (HttpRequest req) => gate(req, "pages", adm =>
         {
             var b = H.Body(req).GetAwaiter().GetResult();
             var slug = (H.GetS(b, "slug") ?? "").Trim();
@@ -605,23 +612,23 @@ public static class AdminMgmt
             db.Execute("UPDATE page_blocks SET label=COALESCE(?,label), cvalue=?, updated_at=datetime('now') WHERE slug=? AND block_key=?",
                 H.GetS(b, "label"), H.GetS(b, "cvalue"), slug, key);
             PCI.Backend.Core.PageContent.Bump();
-            log(null, "page_block_upsert", $"{slug}:{key}");
+            log(adm.Id, "page_block_upsert", $"{slug}:{key}");
             return J(new { ok = true, id });
         }));
-        app.MapPatch("/api/admin/page-blocks/{id}", (HttpRequest req, long id) => gate(req, "pages", _ =>
+        app.MapPatch("/api/admin/page-blocks/{id}", (HttpRequest req, long id) => gate(req, "pages", adm =>
         {
             var b = H.Body(req).GetAwaiter().GetResult();
             db.Execute("UPDATE page_blocks SET cvalue=?, label=COALESCE(?,label), sort_order=COALESCE(?,sort_order), updated_at=datetime('now') WHERE id=?",
                 H.GetS(b, "cvalue") ?? "", H.GetS(b, "label"), b.ContainsKey("sort_order") ? (object)(long)(H.GetNum(b, "sort_order") ?? 0) : null, id);
             PCI.Backend.Core.PageContent.Bump();
-            log(null, "page_block_update", id.ToString());
+            log(adm.Id, "page_block_update", id.ToString());
             return J(new { ok = true });
         }));
-        app.MapDelete("/api/admin/page-blocks/{id}", (HttpRequest req, long id) => gate(req, "pages", _ =>
+        app.MapDelete("/api/admin/page-blocks/{id}", (HttpRequest req, long id) => gate(req, "pages", adm =>
         {
             db.Execute("DELETE FROM page_blocks WHERE id=?", id);
             PCI.Backend.Core.PageContent.Bump();
-            log(null, "page_block_delete", id.ToString());
+            log(adm.Id, "page_block_delete", id.ToString());
             return J(new { ok = true });
         }));
         app.MapGet("/api/admin/subscribers", (HttpRequest req) => gate(req, "subscribers", _ => J(new { rows = db.Query("SELECT * FROM newsletter_subscribers ORDER BY id DESC") })));
@@ -633,6 +640,7 @@ public static class AdminMgmt
             if (subStatus is not ("subscribed" or "unsubscribed" or "bounced" or "complained"))
                 return Results.Json(new { error = "bad_status" }, statusCode: 400);
             db.Execute("UPDATE newsletter_subscribers SET status=? WHERE id=?", subStatus, id);
+            log(adminFromReq(req)?.Id, "subscriber_update", $"{id}: {string.Join(",", b.Keys)}");
             return J(new { ok = true });
         });
         app.MapGet("/api/admin/form_submissions", (HttpRequest req) =>
@@ -653,6 +661,7 @@ public static class AdminMgmt
             if (fsStatus is not ("new" or "in_progress" or "resolved" or "archived" or "spam"))
                 return Results.Json(new { error = "bad_status" }, statusCode: 400);
             db.Execute("UPDATE form_submissions SET status=? WHERE id=?", fsStatus, id);
+            log(adminFromReq(req)?.Id, "form_submission_status", $"{id} → {fsStatus}");
             return J(new { ok = true });
         });
     }

@@ -87,6 +87,7 @@ public static class AdminSeo
         app.MapPost("/api/admin/seo/redirects", async (HttpContext ctx) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             var from = PathRedirects.Norm(H.GetS(b, "from_path"));
             var to = (H.GetS(b, "to_url") ?? "").Trim();
@@ -106,15 +107,15 @@ public static class AdminSeo
             db.Execute("DELETE FROM seo_redirects WHERE from_path=?", from);
             db.Execute("INSERT INTO seo_redirects(from_path,to_url,status,active,note) VALUES(?,?,?,1,?)", from, to, status, note);
             PathRedirects.Bump();
-            log(null, "seo.redirect_set", $"{from} -> {to} ({status})");
+            log(actorId, "seo.redirect_set", $"{from} -> {to} ({status})");
             return J(new { ok = true });
         });
 
-        app.MapPost("/api/admin/seo/redirects/{id}/delete", (HttpRequest req, long id) => gate(req, "pages", _ =>
+        app.MapPost("/api/admin/seo/redirects/{id}/delete", (HttpRequest req, long id) => gate(req, "pages", adm =>
         {
             db.Execute("DELETE FROM seo_redirects WHERE id=?", id);
             PathRedirects.Bump();
-            log(null, "seo.redirect_delete", id.ToString());
+            log(adm.Id, "seo.redirect_delete", id.ToString());
             return J(new { ok = true });
         }));
 
@@ -142,6 +143,7 @@ public static class AdminSeo
         app.MapPost("/api/admin/seo/integrations", async (HttpContext ctx) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             void Set(string k, string? v)
             {
@@ -152,13 +154,14 @@ public static class AdminSeo
             foreach (var k in new[] { "ga4_measurement_id", "gtm_container_id", "clarity_project_id", "google_site_verification", "bing_site_verification", "psi_api_key" })
                 Set(k, H.GetS(b, k));
             SeoTags.Bump();
-            log(null, "seo.integrations_update", null);
+            log(actorId, "seo.integrations_update", null);
             return J(new { ok = true });
         });
 
         app.MapPost("/api/admin/seo/indexnow/submit", async (HttpContext ctx) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             List<string> urls;
             if (H.GetEl(b, "urls") is { ValueKind: System.Text.Json.JsonValueKind.Array } arr)
@@ -166,7 +169,7 @@ public static class AdminSeo
             else
                 urls = IndexNowService.AllPublicUrls(db);
             var (ok, detail) = IndexNowService.Submit(db, urls);
-            log(null, "seo.indexnow_submit", $"{urls.Count} urls: {detail}");
+            log(actorId, "seo.indexnow_submit", $"{urls.Count} urls: {detail}");
             return J(new { ok, submitted = urls.Count, detail });
         });
 
@@ -176,6 +179,7 @@ public static class AdminSeo
         app.MapPost("/api/admin/seo/pagespeed", async (HttpContext ctx) =>
         {
             var deny = Deny(ctx.Request); if (deny is not null) return deny;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             var url = (H.GetS(b, "url") ?? Redirects.CanonicalBase + "/").Trim();
             if (!url.StartsWith("https://") && !url.StartsWith("http://"))
@@ -192,7 +196,7 @@ public static class AdminSeo
                 using var doc = System.Text.Json.JsonDocument.Parse(txt);
                 var cats = doc.RootElement.GetProperty("lighthouseResult").GetProperty("categories");
                 double Score(string c) => cats.TryGetProperty(c, out var el) && el.TryGetProperty("score", out var s) ? Math.Round(s.GetDouble() * 100) : -1;
-                log(null, "seo.pagespeed", url);
+                log(actorId, "seo.pagespeed", url);
                 return J(new { ok = true, url, performance = Score("performance"), seo = Score("seo") });
             }
             catch (Exception e)

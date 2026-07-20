@@ -260,7 +260,24 @@ public static class PartnerPortal
             var temp = Security.RandomHex(5);
             var uid = db.ExecuteReturningId("INSERT INTO partner_users(partner_id,email,name,role,password_hash,created_by) VALUES(?,?,?,?,?,?)",
                 id, email, H.GetS(b, "name"), role, BCrypt.Net.BCrypt.HashPassword(temp), adm.Id);
-            log(null, "partner_user_created", $"{email} ({role}) for partner {id} by {adm.Id}");
+            log(adm.Id, "partner_user_created", $"{email} ({role}) for partner {id} by {adm.Id}");
+            // Invite notification to the new partner user (best-effort; admin-toggleable via
+            // notify_partner_invite_enabled). We never email the temporary password (platform posture) — the
+            // admin shares it out-of-band and the user sets their own on first sign-in (must_change_pw).
+            if (Notify.Enabled(db, "partner_invite"))
+                try
+                {
+                    var inst = H.Str(db.QueryOne("SELECT name FROM training_partners WHERE id=?", id)?["name"]) ?? "your institution";
+                    var portal = Mailer.BaseUrl(ctx.Request) + "/partner.html";
+                    var nameEnc = System.Net.WebUtility.HtmlEncode(H.GetS(b, "name") ?? "there");
+                    var body = $@"<div style=""font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#0E1525"">
+<h1 style=""font-size:22px"">You've been added to the PCI institution portal</h1>
+<p style=""font-size:15px;line-height:1.7;color:#434b57"">Hello {nameEnc}, an administrator has created a <strong>{System.Net.WebUtility.HtmlEncode(inst)}</strong> portal account for you ({System.Net.WebUtility.HtmlEncode(email)}, role: {System.Net.WebUtility.HtmlEncode(role)}).</p>
+<p style=""font-size:15px;line-height:1.7;color:#434b57"">Sign in at <a href=""{portal}"" style=""color:#1D4ED8"">{portal}</a> using the temporary password your administrator shared with you. You'll set your own password on first sign-in.</p>
+<p style=""font-size:13px;color:#7a828f"">Warm regards,<br>The Project Controls Institute team</p></div>";
+                    Mailer.Send(db, null, email, "partner_invite", "Your PCI institution portal access", body);
+                }
+                catch { }
             return J(new { ok = true, id = uid, email, role, temp_password = temp, portal_url = "/partner.html" });
         }));
 
@@ -270,7 +287,7 @@ public static class PartnerPortal
             var temp = Security.RandomHex(5);
             db.Execute("UPDATE partner_users SET password_hash=?, must_change_pw=1 WHERE id=?", BCrypt.Net.BCrypt.HashPassword(temp), id);
             db.Execute("DELETE FROM partner_sessions WHERE partner_user_id=?", id);
-            log(null, "partner_user_pw_reset", $"{id} by {adm.Id}");
+            log(adm.Id, "partner_user_pw_reset", $"{id} by {adm.Id}");
             return J(new { ok = true, temp_password = temp });
         }));
 
@@ -281,7 +298,7 @@ public static class PartnerPortal
             if (status is not ("active" or "suspended")) return Err(400, "bad_status");
             db.Execute("UPDATE partner_users SET status=? WHERE id=?", status, id);
             if (status == "suspended") db.Execute("DELETE FROM partner_sessions WHERE partner_user_id=?", id);
-            log(null, "partner_user_status", $"{id} → {status} by {adm.Id}");
+            log(adm.Id, "partner_user_status", $"{id} → {status} by {adm.Id}");
             return J(new { ok = true });
         }));
 
@@ -300,7 +317,7 @@ public static class PartnerPortal
             if (c["partner_id"] is not null)
                 db.Execute("INSERT INTO partner_notices(partner_id,title,body) VALUES(?,?,?)", H.L(c["partner_id"]),
                     $"Code {H.Str(c["code"])} approved", "Your discount code has been approved by PCI and is now live.");
-            log(null, "code_approved", $"{H.Str(c["code"])} by {adm.Id}");
+            log(adm.Id, "code_approved", $"{H.Str(c["code"])} by {adm.Id}");
             return J(new { ok = true });
         }));
 
@@ -315,7 +332,7 @@ public static class PartnerPortal
             if (c["partner_id"] is not null)
                 db.Execute("INSERT INTO partner_notices(partner_id,title,body) VALUES(?,?,?)", H.L(c["partner_id"]),
                     $"Code {H.Str(c["code"])} rejected", $"PCI rejected this code: {reason}. You can amend and resubmit it.");
-            log(null, "code_rejected", $"{H.Str(c["code"])} by {adm.Id}: {reason}");
+            log(adm.Id, "code_rejected", $"{H.Str(c["code"])} by {adm.Id}: {reason}");
             return J(new { ok = true });
         }));
 
@@ -337,7 +354,7 @@ public static class PartnerPortal
             if (ctx.Request.Query["format"] == "csv")
             {
                 // Personal/financial exports are themselves auditable events.
-                log(null, "export", $"discount report CSV by admin {adm.Id}");
+                log(adm.Id, "export", $"discount report CSV by admin {adm.Id}");
                 var sb = new System.Text.StringBuilder("code,type,institution,percent,applies_to,status,max_uses,used,expires,discount_given,revenue\n");
                 foreach (var r in rows)
                 {
@@ -363,7 +380,7 @@ public static class PartnerPortal
                 db.Execute("UPDATE discount_codes SET status='suspended', active=0 WHERE id=?", H.L(f["code_id"]));
             db.Execute("UPDATE fraud_flags SET status=?, actioned_by=?, actioned_at=datetime('now') WHERE id=?",
                 action == "clear" ? "cleared" : "actioned", adm.Id, id);
-            log(null, "fraud_flag_" + action, $"flag {id} by {adm.Id}");
+            log(adm.Id, "fraud_flag_" + action, $"flag {id} by {adm.Id}");
             return J(new { ok = true, action });
         }));
     }

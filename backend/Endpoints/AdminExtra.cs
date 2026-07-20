@@ -62,7 +62,7 @@ public static class AdminExtra
             if (message.Length > 4000) message = message[..4000];
             db.Execute("INSERT INTO ticket_messages(ticket_id,sender,body) VALUES(?,?,?)", id, "admin", message);
             db.Execute("UPDATE tickets SET status='awaiting_student', updated_at=datetime('now'), first_response_at=COALESCE(first_response_at, datetime('now')) WHERE id=?", id);
-            log(null, "ticket_replied", id.ToString());
+            log(adminFromReq(req)?.Id, "ticket_replied", id.ToString());
             return J(new { ok = true });
         });
         app.MapPost("/api/admin/tickets/{id}/status", async (HttpRequest req, long id) =>
@@ -72,6 +72,7 @@ public static class AdminExtra
             var status = H.GetS(b, "status");
             if (status is not ("open" or "awaiting_student" or "resolved" or "closed")) return Results.Json(new { error = "bad_status" }, statusCode: 400);
             db.Execute("UPDATE tickets SET status=?, updated_at=datetime('now') WHERE id=?", status, id);
+            log(adminFromReq(req)?.Id, "ticket_status", $"{id} → {status}");
             return J(new { ok = true });
         });
 
@@ -121,7 +122,7 @@ public static class AdminExtra
                 }
                 catch { }
             }
-            log(null, "codes_generated", $"{batch} x{outCodes.Count}");
+            log(adminFromReq(req)?.Id, "codes_generated", $"{batch} x{outCodes.Count}");
             return J(new { batch_id = batch, count = outCodes.Count, codes = outCodes });
         });
         app.MapGet("/api/admin/codes/{id}/redemptions", (HttpRequest req, long id) => gate(req, "codes", _ => J(new
