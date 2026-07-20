@@ -19,6 +19,7 @@ const NAV: NavItem[] = [
   { to: '/enrollments', label: 'Enrolments', perm: 'enrollments', group: 'Students' },
   { to: '/payments', label: 'Payments', perm: 'payments', group: 'Students' },
   { to: '/tickets', label: 'Support tickets', perm: 'tickets', group: 'Students' },
+  { to: '/casework', label: 'Appeals & accommodations', perm: 'tickets', group: 'Students' },
   { to: '/documents', label: 'Documents', perm: 'documents', group: 'Students' },
   { to: '/books', label: 'Books & materials', perm: 'resources', group: 'Students' },
   { to: '/erasure-requests', label: 'Data erasure requests', perm: 'members', group: 'Students' },

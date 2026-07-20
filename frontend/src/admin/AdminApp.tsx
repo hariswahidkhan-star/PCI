@@ -18,6 +18,7 @@ import MarketingAds from './pages/MarketingAds'
 import Books from './pages/Books'
 import SupportInbox from './pages/SupportInbox'
 import ErasureRequests from './pages/ErasureRequests'
+import Casework from './pages/Casework'
 import ErrorReports from './pages/ErrorReports'
 import Enrollments from './pages/Enrollments'
 import Codes from './pages/Codes'
@@ -90,6 +91,7 @@ export default function AdminApp() {
         <Route path="payments" element={<Perm section="payments"><Payments /></Perm>} />
         <Route path="credentials" element={<Perm section="credentials"><Credentials /></Perm>} />
         <Route path="tickets" element={<Perm section="tickets"><Tickets /></Perm>} />
+        <Route path="casework" element={<Perm section="tickets"><Casework /></Perm>} />
         <Route path="documents" element={<Perm section="documents"><Documents /></Perm>} />
         <Route path="erasure-requests" element={<Perm section="members"><ErasureRequests /></Perm>} />
         <Route path="books" element={<Perm section="resources"><Books /></Perm>} />
