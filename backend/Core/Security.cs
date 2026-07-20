@@ -251,7 +251,7 @@ public static class Rbac
     public static readonly Dictionary<string, string[]> Sections = new()
     {
         ["platform"] = new[]{ "overview","reports","audit","emails","settings","team","integrations" },
-        ["website"]  = new[]{ "set_web","pricing","codes","content","pages","news","faqs","bok","governance","resources","media","nav","partners","sitesettings","subscribers","submissions","inquiries" },
+        ["website"]  = new[]{ "set_web","pricing","codes","content","pages","news","faqs","bok","governance","resources","media","nav","partners","social","sitesettings","subscribers","submissions","inquiries" },
         ["student"]  = new[]{ "set_sp","members","enrollments","payments","credentials","tickets","documents" },
         ["exam"]     = new[]{ "set_exam","exams","proctoring","sampleq","exam_delivery" },
         // Exam Exceptions & Authorizations — granular per-action permissions so deadline extensions,

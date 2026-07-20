@@ -210,6 +210,8 @@ table.data { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch
 .stat .k::before { content: ""; display: inline-block; width: 14px; height: 2px; background: var(--brand); opacity: .6; margin-right: 7px; vertical-align: .22em; }
 .notice { padding: .8rem 1rem; border-radius: 10px; border: 1px solid #dbe6ff; border-left: 3px solid var(--brand); background: var(--brand-050); }
 .notice.warn { background: var(--warn-bg); border-color: #fde68a; border-left-color: var(--warn); }
+.soc-ic { display: inline-flex; align-items: center; justify-content: center; }
+.soc-ic svg { width: 20px; height: 20px; display: block; }
 .notice.err { background: var(--err-bg); border-color: #fecaca; border-left-color: var(--err); color: var(--err); }
 .center-page { display: grid; place-items: center; min-height: 100vh; min-height: 100dvh; padding: 1.5rem; }
 .spinner { width: 26px; height: 26px; border: 3px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: spin .7s linear infinite; }

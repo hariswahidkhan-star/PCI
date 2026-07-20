@@ -189,6 +189,12 @@ footer{background:var(--noir);color:#94A3B8;padding:78px 0 38px;}
 footer h4{font-family:var(--display);font-weight:700;color:#fff;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 16px;}footer h4::before{content:"";display:inline-block;width:7px;height:7px;background:var(--crimson);margin-right:8px;border-radius:1px;}
 footer ul{list-style:none;padding:0;margin:0;display:grid;gap:12px;}
 footer ul a{font-size:14.5px;opacity:.82;}footer ul a:hover{opacity:1;color:#fff;}
+/* ---- footer social bar (server-rendered from social_accounts via <!--PCI-SOCIAL-->) ---- */
+.ft-social{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:22px 0 2px;}
+.ft-social-lnk{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:9px;color:#94A3B8;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);transition:color .16s,background .16s,border-color .16s,transform .16s;}
+.ft-social-lnk:hover{color:#fff;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28);transform:translateY(-1px);}
+.ft-social-lnk:focus-visible{outline:2px solid var(--crimson);outline-offset:2px;color:#fff;}
+.ft-social-lnk svg{width:20px;height:20px;display:block;}
 .ft-bottom{padding-top:24px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:12.5px;color:#8A93A1;}
 .disc{font-size:11.5px;line-height:1.7;color:var(--mist);text-align:center;padding:28px 18px 42px;max-width:1000px;margin:0 auto;}
 @media (max-width:1000px){.feat,.feat-2{grid-template-columns:1fr;}.cert{grid-template-columns:1fr;gap:42px;}.badge{position:static;max-width:380px;}.ind{grid-template-columns:1fr;}.redband-in{grid-template-columns:1fr;gap:28px;}.redband .cta{justify-content:flex-start;}.mem{grid-template-columns:1fr;gap:36px;}.steps,.steps.s4{grid-template-columns:1fr 1fr;}.step{border-right:0;border-bottom:1px solid var(--line);}.ins{grid-template-columns:1fr;}.boxes{grid-template-columns:1fr;}.doms{grid-template-columns:1fr 1fr;}.grid2,.contact-grid{grid-template-columns:1fr;gap:36px;}.qcards{grid-template-columns:1fr;}}
@@ -860,12 +866,6 @@ img{height:auto;}
 .pci-langmenu a{display:block;padding:7px 11px;font-family:var(--sans);font-size:13px;color:var(--ink);text-decoration:none;border-radius:5px;white-space:nowrap;}
 .pci-langmenu a:hover{background:#F1F5F9;}
 .pci-langmenu a[aria-current="true"]{color:var(--crimson);font-weight:700;}
-
-/* ===== PCI-SOCIAL: footer social-media icons (admin-controlled) ===== */
-.pci-social{display:inline-flex;align-items:center;gap:12px;}
-.pci-social a{display:inline-flex;color:#8A93A1;transition:color .18s,transform .18s;}
-.pci-social a:hover{color:var(--crimson);transform:translateY(-2px);}
-.pci-social svg{width:18px;height:18px;}
 
 
 /* ===== Wordmark logo — BLUE at the top, turns CRIMSON on scroll ===== */

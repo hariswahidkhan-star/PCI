@@ -406,9 +406,89 @@ public static class Migrate
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_ack_subject','')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_admin_subject','')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_partners_enabled','1')");
-        // Footer social-media links (Endpoints/Social.cs) — admin-set URLs + master toggle, off by default.
-        foreach (var k in new[] { "social_enabled", "social_linkedin", "social_x", "social_facebook", "social_instagram", "social_youtube", "social_whatsapp" })
+        // ── Social Media Management (Endpoints/Social.cs, Core/SocialIcons.cs, Core/ListSections.cs) ──
+        // The database is the source of truth for every public social-media profile and every
+        // page-sharing button — nothing is hardcoded in React. social_enabled is the master on/off
+        // switch (off by default); the per-network site_settings keys below are the LEGACY store,
+        // kept only so an existing deployment's URLs are one-time migrated into social_accounts.
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_enabled','')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_analytics_enabled','1')");
+        foreach (var k in new[] { "social_linkedin", "social_x", "social_facebook", "social_instagram", "social_youtube", "social_whatsapp" })
             db.Exec($"INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('{k}','')");
+        // One admin-configured social-media profile. `platform` and `locations` are free strings so a
+        // new platform or a new display location needs NO schema change. Effective/expiry, language,
+        // country, approval, official and link-status fields are the source of truth for the public
+        // display rules and for structured-data (sameAs) inclusion.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS social_accounts(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            platform VARCHAR(40) NOT NULL,
+            display_name TEXT,
+            handle TEXT,
+            url TEXT NOT NULL,
+            icon_type VARCHAR(16) DEFAULT 'builtin',      -- builtin | custom
+            custom_icon TEXT,                              -- inline SVG when icon_type='custom'
+            aria_label TEXT,
+            tooltip TEXT,
+            locations TEXT DEFAULT 'footer',               -- CSV of location keys (footer, contact, about, …)
+            display_order INTEGER DEFAULT 0,
+            active INTEGER DEFAULT 1,
+            is_official INTEGER DEFAULT 1,                  -- included in sameAs structured data
+            open_new_tab INTEGER DEFAULT 1,
+            rel_nofollow INTEGER DEFAULT 1,
+            language VARCHAR(8),                            -- '' / NULL = all languages
+            country VARCHAR(8),                            -- '' / NULL = all countries
+            effective_date TEXT,                           -- '' / NULL = live now
+            expiry_date TEXT,                              -- '' / NULL = never expires
+            approval_status VARCHAR(16) DEFAULT 'approved',-- draft | approved | archived
+            link_status VARCHAR(16) DEFAULT 'not_checked', -- not_checked | valid | warning | invalid | unreachable | disabled
+            link_checked_at TEXT,
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_social_accounts_order ON social_accounts(display_order, id)");
+        // Change history for every social-media configuration action (add/edit/activate/archive/check).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS social_audit(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            account_id INTEGER, actor_id INTEGER,
+            action VARCHAR(40) NOT NULL, detail TEXT,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_social_audit_account ON social_audit(account_id)");
+        // Broken-link validation history (one row per check run).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS social_link_checks(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            account_id INTEGER NOT NULL,
+            status VARCHAR(16), http_code INTEGER, detail TEXT,
+            checked_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_social_link_checks_account ON social_link_checks(account_id)");
+        // Page-sharing button configuration, per public content type. buttons is a CSV of share targets.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS social_share_settings(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            content_type VARCHAR(40) NOT NULL,
+            buttons TEXT DEFAULT 'linkedin,x,facebook,whatsapp,email,copy',
+            enabled INTEGER DEFAULT 0)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_social_share_type ON social_share_settings(content_type)");
+        foreach (var ct in new[] { "blog", "news", "certification", "resource", "download", "event" })
+            db.Execute("INSERT OR IGNORE INTO social_share_settings(content_type,buttons,enabled) VALUES(?,?,0)",
+                ct, "linkedin,x,facebook,whatsapp,email,copy");
+        // One-time migration: fold any legacy site_settings social URLs into social_accounts, so an
+        // existing deployment keeps its links. Runs only while the new table is still empty.
+        try
+        {
+            if (db.Scalar<long>("SELECT COUNT(*) FROM social_accounts") == 0)
+            {
+                var legacy = new (string plat, string key)[]
+                { ("linkedin","social_linkedin"), ("x","social_x"), ("facebook","social_facebook"),
+                  ("instagram","social_instagram"), ("youtube","social_youtube"), ("whatsapp","social_whatsapp") };
+                int ord = 0;
+                foreach (var (plat, key) in legacy)
+                {
+                    var v = (db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", key) ?? "").Trim();
+                    if (v.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || v.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                        db.Execute("INSERT INTO social_accounts(platform,url,display_order,locations,approval_status) VALUES(?,?,?,?,?)",
+                            plat, v, ord++, "footer", "approved");
+                }
+            }
+        }
+        catch { /* legacy migration is best-effort; never block boot */ }
         // Bulk / marketing email campaigns (Endpoints/Campaigns.cs): one campaign row, a per-recipient
         // delivery ledger, and a global suppression list (one-click unsubscribes + manual entries).
         // Anti-spam/CAN-SPAM/GDPR is enforced in code: every send carries an auto-appended footer with a
