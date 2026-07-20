@@ -18,6 +18,39 @@ steps below. Nothing goes live by accident.
 
 ---
 
+## 0. If the Render deploy "fails" / the service won't start
+
+The app runs a **production preflight** and **deliberately refuses to boot** (exit
+non-zero → Render health check fails → "deploy failed") if any of these are
+missing or wrong. This is the #1 reason a deploy shows as failed even though the
+build succeeded and the code is fine. Set **all** of these in Render, then
+redeploy:
+
+| Variable | Hard requirement in Production |
+|---|---|
+| `APP_BASE_URL` | Public HTTPS URL (not localhost/127.0.0.1). |
+| `ALLOWED_ORIGIN` | An explicit origin — **not** `*`. |
+| `DB_PROVIDER` | `mysql` (SQLite is refused in production). |
+| `MYSQL_HOST` + `MYSQL_PASSWORD` | (or a full `MYSQL_CONNECTION_STRING`) — MySQL must be reachable. |
+| `CREDENTIAL_ENCRYPTION_KEY` | A dedicated **32-byte** key (base64/hex/passphrase). |
+| `STRIPE_WEBHOOK_SECRET` | Required **only if** `STRIPE_SECRET_KEY` is set. |
+| `ENABLE_LEGACY_ADMIN_TOKEN` | Must **not** be `true`. |
+
+The boot log names the exact offender(s) as `[config:error] <VAR> — <reason>` and
+ends with `Refusing to start: N production configuration error(s)`. Open Render →
+the failed deploy → **Logs** and look for those lines.
+
+> Verified on a real MariaDB 10.11: with these set, the full migration + seed +
+> health check pass cleanly (200) — every `mkt_*`/comms table and query included.
+> The schema and code are MySQL-ready; the only thing gating a green deploy is
+> this configuration.
+
+`STRIPE_SECRET_KEY`, `SMTP_HOST`/`RESEND_API_KEY`, and `ADMIN_OWNER_PASSWORD`
+produce **warnings** only — they don't block boot (payments/email degrade until
+set), so they are not the cause of a failed deploy.
+
+---
+
 ## 1. Environment variables (exact names)
 
 Set these in **Render → your service → Environment**. "Fallback" means the app
