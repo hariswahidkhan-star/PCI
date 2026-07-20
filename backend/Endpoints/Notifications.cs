@@ -28,6 +28,8 @@ public static class Notifications
         ("partners", "Institution allocation warnings"),
         ("support", "Escalated support cases"),
         ("fraud", "Suspicious discount activity"),
+        ("exam_exception", "Exam exceptions & incident reports"),
+        ("exam_booking", "Exam booking & reschedule confirmations"),
     };
 
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log,
