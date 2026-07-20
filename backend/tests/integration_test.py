@@ -295,6 +295,16 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
             body = RSS_FEED.encode()
             self.send_response(200); self.send_header("Content-Type", "application/rss+xml")
             self.send_header("Content-Length", str(len(body))); self.end_headers(); self.wfile.write(body); return
+        if "/backlink-live" in self.path:                                                                     # Phase 5 verify: page still links to PCI
+            body = b'<html><body><p>Great read from <a href="https://projectcontrolsinstitute.org/blog/pci-guide">Project Controls Institute</a>.</p></body></html>'
+            self.send_response(200); self.send_header("Content-Type", "text/html")
+            self.send_header("Content-Length", str(len(body))); self.end_headers(); self.wfile.write(body); return
+        if "/backlink-gone" in self.path:                                                                     # Phase 5 verify: page loads but link removed
+            body = b'<html><body><p>We no longer reference external institutes here.</p></body></html>'
+            self.send_response(200); self.send_header("Content-Type", "text/html")
+            self.send_header("Content-Length", str(len(body))); self.end_headers(); self.wfile.write(body); return
+        if "/backlink-404" in self.path:                                                                      # Phase 5 verify: source page removed
+            self.send_response(404); self.send_header("Content-Length", "0"); self.end_headers(); return
         return self._send(200, {"ok": True})
     def do_POST(self):
         ln = int(self.headers.get("Content-Length") or 0)
@@ -1889,6 +1899,70 @@ def test_external_import(admin):
     chk("23n import API requires authentication (401)", c == 401, c)
     srv.shutdown()
 
+def test_backlinks(admin):
+    print("\n=== 24. Backlink & outreach CRM (manual/CSV + on-demand link verification) ===")
+    srv, port = start_mock_vendor()
+    base = f"http://127.0.0.1:{port}"
+    tgt = "https://projectcontrolsinstitute.org/blog/pci-guide"
+
+    # ---- prospects + outreach ----
+    c, p1 = jget("POST", "/api/admin/content/backlinks/prospects", token=admin,
+                 body={"name": "PC Journal", "domain": "pcjournal.example", "category": "publication", "contact_email": "editor@pcjournal.example"})
+    chk("24a register a link prospect", c == 200 and p1.get("id"), p1)
+    pid = p1.get("id")
+
+    c, plist = jget("GET", "/api/admin/content/backlinks/prospects", token=admin)
+    chk("24b prospect appears in the pipeline", any(r["id"] == pid for r in plist.get("rows", [])), plist)
+
+    c, o1 = jget("POST", "/api/admin/content/backlinks/outreach", token=admin,
+                 body={"prospect_id": pid, "channel": "email", "subject": "Intro + resource offer",
+                       "outcome": "sent", "follow_up_at": "2026-08-01", "prospect_status": "contacted"})
+    chk("24c log an outreach touchpoint", c == 200 and o1.get("id"), o1)
+    c, plist2 = jget("GET", "/api/admin/content/backlinks/prospects?status=contacted", token=admin)
+    chk("24d outreach advances the prospect's pipeline status + next action",
+        any(r["id"] == pid and r["status"] == "contacted" and r.get("next_action_at") for r in plist2.get("rows", [])), plist2)
+
+    # ---- earned backlinks: record, dedup, verify ----
+    c, l1 = jget("POST", "/api/admin/content/backlinks/links", token=admin,
+                 body={"source_url": base + "/backlink-live", "target_url": tgt, "anchor_text": "Project Controls Institute", "rel": "dofollow", "prospect_id": pid})
+    chk("24e record a backlink (starts as candidate)", c == 200 and l1.get("id") and not l1.get("duplicate"), l1)
+    lid_live = l1.get("id")
+
+    c, dup = jget("POST", "/api/admin/content/backlinks/links", token=admin, body={"source_url": base + "/backlink-live", "target_url": tgt})
+    chk("24f duplicate source→target is de-duplicated", c == 200 and dup.get("duplicate") is True, dup)
+
+    c, l2 = jget("POST", "/api/admin/content/backlinks/links", token=admin, body={"source_url": base + "/backlink-gone", "target_url": tgt})
+    lid_gone = l2.get("id")
+    c, l3 = jget("POST", "/api/admin/content/backlinks/links", token=admin, body={"source_url": base + "/backlink-404", "target_url": tgt})
+    lid_404 = l3.get("id")
+
+    c, v1 = jget("POST", f"/api/admin/content/backlinks/links/{lid_live}/verify", token=admin)
+    chk("24g verify: live link confirmed present", c == 200 and v1.get("status") == "live", v1)
+    con = dbconn(); fs = con.execute("SELECT first_seen_at, status FROM cc_backlinks WHERE id=?", (lid_live,)).fetchone(); con.close()
+    chk("24h verify stamps first_seen_at + status=live", fs and fs[0] and fs[1] == "live", fs)
+
+    c, v2 = jget("POST", f"/api/admin/content/backlinks/links/{lid_gone}/verify", token=admin)
+    chk("24i verify: page loads but link removed → lost", c == 200 and v2.get("status") == "lost", v2)
+    c, v3 = jget("POST", f"/api/admin/content/backlinks/links/{lid_404}/verify", token=admin)
+    chk("24j verify: source page 404 → removed", c == 200 and v3.get("status") == "removed" and v3.get("http_code") == 404, v3)
+
+    c, ov = jget("GET", "/api/admin/content/backlinks/overview", token=admin)
+    chk("24k overview reflects live vs lost/removed", c == 200 and ov.get("live") >= 1 and ov.get("lost") >= 2, ov)
+
+    # ---- bulk CSV import ----
+    c, imp = jget("POST", "/api/admin/content/backlinks/links/import", token=admin,
+                  body={"rows": [{"source_url": base + "/csv-a", "target_url": tgt, "anchor_text": "PCI", "rel": "nofollow"},
+                                 {"source_url": base + "/csv-b", "target_url": tgt, "anchor_text": "PCI", "rel": "dofollow"}]})
+    chk("24l bulk CSV import records new backlinks", c == 200 and imp.get("added") == 2, imp)
+
+    c, _ = jget("POST", f"/api/admin/content/backlinks/links/{lid_gone}/delete", token=admin)
+    c, llist = jget("GET", "/api/admin/content/backlinks/links", token=admin)
+    chk("24m a backlink can be removed (soft delete)", all(r["id"] != lid_gone for r in llist.get("rows", [])), None)
+
+    c, _ = jget("GET", "/api/admin/content/backlinks/prospects")
+    chk("24n backlink API requires authentication (401)", c == 401, c)
+    srv.shutdown()
+
 def run(proc):
     admin = admin_login()
     widen_window(admin)
@@ -2644,6 +2718,7 @@ def run(proc):
     test_social_publishing(admin)
     test_syndication(admin)
     test_external_import(admin)
+    test_backlinks(admin)
 
     print("\n(assertions complete)")
 

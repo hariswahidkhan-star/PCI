@@ -880,6 +880,7 @@ PCI.Backend.Endpoints.ContentCentre.Map(app, db, logFn, GateFn, r => Auth.AdminF
 PCI.Backend.Endpoints.SocialPublishing.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Phase 2: live social connectors + drafts + outbox
 PCI.Backend.Endpoints.Syndication.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Phase 3: WordPress/Ghost/Forem syndication
 PCI.Backend.Endpoints.ExternalImport.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Phase 4: RSS/Atom import + review queue
+PCI.Backend.Endpoints.Backlinks.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Phase 5: backlink & outreach CRM + on-demand link verification
 PCI.Backend.Endpoints.MarketingCentre.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Payments.Map(app, db, logFn, () => !string.IsNullOrEmpty(stripeKey));
 PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
