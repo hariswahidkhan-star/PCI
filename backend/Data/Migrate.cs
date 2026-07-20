@@ -256,6 +256,80 @@ public static class Migrate
         // Waiver ledger: every full/partial waiver as a first-class record (who, what, why, how much).
         db.Exec(@"CREATE TABLE IF NOT EXISTS fee_waivers(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,product_type VARCHAR(24),certification_id INTEGER,kind VARCHAR(16) DEFAULT 'full',original_amount REAL,waived_amount REAL,final_amount REAL,currency VARCHAR(8) DEFAULT 'USD',reason TEXT,note TEXT,approved_by INTEGER,code_id INTEGER,payment_id INTEGER,expires_at TEXT,status VARCHAR(16) DEFAULT 'granted',created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_fee_waivers_user ON fee_waivers(user_id)");
+
+        // ── Exam Exceptions & Authorizations ──────────────────────────────────────────────────────────
+        // Admin-managed deadline extensions, rescheduling, reattempts, fee waivers and exam-incident cases.
+        // The authorization record is the admin-facing, configurable scheduling-window + attempt-policy +
+        // status anchor for one exam entitlement. The booking flow keeps reading payments.exam_schedule_deadline
+        // (which an extension writes through to), so scheduling stays backward-compatible; this layer adds
+        // history, attempt policy and exception workflow on top. Nothing here hardcodes a one-year period.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_authorizations(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,certification_id INTEGER DEFAULT 1,payment_id INTEGER,entitlement_id INTEGER,eligibility_start TEXT,original_deadline TEXT,current_deadline TEXT,access_expiry TEXT,attempts_permitted INTEGER DEFAULT 1,attempts_used INTEGER DEFAULT 0,retake_wait_until TEXT,window_days INTEGER,window_source TEXT,route_key TEXT,campaign TEXT,institution_id INTEGER,country TEXT,status TEXT DEFAULT 'active',notes TEXT,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examauth_user ON exam_authorizations(user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examauth_cert ON exam_authorizations(certification_id)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_examauth_payment ON exam_authorizations(payment_id) WHERE payment_id IS NOT NULL");
+
+        // Configurable scheduling windows: resolved by precedence individual > campaign > institution >
+        // country > exam > route > certification > global default (setting exam_default_window_days).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_window_rules(id INTEGER PRIMARY KEY AUTOINCREMENT,scope_type TEXT NOT NULL,scope_value TEXT,window_days INTEGER,access_expiry_days INTEGER,attempts_permitted INTEGER,retake_wait_days INTEGER,active INTEGER DEFAULT 1,note TEXT,created_by INTEGER,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examwindow_scope ON exam_window_rules(scope_type, scope_value)");
+
+        // Deadline extension history — the original deadline is preserved on the authorization; each grant is a row.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_extension_history(id INTEGER PRIMARY KEY AUTOINCREMENT,authorization_id INTEGER,user_id INTEGER NOT NULL,certification_id INTEGER DEFAULT 1,previous_deadline TEXT,new_deadline TEXT,previous_expiry TEXT,new_expiry TEXT,added_days INTEGER,reason TEXT,note TEXT,fee_applies INTEGER DEFAULT 0,is_free INTEGER DEFAULT 1,evidence_ref TEXT,approved_by INTEGER,approved_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examext_auth ON exam_extension_history(authorization_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examext_user ON exam_extension_history(user_id)");
+
+        // Reschedule history — the original appointment is preserved as history, never deleted.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_reschedule_history(id INTEGER PRIMARY KEY AUTOINCREMENT,booking_id INTEGER,authorization_id INTEGER,user_id INTEGER NOT NULL,certification_id INTEGER DEFAULT 1,previous_scheduled_at TEXT,previous_timezone TEXT,previous_status TEXT,new_scheduled_at TEXT,new_timezone TEXT,delivery_change TEXT,provider_change TEXT,reason TEXT,note TEXT,fee_applies INTEGER DEFAULT 0,fee_waived INTEGER DEFAULT 0,changed_by INTEGER,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examresched_user ON exam_reschedule_history(user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examresched_booking ON exam_reschedule_history(booking_id)");
+
+        // Attempt grants — a replacement/additional/complimentary/paid/etc. opportunity, classified and
+        // optionally tied to an incident. counts_as_attempt=0 = a verified system/provider failure that must
+        // not consume the candidate's attempt allowance.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_attempt_grants(id INTEGER PRIMARY KEY AUTOINCREMENT,authorization_id INTEGER,user_id INTEGER NOT NULL,certification_id INTEGER DEFAULT 1,grant_type TEXT DEFAULT 'additional',counts_as_attempt INTEGER DEFAULT 1,reason TEXT,note TEXT,incident_id INTEGER,payment_id INTEGER,fee_applies INTEGER DEFAULT 0,fee_waived INTEGER DEFAULT 1,status TEXT DEFAULT 'granted',consumed_attempt_id INTEGER,approved_by INTEGER,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examgrant_user ON exam_attempt_grants(user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examgrant_auth ON exam_attempt_grants(authorization_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examgrant_incident ON exam_attempt_grants(incident_id)");
+
+        // Exam incidents — first-class case record for exceptional exam situations, modelled on the appeals/
+        // accommodation decision workflow. Links technical/proctoring context → disposition → remedy.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_incidents(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,certification_id INTEGER DEFAULT 1,attempt_id INTEGER,booking_id INTEGER,authorization_id INTEGER,category TEXT,occurred_at TEXT,student_explanation TEXT,proctor_report TEXT,tech_logs TEXT,evidence_ref TEXT,evidence_name TEXT,severity TEXT DEFAULT 'medium',status TEXT DEFAULT 'received',investigation_result TEXT,decision TEXT,remedy TEXT,reported_by TEXT DEFAULT 'student',created_by INTEGER,decided_by INTEGER,decided_at TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examincident_user ON exam_incidents(user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examincident_status ON exam_incidents(status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_examincident_attempt ON exam_incidents(attempt_id)");
+
+        // Attempt classification + linkage (integrity: every attempt is preserved AND labelled).
+        AddCol("exam_attempts", "attempt_class", "attempt_class TEXT DEFAULT 'normal'");   // normal|replacement|additional|complimentary|technical
+        AddCol("exam_attempts", "authorization_id", "authorization_id INTEGER");
+        AddCol("exam_attempts", "grant_id", "grant_id INTEGER");
+        AddCol("exam_attempts", "replaces_attempt_id", "replaces_attempt_id INTEGER");
+        AddCol("exam_attempts", "counts_as_attempt", "counts_as_attempt INTEGER DEFAULT 1");
+        AddCol("exam_attempts", "invalidation_reason", "invalidation_reason TEXT");
+        AddCol("exam_attempts", "invalidated_by", "invalidated_by INTEGER");
+
+        // Waiver ledger extensions — exam/retake/reschedule fee types + sponsor/institution/incident linkage.
+        AddCol("fee_waivers", "fee_type", "fee_type TEXT DEFAULT 'exam'");           // exam|retake|reschedule
+        AddCol("fee_waivers", "waiver_type", "waiver_type TEXT");                    // full|partial|complimentary|sponsor|institution|campaign|technical|administrative|test_user
+        AddCol("fee_waivers", "sponsor", "sponsor TEXT");
+        AddCol("fee_waivers", "institution_id", "institution_id INTEGER");
+        AddCol("fee_waivers", "incident_id", "incident_id INTEGER");
+        AddCol("fee_waivers", "appeal_id", "appeal_id INTEGER");
+        AddCol("fee_waivers", "evidence_ref", "evidence_ref TEXT");
+        AddCol("fee_waivers", "payable_amount", "payable_amount REAL");
+
+        // Authorization links so history + policy join cleanly.
+        AddCol("exam_bookings", "authorization_id", "authorization_id INTEGER");
+        AddCol("exam_entitlements", "authorization_id", "authorization_id INTEGER");
+
+        // Configurable-window defaults (no hardcoded year in code; operator-tunable via Settings) + the
+        // exam-exception notification master toggle (per-event toggles are declared in Notifications.cs).
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('exam_default_window_days','365')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('exam_default_access_expiry_days','')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('exam_default_attempts','1')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('exam_default_retake_wait_days','0')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_exam_exception_enabled','1')");
+        // ──────────────────────────────────────────────────────────────────────────────────────────────
+
         // Institution (training-partner) sponsorship limits + partner-linked discount codes.
         AddCol("training_partners", "max_discount_percent", "max_discount_percent REAL");
         AddCol("training_partners", "max_codes", "max_codes INTEGER");
