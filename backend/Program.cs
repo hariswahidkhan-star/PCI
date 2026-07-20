@@ -482,7 +482,7 @@ app.MapPost("/api/admin/auth/login", async (HttpRequest req) =>
     db.Execute("INSERT INTO admin_sessions(admin_id,token,expires_at) VALUES(?,?,datetime('now','+12 hours'))", a["id"], Security.Sha(tok));
     db.Execute("UPDATE admin_users SET last_login_at=datetime('now') WHERE id=?", a["id"]);
     var ctx = Auth.ToAdmin(a);
-    Log(0, "admin_login", ctx.Email);
+    Log(ctx.Id, "admin_login", ctx.Email);   // attribute the login to the admin, so the audit log tracks who signed in
     return Json(new { token = tok, admin = new { id = ctx.Id, email = ctx.Email, name = ctx.Name, role = ctx.Role, must_change_pw = ctx.MustChangePw }, permissions = ctx.Perms });
 });
 
@@ -577,7 +577,7 @@ app.MapPost("/api/admin/me/2fa/setup", (HttpRequest req) =>
     // Stored as pending until the admin proves their authenticator works — enabling MFA can never lock
     // an account out on a mis-scanned QR.
     db.Execute("UPDATE admin_users SET totp_secret=? WHERE id=?", "pending:" + secret, a.Id);
-    Log(0, "admin_2fa_setup", a.Email);
+    Log(a.Id, "admin_2fa_setup", a.Email);
     return Json(new { secret, otpauth = $"otpauth://totp/PCI%20Admin:{Uri.EscapeDataString(a.Email)}?secret={secret}&issuer=PCI" });
 });
 
@@ -590,7 +590,7 @@ app.MapPost("/api/admin/me/2fa/verify", async (HttpRequest req) =>
     if (!stored.StartsWith("pending:")) return Results.Json(new { error = "nothing_pending" }, statusCode: 409);
     if (!Security.VerifyTotp(stored["pending:".Length..], S(b, "code"))) return Results.Json(new { error = "totp_invalid" }, statusCode: 400);
     db.Execute("UPDATE admin_users SET totp_secret=? WHERE id=?", stored["pending:".Length..], a.Id);
-    Log(0, "admin_2fa_enabled", a.Email);
+    Log(a.Id, "admin_2fa_enabled", a.Email);
     return Json(new { ok = true, enabled = true });
 });
 
@@ -603,7 +603,7 @@ app.MapPost("/api/admin/me/2fa/disable", async (HttpRequest req) =>
     if (stored.Length > 0 && !stored.StartsWith("pending:") && !Security.VerifyTotp(stored, S(b, "code")))
         return Results.Json(new { error = "totp_invalid", message = "Enter a current code to disable MFA." }, statusCode: 400);
     db.Execute("UPDATE admin_users SET totp_secret=NULL WHERE id=?", a.Id);
-    Log(0, "admin_2fa_disabled", a.Email);
+    Log(a.Id, "admin_2fa_disabled", a.Email);
     return Json(new { ok = true, enabled = false });
 });
 
@@ -688,15 +688,21 @@ app.MapPost("/api/admin/team", async (HttpRequest req) =>
         if (ids.Length > 0) certScope = JsonSerializer.Serialize(ids);
     }
     var tempPw = S(b, "password") ?? Security.RandomHex(5);
-    var id = db.ExecuteReturningId("INSERT INTO admin_users(email,name,password_hash,role,permissions,status,must_change_pw,created_by,cert_scope) VALUES(?,?,?,?,?, 'active',1,?,?)",
-        email, S(b, "name") ?? "", BCrypt.Net.BCrypt.HashPassword(tempPw), role, perms, admin!.Id == 0 ? (object?)null : admin.Id, certScope);
-    Log(0, "admin_created", $"{email} ({role})");
+    // Whether a new admin must change their password at first sign-in is operator-configurable
+    // (Settings → 'admin_force_password_change', default on). A per-request `force_password_change`
+    // still overrides it either way.
+    var forcePw = (H.GetEl(b, "force_password_change") is { } fpc
+        ? fpc.ValueKind is JsonValueKind.True || (fpc.ValueKind is JsonValueKind.String && fpc.GetString() is "1" or "true")
+        : Settings.Bool(db, "admin_force_password_change", true)) ? 1 : 0;
+    var id = db.ExecuteReturningId("INSERT INTO admin_users(email,name,password_hash,role,permissions,status,must_change_pw,created_by,cert_scope) VALUES(?,?,?,?,?, 'active',?,?,?)",
+        email, S(b, "name") ?? "", BCrypt.Net.BCrypt.HashPassword(tempPw), role, perms, forcePw, admin!.Id == 0 ? (object?)null : admin.Id, certScope);
+    Log(admin.Id == 0 ? null : admin.Id, "admin_created", $"{email} ({role})");
     return Json(new { ok = true, id, temp_password = tempPw });
 });
 
 app.MapPatch("/api/admin/team/{id}", async (HttpRequest req, long id) =>
 {
-    var gate = OwnerGate(req, out _); if (gate is not null) return gate;
+    var gate = OwnerGate(req, out var actor); if (gate is not null) return gate;
     var a = db.QueryOne("SELECT * FROM admin_users WHERE id=?", id);
     if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
     var b = await Body(req);
@@ -732,25 +738,26 @@ app.MapPatch("/api/admin/team/{id}", async (HttpRequest req, long id) =>
         if (owners <= 1) return Results.Json(new { error = "cannot_demote_last_owner" }, statusCode: 400);
     }
     if (sets.Count > 0) { vals.Add(id); db.Execute($"UPDATE admin_users SET {string.Join(", ", sets)} WHERE id=?", vals.ToArray()); }
-    Log(0, "admin_updated", a["email"] as string);
+    Log(actor?.Id, "admin_updated", a["email"] as string);
     return Json(new { ok = true });
 });
 
 app.MapPost("/api/admin/team/{id}/reset-password", (HttpRequest req, long id) =>
 {
-    var gate = OwnerGate(req, out _); if (gate is not null) return gate;
+    var gate = OwnerGate(req, out var actor); if (gate is not null) return gate;
     var a = db.QueryOne("SELECT * FROM admin_users WHERE id=?", id);
     if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
     var tempPw = Security.RandomHex(5);
-    db.Execute("UPDATE admin_users SET password_hash=?, must_change_pw=1 WHERE id=?", BCrypt.Net.BCrypt.HashPassword(tempPw), id);
+    var forceReset = Settings.Bool(db, "admin_force_password_change", true) ? 1 : 0;
+    db.Execute("UPDATE admin_users SET password_hash=?, must_change_pw=? WHERE id=?", BCrypt.Net.BCrypt.HashPassword(tempPw), forceReset, id);
     db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", id);
-    Log(0, "admin_pw_reset", a["email"] as string);
+    Log(actor?.Id, "admin_pw_reset", $"{a["email"] as string} (admin {id})");
     return Json(new { ok = true, temp_password = tempPw });
 });
 
 app.MapDelete("/api/admin/team/{id}", (HttpRequest req, long id) =>
 {
-    var gate = OwnerGate(req, out _); if (gate is not null) return gate;
+    var gate = OwnerGate(req, out var actor); if (gate is not null) return gate;
     var a = db.QueryOne("SELECT * FROM admin_users WHERE id=?", id);
     if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
     if ((a["role"] as string) == "owner")
@@ -760,7 +767,7 @@ app.MapDelete("/api/admin/team/{id}", (HttpRequest req, long id) =>
     }
     db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", id);
     db.Execute("DELETE FROM admin_users WHERE id=?", id);
-    Log(0, "admin_deleted", a["email"] as string);
+    Log(actor?.Id, "admin_deleted", a["email"] as string);
     return Json(new { ok = true });
 });
 
@@ -809,7 +816,7 @@ app.MapPatch("/api/admin/settings", async (HttpRequest req) =>
     PCI.Backend.Core.PageContent.Bump();   // announcement banner + any content-affecting settings
     PCI.Backend.Core.CertCatalogue.Bump(); // exam_* settings feed the public catalogue's effective prices
     PCI.Backend.Core.PriceTags.Bump();     // pricing-affecting settings flow into page price tokens
-    Log(null, "settings_update", string.Join(",", b.Keys));
+    Log(a.Id, "settings_update", string.Join(",", b.Keys));
     return rejected.Count > 0 ? Json(new { ok = true, rejected }) : Json(new { ok = true });
 });
 

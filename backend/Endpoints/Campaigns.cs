@@ -189,6 +189,7 @@ public static class Campaigns
         {
             var denied = gate(ctx.Request, "subscribers", _ => Results.Ok());
             if (denied is not Microsoft.AspNetCore.Http.HttpResults.Ok) return denied;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             var name = (H.GetS(b, "name") ?? "").Trim();
             var subject = (H.GetS(b, "subject") ?? "").Trim();
@@ -201,7 +202,7 @@ public static class Campaigns
             var id = db.ExecuteReturningId(
                 "INSERT INTO email_campaigns(name,subject,body_html,audience,status) VALUES(?,?,?,?, 'draft')",
                 name, subject, body, audience);
-            log(null, "campaign_create", id.ToString());
+            log(actorId, "campaign_create", id.ToString());
             return J(new { id });
         });
 
@@ -239,6 +240,7 @@ public static class Campaigns
         {
             var denied = gate(ctx.Request, "subscribers", _ => Results.Ok());
             if (denied is not Microsoft.AspNetCore.Http.HttpResults.Ok) return denied;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             var to = (H.GetS(b, "to") ?? "").Trim();
             if (!EmailRx.IsMatch(to)) return Results.Json(new { error = "invalid_email" }, statusCode: 400);
@@ -249,7 +251,7 @@ public static class Campaigns
             var html = Personalise(H.Str(c["body_html"]) ?? "", to, null) + Footer(baseUrl, to);
             // Notify.Email sends AND records the attempt in notification_history (never throws).
             var status = Notify.Email(db, null, to, subject, html, "campaign", id);
-            log(null, "campaign_test", id.ToString());
+            log(actorId, "campaign_test", id.ToString());
             return J(new { ok = true, status });
         });
 
@@ -271,7 +273,7 @@ public static class Campaigns
                     id, email, first);
             db.Execute("UPDATE email_campaigns SET status='sending', total=?, sent=0, failed=0, suppressed=? WHERE id=?",
                 deliver.Count, suppressed, id);
-            log(null, "campaign_send", id.ToString());
+            log(admin.Id, "campaign_send", id.ToString());
 
             var baseUrl = Mailer.BaseUrl(req);
             var subjectTpl = H.Str(c["subject"]) ?? "";
@@ -329,6 +331,7 @@ public static class Campaigns
         {
             var denied = gate(ctx.Request, "subscribers", _ => Results.Ok());
             if (denied is not Microsoft.AspNetCore.Http.HttpResults.Ok) return denied;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             var email = (H.GetS(b, "email") ?? "").Trim().ToLowerInvariant();
             var action = (H.GetS(b, "action") ?? "add").Trim().ToLowerInvariant();
@@ -337,7 +340,7 @@ public static class Campaigns
                 db.Execute("DELETE FROM email_suppression WHERE email=?", email);
             else
                 db.Execute("INSERT OR IGNORE INTO email_suppression(email,reason) VALUES(?, 'manual')", email);
-            log(null, "campaign_suppression", $"{action}:{email}");
+            log(actorId, "campaign_suppression", $"{action}:{email}");
             return J(new { ok = true });
         });
     }

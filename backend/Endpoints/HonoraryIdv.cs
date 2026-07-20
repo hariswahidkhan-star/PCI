@@ -83,7 +83,7 @@ public static class HonoraryIdv
                 }
                 catch { /* email best-effort; the link is also returned for manual sending */ }
 
-            log(null, "honorary_shortlisted", $"{H.Str(a["reference"])} by admin {adm!.Id}");
+            log(adm!.Id, "honorary_shortlisted", $"{H.Str(a["reference"])} by admin {adm!.Id}");
             return J(new { ok = true, link, expires_days = TokenDays, emailed = Notify.Enabled(db, "honorary") && email.Length > 0 });
         });
 
@@ -94,7 +94,7 @@ public static class HonoraryIdv
             var a = db.QueryOne("SELECT id FROM honorary_applications WHERE id=?", id);
             if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             db.Execute("UPDATE honorary_applications SET idv_token=NULL, idv_token_expires=NULL, updated_at=datetime('now') WHERE id=?", id);
-            log(null, "honorary_idv_link_revoked", $"app {id} by admin {adm!.Id}");
+            log(adm!.Id, "honorary_idv_link_revoked", $"app {id} by admin {adm!.Id}");
             return J(new { ok = true });
         });
 
@@ -114,7 +114,7 @@ public static class HonoraryIdv
             if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var got = Storage.Get(H.Str(d["storage_ref"]));
             if (got is null || got.Value.bytes is null) return Results.Json(new { error = "file_unavailable" }, statusCode: 404);
-            log(null, "honorary_idv_document_viewed", $"app {id} doc {docId} ({H.Str(d["doc_kind"])}) by admin {adm!.Id}");
+            log(adm!.Id, "honorary_idv_document_viewed", $"app {id} doc {docId} ({H.Str(d["doc_kind"])}) by admin {adm!.Id}");
             return Results.File(got.Value.bytes!, got.Value.mime);
         });
 
@@ -124,7 +124,7 @@ public static class HonoraryIdv
             var (adm, deny) = Owner(ctx.Request); if (deny is not null) return deny;
             var n = PurgeForApplication(db, id);
             db.Execute("UPDATE honorary_applications SET idv_status='deleted', idv_deleted_at=datetime('now'), idv_token=NULL, idv_token_expires=NULL, updated_at=datetime('now') WHERE id=?", id);
-            log(null, "honorary_idv_deleted", $"app {id} ({n} file(s)) by admin {adm!.Id}");
+            log(adm!.Id, "honorary_idv_deleted", $"app {id} ({n} file(s)) by admin {adm!.Id}");
             return J(new { ok = true, deleted = n });
         });
 

@@ -73,7 +73,7 @@ public static class Support
             var status = (H.GetS(b, "status") ?? "").Trim();
             if (status is not ("open" or "investigating" or "resolved")) return Err(400, "bad_status");
             db.Execute("UPDATE error_reports SET status=?, resolution_note=COALESCE(?,resolution_note) WHERE id=?", status, H.GetS(b, "note"), id);
-            log(null, "error_report_status", $"{id} → {status} by {adm.Id}");
+            log(adm.Id, "error_report_status", $"{id} → {status} by {adm.Id}");
             return J(new { ok = true });
         }));
 
@@ -221,7 +221,7 @@ public static class Support
             if (target is { } t3)
                 try { Notify.Email(db, null, H.Str(db.QueryOne("SELECT email FROM admin_users WHERE id=?", t3)?["email"]),
                     $"Support ticket #{id} assigned to you", "<p>A support conversation has been assigned to you in the PCI console.</p>", "ticket", id); } catch { }
-            log(null, "support_assign", $"ticket {id} → admin {target?.ToString() ?? "unassigned"} by {adm.Id}");
+            log(adm.Id, "support_assign", $"ticket {id} → admin {target?.ToString() ?? "unassigned"} by {adm.Id}");
             return J(new { ok = true });
         }));
 
@@ -250,7 +250,7 @@ public static class Support
             var priority = (H.GetS(b, "priority") ?? "").Trim();
             if (priority is not ("low" or "normal" or "high" or "urgent")) return Err(400, "bad_priority");
             db.Execute("UPDATE tickets SET priority=?, updated_at=datetime('now') WHERE id=?", priority, id);
-            log(null, "support_priority", $"ticket {id} → {priority} by {adm.Id}");
+            log(adm.Id, "support_priority", $"ticket {id} → {priority} by {adm.Id}");
             return J(new { ok = true });
         }));
 
@@ -307,7 +307,7 @@ public static class Support
             var qn = (H.GetS(b, "question") ?? "").Trim(); var an = (H.GetS(b, "answer") ?? "").Trim();
             if (qn.Length == 0 || an.Length == 0) return Err(400, "question_and_answer_required");
             var id = db.ExecuteReturningId("INSERT INTO chat_kb(question,answer,keywords,enabled,sort_order) VALUES(?,?,?,0,999)", qn, an, "suggested by " + adm.Email);
-            log(null, "kb_suggested", $"{id} by {adm.Id}");
+            log(adm.Id, "kb_suggested", $"{id} by {adm.Id}");
             return J(new { ok = true, id, note = "Saved as a draft — a content editor reviews and enables it." });
         }));
 
@@ -317,7 +317,7 @@ public static class Support
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             if (H.GetNum(b, "first_response_mins") is { } fr) Settings.Put(db, "sla_first_response_mins", ((int)Math.Clamp(fr, 5, 10080)).ToString());
             if (H.GetNum(b, "resolution_mins") is { } rs) Settings.Put(db, "sla_resolution_mins", ((int)Math.Clamp(rs, 30, 43200)).ToString());
-            log(null, "sla_updated", $"by {adm.Id}");
+            log(adm.Id, "sla_updated", $"by {adm.Id}");
             return J(new { ok = true });
         }));
 

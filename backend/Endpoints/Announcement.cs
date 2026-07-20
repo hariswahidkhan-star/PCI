@@ -115,6 +115,7 @@ public static class Announcement
         {
             var denied = gate(ctx.Request, "content", _ => Results.Ok());
             if (denied is not Microsoft.AspNetCore.Http.HttpResults.Ok) return denied;
+            var actorId = Auth.AdminFromReq(ctx.Request, db)?.Id;
             var b = await H.Body(ctx.Request);
             void Put(string key, string v) { db.Execute("DELETE FROM site_settings WHERE skey=?", key); db.Execute("INSERT INTO site_settings(skey,svalue) VALUES(?,?)", key, v); }
 
@@ -132,7 +133,7 @@ public static class Announcement
                 };
                 Put("announce_enabled", on ? "1" : "0");
             }
-            log(null, "announcement_update", string.Join(",", b.Keys));
+            log(actorId, "announcement_update", string.Join(",", b.Keys));
             return J(new { ok = true });
         });
     }

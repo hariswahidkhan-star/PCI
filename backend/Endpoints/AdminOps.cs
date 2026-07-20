@@ -98,7 +98,7 @@ public static class AdminOps
             try { Notify.Alert(db, "finance", "Manual payment recorded",
                 $"<p>{(amount > 0 ? $"Offline payment of ${amount:0.##}" : "Complimentary access")} recorded for member #{id} ({System.Net.WebUtility.HtmlEncode(H.Str(u["email"]) ?? "")}), product {product}, ref {reference}, by admin #{adm.Id}.{(mismatch ? $" <b>Amount differs from the ${listPrice:0.##} list price.</b>" : "")}</p>",
                 "payment", payId); } catch { }
-            log(id, "admin_mark_paid", $"{product} {amount:0.##} ref {reference} method {meta.Method ?? "-"} by {adm.Id}{(mismatch ? $" MISMATCH list {listPrice:0.##}" : "")}{(note.Length > 0 ? " — " + note : "")}");
+            log(adm.Id, "admin_mark_paid", $"{product} {amount:0.##} ref {reference} method {meta.Method ?? "-"} by {adm.Id} (subject {id}){(mismatch ? $" MISMATCH list {listPrice:0.##}" : "")}{(note.Length > 0 ? " — " + note : "")}");
             return J(new { ok = true, payment_id = payId, product, amount, reference, free = amount == 0, mismatch, list_price = listPrice });
         }));
 
@@ -120,6 +120,16 @@ public static class AdminOps
 
             if (percent >= 100)
             {
+                // Already-entitled guard (parity with mark-paid): a full exam waiver must not grant a
+                // second live entitlement when the student already holds one.
+                var allowDup = H.GetEl(b, "allow_duplicate") is { ValueKind: JsonValueKind.True };
+                if (product is "exam" or "bundle")
+                {
+                    var open = db.QueryOne(@"SELECT p.id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id
+                        WHERE p.user_id=? AND p.payment_status IN ('paid','waived') AND p.product_type IN ('exam','bundle')
+                        AND COALESCE(e.certification_id,1)=? AND COALESCE(e.status,'available') IN ('available','booked')", id, certId);
+                    if (open is not null && product == "exam" && !allowDup) return Err(409, "already_entitled");
+                }
                 // Full waiver — the same immediate settlement as mark-paid amount 0.
                 var reference = "WAIVE-" + Security.RandomHex(5).ToUpperInvariant();
                 var payId = Settlement.Grant(db, id, H.Str(u["email"]), product, certId, 0, reference, "admin_waiver",
@@ -159,7 +169,7 @@ public static class AdminOps
             var result = Settlement.Reverse(db, pid, reason, adm.Id);
             var doc = JsonSerializer.SerializeToElement(result);
             if (doc.TryGetProperty("ok", out var okEl) && okEl.ValueKind == JsonValueKind.True)
-                log(H.L(prev?["user_id"]), "payment_reversed", $"payment {pid} {H.Str(prev?["payment_status"])}→refunded by {adm.Id}: {reason}");
+                log(adm.Id, "payment_reversed", $"payment {pid} {H.Str(prev?["payment_status"])}→refunded by {adm.Id} (subject {H.L(prev?["user_id"])}): {reason}");
             return J(result);
         }));
 
@@ -203,7 +213,7 @@ public static class AdminOps
         app.MapPost("/api/admin/payments/{pid}/reprocess", (HttpContext ctx, long pid) => gate(ctx.Request, "finance", adm =>
         {
             var result = Settlement.EnsureDownstream(db, pid);
-            log(null, "payment_reprocessed", $"payment {pid} by {adm.Id}");
+            log(adm.Id, "payment_reprocessed", $"payment {pid} by {adm.Id}");
             return J(result);
         }));
 
@@ -318,7 +328,7 @@ public static class AdminOps
             var tokenSha = Security.Sha(token);
             db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'impersonation', datetime('now','+1 hours'))", id, tokenSha);
             db.Execute("INSERT INTO impersonation_sessions(token_sha,admin_id,user_id,reason) VALUES(?,?,?,?)", tokenSha, adm.Id, id, reason);
-            log(id, "impersonation_started", $"admin {adm.Id} ({adm.Email}) — {reason}");
+            log(adm.Id, "impersonation_started", $"admin {adm.Id} ({adm.Email}) — {reason} (subject {id})");
             return J(new { ok = true, token, login_url = "/app/#t=" + token, expires_minutes = 60,
                 note = "The portal shows a permanent support-view banner; payment and password actions are disabled for this session." });
         }));
@@ -484,7 +494,7 @@ public static class AdminOps
             if (H.GetEl(b, "honorary_grants_membership") is { } hg) Settings.Put(db, "honorary_grants_membership", (hg.ValueKind == JsonValueKind.True || (hg.ValueKind == JsonValueKind.String && hg.GetString() is "1" or "true")) ? "1" : "0");
             if (H.GetS(b, "api_key") is { } k && k.Length > 0) Settings.Put(db, "certuvo_api_key", k);                     // write-only
             if (H.GetS(b, "webhook_secret") is { } ws && ws.Length > 0) Settings.Put(db, "certuvo_webhook_secret", ws);    // write-only
-            log(null, "certuvo.config", $"by {adm.Id}");
+            log(adm.Id, "certuvo.config", $"by {adm.Id}");
             return J(new { ok = true });
         }));
 

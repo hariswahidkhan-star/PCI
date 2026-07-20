@@ -321,6 +321,21 @@ public static class StudentExam
             // TestReach, Questionmark) if one is set as default and the certification is mapped. Best-effort:
             // never blocks or fails the PCI booking; unrouted/failed orders are retryable from the admin.
             await PCI.Backend.Core.ExamDelivery.RouteBooking(db, id, u.Id, certId, scheduledAt, timezone);
+            // Booking-confirmation email (best-effort; admin-toggleable via notify_exam_booking_enabled).
+            if (Notify.Enabled(db, "exam_booking"))
+                try
+                {
+                    var baseUrl = Mailer.BaseUrl(ctx.Request);
+                    var html = Mailer.Template("exam-confirmation", new()
+                    {
+                        ["FIRST_NAME"] = string.IsNullOrWhiteSpace(u.FirstName) ? "there" : u.FirstName!,
+                        ["DATE"] = scheduledAt ?? "", ["EXAM_DEADLINE"] = deadline ?? "",
+                        ["REFERENCE"] = "BKG-" + id, ["AMOUNT"] = "",
+                        ["SCHEDULE_URL"] = baseUrl + "/app/", ["DOWNLOADS_URL"] = baseUrl + "/app/resources",
+                    });
+                    Mailer.Send(db, u.Id, u.Email, "exam_booking", "Your PCI exam is booked", html);
+                }
+                catch { }
             return J(new { ok = true, id, scheduled_at = scheduledAt, certification_id = certId });
         });
 
@@ -334,8 +349,14 @@ public static class StudentExam
             var certSel = H.GetS(b, "certification_id", "certification", "cert");
             var bk = certSel is null ? ActiveBooking(u.Id) : ActiveBooking(u.Id, Certs.Resolve(db, certSel));
             if (bk is null) return Results.Json(new { error = "no_booking" }, statusCode: 400);
+            // Admin-controllable: honour the sp_reschedule_enabled toggle and the sp_reschedule_cutoff_hours
+            // window (both surfaced in /api/me/config and editable in Settings). Fall back to the compiled
+            // defaults when unset so existing behaviour is preserved.
+            if (!Settings.Bool(db, "sp_reschedule_enabled", true))
+                return Results.Json(new { error = "reschedule_disabled", message = "Rescheduling is currently unavailable. Please contact support." }, statusCode: 403);
+            var lockH = Settings.Num(db, "sp_reschedule_cutoff_hours", H.RESCHED_LOCK_H);
             var hoursTo = (H.JsMillis(H.Str(bk["scheduled_at"])) - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()) / 3600_000.0;
-            if (hoursTo < H.RESCHED_LOCK_H) return Results.Json(new { error = "locked", lock_hours = H.RESCHED_LOCK_H }, statusCode: 400);
+            if (hoursTo < lockH) return Results.Json(new { error = "locked", lock_hours = lockH }, statusCode: 400);
             if (H.L(bk["reschedule_count"]) >= H.MAX_RESCHED) return Results.Json(new { error = "max_reschedules" }, statusCode: 400);
             var scheduledAt = H.GetS(b, "scheduled_at");
             var timezone = H.GetS(b, "timezone");
@@ -347,6 +368,21 @@ public static class StudentExam
             db.Execute("UPDATE exam_bookings SET scheduled_at=?, timezone=?, reschedule_count=reschedule_count+1, updated_at=datetime('now') WHERE id=?", scheduledAt, timezone ?? H.Str(bk["timezone"]), bk["id"]);
             log(u.Id, "exam_rescheduled", scheduledAt);
             await PCI.Backend.Core.ExamDelivery.RescheduleBooking(db, H.L(bk["id"]), scheduledAt, timezone ?? H.Str(bk["timezone"]));
+            // Reschedule-confirmation email (best-effort; same admin toggle as the booking mail).
+            if (Notify.Enabled(db, "exam_booking"))
+                try
+                {
+                    var baseUrl = Mailer.BaseUrl(ctx.Request);
+                    var html = Mailer.Template("exam-confirmation", new()
+                    {
+                        ["FIRST_NAME"] = string.IsNullOrWhiteSpace(u.FirstName) ? "there" : u.FirstName!,
+                        ["DATE"] = scheduledAt ?? "", ["EXAM_DEADLINE"] = dl ?? "",
+                        ["REFERENCE"] = "BKG-" + H.L(bk["id"]), ["AMOUNT"] = "",
+                        ["SCHEDULE_URL"] = baseUrl + "/app/", ["DOWNLOADS_URL"] = baseUrl + "/app/resources",
+                    });
+                    Mailer.Send(db, u.Id, u.Email, "exam_reschedule", "Your PCI exam has been rescheduled", html);
+                }
+                catch { }
             return J(new { ok = true, free = hoursTo >= H.FREE_RESCHED_H, reschedule_count = H.L(bk["reschedule_count"]) + 1 });
         });
 
