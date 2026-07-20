@@ -261,6 +261,17 @@ public static class Lifecycle
 <p style=""font-size:15px;line-height:1.7;color:#434b57"">Download your verifiable PDF certificate from <a href=""{portal}"" style=""color:#1D4ED8"">your PCI portal</a>; anyone can confirm it at <a href=""{verify}"" style=""color:#1D4ED8"">{verify}</a>.</p>
 <p style=""font-size:13px;color:#7a828f"">Warm regards,<br>The Project Controls Institute team</p></div>";
                         Mailer.Send(db, userId, toEmail, "credential_issued", "Your PCI credential has been issued", body);
+                        // Additional channels (WhatsApp + in-app) via the Communications Centre for the
+                        // cert.issued trigger. Email sent above (and mirrored), so skip email here.
+                        try
+                        {
+                            Comms.Fire(db, "cert.issued", userId, toEmail, null,
+                                new Dictionary<string, string?> { ["student_name"] = first ?? "there", ["certification_name"] = H.Str(cert["name"]) ?? Certs.Prefix(cert), ["certificate_number"] = cid, ["certificate_link"] = portal },
+                                "Your PCI credential has been issued",
+                                $"<p>Congratulations! Your {H.Str(cert["name"]) ?? Certs.Prefix(cert)} credential ({cid}) has been issued. Download it from your PCI portal.</p>",
+                                certId: H.L(cert["id"]), dedupSuffix: cid, skipEmail: true);
+                        }
+                        catch { }
                     }
                 }
                 catch { }

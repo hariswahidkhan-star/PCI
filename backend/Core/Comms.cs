@@ -85,7 +85,8 @@ public static class Comms
     /// with the Mailer history mirror.</summary>
     public static void Fire(Db db, string triggerCode, long? userId, string? toEmail, string? toPhone,
         IDictionary<string, string?> vars, string fallbackSubject, string fallbackHtml,
-        string? waText = null, long? certId = null, string? dedupSuffix = null)
+        string? waText = null, long? certId = null, string? dedupSuffix = null,
+        bool skipEmail = false, bool skipInApp = false)
     {
         Dictionary<string, object?>? t;
         try { t = db.QueryOne("SELECT * FROM comm_triggers WHERE code=? AND active=1", triggerCode); }
@@ -99,19 +100,31 @@ public static class Comms
         var who = userId?.ToString() ?? toEmail ?? toPhone ?? "?";
         var baseKey = $"{triggerCode}:{who}:{dedupSuffix ?? ""}";
 
-        if (H.B(t["email_enabled"]) && !string.IsNullOrEmpty(toEmail))
+        if (!skipEmail && H.B(t["email_enabled"]) && !string.IsNullOrEmpty(toEmail))
         {
             var (subj, html) = ResolveEmail(db, H.Str(t["email_template_key"]), vars, fallbackSubject, fallbackHtml);
             Enqueue(db, "email", baseKey + ":email", userId, toEmail, null, subj, html,
                 senderKey: senderKey, category: category, triggerCode: triggerCode, certId: certId);
         }
-        if (H.B(t["whatsapp_enabled"]) && !string.IsNullOrEmpty(toPhone))
+        if (H.B(t["whatsapp_enabled"]))
         {
-            var body = ResolveText(db, H.Str(t["whatsapp_template_key"]), vars, waText ?? StripHtml(fallbackHtml));
-            Enqueue(db, "whatsapp", baseKey + ":wa", userId, null, toPhone, fallbackSubject, body,
-                waAccountKey: waKey, category: category, triggerCode: triggerCode, certId: certId);
+            // Resolve the WhatsApp number from the profile and require the channel opt-in (WhatsApp Business
+            // policy) when we don't have an explicit number. No opt-in / no number → no WhatsApp send.
+            var phone = toPhone;
+            if (string.IsNullOrEmpty(phone) && userId is not null)
+            {
+                var pref = db.QueryOne("SELECT whatsapp_optin FROM comm_preferences WHERE user_id=?", userId);
+                if (pref is not null && H.B(pref["whatsapp_optin"]))
+                    try { phone = H.Str(db.QueryOne("SELECT mobile FROM student_profiles WHERE user_id=?", userId)?["mobile"]); } catch { }
+            }
+            if (!string.IsNullOrEmpty(phone))
+            {
+                var body = ResolveText(db, H.Str(t["whatsapp_template_key"]), vars, waText ?? StripHtml(fallbackHtml));
+                Enqueue(db, "whatsapp", baseKey + ":wa", userId, null, phone, fallbackSubject, body,
+                    waAccountKey: waKey, category: category, triggerCode: triggerCode, certId: certId);
+            }
         }
-        if (H.B(t["inapp_enabled"]) && userId is not null)
+        if (!skipInApp && H.B(t["inapp_enabled"]) && userId is not null)
             Enqueue(db, "inapp", baseKey + ":inapp", userId, null, null, fallbackSubject, StripHtml(fallbackHtml),
                 category: category, triggerCode: triggerCode, certId: certId);
     }

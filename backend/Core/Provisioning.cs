@@ -82,6 +82,20 @@ public static class Settlement
                 }
             }
             catch { }
+        // Additional channels (WhatsApp + in-app) via the Communications Centre, governed by the
+        // payment.successful trigger's per-channel toggles. Email is handled above (and mirrored to
+        // history), so skip email here; dedup on the payment id prevents a duplicate provider callback
+        // from double-firing.
+        if (status == "paid")
+            try
+            {
+                var payer2 = db.QueryOne("SELECT email,first_name FROM users WHERE id=?", userId);
+                Comms.Fire(db, "payment.successful", userId, H.Str(payer2?["email"]) ?? email, null,
+                    new Dictionary<string, string?> { ["student_name"] = H.Str(payer2?["first_name"]) ?? "there", ["payment_amount"] = "USD " + amount.ToString("0.##"), ["invoice_number"] = reference, ["portal_link"] = "/app/billing" },
+                    "Payment received", $"<p>We've received your payment of USD {amount:0.##} (reference {reference}). Thank you.</p>",
+                    dedupSuffix: payId.ToString(), skipEmail: true);
+            }
+            catch { }
         return payId;
     }
 

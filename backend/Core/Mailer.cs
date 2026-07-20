@@ -133,6 +133,16 @@ public static class Mailer
             ["DOWNLOADS_URL"] = baseUrl + "/downloads.html",
         });
         Send(db, userId, to, "welcome", "Welcome to PCI — set your password", html);
+        // Additional channels (WhatsApp + in-app) for the welcome event via the Communications Centre,
+        // governed by the account.welcome trigger toggles. Email is sent above (and mirrored), so skip it.
+        try
+        {
+            Comms.Fire(db, "account.welcome", userId, to, null,
+                new Dictionary<string, string?> { ["student_name"] = string.IsNullOrWhiteSpace(firstName) ? "there" : firstName!, ["portal_link"] = baseUrl + "/app/" },
+                "Welcome to PCI", "<p>Welcome to the Project Controls Institute. Your account is ready — sign in to get started.</p>",
+                skipEmail: true);
+        }
+        catch { }
     }
 
     static IEnumerable<string> ExtractLinks(string html)
