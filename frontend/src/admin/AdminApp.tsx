@@ -21,7 +21,6 @@ import ErrorReports from './pages/ErrorReports'
 import Enrollments from './pages/Enrollments'
 import Codes from './pages/Codes'
 import Founding from './pages/Founding'
-import Applications from './pages/Applications'
 import Honorary from './pages/Honorary'
 import HonoraryApplications from './pages/HonoraryApplications'
 import Translations from './pages/Translations'
@@ -96,7 +95,6 @@ export default function AdminApp() {
         <Route path="support-inbox" element={<Perm section="inbox"><SupportInbox /></Perm>} />
         <Route path="errors" element={<Perm section="inbox"><ErrorReports /></Perm>} />
         <Route path="certifications" element={<Perm section="exams"><Certifications /></Perm>} />
-        <Route path="applications" element={<Perm section="members"><Applications /></Perm>} />
         <Route path="codes" element={<Perm section="codes"><Codes /></Perm>} />
         <Route path="founding" element={<AnyPerm sections={['members', 'codes']}><Founding /></AnyPerm>} />
         <Route path="honorary" element={<OwnerOnly><Honorary /></OwnerOnly>} />

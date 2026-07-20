@@ -34,6 +34,19 @@ public static class Payments
                 var d = await H.Body(req);
                 var product = PRODUCT_LABEL.ContainsKey(H.GetS(d, "product") ?? "") ? H.GetS(d, "product")! : "membership";
                 var email = H.GetS(d, "email");
+                // Exam-only purchases require an ACTIVE membership on the account first. A student without
+                // one is told to pay the membership fee first — or to choose the membership+exam bundle,
+                // which pays both together. Membership / bundle / renewal / recert are exempt (the bundle is
+                // itself the "pay both together" path). Enforced here (not just in the browser) so it also
+                // covers the public checkout page.
+                if (product == "exam")
+                {
+                    var em = (email ?? "").Trim().ToLowerInvariant();
+                    var urow = em.Length > 0 ? db.QueryOne("SELECT id FROM users WHERE email=?", em) : null;
+                    var memberActive = urow is not null && db.QueryOne("SELECT id FROM memberships WHERE user_id=? AND status='active'", H.L(urow["id"])) is not null;
+                    if (!memberActive)
+                        return Results.Json(new { error = "membership_required", message = "Please pay your membership fee first, or choose the membership + exam bundle to pay both together." }, statusCode: 400);
+                }
                 // Which certification the exam seat is for (id or code; the founding certification when
                 // unspecified). An EXPLICIT but unknown value is rejected — never silently converted.
                 var certSelIn = Certs.TryResolve(db, H.GetS(d, "certification_id", "certification", "cert"));

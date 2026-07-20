@@ -305,6 +305,9 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
             self.send_header("Content-Length", str(len(body))); self.end_headers(); self.wfile.write(body); return
         if "/backlink-404" in self.path:                                                                      # Phase 5 verify: source page removed
             self.send_response(404); self.send_header("Content-Length", "0"); self.end_headers(); return
+        if "/GetQueryStats" in self.path:                                                                      # Bing Webmaster Tools (Phase 6)
+            return self._send(200, {"d": [{"Query": "project controls certification", "Clicks": 40, "Impressions": 900, "AvgPosition": 6.1},
+                                          {"Query": "pcp-ai exam", "Clicks": 25, "Impressions": 500, "AvgPosition": 8.3}]})
         return self._send(200, {"ok": True})
     def do_POST(self):
         ln = int(self.headers.get("Content-Length") or 0)
@@ -318,6 +321,21 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
                 "Add Registration": {"confirmationNumber": "KRY-777", "success": "true"},
                 "Get Registrations": {"progress": "COMPLETED", "passed": "true", "score": 88, "success": "true"},
             }.get(rt, {"success": "true"}))
+        if "searchAnalytics/query" in self.path:                                        # Google Search Console (Phase 6)
+            dims = body.get("dimensions") or ["query"]; dim = dims[0] if dims else "query"
+            rows = {
+                "query": [{"keys": ["earned value management"], "clicks": 120, "impressions": 3400, "ctr": 0.035, "position": 4.2},
+                          {"keys": ["schedule risk analysis"], "clicks": 60, "impressions": 2100, "ctr": 0.028, "position": 7.9}],
+                "page":  [{"keys": ["https://projectcontrolsinstitute.org/blog/evm"], "clicks": 90, "impressions": 2600, "ctr": 0.034, "position": 5.1}],
+                "date":  [{"keys": ["2026-07-01"], "clicks": 70, "impressions": 1800, "ctr": 0.038, "position": 5.0},
+                          {"keys": ["2026-07-02"], "clicks": 110, "impressions": 3700, "ctr": 0.029, "position": 4.4}],
+            }.get(dim, [])
+            return self._send(200, {"rows": rows})
+        if ":runReport" in self.path:                                                    # Google Analytics 4 (Phase 6)
+            return self._send(200, {"rows": [
+                {"dimensionValues": [{"value": "20260701"}], "metricValues": [{"value": "200"}, {"value": "150"}, {"value": "320"}]},
+                {"dimensionValues": [{"value": "20260702"}], "metricValues": [{"value": "260"}, {"value": "190"}, {"value": "410"}]},
+            ]})
         if "/Participants" in self.path: return self._send(201, {"ID": 4242})            # Questionmark participant
         if "/Schedules" in self.path: return self._send(201, {"ID": 88})                # Questionmark schedule
         if "/candidates" in self.path: return self._send(201, {"psi_eligiblity_id": "ELIG-1"})  # PSI eligibility
@@ -1963,6 +1981,97 @@ def test_backlinks(admin):
     chk("24n backlink API requires authentication (401)", c == 401, c)
     srv.shutdown()
 
+def test_analytics(admin):
+    print("\n=== 25. Read-only analytics connectors (GSC / Bing / GA4) ===")
+    srv, port = start_mock_vendor()
+    base = f"http://127.0.0.1:{port}"
+
+    # ---- Google Search Console ----
+    c, g = jget("POST", "/api/admin/content/analytics/sources", token=admin,
+                body={"provider": "gsc", "label": "PCI prod", "property": "https://projectcontrolsinstitute.org/",
+                      "api_base": base, "secret": "ya29.mock-token", "range_days": 28})
+    chk("25a register a Search Console source", c == 200 and g.get("id"), g)
+    gid = g.get("id")
+
+    con = dbconn(); enc = con.execute("SELECT secret_enc FROM cc_analytics_sources WHERE id=?", (gid,)).fetchone()[0]; con.close()
+    chk("25b credential is encrypted at rest (enc:v1:)", isinstance(enc, str) and enc.startswith("enc:v1:"), enc[:12] if enc else None)
+
+    c, srcs = jget("GET", "/api/admin/content/analytics/sources", token=admin)
+    row = next((r for r in srcs.get("rows", []) if r["id"] == gid), None)
+    chk("25c API exposes has_secret only, never the token", row and row.get("has_secret") is True and "secret" not in row and "secret_enc" not in row, row)
+
+    c, sy = jget("POST", f"/api/admin/content/analytics/sources/{gid}/sync", token=admin)
+    chk("25d sync ingests GSC metrics", c == 200 and sy.get("rows", 0) > 0, sy)
+
+    c, ov = jget("GET", "/api/admin/content/analytics/overview", token=admin)
+    tot = next((t for t in ov.get("totals", []) if t["source_id"] == gid), None)
+    chk("25e overview totals sum the date window (180 clicks / 5500 impr)", tot and tot.get("clicks") == 180 and tot.get("impressions") == 5500, tot)
+
+    c, mq = jget("GET", f"/api/admin/content/analytics/metrics?source_id={gid}&dimension=query", token=admin)
+    top = mq.get("rows", [])
+    chk("25f top query ranked by clicks", top and top[0].get("dim_value") == "earned value management", [r.get("dim_value") for r in top])
+
+    # ---- a source with no credential ----
+    c, nc = jget("POST", "/api/admin/content/analytics/sources", token=admin,
+                 body={"provider": "gsc", "label": "unconfigured", "property": "https://x/", "api_base": base})
+    ncid = nc.get("id")
+    c, srcs2 = jget("GET", "/api/admin/content/analytics/sources", token=admin)
+    ncrow = next((r for r in srcs2.get("rows", []) if r["id"] == ncid), None)
+    chk("25g a source with no credential is not_connected", ncrow and ncrow["status"] == "not_connected" and ncrow["has_secret"] is False, ncrow)
+    c, ncs = jget("POST", f"/api/admin/content/analytics/sources/{ncid}/sync", token=admin)
+    chk("25h sync without a credential fails cleanly (400)", c == 400 and ncs.get("error") == "sync_failed", ncs)
+
+    # ---- Bing Webmaster Tools (api key) ----
+    c, bng = jget("POST", "/api/admin/content/analytics/sources", token=admin,
+                  body={"provider": "bing", "label": "Bing", "property": "https://projectcontrolsinstitute.org/", "api_base": base, "secret": "bing-api-key"})
+    bid = bng.get("id")
+    con = dbconn(); ak = con.execute("SELECT auth_kind FROM cc_analytics_sources WHERE id=?", (bid,)).fetchone()[0]; con.close()
+    chk("25i Bing auto-selects api_key auth", ak == "api_key", ak)
+    c, bsy = jget("POST", f"/api/admin/content/analytics/sources/{bid}/sync", token=admin)
+    chk("25j Bing Webmaster source syncs via api key", c == 200 and bsy.get("rows", 0) > 0, bsy)
+
+    # ---- Google Analytics 4 ----
+    c, ga = jget("POST", "/api/admin/content/analytics/sources", token=admin,
+                 body={"provider": "ga4", "label": "GA4", "property": "123456789", "api_base": base, "secret": "ya29.ga4"})
+    gaid = ga.get("id")
+    jget("POST", f"/api/admin/content/analytics/sources/{gaid}/sync", token=admin)
+    c, ov2 = jget("GET", "/api/admin/content/analytics/overview", token=admin)
+    gtot = next((t for t in ov2.get("totals", []) if t["source_id"] == gaid), None)
+    chk("25k GA4 overview totals sessions/users/views (460 / 340 / 730)", gtot and gtot.get("sessions") == 460 and gtot.get("users") == 340 and gtot.get("pageviews") == 730, gtot)
+
+    # ---- secret stays write-only on update; soft delete ----
+    c, _ = jget("PATCH", f"/api/admin/content/analytics/sources/{gid}", token=admin, body={"secret": "ya29.rotated"})
+    con = dbconn(); enc2 = con.execute("SELECT secret_enc FROM cc_analytics_sources WHERE id=?", (gid,)).fetchone()[0]; con.close()
+    chk("25l rotating the secret keeps it encrypted (never plaintext)", enc2.startswith("enc:v1:") and enc2 != enc, enc2[:12])
+
+    c, _ = jget("POST", f"/api/admin/content/analytics/sources/{ncid}/delete", token=admin)
+    c, srcs3 = jget("GET", "/api/admin/content/analytics/sources", token=admin)
+    chk("25m a source can be removed (soft delete)", all(r["id"] != ncid for r in srcs3.get("rows", [])), None)
+
+    c, _ = jget("GET", "/api/admin/content/analytics/overview")
+    chk("25n analytics API requires authentication (401)", c == 401, c)
+    srv.shutdown()
+
+def test_membership_gate():
+    print("\n=== 26. Exam fee requires an active membership ===")
+    def blocked(body): return isinstance(body, dict) and body.get("error") == "membership_required"
+
+    # A brand-new email with no account/membership cannot pay an exam fee.
+    c, r = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "nomember26@ex.co"})
+    chk("26a exam checkout blocked without an active membership", c == 400 and blocked(r), (c, r))
+
+    # The bundle (membership + exam together) is the "pay both together" escape hatch — NOT blocked.
+    c, rb = jget("POST", "/api/create-checkout-session", body={"product": "bundle", "email": "nomember26@ex.co"})
+    chk("26b membership + exam bundle is not blocked by the gate", not blocked(rb), (c, rb))
+
+    # Membership-only checkout is exempt.
+    c, rm = jget("POST", "/api/create-checkout-session", body={"product": "membership", "email": "nomember26@ex.co"})
+    chk("26c membership checkout is not blocked", not blocked(rm), (c, rm))
+
+    # An active member (buyer1@ex.co settled the bundle in §1) passes the gate.
+    c, rok = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "buyer1@ex.co"})
+    chk("26d an active member is not blocked from paying an exam fee", not blocked(rok), (c, rok))
+
 def run(proc):
     admin = admin_login()
     widen_window(admin)
@@ -2719,6 +2828,8 @@ def run(proc):
     test_syndication(admin)
     test_external_import(admin)
     test_backlinks(admin)
+    test_analytics(admin)
+    test_membership_gate()
 
     print("\n(assertions complete)")
 

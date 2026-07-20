@@ -31,6 +31,8 @@ export function checkoutErrorMessage(e: unknown): string {
     // A rejected discount code carries its own explanation (e.g. scoped to the other product) — show it.
     const body = e.body as { error?: string; message?: string } | null
     if (body?.error === 'code_invalid' && body.message) return body.message
+    // Exam purchase blocked until membership is paid — surface the server's guidance.
+    if (body?.error === 'membership_required') return body.message || 'Please pay your membership fee before purchasing an exam.'
     return 'That selection is not available right now. Please refresh and try again.'
   }
   return e instanceof Error ? e.message : 'Could not start checkout.'

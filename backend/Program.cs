@@ -881,6 +881,7 @@ PCI.Backend.Endpoints.SocialPublishing.Map(app, db, logFn, GateFn, r => Auth.Adm
 PCI.Backend.Endpoints.Syndication.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Phase 3: WordPress/Ghost/Forem syndication
 PCI.Backend.Endpoints.ExternalImport.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Phase 4: RSS/Atom import + review queue
 PCI.Backend.Endpoints.Backlinks.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Phase 5: backlink & outreach CRM + on-demand link verification
+PCI.Backend.Endpoints.ContentAnalytics.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Phase 6: read-only analytics connectors (GSC/Bing/GA4)
 PCI.Backend.Endpoints.MarketingCentre.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Payments.Map(app, db, logFn, () => !string.IsNullOrEmpty(stripeKey));
 PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
@@ -889,7 +890,6 @@ PCI.Backend.Endpoints.Forum.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), G
 PCI.Backend.Endpoints.Chat.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);    // self-hosted bot + live chat
 PCI.Backend.Endpoints.Casework.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
-PCI.Backend.Endpoints.Applications.Map(app, db, logFn, GateFn);        // per-certification application submission + review (Phase 4b)
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryIdv.Map(app, db, logFn);   // shortlist-gated identity verification (photo + gov ID + background declaration)
