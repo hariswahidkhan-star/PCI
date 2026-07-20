@@ -268,6 +268,12 @@ public static class Rbac
         // Customer-service portal: 'inbox' = work the unified queue (chats, tickets, enquiries,
         // error references); 'support_admin' = manage templates, SLA targets and assignment rules.
         ["support"] = new[]{ "inbox","support_admin","comms" },
+        // Content, SEO & Distribution Centre — granular per-capability permissions so the editorial and
+        // distribution roles from the spec (Content Admin / Strategist / Author / Editor / Technical &
+        // SEO & Legal Reviewer / Translator / Social Manager / Publisher / Super Admin) can be separated.
+        // Enforced in both the .NET gate and the React Perm wrappers. Higher-risk actions (publish, social
+        // & syndication delivery, licensing/legal approval) stay owner + explicit-grant.
+        ["content_centre"] = new[]{ "cc_view","cc_author","cc_edit","cc_review","cc_publish","cc_seo","cc_ai","cc_social","cc_syndicate","cc_backlinks","cc_integrations","cc_legal","cc_settings" },
     };
 
     public static string[] AllSections => Sections.Values.SelectMany(x => x).ToArray();
@@ -284,6 +290,11 @@ public static class Rbac
         // those stay explicit per-person grants.
         ["support_agent"]      = new[]{ "overview","inbox","tickets","members" },
         ["support_supervisor"] = new[]{ "overview","inbox","support_admin","tickets","members","reports" },
+        // Content roles. content_manager runs the whole Content Centre; content_editor covers the
+        // editorial pipeline (write/edit/review/publish/SEO) without the distribution/integration surface.
+        ["content_manager"] = Sections["content_centre"].Append("overview").ToArray(),
+        ["content_editor"]  = new[]{ "overview","cc_view","cc_author","cc_edit","cc_review","cc_publish","cc_seo","cc_ai" },
+        ["content_author"]  = new[]{ "cc_view","cc_author","cc_ai" },
     };
 
     public static List<string> PermsFor(string role, string? permissionsJson)

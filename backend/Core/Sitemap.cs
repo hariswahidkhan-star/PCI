@@ -38,6 +38,21 @@ public static class Sitemap
                 if (H.Str(r["updated_at"]) is { Length: >= 10 } u) sb.Append("<lastmod>").Append(Esc(u[..10])).Append("</lastmod>");
                 sb.Append("<changefreq>weekly</changefreq></url>\n");
             }
+            // Dynamic blog posts (Content Centre) — published, indexable, canonical URLs only. Kept in the
+            // main sitemap so Search Console/Bing discover them via the already-submitted /sitemap.xml.
+            try
+            {
+                var bp = Blog.BasePath(db);
+                foreach (var r in db.Query("SELECT slug,updated_at FROM blog_posts WHERE status='published' AND published=1 AND COALESCE(robots_noindex,0)=0 ORDER BY COALESCE(published_at,created_at) DESC"))
+                {
+                    var s = H.Str(r["slug"]) ?? "";
+                    if (s.Length == 0 || s.Contains("..")) continue;
+                    sb.Append("  <url><loc>").Append(Esc(host + bp + "/" + s)).Append("</loc>");
+                    if (H.Str(r["updated_at"]) is { Length: >= 10 } bu) sb.Append("<lastmod>").Append(Esc(bu[..10])).Append("</lastmod>");
+                    sb.Append("<changefreq>monthly</changefreq></url>\n");
+                }
+            }
+            catch { /* blog tables absent on a very early boot — sitemap still valid */ }
             sb.Append("</urlset>\n");
             _xml = sb.ToString();
             _ver = v;
