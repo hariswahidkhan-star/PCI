@@ -135,6 +135,13 @@ public static class AdminExamDelivery
                 cfg["exam_map"] = map;
             }
             if (H.GetS(b, "callback_secret") is { } csct) cfg["callback_secret"] = csct;
+            // Reject at save time any endpoint URL (api_base / base_url / endpoint / *url) that resolves to a
+            // private, loopback or reserved address — the same guard the webhook/QuickBooks connectors apply.
+            foreach (var (k, v) in cfg)
+                if (v is string sv && sv.Length > 0 && (k.Contains("url", StringComparison.OrdinalIgnoreCase)
+                        || k.Contains("api_base", StringComparison.OrdinalIgnoreCase) || k.Contains("endpoint", StringComparison.OrdinalIgnoreCase))
+                    && Egress.UrlProblem(sv) is { } prob)
+                    return Results.Json(new { error = "unsafe_endpoint", field = k, message = prob }, statusCode: 400);
             var configJson = JsonSerializer.Serialize(cfg);
 
             // secret = write-only, merged with what's stored so one field can change without re-entering all.

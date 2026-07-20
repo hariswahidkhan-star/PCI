@@ -35,12 +35,13 @@ export default function Audit() {
         ) : (
           <table className="data">
             <thead>
-              <tr><th>When</th><th>Action</th><th>Details</th></tr>
+              <tr><th>When</th><th>Who</th><th>Action</th><th>Details</th></tr>
             </thead>
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id}>
                   <td className="small muted" style={{ whiteSpace: 'nowrap' }}>{fmtDateTime(r.created_at)}</td>
+                  <td className="small">{r.actor || (r.user_id ? `#${r.user_id}` : '—')}</td>
                   <td>{titleCase(r.action ?? '')}</td>
                   <td className="small">{r.details}</td>
                 </tr>

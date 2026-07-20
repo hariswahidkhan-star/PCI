@@ -745,6 +745,7 @@ public static class StudentExam
         app.MapPost("/api/me/exam/launch-code", (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var bk = db.QueryOne("SELECT * FROM exam_bookings WHERE user_id=? AND status='scheduled' ORDER BY id DESC", u.Id);
             if (bk is null) return Results.Json(new { error = "no_booking" }, statusCode: 400);
             // #15 — redesigned launch token: high-entropy, HASHED at rest, short-lived (15 min),

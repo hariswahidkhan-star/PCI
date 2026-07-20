@@ -344,6 +344,7 @@ export interface AuditRow {
   id: number
   admin_id?: number | null
   user_id?: number | null
+  actor?: string | null
   action?: string | null
   details?: string | null
   created_at?: string | null

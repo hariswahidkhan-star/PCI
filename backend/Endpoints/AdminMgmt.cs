@@ -543,7 +543,10 @@ public static class AdminMgmt
             var w = where.Count > 0 ? "WHERE " + string.Join(" AND ", where) : "";
             return J(new { rows = db.Query($"SELECT * FROM email_logs {w} ORDER BY id DESC LIMIT 300", args.ToArray()) });
         });
-        app.MapGet("/api/admin/audit", (HttpRequest req) => gate(req, "audit", _ => J(new { rows = db.Query("SELECT * FROM audit_logs ORDER BY id DESC LIMIT 300") })));
+        app.MapGet("/api/admin/audit", (HttpRequest req) => gate(req, "audit", _ => J(new { rows = db.Query(
+            @"SELECT a.*, COALESCE((SELECT email FROM admin_users WHERE id=a.user_id),
+                                    (SELECT email FROM users WHERE id=a.user_id)) AS actor
+              FROM audit_logs a ORDER BY a.id DESC LIMIT 300") })));
 
         // ---------- CSV export ----------
         app.MapGet("/api/admin/export", (HttpRequest req) =>
