@@ -82,6 +82,13 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_appeals_user ON appeals(user_id)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS accommodation_requests(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,request_type TEXT NOT NULL,description TEXT NOT NULL,evidence_name TEXT,evidence_data TEXT,status TEXT DEFAULT 'submitted',approved_extra_minutes INTEGER DEFAULT 0,admin_note TEXT,created_at TEXT DEFAULT (datetime('now')),decided_at TEXT,decided_by INTEGER)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_accom_user ON accommodation_requests(user_id)");
+        // GDPR right-to-erasure requests: a request creates a tracked ticket with a 30-day due date; an admin
+        // acknowledges, then completes (anonymisation) or rejects with a reason. status: pending | acknowledged | completed | rejected.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS erasure_requests(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,email TEXT,reason TEXT,
+            status TEXT DEFAULT 'pending',requested_at TEXT DEFAULT (datetime('now')),due_at TEXT,acknowledged_at TEXT,
+            reviewed_by INTEGER,reviewed_at TEXT,admin_note TEXT,completed_at TEXT)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_erasure_user ON erasure_requests(user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_erasure_status ON erasure_requests(status)");
         // fallback shape kept aligned with schema.sql (storage_ref required, data_uri nullable legacy)
         db.Exec(@"CREATE TABLE IF NOT EXISTS support_attachments(id INTEGER PRIMARY KEY AUTOINCREMENT,ticket_id INTEGER NOT NULL,user_id INTEGER,filename TEXT NOT NULL,mime TEXT,size_bytes INTEGER,sha256 TEXT,data_uri TEXT,storage_ref TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_attach_ticket ON support_attachments(ticket_id)");

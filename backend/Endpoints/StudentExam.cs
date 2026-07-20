@@ -960,8 +960,21 @@ public static class StudentExam
                 attempts = db.Query("SELECT id,kind,started_at,submitted_at,percent,result,status,result_status,violations,duration_minutes FROM exam_attempts WHERE user_id=? ORDER BY id DESC", u.Id)
                     .Select(a => { if (H.Str(a["result_status"]) == "auto_held") { a["percent"] = null; a["result"] = null; } return a; }).ToList(),
                 cpd = db.Query("SELECT * FROM cpd_entries WHERE user_id=?", u.Id) }); });
-        app.MapPost("/api/me/delete-request", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            log(u.Id, "delete_request", u.Email); return J(new { ok = true, note = "A data deletion request has been recorded." }); });
+        app.MapPost("/api/me/delete-request", async (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var b = await H.Body(ctx.Request);
+            var reason = (H.GetS(b, "reason") ?? "").Trim(); if (reason.Length > 2000) reason = reason[..2000];
+            // Create a tracked erasure request with a 30-day fulfilment clock, unless one is already open.
+            var open = db.QueryOne("SELECT id,due_at FROM erasure_requests WHERE user_id=? AND status IN ('pending','acknowledged')", u.Id);
+            if (open is not null) return J(new { ok = true, already_open = true, due_at = open["due_at"], note = "Your data deletion request is already being processed." });
+            var id = db.ExecuteReturningId("INSERT INTO erasure_requests(user_id,email,reason,status,requested_at,due_at) VALUES(?,?,?, 'pending', datetime('now'), datetime('now','+30 day'))",
+                u.Id, u.Email, reason.Length > 0 ? reason : null);
+            log(u.Id, "delete_request", u.Email);
+            var due = H.Str(db.QueryOne("SELECT due_at FROM erasure_requests WHERE id=?", id)?["due_at"]);
+            try { Comms.Fire(db, "privacy.deletion_received", u.Id, u.Email, null,
+                new Dictionary<string, string?> { ["student_name"] = u.Email, ["due_date"] = due?.Length >= 10 ? due[..10] : due },
+                "We have received your data deletion request",
+                "<p>We have received your request to delete your personal data. PCI will review and action it, retaining only the records we are legally required to keep. We will confirm once completed.</p>"); } catch { }
+            return J(new { ok = true, id, due_at = due, note = "A data deletion request has been recorded. PCI will action it within 30 days." }); });
         app.MapGet("/api/me/invoices", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             var rows = db.Query("SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference,waived_amount FROM payments WHERE user_id=? AND payment_status IN ('paid','waived') ORDER BY id DESC", u.Id);
             return J(new { rows }); });

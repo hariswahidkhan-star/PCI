@@ -310,5 +310,68 @@ public static class AdminStudents
             if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             return Results.File(got.Value.bytes!, got.Value.mime);
         }));
+
+        // ─────────────────────────── GDPR erasure requests (admin) ───────────────────────────
+        // A student's "delete my data" request lands here as a tracked ticket with a 30-day due date.
+        app.MapGet("/api/admin/erasure-requests", (HttpContext ctx) => gate(ctx.Request, "members", _ =>
+        {
+            var status = (ctx.Request.Query["status"].ToString() ?? "").Trim();
+            var where = status.Length > 0 ? " WHERE r.status=?" : "";
+            var args = status.Length > 0 ? new object?[] { status } : Array.Empty<object?>();
+            var rows = db.Query(@"SELECT r.id,r.user_id,r.email,r.reason,r.status,r.requested_at,r.due_at,r.acknowledged_at,
+                r.reviewed_at,r.admin_note,r.completed_at, u.first_name,u.last_name,u.status user_status
+                FROM erasure_requests r LEFT JOIN users u ON u.id=r.user_id" + where + " ORDER BY (r.status IN ('pending','acknowledged')) DESC, r.id DESC LIMIT 300", args);
+            // overdue = still open past its 30-day due date.
+            var outRows = rows.Select(r => { var o = new Dictionary<string, object?>(r); o["overdue"] = H.Str(r["status"]) is "pending" or "acknowledged" && H.Str(r["due_at"]) is { } d && H.IsPast(d); return o; }).ToList();
+            return J(new { rows = outRows, open = outRows.Count(r => H.Str(r["status"]) is "pending" or "acknowledged") });
+        }));
+
+        app.MapPost("/api/admin/erasure-requests/{id}/acknowledge", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
+        {
+            var r = db.QueryOne("SELECT * FROM erasure_requests WHERE id=?", id);
+            if (r is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (H.Str(r["status"]) != "pending") return Results.Json(new { error = "bad_state", message = "Only a pending request can be acknowledged." }, statusCode: 400);
+            db.Execute("UPDATE erasure_requests SET status='acknowledged', acknowledged_at=datetime('now'), reviewed_by=?, reviewed_at=datetime('now') WHERE id=?", adm.Id, id);
+            log(H.Ln(r["user_id"]), "erasure_acknowledged", $"request {id} by {adm.Id}");
+            try { Comms.Fire(db, "privacy.under_review", H.L(r["user_id"]), H.Str(r["email"]), null,
+                new Dictionary<string, string?> { ["student_name"] = H.Str(r["email"]) }, "Your data deletion request is under review",
+                "<p>Your data deletion request is now under review. We will confirm once it has been actioned.</p>"); } catch { }
+            return J(new { ok = true, status = "acknowledged" });
+        }));
+
+        app.MapPost("/api/admin/erasure-requests/{id}/reject", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
+        {
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var note = (H.GetS(b, "note", "admin_note") ?? "").Trim();
+            if (note.Length < 5) return Results.Json(new { error = "note_required", message = "Give a reason the request is being declined (e.g. a legal retention basis)." }, statusCode: 400);
+            var r = db.QueryOne("SELECT * FROM erasure_requests WHERE id=?", id);
+            if (r is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (H.Str(r["status"]) is "completed" or "rejected") return Results.Json(new { error = "bad_state", message = "This request is already closed." }, statusCode: 400);
+            db.Execute("UPDATE erasure_requests SET status='rejected', admin_note=?, reviewed_by=?, reviewed_at=datetime('now') WHERE id=?", note, adm.Id, id);
+            log(H.Ln(r["user_id"]), "erasure_rejected", $"request {id} by {adm.Id}");
+            return J(new { ok = true, status = "rejected" });
+        }));
+
+        // Complete the erasure: ANONYMISE the member (see Core.Erasure). Requires explicit confirmation.
+        app.MapPost("/api/admin/erasure-requests/{id}/complete", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
+        {
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            if (H.GetBool(b, "confirm") != true) return Results.Json(new { error = "confirm_required", message = "Set confirm=true to permanently anonymise this member's personal data." }, statusCode: 400);
+            var r = db.QueryOne("SELECT * FROM erasure_requests WHERE id=?", id);
+            if (r is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (H.Str(r["status"]) is "completed" or "rejected") return Results.Json(new { error = "bad_state", message = "This request is already closed." }, statusCode: 400);
+            var userId = H.L(r["user_id"]);
+            var email = H.Str(r["email"]);
+            // Notify BEFORE anonymising, while we still have the address on file.
+            try { Comms.Fire(db, "privacy.completed", userId, email, null,
+                new Dictionary<string, string?> { ["student_name"] = email }, "Your data deletion request is complete",
+                "<p>Your personal data has been deleted or anonymised, except records we are legally required to retain. Your account is now closed.</p>"); } catch { }
+            object summary;
+            try { summary = Erasure.Anonymise(db, userId); }
+            catch (Exception e) { Console.Error.WriteLine($"[erasure] request {id} failed: {e.Message}"); return Results.Json(new { error = "erasure_failed", message = "The anonymisation could not be completed. No changes were committed." }, statusCode: 500); }
+            db.Execute("UPDATE erasure_requests SET status='completed', completed_at=datetime('now'), reviewed_by=?, reviewed_at=datetime('now') WHERE id=?", adm.Id, id);
+            log(userId, "erasure_completed", $"request {id} by {adm.Id}");
+            return J(new { ok = true, status = "completed", summary });
+        }));
     }
 }

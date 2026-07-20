@@ -132,6 +132,32 @@ public static class Storage
         try { return (Security.DecryptBytes(File.ReadAllBytes(full)), mime); } catch { return null; }
     }
 
+    /// <summary>Delete a single stored object by its reference (provider:rel). Used for immediate erasure
+    /// of a specific artefact (e.g. an identity document under a GDPR erasure request), independent of the
+    /// age-based retention purge. Best-effort; returns true if the object was removed or already gone.</summary>
+    public static bool DeleteRef(string? reference)
+    {
+        if (string.IsNullOrEmpty(reference)) return false;
+        var colon = reference.IndexOf(':');
+        if (colon < 0) return false;
+        var provider = reference[..colon];
+        var rel = reference[(colon + 1)..];
+        if (rel.Contains("..") || rel.StartsWith('/') || rel.Contains('\\')) return false;   // path-traversal guard
+        try
+        {
+            if (provider == "s3")
+            {
+                if (string.IsNullOrEmpty(S3Bucket)) return false;
+                S3Client().DeleteObjectAsync(S3Bucket, rel).GetAwaiter().GetResult();
+                return true;
+            }
+            var full = Path.Combine(Root, rel);
+            if (File.Exists(full)) File.Delete(full);
+            return true;
+        }
+        catch { return false; }
+    }
+
     /// <summary>Delete artefacts older than the retention window (days). Returns count removed.
     /// Covers whichever backend is active: local files by mtime, S3 objects by LastModified.</summary>
     public static int PurgeOlderThan(int days)
