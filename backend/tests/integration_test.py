@@ -255,6 +255,27 @@ def admin_login():
 # ---- Mock exam-delivery vendor server: mimics the documented request/response shapes for Questionmark
 #      (Delivery OData), Kryterion (JSON-RPC), and PSI (Atlas eligibility), so the whole exam-delivery
 #      pipeline (candidate → authorize → schedule → results / callback → credential) runs end-to-end.
+RSS_FEED = """<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel><title>PC Weekly</title><link>https://pcweekly.example</link>
+<item>
+  <title>AI in Earned Value Management</title>
+  <link>https://pcweekly.example/ai-evm</link>
+  <guid>https://pcweekly.example/ai-evm</guid>
+  <dc:creator>Jane Analyst</dc:creator>
+  <pubDate>Mon, 06 Jan 2026 10:00:00 GMT</pubDate>
+  <description>&lt;p&gt;How AI reshapes EVM forecasting.&lt;/p&gt;&lt;script&gt;alert(1)&lt;/script&gt;</description>
+  <content:encoded>&lt;p&gt;Full article body about AI and EVM across many paragraphs. &lt;script&gt;steal()&lt;/script&gt;&lt;/p&gt;</content:encoded>
+</item>
+<item>
+  <title>Risk Forecasting with LLMs</title>
+  <link>https://pcweekly.example/risk-llm</link>
+  <guid>https://pcweekly.example/risk-llm</guid>
+  <pubDate>Tue, 07 Jan 2026 10:00:00 GMT</pubDate>
+  <description>&lt;p&gt;Applying LLMs to schedule risk analysis.&lt;/p&gt;</description>
+</item>
+</channel></rss>"""
+
 class _MockVendor(http.server.BaseHTTPRequestHandler):
     def _send(self, code, obj):
         b = json.dumps(obj).encode()
@@ -270,6 +291,10 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
         if "/ghost/api/admin/site" in self.path: return self._send(200, {"site": {"title": "PCI Ghost"}})     # Ghost test
         if "/ghost/api/admin/posts/" in self.path: return self._send(200, {"posts": [{"id": "gh1", "updated_at": "2026-01-01T00:00:00.000Z", "url": "http://ghost.mock/p/gh1"}]})  # Ghost read-before-update
         if "/api/users/me" in self.path: return self._send(200, {"id": 1, "username": "pci"})                 # Forem test
+        if "/rss" in self.path:                                                                              # RSS feed (Phase 4 import)
+            body = RSS_FEED.encode()
+            self.send_response(200); self.send_header("Content-Type", "application/rss+xml")
+            self.send_header("Content-Length", str(len(body))); self.end_headers(); self.wfile.write(body); return
         return self._send(200, {"ok": True})
     def do_POST(self):
         ln = int(self.headers.get("Content-Length") or 0)
@@ -1801,6 +1826,66 @@ def test_syndication(admin):
     chk("22p syndication API requires authentication (401)", c == 401, c)
     srv.shutdown()
 
+def test_external_import(admin):
+    print("\n=== 23. External content import (RSS → review queue, copyright-safe) ===")
+    srv, port = start_mock_vendor()
+    base = f"http://127.0.0.1:{port}"
+
+    c, s1 = jget("POST", "/api/admin/content/import/sources", token=admin, body={"name": "PC Weekly", "domain": "pcweekly.example", "feed_url": base + "/rss", "license": "all_rights_reserved", "allowed_use": "curated_link"})
+    chk("23a register an external source", c == 200 and s1.get("id"), s1)
+    sid = s1.get("id")
+
+    c, f1 = jget("POST", f"/api/admin/content/import/sources/{sid}/fetch", token=admin)
+    chk("23b fetch ingests feed items", c == 200 and f1.get("added") == 2 and f1.get("total") == 2, f1)
+
+    c, items = jget("GET", f"/api/admin/content/import/items?source_id={sid}", token=admin)
+    rows = items.get("rows", [])
+    chk("23c items land in the review queue as 'retrieved'", len(rows) == 2 and all(r["status"] == "retrieved" for r in rows), [r.get("status") for r in rows])
+
+    con = dbconn(); sums = [r[0] or "" for r in con.execute("SELECT summary FROM cc_external_items WHERE source_id=?", (sid,)).fetchall()]; con.close()
+    chk("23d imported content is sanitized (no scripts)", all("<script" not in s.lower() for s in sums), None)
+
+    c, f2 = jget("POST", f"/api/admin/content/import/sources/{sid}/fetch", token=admin)
+    chk("23e re-fetch de-duplicates (nothing added)", c == 200 and f2.get("added") == 0 and f2.get("duplicate") == 2, f2)
+
+    # approve as curated link → a PCI DRAFT with canonical to the ORIGINAL, not a full copy
+    item_id = rows[0]["id"]; item_url = rows[0]["source_url"]
+    c, ap = jget("POST", f"/api/admin/content/import/items/{item_id}/approve", token=admin, body={"mode": "link"})
+    chk("23f approve as curated link creates a PCI draft", c == 200 and ap.get("post_id"), ap)
+    con = dbconn()
+    prow = con.execute("SELECT status, published, canonical_url, content_ownership FROM blog_posts WHERE id=?", (ap.get("post_id"),)).fetchone()
+    irow = con.execute("SELECT status, pci_post_id FROM cc_external_items WHERE id=?", (item_id,)).fetchone()
+    con.close()
+    chk("23g curated post is a draft, canonical → original source, not published", prow and prow[0] == "draft" and prow[1] == 0 and prow[2] == item_url and prow[3] == "curated", prow)
+    chk("23h queue item is marked approved_link + linked to the post", irow and irow[0] == "approved_link" and irow[1] == ap.get("post_id"), irow)
+
+    # full republication + excerpt refused for an all-rights-reserved / curated-link-only source
+    item2 = rows[1]["id"]
+    c, full = jget("POST", f"/api/admin/content/import/items/{item2}/approve", token=admin, body={"mode": "full"})
+    chk("23i full republication blocked without a permitting licence", c == 400 and full.get("error") == "full_republication_not_permitted", full)
+    c, exc = jget("POST", f"/api/admin/content/import/items/{item2}/approve", token=admin, body={"mode": "excerpt"})
+    chk("23j excerpt blocked for a curated-link-only source", c == 400 and exc.get("error") == "excerpt_not_permitted", exc)
+
+    # a licensed source with a recorded permission permits full republication
+    c, s2 = jget("POST", "/api/admin/content/import/sources", token=admin, body={"name": "Partner Blog", "domain": "partner.example", "feed_url": base + "/rss", "license": "permission_granted", "permission_ref": "MOU-2026-01", "allowed_use": "full"})
+    sid2 = s2.get("id")
+    jget("POST", f"/api/admin/content/import/sources/{sid2}/fetch", token=admin)
+    c, items2 = jget("GET", f"/api/admin/content/import/items?source_id={sid2}", token=admin)
+    li = items2.get("rows", [])[0]["id"]
+    c, fr = jget("POST", f"/api/admin/content/import/items/{li}/approve", token=admin, body={"mode": "full"})
+    chk("23k a licensed source permits full republication", c == 200 and fr.get("post_id"), fr)
+    con = dbconn(); own = con.execute("SELECT content_ownership FROM blog_posts WHERE id=?", (fr.get("post_id"),)).fetchone()[0]; con.close()
+    chk("23l licensed full republication is recorded as licensed", own == "licensed", own)
+
+    rid = items2.get("rows", [])[1]["id"]
+    c, _ = jget("POST", f"/api/admin/content/import/items/{rid}/reject", token=admin, body={"note": "off-topic"})
+    con = dbconn(); rjs = con.execute("SELECT status FROM cc_external_items WHERE id=?", (rid,)).fetchone()[0]; con.close()
+    chk("23m an item can be rejected", c == 200 and rjs == "rejected", rjs)
+
+    c, _ = jget("GET", "/api/admin/content/import/items")
+    chk("23n import API requires authentication (401)", c == 401, c)
+    srv.shutdown()
+
 def run(proc):
     admin = admin_login()
     widen_window(admin)
@@ -2555,6 +2640,7 @@ def run(proc):
     test_content_centre(admin)
     test_social_publishing(admin)
     test_syndication(admin)
+    test_external_import(admin)
 
     print("\n(assertions complete)")
 

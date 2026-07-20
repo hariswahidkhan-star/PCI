@@ -1134,6 +1134,27 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_synpost_post ON cc_syndicated_posts(post_id)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_cc_synpost_dest ON cc_syndicated_posts(post_id, destination_id)");
 
+        // External content import (Phase 4) — ingest RSS/Atom from APPROVED sources into a review queue with a
+        // licence/permission record. PCI never copies a whole third-party article merely because it is public:
+        // the default is curated-link mode (a PCI-written summary + a link back to the original), full
+        // republication is gated on a recorded licence/permission, and nothing goes public without review
+        // unless the source is explicitly trusted for auto-publish. cc_* namespaced to avoid collisions.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_external_sources(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name VARCHAR(160) NOT NULL, domain VARCHAR(190), feed_url VARCHAR(400), source_type VARCHAR(16) DEFAULT 'rss',
+            owner_contact VARCHAR(190), license VARCHAR(40) DEFAULT 'all_rights_reserved', permission_ref TEXT,
+            allowed_use VARCHAR(24) DEFAULT 'curated_link', attribution_required INTEGER DEFAULT 1,
+            canonical_required INTEGER DEFAULT 1, auto_publish INTEGER DEFAULT 0, language VARCHAR(8),
+            category_id INTEGER, active INTEGER DEFAULT 1, last_fetched_at TEXT, last_error TEXT,
+            created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_extsrc_active ON cc_external_sources(active)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_external_items(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            source_id INTEGER NOT NULL, guid VARCHAR(400), source_url VARCHAR(500), title TEXT, author VARCHAR(190),
+            summary TEXT, image_url VARCHAR(500), published_at TEXT, content_hash VARCHAR(64),
+            status VARCHAR(28) DEFAULT 'retrieved', pci_post_id INTEGER, review_note TEXT, reviewed_by INTEGER,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_extitem_source ON cc_external_items(source_id, status)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_cc_extitem_guid ON cc_external_items(source_id, guid)");
+
         // AI Content Studio — provider/model/use-case configs (secrets stay in env, referenced by key_env) and
         // a full audit ledger of every generation (assist-only; AI never publishes autonomously).
         db.Exec(@"CREATE TABLE IF NOT EXISTS ai_content_providers(id INTEGER PRIMARY KEY AUTOINCREMENT,
