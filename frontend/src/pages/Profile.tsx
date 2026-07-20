@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, useEffect, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useMe } from '../data/MeContext'
 import { api } from '../api/client'
@@ -153,6 +153,62 @@ export default function Profile() {
           itemSub={(r) => [r.issuer, r.issued_year && t('prof.since', { year: r.issued_year }), r.expires_year && t('prof.expires', { year: r.expires_year })].filter(Boolean).join(' · ')}
         />
       </Card>
+
+      <CommPreferences />
     </div>
+  )
+}
+
+// Optional-communications consent. Essential communications (security, decisions, payments, exams,
+// certificates, privacy, critical operations) are always sent and are deliberately not listed here.
+function CommPreferences() {
+  const [prefs, setPrefs] = useState<Record<string, number> | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [busy, setBusy] = useState(false)
+  const [saved, setSaved] = useState(false)
+  useEffect(() => {
+    let live = true
+    api.get<{ preferences: Record<string, number> }>('/api/me/preferences')
+      .then((d) => { if (live) setPrefs(d.preferences) }).catch(() => { if (live) setPrefs({}) }).finally(() => { if (live) setLoading(false) })
+    return () => { live = false }
+  }, [])
+  const toggle = (k: string) => setPrefs((p) => ({ ...(p ?? {}), [k]: p?.[k] ? 0 : 1 }))
+  async function save() {
+    if (!prefs) return
+    setBusy(true); setSaved(false)
+    try { await api.post('/api/me/preferences', prefs); setSaved(true) } finally { setBusy(false) }
+  }
+  const OPTIONS: { key: string; label: string; hint: string }[] = [
+    { key: 'email_marketing', label: 'Marketing email', hint: 'News about certifications, offers and events by email.' },
+    { key: 'whatsapp_marketing', label: 'Marketing WhatsApp', hint: 'Occasional updates by WhatsApp (requires opt-in below).' },
+    { key: 'whatsapp_optin', label: 'WhatsApp opt-in', hint: 'Allow PCI to contact you on WhatsApp at all.' },
+    { key: 'newsletter', label: 'Newsletter', hint: 'The periodic PCI newsletter.' },
+    { key: 'events', label: 'Events', hint: 'Invitations to webinars and events.' },
+    { key: 'surveys', label: 'Surveys', hint: 'Occasional feedback surveys.' },
+  ]
+  return (
+    <Card title="Communication preferences">
+      <p className="muted small" style={{ marginTop: 0 }}>
+        Choose which <strong>optional</strong> messages you receive. Essential communications — account security,
+        application decisions, payment confirmations, exam scheduling and results, certificates and privacy
+        requests — are always sent and cannot be switched off.
+      </p>
+      {loading || !prefs ? <Spinner /> : (
+        <>
+          <div style={{ display: 'grid', gap: '.6rem' }}>
+            {OPTIONS.map((o) => (
+              <label key={o.key} style={{ display: 'flex', gap: '.6rem', alignItems: 'flex-start' }}>
+                <input type="checkbox" checked={!!prefs[o.key]} onChange={() => toggle(o.key)} style={{ width: 'auto', marginTop: 4 }} />
+                <span><strong>{o.label}</strong><br /><span className="muted small">{o.hint}</span></span>
+              </label>
+            ))}
+          </div>
+          <div style={{ marginTop: '.8rem' }}>
+            <button className="btn" disabled={busy} onClick={save}>{busy ? 'Saving…' : 'Save preferences'}</button>
+            {saved && <span className="muted small" style={{ marginLeft: '.6rem' }}>Saved.</span>}
+          </div>
+        </>
+      )}
+    </Card>
   )
 }

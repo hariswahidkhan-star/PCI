@@ -76,6 +76,71 @@ public static class Comms
 
     static bool IsMarketing(string category) => category is "marketing" or "newsletter" or "surveys";
 
+    /// <summary>Fire a platform event through the Communications Centre: reads the trigger's config,
+    /// honours the per-channel (email / WhatsApp / in-app) toggles, renders the assigned published template
+    /// (falling back to the caller-supplied content when none is set/published), checks marketing consent,
+    /// and enqueues one deduped outbox row per enabled channel. The OutboxDispatcher then delivers each.
+    /// Safe to call anywhere — if the trigger is missing/inactive it is a no-op, and dedup keys prevent a
+    /// double-fire from a retried event. Uses the outbox email path (not Mailer), so it never double-sends
+    /// with the Mailer history mirror.</summary>
+    public static void Fire(Db db, string triggerCode, long? userId, string? toEmail, string? toPhone,
+        IDictionary<string, string?> vars, string fallbackSubject, string fallbackHtml,
+        string? waText = null, long? certId = null, string? dedupSuffix = null)
+    {
+        Dictionary<string, object?>? t;
+        try { t = db.QueryOne("SELECT * FROM comm_triggers WHERE code=? AND active=1", triggerCode); }
+        catch { return; }
+        if (t is null) return;
+        var category = H.Str(t["consent_category"]) ?? "transactional";
+        var senderKey = H.Str(t["sender_profile_key"]);
+        var waKey = H.Str(t["whatsapp_account_key"]);
+        if (string.IsNullOrEmpty(toEmail) && userId is not null)
+            try { toEmail = H.Str(db.QueryOne("SELECT email FROM users WHERE id=?", userId)?["email"]); } catch { }
+        var who = userId?.ToString() ?? toEmail ?? toPhone ?? "?";
+        var baseKey = $"{triggerCode}:{who}:{dedupSuffix ?? ""}";
+
+        if (H.B(t["email_enabled"]) && !string.IsNullOrEmpty(toEmail))
+        {
+            var (subj, html) = ResolveEmail(db, H.Str(t["email_template_key"]), vars, fallbackSubject, fallbackHtml);
+            Enqueue(db, "email", baseKey + ":email", userId, toEmail, null, subj, html,
+                senderKey: senderKey, category: category, triggerCode: triggerCode, certId: certId);
+        }
+        if (H.B(t["whatsapp_enabled"]) && !string.IsNullOrEmpty(toPhone))
+        {
+            var body = ResolveText(db, H.Str(t["whatsapp_template_key"]), vars, waText ?? StripHtml(fallbackHtml));
+            Enqueue(db, "whatsapp", baseKey + ":wa", userId, null, toPhone, fallbackSubject, body,
+                waAccountKey: waKey, category: category, triggerCode: triggerCode, certId: certId);
+        }
+        if (H.B(t["inapp_enabled"]) && userId is not null)
+            Enqueue(db, "inapp", baseKey + ":inapp", userId, null, null, fallbackSubject, StripHtml(fallbackHtml),
+                category: category, triggerCode: triggerCode, certId: certId);
+    }
+
+    static (string subject, string html) ResolveEmail(Db db, string? templateKey, IDictionary<string, string?> vars, string fbSubject, string fbHtml)
+    {
+        if (!string.IsNullOrEmpty(templateKey))
+            try
+            {
+                var tpl = db.QueryOne("SELECT subject,body FROM comm_templates WHERE key=? AND kind='email' AND status='published' ORDER BY version DESC LIMIT 1", templateKey);
+                if (tpl is not null) return (Render(H.Str(tpl["subject"]) ?? fbSubject, vars), Render(H.Str(tpl["body"]) ?? fbHtml, vars));
+            }
+            catch { }
+        return (Render(fbSubject, vars), Render(fbHtml, vars));
+    }
+    static string ResolveText(Db db, string? templateKey, IDictionary<string, string?> vars, string fbText)
+    {
+        if (!string.IsNullOrEmpty(templateKey))
+            try
+            {
+                var tpl = db.QueryOne("SELECT body FROM comm_templates WHERE key=? AND kind='whatsapp' AND status='published' ORDER BY version DESC LIMIT 1", templateKey);
+                if (tpl is not null) return Render(H.Str(tpl["body"]) ?? fbText, vars);
+            }
+            catch { }
+        return Render(fbText, vars);
+    }
+    static string StripHtml(string? html) => string.IsNullOrEmpty(html) ? ""
+        : System.Text.RegularExpressions.Regex.Replace(html, "<[^>]+>", " ").Replace("&nbsp;", " ").Trim();
+
     static bool HasMarketingConsent(Db db, long userId, string channel)
     {
         var p = db.QueryOne("SELECT email_marketing,whatsapp_marketing FROM comm_preferences WHERE user_id=?", userId);
@@ -163,4 +228,22 @@ public static class Comms
     }
 
     static string Clip(string? s, int max = 1000) => string.IsNullOrEmpty(s) ? "" : (s.Length > max ? s[..max] : s);
+
+    // ─────────── one-click unsubscribe tokens ───────────
+    static string UnsubSecret =>
+        (Environment.GetEnvironmentVariable("UNSUBSCRIBE_SECRET")
+         ?? Environment.GetEnvironmentVariable("CREDENTIAL_ENCRYPTION_KEY")
+         ?? "pci-unsubscribe-v1") + "|pci-unsub";
+
+    /// <summary>A signed, self-verifying unsubscribe token for a user (safe to embed in an email link).</summary>
+    public static string UnsubToken(long userId) => $"{userId}.{Security.Sha($"{userId}.{UnsubSecret}")[..24]}";
+
+    /// <summary>Verify an unsubscribe token; returns the userId or null.</summary>
+    public static long? VerifyUnsub(string? token)
+    {
+        if (string.IsNullOrEmpty(token)) return null;
+        var p = token.Split('.');
+        if (p.Length != 2 || !long.TryParse(p[0], out var uid)) return null;
+        return Security.FixedTimeEquals(p[1], Security.Sha($"{uid}.{UnsubSecret}")[..24]) ? uid : null;
+    }
 }

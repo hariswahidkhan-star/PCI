@@ -806,6 +806,27 @@ public static class StudentExam
             return J(new { ok = true });
         });
 
+        // ---------------- communication preferences & consent ----------------
+        // Students manage OPTIONAL communications only. Essential communications (security, application
+        // decisions, payments, exam scheduling/results, certificates, privacy, critical operations) are
+        // never in this list and cannot be switched off.
+        app.MapGet("/api/me/preferences", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var p = db.QueryOne("SELECT * FROM comm_preferences WHERE user_id=?", u.Id);
+            if (p is null) { db.Execute("INSERT INTO comm_preferences(user_id) VALUES(?)", u.Id); p = db.QueryOne("SELECT * FROM comm_preferences WHERE user_id=?", u.Id); }
+            return J(new { preferences = p, note = "Essential communications (security, decisions, payments, exams, certificates, privacy) are always sent and cannot be disabled." }); });
+        app.MapPost("/api/me/preferences", async (HttpContext ctx) => {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var b = await H.Body(ctx.Request);
+            int F(string k) => H.GetEl(b, k) is { } e && (e.ValueKind == System.Text.Json.JsonValueKind.True || (e.ValueKind == System.Text.Json.JsonValueKind.String && e.GetString() is "1" or "true") || (e.ValueKind == System.Text.Json.JsonValueKind.Number && e.TryGetInt32(out var i) && i != 0)) ? 1 : 0;
+            if (db.QueryOne("SELECT id FROM comm_preferences WHERE user_id=?", u.Id) is null) db.Execute("INSERT INTO comm_preferences(user_id) VALUES(?)", u.Id);
+            var wa = H.GetS(b, "whatsapp_number");
+            db.Execute(@"UPDATE comm_preferences SET email_marketing=?, whatsapp_marketing=?, whatsapp_optin=?, newsletter=?, events=?, surveys=?,
+                consent_source='student_portal', consent_version='v1', consent_at=datetime('now'), updated_at=datetime('now') WHERE user_id=?",
+                F("email_marketing"), F("whatsapp_marketing"), F("whatsapp_optin"), F("newsletter"), F("events"), F("surveys"), u.Id);
+            // Withdrawing email-marketing consent also clears any prior suppression conflict cleanly.
+            log(u.Id, "comm_preferences_updated", null);
+            return J(new { ok = true }); });
+
         // ---------------- messages / security / invoices / faqs / account-data ----------------
         app.MapGet("/api/me/messages", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             return J(new { rows = db.Query("SELECT * FROM notifications WHERE user_id=? ORDER BY id DESC LIMIT 50", u.Id) }); });

@@ -513,6 +513,33 @@ public static class CommsCentre
             });
         });
 
+        // ───────── public one-click unsubscribe (signed token — no login) ─────────
+        // GET renders a tiny confirmation page; both GET and POST perform the unsubscribe idempotently.
+        void DoUnsub(long uid)
+        {
+            db.Execute("INSERT INTO comm_preferences(user_id) SELECT ? WHERE NOT EXISTS(SELECT 1 FROM comm_preferences WHERE user_id=?)", uid, uid);
+            db.Execute("UPDATE comm_preferences SET email_marketing=0, newsletter=0, surveys=0, events=0, withdrawn_at=datetime('now'), updated_at=datetime('now') WHERE user_id=?", uid);
+            var email = H.Str(db.QueryOne("SELECT email FROM users WHERE id=?", uid)?["email"]);
+            if (!string.IsNullOrEmpty(email))
+                db.Execute("INSERT INTO comm_suppression(channel,address,reason,category,source) VALUES('email',?, 'unsubscribe','marketing','one_click')", email.ToLowerInvariant());
+            log(uid, "comm_unsubscribed", "one_click");
+        }
+        app.MapGet("/api/comms/unsubscribe", (HttpRequest req) =>
+        {
+            var uid = Comms.VerifyUnsub(req.Query["token"].ToString());
+            if (uid is null) return Results.Content("<h2>Unsubscribe link invalid or expired.</h2>", "text/html");
+            DoUnsub(uid.Value);
+            return Results.Content("<html><body style='font-family:sans-serif;max-width:520px;margin:60px auto;text-align:center'><h2>You've been unsubscribed</h2><p>You will no longer receive PCI marketing or newsletter emails. Essential account, application, payment, exam and certificate messages will still be sent. You can re-subscribe any time from your portal preferences.</p></body></html>", "text/html");
+        });
+        app.MapPost("/api/comms/unsubscribe", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            var uid = Comms.VerifyUnsub(H.GetS(b, "token"));
+            if (uid is null) return Results.Json(new { error = "invalid_token" }, statusCode: 400);
+            DoUnsub(uid.Value);
+            return J(new { ok = true });
+        });
+
         // ───────── inbound webhooks (public, secret-verified) ─────────
         // Generic email-inbound (Resend/Mailgun/SendGrid parse). Verified by a shared secret in the query
         // or the X-Webhook-Secret header — matched against EMAIL_WEBHOOK_SECRET. Attaches to a conversation
