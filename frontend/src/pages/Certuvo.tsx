@@ -19,6 +19,8 @@ interface CertuvoAccess {
   must_change_password?: boolean
   notice?: string | null
   login_url?: string | null
+  /** platform sign-in URL, present whenever the operator has configured it (even before the account is active) */
+  portal_url?: string | null
   provisioned_at?: string | null
   activated_at?: string | null
   credentials_sent_at?: string | null
@@ -56,6 +58,9 @@ function CertuvoAccessPanel() {
     }
   }
 
+  // The link a student uses to reach Certuvo: their own account URL once active, otherwise the platform sign-in.
+  const certuvoUrl = data.login_url || data.portal_url || null
+
   return (
     <Card title="Your Certuvo practice access" action={badge}>
       {active ? (
@@ -67,15 +72,22 @@ function CertuvoAccessPanel() {
           {data.provisioned_at && <div className="small muted">Access granted {fmtDate(data.provisioned_at)}</div>}
           {data.expires && <div className="small muted">Membership valid until {fmtDate(data.expires)}</div>}
           <div className="row" style={{ marginTop: '.4rem', flexWrap: 'wrap' }}>
-            {data.login_url && <a className="btn sm" href={data.login_url} target="_blank" rel="noreferrer">Open Certuvo ↗</a>}
+            {certuvoUrl && <a className="btn sm" href={certuvoUrl} target="_blank" rel="noreferrer">Open Certuvo ↗</a>}
             <button className="btn sm secondary" disabled={resending} onClick={resend}>{resending ? 'Sending…' : 'Resend access instructions'}</button>
           </div>
           {resendNote && <div className={'small' + (resendNote.ok ? ' muted' : '')} style={resendNote.ok ? undefined : { color: 'var(--err, #c2410c)' }} role="status">{resendNote.text}</div>}
         </div>
-      ) : data.message ? (
-        <p className="muted small" style={{ margin: 0 }}>{data.message}</p>
       ) : (
-        <p className="muted small" style={{ margin: 0 }}>Your Certuvo practice account is set up automatically once your membership is active. It will appear here shortly after payment.</p>
+        <div style={{ display: 'grid', gap: '.5rem' }}>
+          <p className="muted small" style={{ margin: 0 }}>
+            {data.message ?? 'Your Certuvo practice account is set up automatically once your membership is active. It will appear here shortly after payment.'}
+          </p>
+          {certuvoUrl && (
+            <div className="row">
+              <a className="btn sm secondary" href={certuvoUrl} target="_blank" rel="noreferrer">Go to Certuvo ↗</a>
+            </div>
+          )}
+        </div>
       )}
       {/* Mandated notice: PCI shows only the access card; all practice lives in Certuvo. */}
       <p className="muted small" style={{ margin: '.6rem 0 0', borderTop: '1px solid var(--border,#e5e7eb)', paddingTop: '.5rem' }}>

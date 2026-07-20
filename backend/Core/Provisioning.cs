@@ -540,7 +540,12 @@ public static class CertuvoLink
         var expiry = H.Str(db.QueryOne("SELECT expiry_date FROM memberships WHERE user_id=? AND status='active'", userId)?["expiry_date"]);
         // The mandated notice: PCI shows only the access card; everything practice-related lives in Certuvo.
         const string notice = "Certuvo is an external practice platform. All practice questions, mock examinations, study tools, AI coaching, progress tracking and learning activities are available directly within Certuvo.";
-        if (a is null) return new { enabled = true, status = "not_provisioned", expires = expiry, notice };
+        // The platform sign-in URL (operator-configured). Shown as the "Open Certuvo" link even before the
+        // student's own account is active, so they always know where to go — the per-account login_url below
+        // supersedes it once provisioning completes.
+        var portalUrl = Settings.Str(db, "certuvo_login_url", "").Trim();
+        string? portal = string.IsNullOrWhiteSpace(portalUrl) ? null : portalUrl;
+        if (a is null) return new { enabled = true, status = "not_provisioned", expires = expiry, notice, portal_url = portal };
         var status = H.Str(a["status"]);
         var active = status == "active";
         return new
@@ -562,6 +567,8 @@ public static class CertuvoLink
             password = active ? Security.DecryptSecret(H.Str(a["secret"])) : null,
             must_change_password = active && H.L(a["must_change_password"]) == 1,
             login_url = active ? H.Str(a["login_url"]) : null,
+            // Platform sign-in link, always present when configured (independent of the per-account credentials).
+            portal_url = portal,
             provisioned_at = H.Str(a["provisioned_at"]),
             activated_at = H.Str(a["activated_at"]),
             credentials_sent_at = H.Str(a["credentials_sent_at"]),
