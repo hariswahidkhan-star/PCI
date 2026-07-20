@@ -1686,7 +1686,7 @@ def test_social_publishing(admin):
     chk("21h approve+queue a draft", c == 200 and pubr.get("queued"), pubr)
     c, drn = jget("POST", "/api/admin/content/social/drain", token=admin)
     chk("21i dispatcher delivers the queued post", c == 200 and drn.get("delivered", 0) >= 1, drn)
-    con = dbconn(); row = con.execute("SELECT status,public_url FROM social_drafts WHERE id=?", (tg_draft,)).fetchone(); con.close()
+    con = dbconn(); row = con.execute("SELECT status,public_url FROM cc_social_drafts WHERE id=?", (tg_draft,)).fetchone(); con.close()
     chk("21j delivered draft is published with a public URL", row and row[0] == "published" and (row[1] or ""), row)
 
     # idempotency: re-publishing an already-queued/delivered draft does not re-queue
@@ -1694,7 +1694,7 @@ def test_social_publishing(admin):
     chk("21k re-publish is idempotent (not re-queued)", c == 200 and again.get("queued") == False, again)
 
     # tokens are encrypted at rest (never plaintext)
-    con = dbconn(); sec = con.execute("SELECT secret_enc FROM social_accounts WHERE id=?", (ms.get("id"),)).fetchone()[0]; con.close()
+    con = dbconn(); sec = con.execute("SELECT secret_enc FROM cc_social_accounts WHERE id=?", (ms.get("id"),)).fetchone()[0]; con.close()
     chk("21l tokens are encrypted at rest (enc:v1:, no plaintext)", sec.startswith("enc:v1:") and "mtok" not in sec, sec[:12])
 
     # failure path: a failing webhook → draft fails/retries, and the ARTICLE is never affected
@@ -1711,7 +1711,7 @@ def test_social_publishing(admin):
     jget("POST", f"/api/admin/content/social/drafts/{fdid}/publish", token=admin)
     jget("POST", "/api/admin/content/social/drain", token=admin)
     con = dbconn()
-    frow = con.execute("SELECT status FROM social_drafts WHERE id=?", (fdid,)).fetchone()
+    frow = con.execute("SELECT status FROM cc_social_drafts WHERE id=?", (fdid,)).fetchone()
     prow = con.execute("SELECT status,published FROM blog_posts WHERE id=?", (pid2,)).fetchone()
     con.close()
     chk("21n failed delivery marks the draft retrying/failed (not published)", frow and frow[0] in ("retrying", "failed"), frow)

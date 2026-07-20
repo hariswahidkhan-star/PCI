@@ -28,7 +28,7 @@ public static class SocialPublishing
 
         // ── accounts ────────────────────────────────────────────────────────────────────────────────
         app.MapGet("/api/admin/content/social/accounts", (HttpRequest req) => gate(req, "cc_social", adm =>
-            J(new { rows = db.Query("SELECT * FROM social_accounts ORDER BY id DESC").Select(Redact), live_platforms = SocialConnectors.Live })));
+            J(new { rows = db.Query("SELECT * FROM cc_social_accounts ORDER BY id DESC").Select(Redact), live_platforms = SocialConnectors.Live })));
 
         app.MapPost("/api/admin/content/social/accounts", async (HttpContext ctx) =>
         {
@@ -44,7 +44,7 @@ public static class SocialPublishing
                 var cfg = new Dictionary<string, string>();
                 foreach (var k in new[] { "chat_id", "channel_username", "instance", "handle", "pds", "api_base" })
                     if (H.GetS(b, k) is { Length: > 0 } v) cfg[k] = v.Trim();
-                var id = db.ExecuteReturningId(@"INSERT INTO social_accounts(platform_key,label,external_id,config,secret_enc,status,connected_by,active,created_at,updated_at)
+                var id = db.ExecuteReturningId(@"INSERT INTO cc_social_accounts(platform_key,label,external_id,config,secret_enc,status,connected_by,active,created_at,updated_at)
                     VALUES(?,?,?,?,?, 'connected', ?, 1, datetime('now'), datetime('now'))",
                     platform, H.GetS(b, "label") ?? platform, H.GetS(b, "external_id"),
                     JsonSerializer.Serialize(cfg), Security.EncryptSecret(secret), adm.Id);
@@ -58,17 +58,17 @@ public static class SocialPublishing
             var denied = gate(ctx.Request, "cc_social", _ => Results.Ok());
             if (!IsOk(denied)) return denied;
             var id = long.Parse((string)ctx.Request.RouteValues["id"]!);
-            var a = db.QueryOne("SELECT * FROM social_accounts WHERE id=?", id);
+            var a = db.QueryOne("SELECT * FROM cc_social_accounts WHERE id=?", id);
             if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var res = await SocialConnectors.Test(db, a);
-            db.Execute("UPDATE social_accounts SET status=?, last_error=?, updated_at=datetime('now') WHERE id=?",
+            db.Execute("UPDATE cc_social_accounts SET status=?, last_error=?, updated_at=datetime('now') WHERE id=?",
                 res.Ok ? "connected" : "error", res.Error, id);
             return J(new { ok = res.Ok, error = res.Error });
         });
 
         app.MapPost("/api/admin/content/social/accounts/{id:long}/disconnect", (HttpRequest req, long id) => gate(req, "cc_social", adm =>
         {
-            db.Execute("UPDATE social_accounts SET active=0, status='disconnected', updated_at=datetime('now') WHERE id=?", id);
+            db.Execute("UPDATE cc_social_accounts SET active=0, status='disconnected', updated_at=datetime('now') WHERE id=?", id);
             log(adm.Id, "social_account_disconnect", "#" + id);
             return J(new { ok = true });
         }));
@@ -77,7 +77,7 @@ public static class SocialPublishing
         app.MapGet("/api/admin/content/social/drafts", (HttpRequest req) => gate(req, "cc_social", adm =>
         {
             var postId = req.Query["post_id"].ToString();
-            var sql = "SELECT d.*, a.platform_key AS acct_platform, a.label AS acct_label FROM social_drafts d LEFT JOIN social_accounts a ON a.id=d.account_id";
+            var sql = "SELECT d.*, a.platform_key AS acct_platform, a.label AS acct_label FROM cc_social_drafts d LEFT JOIN cc_social_accounts a ON a.id=d.account_id";
             var rows = postId.Length > 0 ? db.Query(sql + " WHERE d.post_id=? ORDER BY d.id DESC", long.Parse(postId))
                                          : db.Query(sql + " ORDER BY d.id DESC LIMIT 100");
             return J(new { rows });
@@ -94,16 +94,16 @@ public static class SocialPublishing
                 if (post is null) return Results.Json(new { error = "post_not_found" }, statusCode: 404);
                 var link = Blog.PublicUrl(db, H.Str(post["slug"]) ?? "");
                 var tags = Blog.Tags(db, id).Select(t => H.Str(t["name"]) ?? "").Where(s => s.Length > 0).ToList();
-                var accounts = db.Query("SELECT * FROM social_accounts WHERE active=1");
+                var accounts = db.Query("SELECT * FROM cc_social_accounts WHERE active=1");
                 var created = new List<object>();
                 foreach (var a in accounts)
                 {
                     var platform = H.Str(a["platform_key"]) ?? "";
                     // skip if a draft already exists for this (post, account) that isn't published/failed
-                    var dup = db.QueryOne("SELECT id FROM social_drafts WHERE post_id=? AND account_id=? AND status NOT IN ('published','failed','cancelled')", id, H.L(a["id"]));
+                    var dup = db.QueryOne("SELECT id FROM cc_social_drafts WHERE post_id=? AND account_id=? AND status NOT IN ('published','failed','cancelled')", id, H.L(a["id"]));
                     if (dup is not null) continue;
                     var (text, hashtags) = Compose(platform, H.Str(post["title"]) ?? "", H.Str(post["summary"]) ?? "", tags, link);
-                    var did = db.ExecuteReturningId(@"INSERT INTO social_drafts(post_id,platform_key,account_id,text,link,hashtags,status,created_by,created_at,updated_at)
+                    var did = db.ExecuteReturningId(@"INSERT INTO cc_social_drafts(post_id,platform_key,account_id,text,link,hashtags,status,created_by,created_at,updated_at)
                         VALUES(?,?,?,?,?,?, 'draft', ?, datetime('now'), datetime('now'))",
                         id, platform, H.L(a["id"]), text, link, hashtags, adm.Id);
                     created.Add(new { id = did, platform, account = H.Str(a["label"]) });
@@ -120,8 +120,8 @@ public static class SocialPublishing
             return gate(ctx.Request, "cc_social", adm =>
             {
                 foreach (var k in new[] { "text", "link", "hashtags", "first_comment", "scheduled_at" })
-                    if (H.GetS(b, k) is { } v) db.Execute($"UPDATE social_drafts SET {k}=? WHERE id=?", v, id);
-                db.Execute("UPDATE social_drafts SET updated_at=datetime('now') WHERE id=?", id);
+                    if (H.GetS(b, k) is { } v) db.Execute($"UPDATE cc_social_drafts SET {k}=? WHERE id=?", v, id);
+                db.Execute("UPDATE cc_social_drafts SET updated_at=datetime('now') WHERE id=?", id);
                 return J(new { ok = true });
             });
         });
@@ -129,16 +129,16 @@ public static class SocialPublishing
         // Approve + queue for delivery (idempotent — the job's unique key blocks a double-queue).
         app.MapPost("/api/admin/content/social/drafts/{id:long}/publish", (HttpRequest req, long id) => gate(req, "cc_social", adm =>
         {
-            var d = db.QueryOne("SELECT * FROM social_drafts WHERE id=?", id);
+            var d = db.QueryOne("SELECT * FROM cc_social_drafts WHERE id=?", id);
             if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-            var acct = db.QueryOne("SELECT platform_key FROM social_accounts WHERE id=? AND active=1", H.L(d["account_id"]));
+            var acct = db.QueryOne("SELECT platform_key FROM cc_social_accounts WHERE id=? AND active=1", H.L(d["account_id"]));
             if (acct is null) return Results.Json(new { error = "account_inactive" }, statusCode: 400);
             if (!SocialConnectors.IsLive(H.Str(acct["platform_key"]) ?? ""))
                 return Results.Json(new { error = "requires_approval" }, statusCode: 400);
             var (jobId, changes) = db.ExecuteWithChanges(@"INSERT OR IGNORE INTO content_jobs(job_type,idempotency_key,post_id,target,payload,status,next_attempt_at,created_by,created_at,updated_at)
                 VALUES('social_publish', ?, ?, ?, ?, 'pending', datetime('now'), ?, datetime('now'), datetime('now'))",
                 "socialdraft:" + id, H.L(d["post_id"]), H.Str(d["platform_key"]), "{\"draft_id\":" + id + "}", adm.Id);
-            db.Execute("UPDATE social_drafts SET status=?, approved_by=?, job_id=?, updated_at=datetime('now') WHERE id=?",
+            db.Execute("UPDATE cc_social_drafts SET status=?, approved_by=?, job_id=?, updated_at=datetime('now') WHERE id=?",
                 "approved", adm.Id, changes > 0 ? jobId : H.L(d["job_id"]), id);
             log(adm.Id, "social_draft_publish", "draft " + id + (changes > 0 ? " queued" : " already_queued"));
             return J(new { ok = true, queued = changes > 0 });
@@ -146,7 +146,7 @@ public static class SocialPublishing
 
         app.MapPost("/api/admin/content/social/drafts/{id:long}/cancel", (HttpRequest req, long id) => gate(req, "cc_social", adm =>
         {
-            db.Execute("UPDATE social_drafts SET status='cancelled', updated_at=datetime('now') WHERE id=? AND status IN ('draft','approved','retrying')", id);
+            db.Execute("UPDATE cc_social_drafts SET status='cancelled', updated_at=datetime('now') WHERE id=? AND status IN ('draft','approved','retrying')", id);
             db.Execute("UPDATE content_jobs SET status='cancelled', updated_at=datetime('now') WHERE idempotency_key=? AND status IN ('pending','retrying')", "socialdraft:" + id);
             log(adm.Id, "social_draft_cancel", "draft " + id);
             return J(new { ok = true });

@@ -1095,20 +1095,22 @@ public static class Migrate
         // never returned by the API) and per-post platform-specific drafts. Only official APIs are used; the
         // no-approval connectors (Discord webhook / Telegram bot / Mastodon / Bluesky) can publish immediately,
         // while approval-gated platforms remain framework-only until the operator completes provider review.
-        db.Exec(@"CREATE TABLE IF NOT EXISTS social_accounts(id INTEGER PRIMARY KEY AUTOINCREMENT,
+        // NOTE: namespaced cc_* to avoid colliding with the separate public "Social media" links table
+        // (`social_accounts`, platform/url/display_order) which is a different feature entirely.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_social_accounts(id INTEGER PRIMARY KEY AUTOINCREMENT,
             platform_key VARCHAR(48) NOT NULL, label VARCHAR(160), external_id VARCHAR(190),
             config TEXT, secret_enc TEXT, status VARCHAR(20) DEFAULT 'connected', last_error TEXT,
             connected_by INTEGER, active INTEGER DEFAULT 1,
             created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
-        db.Exec("CREATE INDEX IF NOT EXISTS ix_social_accounts_platform ON social_accounts(platform_key)");
-        db.Exec(@"CREATE TABLE IF NOT EXISTS social_drafts(id INTEGER PRIMARY KEY AUTOINCREMENT,
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_social_accounts_platform ON cc_social_accounts(platform_key)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_social_drafts(id INTEGER PRIMARY KEY AUTOINCREMENT,
             post_id INTEGER NOT NULL, platform_key VARCHAR(48) NOT NULL, account_id INTEGER,
             text TEXT, link TEXT, hashtags TEXT, image TEXT, first_comment TEXT,
             status VARCHAR(24) DEFAULT 'draft', scheduled_at TEXT, approved_by INTEGER,
             public_url TEXT, provider_response TEXT, job_id INTEGER, created_by INTEGER,
             created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
-        db.Exec("CREATE INDEX IF NOT EXISTS ix_social_drafts_post ON social_drafts(post_id)");
-        db.Exec("CREATE INDEX IF NOT EXISTS ix_social_drafts_status ON social_drafts(status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_social_drafts_post ON cc_social_drafts(post_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_social_drafts_status ON cc_social_drafts(status)");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_default_base_urls','')");
 
         // AI Content Studio — provider/model/use-case configs (secrets stay in env, referenced by key_env) and

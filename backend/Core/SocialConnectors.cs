@@ -8,7 +8,7 @@ namespace PCI.Backend.Core;
 /// Live social-publishing connectors for the platforms whose OFFICIAL APIs need no platform review — a
 /// PCI-controlled webhook/token is enough: Discord (incoming webhook), Telegram (Bot API), Mastodon
 /// (statuses API) and Bluesky (AT Protocol). Each takes a connected account (credentials decrypted from
-/// social_accounts.secret_enc at call time — never logged) plus the post text/link and returns a result
+/// cc_social_accounts.secret_enc at call time — never logged) plus the post text/link and returns a result
 /// with the public URL. All outbound calls go through the SSRF-guarded egress client because instance /
 /// webhook URLs are operator-supplied. Approval-gated platforms (LinkedIn/Meta/X/…) are deliberately NOT
 /// here — they stay framework-only in the capability registry until the operator completes provider review.
