@@ -361,7 +361,10 @@ public static class HonoraryApplication
                     "approved" => ("Congratulations — Honorary Fellow (PCI) conferred",
                         $"<p>Dear {WebUtility.HtmlEncode(H.Str(a["first_name"]))},</p>" +
                         $"<p>The board has conferred on you the designation <strong>Honorary Fellow (PCI)</strong>. Your award number is <strong>{WebUtility.HtmlEncode(awardNo)}</strong>.</p>" +
-                        $"<p>You can verify it any time at <a href=\"{baseUrl}/verify.html?id={WebUtility.HtmlEncode(awardNo)}\">{baseUrl}/verify.html?id={WebUtility.HtmlEncode(awardNo)}</a>. This is an honorary recognition, distinct from PCI's examined certification credentials.</p><p>— Project Controls Institute Global</p>"),
+                        // A student account is created automatically on approval; the set-password/login email is sent
+                        // separately. Point the recipient at the portal, where their official certificate can be downloaded.
+                        $"<p>We have set up your PCI student portal account — you will receive a separate email to choose your password and sign in. Once signed in, you can <strong>download your official Honorary Fellow (PCI) certificate</strong> from the Credentials area, along with your membership and learning resources.</p>" +
+                        $"<p>You can verify your recognition any time at <a href=\"{baseUrl}/verify.html?id={WebUtility.HtmlEncode(awardNo)}\">{baseUrl}/verify.html?id={WebUtility.HtmlEncode(awardNo)}</a>. This is an honorary recognition, distinct from PCI's examined certification credentials.</p><p>— Project Controls Institute Global</p>"),
                     "rejected" => ("An update on your Honorary Fellow (PCI) application",
                         $"<p>Dear {WebUtility.HtmlEncode(H.Str(a["first_name"]))},</p>" +
                         $"<p>Thank you for your interest in the Honorary Fellow (PCI) recognition. After careful review, the board is not taking your application forward at this time.</p>" +

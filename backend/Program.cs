@@ -482,7 +482,7 @@ app.MapPost("/api/admin/auth/login", async (HttpRequest req) =>
     db.Execute("INSERT INTO admin_sessions(admin_id,token,expires_at) VALUES(?,?,datetime('now','+12 hours'))", a["id"], Security.Sha(tok));
     db.Execute("UPDATE admin_users SET last_login_at=datetime('now') WHERE id=?", a["id"]);
     var ctx = Auth.ToAdmin(a);
-    Log(0, "admin_login", ctx.Email);
+    Log(ctx.Id, "admin_login", ctx.Email);   // attribute the login to the admin, so the audit log tracks who signed in
     return Json(new { token = tok, admin = new { id = ctx.Id, email = ctx.Email, name = ctx.Name, role = ctx.Role, must_change_pw = ctx.MustChangePw }, permissions = ctx.Perms });
 });
 
@@ -688,9 +688,15 @@ app.MapPost("/api/admin/team", async (HttpRequest req) =>
         if (ids.Length > 0) certScope = JsonSerializer.Serialize(ids);
     }
     var tempPw = S(b, "password") ?? Security.RandomHex(5);
-    var id = db.ExecuteReturningId("INSERT INTO admin_users(email,name,password_hash,role,permissions,status,must_change_pw,created_by,cert_scope) VALUES(?,?,?,?,?, 'active',1,?,?)",
-        email, S(b, "name") ?? "", BCrypt.Net.BCrypt.HashPassword(tempPw), role, perms, admin!.Id == 0 ? (object?)null : admin.Id, certScope);
-    Log(0, "admin_created", $"{email} ({role})");
+    // Whether a new admin must change their password at first sign-in is operator-configurable
+    // (Settings → 'admin_force_password_change', default on). A per-request `force_password_change`
+    // still overrides it either way.
+    var forcePw = (H.GetEl(b, "force_password_change") is { } fpc
+        ? fpc.ValueKind is JsonValueKind.True || (fpc.ValueKind is JsonValueKind.String && fpc.GetString() is "1" or "true")
+        : Settings.Bool(db, "admin_force_password_change", true)) ? 1 : 0;
+    var id = db.ExecuteReturningId("INSERT INTO admin_users(email,name,password_hash,role,permissions,status,must_change_pw,created_by,cert_scope) VALUES(?,?,?,?,?, 'active',?,?,?)",
+        email, S(b, "name") ?? "", BCrypt.Net.BCrypt.HashPassword(tempPw), role, perms, forcePw, admin!.Id == 0 ? (object?)null : admin.Id, certScope);
+    Log(admin.Id == 0 ? null : admin.Id, "admin_created", $"{email} ({role})");
     return Json(new { ok = true, id, temp_password = tempPw });
 });
 
@@ -742,9 +748,10 @@ app.MapPost("/api/admin/team/{id}/reset-password", (HttpRequest req, long id) =>
     var a = db.QueryOne("SELECT * FROM admin_users WHERE id=?", id);
     if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
     var tempPw = Security.RandomHex(5);
-    db.Execute("UPDATE admin_users SET password_hash=?, must_change_pw=1 WHERE id=?", BCrypt.Net.BCrypt.HashPassword(tempPw), id);
+    var forceReset = Settings.Bool(db, "admin_force_password_change", true) ? 1 : 0;
+    db.Execute("UPDATE admin_users SET password_hash=?, must_change_pw=? WHERE id=?", BCrypt.Net.BCrypt.HashPassword(tempPw), forceReset, id);
     db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", id);
-    Log(0, "admin_pw_reset", a["email"] as string);
+    Log(Convert.ToInt64(a["id"]), "admin_pw_reset", a["email"] as string);
     return Json(new { ok = true, temp_password = tempPw });
 });
 
