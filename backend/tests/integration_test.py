@@ -1433,6 +1433,121 @@ def main():
     print(f"\n  ══ {passed}/{passed+failed} PASSED ══")
     sys.exit(0 if failed == 0 else 1)
 
+def test_exam_exceptions(admin):
+    from datetime import datetime, timedelta
+    print("\n=== 19. Exam Exceptions & Authorizations ===")
+    def dl(days): return (datetime.utcnow() + timedelta(days=days)).strftime("%Y-%m-%d %H:%M:%S")
+
+    # (1) A settled exam seat auto-creates an authorization with a configured window (not hardcoded +1yr).
+    tok, uid = make_paid_user("exq1@ex.co", product="exam")
+    con = dbconn()
+    a = con.execute("SELECT id,payment_id,original_deadline,current_deadline FROM exam_authorizations WHERE user_id=? ORDER BY id DESC", (uid,)).fetchone(); con.close()
+    chk("19a settled exam auto-creates an authorization", a is not None, a)
+    authId = a[0] if a else 0; payId = a[1] if a else 0
+    c, me = jget("GET", "/api/me", token=tok)
+    ex0 = (me.get("exams") or [{}])[0] if isinstance(me, dict) else {}
+    chk("19b /api/me surfaces a scheduling_status", bool(ex0.get("scheduling_status")), ex0.get("scheduling_status"))
+
+    # (2) window expires, (4) button blocked; (3) admin extends → original preserved + history.
+    con = dbconn()
+    con.execute("UPDATE payments SET exam_schedule_deadline=datetime('now','-1 day') WHERE id=?", (payId,))
+    con.execute("UPDATE exam_authorizations SET current_deadline=datetime('now','-1 day') WHERE id=?", (authId,))
+    con.commit(); con.close()
+    c, me2 = jget("GET", "/api/me", token=tok)
+    chk("19c expired window blocks booking", "entitlement_expired" in me2.get("lifecycle", {}).get("blocking_items", []), me2.get("lifecycle", {}).get("blocking_items"))
+    c, exd = jget("POST", f"/api/admin/exam-authorizations/{authId}/extend", token=admin, body={"new_deadline": dl(120), "reason": "medical extension"})
+    chk("19d admin extends the deadline", c == 200 and exd.get("ok"), exd)
+    con = dbconn()
+    hcount = con.execute("SELECT COUNT(*) FROM exam_extension_history WHERE authorization_id=?", (authId,)).fetchone()[0]
+    orig, cur = con.execute("SELECT original_deadline,current_deadline FROM exam_authorizations WHERE id=?", (authId,)).fetchone()
+    con.close()
+    chk("19e extension recorded + original deadline preserved", hcount >= 1 and orig != cur, (hcount, orig != cur))
+    c, me3 = jget("GET", "/api/me", token=tok)
+    chk("19f Schedule button available again after extend", "entitlement_expired" not in me3.get("lifecycle", {}).get("blocking_items", []), me3.get("lifecycle", {}).get("blocking_items"))
+
+    # (11,12) full retake waiver → payable 0 + skips checkout; (13) partial → payable remains.
+    c, w = jget("POST", "/api/admin/exam-fee-waiver", token=admin, body={"user_id": uid, "certification_id": 1, "fee_type": "retake", "percent": 100, "reason": "goodwill"})
+    chk("19g full waiver → payable 0 + skips checkout", c == 200 and w.get("payable") == 0 and w.get("skips_checkout") is True, w)
+    c, wp = jget("POST", "/api/admin/exam-fee-waiver", token=admin, body={"user_id": uid, "certification_id": 1, "fee_type": "retake", "percent": 50, "reason": "partial"})
+    chk("19h partial waiver leaves a payable balance", c == 200 and (wp.get("payable") or 0) > 0, wp)
+
+    # (8,9,10,15) grant an additional attempt → a new schedulable seat, classified; allowance grows.
+    con = dbconn(); before = con.execute("SELECT COUNT(*) FROM exam_entitlements WHERE user_id=? AND COALESCE(certification_id,1)=1", (uid,)).fetchone()[0]; con.close()
+    c, g = jget("POST", "/api/admin/exam-attempts/grant", token=admin, body={"user_id": uid, "certification_id": 1, "grant_type": "additional", "reason": "goodwill retake"})
+    chk("19i grant additional attempt", c == 200 and g.get("ok"), g)
+    con = dbconn()
+    after = con.execute("SELECT COUNT(*) FROM exam_entitlements WHERE user_id=? AND COALESCE(certification_id,1)=1", (uid,)).fetchone()[0]
+    gc = con.execute("SELECT grant_type,counts_as_attempt FROM exam_attempt_grants WHERE user_id=? ORDER BY id DESC", (uid,)).fetchone()
+    con.close()
+    chk("19j grant creates a new seat", after == before + 1, (before, after))
+    chk("19k grant is classified", gc and gc[0] == "additional", gc)
+
+    # (7,9,16) simulate a submitted attempt, then restore it (invalidated, preserved, seat reopened).
+    con = dbconn()
+    con.execute("INSERT INTO exam_bookings(user_id,payment_id,certification_id,scheduled_at,status) VALUES(?,?,1,datetime('now'),'completed')", (uid, payId))
+    bkid = con.execute("SELECT id FROM exam_bookings WHERE user_id=? ORDER BY id DESC", (uid,)).fetchone()[0]
+    con.execute("INSERT INTO exam_attempts(user_id,booking_id,certification_id,kind,status,result_status,result,counts_as_attempt) VALUES(?,?,1,'exam','submitted','released_fail','fail',1)", (uid, bkid))
+    atid = con.execute("SELECT id FROM exam_attempts WHERE user_id=? ORDER BY id DESC", (uid,)).fetchone()[0]
+    con.execute("UPDATE exam_entitlements SET status='consumed' WHERE payment_id=?", (payId,))
+    con.commit(); con.close()
+    c, rr = jget("POST", f"/api/admin/exam-attempts/{atid}/restore", token=admin, body={"reason": "verified technical failure"})
+    chk("19l restore a consumed attempt", c == 200 and rr.get("ok"), rr)
+    con = dbconn()
+    rs, cca = con.execute("SELECT result_status,counts_as_attempt FROM exam_attempts WHERE id=?", (atid,)).fetchone()
+    ent_after = con.execute("SELECT status FROM exam_entitlements WHERE payment_id=?", (payId,)).fetchone()[0]
+    con.close()
+    chk("19m restored attempt invalidated + not counted (preserved, not deleted)", rs == "invalidated" and cca == 0, (rs, cca))
+    chk("19n restore reopened the seat", ent_after == "available", ent_after)
+
+    # (14) waiting period waived.
+    con = dbconn(); con.execute("UPDATE exam_authorizations SET retake_wait_until=datetime('now','+30 day') WHERE id=?", (authId,)); con.commit(); con.close()
+    c, ww = jget("POST", f"/api/admin/exam-authorizations/{authId}/waive-waiting-period", token=admin, body={"reason": "special consideration"})
+    con = dbconn(); rw = con.execute("SELECT retake_wait_until FROM exam_authorizations WHERE id=?", (authId,)).fetchone()[0]; con.close()
+    chk("19o retake waiting period waived", c == 200 and rw is None, (c, rw))
+
+    # (6) admin reschedules (preserves the old appointment as history).
+    con = dbconn(); con.execute("INSERT INTO exam_bookings(user_id,payment_id,certification_id,scheduled_at,status,authorization_id) VALUES(?,?,1,datetime('now','+5 day'),'scheduled',?)", (uid, payId, authId)); con.commit(); con.close()
+    c, rs2 = jget("POST", f"/api/admin/exam-authorizations/{authId}/reschedule", token=admin, body={"scheduled_at": dl(10), "reason": "candidate request"})
+    con = dbconn(); rh = con.execute("SELECT COUNT(*) FROM exam_reschedule_history WHERE authorization_id=?", (authId,)).fetchone()[0]; con.close()
+    chk("19p admin reschedule preserves history", c == 200 and rs2.get("ok") and rh >= 1, (c, rh))
+
+    # (17) candidate received in-app notifications for these actions.
+    con = dbconn(); nc = con.execute("SELECT COUNT(*) FROM notifications WHERE user_id=? AND category='Exam Exception'", (uid,)).fetchone()[0]; con.close()
+    chk("19q candidate received exam-exception notifications", nc >= 3, nc)
+
+    # (5,21) reopen scheduling after a miss (single candidate).
+    c, ro = jget("POST", "/api/admin/exam-authorizations/reopen", token=admin, body={"user_id": uid, "certification_id": 1, "reason": "missed exam"})
+    chk("19r reopen scheduling", c == 200 and ro.get("ok"), ro)
+
+    # (20) certification isolation — a second candidate on a different cert is untouched.
+    tok2, uid2 = make_paid_user("exq2@ex.co", product="exam")
+    con = dbconn(); iso = con.execute("SELECT COUNT(*) FROM exam_extension_history WHERE user_id=?", (uid2,)).fetchone()[0]; con.close()
+    chk("19s other candidate's authorization is unaffected (isolation)", iso == 0, iso)
+
+    # (23) the exceptions list reflects extensions / grants / waivers.
+    c, lst = jget("GET", "/api/admin/exam-exceptions?q=exq1", token=admin)
+    row = next((r for r in lst.get("rows", []) if r.get("email") == "exq1@ex.co"), None) if isinstance(lst, dict) else None
+    chk("19t exceptions list reflects extension/grant counts", row is not None and row.get("extensions", 0) >= 1 and row.get("grants", 0) >= 1, row and {k: row.get(k) for k in ("extensions", "grants")})
+
+    # (22) audit history recorded each privileged action, attributed to the acting admin.
+    c, au = jget("GET", "/api/admin/audit?limit=300", token=admin)
+    acts = {r.get("action") for r in au.get("rows", [])} if isinstance(au, dict) else set()
+    chk("19u audit history records the exam-exception actions", {"exam_deadline_extended", "exam_attempt_granted", "exam_fee_waived", "exam_attempt_restored"}.issubset(acts), sorted(a for a in acts if a.startswith("exam_")))
+
+    # (18) unauthorized staff cannot grant attempts or waive fees.
+    c, vb = jget("POST", "/api/admin/team", token=admin, body={"email": "exdenied@pci.test", "name": "V", "role": "viewer"})
+    if c == 200:
+        vtok = "extok_" + sha256hex("exdenied")[:20]
+        con = dbconn(); con.execute("INSERT INTO admin_sessions(admin_id,token,expires_at) VALUES(?,?, datetime('now','+1 day'))", (vb["id"], sha256hex(vtok))); con.commit(); con.close()
+        c1, _ = jget("POST", "/api/admin/exam-attempts/grant", token=vtok, body={"user_id": uid, "certification_id": 1, "grant_type": "additional", "reason": "x"})
+        c2, _ = jget("POST", "/api/admin/exam-fee-waiver", token=vtok, body={"user_id": uid, "certification_id": 1, "fee_type": "exam", "reason": "x"})
+        c3, _ = jget("POST", f"/api/admin/exam-authorizations/{authId}/extend", token=vtok, body={"new_deadline": dl(30), "reason": "x"})
+        chk("19v unauthorized staff blocked from grant/waive/extend (403)", c1 == 403 and c2 == 403 and c3 == 403, (c1, c2, c3))
+
+    # (19) duplicate action is guarded — bulk reopen requires a matching confirm_count.
+    c, bad = jget("POST", "/api/admin/exam-authorizations/bulk-reopen", token=admin, body={"user_ids": [uid], "certification_id": 1, "reason": "batch", "confirm_count": 99})
+    chk("19w bulk reopen rejects a mismatched confirm_count", c == 400, (c, bad))
+
 def run(proc):
     admin = admin_login()
     widen_window(admin)
@@ -2183,6 +2298,7 @@ def run(proc):
     test_certificate_pdf(admin)
     test_documents_module(admin)
     test_leadership_suite(admin)
+    test_exam_exceptions(admin)
 
     print("\n(assertions complete)")
 

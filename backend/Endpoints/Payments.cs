@@ -244,6 +244,10 @@ public static class Payments
                             // index) and to the PURCHASED certification (metadata code; PCP-AI default).
                             var entCertId = Certs.Resolve(db, m.GetValueOrDefault("certification"));
                             db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?,?,?, 'available', datetime('now','+1 year'))", userId, payId, product, entCertId);
+                            // Create the Exam Authorization (configurable window + attempt policy). Recomputes
+                            // the deadline from the resolved window and writes it through, so the effective
+                            // period is operator-configured, not the hardcoded +1 year above. Best-effort.
+                            try { ExamAuthorization.EnsureForPayment(db, payId); } catch { }
                         }
                         log(userId, "account_activated", reference);
                         }
