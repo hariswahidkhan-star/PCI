@@ -254,6 +254,12 @@ public static class Rbac
         ["website"]  = new[]{ "set_web","pricing","codes","content","pages","news","faqs","bok","governance","resources","media","nav","partners","sitesettings","subscribers","submissions","inquiries" },
         ["student"]  = new[]{ "set_sp","members","enrollments","payments","credentials","tickets","documents" },
         ["exam"]     = new[]{ "set_exam","exams","proctoring","sampleq","exam_delivery" },
+        // Exam Exceptions & Authorizations — granular per-action permissions so deadline extensions,
+        // rescheduling, reattempts, fee waivers and incident decisions can be split across Customer
+        // Service / Exam Admin / Finance / Certification Admin / Super Admin. Enforced in both the .NET
+        // gate and the React Perm wrappers; higher-risk actions (grants, approvals, result correction,
+        // fee waivers) stay owner + explicit-grant, like the operations bundle below.
+        ["exam_exceptions"] = new[]{ "ex_view","ex_extend","ex_reopen","ex_reschedule","ex_restore","ex_incidents","ex_invalidate","ex_bulk","ex_grant_replacement","ex_grant_additional","ex_approve","ex_correct_result","ex_waive_exam","ex_waive_retake","ex_waive_resched","ex_waive_wait" },
         // High-privilege operator capabilities. Deliberately NOT part of any named role bundle
         // (owner excepted): they are granted individually via a custom role or a permissions
         // override, so "who can move money / act as a student / mint test accounts" is always an
@@ -271,7 +277,7 @@ public static class Rbac
         ["owner"]           = Sections.Values.SelectMany(x => x).ToArray(),
         ["website_manager"] = Sections["website"].Append("overview").ToArray(),
         ["student_manager"] = Sections["student"].Append("overview").ToArray(),
-        ["exam_manager"]    = Sections["exam"].Append("overview").ToArray(),
+        ["exam_manager"]    = Sections["exam"].Concat(new[]{ "overview","ex_view","ex_extend","ex_reopen","ex_reschedule","ex_restore","ex_incidents","ex_invalidate","ex_bulk" }).ToArray(),
         ["viewer"]          = new[]{ "overview","reports" },
         // Customer-service roles: agents work the queue and see member context; supervisors also
         // manage templates/SLA and can read reports. Neither gets finance/impersonate/test_users —
