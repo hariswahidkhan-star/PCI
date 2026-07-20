@@ -39,6 +39,39 @@ public sealed class CommsReminderService : BackgroundService
     {
         var n = 0;
         n += MembershipExpiry(db);
+        n += ExamSchedulingDeadline(db);
+        return n;
+    }
+
+    // Candidates with a paid/waived exam whose schedule-by deadline is within 7 days and who have not yet
+    // booked — one reminder per (payment, deadline). A deadline extension changes the key, so an extended
+    // deadline correctly earns a fresh reminder later.
+    static int ExamSchedulingDeadline(Db db)
+    {
+        var rows = db.Query(@"SELECT p.user_id, p.exam_schedule_deadline, p.id AS payment_id, u.email, u.first_name
+            FROM payments p JOIN users u ON u.id=p.user_id
+            WHERE p.product_type IN ('exam','bundle') AND p.payment_status IN ('paid','waived')
+              AND p.exam_schedule_deadline IS NOT NULL
+              AND p.exam_schedule_deadline <= datetime('now','+7 day') AND p.exam_schedule_deadline > datetime('now')
+              AND u.status='active'
+              AND NOT EXISTS (SELECT 1 FROM exam_bookings b WHERE b.payment_id=p.id AND b.status IN ('scheduled','completed'))");
+        var n = 0;
+        foreach (var r in rows)
+        {
+            var uid = H.L(r["user_id"]);
+            var dl = H.Str(r["exam_schedule_deadline"]) ?? "";
+            var when = dl.Length >= 10 ? dl[..10] : dl;
+            try
+            {
+                Comms.Fire(db, "exam.scheduling_deadline_approaching", uid, H.Str(r["email"]), null,
+                    new Dictionary<string, string?> { ["student_name"] = H.Str(r["first_name"]) ?? "there", ["deadline"] = when, ["portal_link"] = "/app/" },
+                    "Schedule your PCI exam soon",
+                    $"<p>Your exam must be scheduled by {when}. Sign in to your portal to book your sitting before the deadline.</p>",
+                    dedupSuffix: $"sched:{H.L(r["payment_id"])}:{when}");
+                n++;
+            }
+            catch { }
+        }
         return n;
     }
 

@@ -169,7 +169,21 @@ public static class AdminOps
             var result = Settlement.Reverse(db, pid, reason, adm.Id);
             var doc = JsonSerializer.SerializeToElement(result);
             if (doc.TryGetProperty("ok", out var okEl) && okEl.ValueKind == JsonValueKind.True)
+            {
                 log(adm.Id, "payment_reversed", $"payment {pid} {H.Str(prev?["payment_status"])}→refunded by {adm.Id} (subject {H.L(prev?["user_id"])}): {reason}");
+                // Notify the payer across their enabled channels; deduped per payment reversal.
+                try
+                {
+                    var uid = prev?["user_id"] as long?;
+                    var pu = uid is null ? null : db.QueryOne("SELECT email,first_name FROM users WHERE id=?", uid);
+                    Comms.Fire(db, "payment.refund_issued", uid, H.Str(pu?["email"]), null,
+                        new Dictionary<string, string?> { ["student_name"] = H.Str(pu?["first_name"]) ?? "there", ["portal_link"] = "/app/billing" },
+                        "Your PCI payment has been refunded",
+                        "<p>A refund has been issued for your PCI payment. It may take a few business days to appear on your statement. Contact us if you have any questions.</p>",
+                        dedupSuffix: $"reverse:{pid}");
+                }
+                catch { }
+            }
             return J(result);
         }));
 

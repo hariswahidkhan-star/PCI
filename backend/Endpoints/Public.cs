@@ -291,6 +291,18 @@ public static class Public
             db.Execute("DELETE FROM login_tokens WHERE user_id=? AND purpose='session'", row["user_id"]);
             db.Execute("UPDATE login_tokens SET used_at=datetime('now') WHERE user_id=? AND purpose='set_password' AND used_at IS NULL", row["user_id"]);
             log(H.Ln(row["user_id"]), "password_set", "via secure link");
+            // Security confirmation across enabled channels ("your password was changed"). Deduped per
+            // token so a retried request can't double-notify. Essential/transactional — always sent.
+            try
+            {
+                var pu = db.QueryOne("SELECT email,first_name FROM users WHERE id=?", row["user_id"]);
+                Comms.Fire(db, "account.password_changed", H.Ln(row["user_id"]), H.Str(pu?["email"]), null,
+                    new Dictionary<string, string?> { ["student_name"] = H.Str(pu?["first_name"]) ?? "there", ["portal_link"] = "/app/" },
+                    "Your PCI password was changed",
+                    "<p>Your PCI account password was just set or changed. If this wasn't you, contact support immediately — your other sessions have already been signed out.</p>",
+                    dedupSuffix: $"pwset:{H.Str(row["id"])}");
+            }
+            catch { }
             return J(new { ok = true });
         });
 
