@@ -137,6 +137,8 @@ app.Use(async (ctx, next) =>
     h["Referrer-Policy"] = "strict-origin-when-cross-origin";
     h["X-Frame-Options"] = "DENY";                       // legacy ally of frame-ancestors 'none'
     h["Cross-Origin-Opener-Policy"] = "same-origin";
+    // Deny powerful browser features site-wide except where actually used (payment on checkout is same-origin).
+    h["Permissions-Policy"] = "camera=(), microphone=(), geolocation=(), usb=(), payment=(self), interest-cohort=()";
     h[_cspHeader] = _csp;
     // Keep private/authenticated surfaces out of search indexes (defence in depth alongside
     // auth, the noindex meta tags and robots.txt).
@@ -183,7 +185,7 @@ static string ClientIp(HttpContext ctx)
 // per client IP with a fixed-window in-memory counter. Applied by path prefix via middleware so it is
 // robust to route-handler shape (no per-endpoint chaining required).
 var _rlHits = new System.Collections.Concurrent.ConcurrentDictionary<string, (int count, long windowStart)>();
-string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login" };
+string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login", "/api/inquiry", "/api/newsletter", "/api/form-submit" };
 const int RL_LIMIT = 10; const long RL_WINDOW_MS = 60_000;
 app.Use(async (ctx, next) =>
 {
@@ -281,6 +283,11 @@ static List<(string sev, string key, string msg)> ConfigIssues()
         else if (string.IsNullOrEmpty(E("MYSQL_CONNECTION_STRING")) && (string.IsNullOrEmpty(E("MYSQL_HOST")) || string.IsNullOrEmpty(E("MYSQL_PASSWORD"))))
             Err("MYSQL_HOST", "MySQL is selected but connection settings are incomplete (need MYSQL_HOST + MYSQL_PASSWORD, or MYSQL_CONNECTION_STRING)");
         if (string.IsNullOrEmpty(E("ADMIN_OWNER_PASSWORD"))) Warn("ADMIN_OWNER_PASSWORD", "bootstrap owner uses the default password until changed");
+        // Data-at-rest encryption (Certuvo credentials + stored ID documents/photos) must use an explicit
+        // 32-byte key in production — never the derived fallback, which would be predictable if the seeding
+        // secrets are known. (ISO/IEC 27001 A.8.24 / 27018 cryptographic protection of PII.)
+        if (!Security.HasDedicatedEncryptionKey())
+            Err("CREDENTIAL_ENCRYPTION_KEY", "set a 32-byte key (base64/hex/passphrase) — required to encrypt credentials and stored identity documents at rest in production");
     }
     return issues;
 }
@@ -407,8 +414,17 @@ app.MapPost("/api/login", async (HttpRequest req) =>
     var email = (S(b, "email") ?? "").ToLowerInvariant();
     var password = S(b, "password") ?? "";
     var u = db.QueryOne("SELECT * FROM users WHERE email=?", email);
-    if (u is null || !Security.VerifyPassword(password, u["password_hash"] as string))
+    if (u is null) { LoginGuard.BurnTime(password); return Results.Json(new { error = "invalid_credentials" }, statusCode: 401); }
+    if (LoginGuard.IsLocked(db, "users", u["id"]))
+        return Results.Json(new { error = "account_locked", message = "Too many failed attempts. Please try again in a few minutes." }, statusCode: 429);
+    if (!Security.VerifyPassword(password, u["password_hash"] as string))
+    {
+        LoginGuard.OnFail(db, "users", u["id"]);
+        try { var fip = H.LastHopIp(req.Headers["x-forwarded-for"].ToString(), req.HttpContext.Connection.RemoteIpAddress?.ToString());
+              db.Execute("INSERT INTO login_events(user_id,ip,user_agent,device,outcome) VALUES(?,?,?,?,?)", u["id"], fip, "", "", "failed"); } catch { }
         return Results.Json(new { error = "invalid_credentials" }, statusCode: 401);
+    }
+    LoginGuard.OnSuccess(db, "users", u["id"]);
     if ((u["status"] as string) != "active") return Results.Json(new { error = "inactive" }, statusCode: 403);
     var session = Security.RandomHex(32);
     db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'session', datetime('now','+30 day'))",
@@ -440,15 +456,27 @@ app.MapPost("/api/admin/auth/login", async (HttpRequest req) =>
     var email = (S(b, "email") ?? "").Trim().ToLowerInvariant();
     var password = S(b, "password") ?? "";
     var a = db.QueryOne("SELECT * FROM admin_users WHERE lower(email)=?", email);
-    if (a is null || (a["status"] as string) != "active" || !Security.VerifyPassword(password, a["password_hash"] as string))
+    if (a is null) { LoginGuard.BurnTime(password); return Results.Json(new { error = "invalid_credentials" }, statusCode: 401); }
+    if (LoginGuard.IsLocked(db, "admin_users", a["id"]))
+        return Results.Json(new { error = "account_locked", message = "Too many failed attempts. Please try again in a few minutes." }, statusCode: 429);
+    if ((a["status"] as string) != "active" || !Security.VerifyPassword(password, a["password_hash"] as string))
+    {
+        LoginGuard.OnFail(db, "admin_users", a["id"]);
+        Log(a["id"] as long? ?? 0, "admin_login_failed", email);
         return Results.Json(new { error = "invalid_credentials" }, statusCode: 401);
+    }
+    LoginGuard.OnSuccess(db, "admin_users", a["id"]);
     // Optional MFA for privileged accounts: once an admin has enrolled a TOTP secret, every login
-    // requires the 6-digit code as a second factor.
+    // requires the 6-digit code as a second factor. The matched timestep is recorded and must strictly
+    // advance, so a captured code cannot be replayed within its ±1 validity window.
     if (a["totp_secret"] is string totp && totp.Length > 0 && !totp.StartsWith("pending:"))
     {
         var code = S(b, "totp") ?? "";
         if (code.Length == 0) return Results.Json(new { error = "totp_required" }, statusCode: 401);
-        if (!Security.VerifyTotp(totp, code)) return Results.Json(new { error = "totp_invalid" }, statusCode: 401);
+        var matchedStep = Security.VerifyTotpStep(totp, code);
+        var lastStep = a.TryGetValue("totp_last_step", out var ls) && ls is not null ? Convert.ToInt64(ls) : 0L;
+        if (matchedStep < 0 || matchedStep <= lastStep) return Results.Json(new { error = "totp_invalid" }, statusCode: 401);
+        db.Execute("UPDATE admin_users SET totp_last_step=? WHERE id=?", matchedStep, a["id"]);
     }
     var tok = Security.RandomHex(24);
     db.Execute("INSERT INTO admin_sessions(admin_id,token,expires_at) VALUES(?,?,datetime('now','+12 hours'))", a["id"], Security.Sha(tok));

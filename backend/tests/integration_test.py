@@ -140,6 +140,9 @@ def boot():
         _reset_mysql()
         env = dict(os.environ, DB_PROVIDER="mysql", PORT=str(PORT), STORAGE_ROOT=STORAGE,
                    STRIPE_SECRET_KEY=STRIPE_KEY, STRIPE_WEBHOOK_SECRET=WEBHOOK_SECRET,
+                   # the mock vendors (exam-delivery, Certuvo, integrations) all run on 127.0.0.1, which the
+                   # production SSRF guard blocks; opt in like a self-hosted deployment delivering to a private bridge.
+                   INTEGRATIONS_ALLOW_PRIVATE_EGRESS="true",
                    ASPNETCORE_ENVIRONMENT="Development", DATABASE_FILE=DB)
     else:
         for f in (DB, DB+"-wal", DB+"-shm"):
@@ -147,6 +150,7 @@ def boot():
             except OSError: pass
         env = dict(os.environ, DATABASE_FILE=DB, PORT=str(PORT), STORAGE_ROOT=STORAGE,
                    STRIPE_SECRET_KEY=STRIPE_KEY, STRIPE_WEBHOOK_SECRET=WEBHOOK_SECRET,
+                   INTEGRATIONS_ALLOW_PRIVATE_EGRESS="true",   # mock vendors run on loopback (see mysql branch note)
                    ASPNETCORE_ENVIRONMENT="Development")
     proc = subprocess.Popen(["dotnet", DLL], env=env, cwd=BACKEND,
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

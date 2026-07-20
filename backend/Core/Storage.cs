@@ -77,23 +77,28 @@ public static class Storage
     /// <summary>Persist bytes and return a provider-qualified reference + metadata. Throws only on IO error.</summary>
     public static StoredObject Put(byte[] bytes, string mime, string category)
     {
+        // Content-address on the PLAINTEXT (dedup + integrity) but persist ciphertext: every artefact is
+        // envelope-encrypted at rest (AES-256-GCM) so a stolen disk/bucket/backup exposes no raw PII.
         var sha = Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
         var ext = AllowedMime.TryGetValue(mime, out var e) ? e : ".bin";
         var shard = sha[..2];
         var rel = $"{Sanitise(category)}/{shard}/{sha}{ext}";
+        var enc = Security.EncryptBytes(bytes);
         if (S3Configured)
         {
             var put = new Amazon.S3.Model.PutObjectRequest
             {
-                BucketName = S3Bucket, Key = rel, ContentType = mime,
-                InputStream = new MemoryStream(bytes),
+                BucketName = S3Bucket, Key = rel, ContentType = "application/octet-stream",
+                InputStream = new MemoryStream(enc),
+                // App-level envelope encryption is the portable guarantee; SSE adds provider-side cover too.
+                ServerSideEncryptionMethod = Amazon.S3.ServerSideEncryptionMethod.AES256,
             };
             S3Client().PutObjectAsync(put).GetAwaiter().GetResult(); // content-addressed key → re-put is a no-op overwrite
             return new StoredObject($"s3:{rel}", mime, bytes.LongLength, sha);
         }
         var full = Path.Combine(Root, rel);
         Directory.CreateDirectory(Path.GetDirectoryName(full)!);
-        if (!File.Exists(full)) File.WriteAllBytes(full, bytes); // content-addressed → dedupe for free
+        if (!File.Exists(full)) File.WriteAllBytes(full, enc); // content-addressed → dedupe for free
         return new StoredObject($"local:{rel}", mime, bytes.LongLength, sha);
     }
 
@@ -118,13 +123,13 @@ public static class Storage
                 using var resp = S3Client().GetObjectAsync(S3Bucket, rel).GetAwaiter().GetResult();
                 using var ms = new MemoryStream();
                 resp.ResponseStream.CopyTo(ms);
-                return (ms.ToArray(), mime);
+                return (Security.DecryptBytes(ms.ToArray()), mime);   // envelope-decrypt (passes plaintext through)
             }
             catch { return null; }
         }
         var full = Path.Combine(Root, rel);
         if (!File.Exists(full)) return null;
-        try { return (File.ReadAllBytes(full), mime); } catch { return null; }
+        try { return (Security.DecryptBytes(File.ReadAllBytes(full)), mime); } catch { return null; }
     }
 
     /// <summary>Delete artefacts older than the retention window (days). Returns count removed.

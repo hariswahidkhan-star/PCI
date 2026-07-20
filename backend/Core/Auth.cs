@@ -147,3 +147,52 @@ public static class Auth
             pu.TryGetValue("must_change_pw", out var m) && m is not null && Convert.ToInt64(m) == 1);
     }
 }
+
+/// <summary>
+/// Anti-brute-force + anti-enumeration for the password login endpoints. Complements the per-IP rate
+/// limiter with a PER-ACCOUNT lockout (so rotating IPs cannot brute one account) and a constant-time
+/// path for unknown accounts (so response timing does not reveal which emails exist).
+/// Table names are compile-time constants ("users"/"admin_users"/"partner_users"), never request input.
+/// </summary>
+public static class LoginGuard
+{
+    const int MaxFails = 10;      // consecutive wrong passwords before a temporary lock
+    const int LockMinutes = 15;   // lock duration; auto-clears on expiry or a correct password
+
+    // A real cost-11 bcrypt hash generated at boot; verifying a submitted password against it costs the
+    // same as a genuine check, so a login for a non-existent account takes the same time as a real one.
+    static readonly string DummyHash = BCrypt.Net.BCrypt.HashPassword("pci-login-timing-equaliser-v1");
+
+    /// <summary>Run a throwaway bcrypt verify to equalise timing when the account does not exist.</summary>
+    public static void BurnTime(string? password)
+    {
+        try { BCrypt.Net.BCrypt.Verify(password ?? "x", DummyHash); } catch { }
+    }
+
+    /// <summary>True while this account is temporarily locked out after too many failures.</summary>
+    public static bool IsLocked(Db db, string table, object? id)
+    {
+        if (id is null) return false;
+        return db.Scalar<long>($"SELECT COUNT(*) FROM {table} WHERE id=? AND lockout_until IS NOT NULL AND lockout_until > datetime('now')", id) > 0;
+    }
+
+    /// <summary>Record a failed password attempt; lock the account once the threshold is reached.</summary>
+    public static void OnFail(Db db, string table, object? id)
+    {
+        if (id is null) return;
+        try
+        {
+            db.Execute($"UPDATE {table} SET failed_logins = COALESCE(failed_logins,0) + 1 WHERE id=?", id);
+            if (db.Scalar<long>($"SELECT COALESCE(failed_logins,0) FROM {table} WHERE id=?", id) >= MaxFails)
+                db.Execute($"UPDATE {table} SET lockout_until = datetime('now','+{LockMinutes} minutes'), failed_logins = 0 WHERE id=?", id);
+        }
+        catch { }
+    }
+
+    /// <summary>Clear the failure counter on a correct password.</summary>
+    public static void OnSuccess(Db db, string table, object? id)
+    {
+        if (id is null) return;
+        try { db.Execute($"UPDATE {table} SET failed_logins = 0, lockout_until = NULL WHERE id=?", id); } catch { }
+    }
+}

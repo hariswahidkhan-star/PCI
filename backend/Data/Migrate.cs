@@ -316,6 +316,13 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_fraud_flags_status ON fraud_flags(status)");
         // Optional TOTP MFA for admin accounts (privileged logins).
         AddCol("admin_users", "totp_secret", "totp_secret TEXT");
+        AddCol("admin_users", "totp_last_step", "totp_last_step INTEGER");   // replay guard: last consumed TOTP timestep
+        // Per-account brute-force lockout (complements the per-IP rate limiter) on every password login.
+        foreach (var t in new[] { "users", "admin_users", "partner_users" })
+        {
+            AddCol(t, "failed_logins", "failed_logins INTEGER DEFAULT 0");
+            AddCol(t, "lockout_until", "lockout_until TEXT");
+        }
         db.Exec(@"CREATE TABLE IF NOT EXISTS notification_history(id INTEGER PRIMARY KEY AUTOINCREMENT,channel TEXT NOT NULL DEFAULT 'email',recipient TEXT,subject TEXT,status TEXT,related_type TEXT,related_id INTEGER,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','')");

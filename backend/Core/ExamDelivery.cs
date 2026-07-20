@@ -128,7 +128,9 @@ public interface IExamDeliveryConnector
 public static class ExamDelivery
 {
     /// <summary>Shared client for lifecycle calls made off the student booking path (best-effort).</summary>
-    public static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(20) };
+    // SSRF-guarded client: Egress blocks loopback/private/link-local (incl. cloud metadata 169.254.169.254)
+    // at connect time and disables redirects, so an admin-supplied api_base cannot reach internal services.
+    public static readonly HttpClient Http = Egress.CreateClient(TimeSpan.FromSeconds(20));
 
     // provider slug → connector. Populated by ExamDeliveryConnectors.Register() at startup.
     static readonly Dictionary<string, IExamDeliveryConnector> _reg = new(StringComparer.OrdinalIgnoreCase);
