@@ -37,6 +37,7 @@ public static class Announcement
         ("note",      "Honorary Fellow (PCI) is a board-conferred recognition of distinguished contribution to the profession. It involves no examination, is awarded at the Institute’s discretion on the merits of each application, and is not an examined PCI certification. Dates, eligibility and benefits may change and do not form a contract or guarantee."),
         ("cta_label", "Apply for Honorary Fellow (PCI)"),
         ("cta_href",  "honorary-application.html"),
+        ("dismiss",   "Continue browsing"),
         ("version",   "2026-11-01"),
     };
 
@@ -64,11 +65,15 @@ public static class Announcement
         bool Enabled() => (db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='announce_enabled'") ?? "1") == "1";
 
         // ---------- public ----------
-        app.MapGet("/api/announcement", () =>
+        app.MapGet("/api/announcement", (HttpContext ctx) =>
         {
             if (!Enabled()) return J(new { enabled = false });
-            var date = Val("date");
-            string R(string suffix) => Val(suffix).Replace("{date}", date);   // resolve the {date} token
+            // Serve the visitor's language (cookie/?lang=, same resolution as the pages): a translated
+            // field from content_i18n scope "ann" overlays the stored English; untranslated stays English.
+            var lang = I18nContent.ActiveLang(ctx);
+            string L(string suffix) => I18nContent.AnnField(db, lang, suffix) ?? Val(suffix);
+            var date = L("date");
+            string R(string suffix) => L(suffix).Replace("{date}", date);   // resolve the {date} token
             var points = new List<object>();
             foreach (var n in new[] { "1", "2", "3" })
             {
@@ -84,6 +89,8 @@ public static class Announcement
             {
                 enabled = true,
                 version = Val("version"),
+                // Language-stable dismissal key (English date): dismissing in one language dismisses in all.
+                key = Val("version") + "." + Val("date"),
                 date,
                 eyebrow = R("eyebrow"),
                 title = R("title"),
@@ -91,6 +98,7 @@ public static class Announcement
                 intro = R("intro"),
                 points,
                 note = R("note"),
+                dismiss = R("dismiss"),
                 cta = new { label = R("cta_label"), href },
             });
         });

@@ -72,6 +72,7 @@ public static class I18nContent
         public Dictionary<string, string> Global = new(StringComparer.Ordinal);                             // gkey → val
         public Dictionary<string, string> Nav = new(StringComparer.Ordinal);                                // English label → val
         public Dictionary<string, (string? title, string? meta)> Meta = new(StringComparer.OrdinalIgnoreCase); // slug → title/meta
+        public Dictionary<string, string> Ann = new(StringComparer.Ordinal);                                // announcement field → val
     }
 
     static int _cacheVer = -1;
@@ -100,6 +101,7 @@ public static class I18nContent
                         break;
                     case "g": m.Global[key] = val; break;
                     case "nav": m.Nav[key] = val; break;
+                    case "ann": m.Ann[key] = val; break;
                     case "meta":
                         m.Meta.TryGetValue(slug, out var mt);
                         m.Meta[slug] = key == "title" ? (val, mt.meta) : (mt.title, val);
@@ -135,6 +137,14 @@ public static class I18nContent
     {
         if (!Applies(lang) || string.IsNullOrEmpty(english)) return english;
         return Load(db, lang).Nav.TryGetValue(english, out var v) ? v : english;
+    }
+
+    /// <summary>Translation of one announcement-modal field (scope "ann", used by /api/announcement);
+    /// null when the language is English/unsupported or the field has no translation yet.</summary>
+    public static string? AnnField(Db db, string lang, string key)
+    {
+        if (!Applies(lang) || string.IsNullOrEmpty(key)) return null;
+        return Load(db, lang).Ann.TryGetValue(key, out var v) ? v : null;
     }
 
     static readonly Regex RxHtmlTag = new(@"<html\b([^>]*)>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -234,6 +244,17 @@ public static class I18nContent
                 var lbl = H.Str(r["label"]) ?? "";
                 if (!Translatable(lbl)) continue;
                 list.Add(new Src("nav", "", lbl, "text", lbl));
+            }
+            // The site-wide announcement modal (admin-edited copy in site_settings under announce_*),
+            // exposed as scope "ann" so coverage and auto-translate include it. Link + version tag are
+            // machine values, never translated.
+            foreach (var (k, def) in Endpoints.Announcement.Fields)
+            {
+                if (k is "cta_href" or "version") continue;
+                var stored = db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", "announce_" + k);
+                var en = string.IsNullOrEmpty(stored) ? def : stored;
+                if (!Translatable(en)) continue;
+                list.Add(new Src("ann", "", k, "text", en));
             }
         }
         var pg = slug is null
