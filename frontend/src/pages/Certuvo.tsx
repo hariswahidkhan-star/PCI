@@ -70,7 +70,7 @@ function CertuvoAccessPanel() {
           {data.password && <div className="small">Temporary password: <strong>{data.password}</strong></div>}
           {data.must_change_password && <div className="small muted">You'll be asked to set your own password the first time you sign in to Certuvo.</div>}
           {data.provisioned_at && <div className="small muted">Access granted {fmtDate(data.provisioned_at)}</div>}
-          {data.expires && <div className="small muted">Membership valid until {fmtDate(data.expires)}</div>}
+          {data.expires && <div className="small muted">Access valid until {fmtDate(data.expires)}</div>}
           <div className="row" style={{ marginTop: '.4rem', flexWrap: 'wrap' }}>
             {certuvoUrl && <a className="btn sm" href={certuvoUrl} target="_blank" rel="noreferrer">Open Certuvo ↗</a>}
             <button className="btn sm secondary" disabled={resending} onClick={resend}>{resending ? 'Sending…' : 'Resend access instructions'}</button>

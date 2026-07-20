@@ -119,6 +119,7 @@ function CertuvoTab() {
               <select value={f.requires ?? 'membership'} onChange={set('requires')}>
                 <option value="membership">Active membership</option>
                 <option value="membership_and_enrolment">Membership + certification enrolment</option>
+                <option value="membership_or_exam">Membership or exam fee paid</option>
               </select>
             </label>
             <label>Max automatic retries<input type="number" min="0" max="50" value={f.retry_max ?? ''} onChange={set('retry_max')} /></label>

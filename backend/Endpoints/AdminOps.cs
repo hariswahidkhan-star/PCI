@@ -199,17 +199,21 @@ public static class AdminOps
                        (SELECT c.status FROM certuvo_accounts c WHERE c.user_id=p.user_id) certuvo_status
                 FROM payments p LEFT JOIN users u ON u.id=p.user_id ORDER BY p.id DESC LIMIT 200");
             var certuvoOn = CertuvoLink.Enabled(db);
+            var certuvoOnExam = Settings.Str(db, "certuvo_requires", "membership") == "membership_or_exam";
             var outRows = rows.Select(r =>
             {
                 var status = H.Str(r["payment_status"]);
                 var product = (H.Str(r["product_type"]) ?? "").ToLowerInvariant();
+                // Products that should carry Certuvo access: always membership/bundle; also exam when the
+                // operator shares Certuvo on exam payments (membership_or_exam rule).
+                var certuvoProduct = product is "membership" or "bundle" || (certuvoOnExam && product == "exam");
                 string? exception = null;
                 if (status is "paid" or "waived")
                 {
                     if (H.L(r["user_id"]) == 0) exception = "no_linked_student";
                     else if (product is "exam" or "bundle" && H.L(r["has_entitlement"]) == 0) exception = "entitlement_missing";
                     else if (product is "membership" or "bundle" && H.Str(r["membership_status"]) != "active") exception = "membership_not_active";
-                    else if (certuvoOn && product is "membership" or "bundle" && H.Str(r["certuvo_status"]) is not ("active" or "suspended" or "revoked")) exception = "certuvo_not_provisioned";
+                    else if (certuvoOn && certuvoProduct && H.Str(r["certuvo_status"]) is not ("active" or "suspended" or "revoked")) exception = "certuvo_not_provisioned";
                 }
                 return new
                 {
@@ -499,7 +503,7 @@ public static class AdminOps
             Put("certuvo_api_base", "api_base"); Put("certuvo_provision_path", "provision_path");
             Put("certuvo_deactivate_path", "deactivate_path");
             Put("certuvo_login_url", "login_url"); Put("certuvo_auth_header", "auth_header");
-            if (H.GetS(b, "requires") is { } rq && rq is "membership" or "membership_and_enrolment") Settings.Put(db, "certuvo_requires", rq);
+            if (H.GetS(b, "requires") is { } rq && rq is "membership" or "membership_and_enrolment" or "membership_or_exam") Settings.Put(db, "certuvo_requires", rq);
             if (H.GetNum(b, "retry_max") is { } rm) Settings.Put(db, "certuvo_retry_max", ((int)Math.Clamp(rm, 0, 50)).ToString());
             // PCI credential policy: username prefix, temp-password length, and email-conflict rule.
             if (H.GetS(b, "username_prefix") is { } up && up.Trim().Length is > 0 and <= 12) Settings.Put(db, "certuvo_username_prefix", up.Trim());

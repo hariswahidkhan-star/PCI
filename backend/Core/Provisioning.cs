@@ -161,7 +161,12 @@ public static class Settlement
             // is operator-configured, not the hardcoded +1 year above. Idempotent; best-effort.
             try { if (ExamAuthorization.EnsureForPayment(db, payId) > 0) did.Add("authorization_ensured"); } catch { }
         }
-        if (isMembership && CertuvoLink.Enabled(db))
+        // Certuvo provisioning trigger. Always on a membership/bundle payment; also on an exam payment when
+        // the operator has set the eligibility rule to "membership_or_exam" (so paying the exam fee alone
+        // shares Certuvo access). The Provision call re-checks Eligible(), so this only ever fires when the
+        // student actually qualifies under the configured rule.
+        var certuvoOnExam = Settings.Str(db, "certuvo_requires", "membership") == "membership_or_exam";
+        if ((isMembership || (isExam && certuvoOnExam)) && CertuvoLink.Enabled(db))
         {
             var before = H.Str(db.QueryOne("SELECT status FROM certuvo_accounts WHERE user_id=?", userId)?["status"]);
             if (before != "active")
@@ -240,10 +245,17 @@ public static class CertuvoLink
     public static bool Eligible(Db db, long userId)
     {
         var hasMembership = db.QueryOne("SELECT id FROM memberships WHERE user_id=? AND status='active'", userId) is not null;
-        if (!hasMembership) return false;
-        if (Settings.Str(db, "certuvo_requires", "membership") == "membership_and_enrolment")
-            return db.QueryOne("SELECT id FROM exam_entitlements WHERE user_id=? AND status IN ('available','booked','consumed')", userId) is not null;
-        return true;
+        bool HasExam() => db.QueryOne("SELECT id FROM exam_entitlements WHERE user_id=? AND status IN ('available','booked','consumed')", userId) is not null;
+        // Eligibility rule (operator-configured):
+        //   membership              → active membership required (default)
+        //   membership_and_enrolment→ active membership AND a paid exam entitlement
+        //   membership_or_exam      → EITHER an active membership OR a paid exam entitlement qualifies
+        return Settings.Str(db, "certuvo_requires", "membership") switch
+        {
+            "membership_and_enrolment" => hasMembership && HasExam(),
+            "membership_or_exam" => hasMembership || HasExam(),
+            _ => hasMembership,
+        };
     }
 
     static int RetryMax(Db db) => (int)Settings.Num(db, "certuvo_retry_max", 8);
@@ -537,7 +549,10 @@ public static class CertuvoLink
     {
         if (!Enabled(db)) return new { enabled = false };
         var a = db.QueryOne("SELECT external_id,username,secret,login_url,status,must_change_password,provisioned_at,activated_at,credentials_sent_at FROM certuvo_accounts WHERE user_id=?", userId);
-        var expiry = H.Str(db.QueryOne("SELECT expiry_date FROM memberships WHERE user_id=? AND status='active'", userId)?["expiry_date"]);
+        // Access validity: the active membership's expiry, or (for exam-only access under the
+        // membership_or_exam rule) the latest paid exam entitlement's valid_until.
+        var expiry = H.Str(db.QueryOne("SELECT expiry_date FROM memberships WHERE user_id=? AND status='active'", userId)?["expiry_date"])
+            ?? H.Str(db.QueryOne("SELECT valid_until FROM exam_entitlements WHERE user_id=? AND status IN ('available','booked','consumed') ORDER BY id DESC", userId)?["valid_until"]);
         // The mandated notice: PCI shows only the access card; everything practice-related lives in Certuvo.
         const string notice = "Certuvo is an external practice platform. All practice questions, mock examinations, study tools, AI coaching, progress tracking and learning activities are available directly within Certuvo.";
         // The platform sign-in URL (operator-configured). Shown as the "Open Certuvo" link even before the
