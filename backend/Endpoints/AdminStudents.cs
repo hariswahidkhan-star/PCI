@@ -141,7 +141,7 @@ public static class AdminStudents
                 emails = db.Query("SELECT * FROM email_logs WHERE user_id=? OR email=? ORDER BY id DESC LIMIT 50", id, u["email"]) });
         }));
 
-        app.MapPatch("/api/admin/students/{id}/profile", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
+        app.MapPatch("/api/admin/students/{id}/profile", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
             var u = db.QueryOne("SELECT * FROM users WHERE id=?", id);
             if (u is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
@@ -157,11 +157,11 @@ public static class AdminStudents
                 else
                     db.Execute($"INSERT INTO student_profiles(user_id,{string.Join(",", pf)}) VALUES(?,{string.Join(",", pf.Select(_ => "?"))})", (new object?[]{ id }).Concat(pf.Select(k => (object?)H.GetS(b, k))).ToArray());
             }
-            log(0, "admin_edit_profile", "user " + id);
+            log(adm.Id, "admin_edit_profile", "user " + id);
             return J(new { ok = true });
         }));
 
-        app.MapPost("/api/admin/students/{id}/cpd", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
+        app.MapPost("/api/admin/students/{id}/cpd", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
             if (db.QueryOne("SELECT id FROM users WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
@@ -173,7 +173,7 @@ public static class AdminStudents
             var map = new Dictionary<string, object?> { ["title"] = title, ["activity"] = title, ["hours"] = hours, ["date"] = date, ["activity_date"] = date, ["category"] = category, ["description"] = title, ["user_id"] = id };
             var use = map.Keys.Where(k => c.Contains(k)).ToList();
             db.Execute($"INSERT INTO cpd_entries({string.Join(",", use)}) VALUES({string.Join(",", use.Select(_ => "?"))})", use.Select(k => map[k]).ToArray());
-            log(0, "admin_add_cpd", $"user {id} +{hours}h");
+            log(adm.Id, "admin_add_cpd", $"user {id} +{hours}h");
             return J(new { ok = true });
         }));
 
@@ -183,7 +183,7 @@ public static class AdminStudents
             return J(new { ok = true });
         }));
 
-        app.MapPost("/api/admin/students/{id}/membership", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
+        app.MapPost("/api/admin/students/{id}/membership", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
             if (db.QueryOne("SELECT id FROM users WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
@@ -197,11 +197,11 @@ public static class AdminStudents
             else if (c.Contains("expiry_date") && renew is not null) { set.Add("expiry_date=?"); val.Add(renew); }
             if (ex is not null && set.Count > 0) db.Execute($"UPDATE memberships SET {string.Join(", ", set)} WHERE user_id=?", val.Append((object?)id).ToArray());
             else if (ex is null) db.Execute("INSERT INTO memberships(user_id,status) VALUES(?,?)", id, status);
-            log(0, "admin_edit_membership", $"user {id} {status}");
+            log(adm.Id, "admin_edit_membership", $"user {id} {status}");
             return J(new { ok = true });
         }));
 
-        app.MapPost("/api/admin/students/{id}/booking", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
+        app.MapPost("/api/admin/students/{id}/booking", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
             if (db.QueryOne("SELECT id FROM users WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
@@ -211,7 +211,7 @@ public static class AdminStudents
             var open = db.QueryOne("SELECT * FROM exam_bookings WHERE user_id=? AND status='scheduled' ORDER BY id DESC", id);
             if (open is not null) db.Execute("UPDATE exam_bookings SET scheduled_at=?, timezone=?, updated_at=datetime('now') WHERE id=?", when, tz, open["id"]);
             else db.Execute("INSERT INTO exam_bookings(user_id,scheduled_at,timezone,status) VALUES(?,?,?, 'scheduled')", id, when, tz);
-            log(0, "admin_set_booking", $"user {id} @ {when}");
+            log(adm.Id, "admin_set_booking", $"user {id} @ {when}");
             return J(new { ok = true });
         }));
 
@@ -222,10 +222,10 @@ public static class AdminStudents
             return J(new { ok = true });
         }));
 
-        app.MapPost("/api/admin/students/{id}/revoke-sessions", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
+        app.MapPost("/api/admin/students/{id}/revoke-sessions", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
             db.Execute("DELETE FROM login_tokens WHERE user_id=? AND purpose='session'", id);
-            log(0, "admin_revoke_sessions", "user " + id);
+            log(adm.Id, "admin_revoke_sessions", "user " + id);
             return J(new { ok = true });
         }));
 

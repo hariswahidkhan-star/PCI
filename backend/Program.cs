@@ -577,7 +577,7 @@ app.MapPost("/api/admin/me/2fa/setup", (HttpRequest req) =>
     // Stored as pending until the admin proves their authenticator works — enabling MFA can never lock
     // an account out on a mis-scanned QR.
     db.Execute("UPDATE admin_users SET totp_secret=? WHERE id=?", "pending:" + secret, a.Id);
-    Log(0, "admin_2fa_setup", a.Email);
+    Log(a.Id, "admin_2fa_setup", a.Email);
     return Json(new { secret, otpauth = $"otpauth://totp/PCI%20Admin:{Uri.EscapeDataString(a.Email)}?secret={secret}&issuer=PCI" });
 });
 
@@ -590,7 +590,7 @@ app.MapPost("/api/admin/me/2fa/verify", async (HttpRequest req) =>
     if (!stored.StartsWith("pending:")) return Results.Json(new { error = "nothing_pending" }, statusCode: 409);
     if (!Security.VerifyTotp(stored["pending:".Length..], S(b, "code"))) return Results.Json(new { error = "totp_invalid" }, statusCode: 400);
     db.Execute("UPDATE admin_users SET totp_secret=? WHERE id=?", stored["pending:".Length..], a.Id);
-    Log(0, "admin_2fa_enabled", a.Email);
+    Log(a.Id, "admin_2fa_enabled", a.Email);
     return Json(new { ok = true, enabled = true });
 });
 
@@ -603,7 +603,7 @@ app.MapPost("/api/admin/me/2fa/disable", async (HttpRequest req) =>
     if (stored.Length > 0 && !stored.StartsWith("pending:") && !Security.VerifyTotp(stored, S(b, "code")))
         return Results.Json(new { error = "totp_invalid", message = "Enter a current code to disable MFA." }, statusCode: 400);
     db.Execute("UPDATE admin_users SET totp_secret=NULL WHERE id=?", a.Id);
-    Log(0, "admin_2fa_disabled", a.Email);
+    Log(a.Id, "admin_2fa_disabled", a.Email);
     return Json(new { ok = true, enabled = false });
 });
 
@@ -702,7 +702,7 @@ app.MapPost("/api/admin/team", async (HttpRequest req) =>
 
 app.MapPatch("/api/admin/team/{id}", async (HttpRequest req, long id) =>
 {
-    var gate = OwnerGate(req, out _); if (gate is not null) return gate;
+    var gate = OwnerGate(req, out var actor); if (gate is not null) return gate;
     var a = db.QueryOne("SELECT * FROM admin_users WHERE id=?", id);
     if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
     var b = await Body(req);
@@ -738,7 +738,7 @@ app.MapPatch("/api/admin/team/{id}", async (HttpRequest req, long id) =>
         if (owners <= 1) return Results.Json(new { error = "cannot_demote_last_owner" }, statusCode: 400);
     }
     if (sets.Count > 0) { vals.Add(id); db.Execute($"UPDATE admin_users SET {string.Join(", ", sets)} WHERE id=?", vals.ToArray()); }
-    Log(0, "admin_updated", a["email"] as string);
+    Log(actor?.Id, "admin_updated", a["email"] as string);
     return Json(new { ok = true });
 });
 
@@ -757,7 +757,7 @@ app.MapPost("/api/admin/team/{id}/reset-password", (HttpRequest req, long id) =>
 
 app.MapDelete("/api/admin/team/{id}", (HttpRequest req, long id) =>
 {
-    var gate = OwnerGate(req, out _); if (gate is not null) return gate;
+    var gate = OwnerGate(req, out var actor); if (gate is not null) return gate;
     var a = db.QueryOne("SELECT * FROM admin_users WHERE id=?", id);
     if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
     if ((a["role"] as string) == "owner")
@@ -767,7 +767,7 @@ app.MapDelete("/api/admin/team/{id}", (HttpRequest req, long id) =>
     }
     db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", id);
     db.Execute("DELETE FROM admin_users WHERE id=?", id);
-    Log(0, "admin_deleted", a["email"] as string);
+    Log(actor?.Id, "admin_deleted", a["email"] as string);
     return Json(new { ok = true });
 });
 
@@ -816,7 +816,7 @@ app.MapPatch("/api/admin/settings", async (HttpRequest req) =>
     PCI.Backend.Core.PageContent.Bump();   // announcement banner + any content-affecting settings
     PCI.Backend.Core.CertCatalogue.Bump(); // exam_* settings feed the public catalogue's effective prices
     PCI.Backend.Core.PriceTags.Bump();     // pricing-affecting settings flow into page price tokens
-    Log(null, "settings_update", string.Join(",", b.Keys));
+    Log(a.Id, "settings_update", string.Join(",", b.Keys));
     return rejected.Count > 0 ? Json(new { ok = true, rejected }) : Json(new { ok = true });
 });
 

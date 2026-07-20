@@ -348,8 +348,12 @@ public static class Public
         {
             var b = await H.Body(req);
             var ft = H.GetS(b, "form_type") ?? "general";
-            var reff = "PCI-" + System.Text.RegularExpressions.Regex.Replace(ft.ToUpperInvariant(), "[^A-Z]", "");
-            reff = (reff.Length > 4 ? reff[..4] : reff) + "-" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString("X");
+            // Build a short form-type token (first 4 letters), then prefix it with PCI- so the reference
+            // reads e.g. "PCI-CONT-19F7…" — previously the whole "PCI-<type>" was sliced to 4 chars,
+            // which dropped the type entirely and produced "PCI--<hex>".
+            var tok = System.Text.RegularExpressions.Regex.Replace(ft.ToUpperInvariant(), "[^A-Z]", "");
+            tok = tok.Length == 0 ? "GEN" : tok.Length > 4 ? tok[..4] : tok;
+            var reff = "PCI-" + tok + "-" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString("X");
             try { db.Execute("INSERT INTO form_submissions(form_type,name,email,subject,message,reference) VALUES(?,?,?,?,?,?)",
                 ft, H.GetS(b, "name"), H.GetS(b, "email"), H.GetS(b, "subject"), H.GetS(b, "message"), reff); } catch { }
             return J(new { ok = true, reference = reff });

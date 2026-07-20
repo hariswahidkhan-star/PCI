@@ -47,7 +47,7 @@ public static class AdminProctoring
             if (body.Length > 1000) body = body[..1000];
             if (body.Length == 0) return Results.Json(new { error = "body_required" }, statusCode: 400);
             db.Execute("INSERT INTO proctor_messages(attempt_id,user_id,sender,body) VALUES(?,?,?,?)", a["id"], a["user_id"], "proctor", body);
-            log(0, "proctor_message", "attempt " + id);
+            log(adm.Id, "proctor_message", "attempt " + id);
             return J(new { ok = true });
         }));
 
