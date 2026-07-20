@@ -70,6 +70,24 @@ export default function Credentials() {
     }
   }
 
+  // Upload a custom certificate PDF (examined or honorary) to replace the auto-generated one; the
+  // student/admin download routes then serve the uploaded file. Read as a data URI and POST it.
+  const [uploading, setUploading] = useState('')
+  function uploadCert(c: CredentialRow, file: File) {
+    if (file.type !== 'application/pdf') { alert('Please choose a PDF file.'); return }
+    const reader = new FileReader()
+    reader.onload = async () => {
+      setUploading(c.credential_id)
+      try {
+        await adminApi.post(`/api/admin/credentials/${encodeURIComponent(c.credential_id)}/upload-certificate`, { data_uri: reader.result })
+        alert(`Certificate uploaded for ${c.credential_id}.`)
+        refetch()
+      } catch (e) { alert(e instanceof Error ? e.message : 'Upload failed.') }
+      finally { setUploading('') }
+    }
+    reader.readAsDataURL(file)
+  }
+
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       <div className="spread">
@@ -113,11 +131,18 @@ export default function Credentials() {
                     <td className="small">{fmtDate(c.expires_at)}</td>
                     <td><StatusBadge status={lapsed ? 'expired' : c.status} /></td>
                     <td>
-                      {c.status === 'active' ? (
-                        <button className="btn ghost sm" onClick={() => setCredStatus(c, 'revoked')}>Revoke</button>
-                      ) : c.status === 'revoked' ? (
-                        <button className="btn ghost sm" onClick={() => setCredStatus(c, 'active')}>Reinstate</button>
-                      ) : null}
+                      <div className="row" style={{ gap: '.35rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                        <label className="btn ghost sm" style={{ cursor: 'pointer', margin: 0 }} title="Upload a custom certificate PDF (examined or honorary)">
+                          {uploading === c.credential_id ? 'Uploading…' : 'Upload cert'}
+                          <input type="file" accept="application/pdf" style={{ display: 'none' }}
+                            onChange={(e) => { const fl = e.target.files?.[0]; if (fl) uploadCert(c, fl); e.currentTarget.value = '' }} />
+                        </label>
+                        {c.status === 'active' ? (
+                          <button className="btn ghost sm" onClick={() => setCredStatus(c, 'revoked')}>Revoke</button>
+                        ) : c.status === 'revoked' ? (
+                          <button className="btn ghost sm" onClick={() => setCredStatus(c, 'active')}>Reinstate</button>
+                        ) : null}
+                      </div>
                     </td>
                   </tr>
                 )

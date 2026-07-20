@@ -73,5 +73,33 @@ public static class Certificates
             Audit(credId, null, "admin#" + adm.Id, "admin", Ip(ctx), isHon ? "honorary" : "certificate", "admin_download");
             return Results.Bytes(pdf.Value.bytes, "application/pdf", pdf.Value.name);
         }));
+
+        // ── Admin: UPLOAD a custom certificate PDF for any credential — examined OR honorary. Gated
+        // 'credentials'. Replaces the auto-generated PDF: the uploaded file is stored (encrypted at rest,
+        // in the protected 'certificates' category) and served by the same student/admin download routes.
+        // 'Regenerate PDF' can still overwrite it with a freshly generated one if the operator wants. ──
+        app.MapPost("/api/admin/credentials/{credId}/upload-certificate", async (HttpContext ctx, string credId) =>
+        {
+            var b = await H.Body(ctx.Request);   // read the body before entering the (synchronous) gate
+            return gate(ctx.Request, "credentials", adm =>
+            {
+                var (bytes, mime, err) = Storage.DecodeDataUri(H.GetS(b, "data_uri"));
+                if (bytes is null) return Results.Json(new { error = err ?? "no_file" }, statusCode: 400);
+                if (mime != "application/pdf") return Results.Json(new { error = "pdf_required", message = "Upload a PDF certificate." }, statusCode: 400);
+                var isHon = credId.StartsWith(Endpoints.Honorary.AwardPrefix + "-", StringComparison.OrdinalIgnoreCase);
+                var exists = isHon
+                    ? db.QueryOne("SELECT award_no FROM honorary_awards WHERE award_no=?", credId) is not null
+                    : db.QueryOne("SELECT credential_id FROM issued_credentials WHERE credential_id=?", credId) is not null;
+                if (!exists) return Results.Json(new { error = "not_found", message = "No credential with that id." }, statusCode: 404);
+                var stored = Storage.Put(bytes, mime, "certificates");
+                if (isHon)
+                    db.Execute("UPDATE honorary_awards SET pdf_ref=?, pdf_sha256=?, pdf_generated_at=datetime('now') WHERE award_no=?", stored.Reference, stored.Sha256, credId);
+                else
+                    db.Execute("UPDATE issued_credentials SET pdf_ref=?, pdf_sha256=?, pdf_generated_at=datetime('now') WHERE credential_id=?", stored.Reference, stored.Sha256, credId);
+                log(adm.Id, "certificate_uploaded", credId + " sha " + stored.Sha256[..12]);
+                Audit(credId, null, "admin#" + adm.Id, "admin", Ip(ctx), isHon ? "honorary" : "certificate", "uploaded");
+                return Results.Json(new { ok = true, sha256 = stored.Sha256, bytes = bytes.LongLength });
+            });
+        });
     }
 }
