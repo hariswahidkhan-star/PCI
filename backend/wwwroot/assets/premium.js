@@ -166,17 +166,22 @@
           menu.appendChild(a);
         })(LANGS[i][0], LANGS[i][1]);
       }
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var open = menu.hidden;
+      // Visibility is driven by the `.open` class (the stylesheet reveals the menu with
+      // `.pci-langmenu.open{display:block}`); keep the `hidden` attribute in sync for a11y.
+      function setOpen(open) {
+        menu.classList.toggle('open', open);
         menu.hidden = !open;
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setOpen(!menu.classList.contains('open'));
       });
       document.addEventListener('click', function () {
-        if (!menu.hidden) { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+        if (menu.classList.contains('open')) setOpen(false);
       });
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && !menu.hidden) { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); btn.focus(); }
+        if (e.key === 'Escape' && menu.classList.contains('open')) { setOpen(false); btn.focus(); }
       });
       wrap.appendChild(btn);
       wrap.appendChild(menu);

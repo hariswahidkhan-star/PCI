@@ -841,7 +841,14 @@ img{height:auto;}
 /* ===== PCI-LANGBAR: top-bar language button (added for the top-of-page language switcher) ===== */
 .promo.has-langbtn{position:relative;}
 .pci-langwrap{position:relative;display:inline-flex;margin-left:14px;vertical-align:middle;}
-.promo .pci-langwrap{position:absolute;right:14px;top:50%;transform:translateY(-50%);margin:0;}
+.promo .pci-langwrap{position:absolute;right:14px;top:50%;transform:translateY(-50%);margin:0;z-index:2;}
+/* reserve room on the right so the centred promo text never runs under the absolute language button */
+.promo.has-langbtn .promo-in{padding-right:78px;}
+@media(max-width:640px){
+  .promo.has-langbtn .promo-in{padding-right:60px;padding-left:14px;}
+  .promo .pci-langwrap{right:10px;}
+  .pci-langbtn{padding:4px 8px;font-size:11px;}
+}
 .pci-langfixed{position:fixed;top:8px;right:10px;z-index:1200;}
 .pci-langbtn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:999px;font-family:var(--sans);font-size:11.5px;font-weight:600;letter-spacing:.03em;padding:4px 9px;cursor:pointer;line-height:1;transition:background .18s,border-color .18s;}
 .pci-langbtn:hover{background:rgba(255,255,255,.2);border-color:var(--crimson);}
