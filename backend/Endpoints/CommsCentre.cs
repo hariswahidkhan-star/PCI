@@ -245,6 +245,16 @@ public static class CommsCentre
             try { OutboxDispatcher.DrainOnce(db, 50); } catch (Exception e) { return Results.Json(new { error = "drain_failed", message = e.Message }, statusCode: 500); }
             return J(new { ok = true });
         }));
+        // Run the scheduled reminder sweep on demand (also runs daily via CommsReminderService).
+        app.MapPost("/api/admin/comms/reminders/run", (HttpRequest req) => gate(req, SECTION, adm =>
+        {
+            int matched; long before = db.Scalar<long>("SELECT COUNT(*) FROM comm_outbox");
+            try { matched = CommsReminderService.SweepOnce(db); } catch (Exception e) { return Results.Json(new { error = "sweep_failed", message = e.Message }, statusCode: 500); }
+            var newlyQueued = db.Scalar<long>("SELECT COUNT(*) FROM comm_outbox") - before;   // deduped re-runs add nothing
+            try { OutboxDispatcher.DrainOnce(db, 50); } catch { }
+            log(adm.Id, "comm_reminders_run", $"matched {matched}, queued {newlyQueued}");
+            return J(new { ok = true, matched, newly_queued = newlyQueued });
+        }));
 
         // ───────── manual compose ─────────
         app.MapPost("/api/admin/comms/compose", async (HttpContext ctx) =>

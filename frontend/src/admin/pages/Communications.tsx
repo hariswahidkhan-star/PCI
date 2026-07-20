@@ -64,9 +64,16 @@ function useGet<T>(path: string, dep = 0) {
 function Dashboard() {
   const { data } = useGet<Row>('/api/admin/comms/overview')
   const { data: prov } = useGet<Row>('/api/admin/comms/providers')
+  const [remMsg, setRemMsg] = useState('')
+  async function runReminders() {
+    setRemMsg('Running…')
+    try { const r = await adminApi.post<Row>('/api/admin/comms/reminders/run', {}); setRemMsg(`Swept ${r.matched} candidate(s); ${r.newly_queued} new reminder(s) queued.`) }
+    catch { setRemMsg('Could not run reminders.') }
+  }
   return (
     <div style={{ display: 'grid', gap: '1rem' }}>
-      <Card title="At a glance">
+      <Card title="At a glance" action={<button className="btn sm ghost" onClick={runReminders}>Run reminders now</button>}>
+        {remMsg && <p className="small" style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '.4rem .6rem', marginTop: 0 }}>{remMsg}</p>}
         {!data ? <Spinner /> : (
           <div className="grid cols-4 small" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '.8rem' }}>
             <Stat k="Queued" v={data.queued} /><Stat k="Failed" v={data.failed} /><Stat k="Sent (24h)" v={data.sent_today} />

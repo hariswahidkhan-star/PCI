@@ -358,6 +358,11 @@ public static class StudentExam
                     Mailer.Send(db, u.Id, u.Email, "exam_booking", "Your PCI exam is booked", html);
                 }
                 catch { }
+            // Add WhatsApp + in-app confirmation via the Communications Centre (email sent above); deduped per booking.
+            try { Comms.Fire(db, "exam.appointment_confirmed", u.Id, u.Email, null,
+                new Dictionary<string, string?> { ["student_name"] = u.FirstName ?? "there", ["exam_date"] = scheduledAt ?? "", ["portal_link"] = "/app/" },
+                "Your PCI exam is booked", "<p>Your exam is booked. Sign in to your portal for the details.</p>",
+                certId: certId, dedupSuffix: id.ToString(), skipEmail: true); } catch { }
             return J(new { ok = true, id, scheduled_at = scheduledAt, certification_id = certId });
         });
 
@@ -405,6 +410,11 @@ public static class StudentExam
                     Mailer.Send(db, u.Id, u.Email, "exam_reschedule", "Your PCI exam has been rescheduled", html);
                 }
                 catch { }
+            // WhatsApp + in-app reschedule confirmation via the Communications Centre; deduped per booking+count.
+            try { Comms.Fire(db, "resched.approved", u.Id, u.Email, null,
+                new Dictionary<string, string?> { ["student_name"] = u.FirstName ?? "there", ["exam_date"] = scheduledAt ?? "", ["portal_link"] = "/app/" },
+                "Your PCI exam has been rescheduled", "<p>Your exam has been rescheduled. Sign in to your portal for the details.</p>",
+                dedupSuffix: $"{H.L(bk["id"])}:{H.L(bk["reschedule_count"]) + 1}", skipEmail: true); } catch { }
             return J(new { ok = true, free = hoursTo >= H.FREE_RESCHED_H, reschedule_count = H.L(bk["reschedule_count"]) + 1 });
         });
 

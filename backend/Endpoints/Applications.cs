@@ -117,6 +117,25 @@ public static class Applications
             db.Execute("UPDATE certification_applications SET status=?, workflow_stage=?, admin_note=?, decided_by=?, decided_at=datetime('now'), updated_at=datetime('now') WHERE id=?",
                 status, stage, note, adm.Id, id);
             log(adm.Id, "application_decision", $"{id} -> {status}{(grantRef is not null ? $" (exam entitlement {grantRef})" : "")}");
+            // Notify the candidate across their enabled channels (email/WhatsApp/in-app) via the
+            // Communications Centre. Deduped per (application, status) so a re-decision can't double-send.
+            try
+            {
+                var appUser = db.QueryOne("SELECT email,first_name FROM users WHERE id=?", H.L(appRow["user_id"]));
+                var appNo = H.Str(appRow["application_no"]) ?? ("#" + id);
+                (string code, string subj, string html)? ev = status switch
+                {
+                    "approved" => ("application.approved", "Your PCI application is approved", $"<p>Good news — your application {appNo} has been approved.</p>"),
+                    "rejected" => ("application.rejected", "Update on your PCI application", $"<p>Thank you for your application {appNo}. After review it was not approved on this occasion. You're welcome to contact us if you'd like feedback.</p>"),
+                    "info_requested" => ("application.info_requested", "More information needed for your PCI application", $"<p>We need a little more information to continue reviewing your application {appNo}. Please sign in to your portal to respond.</p>"),
+                    _ => null,
+                };
+                if (ev is { } e)
+                    Comms.Fire(db, e.code, H.L(appRow["user_id"]), H.Str(appUser?["email"]), null,
+                        new Dictionary<string, string?> { ["student_name"] = H.Str(appUser?["first_name"]) ?? "there", ["application_no"] = appNo, ["portal_link"] = "/app/" },
+                        e.subj, e.html, certId: H.L(appRow["certification_id"]), dedupSuffix: $"{id}:{status}");
+            }
+            catch { }
             if (grantRef is not null)
                 try { db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Application', 'Application approved', ?, 'Schedule exam', '/certifications')",
                     H.L(appRow["user_id"]), $"Your application {H.Str(appRow["application_no"])} has been approved and your exam access is now open."); } catch { }

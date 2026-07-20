@@ -55,6 +55,7 @@ builder.Services.AddHostedService<PCI.Backend.Core.OutboxDispatcher>();
 builder.Services.AddHostedService<PCI.Backend.Core.SocialDispatcher>();   // Phase 2: social publish outbox
 builder.Services.AddHostedService<PCI.Backend.Core.SyndicationDispatcher>();   // Phase 3: syndication outbox
 builder.Services.AddHostedService<PCI.Backend.Core.MarketingJobDispatcher>();   // Marketing Phase 2: provider job queue
+builder.Services.AddHostedService<PCI.Backend.Core.CommsReminderService>();     // Comms §13: scheduled reminder sequences
 
 var app = builder.Build();
 

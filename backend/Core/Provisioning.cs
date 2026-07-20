@@ -131,7 +131,20 @@ public static class Settlement
                 did.Add("membership_activated");
             }
             if (did.Count > 0)
+            {
                 try { Integrations.Emit(db, "membership.activated", "user", userId, new { user_id = userId, email, membership_type = "Student Membership", occurred_at = H.IsoNow }); } catch { }
+                // Multi-channel member welcome via the Communications Centre; deduped per payment so the
+                // idempotent reprocess path can't re-notify.
+                try
+                {
+                    var mu = db.QueryOne("SELECT email,first_name FROM users WHERE id=?", userId);
+                    Comms.Fire(db, "membership.activated", userId, H.Str(mu?["email"]) ?? email, null,
+                        new Dictionary<string, string?> { ["student_name"] = H.Str(mu?["first_name"]) ?? "there", ["portal_link"] = "/app/" },
+                        "Your PCI membership is active", "<p>Your PCI membership is now active — welcome. Sign in to your portal to make the most of it.</p>",
+                        dedupSuffix: $"member:{payId}");
+                }
+                catch { }
+            }
         }
         if (isExam)
         {
