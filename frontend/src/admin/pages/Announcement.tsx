@@ -20,6 +20,7 @@ const FIELDS: { key: string; label: string; hint?: string; long?: boolean }[] = 
   { key: 'note', label: 'Legal / fine-print note', long: true },
   { key: 'cta_label', label: 'Button label' },
   { key: 'cta_href', label: 'Button link', hint: 'A page on the site (e.g. honorary-application.html) or a full https:// URL.' },
+  { key: 'dismiss', label: 'Dismiss button label', hint: 'The secondary “Continue browsing” action.' },
   { key: 'version', label: 'Version tag', hint: 'Change this (or the date) to re-show the notice to visitors who already dismissed it.' },
 ]
 

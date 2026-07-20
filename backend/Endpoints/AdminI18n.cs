@@ -70,7 +70,7 @@ public static class AdminI18n
             var lang = H.GetS(b, "lang"); var scope = H.GetS(b, "scope"); var slug = H.GetS(b, "slug") ?? "";
             var ckey = H.GetS(b, "ckey"); var cvalue = H.GetS(b, "cvalue");
             if (!ValidLang(lang)) return Results.Json(new { error = "bad_lang" }, statusCode: 400);
-            if (scope is not ("p" or "g" or "nav" or "meta") || string.IsNullOrEmpty(ckey))
+            if (scope is not ("p" or "g" or "nav" or "meta" or "ann") || string.IsNullOrEmpty(ckey))
                 return Results.Json(new { error = "bad_key" }, statusCode: 400);
             I18nContent.Upsert(db, lang!, scope, slug, ckey!, cvalue);
             log(adm!.Id, "i18n.set", $"{lang}:{scope}:{slug}:{ckey}");

@@ -166,17 +166,22 @@
           menu.appendChild(a);
         })(LANGS[i][0], LANGS[i][1]);
       }
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var open = menu.hidden;
+      // Visibility is driven by the `.open` class (the stylesheet reveals the menu with
+      // `.pci-langmenu.open{display:block}`); keep the `hidden` attribute in sync for a11y.
+      function setOpen(open) {
+        menu.classList.toggle('open', open);
         menu.hidden = !open;
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setOpen(!menu.classList.contains('open'));
       });
       document.addEventListener('click', function () {
-        if (!menu.hidden) { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+        if (menu.classList.contains('open')) setOpen(false);
       });
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && !menu.hidden) { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); btn.focus(); }
+        if (e.key === 'Escape' && menu.classList.contains('open')) { setOpen(false); btn.focus(); }
       });
       wrap.appendChild(btn);
       wrap.appendChild(menu);
@@ -302,7 +307,9 @@
     var base = (window.PCI_API_BASE || '').replace(/\/$/, '');
     fetch(base + '/api/announcement').then(function (r) { return r.json(); }).then(function (cfg) {
       if (!cfg || !cfg.enabled) return;
-      var ANX_KEY = 'pci.anx.' + (cfg.version || '') + '.' + (cfg.date || '');
+      // Prefer the server's language-stable key (English version+date) so dismissing the notice in one
+      // language dismisses it in all; fall back to version+date for an older backend.
+      var ANX_KEY = 'pci.anx.' + (cfg.key || ((cfg.version || '') + '.' + (cfg.date || '')));
       try { if (sessionStorage.getItem(ANX_KEY) === '1') return; } catch (e) { /* private mode: still show */ }
       buildAndShow(cfg, ANX_KEY);
     }).catch(function () { /* backend unreachable: no announcement, page unaffected */ });
@@ -382,7 +389,7 @@
     var card = el('div', 'pci-anx-card');
     card.appendChild(el('div', 'pci-anx-glow'));
 
-    var x = el('button', 'pci-anx-x'); x.type = 'button'; x.setAttribute('aria-label', 'Dismiss announcement');
+    var x = el('button', 'pci-anx-x'); x.type = 'button'; x.setAttribute('aria-label', cfg.dismiss || 'Dismiss announcement');
     x.setAttribute('data-anx-close', '');
     x.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
     card.appendChild(x);
@@ -417,7 +424,7 @@
       var sv = document.createElement('span'); sv.innerHTML = arrow; a.appendChild(sv);
       cta.appendChild(a);
     }
-    var sec = el('button', 'pci-anx-secondary', 'Continue browsing'); sec.type = 'button';
+    var sec = el('button', 'pci-anx-secondary', cfg.dismiss || 'Continue browsing'); sec.type = 'button';
     sec.setAttribute('data-anx-close', ''); cta.appendChild(sec);
     card.appendChild(cta);
 
