@@ -51,6 +51,7 @@ builder.Services.AddHostedService<PCI.Backend.Core.RetentionService>();
 builder.Services.AddHostedService<PCI.Backend.Core.IntegrationDispatcher>();
 // Communications outbox worker: drains comm_outbox (email/WhatsApp/in-app) with retries + backoff.
 builder.Services.AddHostedService<PCI.Backend.Core.OutboxDispatcher>();
+builder.Services.AddHostedService<PCI.Backend.Core.SocialDispatcher>();   // Phase 2: social publish outbox
 
 var app = builder.Build();
 
@@ -847,6 +848,7 @@ PCI.Backend.Endpoints.AdminMgmt.Map(app, db, logFn, r => Auth.AdminFromReq(r, db
 PCI.Backend.Endpoints.PublicDocuments.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.CommsCentre.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.ContentCentre.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Blog CMS + SEO + AI Studio + capability registry
+PCI.Backend.Endpoints.SocialPublishing.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Phase 2: live social connectors + drafts + outbox
 PCI.Backend.Endpoints.Payments.Map(app, db, logFn, () => !string.IsNullOrEmpty(stripeKey));
 PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Reviews.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
