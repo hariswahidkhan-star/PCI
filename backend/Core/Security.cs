@@ -267,7 +267,7 @@ public static class Rbac
         ["operations"] = new[]{ "finance","impersonate","test_users" },
         // Customer-service portal: 'inbox' = work the unified queue (chats, tickets, enquiries,
         // error references); 'support_admin' = manage templates, SLA targets and assignment rules.
-        ["support"] = new[]{ "inbox","support_admin" },
+        ["support"] = new[]{ "inbox","support_admin","comms" },
     };
 
     public static string[] AllSections => Sections.Values.SelectMany(x => x).ToArray();

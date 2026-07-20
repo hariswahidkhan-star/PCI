@@ -23,6 +23,7 @@ const NAV: NavItem[] = [
   { to: '/books', label: 'Books & materials', perm: 'resources', group: 'Students' },
   { to: '/applications', label: 'Applications', perm: 'members', group: 'Students' },
 
+  { to: '/communications', label: 'Communications Centre', perm: 'comms', group: 'Support' },
   { to: '/support-inbox', label: 'Support inbox', perm: 'inbox', group: 'Support' },
   { to: '/errors', label: 'Error reports', perm: 'inbox', group: 'Support' },
 
