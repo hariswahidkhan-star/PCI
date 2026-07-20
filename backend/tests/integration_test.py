@@ -264,6 +264,8 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
         if "/Results" in self.path: return self._send(200, {"value": [{"ScoreBandTitle": "Pass", "PercentageScore": 82, "MaxScore": 100}]})
         if "/Participants" in self.path: return self._send(200, {"value": []})           # Questionmark test-connection
         if "/eligibilities" in self.path: return self._send(200, {"status": "eligible", "eligible_to_schedule": True})
+        if "getMe" in self.path: return self._send(200, {"ok": True, "result": {"username": "pcibot"}})       # Telegram
+        if "verify_credentials" in self.path: return self._send(200, {"id": "1", "username": "pci"})          # Mastodon
         return self._send(200, {"ok": True})
     def do_POST(self):
         ln = int(self.headers.get("Content-Length") or 0)
@@ -281,6 +283,12 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
         if "/Schedules" in self.path: return self._send(201, {"ID": 88})                # Questionmark schedule
         if "/candidates" in self.path: return self._send(201, {"psi_eligiblity_id": "ELIG-1"})  # PSI eligibility
         if "/nope" in self.path: return self._send(500, {"error": "simulated outage"})   # forced failure (retry tests)
+        if "/socialfail" in self.path: return self._send(500, {"error": "simulated social outage"})   # social retry test
+        if "createSession" in self.path: return self._send(200, {"accessJwt": "jwt-x", "did": "did:plc:abc"})  # Bluesky
+        if "createRecord" in self.path: return self._send(200, {"uri": "at://did:plc:abc/app.bsky.feed.post/rk1", "cid": "c1"})
+        if "/discord/" in self.path: return self._send(200, {"id": "disc-msg-1"})         # Discord webhook (?wait=true)
+        if "sendMessage" in self.path: return self._send(200, {"ok": True, "result": {"message_id": 7}})  # Telegram
+        if "/api/v1/statuses" in self.path: return self._send(200, {"url": "https://mastodon.example/@pci/1", "id": "1"})  # Mastodon
         if "certuvo" in self.path or "/accounts" in self.path:                          # Certuvo account provisioning
             # PCI now OWNS the login: it sends its own username + temp_password. The vendor just opens the
             # account under those credentials and returns an opaque account id + login URL. An email marked
@@ -1629,6 +1637,91 @@ def test_content_centre(admin):
     c, seo = jget("GET", "/api/admin/content/seo/audit", token=admin)
     chk("20u SEO audit returns a structured report", c == 200 and "audited" in seo, seo if c != 200 else "ok")
 
+def _make_published_post(admin, title):
+    c, p = jget("POST", "/api/admin/content/posts", token=admin, body={"title": title, "summary": "AI reshapes forecasting, EVM and risk.", "body": "<p>" + ("Body content about AI in project controls. " * 20) + "</p>"})
+    pid = p.get("id"); slug = p.get("slug")
+    jget("POST", f"/api/admin/content/posts/{pid}/tags", token=admin, body={"tags": ["AI", "ProjectControls"]})
+    jget("POST", f"/api/admin/content/posts/{pid}/publish", token=admin, body={})
+    return pid, slug
+
+def test_social_publishing(admin):
+    print("\n=== 21. Social publishing (live connectors: Discord/Telegram/Mastodon/Bluesky) ===")
+    srv, port = start_mock_vendor()
+    base = f"http://127.0.0.1:{port}"
+    pid, slug = _make_published_post(admin, "Social Publishing Launch Post")
+
+    def connect(payload): return jget("POST", "/api/admin/content/social/accounts", token=admin, body=payload)
+    c, dz = connect({"platform_key": "discord", "label": "PCI Discord", "secret": base + "/discord/webhook/abc"})
+    chk("21a connect Discord webhook", c == 200 and dz.get("id"), dz)
+    c, tg = connect({"platform_key": "telegram", "label": "PCI Telegram", "secret": "tok123", "api_base": base + "/tg", "chat_id": "@pcichannel"})
+    c2, ms = connect({"platform_key": "mastodon", "label": "PCI Mastodon", "secret": "mtok", "instance": base + "/masto"})
+    c3, bs = connect({"platform_key": "bluesky", "label": "PCI Bluesky", "secret": "app-pass", "handle": "pci.test", "pds": base + "/bsky"})
+    chk("21b connect Telegram + Mastodon + Bluesky", c == 200 and c2 == 200 and c3 == 200, (c, c2, c3))
+
+    # secrets are never returned by the API
+    c, acs = jget("GET", "/api/admin/content/social/accounts", token=admin)
+    rows = acs.get("rows", [])
+    chk("21c account list redacts secrets (has_secret only)", all("secret" not in r and "secret_enc" not in r for r in rows) and all(r.get("has_secret") for r in rows), rows[:1])
+
+    # test connection (Mastodon verify_credentials against the mock)
+    c, t = jget("POST", f"/api/admin/content/social/accounts/{ms.get('id')}/test", token=admin)
+    chk("21d Mastodon test connection succeeds", c == 200 and t.get("ok"), t)
+
+    # approval-gated platform is refused honestly at connect time
+    c, li = connect({"platform_key": "linkedin_org", "label": "x", "secret": "y"})
+    chk("21e approval-gated platform refused at connect (requires_approval)", c == 400 and li.get("error") == "requires_approval", li)
+
+    # generate platform-tailored drafts (one per connected account)
+    c, gen = jget("POST", f"/api/admin/content/posts/{pid}/social/generate", token=admin)
+    created = gen.get("created", [])
+    chk("21f generate one draft per connected account", c == 200 and len(created) == 4, created)
+    c, dl = jget("GET", f"/api/admin/content/social/drafts?post_id={pid}", token=admin)
+    drafts = dl.get("rows", [])
+    by_plat = {d["platform_key"]: d for d in drafts}
+    chk("21g drafts are platform-tailored (distinct text)", len({d["text"] for d in drafts}) >= 3 and by_plat["telegram"]["text"] != by_plat["bluesky"]["text"], None)
+
+    # publish the Telegram draft → queue → drain → delivered with a public URL
+    tg_draft = by_plat["telegram"]["id"]
+    c, pubr = jget("POST", f"/api/admin/content/social/drafts/{tg_draft}/publish", token=admin)
+    chk("21h approve+queue a draft", c == 200 and pubr.get("queued"), pubr)
+    c, drn = jget("POST", "/api/admin/content/social/drain", token=admin)
+    chk("21i dispatcher delivers the queued post", c == 200 and drn.get("delivered", 0) >= 1, drn)
+    con = dbconn(); row = con.execute("SELECT status,public_url FROM social_drafts WHERE id=?", (tg_draft,)).fetchone(); con.close()
+    chk("21j delivered draft is published with a public URL", row and row[0] == "published" and (row[1] or ""), row)
+
+    # idempotency: re-publishing an already-queued/delivered draft does not re-queue
+    c, again = jget("POST", f"/api/admin/content/social/drafts/{tg_draft}/publish", token=admin)
+    chk("21k re-publish is idempotent (not re-queued)", c == 200 and again.get("queued") == False, again)
+
+    # tokens are encrypted at rest (never plaintext)
+    con = dbconn(); sec = con.execute("SELECT secret_enc FROM social_accounts WHERE id=?", (ms.get("id"),)).fetchone()[0]; con.close()
+    chk("21l tokens are encrypted at rest (enc:v1:, no plaintext)", sec.startswith("enc:v1:") and "mtok" not in sec, sec[:12])
+
+    # failure path: a failing webhook → draft fails/retries, and the ARTICLE is never affected
+    c, df = connect({"platform_key": "discord", "label": "Broken Discord", "secret": base + "/socialfail"})
+    fail_acct = df.get("id")
+    pid2, slug2 = _make_published_post(admin, "Second Social Post")
+    # disconnect the good accounts so generate only targets the failing one
+    for a in (dz.get("id"), tg.get("id"), ms.get("id"), bs.get("id")):
+        jget("POST", f"/api/admin/content/social/accounts/{a}/disconnect", token=admin)
+    c, gen2 = jget("POST", f"/api/admin/content/posts/{pid2}/social/generate", token=admin)
+    fdrafts = gen2.get("created", [])
+    chk("21m generate targets only the (failing) active account", len(fdrafts) == 1, fdrafts)
+    fdid = fdrafts[0]["id"]
+    jget("POST", f"/api/admin/content/social/drafts/{fdid}/publish", token=admin)
+    jget("POST", "/api/admin/content/social/drain", token=admin)
+    con = dbconn()
+    frow = con.execute("SELECT status FROM social_drafts WHERE id=?", (fdid,)).fetchone()
+    prow = con.execute("SELECT status,published FROM blog_posts WHERE id=?", (pid2,)).fetchone()
+    con.close()
+    chk("21n failed delivery marks the draft retrying/failed (not published)", frow and frow[0] in ("retrying", "failed"), frow)
+    chk("21o a failed social delivery never unpublishes the article", prow and prow[0] == "published" and prow[1] == 1, prow)
+
+    # RBAC: the social API requires authentication
+    c, _ = jget("GET", "/api/admin/content/social/accounts")
+    chk("21p social API requires authentication (401)", c == 401, c)
+    srv.shutdown()
+
 def run(proc):
     admin = admin_login()
     widen_window(admin)
@@ -2381,6 +2474,7 @@ def run(proc):
     test_leadership_suite(admin)
     test_exam_exceptions(admin)
     test_content_centre(admin)
+    test_social_publishing(admin)
 
     print("\n(assertions complete)")
 
