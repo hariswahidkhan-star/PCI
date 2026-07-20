@@ -901,6 +901,118 @@ public static class Migrate
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_admin_reset_token ON admin_reset_tokens(token)");
 
+        // ══════════════════════════════════════════════════════════════════════════════════════════════
+        // Content, SEO & Distribution Centre (Phase 1: dynamic Blog CMS + SEO + AI-discovery foundation)
+        // A first-class article/author/category/tag model — the public "blog" was previously hand-authored
+        // static HTML. Posts are stored dynamically here, rendered server-side (full article in the initial
+        // HTML response) by Core/BlogRender.cs, and distributed via the existing sitemap / IndexNow / feeds.
+        // Nothing is hardcoded: categories, tags, authors, statuses and SEO are all admin-managed.
+        // ──────────────────────────────────────────────────────────────────────────────────────────────
+        // Authors (editorial by-lines, distinct from admin_users; a reviewer/editor references admin_users.id).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS blog_authors(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            slug VARCHAR(160) UNIQUE NOT NULL, name VARCHAR(200) NOT NULL, title TEXT, bio TEXT,
+            avatar_ref TEXT, credentials TEXT, email VARCHAR(255), links TEXT, admin_user_id INTEGER,
+            active INTEGER DEFAULT 1, sort_order INTEGER DEFAULT 0,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_authors_active ON blog_authors(active)");
+
+        // Categories (hierarchical via parent_id) and free tags with a join table.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS blog_categories(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            slug VARCHAR(160) UNIQUE NOT NULL, name VARCHAR(200) NOT NULL, description TEXT,
+            parent_id INTEGER, certification_id INTEGER, sort_order INTEGER DEFAULT 0, active INTEGER DEFAULT 1,
+            seo_title TEXT, meta_description TEXT, created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_categories_active ON blog_categories(active, sort_order)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS blog_tags(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            slug VARCHAR(160) UNIQUE NOT NULL, name VARCHAR(200) NOT NULL, created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS blog_post_tags(post_id INTEGER NOT NULL, tag_id INTEGER NOT NULL,
+            PRIMARY KEY(post_id, tag_id))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_post_tags_tag ON blog_post_tags(tag_id)");
+
+        // Posts. Hot/queried fields are real columns; the long tail of the spec's field list lives in extra_json.
+        // status drives the editorial workflow; published=1 AND status='published' AND not noindex => public+indexable.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS blog_posts(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            slug VARCHAR(200) UNIQUE NOT NULL,
+            title TEXT NOT NULL, seo_title TEXT, subtitle TEXT, summary TEXT,
+            body TEXT, body_format VARCHAR(12) DEFAULT 'html', blocks_json TEXT,
+            featured_image TEXT, featured_image_alt TEXT, social_image TEXT,
+            author_id INTEGER, reviewer_id INTEGER, editor_id INTEGER,
+            category_id INTEGER, topic_cluster TEXT,
+            primary_keyword TEXT, secondary_keywords TEXT, search_intent VARCHAR(24), target_audience TEXT,
+            language VARCHAR(8) DEFAULT 'en', certification_id INTEGER, route_key TEXT, industry TEXT,
+            status VARCHAR(24) DEFAULT 'draft', published INTEGER DEFAULT 0,
+            published_at TEXT, scheduled_at TEXT, original_published_at TEXT, updated_at TEXT DEFAULT (datetime('now')),
+            reading_time INTEGER,
+            meta_description TEXT, canonical_url TEXT, original_source_url TEXT,
+            og_title TEXT, og_description TEXT, og_image TEXT,
+            robots_noindex INTEGER DEFAULT 0, structured_type VARCHAR(24) DEFAULT 'BlogPosting',
+            content_ownership VARCHAR(24) DEFAULT 'original', copyright_status TEXT, license TEXT, attribution TEXT,
+            syndication_status VARCHAR(24) DEFAULT 'none', social_distribution INTEGER DEFAULT 1, newsletter INTEGER DEFAULT 0,
+            ai_assisted INTEGER DEFAULT 0, ai_disclosure VARCHAR(32),
+            internal_notes TEXT, extra_json TEXT, version INTEGER DEFAULT 1,
+            approved_by INTEGER, approved_at TEXT, created_by INTEGER, created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_posts_status ON blog_posts(status, published)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_posts_cat ON blog_posts(category_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_posts_author ON blog_posts(author_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_posts_pub ON blog_posts(published, published_at)");
+
+        // Version history — a full snapshot per save; the previous version is NEVER overwritten (integrity).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS blog_post_versions(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            post_id INTEGER NOT NULL, version INTEGER NOT NULL, status_at VARCHAR(24), snapshot_json TEXT,
+            change_reason TEXT, editor_id INTEGER, created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_versions_post ON blog_post_versions(post_id, version)");
+
+        // Editorial reviews/approvals per post (workflow stages: author/editorial/technical/seo/legal).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS blog_reviews(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            post_id INTEGER NOT NULL, stage VARCHAR(24) NOT NULL, decision VARCHAR(16),
+            reviewer_id INTEGER, note TEXT, created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_reviews_post ON blog_reviews(post_id)");
+
+        // Integration Capability Registry — every publishing/distribution destination classified HONESTLY
+        // (Direct Publishing Available | Requires Approval | Draft Export | RSS Distribution | Share Link |
+        //  Manual Submission | Import Only | Read Only | Temporarily Unavailable | Unsupported | Under Review).
+        // Seeded from Core/CapabilityRegistry.cs; admins never see a fake "everything is connected" claim.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS content_capabilities(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            platform_key VARCHAR(48) UNIQUE NOT NULL, platform VARCHAR(120) NOT NULL, kind VARCHAR(24) NOT NULL,
+            capability VARCHAR(40) NOT NULL, publish_mode VARCHAR(32), requires_approval INTEGER DEFAULT 0,
+            official_api INTEGER DEFAULT 1, doc_url TEXT, notes TEXT, connected INTEGER DEFAULT 0,
+            sort_order INTEGER DEFAULT 0, active INTEGER DEFAULT 1, updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_content_caps_kind ON content_capabilities(kind, sort_order)");
+
+        // Content job queue (outbox) — publish/indexnow/social/syndication jobs, idempotent + retried by the
+        // ContentDispatcher background worker. Mirrors the integration_deliveries/comm_outbox pattern.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS content_jobs(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            job_type VARCHAR(32) NOT NULL, idempotency_key VARCHAR(120) UNIQUE, post_id INTEGER,
+            target VARCHAR(48), payload TEXT, status VARCHAR(16) DEFAULT 'pending', attempts INTEGER DEFAULT 0,
+            response_code INTEGER, last_error TEXT, result_ref TEXT, next_attempt_at TEXT,
+            created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_content_jobs_status ON content_jobs(status, next_attempt_at)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_content_jobs_post ON content_jobs(post_id)");
+
+        // AI Content Studio — provider/model/use-case configs (secrets stay in env, referenced by key_env) and
+        // a full audit ledger of every generation (assist-only; AI never publishes autonomously).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS ai_content_providers(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            provider VARCHAR(24) NOT NULL, label VARCHAR(120), model VARCHAR(80), use_case VARCHAR(40),
+            system_prompt TEXT, prompt_template TEXT, max_tokens INTEGER DEFAULT 1200, temperature REAL DEFAULT 0.7,
+            key_env VARCHAR(64), daily_quota INTEGER, require_citations INTEGER DEFAULT 0, require_review INTEGER DEFAULT 1,
+            active INTEGER DEFAULT 1, sort_order INTEGER DEFAULT 0, created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_ai_providers_use ON ai_content_providers(use_case, active)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS ai_content_generations(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            provider VARCHAR(24), model VARCHAR(80), use_case VARCHAR(40), post_id INTEGER,
+            prompt TEXT, output TEXT, sources TEXT, tokens_in INTEGER, tokens_out INTEGER,
+            status VARCHAR(16) DEFAULT 'generated', human_approved INTEGER DEFAULT 0,
+            created_by INTEGER, created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_ai_gen_post ON ai_content_generations(post_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_ai_gen_creator ON ai_content_generations(created_by)");
+
+        // Configurable defaults (operator-tunable via Settings; no hardcoded values in React/.NET) + the
+        // content-centre notification master toggle.
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_base_path','/blog')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_posts_per_page','12')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_indexnow_on_publish','1')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_content_enabled','1')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('ai_content_enabled','1')");
+        try { PCI.Backend.Core.CapabilityRegistry.Seed(db); } catch { /* site_settings/content_capabilities present on later pass */ }
+
         MultiCert.Seed(db);
 
         // Public announcement modal defaults (idempotent: only fills absent keys, never overwrites
