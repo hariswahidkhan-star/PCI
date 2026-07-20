@@ -544,8 +544,10 @@ def test_finance_and_certuvo_hardening(admin):
         chk("13m3 /api/me flags the support view", c == 200 and me.get("user", {}).get("impersonated") is True, me.get("user"))
         c, cons = jget("POST", "/api/me/consents", token=im.get("token"), body={"accept_all": True})
         chk("13m4 consent is refused in support view (403)", c == 403 and cons.get("error") == "impersonation_readonly", cons)
-        con = dbconn(); arow = con.execute("SELECT COUNT(*) FROM audit_logs WHERE action='impersonation_started' AND user_id=?", (ruid,)).fetchone(); con.close()
-        chk("13m5 impersonation start is audited", arow is not None and arow[0] >= 1, arow)
+        # Impersonation is audited to the ACTING ADMIN (user_id > 0), with the impersonated student's id
+        # recorded in the details ("(subject <id>)"). Audit rows are attributed to who performed the action.
+        con = dbconn(); arow = con.execute("SELECT COUNT(*) FROM audit_logs WHERE action='impersonation_started' AND user_id>0 AND details LIKE ?", (f"%subject {ruid}%",)).fetchone(); con.close()
+        chk("13m5 impersonation start is audited (acting admin + subject in details)", arow is not None and arow[0] >= 1, arow)
         c, ie = jget("POST", f"/api/admin/members/{ruid}/impersonate/end", token=admin)
         chk("13m6 end-session revokes the token", c == 200 and jget("GET", "/api/me", token=im.get("token"))[0] == 401, ie)
 
