@@ -887,7 +887,7 @@ public static class Migrate
             subject TEXT, body TEXT, template_key VARCHAR(80),
             certification_id INTEGER,
             status VARCHAR(20) DEFAULT 'queued',         -- draft|scheduled|queued|processing|sent|delivered|read|failed|hard_bounced|rejected|cancelled|unsubscribed|expired
-            scheduled_at TEXT, attempts INTEGER DEFAULT 0, max_attempts INTEGER DEFAULT 5,
+            scheduled_at VARCHAR(40), attempts INTEGER DEFAULT 0, max_attempts INTEGER DEFAULT 5,   -- VARCHAR (not TEXT): it is indexed by ix_comm_outbox_status; MySQL cannot index a TEXT column
             last_error TEXT, provider VARCHAR(30), provider_message_id TEXT, provider_response TEXT,
             created_by INTEGER, next_attempt_at TEXT, sent_at TEXT,
             created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
@@ -917,7 +917,7 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_inbound_conv ON comm_inbound_messages(conversation_id)");
         // Per-recipient suppression (bounces/complaints/unsubscribes) — checked before every marketing send.
         db.Exec(@"CREATE TABLE IF NOT EXISTS comm_suppression(
-            id INTEGER PRIMARY KEY AUTOINCREMENT, channel VARCHAR(16), address TEXT,
+            id INTEGER PRIMARY KEY AUTOINCREMENT, channel VARCHAR(16), address VARCHAR(255),   -- VARCHAR (not TEXT): indexed by ix_comm_suppress_addr; MySQL cannot index a TEXT column
             reason VARCHAR(40), category VARCHAR(24), source TEXT, created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_suppress_addr ON comm_suppression(channel,address)");
         // Consent + channel preferences per user (marketing requires opt-in; essential cannot be disabled).
