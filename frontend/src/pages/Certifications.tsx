@@ -204,9 +204,85 @@ function IdentityCard({ doc, onChanged }: { doc: IdentityDocument | null; onChan
   )
 }
 
+// Exam-day incident categories a candidate can report (POST /api/me/exam/incident). Values mirror
+// the backend enum; labels are i18n keys resolved with t().
+const INCIDENT_CATEGORIES = [
+  { value: 'exam_wont_launch', labelKey: 'cert.issueCat.examWontLaunch' },
+  { value: 'identity_failed', labelKey: 'cert.issueCat.identityFailed' },
+  { value: 'proctor_absent', labelKey: 'cert.issueCat.proctorAbsent' },
+  { value: 'disconnection', labelKey: 'cert.issueCat.disconnection' },
+  { value: 'power_failure', labelKey: 'cert.issueCat.powerFailure' },
+  { value: 'browser_crash', labelKey: 'cert.issueCat.browserCrash' },
+  { value: 'submission_failure', labelKey: 'cert.issueCat.submissionFailure' },
+  { value: 'timer_malfunction', labelKey: 'cert.issueCat.timerMalfunction' },
+  { value: 'wrong_exam', labelKey: 'cert.issueCat.wrongExam' },
+  { value: 'content_failed', labelKey: 'cert.issueCat.contentFailed' },
+  { value: 'system_outage', labelKey: 'cert.issueCat.systemOutage' },
+  { value: 'illness', labelKey: 'cert.issueCat.illness' },
+  { value: 'other', labelKey: 'cert.issueCat.other' },
+]
+
+/** Report an exam-day problem for investigation. On success the backend returns a reference the
+ *  candidate can quote to support. */
+function IncidentReportForm({ certificationId, onClose }: { certificationId: number; onClose: () => void }) {
+  const t = useT()
+  const [category, setCategory] = useState('exam_wont_launch')
+  const [details, setDetails] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [reference, setReference] = useState<string | null>(null)
+
+  async function submit() {
+    setBusy(true)
+    setError(null)
+    try {
+      const r = await api.post<{ reference?: string; ref?: string }>('/api/me/exam/incident', {
+        category,
+        certification_id: certificationId,
+        student_explanation: details,
+      })
+      setReference(r.reference || r.ref || '')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : t('cert.issueFailed'))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (reference !== null) {
+    return (
+      <div className="notice ok" role="status" style={{ marginTop: '.6rem' }}>
+        {t('cert.issueSubmitted', { ref: reference || '—' })}
+      </div>
+    )
+  }
+
+  return (
+    <div className="stack" style={{ marginTop: '.6rem', display: 'grid', gap: '.6rem' }}>
+      <p className="muted small" style={{ margin: 0 }}>{t('cert.reportIssueIntro')}</p>
+      {error && <div className="notice err" role="alert">{error}</div>}
+      <div className="field" style={{ margin: 0 }}>
+        <label htmlFor={`inc-cat-${certificationId}`}>{t('cert.issueCategory')}</label>
+        <select id={`inc-cat-${certificationId}`} value={category} onChange={(e) => setCategory(e.target.value)}>
+          {INCIDENT_CATEGORIES.map((c) => <option key={c.value} value={c.value}>{t(c.labelKey)}</option>)}
+        </select>
+      </div>
+      <div className="field" style={{ margin: 0 }}>
+        <label htmlFor={`inc-det-${certificationId}`}>{t('cert.issueDetails')}</label>
+        <textarea id={`inc-det-${certificationId}`} value={details} onChange={(e) => setDetails(e.target.value)} rows={3} placeholder={t('cert.issueDetailsPlaceholder')} />
+      </div>
+      <div className="row">
+        <button className="btn sm" disabled={busy || !details.trim()} onClick={submit}>{busy ? t('cert.submittingIssue') : t('cert.submitIssue')}</button>
+        <button className="btn sm secondary" onClick={onClose}>{t('cert.close')}</button>
+      </div>
+    </div>
+  )
+}
+
 function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: () => void; holds: string[] }) {
   const t = useT()
   const [scheduling, setScheduling] = useState(false)
+  const [reporting, setReporting] = useState(false)
   const booking = entry.booking as Record<string, unknown> | null
   const attempt = entry.latest_attempt as Record<string, unknown> | null
   const cred = entry.credential
@@ -227,7 +303,12 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
   return (
     <Card
       title={entry.certification_name || t('cert.untitledCert', { id: entry.certification_id })}
-      action={<Badge tone={state.tone}>{state.label}</Badge>}
+      action={
+        <span className="row" style={{ gap: '.35rem' }}>
+          {entry.scheduling_status && <StatusBadge status={entry.scheduling_status} />}
+          <Badge tone={state.tone}>{state.label}</Badge>
+        </span>
+      }
     >
       <div className="small muted stack">
         {entry.certification_code && <div>{t('cert.codeLabel')} <strong>{entry.certification_code}</strong></div>}
@@ -238,7 +319,15 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
             {deadlineDays !== null && deadlineDays >= 0 && <> · {deadlineDays === 1 ? t('cert.oneDayLeft') : t('cert.daysLeft', { n: deadlineDays })}</>}
           </div>
         )}
+        {entry.extended && <div>{t('cert.extendedNewDeadline', { date: fmtDate(entry.deadline) })}</div>}
+        {entry.attempts_permitted != null && (
+          <div>{t('cert.attemptsSummary', { used: entry.attempts_used ?? 0, remaining: Math.max(0, (entry.attempts_permitted ?? 0) - (entry.attempts_used ?? 0)) })}</div>
+        )}
       </div>
+
+      {entry.waiver && (
+        <div className="notice" style={{ marginTop: '.6rem' }}>{t('cert.waiverApplied')}</div>
+      )}
 
       {cred?.status === 'active' ? (
         <div className="notice" style={{ marginTop: '.75rem' }}>
@@ -331,6 +420,14 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
           )}
         </div>
       )}
+
+      <div style={{ marginTop: '.9rem', borderTop: '1px solid var(--line, #e5e7eb)', paddingTop: '.6rem' }}>
+        {reporting ? (
+          <IncidentReportForm certificationId={entry.certification_id} onClose={() => setReporting(false)} />
+        ) : (
+          <button className="btn ghost sm" onClick={() => setReporting(true)}>{t('cert.reportIssue')}</button>
+        )}
+      </div>
     </Card>
   )
 }

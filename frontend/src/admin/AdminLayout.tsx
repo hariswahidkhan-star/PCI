@@ -29,6 +29,7 @@ const NAV: NavItem[] = [
   { to: '/certifications', label: 'Certifications', perm: 'exams', group: 'Examinations' },
   { to: '/exams', label: 'Exam registrations', perm: 'exams', group: 'Examinations' },
   { to: '/proctoring', label: 'Proctoring & sessions', perm: 'proctoring', group: 'Examinations' },
+  { to: '/exam-exceptions', label: 'Exam Exceptions', perm: 'ex_view', group: 'Examinations' },
   { to: '/exam-delivery', label: 'Exam delivery vendors', perm: 'exam_delivery', group: 'Examinations' },
   crudItem('questions', 'Examinations'),
   { to: '/credentials', label: 'Credentials', perm: 'credentials', group: 'Examinations' },
