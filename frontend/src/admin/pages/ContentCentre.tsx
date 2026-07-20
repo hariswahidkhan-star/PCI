@@ -20,7 +20,7 @@ interface Author { id: number; slug: string; name: string; title?: string; activ
 interface Category { id: number; slug: string; name: string; active: number }
 interface Capability { id: number; platform_key: string; platform: string; kind: string; capability: string; publish_mode?: string; requires_approval: number; official_api: number; connected: boolean; notes?: string; doc_url?: string }
 
-const TABS = ['Dashboard', 'Blog posts', 'Taxonomy', 'Social', 'Distribution', 'AI Studio'] as const
+const TABS = ['Dashboard', 'Blog posts', 'Taxonomy', 'Social', 'Syndication', 'Distribution', 'AI Studio'] as const
 
 export default function ContentCentre() {
   const { can } = useAdminAuth()
@@ -38,6 +38,7 @@ export default function ContentCentre() {
       {tab === 'Blog posts' && <PostsTab canEdit={can('cc_edit') || can('cc_author')} canPublish={can('cc_publish')} />}
       {tab === 'Taxonomy' && <TaxonomyTab canEdit={can('cc_edit')} />}
       {tab === 'Social' && <SocialTab canSocial={can('cc_social')} />}
+      {tab === 'Syndication' && <SyndicationTab canSyndicate={can('cc_syndicate')} />}
       {tab === 'Distribution' && <DistributionTab />}
       {tab === 'AI Studio' && <AiTab />}
     </div>
@@ -352,6 +353,87 @@ function SocialTab({ canSocial }: { canSocial: boolean }) {
                   <button className="btn sm" onClick={() => act(`/api/admin/content/social/drafts/${d.id}/publish`, drafts.refetch)}>Publish</button>
                   <button className="btn sm ghost" onClick={() => act(`/api/admin/content/social/drafts/${d.id}/cancel`, drafts.refetch)}>Cancel</button>
                 </span> : null}</td>
+              </tr>))}</tbody>
+          </table>
+        )}
+      </Card>
+    </div>
+  )
+}
+
+interface SynDest { id: number; platform_key: string; label: string; base_url: string; mode: string; default_status: string; status: string; last_error?: string | null; active: number; has_secret: boolean }
+interface SynPost { id: number; post_id: number; destination_id: number; external_url?: string | null; canonical_url?: string | null; status: string; last_error?: string | null; dest_platform?: string | null; dest_label?: string | null }
+
+const SYN_PLATFORMS: Record<string, { label: string; secretLabel: string; extra: Array<{ key: string; label: string; ph?: string }> }> = {
+  wordpress_selfhosted: { label: 'WordPress (self-hosted)', secretLabel: 'Application password', extra: [{ key: 'username', label: 'WordPress username', ph: 'editor' }] },
+  ghost: { label: 'Ghost', secretLabel: 'Admin API key (id:secret)', extra: [] },
+  forem_dev: { label: 'Forem / DEV', secretLabel: 'API key', extra: [] },
+}
+
+function SyndicationTab({ canSyndicate }: { canSyndicate: boolean }) {
+  const dests = useAdminQuery<{ rows: SynDest[]; live_platforms: string[] }>('/api/admin/content/syndication/destinations')
+  const [platform, setPlatform] = useState('wordpress_selfhosted')
+  const [f, setF] = useState<Record<string, string>>({})
+  const [msg, setMsg] = useState('')
+  const [postId, setPostId] = useState('')
+  const posts = useAdminQuery<{ rows: SynPost[] }>(postId ? `/api/admin/content/syndication/posts?post_id=${postId}` : '/api/admin/content/syndication/posts')
+  const spec = SYN_PLATFORMS[platform]
+
+  async function connect() {
+    setMsg('')
+    try { await adminApi.post('/api/admin/content/syndication/destinations', { platform_key: platform, base_url: f.base_url, secret: f.secret, label: f.label || spec.label, mode: f.mode || 'create', default_status: f.default_status || 'draft', ...f }); setF({}); setMsg('Connected'); dests.refetch() }
+    catch (e) { setMsg((e as Error).message) }
+  }
+  async function act(path: string, then?: () => void) { try { await adminApi.post(path, {}); then?.() } catch (e) { setMsg((e as Error).message) } }
+
+  return (
+    <div style={{ display: 'grid', gap: '1rem' }}>
+      <p className="muted" style={{ margin: 0 }}>Cross-post a published article to partner CMS platforms whose official APIs need no provider onboarding (WordPress self-hosted, Ghost, Forem/DEV). Every syndicated copy sets its canonical back to the PCI original, so search engines consolidate duplicate content to the source. Credentials are encrypted at rest and never shown again.</p>
+      {canSyndicate && (
+        <Card title="Connect a destination">
+          <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'end' }}>
+            <label>Platform<select value={platform} onChange={(e) => { setPlatform(e.target.value); setF({}) }}>
+              {(dests.data?.live_platforms || Object.keys(SYN_PLATFORMS)).map((p) => <option key={p} value={p}>{SYN_PLATFORMS[p]?.label || p}</option>)}
+            </select></label>
+            <label>Label<input value={f.label || ''} onChange={(e) => setF({ ...f, label: e.target.value })} placeholder={spec.label} /></label>
+            <label style={{ minWidth: 220 }}>Site URL<input value={f.base_url || ''} onChange={(e) => setF({ ...f, base_url: e.target.value })} placeholder="https://blog.example.com" /></label>
+            <label style={{ minWidth: 220 }}>{spec.secretLabel}<input type="password" value={f.secret || ''} onChange={(e) => setF({ ...f, secret: e.target.value })} /></label>
+            {spec.extra.map((x) => <label key={x.key}>{x.label}<input value={f[x.key] || ''} onChange={(e) => setF({ ...f, [x.key]: e.target.value })} placeholder={x.ph} /></label>)}
+            <label>Publish as<select value={f.default_status || 'draft'} onChange={(e) => setF({ ...f, default_status: e.target.value })}><option value="draft">Draft on destination</option><option value="published">Published</option></select></label>
+            <label>Updates<select value={f.mode || 'create'} onChange={(e) => setF({ ...f, mode: e.target.value })}><option value="create">Create only</option><option value="create_update">Create + update</option></select></label>
+            <button className="btn sm" onClick={connect} disabled={!f.secret || !f.base_url}>Connect</button>
+          </div>
+          {msg && <div className="muted" style={{ marginTop: '.4rem' }}>{msg}</div>}
+        </Card>
+      )}
+      <Card title="Destinations">
+        {dests.loading ? <Spinner /> : !dests.data?.rows.length ? <Empty>No destinations connected</Empty> : (
+          <table className="tbl"><thead><tr><th>Platform</th><th>Label</th><th>Site</th><th>Status</th><th></th></tr></thead>
+            <tbody>{dests.data.rows.map((d) => (
+              <tr key={d.id}>
+                <td>{d.platform_key}</td><td>{d.label}</td><td className="muted" style={{ fontSize: '.8rem' }}>{d.base_url}</td>
+                <td><Badge tone={d.status === 'connected' && d.active ? 'ok' : d.status === 'error' ? 'err' : 'neutral' as never}>{d.active ? d.status : 'disconnected'}</Badge>{d.last_error ? <span className="muted" style={{ fontSize: '.78rem' }}> — {d.last_error}</span> : null}</td>
+                <td>{canSyndicate && d.active ? <span className="row" style={{ gap: '.3rem' }}>
+                  <button className="btn sm ghost" onClick={() => act(`/api/admin/content/syndication/destinations/${d.id}/test`, dests.refetch)}>Test</button>
+                  <button className="btn sm ghost" onClick={() => act(`/api/admin/content/syndication/destinations/${d.id}/disconnect`, dests.refetch)}>Disconnect</button>
+                </span> : null}</td>
+              </tr>))}</tbody>
+          </table>
+        )}
+      </Card>
+      <Card title="Syndicated posts" action={canSyndicate ? <span className="row" style={{ gap: '.4rem' }}>
+        <input placeholder="Post id" value={postId} onChange={(e) => setPostId(e.target.value.replace(/\D/g, ''))} style={{ width: 90 }} />
+        <button className="btn sm" disabled={!postId} onClick={() => act(`/api/admin/content/posts/${postId}/syndicate`, posts.refetch)}>Syndicate post</button>
+        <button className="btn sm ghost" onClick={() => act('/api/admin/content/syndication/drain', posts.refetch)}>Run queue now</button>
+      </span> : null}>
+        {posts.loading ? <Spinner /> : !posts.data?.rows.length ? <Empty>No syndicated posts</Empty> : (
+          <table className="tbl"><thead><tr><th>Destination</th><th>External URL</th><th>Status</th><th></th></tr></thead>
+            <tbody>{posts.data.rows.map((s) => (
+              <tr key={s.id}>
+                <td>{s.dest_label || s.dest_platform}<div className="muted" style={{ fontSize: '.75rem' }}>post #{s.post_id}</div></td>
+                <td style={{ maxWidth: 320, fontSize: '.82rem' }}>{s.external_url ? <a href={s.external_url} target="_blank" rel="noreferrer">{s.external_url}</a> : <span className="muted">—</span>}{s.last_error ? <div className="muted">{s.last_error}</div> : null}</td>
+                <td><StatusPill status={s.status} /></td>
+                <td>{canSyndicate && ['failed', 'retrying'].includes(s.status) ? <button className="btn sm" onClick={() => act(`/api/admin/content/syndication/posts/${s.id}/retry`, posts.refetch)}>Retry</button> : null}</td>
               </tr>))}</tbody>
           </table>
         )}
