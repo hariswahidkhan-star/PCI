@@ -8,7 +8,7 @@ import { fmtDateTime } from '../../format'
  * Provider SECRETS are never fetched or shown — the Dashboard reports configured/not booleans only. */
 
 type Row = Record<string, any>
-const TABS = ['Dashboard', 'Unified Inbox', 'Compose', 'Delivery Queue', 'Templates', 'Sender Profiles', 'WhatsApp Accounts', 'Triggers', 'Suppression'] as const
+const TABS = ['Dashboard', 'Unified Inbox', 'Compose', 'Bulk Campaigns', 'Delivery Queue', 'Analytics', 'Templates', 'Sender Profiles', 'WhatsApp Accounts', 'Triggers', 'Suppression'] as const
 type Tab = typeof TABS[number]
 
 const STATUS_TONE: Record<string, 'ok' | 'err' | 'brand' | 'warn'> = {
@@ -34,6 +34,8 @@ export default function Communications() {
       {tab === 'Dashboard' && <Dashboard />}
       {tab === 'Unified Inbox' && <Inbox />}
       {tab === 'Compose' && <Compose />}
+      {tab === 'Bulk Campaigns' && <Campaigns />}
+      {tab === 'Analytics' && <Analytics />}
       {tab === 'Delivery Queue' && <Queue />}
       {tab === 'Templates' && <Templates />}
       {tab === 'Sender Profiles' && <Senders />}
@@ -391,5 +393,93 @@ function Suppression() {
           ))}</tbody></table>
       )}
     </Card>
+  )
+}
+
+function Campaigns() {
+  const { data, loading, reload } = useGet<{ rows: Row[] }>('/api/admin/comms/campaigns')
+  const [edit, setEdit] = useState<Row | null>(null)
+  return (
+    <Card title="Bulk Campaigns" action={<button className="btn sm" onClick={() => setEdit({ channel: 'email', category: 'marketing' })}>New campaign</button>}>
+      <p className="muted small" style={{ marginTop: 0 }}>Each recipient gets a separate message — addresses are never exposed to others. Consent, suppression and duplicate-prevention are enforced on send.</p>
+      {loading ? <Spinner /> : (data?.rows.length ?? 0) === 0 ? <Empty>No campaigns yet.</Empty> : (
+        <table className="data"><thead><tr><th>Name</th><th>Channel</th><th>Category</th><th>Status</th><th>Sent</th><th /></tr></thead>
+          <tbody>{data!.rows.map((c) => (
+            <tr key={c.id}><td>{c.name}</td><td><Badge>{c.channel}</Badge></td><td className="small">{c.category}</td>
+              <td><Badge tone={c.status === 'sent' ? 'ok' : c.status === 'cancelled' ? 'err' : 'brand'}>{c.status}</Badge></td>
+              <td className="small">{c.queued || 0}/{c.total || 0}</td>
+              <td><button className="btn ghost sm" onClick={() => setEdit(c)}>Manage</button></td></tr>
+          ))}</tbody></table>
+      )}
+      {edit && <CampaignEditor c={edit} onClose={() => setEdit(null)} onChanged={reload} />}
+    </Card>
+  )
+}
+function CampaignEditor({ c, onClose, onChanged }: { c: Row; onClose: () => void; onChanged: () => void }) {
+  const [f, setF] = useState<Row>({ id: c.id, name: c.name ?? '', channel: c.channel ?? 'email', category: c.category ?? 'marketing', subject: c.subject ?? '', body: c.body ?? '', sender_profile_key: c.sender_profile_key ?? 'marketing' })
+  const [filters, setFilters] = useState<Row>(() => { try { return c.filters ? JSON.parse(c.filters) : {} } catch { return {} } })
+  const [preview, setPreview] = useState<Row | null>(null)
+  const [detail, setDetail] = useState<Row | null>(null)
+  const [busy, setBusy] = useState(false); const [msg, setMsg] = useState<string | null>(null)
+  const set = (k: string, v: string) => setF((p) => ({ ...p, [k]: v }))
+  const setFilter = (k: string, v: any) => setFilters((p) => ({ ...p, [k]: v }))
+  async function save(): Promise<number> { const r = await adminApi.post<Row>('/api/admin/comms/campaigns', { ...f, filters }); return r.id ?? f.id }
+  async function doPreview() { setBusy(true); setMsg(null); try { const id = await save(); setPreview(await adminApi.post(`/api/admin/comms/campaigns/${id}/preview`, {})); setF((p) => ({ ...p, id })) } finally { setBusy(false) } }
+  async function doTest() { setBusy(true); try { const id = await save(); await adminApi.post(`/api/admin/comms/campaigns/${id}/test`, {}); setMsg('Test message queued to your admin email.') } finally { setBusy(false) } }
+  async function doApprove() { setBusy(true); try { const id = await save(); await adminApi.post(`/api/admin/comms/campaigns/${id}/approve`, {}); setMsg('Approved — you can now send.'); setF((p) => ({ ...p, id })); refreshDetail(id) } finally { setBusy(false) } }
+  async function doSend() { if (!window.confirm('Send this campaign to the full audience now?')) return; setBusy(true); try { const id = await save(); const r = await adminApi.post<Row>(`/api/admin/comms/campaigns/${id}/send`, {}); setMsg(`Queued ${r.queued} of ${r.audience} recipients.`); onChanged(); refreshDetail(id) } catch (e) { setMsg(e instanceof Error ? e.message : 'Send failed') } finally { setBusy(false) } }
+  async function refreshDetail(id: number) { setDetail(await adminApi.get(`/api/admin/comms/campaigns/${id}`)) }
+  return (
+    <div className="drawer-backdrop" onClick={onClose}><div className="drawer" onClick={(e) => e.stopPropagation()}>
+      <div className="spread"><h3 style={{ margin: 0 }}>{c.id ? 'Manage campaign' : 'New campaign'}</h3><button className="btn secondary sm" onClick={onClose}>Close</button></div>
+      {msg && <div className="notice ok" style={{ margin: '.5rem 0' }}>{msg}</div>}
+      <div style={{ display: 'grid', gap: '.5rem', marginTop: '.6rem' }}>
+        <label className="field"><span>Name</span><input value={f.name} onChange={(e) => set('name', e.target.value)} /></label>
+        <div className="grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.5rem' }}>
+          <label className="field"><span>Channel</span><select value={f.channel} onChange={(e) => set('channel', e.target.value)}><option value="email">Email</option><option value="whatsapp">WhatsApp</option></select></label>
+          <label className="field"><span>Category</span><select value={f.category} onChange={(e) => set('category', e.target.value)}><option value="marketing">Marketing</option><option value="newsletter">Newsletter</option><option value="operational">Operational</option></select></label>
+        </div>
+        <label className="field"><span>Subject</span><input value={f.subject} onChange={(e) => set('subject', e.target.value)} /></label>
+        <label className="field"><span>Body (HTML, {'{{variables}}'})</span><textarea rows={4} value={f.body} onChange={(e) => set('body', e.target.value)} /></label>
+        <div style={{ borderTop: '1px solid var(--line)', paddingTop: '.5rem' }}><strong className="small">Audience filters</strong></div>
+        <div className="grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.5rem' }}>
+          <label className="field"><span>Holds certification (name contains)</span><input value={filters.certification ?? ''} onChange={(e) => setFilter('certification', e.target.value)} placeholder="PCL-AI" /></label>
+          <label className="field"><span>Registered after</span><input value={filters.registered_after ?? ''} onChange={(e) => setFilter('registered_after', e.target.value)} placeholder="2026-01-01" /></label>
+          <label className="small" style={{ display: 'flex', gap: '.4rem', alignItems: 'center' }}><input type="checkbox" checked={!!filters.has_membership} onChange={(e) => setFilter('has_membership', e.target.checked)} style={{ width: 'auto' }} /> Has a membership</label>
+          <label className="small" style={{ display: 'flex', gap: '.4rem', alignItems: 'center' }}><input type="checkbox" checked={!!filters.active_only} onChange={(e) => setFilter('active_only', e.target.checked)} style={{ width: 'auto' }} /> Active accounts only</label>
+        </div>
+        {(f.category === 'marketing' || f.category === 'newsletter') && <p className="muted small" style={{ margin: 0 }}>Marketing/newsletter automatically requires each recipient's email-marketing consent.</p>}
+        {preview && <div className="notice" style={{ background: '#eff6ff' }}><strong>{preview.total}</strong> eligible recipient(s){preview.suppressed ? ` · ${preview.suppressed} suppressed` : ''}. Sample: {(preview.sample ?? []).join(', ') || '—'}<div className="muted small">{preview.note}</div></div>}
+        {detail?.delivery && <div className="notice" style={{ background: '#f0fdf4' }}>Delivery: {(detail.delivery as Row[]).map((d) => `${d.status}: ${d.n}`).join(' · ') || 'none yet'}</div>}
+        <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
+          <button className="btn sm secondary" disabled={busy} onClick={doPreview}>Preview audience</button>
+          <button className="btn sm secondary" disabled={busy} onClick={doTest}>Send test</button>
+          <button className="btn sm secondary" disabled={busy} onClick={doApprove}>Approve</button>
+          <button className="btn sm" disabled={busy} onClick={doSend}>Send now</button>
+        </div>
+      </div>
+    </div></div>
+  )
+}
+
+function Analytics() {
+  const { data, loading } = useGet<Row>('/api/admin/comms/analytics')
+  if (loading) return <Spinner />
+  if (!data) return <Empty>No data.</Empty>
+  const Section = ({ title, rows, k, v }: { title: string; rows: Row[]; k: string; v: string }) => (
+    <Card title={title}>
+      {(rows ?? []).length === 0 ? <Empty>None.</Empty> : (
+        <table className="data"><tbody>{rows.map((r, i) => (<tr key={i}><td className="small">{String(r[k] ?? '—')}</td><td style={{ textAlign: 'right', fontWeight: 700 }}>{r[v]}</td></tr>))}</tbody></table>
+      )}
+    </Card>
+  )
+  return (
+    <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: '1fr 1fr' }}>
+      <Section title="By status" rows={data.by_status} k="status" v="n" />
+      <Section title="By channel" rows={data.by_channel} k="channel" v="n" />
+      <Section title="Sends per day (14d)" rows={data.by_day} k="day" v="n" />
+      <Section title="Top triggers" rows={data.top_triggers} k="trigger_code" v="n" />
+      <Section title="Failure reasons" rows={data.failures} k="last_error" v="n" />
+    </div>
   )
 }

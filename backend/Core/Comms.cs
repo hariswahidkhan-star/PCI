@@ -58,6 +58,22 @@ public static class Comms
         catch { return null; /* unique dedup collision under a race — treat as duplicate */ }
     }
 
+    /// <summary>Record an email the platform ALREADY sent (via Mailer.Send) as a history row in the
+    /// communications outbox, so every transactional/automated message appears in the Communications
+    /// Centre history + monitoring. This never re-sends — it writes a terminal row with the real status.
+    /// Best-effort: any failure here must never break the caller's send.</summary>
+    public static void MirrorSent(Db db, long? userId, string? toEmail, string emailType, string subject, string status)
+    {
+        try
+        {
+            var mapped = status switch { "sent" => "sent", "console" => "sent", "failed" => "failed", _ => status };
+            db.Execute(@"INSERT INTO comm_outbox(dedup_key,channel,trigger_code,category,user_id,to_email,subject,status,provider,attempts,sent_at,created_at)
+                VALUES(?, 'email', ?, 'transactional', ?, ?, ?, ?, 'mailer', 1, datetime('now'), datetime('now'))",
+                $"mailer:{emailType}:{toEmail}:{DateTime.UtcNow.Ticks}", emailType, userId, toEmail, subject, mapped, "mailer");
+        }
+        catch { /* history mirror is best-effort */ }
+    }
+
     static bool IsMarketing(string category) => category is "marketing" or "newsletter" or "surveys";
 
     static bool HasMarketingConsent(Db db, long userId, string channel)

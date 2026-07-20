@@ -847,6 +847,21 @@ public static class Migrate
             newsletter INTEGER DEFAULT 0, events INTEGER DEFAULT 0, surveys INTEGER DEFAULT 0,
             consent_source TEXT, consent_version TEXT, consent_at TEXT, withdrawn_at TEXT,
             updated_at TEXT DEFAULT (datetime('now')))");
+        // Bulk email/WhatsApp campaigns. Delivery rides the same outbox (one row per recipient), so
+        // consent, suppression, duplicate prevention, retries and monitoring all apply uniformly.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_campaigns(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL, channel VARCHAR(16) DEFAULT 'email',   -- email|whatsapp|both
+            category VARCHAR(24) DEFAULT 'operational',                -- operational|marketing|newsletter
+            subject TEXT, body TEXT, template_key VARCHAR(80),
+            sender_profile_key VARCHAR(60), whatsapp_account_key VARCHAR(60),
+            certification_id INTEGER, filters TEXT,                    -- JSON audience filters
+            status VARCHAR(20) DEFAULT 'draft',                        -- draft|pending_approval|approved|scheduled|sending|paused|sent|cancelled
+            scheduled_at TEXT, recurring VARCHAR(16),                  -- once|daily|weekly|monthly (foundation: once)
+            approval_required INTEGER DEFAULT 1, approved_by INTEGER, approved_at TEXT,
+            total INTEGER DEFAULT 0, queued INTEGER DEFAULT 0,
+            created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_campaign_status ON comm_campaigns(status)");
 
         // ── Per-certification applications (Phase 4b): one record per (candidate, certification, route) ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS certification_applications(

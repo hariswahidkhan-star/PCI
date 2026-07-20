@@ -118,6 +118,8 @@ public static class Mailer
         }
         try { db.Execute("INSERT INTO email_logs(user_id,email,email_type,subject,status) VALUES(?,?,?,?,?)", userId, to, emailType, subject, status); }
         catch { /* the log row must never break the caller */ }
+        // Mirror into the Communications Centre so every platform email appears in unified history + monitoring.
+        Comms.MirrorSent(db, userId, to, emailType, subject, status);
     }
 
     /// <summary>Convenience: welcome email with the password-setup link (used by the payment

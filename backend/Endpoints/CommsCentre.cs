@@ -309,6 +309,153 @@ public static class CommsCentre
             return J(new { ok = true });
         }));
 
+        // ───────── bulk campaigns ─────────
+        // Resolve the audience for a campaign's filters → list of (userId, email). Defensive: unknown
+        // columns/tables are skipped, never throw. Marketing campaigns require email-marketing consent.
+        List<(long id, string email)> Audience(Dictionary<string, JsonElement>? filters, bool marketing)
+        {
+            var where = new List<string> { "u.email IS NOT NULL", "u.email<>''" };
+            var args = new List<object?>();
+            string? Ff(string k) => filters is not null && filters.TryGetValue(k, out var v) && v.ValueKind == JsonValueKind.String ? v.GetString() : null;
+            bool Fb(string k) => filters is not null && filters.TryGetValue(k, out var v) && (v.ValueKind == JsonValueKind.True || (v.ValueKind == JsonValueKind.String && v.GetString() is "1" or "true"));
+            if (Fb("active_only")) where.Add("u.status='active'");
+            if (Ff("registered_after") is { Length: > 0 } ra) { where.Add("u.created_at>=?"); args.Add(ra); }
+            if (Ff("registered_before") is { Length: > 0 } rb) { where.Add("u.created_at<=?"); args.Add(rb); }
+            if (Fb("has_membership")) where.Add("EXISTS(SELECT 1 FROM memberships m WHERE m.user_id=u.id)");
+            if (Ff("certification") is { Length: > 0 } cert) { where.Add("EXISTS(SELECT 1 FROM held_certifications h WHERE h.user_id=u.id AND h.name LIKE ?)"); args.Add("%" + cert + "%"); }
+            if (marketing) where.Add("EXISTS(SELECT 1 FROM comm_preferences p WHERE p.user_id=u.id AND p.email_marketing=1)");
+            try
+            {
+                return db.Query($"SELECT u.id, u.email FROM users u WHERE {string.Join(" AND ", where)} GROUP BY u.id LIMIT 20000", args.ToArray())
+                    .Select(r => (H.L(r["id"]), (H.Str(r["email"]) ?? "").ToLowerInvariant()))
+                    .Where(x => x.Item2.Length > 0).Distinct().ToList();
+            }
+            catch { return new(); }
+        }
+        static string Mask(string email)
+        {
+            var at = email.IndexOf('@'); if (at <= 1) return "***" + (at >= 0 ? email[at..] : "");
+            return email[0] + new string('*', Math.Min(5, at - 1)) + email[at..];
+        }
+
+        app.MapGet("/api/admin/comms/campaigns", (HttpRequest req) => gate(req, SECTION, _ =>
+            J(new { rows = db.Query("SELECT id,name,channel,category,status,total,queued,scheduled_at,approved_at,created_at FROM comm_campaigns ORDER BY id DESC LIMIT 300") })));
+        app.MapGet("/api/admin/comms/campaigns/{id:long}", (HttpRequest req, long id) => gate(req, SECTION, _ =>
+        {
+            var c = db.QueryOne("SELECT * FROM comm_campaigns WHERE id=?", id);
+            if (c is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            // Live delivery breakdown from the outbox rows this campaign produced.
+            var breakdown = db.Query("SELECT status, COUNT(*) AS n FROM comm_outbox WHERE campaign_id=? GROUP BY status", id);
+            return J(new { campaign = c, delivery = breakdown });
+        }));
+        app.MapPost("/api/admin/comms/campaigns", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, SECTION, adm =>
+            {
+                var name = S(b, "name"); if (name.Length == 0) return Results.Json(new { error = "name_required" }, statusCode: 400);
+                var filtersJson = H.GetEl(b, "filters") is { ValueKind: JsonValueKind.Object } fj ? fj.GetRawText() : "{}";
+                var idNum = (long)(H.GetNum(b, "id") ?? 0);
+                if (idNum > 0)
+                {
+                    db.Execute(@"UPDATE comm_campaigns SET name=?,channel=?,category=?,subject=?,body=?,sender_profile_key=?,filters=?,scheduled_at=?,updated_at=datetime('now') WHERE id=? AND status IN('draft','pending_approval')",
+                        name, S(b, "channel"), S(b, "category"), S(b, "subject"), S(b, "body"), S(b, "sender_profile_key"), filtersJson, S(b, "scheduled_at"), idNum);
+                    log(adm.Id, "comm_campaign_updated", $"#{idNum}");
+                    return J(new { ok = true, id = idNum });
+                }
+                var newId = db.ExecuteReturningId(@"INSERT INTO comm_campaigns(name,channel,category,subject,body,sender_profile_key,filters,scheduled_at,status,created_by)
+                    VALUES(?,?,?,?,?,?,?,?, 'draft', ?)",
+                    name, S(b, "channel") is { Length: > 0 } ch ? ch : "email", S(b, "category") is { Length: > 0 } ca ? ca : "operational",
+                    S(b, "subject"), S(b, "body"), S(b, "sender_profile_key") is { Length: > 0 } sp ? sp : "marketing", filtersJson, S(b, "scheduled_at"), adm.Id);
+                log(adm.Id, "comm_campaign_created", $"#{newId} {name}");
+                return J(new { ok = true, id = newId });
+            });
+        });
+        app.MapPost("/api/admin/comms/campaigns/{id:long}/preview", (HttpRequest req, long id) => gate(req, SECTION, _ =>
+        {
+            var c = db.QueryOne("SELECT * FROM comm_campaigns WHERE id=?", id);
+            if (c is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var filters = H.Str(c["filters"]) is { Length: > 0 } fj ? H.ToMap(JsonDocument.Parse(fj).RootElement) : null;
+            var marketing = H.Str(c["category"]) is "marketing" or "newsletter";
+            var aud = Audience(filters, marketing);
+            // Suppression removes already-opted-out addresses from the count shown.
+            var suppressed = 0;
+            var eligible = aud.Where(x => { var sup = db.QueryOne("SELECT id FROM comm_suppression WHERE channel='email' AND lower(address)=?", x.email) is not null; if (sup) suppressed++; return !sup; }).ToList();
+            return J(new
+            {
+                total = eligible.Count, suppressed, raw = aud.Count,
+                sample = eligible.Take(5).Select(x => Mask(x.email)).ToList(),
+                note = "Recipient addresses are masked and are never exposed to other recipients — each message is sent separately.",
+            });
+        }));
+        app.MapPost("/api/admin/comms/campaigns/{id:long}/test", async (HttpContext ctx, long id) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, SECTION, adm =>
+            {
+                var c = db.QueryOne("SELECT * FROM comm_campaigns WHERE id=?", id);
+                if (c is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+                var to = S(b, "to"); if (to.Length == 0) to = adm.Email;
+                Comms.Enqueue(db, "email", $"camptest:{id}:{to}:{DateTime.UtcNow.Ticks}", null, to, null,
+                    "[TEST] " + (H.Str(c["subject"]) ?? "Campaign"), H.Str(c["body"]) ?? "", senderKey: H.Str(c["sender_profile_key"]),
+                    category: "operational", triggerCode: "campaign.test", campaignId: id, createdBy: adm.Id);
+                try { OutboxDispatcher.DrainOnce(db, 5); } catch { }
+                log(adm.Id, "comm_campaign_test", $"#{id} -> {to}");
+                return J(new { ok = true, sent_to = to });
+            });
+        });
+        app.MapPost("/api/admin/comms/campaigns/{id:long}/approve", (HttpRequest req, long id) => gate(req, SECTION, adm =>
+        {
+            var c = db.QueryOne("SELECT status FROM comm_campaigns WHERE id=?", id);
+            if (c is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            db.Execute("UPDATE comm_campaigns SET status='approved', approved_by=?, approved_at=datetime('now'), updated_at=datetime('now') WHERE id=?", adm.Id, id);
+            log(adm.Id, "comm_campaign_approved", $"#{id}");
+            return J(new { ok = true });
+        }));
+        app.MapPost("/api/admin/comms/campaigns/{id:long}/send", (HttpRequest req, long id) => gate(req, SECTION, adm =>
+        {
+            var c = db.QueryOne("SELECT * FROM comm_campaigns WHERE id=?", id);
+            if (c is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (H.Str(c["status"]) != "approved") return Results.Json(new { error = "not_approved", message = "Approve the campaign before sending." }, statusCode: 409);
+            var filters = H.Str(c["filters"]) is { Length: > 0 } fj ? H.ToMap(JsonDocument.Parse(fj).RootElement) : null;
+            var marketing = H.Str(c["category"]) is "marketing" or "newsletter";
+            var aud = Audience(filters, marketing);
+            db.Execute("UPDATE comm_campaigns SET status='sending', updated_at=datetime('now') WHERE id=?", id);
+            int queued = 0;
+            foreach (var (uid, email) in aud)
+            {
+                // One separate message per recipient (privacy-safe). Enqueue enforces suppression + consent
+                // + a per-recipient dedup key, so a re-run never double-sends to the same person.
+                var oid = Comms.Enqueue(db, "email", $"campaign:{id}:{email}", uid, email, null,
+                    H.Str(c["subject"]) ?? "", H.Str(c["body"]) ?? "", senderKey: H.Str(c["sender_profile_key"]),
+                    category: H.Str(c["category"]) ?? "operational", triggerCode: "campaign.send", campaignId: id, createdBy: adm.Id);
+                if (oid is not null) queued++;
+            }
+            db.Execute("UPDATE comm_campaigns SET status='sent', total=?, queued=?, updated_at=datetime('now') WHERE id=?", aud.Count, queued, id);
+            try { OutboxDispatcher.DrainOnce(db, 100); } catch { }
+            log(adm.Id, "comm_campaign_sent", $"#{id} queued={queued}/{aud.Count}");
+            return J(new { ok = true, audience = aud.Count, queued });
+        }));
+        app.MapPost("/api/admin/comms/campaigns/{id:long}/{action}", (HttpRequest req, long id, string action) => gate(req, SECTION, adm =>
+        {
+            if (action is not ("pause" or "resume" or "cancel")) return Results.Json(new { error = "bad_action" }, statusCode: 400);
+            var st = action switch { "pause" => "paused", "resume" => "approved", _ => "cancelled" };
+            db.Execute("UPDATE comm_campaigns SET status=?, updated_at=datetime('now') WHERE id=?", st, id);
+            if (action == "cancel") db.Execute("UPDATE comm_outbox SET status='cancelled' WHERE campaign_id=? AND status IN('queued','scheduled','retrying')", id);
+            log(adm.Id, "comm_campaign_" + action, $"#{id}");
+            return J(new { ok = true, status = st });
+        }));
+
+        // ───────── analytics ─────────
+        app.MapGet("/api/admin/comms/analytics", (HttpRequest req) => gate(req, SECTION, _ => J(new
+        {
+            by_status = db.Query("SELECT status, COUNT(*) AS n FROM comm_outbox GROUP BY status ORDER BY n DESC"),
+            by_channel = db.Query("SELECT channel, COUNT(*) AS n FROM comm_outbox GROUP BY channel"),
+            by_day = db.Query("SELECT substr(COALESCE(sent_at,created_at),1,10) AS day, COUNT(*) AS n FROM comm_outbox GROUP BY day ORDER BY day DESC LIMIT 14"),
+            top_triggers = db.Query("SELECT trigger_code, COUNT(*) AS n FROM comm_outbox WHERE trigger_code IS NOT NULL GROUP BY trigger_code ORDER BY n DESC LIMIT 12"),
+            failures = db.Query("SELECT last_error, COUNT(*) AS n FROM comm_outbox WHERE status='failed' AND last_error IS NOT NULL GROUP BY last_error ORDER BY n DESC LIMIT 10"),
+        })));
+
         // ───────── unified inbox (conversations) ─────────
         app.MapGet("/api/admin/comms/conversations", (HttpRequest req) => gate(req, SECTION, _ =>
         {
