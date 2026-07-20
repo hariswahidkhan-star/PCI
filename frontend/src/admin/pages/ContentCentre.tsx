@@ -20,7 +20,7 @@ interface Author { id: number; slug: string; name: string; title?: string; activ
 interface Category { id: number; slug: string; name: string; active: number }
 interface Capability { id: number; platform_key: string; platform: string; kind: string; capability: string; publish_mode?: string; requires_approval: number; official_api: number; connected: boolean; notes?: string; doc_url?: string }
 
-const TABS = ['Dashboard', 'Blog posts', 'Taxonomy', 'Social', 'Syndication', 'Import', 'Distribution', 'AI Studio'] as const
+const TABS = ['Dashboard', 'Blog posts', 'Taxonomy', 'Social', 'Syndication', 'Import', 'Backlinks', 'Distribution', 'AI Studio'] as const
 
 export default function ContentCentre() {
   const { can } = useAdminAuth()
@@ -40,6 +40,7 @@ export default function ContentCentre() {
       {tab === 'Social' && <SocialTab canSocial={can('cc_social')} />}
       {tab === 'Syndication' && <SyndicationTab canSyndicate={can('cc_syndicate')} />}
       {tab === 'Import' && <ImportTab canReview={can('cc_review')} canLegal={can('cc_legal')} />}
+      {tab === 'Backlinks' && <BacklinksTab canManage={can('cc_backlinks')} />}
       {tab === 'Distribution' && <DistributionTab />}
       {tab === 'AI Studio' && <AiTab />}
     </div>
@@ -81,7 +82,9 @@ function DashboardTab() {
 }
 
 function StatusPill({ status }: { status: string }) {
-  const tone = status === 'published' ? 'ok' : status === 'withdrawn' || status === 'unpublished' ? 'err' : status.includes('review') ? 'warn' : 'neutral'
+  const ok = ['published', 'live', 'agreed']
+  const err = ['withdrawn', 'unpublished', 'lost', 'removed', 'redirected', 'unreachable', 'declined', 'rejected']
+  const tone = ok.includes(status) ? 'ok' : err.includes(status) ? 'err' : status.includes('review') ? 'warn' : 'neutral'
   return <Badge tone={tone as never}>{status.replace(/_/g, ' ')}</Badge>
 }
 
@@ -511,6 +514,138 @@ function ImportTab({ canReview, canLegal }: { canReview: boolean; canLegal: bool
                   {it.allowed_use === 'full' && canLegal ? <button className="btn sm ghost" onClick={() => act(`/api/admin/content/import/items/${it.id}/approve`, { mode: 'full' }, items.refetch)}>Full</button> : null}
                   <button className="btn sm ghost" onClick={() => act(`/api/admin/content/import/items/${it.id}/reject`, {}, items.refetch)}>Reject</button>
                 </span> : it.pci_post_id ? <span className="muted" style={{ fontSize: '.8rem' }}>→ draft #{it.pci_post_id}</span> : null}</td>
+              </tr>))}</tbody>
+          </table>
+        )}
+      </Card>
+    </div>
+  )
+}
+
+interface Prospect { id: number; name: string; domain?: string; url?: string; category: string; authority?: number | null; relevance: string; status: string; owner?: string; contact_name?: string; contact_email?: string; next_action_at?: string | null }
+interface Backlink { id: number; prospect_id?: number | null; source_url: string; source_domain?: string; target_url?: string; anchor_text?: string; rel: string; link_type: string; status: string; discovered_via: string; last_checked_at?: string | null; last_status_code?: number | null; first_seen_at?: string | null }
+interface BLOverview { prospects: Array<{ status: string; n: number }>; links: Array<{ status: string; n: number }>; follow_ups_due: number; live: number; lost: number }
+
+const PROSPECT_STATUSES = ['prospect', 'contacted', 'in_talks', 'agreed', 'live', 'declined', 'dormant']
+const LINK_REL = ['unknown', 'dofollow', 'nofollow', 'ugc', 'sponsored']
+
+function BacklinksTab({ canManage }: { canManage: boolean }) {
+  const overview = useAdminQuery<BLOverview>('/api/admin/content/backlinks/overview')
+  const [statusFilter, setStatusFilter] = useState('')
+  const prospects = useAdminQuery<{ rows: Prospect[] }>('/api/admin/content/backlinks/prospects' + (statusFilter ? '?status=' + statusFilter : ''))
+  const links = useAdminQuery<{ rows: Backlink[] }>('/api/admin/content/backlinks/links')
+  const [p, setP] = useState<Record<string, string>>({})
+  const [l, setL] = useState<Record<string, string>>({})
+  const [csv, setCsv] = useState('')
+  const [outreachFor, setOutreachFor] = useState<number | null>(null)
+  const [o, setO] = useState<Record<string, string>>({})
+  const [msg, setMsg] = useState('')
+
+  async function call(fn: () => Promise<unknown>, then?: () => void) { setMsg(''); try { await fn(); then?.() } catch (e) { setMsg((e as Error).message) } }
+  const addProspect = () => call(() => adminApi.post('/api/admin/content/backlinks/prospects', { name: p.name, domain: p.domain, url: p.url, category: p.category || 'publication', contact_email: p.contact_email, owner: p.owner, status: p.status || 'prospect' }), () => { setP({}); prospects.refetch(); overview.refetch() })
+  const setProspectStatus = (id: number, status: string) => call(() => adminApi.patch(`/api/admin/content/backlinks/prospects/${id}`, { status }), () => { prospects.refetch(); overview.refetch() })
+  const logOutreach = (id: number) => call(() => adminApi.post('/api/admin/content/backlinks/outreach', { prospect_id: id, channel: o.channel || 'email', subject: o.subject, outcome: o.outcome || 'sent', follow_up_at: o.follow_up_at, prospect_status: o.prospect_status }), () => { setOutreachFor(null); setO({}); prospects.refetch(); overview.refetch() })
+  const addLink = () => call(() => adminApi.post('/api/admin/content/backlinks/links', { source_url: l.source_url, target_url: l.target_url, anchor_text: l.anchor_text, rel: l.rel || 'unknown' }), () => { setL({}); links.refetch(); overview.refetch() })
+  const verifyLink = (id: number) => call(() => adminApi.post(`/api/admin/content/backlinks/links/${id}/verify`, {}), () => { links.refetch(); overview.refetch() })
+  const importCsv = () => {
+    const rows = csv.split('\n').map((ln) => ln.trim()).filter(Boolean).map((ln) => { const [source_url, target_url, anchor_text, rel] = ln.split(',').map((s) => s.trim()); return { source_url, target_url, anchor_text, rel } }).filter((r) => r.source_url)
+    if (!rows.length) return
+    call(() => adminApi.post('/api/admin/content/backlinks/links/import', { rows }), () => { setCsv(''); links.refetch(); overview.refetch() })
+  }
+
+  return (
+    <div style={{ display: 'grid', gap: '1rem' }}>
+      <p className="muted" style={{ margin: 0 }}>Earn and monitor inbound links the honest way. PCI does not scrape the web, buy links, or run automated discovery — prospects, outreach and earned links are logged manually or by CSV. The one automated action is on-demand <strong>verification</strong>: fetching a single recorded source page (through the SSRF-guarded egress client) to confirm the link to PCI still exists. Bulk backlink discovery would require a licensed third-party backlink index and is not enabled.</p>
+      {overview.data && (
+        <div className="statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(140px,1fr))', gap: '.8rem' }}>
+          <Stat n={overview.data.live} k="Live links" />
+          <Stat n={overview.data.lost} k="Lost / removed" />
+          <Stat n={overview.data.prospects.reduce((s, r) => s + r.n, 0)} k="Prospects" />
+          <Stat n={overview.data.follow_ups_due} k="Follow-ups due" />
+        </div>
+      )}
+      {msg && <ErrorNote>{msg}</ErrorNote>}
+
+      {canManage && (
+        <Card title="Add a link prospect">
+          <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'end' }}>
+            <label>Name<input value={p.name || ''} onChange={(e) => setP({ ...p, name: e.target.value })} placeholder="PC Journal" /></label>
+            <label>Domain<input value={p.domain || ''} onChange={(e) => setP({ ...p, domain: e.target.value })} placeholder="pcjournal.example" /></label>
+            <label style={{ minWidth: 200 }}>URL<input value={p.url || ''} onChange={(e) => setP({ ...p, url: e.target.value })} placeholder="https://…" /></label>
+            <label>Category<input value={p.category || ''} onChange={(e) => setP({ ...p, category: e.target.value })} placeholder="publication" /></label>
+            <label>Contact email<input value={p.contact_email || ''} onChange={(e) => setP({ ...p, contact_email: e.target.value })} placeholder="editor@…" /></label>
+            <button className="btn sm" onClick={addProspect} disabled={!p.name}>Add</button>
+          </div>
+        </Card>
+      )}
+
+      <Card title="Prospects" action={
+        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+          <option value="">All statuses</option>
+          {PROSPECT_STATUSES.map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
+        </select>
+      }>
+        {prospects.loading ? <Spinner /> : !prospects.data?.rows.length ? <Empty>No prospects</Empty> : (
+          <table className="tbl"><thead><tr><th>Prospect</th><th>Status</th><th>Contact</th><th></th></tr></thead>
+            <tbody>{prospects.data.rows.map((pr) => (
+              <>
+                <tr key={pr.id}>
+                  <td>{pr.name}<div className="muted" style={{ fontSize: '.78rem' }}>{pr.domain}{pr.category ? ' · ' + pr.category : ''}</div></td>
+                  <td>{canManage ? <select value={pr.status} onChange={(e) => setProspectStatus(pr.id, e.target.value)}>{PROSPECT_STATUSES.map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}</select> : <StatusPill status={pr.status} />}</td>
+                  <td className="muted" style={{ fontSize: '.8rem' }}>{pr.contact_email || pr.contact_name || '—'}{pr.next_action_at ? <div>next: {pr.next_action_at}</div> : null}</td>
+                  <td>{canManage ? <span className="row" style={{ gap: '.3rem' }}>
+                    <button className="btn sm ghost" onClick={() => { setOutreachFor(outreachFor === pr.id ? null : pr.id); setO({}) }}>Outreach</button>
+                    <button className="btn sm ghost" onClick={() => call(() => adminApi.post(`/api/admin/content/backlinks/prospects/${pr.id}/delete`, {}), () => { prospects.refetch(); overview.refetch() })}>Remove</button>
+                  </span> : null}</td>
+                </tr>
+                {outreachFor === pr.id && canManage && (
+                  <tr key={pr.id + '-o'}><td colSpan={4} style={{ background: 'var(--panel,#f6f6f8)' }}>
+                    <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'end', padding: '.4rem 0' }}>
+                      <label>Channel<select value={o.channel || 'email'} onChange={(e) => setO({ ...o, channel: e.target.value })}>{['email', 'call', 'social', 'event', 'form'].map((c) => <option key={c} value={c}>{c}</option>)}</select></label>
+                      <label style={{ minWidth: 200 }}>Subject / note<input value={o.subject || ''} onChange={(e) => setO({ ...o, subject: e.target.value })} placeholder="Intro email sent" /></label>
+                      <label>Outcome<select value={o.outcome || 'sent'} onChange={(e) => setO({ ...o, outcome: e.target.value })}>{['sent', 'replied', 'agreed', 'declined', 'no_response', 'bounced'].map((c) => <option key={c} value={c}>{c.replace(/_/g, ' ')}</option>)}</select></label>
+                      <label>Advance status<select value={o.prospect_status || ''} onChange={(e) => setO({ ...o, prospect_status: e.target.value })}><option value="">(unchanged)</option>{PROSPECT_STATUSES.map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}</select></label>
+                      <label>Follow-up<input type="date" value={o.follow_up_at || ''} onChange={(e) => setO({ ...o, follow_up_at: e.target.value })} /></label>
+                      <button className="btn sm" onClick={() => logOutreach(pr.id)}>Log</button>
+                    </div>
+                  </td></tr>
+                )}
+              </>
+            ))}</tbody>
+          </table>
+        )}
+      </Card>
+
+      {canManage && (
+        <Card title="Record a backlink">
+          <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'end' }}>
+            <label style={{ minWidth: 240 }}>Source URL (the page linking to us)<input value={l.source_url || ''} onChange={(e) => setL({ ...l, source_url: e.target.value })} placeholder="https://site/article" /></label>
+            <label style={{ minWidth: 200 }}>Target URL (our page)<input value={l.target_url || ''} onChange={(e) => setL({ ...l, target_url: e.target.value })} placeholder="https://projectcontrolsinstitute.org/…" /></label>
+            <label>Anchor<input value={l.anchor_text || ''} onChange={(e) => setL({ ...l, anchor_text: e.target.value })} placeholder="Project Controls Institute" /></label>
+            <label>Rel<select value={l.rel || 'unknown'} onChange={(e) => setL({ ...l, rel: e.target.value })}>{LINK_REL.map((r) => <option key={r} value={r}>{r}</option>)}</select></label>
+            <button className="btn sm" onClick={addLink} disabled={!l.source_url}>Add</button>
+          </div>
+          <details style={{ marginTop: '.6rem' }}>
+            <summary className="muted" style={{ cursor: 'pointer' }}>Bulk import (CSV: source_url,target_url,anchor,rel — one per line)</summary>
+            <textarea value={csv} onChange={(e) => setCsv(e.target.value)} rows={4} style={{ width: '100%', marginTop: '.4rem' }} placeholder="https://site/a,https://projectcontrolsinstitute.org/x,PCI,dofollow" />
+            <button className="btn sm" onClick={importCsv} disabled={!csv.trim()}>Import rows</button>
+          </details>
+        </Card>
+      )}
+
+      <Card title="Backlinks">
+        {links.loading ? <Spinner /> : !links.data?.rows.length ? <Empty>No backlinks recorded</Empty> : (
+          <table className="tbl"><thead><tr><th>Source → target</th><th>Anchor / rel</th><th>Status</th><th>Last checked</th><th></th></tr></thead>
+            <tbody>{links.data.rows.map((bl) => (
+              <tr key={bl.id}>
+                <td style={{ maxWidth: 320 }}><a href={bl.source_url} target="_blank" rel="noreferrer">{bl.source_domain || bl.source_url}</a>{bl.target_url ? <div className="muted" style={{ fontSize: '.75rem' }}>→ {bl.target_url}</div> : null}</td>
+                <td className="muted" style={{ fontSize: '.8rem' }}>{bl.anchor_text || '—'}<div><Badge tone="neutral">{bl.rel}</Badge></div></td>
+                <td><StatusPill status={bl.status} /></td>
+                <td className="muted" style={{ fontSize: '.78rem' }}>{bl.last_checked_at || '—'}{bl.last_status_code ? <div>HTTP {bl.last_status_code}</div> : null}</td>
+                <td>{canManage ? <span className="row" style={{ gap: '.3rem' }}>
+                  <button className="btn sm" onClick={() => verifyLink(bl.id)}>Verify</button>
+                  <button className="btn sm ghost" onClick={() => call(() => adminApi.post(`/api/admin/content/backlinks/links/${bl.id}/delete`, {}), () => { links.refetch(); overview.refetch() })}>Remove</button>
+                </span> : null}</td>
               </tr>))}</tbody>
           </table>
         )}

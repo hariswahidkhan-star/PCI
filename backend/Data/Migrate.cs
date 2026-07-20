@@ -1171,8 +1171,41 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_ai_gen_post ON ai_content_generations(post_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_ai_gen_creator ON ai_content_generations(created_by)");
 
+        // Backlink & Outreach CRM (Phase 5) — earn and monitor inbound links the honest way. PCI does NOT
+        // scrape the web, buy links, or run automated discovery: prospects, outreach touchpoints and earned
+        // backlinks are entered manually or by CSV, or captured from PCI's own referral logs. The one
+        // automated action is on-demand VERIFICATION — fetching a SINGLE recorded source page through the
+        // SSRF-guarded egress client to confirm the link to PCI still exists. cc_* namespaced; the whole
+        // subsystem is gated by the cc_backlinks permission.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_link_prospects(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name VARCHAR(160) NOT NULL, domain VARCHAR(190), url VARCHAR(500), category VARCHAR(40) DEFAULT 'publication',
+            authority INTEGER, relevance VARCHAR(12) DEFAULT 'medium', status VARCHAR(20) DEFAULT 'prospect',
+            owner VARCHAR(120), contact_name VARCHAR(120), contact_email VARCHAR(190),
+            notes TEXT, next_action_at TEXT, active INTEGER DEFAULT 1,
+            created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_prospect_status ON cc_link_prospects(status, active)");
+
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_outreach(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            prospect_id INTEGER NOT NULL, channel VARCHAR(20) DEFAULT 'email', direction VARCHAR(8) DEFAULT 'out',
+            subject VARCHAR(200), body TEXT, outcome VARCHAR(20) DEFAULT 'sent',
+            occurred_at TEXT DEFAULT (datetime('now')), follow_up_at TEXT,
+            created_by INTEGER, created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_outreach_prospect ON cc_outreach(prospect_id)");
+
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_backlinks(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            prospect_id INTEGER, link_hash VARCHAR(64), source_url VARCHAR(500) NOT NULL, source_domain VARCHAR(190),
+            target_url VARCHAR(500), anchor_text VARCHAR(300), rel VARCHAR(16) DEFAULT 'unknown',
+            link_type VARCHAR(20) DEFAULT 'editorial', status VARCHAR(16) DEFAULT 'candidate',
+            discovered_via VARCHAR(24) DEFAULT 'manual', first_seen_at TEXT, last_checked_at TEXT, last_status_code INTEGER,
+            notes TEXT, active INTEGER DEFAULT 1,
+            created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_backlink_status ON cc_backlinks(status, active)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_cc_backlink_hash ON cc_backlinks(link_hash)");
+
         // Configurable defaults (operator-tunable via Settings; no hardcoded values in React/.NET) + the
         // content-centre notification master toggle.
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('backlink_our_domain','projectcontrolsinstitute.org')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('backlink_verify_enabled','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_base_path','/blog')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_posts_per_page','12')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_indexnow_on_publish','1')");
