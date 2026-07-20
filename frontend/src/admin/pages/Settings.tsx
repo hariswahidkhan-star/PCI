@@ -23,6 +23,7 @@ function TwoFactorCard() {
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const [copied, setCopied] = useState(false)
+  const [recovery, setRecovery] = useState<string[] | null>(null)
 
   async function begin() {
     setBusy(true); setMsg(null)
@@ -33,8 +34,9 @@ function TwoFactorCard() {
   async function verify() {
     setBusy(true); setMsg(null)
     try {
-      await adminApi.post('/api/admin/me/2fa/verify', { code: code.trim() })
+      const r = await adminApi.post<{ recovery_codes?: string[] }>('/api/admin/me/2fa/verify', { code: code.trim() })
       setSetup(null); setCode('')
+      setRecovery(r.recovery_codes ?? [])
       setMsg({ ok: true, text: '2FA enabled — you will be asked for an authentication code at every sign-in.' })
     } catch (e) {
       setMsg({ ok: false, text: e instanceof Error && e.message === 'totp_invalid' ? 'That code is not valid — check your authenticator app and try again.' : (e as Error).message })
@@ -62,6 +64,21 @@ function TwoFactorCard() {
         1Password, Authy…). Once enabled, every sign-in asks for the 6-digit code as a second factor.
       </p>
       {msg && <div className={'notice' + (msg.ok ? '' : ' err')} role="status" style={{ marginBottom: '.6rem' }}>{msg.text}</div>}
+      {recovery && recovery.length > 0 && (
+        <div className="notice" style={{ marginBottom: '.6rem', display: 'grid', gap: '.4rem' }}>
+          <strong>Save your recovery codes now</strong>
+          <p className="muted small" style={{ margin: 0 }}>
+            Each code works once if you lose your authenticator. Store them somewhere safe — they will not be shown again.
+          </p>
+          <div style={{ fontFamily: 'monospace', fontSize: '.95rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '.25rem' }}>
+            {recovery.map((c) => <span key={c}>{c}</span>)}
+          </div>
+          <div className="row" style={{ gap: '.4rem' }}>
+            <button className="btn ghost sm" onClick={() => { navigator.clipboard?.writeText(recovery.join('\n')).catch(() => {}) }}>Copy all</button>
+            <button className="btn sm" onClick={() => setRecovery(null)}>I've saved them</button>
+          </div>
+        </div>
+      )}
       {!setup ? (
         <button className="btn sm" disabled={busy} onClick={begin}>{busy ? 'Working…' : 'Enable 2FA'}</button>
       ) : (
@@ -84,7 +101,7 @@ function TwoFactorCard() {
       <details style={{ marginTop: '.8rem' }}>
         <summary className="small" style={{ cursor: 'pointer', fontWeight: 600 }}>Disable 2FA</summary>
         <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap', marginTop: '.5rem' }}>
-          <input inputMode="numeric" maxLength={8} placeholder="Current code" value={disableCode} onChange={(e) => setDisableCode(e.target.value)} style={{ maxWidth: 140 }} aria-label="Current authentication code" />
+          <input maxLength={16} placeholder="Current or recovery code" value={disableCode} onChange={(e) => setDisableCode(e.target.value)} style={{ maxWidth: 180 }} aria-label="Current authentication or recovery code" />
           <button className="btn sm danger" disabled={busy} onClick={disable}>{busy ? 'Working…' : 'Disable 2FA'}</button>
         </div>
         <p className="muted small" style={{ marginTop: '.4rem' }}>Requires a current code from your authenticator app while 2FA is active.</p>

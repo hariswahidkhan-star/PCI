@@ -75,6 +75,19 @@ function Editor({ member, meta, onClose, onSaved }: { member: TeamMember | null;
     }
   }
 
+  async function reset2fa() {
+    if (!member) return
+    if (!confirm(`Reset two-factor authentication for ${member.email}? They will sign in with their password alone and can re-enrol a new authenticator.`)) return
+    try {
+      await adminApi.post(`/api/admin/team/${member.id}/reset-2fa`)
+      setError(null)
+      setTempPw(null)
+      alert(`Two-factor authentication has been reset for ${member.email}.`)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Could not reset 2FA.')
+    }
+  }
+
   return (
     <div className="drawer-backdrop" onClick={onClose}>
       <div className="drawer" onClick={(e) => e.stopPropagation()}>
@@ -129,6 +142,7 @@ function Editor({ member, meta, onClose, onSaved }: { member: TeamMember | null;
         <div className="row" style={{ marginTop: '.5rem', flexWrap: 'wrap' }}>
           <button className="btn" disabled={busy || (isNew && !email)} onClick={save}>{busy ? 'Saving…' : isNew ? 'Create member' : 'Save changes'}</button>
           {!isNew && <button className="btn secondary sm" onClick={resetPw}>Reset password</button>}
+          {!isNew && <button className="btn secondary sm" onClick={reset2fa}>Reset 2FA</button>}
         </div>
       </div>
     </div>

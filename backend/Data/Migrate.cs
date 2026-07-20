@@ -391,6 +391,7 @@ public static class Migrate
         // Optional TOTP MFA for admin accounts (privileged logins).
         AddCol("admin_users", "totp_secret", "totp_secret TEXT");
         AddCol("admin_users", "totp_last_step", "totp_last_step INTEGER");   // replay guard: last consumed TOTP timestep
+        AddCol("admin_users", "totp_recovery", "totp_recovery TEXT");        // one-time MFA recovery codes (SHA-256 hashes, JSON array)
         // Per-account brute-force lockout (complements the per-IP rate limiter) on every password login.
         foreach (var t in new[] { "users", "admin_users", "partner_users" })
         {

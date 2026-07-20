@@ -71,7 +71,7 @@ export default function AdminLogin() {
         setError('This account has two-factor authentication — enter the 6-digit code from your authenticator app.')
       } else if (code === 'totp_invalid') {
         setNeedsTotp(true)
-        setError('That authentication code is not valid — check your authenticator app and try again.')
+        setError('That code is not valid — check your authenticator app, or enter a recovery code, and try again.')
       } else {
         setError(err instanceof Error ? err.message : 'Unable to sign in.')
       }
@@ -103,7 +103,8 @@ export default function AdminLogin() {
             {needsTotp && (
               <div className="field">
                 <label htmlFor="totp">Authentication code</label>
-                <input id="totp" inputMode="numeric" autoComplete="one-time-code" maxLength={8} required placeholder="123456" value={totp} onChange={(e) => setTotp(e.target.value)} />
+                <input id="totp" autoComplete="one-time-code" maxLength={16} required placeholder="123456 or recovery code" value={totp} onChange={(e) => setTotp(e.target.value)} />
+                <p className="muted small" style={{ margin: '.3rem 0 0' }}>Lost your authenticator? Enter one of your recovery codes instead.</p>
               </div>
             )}
             <button className="btn block" type="submit" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>

@@ -504,12 +504,28 @@ app.MapPost("/api/admin/auth/login", async (HttpRequest req) =>
     // advance, so a captured code cannot be replayed within its ±1 validity window.
     if (a["totp_secret"] is string totp && totp.Length > 0 && !totp.StartsWith("pending:"))
     {
-        var code = S(b, "totp") ?? "";
+        var code = (S(b, "totp") ?? "").Trim();
         if (code.Length == 0) return Results.Json(new { error = "totp_required" }, statusCode: 401);
         var matchedStep = Security.VerifyTotpStep(totp, code);
         var lastStep = a.TryGetValue("totp_last_step", out var ls) && ls is not null ? Convert.ToInt64(ls) : 0L;
-        if (matchedStep < 0 || matchedStep <= lastStep) return Results.Json(new { error = "totp_invalid" }, statusCode: 401);
-        db.Execute("UPDATE admin_users SET totp_last_step=? WHERE id=?", matchedStep, a["id"]);
+        if (matchedStep >= 0 && matchedStep > lastStep)
+        {
+            db.Execute("UPDATE admin_users SET totp_last_step=? WHERE id=?", matchedStep, a["id"]);
+        }
+        else
+        {
+            // Fall back to a one-time recovery code (hashed compare; consumed on use) so a lost
+            // authenticator is recoverable without operator intervention. Same scheme as the student login.
+            var recovHash = Security.Sha(code.Replace(" ", "").Replace("-", "").ToLowerInvariant());
+            var storedRec = (a.TryGetValue("totp_recovery", out var rv) ? rv as string : null) ?? "";
+            var codes = string.IsNullOrEmpty(storedRec) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(storedRec) ?? new();
+            if (!codes.Remove(recovHash))
+            {
+                LoginGuard.OnFail(db, "admin_users", a["id"]);
+                return Results.Json(new { error = "totp_invalid" }, statusCode: 401);
+            }
+            db.Execute("UPDATE admin_users SET totp_recovery=? WHERE id=?", JsonSerializer.Serialize(codes), a["id"]);
+        }
     }
     var tok = Security.RandomHex(24);
     db.Execute("INSERT INTO admin_sessions(admin_id,token,expires_at) VALUES(?,?,datetime('now','+12 hours'))", a["id"], Security.Sha(tok));
@@ -594,7 +610,9 @@ app.MapPost("/api/admin/auth/recover", async (HttpRequest req) =>
         Log(0, "admin_recovery_failed", email);
         return Results.Json(new { error = "recovery_invalid", message = "The recovery code or email is not valid." }, statusCode: 400);
     }
-    db.Execute("UPDATE admin_users SET password_hash=?, must_change_pw=0, status='active' WHERE id=?", BCrypt.Net.BCrypt.HashPassword(newPw), a["id"]);
+    // The master recovery code also clears any TOTP factor — otherwise an admin who lost BOTH their password
+    // and their authenticator would reset the password here and still be blocked at the MFA prompt.
+    db.Execute("UPDATE admin_users SET password_hash=?, must_change_pw=0, status='active', totp_secret=NULL, totp_recovery=NULL, totp_last_step=0 WHERE id=?", BCrypt.Net.BCrypt.HashPassword(newPw), a["id"]);
     db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", a["id"]);               // sign out everywhere
     db.Execute("DELETE FROM admin_reset_tokens WHERE admin_id=? AND used_at IS NULL", a["id"]);   // void any pending email links
     Log(a["id"] as long? ?? 0, "admin_recovery_completed", email);
@@ -622,9 +640,14 @@ app.MapPost("/api/admin/me/2fa/verify", async (HttpRequest req) =>
     var stored = db.Scalar<string>("SELECT totp_secret FROM admin_users WHERE id=?", a.Id) ?? "";
     if (!stored.StartsWith("pending:")) return Results.Json(new { error = "nothing_pending" }, statusCode: 409);
     if (!Security.VerifyTotp(stored["pending:".Length..], S(b, "code"))) return Results.Json(new { error = "totp_invalid" }, statusCode: 400);
-    db.Execute("UPDATE admin_users SET totp_secret=? WHERE id=?", stored["pending:".Length..], a.Id);
+    // Issue 10 one-time recovery codes so a lost authenticator can never permanently lock the admin out;
+    // store SHA-256 hashes only and show the plaintext once (mirrors the student 2FA enrolment).
+    var plain = Enumerable.Range(0, 10).Select(_ => Security.RandomHex(5).ToLowerInvariant()).ToList();
+    var hashes = plain.Select(c => Security.Sha(c)).ToList();
+    db.Execute("UPDATE admin_users SET totp_secret=?, totp_last_step=0, totp_recovery=? WHERE id=?",
+        stored["pending:".Length..], JsonSerializer.Serialize(hashes), a.Id);
     Log(a.Id, "admin_2fa_enabled", a.Email);
-    return Json(new { ok = true, enabled = true });
+    return Json(new { ok = true, enabled = true, recovery_codes = plain.Select(c => c.Length >= 10 ? c[..5] + "-" + c[5..10] : c).ToArray() });
 });
 
 app.MapPost("/api/admin/me/2fa/disable", async (HttpRequest req) =>
@@ -633,9 +656,21 @@ app.MapPost("/api/admin/me/2fa/disable", async (HttpRequest req) =>
     if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
     var b = await Body(req);
     var stored = db.Scalar<string>("SELECT totp_secret FROM admin_users WHERE id=?", a.Id) ?? "";
-    if (stored.Length > 0 && !stored.StartsWith("pending:") && !Security.VerifyTotp(stored, S(b, "code")))
-        return Results.Json(new { error = "totp_invalid", message = "Enter a current code to disable MFA." }, statusCode: 400);
-    db.Execute("UPDATE admin_users SET totp_secret=NULL WHERE id=?", a.Id);
+    if (stored.Length > 0 && !stored.StartsWith("pending:"))
+    {
+        var code = (S(b, "code") ?? "").Trim();
+        var ok = Security.VerifyTotp(stored, code);
+        if (!ok)
+        {
+            // Accept a one-time recovery code as well (consumed), so a lost authenticator can still turn MFA off.
+            var recovHash = Security.Sha(code.Replace(" ", "").Replace("-", "").ToLowerInvariant());
+            var rec = db.Scalar<string>("SELECT totp_recovery FROM admin_users WHERE id=?", a.Id) ?? "";
+            var codes = string.IsNullOrEmpty(rec) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(rec) ?? new();
+            if (!codes.Contains(recovHash))
+                return Results.Json(new { error = "totp_invalid", message = "Enter a current authenticator or recovery code to disable MFA." }, statusCode: 400);
+        }
+    }
+    db.Execute("UPDATE admin_users SET totp_secret=NULL, totp_recovery=NULL, totp_last_step=0 WHERE id=?", a.Id);
     Log(a.Id, "admin_2fa_disabled", a.Email);
     return Json(new { ok = true, enabled = false });
 });
@@ -786,6 +821,20 @@ app.MapPost("/api/admin/team/{id}/reset-password", (HttpRequest req, long id) =>
     db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", id);
     Log(actor?.Id, "admin_pw_reset", $"{a["email"] as string} (admin {id})");
     return Json(new { ok = true, temp_password = tempPw });
+});
+
+// Owner reset of another admin's MFA — the recovery path for a lost authenticator. Clears the TOTP factor
+// and any recovery codes so the admin can sign in with their password alone and re-enrol a fresh factor.
+// Owner-gated and audited; sessions are cleared so a stolen device cannot ride an existing session.
+app.MapPost("/api/admin/team/{id}/reset-2fa", (HttpRequest req, long id) =>
+{
+    var gate = OwnerGate(req, out var actor); if (gate is not null) return gate;
+    var a = db.QueryOne("SELECT * FROM admin_users WHERE id=?", id);
+    if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+    db.Execute("UPDATE admin_users SET totp_secret=NULL, totp_recovery=NULL, totp_last_step=0 WHERE id=?", id);
+    db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", id);
+    Log(actor?.Id, "admin_2fa_reset", $"{a["email"] as string} (admin {id})");
+    return Json(new { ok = true });
 });
 
 app.MapDelete("/api/admin/team/{id}", (HttpRequest req, long id) =>
