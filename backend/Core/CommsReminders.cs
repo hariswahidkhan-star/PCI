@@ -40,6 +40,61 @@ public sealed class CommsReminderService : BackgroundService
         var n = 0;
         n += MembershipExpiry(db);
         n += ExamSchedulingDeadline(db);
+        n += ApplicationInfoRequested(db);
+        n += MembershipExpired(db);
+        return n;
+    }
+
+    // Applications waiting on the candidate (status info_requested) for more than 7 days — one nudge each.
+    static int ApplicationInfoRequested(Db db)
+    {
+        var rows = db.Query(@"SELECT a.id, a.user_id, a.application_no, u.email, u.first_name
+            FROM certification_applications a JOIN users u ON u.id=a.user_id
+            WHERE a.status='info_requested' AND a.updated_at <= datetime('now','-7 day') AND u.status='active'");
+        var n = 0;
+        foreach (var r in rows)
+        {
+            var uid = H.L(r["user_id"]);
+            var appNo = H.Str(r["application_no"]) ?? ("#" + H.L(r["id"]));
+            try
+            {
+                Comms.Fire(db, "application.incomplete_reminder", uid, H.Str(r["email"]), null,
+                    new Dictionary<string, string?> { ["student_name"] = H.Str(r["first_name"]) ?? "there", ["application_no"] = appNo, ["portal_link"] = "/app/" },
+                    "Action needed on your PCI application",
+                    $"<p>Your application {appNo} is waiting on some additional information from you. Please sign in to your portal to respond so we can continue the review.</p>",
+                    dedupSuffix: $"appinfo:{H.L(r["id"])}");
+                n++;
+            }
+            catch { }
+        }
+        return n;
+    }
+
+    // Recently-lapsed memberships (expired within the last 30 days) — a single factual renewal notice.
+    static int MembershipExpired(Db db)
+    {
+        var rows = db.Query(@"SELECT m.user_id, m.expiry_date, u.email, u.first_name
+            FROM memberships m JOIN users u ON u.id=m.user_id
+            WHERE m.status='expired' AND m.expiry_date IS NOT NULL
+              AND m.expiry_date <= datetime('now') AND m.expiry_date > datetime('now','-30 day')
+              AND u.status='active'");
+        var n = 0;
+        foreach (var r in rows)
+        {
+            var uid = H.L(r["user_id"]);
+            var expiry = H.Str(r["expiry_date"]) ?? "";
+            var when = expiry.Length >= 10 ? expiry[..10] : expiry;
+            try
+            {
+                Comms.Fire(db, "membership.expired", uid, H.Str(r["email"]), null,
+                    new Dictionary<string, string?> { ["student_name"] = H.Str(r["first_name"]) ?? "there", ["expiry_date"] = when, ["portal_link"] = "/app/billing" },
+                    "Your PCI membership has expired",
+                    $"<p>Your PCI membership expired on {when}. You can renew any time from your portal to restore your benefits.</p>",
+                    dedupSuffix: $"expired:{uid}:{when}");
+                n++;
+            }
+            catch { }
+        }
         return n;
     }
 
