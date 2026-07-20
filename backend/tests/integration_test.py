@@ -1694,7 +1694,7 @@ def test_social_publishing(admin):
     chk("21k re-publish is idempotent (not re-queued)", c == 200 and again.get("queued") == False, again)
 
     # tokens are encrypted at rest (never plaintext)
-    con = dbconn(); sec = con.execute("SELECT secret_enc FROM social_accounts WHERE id=?", (ms.get("id"),)).fetchone()[0]; con.close()
+    con = dbconn(); sec = con.execute("SELECT secret_enc FROM social_pub_accounts WHERE id=?", (ms.get("id"),)).fetchone()[0]; con.close()
     chk("21l tokens are encrypted at rest (enc:v1:, no plaintext)", sec.startswith("enc:v1:") and "mtok" not in sec, sec[:12])
 
     # failure path: a failing webhook → draft fails/retries, and the ARTICLE is never affected
