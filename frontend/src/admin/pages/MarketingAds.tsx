@@ -12,7 +12,7 @@ type Row = Record<string, any>
 const TABS = [
   'Dashboard', 'Capability Registry', 'Connected Accounts', 'LinkedIn Posts', 'Manual Outreach',
   'Campaigns', 'Promotions', 'Lead Centre', 'Audiences', 'Creatives', 'Landing Pages',
-  'Conversions', 'Search Console', 'Alerts', 'Audit',
+  'Conversions', 'Search Console', 'Provider Jobs', 'Alerts', 'Audit',
 ] as const
 type Tab = typeof TABS[number]
 
@@ -58,6 +58,7 @@ export default function MarketingAds() {
       {tab === 'Landing Pages' && <SimpleList title="Landing Pages" path="landing-pages" fields={[['name', 'Name', true], ['url', 'URL'], ['headline', 'Headline'], ['description', 'Description'], ['cta', 'Call to action'], ['application_link', 'Application link']]} note="Validate fees, certification and claims before linking a landing page to a live campaign." />}
       {tab === 'Conversions' && <SimpleList title="Conversion Actions" path="conversions" fields={[['name', 'Name', true], ['platform_code', 'Platform'], ['business_event', 'Business event'], ['value', 'Value'], ['currency', 'Currency']]} note="Do not transmit unnecessary sensitive personal information. Attribution is never perfect where consent or browser limits apply." />}
       {tab === 'Search Console' && <SearchConsole />}
+      {tab === 'Provider Jobs' && <Jobs />}
       {tab === 'Alerts' && <Alerts />}
       {tab === 'Audit' && <Audit />}
     </div>
@@ -149,7 +150,8 @@ function Connections() {
   }
   async function connect(id: number) {
     const r = await adminApi.post<Row>(`/api/admin/marketing/connections/${id}/oauth-url`, {})
-    setMsg(r.operator_action || (r.ok ? 'Ready' : 'Connection not available yet.'))
+    if (r.ok && r.authorize_url) { setMsg('Opening the provider sign-in in a new tab…'); window.open(r.authorize_url, '_blank', 'noopener'); reload() }
+    else setMsg(r.operator_action || 'Connection not available yet.')
   }
   async function disconnect(id: number) { if (!confirm('Disconnect this account and clear its tokens?')) return; await adminApi.post(`/api/admin/marketing/connections/${id}/disconnect`, {}); reload() }
   return (
@@ -421,18 +423,53 @@ function SimpleList({ title, path, fields, note }: { title: string; path: string
 // ───────── Search Console ─────────
 function SearchConsole() {
   const { data, loading, reload } = useGet<{ rows: Row[]; sitemaps: Row[] }>('/api/admin/marketing/gsc/properties')
-  const [msg, setMsg] = useState('')
-  async function submit() { const r = await adminApi.post<Row>('/api/admin/marketing/gsc/sitemaps/submit', {}); setMsg(r.operator_action || 'Done'); reload() }
+  const [msg, setMsg] = useState(''); const [sitemap, setSitemap] = useState(''); const [url, setUrl] = useState('')
+  async function submit() { if (!sitemap) return; const r = await adminApi.post<Row>('/api/admin/marketing/gsc/sitemaps/submit', { sitemap_url: sitemap }); setMsg(r.note || r.operator_action || 'Done'); reload() }
+  async function inspect() { if (!url) return; const r = await adminApi.post<Row>('/api/admin/marketing/gsc/inspect', { url }); setMsg(r.note || r.operator_action || 'Done'); reload() }
   return (
     <Card title="Google Search Console">
-      <p className="muted small" style={{ marginTop: 0 }}>Search performance, sitemaps and URL inspection for the verified PCI property — this is search analytics, not paid advertising. Sitemap submission is a discovery signal and does not guarantee indexing.</p>
+      <p className="muted small" style={{ marginTop: 0 }}>Search performance, sitemaps and URL inspection for the verified PCI property — this is search analytics, not paid advertising. Sitemap submission is a discovery signal and does not guarantee crawling or indexing; URL Inspection reports the status the API exposes, not a guaranteed “index now”.</p>
       {msg && <p className="small" style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, padding: '.5rem .7rem' }}>{msg}</p>}
-      <div className="row" style={{ gap: '.4rem', marginBottom: '.6rem' }}><button className="btn sm" onClick={submit}>Submit sitemap</button></div>
+      <div className="row" style={{ gap: '.4rem', marginBottom: '.4rem', flexWrap: 'wrap' }}>
+        <input placeholder="Sitemap URL (e.g. https://…/sitemap.xml)" value={sitemap} onChange={(e) => setSitemap(e.target.value)} style={{ minWidth: 280 }} />
+        <button className="btn sm" onClick={submit}>Submit sitemap</button>
+      </div>
+      <div className="row" style={{ gap: '.4rem', marginBottom: '.7rem', flexWrap: 'wrap' }}>
+        <input placeholder="Public URL to inspect" value={url} onChange={(e) => setUrl(e.target.value)} style={{ minWidth: 280 }} />
+        <button className="btn sm ghost" onClick={inspect}>Inspect URL</button>
+      </div>
       {loading ? <Spinner /> : (data?.rows.length ?? 0) === 0 ? <Empty>No verified property connected yet. Connect Google Search Console under Connected Accounts.</Empty> : (
         <table className="data"><thead><tr><th>Property</th><th>Verified</th><th>Last synced</th></tr></thead>
           <tbody>{data!.rows.map((p) => (
             <tr key={p.id}><td className="small">{p.property}</td><td>{p.verified ? <Badge tone="ok">yes</Badge> : <Badge tone="neutral">no</Badge>}</td><td className="small muted">{p.last_synced_at ? fmtDateTime(p.last_synced_at) : '—'}</td></tr>
           ))}</tbody></table>
+      )}
+      {(data?.sitemaps?.length ?? 0) > 0 && (
+        <table className="data" style={{ marginTop: '.6rem' }}><thead><tr><th>Sitemap</th><th>Status</th><th>Submitted</th></tr></thead>
+          <tbody>{data!.sitemaps.map((s) => (<tr key={s.id}><td className="small">{s.path}</td><td className="small">{s.status}</td><td className="small muted">{s.last_submitted_at ? fmtDateTime(s.last_submitted_at) : '—'}</td></tr>))}</tbody></table>
+      )}
+    </Card>
+  )
+}
+
+// ───────── Provider Jobs (the reliable queue behind every live provider call) ─────────
+function Jobs() {
+  const { data, loading, reload } = useGet<{ rows: Row[] }>('/api/admin/marketing/jobs')
+  async function retry(id: number) { await adminApi.post(`/api/admin/marketing/jobs/${id}/retry`, {}); reload() }
+  async function drain() { await adminApi.post('/api/admin/marketing/jobs/drain', {}); reload() }
+  return (
+    <Card title="Provider Jobs" action={<button className="btn sm ghost" onClick={drain}>Process now</button>}>
+      <p className="muted small" style={{ marginTop: 0 }}>Every live provider call (publish, sitemap submit, URL inspect) runs through this queue with a unique idempotency key and automatic retry — so an action can never fire twice, and a provider outage never loses work.</p>
+      {loading ? <Spinner /> : (data?.rows.length ?? 0) === 0 ? <Empty>No jobs yet.</Empty> : (
+        <div style={{ overflowX: 'auto' }}>
+          <table className="data"><thead><tr><th>Type</th><th>Platform</th><th>Status</th><th>Attempts</th><th>Last error</th><th /></tr></thead>
+            <tbody>{data!.rows.map((j) => (
+              <tr key={j.id}><td className="small">{j.job_type}</td><td className="small muted">{j.platform_code}</td>
+                <td><Badge tone={j.status === 'sent' ? 'ok' : j.status === 'failed' ? 'err' : j.status === 'retrying' ? 'warn' : 'brand'}>{j.status}</Badge></td>
+                <td className="small">{j.attempts}/{j.max_attempts}</td><td className="small muted">{(j.last_error || '').slice(0, 60)}</td>
+                <td>{j.status === 'failed' && <button className="btn ghost sm" onClick={() => retry(j.id)}>Retry</button>}</td></tr>
+            ))}</tbody></table>
+        </div>
       )}
     </Card>
   )

@@ -88,16 +88,20 @@ public static class MarketingCentre
             });
         });
 
-        // Begin OAuth — honest: reports whether the provider app is even configured in Render env.
+        // Begin OAuth — returns a real authorize URL when the provider app is configured (env), else an
+        // honest operator action. The signed state binds the callback to this connection for one hour.
         app.MapPost("/api/admin/marketing/connections/{id:long}/oauth-url", (HttpRequest req, long id) => gate(req, "mkt_connect", adm =>
         {
             var c = db.QueryOne("SELECT * FROM mkt_connections WHERE id=?", id);
             if (c is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var family = H.Str(db.QueryOne("SELECT family FROM mkt_platforms WHERE code=?", H.Str(c["platform_code"]))?["family"]) ?? "";
             if (!Marketing.FamilyConfigured(family))
-                return J(new { ok = false, reason = "provider_not_configured", operator_action = $"Set the {family} OAuth client id and secret in Render environment variables before connecting." });
-            // Live OAuth redirect construction is Phase 2 (needs the approved developer app + redirect URL).
-            return J(new { ok = false, reason = "oauth_pending_setup", operator_action = "Provider app configured. Live OAuth authorisation flow is enabled once the redirect URL is registered with the provider (Phase 2)." });
+                return J(new { ok = false, reason = "provider_not_configured", operator_action = $"Set the {family} OAuth client id and secret in Render environment variables, then register the redirect URL {MarketingOAuth.RedirectUri(req)} with the provider." });
+            var url = MarketingOAuth.AuthorizeUrl(db, id, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), req);
+            if (url is null) return J(new { ok = false, reason = "provider_not_configured", operator_action = "Provider client id is not set in the environment." });
+            db.Execute("UPDATE mkt_connections SET status='connecting', updated_at=datetime('now') WHERE id=?", id);
+            log(adm.Id, "mkt_oauth_started", $"#{id} {family}");
+            return J(new { ok = true, authorize_url = url, redirect_uri = MarketingOAuth.RedirectUri(req) });
         }));
 
         app.MapPost("/api/admin/marketing/connections/{id:long}/disconnect", (HttpRequest req, long id) => gate(req, "mkt_connect", adm =>
@@ -182,12 +186,15 @@ public static class MarketingCentre
             if (eff is not ("available" or "available_with_permission"))
             {
                 db.Execute("UPDATE mkt_linkedin_posts SET status='scheduled', updated_at=datetime('now') WHERE id=?", id);
-                return J(new { ok = false, queued = true, reason = eff, operator_action = "LinkedIn organisation posting is not yet available. Post marked scheduled; it will publish once the LinkedIn Company Page connection and Community Management access are approved (Phase 2)." });
+                return J(new { ok = false, queued = true, reason = eff, operator_action = "LinkedIn organisation posting is not yet available. Post marked scheduled; it will publish once the LinkedIn Company Page connection and Community Management access are approved and the account is connected." });
             }
-            // (Phase 2: enqueue a mkt_jobs row for the LinkedIn Posts API call with an idempotency key.)
+            // Enqueue an idempotent provider job; the dispatcher calls the LinkedIn Posts API. A re-click
+            // reuses the same key, so a post can never be published twice.
             db.Execute("UPDATE mkt_linkedin_posts SET status='publishing', updated_at=datetime('now') WHERE id=?", id);
-            log(adm.Id, "mkt_post_publish_requested", $"#{id}");
-            return J(new { ok = true, status = "publishing" });
+            var jid = MarketingJobDispatcher.Enqueue(db, "linkedin_post_publish", "linkedin_page", "linkedin_post", id, null, $"linkedin_post:{id}", adm.Id);
+            try { MarketingJobDispatcher.DrainOnce(db, 3); } catch { }
+            log(adm.Id, "mkt_post_publish_requested", $"#{id} job {jid}");
+            return J(new { ok = true, status = "publishing", job_id = jid });
         }));
 
         // ───────── manual LinkedIn outreach (system NEVER auto-sends a personal DM) ─────────
@@ -347,8 +354,33 @@ public static class MarketingCentre
                 var hasConn = db.Scalar<long>("SELECT COUNT(*) FROM mkt_connections WHERE platform_code='google_search_console' AND status='connected'") > 0;
                 if (!hasConn)
                     return J(new { ok = false, reason = "not_connected", operator_action = "Connect a verified Search Console property via Google OAuth before submitting sitemaps." });
-                // Phase 2: call the Search Console API sitemaps.submit; record the provider response.
-                return J(new { ok = false, reason = "pending_setup", operator_action = "Property connection pending. Note: sitemap submission is a discovery signal and does not guarantee indexing." });
+                var property = S(b, "property"); var sitemap = S(b, "sitemap_url");
+                if (property.Length == 0) property = H.Str(db.QueryOne("SELECT property FROM mkt_gsc_properties ORDER BY id DESC LIMIT 1")?["property"]) ?? "";
+                if (property.Length == 0 || sitemap.Length == 0) return Results.Json(new { error = "property_and_sitemap_required" }, statusCode: 400);
+                var jid = MarketingJobDispatcher.Enqueue(db, "gsc_sitemap_submit", "google_search_console", "sitemap", 0,
+                    new { property, sitemap_url = sitemap }, $"gsc_sitemap:{property}:{sitemap}:{DateTime.UtcNow:yyyyMMddHH}", adm.Id);
+                try { MarketingJobDispatcher.DrainOnce(db, 3); } catch { }
+                log(adm.Id, "mkt_sitemap_submit", $"{property} {sitemap} job {jid}");
+                // Honest note carried through regardless of provider outcome.
+                return J(new { ok = true, job_id = jid, note = "Sitemap submission is a discovery signal and does not guarantee crawling or indexing." });
+            });
+        });
+        // URL Inspection — reports the index status the API exposes; not a guaranteed 'index now' request.
+        app.MapPost("/api/admin/marketing/gsc/inspect", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, "mkt_gsc", adm =>
+            {
+                var hasConn = db.Scalar<long>("SELECT COUNT(*) FROM mkt_connections WHERE platform_code='google_search_console' AND status='connected'") > 0;
+                if (!hasConn) return J(new { ok = false, reason = "not_connected", operator_action = "Connect a verified Search Console property before inspecting URLs." });
+                var property = S(b, "property"); var url = S(b, "url");
+                if (property.Length == 0) property = H.Str(db.QueryOne("SELECT property FROM mkt_gsc_properties ORDER BY id DESC LIMIT 1")?["property"]) ?? "";
+                if (property.Length == 0 || url.Length == 0) return Results.Json(new { error = "property_and_url_required" }, statusCode: 400);
+                var jid = MarketingJobDispatcher.Enqueue(db, "gsc_url_inspect", "google_search_console", "url", 0,
+                    new { property, url }, $"gsc_inspect:{url}:{DateTime.UtcNow:yyyyMMddHHmm}", adm.Id);
+                try { MarketingJobDispatcher.DrainOnce(db, 3); } catch { }
+                log(adm.Id, "mkt_url_inspect", $"{url} job {jid}");
+                return J(new { ok = true, job_id = jid, note = "URL Inspection reports the index status the Search Console API exposes; it is not a guaranteed request for immediate indexing." });
             });
         });
 
@@ -362,5 +394,58 @@ public static class MarketingCentre
         }));
         app.MapGet("/api/admin/marketing/audit", (HttpRequest req) => gate(req, "mkt_view", _ =>
             J(new { rows = db.Query("SELECT id,user_id,action,details,created_at FROM audit_logs WHERE action LIKE 'mkt_%' ORDER BY id DESC LIMIT 300") })));
+
+        // ───────── provider job queue (visibility + manual drain/retry) ─────────
+        app.MapGet("/api/admin/marketing/jobs", (HttpRequest req) => gate(req, "mkt_view", _ =>
+            J(new { rows = db.Query("SELECT id,idempotency_key,job_type,platform_code,entity_type,entity_id,status,attempts,max_attempts,last_error,next_attempt_at,created_at,updated_at FROM mkt_jobs ORDER BY id DESC LIMIT 300") })));
+        app.MapPost("/api/admin/marketing/jobs/{id:long}/retry", (HttpRequest req, long id) => gate(req, "mkt_ads", adm =>
+        {
+            db.Execute("UPDATE mkt_jobs SET status='queued', next_attempt_at=NULL, updated_at=datetime('now') WHERE id=? AND status='failed'", id);
+            try { MarketingJobDispatcher.DrainOnce(db, 3); } catch { }
+            log(adm.Id, "mkt_job_retry", $"#{id}");
+            return J(new { ok = true });
+        }));
+        app.MapPost("/api/admin/marketing/jobs/drain", (HttpRequest req) => gate(req, "mkt_ads", adm =>
+        {
+            var n = MarketingJobDispatcher.DrainOnce(db, 25);
+            return J(new { ok = true, processed = n });
+        }));
+
+        // ───────── public OAuth callback (browser redirect target — verified by signed state, no bearer) ─────────
+        app.MapGet("/api/marketing/oauth/callback", async (HttpContext ctx) =>
+        {
+            IResult Page(string title, string msg) => Results.Content(
+                $"<html><body style='font-family:sans-serif;max-width:560px;margin:60px auto;text-align:center'><h2>{title}</h2><p>{msg}</p><p><a href='/admin/marketing-ads'>Return to the Marketing centre</a></p></body></html>", "text/html");
+            var err = ctx.Request.Query["error"].ToString();
+            if (!string.IsNullOrEmpty(err)) return Page("Connection cancelled", "The provider reported: " + System.Net.WebUtility.HtmlEncode(err));
+            var code = ctx.Request.Query["code"].ToString();
+            var state = ctx.Request.Query["state"].ToString();
+            var connId = MarketingOAuth.VerifyState(state, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+            if (connId is null) return Page("Link invalid or expired", "Please start the connection again from the Marketing centre.");
+            var c = db.QueryOne("SELECT * FROM mkt_connections WHERE id=?", connId.Value);
+            if (c is null) return Page("Connection not found", "Please register the account again.");
+            var platform = H.Str(c["platform_code"]) ?? "";
+            var family = H.Str(db.QueryOne("SELECT family FROM mkt_platforms WHERE code=?", platform)?["family"]) ?? "";
+            if (string.IsNullOrEmpty(code)) return Page("No authorisation code", "The provider did not return an authorisation code.");
+            var tok = await MarketingOAuth.Exchange(family, code, MarketingOAuth.RedirectUri(ctx.Request));
+            if (tok is null || string.IsNullOrEmpty(tok.AccessToken))
+            {
+                db.Execute("UPDATE mkt_connections SET status='error', last_failure_at=datetime('now'), last_error='token_exchange_failed', updated_at=datetime('now') WHERE id=?", connId.Value);
+                return Page("Could not complete the connection", "The token exchange failed. Check the provider app configuration and try again.");
+            }
+            var expiresAt = tok.ExpiresInSeconds is > 0 ? DateTime.UtcNow.AddSeconds(tok.ExpiresInSeconds.Value).ToString("yyyy-MM-dd HH:mm:ss") : null;
+            Marketing.StoreTokens(db, connId.Value, tok.AccessToken, tok.RefreshToken, expiresAt);
+            db.Execute("UPDATE mkt_connections SET status='connected', granted_scopes=COALESCE(?,?), last_success_at=datetime('now'), last_error=NULL, updated_at=datetime('now') WHERE id=?",
+                string.IsNullOrEmpty(tok.Scope) ? null : tok.Scope, MarketingOAuth.Scopes(platform), connId.Value);
+            // For a Search Console connection, register the property record so the GSC tab can use it.
+            if (platform == "google_search_console")
+            {
+                var property = H.Str(c["external_property"]);
+                if (!string.IsNullOrEmpty(property) && db.QueryOne("SELECT id FROM mkt_gsc_properties WHERE property=?", property) is null)
+                    db.Execute("INSERT INTO mkt_gsc_properties(connection_id,property,verified) VALUES(?,?,1)", connId.Value, property);
+            }
+            log(null, "mkt_oauth_connected", $"#{connId} {platform}");
+            return Page("Account connected", "The account is now connected. You can close this window and return to the Marketing centre.");
+        });
     }
 }
