@@ -1025,8 +1025,11 @@ def _pdf_text(data):
     try:
         from pypdf import PdfReader; import io
         return " ".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(data)).pages).replace("\n", " ")
-    except Exception:
-        # pypdf unavailable/failed: latin1-decode the raw bytes AND best-effort zlib-inflate every
+    except BaseException:
+        # pypdf unavailable/failed — including a native-binding load failure that raises a non-Exception
+        # (e.g. a Rust PanicException from a broken cffi/cryptography stack) — so catch BaseException, not
+        # just Exception, and fall back to a pure-Python read: latin1-decode the raw bytes AND best-effort
+        # zlib-inflate every
         # stream object, so FlateDecode-compressed content (e.g. PDFsharp output) is still searchable.
         import re as _re, zlib as _zlib
         txt = data.decode("latin1", "ignore")
