@@ -53,27 +53,27 @@ public static class CommsCentre
 
         // ───────── sender profiles ─────────
         app.MapGet("/api/admin/comms/senders", (HttpRequest req) => gate(req, SECTION, _ =>
-            J(new { rows = db.Query("SELECT * FROM comm_sender_profiles ORDER BY key") })));
+            J(new { rows = db.Query("SELECT * FROM comm_sender_profiles ORDER BY `key`") })));
         app.MapPost("/api/admin/comms/senders", async (HttpContext ctx) =>
         {
             var b = await H.Body(ctx.Request);
             return gate(ctx.Request, SECTION, adm =>
             {
                 var key = S(b, "key"); if (key.Length == 0) return Results.Json(new { error = "key_required" }, statusCode: 400);
-                var existing = db.QueryOne("SELECT id FROM comm_sender_profiles WHERE key=?", key);
+                var existing = db.QueryOne("SELECT id FROM comm_sender_profiles WHERE `key`=?", key);
                 if (existing is null)
-                    db.Execute(@"INSERT INTO comm_sender_profiles(key,name,display_name,from_email,reply_to,purpose,category,provider,domain_verified,permitted_roles,is_default,active,approval_status,owner,effective_date,expiry_date)
+                    db.Execute(@"INSERT INTO comm_sender_profiles(`key`,name,display_name,from_email,reply_to,purpose,category,provider,domain_verified,permitted_roles,is_default,active,approval_status,owner,effective_date,expiry_date)
                         VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                         key, S(b, "name"), S(b, "display_name"), S(b, "from_email"), S(b, "reply_to"), S(b, "purpose"),
                         S(b, "category"), S(b, "provider"), I(b, "domain_verified"), S(b, "permitted_roles"),
                         I(b, "is_default"), b.ContainsKey("active") ? I(b, "active") : 1, S(b, "approval_status") is { Length: > 0 } a ? a : "approved",
                         S(b, "owner"), S(b, "effective_date"), S(b, "expiry_date"));
                 else
-                    db.Execute(@"UPDATE comm_sender_profiles SET name=?,display_name=?,from_email=?,reply_to=?,purpose=?,category=?,provider=?,domain_verified=?,permitted_roles=?,is_default=?,active=?,approval_status=?,owner=?,effective_date=?,expiry_date=?,updated_at=datetime('now') WHERE key=?",
+                    db.Execute(@"UPDATE comm_sender_profiles SET name=?,display_name=?,from_email=?,reply_to=?,purpose=?,category=?,provider=?,domain_verified=?,permitted_roles=?,is_default=?,active=?,approval_status=?,owner=?,effective_date=?,expiry_date=?,updated_at=datetime('now') WHERE `key`=?",
                         S(b, "name"), S(b, "display_name"), S(b, "from_email"), S(b, "reply_to"), S(b, "purpose"), S(b, "category"),
                         S(b, "provider"), I(b, "domain_verified"), S(b, "permitted_roles"), I(b, "is_default"), I(b, "active"),
                         S(b, "approval_status"), S(b, "owner"), S(b, "effective_date"), S(b, "expiry_date"), key);
-                if (I(b, "is_default") == 1) db.Execute("UPDATE comm_sender_profiles SET is_default=0 WHERE key<>?", key);
+                if (I(b, "is_default") == 1) db.Execute("UPDATE comm_sender_profiles SET is_default=0 WHERE `key`<>?", key);
                 log(adm.Id, "comm_sender_saved", key);
                 return J(new { ok = true });
             });
@@ -97,27 +97,27 @@ public static class CommsCentre
 
         // ───────── WhatsApp accounts ─────────
         app.MapGet("/api/admin/comms/whatsapp", (HttpRequest req) => gate(req, SECTION, _ =>
-            J(new { rows = db.Query("SELECT * FROM comm_whatsapp_accounts ORDER BY key") })));
+            J(new { rows = db.Query("SELECT * FROM comm_whatsapp_accounts ORDER BY `key`") })));
         app.MapPost("/api/admin/comms/whatsapp", async (HttpContext ctx) =>
         {
             var b = await H.Body(ctx.Request);
             return gate(ctx.Request, SECTION, adm =>
             {
                 var key = S(b, "key"); if (key.Length == 0) return Results.Json(new { error = "key_required" }, statusCode: 400);
-                var existing = db.QueryOne("SELECT id FROM comm_whatsapp_accounts WHERE key=?", key);
+                var existing = db.QueryOne("SELECT id FROM comm_whatsapp_accounts WHERE `key`=?", key);
                 if (existing is null)
-                    db.Execute(@"INSERT INTO comm_whatsapp_accounts(key,name,display_name,phone_number,provider,provider_account_id,token_env,purpose,country,permitted_categories,permitted_roles,business_hours,escalation_rule,verification_status,is_default,active,owner)
+                    db.Execute(@"INSERT INTO comm_whatsapp_accounts(`key`,name,display_name,phone_number,provider,provider_account_id,token_env,purpose,country,permitted_categories,permitted_roles,business_hours,escalation_rule,verification_status,is_default,active,owner)
                         VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                         key, S(b, "name"), S(b, "display_name"), S(b, "phone_number"), S(b, "provider") is { Length: > 0 } pv ? pv : "meta_cloud",
                         S(b, "provider_account_id"), S(b, "token_env") is { Length: > 0 } te ? te : "WHATSAPP_ACCESS_TOKEN", S(b, "purpose"),
                         S(b, "country"), S(b, "permitted_categories"), S(b, "permitted_roles"), S(b, "business_hours"), S(b, "escalation_rule"),
                         S(b, "verification_status") is { Length: > 0 } vs ? vs : "unverified", I(b, "is_default"), b.ContainsKey("active") ? I(b, "active") : 1, S(b, "owner"));
                 else
-                    db.Execute(@"UPDATE comm_whatsapp_accounts SET name=?,display_name=?,phone_number=?,provider=?,provider_account_id=?,token_env=?,purpose=?,country=?,permitted_categories=?,permitted_roles=?,business_hours=?,escalation_rule=?,verification_status=?,is_default=?,active=?,owner=?,updated_at=datetime('now') WHERE key=?",
+                    db.Execute(@"UPDATE comm_whatsapp_accounts SET name=?,display_name=?,phone_number=?,provider=?,provider_account_id=?,token_env=?,purpose=?,country=?,permitted_categories=?,permitted_roles=?,business_hours=?,escalation_rule=?,verification_status=?,is_default=?,active=?,owner=?,updated_at=datetime('now') WHERE `key`=?",
                         S(b, "name"), S(b, "display_name"), S(b, "phone_number"), S(b, "provider"), S(b, "provider_account_id"), S(b, "token_env"),
                         S(b, "purpose"), S(b, "country"), S(b, "permitted_categories"), S(b, "permitted_roles"), S(b, "business_hours"),
                         S(b, "escalation_rule"), S(b, "verification_status"), I(b, "is_default"), I(b, "active"), S(b, "owner"), key);
-                if (I(b, "is_default") == 1) db.Execute("UPDATE comm_whatsapp_accounts SET is_default=0 WHERE key<>?", key);
+                if (I(b, "is_default") == 1) db.Execute("UPDATE comm_whatsapp_accounts SET is_default=0 WHERE `key`<>?", key);
                 log(adm.Id, "comm_whatsapp_saved", key);
                 return J(new { ok = true });
             });
@@ -125,7 +125,7 @@ public static class CommsCentre
 
         // ───────── templates ─────────
         app.MapGet("/api/admin/comms/templates", (HttpRequest req) => gate(req, SECTION, _ =>
-            J(new { rows = db.Query("SELECT * FROM comm_templates ORDER BY kind,key,version DESC") })));
+            J(new { rows = db.Query("SELECT * FROM comm_templates ORDER BY kind,`key`,version DESC") })));
         app.MapPost("/api/admin/comms/templates", async (HttpContext ctx) =>
         {
             var b = await H.Body(ctx.Request);
@@ -146,7 +146,7 @@ public static class CommsCentre
                     log(adm.Id, "comm_template_updated", $"#{idNum} {key}");
                     return J(new { ok = true, id = idNum });
                 }
-                var newId = db.ExecuteReturningId(@"INSERT INTO comm_templates(key,name,kind,category,subject,body,wa_template_name,certification_id,route_key,language,required_vars,status,created_by)
+                var newId = db.ExecuteReturningId(@"INSERT INTO comm_templates(`key`,name,kind,category,subject,body,wa_template_name,certification_id,route_key,language,required_vars,status,created_by)
                     VALUES(?,?,?,?,?,?,?,?,?,?,?, 'draft', ?)",
                     key, S(b, "name"), S(b, "kind") is { Length: > 0 } kd ? kd : "email", S(b, "category"), S(b, "subject"), S(b, "body"),
                     S(b, "wa_template_name"), H.GetNum(b, "certification_id"), S(b, "route_key"), S(b, "language") is { Length: > 0 } l2 ? l2 : "en",

@@ -821,7 +821,7 @@ public static class Migrate
         // Approved email identities. Credentials are NOT stored here — only the identity + policy.
         db.Exec(@"CREATE TABLE IF NOT EXISTS comm_sender_profiles(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            key VARCHAR(60) UNIQUE NOT NULL,            -- stable code, e.g. 'support','finance','no-reply'
+            `key` VARCHAR(60) UNIQUE NOT NULL,            -- stable code, e.g. 'support','finance','no-reply'
             name TEXT NOT NULL, display_name TEXT,
             from_email TEXT NOT NULL, reply_to TEXT,
             purpose TEXT, category VARCHAR(40) DEFAULT 'operational',
@@ -834,7 +834,7 @@ public static class Migrate
         // Approved WhatsApp Business numbers. Tokens/app-secrets are NOT stored here — only which env var holds them.
         db.Exec(@"CREATE TABLE IF NOT EXISTS comm_whatsapp_accounts(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            key VARCHAR(60) UNIQUE NOT NULL,
+            `key` VARCHAR(60) UNIQUE NOT NULL,
             name TEXT NOT NULL, display_name TEXT,
             phone_number TEXT NOT NULL, provider VARCHAR(30) DEFAULT 'meta_cloud',
             provider_account_id TEXT,                   -- phone_number_id / WABA id (NOT a secret)
@@ -848,7 +848,7 @@ public static class Migrate
         // Channel-agnostic templates with versioning + publish lifecycle + dynamic {{variables}}.
         db.Exec(@"CREATE TABLE IF NOT EXISTS comm_templates(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            key VARCHAR(80) NOT NULL,
+            `key` VARCHAR(80) NOT NULL,
             name TEXT NOT NULL, kind VARCHAR(24) DEFAULT 'email',   -- email|whatsapp|auto_response|internal|bulk
             category VARCHAR(40) DEFAULT 'operational',
             subject TEXT, body TEXT,                    -- body: HTML (email) or text (whatsapp); {{vars}}
@@ -857,7 +857,7 @@ public static class Migrate
             version INTEGER DEFAULT 1, status VARCHAR(20) DEFAULT 'draft',  -- draft|approved|published|archived
             required_vars TEXT, approved_by INTEGER, published_at TEXT,
             created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
-        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_tpl_key ON comm_templates(key,status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_tpl_key ON comm_templates(`key`,status)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS comm_template_versions(
             id INTEGER PRIMARY KEY AUTOINCREMENT, template_id INTEGER NOT NULL, version INTEGER,
             subject TEXT, body TEXT, wa_template_name TEXT, saved_by INTEGER, created_at TEXT DEFAULT (datetime('now')))");

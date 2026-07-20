@@ -65,14 +65,14 @@ public sealed class OutboxDispatcher : BackgroundService
         }
         else if (channel == "whatsapp")
         {
-            var acct = db.QueryOne("SELECT * FROM comm_whatsapp_accounts WHERE key=? OR is_default=1 ORDER BY (key=?) DESC LIMIT 1",
+            var acct = db.QueryOne("SELECT * FROM comm_whatsapp_accounts WHERE `key`=? OR is_default=1 ORDER BY (`key`=?) DESC LIMIT 1",
                 H.Str(r["whatsapp_account_key"]) ?? "", H.Str(r["whatsapp_account_key"]) ?? "");
             res = Comms.SendWhatsApp(H.Str(acct?["provider_account_id"]), H.Str(acct?["token_env"]),
                 H.Str(r["to_phone"]) ?? "", H.Str(r["body"]) ?? "", null, "en");
         }
         else
         {
-            var prof = db.QueryOne("SELECT * FROM comm_sender_profiles WHERE key=? AND active=1", H.Str(r["sender_profile_key"]) ?? "")
+            var prof = db.QueryOne("SELECT * FROM comm_sender_profiles WHERE `key`=? AND active=1", H.Str(r["sender_profile_key"]) ?? "")
                        ?? db.QueryOne("SELECT * FROM comm_sender_profiles WHERE is_default=1 AND active=1 LIMIT 1");
             var fromName = H.Str(prof?["display_name"]);
             var fromEmail = H.Str(prof?["from_email"]) ?? "no-reply@projectcontrolsinstitute.org";
