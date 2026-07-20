@@ -28,6 +28,18 @@ public static class Security
         return CryptographicOperations.FixedTimeEquals(Encoding.UTF8.GetBytes(a), Encoding.UTF8.GetBytes(b));
     }
 
+    /// <summary>Verify a Meta/WhatsApp X-Hub-Signature-256 header ("sha256=&lt;hex&gt;") — an HMAC-SHA256 of
+    /// the raw request body keyed by the app secret. Constant-time compare. Returns false on any missing
+    /// input, so the caller decides whether an unconfigured secret means accept (dev) or reject.</summary>
+    public static bool VerifyHubSignature(string? header, byte[] body, string? secret)
+    {
+        if (string.IsNullOrEmpty(secret) || string.IsNullOrEmpty(header)) return false;
+        var hex = header.StartsWith("sha256=", StringComparison.OrdinalIgnoreCase) ? header["sha256=".Length..] : header;
+        using var h = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
+        var mac = Convert.ToHexString(h.ComputeHash(body)).ToLowerInvariant();
+        return FixedTimeEquals(mac, hex.Trim().ToLowerInvariant());
+    }
+
     // ---- Temporary-credential generation ----
     // Unambiguous alphabets (no 0/O, 1/l/I) so a student can retype a temp password without confusion.
     const string PwLower = "abcdefghijkmnpqrstuvwxyz";

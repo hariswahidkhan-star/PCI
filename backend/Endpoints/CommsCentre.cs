@@ -684,7 +684,15 @@ public static class CommsCentre
         });
         app.MapPost("/api/webhooks/whatsapp", async (HttpContext ctx) =>
         {
-            var b = await H.Body(ctx.Request);
+            // Incremental hardening: verify the Meta X-Hub-Signature-256 (HMAC of the raw body keyed by the
+            // WhatsApp/Meta app secret) when configured, so inbound messages can't be forged. Not configured
+            // → accept (non-breaking for existing/dev flows).
+            var raw = await H.RawString(ctx.Request);
+            var appSecret = Environment.GetEnvironmentVariable("WHATSAPP_APP_SECRET") ?? Environment.GetEnvironmentVariable("META_APP_SECRET");
+            if (!string.IsNullOrEmpty(appSecret) && !Security.VerifyHubSignature(
+                    ctx.Request.Headers["X-Hub-Signature-256"].ToString(), System.Text.Encoding.UTF8.GetBytes(raw), appSecret))
+                return Results.Ok(new { ok = true });   // 200 (don't leak validity) but drop the forged event
+            var b = H.MapFrom(raw);
             try
             {
                 if (H.GetEl(b, "entry") is { ValueKind: JsonValueKind.Array } entries)

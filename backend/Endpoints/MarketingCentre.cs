@@ -608,7 +608,15 @@ public static class MarketingCentre
         });
         app.MapPost("/api/webhooks/meta-leads", async (HttpContext ctx) =>
         {
-            var b = await H.Body(ctx.Request);
+            // Incremental hardening: when META_APP_SECRET is configured, require a valid X-Hub-Signature-256
+            // (HMAC-SHA256 of the raw body) so lead events can't be forged. Not configured → accept (keeps
+            // existing/dev flows working); this is the same non-breaking gate the rest of the seam uses.
+            var raw = await H.RawString(ctx.Request);
+            var appSecret = Environment.GetEnvironmentVariable("META_APP_SECRET");
+            if (!string.IsNullOrEmpty(appSecret) && !Security.VerifyHubSignature(
+                    ctx.Request.Headers["X-Hub-Signature-256"].ToString(), System.Text.Encoding.UTF8.GetBytes(raw), appSecret))
+                return Results.Json(new { error = "bad_signature" }, statusCode: 401);
+            var b = H.MapFrom(raw);
             try
             {
                 if (H.GetEl(b, "entry") is { ValueKind: JsonValueKind.Array } entries)

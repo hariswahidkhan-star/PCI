@@ -46,6 +46,20 @@ public static class H
     }
     public static async Task<Dictionary<string, JsonElement>> Body(HttpRequest r) => ToMap(await BodyEl(r));
 
+    /// <summary>Read the raw request body as a UTF-8 string (for webhook signature verification, which
+    /// must hash the exact bytes the provider signed). Consumes the body stream once.</summary>
+    public static async Task<string> RawString(HttpRequest r)
+    {
+        using var sr = new StreamReader(r.Body, System.Text.Encoding.UTF8);
+        return await sr.ReadToEndAsync();
+    }
+    /// <summary>Parse an already-read raw JSON string into the same map shape as Body().</summary>
+    public static Dictionary<string, JsonElement> MapFrom(string json)
+    {
+        try { using var doc = JsonDocument.Parse(json); return ToMap(doc.RootElement.Clone()); }
+        catch { return new(StringComparer.Ordinal); }
+    }
+
     public static string? GetS(Dictionary<string, JsonElement> b, params string[] keys)
     {
         foreach (var k in keys)
