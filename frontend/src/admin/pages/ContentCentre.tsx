@@ -20,7 +20,7 @@ interface Author { id: number; slug: string; name: string; title?: string; activ
 interface Category { id: number; slug: string; name: string; active: number }
 interface Capability { id: number; platform_key: string; platform: string; kind: string; capability: string; publish_mode?: string; requires_approval: number; official_api: number; connected: boolean; notes?: string; doc_url?: string }
 
-const TABS = ['Dashboard', 'Blog posts', 'Taxonomy', 'Social', 'Syndication', 'Distribution', 'AI Studio'] as const
+const TABS = ['Dashboard', 'Blog posts', 'Taxonomy', 'Social', 'Syndication', 'Import', 'Distribution', 'AI Studio'] as const
 
 export default function ContentCentre() {
   const { can } = useAdminAuth()
@@ -39,6 +39,7 @@ export default function ContentCentre() {
       {tab === 'Taxonomy' && <TaxonomyTab canEdit={can('cc_edit')} />}
       {tab === 'Social' && <SocialTab canSocial={can('cc_social')} />}
       {tab === 'Syndication' && <SyndicationTab canSyndicate={can('cc_syndicate')} />}
+      {tab === 'Import' && <ImportTab canReview={can('cc_review')} canLegal={can('cc_legal')} />}
       {tab === 'Distribution' && <DistributionTab />}
       {tab === 'AI Studio' && <AiTab />}
     </div>
@@ -434,6 +435,82 @@ function SyndicationTab({ canSyndicate }: { canSyndicate: boolean }) {
                 <td style={{ maxWidth: 320, fontSize: '.82rem' }}>{s.external_url ? <a href={s.external_url} target="_blank" rel="noreferrer">{s.external_url}</a> : <span className="muted">—</span>}{s.last_error ? <div className="muted">{s.last_error}</div> : null}</td>
                 <td><StatusPill status={s.status} /></td>
                 <td>{canSyndicate && ['failed', 'retrying'].includes(s.status) ? <button className="btn sm" onClick={() => act(`/api/admin/content/syndication/posts/${s.id}/retry`, posts.refetch)}>Retry</button> : null}</td>
+              </tr>))}</tbody>
+          </table>
+        )}
+      </Card>
+    </div>
+  )
+}
+
+interface ExtSource { id: number; name: string; domain?: string; feed_url?: string; license: string; allowed_use: string; permission_ref?: string; active: number; last_fetched_at?: string | null; last_error?: string | null }
+interface ExtItem { id: number; source_id: number; title?: string; source_url?: string; author?: string; status: string; source_name?: string; source_domain?: string; allowed_use?: string; pci_post_id?: number | null }
+
+const LICENSES = ['all_rights_reserved', 'permission_granted', 'cc_by', 'cc_by_sa', 'public_domain']
+const USES = [{ v: 'curated_link', l: 'Curated link (summary + link)' }, { v: 'excerpt', l: 'Excerpt' }, { v: 'full', l: 'Full republication (licence required)' }]
+
+function ImportTab({ canReview, canLegal }: { canReview: boolean; canLegal: boolean }) {
+  const sources = useAdminQuery<{ rows: ExtSource[] }>('/api/admin/content/import/sources')
+  const [f, setF] = useState<Record<string, string>>({})
+  const [msg, setMsg] = useState('')
+  const [sourceId, setSourceId] = useState('')
+  const items = useAdminQuery<{ rows: ExtItem[] }>(sourceId ? `/api/admin/content/import/items?source_id=${sourceId}` : '/api/admin/content/import/items?status=retrieved')
+
+  async function addSource() {
+    setMsg('')
+    try { await adminApi.post('/api/admin/content/import/sources', { name: f.name, feed_url: f.feed_url, domain: f.domain, license: f.license || 'all_rights_reserved', allowed_use: f.allowed_use || 'curated_link', permission_ref: f.permission_ref }); setF({}); sources.refetch() }
+    catch (e) { setMsg((e as Error).message) }
+  }
+  async function act(path: string, body: Record<string, unknown>, then?: () => void) { setMsg(''); try { await adminApi.post(path, body); then?.() } catch (e) { setMsg((e as Error).message) } }
+
+  return (
+    <div style={{ display: 'grid', gap: '1rem' }}>
+      <p className="muted" style={{ margin: 0 }}>Import from approved RSS/Atom sources into a review queue. PCI never republishes a whole third-party article just because it is public: the default is a curated link (a PCI-written summary + a link to the original), and full republication requires a recorded licence plus elevated approval. Every imported copy carries attribution and a canonical pointing at the original.</p>
+      {canReview && (
+        <Card title="Add a source">
+          <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'end' }}>
+            <label>Name<input value={f.name || ''} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="PC Weekly" /></label>
+            <label>Domain<input value={f.domain || ''} onChange={(e) => setF({ ...f, domain: e.target.value })} placeholder="pcweekly.example" /></label>
+            <label style={{ minWidth: 240 }}>Feed URL<input value={f.feed_url || ''} onChange={(e) => setF({ ...f, feed_url: e.target.value })} placeholder="https://…/feed.xml" /></label>
+            <label>Licence<select value={f.license || 'all_rights_reserved'} onChange={(e) => setF({ ...f, license: e.target.value })}>{LICENSES.map((l) => <option key={l} value={l}>{l.replace(/_/g, ' ')}</option>)}</select></label>
+            <label>Allowed use<select value={f.allowed_use || 'curated_link'} onChange={(e) => setF({ ...f, allowed_use: e.target.value })}>{USES.map((u) => <option key={u.v} value={u.v}>{u.l}</option>)}</select></label>
+            <label>Permission ref<input value={f.permission_ref || ''} onChange={(e) => setF({ ...f, permission_ref: e.target.value })} placeholder="MOU / licence id" /></label>
+            <button className="btn sm" onClick={addSource} disabled={!f.name || !f.feed_url}>Add</button>
+          </div>
+          {msg && <div className="muted" style={{ marginTop: '.4rem' }}>{msg}</div>}
+        </Card>
+      )}
+      <Card title="Sources">
+        {sources.loading ? <Spinner /> : !sources.data?.rows.length ? <Empty>No sources</Empty> : (
+          <table className="tbl"><thead><tr><th>Source</th><th>Licence / use</th><th>Last fetch</th><th></th></tr></thead>
+            <tbody>{sources.data.rows.filter((s) => s.active).map((s) => (
+              <tr key={s.id}>
+                <td>{s.name}<div className="muted" style={{ fontSize: '.78rem' }}>{s.domain}</div></td>
+                <td><Badge tone="neutral">{s.license.replace(/_/g, ' ')}</Badge> <span className="muted" style={{ fontSize: '.8rem' }}>{s.allowed_use.replace(/_/g, ' ')}</span></td>
+                <td className="muted" style={{ fontSize: '.8rem' }}>{s.last_fetched_at || '—'}{s.last_error ? <div style={{ color: 'var(--err,#b00)' }}>{s.last_error}</div> : null}</td>
+                <td>{canReview ? <span className="row" style={{ gap: '.3rem' }}>
+                  <button className="btn sm" onClick={() => act(`/api/admin/content/import/sources/${s.id}/fetch`, {}, () => { items.refetch(); sources.refetch() })}>Fetch now</button>
+                  <button className="btn sm ghost" onClick={() => setSourceId(String(s.id))}>Queue</button>
+                  <button className="btn sm ghost" onClick={() => act(`/api/admin/content/import/sources/${s.id}/delete`, {}, sources.refetch)}>Remove</button>
+                </span> : null}</td>
+              </tr>))}</tbody>
+          </table>
+        )}
+      </Card>
+      <Card title="Review queue" action={sourceId ? <button className="btn sm ghost" onClick={() => setSourceId('')}>All sources</button> : null}>
+        {items.loading ? <Spinner /> : !items.data?.rows.length ? <Empty>Nothing to review</Empty> : (
+          <table className="tbl"><thead><tr><th>Item</th><th>Source</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>{items.data.rows.map((it) => (
+              <tr key={it.id}>
+                <td style={{ maxWidth: 320 }}>{it.title}{it.source_url ? <div className="muted" style={{ fontSize: '.76rem' }}><a href={it.source_url} target="_blank" rel="noreferrer">{it.source_url}</a></div> : null}</td>
+                <td>{it.source_name}<div className="muted" style={{ fontSize: '.75rem' }}>{(it.allowed_use || '').replace(/_/g, ' ')}</div></td>
+                <td><StatusPill status={it.status} /></td>
+                <td>{canReview && it.status === 'retrieved' ? <span className="row" style={{ gap: '.3rem', flexWrap: 'wrap' }}>
+                  <button className="btn sm" onClick={() => act(`/api/admin/content/import/items/${it.id}/approve`, { mode: 'link' }, items.refetch)}>Curated link</button>
+                  {it.allowed_use !== 'curated_link' ? <button className="btn sm ghost" onClick={() => act(`/api/admin/content/import/items/${it.id}/approve`, { mode: 'excerpt' }, items.refetch)}>Excerpt</button> : null}
+                  {it.allowed_use === 'full' && canLegal ? <button className="btn sm ghost" onClick={() => act(`/api/admin/content/import/items/${it.id}/approve`, { mode: 'full' }, items.refetch)}>Full</button> : null}
+                  <button className="btn sm ghost" onClick={() => act(`/api/admin/content/import/items/${it.id}/reject`, {}, items.refetch)}>Reject</button>
+                </span> : it.pci_post_id ? <span className="muted" style={{ fontSize: '.8rem' }}>→ draft #{it.pci_post_id}</span> : null}</td>
               </tr>))}</tbody>
           </table>
         )}
