@@ -19,6 +19,7 @@ import Books from './pages/Books'
 import SupportInbox from './pages/SupportInbox'
 import ErasureRequests from './pages/ErasureRequests'
 import Casework from './pages/Casework'
+import ForumModeration from './pages/ForumModeration'
 import ErrorReports from './pages/ErrorReports'
 import Enrollments from './pages/Enrollments'
 import Codes from './pages/Codes'
@@ -108,6 +109,7 @@ export default function AdminApp() {
         <Route path="enquiries" element={<Perm section="inquiries"><Enquiries /></Perm>} />
         <Route path="submissions" element={<Perm section="submissions"><Submissions /></Perm>} />
         <Route path="reviews" element={<Perm section="content"><Reviews /></Perm>} />
+        <Route path="forum-moderation" element={<Perm section="content"><ForumModeration /></Perm>} />
         <Route path="content" element={<Perm section="content"><Content /></Perm>} />
         <Route path="announcement" element={<Perm section="content"><Announcement /></Perm>} />
         <Route path="translations" element={<OwnerOnly><Translations /></OwnerOnly>} />
