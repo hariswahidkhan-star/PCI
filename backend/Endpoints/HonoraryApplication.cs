@@ -376,6 +376,20 @@ public static class HonoraryApplication
                 Notify.Email(db, null, email, subject, body, "honorary_application", id);
             }
 
+            // Multi-channel decision notice via the Communications Centre (email sent above; skip in-app on
+            // approval where a notification row is already inserted). Deduped per (application, status).
+            if (status is "approved" or "rejected")
+                try
+                {
+                    var hu = string.IsNullOrEmpty(email) ? null : db.QueryOne("SELECT id FROM users WHERE lower(email)=?", email.ToLowerInvariant());
+                    Comms.Fire(db, status == "approved" ? "honorary.approved" : "honorary.rejected", hu is null ? null : H.L(hu["id"]), email, null,
+                        new Dictionary<string, string?> { ["student_name"] = H.Str(a["first_name"]) ?? "there", ["portal_link"] = "/app/" },
+                        "Update on your Honorary Fellow (PCI) application",
+                        "<p>There is an update on your Honorary Fellow (PCI) application — please check your email or portal for details.</p>",
+                        dedupSuffix: $"honorary:{id}:{status}", skipEmail: true, skipInApp: status == "approved");
+                }
+                catch { }
+
             return J(new { ok = true, status = status.Length > 0 ? status : H.Str(a["status"]), award_no = awardNo });
         });
     }

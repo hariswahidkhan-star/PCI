@@ -871,6 +871,12 @@ public static class StudentExam
                 u.Id, cid, attemptId, bk?["id"], auth?["id"], category, H.GetS(b, "occurred_at"), explanation, evRef, evName, u.Id);
             db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Exam Exception', 'Exam incident received', 'We have received your exam incident report and will review it shortly.', 'View support', '/support')", u.Id);
             log(u.Id, "exam_incident_reported", $"incident {id} cat {category} cert {cid}");
+            // Email + WhatsApp confirmation to the candidate (in-app added above); deduped per incident.
+            try { Comms.Fire(db, "exam.incident_received", u.Id, u.Email, null,
+                new Dictionary<string, string?> { ["student_name"] = u.FirstName ?? "there", ["reference"] = "INC-" + id, ["portal_link"] = "/support" },
+                "We've received your exam incident report",
+                $"<p>Thank you — we've received your exam incident report (reference INC-{id}) and will review it shortly.</p>",
+                certId: cid, dedupSuffix: id.ToString(), skipInApp: true); } catch { }
             try { Notify.Alert(db, "exam_exception", "New exam incident reported",
                 $"<p>Candidate #{u.Id} ({System.Net.WebUtility.HtmlEncode(u.Email)}) reported an exam incident (category: {System.Net.WebUtility.HtmlEncode(category)}) for certification {cid}. Review it in Exam Exceptions &rarr; Incidents.</p>", "exam_incident", id); } catch { }
             return J(new { ok = true, incident_id = id, reference = "INC-" + id });
