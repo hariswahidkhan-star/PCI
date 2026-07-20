@@ -50,6 +50,7 @@ const NAV: NavItem[] = [
 
 
   { to: '/reviews', label: 'Reviews', perm: 'content', group: 'Website' },
+  { to: '/social', label: 'Social media', perm: 'social', group: 'Website' },
   crudItem('faqs', 'Website'),
   crudItem('resources', 'Website'),
   crudItem('news', 'Website'),

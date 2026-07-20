@@ -25,6 +25,7 @@ import Honorary from './pages/Honorary'
 import HonoraryApplications from './pages/HonoraryApplications'
 import Translations from './pages/Translations'
 import Seo from './pages/Seo'
+import SocialMedia from './pages/SocialMedia'
 import Analytics from './pages/Analytics'
 import AiVisibility from './pages/AiVisibility'
 import ContentCentre from './pages/ContentCentre'
@@ -108,6 +109,7 @@ export default function AdminApp() {
         <Route path="announcement" element={<Perm section="content"><Announcement /></Perm>} />
         <Route path="translations" element={<OwnerOnly><Translations /></OwnerOnly>} />
         <Route path="seo" element={<Perm section="pages"><Seo /></Perm>} />
+        <Route path="social" element={<Perm section="social"><SocialMedia /></Perm>} />
         <Route path="analytics" element={<Perm section="reports"><Analytics /></Perm>} />
         <Route path="ai-visibility" element={<Perm section="pages"><AiVisibility /></Perm>} />
         <Route path="content-centre" element={<Perm section="cc_view"><ContentCentre /></Perm>} />

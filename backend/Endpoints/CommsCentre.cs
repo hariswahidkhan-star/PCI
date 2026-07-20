@@ -114,7 +114,7 @@ public static class CommsCentre
                         S(b, "country"), S(b, "permitted_categories"), S(b, "permitted_roles"), S(b, "business_hours"), S(b, "escalation_rule"),
                         S(b, "verification_status") is { Length: > 0 } vs ? vs : "unverified", I(b, "is_default"), b.ContainsKey("active") ? I(b, "active") : 1, S(b, "owner"));
                 else
-                    db.Execute(@"UPDATE comm_whatsapp_accounts SET name=?,display_name=?,phone_number=?,provider=?,provider_account_id=?,token_env=?,purpose=?,country=?,permitted_categories=?,permitted_roles=?,business_hours=?,escalation_rule=?,verification_status=?,is_default=?,active=?,owner=?,updated_at=datetime('now') WHERE key=?",
+                    db.Execute(@"UPDATE comm_whatsapp_accounts SET name=?,display_name=?,phone_number=?,provider=?,provider_account_id=?,token_env=?,purpose=?,country=?,permitted_categories=?,permitted_roles=?,business_hours=?,escalation_rule=?,verification_status=?,is_default=?,active=?,owner=?,updated_at=datetime('now') WHERE `key`=?",
                         S(b, "name"), S(b, "display_name"), S(b, "phone_number"), S(b, "provider"), S(b, "provider_account_id"), S(b, "token_env"),
                         S(b, "purpose"), S(b, "country"), S(b, "permitted_categories"), S(b, "permitted_roles"), S(b, "business_hours"),
                         S(b, "escalation_rule"), S(b, "verification_status"), I(b, "is_default"), I(b, "active"), S(b, "owner"), key);

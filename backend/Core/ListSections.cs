@@ -31,7 +31,7 @@ public static class ListSections
     static readonly Dictionary<string, string> _cache = new(StringComparer.Ordinal);
     static readonly object _lock = new();
 
-    static readonly Regex RxMarker = new(@"<!--PCI-(NAV-HEADER|NAV-FOOTER|FAQS|BOK|GOVERNANCE|RESOURCES|NEWS|PARTNERS)-->.*?<!--/PCI-\1-->",
+    static readonly Regex RxMarker = new(@"<!--PCI-(NAV-HEADER|NAV-FOOTER|FAQS|BOK|GOVERNANCE|RESOURCES|NEWS|PARTNERS|SOCIAL)-->.*?<!--/PCI-\1-->",
         RegexOptions.Singleline | RegexOptions.Compiled);
 
     /// <summary>Replace every known marker region with its table-rendered markup. A section whose
@@ -72,6 +72,7 @@ public static class ListSections
                 "RESOURCES" => Resources(db),
                 "NEWS" => News(db),
                 "PARTNERS" => Partners(db),
+                "SOCIAL" => SocialLinks.RenderFooter(db),
                 _ => null,
             };
         }
