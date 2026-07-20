@@ -742,6 +742,9 @@ public static class Migrate
             ("canonical_url","canonical_url TEXT"), ("content_json","content_json TEXT"),
             // Certuvo mapping (Phase 8): which Certuvo prep product this credential maps to, and whether enabled.
             ("certuvo_enabled","certuvo_enabled INTEGER DEFAULT 1"), ("certuvo_product","certuvo_product TEXT"),
+            // CPD requirement per recertification cycle (0 = no requirement). Approved CPD hours dated within
+            // the credential's current cycle must reach this before the holder can recertify.
+            ("cpd_required_hours","cpd_required_hours REAL DEFAULT 0"),
         })
             AddCol("certifications", col, ddl);
 

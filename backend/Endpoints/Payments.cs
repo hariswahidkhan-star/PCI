@@ -47,6 +47,22 @@ public static class Payments
                     if (!memberActive)
                         return Results.Json(new { error = "membership_required", message = "Please pay your membership fee first, or choose the membership + exam bundle to pay both together." }, statusCode: 400);
                 }
+                // Recertification requires the credential's CPD to be met first (per-certification requirement).
+                // Enforced at checkout so a student can never PAY for a recert they aren't yet eligible for —
+                // the fulfilment path only extends an already-eligible credential.
+                if (product == "recert")
+                {
+                    var em = (email ?? "").Trim().ToLowerInvariant();
+                    var urow = em.Length > 0 ? db.QueryOne("SELECT id FROM users WHERE email=?", em) : null;
+                    if (urow is not null && Certs.TryResolve(db, H.GetS(d, "certification_id", "certification", "cert")) is { } rcId
+                        && CpdPolicy.ForUserCert(db, H.L(urow["id"]), rcId) is { HasRequirement: true, Met: false } cpd)
+                        return Results.Json(new
+                        {
+                            error = "cpd_required",
+                            message = $"Recertification requires {cpd.Required:0.#} approved CPD hours for this certification cycle. You have {cpd.Approved:0.#} approved so far — log and get the remaining hours approved, then recertify.",
+                            required = cpd.Required, approved = cpd.Approved,
+                        }, statusCode: 400);
+                }
                 // Which certification the exam seat is for (id or code; the founding certification when
                 // unspecified). An EXPLICIT but unknown value is rejected — never silently converted.
                 var certSelIn = Certs.TryResolve(db, H.GetS(d, "certification_id", "certification", "cert"));

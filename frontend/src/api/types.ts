@@ -39,6 +39,8 @@ export interface ExamEntry {
   booking?: Record<string, unknown> | null
   latest_attempt?: Record<string, unknown> | null
   credential?: { credential_id: string; status: string; expires_at?: string | null } | null
+  /** Recert CPD status for this credential (present only when the certification requires CPD). */
+  recert_cpd?: { required: number; approved: number; met: boolean } | null
   // Exam-exceptions surface: admin extensions, attempt allowances, waivers and scheduling state.
   authorization?: Record<string, unknown> | null
   extended?: boolean
@@ -142,7 +144,7 @@ export interface Me {
   credentials: Credential[]
   tickets: Ticket[]
   referral: { code: string } | null
-  cpd: { total: number; target: number }
+  cpd: { total: number; target: number; pending?: number }
   two_factor: boolean
   two_factor_coming_soon: boolean
   unread: number

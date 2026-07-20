@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
 import { useMe } from '../data/MeContext'
 import { useQuery } from '../api/hooks'
 import { api } from '../api/client'
@@ -84,7 +84,7 @@ function PlansCard() {
   const renewalDue = me.membership != null && renewDays != null && renewDays <= RENEW_WINDOW_DAYS
   const seenCert = new Set<string>()
   const recertsDue = (me.exams ?? [])
-    .map((x) => ({ code: x.certification_code ?? undefined, name: x.certification_name ?? undefined, exp: x.credential?.expires_at, days: daysUntil(x.credential?.expires_at), hasCred: !!x.credential }))
+    .map((x) => ({ code: x.certification_code ?? undefined, name: x.certification_name ?? undefined, exp: x.credential?.expires_at, days: daysUntil(x.credential?.expires_at), hasCred: !!x.credential, cpd: x.recert_cpd ?? null }))
     .filter((r) => r.hasCred && r.days != null && r.days <= RENEW_WINDOW_DAYS)
     .filter((r) => { const k = r.code ?? ''; if (seenCert.has(k)) return false; seenCert.add(k); return true })
 
@@ -199,6 +199,8 @@ function PlansCard() {
 
       {pricing && recertsDue.map((r) => {
         const key = `recert:${r.code ?? ''}`
+        // A CPD requirement that isn't yet met blocks recertification (the checkout would refuse it too).
+        const cpdBlocked = !!r.cpd && !r.cpd.met
         return (
           <div className="plan-row" key={key}>
             <div style={{ flex: 1, minWidth: 220 }}>
@@ -208,10 +210,18 @@ function PlansCard() {
                   ? t('billing.recertDescExpired', { name: r.name || r.code || '', date: r.exp ? fmtDate(r.exp) : '' })
                   : t('billing.recertDescExpires', { name: r.name || r.code || '', date: r.exp ? fmtDate(r.exp) : '' })}
               </div>
+              {r.cpd && (
+                <div className="small" style={{ marginTop: '.25rem', color: cpdBlocked ? 'var(--err, #c2410c)' : 'var(--ok, #15803d)' }}>
+                  {cpdBlocked
+                    ? `CPD ${r.cpd.approved}/${r.cpd.required} approved hours — complete your CPD to recertify.`
+                    : `CPD requirement met (${r.cpd.approved}/${r.cpd.required} approved hours).`}
+                  {cpdBlocked && <> <Link to="/cpd">Log CPD</Link></>}
+                </div>
+              )}
             </div>
             <div className="row">
               <span className="plan-price">{fmtMoney(pricing.recert.final, pricing.currency)}</span>
-              <button className="btn sm" disabled={busy !== null} onClick={() => buy('recert', { cert: r.code, busyKey: key })}>
+              <button className="btn sm" disabled={busy !== null || cpdBlocked} title={cpdBlocked ? 'Complete your CPD requirement before recertifying.' : undefined} onClick={() => buy('recert', { cert: r.code, busyKey: key })}>
                 {busy === key ? t('billing.openingCheckout') : t('billing.recertifyBtn')}
               </button>
             </div>

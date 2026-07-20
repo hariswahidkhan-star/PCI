@@ -199,7 +199,9 @@ public static class AdminMgmt
                 "membership_required","application_fee","overview","next_exam_note",
                 "meta_title","meta_description","keywords","og_title","og_description","social_image","canonical_url","content_json",
                 // Certuvo mapping (Phase 8)
-                "certuvo_enabled","certuvo_product" };
+                "certuvo_enabled","certuvo_product",
+                // CPD requirement per recertification cycle (0 = none)
+                "cpd_required_hours" };
             var set = allowed.Where(c => b.ContainsKey(c)).ToList();
             if (id == 1 && set.Contains("active") && !JsonFlag(b["active"]))
                 return Results.Json(new { error = "founding_cert_permanent", message = "The founding certification cannot be deactivated." }, statusCode: 400);

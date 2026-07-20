@@ -63,6 +63,10 @@ export default function Cpd() {
         <div style={{ height: 10, background: 'var(--canvas)', borderRadius: 999, overflow: 'hidden' }}>
           <div style={{ width: `${pct}%`, height: '100%', background: 'var(--brand)' }} />
         </div>
+        <p className="muted small" style={{ margin: '.5rem 0 0' }}>
+          Only admin-approved hours count toward your total.
+          {(me?.cpd.pending ?? 0) > 0 && ` You have ${me?.cpd.pending} hour(s) awaiting review.`}
+        </p>
       </Card>
 
       <Card title={t('cpd.addActivity')}>

@@ -39,8 +39,11 @@ public static class StudentExam
             // even when result_status='auto_held', so the exam.passed flag must exclude held attempts
             // (matches the redaction applied to attempts[] and the score report).
             var passAtt = db.QueryOne("SELECT * FROM exam_attempts WHERE user_id=? AND kind='exam' AND result='pass' AND result_status NOT IN ('auto_held') ORDER BY id DESC", u.Id);
-            var cpdRows = db.Query("SELECT hours FROM cpd_entries WHERE user_id=?", u.Id);
-            var total = cpdRows.Sum(r => H.D(r["hours"]));
+            // CPD progress counts only ADMIN-APPROVED hours (a student can no longer reach the target with
+            // unreviewed entries); pending hours are surfaced separately so they still see them in flight.
+            var cpdRows = db.Query("SELECT hours,status FROM cpd_entries WHERE user_id=?", u.Id);
+            var total = cpdRows.Where(r => H.Str(r["status"]) == "approved").Sum(r => H.D(r["hours"]));
+            var cpdPending = cpdRows.Where(r => H.Str(r["status"]) == "recorded").Sum(r => H.D(r["hours"]));
             var unread = db.Scalar<long>("SELECT COUNT(*) FROM notifications WHERE user_id=? AND read_at IS NULL", u.Id);
             // Ensure a stable registration number exists (lazy backfill for both new and pre-existing users).
             var regNo = db.Scalar<string>("SELECT registration_no FROM users WHERE id=?", u.Id);
@@ -100,9 +103,13 @@ public static class StudentExam
                             : grant is not null ? (H.Str(grant["grant_type"]) == "complimentary" ? "Complimentary Attempt Approved" : "Additional Attempt Approved")
                             : extended ? "Extension Approved"
                             : "Eligible to Schedule";
+                        // Recert CPD status for this credential (null when no active credential or no requirement),
+                        // so the portal can show progress and only offer recertification once CPD is met.
+                        var recertCpd = cred is not null ? CpdPolicy.ForCredential(db, u.Id, cred) : null;
                         return new { certification_id = cid, certification_code = cert?["code"], certification_name = cert?["name"],
                             payment_id = r["payment_id"], reference = r["reference"], deadline = r["exam_schedule_deadline"],
                             entitlement_status = r["entitlement_status"], booking = bk, latest_attempt = att, credential = cred,
+                            recert_cpd = recertCpd is { HasRequirement: true } rc ? new { required = rc.Required, approved = rc.Approved, met = rc.Met } : null,
                             authorization = auth, extended, original_deadline = auth?["original_deadline"], days_left = daysLeft,
                             attempts_used = ExamAuthorization.AttemptsUsed(db, u.Id, cid), attempts_permitted = ExamAuthorization.AttemptsPermitted(db, u.Id, cid),
                             retake_wait_until = auth?["retake_wait_until"], waiver, scheduling_status = schedStatus };
@@ -129,7 +136,7 @@ public static class StudentExam
                 certifications_held = db.Query("SELECT * FROM held_certifications WHERE user_id=? ORDER BY id DESC", u.Id),
                 tickets = db.Query("SELECT id,reference,subject,category,status,updated_at FROM tickets WHERE user_id=? ORDER BY updated_at DESC LIMIT 10", u.Id),
                 referral = db.QueryOne("SELECT code FROM discount_codes WHERE owner_user_id=? AND code_type='referral' AND active=1", u.Id),
-                cpd = new { total, target = H.D(db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='sp_cpd_target_hours'")) is var _ct && _ct > 0 ? _ct : 60.0 },
+                cpd = new { total, pending = cpdPending, target = H.D(db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='sp_cpd_target_hours'")) is var _ct && _ct > 0 ? _ct : 60.0 },
                 two_factor = (db.Scalar<string>("SELECT totp_secret FROM users WHERE id=?", u.Id) ?? "") is { Length: > 0 } _tf && !_tf.StartsWith("pending:"), two_factor_coming_soon = false,
                 unread,
                 enrollment = db.QueryOne("SELECT current_step,selected_product,last_activity_at FROM enrollment_sessions WHERE email=? AND session_status='in_progress' ORDER BY id DESC", u.Email.ToLowerInvariant()),

@@ -61,6 +61,7 @@ function Editor({ initial, onClose, onSaved }: { initial: Draft | null; onClose:
         pass_mark_pct: d.pass_mark_pct,
         duration_minutes: d.duration_minutes,
         expiry_years: d.expiry_years,
+        cpd_required_hours: d.cpd_required_hours,
         exam_price: d.exam_price,
         application_fee: d.application_fee,
         membership_required: !!d.membership_required,
@@ -124,6 +125,7 @@ function Editor({ initial, onClose, onSaved }: { initial: Draft | null; onClose:
           <div className="field"><label>Pass mark (%) — blank = global</label><input type="number" value={d.pass_mark_pct ?? ''} onChange={(e) => set('pass_mark_pct', num(e.target.value))} /></div>
           <div className="field"><label>Duration (min) — blank = global</label><input type="number" value={d.duration_minutes ?? ''} onChange={(e) => set('duration_minutes', num(e.target.value))} /></div>
           <div className="field"><label>Expiry (years)</label><input type="number" value={d.expiry_years ?? ''} onChange={(e) => set('expiry_years', num(e.target.value))} /></div>
+          <div className="field"><label>CPD required to recertify (hours) — 0 = none</label><input type="number" min="0" step="1" value={d.cpd_required_hours ?? ''} onChange={(e) => set('cpd_required_hours', num(e.target.value))} /></div>
           <div className="field"><label>Membership required</label>
             <select value={d.membership_required ? '1' : '0'} onChange={(e) => set('membership_required', e.target.value === '1' ? 1 : 0)}>
               <option value="0">No</option>
