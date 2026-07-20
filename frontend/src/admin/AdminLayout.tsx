@@ -68,6 +68,7 @@ const NAV: NavItem[] = [
   { to: '/integrations', label: 'Integrations & ERP', perm: 'integrations', group: 'Integrations' },
 
   { to: '/marketing', label: 'Marketing dashboard', anyPerm: ['subscribers', 'reports'], group: 'Marketing' },
+  { to: '/marketing-ads', label: 'Marketing, Ads & Search Console', perm: 'mkt_view', group: 'Marketing' },
 
   { to: '/enquiries', label: 'Enquiries', perm: 'inquiries', group: 'Community' },
   { to: '/submissions', label: 'Form submissions', perm: 'submissions', group: 'Community' },

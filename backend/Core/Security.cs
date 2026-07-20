@@ -274,6 +274,11 @@ public static class Rbac
         // Enforced in both the .NET gate and the React Perm wrappers. Higher-risk actions (publish, social
         // & syndication delivery, licensing/legal approval) stay owner + explicit-grant.
         ["content_centre"] = new[]{ "cc_view","cc_author","cc_edit","cc_review","cc_publish","cc_seo","cc_ai","cc_social","cc_syndicate","cc_backlinks","cc_integrations","cc_legal","cc_settings" },
+        // Marketing, Ads and Search Console centre. Granular so posting, paid ads, budgets, approvals,
+        // Search Console and lead access can be split. Enforced in both the .NET gate and React Perm
+        // wrappers; higher-risk actions (connect accounts, publish, approve, budgets, export leads)
+        // stay explicit grants rather than a side-effect of a job title.
+        ["marketing"] = new[]{ "mkt_view","mkt_connect","mkt_posts","mkt_publish","mkt_ads","mkt_gsc","mkt_promos","mkt_leads","mkt_leads_export","mkt_budgets","mkt_approve" },
     };
 
     public static string[] AllSections => Sections.Values.SelectMany(x => x).ToArray();

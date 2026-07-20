@@ -14,6 +14,7 @@ import Tickets from './pages/Tickets'
 import Documents from './pages/Documents'
 import PublicDownloads from './pages/PublicDownloads'
 import Communications from './pages/Communications'
+import MarketingAds from './pages/MarketingAds'
 import Books from './pages/Books'
 import SupportInbox from './pages/SupportInbox'
 import ErrorReports from './pages/ErrorReports'
@@ -116,6 +117,7 @@ export default function AdminApp() {
         <Route path="training-partners" element={<Perm section="partners"><TrainingPartners /></Perm>} />
         <Route path="integrations" element={<Perm section="integrations"><Integrations /></Perm>} />
         <Route path="marketing" element={<AnyPerm sections={['subscribers', 'reports']}><Marketing /></AnyPerm>} />
+        <Route path="marketing-ads" element={<Perm section="mkt_view"><MarketingAds /></Perm>} />
         <Route path="exam-delivery" element={<Perm section="exam_delivery"><ExamDelivery /></Perm>} />
         <Route path="subscribers" element={<Perm section="subscribers"><Subscribers /></Perm>} />
         <Route path="reports" element={<Perm section="reports"><Reports /></Perm>} />

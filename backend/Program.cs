@@ -44,6 +44,7 @@ if (!File.Exists(schemaPath)) schemaPath = schemaFile;
 Console.WriteLine($"[boot] database provider: {db.Provider} (schema: {schemaFile})");
 Migrate.Run(db, schemaPath);
 try { PCI.Backend.Data.CommsSeed.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[comms seed] {e.Message}"); }
+try { PCI.Backend.Data.MarketingSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[marketing schema] {e.Message}"); }
 builder.Services.AddSingleton(db);
 // Scheduled retention: purge stored artefacts past evidence_retention_days, daily (manual endpoint stays).
 builder.Services.AddHostedService<PCI.Backend.Core.RetentionService>();
@@ -849,6 +850,7 @@ PCI.Backend.Endpoints.PublicDocuments.Map(app, db, logFn, r => Auth.AdminFromReq
 PCI.Backend.Endpoints.CommsCentre.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.ContentCentre.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Blog CMS + SEO + AI Studio + capability registry
 PCI.Backend.Endpoints.SocialPublishing.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Phase 2: live social connectors + drafts + outbox
+PCI.Backend.Endpoints.MarketingCentre.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Payments.Map(app, db, logFn, () => !string.IsNullOrEmpty(stripeKey));
 PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Reviews.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
