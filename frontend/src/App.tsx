@@ -15,6 +15,7 @@ import Resources from './pages/Resources'
 import Documents from './pages/Documents'
 import Messages from './pages/Messages'
 import Support from './pages/Support'
+import Appeals from './pages/Appeals'
 import Profile from './pages/Profile'
 
 export default function App() {
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="documents" element={<Documents />} />
           <Route path="messages" element={<Messages />} />
           <Route path="support" element={<Support />} />
+          <Route path="appeals" element={<Appeals />} />
           <Route path="profile" element={<Profile />} />
         </Route>
       </Route>
