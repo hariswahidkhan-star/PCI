@@ -130,7 +130,7 @@ public static class StudentExam
                 tickets = db.Query("SELECT id,reference,subject,category,status,updated_at FROM tickets WHERE user_id=? ORDER BY updated_at DESC LIMIT 10", u.Id),
                 referral = db.QueryOne("SELECT code FROM discount_codes WHERE owner_user_id=? AND code_type='referral' AND active=1", u.Id),
                 cpd = new { total, target = H.D(db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='sp_cpd_target_hours'")) is var _ct && _ct > 0 ? _ct : 60.0 },
-                two_factor = false, two_factor_coming_soon = true,
+                two_factor = (db.Scalar<string>("SELECT totp_secret FROM users WHERE id=?", u.Id) ?? "") is { Length: > 0 } _tf && !_tf.StartsWith("pending:"), two_factor_coming_soon = false,
                 unread,
                 enrollment = db.QueryOne("SELECT current_step,selected_product,last_activity_at FROM enrollment_sessions WHERE email=? AND session_status='in_progress' ORDER BY id DESC", u.Email.ToLowerInvariant()),
                 site_base_url = db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='site_base_url'") ?? ""
@@ -835,8 +835,9 @@ public static class StudentExam
         app.MapPost("/api/me/messages/read-all", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             db.Execute("UPDATE notifications SET read_at=datetime('now') WHERE user_id=? AND read_at IS NULL", u.Id); return J(new { ok = true }); });
         app.MapGet("/api/me/security", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var tf = db.Scalar<string>("SELECT totp_secret FROM users WHERE id=?", u.Id) ?? "";
             return J(new { logins = db.Query("SELECT created_at,ip,user_agent,device,outcome FROM login_events WHERE user_id=? ORDER BY id DESC LIMIT 20", u.Id),
-                two_factor = false, two_factor_coming_soon = true }); });
+                two_factor = tf.Length > 0 && !tf.StartsWith("pending:"), two_factor_coming_soon = false }); });
 
         // ── Exam Exceptions: student reports an exam incident (creates a case for the admin workflow) ──
         app.MapPost("/api/me/exam/incident", async (HttpContext ctx) =>
@@ -866,13 +867,66 @@ public static class StudentExam
         });
         app.MapGet("/api/me/exam/incidents", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             return J(new { rows = db.Query("SELECT id,certification_id,category,occurred_at,status,decision,remedy,created_at FROM exam_incidents WHERE user_id=? ORDER BY id DESC LIMIT 50", u.Id) }); });
-        app.MapPost("/api/me/2fa", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            // Two-factor auth is not yet enforced at sign-in. Rather than persist a state that would
-            // misleadingly display as "on", we register interest and report it as coming soon, so the
-            // portal never tells a candidate they are protected when they are not.
-            db.Execute("UPDATE users SET two_factor_enabled=0 WHERE id=?", u.Id);
-            log(u.Id, "twofa_interest", "requested");
-            return J(new { ok = false, coming_soon = true, two_factor = false, message = "Two-factor authentication is coming soon. We'll notify you when it's available." }); });
+        // ── Two-factor authentication (TOTP) self-enrolment: setup (pending) → verify (enable + recovery
+        //    codes) → disable. A secret is only promoted to active once the candidate proves their
+        //    authenticator works, so enabling 2FA can never lock an account out on a mis-scanned QR. ──
+        app.MapGet("/api/me/2fa", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var row = db.QueryOne("SELECT two_factor_enabled, totp_secret, totp_recovery FROM users WHERE id=?", u.Id);
+            var secret = H.Str(row?["totp_secret"]) ?? "";
+            var enabled = (row?["two_factor_enabled"] as long? ?? 0) == 1 && secret.Length > 0 && !secret.StartsWith("pending:");
+            var recov = H.Str(row?["totp_recovery"]);
+            var remaining = string.IsNullOrEmpty(recov) ? 0 : (System.Text.Json.JsonSerializer.Deserialize<List<string>>(recov)?.Count ?? 0);
+            return J(new { enabled, pending = secret.StartsWith("pending:"), recovery_remaining = remaining }); });
+
+        app.MapPost("/api/me/2fa/setup", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var already = db.Scalar<string>("SELECT totp_secret FROM users WHERE id=?", u.Id) ?? "";
+            if (already.Length > 0 && !already.StartsWith("pending:")) return Results.Json(new { error = "already_enabled" }, statusCode: 409);
+            var secret = Security.NewTotpSecret();
+            db.Execute("UPDATE users SET totp_secret=? WHERE id=?", "pending:" + secret, u.Id);
+            log(u.Id, "twofa_setup", "pending");
+            return J(new { secret, otpauth = $"otpauth://totp/PCI:{Uri.EscapeDataString(u.Email)}?secret={secret}&issuer=Project%20Controls%20Institute" }); });
+
+        app.MapPost("/api/me/2fa/verify", async (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var b = await H.Body(ctx.Request);
+            var stored = db.Scalar<string>("SELECT totp_secret FROM users WHERE id=?", u.Id) ?? "";
+            if (!stored.StartsWith("pending:")) return Results.Json(new { error = "nothing_pending", message = "Start the setup again." }, statusCode: 409);
+            if (!Security.VerifyTotp(stored["pending:".Length..], H.GetS(b, "code"))) return Results.Json(new { error = "totp_invalid", message = "That code was not valid. Check your authenticator and try again." }, statusCode: 400);
+            // Issue 10 one-time recovery codes; store SHA-256 hashes only, show the plaintext once.
+            var plain = Enumerable.Range(0, 10).Select(_ => Security.RandomHex(5).ToLowerInvariant()).ToList();
+            var hashes = plain.Select(c => Security.Sha(c)).ToList();
+            db.Execute("UPDATE users SET totp_secret=?, two_factor_enabled=1, totp_last_step=0, totp_recovery=? WHERE id=?",
+                stored["pending:".Length..], System.Text.Json.JsonSerializer.Serialize(hashes), u.Id);
+            db.Execute("DELETE FROM login_tokens WHERE user_id=? AND purpose='session' AND token!=?", u.Id,
+                ctx.Request.Headers.Authorization.ToString() is { } h && h.StartsWith("Bearer ") ? Security.Sha(h[7..]) : "");
+            log(u.Id, "twofa_enabled", "recovery codes issued");
+            try { Comms.Fire(db, "account.totp_enabled", u.Id, u.Email, null,
+                new Dictionary<string, string?> { ["student_name"] = u.Email }, "Two-factor authentication enabled",
+                "<p>Two-factor authentication is now on for your PCI account. If this wasn't you, contact support immediately.</p>"); } catch { }
+            // Format the recovery codes as XXXXX-XXXXX for readability.
+            return J(new { ok = true, enabled = true, recovery_codes = plain.Select(c => c.Length >= 10 ? c[..5] + "-" + c[5..10] : c).ToArray() }); });
+
+        app.MapPost("/api/me/2fa/disable", async (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var b = await H.Body(ctx.Request);
+            var stored = db.Scalar<string>("SELECT totp_secret FROM users WHERE id=?", u.Id) ?? "";
+            // If 2FA is active, require a current code (or recovery code) to switch it off — same bar as login.
+            if (stored.Length > 0 && !stored.StartsWith("pending:"))
+            {
+                var code = (H.GetS(b, "code") ?? "").Trim();
+                var totpOk = Security.VerifyTotp(stored, code);
+                if (!totpOk)
+                {
+                    var recovHash = Security.Sha(code.Replace(" ", "").Replace("-", "").ToLowerInvariant());
+                    var rec = db.Scalar<string>("SELECT totp_recovery FROM users WHERE id=?", u.Id) ?? "";
+                    var codes = string.IsNullOrEmpty(rec) ? new List<string>() : System.Text.Json.JsonSerializer.Deserialize<List<string>>(rec) ?? new();
+                    if (!codes.Contains(recovHash)) return Results.Json(new { error = "totp_invalid", message = "Enter a current authenticator or recovery code to turn off 2FA." }, statusCode: 400);
+                }
+            }
+            db.Execute("UPDATE users SET two_factor_enabled=0, totp_secret=NULL, totp_last_step=NULL, totp_recovery=NULL WHERE id=?", u.Id);
+            log(u.Id, "twofa_disabled", "by student");
+            try { Comms.Fire(db, "account.totp_disabled", u.Id, u.Email, null,
+                new Dictionary<string, string?> { ["student_name"] = u.Email }, "Two-factor authentication disabled",
+                "<p>Two-factor authentication has been turned off for your PCI account. If this wasn't you, contact support immediately.</p>"); } catch { }
+            return J(new { ok = true, enabled = false }); });
         app.MapPost("/api/me/sessions/revoke-others", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             var h = ctx.Request.Headers.Authorization.ToString(); var cur = h.StartsWith("Bearer ") ? Security.Sha(h[7..]) : "";
             db.Execute("DELETE FROM login_tokens WHERE user_id=? AND purpose='session' AND token!=?", u.Id, cur); return J(new { ok = true }); });

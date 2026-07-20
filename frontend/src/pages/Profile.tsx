@@ -154,8 +154,84 @@ export default function Profile() {
         />
       </Card>
 
+      <TwoFactorCard />
       <CommPreferences />
     </div>
+  )
+}
+
+// Two-factor authentication (TOTP) self-enrolment: setup → scan/enter secret → verify → recovery codes.
+function TwoFactorCard() {
+  const [status, setStatus] = useState<{ enabled: boolean; pending: boolean; recovery_remaining: number } | null>(null)
+  const [secret, setSecret] = useState<string | null>(null)
+  const [otpauth, setOtpauth] = useState('')
+  const [code, setCode] = useState('')
+  const [recovery, setRecovery] = useState<string[] | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  const reload = () => api.get<{ enabled: boolean; pending: boolean; recovery_remaining: number }>('/api/me/2fa').then(setStatus).catch(() => setStatus({ enabled: false, pending: false, recovery_remaining: 0 }))
+  useEffect(() => { reload() }, [])
+  async function begin() {
+    setBusy(true); setErr(null)
+    try { const r = await api.post<{ secret: string; otpauth: string }>('/api/me/2fa/setup', {}); setSecret(r.secret); setOtpauth(r.otpauth) }
+    catch (e) { setErr(e instanceof Error ? e.message : 'Could not start setup.') } finally { setBusy(false) }
+  }
+  async function verify() {
+    setBusy(true); setErr(null)
+    try { const r = await api.post<{ recovery_codes: string[] }>('/api/me/2fa/verify', { code: code.trim() }); setRecovery(r.recovery_codes); setSecret(null); setCode(''); await reload() }
+    catch (e) { const c = e && typeof e === 'object' && 'body' in e ? (e as { body?: { message?: string } }).body?.message : undefined; setErr(c || 'That code was not valid.') } finally { setBusy(false) }
+  }
+  async function disable() {
+    const c = prompt('Enter a current authenticator code (or a recovery code) to turn off two-factor authentication:')
+    if (c === null) return
+    setBusy(true); setErr(null)
+    try { await api.post('/api/me/2fa/disable', { code: c.trim() }); setRecovery(null); await reload() }
+    catch (e) { const m = e && typeof e === 'object' && 'body' in e ? (e as { body?: { message?: string } }).body?.message : undefined; setErr(m || 'Could not disable 2FA.') } finally { setBusy(false) }
+  }
+  if (!status) return <Card title="Two-factor authentication"><Spinner /></Card>
+  return (
+    <Card title="Two-factor authentication (2FA)">
+      <p className="muted small" style={{ marginTop: 0 }}>
+        Add a second step at sign-in using an authenticator app (Google Authenticator, Authy, 1Password, …).
+        We never send codes by email or message — they come only from your app.
+      </p>
+      {err && <ErrorNote>{err}</ErrorNote>}
+
+      {recovery && (
+        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: 8, padding: '.8rem', marginBottom: '.8rem' }}>
+          <strong>2FA is on. Save your recovery codes now.</strong>
+          <p className="muted small" style={{ margin: '.3rem 0' }}>Each code works once if you lose your authenticator. Store them somewhere safe — they won't be shown again.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(120px,1fr))', gap: '.3rem', fontFamily: 'monospace' }}>
+            {recovery.map((c) => <span key={c}>{c}</span>)}
+          </div>
+        </div>
+      )}
+
+      {status.enabled && !recovery && (
+        <div>
+          <p><span className="badge ok">Enabled</span> <span className="muted small">Recovery codes remaining: {status.recovery_remaining}</span></p>
+          <button className="btn secondary" disabled={busy} onClick={disable}>Turn off 2FA</button>
+        </div>
+      )}
+
+      {!status.enabled && !secret && !recovery && (
+        <button className="btn" disabled={busy} onClick={begin}>{busy ? 'Starting…' : 'Set up 2FA'}</button>
+      )}
+
+      {secret && (
+        <div style={{ display: 'grid', gap: '.6rem' }}>
+          <p className="small" style={{ margin: 0 }}>1. Add this key to your authenticator app (or paste the setup URL):</p>
+          <code style={{ background: 'var(--surface-2,#f1f5f9)', padding: '.5rem .7rem', borderRadius: 6, wordBreak: 'break-all' }}>{secret}</code>
+          <details><summary className="small muted">Show setup URL (otpauth://)</summary><code className="small" style={{ wordBreak: 'break-all' }}>{otpauth}</code></details>
+          <p className="small" style={{ margin: 0 }}>2. Enter the 6-digit code your app shows:</p>
+          <input inputMode="numeric" autoComplete="one-time-code" placeholder="6-digit code" value={code} onChange={(e) => setCode(e.target.value)} style={{ maxWidth: 200 }} />
+          <div className="row" style={{ gap: '.5rem' }}>
+            <button className="btn" disabled={busy || code.trim().length < 6} onClick={verify}>{busy ? 'Verifying…' : 'Verify & enable'}</button>
+            <button className="btn ghost" disabled={busy} onClick={() => { setSecret(null); setCode(''); setErr(null) }}>Cancel</button>
+          </div>
+        </div>
+      )}
+    </Card>
   )
 }
 

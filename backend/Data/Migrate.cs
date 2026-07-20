@@ -617,6 +617,9 @@ public static class Migrate
         // candidate who has lost their authenticator (see /api/admin/students/{id}/reset-2fa).
         AddCol("users", "totp_secret", "totp_secret TEXT");
         AddCol("users", "totp_last_step", "totp_last_step INTEGER");
+        // One-time recovery codes (SHA-256 hashed, JSON array) issued when a student enables 2FA, so a lost
+        // authenticator never means a permanent lockout. Consumed on use; cleared when 2FA is disabled.
+        AddCol("users", "totp_recovery", "totp_recovery TEXT");
         // Stage 4: table-backed public sections — extra display fields for pre-existing databases
         AddCol("resources", "description", "description TEXT");
         AddCol("bok_domains", "bullets", "bullets TEXT");

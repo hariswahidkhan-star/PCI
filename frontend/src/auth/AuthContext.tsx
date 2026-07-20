@@ -14,7 +14,7 @@ interface SessionUser {
 interface AuthState {
   user: SessionUser | null
   ready: boolean // finished the initial token check
-  login: (email: string, password: string) => Promise<void>
+  login: (email: string, password: string, totp?: string) => Promise<void>
   register: (data: { firstName: string; lastName: string; email: string; password: string; confirmPassword?: string; country?: string; mobile?: string }) => Promise<void>
   googleSignIn: (credential: string) => Promise<void>
   logout: () => void
@@ -84,8 +84,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const login = useCallback(async (email: string, password: string) => {
-    const res = await api.post<LoginResponse>('/api/login', { email, password }, { allowUnauthorized: true })
+  const login = useCallback(async (email: string, password: string, totp?: string) => {
+    const res = await api.post<LoginResponse>('/api/login', { email, password, totp }, { allowUnauthorized: true })
     setToken(res.token)
     setUser(res.user)
   }, [])

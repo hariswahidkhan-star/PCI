@@ -433,6 +433,31 @@ app.MapPost("/api/login", async (HttpRequest req) =>
     }
     LoginGuard.OnSuccess(db, "users", u["id"]);
     if ((u["status"] as string) != "active") return Results.Json(new { error = "inactive" }, statusCode: 403);
+    // Second factor: if the candidate has enabled TOTP (secret present and not still 'pending:'), require a
+    // valid 6-digit code or a one-time recovery code before a session is issued. Replay is blocked by
+    // recording the last consumed timestep (a captured code can't be reused within its ±1 window).
+    if ((u["two_factor_enabled"] as long? ?? 0) == 1 && u["totp_secret"] is string usecret && usecret.Length > 0 && !usecret.StartsWith("pending:"))
+    {
+        var code = (S(b, "totp") ?? "").Trim();
+        if (code.Length == 0) return Results.Json(new { error = "totp_required", two_factor = true, message = "Enter the 6-digit code from your authenticator app." }, statusCode: 401);
+        var lastStep = u.TryGetValue("totp_last_step", out var ls) && ls is not null ? Convert.ToInt64(ls) : 0L;
+        var step = Security.VerifyTotpStep(usecret, code);
+        var totpOk = step >= 0 && step > lastStep;
+        if (totpOk) db.Execute("UPDATE users SET totp_last_step=? WHERE id=?", step, u["id"]);
+        else
+        {
+            // Fall back to a one-time recovery code (hashed compare; consumed on use).
+            var recovHash = Security.Sha(code.Replace(" ", "").Replace("-", "").ToLowerInvariant());
+            var stored = (u["totp_recovery"] as string) ?? "";
+            var codes = string.IsNullOrEmpty(stored) ? new List<string>() : System.Text.Json.JsonSerializer.Deserialize<List<string>>(stored) ?? new();
+            if (!codes.Remove(recovHash))
+            {
+                LoginGuard.OnFail(db, "users", u["id"]);
+                return Results.Json(new { error = "totp_invalid", two_factor = true, message = "That code was not valid. Try again, or use a recovery code." }, statusCode: 401);
+            }
+            db.Execute("UPDATE users SET totp_recovery=? WHERE id=?", System.Text.Json.JsonSerializer.Serialize(codes), u["id"]);
+        }
+    }
     var session = Security.RandomHex(32);
     db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'session', datetime('now','+30 day'))",
         u["id"], Security.Sha(session));
