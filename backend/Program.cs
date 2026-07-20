@@ -744,14 +744,14 @@ app.MapPatch("/api/admin/team/{id}", async (HttpRequest req, long id) =>
 
 app.MapPost("/api/admin/team/{id}/reset-password", (HttpRequest req, long id) =>
 {
-    var gate = OwnerGate(req, out _); if (gate is not null) return gate;
+    var gate = OwnerGate(req, out var actor); if (gate is not null) return gate;
     var a = db.QueryOne("SELECT * FROM admin_users WHERE id=?", id);
     if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
     var tempPw = Security.RandomHex(5);
     var forceReset = Settings.Bool(db, "admin_force_password_change", true) ? 1 : 0;
     db.Execute("UPDATE admin_users SET password_hash=?, must_change_pw=? WHERE id=?", BCrypt.Net.BCrypt.HashPassword(tempPw), forceReset, id);
     db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", id);
-    Log(Convert.ToInt64(a["id"]), "admin_pw_reset", a["email"] as string);
+    Log(actor?.Id, "admin_pw_reset", $"{a["email"] as string} (admin {id})");
     return Json(new { ok = true, temp_password = tempPw });
 });
 

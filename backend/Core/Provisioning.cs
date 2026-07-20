@@ -58,6 +58,30 @@ public static class Settlement
         EnsureDownstream(db, payId);
 
         try { Integrations.Emit(db, "payment.recorded", "payment", payId, new { payment_id = payId, user_id = userId, email, amount, currency = "USD", product, product_type = product, status, occurred_at = H.IsoNow }); } catch { }
+
+        // Emailed payment receipt to the payer — paid settlements only (a waiver is not a receipt). Fires
+        // for every settlement path (Stripe webhook, admin mark-paid). Best-effort; admin-toggleable via
+        // notify_payment_receipt_enabled. The receipt is also downloadable in-portal (/api/me/invoices).
+        if (status == "paid" && Notify.Enabled(db, "payment_receipt"))
+            try
+            {
+                var payer = db.QueryOne("SELECT email,first_name FROM users WHERE id=?", userId);
+                var toEmail = !string.IsNullOrWhiteSpace(email) ? email : H.Str(payer?["email"]);
+                if (!string.IsNullOrWhiteSpace(toEmail))
+                {
+                    var first = H.Str(payer?["first_name"]);
+                    var html = Mailer.Template("payment-confirmation", new()
+                    {
+                        ["FIRST_NAME"] = string.IsNullOrWhiteSpace(first) ? "there" : first!,
+                        ["AMOUNT"] = "USD " + amount.ToString("0.##"),
+                        ["DATE"] = meta?.PaidAt ?? H.IsoNow,
+                        ["PRODUCT"] = char.ToUpperInvariant(product[0]) + product[1..],
+                        ["REFERENCE"] = reference,
+                    });
+                    Mailer.Send(db, userId, toEmail!, "payment_receipt", "Your PCI payment receipt", html);
+                }
+            }
+            catch { }
         return payId;
     }
 

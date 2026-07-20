@@ -240,6 +240,30 @@ public static class Lifecycle
                 // Render the verifiable PDF certificate (best-effort; the record is authoritative and the PDF
                 // is regenerated on first download if this fails).
                 CertIssue.EnsureCredentialPdf(db, cid);
+                // Credential-issued notification to the holder (best-effort; never for test accounts;
+                // admin-toggleable via notify_credential_issued_enabled). credentials.html is the account-
+                // setup email, so this is a purpose-built certificate notice pointing at the download + verify.
+                try
+                {
+                    var usr = db.QueryOne("SELECT email,first_name,is_test FROM users WHERE id=?", userId);
+                    if (usr is not null && H.L(usr["is_test"]) != 1 && Notify.Enabled(db, "credential_issued")
+                        && H.Str(usr["email"]) is { Length: > 0 } toEmail)
+                    {
+                        var baseUrl = Mailer.BaseUrl();
+                        var first = H.Str(usr["first_name"]);
+                        var name = System.Net.WebUtility.HtmlEncode(string.IsNullOrWhiteSpace(first) ? "there" : first);
+                        var certName = System.Net.WebUtility.HtmlEncode(H.Str(cert["name"]) ?? Certs.Prefix(cert));
+                        var portal = baseUrl + "/app/credentials";
+                        var verify = baseUrl + "/verify.html?id=" + Uri.EscapeDataString(cid);
+                        var body = $@"<div style=""font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#0E1525"">
+<h1 style=""font-size:22px;color:#0E1525"">Congratulations, {name}!</h1>
+<p style=""font-size:15px;line-height:1.7;color:#434b57"">Your <strong>{certName}</strong> credential has been issued. Your certificate number is <strong>{cid}</strong>.</p>
+<p style=""font-size:15px;line-height:1.7;color:#434b57"">Download your verifiable PDF certificate from <a href=""{portal}"" style=""color:#1D4ED8"">your PCI portal</a>; anyone can confirm it at <a href=""{verify}"" style=""color:#1D4ED8"">{verify}</a>.</p>
+<p style=""font-size:13px;color:#7a828f"">Warm regards,<br>The Project Controls Institute team</p></div>";
+                        Mailer.Send(db, userId, toEmail, "credential_issued", "Your PCI credential has been issued", body);
+                    }
+                }
+                catch { }
                 return cid;
             }
             catch { /* credential_id collision → next sequential number; attempt_id duplicate → loop exits via existing check next call */ }

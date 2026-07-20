@@ -105,7 +105,7 @@ public static class AdminStudents
             var baseUrl = Mailer.BaseUrl(ctx.Request);
             var setupUrl = Mailer.SetupLink(baseUrl, token);
             Mailer.SendWelcome(db, uid, email, first, setupUrl, baseUrl);
-            log(uid, "member_created_by_admin", $"by admin {adm.Id}");
+            log(adm.Id, "member_created_by_admin", $"user {uid} ({email}) by admin {adm.Id}");
             return J(new { ok = true, id = uid, setup_url = setupUrl });
         }));
 
@@ -215,10 +215,11 @@ public static class AdminStudents
             return J(new { ok = true });
         }));
 
-        app.MapPost("/api/admin/students/{id}/booking/cancel", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
+        app.MapPost("/api/admin/students/{id}/booking/cancel", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
             var open = db.QueryOne("SELECT * FROM exam_bookings WHERE user_id=? AND status='scheduled' ORDER BY id DESC", id);
             if (open is not null) db.Execute("UPDATE exam_bookings SET status='cancelled', updated_at=datetime('now') WHERE id=?", open["id"]);
+            log(adm.Id, "admin_cancel_booking", "user " + id);
             return J(new { ok = true });
         }));
 
