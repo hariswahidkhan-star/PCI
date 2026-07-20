@@ -30,6 +30,7 @@ public static class Notifications
         ("fraud", "Suspicious discount activity"),
         ("exam_exception", "Exam exceptions & incident reports"),
         ("exam_booking", "Exam booking & reschedule confirmations"),
+        ("content", "Blog & content publishing"),
     };
 
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log,
