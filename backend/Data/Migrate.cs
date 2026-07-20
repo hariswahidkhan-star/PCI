@@ -822,6 +822,9 @@ public static class Migrate
         }
         catch (Exception e) { Console.Error.WriteLine($"[seed] owner reset skipped: {e.Message}"); }
 
+        // Backfill Exam Authorizations for any pre-existing settled exam seat (idempotent; best-effort).
+        PCI.Backend.Core.ExamAuthorization.BackfillAll(db);
+
         // Demo student on first run (users table empty): lets the operator try the student panel
         // before payments/SMTP are configured. Mirrors the bootstrap-owner pattern: known default
         // password, loudly logged, and expected to be changed or deactivated before launch. The
