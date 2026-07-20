@@ -165,4 +165,122 @@ public static class MarketingConnectors
         }
         catch (Exception ex) { return Fail("meta_lead_fetch_failed: " + ex.Message); }
     }
+
+    // ───────────────────────── Phase 4: Google Ads, insights sync, LinkedIn leads ─────────────────────────
+    static string? E(string k) => Environment.GetEnvironmentVariable(k);
+
+    /// <summary>Create a paused Google Ads Search campaign via the Ads REST API: a campaign budget then a
+    /// campaign referencing it. Requires the developer token (env) + a connected customer id + token.</summary>
+    public static Result GoogleAdsCreateCampaign(Db db, string name, double dailyBudget)
+    {
+        var conn = LiveConnection(db, "google_ads");
+        if (conn is null) return Fail("no_connected_google_ads");
+        var token = Security.DecryptSecret(H.Str(conn["access_token_enc"]));
+        if (string.IsNullOrWhiteSpace(token)) return Fail("no_access_token");
+        var devToken = E("GOOGLE_ADS_DEVELOPER_TOKEN");
+        if (string.IsNullOrWhiteSpace(devToken)) return Fail("no_developer_token");
+        var customerId = (H.Str(conn["external_ad_account_id"]) ?? "").Replace("-", "");
+        if (customerId.Length == 0) return Fail("no_customer_id");
+        var loginCustomer = (H.Str(conn["external_business_id"]) ?? customerId).Replace("-", "");
+        try
+        {
+            long micros = (long)(dailyBudget <= 0 ? 10 : dailyBudget) * 1_000_000;
+            // 1) Campaign budget
+            var budgetReq = new { operations = new[] { new { create = new { name = name + " budget", amountMicros = micros, deliveryMethod = "STANDARD" } } } };
+            var budget = GoogleAdsMutate(db, customerId, loginCustomer, token, devToken!, "campaignBudgets", budgetReq);
+            if (!budget.Ok) return budget;
+            var budgetRes = ExtractResourceName(budget.Response);
+            if (budgetRes is null) return new Result(false, budget.Status, null, "budget_resource_missing: " + budget.Response);
+            // 2) Campaign (PAUSED) referencing the budget
+            var campReq = new { operations = new[] { new { create = new {
+                name, status = "PAUSED", advertisingChannelType = "SEARCH", campaignBudget = budgetRes,
+                networkSettings = new { targetGoogleSearch = true, targetSearchNetwork = true, targetContentNetwork = false },
+                manualCpc = new { } } } } };
+            var camp = GoogleAdsMutate(db, customerId, loginCustomer, token, devToken!, "campaigns", campReq);
+            return new Result(camp.Ok, camp.Status, ExtractResourceName(camp.Response), camp.Response);
+        }
+        catch (Exception ex) { return Fail("google_ads_call_failed: " + ex.Message); }
+    }
+
+    static Result GoogleAdsMutate(Db db, string customerId, string loginCustomer, string token, string devToken, string resource, object payload)
+    {
+        var url = $"https://googleads.googleapis.com/v17/customers/{customerId}/{resource}:mutate";
+        using var msg = new HttpRequestMessage(HttpMethod.Post, url);
+        msg.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        msg.Headers.TryAddWithoutValidation("developer-token", devToken);
+        if (!string.IsNullOrEmpty(loginCustomer)) msg.Headers.TryAddWithoutValidation("login-customer-id", loginCustomer);
+        msg.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+        using var resp = Http.Send(msg);
+        var body = new StreamReader(resp.Content.ReadAsStream()).ReadToEnd();
+        return new Result(resp.IsSuccessStatusCode, (int)resp.StatusCode, null, body.Length > 4000 ? body[..4000] : body);
+    }
+
+    static string? ExtractResourceName(string json)
+    {
+        try { using var d = JsonDocument.Parse(json);
+            if (d.RootElement.TryGetProperty("results", out var rs) && rs.ValueKind == JsonValueKind.Array && rs.GetArrayLength() > 0
+                && rs[0].TryGetProperty("resourceName", out var rn)) return rn.GetString();
+        } catch { }
+        return null;
+    }
+
+    /// <summary>Pull Meta campaign insights (spend/impressions/clicks/leads) for a provider campaign id.</summary>
+    public static Result MetaInsights(Db db, string providerCampaignId)
+    {
+        var conn = LiveConnection(db, "meta_ads");
+        if (conn is null) return Fail("no_connected_meta_account");
+        var token = Security.DecryptSecret(H.Str(conn["access_token_enc"]));
+        if (string.IsNullOrWhiteSpace(token)) return Fail("no_access_token");
+        try
+        {
+            var fields = "impressions,reach,clicks,spend,actions";
+            var url = $"https://graph.facebook.com/v21.0/{Uri.EscapeDataString(providerCampaignId)}/insights?fields={fields}&date_preset=last_30d&access_token={Uri.EscapeDataString(token)}";
+            using var resp = Http.Send(new HttpRequestMessage(HttpMethod.Get, url));
+            var body = new StreamReader(resp.Content.ReadAsStream()).ReadToEnd();
+            return new Result(resp.IsSuccessStatusCode, (int)resp.StatusCode, providerCampaignId, body.Length > 6000 ? body[..6000] : body);
+        }
+        catch (Exception ex) { return Fail("meta_insights_failed: " + ex.Message); }
+    }
+
+    /// <summary>Pull LinkedIn ad analytics for a campaign (impressions/clicks/cost) via the Advertising API.</summary>
+    public static Result LinkedInAdAnalytics(Db db, string providerCampaignId)
+    {
+        var conn = LiveConnection(db, "linkedin_ads");
+        if (conn is null) return Fail("no_connected_linkedin_ads");
+        var token = Security.DecryptSecret(H.Str(conn["access_token_enc"]));
+        if (string.IsNullOrWhiteSpace(token)) return Fail("no_access_token");
+        try
+        {
+            var url = "https://api.linkedin.com/rest/adAnalytics?q=analytics&pivot=CAMPAIGN&timeGranularity=ALL"
+                + $"&campaigns=List(urn%3Ali%3AsponsoredCampaign%3A{Uri.EscapeDataString(providerCampaignId)})&fields=impressions,clicks,costInUsd,externalWebsiteConversions";
+            using var msg = new HttpRequestMessage(HttpMethod.Get, url);
+            msg.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            msg.Headers.TryAddWithoutValidation("LinkedIn-Version", "202401");
+            msg.Headers.TryAddWithoutValidation("X-Restli-Protocol-Version", "2.0.0");
+            using var resp = Http.Send(msg);
+            var body = new StreamReader(resp.Content.ReadAsStream()).ReadToEnd();
+            return new Result(resp.IsSuccessStatusCode, (int)resp.StatusCode, providerCampaignId, body.Length > 6000 ? body[..6000] : body);
+        }
+        catch (Exception ex) { return Fail("linkedin_analytics_failed: " + ex.Message); }
+    }
+
+    /// <summary>Fetch LinkedIn Lead Gen form responses for a form via the Advertising API.</summary>
+    public static Result LinkedInFetchLeads(Db db, string formId)
+    {
+        var conn = LiveConnection(db, "linkedin_ads");
+        if (conn is null) return Fail("no_connected_linkedin_ads");
+        var token = Security.DecryptSecret(H.Str(conn["access_token_enc"]));
+        if (string.IsNullOrWhiteSpace(token)) return Fail("no_access_token");
+        try
+        {
+            var url = $"https://api.linkedin.com/rest/leadFormResponses?q=owner&owner=(sponsoredAccount:urn:li:sponsoredAccount:{Uri.EscapeDataString(H.Str(conn["external_ad_account_id"]) ?? "")})&leadType=(leadFormResponse)";
+            using var msg = new HttpRequestMessage(HttpMethod.Get, url);
+            msg.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            msg.Headers.TryAddWithoutValidation("LinkedIn-Version", "202401");
+            using var resp = Http.Send(msg);
+            var body = new StreamReader(resp.Content.ReadAsStream()).ReadToEnd();
+            return new Result(resp.IsSuccessStatusCode, (int)resp.StatusCode, formId, body.Length > 8000 ? body[..8000] : body);
+        }
+        catch (Exception ex) { return Fail("linkedin_leads_failed: " + ex.Message); }
+    }
 }

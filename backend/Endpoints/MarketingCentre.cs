@@ -289,7 +289,7 @@ public static class MarketingCentre
             var platform = H.Str(pc["platform_code"]) ?? "";
             var hasConn = db.Scalar<long>("SELECT COUNT(*) FROM mkt_connections WHERE platform_code=? AND status='connected'", platform) > 0;
             if (!hasConn) return J(new { ok = false, reason = "not_connected", operator_action = $"Connect an approved {platform} account before launching. The variant stays draft." });
-            var jobType = platform switch { "meta_ads" or "facebook_page" or "instagram" => "meta_campaign_create", _ => null };
+            var jobType = platform switch { "meta_ads" or "facebook_page" or "instagram" => "meta_campaign_create", "google_ads" => "google_campaign_create", _ => null };
             if (jobType is null) return J(new { ok = false, reason = "connector_pending", operator_action = $"A live campaign-create connector for {platform} is not enabled yet; the variant is saved and can be launched once available." });
             db.Execute("UPDATE mkt_platform_campaigns SET status='launching', updated_at=datetime('now') WHERE id=?", id);
             var jid = MarketingJobDispatcher.Enqueue(db, jobType, platform, "platform_campaign", id, null, $"{jobType}:{id}", adm.Id);
@@ -312,6 +312,41 @@ public static class MarketingCentre
                 application_submitted = db.Scalar<long>("SELECT COUNT(*) FROM mkt_leads WHERE status='application_submitted'"),
             },
         })));
+        // Sync provider insights (spend/impressions/clicks) into mkt_campaign_metrics for every launched
+        // Meta/LinkedIn variant that has a provider campaign id. Token-gated; honest when not connected.
+        app.MapPost("/api/admin/marketing/reporting/sync", (HttpRequest req) => gate(req, "mkt_view", adm =>
+        {
+            var variants = db.Query(@"SELECT id, platform_code FROM mkt_platform_campaigns
+                WHERE provider_campaign_id IS NOT NULL AND provider_campaign_id<>'' AND platform_code IN('meta_ads','linkedin_ads')");
+            int queued = 0;
+            foreach (var v in variants)
+            {
+                var plat = H.Str(v["platform_code"]) ?? "";
+                var jt = plat == "meta_ads" ? "meta_insights_sync" : "linkedin_insights_sync";
+                var jid = MarketingJobDispatcher.Enqueue(db, jt, plat, "platform_campaign", H.L(v["id"]), null,
+                    $"{jt}:{H.L(v["id"])}:{DateTime.UtcNow:yyyyMMddHH}", adm.Id);
+                if (jid is not null) queued++;
+            }
+            try { MarketingJobDispatcher.DrainOnce(db, 20); } catch { }
+            log(adm.Id, "mkt_reporting_sync", $"queued {queued}");
+            return J(new { ok = true, queued, variants = variants.Count });
+        }));
+        // Fetch LinkedIn Lead Gen form responses into the unified Lead Centre.
+        app.MapPost("/api/admin/marketing/linkedin/fetch-leads", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, "mkt_leads", adm =>
+            {
+                var hasConn = db.Scalar<long>("SELECT COUNT(*) FROM mkt_connections WHERE platform_code='linkedin_ads' AND status='connected'") > 0;
+                if (!hasConn) return J(new { ok = false, reason = "not_connected", operator_action = "Connect an approved LinkedIn advertising account before fetching lead-gen responses." });
+                var formId = S(b, "form_id");
+                var jid = MarketingJobDispatcher.Enqueue(db, "linkedin_lead_fetch", "linkedin_ads", "lead_form", 0,
+                    new { form_id = formId }, $"linkedin_lead_fetch:{formId}:{DateTime.UtcNow:yyyyMMddHH}", adm.Id);
+                try { MarketingJobDispatcher.DrainOnce(db, 5); } catch { }
+                log(adm.Id, "mkt_linkedin_fetch_leads", $"form {formId} job {jid}");
+                return J(new { ok = true, job_id = jid });
+            });
+        });
 
         // ───────── audiences / creatives / landing pages / conversions (read + simple create) ─────────
         app.MapGet("/api/admin/marketing/audiences", (HttpRequest req) => gate(req, "mkt_view", _ =>

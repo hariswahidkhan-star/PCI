@@ -495,12 +495,20 @@ function SearchConsole() {
 
 // ───────── Unified Reporting ─────────
 function Reporting() {
-  const { data, loading } = useGet<Row>('/api/admin/marketing/reporting')
-  if (loading) return <Spinner />
+  const [dep, setDep] = useState(0)
+  const { data, loading } = useGet<Row>('/api/admin/marketing/reporting', dep)
+  const [msg, setMsg] = useState('')
+  async function sync() {
+    setMsg('Syncing…')
+    try { const r = await adminApi.post<Row>('/api/admin/marketing/reporting/sync', {}); setMsg(r.variants === 0 ? 'No launched campaigns with a provider id yet.' : `Queued ${r.queued} insight sync job(s).`); setTimeout(() => setDep((x) => x + 1), 1500) }
+    catch { setMsg('Sync unavailable.') }
+  }
+  if (loading && !data) return <Spinner />
   const o = data?.outcomes ?? {}
   return (
     <div style={{ display: 'grid', gap: '1rem' }}>
-      <Card title="PCI outcomes">
+      {msg && <p className="small" style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '.4rem .6rem', margin: 0 }}>{msg}</p>}
+      <Card title="PCI outcomes" action={<button className="btn sm ghost" onClick={sync}>Sync spend/insights now</button>}>
         <div className="stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))', gap: '.6rem' }}>
           <Stat n={o.leads ?? 0} k="Leads" />
           <Stat n={o.application_started ?? 0} k="Applications started" />

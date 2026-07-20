@@ -79,6 +79,10 @@ public sealed class MarketingJobDispatcher : BackgroundService
             "gsc_search_analytics" => SearchAnalytics(db, job),
             "meta_campaign_create" => MetaCampaignCreate(db, job, entityId),
             "meta_lead_fetch" => MetaLeadFetch(db, job),
+            "google_campaign_create" => GoogleCampaignCreate(db, entityId),
+            "meta_insights_sync" => InsightsSync(db, job, "meta_ads"),
+            "linkedin_insights_sync" => InsightsSync(db, job, "linkedin_ads"),
+            "linkedin_lead_fetch" => LinkedInLeadFetch(db, job),
             _ => new MarketingConnectors.Result(false, 0, null, "unknown_job_type:" + type),
         };
 
@@ -94,6 +98,7 @@ public sealed class MarketingJobDispatcher : BackgroundService
             // failure — don't spin retries on it. Genuine provider/network errors still retry with backoff.
             var permanent = res.Response.StartsWith("no_connected") || res.Response.StartsWith("missing_")
                 || res.Response is "no_access_token" or "no_organisation_id" or "no_ad_account_id"
+                    or "no_developer_token" or "no_customer_id" or "no_provider_campaign_id"
                 || res.Response.StartsWith("unknown_job_type") || res.Response.EndsWith("_not_found");
             if (permanent || attempt >= maxAttempts)
                 db.Execute("UPDATE mkt_jobs SET status='failed', attempts=?, last_error=?, provider_response=?, updated_at=datetime('now') WHERE id=?",
@@ -112,6 +117,69 @@ public sealed class MarketingJobDispatcher : BackgroundService
         if (type == "linkedin_post_publish")
             db.Execute("UPDATE mkt_linkedin_posts SET status='published', linkedin_post_id=?, provider_response=?, updated_at=datetime('now') WHERE id=?",
                 res.ProviderId, Trunc(res.Response), entityId);
+        else if (type == "google_campaign_create")
+            db.Execute("UPDATE mkt_platform_campaigns SET provider_campaign_id=?, provider_status='PAUSED', status='created', last_synced_at=datetime('now'), updated_at=datetime('now') WHERE id=?",
+                res.ProviderId, entityId);
+    }
+
+    static MarketingConnectors.Result GoogleCampaignCreate(Db db, long platformCampaignId)
+    {
+        var pc = db.QueryOne("SELECT * FROM mkt_platform_campaigns WHERE id=?", platformCampaignId);
+        if (pc is null) return new(false, 0, null, "platform_campaign_not_found");
+        return MarketingConnectors.GoogleAdsCreateCampaign(db, H.Str(pc["name"]) ?? "PCI campaign", H.D(pc["daily_budget"]));
+    }
+
+    // Pull insights for one platform campaign and upsert a daily metrics row (deduped per platform+campaign+day).
+    static MarketingConnectors.Result InsightsSync(Db db, Dictionary<string, object?> job, string platform)
+    {
+        var pcId = H.L(job["entity_id"]);
+        var pc = db.QueryOne("SELECT * FROM mkt_platform_campaigns WHERE id=?", pcId);
+        if (pc is null) return new(false, 0, null, "platform_campaign_not_found");
+        var provId = H.Str(pc["provider_campaign_id"]);
+        if (string.IsNullOrWhiteSpace(provId)) return new(false, 0, null, "no_provider_campaign_id");
+        var res = platform == "meta_ads" ? MarketingConnectors.MetaInsights(db, provId!) : MarketingConnectors.LinkedInAdAnalytics(db, provId!);
+        if (res.Ok)
+        {
+            var (impr, clicks, spend) = ParseInsights(res.Response, platform);
+            var day = DateTime.UtcNow.ToString("yyyy-MM-dd");
+            try
+            {
+                db.Execute(@"INSERT INTO mkt_campaign_metrics(platform_campaign_id,platform_code,day,impressions,clicks,spend,dedup_key)
+                    VALUES(?,?,?,?,?,?,?)", pcId, platform, day, impr, clicks, spend, $"{platform}:{pcId}:{day}");
+            }
+            catch { /* unique dedup: already synced today — treat as success */ }
+        }
+        return res;
+    }
+
+    static (long, long, double) ParseInsights(string json, string platform)
+    {
+        try
+        {
+            using var d = JsonDocument.Parse(json);
+            var root = d.RootElement;
+            // Meta: {data:[{impressions,clicks,spend}]}. LinkedIn: {elements:[{impressions,clicks,costInUsd}]}.
+            var arr = platform == "meta_ads"
+                ? (root.TryGetProperty("data", out var dt) ? dt : default)
+                : (root.TryGetProperty("elements", out var el) ? el : default);
+            if (arr.ValueKind == JsonValueKind.Array && arr.GetArrayLength() > 0)
+            {
+                var r = arr[0];
+                long Num(string k) => r.TryGetProperty(k, out var v) ? (v.ValueKind == JsonValueKind.String && long.TryParse(v.GetString(), out var n) ? n : (v.ValueKind == JsonValueKind.Number ? (long)v.GetDouble() : 0)) : 0;
+                double Dbl(string k) => r.TryGetProperty(k, out var v) ? (v.ValueKind == JsonValueKind.String && double.TryParse(v.GetString(), out var n) ? n : (v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0)) : 0;
+                return platform == "meta_ads"
+                    ? (Num("impressions"), Num("clicks"), Dbl("spend"))
+                    : (Num("impressions"), Num("clicks"), Dbl("costInUsd"));
+            }
+        }
+        catch { }
+        return (0, 0, 0);
+    }
+
+    static MarketingConnectors.Result LinkedInLeadFetch(Db db, Dictionary<string, object?> job)
+    {
+        var formId = PayloadStr(job, "form_id") ?? "";
+        return MarketingConnectors.LinkedInFetchLeads(db, formId);
     }
 
     static MarketingConnectors.Result PublishLinkedInPost(Db db, long postId)
