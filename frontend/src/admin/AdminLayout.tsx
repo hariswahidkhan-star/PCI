@@ -41,6 +41,7 @@ const NAV: NavItem[] = [
   { to: '/honorary-applications', label: 'Honorary applications', owner: true, group: 'Access & pricing' },
   crudItem('pricing', 'Access & pricing'),
 
+  { to: '/content-centre', label: 'Content & Distribution', perm: 'cc_view', group: 'Website' },
   { to: '/pages', label: 'Pages & content', perm: 'pages', group: 'Website' },
   { to: '/public-downloads', label: 'Downloads Centre', perm: 'documents', group: 'Website' },
   { to: '/content', label: 'Site content', perm: 'content', group: 'Website' },

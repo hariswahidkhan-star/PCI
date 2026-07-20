@@ -28,6 +28,7 @@ import Seo from './pages/Seo'
 import SocialMedia from './pages/SocialMedia'
 import Analytics from './pages/Analytics'
 import AiVisibility from './pages/AiVisibility'
+import ContentCentre from './pages/ContentCentre'
 import TrainingPartners from './pages/TrainingPartners'
 import Integrations from './pages/Integrations'
 import Marketing from './pages/Marketing'
@@ -111,6 +112,7 @@ export default function AdminApp() {
         <Route path="social" element={<Perm section="social"><SocialMedia /></Perm>} />
         <Route path="analytics" element={<Perm section="reports"><Analytics /></Perm>} />
         <Route path="ai-visibility" element={<Perm section="pages"><AiVisibility /></Perm>} />
+        <Route path="content-centre" element={<Perm section="cc_view"><ContentCentre /></Perm>} />
         <Route path="training-partners" element={<Perm section="partners"><TrainingPartners /></Perm>} />
         <Route path="integrations" element={<Perm section="integrations"><Integrations /></Perm>} />
         <Route path="marketing" element={<AnyPerm sections={['subscribers', 'reports']}><Marketing /></AnyPerm>} />

@@ -8,7 +8,7 @@ import { fmtDateTime } from '../../format'
  * Provider SECRETS are never fetched or shown — the Dashboard reports configured/not booleans only. */
 
 type Row = Record<string, any>
-const TABS = ['Dashboard', 'Unified Inbox', 'Compose', 'Bulk Campaigns', 'Delivery Queue', 'Analytics', 'Templates', 'Sender Profiles', 'WhatsApp Accounts', 'Triggers', 'Suppression'] as const
+const TABS = ['Dashboard', 'Unified Inbox', 'Compose', 'Bulk Campaigns', 'Delivery Queue', 'Analytics', 'Templates', 'Sender Profiles', 'WhatsApp Accounts', 'Triggers', 'Customer-Service Rules', 'Auto-Responses', 'Suppression'] as const
 type Tab = typeof TABS[number]
 
 const STATUS_TONE: Record<string, 'ok' | 'err' | 'brand' | 'warn'> = {
@@ -41,6 +41,8 @@ export default function Communications() {
       {tab === 'Sender Profiles' && <Senders />}
       {tab === 'WhatsApp Accounts' && <WhatsApp />}
       {tab === 'Triggers' && <Triggers />}
+      {tab === 'Customer-Service Rules' && <Routing />}
+      {tab === 'Auto-Responses' && <AutoResponses />}
       {tab === 'Suppression' && <Suppression />}
     </div>
   )
@@ -112,6 +114,7 @@ function Inbox() {
     finally { setBusy(false) }
   }
   async function setConvStatus(s: string) { if (!detail) return; await adminApi.post(`/api/admin/comms/conversations/${detail.conversation.id}/status`, { status: s, assign_self: 1 }); await view(detail.conversation.id); reload() }
+  async function acceptSuggestion() { if (!detail) return; setBusy(true); try { await adminApi.post(`/api/admin/comms/conversations/${detail.conversation.id}/accept-suggestion`, {}); await view(detail.conversation.id); reload() } finally { setBusy(false) } }
   return (
     <Card title="Unified Inbox" action={<select value={status} onChange={(e) => setStatus(e.target.value)}><option value="open">Open</option><option value="pending">Pending</option><option value="escalated">Escalated</option><option value="resolved">Resolved</option><option value="">All</option></select>}>
       {loading ? <Spinner /> : (data?.rows.length ?? 0) === 0 ? <Empty>No conversations.</Empty> : (
@@ -128,6 +131,23 @@ function Inbox() {
           <div className="drawer" onClick={(e) => e.stopPropagation()}>
             <div className="spread"><h3 style={{ margin: 0 }}>{detail.conversation.subject}</h3><button className="btn secondary sm" onClick={() => setOpen(null)}>Close</button></div>
             <p className="muted small">{detail.conversation.reference} · {detail.conversation.customer_email || detail.conversation.customer_phone} · {detail.conversation.channel}</p>
+            <div className="row" style={{ gap: '.3rem', flexWrap: 'wrap', marginBottom: '.4rem' }}>
+              {detail.conversation.category && <Badge>{detail.conversation.category}</Badge>}
+              {detail.conversation.priority && <Badge tone={detail.conversation.priority === 'high' ? 'err' : 'brand'}>{detail.conversation.priority} priority</Badge>}
+              {(detail.conversation.tags || '').split(',').filter(Boolean).map((t: string) => <Badge key={t} tone={t === 'sensitive' || t === 'escalated' ? 'warn' : 'brand'}>{t}</Badge>)}
+              {detail.conversation.sla_due_at && <Badge tone="warn">SLA {fmtDateTime(detail.conversation.sla_due_at)}</Badge>}
+              {!!detail.conversation.auto_answered && <Badge tone="ok">auto-answered</Badge>}
+            </div>
+            {detail.conversation.suggested_response && (
+              <div style={{ padding: '.6rem .7rem', borderRadius: 8, background: '#ecfeff', border: '1px solid #a5f3fc', margin: '.2rem 0 .6rem' }}>
+                <div className="muted small" style={{ marginBottom: '.3rem' }}>💡 Suggested FAQ answer (from the knowledge base) — review before sending:</div>
+                <div className="small" style={{ whiteSpace: 'pre-wrap' }}>{detail.conversation.suggested_response}</div>
+                <div className="row" style={{ gap: '.4rem', marginTop: '.5rem' }}>
+                  <button className="btn sm" disabled={busy} onClick={acceptSuggestion}>Accept &amp; send</button>
+                  <button className="btn sm ghost" disabled={busy} onClick={() => setReply(detail.conversation.suggested_response)}>Edit first</button>
+                </div>
+              </div>
+            )}
             <div style={{ display: 'grid', gap: '.4rem', margin: '.6rem 0', maxHeight: 320, overflowY: 'auto' }}>
               {detail.messages.map((m) => (
                 <div key={m.id} style={{ padding: '.5rem .7rem', borderRadius: 8, background: m.is_internal_note ? '#fef9c3' : m.direction === 'out' ? '#eff6ff' : '#f1f5f9' }}>
@@ -481,5 +501,111 @@ function Analytics() {
       <Section title="Top triggers" rows={data.top_triggers} k="trigger_code" v="n" />
       <Section title="Failure reasons" rows={data.failures} k="last_error" v="n" />
     </div>
+  )
+}
+
+// ───────── Customer-Service Rules (auto-triage) ─────────
+const BLANK_RULE: Row = { name: '', priority: 100, match_channel: '', match_keywords: '', set_category: '', set_priority: '', sla_hours: 0, add_tags: '', escalate: 0, active: 1 }
+function Routing() {
+  const { data, loading, reload } = useGet<{ rows: Row[] }>('/api/admin/comms/routing')
+  const [edit, setEdit] = useState<Row | null>(null)
+  async function save(r: Row) {
+    if (!r.name.trim()) return
+    if (r.id) await adminApi.post(`/api/admin/comms/routing/${r.id}`, r)
+    else await adminApi.post('/api/admin/comms/routing', r)
+    setEdit(null); reload()
+  }
+  async function remove(id: number) { if (!confirm('Delete this routing rule?')) return; await adminApi.del(`/api/admin/comms/routing/${id}`); reload() }
+  async function toggle(r: Row) { await adminApi.post(`/api/admin/comms/routing/${r.id}`, { active: r.active ? 0 : 1 }); reload() }
+  return (
+    <Card title="Customer-Service Routing Rules" action={<button className="btn sm" onClick={() => setEdit({ ...BLANK_RULE })}>New rule</button>}>
+      <p className="muted small" style={{ marginTop: 0 }}>
+        Inbound emails and WhatsApp messages are auto-triaged in priority order (lowest number first); the first
+        matching rule sets the category, priority, SLA and tags. Rules only <strong>classify and route</strong> —
+        they never decide outcomes. Sensitive topics (rejections, refunds, revocations, privacy, legal, identity)
+        are always escalated to a human and never auto-answered, regardless of rules.
+      </p>
+      {loading ? <Spinner /> : (data?.rows.length ?? 0) === 0 ? <Empty>No routing rules.</Empty> : (
+        <table className="data"><thead><tr><th>#</th><th>Rule</th><th>Match</th><th>Sets</th><th>SLA</th><th>Escalate</th><th /></tr></thead>
+          <tbody>{data!.rows.map((r) => (
+            <tr key={r.id} style={{ opacity: r.active ? 1 : 0.5 }}>
+              <td className="small muted">{r.priority}</td>
+              <td className="small">{r.name}</td>
+              <td className="small muted">{[r.match_channel, r.match_keywords, r.match_received_address].filter(Boolean).join(' · ') || 'any'}</td>
+              <td className="small">{[r.set_category, r.set_priority && r.set_priority + ' pri', r.add_tags].filter(Boolean).join(', ') || '—'}</td>
+              <td className="small">{r.sla_hours ? r.sla_hours + 'h' : '—'}</td>
+              <td>{r.escalate ? <Badge tone="warn">yes</Badge> : '—'}</td>
+              <td style={{ whiteSpace: 'nowrap' }}>
+                <button className="btn ghost sm" onClick={() => setEdit(r)}>Edit</button>
+                <button className="btn ghost sm" onClick={() => toggle(r)}>{r.active ? 'Disable' : 'Enable'}</button>
+                <button className="btn ghost sm" onClick={() => remove(r.id)}>Delete</button>
+              </td></tr>
+          ))}</tbody></table>
+      )}
+      {edit && <RuleEditor rule={edit} onClose={() => setEdit(null)} onSave={save} />}
+    </Card>
+  )
+}
+function RuleEditor({ rule, onClose, onSave }: { rule: Row; onClose: () => void; onSave: (r: Row) => void }) {
+  const [f, setF] = useState<Row>(rule)
+  const set = (k: string, v: any) => setF((p) => ({ ...p, [k]: v }))
+  return (
+    <div className="drawer-backdrop" onClick={onClose}>
+      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+        <div className="spread"><h3 style={{ margin: 0 }}>{f.id ? 'Edit' : 'New'} routing rule</h3><button className="btn secondary sm" onClick={onClose}>Close</button></div>
+        <div style={{ display: 'grid', gap: '.6rem', marginTop: '.6rem' }}>
+          <label className="field"><span>Name</span><input value={f.name} onChange={(e) => set('name', e.target.value)} /></label>
+          <label className="field"><span>Priority (lower runs first)</span><input type="number" value={f.priority} onChange={(e) => set('priority', Number(e.target.value))} /></label>
+          <label className="field"><span>Match channel</span><select value={f.match_channel || ''} onChange={(e) => set('match_channel', e.target.value)}><option value="">Any</option><option value="email">Email</option><option value="whatsapp">WhatsApp</option><option value="inapp">In-app</option></select></label>
+          <label className="field"><span>Match keywords (comma-separated; blank = any message)</span><input value={f.match_keywords || ''} onChange={(e) => set('match_keywords', e.target.value)} placeholder="payment, invoice, refund" /></label>
+          <label className="field"><span>Match received address contains (optional)</span><input value={f.match_received_address || ''} onChange={(e) => set('match_received_address', e.target.value)} placeholder="exams@" /></label>
+          <label className="field"><span>Set category</span><input value={f.set_category || ''} onChange={(e) => set('set_category', e.target.value)} placeholder="finance" /></label>
+          <label className="field"><span>Set priority</span><select value={f.set_priority || ''} onChange={(e) => set('set_priority', e.target.value)}><option value="">Leave unchanged</option><option value="low">Low</option><option value="normal">Normal</option><option value="high">High</option></select></label>
+          <label className="field"><span>SLA hours (0 = none)</span><input type="number" value={f.sla_hours || 0} onChange={(e) => set('sla_hours', Number(e.target.value))} /></label>
+          <label className="field"><span>Add tags (comma-separated)</span><input value={f.add_tags || ''} onChange={(e) => set('add_tags', e.target.value)} /></label>
+          <label style={{ display: 'flex', gap: '.4rem' }}><input type="checkbox" checked={!!f.escalate} onChange={(e) => set('escalate', e.target.checked ? 1 : 0)} style={{ width: 'auto' }} /> Force human escalation (never auto-answer)</label>
+          <button className="btn" onClick={() => onSave(f)}>Save rule</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ───────── Auto-Responses (FAQ mode + sensitive-topic floor) ─────────
+function AutoResponses() {
+  const { data, loading, reload } = useGet<{ faq_mode: string; sensitive_keywords: string }>('/api/admin/comms/routing')
+  const [mode, setMode] = useState(''); const [kw, setKw] = useState(''); const [busy, setBusy] = useState(false); const [saved, setSaved] = useState(false)
+  useEffect(() => { if (data) { setMode(data.faq_mode || 'suggest'); setKw(data.sensitive_keywords || '') } }, [data])
+  async function save() { setBusy(true); try { await adminApi.post('/api/admin/comms/autoresponse', { faq_mode: mode, sensitive_keywords: kw }); setSaved(true); setTimeout(() => setSaved(false), 2000); reload() } finally { setBusy(false) } }
+  if (loading && !data) return <Spinner />
+  return (
+    <Card title="Automated FAQ Responses">
+      <p className="muted small" style={{ marginTop: 0 }}>
+        When a message matches the site knowledge base, the platform can draft or send an answer automatically.
+        Answers only ever replay admin-authored knowledge-base entries — the system invents no fees, eligibility
+        rules, exam results or legal conclusions. Sensitive/adverse topics below are always escalated to a human.
+      </p>
+      <div style={{ display: 'grid', gap: '.9rem', maxWidth: 640 }}>
+        <label className="field"><span>FAQ response mode</span>
+          <select value={mode} onChange={(e) => setMode(e.target.value)}>
+            <option value="suggest">Suggest — draft an answer for an agent to review &amp; send (recommended)</option>
+            <option value="auto">Auto — send the matched knowledge-base answer immediately</option>
+            <option value="escalate_all">Escalate all — never auto-answer; a human handles every message</option>
+          </select>
+        </label>
+        <label className="field"><span>Additional sensitive keywords (comma-separated) — always escalated, never auto-answered</span>
+          <textarea rows={3} value={kw} onChange={(e) => setKw(e.target.value)} placeholder="e.g. sponsorship dispute, accreditation complaint" />
+        </label>
+        <p className="muted small" style={{ margin: 0 }}>
+          A built-in floor already escalates: rejections/appeals, refunds/chargebacks, revocations, disputes &amp;
+          complaints, legal, criminal/fraud, identity/passport, privacy/GDPR/erasure, security/breach, exam-result
+          disputes and waivers. Your additions extend this list; they cannot shrink it.
+        </p>
+        <div className="row" style={{ gap: '.5rem', alignItems: 'center' }}>
+          <button className="btn" disabled={busy} onClick={save}>Save settings</button>
+          {saved && <span className="small" style={{ color: '#059669' }}>Saved ✓</span>}
+        </div>
+      </div>
+    </Card>
   )
 }

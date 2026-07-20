@@ -846,6 +846,7 @@ PCI.Backend.Endpoints.Account.Map(app, db, logFn);
 PCI.Backend.Endpoints.AdminMgmt.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.PublicDocuments.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.CommsCentre.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
+PCI.Backend.Endpoints.ContentCentre.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Blog CMS + SEO + AI Studio + capability registry
 PCI.Backend.Endpoints.Payments.Map(app, db, logFn, () => !string.IsNullOrEmpty(stripeKey));
 PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Reviews.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
@@ -946,6 +947,60 @@ app.Use(async (ctx, next) =>
                 ctx.Response.Headers.CacheControl = "no-cache";
                 await ctx.Response.SendFileAsync(centre);
                 return;
+            }
+        }
+        // ── Content Centre: dynamic blog (server-side rendered) + syndication feeds + blog sitemap ──────
+        //    Full article HTML is present in the initial response (crawler-safe). Feeds/sitemap are exact
+        //    paths; the index, category/author/tag facets and each article are rendered from blog_posts.
+        {
+            var bp = PCI.Backend.Core.Blog.BasePath(db);                     // configurable, default "/blog"
+            var blang = PCI.Backend.Core.I18nContent.ActiveLang(ctx);
+            if (reqPath.Equals("/blog-sitemap.xml", StringComparison.OrdinalIgnoreCase))
+            { ctx.Response.ContentType = "application/xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Sitemap(db)); return; }
+            if (reqPath.Equals(bp + "/feed.xml", StringComparison.OrdinalIgnoreCase))
+            { ctx.Response.ContentType = "application/rss+xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Rss(db)); return; }
+            if (reqPath.Equals(bp + "/atom.xml", StringComparison.OrdinalIgnoreCase))
+            { ctx.Response.ContentType = "application/atom+xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Atom(db)); return; }
+            if (reqPath.Equals(bp + "/feed.json", StringComparison.OrdinalIgnoreCase))
+            { ctx.Response.ContentType = "application/feed+json; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Json(db)); return; }
+            if (reqPath.Equals(bp, StringComparison.OrdinalIgnoreCase) || reqPath.Equals(bp + "/", StringComparison.OrdinalIgnoreCase))
+            {
+                int.TryParse(ctx.Request.Query["page"], out var pg);
+                ctx.Response.ContentType = "text/html; charset=utf-8"; ctx.Response.Headers.CacheControl = "no-cache"; ctx.Response.Headers.Vary = "Cookie";
+                await ctx.Response.WriteAsync(PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg <= 0 ? 1 : pg, null, null, null, null));
+                return;
+            }
+            if (reqPath.StartsWith(bp + "/", StringComparison.OrdinalIgnoreCase))
+            {
+                var rest = reqPath.Substring(bp.Length + 1).Trim('/');
+                int.TryParse(ctx.Request.Query["page"], out var pg);
+                if (pg <= 0) pg = 1;
+                string? html = null;
+                if (rest.StartsWith("category/", StringComparison.OrdinalIgnoreCase))
+                {
+                    var c = db.QueryOne("SELECT id,name FROM blog_categories WHERE slug=? AND active=1", rest.Substring(9).ToLowerInvariant());
+                    if (c is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, PCI.Backend.Core.H.L(c["id"]), PCI.Backend.Core.H.Str(c["name"]), null, null);
+                }
+                else if (rest.StartsWith("author/", StringComparison.OrdinalIgnoreCase))
+                {
+                    var a = db.QueryOne("SELECT id,name FROM blog_authors WHERE slug=? AND active=1", rest.Substring(7).ToLowerInvariant());
+                    if (a is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, null, null, PCI.Backend.Core.H.L(a["id"]), "Articles by " + (PCI.Backend.Core.H.Str(a["name"]) ?? ""));
+                }
+                else if (rest.StartsWith("tag/", StringComparison.OrdinalIgnoreCase))
+                {
+                    var t = db.QueryOne("SELECT id,name FROM blog_tags WHERE slug=?", rest.Substring(4).ToLowerInvariant());
+                    if (t is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, null, null, null, null, PCI.Backend.Core.H.L(t["id"]), "#" + (PCI.Backend.Core.H.Str(t["name"]) ?? ""));
+                }
+                else if (!rest.Contains('/') && !rest.Contains('.'))
+                {
+                    html = PCI.Backend.Core.BlogRender.RenderArticle(db, webRoot, rest, blang);   // null → draft/unknown → 404 below
+                }
+                if (html is not null)
+                {
+                    ctx.Response.ContentType = "text/html; charset=utf-8"; ctx.Response.Headers.CacheControl = "no-cache"; ctx.Response.Headers.Vary = "Cookie";
+                    await ctx.Response.WriteAsync(html); return;
+                }
+                // no match (draft, unknown slug/category/author/tag) → fall through to normal 404 handling
             }
         }
         // ── Multi-certification clean URLs: /certifications (catalogue) and /certifications/{slug} (per credential) ──

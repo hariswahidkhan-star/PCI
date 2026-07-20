@@ -19,6 +19,7 @@ public static class CommsCentre
         IResult J(object o) => Results.Json(o);
         string S(Dictionary<string, JsonElement> b, params string[] k) => (H.GetS(b, k) ?? "").Trim();
         int I(Dictionary<string, JsonElement> b, string k) => (int)(H.GetNum(b, k) ?? 0);
+        static string? Nz(string s) => string.IsNullOrWhiteSpace(s) ? null : s;
 
         // ───────── dashboard + provider settings ─────────
         app.MapGet("/api/admin/comms/overview", (HttpRequest req) => gate(req, SECTION, _ =>
@@ -513,6 +514,101 @@ public static class CommsCentre
             });
         });
 
+        // ───────── customer-service routing rules + FAQ auto-response config (Phase 5) ─────────
+        app.MapGet("/api/admin/comms/routing", (HttpRequest req) => gate(req, SECTION, _ => J(new
+        {
+            rows = db.Query("SELECT * FROM comm_routing_rules ORDER BY priority, id"),
+            faq_mode = Settings.Str(db, "comms_faq_mode", "suggest"),
+            sensitive_keywords = Settings.Str(db, "comms_sensitive_keywords", ""),
+        })));
+        app.MapPost("/api/admin/comms/routing", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, SECTION, adm =>
+            {
+                var name = S(b, "name"); if (name.Length == 0) return Results.Json(new { error = "name_required" }, statusCode: 400);
+                var id = db.ExecuteReturningId(@"INSERT INTO comm_routing_rules
+                    (name,priority,match_channel,match_received_address,match_keywords,match_certification_id,
+                     set_category,set_priority,assign_admin_id,sla_hours,add_tags,escalate,active,created_by)
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    name, I(b, "priority") == 0 ? 100 : I(b, "priority"),
+                    Nz(S(b, "match_channel")), Nz(S(b, "match_received_address")), Nz(S(b, "match_keywords")),
+                    b.ContainsKey("match_certification_id") ? (long?)I(b, "match_certification_id") : null,
+                    Nz(S(b, "set_category")), Nz(S(b, "set_priority")),
+                    b.ContainsKey("assign_admin_id") && I(b, "assign_admin_id") > 0 ? (long?)I(b, "assign_admin_id") : null,
+                    b.ContainsKey("sla_hours") && I(b, "sla_hours") > 0 ? (long?)I(b, "sla_hours") : null,
+                    Nz(S(b, "add_tags")), I(b, "escalate") == 1 ? 1 : 0, 1, adm.Id);
+                log(adm.Id, "comm_routing_rule_add", $"#{id} {name}");
+                return J(new { ok = true, id });
+            });
+        });
+        app.MapPost("/api/admin/comms/routing/{id:long}", async (HttpContext ctx, long id) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, SECTION, adm =>
+            {
+                if (db.QueryOne("SELECT id FROM comm_routing_rules WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+                void Set(string col, object? v) => db.Execute($"UPDATE comm_routing_rules SET {col}=?, updated_at=datetime('now') WHERE id=?", v, id);
+                if (b.ContainsKey("name") && S(b, "name").Length > 0) Set("name", S(b, "name"));
+                if (b.ContainsKey("priority")) Set("priority", I(b, "priority"));
+                if (b.ContainsKey("match_channel")) Set("match_channel", Nz(S(b, "match_channel")));
+                if (b.ContainsKey("match_received_address")) Set("match_received_address", Nz(S(b, "match_received_address")));
+                if (b.ContainsKey("match_keywords")) Set("match_keywords", Nz(S(b, "match_keywords")));
+                if (b.ContainsKey("match_certification_id")) Set("match_certification_id", I(b, "match_certification_id") > 0 ? (long?)I(b, "match_certification_id") : null);
+                if (b.ContainsKey("set_category")) Set("set_category", Nz(S(b, "set_category")));
+                if (b.ContainsKey("set_priority")) Set("set_priority", Nz(S(b, "set_priority")));
+                if (b.ContainsKey("assign_admin_id")) Set("assign_admin_id", I(b, "assign_admin_id") > 0 ? (long?)I(b, "assign_admin_id") : null);
+                if (b.ContainsKey("sla_hours")) Set("sla_hours", I(b, "sla_hours") > 0 ? (long?)I(b, "sla_hours") : null);
+                if (b.ContainsKey("add_tags")) Set("add_tags", Nz(S(b, "add_tags")));
+                if (b.ContainsKey("escalate")) Set("escalate", I(b, "escalate") == 1 ? 1 : 0);
+                if (b.ContainsKey("active")) Set("active", I(b, "active") == 1 ? 1 : 0);
+                log(adm.Id, "comm_routing_rule_update", $"#{id}");
+                return J(new { ok = true });
+            });
+        });
+        app.MapDelete("/api/admin/comms/routing/{id:long}", (HttpRequest req, long id) => gate(req, SECTION, adm =>
+        {
+            db.Execute("DELETE FROM comm_routing_rules WHERE id=?", id);
+            log(adm.Id, "comm_routing_rule_delete", $"#{id}");
+            return J(new { ok = true });
+        }));
+        // FAQ auto-response mode + sensitive-keyword floor.
+        app.MapPost("/api/admin/comms/autoresponse", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, SECTION, adm =>
+            {
+                if (b.ContainsKey("faq_mode"))
+                {
+                    var m = S(b, "faq_mode");
+                    if (m is not ("suggest" or "auto" or "escalate_all")) return Results.Json(new { error = "bad_mode" }, statusCode: 400);
+                    Settings.Put(db, "comms_faq_mode", m);
+                }
+                if (b.ContainsKey("sensitive_keywords")) Settings.Put(db, "comms_sensitive_keywords", S(b, "sensitive_keywords"));
+                log(adm.Id, "comm_autoresponse_config", Settings.Str(db, "comms_faq_mode", "suggest"));
+                return J(new { ok = true });
+            });
+        });
+        // Accept the drafted (suggested) FAQ response on a conversation: sends it and clears the draft.
+        app.MapPost("/api/admin/comms/conversations/{id:long}/accept-suggestion", (HttpRequest req, long id) => gate(req, SECTION, adm =>
+        {
+            var c = db.QueryOne("SELECT * FROM comm_conversations WHERE id=?", id);
+            if (c is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var draft = H.Str(c["suggested_response"]);
+            if (string.IsNullOrWhiteSpace(draft)) return Results.Json(new { error = "no_suggestion" }, statusCode: 400);
+            var channel = H.Str(c["channel"]) ?? "email";
+            db.Execute("INSERT INTO comm_inbound_messages(conversation_id,direction,channel,from_addr,to_addr,body,author_admin_id) VALUES(?, 'out', ?, ?, ?, ?, ?)",
+                id, channel, adm.Email, H.Str(c["customer_email"]) ?? H.Str(c["customer_phone"]), draft, adm.Id);
+            Comms.Enqueue(db, channel == "whatsapp" ? "whatsapp" : "email", $"suggestion:{id}:{DateTime.UtcNow.Ticks}",
+                c["user_id"] as long?, H.Str(c["customer_email"]), H.Str(c["customer_phone"]),
+                "Re: " + (H.Str(c["subject"]) ?? "Your enquiry"), channel == "email" ? $"<p>{System.Net.WebUtility.HtmlEncode(draft)}</p>" : draft,
+                senderKey: "support", category: "support", triggerCode: "support.suggestion_sent", conversationId: id, createdBy: adm.Id);
+            db.Execute("UPDATE comm_conversations SET suggested_response=NULL, last_message_at=datetime('now'), status=CASE WHEN status='resolved' THEN 'open' ELSE status END, updated_at=datetime('now') WHERE id=?", id);
+            try { OutboxDispatcher.DrainOnce(db, 5); } catch { }
+            log(adm.Id, "comm_suggestion_sent", $"conv #{id}");
+            return J(new { ok = true });
+        }));
+
         // ───────── public one-click unsubscribe (signed token — no login) ─────────
         // GET renders a tiny confirmation page; both GET and POST perform the unsubscribe idempotently.
         void DoUnsub(long uid)
@@ -561,6 +657,7 @@ public static class CommsCentre
                 convId, from, to, text.Length > 20000 ? text[..20000] : text, H.GetS(b, "message_id", "Message-Id"));
             db.Execute("UPDATE comm_conversations SET last_message_at=datetime('now'), status=CASE WHEN status IN('resolved','closed') THEN 'open' ELSE status END, updated_at=datetime('now') WHERE id=?", convId);
             AutoAck(db, convId);
+            CommsRouting.Apply(db, convId, text);      // auto-triage: classify, route, and FAQ-answer where safe
             return J(new { ok = true, conversation_id = convId });
         });
 
@@ -597,6 +694,7 @@ public static class CommsCentre
                                             convId, fromPhone, textBody, mid);
                                         db.Execute("UPDATE comm_conversations SET last_message_at=datetime('now'), status='open', updated_at=datetime('now') WHERE id=?", convId);
                                         AutoAck(db, convId);
+                                        CommsRouting.Apply(db, convId, textBody ?? "");   // auto-triage + FAQ answer where safe
                                     }
             }
             catch (Exception e) { Console.Error.WriteLine($"[comms] whatsapp webhook parse: {e.Message}"); }
