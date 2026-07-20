@@ -28,8 +28,8 @@ public static class CommsSeed
             ("no-reply", "No-reply", "no-reply@projectcontrolsinstitute.org", "transactional"),
         };
         foreach (var (key, name, from, cat) in senders)
-            db.Execute(@"INSERT INTO comm_sender_profiles(key,name,display_name,from_email,reply_to,category,is_default,active,approval_status)
-                SELECT ?,?,?,?,?,?,?,1,'approved' WHERE NOT EXISTS(SELECT 1 FROM comm_sender_profiles WHERE key=?)",
+            db.Execute(@"INSERT INTO comm_sender_profiles(`key`,name,display_name,from_email,reply_to,category,is_default,active,approval_status)
+                SELECT ?,?,?,?,?,?,?,1,'approved' WHERE NOT EXISTS(SELECT 1 FROM comm_sender_profiles WHERE `key`=?)",
                 key, name, "Project Controls Institute", from, from, cat, key == "no-reply" ? 1 : 0, key);
 
         // Trigger catalogue: (code, name, group, backend_wired). wired=1 for events an existing backend

@@ -21,8 +21,10 @@ public static class Blog
 
     public static int PerPage(Db db)
     {
-        var n = (int)(db.Scalar<long>("SELECT CAST(svalue AS INTEGER) FROM site_settings WHERE skey='blog_posts_per_page'"));
-        return n is > 0 and <= 100 ? n : 12;
+        // Read as string + parse in C# (avoids CAST AS INTEGER, which the MySQL translator would turn into
+        // the invalid CAST AS BIGINT — MySQL cast targets are SIGNED/UNSIGNED, not BIGINT).
+        var s = db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='blog_posts_per_page'");
+        return int.TryParse(s, out var n) && n is > 0 and <= 100 ? n : 12;
     }
 
     public static string PublicUrl(Db db, string slug) => Redirects.CanonicalBase + BasePath(db) + "/" + slug;

@@ -121,7 +121,7 @@ public static class Comms
         if (!string.IsNullOrEmpty(templateKey))
             try
             {
-                var tpl = db.QueryOne("SELECT subject,body FROM comm_templates WHERE key=? AND kind='email' AND status='published' ORDER BY version DESC LIMIT 1", templateKey);
+                var tpl = db.QueryOne("SELECT subject,body FROM comm_templates WHERE `key`=? AND kind='email' AND status='published' ORDER BY version DESC LIMIT 1", templateKey);
                 if (tpl is not null) return (Render(H.Str(tpl["subject"]) ?? fbSubject, vars), Render(H.Str(tpl["body"]) ?? fbHtml, vars));
             }
             catch { }
@@ -132,7 +132,7 @@ public static class Comms
         if (!string.IsNullOrEmpty(templateKey))
             try
             {
-                var tpl = db.QueryOne("SELECT body FROM comm_templates WHERE key=? AND kind='whatsapp' AND status='published' ORDER BY version DESC LIMIT 1", templateKey);
+                var tpl = db.QueryOne("SELECT body FROM comm_templates WHERE `key`=? AND kind='whatsapp' AND status='published' ORDER BY version DESC LIMIT 1", templateKey);
                 if (tpl is not null) return Render(H.Str(tpl["body"]) ?? fbText, vars);
             }
             catch { }

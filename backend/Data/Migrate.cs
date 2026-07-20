@@ -741,7 +741,7 @@ public static class Migrate
         // Approved email identities. Credentials are NOT stored here — only the identity + policy.
         db.Exec(@"CREATE TABLE IF NOT EXISTS comm_sender_profiles(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            key VARCHAR(60) UNIQUE NOT NULL,            -- stable code, e.g. 'support','finance','no-reply'
+            `key` VARCHAR(60) UNIQUE NOT NULL,            -- stable code, e.g. 'support','finance','no-reply'
             name TEXT NOT NULL, display_name TEXT,
             from_email TEXT NOT NULL, reply_to TEXT,
             purpose TEXT, category VARCHAR(40) DEFAULT 'operational',
@@ -754,7 +754,7 @@ public static class Migrate
         // Approved WhatsApp Business numbers. Tokens/app-secrets are NOT stored here — only which env var holds them.
         db.Exec(@"CREATE TABLE IF NOT EXISTS comm_whatsapp_accounts(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            key VARCHAR(60) UNIQUE NOT NULL,
+            `key` VARCHAR(60) UNIQUE NOT NULL,
             name TEXT NOT NULL, display_name TEXT,
             phone_number TEXT NOT NULL, provider VARCHAR(30) DEFAULT 'meta_cloud',
             provider_account_id TEXT,                   -- phone_number_id / WABA id (NOT a secret)
@@ -768,7 +768,7 @@ public static class Migrate
         // Channel-agnostic templates with versioning + publish lifecycle + dynamic {{variables}}.
         db.Exec(@"CREATE TABLE IF NOT EXISTS comm_templates(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            key VARCHAR(80) NOT NULL,
+            `key` VARCHAR(80) NOT NULL,
             name TEXT NOT NULL, kind VARCHAR(24) DEFAULT 'email',   -- email|whatsapp|auto_response|internal|bulk
             category VARCHAR(40) DEFAULT 'operational',
             subject TEXT, body TEXT,                    -- body: HTML (email) or text (whatsapp); {{vars}}
@@ -777,7 +777,7 @@ public static class Migrate
             version INTEGER DEFAULT 1, status VARCHAR(20) DEFAULT 'draft',  -- draft|approved|published|archived
             required_vars TEXT, approved_by INTEGER, published_at TEXT,
             created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
-        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_tpl_key ON comm_templates(key,status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_tpl_key ON comm_templates(`key`,status)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS comm_template_versions(
             id INTEGER PRIMARY KEY AUTOINCREMENT, template_id INTEGER NOT NULL, version INTEGER,
             subject TEXT, body TEXT, wa_template_name TEXT, saved_by INTEGER, created_at TEXT DEFAULT (datetime('now')))");
@@ -812,7 +812,7 @@ public static class Migrate
             created_by INTEGER, next_attempt_at TEXT, sent_at TEXT,
             created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_comm_outbox_dedup ON comm_outbox(dedup_key)");
-        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_outbox_status ON comm_outbox(status,scheduled_at)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_outbox_status ON comm_outbox(status)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_outbox_user ON comm_outbox(user_id)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS comm_delivery_attempts(
             id INTEGER PRIMARY KEY AUTOINCREMENT, outbox_id INTEGER NOT NULL, attempt INTEGER,
@@ -837,7 +837,7 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_inbound_conv ON comm_inbound_messages(conversation_id)");
         // Per-recipient suppression (bounces/complaints/unsubscribes) — checked before every marketing send.
         db.Exec(@"CREATE TABLE IF NOT EXISTS comm_suppression(
-            id INTEGER PRIMARY KEY AUTOINCREMENT, channel VARCHAR(16), address TEXT,
+            id INTEGER PRIMARY KEY AUTOINCREMENT, channel VARCHAR(16), address VARCHAR(190),
             reason VARCHAR(40), category VARCHAR(24), source TEXT, created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_suppress_addr ON comm_suppression(channel,address)");
         // Consent + channel preferences per user (marketing requires opt-in; essential cannot be disabled).
@@ -953,7 +953,7 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_posts_status ON blog_posts(status, published)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_posts_cat ON blog_posts(category_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_posts_author ON blog_posts(author_id)");
-        db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_posts_pub ON blog_posts(published, published_at)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_blog_posts_pub ON blog_posts(published)");
 
         // Version history — a full snapshot per save; the previous version is NEVER overwritten (integrity).
         db.Exec(@"CREATE TABLE IF NOT EXISTS blog_post_versions(id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -985,7 +985,7 @@ public static class Migrate
             target VARCHAR(48), payload TEXT, status VARCHAR(16) DEFAULT 'pending', attempts INTEGER DEFAULT 0,
             response_code INTEGER, last_error TEXT, result_ref TEXT, next_attempt_at TEXT,
             created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
-        db.Exec("CREATE INDEX IF NOT EXISTS ix_content_jobs_status ON content_jobs(status, next_attempt_at)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_content_jobs_status ON content_jobs(status)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_content_jobs_post ON content_jobs(post_id)");
 
         // AI Content Studio — provider/model/use-case configs (secrets stay in env, referenced by key_env) and

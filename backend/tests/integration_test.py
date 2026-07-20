@@ -1563,6 +1563,72 @@ def test_exam_exceptions(admin):
     c, bad = jget("POST", "/api/admin/exam-authorizations/bulk-reopen", token=admin, body={"user_ids": [uid], "certification_id": 1, "reason": "batch", "confirm_count": 99})
     chk("19w bulk reopen rejects a mismatched confirm_count", c == 400, (c, bad))
 
+def test_content_centre(admin):
+    print("\n=== 20. Content, SEO & Distribution Centre ===")
+    # author + category
+    c, a = jget("POST", "/api/admin/content/authors", token=admin, body={"name": "Dr. Ada Rivera", "title": "Head of Research", "bio": "Leads PCI research."})
+    chk("20a create author", c == 200 and a.get("id"), a)
+    aid = a.get("id")
+    c, cat = jget("POST", "/api/admin/content/categories", token=admin, body={"name": "AI & Project Controls"})
+    chk("20b create category", c == 200 and cat.get("id"), cat)
+    cid = cat.get("id")
+    # create post (draft)
+    body_html = "<h2>Overview</h2><p>" + ("Artificial intelligence is transforming forecasting and earned value. " * 30) + "</p>"
+    c, p = jget("POST", "/api/admin/content/posts", token=admin, body={"title": "AI In Project Controls 2026", "summary": "How AI reshapes forecasting, EVM and risk.", "body": body_html, "author_id": aid, "category_id": cid, "primary_keyword": "AI project controls", "meta_description": "How AI reshapes forecasting, EVM and risk management in project controls.", "featured_image": "/assets/og-image.jpg", "featured_image_alt": "AI project controls"})
+    chk("20c create post as draft", c == 200 and p.get("id"), p)
+    pid = p.get("id"); slug = p.get("slug")
+    con = dbconn(); st = con.execute("SELECT status,published FROM blog_posts WHERE id=?", (pid,)).fetchone(); con.close()
+    chk("20d new post starts as unpublished draft", st and st[0] == "draft" and st[1] == 0, st)
+    # draft is NOT public (protected from indexing)
+    sc, _ = req("GET", f"/blog/{slug}")
+    chk("20e draft slug returns 404 publicly", sc == 404, sc)
+    # tags
+    jget("POST", f"/api/admin/content/posts/{pid}/tags", token=admin, body={"tags": ["AI", "Forecasting", "EVM"]})
+    # edit → a new version snapshot is kept (previous content preserved)
+    jget("PATCH", f"/api/admin/content/posts/{pid}", token=admin, body={"subtitle": "A practical view", "change_reason": "add subtitle"})
+    con = dbconn(); vcount = con.execute("SELECT COUNT(*) FROM blog_post_versions WHERE post_id=?", (pid,)).fetchone()[0]; con.close()
+    chk("20f edit preserves a prior version (never overwritten)", vcount >= 1, vcount)
+    # publish
+    c, pub = jget("POST", f"/api/admin/content/posts/{pid}/publish", token=admin, body={})
+    chk("20g publish returns canonical url", c == 200 and pub.get("url", "").endswith(slug), pub)
+    # SSR article: full content + JSON-LD in the initial HTML
+    sc, html = req("GET", f"/blog/{slug}")
+    chk("20h article renders server-side (200, full title in HTML)", sc == 200 and "AI In Project Controls 2026" in html, sc)
+    chk("20i article carries BlogPosting + BreadcrumbList JSON-LD", "BlogPosting" in html and "BreadcrumbList" in html, None)
+    chk("20j article has canonical + article og:type", 'rel="canonical"' in html and 'content="article"' in html, None)
+    chk("20k author by-line present in HTML", "Dr. Ada Rivera" in html, None)
+    # public API + feeds + sitemap
+    c, api = jget("GET", "/api/blog/posts")
+    chk("20l public API lists the published post", c == 200 and api.get("total", 0) >= 1, api.get("total"))
+    sc, rss = req("GET", "/blog/feed.xml")
+    chk("20m RSS feed contains the post", sc == 200 and slug in rss, sc)
+    sc, sm = req("GET", "/sitemap.xml")
+    chk("20n main sitemap includes the blog URL", ("/blog/" + slug) in sm, None)
+    sc, bsm = req("GET", "/blog-sitemap.xml")
+    chk("20o blog sitemap serves", sc == 200 and slug in bsm, sc)
+    # integrity: unpublish keeps the post + versions (never deleted)
+    jget("POST", f"/api/admin/content/posts/{pid}/unpublish", token=admin, body={})
+    sc, _ = req("GET", f"/blog/{slug}")
+    con = dbconn(); still = con.execute("SELECT COUNT(*) FROM blog_posts WHERE id=?", (pid,)).fetchone()[0]; con.close()
+    chk("20p unpublish hides publicly (404) but never deletes the record", sc == 404 and still == 1, (sc, still))
+    # Capability Registry — honest classification, not "all connected"
+    c, caps = jget("GET", "/api/admin/content/capabilities", token=admin)
+    rows = caps.get("rows", []) if isinstance(caps, dict) else []
+    gia = next((r for r in rows if r.get("platform_key") == "google_indexing_api"), {})
+    inx = next((r for r in rows if r.get("platform_key") == "indexnow"), {})
+    li = next((r for r in rows if r.get("platform_key") == "linkedin_org"), {})
+    chk("20q capability registry classifies destinations honestly", len(rows) >= 30 and gia.get("capability") == "Unsupported" and li.get("requires_approval") == 1, (len(rows), gia.get("capability")))
+    chk("20r IndexNow is live-connected; Google Indexing API is Unsupported for blogs", inx.get("connected") == True and gia.get("capability") == "Unsupported", (inx.get("connected"), gia.get("capability")))
+    # AI Studio honesty — no key configured → refuses, never fakes output
+    c, ai = jget("POST", "/api/admin/content/ai/generate", token=admin, body={"provider": "openai", "use_case": "draft", "prompt": "Write an intro."})
+    chk("20s AI generate honestly refuses when no API key is set (no fake output)", c == 400 and ai.get("error") == "provider_not_configured", (c, ai.get("error")))
+    # RBAC: unauthenticated cannot reach the admin CMS
+    c, _ = jget("GET", "/api/admin/content/posts")
+    chk("20t admin CMS requires authentication (401)", c == 401, c)
+    # SEO audit produces structured checks
+    c, seo = jget("GET", "/api/admin/content/seo/audit", token=admin)
+    chk("20u SEO audit returns a structured report", c == 200 and "audited" in seo, seo if c != 200 else "ok")
+
 def run(proc):
     admin = admin_login()
     widen_window(admin)
@@ -2314,6 +2380,7 @@ def run(proc):
     test_documents_module(admin)
     test_leadership_suite(admin)
     test_exam_exceptions(admin)
+    test_content_centre(admin)
 
     print("\n(assertions complete)")
 
