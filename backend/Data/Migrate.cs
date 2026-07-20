@@ -270,7 +270,7 @@ public static class Migrate
 
         // Configurable scheduling windows: resolved by precedence individual > campaign > institution >
         // country > exam > route > certification > global default (setting exam_default_window_days).
-        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_window_rules(id INTEGER PRIMARY KEY AUTOINCREMENT,scope_type TEXT NOT NULL,scope_value TEXT,window_days INTEGER,access_expiry_days INTEGER,attempts_permitted INTEGER,retake_wait_days INTEGER,active INTEGER DEFAULT 1,note TEXT,created_by INTEGER,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_window_rules(id INTEGER PRIMARY KEY AUTOINCREMENT,scope_type VARCHAR(40) NOT NULL,scope_value VARCHAR(190),window_days INTEGER,access_expiry_days INTEGER,attempts_permitted INTEGER,retake_wait_days INTEGER,active INTEGER DEFAULT 1,note TEXT,created_by INTEGER,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_examwindow_scope ON exam_window_rules(scope_type, scope_value)");
 
         // Deadline extension history — the original deadline is preserved on the authorization; each grant is a row.
@@ -293,7 +293,7 @@ public static class Migrate
 
         // Exam incidents — first-class case record for exceptional exam situations, modelled on the appeals/
         // accommodation decision workflow. Links technical/proctoring context → disposition → remedy.
-        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_incidents(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,certification_id INTEGER DEFAULT 1,attempt_id INTEGER,booking_id INTEGER,authorization_id INTEGER,category TEXT,occurred_at TEXT,student_explanation TEXT,proctor_report TEXT,tech_logs TEXT,evidence_ref TEXT,evidence_name TEXT,severity TEXT DEFAULT 'medium',status TEXT DEFAULT 'received',investigation_result TEXT,decision TEXT,remedy TEXT,reported_by TEXT DEFAULT 'student',created_by INTEGER,decided_by INTEGER,decided_at TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS exam_incidents(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,certification_id INTEGER DEFAULT 1,attempt_id INTEGER,booking_id INTEGER,authorization_id INTEGER,category TEXT,occurred_at TEXT,student_explanation TEXT,proctor_report TEXT,tech_logs TEXT,evidence_ref TEXT,evidence_name TEXT,severity TEXT DEFAULT 'medium',status VARCHAR(24) DEFAULT 'received',investigation_result TEXT,decision TEXT,remedy TEXT,reported_by TEXT DEFAULT 'student',created_by INTEGER,decided_by INTEGER,decided_at TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_examincident_user ON exam_incidents(user_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_examincident_status ON exam_incidents(status)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_examincident_attempt ON exam_incidents(attempt_id)");
