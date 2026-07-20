@@ -237,6 +237,17 @@ public static class MarketingSchema
             created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_mkt_jobs_idem ON mkt_jobs(idempotency_key)");
 
+        // ── Per-day platform-campaign metrics (reporting sync target) ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS mkt_campaign_metrics(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            platform_campaign_id INTEGER, platform_code VARCHAR(40), day TEXT,
+            impressions INTEGER DEFAULT 0, reach INTEGER DEFAULT 0, clicks INTEGER DEFAULT 0,
+            spend REAL DEFAULT 0, currency VARCHAR(8) DEFAULT 'USD',
+            leads INTEGER DEFAULT 0, conversions INTEGER DEFAULT 0, conversion_value REAL DEFAULT 0,
+            video_views INTEGER DEFAULT 0, dedup_key VARCHAR(160),
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_mkt_metrics_dedup ON mkt_campaign_metrics(dedup_key)");
+
         // ── Alerts ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS mkt_alerts(
             id INTEGER PRIMARY KEY AUTOINCREMENT,

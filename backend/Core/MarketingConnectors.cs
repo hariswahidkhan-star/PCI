@@ -94,4 +94,75 @@ public static class MarketingConnectors
         }
         catch (Exception ex) { return Fail("gsc_inspect_failed: " + ex.Message); }
     }
+
+    /// <summary>Query Search Console Search Analytics (searchanalytics.query) for a date range + dimension.
+    /// Returns the raw JSON rows; the caller stores them into mkt_gsc_query_data.</summary>
+    public static Result GscSearchAnalytics(Db db, string property, string startDate, string endDate, string dimension)
+    {
+        var conn = LiveConnection(db, "google_search_console");
+        if (conn is null) return Fail("no_connected_property");
+        var token = Security.DecryptSecret(H.Str(conn["access_token_enc"]));
+        if (string.IsNullOrWhiteSpace(token)) return Fail("no_access_token");
+        try
+        {
+            var url = $"https://www.googleapis.com/webmasters/v3/sites/{Uri.EscapeDataString(property)}/searchAnalytics/query";
+            var payload = new { startDate, endDate, dimensions = new[] { dimension }, rowLimit = 250 };
+            using var msg = new HttpRequestMessage(HttpMethod.Post, url);
+            msg.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            msg.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+            using var resp = Http.Send(msg);
+            var body = new StreamReader(resp.Content.ReadAsStream()).ReadToEnd();
+            return new Result(resp.IsSuccessStatusCode, (int)resp.StatusCode, dimension, body);
+        }
+        catch (Exception ex) { return Fail("gsc_analytics_failed: " + ex.Message); }
+    }
+
+    /// <summary>Create a paused Meta campaign via the Marketing API (act_&lt;id&gt;/campaigns). Created PAUSED
+    /// so nothing spends before an operator activates it in the connected account.</summary>
+    public static Result MetaCreateCampaign(Db db, string name, string objective)
+    {
+        var conn = LiveConnection(db, "meta_ads");
+        if (conn is null) return Fail("no_connected_meta_account");
+        var token = Security.DecryptSecret(H.Str(conn["access_token_enc"]));
+        if (string.IsNullOrWhiteSpace(token)) return Fail("no_access_token");
+        var adAccount = H.Str(conn["external_ad_account_id"]);
+        if (string.IsNullOrWhiteSpace(adAccount)) return Fail("no_ad_account_id");
+        try
+        {
+            var acct = adAccount.StartsWith("act_") ? adAccount : "act_" + adAccount;
+            var url = $"https://graph.facebook.com/v21.0/{acct}/campaigns";
+            var form = new Dictionary<string, string>
+            {
+                ["name"] = name,
+                ["objective"] = objective,
+                ["status"] = "PAUSED",
+                ["special_ad_categories"] = "[]",
+                ["access_token"] = token,
+            };
+            using var msg = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(form) };
+            using var resp = Http.Send(msg);
+            var body = new StreamReader(resp.Content.ReadAsStream()).ReadToEnd();
+            string? cid = null;
+            try { using var d = JsonDocument.Parse(body); if (d.RootElement.TryGetProperty("id", out var idv)) cid = idv.GetString(); } catch { }
+            return new Result(resp.IsSuccessStatusCode, (int)resp.StatusCode, cid, body.Length > 4000 ? body[..4000] : body);
+        }
+        catch (Exception ex) { return Fail("meta_call_failed: " + ex.Message); }
+    }
+
+    /// <summary>Fetch a Meta lead's field data by leadgen id (Graph API) using the connected page token.</summary>
+    public static Result MetaFetchLead(Db db, string leadgenId)
+    {
+        var conn = LiveConnection(db, "meta_ads");
+        if (conn is null) return Fail("no_connected_meta_account");
+        var token = Security.DecryptSecret(H.Str(conn["access_token_enc"]));
+        if (string.IsNullOrWhiteSpace(token)) return Fail("no_access_token");
+        try
+        {
+            var url = $"https://graph.facebook.com/v21.0/{Uri.EscapeDataString(leadgenId)}?fields=field_data,campaign_name,form_id,created_time&access_token={Uri.EscapeDataString(token)}";
+            using var resp = Http.Send(new HttpRequestMessage(HttpMethod.Get, url));
+            var body = new StreamReader(resp.Content.ReadAsStream()).ReadToEnd();
+            return new Result(resp.IsSuccessStatusCode, (int)resp.StatusCode, leadgenId, body.Length > 6000 ? body[..6000] : body);
+        }
+        catch (Exception ex) { return Fail("meta_lead_fetch_failed: " + ex.Message); }
+    }
 }

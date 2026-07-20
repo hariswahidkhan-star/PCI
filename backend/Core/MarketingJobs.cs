@@ -76,6 +76,9 @@ public sealed class MarketingJobDispatcher : BackgroundService
             "linkedin_post_publish" => PublishLinkedInPost(db, entityId),
             "gsc_sitemap_submit" => SubmitSitemap(db, job),
             "gsc_url_inspect" => InspectUrl(db, job),
+            "gsc_search_analytics" => SearchAnalytics(db, job),
+            "meta_campaign_create" => MetaCampaignCreate(db, job, entityId),
+            "meta_lead_fetch" => MetaLeadFetch(db, job),
             _ => new MarketingConnectors.Result(false, 0, null, "unknown_job_type:" + type),
         };
 
@@ -87,8 +90,11 @@ public sealed class MarketingJobDispatcher : BackgroundService
         }
         else
         {
-            // A missing connection/token is a permanent (operator-action) failure — don't spin retries on it.
-            var permanent = res.Response.StartsWith("no_connected") || res.Response is "no_access_token" or "no_organisation_id" || res.Response.StartsWith("unknown_job_type");
+            // A missing connection/token/config or malformed payload is a permanent (operator-action)
+            // failure — don't spin retries on it. Genuine provider/network errors still retry with backoff.
+            var permanent = res.Response.StartsWith("no_connected") || res.Response.StartsWith("missing_")
+                || res.Response is "no_access_token" or "no_organisation_id" or "no_ad_account_id"
+                || res.Response.StartsWith("unknown_job_type") || res.Response.EndsWith("_not_found");
             if (permanent || attempt >= maxAttempts)
                 db.Execute("UPDATE mkt_jobs SET status='failed', attempts=?, last_error=?, provider_response=?, updated_at=datetime('now') WHERE id=?",
                     attempt, res.Response, Trunc(res.Response), id);
@@ -141,6 +147,91 @@ public sealed class MarketingJobDispatcher : BackgroundService
                 propId is null ? null : H.L(propId["id"]), url, Trunc(res.Response));
         }
         return res;
+    }
+
+    static MarketingConnectors.Result SearchAnalytics(Db db, Dictionary<string, object?> job)
+    {
+        var (property, range) = PayloadTwo(job, "property", "range");
+        var dimension = PayloadStr(job, "dimension") ?? "query";
+        var (start, end) = PayloadTwo(job, "start_date", "end_date");
+        if (string.IsNullOrWhiteSpace(property) || string.IsNullOrWhiteSpace(start) || string.IsNullOrWhiteSpace(end))
+            return new(false, 0, null, "missing_property_or_dates");
+        var res = MarketingConnectors.GscSearchAnalytics(db, property!, start!, end!, dimension);
+        if (res.Ok)
+        {
+            var propId = db.QueryOne("SELECT id FROM mkt_gsc_properties WHERE property=? ORDER BY id DESC LIMIT 1", property);
+            var pid = propId is null ? (long?)null : H.L(propId["id"]);
+            try
+            {
+                using var doc = JsonDocument.Parse(res.Response);
+                if (doc.RootElement.TryGetProperty("rows", out var rows) && rows.ValueKind == JsonValueKind.Array)
+                    foreach (var row in rows.EnumerateArray())
+                    {
+                        var key = row.TryGetProperty("keys", out var ks) && ks.ValueKind == JsonValueKind.Array && ks.GetArrayLength() > 0 ? ks[0].GetString() : null;
+                        double D(string k) => row.TryGetProperty(k, out var v) && v.TryGetDouble(out var d) ? d : 0;
+                        db.Execute(@"INSERT INTO mkt_gsc_query_data(property_id,day,dimension,dim_value,clicks,impressions,ctr,position)
+                            VALUES(?,?,?,?,?,?,?,?)", pid, end, dimension, key, (long)D("clicks"), (long)D("impressions"), D("ctr"), D("position"));
+                    }
+            }
+            catch (Exception e) { Console.Error.WriteLine($"[mkt-jobs] gsc analytics parse: {e.Message}"); }
+        }
+        return res;
+    }
+
+    static MarketingConnectors.Result MetaCampaignCreate(Db db, Dictionary<string, object?> job, long platformCampaignId)
+    {
+        var pc = db.QueryOne("SELECT * FROM mkt_platform_campaigns WHERE id=?", platformCampaignId);
+        if (pc is null) return new(false, 0, null, "platform_campaign_not_found");
+        var res = MarketingConnectors.MetaCreateCampaign(db, H.Str(pc["name"]) ?? "PCI campaign", (H.Str(pc["objective"]) ?? "OUTCOME_LEADS").ToUpperInvariant());
+        if (res.Ok)
+            db.Execute("UPDATE mkt_platform_campaigns SET provider_campaign_id=?, provider_status='PAUSED', status='created', last_synced_at=datetime('now'), updated_at=datetime('now') WHERE id=?",
+                res.ProviderId, platformCampaignId);
+        return res;
+    }
+
+    static MarketingConnectors.Result MetaLeadFetch(Db db, Dictionary<string, object?> job)
+    {
+        var leadgenId = PayloadStr(job, "leadgen_id");
+        var leadId = PayloadStr(job, "lead_id");
+        if (string.IsNullOrWhiteSpace(leadgenId)) return new(false, 0, null, "missing_leadgen_id");
+        var res = MarketingConnectors.MetaFetchLead(db, leadgenId!);
+        if (res.Ok && long.TryParse(leadId, out var lid))
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(res.Response);
+                string? name = null, email = null, phone = null, company = null, title = null;
+                if (doc.RootElement.TryGetProperty("field_data", out var fd) && fd.ValueKind == JsonValueKind.Array)
+                    foreach (var f in fd.EnumerateArray())
+                    {
+                        var n = f.TryGetProperty("name", out var nv) ? nv.GetString() : null;
+                        var val = f.TryGetProperty("values", out var vv) && vv.ValueKind == JsonValueKind.Array && vv.GetArrayLength() > 0 ? vv[0].GetString() : null;
+                        switch (n)
+                        {
+                            case "full_name" or "name": name = val; break;
+                            case "email": email = val; break;
+                            case "phone_number" or "phone": phone = val; break;
+                            case "company_name" or "company": company = val; break;
+                            case "job_title": title = val; break;
+                        }
+                    }
+                db.Execute("UPDATE mkt_leads SET name=COALESCE(?,name), email=COALESCE(?,email), phone=COALESCE(?,phone), company=COALESCE(?,company), job_title=COALESCE(?,job_title), updated_at=datetime('now') WHERE id=?",
+                    name, email, phone, company, title, lid);
+            }
+            catch (Exception e) { Console.Error.WriteLine($"[mkt-jobs] meta lead parse: {e.Message}"); }
+        }
+        return res;
+    }
+
+    static string? PayloadStr(Dictionary<string, object?> job, string key)
+    {
+        try
+        {
+            var raw = H.Str(job["payload_json"]); if (string.IsNullOrEmpty(raw)) return null;
+            using var doc = JsonDocument.Parse(raw);
+            return doc.RootElement.TryGetProperty(key, out var v) && v.ValueKind == JsonValueKind.String ? v.GetString() : null;
+        }
+        catch { return null; }
     }
 
     static (string?, string?) PayloadTwo(Dictionary<string, object?> job, string a, string b)

@@ -12,7 +12,7 @@ type Row = Record<string, any>
 const TABS = [
   'Dashboard', 'Capability Registry', 'Connected Accounts', 'LinkedIn Posts', 'Manual Outreach',
   'Campaigns', 'Promotions', 'Lead Centre', 'Audiences', 'Creatives', 'Landing Pages',
-  'Conversions', 'Search Console', 'Provider Jobs', 'Alerts', 'Audit',
+  'Conversions', 'Search Console', 'Reporting', 'Provider Jobs', 'Alerts', 'Audit',
 ] as const
 type Tab = typeof TABS[number]
 
@@ -58,6 +58,7 @@ export default function MarketingAds() {
       {tab === 'Landing Pages' && <SimpleList title="Landing Pages" path="landing-pages" fields={[['name', 'Name', true], ['url', 'URL'], ['headline', 'Headline'], ['description', 'Description'], ['cta', 'Call to action'], ['application_link', 'Application link']]} note="Validate fees, certification and claims before linking a landing page to a live campaign." />}
       {tab === 'Conversions' && <SimpleList title="Conversion Actions" path="conversions" fields={[['name', 'Name', true], ['platform_code', 'Platform'], ['business_event', 'Business event'], ['value', 'Value'], ['currency', 'Currency']]} note="Do not transmit unnecessary sensitive personal information. Attribution is never perfect where consent or browser limits apply." />}
       {tab === 'Search Console' && <SearchConsole />}
+      {tab === 'Reporting' && <Reporting />}
       {tab === 'Provider Jobs' && <Jobs />}
       {tab === 'Alerts' && <Alerts />}
       {tab === 'Audit' && <Audit />}
@@ -294,6 +295,11 @@ function CampaignEditor({ camp, onClose, onSave }: { camp: Row; onClose: () => v
   const [f, setF] = useState<Row>(camp); const set = (k: string, v: any) => setF((p) => ({ ...p, [k]: v }))
   const alloc = (Number(f.alloc_linkedin) || 0) + (Number(f.alloc_google) || 0) + (Number(f.alloc_meta) || 0)
   const over = alloc > (Number(f.total_budget) || 0)
+  const [variants, setVariants] = useState<Row[]>([]); const [vpf, setVpf] = useState('meta_ads'); const [vmsg, setVmsg] = useState('')
+  async function loadVariants() { if (!f.id) return; const d = await adminApi.get<Row>(`/api/admin/marketing/campaigns/${f.id}`); setVariants(d.variants || []) }
+  useEffect(() => { loadVariants() }, [f.id])
+  async function addVariant() { if (!f.id) return; await adminApi.post(`/api/admin/marketing/campaigns/${f.id}/platforms`, { platform_code: vpf, name: f.name, objective: f.objective }); loadVariants() }
+  async function launch(id: number) { const r = await adminApi.post<Row>(`/api/admin/marketing/platform-campaigns/${id}/launch`, {}); setVmsg(r.operator_action || r.note || (r.ok ? 'Launching…' : 'Not launched.')); loadVariants() }
   return (
     <div className="drawer-backdrop" onClick={onClose}>
       <div className="drawer" onClick={(e) => e.stopPropagation()}>
@@ -313,6 +319,25 @@ function CampaignEditor({ camp, onClose, onSave }: { camp: Row; onClose: () => v
           {over && <p className="small" style={{ color: '#b91c1c', margin: 0 }}>Platform allocations ({alloc}) exceed the total budget ({f.total_budget}).</p>}
           <button className="btn" disabled={over} onClick={() => onSave(f)}>Save campaign</button>
         </div>
+        {f.id && (
+          <div style={{ marginTop: '1rem', borderTop: '1px solid var(--line)', paddingTop: '.7rem' }}>
+            <h4 style={{ margin: '0 0 .4rem' }}>Platform variants</h4>
+            <p className="muted small" style={{ marginTop: 0 }}>Launch requires an approved campaign + a connected account; the provider campaign is created paused so nothing spends before review.</p>
+            {vmsg && <p className="small" style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, padding: '.5rem .7rem' }}>{vmsg}</p>}
+            <div className="row" style={{ gap: '.4rem', marginBottom: '.5rem' }}>
+              <select value={vpf} onChange={(e) => setVpf(e.target.value)}><option value="linkedin_ads">LinkedIn Ads</option><option value="google_ads">Google Ads</option><option value="meta_ads">Meta Ads</option></select>
+              <button className="btn sm ghost" onClick={addVariant}>Add variant</button>
+            </div>
+            {variants.length === 0 ? <p className="muted small">No platform variants yet.</p> : (
+              <table className="data"><thead><tr><th>Platform</th><th>Status</th><th>Provider ID</th><th /></tr></thead>
+                <tbody>{variants.map((v) => (
+                  <tr key={v.id}><td className="small">{v.platform_code}</td><td><Badge tone={v.status === 'created' ? 'ok' : 'brand'}>{v.status}</Badge></td>
+                    <td className="small muted">{v.provider_campaign_id || '—'}</td>
+                    <td>{v.status !== 'created' && <button className="btn ghost sm" onClick={() => launch(v.id)}>Launch</button>}</td></tr>
+                ))}</tbody></table>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
@@ -424,8 +449,14 @@ function SimpleList({ title, path, fields, note }: { title: string; path: string
 function SearchConsole() {
   const { data, loading, reload } = useGet<{ rows: Row[]; sitemaps: Row[] }>('/api/admin/marketing/gsc/properties')
   const [msg, setMsg] = useState(''); const [sitemap, setSitemap] = useState(''); const [url, setUrl] = useState('')
+  const { data: qd, reload: reloadQd } = useGet<{ rows: Row[] }>('/api/admin/marketing/gsc/query-data?dimension=query')
   async function submit() { if (!sitemap) return; const r = await adminApi.post<Row>('/api/admin/marketing/gsc/sitemaps/submit', { sitemap_url: sitemap }); setMsg(r.note || r.operator_action || 'Done'); reload() }
   async function inspect() { if (!url) return; const r = await adminApi.post<Row>('/api/admin/marketing/gsc/inspect', { url }); setMsg(r.note || r.operator_action || 'Done'); reload() }
+  async function pullAnalytics() {
+    const end = new Date().toISOString().slice(0, 10); const start = new Date(Date.now() - 28 * 864e5).toISOString().slice(0, 10)
+    const r = await adminApi.post<Row>('/api/admin/marketing/gsc/search-analytics', { start_date: start, end_date: end, dimension: 'query' })
+    setMsg(r.operator_action || (r.ok ? 'Search analytics pull queued.' : 'Not available.')); setTimeout(reloadQd, 1200)
+  }
   return (
     <Card title="Google Search Console">
       <p className="muted small" style={{ marginTop: 0 }}>Search performance, sitemaps and URL inspection for the verified PCI property — this is search analytics, not paid advertising. Sitemap submission is a discovery signal and does not guarantee crawling or indexing; URL Inspection reports the status the API exposes, not a guaranteed “index now”.</p>
@@ -434,10 +465,20 @@ function SearchConsole() {
         <input placeholder="Sitemap URL (e.g. https://…/sitemap.xml)" value={sitemap} onChange={(e) => setSitemap(e.target.value)} style={{ minWidth: 280 }} />
         <button className="btn sm" onClick={submit}>Submit sitemap</button>
       </div>
-      <div className="row" style={{ gap: '.4rem', marginBottom: '.7rem', flexWrap: 'wrap' }}>
+      <div className="row" style={{ gap: '.4rem', marginBottom: '.5rem', flexWrap: 'wrap' }}>
         <input placeholder="Public URL to inspect" value={url} onChange={(e) => setUrl(e.target.value)} style={{ minWidth: 280 }} />
         <button className="btn sm ghost" onClick={inspect}>Inspect URL</button>
+        <button className="btn sm ghost" onClick={pullAnalytics}>Pull search analytics (28d)</button>
       </div>
+      {(qd?.rows?.length ?? 0) > 0 && (
+        <div style={{ overflowX: 'auto', marginBottom: '.7rem' }}>
+          <table className="data"><thead><tr><th>Top query</th><th>Clicks</th><th>Impressions</th><th>CTR</th><th>Position</th></tr></thead>
+            <tbody>{qd!.rows.slice(0, 25).map((r) => (
+              <tr key={r.id}><td className="small">{r.dim_value}</td><td className="small">{r.clicks}</td><td className="small">{r.impressions}</td>
+                <td className="small">{(Number(r.ctr) * 100).toFixed(1)}%</td><td className="small">{Number(r.position).toFixed(1)}</td></tr>
+            ))}</tbody></table>
+        </div>
+      )}
       {loading ? <Spinner /> : (data?.rows.length ?? 0) === 0 ? <Empty>No verified property connected yet. Connect Google Search Console under Connected Accounts.</Empty> : (
         <table className="data"><thead><tr><th>Property</th><th>Verified</th><th>Last synced</th></tr></thead>
           <tbody>{data!.rows.map((p) => (
@@ -449,6 +490,43 @@ function SearchConsole() {
           <tbody>{data!.sitemaps.map((s) => (<tr key={s.id}><td className="small">{s.path}</td><td className="small">{s.status}</td><td className="small muted">{s.last_submitted_at ? fmtDateTime(s.last_submitted_at) : '—'}</td></tr>))}</tbody></table>
       )}
     </Card>
+  )
+}
+
+// ───────── Unified Reporting ─────────
+function Reporting() {
+  const { data, loading } = useGet<Row>('/api/admin/marketing/reporting')
+  if (loading) return <Spinner />
+  const o = data?.outcomes ?? {}
+  return (
+    <div style={{ display: 'grid', gap: '1rem' }}>
+      <Card title="PCI outcomes">
+        <div className="stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))', gap: '.6rem' }}>
+          <Stat n={o.leads ?? 0} k="Leads" />
+          <Stat n={o.application_started ?? 0} k="Applications started" />
+          <Stat n={o.application_submitted ?? 0} k="Applications submitted" />
+          <Stat n={o.converted ?? 0} k="Converted" />
+        </div>
+        <p className="muted small" style={{ marginBottom: 0 }}>Attribution is never perfect where consent settings or provider/browser limits apply; figures reflect what the platforms and consented tracking report.</p>
+      </Card>
+      <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: '1fr 1fr' }}>
+        <Card title="Spend by platform">
+          {(data?.spend_by_platform?.length ?? 0) === 0 ? <Empty>No spend synced yet.</Empty> : (
+            <table className="data"><thead><tr><th>Platform</th><th>Spend</th><th>Impr.</th><th>Clicks</th><th>Leads</th></tr></thead>
+              <tbody>{data!.spend_by_platform.map((r: Row, i: number) => (
+                <tr key={i}><td className="small">{r.platform_code}</td><td className="small">{r.spend ?? 0}</td><td className="small">{r.impressions ?? 0}</td><td className="small">{r.clicks ?? 0}</td><td className="small">{r.leads ?? 0}</td></tr>
+              ))}</tbody></table>
+          )}
+        </Card>
+        <Card title="Leads by source">
+          {(data?.leads_by_source?.length ?? 0) === 0 ? <Empty>No leads yet.</Empty> : (
+            <table className="data"><tbody>{data!.leads_by_source.map((r: Row, i: number) => (
+              <tr key={i}><td className="small">{r.source_platform || 'unknown'}</td><td style={{ textAlign: 'right', fontWeight: 700 }}>{r.n}</td></tr>
+            ))}</tbody></table>
+          )}
+        </Card>
+      </div>
+    </div>
   )
 }
 

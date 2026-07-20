@@ -263,6 +263,55 @@ public static class MarketingCentre
             log(adm.Id, "mkt_campaign_approved", $"#{id}");
             return J(new { ok = true });
         }));
+        // Per-platform campaign variant under a PCI campaign.
+        app.MapPost("/api/admin/marketing/campaigns/{id:long}/platforms", async (HttpContext ctx, long id) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, "mkt_ads", adm =>
+            {
+                if (db.QueryOne("SELECT id FROM mkt_campaigns WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+                var platform = S(b, "platform_code"); if (platform.Length == 0) return Results.Json(new { error = "platform_required" }, statusCode: 400);
+                var nid = db.ExecuteReturningId(@"INSERT INTO mkt_platform_campaigns(campaign_id,platform_code,name,objective,campaign_type,daily_budget,lifetime_budget,status,approval_status)
+                    VALUES(?,?,?,?,?,?,?, 'draft','draft')",
+                    id, platform, Nz(S(b, "name")), Nz(S(b, "objective")), Nz(S(b, "campaign_type")), N(b, "daily_budget"), N(b, "lifetime_budget"));
+                log(adm.Id, "mkt_platform_campaign_create", $"campaign #{id} {platform} #{nid}");
+                return J(new { ok = true, id = nid });
+            });
+        });
+        // Launch a platform variant: requires PCI approval + an approved budget + a connected account; then
+        // enqueues an idempotent provider create job (created PAUSED at the provider so nothing spends yet).
+        app.MapPost("/api/admin/marketing/platform-campaigns/{id:long}/launch", (HttpRequest req, long id) => gate(req, "mkt_approve", adm =>
+        {
+            var pc = db.QueryOne("SELECT * FROM mkt_platform_campaigns WHERE id=?", id);
+            if (pc is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var camp = db.QueryOne("SELECT * FROM mkt_campaigns WHERE id=?", H.L(pc["campaign_id"]));
+            if (H.Str(camp?["approval_status"]) != "approved") return Results.Json(new { error = "campaign_not_approved", detail = "Approve the PCI campaign before launching a platform." }, statusCode: 400);
+            var platform = H.Str(pc["platform_code"]) ?? "";
+            var hasConn = db.Scalar<long>("SELECT COUNT(*) FROM mkt_connections WHERE platform_code=? AND status='connected'", platform) > 0;
+            if (!hasConn) return J(new { ok = false, reason = "not_connected", operator_action = $"Connect an approved {platform} account before launching. The variant stays draft." });
+            var jobType = platform switch { "meta_ads" or "facebook_page" or "instagram" => "meta_campaign_create", _ => null };
+            if (jobType is null) return J(new { ok = false, reason = "connector_pending", operator_action = $"A live campaign-create connector for {platform} is not enabled yet; the variant is saved and can be launched once available." });
+            db.Execute("UPDATE mkt_platform_campaigns SET status='launching', updated_at=datetime('now') WHERE id=?", id);
+            var jid = MarketingJobDispatcher.Enqueue(db, jobType, platform, "platform_campaign", id, null, $"{jobType}:{id}", adm.Id);
+            try { MarketingJobDispatcher.DrainOnce(db, 3); } catch { }
+            log(adm.Id, "mkt_platform_campaign_launch", $"#{id} {platform} job {jid}");
+            return J(new { ok = true, status = "launching", job_id = jid, note = "The provider campaign is created PAUSED; activate it in the connected account after review." });
+        }));
+
+        // ───────── unified reporting (spend/metrics + lead funnel + PCI outcomes) ─────────
+        app.MapGet("/api/admin/marketing/reporting", (HttpRequest req) => gate(req, "mkt_view", _ => J(new
+        {
+            spend_by_platform = db.Query("SELECT platform_code, SUM(spend) spend, SUM(impressions) impressions, SUM(clicks) clicks, SUM(leads) leads, SUM(conversions) conversions FROM mkt_campaign_metrics GROUP BY platform_code"),
+            leads_by_status = db.Query("SELECT status, COUNT(*) n FROM mkt_leads GROUP BY status"),
+            leads_by_source = db.Query("SELECT source_platform, COUNT(*) n FROM mkt_leads GROUP BY source_platform"),
+            outcomes = new
+            {
+                leads = db.Scalar<long>("SELECT COUNT(*) FROM mkt_leads"),
+                converted = db.Scalar<long>("SELECT COUNT(*) FROM mkt_leads WHERE status='converted'"),
+                application_started = db.Scalar<long>("SELECT COUNT(*) FROM mkt_leads WHERE status='application_started'"),
+                application_submitted = db.Scalar<long>("SELECT COUNT(*) FROM mkt_leads WHERE status='application_submitted'"),
+            },
+        })));
 
         // ───────── audiences / creatives / landing pages / conversions (read + simple create) ─────────
         app.MapGet("/api/admin/marketing/audiences", (HttpRequest req) => gate(req, "mkt_view", _ =>
@@ -383,6 +432,34 @@ public static class MarketingCentre
                 return J(new { ok = true, job_id = jid, note = "URL Inspection reports the index status the Search Console API exposes; it is not a guaranteed request for immediate indexing." });
             });
         });
+        // Pull Search Analytics (clicks/impressions/CTR/position) for a date range + dimension.
+        app.MapPost("/api/admin/marketing/gsc/search-analytics", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, "mkt_gsc", adm =>
+            {
+                var hasConn = db.Scalar<long>("SELECT COUNT(*) FROM mkt_connections WHERE platform_code='google_search_console' AND status='connected'") > 0;
+                if (!hasConn) return J(new { ok = false, reason = "not_connected", operator_action = "Connect a verified Search Console property before pulling search analytics." });
+                var property = S(b, "property");
+                if (property.Length == 0) property = H.Str(db.QueryOne("SELECT property FROM mkt_gsc_properties ORDER BY id DESC LIMIT 1")?["property"]) ?? "";
+                var start = S(b, "start_date"); var end = S(b, "end_date"); var dim = S(b, "dimension");
+                if (dim.Length == 0) dim = "query";
+                if (property.Length == 0 || start.Length == 0 || end.Length == 0) return Results.Json(new { error = "property_start_end_required" }, statusCode: 400);
+                var jid = MarketingJobDispatcher.Enqueue(db, "gsc_search_analytics", "google_search_console", "property", 0,
+                    new { property, start_date = start, end_date = end, dimension = dim }, $"gsc_sa:{property}:{start}:{end}:{dim}", adm.Id);
+                try { MarketingJobDispatcher.DrainOnce(db, 3); } catch { }
+                log(adm.Id, "mkt_gsc_analytics", $"{property} {start}..{end} {dim} job {jid}");
+                return J(new { ok = true, job_id = jid });
+            });
+        });
+        app.MapGet("/api/admin/marketing/gsc/query-data", (HttpRequest req) => gate(req, "mkt_gsc", _ =>
+        {
+            var dim = req.Query["dimension"].ToString();
+            var rows = string.IsNullOrEmpty(dim)
+                ? db.Query("SELECT * FROM mkt_gsc_query_data ORDER BY id DESC LIMIT 250")
+                : db.Query("SELECT * FROM mkt_gsc_query_data WHERE dimension=? ORDER BY clicks DESC, id DESC LIMIT 250", dim);
+            return J(new { rows });
+        }));
 
         // ───────── alerts + audit ─────────
         app.MapGet("/api/admin/marketing/alerts", (HttpRequest req) => gate(req, "mkt_view", _ =>
@@ -446,6 +523,79 @@ public static class MarketingCentre
             }
             log(null, "mkt_oauth_connected", $"#{connId} {platform}");
             return Page("Account connected", "The account is now connected. You can close this window and return to the Marketing centre.");
+        });
+
+        // ───────── lead intake webhooks (public, secret-verified) → unified Lead Centre ─────────
+        // Insert-or-ignore a lead keyed by a caller-supplied dedup key (or platform+provider id). Returns the
+        // lead id. Never creates a student account — an advertising lead is a prospect, not a member (spec §7).
+        long UpsertLead(string source, string dedup, string? name, string? email, string? phone, string? country,
+            string? company, string? title, string? certInterest, bool consent, string? consentText, string? utmJson, string? providerLeadId, long? campaignId)
+        {
+            var existing = db.QueryOne("SELECT id FROM mkt_leads WHERE dedup_key=?", dedup);
+            if (existing is not null) return H.L(existing["id"]);
+            try
+            {
+                return db.ExecuteReturningId(@"INSERT INTO mkt_leads(name,email,phone,country,company,job_title,source_platform,campaign_id,certification_interest,consent,consent_text,utm_json,provider_lead_id,dedup_key,status)
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'new')",
+                    name, email, phone, country, company, title, source, campaignId, certInterest, consent ? 1 : 0, consentText, utmJson, providerLeadId, dedup);
+            }
+            catch { return H.L(db.QueryOne("SELECT id FROM mkt_leads WHERE dedup_key=?", dedup)?["id"] ?? 0L); /* unique race */ }
+        }
+
+        // Generic secret-verified intake for website/partner/webinar lead forms (full fields inline).
+        app.MapPost("/api/webhooks/lead-intake", async (HttpContext ctx) =>
+        {
+            var secret = Environment.GetEnvironmentVariable("MARKETING_LEAD_WEBHOOK_SECRET") ?? Environment.GetEnvironmentVariable("EMAIL_WEBHOOK_SECRET");
+            var given = ctx.Request.Query["secret"].ToString();
+            if (string.IsNullOrEmpty(given)) given = ctx.Request.Headers["X-Webhook-Secret"].ToString();
+            if (string.IsNullOrEmpty(secret) || !Security.FixedTimeEquals(given, secret)) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+            var b = await H.Body(ctx.Request);
+            var email = (H.GetS(b, "email") ?? "").Trim();
+            var phone = (H.GetS(b, "phone") ?? "").Trim();
+            if (email.Length == 0 && phone.Length == 0) return Results.Json(new { error = "email_or_phone_required" }, statusCode: 400);
+            var source = H.GetS(b, "source", "source_platform") ?? "website";
+            var dedup = H.GetS(b, "dedup_key") ?? $"intake:{source}:{(email.Length > 0 ? email.ToLowerInvariant() : phone)}";
+            var lid = UpsertLead(source, dedup, H.GetS(b, "name"), email.Length > 0 ? email : null, phone.Length > 0 ? phone : null,
+                H.GetS(b, "country"), H.GetS(b, "company"), H.GetS(b, "job_title", "title"), H.GetS(b, "certification_interest"),
+                (H.GetNum(b, "consent") ?? 0) == 1, H.GetS(b, "consent_text"), H.GetS(b, "utm_json"), H.GetS(b, "provider_lead_id"), null);
+            return J(new { ok = true, lead_id = lid });
+        });
+
+        // Meta Lead Ads webhook: GET verification challenge + POST leadgen notifications.
+        app.MapGet("/api/webhooks/meta-leads", (HttpRequest req) =>
+        {
+            var verify = Environment.GetEnvironmentVariable("META_LEADS_VERIFY_TOKEN") ?? Environment.GetEnvironmentVariable("META_WEBHOOK_SECRET");
+            var mode = req.Query["hub.mode"].ToString();
+            var token = req.Query["hub.verify_token"].ToString();
+            if (mode == "subscribe" && !string.IsNullOrEmpty(verify) && Security.FixedTimeEquals(token, verify))
+                return Results.Text(req.Query["hub.challenge"].ToString());
+            return Results.StatusCode(403);
+        });
+        app.MapPost("/api/webhooks/meta-leads", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            try
+            {
+                if (H.GetEl(b, "entry") is { ValueKind: JsonValueKind.Array } entries)
+                    foreach (var entry in entries.EnumerateArray())
+                        if (entry.TryGetProperty("changes", out var changes) && changes.ValueKind == JsonValueKind.Array)
+                            foreach (var ch in changes.EnumerateArray())
+                                if (ch.TryGetProperty("field", out var fld) && fld.GetString() == "leadgen"
+                                    && ch.TryGetProperty("value", out var val))
+                                {
+                                    var leadgenId = val.TryGetProperty("leadgen_id", out var lg) ? lg.GetString() : null;
+                                    if (string.IsNullOrEmpty(leadgenId)) continue;
+                                    var formId = val.TryGetProperty("form_id", out var fm) ? fm.GetString() : null;
+                                    // Create a stub keyed by the leadgen id (dedup), then fetch details via the API.
+                                    var lid = UpsertLead("meta", $"meta:leadgen:{leadgenId}", null, null, null, null, null, null, null, false, null,
+                                        formId is null ? null : $"{{\"form_id\":\"{formId}\"}}", leadgenId, null);
+                                    MarketingJobDispatcher.Enqueue(db, "meta_lead_fetch", "meta_ads", "lead", lid,
+                                        new { leadgen_id = leadgenId, lead_id = lid.ToString() }, $"meta_lead_fetch:{leadgenId}", null);
+                                }
+                try { MarketingJobDispatcher.DrainOnce(db, 5); } catch { }
+            }
+            catch (Exception e) { Console.Error.WriteLine($"[mkt] meta-leads webhook: {e.Message}"); }
+            return Results.Ok(new { ok = true });   // always 200 so the provider doesn't retry-storm
         });
     }
 }
