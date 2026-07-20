@@ -47,7 +47,7 @@ public sealed class SocialDispatcher : BackgroundService
             try { using var d = System.Text.Json.JsonDocument.Parse(H.Str(job["payload"]) ?? "{}"); if (d.RootElement.TryGetProperty("draft_id", out var el)) draftId = el.GetInt64(); } catch { }
             var draft = draftId > 0 ? db.QueryOne("SELECT * FROM social_drafts WHERE id=?", draftId) : null;
             if (draft is null) { db.Execute("UPDATE content_jobs SET status='failed', last_error='draft_missing', updated_at=datetime('now') WHERE id=?", jobId); continue; }
-            var account = db.QueryOne("SELECT * FROM social_accounts WHERE id=? AND active=1", H.L(draft["account_id"]));
+            var account = db.QueryOne("SELECT * FROM social_pub_accounts WHERE id=? AND active=1", H.L(draft["account_id"]));
             if (account is null)
             {
                 db.Execute("UPDATE content_jobs SET status='failed', last_error='account_missing', updated_at=datetime('now') WHERE id=?", jobId);
@@ -60,7 +60,7 @@ public sealed class SocialDispatcher : BackgroundService
             {
                 db.Execute("UPDATE content_jobs SET status='delivered', response_code=?, result_ref=?, updated_at=datetime('now') WHERE id=?", res.Code, res.PublicUrl, jobId);
                 db.Execute("UPDATE social_drafts SET status='published', public_url=?, provider_response='ok', updated_at=datetime('now') WHERE id=?", res.PublicUrl, draftId);
-                db.Execute("UPDATE social_accounts SET status='connected', last_error=NULL WHERE id=?", H.L(account["id"]));
+                db.Execute("UPDATE social_pub_accounts SET status='connected', last_error=NULL WHERE id=?", H.L(account["id"]));
                 done++;
             }
             else
@@ -72,7 +72,7 @@ public sealed class SocialDispatcher : BackgroundService
                     terminal ? "failed" : "retrying", attempts, res.Code, res.Error, next, jobId);
                 db.Execute("UPDATE social_drafts SET status=?, provider_response=?, updated_at=datetime('now') WHERE id=?",
                     terminal ? "failed" : "retrying", res.Error, draftId);
-                db.Execute("UPDATE social_accounts SET last_error=? WHERE id=?", res.Error, H.L(account["id"]));
+                db.Execute("UPDATE social_pub_accounts SET last_error=? WHERE id=?", res.Error, H.L(account["id"]));
             }
         }
         return done;

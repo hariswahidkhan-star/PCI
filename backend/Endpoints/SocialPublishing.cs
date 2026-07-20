@@ -28,7 +28,7 @@ public static class SocialPublishing
 
         // ── accounts ────────────────────────────────────────────────────────────────────────────────
         app.MapGet("/api/admin/content/social/accounts", (HttpRequest req) => gate(req, "cc_social", adm =>
-            J(new { rows = db.Query("SELECT * FROM social_accounts ORDER BY id DESC").Select(Redact), live_platforms = SocialConnectors.Live })));
+            J(new { rows = db.Query("SELECT * FROM social_pub_accounts ORDER BY id DESC").Select(Redact), live_platforms = SocialConnectors.Live })));
 
         app.MapPost("/api/admin/content/social/accounts", async (HttpContext ctx) =>
         {
@@ -44,7 +44,7 @@ public static class SocialPublishing
                 var cfg = new Dictionary<string, string>();
                 foreach (var k in new[] { "chat_id", "channel_username", "instance", "handle", "pds", "api_base" })
                     if (H.GetS(b, k) is { Length: > 0 } v) cfg[k] = v.Trim();
-                var id = db.ExecuteReturningId(@"INSERT INTO social_accounts(platform_key,label,external_id,config,secret_enc,status,connected_by,active,created_at,updated_at)
+                var id = db.ExecuteReturningId(@"INSERT INTO social_pub_accounts(platform_key,label,external_id,config,secret_enc,status,connected_by,active,created_at,updated_at)
                     VALUES(?,?,?,?,?, 'connected', ?, 1, datetime('now'), datetime('now'))",
                     platform, H.GetS(b, "label") ?? platform, H.GetS(b, "external_id"),
                     JsonSerializer.Serialize(cfg), Security.EncryptSecret(secret), adm.Id);
@@ -58,17 +58,17 @@ public static class SocialPublishing
             var denied = gate(ctx.Request, "cc_social", _ => Results.Ok());
             if (!IsOk(denied)) return denied;
             var id = long.Parse((string)ctx.Request.RouteValues["id"]!);
-            var a = db.QueryOne("SELECT * FROM social_accounts WHERE id=?", id);
+            var a = db.QueryOne("SELECT * FROM social_pub_accounts WHERE id=?", id);
             if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var res = await SocialConnectors.Test(db, a);
-            db.Execute("UPDATE social_accounts SET status=?, last_error=?, updated_at=datetime('now') WHERE id=?",
+            db.Execute("UPDATE social_pub_accounts SET status=?, last_error=?, updated_at=datetime('now') WHERE id=?",
                 res.Ok ? "connected" : "error", res.Error, id);
             return J(new { ok = res.Ok, error = res.Error });
         });
 
         app.MapPost("/api/admin/content/social/accounts/{id:long}/disconnect", (HttpRequest req, long id) => gate(req, "cc_social", adm =>
         {
-            db.Execute("UPDATE social_accounts SET active=0, status='disconnected', updated_at=datetime('now') WHERE id=?", id);
+            db.Execute("UPDATE social_pub_accounts SET active=0, status='disconnected', updated_at=datetime('now') WHERE id=?", id);
             log(adm.Id, "social_account_disconnect", "#" + id);
             return J(new { ok = true });
         }));
@@ -77,7 +77,7 @@ public static class SocialPublishing
         app.MapGet("/api/admin/content/social/drafts", (HttpRequest req) => gate(req, "cc_social", adm =>
         {
             var postId = req.Query["post_id"].ToString();
-            var sql = "SELECT d.*, a.platform_key AS acct_platform, a.label AS acct_label FROM social_drafts d LEFT JOIN social_accounts a ON a.id=d.account_id";
+            var sql = "SELECT d.*, a.platform_key AS acct_platform, a.label AS acct_label FROM social_drafts d LEFT JOIN social_pub_accounts a ON a.id=d.account_id";
             var rows = postId.Length > 0 ? db.Query(sql + " WHERE d.post_id=? ORDER BY d.id DESC", long.Parse(postId))
                                          : db.Query(sql + " ORDER BY d.id DESC LIMIT 100");
             return J(new { rows });
@@ -94,7 +94,7 @@ public static class SocialPublishing
                 if (post is null) return Results.Json(new { error = "post_not_found" }, statusCode: 404);
                 var link = Blog.PublicUrl(db, H.Str(post["slug"]) ?? "");
                 var tags = Blog.Tags(db, id).Select(t => H.Str(t["name"]) ?? "").Where(s => s.Length > 0).ToList();
-                var accounts = db.Query("SELECT * FROM social_accounts WHERE active=1");
+                var accounts = db.Query("SELECT * FROM social_pub_accounts WHERE active=1");
                 var created = new List<object>();
                 foreach (var a in accounts)
                 {
@@ -131,7 +131,7 @@ public static class SocialPublishing
         {
             var d = db.QueryOne("SELECT * FROM social_drafts WHERE id=?", id);
             if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-            var acct = db.QueryOne("SELECT platform_key FROM social_accounts WHERE id=? AND active=1", H.L(d["account_id"]));
+            var acct = db.QueryOne("SELECT platform_key FROM social_pub_accounts WHERE id=? AND active=1", H.L(d["account_id"]));
             if (acct is null) return Results.Json(new { error = "account_inactive" }, statusCode: 400);
             if (!SocialConnectors.IsLive(H.Str(acct["platform_key"]) ?? ""))
                 return Results.Json(new { error = "requires_approval" }, statusCode: 400);
