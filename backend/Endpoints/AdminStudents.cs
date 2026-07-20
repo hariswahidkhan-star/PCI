@@ -230,6 +230,18 @@ public static class AdminStudents
             return J(new { ok = true });
         }));
 
+        // Admin recovery: clear a student's two-factor (TOTP) enrolment so a candidate who has lost their
+        // authenticator can sign in and re-enrol. Also revokes active sessions (any 2FA-bound token dies).
+        // Gated by 'members' and audited — attributed to the acting admin.
+        app.MapPost("/api/admin/students/{id}/reset-2fa", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
+        {
+            if (db.QueryOne("SELECT id FROM users WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            db.Execute("UPDATE users SET two_factor_enabled=0, totp_secret=NULL, totp_last_step=NULL WHERE id=?", id);
+            db.Execute("DELETE FROM login_tokens WHERE user_id=? AND purpose='session'", id);
+            log(adm.Id, "admin_reset_student_2fa", "user " + id);
+            return J(new { ok = true, message = "Two-factor authentication has been reset for this student." });
+        }));
+
         // ---- exam fee waiver: grant an exam entitlement without payment (scholarships, comps,
         // corporate seats). Mirrors exactly what the Stripe webhook grants — a paid $0 payment row
         // plus a formal entitlement — so every downstream gate (booking, launch, submit, one-attempt

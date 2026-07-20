@@ -459,6 +459,10 @@ public static class Migrate
         AddCol("student_profiles", "linkedin_url", "linkedin_url TEXT");
         AddCol("student_profiles", "profile_photo", "profile_photo TEXT");
         AddCol("users", "two_factor_enabled", "two_factor_enabled INTEGER DEFAULT 0");
+        // Student TOTP secret + replay guard (mirrors admin_users). An admin can clear these to recover a
+        // candidate who has lost their authenticator (see /api/admin/students/{id}/reset-2fa).
+        AddCol("users", "totp_secret", "totp_secret TEXT");
+        AddCol("users", "totp_last_step", "totp_last_step INTEGER");
         // Stage 4: table-backed public sections — extra display fields for pre-existing databases
         AddCol("resources", "description", "description TEXT");
         AddCol("bok_domains", "bullets", "bullets TEXT");

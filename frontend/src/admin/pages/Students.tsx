@@ -406,6 +406,17 @@ function SecurityCard({ id }: { id: number }) {
       setMsg({ ok: false, text: e instanceof Error ? e.message : 'Could not revoke the sessions.' })
     } finally { setBusy(false) }
   }
+  async function resetTwoFactor() {
+    if (!window.confirm('Reset this student’s two-factor authentication? They will be able to sign in without a code and can re-enrol an authenticator. Active sessions are also revoked.')) return
+    setBusy(true); setMsg(null)
+    try {
+      await adminApi.post(`/api/admin/students/${id}/reset-2fa`, {})
+      setMsg({ ok: true, text: 'Two-factor authentication reset — the student can now sign in and re-enrol.' })
+      refetch()
+    } catch (e) {
+      setMsg({ ok: false, text: e instanceof Error ? e.message : 'Could not reset two-factor authentication.' })
+    } finally { setBusy(false) }
+  }
 
   // login_events rows can vary by deployment — pick the common columns defensively.
   const loginWhen = (r: Record<string, unknown>) => fmtDateTime(r.created_at ?? r.at ?? r.ts)
@@ -422,6 +433,7 @@ function SecurityCard({ id }: { id: number }) {
           </div>
           <div className="row" style={{ flexWrap: 'wrap', gap: '.4rem' }}>
             <button className="btn sm secondary" disabled={busy} onClick={resendSetup}>Send password-reset link</button>
+            <button className="btn sm secondary" disabled={busy} onClick={resetTwoFactor}>Reset 2FA</button>
             <button className="btn sm danger" disabled={busy} onClick={revokeSessions}>Revoke sessions</button>
           </div>
           {msg && <div className={'notice' + (msg.ok ? '' : ' err')} role="status" style={{ marginTop: '.5rem', overflowWrap: 'anywhere' }}>{msg.text}</div>}
