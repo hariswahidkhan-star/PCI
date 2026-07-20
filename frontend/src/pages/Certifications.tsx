@@ -441,9 +441,16 @@ function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
   const { data, loading, error } = useQuery<{ rows: CatalogueCert[] }>('/api/certifications')
   const [buying, setBuying] = useState<string | null>(null)
   const [buyErr, setBuyErr] = useState<string | null>(null)
+  // The exam fee can only be paid once membership is active. A student without membership is asked to
+  // pay the membership fee first (or use the membership + exam bundle, on Billing, to pay both together).
+  const memberActive = me?.lifecycle.membership_status === 'active'
 
   async function buy(certCode: string) {
     if (!me) return
+    if (!memberActive) {
+      setBuyErr(t('cert.membershipRequired'))
+      return
+    }
     setBuyErr(null)
     setBuying(certCode)
     try {
@@ -467,6 +474,12 @@ function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
 
   return (
     <>
+    {!memberActive && (
+      <div className="notice" role="status" style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span>{t('cert.membershipRequired')}</span>
+        <Link className="btn sm" to="/billing">{t('cert.payMembershipFee')}</Link>
+      </div>
+    )}
     {buyErr && <div className="notice err" role="alert">{buyErr}</div>}
     <div className="cert-catalogue-grid">
       {rows.map((c) => {
@@ -498,170 +511,6 @@ function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
       })}
     </div>
     </>
-  )
-}
-
-/** A candidate's application to a certification through a specific route (GET /api/me/applications). */
-interface MyApplication {
-  id: number
-  application_no?: string | null
-  certification_id: number
-  route_key: string
-  status: string
-  workflow_stage?: string | null
-  blocker?: string | null
-  admin_note?: string | null
-  created_at?: string | null
-  cert_acronym?: string | null
-  cert_name?: string | null
-}
-interface PublicRoute {
-  route_key: string
-  label: string
-  description?: string | null
-  requires_approval: boolean
-  exam_required: boolean
-  fee_mode?: string | null
-}
-
-const APP_TONE: Record<string, 'ok' | 'err' | 'brand' | 'warn' | 'neutral'> = {
-  approved: 'ok', submitted: 'brand', under_review: 'warn', info_requested: 'warn', rejected: 'err', withdrawn: 'neutral',
-}
-
-/** Apply for a certification through a route (Standard, Sponsored, Honorary, …) and track the status of
- *  every application. Routes that need review sit as "submitted" until the Institute decides; auto-approved
- *  routes clear immediately. Each application is scoped to one credential and one route. */
-function ApplicationsSection() {
-  const { data, loading, error, refetch } = useQuery<{ rows: MyApplication[] }>('/api/me/applications')
-  const certsQ = useQuery<{ rows: CatalogueCert[] }>('/api/certifications')
-  const certs = certsQ.data?.rows ?? []
-  const [certId, setCertId] = useState('')
-  const [routeKey, setRouteKey] = useState('')
-  const [routes, setRoutes] = useState<PublicRoute[]>([])
-  const [routesLoading, setRoutesLoading] = useState(false)
-  const [busy, setBusy] = useState(false)
-  const [err, setErr] = useState<string | null>(null)
-  const [ok, setOk] = useState<string | null>(null)
-
-  async function pickCert(id: string) {
-    setCertId(id)
-    setRouteKey('')
-    setRoutes([])
-    setErr(null)
-    setOk(null)
-    if (!id) return
-    setRoutesLoading(true)
-    try {
-      const r = await api.get<{ rows: PublicRoute[] }>(`/api/certifications/${id}/routes`)
-      setRoutes(r.rows)
-      if (r.rows.some((x) => x.route_key === 'standard')) setRouteKey('standard')
-    } catch {
-      setRoutes([])
-    } finally {
-      setRoutesLoading(false)
-    }
-  }
-
-  async function submit() {
-    if (!certId || !routeKey) return
-    setBusy(true)
-    setErr(null)
-    setOk(null)
-    try {
-      const res = await api.post<{ application_no: string; status: string }>('/api/me/applications', {
-        certification: certId,
-        route: routeKey,
-      })
-      setOk(`Application ${res.application_no} ${res.status === 'approved' ? 'approved' : 'submitted for review'}.`)
-      setCertId('')
-      setRouteKey('')
-      setRoutes([])
-      refetch()
-    } catch (e) {
-      const code = e instanceof ApiError && e.body && typeof e.body === 'object' && 'error' in e.body ? String((e.body as Record<string, unknown>).error) : ''
-      const msg = e instanceof ApiError && e.body && typeof e.body === 'object' && 'message' in e.body ? String((e.body as Record<string, unknown>).message) : ''
-      setErr(msg || (code === 'already_applied' ? 'You already have an active application for that certification and route.' : (e instanceof Error ? e.message : 'Could not submit the application.')))
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  const rows = data?.rows ?? []
-  const selectedRoute = routes.find((r) => r.route_key === routeKey)
-
-  return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <Card title="Apply for a certification">
-        <p className="muted small" style={{ marginTop: 0 }}>
-          Choose a certification and an application route. Most routes are reviewed by the Institute before you
-          proceed; the Standard route leads to the examination.
-        </p>
-        {err && <div className="notice err" role="alert">{err}</div>}
-        {ok && <div className="notice ok" role="status">{ok}</div>}
-        <div className="field" style={{ margin: '.5rem 0 0' }}>
-          <label htmlFor="app-cert">Certification</label>
-          <select id="app-cert" value={certId} onChange={(e) => pickCert(e.target.value)}>
-            <option value="">Select a certification…</option>
-            {certs.map((c) => (
-              <option key={c.id} value={c.id}>{c.acronym ? `${c.acronym} — ${c.name}` : c.name}</option>
-            ))}
-          </select>
-        </div>
-        {certId && (
-          <div className="field" style={{ margin: '.5rem 0 0' }}>
-            <label htmlFor="app-route">Application route</label>
-            <select id="app-route" value={routeKey} onChange={(e) => setRouteKey(e.target.value)} disabled={routesLoading || routes.length === 0}>
-              <option value="">{routesLoading ? 'Loading routes…' : 'Select a route…'}</option>
-              {routes.map((r) => (
-                <option key={r.route_key} value={r.route_key}>{r.label}</option>
-              ))}
-            </select>
-            {selectedRoute && (
-              <div className="muted small" style={{ marginTop: '.4rem' }}>
-                {selectedRoute.description}
-                {' '}{selectedRoute.requires_approval ? '· Reviewed by the Institute.' : '· Approved automatically.'}
-                {selectedRoute.exam_required ? ' Leads to the examination.' : ' No examination required.'}
-              </div>
-            )}
-          </div>
-        )}
-        <div className="row" style={{ marginTop: '.75rem' }}>
-          <button className="btn sm" disabled={!certId || !routeKey || busy} onClick={submit}>
-            {busy ? 'Submitting…' : 'Submit application'}
-          </button>
-        </div>
-      </Card>
-
-      <Card title="Your applications">
-        {loading ? (
-          <Spinner />
-        ) : error ? (
-          <ErrorNote>{error}</ErrorNote>
-        ) : rows.length === 0 ? (
-          <Empty>You have not submitted any applications yet.</Empty>
-        ) : (
-          <table className="data">
-            <thead>
-              <tr><th>Reference</th><th>Certification</th><th>Route</th><th>Submitted</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-              {rows.map((a) => (
-                <tr key={a.id}>
-                  <td className="small">{a.application_no}</td>
-                  <td className="small">{a.cert_acronym || a.cert_name || `#${a.certification_id}`}</td>
-                  <td className="small">{a.route_key.replace(/_/g, ' ')}</td>
-                  <td className="small muted">{fmtDate(a.created_at)}</td>
-                  <td>
-                    <Badge tone={APP_TONE[a.status] ?? 'brand'}>{a.status.replace(/_/g, ' ')}</Badge>
-                    {a.admin_note && <div className="muted small" style={{ marginTop: '.2rem' }}>{a.admin_note}</div>}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </Card>
-    </div>
   )
 }
 
@@ -733,14 +582,6 @@ export default function Certifications() {
           <p className="muted small" style={{ margin: '.25rem 0 0' }}>{t('cert.exploreSubtitle')}</p>
         </div>
         <Catalogue ownedCodes={ownedCodes} />
-      </section>
-
-      <section className="stack" style={{ display: 'grid', gap: '1rem' }}>
-        <div>
-          <h2 className="section-title">{t('cert.applicationsTitle')}</h2>
-          <p className="muted small" style={{ margin: '.25rem 0 0' }}>{t('cert.applicationsSubtitle')}</p>
-        </div>
-        <ApplicationsSection />
       </section>
     </div>
   )

@@ -2052,6 +2052,26 @@ def test_analytics(admin):
     chk("25n analytics API requires authentication (401)", c == 401, c)
     srv.shutdown()
 
+def test_membership_gate():
+    print("\n=== 26. Exam fee requires an active membership ===")
+    def blocked(body): return isinstance(body, dict) and body.get("error") == "membership_required"
+
+    # A brand-new email with no account/membership cannot pay an exam fee.
+    c, r = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "nomember26@ex.co"})
+    chk("26a exam checkout blocked without an active membership", c == 400 and blocked(r), (c, r))
+
+    # The bundle (membership + exam together) is the "pay both together" escape hatch — NOT blocked.
+    c, rb = jget("POST", "/api/create-checkout-session", body={"product": "bundle", "email": "nomember26@ex.co"})
+    chk("26b membership + exam bundle is not blocked by the gate", not blocked(rb), (c, rb))
+
+    # Membership-only checkout is exempt.
+    c, rm = jget("POST", "/api/create-checkout-session", body={"product": "membership", "email": "nomember26@ex.co"})
+    chk("26c membership checkout is not blocked", not blocked(rm), (c, rm))
+
+    # An active member (buyer1@ex.co settled the bundle in §1) passes the gate.
+    c, rok = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "buyer1@ex.co"})
+    chk("26d an active member is not blocked from paying an exam fee", not blocked(rok), (c, rok))
+
 def run(proc):
     admin = admin_login()
     widen_window(admin)
@@ -2809,6 +2829,7 @@ def run(proc):
     test_external_import(admin)
     test_backlinks(admin)
     test_analytics(admin)
+    test_membership_gate()
 
     print("\n(assertions complete)")
 

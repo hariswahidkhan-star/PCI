@@ -890,7 +890,6 @@ PCI.Backend.Endpoints.Forum.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), G
 PCI.Backend.Endpoints.Chat.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);    // self-hosted bot + live chat
 PCI.Backend.Endpoints.Casework.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
-PCI.Backend.Endpoints.Applications.Map(app, db, logFn, GateFn);        // per-certification application submission + review (Phase 4b)
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryIdv.Map(app, db, logFn);   // shortlist-gated identity verification (photo + gov ID + background declaration)
