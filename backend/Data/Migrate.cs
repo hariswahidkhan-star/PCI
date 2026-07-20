@@ -814,6 +814,135 @@ public static class Migrate
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_pubdocdl_doc ON public_document_downloads(document_id)");
 
+        // ═══════════════ Unified Communications Centre ═══════════════
+        // All outbound messages (transactional/manual/bulk, email/WhatsApp/in-app) flow through a single
+        // MySQL-backed outbox with a dedup key, status lifecycle and retry — so a provider outage never
+        // loses the business event. Provider SECRETS live only in env vars, never in these tables.
+        // Approved email identities. Credentials are NOT stored here — only the identity + policy.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_sender_profiles(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            key VARCHAR(60) UNIQUE NOT NULL,            -- stable code, e.g. 'support','finance','no-reply'
+            name TEXT NOT NULL, display_name TEXT,
+            from_email TEXT NOT NULL, reply_to TEXT,
+            purpose TEXT, category VARCHAR(40) DEFAULT 'operational',
+            provider VARCHAR(30) DEFAULT 'resend',
+            domain_verified INTEGER DEFAULT 0,
+            permitted_roles TEXT,                       -- CSV of admin perms allowed to send as this profile
+            is_default INTEGER DEFAULT 0, active INTEGER DEFAULT 1, approval_status VARCHAR(20) DEFAULT 'approved',
+            owner TEXT, effective_date TEXT, expiry_date TEXT,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        // Approved WhatsApp Business numbers. Tokens/app-secrets are NOT stored here — only which env var holds them.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_whatsapp_accounts(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            key VARCHAR(60) UNIQUE NOT NULL,
+            name TEXT NOT NULL, display_name TEXT,
+            phone_number TEXT NOT NULL, provider VARCHAR(30) DEFAULT 'meta_cloud',
+            provider_account_id TEXT,                   -- phone_number_id / WABA id (NOT a secret)
+            token_env VARCHAR(80) DEFAULT 'WHATSAPP_ACCESS_TOKEN',   -- name of the env var holding the token
+            purpose TEXT, country VARCHAR(4),
+            permitted_categories TEXT, permitted_roles TEXT,
+            business_hours TEXT, escalation_rule TEXT,
+            verification_status VARCHAR(20) DEFAULT 'unverified',
+            is_default INTEGER DEFAULT 0, active INTEGER DEFAULT 1, owner TEXT,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        // Channel-agnostic templates with versioning + publish lifecycle + dynamic {{variables}}.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_templates(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            key VARCHAR(80) NOT NULL,
+            name TEXT NOT NULL, kind VARCHAR(24) DEFAULT 'email',   -- email|whatsapp|auto_response|internal|bulk
+            category VARCHAR(40) DEFAULT 'operational',
+            subject TEXT, body TEXT,                    -- body: HTML (email) or text (whatsapp); {{vars}}
+            wa_template_name TEXT,                      -- provider-approved WhatsApp template name, if any
+            certification_id INTEGER, route_key VARCHAR(40), language VARCHAR(10) DEFAULT 'en',
+            version INTEGER DEFAULT 1, status VARCHAR(20) DEFAULT 'draft',  -- draft|approved|published|archived
+            required_vars TEXT, approved_by INTEGER, published_at TEXT,
+            created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_tpl_key ON comm_templates(key,status)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_template_versions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT, template_id INTEGER NOT NULL, version INTEGER,
+            subject TEXT, body TEXT, wa_template_name TEXT, saved_by INTEGER, created_at TEXT DEFAULT (datetime('now')))");
+        // Platform-event triggers: which channels/templates fire for each backend event.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_triggers(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code VARCHAR(80) UNIQUE NOT NULL, name TEXT NOT NULL, event_group VARCHAR(40), description TEXT,
+            backend_wired INTEGER DEFAULT 0,            -- 1 = a real backend event emits this code
+            email_enabled INTEGER DEFAULT 1, whatsapp_enabled INTEGER DEFAULT 0, inapp_enabled INTEGER DEFAULT 1,
+            email_template_key VARCHAR(80), whatsapp_template_key VARCHAR(80),
+            sender_profile_key VARCHAR(60), whatsapp_account_key VARCHAR(60),
+            consent_category VARCHAR(24) DEFAULT 'transactional',  -- transactional bypasses opt-out; marketing requires consent
+            certification_scope TEXT, route_scope TEXT, delay_minutes INTEGER DEFAULT 0,
+            reminder_sequence TEXT, conditions TEXT, dedup_window_minutes INTEGER DEFAULT 0,
+            approval_required INTEGER DEFAULT 0, active INTEGER DEFAULT 1,
+            effective_date TEXT, expiry_date TEXT,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        // The reliable MySQL-backed queue. One row per (business event × recipient × channel).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_outbox(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            dedup_key VARCHAR(160),                     -- unique-ish business+delivery key; blocks duplicates
+            channel VARCHAR(16) NOT NULL,               -- email|whatsapp|inapp
+            trigger_code VARCHAR(80), category VARCHAR(24) DEFAULT 'operational',
+            user_id INTEGER, conversation_id INTEGER, campaign_id INTEGER,
+            to_email TEXT, to_phone TEXT,
+            sender_profile_key VARCHAR(60), whatsapp_account_key VARCHAR(60),
+            subject TEXT, body TEXT, template_key VARCHAR(80),
+            certification_id INTEGER,
+            status VARCHAR(20) DEFAULT 'queued',         -- draft|scheduled|queued|processing|sent|delivered|read|failed|hard_bounced|rejected|cancelled|unsubscribed|expired
+            scheduled_at TEXT, attempts INTEGER DEFAULT 0, max_attempts INTEGER DEFAULT 5,
+            last_error TEXT, provider VARCHAR(30), provider_message_id TEXT, provider_response TEXT,
+            created_by INTEGER, next_attempt_at TEXT, sent_at TEXT,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_comm_outbox_dedup ON comm_outbox(dedup_key)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_outbox_status ON comm_outbox(status,scheduled_at)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_outbox_user ON comm_outbox(user_id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_delivery_attempts(
+            id INTEGER PRIMARY KEY AUTOINCREMENT, outbox_id INTEGER NOT NULL, attempt INTEGER,
+            status VARCHAR(20), detail TEXT, created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_attempt_outbox ON comm_delivery_attempts(outbox_id)");
+        // Unified inbox: one conversation per customer thread, with inbound messages of any channel.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_conversations(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            reference VARCHAR(40) UNIQUE, channel VARCHAR(16), subject TEXT,
+            customer_name TEXT, customer_email TEXT, customer_phone TEXT,
+            user_id INTEGER, certification_id INTEGER, application_id INTEGER, payment_id INTEGER,
+            received_address TEXT, assigned_admin_id INTEGER, priority VARCHAR(12) DEFAULT 'normal',
+            status VARCHAR(20) DEFAULT 'open', sla_due_at TEXT, category VARCHAR(40),
+            last_message_at TEXT, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_conv_status ON comm_conversations(status)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_inbound_messages(
+            id INTEGER PRIMARY KEY AUTOINCREMENT, conversation_id INTEGER NOT NULL,
+            direction VARCHAR(8) DEFAULT 'in',          -- in|out
+            channel VARCHAR(16), from_addr TEXT, to_addr TEXT, body TEXT,
+            provider_message_id TEXT, is_internal_note INTEGER DEFAULT 0, author_admin_id INTEGER,
+            attachments TEXT, created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_inbound_conv ON comm_inbound_messages(conversation_id)");
+        // Per-recipient suppression (bounces/complaints/unsubscribes) — checked before every marketing send.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_suppression(
+            id INTEGER PRIMARY KEY AUTOINCREMENT, channel VARCHAR(16), address TEXT,
+            reason VARCHAR(40), category VARCHAR(24), source TEXT, created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_suppress_addr ON comm_suppression(channel,address)");
+        // Consent + channel preferences per user (marketing requires opt-in; essential cannot be disabled).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_preferences(
+            id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER UNIQUE,
+            email_marketing INTEGER DEFAULT 0, whatsapp_marketing INTEGER DEFAULT 0, whatsapp_optin INTEGER DEFAULT 0,
+            newsletter INTEGER DEFAULT 0, events INTEGER DEFAULT 0, surveys INTEGER DEFAULT 0,
+            consent_source TEXT, consent_version TEXT, consent_at TEXT, withdrawn_at TEXT,
+            updated_at TEXT DEFAULT (datetime('now')))");
+        // Bulk email/WhatsApp campaigns. Delivery rides the same outbox (one row per recipient), so
+        // consent, suppression, duplicate prevention, retries and monitoring all apply uniformly.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_campaigns(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL, channel VARCHAR(16) DEFAULT 'email',   -- email|whatsapp|both
+            category VARCHAR(24) DEFAULT 'operational',                -- operational|marketing|newsletter
+            subject TEXT, body TEXT, template_key VARCHAR(80),
+            sender_profile_key VARCHAR(60), whatsapp_account_key VARCHAR(60),
+            certification_id INTEGER, filters TEXT,                    -- JSON audience filters
+            status VARCHAR(20) DEFAULT 'draft',                        -- draft|pending_approval|approved|scheduled|sending|paused|sent|cancelled
+            scheduled_at TEXT, recurring VARCHAR(16),                  -- once|daily|weekly|monthly (foundation: once)
+            approval_required INTEGER DEFAULT 1, approved_by INTEGER, approved_at TEXT,
+            total INTEGER DEFAULT 0, queued INTEGER DEFAULT 0,
+            created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_campaign_status ON comm_campaigns(status)");
+
         // ── Per-certification applications (Phase 4b): one record per (candidate, certification, route) ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS certification_applications(
             id INTEGER PRIMARY KEY AUTOINCREMENT,

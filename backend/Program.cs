@@ -43,11 +43,14 @@ var schemaPath = Path.Combine(AppContext.BaseDirectory, schemaFile);
 if (!File.Exists(schemaPath)) schemaPath = schemaFile;
 Console.WriteLine($"[boot] database provider: {db.Provider} (schema: {schemaFile})");
 Migrate.Run(db, schemaPath);
+try { PCI.Backend.Data.CommsSeed.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[comms seed] {e.Message}"); }
 builder.Services.AddSingleton(db);
 // Scheduled retention: purge stored artefacts past evidence_retention_days, daily (manual endpoint stays).
 builder.Services.AddHostedService<PCI.Backend.Core.RetentionService>();
 // ERP / integrations outbox delivery worker (Phase 9): drains due deliveries and posts them, signed.
 builder.Services.AddHostedService<PCI.Backend.Core.IntegrationDispatcher>();
+// Communications outbox worker: drains comm_outbox (email/WhatsApp/in-app) with retries + backoff.
+builder.Services.AddHostedService<PCI.Backend.Core.OutboxDispatcher>();
 
 var app = builder.Build();
 
@@ -842,6 +845,7 @@ PCI.Backend.Endpoints.Public.Map(app, db, logFn);
 PCI.Backend.Endpoints.Account.Map(app, db, logFn);
 PCI.Backend.Endpoints.AdminMgmt.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.PublicDocuments.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
+PCI.Backend.Endpoints.CommsCentre.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Payments.Map(app, db, logFn, () => !string.IsNullOrEmpty(stripeKey));
 PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Reviews.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);

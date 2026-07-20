@@ -235,10 +235,20 @@ public static class AdminStudents
         // Gated by 'members' and audited — attributed to the acting admin.
         app.MapPost("/api/admin/students/{id}/reset-2fa", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
-            if (db.QueryOne("SELECT id FROM users WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var su = db.QueryOne("SELECT id,email,first_name FROM users WHERE id=?", id);
+            if (su is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             db.Execute("UPDATE users SET two_factor_enabled=0, totp_secret=NULL, totp_last_step=NULL WHERE id=?", id);
             db.Execute("DELETE FROM login_tokens WHERE user_id=? AND purpose='session'", id);
             log(adm.Id, "admin_reset_student_2fa", "user " + id);
+            // Fire through the Communications Centre (email + in-app per the trigger config). This event
+            // previously sent nothing, so wiring it here is purely additive — no double-send.
+            Comms.Fire(db, "account.totp_disabled", id, H.Str(su["email"]), null,
+                new Dictionary<string, string?> { ["student_name"] = H.Str(su["first_name"]) ?? "there", ["portal_link"] = "/app/" },
+                "Two-factor authentication was reset on your PCI account",
+                "<p>Dear {{student_name}},</p><p>An administrator has reset the two-factor authentication (2FA) on your PCI account. " +
+                "You can sign in and re-enrol an authenticator from your profile at any time. If you did not expect this change, " +
+                "please contact support immediately.</p><p>— Project Controls Institute</p>",
+                dedupSuffix: DateTime.UtcNow.Ticks.ToString());
             return J(new { ok = true, message = "Two-factor authentication has been reset for this student." });
         }));
 

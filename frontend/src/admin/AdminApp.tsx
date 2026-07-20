@@ -13,6 +13,7 @@ import Credentials from './pages/Credentials'
 import Tickets from './pages/Tickets'
 import Documents from './pages/Documents'
 import PublicDownloads from './pages/PublicDownloads'
+import Communications from './pages/Communications'
 import Books from './pages/Books'
 import SupportInbox from './pages/SupportInbox'
 import ErrorReports from './pages/ErrorReports'
@@ -89,6 +90,7 @@ export default function AdminApp() {
         <Route path="tickets" element={<Perm section="tickets"><Tickets /></Perm>} />
         <Route path="documents" element={<Perm section="documents"><Documents /></Perm>} />
         <Route path="books" element={<Perm section="resources"><Books /></Perm>} />
+        <Route path="communications" element={<Perm section="comms"><Communications /></Perm>} />
         <Route path="support-inbox" element={<Perm section="inbox"><SupportInbox /></Perm>} />
         <Route path="errors" element={<Perm section="inbox"><ErrorReports /></Perm>} />
         <Route path="certifications" element={<Perm section="exams"><Certifications /></Perm>} />
