@@ -107,6 +107,8 @@ public static class CommsSeed
             ("certuvo.access_expiring", "Access expiring", 0));
         G("Support",
             ("support.ticket_created", "Ticket created", 1), ("support.agent_replied", "Agent replied", 1),
+            ("support.auto_ack", "Automatic acknowledgement", 1), ("support.auto_faq", "Automatic FAQ answer", 1),
+            ("support.suggestion_sent", "Agent-accepted FAQ answer", 1),
             ("support.info_requested", "Additional information requested", 0), ("support.escalated", "Ticket escalated", 0),
             ("support.resolved", "Ticket resolved", 1), ("support.reopened", "Ticket reopened", 0),
             ("support.satisfaction_survey", "Satisfaction survey", 0));
@@ -119,6 +121,22 @@ public static class CommsSeed
             db.Execute(@"INSERT INTO comm_triggers(code,name,event_group,backend_wired,email_enabled,whatsapp_enabled,inapp_enabled,sender_profile_key,consent_category,active)
                 SELECT ?,?,?,?,1,0,1,?, 'transactional',1 WHERE NOT EXISTS(SELECT 1 FROM comm_triggers WHERE code=?)",
                 code, name, grp, wired, DefaultSender(grp), code);
+
+        // ── Default customer-service routing rules (Phase 5) ──
+        // Classification only — these set category/priority/SLA/tags. Adverse/sensitive topics are handled
+        // by the built-in sensitive-topic guard in CommsRouting (always escalated, never auto-answered),
+        // so these seed rules deliberately do NOT auto-decide anything.
+        void R(string name, int priority, string? keywords, string? category, string? setPriority, int slaHours, string? tags, int escalate)
+            => db.Execute(@"INSERT INTO comm_routing_rules(name,priority,match_keywords,set_category,set_priority,sla_hours,add_tags,escalate,active)
+                SELECT ?,?,?,?,?,?,?,?,1 WHERE NOT EXISTS(SELECT 1 FROM comm_routing_rules WHERE name=?)",
+                name, priority, keywords, category, setPriority, slaHours, tags, escalate, name);
+        R("Payments & billing", 10, "payment,invoice,receipt,billing,card,charge,pay,transaction", "finance", "high", 12, "billing", 0);
+        R("Exam scheduling", 20, "exam,schedule,reschedule,booking,slot,proctor,launch code,test date", "exams", "normal", 24, "exam", 0);
+        R("Certificate & verification", 30, "certificate,credential,verify,verification,badge,digital badge", "certifications", "normal", 24, "certificate", 0);
+        R("Membership", 40, "membership,member,renewal,subscription,fellow", "membership", "normal", 48, "membership", 0);
+        R("Honorary / adverse decisions", 5, "honorary,appeal,rejection,rejected,revoke,revocation,dispute,complaint,refund", "escalations", "high", 8, "sensitive", 1);
+        R("Privacy & data", 6, "privacy,gdpr,data protection,erasure,delete my data,right to be forgotten,breach", "privacy", "high", 8, "privacy", 1);
+        R("General enquiry", 100, null, "general", "normal", 48, null, 0);
     }
 
     // Map an event group to a sensible default sender profile.

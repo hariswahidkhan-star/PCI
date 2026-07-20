@@ -862,6 +862,29 @@ public static class Migrate
             total INTEGER DEFAULT 0, queued INTEGER DEFAULT 0,
             created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_campaign_status ON comm_campaigns(status)");
+        // Customer-service routing rules (Phase 5): auto-triage inbound conversations. Rules are evaluated
+        // in priority order and the first match applies category/priority/assignment/SLA/tags/escalation.
+        // These NEVER make adverse decisions — they only classify and route; sensitive topics are always
+        // escalated to a human and never auto-answered.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS comm_routing_rules(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL, priority INTEGER DEFAULT 100,
+            match_channel VARCHAR(16),                   -- email|whatsapp|inapp|null(any)
+            match_received_address TEXT,                 -- substring of the to/received address
+            match_keywords TEXT,                         -- comma-separated; any token/phrase match
+            match_certification_id INTEGER,
+            set_category VARCHAR(40), set_priority VARCHAR(12),
+            assign_admin_id INTEGER, sla_hours INTEGER,
+            add_tags TEXT, escalate INTEGER DEFAULT 0,   -- 1 = force human, block auto-answer
+            active INTEGER DEFAULT 1,
+            created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_routing_active ON comm_routing_rules(active,priority)");
+        // Auto-response bookkeeping on the conversation: a stored draft the agent can accept/edit/send,
+        // free-text tags applied by routing, and whether an automated reply already went out.
+        AddCol("comm_conversations", "suggested_response", "suggested_response TEXT");
+        AddCol("comm_conversations", "tags", "tags TEXT");
+        AddCol("comm_conversations", "auto_answered", "auto_answered INTEGER DEFAULT 0");
+        AddCol("comm_conversations", "routed_rule_id", "routed_rule_id INTEGER");
 
         // ── Per-certification applications (Phase 4b): one record per (candidate, certification, route) ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS certification_applications(
