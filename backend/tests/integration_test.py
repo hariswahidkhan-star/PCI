@@ -152,15 +152,30 @@ def boot():
                    STRIPE_SECRET_KEY=STRIPE_KEY, STRIPE_WEBHOOK_SECRET=WEBHOOK_SECRET,
                    INTEGRATIONS_ALLOW_PRIVATE_EGRESS="true",   # mock vendors run on loopback (see mysql branch note)
                    ASPNETCORE_ENVIRONMENT="Development")
+    boot_log = os.path.join(HERE, "_server_boot.log")
+    logf = open(boot_log, "wb")
     proc = subprocess.Popen(["dotnet", DLL], env=env, cwd=BACKEND,
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    for _ in range(60):
+                            stdout=logf, stderr=subprocess.STDOUT)
+    def _log_tail():
         try:
-            code, _ = req("GET", "/api/health");
+            logf.flush()
+            with open(boot_log, "r", errors="replace") as f: return f.read()[-4000:]
+        except Exception: return "(no server log)"
+    # CI cold-start (cold .NET JIT + a full fresh migration over a networked MySQL) is materially
+    # slower than a warm local box, so allow generous headroom before declaring failure. A crash
+    # is detected immediately via proc.poll(), so the long deadline only extends the slow-boot case.
+    deadline = time.time() + 120
+    while time.time() < deadline:
+        if proc.poll() is not None:            # server exited before serving health — a boot crash
+            raise SystemExit(f"server exited during boot (exit code {proc.returncode})\n"
+                             f"--- server log tail ---\n{_log_tail()}")
+        try:
+            code, _ = req("GET", "/api/health")
             if code == 200: return proc
         except Exception: pass
         time.sleep(0.5)
-    proc.terminate(); raise SystemExit("server did not boot")
+    proc.terminate()
+    raise SystemExit(f"server did not boot within 120s\n--- server log tail ---\n{_log_tail()}")
 
 # ---- helpers built on the real flows ----
 def make_paid_user(email, product="bundle", amount=9900, pi=None, sid=None, real_login=False, metadata=None):
