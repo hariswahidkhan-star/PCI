@@ -121,6 +121,61 @@ public static class Security
         catch { return null; }
     }
 
+    /// <summary>True when a dedicated 32-byte CREDENTIAL_ENCRYPTION_KEY was supplied (not the derived
+    /// fallback). Production should always set one; the boot preflight uses this to refuse an unsafe start.</summary>
+    public static bool HasDedicatedEncryptionKey()
+    {
+        var raw = Environment.GetEnvironmentVariable("CREDENTIAL_ENCRYPTION_KEY");
+        if (string.IsNullOrWhiteSpace(raw)) return false;
+        raw = raw.Trim();
+        try { if (Convert.FromBase64String(raw).Length == 32) return true; } catch { }
+        try { if (raw.Length == 64) { Convert.FromHexString(raw); return true; } } catch { }
+        return raw.Length >= 16;   // any sufficiently long passphrase is hashed to a 32-byte key
+    }
+
+    // ---- Authenticated encryption for stored FILE bytes at rest (AES-256-GCM) ----
+    // The most sensitive artefacts — government-ID scans, passport photos, identity evidence — are
+    // envelope-encrypted before they touch disk or object storage, so a stolen volume/bucket/backup
+    // never exposes raw PII. Content-addressing (the SHA is computed on the plaintext) and dedup are
+    // preserved; only the file body is ciphertext. A versioned magic header lets Get() transparently
+    // pass through any pre-existing plaintext object, so enabling this needs no data migration.
+    static readonly byte[] FileMagic = Encoding.ASCII.GetBytes("PCIENC1\0");   // 8 bytes
+
+    /// <summary>True if the blob carries the encrypted-at-rest envelope header.</summary>
+    public static bool IsEncryptedBlob(byte[]? b) =>
+        b is not null && b.Length >= FileMagic.Length + 28 && b.AsSpan(0, FileMagic.Length).SequenceEqual(FileMagic);
+
+    /// <summary>Envelope-encrypt file bytes: magic ‖ 12-byte nonce ‖ 16-byte tag ‖ ciphertext.</summary>
+    public static byte[] EncryptBytes(byte[] plain)
+    {
+        var nonce = RandomNumberGenerator.GetBytes(12);
+        var ct = new byte[plain.Length];
+        var tag = new byte[16];
+        using var gcm = new AesGcm(_credKey, 16);
+        gcm.Encrypt(nonce, plain, ct, tag);
+        var blob = new byte[FileMagic.Length + 12 + 16 + ct.Length];
+        Buffer.BlockCopy(FileMagic, 0, blob, 0, FileMagic.Length);
+        Buffer.BlockCopy(nonce, 0, blob, FileMagic.Length, 12);
+        Buffer.BlockCopy(tag, 0, blob, FileMagic.Length + 12, 16);
+        Buffer.BlockCopy(ct, 0, blob, FileMagic.Length + 28, ct.Length);
+        return blob;
+    }
+
+    /// <summary>Decrypt bytes produced by <see cref="EncryptBytes"/>. Blobs without the magic header are
+    /// returned unchanged (legacy plaintext tolerance); a tampered/undecryptable envelope throws.</summary>
+    public static byte[] DecryptBytes(byte[] blob)
+    {
+        if (!IsEncryptedBlob(blob)) return blob;
+        var off = FileMagic.Length;
+        var nonce = blob[off..(off + 12)];
+        var tag = blob[(off + 12)..(off + 28)];
+        var ct = blob[(off + 28)..];
+        var pt = new byte[ct.Length];
+        using var gcm = new AesGcm(_credKey, 16);
+        gcm.Decrypt(nonce, ct, tag, pt);
+        return pt;
+    }
+
     // ---- TOTP (RFC 6238, SHA-1, 6 digits, 30 s) — optional MFA for privileged admin accounts ----
     static readonly char[] B32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567".ToCharArray();
 
@@ -154,11 +209,16 @@ public static class Security
     }
 
     /// <summary>Verify a 6-digit TOTP code, accepting a ±1 window step for clock skew.</summary>
-    public static bool VerifyTotp(string secret, string? code)
+    public static bool VerifyTotp(string secret, string? code) => VerifyTotpStep(secret, code) >= 0;
+
+    /// <summary>Verify a TOTP code and return the matched timestep (unix/30), or -1 if invalid. The step
+    /// lets the caller reject replay: a captured code stays valid ~90 s within the ±1 window, so the login
+    /// path records the last consumed step and refuses any code whose step is not strictly newer.</summary>
+    public static long VerifyTotpStep(string secret, string? code)
     {
-        if (string.IsNullOrWhiteSpace(secret) || string.IsNullOrWhiteSpace(code) || code.Trim().Length != 6) return false;
+        if (string.IsNullOrWhiteSpace(secret) || string.IsNullOrWhiteSpace(code) || code.Trim().Length != 6) return -1;
         var key = B32Decode(secret);
-        if (key.Length == 0) return false;
+        if (key.Length == 0) return -1;
         var step = DateTimeOffset.UtcNow.ToUnixTimeSeconds() / 30;
         for (var offset = -1; offset <= 1; offset++)
         {
@@ -168,9 +228,9 @@ public static class Security
             var hash = hmac.ComputeHash(counter);
             var pos = hash[^1] & 0x0F;
             var truncated = ((hash[pos] & 0x7F) << 24) | (hash[pos + 1] << 16) | (hash[pos + 2] << 8) | hash[pos + 3];
-            if ((truncated % 1_000_000).ToString("D6") == code.Trim()) return true;
+            if ((truncated % 1_000_000).ToString("D6") == code.Trim()) return step + offset;
         }
-        return false;
+        return -1;
     }
 
     /// <summary>Constant-behaviour password check: false for null/malformed stored hashes instead of

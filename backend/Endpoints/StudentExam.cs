@@ -119,6 +119,7 @@ public static class StudentExam
         app.MapPatch("/api/me/profile", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             var allowed = new[]{ "mobile","country","city","preferred_language","current_role","company","industry_sector","years_experience","highest_qualification","project_controls_area","enrollment_purpose","linkedin_url","profile_photo" };
             if (db.QueryOne("SELECT user_id FROM student_profiles WHERE user_id=?", u.Id) is null)
@@ -283,6 +284,7 @@ public static class StudentExam
         app.MapPost("/api/me/exam/book", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             // Which credential is being booked: explicit certification (id or code) or, for
             // single-certification candidates, the one their entitlement belongs to.
@@ -325,6 +327,7 @@ public static class StudentExam
         app.MapPost("/api/me/exam/reschedule", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             // Optional certification scope for candidates holding bookings for several credentials;
             // default stays "the latest scheduled booking" for existing single-cert clients.
@@ -383,6 +386,7 @@ public static class StudentExam
         app.MapPost("/api/me/exam/start", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             var certSel = H.GetS(b, "certification_id", "certification", "cert");
             var bk = certSel is null ? ActiveBooking(u.Id) : ActiveBooking(u.Id, Certs.Resolve(db, certSel));
@@ -436,6 +440,7 @@ public static class StudentExam
         app.MapPost("/api/me/exam/submit", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             var attemptId = H.GetEl(b, "attempt_id", "attemptToken", "AttemptToken");
             object? attIdObj = attemptId?.ValueKind == JsonValueKind.Number ? attemptId.Value.GetInt64() : attemptId?.GetString();
@@ -555,6 +560,7 @@ public static class StudentExam
         app.MapPost("/api/me/exam/heartbeat", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             var attemptId = H.GetEl(b, "attempt_id", "attemptToken", "AttemptToken");
             object? attIdObj = attemptId?.ValueKind == JsonValueKind.Number ? attemptId.Value.GetInt64() : attemptId?.GetString();

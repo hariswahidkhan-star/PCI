@@ -19,7 +19,7 @@ namespace PCI.Backend.Core;
 /// </summary>
 public static class Translator
 {
-    static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(60) };
+    static readonly HttpClient _http = Egress.CreateClient(TimeSpan.FromSeconds(60));   // SSRF-guarded custom endpoint
 
     public static readonly Dictionary<string, string> LangNames = new(StringComparer.Ordinal)
     {

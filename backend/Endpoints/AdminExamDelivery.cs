@@ -31,7 +31,7 @@ public static class AdminExamDelivery
         Func<HttpRequest, string, Func<AdminCtx, IResult>, IResult> gate)
     {
         IResult J(object o) => Results.Json(o);
-        var http = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+        var http = Egress.CreateClient(TimeSpan.FromSeconds(20));   // SSRF-guarded (see ExamDelivery.Http)
         IResult? Deny(HttpRequest req)
         {
             var r = gate(req, "exam_delivery", _ => Results.Ok());
@@ -121,6 +121,11 @@ public static class AdminExamDelivery
             // config = the connector's declared config fields + exam_map + callback_secret (non-secret).
             var cfg = new Dictionary<string, object?>();
             foreach (var f in connector.ConfigFields) if (H.GetS(b, f) is { } v) cfg[f] = v;
+            // Reject an api_base that points at a private/loopback/metadata address on save (fast operator
+            // feedback; the SSRF-guarded client is the actual runtime control).
+            if (cfg.TryGetValue("api_base", out var abv) && abv is string abs && abs.Trim().Length > 0
+                && Egress.UrlProblem(abs.Trim()) is { } abProb)
+                return Results.Json(new { error = "bad_api_base", message = abProb }, statusCode: 400);
             if (H.GetEl(b, "exam_map") is { ValueKind: JsonValueKind.Object } em)
             {
                 var map = new Dictionary<string, string>();

@@ -56,8 +56,15 @@ public static class PartnerPortal
             var email = (H.GetS(b, "email") ?? "").Trim().ToLowerInvariant();
             var password = H.GetS(b, "password") ?? "";
             var pu = db.QueryOne("SELECT * FROM partner_users WHERE email=?", email);
-            if (pu is null || !Security.VerifyPassword(password, pu["password_hash"] as string))
+            if (pu is null) { LoginGuard.BurnTime(password); return Results.Json(new { error = "invalid_credentials" }, statusCode: 401); }
+            if (LoginGuard.IsLocked(db, "partner_users", pu["id"]))
+                return Results.Json(new { error = "account_locked", message = "Too many failed attempts. Please try again in a few minutes." }, statusCode: 429);
+            if (!Security.VerifyPassword(password, pu["password_hash"] as string))
+            {
+                LoginGuard.OnFail(db, "partner_users", pu["id"]);
                 return Results.Json(new { error = "invalid_credentials" }, statusCode: 401);
+            }
+            LoginGuard.OnSuccess(db, "partner_users", pu["id"]);
             if ((pu["status"] as string) != "active") return Results.Json(new { error = "account_suspended" }, statusCode: 403);
             var partner = db.QueryOne("SELECT id,name,status,agreement_end FROM training_partners WHERE id=?", pu["partner_id"]);
             if (partner is null || (partner["status"] as string ?? "active") != "active")
@@ -84,6 +91,10 @@ public static class PartnerPortal
             var pw = H.GetS(b, "new_password") ?? "";
             if (pw.Length < 10) return Err(400, "weak_password", "Use at least 10 characters.");
             db.Execute("UPDATE partner_users SET password_hash=?, must_change_pw=0 WHERE id=?", BCrypt.Net.BCrypt.HashPassword(pw), p!.Id);
+            // Sign out every OTHER session so a stolen token dies when the password changes (parity with admin/student).
+            var self = ctx.Request.Headers.Authorization.ToString();
+            var selfSha = self.StartsWith("Bearer ") ? Security.Sha(self[7..]) : "";
+            db.Execute("DELETE FROM partner_sessions WHERE partner_user_id=? AND token<>?", p!.Id, selfSha);
             return J(new { ok = true });
         });
 
