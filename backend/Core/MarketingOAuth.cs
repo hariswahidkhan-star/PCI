@@ -65,6 +65,21 @@ public static class MarketingOAuth
     /// <summary>The fixed redirect URL registered with each provider. Derived from APP_BASE_URL/SITE_BASE_URL.</summary>
     public static string RedirectUri(HttpRequest? req = null) => Mailer.BaseUrl(req) + "/api/marketing/oauth/callback";
 
+    // PKCE (RFC 7636) is used for the providers that support it. LinkedIn's authorization-code flow does
+    // not use PKCE (it relies on the client secret), so we skip the challenge there rather than send a
+    // parameter it may reject.
+    static bool SupportsPkce(string family) => family is "google" or "meta";
+
+    static string B64Url(byte[] b) => Convert.ToBase64String(b).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+
+    /// <summary>Generate a PKCE (verifier, S256 challenge) pair.</summary>
+    static (string verifier, string challenge) NewPkce()
+    {
+        var verifier = B64Url(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32));   // 43-char high-entropy
+        var challenge = B64Url(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.ASCII.GetBytes(verifier)));
+        return (verifier, challenge);
+    }
+
     /// <summary>Build a real authorize URL for a connection, or null when the provider app is not configured.</summary>
     public static string? AuthorizeUrl(Db db, long connId, long nowUnix, HttpRequest? req = null)
     {
@@ -85,6 +100,18 @@ public static class MarketingOAuth
             ["state"] = State(connId, nowUnix),
         };
         if (family == "google") { q["access_type"] = "offline"; q["prompt"] = "consent"; q["include_granted_scopes"] = "true"; }
+        if (SupportsPkce(family))
+        {
+            var (verifier, challenge) = NewPkce();
+            // Persist the verifier on the connection so the callback can present it at token exchange.
+            db.Execute("UPDATE mkt_connections SET oauth_verifier=?, updated_at=datetime('now') WHERE id=?", verifier, connId);
+            q["code_challenge"] = challenge;
+            q["code_challenge_method"] = "S256";
+        }
+        else
+        {
+            db.Execute("UPDATE mkt_connections SET oauth_verifier=NULL, updated_at=datetime('now') WHERE id=?", connId);
+        }
         var qs = string.Join("&", q.Where(kv => kv.Value is not null).Select(kv => $"{Uri.EscapeDataString(kv.Key)}={Uri.EscapeDataString(kv.Value!)}"));
         return p.AuthUrl + "?" + qs;
     }
@@ -93,7 +120,7 @@ public static class MarketingOAuth
 
     /// <summary>Exchange an authorization code for tokens at the provider token endpoint. Returns null on
     /// failure (recorded by the caller). Env-gated: no client secret → no call.</summary>
-    public static async Task<TokenResult?> Exchange(string family, string code, string redirectUri)
+    public static async Task<TokenResult?> Exchange(string family, string code, string redirectUri, string? codeVerifier = null)
     {
         var p = ForFamily(family);
         if (p is null) return null;
@@ -107,6 +134,8 @@ public static class MarketingOAuth
             ["client_id"] = clientId,
             ["client_secret"] = clientSecret,
         };
+        // PKCE: present the verifier that pairs with the challenge sent at authorize time.
+        if (!string.IsNullOrEmpty(codeVerifier)) form["code_verifier"] = codeVerifier!;
         try
         {
             using var reqMsg = new HttpRequestMessage(HttpMethod.Post, p.TokenUrl) { Content = new FormUrlEncodedContent(form) };

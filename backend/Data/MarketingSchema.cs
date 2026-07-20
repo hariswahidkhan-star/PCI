@@ -17,8 +17,17 @@ public static class MarketingSchema
     public static void Ensure(Db db)
     {
         Tables(db);
+        // Incremental, non-destructive column additions for already-deployed databases.
+        AddCol(db, "mkt_connections", "oauth_verifier", "oauth_verifier VARCHAR(128)");   // PKCE code_verifier
         SeedPlatforms(db);
         SeedCapabilities(db);
+    }
+
+    // Add a column only if the table exists and lacks it (mirrors Migrate.cs's AddCol; MySQL + SQLite safe).
+    static void AddCol(Db db, string table, string col, string ddl)
+    {
+        try { var have = db.Columns(table); if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}"); }
+        catch { /* best-effort; a fresh CREATE already includes the column */ }
     }
 
     static void Tables(Db db)
@@ -51,7 +60,7 @@ public static class MarketingSchema
             external_ig_id TEXT, external_business_id TEXT, external_property TEXT,
             connected_user_ref TEXT, granted_scopes TEXT, roles TEXT,
             access_tier VARCHAR(30), api_version TEXT, account_currency VARCHAR(8), account_timezone TEXT,
-            access_token_enc TEXT, refresh_token_enc TEXT, token_expires_at TEXT,
+            access_token_enc TEXT, refresh_token_enc TEXT, token_expires_at TEXT, oauth_verifier VARCHAR(128),
             status VARCHAR(24) DEFAULT 'disconnected',  -- disconnected|connecting|connected|expired|error|revoked
             approval_status VARCHAR(30) DEFAULT 'not_requested',
             last_success_at TEXT, last_failure_at TEXT, last_error TEXT,

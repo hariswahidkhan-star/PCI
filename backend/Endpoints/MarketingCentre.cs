@@ -539,7 +539,9 @@ public static class MarketingCentre
             var platform = H.Str(c["platform_code"]) ?? "";
             var family = H.Str(db.QueryOne("SELECT family FROM mkt_platforms WHERE code=?", platform)?["family"]) ?? "";
             if (string.IsNullOrEmpty(code)) return Page("No authorisation code", "The provider did not return an authorisation code.");
-            var tok = await MarketingOAuth.Exchange(family, code, MarketingOAuth.RedirectUri(ctx.Request));
+            var verifier = H.Str(c["oauth_verifier"]);   // PKCE: present the verifier paired with the authorize challenge
+            var tok = await MarketingOAuth.Exchange(family, code, MarketingOAuth.RedirectUri(ctx.Request), verifier);
+            db.Execute("UPDATE mkt_connections SET oauth_verifier=NULL WHERE id=?", connId.Value);   // one-time use
             if (tok is null || string.IsNullOrEmpty(tok.AccessToken))
             {
                 db.Execute("UPDATE mkt_connections SET status='error', last_failure_at=datetime('now'), last_error='token_exchange_failed', updated_at=datetime('now') WHERE id=?", connId.Value);
