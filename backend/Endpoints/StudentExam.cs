@@ -81,9 +81,31 @@ public static class StudentExam
                         var bk = db.QueryOne("SELECT id,scheduled_at,timezone,status FROM exam_bookings WHERE user_id=? AND payment_id=? AND status='scheduled' ORDER BY id DESC", u.Id, r["payment_id"]);
                         var att = db.QueryOne("SELECT id,status,result_status,submitted_at FROM exam_attempts WHERE user_id=? AND kind='exam' AND COALESCE(certification_id,1)=? ORDER BY id DESC", u.Id, cid);
                         var cred = db.QueryOne("SELECT credential_id,status,expires_at FROM issued_credentials WHERE user_id=? AND COALESCE(certification_id,1)=? AND status='active' ORDER BY id DESC", u.Id, cid);
+                        // Exam Exceptions & Authorizations: surface the seat's authorization (deadline history,
+                        // attempt policy, retake wait), any fee waiver, and a computed scheduling status so the
+                        // portal can show extensions / reopened scheduling / granted attempts / waivers.
+                        var auth = db.QueryOne("SELECT id,original_deadline,current_deadline,access_expiry,attempts_permitted,attempts_used,retake_wait_until,status FROM exam_authorizations WHERE payment_id=?", r["payment_id"]);
+                        var deadlineStr = H.Str(r["exam_schedule_deadline"]);
+                        var extended = auth is not null && H.Str(auth["original_deadline"]) is { } od0 && H.Str(auth["current_deadline"]) is { } cd0 && od0 != cd0;
+                        var waiver = db.QueryOne("SELECT fee_type,waiver_type,kind,waived_amount,payable_amount,status FROM fee_waivers WHERE user_id=? AND COALESCE(certification_id,0) IN (0,?) AND status='granted' ORDER BY id DESC", u.Id, cid);
+                        var grant = db.QueryOne("SELECT grant_type,fee_waived FROM exam_attempt_grants WHERE payment_id=? ORDER BY id DESC", r["payment_id"]);
+                        var daysLeft = deadlineStr is null ? (int?)null : (int)Math.Ceiling((H.JsMillis(deadlineStr) - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()) / 86_400_000.0);
+                        string schedStatus =
+                            cred is not null ? "Exam Completed"
+                            : att is not null && H.Str(att["result_status"]) == "invalidated" ? "Attempt Invalidated"
+                            : att is not null && H.Str(att["result_status"]) == "auto_held" ? "Result Pending"
+                            : att is not null && H.Str(att["status"]) == "submitted" ? "Result Pending"
+                            : bk is not null ? "Exam Scheduled"
+                            : deadlineStr is not null && H.IsPast(deadlineStr) ? "Scheduling Window Expired"
+                            : grant is not null ? (H.Str(grant["grant_type"]) == "complimentary" ? "Complimentary Attempt Approved" : "Additional Attempt Approved")
+                            : extended ? "Extension Approved"
+                            : "Eligible to Schedule";
                         return new { certification_id = cid, certification_code = cert?["code"], certification_name = cert?["name"],
                             payment_id = r["payment_id"], reference = r["reference"], deadline = r["exam_schedule_deadline"],
-                            entitlement_status = r["entitlement_status"], booking = bk, latest_attempt = att, credential = cred };
+                            entitlement_status = r["entitlement_status"], booking = bk, latest_attempt = att, credential = cred,
+                            authorization = auth, extended, original_deadline = auth?["original_deadline"], days_left = daysLeft,
+                            attempts_used = ExamAuthorization.AttemptsUsed(db, u.Id, cid), attempts_permitted = ExamAuthorization.AttemptsPermitted(db, u.Id, cid),
+                            retake_wait_until = auth?["retake_wait_until"], waiver, scheduling_status = schedStatus };
                     }).ToList(),
                 // Held attempts must not disclose pass/fail/score until released (Section A rule 6) —
                 // redacted SERVER-side, not merely hidden by the front-end.
@@ -794,6 +816,35 @@ public static class StudentExam
         app.MapGet("/api/me/security", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             return J(new { logins = db.Query("SELECT created_at,ip,user_agent,device,outcome FROM login_events WHERE user_id=? ORDER BY id DESC LIMIT 20", u.Id),
                 two_factor = false, two_factor_coming_soon = true }); });
+
+        // ── Exam Exceptions: student reports an exam incident (creates a case for the admin workflow) ──
+        app.MapPost("/api/me/exam/incident", async (HttpContext ctx) =>
+        {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
+            var b = await H.Body(ctx.Request);
+            var category = (H.GetS(b, "category") ?? "other").Trim();
+            var explanation = (H.GetS(b, "student_explanation", "explanation", "description") ?? "").Trim();
+            if (explanation.Length < 5) return Results.Json(new { error = "explanation_required", message = "Please describe what happened." }, statusCode: 400);
+            if (explanation.Length > 4000) explanation = explanation[..4000];
+            var cid = Certs.Resolve(db, H.GetS(b, "certification_id", "certification", "cert"));
+            var attemptId = H.GetNum(b, "attempt_id") is double an && an > 0 ? (long?)(long)an : null;
+            string? evRef = null, evName = null;
+            var (bytes, mime, _) = Storage.DecodeDataUri(H.GetS(b, "evidence", "file", "data_uri"));
+            if (bytes is not null && bytes.Length <= 15_000_000) { try { var st = Storage.Put(bytes, mime ?? "application/octet-stream", "incidents"); evRef = st.Reference; evName = H.GetS(b, "evidence_name") ?? "evidence"; } catch { } }
+            var auth = db.QueryOne("SELECT id FROM exam_authorizations WHERE user_id=? AND certification_id=? ORDER BY id DESC", u.Id, cid);
+            var bk = db.QueryOne("SELECT id FROM exam_bookings WHERE user_id=? AND certification_id=? ORDER BY id DESC", u.Id, cid);
+            var id = db.ExecuteReturningId(@"INSERT INTO exam_incidents(user_id,certification_id,attempt_id,booking_id,authorization_id,category,occurred_at,student_explanation,evidence_ref,evidence_name,severity,status,reported_by,created_by)
+                VALUES(?,?,?,?,?,?,?,?,?,?, 'medium', 'received', 'student', ?)",
+                u.Id, cid, attemptId, bk?["id"], auth?["id"], category, H.GetS(b, "occurred_at"), explanation, evRef, evName, u.Id);
+            db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Exam Exception', 'Exam incident received', 'We have received your exam incident report and will review it shortly.', 'View support', '/support')", u.Id);
+            log(u.Id, "exam_incident_reported", $"incident {id} cat {category} cert {cid}");
+            try { Notify.Alert(db, "exam_exception", "New exam incident reported",
+                $"<p>Candidate #{u.Id} ({System.Net.WebUtility.HtmlEncode(u.Email)}) reported an exam incident (category: {System.Net.WebUtility.HtmlEncode(category)}) for certification {cid}. Review it in Exam Exceptions &rarr; Incidents.</p>", "exam_incident", id); } catch { }
+            return J(new { ok = true, incident_id = id, reference = "INC-" + id });
+        });
+        app.MapGet("/api/me/exam/incidents", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            return J(new { rows = db.Query("SELECT id,certification_id,category,occurred_at,status,decision,remedy,created_at FROM exam_incidents WHERE user_id=? ORDER BY id DESC LIMIT 50", u.Id) }); });
         app.MapPost("/api/me/2fa", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             // Two-factor auth is not yet enforced at sign-in. Rather than persist a state that would
             // misleadingly display as "on", we register interest and report it as coming soon, so the

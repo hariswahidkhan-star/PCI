@@ -68,6 +68,21 @@ public static class H
         foreach (var k in keys) if (b.TryGetValue(k, out var v)) return v;
         return null;
     }
+    /// <summary>Coerce a JSON body value to a bool: true/false, 1/0, or "1"/"true"/"yes". Null if absent/unclear.</summary>
+    public static bool? GetBool(Dictionary<string, JsonElement> b, params string[] keys)
+    {
+        var e = GetEl(b, keys);
+        if (e is null) return null;
+        var v = e.Value;
+        return v.ValueKind switch
+        {
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            JsonValueKind.Number => v.TryGetInt64(out var n) && n != 0,
+            JsonValueKind.String => (v.GetString() ?? "").Trim().ToLowerInvariant() is "1" or "true" or "yes",
+            _ => (bool?)null,
+        };
+    }
 
     // ---- exam config (parity with examCfg) ----
     public const int EXAM_MIN = 90, PASS = 65, OPEN_BEFORE_MIN = 15, GRACE_MIN = 30, RESCHED_LOCK_H = 24, FREE_RESCHED_H = 72, MAX_RESCHED = 3;

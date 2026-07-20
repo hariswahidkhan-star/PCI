@@ -472,3 +472,87 @@ export interface ExamSessionDetail {
   messages: ProctorMessage[]
   summary: { total_events: number; by_severity: Record<string, number>; answered: number }
 }
+
+// ---- Exam exceptions & authorizations (ex_* section) ----
+
+/** One exam authorization row (GET /api/admin/exam-exceptions). */
+export interface ExamExceptionRow {
+  id: number
+  user_id: number
+  certification_id: number
+  payment_id?: number | null
+  original_deadline?: string | null
+  current_deadline?: string | null
+  access_expiry?: string | null
+  attempts_permitted?: number | null
+  attempts_used?: number | null
+  retake_wait_until?: string | null
+  window_days?: number | null
+  window_source?: string | null
+  status: string
+  institution_id?: number | null
+  country?: string | null
+  created_at?: string | null
+  email?: string | null
+  first_name?: string | null
+  last_name?: string | null
+  certification_name?: string | null
+  certification_acronym?: string | null
+  extensions?: number | null
+  reschedules?: number | null
+  incidents?: number | null
+  grants?: number | null
+  attempts_used_total?: number | null
+  attempts_permitted_total?: number | null
+}
+
+/** Full authorization detail (GET /api/admin/exam-exceptions/{authId}). Nested rows are kept
+ *  permissive so a backend addition never breaks the build. */
+export interface ExamExceptionDetail {
+  authorization: Record<string, unknown>
+  student: Record<string, unknown>
+  certification: Record<string, unknown>
+  attempts_used: number
+  attempts_permitted: number
+  extensions: Record<string, unknown>[]
+  reschedules: Record<string, unknown>[]
+  attempt_grants: Record<string, unknown>[]
+  incidents: Record<string, unknown>[]
+  attempts: Record<string, unknown>[]
+  bookings: Record<string, unknown>[]
+  waivers: Record<string, unknown>[]
+}
+
+/** One exam incident row (GET /api/admin/exam-incidents). */
+export interface ExamIncidentRow {
+  id: number
+  reference?: string | null
+  user_id?: number | null
+  certification_id?: number | null
+  attempt_id?: number | null
+  category?: string | null
+  severity?: string | null
+  status: string
+  decision?: string | null
+  student_explanation?: string | null
+  created_at?: string | null
+  email?: string | null
+  first_name?: string | null
+  last_name?: string | null
+  certification_name?: string | null
+  certification_acronym?: string | null
+}
+
+/** One exam window rule (GET/POST /api/admin/exam-window-rules). */
+export interface ExamWindowRule {
+  id: number
+  scope_type: string
+  scope_value?: string | null
+  window_days?: number | null
+  access_expiry_days?: number | null
+  attempts_permitted?: number | null
+  retake_wait_days?: number | null
+  active?: number | null
+  note?: string | null
+  created_at?: string | null
+}

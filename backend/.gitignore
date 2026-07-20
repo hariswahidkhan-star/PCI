@@ -12,6 +12,7 @@ wwwroot/admin/
 # integration test artifacts
 tests/_integration.db*
 tests/_integration_storage/
+tests/_server_boot.log
 tests/_sweep*
 tests/_s3*
 backend/u.db*

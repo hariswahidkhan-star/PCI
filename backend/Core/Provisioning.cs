@@ -129,6 +129,10 @@ public static class Settlement
                 db.Execute("UPDATE payments SET exam_schedule_deadline=datetime('now','+1 year') WHERE id=?", payId);
                 did.Add("schedule_deadline_set");
             }
+            // Create the Exam Authorization (configurable scheduling window + attempt policy + status). This
+            // recomputes the deadline from the resolved window and writes it through, so the effective period
+            // is operator-configured, not the hardcoded +1 year above. Idempotent; best-effort.
+            try { if (ExamAuthorization.EnsureForPayment(db, payId) > 0) did.Add("authorization_ensured"); } catch { }
         }
         if (isMembership && CertuvoLink.Enabled(db))
         {
@@ -147,7 +151,11 @@ public static class Settlement
     /// target a specific credential — the generic path defaults to certification 1).</summary>
     public static void RetargetEntitlement(Db db, long payId, long certId)
     {
-        if (certId > 0) db.Execute("UPDATE exam_entitlements SET certification_id=? WHERE payment_id=?", certId, payId);
+        if (certId > 0)
+        {
+            db.Execute("UPDATE exam_entitlements SET certification_id=? WHERE payment_id=?", certId, payId);
+            try { ExamAuthorization.SyncCert(db, payId, certId); } catch { }   // keep the authorization's cert + window in step
+        }
     }
 
     /// <summary>Reverse a manual settlement (offline payment or waiver): the payment is marked refunded with

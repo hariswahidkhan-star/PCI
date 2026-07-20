@@ -39,6 +39,16 @@ export interface ExamEntry {
   booking?: Record<string, unknown> | null
   latest_attempt?: Record<string, unknown> | null
   credential?: { credential_id: string; status: string; expires_at?: string | null } | null
+  // Exam-exceptions surface: admin extensions, attempt allowances, waivers and scheduling state.
+  authorization?: Record<string, unknown> | null
+  extended?: boolean
+  original_deadline?: string | null
+  days_left?: number | null
+  attempts_used?: number | null
+  attempts_permitted?: number | null
+  retake_wait_until?: string | null
+  waiver?: Record<string, unknown> | null
+  scheduling_status?: string | null
 }
 
 export interface Attempt {
