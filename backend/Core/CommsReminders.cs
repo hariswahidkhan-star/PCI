@@ -42,8 +42,51 @@ public sealed class CommsReminderService : BackgroundService
         n += ExamSchedulingDeadline(db);
         n += ApplicationInfoRequested(db);
         n += MembershipExpired(db);
+        n += CredentialExpiry(db);
         return n;
     }
+
+    // Active credentials within 90 days of their recertification date — one reminder per credential+expiry.
+    // Mirrors MembershipExpiry: recert is a paid renewal, so proactive outreach protects both the holder's
+    // continuous certification and the recertification revenue line. The public verifier already computes
+    // expiry live; this only nudges the holder while there is still time to recertify.
+    static int CredentialExpiry(Db db)
+    {
+        var rows = db.Query(@"SELECT c.credential_id, c.credential, c.expires_at, u.id user_id, u.email, u.first_name
+            FROM issued_credentials c JOIN users u ON u.id=c.user_id
+            WHERE c.status='active' AND c.expires_at IS NOT NULL
+              AND c.expires_at <= datetime('now','+90 day') AND c.expires_at > datetime('now')
+              AND u.status='active'");
+        var n = 0;
+        foreach (var r in rows)
+        {
+            var uid = H.L(r["user_id"]);
+            var expiry = H.Str(r["expires_at"]) ?? "";
+            var when = expiry.Length >= 10 ? expiry[..10] : expiry;
+            var credId = H.Str(r["credential_id"]) ?? "";
+            var credName = H.Str(r["credential"]) ?? "your PCI credential";
+            try
+            {
+                Comms.Fire(db, "cert.recert_due", uid, H.Str(r["email"]), null,
+                    new Dictionary<string, string?>
+                    {
+                        ["student_name"] = H.Str(r["first_name"]) ?? "there",
+                        ["credential"] = credName,
+                        ["credential_id"] = credId,
+                        ["expiry_date"] = when,
+                        ["portal_link"] = "/app/billing",
+                    },
+                    "Your PCI credential is due for recertification",
+                    $"<p>Your {WebUtils(credName)} ({WebUtils(credId)}) is valid until {when}. Recertify from your portal to keep your credential active without a lapse.</p>",
+                    dedupSuffix: $"credexpiry:{credId}:{when}");
+                n++;
+            }
+            catch { }
+        }
+        return n;
+    }
+
+    static string WebUtils(string s) => System.Net.WebUtility.HtmlEncode(s);
 
     // Applications waiting on the candidate (status info_requested) for more than 7 days — one nudge each.
     static int ApplicationInfoRequested(Db db)

@@ -32,6 +32,26 @@ export default function Credentials() {
       <p class="muted" style="text-align:center;margin-top:1.5rem">${t('cred.verifyAt', { url: verifyUrl })}</p>`)
   }
 
+  // LinkedIn "Add to Profile" — LinkedIn's official certification deep-link (no API, no scraping, no OAuth).
+  // Pre-fills the holder's Licenses & Certifications entry with the credential name, PCI as the issuing
+  // organisation, the issue/expiry dates, the credential id and the public verification URL. Every credential
+  // holder who adds it becomes organic reach for the certification.
+  const ORG_NAME = 'Project Controls Institute'
+  const addToLinkedIn = (c: Credential) => {
+    const name = c.certification_name || c.credential || c.credential_id
+    const verifyUrl = `${me.site_base_url || location.origin}/verify.html?id=${encodeURIComponent(c.credential_id)}`
+    const ym = (d?: string | null) => {
+      if (!d) return {}
+      const dt = new Date(d)
+      return isNaN(dt.getTime()) ? {} : { year: String(dt.getUTCFullYear()), month: String(dt.getUTCMonth() + 1) }
+    }
+    const iss = ym(c.issued_at), exp = ym(c.expires_at)
+    const p = new URLSearchParams({ startTask: 'CERTIFICATION_NAME', name, organizationName: ORG_NAME, certUrl: verifyUrl, certId: c.credential_id })
+    if (iss.year) { p.set('issueYear', iss.year); p.set('issueMonth', iss.month!) }
+    if (exp.year) { p.set('expirationYear', exp.year); p.set('expirationMonth', exp.month!) }
+    window.open('https://www.linkedin.com/profile/add?' + p.toString(), '_blank', 'noopener,noreferrer')
+  }
+
   // Fetch the official, QR-bearing PDF certificate (authenticated) and save it. This is the real
   // downloadable document; the printable above remains as a quick on-screen view.
   const downloadPdf = async (id: string, honorary = false) => {
@@ -101,6 +121,7 @@ export default function Credentials() {
                   <button className="btn sm" onClick={() => downloadPdf(c.credential_id)}>Download PDF</button>
                   <button className="btn sm secondary" onClick={() => certificate(c)}>{t('cred.downloadCertificate')}</button>
                   <a className="btn sm secondary" href={`/verify.html?id=${encodeURIComponent(c.credential_id)}`} target="_blank" rel="noreferrer">{t('cred.publicVerifyPage')}</a>
+                  <button className="btn sm secondary" onClick={() => addToLinkedIn(c)} title="Add this credential to your LinkedIn profile">Add to LinkedIn</button>
                 </div>
               )}
             </Card>
