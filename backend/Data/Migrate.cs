@@ -1113,6 +1113,24 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_social_drafts_status ON social_drafts(status)");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_default_base_urls','')");
 
+        // Content Syndication (Phase 3) — outbound publishing to partner CMS platforms whose official APIs need
+        // no provider review (WordPress self-hosted, Ghost, Forem/DEV). Credentials ENCRYPTED at rest, never
+        // returned. Every syndicated copy sets its canonical back to the PCI article, so duplicate content is
+        // consolidated to the original. cc_* namespaced to avoid colliding with the Marketing Centre.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_syndication_destinations(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            platform_key VARCHAR(48) NOT NULL, label VARCHAR(160), base_url VARCHAR(300), config TEXT, secret_enc TEXT,
+            mode VARCHAR(24) DEFAULT 'create', default_status VARCHAR(16) DEFAULT 'draft',
+            status VARCHAR(20) DEFAULT 'connected', last_error TEXT, connected_by INTEGER, active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_syndest_platform ON cc_syndication_destinations(platform_key)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_syndicated_posts(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            post_id INTEGER NOT NULL, destination_id INTEGER NOT NULL, external_id VARCHAR(190), external_url TEXT,
+            canonical_url TEXT, status VARCHAR(24) DEFAULT 'pending', mode VARCHAR(24), last_error TEXT,
+            provider_response TEXT, job_id INTEGER, created_by INTEGER,
+            created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_synpost_post ON cc_syndicated_posts(post_id)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_cc_synpost_dest ON cc_syndicated_posts(post_id, destination_id)");
+
         // AI Content Studio — provider/model/use-case configs (secrets stay in env, referenced by key_env) and
         // a full audit ledger of every generation (assist-only; AI never publishes autonomously).
         db.Exec(@"CREATE TABLE IF NOT EXISTS ai_content_providers(id INTEGER PRIMARY KEY AUTOINCREMENT,

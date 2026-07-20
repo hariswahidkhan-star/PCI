@@ -53,6 +53,7 @@ builder.Services.AddHostedService<PCI.Backend.Core.IntegrationDispatcher>();
 // Communications outbox worker: drains comm_outbox (email/WhatsApp/in-app) with retries + backoff.
 builder.Services.AddHostedService<PCI.Backend.Core.OutboxDispatcher>();
 builder.Services.AddHostedService<PCI.Backend.Core.SocialDispatcher>();   // Phase 2: social publish outbox
+builder.Services.AddHostedService<PCI.Backend.Core.SyndicationDispatcher>();   // Phase 3: syndication outbox
 builder.Services.AddHostedService<PCI.Backend.Core.MarketingJobDispatcher>();   // Marketing Phase 2: provider job queue
 
 var app = builder.Build();
@@ -851,6 +852,7 @@ PCI.Backend.Endpoints.PublicDocuments.Map(app, db, logFn, r => Auth.AdminFromReq
 PCI.Backend.Endpoints.CommsCentre.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.ContentCentre.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Blog CMS + SEO + AI Studio + capability registry
 PCI.Backend.Endpoints.SocialPublishing.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Phase 2: live social connectors + drafts + outbox
+PCI.Backend.Endpoints.Syndication.Map(app, db, logFn, GateFn, r => Auth.AdminFromReq(r, db));  // Phase 3: WordPress/Ghost/Forem syndication
 PCI.Backend.Endpoints.MarketingCentre.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Payments.Map(app, db, logFn, () => !string.IsNullOrEmpty(stripeKey));
 PCI.Backend.Endpoints.AdminExtra.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);

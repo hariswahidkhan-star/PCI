@@ -266,6 +266,10 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
         if "/eligibilities" in self.path: return self._send(200, {"status": "eligible", "eligible_to_schedule": True})
         if "getMe" in self.path: return self._send(200, {"ok": True, "result": {"username": "pcibot"}})       # Telegram
         if "verify_credentials" in self.path: return self._send(200, {"id": "1", "username": "pci"})          # Mastodon
+        if "/wp-json/wp/v2/users/me" in self.path: return self._send(200, {"id": 1, "name": "pci"})           # WordPress test
+        if "/ghost/api/admin/site" in self.path: return self._send(200, {"site": {"title": "PCI Ghost"}})     # Ghost test
+        if "/ghost/api/admin/posts/" in self.path: return self._send(200, {"posts": [{"id": "gh1", "updated_at": "2026-01-01T00:00:00.000Z", "url": "http://ghost.mock/p/gh1"}]})  # Ghost read-before-update
+        if "/api/users/me" in self.path: return self._send(200, {"id": 1, "username": "pci"})                 # Forem test
         return self._send(200, {"ok": True})
     def do_POST(self):
         ln = int(self.headers.get("Content-Length") or 0)
@@ -289,6 +293,10 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
         if "/discord/" in self.path: return self._send(200, {"id": "disc-msg-1"})         # Discord webhook (?wait=true)
         if "sendMessage" in self.path: return self._send(200, {"ok": True, "result": {"message_id": 7}})  # Telegram
         if "/api/v1/statuses" in self.path: return self._send(200, {"url": "https://mastodon.example/@pci/1", "id": "1"})  # Mastodon
+        if "/synfail" in self.path: return self._send(500, {"error": "simulated syndication outage"})   # syndication retry test
+        if "/wp-json/wp/v2/posts" in self.path: return self._send(201, {"id": 101, "link": "http://wp.mock/?p=101"})   # WordPress create/update
+        if "/ghost/api/admin/posts" in self.path: return self._send(201, {"posts": [{"id": "gh1", "url": "http://ghost.mock/p/gh1"}]})  # Ghost create
+        if "/api/articles" in self.path: return self._send(201, {"id": 501, "url": "http://forem.mock/a/501"})  # Forem create
         if "certuvo" in self.path or "/accounts" in self.path:                          # Certuvo account provisioning
             # PCI now OWNS the login: it sends its own username + temp_password. The vendor just opens the
             # account under those credentials and returns an opaque account id + login URL. An email marked
@@ -299,6 +307,12 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
             self._last_certuvo = body                                                    # so tests can assert what PCI sent
             _MockVendor.last_certuvo_body = body
             return self._send(201, {"id": "CV-" + str(abs(hash(body.get("username") or "x")) % 10000), "login_url": "https://certuvo.example/login"})
+        return self._send(200, {"ok": True})
+    def do_PUT(self):
+        ln = int(self.headers.get("Content-Length") or 0);  self.rfile.read(ln) if ln else None
+        if "/synfail" in self.path: return self._send(500, {"error": "simulated syndication outage"})
+        if "/ghost/api/admin/posts" in self.path: return self._send(200, {"posts": [{"id": "gh1", "url": "http://ghost.mock/p/gh1"}]})  # Ghost update
+        if "/api/articles" in self.path: return self._send(200, {"id": 501, "url": "http://forem.mock/a/501"})  # Forem update
         return self._send(200, {"ok": True})
     def do_PATCH(self):
         ln = int(self.headers.get("Content-Length") or 0);  self.rfile.read(ln) if ln else None
@@ -1722,6 +1736,71 @@ def test_social_publishing(admin):
     chk("21p social API requires authentication (401)", c == 401, c)
     srv.shutdown()
 
+def test_syndication(admin):
+    print("\n=== 22. Content syndication (WordPress / Ghost / Forem) ===")
+    srv, port = start_mock_vendor()
+    base = f"http://127.0.0.1:{port}"
+    pid, slug = _make_published_post(admin, "Syndication Launch Post")
+
+    def connect(p): return jget("POST", "/api/admin/content/syndication/destinations", token=admin, body=p)
+    c, wp = connect({"platform_key": "wordpress_selfhosted", "label": "PCI WP", "base_url": base, "username": "pciadmin", "secret": "app-pass-123", "mode": "create_update", "default_status": "published"})
+    chk("22a connect WordPress destination", c == 200 and wp.get("id"), wp)
+    c, gh = connect({"platform_key": "ghost", "label": "PCI Ghost", "base_url": base, "secret": "6412ab:" + "ab" * 32, "default_status": "published"})
+    c2, fo = connect({"platform_key": "forem_dev", "label": "PCI DEV", "base_url": base, "secret": "forem-key", "default_status": "published"})
+    chk("22b connect Ghost + Forem destinations", c == 200 and c2 == 200, (c, c2))
+
+    c, dl = jget("GET", "/api/admin/content/syndication/destinations", token=admin)
+    rows = dl.get("rows", [])
+    chk("22c destination list redacts secrets", all("secret" not in r and "secret_enc" not in r for r in rows) and all(r.get("has_secret") for r in rows), rows[:1])
+
+    c, t = jget("POST", f"/api/admin/content/syndication/destinations/{fo.get('id')}/test", token=admin)
+    chk("22d Forem test connection succeeds", c == 200 and t.get("ok"), t)
+
+    c, li = connect({"platform_key": "wordpress_com", "label": "x", "base_url": base, "secret": "y"})
+    chk("22e approval-gated destination refused (requires_approval)", c == 400 and li.get("error") == "requires_approval", li)
+
+    c, q = jget("POST", f"/api/admin/content/posts/{pid}/syndicate", token=admin)
+    chk("22f syndicate queues all active destinations", c == 200 and len(q.get("queued", [])) == 3, q)
+    c, drn = jget("POST", "/api/admin/content/syndication/drain", token=admin)
+    chk("22g dispatcher delivers the syndication jobs", c == 200 and drn.get("delivered", 0) >= 3, drn)
+
+    con = dbconn(); srows = con.execute("SELECT status, external_url, canonical_url FROM cc_syndicated_posts WHERE post_id=?", (pid,)).fetchall(); con.close()
+    chk("22h syndicated copies are published with an external URL", len(srows) == 3 and all(r[0] == "published" and (r[1] or "") for r in srows), srows)
+    chk("22i canonical points back to the PCI article", all((r[2] or "").endswith("/" + slug) for r in srows), [r[2] for r in srows])
+
+    c, q2 = jget("POST", f"/api/admin/content/posts/{pid}/syndicate", token=admin)
+    chk("22j re-syndicate (same version) is idempotent (not re-queued)", c == 200 and len(q2.get("queued", [])) == 0, q2)
+
+    # editing bumps the post version → re-syndicating updates the existing external copies
+    jget("PATCH", f"/api/admin/content/posts/{pid}", token=admin, body={"summary": "Updated summary for re-syndication."})
+    c, q3 = jget("POST", f"/api/admin/content/posts/{pid}/syndicate", token=admin)
+    jget("POST", "/api/admin/content/syndication/drain", token=admin)
+    con = dbconn(); upd = con.execute("SELECT COUNT(*) FROM cc_syndicated_posts WHERE post_id=? AND status='updated'", (pid,)).fetchone()[0]; con.close()
+    chk("22k editing + re-syndicating updates the external copies", len(q3.get("queued", [])) == 3 and upd >= 1, (q3.get("queued"), upd))
+
+    # token encrypted at rest
+    con = dbconn(); sec = con.execute("SELECT secret_enc FROM cc_syndication_destinations WHERE id=?", (gh.get("id"),)).fetchone()[0]; con.close()
+    chk("22l destination credentials are encrypted at rest", sec.startswith("enc:v1:") and "ab" * 32 not in sec, sec[:12])
+
+    # failure path: a broken destination fails/retries; the SOURCE article is untouched
+    c, bad = connect({"platform_key": "forem_dev", "label": "Broken DEV", "base_url": base + "/synfail", "secret": "k", "default_status": "published"})
+    for d in (wp.get("id"), gh.get("id"), fo.get("id")):
+        jget("POST", f"/api/admin/content/syndication/destinations/{d}/disconnect", token=admin)
+    pid2, slug2 = _make_published_post(admin, "Second Syndication Post")
+    c, q4 = jget("POST", f"/api/admin/content/posts/{pid2}/syndicate", token=admin)
+    chk("22m syndicate targets only the active destination", len(q4.get("queued", [])) == 1, q4)
+    jget("POST", "/api/admin/content/syndication/drain", token=admin)
+    con = dbconn()
+    frow = con.execute("SELECT status FROM cc_syndicated_posts WHERE post_id=?", (pid2,)).fetchone()
+    prow = con.execute("SELECT status, published FROM blog_posts WHERE id=?", (pid2,)).fetchone()
+    con.close()
+    chk("22n failed syndication marks the row retrying/failed", frow and frow[0] in ("retrying", "failed"), frow)
+    chk("22o a failed syndication never unpublishes the source article", prow and prow[0] == "published" and prow[1] == 1, prow)
+
+    c, _ = jget("GET", "/api/admin/content/syndication/destinations")
+    chk("22p syndication API requires authentication (401)", c == 401, c)
+    srv.shutdown()
+
 def run(proc):
     admin = admin_login()
     widen_window(admin)
@@ -2475,6 +2554,7 @@ def run(proc):
     test_exam_exceptions(admin)
     test_content_centre(admin)
     test_social_publishing(admin)
+    test_syndication(admin)
 
     print("\n(assertions complete)")
 
