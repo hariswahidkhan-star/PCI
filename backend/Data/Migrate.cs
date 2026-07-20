@@ -1202,10 +1202,28 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_backlink_status ON cc_backlinks(status, active)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_cc_backlink_hash ON cc_backlinks(link_hash)");
 
+        // Read-only analytics connectors (Phase 6) — pull search/traffic metrics from providers whose official
+        // APIs are read-only: Google Search Console, Bing Webmaster Tools, Google Analytics 4. This surface
+        // only READS; nothing is written back to any provider. Credentials (a bearer OAuth token for Google,
+        // an API key for Bing) are stored encrypted (secret_enc), never returned to the browser, and every
+        // call goes through the SSRF-guarded egress client. cc_* namespaced; gated by the cc_seo permission.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_analytics_sources(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            provider VARCHAR(16) NOT NULL, label VARCHAR(160), property VARCHAR(300), api_base VARCHAR(300),
+            auth_kind VARCHAR(16) DEFAULT 'bearer', secret_enc TEXT, range_days INTEGER DEFAULT 28,
+            status VARCHAR(16) DEFAULT 'not_connected', active INTEGER DEFAULT 1, last_synced_at TEXT, last_error TEXT,
+            created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_ansrc_provider ON cc_analytics_sources(provider, active)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_analytics_metrics(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            source_id INTEGER NOT NULL, dimension VARCHAR(16) NOT NULL, dim_value VARCHAR(400), metric_date VARCHAR(12),
+            clicks INTEGER, impressions INTEGER, ctr REAL, position REAL, sessions INTEGER, users INTEGER, pageviews INTEGER,
+            fetched_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_anmetric_source ON cc_analytics_metrics(source_id, dimension)");
+
         // Configurable defaults (operator-tunable via Settings; no hardcoded values in React/.NET) + the
         // content-centre notification master toggle.
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('backlink_our_domain','projectcontrolsinstitute.org')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('backlink_verify_enabled','1')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('analytics_default_range_days','28')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_base_path','/blog')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_posts_per_page','12')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_indexnow_on_publish','1')");

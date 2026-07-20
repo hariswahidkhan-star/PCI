@@ -20,7 +20,7 @@ interface Author { id: number; slug: string; name: string; title?: string; activ
 interface Category { id: number; slug: string; name: string; active: number }
 interface Capability { id: number; platform_key: string; platform: string; kind: string; capability: string; publish_mode?: string; requires_approval: number; official_api: number; connected: boolean; notes?: string; doc_url?: string }
 
-const TABS = ['Dashboard', 'Blog posts', 'Taxonomy', 'Social', 'Syndication', 'Import', 'Backlinks', 'Distribution', 'AI Studio'] as const
+const TABS = ['Dashboard', 'Blog posts', 'Taxonomy', 'Social', 'Syndication', 'Import', 'Backlinks', 'Analytics', 'Distribution', 'AI Studio'] as const
 
 export default function ContentCentre() {
   const { can } = useAdminAuth()
@@ -41,6 +41,7 @@ export default function ContentCentre() {
       {tab === 'Syndication' && <SyndicationTab canSyndicate={can('cc_syndicate')} />}
       {tab === 'Import' && <ImportTab canReview={can('cc_review')} canLegal={can('cc_legal')} />}
       {tab === 'Backlinks' && <BacklinksTab canManage={can('cc_backlinks')} />}
+      {tab === 'Analytics' && <AnalyticsTab canManage={can('cc_seo')} />}
       {tab === 'Distribution' && <DistributionTab />}
       {tab === 'AI Studio' && <AiTab />}
     </div>
@@ -650,6 +651,86 @@ function BacklinksTab({ canManage }: { canManage: boolean }) {
           </table>
         )}
       </Card>
+    </div>
+  )
+}
+
+interface AnSource { id: number; provider: string; label?: string; property?: string; api_base?: string; auth_kind: string; range_days: number; status: string; last_synced_at?: string | null; last_error?: string | null; has_secret: boolean }
+interface AnTotal { source_id: number; provider: string; label?: string; status: string; clicks?: number | null; impressions?: number | null; ctr?: number | null; position?: number | null; sessions?: number | null; users?: number | null; pageviews?: number | null; last_synced_at?: string | null }
+interface AnMetric { id: number; source_id: number; dimension: string; dim_value?: string | null; metric_date?: string | null; clicks?: number | null; impressions?: number | null; ctr?: number | null; position?: number | null; sessions?: number | null; users?: number | null; pageviews?: number | null }
+
+const AN_PROVIDERS = [{ v: 'gsc', l: 'Google Search Console' }, { v: 'bing', l: 'Bing Webmaster Tools' }, { v: 'ga4', l: 'Google Analytics 4' }]
+
+function AnalyticsTab({ canManage }: { canManage: boolean }) {
+  const overview = useAdminQuery<{ sources: AnSource[]; totals: AnTotal[] }>('/api/admin/content/analytics/overview')
+  const [f, setF] = useState<Record<string, string>>({ provider: 'gsc' })
+  const [openSource, setOpenSource] = useState<number | null>(null)
+  const metrics = useAdminQuery<{ rows: AnMetric[] }>(openSource ? `/api/admin/content/analytics/metrics?source_id=${openSource}&dimension=query` : null)
+  const [msg, setMsg] = useState('')
+
+  async function call(fn: () => Promise<unknown>, then?: () => void) { setMsg(''); try { await fn(); then?.() } catch (e) { setMsg((e as Error).message) } }
+  const add = () => call(() => adminApi.post('/api/admin/content/analytics/sources', { provider: f.provider, label: f.label, property: f.property, api_base: f.api_base, secret: f.secret, range_days: f.range_days ? Number(f.range_days) : undefined }), () => { setF({ provider: 'gsc' }); overview.refetch() })
+  const sync = (id: number) => call(() => adminApi.post(`/api/admin/content/analytics/sources/${id}/sync`, {}), () => { overview.refetch(); if (openSource === id) metrics.refetch() })
+
+  const totalFor = (id: number) => overview.data?.totals.find((t) => t.source_id === id)
+  const isSearch = (p: string) => p === 'gsc' || p === 'bing'
+
+  return (
+    <div style={{ display: 'grid', gap: '1rem' }}>
+      <p className="muted" style={{ margin: 0 }}>Read-only search &amp; traffic analytics. PCI connects to providers whose official APIs are read-only — Google Search Console, Bing Webmaster Tools and Google Analytics 4 — and only ever <strong>reads</strong>: nothing is written back. Credentials are stored encrypted and never shown again. Google access tokens are short-lived; mint one via a service account or OAuth and re-paste it when a sync reports an auth error (automatic refresh is a planned follow-up).</p>
+      {msg && <ErrorNote>{msg}</ErrorNote>}
+
+      {canManage && (
+        <Card title="Connect an analytics source">
+          <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'end' }}>
+            <label>Provider<select value={f.provider} onChange={(e) => setF({ ...f, provider: e.target.value })}>{AN_PROVIDERS.map((p) => <option key={p.v} value={p.v}>{p.l}</option>)}</select></label>
+            <label>Label<input value={f.label || ''} onChange={(e) => setF({ ...f, label: e.target.value })} placeholder="PCI — production" /></label>
+            <label style={{ minWidth: 220 }}>{f.provider === 'ga4' ? 'GA4 property id' : 'Site URL'}<input value={f.property || ''} onChange={(e) => setF({ ...f, property: e.target.value })} placeholder={f.provider === 'ga4' ? '123456789' : 'https://projectcontrolsinstitute.org/'} /></label>
+            <label style={{ minWidth: 180 }}>{f.provider === 'bing' ? 'API key' : 'Access token'}<input type="password" value={f.secret || ''} onChange={(e) => setF({ ...f, secret: e.target.value })} placeholder="write-only" /></label>
+            <label style={{ width: 90 }}>Days<input type="number" value={f.range_days || ''} onChange={(e) => setF({ ...f, range_days: e.target.value })} placeholder="28" /></label>
+            <button className="btn sm" onClick={add} disabled={!f.provider || !f.property}>Connect</button>
+          </div>
+          <details style={{ marginTop: '.5rem' }}><summary className="muted" style={{ cursor: 'pointer' }}>Advanced</summary>
+            <label style={{ display: 'block', marginTop: '.4rem' }}>API base override (optional)<input value={f.api_base || ''} onChange={(e) => setF({ ...f, api_base: e.target.value })} placeholder="leave blank for the provider default" style={{ width: '100%' }} /></label>
+          </details>
+        </Card>
+      )}
+
+      <Card title="Sources">
+        {overview.loading ? <Spinner /> : !overview.data?.sources.length ? <Empty>No analytics sources connected</Empty> : (
+          <table className="tbl"><thead><tr><th>Source</th><th>Status</th><th>Totals (window)</th><th>Last sync</th><th></th></tr></thead>
+            <tbody>{overview.data.sources.map((s) => { const t = totalFor(s.id); return (
+              <tr key={s.id}>
+                <td>{s.label || s.provider.toUpperCase()}<div className="muted" style={{ fontSize: '.76rem' }}>{AN_PROVIDERS.find((p) => p.v === s.provider)?.l || s.provider} · {s.property}</div></td>
+                <td><StatusPill status={s.status} />{!s.has_secret ? <div className="muted" style={{ fontSize: '.72rem' }}>no credential</div> : null}{s.last_error ? <div style={{ color: 'var(--err,#b00)', fontSize: '.72rem' }}>{s.last_error}</div> : null}</td>
+                <td className="muted" style={{ fontSize: '.8rem' }}>{t && isSearch(s.provider) ? <span>{t.clicks ?? 0} clicks · {t.impressions ?? 0} impr{t.position != null ? ` · pos ${Number(t.position).toFixed(1)}` : ''}</span> : t && s.provider === 'ga4' ? <span>{t.sessions ?? 0} sessions · {t.users ?? 0} users · {t.pageviews ?? 0} views</span> : '—'}</td>
+                <td className="muted" style={{ fontSize: '.78rem' }}>{s.last_synced_at || 'never'}</td>
+                <td>{canManage ? <span className="row" style={{ gap: '.3rem' }}>
+                  <button className="btn sm" onClick={() => sync(s.id)} disabled={!s.has_secret}>Sync</button>
+                  {isSearch(s.provider) ? <button className="btn sm ghost" onClick={() => setOpenSource(openSource === s.id ? null : s.id)}>Queries</button> : null}
+                  <button className="btn sm ghost" onClick={() => call(() => adminApi.post(`/api/admin/content/analytics/sources/${s.id}/delete`, {}), overview.refetch)}>Remove</button>
+                </span> : null}</td>
+              </tr>) })}</tbody>
+          </table>
+        )}
+      </Card>
+
+      {openSource && (
+        <Card title="Top queries" action={<button className="btn sm ghost" onClick={() => setOpenSource(null)}>Close</button>}>
+          {metrics.loading ? <Spinner /> : !metrics.data?.rows.length ? <Empty>No query data — run a sync first</Empty> : (
+            <table className="tbl"><thead><tr><th>Query</th><th>Clicks</th><th>Impressions</th><th>CTR</th><th>Position</th></tr></thead>
+              <tbody>{metrics.data.rows.map((m) => (
+                <tr key={m.id}>
+                  <td>{m.dim_value}</td>
+                  <td>{m.clicks ?? 0}</td>
+                  <td>{m.impressions ?? 0}</td>
+                  <td>{m.ctr != null ? (Number(m.ctr) * 100).toFixed(1) + '%' : '—'}</td>
+                  <td>{m.position != null ? Number(m.position).toFixed(1) : '—'}</td>
+                </tr>))}</tbody>
+            </table>
+          )}
+        </Card>
+      )}
     </div>
   )
 }
