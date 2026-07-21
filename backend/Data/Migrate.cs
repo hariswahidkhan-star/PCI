@@ -787,8 +787,15 @@ public static class Migrate
             // Mandatory "AI-currency" component of the CPD requirement (0 = none): a portion of the required
             // hours that must be in the AI-currency category, keeping AI knowledge current (CPD framework).
             ("cpd_ai_hours_required","cpd_ai_hours_required REAL DEFAULT 0"),
+            // Optional Credly badge-template id — maps this certification to a Credly badge template so
+            // earned credentials can be exported to the Credly network (in addition to PCI's native badges).
+            ("credly_template_id","credly_template_id VARCHAR(64)"),
         })
             AddCol("certifications", col, ddl);
+        // Credly export tracking on each issued credential (empty until pushed). credly_state: issued|revoked|error.
+        AddCol("issued_credentials", "credly_badge_id", "credly_badge_id VARCHAR(64)");
+        AddCol("issued_credentials", "credly_state", "credly_state VARCHAR(16)");
+        AddCol("issued_credentials", "credly_error", "credly_error TEXT");
 
         // ── Per-certification documents, books & study materials (Phase 8) ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS cert_documents(

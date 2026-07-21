@@ -201,7 +201,9 @@ public static class AdminMgmt
                 // Certuvo mapping (Phase 8)
                 "certuvo_enabled","certuvo_product",
                 // CPD requirement per recertification cycle (0 = none) + mandatory AI-currency component
-                "cpd_required_hours","cpd_ai_hours_required" };
+                "cpd_required_hours","cpd_ai_hours_required",
+                // Credly badge-template mapping for the optional network export
+                "credly_template_id" };
             var set = allowed.Where(c => b.ContainsKey(c)).ToList();
             if (id == 1 && set.Contains("active") && !JsonFlag(b["active"]))
                 return Results.Json(new { error = "founding_cert_permanent", message = "The founding certification cannot be deactivated." }, statusCode: 400);
@@ -509,7 +511,36 @@ public static class AdminMgmt
                 return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
             db.Execute("UPDATE issued_credentials SET status=? WHERE id=?", status, id);
             log(adminFromReq(req)?.Id, "credential_" + status, id.ToString());
+            // Mirror the change to the Credly network when that export is configured (best-effort, non-blocking
+            // to the response contract): revoke on the network when revoked, (re)issue when set active.
+            if (CredlyConnector.Enabled)
+            {
+                try { if (status == "revoked") await CredlyConnector.RevokeBadge(db, id); else if (status == "active") await CredlyConnector.IssueBadge(db, id); } catch { }
+            }
             return J(new { ok = true });
+        });
+
+        // ── Credly network export (optional; env-gated) ──
+        app.MapGet("/api/admin/credly/status", (HttpRequest req) => gate(req, "credentials", _ =>
+            J(new { configured = CredlyConnector.Enabled, api_base = CredlyConnector.ApiBase })));
+
+        app.MapPost("/api/admin/credentials/{id}/credly", async (HttpRequest req, long id) =>
+        {
+            var g = Deny(req, "credentials"); if (g is not null) return g;
+            if (!CredlyConnector.Enabled) return Results.Json(new { error = "credly_not_configured", message = "Set CREDLY_API_TOKEN and CREDLY_ORG_ID to enable Credly export." }, statusCode: 503);
+            var b = await H.Body(req); var action = H.GetS(b, "action") ?? "push";
+            var res = action == "revoke" ? await CredlyConnector.RevokeBadge(db, id) : await CredlyConnector.IssueBadge(db, id);
+            log(adminFromReq(req)?.Id, "credly_" + action, id.ToString());
+            return res.Ok ? J(new { ok = true, badge_id = res.BadgeId }) : Results.Json(new { error = "credly_failed", message = res.Error }, statusCode: 400);
+        });
+
+        app.MapPost("/api/admin/credly/sync", async (HttpRequest req) =>
+        {
+            var g = Deny(req, "credentials"); if (g is not null) return g;
+            if (!CredlyConnector.Enabled) return Results.Json(new { error = "credly_not_configured", message = "Set CREDLY_API_TOKEN and CREDLY_ORG_ID to enable Credly export." }, statusCode: 503);
+            var (pushed, failed, _) = await CredlyConnector.SyncPending(db);
+            log(adminFromReq(req)?.Id, "credly_sync", $"pushed {pushed}, failed {failed}");
+            return J(new { ok = true, pushed, failed });
         });
 
         // ---------- inquiries ----------

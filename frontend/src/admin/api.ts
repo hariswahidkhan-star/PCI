@@ -110,6 +110,7 @@ export interface CertRow {
   expiry_years?: number | null
   cpd_required_hours?: number | null
   cpd_ai_hours_required?: number | null
+  credly_template_id?: string | null
   exam_price?: number | null
   active?: number | null
   sort_order?: number | null

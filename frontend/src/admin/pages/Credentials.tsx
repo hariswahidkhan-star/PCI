@@ -43,6 +43,41 @@ function IssueForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => v
   )
 }
 
+// Optional Credly-network export status + bulk sync. Shows nothing intrusive when not configured.
+function CredlyPanel() {
+  const { data } = useAdminQuery<{ configured: boolean }>('/api/admin/credly/status')
+  const [busy, setBusy] = useState(false)
+  const [note, setNote] = useState<string | null>(null)
+  if (!data) return null
+  async function sync() {
+    setBusy(true); setNote(null)
+    try {
+      const r = await adminApi.post<{ pushed: number; failed: number }>('/api/admin/credly/sync', {})
+      setNote(`Pushed ${r.pushed} credential(s) to Credly${r.failed ? `, ${r.failed} failed` : ''}.`)
+    } catch (e) {
+      setNote(e instanceof Error ? e.message : 'Sync failed.')
+    } finally { setBusy(false) }
+  }
+  return (
+    <Card title="Credly network export">
+      {data.configured ? (
+        <div className="row" style={{ flexWrap: 'wrap', gap: '.5rem', alignItems: 'center' }}>
+          <StatusBadge status="active" />
+          <span className="small muted">Earned credentials with a mapped Credly badge-template are exported to Credly. Revocations propagate automatically.</span>
+          <button className="btn sm" disabled={busy} onClick={sync}>{busy ? 'Syncing…' : 'Sync pending to Credly'}</button>
+          {note && <span className="small">{note}</span>}
+        </div>
+      ) : (
+        <div className="small muted">
+          PCI issues its own verifiable badges (Open Badges) already. To ALSO push badges to the Credly network,
+          set <code>CREDLY_API_TOKEN</code> and <code>CREDLY_ORG_ID</code> in the environment and map each
+          certification to a Credly badge-template ID (in the certification editor).
+        </div>
+      )}
+    </Card>
+  )
+}
+
 export default function Credentials() {
   const [status, setStatus] = useState('')
   const [q, setQ] = useState('')
@@ -94,6 +129,8 @@ export default function Credentials() {
         <h1>Credentials</h1>
         <button className="btn sm" onClick={() => setIssuing(true)}>Issue credential</button>
       </div>
+
+      <CredlyPanel />
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap' }}>

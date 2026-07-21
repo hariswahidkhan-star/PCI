@@ -63,6 +63,7 @@ function Editor({ initial, onClose, onSaved }: { initial: Draft | null; onClose:
         expiry_years: d.expiry_years,
         cpd_required_hours: d.cpd_required_hours,
         cpd_ai_hours_required: d.cpd_ai_hours_required,
+        credly_template_id: d.credly_template_id,
         exam_price: d.exam_price,
         application_fee: d.application_fee,
         membership_required: !!d.membership_required,
@@ -128,6 +129,7 @@ function Editor({ initial, onClose, onSaved }: { initial: Draft | null; onClose:
           <div className="field"><label>Expiry (years)</label><input type="number" value={d.expiry_years ?? ''} onChange={(e) => set('expiry_years', num(e.target.value))} /></div>
           <div className="field"><label>CPD required to recertify (hours) — 0 = none</label><input type="number" min="0" step="1" value={d.cpd_required_hours ?? ''} onChange={(e) => set('cpd_required_hours', num(e.target.value))} /></div>
           <div className="field"><label>…of which AI-currency hours (mandatory component)</label><input type="number" min="0" step="1" value={d.cpd_ai_hours_required ?? ''} onChange={(e) => set('cpd_ai_hours_required', num(e.target.value))} /></div>
+          <div className="field"><label>Credly badge-template ID (optional export)</label><input value={d.credly_template_id ?? ''} onChange={(e) => set('credly_template_id', e.target.value)} placeholder="Credly template UUID" /></div>
           <div className="field"><label>Membership required</label>
             <select value={d.membership_required ? '1' : '0'} onChange={(e) => set('membership_required', e.target.value === '1' ? 1 : 0)}>
               <option value="0">No</option>
