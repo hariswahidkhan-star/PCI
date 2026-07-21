@@ -104,6 +104,17 @@ public static class Migrate
             reviewed_by INTEGER,reviewed_at TEXT,admin_note TEXT,created_at TEXT DEFAULT (datetime('now')),decided_at TEXT)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_mupgrade_user ON membership_upgrades(user_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_mupgrade_status ON membership_upgrades(status)");
+        // Member events & webinars (CPD-earning). event_type: webinar | workshop | conference | course.
+        // cpd_hours/cpd_category are credited (as an approved CPD entry) when a registrant is marked attended.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT NOT NULL,summary TEXT,description TEXT,
+            event_type TEXT DEFAULT 'webinar',starts_at TEXT,ends_at TEXT,timezone TEXT,location TEXT,join_url TEXT,capacity INTEGER DEFAULT 0,
+            cpd_hours REAL DEFAULT 0,cpd_category TEXT DEFAULT 'Events & webinars',status TEXT DEFAULT 'draft',
+            created_by INTEGER,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_events_status ON events(status)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS event_registrations(id INTEGER PRIMARY KEY AUTOINCREMENT,event_id INTEGER NOT NULL,user_id INTEGER NOT NULL,
+            status TEXT DEFAULT 'registered',registered_at TEXT DEFAULT (datetime('now')),attended_at TEXT,cpd_entry_id INTEGER)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_event_reg ON event_registrations(event_id,user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_event_reg_user ON event_registrations(user_id)");
         // fallback shape kept aligned with schema.sql (storage_ref required, data_uri nullable legacy)
         db.Exec(@"CREATE TABLE IF NOT EXISTS support_attachments(id INTEGER PRIMARY KEY AUTOINCREMENT,ticket_id INTEGER NOT NULL,user_id INTEGER,filename TEXT NOT NULL,mime TEXT,size_bytes INTEGER,sha256 TEXT,data_uri TEXT,storage_ref TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_attach_ticket ON support_attachments(ticket_id)");

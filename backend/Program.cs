@@ -938,6 +938,7 @@ PCI.Backend.Endpoints.Reviews.Map(app, db, logFn, r => Auth.AdminFromReq(r, db),
 PCI.Backend.Endpoints.Forum.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);   // public discussion forum
 PCI.Backend.Endpoints.Chat.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);    // self-hosted bot + live chat
 PCI.Backend.Endpoints.Casework.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
+PCI.Backend.Endpoints.Events.Map(app, db, logFn, GateFn);   // member events & webinars (CPD-earning)
 PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);

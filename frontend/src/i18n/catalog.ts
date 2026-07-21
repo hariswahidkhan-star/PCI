@@ -29,6 +29,7 @@ export const CATALOG: Record<string, Entry> = {
   'nav.messages': { en: 'Messages', ko: '메시지', ar: 'الرسائل', es: 'Mensajes', fr: 'Messages', zh: '消息', ru: 'Сообщения' },
   'nav.support': { en: 'Support', ko: '지원', ar: 'الدعم', es: 'Soporte', fr: 'Assistance', zh: '支持', ru: 'Поддержка' },
   'nav.appeals': { en: 'Appeals & Accommodations', ko: '이의신청 및 편의지원', ar: 'الطعون والتيسيرات', es: 'Apelaciones y adaptaciones', fr: 'Recours et aménagements', zh: '申诉与便利安排', ru: 'Апелляции и условия' },
+  'nav.events': { en: 'Events', ko: '이벤트', ar: 'الفعاليات', es: 'Eventos', fr: 'Événements', zh: '活动', ru: 'События' },
   'nav.profile': { en: 'Profile', ko: '프로필', ar: 'الملف الشخصي', es: 'Perfil', fr: 'Profil', zh: '个人资料', ru: 'Профиль' },
 
   // ---- sign in ----

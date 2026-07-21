@@ -16,6 +16,7 @@ import Documents from './pages/Documents'
 import Messages from './pages/Messages'
 import Support from './pages/Support'
 import Appeals from './pages/Appeals'
+import Events from './pages/Events'
 import Profile from './pages/Profile'
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="certuvo" element={<Certuvo />} />
           <Route path="billing" element={<Billing />} />
           <Route path="resources" element={<Resources />} />
+          <Route path="events" element={<Events />} />
           <Route path="documents" element={<Documents />} />
           <Route path="messages" element={<Messages />} />
           <Route path="support" element={<Support />} />
