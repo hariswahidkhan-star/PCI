@@ -30,6 +30,11 @@ public static class Careers
     // Applicant-tracking statuses (Increment 3). The public "My applications" view maps these to
     // candidate-friendly labels; internal notes are never candidate-visible.
     static readonly string[] AppStatuses = { "new", "reviewing", "shortlisted", "interview", "assessment", "offer", "hired", "rejected", "withdrawn", "closed" };
+    // Increment 4: admin-managed master data. Categories are fixed (they map to job_postings columns);
+    // the values within each category are configured in the Admin Panel (career_taxonomy), never hardcoded.
+    static readonly string[] TaxKinds = { "department", "sector", "experience", "location" };
+    // Candidate email templates keyed by event; each is admin-editable and can be disabled.
+    static readonly string[] TemplateKeys = { "application_received", "status_changed", "interview_scheduled", "message" };
 
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log,
         Func<HttpRequest, string, Func<AdminCtx, IResult>, IResult> gate)
@@ -83,6 +88,17 @@ public static class Careers
             return J(new { job = Row(r, true), jsonld = JobJsonLd(db, r), questions });   // jsonld = Google-for-Jobs JobPosting structured data
         });
 
+        // Admin-managed controlled vocabulary for the careers board (departments/sectors/experience/locations),
+        // so filters and the posting editor draw from configured master data rather than hardcoded lists.
+        app.MapGet("/api/careers/meta", () =>
+        {
+            var g = new Dictionary<string, List<string?>>();
+            foreach (var kind in TaxKinds)
+                g[kind] = db.Query("SELECT value FROM career_taxonomy WHERE kind=? AND active=1 ORDER BY sort_order,value", kind)
+                    .Select(r => H.Str(r["value"])).ToList();
+            return J(g);
+        });
+
         // Apply in-platform (only for postings whose apply_method is 'inplatform'). Honeypot + basic validation
         // + one application per email per posting (unique index enforces it too).
         app.MapPost("/api/careers/{id:long}/apply", async (HttpContext ctx, long id) =>
@@ -132,6 +148,7 @@ public static class Careers
             var reference = $"PCI-APP-{DateTime.UtcNow:yyyy}-{appId:D6}";
             db.Execute("UPDATE job_applications SET reference=? WHERE id=?", reference, appId);
             log(userId, "job_application", $"job {id} #{appId} {reference}");
+            Notify(db, appId, "application_received");   // best-effort candidate acknowledgement
             return J(new { ok = true, reference, message = $"Your application has been received. Your reference is {reference}." });
         });
 
@@ -239,6 +256,75 @@ public static class Careers
             return J(new { ok = true });
         }));
 
+        // ── Master data (career_taxonomy): admin-managed departments/sectors/experience/locations ──
+        app.MapGet("/api/admin/careers/taxonomy", (HttpRequest req) => gate(req, "content", _ =>
+            J(new { rows = db.Query("SELECT id,kind,value,sort_order,active FROM career_taxonomy ORDER BY kind,sort_order,value"), kinds = TaxKinds })));
+
+        app.MapPost("/api/admin/careers/taxonomy", (HttpRequest req) => gate(req, "content", adm =>
+        {
+            var b = H.Body(req).GetAwaiter().GetResult();
+            var kind = (H.GetS(b, "kind") ?? "").Trim().ToLowerInvariant();
+            if (!TaxKinds.Contains(kind)) return Results.Json(new { error = "bad_kind" }, statusCode: 400);
+            var value = (H.GetS(b, "value") ?? "").Trim();
+            if (value.Length is < 1 or > 160) return Results.Json(new { error = "bad_value", message = "Enter a value (1–160 characters)." }, statusCode: 400);
+            var order = (long)(H.GetNum(b, "sort_order") ?? 0);
+            var id = H.GetNum(b, "id");
+            if (id is > 0)
+                db.Execute("UPDATE career_taxonomy SET value=?,sort_order=?,active=? WHERE id=?",
+                    value, order, (H.GetBool(b, "active") ?? true) ? 1 : 0, (long)id.Value);
+            else
+            {
+                if (db.QueryOne("SELECT id FROM career_taxonomy WHERE kind=? AND value=?", kind, value) is not null)
+                    return Results.Json(new { error = "exists", message = "That value already exists." }, statusCode: 400);
+                db.Execute("INSERT INTO career_taxonomy(kind,value,sort_order) VALUES(?,?,?)", kind, value, order);
+            }
+            log(adm.Id, "career_taxonomy", $"{kind}:{value}");
+            return J(new { ok = true });
+        }));
+
+        app.MapPost("/api/admin/careers/taxonomy/{id:long}/delete", (HttpRequest req, long id) => gate(req, "content", adm =>
+        {
+            db.Execute("DELETE FROM career_taxonomy WHERE id=?", id);
+            log(adm.Id, "career_taxonomy_delete", id.ToString());
+            return J(new { ok = true });
+        }));
+
+        // ── Candidate email templates (admin-editable, rendered with {{placeholders}}) ──
+        app.MapGet("/api/admin/careers/templates", (HttpRequest req) => gate(req, "content", _ =>
+            J(new { rows = db.Query("SELECT id,event_key,subject,body,enabled FROM career_email_templates ORDER BY id"), keys = TemplateKeys })));
+
+        app.MapPost("/api/admin/careers/templates", (HttpRequest req) => gate(req, "content", adm =>
+        {
+            var b = H.Body(req).GetAwaiter().GetResult();
+            var key = (H.GetS(b, "event_key") ?? "").Trim();
+            if (!TemplateKeys.Contains(key)) return Results.Json(new { error = "bad_event" }, statusCode: 400);
+            var subject = (H.GetS(b, "subject") ?? "").Trim(); if (subject.Length > 300) subject = subject[..300];
+            var body = H.GetS(b, "body") ?? "";
+            var enabled = (H.GetBool(b, "enabled") ?? true) ? 1 : 0;
+            if (db.QueryOne("SELECT id FROM career_email_templates WHERE event_key=?", key) is not null)
+                db.Execute("UPDATE career_email_templates SET subject=?,body=?,enabled=?,updated_at=datetime('now') WHERE event_key=?", subject, body, enabled, key);
+            else
+                db.Execute("INSERT INTO career_email_templates(event_key,subject,body,enabled) VALUES(?,?,?,?)", key, subject, body, enabled);
+            log(adm.Id, "career_template", key);
+            return J(new { ok = true });
+        }));
+
+        // ── Recruiting analytics (read-only funnel + per-posting counts) ──
+        app.MapGet("/api/admin/careers/reports", (HttpRequest req) => gate(req, "content", _ =>
+        {
+            var byStatus = db.Query("SELECT status, COUNT(*) n FROM job_applications GROUP BY status");
+            var perJob = db.Query(@"SELECT j.id,j.title,j.job_code,j.status,
+                (SELECT COUNT(*) FROM job_applications a WHERE a.job_id=j.id) applications
+                FROM job_postings j ORDER BY applications DESC, j.id DESC LIMIT 50");
+            var totals = db.QueryOne(@"SELECT
+                (SELECT COUNT(*) FROM job_postings) postings,
+                (SELECT COUNT(*) FROM job_postings WHERE status='published') published,
+                (SELECT COUNT(*) FROM job_applications) applications,
+                (SELECT COUNT(*) FROM job_applications WHERE created_at >= datetime('now','-30 days')) applications_30d,
+                (SELECT COUNT(*) FROM job_applications WHERE status='hired') hired");
+            return J(new { totals, byStatus, perJob });
+        }));
+
         // ─────────────────────────── MEMBER (student session) ───────────────────────────
         // The signed-in member's own applications, for the portal "My applications" view.
         app.MapGet("/api/me/applications", (HttpContext ctx) =>
@@ -287,6 +373,7 @@ public static class Careers
             var from = cur is null ? null : H.Str(cur["status"]);
             db.Execute("UPDATE job_applications SET status=?, admin_note=? WHERE id=?", status, H.GetS(b, "admin_note"), id);
             Event(db, id, "status", adm, H.GetS(b, "note"), from, status, null);   // no silent status changes — every move is recorded
+            if (from != status) Notify(db, id, "status_changed");   // tell the candidate their status moved
             log(adm.Id, "job_application_" + status, id.ToString());
             return J(new { ok = true });
         }));
@@ -306,7 +393,9 @@ public static class Careers
         {
             var body = (H.GetS(H.Body(req).GetAwaiter().GetResult(), "body") ?? "").Trim();
             if (body.Length == 0) return Results.Json(new { error = "empty" }, statusCode: 400);
-            Event(db, id, "message", adm, body.Length > 5000 ? body[..5000] : body, null, null, null);
+            var msg = body.Length > 5000 ? body[..5000] : body;
+            Event(db, id, "message", adm, msg, null, null, null);
+            Notify(db, id, "message", new() { ["message"] = msg });   // email the candidate the message too
             log(adm.Id, "job_app_message", id.ToString());
             return J(new { ok = true });
         }));
@@ -318,6 +407,7 @@ public static class Careers
             var when = (H.GetS(b, "scheduled_at") ?? "").Trim();
             if (when.Length == 0) return Results.Json(new { error = "no_date" }, statusCode: 400);
             Event(db, id, "interview", adm, H.GetS(b, "body"), null, null, when);
+            Notify(db, id, "interview_scheduled", new() { ["interview_at"] = when, ["message"] = H.GetS(b, "body") ?? "" });
             log(adm.Id, "job_app_interview", id.ToString());
             return J(new { ok = true });
         }));
@@ -350,6 +440,36 @@ public static class Careers
     static void Event(Db db, long appId, string kind, AdminCtx adm, string? body, string? from, string? to, string? scheduledAt)
         => db.Execute("INSERT INTO job_app_events(application_id,kind,from_status,to_status,body,scheduled_at,actor_id,actor_name) VALUES(?,?,?,?,?,?,?,?)",
             appId, kind, from, to, string.IsNullOrWhiteSpace(body) ? null : body, scheduledAt, adm.Id, adm.Name);
+
+    /// <summary>Best-effort candidate notification: render the admin-managed template for this event and
+    /// enqueue it through the Communications Centre outbox (which the dispatcher then delivers, honouring
+    /// suppression/consent). A missing or disabled template is skipped. This NEVER throws into the caller —
+    /// a recruiting action must not fail because email is misconfigured.</summary>
+    static void Notify(Db db, long appId, string eventKey, Dictionary<string, string?>? extra = null)
+    {
+        try
+        {
+            var t = db.QueryOne("SELECT subject,body,enabled FROM career_email_templates WHERE event_key=?", eventKey);
+            if (t is null || !H.B(t["enabled"])) return;
+            var a = db.QueryOne(@"SELECT a.email,a.name,a.reference,a.status,a.user_id,j.title,j.organisation
+                FROM job_applications a JOIN job_postings j ON j.id=a.job_id WHERE a.id=?", appId);
+            if (a is null) return;
+            var email = H.Str(a["email"]);
+            if (string.IsNullOrWhiteSpace(email)) return;
+            var map = new Dictionary<string, string?>
+            {
+                ["name"] = H.Str(a["name"]), ["job_title"] = H.Str(a["title"]),
+                ["org"] = string.IsNullOrWhiteSpace(H.Str(a["organisation"])) ? "the Project Controls Institute" : H.Str(a["organisation"]),
+                ["reference"] = H.Str(a["reference"]), ["status"] = H.Str(a["status"]), ["message"] = "", ["interview_at"] = "",
+            };
+            if (extra is not null) foreach (var kv in extra) map[kv.Key] = kv.Value;
+            string Render(string? s) { s ??= ""; foreach (var kv in map) s = s.Replace("{{" + kv.Key + "}}", kv.Value ?? ""); return s; }
+            long? uid = a.TryGetValue("user_id", out var uv) && uv is not null ? H.L(uv) : null;
+            Comms.Enqueue(db, "email", $"careers:{eventKey}:{appId}:{DateTime.UtcNow.Ticks}", uid, email, null,
+                Render(H.Str(t["subject"])), Render(H.Str(t["body"])), category: "operational", triggerCode: "careers_" + eventKey);
+        }
+        catch { /* candidate notifications are best-effort — never break the recruiting action */ }
+    }
 
     // schema.org employmentType values (Google for Jobs).
     static readonly Dictionary<string, string> EmpMap = new()

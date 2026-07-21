@@ -34,9 +34,18 @@ const Q_TYPES: [string, string][] = [
 const EMPTY: Partial<Job> = { title: '', employment_type: 'full_time', remote_type: 'onsite', apply_method: 'inplatform', status: 'draft', salary_currency: 'USD', salary_period: 'year' }
 const APP_STATUSES = ['new', 'reviewing', 'shortlisted', 'interview', 'assessment', 'offer', 'hired', 'rejected', 'withdrawn', 'closed']
 interface AppEvent { id: number; kind: string; from_status?: string | null; to_status?: string | null; body?: string | null; scheduled_at?: string | null; actor_name?: string | null; created_at?: string | null }
+// Increment 4 — admin-managed master data + candidate email templates.
+interface Tax { id: number; kind: string; value: string; sort_order?: number; active?: number }
+interface Tmpl { id?: number; event_key: string; subject?: string; body?: string; enabled?: number }
+export interface TaxGroups { department: string[]; sector: string[]; experience: string[]; location: string[] }
+const TAX_KINDS: [keyof TaxGroups, string][] = [['department', 'Departments'], ['sector', 'Sectors'], ['experience', 'Experience levels'], ['location', 'Locations']]
+const TAB_LABELS: [string, string][] = [['postings', 'Postings'], ['data', 'Master data'], ['templates', 'Templates'], ['reports', 'Reports']]
+const emptyTax = (): TaxGroups => ({ department: [], sector: [], experience: [], location: [] })
 
 export default function Careers() {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Job[] }>('/api/admin/careers')
+  const taxQ = useAdminQuery<{ rows: Tax[] }>('/api/admin/careers/taxonomy')
+  const [tab, setTab] = useState('postings')
   const [edit, setEdit] = useState<Partial<Job> | null>(null)
   const [appsFor, setAppsFor] = useState<Job | null>(null)
   const [questionsFor, setQuestionsFor] = useState<Job | null>(null)
@@ -47,6 +56,9 @@ export default function Careers() {
 
   const del = (j: Job) =>
     runMutation(async () => { if (!window.confirm(`Delete "${j.title}" and its applications?`)) return; await adminApi.post(`/api/admin/careers/${j.id}/delete`, {}); refetch() })
+
+  const tax = emptyTax()
+  for (const t of taxQ.data?.rows ?? []) if (t.active !== 0 && t.kind in tax) tax[t.kind as keyof TaxGroups].push(t.value)
 
   const all = data?.rows ?? []
   const countries = Array.from(new Set(all.map((j) => j.country).filter(Boolean))) as string[]
@@ -60,9 +72,18 @@ export default function Careers() {
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       <div className="spread">
-        <div><h1>Careers</h1><p className="muted small" style={{ margin: 0 }}>Manage the public job board and review applicants.</p></div>
-        <button className="btn sm" onClick={() => setEdit({ ...EMPTY })}>New posting</button>
+        <div><h1>Careers</h1><p className="muted small" style={{ margin: 0 }}>Manage the public job board, applicants, master data and candidate notifications.</p></div>
+        {tab === 'postings' && <button className="btn sm" onClick={() => setEdit({ ...EMPTY })}>New posting</button>}
       </div>
+      <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
+        {TAB_LABELS.map(([v, l]) => (
+          <button key={v} className={`btn sm ${tab === v ? '' : 'ghost'}`} onClick={() => setTab(v)}>{l}</button>
+        ))}
+      </div>
+      {tab === 'data' && <MasterData rows={taxQ.data?.rows ?? []} loading={taxQ.loading} onChanged={taxQ.refetch} />}
+      {tab === 'templates' && <Templates />}
+      {tab === 'reports' && <Reports />}
+      {tab === 'postings' && (
       <Card>
         <div className="row" style={{ flexWrap: 'wrap', marginBottom: '.6rem', gap: '.5rem' }}>
           <input placeholder="Search title, employer, code, country…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 280 }} />
@@ -106,14 +127,15 @@ export default function Careers() {
           </table>
         )}
       </Card>
-      {edit && <JobEditor initial={edit} onClose={() => setEdit(null)} onSaved={() => { setEdit(null); refetch() }} />}
+      )}
+      {edit && <JobEditor initial={edit} tax={tax} onClose={() => setEdit(null)} onSaved={() => { setEdit(null); refetch() }} />}
       {appsFor && <Applicants job={appsFor} onClose={() => setAppsFor(null)} />}
       {questionsFor && <QuestionsEditor job={questionsFor} onClose={() => setQuestionsFor(null)} />}
     </div>
   )
 }
 
-function JobEditor({ initial, onClose, onSaved }: { initial: Partial<Job>; onClose: () => void; onSaved: () => void }) {
+function JobEditor({ initial, tax, onClose, onSaved }: { initial: Partial<Job>; tax: TaxGroups; onClose: () => void; onSaved: () => void }) {
   const [d, setD] = useState<Partial<Job>>(initial)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
@@ -139,7 +161,9 @@ function JobEditor({ initial, onClose, onSaved }: { initial: Partial<Job>; onClo
           <div className="field" style={{ gridColumn: '1 / -1' }}><label>Title</label><input value={d.title ?? ''} onChange={(e) => set('title', e.target.value)} /></div>
           <div className="field"><label>Job code <span className="muted small">(blank = auto)</span></label><input value={d.job_code ?? ''} onChange={(e) => set('job_code', e.target.value)} placeholder="auto: PCI-2026-0001" /></div>
           <div className="field"><label>Employer / organisation</label><input value={d.organisation ?? ''} onChange={(e) => set('organisation', e.target.value)} /></div>
-          <div className="field"><label>City / location</label><input value={d.location ?? ''} onChange={(e) => set('location', e.target.value)} placeholder="London" /></div>
+          <div className="field"><label>City / location</label><input list="tax-location" value={d.location ?? ''} onChange={(e) => set('location', e.target.value)} placeholder="London" />
+            <datalist id="tax-location">{tax.location.map((v) => <option key={v} value={v} />)}</datalist>
+          </div>
           <div className="field"><label>Country</label><input value={d.country ?? ''} onChange={(e) => set('country', e.target.value)} placeholder="United Kingdom" /></div>
           <div className="field"><label>Type</label>
             <select value={d.employment_type ?? 'full_time'} onChange={(e) => set('employment_type', e.target.value)}>
@@ -151,7 +175,9 @@ function JobEditor({ initial, onClose, onSaved }: { initial: Partial<Job>; onClo
               <option value="onsite">On-site</option><option value="remote">Remote</option><option value="hybrid">Hybrid</option>
             </select>
           </div>
-          <div className="field"><label>Sector</label><input value={d.sector ?? ''} onChange={(e) => set('sector', e.target.value)} placeholder="Energy, Rail…" /></div>
+          <div className="field"><label>Sector</label><input list="tax-sector" value={d.sector ?? ''} onChange={(e) => set('sector', e.target.value)} placeholder="Energy, Rail…" />
+            <datalist id="tax-sector">{tax.sector.map((v) => <option key={v} value={v} />)}</datalist>
+          </div>
           <div className="field"><label>Status</label>
             <select value={d.status ?? 'draft'} onChange={(e) => set('status', e.target.value)}>
               <option value="draft">Draft</option><option value="published">Published</option><option value="closed">Closed</option>
@@ -160,10 +186,13 @@ function JobEditor({ initial, onClose, onSaved }: { initial: Partial<Job>; onClo
           <div className="field" style={{ gridColumn: '1 / -1' }}><label>About the role</label><textarea rows={4} value={d.description ?? ''} onChange={(e) => set('description', e.target.value)} /></div>
           <div className="field" style={{ gridColumn: '1 / -1' }}><label>Responsibilities</label><textarea rows={3} value={d.responsibilities ?? ''} onChange={(e) => set('responsibilities', e.target.value)} /></div>
           <div className="field" style={{ gridColumn: '1 / -1' }}><label>Requirements</label><textarea rows={3} value={d.requirements ?? ''} onChange={(e) => set('requirements', e.target.value)} /></div>
-          <div className="field"><label>Department</label><input value={d.department ?? ''} onChange={(e) => set('department', e.target.value)} placeholder="Cost & Commercial" /></div>
+          <div className="field"><label>Department</label><input list="tax-department" value={d.department ?? ''} onChange={(e) => set('department', e.target.value)} placeholder="Cost & Commercial" />
+            <datalist id="tax-department">{tax.department.map((v) => <option key={v} value={v} />)}</datalist>
+          </div>
           <div className="field"><label>Experience level</label>
             <select value={d.experience_level ?? ''} onChange={(e) => set('experience_level', e.target.value)}>
-              <option value="">—</option><option value="entry">Entry</option><option value="junior">Junior</option><option value="mid">Mid</option><option value="senior">Senior</option><option value="lead">Lead</option><option value="principal">Principal</option><option value="director">Director</option>
+              <option value="">—</option>
+              {(tax.experience.length ? tax.experience : ['entry', 'junior', 'mid', 'senior', 'lead', 'principal', 'director']).map((v) => <option key={v} value={v}>{v}</option>)}
             </select>
           </div>
           <div className="field"><label>Vacancies</label><input type="number" value={d.vacancies ?? ''} onChange={(e) => set('vacancies', num(e.target.value) as number)} placeholder="1" /></div>
@@ -328,6 +357,131 @@ function ApplicantDetail({ app, onChanged }: { app: Application; onChanged: () =
 function parseAnswers(json?: string | null): { label: string; value: string }[] {
   if (!json) return []
   try { const a = JSON.parse(json); return Array.isArray(a) ? a : [] } catch { return [] }
+}
+
+// ── Master data: admin-managed departments / sectors / experience levels / locations. These feed the
+// posting editor's pick-lists so the vocabulary is controlled from the Admin Panel, not hardcoded. ──
+function MasterData({ rows, loading, onChanged }: { rows: Tax[]; loading: boolean; onChanged: () => void }) {
+  const [adding, setAdding] = useState<Record<string, string>>({})
+  const add = (kind: keyof TaxGroups) =>
+    runMutation(async () => {
+      const value = (adding[kind] ?? '').trim(); if (!value) return
+      await adminApi.post('/api/admin/careers/taxonomy', { kind, value })
+      setAdding((p) => ({ ...p, [kind]: '' })); onChanged()
+    })
+  const toggle = (t: Tax) => runMutation(async () => { await adminApi.post('/api/admin/careers/taxonomy', { id: t.id, kind: t.kind, value: t.value, active: t.active === 0 ? 1 : 0 }); onChanged() })
+  const del = (t: Tax) => runMutation(async () => { if (!window.confirm(`Remove "${t.value}"?`)) return; await adminApi.post(`/api/admin/careers/taxonomy/${t.id}/delete`, {}); onChanged() })
+  return (
+    <Card>
+      <p className="muted small" style={{ marginTop: 0 }}>Configure the pick-lists offered when creating a posting. Values are suggested to editors; they can still type a one-off value on a specific role.</p>
+      {loading ? <Spinner /> : (
+        <div className="grid cols-2" style={{ gap: '1rem' }}>
+          {TAX_KINDS.map(([kind, label]) => {
+            const items = rows.filter((r) => r.kind === kind)
+            return (
+              <div key={kind} className="field">
+                <label>{label}</label>
+                <div className="stack" style={{ display: 'grid', gap: '.3rem', marginBottom: '.4rem' }}>
+                  {items.length === 0 && <div className="muted small">None yet.</div>}
+                  {items.map((t) => (
+                    <div key={t.id} className="spread" style={{ alignItems: 'center', gap: '.4rem' }}>
+                      <span className={t.active === 0 ? 'muted' : ''} style={{ textDecoration: t.active === 0 ? 'line-through' : 'none' }}>{t.value}</span>
+                      <div className="row" style={{ gap: '.2rem' }}>
+                        <button className="btn ghost sm" onClick={() => toggle(t)}>{t.active === 0 ? 'Enable' : 'Disable'}</button>
+                        <button className="btn ghost sm danger" onClick={() => del(t)}>✕</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="row" style={{ gap: '.4rem' }}>
+                  <input placeholder={`Add ${label.toLowerCase().replace(/s$/, '')}…`} value={adding[kind] ?? ''} onChange={(e) => setAdding((p) => ({ ...p, [kind]: e.target.value }))}
+                    onKeyDown={(e) => { if (e.key === 'Enter') add(kind) }} />
+                  <button className="btn sm" disabled={!(adding[kind] ?? '').trim()} onClick={() => add(kind)}>Add</button>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </Card>
+  )
+}
+
+// ── Candidate email templates: rendered with {{placeholders}} and delivered via the Communications Centre. ──
+const TMPL_LABEL: Record<string, string> = {
+  application_received: 'Application received (auto-acknowledgement)', status_changed: 'Application status changed',
+  interview_scheduled: 'Interview scheduled', message: 'Message sent to candidate',
+}
+function Templates() {
+  const { data, loading, error, refetch } = useAdminQuery<{ rows: Tmpl[]; keys: string[] }>('/api/admin/careers/templates')
+  return (
+    <Card>
+      <p className="muted small" style={{ marginTop: 0 }}>
+        Emails sent to candidates as their application progresses. Placeholders: <span className="mono">{'{{name}} {{job_title}} {{org}} {{reference}} {{status}} {{message}} {{interview_at}}'}</span>. Disable any you don’t want sent.
+      </p>
+      {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : (
+        <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+          {(data?.rows ?? []).map((t) => <TemplateRow key={t.event_key} t={t} onSaved={refetch} />)}
+        </div>
+      )}
+    </Card>
+  )
+}
+function TemplateRow({ t, onSaved }: { t: Tmpl; onSaved: () => void }) {
+  const [d, setD] = useState<Tmpl>(t)
+  const [busy, setBusy] = useState(false)
+  const dirty = d.subject !== t.subject || d.body !== t.body || d.enabled !== t.enabled
+  const save = () => runMutation(async () => { setBusy(true); try { await adminApi.post('/api/admin/careers/templates', d); onSaved() } finally { setBusy(false) } })
+  return (
+    <div style={{ borderBottom: '1px solid var(--line,#e2e8f0)', paddingBottom: '.8rem' }}>
+      <div className="spread" style={{ marginBottom: '.4rem' }}>
+        <strong>{TMPL_LABEL[t.event_key] ?? t.event_key}</strong>
+        <label className="row small" style={{ gap: '.3rem', alignItems: 'center' }}>
+          <input type="checkbox" style={{ width: 'auto' }} checked={d.enabled !== 0} onChange={(e) => setD((p) => ({ ...p, enabled: e.target.checked ? 1 : 0 }))} /> Enabled
+        </label>
+      </div>
+      <div className="field"><label>Subject</label><input value={d.subject ?? ''} onChange={(e) => setD((p) => ({ ...p, subject: e.target.value }))} /></div>
+      <div className="field"><label>Body</label><textarea rows={5} value={d.body ?? ''} onChange={(e) => setD((p) => ({ ...p, body: e.target.value }))} /></div>
+      <div className="row" style={{ marginTop: '.4rem' }}><button className="btn sm" disabled={busy || !dirty} onClick={save}>{busy ? 'Saving…' : 'Save'}</button></div>
+    </div>
+  )
+}
+
+// ── Recruiting analytics: funnel by status, per-posting application counts. ──
+interface ReportsData { totals: Record<string, number>; byStatus: { status: string; n: number }[]; perJob: { id: number; title: string; job_code?: string; status: string; applications: number }[] }
+function Reports() {
+  const { data, loading, error } = useAdminQuery<ReportsData>('/api/admin/careers/reports')
+  if (loading) return <Card><Spinner /></Card>
+  if (error) return <Card><ErrorNote>{error}</ErrorNote></Card>
+  const t = data?.totals ?? {}
+  const tiles: [string, number][] = [['Postings', t.postings ?? 0], ['Published', t.published ?? 0], ['Applications', t.applications ?? 0], ['Last 30 days', t.applications_30d ?? 0], ['Hired', t.hired ?? 0]]
+  return (
+    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+      <Card>
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(120px,1fr))', gap: '.8rem' }}>
+          {tiles.map(([l, v]) => (
+            <div key={l} style={{ textAlign: 'center' }}><div style={{ fontSize: '1.6rem', fontWeight: 700 }}>{v}</div><div className="muted small">{l}</div></div>
+          ))}
+        </div>
+      </Card>
+      <Card>
+        <h3 style={{ marginTop: 0 }}>Applications by status</h3>
+        {(data?.byStatus ?? []).length === 0 ? <Empty>No applications yet.</Empty> : (
+          <table className="data"><thead><tr><th>Status</th><th>Applications</th></tr></thead>
+            <tbody>{(data?.byStatus ?? []).map((s) => <tr key={s.status}><td><StatusBadge status={s.status} /></td><td>{s.n}</td></tr>)}</tbody>
+          </table>
+        )}
+      </Card>
+      <Card>
+        <h3 style={{ marginTop: 0 }}>Applications by posting</h3>
+        {(data?.perJob ?? []).length === 0 ? <Empty>No postings yet.</Empty> : (
+          <table className="data"><thead><tr><th>Code</th><th>Title</th><th>Status</th><th>Applications</th></tr></thead>
+            <tbody>{(data?.perJob ?? []).map((j) => <tr key={j.id}><td className="small mono">{j.job_code}</td><td>{j.title}</td><td className="small">{j.status}</td><td>{j.applications}</td></tr>)}</tbody>
+          </table>
+        )}
+      </Card>
+    </div>
+  )
 }
 
 function QuestionsEditor({ job, onClose }: { job: Job; onClose: () => void }) {

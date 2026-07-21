@@ -170,6 +170,33 @@ public static class Migrate
             actor_id INTEGER,actor_name TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_jobappev_app ON job_app_events(application_id)");
         AddCol("job_applications", "assigned_to", "assigned_to INTEGER");
+        // Careers Increment 4: recruiting master data + candidate notifications.
+        //  · career_taxonomy — admin-managed controlled vocabulary (departments/sectors/experience/locations)
+        //    so these lists are configured in the Admin Panel, never hardcoded. kind is a string → a new
+        //    category needs no schema change.
+        //  · career_email_templates — admin-editable candidate email templates, rendered with {{placeholders}}
+        //    and delivered through the existing Communications Centre outbox.
+        //  All additive; indexes are on short VARCHAR/INTEGER columns only (no MySQL-migration risk).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS career_taxonomy(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            kind VARCHAR(24) NOT NULL,value VARCHAR(160) NOT NULL,sort_order INTEGER DEFAULT 0,active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_career_tax_kind ON career_taxonomy(kind, sort_order, id)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS career_email_templates(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_key VARCHAR(40) NOT NULL,subject VARCHAR(300),body TEXT,enabled INTEGER DEFAULT 1,
+            updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_career_tmpl_event ON career_email_templates(event_key)");
+        foreach (var t in new (string key, string subj, string body)[]
+        {
+            ("application_received", "Application received — {{job_title}} ({{reference}})",
+             "Hi {{name}},\n\nThank you for applying for {{job_title}} at {{org}}. Your application reference is {{reference}}.\n\nWe will be in touch as your application progresses. You can track it any time from your PCI account.\n\nProject Controls Institute"),
+            ("status_changed", "Update on your application — {{job_title}}",
+             "Hi {{name}},\n\nThere is an update on your application for {{job_title}} (ref {{reference}}). The status is now: {{status}}.\n\nProject Controls Institute"),
+            ("interview_scheduled", "Interview invitation — {{job_title}}",
+             "Hi {{name}},\n\nWe would like to invite you to an interview for {{job_title}} (ref {{reference}}).\n\nWhen: {{interview_at}}\n{{message}}\n\nProject Controls Institute"),
+            ("message", "Message about your application — {{job_title}}",
+             "Hi {{name}},\n\nYou have a new message regarding your application for {{job_title}} (ref {{reference}}):\n\n{{message}}\n\nProject Controls Institute"),
+        })
+            db.Execute("INSERT OR IGNORE INTO career_email_templates(event_key,subject,body) VALUES(?,?,?)", t.key, t.subj, t.body);
         // fallback shape kept aligned with schema.sql (storage_ref required, data_uri nullable legacy)
         db.Exec(@"CREATE TABLE IF NOT EXISTS support_attachments(id INTEGER PRIMARY KEY AUTOINCREMENT,ticket_id INTEGER NOT NULL,user_id INTEGER,filename TEXT NOT NULL,mime TEXT,size_bytes INTEGER,sha256 TEXT,data_uri TEXT,storage_ref TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_attach_ticket ON support_attachments(ticket_id)");
