@@ -182,6 +182,8 @@
   }
   ['f-q','f-country','f-type','f-remote','f-sector','f-department','f-experience','f-sort'].forEach(function(idv){ var e=$(idv); e.addEventListener(idv==='f-q'?'input':'change',function(){ clearTimeout(window._ct); window._ct=setTimeout(load,idv==='f-q'?250:0); }); });
   load();
+  // Deep link from the server-rendered /careers/{code} pages (and shared links): ?job=ID opens that role.
+  try{ var _jp=new URLSearchParams(location.search).get('job'); if(_jp&&/^\d+$/.test(_jp)) openJob(Number(_jp)); }catch(e){}
 })();
 </script>
 </body></html>

@@ -201,6 +201,7 @@ public static class Careers
                 var vals = cols.Select(c => c.val).ToList(); if (codeIn.Length > 0) vals.Add(codeIn); vals.Add((long)id.Value);
                 db.Execute($"UPDATE job_postings SET {set} WHERE id=?", vals.ToArray());
                 log(adm.Id, "career_update", ((long)id).ToString());
+                PageContent.Bump();   // refresh cached sitemap / server-rendered careers pages
                 return J(new { ok = true, id = (long)id });
             }
             if (codeIn.Length > 0 && db.QueryOne("SELECT id FROM job_postings WHERE job_code=?", codeIn) is not null)
@@ -212,6 +213,7 @@ public static class Careers
             var code = codeIn.Length > 0 ? codeIn : $"PCI-{DateTime.UtcNow:yyyy}-{newId:D4}";
             db.Execute("UPDATE job_postings SET job_code=? WHERE id=?", code, newId);
             log(adm.Id, "career_create", $"{newId} {code}");
+            PageContent.Bump();   // refresh cached sitemap / server-rendered careers pages
             return J(new { ok = true, id = newId, job_code = code });
         }));
 
@@ -220,6 +222,7 @@ public static class Careers
             db.Execute("DELETE FROM job_applications WHERE job_id=?", id);
             db.Execute("DELETE FROM job_postings WHERE id=?", id);
             log(adm.Id, "career_delete", id.ToString());
+            PageContent.Bump();   // refresh cached sitemap / server-rendered careers pages
             return J(new { ok = true });
         }));
 
@@ -477,7 +480,7 @@ public static class Careers
 
     /// <summary>Build a schema.org JobPosting JSON-LD document for a posting row, for Google for Jobs.
     /// Salary is included only when the operator chose to publish it (salary_visible). Returns a JSON string.</summary>
-    static string JobJsonLd(Db db, Dictionary<string, object?> r)
+    public static string JobJsonLd(Db db, Dictionary<string, object?> r)
     {
         string? S(string k) => H.Str(r.TryGetValue(k, out var v) ? v : null);
         var baseUrl = db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", "site_base_url");
