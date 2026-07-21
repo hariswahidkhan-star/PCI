@@ -162,6 +162,14 @@ public static class Migrate
         AddCol("job_applications", "answers_json", "answers_json TEXT");
         AddCol("job_applications", "reference", "reference VARCHAR(24)");
         AddCol("job_applications", "user_id", "user_id INTEGER");
+        // Careers Increment 3: applicant tracking — a single event stream records status changes,
+        // internal notes, candidate-visible messages and interviews; plus a reviewer assignment.
+        // All additive; the only index is on an INTEGER column, so no MySQL-migration risk.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS job_app_events(id INTEGER PRIMARY KEY AUTOINCREMENT,application_id INTEGER NOT NULL,
+            kind VARCHAR(16) DEFAULT 'note',from_status VARCHAR(24),to_status VARCHAR(24),body TEXT,scheduled_at VARCHAR(40),
+            actor_id INTEGER,actor_name TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_jobappev_app ON job_app_events(application_id)");
+        AddCol("job_applications", "assigned_to", "assigned_to INTEGER");
         // fallback shape kept aligned with schema.sql (storage_ref required, data_uri nullable legacy)
         db.Exec(@"CREATE TABLE IF NOT EXISTS support_attachments(id INTEGER PRIMARY KEY AUTOINCREMENT,ticket_id INTEGER NOT NULL,user_id INTEGER,filename TEXT NOT NULL,mime TEXT,size_bytes INTEGER,sha256 TEXT,data_uri TEXT,storage_ref TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_attach_ticket ON support_attachments(ticket_id)");

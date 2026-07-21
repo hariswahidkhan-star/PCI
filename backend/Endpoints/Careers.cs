@@ -27,6 +27,9 @@ public static class Careers
     static readonly string[] Types = { "full_time", "part_time", "contract", "internship", "temporary" };
     static readonly string[] Remotes = { "onsite", "remote", "hybrid" };
     static readonly string[] QTypes = { "short_text", "long_text", "yesno", "single", "multi", "number", "date", "dropdown", "consent" };
+    // Applicant-tracking statuses (Increment 3). The public "My applications" view maps these to
+    // candidate-friendly labels; internal notes are never candidate-visible.
+    static readonly string[] AppStatuses = { "new", "reviewing", "shortlisted", "interview", "assessment", "offer", "hired", "rejected", "withdrawn", "closed" };
 
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log,
         Func<HttpRequest, string, Func<AdminCtx, IResult>, IResult> gate)
@@ -204,7 +207,9 @@ public static class Careers
         }));
 
         app.MapGet("/api/admin/careers/{id:long}/applications", (HttpRequest req, long id) => gate(req, "content", _ =>
-            J(new { rows = db.Query("SELECT id,job_id,name,email,phone,cover_message,cv_name,reference,answers_json,status,admin_note,created_at FROM job_applications WHERE job_id=? ORDER BY id DESC", id) })));
+            J(new { rows = db.Query(@"SELECT a.id,a.job_id,a.name,a.email,a.phone,a.cover_message,a.cv_name,a.reference,a.answers_json,a.status,a.admin_note,
+                a.assigned_to,au.name AS assignee_name,a.created_at
+                FROM job_applications a LEFT JOIN admin_users au ON au.id=a.assigned_to WHERE a.job_id=? ORDER BY a.id DESC", id) })));
 
         // Per-job application questions (admin builder). POST replaces the whole set for the job.
         app.MapGet("/api/admin/careers/{id:long}/questions", (HttpRequest req, long id) => gate(req, "content", _ =>
@@ -245,16 +250,92 @@ public static class Careers
             return J(new { rows });
         });
 
+        // One application's candidate-visible detail: status + messages + interviews only (never internal notes).
+        app.MapGet("/api/me/applications/{id:long}", (HttpContext ctx, long id) =>
+        {
+            var u = Auth.UserFromReq(ctx.Request, db);
+            if (u is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+            var a = db.QueryOne(@"SELECT a.id,a.reference,a.status,a.created_at,a.cv_name,j.title,j.job_code,j.organisation,j.location,j.country
+                FROM job_applications a JOIN job_postings j ON j.id=a.job_id WHERE a.id=? AND a.user_id=?", id, u.Id);
+            if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var events = db.Query("SELECT kind,to_status,body,scheduled_at,created_at FROM job_app_events WHERE application_id=? AND kind IN('message','interview','status') ORDER BY id", id);
+            return J(new { application = a, events });
+        });
+
+        // Candidate withdraws their own application.
+        app.MapPost("/api/me/applications/{id:long}/withdraw", (HttpContext ctx, long id) =>
+        {
+            var u = Auth.UserFromReq(ctx.Request, db);
+            if (u is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+            var a = db.QueryOne("SELECT status FROM job_applications WHERE id=? AND user_id=?", id, u.Id);
+            if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var from = H.Str(a["status"]);
+            if (from is "withdrawn" or "hired") return Results.Json(new { error = "not_allowed", message = "This application can no longer be withdrawn." }, statusCode: 400);
+            db.Execute("UPDATE job_applications SET status='withdrawn' WHERE id=?", id);
+            db.Execute("INSERT INTO job_app_events(application_id,kind,from_status,to_status,body,actor_name) VALUES(?,?,?,?,?,?)",
+                id, "status", from, "withdrawn", "Withdrawn by candidate", "Candidate");
+            log(u.Id, "job_app_withdraw", id.ToString());
+            return J(new { ok = true });
+        });
+
         app.MapPost("/api/admin/careers/applications/{id:long}/status", (HttpRequest req, long id) => gate(req, "content", adm =>
         {
             var b = H.Body(req).GetAwaiter().GetResult();
             var status = H.GetS(b, "status") ?? "";
-            if (status is not ("new" or "reviewing" or "shortlisted" or "rejected" or "hired"))
-                return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            if (!AppStatuses.Contains(status)) return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            var cur = db.QueryOne("SELECT status FROM job_applications WHERE id=?", id);
+            var from = cur is null ? null : H.Str(cur["status"]);
             db.Execute("UPDATE job_applications SET status=?, admin_note=? WHERE id=?", status, H.GetS(b, "admin_note"), id);
+            Event(db, id, "status", adm, H.GetS(b, "note"), from, status, null);   // no silent status changes — every move is recorded
             log(adm.Id, "job_application_" + status, id.ToString());
             return J(new { ok = true });
         }));
+
+        // Internal note (never candidate-visible).
+        app.MapPost("/api/admin/careers/applications/{id:long}/note", (HttpRequest req, long id) => gate(req, "content", adm =>
+        {
+            var body = (H.GetS(H.Body(req).GetAwaiter().GetResult(), "body") ?? "").Trim();
+            if (body.Length == 0) return Results.Json(new { error = "empty" }, statusCode: 400);
+            Event(db, id, "note", adm, body.Length > 5000 ? body[..5000] : body, null, null, null);
+            log(adm.Id, "job_app_note", id.ToString());
+            return J(new { ok = true });
+        }));
+
+        // Candidate-visible message (shown to the applicant in the member portal).
+        app.MapPost("/api/admin/careers/applications/{id:long}/message", (HttpRequest req, long id) => gate(req, "content", adm =>
+        {
+            var body = (H.GetS(H.Body(req).GetAwaiter().GetResult(), "body") ?? "").Trim();
+            if (body.Length == 0) return Results.Json(new { error = "empty" }, statusCode: 400);
+            Event(db, id, "message", adm, body.Length > 5000 ? body[..5000] : body, null, null, null);
+            log(adm.Id, "job_app_message", id.ToString());
+            return J(new { ok = true });
+        }));
+
+        // Schedule an interview (records a candidate-visible interview event with a date).
+        app.MapPost("/api/admin/careers/applications/{id:long}/interview", (HttpRequest req, long id) => gate(req, "content", adm =>
+        {
+            var b = H.Body(req).GetAwaiter().GetResult();
+            var when = (H.GetS(b, "scheduled_at") ?? "").Trim();
+            if (when.Length == 0) return Results.Json(new { error = "no_date" }, statusCode: 400);
+            Event(db, id, "interview", adm, H.GetS(b, "body"), null, null, when);
+            log(adm.Id, "job_app_interview", id.ToString());
+            return J(new { ok = true });
+        }));
+
+        // Assign / unassign a reviewer (assign to me, or clear).
+        app.MapPost("/api/admin/careers/applications/{id:long}/assign", (HttpRequest req, long id) => gate(req, "content", adm =>
+        {
+            var b = H.Body(req).GetAwaiter().GetResult();
+            long? to = (H.GetBool(b, "unassign") == true) ? null : ((long?)H.GetNum(b, "assigned_to") ?? adm.Id);
+            db.Execute("UPDATE job_applications SET assigned_to=? WHERE id=?", to, id);
+            Event(db, id, "note", adm, to is null ? "Unassigned" : $"Assigned to {adm.Name ?? ("#" + to)}", null, null, null);
+            log(adm.Id, "job_app_assign", id.ToString());
+            return J(new { ok = true });
+        }));
+
+        // Full internal event timeline for one application.
+        app.MapGet("/api/admin/careers/applications/{id:long}/events", (HttpRequest req, long id) => gate(req, "content", _ =>
+            J(new { rows = db.Query("SELECT id,kind,from_status,to_status,body,scheduled_at,actor_name,created_at FROM job_app_events WHERE application_id=? ORDER BY id", id) })));
 
         app.MapGet("/api/admin/careers/applications/{id:long}/cv", (HttpRequest req, long id) => gate(req, "content", _ =>
         {
@@ -264,6 +345,11 @@ public static class Careers
             return Results.Bytes(got.Value.bytes!, got.Value.mime, H.Str(a!["cv_name"]));
         }));
     }
+
+    // Append one applicant-tracking event (status change, internal note, candidate message or interview).
+    static void Event(Db db, long appId, string kind, AdminCtx adm, string? body, string? from, string? to, string? scheduledAt)
+        => db.Execute("INSERT INTO job_app_events(application_id,kind,from_status,to_status,body,scheduled_at,actor_id,actor_name) VALUES(?,?,?,?,?,?,?,?)",
+            appId, kind, from, to, string.IsNullOrWhiteSpace(body) ? null : body, scheduledAt, adm.Id, adm.Name);
 
     // schema.org employmentType values (Google for Jobs).
     static readonly Dictionary<string, string> EmpMap = new()

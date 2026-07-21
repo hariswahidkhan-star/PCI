@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../../components/ui'
@@ -23,7 +23,7 @@ interface Job {
 interface Application {
   id: number; job_id: number; name?: string | null; email?: string | null; phone?: string | null
   cover_message?: string | null; cv_name?: string | null; status: string; admin_note?: string | null; created_at?: string | null
-  reference?: string | null; answers_json?: string | null
+  reference?: string | null; answers_json?: string | null; assigned_to?: number | null; assignee_name?: string | null
 }
 interface Question { id?: number; qtype: string; label: string; options?: string | null; required?: number }
 const Q_TYPES: [string, string][] = [
@@ -32,7 +32,8 @@ const Q_TYPES: [string, string][] = [
 ]
 
 const EMPTY: Partial<Job> = { title: '', employment_type: 'full_time', remote_type: 'onsite', apply_method: 'inplatform', status: 'draft', salary_currency: 'USD', salary_period: 'year' }
-const APP_STATUSES = ['new', 'reviewing', 'shortlisted', 'rejected', 'hired']
+const APP_STATUSES = ['new', 'reviewing', 'shortlisted', 'interview', 'assessment', 'offer', 'hired', 'rejected', 'withdrawn', 'closed']
+interface AppEvent { id: number; kind: string; from_status?: string | null; to_status?: string | null; body?: string | null; scheduled_at?: string | null; actor_name?: string | null; created_at?: string | null }
 
 export default function Careers() {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Job[] }>('/api/admin/careers')
@@ -205,6 +206,7 @@ function JobEditor({ initial, onClose, onSaved }: { initial: Partial<Job>; onClo
 
 function Applicants({ job, onClose }: { job: Job; onClose: () => void }) {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Application[] }>(`/api/admin/careers/${job.id}/applications`)
+  const [openId, setOpenId] = useState<number | null>(null)
 
   const setStatus = (a: Application, status: string) =>
     runMutation(async () => { await adminApi.post(`/api/admin/careers/applications/${a.id}/status`, { status }); refetch() })
@@ -217,41 +219,106 @@ function Applicants({ job, onClose }: { job: Job; onClose: () => void }) {
     document.body.appendChild(el); el.click(); el.remove(); URL.revokeObjectURL(el.href)
   }
 
+  function exportCsv() {
+    const rows = data?.rows ?? []
+    const head = ['reference', 'name', 'email', 'phone', 'status', 'assignee', 'applied']
+    const esc = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`
+    const body = rows.map((a) => [a.reference, a.name, a.email, a.phone, a.status, a.assignee_name, a.created_at].map(esc).join(','))
+    const csv = [head.join(','), ...body].join('\n')
+    const el = document.createElement('a'); el.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }))
+    el.download = `applicants-${job.job_code || job.id}.csv`; document.body.appendChild(el); el.click(); el.remove(); URL.revokeObjectURL(el.href)
+  }
+
   return (
     <div className="drawer-backdrop" onClick={onClose}>
       <div className="drawer" onClick={(e) => e.stopPropagation()}>
         <div className="spread" style={{ marginBottom: '1rem' }}>
           <h2 style={{ margin: 0 }}>Applicants — {job.title}</h2>
-          <button className="btn secondary sm" onClick={onClose}>Close</button>
+          <div className="row" style={{ gap: '.4rem' }}>
+            {(data?.rows.length ?? 0) > 0 && <button className="btn secondary sm" onClick={exportCsv}>Export CSV</button>}
+            <button className="btn secondary sm" onClick={onClose}>Close</button>
+          </div>
         </div>
         {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : !data || data.rows.length === 0 ? (
           <Empty>No applications yet.</Empty>
         ) : (
           <table className="data">
-            <thead><tr><th>Applicant</th><th>Applied</th><th>Status</th><th></th></tr></thead>
+            <thead><tr><th>Applicant</th><th>Assignee</th><th>Status</th><th></th></tr></thead>
             <tbody>
               {data.rows.map((a) => (
-                <tr key={a.id}>
-                  <td>
-                    <div>{a.name}{a.reference ? <span className="muted small mono"> · {a.reference}</span> : null}</div>
-                    <div className="muted small">{a.email}{a.phone ? ` · ${a.phone}` : ''}</div>
-                    {a.cover_message && <div className="small" style={{ maxWidth: 320, marginTop: '.2rem' }}>{a.cover_message}</div>}
-                    {parseAnswers(a.answers_json).map((qa, i) => (
-                      <div key={i} className="small" style={{ maxWidth: 320, marginTop: '.2rem' }}><strong>{qa.label}:</strong> {qa.value}</div>
-                    ))}
-                    {a.cv_name && <button className="btn ghost sm" style={{ marginTop: '.2rem' }} onClick={() => downloadCv(a)}>CV: {a.cv_name}</button>}
-                  </td>
-                  <td className="small">{fmtDate(a.created_at)}</td>
-                  <td><StatusBadge status={a.status} /></td>
-                  <td>
-                    <select value={a.status} onChange={(e) => setStatus(a, e.target.value)}>
-                      {APP_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
-                    </select>
-                  </td>
-                </tr>
+                <Fragment key={a.id}>
+                  <tr>
+                    <td>
+                      <div>{a.name}{a.reference ? <span className="muted small mono"> · {a.reference}</span> : null}</div>
+                      <div className="muted small">{a.email}{a.phone ? ` · ${a.phone}` : ''} · {fmtDate(a.created_at)}</div>
+                      {a.cover_message && <div className="small" style={{ maxWidth: 320, marginTop: '.2rem' }}>{a.cover_message}</div>}
+                      {parseAnswers(a.answers_json).map((qa, i) => (
+                        <div key={i} className="small" style={{ maxWidth: 320, marginTop: '.2rem' }}><strong>{qa.label}:</strong> {qa.value}</div>
+                      ))}
+                      {a.cv_name && <button className="btn ghost sm" style={{ marginTop: '.2rem' }} onClick={() => downloadCv(a)}>CV: {a.cv_name}</button>}
+                    </td>
+                    <td className="small">{a.assignee_name || <span className="muted">—</span>}</td>
+                    <td>
+                      <StatusBadge status={a.status} />
+                      <select value={a.status} onChange={(e) => setStatus(a, e.target.value)} style={{ marginTop: '.3rem' }}>
+                        {APP_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </td>
+                    <td><button className="btn ghost sm" onClick={() => setOpenId(openId === a.id ? null : a.id)}>{openId === a.id ? 'Hide' : 'Manage'}</button></td>
+                  </tr>
+                  {openId === a.id && (
+                    <tr><td colSpan={4} style={{ background: 'var(--bg-soft,#f8fafc)' }}><ApplicantDetail app={a} onChanged={refetch} /></td></tr>
+                  )}
+                </Fragment>
               ))}
             </tbody>
           </table>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function ApplicantDetail({ app, onChanged }: { app: Application; onChanged: () => void }) {
+  const { data, loading, refetch } = useAdminQuery<{ rows: AppEvent[] }>(`/api/admin/careers/applications/${app.id}/events`)
+  const [note, setNote] = useState(''); const [msg, setMsg] = useState(''); const [ivWhen, setIvWhen] = useState(''); const [ivNote, setIvNote] = useState('')
+  const post = (path: string, body: unknown) => runMutation(async () => { await adminApi.post(`/api/admin/careers/applications/${app.id}/${path}`, body); refetch(); onChanged() })
+  const rows = data?.rows ?? []
+  return (
+    <div style={{ display: 'grid', gap: '.7rem', padding: '.4rem 0' }}>
+      <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
+        {app.assigned_to ? <button className="btn ghost sm" onClick={() => post('assign', { unassign: true })}>Unassign ({app.assignee_name})</button>
+          : <button className="btn secondary sm" onClick={() => post('assign', {})}>Assign to me</button>}
+      </div>
+      <div className="grid cols-2" style={{ gap: '.6rem' }}>
+        <div className="field"><label>Internal note <span className="muted small">(not shown to candidate)</span></label>
+          <div className="row" style={{ gap: '.4rem' }}><input value={note} onChange={(e) => setNote(e.target.value)} /><button className="btn sm" disabled={!note.trim()} onClick={() => { post('note', { body: note }); setNote('') }}>Add</button></div>
+        </div>
+        <div className="field"><label>Message to candidate <span className="muted small">(visible in their portal)</span></label>
+          <div className="row" style={{ gap: '.4rem' }}><input value={msg} onChange={(e) => setMsg(e.target.value)} /><button className="btn sm" disabled={!msg.trim()} onClick={() => { post('message', { body: msg }); setMsg('') }}>Send</button></div>
+        </div>
+        <div className="field" style={{ gridColumn: '1 / -1' }}><label>Schedule interview</label>
+          <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
+            <input type="datetime-local" value={ivWhen} onChange={(e) => setIvWhen(e.target.value)} />
+            <input placeholder="Details (link, location…)" value={ivNote} onChange={(e) => setIvNote(e.target.value)} style={{ flex: 1, minWidth: 160 }} />
+            <button className="btn sm" disabled={!ivWhen} onClick={() => { post('interview', { scheduled_at: ivWhen, body: ivNote }); setIvWhen(''); setIvNote('') }}>Schedule</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div className="muted small" style={{ marginBottom: '.3rem' }}>Timeline</div>
+        {loading ? <Spinner /> : rows.length === 0 ? <div className="muted small">No activity yet.</div> : (
+          <div className="stack" style={{ display: 'grid', gap: '.3rem' }}>
+            {rows.map((e) => (
+              <div key={e.id} className="small">
+                <span className="muted">{fmtDate(e.created_at)} · {e.actor_name || 'System'} · </span>
+                {e.kind === 'status' ? <>moved {e.from_status || '—'} → <strong>{e.to_status}</strong>{e.body ? ` (${e.body})` : ''}</>
+                  : e.kind === 'interview' ? <><strong>Interview</strong> {e.scheduled_at}{e.body ? ` — ${e.body}` : ''}</>
+                  : e.kind === 'message' ? <><strong>→ candidate:</strong> {e.body}</>
+                  : <><strong>note:</strong> {e.body}</>}
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
