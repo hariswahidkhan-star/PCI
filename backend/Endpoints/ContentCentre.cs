@@ -92,6 +92,7 @@ public static class ContentCentre
             var sql = "SELECT id,slug,title,status,published,author_id,category_id,language,published_at,updated_at,version FROM blog_posts WHERE 1=1";
             var args = new List<object?>();
             if (status.Length > 0) { sql += " AND status=?"; args.Add(status); }
+            else sql += " AND status<>'deleted'";     // soft-deleted posts are hidden unless explicitly filtered
             if (q.Length > 0) { sql += " AND (title LIKE ? OR slug LIKE ?)"; args.Add("%" + q + "%"); args.Add("%" + q + "%"); }
             sql += " ORDER BY updated_at DESC, id DESC LIMIT 200";
             var rows = db.Query(sql, args.ToArray());
@@ -278,6 +279,83 @@ public static class ContentCentre
                     }
                 return J(new { ok = true });
             });
+        });
+
+        // ── Lifecycle: archive (reversible), soft-delete (recoverable), purge (owner-only, permanent) ──
+        // Every state change snapshots first, so nothing is lost; a soft-deleted post stays in the DB with
+        // its full version history. Public + default admin lists exclude 'deleted'.
+        app.MapPost("/api/admin/content/posts/{id:long}/archive", (HttpRequest req, long id) => gate(req, "cc_archive", adm =>
+        {
+            if (db.QueryOne("SELECT id FROM blog_posts WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            Snapshot(db, id, "archive", adm.Id);
+            db.Execute("UPDATE blog_posts SET status='archived', published=0, updated_at=datetime('now') WHERE id=?", id);
+            PageContent.Bump();
+            log(adm.Id, "content_post_archive", "post " + id);
+            return J(new { ok = true, status = "archived" });
+        }));
+
+        app.MapPost("/api/admin/content/posts/{id:long}/delete", (HttpRequest req, long id) => gate(req, "cc_delete", adm =>
+        {
+            if (db.QueryOne("SELECT id FROM blog_posts WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            Snapshot(db, id, "delete", adm.Id);
+            db.Execute("UPDATE blog_posts SET status='deleted', published=0, updated_at=datetime('now') WHERE id=?", id);
+            PageContent.Bump();
+            log(adm.Id, "content_post_delete", "post " + id);
+            return J(new { ok = true, status = "deleted" });
+        }));
+
+        app.MapPost("/api/admin/content/posts/{id:long}/purge", (HttpRequest req, long id) => gate(req, "cc_delete", adm =>
+        {
+            if (!adm.IsOwner) return Results.Json(new { error = "owner_only", message = "Permanent deletion is restricted to owners." }, statusCode: 403);
+            var p = db.QueryOne("SELECT slug FROM blog_posts WHERE id=?", id);
+            if (p is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            db.Execute("DELETE FROM blog_post_tags WHERE post_id=?", id);
+            db.Execute("DELETE FROM blog_post_versions WHERE post_id=?", id);
+            db.Execute("DELETE FROM blog_reviews WHERE post_id=?", id);
+            db.Execute("DELETE FROM cc_content_links WHERE post_id=?", id);
+            db.Execute("DELETE FROM blog_posts WHERE id=?", id);
+            PageContent.Bump();
+            log(adm.Id, "content_post_purge", "post " + id + " " + (H.Str(p["slug"]) ?? ""));
+            return J(new { ok = true, status = "purged" });
+        }));
+
+        // ── Content link registry: extract a post's outbound links, set rel/citation policy, HTTP-check ──
+        app.MapPost("/api/admin/content/posts/{id:long}/links/scan", (HttpRequest req, long id) => gate(req, "cc_links", adm =>
+        {
+            if (db.QueryOne("SELECT id FROM blog_posts WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var (found, added) = ContentLinks.Scan(db, id, adm.Id);
+            log(adm.Id, "content_links_scan", "post " + id + " found=" + found + " added=" + added);
+            return J(new { ok = true, found, added });
+        }));
+
+        app.MapGet("/api/admin/content/posts/{id:long}/links", (HttpRequest req, long id) => gate(req, "cc_view", adm =>
+            J(new { rows = db.Query("SELECT id,post_id,url,kind,anchor_text,rel,is_citation,approved,status,http_code,last_checked_at,active FROM cc_content_links WHERE post_id=? ORDER BY kind, id", id) })));
+
+        app.MapPatch("/api/admin/content/links/{id:long}", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            var id = long.Parse((string)ctx.Request.RouteValues["id"]!);
+            return gate(ctx.Request, "cc_links", adm =>
+            {
+                if (db.QueryOne("SELECT id FROM cc_content_links WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+                if (H.GetS(b, "rel") is { } rel && new[] { "auto", "dofollow", "nofollow", "sponsored", "ugc" }.Contains(rel)) db.Execute("UPDATE cc_content_links SET rel=? WHERE id=?", rel, id);
+                if (H.GetBool(b, "is_citation") is { } ic) db.Execute("UPDATE cc_content_links SET is_citation=? WHERE id=?", ic ? 1 : 0, id);
+                if (H.GetBool(b, "approved") is { } ap) db.Execute("UPDATE cc_content_links SET approved=? WHERE id=?", ap ? 1 : 0, id);
+                db.Execute("UPDATE cc_content_links SET updated_at=datetime('now') WHERE id=?", id);
+                log(adm.Id, "content_link_update", "link " + id);
+                return J(new { ok = true });
+            });
+        });
+
+        app.MapPost("/api/admin/content/links/{id:long}/check", async (HttpContext ctx) =>
+        {
+            var denied = gate(ctx.Request, "cc_links", _ => Results.Ok());
+            if (!IsOk(denied)) return denied;
+            var adm = adminFromReq(ctx.Request);
+            var id = long.Parse((string)ctx.Request.RouteValues["id"]!);
+            var (status, code, err) = await ContentLinks.Check(db, id);
+            log(adm?.Id, "content_link_check", "link " + id + " → " + status + (code > 0 ? " (" + code + ")" : ""));
+            return J(new { ok = err is null, status, code, error = err });
         });
 
         // ══════════════════════════ ADMIN: authors / categories ══════════════════════════
@@ -482,6 +560,7 @@ public static class ContentCentre
             reading_time=?, robots_noindex=0, version=version+1, updated_at=datetime('now'),
             approved_by=COALESCE(?, approved_by), approved_at=datetime('now') WHERE id=?", readMin, adminId, id);
         PageContent.Bump();                                   // refresh sitemap (blog URLs included)
+        try { ContentLinks.Scan(db, id, adminId); } catch { /* link registry is best-effort; never blocks publish */ }
         var slug = H.Str(p["slug"]) ?? "";
         QueueIndexNow(db, id, Blog.PublicUrl(db, slug), adminId);
         NotifyStaff(db, "Article published", "<p><strong>" + Esc(H.Str(p["title"]) ?? "") + "</strong> is now live at " + Esc(Blog.PublicUrl(db, slug)) + "</p>");

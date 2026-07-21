@@ -1295,6 +1295,21 @@ public static class Migrate
             fetched_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_anmetric_source ON cc_analytics_metrics(source_id, dimension)");
 
+        // Content link registry (Phase C) — the hyperlinks a post publishes, extracted from its body. Each row
+        // is classified internal (relative or same-site) vs external, carries an editor-set rel policy
+        // (auto/dofollow/nofollow/sponsored/ugc), an optional citation + approval flag, and an on-demand HTTP
+        // status (checked ONLY for external links, through the SSRF-guarded egress client — never for private
+        // targets). url_norm is VARCHAR so it can back the per-post unique index (MySQL can't index TEXT).
+        // cc_* namespaced; gated by the cc_links permission.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_content_links(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            post_id INTEGER NOT NULL, url VARCHAR(500) NOT NULL, url_norm VARCHAR(500),
+            kind VARCHAR(12) DEFAULT 'external', anchor_text VARCHAR(300), rel VARCHAR(24) DEFAULT 'auto',
+            is_citation INTEGER DEFAULT 0, approved INTEGER DEFAULT 0,
+            status VARCHAR(16) DEFAULT 'unchecked', http_code INTEGER, last_checked_at TEXT,
+            active INTEGER DEFAULT 1, created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_links_post ON cc_content_links(post_id, kind)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_cc_links_post_url ON cc_content_links(post_id, url_norm)");
+
         // Configurable defaults (operator-tunable via Settings; no hardcoded values in React/.NET) + the
         // content-centre notification master toggle.
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('backlink_our_domain','projectcontrolsinstitute.org')");
