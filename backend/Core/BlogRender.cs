@@ -102,6 +102,10 @@ public static class BlogRender
             head.Append("<meta property=\"article:modified_time\" content=\"").Append(Esc(Iso(upd))).Append("\"/>");
         if (author is not null) head.Append("<meta name=\"author\" content=\"").Append(Esc(H.Str(author["name"]) ?? "")).Append("\"/>");
         head.Append(JsonLd(db, p, author, category, canonical, basePath, ogImage, news));
+        // Cookieless outbound-link click beacon: on a click of any link inside the article body, POST the post
+        // slug + href to the registry counter. No PII, no cookies; the server only counts links it already knows.
+        head.Append("<script>(function(){try{var s=").Append(JsonSerializer.Serialize(slug))
+            .Append(";document.addEventListener('click',function(e){var t=e.target;var a=t&&t.closest?t.closest('.blog-body a[href]'):null;if(!a)return;var u=a.getAttribute('href')||'';if(!u||u.charAt(0)===\"#\")return;try{navigator.sendBeacon('/api/content/link-click',new Blob([JSON.stringify({slug:s,url:u})],{type:'application/json'}));}catch(x){}},true);}catch(x){}})();</script>");
 
         return Compose(db, webRoot, lang, (news ? "news/" : "blog/") + slug + ".html", title, desc, canonical,
             "article", ogImage, head.ToString(), ArticleBody(db, p, author, category, tags, basePath, news),
@@ -162,6 +166,25 @@ public static class BlogRender
             sb.Append("<strong>").Append(Esc(authorName)).Append("</strong>");
             if (H.Str(author["title"]) is { Length: > 0 } at) sb.Append(" — ").Append(Esc(at));
             sb.Append("<p style=\"margin:.4rem 0 0;color:#475569\">").Append(Esc(bio)).Append("</p></div>");
+        }
+        // share buttons (official share intents — no third-party JS/trackers)
+        var slug = H.Str(p["slug"]) ?? "";
+        var canonical = H.Str(p["canonical_url"]) is { Length: > 0 } cu ? cu : Blog.PublicUrl(db, slug, news);
+        var enc = Uri.EscapeDataString(canonical); var tenc = Uri.EscapeDataString(title);
+        sb.Append("<div class=\"blog-share\" style=\"margin-top:2rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap\">");
+        sb.Append("<span class=\"muted\" style=\"font-size:.85rem\">Share:</span>");
+        sb.Append("<a class=\"btn btn-ghost\" href=\"https://www.linkedin.com/sharing/share-offsite/?url=").Append(enc).Append("\" target=\"_blank\" rel=\"noopener nofollow\">LinkedIn</a>");
+        sb.Append("<a class=\"btn btn-ghost\" href=\"https://twitter.com/intent/tweet?url=").Append(enc).Append("&text=").Append(tenc).Append("\" target=\"_blank\" rel=\"noopener nofollow\">X</a>");
+        sb.Append("<a class=\"btn btn-ghost\" href=\"mailto:?subject=").Append(tenc).Append("&body=").Append(enc).Append("\">Email</a>");
+        sb.Append("</div>");
+        // related posts (same section — same category first, then recent)
+        var related = Blog.Related(db, H.L(p["id"]), p["category_id"] is null ? null : H.L(p["category_id"]), news, 3);
+        if (related.Count > 0)
+        {
+            sb.Append("<div class=\"blog-related\" style=\"margin-top:2.5rem\"><h3>Related ").Append(news ? "news" : "articles").Append("</h3>");
+            sb.Append("<div class=\"blog-grid\" style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem\">");
+            foreach (var rp in related) sb.Append(Card(db, rp, basePath));
+            sb.Append("</div></div>");
         }
         sb.Append("<p style=\"margin-top:2rem\"><a class=\"btn btn-ghost\" href=\"").Append(basePath).Append("\">← All ").Append(news ? "news" : "articles").Append("</a></p>");
         sb.Append("</div></article>");

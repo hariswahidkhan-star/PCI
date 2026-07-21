@@ -128,6 +128,18 @@ public static class Blog
         return (int)db.Scalar<long>(sql.ToString(), args.ToArray());
     }
 
+    /// <summary>Up to <paramref name="limit"/> related published posts in the SAME section — same category
+    /// first, topped up with the most recent — excluding the current post.</summary>
+    public static List<Dictionary<string, object?>> Related(Db db, long postId, long? categoryId, bool news, int limit)
+    {
+        var outp = new List<Dictionary<string, object?>>();
+        var seen = new HashSet<long> { postId };
+        void Take(List<Dictionary<string, object?>> src) { foreach (var r in src) { if (outp.Count >= limit) break; if (seen.Add(H.L(r["id"]))) outp.Add(r); } }
+        if (categoryId is not null) Take(ListPublished(db, limit + 1, 0, categoryId, null, null, null, news));
+        if (outp.Count < limit) Take(ListPublished(db, limit + 3, 0, null, null, null, null, news));
+        return outp;
+    }
+
     public static Dictionary<string, object?>? Author(Db db, object? id) =>
         id is null ? null : db.QueryOne("SELECT * FROM blog_authors WHERE id=?", H.L(id));
     public static Dictionary<string, object?>? Category(Db db, object? id) =>

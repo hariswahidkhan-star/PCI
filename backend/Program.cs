@@ -1096,6 +1096,9 @@ app.Use(async (ctx, next) =>
                         var (ahtml, aredirect) = PCI.Backend.Core.BlogRender.Article(db, webRoot, rest, blang, secNews);
                         if (aredirect is not null) { ctx.Response.StatusCode = 301; ctx.Response.Headers.Location = aredirect; return true; }
                         html = ahtml;
+                        // Per-article, cookieless page view (articles are served here, before the static-page
+                        // PageView call) — feeds the per-article analytics rollup.
+                        if (html is not null) PCI.Backend.Core.Analytics.PageView(db, ctx, (secBase + "/" + rest).TrimStart('/'));
                     }
                     if (html is not null)
                     {

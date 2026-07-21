@@ -1764,6 +1764,20 @@ def test_content_centre(admin):
     con = dbconn(); gone = con.execute("SELECT COUNT(*) FROM blog_posts WHERE id=?", (lc_pid,)).fetchone()[0]
     vgone = con.execute("SELECT COUNT(*) FROM blog_post_versions WHERE post_id=?", (lc_pid,)).fetchone()[0]; con.close()
     chk("20zj purge (owner) permanently removes the post + its versions", pg.get("ok") and gone == 0 and vgone == 0, (pg.get("ok"), gone, vgone))
+    # Phase D: per-article analytics, share buttons + related posts (SSR), outbound link-click beacon
+    dbody = '<p>Read the <a href="/blog/other">internal</a> guide and the <a href="' + BASE + '/api/health">external status</a> page.</p>' + ('<p>More project controls content here. </p>' * 5)
+    c, dp = jget("POST", "/api/admin/content/posts", token=admin, body={"title": "Analytics Test EEE", "summary": "Distribution + analytics.", "body": dbody})
+    dpid = dp.get("id"); dslug = dp.get("slug")
+    jget("POST", f"/api/admin/content/posts/{dpid}/publish", token=admin, body={})   # publish auto-scans links
+    req("GET", f"/blog/{dslug}"); sc, dhtml = req("GET", f"/blog/{dslug}")   # two cookieless page views
+    chk("20zk article SSR carries share buttons + a related section", 'blog-share' in dhtml and 'blog-related' in dhtml, None)
+    c, arts = jget("GET", "/api/admin/content/analytics/articles?days=1", token=admin)
+    mine = next((a for a in arts.get("articles", []) if a.get("slug") == dslug), None)
+    chk("20zl per-article analytics counts the article's views", mine is not None and mine.get("views", 0) >= 2, mine)
+    req("POST", "/api/content/link-click", body={"slug": dslug, "url": BASE + "/api/health"})
+    c, dlinks = jget("GET", f"/api/admin/content/posts/{dpid}/links", token=admin)
+    extlink = next((r for r in dlinks.get("rows", []) if r["kind"] == "external"), {})
+    chk("20zm outbound link-click beacon increments the click counter", extlink.get("clicks", 0) >= 1, extlink)
     # integrity: unpublish keeps the post + versions (never deleted)
     jget("POST", f"/api/admin/content/posts/{pid}/unpublish", token=admin, body={})
     sc, _ = req("GET", f"/blog/{slug}")
@@ -1829,6 +1843,15 @@ def test_social_publishing(admin):
     drafts = dl.get("rows", [])
     by_plat = {d["platform_key"]: d for d in drafts}
     chk("21g drafts are platform-tailored (distinct text)", len({d["text"] for d in drafts}) >= 3 and by_plat["telegram"]["text"] != by_plat["bluesky"]["text"], None)
+    # Phase D: the shared link carries per-platform UTM attribution
+    chk("21g2 shared link carries UTM attribution (utm_source=<platform>)", "utm_source=telegram" in by_plat["telegram"]["text"] and "utm_medium=social" in by_plat["telegram"]["text"], by_plat["telegram"]["text"][:200])
+    # Phase D: real scheduling — a future scheduled_at queues the job to fire THEN, not immediately
+    mas_draft = by_plat["mastodon"]["id"]
+    jget("PATCH", f"/api/admin/content/social/drafts/{mas_draft}", token=admin, body={"scheduled_at": "2035-01-01 10:00:00"})
+    c, spub = jget("POST", f"/api/admin/content/social/drafts/{mas_draft}/publish", token=admin)
+    chk("21g3 a future-scheduled draft is queued as scheduled (not sent now)", spub.get("scheduled") == True, spub)
+    con = dbconn(); jr = con.execute("SELECT next_attempt_at FROM content_jobs WHERE idempotency_key=?", ("socialdraft:" + str(mas_draft),)).fetchone(); con.close()
+    chk("21g4 the social job fires at the scheduled time, not now", jr and jr[0] and str(jr[0]).startswith("2035"), jr)
 
     # publish the Telegram draft → queue → drain → delivered with a public URL
     tg_draft = by_plat["telegram"]["id"]

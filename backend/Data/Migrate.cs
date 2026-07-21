@@ -1191,6 +1191,8 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_social_drafts_post ON social_drafts(post_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_social_drafts_status ON social_drafts(status)");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_default_base_urls','')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_utm_enabled','1')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_utm_campaign','social')");
 
         // Content Syndication (Phase 3) — outbound publishing to partner CMS platforms whose official APIs need
         // no provider review (WordPress self-hosted, Ghost, Forem/DEV). Credentials ENCRYPTED at rest, never
@@ -1305,10 +1307,11 @@ public static class Migrate
             post_id INTEGER NOT NULL, url VARCHAR(500) NOT NULL, url_norm VARCHAR(500),
             kind VARCHAR(12) DEFAULT 'external', anchor_text VARCHAR(300), rel VARCHAR(24) DEFAULT 'auto',
             is_citation INTEGER DEFAULT 0, approved INTEGER DEFAULT 0,
-            status VARCHAR(16) DEFAULT 'unchecked', http_code INTEGER, last_checked_at TEXT,
+            status VARCHAR(16) DEFAULT 'unchecked', http_code INTEGER, last_checked_at TEXT, clicks INTEGER DEFAULT 0,
             active INTEGER DEFAULT 1, created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_links_post ON cc_content_links(post_id, kind)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_cc_links_post_url ON cc_content_links(post_id, url_norm)");
+        AddCol("cc_content_links", "clicks", "clicks INTEGER DEFAULT 0");   // Phase D: outbound-click counter (idempotent for DBs created before this)
 
         // Configurable defaults (operator-tunable via Settings; no hardcoded values in React/.NET) + the
         // content-centre notification master toggle.

@@ -221,7 +221,7 @@ function PostEditor({ id, perms, onClose }: { id: number | 'new'; perms: PostPer
   )
 }
 
-interface LinkRow { id: number; url: string; kind: string; anchor_text?: string; rel: string; is_citation: number; approved: number; status: string; http_code?: number | null; last_checked_at?: string | null; active: number }
+interface LinkRow { id: number; url: string; kind: string; anchor_text?: string; rel: string; is_citation: number; approved: number; status: string; http_code?: number | null; last_checked_at?: string | null; clicks?: number; active: number }
 function LinksPanel({ postId }: { postId: number }) {
   const { data, loading, refetch } = useAdminQuery<{ rows: LinkRow[] }>(`/api/admin/content/posts/${postId}/links`)
   const [busy, setBusy] = useState(false)
@@ -237,7 +237,7 @@ function LinksPanel({ postId }: { postId: number }) {
         {msg && <span className="muted" style={{ fontSize: '.82rem' }}>{msg}</span>}
       </div>
       {loading ? <Spinner /> : rows.length === 0 ? <Empty>No links recorded. Scan the body to build the registry.</Empty> : (
-        <table className="tbl"><thead><tr><th>URL</th><th>Kind</th><th>rel</th><th>Citation</th><th>Status</th><th></th></tr></thead>
+        <table className="tbl"><thead><tr><th>URL</th><th>Kind</th><th>rel</th><th>Citation</th><th>Status</th><th>Clicks</th><th></th></tr></thead>
           <tbody>{rows.map((l) => (
             <tr key={l.id}>
               <td style={{ maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}><span title={l.url}>{l.url}</span>{l.anchor_text ? <div className="muted" style={{ fontSize: '.75rem' }}>{l.anchor_text}</div> : null}</td>
@@ -245,6 +245,7 @@ function LinksPanel({ postId }: { postId: number }) {
               <td><select value={l.rel} onChange={(e) => patch(l.id, { rel: e.target.value })}>{['auto', 'dofollow', 'nofollow', 'sponsored', 'ugc'].map((r) => <option key={r} value={r}>{r}</option>)}</select></td>
               <td><input type="checkbox" checked={l.is_citation === 1} onChange={(e) => patch(l.id, { is_citation: e.target.checked })} />{l.is_citation === 1 ? <span className="muted" style={{ fontSize: '.72rem' }}> {l.approved === 1 ? 'approved' : 'unapproved'}</span> : null}</td>
               <td>{l.status === 'unchecked' ? <span className="muted">—</span> : <Badge tone={l.status === 'live' ? 'ok' : l.status === 'internal' ? 'neutral' : 'err' as never}>{l.status}{l.http_code ? ' ' + l.http_code : ''}</Badge>}</td>
+              <td style={{ fontVariantNumeric: 'tabular-nums' }}>{l.clicks || 0}</td>
               <td className="row" style={{ gap: '.3rem' }}>{l.kind === 'external' ? <button className="btn sm ghost" disabled={busy} onClick={() => check(l.id)}>Check</button> : null}{l.is_citation === 1 ? <button className="btn sm ghost" disabled={busy} onClick={() => patch(l.id, { approved: l.approved !== 1 })}>{l.approved === 1 ? 'Unapprove' : 'Approve'}</button> : null}</td>
             </tr>))}</tbody>
         </table>
@@ -721,6 +722,30 @@ interface AnMetric { id: number; source_id: number; dimension: string; dim_value
 
 const AN_PROVIDERS = [{ v: 'gsc', l: 'Google Search Console' }, { v: 'bing', l: 'Bing Webmaster Tools' }, { v: 'ga4', l: 'Google Analytics 4' }]
 
+interface ArticleStat { path: string; slug: string; title: string; section: string; status: string; views: number; link_clicks: number }
+function PerArticlePanel() {
+  const [days, setDays] = useState(28)
+  const { data, loading } = useAdminQuery<{ days: number; articles: ArticleStat[] }>(`/api/admin/content/analytics/articles?days=${days}`)
+  const arts = data?.articles || []
+  return (
+    <Card title="Per-article performance (first-party, cookieless)" action={
+      <select value={days} onChange={(e) => setDays(Number(e.target.value))}>{[7, 28, 90, 365].map((d) => <option key={d} value={d}>Last {d} days</option>)}</select>
+    }>
+      {loading ? <Spinner /> : arts.length === 0 ? <Empty>No article views recorded yet in this window.</Empty> : (
+        <table className="tbl"><thead><tr><th>Article</th><th>Section</th><th>Views</th><th>Link clicks</th></tr></thead>
+          <tbody>{arts.map((a) => (
+            <tr key={a.path}>
+              <td><a href={a.path} target="_blank" rel="noreferrer">{a.title || a.slug}</a>{a.status !== 'published' ? <span className="muted" style={{ fontSize: '.75rem' }}> ({a.status})</span> : null}</td>
+              <td><Badge tone={a.section === 'news' ? 'ok' : 'neutral' as never}>{a.section}</Badge></td>
+              <td style={{ fontVariantNumeric: 'tabular-nums' }}>{a.views}</td>
+              <td style={{ fontVariantNumeric: 'tabular-nums' }}>{a.link_clicks}</td>
+            </tr>))}</tbody>
+        </table>
+      )}
+    </Card>
+  )
+}
+
 function AnalyticsTab({ canManage }: { canManage: boolean }) {
   const overview = useAdminQuery<{ sources: AnSource[]; totals: AnTotal[] }>('/api/admin/content/analytics/overview')
   const [f, setF] = useState<Record<string, string>>({ provider: 'gsc' })
@@ -739,6 +764,8 @@ function AnalyticsTab({ canManage }: { canManage: boolean }) {
     <div style={{ display: 'grid', gap: '1rem' }}>
       <p className="muted" style={{ margin: 0 }}>Read-only search &amp; traffic analytics. PCI connects to providers whose official APIs are read-only — Google Search Console, Bing Webmaster Tools and Google Analytics 4 — and only ever <strong>reads</strong>: nothing is written back. Credentials are stored encrypted and never shown again. Google access tokens are short-lived; mint one via a service account or OAuth and re-paste it when a sync reports an auth error (automatic refresh is a planned follow-up).</p>
       {msg && <ErrorNote>{msg}</ErrorNote>}
+
+      <PerArticlePanel />
 
       {canManage && (
         <Card title="Connect an analytics source">

@@ -64,6 +64,22 @@ public static class ContentCentre
             feeds = new { rss = Blog.BasePath(db) + "/feed.xml", atom = Blog.BasePath(db) + "/atom.xml", json = Blog.BasePath(db) + "/feed.json" },
         }));
 
+        // Public outbound-link click beacon (cookieless, no PII). Increments the click counter ONLY for a link
+        // already recorded on the given PUBLISHED post — it never creates rows or writes arbitrary data, so the
+        // worst an abuser can do is inflate a soft analytics counter. Called via navigator.sendBeacon from the
+        // article page.
+        app.MapPost("/api/content/link-click", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            var slug = (H.GetS(b, "slug") ?? "").Trim().ToLowerInvariant();
+            var url = (H.GetS(b, "url") ?? "").Trim();
+            if (slug.Length == 0 || url.Length == 0) return Results.Json(new { ok = false });
+            var post = db.QueryOne("SELECT id FROM blog_posts WHERE slug=? AND status='published' AND published=1", slug);
+            if (post is null) return Results.Json(new { ok = false });
+            db.Execute("UPDATE cc_content_links SET clicks=clicks+1 WHERE post_id=? AND url_norm=?", H.L(post["id"]), url.TrimEnd('/').ToLowerInvariant());
+            return Results.Json(new { ok = true });
+        });
+
         // ══════════════════════════ ADMIN: overview ══════════════════════════
         app.MapGet("/api/admin/content/overview", (HttpRequest req) => gate(req, "cc_view", adm =>
         {
@@ -329,7 +345,7 @@ public static class ContentCentre
         }));
 
         app.MapGet("/api/admin/content/posts/{id:long}/links", (HttpRequest req, long id) => gate(req, "cc_view", adm =>
-            J(new { rows = db.Query("SELECT id,post_id,url,kind,anchor_text,rel,is_citation,approved,status,http_code,last_checked_at,active FROM cc_content_links WHERE post_id=? ORDER BY kind, id", id) })));
+            J(new { rows = db.Query("SELECT id,post_id,url,kind,anchor_text,rel,is_citation,approved,status,http_code,last_checked_at,clicks,active FROM cc_content_links WHERE post_id=? ORDER BY kind, id", id) })));
 
         app.MapPatch("/api/admin/content/links/{id:long}", async (HttpContext ctx) =>
         {
