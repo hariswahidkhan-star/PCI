@@ -1,3 +1,4 @@
+using System.Text.Json;
 using PCI.Backend.Core;
 using PCI.Backend.Data;
 
@@ -25,6 +26,7 @@ public static class Careers
 
     static readonly string[] Types = { "full_time", "part_time", "contract", "internship", "temporary" };
     static readonly string[] Remotes = { "onsite", "remote", "hybrid" };
+    static readonly string[] QTypes = { "short_text", "long_text", "yesno", "single", "multi", "number", "date", "dropdown", "consent" };
 
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log,
         Func<HttpRequest, string, Func<AdminCtx, IResult>, IResult> gate)
@@ -74,7 +76,8 @@ public static class Careers
                 application_instructions,eo_statement,salary_min,salary_max,salary_currency,salary_period,salary_visible,urgent,featured,posted_at,closes_at,
                 apply_method,apply_url,apply_email FROM job_postings WHERE id=? AND {OpenWhere}", id);
             if (r is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-            return J(new { job = Row(r, true), jsonld = JobJsonLd(db, r) });   // jsonld = Google-for-Jobs JobPosting structured data
+            var questions = db.Query("SELECT id,qtype,label,options,required FROM job_questions WHERE job_id=? ORDER BY sort_order,id", id);
+            return J(new { job = Row(r, true), jsonld = JobJsonLd(db, r), questions });   // jsonld = Google-for-Jobs JobPosting structured data
         });
 
         // Apply in-platform (only for postings whose apply_method is 'inplatform'). Honeypot + basic validation
@@ -100,10 +103,33 @@ public static class Careers
                 if (err is not null) return Results.Json(new { error = err, message = "That CV file could not be accepted." }, statusCode: 400);
                 cvRef = reference; cvName = clean;
             }
-            var appId = db.ExecuteReturningId("INSERT INTO job_applications(job_id,name,email,phone,cover_message,cv_ref,cv_name) VALUES(?,?,?,?,?,?,?)",
-                id, name, email, H.GetS(b, "phone"), cover.Length > 0 ? cover : null, cvRef, cvName);
-            log(null, "job_application", $"job {id} #{appId}");
-            return J(new { ok = true, message = "Your application has been received. Thank you." });
+            // Job-specific questions: validate required answers and capture them (label+value) for the reviewer.
+            var questions = db.Query("SELECT id,label,required FROM job_questions WHERE job_id=? ORDER BY sort_order,id", id);
+            var ansMap = new Dictionary<long, string>();
+            if (H.GetEl(b, "answers") is JsonElement ae && ae.ValueKind == JsonValueKind.Object)
+                foreach (var p in ae.EnumerateObject())
+                    if (long.TryParse(p.Name, out var qid))
+                        ansMap[qid] = p.Value.ValueKind == JsonValueKind.String ? (p.Value.GetString() ?? "")
+                            : p.Value.ValueKind == JsonValueKind.Array ? string.Join(", ", p.Value.EnumerateArray().Select(x => x.GetString() ?? ""))
+                            : p.Value.ToString();
+            var captured = new List<Dictionary<string, object?>>();
+            foreach (var qq in questions)
+            {
+                var lbl = H.Str(qq["label"]) ?? "";
+                var val = (ansMap.TryGetValue(H.L(qq["id"]), out var vv) ? vv : "").Trim();
+                if (val.Length > 4000) val = val[..4000];
+                if (H.B(qq["required"]) && val.Length == 0)
+                    return Results.Json(new { error = "answer_required", message = $"Please answer: {lbl}" }, statusCode: 400);
+                if (val.Length > 0) captured.Add(new() { ["label"] = lbl, ["value"] = val });
+            }
+            var answersJson = captured.Count > 0 ? JsonSerializer.Serialize(captured) : null;
+            var userId = Auth.UserFromReq(ctx.Request, db)?.Id;   // link to the member's dashboard when signed in
+            var appId = db.ExecuteReturningId("INSERT INTO job_applications(job_id,name,email,phone,cover_message,cv_ref,cv_name,answers_json,user_id) VALUES(?,?,?,?,?,?,?,?,?)",
+                id, name, email, H.GetS(b, "phone"), cover.Length > 0 ? cover : null, cvRef, cvName, answersJson, userId);
+            var reference = $"PCI-APP-{DateTime.UtcNow:yyyy}-{appId:D6}";
+            db.Execute("UPDATE job_applications SET reference=? WHERE id=?", reference, appId);
+            log(userId, "job_application", $"job {id} #{appId} {reference}");
+            return J(new { ok = true, reference, message = $"Your application has been received. Your reference is {reference}." });
         });
 
         // ─────────────────────────── ADMIN (gated: content) ───────────────────────────
@@ -178,7 +204,46 @@ public static class Careers
         }));
 
         app.MapGet("/api/admin/careers/{id:long}/applications", (HttpRequest req, long id) => gate(req, "content", _ =>
-            J(new { rows = db.Query("SELECT id,job_id,name,email,phone,cover_message,cv_name,status,admin_note,created_at FROM job_applications WHERE job_id=? ORDER BY id DESC", id) })));
+            J(new { rows = db.Query("SELECT id,job_id,name,email,phone,cover_message,cv_name,reference,answers_json,status,admin_note,created_at FROM job_applications WHERE job_id=? ORDER BY id DESC", id) })));
+
+        // Per-job application questions (admin builder). POST replaces the whole set for the job.
+        app.MapGet("/api/admin/careers/{id:long}/questions", (HttpRequest req, long id) => gate(req, "content", _ =>
+            J(new { rows = db.Query("SELECT id,qtype,label,options,required,sort_order FROM job_questions WHERE job_id=? ORDER BY sort_order,id", id) })));
+
+        app.MapPost("/api/admin/careers/{id:long}/questions", (HttpRequest req, long id) => gate(req, "content", adm =>
+        {
+            var b = H.Body(req).GetAwaiter().GetResult();
+            db.Execute("DELETE FROM job_questions WHERE job_id=?", id);
+            if (H.GetEl(b, "questions") is JsonElement qs && qs.ValueKind == JsonValueKind.Array)
+            {
+                int i = 0;
+                foreach (var q in qs.EnumerateArray())
+                {
+                    var qtype = q.TryGetProperty("qtype", out var qt) ? (qt.GetString() ?? "short_text") : "short_text";
+                    if (!QTypes.Contains(qtype)) qtype = "short_text";
+                    var label = (q.TryGetProperty("label", out var lb) ? (lb.GetString() ?? "") : "").Trim();
+                    if (label.Length == 0) continue;
+                    if (label.Length > 300) label = label[..300];
+                    var options = q.TryGetProperty("options", out var op) && op.ValueKind == JsonValueKind.String ? op.GetString() : null;
+                    var required = q.TryGetProperty("required", out var rq) && (rq.ValueKind == JsonValueKind.True || (rq.ValueKind == JsonValueKind.Number && rq.GetInt32() != 0));
+                    db.Execute("INSERT INTO job_questions(job_id,qtype,label,options,required,sort_order) VALUES(?,?,?,?,?,?)",
+                        id, qtype, label, options, required ? 1 : 0, i++);
+                }
+            }
+            log(adm.Id, "career_questions", id.ToString());
+            return J(new { ok = true });
+        }));
+
+        // ─────────────────────────── MEMBER (student session) ───────────────────────────
+        // The signed-in member's own applications, for the portal "My applications" view.
+        app.MapGet("/api/me/applications", (HttpContext ctx) =>
+        {
+            var u = Auth.UserFromReq(ctx.Request, db);
+            if (u is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+            var rows = db.Query(@"SELECT a.id,a.reference,a.status,a.created_at,a.cv_name,j.title,j.job_code,j.organisation,j.location,j.country
+                FROM job_applications a JOIN job_postings j ON j.id=a.job_id WHERE a.user_id=? ORDER BY a.id DESC", u.Id);
+            return J(new { rows });
+        });
 
         app.MapPost("/api/admin/careers/applications/{id:long}/status", (HttpRequest req, long id) => gate(req, "content", adm =>
         {

@@ -154,6 +154,14 @@ public static class Migrate
             cover_message TEXT,cv_ref TEXT,cv_name TEXT,status TEXT DEFAULT 'new',admin_note TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_jobapp_job ON job_applications(job_id)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_jobapp_email ON job_applications(job_id,email)");
+        // Careers Increment 2: per-job configurable application questions + application reference,
+        // captured answers and (when the applicant is a signed-in member) a user link for "My applications".
+        db.Exec(@"CREATE TABLE IF NOT EXISTS job_questions(id INTEGER PRIMARY KEY AUTOINCREMENT,job_id INTEGER NOT NULL,
+            qtype VARCHAR(24) DEFAULT 'short_text',label TEXT NOT NULL,options TEXT,required INTEGER DEFAULT 0,sort_order INTEGER DEFAULT 0)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_jobq_job ON job_questions(job_id)");
+        AddCol("job_applications", "answers_json", "answers_json TEXT");
+        AddCol("job_applications", "reference", "reference VARCHAR(24)");
+        AddCol("job_applications", "user_id", "user_id INTEGER");
         // fallback shape kept aligned with schema.sql (storage_ref required, data_uri nullable legacy)
         db.Exec(@"CREATE TABLE IF NOT EXISTS support_attachments(id INTEGER PRIMARY KEY AUTOINCREMENT,ticket_id INTEGER NOT NULL,user_id INTEGER,filename TEXT NOT NULL,mime TEXT,size_bytes INTEGER,sha256 TEXT,data_uri TEXT,storage_ref TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_attach_ticket ON support_attachments(ticket_id)");

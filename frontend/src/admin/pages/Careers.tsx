@@ -23,7 +23,13 @@ interface Job {
 interface Application {
   id: number; job_id: number; name?: string | null; email?: string | null; phone?: string | null
   cover_message?: string | null; cv_name?: string | null; status: string; admin_note?: string | null; created_at?: string | null
+  reference?: string | null; answers_json?: string | null
 }
+interface Question { id?: number; qtype: string; label: string; options?: string | null; required?: number }
+const Q_TYPES: [string, string][] = [
+  ['short_text', 'Short text'], ['long_text', 'Long text'], ['yesno', 'Yes / No'], ['single', 'Single choice'],
+  ['multi', 'Multiple choice'], ['dropdown', 'Dropdown'], ['number', 'Number'], ['date', 'Date'], ['consent', 'Consent checkbox'],
+]
 
 const EMPTY: Partial<Job> = { title: '', employment_type: 'full_time', remote_type: 'onsite', apply_method: 'inplatform', status: 'draft', salary_currency: 'USD', salary_period: 'year' }
 const APP_STATUSES = ['new', 'reviewing', 'shortlisted', 'rejected', 'hired']
@@ -32,6 +38,7 @@ export default function Careers() {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Job[] }>('/api/admin/careers')
   const [edit, setEdit] = useState<Partial<Job> | null>(null)
   const [appsFor, setAppsFor] = useState<Job | null>(null)
+  const [questionsFor, setQuestionsFor] = useState<Job | null>(null)
   const [q, setQ] = useState('')
   const [fStatus, setFStatus] = useState('')
   const [fCountry, setFCountry] = useState('')
@@ -87,6 +94,7 @@ export default function Careers() {
                   <td>
                     <div className="row" style={{ gap: '.35rem', justifyContent: 'flex-end' }}>
                       <button className="btn sm secondary" onClick={() => setAppsFor(j)}>Applicants ({j.applications ?? 0})</button>
+                      <button className="btn sm ghost" onClick={() => setQuestionsFor(j)}>Questions</button>
                       <button className="btn sm ghost" onClick={() => setEdit(j)}>Edit</button>
                       <button className="btn sm ghost danger" onClick={() => del(j)}>Delete</button>
                     </div>
@@ -99,6 +107,7 @@ export default function Careers() {
       </Card>
       {edit && <JobEditor initial={edit} onClose={() => setEdit(null)} onSaved={() => { setEdit(null); refetch() }} />}
       {appsFor && <Applicants job={appsFor} onClose={() => setAppsFor(null)} />}
+      {questionsFor && <QuestionsEditor job={questionsFor} onClose={() => setQuestionsFor(null)} />}
     </div>
   )
 }
@@ -224,9 +233,12 @@ function Applicants({ job, onClose }: { job: Job; onClose: () => void }) {
               {data.rows.map((a) => (
                 <tr key={a.id}>
                   <td>
-                    <div>{a.name}</div>
+                    <div>{a.name}{a.reference ? <span className="muted small mono"> · {a.reference}</span> : null}</div>
                     <div className="muted small">{a.email}{a.phone ? ` · ${a.phone}` : ''}</div>
                     {a.cover_message && <div className="small" style={{ maxWidth: 320, marginTop: '.2rem' }}>{a.cover_message}</div>}
+                    {parseAnswers(a.answers_json).map((qa, i) => (
+                      <div key={i} className="small" style={{ maxWidth: 320, marginTop: '.2rem' }}><strong>{qa.label}:</strong> {qa.value}</div>
+                    ))}
                     {a.cv_name && <button className="btn ghost sm" style={{ marginTop: '.2rem' }} onClick={() => downloadCv(a)}>CV: {a.cv_name}</button>}
                   </td>
                   <td className="small">{fmtDate(a.created_at)}</td>
@@ -240,6 +252,63 @@ function Applicants({ job, onClose }: { job: Job; onClose: () => void }) {
               ))}
             </tbody>
           </table>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function parseAnswers(json?: string | null): { label: string; value: string }[] {
+  if (!json) return []
+  try { const a = JSON.parse(json); return Array.isArray(a) ? a : [] } catch { return [] }
+}
+
+function QuestionsEditor({ job, onClose }: { job: Job; onClose: () => void }) {
+  const { data, loading } = useAdminQuery<{ rows: Question[] }>(`/api/admin/careers/${job.id}/questions`)
+  const [rows, setRows] = useState<Question[] | null>(null)
+  const [busy, setBusy] = useState(false)
+  const list = rows ?? data?.rows ?? []
+  const upd = (i: number, patch: Partial<Question>) => setRows(list.map((q, j) => (j === i ? { ...q, ...patch } : q)))
+  const add = () => setRows([...list, { qtype: 'short_text', label: '', options: '', required: 0 }])
+  const remove = (i: number) => setRows(list.filter((_, j) => j !== i))
+  const move = (i: number, dir: number) => { const n = [...list]; const t = i + dir; if (t < 0 || t >= n.length) return; [n[i], n[t]] = [n[t], n[i]]; setRows(n) }
+  async function save() {
+    setBusy(true)
+    try { await adminApi.post(`/api/admin/careers/${job.id}/questions`, { questions: list.filter((q) => q.label.trim()) }); onClose() }
+    finally { setBusy(false) }
+  }
+  const needsOptions = (t: string) => t === 'single' || t === 'multi' || t === 'dropdown'
+  return (
+    <div className="drawer-backdrop" onClick={onClose}>
+      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+        <div className="spread" style={{ marginBottom: '1rem' }}>
+          <h2 style={{ margin: 0 }}>Application questions — {job.title}</h2>
+          <button className="btn secondary sm" onClick={onClose}>Close</button>
+        </div>
+        <p className="muted small" style={{ marginTop: 0 }}>Job-specific questions candidates answer when applying. Options (one per line) apply to choice / dropdown types.</p>
+        {loading && !rows ? <Spinner /> : (
+          <div className="stack" style={{ display: 'grid', gap: '.7rem' }}>
+            {list.length === 0 && <Empty>No questions yet.</Empty>}
+            {list.map((q, i) => (
+              <div key={i} className="row" style={{ gap: '.4rem', alignItems: 'flex-start', flexWrap: 'wrap', borderBottom: '1px solid var(--line,#e2e8f0)', paddingBottom: '.5rem' }}>
+                <select value={q.qtype} onChange={(e) => upd(i, { qtype: e.target.value })} style={{ maxWidth: 150 }}>
+                  {Q_TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                </select>
+                <input placeholder="Question label" value={q.label} onChange={(e) => upd(i, { label: e.target.value })} style={{ flex: 1, minWidth: 180 }} />
+                {needsOptions(q.qtype) && <textarea placeholder="Options (one per line)" value={q.options ?? ''} onChange={(e) => upd(i, { options: e.target.value })} rows={2} style={{ minWidth: 160 }} />}
+                <label className="row small" style={{ gap: '.3rem', alignSelf: 'center' }}><input type="checkbox" style={{ width: 'auto' }} checked={!!q.required} onChange={(e) => upd(i, { required: e.target.checked ? 1 : 0 })} /> required</label>
+                <div className="row" style={{ gap: '.2rem' }}>
+                  <button className="btn ghost sm" onClick={() => move(i, -1)}>↑</button>
+                  <button className="btn ghost sm" onClick={() => move(i, 1)}>↓</button>
+                  <button className="btn ghost sm danger" onClick={() => remove(i)}>✕</button>
+                </div>
+              </div>
+            ))}
+            <div className="row" style={{ gap: '.5rem' }}>
+              <button className="btn secondary sm" onClick={add}>+ Add question</button>
+              <button className="btn" disabled={busy} onClick={save}>{busy ? 'Saving…' : 'Save questions'}</button>
+            </div>
+          </div>
         )}
       </div>
     </div>
