@@ -85,7 +85,7 @@ public static class Migrate
         // GDPR right-to-erasure requests: a request creates a tracked ticket with a 30-day due date; an admin
         // acknowledges, then completes (anonymisation) or rejects with a reason. status: pending | acknowledged | completed | rejected.
         db.Exec(@"CREATE TABLE IF NOT EXISTS erasure_requests(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,email TEXT,reason TEXT,
-            status TEXT DEFAULT 'pending',requested_at TEXT DEFAULT (datetime('now')),due_at TEXT,acknowledged_at TEXT,
+            status VARCHAR(24) DEFAULT 'pending',requested_at TEXT DEFAULT (datetime('now')),due_at TEXT,acknowledged_at TEXT,
             reviewed_by INTEGER,reviewed_at TEXT,admin_note TEXT,completed_at TEXT)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_erasure_user ON erasure_requests(user_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_erasure_status ON erasure_requests(status)");
@@ -106,7 +106,7 @@ public static class Migrate
         AddCol("memberships", "cancel_at_period_end", "cancel_at_period_end INTEGER DEFAULT 0");
         // Grade upgrade / Fellowship-nomination applications reviewed by admins.
         db.Exec(@"CREATE TABLE IF NOT EXISTS membership_upgrades(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,
-            from_grade TEXT,to_grade TEXT NOT NULL,statement TEXT,status TEXT DEFAULT 'pending',
+            from_grade TEXT,to_grade TEXT NOT NULL,statement TEXT,status VARCHAR(24) DEFAULT 'pending',
             reviewed_by INTEGER,reviewed_at TEXT,admin_note TEXT,created_at TEXT DEFAULT (datetime('now')),decided_at TEXT)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_mupgrade_user ON membership_upgrades(user_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_mupgrade_status ON membership_upgrades(status)");
@@ -114,7 +114,7 @@ public static class Migrate
         // cpd_hours/cpd_category are credited (as an approved CPD entry) when a registrant is marked attended.
         db.Exec(@"CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT NOT NULL,summary TEXT,description TEXT,
             event_type TEXT DEFAULT 'webinar',starts_at TEXT,ends_at TEXT,timezone TEXT,location TEXT,join_url TEXT,capacity INTEGER DEFAULT 0,
-            cpd_hours REAL DEFAULT 0,cpd_category TEXT DEFAULT 'Events & webinars',status TEXT DEFAULT 'draft',
+            cpd_hours REAL DEFAULT 0,cpd_category TEXT DEFAULT 'Events & webinars',status VARCHAR(24) DEFAULT 'draft',
             created_by INTEGER,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_events_status ON events(status)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS event_registrations(id INTEGER PRIMARY KEY AUTOINCREMENT,event_id INTEGER NOT NULL,user_id INTEGER NOT NULL,
@@ -126,14 +126,14 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS job_postings(id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT NOT NULL,organisation TEXT,location TEXT,
             employment_type TEXT DEFAULT 'full_time',remote_type TEXT DEFAULT 'onsite',sector TEXT,description TEXT,requirements TEXT,responsibilities TEXT,
             salary_min REAL,salary_max REAL,salary_currency TEXT DEFAULT 'USD',salary_period TEXT DEFAULT 'year',
-            apply_method TEXT DEFAULT 'inplatform',apply_url TEXT,apply_email TEXT,featured INTEGER DEFAULT 0,status TEXT DEFAULT 'draft',
+            apply_method TEXT DEFAULT 'inplatform',apply_url TEXT,apply_email TEXT,featured INTEGER DEFAULT 0,status VARCHAR(24) DEFAULT 'draft',
             posted_at TEXT,closes_at TEXT,created_by INTEGER,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_jobs_status ON job_postings(status)");
         // Job reference code (auto-generated, unique) + country (for country-based posting & filtering).
         AddCol("job_postings", "job_code", "job_code VARCHAR(32)");
         AddCol("job_postings", "country", "country VARCHAR(64)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_jobs_code ON job_postings(job_code)");
-        db.Exec(@"CREATE TABLE IF NOT EXISTS job_applications(id INTEGER PRIMARY KEY AUTOINCREMENT,job_id INTEGER NOT NULL,name TEXT,email TEXT,phone TEXT,
+        db.Exec(@"CREATE TABLE IF NOT EXISTS job_applications(id INTEGER PRIMARY KEY AUTOINCREMENT,job_id INTEGER NOT NULL,name TEXT,email VARCHAR(190),phone TEXT,
             cover_message TEXT,cv_ref TEXT,cv_name TEXT,status TEXT DEFAULT 'new',admin_note TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_jobapp_job ON job_applications(job_id)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_jobapp_email ON job_applications(job_id,email)");
@@ -1077,7 +1077,7 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS admin_reset_tokens(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             admin_id INTEGER NOT NULL,
-            token TEXT NOT NULL,
+            token VARCHAR(128) NOT NULL,
             expires_at TEXT NOT NULL,
             used_at TEXT,
             created_at TEXT DEFAULT (datetime('now')))");
