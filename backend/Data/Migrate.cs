@@ -1301,6 +1301,7 @@ public static class Migrate
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('backlink_verify_enabled','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('analytics_default_range_days','28')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_base_path','/blog')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('news_base_path','/news')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_posts_per_page','12')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_indexnow_on_publish','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_content_enabled','1')");

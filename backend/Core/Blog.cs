@@ -11,13 +11,26 @@ namespace PCI.Backend.Core;
 /// </summary>
 public static class Blog
 {
-    public static string BasePath(Db db)
+    // A post is a NEWS item when its structured_type is NewsArticle; otherwise it belongs to the blog. News
+    // and blog share ONE store (blog_posts) and ONE admin CMS/workflow, but live at separate public URL
+    // spaces (/news vs /blog) with their own listings, feeds and sitemaps.
+    public const string NewsType = "NewsArticle";
+    public static bool IsNews(Dictionary<string, object?> post) => (H.Str(post["structured_type"]) ?? "") == NewsType;
+
+    static string ReadBasePath(Db db, string skey, string fallback)
     {
-        var p = (db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='blog_base_path'") ?? "/blog").Trim();
-        if (p.Length == 0) p = "/blog";
+        var p = (db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", skey) ?? fallback).Trim();
+        if (p.Length == 0) p = fallback;
         if (!p.StartsWith("/")) p = "/" + p;
         return p.TrimEnd('/');
     }
+
+    public static string BasePath(Db db) => ReadBasePath(db, "blog_base_path", "/blog");
+    public static string NewsBasePath(Db db) => ReadBasePath(db, "news_base_path", "/news");
+    public static string BasePathFor(Db db, bool news) => news ? NewsBasePath(db) : BasePath(db);
+
+    /// <summary>Human label for a section's breadcrumb/heading root.</summary>
+    public static string SectionLabel(bool news) => news ? "News" : "Blog";
 
     public static int PerPage(Db db)
     {
@@ -27,7 +40,13 @@ public static class Blog
         return int.TryParse(s, out var n) && n is > 0 and <= 100 ? n : 12;
     }
 
-    public static string PublicUrl(Db db, string slug) => Redirects.CanonicalBase + BasePath(db) + "/" + slug;
+    /// <summary>Canonical public URL for a post identified by slug — routed to /news or /blog by its type.</summary>
+    public static string PublicUrl(Db db, string slug)
+    {
+        var isNews = db.Scalar<string>("SELECT structured_type FROM blog_posts WHERE slug=?", slug) == NewsType;
+        return PublicUrl(db, slug, isNews);
+    }
+    public static string PublicUrl(Db db, string slug, bool news) => Redirects.CanonicalBase + BasePathFor(db, news) + "/" + slug;
 
     /// <summary>URL-safe slug from arbitrary text (lowercase, hyphenated, ascii-ish). Never empty.</summary>
     public static string Slugify(string s)
@@ -73,9 +92,17 @@ public static class Blog
     public static Dictionary<string, object?>? PublishedBySlug(Db db, string slug) =>
         db.QueryOne("SELECT * FROM blog_posts WHERE slug=? AND status='published' AND published=1", (slug ?? "").Trim().ToLowerInvariant());
 
-    /// <summary>List published posts (newest first) with optional category/author/tag/language filters.</summary>
+    // Section filter fragment: news==true → NewsArticle only; news==false → everything except NewsArticle;
+    // news==null → no filter (both sections, e.g. the combined main sitemap).
+    static void SectionFilter(StringBuilder sql, List<object?> args, bool? news, string col = "p")
+    {
+        if (news == true) { sql.Append($" AND {col}.structured_type=?"); args.Add(NewsType); }
+        else if (news == false) { sql.Append($" AND ({col}.structured_type IS NULL OR {col}.structured_type<>?)"); args.Add(NewsType); }
+    }
+
+    /// <summary>List published posts (newest first) with optional category/author/tag/language/section filters.</summary>
     public static List<Dictionary<string, object?>> ListPublished(Db db, int limit, int offset,
-        long? categoryId = null, long? authorId = null, long? tagId = null, string? lang = null)
+        long? categoryId = null, long? authorId = null, long? tagId = null, string? lang = null, bool? news = null)
     {
         var sql = new StringBuilder("SELECT p.* FROM blog_posts p");
         var args = new List<object?>();
@@ -84,18 +111,20 @@ public static class Blog
         if (categoryId is not null) { sql.Append(" AND p.category_id=?"); args.Add(categoryId); }
         if (authorId is not null) { sql.Append(" AND p.author_id=?"); args.Add(authorId); }
         if (!string.IsNullOrEmpty(lang)) { sql.Append(" AND p.language=?"); args.Add(lang); }
+        SectionFilter(sql, args, news);
         sql.Append(" ORDER BY COALESCE(p.published_at, p.created_at) DESC, p.id DESC LIMIT ? OFFSET ?");
         args.Add(limit); args.Add(offset);
         return db.Query(sql.ToString(), args.ToArray());
     }
 
-    public static int CountPublished(Db db, long? categoryId = null, long? authorId = null, string? lang = null)
+    public static int CountPublished(Db db, long? categoryId = null, long? authorId = null, string? lang = null, bool? news = null)
     {
         var sql = new StringBuilder("SELECT COUNT(*) FROM blog_posts p WHERE p.status='published' AND p.published=1");
         var args = new List<object?>();
         if (categoryId is not null) { sql.Append(" AND p.category_id=?"); args.Add(categoryId); }
         if (authorId is not null) { sql.Append(" AND p.author_id=?"); args.Add(authorId); }
         if (!string.IsNullOrEmpty(lang)) { sql.Append(" AND p.language=?"); args.Add(lang); }
+        SectionFilter(sql, args, news);
         return (int)db.Scalar<long>(sql.ToString(), args.ToArray());
     }
 
@@ -106,9 +135,15 @@ public static class Blog
     public static List<Dictionary<string, object?>> Tags(Db db, long postId) =>
         db.Query("SELECT t.* FROM blog_tags t JOIN blog_post_tags pt ON pt.tag_id=t.id WHERE pt.post_id=? ORDER BY t.name", postId);
 
-    /// <summary>All published post slugs → canonical URLs (for the blog sitemap + feeds).</summary>
-    public static List<Dictionary<string, object?>> PublishedForFeed(Db db, int limit) =>
-        db.Query("SELECT * FROM blog_posts WHERE status='published' AND published=1 AND COALESCE(robots_noindex,0)=0 ORDER BY COALESCE(published_at,created_at) DESC, id DESC LIMIT ?", limit);
+    /// <summary>Published, indexable posts (newest first) for feeds/sitemaps, optionally limited to a section.</summary>
+    public static List<Dictionary<string, object?>> PublishedForFeed(Db db, int limit, bool? news = null)
+    {
+        var sql = new StringBuilder("SELECT * FROM blog_posts p WHERE p.status='published' AND p.published=1 AND COALESCE(p.robots_noindex,0)=0");
+        var args = new List<object?>();
+        SectionFilter(sql, args, news);
+        sql.Append(" ORDER BY COALESCE(p.published_at,p.created_at) DESC, p.id DESC LIMIT ?"); args.Add(limit);
+        return db.Query(sql.ToString(), args.ToArray());
+    }
 
     // small fluent helper so the tag-join arg is appended in the right order
     static StringBuilder Also(this StringBuilder sb, List<object?> args, object? v) { args.Add(v); return sb; }

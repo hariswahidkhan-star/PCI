@@ -118,6 +118,7 @@ public static class AiVisibility
             sb.Append("Sitemap: ").Append(host).Append("/sitemap-index.xml\n");
             sb.Append("Sitemap: ").Append(host).Append("/sitemap.xml\n");
             sb.Append("Sitemap: ").Append(host).Append("/blog-sitemap.xml\n");
+            sb.Append("Sitemap: ").Append(host).Append("/news-sitemap.xml\n");
             _robots = sb.ToString();
             _robotsVer = v;
             return _robots;

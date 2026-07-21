@@ -43,11 +43,15 @@ public static class Sitemap
             try
             {
                 var bp = Blog.BasePath(db);
-                foreach (var r in db.Query("SELECT slug,updated_at FROM blog_posts WHERE status='published' AND published=1 AND COALESCE(robots_noindex,0)=0 ORDER BY COALESCE(published_at,created_at) DESC"))
+                var newsBp = Blog.NewsBasePath(db);
+                foreach (var r in db.Query("SELECT slug,updated_at,structured_type FROM blog_posts WHERE status='published' AND published=1 AND COALESCE(robots_noindex,0)=0 ORDER BY COALESCE(published_at,created_at) DESC"))
                 {
                     var s = H.Str(r["slug"]) ?? "";
                     if (s.Length == 0 || s.Contains("..")) continue;
-                    sb.Append("  <url><loc>").Append(Esc(host + bp + "/" + s)).Append("</loc>");
+                    // News posts live under /news, blog posts under /blog — the sitemap must list each post's
+                    // real canonical URL space, not always /blog.
+                    var pbp = (H.Str(r["structured_type"]) ?? "") == Blog.NewsType ? newsBp : bp;
+                    sb.Append("  <url><loc>").Append(Esc(host + pbp + "/" + s)).Append("</loc>");
                     if (H.Str(r["updated_at"]) is { Length: >= 10 } bu) sb.Append("<lastmod>").Append(Esc(bu[..10])).Append("</lastmod>");
                     sb.Append("<changefreq>monthly</changefreq></url>\n");
                 }
@@ -71,7 +75,7 @@ public static class Sitemap
         var sb = new StringBuilder(512);
         sb.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         sb.Append("<sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
-        foreach (var path in new[] { "/sitemap.xml", "/blog-sitemap.xml" })
+        foreach (var path in new[] { "/sitemap.xml", "/blog-sitemap.xml", "/news-sitemap.xml" })
             sb.Append("  <sitemap><loc>").Append(Esc(host + path)).Append("</loc></sitemap>\n");
         sb.Append("</sitemapindex>\n");
         return sb.ToString();

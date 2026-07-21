@@ -64,6 +64,17 @@ def jget(method, path, **kw):
     try: return code, json.loads(txt)
     except Exception: return code, txt
 
+def no_follow(method, path, token=None):
+    """Request WITHOUT following redirects → (status, Location). Used to assert 301/302/410 behaviour."""
+    class _NR(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, headers, newurl): return None
+    op = urllib.request.build_opener(_NR)
+    r = urllib.request.Request(BASE + path, method=method, headers={"Authorization": "Bearer " + token} if token else {})
+    try:
+        with op.open(r) as resp: return resp.status, resp.headers.get("Location")
+    except urllib.error.HTTPError as e:
+        return e.code, e.headers.get("Location")
+
 def sha256hex(s): return hashlib.sha256(s.encode()).hexdigest()
 
 def sign_and_send_webhook(session_id, email, product, pi_id, metadata=None, amount=9900, event_id=None, etype="checkout.session.completed"):
@@ -1702,6 +1713,26 @@ def test_content_centre(admin):
     jget("PATCH", f"/api/admin/content/posts/{rnpid}", token=admin, body={"slug": "renamed-bbb-xyz", "change_reason": "rename"})
     con = dbconn(); rc = con.execute("SELECT COUNT(*) FROM seo_redirects WHERE from_path=? AND to_url=? AND status=301", ("/blog/" + oldslug, "/blog/renamed-bbb-xyz")).fetchone()[0]; con.close()
     chk("20o6 renaming a live post writes a 301 from the old URL to the new slug", rc == 1, rc)
+    # Phase B: News is a first-class vertical — blog_posts with structured_type=NewsArticle, served at /news/*
+    c, nnp = jget("POST", "/api/admin/content/posts", token=admin, body={"title": "PCI News Bulletin QQQ", "summary": "Latest project controls update.", "body": "<p>" + ("News about project controls standards. " * 20) + "</p>"})
+    nnid, nnslug = nnp.get("id"), nnp.get("slug")
+    jget("PATCH", f"/api/admin/content/posts/{nnid}", token=admin, body={"structured_type": "NewsArticle"})
+    jget("POST", f"/api/admin/content/posts/{nnid}/publish", token=admin, body={})
+    sc, nland = req("GET", "/news")
+    chk("20v news landing SSR lists the news item", sc == 200 and "PCI News Bulletin QQQ" in nland, sc)
+    sc, bland = req("GET", "/blog")
+    chk("20w blog landing excludes news items", "PCI News Bulletin QQQ" not in bland, None)
+    sc, nart = req("GET", f"/news/{nnslug}")
+    chk("20x news article renders at /news/{slug} with NewsArticle JSON-LD + /news canonical",
+        sc == 200 and "NewsArticle" in nart and 'rel="canonical"' in nart and ("/news/" + nnslug) in nart, sc)
+    code, loc = no_follow("GET", f"/blog/{nnslug}")
+    chk("20y a news post requested under /blog 301s to its /news home", code == 301 and (loc or "").endswith("/news/" + nnslug), (code, loc))
+    sc, nsm = req("GET", "/news-sitemap.xml")
+    chk("20z Google-News sitemap serves with the news: namespace + the recent item", sc == 200 and "sitemap-news" in nsm and nnslug in nsm, sc)
+    sc, nrss = req("GET", "/news/feed.xml")
+    chk("20z2 news RSS feed contains the item", sc == 200 and nnslug in nrss, sc)
+    sc, sidx2 = req("GET", "/sitemap-index.xml")
+    chk("20z3 sitemap index references the news sitemap", "/news-sitemap.xml" in sidx2, None)
     # integrity: unpublish keeps the post + versions (never deleted)
     jget("POST", f"/api/admin/content/posts/{pid}/unpublish", token=admin, body={})
     sc, _ = req("GET", f"/blog/{slug}")
