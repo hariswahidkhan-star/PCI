@@ -46,7 +46,8 @@
     <h1>Careers</h1>
     <p class="muted">Project controls roles across the profession. Browse open positions and apply.</p>
     <div class="c-filters">
-      <input id="f-q" placeholder="Search title, employer, location…"/>
+      <input id="f-q" placeholder="Search title, employer, location, job code…"/>
+      <select id="f-country"><option value="">All countries</option></select>
       <select id="f-type"><option value="">All types</option><option value="full_time">Full-time</option><option value="part_time">Part-time</option><option value="contract">Contract</option><option value="internship">Internship</option><option value="temporary">Temporary</option></select>
       <select id="f-remote"><option value="">Any location type</option><option value="onsite">On-site</option><option value="remote">Remote</option><option value="hybrid">Hybrid</option></select>
       <select id="f-sector"><option value="">All sectors</option></select>
@@ -68,15 +69,17 @@
     var p=new URLSearchParams();
     if($('f-q').value)p.set('q',$('f-q').value); if($('f-type').value)p.set('type',$('f-type').value);
     if($('f-remote').value)p.set('remote',$('f-remote').value); if($('f-sector').value)p.set('sector',$('f-sector').value);
+    if($('f-country').value)p.set('country',$('f-country').value);
     fetch(API+'/api/careers?'+p.toString()).then(function(r){return r.json();}).then(function(d){
-      // sectors dropdown (populate once)
-      var sel=$('f-sector'); if(sel.options.length<=1 && d.sectors){ d.sectors.filter(Boolean).forEach(function(s){var o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o);}); }
+      // populate the sector + country dropdowns once
+      function fill(sel,vals){ if(sel.options.length<=1 && vals){ vals.filter(Boolean).forEach(function(s){var o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o);}); } }
+      fill($('f-sector'), d.sectors); fill($('f-country'), d.countries);
       var box=$('jobs'); box.innerHTML='';
       if(!d.rows||!d.rows.length){ $('empty').style.display='block'; return; } $('empty').style.display='none';
       d.rows.forEach(function(j){
         var el=document.createElement('div'); el.className='job-card'; el.onclick=function(){openJob(j.id);};
-        var meta=[]; if(j.location)meta.push('📍 '+esc(j.location)); meta.push(esc(TYPE[j.employment_type]||j.employment_type)); if(j.remote_type&&j.remote_type!=='onsite')meta.push(esc(REMOTE[j.remote_type])); var sal=salary(j); if(sal)meta.push(esc(sal)); if(j.sector)meta.push(esc(j.sector));
-        el.innerHTML='<h3>'+esc(j.title)+(j.featured?' <span class="tag feat">Featured</span>':'')+'</h3>'+(j.organisation?'<div class="org">'+esc(j.organisation)+'</div>':'')+'<div class="job-meta">'+meta.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>';
+        var meta=[]; var loc=[j.location,j.country].filter(Boolean).join(', '); if(loc)meta.push('📍 '+esc(loc)); meta.push(esc(TYPE[j.employment_type]||j.employment_type)); if(j.remote_type&&j.remote_type!=='onsite')meta.push(esc(REMOTE[j.remote_type])); var sal=salary(j); if(sal)meta.push(esc(sal)); if(j.sector)meta.push(esc(j.sector));
+        el.innerHTML='<h3>'+esc(j.title)+(j.featured?' <span class="tag feat">Featured</span>':'')+'</h3>'+(j.organisation?'<div class="org">'+esc(j.organisation)+'</div>':'')+'<div class="job-meta">'+meta.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>'+(j.job_code?'<div class="muted" style="font-size:.78rem;margin-top:.3rem">Ref '+esc(j.job_code)+'</div>':'');
         box.appendChild(el);
       });
     });
@@ -86,7 +89,8 @@
       if(!d.job){ return; } var j=d.job;
       $('list-view').style.display='none'; var v=$('detail-view'); v.style.display='block'; window.scrollTo(0,0);
       var sal=salary(j);
-      var meta=[]; if(j.location)meta.push('📍 '+esc(j.location)); meta.push(esc(TYPE[j.employment_type]||j.employment_type)); if(j.remote_type)meta.push(esc(REMOTE[j.remote_type]||j.remote_type)); if(sal)meta.push(esc(sal)); if(j.sector)meta.push(esc(j.sector));
+      var loc=[j.location,j.country].filter(Boolean).join(', ');
+      var meta=[]; if(loc)meta.push('📍 '+esc(loc)); meta.push(esc(TYPE[j.employment_type]||j.employment_type)); if(j.remote_type)meta.push(esc(REMOTE[j.remote_type]||j.remote_type)); if(sal)meta.push(esc(sal)); if(j.sector)meta.push(esc(j.sector)); if(j.job_code)meta.push('Ref '+esc(j.job_code));
       var apply='';
       if(j.apply_method==='inplatform'){
         apply='<div class="apply-box"><h4>Apply for this role</h4><div id="apply-form">'
@@ -130,7 +134,7 @@
       };
     });
   }
-  ['f-q','f-type','f-remote','f-sector'].forEach(function(idv){ var e=$(idv); e.addEventListener(idv==='f-q'?'input':'change',function(){ clearTimeout(window._ct); window._ct=setTimeout(load,idv==='f-q'?250:0); }); });
+  ['f-q','f-country','f-type','f-remote','f-sector'].forEach(function(idv){ var e=$(idv); e.addEventListener(idv==='f-q'?'input':'change',function(){ clearTimeout(window._ct); window._ct=setTimeout(load,idv==='f-q'?250:0); }); });
   load();
 })();
 </script>

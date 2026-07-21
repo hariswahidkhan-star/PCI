@@ -129,6 +129,10 @@ public static class Migrate
             apply_method TEXT DEFAULT 'inplatform',apply_url TEXT,apply_email TEXT,featured INTEGER DEFAULT 0,status TEXT DEFAULT 'draft',
             posted_at TEXT,closes_at TEXT,created_by INTEGER,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_jobs_status ON job_postings(status)");
+        // Job reference code (auto-generated, unique) + country (for country-based posting & filtering).
+        AddCol("job_postings", "job_code", "job_code VARCHAR(32)");
+        AddCol("job_postings", "country", "country VARCHAR(64)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_jobs_code ON job_postings(job_code)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS job_applications(id INTEGER PRIMARY KEY AUTOINCREMENT,job_id INTEGER NOT NULL,name TEXT,email TEXT,phone TEXT,
             cover_message TEXT,cv_ref TEXT,cv_name TEXT,status TEXT DEFAULT 'new',admin_note TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_jobapp_job ON job_applications(job_id)");

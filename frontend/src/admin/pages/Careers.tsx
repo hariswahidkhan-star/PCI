@@ -8,7 +8,7 @@ import { fmtDate } from '../../format'
 // (with CV download + status). Backend: Careers.cs (gated 'content').
 
 interface Job {
-  id: number; title: string; organisation?: string | null; location?: string | null
+  id: number; job_code?: string | null; title: string; organisation?: string | null; location?: string | null; country?: string | null
   employment_type?: string; remote_type?: string; sector?: string | null
   description?: string | null; requirements?: string | null; responsibilities?: string | null
   salary_min?: number | null; salary_max?: number | null; salary_currency?: string | null; salary_period?: string | null
@@ -27,9 +27,22 @@ export default function Careers() {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Job[] }>('/api/admin/careers')
   const [edit, setEdit] = useState<Partial<Job> | null>(null)
   const [appsFor, setAppsFor] = useState<Job | null>(null)
+  const [q, setQ] = useState('')
+  const [fStatus, setFStatus] = useState('')
+  const [fCountry, setFCountry] = useState('')
+  const [fType, setFType] = useState('')
 
   const del = (j: Job) =>
     runMutation(async () => { if (!window.confirm(`Delete "${j.title}" and its applications?`)) return; await adminApi.post(`/api/admin/careers/${j.id}/delete`, {}); refetch() })
+
+  const all = data?.rows ?? []
+  const countries = Array.from(new Set(all.map((j) => j.country).filter(Boolean))) as string[]
+  const ql = q.trim().toLowerCase()
+  const rows = all.filter((j) =>
+    (!ql || [j.title, j.organisation, j.job_code, j.location, j.country, j.sector].some((v) => (v ?? '').toLowerCase().includes(ql)))
+    && (!fStatus || j.status === fStatus)
+    && (!fCountry || j.country === fCountry)
+    && (!fType || j.employment_type === fType))
 
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
@@ -38,16 +51,31 @@ export default function Careers() {
         <button className="btn sm" onClick={() => setEdit({ ...EMPTY })}>New posting</button>
       </div>
       <Card>
-        {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : !data || data.rows.length === 0 ? (
-          <Empty>No job postings yet.</Empty>
+        <div className="row" style={{ flexWrap: 'wrap', marginBottom: '.6rem', gap: '.5rem' }}>
+          <input placeholder="Search title, employer, code, country…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 280 }} />
+          <select value={fStatus} onChange={(e) => setFStatus(e.target.value)} style={{ maxWidth: 150 }}>
+            <option value="">All statuses</option><option value="published">Published</option><option value="draft">Draft</option><option value="closed">Closed</option>
+          </select>
+          <select value={fCountry} onChange={(e) => setFCountry(e.target.value)} style={{ maxWidth: 170 }}>
+            <option value="">All countries</option>{countries.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <select value={fType} onChange={(e) => setFType(e.target.value)} style={{ maxWidth: 150 }}>
+            <option value="">All types</option><option value="full_time">Full-time</option><option value="part_time">Part-time</option><option value="contract">Contract</option><option value="internship">Internship</option><option value="temporary">Temporary</option>
+          </select>
+          <span className="muted small" style={{ alignSelf: 'center' }}>{rows.length} of {all.length}</span>
+        </div>
+        {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : rows.length === 0 ? (
+          <Empty>{all.length === 0 ? 'No job postings yet.' : 'No postings match your filters.'}</Empty>
         ) : (
           <table className="data">
-            <thead><tr><th>Title</th><th>Employer</th><th>Type</th><th>Applications</th><th>Status</th><th></th></tr></thead>
+            <thead><tr><th>Code</th><th>Title</th><th>Employer</th><th>Location</th><th>Type</th><th>Applications</th><th>Status</th><th></th></tr></thead>
             <tbody>
-              {data.rows.map((j) => (
+              {rows.map((j) => (
                 <tr key={j.id}>
+                  <td className="small mono">{j.job_code}</td>
                   <td>{j.title}{j.featured ? ' ⭐' : ''}</td>
                   <td className="small">{j.organisation}</td>
+                  <td className="small">{[j.location, j.country].filter(Boolean).join(', ')}</td>
                   <td className="small">{j.employment_type}{j.remote_type && j.remote_type !== 'onsite' ? ` · ${j.remote_type}` : ''}</td>
                   <td className="small">{j.applications ?? 0}</td>
                   <td>{j.status === 'published' ? <Badge tone="ok">Published</Badge> : j.status === 'closed' ? <Badge tone="warn">Closed</Badge> : <Badge tone="neutral">Draft</Badge>}</td>
@@ -94,8 +122,10 @@ function JobEditor({ initial, onClose, onSaved }: { initial: Partial<Job>; onClo
         {err && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{err}</div>}
         <div className="grid cols-2">
           <div className="field" style={{ gridColumn: '1 / -1' }}><label>Title</label><input value={d.title ?? ''} onChange={(e) => set('title', e.target.value)} /></div>
+          <div className="field"><label>Job code <span className="muted small">(blank = auto)</span></label><input value={d.job_code ?? ''} onChange={(e) => set('job_code', e.target.value)} placeholder="auto: PCI-2026-0001" /></div>
           <div className="field"><label>Employer / organisation</label><input value={d.organisation ?? ''} onChange={(e) => set('organisation', e.target.value)} /></div>
-          <div className="field"><label>Location</label><input value={d.location ?? ''} onChange={(e) => set('location', e.target.value)} placeholder="London, UK" /></div>
+          <div className="field"><label>City / location</label><input value={d.location ?? ''} onChange={(e) => set('location', e.target.value)} placeholder="London" /></div>
+          <div className="field"><label>Country</label><input value={d.country ?? ''} onChange={(e) => set('country', e.target.value)} placeholder="United Kingdom" /></div>
           <div className="field"><label>Type</label>
             <select value={d.employment_type ?? 'full_time'} onChange={(e) => set('employment_type', e.target.value)}>
               <option value="full_time">Full-time</option><option value="part_time">Part-time</option><option value="contract">Contract</option><option value="internship">Internship</option><option value="temporary">Temporary</option>

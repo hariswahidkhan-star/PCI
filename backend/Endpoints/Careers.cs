@@ -42,20 +42,23 @@ public static class Careers
             var type = req.Query["type"].ToString();
             var remote = req.Query["remote"].ToString();
             var sector = req.Query["sector"].ToString();
+            var country = req.Query["country"].ToString();
             var where = OpenWhere; var args = new List<object?>();
-            if (q.Length > 0) { where += " AND (title LIKE ? OR organisation LIKE ? OR location LIKE ? OR sector LIKE ?)"; var like = "%" + q + "%"; args.AddRange(new object?[] { like, like, like, like }); }
+            if (q.Length > 0) { where += " AND (title LIKE ? OR organisation LIKE ? OR location LIKE ? OR sector LIKE ? OR job_code LIKE ?)"; var like = "%" + q + "%"; args.AddRange(new object?[] { like, like, like, like, like }); }
             if (Types.Contains(type)) { where += " AND employment_type=?"; args.Add(type); }
             if (Remotes.Contains(remote)) { where += " AND remote_type=?"; args.Add(remote); }
             if (!string.IsNullOrWhiteSpace(sector)) { where += " AND sector=?"; args.Add(sector); }
-            var rows = db.Query($@"SELECT id,title,organisation,location,employment_type,remote_type,sector,salary_min,salary_max,salary_currency,salary_period,
+            if (!string.IsNullOrWhiteSpace(country)) { where += " AND country=?"; args.Add(country); }
+            var rows = db.Query($@"SELECT id,job_code,title,organisation,location,country,employment_type,remote_type,sector,salary_min,salary_max,salary_currency,salary_period,
                 featured,posted_at,closes_at,apply_method FROM job_postings WHERE {where} ORDER BY featured DESC, COALESCE(posted_at,created_at) DESC, id DESC", args.ToArray());
-            var sectors = db.Query($"SELECT DISTINCT sector FROM job_postings WHERE {OpenWhere} AND sector IS NOT NULL AND sector<>''").Select(r => H.Str(r["sector"])).ToList();
-            return J(new { rows, sectors, total = rows.Count });
+            var sectors = db.Query($"SELECT DISTINCT sector FROM job_postings WHERE {OpenWhere} AND sector IS NOT NULL AND sector<>'' ORDER BY sector").Select(r => H.Str(r["sector"])).ToList();
+            var countries = db.Query($"SELECT DISTINCT country FROM job_postings WHERE {OpenWhere} AND country IS NOT NULL AND country<>'' ORDER BY country").Select(r => H.Str(r["country"])).ToList();
+            return J(new { rows, sectors, countries, total = rows.Count });
         });
 
         app.MapGet("/api/careers/{id:long}", (long id) =>
         {
-            var r = db.QueryOne($"SELECT id,title,organisation,location,employment_type,remote_type,sector,description,requirements,responsibilities,salary_min,salary_max,salary_currency,salary_period,posted_at,closes_at,apply_method,apply_url,apply_email FROM job_postings WHERE id=? AND {OpenWhere}", id);
+            var r = db.QueryOne($"SELECT id,job_code,title,organisation,location,country,employment_type,remote_type,sector,description,requirements,responsibilities,salary_min,salary_max,salary_currency,salary_period,posted_at,closes_at,apply_method,apply_url,apply_email FROM job_postings WHERE id=? AND {OpenWhere}", id);
             return r is null ? Results.Json(new { error = "not_found" }, statusCode: 404) : J(new { job = Row(r, true) });
         });
 
@@ -107,7 +110,7 @@ public static class Careers
             if (status == "published" && string.IsNullOrWhiteSpace(postedAt)) postedAt = H.IsoNow;
             var cols = new (string col, object? val)[]
             {
-                ("title", title), ("organisation", H.GetS(b, "organisation")), ("location", H.GetS(b, "location")),
+                ("title", title), ("organisation", H.GetS(b, "organisation")), ("location", H.GetS(b, "location")), ("country", H.GetS(b, "country")),
                 ("employment_type", type), ("remote_type", remote), ("sector", H.GetS(b, "sector")),
                 ("description", H.GetS(b, "description")), ("requirements", H.GetS(b, "requirements")), ("responsibilities", H.GetS(b, "responsibilities")),
                 ("salary_min", H.GetNum(b, "salary_min")), ("salary_max", H.GetNum(b, "salary_max")),
@@ -116,19 +119,30 @@ public static class Careers
                 ("featured", (H.GetBool(b, "featured") ?? false) ? 1 : 0), ("status", status),
                 ("posted_at", postedAt), ("closes_at", H.GetS(b, "closes_at")),
             };
+            // Optional custom job code; validated for uniqueness (the unique index also guards it).
+            var codeIn = (H.GetS(b, "job_code") ?? "").Trim().ToUpperInvariant();
+            if (codeIn.Length > 32) codeIn = codeIn[..32];
             var id = H.GetNum(b, "id");
             if (id is > 0)
             {
-                var set = string.Join(",", cols.Select(c => c.col + "=?")) + ",updated_at=datetime('now')";
-                db.Execute($"UPDATE job_postings SET {set} WHERE id=?", cols.Select(c => c.val).Append((object?)(long)id.Value).ToArray());
+                if (codeIn.Length > 0 && db.QueryOne("SELECT id FROM job_postings WHERE job_code=? AND id<>?", codeIn, (long)id) is not null)
+                    return Results.Json(new { error = "code_taken", message = "That job code is already in use." }, statusCode: 400);
+                var set = string.Join(",", cols.Select(c => c.col + "=?")) + (codeIn.Length > 0 ? ",job_code=?" : "") + ",updated_at=datetime('now')";
+                var vals = cols.Select(c => c.val).ToList(); if (codeIn.Length > 0) vals.Add(codeIn); vals.Add((long)id.Value);
+                db.Execute($"UPDATE job_postings SET {set} WHERE id=?", vals.ToArray());
                 log(adm.Id, "career_update", ((long)id).ToString());
                 return J(new { ok = true, id = (long)id });
             }
+            if (codeIn.Length > 0 && db.QueryOne("SELECT id FROM job_postings WHERE job_code=?", codeIn) is not null)
+                return Results.Json(new { error = "code_taken", message = "That job code is already in use." }, statusCode: 400);
             var colNames = cols.Select(c => c.col).Append("created_by").ToArray();
             var ph = string.Join(",", colNames.Select(_ => "?"));
             var newId = db.ExecuteReturningId($"INSERT INTO job_postings({string.Join(",", colNames)}) VALUES({ph})", cols.Select(c => c.val).Append((object?)adm.Id).ToArray());
-            log(adm.Id, "career_create", newId.ToString());
-            return J(new { ok = true, id = newId });
+            // Auto-generate a unique job code from the new id when the operator didn't supply one.
+            var code = codeIn.Length > 0 ? codeIn : $"PCI-{DateTime.UtcNow:yyyy}-{newId:D4}";
+            db.Execute("UPDATE job_postings SET job_code=? WHERE id=?", code, newId);
+            log(adm.Id, "career_create", $"{newId} {code}");
+            return J(new { ok = true, id = newId, job_code = code });
         }));
 
         app.MapPost("/api/admin/careers/{id:long}/delete", (HttpRequest req, long id) => gate(req, "content", adm =>
