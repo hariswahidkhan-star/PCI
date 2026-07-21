@@ -109,7 +109,7 @@ public static class StudentExam
                         return new { certification_id = cid, certification_code = cert?["code"], certification_name = cert?["name"],
                             payment_id = r["payment_id"], reference = r["reference"], deadline = r["exam_schedule_deadline"],
                             entitlement_status = r["entitlement_status"], booking = bk, latest_attempt = att, credential = cred,
-                            recert_cpd = recertCpd is { HasRequirement: true } rc ? new { required = rc.Required, approved = rc.Approved, met = rc.Met } : null,
+                            recert_cpd = recertCpd is { HasRequirement: true } rc ? new { required = rc.Required, approved = rc.Approved, met = rc.Met, ai_required = rc.AiRequired, ai_approved = rc.AiApproved, ai_met = rc.AiMet } : null,
                             authorization = auth, extended, original_deadline = auth?["original_deadline"], days_left = daysLeft,
                             attempts_used = ExamAuthorization.AttemptsUsed(db, u.Id, cid), attempts_permitted = ExamAuthorization.AttemptsPermitted(db, u.Id, cid),
                             retake_wait_until = auth?["retake_wait_until"], waiver, scheduling_status = schedStatus };
@@ -798,7 +798,38 @@ public static class StudentExam
         app.MapGet("/api/me/cpd", (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            return J(new { rows = db.Query("SELECT id,activity_date,category,hours,description,evidence_name,status,admin_note,created_at FROM cpd_entries WHERE user_id=? ORDER BY id DESC", u.Id) });
+            var year = DateTime.UtcNow.Year;
+            var latestDecl = db.QueryOne("SELECT cycle_year,position,statement,hours_snapshot,ai_hours_snapshot,created_at FROM cpd_declarations WHERE user_id=? ORDER BY id DESC", u.Id);
+            var thisYearDecl = db.QueryOne("SELECT cycle_year,position,created_at FROM cpd_declarations WHERE user_id=? AND cycle_year=? ORDER BY id DESC", u.Id, year);
+            return J(new
+            {
+                rows = db.Query("SELECT id,activity_date,category,hours,description,evidence_name,status,admin_note,created_at FROM cpd_entries WHERE user_id=? ORDER BY id DESC", u.Id),
+                // The CPD framework's categories (client renders these in the activity form); the AI-currency
+                // category is the mandatory-component marker.
+                categories = new[] { "Structured learning", "Practice & application", "Contribution", "Events & webinars", CpdPolicy.AiCategory },
+                ai_category = CpdPolicy.AiCategory,
+                declaration_year = year,
+                declared_this_year = thisYearDecl is not null,
+                latest_declaration = latestDecl,
+            });
+        });
+        // Annual CPD declaration ("declared, not discovered"). One row per submission; the latest per year wins.
+        app.MapPost("/api/me/cpd/declaration", async (HttpContext ctx) =>
+        {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var b = await H.Body(ctx.Request);
+            var position = H.GetS(b, "position") ?? "";
+            if (position is not ("compliant" or "career_break" or "not_met"))
+                return Results.Json(new { error = "bad_position", message = "Choose your CPD position." }, statusCode: 400);
+            var statement = (H.GetS(b, "statement") ?? "").Trim(); if (statement.Length > 2000) statement = statement[..2000];
+            var year = DateTime.UtcNow.Year;
+            var approved = db.Query("SELECT hours,category FROM cpd_entries WHERE user_id=? AND status='approved'", u.Id);
+            var hours = approved.Sum(r => H.D(r["hours"]));
+            var aiHours = approved.Where(r => H.Str(r["category"]) == CpdPolicy.AiCategory).Sum(r => H.D(r["hours"]));
+            db.Execute("INSERT INTO cpd_declarations(user_id,cycle_year,position,statement,hours_snapshot,ai_hours_snapshot) VALUES(?,?,?,?,?,?)",
+                u.Id, year, position, statement.Length > 0 ? statement : null, hours, aiHours);
+            log(u.Id, "cpd_declaration", $"{year}:{position}");
+            return J(new { ok = true, cycle_year = year, position });
         });
         app.MapPost("/api/me/cpd", async (HttpContext ctx) =>
         {

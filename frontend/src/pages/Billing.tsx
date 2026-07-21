@@ -215,6 +215,9 @@ function PlansCard() {
                   {cpdBlocked
                     ? `CPD ${r.cpd.approved}/${r.cpd.required} approved hours — complete your CPD to recertify.`
                     : `CPD requirement met (${r.cpd.approved}/${r.cpd.required} approved hours).`}
+                  {!!r.cpd.ai_required && r.cpd.ai_required > 0 && (
+                    <> {' '}(incl. AI-currency {r.cpd.ai_approved ?? 0}/{r.cpd.ai_required}{r.cpd.ai_met ? ' ✓' : ''})</>
+                  )}
                   {cpdBlocked && <> <Link to="/cpd">Log CPD</Link></>}
                 </div>
               )}

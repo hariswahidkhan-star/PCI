@@ -40,7 +40,7 @@ export interface ExamEntry {
   latest_attempt?: Record<string, unknown> | null
   credential?: { credential_id: string; status: string; expires_at?: string | null } | null
   /** Recert CPD status for this credential (present only when the certification requires CPD). */
-  recert_cpd?: { required: number; approved: number; met: boolean } | null
+  recert_cpd?: { required: number; approved: number; met: boolean; ai_required?: number; ai_approved?: number; ai_met?: boolean } | null
   // Exam-exceptions surface: admin extensions, attempt allowances, waivers and scheduling state.
   authorization?: Record<string, unknown> | null
   extended?: boolean

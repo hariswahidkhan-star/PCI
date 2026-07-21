@@ -89,6 +89,12 @@ public static class Migrate
             reviewed_by INTEGER,reviewed_at TEXT,admin_note TEXT,completed_at TEXT)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_erasure_user ON erasure_requests(user_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_erasure_status ON erasure_requests(status)");
+        // Annual CPD declaration ("declared, not discovered"): a member attests their CPD position each cycle
+        // year. position: compliant | career_break | not_met. hours_snapshot records approved hours at the time.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cpd_declarations(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,
+            cycle_year INTEGER NOT NULL,position TEXT NOT NULL,statement TEXT,hours_snapshot REAL DEFAULT 0,ai_hours_snapshot REAL DEFAULT 0,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cpd_decl_user ON cpd_declarations(user_id)");
         // fallback shape kept aligned with schema.sql (storage_ref required, data_uri nullable legacy)
         db.Exec(@"CREATE TABLE IF NOT EXISTS support_attachments(id INTEGER PRIMARY KEY AUTOINCREMENT,ticket_id INTEGER NOT NULL,user_id INTEGER,filename TEXT NOT NULL,mime TEXT,size_bytes INTEGER,sha256 TEXT,data_uri TEXT,storage_ref TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_attach_ticket ON support_attachments(ticket_id)");
@@ -752,6 +758,9 @@ public static class Migrate
             // CPD requirement per recertification cycle (0 = no requirement). Approved CPD hours dated within
             // the credential's current cycle must reach this before the holder can recertify.
             ("cpd_required_hours","cpd_required_hours REAL DEFAULT 0"),
+            // Mandatory "AI-currency" component of the CPD requirement (0 = none): a portion of the required
+            // hours that must be in the AI-currency category, keeping AI knowledge current (CPD framework).
+            ("cpd_ai_hours_required","cpd_ai_hours_required REAL DEFAULT 0"),
         })
             AddCol("certifications", col, ddl);
 

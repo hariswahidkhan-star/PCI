@@ -56,12 +56,17 @@ public static class Payments
                     var urow = em.Length > 0 ? db.QueryOne("SELECT id FROM users WHERE email=?", em) : null;
                     if (urow is not null && Certs.TryResolve(db, H.GetS(d, "certification_id", "certification", "cert")) is { } rcId
                         && CpdPolicy.ForUserCert(db, H.L(urow["id"]), rcId) is { HasRequirement: true, Met: false } cpd)
+                    {
+                        var aiPart = cpd.AiRequired > 0 && !cpd.AiMet
+                            ? $" This includes {cpd.AiRequired:0.#} AI-currency hours ({cpd.AiApproved:0.#} approved)."
+                            : "";
                         return Results.Json(new
                         {
                             error = "cpd_required",
-                            message = $"Recertification requires {cpd.Required:0.#} approved CPD hours for this certification cycle. You have {cpd.Approved:0.#} approved so far — log and get the remaining hours approved, then recertify.",
-                            required = cpd.Required, approved = cpd.Approved,
+                            message = $"Recertification requires {cpd.Required:0.#} approved CPD hours for this certification cycle. You have {cpd.Approved:0.#} approved so far.{aiPart} Log and get the remaining hours approved, then recertify.",
+                            required = cpd.Required, approved = cpd.Approved, ai_required = cpd.AiRequired, ai_approved = cpd.AiApproved,
                         }, statusCode: 400);
+                    }
                 }
                 // Which certification the exam seat is for (id or code; the founding certification when
                 // unspecified). An EXPLICIT but unknown value is rejected — never silently converted.

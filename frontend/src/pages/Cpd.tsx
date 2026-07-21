@@ -14,16 +14,28 @@ interface CpdRow {
   description?: string | null
   status?: string | null
 }
+interface CpdData {
+  rows: CpdRow[]
+  categories?: string[]
+  ai_category?: string
+  declaration_year?: number
+  declared_this_year?: boolean
+  latest_declaration?: { cycle_year: number; position: string; statement?: string | null; created_at?: string | null } | null
+}
 
-const CATEGORIES = ['General', 'Training course', 'Conference', 'Self-study', 'Mentoring', 'Publication', 'On-the-job']
+const FALLBACK_CATEGORIES = ['Structured learning', 'Practice & application', 'Contribution', 'Events & webinars', 'AI currency']
+const POSITION_LABEL: Record<string, string> = { compliant: 'Compliant — I have met my CPD', career_break: 'On a career break / adjusted period', not_met: 'Not yet met' }
 
 export default function Cpd() {
   const t = useT()
   const { me, refetch: refetchMe } = useMe()
-  const { data, loading, error, refetch } = useQuery<{ rows: CpdRow[] }>('/api/me/cpd')
-  const [form, setForm] = useState({ description: '', category: 'General', hours: '', activity_date: '' })
+  const { data, loading, error, refetch } = useQuery<CpdData>('/api/me/cpd')
+  const categories = data?.categories?.length ? data.categories : FALLBACK_CATEGORIES
+  const aiCategory = data?.ai_category ?? 'AI currency'
+  const [form, setForm] = useState({ description: '', category: '', hours: '', activity_date: '' })
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
+  const category = form.category || categories[0]
 
   const target = me?.cpd.target ?? 60
   const total = me?.cpd.total ?? 0
@@ -34,8 +46,8 @@ export default function Cpd() {
     setBusy(true)
     setMsg(null)
     try {
-      await api.post('/api/me/cpd', { ...form, hours: parseFloat(form.hours) || 0 })
-      setForm({ description: '', category: 'General', hours: '', activity_date: '' })
+      await api.post('/api/me/cpd', { ...form, category, hours: parseFloat(form.hours) || 0 })
+      setForm({ description: '', category: '', hours: '', activity_date: '' })
       refetch()
       refetchMe()
     } catch (err) {
@@ -69,6 +81,8 @@ export default function Cpd() {
         </p>
       </Card>
 
+      <DeclarationCard data={data} onDone={refetch} />
+
       <Card title={t('cpd.addActivity')}>
         {msg && <div className="notice err" role="alert" style={{ marginBottom: '.75rem' }}>{msg}</div>}
         <form onSubmit={add}>
@@ -79,9 +93,10 @@ export default function Cpd() {
             </div>
             <div className="field">
               <label htmlFor="cpd-category">{t('cpd.category')}</label>
-              <select id="cpd-category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
-                {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+              <select id="cpd-category" value={category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+                {categories.map((c) => <option key={c}>{c}</option>)}
               </select>
+              {category === aiCategory && <span className="muted small">Mandatory AI-currency component of the framework.</span>}
             </div>
             <div className="field">
               <label htmlFor="cpd-hours">{t('cpd.hours')}</label>
@@ -124,5 +139,65 @@ export default function Cpd() {
         )}
       </Card>
     </div>
+  )
+}
+
+// Annual CPD declaration — "declared, not discovered". The member states their CPD position for the year.
+function DeclarationCard({ data, onDone }: { data?: CpdData | null; onDone: () => void }) {
+  const year = data?.declaration_year ?? new Date().getUTCFullYear()
+  const declared = !!data?.declared_this_year
+  const latest = data?.latest_declaration ?? null
+  const [position, setPosition] = useState('compliant')
+  const [statement, setStatement] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [note, setNote] = useState<{ ok: boolean; text: string } | null>(null)
+  const [reopen, setReopen] = useState(false)
+
+  async function submit() {
+    setBusy(true); setNote(null)
+    try {
+      await api.post('/api/me/cpd/declaration', { position, statement: statement.trim() || undefined })
+      setNote({ ok: true, text: `Your ${year} CPD declaration has been recorded.` })
+      setReopen(false); onDone()
+    } catch (e) {
+      setNote({ ok: false, text: e instanceof Error ? e.message : 'Could not record your declaration.' })
+    } finally { setBusy(false) }
+  }
+
+  return (
+    <Card title={`Annual CPD declaration (${year})`}>
+      {declared && !reopen ? (
+        <div className="stack small" style={{ gap: '.35rem' }}>
+          <div><StatusBadge status="completed" /> You have declared your CPD position for {year}
+            {latest?.position ? `: ${POSITION_LABEL[latest.position] ?? latest.position}` : ''}
+            {latest?.created_at ? ` (${fmtDate(latest.created_at)})` : ''}.</div>
+          <div><button className="btn ghost sm" onClick={() => setReopen(true)}>Update declaration</button></div>
+        </div>
+      ) : (
+        <div className="stack" style={{ display: 'grid', gap: '.5rem' }}>
+          <p className="muted small" style={{ margin: 0 }}>
+            Confirm your continuing professional development position for {year}. What matters is that your
+            position is declared, not discovered — tell PCI early if you are on a career break or adjusted period.
+          </p>
+          <div className="field">
+            <label htmlFor="cpd-position">Your CPD position</label>
+            <select id="cpd-position" value={position} onChange={(e) => setPosition(e.target.value)}>
+              <option value="compliant">{POSITION_LABEL.compliant}</option>
+              <option value="career_break">{POSITION_LABEL.career_break}</option>
+              <option value="not_met">{POSITION_LABEL.not_met}</option>
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="cpd-statement">Notes (optional)</label>
+            <textarea id="cpd-statement" rows={2} maxLength={2000} value={statement} onChange={(e) => setStatement(e.target.value)} placeholder="Anything PCI should know about your CPD this period." />
+          </div>
+          {note && <div className={'small' + (note.ok ? ' muted' : '')} style={note.ok ? undefined : { color: 'var(--err, #c2410c)' }} role="status">{note.text}</div>}
+          <div className="row">
+            <button className="btn sm" disabled={busy} onClick={submit}>{busy ? 'Submitting…' : 'Submit declaration'}</button>
+            {reopen && <button className="btn ghost sm" onClick={() => setReopen(false)}>Cancel</button>}
+          </div>
+        </div>
+      )}
+    </Card>
   )
 }
