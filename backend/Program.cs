@@ -53,6 +53,7 @@ builder.Services.AddHostedService<PCI.Backend.Core.IntegrationDispatcher>();
 // Communications outbox worker: drains comm_outbox (email/WhatsApp/in-app) with retries + backoff.
 builder.Services.AddHostedService<PCI.Backend.Core.OutboxDispatcher>();
 builder.Services.AddHostedService<PCI.Backend.Core.SocialDispatcher>();   // Phase 2: social publish outbox
+builder.Services.AddHostedService<PCI.Backend.Core.ScheduledPublisher>();   // Content Centre: publish scheduled blog posts when due
 builder.Services.AddHostedService<PCI.Backend.Core.SyndicationDispatcher>();   // Phase 3: syndication outbox
 builder.Services.AddHostedService<PCI.Backend.Core.MarketingJobDispatcher>();   // Marketing Phase 2: provider job queue
 builder.Services.AddHostedService<PCI.Backend.Core.CommsReminderService>();     // Comms §13: scheduled reminder sequences
@@ -992,6 +993,7 @@ PCI.Backend.Endpoints.PartnerPortal.Map(app, db, logFn, GateFn);       // instit
 PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
 PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
 PCI.Backend.Data.CertuvoSeed.Apply(db); // Certuvo starter practice pack (scenario MCQs across BoK domains)
+PCI.Backend.Data.BlogSeed.Ensure(db);  // Content Centre: default byline author + content-pillar categories (idempotent by slug)
 PCI.Backend.Data.DemoExamSeed.Apply(db); // optional demo LIVE-exam bank — only when SEED_DEMO_EXAM=true (fresh-deploy testing)
 app.Use(async (ctx, next) =>
 {
@@ -1002,7 +1004,7 @@ app.Use(async (ctx, next) =>
         if (PCI.Backend.Core.PathRedirects.Target(db, ctx.Request) is { } red)
         {
             ctx.Response.StatusCode = red.status;
-            ctx.Response.Headers.Location = red.to;
+            if (red.status != 410) ctx.Response.Headers.Location = red.to;   // 410 Gone carries no Location
             return;
         }
         var reqPath = ctx.Request.Path.Value ?? "/";
@@ -1209,6 +1211,13 @@ app.Use(async (ctx, next) =>
         {
             ctx.Response.ContentType = "application/xml; charset=utf-8";
             await ctx.Response.WriteAsync(PCI.Backend.Core.Sitemap.Xml(db));
+            return;
+        }
+        // Sitemap index — unifies the page sitemap and the blog (image) sitemap under one entry point.
+        if (reqPath.Equals("/sitemap-index.xml", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.ContentType = "application/xml; charset=utf-8";
+            await ctx.Response.WriteAsync(PCI.Backend.Core.Sitemap.Index(db));
             return;
         }
         // Policy-aware robots.txt (Phase 6) — overrides the static file so blocked AI crawlers

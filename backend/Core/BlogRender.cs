@@ -20,19 +20,30 @@ public static class BlogRender
         return File.Exists(p) ? File.ReadAllText(p) : null;
     }
 
+    // Default site-wide keyword line + robots directive, used when a page supplies nothing more specific.
+    const string DefaultKeywords = "project controls, project finance, project delivery, AI, PCL-AI, PFL-AI, PDL-AI, certification, professional development";
+    const string DefaultRobots = "index, follow, max-image-preview:large";
+
     static string Compose(Db db, string webRoot, string lang, string slugForSeo, string title, string desc,
-        string canonical, string ogType, string ogImage, string headExtra, string body)
+        string canonical, string ogType, string ogImage, string headExtra, string body,
+        string? robots = null, string? ogTitle = null, string? ogDesc = null, string? keywords = null)
     {
         var shell = Shell(webRoot);
         if (shell is null) return body;   // template missing → still return content
+        // The shell owns the single copy of each head tag (robots/og:title/og:description/keywords) via tokens,
+        // so an article never emits a second, conflicting <meta>. og:title/description fall back to the page
+        // title/description; robots defaults to indexable; keywords to the site-wide line.
         var html = shell
             .Replace("<!--PCI-BLOG-->", body)
+            .Replace("{{ROBOTS}}", Esc(string.IsNullOrWhiteSpace(robots) ? DefaultRobots : robots))
+            .Replace("{{OGTITLE}}", Esc(string.IsNullOrWhiteSpace(ogTitle) ? title : ogTitle))
+            .Replace("{{OGDESC}}", Esc(string.IsNullOrWhiteSpace(ogDesc) ? desc : ogDesc))
             .Replace("{{TITLE}}", Esc(title))
             .Replace("{{DESC}}", Esc(desc))
             .Replace("{{CANONICAL}}", Esc(canonical))
             .Replace("{{OGTYPE}}", Esc(ogType))
             .Replace("{{OGIMAGE}}", Esc(ogImage))
-            .Replace("{{KEYWORDS}}", Esc("project controls, project finance, project delivery, AI, PCL-AI, PFL-AI, PDL-AI, certification, professional development"))
+            .Replace("{{KEYWORDS}}", Esc(string.IsNullOrWhiteSpace(keywords) ? DefaultKeywords : keywords))
             .Replace("{{HEAD_EXTRA}}", headExtra);
         html = ListSections.Inject(db, html, lang);                 // live header/footer nav
         html = SeoTags.Inject(db, html, slugForSeo);                // admin analytics + verification metas
@@ -60,9 +71,15 @@ public static class BlogRender
         var ogImage = AbsImage(db, H.Str(p["og_image"]) ?? H.Str(p["social_image"]) ?? H.Str(p["featured_image"]));
         var noindex = H.L(p["robots_noindex"]) == 1;
 
+        // robots + og:title + og:description + keywords are emitted once by the shell via Compose tokens
+        // (no second, conflicting <meta> here). og:title uses og_title, falling back to the post title;
+        // og:description uses og_description, falling back to the meta description/summary.
+        var robots = noindex ? "noindex, follow" : DefaultRobots;
+        var ogTitle = H.Str(p["og_title"]) ?? H.Str(p["title"]) ?? "";
+        var ogDesc = H.Str(p["og_description"]) ?? desc;
+        var keywords = KeywordLine(p, tags);
+
         var head = new StringBuilder();
-        if (noindex) head.Append("<meta name=\"robots\" content=\"noindex, follow\"/>");
-        head.Append("<meta property=\"og:title\" content=\"").Append(Esc(H.Str(p["og_title"]) ?? H.Str(p["title"]) ?? "")).Append("\"/>");
         if (H.Str(p["published_at"]) is { Length: > 0 } pub)
             head.Append("<meta property=\"article:published_time\" content=\"").Append(Esc(Iso(pub))).Append("\"/>");
         if (H.Str(p["updated_at"]) is { Length: > 0 } upd)
@@ -71,7 +88,8 @@ public static class BlogRender
         head.Append(JsonLd(db, p, author, category, canonical, basePath, ogImage));
 
         return Compose(db, webRoot, lang, "blog/" + slug + ".html", title, desc, canonical,
-            "article", ogImage, head.ToString(), ArticleBody(db, p, author, category, tags, basePath));
+            "article", ogImage, head.ToString(), ArticleBody(db, p, author, category, tags, basePath),
+            robots: robots, ogTitle: ogTitle, ogDesc: ogDesc, keywords: keywords);
     }
 
     static string ArticleBody(Db db, Dictionary<string, object?> p, Dictionary<string, object?>? author,
@@ -175,13 +193,14 @@ public static class BlogRender
         }
         sb.Append("</div></section>");
 
-        // ItemList JSON-LD for the index
+        // ItemList JSON-LD for the index. Paginated pages (page>1) are noindex via the shell robots token
+        // (single tag) so thin duplicate listings aren't indexed; the og:title is the clean facet heading.
         var head = new StringBuilder();
-        if (page > 1) head.Append("<meta name=\"robots\" content=\"noindex, follow\"/>");   // paginated pages: don't index thin duplicates
         head.Append(IndexJsonLd(db, posts, basePath));
 
         return Compose(db, webRoot, lang, "blog.html", heading + " | Project Controls Institute", desc,
-            canonical, "website", "https://projectcontrolsinstitute.org/assets/og-image.jpg", head.ToString(), sb.ToString());
+            canonical, "website", "https://projectcontrolsinstitute.org/assets/og-image.jpg", head.ToString(), sb.ToString(),
+            robots: page > 1 ? "noindex, follow" : DefaultRobots, ogTitle: heading);
     }
 
     static string Card(Db db, Dictionary<string, object?> p, string basePath)
@@ -219,7 +238,10 @@ public static class BlogRender
             ["@type"] = type,
             ["headline"] = H.Str(p["title"]),
             ["description"] = H.Str(p["meta_description"]) ?? H.Str(p["summary"]),
-            ["image"] = ogImage,
+            // Model the article image as an ImageObject (url + caption) rather than a bare URL string, so
+            // rich-result parsers get a typed image. Dimensions are omitted (not known reliably per-post).
+            ["image"] = new Dictionary<string, object?> { ["@type"] = "ImageObject", ["url"] = ogImage,
+                ["caption"] = H.Str(p["featured_image_alt"]) ?? H.Str(p["title"]) },
             ["datePublished"] = H.Str(p["published_at"]) is { Length: > 0 } pub ? Iso(pub) : null,
             ["dateModified"] = H.Str(p["updated_at"]) is { Length: > 0 } upd ? Iso(upd) : null,
             ["inLanguage"] = H.Str(p["language"]) ?? "en",
@@ -310,6 +332,25 @@ public static class BlogRender
             System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal, out var d)
             ? d.ToString("d MMM yyyy", System.Globalization.CultureInfo.InvariantCulture) : dt;
     }
+    // Build the <meta name="keywords"> line for an article from its editorial SEO fields + tags, so the
+    // stored primary_keyword/secondary_keywords are actually surfaced. Dedup (case-insensitive), capped at
+    // 12 terms; null → Compose falls back to the site-wide default line.
+    static string? KeywordLine(Dictionary<string, object?> p, List<Dictionary<string, object?>> tags)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var outp = new List<string>();
+        void Add(string? s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return;
+            foreach (var part in s.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                if (outp.Count < 12 && seen.Add(part)) outp.Add(part);
+        }
+        Add(H.Str(p["primary_keyword"]));
+        Add(H.Str(p["secondary_keywords"]));
+        foreach (var t in tags) Add(H.Str(t["name"]));
+        return outp.Count > 0 ? string.Join(", ", outp) : null;
+    }
+
     static string Slug(string? s) => Blog.Slugify(s ?? "");
     static string Trunc(string s, int n) => s.Length <= n ? s : s[..n].TrimEnd() + "…";
     static string Esc(string? s) => (s ?? "").Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;");

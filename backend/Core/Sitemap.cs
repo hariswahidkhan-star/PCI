@@ -60,5 +60,22 @@ public static class Sitemap
         }
     }
 
+    /// <summary>
+    /// Sitemap index — a single entry point that references the page sitemap (/sitemap.xml) and the blog
+    /// sitemap (/blog-sitemap.xml, which carries image entries). Advertised from robots.txt so search
+    /// engines discover both without either being orphaned.
+    /// </summary>
+    public static string Index(Db db)
+    {
+        var host = Redirects.CanonicalBase;
+        var sb = new StringBuilder(512);
+        sb.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        sb.Append("<sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
+        foreach (var path in new[] { "/sitemap.xml", "/blog-sitemap.xml" })
+            sb.Append("  <sitemap><loc>").Append(Esc(host + path)).Append("</loc></sitemap>\n");
+        sb.Append("</sitemapindex>\n");
+        return sb.ToString();
+    }
+
     static string Esc(string s) => s.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
 }

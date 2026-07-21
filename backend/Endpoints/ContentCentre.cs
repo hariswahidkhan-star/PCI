@@ -143,8 +143,17 @@ public static class ContentCentre
                 var p = db.QueryOne("SELECT id,version,status FROM blog_posts WHERE id=?", id);
                 if (p is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
                 Snapshot(db, id, H.GetS(b, "change_reason") ?? "edit", adm.Id);      // preserve prior version first
-                if (H.GetS(b, "slug") is { Length: > 0 } newSlug)
-                    db.Execute("UPDATE blog_posts SET slug=? WHERE id=?", Blog.UniqueSlug(db, newSlug, id), id);
+                if (H.GetS(b, "slug") is { Length: > 0 } newSlugRaw)
+                {
+                    var oldSlug = H.Str(db.QueryOne("SELECT slug FROM blog_posts WHERE id=?", id)?["slug"]) ?? "";
+                    var newSlug = Blog.UniqueSlug(db, newSlugRaw, id);
+                    if (!string.Equals(oldSlug, newSlug, StringComparison.OrdinalIgnoreCase))
+                    {
+                        db.Execute("UPDATE blog_posts SET slug=? WHERE id=?", newSlug, id);
+                        // A live post keeps its old public URL working via a 301 to the new slug (links + SEO survive).
+                        if (H.Str(p["status"]) == "published") AddSlugRedirect(db, id, oldSlug, newSlug);
+                    }
+                }
                 ApplyFields(db, id, b);
                 db.Execute("UPDATE blog_posts SET version=version+1, updated_at=datetime('now') WHERE id=?", id);
                 log(adm.Id, "content_post_update", "post " + id);
@@ -192,24 +201,14 @@ public static class ContentCentre
             var id = long.Parse((string)ctx.Request.RouteValues["id"]!);
             return gate(ctx.Request, "cc_publish", adm =>
             {
-                var p = db.QueryOne("SELECT * FROM blog_posts WHERE id=?", id);
+                var p = db.QueryOne("SELECT author_id FROM blog_posts WHERE id=?", id);
                 if (p is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
                 if (SelfAuthored(db, p, adm)) return Results.Json(new { error = "self_publish_forbidden", message = "You cannot publish your own article." }, statusCode: 403);
-                if ((H.Str(p["title"]) ?? "").Trim().Length == 0 || (H.Str(p["body"]) ?? "").Trim().Length == 0)
-                    return Results.Json(new { error = "incomplete", message = "A title and body are required before publishing." }, statusCode: 400);
-                Snapshot(db, id, "publish", adm.Id);
-                var readMin = Blog.ReadingTime(H.Str(p["body"]));
-                db.Execute(@"UPDATE blog_posts SET status='published', published=1,
-                    published_at=COALESCE(published_at, datetime('now')),
-                    original_published_at=COALESCE(original_published_at, published_at, datetime('now')),
-                    reading_time=?, robots_noindex=0, version=version+1, updated_at=datetime('now'),
-                    approved_by=?, approved_at=datetime('now') WHERE id=?", readMin, adm.Id, id);
-                PageContent.Bump();                                   // refresh sitemap (blog URLs included)
-                var slug = H.Str(p["slug"]) ?? "";
-                QueueIndexNow(db, id, Blog.PublicUrl(db, slug), adm.Id);
-                NotifyStaff(db, "Article published", "<p><strong>" + Esc(H.Str(p["title"]) ?? "") + "</strong> is now live at " + Esc(Blog.PublicUrl(db, slug)) + "</p>");
-                log(adm.Id, "content_post_publish", "post " + id + " " + slug);
-                return J(new { ok = true, status = "published", url = Blog.PublicUrl(db, slug) });
+                var (ok, error, url) = PublishPost(db, id, adm.Id, log);
+                if (!ok) return error == "incomplete"
+                    ? Results.Json(new { error = "incomplete", message = "A title and body are required before publishing." }, statusCode: 400)
+                    : Results.Json(new { error = error ?? "error" }, statusCode: 404);
+                return J(new { ok = true, status = "published", url });
             });
         });
 
@@ -221,6 +220,12 @@ public static class ContentCentre
             {
                 var at = H.GetS(b, "scheduled_at");
                 if (string.IsNullOrWhiteSpace(at)) return Results.Json(new { error = "scheduled_at_required" }, statusCode: 400);
+                // Enforce separation of duties at schedule time (mirrors /publish): a person can't schedule
+                // their own article, so the ScheduledPublisher worker can later publish it as a system actor
+                // without re-checking authorship.
+                var p = db.QueryOne("SELECT author_id FROM blog_posts WHERE id=?", id);
+                if (p is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+                if (SelfAuthored(db, p, adm)) return Results.Json(new { error = "self_publish_forbidden", message = "You cannot schedule your own article for publishing." }, statusCode: 403);
                 db.Execute("UPDATE blog_posts SET status='scheduled', scheduled_at=?, updated_at=datetime('now') WHERE id=?", at, id);
                 log(adm.Id, "content_post_schedule", "post " + id + " @ " + at);
                 return J(new { ok = true, status = "scheduled", scheduled_at = at });
@@ -454,6 +459,59 @@ public static class ContentCentre
         var json = JsonSerializer.Serialize(p);
         db.Execute("INSERT INTO blog_post_versions(post_id,version,status_at,snapshot_json,change_reason,editor_id,created_at) VALUES(?,?,?,?,?,?, datetime('now'))",
             id, ver, H.Str(p["status"]), json, reason, editorId);
+    }
+
+    /// <summary>
+    /// Publish a post — the single source of truth used by BOTH the /publish endpoint (after the caller has
+    /// enforced the gate + separation-of-duties) and the ScheduledPublisher background worker (adminId=null →
+    /// system actor; the human enforced SoD when they scheduled it). Idempotent-safe: republishing an already
+    /// published post just refreshes reading time / sitemap. Returns (ok, error, publicUrl); error is
+    /// "not_found" or "incomplete" when ok is false.
+    /// </summary>
+    public static (bool ok, string? error, string? url) PublishPost(Db db, long id, long? adminId, Action<long?, string, string?>? log)
+    {
+        var p = db.QueryOne("SELECT * FROM blog_posts WHERE id=?", id);
+        if (p is null) return (false, "not_found", null);
+        if ((H.Str(p["title"]) ?? "").Trim().Length == 0 || (H.Str(p["body"]) ?? "").Trim().Length == 0)
+            return (false, "incomplete", null);
+        Snapshot(db, id, "publish", adminId);
+        var readMin = Blog.ReadingTime(H.Str(p["body"]));
+        db.Execute(@"UPDATE blog_posts SET status='published', published=1,
+            published_at=COALESCE(published_at, datetime('now')),
+            original_published_at=COALESCE(original_published_at, published_at, datetime('now')),
+            reading_time=?, robots_noindex=0, version=version+1, updated_at=datetime('now'),
+            approved_by=COALESCE(?, approved_by), approved_at=datetime('now') WHERE id=?", readMin, adminId, id);
+        PageContent.Bump();                                   // refresh sitemap (blog URLs included)
+        var slug = H.Str(p["slug"]) ?? "";
+        QueueIndexNow(db, id, Blog.PublicUrl(db, slug), adminId);
+        NotifyStaff(db, "Article published", "<p><strong>" + Esc(H.Str(p["title"]) ?? "") + "</strong> is now live at " + Esc(Blog.PublicUrl(db, slug)) + "</p>");
+        log?.Invoke(adminId, "content_post_publish", "post " + id + " " + slug);
+        return (true, null, Blog.PublicUrl(db, slug));
+    }
+
+    /// <summary>
+    /// Keep a renamed LIVE post's old URL working: write an idempotent 301 from the old blog path to the new
+    /// one, collapse any existing redirect that pointed at the old path (so the chain stays single-hop), and
+    /// clear any stale redirect whose source is now the live new URL. Best-effort — a failure never blocks
+    /// the rename.
+    /// </summary>
+    static void AddSlugRedirect(Db db, long postId, string oldSlug, string newSlug)
+    {
+        if (oldSlug.Length == 0 || newSlug.Length == 0 || string.Equals(oldSlug, newSlug, StringComparison.OrdinalIgnoreCase)) return;
+        try
+        {
+            var bp = Blog.BasePath(db);
+            var from = bp + "/" + oldSlug;
+            var to = bp + "/" + newSlug;
+            db.Execute("DELETE FROM seo_redirects WHERE from_path=?", to);                        // new URL is a live page, not a redirect source
+            db.Execute("UPDATE seo_redirects SET to_url=? WHERE to_url=? AND active=1", to, from); // collapse chains old→new
+            if (db.QueryOne("SELECT id FROM seo_redirects WHERE from_path=?", from) is null)
+                db.Execute("INSERT INTO seo_redirects(from_path,to_url,status,active,note) VALUES(?,?,301,1,?)", from, to, "auto: blog slug change (post " + postId + ")");
+            else
+                db.Execute("UPDATE seo_redirects SET to_url=?, status=301, active=1 WHERE from_path=?", to, from);
+            PathRedirects.Bump();
+        }
+        catch (Exception e) { Console.Error.WriteLine($"[content] slug redirect skipped: {e.Message}"); }
     }
 
     /// <summary>Enforce separation of duties: an admin linked to the post's author can't review/publish it.</summary>
