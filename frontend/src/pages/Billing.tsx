@@ -9,7 +9,7 @@ import FoundingCard from '../components/FoundingCard'
 import { fmtDate, fmtMoney, titleCase } from '../format'
 import { openPrintable, escapeHtml as e } from '../print'
 import { useT } from '../i18n'
-import type { Payment } from '../api/types'
+import type { Payment, Me } from '../api/types'
 
 interface PriceBlock {
   final: number
@@ -124,7 +124,9 @@ function PlansCard() {
   }
 
   return (
-    <Card title={t('billing.plansTitle')}>
+    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+      {me.membership_grade && <MembershipGradeCard grade={me.membership_grade} onDone={refetch} />}
+      <Card title={t('billing.plansTitle')}>
       {paid && (
         <div className="notice" style={{ marginBottom: '.75rem' }}>
           <strong>{t('billing.paymentReceivedThanks')}</strong> {t('billing.purchaseApplying')}{' '}
@@ -241,6 +243,65 @@ function PlansCard() {
           aria-label={t('billing.discountCodeAria')}
         />
         <span className="muted small">{t('billing.discountApplyIntro')}<strong>{t('billing.discountScopeMembership')}</strong>{t('billing.discountSep1')}<strong>{t('billing.discountScopeExam')}</strong>{t('billing.discountSep2')}<strong>{t('billing.discountScopeBoth')}</strong>{t('billing.discountApplyOutro')}</span>
+      </div>
+    </Card>
+    </div>
+  )
+}
+
+// Membership grade & progression (Student → Associate → Professional (MPCI) → Fellow (FPCI)).
+function MembershipGradeCard({ grade, onDone }: { grade: NonNullable<Me['membership_grade']>; onDone: () => void }) {
+  const [busy, setBusy] = useState(false)
+  const [note, setNote] = useState<{ ok: boolean; text: string } | null>(null)
+  const [fellowOpen, setFellowOpen] = useState(false)
+  const [statement, setStatement] = useState('')
+
+  async function upgrade(to: string, body?: Record<string, unknown>) {
+    setBusy(true); setNote(null)
+    try {
+      const r = await api.post<{ pending?: boolean; message?: string }>('/api/me/membership/upgrade', { to_grade: to, ...body })
+      setNote({ ok: true, text: r.message || 'Your membership grade has been updated.' })
+      setFellowOpen(false); setStatement(''); onDone()
+    } catch (e) {
+      const b = e instanceof Object && 'body' in e ? (e as { body?: { message?: string } }).body : null
+      setNote({ ok: false, text: b?.message || (e instanceof Error ? e.message : 'Could not update your grade.') })
+    } finally { setBusy(false) }
+  }
+
+  const pending = grade.pending_application
+  const up = grade.eligible_upgrade
+
+  return (
+    <Card title="Membership grade" action={<Badge tone="brand">{grade.post_nominal}</Badge>}>
+      <div className="stack small" style={{ gap: '.4rem' }}>
+        <div>You are a <strong>{grade.label}</strong> — you may use the post-nominal <strong>{grade.post_nominal}</strong>.</div>
+        {note && <div className={note.ok ? 'muted' : ''} style={note.ok ? undefined : { color: 'var(--err, #c2410c)' }} role="status">{note.text}</div>}
+
+        {pending ? (
+          <div className="muted">Your application to become a {pending.to_grade === 'fellow' ? 'Fellow (FPCI)' : pending.to_grade} is under review.</div>
+        ) : (
+          <div className="row" style={{ flexWrap: 'wrap', gap: '.4rem', marginTop: '.2rem' }}>
+            {up && (
+              <button className="btn sm" disabled={busy} onClick={() => upgrade(up.key)}>
+                {busy ? 'Working…' : `Upgrade to ${up.label} (${up.post_nominal})`}
+              </button>
+            )}
+            {grade.can_apply_fellow && !fellowOpen && (
+              <button className="btn sm secondary" onClick={() => setFellowOpen(true)}>Apply for Fellowship (FPCI)</button>
+            )}
+          </div>
+        )}
+
+        {fellowOpen && !pending && (
+          <div className="stack" style={{ display: 'grid', gap: '.4rem', marginTop: '.3rem' }}>
+            <p className="muted small" style={{ margin: 0 }}>Fellowship is by nomination — describe your sustained contribution to the profession and the institute (min 40 characters).</p>
+            <textarea rows={4} maxLength={4000} value={statement} onChange={(e) => setStatement(e.target.value)} placeholder="Leadership, mentoring, standards work, speaking, publications…" />
+            <div className="row" style={{ gap: '.4rem' }}>
+              <button className="btn sm" disabled={busy || statement.trim().length < 40} onClick={() => upgrade('fellow', { statement: statement.trim() })}>{busy ? 'Submitting…' : 'Submit nomination'}</button>
+              <button className="btn ghost sm" onClick={() => setFellowOpen(false)}>Cancel</button>
+            </div>
+          </div>
+        )}
       </div>
     </Card>
   )

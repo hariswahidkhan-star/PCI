@@ -144,6 +144,15 @@ export interface Me {
   credentials: Credential[]
   tickets: Ticket[]
   referral: { code: string } | null
+  membership_grade?: {
+    current: string
+    label: string
+    post_nominal: string
+    rank: number
+    eligible_upgrade?: { key: string; label: string; post_nominal: string } | null
+    can_apply_fellow: boolean
+    pending_application?: { to_grade: string; created_at?: string | null } | null
+  } | null
   cpd: { total: number; target: number; pending?: number }
   two_factor: boolean
   two_factor_coming_soon: boolean

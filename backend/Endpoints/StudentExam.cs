@@ -136,6 +136,7 @@ public static class StudentExam
                 certifications_held = db.Query("SELECT * FROM held_certifications WHERE user_id=? ORDER BY id DESC", u.Id),
                 tickets = db.Query("SELECT id,reference,subject,category,status,updated_at FROM tickets WHERE user_id=? ORDER BY updated_at DESC LIMIT 10", u.Id),
                 referral = db.QueryOne("SELECT code FROM discount_codes WHERE owner_user_id=? AND code_type='referral' AND active=1", u.Id),
+                membership_grade = MembershipGrades.Snapshot(db, u.Id),
                 cpd = new { total, pending = cpdPending, target = H.D(db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='sp_cpd_target_hours'")) is var _ct && _ct > 0 ? _ct : 60.0 },
                 two_factor = (db.Scalar<string>("SELECT totp_secret FROM users WHERE id=?", u.Id) ?? "") is { Length: > 0 } _tf && !_tf.StartsWith("pending:"), two_factor_coming_soon = false,
                 unread,
@@ -830,6 +831,53 @@ public static class StudentExam
                 u.Id, year, position, statement.Length > 0 ? statement : null, hours, aiHours);
             log(u.Id, "cpd_declaration", $"{year}:{position}");
             return J(new { ok = true, cycle_year = year, position });
+        });
+
+        // ---------------- membership grade upgrade / Fellowship nomination ----------------
+        app.MapPost("/api/me/membership/upgrade", async (HttpContext ctx) =>
+        {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            // Must be an active member to hold a grade at all.
+            if (db.QueryOne("SELECT id FROM memberships WHERE user_id=? AND status='active'", u.Id) is null)
+                return Results.Json(new { error = "no_active_membership", message = "Activate your membership first." }, statusCode: 400);
+            var b = await H.Body(ctx.Request);
+            var to = H.GetS(b, "to_grade") ?? "";
+            if (!MembershipGrades.IsGrade(to)) return Results.Json(new { error = "bad_grade" }, statusCode: 400);
+            var cur = MembershipGrades.ByKey(MembershipGrades.CurrentKey(db, u.Id));
+            var target = MembershipGrades.ByKey(to);
+            if (target.Rank <= cur.Rank) return Results.Json(new { error = "not_an_upgrade", message = "That is not an upgrade from your current grade." }, statusCode: 400);
+
+            if (to == "fellow")
+            {
+                // Fellowship is by nomination → create a pending application for admin/board review.
+                if (!MembershipGrades.CanApplyForFellow(db, u.Id))
+                    return Results.Json(new { error = "not_eligible", message = "Fellowship is by nomination and requires an active credential; you may already have an application in review." }, statusCode: 400);
+                var statement = (H.GetS(b, "statement") ?? "").Trim();
+                if (statement.Length < 40) return Results.Json(new { error = "statement_too_short", message = "Please describe your contribution to the profession (at least 40 characters)." }, statusCode: 400);
+                if (statement.Length > 4000) statement = statement[..4000];
+                var id = db.ExecuteReturningId("INSERT INTO membership_upgrades(user_id,from_grade,to_grade,statement) VALUES(?,?, 'fellow', ?)", u.Id, cur.Key, statement);
+                log(u.Id, "fellowship_applied", $"#{id}");
+                return J(new { ok = true, pending = true, id, message = "Your Fellowship nomination has been submitted for review." });
+            }
+            if (to == "professional")
+            {
+                // Self-service the moment they hold an active credential; otherwise refuse honestly.
+                if (!MembershipGrades.HoldsActiveCredential(db, u.Id))
+                    return Results.Json(new { error = "credential_required", message = "Professional membership requires an active PCI certification." }, statusCode: 400);
+                MembershipGrades.SetGrade(db, u.Id, "professional");
+                log(u.Id, "grade_upgraded", "professional");
+                try { Comms.Fire(db, "membership.activated", u.Id, u.Email, null,
+                    new Dictionary<string, string?> { ["student_name"] = u.Email }, "You are now a Professional Member (MPCI)",
+                    "<p>Congratulations — your PCI membership grade is now Professional Member (MPCI). You may use the post-nominal MPCI.</p>"); } catch { }
+                return J(new { ok = true, grade = "professional", post_nominal = "MPCI" });
+            }
+            if (to == "associate")   // student → associate is an open upgrade
+            {
+                MembershipGrades.SetGrade(db, u.Id, "associate");
+                log(u.Id, "grade_upgraded", "associate");
+                return J(new { ok = true, grade = "associate", post_nominal = "APCI" });
+            }
+            return Results.Json(new { error = "bad_grade" }, statusCode: 400);
         });
         app.MapPost("/api/me/cpd", async (HttpContext ctx) =>
         {

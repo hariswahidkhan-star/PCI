@@ -95,6 +95,15 @@ public static class Migrate
             cycle_year INTEGER NOT NULL,position TEXT NOT NULL,statement TEXT,hours_snapshot REAL DEFAULT 0,ai_hours_snapshot REAL DEFAULT 0,
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_cpd_decl_user ON cpd_declarations(user_id)");
+        // Membership grade (professional standing): student | associate | professional | fellow. Distinct from
+        // membership_type (the product) — the grade carries the post-nominal (APCI/MPCI/FPCI) and progression.
+        AddCol("memberships", "grade", "grade TEXT DEFAULT 'associate'");
+        // Grade upgrade / Fellowship-nomination applications reviewed by admins.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS membership_upgrades(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,
+            from_grade TEXT,to_grade TEXT NOT NULL,statement TEXT,status TEXT DEFAULT 'pending',
+            reviewed_by INTEGER,reviewed_at TEXT,admin_note TEXT,created_at TEXT DEFAULT (datetime('now')),decided_at TEXT)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_mupgrade_user ON membership_upgrades(user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_mupgrade_status ON membership_upgrades(status)");
         // fallback shape kept aligned with schema.sql (storage_ref required, data_uri nullable legacy)
         db.Exec(@"CREATE TABLE IF NOT EXISTS support_attachments(id INTEGER PRIMARY KEY AUTOINCREMENT,ticket_id INTEGER NOT NULL,user_id INTEGER,filename TEXT NOT NULL,mime TEXT,size_bytes INTEGER,sha256 TEXT,data_uri TEXT,storage_ref TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_attach_ticket ON support_attachments(ticket_id)");

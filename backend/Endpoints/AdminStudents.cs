@@ -352,6 +352,57 @@ public static class AdminStudents
             return J(new { ok = true, status = "rejected" });
         }));
 
+        // ─────────────────────────── Membership grade upgrades / Fellowship nominations ───────────────────────────
+        app.MapGet("/api/admin/membership-upgrades", (HttpContext ctx) => gate(ctx.Request, "members", _ =>
+        {
+            var status = (ctx.Request.Query["status"].ToString() ?? "").Trim();
+            var where = status.Length > 0 ? " WHERE mu.status=?" : "";
+            var args = status.Length > 0 ? new object?[] { status } : Array.Empty<object?>();
+            var rows = db.Query(@"SELECT mu.id,mu.user_id,mu.from_grade,mu.to_grade,mu.statement,mu.status,mu.admin_note,mu.created_at,mu.decided_at,
+                u.email,u.first_name,u.last_name FROM membership_upgrades mu LEFT JOIN users u ON u.id=mu.user_id" + where +
+                " ORDER BY (mu.status='pending') DESC, mu.id DESC LIMIT 300", args);
+            return J(new { rows, pending = db.Scalar<long>("SELECT COUNT(*) FROM membership_upgrades WHERE status='pending'") });
+        }));
+
+        app.MapPost("/api/admin/membership-upgrades/{id}/decide", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
+        {
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var action = H.GetS(b, "action") ?? "";
+            if (action is not ("approve" or "reject")) return Results.Json(new { error = "bad_action" }, statusCode: 400);
+            var note = H.GetS(b, "note", "admin_note");
+            var r = db.QueryOne("SELECT * FROM membership_upgrades WHERE id=?", id);
+            if (r is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (H.Str(r["status"]) != "pending") return Results.Json(new { error = "bad_state", message = "This application is already decided." }, statusCode: 400);
+            var uid = H.L(r["user_id"]); var to = H.Str(r["to_grade"]) ?? "";
+            if (action == "approve")
+            {
+                if (!MembershipGrades.SetGrade(db, uid, to)) return Results.Json(new { error = "no_membership", message = "The member has no active membership to grade." }, statusCode: 400);
+                db.Execute("UPDATE membership_upgrades SET status='approved', admin_note=?, reviewed_by=?, reviewed_at=datetime('now'), decided_at=datetime('now') WHERE id=?", note, adm.Id, id);
+                log(uid, "grade_upgrade_approved", $"{to} (#{id}) by {adm.Id}");
+                var g = MembershipGrades.ByKey(to);
+                try { Comms.Fire(db, "membership.activated", uid, H.Str(r["email"]), null,
+                    new Dictionary<string, string?> { ["student_name"] = H.Str(r["email"]) }, $"You have been admitted as {g.Label} ({g.PostNominal})",
+                    $"<p>Congratulations — you have been admitted to the {g.Label} grade. You may use the post-nominal {g.PostNominal}.</p>"); } catch { }
+            }
+            else
+            {
+                db.Execute("UPDATE membership_upgrades SET status='rejected', admin_note=?, reviewed_by=?, reviewed_at=datetime('now'), decided_at=datetime('now') WHERE id=?", note, adm.Id, id);
+                log(uid, "grade_upgrade_rejected", $"{to} (#{id}) by {adm.Id}");
+            }
+            return J(new { ok = true, status = action == "approve" ? "approved" : "rejected" });
+        }));
+
+        // Direct grade set (e.g. an admin/board conferring Fellowship without a self-nomination).
+        app.MapPost("/api/admin/students/{id}/grade", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
+        {
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var grade = H.GetS(b, "grade") ?? "";
+            if (!MembershipGrades.IsGrade(grade)) return Results.Json(new { error = "bad_grade" }, statusCode: 400);
+            if (!MembershipGrades.SetGrade(db, id, grade)) return Results.Json(new { error = "no_membership", message = "This member has no membership to grade." }, statusCode: 400);
+            log(id, "grade_set", $"{grade} by {adm.Id}");
+            return J(new { ok = true, grade });
+        }));
+
         // Complete the erasure: ANONYMISE the member (see Core.Erasure). Requires explicit confirmation.
         app.MapPost("/api/admin/erasure-requests/{id}/complete", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
