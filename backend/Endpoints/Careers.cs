@@ -43,23 +43,38 @@ public static class Careers
             var remote = req.Query["remote"].ToString();
             var sector = req.Query["sector"].ToString();
             var country = req.Query["country"].ToString();
+            var department = req.Query["department"].ToString();
+            var experience = req.Query["experience"].ToString();
+            var sort = req.Query["sort"].ToString();
             var where = OpenWhere; var args = new List<object?>();
-            if (q.Length > 0) { where += " AND (title LIKE ? OR organisation LIKE ? OR location LIKE ? OR sector LIKE ? OR job_code LIKE ?)"; var like = "%" + q + "%"; args.AddRange(new object?[] { like, like, like, like, like }); }
+            if (q.Length > 0) { where += " AND (title LIKE ? OR organisation LIKE ? OR location LIKE ? OR sector LIKE ? OR department LIKE ? OR job_code LIKE ?)"; var like = "%" + q + "%"; args.AddRange(new object?[] { like, like, like, like, like, like }); }
             if (Types.Contains(type)) { where += " AND employment_type=?"; args.Add(type); }
             if (Remotes.Contains(remote)) { where += " AND remote_type=?"; args.Add(remote); }
             if (!string.IsNullOrWhiteSpace(sector)) { where += " AND sector=?"; args.Add(sector); }
             if (!string.IsNullOrWhiteSpace(country)) { where += " AND country=?"; args.Add(country); }
-            var rows = db.Query($@"SELECT id,job_code,title,organisation,location,country,employment_type,remote_type,sector,salary_min,salary_max,salary_currency,salary_period,
-                featured,posted_at,closes_at,apply_method FROM job_postings WHERE {where} ORDER BY featured DESC, COALESCE(posted_at,created_at) DESC, id DESC", args.ToArray());
-            var sectors = db.Query($"SELECT DISTINCT sector FROM job_postings WHERE {OpenWhere} AND sector IS NOT NULL AND sector<>'' ORDER BY sector").Select(r => H.Str(r["sector"])).ToList();
-            var countries = db.Query($"SELECT DISTINCT country FROM job_postings WHERE {OpenWhere} AND country IS NOT NULL AND country<>'' ORDER BY country").Select(r => H.Str(r["country"])).ToList();
-            return J(new { rows, sectors, countries, total = rows.Count });
+            if (!string.IsNullOrWhiteSpace(department)) { where += " AND department=?"; args.Add(department); }
+            if (!string.IsNullOrWhiteSpace(experience)) { where += " AND experience_level=?"; args.Add(experience); }
+            var order = sort switch
+            {
+                "closing" => "featured DESC, (closes_at IS NULL OR closes_at='') ASC, closes_at ASC, id DESC",
+                "title" => "title ASC, id DESC",
+                _ => "featured DESC, COALESCE(posted_at,created_at) DESC, id DESC",   // newest / relevance
+            };
+            var rows = db.Query($@"SELECT id,job_code,title,organisation,location,country,department,employment_type,remote_type,experience_level,sector,
+                salary_min,salary_max,salary_currency,salary_period,salary_visible,featured,urgent,vacancies,posted_at,closes_at,apply_method
+                FROM job_postings WHERE {where} ORDER BY {order}", args.ToArray());
+            List<string?> Facet(string col) => db.Query($"SELECT DISTINCT {col} FROM job_postings WHERE {OpenWhere} AND {col} IS NOT NULL AND {col}<>'' ORDER BY {col}").Select(r => H.Str(r[col])).ToList();
+            return J(new { rows, sectors = Facet("sector"), countries = Facet("country"), departments = Facet("department"), total = rows.Count });
         });
 
         app.MapGet("/api/careers/{id:long}", (long id) =>
         {
-            var r = db.QueryOne($"SELECT id,job_code,title,organisation,location,country,employment_type,remote_type,sector,description,requirements,responsibilities,salary_min,salary_max,salary_currency,salary_period,posted_at,closes_at,apply_method,apply_url,apply_email FROM job_postings WHERE id=? AND {OpenWhere}", id);
-            return r is null ? Results.Json(new { error = "not_found" }, statusCode: 404) : J(new { job = Row(r, true) });
+            var r = db.QueryOne($@"SELECT id,job_code,slug,title,organisation,location,country,department,employment_type,remote_type,experience_level,sector,
+                description,requirements,responsibilities,education,languages,certifications,benefits,reporting_line,vacancies,expected_start,
+                application_instructions,eo_statement,salary_min,salary_max,salary_currency,salary_period,salary_visible,urgent,featured,posted_at,closes_at,
+                apply_method,apply_url,apply_email FROM job_postings WHERE id=? AND {OpenWhere}", id);
+            if (r is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            return J(new { job = Row(r, true), jsonld = JobJsonLd(db, r) });   // jsonld = Google-for-Jobs JobPosting structured data
         });
 
         // Apply in-platform (only for postings whose apply_method is 'inplatform'). Honeypot + basic validation
@@ -118,6 +133,15 @@ public static class Careers
                 ("apply_method", apply), ("apply_url", H.GetS(b, "apply_url")), ("apply_email", H.GetS(b, "apply_email")),
                 ("featured", (H.GetBool(b, "featured") ?? false) ? 1 : 0), ("status", status),
                 ("posted_at", postedAt), ("closes_at", H.GetS(b, "closes_at")),
+                // Increment 1: richer job model (fuller detail pages + Google-for-Jobs structured data)
+                ("department", H.GetS(b, "department")), ("experience_level", H.GetS(b, "experience_level")),
+                ("vacancies", H.GetNum(b, "vacancies")), ("benefits", H.GetS(b, "benefits")),
+                ("education", H.GetS(b, "education")), ("languages", H.GetS(b, "languages")),
+                ("certifications", H.GetS(b, "certifications")), ("reporting_line", H.GetS(b, "reporting_line")),
+                ("expected_start", H.GetS(b, "expected_start")), ("application_instructions", H.GetS(b, "application_instructions")),
+                ("eo_statement", H.GetS(b, "eo_statement")), ("publish_at", H.GetS(b, "publish_at")),
+                ("salary_visible", (H.GetBool(b, "salary_visible") ?? true) ? 1 : 0),
+                ("urgent", (H.GetBool(b, "urgent") ?? false) ? 1 : 0),
             };
             // Optional custom job code; validated for uniqueness (the unique index also guards it).
             var codeIn = (H.GetS(b, "job_code") ?? "").Trim().ToUpperInvariant();
@@ -175,4 +199,59 @@ public static class Careers
             return Results.Bytes(got.Value.bytes!, got.Value.mime, H.Str(a!["cv_name"]));
         }));
     }
+
+    // schema.org employmentType values (Google for Jobs).
+    static readonly Dictionary<string, string> EmpMap = new()
+    { ["full_time"] = "FULL_TIME", ["part_time"] = "PART_TIME", ["contract"] = "CONTRACTOR", ["internship"] = "INTERN", ["temporary"] = "TEMPORARY" };
+
+    /// <summary>Build a schema.org JobPosting JSON-LD document for a posting row, for Google for Jobs.
+    /// Salary is included only when the operator chose to publish it (salary_visible). Returns a JSON string.</summary>
+    static string JobJsonLd(Db db, Dictionary<string, object?> r)
+    {
+        string? S(string k) => H.Str(r.TryGetValue(k, out var v) ? v : null);
+        var baseUrl = db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", "site_base_url");
+        if (string.IsNullOrWhiteSpace(baseUrl)) baseUrl = "https://www.projectcontrolsinstitute.org";
+        baseUrl = baseUrl!.TrimEnd('/');
+
+        string Part(string t, string? body) => string.IsNullOrWhiteSpace(body) ? "" : $"<h3>{Esc(t)}</h3><p>{Esc(body)}</p>";
+        var desc = Part("About the role", S("description")) + Part("Responsibilities", S("responsibilities"))
+                 + Part("Requirements", S("requirements")) + Part("Benefits", S("benefits"));
+        if (desc.Length == 0) desc = Esc(S("title") ?? "Role at the Project Controls Institute");
+
+        var o = new Dictionary<string, object?>
+        {
+            ["@context"] = "https://schema.org/", ["@type"] = "JobPosting",
+            ["title"] = S("title"), ["description"] = desc,
+            ["identifier"] = new Dictionary<string, object?> { ["@type"] = "PropertyValue", ["name"] = "Project Controls Institute", ["value"] = S("job_code") },
+            ["hiringOrganization"] = new Dictionary<string, object?>
+            { ["@type"] = "Organization", ["name"] = string.IsNullOrWhiteSpace(S("organisation")) ? "Project Controls Institute" : S("organisation"), ["sameAs"] = baseUrl },
+            ["directApply"] = S("apply_method") == "inplatform",
+        };
+        if (S("posted_at") is { Length: > 0 } pa) o["datePosted"] = pa[..Math.Min(10, pa.Length)];
+        if (S("closes_at") is { Length: > 0 } ca) o["validThrough"] = ca;
+        if (EmpMap.TryGetValue(S("employment_type") ?? "", out var et)) o["employmentType"] = et;
+
+        var city = S("location"); var country = S("country");
+        if (!string.IsNullOrWhiteSpace(city) || !string.IsNullOrWhiteSpace(country))
+            o["jobLocation"] = new Dictionary<string, object?>
+            { ["@type"] = "Place", ["address"] = new Dictionary<string, object?> { ["@type"] = "PostalAddress", ["addressLocality"] = city, ["addressCountry"] = country } };
+        if (S("remote_type") == "remote")
+        {
+            o["jobLocationType"] = "TELECOMMUTE";
+            if (!string.IsNullOrWhiteSpace(country)) o["applicantLocationRequirements"] = new Dictionary<string, object?> { ["@type"] = "Country", ["name"] = country };
+        }
+
+        var mn = H.D(r.GetValueOrDefault("salary_min")); var mx = H.D(r.GetValueOrDefault("salary_max"));
+        if (H.B(r.GetValueOrDefault("salary_visible")) && (mn > 0 || mx > 0))
+        {
+            var val = new Dictionary<string, object?> { ["@type"] = "QuantitativeValue", ["unitText"] = (S("salary_period") ?? "year").ToUpperInvariant() };
+            if (mn > 0) val["minValue"] = mn;
+            if (mx > 0) val["maxValue"] = mx;
+            if (mn > 0 && mx <= 0) val["value"] = mn;
+            o["baseSalary"] = new Dictionary<string, object?> { ["@type"] = "MonetaryAmount", ["currency"] = S("salary_currency") ?? "USD", ["value"] = val };
+        }
+        return System.Text.Json.JsonSerializer.Serialize(o);
+    }
+
+    static string Esc(string? s) => System.Net.WebUtility.HtmlEncode(s ?? "");
 }

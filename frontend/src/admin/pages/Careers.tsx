@@ -14,6 +14,11 @@ interface Job {
   salary_min?: number | null; salary_max?: number | null; salary_currency?: string | null; salary_period?: string | null
   apply_method?: string; apply_url?: string | null; apply_email?: string | null
   featured?: number; status: string; posted_at?: string | null; closes_at?: string | null; applications?: number
+  // Increment 1: richer job model
+  department?: string | null; experience_level?: string | null; vacancies?: number | null
+  benefits?: string | null; education?: string | null; languages?: string | null; certifications?: string | null
+  reporting_line?: string | null; expected_start?: string | null; application_instructions?: string | null
+  eo_statement?: string | null; salary_visible?: number; urgent?: number; publish_at?: string | null
 }
 interface Application {
   id: number; job_id: number; name?: string | null; email?: string | null; phone?: string | null
@@ -145,6 +150,21 @@ function JobEditor({ initial, onClose, onSaved }: { initial: Partial<Job>; onClo
           <div className="field" style={{ gridColumn: '1 / -1' }}><label>About the role</label><textarea rows={4} value={d.description ?? ''} onChange={(e) => set('description', e.target.value)} /></div>
           <div className="field" style={{ gridColumn: '1 / -1' }}><label>Responsibilities</label><textarea rows={3} value={d.responsibilities ?? ''} onChange={(e) => set('responsibilities', e.target.value)} /></div>
           <div className="field" style={{ gridColumn: '1 / -1' }}><label>Requirements</label><textarea rows={3} value={d.requirements ?? ''} onChange={(e) => set('requirements', e.target.value)} /></div>
+          <div className="field"><label>Department</label><input value={d.department ?? ''} onChange={(e) => set('department', e.target.value)} placeholder="Cost & Commercial" /></div>
+          <div className="field"><label>Experience level</label>
+            <select value={d.experience_level ?? ''} onChange={(e) => set('experience_level', e.target.value)}>
+              <option value="">—</option><option value="entry">Entry</option><option value="junior">Junior</option><option value="mid">Mid</option><option value="senior">Senior</option><option value="lead">Lead</option><option value="principal">Principal</option><option value="director">Director</option>
+            </select>
+          </div>
+          <div className="field"><label>Vacancies</label><input type="number" value={d.vacancies ?? ''} onChange={(e) => set('vacancies', num(e.target.value) as number)} placeholder="1" /></div>
+          <div className="field"><label>Reporting line</label><input value={d.reporting_line ?? ''} onChange={(e) => set('reporting_line', e.target.value)} placeholder="Reports to Controls Manager" /></div>
+          <div className="field"><label>Expected start</label><input value={d.expected_start ?? ''} onChange={(e) => set('expected_start', e.target.value)} placeholder="2026-09 or ASAP" /></div>
+          <div className="field"><label>Language requirements</label><input value={d.languages ?? ''} onChange={(e) => set('languages', e.target.value)} placeholder="English (fluent)" /></div>
+          <div className="field"><label>Required certifications</label><input value={d.certifications ?? ''} onChange={(e) => set('certifications', e.target.value)} placeholder="PMP, PCL-AI" /></div>
+          <div className="field" style={{ gridColumn: '1 / -1' }}><label>Benefits</label><textarea rows={2} value={d.benefits ?? ''} onChange={(e) => set('benefits', e.target.value)} /></div>
+          <div className="field" style={{ gridColumn: '1 / -1' }}><label>Education requirements</label><textarea rows={2} value={d.education ?? ''} onChange={(e) => set('education', e.target.value)} /></div>
+          <div className="field" style={{ gridColumn: '1 / -1' }}><label>Application instructions</label><textarea rows={2} value={d.application_instructions ?? ''} onChange={(e) => set('application_instructions', e.target.value)} /></div>
+          <div className="field" style={{ gridColumn: '1 / -1' }}><label>Equal-opportunity statement</label><textarea rows={2} value={d.eo_statement ?? ''} onChange={(e) => set('eo_statement', e.target.value)} /></div>
           <div className="field"><label>Salary min</label><input type="number" value={d.salary_min ?? ''} onChange={(e) => set('salary_min', num(e.target.value) as number)} /></div>
           <div className="field"><label>Salary max</label><input type="number" value={d.salary_max ?? ''} onChange={(e) => set('salary_max', num(e.target.value) as number)} /></div>
           <div className="field"><label>Currency</label><input value={d.salary_currency ?? 'USD'} onChange={(e) => set('salary_currency', e.target.value)} /></div>
@@ -161,7 +181,10 @@ function JobEditor({ initial, onClose, onSaved }: { initial: Partial<Job>; onClo
           {d.apply_method === 'url' && <div className="field"><label>Apply URL</label><input value={d.apply_url ?? ''} onChange={(e) => set('apply_url', e.target.value)} placeholder="https://…" /></div>}
           {d.apply_method === 'email' && <div className="field"><label>Apply email</label><input value={d.apply_email ?? ''} onChange={(e) => set('apply_email', e.target.value)} placeholder="jobs@…" /></div>}
           <div className="field"><label>Closes on (optional)</label><input value={d.closes_at ?? ''} onChange={(e) => set('closes_at', e.target.value)} placeholder="2026-12-31" /></div>
+          <div className="field"><label>Schedule publish (optional)</label><input value={d.publish_at ?? ''} onChange={(e) => set('publish_at', e.target.value)} placeholder="2026-09-01" /></div>
           <label className="row" style={{ fontWeight: 400, alignItems: 'center', gap: '.4rem' }}><input type="checkbox" style={{ width: 'auto' }} checked={!!d.featured} onChange={(e) => set('featured', (e.target.checked ? 1 : 0) as number)} /> Featured</label>
+          <label className="row" style={{ fontWeight: 400, alignItems: 'center', gap: '.4rem' }}><input type="checkbox" style={{ width: 'auto' }} checked={!!d.urgent} onChange={(e) => set('urgent', (e.target.checked ? 1 : 0) as number)} /> Urgent</label>
+          <label className="row" style={{ fontWeight: 400, alignItems: 'center', gap: '.4rem' }}><input type="checkbox" style={{ width: 'auto' }} checked={d.salary_visible == null ? true : !!d.salary_visible} onChange={(e) => set('salary_visible', (e.target.checked ? 1 : 0) as number)} /> Show salary publicly</label>
         </div>
         <div className="row" style={{ marginTop: '1rem' }}>
           <button className="btn" disabled={busy || !(d.title && d.title.length >= 3)} onClick={save}>{busy ? 'Saving…' : d.id ? 'Save changes' : 'Create posting'}</button>

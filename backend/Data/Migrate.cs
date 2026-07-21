@@ -133,6 +133,23 @@ public static class Migrate
         AddCol("job_postings", "job_code", "job_code VARCHAR(32)");
         AddCol("job_postings", "country", "country VARCHAR(64)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_jobs_code ON job_postings(job_code)");
+        // Careers Increment 1: richer job model for Google-for-Jobs structured data + fuller detail pages.
+        // All additive (AddCol) and unindexed — safe, backward-compatible on both SQLite and MySQL.
+        AddCol("job_postings", "department", "department VARCHAR(120)");
+        AddCol("job_postings", "experience_level", "experience_level VARCHAR(40)");
+        AddCol("job_postings", "vacancies", "vacancies INTEGER DEFAULT 1");
+        AddCol("job_postings", "benefits", "benefits TEXT");
+        AddCol("job_postings", "education", "education TEXT");
+        AddCol("job_postings", "languages", "languages TEXT");
+        AddCol("job_postings", "certifications", "certifications TEXT");
+        AddCol("job_postings", "reporting_line", "reporting_line VARCHAR(160)");
+        AddCol("job_postings", "expected_start", "expected_start VARCHAR(40)");
+        AddCol("job_postings", "application_instructions", "application_instructions TEXT");
+        AddCol("job_postings", "eo_statement", "eo_statement TEXT");
+        AddCol("job_postings", "salary_visible", "salary_visible INTEGER DEFAULT 1");
+        AddCol("job_postings", "urgent", "urgent INTEGER DEFAULT 0");
+        AddCol("job_postings", "publish_at", "publish_at VARCHAR(40)");
+        AddCol("job_postings", "slug", "slug VARCHAR(200)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS job_applications(id INTEGER PRIMARY KEY AUTOINCREMENT,job_id INTEGER NOT NULL,name TEXT,email VARCHAR(190),phone TEXT,
             cover_message TEXT,cv_ref TEXT,cv_name TEXT,status TEXT DEFAULT 'new',admin_note TEXT,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_jobapp_job ON job_applications(job_id)");
