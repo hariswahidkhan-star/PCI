@@ -1801,6 +1801,57 @@ def test_content_centre(admin):
     c, seo = jget("GET", "/api/admin/content/seo/audit", token=admin)
     chk("20u SEO audit returns a structured report", c == 200 and "audited" in seo, seo if c != 200 else "ok")
 
+    # ---------- Phase E: the 20 seeded PCI blog articles (idempotent DRAFTS; NEVER auto-published) ----------
+    E_SLUGS = [
+        "what-is-project-controls", "future-of-project-controls-ai", "estimate-at-completion-explained",
+        "earned-value-management-explained", "integrated-project-schedule", "schedule-risk-analysis-monte-carlo",
+        "project-cost-control-baseline-to-forecast", "change-control-major-projects", "project-controls-dashboards-kpis",
+        "project-data-governance-single-source-of-truth", "project-finance-fundamentals",
+        "managing-project-cash-flow-working-capital", "revenue-recognition-long-term-projects",
+        "financial-risk-management-major-projects", "connecting-project-controls-and-finance",
+        "project-delivery-governance", "pmo-and-project-controls", "ai-governance-for-projects",
+        "project-leadership-career-roadmap", "lessons-from-major-projects-why-projects-fail",
+    ]
+    E_REVIEW = {"project-finance-fundamentals", "managing-project-cash-flow-working-capital",
+                "revenue-recognition-long-term-projects", "financial-risk-management-major-projects",
+                "ai-governance-for-projects"}
+    con = dbconn()
+    ph = ",".join("?" * len(E_SLUGS))
+    seeded = con.execute(
+        "SELECT id,slug,status,published,ai_assisted,ai_disclosure,structured_type,category_id,author_id,LENGTH(body) "
+        "FROM blog_posts WHERE slug IN (" + ph + ")", tuple(E_SLUGS)).fetchall()
+    by_slug = {r[1]: r for r in seeded}
+    chk("20E1 all 20 required PCI blog articles are seeded", len(by_slug) == 20, sorted(set(E_SLUGS) - set(by_slug)))
+    chk("20E2 every seeded article is an unpublished DRAFT (never auto-published)",
+        all(r[2] == "draft" and r[3] == 0 for r in seeded), [r[1] for r in seeded if r[2] != "draft" or r[3] != 0][:5])
+    chk("20E3 seeded articles are honestly disclosed as AI-assisted", all(r[4] == 1 and (r[5] or "") == "AI-assisted" for r in seeded), None)
+    chk("20E4 seeded articles are BlogPosting linked to a content category", all(r[6] == "BlogPosting" and r[7] is not None for r in seeded), None)
+    chk("20E5 seeded articles are substantial (>= ~1,500 chars of HTML body)", all((r[9] or 0) >= 1500 for r in seeded), min((r[9] or 0) for r in seeded) if seeded else 0)
+    # workflow integrity: v1 snapshot + pending editorial review on every seeded draft
+    ids = [r[0] for r in seeded]
+    iph = ",".join("?" * len(ids))
+    vcnt = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_post_versions WHERE post_id IN (" + iph + ")", tuple(ids)).fetchone()[0]
+    ecnt = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='editorial_review' AND decision='pending' AND post_id IN (" + iph + ")", tuple(ids)).fetchone()[0]
+    chk("20E6 every seeded draft has a v1 snapshot + a pending editorial review", vcnt == 20 and ecnt == 20, (vcnt, ecnt))
+    # separation of duties: financial / AI-governance content is additionally flagged for expert review
+    rev_ids = [by_slug[s][0] for s in E_REVIEW if s in by_slug]
+    rph = ",".join("?" * len(rev_ids))
+    lrev = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='legal_review' AND decision='pending' AND post_id IN (" + rph + ")", tuple(rev_ids)).fetchone()[0]
+    nonrev_ids = [by_slug[s][0] for s in by_slug if s not in E_REVIEW]
+    nph = ",".join("?" * len(nonrev_ids))
+    lrev_bad = con.execute("SELECT COUNT(*) FROM blog_reviews WHERE stage='legal_review' AND post_id IN (" + nph + ")", tuple(nonrev_ids)).fetchone()[0]
+    con.close()
+    chk("20E7 financial/AI-governance content flagged for expert review; general content is not", lrev == 5 and lrev_bad == 0, (lrev, lrev_bad))
+    # the seeded drafts are NOT publicly reachable (published=0 => 404 until a human publishes)
+    sc1, _ = req("GET", "/blog/what-is-project-controls")
+    sc2, _ = req("GET", "/blog/project-finance-fundamentals")
+    chk("20E8 seeded drafts are hidden on the public blog (404 until published)", sc1 == 404 and sc2 == 404, (sc1, sc2))
+    # idempotency: unique slug (a UNIQUE-key duplicate would have failed the seeder; re-boot adds 0). Prove no dup rows.
+    con = dbconn()
+    dups = con.execute("SELECT slug,COUNT(*) c FROM blog_posts WHERE slug IN (" + ph + ") GROUP BY slug HAVING c>1", tuple(E_SLUGS)).fetchall()
+    con.close()
+    chk("20E9 seeder is idempotent — exactly one row per slug (no duplicates)", len(dups) == 0, dups)
+
 def _make_published_post(admin, title):
     c, p = jget("POST", "/api/admin/content/posts", token=admin, body={"title": title, "summary": "AI reshapes forecasting, EVM and risk.", "body": "<p>" + ("Body content about AI in project controls. " * 20) + "</p>"})
     pid = p.get("id"); slug = p.get("slug")

@@ -30,6 +30,7 @@
     <None Include="schema.mysql.sql" CopyToOutputDirectory="PreserveNewest" />
     <None Include="i18n_seed.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('i18n_seed.json')" />
     <None Include="certuvo_seed.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('certuvo_seed.json')" />
+    <None Include="blog_seed_articles.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('blog_seed_articles.json')" />
     <None Include="demo_exam_seed.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('demo_exam_seed.json')" />
     <None Include="emails/**/*" CopyToOutputDirectory="PreserveNewest" />
     <None Include="books/**/*" CopyToOutputDirectory="PreserveNewest" />
