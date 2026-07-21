@@ -121,6 +121,53 @@ public static class Payments
             catch (Exception e) { Console.Error.WriteLine(e); return Results.Json(new { error = "session_failed" }, statusCode: 500); }
         });
 
+        // ---------- recurring annual dues (Stripe subscription) ----------
+        // Activates only when the operator sets STRIPE_MEMBERSHIP_PRICE_ID (a recurring Price). Until then the
+        // endpoint reports an honest "not configured" — nothing is faked, matching the platform's capability model.
+        static string? DuesPrice() => Environment.GetEnvironmentVariable("STRIPE_MEMBERSHIP_PRICE_ID");
+
+        app.MapPost("/api/me/membership/subscribe", async (HttpRequest req) =>
+        {
+            if (!stripeReady()) return Stripe503();
+            var u = Auth.UserFromReq(req, db); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var price = DuesPrice();
+            if (string.IsNullOrWhiteSpace(price))
+                return Results.Json(new { error = "dues_not_configured", message = "Recurring annual dues are not enabled yet." }, statusCode: 503);
+            // Reuse the member's Stripe customer if we already have one (avoids duplicate customers on re-subscribe).
+            var existingCust = H.Str(db.QueryOne("SELECT stripe_customer_id FROM memberships WHERE user_id=? ORDER BY id DESC", u.Id)?["stripe_customer_id"]);
+            try
+            {
+                var opts = new SessionCreateOptions
+                {
+                    Mode = "subscription",
+                    LineItems = new() { new() { Price = price, Quantity = 1 } },
+                    ClientReferenceId = u.Id.ToString(),
+                    SubscriptionData = new() { Metadata = new() { ["user_id"] = u.Id.ToString() } },
+                    SuccessUrl = $"{Base}/app/billing?subscribed=1",
+                    CancelUrl = $"{Base}/app/billing?cancelled=1",
+                };
+                if (!string.IsNullOrEmpty(existingCust)) opts.Customer = existingCust; else opts.CustomerEmail = u.Email;
+                var session = await new SessionService().CreateAsync(opts);
+                return J(new { url = session.Url });
+            }
+            catch (Exception e) { Console.Error.WriteLine(e); return Results.Json(new { error = "session_failed" }, statusCode: 500); }
+        });
+
+        // Stripe Billing Portal — the member manages/cancels their own subscription and payment method.
+        app.MapPost("/api/me/membership/portal", async (HttpRequest req) =>
+        {
+            if (!stripeReady()) return Stripe503();
+            var u = Auth.UserFromReq(req, db); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var cust = H.Str(db.QueryOne("SELECT stripe_customer_id FROM memberships WHERE user_id=? ORDER BY id DESC", u.Id)?["stripe_customer_id"]);
+            if (string.IsNullOrEmpty(cust)) return Results.Json(new { error = "no_subscription", message = "You do not have an active subscription to manage." }, statusCode: 400);
+            try
+            {
+                var ps = await new Stripe.BillingPortal.SessionService().CreateAsync(new Stripe.BillingPortal.SessionCreateOptions { Customer = cust, ReturnUrl = $"{Base}/app/billing" });
+                return J(new { url = ps.Url });
+            }
+            catch (Exception e) { Console.Error.WriteLine(e); return Results.Json(new { error = "portal_failed" }, statusCode: 500); }
+        });
+
         // ---------- webhook: the ONLY place access is granted ----------
         app.MapPost("/api/webhook", async (HttpRequest req) =>
         {
@@ -135,6 +182,29 @@ public static class Payments
             Event ev;
             try { ev = EventUtility.ConstructEvent(payload, req.Headers["stripe-signature"].ToString(), webhookSecret); }
             catch { return Results.Text("Webhook signature verification failed", "text/plain", statusCode: 400); }
+
+            // Recurring annual-dues subscription set-up: store the Stripe customer + subscription on the
+            // member and activate their membership. Kept separate from the one-off settlement below.
+            if (ev.Type == "checkout.session.completed" && (ev.Data.Object as Session)?.Mode == "subscription")
+            {
+                var s = ev.Data.Object as Session;
+                var uid = long.TryParse(s?.ClientReferenceId, out var cid) ? cid
+                    : long.TryParse(s?.Metadata?.GetValueOrDefault("user_id", ""), out var mid) ? mid : 0;
+                var email = (s?.CustomerDetails?.Email ?? s?.CustomerEmail ?? "").ToLowerInvariant();
+                if (uid == 0 && !string.IsNullOrEmpty(email)) uid = H.L(db.QueryOne("SELECT id FROM users WHERE email=?", email)?["id"]);
+                if (uid != 0)
+                {
+                    var m2 = db.QueryOne("SELECT id FROM memberships WHERE user_id=? ORDER BY id DESC", uid);
+                    if (m2 is null)
+                        db.Execute("INSERT INTO memberships(user_id,membership_type,status,start_date,expiry_date,stripe_customer_id,stripe_subscription_id,subscription_status,grade) VALUES(?, 'Annual Membership','active',datetime('now'),datetime('now','+1 year'),?,?, 'active','associate')",
+                            uid, s!.CustomerId, s.SubscriptionId);
+                    else
+                        db.Execute("UPDATE memberships SET status='active', stripe_customer_id=?, stripe_subscription_id=?, subscription_status='active', cancel_at_period_end=0, expiry_date=CASE WHEN expiry_date IS NULL OR expiry_date<datetime('now','+1 year') THEN datetime('now','+1 year') ELSE expiry_date END WHERE id=?",
+                            s!.CustomerId, s.SubscriptionId, m2["id"]);
+                    log(uid, "dues_subscribed", s.SubscriptionId);
+                }
+                return Results.Ok();
+            }
 
             if (ev.Type == "checkout.session.completed")
             {
@@ -350,6 +420,39 @@ public static class Payments
                             db.Execute("UPDATE memberships SET status='expired', expiry_date=datetime('now') WHERE user_id=? AND status='active'", uid);
                         log(H.Ln(uid), "payment_" + reversed, $"{ev.Id} pi={pi}");
                     });
+            }
+            // Recurring dues renewal: a successful RECURRING invoice extends the term by a year. The initial
+            // invoice (subscription_create) is skipped — that term is set at checkout.session.completed.
+            else if (ev.Type == "invoice.paid")
+            {
+                var inv = ev.Data.Object as Stripe.Invoice;
+                if (inv is not null && inv.BillingReason == "subscription_cycle" && !string.IsNullOrEmpty(inv.CustomerId))
+                {
+                    var mem = db.QueryOne("SELECT id,user_id,expiry_date FROM memberships WHERE stripe_customer_id=? ORDER BY id DESC", inv.CustomerId);
+                    if (mem is not null)
+                    {
+                        var nowIso = H.IsoNow;
+                        var baseD = H.Str(mem["expiry_date"]) is { } ex && H.After(ex, nowIso) ? ex : nowIso;
+                        var newExp = H.IsoFromMillis(H.JsMillis(baseD) + 365L * 86400_000L);
+                        db.Execute("UPDATE memberships SET status='active', subscription_status='active', expiry_date=? WHERE id=?", newExp, mem["id"]);
+                        log(H.Ln(mem["user_id"]), "dues_renewed", inv.CustomerId);
+                    }
+                }
+            }
+            // Subscription state changes (cancellation scheduled, past_due, canceled) mirror into the member's row.
+            else if (ev.Type is "customer.subscription.updated" or "customer.subscription.deleted")
+            {
+                var sub = ev.Data.Object as Stripe.Subscription;
+                if (sub is not null && !string.IsNullOrEmpty(sub.CustomerId))
+                {
+                    var mem = db.QueryOne("SELECT id,user_id FROM memberships WHERE stripe_customer_id=? ORDER BY id DESC", sub.CustomerId);
+                    if (mem is not null)
+                    {
+                        var status = ev.Type == "customer.subscription.deleted" ? "canceled" : sub.Status;
+                        db.Execute("UPDATE memberships SET subscription_status=?, cancel_at_period_end=? WHERE id=?", status, sub.CancelAtPeriodEnd ? 1 : 0, mem["id"]);
+                        log(H.Ln(mem["user_id"]), "dues_sub_" + (ev.Type == "customer.subscription.deleted" ? "canceled" : "updated"), status);
+                    }
+                }
             }
             return J(new { received = true });
         });

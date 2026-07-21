@@ -98,6 +98,12 @@ public static class Migrate
         // Membership grade (professional standing): student | associate | professional | fellow. Distinct from
         // membership_type (the product) — the grade carries the post-nominal (APCI/MPCI/FPCI) and progression.
         AddCol("memberships", "grade", "grade TEXT DEFAULT 'associate'");
+        // Recurring annual-dues subscription state (Stripe Billing). Populated by the subscription webhooks;
+        // empty for members who paid a one-off term. subscription_status mirrors Stripe (active|past_due|canceled…).
+        AddCol("memberships", "stripe_customer_id", "stripe_customer_id VARCHAR(64)");
+        AddCol("memberships", "stripe_subscription_id", "stripe_subscription_id VARCHAR(64)");
+        AddCol("memberships", "subscription_status", "subscription_status VARCHAR(24)");
+        AddCol("memberships", "cancel_at_period_end", "cancel_at_period_end INTEGER DEFAULT 0");
         // Grade upgrade / Fellowship-nomination applications reviewed by admins.
         db.Exec(@"CREATE TABLE IF NOT EXISTS membership_upgrades(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,
             from_grade TEXT,to_grade TEXT NOT NULL,statement TEXT,status TEXT DEFAULT 'pending',

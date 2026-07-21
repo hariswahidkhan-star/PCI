@@ -126,6 +126,7 @@ function PlansCard() {
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       {me.membership_grade && <MembershipGradeCard grade={me.membership_grade} onDone={refetch} />}
+      {me.membership_dues?.available && <DuesCard dues={me.membership_dues} />}
       <Card title={t('billing.plansTitle')}>
       {paid && (
         <div className="notice" style={{ marginBottom: '.75rem' }}>
@@ -303,6 +304,42 @@ function MembershipGradeCard({ grade, onDone }: { grade: NonNullable<Me['members
           </div>
         )}
       </div>
+    </Card>
+  )
+}
+
+// Recurring annual-dues subscription (Stripe). Only rendered when the operator has enabled the feature.
+function DuesCard({ dues }: { dues: NonNullable<Me['membership_dues']> }) {
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  async function go(path: 'subscribe' | 'portal') {
+    setBusy(true); setErr(null)
+    try {
+      const r = await api.post<{ url?: string }>(`/api/me/membership/${path}`, {})
+      if (r.url) window.location.href = r.url
+      else setErr('Could not open the billing page. Please try again.')
+    } catch (e) {
+      const b = e instanceof Object && 'body' in e ? (e as { body?: { message?: string } }).body : null
+      setErr(b?.message || (e instanceof Error ? e.message : 'Something went wrong.')); setBusy(false)
+    }
+  }
+
+  return (
+    <Card title="Annual membership (auto-renew)">
+      {err && <div className="notice err" role="alert" style={{ marginBottom: '.6rem' }}>{err}</div>}
+      {dues.subscribed ? (
+        <div className="stack small" style={{ gap: '.4rem' }}>
+          <div>Your membership renews automatically each year{dues.status && dues.status !== 'active' ? ` (status: ${dues.status})` : ''}.</div>
+          {dues.cancel_at_period_end && <div className="muted">It is set to end at the close of the current period — you can resume from the billing portal.</div>}
+          <div><button className="btn sm secondary" disabled={busy} onClick={() => go('portal')}>{busy ? 'Opening…' : 'Manage subscription'}</button></div>
+        </div>
+      ) : (
+        <div className="stack small" style={{ gap: '.4rem' }}>
+          <div>Set up an auto-renewing annual membership so your standing never lapses — cancel any time.</div>
+          <div><button className="btn sm" disabled={busy} onClick={() => go('subscribe')}>{busy ? 'Opening…' : 'Set up auto-renew'}</button></div>
+        </div>
+      )}
     </Card>
   )
 }

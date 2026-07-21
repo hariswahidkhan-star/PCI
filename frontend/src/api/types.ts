@@ -153,6 +153,7 @@ export interface Me {
     can_apply_fellow: boolean
     pending_application?: { to_grade: string; created_at?: string | null } | null
   } | null
+  membership_dues?: { available: boolean; subscribed: boolean; status?: string | null; cancel_at_period_end?: boolean } | null
   cpd: { total: number; target: number; pending?: number }
   two_factor: boolean
   two_factor_coming_soon: boolean

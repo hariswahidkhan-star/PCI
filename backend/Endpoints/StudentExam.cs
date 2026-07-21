@@ -45,6 +45,16 @@ public static class StudentExam
             var total = cpdRows.Where(r => H.Str(r["status"]) == "approved").Sum(r => H.D(r["hours"]));
             var cpdPending = cpdRows.Where(r => H.Str(r["status"]) == "recorded").Sum(r => H.D(r["hours"]));
             var unread = db.Scalar<long>("SELECT COUNT(*) FROM notifications WHERE user_id=? AND read_at IS NULL", u.Id);
+            // Recurring annual-dues subscription state (feature is available only when the operator configured
+            // a Stripe recurring price). Drives the Subscribe / Manage-subscription controls on Billing.
+            var duesRow = db.QueryOne("SELECT stripe_subscription_id,subscription_status,cancel_at_period_end FROM memberships WHERE user_id=? ORDER BY id DESC", u.Id);
+            var membershipDues = new
+            {
+                available = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("STRIPE_MEMBERSHIP_PRICE_ID")),
+                subscribed = H.Str(duesRow?["stripe_subscription_id"]) is { Length: > 0 } && H.Str(duesRow?["subscription_status"]) is not ("canceled" or "unpaid"),
+                status = H.Str(duesRow?["subscription_status"]),
+                cancel_at_period_end = H.B(duesRow?["cancel_at_period_end"]),
+            };
             // Ensure a stable registration number exists (lazy backfill for both new and pre-existing users).
             var regNo = db.Scalar<string>("SELECT registration_no FROM users WHERE id=?", u.Id);
             if (string.IsNullOrWhiteSpace(regNo))
@@ -137,6 +147,7 @@ public static class StudentExam
                 tickets = db.Query("SELECT id,reference,subject,category,status,updated_at FROM tickets WHERE user_id=? ORDER BY updated_at DESC LIMIT 10", u.Id),
                 referral = db.QueryOne("SELECT code FROM discount_codes WHERE owner_user_id=? AND code_type='referral' AND active=1", u.Id),
                 membership_grade = MembershipGrades.Snapshot(db, u.Id),
+                membership_dues = membershipDues,
                 cpd = new { total, pending = cpdPending, target = H.D(db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='sp_cpd_target_hours'")) is var _ct && _ct > 0 ? _ct : 60.0 },
                 two_factor = (db.Scalar<string>("SELECT totp_secret FROM users WHERE id=?", u.Id) ?? "") is { Length: > 0 } _tf && !_tf.StartsWith("pending:"), two_factor_coming_soon = false,
                 unread,
