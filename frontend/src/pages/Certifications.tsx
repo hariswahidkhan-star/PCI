@@ -467,6 +467,25 @@ function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
     }
   }
 
+  // Pay the membership fee and this certification's exam fee together, in one checkout.
+  async function buyBundle(certCode: string) {
+    if (!me) return
+    setBuyErr(null)
+    setBuying(certCode)
+    try {
+      await startCheckout({
+        product: 'bundle',
+        email: me.user.email,
+        cert: certCode,
+        first: me.user.first_name ?? undefined,
+        last: me.user.last_name ?? undefined,
+      })
+    } catch (e) {
+      setBuyErr(checkoutErrorMessage(e))
+      setBuying(null)
+    }
+  }
+
   if (loading) return <Card><Spinner /></Card>
   if (error) return <Card><ErrorNote>{error}</ErrorNote></Card>
   const rows = data?.rows ?? []
@@ -501,6 +520,13 @@ function Catalogue({ ownedCodes }: { ownedCodes: Set<string> }) {
             </ul>
             {owned ? (
               <span className="btn sm secondary cert-tile-cta" aria-disabled="true" style={{ opacity: 0.6, pointerEvents: 'none' }}>{t('cert.alreadyEnrolled')}</span>
+            ) : !memberActive ? (
+              <>
+                <button className="btn sm cert-tile-cta" disabled={buying !== null} onClick={() => buyBundle(c.code)}>
+                  {buying === c.code ? t('cert.openingCheckout') : t('cert.payMembershipAndExam')}
+                </button>
+                <div className="muted" style={{ fontSize: '.72rem', marginTop: '.3rem' }}>{t('cert.bundleAddsMembership')}</div>
+              </>
             ) : (
               <button className="btn sm cert-tile-cta" disabled={buying !== null} onClick={() => buy(c.code)}>
                 {buying === c.code ? t('cert.openingCheckout') : t('cert.payExamFee')}

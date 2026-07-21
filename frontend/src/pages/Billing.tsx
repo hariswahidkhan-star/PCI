@@ -91,7 +91,7 @@ function PlansCard() {
   // `busyKey` disambiguates concurrent buttons: exam/membership/renewal are unique, but a member may
   // hold several credentials, so each recert button keys on `recert:<cert code>`.
   async function buy(
-    product: 'membership' | 'exam' | 'renewal' | 'recert',
+    product: 'membership' | 'exam' | 'bundle' | 'renewal' | 'recert',
     opts: { cert?: string; busyKey?: string } = {},
   ) {
     const busyKey = opts.busyKey ?? product
@@ -112,7 +112,7 @@ function PlansCard() {
       await startCheckout({
         product,
         email: me!.user.email,
-        cert: product === 'exam' ? certSel || undefined : product === 'recert' ? opts.cert : undefined,
+        cert: product === 'exam' || product === 'bundle' ? certSel || undefined : product === 'recert' ? opts.cert : undefined,
         code: c || undefined,
         first: me!.user.first_name ?? undefined,
         last: me!.user.last_name ?? undefined,
@@ -180,6 +180,21 @@ function PlansCard() {
           </button>
         </div>
       </div>
+
+      {!memberActive && pricing && (
+        <div className="plan-row" style={{ background: 'var(--tint, #eef2ff)', borderRadius: 10 }}>
+          <div style={{ flex: 1, minWidth: 220 }}>
+            <strong>{t('billing.bundleTitle')}</strong>
+            <div className="muted small">{t('billing.bundleDesc', { cert: certSel || (certs?.[0]?.code ?? '') })}</div>
+          </div>
+          <div className="row">
+            <span className="plan-price">{fmtMoney(pricing.bundle.final, pricing.currency)}</span>
+            <button className="btn sm" disabled={busy !== null} onClick={() => buy('bundle')}>
+              {busy === 'bundle' ? t('billing.openingCheckout') : t('billing.payBundle')}
+            </button>
+          </div>
+        </div>
+      )}
 
       {renewalDue && pricing && (
         <div className="plan-row">
