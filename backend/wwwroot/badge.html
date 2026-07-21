@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="en-GB"><head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="pci-api" content=""/>
+<script>window.PCI_API_BASE=(document.querySelector('meta[name="pci-api"]')||{}).content||window.PCI_API_BASE||"";</script>
+<title>Digital Badge — Project Controls Institute</title>
+<meta name="description" content="A verifiable PCI digital badge (Open Badges). Confirm the holder, certification, issue date and current status at source."/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://projectcontrolsinstitute.org/badge.html"/>
+<link rel="icon" href="favicon.ico" sizes="any"/>
+<link rel="stylesheet" href="assets/styles.css"/>
+<style>
+  .badge-wrap{max-width:640px;margin:3rem auto;padding:0 1rem}
+  .badge-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:2rem;text-align:center;box-shadow:0 6px 30px rgba(15,35,96,.08)}
+  .badge-card img{width:200px;height:200px}
+  .badge-state{display:inline-block;padding:.25rem .7rem;border-radius:999px;font-size:.85rem;font-weight:600;margin-top:.6rem}
+  .st-active{background:#dcfce7;color:#166534}.st-expired{background:#fef3c7;color:#92400e}.st-revoked{background:#fee2e2;color:#991b1b}
+  .badge-meta{margin:1rem 0;color:#475569;font-size:.95rem}
+  .badge-meta strong{color:#0f172a}
+  .badge-actions{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:1.2rem}
+  .badge-actions a,.badge-actions button{font:inherit;cursor:pointer;border-radius:8px;padding:.55rem .9rem;border:1px solid #1D4ED8;text-decoration:none}
+  .btn-primary{background:#1D4ED8;color:#fff}.btn-ghost{background:#fff;color:#1D4ED8}
+  .badge-embed{margin-top:1rem;text-align:left;display:none}
+  .badge-embed textarea{width:100%;height:70px;font-family:monospace;font-size:.8rem;padding:.5rem;border:1px solid #e5e7eb;border-radius:8px}
+  .badge-foot{text-align:center;margin-top:1.2rem;color:#64748b;font-size:.8rem}
+  .badge-foot a{color:#1D4ED8}
+</style>
+</head><body>
+<div class="badge-wrap">
+  <div id="loading" style="text-align:center;color:#475569;margin:2rem 0">Loading badge…</div>
+  <div id="notfound" style="display:none;text-align:center;color:#991b1b;margin:2rem 0">This badge could not be found. Check the link and try again.</div>
+  <div id="card" class="badge-card" style="display:none">
+    <img id="b-img" alt="PCI digital badge" src=""/>
+    <h1 id="b-cert" style="margin:.8rem 0 .2rem;font-size:1.4rem">—</h1>
+    <div id="b-acr" style="color:#64748b"></div>
+    <div><span id="b-state" class="badge-state">—</span></div>
+    <div class="badge-meta">
+      <div>Awarded to <strong id="b-holder">—</strong></div>
+      <div>Credential ID <strong id="b-id">—</strong></div>
+      <div id="b-dates"></div>
+    </div>
+    <div class="badge-actions">
+      <a id="b-linkedin" class="btn-primary" target="_blank" rel="noopener">Add to LinkedIn</a>
+      <a id="b-verify" class="btn-ghost" target="_blank" rel="noopener">Verify at source</a>
+      <button id="b-copy" class="btn-ghost">Copy badge link</button>
+      <button id="b-embedbtn" class="btn-ghost">Embed</button>
+    </div>
+    <div id="b-embed" class="badge-embed">
+      <label style="font-size:.8rem;color:#475569">Paste this into a website or email signature:</label>
+      <textarea id="b-embedcode" readonly></textarea>
+    </div>
+  </div>
+  <div class="badge-foot">
+    A verifiable <a href="https://openbadges.org" target="_blank" rel="noopener">Open Badges</a> credential from the
+    <a href="/">Project Controls Institute</a>. <a id="b-assertion" target="_blank" rel="noopener">View badge data (JSON)</a>.
+  </div>
+</div>
+<script>
+(function(){
+  var API = window.PCI_API_BASE || '';
+  var id = new URLSearchParams(location.search).get('id') || '';
+  var $ = function(x){return document.getElementById(x);};
+  function show(el){ el.style.display=''; }
+  function hide(el){ el.style.display='none'; }
+  if(!id){ hide($('loading')); show($('notfound')); return; }
+  fetch(API + '/api/badges/view/' + encodeURIComponent(id)).then(function(r){return r.json();}).then(function(d){
+    hide($('loading'));
+    if(!d || !d.found){ show($('notfound')); return; }
+    var origin = location.origin;
+    var pageUrl = origin + '/badge.html?id=' + encodeURIComponent(d.credential_id);
+    $('b-img').src = d.image;
+    $('b-cert').textContent = d.certification_name || d.credential_id;
+    $('b-acr').textContent = d.certification_acronym || '';
+    $('b-holder').textContent = d.holder_name || '—';
+    $('b-id').textContent = d.credential_id;
+    var st = $('b-state'); st.textContent = d.state==='active'?'Valid':(d.state==='expired'?'Expired':'Revoked');
+    st.className = 'badge-state ' + (d.state==='active'?'st-active':(d.state==='expired'?'st-expired':'st-revoked'));
+    var dates = [];
+    if(d.issued_at) dates.push('Issued ' + String(d.issued_at).slice(0,10));
+    if(d.expires_at) dates.push('Valid until ' + String(d.expires_at).slice(0,10));
+    $('b-dates').textContent = dates.join(' · ');
+    $('b-verify').href = d.verify_url;
+    $('b-assertion').href = d.assertion_url;
+    // LinkedIn "Add to Profile" official deep-link.
+    var iss = d.issued_at ? new Date(d.issued_at) : null, exp = d.expires_at ? new Date(d.expires_at) : null;
+    var p = new URLSearchParams({ startTask:'CERTIFICATION_NAME', name:(d.certification_name||d.credential_id),
+      organizationName:'Project Controls Institute', certUrl:pageUrl, certId:d.credential_id });
+    if(iss && !isNaN(iss)){ p.set('issueYear', iss.getUTCFullYear()); p.set('issueMonth', iss.getUTCMonth()+1); }
+    if(exp && !isNaN(exp)){ p.set('expirationYear', exp.getUTCFullYear()); p.set('expirationMonth', exp.getUTCMonth()+1); }
+    $('b-linkedin').href = 'https://www.linkedin.com/profile/add?' + p.toString();
+    $('b-embedcode').value = '<a href="'+pageUrl+'"><img src="'+d.image+'" width="120" height="120" alt="'+(d.certification_acronym||'PCI')+' digital badge"/></a>';
+    $('b-copy').onclick = function(){ navigator.clipboard && navigator.clipboard.writeText(pageUrl); this.textContent='Copied'; var b=this; setTimeout(function(){b.textContent='Copy badge link';},1500); };
+    $('b-embedbtn').onclick = function(){ var e=$('b-embed'); e.style.display = e.style.display==='none'?'block':'none'; };
+    show($('card'));
+  }).catch(function(){ hide($('loading')); show($('notfound')); });
+})();
+</script>
+</body></html>

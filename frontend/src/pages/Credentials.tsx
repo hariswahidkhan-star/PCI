@@ -121,6 +121,7 @@ export default function Credentials() {
                   <button className="btn sm" onClick={() => downloadPdf(c.credential_id)}>Download PDF</button>
                   <button className="btn sm secondary" onClick={() => certificate(c)}>{t('cred.downloadCertificate')}</button>
                   <a className="btn sm secondary" href={`/verify.html?id=${encodeURIComponent(c.credential_id)}`} target="_blank" rel="noreferrer">{t('cred.publicVerifyPage')}</a>
+                  <a className="btn sm secondary" href={`/badge.html?id=${encodeURIComponent(c.credential_id)}`} target="_blank" rel="noreferrer" title="Your shareable, verifiable Open Badge">Digital badge</a>
                   <button className="btn sm secondary" onClick={() => addToLinkedIn(c)} title="Add this credential to your LinkedIn profile">Add to LinkedIn</button>
                 </div>
               )}
