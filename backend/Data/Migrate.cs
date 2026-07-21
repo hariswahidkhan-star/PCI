@@ -1191,6 +1191,8 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_social_drafts_post ON social_drafts(post_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_social_drafts_status ON social_drafts(status)");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_default_base_urls','')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_utm_enabled','1')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_utm_campaign','social')");
 
         // Content Syndication (Phase 3) — outbound publishing to partner CMS platforms whose official APIs need
         // no provider review (WordPress self-hosted, Ghost, Forem/DEV). Credentials ENCRYPTED at rest, never
@@ -1295,12 +1297,29 @@ public static class Migrate
             fetched_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_anmetric_source ON cc_analytics_metrics(source_id, dimension)");
 
+        // Content link registry (Phase C) — the hyperlinks a post publishes, extracted from its body. Each row
+        // is classified internal (relative or same-site) vs external, carries an editor-set rel policy
+        // (auto/dofollow/nofollow/sponsored/ugc), an optional citation + approval flag, and an on-demand HTTP
+        // status (checked ONLY for external links, through the SSRF-guarded egress client — never for private
+        // targets). url_norm is VARCHAR so it can back the per-post unique index (MySQL can't index TEXT).
+        // cc_* namespaced; gated by the cc_links permission.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_content_links(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            post_id INTEGER NOT NULL, url VARCHAR(500) NOT NULL, url_norm VARCHAR(500),
+            kind VARCHAR(12) DEFAULT 'external', anchor_text VARCHAR(300), rel VARCHAR(24) DEFAULT 'auto',
+            is_citation INTEGER DEFAULT 0, approved INTEGER DEFAULT 0,
+            status VARCHAR(16) DEFAULT 'unchecked', http_code INTEGER, last_checked_at TEXT, clicks INTEGER DEFAULT 0,
+            active INTEGER DEFAULT 1, created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_links_post ON cc_content_links(post_id, kind)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_cc_links_post_url ON cc_content_links(post_id, url_norm)");
+        AddCol("cc_content_links", "clicks", "clicks INTEGER DEFAULT 0");   // Phase D: outbound-click counter (idempotent for DBs created before this)
+
         // Configurable defaults (operator-tunable via Settings; no hardcoded values in React/.NET) + the
         // content-centre notification master toggle.
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('backlink_our_domain','projectcontrolsinstitute.org')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('backlink_verify_enabled','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('analytics_default_range_days','28')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_base_path','/blog')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('news_base_path','/news')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_posts_per_page','12')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_indexnow_on_publish','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_content_enabled','1')");

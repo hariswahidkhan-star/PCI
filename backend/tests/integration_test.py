@@ -64,6 +64,17 @@ def jget(method, path, **kw):
     try: return code, json.loads(txt)
     except Exception: return code, txt
 
+def no_follow(method, path, token=None):
+    """Request WITHOUT following redirects → (status, Location). Used to assert 301/302/410 behaviour."""
+    class _NR(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, headers, newurl): return None
+    op = urllib.request.build_opener(_NR)
+    r = urllib.request.Request(BASE + path, method=method, headers={"Authorization": "Bearer " + token} if token else {})
+    try:
+        with op.open(r) as resp: return resp.status, resp.headers.get("Location")
+    except urllib.error.HTTPError as e:
+        return e.code, e.headers.get("Location")
+
 def sha256hex(s): return hashlib.sha256(s.encode()).hexdigest()
 
 def sign_and_send_webhook(session_id, email, product, pi_id, metadata=None, amount=9900, event_id=None, etype="checkout.session.completed"):
@@ -1684,6 +1695,89 @@ def test_content_centre(admin):
     chk("20n main sitemap includes the blog URL", ("/blog/" + slug) in sm, None)
     sc, bsm = req("GET", "/blog-sitemap.xml")
     chk("20o blog sitemap serves", sc == 200 and slug in bsm, sc)
+    # Phase A: sitemap index unifies both sitemaps; robots.txt advertises the blog sitemap (no orphan)
+    sc, sidx = req("GET", "/sitemap-index.xml")
+    chk("20o2 sitemap index references both page + blog sitemaps", sc == 200 and "sitemapindex" in sidx and "/sitemap.xml" in sidx and "/blog-sitemap.xml" in sidx, sc)
+    sc, rob = req("GET", "/robots.txt")
+    chk("20o3 robots.txt advertises the blog sitemap + index (not orphaned)", "blog-sitemap.xml" in rob and "sitemap-index.xml" in rob, None)
+    # Phase A: a live article emits EXACTLY one <meta name=robots> and one og:title (no duplicate/conflicting tags)
+    chk("20o4 article has exactly one robots meta and one og:title", html.count('name="robots"') == 1 and html.count('property="og:title"') == 1, (html.count('name="robots"'), html.count('property="og:title"')))
+    # Phase A: a 410 Gone redirect returns 410 (permanent removal, no Location)
+    jget("POST", "/api/admin/seo/redirects", token=admin, body={"from_path": "/retired-thing-xyz.html", "status": 410, "note": "gone"})
+    sc, _ = req("GET", "/retired-thing-xyz.html")
+    chk("20o5 a 410 Gone redirect returns 410", sc == 410, sc)
+    # Phase A: renaming a LIVE post writes a 301 from the old blog URL to the new slug (links/SEO survive)
+    c, rnp = jget("POST", "/api/admin/content/posts", token=admin, body={"title": "Rename Me AAA", "summary": "x", "body": "<p>" + ("body " * 40) + "</p>"})
+    rnpid, oldslug = rnp.get("id"), rnp.get("slug")
+    jget("POST", f"/api/admin/content/posts/{rnpid}/publish", token=admin, body={})
+    jget("PATCH", f"/api/admin/content/posts/{rnpid}", token=admin, body={"slug": "renamed-bbb-xyz", "change_reason": "rename"})
+    con = dbconn(); rc = con.execute("SELECT COUNT(*) FROM seo_redirects WHERE from_path=? AND to_url=? AND status=301", ("/blog/" + oldslug, "/blog/renamed-bbb-xyz")).fetchone()[0]; con.close()
+    chk("20o6 renaming a live post writes a 301 from the old URL to the new slug", rc == 1, rc)
+    # Phase B: News is a first-class vertical — blog_posts with structured_type=NewsArticle, served at /news/*
+    c, nnp = jget("POST", "/api/admin/content/posts", token=admin, body={"title": "PCI News Bulletin QQQ", "summary": "Latest project controls update.", "body": "<p>" + ("News about project controls standards. " * 20) + "</p>"})
+    nnid, nnslug = nnp.get("id"), nnp.get("slug")
+    jget("PATCH", f"/api/admin/content/posts/{nnid}", token=admin, body={"structured_type": "NewsArticle"})
+    jget("POST", f"/api/admin/content/posts/{nnid}/publish", token=admin, body={})
+    sc, nland = req("GET", "/news")
+    chk("20v news landing SSR lists the news item", sc == 200 and "PCI News Bulletin QQQ" in nland, sc)
+    sc, bland = req("GET", "/blog")
+    chk("20w blog landing excludes news items", "PCI News Bulletin QQQ" not in bland, None)
+    sc, nart = req("GET", f"/news/{nnslug}")
+    chk("20x news article renders at /news/{slug} with NewsArticle JSON-LD + /news canonical",
+        sc == 200 and "NewsArticle" in nart and 'rel="canonical"' in nart and ("/news/" + nnslug) in nart, sc)
+    code, loc = no_follow("GET", f"/blog/{nnslug}")
+    chk("20y a news post requested under /blog 301s to its /news home", code == 301 and (loc or "").endswith("/news/" + nnslug), (code, loc))
+    sc, nsm = req("GET", "/news-sitemap.xml")
+    chk("20z Google-News sitemap serves with the news: namespace + the recent item", sc == 200 and "sitemap-news" in nsm and nnslug in nsm, sc)
+    sc, nrss = req("GET", "/news/feed.xml")
+    chk("20z2 news RSS feed contains the item", sc == 200 and nnslug in nrss, sc)
+    sc, sidx2 = req("GET", "/sitemap-index.xml")
+    chk("20z3 sitemap index references the news sitemap", "/news-sitemap.xml" in sidx2, None)
+    # Phase C: content link registry — scan classifies internal vs external; rel/citation set; external check
+    bodyhtml = '<p>See our <a href="/blog/other-guide">internal guide</a> and the <a href="' + BASE + '/api/health">external status</a>.</p>'
+    c, lp = jget("POST", "/api/admin/content/posts", token=admin, body={"title": "Links Test CCC", "summary": "x", "body": bodyhtml})
+    lpid = lp.get("id")
+    c, scan = jget("POST", f"/api/admin/content/posts/{lpid}/links/scan", token=admin)
+    chk("20zc link scan finds both links", scan.get("found", 0) >= 2, scan)
+    c, ll = jget("GET", f"/api/admin/content/posts/{lpid}/links", token=admin)
+    kinds = {r["kind"] for r in ll.get("rows", [])}
+    chk("20zd link registry classifies internal + external", "internal" in kinds and "external" in kinds, sorted(kinds))
+    ext = next((r for r in ll["rows"] if r["kind"] == "external"), None)
+    jget("PATCH", f"/api/admin/content/links/{ext['id']}", token=admin, body={"rel": "nofollow", "is_citation": True})
+    c, ll2 = jget("GET", f"/api/admin/content/posts/{lpid}/links", token=admin)
+    ext2 = next((r for r in ll2["rows"] if r["id"] == ext["id"]), {})
+    chk("20ze external link rel policy + citation flag persist", ext2.get("rel") == "nofollow" and ext2.get("is_citation") == 1, (ext2.get("rel"), ext2.get("is_citation")))
+    c, chkres = jget("POST", f"/api/admin/content/links/{ext['id']}/check", token=admin)
+    chk("20zf external link HTTP status check runs (live)", chkres.get("status") == "live", chkres)
+    # Phase C: lifecycle — archive (reversible), soft-delete (hidden but kept), purge (owner, permanent)
+    lc_pid, lc_slug = _make_published_post(admin, "Lifecycle Test DDD")
+    jget("POST", f"/api/admin/content/posts/{lc_pid}/archive", token=admin)
+    sc, _ = req("GET", f"/blog/{lc_slug}")
+    con = dbconn(); st = con.execute("SELECT status FROM blog_posts WHERE id=?", (lc_pid,)).fetchone()[0]; con.close()
+    chk("20zg archive removes from public + sets status=archived", sc == 404 and st == "archived", (sc, st))
+    jget("POST", f"/api/admin/content/posts/{lc_pid}/delete", token=admin)
+    c, plist = jget("GET", "/api/admin/content/posts", token=admin)
+    chk("20zh soft-deleted post is hidden from the default admin list", lc_pid not in [r["id"] for r in plist.get("rows", [])], None)
+    c, dlist = jget("GET", "/api/admin/content/posts?status=deleted", token=admin)
+    chk("20zi soft-deleted post appears when explicitly filtered", any(r["id"] == lc_pid for r in dlist.get("rows", [])), None)
+    c, pg = jget("POST", f"/api/admin/content/posts/{lc_pid}/purge", token=admin)
+    con = dbconn(); gone = con.execute("SELECT COUNT(*) FROM blog_posts WHERE id=?", (lc_pid,)).fetchone()[0]
+    vgone = con.execute("SELECT COUNT(*) FROM blog_post_versions WHERE post_id=?", (lc_pid,)).fetchone()[0]; con.close()
+    chk("20zj purge (owner) permanently removes the post + its versions", pg.get("ok") and gone == 0 and vgone == 0, (pg.get("ok"), gone, vgone))
+    # Phase D: per-article analytics, share buttons + related posts (SSR), outbound link-click beacon
+    dbody = '<p>Read the <a href="/blog/other">internal</a> guide and the <a href="' + BASE + '/api/health">external status</a> page.</p>' + ('<p>More project controls content here. </p>' * 5)
+    c, dp = jget("POST", "/api/admin/content/posts", token=admin, body={"title": "Analytics Test EEE", "summary": "Distribution + analytics.", "body": dbody})
+    dpid = dp.get("id"); dslug = dp.get("slug")
+    jget("POST", f"/api/admin/content/posts/{dpid}/publish", token=admin, body={})   # publish auto-scans links
+    req("GET", f"/blog/{dslug}"); sc, dhtml = req("GET", f"/blog/{dslug}")   # two cookieless page views
+    chk("20zk article SSR carries share buttons + a related section", 'blog-share' in dhtml and 'blog-related' in dhtml, None)
+    c, arts = jget("GET", "/api/admin/content/analytics/articles?days=1", token=admin)
+    mine = next((a for a in arts.get("articles", []) if a.get("slug") == dslug), None)
+    chk("20zl per-article analytics counts the article's views", mine is not None and mine.get("views", 0) >= 2, mine)
+    req("POST", "/api/content/link-click", body={"slug": dslug, "url": BASE + "/api/health"})
+    c, dlinks = jget("GET", f"/api/admin/content/posts/{dpid}/links", token=admin)
+    extlink = next((r for r in dlinks.get("rows", []) if r["kind"] == "external"), {})
+    chk("20zm outbound link-click beacon increments the click counter", extlink.get("clicks", 0) >= 1, extlink)
     # integrity: unpublish keeps the post + versions (never deleted)
     jget("POST", f"/api/admin/content/posts/{pid}/unpublish", token=admin, body={})
     sc, _ = req("GET", f"/blog/{slug}")
@@ -1706,6 +1800,97 @@ def test_content_centre(admin):
     # SEO audit produces structured checks
     c, seo = jget("GET", "/api/admin/content/seo/audit", token=admin)
     chk("20u SEO audit returns a structured report", c == 200 and "audited" in seo, seo if c != 200 else "ok")
+
+    # ---------- Phase E: the 20 seeded PCI blog articles (idempotent; PUBLISHED on site-owner approval) ----------
+    E_SLUGS = [
+        "what-is-project-controls", "future-of-project-controls-ai", "estimate-at-completion-explained",
+        "earned-value-management-explained", "integrated-project-schedule", "schedule-risk-analysis-monte-carlo",
+        "project-cost-control-baseline-to-forecast", "change-control-major-projects", "project-controls-dashboards-kpis",
+        "project-data-governance-single-source-of-truth", "project-finance-fundamentals",
+        "managing-project-cash-flow-working-capital", "revenue-recognition-long-term-projects",
+        "financial-risk-management-major-projects", "connecting-project-controls-and-finance",
+        "project-delivery-governance", "pmo-and-project-controls", "ai-governance-for-projects",
+        "project-leadership-career-roadmap", "lessons-from-major-projects-why-projects-fail",
+    ]
+    E_REVIEW = {"project-finance-fundamentals", "managing-project-cash-flow-working-capital",
+                "revenue-recognition-long-term-projects", "financial-risk-management-major-projects",
+                "ai-governance-for-projects"}
+    con = dbconn()
+    ph = ",".join("?" * len(E_SLUGS))
+    seeded = con.execute(
+        "SELECT id,slug,status,published,ai_assisted,ai_disclosure,structured_type,category_id,author_id,LENGTH(body) "
+        "FROM blog_posts WHERE slug IN (" + ph + ")", tuple(E_SLUGS)).fetchall()
+    by_slug = {r[1]: r for r in seeded}
+    chk("20E1 all 20 required PCI blog articles are seeded", len(by_slug) == 20, sorted(set(E_SLUGS) - set(by_slug)))
+    chk("20E2 every seeded article is published (status='published', published=1) on owner approval",
+        all(r[2] == "published" and r[3] == 1 for r in seeded), [r[1] for r in seeded if r[2] != "published" or r[3] != 1][:5])
+    chk("20E3 seeded articles are honestly disclosed as AI-assisted", all(r[4] == 1 and (r[5] or "") == "AI-assisted" for r in seeded), None)
+    chk("20E4 seeded articles are BlogPosting linked to a content category", all(r[6] == "BlogPosting" and r[7] is not None for r in seeded), None)
+    chk("20E5 seeded articles are substantial (>= ~1,500 chars of HTML body)", all((r[9] or 0) >= 1500 for r in seeded), min((r[9] or 0) for r in seeded) if seeded else 0)
+    # workflow integrity: v1 snapshot + an editorial review record (approved on owner sign-off) per article
+    ids = [r[0] for r in seeded]
+    iph = ",".join("?" * len(ids))
+    vcnt = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_post_versions WHERE post_id IN (" + iph + ")", tuple(ids)).fetchone()[0]
+    ecnt = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='editorial_review' AND post_id IN (" + iph + ")", tuple(ids)).fetchone()[0]
+    chk("20E6 every seeded article has a v1 snapshot + an editorial review record", vcnt == 20 and ecnt == 20, (vcnt, ecnt))
+    # separation of duties: financial / AI-governance content additionally carries a legal_review record
+    rev_ids = [by_slug[s][0] for s in E_REVIEW if s in by_slug]
+    rph = ",".join("?" * len(rev_ids))
+    lrev = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='legal_review' AND post_id IN (" + rph + ")", tuple(rev_ids)).fetchone()[0]
+    nonrev_ids = [by_slug[s][0] for s in by_slug if s not in E_REVIEW]
+    nph = ",".join("?" * len(nonrev_ids))
+    lrev_bad = con.execute("SELECT COUNT(*) FROM blog_reviews WHERE stage='legal_review' AND post_id IN (" + nph + ")", tuple(nonrev_ids)).fetchone()[0]
+    con.close()
+    chk("20E7 financial/AI-governance content carries an expert-review record; general content does not", lrev == 5 and lrev_bad == 0, (lrev, lrev_bad))
+    # the published articles ARE publicly reachable (200) now that the owner approved publication
+    sc1, _ = req("GET", "/blog/what-is-project-controls")
+    sc2, _ = req("GET", "/blog/project-finance-fundamentals")
+    chk("20E8 published articles are live on the public blog (200)", sc1 == 200 and sc2 == 200, (sc1, sc2))
+    # idempotency: unique slug (a UNIQUE-key duplicate would have failed the seeder; re-boot adds 0). Prove no dup rows.
+    con = dbconn()
+    dups = con.execute("SELECT slug,COUNT(*) c FROM blog_posts WHERE slug IN (" + ph + ") GROUP BY slug HAVING c>1", tuple(E_SLUGS)).fetchall()
+    con.close()
+    chk("20E9 seeder is idempotent — exactly one row per slug (no duplicates)", len(dups) == 0, dups)
+
+    # ---------- Phase E: the seeded source-attributed NEWS items (PUBLISHED on site-owner approval) ----------
+    # Seeded news are structured_type='NewsArticle' with content_ownership='summary' (an original PCI summary of an
+    # external source). A few known slugs prove the real researched content landed, not just any news row.
+    N_KNOWN = ["procore-acquires-datagrid-agentic-ai", "nista-major-projects-annual-report-2025-26",
+               "world-bank-1-5-billion-south-africa-infrastructure-reform-loan",
+               "sizewell-c-final-investment-decision-uk-nuclear", "pmi-updated-pmp-exam-july-2026"]
+    con = dbconn()
+    seededn = con.execute(
+        "SELECT id,slug,status,published,ai_assisted,structured_type,category_id,original_source_url,attribution,body "
+        "FROM blog_posts WHERE structured_type='NewsArticle' AND content_ownership='summary'").fetchall()
+    nby = {r[1]: r for r in seededn}
+    # Reader-facing provenance note that replaced the internal draft banner at publish time (honesty preserved).
+    NOTE = "compiled by the PCI editorial team from publicly reported sources"
+    chk("20N1 the researched news items are seeded (>=40, incl. known slugs across all 5 categories)",
+        len(seededn) >= 40 and all(k in nby for k in N_KNOWN), (len(seededn), [k for k in N_KNOWN if k not in nby]))
+    chk("20N2 every seeded news item is a published NewsArticle (on owner approval)",
+        all(r[2] == "published" and r[3] == 1 and r[5] == "NewsArticle" for r in seededn),
+        [r[1] for r in seededn if r[2] != "published" or r[3] != 1][:5])
+    chk("20N3 every seeded news item stores its real source URL + publisher attribution",
+        all((r[7] or "").startswith("http") and (r[8] or "") for r in seededn),
+        [r[1] for r in seededn if not (r[7] or "").startswith("http") or not (r[8] or "")][:5])
+    chk("20N4 every news body carries the reader-facing 'compiled from publicly reported sources' note",
+        all(NOTE in (r[9] or "") for r in seededn), [r[1] for r in seededn if NOTE not in (r[9] or "")][:5])
+    chk("20N5 news items are linked to a content category + honestly AI-disclosed",
+        all(r[6] is not None and r[4] == 1 for r in seededn), None)
+    # financial / standards / certification news carries an (approved) expert-review record
+    nids = [r[0] for r in seededn]
+    niph = ",".join("?" * len(nids))
+    nlegal = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='legal_review' AND post_id IN (" + niph + ")", tuple(nids)).fetchone()[0]
+    neditorial = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='editorial_review' AND post_id IN (" + niph + ")", tuple(nids)).fetchone()[0]
+    ndups = con.execute("SELECT slug,COUNT(*) c FROM blog_posts WHERE structured_type='NewsArticle' AND content_ownership='summary' GROUP BY slug HAVING c>1").fetchall()
+    con.close()
+    chk("20N6 every news item has an editorial review record; financial/standards news also has an expert-review record",
+        neditorial == len(seededn) and nlegal >= 25, (neditorial, len(seededn), nlegal))
+    chk("20N7 news seeder is idempotent — one row per slug (no duplicates)", len(ndups) == 0, ndups)
+    # published news IS publicly reachable on /news now that the owner approved publication
+    ns1, _ = req("GET", "/news/procore-acquires-datagrid-agentic-ai")
+    ns2, _ = req("GET", "/news/sizewell-c-final-investment-decision-uk-nuclear")
+    chk("20N8 published news is live on the public newsroom (200)", ns1 == 200 and ns2 == 200, (ns1, ns2))
 
 def _make_published_post(admin, title):
     c, p = jget("POST", "/api/admin/content/posts", token=admin, body={"title": title, "summary": "AI reshapes forecasting, EVM and risk.", "body": "<p>" + ("Body content about AI in project controls. " * 20) + "</p>"})
@@ -1749,6 +1934,15 @@ def test_social_publishing(admin):
     drafts = dl.get("rows", [])
     by_plat = {d["platform_key"]: d for d in drafts}
     chk("21g drafts are platform-tailored (distinct text)", len({d["text"] for d in drafts}) >= 3 and by_plat["telegram"]["text"] != by_plat["bluesky"]["text"], None)
+    # Phase D: the shared link carries per-platform UTM attribution
+    chk("21g2 shared link carries UTM attribution (utm_source=<platform>)", "utm_source=telegram" in by_plat["telegram"]["text"] and "utm_medium=social" in by_plat["telegram"]["text"], by_plat["telegram"]["text"][:200])
+    # Phase D: real scheduling — a future scheduled_at queues the job to fire THEN, not immediately
+    mas_draft = by_plat["mastodon"]["id"]
+    jget("PATCH", f"/api/admin/content/social/drafts/{mas_draft}", token=admin, body={"scheduled_at": "2035-01-01 10:00:00"})
+    c, spub = jget("POST", f"/api/admin/content/social/drafts/{mas_draft}/publish", token=admin)
+    chk("21g3 a future-scheduled draft is queued as scheduled (not sent now)", spub.get("scheduled") == True, spub)
+    con = dbconn(); jr = con.execute("SELECT next_attempt_at FROM content_jobs WHERE idempotency_key=?", ("socialdraft:" + str(mas_draft),)).fetchone(); con.close()
+    chk("21g4 the social job fires at the scheduled time, not now", jr and jr[0] and str(jr[0]).startswith("2035"), jr)
 
     # publish the Telegram draft → queue → drain → delivered with a public URL
     tg_draft = by_plat["telegram"]["id"]

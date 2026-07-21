@@ -20,19 +20,30 @@ public static class BlogRender
         return File.Exists(p) ? File.ReadAllText(p) : null;
     }
 
+    // Default site-wide keyword line + robots directive, used when a page supplies nothing more specific.
+    const string DefaultKeywords = "project controls, project finance, project delivery, AI, PCL-AI, PFL-AI, PDL-AI, certification, professional development";
+    const string DefaultRobots = "index, follow, max-image-preview:large";
+
     static string Compose(Db db, string webRoot, string lang, string slugForSeo, string title, string desc,
-        string canonical, string ogType, string ogImage, string headExtra, string body)
+        string canonical, string ogType, string ogImage, string headExtra, string body,
+        string? robots = null, string? ogTitle = null, string? ogDesc = null, string? keywords = null)
     {
         var shell = Shell(webRoot);
         if (shell is null) return body;   // template missing → still return content
+        // The shell owns the single copy of each head tag (robots/og:title/og:description/keywords) via tokens,
+        // so an article never emits a second, conflicting <meta>. og:title/description fall back to the page
+        // title/description; robots defaults to indexable; keywords to the site-wide line.
         var html = shell
             .Replace("<!--PCI-BLOG-->", body)
+            .Replace("{{ROBOTS}}", Esc(string.IsNullOrWhiteSpace(robots) ? DefaultRobots : robots))
+            .Replace("{{OGTITLE}}", Esc(string.IsNullOrWhiteSpace(ogTitle) ? title : ogTitle))
+            .Replace("{{OGDESC}}", Esc(string.IsNullOrWhiteSpace(ogDesc) ? desc : ogDesc))
             .Replace("{{TITLE}}", Esc(title))
             .Replace("{{DESC}}", Esc(desc))
             .Replace("{{CANONICAL}}", Esc(canonical))
             .Replace("{{OGTYPE}}", Esc(ogType))
             .Replace("{{OGIMAGE}}", Esc(ogImage))
-            .Replace("{{KEYWORDS}}", Esc("project controls, project finance, project delivery, AI, PCL-AI, PFL-AI, PDL-AI, certification, professional development"))
+            .Replace("{{KEYWORDS}}", Esc(string.IsNullOrWhiteSpace(keywords) ? DefaultKeywords : keywords))
             .Replace("{{HEAD_EXTRA}}", headExtra);
         html = ListSections.Inject(db, html, lang);                 // live header/footer nav
         html = SeoTags.Inject(db, html, slugForSeo);                // admin analytics + verification metas
@@ -45,13 +56,29 @@ public static class BlogRender
         return img.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? img : Redirects.CanonicalBase + (img.StartsWith("/") ? "" : "/") + img;
     }
 
+    // ── Article resolver (section-aware) ───────────────────────────────────────────────────────────────
+    /// <summary>
+    /// Resolve an article request within a section (blog or news). Returns the rendered HTML, OR a redirect
+    /// target when the post actually belongs to the OTHER section (each post has exactly one canonical home,
+    /// so a wrong-section URL 301s to the right one), OR (null,null) for a 404 (draft/unknown slug).
+    /// </summary>
+    public static (string? html, string? redirect) Article(Db db, string webRoot, string slug, string lang, bool sectionIsNews)
+    {
+        var p = Blog.PublishedBySlug(db, slug);
+        if (p is null) return (null, null);
+        var postIsNews = Blog.IsNews(p);
+        if (postIsNews != sectionIsNews) return (null, Blog.BasePathFor(db, postIsNews) + "/" + slug);
+        return (RenderArticle(db, webRoot, slug, lang), null);
+    }
+
     // ── Article ──────────────────────────────────────────────────────────────────────────────────────
     public static string? RenderArticle(Db db, string webRoot, string slug, string lang)
     {
         var p = Blog.PublishedBySlug(db, slug);
         if (p is null) return null;
-        var basePath = Blog.BasePath(db);
-        var canonical = H.Str(p["canonical_url"]) is { Length: > 0 } cu ? cu : Blog.PublicUrl(db, slug);
+        var news = Blog.IsNews(p);                          // NewsArticle → /news space; else /blog
+        var basePath = Blog.BasePathFor(db, news);
+        var canonical = H.Str(p["canonical_url"]) is { Length: > 0 } cu ? cu : Blog.PublicUrl(db, slug, news);
         var title = (H.Str(p["seo_title"]) ?? H.Str(p["title"]) ?? "") + " | Project Controls Institute";
         var desc = H.Str(p["meta_description"]) ?? H.Str(p["summary"]) ?? "";
         var author = Blog.Author(db, p["author_id"]);
@@ -60,22 +87,33 @@ public static class BlogRender
         var ogImage = AbsImage(db, H.Str(p["og_image"]) ?? H.Str(p["social_image"]) ?? H.Str(p["featured_image"]));
         var noindex = H.L(p["robots_noindex"]) == 1;
 
+        // robots + og:title + og:description + keywords are emitted once by the shell via Compose tokens
+        // (no second, conflicting <meta> here). og:title uses og_title, falling back to the post title;
+        // og:description uses og_description, falling back to the meta description/summary.
+        var robots = noindex ? "noindex, follow" : DefaultRobots;
+        var ogTitle = H.Str(p["og_title"]) ?? H.Str(p["title"]) ?? "";
+        var ogDesc = H.Str(p["og_description"]) ?? desc;
+        var keywords = KeywordLine(p, tags);
+
         var head = new StringBuilder();
-        if (noindex) head.Append("<meta name=\"robots\" content=\"noindex, follow\"/>");
-        head.Append("<meta property=\"og:title\" content=\"").Append(Esc(H.Str(p["og_title"]) ?? H.Str(p["title"]) ?? "")).Append("\"/>");
         if (H.Str(p["published_at"]) is { Length: > 0 } pub)
             head.Append("<meta property=\"article:published_time\" content=\"").Append(Esc(Iso(pub))).Append("\"/>");
         if (H.Str(p["updated_at"]) is { Length: > 0 } upd)
             head.Append("<meta property=\"article:modified_time\" content=\"").Append(Esc(Iso(upd))).Append("\"/>");
         if (author is not null) head.Append("<meta name=\"author\" content=\"").Append(Esc(H.Str(author["name"]) ?? "")).Append("\"/>");
-        head.Append(JsonLd(db, p, author, category, canonical, basePath, ogImage));
+        head.Append(JsonLd(db, p, author, category, canonical, basePath, ogImage, news));
+        // Cookieless outbound-link click beacon: on a click of any link inside the article body, POST the post
+        // slug + href to the registry counter. No PII, no cookies; the server only counts links it already knows.
+        head.Append("<script>(function(){try{var s=").Append(JsonSerializer.Serialize(slug))
+            .Append(";document.addEventListener('click',function(e){var t=e.target;var a=t&&t.closest?t.closest('.blog-body a[href]'):null;if(!a)return;var u=a.getAttribute('href')||'';if(!u||u.charAt(0)===\"#\")return;try{navigator.sendBeacon('/api/content/link-click',new Blob([JSON.stringify({slug:s,url:u})],{type:'application/json'}));}catch(x){}},true);}catch(x){}})();</script>");
 
-        return Compose(db, webRoot, lang, "blog/" + slug + ".html", title, desc, canonical,
-            "article", ogImage, head.ToString(), ArticleBody(db, p, author, category, tags, basePath));
+        return Compose(db, webRoot, lang, (news ? "news/" : "blog/") + slug + ".html", title, desc, canonical,
+            "article", ogImage, head.ToString(), ArticleBody(db, p, author, category, tags, basePath, news),
+            robots: robots, ogTitle: ogTitle, ogDesc: ogDesc, keywords: keywords);
     }
 
     static string ArticleBody(Db db, Dictionary<string, object?> p, Dictionary<string, object?>? author,
-        Dictionary<string, object?>? category, List<Dictionary<string, object?>> tags, string basePath)
+        Dictionary<string, object?>? category, List<Dictionary<string, object?>> tags, string basePath, bool news = false)
     {
         var sb = new StringBuilder();
         var title = H.Str(p["title"]) ?? "";
@@ -88,7 +126,7 @@ public static class BlogRender
 
         sb.Append("<article class=\"sec\"><div class=\"wrap\" style=\"max-width:820px\">");
         // breadcrumb
-        sb.Append("<div class=\"crumbbar-inline\"><a href=\"").Append(basePath).Append("\">Blog</a>");
+        sb.Append("<div class=\"crumbbar-inline\"><a href=\"").Append(basePath).Append("\">").Append(Blog.SectionLabel(news)).Append("</a>");
         if (catName.Length > 0) sb.Append(" · <a href=\"").Append(basePath).Append("/category/").Append(Esc(catSlug)).Append("\">").Append(Esc(catName)).Append("</a>");
         sb.Append("</div>");
         if (catName.Length > 0) sb.Append("<span class=\"eyebrow\">").Append(Esc(catName)).Append("</span>");
@@ -129,7 +167,26 @@ public static class BlogRender
             if (H.Str(author["title"]) is { Length: > 0 } at) sb.Append(" — ").Append(Esc(at));
             sb.Append("<p style=\"margin:.4rem 0 0;color:#475569\">").Append(Esc(bio)).Append("</p></div>");
         }
-        sb.Append("<p style=\"margin-top:2rem\"><a class=\"btn btn-ghost\" href=\"").Append(basePath).Append("\">← All articles</a></p>");
+        // share buttons (official share intents — no third-party JS/trackers)
+        var slug = H.Str(p["slug"]) ?? "";
+        var canonical = H.Str(p["canonical_url"]) is { Length: > 0 } cu ? cu : Blog.PublicUrl(db, slug, news);
+        var enc = Uri.EscapeDataString(canonical); var tenc = Uri.EscapeDataString(title);
+        sb.Append("<div class=\"blog-share\" style=\"margin-top:2rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap\">");
+        sb.Append("<span class=\"muted\" style=\"font-size:.85rem\">Share:</span>");
+        sb.Append("<a class=\"btn btn-ghost\" href=\"https://www.linkedin.com/sharing/share-offsite/?url=").Append(enc).Append("\" target=\"_blank\" rel=\"noopener nofollow\">LinkedIn</a>");
+        sb.Append("<a class=\"btn btn-ghost\" href=\"https://twitter.com/intent/tweet?url=").Append(enc).Append("&text=").Append(tenc).Append("\" target=\"_blank\" rel=\"noopener nofollow\">X</a>");
+        sb.Append("<a class=\"btn btn-ghost\" href=\"mailto:?subject=").Append(tenc).Append("&body=").Append(enc).Append("\">Email</a>");
+        sb.Append("</div>");
+        // related posts (same section — same category first, then recent)
+        var related = Blog.Related(db, H.L(p["id"]), p["category_id"] is null ? null : H.L(p["category_id"]), news, 3);
+        if (related.Count > 0)
+        {
+            sb.Append("<div class=\"blog-related\" style=\"margin-top:2.5rem\"><h3>Related ").Append(news ? "news" : "articles").Append("</h3>");
+            sb.Append("<div class=\"blog-grid\" style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem\">");
+            foreach (var rp in related) sb.Append(Card(db, rp, basePath));
+            sb.Append("</div></div>");
+        }
+        sb.Append("<p style=\"margin-top:2rem\"><a class=\"btn btn-ghost\" href=\"").Append(basePath).Append("\">← All ").Append(news ? "news" : "articles").Append("</a></p>");
         sb.Append("</div></article>");
         return sb.ToString();
     }
@@ -137,26 +194,28 @@ public static class BlogRender
     // ── Index / listing ──────────────────────────────────────────────────────────────────────────────
     public static string RenderIndex(Db db, string webRoot, string lang, int page,
         long? categoryId, string? categoryLabel, long? authorId, string? authorLabel,
-        long? tagId = null, string? tagLabel = null)
+        long? tagId = null, string? tagLabel = null, bool news = false)
     {
-        var basePath = Blog.BasePath(db);
+        var basePath = Blog.BasePathFor(db, news);
         var per = Blog.PerPage(db);
         if (page < 1) page = 1;
-        var posts = Blog.ListPublished(db, per, (page - 1) * per, categoryId, authorId, tagId, null);
+        var posts = Blog.ListPublished(db, per, (page - 1) * per, categoryId, authorId, tagId, null, news);
         var total = tagId is not null ? posts.Count + (page - 1) * per + (posts.Count == per ? per : 0)
-                                      : Blog.CountPublished(db, categoryId, authorId, null);
-        var heading = categoryLabel ?? authorLabel ?? tagLabel ?? "Blog & Insights";
+                                      : Blog.CountPublished(db, categoryId, authorId, null, news);
+        var heading = categoryLabel ?? authorLabel ?? tagLabel ?? (news ? "News & Updates" : "Blog & Insights");
         var canonical = Redirects.CanonicalBase + basePath + (categoryId is not null ? "/category/" + Slug(categoryLabel) : "") + (page > 1 ? "?page=" + page : "");
-        var desc = "Project controls, project finance, project delivery and AI insights, research and certification news from the Project Controls Institute.";
+        var desc = news
+            ? "News, announcements and industry updates on project controls, project finance and project delivery from the Project Controls Institute."
+            : "Project controls, project finance, project delivery and AI insights, research and certification news from the Project Controls Institute.";
 
         var sb = new StringBuilder();
         sb.Append("<section class=\"phead\"><div class=\"wrap\">");
-        sb.Append("<span class=\"eyebrow\">Insights</span><h1>").Append(Esc(heading)).Append("</h1>");
+        sb.Append("<span class=\"eyebrow\">").Append(news ? "Newsroom" : "Insights").Append("</span><h1>").Append(Esc(heading)).Append("</h1>");
         sb.Append("<p class=\"phead-lead\">").Append(Esc(desc)).Append("</p></div></section>");
 
         sb.Append("<section class=\"sec\"><div class=\"wrap\">");
         if (posts.Count == 0)
-            sb.Append("<p class=\"lead\">No articles published yet. Check back soon.</p>");
+            sb.Append("<p class=\"lead\">No ").Append(news ? "news" : "articles").Append(" published yet. Check back soon.</p>");
         else
         {
             sb.Append("<div class=\"blog-grid\" style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem\">");
@@ -175,13 +234,14 @@ public static class BlogRender
         }
         sb.Append("</div></section>");
 
-        // ItemList JSON-LD for the index
+        // ItemList JSON-LD for the index. Paginated pages (page>1) are noindex via the shell robots token
+        // (single tag) so thin duplicate listings aren't indexed; the og:title is the clean facet heading.
         var head = new StringBuilder();
-        if (page > 1) head.Append("<meta name=\"robots\" content=\"noindex, follow\"/>");   // paginated pages: don't index thin duplicates
         head.Append(IndexJsonLd(db, posts, basePath));
 
-        return Compose(db, webRoot, lang, "blog.html", heading + " | Project Controls Institute", desc,
-            canonical, "website", "https://projectcontrolsinstitute.org/assets/og-image.jpg", head.ToString(), sb.ToString());
+        return Compose(db, webRoot, lang, news ? "news.html" : "blog.html", heading + " | Project Controls Institute", desc,
+            canonical, "website", "https://projectcontrolsinstitute.org/assets/og-image.jpg", head.ToString(), sb.ToString(),
+            robots: page > 1 ? "noindex, follow" : DefaultRobots, ogTitle: heading);
     }
 
     static string Card(Db db, Dictionary<string, object?> p, string basePath)
@@ -210,7 +270,7 @@ public static class BlogRender
 
     // ── JSON-LD ──────────────────────────────────────────────────────────────────────────────────────
     static string JsonLd(Db db, Dictionary<string, object?> p, Dictionary<string, object?>? author,
-        Dictionary<string, object?>? category, string canonical, string basePath, string ogImage)
+        Dictionary<string, object?>? category, string canonical, string basePath, string ogImage, bool news = false)
     {
         var type = H.Str(p["structured_type"]) is { Length: > 0 } st ? st : "BlogPosting";
         var posting = new Dictionary<string, object?>
@@ -219,7 +279,10 @@ public static class BlogRender
             ["@type"] = type,
             ["headline"] = H.Str(p["title"]),
             ["description"] = H.Str(p["meta_description"]) ?? H.Str(p["summary"]),
-            ["image"] = ogImage,
+            // Model the article image as an ImageObject (url + caption) rather than a bare URL string, so
+            // rich-result parsers get a typed image. Dimensions are omitted (not known reliably per-post).
+            ["image"] = new Dictionary<string, object?> { ["@type"] = "ImageObject", ["url"] = ogImage,
+                ["caption"] = H.Str(p["featured_image_alt"]) ?? H.Str(p["title"]) },
             ["datePublished"] = H.Str(p["published_at"]) is { Length: > 0 } pub ? Iso(pub) : null,
             ["dateModified"] = H.Str(p["updated_at"]) is { Length: > 0 } upd ? Iso(upd) : null,
             ["inLanguage"] = H.Str(p["language"]) ?? "en",
@@ -238,7 +301,7 @@ public static class BlogRender
         var crumbs = new List<object?>();
         int pos = 1;
         crumbs.Add(Crumb(pos++, "Home", Redirects.CanonicalBase + "/"));
-        crumbs.Add(Crumb(pos++, "Blog", Redirects.CanonicalBase + basePath));
+        crumbs.Add(Crumb(pos++, Blog.SectionLabel(news), Redirects.CanonicalBase + basePath));
         if (category is not null) crumbs.Add(Crumb(pos++, H.Str(category["name"]) ?? "", Redirects.CanonicalBase + basePath + "/category/" + (H.Str(category["slug"]) ?? "")));
         crumbs.Add(Crumb(pos++, H.Str(p["title"]) ?? "", canonical));
         var breadcrumb = new Dictionary<string, object?> { ["@context"] = "https://schema.org", ["@type"] = "BreadcrumbList", ["itemListElement"] = crumbs };
@@ -310,6 +373,25 @@ public static class BlogRender
             System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal, out var d)
             ? d.ToString("d MMM yyyy", System.Globalization.CultureInfo.InvariantCulture) : dt;
     }
+    // Build the <meta name="keywords"> line for an article from its editorial SEO fields + tags, so the
+    // stored primary_keyword/secondary_keywords are actually surfaced. Dedup (case-insensitive), capped at
+    // 12 terms; null → Compose falls back to the site-wide default line.
+    static string? KeywordLine(Dictionary<string, object?> p, List<Dictionary<string, object?>> tags)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var outp = new List<string>();
+        void Add(string? s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return;
+            foreach (var part in s.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                if (outp.Count < 12 && seen.Add(part)) outp.Add(part);
+        }
+        Add(H.Str(p["primary_keyword"]));
+        Add(H.Str(p["secondary_keywords"]));
+        foreach (var t in tags) Add(H.Str(t["name"]));
+        return outp.Count > 0 ? string.Join(", ", outp) : null;
+    }
+
     static string Slug(string? s) => Blog.Slugify(s ?? "");
     static string Trunc(string s, int n) => s.Length <= n ? s : s[..n].TrimEnd() + "…";
     static string Esc(string? s) => (s ?? "").Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;");

@@ -54,6 +54,8 @@ public static class SeedContent
         try
         {
             db.Execute("UPDATE nav_items SET url='/certifications' WHERE nav_group='Header' AND label='Certifications' AND url='certification.html'");
+            // Content Centre: expose the News vertical (/news) in the header nav (idempotent; admin can move it).
+            db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT 'News','/news','Header',40,1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url='/news')");
             // Final Project Leadership Suite credentials in the footer "Certifications" group.
             foreach (var (lbl, url, so) in new[] { ("PCI PCL-AI", "/certifications/pcl-ai", 20), ("PCI PFL-AI", "/certifications/pfl-ai", 21), ("PCI PDL-AI", "/certifications/pdl-ai", 22), ("All certifications", "/certifications", 23) })
                 db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT ?,?, 'Certifications', ?, 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url=? AND nav_group='Certifications')", lbl, url, so, url);

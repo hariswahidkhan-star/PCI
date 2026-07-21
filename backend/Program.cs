@@ -53,6 +53,7 @@ builder.Services.AddHostedService<PCI.Backend.Core.IntegrationDispatcher>();
 // Communications outbox worker: drains comm_outbox (email/WhatsApp/in-app) with retries + backoff.
 builder.Services.AddHostedService<PCI.Backend.Core.OutboxDispatcher>();
 builder.Services.AddHostedService<PCI.Backend.Core.SocialDispatcher>();   // Phase 2: social publish outbox
+builder.Services.AddHostedService<PCI.Backend.Core.ScheduledPublisher>();   // Content Centre: publish scheduled blog posts when due
 builder.Services.AddHostedService<PCI.Backend.Core.SyndicationDispatcher>();   // Phase 3: syndication outbox
 builder.Services.AddHostedService<PCI.Backend.Core.MarketingJobDispatcher>();   // Marketing Phase 2: provider job queue
 builder.Services.AddHostedService<PCI.Backend.Core.CommsReminderService>();     // Comms §13: scheduled reminder sequences
@@ -992,6 +993,9 @@ PCI.Backend.Endpoints.PartnerPortal.Map(app, db, logFn, GateFn);       // instit
 PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
 PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
 PCI.Backend.Data.CertuvoSeed.Apply(db); // Certuvo starter practice pack (scenario MCQs across BoK domains)
+PCI.Backend.Data.BlogSeed.Ensure(db);  // Content Centre: default byline author + content-pillar categories (idempotent by slug)
+PCI.Backend.Data.BlogContentSeed.Ensure(db);  // Content Centre: 20 PCI blog articles as DRAFTS (idempotent by slug; never auto-published)
+PCI.Backend.Data.NewsContentSeed.Ensure(db);  // Content Centre: source-verified news items as DRAFTS (idempotent by slug; never auto-published)
 PCI.Backend.Data.DemoExamSeed.Apply(db); // optional demo LIVE-exam bank — only when SEED_DEMO_EXAM=true (fresh-deploy testing)
 app.Use(async (ctx, next) =>
 {
@@ -1002,7 +1006,7 @@ app.Use(async (ctx, next) =>
         if (PCI.Backend.Core.PathRedirects.Target(db, ctx.Request) is { } red)
         {
             ctx.Response.StatusCode = red.status;
-            ctx.Response.Headers.Location = red.to;
+            if (red.status != 410) ctx.Response.Headers.Location = red.to;   // 410 Gone carries no Location
             return;
         }
         var reqPath = ctx.Request.Path.Value ?? "/";
@@ -1041,55 +1045,75 @@ app.Use(async (ctx, next) =>
         //    Full article HTML is present in the initial response (crawler-safe). Feeds/sitemap are exact
         //    paths; the index, category/author/tag facets and each article are rendered from blog_posts.
         {
+            const StringComparison OIC = StringComparison.OrdinalIgnoreCase;
             var bp = PCI.Backend.Core.Blog.BasePath(db);                     // configurable, default "/blog"
+            var nbp = PCI.Backend.Core.Blog.NewsBasePath(db);               // configurable, default "/news"
             var blang = PCI.Backend.Core.I18nContent.ActiveLang(ctx);
-            if (reqPath.Equals("/blog-sitemap.xml", StringComparison.OrdinalIgnoreCase))
+            if (reqPath.Equals("/blog-sitemap.xml", OIC))
             { ctx.Response.ContentType = "application/xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Sitemap(db)); return; }
-            if (reqPath.Equals(bp + "/feed.xml", StringComparison.OrdinalIgnoreCase))
-            { ctx.Response.ContentType = "application/rss+xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Rss(db)); return; }
-            if (reqPath.Equals(bp + "/atom.xml", StringComparison.OrdinalIgnoreCase))
-            { ctx.Response.ContentType = "application/atom+xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Atom(db)); return; }
-            if (reqPath.Equals(bp + "/feed.json", StringComparison.OrdinalIgnoreCase))
-            { ctx.Response.ContentType = "application/feed+json; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Json(db)); return; }
-            if (reqPath.Equals(bp, StringComparison.OrdinalIgnoreCase) || reqPath.Equals(bp + "/", StringComparison.OrdinalIgnoreCase))
+            if (reqPath.Equals("/news-sitemap.xml", OIC))
+            { ctx.Response.ContentType = "application/xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.NewsSitemap(db)); return; }
+
+            // Serve one content section (blog or news): feeds, listing, category/author/tag facets, article.
+            // News and blog share one store + CMS but live at separate URL spaces; a post has exactly one
+            // canonical home, so a wrong-section article URL 301s to the correct section.
+            async Task<bool> ServeSection(string secBase, bool secNews)
             {
-                int.TryParse(ctx.Request.Query["page"], out var pg);
-                ctx.Response.ContentType = "text/html; charset=utf-8"; ctx.Response.Headers.CacheControl = "no-cache"; ctx.Response.Headers.Vary = "Cookie";
-                await ctx.Response.WriteAsync(PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg <= 0 ? 1 : pg, null, null, null, null));
-                return;
-            }
-            if (reqPath.StartsWith(bp + "/", StringComparison.OrdinalIgnoreCase))
-            {
-                var rest = reqPath.Substring(bp.Length + 1).Trim('/');
-                int.TryParse(ctx.Request.Query["page"], out var pg);
-                if (pg <= 0) pg = 1;
-                string? html = null;
-                if (rest.StartsWith("category/", StringComparison.OrdinalIgnoreCase))
+                if (reqPath.Equals(secBase + "/feed.xml", OIC))
+                { ctx.Response.ContentType = "application/rss+xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Rss(db, secNews)); return true; }
+                if (reqPath.Equals(secBase + "/atom.xml", OIC))
+                { ctx.Response.ContentType = "application/atom+xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Atom(db, secNews)); return true; }
+                if (reqPath.Equals(secBase + "/feed.json", OIC))
+                { ctx.Response.ContentType = "application/feed+json; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Json(db, secNews)); return true; }
+                if (reqPath.Equals(secBase, OIC) || reqPath.Equals(secBase + "/", OIC))
                 {
-                    var c = db.QueryOne("SELECT id,name FROM blog_categories WHERE slug=? AND active=1", rest.Substring(9).ToLowerInvariant());
-                    if (c is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, PCI.Backend.Core.H.L(c["id"]), PCI.Backend.Core.H.Str(c["name"]), null, null);
-                }
-                else if (rest.StartsWith("author/", StringComparison.OrdinalIgnoreCase))
-                {
-                    var a = db.QueryOne("SELECT id,name FROM blog_authors WHERE slug=? AND active=1", rest.Substring(7).ToLowerInvariant());
-                    if (a is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, null, null, PCI.Backend.Core.H.L(a["id"]), "Articles by " + (PCI.Backend.Core.H.Str(a["name"]) ?? ""));
-                }
-                else if (rest.StartsWith("tag/", StringComparison.OrdinalIgnoreCase))
-                {
-                    var t = db.QueryOne("SELECT id,name FROM blog_tags WHERE slug=?", rest.Substring(4).ToLowerInvariant());
-                    if (t is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, null, null, null, null, PCI.Backend.Core.H.L(t["id"]), "#" + (PCI.Backend.Core.H.Str(t["name"]) ?? ""));
-                }
-                else if (!rest.Contains('/') && !rest.Contains('.'))
-                {
-                    html = PCI.Backend.Core.BlogRender.RenderArticle(db, webRoot, rest, blang);   // null → draft/unknown → 404 below
-                }
-                if (html is not null)
-                {
+                    int.TryParse(ctx.Request.Query["page"], out var pg);
                     ctx.Response.ContentType = "text/html; charset=utf-8"; ctx.Response.Headers.CacheControl = "no-cache"; ctx.Response.Headers.Vary = "Cookie";
-                    await ctx.Response.WriteAsync(html); return;
+                    await ctx.Response.WriteAsync(PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg <= 0 ? 1 : pg, null, null, null, null, null, null, secNews));
+                    return true;
                 }
-                // no match (draft, unknown slug/category/author/tag) → fall through to normal 404 handling
+                if (reqPath.StartsWith(secBase + "/", OIC))
+                {
+                    var rest = reqPath.Substring(secBase.Length + 1).Trim('/');
+                    int.TryParse(ctx.Request.Query["page"], out var pg);
+                    if (pg <= 0) pg = 1;
+                    string? html = null;
+                    if (rest.StartsWith("category/", OIC))
+                    {
+                        var c = db.QueryOne("SELECT id,name FROM blog_categories WHERE slug=? AND active=1", rest.Substring(9).ToLowerInvariant());
+                        if (c is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, PCI.Backend.Core.H.L(c["id"]), PCI.Backend.Core.H.Str(c["name"]), null, null, null, null, secNews);
+                    }
+                    else if (rest.StartsWith("author/", OIC))
+                    {
+                        var a = db.QueryOne("SELECT id,name FROM blog_authors WHERE slug=? AND active=1", rest.Substring(7).ToLowerInvariant());
+                        if (a is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, null, null, PCI.Backend.Core.H.L(a["id"]), (secNews ? "News by " : "Articles by ") + (PCI.Backend.Core.H.Str(a["name"]) ?? ""), null, null, secNews);
+                    }
+                    else if (rest.StartsWith("tag/", OIC))
+                    {
+                        var t = db.QueryOne("SELECT id,name FROM blog_tags WHERE slug=?", rest.Substring(4).ToLowerInvariant());
+                        if (t is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, null, null, null, null, PCI.Backend.Core.H.L(t["id"]), "#" + (PCI.Backend.Core.H.Str(t["name"]) ?? ""), secNews);
+                    }
+                    else if (!rest.Contains('/') && !rest.Contains('.'))
+                    {
+                        var (ahtml, aredirect) = PCI.Backend.Core.BlogRender.Article(db, webRoot, rest, blang, secNews);
+                        if (aredirect is not null) { ctx.Response.StatusCode = 301; ctx.Response.Headers.Location = aredirect; return true; }
+                        html = ahtml;
+                        // Per-article, cookieless page view (articles are served here, before the static-page
+                        // PageView call) — feeds the per-article analytics rollup.
+                        if (html is not null) PCI.Backend.Core.Analytics.PageView(db, ctx, (secBase + "/" + rest).TrimStart('/'));
+                    }
+                    if (html is not null)
+                    {
+                        ctx.Response.ContentType = "text/html; charset=utf-8"; ctx.Response.Headers.CacheControl = "no-cache"; ctx.Response.Headers.Vary = "Cookie";
+                        await ctx.Response.WriteAsync(html); return true;
+                    }
+                    // no match under this section (draft, unknown slug/category/author/tag) → 404 fall-through
+                }
+                return false;
             }
+
+            if (await ServeSection(bp, false)) return;
+            if (await ServeSection(nbp, true)) return;
         }
         // ── Multi-certification clean URLs: /certifications (catalogue) and /certifications/{slug} (per credential) ──
         if (reqPath.StartsWith("/certifications", StringComparison.OrdinalIgnoreCase))
@@ -1209,6 +1233,13 @@ app.Use(async (ctx, next) =>
         {
             ctx.Response.ContentType = "application/xml; charset=utf-8";
             await ctx.Response.WriteAsync(PCI.Backend.Core.Sitemap.Xml(db));
+            return;
+        }
+        // Sitemap index — unifies the page sitemap and the blog (image) sitemap under one entry point.
+        if (reqPath.Equals("/sitemap-index.xml", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.ContentType = "application/xml; charset=utf-8";
+            await ctx.Response.WriteAsync(PCI.Backend.Core.Sitemap.Index(db));
             return;
         }
         // Policy-aware robots.txt (Phase 6) — overrides the static file so blocked AI crawlers
