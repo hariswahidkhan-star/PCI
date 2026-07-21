@@ -23,6 +23,7 @@ import ForumModeration from './pages/ForumModeration'
 import MembershipUpgrades from './pages/MembershipUpgrades'
 import AdminEvents from './pages/Events'
 import AdminCareers from './pages/Careers'
+import AdminMemberDirectory from './pages/MemberDirectory'
 import ErrorReports from './pages/ErrorReports'
 import Enrollments from './pages/Enrollments'
 import Codes from './pages/Codes'
@@ -99,6 +100,7 @@ export default function AdminApp() {
         <Route path="documents" element={<Perm section="documents"><Documents /></Perm>} />
         <Route path="erasure-requests" element={<Perm section="members"><ErasureRequests /></Perm>} />
         <Route path="membership-grades" element={<Perm section="members"><MembershipUpgrades /></Perm>} />
+        <Route path="member-directory" element={<Perm section="members"><AdminMemberDirectory /></Perm>} />
         <Route path="books" element={<Perm section="resources"><Books /></Perm>} />
         <Route path="communications" element={<Perm section="comms"><Communications /></Perm>} />
         <Route path="support-inbox" element={<Perm section="inbox"><SupportInbox /></Perm>} />

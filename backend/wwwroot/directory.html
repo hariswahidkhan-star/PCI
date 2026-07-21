@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="en-GB"><head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="pci-api" content=""/>
+<script>window.PCI_API_BASE=(document.querySelector('meta[name="pci-api"]')||{}).content||window.PCI_API_BASE||"";</script>
+<title>Find a Certified Professional — Project Controls Institute</title>
+<meta name="description" content="Search the Project Controls Institute member directory — find certified project controls professionals by name, country and certification. Every listing is member-consented and verifiable."/>
+<meta name="keywords" content="find a project controls professional, certified planner directory, PCL-AI holders, project controls directory"/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://projectcontrolsinstitute.org/directory.html"/>
+<link rel="icon" href="favicon.ico" sizes="any"/>
+<link rel="stylesheet" href="assets/styles.css"/>
+<style>
+  .dir{max-width:960px;margin:2.5rem auto;padding:0 1rem}
+  .dir h1{margin:0 0 .3rem}
+  .d-filters{display:flex;gap:.5rem;flex-wrap:wrap;margin:1.2rem 0}
+  .d-filters input,.d-filters select{padding:.55rem .7rem;border:1px solid #e5e7eb;border-radius:8px;font:inherit}
+  .d-filters input{flex:1;min-width:200px}
+  .m-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.8rem}
+  .m-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.1rem}
+  .m-card h3{margin:0 0 .1rem;font-size:1.1rem;color:#0f172a}
+  .m-head{color:#475569;font-size:.9rem}
+  .m-loc{color:#64748b;font-size:.85rem;margin-top:.3rem}
+  .m-creds{margin-top:.6rem;display:flex;gap:.35rem;flex-wrap:wrap}
+  .cred{display:inline-block;background:#eff6ff;color:#1e40af;border-radius:999px;padding:.15rem .6rem;font-size:.8rem;font-weight:700;text-decoration:none}
+  .cred:hover{background:#dbeafe}
+  .m-links{margin-top:.5rem}
+  .m-links a{color:#1D4ED8;font-size:.85rem;text-decoration:none;margin-right:.8rem}
+  .muted{color:#64748b}.d-empty{text-align:center;color:#64748b;padding:2.5rem}
+</style>
+</head><body>
+<div class="dir">
+  <h1>Find a certified professional</h1>
+  <p class="muted">Search project controls professionals who hold a current PCI credential and have chosen to appear in the public directory. Every listing is member-consented and independently verifiable.</p>
+  <div class="d-filters">
+    <input id="f-q" placeholder="Search name, role, employer…"/>
+    <select id="f-country"><option value="">All countries</option></select>
+    <select id="f-cert"><option value="">All certifications</option></select>
+  </div>
+  <div id="grid" class="m-grid"></div>
+  <div id="empty" class="d-empty" style="display:none">No professionals match your search yet.</div>
+</div>
+<script>
+(function(){
+  var API=window.PCI_API_BASE||'', $=function(x){return document.getElementById(x);};
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function load(){
+    var p=new URLSearchParams();
+    if($('f-q').value)p.set('q',$('f-q').value); if($('f-country').value)p.set('country',$('f-country').value); if($('f-cert').value)p.set('cert',$('f-cert').value);
+    fetch(API+'/api/directory?'+p.toString()).then(function(r){return r.json();}).then(function(d){
+      var cs=$('f-country'); if(cs.options.length<=1&&d.countries){ d.countries.filter(Boolean).forEach(function(s){var o=document.createElement('option');o.value=s;o.textContent=s;cs.appendChild(o);}); }
+      var ce=$('f-cert'); if(ce.options.length<=1&&d.certifications){ d.certifications.forEach(function(c){var o=document.createElement('option');o.value=c.code;o.textContent=(c.acronym||c.code)+' — '+c.name;ce.appendChild(o);}); }
+      var g=$('grid'); g.innerHTML='';
+      if(!d.rows||!d.rows.length){ $('empty').style.display='block'; return; } $('empty').style.display='none';
+      d.rows.forEach(function(m){
+        var el=document.createElement('div'); el.className='m-card';
+        var creds=(m.credentials||[]).map(function(c){ return '<a class="cred" href="/badge.html?id='+encodeURIComponent(c.credential_id)+'" title="'+esc(c.name)+' — verify" target="_blank" rel="noopener">'+esc(c.acronym)+'</a>'; }).join('');
+        var links=''; if(m.linkedin) links+='<a href="'+esc(m.linkedin)+'" target="_blank" rel="noopener">LinkedIn ↗</a>';
+        el.innerHTML='<h3>'+esc(m.name)+'</h3>'+(m.headline?'<div class="m-head">'+esc(m.headline)+'</div>':'')
+          +(m.country?'<div class="m-loc">📍 '+esc(m.country)+'</div>':'')
+          +'<div class="m-creds">'+creds+'</div>'+(links?'<div class="m-links">'+links+'</div>':'');
+        g.appendChild(el);
+      });
+    });
+  }
+  ['f-q','f-country','f-cert'].forEach(function(idv){ var e=$(idv); e.addEventListener(idv==='f-q'?'input':'change',function(){ clearTimeout(window._dt); window._dt=setTimeout(load,idv==='f-q'?250:0); }); });
+  load();
+})();
+</script>
+</body></html>

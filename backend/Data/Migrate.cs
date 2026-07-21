@@ -668,6 +668,13 @@ public static class Migrate
             AddCol("exam_attempts", c, d);
         AddCol("student_profiles", "linkedin_url", "linkedin_url TEXT");
         AddCol("student_profiles", "profile_photo", "profile_photo TEXT");
+        // Opt-in public member directory ("find a certified professional"). Off by default; a member only
+        // appears once they opt in AND hold an active credential. Per-field visibility toggles respect consent.
+        AddCol("student_profiles", "directory_opt_in", "directory_opt_in INTEGER DEFAULT 0");
+        AddCol("student_profiles", "directory_headline", "directory_headline TEXT");
+        AddCol("student_profiles", "directory_show_country", "directory_show_country INTEGER DEFAULT 1");
+        AddCol("student_profiles", "directory_show_org", "directory_show_org INTEGER DEFAULT 1");
+        AddCol("student_profiles", "directory_show_linkedin", "directory_show_linkedin INTEGER DEFAULT 0");
         AddCol("users", "two_factor_enabled", "two_factor_enabled INTEGER DEFAULT 0");
         // Student TOTP secret + replay guard (mirrors admin_users). An admin can clear these to recover a
         // candidate who has lost their authenticator (see /api/admin/students/{id}/reset-2fa).

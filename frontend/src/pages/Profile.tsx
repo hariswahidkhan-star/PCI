@@ -154,9 +154,61 @@ export default function Profile() {
         />
       </Card>
 
+      <DirectorySettings />
       <TwoFactorCard />
       <CommPreferences />
     </div>
+  )
+}
+
+// Opt-in public member directory — a certified member can list themselves in the public "find a professional"
+// registry and control exactly which fields are shown.
+function DirectorySettings() {
+  const [d, setD] = useState<{ eligible: boolean; opt_in: boolean; headline?: string | null; show_country: boolean; show_org: boolean; show_linkedin: boolean } | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [saved, setSaved] = useState(false)
+
+  useEffect(() => {
+    let live = true
+    api.get<typeof d>('/api/me/directory').then((r) => { if (live) setD(r) }).catch(() => {})
+    return () => { live = false }
+  }, [])
+
+  if (!d) return null
+  const set = <K extends keyof NonNullable<typeof d>>(k: K, v: NonNullable<typeof d>[K]) => { setD((p) => (p ? { ...p, [k]: v } : p)); setSaved(false) }
+  async function save() {
+    if (!d) return
+    setBusy(true); setSaved(false)
+    try { await api.post('/api/me/directory', { opt_in: d.opt_in, headline: d.headline ?? '', show_country: d.show_country, show_org: d.show_org, show_linkedin: d.show_linkedin }); setSaved(true) }
+    finally { setBusy(false) }
+  }
+
+  return (
+    <Card title="Public member directory">
+      <p className="muted small" style={{ marginTop: 0 }}>
+        List yourself in PCI's public <a href="/directory.html" target="_blank" rel="noreferrer">find-a-professional</a> directory.
+        You choose to appear and exactly what is shown — your email is never published. You appear only while you hold an active credential.
+      </p>
+      <label className="row" style={{ alignItems: 'center', gap: '.5rem', fontWeight: 600 }}>
+        <input type="checkbox" style={{ width: 'auto' }} checked={d.opt_in} onChange={(e) => set('opt_in', e.target.checked)} />
+        List me in the public directory
+      </label>
+      {!d.eligible && d.opt_in && <p className="small" style={{ color: 'var(--warn,#92400e)', margin: '.4rem 0 0' }}>You'll appear once you hold an active credential.</p>}
+      {d.opt_in && (
+        <div className="stack" style={{ display: 'grid', gap: '.5rem', marginTop: '.7rem' }}>
+          <label className="field"><span>Headline (optional)</span>
+            <input value={d.headline ?? ''} maxLength={160} onChange={(e) => set('headline', e.target.value)} placeholder="Senior Planning Engineer, rail & infrastructure" />
+          </label>
+          <label className="row" style={{ alignItems: 'center', gap: '.5rem' }}><input type="checkbox" style={{ width: 'auto' }} checked={d.show_country} onChange={(e) => set('show_country', e.target.checked)} /> Show my country</label>
+          <label className="row" style={{ alignItems: 'center', gap: '.5rem' }}><input type="checkbox" style={{ width: 'auto' }} checked={d.show_org} onChange={(e) => set('show_org', e.target.checked)} /> Show my role &amp; employer (when no headline set)</label>
+          <label className="row" style={{ alignItems: 'center', gap: '.5rem' }}><input type="checkbox" style={{ width: 'auto' }} checked={d.show_linkedin} onChange={(e) => set('show_linkedin', e.target.checked)} /> Show my LinkedIn link</label>
+        </div>
+      )}
+      <div className="row" style={{ marginTop: '.8rem', alignItems: 'center', gap: '.6rem' }}>
+        <button className="btn sm" disabled={busy} onClick={save}>{busy ? 'Saving…' : 'Save directory settings'}</button>
+        {saved && <span className="small muted">Saved.</span>}
+      </div>
+    </Card>
   )
 }
 
