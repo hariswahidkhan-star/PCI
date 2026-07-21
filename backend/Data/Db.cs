@@ -147,6 +147,8 @@ public sealed class Db
         s = System.Text.RegularExpressions.Regex.Replace(s, @"\bINTEGER\b", "BIGINT");
         // partial unique index → plain (MySQL exempts NULLs from UNIQUE already)
         s = System.Text.RegularExpressions.Regex.Replace(s, @"(CREATE UNIQUE INDEX[^;]*?)\s+WHERE[^;]*", "$1");
+        // MySQL 8.0+ doesn't support "IF NOT EXISTS" in CREATE INDEX; strip it (1061 errors handled in Execute)
+        s = System.Text.RegularExpressions.Regex.Replace(s, @"(CREATE\s+(?:UNIQUE\s+)?INDEX)\s+IF\s+NOT\s+EXISTS\s+", "$1 ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         // remaining CAST(... AS INT) → SIGNED
         s = s.Replace(" AS INT)", " AS SIGNED)");
         return s;
@@ -187,7 +189,14 @@ public sealed class Db
             using var cmd = NewCmd();
             cmd.CommandText = sql;
             Bind(cmd, args);
-            return cmd.ExecuteNonQuery();
+            try
+            {
+                return cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException ex) when (ex.Number == 1061)
+            {
+                return 0;
+            }
         }
     }
 
