@@ -1852,6 +1852,45 @@ def test_content_centre(admin):
     con.close()
     chk("20E9 seeder is idempotent — exactly one row per slug (no duplicates)", len(dups) == 0, dups)
 
+    # ---------- Phase E: the seeded source-attributed NEWS items (drafts only; never auto-published) ----------
+    # Seeded news are structured_type='NewsArticle' with content_ownership='summary' (an original PCI summary of an
+    # external source). A few known slugs prove the real researched content landed, not just any news row.
+    N_KNOWN = ["procore-acquires-datagrid-agentic-ai", "nista-major-projects-annual-report-2025-26",
+               "world-bank-1-5-billion-south-africa-infrastructure-reform-loan",
+               "sizewell-c-final-investment-decision-uk-nuclear", "pmi-updated-pmp-exam-july-2026"]
+    con = dbconn()
+    seededn = con.execute(
+        "SELECT id,slug,status,published,ai_assisted,structured_type,category_id,original_source_url,attribution,body "
+        "FROM blog_posts WHERE structured_type='NewsArticle' AND content_ownership='summary'").fetchall()
+    nby = {r[1]: r for r in seededn}
+    BANNER = "Draft — pending source verification"
+    chk("20N1 the researched news items are seeded (>=40, incl. known slugs across all 5 categories)",
+        len(seededn) >= 40 and all(k in nby for k in N_KNOWN), (len(seededn), [k for k in N_KNOWN if k not in nby]))
+    chk("20N2 every seeded news item is an unpublished NewsArticle draft (never auto-published)",
+        all(r[2] == "draft" and r[3] == 0 and r[5] == "NewsArticle" for r in seededn),
+        [r[1] for r in seededn if r[2] != "draft" or r[3] != 0][:5])
+    chk("20N3 every seeded news item stores its real source URL + publisher attribution",
+        all((r[7] or "").startswith("http") and (r[8] or "") for r in seededn),
+        [r[1] for r in seededn if not (r[7] or "").startswith("http") or not (r[8] or "")][:5])
+    chk("20N4 every seeded news body carries the 'pending source verification' banner (honesty)",
+        all(BANNER in (r[9] or "") for r in seededn), [r[1] for r in seededn if BANNER not in (r[9] or "")][:5])
+    chk("20N5 news items are linked to a content category + honestly AI-disclosed",
+        all(r[6] is not None and r[4] == 1 for r in seededn), None)
+    # financial / standards / certification news is flagged for expert review
+    nids = [r[0] for r in seededn]
+    niph = ",".join("?" * len(nids))
+    nlegal = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='legal_review' AND decision='pending' AND post_id IN (" + niph + ")", tuple(nids)).fetchone()[0]
+    neditorial = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='editorial_review' AND decision='pending' AND post_id IN (" + niph + ")", tuple(nids)).fetchone()[0]
+    ndups = con.execute("SELECT slug,COUNT(*) c FROM blog_posts WHERE structured_type='NewsArticle' AND content_ownership='summary' GROUP BY slug HAVING c>1").fetchall()
+    con.close()
+    chk("20N6 every news draft has a pending editorial review; financial/standards news also flagged for expert review",
+        neditorial == len(seededn) and nlegal >= 25, (neditorial, len(seededn), nlegal))
+    chk("20N7 news seeder is idempotent — one row per slug (no duplicates)", len(ndups) == 0, ndups)
+    # a seeded news draft is not publicly reachable on /news (published=0 => 404 until a human publishes)
+    ns1, _ = req("GET", "/news/procore-acquires-datagrid-agentic-ai")
+    ns2, _ = req("GET", "/news/sizewell-c-final-investment-decision-uk-nuclear")
+    chk("20N8 seeded news drafts are hidden on the public newsroom (404 until published)", ns1 == 404 and ns2 == 404, (ns1, ns2))
+
 def _make_published_post(admin, title):
     c, p = jget("POST", "/api/admin/content/posts", token=admin, body={"title": title, "summary": "AI reshapes forecasting, EVM and risk.", "body": "<p>" + ("Body content about AI in project controls. " * 20) + "</p>"})
     pid = p.get("id"); slug = p.get("slug")
