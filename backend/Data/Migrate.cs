@@ -121,6 +121,18 @@ public static class Migrate
             status TEXT DEFAULT 'registered',registered_at TEXT DEFAULT (datetime('now')),attended_at TEXT,cpd_entry_id INTEGER)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_event_reg ON event_registrations(event_id,user_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_event_reg_user ON event_registrations(user_id)");
+        // Careers / job board. employment_type: full_time|part_time|contract|internship|temporary.
+        // remote_type: onsite|remote|hybrid. apply_method: inplatform|url|email. status: draft|published|closed.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS job_postings(id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT NOT NULL,organisation TEXT,location TEXT,
+            employment_type TEXT DEFAULT 'full_time',remote_type TEXT DEFAULT 'onsite',sector TEXT,description TEXT,requirements TEXT,responsibilities TEXT,
+            salary_min REAL,salary_max REAL,salary_currency TEXT DEFAULT 'USD',salary_period TEXT DEFAULT 'year',
+            apply_method TEXT DEFAULT 'inplatform',apply_url TEXT,apply_email TEXT,featured INTEGER DEFAULT 0,status TEXT DEFAULT 'draft',
+            posted_at TEXT,closes_at TEXT,created_by INTEGER,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_jobs_status ON job_postings(status)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS job_applications(id INTEGER PRIMARY KEY AUTOINCREMENT,job_id INTEGER NOT NULL,name TEXT,email TEXT,phone TEXT,
+            cover_message TEXT,cv_ref TEXT,cv_name TEXT,status TEXT DEFAULT 'new',admin_note TEXT,created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_jobapp_job ON job_applications(job_id)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_jobapp_email ON job_applications(job_id,email)");
         // fallback shape kept aligned with schema.sql (storage_ref required, data_uri nullable legacy)
         db.Exec(@"CREATE TABLE IF NOT EXISTS support_attachments(id INTEGER PRIMARY KEY AUTOINCREMENT,ticket_id INTEGER NOT NULL,user_id INTEGER,filename TEXT NOT NULL,mime TEXT,size_bytes INTEGER,sha256 TEXT,data_uri TEXT,storage_ref TEXT NOT NULL,created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_attach_ticket ON support_attachments(ticket_id)");

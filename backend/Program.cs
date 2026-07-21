@@ -940,6 +940,7 @@ PCI.Backend.Endpoints.Chat.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), Ga
 PCI.Backend.Endpoints.Casework.Map(app, db, logFn, r => Auth.AdminFromReq(r, db), GateFn);
 PCI.Backend.Endpoints.Events.Map(app, db, logFn, GateFn);   // member events & webinars (CPD-earning)
 PCI.Backend.Endpoints.Badges.Map(app, db, logFn);           // native Open Badges (verifiable digital credentials)
+PCI.Backend.Endpoints.Careers.Map(app, db, logFn, GateFn);  // dynamic careers / job board
 PCI.Backend.Endpoints.Founding.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Honorary.Map(app, db, logFn);
 PCI.Backend.Endpoints.HonoraryApplication.Map(app, db, logFn);

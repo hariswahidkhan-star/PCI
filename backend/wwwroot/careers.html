@@ -1,0 +1,137 @@
+<!DOCTYPE html><html lang="en-GB"><head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="pci-api" content=""/>
+<script>window.PCI_API_BASE=(document.querySelector('meta[name="pci-api"]')||{}).content||window.PCI_API_BASE||"";</script>
+<title>Careers — Project Controls Institute</title>
+<meta name="description" content="Project controls careers and job opportunities. Browse open roles — planners, schedulers, cost engineers, risk and controls professionals — and apply."/>
+<meta name="keywords" content="project controls jobs, planning engineer jobs, cost engineer careers, scheduler jobs, project controls careers"/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://projectcontrolsinstitute.org/careers.html"/>
+<link rel="icon" href="favicon.ico" sizes="any"/>
+<link rel="stylesheet" href="assets/styles.css"/>
+<style>
+  .careers{max-width:1000px;margin:2.5rem auto;padding:0 1rem}
+  .careers h1{margin:0 0 .3rem}
+  .c-filters{display:flex;gap:.5rem;flex-wrap:wrap;margin:1.2rem 0}
+  .c-filters input,.c-filters select{padding:.55rem .7rem;border:1px solid #e5e7eb;border-radius:8px;font:inherit}
+  .c-filters input{flex:1;min-width:200px}
+  .job-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.1rem 1.2rem;margin-bottom:.8rem;cursor:pointer;transition:box-shadow .15s}
+  .job-card:hover{box-shadow:0 6px 24px rgba(15,35,96,.08)}
+  .job-card h3{margin:0 0 .2rem;color:#0f172a;font-size:1.15rem}
+  .job-card .org{color:#1D4ED8;font-weight:600}
+  .job-meta{color:#64748b;font-size:.9rem;margin-top:.35rem;display:flex;gap:.9rem;flex-wrap:wrap}
+  .tag{display:inline-block;background:#eff6ff;color:#1e40af;border-radius:999px;padding:.1rem .6rem;font-size:.8rem;font-weight:600}
+  .tag.feat{background:#fef3c7;color:#92400e}
+  .muted{color:#64748b}
+  .c-empty{text-align:center;color:#64748b;padding:2.5rem}
+  /* detail */
+  .detail-back{background:none;border:0;color:#1D4ED8;cursor:pointer;font:inherit;padding:.3rem 0;margin-bottom:.6rem}
+  .detail h2{margin:.2rem 0}
+  .detail section{margin:1.1rem 0}
+  .detail h4{margin:0 0 .3rem;color:#0f172a}
+  .detail p{white-space:pre-wrap;color:#334155;line-height:1.55}
+  .apply-box{background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:1.2rem;margin-top:1.2rem}
+  .apply-box label{display:block;font-size:.85rem;color:#475569;margin:.6rem 0 .2rem}
+  .apply-box input,.apply-box textarea{width:100%;padding:.55rem .7rem;border:1px solid #d1d5db;border-radius:8px;font:inherit}
+  .btn{display:inline-block;background:#1D4ED8;color:#fff;border:0;border-radius:8px;padding:.6rem 1.1rem;font:inherit;cursor:pointer;text-decoration:none}
+  .btn.ghost{background:#fff;color:#1D4ED8;border:1px solid #1D4ED8}
+  .hp{position:absolute;left:-9999px}
+  .notice{border-radius:8px;padding:.7rem .9rem;margin-top:.6rem}
+  .notice.ok{background:#dcfce7;color:#166534}.notice.err{background:#fee2e2;color:#991b1b}
+</style>
+</head><body>
+<div class="careers">
+  <div id="list-view">
+    <h1>Careers</h1>
+    <p class="muted">Project controls roles across the profession. Browse open positions and apply.</p>
+    <div class="c-filters">
+      <input id="f-q" placeholder="Search title, employer, location…"/>
+      <select id="f-type"><option value="">All types</option><option value="full_time">Full-time</option><option value="part_time">Part-time</option><option value="contract">Contract</option><option value="internship">Internship</option><option value="temporary">Temporary</option></select>
+      <select id="f-remote"><option value="">Any location type</option><option value="onsite">On-site</option><option value="remote">Remote</option><option value="hybrid">Hybrid</option></select>
+      <select id="f-sector"><option value="">All sectors</option></select>
+    </div>
+    <div id="jobs"></div>
+    <div id="empty" class="c-empty" style="display:none">No open positions match your search right now. Please check back soon.</div>
+  </div>
+  <div id="detail-view" style="display:none"></div>
+</div>
+<script>
+(function(){
+  var API=window.PCI_API_BASE||'', $=function(x){return document.getElementById(x);};
+  var TYPE={full_time:'Full-time',part_time:'Part-time',contract:'Contract',internship:'Internship',temporary:'Temporary'};
+  var REMOTE={onsite:'On-site',remote:'Remote',hybrid:'Hybrid'};
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function salary(j){ if(!j.salary_min&&!j.salary_max) return ''; var c=j.salary_currency||'USD',p=j.salary_period||'year';
+    var v=j.salary_min&&j.salary_max?(j.salary_min+'–'+j.salary_max):(j.salary_min||j.salary_max); return c+' '+v+'/'+p; }
+  function load(){
+    var p=new URLSearchParams();
+    if($('f-q').value)p.set('q',$('f-q').value); if($('f-type').value)p.set('type',$('f-type').value);
+    if($('f-remote').value)p.set('remote',$('f-remote').value); if($('f-sector').value)p.set('sector',$('f-sector').value);
+    fetch(API+'/api/careers?'+p.toString()).then(function(r){return r.json();}).then(function(d){
+      // sectors dropdown (populate once)
+      var sel=$('f-sector'); if(sel.options.length<=1 && d.sectors){ d.sectors.filter(Boolean).forEach(function(s){var o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o);}); }
+      var box=$('jobs'); box.innerHTML='';
+      if(!d.rows||!d.rows.length){ $('empty').style.display='block'; return; } $('empty').style.display='none';
+      d.rows.forEach(function(j){
+        var el=document.createElement('div'); el.className='job-card'; el.onclick=function(){openJob(j.id);};
+        var meta=[]; if(j.location)meta.push('📍 '+esc(j.location)); meta.push(esc(TYPE[j.employment_type]||j.employment_type)); if(j.remote_type&&j.remote_type!=='onsite')meta.push(esc(REMOTE[j.remote_type])); var sal=salary(j); if(sal)meta.push(esc(sal)); if(j.sector)meta.push(esc(j.sector));
+        el.innerHTML='<h3>'+esc(j.title)+(j.featured?' <span class="tag feat">Featured</span>':'')+'</h3>'+(j.organisation?'<div class="org">'+esc(j.organisation)+'</div>':'')+'<div class="job-meta">'+meta.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>';
+        box.appendChild(el);
+      });
+    });
+  }
+  function openJob(id){
+    fetch(API+'/api/careers/'+id).then(function(r){return r.json();}).then(function(d){
+      if(!d.job){ return; } var j=d.job;
+      $('list-view').style.display='none'; var v=$('detail-view'); v.style.display='block'; window.scrollTo(0,0);
+      var sal=salary(j);
+      var meta=[]; if(j.location)meta.push('📍 '+esc(j.location)); meta.push(esc(TYPE[j.employment_type]||j.employment_type)); if(j.remote_type)meta.push(esc(REMOTE[j.remote_type]||j.remote_type)); if(sal)meta.push(esc(sal)); if(j.sector)meta.push(esc(j.sector));
+      var apply='';
+      if(j.apply_method==='inplatform'){
+        apply='<div class="apply-box"><h4>Apply for this role</h4><div id="apply-form">'
+          +'<input class="hp" tabindex="-1" autocomplete="off" id="a-website" placeholder="Leave blank"/>'
+          +'<label>Full name</label><input id="a-name"/>'
+          +'<label>Email</label><input id="a-email" type="email"/>'
+          +'<label>Phone (optional)</label><input id="a-phone"/>'
+          +'<label>Cover message (optional)</label><textarea id="a-cover" rows="4"></textarea>'
+          +'<label>CV / résumé (optional, PDF)</label><input id="a-cv" type="file" accept=".pdf,.doc,.docx"/>'
+          +'<div style="margin-top:.9rem"><button class="btn" id="a-submit">Submit application</button></div>'
+          +'<div id="a-msg"></div></div></div>';
+      } else if(j.apply_method==='url' && j.apply_url){
+        apply='<div class="apply-box"><a class="btn" href="'+esc(j.apply_url)+'" target="_blank" rel="noopener">Apply on employer site ↗</a></div>';
+      } else if(j.apply_method==='email' && j.apply_email){
+        apply='<div class="apply-box"><a class="btn" href="mailto:'+esc(j.apply_email)+'?subject='+encodeURIComponent('Application: '+j.title)+'">Apply by email</a></div>';
+      }
+      function sec(t,b){ return b?('<section><h4>'+t+'</h4><p>'+esc(b)+'</p></section>'):''; }
+      v.innerHTML='<button class="detail-back" id="back">← All positions</button>'
+        +'<div class="detail"><h2>'+esc(j.title)+'</h2>'+(j.organisation?'<div class="org" style="color:#1D4ED8;font-weight:600">'+esc(j.organisation)+'</div>':'')
+        +'<div class="job-meta" style="margin-top:.4rem">'+meta.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>'
+        +sec('About the role',j.description)+sec('Responsibilities',j.responsibilities)+sec('Requirements',j.requirements)
+        +apply+'</div>';
+      $('back').onclick=function(){ v.style.display='none'; $('list-view').style.display='block'; };
+      var sb=$('a-submit');
+      if(sb) sb.onclick=function(){
+        var msg=$('a-msg'); msg.innerHTML='';
+        var file=$('a-cv').files[0];
+        function send(cvData,cvName){
+          sb.disabled=true; sb.textContent='Submitting…';
+          fetch(API+'/api/careers/'+id+'/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+            website:$('a-website').value, name:$('a-name').value, email:$('a-email').value, phone:$('a-phone').value,
+            cover_message:$('a-cover').value, cv_data:cvData||undefined, cv_name:cvName||undefined })})
+          .then(function(r){return r.json().then(function(b){return{ok:r.ok,b:b};});}).then(function(x){
+            if(x.ok){ $('apply-form').innerHTML='<div class="notice ok">'+esc(x.b.message||'Application received. Thank you.')+'</div>'; }
+            else { msg.innerHTML='<div class="notice err">'+esc((x.b&&x.b.message)||'Could not submit your application.')+'</div>'; sb.disabled=false; sb.textContent='Submit application'; }
+          }).catch(function(){ msg.innerHTML='<div class="notice err">Something went wrong. Please try again.</div>'; sb.disabled=false; sb.textContent='Submit application'; });
+        }
+        if(file){ if(file.size>4000000){ msg.innerHTML='<div class="notice err">Please choose a file under 4 MB.</div>'; return; }
+          var rd=new FileReader(); rd.onload=function(){ send(String(rd.result),file.name); }; rd.readAsDataURL(file);
+        } else send(null,null);
+      };
+    });
+  }
+  ['f-q','f-type','f-remote','f-sector'].forEach(function(idv){ var e=$(idv); e.addEventListener(idv==='f-q'?'input':'change',function(){ clearTimeout(window._ct); window._ct=setTimeout(load,idv==='f-q'?250:0); }); });
+  load();
+})();
+</script>
+</body></html>

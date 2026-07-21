@@ -22,6 +22,7 @@ import Casework from './pages/Casework'
 import ForumModeration from './pages/ForumModeration'
 import MembershipUpgrades from './pages/MembershipUpgrades'
 import AdminEvents from './pages/Events'
+import AdminCareers from './pages/Careers'
 import ErrorReports from './pages/ErrorReports'
 import Enrollments from './pages/Enrollments'
 import Codes from './pages/Codes'
@@ -114,6 +115,7 @@ export default function AdminApp() {
         <Route path="reviews" element={<Perm section="content"><Reviews /></Perm>} />
         <Route path="forum-moderation" element={<Perm section="content"><ForumModeration /></Perm>} />
         <Route path="events" element={<Perm section="content"><AdminEvents /></Perm>} />
+        <Route path="careers" element={<Perm section="content"><AdminCareers /></Perm>} />
         <Route path="content" element={<Perm section="content"><Content /></Perm>} />
         <Route path="announcement" element={<Perm section="content"><Announcement /></Perm>} />
         <Route path="translations" element={<OwnerOnly><Translations /></OwnerOnly>} />
