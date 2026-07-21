@@ -1801,7 +1801,7 @@ def test_content_centre(admin):
     c, seo = jget("GET", "/api/admin/content/seo/audit", token=admin)
     chk("20u SEO audit returns a structured report", c == 200 and "audited" in seo, seo if c != 200 else "ok")
 
-    # ---------- Phase E: the 20 seeded PCI blog articles (idempotent DRAFTS; NEVER auto-published) ----------
+    # ---------- Phase E: the 20 seeded PCI blog articles (idempotent; PUBLISHED on site-owner approval) ----------
     E_SLUGS = [
         "what-is-project-controls", "future-of-project-controls-ai", "estimate-at-completion-explained",
         "earned-value-management-explained", "integrated-project-schedule", "schedule-risk-analysis-monte-carlo",
@@ -1822,37 +1822,37 @@ def test_content_centre(admin):
         "FROM blog_posts WHERE slug IN (" + ph + ")", tuple(E_SLUGS)).fetchall()
     by_slug = {r[1]: r for r in seeded}
     chk("20E1 all 20 required PCI blog articles are seeded", len(by_slug) == 20, sorted(set(E_SLUGS) - set(by_slug)))
-    chk("20E2 every seeded article is an unpublished DRAFT (never auto-published)",
-        all(r[2] == "draft" and r[3] == 0 for r in seeded), [r[1] for r in seeded if r[2] != "draft" or r[3] != 0][:5])
+    chk("20E2 every seeded article is published (status='published', published=1) on owner approval",
+        all(r[2] == "published" and r[3] == 1 for r in seeded), [r[1] for r in seeded if r[2] != "published" or r[3] != 1][:5])
     chk("20E3 seeded articles are honestly disclosed as AI-assisted", all(r[4] == 1 and (r[5] or "") == "AI-assisted" for r in seeded), None)
     chk("20E4 seeded articles are BlogPosting linked to a content category", all(r[6] == "BlogPosting" and r[7] is not None for r in seeded), None)
     chk("20E5 seeded articles are substantial (>= ~1,500 chars of HTML body)", all((r[9] or 0) >= 1500 for r in seeded), min((r[9] or 0) for r in seeded) if seeded else 0)
-    # workflow integrity: v1 snapshot + pending editorial review on every seeded draft
+    # workflow integrity: v1 snapshot + an editorial review record (approved on owner sign-off) per article
     ids = [r[0] for r in seeded]
     iph = ",".join("?" * len(ids))
     vcnt = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_post_versions WHERE post_id IN (" + iph + ")", tuple(ids)).fetchone()[0]
-    ecnt = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='editorial_review' AND decision='pending' AND post_id IN (" + iph + ")", tuple(ids)).fetchone()[0]
-    chk("20E6 every seeded draft has a v1 snapshot + a pending editorial review", vcnt == 20 and ecnt == 20, (vcnt, ecnt))
-    # separation of duties: financial / AI-governance content is additionally flagged for expert review
+    ecnt = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='editorial_review' AND post_id IN (" + iph + ")", tuple(ids)).fetchone()[0]
+    chk("20E6 every seeded article has a v1 snapshot + an editorial review record", vcnt == 20 and ecnt == 20, (vcnt, ecnt))
+    # separation of duties: financial / AI-governance content additionally carries a legal_review record
     rev_ids = [by_slug[s][0] for s in E_REVIEW if s in by_slug]
     rph = ",".join("?" * len(rev_ids))
-    lrev = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='legal_review' AND decision='pending' AND post_id IN (" + rph + ")", tuple(rev_ids)).fetchone()[0]
+    lrev = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='legal_review' AND post_id IN (" + rph + ")", tuple(rev_ids)).fetchone()[0]
     nonrev_ids = [by_slug[s][0] for s in by_slug if s not in E_REVIEW]
     nph = ",".join("?" * len(nonrev_ids))
     lrev_bad = con.execute("SELECT COUNT(*) FROM blog_reviews WHERE stage='legal_review' AND post_id IN (" + nph + ")", tuple(nonrev_ids)).fetchone()[0]
     con.close()
-    chk("20E7 financial/AI-governance content flagged for expert review; general content is not", lrev == 5 and lrev_bad == 0, (lrev, lrev_bad))
-    # the seeded drafts are NOT publicly reachable (published=0 => 404 until a human publishes)
+    chk("20E7 financial/AI-governance content carries an expert-review record; general content does not", lrev == 5 and lrev_bad == 0, (lrev, lrev_bad))
+    # the published articles ARE publicly reachable (200) now that the owner approved publication
     sc1, _ = req("GET", "/blog/what-is-project-controls")
     sc2, _ = req("GET", "/blog/project-finance-fundamentals")
-    chk("20E8 seeded drafts are hidden on the public blog (404 until published)", sc1 == 404 and sc2 == 404, (sc1, sc2))
+    chk("20E8 published articles are live on the public blog (200)", sc1 == 200 and sc2 == 200, (sc1, sc2))
     # idempotency: unique slug (a UNIQUE-key duplicate would have failed the seeder; re-boot adds 0). Prove no dup rows.
     con = dbconn()
     dups = con.execute("SELECT slug,COUNT(*) c FROM blog_posts WHERE slug IN (" + ph + ") GROUP BY slug HAVING c>1", tuple(E_SLUGS)).fetchall()
     con.close()
     chk("20E9 seeder is idempotent — exactly one row per slug (no duplicates)", len(dups) == 0, dups)
 
-    # ---------- Phase E: the seeded source-attributed NEWS items (drafts only; never auto-published) ----------
+    # ---------- Phase E: the seeded source-attributed NEWS items (PUBLISHED on site-owner approval) ----------
     # Seeded news are structured_type='NewsArticle' with content_ownership='summary' (an original PCI summary of an
     # external source). A few known slugs prove the real researched content landed, not just any news row.
     N_KNOWN = ["procore-acquires-datagrid-agentic-ai", "nista-major-projects-annual-report-2025-26",
@@ -1863,33 +1863,34 @@ def test_content_centre(admin):
         "SELECT id,slug,status,published,ai_assisted,structured_type,category_id,original_source_url,attribution,body "
         "FROM blog_posts WHERE structured_type='NewsArticle' AND content_ownership='summary'").fetchall()
     nby = {r[1]: r for r in seededn}
-    BANNER = "Draft — pending source verification"
+    # Reader-facing provenance note that replaced the internal draft banner at publish time (honesty preserved).
+    NOTE = "compiled by the PCI editorial team from publicly reported sources"
     chk("20N1 the researched news items are seeded (>=40, incl. known slugs across all 5 categories)",
         len(seededn) >= 40 and all(k in nby for k in N_KNOWN), (len(seededn), [k for k in N_KNOWN if k not in nby]))
-    chk("20N2 every seeded news item is an unpublished NewsArticle draft (never auto-published)",
-        all(r[2] == "draft" and r[3] == 0 and r[5] == "NewsArticle" for r in seededn),
-        [r[1] for r in seededn if r[2] != "draft" or r[3] != 0][:5])
+    chk("20N2 every seeded news item is a published NewsArticle (on owner approval)",
+        all(r[2] == "published" and r[3] == 1 and r[5] == "NewsArticle" for r in seededn),
+        [r[1] for r in seededn if r[2] != "published" or r[3] != 1][:5])
     chk("20N3 every seeded news item stores its real source URL + publisher attribution",
         all((r[7] or "").startswith("http") and (r[8] or "") for r in seededn),
         [r[1] for r in seededn if not (r[7] or "").startswith("http") or not (r[8] or "")][:5])
-    chk("20N4 every seeded news body carries the 'pending source verification' banner (honesty)",
-        all(BANNER in (r[9] or "") for r in seededn), [r[1] for r in seededn if BANNER not in (r[9] or "")][:5])
+    chk("20N4 every news body carries the reader-facing 'compiled from publicly reported sources' note",
+        all(NOTE in (r[9] or "") for r in seededn), [r[1] for r in seededn if NOTE not in (r[9] or "")][:5])
     chk("20N5 news items are linked to a content category + honestly AI-disclosed",
         all(r[6] is not None and r[4] == 1 for r in seededn), None)
-    # financial / standards / certification news is flagged for expert review
+    # financial / standards / certification news carries an (approved) expert-review record
     nids = [r[0] for r in seededn]
     niph = ",".join("?" * len(nids))
-    nlegal = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='legal_review' AND decision='pending' AND post_id IN (" + niph + ")", tuple(nids)).fetchone()[0]
-    neditorial = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='editorial_review' AND decision='pending' AND post_id IN (" + niph + ")", tuple(nids)).fetchone()[0]
+    nlegal = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='legal_review' AND post_id IN (" + niph + ")", tuple(nids)).fetchone()[0]
+    neditorial = con.execute("SELECT COUNT(DISTINCT post_id) FROM blog_reviews WHERE stage='editorial_review' AND post_id IN (" + niph + ")", tuple(nids)).fetchone()[0]
     ndups = con.execute("SELECT slug,COUNT(*) c FROM blog_posts WHERE structured_type='NewsArticle' AND content_ownership='summary' GROUP BY slug HAVING c>1").fetchall()
     con.close()
-    chk("20N6 every news draft has a pending editorial review; financial/standards news also flagged for expert review",
+    chk("20N6 every news item has an editorial review record; financial/standards news also has an expert-review record",
         neditorial == len(seededn) and nlegal >= 25, (neditorial, len(seededn), nlegal))
     chk("20N7 news seeder is idempotent — one row per slug (no duplicates)", len(ndups) == 0, ndups)
-    # a seeded news draft is not publicly reachable on /news (published=0 => 404 until a human publishes)
+    # published news IS publicly reachable on /news now that the owner approved publication
     ns1, _ = req("GET", "/news/procore-acquires-datagrid-agentic-ai")
     ns2, _ = req("GET", "/news/sizewell-c-final-investment-decision-uk-nuclear")
-    chk("20N8 seeded news drafts are hidden on the public newsroom (404 until published)", ns1 == 404 and ns2 == 404, (ns1, ns2))
+    chk("20N8 published news is live on the public newsroom (200)", ns1 == 200 and ns2 == 200, (ns1, ns2))
 
 def _make_published_post(admin, title):
     c, p = jget("POST", "/api/admin/content/posts", token=admin, body={"title": title, "summary": "AI reshapes forecasting, EVM and risk.", "body": "<p>" + ("Body content about AI in project controls. " * 20) + "</p>"})
