@@ -3067,6 +3067,7 @@ def run(proc):
     test_blog_scheduled_publish(admin)
     test_partner_sponsorship_commissions(admin)
     test_admin_rbac_viewer_sweep()
+    test_partner_login_lockout(admin)
 
     print("\n(assertions complete)")
 
@@ -3421,6 +3422,28 @@ def test_admin_rbac_viewer_sweep():
     ov = jget("GET", "/api/admin/overview", token=vtok)[0]
     rp = jget("GET", "/api/admin/reports", token=vtok)[0]
     chk("38b the viewer CAN reach its granted sections (overview + reports)", ov == 200 and rp == 200, (ov, rp))
+
+def test_partner_login_lockout(admin):
+    # Incremental Testing Programme — the partner-portal login also has a per-account LoginGuard lockout
+    # (partner_users, MaxFails=10, 15-min lock), previously untested. Seeded via DB so it needs only a few
+    # login requests — well under the per-IP throttle — mirroring the deterministic style of section 28.
+    print("\n=== 39. Partner portal login lockout (LoginGuard on partner_users) ===")
+    c, tp = jget("POST", "/api/admin/training-partners", token=admin, body={"name": "Lockout College 39"})
+    pid = tp["id"]
+    c, pu = jget("POST", f"/api/admin/training-partners/{pid}/users", token=admin, body={"email": "partner-lock@ex.co", "name": "Lena Lock", "role": "admin"})
+    pw = pu.get("temp_password")
+    chk("39a partner user is created with a temp password", c == 200 and bool(pw), pu)
+    con = dbconn(); puid = con.execute("SELECT id FROM partner_users WHERE email=?", ("partner-lock@ex.co",)).fetchone()[0]
+    con.execute("UPDATE partner_users SET failed_logins=9, lockout_until=NULL WHERE id=?", (puid,)); con.commit(); con.close()
+    c, r = jget("POST", "/api/partner/auth/login", body={"email": "partner-lock@ex.co", "password": "wrong-" + str(pw)})
+    chk("39b the threshold-crossing wrong password is rejected (invalid_credentials)", c == 401 and r.get("error") == "invalid_credentials", (c, r))
+    con = dbconn(); row = con.execute("SELECT failed_logins, lockout_until FROM partner_users WHERE id=?", (puid,)).fetchone(); con.close()
+    chk("39c crossing the threshold sets lockout_until and resets the failure counter", bool(row) and row[1] is not None and (row[0] or 0) == 0, row)
+    c, r2 = jget("POST", "/api/partner/auth/login", body={"email": "partner-lock@ex.co", "password": pw})
+    chk("39d the correct password is refused while locked (account_locked, 429)", c == 429 and r2.get("error") == "account_locked", (c, r2))
+    con = dbconn(); con.execute("UPDATE partner_users SET lockout_until=NULL WHERE id=?", (puid,)); con.commit(); con.close()
+    c, r3 = jget("POST", "/api/partner/auth/login", body={"email": "partner-lock@ex.co", "password": pw})
+    chk("39e after the lock clears the correct password signs in again", c == 200 and bool(r3.get("token")), (c, r3.get("error")))
 
 if __name__ == "__main__":
     main()
