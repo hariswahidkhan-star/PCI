@@ -3073,6 +3073,7 @@ def run(proc):
     test_reviews_moderation(admin)
     test_careers_module(admin)
     test_events_module(admin)
+    test_announcement_config(admin)
 
     print("\n(assertions complete)")
 
@@ -3790,6 +3791,49 @@ def test_events_module(admin):
     vtok = globals().get("_VIEWER_TOK")
     chk("44p the admin events surface needs the 'content' permission (viewer 403)",
         bool(vtok) and jget("GET", "/api/admin/events", token=vtok)[0] == 403)
+
+def test_announcement_config(admin):
+    # Incremental Testing Programme — the admin-controlled site announcement (Endpoints/Announcement.cs)
+    # had no dedicated coverage: a public read that resolves the {date} token and sanitises the CTA href,
+    # an enable/disable toggle, and content-gated admin read/write. No application changes. Left enabled at
+    # the end so the public banner is not silently disabled for other readers.
+    print("\n=== 45. Announcement: public {date}-resolution + CTA sanitising + enable toggle + RBAC ===")
+    # Public read: enabled by default (seeded), and the {date} token is resolved inside the title.
+    c, pub = jget("GET", "/api/announcement")
+    date0 = pub.get("date")
+    chk("45a the public announcement is enabled by default with a resolved title",
+        c == 200 and pub.get("enabled") is True and bool(pub.get("title")), pub)
+    chk("45b the {date} token is resolved (no literal '{date}' leaks to the client)",
+        "{date}" not in str(pub.get("title", "")) and "{date}" not in str(pub.get("intro", "")), pub.get("title"))
+    # Admin read is content-gated.
+    vtok = globals().get("_VIEWER_TOK")
+    chk("45c the admin announcement read needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/announcement", token=vtok)[0] == 403)
+    c, adm = jget("GET", "/api/admin/announcement", token=admin)
+    chk("45d admin sees the stored config including the enabled flag", c == 200 and "announce_enabled" in adm, list(adm.keys())[:4] if isinstance(adm, dict) else adm)
+    # An admin edit propagates to the public read, with the {date} token still resolved.
+    jget("POST", "/api/admin/announcement", token=admin, body={"title": "Custom Notice 45 for {date}"})
+    c, pub2 = jget("GET", "/api/announcement")
+    chk("45e an admin title edit propagates to the public read with {date} resolved",
+        pub2.get("title") == "Custom Notice 45 for " + str(pub2.get("date")), (pub2.get("title"), pub2.get("date")))
+    # A hostile CTA href is refused — the public read never emits a javascript: URL.
+    jget("POST", "/api/admin/announcement", token=admin, body={"cta_href": "javascript:alert(1)"})
+    c, pub3 = jget("GET", "/api/announcement")
+    chk("45f a non-http CTA href is sanitised back to the safe default",
+        pub3.get("cta", {}).get("href") == "honorary-application.html", pub3.get("cta"))
+    # Disabling hides the whole announcement from the public read.
+    jget("POST", "/api/admin/announcement", token=admin, body={"announce_enabled": False})
+    c, pub4 = jget("GET", "/api/announcement")
+    chk("45g disabling the announcement hides it entirely from the public read",
+        pub4.get("enabled") is False and "title" not in pub4, pub4)
+    # A viewer cannot change the announcement (content-gated write).
+    chk("45h the admin announcement write needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("POST", "/api/admin/announcement", token=vtok, body={"announce_enabled": True})[0] == 403)
+    # Re-enable + change the date; the public title resolves the NEW date. Leaves the banner enabled.
+    jget("POST", "/api/admin/announcement", token=admin, body={"announce_enabled": True, "date": "2027-12-31"})
+    c, pub5 = jget("GET", "/api/announcement")
+    chk("45i re-enabling with a new date re-resolves the token in the title",
+        pub5.get("enabled") is True and "2027-12-31" in str(pub5.get("title", "")), (pub5.get("enabled"), pub5.get("title")))
 
 if __name__ == "__main__":
     main()
