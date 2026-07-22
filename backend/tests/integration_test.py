@@ -353,6 +353,16 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
                           {"keys": ["2026-07-02"], "clicks": 110, "impressions": 3700, "ctr": 0.029, "position": 4.4}],
             }.get(dim, [])
             return self._send(200, {"rows": rows})
+        if "/chat/completions" in self.path:                                             # OpenAI-compatible translator (custom provider)
+            # Echo the prompt's Input array back with a "[t] " prefix, same length/order — the
+            # contract Translator.ParseArray expects from a real model.
+            try:
+                content = ((body.get("messages") or [{}])[0].get("content") or "")
+                arr = json.loads(content[content.rindex("Input:") + 6:].strip())
+                outs = ["[t] " + s for s in arr]
+            except Exception:
+                outs = []
+            return self._send(200, {"choices": [{"message": {"content": json.dumps(outs)}}]})
         if ":runReport" in self.path:                                                    # Google Analytics 4 (Phase 6)
             return self._send(200, {"rows": [
                 {"dimensionValues": [{"value": "20260701"}], "metricValues": [{"value": "200"}, {"value": "150"}, {"value": "320"}]},
@@ -3081,6 +3091,7 @@ def run(proc):
     test_badges_module(admin)
     test_site_chat(admin)
     test_admin_seo(admin)
+    test_admin_i18n(admin)
 
     print("\n(assertions complete)")
 
@@ -4461,6 +4472,105 @@ def test_admin_seo(admin):
     c, r = jget("POST", "/api/admin/seo/pagespeed", token=admin, body={"url": "notaurl"})
     chk("52s PageSpeed refuses a schemeless URL before any outbound call (400)",
         c == 400 and r.get("error") == "bad_url", r)
+
+def test_admin_i18n(admin):
+    # Incremental Testing Programme §53 — backend-owned website translations (Endpoints/AdminI18n.cs,
+    # owner-only). Proves the gate, coverage/regions shapes, a hand-edited translation rendered LIVE on
+    # the public page (?lang= + <html lang>/RTL dir), the write-only provider key, a full auto-translate
+    # round-trip through a mock OpenAI-compatible endpoint, and the page-scoped clear.
+    print("\n=== 53. Admin translations: owner gate, live rendering, provider secrecy, auto-translate ===")
+    c, _ = jget("GET", "/api/admin/i18n/coverage")
+    chk("53a the translations console requires an admin token (401)", c == 401, c)
+    vtok = globals().get("_VIEWER_TOK")
+    c, _ = jget("GET", "/api/admin/i18n/coverage", token=vtok)
+    chk("53b a non-owner admin is refused — translations are owner-only (403)", c == 403, c)
+
+    c, cov = jget("GET", "/api/admin/i18n/coverage", token=admin)
+    langs = {l.get("code") for l in cov.get("languages", [])}
+    chk("53c coverage reports the 6 target languages, per-language progress and the page list",
+        c == 200 and cov.get("coverage", {}).get("total", 0) > 0
+        and langs == {"ko", "ar", "es", "fr", "zh", "ru"}
+        and "es" in cov.get("coverage", {}).get("langs", {}) and len(cov.get("pages", [])) > 0, langs)
+
+    c, r = jget("GET", "/api/admin/i18n/regions?slug=index.html&lang=xx", token=admin)
+    chk("53d an unsupported language is rejected (400 bad_lang)", c == 400 and r.get("error") == "bad_lang", r)
+    c, r = jget("GET", "/api/admin/i18n/regions?slug=..%2Fsecrets&lang=es", token=admin)
+    chk("53e a traversal slug is rejected (400 bad_slug)", c == 400 and r.get("error") == "bad_slug", r)
+
+    # Find a page with a body ('p'-scope) text region to hand-translate. _h1 preferred — its
+    # replacement semantics are positional and easy to spot in the served HTML.
+    slug, region = None, None
+    for cand in [s for s in cov.get("pages", []) if s != "index.html"][:12]:
+        c, rg = jget("GET", f"/api/admin/i18n/regions?slug={cand}&lang=es", token=admin)
+        rows = rg.get("rows", [])
+        pick = next((x for x in rows if x.get("ckey") == "_h1"), None) or \
+               next((x for x in rows if x.get("scope") == "p" and x.get("ctype") == "text"), None)
+        if pick and rows:
+            slug, region = cand, pick
+            chk("53f a page's regions list its English source text for translation",
+                all((x.get("english") or "") != "" for x in rows), cand)
+            break
+    if slug is None:
+        chk("53f a page's regions list its English source text for translation", False, "no page with a p-scope region")
+        return
+
+    c, r = jget("POST", "/api/admin/i18n/set", token=admin,
+                body={"lang": "es", "scope": "q", "slug": slug, "ckey": "_h1", "cvalue": "x"})
+    chk("53g an unknown scope is rejected (400 bad_key)", c == 400 and r.get("error") == "bad_key", r)
+
+    sentinel = "Zephyr53 seccion"
+    c, r = jget("POST", "/api/admin/i18n/set", token=admin,
+                body={"lang": "es", "scope": "p", "slug": slug, "ckey": region["ckey"], "cvalue": sentinel})
+    c2, rg = jget("GET", f"/api/admin/i18n/regions?slug={slug}&lang=es", token=admin)
+    got = next((x for x in rg.get("rows", []) if x.get("ckey") == region["ckey"]), {})
+    chk("53h a hand-edited translation is stored and echoed by the regions view",
+        c == 200 and r.get("ok") and got.get("translation") == sentinel, got.get("translation"))
+
+    st, hb, _ = _raw_get(f"/{slug}?lang=es")
+    hes = hb.decode("utf-8", "ignore")
+    st2, hb2, _ = _raw_get(f"/{slug}")
+    hen = hb2.decode("utf-8", "ignore")
+    chk("53i the translation renders LIVE on the public page (?lang=es sets <html lang>); English untouched",
+        st == 200 and sentinel in hes and 'lang="es"' in hes and st2 == 200 and sentinel not in hen, (st, st2))
+    st, hb, _ = _raw_get(f"/{slug}?lang=ar")
+    har = hb.decode("utf-8", "ignore")
+    chk("53j an RTL language serves the page with lang=\"ar\" and dir=\"rtl\"",
+        st == 200 and 'lang="ar"' in har and 'dir="rtl"' in har, st)
+
+    c, r = jget("POST", "/api/admin/i18n/translate", token=admin, body={"lang": "es"})
+    chk("53k auto-translate refuses until a provider is configured (400)",
+        c == 400 and r.get("error") == "provider_not_configured", r)
+    c, r = jget("POST", "/api/admin/i18n/config", token=admin, body={"provider": "sketchy"})
+    chk("53l an unknown provider is rejected (400 bad_provider)", c == 400 and r.get("error") == "bad_provider", r)
+
+    srv, mport = start_mock_vendor()
+    c, r = jget("POST", "/api/admin/i18n/config", token=admin,
+                body={"provider": "custom", "endpoint": f"http://127.0.0.1:{mport}/v1", "api_key": "tr-key-53", "model": "mock-mt"})
+    c2, cov2 = jget("GET", "/api/admin/i18n/coverage", token=admin)
+    prov = cov2.get("provider", {})
+    chk("53m a custom provider configures; the API key reads back only as has_key, never the value",
+        c == 200 and r.get("ok") and r.get("configured") is True and prov.get("provider") == "custom"
+        and prov.get("has_key") is True and "tr-key-53" not in json.dumps(cov2), prov)
+
+    c, r = jget("POST", "/api/admin/i18n/translate", token=admin,
+                body={"lang": "fr", "slug": slug, "overwrite": True, "limit": 2})
+    c2, rgf = jget("GET", f"/api/admin/i18n/regions?slug={slug}&lang=fr", token=admin)
+    auto = [x for x in rgf.get("rows", []) if str(x.get("translation") or "").startswith("[t] ")]
+    chk("53n auto-translate round-trips through the OpenAI-compatible provider and stores the batch",
+        c == 200 and r.get("ok") and r.get("translated") == 2 and len(auto) >= 1, (r, len(auto)))
+
+    c, r = jget("POST", "/api/admin/i18n/clear", token=admin, body={"lang": "es", "slug": slug})
+    c2, rg2 = jget("GET", f"/api/admin/i18n/regions?slug={slug}&lang=es", token=admin)
+    got2 = next((x for x in rg2.get("rows", []) if x.get("ckey") == region["ckey"]), {})
+    st, hb, _ = _raw_get(f"/{slug}?lang=es")
+    chk("53o a page-scoped clear removes the translation and the live page reverts to English",
+        c == 200 and r.get("ok") and got2.get("translation") is None
+        and sentinel not in hb.decode("utf-8", "ignore"), got2.get("translation"))
+
+    c, r = jget("POST", "/api/admin/i18n/config", token=admin, body={"provider": "custom", "model": "mock-mt-2"})
+    chk("53p a config update that omits the API key keeps the stored secret (still configured)",
+        c == 200 and r.get("configured") is True, r)
+    srv.shutdown()
 
 if __name__ == "__main__":
     main()
