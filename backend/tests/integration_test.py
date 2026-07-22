@@ -3096,6 +3096,7 @@ def run(proc):
     test_comms_centre(admin)
     test_public_documents(admin)
     test_marketing_centre(admin)
+    test_admin_extra_gaps(admin)
 
     print("\n(assertions complete)")
 
@@ -5295,6 +5296,176 @@ def test_marketing_centre(admin):
         and ca == 200 and len(acts) > 0 and all(str(a).startswith("mkt_") for a in acts)
         and {"mkt_post_create", "mkt_campaign_approved", "mkt_platform_campaign_launch", "mkt_connection_disconnected"} <= set(acts),
         (grow, acts[:8]))
+
+def test_admin_extra_gaps(admin):
+    # Incremental Testing Programme §58 — the AdminExtra remainder (Endpoints/AdminExtra.cs): the legacy
+    # admin tickets console ('tickets' permission — distinct from §34's /api/support 'inbox' console),
+    # the codes-v2 browser + bulk generator + per-code redemption drill-down ('codes'), and the public
+    # enrolment wizards (/api/session start/save/resume + /api/enrollment save/resume) whose resume
+    # tokens are stored hash-only and must never let an email alone touch another party's saved session.
+    print("\n=== 58. AdminExtra gaps: legacy tickets console, codes-v2 bulk generate, enrolment save/resume ===")
+    import re as _re
+    vtok = globals().get("_VIEWER_TOK")
+
+    # Fixture: a student with one open ticket (opening message lands with sender 'user').
+    stok, _ = register_student("tickets-58@ex.co")
+    c, tk = jget("POST", "/api/me/tickets", token=stok,
+                 body={"subject": "Voucher missing 58", "category": "general", "body": "Where is my exam voucher? (58)"})
+    tid, tref = tk.get("id"), tk.get("reference")
+
+    # --- RBAC: both consoles refuse anonymous (401) and a viewer admin (403 naming the section) ---
+    c1, e1 = jget("GET", "/api/admin/tickets")
+    c2, _e2 = jget("GET", "/api/admin/codes-v2")
+    c3, f1 = jget("GET", "/api/admin/tickets", token=vtok)
+    c4, f2 = jget("GET", "/api/admin/codes-v2", token=vtok)
+    c5, _f3 = jget("POST", "/api/admin/codes/generate", token=vtok, body={"count": 1})
+    chk("58a the tickets and codes consoles are 401 anonymous and viewer-403 naming their sections",
+        c1 == 401 and e1.get("error") == "unauthorized" and c2 == 401
+        and c3 == 403 and f1.get("section") == "tickets"
+        and c4 == 403 and f2.get("section") == "codes" and c5 == 403, (c1, c2, f1, f2, c5))
+
+    c, lst = jget("GET", "/api/admin/tickets", token=admin)
+    row = next((t for t in lst.get("rows", []) if t.get("reference") == tref), None)
+    c2, res = jget("GET", "/api/admin/tickets?status=resolved", token=admin)
+    chk("58b the ticket list joins the student's identity + message count, and the status filter excludes it",
+        c == 200 and bool(row) and row.get("email") == "tickets-58@ex.co" and row.get("first_name") == "Jo"
+        and H0(row.get("msg_count")) == 1
+        and not any(t.get("reference") == tref for t in res.get("rows", [])), row)
+
+    c, nf = jget("GET", "/api/admin/tickets/99999958", token=admin)
+    c2, det = jget("GET", f"/api/admin/tickets/{tid}", token=admin)
+    msgs = det.get("messages", []) if isinstance(det, dict) else []
+    chk("58c an unknown ticket is 404 not_found; a real one returns the joined identity and the thread",
+        c == 404 and nf.get("error") == "not_found" and c2 == 200 and det.get("email") == "tickets-58@ex.co"
+        and len(msgs) == 1 and msgs[0].get("sender") == "user"
+        and "voucher" in str(msgs[0].get("body", "")).lower(), (c, det.get("email"), msgs))
+
+    c, r = jget("POST", f"/api/admin/tickets/{tid}/reply", token=admin, body={"message": ""})
+    chk("58d an empty admin reply is rejected (400 missing_message)", c == 400 and r.get("error") == "missing_message", (c, r))
+
+    jget("POST", f"/api/admin/tickets/{tid}/reply", token=admin, body={"message": "Your voucher is on its way. (58)"})
+    con = dbconn(); fra1 = con.execute("SELECT first_response_at FROM tickets WHERE id=?", (tid,)).fetchone()[0]; con.close()
+    jget("POST", f"/api/admin/tickets/{tid}/reply", token=admin, body={"message": "Anything else we can help with? (58)"})
+    con = dbconn()
+    trow = con.execute("SELECT status, first_response_at FROM tickets WHERE id=?", (tid,)).fetchone()
+    nadm = con.execute("SELECT COUNT(*) FROM ticket_messages WHERE ticket_id=? AND sender='admin'", (tid,)).fetchone()[0]
+    con.close()
+    chk("58e replies store admin messages, park the ticket awaiting_student, and first_response_at is stamped exactly once",
+        bool(trow) and trow[0] == "awaiting_student" and fra1 is not None and trow[1] == fra1 and H0(nadm) == 2,
+        (trow, fra1, nadm))
+
+    c, bs = jget("POST", f"/api/admin/tickets/{tid}/status", token=admin, body={"status": "reopened"})
+    c2, ok = jget("POST", f"/api/admin/tickets/{tid}/status", token=admin, body={"status": "resolved"})
+    c3, res = jget("GET", "/api/admin/tickets?status=resolved", token=admin)
+    c4, opn = jget("GET", "/api/admin/tickets?status=open", token=admin)
+    chk("58f a made-up ticket status is 400 bad_status; 'resolved' is stored and drives the filter",
+        c == 400 and bs.get("error") == "bad_status" and c2 == 200 and ok.get("ok")
+        and any(t.get("reference") == tref for t in res.get("rows", []))
+        and not any(t.get("reference") == tref for t in opn.get("rows", [])), (c, bs, c2))
+
+    # --- codes v2: bulk generate (count clamped, prefix sanitised) + batch browser + drill-down ---
+    c0, g0 = jget("POST", "/api/admin/codes/generate", token=admin, body={"count": 0, "prefix": "clamp58"})
+    c, gen = jget("POST", "/api/admin/codes/generate", token=admin,
+                  body={"count": 3, "prefix": "q4 58!", "discount_type": "fixed", "discount_value": 25,
+                        "applies_to": "exam", "code_type": "institution", "org_name": "Acme Institute 58",
+                        "max_uses": 5, "per_user_limit": 2, "end_date": "2030-01-01", "notes": "bulk batch 58"})
+    batch = gen.get("batch_id", ""); codes = gen.get("codes", [])
+    chk("58g generate clamps count 0 to 1 and mints a sanitised-prefix batch (Q458-XXXXXXXX x3)",
+        c0 == 200 and g0.get("count") == 1 and c == 200 and gen.get("count") == 3
+        and batch.startswith("Q458-") and len(codes) == len(set(codes)) == 3
+        and all(_re.fullmatch(r"Q458-[0-9A-F]{8}", x) for x in codes), (g0, gen))
+
+    c, v2 = jget("GET", f"/api/admin/codes-v2?batch={batch}", token=admin)
+    rows = v2.get("rows", [])
+    chk("58h codes-v2 filtered by batch returns exactly the 3 with their stored terms and zeroed rollups",
+        c == 200 and len(rows) == 3 and {x.get("code") for x in rows} == set(codes)
+        and all(x.get("discount_type") == "fixed" and abs(float(x.get("discount_value") or 0) - 25) < 1e-6
+                and x.get("applies_to") == "exam" and x.get("code_type") == "institution"
+                and x.get("org_name") == "Acme Institute 58" and H0(x.get("active")) == 1
+                and H0(x.get("max_uses")) == 5 and H0(x.get("per_user_limit")) == 2
+                and str(x.get("end_date") or "").startswith("2030-01-01")
+                and H0(x.get("redemptions")) == 0 and abs(float(x.get("discount_given") or 0)) < 1e-6
+                and abs(float(x.get("revenue_attributed") or 0)) < 1e-6 for x in rows), rows)
+
+    con = dbconn()
+    crow = con.execute("SELECT id, code FROM discount_codes WHERE batch_id=? ORDER BY id LIMIT 1", (batch,)).fetchone()
+    cid = crow[0]
+    con.execute("INSERT INTO code_redemptions(code_id,code,user_id,email,product_type,amount_before,discount_amount) VALUES(?,?,NULL,?, 'exam', 200, 25)",
+                (cid, crow[1], "redeemer-58@ex.co"))
+    con.commit(); con.close()
+    c, dd = jget("GET", f"/api/admin/codes/{cid}/redemptions", token=admin)
+    c2, v2b = jget("GET", f"/api/admin/codes-v2?batch={batch}", token=admin)
+    mine = next((x for x in v2b.get("rows", []) if x.get("id") == cid), {})
+    chk("58i a redemption shows in the per-code drill-down and rolls up into the codes-v2 counters",
+        c == 200 and len(dd.get("rows", [])) == 1 and dd["rows"][0].get("email") == "redeemer-58@ex.co"
+        and abs(float(dd["rows"][0].get("discount_amount") or 0) - 25) < 1e-6
+        and H0(mine.get("redemptions")) == 1 and abs(float(mine.get("discount_given") or 0) - 25) < 1e-6, (dd, mine))
+
+    # --- public enrolment wizard v1: /api/session start / save / resume (token stored hash-only) ---
+    c, bad = jget("POST", "/api/session/start", body={"email": "not-an-email"})
+    c2, s1 = jget("POST", "/api/session/start", body={"email": "wizard-58@ex.co"})
+    sid = s1.get("session_id")
+    con = dbconn(); srow = con.execute("SELECT session_status, resume_token_hash, resume_token_expiry FROM enrollment_sessions WHERE id=?", (sid,)).fetchone(); con.close()
+    chk("58j session/start rejects a bad email (400 invalid_email) and opens an in_progress session with a hashed resume token",
+        c == 400 and bad.get("error") == "invalid_email" and c2 == 200 and bool(sid)
+        and int(s1.get("current_step") or 0) == 1 and bool(srow) and srow[0] == "in_progress"
+        and bool(srow[1]) and bool(srow[2]), (c, s1, srow))
+
+    c, s2 = jget("POST", "/api/session/start", body={"email": "wizard-58@ex.co"})
+    con = dbconn(); h2 = con.execute("SELECT resume_token_hash FROM enrollment_sessions WHERE id=?", (sid,)).fetchone()[0]; con.close()
+    chk("58k restarting with the same email resumes the SAME session and rotates its token hash",
+        c == 200 and s2.get("session_id") == sid and bool(h2) and h2 != srow[1], (s2, h2))
+
+    c, ns = jget("POST", "/api/session/save", body={"email": "ghost-58@ex.co", "current_step": 2})
+    c2, sv = jget("POST", "/api/session/save", body={"email": "wizard-58@ex.co", "current_step": 3,
+                                                    "selected_product": "bundle", "pricing_snapshot": {"plan": "pro58", "total": 149}})
+    con = dbconn(); srow2 = con.execute("SELECT current_step, selected_product, pricing_snapshot FROM enrollment_sessions WHERE id=?", (sid,)).fetchone(); con.close()
+    chk("58l session/save is 404 no_session for an unknown email and stores step / product / pricing snapshot",
+        c == 404 and ns.get("error") == "no_session" and c2 == 200 and sv.get("ok")
+        and bool(srow2) and int(float(srow2[0] or 0)) == 3 and srow2[1] == "bundle" and "pro58" in str(srow2[2]),
+        (c, sv, srow2))
+
+    # Plant a KNOWN token's hash (Security.Sha == sha256hex) so the resume lookup can be driven end-to-end.
+    con = dbconn(); con.execute("UPDATE enrollment_sessions SET resume_token_hash=? WHERE id=?", (sha256hex("sess58-resume-token"), sid)); con.commit(); con.close()
+    c, rr = jget("GET", "/api/session/resume?token=sess58-resume-token")
+    c2, rj = jget("GET", "/api/session/resume?token=junk-58")
+    chk("58m session/resume returns the saved state for a valid token — never any token hash — and 404s junk",
+        c == 200 and rr.get("email") == "wizard-58@ex.co" and int(rr.get("current_step") or 0) == 3
+        and rr.get("selected_product") == "bundle" and (rr.get("pricing_snapshot") or {}).get("plan") == "pro58"
+        and "resume_token" not in json.dumps(rr) and sha256hex("sess58-resume-token") not in json.dumps(rr)
+        and c2 == 404 and rj.get("error") == "invalid_or_expired", (rr, c2))
+
+    con = dbconn(); con.execute("UPDATE enrollment_sessions SET resume_token_expiry='2020-01-01 00:00:00' WHERE id=?", (sid,)); con.commit(); con.close()
+    c, rx = jget("GET", "/api/session/resume?token=sess58-resume-token")
+    chk("58n an expired resume token is refused (404 invalid_or_expired)",
+        c == 404 and rx.get("error") == "invalid_or_expired", (c, rx))
+
+    # --- enrolment wizard v2: /api/enrollment save/resume — the #10 token-or-fresh-session guard ---
+    c, bd = jget("POST", "/api/enrollment/save", body={"email": "junk58"})
+    c2, ev1 = jget("POST", "/api/enrollment/save", body={"email": "wizardv2-58@ex.co", "step": 42, "data": {"cert": "pcl58"}})
+    tA = ev1.get("resume_token") or ""
+    c3, ev2 = jget("POST", "/api/enrollment/save", body={"email": "wizardv2-58@ex.co", "resume_token": tA, "step": 4,
+                                                         "data": {"cert": "pcl58", "seat": "night"}})
+    c4, rz = jget("GET", f"/api/enrollment/resume?token={tA}")
+    chk("58o enrollment/save rejects a bad email, clamps step 42 to 9, and a token-verified update round-trips through resume",
+        c == 400 and bd.get("error") == "invalid_email" and c2 == 200 and int(ev1.get("step") or 0) == 9
+        and len(tA) == 40 and c3 == 200 and ev2.get("resume_token") == tA
+        and c4 == 200 and rz.get("email") == "wizardv2-58@ex.co" and int(rz.get("step") or 0) == 4
+        and (rz.get("data") or {}).get("seat") == "night", (bd, ev1, ev2, rz))
+
+    c, ev3 = jget("POST", "/api/enrollment/save", body={"email": "wizardv2-58@ex.co", "resume_token": "wrong-58",
+                                                        "step": 1, "data": {"cert": "hijack58"}})
+    tB = ev3.get("resume_token") or ""
+    con = dbconn(); nrows = con.execute("SELECT COUNT(*) FROM enrollment_sessions WHERE email=? AND session_status='in_progress'", ("wizardv2-58@ex.co",)).fetchone()[0]; con.close()
+    c2, rz2 = jget("GET", f"/api/enrollment/resume?token={tA}")
+    c3, tr = jget("GET", "/api/enrollment/resume")
+    c4, iv = jget("GET", "/api/enrollment/resume?token=junk-58")
+    chk("58p a save without the session's token never touches the existing row (fresh session instead); blank/junk resume is 400/404",
+        c == 200 and bool(tB) and tB != tA and H0(nrows) == 2
+        and c2 == 200 and int(rz2.get("step") or 0) == 4 and (rz2.get("data") or {}).get("cert") == "pcl58"
+        and "hijack58" not in json.dumps(rz2)
+        and c3 == 400 and tr.get("error") == "token_required"
+        and c4 == 404 and iv.get("error") == "invalid_or_expired", (tB[:8], nrows, rz2, c3, c4))
 
 if __name__ == "__main__":
     main()
