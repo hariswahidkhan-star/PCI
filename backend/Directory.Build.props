@@ -1,0 +1,9 @@
+<Project>
+  <!-- The unit-test project lives at tests/PCI.Backend.Tests. Without this exclude the Web SDK's
+       default **/*.cs glob would compile the test sources into PCI.Backend itself (and fail: xunit
+       is not an app dependency). Paths here are relative to EACH project directory, so the test
+       project still globs its own sources normally. -->
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);tests/**</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>
