@@ -914,6 +914,26 @@ def test_support_and_institutions(admin):
     chk("14u3 login without the code is refused once enabled", c == 401 and relog.get("error") == "totp_required", relog)
     c, relog2 = admin_login_rl(lambda: {"email": "owner@pci.local", "password": "Op3rator!Pw", "totp": totp_now(setup["secret"])})
     chk("14u4 login with a valid code succeeds", c == 200 and relog2.get("token"), relog2.get("error"))
+    # 14u5/u6 — TOTP replay guard. The server records the last consumed timestep (totp_last_step) and
+    # requires each accepted code to strictly ADVANCE it, so a captured code cannot open a second session
+    # inside its ±1 validity window. Driven deterministically by seeding totp_last_step in the DB and
+    # presenting a code for a KNOWN timestep (totp_at) — no dependence on which code 14u4 happened to
+    # consume, and one login per assertion (well under the per-IP throttle; admin_login_rl absorbs a 429).
+    def totp_at(secret, step):
+        pad = "=" * ((8 - len(secret) % 8) % 8)
+        key = _b64.b32decode(secret + pad)
+        h = _hmac.new(key, struct.pack(">Q", step), _hashlib.sha1).digest()
+        o = h[-1] & 0x0F
+        return str((struct.unpack(">I", h[o:o+4])[0] & 0x7FFFFFFF) % 1000000).zfill(6)
+    cur_step = int(_time.time()) // 30
+    con = dbconn(); aid = con.execute("SELECT id FROM admin_users WHERE lower(email)=?", ("owner@pci.local",)).fetchone()[0]
+    con.execute("UPDATE admin_users SET totp_last_step=? WHERE id=?", (cur_step, aid)); con.commit(); con.close()
+    replay_code = totp_at(setup["secret"], cur_step)  # a code for the timestep we just marked consumed
+    c, rep = admin_login_rl(lambda: {"email": "owner@pci.local", "password": "Op3rator!Pw", "totp": replay_code})
+    chk("14u5 a consumed TOTP timestep cannot be replayed (totp_invalid)", c == 401 and rep.get("error") == "totp_invalid", rep)
+    con = dbconn(); con.execute("UPDATE admin_users SET totp_last_step=? WHERE id=?", (cur_step - 1, aid)); con.commit(); con.close()
+    c, adv = admin_login_rl(lambda: {"email": "owner@pci.local", "password": "Op3rator!Pw", "totp": totp_now(setup["secret"])})
+    chk("14u6 a strictly-advancing TOTP code is accepted", c == 200 and bool(adv.get("token")), adv.get("error"))
     jget("POST", "/api/admin/me/2fa/disable", token=admin, body={"code": totp_now(setup["secret"])})
 
     # ---- 14v. RBAC: support role sees the inbox but not money; viewer sees nothing; partner APIs need partner auth ----
@@ -3025,6 +3045,7 @@ def run(proc):
     test_analytics(admin)
     test_membership_gate()
     test_privacy_erasure(admin)
+    test_login_lockout()
 
     print("\n(assertions complete)")
 
@@ -3066,6 +3087,34 @@ def test_privacy_erasure(admin):
     # --- Authorization: a student cannot reach the admin erasure queue ---
     c, _ = jget("GET", "/api/admin/erasure-requests", token=btok)
     chk("27l the admin erasure queue is not reachable with a student token", c in (401, 403), c)
+
+def test_login_lockout():
+    # Incremental Testing Programme — per-account brute-force lockout (Core/Auth.cs LoginGuard, previously
+    # only exercised implicitly). A fresh student with a known password via /api/login, kept isolated from
+    # the heavily-used admin login path. failed_logins is seeded in the DB so the whole check needs only a
+    # few login requests — far under the per-IP throttle (10/min) and with no wall-clock timing, so it
+    # can't flake.
+    print("\n=== 28. Per-account login lockout (LoginGuard: threshold -> refuse-while-locked -> reset) ===")
+    email = "lockme@ex.co"
+    make_paid_user(email, real_login=True)              # sets a known password + proves login works
+    con = dbconn(); uid = con.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()[0]; con.close()
+    pw = "Passw0rd!" + email[:3]
+    # Seed the counter to one below the threshold (MaxFails=10) so a single wrong attempt trips the lock.
+    con = dbconn(); con.execute("UPDATE users SET failed_logins=9, lockout_until=NULL WHERE id=?", (uid,)); con.commit(); con.close()
+    c, r = jget("POST", "/api/login", body={"email": email, "password": "wrong-" + pw})
+    chk("28a the threshold-crossing wrong password is rejected (invalid_credentials)", c == 401 and r.get("error") == "invalid_credentials", (c, r))
+    con = dbconn(); row = con.execute("SELECT failed_logins, lockout_until FROM users WHERE id=?", (uid,)).fetchone(); con.close()
+    chk("28b crossing the threshold sets lockout_until and resets the failure counter", bool(row) and row[1] is not None and (row[0] or 0) == 0, row)
+    # While locked, even the CORRECT password is refused (IsLocked short-circuits the password verify).
+    c, r2 = jget("POST", "/api/login", body={"email": email, "password": pw})
+    chk("28c the correct password is refused while locked (account_locked, 429)", c == 429 and r2.get("error") == "account_locked", (c, r2))
+    # Simulate the lock expiring (its natural clearing path) — the correct password now succeeds and the
+    # successful login clears the counter (OnSuccess).
+    con = dbconn(); con.execute("UPDATE users SET lockout_until=NULL WHERE id=?", (uid,)); con.commit(); con.close()
+    c, r3 = jget("POST", "/api/login", body={"email": email, "password": pw})
+    chk("28d after the lock clears the correct password logs in again", c == 200 and bool(r3.get("token")), (c, r3.get("error")))
+    con = dbconn(); row = con.execute("SELECT failed_logins, lockout_until FROM users WHERE id=?", (uid,)).fetchone(); con.close()
+    chk("28e a successful login clears the failure counter and lockout (OnSuccess)", bool(row) and (row[0] or 0) == 0 and row[1] is None, row)
 
 if __name__ == "__main__":
     main()
