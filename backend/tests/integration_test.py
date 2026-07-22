@@ -3074,6 +3074,7 @@ def run(proc):
     test_careers_module(admin)
     test_events_module(admin)
     test_announcement_config(admin)
+    test_notifications_config(admin)
 
     print("\n(assertions complete)")
 
@@ -3834,6 +3835,39 @@ def test_announcement_config(admin):
     c, pub5 = jget("GET", "/api/announcement")
     chk("45i re-enabling with a new date re-resolves the token in the title",
         pub5.get("enabled") is True and "2027-12-31" in str(pub5.get("title", "")), (pub5.get("enabled"), pub5.get("title")))
+
+def test_notifications_config(admin):
+    # Incremental Testing Programme — the operator notification-service config (Endpoints/Notifications.cs)
+    # had no dedicated coverage: recipient list + per-event toggles (content-gated), a resolved fan-out list,
+    # and a test-send that records to notification_history. No application changes.
+    print("\n=== 46. Notifications: recipients + per-event toggles + test-send + RBAC ===")
+    vtok = globals().get("_VIEWER_TOK")
+    chk("46a the admin notifications read needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/notifications", token=vtok)[0] == 403)
+    c, cfg = jget("GET", "/api/admin/notifications", token=admin)
+    chk("46b admin sees the config (events, toggles, resolved recipients)",
+        c == 200 and isinstance(cfg.get("events"), list) and isinstance(cfg.get("toggles"), dict) and "resolved" in cfg, list(cfg.keys())[:6] if isinstance(cfg, dict) else cfg)
+    # Set a recipient — it appears in the raw setting and the resolved fan-out list.
+    jget("POST", "/api/admin/notifications", token=admin, body={"recipients": "ops-46@ex.co"})
+    c, cfg2 = jget("GET", "/api/admin/notifications", token=admin)
+    chk("46c a saved recipient appears in the raw setting and the resolved fan-out",
+        "ops-46@ex.co" in str(cfg2.get("recipients", "")) and "ops-46@ex.co" in [str(x) for x in cfg2.get("resolved", [])], (cfg2.get("recipients"), cfg2.get("resolved")))
+    # Toggle an event off, then back on — the stored flag round-trips.
+    jget("POST", "/api/admin/notifications", token=admin, body={"enrollment": False})
+    c, cfg3 = jget("GET", "/api/admin/notifications", token=admin)
+    con = dbconn(); flag = con.execute("SELECT svalue FROM site_settings WHERE skey='notify_enrollment_enabled'").fetchone(); con.close()
+    chk("46d toggling an event off persists (toggle false + stored '0')",
+        cfg3.get("toggles", {}).get("enrollment") in (False, 0) and bool(flag) and flag[0] == "0", (cfg3.get("toggles", {}).get("enrollment"), flag))
+    jget("POST", "/api/admin/notifications", token=admin, body={"enrollment": True})
+    c, cfg4 = jget("GET", "/api/admin/notifications", token=admin)
+    chk("46e toggling it back on round-trips", cfg4.get("toggles", {}).get("enrollment") in (True, 1), cfg4.get("toggles", {}).get("enrollment"))
+    # A test-send fans out to the resolved recipients and records to notification_history.
+    c, test = jget("POST", "/api/admin/notifications/test", token=admin)
+    con = dbconn(); trow = con.execute("SELECT COUNT(*) FROM notification_history WHERE related_type='test' AND recipient=?", ("ops-46@ex.co",)).fetchone()[0]; con.close()
+    chk("46f a test-send records a 'test' delivery for the configured recipient", test.get("ok") is True and trow >= 1, (test, trow))
+    # The write is content-gated.
+    chk("46g the admin notifications write needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("POST", "/api/admin/notifications", token=vtok, body={"recipients": "x@y.co"})[0] == 403)
 
 if __name__ == "__main__":
     main()
