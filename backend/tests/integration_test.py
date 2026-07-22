@@ -3078,6 +3078,7 @@ def run(proc):
     test_member_directory(admin)
     test_forum_module(admin)
     test_campaigns_module(admin)
+    test_badges_module(admin)
 
     print("\n(assertions complete)")
 
@@ -4147,6 +4148,114 @@ def test_campaigns_module(admin):
     c, sl2 = jget("GET", "/api/admin/suppression", token=admin)
     chk("49n removing a manual suppression drops it from the list",
         c == 200 and all(r.get("email") != "sub-supp-49@ex.co" for r in sl2.get("rows", [])), None)
+
+def test_badges_module(admin):
+    # Incremental Testing Programme — native Open Badges 2.0 (Endpoints/Badges.cs) had no coverage.
+    # The whole surface is deliberately public (badge validators must read it unauthenticated), so there
+    # is no RBAC gate to prove; the security contract instead is: the recipient is a salted SHA-256 email
+    # hash (the raw email never appears), revocation is flagged without leaking the recipient, and
+    # test-account credentials are excluded (parity with /api/verify). No application changes.
+    print("\n=== 50. Badges: Open Badges issuer/class/assertion + hashed recipient + revocation/expiry ===")
+    tok, uid = make_paid_user("badge-holder-50@ex.co")
+    con = dbconn()
+    con.execute("INSERT INTO issued_credentials(credential_id,user_id,holder_name,certification_id,status) VALUES(?,?,?,?, 'active')",
+                ("PCI-BDG-50A", uid, "Bea Badger", 1))
+    con.commit(); con.close()
+
+    # 50a. The issuer profile is a valid Open Badges Issuer that self-references its hosted id.
+    c, iss = jget("GET", "/api/badges/issuer")
+    chk("50a issuer profile: type Issuer, self-referencing id, org name, image URL",
+        c == 200 and iss.get("type") == "Issuer" and str(iss.get("id", "")).endswith("/api/badges/issuer")
+        and iss.get("name") == "Project Controls Institute" and str(iss.get("image", "")).endswith("/api/badges/issuer/image"), iss)
+
+    # 50b. Badge images are branded SVGs; an unknown cert ref falls back to the PCI mark (no 500).
+    c1, svg = jget("GET", "/api/badges/image/PCL-AI")
+    c2, fsvg = jget("GET", "/api/badges/image/does-not-exist")
+    chk("50b badge image is an SVG carrying the cert acronym; unknown ref falls back to 'PCI'",
+        c1 == 200 and str(svg).startswith("<svg") and ">PCI PCL-AI</text>" in str(svg)
+        and c2 == 200 and ">PCI</text>" in str(fsvg), str(svg)[:80])
+
+    # 50c. The BadgeClass resolves by code AND by numeric id, both canonicalised to the code-based id.
+    c1, bc = jget("GET", "/api/badges/class/PCL-AI")
+    c2, bc2 = jget("GET", "/api/badges/class/1")
+    chk("50c BadgeClass by code and by id: canonical id, name, image, criteria slug, issuer link",
+        c1 == 200 and bc.get("type") == "BadgeClass" and str(bc.get("id", "")).endswith("/api/badges/class/PCL-AI")
+        and bool(bc.get("name")) and str(bc.get("image", "")).endswith("/api/badges/image/PCL-AI")
+        and "/certifications/pcl-ai" in str(bc.get("criteria", {}).get("id", ""))
+        and str(bc.get("issuer", "")).endswith("/api/badges/issuer")
+        and c2 == 200 and str(bc2.get("id", "")).endswith("/api/badges/class/PCL-AI"), bc)
+    # 50d. An unknown certification ref is a clean 404.
+    c, nf = jget("GET", "/api/badges/class/no-such-cert")
+    chk("50d unknown BadgeClass ref is 404 not_found", c == 404 and nf.get("error") == "not_found", (c, nf))
+
+    # 50e. The Assertion is HostedBadge-verified: its id is its own URL, badge links the class,
+    #      issuedOn is ISO-8601 Zulu and evidence points at the public verify page.
+    c, a = jget("GET", "/api/badges/assertion/PCI-BDG-50A")
+    chk("50e assertion: self-id, HostedBadge verification, class link, ISO issuedOn, verify evidence",
+        c == 200 and a.get("type") == "Assertion" and str(a.get("id", "")).endswith("/api/badges/assertion/PCI-BDG-50A")
+        and a.get("verification", {}).get("type") == "HostedBadge" and str(a.get("badge", "")).endswith("/api/badges/class/PCL-AI")
+        and "T" in str(a.get("issuedOn", "")) and str(a.get("issuedOn", "")).endswith("Z")
+        and "verify.html?id=PCI-BDG-50A" in str(a.get("evidence", "")), a)
+
+    # 50f. Recipient privacy: a salted SHA-256 of the lowercased email (salt = the public credential id),
+    #      recomputable by a verifier the holder shares their email with — and the raw email NEVER appears.
+    rec = a.get("recipient", {})
+    expected = "sha256$" + sha256hex("badge-holder-50@ex.co" + "PCI-BDG-50A")
+    chk("50f recipient is the salted email hash and the raw email never appears in the assertion",
+        rec.get("hashed") is True and rec.get("salt") == "PCI-BDG-50A" and rec.get("identity") == expected
+        and "badge-holder-50@ex.co" not in json.dumps(a), rec)
+
+    # 50g. The credential id is matched case-insensitively (shared links survive lowercasing).
+    c, al = jget("GET", "/api/badges/assertion/pci-bdg-50a")
+    chk("50g a lowercased credential id still resolves to the same recipient",
+        c == 200 and al.get("recipient", {}).get("salt") == "PCI-BDG-50A", (c, al.get("recipient")))
+
+    # 50h. The public badge-page view summarises the credential with share/verify links.
+    c, v = jget("GET", "/api/badges/view/PCI-BDG-50A")
+    chk("50h badge view: found, active+valid, holder, acronym, assertion/image/verify links",
+        c == 200 and v.get("found") is True and v.get("state") == "active" and v.get("valid") is True
+        and v.get("holder_name") == "Bea Badger" and v.get("certification_acronym") == "PCI PCL-AI"
+        and str(v.get("assertion_url", "")).endswith("/api/badges/assertion/PCI-BDG-50A")
+        and "verify.html?id=PCI-BDG-50A" in str(v.get("verify_url", "")), v)
+
+    # 50i. Revocation: the assertion still resolves (per Open Badges) but is flagged revoked, with NO
+    #      recipient block (no hash leak for a revoked holder); the view mirrors revoked/invalid.
+    con = dbconn(); con.execute("UPDATE issued_credentials SET status='revoked' WHERE credential_id=?", ("PCI-BDG-50A",)); con.commit(); con.close()
+    c, ar = jget("GET", "/api/badges/assertion/PCI-BDG-50A")
+    c2, vr = jget("GET", "/api/badges/view/PCI-BDG-50A")
+    chk("50i a revoked credential is flagged revoked with a reason and no recipient block; view mirrors it",
+        c == 200 and ar.get("revoked") is True and bool(ar.get("revocationReason")) and "recipient" not in ar
+        and vr.get("state") == "revoked" and vr.get("valid") is False, (ar, vr.get("state")))
+
+    # 50j. Expiry: a lapsed expires_at (status still 'active') surfaces as an ISO 'expires' on the
+    #      assertion, and the view computes state 'expired' / valid false (parity with /api/verify).
+    con = dbconn()
+    con.execute("INSERT INTO issued_credentials(credential_id,user_id,holder_name,certification_id,status,expires_at) VALUES(?,?,?,?, 'active', ?)",
+                ("PCI-BDG-50B", uid, "Bea Badger", 1, "2020-01-01 00:00:00"))
+    con.commit(); con.close()
+    c, ae = jget("GET", "/api/badges/assertion/PCI-BDG-50B")
+    c2, ve = jget("GET", "/api/badges/view/PCI-BDG-50B")
+    chk("50j a lapsed credential carries an ISO expires and the view reads expired/invalid",
+        c == 200 and ae.get("expires") == "2020-01-01T00:00:00Z" and ve.get("state") == "expired" and ve.get("valid") is False,
+        (ae.get("expires"), ve.get("state")))
+
+    # 50k. Test-account credentials are excluded from the public badge surface (parity with /api/verify).
+    tok2, uid2 = make_paid_user("badge-test-50@ex.co")
+    con = dbconn()
+    con.execute("UPDATE users SET is_test=1 WHERE id=?", (uid2,))
+    con.execute("INSERT INTO issued_credentials(credential_id,user_id,holder_name,certification_id,status) VALUES(?,?,?,?, 'active')",
+                ("PCI-BDG-50C", uid2, "Testy Tester", 1))
+    con.commit(); con.close()
+    c1, at = jget("GET", "/api/badges/assertion/PCI-BDG-50C")
+    c2, vt = jget("GET", "/api/badges/view/PCI-BDG-50C")
+    chk("50k a test-account credential is invisible: assertion 404 and view not found",
+        c1 == 404 and at.get("error") == "not_found" and vt.get("found") is False, (c1, vt))
+
+    # 50l. An unknown credential id is a clean miss on both surfaces.
+    c1, an = jget("GET", "/api/badges/assertion/PCI-NOPE-50")
+    c2, vn = jget("GET", "/api/badges/view/PCI-NOPE-50")
+    chk("50l an unknown credential id: assertion 404 and view not found",
+        c1 == 404 and an.get("error") == "not_found" and vn.get("found") is False, (c1, vn))
 
 if __name__ == "__main__":
     main()
