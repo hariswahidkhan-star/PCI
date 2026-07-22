@@ -3094,6 +3094,7 @@ def run(proc):
     test_admin_i18n(admin)
     test_honorary_idv(admin)
     test_comms_centre(admin)
+    test_public_documents(admin)
 
     print("\n(assertions complete)")
 
@@ -4887,6 +4888,153 @@ def test_comms_centre(admin):
     con.execute("UPDATE comm_sender_profiles SET is_default=0 WHERE `key` IN ('ops55','mkt55')")
     con.execute("UPDATE comm_sender_profiles SET is_default=1 WHERE `key`=?", ("no-reply",))
     con.commit(); con.close()
+
+def test_public_documents(admin):
+    # Incremental Testing Programme §57 — Public Downloads Centre (Endpoints/PublicDocuments.cs, 12 routes,
+    # ZERO coverage): the anonymous catalogue/detail/file surfaces vs the 'documents'-gated admin module.
+    # Proves the serving invariant (only status='published' AND visibility='public' AND is_current=1 is ever
+    # distributed) across the full version chain (draft → publish → replace → supersede → withdraw), byte-exact
+    # file integrity + download analytics, and the public projection that never leaks storage/review internals.
+    print("\n=== 57. Public Downloads Centre: lifecycle on the public surface, byte integrity, privacy ===")
+    png = base64.b64decode(TINY_PNG.split(",", 1)[1])
+
+    # The seeded register is read-only for us: published+current rows only, and the public projection
+    # must never contain a storage reference, hash or internal review field anywhere in the JSON.
+    c, cat = jget("GET", "/api/public/documents")
+    rows = cat.get("rows", []) if isinstance(cat, dict) else []
+    seeded = next((r for r in rows if r.get("doc_group") == "global-privacy-policy"), None)
+    blob = json.dumps(cat)
+    chk("57a the anonymous catalogue serves the seeded register (published+current only) and never leaks storage/review internals",
+        c == 200 and bool(seeded) and seeded.get("has_file") is True
+        and all(r.get("status") == "published" and r.get("is_current") is True for r in rows)
+        and all(k not in blob for k in ('"storage_ref"', '"sha256"', '"legal_review_status"', '"visibility"', '"created_by"')),
+        (len(rows), bool(seeded)))
+
+    chk("57b the admin module refuses without a token (401 on list and create)",
+        jget("GET", "/api/admin/public-documents")[0] == 401
+        and jget("POST", "/api/admin/public-documents", body={"title": "x57"})[0] == 401)
+
+    vtok = globals().get("_VIEWER_TOK")
+    c, fb = jget("GET", "/api/admin/public-documents", token=vtok)
+    chk("57c a viewer admin (overview+reports only) is refused — the module reuses the 'documents' permission (403)",
+        bool(vtok) and c == 403 and fb.get("error") == "forbidden" and fb.get("section") == "documents"
+        and jget("POST", "/api/admin/public-documents", token=vtok, body={"title": "x57"})[0] == 403, (c, fb))
+
+    # Create the working document plus a throwaway draft that also probes group-collision + category coercion.
+    c, mk = jget("POST", "/api/admin/public-documents", token=admin,
+                 body={"title": "Zephyr57 Fees Notice", "description": "Zephyr57 notice for integration coverage.",
+                       "category": "fees-and-refunds"})
+    did = mk.get("id"); grp = mk.get("doc_group")
+    c2, tk = jget("POST", "/api/admin/public-documents", token=admin,
+                  body={"title": "Zephyr57 Throwaway", "doc_group": "zephyr57-fees-notice", "category": "totally-bogus-57"})
+    tid = tk.get("id"); tgrp = tk.get("doc_group") or ""
+    c3, det = jget("GET", f"/api/admin/public-documents/{did}", token=admin)
+    doc = det.get("document", {})
+    c4, tdet = jget("GET", f"/api/admin/public-documents/{tid}", token=admin)
+    chk("57d create slugs the doc_group from the title, uniquifies a colliding group, coerces an unknown category to 'general', and lands as draft v1.0 (en)",
+        c == 200 and grp == "zephyr57-fees-notice" and c2 == 200
+        and tgrp.startswith("zephyr57-fees-notice-") and tgrp != grp
+        and c3 == 200 and doc.get("status") == "draft" and doc.get("version") == "1.0" and doc.get("language") == "en"
+        and tdet.get("document", {}).get("category") == "general", (grp, tgrp, doc.get("status")))
+
+    c, r = jget("PATCH", f"/api/admin/public-documents/{did}", token=admin, body={"certification": "no-such-cert-57"})
+    c2, r2 = jget("PATCH", f"/api/admin/public-documents/{did}", token=admin,
+                  body={"description": "Zephyr57 revised notice.", "owner": "Registrar 57"})
+    c3, det = jget("GET", f"/api/admin/public-documents/{did}", token=admin)
+    chk("57e metadata PATCH refuses an unknown certification (400 invalid_certification) and stores ordinary field edits",
+        c == 400 and r.get("error") == "invalid_certification" and c2 == 200 and r2.get("ok") is True
+        and det.get("document", {}).get("description") == "Zephyr57 revised notice."
+        and det.get("document", {}).get("owner") == "Registrar 57", (c, r, det.get("document", {}).get("owner")))
+
+    c, pl = jget("GET", "/api/public/documents?q=zephyr57")
+    c2, pd = jget("GET", f"/api/public/documents/{grp}")
+    st, _b, _ct = _raw_get(f"/api/public/documents/{grp}/file")
+    chk("57f a draft is invisible on every public surface (absent from the catalogue; detail and file both 404)",
+        c == 200 and len(pl.get("rows", [])) == 0 and c2 == 404 and pd.get("error") == "not_found" and st == 404,
+        (len(pl.get("rows", [])), c2, st))
+
+    c, r = jget("POST", f"/api/admin/public-documents/{did}/status", token=admin, body={"status": "published"})
+    chk("57g publishing without an attached file is refused (400 no_file: 'Attach a file before publishing.')",
+        c == 400 and r.get("error") == "no_file" and "Attach a file" in str(r.get("message", "")), r)
+
+    c, up = jget("POST", f"/api/admin/public-documents/{did}/file", token=admin,
+                 body={"data_uri": TINY_PNG, "filename": "zephyr57.png"})
+    c2, det = jget("GET", f"/api/admin/public-documents/{did}", token=admin)
+    doc = det.get("document", {})
+    st, abody, actype = _raw_get(f"/api/admin/public-documents/{did}/file", token=admin)
+    chk("57h an uploaded file records exact size + sha256 and round-trips byte-exact through the admin preview (image/png)",
+        c == 200 and up.get("size_bytes") == len(png)
+        and doc.get("sha256") == hashlib.sha256(png).hexdigest() and doc.get("mime") == "image/png"
+        and doc.get("has_file") is True and st == 200 and abody == png and actype.startswith("image/png"),
+        (up, doc.get("sha256")))
+
+    c, r = jget("POST", f"/api/admin/public-documents/{did}/file", token=admin, body={"data_uri": "hello57"})
+    c2, r2 = jget("POST", f"/api/admin/public-documents/{did}/file", token=admin,
+                  body={"data_uri": "data:text/plain;base64," + base64.b64encode(b"zephyr 57").decode()})
+    chk("57i the storage intake refuses a non-data-URI (not_a_data_uri) and a disallowed MIME (file_type_not_allowed)",
+        c == 400 and r.get("error") == "not_a_data_uri" and c2 == 400 and r2.get("error") == "file_type_not_allowed", (r, r2))
+
+    c, r = jget("POST", f"/api/admin/public-documents/{did}/status", token=admin, body={"status": "published"})
+    c2, pd = jget("GET", f"/api/public/documents/{grp}")
+    d = pd.get("document", {})
+    c3, q1 = jget("GET", "/api/public/documents?q=zephyr57")
+    c4, q2 = jget("GET", "/api/public/documents?category=fees-and-refunds")
+    chk("57j publishing puts it live: public detail 200 (published, current, stamped published_at), found by search and category, still leak-free",
+        c == 200 and r.get("status") == "published" and c2 == 200
+        and d.get("status") == "published" and d.get("is_current") is True and bool(d.get("published_at"))
+        and len(q1.get("rows", [])) == 1 and q1["rows"][0].get("doc_group") == grp
+        and any(x.get("doc_group") == grp for x in q2.get("rows", []))
+        and all(k not in json.dumps(pd) for k in ('"storage_ref"', '"sha256"', '"legal_review_status"')), (c2, d.get("status")))
+
+    st, fbody, ctype = _raw_get(f"/api/public/documents/{grp}/file")
+    c2, pd = jget("GET", f"/api/public/documents/{grp}")
+    con = dbconn()
+    ndl = con.execute("SELECT COUNT(*) FROM public_document_downloads WHERE doc_group=?", (grp,)).fetchone()[0]
+    con.close()
+    chk("57k the public file serves anonymously byte-exact as image/png, bumps download_count and writes a download-audit row",
+        st == 200 and fbody == png and ctype.startswith("image/png")
+        and pd.get("document", {}).get("download_count") == 1 and ndl == 1, (st, ctype, ndl))
+
+    c, rp = jget("POST", f"/api/admin/public-documents/{did}/replace", token=admin, body={})
+    nid = rp.get("id")
+    c2, det = jget("GET", f"/api/admin/public-documents/{nid}", token=admin)
+    nd = det.get("document", {})
+    c3, pd = jget("GET", f"/api/public/documents/{grp}")
+    chk("57l replace mints a draft v1.1 in the same group (file carried forward, supersedes_id set) while the public surface still serves v1.0",
+        c == 200 and rp.get("version") == "1.1" and nid != did
+        and nd.get("status") == "draft" and nd.get("doc_group") == grp and nd.get("has_file") is True
+        and nd.get("supersedes_id") == did and nd.get("is_current") is False
+        and pd.get("document", {}).get("id") == did, (rp, nd.get("status")))
+
+    jget("POST", f"/api/admin/public-documents/{nid}/status", token=admin, body={"status": "published"})
+    c, pd = jget("GET", f"/api/public/documents/{grp}")
+    old = next((v for v in pd.get("versions", []) if v.get("id") == did), None)
+    c2, q1 = jget("GET", "/api/public/documents?q=zephyr57")
+    mine = [x for x in q1.get("rows", []) if x.get("doc_group") == grp]
+    st, obody, _ = _raw_get(f"/api/public/documents/{grp}/file?v={did}")
+    chk("57m publishing v1.1 demotes v1.0 to superseded: one current catalogue row, both versions in the public history, and the old explicit ?v= link still resolves byte-exact",
+        c == 200 and pd.get("document", {}).get("id") == nid and pd.get("document", {}).get("version") == "1.1"
+        and old is not None and old.get("status") == "superseded"
+        and len(mine) == 1 and mine[0].get("id") == nid and st == 200 and obody == png, (old, len(mine), st))
+
+    st1, _r1, _ = _raw_get(f"/api/public/documents/global-privacy-policy/file?v={did}")
+    st2, _r2, _ = _raw_get("/api/public/documents/..%2F..%2Fstorage%2Fsecrets/file")
+    c3, r3 = jget("GET", "/api/public/documents/no-such-group-57")
+    c4, r4 = jget("POST", f"/api/admin/public-documents/{nid}/status", token=admin, body={"status": "vaporised57"})
+    chk("57n a cross-group ?v= probe, a traversal group and an unknown group all miss (404), and an unknown lifecycle status is rejected (400 bad_status)",
+        st1 == 404 and st2 == 404 and c3 == 404 and r3.get("error") == "not_found"
+        and c4 == 400 and r4.get("error") == "bad_status", (st1, st2, c3, c4))
+
+    c, r = jget("POST", f"/api/admin/public-documents/{nid}/status", token=admin, body={"status": "withdrawn"})
+    c2, pd = jget("GET", f"/api/public/documents/{grp}")
+    st, _b, _ = _raw_get(f"/api/public/documents/{grp}/file")
+    c3, dl = jget("DELETE", f"/api/admin/public-documents/{nid}", token=admin)
+    c4, dl2 = jget("DELETE", f"/api/admin/public-documents/{tid}", token=admin)
+    c5, _gone = jget("GET", f"/api/admin/public-documents/{tid}", token=admin)
+    chk("57o withdrawing pulls the document from the public web immediately; only a draft can be hard-deleted (withdrawn → 400 not_deletable) and the deleted draft is gone",
+        c == 200 and r.get("status") == "withdrawn" and c2 == 404 and st == 404
+        and c3 == 400 and dl.get("error") == "not_deletable" and "Only a draft" in str(dl.get("message", ""))
+        and c4 == 200 and dl2.get("ok") is True and c5 == 404, (c2, st, c3, c4, c5))
 
 if __name__ == "__main__":
     main()
