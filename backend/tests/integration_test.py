@@ -3075,6 +3075,7 @@ def run(proc):
     test_events_module(admin)
     test_announcement_config(admin)
     test_notifications_config(admin)
+    test_member_directory(admin)
 
     print("\n(assertions complete)")
 
@@ -3868,6 +3869,57 @@ def test_notifications_config(admin):
     # The write is content-gated.
     chk("46g the admin notifications write needs the 'content' permission (viewer 403)",
         bool(vtok) and jget("POST", "/api/admin/notifications", token=vtok, body={"recipients": "x@y.co"})[0] == 403)
+
+def test_member_directory(admin):
+    # Incremental Testing Programme — the public member directory (Endpoints/Directory.cs) had no dedicated
+    # coverage: visibility is gated on BOTH an opt-in AND holding an active credential, with per-field consent
+    # (country/org/LinkedIn) and admin unlisting. No application changes.
+    print("\n=== 47. Member directory: opt-in + credential-gated visibility + per-field consent + admin unlist ===")
+    tok, uid = make_paid_user("dir-listed-47@ex.co")
+    # A member only appears once they hold an active credential — seed one, and ensure the account is active.
+    con = dbconn()
+    con.execute("INSERT INTO issued_credentials(credential_id,user_id,holder_name,credential,status) VALUES(?,?,?,?, 'active')",
+                ("PCI-DIR-47A", uid, "Dana Director", "PCP-AI"))
+    con.execute("UPDATE users SET status='active' WHERE id=?", (uid,))
+    con.commit(); con.close()
+    jget("PATCH", "/api/me/profile", token=tok, body={"country": "Canada", "company": "Acme", "current_role": "PC Lead"})
+    # Management requires auth.
+    chk("47a managing a directory listing requires authentication (401)", jget("GET", "/api/me/directory")[0] == 401)
+    # Eligible (holds a credential) but not opted in by default → not public.
+    c, mine = jget("GET", "/api/me/directory", token=tok)
+    chk("47b a credential-holder is eligible but not opted in by default",
+        c == 200 and mine.get("eligible") is True and mine.get("opt_in") in (False, 0), mine)
+    c, pub0 = jget("GET", "/api/directory")
+    chk("47c an opted-out member does not appear publicly", all(r.get("id") != uid for r in pub0.get("rows", [])), None)
+    # Opt in, set a headline, hide the country.
+    jget("POST", "/api/me/directory", token=tok, body={"opt_in": True, "headline": "Project controls leader", "show_country": False})
+    c, mine2 = jget("GET", "/api/me/directory", token=tok)
+    chk("47d opting in persists the prefs (opt_in, headline, show_country off)",
+        mine2.get("opt_in") in (True, 1) and mine2.get("headline") == "Project controls leader" and mine2.get("show_country") in (False, 0), mine2)
+    # Now public — with per-field consent applied (country hidden) and credentials surfaced.
+    c, pub1 = jget("GET", "/api/directory")
+    row = next((r for r in pub1.get("rows", []) if r.get("id") == uid), None)
+    chk("47e the opted-in member appears with headline + credentials, country hidden by consent",
+        bool(row) and row.get("headline") == "Project controls leader" and row.get("country") is None
+        and any(cc.get("acronym") for cc in row.get("credentials", [])), row)
+    # A second member opts in but holds NO credential → not eligible, not public.
+    tok2, uid2 = make_paid_user("dir-nocred-47@ex.co")
+    jget("POST", "/api/me/directory", token=tok2, body={"opt_in": True})
+    c, mine3 = jget("GET", "/api/me/directory", token=tok2)
+    c, pub2 = jget("GET", "/api/directory")
+    chk("47f an opted-in member without an active credential is NOT eligible and NOT public",
+        mine3.get("eligible") in (False, 0) and all(r.get("id") != uid2 for r in pub2.get("rows", [])), (mine3.get("eligible"), uid2))
+    # Admin moderation is members-gated and can unlist a member.
+    vtok = globals().get("_VIEWER_TOK")
+    chk("47g the admin directory needs the 'members' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/directory", token=vtok)[0] == 403)
+    c, adm = jget("GET", "/api/admin/directory", token=admin)
+    chk("47h the admin sees the listed member", c == 200 and any(r.get("id") == uid for r in adm.get("rows", [])), None)
+    jget("POST", f"/api/admin/directory/{uid}/unlist", token=admin)
+    c, pub3 = jget("GET", "/api/directory")
+    con = dbconn(); optin = con.execute("SELECT directory_opt_in FROM student_profiles WHERE user_id=?", (uid,)).fetchone()[0]; con.close()
+    chk("47i admin unlist removes the member from the public directory and clears opt_in",
+        all(r.get("id") != uid for r in pub3.get("rows", [])) and (optin in (0, None)), optin)
 
 if __name__ == "__main__":
     main()
