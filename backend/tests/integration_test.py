@@ -3093,6 +3093,7 @@ def run(proc):
     test_admin_seo(admin)
     test_admin_i18n(admin)
     test_honorary_idv(admin)
+    test_comms_centre(admin)
 
     print("\n(assertions complete)")
 
@@ -4695,6 +4696,197 @@ def test_honorary_idv(admin):
     c, ex = jget("GET", f"/api/honorary-idv/{raw3}")
     chk("54s a lapsed link is 410 Gone with the expired reason (never a silent 404)",
         c == 410 and ex.get("error") == "expired", (c, ex))
+
+def test_comms_centre(admin):
+    # Incremental Testing Programme §55 — Unified Communications Centre (Endpoints/CommsCentre.cs +
+    # Core/Comms.cs + Core/OutboxDispatcher.cs, 'comms' permission): ZERO prior coverage. Proves the
+    # outbox delivery lifecycle end-to-end (no provider configured → the console sink, so rows really
+    # drain to 'sent'), template publish/version state machine, the campaign approval gate with
+    # consent + suppression + dedup, the signed one-click unsubscribe, and fail-closed inbound webhooks.
+    print("\n=== 55. Communications Centre: outbox lifecycle, campaign consent/suppression, unsubscribe, webhook guards ===")
+
+    def _ob(oid):
+        # GET one outbox message, waiting out any transient dispatcher state (bg drain runs every ~15s).
+        c, o = 0, {}
+        for _ in range(10):
+            c, o = jget("GET", f"/api/admin/comms/outbox/{oid}", token=admin)
+            if (o.get("message") or {}).get("status") not in ("queued", "processing", "scheduled", "retrying"):
+                break
+            time.sleep(0.3)
+        return c, o
+
+    # --- gate + provider secrecy ---
+    c1, r1 = jget("GET", "/api/admin/comms/overview")
+    c2, r2 = jget("POST", "/api/admin/comms/campaigns/999/approve")
+    chk("55a the comms centre requires an admin token on reads and writes (401 unauthorized)",
+        c1 == 401 and r1.get("error") == "unauthorized" and c2 == 401, (c1, c2))
+    vtok = globals().get("_VIEWER_TOK")
+    chk("55b a viewer admin without the 'comms' permission is refused reads and writes (403)",
+        bool(vtok) and jget("GET", "/api/admin/comms/overview", token=vtok)[0] == 403
+        and jget("POST", "/api/admin/comms/suppression", token=vtok, body={"address": "probe-55@ex.co"})[0] == 403)
+    c, pv = jget("GET", "/api/admin/comms/providers", token=admin)
+    chk("55c provider settings report configuration booleans ONLY — never a secret value",
+        c == 200 and isinstance(pv, dict) and len(pv) > 0 and all(isinstance(v, bool) for v in pv.values()), pv)
+
+    # --- sender profiles: creating a new default clears every other default ---
+    c1, s1 = jget("POST", "/api/admin/comms/senders", token=admin, body={
+        "key": "ops55", "name": "Operations 55", "display_name": "PCI Ops 55",
+        "from_email": "ops55@pci.test", "reply_to": "ops55@pci.test", "category": "operational", "is_default": 1})
+    c2, s2 = jget("POST", "/api/admin/comms/senders", token=admin, body={
+        "key": "mkt55", "name": "Marketing 55", "display_name": "PCI Mkt 55",
+        "from_email": "mkt55@pci.test", "category": "marketing", "is_default": 1})
+    con = dbconn()
+    dflt = dict(con.execute("SELECT `key`, is_default FROM comm_sender_profiles WHERE `key` IN ('ops55','mkt55')").fetchall())
+    con.close()
+    chk("55d creating a new default sender clears the previous default (exactly one default)",
+        c1 == 200 and s1.get("ok") and c2 == 200 and s2.get("ok")
+        and int(dflt.get("ops55", 9)) == 0 and int(dflt.get("mkt55", 0)) == 1, dflt)
+
+    # --- templates: draft → publish gated on declared variables; edits snapshot + re-draft ---
+    c, t = jget("POST", "/api/admin/comms/templates", token=admin, body={
+        "key": "welcome55", "name": "Welcome 55", "kind": "email", "category": "operational",
+        "subject": "Hi {{first_name}}", "body": "<p>Welcome aboard.</p>", "required_vars": "first_name,cta_link"})
+    tid = t.get("id")
+    c2, pub = jget("POST", f"/api/admin/comms/templates/{tid}/status", token=admin, body={"status": "published"})
+    con = dbconn(); trow = con.execute("SELECT status, version FROM comm_templates WHERE id=?", (tid,)).fetchone(); con.close()
+    chk("55e a new template lands as a draft and publish is refused while a declared variable is missing",
+        c == 200 and bool(tid) and c2 == 400 and pub.get("error") == "missing_variables"
+        and "cta_link" in (pub.get("missing") or []) and trow and trow[0] == "draft" and int(trow[1]) == 1, (pub, trow))
+    c, up = jget("POST", "/api/admin/comms/templates", token=admin, body={
+        "id": tid, "key": "welcome55", "name": "Welcome 55", "kind": "email", "category": "operational",
+        "subject": "Hi {{first_name}}", "body": "<p>Hi {{first_name}}, start here: {{cta_link}}</p>",
+        "required_vars": "first_name,cta_link"})
+    con = dbconn()
+    trow2 = con.execute("SELECT status, version FROM comm_templates WHERE id=?", (tid,)).fetchone()
+    snap = con.execute("SELECT version, body FROM comm_template_versions WHERE template_id=? ORDER BY id DESC", (tid,)).fetchone()
+    con.close()
+    chk("55f editing a template snapshots the prior version and returns it to draft (v1 preserved, now v2 draft)",
+        c == 200 and up.get("ok") and tuple(trow2) == ("draft", 2)
+        and snap and int(snap[0]) == 1 and "Welcome aboard" in (snap[1] or ""), (trow2, snap))
+    c, pub2 = jget("POST", f"/api/admin/comms/templates/{tid}/status", token=admin, body={"status": "published"})
+    con = dbconn()
+    prow = con.execute("SELECT status, approved_by, published_at FROM comm_templates WHERE id=?", (tid,)).fetchone()
+    con.close()
+    chk("55g once every declared variable is present the template publishes, stamped with approver + time",
+        c == 200 and pub2.get("status") == "published" and prow
+        and prow[0] == "published" and prow[1] is not None and prow[2] is not None, prow)
+    chk("55h bad inputs are refused with exact codes: template key_required/bad_status, compose body_required/no_recipient",
+        jget("POST", "/api/admin/comms/templates", token=admin, body={"name": "no key 55"})[1].get("error") == "key_required"
+        and jget("POST", f"/api/admin/comms/templates/{tid}/status", token=admin, body={"status": "live"})[1].get("error") == "bad_status"
+        and jget("POST", "/api/admin/comms/compose", token=admin, body={"channel": "email", "subject": "x", "body": ""})[1].get("error") == "body_required"
+        and jget("POST", "/api/admin/comms/compose", token=admin, body={"channel": "email", "subject": "x", "body": "<p>x</p>"})[1].get("error") == "no_recipient")
+
+    # --- outbox lifecycle: compose delivers for real (console sink), terminal states are guarded ---
+    c0, dr = jget("POST", "/api/admin/comms/outbox/drain", token=admin)   # clear any backlog first
+    c, cm = jget("POST", "/api/admin/comms/compose", token=admin, body={
+        "channel": "email", "to": "dot.compose-55@ex.co", "subject": "Compose 55",
+        "body": "<p>Hello from the Communications Centre.</p>", "sender_profile_key": "ops55"})
+    oid = (cm.get("outbox_ids") or [None])[0]
+    c2, ob = _ob(oid); msg = ob.get("message") or {}
+    chk("55i a composed message drains through the outbox to 'sent' via the console provider, with an attempt row",
+        c0 == 200 and dr.get("ok") and c == 200 and cm.get("queued") == 1 and bool(oid)
+        and msg.get("status") == "sent" and msg.get("provider") == "console"
+        and len(ob.get("attempts") or []) >= 1, (cm, msg.get("status"), msg.get("provider")))
+    con = dbconn()
+    con.execute("INSERT INTO comm_outbox(dedup_key,channel,category,to_email,subject,body,status,scheduled_at) "
+                "VALUES('55:sched:cancel','email','operational','eve.scheduled-55@ex.co','Sched 55','<p>later</p>','scheduled','2030-01-01 00:00:00')")
+    con.execute("INSERT INTO comm_outbox(dedup_key,channel,category,to_email,subject,body,status,attempts,last_error) "
+                "VALUES('55:failed:retry','email','operational','fay.retry-55@ex.co','Retry 55','<p>again</p>','failed',1,'boom55')")
+    con.commit()
+    sched_id = con.execute("SELECT id FROM comm_outbox WHERE dedup_key=?", ("55:sched:cancel",)).fetchone()[0]
+    fail_id = con.execute("SELECT id FROM comm_outbox WHERE dedup_key=?", ("55:failed:retry",)).fetchone()[0]
+    con.close()
+    cr1, rr1 = jget("POST", f"/api/admin/comms/outbox/{oid}/retry", token=admin)
+    cr2, rr2 = jget("POST", f"/api/admin/comms/outbox/{oid}/cancel", token=admin)
+    cc, _ = jget("POST", f"/api/admin/comms/outbox/{sched_id}/cancel", token=admin)
+    con = dbconn(); sst = con.execute("SELECT status FROM comm_outbox WHERE id=?", (sched_id,)).fetchone()[0]; con.close()
+    chk("55j a sent message is terminal (retry AND cancel are 409 already_sent) while a pending scheduled one cancels",
+        cr1 == 409 and rr1.get("error") == "already_sent" and cr2 == 409 and rr2.get("error") == "already_sent"
+        and cc == 200 and sst == "cancelled", (cr1, cr2, sst))
+    c, rt = jget("POST", f"/api/admin/comms/outbox/{fail_id}/retry", token=admin)
+    c2, ob2 = _ob(fail_id); m2 = ob2.get("message") or {}
+    chk("55k retrying a failed message requeues and delivers it (attempt 2 recorded, status 'sent')",
+        c == 200 and rt.get("ok") and m2.get("status") == "sent" and int(m2.get("attempts") or 0) == 2,
+        (m2.get("status"), m2.get("attempts")))
+
+    # --- campaigns: audience = consent-scoped; suppression + dedup enforced per recipient ---
+    u1t, u1 = register_student("ada.consent-55@ex.co")
+    u2t, u2 = register_student("bea.suppressed-55@ex.co")
+    u3t, u3 = register_student("cyd.noconsent-55@ex.co")
+    jget("POST", "/api/me/preferences", token=u1t, body={"email_marketing": 1})
+    jget("POST", "/api/me/preferences", token=u2t, body={"email_marketing": 1})   # u3: no marketing consent
+    for tk in (u1t, u2t, u3t):   # cohort membership via the real profile repeater (both providers)
+        jget("POST", "/api/me/certifications-held", token=tk, body={"name": "zephyr55 cohort", "issuer": "PCI"})
+    csup, sp = jget("POST", "/api/admin/comms/suppression", token=admin,
+                    body={"address": "bea.suppressed-55@ex.co", "reason": "manual-55", "category": "marketing"})
+    c, cr = jget("POST", "/api/admin/comms/campaigns", token=admin, body={
+        "name": "Zephyr55 launch", "channel": "email", "category": "marketing",
+        "subject": "PCI news 55", "body": "<p>Big news.</p>", "sender_profile_key": "mkt55",
+        "filters": {"certification": "zephyr55"}})
+    cid1 = cr.get("id")
+    c2, sd = jget("POST", f"/api/admin/comms/campaigns/{cid1}/send", token=admin)
+    chk("55l a campaign can never be sent before approval (409 not_approved)",
+        c == 200 and bool(cid1) and c2 == 409 and sd.get("error") == "not_approved", (c2, sd))
+    c, pvw = jget("POST", f"/api/admin/comms/campaigns/{cid1}/preview", token=admin)
+    chk("55m preview counts only consented recipients, nets off suppression, and MASKS every sampled address",
+        c == 200 and csup == 200 and sp.get("ok") and pvw.get("raw") == 2 and pvw.get("suppressed") == 1
+        and pvw.get("total") == 1 and pvw.get("sample") == ["a*****@ex.co"]
+        and "ada.consent-55" not in json.dumps(pvw), pvw)
+    jget("POST", f"/api/admin/comms/campaigns/{cid1}/approve", token=admin)
+    c, sd2 = jget("POST", f"/api/admin/comms/campaigns/{cid1}/send", token=admin)
+    con = dbconn()
+    crows = con.execute("SELECT id, to_email FROM comm_outbox WHERE campaign_id=?", (cid1,)).fetchall()
+    camp = con.execute("SELECT status, total, queued FROM comm_campaigns WHERE id=?", (cid1,)).fetchone()
+    con.close()
+    sent_ok = len(crows) == 1 and (_ob(crows[0][0])[1].get("message") or {}).get("status") == "sent"
+    chk("55n an approved send queues EXACTLY the consented, unsuppressed recipient and delivers it (suppressed user never enqueued)",
+        c == 200 and sd2.get("audience") == 2 and sd2.get("queued") == 1
+        and len(crows) == 1 and crows[0][1] == "ada.consent-55@ex.co" and sent_ok
+        and camp and camp[0] == "sent" and int(camp[1]) == 2 and int(camp[2]) == 1, (sd2, crows, camp))
+    jget("POST", f"/api/admin/comms/campaigns/{cid1}/approve", token=admin)
+    c, sd3 = jget("POST", f"/api/admin/comms/campaigns/{cid1}/send", token=admin)
+    con = dbconn(); n2 = con.execute("SELECT COUNT(*) FROM comm_outbox WHERE campaign_id=?", (cid1,)).fetchone()[0]; con.close()
+    chk("55o a re-approved re-send queues nothing — the per-recipient dedup key blocks any double-send",
+        c == 200 and sd3.get("queued") == 0 and sd3.get("audience") == 2 and int(n2) == 1, (sd3, n2))
+
+    # --- one-click unsubscribe: forged token refused; a valid signed token withdraws consent + suppresses ---
+    cb, bad = jget("POST", "/api/comms/unsubscribe", body={"token": "424242.deadbeefdeadbeefdead"})
+    _sec = (os.environ.get("UNSUBSCRIBE_SECRET") or os.environ.get("CREDENTIAL_ENCRYPTION_KEY")
+            or "pci-unsubscribe-v1") + "|pci-unsub"   # same precedence the server uses (Core/Comms.cs)
+    utok = f"{u1}." + hashlib.sha256(f"{u1}.{_sec}".encode()).hexdigest()[:24]
+    cg, good = jget("POST", "/api/comms/unsubscribe", body={"token": utok})
+    con = dbconn()
+    pref = con.execute("SELECT email_marketing, withdrawn_at FROM comm_preferences WHERE user_id=?", (u1,)).fetchone()
+    nsup = con.execute("SELECT COUNT(*) FROM comm_suppression WHERE channel='email' AND address=? AND source='one_click'",
+                       ("ada.consent-55@ex.co",)).fetchone()[0]
+    con.close()
+    chk("55p one-click unsubscribe: a forged token is invalid_token (400); the signed token withdraws consent and suppresses",
+        cb == 400 and bad.get("error") == "invalid_token" and cg == 200 and good.get("ok")
+        and pref and int(pref[0]) == 0 and pref[1] is not None and int(nsup) >= 1, (cb, pref, nsup))
+    c, cr2 = jget("POST", "/api/admin/comms/campaigns", token=admin, body={
+        "name": "Zephyr55 relaunch", "channel": "email", "category": "marketing",
+        "subject": "PCI news 55b", "body": "<p>More news.</p>", "sender_profile_key": "mkt55",
+        "filters": {"certification": "zephyr55"}})
+    cid2 = cr2.get("id")
+    jget("POST", f"/api/admin/comms/campaigns/{cid2}/approve", token=admin)
+    c2, sd4 = jget("POST", f"/api/admin/comms/campaigns/{cid2}/send", token=admin)
+    con = dbconn(); n3 = con.execute("SELECT COUNT(*) FROM comm_outbox WHERE campaign_id=?", (cid2,)).fetchone()[0]; con.close()
+    chk("55q after the unsubscribe a fresh campaign reaches nobody: consent withdrawal + suppression both honoured",
+        c == 200 and c2 == 200 and sd4.get("audience") == 1 and sd4.get("queued") == 0 and int(n3) == 0, (sd4, n3))
+
+    # --- inbound webhooks fail closed (secret unset OR wrong → refused; nothing is ever stored) ---
+    cw, wi = jget("POST", "/api/webhooks/email-inbound?secret=guess-55",
+                  body={"from": "probe-55@ex.co", "to": "support@pci.test", "subject": "Probe inbound 55", "text": "hello"})
+    cwa, _ = jget("GET", "/api/webhooks/whatsapp?hub.mode=subscribe&hub.verify_token=guess55&hub.challenge=c55")
+    con = dbconn(); nconv = con.execute("SELECT COUNT(*) FROM comm_conversations WHERE subject=?", ("Probe inbound 55",)).fetchone()[0]; con.close()
+    chk("55r inbound webhooks fail closed: email-inbound 401 without the shared secret, WhatsApp verification 403, no conversation created",
+        cw == 401 and wi.get("error") == "unauthorized" and cwa == 403 and int(nconv) == 0, (cw, cwa, nconv))
+
+    # Leave the platform's seeded default sender ('no-reply') as the default again — §55 only borrowed it.
+    con = dbconn()
+    con.execute("UPDATE comm_sender_profiles SET is_default=0 WHERE `key` IN ('ops55','mkt55')")
+    con.execute("UPDATE comm_sender_profiles SET is_default=1 WHERE `key`=?", ("no-reply",))
+    con.commit(); con.close()
 
 if __name__ == "__main__":
     main()
