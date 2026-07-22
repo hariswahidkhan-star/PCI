@@ -3077,6 +3077,7 @@ def run(proc):
     test_notifications_config(admin)
     test_member_directory(admin)
     test_forum_module(admin)
+    test_campaigns_module(admin)
 
     print("\n(assertions complete)")
 
@@ -4029,6 +4030,123 @@ def test_forum_module(admin):
     np = con.execute("SELECT COUNT(*) FROM forum_posts WHERE thread_id=?", (tid,)).fetchone()[0]
     con.close()
     chk("48n deleting a thread purges it and all its posts", nt == 0 and np == 0, (nt, np))
+
+def test_campaigns_module(admin):
+    # Incremental Testing Programme — bulk email campaigns (Endpoints/Campaigns.cs) had no coverage:
+    # draft validation, audience resolution honouring the suppression list + subscriber status, the
+    # personalised "[TEST]" test-send, the batched background dispatch with a double-send guard, and the
+    # HMAC-token one-click unsubscribe (neutral page on a bad token — no address/token oracle).
+    # Audience-size assertions are DELTA-based so pre-existing subscribers from earlier sections can't skew them.
+    print("\n=== 49. Campaigns: drafts + audience suppression + test-send + dispatch + one-click unsubscribe ===")
+    from urllib.parse import quote
+    vtok = globals().get("_VIEWER_TOK")
+    chk("49a campaign list and suppression writes need the 'subscribers' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/campaigns", token=vtok)[0] == 403
+        and jget("POST", "/api/admin/suppression", token=vtok, body={"email": "x-49@ex.co"})[0] == 403)
+
+    # 49b. Draft validation: missing name / short body / unknown audience each carry their own code.
+    c1, r1 = jget("POST", "/api/admin/campaigns", token=admin, body={"subject": "S", "body": "long enough body", "audience": "all"})
+    c2, r2 = jget("POST", "/api/admin/campaigns", token=admin, body={"name": "N", "subject": "S", "body": "short", "audience": "all"})
+    c3, r3 = jget("POST", "/api/admin/campaigns", token=admin, body={"name": "N", "subject": "S", "body": "long enough body", "audience": "everyone"})
+    chk("49b missing name / short body / unknown audience are each rejected",
+        (c1, r1.get("error")) == (400, "name_required") and (c2, r2.get("error")) == (400, "body_too_short")
+        and (c3, r3.get("error")) == (400, "invalid_audience"), (r1, r2, r3))
+
+    # 49c. A valid draft is created and listed as 'draft'.
+    c, mk = jget("POST", "/api/admin/campaigns", token=admin,
+                 body={"name": "July digest 49", "subject": "Hello {{first_name}}",
+                       "body": "<p>Hi {{first_name}}, news for {{email}}.</p>", "audience": "subscribers"})
+    cid = mk.get("id") if isinstance(mk, dict) else None
+    c2, lst = jget("GET", "/api/admin/campaigns", token=admin)
+    lrow = next((r for r in lst.get("rows", []) if r.get("id") == cid), None)
+    chk("49c a valid draft is created and listed as draft", c == 200 and bool(cid) and bool(lrow) and lrow.get("status") == "draft", (mk, lrow))
+
+    # Baseline audience size, then seed: one live subscriber, one already-unsubscribed, one admin-suppressed.
+    c, pv0 = jget("POST", "/api/admin/campaigns/audience-preview", token=admin, body={"audience": "subscribers"})
+    con = dbconn()
+    con.execute("INSERT INTO newsletter_subscribers(email,status) VALUES(?, 'subscribed')", ("sub-live-49@ex.co",))
+    con.execute("INSERT INTO newsletter_subscribers(email,status) VALUES(?, 'unsubscribed')", ("sub-gone-49@ex.co",))
+    con.execute("INSERT INTO newsletter_subscribers(email,status) VALUES(?, 'subscribed')", ("sub-supp-49@ex.co",))
+    con.commit(); con.close()
+    # 49d. A manual suppression added through the admin API appears in the suppression list.
+    jget("POST", "/api/admin/suppression", token=admin, body={"email": "sub-supp-49@ex.co"})
+    c, sl = jget("GET", "/api/admin/suppression", token=admin)
+    chk("49d a manually-suppressed address appears in the suppression list (reason 'manual')",
+        c == 200 and any(r.get("email") == "sub-supp-49@ex.co" and r.get("reason") == "manual" for r in sl.get("rows", [])), sl.get("rows", [])[:3])
+
+    # 49e. Audience preview: only the live subscriber is deliverable; the unsubscribed + suppressed count as suppressed.
+    c, pv1 = jget("POST", "/api/admin/campaigns/audience-preview", token=admin, body={"audience": "subscribers"})
+    chk("49e preview counts +1 deliverable and +2 suppressed after seeding",
+        c == 200 and pv1.get("count") == pv0.get("count") + 1 and pv1.get("suppressed") == pv0.get("suppressed") + 2, (pv0, pv1))
+
+    # 49f/49g. Test-send: a bad address is rejected; a good one goes out personalised with the "[TEST]" prefix.
+    chk("49f a test-send to a malformed address is 400 invalid_email",
+        jget("POST", f"/api/admin/campaigns/{cid}/test", token=admin, body={"to": "not-an-email"})[0] == 400)
+    c, ts = jget("POST", f"/api/admin/campaigns/{cid}/test", token=admin, body={"to": "test-send-49@ex.co"})
+    con = dbconn()
+    subj = con.execute("SELECT subject FROM email_logs WHERE email=? ORDER BY id DESC", ("test-send-49@ex.co",)).fetchone()
+    nh = con.execute("SELECT COUNT(*) FROM notification_history WHERE related_type='campaign' AND related_id=? AND recipient=?",
+                     (cid, "test-send-49@ex.co")).fetchone()[0]
+    con.close()
+    chk("49g a test-send is personalised, '[TEST]'-prefixed and recorded to the notification ledger",
+        c == 200 and ts.get("ok") is True and bool(subj) and subj[0] == "[TEST] Hello there" and nh >= 1, (ts, subj, nh))
+
+    # 49h. Send: the ledger is written for exactly the deliverable audience (suppressed never enter it).
+    c, snd = jget("POST", f"/api/admin/campaigns/{cid}/send", token=admin)
+    chk("49h send accepts the draft and reports the previewed audience size",
+        c == 200 and snd.get("ok") is True and snd.get("total") == pv1.get("count") and snd.get("suppressed") == pv1.get("suppressed"), (snd, pv1))
+    # 49i. The background dispatcher completes: campaign 'sent', the live subscriber's row 'sent',
+    #      and neither the unsubscribed nor the suppressed address ever entered the recipient ledger.
+    det = {}
+    for _ in range(40):
+        c, det = jget("GET", f"/api/admin/campaigns/{cid}", token=admin)
+        if det.get("campaign", {}).get("status") == "sent": break
+        time.sleep(0.5)
+    con = dbconn()
+    excl = con.execute("SELECT COUNT(*) FROM campaign_recipients WHERE campaign_id=? AND email IN (?,?)",
+                       (cid, "sub-gone-49@ex.co", "sub-supp-49@ex.co")).fetchone()[0]
+    con.close()
+    live = next((r for r in det.get("recipients", []) if r.get("email") == "sub-live-49@ex.co"), None)
+    chk("49i background dispatch completes: status sent, live subscriber sent, suppressed never enrolled",
+        det.get("campaign", {}).get("status") == "sent" and det.get("counts", {}).get("sent") == snd.get("total")
+        and det.get("counts", {}).get("failed") == 0 and bool(live) and live.get("status") == "sent" and excl == 0,
+        (det.get("campaign", {}).get("status"), det.get("counts"), live, excl))
+    # 49j. Double-send guard: a second send of the same (now non-draft) campaign is 409 not_draft.
+    c, dbl = jget("POST", f"/api/admin/campaigns/{cid}/send", token=admin)
+    chk("49j a second send is refused (409 not_draft)", c == 409 and dbl.get("error") == "not_draft", (c, dbl))
+
+    # 49k. One-click unsubscribe with a BAD token: a neutral page, and nothing is suppressed.
+    c, page = jget("GET", "/api/unsubscribe?e=" + quote("sub-live-49@ex.co", safe="") + "&t=" + "0" * 24)
+    con = dbconn()
+    supp_bad = con.execute("SELECT COUNT(*) FROM email_suppression WHERE email=?", ("sub-live-49@ex.co",)).fetchone()[0]
+    st_bad = con.execute("SELECT status FROM newsletter_subscribers WHERE email=?", ("sub-live-49@ex.co",)).fetchone()[0]
+    con.close()
+    chk("49k a bad unsubscribe token gets a neutral page and suppresses nothing",
+        c == 200 and "If your request was valid" in str(page) and supp_bad == 0 and st_bad == "subscribed", (supp_bad, st_bad))
+
+    # 49l. With the VALID HMAC token (recomputed here with the server's secret precedence) the address is
+    #      suppressed with reason 'unsubscribe' and the subscriber flips to 'unsubscribed'.
+    secret = os.environ.get("NEWSLETTER_SALT") or os.environ.get("FORUM_SALT") or "pci-unsub-secret"
+    tok = hmac.new(secret.encode(), b"sub-live-49@ex.co", hashlib.sha256).hexdigest()[:24]
+    c, page2 = jget("GET", "/api/unsubscribe?e=" + quote("sub-live-49@ex.co", safe="") + "&t=" + tok)
+    con = dbconn()
+    supp_ok = con.execute("SELECT reason FROM email_suppression WHERE email=?", ("sub-live-49@ex.co",)).fetchone()
+    st_ok = con.execute("SELECT status FROM newsletter_subscribers WHERE email=?", ("sub-live-49@ex.co",)).fetchone()[0]
+    con.close()
+    chk("49l a valid one-click unsubscribe suppresses the address and flips the subscriber",
+        c == 200 and "You've been unsubscribed" in str(page2) and bool(supp_ok) and supp_ok[0] == "unsubscribe"
+        and st_ok == "unsubscribed", (supp_ok, st_ok))
+
+    # 49m. The unsubscribe is honoured by the next audience resolution (deliverable -1, suppressed +1).
+    c, pv2 = jget("POST", "/api/admin/campaigns/audience-preview", token=admin, body={"audience": "subscribers"})
+    chk("49m the unsubscribed address is excluded from the next audience resolution",
+        c == 200 and pv2.get("count") == pv1.get("count") - 1 and pv2.get("suppressed") == pv1.get("suppressed") + 1, (pv1, pv2))
+
+    # 49n. A manual suppression can be removed again through the admin API.
+    jget("POST", "/api/admin/suppression", token=admin, body={"email": "sub-supp-49@ex.co", "action": "remove"})
+    c, sl2 = jget("GET", "/api/admin/suppression", token=admin)
+    chk("49n removing a manual suppression drops it from the list",
+        c == 200 and all(r.get("email") != "sub-supp-49@ex.co" for r in sl2.get("rows", [])), None)
 
 if __name__ == "__main__":
     main()
