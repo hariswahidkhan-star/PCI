@@ -3024,8 +3024,48 @@ def run(proc):
     test_backlinks(admin)
     test_analytics(admin)
     test_membership_gate()
+    test_privacy_erasure(admin)
 
     print("\n(assertions complete)")
+
+def test_privacy_erasure(admin):
+    # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
+    # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.
+    print("\n=== 27. Privacy erasure request lifecycle (student request -> admin review state machine) ===")
+    # --- Subject A: pending -> acknowledge -> complete (anonymise) ---
+    atok, auid = make_paid_user("erasure-a@ex.co")  # bundle → full member (a realistic erasure subject)
+    c, r1 = jget("POST", "/api/me/delete-request", token=atok, body={"reason": "No longer require my account."})
+    chk("27a student erasure request is recorded with a fulfilment deadline", c == 200 and r1.get("ok") and r1.get("id") and r1.get("due_at"), r1)
+    con = dbconn(); prow = con.execute("SELECT status FROM erasure_requests WHERE user_id=?", (auid,)).fetchone(); con.close()
+    chk("27b the request is created in 'pending' state", prow and prow[0] == "pending", prow)
+    c, r2 = jget("POST", "/api/me/delete-request", token=atok, body={"reason": "again"})
+    chk("27c a second request while one is open is de-duplicated (already_open)", c == 200 and r2.get("already_open") == True, r2)
+    c, lst = jget("GET", "/api/admin/erasure-requests", token=admin)
+    mine = next((x for x in lst.get("rows", []) if x.get("user_id") == auid), None)
+    chk("27d admin erasure queue lists the open request", mine is not None and lst.get("open", 0) >= 1, (lst.get("open"), mine is not None))
+    rid = mine["id"]
+    c, ack = jget("POST", f"/api/admin/erasure-requests/{rid}/acknowledge", token=admin, body={})
+    chk("27e admin can acknowledge a pending request", c == 200 and ack.get("status") == "acknowledged", ack)
+    c, ack2 = jget("POST", f"/api/admin/erasure-requests/{rid}/acknowledge", token=admin, body={})
+    chk("27f re-acknowledging a non-pending request is refused (bad_state)", c == 400 and ack2.get("error") == "bad_state", ack2)
+    c, nc = jget("POST", f"/api/admin/erasure-requests/{rid}/complete", token=admin, body={})
+    chk("27g completing erasure requires explicit confirm=true", c == 400 and nc.get("error") == "confirm_required", nc)
+    c, done = jget("POST", f"/api/admin/erasure-requests/{rid}/complete", token=admin, body={"confirm": True})
+    con = dbconn(); st = con.execute("SELECT status FROM erasure_requests WHERE id=?", (rid,)).fetchone(); con.close()
+    chk("27h confirmed completion anonymises the member and closes the request", c == 200 and done.get("ok") and st and st[0] == "completed", (c, st))
+    # --- Subject B: reject path (note required, then closed cannot be re-rejected) ---
+    btok, buid = make_paid_user("erasure-b@ex.co")
+    jget("POST", "/api/me/delete-request", token=btok, body={"reason": "please remove me"})
+    con = dbconn(); brid = con.execute("SELECT id FROM erasure_requests WHERE user_id=?", (buid,)).fetchone()[0]; con.close()
+    c, rj0 = jget("POST", f"/api/admin/erasure-requests/{brid}/reject", token=admin, body={"note": "no"})
+    chk("27i rejecting requires a substantive reason (note_required)", c == 400 and rj0.get("error") == "note_required", rj0)
+    c, rj1 = jget("POST", f"/api/admin/erasure-requests/{brid}/reject", token=admin, body={"note": "Legal retention basis: active dispute."})
+    chk("27j admin can reject with a documented legal basis", c == 200 and rj1.get("status") == "rejected", rj1)
+    c, rj2 = jget("POST", f"/api/admin/erasure-requests/{brid}/reject", token=admin, body={"note": "already handled"})
+    chk("27k a closed (rejected) request cannot be re-rejected (bad_state)", c == 400 and rj2.get("error") == "bad_state", rj2)
+    # --- Authorization: a student cannot reach the admin erasure queue ---
+    c, _ = jget("GET", "/api/admin/erasure-requests", token=btok)
+    chk("27l the admin erasure queue is not reachable with a student token", c in (401, 403), c)
 
 if __name__ == "__main__":
     main()
