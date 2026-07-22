@@ -3058,6 +3058,9 @@ def run(proc):
     test_privacy_erasure(admin)
     test_login_lockout()
     test_payment_reversal_webhooks(admin)
+    test_support_attachment_idor()
+    test_certificate_suspension(admin)
+    test_exam_self_reschedule(admin)
 
     print("\n(assertions complete)")
 
@@ -3174,6 +3177,78 @@ def test_payment_reversal_webhooks(admin):
     p2 = con.execute("SELECT payment_status FROM payments WHERE provider_payment_id=?", ("pi_refundme",)).fetchone()
     con.close()
     chk("29j re-delivering the refund event stays refunded (idempotent)", code2 == 200 and bool(p2) and p2[0] == "refunded", (code2, p2))
+
+def test_support_attachment_idor():
+    # Incremental Testing Programme — private-file access control on support-ticket attachments. Isolation
+    # was proven for documents/partner-docs but NOT for support attachments (the /api/me/tickets/{tid}/
+    # attachments/{aid} serve endpoint joins on t.user_id, so another student must get 404).
+    print("\n=== 30. Support attachment isolation (IDOR: one student cannot read another's attachment) ===")
+    atok, auid = make_paid_user("attach-a@ex.co")
+    c, tk = jget("POST", "/api/me/tickets", token=atok, body={"subject": "receipt", "category": "Billing", "body": "need it"})
+    tid = tk.get("id")
+    chk("30a student A opens a ticket", c == 200 and tid, tk)
+    real_pdf = "data:application/pdf;base64," + base64.b64encode(b"%PDF-1.4 idor-A").decode()
+    c, up = jget("POST", f"/api/me/tickets/{tid}/attachments", token=atok, body={"filename": "a.pdf", "data_uri": real_pdf})
+    chk("30b student A uploads an attachment", c == 200, (c, up))
+    con = dbconn(); aid = con.execute("SELECT id FROM support_attachments WHERE ticket_id=? ORDER BY id DESC", (tid,)).fetchone()[0]; con.close()
+    st, _, _ = _raw_get(f"/api/me/tickets/{tid}/attachments/{aid}", token=atok)
+    chk("30c student A can download their own attachment (200)", st == 200, st)
+    btok, buid = make_paid_user("attach-b@ex.co")
+    c2, r2 = jget("GET", f"/api/me/tickets/{tid}/attachments/{aid}", token=btok)
+    chk("30d student B is refused A's attachment (404 — IDOR blocked)", c2 == 404, (c2, r2))
+    c3, r3 = jget("GET", f"/api/me/tickets/{tid}/attachments/{aid}")
+    chk("30e an anonymous request for the attachment is refused (401)", c3 == 401, (c3, r3))
+
+def test_certificate_suspension(admin):
+    # Incremental Testing Programme — the download gate on a SUSPENDED credential (Certificates.cs), which
+    # was unwired from the admin status endpoint (that endpoint exposes only active/expired/revoked) and had
+    # no test. Suspend is applied by DB surgery (its real setter is a separate provisioning path); reinstate
+    # goes through the real admin endpoint.
+    print("\n=== 31. Certificate suspend / reinstate (download gate on the suspended status) ===")
+    stok, suid = register_student("suspendcert@ex.co")
+    cid = "PCI-CPPC-2026-88001"
+    fut = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time() + 3 * 365 * 86400))
+    c, iss = jget("POST", "/api/admin/credentials", token=admin, body={"credential_id": cid, "holder_name": "Suzy Suspend", "user_id": suid, "expires_at": fut})
+    rowid = iss.get("id")
+    chk("31a admin issues a credential", c == 200 and rowid, iss)
+    st, body, ctype = _raw_get(f"/api/me/certificate/pdf?id={cid}", token=stok)
+    chk("31b an active certificate downloads (200, PDF)", st == 200 and body[:5] == b"%PDF-", (st, ctype))
+    con = dbconn(); con.execute("UPDATE issued_credentials SET status='suspended' WHERE id=?", (rowid,)); con.commit(); con.close()
+    st2, body2, _ = _raw_get(f"/api/me/certificate/pdf?id={cid}", token=stok)
+    chk("31c a suspended certificate is not downloadable (403)", st2 == 403, st2)
+    chk("31d the 403 body names the suspension", b"suspended" in body2, body2[:160])
+    c, rn = jget("POST", f"/api/admin/credentials/{rowid}/status", token=admin, body={"status": "active"})
+    chk("31e admin reinstates the credential to active", c == 200 and rn.get("ok"), rn)
+    st3, body3, _ = _raw_get(f"/api/me/certificate/pdf?id={cid}", token=stok)
+    chk("31f the reinstated certificate downloads again (200)", st3 == 200 and body3[:5] == b"%PDF-", st3)
+
+def test_exam_self_reschedule(admin):
+    # Incremental Testing Programme — the candidate self-service reschedule endpoint POST /api/me/exam/reschedule
+    # had ZERO coverage. A scheduled booking is inserted directly (payment already settled) so the test controls
+    # the time-to-exam deterministically without depending on the booking-eligibility window.
+    print("\n=== 32. Candidate self-service exam reschedule (toggle / free-window / lock / cap) ===")
+    def slot(n): return time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time() + n * 86400))
+    rtok, ruid = make_paid_user("resched@ex.co")
+    con = dbconn()
+    payId = con.execute("SELECT id FROM payments WHERE user_id=? AND payment_status='paid' ORDER BY id DESC", (ruid,)).fetchone()[0]
+    con.execute("INSERT INTO exam_bookings(user_id,payment_id,certification_id,scheduled_at,status,reschedule_count) VALUES(?,?,1,datetime('now','+5 day'),'scheduled',0)", (ruid, payId))
+    con.commit(); con.close()
+    c, r = jget("POST", "/api/me/exam/reschedule", token=rtok, body={"scheduled_at": slot(4), "timezone": "UTC"})
+    chk("32a a candidate can reschedule an upcoming booking (count increments)", c == 200 and r.get("ok") and r.get("reschedule_count") == 1, (c, r))
+    chk("32b a reschedule made >72h out is flagged free", r.get("free") is True, r)
+    c, rb = jget("POST", "/api/me/exam/reschedule", token=rtok, body={"scheduled_at": slot(-1), "timezone": "UTC"})
+    chk("32c a past/too-soon slot is rejected (bad_slot)", c == 400 and rb.get("error") == "bad_slot", (c, rb))
+    req("PATCH", "/api/admin/settings", token=admin, body={"sp_reschedule_enabled": "false"})
+    c, rd = jget("POST", "/api/me/exam/reschedule", token=rtok, body={"scheduled_at": slot(3), "timezone": "UTC"})
+    chk("32d the admin toggle disables rescheduling (403 reschedule_disabled)", c == 403 and rd.get("error") == "reschedule_disabled", (c, rd))
+    req("PATCH", "/api/admin/settings", token=admin, body={"sp_reschedule_enabled": "true"})
+    con = dbconn(); bid = con.execute("SELECT id FROM exam_bookings WHERE user_id=? ORDER BY id DESC", (ruid,)).fetchone()[0]
+    con.execute("UPDATE exam_bookings SET scheduled_at=datetime('now','+5 hour') WHERE id=?", (bid,)); con.commit(); con.close()
+    c, rl = jget("POST", "/api/me/exam/reschedule", token=rtok, body={"scheduled_at": slot(3), "timezone": "UTC"})
+    chk("32e inside the cutoff window a reschedule is locked (400)", c == 400 and rl.get("error") == "locked", (c, rl))
+    con = dbconn(); con.execute("UPDATE exam_bookings SET scheduled_at=datetime('now','+5 day'), reschedule_count=3 WHERE id=?", (bid,)); con.commit(); con.close()
+    c, rm = jget("POST", "/api/me/exam/reschedule", token=rtok, body={"scheduled_at": slot(4), "timezone": "UTC"})
+    chk("32f the per-candidate reschedule cap is enforced (max_reschedules)", c == 400 and rm.get("error") == "max_reschedules", (c, rm))
 
 if __name__ == "__main__":
     main()

@@ -22,11 +22,18 @@ The audit table below is the frozen baseline. This log records the increments ad
 
 | Done | Pri | Area | New assertions | What it proves |
 |------|-----|------|----------------|----------------|
+| ✅ | P1 | Exam — candidate self-service reschedule | §32a–32f (6) | `POST /api/me/exam/reschedule` (previously ZERO coverage): a valid reschedule increments the count and flags `free` when >72h out; a past slot is `bad_slot`; the `sp_reschedule_enabled` toggle returns 403; inside the cutoff window it is `locked`; the per-candidate cap returns `max_reschedules`. |
+| ✅ | P1 | Certificates — suspend / reinstate download gate | §31a–31f (6) | An active certificate downloads; a `suspended` credential is not downloadable (403, message names the suspension); admin reinstate to active restores the download. |
+| ✅ | P1 | Storage — support-attachment IDOR | §30a–30e (5) | A second student and an anonymous caller are both refused another student's ticket attachment (404 / 401); the owner can fetch their own. |
 | ✅ | P0 | Payments — Stripe reversal webhooks | §29a–29j (10) | `charge.refunded` (full) → payment refunded + membership lapsed + unused entitlement revoked; `charge.dispute.created` → reversed + membership lapsed; a partial refund keeps access; the refund event is idempotent. Driven through a signed webhook (helper now shapes Charge/Dispute objects). |
 | ✅ | P0 | Auth — lockout + TOTP replay | §14u5/u6, §28a–28e (7) | LoginGuard per-account lockout (threshold → `lockout_until` set + counter reset → correct password refused while locked → cleared on success); TOTP replay guard (a consumed timestep is refused, a strictly-advancing code is accepted). |
 | ✅ | P0 | Privacy — right-to-erasure lifecycle | §27a–27l (12) | Student request → pending + fulfilment deadline; de-dup; admin acknowledge (pending-only) / reject (note-required, no re-reject) / complete (confirm-required → anonymise + close); admin queue unreachable with a student token. |
 
-All three Critical / P0 zero-or-partial-coverage gaps from the baseline are now closed. Remaining work is the P1/P2 backlog in the table below (frontend Vitest/RTL, Playwright E2E + axe, `PCI.Backend.Tests` xUnit, migration/contract tests, CI quality-gate wiring), plus the Operator-Required items (provider/Render/DR/perf).
+All three Critical / P0 zero-or-partial-coverage gaps from the baseline are now closed, and the first P1 backend increments (exam reschedule, certificate suspend/reinstate, support-attachment IDOR) have landed. Remaining work is the rest of the P1/P2 backlog in the table below (frontend Vitest/RTL, Playwright E2E + axe, `PCI.Backend.Tests` xUnit, migration/contract tests, CI quality-gate wiring), plus the Operator-Required items (provider/Render/DR/perf).
+
+### Findings surfaced while adding coverage (not defects introduced; recorded, not fixed here)
+
+- **`/api/verify` treats a `suspended` credential as valid.** The public verify endpoint (`Endpoints/Public.cs`) computes `state` as `revoked` / `expired` / `active` only, so a `suspended` credential falls through to `active` and reports `valid: true` — while the download gate (`Endpoints/Certificates.cs`) correctly blocks it with a 403. §31 therefore asserts only the (correct) download-gate behaviour and does not assert verify for suspended. Candidate one-line fix for a later change: fold `suspended` into the non-active branch of the `state` computation. Left unchanged here to keep this a test-only PR.
 
 ## Coverage Matrix
 
