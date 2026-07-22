@@ -3068,6 +3068,7 @@ def run(proc):
     test_partner_sponsorship_commissions(admin)
     test_admin_rbac_viewer_sweep()
     test_partner_login_lockout(admin)
+    test_discount_code_validation_edges(admin)
 
     print("\n(assertions complete)")
 
@@ -3444,6 +3445,107 @@ def test_partner_login_lockout(admin):
     con = dbconn(); con.execute("UPDATE partner_users SET lockout_until=NULL WHERE id=?", (puid,)); con.commit(); con.close()
     c, r3 = jget("POST", "/api/partner/auth/login", body={"email": "partner-lock@ex.co", "password": pw})
     chk("39e after the lock clears the correct password signs in again", c == 200 and bool(r3.get("token")), (c, r3.get("error")))
+
+def test_discount_code_validation_edges(admin):
+    # Incremental Testing Programme — the discount-engine's public /api/validate-code rejection matrix.
+    # Prior sections cover waiver email-locking (§6), partner allocation (§13/14) and per-email limits; the
+    # engine's *other* refusal branches (lifecycle status, date windows, usage cap, product/cert scope,
+    # founding-code misuse, country eligibility) were unproven. Each code is seeded straight into
+    # discount_codes so exactly one branch is exercised in isolation — codes are stored UPPERCASE because
+    # ValidateCode uppercases the lookup key (a lowercase row would read as "not found" on case-sensitive
+    # SQLite). No application code changes; this is a test-only, both-provider assertion.
+    print("\n=== 40. Discount-code validation edges (/api/validate-code rejection matrix) ===")
+
+    def mkcode(code, **cols):
+        cols.setdefault("discount_type", "percentage")
+        cols.setdefault("discount_value", 20)
+        cols.setdefault("applies_to", "all")
+        cols.setdefault("active", 1)
+        keys = ["code"] + list(cols.keys())
+        con = dbconn()
+        con.execute(f"INSERT INTO discount_codes({','.join(keys)}) VALUES({','.join('?' * len(keys))})",
+                    tuple([code] + list(cols.values())))
+        con.commit(); con.close()
+
+    # Each check validates ONE distinct pre-seeded code as ONE prospective buyer. Public /api/validate-code
+    # is throttled 10/min per real client IP (the LAST X-Forwarded-For hop, appended by our proxy), so a
+    # distinct last-hop per check models a dozen independent buyers rather than one client hammering the
+    # endpoint — otherwise the branch matrix would trip the anti-enumeration limiter it isn't testing.
+    _client = [0]
+    def val(code, product="membership", email=None, cert=None):
+        body = {"code": code, "product": product}
+        if email is not None: body["email"] = email
+        if cert is not None: body["cert"] = cert
+        _client[0] += 1
+        return jget("POST", "/api/validate-code", body=body,
+                    headers={"X-Forwarded-For": f"198.51.100.{_client[0]}"})[1]
+
+    # 40a. A code that was never issued is refused (not silently treated as 0% off).
+    r = val("EDGE40NOSUCHCODE")
+    chk("40a an unknown code is rejected", r.get("valid") is not True and "not valid" in str(r.get("message", "")).lower(), r)
+
+    # 40b. Lifecycle: a draft (engine-managed, not yet approved) code does not validate.
+    mkcode("EDGE40DRAFT", status="draft")
+    r = val("EDGE40DRAFT")
+    chk("40b a draft code is not active yet", r.get("valid") is not True and "not active yet" in str(r.get("message", "")).lower(), r)
+
+    # 40c. Lifecycle: a rejected code is gone for good.
+    mkcode("EDGE40REJECTED", status="rejected")
+    r = val("EDGE40REJECTED")
+    chk("40c a rejected code is no longer available", r.get("valid") is not True and "no longer available" in str(r.get("message", "")).lower(), r)
+
+    # 40d. A legacy (status NULL) code with active=0 is refused by the active flag alone.
+    mkcode("EDGE40INACTIVE", active=0)
+    r = val("EDGE40INACTIVE")
+    chk("40d an inactive legacy code is rejected", r.get("valid") is not True and "not valid" in str(r.get("message", "")).lower(), r)
+
+    # 40e. Date window: an end_date in the past reads as expired.
+    mkcode("EDGE40EXPIRED", end_date="2000-01-01")
+    r = val("EDGE40EXPIRED")
+    chk("40e a code past its end_date is expired", r.get("valid") is not True and "expired" in str(r.get("message", "")).lower(), r)
+
+    # 40f. Date window: a start_date in the future is not yet active.
+    mkcode("EDGE40FUTURE", start_date="2999-01-01")
+    r = val("EDGE40FUTURE")
+    chk("40f a code before its start_date is not yet active", r.get("valid") is not True and "not yet active" in str(r.get("message", "")).lower(), r)
+
+    # 40g. Usage cap: used_count has reached max_uses.
+    mkcode("EDGE40MAXED", max_uses=5, used_count=5)
+    r = val("EDGE40MAXED")
+    chk("40g a fully-used code hits its usage limit", r.get("valid") is not True and "usage limit" in str(r.get("message", "")).lower(), r)
+
+    # 40h. Product scope: an exam-only code offered against a membership purchase is refused.
+    mkcode("EDGE40EXAMONLY", applies_to="exam")
+    r = val("EDGE40EXAMONLY", product="membership")
+    chk("40h an exam-only code is refused on a membership purchase", r.get("valid") is not True and "exam fee" in str(r.get("message", "")).lower(), r)
+
+    # 40i. A founding code pasted into the discount field is called out (not accepted as a 0% code).
+    mkcode("EDGE40FOUNDING", founding_route="founding")
+    r = val("EDGE40FOUNDING")
+    chk("40i a founding code is redirected to the Founding card, not honoured as a discount",
+        r.get("valid") is not True and "founding code" in str(r.get("message", "")).lower(), r)
+
+    # 40j. Certification scope: a code tied to one credential is rejected against another.
+    c, cat = jget("GET", "/api/certifications")
+    certs = {row.get("code"): row.get("id") for row in cat.get("rows", [])}
+    if "PCL-AI" in certs and "PFL-AI" in certs:
+        mkcode("EDGE40CERTSCOPE", certification_id=certs["PCL-AI"])
+        r = val("EDGE40CERTSCOPE", cert="PFL-AI")
+        chk("40j a cert-scoped code is rejected for a different certification",
+            r.get("valid") is not True and "only valid for" in str(r.get("message", "")).lower(), r)
+
+    # 40k. Country eligibility: a country-restricted code is refused for a student outside the allow-list.
+    gtok, guid = make_paid_user("code-geo-40@ex.co")
+    jget("PATCH", "/api/me/profile", token=gtok, body={"country": "Pakistan"})
+    mkcode("EDGE40GEO", eligible_countries="Canada,United States")
+    r = val("EDGE40GEO", email="code-geo-40@ex.co")
+    chk("40k a country-restricted code is refused outside its allow-list",
+        r.get("valid") is not True and "your country" in str(r.get("message", "")).lower(), r)
+
+    # 40l. Positive control: a clean, active, all-scope code validates and prices the purchase.
+    mkcode("EDGE40OK", discount_value=10, status="active")
+    r = val("EDGE40OK")
+    chk("40l a clean active code validates and returns a price", r.get("valid") is True and r.get("final_amount") is not None, r)
 
 if __name__ == "__main__":
     main()
