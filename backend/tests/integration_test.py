@@ -3079,6 +3079,7 @@ def run(proc):
     test_forum_module(admin)
     test_campaigns_module(admin)
     test_badges_module(admin)
+    test_site_chat(admin)
 
     print("\n(assertions complete)")
 
@@ -4264,6 +4265,81 @@ def test_badges_module(admin):
     c2, vn = jget("GET", "/api/badges/view/PCI-NOPE-50")
     chk("50l an unknown credential id: assertion 404 and view not found",
         c1 == 404 and an.get("error") == "not_found" and vn.get("found") is False, (c1, vn))
+
+def test_site_chat(admin):
+    # Incremental Testing Programme — the self-hosted site chat (Endpoints/Chat.cs) had no coverage: the
+    # bot brain (small talk → KB keyword match → fallback), human-handoff escalation, the visitor poll,
+    # and the inbox-gated admin console that never emits ip_hash or the visitor's bearer token. The visitor
+    # runs on a distinct trusted last-hop (X-Forwarded-For) so the per-IP-hash limits see one clean client.
+    print("\n=== 51. Site chat: bot brain (KB/small-talk/fallback) + escalation + admin console privacy ===")
+    V = {"X-Forwarded-For": "203.0.113.51"}   # the visitor's stable client hop
+    c, st = jget("POST", "/api/chat/start", body={"name": "Cleo51"}, headers=V)
+    tok = st.get("token")
+    chk("51a starting a chat issues a token and a personalised bot greeting",
+        c == 200 and bool(tok) and st.get("status") == "bot" and "Cleo51" in str(st.get("greeting", "")), st)
+    c, nf = jget("POST", "/api/chat/send", body={"token": "no-such-token-51", "body": "hello"}, headers=V)
+    chk("51b sending with an unknown token is not_found (404)", c == 404 and nf.get("error") == "not_found", (c, nf))
+    c, bb = jget("POST", "/api/chat/send", body={"token": tok, "body": ""}, headers=V)
+    chk("51c an empty message without escalate is bad_body (400)", c == 400 and bb.get("error") == "bad_body", (c, bb))
+    # Admin KB: validation + seed an entry with a unique keyword so no seeded KB row can shadow it.
+    c, bq = jget("POST", "/api/admin/chat/kb", token=admin, body={"question": "hm", "answer": "too short question"})
+    chk("51d a too-short KB question is rejected (bad_question, 400)", c == 400 and bq.get("error") == "bad_question", bq)
+    c, kb = jget("POST", "/api/admin/chat/kb", token=admin,
+                 body={"question": "What is the zephyrfee51 cost?", "answer": "The zephyrfee51 costs 42 credits.", "keywords": "zephyrfee51"})
+    kbid = kb.get("id")
+    chk("51e an admin KB entry is created", c == 200 and bool(kbid), kb)
+    # Bot brain: KB keyword match → the seeded answer.
+    c, r1 = jget("POST", "/api/chat/send", body={"token": tok, "body": "how much is the zephyrfee51 please"}, headers=V)
+    bot1 = (r1.get("replies") or [{}])[0].get("body", "")
+    chk("51f a KB-keyword question gets the seeded answer", c == 200 and bot1 == "The zephyrfee51 costs 42 credits.", bot1)
+    # Fallback for a question nothing matches.
+    c, r2 = jget("POST", "/api/chat/send", body={"token": tok, "body": "qqrx bzzt vlomp"}, headers=V)
+    bot2 = (r2.get("replies") or [{}])[0].get("body", "")
+    chk("51g an unmatched question gets the helpful fallback", bot2.startswith("I'm sorry"), bot2)
+    # Small talk beats the fallback.
+    c, r3 = jget("POST", "/api/chat/send", body={"token": tok, "body": "thanks"}, headers=V)
+    bot3 = (r3.get("replies") or [{}])[0].get("body", "")
+    chk("51h small talk is answered conversationally (never the fallback)", bot3.startswith("You're very welcome"), bot3)
+    # Human handoff: the word 'person' queues the session.
+    c, r4 = jget("POST", "/api/chat/send", body={"token": tok, "body": "can I talk to a person about enrolment"}, headers=V)
+    chk("51i asking for a person moves the session to the queue (status waiting)",
+        c == 200 and r4.get("status") == "waiting" and "queue" in str((r4.get("replies") or [{}])[0].get("body", "")), r4)
+    c, pol = jget("GET", f"/api/chat/poll?token={tok}", headers=V)
+    chk("51j the visitor poll returns the transcript and the waiting status",
+        c == 200 and pol.get("status") == "waiting" and len(pol.get("messages", [])) >= 6, (pol.get("status"), len(pol.get("messages", []))))
+    # Admin console: inbox-gated; the session shows in the waiting queue; ip_hash/token are never emitted.
+    vtok = globals().get("_VIEWER_TOK")
+    chk("51k the admin chat console needs the 'inbox' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/chat/sessions", token=vtok)[0] == 403
+        and jget("GET", "/api/admin/chat/kb", token=vtok)[0] == 403)
+    c, adm = jget("GET", "/api/admin/chat/sessions?status=waiting", token=admin)
+    row = next((s for s in adm.get("sessions", []) if s.get("visitor_name") == "Cleo51"), None)
+    sid = row.get("id") if row else None
+    chk("51l the waiting session is listed for admins WITHOUT ip_hash or the visitor token",
+        bool(row) and adm.get("counts", {}).get("waiting", 0) >= 1
+        and "ip_hash" not in row and "token" not in row, row)
+    # Agent reply goes live and reaches the visitor's poll.
+    c, rep = jget("POST", f"/api/admin/chat/sessions/{sid}/reply", token=admin, body={"body": "Hello from the PCI team — happy to help."})
+    c, pol2 = jget("GET", f"/api/chat/poll?token={tok}", headers=V)
+    chk("51m an agent reply flips the session live and reaches the visitor",
+        rep.get("status") == "live" and pol2.get("status") == "live"
+        and any(m.get("sender") == "agent" for m in pol2.get("messages", [])), (rep, pol2.get("status")))
+    # Close: the visitor can no longer send, and the closing notice is in the transcript.
+    jget("POST", f"/api/admin/chat/sessions/{sid}/close", token=admin)
+    c, cs = jget("POST", "/api/chat/send", body={"token": tok, "body": "one more thing"}, headers=V)
+    c2, pol3 = jget("GET", f"/api/chat/poll?token={tok}", headers=V)
+    chk("51n a closed chat refuses new visitor messages (409) and shows the closing notice",
+        c == 409 and cs.get("error") == "closed" and pol3.get("status") == "closed"
+        and any("closed by the team" in str(m.get("body", "")) for m in pol3.get("messages", [])), (c, pol3.get("status")))
+    # Disabling the KB entry removes it from the bot brain (enabled=1 filter). The probe is the bare
+    # unique token — phrasing with real words ("how much…") can legitimately match a seeded fees row.
+    jget("POST", f"/api/admin/chat/kb/{kbid}", token=admin, body={"action": "toggle"})
+    c, st2 = jget("POST", "/api/chat/start", body={"name": "Nia51"}, headers=V)
+    tok2 = st2.get("token")
+    c, r5 = jget("POST", "/api/chat/send", body={"token": tok2, "body": "zephyrfee51"}, headers=V)
+    bot5 = (r5.get("replies") or [{}])[0].get("body", "")
+    chk("51o a toggled-off KB entry no longer answers (falls back)",
+        bot5.startswith("I'm sorry") and "42 credits" not in bot5, bot5)
 
 if __name__ == "__main__":
     main()
