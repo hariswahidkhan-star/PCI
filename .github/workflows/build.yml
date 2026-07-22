@@ -132,9 +132,10 @@ jobs:
           python3 tests/honorary_application_test.py
 
   frontend:
-    # Stage 3 React student portal: typecheck + production build must both succeed.
+    # Stage 3 React student portal: typecheck + Vitest unit/component tests + production build.
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: frontend } }
+    env: { PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1' }   # this job never needs a browser; only the e2e job does
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -170,3 +171,37 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with: { dotnet-version: '8.0.x' }
       - run: dotnet test PCI.SecureExam.Tests/PCI.SecureExam.Tests.csproj -c Release
+
+  e2e:
+    # Browser E2E + axe accessibility (Playwright) over the backend-served public site. Playwright's
+    # webServer boots the built backend DLL and waits for /api/health, then runs the specs headless.
+    # NON-BLOCKING (continue-on-error) until it has a green run history — mirroring the optional S3/moto
+    # step in the backend job — so an as-yet-unproven browser run can never turn the pipeline red.
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - name: Build backend (served by Playwright's webServer)
+        working-directory: backend
+        run: dotnet build -c Release
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: 'npm', cache-dependency-path: frontend/package-lock.json }
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+      - name: Install Playwright Chromium
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Playwright E2E + axe (boots the backend on :8080)
+        working-directory: frontend
+        run: npm run e2e
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/playwright-report
+          retention-days: 7
+          if-no-files-found: ignore
