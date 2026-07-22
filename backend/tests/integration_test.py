@@ -3235,10 +3235,18 @@ def test_certificate_suspension(admin):
     st2, body2, _ = _raw_get(f"/api/me/certificate/pdf?id={cid}", token=stok)
     chk("31c a suspended certificate is not downloadable (403)", st2 == 403, st2)
     chk("31d the 403 body names the suspension", b"suspended" in body2, body2[:160])
+    # The public register must agree with the download gate: a suspended credential is NOT valid.
+    # (This was a recorded finding — verify used to fall through to 'active' for suspended.)
+    c, ver = jget("GET", f"/api/verify?id={cid}")
+    chk("31d2 /api/verify reports a suspended credential as state=suspended, valid=false",
+        c == 200 and ver.get("found") is True and ver.get("state") == "suspended" and ver.get("valid") is False, ver)
     c, rn = jget("POST", f"/api/admin/credentials/{rowid}/status", token=admin, body={"status": "active"})
     chk("31e admin reinstates the credential to active", c == 200 and rn.get("ok"), rn)
     st3, body3, _ = _raw_get(f"/api/me/certificate/pdf?id={cid}", token=stok)
     chk("31f the reinstated certificate downloads again (200)", st3 == 200 and body3[:5] == b"%PDF-", st3)
+    c, ver2 = jget("GET", f"/api/verify?id={cid}")
+    chk("31f2 after reinstatement /api/verify reports the credential valid again",
+        c == 200 and ver2.get("state") == "active" and ver2.get("valid") is True, ver2)
 
 def test_exam_self_reschedule(admin):
     # Incremental Testing Programme — the candidate self-service reschedule endpoint POST /api/me/exam/reschedule

@@ -267,7 +267,9 @@ public static class Public
             var status = H.Str(c["status"]) ?? "active";
             var expires = H.Str(c["expires_at"]);
             var lapsed = status == "active" && H.IsPast(expires);
-            var state = status == "revoked" ? "revoked" : (lapsed || status == "expired") ? "expired" : "active";
+            // 'suspended' must surface as its own non-valid state: the download gate already blocks a
+            // suspended certificate, and the public register must agree rather than report it valid.
+            var state = status == "revoked" ? "revoked" : status == "suspended" ? "suspended" : (lapsed || status == "expired") ? "expired" : "active";
             // document_hash lets anyone independently confirm a downloaded PDF is the exact one PCI issued
             // (recompute SHA-256 of the file and compare) — tamper-evidence without trusting the visual.
             var docHash = H.Str(c["pdf_sha256"]);
