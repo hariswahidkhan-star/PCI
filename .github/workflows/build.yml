@@ -175,10 +175,9 @@ jobs:
   e2e:
     # Browser E2E + axe accessibility (Playwright) over the backend-served public site. Playwright's
     # webServer boots the built backend DLL and waits for /api/health, then runs the specs headless.
-    # NON-BLOCKING (continue-on-error) until it has a green run history — mirroring the optional S3/moto
-    # step in the backend job — so an as-yet-unproven browser run can never turn the pipeline red.
+    # GATING since it accumulated a long unbroken green history across the coverage-programme heads —
+    # a red browser run now blocks the pipeline like any other job.
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
