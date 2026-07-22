@@ -16,7 +16,7 @@ test.describe('public site', () => {
   })
 
   test('the verify page renders the credential lookup', async ({ page }) => {
-    const resp = await page.goto('/verify')
+    const resp = await page.goto('/verify.html')
     expect(resp?.status() ?? 0).toBeLessThan(400)
     await expect(page).toHaveTitle(/Verify a Credential/i)
     await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
