@@ -3069,6 +3069,7 @@ def run(proc):
     test_admin_rbac_viewer_sweep()
     test_partner_login_lockout(admin)
     test_discount_code_validation_edges(admin)
+    test_partner_commission_accrual(admin)
 
     print("\n(assertions complete)")
 
@@ -3546,6 +3547,51 @@ def test_discount_code_validation_edges(admin):
     mkcode("EDGE40OK", discount_value=10, status="active")
     r = val("EDGE40OK")
     chk("40l a clean active code validates and returns a price", r.get("valid") is True and r.get("final_amount") is not None, r)
+
+def test_partner_commission_accrual(admin):
+    # Incremental Testing Programme — closes the recorded §37 follow-up. The commission ledger is DERIVED
+    # (accrued = attributed × pct/100 over PAID partner-code redemptions; balance = accrued − payouts), and
+    # §37 asserted only its shape with a zero balance. §41 drives a REAL paid redemption of a partner-linked
+    # code through the signed Stripe webhook and asserts a non-zero accrual, then records a payout via the
+    # admin endpoint and checks the balance deducts. No application changes.
+    print("\n=== 41. Partner commission accrual from a paid redemption (derived ledger) ===")
+    c, tp = jget("POST", "/api/admin/training-partners", token=admin, body={"name": "Commission College 41"})
+    pid = tp["id"]
+    jget("PATCH", f"/api/admin/training-partners/{pid}", token=admin, body={"commission_pct": 20})
+    c, pu = jget("POST", f"/api/admin/training-partners/{pid}/users", token=admin, body={"email": "commission-41@ex.co", "name": "Cora Ledger", "role": "admin"})
+    c, pl = jget("POST", "/api/partner/auth/login", body={"email": "commission-41@ex.co", "password": pu.get("temp_password", "")})
+    ptok = pl.get("token")
+    jget("POST", "/api/partner/auth/password", token=ptok, body={"new_password": "Commission!2026x"})
+    # A partner-linked, active discount code. Stored UPPERCASE — the webhook matches the metadata value verbatim.
+    con = dbconn()
+    con.execute("INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,active,status,partner_id) VALUES(?,?,?,?,?,?,?)",
+                ("PART41CODE", "percentage", 20, "all", 1, "active", pid))
+    con.commit(); con.close()
+    c, comm0 = jget("GET", "/api/partner/commissions", token=ptok)
+    chk("41a before any paid redemption the ledger accrues nothing",
+        c == 200 and (comm0.get("attributed_revenue") or 0) == 0 and (comm0.get("accrued") or 0) == 0, comm0)
+    # Drive a REAL paid redemption of the partner code through the signed webhook (final_amount = 119).
+    stok, suid = make_paid_user("commission-buyer-41@ex.co", product="membership",
+                                metadata={"discount_code": "PART41CODE", "standard_amount": "149", "code_amount": "30", "final_amount": "119"})
+    c, comm1 = jget("GET", "/api/partner/commissions", token=ptok)
+    chk("41b the paid redemption attributes its final_amount to the partner",
+        c == 200 and round(comm1.get("attributed_revenue", 0), 2) == 119.0, comm1.get("attributed_revenue"))
+    chk("41c commission accrues at the configured pct (119 × 20% = 23.80)", round(comm1.get("accrued", 0), 2) == 23.80, comm1.get("accrued"))
+    chk("41d the redemption's payment appears in the ledger detail", any(p.get("code") == "PART41CODE" for p in comm1.get("payments", [])), comm1.get("payments"))
+    # An admin-recorded payout deducts from the outstanding balance; a zero payout is rejected.
+    jget("POST", f"/api/admin/training-partners/{pid}/payouts", token=admin, body={"amount": 10, "note": "Q1 settlement"})
+    chk("41e a $0 payout is rejected (bad_amount, 400)",
+        jget("POST", f"/api/admin/training-partners/{pid}/payouts", token=admin, body={"amount": 0})[0] == 400)
+    c, comm2 = jget("GET", "/api/partner/commissions", token=ptok)
+    chk("41f a recorded payout deducts from the balance (23.80 − 10 = 13.80)",
+        round(comm2.get("paid_out", 0), 2) == 10.0 and round(comm2.get("balance", 0), 2) == 13.80, comm2)
+    # Admin sees the identical derived ledger; the admin route needs the 'partners' permission.
+    c, admledger = jget("GET", f"/api/admin/training-partners/{pid}/commissions", token=admin)
+    chk("41g admin sees the same derived ledger numbers as the partner",
+        c == 200 and round(admledger.get("accrued", 0), 2) == 23.80 and round(admledger.get("balance", 0), 2) == 13.80, admledger)
+    vtok = globals().get("_VIEWER_TOK")
+    chk("41h the admin commission ledger needs the 'partners' permission (viewer 403)",
+        bool(vtok) and jget("GET", f"/api/admin/training-partners/{pid}/commissions", token=vtok)[0] == 403)
 
 if __name__ == "__main__":
     main()
