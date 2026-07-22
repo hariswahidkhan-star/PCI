@@ -3076,6 +3076,7 @@ def run(proc):
     test_announcement_config(admin)
     test_notifications_config(admin)
     test_member_directory(admin)
+    test_forum_module(admin)
 
     print("\n(assertions complete)")
 
@@ -3920,6 +3921,114 @@ def test_member_directory(admin):
     con = dbconn(); optin = con.execute("SELECT directory_opt_in FROM student_profiles WHERE user_id=?", (uid,)).fetchone()[0]; con.close()
     chk("47i admin unlist removes the member from the public directory and clears opt_in",
         all(r.get("id") != uid for r in pub3.get("rows", [])) and (optin in (0, None)), optin)
+
+def test_forum_module(admin):
+    # Incremental Testing Programme — the public discussion forum (Endpoints/Forum.cs) had no coverage:
+    # anonymous display-name posting with validation + honeypot + link cap + per-IP-hash fixed-window
+    # rate limits, community flagging with a 3-flag auto-hold, and content-gated admin moderation that
+    # never exposes the ip_hash. The limiter keys on the trusted LAST X-Forwarded-For hop, so distinct
+    # last hops model independent clients and each check exercises its own branch in isolation.
+    print("\n=== 48. Forum: anonymous posting + honeypot + flag auto-hold + moderation ===")
+    _hop = [0]
+    def fj(method, path, body=None):
+        _hop[0] += 1
+        return jget(method, path, body=body, headers={"X-Forwarded-For": f"203.0.113.{_hop[0]}"})
+
+    # 48a. The fixed category list is public and serves the documented keys.
+    c, cats = jget("GET", "/api/forum/categories")
+    keys = [x.get("key") for x in cats.get("categories", [])] if isinstance(cats, dict) else []
+    chk("48a public category list serves the fixed keys", c == 200 and "general" in keys and "exam-prep" in keys, keys)
+
+    # 48b. Honeypot: a filled 'website' field fake-succeeds (so the bot believes it) but stores NOTHING.
+    c, hp = fj("POST", "/api/forum/threads", body={"website": "http://spam.example", "name": "Bot",
+                                                   "title": "Honeypot title 48", "body": "x" * 40, "category": "general"})
+    con = dbconn(); nhp = con.execute("SELECT COUNT(*) FROM forum_threads WHERE title=?", ("Honeypot title 48",)).fetchone()[0]; con.close()
+    chk("48b honeypot submission fake-succeeds, returns no id, stores nothing",
+        c == 200 and hp.get("ok") is True and "id" not in hp and nhp == 0, (hp, nhp))
+
+    # 48c. Validation: short title / unknown category / >2 links are each rejected with their own code.
+    c1, r1 = fj("POST", "/api/forum/threads", body={"name": "Ana", "title": "short", "body": "b" * 40, "category": "general"})
+    c2, r2 = fj("POST", "/api/forum/threads", body={"name": "Ana", "title": "A valid title 48", "body": "b" * 40, "category": "nope"})
+    c3, r3 = fj("POST", "/api/forum/threads", body={"name": "Ana", "title": "A valid title 48",
+                                                    "body": "see http://a.co http://b.co http://c.co padding padding", "category": "general"})
+    chk("48c bad title / bad category / >2 links are each rejected",
+        (c1, r1.get("error")) == (400, "bad_title") and (c2, r2.get("error")) == (400, "bad_category")
+        and (c3, r3.get("error")) == (400, "too_many_links"), (r1, r2, r3))
+
+    # 48d. A valid thread is created and listed in its category with its opening post live.
+    hop_d = "203.0.113.201"
+    c, t = jget("POST", "/api/forum/threads", headers={"X-Forwarded-For": hop_d},
+                body={"name": "Asma", "title": "Scheduling EVM questions 48",
+                      "body": "How do you baseline schedule variance on hybrid programmes?", "category": "exam-prep"})
+    tid = t.get("id") if isinstance(t, dict) else None
+    c2, lst = jget("GET", "/api/forum/threads?category=exam-prep")
+    row = next((r for r in lst.get("threads", []) if r.get("id") == tid), None)
+    chk("48d a valid thread is created and listed in its category",
+        c == 200 and t.get("ok") is True and bool(tid) and bool(row)
+        and row.get("author_name") == "Asma" and row.get("reply_count") == 0, (t, row))
+
+    # 48e. Fixed-window rate limit: the same client cannot open a second thread within 2 minutes.
+    c, rl = jget("POST", "/api/forum/threads", headers={"X-Forwarded-For": hop_d},
+                 body={"name": "Asma", "title": "Second thread too soon 48",
+                       "body": "This one should hit the 2-minute window.", "category": "exam-prep"})
+    chk("48e a second thread from the same client inside 2 minutes is 429 rate_limited",
+        c == 429 and rl.get("error") == "rate_limited", (c, rl))
+
+    # 48f. A reply (different client) increments reply_count and appears in the public thread view.
+    c, p = jget("POST", f"/api/forum/threads/{tid}/posts", headers={"X-Forwarded-For": "203.0.113.202"},
+                body={"name": "Bilal", "body": "Track SV against the re-baselined PMB."})
+    pid = p.get("id") if isinstance(p, dict) else None
+    c2, tv = jget("GET", f"/api/forum/threads/{tid}")
+    chk("48f a reply increments reply_count and shows in the thread view",
+        c == 200 and bool(pid) and tv.get("thread", {}).get("reply_count") == 1
+        and any(pp.get("id") == pid and pp.get("author_name") == "Bilal" for pp in tv.get("posts", [])), (p, tv.get("thread")))
+
+    # 48g. Community flagging: 3 flags auto-hold the post; the report response never reveals the outcome.
+    rr = None
+    for _ in range(3):
+        c, rr = jget("POST", f"/api/forum/posts/{pid}/report", headers={"X-Forwarded-For": "203.0.113.203"})
+    c2, tv2 = jget("GET", f"/api/forum/threads/{tid}")
+    chk("48g three community flags auto-hide the post and the response stays opaque",
+        c == 200 and rr == {"ok": True} and all(pp.get("id") != pid for pp in tv2.get("posts", [])), (rr, tv2.get("posts")))
+
+    # 48h/48i. The moderation queue is content-gated; it surfaces the held post but NEVER the ip_hash.
+    vtok = globals().get("_VIEWER_TOK")
+    chk("48h the moderation queue needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/forum/queue", token=vtok)[0] == 403)
+    c, q = jget("GET", "/api/admin/forum/queue", token=admin)
+    qrow = next((r for r in q.get("posts", []) if r.get("id") == pid), None)
+    chk("48i admin queue surfaces the auto-held post (status, flags, joined title) without any ip_hash",
+        c == 200 and bool(qrow) and qrow.get("status") == "hidden" and (qrow.get("flags") or 0) >= 3
+        and qrow.get("thread_title") == "Scheduling EVM questions 48" and "ip_hash" not in json.dumps(q), qrow)
+
+    # 48j. Admin restore puts the post back live with flags cleared → publicly visible again.
+    jget("POST", f"/api/admin/forum/posts/{pid}", token=admin, body={"action": "restore"})
+    con = dbconn(); strow = con.execute("SELECT status,flags FROM forum_posts WHERE id=?", (pid,)).fetchone(); con.close()
+    c, tv3 = jget("GET", f"/api/forum/threads/{tid}")
+    chk("48j admin restore returns the post to live with flags cleared",
+        tuple(strow) == ("live", 0) and any(pp.get("id") == pid for pp in tv3.get("posts", [])), strow)
+
+    # 48k. Locking a thread refuses new replies with 409.
+    jget("POST", f"/api/admin/forum/threads/{tid}", token=admin, body={"action": "lock"})
+    c, lk = fj("POST", f"/api/forum/threads/{tid}/posts", body={"name": "Cara", "body": "Am I too late to join this one?"})
+    chk("48k a locked thread refuses new replies (409 locked)", c == 409 and lk.get("error") == "locked", (c, lk))
+
+    # 48l. Thread moderation is content-gated; hiding a thread 404s it publicly and delists it.
+    chk("48l thread moderation needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("POST", f"/api/admin/forum/threads/{tid}", token=vtok, body={"action": "hide"})[0] == 403)
+    jget("POST", f"/api/admin/forum/threads/{tid}", token=admin, body={"action": "hide"})
+    c1 = jget("GET", f"/api/forum/threads/{tid}")[0]
+    c2, lst2 = jget("GET", "/api/forum/threads?category=exam-prep")
+    chk("48m a hidden thread 404s publicly and vanishes from the listing",
+        c1 == 404 and all(r.get("id") != tid for r in lst2.get("threads", [])), (c1, lst2.get("total")))
+
+    # 48n. Deleting a thread purges it and every one of its posts.
+    jget("POST", f"/api/admin/forum/threads/{tid}", token=admin, body={"action": "delete"})
+    con = dbconn()
+    nt = con.execute("SELECT COUNT(*) FROM forum_threads WHERE id=?", (tid,)).fetchone()[0]
+    np = con.execute("SELECT COUNT(*) FROM forum_posts WHERE thread_id=?", (tid,)).fetchone()[0]
+    con.close()
+    chk("48n deleting a thread purges it and all its posts", nt == 0 and np == 0, (nt, np))
 
 if __name__ == "__main__":
     main()
