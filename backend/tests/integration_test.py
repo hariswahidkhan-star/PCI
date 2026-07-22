@@ -3092,6 +3092,7 @@ def run(proc):
     test_site_chat(admin)
     test_admin_seo(admin)
     test_admin_i18n(admin)
+    test_honorary_idv(admin)
 
     print("\n(assertions complete)")
 
@@ -4571,6 +4572,129 @@ def test_admin_i18n(admin):
     chk("53p a config update that omits the API key keeps the stored secret (still configured)",
         c == 200 and r.get("configured") is True, r)
     srv.shutdown()
+
+def test_honorary_idv(admin):
+    # Incremental Testing Programme §54 — shortlist-gated honorary identity verification
+    # (Endpoints/HonoraryIdv.cs, ZERO prior coverage): the owner-only shortlist mints a one-time
+    # 14-day link whose raw token is never stored (SHA-256 only); the public tokenised GET/POST
+    # (data minimisation, declaration ladder, MIME allow-list), token burn + replay defence,
+    # metadata-only admin doc list, byte-exact owner download, one-click delete, and 410 expiry.
+    print("\n=== 54. Honorary IDV: hashed one-time token, declarations, protected docs, delete, expiry ===")
+
+    def _tok(resp):
+        l = resp.get("link", "") or ""
+        return l.split("token=", 1)[1] if "token=" in l else ""
+
+    email = "idv-54@ex.co"
+    c, ha = jget("POST", "/api/honorary-application", body=_hon_app(email))
+    ref = ha.get("reference")
+    con = dbconn(); aid = con.execute("SELECT id FROM honorary_applications WHERE email=? ORDER BY id DESC LIMIT 1", (email,)).fetchone()[0]; con.close()
+
+    # --- owner gate + unknown id ---
+    vtok = globals().get("_VIEWER_TOK")
+    chk("54a the shortlist is owner-only (401 unauthenticated, 403 for a viewer admin)",
+        jget("POST", f"/api/admin/honorary-applications/{aid}/shortlist")[0] == 401
+        and bool(vtok) and jget("POST", f"/api/admin/honorary-applications/{aid}/shortlist", token=vtok)[0] == 403)
+    c, nf = jget("POST", "/api/admin/honorary-applications/99999999/shortlist", token=admin)
+    chk("54b shortlisting an unknown application is not_found (404)", c == 404 and nf.get("error") == "not_found", (c, nf))
+
+    # --- shortlist mints a one-time link; the DB keeps only the token's SHA-256 ---
+    c, sl = jget("POST", f"/api/admin/honorary-applications/{aid}/shortlist", token=admin)
+    raw = _tok(sl)
+    chk("54c shortlisting mints a one-time verification link that expires in 14 days",
+        c == 200 and sl.get("ok") is True and "/honorary-verification.html?token=" in sl.get("link", "")
+        and sl.get("expires_days") == 14 and len(raw) == 64, sl)
+    con = dbconn(); row = con.execute("SELECT idv_token,idv_status,shortlisted FROM honorary_applications WHERE id=?", (aid,)).fetchone(); con.close()
+    chk("54d the DB stores ONLY the SHA-256 of the token (never the raw), status invited + shortlisted",
+        row and row[0] == sha256hex(raw) and row[0] != raw and row[1] == "invited" and H0(row[2]) == 1, row)
+
+    # --- public GET: minimum context, no email; bad tokens miss cleanly ---
+    c, g = jget("GET", f"/api/honorary-idv/{raw}")
+    chk("54e the public link returns the MINIMUM context: first name + reference, not yet submitted",
+        c == 200 and g.get("ok") is True and g.get("first_name") == "Ada" and bool(ref) and g.get("reference") == ref
+        and g.get("already_submitted") is False and g.get("stage") == "shortlisted", g)
+    chk("54f the tokenised response never contains the applicant's email (data minimisation)",
+        email not in json.dumps(g).lower(), g)
+    c1, g1 = jget("GET", "/api/honorary-idv/" + "f" * 64)
+    c2, g2 = jget("GET", "/api/honorary-idv/tooshort")
+    chk("54g a garbage token and a <16-char token both miss cleanly (404 invalid_token)",
+        c1 == 404 and g1.get("error") == "invalid_token" and c2 == 404 and g2.get("error") == "invalid_token", (c1, c2))
+
+    # --- declaration ladder, missing photo, and the storage intake's MIME allow-list ---
+    ca, d1 = jget("POST", f"/api/honorary-idv/{raw}", body={})
+    cb, d2 = jget("POST", f"/api/honorary-idv/{raw}", body={"declaration_truthful": True})
+    cc, d3 = jget("POST", f"/api/honorary-idv/{raw}", body={"declaration_truthful": True, "background_declaration": True})
+    chk("54h the declaration ladder rejects step by step: truthfulness, background, consent (all 400)",
+        (ca, d1.get("error")) == (400, "declaration_required")
+        and (cb, d2.get("error")) == (400, "background_required")
+        and (cc, d3.get("error")) == (400, "consent_required"), (d1, d2, d3))
+    FLAGS = {"declaration_truthful": True, "background_declaration": True, "consent": True}
+    c, d4 = jget("POST", f"/api/honorary-idv/{raw}", body=dict(FLAGS))
+    chk("54i all declarations but no files is photo_required (400)", c == 400 and d4.get("error") == "photo_required", (c, d4))
+    c, d5 = jget("POST", f"/api/honorary-idv/{raw}",
+                 body=dict(FLAGS, photo=TINY_PNG, government_id="data:text/plain;base64,aGVsbG8="))
+    chk("54j a disallowed file type is refused by the intake, naming the offending document",
+        c == 400 and d5.get("error") == "file_type_not_allowed" and d5.get("doc_kind") == "government_id", d5)
+
+    # --- full submission: 2 docs stored, metadata-only listing, token burned ---
+    PNG_BYTES = base64.b64decode(TINY_PNG.split(",", 1)[1])
+    c, sub = jget("POST", f"/api/honorary-idv/{raw}",
+                  body=dict(FLAGS, photo=TINY_PNG, photo_filename="face-54.png",
+                            government_id=TINY_PNG, government_id_filename="passport-54.png"))
+    chk("54k a full submission (photo + government ID + declarations) is received", c == 200 and sub.get("ok") is True, sub)
+    c, dl = jget("GET", f"/api/admin/honorary-applications/{aid}/idv", token=admin)
+    docs = dl.get("documents", [])
+    chk("54l the admin list shows exactly the 2 documents as METADATA ONLY (no storage_ref/sha256)",
+        c == 200 and len(docs) == 2 and sorted(d.get("doc_kind") for d in docs) == ["government_id", "photo"]
+        and all("storage_ref" not in d and "sha256" not in d for d in docs)
+        and all(d.get("mime") == "image/png" and d.get("size_bytes") == len(PNG_BYTES)
+                and d.get("filename") and d.get("created_at") for d in docs), docs)
+    con = dbconn(); row = con.execute("SELECT idv_status,idv_token,background_declaration FROM honorary_applications WHERE id=?", (aid,)).fetchone(); con.close()
+    chk("54m submission records submitted + the attestation and BURNS the one-time token (NULL)",
+        row and row[0] == "submitted" and row[1] is None and H0(row[2]) == 1, row)
+    c1, _g = jget("GET", f"/api/honorary-idv/{raw}")
+    c2, r2 = jget("POST", f"/api/honorary-idv/{raw}", body=dict(FLAGS, photo=TINY_PNG, government_id=TINY_PNG))
+    chk("54n the used link is dead: GET and a POST replay both miss (404, one-time)",
+        c1 == 404 and c2 == 404 and r2.get("error") == "invalid_token", (c1, c2))
+
+    # --- re-shortlist: a DIFFERENT token, already_submitted page, the CASE WHEN status guard ---
+    c, sl2 = jget("POST", f"/api/admin/honorary-applications/{aid}/shortlist", token=admin)
+    raw2 = _tok(sl2)
+    c2, g3 = jget("GET", f"/api/honorary-idv/{raw2}")
+    con = dbconn(); st2 = con.execute("SELECT idv_status FROM honorary_applications WHERE id=?", (aid,)).fetchone()[0]; con.close()
+    chk("54o re-shortlisting mints a DIFFERENT token; the page reports already submitted; status stays submitted",
+        c == 200 and len(raw2) == 64 and raw2 != raw and c2 == 200 and g3.get("already_submitted") is True
+        and st2 == "submitted", (raw2 == raw, g3.get("already_submitted"), st2))
+    c, rp = jget("POST", f"/api/honorary-idv/{raw2}", body=dict(FLAGS, photo=TINY_PNG, government_id=TINY_PNG))
+    chk("54p a second submission on the fresh link is refused (409 already_submitted)",
+        c == 409 and rp.get("error") == "already_submitted", (c, rp))
+
+    # --- owner download is byte-exact; viewer admin cannot even list the docs ---
+    photo_id = next((d.get("id") for d in docs if d.get("doc_kind") == "photo"), None)
+    st, blob, ct = _raw_get(f"/api/admin/honorary-applications/{aid}/idv/{photo_id}/file", token=admin)
+    chk("54q the owner downloads the EXACT stored bytes (envelope encryption round-trips); viewer 403 on the list",
+        st == 200 and blob == PNG_BYTES and "image/png" in ct
+        and bool(vtok) and jget("GET", f"/api/admin/honorary-applications/{aid}/idv", token=vtok)[0] == 403, (st, ct))
+
+    # --- one-click delete: files gone, status deleted, the download dies ---
+    c, de = jget("POST", f"/api/admin/honorary-applications/{aid}/idv/delete", token=admin)
+    c2, dl2 = jget("GET", f"/api/admin/honorary-applications/{aid}/idv", token=admin)
+    st, _b, _ct = _raw_get(f"/api/admin/honorary-applications/{aid}/idv/{photo_id}/file", token=admin)
+    con = dbconn(); st3 = con.execute("SELECT idv_status FROM honorary_applications WHERE id=?", (aid,)).fetchone()[0]; con.close()
+    chk("54r one-click delete erases both files: list empty, status deleted, the download now 404",
+        c == 200 and de.get("ok") is True and de.get("deleted") == 2 and dl2.get("documents") == []
+        and st == 404 and st3 == "deleted", (de, st, st3))
+
+    # --- expiry: a lapsed link on a second fresh application is 410 Gone, reason 'expired' ---
+    email2 = "idv-54b@ex.co"
+    jget("POST", "/api/honorary-application", body=_hon_app(email2))
+    con = dbconn(); aid2 = con.execute("SELECT id FROM honorary_applications WHERE email=? ORDER BY id DESC LIMIT 1", (email2,)).fetchone()[0]; con.close()
+    c, sl3 = jget("POST", f"/api/admin/honorary-applications/{aid2}/shortlist", token=admin)
+    raw3 = _tok(sl3)
+    con = dbconn(); con.execute("UPDATE honorary_applications SET idv_token_expires='2020-01-01 00:00:00' WHERE id=?", (aid2,)); con.commit(); con.close()
+    c, ex = jget("GET", f"/api/honorary-idv/{raw3}")
+    chk("54s a lapsed link is 410 Gone with the expired reason (never a silent 404)",
+        c == 410 and ex.get("error") == "expired", (c, ex))
 
 if __name__ == "__main__":
     main()
