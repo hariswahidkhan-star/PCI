@@ -142,6 +142,8 @@ jobs:
       - run: npm ci
       - name: Typecheck
         run: npm run typecheck
+      - name: Unit + component tests (Vitest + React Testing Library)
+        run: npm run test
       - name: Production build (student + admin)
         run: npm run build
       - name: Fail if either app produced no assets
