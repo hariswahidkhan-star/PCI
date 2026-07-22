@@ -77,16 +77,27 @@ def no_follow(method, path, token=None):
 
 def sha256hex(s): return hashlib.sha256(s.encode()).hexdigest()
 
-def sign_and_send_webhook(session_id, email, product, pi_id, metadata=None, amount=9900, event_id=None, etype="checkout.session.completed"):
-    """Construct a Stripe event exactly as Stripe would, HMAC-sign it, POST to /api/webhook."""
+def sign_and_send_webhook(session_id, email, product, pi_id, metadata=None, amount=9900, event_id=None, etype="checkout.session.completed", refunded=True):
+    """Construct a Stripe event exactly as Stripe would, HMAC-sign it, POST to /api/webhook.
+
+    The data.object is shaped for the event type so Stripe.NET deserializes it into the concrete
+    model the handler casts to: a Charge for charge.refunded, a Dispute for charge.dispute.*, a bare
+    PaymentIntent for the failure events, and a full Checkout Session otherwise. For charge.refunded,
+    refunded=True is a FULL refund (revokes access); refunded=False is a partial refund (access kept)."""
     meta = {"product": product, "first_name": "Test", "last_name": "User", "country": "PK",
             "final_amount": str(amount/100), "code_amount": "0", "standard_amount": str(amount/100), "default_discount": "0"}
     if metadata: meta.update(metadata)
     obj = {"id": session_id, "object": "checkout.session", "amount_total": amount,
            "customer_email": email, "customer_details": {"email": email},
            "payment_intent": pi_id, "metadata": meta, "mode": "payment", "payment_status": "paid"}
-    if etype != "checkout.session.completed":
+    if etype in ("checkout.session.async_payment_failed", "payment_intent.payment_failed"):
         obj = {"id": pi_id, "object": "payment_intent"}
+    elif etype == "charge.refunded":
+        obj = {"id": "ch_" + sha256hex(pi_id + "ch")[:16], "object": "charge", "payment_intent": pi_id,
+               "refunded": bool(refunded), "amount": amount, "amount_refunded": amount, "amount_captured": amount}
+    elif etype.startswith("charge.dispute"):
+        obj = {"id": "dp_" + sha256hex(pi_id + "dp")[:16], "object": "dispute", "payment_intent": pi_id,
+               "amount": amount, "status": "lost"}
     # Stripe.net's EventConverter dereferences data.object and request without null-guards,
     # so a genuine event's top-level shape is required: object/api_version/data/request/
     # pending_webhooks all present (a bare {type,data} crashes ConstructEvent with an NRE).
@@ -3046,6 +3057,7 @@ def run(proc):
     test_membership_gate()
     test_privacy_erasure(admin)
     test_login_lockout()
+    test_payment_reversal_webhooks(admin)
 
     print("\n(assertions complete)")
 
@@ -3115,6 +3127,53 @@ def test_login_lockout():
     chk("28d after the lock clears the correct password logs in again", c == 200 and bool(r3.get("token")), (c, r3.get("error")))
     con = dbconn(); row = con.execute("SELECT failed_logins, lockout_until FROM users WHERE id=?", (uid,)).fetchone(); con.close()
     chk("28e a successful login clears the failure counter and lockout (OnSuccess)", bool(row) and (row[0] or 0) == 0 and row[1] is None, row)
+
+def test_payment_reversal_webhooks(admin):
+    # Incremental Testing Programme — Stripe reversal branch (Payments.cs charge.refunded /
+    # charge.dispute.*), previously exercised only via the admin manual-reversal path, never through a
+    # signed webhook event. Money returned -> access revoked; a partial refund leaves access intact.
+    print("\n=== 29. Payment reversal webhooks (refund / dispute revoke access; partial refund does not) ===")
+    # (a) full refund of a bundle -> payment refunded, membership lapsed, unused entitlement revoked
+    _, ruid = make_paid_user("refundme@ex.co", pi="pi_refundme", sid="cs_refundme")
+    con = dbconn()
+    m0 = con.execute("SELECT status FROM memberships WHERE user_id=?", (ruid,)).fetchone()
+    p0 = con.execute("SELECT payment_status FROM payments WHERE provider_payment_id=?", ("pi_refundme",)).fetchone()
+    con.close()
+    chk("29a bundle purchase is active before the refund", bool(m0) and m0[0] == "active" and bool(p0) and p0[0] == "paid", (m0, p0))
+    code, _ = sign_and_send_webhook("cs_refund_ev", "refundme@ex.co", "bundle", "pi_refundme", etype="charge.refunded")
+    chk("29b charge.refunded webhook accepted (200)", code == 200, code)
+    con = dbconn()
+    p1 = con.execute("SELECT payment_status FROM payments WHERE provider_payment_id=?", ("pi_refundme",)).fetchone()
+    m1 = con.execute("SELECT status FROM memberships WHERE user_id=?", (ruid,)).fetchone()
+    e1 = con.execute("SELECT status FROM exam_entitlements WHERE user_id=?", (ruid,)).fetchall()
+    con.close()
+    chk("29c a full refund flips the payment to refunded", bool(p1) and p1[0] == "refunded", p1)
+    chk("29d a full refund lapses the membership it activated", bool(m1) and m1[0] == "expired", m1)
+    chk("29e a full refund revokes the unused exam entitlement", bool(e1) and all(r[0] == "revoked" for r in e1), e1)
+    # (b) dispute created -> payment reversed, membership lapsed
+    _, duid = make_paid_user("disputeme@ex.co", pi="pi_disputeme", sid="cs_disputeme")
+    code, _ = sign_and_send_webhook("cs_dispute_ev", "disputeme@ex.co", "bundle", "pi_disputeme", etype="charge.dispute.created")
+    con = dbconn()
+    pd = con.execute("SELECT payment_status FROM payments WHERE provider_payment_id=?", ("pi_disputeme",)).fetchone()
+    md = con.execute("SELECT status FROM memberships WHERE user_id=?", (duid,)).fetchone()
+    con.close()
+    chk("29f a dispute reverses the payment", code == 200 and bool(pd) and pd[0] == "reversed", (code, pd))
+    chk("29g a dispute lapses the membership", bool(md) and md[0] == "expired", md)
+    # (c) partial refund (refunded=false) -> access retained
+    _, puid = make_paid_user("partialref@ex.co", pi="pi_partialref", sid="cs_partialref")
+    code, _ = sign_and_send_webhook("cs_partial_ev", "partialref@ex.co", "bundle", "pi_partialref", etype="charge.refunded", refunded=False)
+    con = dbconn()
+    pp = con.execute("SELECT payment_status FROM payments WHERE provider_payment_id=?", ("pi_partialref",)).fetchone()
+    mp = con.execute("SELECT status FROM memberships WHERE user_id=?", (puid,)).fetchone()
+    con.close()
+    chk("29h a partial refund does not reverse the payment", bool(pp) and pp[0] == "paid", (code, pp))
+    chk("29i a partial refund does not lapse the membership", bool(mp) and mp[0] == "active", mp)
+    # (d) idempotency — re-delivering the full-refund event is a no-op (already refunded)
+    code2, _ = sign_and_send_webhook("cs_refund_ev2", "refundme@ex.co", "bundle", "pi_refundme", etype="charge.refunded")
+    con = dbconn()
+    p2 = con.execute("SELECT payment_status FROM payments WHERE provider_payment_id=?", ("pi_refundme",)).fetchone()
+    con.close()
+    chk("29j re-delivering the refund event stays refunded (idempotent)", code2 == 200 and bool(p2) and p2[0] == "refunded", (code2, p2))
 
 if __name__ == "__main__":
     main()

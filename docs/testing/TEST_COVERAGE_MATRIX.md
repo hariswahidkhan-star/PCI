@@ -16,6 +16,18 @@ _Audit-first output of the Master Incremental Testing Programme (Section 1). Pro
 - **Priority:** 3 P0 · 30 P1 · 4 P2
 - **Classification:** 26 Existing Coverage Partial · 5 Unit Tests Missing · 3 Integration Tests Missing · 2 End-to-End Tests Missing · 1 Operator Configuration Required
 
+## Increments delivered (running log)
+
+The audit table below is the frozen baseline. This log records the increments added since, most recent first. Each is a live-HTTP addition to `backend/tests/integration_test.py`, verified on **both SQLite and MySQL** in the same run the suite uses in CI.
+
+| Done | Pri | Area | New assertions | What it proves |
+|------|-----|------|----------------|----------------|
+| ✅ | P0 | Payments — Stripe reversal webhooks | §29a–29j (10) | `charge.refunded` (full) → payment refunded + membership lapsed + unused entitlement revoked; `charge.dispute.created` → reversed + membership lapsed; a partial refund keeps access; the refund event is idempotent. Driven through a signed webhook (helper now shapes Charge/Dispute objects). |
+| ✅ | P0 | Auth — lockout + TOTP replay | §14u5/u6, §28a–28e (7) | LoginGuard per-account lockout (threshold → `lockout_until` set + counter reset → correct password refused while locked → cleared on success); TOTP replay guard (a consumed timestep is refused, a strictly-advancing code is accepted). |
+| ✅ | P0 | Privacy — right-to-erasure lifecycle | §27a–27l (12) | Student request → pending + fulfilment deadline; de-dup; admin acknowledge (pending-only) / reject (note-required, no re-reject) / complete (confirm-required → anonymise + close); admin queue unreachable with a student token. |
+
+All three Critical / P0 zero-or-partial-coverage gaps from the baseline are now closed. Remaining work is the P1/P2 backlog in the table below (frontend Vitest/RTL, Playwright E2E + axe, `PCI.Backend.Tests` xUnit, migration/contract tests, CI quality-gate wiring), plus the Operator-Required items (provider/Render/DR/perf).
+
 ## Coverage Matrix
 
 | Pri | Risk | Module | Coverage present | Classification | Main gap (abridged) | Incremental tests to add (abridged) |
