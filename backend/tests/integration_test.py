@@ -3097,6 +3097,7 @@ def run(proc):
     test_public_documents(admin)
     test_marketing_centre(admin)
     test_admin_extra_gaps(admin)
+    test_proctoring_analytics_gaps(admin)
 
     print("\n(assertions complete)")
 
@@ -5466,6 +5467,183 @@ def test_admin_extra_gaps(admin):
         and "hijack58" not in json.dumps(rz2)
         and c3 == 400 and tr.get("error") == "token_required"
         and c4 == 404 and iv.get("error") == "invalid_or_expired", (tB[:8], nrows, rz2, c3, c4))
+
+def test_proctoring_analytics_gaps(admin):
+    # Incremental Testing Programme §59 — the two adjacent read-side admin surfaces still uncovered:
+    # AdminProctoring.cs beyond the review lifecycle (the evidence stream + its access control, live board,
+    # session dossier, proctor messaging, admin launch-code mint, review edge branches) and AdminAnalytics.cs
+    # (reports-gated summary + CSV export, ZERO prior references). Evidence rides the REAL desktop upload
+    # path (/api/exam/evidence); DB inserts only for the broken/legacy artefacts no HTTP path can create.
+    print("\n=== 59. Proctoring evidence access control + live/dossier/launch-code edges + first-party analytics ===")
+    vtok = globals().get("_VIEWER_TOK")
+
+    # Fixture: a paid candidate with an in-progress browser sitting (never submitted in this section).
+    tok, uid = make_paid_user("proctor-59@ex.co")
+    accept_all_consents(tok); complete_profile(tok)
+    c, bk, st = book_and_start(tok, admin)
+    aid = st["attempt_id"]
+
+    # Real desktop-client evidence upload: bytes land in blob storage, the DB keeps only ref + metadata.
+    raw = base64.b64decode(TINY_PNG.split(",", 1)[1])
+    c, up = jget("POST", "/api/exam/evidence", token=tok,
+                 body={"attempt_id": aid, "kind": "frame", "data_uri": TINY_PNG})
+    con = dbconn()
+    ev = con.execute("SELECT id,storage_ref,sha256,size_bytes,mime FROM exam_evidence WHERE attempt_id=? ORDER BY id DESC",
+                     (aid,)).fetchone()
+    ecount = con.execute("SELECT evidence_count FROM exam_attempts WHERE id=?", (aid,)).fetchone()[0]
+    con.close()
+    evid = ev[0] if ev else None
+    chk("59a a real evidence upload stores a blob reference + sha256/size metadata and bumps evidence_count",
+        c == 200 and up.get("ok") is True and ev is not None and str(ev[1] or "").startswith("local:evidence/")
+        and ev[2] == hashlib.sha256(raw).hexdigest() and H0(ev[3]) == len(raw) and ev[4] == "image/png"
+        and H0(ecount) == 1, (c, ev))
+
+    stc, body, ct = _raw_get(f"/api/admin/evidence/{evid}", token=admin)
+    chk("59b the admin evidence stream round-trips the uploaded bytes exactly as image/png",
+        stc == 200 and body == raw and ct.startswith("image/png"), (stc, ct, len(body or b"")))
+
+    c1, an = jget("GET", f"/api/admin/evidence/{evid}")
+    c2, vw = jget("GET", f"/api/admin/evidence/{evid}", token=vtok)
+    chk("59c the evidence stream is proctoring-gated (anon 401 unauthorized; viewer 403 naming the section)",
+        c1 == 401 and an.get("error") == "unauthorized" and bool(vtok) and c2 == 403
+        and vw.get("error") == "forbidden" and vw.get("section") == "proctoring", (c1, c2, vw))
+
+    # Per-certification scope: an exam_manager scoped to certification 2 HAS the proctoring permission
+    # yet must be refused this cert-1 artefact, and the attempt must vanish from their session list.
+    c, sb = jget("POST", "/api/admin/team", token=admin,
+                 body={"email": "scoped-59@pci.test", "name": "Scoped 59", "role": "exam_manager", "cert_scope": [2]})
+    c, sl = admin_login_rl(lambda: {"email": "scoped-59@pci.test", "password": sb.get("temp_password", "")})
+    sctok = clear_must_change(sl.get("token"))
+    c1, sfe = jget("GET", f"/api/admin/evidence/{evid}", token=sctok)
+    c2, sls = jget("GET", "/api/admin/exam-sessions", token=sctok)
+    chk("59d a cert-scoped admin is cert_forbidden on the artefact and never sees the attempt listed",
+        c1 == 403 and sfe.get("error") == "cert_forbidden" and c2 == 200
+        and not any(H0(r.get("id")) == H0(aid) for r in sls.get("rows", [])), (c1, sfe, c2))
+
+    # Misses are clean 404s; a pre-migration inline artefact still serves via the legacy branch.
+    dangling_ref = "local:evidence/zz/" + "0" * 64 + ".png"
+    con = dbconn()
+    con.execute("INSERT INTO exam_evidence(attempt_id,user_id,kind,mime,storage_ref) VALUES(?,?,?,?,?)",
+                (aid, uid, "frame", "image/png", dangling_ref))
+    con.execute("INSERT INTO exam_evidence(attempt_id,user_id,kind,mime,data_uri) VALUES(?,?,?,?,?)",
+                (aid, uid, "legacy", "image/png", TINY_PNG))
+    dgl = con.execute("SELECT id FROM exam_evidence WHERE storage_ref=?", (dangling_ref,)).fetchone()[0]
+    leg = con.execute("SELECT id FROM exam_evidence WHERE attempt_id=? AND data_uri IS NOT NULL ORDER BY id DESC",
+                      (aid,)).fetchone()[0]
+    con.commit(); con.close()
+    c1, nf = jget("GET", "/api/admin/evidence/99999999", token=admin)
+    c2, dg = jget("GET", f"/api/admin/evidence/{dgl}", token=admin)
+    st3, lbody, lct = _raw_get(f"/api/admin/evidence/{leg}", token=admin)
+    chk("59e unknown id and a dangling storage ref both 404 not_found; a legacy inline data_uri streams as text/plain verbatim",
+        c1 == 404 and nf.get("error") == "not_found" and c2 == 404 and dg.get("error") == "not_found"
+        and st3 == 200 and lct.startswith("text/plain") and lbody.decode() == TINY_PNG, (c1, c2, st3, lct))
+
+    c, lv = jget("GET", "/api/admin/exam-sessions/live", token=admin)
+    lrow = next((r for r in lv.get("rows", []) if H0(r.get("id")) == H0(aid)), None)
+    chk("59f the live board lists the in-progress sitting with its clock and counters",
+        c == 200 and bool(lv.get("now")) and lrow is not None and lrow.get("email") == "proctor-59@ex.co"
+        and H0(lrow.get("remaining_s")) > 0 and H0(lrow.get("evidence_count")) == 1
+        and H0(lrow.get("candidate_msgs")) == 0, (c, lrow))
+
+    c1, mn = jget("POST", "/api/admin/exam-sessions/99999999/message", token=admin, body={"body": "hello"})
+    c2, mb = jget("POST", f"/api/admin/exam-sessions/{aid}/message", token=admin, body={"body": "   "})
+    c3, mk = jget("POST", f"/api/admin/exam-sessions/{aid}/message", token=admin,
+                  body={"body": "please keep your face in frame (59)"})
+    con = dbconn()
+    pm = con.execute("SELECT sender,body FROM proctor_messages WHERE attempt_id=? ORDER BY id DESC", (aid,)).fetchone()
+    con.close()
+    chk("59g proctor messaging: unknown attempt 404, blank body 400 body_required, a real message lands as sender=proctor",
+        c1 == 404 and mn.get("error") == "not_found" and c2 == 400 and mb.get("error") == "body_required"
+        and c3 == 200 and mk.get("ok") is True
+        and tuple(pm) == ("proctor", "please keep your face in frame (59)"), (c1, c2, c3, pm))
+
+    c, det = jget("GET", f"/api/admin/exam-sessions/{aid}", token=admin)
+    evrows = det.get("evidence", [])
+    legrow = next((r for r in evrows if H0(r.get("id")) == H0(leg)), None)
+    c2, d404 = jget("GET", "/api/admin/exam-sessions/99999999", token=admin)
+    chk("59h the session dossier joins user/evidence/message metadata but never the raw artefact; unknown attempt 404",
+        c == 200 and H0(det.get("attempt", {}).get("id")) == H0(aid)
+        and det.get("user", {}).get("email") == "proctor-59@ex.co" and len(evrows) == 3
+        and legrow is not None and H0(legrow.get("legacy_inline")) == 1
+        and any(m.get("sender") == "proctor" and "face in frame (59)" in str(m.get("body")) for m in det.get("messages", []))
+        and H0(det.get("summary", {}).get("total_events")) == 0
+        and TINY_PNG not in json.dumps(det)
+        and c2 == 404 and d404.get("error") == "not_found", (c, len(evrows), c2))
+
+    c1, nh = jget("POST", f"/api/admin/exam-sessions/{aid}/review", token=admin,
+                  body={"action": "release", "note": "premature"})
+    c2, cl = jget("POST", f"/api/admin/exam-sessions/{aid}/review", token=admin,
+                  body={"note": "routine check 59 - clean"})
+    con = dbconn()
+    rv = con.execute("SELECT review_status,review_note,reviewed_at FROM exam_attempts WHERE id=?", (aid,)).fetchone()
+    con.close()
+    chk("59i review edges: releasing a never-held attempt is 400 not_held; a plain review clears with the note stamped",
+        c1 == 400 and nh.get("error") == "not_held" and c2 == 200 and cl.get("ok") is True
+        and rv[0] == "cleared" and rv[1] == "routine check 59 - clean" and rv[2] is not None, (c1, c2, rv))
+
+    c1, l1 = jget("POST", "/api/admin/exam-sessions/launch-code", token=admin, body={})
+    nbtok, nbuid = make_paid_user("nobooking-59@ex.co")   # paid but never booked
+    c2, l2 = jget("POST", "/api/admin/exam-sessions/launch-code", token=admin, body={"user_id": nbuid})
+    c3, l3 = jget("POST", "/api/admin/exam-sessions/launch-code", token=admin, body={"user_id": uid})
+    code = l3.get("code", "")
+    con = dbconn()
+    lcrow = con.execute("SELECT user_id, code FROM exam_launch_codes WHERE code_hash=?", (sha256hex(code),)).fetchone()
+    con.close()
+    chk("59j admin launch-code: user_id_required, no_booking, then a 15-minute code stored only as its SHA-256",
+        c1 == 400 and l1.get("error") == "user_id_required" and c2 == 400 and l2.get("error") == "no_booking"
+        and c3 == 200 and code.startswith("PCI-") and l3.get("expires_in_seconds") == 900
+        and l3.get("uri") == "pciexam://start?code=" + code
+        and lcrow is not None and H0(lcrow[0]) == H0(uid) and lcrow[1] is None, (c1, c2, c3, lcrow))
+
+    # ---- AdminAnalytics: seed a uniquely-attributed slice of the ledger, then prove the contract ----
+    con = dbconn()
+    con.execute("INSERT INTO analytics_events(event,path,visitor,country,device,browser,utm_source,utm_campaign,created_at) "
+                "VALUES(?,?,?,?,?,?,?,?,datetime('now'))",
+                ("page_view", "/cert-59.html", "v59page", "PK", "desktop", "Chrome", "zephyr59", "camp,59"))
+    con.execute("INSERT INTO analytics_events(event,path,utm_source,created_at) VALUES(?,?,?,datetime('now'))",
+                ("registration_completed", "/register.html", "zephyr59"))
+    con.execute("INSERT INTO analytics_events(event,utm_source,value,currency,created_at) VALUES(?,?,?,?,datetime('now'))",
+                ("purchase_completed", "zephyr59", 100.25, "USD"))
+    con.execute("INSERT INTO analytics_events(event,utm_source,value,currency,created_at) VALUES(?,?,?,?,datetime('now'))",
+                ("purchase_completed", "zephyr59", 49.75, "USD"))
+    con.execute("INSERT INTO analytics_events(event,path,visitor,utm_source,created_at) VALUES(?,?,?,?,?)",
+                ("page_view", "/old-59.html", "v59old", "zephyr59old", "2020-01-01 00:00:00"))
+    con.commit(); con.close()
+
+    c1, ag = jget("GET", "/api/admin/analytics/summary")
+    c2, _v = jget("GET", "/api/admin/analytics/summary", token=vtok)
+    c3, sm = jget("GET", "/api/admin/analytics/summary", token=admin)
+    chk("59k the analytics summary is reports-gated, not proctoring (anon 401; the viewer CAN read it) with sane counters",
+        c1 == 401 and ag.get("error") == "unauthorized" and bool(vtok) and c2 == 200
+        and c3 == 200 and H0(sm.get("page_views")) >= 1 and H0(sm.get("visitors")) >= 1
+        and H0(sm.get("registrations")) >= 1 and H0(sm.get("purchases")) >= 2
+        and float(sm.get("revenue") or 0) >= 150.0, (c1, c2, c3))
+
+    src = next((r for r in sm.get("sources", []) if r.get("source") == "zephyr59"), None)
+    camp = next((r for r in sm.get("campaigns", []) if r.get("campaign") == "camp,59"), None)
+    cbs = next((r for r in sm.get("conversions_by_source", []) if r.get("source") == "zephyr59"), None)
+    today = time.strftime("%Y-%m-%d", time.gmtime())
+    chk("59l every dimension aggregates the seeded traffic exactly (source, campaign, country, device, day, revenue attribution)",
+        src is not None and H0(src.get("n")) == 1 and camp is not None and H0(camp.get("n")) == 1
+        and any(r.get("country") == "PK" for r in sm.get("countries", []))
+        and any(r.get("device") == "desktop" for r in sm.get("devices", []))
+        and any(d.get("day") == today for d in sm.get("daily", []))
+        and cbs is not None and H0(cbs.get("registrations")) == 1 and H0(cbs.get("purchases")) == 2
+        and float(cbs.get("revenue") or 0) == 150.0, (src, camp, cbs))
+
+    c, sm365 = jget("GET", "/api/admin/analytics/summary?days=9999", token=admin)
+    chk("59m the days window clamps at 365: the 2020 event never surfaces even when 9999 days are requested",
+        c == 200 and not any(r.get("source") == "zephyr59old" for r in sm365.get("sources", []))
+        and not any(p.get("path") == "/old-59.html" for p in sm365.get("top_pages", []))
+        and not any(d.get("day") == "2020-01-01" for d in sm365.get("daily", [])), c)
+
+    stc, cbody, cct = _raw_get("/api/admin/analytics/export.csv", token=admin)
+    text = cbody.decode("utf-8", "ignore")
+    header = text.splitlines()[0] if text else ""
+    chk("59n the CSV export serves text/csv with the exact 14-column header, the seeded row, quoted commas, and the window applied",
+        stc == 200 and cct.startswith("text/csv")
+        and header == "created_at,event,path,visitor,country,device,browser,utm_source,utm_medium,utm_campaign,referrer,landing,value,currency"
+        and "zephyr59" in text and '"camp,59"' in text and "2020-01-01" not in text, (stc, cct, header))
 
 if __name__ == "__main__":
     main()
