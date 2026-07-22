@@ -3072,6 +3072,7 @@ def run(proc):
     test_partner_commission_accrual(admin)
     test_reviews_moderation(admin)
     test_careers_module(admin)
+    test_events_module(admin)
 
     print("\n(assertions complete)")
 
@@ -3718,6 +3719,77 @@ def test_careers_module(admin):
     orphans = con.execute("SELECT COUNT(*) FROM job_applications WHERE job_id=?", (jid,)).fetchone()[0]
     con.close()
     chk("43o admin delete removes the posting and its applications", deld.get("ok") and gone == 0 and orphans == 0, (gone, orphans))
+
+def test_events_module(admin):
+    # Incremental Testing Programme — the events module (Endpoints/Events.cs) had no dedicated coverage:
+    # capacity-limited registration, join-link visibility (registered members only), a cancel rule
+    # (can't cancel after attending) and admin attendance that idempotently credits an APPROVED CPD entry.
+    # No application changes.
+    print("\n=== 44. Events: capacity registration + join-link gating + attendance→CPD crediting ===")
+    # Admin creates a published, capacity-1 event worth 2 CPD hours.
+    c, ev = jget("POST", "/api/admin/events", token=admin,
+                 body={"title": "Project Controls Webinar 44", "status": "published", "event_type": "webinar",
+                       "capacity": 1, "cpd_hours": 2, "join_url": "https://meet.example/pc44", "starts_at": "2026-09-01"})
+    eid = ev.get("id")
+    chk("44a admin creates a published event", c == 200 and bool(eid), ev)
+    c, bt = jget("POST", "/api/admin/events", token=admin, body={"title": "PC", "status": "published"})
+    chk("44b a too-short event title is rejected (bad_title, 400)", c == 400 and bt.get("error") == "bad_title", bt)
+    ta, ua = make_paid_user("event-a-44@ex.co")
+    tb, ub = make_paid_user("event-b-44@ex.co")
+    tc, uc = make_paid_user("event-c-44@ex.co")
+    # Before registering: the event is visible, the join link is hidden, one seat is free.
+    def my_event(tok):
+        _, r = jget("GET", "/api/me/events", token=tok)
+        return next((e for e in r.get("rows", []) if e.get("id") == eid), None)
+    ea = my_event(ta)
+    chk("44c an unregistered member sees the event but not the join link, with seats_left=1",
+        bool(ea) and ea.get("registered") is False and ea.get("join_url") in (None, "") and ea.get("seats_left") == 1, ea)
+    # Member A registers → the join link is now revealed to them.
+    c, rega = jget("POST", f"/api/me/events/{eid}/register", token=ta)
+    chk("44d member A registers successfully", c == 200 and rega.get("ok") is True, rega)
+    ea2 = my_event(ta)
+    chk("44e after registering the join link is revealed and registered=true",
+        bool(ea2) and ea2.get("registered") is True and ea2.get("join_url") == "https://meet.example/pc44", ea2)
+    # Capacity is 1, so member B is refused.
+    c, regb = jget("POST", f"/api/me/events/{eid}/register", token=tb)
+    chk("44f a second registration is refused once capacity is reached (full, 409)", c == 409 and regb.get("error") == "full", regb)
+    # Member A cancels → the seat frees up and member B can now register.
+    c, cana = jget("POST", f"/api/me/events/{eid}/cancel", token=ta)
+    chk("44g member A cancels their registration", c == 200 and cana.get("ok") is True, cana)
+    c, regb2 = jget("POST", f"/api/me/events/{eid}/register", token=tb)
+    chk("44h the freed seat lets member B register", c == 200 and regb2.get("ok") is True, regb2)
+    # Member C never registered → cancel is not_registered.
+    c, canc = jget("POST", f"/api/me/events/{eid}/cancel", token=tc)
+    chk("44i cancelling without a registration is refused (not_registered, 404)", c == 404 and canc.get("error") == "not_registered", canc)
+    # Admin registrations list reflects B registered and A cancelled.
+    c, regs = jget("GET", f"/api/admin/events/{eid}/registrations", token=admin)
+    byuid = {r.get("user_id"): r.get("status") for r in regs.get("rows", [])}
+    chk("44j the admin registrations list reflects B=registered and A=cancelled",
+        byuid.get(ub) == "registered" and byuid.get(ua) == "cancelled", byuid)
+    # Admin marks B attended → an APPROVED CPD entry for the event hours is credited.
+    c, att = jget("POST", f"/api/admin/events/{eid}/attendance", token=admin, body={"user_id": ub, "attended": True})
+    chk("44k marking attendance succeeds and reports the CPD hours", c == 200 and att.get("cpd_hours") == 2, att)
+    # (The LIKE pattern is passed as a parameter, not inline, so its literal '%' survives the MySQL wrapper.)
+    con = dbconn(); cnt1 = con.execute("SELECT COUNT(*) FROM cpd_entries WHERE user_id=? AND status='approved' AND hours=2 AND description LIKE ?", (ub, "Attended:%")).fetchone()[0]; con.close()
+    chk("44l attendance credits exactly one approved CPD entry for the event hours", cnt1 == 1, cnt1)
+    # Marking attendance again is idempotent — no double CPD credit.
+    c, att2 = jget("POST", f"/api/admin/events/{eid}/attendance", token=admin, body={"user_id": ub, "attended": True})
+    con = dbconn(); cnt2 = con.execute("SELECT COUNT(*) FROM cpd_entries WHERE user_id=? AND description LIKE ?", (ub, "Attended:%")).fetchone()[0]; con.close()
+    chk("44m re-marking attendance is idempotent (still one CPD entry)", att2.get("already") is True and cnt2 == 1, (att2, cnt2))
+    # A member who has attended cannot cancel.
+    c, canb = jget("POST", f"/api/me/events/{eid}/cancel", token=tb)
+    chk("44n an attended registration cannot be cancelled (already_attended, 400)", c == 400 and canb.get("error") == "already_attended", canb)
+    # Un-marking attendance reverts the status and removes the auto-credited CPD entry.
+    jget("POST", f"/api/admin/events/{eid}/attendance", token=admin, body={"user_id": ub, "attended": False})
+    con = dbconn()
+    cnt3 = con.execute("SELECT COUNT(*) FROM cpd_entries WHERE user_id=? AND description LIKE ?", (ub, "Attended:%")).fetchone()[0]
+    st = con.execute("SELECT status FROM event_registrations WHERE event_id=? AND user_id=?", (eid, ub)).fetchone()
+    con.close()
+    chk("44o un-marking attendance removes the CPD entry and reverts to registered", cnt3 == 0 and bool(st) and st[0] == "registered", (cnt3, st))
+    # The admin events surface is content-gated (viewer 403).
+    vtok = globals().get("_VIEWER_TOK")
+    chk("44p the admin events surface needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/events", token=vtok)[0] == 403)
 
 if __name__ == "__main__":
     main()
