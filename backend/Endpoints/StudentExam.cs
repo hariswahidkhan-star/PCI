@@ -93,7 +93,10 @@ public static class StudentExam
                         var cert = Certs.ById(db, cid);
                         var bk = db.QueryOne("SELECT id,scheduled_at,timezone,status FROM exam_bookings WHERE user_id=? AND payment_id=? AND status='scheduled' ORDER BY id DESC", u.Id, r["payment_id"]);
                         var att = db.QueryOne("SELECT id,status,result_status,submitted_at FROM exam_attempts WHERE user_id=? AND kind='exam' AND COALESCE(certification_id,1)=? ORDER BY id DESC", u.Id, cid);
-                        var cred = db.QueryOne("SELECT credential_id,status,expires_at FROM issued_credentials WHERE user_id=? AND COALESCE(certification_id,1)=? AND status='active' ORDER BY id DESC", u.Id, cid);
+                        // certification_id is required by CpdPolicy.ForCredential/CycleStart below (they read
+                        // cred["certification_id"]); omitting it 500'd /api/me for any user holding an active
+                        // credential (e.g. a multi-certification candidate who has passed).
+                        var cred = db.QueryOne("SELECT credential_id,certification_id,status,expires_at FROM issued_credentials WHERE user_id=? AND COALESCE(certification_id,1)=? AND status='active' ORDER BY id DESC", u.Id, cid);
                         // Exam Exceptions & Authorizations: surface the seat's authorization (deadline history,
                         // attempt policy, retake wait), any fee waiver, and a computed scheduling status so the
                         // portal can show extensions / reopened scheduling / granted attempts / waivers.
