@@ -3070,6 +3070,7 @@ def run(proc):
     test_partner_login_lockout(admin)
     test_discount_code_validation_edges(admin)
     test_partner_commission_accrual(admin)
+    test_reviews_moderation(admin)
 
     print("\n(assertions complete)")
 
@@ -3592,6 +3593,66 @@ def test_partner_commission_accrual(admin):
     vtok = globals().get("_VIEWER_TOK")
     chk("41h the admin commission ledger needs the 'partners' permission (viewer 403)",
         bool(vtok) and jget("GET", f"/api/admin/training-partners/{pid}/commissions", token=vtok)[0] == 403)
+
+def test_reviews_moderation(admin):
+    # Incremental Testing Programme — the student reviews module (Endpoints/Reviews.cs) had no dedicated
+    # coverage: a public read (published only), an authed submit with a one-live-review-per-user rule and a
+    # rating clamp, and an admin moderation state machine (publish/reject/feature/delete) gated on 'content'.
+    # No application changes.
+    print("\n=== 42. Reviews: submit → moderation state machine → publish/feature (Reviews.cs) ===")
+    # Anonymous submit is refused.
+    c, r = jget("POST", "/api/me/reviews", body={"body": "A great programme, highly recommended to peers."})
+    chk("42a submitting a review requires authentication (401)", c == 401, (c, r))
+    stok, suid = make_paid_user("reviewer-42@ex.co")
+    # A too-short body is rejected.
+    c, short = jget("POST", "/api/me/reviews", token=stok, body={"body": "short"})
+    chk("42b a too-short review body is rejected (review_too_short, 400)", c == 400 and short.get("error") == "review_too_short", short)
+    # A valid submit lands as pending; the rating is clamped into 1–5.
+    c, sub = jget("POST", "/api/me/reviews", token=stok,
+                  body={"body": "PCI's programme genuinely lifted my project-controls practice.", "rating": 9, "title": "Excellent", "company": "Acme"})
+    rid = sub.get("id")
+    chk("42c a valid review is accepted as pending", c == 200 and sub.get("status") == "pending" and bool(rid), sub)
+    con = dbconn(); rrow = con.execute("SELECT rating,status FROM reviews WHERE id=?", (rid,)).fetchone(); con.close()
+    chk("42d the rating is clamped to the 1–5 range (9 → 5)", bool(rrow) and rrow[0] == 5, rrow)
+    # A pending review is not public yet, but its author can see it.
+    c, pub0 = jget("GET", "/api/reviews")
+    chk("42e a pending review is NOT in the public list", all(rv.get("id") != rid for rv in pub0.get("reviews", [])), None)
+    c, mine = jget("GET", "/api/me/reviews", token=stok)
+    chk("42f the author sees their own pending review", any(rv.get("id") == rid and rv.get("status") == "pending" for rv in mine.get("reviews", [])), mine.get("reviews"))
+    # Resubmitting while pending updates the SAME row (one live review per user).
+    c, sub2 = jget("POST", "/api/me/reviews", token=stok,
+                   body={"body": "Updated: still a first-rate programme after finishing my exam.", "rating": 4})
+    chk("42g resubmitting while pending updates the same row (no duplicate)", sub2.get("id") == rid and sub2.get("status") == "pending", sub2)
+    con = dbconn(); cnt = con.execute("SELECT COUNT(*) FROM reviews WHERE user_id=?", (suid,)).fetchone()[0]; con.close()
+    chk("42g2 the author still has exactly one review row", cnt == 1, cnt)
+    # The admin moderation queue is gated on 'content' (viewer 403) and surfaces the pending review.
+    vtok = globals().get("_VIEWER_TOK")
+    chk("42h the admin moderation queue needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/reviews", token=vtok)[0] == 403)
+    c, q = jget("GET", "/api/admin/reviews", token=admin)
+    chk("42i the pending review shows in the admin queue with a pending count",
+        c == 200 and (q.get("counts", {}).get("pending", 0) >= 1) and any(rv.get("id") == rid for rv in q.get("reviews", [])), q.get("counts"))
+    # An unknown moderation status is rejected.
+    c, bs = jget("POST", f"/api/admin/reviews/{rid}/status", token=admin, body={"status": "banana"})
+    chk("42j an unknown moderation status is rejected (bad_status, 400)", c == 400 and bs.get("error") == "bad_status", bs)
+    # Publishing makes it public and stamps published_at.
+    c, pubd = jget("POST", f"/api/admin/reviews/{rid}/status", token=admin, body={"status": "published"})
+    c, pub1 = jget("GET", "/api/reviews")
+    chk("42k publishing makes the review public", pubd.get("ok") and any(rv.get("id") == rid for rv in pub1.get("reviews", [])), None)
+    con = dbconn(); pat = con.execute("SELECT published_at FROM reviews WHERE id=?", (rid,)).fetchone()[0]; con.close()
+    chk("42k2 publishing stamps published_at", bool(pat), pat)
+    # Featuring surfaces it in the featured-only list.
+    jget("PATCH", f"/api/admin/reviews/{rid}", token=admin, body={"featured": 1})
+    c, feat = jget("GET", "/api/reviews?featured=1")
+    chk("42l featuring surfaces the review in the featured list", any(rv.get("id") == rid for rv in feat.get("reviews", [])), None)
+    # Rejecting drops it back out of the public list.
+    jget("POST", f"/api/admin/reviews/{rid}/status", token=admin, body={"status": "rejected"})
+    c, pub2 = jget("GET", "/api/reviews")
+    chk("42m rejecting removes the review from the public list", all(rv.get("id") != rid for rv in pub2.get("reviews", [])), None)
+    # Admin delete removes the row entirely.
+    c, deld = jget("DELETE", f"/api/admin/reviews/{rid}", token=admin)
+    con = dbconn(); gone = con.execute("SELECT COUNT(*) FROM reviews WHERE id=?", (rid,)).fetchone()[0]; con.close()
+    chk("42n admin delete removes the review row", deld.get("ok") and gone == 0, gone)
 
 if __name__ == "__main__":
     main()
