@@ -3080,6 +3080,7 @@ def run(proc):
     test_campaigns_module(admin)
     test_badges_module(admin)
     test_site_chat(admin)
+    test_admin_seo(admin)
 
     print("\n(assertions complete)")
 
@@ -4340,6 +4341,126 @@ def test_site_chat(admin):
     bot5 = (r5.get("replies") or [{}])[0].get("body", "")
     chk("51o a toggled-off KB entry no longer answers (falls back)",
         bot5.startswith("I'm sorry") and "42 credits" not in bot5, bot5)
+
+def test_admin_seo(admin):
+    # Incremental Testing Programme §52 — Admin SEO console (Endpoints/AdminSeo.cs, 'pages' permission):
+    # overview/pages issue detection, the redirect manager's single-hop write-time guards proven LIVE
+    # against the serving middleware, write-only PSI secret, IndexNow ownership file + URL allow-list,
+    # and the practical audit. All from_paths are fictitious (seo52-*) so no real page is ever redirected.
+    print("\n=== 52. Admin SEO console: overview, redirect guards (live), integrations secrecy, audit ===")
+    import urllib.request as _ur, urllib.error as _ue
+
+    class _NoRedir(_ur.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, headers, newurl): return None
+    _op = _ur.build_opener(_NoRedir)
+
+    def raw_status(path):
+        # (status, Location) without following redirects — the point IS the redirect response itself.
+        try:
+            with _op.open(BASE + path) as r: return r.status, r.headers.get("Location")
+        except _ue.HTTPError as e:
+            return e.code, e.headers.get("Location")
+
+    c, _ = jget("GET", "/api/admin/seo/overview")
+    chk("52a the SEO console requires an admin token (401)", c == 401, c)
+    vtok = globals().get("_VIEWER_TOK")
+    c, _ = jget("GET", "/api/admin/seo/overview", token=vtok)
+    chk("52b a viewer admin without the pages permission is refused (403)", c == 403, c)
+
+    c, ov = jget("GET", "/api/admin/seo/overview", token=admin)
+    chk("52c overview reports page counts and a self-consistent sitemap size",
+        c == 200 and ov.get("pages", 0) > 0 and ov.get("canonical_host")
+        and ov.get("sitemap_urls") == ov.get("published") - ov.get("noindex")
+        and isinstance(ov.get("issues", {}).get("missing_title"), int), ov)
+
+    c, pl = jget("GET", "/api/admin/seo/pages", token=admin)
+    rows = pl.get("rows", [])
+    flags_ok = all(r["issues"]["missing_title"] == (not r.get("title")) and
+                   r["issues"]["missing_meta"] == (not r.get("meta_description")) for r in rows)
+    chk("52d per-page issue flags agree with the underlying fields on every row",
+        c == 200 and len(rows) > 0 and flags_ok, len(rows))
+
+    # --- redirect manager: create (input path normalised), then prove it live ---
+    c, r = jget("POST", "/api/admin/seo/redirects", token=admin,
+                body={"from_path": "seo52-old.html", "to_url": "/membership.html"})
+    c2, lst = jget("GET", "/api/admin/seo/redirects", token=admin)
+    mine = next((x for x in lst.get("rows", []) if x.get("from_path") == "/seo52-old.html"), None)
+    chk("52e a redirect is created with its path normalised to a leading slash",
+        c == 200 and r.get("ok") and mine and mine.get("to_url") == "/membership.html"
+        and int(mine.get("status")) == 301, mine)
+    st, loc = raw_status("/seo52-old.html")
+    chk("52f the redirect is served live as a 301 to the stored target", st == 301 and loc == "/membership.html", (st, loc))
+
+    c, r = jget("POST", "/api/admin/seo/redirects", token=admin,
+                body={"from_path": "/seo52-self.html", "to_url": "/seo52-self.html"})
+    chk("52g a self-redirect is rejected at write time (400)", c == 400 and r.get("error") == "self_redirect", r)
+
+    # Single-hop guarantee, both directions. First a mid rule to build the chain against.
+    jget("POST", "/api/admin/seo/redirects", token=admin, body={"from_path": "/seo52-mid.html", "to_url": "/membership.html"})
+    c, r = jget("POST", "/api/admin/seo/redirects", token=admin,
+                body={"from_path": "/seo52-x.html", "to_url": "/seo52-mid.html"})
+    chk("52h pointing at an already-redirected path is rejected as a chain", c == 400 and r.get("error") == "chain", r)
+    c, r = jget("POST", "/api/admin/seo/redirects", token=admin,
+                body={"from_path": "/membership.html", "to_url": "/index.html"})
+    chk("52i redirecting a path that existing rules target is rejected as a chain", c == 400 and r.get("error") == "chain", r)
+    if c == 200:  # never leave a real page redirected if the guard ever regressed
+        c2, lst = jget("GET", "/api/admin/seo/redirects", token=admin)
+        bad = next((x for x in lst.get("rows", []) if x.get("from_path") == "/membership.html"), None)
+        if bad: jget("POST", f"/api/admin/seo/redirects/{bad['id']}/delete", token=admin)
+
+    c, r = jget("POST", "/api/admin/seo/redirects", token=admin,
+                body={"from_path": "/api/seo52-nope", "to_url": "/index.html"})
+    chk("52j private/app paths can never be redirected (400)", c == 400 and r.get("error") == "private_path", r)
+
+    jget("POST", "/api/admin/seo/redirects", token=admin,
+         body={"from_path": "/seo52-coerce.html", "to_url": "/membership.html", "status": 307})
+    c, lst = jget("GET", "/api/admin/seo/redirects", token=admin)
+    co = next((x for x in lst.get("rows", []) if x.get("from_path") == "/seo52-coerce.html"), None)
+    chk("52k an unsupported redirect status is coerced to 301", co and int(co.get("status")) == 301, co)
+
+    jget("POST", "/api/admin/seo/redirects", token=admin, body={"from_path": "/seo52-gone.html", "status": 410})
+    st, loc = raw_status("/seo52-gone.html")
+    chk("52l a 410 Gone rule is served live with no Location target", st == 410 and loc is None, (st, loc))
+
+    oldid = mine.get("id") if mine else None
+    jget("POST", f"/api/admin/seo/redirects/{oldid}/delete", token=admin)
+    st, _loc = raw_status("/seo52-old.html")
+    c, lst = jget("GET", "/api/admin/seo/redirects", token=admin)
+    chk("52m a deleted redirect stops being served immediately (404, gone from the list)",
+        st == 404 and not any(x.get("from_path") == "/seo52-old.html" for x in lst.get("rows", [])), st)
+
+    # --- integrations: public IDs echoed, the PSI key write-only ---
+    c, r = jget("POST", "/api/admin/seo/integrations", token=admin,
+                body={"ga4_measurement_id": "G-TEST52", "psi_api_key": "psi-secret-52"})
+    c2, ig = jget("GET", "/api/admin/seo/integrations", token=admin)
+    chk("52n integrations store settings; the PSI key reads back only as has_key, never the value",
+        c == 200 and ig.get("ga4_measurement_id") == "G-TEST52" and ig.get("psi_has_key") is True
+        and "psi-secret-52" not in json.dumps(ig), ig.get("psi_has_key"))
+    jget("POST", "/api/admin/seo/integrations", token=admin, body={"ga4_measurement_id": "G-TEST52B"})
+    c, ig2 = jget("GET", "/api/admin/seo/integrations", token=admin)
+    chk("52o an update that omits the PSI key leaves the stored secret untouched",
+        ig2.get("ga4_measurement_id") == "G-TEST52B" and ig2.get("psi_has_key") is True, ig2.get("ga4_measurement_id"))
+
+    key = ig2.get("indexnow_key") or ""
+    st, body, _ct = _raw_get("/" + key + ".txt")
+    chk("52p the IndexNow ownership key is generated and served at /{key}.txt",
+        len(key) == 32 and st == 200 and key in body.decode("utf-8", "ignore"), (len(key), st))
+
+    # Foreign URLs are filtered by the canonical-host allow-list BEFORE any submission —
+    # an all-foreign list therefore submits nothing and never leaves the process.
+    c, sub = jget("POST", "/api/admin/seo/indexnow/submit", token=admin,
+                  body={"urls": ["https://evil.example/x", "http://attacker.test/y"]})
+    chk("52q foreign URLs never reach IndexNow (filtered to an empty submission)",
+        c == 200 and sub.get("submitted") == 0 and "no URLs" in str(sub.get("detail", "")), sub)
+
+    c, aud = jget("GET", "/api/admin/seo/audit", token=admin)
+    chk("52r the practical audit scans the real page set and confirms our rules created no chain",
+        c == 200 and aud.get("page_count", 0) > 0 and isinstance(aud.get("missing_h1"), list)
+        and not any(ch.get("from") in ("/seo52-mid.html", "/seo52-coerce.html") for ch in aud.get("redirect_chains", [])), aud.get("page_count"))
+
+    c, r = jget("POST", "/api/admin/seo/pagespeed", token=admin, body={"url": "notaurl"})
+    chk("52s PageSpeed refuses a schemeless URL before any outbound call (400)",
+        c == 400 and r.get("error") == "bad_url", r)
 
 if __name__ == "__main__":
     main()
