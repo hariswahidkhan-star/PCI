@@ -3064,6 +3064,9 @@ def run(proc):
     test_training_partner_application(admin)
     test_support_assign_escalate(admin)
     test_membership_expiry(admin)
+    test_blog_scheduled_publish(admin)
+    test_partner_sponsorship_commissions(admin)
+    test_admin_rbac_viewer_sweep()
 
     print("\n(assertions complete)")
 
@@ -3331,6 +3334,93 @@ def test_membership_expiry(admin):
     chk("35d status='expired' is reflected as an expired membership", me3.get("lifecycle", {}).get("membership_status") == "expired", me3.get("lifecycle", {}).get("membership_status"))
     c, gate2 = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "expiremember@ex.co"})
     chk("35e an expired member is blocked from the exam-fee gate (membership_required)", c == 400 and blocked(gate2), (c, gate2))
+
+def test_blog_scheduled_publish(admin):
+    # Incremental Testing Programme — the blog post scheduled-publish endpoint (ContentCentre .../schedule)
+    # had ZERO coverage (only social drafts scheduling was tested). The due-sweep worker (ScheduledPublisher)
+    # has no on-demand HTTP hook, so this mirrors the social "queued-not-fired + direct-DB + public-404" style.
+    print("\n=== 36. Blog scheduled-publish (a future schedule stays queued + non-public) ===")
+    c, p = jget("POST", "/api/admin/content/posts", token=admin,
+                body={"title": "Scheduled AI Forecasting Post", "summary": "About scheduling.",
+                      "body": "<p>" + ("Body about AI in project controls. " * 20) + "</p>"})
+    pid = p.get("id"); slug = p.get("slug")
+    chk("36a admin creates a draft post", c == 200 and pid and slug, p)
+    c, _ = jget("GET", f"/api/blog/posts/{slug}")
+    chk("36b a draft post is not public (404)", c == 404, c)
+    c, nr = jget("POST", f"/api/admin/content/posts/{pid}/schedule", token=admin, body={})
+    chk("36c scheduling requires scheduled_at (400)", c == 400 and nr.get("error") == "scheduled_at_required", nr)
+    c, sch = jget("POST", f"/api/admin/content/posts/{pid}/schedule", token=admin, body={"scheduled_at": "2035-01-01 10:00:00"})
+    chk("36d scheduling returns status='scheduled'", c == 200 and sch.get("status") == "scheduled", sch)
+    con = dbconn(); row = con.execute("SELECT status,scheduled_at,published FROM blog_posts WHERE id=?", (pid,)).fetchone(); con.close()
+    chk("36e the post is stored scheduled (not published) with the future time", bool(row) and row[0] == "scheduled" and str(row[1]).startswith("2035") and (row[2] or 0) == 0, row)
+    c1, _ = jget("GET", f"/api/blog/posts/{slug}")
+    sc, _ = req("GET", f"/blog/{slug}")
+    chk("36f a scheduled (future) post is not yet public (API 404 + page not 200)", c1 == 404 and sc != 200, (c1, sc))
+    vtok = globals().get("_VIEWER_TOK")
+    c, _ = jget("POST", f"/api/admin/content/posts/{pid}/schedule", token=vtok, body={"scheduled_at": "2035-01-01 10:00:00"})
+    chk("36g scheduling is refused for a viewer lacking cc_publish (403)", c == 403, c)
+
+def test_partner_sponsorship_commissions(admin):
+    # Incremental Testing Programme — the partner-portal SPONSORSHIP + COMMISSION ledger endpoints (Partners.cs)
+    # were untested. Also proves cross-partner isolation and that the endpoints reject non-partner tokens.
+    print("\n=== 37. Partner portal: sponsorship + commission ledger + isolation ===")
+    c, tpA = jget("POST", "/api/admin/training-partners", token=admin, body={"name": "Sponsor Academy A"})
+    pidA = tpA["id"]
+    jget("PATCH", f"/api/admin/training-partners/{pidA}", token=admin, body={"sponsor_enabled": True, "commission_pct": 20})
+    c, puA = jget("POST", f"/api/admin/training-partners/{pidA}/users", token=admin, body={"email": "sponsor-a@ex.co", "name": "Alba", "role": "admin"})
+    c, plA = jget("POST", "/api/partner/auth/login", body={"email": "sponsor-a@ex.co", "password": puA.get("temp_password", "")})
+    ptokA = plA.get("token")
+    jget("POST", "/api/partner/auth/password", token=ptokA, body={"new_password": "Sponsor!2026aa"})
+    chk("37a partner A can sign in to their portal", bool(ptokA) and plA.get("institution") == "Sponsor Academy A", plA)
+    c, cand0 = jget("GET", "/api/partner/candidates", token=ptokA)
+    chk("37b candidates list is empty and sponsorship is enabled", c == 200 and cand0.get("sponsor_enabled") in (True, 1) and len(cand0.get("rows", [])) == 0, cand0)
+    c, spon = jget("POST", "/api/partner/candidates", token=ptokA, body={"candidates": [{"email": "sponsored-a1@ex.co", "first_name": "Sam", "last_name": "Sponsored", "certification": "PCL-AI"}]})
+    res0 = (spon.get("results") or [{}])[0]
+    chk("37c a candidate is sponsored (account + entitlement created)", c == 200 and res0.get("status") in ("sponsored", "sponsored_already_entitled"), spon)
+    c, cand1 = jget("GET", "/api/partner/candidates", token=ptokA)
+    chk("37d the sponsored candidate appears in partner A's list", any(r.get("candidate_email") == "sponsored-a1@ex.co" for r in cand1.get("rows", [])), cand1.get("rows"))
+    c, dup = jget("POST", "/api/partner/candidates", token=ptokA, body={"candidates": [{"email": "sponsored-a1@ex.co", "first_name": "Sam", "last_name": "Sponsored", "certification": "PCL-AI"}]})
+    dres = (dup.get("results") or [{}])[0]
+    chk("37e re-sponsoring the same candidate is deduped (already_sponsored)", dres.get("status") == "already_sponsored", dup)
+    c, comm = jget("GET", "/api/partner/commissions", token=ptokA)
+    chk("37f commission ledger returns the configured pct and a computed balance", c == 200 and comm.get("commission_pct") == 20 and "accrued" in comm and "balance" in comm, comm)
+    c, tpB = jget("POST", "/api/admin/training-partners", token=admin, body={"name": "Sponsor Academy B"})
+    pidB = tpB["id"]
+    c, puB = jget("POST", f"/api/admin/training-partners/{pidB}/users", token=admin, body={"email": "sponsor-b@ex.co", "name": "Beto", "role": "admin"})
+    c, plB = jget("POST", "/api/partner/auth/login", body={"email": "sponsor-b@ex.co", "password": puB.get("temp_password", "")})
+    ptokB = plB.get("token")
+    jget("POST", "/api/partner/auth/password", token=ptokB, body={"new_password": "Sponsor!2026bb"})
+    c, sdis = jget("POST", "/api/partner/candidates", token=ptokB, body={"candidates": [{"email": "nope-b@ex.co", "certification": "PCL-AI"}]})
+    chk("37g sponsorship is refused when disabled (sponsorship_disabled, 403)", c == 403 and sdis.get("error") == "sponsorship_disabled", sdis)
+    c, candB = jget("GET", "/api/partner/candidates", token=ptokB)
+    chk("37h partner B cannot see partner A's sponsored candidates (isolation)", all(r.get("candidate_email") != "sponsored-a1@ex.co" for r in candB.get("rows", [])), candB.get("rows"))
+    stok, _ = make_paid_user("sponsorstu@ex.co")
+    chk("37i partner sponsorship/commission endpoints reject non-partner tokens (401)",
+        jget("GET", "/api/partner/candidates", token=admin)[0] == 401
+        and jget("GET", "/api/partner/commissions", token=stok)[0] == 401
+        and jget("GET", "/api/partner/candidates")[0] == 401)
+
+def test_admin_rbac_viewer_sweep():
+    # Incremental Testing Programme — RBAC section gating. A 'viewer' admin (perms {overview, reports} only)
+    # must be denied every privileged admin GET section. Closes the section-gating gap the audit flagged.
+    print("\n=== 38. Admin RBAC: a viewer is denied every privileged section ===")
+    vtok = globals().get("_VIEWER_TOK")
+    gated = [
+        ("/api/admin/students", "members"), ("/api/admin/members", "members"),
+        ("/api/admin/erasure-requests", "members"), ("/api/admin/payments", "payments"),
+        ("/api/admin/credentials", "credentials"), ("/api/admin/pricing", "pricing"),
+        ("/api/admin/codes", "codes"), ("/api/admin/enrollments", "enrollments"),
+        ("/api/admin/audit", "audit"), ("/api/admin/inquiries", "inquiries"),
+        ("/api/admin/subscribers", "subscribers"), ("/api/support/inbox", "inbox"),
+        ("/api/admin/integrations", "integrations"), ("/api/admin/training-partner-applications", "partners"),
+        ("/api/admin/exam-sessions", "proctoring"), ("/api/admin/exam-delivery", "exam_delivery"),
+    ]
+    leaks = [(path, perm, jget("GET", path, token=vtok)[0]) for path, perm in gated]
+    leaks = [x for x in leaks if x[2] != 403]
+    chk(f"38a a viewer is 403 on all {len(gated)} privileged admin GET sections", len(leaks) == 0, leaks)
+    ov = jget("GET", "/api/admin/overview", token=vtok)[0]
+    rp = jget("GET", "/api/admin/reports", token=vtok)[0]
+    chk("38b the viewer CAN reach its granted sections (overview + reports)", ov == 200 and rp == 200, (ov, rp))
 
 if __name__ == "__main__":
     main()
