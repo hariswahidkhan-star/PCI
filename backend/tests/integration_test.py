@@ -3071,6 +3071,7 @@ def run(proc):
     test_discount_code_validation_edges(admin)
     test_partner_commission_accrual(admin)
     test_reviews_moderation(admin)
+    test_careers_module(admin)
 
     print("\n(assertions complete)")
 
@@ -3653,6 +3654,70 @@ def test_reviews_moderation(admin):
     c, deld = jget("DELETE", f"/api/admin/reviews/{rid}", token=admin)
     con = dbconn(); gone = con.execute("SELECT COUNT(*) FROM reviews WHERE id=?", (rid,)).fetchone()[0]; con.close()
     chk("42n admin delete removes the review row", deld.get("ok") and gone == 0, gone)
+
+def test_careers_module(admin):
+    # Incremental Testing Programme — the careers module (Endpoints/Careers.cs) had no dedicated coverage:
+    # admin CRUD (content-gated), the public listing/detail (published-only), and a public in-platform
+    # application path with a honeypot, name/email validation, an external-apply guard and a
+    # one-application-per-email rule, plus admin application-status moderation. No application changes.
+    print("\n=== 43. Careers: admin posting + public apply (honeypot/validation/dedup) + moderation ===")
+    # Admin creates a published in-platform posting → auto job code.
+    c, job = jget("POST", "/api/admin/careers", token=admin,
+                  body={"title": "Project Controls Lead 43", "status": "published", "apply_method": "inplatform",
+                        "organisation": "PCI", "location": "Remote", "country": "United Kingdom", "description": "Lead role."})
+    jid = job.get("id")
+    chk("43a admin creates a published posting and it gets a job code", c == 200 and bool(jid) and bool(job.get("job_code")), job)
+    # A too-short title is rejected.
+    c, bt = jget("POST", "/api/admin/careers", token=admin, body={"title": "PC", "status": "published"})
+    chk("43b a too-short title is rejected (bad_title, 400)", c == 400 and bt.get("error") == "bad_title", bt)
+    # The published posting is publicly listed and its detail resolves.
+    c, pub = jget("GET", "/api/careers")
+    chk("43c the published posting appears in the public listing", any(r.get("id") == jid for r in pub.get("rows", [])), None)
+    c, det = jget("GET", f"/api/careers/{jid}")
+    chk("43d the public detail endpoint returns the job", c == 200 and det.get("job", {}).get("id") == jid, det)
+    # A honeypot submission is silently accepted but records nothing.
+    c, hp = jget("POST", f"/api/careers/{jid}/apply", body={"website": "http://spam.example", "name": "Bot Spammer", "email": "honeypot-43@ex.co"})
+    chk("43e a honeypot submission is accepted but records no application", c == 200 and hp.get("ok") is True, hp)
+    # Name/email validation.
+    c, bn = jget("POST", f"/api/careers/{jid}/apply", body={"name": "A", "email": "applicant-43@ex.co"})
+    chk("43f a too-short applicant name is rejected (bad_name, 400)", c == 400 and bn.get("error") == "bad_name", bn)
+    c, be = jget("POST", f"/api/careers/{jid}/apply", body={"name": "Ada Applicant", "email": "not-an-email"})
+    chk("43g a malformed applicant email is rejected (bad_email, 400)", c == 400 and be.get("error") == "bad_email", be)
+    # A valid in-platform application is accepted.
+    c, ap = jget("POST", f"/api/careers/{jid}/apply", body={"name": "Ada Applicant", "email": "applicant-43@ex.co", "cover_message": "Keen to contribute."})
+    chk("43h a valid in-platform application is accepted", c == 200 and ap.get("ok") is True, ap)
+    # A second application from the same email is refused.
+    c, dup = jget("POST", f"/api/careers/{jid}/apply", body={"name": "Ada Applicant", "email": "applicant-43@ex.co"})
+    chk("43i a duplicate application from the same email is refused (already_applied, 409)", c == 409 and dup.get("error") == "already_applied", dup)
+    # An externally-applied posting refuses in-platform applications.
+    c, ext = jget("POST", "/api/admin/careers", token=admin,
+                  body={"title": "External Role 43", "status": "published", "apply_method": "url", "apply_url": "https://example.org/jobs/1"})
+    exid = ext.get("id")
+    c, exap = jget("POST", f"/api/careers/{exid}/apply", body={"name": "Ada Applicant", "email": "applicant-43@ex.co"})
+    chk("43j applying in-platform to an external posting is refused (external_apply, 400)", c == 400 and exap.get("error") == "external_apply", exap)
+    # Admin sees exactly the one real application (the honeypot recorded nothing).
+    c, apps = jget("GET", f"/api/admin/careers/{jid}/applications", token=admin)
+    emails = [r.get("email") for r in apps.get("rows", [])]
+    chk("43k the admin sees the real application and NOT the honeypot",
+        "applicant-43@ex.co" in emails and "honeypot-43@ex.co" not in emails, emails)
+    appid = next((r.get("id") for r in apps.get("rows", []) if r.get("email") == "applicant-43@ex.co"), None)
+    # Application-status moderation: bad status rejected, a valid transition persists.
+    c, bs = jget("POST", f"/api/admin/careers/applications/{appid}/status", token=admin, body={"status": "banana"})
+    chk("43l an unknown application status is rejected (bad_status, 400)", c == 400 and bs.get("error") == "bad_status", bs)
+    jget("POST", f"/api/admin/careers/applications/{appid}/status", token=admin, body={"status": "shortlisted", "admin_note": "Strong fit"})
+    con = dbconn(); st = con.execute("SELECT status FROM job_applications WHERE id=?", (appid,)).fetchone(); con.close()
+    chk("43m a valid application status transition persists (shortlisted)", bool(st) and st[0] == "shortlisted", st)
+    # The admin surface is content-gated (viewer 403).
+    vtok = globals().get("_VIEWER_TOK")
+    chk("43n the admin careers surface needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/careers", token=vtok)[0] == 403)
+    # Delete removes the posting and cascades its applications.
+    c, deld = jget("POST", f"/api/admin/careers/{jid}/delete", token=admin)
+    con = dbconn()
+    gone = con.execute("SELECT COUNT(*) FROM job_postings WHERE id=?", (jid,)).fetchone()[0]
+    orphans = con.execute("SELECT COUNT(*) FROM job_applications WHERE job_id=?", (jid,)).fetchone()[0]
+    con.close()
+    chk("43o admin delete removes the posting and its applications", deld.get("ok") and gone == 0 and orphans == 0, (gone, orphans))
 
 if __name__ == "__main__":
     main()
