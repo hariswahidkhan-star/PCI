@@ -3061,6 +3061,9 @@ def run(proc):
     test_support_attachment_idor()
     test_certificate_suspension(admin)
     test_exam_self_reschedule(admin)
+    test_training_partner_application(admin)
+    test_support_assign_escalate(admin)
+    test_membership_expiry(admin)
 
     print("\n(assertions complete)")
 
@@ -3249,6 +3252,85 @@ def test_exam_self_reschedule(admin):
     con = dbconn(); con.execute("UPDATE exam_bookings SET scheduled_at=datetime('now','+5 day'), reschedule_count=3 WHERE id=?", (bid,)); con.commit(); con.close()
     c, rm = jget("POST", "/api/me/exam/reschedule", token=rtok, body={"scheduled_at": slot(4), "timezone": "UTC"})
     chk("32f the per-candidate reschedule cap is enforced (max_reschedules)", c == 400 and rm.get("error") == "max_reschedules", (c, rm))
+
+def test_training_partner_application(admin):
+    # Incremental Testing Programme — the public training-partner APPLICATION flow (apply -> admin decide ->
+    # auto-created directory entry) had ZERO coverage; only directly-created partners were tested.
+    print("\n=== 33. Training-partner application (public apply -> admin decide -> auto directory entry) ===")
+    app_body = {
+        "org_name": "Acme Controls Academy", "website": "https://acme-academy.example",
+        "contact_name": "Dana Trainer", "contact_email": "partner-apply@ex.co",
+        "contact_phone": "+441234567890", "country": "United Kingdom", "city": "Leeds",
+        "specialties": "Project controls, earned-value management",
+        "description": "We deliver accredited project-controls training across the UK.",
+        "declaration": True,
+    }
+    c, r = jget("POST", "/api/training-partner-application", body=app_body)
+    ref = r.get("reference")
+    chk("33a a complete application is accepted with a PCI-TPA reference", c == 200 and r.get("ok") and isinstance(ref, str) and ref.startswith("PCI-TPA-"), r)
+    c, r2 = jget("POST", "/api/training-partner-application", body={**app_body, "declaration": False})
+    chk("33b the partner declaration is mandatory (declaration_required)", c == 400 and r2.get("error") == "declaration_required", r2)
+    c, r3 = jget("POST", "/api/training-partner-application", body={**app_body, "contact_email": "not-an-email"})
+    chk("33c an invalid contact email is rejected (invalid_email)", c == 400 and r3.get("error") == "invalid_email", r3)
+    c, r4 = jget("POST", "/api/training-partner-application", body={**app_body, "org_name": ""})
+    chk("33d a missing organisation name is rejected (org_name_required)", c == 400 and r4.get("error") == "org_name_required", r4)
+    con = dbconn(); appid = con.execute("SELECT id FROM training_partner_applications WHERE reference=?", (ref,)).fetchone()[0]; con.close()
+    c, lst = jget("GET", "/api/admin/training-partner-applications", token=admin)
+    chk("33e admin queue lists the pending application", c == 200 and any(row.get("reference") == ref for row in lst.get("rows", [])), len(lst.get("rows", [])))
+    c, bad = jget("POST", f"/api/admin/training-partner-applications/{appid}/decide", token=admin, body={"status": "bogus"})
+    chk("33f an unknown decision status is rejected (bad_status)", c == 400 and bad.get("error") == "bad_status", bad)
+    c, dec = jget("POST", f"/api/admin/training-partner-applications/{appid}/decide", token=admin, body={"status": "approved", "tier": "registered", "admin_note": "Accredited; approved."})
+    chk("33g admin approves -> application approved + partner_id linked", c == 200 and dec.get("ok") and dec.get("status") == "approved" and dec.get("partner_id"), dec)
+    con = dbconn(); prow = con.execute("SELECT listed,source_application_id FROM training_partners WHERE source_application_id=?", (appid,)).fetchone(); con.close()
+    chk("33h approval auto-creates an UNLISTED directory entry linked to the application", bool(prow) and (prow[0] or 0) == 0 and prow[1] == appid, prow)
+    c, again = jget("POST", f"/api/admin/training-partner-applications/{appid}/decide", token=admin, body={"status": "approved"})
+    chk("33i an already-approved application cannot be re-decided (already_decided, 409)", c == 409 and again.get("error") == "already_decided", again)
+    vtok = globals().get("_VIEWER_TOK")
+    chk("33j the partner-applications queue is not reachable with a viewer token (403)", jget("GET", "/api/admin/training-partner-applications", token=vtok)[0] == 403)
+
+def test_support_assign_escalate(admin):
+    # Incremental Testing Programme — the support inbox workflow: ASSIGN (POST .../assign) was never called,
+    # and the status endpoint was only ever driven to 'resolved' — 'escalated' and 'bad_status' were untested.
+    print("\n=== 34. Support ticket assign + escalate (inbox workflow) ===")
+    stok, suid = make_paid_user("supportflow@ex.co")
+    c, tk = jget("POST", "/api/me/tickets", token=stok, body={"subject": "assign me", "category": "general", "body": "please help"})
+    tid = tk.get("id")
+    chk("34a student opens a ticket", c == 200 and tid, tk)
+    con = dbconn(); ownerId = con.execute("SELECT id FROM admin_users WHERE lower(email)=?", ("owner@pci.local",)).fetchone()[0]; con.close()
+    c, asg = jget("POST", f"/api/support/tickets/{tid}/assign", token=admin, body={"admin_id": ownerId})
+    chk("34b admin assigns the ticket to an active agent", c == 200 and asg.get("ok"), asg)
+    con = dbconn(); at = con.execute("SELECT assigned_to FROM tickets WHERE id=?", (tid,)).fetchone(); con.close()
+    chk("34c the assignment is persisted (tickets.assigned_to)", bool(at) and at[0] == ownerId, at)
+    c, bad = jget("POST", f"/api/support/tickets/{tid}/assign", token=admin, body={"admin_id": 99999999})
+    chk("34d assigning to a nonexistent admin is refused (admin_not_found, 404)", c == 404 and bad.get("error") == "admin_not_found", bad)
+    c, esc = jget("POST", f"/api/support/tickets/{tid}/status", token=admin, body={"status": "escalated"})
+    chk("34e admin escalates the ticket", c == 200 and esc.get("status") == "escalated", esc)
+    con = dbconn(); er = con.execute("SELECT status,escalated FROM tickets WHERE id=?", (tid,)).fetchone(); con.close()
+    chk("34f escalation sets status='escalated' and the sticky escalated flag", bool(er) and er[0] == "escalated" and (er[1] or 0) == 1, er)
+    c, badst = jget("POST", f"/api/support/tickets/{tid}/status", token=admin, body={"status": "not-a-status"})
+    chk("34g an unknown ticket status is rejected (bad_status)", c == 400 and badst.get("error") == "bad_status", badst)
+    c, met = jget("GET", "/api/support/metrics", token=admin)
+    chk("34h metrics reflect the assignment in agent_workload", any((w.get("n", 0) or 0) >= 1 for w in met.get("agent_workload", [])), met.get("agent_workload"))
+
+def test_membership_expiry(admin):
+    # Incremental Testing Programme — how the platform treats an expired membership. Pins the real
+    # (status-driven) behaviour AND documents that there is no time-based expiry sweep: a past expiry_date
+    # alone does not expire access; only status='expired' (which the platform sets on reversal) does.
+    print("\n=== 35. Membership expiry treatment (status-driven; no time-based sweep) ===")
+    def blocked(body): return isinstance(body, dict) and body.get("error") == "membership_required"
+    mtok, muid = make_paid_user("expiremember@ex.co")  # bundle -> active member
+    c, me = jget("GET", "/api/me", token=mtok)
+    chk("35a a fresh bundle purchaser is an active member", c == 200 and me.get("lifecycle", {}).get("membership_status") == "active", me.get("lifecycle", {}).get("membership_status"))
+    con = dbconn(); con.execute("UPDATE memberships SET expiry_date=datetime('now','-10 day') WHERE user_id=?", (muid,)); con.commit(); con.close()
+    c, me2 = jget("GET", "/api/me", token=mtok)
+    chk("35b a past expiry_date with status='active' still reads active (no time-based sweep)", me2.get("lifecycle", {}).get("membership_status") == "active", me2.get("lifecycle", {}).get("membership_status"))
+    c, gate1 = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "expiremember@ex.co"})
+    chk("35c the exam-fee gate still passes while status='active'", not blocked(gate1), (c, gate1))
+    con = dbconn(); con.execute("UPDATE memberships SET status='expired' WHERE user_id=?", (muid,)); con.commit(); con.close()
+    c, me3 = jget("GET", "/api/me", token=mtok)
+    chk("35d status='expired' is reflected as an expired membership", me3.get("lifecycle", {}).get("membership_status") == "expired", me3.get("lifecycle", {}).get("membership_status"))
+    c, gate2 = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "expiremember@ex.co"})
+    chk("35e an expired member is blocked from the exam-fee gate (membership_required)", c == 400 and blocked(gate2), (c, gate2))
 
 if __name__ == "__main__":
     main()
