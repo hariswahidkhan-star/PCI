@@ -3095,6 +3095,7 @@ def run(proc):
     test_honorary_idv(admin)
     test_comms_centre(admin)
     test_public_documents(admin)
+    test_marketing_centre(admin)
 
     print("\n(assertions complete)")
 
@@ -5035,6 +5036,265 @@ def test_public_documents(admin):
         c == 200 and r.get("status") == "withdrawn" and c2 == 404 and st == 404
         and c3 == 400 and dl.get("error") == "not_deletable" and "Only a draft" in str(dl.get("message", ""))
         and c4 == 200 and dl2.get("ok") is True and c5 == 404, (c2, st, c3, c4, c5))
+
+def test_marketing_centre(admin):
+    # Incremental Testing Programme §56 — Marketing, Ads & Search Console centre (Endpoints/MarketingCentre.cs
+    # + Core/Marketing*.cs + Data/MarketingSchema.cs): ZERO prior coverage. Proves the 9-section RBAC gate, the
+    # booleans-only provider registry and token-free connection listing, the signed OAuth-state callback, the
+    # honest capability ceiling (a live connection never unlocks an approval-gated feature), post/campaign
+    # approval chains whose provider jobs fail CLOSED (no token → no fake publish/launch), idempotent re-clicks,
+    # and the fail-closed public lead webhooks. No provider env vars exist, so nothing ever leaves the process.
+    print("\n=== 56. Marketing centre: honest capability registry, OAuth secrecy, approval gates, fail-closed provider jobs ===")
+    M = "/api/admin/marketing"
+
+    def _job(col, val):
+        # One mkt_jobs row by id/idempotency_key, waiting out the inline/background drain race (col is a
+        # literal column name from this test, never input). no_access_token failures are permanent, so the
+        # settled state is deterministic.
+        row = None
+        for _ in range(10):
+            con = dbconn()
+            row = con.execute("SELECT status, attempts, last_error FROM mkt_jobs WHERE " + col + "=?", (val,)).fetchone()
+            con.close()
+            if row and row[0] not in ("queued", "processing"): break
+            time.sleep(0.3)
+        return row
+
+    # --- the gate: 401 unauthenticated, viewer 403 across the permission sections ---
+    c1, r1 = jget("GET", f"{M}/overview")
+    c2, _ = jget("POST", "/api/admin/marketing/posts/1/approve")
+    vtok = globals().get("_VIEWER_TOK")
+    cv, rv = jget("GET", f"{M}/overview", token=vtok)
+    chk("56a every marketing route is admin-gated: 401 unauthenticated, viewer 403 on the view/posts/gsc/leads/jobs sections",
+        c1 == 401 and r1.get("error") == "unauthorized" and c2 == 401
+        and bool(vtok) and cv == 403 and rv.get("error") == "forbidden" and rv.get("section") == "mkt_view"
+        and jget("POST", f"{M}/posts", token=vtok, body={"body": "probe 56"})[0] == 403
+        and jget("GET", f"{M}/gsc/properties", token=vtok)[0] == 403
+        and jget("GET", f"{M}/leads", token=vtok)[0] == 403
+        and jget("POST", f"{M}/jobs/drain", token=vtok)[0] == 403, (c1, c2, cv, rv))
+
+    # --- provider registry: configuration booleans ONLY, never a secret value ---
+    def _bools(x): return all(_bools(v) for v in x.values()) if isinstance(x, dict) else isinstance(x, bool)
+    c, pv = jget("GET", f"{M}/providers", token=admin)
+    chk("56b provider settings report booleans only — every leaf is true/false and 'configured' is derived from id+secret presence",
+        c == 200 and set(pv) >= {"token_encryption", "linkedin", "google", "meta"} and _bools(pv)
+        and pv["linkedin"]["configured"] == (pv["linkedin"]["client_id"] and pv["linkedin"]["client_secret"]), pv)
+
+    # --- connections: register → token-free listing → honest oauth-url refusal ---
+    c0, badp = jget("POST", f"{M}/connections", token=admin, body={"platform_code": "nope56"})
+    c1, cn = jget("POST", f"{M}/connections", token=admin,
+                  body={"platform_code": "linkedin_page", "label": "li page 56", "external_org_id": "90056"})
+    li = cn.get("id")
+    c2, urf = jget("POST", f"{M}/connections/{li}/oauth-url", token=admin)
+    c3, u404 = jget("POST", f"{M}/connections/999999/oauth-url", token=admin)
+    c4, lst = jget("GET", f"{M}/connections", token=admin)
+    row = next((r for r in lst.get("rows", []) if r.get("id") == li), None)
+    chk("56c a registered connection starts disconnected/not_requested, the list NEVER carries token or PKCE columns, and oauth-url is an honest operator action while the provider app is unconfigured (unknown platform 400, ghost id 404)",
+        c0 == 400 and badp.get("error") == "unknown_platform"
+        and c1 == 200 and bool(li) and cn.get("family_configured") is False
+        and c2 == 200 and urf.get("ok") is False and urf.get("reason") == "provider_not_configured"
+        and "linkedin" in str(urf.get("operator_action", ""))
+        and c3 == 404 and u404.get("error") == "not_found"
+        and c4 == 200 and row and row.get("status") == "disconnected" and row.get("approval_status") == "not_requested"
+        and "access_token_enc" not in row and "refresh_token_enc" not in row and "oauth_verifier" not in row,
+        (c0, c2, urf.get("reason"), row and row.get("status")))
+
+    # --- public OAuth callback: signed-state machine, recomputed with the server's exact secret precedence ---
+    _mksec = (os.environ.get("MARKETING_OAUTH_SECRET") or os.environ.get("CREDENTIAL_ENCRYPTION_KEY")
+              or "pci-marketing-oauth-v1") + "|pci-mkt-oauth"   # Core/MarketingOAuth.StateSecret
+    exp = int(time.time()) + 3600
+    good_state = f"{li}.{exp}." + hashlib.sha256(f"{li}.{exp}.{_mksec}".encode()).hexdigest()[:24]
+    s1, b1, _ = _raw_get(f"/api/marketing/oauth/callback?code=x&state={li}.{exp}.aaaaaaaaaaaaaaaaaaaaaaaa")
+    s2, b2, _ = _raw_get("/api/marketing/oauth/callback?error=access_denied")
+    s3, b3, _ = _raw_get(f"/api/marketing/oauth/callback?code=fake56&state={good_state}")
+    con = dbconn(); crow = con.execute("SELECT status, last_error FROM mkt_connections WHERE id=?", (li,)).fetchone(); con.close()
+    chk("56d the OAuth callback is state-verified: a forged state is refused, a provider error is reported, and a valid signed state whose token exchange dies records an honest error status — never a fake connect",
+        s1 == 200 and b"Link invalid or expired" in b1
+        and s2 == 200 and b"Connection cancelled" in b2 and b"access_denied" in b2
+        and s3 == 200 and b"Could not complete the connection" in b3
+        and crow and crow[0] == "error" and crow[1] == "token_exchange_failed", (s1, s2, s3, tuple(crow or ())))
+
+    # --- LinkedIn posts: draft → approval gate → capability honesty gate ---
+    c1, p1 = jget("POST", f"{M}/posts", token=admin,
+                  body={"post_type": "text", "body": "marketing centre integration post 56", "hashtags": "#pci56"})
+    pid = p1.get("id")
+    c2, pub0 = jget("POST", f"{M}/posts/{pid}/publish", token=admin)
+    c3, p404 = jget("POST", f"{M}/posts/999999/publish", token=admin)
+    con = dbconn(); prow = con.execute("SELECT status, approval_status FROM mkt_linkedin_posts WHERE id=?", (pid,)).fetchone(); con.close()
+    chk("56e a new post lands draft/draft and can never publish unapproved (400 not_approved; ghost id 404)",
+        c1 == 200 and bool(pid) and tuple(prow) == ("draft", "draft")
+        and c2 == 400 and pub0.get("error") == "not_approved" and c3 == 404 and p404.get("error") == "not_found", (prow, pub0))
+
+    jget("POST", f"{M}/posts/{pid}/approve", token=admin)
+    c, pubq = jget("POST", f"{M}/posts/{pid}/publish", token=admin)
+    con = dbconn(); st = con.execute("SELECT status, approval_status FROM mkt_linkedin_posts WHERE id=?", (pid,)).fetchone(); con.close()
+    chk("56f even an approved post cannot fake-publish: the seeded provider_approval_required capability queues it as 'scheduled' with an honest operator action",
+        c == 200 and pubq.get("ok") is False and pubq.get("queued") is True
+        and pubq.get("reason") == "provider_approval_required" and "LinkedIn" in str(pubq.get("operator_action", ""))
+        and tuple(st) == ("scheduled", "approved"), (pubq, st))
+
+    # DB surgery: the account is now "connected" (no token) — the honesty layer must still not inflate.
+    con = dbconn(); con.execute("UPDATE mkt_connections SET status='connected' WHERE id=?", (li,)); con.commit(); con.close()
+    c, caps = jget("GET", f"{M}/capabilities", token=admin)
+    rows = caps.get("rows", [])
+    def _cap(pc, feat): return next((r for r in rows if r.get("platform_code") == pc and r.get("feature") == feat), None)
+    org, dm, sm = _cap("linkedin_page", "Organisation page posts"), _cap("linkedin_page", "Personal direct messages"), _cap("google_search_console", "Sitemap list & submit")
+    chk("56g the capability registry never inflates: a live connection leaves an approval-gated feature gated, manual-only stays terminal, and an unconnected feature reads not_connected",
+        c == 200 and org and org.get("connected") == 1 and org.get("effective_status") == "provider_approval_required"
+        and dm and dm.get("effective_status") == "manual_workflow_only"
+        and sm and sm.get("connected") == 0 and sm.get("effective_status") == "not_connected",
+        [(r or {}).get("effective_status") for r in (org, dm, sm)])
+
+    # DB surgery: the operator records LinkedIn's approval — publish may now enqueue a REAL provider job.
+    con = dbconn()
+    con.execute("UPDATE mkt_capabilities SET status='available' WHERE platform_code='linkedin_page' AND feature='Organisation page posts'")
+    con.commit(); con.close()
+    c1, pub1 = jget("POST", f"{M}/posts/{pid}/publish", token=admin)
+    jid = pub1.get("job_id")
+    jrow = _job("id", jid)
+    c2, pub2 = jget("POST", f"{M}/posts/{pid}/publish", token=admin)   # the re-click
+    con = dbconn()
+    prow2 = con.execute("SELECT status, linkedin_post_id FROM mkt_linkedin_posts WHERE id=?", (pid,)).fetchone()
+    njobs = con.execute("SELECT COUNT(*) FROM mkt_jobs WHERE idempotency_key=?", (f"linkedin_post:{pid}",)).fetchone()[0]
+    con.close()
+    chk("56h publish enqueues a real provider job that fails CLOSED on the missing token (post stays 'publishing', no provider id invented) and a re-click reuses the idempotency key — one job ever",
+        c1 == 200 and pub1.get("ok") is True and pub1.get("status") == "publishing" and bool(jid)
+        and jrow and jrow[0] == "failed" and jrow[2] == "no_access_token"
+        and prow2 and prow2[0] == "publishing" and prow2[1] is None
+        and c2 == 200 and pub2.get("job_id") is None and int(njobs) == 1, (pub1, jrow, prow2, njobs))
+
+    cr, rr = jget("POST", f"{M}/jobs/{jid}/retry", token=admin)
+    j2 = _job("id", jid)
+    cl, jl = jget("GET", f"{M}/jobs", token=admin)
+    jvis = next((r for r in jl.get("rows", []) if r.get("id") == jid), None)
+    cd, drn = jget("POST", f"{M}/jobs/drain", token=admin)
+    chk("56i an admin retry re-runs the failed job through the same honest gate (attempt 2, failed again), the queue view omits payload/provider blobs, and drain reports its processed count",
+        cr == 200 and rr.get("ok") and j2 and j2[0] == "failed" and int(j2[1]) == 2 and j2[2] == "no_access_token"
+        and cl == 200 and jvis and "payload_json" not in jvis and "provider_response" not in jvis
+        and cd == 200 and drn.get("ok") and isinstance(drn.get("processed"), int), (j2, drn))
+
+    # --- campaigns: validation → approval chain → connected launch, all honestly gated ---
+    c0, camp = jget("POST", f"{M}/campaigns", token=admin,
+                    body={"name": "aurora launch 56", "objective": "leads", "total_budget": 900, "alloc_meta": 400})
+    cid = camp.get("id")
+    chk("56j creates are validated with exact codes: campaign and promotion need a name, a variant needs a platform, and a variant under a ghost campaign is 404",
+        c0 == 200 and bool(cid)
+        and jget("POST", f"{M}/campaigns", token=admin, body={})[1].get("error") == "name_required"
+        and jget("POST", f"{M}/promotions", token=admin, body={})[1].get("error") == "name_required"
+        and jget("POST", f"{M}/campaigns/{cid}/platforms", token=admin, body={})[1].get("error") == "platform_required"
+        and jget("POST", f"{M}/campaigns/999999/platforms", token=admin, body={"platform_code": "meta_ads"})[0] == 404)
+
+    c1, var = jget("POST", f"{M}/campaigns/{cid}/platforms", token=admin,
+                   body={"platform_code": "meta_ads", "name": "aurora meta 56", "objective": "leads", "daily_budget": 25})
+    vid = var.get("id")
+    c2, l0 = jget("POST", f"{M}/platform-campaigns/{vid}/launch", token=admin)
+    jget("POST", f"{M}/campaigns/{cid}/approve", token=admin)
+    c3, l1 = jget("POST", f"{M}/platform-campaigns/{vid}/launch", token=admin)
+    c4, _ = jget("POST", f"{M}/platform-campaigns/999999/launch", token=admin)
+    con = dbconn(); vrow = con.execute("SELECT status FROM mkt_platform_campaigns WHERE id=?", (vid,)).fetchone(); con.close()
+    chk("56k a variant cannot launch before PCI approval (400 campaign_not_approved) nor without a connected account (honest refusal — the variant stays draft; ghost id 404)",
+        c1 == 200 and bool(vid) and c2 == 400 and l0.get("error") == "campaign_not_approved"
+        and c3 == 200 and l1.get("ok") is False and l1.get("reason") == "not_connected"
+        and "meta_ads" in str(l1.get("operator_action", "")) and c4 == 404 and vrow and vrow[0] == "draft", (l0, l1, vrow))
+
+    cm, mc = jget("POST", f"{M}/connections", token=admin,
+                  body={"platform_code": "meta_ads", "label": "meta ads 56", "external_ad_account_id": "act_9056"})
+    mid = mc.get("id")
+    con = dbconn(); con.execute("UPDATE mkt_connections SET status='connected' WHERE id=?", (mid,)); con.commit(); con.close()
+    c, l2 = jget("POST", f"{M}/platform-campaigns/{vid}/launch", token=admin)
+    jrow = _job("idempotency_key", f"meta_campaign_create:{vid}")
+    c2, det = jget("GET", f"{M}/campaigns/{cid}", token=admin)
+    con = dbconn(); vrow2 = con.execute("SELECT status, provider_campaign_id FROM mkt_platform_campaigns WHERE id=?", (vid,)).fetchone(); con.close()
+    chk("56l a connected launch promises a PAUSED provider campaign and enqueues the create job, which fails closed without a real token — no provider campaign id is ever invented",
+        cm == 200 and c == 200 and l2.get("ok") is True and l2.get("status") == "launching" and "PAUSED" in str(l2.get("note", ""))
+        and jrow and jrow[0] == "failed" and jrow[2] == "no_access_token"
+        and c2 == 200 and len(det.get("variants", [])) == 1
+        and vrow2 and vrow2[0] == "launching" and vrow2[1] is None, (l2, jrow, vrow2))
+
+    # --- Google Search Console: refusal → field validation → honest submit ---
+    c0, g0 = jget("POST", f"{M}/gsc/sitemaps/submit", token=admin,
+                  body={"property": "sc-domain:pci56.example", "sitemap_url": "https://pci56.example/sitemap.xml"})
+    cg, gc = jget("POST", f"{M}/connections", token=admin,
+                  body={"platform_code": "google_search_console", "label": "gsc 56", "external_property": "sc-domain:pci56.example"})
+    gid = gc.get("id")
+    con = dbconn(); con.execute("UPDATE mkt_connections SET status='connected' WHERE id=?", (gid,)); con.commit(); con.close()
+    c1, g1 = jget("POST", f"{M}/gsc/sitemaps/submit", token=admin, body={})
+    c2, g2 = jget("POST", f"{M}/gsc/search-analytics", token=admin, body={"property": "sc-domain:pci56.example"})
+    c3, g3 = jget("POST", f"{M}/gsc/sitemaps/submit", token=admin,
+                  body={"property": "sc-domain:pci56.example", "sitemap_url": "https://pci56.example/sitemap-56.xml"})
+    jrow = _job("id", g3.get("job_id"))
+    con = dbconn(); nsm = con.execute("SELECT COUNT(*) FROM mkt_gsc_sitemaps").fetchone()[0]; con.close()
+    chk("56m GSC is honestly gated: unconnected refusal names the operator action, missing fields are exact 400s, and a submit carries the no-indexing-guarantee note while the job fails closed (no sitemap row is faked)",
+        c0 == 200 and g0.get("ok") is False and g0.get("reason") == "not_connected" and "Search Console" in str(g0.get("operator_action", ""))
+        and c1 == 400 and g1.get("error") == "property_and_sitemap_required"
+        and c2 == 400 and g2.get("error") == "property_start_end_required"
+        and c3 == 200 and "does not guarantee" in str(g3.get("note", ""))
+        and jrow and jrow[0] == "failed" and jrow[2] == "no_access_token" and int(nsm) == 0, (g0, g1, g2, jrow, nsm))
+
+    # --- public lead webhooks fail closed / dedup ---
+    c1, w1 = jget("POST", "/api/webhooks/lead-intake?secret=guess-56", body={"email": "intake-56@ex.co", "consent": 1})
+    c2, _ = jget("POST", "/api/webhooks/lead-intake", headers={"X-Webhook-Secret": "guess-56"}, body={"email": "intake-56@ex.co"})
+    con = dbconn(); nl = con.execute("SELECT COUNT(*) FROM mkt_leads WHERE email=?", ("intake-56@ex.co",)).fetchone()[0]; con.close()
+    chk("56n the public lead-intake webhook fails closed while no shared secret is configured: 401 via query AND header, and no lead row is ever stored",
+        c1 == 401 and w1.get("error") == "unauthorized" and c2 == 401 and int(nl) == 0, (c1, c2, nl))
+
+    cv2, _ = jget("GET", "/api/webhooks/meta-leads?hub.mode=subscribe&hub.verify_token=guess56&hub.challenge=c56")
+    payload = {"entry": [{"changes": [{"field": "leadgen", "value": {"leadgen_id": "lg-mk56", "form_id": "f-mk56"}}]}]}
+    c1, m1 = jget("POST", "/api/webhooks/meta-leads", body=payload)
+    c2, _ = jget("POST", "/api/webhooks/meta-leads", body=payload)   # provider retry-storm replay
+    jrow = _job("idempotency_key", "meta_lead_fetch:lg-mk56")
+    con = dbconn()
+    lead = con.execute("SELECT id, source_platform, provider_lead_id, consent, status, email FROM mkt_leads WHERE dedup_key=?",
+                       ("meta:leadgen:lg-mk56",)).fetchall()
+    con.close()
+    lid = lead[0][0] if lead else None
+    chk("56o Meta lead events: the verification handshake fails closed (403), a leadgen notification stores ONE consent-0 stub lead (a prospect, never a member) that a replay dedups, and the detail-fetch job fails honestly without a token",
+        cv2 == 403 and c1 == 200 and m1.get("ok") is True and c2 == 200
+        and len(lead) == 1 and lead[0][1] == "meta" and lead[0][2] == "lg-mk56" and int(lead[0][3]) == 0
+        and lead[0][4] == "new" and lead[0][5] is None
+        and jrow and jrow[0] == "failed" and jrow[2] in ("no_access_token", "no_connected_meta_account"), (cv2, lead, jrow))
+
+    c1, su = jget("POST", f"{M}/leads/{lid}/status", token=admin,
+                  body={"status": "contacted", "assign_self": 1, "next_followup_at": "2026-08-01"})
+    c2, fl = jget("GET", f"{M}/leads?status=contacted", token=admin)
+    con = dbconn(); lrow = con.execute("SELECT status, owner_admin_id, last_contact_at, next_followup_at FROM mkt_leads WHERE id=?", (lid,)).fetchone(); con.close()
+    chk("56p the Lead Centre pipeline: a status move with assign_self stamps the owner, contact time and follow-up date, and the status filter finds the lead",
+        c1 == 200 and su.get("ok") and lrow and lrow[0] == "contacted" and lrow[1] is not None
+        and lrow[2] is not None and lrow[3] == "2026-08-01"
+        and c2 == 200 and any(r.get("id") == lid for r in fl.get("rows", [])), (su, lrow))
+
+    # --- overview counts + alert ack, then audit trail + disconnect wipe (which also restores state) ---
+    con = dbconn()
+    con.execute("INSERT INTO mkt_alerts(kind,severity,platform_code,message,status) VALUES('pace_56','warning','meta_ads','probe alert 56','open')")
+    aid = con.execute("SELECT id FROM mkt_alerts WHERE message=?", ("probe alert 56",)).fetchone()[0]
+    con.commit(); con.close()
+    c1, ov = jget("GET", f"{M}/overview", token=admin)
+    counts = ov.get("counts", {})
+    c2, ack = jget("POST", f"{M}/alerts/{aid}/ack", token=admin)
+    con = dbconn(); arow = con.execute("SELECT status, acknowledged_by FROM mkt_alerts WHERE id=?", (aid,)).fetchone(); con.close()
+    chk("56q the overview dashboard reports the live truth (3 connected accounts, the post, the campaign, the lead, the open alert) and an ack stamps who acknowledged",
+        c1 == 200 and counts.get("connections", 0) >= 3 and counts.get("posts", 0) >= 1 and counts.get("campaigns", 0) >= 1
+        and counts.get("leads", 0) >= 1 and counts.get("open_alerts", 0) >= 1
+        and any(a.get("message") == "probe alert 56" for a in ov.get("alerts", []))
+        and c2 == 200 and ack.get("ok") and arow and arow[0] == "acknowledged" and arow[1] is not None, (counts, arow))
+
+    con = dbconn()   # plant sentinel token material so the disconnect wipe is provable (all its jobs are already terminal)
+    con.execute("UPDATE mkt_connections SET access_token_enc='enc-wipe-56', refresh_token_enc='enc-wipe-56r', token_expires_at='2020-01-01 00:00:00' WHERE id=?", (gid,))
+    con.commit(); con.close()
+    for c_id in (li, mid, gid):   # the real endpoint is the restoration path
+        jget("POST", f"{M}/connections/{c_id}/disconnect", token=admin)
+    con = dbconn()
+    grow = con.execute("SELECT status, access_token_enc, refresh_token_enc, token_expires_at FROM mkt_connections WHERE id=?", (gid,)).fetchone()
+    # restore the capability ceiling §56 borrowed — the platform is back to its honest seeded state
+    con.execute("UPDATE mkt_capabilities SET status='provider_approval_required' WHERE platform_code='linkedin_page' AND feature='Organisation page posts'")
+    con.commit(); con.close()
+    ca, aud = jget("GET", f"{M}/audit", token=admin)
+    acts = [r.get("action") for r in aud.get("rows", [])]
+    chk("56r disconnect wipes stored tokens and expiry in one stroke, and the marketing audit trail is scoped to mkt_* actions recording the whole journey",
+        grow and grow[0] == "disconnected" and grow[1] is None and grow[2] is None and grow[3] is None
+        and ca == 200 and len(acts) > 0 and all(str(a).startswith("mkt_") for a in acts)
+        and {"mkt_post_create", "mkt_campaign_approved", "mkt_platform_campaign_launch", "mkt_connection_disconnected"} <= set(acts),
+        (grow, acts[:8]))
 
 if __name__ == "__main__":
     main()
