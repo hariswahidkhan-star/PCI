@@ -387,4 +387,68 @@ public class SimCalcTests
         var r = SimCalc.MonteCarlo(McChain, seed: 99, iterations: 20000);
         Assert.InRange(r.Mean, 12.7, 13.3);
     }
+
+    // ── Change control ────────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void ChangeControl_AppliesOnlyApprovedChanges()
+    {
+        var changes = new[]
+        {
+            new SimCalc.ChangeItem("C1", "approved", 30000, 5),
+            new SimCalc.ChangeItem("C2", "rejected", 50000, 10),   // ignored
+            new SimCalc.ChangeItem("C3", "approved", -10000, -2),
+            new SimCalc.ChangeItem("C4", "pending", 20000, 3),     // ignored
+        };
+        var r = SimCalc.ChangeControl(500000, 100, changes);
+        Assert.Equal(520000, r.RevisedBac, 4);          // +30000 −10000
+        Assert.Equal(103, r.RevisedDuration, 4);        // +5 −2
+        Assert.Equal(20000, r.ApprovedCostDelta, 4);
+        Assert.Equal(2, r.ApprovedCount);
+    }
+
+    [Fact]
+    public void Resolve_Change_ReturnsRevisedBaselineAndApprovedCount()
+    {
+        var given = J("{\"baseline_bac\":500000,\"baseline_duration\":100,\"changes\":[" +
+            "{\"id\":\"C1\",\"status\":\"approved\",\"cost_delta\":30000,\"schedule_delta\":5}," +
+            "{\"id\":\"C2\",\"status\":\"rejected\",\"cost_delta\":50000,\"schedule_delta\":10}," +
+            "{\"id\":\"C3\",\"status\":\"approved\",\"cost_delta\":-10000,\"schedule_delta\":-2}," +
+            "{\"id\":\"C4\",\"status\":\"pending\",\"cost_delta\":20000,\"schedule_delta\":3}]}");
+        Assert.Equal(520000, (double)SimCalc.Resolve("change", "revised_bac", given)!, 4);
+        Assert.Equal(103, (double)SimCalc.Resolve("change", "revised_duration", given)!, 4);
+        Assert.Equal(2, (double)SimCalc.Resolve("change", "approved_count", given)!, 4);
+    }
+
+    // ── Cash flow ─────────────────────────────────────────────────────────────────────────────────
+
+    static readonly SimCalc.CashPeriod[] Cash =
+    {
+        new(1, 0, 50000),        // cum −50000
+        new(2, 20000, 60000),    // cum −90000  (deepest)
+        new(3, 80000, 40000),    // cum −50000
+        new(4, 120000, 30000),   // cum +40000
+    };
+
+    [Fact]
+    public void CashFlow_ComputesFinalPositionAndPeakFunding()
+    {
+        var r = SimCalc.CashFlow(Cash);
+        Assert.Equal(40000, r.FinalPosition, 4);        // closing cumulative
+        Assert.Equal(90000, r.PeakFunding, 4);          // deepest deficit as a positive magnitude
+        Assert.Equal(-90000, r.Series.Single(s => s.Period == 2).Cumulative, 4);
+    }
+
+    [Fact]
+    public void Resolve_CashFlow_ReturnsFinalPositionPeakFundingAndCumulative()
+    {
+        var given = J("{\"periods\":[" +
+            "{\"period\":1,\"inflow\":0,\"outflow\":50000}," +
+            "{\"period\":2,\"inflow\":20000,\"outflow\":60000}," +
+            "{\"period\":3,\"inflow\":80000,\"outflow\":40000}," +
+            "{\"period\":4,\"inflow\":120000,\"outflow\":30000}]}");
+        Assert.Equal(40000, (double)SimCalc.Resolve("cashflow", "final_position", given)!, 4);
+        Assert.Equal(90000, (double)SimCalc.Resolve("cashflow", "peak_funding", given)!, 4);
+        Assert.Equal(-90000, (double)SimCalc.Resolve("cashflow", "cumulative_2", given)!, 4);
+    }
 }

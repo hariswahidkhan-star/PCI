@@ -471,6 +471,56 @@ public static class SimCalc
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────────
+    //  Change control — approved-change roll-up onto the baseline
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    public sealed record ChangeItem(string Id, string Status, double CostDelta, double ScheduleDelta);
+
+    public sealed record ChangeResult(double RevisedBac, double RevisedDuration, double ApprovedCostDelta, double ApprovedScheduleDelta, int ApprovedCount);
+
+    /// <summary>
+    /// Apply only the APPROVED changes in a change register to the baseline: revised BAC = baseline +
+    /// Σ(approved cost deltas), revised duration = baseline + Σ(approved schedule deltas). Pending and
+    /// rejected changes never move the baseline — that is the discipline the lab teaches.
+    /// </summary>
+    public static ChangeResult ChangeControl(double baseBac, double baseDuration, IReadOnlyList<ChangeItem> changes)
+    {
+        double cost = 0, sched = 0; var n = 0;
+        foreach (var c in changes)
+            if (string.Equals(c.Status, "approved", StringComparison.OrdinalIgnoreCase)) { cost += c.CostDelta; sched += c.ScheduleDelta; n++; }
+        return new ChangeResult(R(baseBac + cost), R(baseDuration + sched), R(cost), R(sched), n);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    //  Cash flow — cumulative net position and peak funding requirement
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    public sealed record CashPeriod(int Period, double Inflow, double Outflow);
+
+    public sealed record CashPoint(int Period, double Net, double Cumulative);
+
+    public sealed record CashResult(double FinalPosition, double PeakFunding, IReadOnlyList<CashPoint> Series);
+
+    /// <summary>
+    /// Roll a time-phased cash flow into its cumulative net position. The final position is the closing
+    /// cumulative; the peak funding requirement is the deepest cumulative deficit as a positive magnitude
+    /// (0 if the project is never cash-negative). Periods are processed in order.
+    /// </summary>
+    public static CashResult CashFlow(IReadOnlyList<CashPeriod> periods)
+    {
+        double cum = 0, minCum = 0;
+        var series = new List<CashPoint>();
+        foreach (var p in periods.OrderBy(x => x.Period))
+        {
+            var net = p.Inflow - p.Outflow;
+            cum += net;
+            if (cum < minCum) minCum = cum;
+            series.Add(new CashPoint(p.Period, R(net), R(cum)));
+        }
+        return new CashResult(R(cum), R(minCum < 0 ? -minCum : 0), series);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
     //  Answer resolution — the values a scenario can ask a student to compute
     // ─────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -548,6 +598,28 @@ public static class SimCalc
                     _ => null,
                 };
             }
+            case "change":
+            {
+                var r = ChangeControl(G("baseline_bac"), G("baseline_duration"), ParseChanges(given));
+                return key switch
+                {
+                    "revised_bac" => (object?)r.RevisedBac,
+                    "revised_duration" => r.RevisedDuration,
+                    "approved_cost_delta" => r.ApprovedCostDelta,
+                    "approved_schedule_delta" => r.ApprovedScheduleDelta,
+                    "approved_count" => (double)r.ApprovedCount,
+                    _ => null,
+                };
+            }
+            case "cashflow":
+            {
+                var r = CashFlow(ParseCash(given));
+                if (key == "final_position") return r.FinalPosition;
+                if (key == "peak_funding") return r.PeakFunding;
+                if (key.StartsWith("cumulative_", StringComparison.Ordinal) && int.TryParse(key.Substring("cumulative_".Length), out var per))
+                    return r.Series.FirstOrDefault(s => s.Period == per)?.Cumulative;
+                return null;
+            }
             case "cpm":
             {
                 var acts = ParseCpm(given);
@@ -606,6 +678,33 @@ public static class SimCalc
                 string? parent = n.TryGetProperty("parent", out var p) && p.ValueKind == JsonValueKind.String ? p.GetString() : null;
                 double? val = n.TryGetProperty("value", out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : (double?)null;
                 list.Add(new WbsInputNode(id, parent, val));
+            }
+        return list;
+    }
+
+    static List<ChangeItem> ParseChanges(JsonElement given)
+    {
+        var list = new List<ChangeItem>();
+        if (given.TryGetProperty("changes", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                var id = n.TryGetProperty("id", out var i) ? i.GetString() ?? "" : "";
+                var status = n.TryGetProperty("status", out var s) ? s.GetString() ?? "" : "";
+                double G(string k) => n.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0;
+                list.Add(new ChangeItem(id, status, G("cost_delta"), G("schedule_delta")));
+            }
+        return list;
+    }
+
+    static List<CashPeriod> ParseCash(JsonElement given)
+    {
+        var list = new List<CashPeriod>();
+        if (given.TryGetProperty("periods", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                var per = n.TryGetProperty("period", out var pv) && pv.ValueKind == JsonValueKind.Number ? pv.GetInt32() : 0;
+                double G(string k) => n.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0;
+                list.Add(new CashPeriod(per, G("inflow"), G("outflow")));
             }
         return list;
     }

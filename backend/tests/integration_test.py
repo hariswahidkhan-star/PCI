@@ -3388,6 +3388,23 @@ def test_simlab(admin):
     chk("43ll the Monte-Carlo scenario grades the PERT normal-approximation to 100",
         c == 200 and submc.get("score") == 100 and submc.get("passed") is True, (c, submc.get("score")))
 
+    # ---- Phase 3 change control + cash flow ----
+    c, stch = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-CHG-001"})
+    chid = stch.get("attempt_id")
+    c, subch = jget("POST", f"/api/me/lab/attempts/{chid}/submit", token=mtok,
+                    body={"answers": {"revised_bac": 520000, "revised_duration": 103, "approved_count": 2}})
+    chcomps = {x.get("competency") for x in subch.get("competencies", [])}
+    chk("43mm the change-control lab applies only approved changes and grades to 100",
+        c == 200 and subch.get("score") == 100 and subch.get("passed") is True and "change_control" in chcomps, (c, subch.get("score"), sorted(chcomps)))
+
+    c, stcf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-CASH-001"})
+    cfid = stcf.get("attempt_id")
+    c, subcf = jget("POST", f"/api/me/lab/attempts/{cfid}/submit", token=mtok,
+                    body={"answers": {"final_position": 40000, "peak_funding": 90000}})
+    cfcomps = {x.get("competency") for x in subcf.get("competencies", [])}
+    chk("43nn the cash-flow lab grades the closing position + peak funding to 100 (cash_flow evidence)",
+        c == 200 and subcf.get("score") == 100 and subcf.get("passed") is True and "cash_flow" in cfcomps, (c, subcf.get("score"), sorted(cfcomps)))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.

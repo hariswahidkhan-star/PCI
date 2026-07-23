@@ -150,6 +150,13 @@ public static class SimLabSchema
         SeedScenario(db, "SC-MC-001", "PERT vs Monte-Carlo: read the distribution", "scenario", "Pharmaceutical", "advanced", 22,
             "[\"risk_management\",\"schedule_analysis\"]", "Compute the PERT normal-approximation for a chain, then compare it with a Monte-Carlo simulation of the finish date.",
             ConfigMonteCarlo);
+        // Phase 3 — change control + cash flow.
+        SeedScenario(db, "GL-CHG-001", "Apply the change register to the baseline", "guided_lab", "Defence", "intermediate", 14,
+            "[\"change_control\"]", "Roll only the APPROVED changes onto the baseline to get the revised budget and duration.",
+            ConfigChange);
+        SeedScenario(db, "GL-CASH-001", "Project cash flow and peak funding", "guided_lab", "Utilities", "intermediate", 16,
+            "[\"cash_flow\"]", "Roll a time-phased cash flow into its cumulative position and find the peak funding requirement.",
+            ConfigCash);
     }
 
     static void SeedScenario(Db db, string code, string title, string kind, string industry, string difficulty,
@@ -209,6 +216,35 @@ public static class SimLabSchema
            {"key":"critical_path","label":"Critical path (comma-separated activity IDs)","type":"set"},
            {"key":"float_C","label":"Total float of activity C (days)","type":"number"}],
          "tolerance":0.001,"pass_pct":70,"competencies":["schedule_analysis"]}
+        """;
+
+    const string ConfigChange = """
+        {"task":"change",
+         "prompt":"A project baseline is BAC 500000 over 100 days. The change register below lists four changes with cost and schedule deltas. Roll ONLY the approved changes onto the baseline: give the revised BAC, the revised duration, and how many changes were approved.",
+         "given":{"baseline_bac":500000,"baseline_duration":100,"changes":[
+           {"id":"C1","title":"Extra test rig","status":"approved","cost_delta":30000,"schedule_delta":5},
+           {"id":"C2","title":"Gold-plating request","status":"rejected","cost_delta":50000,"schedule_delta":10},
+           {"id":"C3","title":"Descope legacy module","status":"approved","cost_delta":-10000,"schedule_delta":-2},
+           {"id":"C4","title":"Client-requested finish","status":"pending","cost_delta":20000,"schedule_delta":3}]},
+         "ask":[
+           {"key":"revised_bac","label":"Revised BAC","type":"number"},
+           {"key":"revised_duration","label":"Revised duration (days)","type":"number"},
+           {"key":"approved_count","label":"Number of changes approved","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["change_control"]}
+        """;
+
+    const string ConfigCash = """
+        {"task":"cashflow",
+         "prompt":"A project's monthly cash inflows and outflows are below. Roll them into the cumulative net position: give the final (closing) position and the peak funding requirement (the deepest cumulative deficit, as a positive amount).",
+         "given":{"periods":[
+           {"period":1,"inflow":0,"outflow":50000},
+           {"period":2,"inflow":20000,"outflow":60000},
+           {"period":3,"inflow":80000,"outflow":40000},
+           {"period":4,"inflow":120000,"outflow":30000}]},
+         "ask":[
+           {"key":"final_position","label":"Final (closing) cash position","type":"number"},
+           {"key":"peak_funding","label":"Peak funding requirement","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["cash_flow"]}
         """;
 
     const string ConfigMonteCarlo = """

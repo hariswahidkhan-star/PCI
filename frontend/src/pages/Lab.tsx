@@ -52,6 +52,7 @@ const COMPETENCY_LABEL: Record<string, string> = {
   risk_management: 'Risk management',
   change_control: 'Change control',
   progress_measurement: 'Progress measurement',
+  cash_flow: 'Cash flow',
 }
 const titleCaseWords = (s: string) => s.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 

@@ -71,6 +71,41 @@ function GivenView({ task }: { task: Task }) {
       </table>
     )
   }
+  if (task.task === 'change') {
+    const changes = (g.changes as { id: string; title?: string; status: string; cost_delta: number; schedule_delta: number }[]) ?? []
+    return (
+      <>
+        <div className="small muted" style={{ marginBottom: '.3rem' }}>
+          Baseline: BAC {fmt(g.baseline_bac as number)} · {fmt(g.baseline_duration as number)} days
+        </div>
+        <table className="data">
+          <thead><tr><th>Change</th><th>Description</th><th>Status</th><th>Cost Δ</th><th>Schedule Δ</th></tr></thead>
+          <tbody>
+            {changes.map((ch) => (
+              <tr key={ch.id}>
+                <td>{ch.id}</td><td>{ch.title ?? '—'}</td>
+                <td><Badge tone={ch.status === 'approved' ? 'ok' : ch.status === 'rejected' ? 'warn' : 'neutral'}>{titleCase(ch.status)}</Badge></td>
+                <td>{fmt(ch.cost_delta)}</td><td>{fmt(ch.schedule_delta)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    )
+  }
+  if (task.task === 'cashflow') {
+    const periods = (g.periods as { period: number; inflow: number; outflow: number }[]) ?? []
+    return (
+      <table className="data">
+        <thead><tr><th>Period</th><th>Inflow</th><th>Outflow</th><th>Net</th></tr></thead>
+        <tbody>
+          {periods.map((p) => (
+            <tr key={p.period}><td>{p.period}</td><td>{fmt(p.inflow)}</td><td>{fmt(p.outflow)}</td><td>{fmt(p.inflow - p.outflow)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
   if (task.task === 'risk') {
     const risks = (g.risks as { id: string; name?: string; probability: number; impact: number }[]) ?? []
     return (
