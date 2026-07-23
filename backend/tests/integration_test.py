@@ -3623,20 +3623,18 @@ def sim_lab_answers(task):
         plan = sorted(g.get("plan") or [], key=lambda p: int(p.get("period") or 0))
         ev, at = float(g.get("ev") or 0), float(g.get("at") or 0)
         pd = float(g.get("planned_duration") or (plan[-1]["period"] if plan else 0))
-        es = 0.0
-        if plan:
-            if ev <= float(plan[0]["pv"]):
-                es = 0.0 if float(plan[0]["pv"]) == 0 else ev / float(plan[0]["pv"]) * float(plan[0]["period"])
-            elif ev >= float(plan[-1]["pv"]):
-                es = float(plan[-1]["period"])
-            else:
-                for i in range(1, len(plan)):
-                    prev, cur = plan[i - 1], plan[i]
-                    if float(prev["pv"]) <= ev <= float(cur["pv"]):
-                        span = float(cur["pv"]) - float(prev["pv"])
-                        frac = 0.0 if span == 0 else (ev - float(prev["pv"])) / span
-                        es = float(prev["period"]) + frac * (float(cur["period"]) - float(prev["period"]))
-                        break
+        if not plan:
+            es = 0.0
+        elif ev <= float(plan[0]["pv"]):
+            es = 0.0 if float(plan[0]["pv"]) <= 0 else float(plan[0]["period"]) * (ev / float(plan[0]["pv"]))
+        else:
+            i = 0
+            while i + 1 < len(plan) and float(plan[i + 1]["pv"]) <= ev:
+                i += 1
+            es = float(plan[i]["period"])
+            if i + 1 < len(plan) and float(plan[i + 1]["pv"]) > float(plan[i]["pv"]):
+                es += (ev - float(plan[i]["pv"])) / (float(plan[i + 1]["pv"]) - float(plan[i]["pv"])) * (
+                    float(plan[i + 1]["period"]) - float(plan[i]["period"]))
         spi_t = 0.0 if at == 0 else es / at
         full = {"es": es, "sv_time": es - at, "spi_time": spi_t, "eac_time": 0.0 if spi_t == 0 else pd / spi_t}
 
