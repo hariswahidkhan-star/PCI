@@ -3616,6 +3616,52 @@ def test_simlab(admin):
     c, _vn = jget("GET", "/api/admin/lab/scenarios/99999999/validate", token=admin)
     chk("43z3 validating an unknown scenario id returns 404", c == 404, c)
 
+    # ---- Phase 5A: scenario authoring + review workflow (§13), gated 'content', maker-checker enforced ----
+    valid_cfg = {"task": "evm", "prompt": "Compute the CPI.",
+                 "given": {"pv": 100000, "ev": 90000, "ac": 95000, "bac": 200000},
+                 "ask": [{"key": "cpi", "label": "CPI", "type": "number"}],
+                 "tolerance": 0.01, "pass_pct": 70, "competencies": ["earned_value"]}
+    c, cr = jget("POST", "/api/admin/lab/scenarios", token=admin, body={
+        "scenario_code": "IT-REV-001", "title": "Review-workflow scenario", "difficulty": "foundation",
+        "competencies": ["earned_value"], "certification_id": 1, "config_json": valid_cfg,
+        "synthetic_declared": True, "summary": "synthetic review-workflow test"})
+    new_id = cr.get("id")
+    chk("43z4 an admin creates a DRAFT scenario (author recorded, not yet served)",
+        c == 200 and new_id and cr.get("review_state") == "draft" and cr.get("status") == "draft", (c, cr))
+    c, dup = jget("POST", "/api/admin/lab/scenarios", token=admin, body={"scenario_code": "IT-REV-001", "title": "dup"})
+    chk("43z5 a duplicate scenario_code is refused (409)", c == 409 and dup.get("error") == "duplicate_code", (c, dup))
+    c, bt = jget("POST", f"/api/admin/lab/scenarios/{new_id}/review", token=admin, body={"to": "published"})
+    chk("43z6 a scenario cannot skip straight to published (bad_transition, 409)", c == 409 and bt.get("error") == "bad_transition", (c, bt))
+    walk_ok = True; tr = {}
+    for stage in ("calc_review", "learning_review", "safety_review", "pilot"):
+        c, tr = jget("POST", f"/api/admin/lab/scenarios/{new_id}/review", token=admin, body={"to": stage})
+        walk_ok = walk_ok and c == 200 and tr.get("review_state") == stage
+    chk("43z7 a scenario walks the review stages one step at a time", walk_ok, tr)
+    c, mc = jget("POST", f"/api/admin/lab/scenarios/{new_id}/review", token=admin, body={"to": "approved"})
+    chk("43z8 the author cannot approve their own scenario (maker_checker, 409)", c == 409 and mc.get("error") == "maker_checker", (c, mc))
+    # A second admin holding 'content' satisfies maker-checker and can approve + publish.
+    jget("POST", "/api/admin/team", token=admin, body={"email": "simrev2@pci.test", "name": "Sim Reviewer",
+         "role": "custom", "permissions": ["content"], "password": "SimRev-2026!", "force_password_change": False})
+    c, l2 = admin_login_rl(lambda: {"email": "simrev2@pci.test", "password": "SimRev-2026!"})
+    admin2 = l2.get("token")
+    c, ap = jget("POST", f"/api/admin/lab/scenarios/{new_id}/review", token=admin2, body={"to": "approved"})
+    chk("43z9 a different admin approves the scenario (maker-checker satisfied)", c == 200 and ap.get("review_state") == "approved", (c, ap))
+    c, pub = jget("POST", f"/api/admin/lab/scenarios/{new_id}/review", token=admin2, body={"to": "published"})
+    chk("43z10 the approving admin publishes the scenario", c == 200 and pub.get("review_state") == "published", (c, pub))
+    c, startnew = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "IT-REV-001", "mode": "training"})
+    chk("43z11 the newly published scenario is served to students end-to-end (attempt starts)",
+        c == 200 and startnew.get("attempt_id") and (startnew.get("task") or {}).get("task") == "evm", (c, (startnew.get("task") or {}).get("task")))
+    # An incomplete scenario (no config/competencies/synthetic) is blocked at approval by the §14 validator.
+    c, cz = jget("POST", "/api/admin/lab/scenarios", token=admin, body={"scenario_code": "IT-REV-INC", "title": "Incomplete", "difficulty": "foundation"})
+    inc_id = cz.get("id")
+    for stage in ("calc_review", "learning_review", "safety_review", "pilot"):
+        jget("POST", f"/api/admin/lab/scenarios/{inc_id}/review", token=admin, body={"to": stage})
+    c, ng = jget("POST", f"/api/admin/lab/scenarios/{inc_id}/review", token=admin2, body={"to": "approved"})
+    chk("43z12 an unpublishable (incomplete) scenario is blocked at approval (not_publishable, 409)",
+        c == 409 and ng.get("error") == "not_publishable" and ng.get("errors", 0) >= 1, (c, ng.get("error"), ng.get("errors")))
+    c, _stu = jget("POST", "/api/admin/lab/scenarios", token=mtok, body={"scenario_code": "X", "title": "x"})
+    chk("43z13 scenario authoring is not reachable with a student token", c in (401, 403), c)
+
     # ---- Phase 2 engine: forecasting (three EAC methods) + CBS cost roll-up, graded deterministically ----
     c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})
     fid = stf.get("attempt_id")
