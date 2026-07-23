@@ -451,4 +451,69 @@ public class SimCalcTests
         Assert.Equal(90000, (double)SimCalc.Resolve("cashflow", "peak_funding", given)!, 4);
         Assert.Equal(-90000, (double)SimCalc.Resolve("cashflow", "cumulative_2", given)!, 4);
     }
+
+    // ── Time-driven EVM timeline ────────────────────────────────────────────────────────────────────
+
+    static readonly SimCalc.TimelineInput[] Timeline =
+    {
+        // Cumulative PV/EV/AC over six reporting periods against a 600k BAC. Worst SPI and CPI both fall in
+        // period 3; the CPI-method forecast (EAC = BAC ÷ CPI) settles well above budget by the finish.
+        new(1, 100000, 90000, 100000),
+        new(2, 220000, 200000, 230000),
+        new(3, 350000, 300000, 360000),
+        new(4, 470000, 420000, 500000),
+        new(5, 560000, 520000, 610000),
+        new(6, 600000, 580000, 680000),
+    };
+
+    [Fact]
+    public void EvmTimeline_ReplaysPeriodsAndFindsWorstPerformance()
+    {
+        var r = SimCalc.EvmTimeline(Timeline, 600000);
+        Assert.Equal(6, r.Series.Count);
+        // Period-3 snapshot: SPI 300000/350000, CPI 300000/360000, EAC 600000/CPI.
+        var p3 = r.Series.Single(s => s.Period == 3);
+        Assert.Equal(0.8571, p3.Spi, 4);
+        Assert.Equal(0.8333, p3.Cpi, 4);
+        Assert.Equal(720000, p3.Eac, 4);
+        // Whole-project reading.
+        Assert.Equal(0.8571, r.WorstSpi, 4);
+        Assert.Equal(3, r.WorstSpiPeriod);
+        Assert.Equal(0.8333, r.WorstCpi, 4);
+        Assert.Equal(3, r.WorstCpiPeriod);
+        Assert.Equal(0.9667, r.FinalSpi, 4);
+        Assert.Equal(0.8529, r.FinalCpi, 4);
+        Assert.Equal(703448.2759, r.FinalEac, 4);
+        Assert.Equal(-103448.2759, r.Vac, 4);
+    }
+
+    [Fact]
+    public void EvmTimeline_TieOnWorstKeepsTheEarlierPeriod()
+    {
+        // Two periods share the minimum CPI (0.8); the earlier one must win for determinism.
+        var pts = new[]
+        {
+            new SimCalc.TimelineInput(1, 100, 80, 100),   // CPI 0.8
+            new SimCalc.TimelineInput(2, 200, 180, 200),  // CPI 0.9
+            new SimCalc.TimelineInput(3, 300, 240, 300),  // CPI 0.8 (tie, but later)
+        };
+        var r = SimCalc.EvmTimeline(pts, 300);
+        Assert.Equal(1, r.WorstCpiPeriod);
+    }
+
+    [Fact]
+    public void Resolve_Timeline_ReturnsTrendAndForecast()
+    {
+        var given = J("{\"bac\":600000,\"series\":[" +
+            "{\"period\":1,\"pv\":100000,\"ev\":90000,\"ac\":100000}," +
+            "{\"period\":2,\"pv\":220000,\"ev\":200000,\"ac\":230000}," +
+            "{\"period\":3,\"pv\":350000,\"ev\":300000,\"ac\":360000}," +
+            "{\"period\":4,\"pv\":470000,\"ev\":420000,\"ac\":500000}," +
+            "{\"period\":5,\"pv\":560000,\"ev\":520000,\"ac\":610000}," +
+            "{\"period\":6,\"pv\":600000,\"ev\":580000,\"ac\":680000}]}");
+        Assert.Equal(0.8529, (double)SimCalc.Resolve("timeline", "final_cpi", given)!, 4);
+        Assert.Equal(703448.2759, (double)SimCalc.Resolve("timeline", "final_eac", given)!, 4);
+        Assert.Equal(-103448.2759, (double)SimCalc.Resolve("timeline", "vac", given)!, 4);
+        Assert.Equal(3, (double)SimCalc.Resolve("timeline", "worst_spi_period", given)!, 4);
+    }
 }

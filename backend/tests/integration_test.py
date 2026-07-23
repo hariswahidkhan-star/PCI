@@ -3405,6 +3405,20 @@ def test_simlab(admin):
     chk("43nn the cash-flow lab grades the closing position + peak funding to 100 (cash_flow evidence)",
         c == 200 and subcf.get("score") == 100 and subcf.get("passed") is True and "cash_flow" in cfcomps, (c, subcf.get("score"), sorted(cfcomps)))
 
+    # ---- Phase 3 time-driven EVM timeline ----
+    c, sttl = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SC-EVT-001"})
+    tlid = sttl.get("attempt_id")
+    tltask = sttl.get("task", {})
+    # The task carries the period series (given, so the S-curve can draw it) but never the computed trend.
+    chk("43oo the timeline task exposes the given period series without leaking the trend/forecast",
+        tltask.get("task") == "timeline" and len((tltask.get("given") or {}).get("series", [])) == 6
+        and "worst_spi_period" not in (tltask.get("given") or {}), tltask.get("given"))
+    c, subtl = jget("POST", f"/api/me/lab/attempts/{tlid}/submit", token=mtok,
+                    body={"answers": {"worst_spi_period": 3, "final_cpi": 0.8529, "final_eac": 703448.28, "vac": -103448.28}})
+    tlcomps = {x.get("competency") for x in subtl.get("competencies", [])}
+    chk("43pp the timeline lab grades the worst-period + CPI-method forecast to 100 (earned_value evidence)",
+        c == 200 and subtl.get("score") == 100 and subtl.get("passed") is True and "earned_value" in tlcomps, (c, subtl.get("score"), sorted(tlcomps)))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.

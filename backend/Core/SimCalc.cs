@@ -521,6 +521,55 @@ public static class SimCalc
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────────
+    //  Time-driven EVM timeline — replay a project period by period
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    public sealed record TimelineInput(int Period, double Pv, double Ev, double Ac);
+
+    public sealed record TimelinePoint(
+        int Period, double Pv, double Ev, double Ac,
+        double Sv, double Cv, double Spi, double Cpi, double Eac);
+
+    public sealed record TimelineResult(
+        IReadOnlyList<TimelinePoint> Series,
+        double FinalEv, double FinalAc, double FinalSpi, double FinalCpi, double FinalEac, double Vac,
+        double WorstSpi, int WorstSpiPeriod, double WorstCpi, int WorstCpiPeriod);
+
+    /// <summary>
+    /// Step a project through its reporting periods, computing the earned-value snapshot at each one from
+    /// the cumulative Planned Value, Earned Value and Actual Cost recorded to date. This is the "time-driven"
+    /// view the spec's dynamic simulation calls for: rather than one snapshot, the student reads the whole
+    /// trajectory — where schedule and cost performance were worst, and where the CPI-method forecast (EAC =
+    /// BAC ÷ CPI) is heading. Periods are processed in order; SPI/CPI guard division by zero (0 = "no basis").
+    /// The worst-period selection keeps the FIRST period at the minimum, so ties resolve deterministically.
+    /// </summary>
+    public static TimelineResult EvmTimeline(IReadOnlyList<TimelineInput> periods, double bac)
+    {
+        var series = new List<TimelinePoint>();
+        double worstSpi = double.PositiveInfinity, worstCpi = double.PositiveInfinity;
+        int worstSpiP = 0, worstCpiP = 0;
+        TimelineInput? last = null;
+        foreach (var p in periods.OrderBy(x => x.Period))
+        {
+            var spi = p.Pv == 0 ? 0 : p.Ev / p.Pv;
+            var cpi = p.Ac == 0 ? 0 : p.Ev / p.Ac;
+            var eac = cpi == 0 ? 0 : bac / cpi;
+            series.Add(new TimelinePoint(p.Period, R(p.Pv), R(p.Ev), R(p.Ac),
+                R(p.Ev - p.Pv), R(p.Ev - p.Ac), R(spi), R(cpi), R(eac)));
+            if (spi < worstSpi) { worstSpi = spi; worstSpiP = p.Period; }
+            if (cpi < worstCpi) { worstCpi = cpi; worstCpiP = p.Period; }
+            last = p;
+        }
+        var lp = last ?? new TimelineInput(0, 0, 0, 0);
+        var fSpi = lp.Pv == 0 ? 0 : lp.Ev / lp.Pv;
+        var fCpi = lp.Ac == 0 ? 0 : lp.Ev / lp.Ac;
+        var fEac = fCpi == 0 ? 0 : bac / fCpi;
+        return new TimelineResult(series, R(lp.Ev), R(lp.Ac), R(fSpi), R(fCpi), R(fEac), R(bac - fEac),
+            R(double.IsPositiveInfinity(worstSpi) ? 0 : worstSpi), worstSpiP,
+            R(double.IsPositiveInfinity(worstCpi) ? 0 : worstCpi), worstCpiP);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
     //  Answer resolution — the values a scenario can ask a student to compute
     // ─────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -620,6 +669,25 @@ public static class SimCalc
                     return r.Series.FirstOrDefault(s => s.Period == per)?.Cumulative;
                 return null;
             }
+            case "timeline":
+            {
+                var (pts, bac) = ParseTimeline(given);
+                var r = EvmTimeline(pts, bac);
+                return key switch
+                {
+                    "final_ev" => (object?)r.FinalEv,
+                    "final_ac" => r.FinalAc,
+                    "final_spi" => r.FinalSpi,
+                    "final_cpi" => r.FinalCpi,
+                    "final_eac" => r.FinalEac,
+                    "vac" => r.Vac,
+                    "worst_spi" => r.WorstSpi,
+                    "worst_spi_period" => (double)r.WorstSpiPeriod,
+                    "worst_cpi" => r.WorstCpi,
+                    "worst_cpi_period" => (double)r.WorstCpiPeriod,
+                    _ => null,
+                };
+            }
             case "cpm":
             {
                 var acts = ParseCpm(given);
@@ -707,6 +775,20 @@ public static class SimCalc
                 list.Add(new CashPeriod(per, G("inflow"), G("outflow")));
             }
         return list;
+    }
+
+    static (List<TimelineInput> points, double bac) ParseTimeline(JsonElement given)
+    {
+        var list = new List<TimelineInput>();
+        if (given.TryGetProperty("series", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                var per = n.TryGetProperty("period", out var pd) && pd.ValueKind == JsonValueKind.Number ? pd.GetInt32() : 0;
+                double G(string k) => n.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0;
+                list.Add(new TimelineInput(per, G("pv"), G("ev"), G("ac")));
+            }
+        double bac = given.TryGetProperty("bac", out var b) && b.ValueKind == JsonValueKind.Number ? b.GetDouble() : 0;
+        return (list, bac);
     }
 
     static List<RiskItem> ParseRisks(JsonElement given)

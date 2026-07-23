@@ -157,6 +157,10 @@ public static class SimLabSchema
         SeedScenario(db, "GL-CASH-001", "Project cash flow and peak funding", "guided_lab", "Utilities", "intermediate", 16,
             "[\"cash_flow\"]", "Roll a time-phased cash flow into its cumulative position and find the peak funding requirement.",
             ConfigCash);
+        // Phase 3 — time-driven simulation: step a project period by period and read its trajectory.
+        SeedScenario(db, "SC-EVT-001", "Track a project month by month (EVM trend)", "scenario", "Infrastructure", "advanced", 20,
+            "[\"earned_value\",\"forecasting\"]", "Step a six-month project period by period: find where performance was worst and forecast the final cost from the cumulative CPI.",
+            ConfigTimeline);
     }
 
     static void SeedScenario(Db db, string code, string title, string kind, string industry, string difficulty,
@@ -245,6 +249,25 @@ public static class SimLabSchema
            {"key":"final_position","label":"Final (closing) cash position","type":"number"},
            {"key":"peak_funding","label":"Peak funding requirement","type":"number"}],
          "tolerance":0.01,"pass_pct":70,"competencies":["cash_flow"]}
+        """;
+
+    const string ConfigTimeline = """
+        {"task":"timeline",
+         "prompt":"A six-month infrastructure package reports cumulative Planned Value, Earned Value and Actual Cost each month against a 600000 BAC. Read the trajectory rather than a single snapshot: in which month was schedule performance (SPI) at its worst, what is the cumulative CPI at the finish, and — using the CPI method (EAC = BAC / CPI) — what is the forecast final cost and the resulting Variance at Completion (VAC = BAC − EAC)?",
+         "given":{"bac":600000,
+           "series":[
+             {"period":1,"pv":100000,"ev":90000,"ac":100000},
+             {"period":2,"pv":220000,"ev":200000,"ac":230000},
+             {"period":3,"pv":350000,"ev":300000,"ac":360000},
+             {"period":4,"pv":470000,"ev":420000,"ac":500000},
+             {"period":5,"pv":560000,"ev":520000,"ac":610000},
+             {"period":6,"pv":600000,"ev":580000,"ac":680000}]},
+         "ask":[
+           {"key":"worst_spi_period","label":"Month of worst schedule performance (lowest SPI)","type":"number"},
+           {"key":"final_cpi","label":"Cumulative CPI at completion","type":"number"},
+           {"key":"final_eac","label":"Estimate at Completion (EAC = BAC / CPI)","type":"number"},
+           {"key":"vac","label":"Variance at Completion (VAC = BAC - EAC)","type":"number"}],
+         "tolerance":0.01,"pass_pct":75,"competencies":["earned_value","forecasting"]}
         """;
 
     const string ConfigMonteCarlo = """

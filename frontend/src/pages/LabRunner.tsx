@@ -106,6 +106,22 @@ function GivenView({ task }: { task: Task }) {
       </table>
     )
   }
+  if (task.task === 'timeline') {
+    const series = (g.series as { period: number; pv: number; ev: number; ac: number }[]) ?? []
+    return (
+      <>
+        {g.bac != null && <div className="small muted" style={{ marginBottom: '.3rem' }}>Budget at Completion (BAC): {fmt(g.bac as number)}</div>}
+        <table className="data">
+          <thead><tr><th>Period</th><th>Planned Value</th><th>Earned Value</th><th>Actual Cost</th></tr></thead>
+          <tbody>
+            {series.map((p) => (
+              <tr key={p.period}><td>{p.period}</td><td>{fmt(p.pv)}</td><td>{fmt(p.ev)}</td><td>{fmt(p.ac)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    )
+  }
   if (task.task === 'risk') {
     const risks = (g.risks as { id: string; name?: string; probability: number; impact: number }[]) ?? []
     return (
