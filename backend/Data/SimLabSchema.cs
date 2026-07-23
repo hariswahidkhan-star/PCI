@@ -140,6 +140,13 @@ public static class SimLabSchema
         SeedScenario(db, "GL-PRG-001", "Measure weighted physical progress", "guided_lab", "Manufacturing", "foundation", 12,
             "[\"progress_measurement\"]", "Compute a project's overall percent-complete as the budget-weighted average of its work packages.",
             ConfigProgress);
+        // Phase 3 — risk.
+        SeedScenario(db, "SD-RSK-001", "Value a risk register (EMV)", "skill_drill", "Oil & Gas", "intermediate", 10,
+            "[\"risk_management\"]", "Compute the Expected Monetary Value of a quantified risk register (threats and opportunities net off).",
+            ConfigRisk);
+        SeedScenario(db, "GL-PRT-001", "Three-point estimate and confidence (PERT)", "guided_lab", "Aerospace", "advanced", 20,
+            "[\"schedule_analysis\",\"risk_management\"]", "Run a PERT analysis on a critical path: expected duration, standard deviation, and the probability of meeting a deadline.",
+            ConfigPert);
     }
 
     static void SeedScenario(Db db, string code, string title, string kind, string industry, string difficulty,
@@ -199,6 +206,31 @@ public static class SimLabSchema
            {"key":"critical_path","label":"Critical path (comma-separated activity IDs)","type":"set"},
            {"key":"float_C","label":"Total float of activity C (days)","type":"number"}],
          "tolerance":0.001,"pass_pct":70,"competencies":["schedule_analysis"]}
+        """;
+
+    const string ConfigRisk = """
+        {"task":"risk",
+         "prompt":"A project's risk register lists three quantified risks. Negative impacts are threats; positive impacts are opportunities. Compute the register's Expected Monetary Value (threats and opportunities net off).",
+         "given":{"risks":[
+           {"id":"R1","name":"Supplier delay","probability":0.3,"impact":-20000},
+           {"id":"R2","name":"Scope creep","probability":0.5,"impact":-10000},
+           {"id":"R3","name":"Early-handover bonus","probability":0.2,"impact":15000}]},
+         "ask":[{"key":"emv","label":"Expected Monetary Value of the register","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["risk_management"]}
+        """;
+
+    const string ConfigPert = """
+        {"task":"pert",
+         "prompt":"Three activities on the critical path have optimistic (O), most-likely (M) and pessimistic (P) estimates in days. Compute the path's PERT expected duration, its standard deviation, and the probability of finishing by day 14 (%).",
+         "given":{"activities":[
+           {"id":"A","o":2,"m":4,"p":6},
+           {"id":"B","o":3,"m":5,"p":13},
+           {"id":"C","o":1,"m":2,"p":3}],"deadline":14},
+         "ask":[
+           {"key":"expected_duration","label":"PERT expected duration (days)","type":"number"},
+           {"key":"std_dev","label":"Path standard deviation (days)","type":"number"},
+           {"key":"prob_on_time","label":"Probability of finishing by day 14 (%)","type":"number"}],
+         "tolerance":0.02,"pass_pct":70,"competencies":["schedule_analysis","risk_management"]}
         """;
 
     const string ConfigProgress = """

@@ -3360,6 +3360,21 @@ def test_simlab(admin):
     chk("43hh the progress lab grades the budget-weighted percent-complete to 100 (progress evidence)",
         c == 200 and subp.get("score") == 100 and subp.get("passed") is True and "progress_measurement" in pcomps, (c, subp.get("score"), sorted(pcomps)))
 
+    # ---- Phase 3 risk engine: Expected Monetary Value + three-point (PERT) analysis ----
+    c, str_ = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-RSK-001"})
+    rid = str_.get("attempt_id")
+    c, subr = jget("POST", f"/api/me/lab/attempts/{rid}/submit", token=mtok, body={"answers": {"emv": -8000}})
+    rcomps = {x.get("competency") for x in subr.get("competencies", [])}
+    chk("43ii the risk drill grades the register EMV to 100 (risk_management evidence)",
+        c == 200 and subr.get("score") == 100 and subr.get("passed") is True and "risk_management" in rcomps, (c, subr.get("score"), sorted(rcomps)))
+
+    c, stpt = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-PRT-001"})
+    ptid = stpt.get("attempt_id")
+    c, subpt = jget("POST", f"/api/me/lab/attempts/{ptid}/submit", token=mtok,
+                    body={"answers": {"expected_duration": 12, "std_dev": 1.8257, "prob_on_time": 86.3}})
+    chk("43jj the PERT lab grades expected duration + std-dev + probability-on-time to 100",
+        c == 200 and subpt.get("score") == 100 and subpt.get("passed") is True, (c, subpt.get("score")))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.

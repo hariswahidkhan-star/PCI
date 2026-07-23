@@ -330,6 +330,67 @@ public static class SimCalc
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────────
+    //  Risk — Expected Monetary Value and three-point (PERT) analysis
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    public sealed record RiskItem(string Id, double Probability, double Impact);
+
+    public sealed record EmvResult(double Total, IReadOnlyList<(string id, double emv)> Items);
+
+    /// <summary>
+    /// Expected Monetary Value of a risk register: Σ(probability · impact). Signed impacts let a threat
+    /// (negative) and an opportunity (positive) net off. Per-risk EMVs are returned for the breakdown.
+    /// </summary>
+    public static EmvResult Emv(IReadOnlyList<RiskItem> risks)
+    {
+        double total = 0;
+        var items = new List<(string, double)>();
+        foreach (var r in risks) { var e = r.Probability * r.Impact; total += e; items.Add((r.Id, R(e))); }
+        return new EmvResult(R(total), items);
+    }
+
+    public readonly record struct PertResult(double Expected, double StdDev, double Variance);
+
+    /// <summary>Three-point (PERT/beta) estimate for one activity: expected = (O + 4M + P)/6, standard
+    /// deviation = (P − O)/6, variance = ((P − O)/6)².</summary>
+    public static PertResult Pert(double o, double m, double p)
+    {
+        var e = (o + 4 * m + p) / 6.0;
+        var sd = (p - o) / 6.0;
+        return new PertResult(R(e), R(sd), R(sd * sd));
+    }
+
+    public sealed record PertPathResult(double Expected, double StdDev, double Variance, double? ProbOnTimePercent);
+
+    /// <summary>
+    /// PERT for a chain of activities in series (e.g. the critical path): the path's expected duration is
+    /// the sum of the activities' expected durations, its variance the sum of their variances. If a
+    /// deadline is supplied, the probability of finishing on time is Φ((deadline − expected) / σ) as a
+    /// percentage (the normal approximation), where σ is the path standard deviation.
+    /// </summary>
+    public static PertPathResult PertPath(IReadOnlyList<(double o, double m, double p)> acts, double? deadline)
+    {
+        double e = 0, var = 0;
+        foreach (var a in acts) { var r = Pert(a.o, a.m, a.p); e += r.Expected; var += r.Variance; }
+        var sd = Math.Sqrt(var);
+        double? prob = null;
+        if (deadline is double d)
+            prob = sd == 0 ? (d >= e ? 100 : 0) : 100.0 * NormalCdf((d - e) / sd);
+        return new PertPathResult(R(e), R(sd), R(var), prob is double pr ? R(pr) : null);
+    }
+
+    /// <summary>Standard-normal CDF Φ(z) via the Abramowitz &amp; Stegun 7.1.26 erf approximation
+    /// (max error ≈ 1.5e-7) — deterministic and dependency-free.</summary>
+    public static double NormalCdf(double z)
+    {
+        var sign = z < 0 ? -1.0 : 1.0;
+        var x = Math.Abs(z) / Math.Sqrt(2.0);
+        var t = 1.0 / (1.0 + 0.3275911 * x);
+        var y = 1.0 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.Exp(-x * x);
+        return 0.5 * (1.0 + sign * y);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
     //  Answer resolution — the values a scenario can ask a student to compute
     // ─────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -380,6 +441,32 @@ public static class SimCalc
             {
                 var r = Progress(ParseProgress(given));
                 return key switch { "overall_percent" => (object?)r.OverallPercent, "total_weight" => r.TotalWeight, _ => null };
+            }
+            case "risk":
+            {
+                var r = Emv(ParseRisks(given));
+                if (key == "emv") return r.Total;
+                if (key.StartsWith("emv_", StringComparison.Ordinal))
+                {
+                    var id = key.Substring("emv_".Length);
+                    var hit = r.Items.FirstOrDefault(i => i.id == id);
+                    return hit.id == id ? hit.emv : (object?)null;
+                }
+                return null;
+            }
+            case "pert":
+            {
+                var acts = ParsePert(given);
+                var deadline = GN("deadline");
+                var r = PertPath(acts, deadline);
+                return key switch
+                {
+                    "expected_duration" => (object?)r.Expected,
+                    "std_dev" => r.StdDev,
+                    "variance" => r.Variance,
+                    "prob_on_time" => r.ProbOnTimePercent,
+                    _ => null,
+                };
             }
             case "cpm":
             {
@@ -439,6 +526,32 @@ public static class SimCalc
                 string? parent = n.TryGetProperty("parent", out var p) && p.ValueKind == JsonValueKind.String ? p.GetString() : null;
                 double? val = n.TryGetProperty("value", out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : (double?)null;
                 list.Add(new WbsInputNode(id, parent, val));
+            }
+        return list;
+    }
+
+    static List<RiskItem> ParseRisks(JsonElement given)
+    {
+        var list = new List<RiskItem>();
+        if (given.TryGetProperty("risks", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                var id = n.TryGetProperty("id", out var i) ? i.GetString() ?? "" : "";
+                var prob = n.TryGetProperty("probability", out var p) && p.ValueKind == JsonValueKind.Number ? p.GetDouble() : 0;
+                var impact = n.TryGetProperty("impact", out var im) && im.ValueKind == JsonValueKind.Number ? im.GetDouble() : 0;
+                list.Add(new RiskItem(id, prob, impact));
+            }
+        return list;
+    }
+
+    static List<(double o, double m, double p)> ParsePert(JsonElement given)
+    {
+        var list = new List<(double, double, double)>();
+        if (given.TryGetProperty("activities", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                double G(string k) => n.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0;
+                list.Add((G("o"), G("m"), G("p")));
             }
         return list;
     }

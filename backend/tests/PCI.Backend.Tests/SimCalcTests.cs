@@ -280,4 +280,74 @@ public class SimCalcTests
             "{\"id\":\"1.3\",\"weight\":30000,\"percent\":0}]}");
         Assert.Equal(55, (double)SimCalc.Resolve("progress", "overall_percent", given)!, 4);
     }
+
+    // ── Risk: Expected Monetary Value ─────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Emv_SumsProbabilityTimesImpact()
+    {
+        var risks = new[]
+        {
+            new SimCalc.RiskItem("R1", 0.30, -20000),   // threat
+            new SimCalc.RiskItem("R2", 0.50, -10000),   // threat
+            new SimCalc.RiskItem("R3", 0.20, 15000),    // opportunity
+        };
+        var r = SimCalc.Emv(risks);
+        // 0.3·-20000 + 0.5·-10000 + 0.2·15000 = -6000 - 5000 + 3000 = -8000
+        Assert.Equal(-8000, r.Total, 4);
+        Assert.Equal(-6000, r.Items.Single(i => i.id == "R1").emv, 4);
+    }
+
+    [Fact]
+    public void Resolve_Risk_ReturnsEmvTotalAndPerRisk()
+    {
+        var given = J("{\"risks\":[" +
+            "{\"id\":\"R1\",\"probability\":0.3,\"impact\":-20000}," +
+            "{\"id\":\"R2\",\"probability\":0.5,\"impact\":-10000}," +
+            "{\"id\":\"R3\",\"probability\":0.2,\"impact\":15000}]}");
+        Assert.Equal(-8000, (double)SimCalc.Resolve("risk", "emv", given)!, 4);
+        Assert.Equal(-6000, (double)SimCalc.Resolve("risk", "emv_R1", given)!, 4);
+    }
+
+    // ── Risk: three-point (PERT) analysis ─────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Pert_ComputesExpectedAndStandardDeviation()
+    {
+        var r = SimCalc.Pert(2, 4, 6);                 // (2 + 16 + 6)/6 = 4; sd = (6-2)/6 = 0.6667
+        Assert.Equal(4, r.Expected, 4);
+        Assert.Equal(0.6667, r.StdDev, 4);
+    }
+
+    [Fact]
+    public void PertPath_SumsExpectedAndVarianceAndComputesProbability()
+    {
+        var acts = new[] { (2.0, 4.0, 6.0), (3.0, 5.0, 13.0), (1.0, 2.0, 3.0) };
+        var r = SimCalc.PertPath(acts, 14);
+        // expected 4 + 6 + 2 = 12; variances 0.4444 + 2.7778 + 0.1111 = 3.3333; sd = 1.8257
+        Assert.Equal(12, r.Expected, 4);
+        Assert.Equal(1.8257, r.StdDev, 4);
+        // Z = (14-12)/1.8257 = 1.0954 → Φ ≈ 0.8632 → ~86.3%
+        Assert.InRange(r.ProbOnTimePercent!.Value, 86.0, 87.0);
+    }
+
+    [Fact]
+    public void NormalCdf_MatchesKnownValues()
+    {
+        Assert.Equal(0.5, SimCalc.NormalCdf(0), 3);
+        Assert.Equal(0.8413, SimCalc.NormalCdf(1), 3);     // Φ(1)
+        Assert.Equal(0.1587, SimCalc.NormalCdf(-1), 3);    // Φ(-1)
+    }
+
+    [Fact]
+    public void Resolve_Pert_ReturnsPathExpectedStdDevAndProbability()
+    {
+        var given = J("{\"activities\":[" +
+            "{\"id\":\"A\",\"o\":2,\"m\":4,\"p\":6}," +
+            "{\"id\":\"B\",\"o\":3,\"m\":5,\"p\":13}," +
+            "{\"id\":\"C\",\"o\":1,\"m\":2,\"p\":3}],\"deadline\":14}");
+        Assert.Equal(12, (double)SimCalc.Resolve("pert", "expected_duration", given)!, 4);
+        Assert.Equal(1.8257, (double)SimCalc.Resolve("pert", "std_dev", given)!, 4);
+        Assert.InRange((double)SimCalc.Resolve("pert", "prob_on_time", given)!, 86.0, 87.0);
+    }
 }

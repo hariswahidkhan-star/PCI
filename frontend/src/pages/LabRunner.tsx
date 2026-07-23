@@ -70,6 +70,41 @@ function GivenView({ task }: { task: Task }) {
       </table>
     )
   }
+  if (task.task === 'risk') {
+    const risks = (g.risks as { id: string; name?: string; probability: number; impact: number }[]) ?? []
+    return (
+      <table className="data">
+        <thead><tr><th>Risk</th><th>Description</th><th>Probability</th><th>Impact</th></tr></thead>
+        <tbody>
+          {risks.map((r) => (
+            <tr key={r.id}>
+              <td>{r.id}</td>
+              <td>{r.name ?? '—'}</td>
+              <td>{fmt(r.probability)}</td>
+              <td>{fmt(r.impact)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+  if (task.task === 'pert') {
+    const acts = (g.activities as { id: string; o: number; m: number; p: number }[]) ?? []
+    const deadline = g.deadline as number | undefined
+    return (
+      <>
+        <table className="data">
+          <thead><tr><th>Activity</th><th>Optimistic</th><th>Most likely</th><th>Pessimistic</th></tr></thead>
+          <tbody>
+            {acts.map((a) => (
+              <tr key={a.id}><td>{a.id}</td><td>{a.o}</td><td>{a.m}</td><td>{a.p}</td></tr>
+            ))}
+          </tbody>
+        </table>
+        {deadline != null && <div className="small muted" style={{ marginTop: '.3rem' }}>Deadline: day {fmt(deadline)}</div>}
+      </>
+    )
+  }
   if (task.task === 'progress') {
     const nodes = (g.nodes as { id: string; name?: string; weight?: number; percent?: number }[]) ?? []
     return (
