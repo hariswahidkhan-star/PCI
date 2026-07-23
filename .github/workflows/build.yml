@@ -80,6 +80,9 @@ jobs:
       - name: Retake waiting-period regression (P0-7 — persisted, enforced at booking, admin-waivable)
         run: python3 tests/retake_wait_test.py
 
+      - name: Migration versioning + lock regression (P0-6 — ledger, compatibility gate, concurrent boot)
+        run: python3 tests/migration_versioning_test.py
+
       - name: Founding-stage suite (codes, applications, waiver settlement)
         run: python3 tests/founding_test.py
 
