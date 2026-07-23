@@ -380,6 +380,10 @@ public static class SimCalc
         }
     }
 
+    /// <summary>Run the schedule (forward/backward pass) directly from a scenario's <c>given</c> block —
+    /// used to render the Gantt in the result view once an attempt is graded (never before).</summary>
+    public static CpmResult ScheduleFrom(JsonElement given) => CriticalPath(ParseCpm(given));
+
     static List<CpmActivity> ParseCpm(JsonElement given)
     {
         var list = new List<CpmActivity>();

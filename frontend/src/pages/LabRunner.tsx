@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { api, ApiError } from '../api/client'
 import { Card, Badge, Spinner, ErrorNote } from '../components/ui'
 import SCurve, { type EvmPoint } from '../components/SCurve'
+import Gantt, { type GanttBar } from '../components/Gantt'
 
 // PCI AI Project Controls Simulation Lab — interactive workspace (Phase 1 foundation).
 // Starts (or resumes) an attempt at a guided lab, presents the synthetic task and its inputs, collects the
@@ -15,7 +16,8 @@ interface ScenarioMeta { id: number; scenario_code: string; title: string; kind:
 interface StartResp { attempt_id: number; resumed: boolean; scenario: ScenarioMeta; task: Task }
 interface Measure { key: string; label: string; is_correct: boolean; correct_value: unknown; your_value: unknown }
 interface Competency { competency: string; score: number; level: string }
-interface Grade { score: number; passed: boolean; correct: number; total: number; mode: string; assessment: boolean; measures: Measure[]; competencies: Competency[] }
+interface Schedule { project_duration: number; critical_path: string[]; bars: GanttBar[] }
+interface Grade { score: number; passed: boolean; correct: number; total: number; mode: string; assessment: boolean; measures: Measure[]; competencies: Competency[]; schedule?: Schedule | null }
 
 type Mode = 'training' | 'assessment'
 
@@ -250,6 +252,16 @@ export default function LabRunner() {
                     Assessment Mode reports your marks only — the worked answers are withheld. Switch to Training
                     Mode to see the full solution.
                   </p>
+                )}
+                {grade.schedule?.bars && grade.schedule.bars.length > 0 && (
+                  <div>
+                    <div className="small muted" style={{ marginBottom: '.2rem' }}>
+                      Computed schedule — critical path {grade.schedule.critical_path.join(' → ')}, duration {grade.schedule.project_duration}
+                    </div>
+                    <div style={{ overflowX: 'auto' }}>
+                      <Gantt bars={grade.schedule.bars} projectDuration={grade.schedule.project_duration} />
+                    </div>
+                  </div>
                 )}
                 {grade.competencies.length > 0 && (
                   <div className="row" style={{ flexWrap: 'wrap', gap: '.3rem', alignItems: 'center' }}>

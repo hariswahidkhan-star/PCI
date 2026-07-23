@@ -3334,6 +3334,24 @@ def test_simlab(admin):
     chk("43ee the S-curve scenario grades the current-period EVM measures to 100",
         c == 200 and subs.get("score") == 100 and subs.get("passed") is True, (c, subs.get("score")))
 
+    # Gantt dashboard: a graded CPM attempt returns the computed schedule (the answer) in Training Mode,
+    # but Assessment Mode withholds it entirely.
+    c, stg = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-SCH-001", "mode": "training"})
+    gid = stg.get("attempt_id")
+    c, subg = jget("POST", f"/api/me/lab/attempts/{gid}/submit", token=mtok,
+                   body={"answers": {"project_duration": 13, "critical_path": ["A", "B", "D", "E"], "float_C": 2}})
+    sched = subg.get("schedule") or {}
+    bar_a = next((b for b in sched.get("bars", []) if b.get("id") == "A"), {})
+    chk("43ff a graded CPM attempt returns the computed Gantt schedule (Training Mode)",
+        c == 200 and sched.get("project_duration") == 13 and sched.get("critical_path") == ["A", "B", "D", "E"] and bar_a.get("critical") is True,
+        (c, sched.get("project_duration"), sched.get("critical_path")))
+    c, stga = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-SCH-001", "mode": "assessment"})
+    gaid = stga.get("attempt_id")
+    c, subga = jget("POST", f"/api/me/lab/attempts/{gaid}/submit", token=mtok,
+                    body={"answers": {"project_duration": 13, "critical_path": ["A", "B", "D", "E"], "float_C": 2}})
+    chk("43gg Assessment Mode withholds the computed schedule (no answer leaked)",
+        c == 200 and subga.get("schedule") is None, (c, subga.get("schedule")))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.

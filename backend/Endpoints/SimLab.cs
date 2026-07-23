@@ -199,7 +199,7 @@ public static class SimLab
             {
                 var answers = LoadAnswers(H.Str(att["state_json"]));
                 var g = Core.SimGrade.Grade(config, answers, mode);   // deterministic replay from stored answers
-                grade = GradePayload(g, mode);
+                grade = GradePayload(g, mode, CpmSchedule(config, mode));
             }
             return J(new
             {
@@ -249,7 +249,7 @@ public static class SimLab
             Analytics.Track(db, ctx, "sim_attempt_completed", u.Id, grade.Score, null, H.Str(s["scenario_code"]));
             log(u.Id, "sim_attempt_submit", $"{H.Str(s["scenario_code"])} {grade.Score}%{(grade.Passed ? " pass" : "")} #{id}");
 
-            return J(GradePayload(grade, mode));
+            return J(GradePayload(grade, mode, CpmSchedule(config, mode)));
         });
 
         // ---- AI Coach: grounded explanation of an attempt (deterministic engine supplies every number;
@@ -297,8 +297,9 @@ public static class SimLab
     }
 
     // Mode-aware grade payload: Assessment Mode reports only right/wrong (SimGrade already nulls the
-    // correct/your values), so nothing here re-introduces the answer key.
-    static object GradePayload(Core.SimGrade.GradeResult g, string mode) => new
+    // correct/your values), so nothing here re-introduces the answer key. The optional `schedule` is the
+    // computed Gantt for a graded CPM lab — supplied only in reveal (non-assessment) modes.
+    static object GradePayload(Core.SimGrade.GradeResult g, string mode, object? schedule = null) => new
     {
         ok = true,
         score = g.Score, passed = g.Passed, correct = g.Correct, total = g.Total, mode,
@@ -309,7 +310,32 @@ public static class SimLab
             correct_value = m.Correct_Value, your_value = m.Your_Value,
         }),
         competencies = g.Competencies.Select(c => new { competency = c.competency, score = c.score, level = c.level }),
+        schedule,
     };
+
+    // The computed schedule for a graded CPM lab, for the Gantt in the result view. This IS the answer, so
+    // it is withheld in Assessment Mode and only ever attached after an attempt has been submitted/graded.
+    static object? CpmSchedule(JsonElement config, string mode)
+    {
+        if (mode == "assessment") return null;
+        var task = config.TryGetProperty("task", out var tk) ? tk.GetString() : "";
+        if (task != "cpm" || !config.TryGetProperty("given", out var given)) return null;
+        try
+        {
+            var r = Core.SimCalc.ScheduleFrom(given);
+            return new
+            {
+                project_duration = r.ProjectDuration,
+                critical_path = r.CriticalPath,
+                bars = r.Nodes.Select(n => new
+                {
+                    id = n.Id, duration = n.Duration, es = n.Es, ef = n.Ef,
+                    ls = n.Ls, lf = n.Lf, total_float = n.TotalFloat, critical = n.Critical,
+                }),
+            };
+        }
+        catch { return null; }
+    }
 
     static string[] ParseArray(string? json)
     {
