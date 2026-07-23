@@ -34,6 +34,7 @@ public sealed class Db
     private readonly DbConnection _conn;
     private readonly object _gate = new();
     private DbTransaction? _activeTx;
+    private readonly string _sqlitePath = "";
 
     public Db(string path)
     {
@@ -46,6 +47,7 @@ public sealed class Db
         else
         {
             Provider = Kind.Sqlite;
+            _sqlitePath = path;
             _conn = new SqliteConnection($"Data Source={path};Cache=Shared");
         }
         OpenWithRetry();
@@ -385,6 +387,33 @@ public sealed class Db
             catch { try { tx.Rollback(); } catch { } throw; }
             finally { _activeTx = null; }
         }
+    }
+
+    /// <summary>Run <paramref name="body"/> under a cross-instance schema-migration lock so that when several
+    /// app instances boot at once (rolling deploy, scale-out) only ONE runs DDL at a time and the others wait —
+    /// preventing DDL races and duplicate-key inserts into the migration ledger. MySQL uses a connection-scoped
+    /// advisory lock (GET_LOCK); SQLite uses a best-effort lock file next to the database (single-host).</summary>
+    public void WithMigrationLock(Action body)
+    {
+        if (Provider == Kind.MySql)
+        {
+            var got = Scalar<long>("SELECT GET_LOCK('pci_schema_migrate', 120)");
+            if (got != 1) throw new Exception("could not acquire the MySQL schema-migration lock (GET_LOCK timed out)");
+            try { body(); }
+            finally { try { Execute("DO RELEASE_LOCK('pci_schema_migrate')"); } catch { } }
+            return;
+        }
+        var lockPath = (_sqlitePath is { Length: > 0 } p && p != ":memory:") ? p + ".migrate.lock" : null;
+        if (lockPath is null) { body(); return; }   // in-memory db: nothing to coordinate across processes
+        FileStream? fl = null;
+        var deadline = DateTime.UtcNow.AddSeconds(120);
+        while (fl is null)
+        {
+            try { fl = new FileStream(lockPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None); }
+            catch (IOException) { if (DateTime.UtcNow > deadline) { body(); return; } Thread.Sleep(200); }
+        }
+        try { body(); }
+        finally { fl.Dispose(); }
     }
 
     public HashSet<string> Columns(string table)
