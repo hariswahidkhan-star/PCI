@@ -480,6 +480,31 @@ def test_exam_delivery(admin):
         c, cb = jget("POST", "/api/exam-delivery/callback/psi?token=cbsecret", body={"client_eligibility_id": o2[2], "candidate_id": str(upsi), "result": "pass", "score": 80})
         chk("11v PSI result callback issues the credential", c == 200 and cb.get("result_status") == "pass" and bool(cb.get("credential")), cb)
 
+        # ---- SWITCH to Kryterion (Webassessor EWS): the 3rd connector driven end-to-end and the
+        #      second sync-poll pattern (Add User → Add Registration → Get Registrations for results,
+        #      structurally like Questionmark; the mock's requestType-dispatched EWS branch backs it) ----
+        c, kr = jget("POST", "/api/admin/exam-delivery", token=admin, body={
+            "provider": "kryterion", "name": "Kryterion", "environment": "sandbox", "enabled": True,
+            "api_base": mock, "security_token": "sec-tok", "exam_map": {"PCL-AI": "KRY-EXAM"}})
+        krid = kr.get("id"); chk("11ka create Kryterion vendor", c == 200 and kr.get("ok"), kr)
+        c, ktr = jget("POST", f"/api/admin/exam-delivery/{krid}/test", token=admin)
+        chk("11kb Kryterion connection test ok (EWS ping)", c == 200 and ktr.get("ok"), ktr)
+        c, sm = set_mode(mode="kryterion")
+        chk("11kc admin switch: deliver via Kryterion", c == 200 and sm.get("mode") == "kryterion", sm)
+        tkr, ukr = make_paid_user("kry@ex.co"); accept_all_consents(tkr); complete_profile(tkr)
+        c, bkk = jget("POST", "/api/me/exam/book", token=tkr, body={"scheduled_at": slot, "timezone": "UTC"})
+        chk("11kd Kryterion booking accepted", c == 200 and bkk.get("ok"), bkk)
+        con = dbconn(); ok_ = con.execute("SELECT id,status,external_appointment_id FROM exam_delivery_orders WHERE user_id=? AND provider='kryterion'", (ukr,)).fetchone(); con.close()
+        chk("11ke Kryterion: booking auto-routed + provisioned to scheduled (confirmation captured)", bool(ok_) and ok_[1] == "scheduled" and bool(ok_[2]), ok_)
+        c, sblk = jget("POST", "/api/me/exam/start", token=tkr, body={})
+        chk("11kf Kryterion: in-house SecureExam launch is blocked", c == 400 and sblk.get("error") == "external_delivery", sblk)
+        c, dsk = jget("GET", "/api/me/exam/delivery", token=tkr)
+        chk("11kg student dashboard shows Kryterion delivery", c == 200 and dsk.get("routed") and dsk.get("provider") == "kryterion", dsk)
+        c, syk = jget("POST", f"/api/admin/exam-delivery/orders/{ok_[0]}/sync", token=admin)
+        chk("11kh Kryterion: sync pulls a pass and issues the credential", c == 200 and syk.get("result_status") == "pass" and bool(syk.get("credential")), syk)
+        c, syk2 = jget("POST", f"/api/admin/exam-delivery/orders/{ok_[0]}/sync", token=admin)
+        chk("11ki Kryterion: re-sync is idempotent (no duplicate credential)", syk2.get("credential") == syk.get("credential"), (syk.get("credential"), syk2.get("credential")))
+
         # ---- SWITCH BACK to our own SecureExam ----
         c, sm = set_mode(mode="in_house"); chk("11w admin switch back to SecureExam (in-house)", c == 200 and sm.get("mode") == "in_house", sm)
         tbk, ubk = make_paid_user("backagain@ex.co"); accept_all_consents(tbk); complete_profile(tbk)
