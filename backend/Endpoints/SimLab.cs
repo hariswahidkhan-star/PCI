@@ -251,6 +251,32 @@ public static class SimLab
 
             return J(GradePayload(grade, mode));
         });
+
+        // ---- AI Coach: grounded explanation of an attempt (deterministic engine supplies every number;
+        //      refused in Assessment Mode; degrades to a built-in explainer when no provider is configured) ----
+        app.MapPost("/api/me/lab/attempts/{id:long}/coach", async (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, out var u) is { } blocked) return blocked;
+            if (!Core.SimCoach.Enabled(db)) return Results.Json(new { error = "coach_disabled" }, statusCode: 403);
+            if (Throttle(u!.Id, "coach") is { } limited) return limited;
+
+            var att = db.QueryOne("SELECT * FROM simulation_attempts WHERE id=? AND user_id=?", id, u.Id);
+            if (att is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var s = db.QueryOne("SELECT scenario_code,config_json FROM simulation_scenarios WHERE id=?", H.L(att["scenario_id"]));
+            if (s is null || string.IsNullOrWhiteSpace(H.Str(s["config_json"])))
+                return Results.Json(new { error = "not_interactive" }, statusCode: 409);
+            var config = JsonDocument.Parse(H.Str(s["config_json"])!).RootElement;
+            var mode = H.Str(att["mode"]) ?? "training";
+
+            var b = await H.Body(ctx.Request);
+            // The answers the student is asking about: what they pass now, else what they last submitted.
+            var answers = H.GetEl(b, "answers") ?? LoadAnswers(H.Str(att["state_json"]));
+            var question = H.GetS(b, "question");
+
+            var coach = await Core.SimCoach.Coach(db, config, answers, mode, question);
+            log(u.Id, "sim_coach", $"{H.Str(s["scenario_code"])} · {coach.Source} #{id}");
+            return Results.Json(new { ok = coach.Ok, message = coach.Message, source = coach.Source, ai = coach.Ai });
+        });
     }
 
     static string NormMode(string? raw)

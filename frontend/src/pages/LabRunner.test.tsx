@@ -56,6 +56,28 @@ describe('LabRunner (Simulation Lab workspace)', () => {
     expect(screen.getByText(/Earned Value · Advanced/)).toBeInTheDocument()
   })
 
+  it('fetches and shows a coaching message on request (Training Mode)', async () => {
+    post.mockImplementation((path: string) => {
+      if (path === '/api/me/lab/attempts') return Promise.resolve(startResp(false))
+      if (String(path).endsWith('/submit')) return Promise.resolve({
+        score: 50, passed: false, correct: 0, total: 1, mode: 'training', assessment: false,
+        measures: [{ key: 'spi', label: 'Schedule Performance Index (SPI)', is_correct: false, correct_value: 0.9, your_value: 1.2 }],
+        competencies: [],
+      })
+      if (String(path).endsWith('/coach')) return Promise.resolve({ ok: true, message: 'The SPI below 1 means behind schedule.', source: 'builtin', ai: false })
+      return Promise.resolve({})
+    })
+    renderRunner()
+    await screen.findByText('Compute the earned-value measures.')
+    fireEvent.change(screen.getByPlaceholderText('number'), { target: { value: '1.2' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Submit for grading' }))
+    await screen.findByText('Result — 50%')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Ask the coach' }))
+    expect(await screen.findByText('The SPI below 1 means behind schedule.')).toBeInTheDocument()
+    expect(screen.getByText('Guide')).toBeInTheDocument()   // deterministic (non-AI) badge
+  })
+
   it('withholds the correct values in Assessment Mode', async () => {
     post.mockImplementation((path: string) => {
       if (path === '/api/me/lab/attempts') return Promise.resolve(startResp(true))

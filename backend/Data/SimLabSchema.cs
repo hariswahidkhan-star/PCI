@@ -108,6 +108,8 @@ public static class SimLabSchema
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('sp_simlab_enabled','1')");
         // Access rule: membership | membership_or_exam | membership_and_enrolment | open (mirrors certuvo_requires).
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('simlab_requires','membership_or_exam')");
+        // AI Coach: on by default; degrades to a deterministic explainer when no provider key is configured.
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('simlab_coach_enabled','1')");
 
         // Starter catalogue — a few PUBLISHED guided labs + one skill drill, seeded idempotently by
         // scenario_code (WHERE NOT EXISTS, the house seed pattern). Synthetic content only. Each carries a

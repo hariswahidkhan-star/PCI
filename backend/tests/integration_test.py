@@ -3275,6 +3275,23 @@ def test_simlab(admin):
     chk("43t loading a completed attempt returns its deterministic re-grade",
         c == 200 and rev.get("status") in ("passed", "completed") and rev.get("grade", {}).get("score") == 100, (c, rev.get("status")))
 
+    # ---- AI Coach: grounded explanation, deterministic fallback (no provider key in CI), assessment-safe ----
+    c, coach = jget("POST", f"/api/me/lab/attempts/{aid}/coach", token=mtok, body={})
+    chk("43u the coach explains a completed training attempt (builtin fallback, no key in CI)",
+        c == 200 and coach.get("ok") is True and coach.get("source") == "builtin" and coach.get("ai") is False and len(coach.get("message", "")) > 20,
+        (c, coach.get("source"), coach.get("ai")))
+    # Coaching mid-attempt on the answers the student passes in — grounded concept explanation.
+    c, st2 = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-EVM-001", "mode": "training"})
+    aid2 = st2.get("attempt_id")
+    c, coach2 = jget("POST", f"/api/me/lab/attempts/{aid2}/coach", token=mtok, body={"answers": {"spi": 2.0}, "question": "why is my SPI wrong?"})
+    chk("43v the coach grounds its explanation in a project-controls concept (Index)",
+        c == 200 and coach2.get("ok") is True and "Index" in coach2.get("message", ""), (c, coach2.get("message", "")[:60]))
+    # Assessment Mode: the coach is refused outright — never a hint, never an answer.
+    c, coach3 = jget("POST", f"/api/me/lab/attempts/{wid}/coach", token=mtok, body={})
+    chk("43w Assessment Mode coaching is refused (source=assessment, no answer leaked)",
+        c == 200 and coach3.get("ok") is False and coach3.get("source") == "assessment" and "999" not in coach3.get("message", ""),
+        (c, coach3.get("source")))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.

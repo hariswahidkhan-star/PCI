@@ -93,12 +93,14 @@ export default function LabRunner() {
   const [start, setStart] = useState<StartResp | null>(null)
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [grade, setGrade] = useState<Grade | null>(null)
+  const [coach, setCoach] = useState<{ ok: boolean; message: string; ai: boolean } | null>(null)
+  const [coaching, setCoaching] = useState(false)
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const begin = useCallback(async (m: Mode) => {
-    setLoading(true); setError(null); setGrade(null); setAnswers({})
+    setLoading(true); setError(null); setGrade(null); setAnswers({}); setCoach(null)
     try {
       const s = await api.post<StartResp>('/api/me/lab/attempts', { scenario_code: code, mode: m })
       setStart(s)
@@ -128,6 +130,19 @@ export default function LabRunner() {
       setError(mapError(e))
     } finally {
       setBusy(false)
+    }
+  }
+
+  const askCoach = async () => {
+    if (!start) return
+    setCoaching(true)
+    try {
+      const r = await api.post<{ ok: boolean; message: string; ai: boolean }>(`/api/me/lab/attempts/${start.attempt_id}/coach`, {})
+      setCoach(r)
+    } catch {
+      setCoach({ ok: false, message: 'The coach is unavailable right now — please try again shortly.', ai: false })
+    } finally {
+      setCoaching(false)
     }
   }
 
@@ -221,6 +236,23 @@ export default function LabRunner() {
                       <Badge key={c.competency} tone="brand">{titleCase(c.competency)} · {titleCase(c.level)}</Badge>
                     ))}
                   </div>
+                )}
+                {!grade.assessment && (
+                  coach ? (
+                    <div style={{ background: 'var(--wash, #f6f8fb)', borderRadius: '.5rem', padding: '.7rem .8rem' }}>
+                      <div className="row" style={{ gap: '.4rem', alignItems: 'center', marginBottom: '.3rem' }}>
+                        <strong>Coach</strong>
+                        <Badge tone={coach.ai ? 'brand' : 'neutral'}>{coach.ai ? 'AI' : 'Guide'}</Badge>
+                      </div>
+                      <div style={{ whiteSpace: 'pre-wrap' }}>{coach.message}</div>
+                    </div>
+                  ) : (
+                    <div>
+                      <button className="btn secondary sm" onClick={askCoach} disabled={coaching}>
+                        {coaching ? 'Asking the coach…' : 'Ask the coach'}
+                      </button>
+                    </div>
+                  )
                 )}
                 <div className="row" style={{ gap: '.5rem' }}>
                   <button className="btn secondary" onClick={() => begin(mode)}>Try again</button>
