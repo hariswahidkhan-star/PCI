@@ -24,7 +24,6 @@ const NAV: NavItem[] = [
   { to: '/documents', label: 'Documents', perm: 'documents', group: 'Students' },
   { to: '/books', label: 'Books & materials', perm: 'resources', group: 'Students' },
   { to: '/membership-grades', label: 'Membership grades', perm: 'members', group: 'Students' },
-  { to: '/cpd', label: 'CPD review', perm: 'members', group: 'Students' },
   { to: '/member-directory', label: 'Member directory', perm: 'members', group: 'Students' },
   { to: '/erasure-requests', label: 'Data erasure requests', perm: 'members', group: 'Students' },
 

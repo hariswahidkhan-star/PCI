@@ -256,14 +256,9 @@ jobs:
       - name: Install frontend deps
         working-directory: frontend
         run: npm ci
-<<<<<<< HEAD
       - name: Install Playwright browser matrix
         working-directory: frontend
-=======
-      - name: Install Playwright browsers
-        working-directory: frontend
-        # Chromium runs the full suite; Firefox/WebKit power cross-browser smoke + mobile-safari.
->>>>>>> origin/main
+        # Chromium runs the full suite; Firefox/WebKit power cross-browser smoke + mobile profiles.
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Playwright E2E + axe (boots the backend on :8080)
         working-directory: frontend
