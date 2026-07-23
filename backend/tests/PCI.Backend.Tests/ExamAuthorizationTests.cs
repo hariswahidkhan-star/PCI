@@ -286,10 +286,10 @@ public class ExamAuthorizationTests
         Assert.Equal(0, ExamAuthorization.AttemptsPermitted(db, uid, 1));   // refunded seats are not permitted
     }
 
-    // ---- Retake waiting period: surfaced + waivable, but never actually SET or ENFORCED ------------
+    // ---- Retake waiting period: persisted on a retake seat, enforced, and waivable (P0-7 / DEF-2) --
 
     [Fact]
-    public void EnsureForPayment_ResolvedRetakeWait_IsNeverPersisted()
+    public void EnsureForPayment_FirstSeat_NoPriorFailure_LeavesRetakeWaitNull()
     {
         var db = Fresh();
         var uid = SeedUser(db);
@@ -297,16 +297,43 @@ public class ExamAuthorizationTests
         SeedRule(db, "certification", "1", windowDays: 180, retakeWait: 45);
         Assert.Equal(45, ExamAuthorization.ResolveWindow(db, uid, 1).RetakeWaitDays);
 
+        // ...but the FIRST seat has no prior failed sitting, so there is nothing to wait for → stays NULL.
         var pid = Settlement.Grant(db, uid, Email, "exam", 1, amount: 500, "EA-7", "admin_manual");
         ExamAuthorization.EnsureForPayment(db, pid);
         var a = Auth(db, pid);
         Assert.Equal(180L, H.L(a["window_days"]));       // proves the authorization was built under the rule
-        // FINDING (BD-9 dead-end): ResolveWindow computes RetakeWaitDays, but EnsureForPayment never writes it
-        // to exam_authorizations.retake_wait_until, and no code path anywhere SETS that column to a non-null
-        // value (WaiveWaitingPeriod only clears it, StudentExam/ExamExceptions only read it). So the retake
-        // waiting period is surfaced to the student and "waivable" by admins, yet is never populated or
-        // enforced. This test pins the CURRENT real behaviour: the column stays NULL despite a 45-day rule.
-        Assert.Null(a["retake_wait_until"]);
+        Assert.Null(a["retake_wait_until"]);             // no prior failure ⇒ no cool-off on the first seat
+    }
+
+    [Fact]
+    public void EnsureForPayment_RetakeAfterFailedSitting_PersistsRetakeWaitUntil()
+    {
+        var db = Fresh();
+        var uid = SeedUser(db);
+        SeedRule(db, "certification", "1", windowDays: 180, retakeWait: 45);
+        // The candidate has a finalized FAILED sitting for this certification (submitted just now)...
+        db.Execute("INSERT INTO exam_attempts(user_id,certification_id,kind,status,result,counts_as_attempt,submitted_at) VALUES(?,?, 'exam','submitted','fail',1, datetime('now'))", uid, 1);
+        // ...so the NEXT (retake) seat's authorization is stamped with a cool-off ~45 days out.
+        var pid = Settlement.Grant(db, uid, Email, "exam", 1, amount: 500, "EA-7b", "admin_manual");
+        ExamAuthorization.EnsureForPayment(db, pid);
+        var a = Auth(db, pid);
+        var wait = H.Str(a["retake_wait_until"]);
+        Assert.False(string.IsNullOrEmpty(wait));                 // the cool-off is now PERSISTED, not inert
+        var days = DaysBetween(H.IsoNow, wait);
+        Assert.True(days is > 44 and < 46, $"retake wait should be ~45 days out, was {days}");
+    }
+
+    [Fact]
+    public void EnsureForPayment_RetakeAfterHeldSitting_DoesNotStartWait()
+    {
+        var db = Fresh();
+        var uid = SeedUser(db);
+        SeedRule(db, "certification", "1", windowDays: 180, retakeWait: 45);
+        // A held attempt is not a finalized failure (result pending review) → no cool-off is started.
+        db.Execute("INSERT INTO exam_attempts(user_id,certification_id,kind,status,result,result_status,counts_as_attempt,submitted_at) VALUES(?,?, 'exam','submitted','fail','auto_held',1, datetime('now'))", uid, 1);
+        var pid = Settlement.Grant(db, uid, Email, "exam", 1, amount: 500, "EA-7c", "admin_manual");
+        ExamAuthorization.EnsureForPayment(db, pid);
+        Assert.Null(Auth(db, pid)["retake_wait_until"]);
     }
 
     [Fact]
@@ -316,8 +343,8 @@ public class ExamAuthorizationTests
         var uid = SeedUser(db);
         var pid = Settlement.Grant(db, uid, Email, "exam", 1, amount: 500, "EA-8", "admin_manual");
         ExamAuthorization.EnsureForPayment(db, pid);
-        // Nothing in the app populates retake_wait_until (see finding above), so set it directly to exercise
-        // the one real effect the waiver has: clearing it on the live authorization.
+        // EnsureForPayment now persists a retake wait after a failure; here we set it directly (no prior
+        // failure in this test) to exercise the waiver's one job: clearing it on the live authorization.
         db.Execute("UPDATE exam_authorizations SET retake_wait_until=datetime('now','+30 day') WHERE payment_id=?", pid);
         Assert.NotNull(Auth(db, pid)["retake_wait_until"]);
 

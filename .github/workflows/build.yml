@@ -77,6 +77,9 @@ jobs:
       - name: Stripe fulfillment replay-safety regression (P0-2 — paid-gate, async success, invoice replay)
         run: python3 tests/payments_replay_test.py
 
+      - name: Retake waiting-period regression (P0-7 — persisted, enforced at booking, admin-waivable)
+        run: python3 tests/retake_wait_test.py
+
       - name: Founding-stage suite (codes, applications, waiver settlement)
         run: python3 tests/founding_test.py
 
