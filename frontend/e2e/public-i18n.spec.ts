@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { preparePublicJourney } from './util'
 
 // Public-website internationalisation: the backend renders every page in the active language
 // (?lang= wins and is persisted to the pci_lang cookie — Core/I18nContent.cs), rewriting
@@ -26,6 +27,7 @@ test.describe('public site i18n', () => {
   })
 
   test('the visible language switcher navigates to a translated page', async ({ page }) => {
+    await preparePublicJourney(page)
     await page.goto('/')
     await expect(page.locator('html')).toHaveAttribute('lang', 'en-GB')
     await page.getByRole('button', { name: 'Select language' }).click()

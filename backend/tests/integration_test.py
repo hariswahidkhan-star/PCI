@@ -678,9 +678,18 @@ def test_finance_and_certuvo_hardening(admin):
         c, j1 = jget("GET", f"/api/admin/members/{t1['id']}/journey", token=admin)
         chk("13n scenario 'incomplete_profile' parks the account at Profile", j1.get("stuck_at") == "Profile", j1.get("stuck_at"))
         chk("13n2 journey marks the account as a test account", j1.get("user", {}).get("is_test") is True, j1.get("user"))
+        stages1 = {s.get("key"): s.get("status") for s in j1.get("stages", [])}
+        chk("13n3 incomplete-profile isolates one blocker (ID + fee already done)",
+            stages1.get("profile") == "action_required" and stages1.get("identity") == "done" and stages1.get("payment") == "done", stages1)
+        c, tnoid = jget("POST", "/api/admin/test-users", token=admin, body={"scenario": "no_id"})
+        c, jnoid = jget("GET", f"/api/admin/members/{tnoid['id']}/journey", token=admin)
+        stages_noid = {s.get("key"): s.get("status") for s in jnoid.get("stages", [])}
+        chk("13n4 no-ID isolates one blocker (profile + fee already done)",
+            jnoid.get("stuck_at") == "Government ID" and stages_noid.get("profile") == "done"
+            and stages_noid.get("identity") == "blocked" and stages_noid.get("payment") == "done", (jnoid.get("stuck_at"), stages_noid))
         c, t1r = jget("POST", f"/api/admin/test-users/{t1['id']}/reset", token=admin, body={"scenario": "ready"})
         c, j2 = jget("GET", f"/api/admin/members/{t1['id']}/journey", token=admin)
-        chk("13n3 reset re-applies a scenario (ready → schedulable)", t1r.get("ok") and j2.get("stuck_at") in (None, "Exam scheduled"), (t1r.get("ok"), j2.get("stuck_at")))
+        chk("13n5 reset re-applies a scenario (ready → schedulable)", t1r.get("ok") and j2.get("stuck_at") in (None, "Exam scheduled"), (t1r.get("ok"), j2.get("stuck_at")))
 
         c, rep0 = jget("GET", "/api/admin/reports", token=admin)
         before = (rep0.get("totals", {}).get("payments"), rep0.get("totals", {}).get("revenue"))
@@ -5635,6 +5644,12 @@ def test_proctoring_analytics_gaps(admin):
                 ("purchase_completed", "zephyr59", 49.75, "USD"))
     con.execute("INSERT INTO analytics_events(event,path,visitor,utm_source,created_at) VALUES(?,?,?,?,?)",
                 ("page_view", "/old-59.html", "v59old", "zephyr59old", "2020-01-01 00:00:00"))
+    con.execute("INSERT INTO analytics_events(event,path,visitor,utm_source,created_at) VALUES(?,?,?,?,datetime('now'))",
+                ("page_view", "=2+2", "v59formula", "formula59"))
+    con.execute("INSERT INTO inquiries(type,email,org,topic,reference,status) VALUES(?,?,?,?,?,'new')",
+                ("general", "formula-59@ex.co", "  @SUM(A1)", "CSV safety", "PCI-FORMULA-59"))
+    con.execute("INSERT INTO discount_codes(code,discount_type,discount_value,org_name,active,status,max_uses,used_count) "
+                "VALUES(?, 'percentage', 10, ?, 1, 'active', 5, 0)", ("FORMULA59", "+CMD"))
     con.commit(); con.close()
 
     c1, ag = jget("GET", "/api/admin/analytics/summary")
@@ -5671,6 +5686,18 @@ def test_proctoring_analytics_gaps(admin):
         stc == 200 and cct.startswith("text/csv")
         and header == "created_at,event,path,visitor,country,device,browser,utm_source,utm_medium,utm_campaign,referrer,landing,value,currency"
         and "zephyr59" in text and '"camp,59"' in text and "2020-01-01" not in text, (stc, cct, header))
+
+    # Every administrator CSV path uses the same formula-neutralising encoder. Leading whitespace is
+    # significant: spreadsheet programs may still interpret "  @..." as a formula if it is not forced
+    # to text. Genuine numeric negative values remain numeric because only string cells are neutralised.
+    s2, b2, _ = _raw_get("/api/admin/export?entity=inquiries", token=admin)
+    s3, b3, _ = _raw_get("/api/admin/reports/discounts?format=csv", token=admin)
+    inquiry_csv = b2.decode("utf-8", "ignore")
+    discount_csv = b3.decode("utf-8", "ignore")
+    chk("59o analytics, bulk-data and partner-report CSV exports neutralise spreadsheet formulas",
+        "'=2+2" in text and s2 == 200 and "'  @SUM(A1)" in inquiry_csv
+        and s3 == 200 and "'+CMD" in discount_csv,
+        (s2, s3, "'=2+2" in text, "'  @SUM(A1)" in inquiry_csv, "'+CMD" in discount_csv))
 
 def test_time_sweeps(admin):
     # Incremental Testing Programme §60 — the two findings resolved by the sweeps increment: the

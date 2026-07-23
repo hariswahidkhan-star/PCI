@@ -25,11 +25,7 @@ public static class AdminMgmt
         _ => false,
     };
     static string CsvEsc(object? v)
-    {
-        var s = v?.ToString() ?? "";
-        if (System.Text.RegularExpressions.Regex.IsMatch(s, @"^[=+\-@]")) s = "'" + s;
-        return System.Text.RegularExpressions.Regex.IsMatch(s, "[\",\n]") ? "\"" + s.Replace("\"", "\"\"") + "\"" : s;
-    }
+        => Csv.Cell(v);
     static string ToCsv(List<Dictionary<string, object?>> rows)
     {
         if (rows.Count == 0) return "";

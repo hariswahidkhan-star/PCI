@@ -32,4 +32,29 @@ test.describe('public site', () => {
     if (critical.length) console.log('axe critical:', JSON.stringify(critical.map((v) => ({ id: v.id, nodes: v.nodes.length })), null, 2))
     expect(critical, `critical a11y violations: ${critical.map((v) => v.id).join(', ')}`).toEqual([])
   })
+
+  test('the admin-controlled announcement is accessible, dismissible and stays dismissed for the visit', async ({ page, request }) => {
+    await page.addInitScript(() => {
+      try { localStorage.setItem('pci-cookie-consent', 'essential') } catch { /* no storage */ }
+    })
+    const configResponse = await request.get('/api/announcement')
+    expect(configResponse.ok()).toBeTruthy()
+    const config = (await configResponse.json()) as { enabled: boolean; key: string; title: string; dismiss: string }
+    expect(config.enabled).toBe(true)
+
+    await page.goto('/')
+    const dialog = page.locator('#pciAnx')
+    await expect(dialog).toBeVisible()
+    await expect(dialog).toHaveAttribute('role', 'dialog')
+    await expect(dialog.getByRole('heading')).toHaveText(config.title)
+    await dialog.getByRole('button', { name: config.dismiss }).click()
+    await expect(dialog).toHaveCount(0)
+    expect(await page.evaluate((key) => sessionStorage.getItem(`pci.anx.${key}`), config.key)).toBe('1')
+
+    const announcementResponse = page.waitForResponse((response) => response.url().endsWith('/api/announcement'))
+    await page.reload()
+    await (await announcementResponse).finished()
+    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
+    await expect(page.locator('#pciAnx')).toHaveCount(0)
+  })
 })

@@ -358,8 +358,8 @@ public static class PartnerPortal
                 var sb = new System.Text.StringBuilder("code,type,institution,percent,applies_to,status,max_uses,used,expires,discount_given,revenue\n");
                 foreach (var r in rows)
                 {
-                    string C(object? v) { var s2 = H.Str(v) ?? v?.ToString() ?? ""; return s2.Contains(',') || s2.Contains('"') ? "\"" + s2.Replace("\"", "\"\"") + "\"" : s2; }
-                    sb.Append(string.Join(',', new[] { C(r["code"]), C(r["code_type"]), C(r["institution"]), C(r["discount_value"]), C(r["applies_to"]), C(r["status"]), C(r["max_uses"]), C(r["used_count"]), C(r["end_date"]), C(r["discount_given"]), C(r["revenue"]) })).Append('\n');
+                    sb.Append(string.Join(',', new[] { "code", "code_type", "institution", "discount_value", "applies_to", "status", "max_uses", "used_count", "end_date", "discount_given", "revenue" }
+                        .Select(k => Csv.Cell(r[k])))).Append('\n');
                 }
                 return Results.Text(sb.ToString(), "text/csv");
             }

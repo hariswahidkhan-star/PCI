@@ -244,7 +244,10 @@ public static class AdminOps
             var stamp = Security.RandomHex(3).ToUpperInvariant();
             var withConsents = scenario is not "unpaid";
             var withProfile = scenario is not ("incomplete_profile" or "unpaid");
-            var withId = scenario is "ready" or "member" or "waived" or "certuvo_failed";
+            // Each negative scenario must isolate the named blocker. Previously both `no_id` and
+            // `incomplete_profile` also had no entitlement, while `incomplete_profile` had no ID;
+            // the resulting account was multiply blocked and could not faithfully test either UX.
+            var withId = scenario is not ("unpaid" or "no_id");
             if (withProfile) db.Execute("INSERT INTO student_profiles(user_id,country,city,mobile) VALUES(?, 'United Kingdom','London','+440000000000')", uid);
             else db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", uid);
             if (withConsents)
@@ -254,7 +257,8 @@ public static class AdminOps
                 db.Execute("INSERT INTO identity_documents(user_id,doc_kind,filename,mime,size_bytes,storage_ref,sha256,status,reviewed_at) VALUES(?, 'passport','test-id.png','image/png',64,'test','test','approved',datetime('now'))", uid);
             switch (scenario)
             {
-                case "ready": Settlement.Grant(db, uid, email, "bundle", certId, 0, "TESTUSER-" + stamp, "admin_test_user"); break;
+                case "ready": case "incomplete_profile": case "no_id":
+                    Settlement.Grant(db, uid, email, "bundle", certId, 0, "TESTUSER-" + stamp, "admin_test_user"); break;
                 case "member": case "certuvo_failed": Settlement.Grant(db, uid, email, "membership", certId, 0, "TESTUSER-" + stamp, "admin_test_user"); break;
                 case "waived": Settlement.Grant(db, uid, email, "exam", certId, 0, "TESTWAIVE-" + stamp, "admin_waiver"); break;
             }

@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test'
+import { E2E_ADMIN } from './e2e/util'
 
 // Browser end-to-end + accessibility (axe) over the public site, which the ASP.NET backend serves
 // directly. Playwright boots the built backend DLL as its webServer and waits for /api/health.
@@ -51,6 +52,8 @@ export default defineConfig({
           ASPNETCORE_ENVIRONMENT: 'Development',
           STRIPE_SECRET_KEY: 'sk_test_e2e_browser_suite',
           STRIPE_WEBHOOK_SECRET: 'whsec_e2e_browser_suite',
+          E2E_ADMIN_EMAIL: E2E_ADMIN.email,
+          E2E_ADMIN_PASSWORD: E2E_ADMIN.password,
           SEED_DEMO_EXAM: 'true',
           E2E_EXAM_OPEN_BEFORE_MINUTES: '100000',
         },

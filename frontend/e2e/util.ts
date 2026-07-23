@@ -10,6 +10,7 @@ import { createHmac } from 'node:crypto'
 // Production, so these credentials exist exactly in the environments where this suite runs.
 export const DEMO_STUDENT = { email: 'student@pci.local', password: 'changeme-student' }
 export const OWNER_ADMIN = { email: 'owner@pci.local', password: 'changeme-owner' }
+export const E2E_ADMIN = { email: 'browser-admin@pci.test', password: 'BrowserSuiteAdmin-2026' }
 export const E2E_STRIPE_WEBHOOK_SECRET = 'whsec_e2e_browser_suite'
 
 let counter = 0
@@ -19,6 +20,16 @@ let counter = 0
 export function uniqueEmail(prefix = 'e2e'): string {
   counter += 1
   return `${prefix}-${process.pid}-${Date.now()}-${counter}@e2e.pci.local`
+}
+
+/** Keep unrelated public-site consent/announcement overlays from intercepting clicks in a journey
+ * whose subject is a form or download. Announcement behaviour has its own dedicated browser test. */
+export async function preparePublicJourney(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    try { localStorage.setItem('pci-cookie-consent', 'essential') } catch { /* no storage */ }
+    try { sessionStorage.setItem('pciannx', '1') } catch { /* no storage */ }
+    ;(window as typeof window & { PCI_NO_ANNOUNCE?: boolean }).PCI_NO_ANNOUNCE = true
+  })
 }
 
 /** Sign the demo student in via the API and plant the session token where the SPA looks for it
@@ -37,6 +48,57 @@ export async function apiLoginAsDemoStudent(request: APIRequestContext, page: Pa
       /* storage unavailable — the test will fail on the auth redirect instead */
     }
   }, token)
+}
+
+/** Sign in as the opt-in, non-Production browser-suite owner. The Playwright webServer is the only
+ * caller that sets E2E_ADMIN_PASSWORD, so this account never exists in a normal deployment. */
+export async function apiLoginAsE2EAdmin(request: APIRequestContext, page?: Page): Promise<string> {
+  const res = await request.post('/api/admin/auth/login', { data: E2E_ADMIN })
+  expect(res.ok(), `E2E admin login should succeed (got ${res.status()})`).toBeTruthy()
+  const body = (await res.json()) as { token?: string; admin?: { must_change_pw?: boolean } }
+  expect(body.token, 'admin login response should carry a session token').toBeTruthy()
+  expect(body.admin?.must_change_pw, 'E2E operator should not be behind the bootstrap password gate').toBe(false)
+  const token = body.token as string
+  if (page) {
+    await page.addInitScript((t) => {
+      try { sessionStorage.setItem('pci.admin.token', t) } catch { /* asserted by the auth redirect */ }
+    }, token)
+  }
+  return token
+}
+
+export type TestUserScenario = 'ready' | 'unpaid' | 'member' | 'waived' | 'incomplete_profile' | 'no_id' | 'certuvo_failed'
+export interface TestUser {
+  id: number
+  email: string
+  password: string
+  token: string
+  scenario: TestUserScenario
+}
+
+/** Create a scenario account through the real admin operator API and optionally adopt its student
+ * session in a page. This is deliberately not a DB seed: the journey verifies the admin control. */
+export async function createTestUser(
+  request: APIRequestContext,
+  adminToken: string,
+  scenario: TestUserScenario,
+  page?: Page,
+): Promise<TestUser> {
+  const res = await request.post('/api/admin/test-users', {
+    headers: { Authorization: `Bearer ${adminToken}` },
+    data: { scenario, certification: 'PML-AI' },
+  })
+  expect(res.ok(), `${scenario} test user should be created (got ${res.status()})`).toBeTruthy()
+  const user = (await res.json()) as TestUser
+  expect(user.id).toBeGreaterThan(0)
+  expect(user.token).toBeTruthy()
+  expect(user.scenario).toBe(scenario)
+  if (page) {
+    await page.addInitScript((t) => {
+      try { sessionStorage.setItem('pci.session.token', t) } catch { /* asserted by the auth redirect */ }
+    }, user.token)
+  }
+  return user
 }
 
 /** Settle a synthetic exam purchase through the real signed Stripe webhook. The browser job owns an
