@@ -1,8 +1,61 @@
 namespace PCI.Backend.Data;
 
+/// <summary>Thrown when the database schema was migrated by a NEWER build than the one now starting.
+/// Starting an older binary against a newer schema risks reading/writing columns it doesn't understand,
+/// so boot is refused rather than silently running against an incompatible schema.</summary>
+public sealed class SchemaCompatibilityException : Exception
+{
+    public SchemaCompatibilityException(string message) : base(message) { }
+}
+
 public static class Migrate
 {
+    /// <summary>Schema/convergence version recorded in the <c>schema_migrations</c> ledger. BUMP this whenever
+    /// the base schema or the idempotent upgrades below change, so the compatibility gate and checksum-drift
+    /// detection stay meaningful.</summary>
+    public const int SchemaVersion = 1;
+
+    /// <summary>Versioned + LOCKED entry point. Acquires the cross-instance migration lock, refuses to start an
+    /// older binary against a newer schema, converges the schema idempotently, then records the applied version
+    /// and a checksum in the <c>schema_migrations</c> ledger (detecting drift). A failure here propagates so the
+    /// caller can refuse to start — the service is never reported ready on a half-migrated database.</summary>
     public static void Run(Db db, string schemaPath)
+    {
+        db.WithMigrationLock(() =>
+        {
+            // The ledger itself must exist before we can consult/record versions (dialect-neutral DDL).
+            db.Exec("CREATE TABLE IF NOT EXISTS schema_migrations(version INTEGER PRIMARY KEY, checksum TEXT, description TEXT, applied_at TEXT DEFAULT (datetime('now')))");
+            var dbVersion = db.Scalar<long>("SELECT COALESCE(MAX(version),0) FROM schema_migrations");
+            if (dbVersion > SchemaVersion)
+                throw new SchemaCompatibilityException(
+                    $"database schema version {dbVersion} is newer than this build supports (v{SchemaVersion}). " +
+                    "Deploy the newer build, or roll the schema back, before starting this one.");
+
+            Converge(db, schemaPath);
+
+            var checksum = Checksum(schemaPath);
+            var recorded = db.Scalar<string>("SELECT checksum FROM schema_migrations WHERE version=?", SchemaVersion);
+            if (recorded is null)
+                db.Execute("INSERT INTO schema_migrations(version,checksum,description,applied_at) VALUES(?,?,?, datetime('now'))",
+                    SchemaVersion, checksum, "base schema + idempotent convergence");
+            else if (recorded != checksum)
+            {
+                Console.Error.WriteLine($"[migrate] checksum drift for schema v{SchemaVersion}: recorded {recorded[..Math.Min(8, recorded.Length)]}…, computed {checksum[..8]}… — schema changed without a version bump; recording the new checksum.");
+                db.Execute("UPDATE schema_migrations SET checksum=?, applied_at=datetime('now') WHERE version=?", checksum, SchemaVersion);
+            }
+        });
+    }
+
+    /// <summary>SHA-256 of the base schema file (dialect-specific) plus the schema version — the fingerprint
+    /// stored in the ledger so a schema change without a version bump is detectable as drift.</summary>
+    static string Checksum(string schemaPath)
+    {
+        var payload = File.ReadAllText(schemaPath) + "|schemaVersion=" + SchemaVersion;
+        var bytes = System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(payload));
+        return Convert.ToHexString(bytes).ToLowerInvariant();
+    }
+
+    static void Converge(Db db, string schemaPath)
     {
         db.Exec(File.ReadAllText(schemaPath));
         // ensure production lifecycle tables exist on pre-existing databases

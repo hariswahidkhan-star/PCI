@@ -42,7 +42,22 @@ var schemaFile = db.Provider == Db.Kind.MySql ? "schema.mysql.sql" : "schema.sql
 var schemaPath = Path.Combine(AppContext.BaseDirectory, schemaFile);
 if (!File.Exists(schemaPath)) schemaPath = schemaFile;
 Console.WriteLine($"[boot] database provider: {db.Provider} (schema: {schemaFile})");
-Migrate.Run(db, schemaPath);
+// Versioned + locked migration. A compatibility failure (older binary vs newer schema) or any migration
+// error must PREVENT startup — the service is never reported ready on a half-migrated/incompatible database.
+try
+{
+    Migrate.Run(db, schemaPath);
+}
+catch (PCI.Backend.Data.SchemaCompatibilityException ce)
+{
+    Console.Error.WriteLine($"[migrate] refusing to start: {ce.Message}");
+    Environment.Exit(75); // EX_TEMPFAIL — incompatible schema; a different build is required
+}
+catch (Exception me)
+{
+    Console.Error.WriteLine($"[migrate] refusing to start: schema migration failed — {me.Message}");
+    Environment.Exit(70); // EX_SOFTWARE — migration error; do not serve on a half-migrated database
+}
 try { PCI.Backend.Data.CommsSeed.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[comms seed] {e.Message}"); }
 try { PCI.Backend.Data.MarketingSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[marketing schema] {e.Message}"); }
 builder.Services.AddSingleton(db);
