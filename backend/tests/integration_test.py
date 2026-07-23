@@ -3419,6 +3419,19 @@ def test_simlab(admin):
     chk("43pp the timeline lab grades the worst-period + CPI-method forecast to 100 (earned_value evidence)",
         c == 200 and subtl.get("score") == 100 and subtl.get("passed") is True and "earned_value" in tlcomps, (c, subtl.get("score"), sorted(tlcomps)))
 
+    # ---- Phase 3 earned schedule (schedule performance in time) ----
+    c, stes = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-ESC-001"})
+    esid = stes.get("attempt_id")
+    estask = stes.get("task", {})
+    chk("43qq the earned-schedule task serves the planned-value curve without leaking ES/indices",
+        estask.get("task") == "earned_schedule" and len((estask.get("given") or {}).get("plan", [])) == 6
+        and "es" not in (estask.get("given") or {}), estask.get("given"))
+    c, subes = jget("POST", f"/api/me/lab/attempts/{esid}/submit", token=mtok,
+                    body={"answers": {"es": 3.25, "sv_time": -0.75, "spi_time": 0.8125, "eac_time": 7.3846}})
+    escomps = {x.get("competency") for x in subes.get("competencies", [])}
+    chk("43rr the earned-schedule lab grades ES + time indices + time forecast to 100 (schedule_analysis evidence)",
+        c == 200 and subes.get("score") == 100 and subes.get("passed") is True and "schedule_analysis" in escomps, (c, subes.get("score"), sorted(escomps)))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.

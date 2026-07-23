@@ -161,6 +161,10 @@ public static class SimLabSchema
         SeedScenario(db, "SC-EVT-001", "Track a project month by month (EVM trend)", "scenario", "Infrastructure", "advanced", 20,
             "[\"earned_value\",\"forecasting\"]", "Step a six-month project period by period: find where performance was worst and forecast the final cost from the cumulative CPI.",
             ConfigTimeline);
+        // Phase 3 — earned schedule: schedule performance read in the time dimension, not cost.
+        SeedScenario(db, "SD-ESC-001", "Measure schedule performance in time (Earned Schedule)", "scenario", "Software", "advanced", 18,
+            "[\"schedule_analysis\",\"forecasting\"]", "Read Earned Schedule off the planned-value curve: schedule variance and index in time units, and an independent time forecast.",
+            ConfigEarnedSchedule);
     }
 
     static void SeedScenario(Db db, string code, string title, string kind, string industry, string difficulty,
@@ -268,6 +272,25 @@ public static class SimLabSchema
            {"key":"final_eac","label":"Estimate at Completion (EAC = BAC / CPI)","type":"number"},
            {"key":"vac","label":"Variance at Completion (VAC = BAC - EAC)","type":"number"}],
          "tolerance":0.01,"pass_pct":75,"competencies":["earned_value","forecasting"]}
+        """;
+
+    const string ConfigEarnedSchedule = """
+        {"task":"earned_schedule",
+         "prompt":"A six-month release plan has the cumulative Planned Value below (BAC 1000, planned duration 6 months). At the end of month 4 the team has earned EV 500. Classic SPI is heading to 1.0 as the project ends, so use Earned Schedule instead: read ES off the plan (the time the plan meant to have earned 500), then give the schedule variance in time (SV(t) = ES - AT), the time-based index (SPI(t) = ES / AT), and the independent time forecast (IEAC(t) = PD / SPI(t)).",
+         "given":{"planned_duration":6,"at":4,"ev":500,
+           "plan":[
+             {"period":1,"pv":100},
+             {"period":2,"pv":250},
+             {"period":3,"pv":450},
+             {"period":4,"pv":650},
+             {"period":5,"pv":830},
+             {"period":6,"pv":1000}]},
+         "ask":[
+           {"key":"es","label":"Earned Schedule (months)","type":"number"},
+           {"key":"sv_time","label":"Schedule variance in time (SV(t) = ES - AT)","type":"number"},
+           {"key":"spi_time","label":"Time-based schedule index (SPI(t) = ES / AT)","type":"number"},
+           {"key":"eac_time","label":"Independent time forecast (IEAC(t) = PD / SPI(t))","type":"number"}],
+         "tolerance":0.01,"pass_pct":75,"competencies":["schedule_analysis","forecasting"]}
         """;
 
     const string ConfigMonteCarlo = """

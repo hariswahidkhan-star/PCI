@@ -516,4 +516,45 @@ public class SimCalcTests
         Assert.Equal(-103448.2759, (double)SimCalc.Resolve("timeline", "vac", given)!, 4);
         Assert.Equal(3, (double)SimCalc.Resolve("timeline", "worst_spi_period", given)!, 4);
     }
+
+    // ── Earned Schedule ─────────────────────────────────────────────────────────────────────────────
+
+    static readonly (int period, double pv)[] Plan =
+    {
+        (1, 100), (2, 250), (3, 450), (4, 650), (5, 830), (6, 1000),
+    };
+
+    [Fact]
+    public void EarnedSchedule_InterpolatesEsFromThePlannedValueCurve()
+    {
+        // At the end of month 4, EV is 500. The plan reached 450 at month 3 and 650 at month 4, so ES lands a
+        // quarter of the way into month 4: 3 + (500-450)/(650-450) = 3.25. AT is 4, planned duration 6.
+        var r = SimCalc.EarnedSchedule(Plan, evNow: 500, atNow: 4, plannedDuration: 6);
+        Assert.Equal(3.25, r.Es, 4);
+        Assert.Equal(-0.75, r.SvTime, 4);       // ES − AT
+        Assert.Equal(0.8125, r.SpiTime, 4);     // ES ÷ AT
+        Assert.Equal(7.3846, r.EacTime!.Value, 4); // PD ÷ SPI(t)
+    }
+
+    [Fact]
+    public void EarnedSchedule_OnPlanGivesUnitIndexAndNoTimeVariance()
+    {
+        // EV exactly on the month-3 planned value → ES 3, AT 3, SPI(t) 1, SV(t) 0.
+        var r = SimCalc.EarnedSchedule(Plan, evNow: 450, atNow: 3, plannedDuration: 6);
+        Assert.Equal(3, r.Es, 4);
+        Assert.Equal(0, r.SvTime, 4);
+        Assert.Equal(1, r.SpiTime, 4);
+    }
+
+    [Fact]
+    public void Resolve_EarnedSchedule_ReturnsEsAndTimeIndices()
+    {
+        var given = J("{\"planned_duration\":6,\"at\":4,\"ev\":500,\"plan\":[" +
+            "{\"period\":1,\"pv\":100},{\"period\":2,\"pv\":250},{\"period\":3,\"pv\":450}," +
+            "{\"period\":4,\"pv\":650},{\"period\":5,\"pv\":830},{\"period\":6,\"pv\":1000}]}");
+        Assert.Equal(3.25, (double)SimCalc.Resolve("earned_schedule", "es", given)!, 4);
+        Assert.Equal(0.8125, (double)SimCalc.Resolve("earned_schedule", "spi_time", given)!, 4);
+        Assert.Equal(-0.75, (double)SimCalc.Resolve("earned_schedule", "sv_time", given)!, 4);
+        Assert.Equal(7.3846, (double)SimCalc.Resolve("earned_schedule", "eac_time", given)!, 4);
+    }
 }

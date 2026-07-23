@@ -122,6 +122,24 @@ function GivenView({ task }: { task: Task }) {
       </>
     )
   }
+  if (task.task === 'earned_schedule') {
+    const plan = (g.plan as { period: number; pv: number }[]) ?? []
+    return (
+      <>
+        <div className="small muted" style={{ marginBottom: '.3rem' }}>
+          Status at month {fmt(g.at as number)}: Earned Value {fmt(g.ev as number)} · planned duration {fmt(g.planned_duration as number)} months
+        </div>
+        <table className="data">
+          <thead><tr><th>Month</th><th>Cumulative Planned Value</th></tr></thead>
+          <tbody>
+            {plan.map((p) => (
+              <tr key={p.period}><td>{p.period}</td><td>{fmt(p.pv)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    )
+  }
   if (task.task === 'risk') {
     const risks = (g.risks as { id: string; name?: string; probability: number; impact: number }[]) ?? []
     return (

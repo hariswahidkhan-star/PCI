@@ -570,6 +570,41 @@ public static class SimCalc
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────────
+    //  Earned Schedule — schedule performance measured in time, not cost
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    public sealed record EarnedScheduleResult(double Es, double SvTime, double SpiTime, double? EacTime);
+
+    /// <summary>
+    /// Earned Schedule (Lipke): the time at which the plan intended to have earned what the project has
+    /// actually earned so far. Where the classic earned-value SPI collapses to 1.0 as a late project
+    /// finishes (EV → PV → BAC), ES stays meaningful because it works in the time dimension. ES is read off
+    /// the planned-value curve — the last period whose cumulative PV does not exceed the current EV, plus the
+    /// linearly-interpolated fraction into the next period. From it: SV(t) = ES − AT, SPI(t) = ES ÷ AT, and
+    /// an independent time forecast IEAC(t) = PD ÷ SPI(t). Inputs are cumulative; AT is the elapsed time.
+    /// </summary>
+    public static EarnedScheduleResult EarnedSchedule(IReadOnlyList<(int period, double pv)> plan, double evNow, double atNow, double? plannedDuration)
+    {
+        var pts = plan.OrderBy(p => p.period).ToList();
+        double es;
+        if (pts.Count == 0) es = 0;
+        else if (evNow <= pts[0].pv)
+            es = pts[0].pv <= 0 ? 0 : pts[0].period * (evNow / pts[0].pv);   // fractional first period
+        else
+        {
+            var i = 0;
+            while (i + 1 < pts.Count && pts[i + 1].pv <= evNow) i++;
+            es = pts[i].period;
+            if (i + 1 < pts.Count && pts[i + 1].pv > pts[i].pv)
+                es += (evNow - pts[i].pv) / (pts[i + 1].pv - pts[i].pv) * (pts[i + 1].period - pts[i].period);
+            // else the plan is fully earned — ES rests at the final planned period (project at/ahead of plan)
+        }
+        var spiT = atNow == 0 ? 0 : es / atNow;
+        double? eacT = plannedDuration is double pd && spiT != 0 ? R(pd / spiT) : (double?)null;
+        return new EarnedScheduleResult(R(es), R(es - atNow), R(spiT), eacT);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
     //  Answer resolution — the values a scenario can ask a student to compute
     // ─────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -688,6 +723,19 @@ public static class SimCalc
                     _ => null,
                 };
             }
+            case "earned_schedule":
+            {
+                var plan = ParsePlan(given);
+                var r = EarnedSchedule(plan, G("ev"), G("at"), GN("planned_duration"));
+                return key switch
+                {
+                    "es" => (object?)r.Es,
+                    "spi_time" => r.SpiTime,
+                    "sv_time" => r.SvTime,
+                    "eac_time" => r.EacTime,
+                    _ => null,
+                };
+            }
             case "cpm":
             {
                 var acts = ParseCpm(given);
@@ -773,6 +821,19 @@ public static class SimCalc
                 var per = n.TryGetProperty("period", out var pv) && pv.ValueKind == JsonValueKind.Number ? pv.GetInt32() : 0;
                 double G(string k) => n.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0;
                 list.Add(new CashPeriod(per, G("inflow"), G("outflow")));
+            }
+        return list;
+    }
+
+    static List<(int period, double pv)> ParsePlan(JsonElement given)
+    {
+        var list = new List<(int, double)>();
+        if (given.TryGetProperty("plan", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                var per = n.TryGetProperty("period", out var pd) && pd.ValueKind == JsonValueKind.Number ? pd.GetInt32() : 0;
+                var pv = n.TryGetProperty("pv", out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0;
+                list.Add((per, pv));
             }
         return list;
     }
