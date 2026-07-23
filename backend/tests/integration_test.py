@@ -2613,6 +2613,47 @@ def run(proc):
         rejected = True  # Kestrel aborts the connection on oversized body → also a rejection
     chk("9b7 oversized request body rejected", rejected)
 
+    # SEC-3 — headers the Phase-2 header pass set but that were never asserted. Pin them so a future
+    # refactor that drops one is caught here (defence-in-depth: clickjacking/opener isolation, powerful
+    # -feature lock-down, and keeping authenticated surfaces out of search indexes).
+    chk("9b8 Cross-Origin-Opener-Policy same-origin", hdrs.get("cross-origin-opener-policy") == "same-origin", hdrs.get("cross-origin-opener-policy"))
+    _pp = hdrs.get("permissions-policy") or ""
+    chk("9b9 Permissions-Policy locks camera/microphone/geolocation",
+        all(f"{k}=()" in _pp for k in ("camera", "microphone", "geolocation")), _pp)
+    # X-Robots-Tag: present (noindex) on private /api surfaces, absent on the public homepage.
+    chk("9b10 X-Robots-Tag noindex on private /api path", "noindex" in (h2.get("x-robots-tag") or ""), h2.get("x-robots-tag"))
+    chk("9b11 no X-Robots-Tag on public homepage", "x-robots-tag" not in hdrs, hdrs.get("x-robots-tag"))
+
+    # SEC-1 — CORS. The server answers with a FIXED Access-Control-Allow-Origin (the configured
+    # ALLOWED_ORIGIN, or '*' only in development) and must NEVER echo an attacker-supplied Origin back —
+    # a reflected Origin paired with credentials is the classic CORS-bypass. We prove non-reflection by
+    # sending two different crafted Origins and confirming the allow-origin is identical (fixed) and
+    # equals neither request Origin.
+    def _aco(origin):
+        rq = urllib.request.Request(BASE + "/api/health", headers={"Origin": origin})
+        with urllib.request.urlopen(rq) as rp:
+            return rp.headers.get("Access-Control-Allow-Origin")
+    aco_a = _aco("https://evil.example")
+    aco_b = _aco("https://attacker.test")
+    chk("9b12 Access-Control-Allow-Origin present on API responses", bool(aco_a), aco_a)
+    chk("9b13 arbitrary request Origin is not reflected", aco_a != "https://evil.example" and aco_b != "https://attacker.test", (aco_a, aco_b))
+    chk("9b14 Allow-Origin is fixed, independent of the request Origin", aco_a == aco_b, (aco_a, aco_b))
+    # Preflight: OPTIONS short-circuits to 204 and advertises the constrained method/header allow-lists.
+    pf = urllib.request.Request(BASE + "/api/login", method="OPTIONS",
+                                headers={"Origin": "https://evil.example", "Access-Control-Request-Method": "POST"})
+    try:
+        with urllib.request.urlopen(pf) as rp:
+            pf_status, pf_hdrs = rp.status, rp.headers
+    except urllib.error.HTTPError as e:
+        pf_status, pf_hdrs = e.code, e.headers
+    pf_methods = pf_hdrs.get("Access-Control-Allow-Methods") or ""
+    pf_allow_headers = pf_hdrs.get("Access-Control-Allow-Headers") or ""
+    pf_aco = pf_hdrs.get("Access-Control-Allow-Origin")
+    chk("9b15 OPTIONS preflight returns 204", pf_status == 204, pf_status)
+    chk("9b16 preflight advertises the GET/POST method allow-list", "POST" in pf_methods and "GET" in pf_methods, pf_methods)
+    chk("9b17 preflight allows the Authorization header", "authorization" in pf_allow_headers.lower(), pf_allow_headers)
+    chk("9b18 preflight does not reflect arbitrary Origin", pf_aco != "https://evil.example", pf_aco)
+
     # ---------- 9c. Regressions for adversarial-review findings ----------
     print("\n=== 9c. Review-finding regressions ===")
 
