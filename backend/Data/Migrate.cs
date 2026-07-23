@@ -1026,6 +1026,9 @@ public static class Migrate
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_comm_outbox_dedup ON comm_outbox(dedup_key)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_outbox_status ON comm_outbox(status)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_comm_outbox_user ON comm_outbox(user_id)");
+        // P0-5: lease bookkeeping for atomic worker claiming (comm_outbox + integration_deliveries both exist
+        // by now; mkt_jobs is created later by MarketingSchema.Ensure, which ensures its own lease columns).
+        PCI.Backend.Core.Lease.EnsureLeaseColumns(db);
         db.Exec(@"CREATE TABLE IF NOT EXISTS comm_delivery_attempts(
             id INTEGER PRIMARY KEY AUTOINCREMENT, outbox_id INTEGER NOT NULL, attempt INTEGER,
             status VARCHAR(20), detail TEXT, created_at TEXT DEFAULT (datetime('now')))");

@@ -76,9 +76,22 @@ public static class Integrations
     /// <summary>Deliver all pending deliveries whose next_attempt_at is due. Returns the count attempted.</summary>
     public static async Task<int> DeliverDue(Db db, HttpClient http, int max = 25)
     {
-        var due = db.Query("SELECT * FROM integration_deliveries WHERE status='pending' AND (next_attempt_at IS NULL OR next_attempt_at<=datetime('now')) ORDER BY id LIMIT ?", max);
-        foreach (var d in due) await DeliverOne(db, http, d);
-        return due.Count;
+        // Atomically claim each due (or crashed-lease) delivery before sending, so concurrent dispatchers
+        // on several instances never POST the same delivery twice.
+        var owner = Lease.NewOwner();
+        var due = db.Query(@"SELECT id FROM integration_deliveries
+            WHERE (status='pending' AND (next_attempt_at IS NULL OR next_attempt_at<=datetime('now')))
+               OR (status='processing' AND lease_expires_at IS NOT NULL AND lease_expires_at<datetime('now'))
+            ORDER BY id LIMIT ?", max);
+        var attempted = 0;
+        foreach (var idRow in due)
+        {
+            var id = H.L(idRow["id"]);
+            if (!Lease.Claim(db, "integration_deliveries", id, owner, new[] { "pending" })) continue;
+            var d = db.QueryOne("SELECT * FROM integration_deliveries WHERE id=?", id);
+            if (d is not null) { await DeliverOne(db, http, d); attempted++; }
+        }
+        return attempted;
     }
 
     /// <summary>Attempt a single delivery: build the signed envelope, POST it, and record the outcome

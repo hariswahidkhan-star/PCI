@@ -19,6 +19,9 @@ public static class MarketingSchema
         Tables(db);
         // Incremental, non-destructive column additions for already-deployed databases.
         AddCol(db, "mkt_connections", "oauth_verifier", "oauth_verifier VARCHAR(128)");   // PKCE code_verifier
+        // P0-5: lease bookkeeping so the marketing job worker claims each job atomically (no double-run).
+        AddCol(db, "mkt_jobs", "lease_owner", "lease_owner TEXT");
+        AddCol(db, "mkt_jobs", "lease_expires_at", "lease_expires_at TEXT");
         SeedPlatforms(db);
         SeedCapabilities(db);
     }

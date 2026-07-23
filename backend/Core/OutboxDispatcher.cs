@@ -30,14 +30,21 @@ public sealed class OutboxDispatcher : BackgroundService
     /// <summary>Process up to <paramref name="limit"/> due rows. Also callable directly by an admin retry.</summary>
     public static void DrainOnce(Db db, int limit)
     {
-        var rows = db.Query(@"SELECT * FROM comm_outbox
-            WHERE status IN ('queued','scheduled','retrying')
-              AND (scheduled_at IS NULL OR scheduled_at<=datetime('now'))
-              AND (next_attempt_at IS NULL OR next_attempt_at<=datetime('now'))
+        // Select due candidates (incl. crashed 'processing' rows whose lease has expired), then ATOMICALLY
+        // claim each before delivering — so two worker instances draining concurrently never double-send.
+        var owner = Lease.NewOwner();
+        var rows = db.Query(@"SELECT id FROM comm_outbox
+            WHERE (status IN ('queued','scheduled','retrying')
+                  AND (scheduled_at IS NULL OR scheduled_at<=datetime('now'))
+                  AND (next_attempt_at IS NULL OR next_attempt_at<=datetime('now')))
+               OR (status='processing' AND lease_expires_at IS NOT NULL AND lease_expires_at<datetime('now'))
             ORDER BY id LIMIT ?", limit);
-        foreach (var r in rows)
+        foreach (var idRow in rows)
         {
-            var id = H.L(r["id"]);
+            var id = H.L(idRow["id"]);
+            if (!Lease.Claim(db, "comm_outbox", id, owner, new[] { "queued", "scheduled", "retrying" })) continue; // lost the race — another worker owns it
+            var r = db.QueryOne("SELECT * FROM comm_outbox WHERE id=?", id);
+            if (r is null) continue;
             try { DeliverOne(db, r); }
             catch (Exception e)
             {
@@ -49,7 +56,7 @@ public sealed class OutboxDispatcher : BackgroundService
     static void DeliverOne(Db db, Dictionary<string, object?> r)
     {
         var id = H.L(r["id"]);
-        db.Execute("UPDATE comm_outbox SET status='processing', updated_at=datetime('now') WHERE id=?", id);
+        // (status is already 'processing' — claimed atomically by the caller's lease.)
         var channel = H.Str(r["channel"]) ?? "email";
         var attempt = (int)H.L(r["attempts"]) + 1;
         var maxAttempts = (int)Math.Max(1, H.L(r["max_attempts"]));

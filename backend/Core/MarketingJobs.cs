@@ -48,14 +48,20 @@ public sealed class MarketingJobDispatcher : BackgroundService
     /// <summary>Process up to <paramref name="limit"/> due jobs. Also callable directly for an admin retry.</summary>
     public static int DrainOnce(Db db, int limit)
     {
-        var rows = db.Query(@"SELECT * FROM mkt_jobs
-            WHERE status IN('queued','retrying')
-              AND (next_attempt_at IS NULL OR next_attempt_at<=datetime('now'))
+        // Atomically claim each due (or crashed-lease) job before running it, so concurrent dispatchers on
+        // several instances never process the same job twice.
+        var owner = Lease.NewOwner();
+        var rows = db.Query(@"SELECT id FROM mkt_jobs
+            WHERE (status IN('queued','retrying') AND (next_attempt_at IS NULL OR next_attempt_at<=datetime('now')))
+               OR (status='processing' AND lease_expires_at IS NOT NULL AND lease_expires_at<datetime('now'))
             ORDER BY id LIMIT ?", limit);
         var n = 0;
-        foreach (var r in rows)
+        foreach (var idRow in rows)
         {
-            var id = H.L(r["id"]);
+            var id = H.L(idRow["id"]);
+            if (!Lease.Claim(db, "mkt_jobs", id, owner, new[] { "queued", "retrying" })) continue;
+            var r = db.QueryOne("SELECT * FROM mkt_jobs WHERE id=?", id);
+            if (r is null) continue;
             try { RunOne(db, r); n++; }
             catch (Exception e) { db.Execute("UPDATE mkt_jobs SET status='failed', last_error=?, updated_at=datetime('now') WHERE id=?", e.Message, id); }
         }
@@ -65,7 +71,7 @@ public sealed class MarketingJobDispatcher : BackgroundService
     static void RunOne(Db db, Dictionary<string, object?> job)
     {
         var id = H.L(job["id"]);
-        db.Execute("UPDATE mkt_jobs SET status='processing', updated_at=datetime('now') WHERE id=?", id);
+        // (status is already 'processing' — claimed atomically by the caller's lease.)
         var type = H.Str(job["job_type"]) ?? "";
         var entityId = H.L(job["entity_id"]);
         var attempt = (int)H.L(job["attempts"]) + 1;
