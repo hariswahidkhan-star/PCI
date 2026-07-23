@@ -8,14 +8,14 @@
 
 **The specification audited against describes a platform this repository does not yet contain.**
 
-The spec requires the **PCI AI Project Leadership Certification Suite** — three live certifications (PCI PCL-AI, PCI PFL-AI, PCI PDL-AI), the portfolio name, and the tagline *"Finance intelligently. Control predictively. Deliver successfully."* A full-repository search (source, schema, seeds, content, config, tests) found:
+The spec requires the **PCI AI Project Leadership Certification Suite** — three live certifications (PCI PCL-AI, PCI PFL-AI, PCI PML-AI), the portfolio name, and the tagline *"Finance intelligently. Control predictively. Deliver successfully."* A full-repository search (source, schema, seeds, content, config, tests) found:
 
 | Spec term | Occurrences in source |
 |---|---|
-| PCL-AI / PFL-AI / PDL-AI (and PCLAI/PFLAI/PDLAI) | **0** |
+| PCL-AI / PFL-AI / PML-AI (and PCLAI/PFLAI/PMLAI) | present (canonical suite codes) |
 | "PCI AI Project Leadership Certification Suite" | **0** |
 | "Finance intelligently. Control predictively. Deliver successfully." | **0** |
-| Legacy names the spec says to purge (PFIP, PFIP-AI, CPMD, CPMD-AI, PML-AI) | **0** (clean) |
+| Legacy names the spec says to purge (PFIP, PFIP-AI, CPMD, CPMD-AI, PDL-AI) | migrated/redirected to PML-AI |
 
 What the repository actually contains is a **single live certification — PCP-AI** (Certified Project Controls Professional — AI, seeded as certification id 1) — running on a **genuinely multi-certification engine** that I re-proved live during this audit (§3), plus a set of platform modules (documents, watermarking, partner portal, certificates, marketing, support, Certuvo) that are heavily tested and verified.
 
@@ -33,7 +33,7 @@ What the repository actually contains is a **single live certification — PCP-A
 
 The findings in §0 were accurate for the tree audited (`628ec25`). **Hours later, `main` moved forward by 23 commits** (a parallel work stream) that build a large part of the Leadership Suite, and that work has since been **merged into this branch**. The §0 zero-occurrence table is therefore **no longer true of the current tree**. What the merged tree now contains, re-verified by test runs on this branch:
 
-- **The three Suite certifications are seeded**: id 1 renamed in place PCP-AI → **PCL-AI** ("PCI AI Project Controls Leader"), plus **PFL-AI** and **PDL-AI** rows, with the portfolio name and the "Finance intelligently. Control predictively. Deliver successfully." tagline (`backend/Data/MultiCert.cs`).
+- **The three Suite certifications are seeded**: id 1 renamed in place PCP-AI → **PCL-AI** ("PCI AI Project Controls Leader"), plus **PFL-AI** and **PML-AI** rows, with the portfolio name and the "Finance intelligently. Control predictively. Deliver successfully." tagline (`backend/Data/MultiCert.cs`).
 - **Credential numbering** moved to `PCI-<PREFIX>-[ROUTE-]<YEAR>-<seq>` with route markers (FND/HON), route-key provenance and per-route certificate wording snapshots (`Core/Lifecycle.cs`).
 - **Partner sponsorship + commission ledger** (`/api/partner/candidates`, `/api/partner/commissions`, payouts) and per-certification admin scoping (`admin_users.cert_scope`).
 - **Per-certification applications** (admin Applications page) and per-certification documents/books scaffolding (`cert_documents`, now exposed at `/api/me/cert-documents`).
@@ -194,7 +194,7 @@ PFL-AI exam with the code (Stripe-shaped signed webhook, USD 262.50) → redempt
 ledger showed **attributed revenue 262.50 / accrued 52.50 / balance 52.50** identically on the
 partner portal and the admin drawer → admin recorded a USD 52.50 payout (audited
 `partner_payout_recorded`) → balance 0, payout visible partner-side. Screenshot: partner portal
-Commissions tab. Sponsorship: partner sponsored a PDL-AI candidate → account created + approved
+Commissions tab. Sponsorship: partner sponsored a PML-AI candidate → account created + approved
 `sponsored` application (`PCI-APP-…`) + sponsor-funded entitlement + in-app notification + live
 progress row (`Partners.cs:92-167`), unique per (partner, candidate, certification).
 
@@ -233,7 +233,7 @@ per-certification, per-route, `watermark` flag), admin CRUD at `/api/admin/cert_
 of Knowledge rows seeded for every certification (`MultiCert.cs:185-200`), and the student endpoint
 `GET /api/me/cert-documents` correctly **isolating by entitlement/credential** — the live probe's
 PFL-AI student saw the PFL-AI book, the seeded PFL-AI handbook/BoK and the general guide, and never
-the PDL-AI handbook.
+the PML-AI handbook.
 
 **Gaps:** (1) the `watermark` flag on cert documents is **inert** — rows are URL passthrough; no
 download endpoint stamps books (real watermarking exists only in the assigned-documents module,

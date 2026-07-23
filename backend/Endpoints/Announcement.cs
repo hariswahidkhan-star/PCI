@@ -27,7 +27,7 @@ public static class Announcement
         ("eyebrow",   "Project Controls Institute · Announcement"),
         ("title",     "Certifications open for examination on {date}"),
         ("subtitle",  "Applications are open now — Honorary Fellowship only"),
-        ("intro",     "The PCI AI Project Leadership Certification Suite — PCI PCL-AI, PFL-AI and PDL-AI — is scheduled to open for enrolment and examination on {date}. Ahead of that date, the Institute is accepting applications for Honorary Fellow (PCI) recognition only."),
+        ("intro",     "The PCI AI Project Leadership Certification Suite — PCI PCL-AI, PFL-AI and PML-AI — is scheduled to open for enrolment and examination on {date}. Ahead of that date, the Institute is accepting applications for Honorary Fellow (PCI) recognition only."),
         ("p1_title",  "Review times."),
         ("p1_text",   "Owing to the current volume of applications, a decision may take approximately 15 to 30 days from the date your complete application is received."),
         ("p2_title",  "If your application is successful."),

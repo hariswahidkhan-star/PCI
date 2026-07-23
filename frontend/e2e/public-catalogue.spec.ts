@@ -15,6 +15,14 @@ test.describe('certification catalogue and enrolment hand-off', () => {
     await expect(cards.first().getByRole('link', { name: 'Learn more' })).toBeVisible()
   })
 
+  test('the three AI certifications appear as distinct catalogue entries', async ({ page }) => {
+    await page.goto('/certifications.html')
+    const cards = page.locator('article.cert-card')
+    for (const code of ['PCL-AI', 'PFL-AI', 'PML-AI']) {
+      await expect(cards.filter({ hasText: code })).toHaveCount(1)
+    }
+  })
+
   test('the clean /certifications route serves the same catalogue', async ({ page }) => {
     const resp = await page.goto('/certifications')
     expect(resp?.status() ?? 0).toBeLessThan(400)

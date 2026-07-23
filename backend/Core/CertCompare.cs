@@ -21,7 +21,7 @@ public static class CertCompare
         var html = File.ReadAllText(tplPath)
             .Replace("<!--PCI-CERT-DETAIL-->", BuildBody(db))
             .Replace("{{TITLE}}", "Compare PCI Certifications | " + MultiCert.PortfolioName)
-            .Replace("{{DESC}}", "Side-by-side comparison of the PCI AI Project Leadership Certification Suite — PCI PCL-AI, PCI PFL-AI and PCI PDL-AI: audience, competencies, routes, fees and examinations.")
+            .Replace("{{DESC}}", "Side-by-side comparison of the PCI AI Project Leadership Certification Suite — PCI PCL-AI, PCI PFL-AI and PCI PML-AI: audience, competencies, routes, fees and examinations.")
             .Replace("{{CANONICAL}}", "/certifications/compare");
         html = ListSections.Inject(db, html, lang);
         html = SeoTags.Inject(db, html, "certifications/compare.html");

@@ -46,7 +46,7 @@ Then a prioritized FIX LIST of every FAIL/gap with the exact reproduction and (i
 
 A. PUBLIC WEBSITE (anonymous)
 A1  Homepage loads, hero + certification catalogue render, no console errors.
-A2  Each certification page (PCL-AI, PFL-AI, PDL-AI, all-certifications) shows correct copy + prices.
+A2  Each certification page (PCL-AI, PFL-AI, PML-AI, all-certifications) shows correct copy + prices.
 A3  Language switch en->ko->ar->es->fr->zh->ru: page + nav translate; Arabic is RTL; choice persists.
 A4  Launch announcement popup shows once, is dismissable, stays dismissed, and is in the active language.
 A5  Submit the Honorary Fellow application (eligibility, qualifications/certs/experience rows,

@@ -189,7 +189,7 @@ public static class StudentExam
 
         // Per-certification documents & books: the student sees general documents plus the documents for
         // every certification they are enrolled in (an entitlement or an issued credential). Grouped by
-        // certification so a PCL-AI candidate never sees PFL-AI/PDL-AI materials they are not entitled to.
+        // certification so a PCL-AI candidate never sees PFL-AI/PML-AI materials they are not entitled to.
         // (/api/me/documents is the per-student assigned-documents module in Endpoints/Documents.cs.)
         app.MapGet("/api/me/cert-documents", (HttpContext ctx) =>
         {
@@ -832,6 +832,7 @@ public static class StudentExam
         app.MapPost("/api/me/cpd/declaration", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             var position = H.GetS(b, "position") ?? "";
             if (position is not ("compliant" or "career_break" or "not_met"))
@@ -896,6 +897,7 @@ public static class StudentExam
         app.MapPost("/api/me/cpd", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             var cols = db.Columns("cpd_entries");
             var map = new Dictionary<string, object?> {
@@ -912,6 +914,7 @@ public static class StudentExam
         app.MapDelete("/api/me/cpd/{id}", (HttpContext ctx, long id) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             db.Execute("DELETE FROM cpd_entries WHERE id=? AND user_id=?", id, u.Id);
             return J(new { ok = true });
         });

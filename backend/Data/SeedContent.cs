@@ -57,24 +57,26 @@ public static class SeedContent
             // Content Centre: expose the News vertical (/news) in the header nav (idempotent; admin can move it).
             db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT 'News','/news','Header',40,1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url='/news')");
             // Final Project Leadership Suite credentials in the footer "Certifications" group.
-            foreach (var (lbl, url, so) in new[] { ("PCI PCL-AI", "/certifications/pcl-ai", 20), ("PCI PFL-AI", "/certifications/pfl-ai", 21), ("PCI PDL-AI", "/certifications/pdl-ai", 22), ("All certifications", "/certifications", 23) })
+            foreach (var (lbl, url, so) in new[] { ("PCI PCL-AI", "/certifications/pcl-ai", 20), ("PCI PFL-AI", "/certifications/pfl-ai", 21), ("PCI PML-AI", "/certifications/pml-ai", 22), ("All certifications", "/certifications", 23) })
                 db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT ?,?, 'Certifications', ?, 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url=? AND nav_group='Certifications')", lbl, url, so, url);
             // Migrate any earlier (temporary) credential nav rows to the final slugs + designations.
             foreach (var (oldUrl, newUrl, newLbl) in new[] {
                 ("/certifications/pcp-ai", "/certifications/pcl-ai", "PCI PCL-AI"),
                 ("/certifications/pfip", "/certifications/pfl-ai", "PCI PFL-AI"),
-                ("/certifications/cpmd", "/certifications/pdl-ai", "PCI PDL-AI") })
+                ("/certifications/cpmd", "/certifications/pml-ai", "PCI PML-AI"),
+                ("/certifications/pdl-ai", "/certifications/pml-ai", "PCI PML-AI") })
                 db.Execute("UPDATE nav_items SET url=?, label=? WHERE nav_group='Certifications' AND url=?", newUrl, newLbl, oldUrl);
-            // Replace the retired acronym in any nav label (e.g. "PMP vs AACE vs PCP-AI") across every group.
+            // Replace retired third-cert acronyms in any nav label.
             db.Execute("UPDATE nav_items SET label=REPLACE(label,'PCP-AI','PCL-AI') WHERE label LIKE '%PCP-AI%'");
+            db.Execute("UPDATE nav_items SET label=REPLACE(label,'PDL-AI','PML-AI') WHERE label LIKE '%PDL-AI%'");
             // The comparison article moved with the acronym rename; keep any old nav row pointing at it.
             db.Execute("UPDATE nav_items SET url='pmp-vs-aace-vs-pcl-ai.html' WHERE url='pmp-vs-aace-vs-pcp-ai.html'");
-            // Deterministic order for the Certifications menu: the suite first (All → PCL → PFL → PDL),
+            // Deterministic order for the Certifications menu: the suite first (All → PCL → PFL → PML),
             // then the journey pages. Existing rows kept their pre-suite sort_orders, which interleaved
             // the three credentials oddly mid-menu; this pins the canonical order on every boot (keyed
             // by URL, so renamed labels stay put and admin-added rows sort after by their own order).
             foreach (var (url, so) in new (string, int)[] {
-                ("/certifications", 1), ("/certifications/pcl-ai", 2), ("/certifications/pfl-ai", 3), ("/certifications/pdl-ai", 4),
+                ("/certifications", 1), ("/certifications/pcl-ai", 2), ("/certifications/pfl-ai", 3), ("/certifications/pml-ai", 4),
                 ("certification-roadmap.html", 5), ("eligibility-requirements.html", 6), ("exam-structure.html", 7),
                 ("body-of-knowledge.html", 8), ("sample-questions.html", 9), ("cert-policies.html", 10),
                 ("recert.html", 11), ("digital-credentials.html", 12), ("ai-cert.html", 13),

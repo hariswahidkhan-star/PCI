@@ -475,6 +475,7 @@ public static class AdminMgmt
         app.MapPost("/api/admin/credentials", async (HttpRequest req) =>
         {
             var g = Deny(req, "credentials"); if (g is not null) return g;
+            var adm = adminFromReq(req)!;
             var b = await H.Body(req);
             var cid = H.GetS(b, "credential_id"); var holder = H.GetS(b, "holder_name");
             if (string.IsNullOrEmpty(cid) || string.IsNullOrEmpty(holder)) return Results.Json(new { error = "missing_fields" }, statusCode: 400);
@@ -488,13 +489,13 @@ public static class AdminMgmt
             var credCertSel = Certs.TryResolve(db, H.GetS(b, "certification_id", "certification"));
             if (credCertSel is null) return Results.Json(new { error = "bad_certification" }, statusCode: 400);
             var credCertId = credCertSel.Value;
-            if (adminFromReq(req) is { } cadm && !cadm.CanCert(credCertId))
+            if (!adm.CanCert(credCertId))
                 return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
             var credCert = Certs.ById(db, credCertId);
             var credLabel = H.GetS(b, "credential") ?? (credCert is not null ? Certs.Prefix(credCert) : "PCL-AI");
             try { var id = db.ExecuteReturningId("INSERT INTO issued_credentials(credential_id,user_id,certification_id,holder_name,credential,status,expires_at) VALUES(?,?,?,?,?, 'active',?)",
                 cid.ToUpperInvariant(), H.GetNum(b, "user_id"), credCertId, holder, credLabel, H.GetS(b, "expires_at"));
-                log(H.Ln(H.GetNum(b, "user_id")), "credential_issued", cid); return J(new { id }); }
+                log(adm.Id, "credential_issued", $"{cid} user {H.Ln(H.GetNum(b, "user_id"))?.ToString() ?? "-"}"); return J(new { id }); }
             catch { return Results.Json(new { error = "duplicate_or_invalid" }, statusCode: 400); }
         });
         app.MapPost("/api/admin/credentials/{id}/status", async (HttpRequest req, long id) =>
