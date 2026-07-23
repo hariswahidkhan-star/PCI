@@ -3717,6 +3717,20 @@ def test_simlab(admin):
         c == 200 and coachec.get("ok") is True and "Revisit the definition of this measure" not in ecmsg
         and ("Earned Schedule" in ecmsg or "ES " in ecmsg or "time" in ecmsg), (c, ecmsg[:80]))
 
+    # ---- Test-account path: an admin 'member' test user reaches the Practice Lab after membership ----
+    # Guarantees the documented QA route (Admin -> Test Users -> "member" scenario) unlocks the Lab, so a
+    # tester gets in exactly as a real student would (via membership) without touching real records — the
+    # test user is is_test=1 (excluded from reports/registers) and is cleaned up here.
+    c, mtu = jget("POST", "/api/admin/test-users", token=admin, body={"scenario": "member"})
+    mtu_tok = mtu.get("token"); mtu_id = mtu.get("id")
+    c, mtu_acc = jget("GET", "/api/me/lab/access", token=mtu_tok)
+    chk("43tt a 'member' admin test user is granted Practice Lab access via its membership",
+        c == 200 and mtu_acc.get("has_access") is True and mtu_acc.get("source") in ("membership", "grant"), (c, mtu_acc.get("has_access"), mtu_acc.get("source")))
+    c, mtu_start = jget("POST", "/api/me/lab/attempts", token=mtu_tok, body={"scenario_code": "GL-EVM-001", "mode": "training"})
+    chk("43uu the test user can open a lab end-to-end (attempt starts, task served)",
+        c == 200 and mtu_start.get("attempt_id") and (mtu_start.get("task") or {}).get("task") == "evm", (c, bool(mtu_start.get("attempt_id"))))
+    jget("POST", f"/api/admin/test-users/{mtu_id}/delete", token=admin)   # keep the harness clean
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.
