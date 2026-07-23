@@ -3440,8 +3440,282 @@ def run(proc):
     test_admin_extra_gaps(admin)
     test_proctoring_analytics_gaps(admin)
     test_time_sweeps(admin)
+    test_simlab(admin)
 
     print("\n(assertions complete)")
+
+def test_simlab(admin):
+    # PCI AI Project Controls Simulation Lab — Phase 1 foundation: live entitlement + published catalogue.
+    # The Lab reuses the existing student account; access is computed from membership / exam entitlement /
+    # explicit grant (never a parallel account), and the catalogue serves only PUBLISHED applied-practice
+    # labs (distinct from Certuvo's external MCQ prep). Verified on both SQLite and MySQL.
+    print("\n=== 43. Simulation Lab — access entitlement + published catalogue (Phase 1) ===")
+    c, _ = jget("GET", "/api/me/lab/access")
+    chk("43a anonymous is blocked from lab access (401)", c == 401, c)
+
+    btok, buid = register_student("simlab-bare@ex.co")
+    c, ba = jget("GET", "/api/me/lab/access", token=btok)
+    chk("43b bare student: enabled, no access yet, friendly reason (never a raw error)",
+        c == 200 and ba.get("enabled") is True and ba.get("has_access") is False and bool(ba.get("reason")), ba)
+    c, bc = jget("GET", "/api/me/lab/catalogue", token=btok)
+    chk("43c bare student: catalogue is access-gated (403 no_access, carries the access blob)",
+        c == 403 and bc.get("error") == "no_access" and isinstance(bc.get("access"), dict), bc)
+
+    mtok, muid = make_paid_user("simlab-member@ex.co")  # bundle → active membership
+    c, ma = jget("GET", "/api/me/lab/access", token=mtok)
+    chk("43d member: has access via active membership (source=membership)",
+        c == 200 and ma.get("has_access") is True and ma.get("source") == "membership", ma)
+
+    c, cat = jget("GET", "/api/me/lab/catalogue", token=mtok)
+    rows = cat.get("rows", []); codes = {r.get("scenario_code") for r in rows}
+    chk("43e member: catalogue lists the seeded PUBLISHED labs with codes",
+        c == 200 and len(rows) >= 4 and {"GL-WBS-001", "GL-EVM-001", "SD-EVM-001", "GL-SCH-001"} <= codes, (len(rows), sorted(codes)[:8]))
+    first = rows[0] if rows else {}
+    chk("43f catalogue rows carry the applied-practice shape (kind + difficulty + competencies[])",
+        bool(first.get("kind")) and bool(first.get("difficulty")) and isinstance(first.get("competencies"), list), first)
+    chk("43g a member who hasn't started sees no attempt status on any lab",
+        all(r.get("attempt_status") is None for r in rows), [r.get("attempt_status") for r in rows][:4])
+
+    # No draft/unpublished scenario ever leaks into the student catalogue.
+    con = dbconn(); con.execute("INSERT INTO simulation_scenarios(scenario_code,title,kind,status) VALUES(?,?,?,?)",
+                                ("DRAFT-XYZ", "Hidden draft", "guided_lab", "draft")); con.commit(); con.close()
+    c, cat2 = jget("GET", "/api/me/lab/catalogue", token=mtok)
+    chk("43h a DRAFT scenario is never served to students",
+        "DRAFT-XYZ" not in {r.get("scenario_code") for r in cat2.get("rows", [])}, "draft leaked" )
+
+    # An explicit, in-window complimentary grant confers access even without a membership (source=grant).
+    con = dbconn(); con.execute("INSERT INTO simulation_entitlements(user_id,source,status,expires_at) VALUES(?,?,?,datetime('now','+30 day'))",
+                                (buid, "complimentary", "active")); con.commit(); con.close()
+    c, ba2 = jget("GET", "/api/me/lab/access", token=btok)
+    chk("43i an explicit complimentary grant confers access (source=grant)",
+        c == 200 and ba2.get("has_access") is True and ba2.get("source") == "grant", ba2)
+
+    # ---- attempt lifecycle: deterministic guided labs (start -> submit -> grade + competency evidence) ----
+    import json as _json
+    # A no-access student cannot start an attempt (gated exactly like the catalogue).
+    ntok, nuid = register_student("simlab-nostart@ex.co")
+    c, _ = jget("POST", "/api/me/lab/attempts", token=ntok, body={"scenario_code": "GL-EVM-001"})
+    chk("43j a student without access cannot start an attempt (403 no_access)", c == 403, c)
+    c, _ = jget("POST", "/api/me/lab/attempts", body={"scenario_code": "GL-EVM-001"})
+    chk("43k anonymous cannot start an attempt (401)", c == 401, c)
+
+    # Start the EVM guided lab. The served task carries the inputs and what to compute, but NEVER the key.
+    c, st = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-EVM-001", "mode": "training"})
+    task = st.get("task", {})
+    aid = st.get("attempt_id")
+    leaks = any(k in _json.dumps(task).lower() for k in ("correct_value", "\"solution\"", "\"answer\""))
+    chk("43l start returns an attempt + task (evm), and the task never leaks the answer key",
+        c == 200 and aid and task.get("task") == "evm" and isinstance(task.get("ask"), list) and not leaks, (c, list(task.keys())))
+
+    # Submit the exact deterministic answers → full marks, passes, earned_value competency evidence.
+    ev_ans = {"sv": -10000, "cv": -5000, "spi": 0.9, "cpi": 0.9474, "eac": 211111.1111}
+    c, sub = jget("POST", f"/api/me/lab/attempts/{aid}/submit", token=mtok, body={"answers": ev_ans})
+    chk("43m submitting the correct EVM measures scores 100 and passes",
+        c == 200 and sub.get("score") == 100 and sub.get("passed") is True, (c, sub.get("score"), sub.get("passed")))
+    comps = {x.get("competency") for x in sub.get("competencies", [])}
+    chk("43n the graded attempt writes earned_value competency evidence", "earned_value" in comps, sorted(comps))
+    con = dbconn(); ce = con.execute("SELECT competency,level FROM simulation_competency WHERE attempt_id=?", (aid,)).fetchall(); con.close()
+    chk("43o competency evidence is persisted with a mastery level", len(ce) >= 1 and all(r[1] for r in ce), ce)
+
+    # Re-submitting a completed attempt is refused (single grading, no answer-farming).
+    c, again = jget("POST", f"/api/me/lab/attempts/{aid}/submit", token=mtok, body={"answers": ev_ans})
+    chk("43p a completed attempt cannot be re-submitted (already_submitted, 409)", c == 409 and again.get("error") == "already_submitted", (c, again))
+
+    # The catalogue now reflects the completed attempt (status + score) for that scenario.
+    c, cat3 = jget("GET", "/api/me/lab/catalogue", token=mtok)
+    evrow = next((r for r in cat3.get("rows", []) if r.get("scenario_code") == "GL-EVM-001"), {})
+    chk("43q the catalogue folds the completed attempt back in (status + score)",
+        evrow.get("attempt_status") in ("passed", "completed") and evrow.get("score") == 100, (evrow.get("attempt_status"), evrow.get("score")))
+
+    # Critical-path lab: set-valued answer (path) + numeric duration/float, all deterministic.
+    c, stc = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-SCH-001"})
+    cid = stc.get("attempt_id")
+    c, subc = jget("POST", f"/api/me/lab/attempts/{cid}/submit", token=mtok,
+                   body={"answers": {"project_duration": 13, "critical_path": ["A", "B", "D", "E"], "float_C": 2}})
+    chk("43r the critical-path lab grades duration + critical path (set) + float to 100",
+        c == 200 and subc.get("score") == 100 and subc.get("passed") is True, (c, subc.get("score")))
+
+    # Assessment Mode: grading still happens server-side, but the correct value is NEVER returned.
+    c, sta = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-WBS-001", "mode": "assessment"})
+    wid = sta.get("attempt_id")
+    c, suba = jget("POST", f"/api/me/lab/attempts/{wid}/submit", token=mtok,
+                   body={"answers": {"root_total": 999, "hundred_percent_valid": True}})
+    m_root = next((m for m in suba.get("measures", []) if m.get("key") == "root_total"), {})
+    chk("43s Assessment Mode grades server-side but withholds the correct value",
+        c == 200 and suba.get("assessment") is True and m_root.get("is_correct") is False and m_root.get("correct_value") is None,
+        (suba.get("assessment"), m_root))
+
+    # Loading a completed attempt re-grades deterministically from the stored answers.
+    c, rev = jget("GET", f"/api/me/lab/attempts/{aid}", token=mtok)
+    chk("43t loading a completed attempt returns its deterministic re-grade",
+        c == 200 and rev.get("status") in ("passed", "completed") and rev.get("grade", {}).get("score") == 100, (c, rev.get("status")))
+
+    # ---- AI Coach: grounded explanation, deterministic fallback (no provider key in CI), assessment-safe ----
+    c, coach = jget("POST", f"/api/me/lab/attempts/{aid}/coach", token=mtok, body={})
+    chk("43u the coach explains a completed training attempt (builtin fallback, no key in CI)",
+        c == 200 and coach.get("ok") is True and coach.get("source") == "builtin" and coach.get("ai") is False and len(coach.get("message", "")) > 20,
+        (c, coach.get("source"), coach.get("ai")))
+    # Coaching mid-attempt on the answers the student passes in — grounded concept explanation.
+    c, st2 = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-EVM-001", "mode": "training"})
+    aid2 = st2.get("attempt_id")
+    c, coach2 = jget("POST", f"/api/me/lab/attempts/{aid2}/coach", token=mtok, body={"answers": {"spi": 2.0}, "question": "why is my SPI wrong?"})
+    chk("43v the coach grounds its explanation in a project-controls concept (Index)",
+        c == 200 and coach2.get("ok") is True and "Index" in coach2.get("message", ""), (c, coach2.get("message", "")[:60]))
+    # Assessment Mode: the coach is refused outright — never a hint, never an answer.
+    c, coach3 = jget("POST", f"/api/me/lab/attempts/{wid}/coach", token=mtok, body={})
+    chk("43w Assessment Mode coaching is refused (source=assessment, no answer leaked)",
+        c == 200 and coach3.get("ok") is False and coach3.get("source") == "assessment" and "999" not in coach3.get("message", ""),
+        (c, coach3.get("source")))
+
+    # ---- admin scenario catalogue: all statuses + per-scenario practice aggregates (gated 'content') ----
+    c, adm = jget("GET", "/api/admin/lab/scenarios", token=admin)
+    arows = adm.get("rows", []); acodes = {r.get("scenario_code"): r for r in arows}
+    chk("43x admin scenario list shows all scenarios incl. the DRAFT, with published count",
+        c == 200 and adm.get("total", 0) >= 5 and adm.get("published", 0) >= 4 and acodes.get("DRAFT-XYZ", {}).get("status") == "draft", (c, adm.get("total"), adm.get("published")))
+    ev_admin = acodes.get("GL-EVM-001", {})
+    chk("43y the admin list carries per-scenario practice aggregates (attempts/completed)",
+        ev_admin.get("attempts", 0) >= 1 and ev_admin.get("completed", 0) >= 1 and ev_admin.get("interactive") is True, ev_admin)
+    c, _ = jget("GET", "/api/admin/lab/scenarios", token=mtok)  # a student token is not an admin
+    chk("43z the admin scenario list is not reachable with a student token", c in (401, 403), c)
+
+    # ---- Phase 2 engine: forecasting (three EAC methods) + CBS cost roll-up, graded deterministically ----
+    c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})
+    fid = stf.get("attempt_id")
+    c, subf = jget("POST", f"/api/me/lab/attempts/{fid}/submit", token=mtok,
+                   body={"answers": {"eac_cpi": 444444.4444, "eac_composite": 471604.9383, "eac_budget": 420000}})
+    fcomps = {x.get("competency") for x in subf.get("competencies", [])}
+    chk("43aa the forecasting drill grades all three EAC methods to 100 (forecasting evidence)",
+        c == 200 and subf.get("score") == 100 and subf.get("passed") is True and "forecasting" in fcomps, (c, subf.get("score"), sorted(fcomps)))
+
+    c, stc2 = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-CBS-001"})
+    bid = stc2.get("attempt_id"); btask = stc2.get("task", {})
+    chk("43bb the cost-control lab serves a CBS task with budget/actual given (no answer key leaked)",
+        c == 200 and btask.get("task") == "cbs" and "correct_value" not in _json.dumps(btask).lower(), (c, btask.get("task")))
+    c, subb = jget("POST", f"/api/me/lab/attempts/{bid}/submit", token=mtok,
+                   body={"answers": {"root_budget": 100000, "root_actual": 102000, "root_variance": -2000}})
+    bcomps = {x.get("competency") for x in subb.get("competencies", [])}
+    chk("43cc the CBS lab grades the roll-up + variance to 100 (cost_control evidence)",
+        c == 200 and subb.get("score") == 100 and subb.get("passed") is True and "cost_control" in bcomps, (c, subb.get("score"), sorted(bcomps)))
+
+    # S-curve scenario: the task carries a time-phased series (for the dashboard) + the final scalars; the
+    # student computes the EVM measures at the current period. Series is display data, never the answer.
+    c, sts = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SC-EVM-001"})
+    stask = sts.get("task", {}); series = (stask.get("given") or {}).get("series")
+    chk("43dd the S-curve scenario serves a time-phased series alongside the given scalars",
+        c == 200 and isinstance(series, list) and len(series) == 5 and series[-1].get("pv") == 500000, (c, len(series or [])))
+    sid2 = sts.get("attempt_id")
+    c, subs = jget("POST", f"/api/me/lab/attempts/{sid2}/submit", token=mtok,
+                   body={"answers": {"sv": -70000, "cv": -30000, "spi": 0.86, "cpi": 0.9348, "eac": 962790.6977}})
+    chk("43ee the S-curve scenario grades the current-period EVM measures to 100",
+        c == 200 and subs.get("score") == 100 and subs.get("passed") is True, (c, subs.get("score")))
+
+    # Gantt dashboard: a graded CPM attempt returns the computed schedule (the answer) in Training Mode,
+    # but Assessment Mode withholds it entirely.
+    c, stg = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-SCH-001", "mode": "training"})
+    gid = stg.get("attempt_id")
+    c, subg = jget("POST", f"/api/me/lab/attempts/{gid}/submit", token=mtok,
+                   body={"answers": {"project_duration": 13, "critical_path": ["A", "B", "D", "E"], "float_C": 2}})
+    sched = subg.get("schedule") or {}
+    bar_a = next((b for b in sched.get("bars", []) if b.get("id") == "A"), {})
+    chk("43ff a graded CPM attempt returns the computed Gantt schedule (Training Mode)",
+        c == 200 and sched.get("project_duration") == 13 and sched.get("critical_path") == ["A", "B", "D", "E"] and bar_a.get("critical") is True,
+        (c, sched.get("project_duration"), sched.get("critical_path")))
+    c, stga = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-SCH-001", "mode": "assessment"})
+    gaid = stga.get("attempt_id")
+    c, subga = jget("POST", f"/api/me/lab/attempts/{gaid}/submit", token=mtok,
+                    body={"answers": {"project_duration": 13, "critical_path": ["A", "B", "D", "E"], "float_C": 2}})
+    chk("43gg Assessment Mode withholds the computed schedule (no answer leaked)",
+        c == 200 and subga.get("schedule") is None, (c, subga.get("schedule")))
+
+    # Progress lab: weighted physical percent-complete across work packages.
+    c, stp = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-PRG-001"})
+    pid2 = stp.get("attempt_id")
+    c, subp = jget("POST", f"/api/me/lab/attempts/{pid2}/submit", token=mtok, body={"answers": {"overall_percent": 55}})
+    pcomps = {x.get("competency") for x in subp.get("competencies", [])}
+    chk("43hh the progress lab grades the budget-weighted percent-complete to 100 (progress evidence)",
+        c == 200 and subp.get("score") == 100 and subp.get("passed") is True and "progress_measurement" in pcomps, (c, subp.get("score"), sorted(pcomps)))
+
+    # ---- Phase 3 risk engine: Expected Monetary Value + three-point (PERT) analysis ----
+    c, str_ = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-RSK-001"})
+    rid = str_.get("attempt_id")
+    c, subr = jget("POST", f"/api/me/lab/attempts/{rid}/submit", token=mtok, body={"answers": {"emv": -8000}})
+    rcomps = {x.get("competency") for x in subr.get("competencies", [])}
+    chk("43ii the risk drill grades the register EMV to 100 (risk_management evidence)",
+        c == 200 and subr.get("score") == 100 and subr.get("passed") is True and "risk_management" in rcomps, (c, subr.get("score"), sorted(rcomps)))
+
+    c, stpt = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-PRT-001"})
+    ptid = stpt.get("attempt_id")
+    c, subpt = jget("POST", f"/api/me/lab/attempts/{ptid}/submit", token=mtok,
+                    body={"answers": {"expected_duration": 12, "std_dev": 1.8257, "prob_on_time": 86.3}})
+    chk("43jj the PERT lab grades expected duration + std-dev + probability-on-time to 100",
+        c == 200 and subpt.get("score") == 100 and subpt.get("passed") is True, (c, subpt.get("score")))
+
+    # Monte-Carlo scenario: the task carries a seeded, deterministic MC distribution for the dashboard,
+    # and the student is graded on the PERT normal-approximation.
+    c, stmc = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SC-MC-001"})
+    mctask = stmc.get("task", {}); mcv = mctask.get("montecarlo") or {}
+    ordered = all(k in mcv for k in ("p10", "p50", "p80", "p90")) and mcv.get("p50", 0) <= mcv.get("p80", 0) <= mcv.get("p90", 0)
+    chk("43kk the Monte-Carlo scenario attaches a seeded distribution (percentiles + histogram)",
+        c == 200 and isinstance(mcv.get("histogram"), list) and len(mcv.get("histogram", [])) >= 1 and ordered, (c, mcv.get("p50"), mcv.get("p80")))
+    mcid = stmc.get("attempt_id")
+    c, submc = jget("POST", f"/api/me/lab/attempts/{mcid}/submit", token=mtok,
+                    body={"answers": {"expected_duration": 19, "prob_on_time": 88.5}})
+    chk("43ll the Monte-Carlo scenario grades the PERT normal-approximation to 100",
+        c == 200 and submc.get("score") == 100 and submc.get("passed") is True, (c, submc.get("score")))
+
+    # ---- Phase 3 change control + cash flow ----
+    c, stch = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-CHG-001"})
+    chid = stch.get("attempt_id")
+    c, subch = jget("POST", f"/api/me/lab/attempts/{chid}/submit", token=mtok,
+                    body={"answers": {"revised_bac": 520000, "revised_duration": 103, "approved_count": 2}})
+    chcomps = {x.get("competency") for x in subch.get("competencies", [])}
+    chk("43mm the change-control lab applies only approved changes and grades to 100",
+        c == 200 and subch.get("score") == 100 and subch.get("passed") is True and "change_control" in chcomps, (c, subch.get("score"), sorted(chcomps)))
+
+    c, stcf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-CASH-001"})
+    cfid = stcf.get("attempt_id")
+    c, subcf = jget("POST", f"/api/me/lab/attempts/{cfid}/submit", token=mtok,
+                    body={"answers": {"final_position": 40000, "peak_funding": 90000}})
+    cfcomps = {x.get("competency") for x in subcf.get("competencies", [])}
+    chk("43nn the cash-flow lab grades the closing position + peak funding to 100 (cash_flow evidence)",
+        c == 200 and subcf.get("score") == 100 and subcf.get("passed") is True and "cash_flow" in cfcomps, (c, subcf.get("score"), sorted(cfcomps)))
+
+    # ---- Phase 3 time-driven EVM timeline ----
+    c, sttl = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SC-EVT-001"})
+    tlid = sttl.get("attempt_id")
+    tltask = sttl.get("task", {})
+    # The task carries the period series (given, so the S-curve can draw it) but never the computed trend.
+    chk("43oo the timeline task exposes the given period series without leaking the trend/forecast",
+        tltask.get("task") == "timeline" and len((tltask.get("given") or {}).get("series", [])) == 6
+        and "worst_spi_period" not in (tltask.get("given") or {}), tltask.get("given"))
+    c, subtl = jget("POST", f"/api/me/lab/attempts/{tlid}/submit", token=mtok,
+                    body={"answers": {"worst_spi_period": 3, "final_cpi": 0.8529, "final_eac": 703448.28, "vac": -103448.28}})
+    tlcomps = {x.get("competency") for x in subtl.get("competencies", [])}
+    chk("43pp the timeline lab grades the worst-period + CPI-method forecast to 100 (earned_value evidence)",
+        c == 200 and subtl.get("score") == 100 and subtl.get("passed") is True and "earned_value" in tlcomps, (c, subtl.get("score"), sorted(tlcomps)))
+
+    # ---- Phase 3 earned schedule (schedule performance in time) ----
+    c, stes = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-ESC-001"})
+    esid = stes.get("attempt_id")
+    estask = stes.get("task", {})
+    chk("43qq the earned-schedule task serves the planned-value curve without leaking ES/indices",
+        estask.get("task") == "earned_schedule" and len((estask.get("given") or {}).get("plan", [])) == 6
+        and "es" not in (estask.get("given") or {}), estask.get("given"))
+    c, subes = jget("POST", f"/api/me/lab/attempts/{esid}/submit", token=mtok,
+                    body={"answers": {"es": 3.25, "sv_time": -0.75, "spi_time": 0.8125, "eac_time": 7.3846}})
+    escomps = {x.get("competency") for x in subes.get("competencies", [])}
+    chk("43rr the earned-schedule lab grades ES + time indices + time forecast to 100 (schedule_analysis evidence)",
+        c == 200 and subes.get("score") == 100 and subes.get("passed") is True and "schedule_analysis" in escomps, (c, subes.get("score"), sorted(escomps)))
+
+    # ---- Phase 4 AI-Coach evals: the coach grounds a Phase-3 task type (not the generic fallback) ----
+    c, stec = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-ESC-001", "mode": "training"})
+    ecid = stec.get("attempt_id")
+    c, coachec = jget("POST", f"/api/me/lab/attempts/{ecid}/coach", token=mtok,
+                      body={"answers": {"spi_time": 9}, "question": "why is my SPI(t) off?"})
+    ecmsg = coachec.get("message", "")
+    chk("43ss the coach grounds an earned-schedule miss in a real concept (not the generic fallback)",
+        c == 200 and coachec.get("ok") is True and "Revisit the definition of this measure" not in ecmsg
+        and ("Earned Schedule" in ecmsg or "ES " in ecmsg or "time" in ecmsg), (c, ecmsg[:80]))
 
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).

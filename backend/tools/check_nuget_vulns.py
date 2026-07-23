@@ -24,10 +24,32 @@ import json
 import os
 import subprocess
 import sys
+import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BACKEND_DIR = os.path.dirname(HERE)
 ALLOWLIST = os.path.join(HERE, "nuget-vuln-allowlist.json")
+
+# `dotnet list package --vulnerable` fetches the advisory database over the network. That upstream
+# service occasionally returns a transient 5xx / times out, which is not a security signal — it must
+# not fail the build on its own. We retry a few times on those transient markers only; a genuine
+# config error (e.g. "restore first") still fails fast, and if every retry is exhausted the gate stays
+# fail-closed (non-zero exit) rather than silently passing an un-checked build.
+TRANSIENT_MARKERS = (
+    "does not indicate success",   # generic dotnet HTTP failure line
+    "gateway time-out", "gateway timeout",
+    "502", "503", "504",
+    "timed out", "timeout",
+    "temporarily unavailable",
+    "an error occurred while sending the request",
+    "connection reset", "connection refused",
+    "the ssl connection could not be established",
+)
+
+
+def is_transient(text):
+    low = (text or "").lower()
+    return any(m in low for m in TRANSIENT_MARKERS)
 
 
 def load_allowlist():
@@ -43,17 +65,32 @@ def norm(url):
     return (url or "").strip().rstrip("/").lower()
 
 
-def run_dotnet():
-    """Return the parsed JSON report from `dotnet list package --vulnerable`."""
+def run_dotnet(attempts=4):
+    """Return the parsed JSON report from `dotnet list package --vulnerable`.
+
+    Retries on transient upstream failures (the advisory service returning 5xx / timing out) with
+    exponential backoff. A non-transient failure fails fast; exhausting the retries still fails the
+    build (fail-closed) so an un-checkable run never passes silently."""
     cmd = [
         "dotnet", "list", "package",
         "--vulnerable", "--include-transitive", "--format", "json",
     ]
-    proc = subprocess.run(cmd, cwd=BACKEND_DIR, capture_output=True, text=True)
-    if proc.returncode != 0:
-        sys.stderr.write(proc.stdout + "\n" + proc.stderr + "\n")
+    for attempt in range(1, attempts + 1):
+        proc = subprocess.run(cmd, cwd=BACKEND_DIR, capture_output=True, text=True)
+        if proc.returncode == 0:
+            return json.loads(proc.stdout)
+        combined = (proc.stdout or "") + "\n" + (proc.stderr or "")
+        if attempt < attempts and is_transient(combined):
+            wait = 3 * (2 ** (attempt - 1))   # 3s, 6s, 12s
+            sys.stderr.write(
+                f"::warning::advisory lookup hit a transient error (attempt {attempt}/{attempts}); "
+                f"retrying in {wait}s\n{combined}\n")
+            time.sleep(wait)
+            continue
+        sys.stderr.write(combined + "\n")
         sys.exit("::error::`dotnet list package --vulnerable` failed to run (restore first?)")
-    return json.loads(proc.stdout)
+    # Unreachable: the loop either returns or sys.exit()s, but guard anyway (fail-closed).
+    sys.exit("::error::`dotnet list package --vulnerable` failed after retries")
 
 
 def collect(report):
