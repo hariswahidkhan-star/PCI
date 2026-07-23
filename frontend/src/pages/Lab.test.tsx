@@ -51,9 +51,9 @@ describe('Lab (Simulation Lab landing)', () => {
     h.cat = { rows: [lab()] }
     renderLab()
     expect(screen.getByText('Structure a project WBS')).toBeInTheDocument()
-    expect(screen.getByText('Guided lab')).toBeInTheDocument()          // kind label
-    expect(screen.getByText(/Foundation/)).toBeInTheDocument()          // difficulty
-    expect(screen.getByText('Scope structuring')).toBeInTheDocument()   // competency label
+    expect(screen.getAllByText('Guided lab').length).toBeGreaterThanOrEqual(1) // badge (+ filter option)
+    expect(screen.getByText(/Foundation · Construction/)).toBeInTheDocument()
+    expect(screen.getAllByText('Scope structuring').length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText('Not started')).toBeInTheDocument()
     const open = screen.getByRole('link', { name: 'Open lab' })
     expect(open).toHaveAttribute('href', '/lab/GL-WBS-001')
@@ -86,6 +86,6 @@ describe('Lab (Simulation Lab landing)', () => {
     fireEvent.change(screen.getByLabelText('Filter by industry'), { target: { value: 'Finance' } })
     expect(screen.queryByText('Structure a project WBS')).toBeNull()
     expect(screen.getByText('Model cash exposure')).toBeInTheDocument()
-    expect(screen.getByText(/PFL-AI/)).toBeInTheDocument()
+    expect(screen.getByText(/· PFL-AI/)).toBeInTheDocument()
   })
 })
