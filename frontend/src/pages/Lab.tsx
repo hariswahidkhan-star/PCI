@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useQuery } from '../api/hooks'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../components/ui'
 
@@ -29,6 +30,7 @@ interface LabRow {
   certification_id?: number | null
   summary?: string | null
   version?: number
+  interactive?: boolean
   attempt_status?: string | null
   score?: number | null
 }
@@ -109,8 +111,9 @@ export default function Lab() {
                   {r.attempt_status
                     ? <Badge tone={r.attempt_status === 'passed' || r.attempt_status === 'completed' ? 'ok' : 'warn'}>{titleCaseWords(r.attempt_status)}</Badge>
                     : <span className="muted small">Not started</span>}
-                  {/* The interactive workspace launch arrives in the next Phase-1 increment. */}
-                  <button className="btn sm" disabled title="Interactive workspace coming soon">Open lab</button>
+                  {r.interactive !== false
+                    ? <Link className="btn sm" to={`/lab/${r.scenario_code}`}>{r.attempt_status ? 'Open again' : 'Open lab'}</Link>
+                    : <button className="btn sm" disabled title="Interactive workspace coming soon">Open lab</button>}
                 </div>
               </div>
             </Card>

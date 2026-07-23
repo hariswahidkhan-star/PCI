@@ -3215,6 +3215,66 @@ def test_simlab(admin):
     chk("43i an explicit complimentary grant confers access (source=grant)",
         c == 200 and ba2.get("has_access") is True and ba2.get("source") == "grant", ba2)
 
+    # ---- attempt lifecycle: deterministic guided labs (start -> submit -> grade + competency evidence) ----
+    import json as _json
+    # A no-access student cannot start an attempt (gated exactly like the catalogue).
+    ntok, nuid = register_student("simlab-nostart@ex.co")
+    c, _ = jget("POST", "/api/me/lab/attempts", token=ntok, body={"scenario_code": "GL-EVM-001"})
+    chk("43j a student without access cannot start an attempt (403 no_access)", c == 403, c)
+    c, _ = jget("POST", "/api/me/lab/attempts", body={"scenario_code": "GL-EVM-001"})
+    chk("43k anonymous cannot start an attempt (401)", c == 401, c)
+
+    # Start the EVM guided lab. The served task carries the inputs and what to compute, but NEVER the key.
+    c, st = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-EVM-001", "mode": "training"})
+    task = st.get("task", {})
+    aid = st.get("attempt_id")
+    leaks = any(k in _json.dumps(task).lower() for k in ("correct_value", "\"solution\"", "\"answer\""))
+    chk("43l start returns an attempt + task (evm), and the task never leaks the answer key",
+        c == 200 and aid and task.get("task") == "evm" and isinstance(task.get("ask"), list) and not leaks, (c, list(task.keys())))
+
+    # Submit the exact deterministic answers → full marks, passes, earned_value competency evidence.
+    ev_ans = {"sv": -10000, "cv": -5000, "spi": 0.9, "cpi": 0.9474, "eac": 211111.1111}
+    c, sub = jget("POST", f"/api/me/lab/attempts/{aid}/submit", token=mtok, body={"answers": ev_ans})
+    chk("43m submitting the correct EVM measures scores 100 and passes",
+        c == 200 and sub.get("score") == 100 and sub.get("passed") is True, (c, sub.get("score"), sub.get("passed")))
+    comps = {x.get("competency") for x in sub.get("competencies", [])}
+    chk("43n the graded attempt writes earned_value competency evidence", "earned_value" in comps, sorted(comps))
+    con = dbconn(); ce = con.execute("SELECT competency,level FROM simulation_competency WHERE attempt_id=?", (aid,)).fetchall(); con.close()
+    chk("43o competency evidence is persisted with a mastery level", len(ce) >= 1 and all(r[1] for r in ce), ce)
+
+    # Re-submitting a completed attempt is refused (single grading, no answer-farming).
+    c, again = jget("POST", f"/api/me/lab/attempts/{aid}/submit", token=mtok, body={"answers": ev_ans})
+    chk("43p a completed attempt cannot be re-submitted (already_submitted, 409)", c == 409 and again.get("error") == "already_submitted", (c, again))
+
+    # The catalogue now reflects the completed attempt (status + score) for that scenario.
+    c, cat3 = jget("GET", "/api/me/lab/catalogue", token=mtok)
+    evrow = next((r for r in cat3.get("rows", []) if r.get("scenario_code") == "GL-EVM-001"), {})
+    chk("43q the catalogue folds the completed attempt back in (status + score)",
+        evrow.get("attempt_status") in ("passed", "completed") and evrow.get("score") == 100, (evrow.get("attempt_status"), evrow.get("score")))
+
+    # Critical-path lab: set-valued answer (path) + numeric duration/float, all deterministic.
+    c, stc = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-SCH-001"})
+    cid = stc.get("attempt_id")
+    c, subc = jget("POST", f"/api/me/lab/attempts/{cid}/submit", token=mtok,
+                   body={"answers": {"project_duration": 13, "critical_path": ["A", "B", "D", "E"], "float_C": 2}})
+    chk("43r the critical-path lab grades duration + critical path (set) + float to 100",
+        c == 200 and subc.get("score") == 100 and subc.get("passed") is True, (c, subc.get("score")))
+
+    # Assessment Mode: grading still happens server-side, but the correct value is NEVER returned.
+    c, sta = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-WBS-001", "mode": "assessment"})
+    wid = sta.get("attempt_id")
+    c, suba = jget("POST", f"/api/me/lab/attempts/{wid}/submit", token=mtok,
+                   body={"answers": {"root_total": 999, "hundred_percent_valid": True}})
+    m_root = next((m for m in suba.get("measures", []) if m.get("key") == "root_total"), {})
+    chk("43s Assessment Mode grades server-side but withholds the correct value",
+        c == 200 and suba.get("assessment") is True and m_root.get("is_correct") is False and m_root.get("correct_value") is None,
+        (suba.get("assessment"), m_root))
+
+    # Loading a completed attempt re-grades deterministically from the stored answers.
+    c, rev = jget("GET", f"/api/me/lab/attempts/{aid}", token=mtok)
+    chk("43t loading a completed attempt returns its deterministic re-grade",
+        c == 200 and rev.get("status") in ("passed", "completed") and rev.get("grade", {}).get("score") == 100, (c, rev.get("status")))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.

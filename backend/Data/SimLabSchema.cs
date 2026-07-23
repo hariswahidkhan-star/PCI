@@ -110,25 +110,95 @@ public static class SimLabSchema
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('simlab_requires','membership_or_exam')");
 
         // Starter catalogue — a few PUBLISHED guided labs + one skill drill, seeded idempotently by
-        // scenario_code (WHERE NOT EXISTS, the house seed pattern). Synthetic content only. `config_json`
-        // task payloads are filled out in later Phase-1 bricks (the calc/grading engine); these rows make
-        // the catalogue non-empty so /api/me/lab/catalogue and the student page have real data.
+        // scenario_code (WHERE NOT EXISTS, the house seed pattern). Synthetic content only. Each carries a
+        // `config_json` task the deterministic calc/grading engine (Core/SimCalc + Core/SimGrade) computes
+        // and scores against — the answer key is never stored, it is derived from `given` at grade time.
         SeedScenario(db, "GL-WBS-001", "Structure a project WBS", "guided_lab", "Construction", "foundation", 15,
-            "[\"scope_structuring\"]", "Build a compliant, fully-decomposed Work Breakdown Structure for a small project and validate the roll-up.");
+            "[\"scope_structuring\"]", "Roll a small project's Work Breakdown Structure up from its leaf budgets and confirm the 100% rule.",
+            ConfigWbs);
         SeedScenario(db, "GL-EVM-001", "Calculate the core EVM measures", "guided_lab", "Energy", "foundation", 15,
-            "[\"earned_value\"]", "Given PV, EV and AC, compute SV, CV, SPI, CPI and interpret project health.");
+            "[\"earned_value\"]", "Given PV, EV, AC and BAC, compute SV, CV, SPI, CPI and the EAC forecast.",
+            ConfigEvm);
         SeedScenario(db, "SD-EVM-001", "EVM six-measure drill", "skill_drill", "Rail", "intermediate", 10,
-            "[\"earned_value\",\"forecasting\"]", "A short, focused drill: compute six EVM/forecast measures against the clock.");
+            "[\"earned_value\",\"forecasting\"]", "A short, focused drill: compute six EVM/forecast measures against the clock.",
+            ConfigEvmDrill);
         SeedScenario(db, "GL-SCH-001", "Identify the critical path", "guided_lab", "Infrastructure", "intermediate", 20,
-            "[\"schedule_analysis\"]", "Run the forward/backward pass on a small network and identify the critical path and total float.");
+            "[\"schedule_analysis\"]", "Run the forward/backward pass on a small network and identify the critical path and total float.",
+            ConfigCpm);
     }
 
     static void SeedScenario(Db db, string code, string title, string kind, string industry, string difficulty,
-        int minutes, string competenciesJson, string summary)
+        int minutes, string competenciesJson, string summary, string configJson)
     {
-        db.Execute(@"INSERT INTO simulation_scenarios(scenario_code,title,kind,industry,difficulty,est_minutes,competencies_json,summary,status,version)
-            SELECT ?,?,?,?,?,?,?,?, 'published', 1
+        db.Execute(@"INSERT INTO simulation_scenarios(scenario_code,title,kind,industry,difficulty,est_minutes,competencies_json,summary,config_json,status,version)
+            SELECT ?,?,?,?,?,?,?,?,?, 'published', 1
             WHERE NOT EXISTS(SELECT 1 FROM simulation_scenarios WHERE scenario_code=?)",
-            code, title, kind, industry, difficulty, minutes, competenciesJson, summary, code);
+            code, title, kind, industry, difficulty, minutes, competenciesJson, summary, configJson, code);
+        // Backfill: a scenario seeded by an earlier build (before the task engine) has a NULL config — set
+        // it once, without disturbing any operator edits (only when empty). Idempotent on both providers.
+        db.Execute(@"UPDATE simulation_scenarios SET config_json=?
+            WHERE scenario_code=? AND (config_json IS NULL OR config_json='')", configJson, code);
     }
+
+    // ── Scenario task definitions (synthetic data only). `given` holds the inputs; `ask` lists the
+    //    measures the student computes; the engine (SimCalc.Resolve) derives the authoritative answers. ──
+
+    const string ConfigEvm = """
+        {"task":"evm",
+         "prompt":"At the end of month 3, a solar-farm package reports Planned Value (PV) 100000, Earned Value (EV) 90000 and Actual Cost (AC) 95000, against a Budget at Completion (BAC) of 200000. Compute the core earned-value measures (indices to 2 decimal places).",
+         "given":{"pv":100000,"ev":90000,"ac":95000,"bac":200000},
+         "ask":[
+           {"key":"sv","label":"Schedule Variance (SV)","type":"number"},
+           {"key":"cv","label":"Cost Variance (CV)","type":"number"},
+           {"key":"spi","label":"Schedule Performance Index (SPI)","type":"number"},
+           {"key":"cpi","label":"Cost Performance Index (CPI)","type":"number"},
+           {"key":"eac","label":"Estimate at Completion (EAC, CPI method)","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["earned_value"]}
+        """;
+
+    const string ConfigEvmDrill = """
+        {"task":"evm",
+         "prompt":"Rapid drill. A rail package reports PV 250000, EV 220000, AC 240000, against a BAC of 600000. Compute all six measures.",
+         "given":{"pv":250000,"ev":220000,"ac":240000,"bac":600000},
+         "ask":[
+           {"key":"sv","label":"Schedule Variance (SV)","type":"number"},
+           {"key":"cv","label":"Cost Variance (CV)","type":"number"},
+           {"key":"spi","label":"Schedule Performance Index (SPI)","type":"number"},
+           {"key":"cpi","label":"Cost Performance Index (CPI)","type":"number"},
+           {"key":"eac","label":"Estimate at Completion (EAC, CPI method)","type":"number"},
+           {"key":"tcpi","label":"To-Complete Performance Index (TCPI to BAC)","type":"number"}],
+         "tolerance":0.01,"pass_pct":80,"competencies":["earned_value","forecasting"]}
+        """;
+
+    const string ConfigCpm = """
+        {"task":"cpm",
+         "prompt":"Run the forward and backward pass on this small activity network (durations in days) and identify the critical path and total float.",
+         "given":{"activities":[
+           {"id":"A","dur":3,"preds":[]},
+           {"id":"B","dur":4,"preds":["A"]},
+           {"id":"C","dur":2,"preds":["A"]},
+           {"id":"D","dur":5,"preds":["B","C"]},
+           {"id":"E","dur":1,"preds":["D"]}]},
+         "ask":[
+           {"key":"project_duration","label":"Project duration (days)","type":"number"},
+           {"key":"critical_path","label":"Critical path (comma-separated activity IDs)","type":"set"},
+           {"key":"float_C","label":"Total float of activity C (days)","type":"number"}],
+         "tolerance":0.001,"pass_pct":70,"competencies":["schedule_analysis"]}
+        """;
+
+    const string ConfigWbs = """
+        {"task":"wbs",
+         "prompt":"A small office fit-out has the work breakdown below with leaf-level budgets. Roll the costs up to the root and confirm the structure satisfies the 100% rule.",
+         "given":{"nodes":[
+           {"id":"1","parent":null,"name":"Office fit-out"},
+           {"id":"1.1","parent":"1","name":"Design","value":40000},
+           {"id":"1.2","parent":"1","name":"Build"},
+           {"id":"1.2.1","parent":"1.2","name":"Structure","value":30000},
+           {"id":"1.2.2","parent":"1.2","name":"Services","value":20000},
+           {"id":"1.3","parent":"1","name":"Handover","value":10000}]},
+         "ask":[
+           {"key":"root_total","label":"Total project budget (root roll-up)","type":"number"},
+           {"key":"hundred_percent_valid","label":"Does the WBS satisfy the 100% rule? (yes/no)","type":"bool"}],
+         "pass_pct":70,"competencies":["scope_structuring"]}
+        """;
 }
