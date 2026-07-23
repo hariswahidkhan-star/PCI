@@ -3832,6 +3832,24 @@ def test_simlab(admin):
         len(pub_house) >= 20 and not bad_cert and {1, 2, 3}.issubset(certs_present),
         (len(pub_house), bad_cert[:5], sorted(certs_present)))
 
+    # ---- Phase 5B: review-due / expiry governance dates (§13). Governance METADATA, so settable even on a
+    #      published scenario without breaching immutability; drives the amber/overdue/expired operator flag. ----
+    c, g1 = jget("PATCH", f"/api/admin/lab/scenarios/{ev_id}/governance", token=admin, body={"review_due": "2020-01-01"})
+    chk("43zg1 a past review-due date flags a PUBLISHED scenario review_overdue (metadata is not frozen)",
+        c == 200 and g1.get("governance") == "review_overdue" and (g1.get("days_to_review") or 0) < 0, (c, g1))
+    c, g2 = jget("PATCH", f"/api/admin/lab/scenarios/{ev_id}/governance", token=admin, body={"expires_at": "2020-06-01"})
+    chk("43zg2 a past expiry date flags the scenario expired (expiry dominates the review flag)",
+        c == 200 and g2.get("governance") == "expired", (c, g2))
+    c, g3 = jget("PATCH", f"/api/admin/lab/scenarios/{ev_id}/governance", token=admin, body={"review_due": "", "expires_at": ""})
+    chk("43zg3 clearing both governance dates returns the scenario to ok",
+        c == 200 and g3.get("governance") == "ok" and g3.get("review_due") is None and g3.get("expires_at") is None, (c, g3))
+    c, g4 = jget("PATCH", f"/api/admin/lab/scenarios/{ev_id}/governance", token=admin, body={"review_due": "not-a-date"})
+    chk("43zg4 a malformed governance date is rejected (400 bad_date)", c == 400 and g4.get("error") == "bad_date", (c, g4))
+    c, _g5 = jget("PATCH", f"/api/admin/lab/scenarios/{ev_id}/governance", token=mtok, body={"review_due": "2027-01-01"})
+    chk("43zg5 governance dates cannot be set with a student token (RBAC)", c in (401, 403), c)
+    c, _g6 = jget("PATCH", "/api/admin/lab/scenarios/99999999/governance", token=admin, body={"review_due": "2027-01-01"})
+    chk("43zg6 setting governance on an unknown scenario id returns 404", c == 404, c)
+
     # ---- Phase 5A: scenario authoring + review workflow (§13), gated 'content', maker-checker enforced ----
     valid_cfg = {"task": "evm", "prompt": "Compute the CPI.",
                  "given": {"pv": 100000, "ev": 90000, "ac": 95000, "bac": 200000},

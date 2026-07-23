@@ -25,6 +25,11 @@ interface ScenarioRow {
   interactive: boolean
   attempts: number
   completed: number
+  review_due?: string | null
+  expires_at?: string | null
+  governance?: string
+  days_to_review?: number | null
+  days_to_expiry?: number | null
 }
 interface Resp { rows: ScenarioRow[]; total: number; published: number }
 interface Issue { severity: string; code: string; message: string }
@@ -39,6 +44,11 @@ const nextState = (s: string): string | null => {
   return i >= 0 && i + 1 < FORWARD.length ? FORWARD[i + 1] : null
 }
 const reviewTone = (s: string) => (s === 'published' ? 'ok' : s === 'draft' ? 'neutral' : s === 'retired' ? 'warn' : 'brand')
+
+// Review-due / expiry governance (§13) surfaced as an amber/red flag alongside the review state.
+const govLabel = (g?: string) =>
+  g === 'expired' ? 'Expired' : g === 'review_overdue' ? 'Review overdue' : g === 'review_due_soon' ? 'Review due soon' : ''
+const govTone = (g?: string) => (g === 'expired' || g === 'review_overdue' ? 'err' : g === 'review_due_soon' ? 'warn' : 'neutral')
 
 export default function SimLab() {
   const { data, loading, error, refetch } = useAdminQuery<Resp>('/api/admin/lab/scenarios')
@@ -110,6 +120,19 @@ export default function SimLab() {
     try {
       await adminApi.post(`/api/admin/lab/scenarios/${id}/revise`, { new_code: newCode.trim() })
       flash(`Revised into new draft “${newCode.trim()}”.`)
+      refetch()
+    } catch (e) { fail(e) } finally { setBusy(false) }
+  }
+
+  async function doGovernance(id: number, r: ScenarioRow) {
+    const review = window.prompt('Review-due date (YYYY-MM-DD, blank to clear):', (r.review_due ?? '').slice(0, 10))
+    if (review === null) return
+    const expiry = window.prompt('Expiry date (YYYY-MM-DD, blank to clear):', (r.expires_at ?? '').slice(0, 10))
+    if (expiry === null) return
+    setBusy(true); setErr(''); setMsg('')
+    try {
+      await adminApi.patch(`/api/admin/lab/scenarios/${id}/governance`, { review_due: review.trim(), expires_at: expiry.trim() })
+      flash('Governance dates updated.')
       refetch()
     } catch (e) { fail(e) } finally { setBusy(false) }
   }
@@ -230,11 +253,17 @@ export default function SimLab() {
                       <td>{r.title}</td>
                       <td>{r.difficulty ? titleCase(r.difficulty) : '—'}</td>
                       <td><StatusBadge status={r.status} /></td>
-                      <td><Badge tone={reviewTone(r.review_state)}>{titleCase(r.review_state)}</Badge></td>
+                      <td>
+                        <Badge tone={reviewTone(r.review_state)}>{titleCase(r.review_state)}</Badge>
+                        {r.governance && r.governance !== 'ok' && (
+                          <>{' '}<Badge tone={govTone(r.governance)}>{govLabel(r.governance)}</Badge></>
+                        )}
+                      </td>
                       <td style={{ textAlign: 'right' }}>{r.attempts}</td>
                       <td>
                         <div className="row" style={{ gap: '.3rem', flexWrap: 'wrap' }}>
                           <button className="btn sm" disabled={busy} onClick={() => doValidate(r.id)}>Validate</button>
+                          <button className="btn sm secondary" disabled={busy} onClick={() => doGovernance(r.id, r)}>Dates</button>
                           {nxt && (
                             <button className="btn sm" disabled={busy} onClick={() => doReview(r.id, nxt)}>
                               → {titleCase(nxt)}
