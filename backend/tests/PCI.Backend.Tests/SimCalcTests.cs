@@ -254,4 +254,30 @@ public class SimCalcTests
         var bad = new[] { new SimCalc.CbsInputNode("x", "nope", 1, 1) };
         Assert.Throws<ArgumentException>(() => SimCalc.Cbs(bad));
     }
+
+    // ── Weighted physical progress ────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Progress_IsTheBudgetWeightedAverageOfPackageProgress()
+    {
+        var nodes = new[]
+        {
+            new SimCalc.ProgressInputNode("1.1", 40_000, 100),
+            new SimCalc.ProgressInputNode("1.2", 30_000, 50),
+            new SimCalc.ProgressInputNode("1.3", 30_000, 0),
+        };
+        var r = SimCalc.Progress(nodes);
+        Assert.Equal(55, r.OverallPercent, 4);      // (40k·100 + 30k·50 + 30k·0) / 100k
+        Assert.Equal(100_000, r.TotalWeight, 4);
+    }
+
+    [Fact]
+    public void Resolve_Progress_ReturnsOverallPercent()
+    {
+        var given = J("{\"nodes\":[" +
+            "{\"id\":\"1.1\",\"weight\":40000,\"percent\":100}," +
+            "{\"id\":\"1.2\",\"weight\":30000,\"percent\":50}," +
+            "{\"id\":\"1.3\",\"weight\":30000,\"percent\":0}]}");
+        Assert.Equal(55, (double)SimCalc.Resolve("progress", "overall_percent", given)!, 4);
+    }
 }

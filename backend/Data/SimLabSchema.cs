@@ -137,6 +137,9 @@ public static class SimLabSchema
         SeedScenario(db, "SC-EVM-001", "Read the S-curve and compute earned value", "scenario", "Technology", "intermediate", 18,
             "[\"earned_value\",\"forecasting\"]", "Interpret a five-month cost/value S-curve and compute the earned-value measures at the current period.",
             ConfigScurve);
+        SeedScenario(db, "GL-PRG-001", "Measure weighted physical progress", "guided_lab", "Manufacturing", "foundation", 12,
+            "[\"progress_measurement\"]", "Compute a project's overall percent-complete as the budget-weighted average of its work packages.",
+            ConfigProgress);
     }
 
     static void SeedScenario(Db db, string code, string title, string kind, string industry, string difficulty,
@@ -196,6 +199,18 @@ public static class SimLabSchema
            {"key":"critical_path","label":"Critical path (comma-separated activity IDs)","type":"set"},
            {"key":"float_C","label":"Total float of activity C (days)","type":"number"}],
          "tolerance":0.001,"pass_pct":70,"competencies":["schedule_analysis"]}
+        """;
+
+    const string ConfigProgress = """
+        {"task":"progress",
+         "prompt":"A production line has three work packages, each with a budget weight and its own percent-complete. Compute the project's overall physical progress as the budget-weighted average.",
+         "given":{"nodes":[
+           {"id":"1.1","name":"Tooling","weight":40000,"percent":100},
+           {"id":"1.2","name":"Assembly","weight":30000,"percent":50},
+           {"id":"1.3","name":"Commissioning","weight":30000,"percent":0}]},
+         "ask":[
+           {"key":"overall_percent","label":"Overall percent-complete (budget-weighted)","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["progress_measurement"]}
         """;
 
     const string ConfigScurve = """

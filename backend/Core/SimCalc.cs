@@ -306,6 +306,30 @@ public static class SimCalc
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────────
+    //  Physical progress — weighted percent-complete roll-up
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    public sealed record ProgressInputNode(string Id, double? Weight, double? Percent);
+
+    public sealed record ProgressResult(double OverallPercent, double TotalWeight);
+
+    /// <summary>
+    /// Overall physical percent-complete as a weight-weighted average of each work package's own
+    /// percent-complete: Σ(weight·percent) ÷ Σ(weight). Packages missing a weight or a percent are ignored
+    /// (a package with no weight contributes nothing to the roll-up). Zero total weight yields 0.
+    /// </summary>
+    public static ProgressResult Progress(IReadOnlyList<ProgressInputNode> input)
+    {
+        double wsum = 0, wp = 0;
+        foreach (var n in input)
+        {
+            if (n.Weight is not double w || n.Percent is not double p) continue;
+            wsum += w; wp += w * p;
+        }
+        return new ProgressResult(wsum == 0 ? 0 : R(wp / wsum), R(wsum));
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
     //  Answer resolution — the values a scenario can ask a student to compute
     // ─────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -351,6 +375,11 @@ public static class SimCalc
                     return r.Nodes.FirstOrDefault(n => n.Id == id)?.Variance;
                 }
                 return null;
+            }
+            case "progress":
+            {
+                var r = Progress(ParseProgress(given));
+                return key switch { "overall_percent" => (object?)r.OverallPercent, "total_weight" => r.TotalWeight, _ => null };
             }
             case "cpm":
             {
@@ -410,6 +439,20 @@ public static class SimCalc
                 string? parent = n.TryGetProperty("parent", out var p) && p.ValueKind == JsonValueKind.String ? p.GetString() : null;
                 double? val = n.TryGetProperty("value", out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : (double?)null;
                 list.Add(new WbsInputNode(id, parent, val));
+            }
+        return list;
+    }
+
+    static List<ProgressInputNode> ParseProgress(JsonElement given)
+    {
+        var list = new List<ProgressInputNode>();
+        if (given.TryGetProperty("nodes", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                var id = n.TryGetProperty("id", out var i) ? i.GetString() ?? "" : "";
+                double? weight = n.TryGetProperty("weight", out var w) && w.ValueKind == JsonValueKind.Number ? w.GetDouble() : (double?)null;
+                double? pct = n.TryGetProperty("percent", out var p) && p.ValueKind == JsonValueKind.Number ? p.GetDouble() : (double?)null;
+                list.Add(new ProgressInputNode(id, weight, pct));
             }
         return list;
     }

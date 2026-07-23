@@ -70,6 +70,24 @@ function GivenView({ task }: { task: Task }) {
       </table>
     )
   }
+  if (task.task === 'progress') {
+    const nodes = (g.nodes as { id: string; name?: string; weight?: number; percent?: number }[]) ?? []
+    return (
+      <table className="data">
+        <thead><tr><th>Package</th><th>Work</th><th>Weight</th><th>% complete</th></tr></thead>
+        <tbody>
+          {nodes.map((n) => (
+            <tr key={n.id}>
+              <td>{n.id}</td>
+              <td>{n.name ?? '—'}</td>
+              <td>{n.weight != null ? fmt(n.weight) : '—'}</td>
+              <td>{n.percent != null ? `${fmt(n.percent)}%` : '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
   if (task.task === 'cbs') {
     const nodes = (g.nodes as { id: string; parent: string | null; name?: string; budget?: number; actual?: number }[]) ?? []
     return (

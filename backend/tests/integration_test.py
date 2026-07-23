@@ -3352,6 +3352,14 @@ def test_simlab(admin):
     chk("43gg Assessment Mode withholds the computed schedule (no answer leaked)",
         c == 200 and subga.get("schedule") is None, (c, subga.get("schedule")))
 
+    # Progress lab: weighted physical percent-complete across work packages.
+    c, stp = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-PRG-001"})
+    pid2 = stp.get("attempt_id")
+    c, subp = jget("POST", f"/api/me/lab/attempts/{pid2}/submit", token=mtok, body={"answers": {"overall_percent": 55}})
+    pcomps = {x.get("competency") for x in subp.get("competencies", [])}
+    chk("43hh the progress lab grades the budget-weighted percent-complete to 100 (progress evidence)",
+        c == 200 and subp.get("score") == 100 and subp.get("passed") is True and "progress_measurement" in pcomps, (c, subp.get("score"), sorted(pcomps)))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.
