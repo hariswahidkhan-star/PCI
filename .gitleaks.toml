@@ -1,0 +1,37 @@
+# SQ-7 — gitleaks configuration for the secret-scanning CI gate.
+#
+# The gate runs `gitleaks` in filesystem mode (--no-git) over the checked-out tree, so it sees the
+# CURRENT committed files (the same surface audited when this gate was introduced: no real provider
+# keys are committed). It extends gitleaks' default rule set and adds a tightly-scoped allow-list for
+# the synthetic placeholders the adversarial test suites deliberately hard-code. Any NEW real secret
+# outside these narrow exceptions fails the build.
+#
+# Adding to the allow-list is a reviewed action — see docs/testing/SUPPRESSION_PROCESS.md. Prefer
+# NOT committing secrets at all (use env vars / CI secrets); the allow-list is only for values that
+# are provably non-sensitive test fixtures.
+
+title = "PCI gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Synthetic test placeholders and non-secret fixtures — not real credentials."
+
+# Test suites hard-code fake tokens to drive signature/HMAC verification paths. These are not real
+# secrets (they authenticate nothing outside the test's own mock servers).
+regexes = [
+  '''whsec_integration_test_secret''',
+  '''sk_test_integration''',
+  '''whsec_cv_13''',
+  '''cv_key''',
+]
+
+# Paths whose secret-shaped strings are, by construction, test fixtures. Scoped to the backend test
+# suite and frontend unit/e2e tests so production code is still fully scanned.
+paths = [
+  '''backend/tests/.*''',
+  '''.*\.test\.(ts|tsx|js|jsx)$''',
+  '''.*\.spec\.(ts|tsx|js|jsx)$''',
+  '''frontend/e2e/.*''',
+]

@@ -181,7 +181,7 @@ public static class PublicDocuments
         }));
 
         // Create a new document (metadata; file optional and can be added/replaced later).
-        app.MapPost("/api/admin/public-documents", async (HttpContext ctx) =>
+        app.MapPost("/api/admin/public-documents", (HttpContext ctx) =>
         {
             AllowUpload(ctx);
             return gate(ctx.Request, SECTION, adm => CreateOrFile(ctx, adm, db, log, null).GetAwaiter().GetResult());

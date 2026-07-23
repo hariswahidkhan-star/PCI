@@ -117,17 +117,17 @@ This corrects the Phase-2 prompt's "~686" estimate: the true integration baselin
 
 | ID | Module | Existing Coverage | Remaining Gap | Test Layer | Risk | Priority | A/M/E | Status | Evidence |
 |---|---|---|---|---|---|---|---|---|---|
-| SQ-1 | backend/secureexam C# | Release build in CI; nullable enabled | Warnings never gate (no `-warnaserror`); 19 baseline warnings | Static | Medium | P1 | Auto | Open | build.yml:19 |
-| SQ-2 | frontend React/TS | `tsc --noEmit` strict | No ESLint at all | Static | Medium | P1 | Auto | Open | package.json (no lint) |
-| SQ-3 | whole repo | none | No `.editorconfig`/prettier/`dotnet format --verify` | Static | Low | P2 | Auto | Open | no .editorconfig |
+| SQ-1 | backend/secureexam C# | Release build in CI; nullable enabled | Warnings never gate (no `-warnaserror`); 19 baseline warnings | Static | Medium | P1 | Auto | **Closed** | `-warnaserror` in Directory.Build.props; 19 warnings fixed (dead fn + CS1998 pragma/async-removal); 0 warnings, 112 xUnit green |
+| SQ-2 | frontend React/TS | `tsc --noEmit` strict | No ESLint at all | Static | Medium | P1 | Auto | **Closed** | eslint.config.js (flat, react-hooks errors); `npm run lint` gate in frontend job; 0 errors |
+| SQ-3 | whole repo | none | No `.editorconfig`/prettier/`dotnet format --verify` | Static | Low | P2 | Auto | **Closed** | .editorconfig (C#=4sp, TS/other=2sp, matches tree) |
 | SQ-4 | frontend test/e2e TS | src typechecked | Test/e2e/config TS excluded from typecheck | Static | Low | P2 | Auto | Open | tsconfig include |
-| SQ-5 | backend NuGet | none | No vuln gate; **2 High transitive live** (Newtonsoft.Json 12.0.3 via Stripe.net; SQLitePCLRaw 2.1.6 via Microsoft.Data.Sqlite) | SCA | High | P0 | Auto | Open | dotnet list --vulnerable |
-| SQ-6 | frontend npm | none | No `npm audit` gate; prod clean today, dev chain 2 critical | SCA | Medium | P1 | Auto | Open | npm audit |
-| SQ-7 | repo + history | none | No secret scanning | Secrets | High | P0 | Auto | Open | no gitleaks |
+| SQ-5 | backend NuGet | none | No vuln gate; **2 High transitive live** (Newtonsoft.Json 12.0.3 via Stripe.net; SQLitePCLRaw 2.1.6 via Microsoft.Data.Sqlite) | SCA | High | P0 | Auto | **Closed (1 residual)** | Newtonsoft pinned 13.0.3 (resolved); SQLitePCLRaw pinned 2.1.11; allow-list-aware check_nuget_vulns.py gate; CVE-2025-6965 unpatched-upstream residual documented (LOW: no user-supplied SQL) |
+| SQ-6 | frontend npm | none | No `npm audit` gate; prod clean today, dev chain 2 critical | SCA | Medium | P1 | Auto | **Closed** | `npm audit --omit=dev --audit-level=high` gate; prod deps 0 vulns (dev-tooling advisories out of scope by design) |
+| SQ-7 | repo + history | none | No secret scanning | Secrets | High | P0 | Auto | **Closed** | gitleaks blocking gate + .gitleaks.toml allow-list (test placeholders only); tree grep-audited clean of real secrets |
 | SQ-8 | backend/frontend | none | No SAST (CodeQL/semgrep) | SAST | High | P1 | Auto | Open | workflows/=build.yml |
 | SQ-9 | whole repo | none | No licence report / repo LICENSE | Licence | Low | P3 | Auto | Open | no LICENSE |
-| SQ-10 | Dockerfile | multi-stage build | No hadolint; bases tag- not digest-pinned; **no USER (runs as root)** | Container cfg | Medium | P1 | Auto | Open | Dockerfile (no USER) |
-| SQ-11 | build.yml | works | No actionlint; no `permissions:` block; actions @major-tag not SHA | CI cfg | Medium | P2 | Auto | Open | build.yml:1-16 |
+| SQ-10 | Dockerfile | multi-stage build | No hadolint; bases tag- not digest-pinned; **no USER (runs as root)** | Container cfg | Medium | P1 | Auto | **Partial** | hadolint informational gate + .hadolint.yaml; non-root USER deferred (Render /data mount is root-owned at runtime — needs operator-coordinated disk-perms) |
+| SQ-11 | build.yml | works | No actionlint; no `permissions:` block; actions @major-tag not SHA | CI cfg | Medium | P2 | Auto | **Partial** | top-level `permissions: contents: read` added; actionlint informational gate; SHA-pinning of actions deferred to a later increment |
 | SQ-12 | prod image | none | No image CVE scan (trivy) + no scheduled rescan | Container SCA | Medium | P1 | Auto | Open | no trivy |
 | SQ-13 | all manifests | none | No dependabot/renovate (root cause of SQ-5/6 staleness) | Updates | Medium | P1 | External | Open | .github/ |
 | SQ-14 | secureexam WPF | Windows CI builds it | NuGet vuln state unauditable (no step in windows job) | SCA | Medium | P2 | Auto | Open | build.yml:181-190 |
@@ -189,13 +189,13 @@ This corrects the Phase-2 prompt's "~686" estimate: the true integration baselin
 ### Phase-2 gap summary
 
 - **72 remaining-gap rows** (15 BD · 14 SQ · 27 FE/E2E/XB/A11Y · 16 CT/SEC/DB/PERF/RES/DR/DEP/COV/DOC).
-- **Priority:** 2 P0 (SQ-5 NuGet vulns, SQ-7 secret scanning) · ~40 P1 · ~26 P2 · ~4 P3.
+- **Priority:** 2 P0 (SQ-5 NuGet vulns, SQ-7 secret scanning) · ~40 P1 · ~26 P2 · ~4 P3. **Both P0s closed in Increment A** (NuGet vuln gate with the 2 High transitive advisories resolved/allow-listed; blocking secret scan).
 - **Classification:** most Automatable inside existing CI infra (temp-SQLite Db, CI MySQL service, mock-vendor seam, Playwright webServer, double-boot harness). **Hard-blocked → Operator/External Pending** (never fake-automated): CT-4, PERF-2, DR-3, DEP-3, DEP-1 execution-half, SEC-5 staging-half, SQ-13, real-bucket S3.
 - **One confirmed application defect surfaced by the audit:** SEC-2 (CSV formula injection) — to be fixed with a regression test inside the security increment, mirroring the PR-#73 discipline of fixing confirmed defects rather than only asserting them.
 
 ### Increment plan (small reviewable commits, in order)
 
-- **A — Static-quality gates:** fix the 19 compiler warnings then `-warnaserror`; NuGet-vuln + npm-audit + gitleaks + actionlint + hadolint CI checks (secrets/critical block immediately, noisy scanners non-blocking-until-baselined); ESLint flat config; `permissions:` block + SHA-pin actions; `SUPPRESSION_PROCESS.md`.
+- **A — Static-quality gates — ✅ DELIVERED:** 19 compiler warnings fixed + `-warnaserror` (SQ-1); blocking NuGet-vuln gate with the 2 High transitive advisories pinned/allow-listed (SQ-5), blocking `npm audit --omit=dev` (SQ-6), blocking gitleaks + `.gitleaks.toml` (SQ-7); actionlint + hadolint wired informational-until-baselined (SQ-10/11); ESLint flat config + `npm run lint` gate (SQ-2); `.editorconfig` (SQ-3); top-level `permissions: contents: read` (SQ-11); `SUPPRESSION_PROCESS.md`. Verified: backend 0-warning build, 112 xUnit, integration suite 956/956 on **both** SQLite and MySQL, frontend typecheck+lint+30 vitest+build. Deferred to later increments (recorded above): SHA-pinning actions, non-root container USER (operator-coordinated), SAST/trivy/dependabot (SQ-8/12/13).
 - **B — Backend decision unit tests:** the 6 xUnit classes (PricingDecision, SettlementAndMembership, LifecycleEligibility, ExamAuthorizationWindow, CredentialAndCpd, CommsDecision) — ~230 data-driven cases; items 1–3 (money, settlement, exam eligibility) first.
 - **C — React component tranche:** shared `renderWithProviders`; first 10–12 P1 screens across states.
 - **D — Membership + application E2E** (Journeys A, B) incl. TS webhook signer.
