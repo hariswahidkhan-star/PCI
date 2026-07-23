@@ -74,6 +74,9 @@ jobs:
       - name: Impersonation read-only regression (P0-1 — central fail-closed enforcement)
         run: python3 tests/impersonation_readonly_test.py
 
+      - name: Stripe fulfillment replay-safety regression (P0-2 — paid-gate, async success, invoice replay)
+        run: python3 tests/payments_replay_test.py
+
       - name: Founding-stage suite (codes, applications, waiver settlement)
         run: python3 tests/founding_test.py
 
