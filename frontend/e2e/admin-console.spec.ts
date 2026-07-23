@@ -3,9 +3,9 @@ import { test, expect } from '@playwright/test'
 import { OWNER_ADMIN, apiLoginAsE2EAdmin, captureStoryEvidence, uniqueEmail } from './util'
 
 // Admin console (React SPA under /admin/). The Development boot seeds a bootstrap owner
-// (owner@pci.local / changeme-owner) flagged must_change_pw, so a successful sign-in lands on
-// the forced "set a new password" gate — asserted here WITHOUT completing the change, keeping
-// the seeded credentials valid for every subsequent run against the same database.
+// (owner@pci.local / changeme-owner). Sign-in lands straight in the console — there is no forced
+// "set a new password" gate; password changes are self-service in Settings → Security. We never
+// change the seeded password here, keeping the seeded credentials valid for every subsequent run.
 test.describe('admin console', () => {
   test('an unauthenticated visit redirects to the staff sign-in screen', async ({ page }) => {
     await page.goto('/admin/')
@@ -15,17 +15,17 @@ test.describe('admin console', () => {
     await expect(page.getByLabel('Password')).toBeVisible()
   })
 
-  test('the seeded owner signs in and is forced to set a new password before the console opens', async ({ page }) => {
+  test('the seeded owner signs in and lands straight in the console with no forced password prompt', async ({ page }) => {
     await page.goto('/admin/login')
     await page.getByLabel('Email address').fill(OWNER_ADMIN.email)
     await page.getByLabel('Password').fill(OWNER_ADMIN.password)
     await page.getByRole('button', { name: 'Sign in' }).click()
 
-    // must_change_pw gate: the console stays closed until a new password is set (also enforced
-    // server-side for every /api/admin/* call). We assert the gate and stop — never change it.
-    await expect(page.getByRole('heading', { name: 'Set a new password' })).toBeVisible()
-    await expect(page.getByLabel('New password', { exact: true })).toBeVisible()
-    await expect(page.getByLabel('Confirm password')).toBeVisible()
+    // No forced "set a new password" gate: the console opens directly. Password changes are
+    // self-service in Settings → Security, so we assert the gate is absent and the console chrome
+    // is present — leaving the seeded password untouched for every subsequent run.
+    await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Set a new password' })).toHaveCount(0)
   })
 
   test('a failed staff sign-in shows an error and keeps the console closed', async ({ page }) => {
