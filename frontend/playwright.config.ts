@@ -3,10 +3,9 @@ import { defineConfig, devices } from '@playwright/test'
 // Browser end-to-end + accessibility (axe) over the public site, which the ASP.NET backend serves
 // directly. Playwright boots the built backend DLL as its webServer and waits for /api/health.
 //
-// Local note: this sandbox blocks a local server bind, so these specs are exercised on CI runners
-// (which boot the backend exactly as the `backend` CI job does). The CI `e2e` job is non-blocking
-// (continue-on-error) until it has a green run history — mirroring how the repo already treats the
-// optional S3/moto step — so an unproven browser run can never turn the pipeline red.
+// The CI `e2e` job is GATING: every spec here must be deterministic (auto-waiting locators and
+// expect() polls only — no fixed sleeps) and independent, so the suite passes repeatedly against
+// the same reused dev database as well as a fresh CI one.
 const PORT = process.env.E2E_PORT || '8080'
 const BASE = process.env.E2E_BASE_URL || `http://127.0.0.1:${PORT}`
 
@@ -16,6 +15,9 @@ const executablePath = process.env.PW_CHROMIUM_PATH || undefined
 
 export default defineConfig({
   testDir: './e2e',
+  // Stages the built React SPAs into backend/wwwroot when absent (fresh CI checkout) — the
+  // portal/admin specs need the backend to actually serve /app/ and /admin/. No-op locally.
+  globalSetup: './e2e/global-setup.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
