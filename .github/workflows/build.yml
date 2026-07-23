@@ -71,6 +71,9 @@ jobs:
           pip install --quiet --break-system-packages pypdf || pip install --quiet pypdf || true
           if [ -f tests/integration_test.py ]; then python3 tests/integration_test.py; else echo "no integration suite yet"; fi
 
+      - name: Impersonation read-only regression (P0-1 — central fail-closed enforcement)
+        run: python3 tests/impersonation_readonly_test.py
+
       - name: Founding-stage suite (codes, applications, waiver settlement)
         run: python3 tests/founding_test.py
 
