@@ -6,7 +6,7 @@ The repository now has deeper deterministic coverage for the public visitor, can
 
 This document deliberately does not convert test discovery into a pass. The current sandbox has no .NET SDK or browser engines, and repository writes are denied to the GitHub integration. Therefore:
 
-- the latest upstream PR head `d1adf2f` is independently green in GitHub Actions run [#350](https://github.com/hariswahidkhan-star/PCI/actions/runs/29974673700), including backend SQLite/MySQL, backend unit, frontend, SecureExam Linux/Windows and the prior browser suite;
+- the latest upstream PR head `02b6ec7` is independently green in GitHub Actions run [#352](https://github.com/hariswahidkhan-star/PCI/actions/runs/29975188951), including backend SQLite/MySQL, 210 backend `[Fact]`/`[Theory]` methods, frontend, SecureExam Linux/Windows and the prior browser suite;
 - the deeper local change set passes every runnable local gate (six backend logic suites, Python/JavaScript syntax, ESLint with zero errors, TypeScript, 30 Vitest tests, production builds, npm production audit, and Playwright discovery of all 60 executions);
 - the new .NET integration assertions and browser journeys remain **PENDING-CI** until the local commits can be pushed by a credential with repository write access; and
 - live Google/Stripe/vendor/QuickBooks/Windows-GUI journeys remain **BLOCKED** until approved sandboxes or an operator environment exist.

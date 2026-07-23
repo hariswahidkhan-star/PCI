@@ -7,7 +7,7 @@ _Audit-first output of the Master Incremental Testing Programme (Section 1). Pro
 The **Existing test surface** and 37-module audit below are intentionally retained as a frozen historical baseline. They must not be read as the current state. The delivered-increments log is the change record; PR #73 plus the current remediation branch have produced:
 
 - approximately 1,100 Python `chk(...)` assertions across the backend suites, including 955 in the principal live-HTTP integration suite;
-- a `PCI.Backend.Tests` xUnit project with 141 `[Fact]`/`[Theory]` test methods, in addition to the SecureExam tests;
+- a `PCI.Backend.Tests` xUnit project with 210 `[Fact]`/`[Theory]` test methods, in addition to the SecureExam tests;
 - five Vitest/React Testing Library files with 30 passing frontend tests;
 - fourteen Playwright specs with 40 primary Chromium tests / 60 configured project executions, including the complete direct-purchase certification lifecycle, seven deterministic test-user states, three-certification catalogue/detail consistency, public application-to-admin handoffs, support/privacy, two-institution isolation, Axe scans, Firefox/WebKit smoke, and mobile smoke; and
 - a gating CI E2E job (the older non-blocking entry in the historical log records the suite's introduction, not its present setting).
