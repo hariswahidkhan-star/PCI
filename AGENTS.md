@@ -34,7 +34,7 @@ and a **React/Vite frontend** (`frontend/`) for the student and admin SPAs. `sec
   `ASPNETCORE_ENVIRONMENT=Development`.
 - Auth routes are split: **admin/owner** login is `POST /api/admin/auth/login`; **student** login is
   `POST /api/login`; student signup is `POST /api/register`. First-run owner is
-  `owner@pci.local` / `changeme-owner` (forced password change on first login).
+  `owner@pci.local` / `changeme-owner` (no forced change — update the password in Settings → Security).
 - Optional demo data: set `SEED_DEMO_EXAM=true` (seeds the demo question bank) and
   `DEMO_STUDENT_PASSWORD=...` (creates `student@pci.local`). This does **not** grant a ready-to-sit exam
   entitlement — sitting an exam still requires payment/eligibility/scheduling (payments need Stripe keys,

@@ -91,7 +91,7 @@ export async function apiLoginAsE2EAdmin(request: APIRequestContext, page?: Page
   expect(res.ok(), `E2E admin login should succeed (got ${res.status()})`).toBeTruthy()
   const body = (await res.json()) as { token?: string; admin?: { must_change_pw?: boolean } }
   expect(body.token, 'admin login response should carry a session token').toBeTruthy()
-  expect(body.admin?.must_change_pw, 'E2E operator should not be behind the bootstrap password gate').toBe(false)
+  expect(body.admin?.must_change_pw, 'E2E operator should be seeded with a real password (advisory flag clear)').toBe(false)
   const token = body.token as string
   e2eAdminTokenCache = token
   await plant(token)

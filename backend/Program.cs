@@ -238,29 +238,6 @@ app.Use(async (ctx, next) =>
     await next();
 });
 
-// Enforce the forced-password-change server-side, not just in the UI. An admin still flagged
-// must_change_pw (e.g. logged in with the default bootstrap password) can reach ONLY logout,
-// their own profile, and the change-password endpoint until they set a new password — so a
-// direct API caller can't bypass the change the way the SPA gate can't. Read paths and the auth
-// endpoints stay open so the change flow itself works.
-var _mcpAllow = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-{ "/api/admin/auth/login", "/api/admin/auth/logout", "/api/admin/me", "/api/admin/me/password", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover" };
-app.Use(async (ctx, next) =>
-{
-    var path = ctx.Request.Path.Value ?? "";
-    if (path.StartsWith("/api/admin/", StringComparison.OrdinalIgnoreCase) && !_mcpAllow.Contains(path))
-    {
-        var a = Auth.AdminFromReq(ctx.Request, db);
-        if (a is not null && a.MustChangePw)
-        {
-            ctx.Response.StatusCode = 403;
-            await ctx.Response.WriteAsJsonAsync(new { error = "must_change_password", message = "Set a new password before using the console." });
-            return;
-        }
-    }
-    await next();
-});
-
 var stripeKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
 if(!string.IsNullOrEmpty(stripeKey)) Stripe.StripeConfiguration.ApiKey = stripeKey;
 if (string.IsNullOrEmpty(stripeKey)) Console.WriteLine("[boot] STRIPE_SECRET_KEY not set — payment endpoints will answer 503 until configured.");
@@ -912,9 +889,11 @@ app.MapPost("/api/admin/team", async (HttpRequest req) =>
         if (ids.Length > 0) certScope = JsonSerializer.Serialize(ids);
     }
     var tempPw = S(b, "password") ?? Security.RandomHex(5);
-    // Whether a new admin must change their password at first sign-in is operator-configurable
-    // (Settings → 'admin_force_password_change', default on). A per-request `force_password_change`
-    // still overrides it either way.
+    // must_change_pw is advisory only: it marks an admin still on an issued temp password (surfaced
+    // via /api/admin/me and the deploy status endpoint) and never blocks the console — password
+    // changes are self-service in Settings → Security. Whether new admins get the flag is
+    // operator-configurable (Settings → 'admin_force_password_change', default on). A per-request
+    // `force_password_change` still overrides it either way.
     var forcePw = (H.GetEl(b, "force_password_change") is { } fpc
         ? fpc.ValueKind is JsonValueKind.True || (fpc.ValueKind is JsonValueKind.String && fpc.GetString() is "1" or "true")
         : Settings.Bool(db, "admin_force_password_change", true)) ? 1 : 0;

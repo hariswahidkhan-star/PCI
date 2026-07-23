@@ -268,8 +268,9 @@ def answer_key(item_ids):
     return {str(r[0]): r[1] for r in rows}
 
 def clear_must_change(token, newpw="Op3rator!Pw"):
-    """A default/freshly-provisioned admin is flagged must_change_pw; the server blocks the console
-    (same gate the SPA enforces) until a new password is set. Clear it so the token can operate."""
+    """Set a real password on a default/freshly-provisioned admin. must_change_pw is advisory only
+    (nothing blocks the console); this just moves the account off the seeded/temp password so the
+    rest of the suite works with a known value."""
     jget("POST", "/api/admin/me/password", token=token, body={"new_password": newpw})
     return token
 
@@ -2792,17 +2793,19 @@ def run(proc):
 
     # ---------- 7. RBAC probes ----------
     print("\n=== 7. RBAC per role ===")
-    # must_change_password gate: a freshly-provisioned admin (temp password) is blocked from the
-    # console server-side until it sets a password — the SPA gate alone can be bypassed by a direct
-    # API caller, so this is enforced in middleware too.
+    # must_change_pw is advisory only: a freshly-provisioned admin (temp password) can use the
+    # console immediately — no server-side gate, no SPA gate. The flag is still tracked (and
+    # cleared by a self-service password change) so the UI and status endpoints can surface it.
     c, mcb = jget("POST", "/api/admin/team", token=admin, body={"email": "mcp@pci.test", "name": "M", "role": "student_manager"})
     c, mcl = jget("POST", "/api/admin/auth/login", body={"email": "mcp@pci.test", "password": mcb.get("temp_password", "")})
     mctok = mcl.get("token")
     c, mcbody = jget("GET", "/api/admin/members", token=mctok)
-    chk("7·mcp1 blocked before password change (403 must_change_password)", c == 403 and mcbody.get("error") == "must_change_password", (c, mcbody))
-    chk("7·mcp2 own profile stays reachable (allow-listed)", jget("GET", "/api/admin/me", token=mctok)[0] == 200)
-    chk("7·mcp3 password change succeeds", jget("POST", "/api/admin/me/password", token=mctok, body={"new_password": "Op3rator!Pw"})[0] == 200)
-    chk("7·mcp4 console reachable after change (200)", jget("GET", "/api/admin/members", token=mctok)[0] == 200)
+    chk("7·mcp1 console open on temp password (200, no forced change)", c == 200, (c, mcbody))
+    c, me = jget("GET", "/api/admin/me", token=mctok)
+    chk("7·mcp2 advisory must_change_pw flag set on fresh admin", c == 200 and me.get("must_change_pw") is True, (c, me.get("must_change_pw")))
+    chk("7·mcp3 self-service password change succeeds", jget("POST", "/api/admin/me/password", token=mctok, body={"new_password": "Op3rator!Pw"})[0] == 200)
+    c, me = jget("GET", "/api/admin/me", token=mctok)
+    chk("7·mcp4 flag cleared after change", c == 200 and me.get("must_change_pw") is False, (c, me.get("must_change_pw")))
     def make_admin(role):
         c, b = jget("POST", "/api/admin/team", token=admin, body={"email": f"{role}@pci.test", "name": role, "role": role})
         tp = b.get("temp_password")
