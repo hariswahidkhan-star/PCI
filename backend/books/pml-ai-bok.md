@@ -1,17 +1,9 @@
-<<<<<<<< HEAD:backend/books/pml-ai-bok.md
 # PCI Project Management Leader – AI — Body of Knowledge
-========
-# PCI AI Project Management Leader — Body of Knowledge
->>>>>>>> origin/main:backend/books/pdl-ai-bok.md
 
 
 ## Foreword
 
-<<<<<<<< HEAD:backend/books/pml-ai-bok.md
 Every organisation that matters delivers its strategy through projects, and every project stands or falls on the quality of its leadership. The Project Controls Institute (PCI) created the PCI Project Management Leader – AI (PCI PML-AI) credential, and this Body of Knowledge that underpins it, for one purpose: to define what a competent project delivery leader must know and be able to do in an era in which artificial intelligence has become part of the everyday machinery of professional work.
-========
-Every organisation that matters delivers its strategy through projects, and every project stands or falls on the quality of its leadership. The Project Controls Institute (PCI) created the PCI AI Project Management Leader (PCI PML-AI) credential, and this Body of Knowledge that underpins it, for one purpose: to define what a competent project management leader must know and be able to do in an era in which artificial intelligence has become part of the everyday machinery of professional work.
->>>>>>>> origin/main:backend/books/pdl-ai-bok.md
 
 The Institute's position on that machinery is deliberate and unambiguous: **AI proposes; the professional disposes.** AI can draft a schedule, surface a risk, forecast a cost outcome or summarise a contract — but every such output must be explainable, validated and owned by a competent human before it informs a decision. This volume therefore treats AI neither as a threat nor as a novelty, but as an instrument whose value depends entirely on the judgement, accountability and professionalism of the person wielding it.
 
@@ -21,11 +13,7 @@ This Body of Knowledge is the authoritative reference for the PCI PML-AI examina
 
 ## About this credential
 
-<<<<<<<< HEAD:backend/books/pml-ai-bok.md
 The PCI Project Management Leader – AI (PCI PML-AI) is an **examination-based** professional credential: it is earned solely by demonstrating competence in the PCI PML-AI examination, which is built directly on this Body of Knowledge. It is awarded by the Project Controls Institute on its own authority as a professional certification body, and forms part of the PCI AI Project Leadership Certification Suite.
-========
-The PCI AI Project Management Leader (PCI PML-AI) is an **examination-based** professional credential: it is earned solely by demonstrating competence in the PCI PML-AI examination, which is built directly on this Body of Knowledge. It is awarded by the Project Controls Institute on its own authority as a professional certification body, and forms part of the PCI AI Project Leadership Certification Suite.
->>>>>>>> origin/main:backend/books/pdl-ai-bok.md
 
 Its scope is comprehensive project management, leadership and delivery: initiation and business justification, governance, planning and execution, scope and stakeholder leadership, procurement and commercial delivery, integrated cost, schedule and risk management, predictive, agile and hybrid delivery, quality and change, sustainability, benefits realisation and closure — together with the governed, responsible use of AI in project management. It is intended for project managers, delivery leads, PMO professionals and programme practitioners who lead delivery, and for those preparing to step into such roles.
 
@@ -1008,11 +996,7 @@ Artificial intelligence is changing stakeholder leadership from a periodically r
 
 ### 8.10 What the leader automates — and what the leader validates
 
-<<<<<<<< HEAD:backend/books/pml-ai-bok.md
 The certified Project Management Leader – AI draws a deliberate boundary between automation and validation. Suitable for automation are the mechanical layers of the competency: collation of stakeholder data, first-draft communication tailoring, sentiment and engagement analytics, distribution-list hygiene, and the routine tracking of actions arising from engagement events. Reserved for human validation are the layers where meaning and relationships are at stake: the interpretation of sentiment signals, the classification of any stakeholder's attitude or influence, the wording of sensitive messages, and every decision about who is engaged, when, and by whom. A model may suggest that a sponsor's confidence is declining; only the leader can test that inference in conversation, understand its causes and decide how to respond. No AI-generated communication should reach a stakeholder without review by an accountable professional, and no stakeholder should ever discover that a message concerning them was machine-authored and unowned.
-========
-The certified AI Project Management Leader draws a deliberate boundary between automation and validation. Suitable for automation are the mechanical layers of the competency: collation of stakeholder data, first-draft communication tailoring, sentiment and engagement analytics, distribution-list hygiene, and the routine tracking of actions arising from engagement events. Reserved for human validation are the layers where meaning and relationships are at stake: the interpretation of sentiment signals, the classification of any stakeholder's attitude or influence, the wording of sensitive messages, and every decision about who is engaged, when, and by whom. A model may suggest that a sponsor's confidence is declining; only the leader can test that inference in conversation, understand its causes and decide how to respond. No AI-generated communication should reach a stakeholder without review by an accountable professional, and no stakeholder should ever discover that a message concerning them was machine-authored and unowned.
->>>>>>>> origin/main:backend/books/pdl-ai-bok.md
 
 ### 8.11 Model risk, data protection and human accountability
 
@@ -2840,11 +2824,7 @@ D. The model refuses to generate output outside its validated boundary, so no fu
 
 ### Responsible AI as a delivery discipline
 
-<<<<<<<< HEAD:backend/books/pml-ai-bok.md
 Responsible AI is the discipline of using artificial intelligence in ways that realise its benefits without transferring unmanaged harm to individuals, to the organisation or to the project itself. For the Project Management Leader – AI it is not an abstract ethical debate but a delivery competence. Every AI use on a project — an estimating model, a schedule-risk predictor, a generative assistant drafting communications, a tool that shortlists suppliers or allocates people to work — creates obligations that must be identified, assessed and controlled with the same rigour the profession applies to cost, schedule and risk. The doctrine that governs this entire Body of Knowledge applies here in its strongest form: **AI proposes; the professional disposes.** An AI output remains a proposal until a competent, named human has understood it, validated it and taken ownership of the decision it informs. Responsible AI is the framework that makes that ownership real rather than rhetorical.
-========
-Responsible AI is the discipline of using artificial intelligence in ways that realise its benefits without transferring unmanaged harm to individuals, to the organisation or to the project itself. For the AI Project Management Leader it is not an abstract ethical debate but a delivery competence. Every AI use on a project — an estimating model, a schedule-risk predictor, a generative assistant drafting communications, a tool that shortlists suppliers or allocates people to work — creates obligations that must be identified, assessed and controlled with the same rigour the profession applies to cost, schedule and risk. The doctrine that governs this entire Body of Knowledge applies here in its strongest form: **AI proposes; the professional disposes.** An AI output remains a proposal until a competent, named human has understood it, validated it and taken ownership of the decision it informs. Responsible AI is the framework that makes that ownership real rather than rhetorical.
->>>>>>>> origin/main:backend/books/pdl-ai-bok.md
 
 The chapter follows a single control loop: principles supply the criteria; regulation converts several of them into binding obligations; risk assessment determines what proportionate control looks like for a given use; and explainability, validation and assurance are how that control is exercised in practice.
 
@@ -3162,11 +3142,7 @@ The centre enters service ahead of the compliance date. The deferred "could have
 
 # PCI PML-AI Body of Knowledge — Glossary of Terms
 
-<<<<<<<< HEAD:backend/books/pml-ai-bok.md
 This glossary consolidates the key terms of the PCI Project Management Leader – AI (PCI PML-AI) Body of Knowledge, Chapters 1–24. Each term is defined once here and carries the same meaning wherever it appears in the Body of Knowledge, the examination blueprint and the Institute's study materials. Candidates preparing for the PCI PML-AI examination should treat these definitions as authoritative.
-========
-This glossary consolidates the key terms of the PCI AI Project Management Leader (PCI PML-AI) Body of Knowledge, Chapters 1–24. Each term is defined once here and carries the same meaning wherever it appears in the Body of Knowledge, the examination blueprint and the Institute's study materials. Candidates preparing for the PCI PML-AI examination should treat these definitions as authoritative.
->>>>>>>> origin/main:backend/books/pdl-ai-bok.md
 
 **Agile delivery** — An iterative, incremental approach in which requirements and solutions evolve through short, time-boxed cycles of planning, delivery and review. Value is released progressively and priorities are reordered as learning emerges.
 
