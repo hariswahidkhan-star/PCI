@@ -118,7 +118,7 @@ test.describe('admin student operations', () => {
       && response.request().method() === 'POST')
     await reconRow.getByRole('button', { name: 'Reverse' }).click()
     expect((await reverseResponsePromise).ok()).toBeTruthy()
-    await expect(page.getByRole('status')).toContainText(`Payment #${paid.payment_id} reversed`)
+    await expect(page.getByRole('status').filter({ hasText: `Payment #${paid.payment_id} reversed` })).toBeVisible()
     await expect(reconRow).toContainText('refunded')
     await captureStoryEvidence(page, testInfo, 'G4-D4', 'reconciled-payment-reversed')
 

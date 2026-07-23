@@ -11,6 +11,20 @@
   if(!BASE) return;
   /* publish the resolved base so inline form handlers on this page pick up the same-origin default */
   window.PCI_API_BASE=BASE;
+
+  /* Newsletter must bind even when /api/content is slow/unavailable — otherwise Subscribe is a no-op. */
+  var btn=document.getElementById('nlBtn'), em=document.getElementById('nlEmail');
+  if(btn&&em){
+    btn.addEventListener('click',function(){
+      var v=(em.value||'').trim();
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ em.focus(); return; }
+      btn.disabled=true;
+      fetch(BASE+'/api/newsletter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v})})
+        .then(function(){btn.textContent='Subscribed \u2713';})
+        .catch(function(){btn.disabled=false;});
+    });
+  }
+
   var ctrl=('AbortController' in window)?new AbortController():null;
   if(ctrl) setTimeout(function(){ctrl.abort();},3000);
   fetch(BASE+'/api/content',{signal:ctrl&&ctrl.signal}).then(function(r){return r.json();}).then(function(d){
@@ -38,18 +52,6 @@
       x.onclick=function(){bar.remove();try{sessionStorage.setItem('pciannx','1');}catch(e){}};
       bar.appendChild(x);
       document.body.insertBefore(bar,document.body.firstChild);
-    }
-    /* newsletter form -> backend */
-    var btn=document.getElementById('nlBtn'), em=document.getElementById('nlEmail');
-    if(btn&&em){
-      btn.addEventListener('click',function(){
-        var v=(em.value||'').trim();
-        if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ em.focus(); return; }
-        btn.disabled=true;
-        fetch(BASE+'/api/newsletter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v})})
-          .then(function(){btn.textContent='Subscribed \u2713';})
-          .catch(function(){btn.disabled=false;});
-      });
     }
   }).catch(function(){/* backend unreachable: site stays fully static */});
 })();

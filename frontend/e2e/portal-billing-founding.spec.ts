@@ -43,11 +43,8 @@ test.describe('billing, discount and founding journeys', () => {
     await drawer.locator('.field').filter({ hasText: 'Window closes' }).locator('input').fill(closes)
     await drawer.locator('.field').filter({ hasText: 'Max total uses' }).locator('input').fill('2')
     await drawer.getByLabel(/Require an application/).check()
-    // Nested founding criteria card — click the label text (Playwright setChecked fights the controlled input).
-    const autoApprove = drawer.locator('label').filter({ hasText: /Auto-approve applications that meet the criteria/ })
-    await expect(autoApprove.locator('input[type="checkbox"]')).toBeChecked()
-    await autoApprove.click()
-    await expect(autoApprove.locator('input[type="checkbox"]')).not.toBeChecked()
+    // Checking "Require an application" defaults auto-approve off (board review).
+    await expect(drawer.locator('label').filter({ hasText: /Auto-approve applications that meet the criteria/ }).locator('input[type="checkbox"]')).not.toBeChecked()
     await drawer.locator('.field').filter({ hasText: 'Minimum experience (years)' }).locator('input').fill('5')
     const foundingCreatePromise = page.waitForResponse((response) =>
       response.url().endsWith('/api/admin/codes') && response.request().method() === 'POST')
