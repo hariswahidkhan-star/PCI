@@ -363,6 +363,13 @@ public static class StudentExam
             if (priorForPayment is not null) return Results.Json(new { error = "payment_already_used" }, statusCode: 400);
             var submittedForPayment = db.QueryOne(@"SELECT a.id FROM exam_attempts a JOIN exam_bookings bk ON bk.id=a.booking_id WHERE bk.payment_id=? AND a.kind='exam' AND a.status='submitted' LIMIT 1", ent["id"]);
             if (submittedForPayment is not null) return Results.Json(new { error = "exam_already_taken" }, statusCode: 400);
+            // Retake waiting period (P0-7): a retake seat carries a persisted retake_wait_until (set at
+            // seat creation from the last failed sitting + the configured cool-off). Block scheduling until it
+            // passes; an admin can waive it (Exam Exceptions → waive waiting period), which clears the date.
+            var retakeWaitUntil = H.Str(db.QueryOne("SELECT retake_wait_until FROM exam_authorizations WHERE payment_id=?", ent["id"])?["retake_wait_until"]);
+            if (!string.IsNullOrEmpty(retakeWaitUntil) && !H.IsPast(retakeWaitUntil))
+                return Results.Json(new { error = "retake_wait_active", retake_wait_until = retakeWaitUntil,
+                    message = $"A retake cannot be scheduled until the waiting period ends on {retakeWaitUntil} UTC." }, statusCode: 400);
             var scheduledAt = H.GetS(b, "scheduled_at");
             var timezone = H.GetS(b, "timezone");
             if (scheduledAt is null || H.JsMillis(scheduledAt) < DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 2 * 3600_000)
