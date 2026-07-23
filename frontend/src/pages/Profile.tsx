@@ -260,9 +260,11 @@ function TwoFactorCard() {
         </div>
       )}
 
-      {status.enabled && !recovery && (
+      {status.enabled && (
         <div>
-          <p><span className="badge ok">Enabled</span> <span className="muted small">Recovery codes remaining: {status.recovery_remaining}</span></p>
+          {!recovery && (
+            <p><span className="badge ok">Enabled</span> <span className="muted small">Recovery codes remaining: {status.recovery_remaining}</span></p>
+          )}
           <button className="btn secondary" disabled={busy} onClick={disable}>Turn off 2FA</button>
         </div>
       )}

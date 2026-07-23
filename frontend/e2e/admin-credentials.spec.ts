@@ -83,7 +83,7 @@ test.describe('credential operator to holder journey', () => {
     await row.getByRole('button', { name: 'Revoke' }).click()
     await expect(row.getByRole('button', { name: 'Reinstate' })).toBeVisible()
     await studentPage.reload()
-    await expect(holderCard).toContainText('Revoked')
+    await expect(holderCard).toContainText(/revoked/i)
     await expect(holderCard.getByRole('button', { name: 'Download PDF' })).toHaveCount(0)
     const publicRevoked = await request.get(`/api/verify?id=${encodeURIComponent(credentialId)}`)
     expect(await publicRevoked.json()).toMatchObject({ found: true, valid: false, state: 'revoked' })

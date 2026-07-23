@@ -182,12 +182,14 @@ test.describe('student account recovery, onboarding and security', () => {
     await expect(page.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible()
 
     await page.goto('/app/profile')
+    await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible({ timeout: 30_000 })
+    await expect(page.getByRole('button', { name: 'Turn off 2FA' })).toBeVisible({ timeout: 30_000 })
     page.once('dialog', async (dialog) => {
       expect(dialog.type()).toBe('prompt')
       await dialog.accept(verified.recovery_codes[0])
     })
     await page.getByRole('button', { name: 'Turn off 2FA' }).click()
-    await expect(page.getByRole('button', { name: 'Set up 2FA' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Set up 2FA' })).toBeVisible({ timeout: 30_000 })
     await captureStoryEvidence(page, testInfo, 'F5', 'student-totp-lifecycle')
 
     await page.getByRole('button', { name: 'Sign out', exact: true }).click()

@@ -69,7 +69,7 @@ test.describe('student records handed off to PCI operators', () => {
     await expect(adminRow).toBeVisible({ timeout: 15_000 })
     await adminRow.click()
     await expect(adminPage.getByText('Recipients (1)')).toBeVisible()
-    await expect(adminPage.getByText(student.email, { exact: true })).toBeVisible()
+    await expect(adminPage.getByText(student.email, { exact: true }).first()).toBeVisible()
     await expect(adminPage.getByText('Acknowledgements')).toBeVisible()
     await expect(adminPage.getByText('Total downloads')).toBeVisible()
     await captureStoryEvidence(adminPage, testInfo, 'E4-G17', 'document-admin-audit')

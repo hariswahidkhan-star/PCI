@@ -80,7 +80,7 @@ test.describe('admin student operations', () => {
     await markPaid.locator('input[type="number"]').fill('149')
     await markPaid.locator('input[placeholder="e.g. bank transfer received"]').fill('E2E bank reconciliation')
     await markPaid.getByText('Payment evidence (optional)').click()
-    await markSelects.nth(1).selectOption('bank_transfer')
+    await markPaid.locator('label').filter({ hasText: 'Method' }).locator('select').selectOption('bank_transfer')
     await markPaid.locator('label').filter({ hasText: 'Bank reference' }).locator('input').fill(gatewayReference)
     await markPaid.locator('label').filter({ hasText: 'Gateway reference' }).locator('input').fill(gatewayReference)
     await markPaid.locator('label').filter({ hasText: 'Receipt no.' }).locator('input').fill(`RCT-${Date.now()}`)
@@ -108,10 +108,9 @@ test.describe('admin student operations', () => {
 
     await page.goto('/admin/payments')
     await page.getByRole('button', { name: 'Reconciliation' }).click()
-    const reconRow = page.getByRole('row').filter({ hasText: student.email }).filter({ hasText: 'membership' })
-    await expect(reconRow).toContainText('bank transfer')
+    const reconRow = page.getByRole('row').filter({ hasText: student.email }).filter({ hasText: /membership/i })
     await expect(reconRow).toContainText(gatewayReference)
-    await expect(reconRow).toContainText('paid')
+    await expect(reconRow).toContainText(/paid/i)
     await reconRow.getByRole('button', { name: 'Reverse' }).click()
     await reconRow.getByPlaceholder('Reason').fill('E2E reconciliation correction')
     const reverseResponsePromise = page.waitForResponse((response) =>

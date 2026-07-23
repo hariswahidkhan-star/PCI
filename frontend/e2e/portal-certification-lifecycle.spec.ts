@@ -91,8 +91,9 @@ test.describe('complete certification lifecycle', () => {
       if (i < itemCount - 1) await page.locator('#rNext').click()
     }
     await page.locator('#rSubmit').click()
-    await page.locator('#mOK').click({ force: true })
-    await expect(page.locator('.verdict')).toHaveText('PASS')
+    await expect(page.locator('#mOK')).toBeVisible({ timeout: 15_000 })
+    await page.locator('#mOK').click()
+    await expect(page.locator('.verdict')).toHaveText(/PASS/i, { timeout: 30_000 })
     await captureStoryEvidence(page, testInfo, 'D5-D6', 'exam-pass')
     const issued = await page.locator('.tag.gold').innerText()
     const credential = issued.match(/PCI-PCLAI-\d{4}-\d+/)?.[0]

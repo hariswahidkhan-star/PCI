@@ -268,10 +268,10 @@ test.describe('public form-to-admin journeys', () => {
     const inquiry = (await inquirySubmitted.json()) as { reference: string }
     await expect(page.locator('#contactForm .proto-msg')).toContainText(inquiry.reference)
 
-    await page.getByLabel('Email address').fill(subscriberEmail)
+    await page.locator('#nlEmail').fill(subscriberEmail)
     const newsletterResponse = page.waitForResponse((response) =>
       response.url().endsWith('/api/newsletter') && response.request().method() === 'POST')
-    await page.getByRole('button', { name: 'Subscribe' }).click()
+    await page.locator('#nlBtn').click()
     expect((await newsletterResponse).ok()).toBeTruthy()
     await expect(page.locator('#nlBtn')).toHaveText('Subscribed ✓')
     await captureStoryEvidence(page, testInfo, 'A7', 'contact-and-newsletter')
