@@ -3454,6 +3454,194 @@ def run(proc):
 
     print("\n(assertions complete)")
 
+def sim_lab_answers(task):
+    """Reference solver for Lab integration tests — answers every ask key from the served given.
+    Mirrors Core/SimCalc for the task families exercised by test_simlab so densified ask banks still
+    round-trip to 100 without hard-coding scenario numbers."""
+    import math
+    t = (task or {}).get("task")
+    g = (task or {}).get("given") or {}
+    ask_keys = [a.get("key") for a in (task or {}).get("ask") or [] if a.get("key")]
+    full = {}
+
+    if t == "evm":
+        pv, ev, ac, bac = float(g["pv"]), float(g["ev"]), float(g["ac"]), float(g["bac"])
+        spi = 0.0 if pv == 0 else ev / pv
+        cpi = 0.0 if ac == 0 else ev / ac
+        eac = 0.0 if cpi == 0 else bac / cpi
+        full = {
+            "sv": ev - pv, "cv": ev - ac, "spi": spi, "cpi": cpi, "eac": eac,
+            "etc": eac - ac, "vac": bac - eac,
+            "tcpi": 0.0 if (bac - ac) == 0 else (bac - ev) / (bac - ac),
+            "percent_complete": 0.0 if bac == 0 else ev / bac,
+            "percent_spent": 0.0 if bac == 0 else ac / bac,
+            "eac_cpi": eac,
+            "eac_composite": ac + (0.0 if (cpi * spi) == 0 else (bac - ev) / (cpi * spi)),
+            "eac_budget": ac + (bac - ev),
+        }
+    elif t == "cpm":
+        acts = {a["id"]: (float(a.get("dur") or 0), list(a.get("preds") or [])) for a in g.get("activities") or []}
+        # Topo order by repeated ready-set (networks are small DAGs).
+        order, remaining = [], dict(acts)
+        while remaining:
+            ready = [i for i, (_, preds) in remaining.items() if all(p in order for p in preds)]
+            if not ready:
+                break
+            for i in sorted(ready):
+                order.append(i); remaining.pop(i)
+        es, ef = {}, {}
+        for i in order:
+            dur, preds = acts[i]
+            es[i] = max((ef[p] for p in preds), default=0.0)
+            ef[i] = es[i] + dur
+        duration = max(ef.values()) if ef else 0.0
+        ls, lf = {}, {}
+        for i in reversed(order):
+            dur, _ = acts[i]
+            succs = [j for j, (_, preds) in acts.items() if i in preds]
+            lf[i] = min((ls[s] for s in succs), default=duration)
+            ls[i] = lf[i] - dur
+        crit = [i for i in order if abs(ls[i] - es[i]) < 1e-9]
+        full = {"project_duration": duration, "critical_path": crit}
+        for i in order:
+            full[f"float_{i}"] = ls[i] - es[i]
+    elif t == "wbs":
+        nodes = {n["id"]: n for n in g.get("nodes") or []}
+        children = {}
+        for n in nodes.values():
+            p = n.get("parent")
+            if p: children.setdefault(p, []).append(n["id"])
+        memo = {}
+        def roll(i):
+            if i in memo: return memo[i]
+            kids = children.get(i) or []
+            if not kids:
+                v = nodes[i].get("value")
+                memo[i] = float(v or 0); return memo[i]
+            memo[i] = sum(roll(k) for k in kids); return memo[i]
+        roots = [i for i, n in nodes.items() if not n.get("parent")]
+        root_total = sum(roll(r) for r in roots)
+        valid = True
+        for i, kids in children.items():
+            declared = nodes[i].get("value")
+            if declared is not None and abs(float(declared) - roll(i)) > 1e-6:
+                valid = False
+        full = {"root_total": root_total, "hundred_percent_valid": valid}
+    elif t == "cbs":
+        nodes = {n["id"]: n for n in g.get("nodes") or []}
+        children = {}
+        for n in nodes.values():
+            p = n.get("parent")
+            if p: children.setdefault(p, []).append(n["id"])
+        def roll_field(i, field):
+            kids = children.get(i) or []
+            if not kids:
+                v = nodes[i].get(field)
+                return float(v or 0)
+            return sum(roll_field(k, field) for k in kids)
+        roots = [i for i, n in nodes.items() if not n.get("parent")]
+        rb = sum(roll_field(r, "budget") for r in roots)
+        ra = sum(roll_field(r, "actual") for r in roots)
+        full = {"root_budget": rb, "root_actual": ra, "root_variance": rb - ra}
+        for i in nodes:
+            b, a = roll_field(i, "budget"), roll_field(i, "actual")
+            full[f"variance_{i}"] = b - a
+    elif t == "progress":
+        nodes = g.get("nodes") or []
+        tw = sum(float(n.get("weight") or 0) for n in nodes)
+        overall = 0.0 if tw == 0 else sum(float(n.get("weight") or 0) * float(n.get("percent") or 0) for n in nodes) / tw
+        full = {"overall_percent": overall, "total_weight": tw}
+    elif t == "risk":
+        items = g.get("risks") or []
+        emvs = {r["id"]: float(r.get("probability") or 0) * float(r.get("impact") or 0) for r in items}
+        full = {"emv": sum(emvs.values())}
+        for rid, v in emvs.items():
+            full[f"emv_{rid}"] = v
+    elif t == "pert":
+        acts = g.get("activities") or []
+        exps, vars_ = [], []
+        for a in acts:
+            o, m, p = float(a["o"]), float(a["m"]), float(a["p"])
+            exps.append((o + 4 * m + p) / 6.0)
+            vars_.append(((p - o) / 6.0) ** 2)
+        expected = sum(exps); variance = sum(vars_); std = math.sqrt(variance)
+        deadline = float(g.get("deadline") or 0)
+        z = 0.0 if std == 0 else (deadline - expected) / std
+        # Match SimCalc.NormalCdf (Abramowitz & Stegun 7.1.26).
+        def norm_cdf(z):
+            sign = -1.0 if z < 0 else 1.0
+            x = abs(z) / math.sqrt(2.0)
+            t = 1.0 / (1.0 + 0.3275911 * x)
+            y = 1.0 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * math.exp(-x * x)
+            return 0.5 * (1.0 + sign * y)
+        full = {
+            "expected_duration": expected, "std_dev": std, "variance": variance,
+            "prob_on_time": 100.0 if std == 0 and deadline >= expected else (0.0 if std == 0 else 100.0 * norm_cdf(z)),
+        }
+    elif t == "change":
+        changes = g.get("changes") or []
+        approved = [c for c in changes if (c.get("status") or "").lower() == "approved"]
+        cost = sum(float(c.get("cost_delta") or 0) for c in approved)
+        sched = sum(float(c.get("schedule_delta") or 0) for c in approved)
+        full = {
+            "revised_bac": float(g.get("baseline_bac") or 0) + cost,
+            "revised_duration": float(g.get("baseline_duration") or 0) + sched,
+            "approved_cost_delta": cost, "approved_schedule_delta": sched,
+            "approved_count": float(len(approved)),
+        }
+    elif t == "cashflow":
+        periods = sorted(g.get("periods") or [], key=lambda p: int(p.get("period") or 0))
+        cum, peak, series = 0.0, 0.0, {}
+        for p in periods:
+            cum += float(p.get("inflow") or 0) - float(p.get("outflow") or 0)
+            series[int(p["period"])] = cum
+            if cum < 0: peak = max(peak, -cum)
+        full = {"final_position": cum, "peak_funding": peak}
+        for per, v in series.items():
+            full[f"cumulative_{per}"] = v
+    elif t == "timeline":
+        series = sorted(g.get("series") or [], key=lambda p: int(p.get("period") or 0))
+        bac = float(g.get("bac") or 0)
+        if series:
+            last = series[-1]
+            fev, fac = float(last["ev"]), float(last["ac"])
+            fpv = float(last["pv"])
+            fspi = 0.0 if fpv == 0 else fev / fpv
+            fcpi = 0.0 if fac == 0 else fev / fac
+            feac = 0.0 if fcpi == 0 else bac / fcpi
+            worst_spi = min(series, key=lambda p: (0.0 if float(p["pv"]) == 0 else float(p["ev"]) / float(p["pv"])))
+            worst_cpi = min(series, key=lambda p: (0.0 if float(p["ac"]) == 0 else float(p["ev"]) / float(p["ac"])))
+            wspi = 0.0 if float(worst_spi["pv"]) == 0 else float(worst_spi["ev"]) / float(worst_spi["pv"])
+            wcpi = 0.0 if float(worst_cpi["ac"]) == 0 else float(worst_cpi["ev"]) / float(worst_cpi["ac"])
+            full = {
+                "final_ev": fev, "final_ac": fac, "final_spi": fspi, "final_cpi": fcpi,
+                "final_eac": feac, "vac": bac - feac,
+                "worst_spi": wspi, "worst_spi_period": float(worst_spi["period"]),
+                "worst_cpi": wcpi, "worst_cpi_period": float(worst_cpi["period"]),
+            }
+    elif t == "earned_schedule":
+        plan = sorted(g.get("plan") or [], key=lambda p: int(p.get("period") or 0))
+        ev, at = float(g.get("ev") or 0), float(g.get("at") or 0)
+        pd = float(g.get("planned_duration") or (plan[-1]["period"] if plan else 0))
+        es = 0.0
+        if plan:
+            if ev <= float(plan[0]["pv"]):
+                es = 0.0 if float(plan[0]["pv"]) == 0 else ev / float(plan[0]["pv"]) * float(plan[0]["period"])
+            elif ev >= float(plan[-1]["pv"]):
+                es = float(plan[-1]["period"])
+            else:
+                for i in range(1, len(plan)):
+                    prev, cur = plan[i - 1], plan[i]
+                    if float(prev["pv"]) <= ev <= float(cur["pv"]):
+                        span = float(cur["pv"]) - float(prev["pv"])
+                        frac = 0.0 if span == 0 else (ev - float(prev["pv"])) / span
+                        es = float(prev["period"]) + frac * (float(cur["period"]) - float(prev["period"]))
+                        break
+        spi_t = 0.0 if at == 0 else es / at
+        full = {"es": es, "sv_time": es - at, "spi_time": spi_t, "eac_time": 0.0 if spi_t == 0 else pd / spi_t}
+
+    return {k: full[k] for k in ask_keys if k in full}
+
 def test_simlab(admin):
     # PCI AI Project Controls Simulation Lab — Phase 1 foundation: live entitlement + published catalogue.
     # The Lab reuses the existing student account; access is computed from membership / exam entitlement /
@@ -3479,7 +3667,7 @@ def test_simlab(admin):
     c, cat = jget("GET", "/api/me/lab/catalogue", token=mtok)
     rows = cat.get("rows", []); codes = {r.get("scenario_code") for r in rows}
     chk("43e member: catalogue lists the seeded PUBLISHED labs with codes",
-        c == 200 and len(rows) >= 4 and {"GL-WBS-001", "GL-EVM-001", "SD-EVM-001", "GL-SCH-001"} <= codes, (len(rows), sorted(codes)[:8]))
+        c == 200 and len(rows) >= 30 and {"GL-WBS-001", "GL-EVM-001", "SD-EVM-001", "GL-SCH-001"} <= codes, (len(rows), sorted(codes)[:8]))
     first = rows[0] if rows else {}
     chk("43f catalogue rows carry the applied-practice shape (kind + difficulty + competencies[])",
         bool(first.get("kind")) and bool(first.get("difficulty")) and isinstance(first.get("competencies"), list), first)
@@ -3517,15 +3705,10 @@ def test_simlab(admin):
     chk("43l start returns an attempt + task (evm), and the task never leaks the answer key",
         c == 200 and aid and task.get("task") == "evm" and isinstance(task.get("ask"), list) and not leaks, (c, list(task.keys())))
 
-    # GL-EVM-001 now serves a deterministic per-attempt VARIANT (§6): compute the expected EVM answers from
-    # the ACTUAL served inputs (a reference solver in the test), so the full serve→grade round-trip is proven
-    # for whatever instance this attempt drew. Full-precision answers pass within the engine's tolerance.
+    # GL-EVM-001 serves a deterministic per-attempt VARIANT (§6): compute expected answers from the
+    # ACTUAL served inputs via the test reference solver so densified ask banks still score 100.
     g0 = task.get("given", {})
-    pv0, ev0, ac0, bac0 = g0.get("pv"), g0.get("ev"), g0.get("ac"), g0.get("bac")
-    def evm_answers(g):
-        pv, ev, ac, bac = g["pv"], g["ev"], g["ac"], g["bac"]
-        return {"sv": ev - pv, "cv": ev - ac, "spi": ev / pv, "cpi": ev / ac, "eac": bac / (ev / ac)}
-    ev_ans = evm_answers(g0)
+    ev_ans = sim_lab_answers(task)
     c, sub = jget("POST", f"/api/me/lab/attempts/{aid}/submit", token=mtok, body={"answers": ev_ans})
     chk("43m submitting the correct EVM measures (computed from the served variant) scores 100 and passes",
         c == 200 and sub.get("score") == 100 and sub.get("passed") is True, (c, sub.get("score"), sub.get("passed")))
@@ -3535,7 +3718,7 @@ def test_simlab(admin):
     # replayable — not the same numbers every time, and never ungradable.
     c, stv = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-EVM-001", "mode": "training"})
     aidv = stv.get("attempt_id"); gv = stv.get("task", {}).get("given", {})
-    c, subv = jget("POST", f"/api/me/lab/attempts/{aidv}/submit", token=mtok, body={"answers": evm_answers(gv)})
+    c, subv = jget("POST", f"/api/me/lab/attempts/{aidv}/submit", token=mtok, body={"answers": sim_lab_answers(stv.get("task"))})
     con = dbconn()
     seeds = {r[0] for r in con.execute("SELECT seed FROM simulation_attempts WHERE id IN (?,?)", (aid, aidv)).fetchall()}
     con.close()
@@ -3561,7 +3744,7 @@ def test_simlab(admin):
     c, stc = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-SCH-001"})
     cid = stc.get("attempt_id")
     c, subc = jget("POST", f"/api/me/lab/attempts/{cid}/submit", token=mtok,
-                   body={"answers": {"project_duration": 13, "critical_path": ["A", "B", "D", "E"], "float_C": 2}})
+                   body={"answers": sim_lab_answers(stc.get("task"))})
     chk("43r the critical-path lab grades duration + critical path (set) + float to 100",
         c == 200 and subc.get("score") == 100 and subc.get("passed") is True, (c, subc.get("score")))
 
@@ -3581,14 +3764,16 @@ def test_simlab(admin):
         c == 200 and rev.get("status") in ("passed", "completed") and rev.get("grade", {}).get("score") == 100, (c, rev.get("status")))
 
     # ---- AI Coach: grounded explanation, deterministic fallback (no provider key in CI), assessment-safe ----
-    c, coach = jget("POST", f"/api/me/lab/attempts/{aid}/coach", token=mtok, body={})
+    c, coach = jget("POST", f"/api/me/lab/attempts/{aid}/coach", token=mtok, body={"coach_mode": "debrief", "hint_level": 6})
     chk("43u the coach explains a completed training attempt (builtin fallback, no key in CI)",
         c == 200 and coach.get("ok") is True and coach.get("source") == "builtin" and coach.get("ai") is False and len(coach.get("message", "")) > 20,
         (c, coach.get("source"), coach.get("ai")))
-    # Coaching mid-attempt on the answers the student passes in — grounded concept explanation.
+    # Coaching mid-attempt — progressive hint names the SPI concept without revealing the key.
     c, st2 = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-EVM-001", "mode": "training"})
     aid2 = st2.get("attempt_id")
-    c, coach2 = jget("POST", f"/api/me/lab/attempts/{aid2}/coach", token=mtok, body={"answers": {"spi": 2.0}, "question": "why is my SPI wrong?"})
+    right = sim_lab_answers(st2.get("task")); right["spi"] = 2.0  # only SPI wrong so the coach focuses there
+    c, coach2 = jget("POST", f"/api/me/lab/attempts/{aid2}/coach", token=mtok,
+                     body={"answers": right, "question": "why is my SPI wrong?", "coach_mode": "guided", "hint_level": 2})
     chk("43v the coach grounds its explanation in a project-controls concept (Index)",
         c == 200 and coach2.get("ok") is True and "Index" in coach2.get("message", ""), (c, coach2.get("message", "")[:60]))
     # Assessment Mode: the coach is refused outright — never a hint, never an answer.
@@ -3688,7 +3873,7 @@ def test_simlab(admin):
     c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})
     fid = stf.get("attempt_id")
     c, subf = jget("POST", f"/api/me/lab/attempts/{fid}/submit", token=mtok,
-                   body={"answers": {"eac_cpi": 444444.4444, "eac_composite": 471604.9383, "eac_budget": 420000}})
+                   body={"answers": sim_lab_answers(stf.get("task"))})
     fcomps = {x.get("competency") for x in subf.get("competencies", [])}
     chk("43aa the forecasting drill grades all three EAC methods to 100 (forecasting evidence)",
         c == 200 and subf.get("score") == 100 and subf.get("passed") is True and "forecasting" in fcomps, (c, subf.get("score"), sorted(fcomps)))
@@ -3698,7 +3883,7 @@ def test_simlab(admin):
     chk("43bb the cost-control lab serves a CBS task with budget/actual given (no answer key leaked)",
         c == 200 and btask.get("task") == "cbs" and "correct_value" not in _json.dumps(btask).lower(), (c, btask.get("task")))
     c, subb = jget("POST", f"/api/me/lab/attempts/{bid}/submit", token=mtok,
-                   body={"answers": {"root_budget": 100000, "root_actual": 102000, "root_variance": -2000}})
+                   body={"answers": sim_lab_answers(btask)})
     bcomps = {x.get("competency") for x in subb.get("competencies", [])}
     chk("43cc the CBS lab grades the roll-up + variance to 100 (cost_control evidence)",
         c == 200 and subb.get("score") == 100 and subb.get("passed") is True and "cost_control" in bcomps, (c, subb.get("score"), sorted(bcomps)))
@@ -3708,10 +3893,11 @@ def test_simlab(admin):
     c, sts = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SC-EVM-001"})
     stask = sts.get("task", {}); series = (stask.get("given") or {}).get("series")
     chk("43dd the S-curve scenario serves a time-phased series alongside the given scalars",
-        c == 200 and isinstance(series, list) and len(series) == 5 and series[-1].get("pv") == 500000, (c, len(series or [])))
+        c == 200 and isinstance(series, list) and len(series) >= 4 and series[-1].get("pv") == (stask.get("given") or {}).get("pv"),
+        (c, len(series or []), (stask.get("given") or {}).get("pv")))
     sid2 = sts.get("attempt_id")
     c, subs = jget("POST", f"/api/me/lab/attempts/{sid2}/submit", token=mtok,
-                   body={"answers": {"sv": -70000, "cv": -30000, "spi": 0.86, "cpi": 0.9348, "eac": 962790.6977}})
+                   body={"answers": sim_lab_answers(stask)})
     chk("43ee the S-curve scenario grades the current-period EVM measures to 100",
         c == 200 and subs.get("score") == 100 and subs.get("passed") is True, (c, subs.get("score")))
 
@@ -3719,24 +3905,25 @@ def test_simlab(admin):
     # but Assessment Mode withholds it entirely.
     c, stg = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-SCH-001", "mode": "training"})
     gid = stg.get("attempt_id")
-    c, subg = jget("POST", f"/api/me/lab/attempts/{gid}/submit", token=mtok,
-                   body={"answers": {"project_duration": 13, "critical_path": ["A", "B", "D", "E"], "float_C": 2}})
+    cans = sim_lab_answers(stg.get("task"))
+    c, subg = jget("POST", f"/api/me/lab/attempts/{gid}/submit", token=mtok, body={"answers": cans})
     sched = subg.get("schedule") or {}
     bar_a = next((b for b in sched.get("bars", []) if b.get("id") == "A"), {})
     chk("43ff a graded CPM attempt returns the computed Gantt schedule (Training Mode)",
-        c == 200 and sched.get("project_duration") == 13 and sched.get("critical_path") == ["A", "B", "D", "E"] and bar_a.get("critical") is True,
+        c == 200 and sched.get("project_duration") == cans.get("project_duration")
+        and sched.get("critical_path") == cans.get("critical_path") and bar_a.get("critical") is True,
         (c, sched.get("project_duration"), sched.get("critical_path")))
     c, stga = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-SCH-001", "mode": "assessment"})
     gaid = stga.get("attempt_id")
     c, subga = jget("POST", f"/api/me/lab/attempts/{gaid}/submit", token=mtok,
-                    body={"answers": {"project_duration": 13, "critical_path": ["A", "B", "D", "E"], "float_C": 2}})
+                    body={"answers": sim_lab_answers(stga.get("task"))})
     chk("43gg Assessment Mode withholds the computed schedule (no answer leaked)",
         c == 200 and subga.get("schedule") is None, (c, subga.get("schedule")))
 
     # Progress lab: weighted physical percent-complete across work packages.
     c, stp = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-PRG-001"})
     pid2 = stp.get("attempt_id")
-    c, subp = jget("POST", f"/api/me/lab/attempts/{pid2}/submit", token=mtok, body={"answers": {"overall_percent": 55}})
+    c, subp = jget("POST", f"/api/me/lab/attempts/{pid2}/submit", token=mtok, body={"answers": sim_lab_answers(stp.get("task"))})
     pcomps = {x.get("competency") for x in subp.get("competencies", [])}
     chk("43hh the progress lab grades the budget-weighted percent-complete to 100 (progress evidence)",
         c == 200 and subp.get("score") == 100 and subp.get("passed") is True and "progress_measurement" in pcomps, (c, subp.get("score"), sorted(pcomps)))
@@ -3744,7 +3931,7 @@ def test_simlab(admin):
     # ---- Phase 3 risk engine: Expected Monetary Value + three-point (PERT) analysis ----
     c, str_ = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-RSK-001"})
     rid = str_.get("attempt_id")
-    c, subr = jget("POST", f"/api/me/lab/attempts/{rid}/submit", token=mtok, body={"answers": {"emv": -8000}})
+    c, subr = jget("POST", f"/api/me/lab/attempts/{rid}/submit", token=mtok, body={"answers": sim_lab_answers(str_.get("task"))})
     rcomps = {x.get("competency") for x in subr.get("competencies", [])}
     chk("43ii the risk drill grades the register EMV to 100 (risk_management evidence)",
         c == 200 and subr.get("score") == 100 and subr.get("passed") is True and "risk_management" in rcomps, (c, subr.get("score"), sorted(rcomps)))
@@ -3752,7 +3939,7 @@ def test_simlab(admin):
     c, stpt = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-PRT-001"})
     ptid = stpt.get("attempt_id")
     c, subpt = jget("POST", f"/api/me/lab/attempts/{ptid}/submit", token=mtok,
-                    body={"answers": {"expected_duration": 12, "std_dev": 1.8257, "prob_on_time": 86.3}})
+                    body={"answers": sim_lab_answers(stpt.get("task"))})
     chk("43jj the PERT lab grades expected duration + std-dev + probability-on-time to 100",
         c == 200 and subpt.get("score") == 100 and subpt.get("passed") is True, (c, subpt.get("score")))
 
@@ -3765,7 +3952,7 @@ def test_simlab(admin):
         c == 200 and isinstance(mcv.get("histogram"), list) and len(mcv.get("histogram", [])) >= 1 and ordered, (c, mcv.get("p50"), mcv.get("p80")))
     mcid = stmc.get("attempt_id")
     c, submc = jget("POST", f"/api/me/lab/attempts/{mcid}/submit", token=mtok,
-                    body={"answers": {"expected_duration": 19, "prob_on_time": 88.5}})
+                    body={"answers": sim_lab_answers(mctask)})
     chk("43ll the Monte-Carlo scenario grades the PERT normal-approximation to 100",
         c == 200 and submc.get("score") == 100 and submc.get("passed") is True, (c, submc.get("score")))
 
@@ -3773,7 +3960,7 @@ def test_simlab(admin):
     c, stch = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-CHG-001"})
     chid = stch.get("attempt_id")
     c, subch = jget("POST", f"/api/me/lab/attempts/{chid}/submit", token=mtok,
-                    body={"answers": {"revised_bac": 520000, "revised_duration": 103, "approved_count": 2}})
+                    body={"answers": sim_lab_answers(stch.get("task"))})
     chcomps = {x.get("competency") for x in subch.get("competencies", [])}
     chk("43mm the change-control lab applies only approved changes and grades to 100",
         c == 200 and subch.get("score") == 100 and subch.get("passed") is True and "change_control" in chcomps, (c, subch.get("score"), sorted(chcomps)))
@@ -3781,7 +3968,7 @@ def test_simlab(admin):
     c, stcf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-CASH-001"})
     cfid = stcf.get("attempt_id")
     c, subcf = jget("POST", f"/api/me/lab/attempts/{cfid}/submit", token=mtok,
-                    body={"answers": {"final_position": 40000, "peak_funding": 90000}})
+                    body={"answers": sim_lab_answers(stcf.get("task"))})
     cfcomps = {x.get("competency") for x in subcf.get("competencies", [])}
     chk("43nn the cash-flow lab grades the closing position + peak funding to 100 (cash_flow evidence)",
         c == 200 and subcf.get("score") == 100 and subcf.get("passed") is True and "cash_flow" in cfcomps, (c, subcf.get("score"), sorted(cfcomps)))
@@ -3792,10 +3979,10 @@ def test_simlab(admin):
     tltask = sttl.get("task", {})
     # The task carries the period series (given, so the S-curve can draw it) but never the computed trend.
     chk("43oo the timeline task exposes the given period series without leaking the trend/forecast",
-        tltask.get("task") == "timeline" and len((tltask.get("given") or {}).get("series", [])) == 6
+        tltask.get("task") == "timeline" and len((tltask.get("given") or {}).get("series", [])) >= 6
         and "worst_spi_period" not in (tltask.get("given") or {}), tltask.get("given"))
     c, subtl = jget("POST", f"/api/me/lab/attempts/{tlid}/submit", token=mtok,
-                    body={"answers": {"worst_spi_period": 3, "final_cpi": 0.8529, "final_eac": 703448.28, "vac": -103448.28}})
+                    body={"answers": sim_lab_answers(tltask)})
     tlcomps = {x.get("competency") for x in subtl.get("competencies", [])}
     chk("43pp the timeline lab grades the worst-period + CPI-method forecast to 100 (earned_value evidence)",
         c == 200 and subtl.get("score") == 100 and subtl.get("passed") is True and "earned_value" in tlcomps, (c, subtl.get("score"), sorted(tlcomps)))
@@ -3805,10 +3992,10 @@ def test_simlab(admin):
     esid = stes.get("attempt_id")
     estask = stes.get("task", {})
     chk("43qq the earned-schedule task serves the planned-value curve without leaking ES/indices",
-        estask.get("task") == "earned_schedule" and len((estask.get("given") or {}).get("plan", [])) == 6
+        estask.get("task") == "earned_schedule" and len((estask.get("given") or {}).get("plan", [])) >= 6
         and "es" not in (estask.get("given") or {}), estask.get("given"))
     c, subes = jget("POST", f"/api/me/lab/attempts/{esid}/submit", token=mtok,
-                    body={"answers": {"es": 3.25, "sv_time": -0.75, "spi_time": 0.8125, "eac_time": 7.3846}})
+                    body={"answers": sim_lab_answers(estask)})
     escomps = {x.get("competency") for x in subes.get("competencies", [])}
     chk("43rr the earned-schedule lab grades ES + time indices + time forecast to 100 (schedule_analysis evidence)",
         c == 200 and subes.get("score") == 100 and subes.get("passed") is True and "schedule_analysis" in escomps, (c, subes.get("score"), sorted(escomps)))
@@ -3816,12 +4003,13 @@ def test_simlab(admin):
     # ---- Phase 4 AI-Coach evals: the coach grounds a Phase-3 task type (not the generic fallback) ----
     c, stec = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-ESC-001", "mode": "training"})
     ecid = stec.get("attempt_id")
+    ec_ans = sim_lab_answers(stec.get("task")); ec_ans["spi_time"] = 9
     c, coachec = jget("POST", f"/api/me/lab/attempts/{ecid}/coach", token=mtok,
-                      body={"answers": {"spi_time": 9}, "question": "why is my SPI(t) off?"})
+                      body={"answers": ec_ans, "question": "why is my SPI(t) off?", "coach_mode": "guided", "hint_level": 2})
     ecmsg = coachec.get("message", "")
     chk("43ss the coach grounds an earned-schedule miss in a real concept (not the generic fallback)",
         c == 200 and coachec.get("ok") is True and "Revisit the definition of this measure" not in ecmsg
-        and ("Earned Schedule" in ecmsg or "ES " in ecmsg or "time" in ecmsg), (c, ecmsg[:80]))
+        and ("Earned Schedule" in ecmsg or "ES " in ecmsg or "time" in ecmsg or "SPI" in ecmsg), (c, ecmsg[:80]))
 
     # ---- Test-account path: an admin 'member' test user reaches the Practice Lab after membership ----
     # Guarantees the documented QA route (Admin -> Test Users -> "member" scenario) unlocks the Lab, so a
