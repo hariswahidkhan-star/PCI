@@ -115,7 +115,11 @@ public static class Payments
                         ? $"{Base}/app/billing?cancelled=1"
                         : $"{Base}/payment-failed.html"
                 };
-                var session = await new SessionService().CreateAsync(options);
+                // Deterministic Stripe idempotency key: a retried create (network blip, double-click) within
+                // the same minute returns the SAME Checkout Session instead of creating a duplicate; genuinely
+                // separate purchases (different product/cert/amount, or a later minute) get a fresh session.
+                var idemKey = "cs_" + Security.Sha($"{(email ?? "").ToLowerInvariant()}|{product}|{certSelIn}|{pr.final}|{DateTime.UtcNow:yyyyMMddHHmm}");
+                var session = await new SessionService().CreateAsync(options, new RequestOptions { IdempotencyKey = idemKey });
                 return J(new { url = session.Url });
             }
             catch (Exception e) { Console.Error.WriteLine(e); return Results.Json(new { error = "session_failed" }, statusCode: 500); }
@@ -147,7 +151,9 @@ public static class Payments
                     CancelUrl = $"{Base}/app/billing?cancelled=1",
                 };
                 if (!string.IsNullOrEmpty(existingCust)) opts.Customer = existingCust; else opts.CustomerEmail = u.Email;
-                var session = await new SessionService().CreateAsync(opts);
+                // Deterministic idempotency key (see create-checkout-session): dedupes a retried subscribe.
+                var idemKey = "sub_" + Security.Sha($"{u.Id}|{price}|{DateTime.UtcNow:yyyyMMddHHmm}");
+                var session = await new SessionService().CreateAsync(opts, new RequestOptions { IdempotencyKey = idemKey });
                 return J(new { url = session.Url });
             }
             catch (Exception e) { Console.Error.WriteLine(e); return Results.Json(new { error = "session_failed" }, statusCode: 500); }
@@ -206,9 +212,22 @@ public static class Payments
                 return Results.Ok();
             }
 
-            if (ev.Type == "checkout.session.completed")
+            if (ev.Type is "checkout.session.completed" or "checkout.session.async_payment_succeeded")
             {
                 var s = ev.Data.Object as Session;
+                // Subscriptions are settled in the dedicated branch above; a stray async event for a
+                // subscription session carries no one-off PaymentIntent, so never settle it as a one-off here.
+                if (s?.Mode == "subscription") return Results.Ok();
+                // Fulfil ONLY when Stripe confirms the money settled. For delayed-notification payment methods
+                // (e.g. bank debits), checkout.session.completed can arrive with payment_status='unpaid'; the
+                // funds are confirmed LATER by checkout.session.async_payment_succeeded. Granting access on
+                // 'completed' regardless would hand over the product before payment. 'no_payment_required' is a
+                // genuine $0 settlement (e.g. a 100%-off code) and IS fulfilled.
+                if (s is not null && s.PaymentStatus is not ("paid" or "no_payment_required"))
+                {
+                    log(null, "checkout_unpaid_deferred", $"{ev.Id} status={s.PaymentStatus}");
+                    return Results.Ok();
+                }
                 var m = s?.Metadata ?? new();
                 var email = (s?.CustomerDetails?.Email ?? s?.CustomerEmail ?? "").ToLowerInvariant();
                 if (!string.IsNullOrEmpty(email))
@@ -427,17 +446,25 @@ public static class Payments
             {
                 var inv = ev.Data.Object as Stripe.Invoice;
                 if (inv is not null && inv.BillingReason == "subscription_cycle" && !string.IsNullOrEmpty(inv.CustomerId))
-                {
-                    var mem = db.QueryOne("SELECT id,user_id,expiry_date FROM memberships WHERE stripe_customer_id=? ORDER BY id DESC", inv.CustomerId);
-                    if (mem is not null)
+                    db.Transaction(() =>
                     {
+                        // Claim the event FIRST, atomically with the extension: a replayed (or duplicate)
+                        // invoice.paid must be a NO-OP, never a second year silently granted. The ledger claim
+                        // commits together with the expiry write, or neither does.
+                        var (_, evChanges) = db.ExecuteWithChanges("INSERT OR IGNORE INTO webhook_events(provider,event_id,status) VALUES('stripe',?,'processed')", ev.Id);
+                        if (evChanges == 0) { log(null, "webhook_event_replay_ignored", ev.Id); return; }
+                        var mem = db.QueryOne("SELECT id,user_id,expiry_date FROM memberships WHERE stripe_customer_id=? ORDER BY id DESC", inv.CustomerId);
+                        if (mem is null) return;
+                        // Reconcile the term to Stripe's authoritative billing-period END when present, rather
+                        // than blindly "add one year on receipt"; fall back to +1 year from max(expiry, now).
                         var nowIso = H.IsoNow;
-                        var baseD = H.Str(mem["expiry_date"]) is { } ex && H.After(ex, nowIso) ? ex : nowIso;
-                        var newExp = H.IsoFromMillis(H.JsMillis(baseD) + 365L * 86400_000L);
+                        var periodEnd = inv.PeriodEnd.Year > 2000 ? inv.PeriodEnd.ToUniversalTime().ToString("o") : null;
+                        string newExp;
+                        if (periodEnd is not null && H.After(periodEnd, nowIso)) newExp = periodEnd;
+                        else { var baseD = H.Str(mem["expiry_date"]) is { } ex && H.After(ex, nowIso) ? ex : nowIso; newExp = H.IsoFromMillis(H.JsMillis(baseD) + 365L * 86400_000L); }
                         db.Execute("UPDATE memberships SET status='active', subscription_status='active', expiry_date=? WHERE id=?", newExp, mem["id"]);
                         log(H.Ln(mem["user_id"]), "dues_renewed", inv.CustomerId);
-                    }
-                }
+                    });
             }
             // Subscription state changes (cancellation scheduled, past_due, canceled) mirror into the member's row.
             else if (ev.Type is "customer.subscription.updated" or "customer.subscription.deleted")
