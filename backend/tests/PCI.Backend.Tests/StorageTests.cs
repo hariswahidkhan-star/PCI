@@ -20,8 +20,13 @@ public class StorageTests
     [InlineData("data:image/pngbase64,iVBORw0KGgo=", "malformed_data_uri")] // no semicolon
     [InlineData("data:image/png,abc;def", "malformed_data_uri")]          // comma before semicolon
     [InlineData("data:text/plain;base64,aGVsbG8=", "file_type_not_allowed")]
+    // SEC-4: scriptable formats are refused by the declared-MIME allow-list before any decode.
+    [InlineData("data:image/svg+xml;base64,PHN2Zy8+", "file_type_not_allowed")]        // "<svg/>"
+    [InlineData("data:text/html;base64,PHNjcmlwdD4=", "file_type_not_allowed")]         // "<script>"
     [InlineData("data:image/png;base64,%%%", "invalid_base64")]
     [InlineData("data:image/png;base64,aGVsbG8=", "content_mime_mismatch")] // "hello" is not a PNG
+    // SEC-4: an SVG payload smuggled under an allowed PNG MIME is caught by content sniffing.
+    [InlineData("data:image/png;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxzY3JpcHQvPjwvc3ZnPg==", "content_mime_mismatch")]
     public void DecodeDataUri_ReportsEachRejection(string? uri, string expectedError)
     {
         var (bytes, _, error) = Storage.DecodeDataUri(uri);
