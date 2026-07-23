@@ -3514,11 +3514,31 @@ def test_simlab(admin):
     chk("43l start returns an attempt + task (evm), and the task never leaks the answer key",
         c == 200 and aid and task.get("task") == "evm" and isinstance(task.get("ask"), list) and not leaks, (c, list(task.keys())))
 
-    # Submit the exact deterministic answers → full marks, passes, earned_value competency evidence.
-    ev_ans = {"sv": -10000, "cv": -5000, "spi": 0.9, "cpi": 0.9474, "eac": 211111.1111}
+    # GL-EVM-001 now serves a deterministic per-attempt VARIANT (§6): compute the expected EVM answers from
+    # the ACTUAL served inputs (a reference solver in the test), so the full serve→grade round-trip is proven
+    # for whatever instance this attempt drew. Full-precision answers pass within the engine's tolerance.
+    g0 = task.get("given", {})
+    pv0, ev0, ac0, bac0 = g0.get("pv"), g0.get("ev"), g0.get("ac"), g0.get("bac")
+    def evm_answers(g):
+        pv, ev, ac, bac = g["pv"], g["ev"], g["ac"], g["bac"]
+        return {"sv": ev - pv, "cv": ev - ac, "spi": ev / pv, "cpi": ev / ac, "eac": bac / (ev / ac)}
+    ev_ans = evm_answers(g0)
     c, sub = jget("POST", f"/api/me/lab/attempts/{aid}/submit", token=mtok, body={"answers": ev_ans})
-    chk("43m submitting the correct EVM measures scores 100 and passes",
+    chk("43m submitting the correct EVM measures (computed from the served variant) scores 100 and passes",
         c == 200 and sub.get("score") == 100 and sub.get("passed") is True, (c, sub.get("score"), sub.get("passed")))
+
+    # A fresh attempt draws its OWN instance: a different, non-zero stored seed (the attempt id), and it too
+    # round-trips to 100 from its own served inputs. Proves variants are per-attempt and deterministically
+    # replayable — not the same numbers every time, and never ungradable.
+    c, stv = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-EVM-001", "mode": "training"})
+    aidv = stv.get("attempt_id"); gv = stv.get("task", {}).get("given", {})
+    c, subv = jget("POST", f"/api/me/lab/attempts/{aidv}/submit", token=mtok, body={"answers": evm_answers(gv)})
+    con = dbconn()
+    seeds = {r[0] for r in con.execute("SELECT seed FROM simulation_attempts WHERE id IN (?,?)", (aid, aidv)).fetchall()}
+    con.close()
+    chk("43m2 each GL-EVM-001 attempt draws its own seeded variant and still grades to 100",
+        subv.get("score") == 100 and aid != aidv and seeds == {aid, aidv} and 0 not in seeds,
+        (subv.get("score"), sorted(seeds), aid, aidv))
     comps = {x.get("competency") for x in sub.get("competencies", [])}
     chk("43n the graded attempt writes earned_value competency evidence", "earned_value" in comps, sorted(comps))
     con = dbconn(); ce = con.execute("SELECT competency,level FROM simulation_competency WHERE attempt_id=?", (aid,)).fetchall(); con.close()
