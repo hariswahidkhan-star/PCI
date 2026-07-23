@@ -628,10 +628,42 @@ app.MapPost("/api/admin/auth/recover", async (HttpRequest req) =>
 });
 
 // ---- optional TOTP MFA for privileged accounts: enrol (pending) → verify (active) → disable ----
+app.MapGet("/api/admin/me/2fa", (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    var row = db.QueryOne("SELECT totp_secret,totp_recovery FROM admin_users WHERE id=?", a.Id);
+    var secret = row?["totp_secret"] as string ?? "";
+    var recovery = row?["totp_recovery"] as string ?? "";
+    var recoveryCount = 0;
+    try
+    {
+        recoveryCount = string.IsNullOrEmpty(recovery)
+            ? 0
+            : (JsonSerializer.Deserialize<List<string>>(recovery) ?? new()).Count;
+    }
+    catch
+    {
+        // A malformed legacy recovery-code payload must not break the Settings page. It is treated as
+        // an empty inventory; the active TOTP factor still remains enforced until explicitly disabled.
+    }
+    return Json(new
+    {
+        enabled = secret.Length > 0 && !secret.StartsWith("pending:"),
+        pending = secret.StartsWith("pending:"),
+        recovery_remaining = recoveryCount,
+    });
+});
+
 app.MapPost("/api/admin/me/2fa/setup", (HttpRequest req) =>
 {
     var a = Auth.AdminFromReq(req, db);
     if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    var existing = db.Scalar<string>("SELECT totp_secret FROM admin_users WHERE id=?", a.Id) ?? "";
+    // Never replace an active factor with an unverified pending secret. Doing so would make the next
+    // login skip MFA and let any stolen authenticated session silently downgrade the account.
+    if (existing.Length > 0 && !existing.StartsWith("pending:"))
+        return Results.Json(new { error = "already_enabled", message = "Two-factor authentication is already enabled." }, statusCode: 409);
     var secret = Security.NewTotpSecret();
     // Stored as pending until the admin proves their authenticator works — enabling MFA can never lock
     // an account out on a mis-scanned QR.
@@ -674,8 +706,9 @@ app.MapPost("/api/admin/me/2fa/disable", async (HttpRequest req) =>
             var recovHash = Security.Sha(code.Replace(" ", "").Replace("-", "").ToLowerInvariant());
             var rec = db.Scalar<string>("SELECT totp_recovery FROM admin_users WHERE id=?", a.Id) ?? "";
             var codes = string.IsNullOrEmpty(rec) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(rec) ?? new();
-            if (!codes.Contains(recovHash))
+            if (!codes.Remove(recovHash))
                 return Results.Json(new { error = "totp_invalid", message = "Enter a current authenticator or recovery code to disable MFA." }, statusCode: 400);
+            db.Execute("UPDATE admin_users SET totp_recovery=? WHERE id=?", JsonSerializer.Serialize(codes), a.Id);
         }
     }
     db.Execute("UPDATE admin_users SET totp_secret=NULL, totp_recovery=NULL, totp_last_step=0 WHERE id=?", a.Id);

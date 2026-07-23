@@ -49,6 +49,8 @@ function PlansCard() {
   const [params] = useSearchParams()
   const [certSel, setCertSel] = useState('')
   const [code, setCode] = useState('')
+  const [codeProduct, setCodeProduct] = useState<'membership' | 'exam' | 'bundle'>('exam')
+  const [codePreview, setCodePreview] = useState<{ valid: boolean; message?: string; code_amount?: number; final_amount?: number } | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
 
@@ -102,7 +104,12 @@ function PlansCard() {
       // wrong-product code is caught here instead of silently charging full price at checkout.
       const c = code.trim()
       if (c) {
-        const v = await api.post<{ valid: boolean; message?: string }>('/api/validate-code', { code: c, product, email: me!.user.email })
+        const v = await api.post<{ valid: boolean; message?: string }>('/api/validate-code', {
+          code: c,
+          product,
+          email: me!.user.email,
+          cert: product === 'exam' || product === 'bundle' ? certSel || undefined : product === 'recert' ? opts.cert : undefined,
+        })
         if (!v.valid) {
           setErr(v.message || t('billing.codeInvalid'))
           setBusy(null)
@@ -119,6 +126,26 @@ function PlansCard() {
       })
     } catch (e2) {
       setErr(checkoutErrorMessage(e2))
+      setBusy(null)
+    }
+  }
+
+  async function previewCode() {
+    const value = code.trim()
+    if (!value) return
+    setBusy('code-preview')
+    setErr(null)
+    setCodePreview(null)
+    try {
+      setCodePreview(await api.post<{ valid: boolean; message?: string; code_amount?: number; final_amount?: number }>('/api/validate-code', {
+        code: value,
+        product: codeProduct,
+        email: me!.user.email,
+        cert: codeProduct === 'exam' || codeProduct === 'bundle' ? certSel || undefined : undefined,
+      }))
+    } catch (e2) {
+      setErr(e2 instanceof Error ? e2.message : t('billing.codeInvalid'))
+    } finally {
       setBusy(null)
     }
   }
@@ -255,11 +282,33 @@ function PlansCard() {
           style={{ maxWidth: 220 }}
           placeholder={t('billing.discountCodePlaceholder')}
           value={code}
-          onChange={(ev) => setCode(ev.target.value)}
+          onChange={(ev) => { setCode(ev.target.value); setCodePreview(null) }}
           aria-label={t('billing.discountCodeAria')}
         />
+        <select
+          value={codeProduct}
+          onChange={(ev) => { setCodeProduct(ev.target.value as typeof codeProduct); setCodePreview(null) }}
+          aria-label="Purchase to preview"
+          style={{ maxWidth: 180 }}
+        >
+          <option value="membership">Membership</option>
+          <option value="exam">Exam fee</option>
+          <option value="bundle">Membership + exam</option>
+        </select>
+        <button className="btn ghost sm" disabled={busy !== null || !code.trim()} onClick={previewCode}>
+          {busy === 'code-preview' ? 'Checking…' : 'Check code'}
+        </button>
         <span className="muted small">{t('billing.discountApplyIntro')}<strong>{t('billing.discountScopeMembership')}</strong>{t('billing.discountSep1')}<strong>{t('billing.discountScopeExam')}</strong>{t('billing.discountSep2')}<strong>{t('billing.discountScopeBoth')}</strong>{t('billing.discountApplyOutro')}</span>
       </div>
+      {codePreview && (
+        <div className={'notice' + (codePreview.valid ? '' : ' err')} role="status" style={{ marginTop: '.65rem' }}>
+          {codePreview.message || (codePreview.valid ? 'Code is valid.' : t('billing.codeInvalid'))}
+          {codePreview.valid && codePreview.code_amount != null && codePreview.final_amount != null && (
+            <> Saves <strong>{fmtMoney(codePreview.code_amount, pricing?.currency ?? 'USD')}</strong>; preview total{' '}
+              <strong>{fmtMoney(codePreview.final_amount, pricing?.currency ?? 'USD')}</strong>.</>
+          )}
+        </div>
+      )}
     </Card>
     </div>
   )

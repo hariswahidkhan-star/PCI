@@ -940,6 +940,16 @@ def test_support_and_institutions(admin):
         return str((struct.unpack(">I", h[o:o+4])[0] & 0x7FFFFFFF) % 1000000).zfill(6)
     c, ver = jget("POST", "/api/admin/me/2fa/verify", token=admin, body={"code": totp_now(setup["secret"])})
     chk("14u2 2FA verify activates", c == 200 and ver.get("enabled") is True, ver)
+    c, mfa_status = jget("GET", "/api/admin/me/2fa", token=admin)
+    chk("14u2a 2FA status reports active factor and recovery inventory",
+        c == 200 and mfa_status.get("enabled") is True and mfa_status.get("pending") is False
+        and mfa_status.get("recovery_remaining") == 10, mfa_status)
+    c, downgrade = jget("POST", "/api/admin/me/2fa/setup", token=admin)
+    c2, after_downgrade = jget("GET", "/api/admin/me/2fa", token=admin)
+    chk("14u2b active 2FA cannot be replaced by an unverified pending secret",
+        c == 409 and downgrade.get("error") == "already_enabled"
+        and c2 == 200 and after_downgrade.get("enabled") is True and after_downgrade.get("pending") is False,
+        (downgrade, after_downgrade))
     c, relog = admin_login_rl(lambda: {"email": "owner@pci.local", "password": "Op3rator!Pw"})
     chk("14u3 login without the code is refused once enabled", c == 401 and relog.get("error") == "totp_required", relog)
     c, relog2 = admin_login_rl(lambda: {"email": "owner@pci.local", "password": "Op3rator!Pw", "totp": totp_now(setup["secret"])})
@@ -964,7 +974,13 @@ def test_support_and_institutions(admin):
     con = dbconn(); con.execute("UPDATE admin_users SET totp_last_step=? WHERE id=?", (cur_step - 1, aid)); con.commit(); con.close()
     c, adv = admin_login_rl(lambda: {"email": "owner@pci.local", "password": "Op3rator!Pw", "totp": totp_now(setup["secret"])})
     chk("14u6 a strictly-advancing TOTP code is accepted", c == 200 and bool(adv.get("token")), adv.get("error"))
-    jget("POST", "/api/admin/me/2fa/disable", token=admin, body={"code": totp_now(setup["secret"])})
+    recovery_code = ver.get("recovery_codes", [""])[0]
+    c, disabled = jget("POST", "/api/admin/me/2fa/disable", token=admin, body={"code": recovery_code})
+    c2, disabled_status = jget("GET", "/api/admin/me/2fa", token=admin)
+    chk("14u7 a one-time recovery code can disable 2FA and clears recovery inventory",
+        c == 200 and disabled.get("enabled") is False and c2 == 200
+        and disabled_status.get("enabled") is False and disabled_status.get("recovery_remaining") == 0,
+        (disabled, disabled_status))
 
     # ---- 14v. RBAC: support role sees the inbox but not money; viewer sees nothing; partner APIs need partner auth ----
     vtok = globals().get("_VIEWER_TOK")

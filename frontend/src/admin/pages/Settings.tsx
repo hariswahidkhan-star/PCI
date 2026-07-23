@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type Settings as SettingsMap } from '../api'
 import { Card, Spinner, ErrorNote } from '../../components/ui'
@@ -17,6 +17,7 @@ function labelFor(k: string) {
 
 /** Account-level TOTP MFA: enrol (pending) → verify with a code (active) → disable with a code. */
 function TwoFactorCard() {
+  const [status, setStatus] = useState<{ enabled: boolean; pending: boolean; recovery_remaining: number } | null>(null)
   const [setup, setSetup] = useState<{ secret: string; otpauth: string } | null>(null)
   const [code, setCode] = useState('')
   const [disableCode, setDisableCode] = useState('')
@@ -24,6 +25,10 @@ function TwoFactorCard() {
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const [copied, setCopied] = useState(false)
   const [recovery, setRecovery] = useState<string[] | null>(null)
+  const reload = () => adminApi.get<{ enabled: boolean; pending: boolean; recovery_remaining: number }>('/api/admin/me/2fa')
+    .then(setStatus)
+    .catch(() => setStatus({ enabled: false, pending: false, recovery_remaining: 0 }))
+  useEffect(() => { reload() }, [])
 
   async function begin() {
     setBusy(true); setMsg(null)
@@ -37,6 +42,7 @@ function TwoFactorCard() {
       const r = await adminApi.post<{ recovery_codes?: string[] }>('/api/admin/me/2fa/verify', { code: code.trim() })
       setSetup(null); setCode('')
       setRecovery(r.recovery_codes ?? [])
+      await reload()
       setMsg({ ok: true, text: '2FA enabled — you will be asked for an authentication code at every sign-in.' })
     } catch (e) {
       setMsg({ ok: false, text: e instanceof Error && e.message === 'totp_invalid' ? 'That code is not valid — check your authenticator app and try again.' : (e as Error).message })
@@ -47,6 +53,8 @@ function TwoFactorCard() {
     try {
       await adminApi.post('/api/admin/me/2fa/disable', { code: disableCode.trim() })
       setDisableCode(''); setSetup(null)
+      setRecovery(null)
+      await reload()
       setMsg({ ok: true, text: '2FA disabled for your account.' })
     } catch (e) {
       setMsg({ ok: false, text: e instanceof Error && e.message === 'totp_invalid' ? 'Enter a current code from your authenticator app to disable 2FA.' : (e as Error).message })
@@ -79,8 +87,17 @@ function TwoFactorCard() {
           </div>
         </div>
       )}
-      {!setup ? (
-        <button className="btn sm" disabled={busy} onClick={begin}>{busy ? 'Working…' : 'Enable 2FA'}</button>
+      {!status ? (
+        <Spinner />
+      ) : status.enabled && !setup ? (
+        <p style={{ margin: 0 }}>
+          <span className="badge ok">Enabled</span>{' '}
+          <span className="muted small">Recovery codes remaining: {status.recovery_remaining}</span>
+        </p>
+      ) : !setup ? (
+        <button className="btn sm" disabled={busy} onClick={begin}>
+          {busy ? 'Working…' : status.pending ? 'Restart 2FA setup' : 'Enable 2FA'}
+        </button>
       ) : (
         <div style={{ display: 'grid', gap: '.5rem' }}>
           <div className="small">1. Add this secret to your authenticator app (choose "enter a setup key" — no QR needed):</div>
@@ -98,14 +115,18 @@ function TwoFactorCard() {
           <p className="muted small" style={{ margin: 0 }}>2FA is not active until the code is confirmed, so a mis-scanned secret can never lock you out.</p>
         </div>
       )}
+      {status && (status.enabled || status.pending) && (
       <details style={{ marginTop: '.8rem' }}>
-        <summary className="small" style={{ cursor: 'pointer', fontWeight: 600 }}>Disable 2FA</summary>
+        <summary className="small" style={{ cursor: 'pointer', fontWeight: 600 }}>{status.enabled ? 'Disable 2FA' : 'Cancel pending setup'}</summary>
         <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap', marginTop: '.5rem' }}>
-          <input maxLength={16} placeholder="Current or recovery code" value={disableCode} onChange={(e) => setDisableCode(e.target.value)} style={{ maxWidth: 180 }} aria-label="Current authentication or recovery code" />
-          <button className="btn sm danger" disabled={busy} onClick={disable}>{busy ? 'Working…' : 'Disable 2FA'}</button>
+          {status.enabled && <input maxLength={16} placeholder="Current or recovery code" value={disableCode} onChange={(e) => setDisableCode(e.target.value)} style={{ maxWidth: 180 }} aria-label="Current authentication or recovery code" />}
+          <button className="btn sm danger" disabled={busy || (status.enabled && !disableCode.trim())} onClick={disable}>{busy ? 'Working…' : status.enabled ? 'Disable 2FA' : 'Cancel setup'}</button>
         </div>
-        <p className="muted small" style={{ marginTop: '.4rem' }}>Requires a current code from your authenticator app while 2FA is active.</p>
+        <p className="muted small" style={{ marginTop: '.4rem' }}>
+          {status.enabled ? 'Requires a current authenticator or recovery code while 2FA is active.' : 'The pending secret has not been activated and can be cleared safely.'}
+        </p>
       </details>
+      )}
     </Card>
   )
 }
