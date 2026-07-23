@@ -26,7 +26,7 @@ Certuvo boundary), corroborated by direct inspection of `backend/Data/Migrate.cs
   production use. Never send credentials / payment data / TOTP / recovery codes / gov IDs / other
   students' data to a provider. Use **synthetic scenario data** by default.
 - Published scenario versions are **immutable**; a revision creates a new version.
-- Do **not** duplicate Certuvo. Naming: **PCL-AI / PFL-AI / PDL-AI** only.
+- Do **not** duplicate Certuvo. Naming: **PCL-AI / PFL-AI / PML-AI** only (PDL-AI is retired).
 
 ---
 
@@ -44,7 +44,7 @@ Certuvo boundary), corroborated by direct inspection of `backend/Data/Migrate.cs
 - Certuvo eligibility analog to copy: `CertuvoLink.Eligible` (`Provisioning.cs:251-265`), operator rule
   `certuvo_requires`; access endpoint shape `GET /api/me/certuvo/access` (`Certuvo.cs:58-63`);
   member-type resolver `DetectMemberType` (297-311: paid/waived/sponsored/complimentary/honorary/test).
-- Certifications stored **clean** (`PCL-AI`/`PFL-AI`/`PDL-AI`, ids 1/2/3; `Certs.DefaultId=1`;
+- Certifications stored **clean** (`PCL-AI`/`PFL-AI`/`PML-AI`, ids 1/2/3; `Certs.DefaultId=1`;
   `COALESCE(certification_id,1)`), `backend/Core/Certs.cs`, `backend/Data/MultiCert.cs:16-105`.
 - Feature flags in `site_settings` via `Settings.Bool/Str/Num` (`Auth.cs:45-69`), `sp_`-prefixed for
   student-portal toggles.
@@ -138,7 +138,7 @@ Certuvo boundary), corroborated by direct inspection of `backend/Data/Migrate.cs
 | Requirement | Existing component | Existing completion | Gap | Minimum increment | Rebuild? |
 |---|---|---|---:|---|---|
 | Student Lab access | Existing PCI account + Certuvo entitlement pattern | ~80% (pattern proven) | No Lab entitlement/flag | `Core/SimLab.Eligible` + `sp_simlab_enabled` + `GET /api/me/lab/access`; grant in `EnsureDownstream` | No |
-| Certification mapping | `Certs`/`MultiCert` (PCL/PFL/PDL-AI, id 1/2/3) | 100% | Scenario→cert mapping table | `simulation_certification_mappings` reusing `COALESCE(cert,1)` | No |
+| Certification mapping | `Certs`/`MultiCert` (PCL/PFL/PML-AI, id 1/2/3) | 100% | Scenario→cert mapping table | `simulation_certification_mappings` reusing `COALESCE(cert,1)` | No |
 | Exam-record separation | `exam_attempts`/entitlements firewall (Certuvo precedent) | 100% (pattern) | New sim tables must not touch them | Separate `simulation_*` tables; no FK into exam records | No |
 | AI Coach / Analyst | `AiContent` + `ai_content_providers` (+ `Translator` mockable endpoint) | ~50% | No tool-calling, no structured output, no evals, unwired config | `Core/AiEngine.cs` (tool round-trip) + wire+seed provider config + eval harness | No |
 | Deterministic calc engine (CPM/EVM/EAC/MC) | none | 0% | Whole engine | New `Core/Sim/*` deterministic services + unit/property tests | New code, not a rebuild |

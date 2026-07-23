@@ -228,6 +228,113 @@ function GivenView({ task }: { task: Task }) {
       </table>
     )
   }
+  if (task.task === 'productivity') {
+    const labels: Record<string, string> = {
+      planned_qty: 'Planned quantity', planned_hours: 'Planned hours',
+      earned_qty: 'Earned quantity', actual_hours: 'Actual hours',
+    }
+    return (
+      <table className="data">
+        <tbody>
+          {Object.keys(labels).filter((k) => k in g).map((k) => (
+            <tr key={k}><th style={{ textAlign: 'left' }}>{labels[k]}</th><td>{fmt(g[k])}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+  if (task.task === 'boq') {
+    const lines = (g.lines as { id: string; qty: number; rate: number }[]) ?? []
+    return (
+      <table className="data">
+        <thead><tr><th>Line</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>
+        <tbody>
+          {lines.map((l) => (
+            <tr key={l.id}><td>{l.id}</td><td>{fmt(l.qty)}</td><td>{fmt(l.rate)}</td><td>{fmt(l.qty * l.rate)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+  if (task.task === 'resource') {
+    const periods = (g.periods as { period: number; demand: number; capacity: number }[]) ?? []
+    return (
+      <table className="data">
+        <thead><tr><th>Period</th><th>Demand</th><th>Capacity</th><th>Overload</th></tr></thead>
+        <tbody>
+          {periods.map((p) => (
+            <tr key={p.period}>
+              <td>{p.period}</td><td>{fmt(p.demand)}</td><td>{fmt(p.capacity)}</td>
+              <td>{fmt(Math.max(0, p.demand - p.capacity))}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+  if (task.task === 'procurement') {
+    return (
+      <table className="data">
+        <tbody>
+          <tr><th style={{ textAlign: 'left' }}>Project duration (days)</th><td>{fmt(g.project_duration)}</td></tr>
+          <tr><th style={{ textAlign: 'left' }}>Remaining float (days)</th><td>{fmt(g.remaining_float)}</td></tr>
+          <tr><th style={{ textAlign: 'left' }}>Supplier delay (days)</th><td>{fmt(g.supplier_delay_days)}</td></tr>
+        </tbody>
+      </table>
+    )
+  }
+  if (task.task === 'portfolio') {
+    const projects = (g.projects as { id: string; npv: number; risk: number; fit: number }[]) ?? []
+    return (
+      <>
+        <div className="small muted" style={{ marginBottom: '.3rem' }}>
+          Weights — NPV {fmt(g.w_npv)} · risk {fmt(g.w_risk)} · fit {fmt(g.w_fit)}
+        </div>
+        <table className="data">
+          <thead><tr><th>Project</th><th>NPV</th><th>Risk</th><th>Fit</th></tr></thead>
+          <tbody>
+            {projects.map((p) => (
+              <tr key={p.id}><td>{p.id}</td><td>{fmt(p.npv)}</td><td>{fmt(p.risk)}</td><td>{fmt(p.fit)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    )
+  }
+  if (task.task === 'decision') {
+    const options = (g.options as { id: string; cost: number; schedule: number; risk: number }[]) ?? []
+    return (
+      <>
+        <div className="small muted" style={{ marginBottom: '.3rem' }}>
+          Weights — cost {fmt(g.w_cost)} · schedule {fmt(g.w_sched)} · risk {fmt(g.w_risk)}
+        </div>
+        <table className="data">
+          <thead><tr><th>Option</th><th>Cost impact</th><th>Schedule impact</th><th>Risk</th></tr></thead>
+          <tbody>
+            {options.map((o) => (
+              <tr key={o.id}><td>{o.id}</td><td>{fmt(o.cost)}</td><td>{fmt(o.schedule)}</td><td>{fmt(o.risk)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    )
+  }
+  if (task.task === 'data_quality') {
+    const rowsDq = (g.rows as { value: number | null; expected: number }[]) ?? []
+    return (
+      <>
+        <div className="small muted" style={{ marginBottom: '.3rem' }}>Anomaly threshold: {fmt(g.threshold)}</div>
+        <table className="data">
+          <thead><tr><th>#</th><th>Value</th><th>Expected</th></tr></thead>
+          <tbody>
+            {rowsDq.map((r, i) => (
+              <tr key={i}><td>{i + 1}</td><td>{r.value == null ? '—' : fmt(r.value)}</td><td>{fmt(r.expected)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    )
+  }
   return <pre className="small muted" style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(g, null, 2)}</pre>
 }
 
@@ -237,8 +344,11 @@ export default function LabRunner() {
   const [start, setStart] = useState<StartResp | null>(null)
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [grade, setGrade] = useState<Grade | null>(null)
-  const [coach, setCoach] = useState<{ ok: boolean; message: string; ai: boolean } | null>(null)
+  const [coach, setCoach] = useState<{ ok: boolean; message: string; ai: boolean; coach_mode?: string; hint_level?: number } | null>(null)
   const [coaching, setCoaching] = useState(false)
+  const [coachMode, setCoachMode] = useState('guided')
+  const [hintLevel, setHintLevel] = useState(2)
+  const [saveNote, setSaveNote] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -257,18 +367,33 @@ export default function LabRunner() {
 
   useEffect(() => { begin(mode) }, [begin, mode])
 
+  const buildAnswersPayload = () => {
+    if (!start) return {}
+    const payload: Record<string, unknown> = {}
+    for (const a of start.task.ask) {
+      const raw = (answers[a.key] ?? '').trim()
+      if (a.type === 'set') payload[a.key] = raw.split(/[,\s]+/).filter(Boolean)
+      else if (a.type === 'bool') payload[a.key] = /^(y|yes|true|valid)$/i.test(raw) ? true : /^(n|no|false|invalid)$/i.test(raw) ? false : null
+      else payload[a.key] = raw === '' ? null : Number(raw)
+    }
+    return payload
+  }
+
+  const autosave = async () => {
+    if (!start || grade) return
+    try {
+      await api.post(`/api/me/lab/attempts/${start.attempt_id}/autosave`, { answers: buildAnswersPayload() })
+      setSaveNote('Progress saved')
+    } catch {
+      setSaveNote('Autosave unavailable — your answers stay in this browser until you submit.')
+    }
+  }
+
   const submit = async () => {
     if (!start) return
     setBusy(true); setError(null)
     try {
-      const payload: Record<string, unknown> = {}
-      for (const a of start.task.ask) {
-        const raw = (answers[a.key] ?? '').trim()
-        if (a.type === 'set') payload[a.key] = raw.split(/[,\s]+/).filter(Boolean)
-        else if (a.type === 'bool') payload[a.key] = /^(y|yes|true|valid)$/i.test(raw) ? true : /^(n|no|false|invalid)$/i.test(raw) ? false : null
-        else payload[a.key] = raw === '' ? null : Number(raw)
-      }
-      const g = await api.post<Grade>(`/api/me/lab/attempts/${start.attempt_id}/submit`, { answers: payload })
+      const g = await api.post<Grade>(`/api/me/lab/attempts/${start.attempt_id}/submit`, { answers: buildAnswersPayload() })
       setGrade(g)
     } catch (e) {
       setError(mapError(e))
@@ -277,12 +402,17 @@ export default function LabRunner() {
     }
   }
 
-  const askCoach = async () => {
+  const askCoach = async (levelOverride?: number) => {
     if (!start) return
     setCoaching(true)
+    const level = levelOverride ?? hintLevel
     try {
-      const r = await api.post<{ ok: boolean; message: string; ai: boolean }>(`/api/me/lab/attempts/${start.attempt_id}/coach`, {})
+      const r = await api.post<{ ok: boolean; message: string; ai: boolean; coach_mode?: string; hint_level?: number }>(
+        `/api/me/lab/attempts/${start.attempt_id}/coach`,
+        { answers: buildAnswersPayload(), coach_mode: coachMode, hint_level: level },
+      )
       setCoach(r)
+      if (r.ok && !grade) setHintLevel((h) => Math.min(6, Math.max(h, level) + 1))
     } catch {
       setCoach({ ok: false, message: 'The coach is unavailable right now — please try again shortly.', ai: false })
     } finally {
@@ -346,9 +476,44 @@ export default function LabRunner() {
                   </label>
                 ))}
                 {error && <ErrorNote>{error}</ErrorNote>}
-                <div className="row" style={{ gap: '.5rem' }}>
+                <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
                   <button className="btn" onClick={submit} disabled={busy}>{busy ? 'Grading…' : 'Submit for grading'}</button>
+                  <button className="btn secondary" type="button" onClick={autosave} disabled={busy}>Save progress</button>
+                  {saveNote && <span className="small muted" role="status">{saveNote}</span>}
                 </div>
+                {!start.task.assessment && (
+                  <div className="stack" style={{ display: 'grid', gap: '.4rem', marginTop: '.4rem' }}>
+                    <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
+                      <label className="small">Coach mode
+                        <select value={coachMode} onChange={(e) => setCoachMode(e.target.value)} aria-label="Coach mode">
+                          <option value="socratic">Socratic</option>
+                          <option value="guided">Guided</option>
+                          <option value="explain">Explain</option>
+                          <option value="review">Review</option>
+                          <option value="language">Language / accessibility</option>
+                        </select>
+                      </label>
+                      <label className="small">Hint level
+                        <select value={hintLevel} onChange={(e) => setHintLevel(Number(e.target.value))} aria-label="Hint level">
+                          {[1, 2, 3, 4, 5].map((n) => <option key={n} value={n}>{n}</option>)}
+                        </select>
+                      </label>
+                      <button className="btn secondary sm" type="button" onClick={askCoach} disabled={coaching}>
+                        {coaching ? 'Asking…' : 'Ask for a hint'}
+                      </button>
+                    </div>
+                    {coach && (
+                      <div style={{ background: 'var(--wash, #f6f8fb)', borderRadius: '.5rem', padding: '.7rem .8rem' }}>
+                        <div className="row" style={{ gap: '.4rem', alignItems: 'center', marginBottom: '.3rem' }}>
+                          <strong>Coach</strong>
+                          <Badge tone={coach.ai ? 'brand' : 'neutral'}>{coach.ai ? 'AI' : 'Guide'}</Badge>
+                          {coach.coach_mode && <Badge tone="neutral">{titleCase(coach.coach_mode)}</Badge>}
+                        </div>
+                        <div style={{ whiteSpace: 'pre-wrap' }}>{coach.message}</div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </Card>
           ) : (
@@ -403,12 +568,21 @@ export default function LabRunner() {
                       <div className="row" style={{ gap: '.4rem', alignItems: 'center', marginBottom: '.3rem' }}>
                         <strong>Coach</strong>
                         <Badge tone={coach.ai ? 'brand' : 'neutral'}>{coach.ai ? 'AI' : 'Guide'}</Badge>
+                        {coach.coach_mode && <Badge tone="neutral">{titleCase(coach.coach_mode)}</Badge>}
                       </div>
                       <div style={{ whiteSpace: 'pre-wrap' }}>{coach.message}</div>
                     </div>
                   ) : (
-                    <div>
-                      <button className="btn secondary sm" onClick={askCoach} disabled={coaching}>
+                    <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
+                      <label className="small">Debrief mode
+                        <select value={coachMode} onChange={(e) => setCoachMode(e.target.value)} aria-label="Debrief coach mode">
+                          <option value="debrief">Debrief</option>
+                          <option value="explain">Explain</option>
+                          <option value="review">Review</option>
+                          <option value="language">Language / accessibility</option>
+                        </select>
+                      </label>
+                      <button className="btn secondary sm" onClick={() => { setCoachMode('debrief'); void askCoach(6) }} disabled={coaching}>
                         {coaching ? 'Asking the coach…' : 'Ask the coach'}
                       </button>
                     </div>
