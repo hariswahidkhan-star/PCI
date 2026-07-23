@@ -144,20 +144,25 @@ public static class SimLab
             var scenarioId = H.L(s["id"]);
             var version = H.L(s["version"]);
             // Resume an existing in-progress attempt for this scenario+mode rather than spawning duplicates.
-            var existing = db.QueryOne(@"SELECT id FROM simulation_attempts
+            var existing = db.QueryOne(@"SELECT id,seed FROM simulation_attempts
                 WHERE user_id=? AND scenario_id=? AND mode=? AND status='in_progress' ORDER BY id DESC LIMIT 1",
                 u.Id, scenarioId, mode);
-            long attemptId;
-            if (existing is not null) attemptId = H.L(existing["id"]);
+            long attemptId, seed;
+            if (existing is not null) { attemptId = H.L(existing["id"]); seed = H.L(existing["seed"]); }
             else
             {
                 attemptId = db.ExecuteReturningId(@"INSERT INTO simulation_attempts
                     (user_id,scenario_id,scenario_version,mode,status,seed,state_json)
                     VALUES(?,?,?,?, 'in_progress', 0, '{}')", u.Id, scenarioId, version, mode);
+                // A scenario with a variant block draws a per-attempt instance: the seed is the attempt id —
+                // unique, non-zero and stored — so serving, resume and grading all re-derive the same numbers.
+                // Non-variant scenarios keep seed 0, so existing content behaves exactly as before.
+                seed = Core.SimVariant.HasVariants(config) ? attemptId : 0;
+                if (seed != 0) db.Execute("UPDATE simulation_attempts SET seed=? WHERE id=?", seed, attemptId);
                 log(u.Id, "sim_attempt_start", $"{code} · {mode} · #{attemptId}");
             }
             return J(new { attempt_id = attemptId, resumed = existing is not null,
-                scenario = ScenarioMeta(s), task = Core.SimGrade.TaskFor(config, mode) });
+                scenario = ScenarioMeta(s), task = Core.SimGrade.TaskFor(EffectiveConfig(configRaw!, seed), mode) });
         });
 
         // ---- list this student's attempts ----
@@ -189,7 +194,7 @@ public static class SimLab
             if (s is null || string.IsNullOrWhiteSpace(H.Str(s["config_json"])))
                 return Results.Json(new { error = "not_interactive" }, statusCode: 409);
 
-            var config = JsonDocument.Parse(H.Str(s["config_json"])!).RootElement;
+            var config = EffectiveConfig(H.Str(s["config_json"])!, H.L(att["seed"]));
             var mode = H.Str(att["mode"]) ?? "training";
             var status = H.Str(att["status"]) ?? "in_progress";
             var completed = status is "completed" or "passed" or "failed";
@@ -226,7 +231,7 @@ public static class SimLab
             var s = db.QueryOne("SELECT id,scenario_code,config_json FROM simulation_scenarios WHERE id=?", H.L(att["scenario_id"]));
             if (s is null || string.IsNullOrWhiteSpace(H.Str(s["config_json"])))
                 return Results.Json(new { error = "not_interactive" }, statusCode: 409);
-            var config = JsonDocument.Parse(H.Str(s["config_json"])!).RootElement;
+            var config = EffectiveConfig(H.Str(s["config_json"])!, H.L(att["seed"]));
             var mode = H.Str(att["mode"]) ?? "training";
 
             var b = await H.Body(ctx.Request);
@@ -265,7 +270,7 @@ public static class SimLab
             var s = db.QueryOne("SELECT scenario_code,config_json FROM simulation_scenarios WHERE id=?", H.L(att["scenario_id"]));
             if (s is null || string.IsNullOrWhiteSpace(H.Str(s["config_json"])))
                 return Results.Json(new { error = "not_interactive" }, statusCode: 409);
-            var config = JsonDocument.Parse(H.Str(s["config_json"])!).RootElement;
+            var config = EffectiveConfig(H.Str(s["config_json"])!, H.L(att["seed"]));
             var mode = H.Str(att["mode"]) ?? "training";
 
             var b = await H.Body(ctx.Request);
@@ -284,6 +289,13 @@ public static class SimLab
         var mode = (raw ?? "training").Trim().ToLowerInvariant();
         return mode is "training" or "challenge" or "assessment" or "sandbox" ? mode : "training";
     }
+
+    /// <summary>The exact task instance an attempt runs: the scenario's config with its variant applied for
+    /// the attempt's stored <c>seed</c>. Seed 0 — or a scenario with no variant block — yields the canonical
+    /// instance, so re-deriving from the stored seed reproduces identical numbers for serving, resume and
+    /// grading. SimCalc still derives every answer from these inputs; no answer key is ever stored.</summary>
+    static JsonElement EffectiveConfig(string configRaw, long seed) =>
+        JsonDocument.Parse(Core.SimVariant.Derive(configRaw, seed)).RootElement;
 
     static JsonElement LoadAnswers(string? stateJson)
     {

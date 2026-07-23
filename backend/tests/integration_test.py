@@ -3517,11 +3517,31 @@ def test_simlab(admin):
     chk("43l start returns an attempt + task (evm), and the task never leaks the answer key",
         c == 200 and aid and task.get("task") == "evm" and isinstance(task.get("ask"), list) and not leaks, (c, list(task.keys())))
 
-    # Submit the exact deterministic answers → full marks, passes, earned_value competency evidence.
-    ev_ans = {"sv": -10000, "cv": -5000, "spi": 0.9, "cpi": 0.9474, "eac": 211111.1111}
+    # GL-EVM-001 now serves a deterministic per-attempt VARIANT (§6): compute the expected EVM answers from
+    # the ACTUAL served inputs (a reference solver in the test), so the full serve→grade round-trip is proven
+    # for whatever instance this attempt drew. Full-precision answers pass within the engine's tolerance.
+    g0 = task.get("given", {})
+    pv0, ev0, ac0, bac0 = g0.get("pv"), g0.get("ev"), g0.get("ac"), g0.get("bac")
+    def evm_answers(g):
+        pv, ev, ac, bac = g["pv"], g["ev"], g["ac"], g["bac"]
+        return {"sv": ev - pv, "cv": ev - ac, "spi": ev / pv, "cpi": ev / ac, "eac": bac / (ev / ac)}
+    ev_ans = evm_answers(g0)
     c, sub = jget("POST", f"/api/me/lab/attempts/{aid}/submit", token=mtok, body={"answers": ev_ans})
-    chk("43m submitting the correct EVM measures scores 100 and passes",
+    chk("43m submitting the correct EVM measures (computed from the served variant) scores 100 and passes",
         c == 200 and sub.get("score") == 100 and sub.get("passed") is True, (c, sub.get("score"), sub.get("passed")))
+
+    # A fresh attempt draws its OWN instance: a different, non-zero stored seed (the attempt id), and it too
+    # round-trips to 100 from its own served inputs. Proves variants are per-attempt and deterministically
+    # replayable — not the same numbers every time, and never ungradable.
+    c, stv = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-EVM-001", "mode": "training"})
+    aidv = stv.get("attempt_id"); gv = stv.get("task", {}).get("given", {})
+    c, subv = jget("POST", f"/api/me/lab/attempts/{aidv}/submit", token=mtok, body={"answers": evm_answers(gv)})
+    con = dbconn()
+    seeds = {r[0] for r in con.execute("SELECT seed FROM simulation_attempts WHERE id IN (?,?)", (aid, aidv)).fetchall()}
+    con.close()
+    chk("43m2 each GL-EVM-001 attempt draws its own seeded variant and still grades to 100",
+        subv.get("score") == 100 and aid != aidv and seeds == {aid, aidv} and 0 not in seeds,
+        (subv.get("score"), sorted(seeds), aid, aidv))
     comps = {x.get("competency") for x in sub.get("competencies", [])}
     chk("43n the graded attempt writes earned_value competency evidence", "earned_value" in comps, sorted(comps))
     con = dbconn(); ce = con.execute("SELECT competency,level FROM simulation_competency WHERE attempt_id=?", (aid,)).fetchall(); con.close()
@@ -3598,6 +3618,70 @@ def test_simlab(admin):
     chk("43z2 the scenario validator is not reachable with a student token", c in (401, 403), c)
     c, _vn = jget("GET", "/api/admin/lab/scenarios/99999999/validate", token=admin)
     chk("43z3 validating an unknown scenario id returns 404", c == 404, c)
+
+    # ---- Phase 5A: scenario authoring + review workflow (§13), gated 'content', maker-checker enforced ----
+    valid_cfg = {"task": "evm", "prompt": "Compute the CPI.",
+                 "given": {"pv": 100000, "ev": 90000, "ac": 95000, "bac": 200000},
+                 "ask": [{"key": "cpi", "label": "CPI", "type": "number"}],
+                 "tolerance": 0.01, "pass_pct": 70, "competencies": ["earned_value"]}
+    c, cr = jget("POST", "/api/admin/lab/scenarios", token=admin, body={
+        "scenario_code": "IT-REV-001", "title": "Review-workflow scenario", "difficulty": "foundation",
+        "competencies": ["earned_value"], "certification_id": 1, "config_json": valid_cfg,
+        "synthetic_declared": True, "summary": "synthetic review-workflow test"})
+    new_id = cr.get("id")
+    chk("43z4 an admin creates a DRAFT scenario (author recorded, not yet served)",
+        c == 200 and new_id and cr.get("review_state") == "draft" and cr.get("status") == "draft", (c, cr))
+    c, dup = jget("POST", "/api/admin/lab/scenarios", token=admin, body={"scenario_code": "IT-REV-001", "title": "dup"})
+    chk("43z5 a duplicate scenario_code is refused (409)", c == 409 and dup.get("error") == "duplicate_code", (c, dup))
+    c, bt = jget("POST", f"/api/admin/lab/scenarios/{new_id}/review", token=admin, body={"to": "published"})
+    chk("43z6 a scenario cannot skip straight to published (bad_transition, 409)", c == 409 and bt.get("error") == "bad_transition", (c, bt))
+    walk_ok = True; tr = {}
+    for stage in ("calc_review", "learning_review", "safety_review", "pilot"):
+        c, tr = jget("POST", f"/api/admin/lab/scenarios/{new_id}/review", token=admin, body={"to": stage})
+        walk_ok = walk_ok and c == 200 and tr.get("review_state") == stage
+    chk("43z7 a scenario walks the review stages one step at a time", walk_ok, tr)
+    c, mc = jget("POST", f"/api/admin/lab/scenarios/{new_id}/review", token=admin, body={"to": "approved"})
+    chk("43z8 the author cannot approve their own scenario (maker_checker, 409)", c == 409 and mc.get("error") == "maker_checker", (c, mc))
+    # A second admin holding 'content' satisfies maker-checker and can approve + publish.
+    jget("POST", "/api/admin/team", token=admin, body={"email": "simrev2@pci.test", "name": "Sim Reviewer",
+         "role": "custom", "permissions": ["content"], "password": "SimRev-2026!", "force_password_change": False})
+    c, l2 = admin_login_rl(lambda: {"email": "simrev2@pci.test", "password": "SimRev-2026!"})
+    admin2 = l2.get("token")
+    c, ap = jget("POST", f"/api/admin/lab/scenarios/{new_id}/review", token=admin2, body={"to": "approved"})
+    chk("43z9 a different admin approves the scenario (maker-checker satisfied)", c == 200 and ap.get("review_state") == "approved", (c, ap))
+    c, pub = jget("POST", f"/api/admin/lab/scenarios/{new_id}/review", token=admin2, body={"to": "published"})
+    chk("43z10 the approving admin publishes the scenario", c == 200 and pub.get("review_state") == "published", (c, pub))
+    c, startnew = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "IT-REV-001", "mode": "training"})
+    chk("43z11 the newly published scenario is served to students end-to-end (attempt starts)",
+        c == 200 and startnew.get("attempt_id") and (startnew.get("task") or {}).get("task") == "evm", (c, (startnew.get("task") or {}).get("task")))
+    # An incomplete scenario (no config/competencies/synthetic) is blocked at approval by the §14 validator.
+    c, cz = jget("POST", "/api/admin/lab/scenarios", token=admin, body={"scenario_code": "IT-REV-INC", "title": "Incomplete", "difficulty": "foundation"})
+    inc_id = cz.get("id")
+    for stage in ("calc_review", "learning_review", "safety_review", "pilot"):
+        jget("POST", f"/api/admin/lab/scenarios/{inc_id}/review", token=admin, body={"to": stage})
+    c, ng = jget("POST", f"/api/admin/lab/scenarios/{inc_id}/review", token=admin2, body={"to": "approved"})
+    chk("43z12 an unpublishable (incomplete) scenario is blocked at approval (not_publishable, 409)",
+        c == 409 and ng.get("error") == "not_publishable" and ng.get("errors", 0) >= 1, (c, ng.get("error"), ng.get("errors")))
+    c, _stu = jget("POST", "/api/admin/lab/scenarios", token=mtok, body={"scenario_code": "X", "title": "x"})
+    chk("43z13 scenario authoring is not reachable with a student token", c in (401, 403), c)
+
+    # ---- Phase 5A: edit / published-immutability / controlled revise-to-new-version (§18) ----
+    c, ed = jget("PATCH", f"/api/admin/lab/scenarios/{inc_id}", token=admin, body={"title": "Incomplete (edited)"})
+    chk("43z14 an in-review (non-published) scenario can be edited", c == 200 and ed.get("updated", 0) >= 1, (c, ed))
+    c, im = jget("PATCH", f"/api/admin/lab/scenarios/{new_id}", token=admin, body={"title": "tamper with the published one"})
+    chk("43z15 a PUBLISHED scenario is immutable to edits (409 immutable)", c == 409 and im.get("error") == "immutable", (c, im))
+    c, rv = jget("POST", f"/api/admin/lab/scenarios/{new_id}/revise", token=admin, body={"new_code": "IT-REV-001-v2"})
+    rev_id = rv.get("id")
+    chk("43z16 a published scenario revises into a new DRAFT version (source untouched)",
+        c == 200 and rev_id and rv.get("review_state") == "draft" and rv.get("revised_from") == new_id, (c, rv))
+    c, rve = jget("PATCH", f"/api/admin/lab/scenarios/{rev_id}", token=admin, body={"summary": "revised draft"})
+    chk("43z17 the revised draft is itself editable", c == 200 and rve.get("updated", 0) >= 1, (c, rve))
+    c, dupr = jget("POST", f"/api/admin/lab/scenarios/{new_id}/revise", token=admin, body={"new_code": "IT-REV-001-v2"})
+    chk("43z18 revising into an existing code is refused (409)", c == 409 and dupr.get("error") == "duplicate_code", (c, dupr))
+    # The original published scenario is unchanged and still served.
+    c, orig = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "IT-REV-001", "mode": "training"})
+    chk("43z19 the original published scenario is untouched by the revision (still served)",
+        c == 200 and orig.get("attempt_id"), c)
 
     # ---- Phase 2 engine: forecasting (three EAC methods) + CBS cost roll-up, graded deterministically ----
     c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})
