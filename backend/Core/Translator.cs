@@ -32,7 +32,9 @@ public static class Translator
     public static Config Load(Db db)
     {
         string S(string k) => db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", k) ?? "";
-        return new Config(S("translate_provider").Trim().ToLowerInvariant(), S("translate_api_key").Trim(),
+        var rawKey = S("translate_api_key").Trim();
+        var apiKey = (Security.DecryptSecret(rawKey) ?? rawKey).Trim();
+        return new Config(S("translate_provider").Trim().ToLowerInvariant(), apiKey,
                           S("translate_model").Trim(), S("translate_endpoint").Trim());
     }
 

@@ -146,8 +146,10 @@ metadata) live under the other SEO tabs.
 ## 9. Payments (Stripe)
 
 - Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`. Point a Stripe webhook at
-  `POST /api/payments/webhook`. Inbound events are **HMAC-verified** and processed exactly once
-  (idempotent by event id). Until configured, payment endpoints answer 503.
+  `POST /api/webhook` (not `/api/payments/webhook` — that route does not exist). Inbound events are
+  **HMAC-verified** and processed exactly once (idempotent by event id). Until configured, payment
+  endpoints answer 503. Optionally set `STRIPE_WEBHOOK_URL` to the exact URL registered in Stripe so
+  the production config preflight and `/api/admin/system-check` can verify it ends with `/api/webhook`.
 
 ---
 

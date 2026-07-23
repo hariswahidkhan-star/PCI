@@ -64,6 +64,7 @@ builder.Services.AddHostedService<PCI.Backend.Core.SocialDispatcher>();   // Pha
 builder.Services.AddHostedService<PCI.Backend.Core.ScheduledPublisher>();   // Content Centre: publish scheduled blog posts when due
 builder.Services.AddHostedService<PCI.Backend.Core.SyndicationDispatcher>();   // Phase 3: syndication outbox
 builder.Services.AddHostedService<PCI.Backend.Core.MarketingJobDispatcher>();   // Marketing Phase 2: provider job queue
+builder.Services.AddHostedService<PCI.Backend.Core.ExamDeliveryDispatcher>();   // EXT-P0-04: durable exam-vendor provisioning
 builder.Services.AddHostedService<PCI.Backend.Core.CommsReminderService>();     // Comms §13: scheduled reminder sequences
 
 var app = builder.Build();
@@ -270,7 +271,7 @@ if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SMTP_HOST")) && str
     var sr = Environment.GetEnvironmentVariable("STORAGE_ROOT") ?? "./storage";
     if (sp == "local") Console.WriteLine($"[boot] storage: local at '{sr}' (evidence/attachments stored as files; DB holds references).");
     else if (!PCI.Backend.Core.Storage.UsingLocal) Console.WriteLine($"[boot] storage: s3 bucket '{Environment.GetEnvironmentVariable("S3_BUCKET")}'" + (Environment.GetEnvironmentVariable("S3_ENDPOINT") is { } ep ? $" via endpoint '{ep}'" : "") + " (DB holds references).");
-    else if (sp == "s3") Console.WriteLine($"[boot] storage: STORAGE_PROVIDER=s3 but S3_BUCKET is not set — falling back to local at '{sr}'.");
+    else if (sp == "s3") Console.WriteLine($"[boot] storage: STORAGE_PROVIDER=s3 but S3_BUCKET is not set — this is a configuration error (no silent local fallback).");
     else Console.WriteLine($"[boot] storage: unknown provider '{sp}' — falling back to local at '{sr}'. Set STORAGE_PROVIDER=local or s3.");
 }
 
@@ -308,6 +309,13 @@ static List<(string sev, string key, string msg)> ConfigIssues()
         // secrets are known. (ISO/IEC 27001 A.8.24 / 27018 cryptographic protection of PII.)
         if (!Security.HasDedicatedEncryptionKey())
             Err("CREDENTIAL_ENCRYPTION_KEY", "set a 32-byte key (base64/hex/passphrase) — required to encrypt credentials and stored identity documents at rest in production");
+        // EXT-P1-09 — incomplete S3 config must never silently fall back to node-local disk in production.
+        if (Storage.S3Misconfigured)
+            Err("S3_BUCKET", "STORAGE_PROVIDER=s3 requires S3_BUCKET (and AWS credentials / role); refusing silent local-disk fallback");
+        // EXT-P0-01 — if the operator documents the Stripe webhook URL they configured, it must match /api/webhook.
+        var stripeWhUrl = E("STRIPE_WEBHOOK_URL");
+        if (!string.IsNullOrWhiteSpace(stripeWhUrl) && !stripeWhUrl.TrimEnd('/').EndsWith("/api/webhook", StringComparison.OrdinalIgnoreCase))
+            Err("STRIPE_WEBHOOK_URL", "must end with /api/webhook (not /api/payments/webhook) — see docs/OPERATIONS.md §9");
     }
     return issues;
 }
@@ -425,12 +433,83 @@ app.MapGet("/api/admin/system-check", (HttpRequest req) =>
         owner_password_changed = db.Scalar<long>("SELECT COUNT(*) FROM admin_users WHERE email=? AND must_change_pw=0", (E("ADMIN_OWNER_EMAIL") ?? "owner@pci.local").ToLowerInvariant()) > 0,
         migrations_applied = db.Columns("exam_score_snapshots").Count > 0,   // provider-agnostic (sqlite_master is SQLite-only)
         storage_local = PCI.Backend.Core.Storage.UsingLocal,
+        storage_s3_misconfigured = PCI.Backend.Core.Storage.S3Misconfigured,
+        stripe_webhook_path = "/api/webhook",
+        stripe_webhook_url_ok = string.IsNullOrWhiteSpace(E("STRIPE_WEBHOOK_URL"))
+            || (E("STRIPE_WEBHOOK_URL") ?? "").TrimEnd('/').EndsWith("/api/webhook", StringComparison.OrdinalIgnoreCase),
+        meta_leads_secret_configured = !string.IsNullOrEmpty(E("META_APP_SECRET")),
         security_headers = true,                         // CSP + nosniff + frame-ancestors + referrer-policy
         csp_enforced = !string.Equals(E("CSP_REPORT_ONLY"), "true", StringComparison.OrdinalIgnoreCase),
         request_body_capped = true,                      // Kestrel MaxRequestBodySize = 6 MB
         retention_scheduled = true,                      // daily RetentionService hosted service
     };
     return Json(new { ok = issues.All(i => i.sev != "error"), environment = E("ASPNETCORE_ENVIRONMENT") ?? "Development", checks, issues = issues.Select(i => new { i.sev, i.key, i.msg }) });
+});
+
+// EXT-P1-11 — Integration Health: queue depth, DLQ, connector status, credential readiness (no secret values).
+app.MapGet("/api/admin/integrations/health", (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorised" }, statusCode: 401);
+    if (!a.IsOwner && !a.Perms.Contains("integrations")) return Results.Json(new { error = "forbidden" }, statusCode: 403);
+    string? E(string k) => Environment.GetEnvironmentVariable(k);
+    object Queue(string table, string pendingSql, string failedSql) => new
+    {
+        pending = db.Scalar<long>($"SELECT COUNT(*) FROM {table} WHERE {pendingSql}"),
+        failed = db.Scalar<long>($"SELECT COUNT(*) FROM {table} WHERE {failedSql}"),
+        oldest_pending_age_min = db.Scalar<long?>($"SELECT CAST(ROUND((julianday('now')-julianday(MIN(created_at)))*1440) AS INTEGER) FROM {table} WHERE {pendingSql}"),
+    };
+    var stripeConfigured = !string.IsNullOrEmpty(E("STRIPE_SECRET_KEY"));
+    var stripeWh = E("STRIPE_WEBHOOK_URL");
+    return Json(new
+    {
+        ok = true,
+        generated_at = DateTime.UtcNow.ToString("o"),
+        stripe = new
+        {
+            configured = stripeConfigured,
+            webhook_secret_configured = !string.IsNullOrEmpty(E("STRIPE_WEBHOOK_SECRET")),
+            webhook_path = "/api/webhook",
+            webhook_url_aligned = string.IsNullOrWhiteSpace(stripeWh) || stripeWh.TrimEnd('/').EndsWith("/api/webhook", StringComparison.OrdinalIgnoreCase),
+            recent_events = db.Scalar<long>("SELECT COUNT(*) FROM webhook_events WHERE provider='stripe' AND processed_at>=datetime('now','-1 day')"),
+        },
+        email = new
+        {
+            resend = !string.IsNullOrEmpty(E("RESEND_API_KEY")),
+            smtp = !string.IsNullOrEmpty(E("SMTP_HOST")),
+            outbox = Queue("comm_outbox", "status IN ('queued','scheduled','retrying','processing')", "status='failed'"),
+        },
+        integrations = new
+        {
+            connectors = db.Query("SELECT id,provider,name,enabled,status,last_delivery_at FROM integrations ORDER BY id"),
+            deliveries = Queue("integration_deliveries", "status='pending'", "status='failed'"),
+        },
+        certuvo = new
+        {
+            enabled = PCI.Backend.Core.Settings.Bool(db, "certuvo_enabled", false),
+            has_api_key = PCI.Backend.Core.CertuvoLink.ApiKey(db).Length > 0,
+            accounts = db.Query("SELECT status, COUNT(*) AS n FROM certuvo_accounts GROUP BY status"),
+            due_retries = db.Scalar<long>("SELECT COUNT(*) FROM certuvo_accounts WHERE status='error' AND next_retry_at IS NOT NULL AND next_retry_at<=datetime('now')"),
+        },
+        exam_delivery = new
+        {
+            mode = PCI.Backend.Core.Settings.Str(db, "exam_delivery_mode", "in_house"),
+            providers = db.Query("SELECT provider,enabled,environment,status FROM exam_delivery_providers ORDER BY id"),
+            orders = Queue("exam_delivery_orders", "status IN ('pending','failed','processing')", "status='failed'"),
+        },
+        marketing = new
+        {
+            meta_app_secret = !string.IsNullOrEmpty(E("META_APP_SECRET")),
+            jobs = Queue("mkt_jobs", "status IN ('queued','retrying','processing')", "status='failed'"),
+        },
+        storage = new
+        {
+            provider = E("STORAGE_PROVIDER") ?? "local",
+            using_local = PCI.Backend.Core.Storage.UsingLocal,
+            s3_misconfigured = PCI.Backend.Core.Storage.S3Misconfigured,
+        },
+        content_jobs = Queue("content_jobs", "status IN ('pending','retrying','processing')", "status='failed'"),
+    });
 });
 
 // ================= public content =================

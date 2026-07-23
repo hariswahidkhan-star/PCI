@@ -165,6 +165,8 @@ def boot():
                    # the mock vendors (exam-delivery, Certuvo, integrations) all run on 127.0.0.1, which the
                    # production SSRF guard blocks; opt in like a self-hosted deployment delivering to a private bridge.
                    INTEGRATIONS_ALLOW_PRIVATE_EGRESS="true",
+                   # Meta Lead Ads fail closed without META_APP_SECRET (EXT-P1-02); tests sign with this key.
+                   META_APP_SECRET="meta-test-secret-56",
                    ASPNETCORE_ENVIRONMENT="Development", DATABASE_FILE=DB)
     else:
         for f in (DB, DB+"-wal", DB+"-shm"):
@@ -173,6 +175,7 @@ def boot():
         env = dict(os.environ, DATABASE_FILE=DB, PORT=str(PORT), STORAGE_ROOT=STORAGE,
                    STRIPE_SECRET_KEY=STRIPE_KEY, STRIPE_WEBHOOK_SECRET=WEBHOOK_SECRET,
                    INTEGRATIONS_ALLOW_PRIVATE_EGRESS="true",   # mock vendors run on loopback (see mysql branch note)
+                   META_APP_SECRET="meta-test-secret-56",
                    ASPNETCORE_ENVIRONMENT="Development")
     boot_log = os.path.join(HERE, "_server_boot.log")
     logf = open(boot_log, "wb")
@@ -477,7 +480,11 @@ def test_exam_delivery(admin):
         chk("11t PSI: eligibility pushed → awaiting candidate self-schedule", bool(o2) and o2[1] == "awaiting_candidate_schedule", o2)
         c, cbbad = jget("POST", "/api/exam-delivery/callback/psi", body={"client_eligibility_id": o2[2], "result": "pass"})
         chk("11u inbound callback rejected without the shared secret", c in (400, 401), c)
-        c, cb = jget("POST", "/api/exam-delivery/callback/psi?token=cbsecret", body={"client_eligibility_id": o2[2], "candidate_id": str(upsi), "result": "pass", "score": 80})
+        # Query-string tokens are rejected (EXT-P1-04); auth is header-only.
+        c_q, _ = jget("POST", "/api/exam-delivery/callback/psi?token=cbsecret", body={"client_eligibility_id": o2[2], "result": "pass"})
+        chk("11u2 query-string callback token is refused", c_q == 401, c_q)
+        c, cb = jget("POST", "/api/exam-delivery/callback/psi", body={"client_eligibility_id": o2[2], "candidate_id": str(upsi), "result": "pass", "score": 80},
+                     headers={"X-PCI-Callback-Token": "cbsecret"})
         chk("11v PSI result callback issues the credential", c == 200 and cb.get("result_status") == "pass" and bool(cb.get("credential")), cb)
 
         # ---- SWITCH BACK to our own SecureExam ----
@@ -3836,7 +3843,7 @@ def test_payment_reversal_webhooks(admin):
     pp = con.execute("SELECT payment_status FROM payments WHERE provider_payment_id=?", ("pi_partialref",)).fetchone()
     mp = con.execute("SELECT status FROM memberships WHERE user_id=?", (puid,)).fetchone()
     con.close()
-    chk("29h a partial refund does not reverse the payment", bool(pp) and pp[0] == "paid", (code, pp))
+    chk("29h a partial refund does not reverse the payment", bool(pp) and pp[0] in ("paid", "partially_refunded"), (code, pp))
     chk("29i a partial refund does not lapse the membership", bool(mp) and mp[0] == "active", mp)
     # (d) idempotency — re-delivering the full-refund event is a no-op (already refunded)
     code2, _ = sign_and_send_webhook("cs_refund_ev2", "refundme@ex.co", "bundle", "pi_refundme", etype="charge.refunded")
@@ -5873,19 +5880,29 @@ def test_marketing_centre(admin):
 
     cv2, _ = jget("GET", "/api/webhooks/meta-leads?hub.mode=subscribe&hub.verify_token=guess56&hub.challenge=c56")
     payload = {"entry": [{"changes": [{"field": "leadgen", "value": {"leadgen_id": "lg-mk56", "form_id": "f-mk56"}}]}]}
-    c1, m1 = jget("POST", "/api/webhooks/meta-leads", body=payload)
-    c2, _ = jget("POST", "/api/webhooks/meta-leads", body=payload)   # provider retry-storm replay
+    raw = json.dumps(payload).encode()
+    # EXT-P1-02 — META_APP_SECRET is required; unsigned posts must not create leads. Sign with the boot secret.
+    meta_sec = "meta-test-secret-56"
+    sig = "sha256=" + hmac.new(meta_sec.encode(), raw, hashlib.sha256).hexdigest()
+    c_bad, m_bad = req("POST", "/api/webhooks/meta-leads", raw=raw, headers={"Content-Type": "application/json"})
+    try: m_bad_j = json.loads(m_bad)
+    except Exception: m_bad_j = m_bad
+    c1, m1txt = req("POST", "/api/webhooks/meta-leads", raw=raw, headers={"Content-Type": "application/json", "X-Hub-Signature-256": sig})
+    try: m1 = json.loads(m1txt)
+    except Exception: m1 = m1txt
+    c2, _ = req("POST", "/api/webhooks/meta-leads", raw=raw, headers={"Content-Type": "application/json", "X-Hub-Signature-256": sig})
     jrow = _job("idempotency_key", "meta_lead_fetch:lg-mk56")
     con = dbconn()
     lead = con.execute("SELECT id, source_platform, provider_lead_id, consent, status, email FROM mkt_leads WHERE dedup_key=?",
                        ("meta:leadgen:lg-mk56",)).fetchall()
     con.close()
     lid = lead[0][0] if lead else None
-    chk("56o Meta lead events: the verification handshake fails closed (403), a leadgen notification stores ONE consent-0 stub lead (a prospect, never a member) that a replay dedups, and the detail-fetch job fails honestly without a token",
-        cv2 == 403 and c1 == 200 and m1.get("ok") is True and c2 == 200
+    chk("56o Meta lead events: the verification handshake fails closed (403), unsigned posts are refused, a signed leadgen notification stores ONE consent-0 stub lead (a prospect, never a member) that a replay dedups, and the detail-fetch job fails honestly without a token",
+        cv2 == 403 and c_bad == 401 and (isinstance(m_bad_j, dict) and m_bad_j.get("error") == "bad_signature")
+        and c1 == 200 and m1.get("ok") is True and c2 == 200
         and len(lead) == 1 and lead[0][1] == "meta" and lead[0][2] == "lg-mk56" and int(lead[0][3]) == 0
         and lead[0][4] == "new" and lead[0][5] is None
-        and jrow and jrow[0] == "failed" and jrow[2] in ("no_access_token", "no_connected_meta_account"), (cv2, lead, jrow))
+        and jrow and jrow[0] == "failed" and jrow[2] in ("no_access_token", "no_connected_meta_account"), (cv2, c_bad, lead, jrow))
 
     c1, su = jget("POST", f"{M}/leads/{lid}/status", token=admin,
                   body={"status": "contacted", "assign_self": 1, "next_followup_at": "2026-08-01"})

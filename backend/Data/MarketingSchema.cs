@@ -243,8 +243,21 @@ public static class MarketingSchema
             entity_type VARCHAR(30), entity_id INTEGER, payload_json TEXT,
             status VARCHAR(20) DEFAULT 'queued', attempts INTEGER DEFAULT 0, max_attempts INTEGER DEFAULT 5,
             last_error TEXT, provider_response TEXT, next_attempt_at TEXT,
+            lease_owner VARCHAR(64), lease_until TEXT,
             created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_mkt_jobs_idem ON mkt_jobs(idempotency_key)");
+        // Pre-existing databases created before worker leases — additive, never a blocker.
+        void AddCol(string table, string col, string ddl)
+        {
+            try
+            {
+                var have = db.Columns(table);
+                if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+            }
+            catch { }
+        }
+        AddCol("mkt_jobs", "lease_owner", "lease_owner VARCHAR(64)");
+        AddCol("mkt_jobs", "lease_until", "lease_until TEXT");
 
         // ── Per-day platform-campaign metrics (reporting sync target) ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS mkt_campaign_metrics(

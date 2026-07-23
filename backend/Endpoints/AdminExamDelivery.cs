@@ -45,10 +45,13 @@ public static class AdminExamDelivery
             var secretRaw = H.Str(r["secret"]) ?? "";
             var setSecrets = new List<string>();
             if (connector is not null && secretRaw.Length > 0)
-                try { var e = JsonDocument.Parse(secretRaw).RootElement;
+            {
+                var plain = Security.DecryptSecret(secretRaw) ?? secretRaw;
+                try { var e = JsonDocument.Parse(plain).RootElement;
                       foreach (var k in connector.SecretFields)
                           if (e.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.String && (v.GetString() ?? "").Length > 0) setSecrets.Add(k); }
                 catch { }
+            }
             object? config = null;
             if (H.Str(r["config"]) is { Length: > 0 } cfg) { try { config = JsonSerializer.Deserialize<Dictionary<string, object?>>(cfg); } catch { } }
             return new
@@ -145,12 +148,14 @@ public static class AdminExamDelivery
             var configJson = JsonSerializer.Serialize(cfg);
 
             // secret = write-only, merged with what's stored so one field can change without re-entering all.
+            // EXT-P1-03 — envelope-encrypt the secret JSON at rest; DecryptSecret tolerates legacy plaintext.
             string MergeSecret(string? existing)
             {
+                var plain = Security.DecryptSecret(existing) ?? existing;
                 Dictionary<string, string> cur = new();
-                try { if (!string.IsNullOrEmpty(existing)) cur = JsonSerializer.Deserialize<Dictionary<string, string>>(existing) ?? new(); } catch { }
+                try { if (!string.IsNullOrEmpty(plain)) cur = JsonSerializer.Deserialize<Dictionary<string, string>>(plain) ?? new(); } catch { }
                 foreach (var k in connector.SecretFields) if (H.GetS(b, k) is { } v) { if (v.Length == 0) cur.Remove(k); else cur[k] = v; }
-                return JsonSerializer.Serialize(cur);
+                return Security.EncryptSecret(JsonSerializer.Serialize(cur)) ?? JsonSerializer.Serialize(cur);
             }
             bool AnySecretInBody() => connector.SecretFields.Any(k => H.GetEl(b, k) is not null);
 
@@ -242,7 +247,8 @@ public static class AdminExamDelivery
         });
 
         // ---------- inbound vendor callback (PSI Notification / Pearson RTEN / TestReach results push) ----------
-        // Public endpoint, verified by the per-provider callback_secret (header X-PCI-Callback-Token or ?token=).
+        // Public endpoint, verified by the per-provider callback_secret via header X-PCI-Callback-Token ONLY
+        // (EXT-P1-04 — query-string secrets leak to proxy/monitoring logs and are rejected).
         // Matches the order by any external id present in the payload, records appointment/result, and issues
         // the PCI credential on a graded pass. Vendors that PULL (Kryterion/Questionmark) don't use this.
         app.MapPost("/api/exam-delivery/callback/{provider}", async (HttpContext ctx, string provider) =>
@@ -254,13 +260,25 @@ public static class AdminExamDelivery
             var expected = p.Cfg("callback_secret");
             if (string.IsNullOrEmpty(expected)) return Results.Json(new { error = "callback_not_configured" }, statusCode: 400);
             var token = ctx.Request.Headers["X-PCI-Callback-Token"].ToString();
-            if (string.IsNullOrEmpty(token)) token = ctx.Request.Query["token"].ToString();
+            if (string.IsNullOrEmpty(token))
+                return Results.Json(new { error = "missing_token", message = "Pass the callback secret in the X-PCI-Callback-Token header (query-string tokens are not accepted)." }, statusCode: 401);
             if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(
-                    System.Text.Encoding.UTF8.GetBytes(token ?? ""), System.Text.Encoding.UTF8.GetBytes(expected)))
+                    System.Text.Encoding.UTF8.GetBytes(token), System.Text.Encoding.UTF8.GetBytes(expected)))
                 return Results.Json(new { error = "bad_token" }, statusCode: 401);
 
-            // Locate the order by any external id the vendor echoes back.
+            // Replay protection: dedupe by provider + a stable event/appointment id when present.
             string? Get(params string[] k) => H.GetS(body, k);
+            var eventKey = Get("event_id", "notificationId", "id") ?? Get("booking_code", "confirmationNumber", "appointmentId", "orderNumber", "registrationId");
+            if (eventKey is { Length: > 0 })
+            {
+                var (_, evChanges) = db.ExecuteWithChanges(
+                    "INSERT OR IGNORE INTO webhook_events(provider,event_id,status) VALUES(?,?, 'processed')",
+                    "exam_delivery:" + provider.ToLowerInvariant(),
+                    "exam_delivery:" + provider.ToLowerInvariant() + ":" + eventKey);
+                if (evChanges == 0) return J(new { ok = true, replay = true });
+            }
+
+            // Locate the order by any external id the vendor echoes back.
             var candidate = Get("candidate_id", "clientCandidateId", "candidateReference", "externalReference", "login");
             var registration = Get("client_eligibility_id", "authorizationId", "enrolmentId", "registration_id", "clientAuthorizationId");
             var appointment = Get("booking_code", "confirmationNumber", "appointmentId", "orderNumber", "registrationId");

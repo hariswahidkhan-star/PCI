@@ -37,22 +37,28 @@ public sealed class SyndicationDispatcher : BackgroundService
     /// <summary>Process up to <paramref name="limit"/> due syndication jobs. Also callable by an admin retry.</summary>
     public static async Task<int> DrainOnce(Db db, int limit)
     {
-        var due = db.Query(@"SELECT * FROM content_jobs WHERE job_type='syndicate'
+        try { WorkerLease.RecoverExpired(db, "content_jobs", "retrying"); } catch { }
+        var due = db.Query(@"SELECT id FROM content_jobs WHERE job_type='syndicate'
             AND status IN ('pending','retrying') AND (next_attempt_at IS NULL OR next_attempt_at<=datetime('now'))
+            AND (lease_until IS NULL OR lease_until<=datetime('now'))
             ORDER BY id LIMIT ?", limit);
+        var owner = WorkerLease.NewOwner();
         int done = 0;
-        foreach (var job in due)
+        foreach (var row in due)
         {
-            var jobId = H.L(job["id"]);
+            var jobId = H.L(row["id"]);
+            if (!WorkerLease.TryClaim(db, "content_jobs", jobId, owner, "'pending','retrying'")) continue;
+            var job = db.QueryOne("SELECT * FROM content_jobs WHERE id=?", jobId);
+            if (job is null) continue;
             long synId = 0;
             try { using var d = System.Text.Json.JsonDocument.Parse(H.Str(job["payload"]) ?? "{}"); if (d.RootElement.TryGetProperty("syndicated_id", out var el)) synId = el.GetInt64(); } catch { }
             var syn = synId > 0 ? db.QueryOne("SELECT * FROM cc_syndicated_posts WHERE id=?", synId) : null;
-            if (syn is null) { db.Execute("UPDATE content_jobs SET status='failed', last_error='row_missing', updated_at=datetime('now') WHERE id=?", jobId); continue; }
+            if (syn is null) { db.Execute("UPDATE content_jobs SET status='failed', last_error='row_missing', lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?", jobId); continue; }
             var dest = db.QueryOne("SELECT * FROM cc_syndication_destinations WHERE id=? AND active=1", H.L(syn["destination_id"]));
             var post = db.QueryOne("SELECT * FROM blog_posts WHERE id=?", H.L(syn["post_id"]));
             if (dest is null || post is null)
             {
-                db.Execute("UPDATE content_jobs SET status='failed', last_error='dest_or_post_missing', updated_at=datetime('now') WHERE id=?", jobId);
+                db.Execute("UPDATE content_jobs SET status='failed', last_error='dest_or_post_missing', lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?", jobId);
                 db.Execute("UPDATE cc_syndicated_posts SET status='failed', last_error='destination or post unavailable', updated_at=datetime('now') WHERE id=?", synId);
                 continue;
             }
@@ -67,7 +73,7 @@ public sealed class SyndicationDispatcher : BackgroundService
             if (res.Ok)
             {
                 var mode = externalId is { Length: > 0 } ? "updated" : "published";
-                db.Execute("UPDATE content_jobs SET status='delivered', response_code=?, result_ref=?, updated_at=datetime('now') WHERE id=?", res.Code, res.ExternalUrl, jobId);
+                db.Execute("UPDATE content_jobs SET status='delivered', response_code=?, result_ref=?, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?", res.Code, res.ExternalUrl, jobId);
                 db.Execute("UPDATE cc_syndicated_posts SET status=?, external_id=COALESCE(?,external_id), external_url=?, canonical_url=?, last_error=NULL, provider_response='ok', updated_at=datetime('now') WHERE id=?",
                     mode, res.ExternalId, res.ExternalUrl, canonical, synId);
                 db.Execute("UPDATE cc_syndication_destinations SET status='connected', last_error=NULL WHERE id=?", H.L(dest["id"]));
@@ -78,7 +84,7 @@ public sealed class SyndicationDispatcher : BackgroundService
                 var attempts = (int)H.L(job["attempts"]) + 1;
                 var terminal = attempts >= MaxAttempts;
                 var next = DateTime.UtcNow.AddSeconds(Backoff(attempts)).ToString("yyyy-MM-dd HH:mm:ss");
-                db.Execute("UPDATE content_jobs SET status=?, attempts=?, response_code=?, last_error=?, next_attempt_at=?, updated_at=datetime('now') WHERE id=?",
+                db.Execute("UPDATE content_jobs SET status=?, attempts=?, response_code=?, last_error=?, next_attempt_at=?, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
                     terminal ? "failed" : "retrying", attempts, res.Code, res.Error, next, jobId);
                 db.Execute("UPDATE cc_syndicated_posts SET status=?, last_error=?, updated_at=datetime('now') WHERE id=?",
                     terminal ? "failed" : "retrying", res.Error, synId);

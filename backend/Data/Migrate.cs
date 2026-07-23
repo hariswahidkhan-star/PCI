@@ -22,8 +22,15 @@ public static class Migrate
         EnsureReviews();
         void AddCol(string table, string col, string ddl)
         {
-            var have = db.Columns(table);
-            if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+            try
+            {
+                var have = db.Columns(table);
+                if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+            }
+            catch
+            {
+                // Table may not exist yet on this provider (e.g. mkt_jobs is created later by MarketingSchema).
+            }
         }
         AddCol("users", "is_test", "is_test INTEGER DEFAULT 0");   // admin-created test accounts (excluded from real reporting)
         // Honorary application: explicit eligibility self-confirmation + terms & conditions acceptance,
@@ -1414,6 +1421,28 @@ public static class Migrate
             }
         }
         catch (Exception e) { Console.Error.WriteLine($"[seed] owner reset skipped: {e.Message}"); }
+
+        // EXT-P0-05 — atomic worker leases: multi-instance dispatchers claim due work with a conditional
+        // UPDATE (lease_owner + lease_until). Expired leases are reclaimed so a crashed worker cannot
+        // permanently strand a row, and two workers cannot both deliver the same outbound action.
+        void AddLeaseCols(string table)
+        {
+            AddCol(table, "lease_owner", "lease_owner VARCHAR(64)");
+            AddCol(table, "lease_until", "lease_until TEXT");
+        }
+        AddLeaseCols("comm_outbox");
+        AddLeaseCols("integration_deliveries");
+        AddLeaseCols("mkt_jobs");
+        AddLeaseCols("content_jobs");
+        AddLeaseCols("certuvo_accounts");
+        AddLeaseCols("exam_delivery_orders");
+
+        // EXT-P0-03 — surface external-delivery pending/blocked state on the PCI booking itself.
+        AddCol("exam_bookings", "delivery_status", "delivery_status VARCHAR(32)");
+
+        // EXT-P0-02 — partial refunds update financial state without revoking access.
+        AddCol("payments", "amount_refunded", "amount_refunded REAL DEFAULT 0");
+        AddCol("payments", "refunded_at", "refunded_at TEXT");
 
         // Backfill Exam Authorizations for any pre-existing settled exam seat (idempotent; best-effort).
         PCI.Backend.Core.ExamAuthorization.BackfillAll(db);

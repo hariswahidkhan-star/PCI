@@ -364,15 +364,30 @@ public static class StudentExam
             if (scheduledAt is null || H.JsMillis(scheduledAt) < DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 2 * 3600_000)
                 return Results.Json(new { error = "bad_slot" }, statusCode: 400);
             if (deadline is not null && H.After(scheduledAt, deadline)) return Results.Json(new { error = "beyond_window" }, statusCode: 400);
+            // EXT-P0-03 — if this certification is configured for an external vendor, refuse the booking
+            // when that vendor is missing/disabled/unmapped. Never silently fall back to an in-house sitting.
+            if (PCI.Backend.Core.ExamDelivery.ExternalBlockReason(db, certId) is { } blockReason)
+                return Results.Json(new {
+                    error = blockReason,
+                    message = "External exam delivery is required for this certification but the vendor is not available. Please contact support — a local exam will not be started."
+                }, statusCode: 503);
             var id = db.ExecuteReturningId("INSERT INTO exam_bookings(user_id,payment_id,certification_id,scheduled_at,timezone) VALUES(?,?,?,?,?)", u.Id, ent["id"], certId, scheduledAt, timezone);
             // Link the formal entitlement to this booking and mark it booked, so submit can consume it
             // by booking_id (one-attempt-per-entitlement).
             db.Execute("UPDATE exam_entitlements SET status='booked', booking_id=? WHERE payment_id=? AND status IN ('available','booked')", id, ent["id"]);
             log(u.Id, "exam_booked", $"{scheduledAt} (cert {certId})");
-            // Route to the configured third-party exam-delivery vendor (Pearson VUE/OnVUE, Kryterion, PSI,
-            // TestReach, Questionmark) if one is set as default and the certification is mapped. Best-effort:
-            // never blocks or fails the PCI booking; unrouted/failed orders are retryable from the admin.
-            await PCI.Backend.Core.ExamDelivery.RouteBooking(db, id, u.Id, certId, scheduledAt, timezone);
+            // Route to the configured third-party exam-delivery vendor. Fail-closed: if routing fails after
+            // the booking insert, cancel the booking and restore the entitlement (never leave a local path).
+            var routed = await PCI.Backend.Core.ExamDelivery.RouteBooking(db, id, u.Id, certId, scheduledAt, timezone);
+            if (!routed.Ok)
+            {
+                db.Execute("UPDATE exam_bookings SET status='cancelled', delivery_status=?, updated_at=datetime('now') WHERE id=?", routed.Error ?? "delivery_route_failed", id);
+                db.Execute("UPDATE exam_entitlements SET status='available', booking_id=NULL WHERE payment_id=? AND status='booked'", ent["id"]);
+                return Results.Json(new {
+                    error = routed.Error ?? "delivery_route_failed",
+                    message = "External exam delivery could not be started. Your seat is still available — please try again or contact support."
+                }, statusCode: 503);
+            }
             // Booking-confirmation email (best-effort; admin-toggleable via notify_exam_booking_enabled).
             if (Notify.Enabled(db, "exam_booking"))
                 try

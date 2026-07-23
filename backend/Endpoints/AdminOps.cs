@@ -522,6 +522,11 @@ public static class AdminOps
             Put("certuvo_api_base", "api_base"); Put("certuvo_provision_path", "provision_path");
             Put("certuvo_deactivate_path", "deactivate_path");
             Put("certuvo_login_url", "login_url"); Put("certuvo_auth_header", "auth_header");
+            // EXT-P1-01 — validate outbound URLs at save time (SSRF / private egress guard).
+            if (H.GetS(b, "api_base") is { Length: > 0 } abCheck && Egress.UrlProblem(abCheck.Trim()) is { } abProb)
+                return Results.Json(new { error = "bad_api_base", message = abProb }, statusCode: 400);
+            if (H.GetS(b, "login_url") is { Length: > 0 } luCheck && Egress.UrlProblem(luCheck.Trim()) is { } luProb)
+                return Results.Json(new { error = "bad_login_url", message = luProb }, statusCode: 400);
             if (H.GetS(b, "requires") is { } rq && rq is "membership" or "membership_and_enrolment" or "membership_or_exam") Settings.Put(db, "certuvo_requires", rq);
             if (H.GetNum(b, "retry_max") is { } rm) Settings.Put(db, "certuvo_retry_max", ((int)Math.Clamp(rm, 0, 50)).ToString());
             // PCI credential policy: username prefix, temp-password length, and email-conflict rule.
@@ -529,8 +534,9 @@ public static class AdminOps
             if (H.GetNum(b, "password_length") is { } pl) Settings.Put(db, "certuvo_password_length", ((int)Math.Clamp(pl, 10, 64)).ToString());
             if (H.GetS(b, "email_conflict") is { } ec && ec is "dedicated" or "manual") Settings.Put(db, "certuvo_email_conflict", ec);
             if (H.GetEl(b, "honorary_grants_membership") is { } hg) Settings.Put(db, "honorary_grants_membership", (hg.ValueKind == JsonValueKind.True || (hg.ValueKind == JsonValueKind.String && hg.GetString() is "1" or "true")) ? "1" : "0");
-            if (H.GetS(b, "api_key") is { } k && k.Length > 0) Settings.Put(db, "certuvo_api_key", k);                     // write-only
-            if (H.GetS(b, "webhook_secret") is { } ws && ws.Length > 0) Settings.Put(db, "certuvo_webhook_secret", ws);    // write-only
+            // EXT-P1-03 — envelope-encrypt secrets at rest (DecryptSecret tolerates legacy plaintext).
+            if (H.GetS(b, "api_key") is { } k && k.Length > 0) Settings.Put(db, "certuvo_api_key", Security.EncryptSecret(k)!);
+            if (H.GetS(b, "webhook_secret") is { } ws && ws.Length > 0) Settings.Put(db, "certuvo_webhook_secret", Security.EncryptSecret(ws)!);
             log(adm.Id, "certuvo.config", $"by {adm.Id}");
             return J(new { ok = true });
         }));
@@ -595,7 +601,7 @@ public static class AdminOps
         {
             // 404 (not 5xx) while unconfigured: the route does not exist as far as callers are concerned,
             // and the 500-sweep gate treats any 5xx as a defect.
-            var secret = Settings.Str(db, "certuvo_webhook_secret", "");
+            var secret = CertuvoLink.WebhookSecret(db);
             if (secret.Length == 0) return Results.Json(new { error = "webhook_not_configured" }, statusCode: 404);
             var given = ctx.Request.Headers["X-Certuvo-Secret"].ToString();
             if (!Security.FixedTimeEquals(given, secret)) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
