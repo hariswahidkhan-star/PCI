@@ -16,7 +16,7 @@ namespace PCI.Backend.Tests;
 ///   • NO HALLUCINATION — every scenario-specific number the coach prints traces to the deterministic
 ///     engine (given inputs, authoritative measures, or the score); no invented figures slip through.
 ///   • NO LEAK — in Assessment Mode the model context withholds the correct values entirely.
-/// The cases below span all eleven task engines so a new engine cannot ship without coach grounding.
+/// The cases below span all eighteen task engines so a new engine cannot ship without coach grounding.
 /// </summary>
 public class SimCoachEvalTests
 {
@@ -59,6 +59,27 @@ public class SimCoachEvalTests
         new object[] { "earned_schedule",
             "{\"task\":\"earned_schedule\",\"prompt\":\"p\",\"given\":{\"planned_duration\":6,\"at\":4,\"ev\":500,\"plan\":[{\"period\":1,\"pv\":100},{\"period\":2,\"pv\":250},{\"period\":3,\"pv\":450},{\"period\":4,\"pv\":650}]},\"ask\":[{\"key\":\"spi_time\",\"label\":\"SPI(t)\",\"type\":\"number\"}],\"tolerance\":0.01,\"pass_pct\":70,\"competencies\":[\"schedule_analysis\"]}",
             "{\"spi_time\":9}" },
+        new object[] { "productivity",
+            "{\"task\":\"productivity\",\"prompt\":\"p\",\"given\":{\"planned_qty\":480,\"planned_hours\":960,\"earned_qty\":445,\"actual_hours\":1040},\"ask\":[{\"key\":\"factor\",\"label\":\"Productivity factor\",\"type\":\"number\"}],\"tolerance\":0.01,\"pass_pct\":70,\"competencies\":[\"productivity_analysis\"]}",
+            "{\"factor\":9}" },
+        new object[] { "boq",
+            "{\"task\":\"boq\",\"prompt\":\"p\",\"given\":{\"lines\":[{\"id\":\"L1\",\"qty\":10,\"rate\":50},{\"id\":\"L2\",\"qty\":4,\"rate\":80}]},\"ask\":[{\"key\":\"total\",\"label\":\"Bill total\",\"type\":\"number\"}],\"tolerance\":0.01,\"pass_pct\":70,\"competencies\":[\"quantity_surveying\"]}",
+            "{\"total\":1}" },
+        new object[] { "resource",
+            "{\"task\":\"resource\",\"prompt\":\"p\",\"given\":{\"periods\":[{\"period\":1,\"demand\":18,\"capacity\":20},{\"period\":2,\"demand\":24,\"capacity\":22}]},\"ask\":[{\"key\":\"peak_overload\",\"label\":\"Peak overload\",\"type\":\"number\"}],\"tolerance\":0.01,\"pass_pct\":70,\"competencies\":[\"resource_management\"]}",
+            "{\"peak_overload\":99}" },
+        new object[] { "procurement",
+            "{\"task\":\"procurement\",\"prompt\":\"p\",\"given\":{\"project_duration\":214,\"remaining_float\":9,\"supplier_delay_days\":16},\"ask\":[{\"key\":\"critical_delay\",\"label\":\"Critical delay\",\"type\":\"number\"}],\"tolerance\":0.01,\"pass_pct\":70,\"competencies\":[\"procurement_management\"]}",
+            "{\"critical_delay\":1}" },
+        new object[] { "portfolio",
+            "{\"task\":\"portfolio\",\"prompt\":\"p\",\"given\":{\"w_npv\":0.5,\"w_risk\":0.3,\"w_fit\":0.2,\"projects\":[{\"id\":\"P1\",\"npv\":100,\"risk\":0.2,\"fit\":0.8},{\"id\":\"P2\",\"npv\":80,\"risk\":0.1,\"fit\":0.9}]},\"ask\":[{\"key\":\"top_score\",\"label\":\"Top score\",\"type\":\"number\"}],\"tolerance\":0.0001,\"pass_pct\":70,\"competencies\":[\"portfolio_selection\"]}",
+            "{\"top_score\":9}" },
+        new object[] { "decision",
+            "{\"task\":\"decision\",\"prompt\":\"p\",\"given\":{\"w_cost\":1,\"w_sched\":1,\"w_risk\":1,\"options\":[{\"id\":\"O1\",\"cost\":10,\"schedule\":2,\"risk\":0.2},{\"id\":\"O2\",\"cost\":5,\"schedule\":4,\"risk\":0.1}]},\"ask\":[{\"key\":\"best_score\",\"label\":\"Best score\",\"type\":\"number\"}],\"tolerance\":0.0001,\"pass_pct\":70,\"competencies\":[\"decision_analysis\"]}",
+            "{\"best_score\":99}" },
+        new object[] { "data_quality",
+            "{\"task\":\"data_quality\",\"prompt\":\"p\",\"given\":{\"threshold\":5,\"rows\":[{\"value\":42,\"expected\":40},{\"value\":null,\"expected\":55},{\"value\":74,\"expected\":62}]},\"ask\":[{\"key\":\"anomaly_count\",\"label\":\"Anomaly count\",\"type\":\"number\"}],\"tolerance\":0.01,\"pass_pct\":70,\"competencies\":[\"data_quality\"]}",
+            "{\"anomaly_count\":99}" },
     };
 
     [Theory]

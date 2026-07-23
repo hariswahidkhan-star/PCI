@@ -1,16 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 
 // FE — the Simulation Lab landing (Phase 1 foundation). Decisions pinned: the access gate (no access →
 // the friendly reason, no catalogue fetch), the published-lab grid (kind/difficulty/competency badges),
 // the attempt-status vs "Not started" marker, the "Open lab" link into the runner, and the empty state.
 // useQuery is mocked at the module boundary and routed by path (access vs catalogue).
-const h = vi.hoisted(() => ({ access: null as unknown, cat: { rows: [] as unknown[] } as unknown }))
+const h = vi.hoisted(() => ({
+  access: null as unknown,
+  cat: { rows: [] as unknown[] } as unknown,
+  mastery: { mastery: [] as unknown[], recommended: [] as unknown[], weak_competencies: [] as string[] } as unknown,
+}))
 
 vi.mock('../api/hooks', () => ({
   useQuery: (path: string | null) => {
-    const data = path === '/api/me/lab/access' ? h.access : path === '/api/me/lab/catalogue' ? h.cat : null
+    const data = path === '/api/me/lab/access' ? h.access
+      : path === '/api/me/lab/catalogue' ? h.cat
+      : path === '/api/me/lab/mastery' ? h.mastery
+      : null
     return { data, loading: false, error: null, refetch: vi.fn() }
   },
 }))
@@ -64,5 +71,21 @@ describe('Lab (Simulation Lab landing)', () => {
     h.cat = { rows: [] }
     renderLab()
     expect(screen.getByText(/No practice labs have been published yet/)).toBeInTheDocument()
+  })
+
+  it('filters the catalogue by industry and shows track badges', () => {
+    h.cat = {
+      rows: [
+        lab({ id: 1, scenario_code: 'GL-WBS-001', title: 'Structure a project WBS', industry: 'Construction', certification_id: 1 }),
+        lab({ id: 2, scenario_code: 'GL-CASH-001', title: 'Model cash exposure', industry: 'Finance', certification_id: 2, competencies: ['cash_flow'] }),
+      ],
+    }
+    renderLab()
+    expect(screen.getByText('Structure a project WBS')).toBeInTheDocument()
+    expect(screen.getByText('Model cash exposure')).toBeInTheDocument()
+    fireEvent.change(screen.getByLabelText('Filter by industry'), { target: { value: 'Finance' } })
+    expect(screen.queryByText('Structure a project WBS')).toBeNull()
+    expect(screen.getByText('Model cash exposure')).toBeInTheDocument()
+    expect(screen.getByText(/PFL-AI/)).toBeInTheDocument()
   })
 })
