@@ -31,7 +31,7 @@ public static class AdminSimLab
             var rows = new List<object>();
             var published = 0;
             foreach (var s in db.Query(@"SELECT id,scenario_code,title,kind,industry,difficulty,est_minutes,
-                    competencies_json,status,version,sort_order,config_json,updated_at
+                    competencies_json,status,review_state,version,sort_order,config_json,updated_at
                 FROM simulation_scenarios ORDER BY sort_order ASC, id ASC"))
             {
                 var id = H.L(s["id"]);
@@ -49,6 +49,7 @@ public static class AdminSimLab
                     est_minutes = H.L(s["est_minutes"]),
                     competencies = ParseArray(H.Str(s["competencies_json"])),
                     status,
+                    review_state = s.TryGetValue("review_state", out var rvs) ? H.Str(rvs) : "draft",
                     version = H.L(s["version"]),
                     interactive = !string.IsNullOrWhiteSpace(H.Str(s["config_json"])),
                     attempts = has ? st.attempts : 0,
