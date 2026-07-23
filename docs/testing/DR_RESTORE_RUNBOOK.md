@@ -71,12 +71,15 @@ Restore the **encrypted, off-box** copies (not the local originals) on a clean h
 from its separate store, then run §5. Record: backup timestamp, dump size, restore wall-clock (RTO),
 data-loss window (RPO), and the §5 pass/fail. File the record with the release evidence.
 
-## 7. In-CI candidate (DR-1)
+## 7. Automated in CI (DR-1) — `backend/tests/backup_restore_test.py`
 
-A thin CI addition can run `mysql_backup.sh` against the `backend-mysql` service, assert a non-empty
-gzip is produced, restore it into a scratch DB and boot the app against it (reusing the double-boot
-harness). This automates the DB half of the round-trip; the full off-box + key + storage rehearsal
-remains Operator-executed (DR-3).
+The DB half of the round-trip is automated: `backup_restore_test.py` boots the real backend against a
+**dedicated** MySQL database (never the harness's `pci`), plants a sentinel + captures key counts, runs
+the production `mysql_backup.sh`, restores the gzip dump into a fresh scratch DB, and asserts the
+sentinel value + row counts survive with **no duplicated seed rows** (7 assertions). It skips cleanly
+when no MySQL client is present. Wired into the `backend-mysql` CI job (non-gating until it has a green
+history, then promotable to gating). Proven locally against MariaDB 10.11: **7/7 PASSED**. The full
+off-box + encryption-key + storage-tree rehearsal (§6) remains Operator-executed (DR-3).
 
 ## 8. Failure modes & responses
 

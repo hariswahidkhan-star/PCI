@@ -151,6 +151,15 @@ jobs:
           pip install --quiet --break-system-packages pymysql || pip install --quiet pymysql
           python3 tests/migration_integrity_test.py
 
+      - name: DR-1 backup → restore round-trip (non-gating until baselined on CI)
+        continue-on-error: true
+        env:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_PORT: '3306'
+          MYSQL_USER: pci
+          MYSQL_PASSWORD: pcipass
+        run: python3 tests/backup_restore_test.py
+
   backend-unit:
     # Hermetic xUnit layer over backend logic the live-HTTP suites cannot reach directly (retention
     # sweeps, token/crypto helpers, egress/redirect guards, storage intake). Temp SQLite + temp
