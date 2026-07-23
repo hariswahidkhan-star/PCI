@@ -39,8 +39,9 @@ test.describe('student support, session security and privacy journeys', () => {
     expect(replyResponse.ok()).toBeTruthy()
 
     await page.goto('/app/messages')
-    await expect(page.getByText('Support replied to your ticket', { exact: true })).toBeVisible()
-    await expect(page.getByText(new RegExp(ticket.reference))).toBeVisible()
+    const replyCard = page.locator('.card').filter({ hasText: ticket.reference }).first()
+    await expect(replyCard).toContainText('Support replied to your ticket')
+    await expect(replyCard).toContainText(ticket.reference)
     await captureStoryEvidence(page, testInfo, 'F3', 'support-notification')
     const markAll = page.getByRole('button', { name: 'Mark all read' })
     await expect(markAll).toBeVisible()

@@ -136,7 +136,7 @@ test.describe('admin-controlled test-user journeys', () => {
     const user = await createTestUser(request, adminToken, 'certuvo_failed', page)
 
     await page.goto('/app/certuvo')
-    await expect(page.getByRole('heading', { name: 'Certuvo' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Certuvo' }).first()).toBeVisible()
     await expect(page.getByText(/still setting up your Certuvo practice access/i)).toBeVisible()
     await expect(page.getByText(/Simulated provisioning failure/i)).toHaveCount(0)
 

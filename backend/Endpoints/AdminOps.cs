@@ -86,7 +86,7 @@ public static class AdminOps
                 PaidAt = H.GetS(b, "paid_at"), OriginalAmount = listPrice > 0 ? listPrice : null,
             };
             var payId = Settlement.Grant(db, id, H.Str(u["email"]), product, certId, amount, reference, provider, meta);
-            if (product is "exam" && certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
+            if ((product is "exam" or "bundle") && certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
             if (amount <= 0)
                 db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,payment_id) VALUES(?,?,?, 'full', ?, ?, 0, 'complimentary', ?, ?, ?)",
                     id, product, certId, listPrice, listPrice, note.Length > 0 ? note : null, adm.Id, payId);
@@ -134,7 +134,7 @@ public static class AdminOps
                 var reference = "WAIVE-" + Security.RandomHex(5).ToUpperInvariant();
                 var payId = Settlement.Grant(db, id, H.Str(u["email"]), product, certId, 0, reference, "admin_waiver",
                     new Settlement.Meta { Note = note.Length > 0 ? note : reason, RecordedBy = adm.Id, OriginalAmount = listPrice });
-                if (product is "exam" && certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
+                if ((product is "exam" or "bundle") && certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
                 db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,payment_id) VALUES(?,?,?, 'full', ?, ?, 0, ?, ?, ?, ?)",
                     id, product, certId, listPrice, listPrice, reason, note.Length > 0 ? note : null, adm.Id, payId);
                 db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Account', 'Your fee has been waived', ?)", id,
@@ -258,9 +258,24 @@ public static class AdminOps
             switch (scenario)
             {
                 case "ready": case "incomplete_profile": case "no_id":
-                    Settlement.Grant(db, uid, email, "bundle", certId, 0, "TESTUSER-" + stamp, "admin_test_user"); break;
-                case "member": case "certuvo_failed": Settlement.Grant(db, uid, email, "membership", certId, 0, "TESTUSER-" + stamp, "admin_test_user"); break;
-                case "waived": Settlement.Grant(db, uid, email, "exam", certId, 0, "TESTWAIVE-" + stamp, "admin_waiver"); break;
+                {
+                    var payId = Settlement.Grant(db, uid, email, "bundle", certId, 0, "TESTUSER-" + stamp, "admin_test_user");
+                    if (certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
+                    break;
+                }
+                case "member": case "certuvo_failed":
+                    Settlement.Grant(db, uid, email, "membership", certId, 0, "TESTUSER-" + stamp, "admin_test_user");
+                    break;
+                case "waived":
+                {
+                    var listPrice = Settlement.ListPrice(db, "exam");
+                    var payId = Settlement.Grant(db, uid, email, "exam", certId, 0, "TESTWAIVE-" + stamp, "admin_waiver",
+                        new Settlement.Meta { OriginalAmount = listPrice, Note = "Browser test-user waiver" });
+                    if (certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
+                    db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,payment_id) VALUES(?, 'exam', ?, 'full', ?, ?, 0, 'test_user', 'Browser test-user waiver', ?)",
+                        uid, certId, listPrice, listPrice, payId);
+                    break;
+                }
             }
             if (scenario == "certuvo_failed")
             {

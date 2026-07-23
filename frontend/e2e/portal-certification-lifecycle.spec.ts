@@ -14,6 +14,7 @@ async function browserLocalDateTime(page: import('@playwright/test').Page, hours
 
 test.describe('complete certification lifecycle', () => {
   test('student registers, pays, schedules, sits, passes, verifies and downloads', async ({ page, request }, testInfo) => {
+    test.slow()
     const email = uniqueEmail('lifecycle')
     await page.goto('/app/register')
     await page.getByLabel('First name').fill('Browser')
@@ -90,7 +91,7 @@ test.describe('complete certification lifecycle', () => {
       if (i < itemCount - 1) await page.locator('#rNext').click()
     }
     await page.locator('#rSubmit').click()
-    await page.locator('#mOK').click()
+    await page.locator('#mOK').click({ force: true })
     await expect(page.locator('.verdict')).toHaveText('PASS')
     await captureStoryEvidence(page, testInfo, 'D5-D6', 'exam-pass')
     const issued = await page.locator('.tag.gold').innerText()

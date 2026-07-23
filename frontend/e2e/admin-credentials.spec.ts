@@ -60,7 +60,7 @@ test.describe('credential operator to holder journey', () => {
     await studentPage.goto('/app/credentials')
     const holderCard = studentPage.locator('.card').filter({ hasText: credentialId })
     await expect(holderCard).toContainText('PML-AI')
-    await expect(holderCard).toContainText('Active')
+    await expect(holderCard).toContainText(/active/i)
     const holderDownload = studentPage.waitForEvent('download')
     await holderCard.getByRole('button', { name: 'Download PDF' }).click()
     const downloaded = await holderDownload

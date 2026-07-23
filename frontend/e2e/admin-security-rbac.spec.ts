@@ -136,7 +136,8 @@ test.describe('admin account security, RBAC and settings', () => {
     await expect(page.getByText('Browser MFA Admin')).toBeVisible()
 
     await page.goto('/admin/settings')
-    await page.getByText('Disable 2FA', { exact: true }).click()
+    await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible({ timeout: 30_000 })
+    await page.locator('summary').filter({ hasText: 'Disable 2FA' }).click()
     await page.getByLabel('Current authentication or recovery code').fill(verified.recovery_codes[0])
     await page.getByRole('button', { name: 'Disable 2FA' }).click()
     await expect(page.getByText('2FA disabled for your account.')).toBeVisible()
@@ -156,7 +157,8 @@ test.describe('admin account security, RBAC and settings', () => {
 
     await page.goto('/admin/settings')
     await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible({ timeout: 30_000 })
-    const setting = page.getByText('Banner text', { exact: true }).locator('..').locator('input')
+    // labelFor(sp_banner_text) → titleCase("banner_text") → "Banner Text"
+    const setting = page.getByText('Banner Text', { exact: true }).locator('..').locator('input, textarea')
     await expect(setting).toBeVisible({ timeout: 15_000 })
     await setting.fill(value)
     const saveResponsePromise = page.waitForResponse((response) =>

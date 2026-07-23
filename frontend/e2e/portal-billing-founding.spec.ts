@@ -43,7 +43,7 @@ test.describe('billing, discount and founding journeys', () => {
     await drawer.locator('.field').filter({ hasText: 'Window closes' }).locator('input').fill(closes)
     await drawer.locator('.field').filter({ hasText: 'Max total uses' }).locator('input').fill('2')
     await drawer.getByLabel(/Require an application/).check()
-    await drawer.getByLabel(/Auto-approve applications/).uncheck()
+    await drawer.getByLabel(/Auto-approve applications/).setChecked(false)
     await drawer.locator('.field').filter({ hasText: 'Minimum experience (years)' }).locator('input').fill('5')
     const foundingCreatePromise = page.waitForResponse((response) =>
       response.url().endsWith('/api/admin/codes') && response.request().method() === 'POST')

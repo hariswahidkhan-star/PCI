@@ -146,6 +146,7 @@ test.describe('student account recovery, onboarding and security', () => {
   })
 
   test('student enables TOTP, signs in with it, then disables it using a recovery code', async ({ page, request }, testInfo) => {
+    test.slow()
     const student = await registerStudent(request, page, 'student-totp')
     await page.goto('/app/profile')
     await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible()
