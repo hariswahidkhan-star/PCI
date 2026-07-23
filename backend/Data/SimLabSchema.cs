@@ -50,6 +50,39 @@ public static class SimLabSchema
         db.Exec("CREATE INDEX IF NOT EXISTS ix_simscenarios_status ON simulation_scenarios(status)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_simscenarios_kind ON simulation_scenarios(kind)");
 
+        // ── Governance / quality-lifecycle columns (Phase 5A). Additive & idempotent so pre-existing
+        //    installations upgrade in place (parity with Migrate.AddCol). `review_state` is the AUTHORING
+        //    workflow (§13) — draft → calc_review → learning_review → safety_review → pilot → approved →
+        //    published → retired — and is deliberately separate from the operational `status` that decides
+        //    what is served (draft | published | suspended | archived). The remaining fields carry the §14
+        //    publishable-scenario evidence: synthetic-data declaration, learning objectives, provenance,
+        //    disclaimers, maker/checker reviewer attribution, approval/publish/review/expiry dates, a
+        //    version change log, pilot metrics and the Training-Mode worked solution (never the graded
+        //    answer key — that stays derived from `given` at grade time). ──
+        void AddCol(string table, string col, string ddl)
+        {
+            var have = db.Columns(table);
+            if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+        }
+        AddCol("simulation_scenarios", "review_state", "review_state VARCHAR(24) NOT NULL DEFAULT 'draft'");
+        AddCol("simulation_scenarios", "synthetic_declared", "synthetic_declared INTEGER DEFAULT 0");
+        AddCol("simulation_scenarios", "objectives_json", "objectives_json TEXT");
+        AddCol("simulation_scenarios", "provenance", "provenance TEXT");
+        AddCol("simulation_scenarios", "disclaimers", "disclaimers TEXT");
+        AddCol("simulation_scenarios", "worked_solution", "worked_solution TEXT");
+        AddCol("simulation_scenarios", "authored_by", "authored_by INTEGER");
+        AddCol("simulation_scenarios", "calc_reviewed_by", "calc_reviewed_by INTEGER");
+        AddCol("simulation_scenarios", "learning_reviewed_by", "learning_reviewed_by INTEGER");
+        AddCol("simulation_scenarios", "safety_reviewed_by", "safety_reviewed_by INTEGER");
+        AddCol("simulation_scenarios", "approved_by", "approved_by INTEGER");
+        AddCol("simulation_scenarios", "approved_at", "approved_at TEXT");
+        AddCol("simulation_scenarios", "published_at", "published_at TEXT");
+        AddCol("simulation_scenarios", "review_due", "review_due TEXT");
+        AddCol("simulation_scenarios", "expires_at", "expires_at TEXT");
+        AddCol("simulation_scenarios", "changelog_json", "changelog_json TEXT");
+        AddCol("simulation_scenarios", "pilot_json", "pilot_json TEXT");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_simscenarios_review ON simulation_scenarios(review_state)");
+
         // ── Explicit Lab entitlement grants (admin / complimentary / sponsored / institution / marketing),
         //    with a start/expiry window. Access is ALSO granted live off an active membership or exam
         //    entitlement (Core/SimLab.Eligible) — this table only records explicit, non-purchase grants. ──
@@ -178,6 +211,13 @@ public static class SimLabSchema
         // it once, without disturbing any operator edits (only when empty). Idempotent on both providers.
         db.Execute(@"UPDATE simulation_scenarios SET config_json=?
             WHERE scenario_code=? AND (config_json IS NULL OR config_json='')", configJson, code);
+        // House content is synthetic and shipped published — mark it governed so it satisfies the §14
+        // validator (SimContent.Validate). Only touches rows still at the authoring default, so an operator
+        // who moves a scenario back into review keeps their state. Idempotent on both providers.
+        db.Execute(@"UPDATE simulation_scenarios
+            SET review_state='published', synthetic_declared=1,
+                published_at=COALESCE(published_at, datetime('now'))
+            WHERE scenario_code=? AND (review_state IS NULL OR review_state='draft')", code);
     }
 
     // ── Scenario task definitions (synthetic data only). `given` holds the inputs; `ask` lists the
@@ -193,7 +233,11 @@ public static class SimLabSchema
            {"key":"spi","label":"Schedule Performance Index (SPI)","type":"number"},
            {"key":"cpi","label":"Cost Performance Index (CPI)","type":"number"},
            {"key":"eac","label":"Estimate at Completion (EAC, CPI method)","type":"number"}],
-         "tolerance":0.01,"pass_pct":70,"competencies":["earned_value"]}
+         "tolerance":0.01,"pass_pct":70,"competencies":["earned_value"],
+         "variant":{"vary":{
+           "pv":{"min":80000,"max":120000,"step":1000},
+           "ev":{"min":70000,"max":110000,"step":1000},
+           "ac":{"min":80000,"max":115000,"step":1000}}}}
         """;
 
     const string ConfigEvmDrill = """
