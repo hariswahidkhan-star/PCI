@@ -310,7 +310,7 @@ public static class Founding
                 var (granted, reason, reference) = Grant(db, log, uid, code, $"manual_approve_admin{adm.Id}");
                 if (!granted && reason != "already_redeemed") return Results.Json(new { error = reason }, statusCode: 400);
                 db.Execute("UPDATE founding_applications SET status='approved', decided_by=?, decided_at=datetime('now'), admin_note=? WHERE id=?", adm.Id, note, id);
-                log(adm.Id, "founding_app_approved", $"app {id} subject={uid} by admin {adm.Id}");
+                log(adm.Id, "founding_app_approved", $"app {id} by admin {adm.Id} (subject {uid})");
                 return J(new { ok = true, status = "approved", reference });
             }
             if (status == "rejected")
@@ -318,7 +318,7 @@ public static class Founding
                 db.Execute("UPDATE founding_applications SET status='rejected', decided_by=?, decided_at=datetime('now'), admin_note=? WHERE id=?", adm.Id, note, id);
                 db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Founding', 'Founding application update', ?)",
                     uid, $"Your founding application was not approved{(note.Length > 0 ? ": " + note : "")}. The standard enrolment route remains open to you.");
-                log(adm.Id, "founding_app_rejected", $"app {id} subject={uid} by admin {adm.Id}");
+                log(adm.Id, "founding_app_rejected", $"app {id} by admin {adm.Id} (subject {uid})");
                 return J(new { ok = true, status = "rejected" });
             }
             // revoke: kill the UNUSED grant only. An earned credential is NEVER touched — if the
@@ -340,7 +340,7 @@ public static class Founding
             db.Execute("UPDATE founding_applications SET status='revoked', decided_by=?, decided_at=datetime('now'), admin_note=? WHERE id=?", adm.Id, note, id);
             db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Founding', 'Founding access revoked', ?)",
                 uid, $"Your founding-stage access has been revoked{(note.Length > 0 ? ": " + note : "")}. Any credential you have already earned is unaffected.");
-            log(adm.Id, "founding_app_revoked", $"app {id} subject={uid} by admin {adm.Id} (entitlements revoked: {revokedEnt})");
+            log(adm.Id, "founding_app_revoked", $"app {id} by admin {adm.Id} (subject {uid}, entitlements revoked: {revokedEnt})");
             return J(new { ok = true, status = "revoked", entitlements_revoked = revokedEnt });
         }));
 

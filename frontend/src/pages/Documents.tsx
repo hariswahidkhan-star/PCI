@@ -76,7 +76,8 @@ function BooksSection() {
       const a = document.createElement('a')
       a.href = href
       a.download = r.filename || `${r.title}.pdf`
-      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(href)
+      document.body.appendChild(a); a.click(); a.remove()
+      setTimeout(() => URL.revokeObjectURL(href), 60_000)
     } catch { alert('Could not open this material right now. Please try again shortly or contact support.') }
     finally { setBusy(null) }
   }
@@ -160,7 +161,8 @@ export default function Documents() {
         const a = document.createElement('a')
         a.href = href
         a.download = r.filename || `document-${r.id}`
-        document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(href)
+        document.body.appendChild(a); a.click(); a.remove()
+        setTimeout(() => URL.revokeObjectURL(href), 60_000)
       }
     } catch { alert('Could not open this document right now. Please try again shortly or contact support.') }
   }

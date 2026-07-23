@@ -1354,6 +1354,41 @@ public static class Migrate
         }
         catch { /* admin_users may not exist on a very first pass; ignored */ }
 
+        // Explicit browser-suite operator. The real bootstrap owner deliberately remains behind the
+        // forced-password-change gate, which is itself an E2E journey. Broader admin/test-user journeys
+        // need a separate, deterministic operator that can call the same owner-gated APIs a human uses.
+        // This account is created ONLY outside Production and ONLY when the Playwright server opts in
+        // with E2E_ADMIN_PASSWORD; a production deployment can never activate it accidentally.
+        try
+        {
+            // Treat an unset environment as Production (the safe default) and honour either .NET
+            // environment variable. The opt-in secret alone must never create this account on an
+            // ambiguously configured deployment.
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+                ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
+                ?? "Production";
+            var isProd = string.Equals(environment, "Production", StringComparison.OrdinalIgnoreCase);
+            var e2ePw = Environment.GetEnvironmentVariable("E2E_ADMIN_PASSWORD");
+            if (!isProd && !string.IsNullOrWhiteSpace(e2ePw))
+            {
+                var email = (Environment.GetEnvironmentVariable("E2E_ADMIN_EMAIL") ?? "browser-admin@pci.test").Trim().ToLowerInvariant();
+                var hash = BCrypt.Net.BCrypt.HashPassword(e2ePw);
+                var existing = db.QueryOne("SELECT id FROM admin_users WHERE lower(email)=?", email);
+                long id;
+                if (existing is null)
+                    id = db.ExecuteReturningId("INSERT INTO admin_users(email,name,password_hash,role,status,must_change_pw) VALUES(?,?,?,?, 'active',0)",
+                        email, "Browser Test Admin", hash, "owner");
+                else
+                {
+                    id = Convert.ToInt64(existing["id"]);
+                    db.Execute("UPDATE admin_users SET name='Browser Test Admin',password_hash=?,role='owner',status='active',must_change_pw=0 WHERE id=?", hash, id);
+                }
+                db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", id);
+                Console.WriteLine($"[seed] opt-in E2E admin ready: {email}");
+            }
+        }
+        catch (Exception e) { Console.Error.WriteLine($"[seed] E2E admin skipped: {e.Message}"); }
+
         // Break-glass owner recovery: if ADMIN_OWNER_RESET_PASSWORD is set at boot, (re)activate the
         // owner account and set its password to that value, forcing a change on next login. This lets
         // an operator who is locked out regain access by setting one Render environment variable and

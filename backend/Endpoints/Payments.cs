@@ -88,7 +88,7 @@ public static class Payments
                     product, JsonSerializer.Serialize(pr), (email ?? "").ToLowerInvariant());
 
                 var label = PRODUCT_LABEL[product];
-                if (product is "exam" or "bundle" && certRow is not null)
+                if (product is "exam" or "bundle" or "recert" && certRow is not null)
                     label = label.Replace("PCL-AI", H.Str(certRow["code"]) ?? "PCL-AI");
                 var options = new SessionCreateOptions
                 {
@@ -110,7 +110,7 @@ public static class Payments
                     // where the webhook-applied membership/entitlement shows up on reload.
                     SuccessUrl = (H.GetS(d, "portal") is "1" or "true")
                         ? $"{Base}/app/billing?paid={{CHECKOUT_SESSION_ID}}"
-                        : $"{Base}/payment-success.html?ref={{CHECKOUT_SESSION_ID}}&product={Uri.EscapeDataString(PRODUCT_LABEL[product])}",
+                        : $"{Base}/payment-success.html?ref={{CHECKOUT_SESSION_ID}}&product={Uri.EscapeDataString(label)}",
                     CancelUrl = (H.GetS(d, "portal") is "1" or "true")
                         ? $"{Base}/app/billing?cancelled=1"
                         : $"{Base}/payment-failed.html"

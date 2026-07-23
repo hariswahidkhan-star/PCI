@@ -6,7 +6,9 @@ namespace PCI.Backend.Data;
 /// OPTIONAL demo LIVE-exam pack. Loads demo_exam_seed.json into sample_questions as SECURE-EXAM rows
 /// (is_practice=0, published=1) so a fresh deployment can sit a full end-to-end examination — browser
 /// runner (<c>/api/me/exam/start</c>) and desktop client (<c>/api/exam/authorize</c>) both draw from
-/// this bank — without an admin first hand-authoring questions.
+/// a certification-scoped bank — without an admin first hand-authoring questions. The same generic
+/// fundamentals are copied into all three suite certifications with distinct labels so isolation can
+/// be exercised without leaking items across certification ids.
 ///
 /// GATED on the environment variable <c>SEED_DEMO_EXAM=true</c>. It never runs by default, so a real
 /// production instance is never contaminated with committed answers. The pack is generic, publicly-known
@@ -19,7 +21,7 @@ namespace PCI.Backend.Data;
 /// </summary>
 public static class DemoExamSeed
 {
-    const int Version = 1;
+    const int Version = 2;
 
     public static void Apply(Db db)
     {
@@ -37,28 +39,37 @@ public static class DemoExamSeed
 
             using var doc = JsonDocument.Parse(File.ReadAllText(path));
             if (!doc.RootElement.TryGetProperty("questions", out var qs) || qs.ValueKind != JsonValueKind.Array) return;
-            int n = 0, sort = 1;   // low sort_order so the demo bank leads if an admin later adds live rows
+            int n = 0;   // low sort_order so the demo bank leads if an admin later adds live rows
+            var certs = db.Query("SELECT id,code FROM certifications WHERE code IN ('PCL-AI','PFL-AI','PML-AI') ORDER BY id");
             db.Transaction(() =>
             {
-                foreach (var q in qs.EnumerateArray())
+                foreach (var cert in certs)
                 {
-                    string? S(string k) => q.TryGetProperty(k, out var el) && el.ValueKind == JsonValueKind.String ? el.GetString() : null;
-                    var question = S("question");
-                    if (string.IsNullOrWhiteSpace(question)) continue;
-                    var ai = q.TryGetProperty("answer_index", out var aiEl) && aiEl.TryGetInt32(out var a) ? a : 0;
-                    if (ai < 0 || ai > 3) ai = 0;
-                    // is_practice=0 + published=1 → this is a LIVE secure-exam item for certification 1.
-                    db.Execute(@"INSERT OR IGNORE INTO sample_questions
-                        (question,option_a,option_b,option_c,option_d,answer_index,domain,explanation,difficulty,is_practice,published,sort_order,certification_id)
-                        VALUES(?,?,?,?,?,?,?,?,?,0,1,?,1)",
-                        question, S("option_a"), S("option_b"), S("option_c"), S("option_d"), ai,
-                        S("domain"), S("explanation"), S("difficulty"), sort++);
-                    n++;
+                    var certId = Convert.ToInt64(cert["id"]);
+                    var code = Convert.ToString(cert["code"]) ?? "PCL-AI";
+                    var sort = 1;
+                    foreach (var q in qs.EnumerateArray())
+                    {
+                        string? S(string k) => q.TryGetProperty(k, out var el) && el.ValueKind == JsonValueKind.String ? el.GetString() : null;
+                        var sourceQuestion = S("question");
+                        if (string.IsNullOrWhiteSpace(sourceQuestion)) continue;
+                        // Question text is globally unique in the schema. Preserve the founding PCL-AI
+                        // wording and prefix the two additional demo banks to keep all rows distinct.
+                        var question = code == "PCL-AI" ? sourceQuestion : $"{code}: {sourceQuestion}";
+                        var ai = q.TryGetProperty("answer_index", out var aiEl) && aiEl.TryGetInt32(out var a) ? a : 0;
+                        if (ai < 0 || ai > 3) ai = 0;
+                        // is_practice=0 + published=1 → a LIVE secure-exam item for this certification.
+                        n += db.Execute(@"INSERT OR IGNORE INTO sample_questions
+                            (question,option_a,option_b,option_c,option_d,answer_index,domain,explanation,difficulty,is_practice,published,sort_order,certification_id)
+                            VALUES(?,?,?,?,?,?,?,?,?,0,1,?,?)",
+                            question, S("option_a"), S("option_b"), S("option_c"), S("option_d"), ai,
+                            S("domain"), S("explanation"), S("difficulty"), sort++, certId);
+                    }
                 }
                 db.Execute("DELETE FROM site_settings WHERE skey='demo_exam_seed_version'");
                 db.Execute("INSERT INTO site_settings(skey,svalue) VALUES('demo_exam_seed_version',?)", Version.ToString());
             });
-            Console.WriteLine($"[seed] Demo LIVE-exam pack loaded (SEED_DEMO_EXAM=true): {n} questions — REMOVE before real certification launch.");
+            Console.WriteLine($"[seed] Demo LIVE-exam packs loaded (SEED_DEMO_EXAM=true): {n} certification-scoped questions — REMOVE before real certification launch.");
         }
         catch (Exception e) { Console.Error.WriteLine($"[seed] Demo exam pack skipped: {e.Message}"); }
     }

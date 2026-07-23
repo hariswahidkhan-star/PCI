@@ -317,7 +317,7 @@ public static class HonoraryApplication
                         setupUrl = Mailer.SetupLink(baseUrl, token);
                         try { Mailer.SendWelcome(db, newId, email, H.Str(a["first_name"]), setupUrl, baseUrl); } catch { }
                         userId = newId;
-                        log(adm!.Id, "honorary_account_created", $"{H.Str(a["reference"])} by admin {adm.Id} subject={newId}");
+                        log(adm!.Id, "honorary_account_created", $"{H.Str(a["reference"])} by admin {adm.Id} (subject {newId})");
                     }
                 }
 
@@ -338,7 +338,7 @@ public static class HonoraryApplication
                 if (userId is not null)
                     db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Recognition', 'Honorary Fellow (PCI)', ?, 'View membership', '/credentials')",
                         userId, $"The board has conferred on you the designation Honorary Fellow (PCI) — award number {awardNo}. Your membership and practice access are being set up.");
-                log(adm.Id, "honorary_application_approved", $"{H.Str(a["reference"])} → {awardNo} by admin {adm.Id} subject={userId?.ToString() ?? email}");
+                log(adm.Id, "honorary_application_approved", $"{H.Str(a["reference"])} → {awardNo} by admin {adm.Id} (subject {userId?.ToString() ?? "unlinked"})");
             }
             else if (status.Length > 0)
             {
@@ -390,9 +390,9 @@ public static class HonoraryApplication
                 }
                 catch { }
 
-            return setupUrl is not null
-                ? J(new { ok = true, status = status.Length > 0 ? status : H.Str(a["status"]), award_no = awardNo, setup_url = setupUrl })
-                : J(new { ok = true, status = status.Length > 0 ? status : H.Str(a["status"]), award_no = awardNo });
+            // The route is owner-only. Returning the newly-created one-time setup link mirrors manual
+            // student provisioning and gives the board a secure handoff when outbound email is disabled.
+            return J(new { ok = true, status = status.Length > 0 ? status : H.Str(a["status"]), award_no = awardNo, setup_url = setupUrl });
         });
     }
 }

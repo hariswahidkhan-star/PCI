@@ -61,7 +61,7 @@ public static class MultiCert
                 new { q = "What does PCI PFL-AI cover?", a = "Investment appraisal, financial modelling, capital structure, coverage ratios (DSCR/LLCR/PLCR), bankability, PPP and concession structures, financial close and AI-enabled analysis." },
             },
         });
-        var delivery = Json(new
+        var management = Json(new
         {
             audience = "Project managers, delivery and programme leaders responsible for initiating, planning, executing and closing projects across predictive, agile and hybrid delivery.",
             competencies = new[]
@@ -76,7 +76,7 @@ public static class MultiCert
             faqs = new[]
             {
                 new { q = "Who is PCI PML-AI for?", a = "Project and delivery leaders who take projects end to end — initiation, governance, planning, execution and closure across predictive, agile and hybrid approaches." },
-                new { q = "Is PCI PML-AI a project-management credential?", a = "Yes. PCI PML-AI is a comprehensive project management, leadership and delivery credential; its official title is PCI AI Project Management Leader." },
+                new { q = "Is PCI PML-AI a project-management credential?", a = "Yes. PCI PML-AI is a comprehensive project management, leadership and delivery credential; its official title is PCI Project Management Leader – AI." },
             },
         });
 
@@ -100,17 +100,17 @@ public static class MultiCert
               (id,code,name,description,credential_prefix,expiry_years,active,sort_order,
                acronym,short_name,public_title,short_description,category,level,status,slug,audience,
                membership_required,meta_title,meta_description,keywords,content_json)
-            VALUES(3,'PML-AI','PCI AI Project Management Leader',
+            VALUES(3,'PML-AI','PCI Project Management Leader – AI',
                'Comprehensive project management, leadership and delivery: initiation, governance, planning, execution, integrated cost/schedule/risk, agile and hybrid delivery, benefits realization and AI-enabled project management with human accountability.',
                'PML-AI',3,1,3,
-               'PCI PML-AI','PML-AI','PCI AI Project Management Leader',
+               'PCI PML-AI','PML-AI','PCI Project Management Leader – AI',
                'Comprehensive project management, leadership and delivery — initiation, governance, planning, execution, integrated cost/schedule/risk, agile/hybrid delivery and AI-enabled project management.',
                'Project Management','Leader','Active','pml-ai',
                'Project managers, delivery and programme leaders.',
-               0,'PCI PML-AI | PCI AI Project Management Leader',
-               'The PCI AI Project Management Leader (PCI PML-AI) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.',
-               'pml-ai, pci pml-ai, project management leader, project management certification, project leadership, agile, hybrid delivery, benefits realization',
-               ?)", delivery);
+               0,'PCI PML-AI | PCI Project Management Leader – AI',
+               'The PCI Project Management Leader – AI (PCI PML-AI) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.',
+               'pml-ai, pci pml-ai, project delivery leader, project management certification, project leadership, agile, hybrid delivery, benefits realization',
+               ?)", management);
 
         // ── Migrate-once renames to the final Project Leadership Suite names (keyed on the prior code,
         //    id-stable, no duplicates, admin edits preserved once renamed). Per-cert taglines are cleared:
@@ -133,16 +133,16 @@ public static class MultiCert
             "The PCI AI Project Finance Leader (PCI PFL-AI) credential covers project finance, financial modelling, capital structure, bankability, coverage ratios, PPP structures and financial close.",
             "pfl-ai, pci pfl-ai, project finance leader, project finance certification, financial modelling, dscr, ppp, bankability",
             finance);
-        // Prior interim name for id 3 was PDL-AI (and before that CPMD / CPMD-AI). Migrate those to PML-AI.
-        MigrateCert(db, 3, new[] { "CPMD", "CPMD-AI", "PDL-AI" }, "PML-AI", "PCI AI Project Management Leader", "PCI PML-AI", "PML-AI",
+        MigrateCert(db, 3, new[] { "CPMD", "CPMD-AI", "PDL-AI" }, "PML-AI", "PCI Project Management Leader – AI", "PCI PML-AI", "PML-AI",
             "pml-ai", "PML-AI", "Project Management",
             "Comprehensive project management, leadership and delivery — initiation, governance, planning, execution, integrated cost/schedule/risk, agile/hybrid delivery and AI-enabled project management.",
             "Comprehensive project management, leadership and delivery: initiation, governance, planning, execution, integrated cost/schedule/risk, agile and hybrid delivery, benefits realization and AI-enabled project management with human accountability.",
             "Project managers, delivery and programme leaders.",
-            "PCI PML-AI | PCI AI Project Management Leader",
-            "The PCI AI Project Management Leader (PCI PML-AI) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.",
-            "pml-ai, pci pml-ai, project management leader, project management certification, project leadership, agile, hybrid delivery",
-            delivery);
+            "PCI PML-AI | PCI Project Management Leader – AI",
+            "The PCI Project Management Leader – AI (PCI PML-AI) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.",
+            "pml-ai, pci pml-ai, project delivery leader, project management certification, project leadership, agile, hybrid delivery",
+            management);
+        RepairPrePdlPmlAlias(db, management);
 
         EnsureRoutes(db);
         EnsureDocuments(db);
@@ -165,11 +165,10 @@ public static class MultiCert
             ("Certified Project Finance & Infrastructure Professional – AI", "PCI AI Project Finance Leader"),
             ("Certified Project Finance Professional – AI", "PCI AI Project Finance Leader"),
             ("Project Finance Leader – AI", "PCI AI Project Finance Leader"),
-            ("PCI AI Project Delivery Leader", "PCI AI Project Management Leader"),
-            ("Project Management Leader – AI", "PCI AI Project Management Leader"),
-            ("PCI Project Management Leader", "PCI AI Project Management Leader"),
-            ("Project Delivery Leader", "Project Management Leader"),
-            ("PCI PDL-AI", "PCI PML-AI"),
+            ("PCI AI Project Delivery Leader", "PCI Project Management Leader – AI"),
+            ("PCI Project Delivery Leader – AI", "PCI Project Management Leader – AI"),
+            ("Project Delivery Leader – AI", "Project Management Leader – AI"),
+            ("Project Delivery Leader", "Project Management Leader – AI"),
             ("PCP-AI", "PCL-AI"), ("PFIP-AI", "PFL-AI"), ("PFIP", "PFL-AI"),
             ("CPMD-AI", "PML-AI"), ("CPMD", "PML-AI"), ("PDL-AI", "PML-AI"),
             // Bare retired acronym LAST: by this point every "PCP-AI" is already "PCL-AI", so any
@@ -182,7 +181,6 @@ public static class MultiCert
             ("cpmd-ai", "pml-ai"), ("cpmd", "pml-ai"), ("pdl-ai", "pml-ai"),
             ("pcp", "pcl-ai"),
             ("certified project controls professional", "pci ai project controls leader"),
-            ("project delivery leader", "project management leader"),
         };
         (string table, string col)[] targets =
         {
@@ -481,8 +479,14 @@ public static class MultiCert
                 if (code.Length == 0) continue;
                 var path = Path.Combine("books", code.ToLowerInvariant() + "-bok.pdf");
                 if (!File.Exists(path)) continue;
-                var row = db.QueryOne("SELECT id FROM cert_documents WHERE certification_id=? AND kind='bok' AND (storage_ref IS NULL OR storage_ref='') ORDER BY id LIMIT 1", cert["id"]);
+                var row = db.QueryOne("SELECT id,filename,storage_ref FROM cert_documents WHERE certification_id=? AND kind='bok' ORDER BY id LIMIT 1", cert["id"]);
                 if (row is null) continue;
+                var missing = string.IsNullOrWhiteSpace(row["storage_ref"] as string);
+                var legacyPdlMaster = code == "PML-AI"
+                    && string.Equals(row["filename"] as string, "pdl-ai-bok.pdf", StringComparison.OrdinalIgnoreCase);
+                // Replace only the bundled legacy PDL-AI master. Any admin-uploaded replacement keeps its
+                // own filename and storage reference, so it is never overwritten by a deployment.
+                if (!missing && !legacyPdlMaster) continue;
                 var bytes = File.ReadAllBytes(path);
                 var stored = Core.Storage.Put(bytes, "application/pdf", "books");
                 db.Execute("UPDATE cert_documents SET storage_ref=?, filename=?, mime='application/pdf', size_bytes=?, sha256=?, watermark=1, updated_at=datetime('now') WHERE id=?",
@@ -557,5 +561,31 @@ public static class MultiCert
               short_description=?, description=?, audience=?, tagline=NULL, status='Active',
               meta_title=?, meta_description=?, keywords=?, content_json=?, updated_at=datetime('now')
             WHERE id=? AND code IN ({inClause})", args.ToArray());
+    }
+
+    /// <summary>Some installations briefly used PML-AI before the PDL-AI release. Because the final
+    /// machine code is also PML-AI, repair that older identity only when one of its identity fields is
+    /// non-canonical. Once repaired, later boots leave descriptive/admin-editable content untouched.</summary>
+    static void RepairPrePdlPmlAlias(Db db, string contentJson)
+    {
+        db.Execute(@"UPDATE certifications SET
+              name='PCI Project Management Leader – AI', public_title='PCI Project Management Leader – AI',
+              acronym='PCI PML-AI', short_name='PML-AI', slug='pml-ai', credential_prefix='PML-AI',
+              category='Project Management', level='Leader',
+              short_description='Comprehensive project management, leadership and delivery — initiation, governance, planning, execution, integrated cost/schedule/risk, agile/hybrid delivery and AI-enabled project management.',
+              description='Comprehensive project management, leadership and delivery: initiation, governance, planning, execution, integrated cost/schedule/risk, agile and hybrid delivery, benefits realization and AI-enabled project management with human accountability.',
+              audience='Project managers, delivery and programme leaders.', tagline=NULL, status='Active',
+              meta_title='PCI PML-AI | PCI Project Management Leader – AI',
+              meta_description='The PCI Project Management Leader – AI (PCI PML-AI) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.',
+              keywords='pml-ai, pci pml-ai, project delivery leader, project management certification, project leadership, agile, hybrid delivery',
+              content_json=?, updated_at=datetime('now')
+            WHERE id=3 AND code='PML-AI' AND (
+              COALESCE(name,'')<>'PCI Project Management Leader – AI'
+              OR COALESCE(public_title,'')<>'PCI Project Management Leader – AI'
+              OR COALESCE(acronym,'')<>'PCI PML-AI'
+              OR COALESCE(short_name,'')<>'PML-AI'
+              OR COALESCE(slug,'')<>'pml-ai'
+              OR COALESCE(credential_prefix,'')<>'PML-AI'
+              OR COALESCE(category,'')<>'Project Management')", contentJson);
     }
 }

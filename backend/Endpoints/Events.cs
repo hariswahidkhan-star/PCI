@@ -142,7 +142,7 @@ public static class Events
                         "Attended: " + (H.Str(ev["title"]) ?? "PCI event"), adm.Id);
                 }
                 db.Execute("UPDATE event_registrations SET status='attended', attended_at=datetime('now'), cpd_entry_id=? WHERE id=?", cpdId, reg["id"]);
-                log(adm.Id, "event_attended", $"event {id} user {uid} (+{H.D(ev["cpd_hours"])}h CPD)");
+                log(adm.Id, "event_attended", $"event {id} (+{H.D(ev["cpd_hours"])}h CPD) (subject {uid})");
                 return J(new { ok = true, cpd_hours = H.D(ev["cpd_hours"]) });
             }
             else
@@ -150,7 +150,7 @@ public static class Events
                 // Un-mark attendance: revert to registered and remove the auto-credited CPD entry (if any).
                 if (H.Ln(reg["cpd_entry_id"]) is { } cid) db.Execute("DELETE FROM cpd_entries WHERE id=?", cid);
                 db.Execute("UPDATE event_registrations SET status='registered', attended_at=NULL, cpd_entry_id=NULL WHERE id=?", reg["id"]);
-                log(adm.Id, "event_attendance_removed", $"event {id} user {uid}");
+                log(adm.Id, "event_attendance_removed", $"event {id} (subject {uid})");
                 return J(new { ok = true });
             }
         }));

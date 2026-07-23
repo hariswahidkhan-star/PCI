@@ -24,7 +24,7 @@ test.describe('student portal accessibility (axe)', () => {
     await apiLoginAsDemoStudent(request, page)
     await page.goto('/app/')
     // Settle the screen first: shell chrome present and the data spinner gone.
-    await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible()
     await expect(page.getByRole('status', { name: 'Loading' })).toHaveCount(0)
     await expectNoCriticalViolations(page)
   })
@@ -32,7 +32,7 @@ test.describe('student portal accessibility (axe)', () => {
   test('the authenticated profile screen has no critical violations', async ({ page, request }) => {
     await apiLoginAsDemoStudent(request, page)
     await page.goto('/app/profile')
-    await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible()
     await expect(page.getByRole('status', { name: 'Loading' })).toHaveCount(0)
     await expectNoCriticalViolations(page)
   })

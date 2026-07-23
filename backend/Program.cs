@@ -43,6 +43,13 @@ var schemaPath = Path.Combine(AppContext.BaseDirectory, schemaFile);
 if (!File.Exists(schemaPath)) schemaPath = schemaFile;
 Console.WriteLine($"[boot] database provider: {db.Provider} (schema: {schemaFile})");
 Migrate.Run(db, schemaPath);
+// Deterministic browser-lifecycle tests need to book a policy-valid future slot and launch it
+// immediately. This override is deliberately Development-only and opt-in; production continues to
+// read the operator-controlled site setting with no test back door or public mutation endpoint.
+if (builder.Environment.IsDevelopment()
+    && double.TryParse(Environment.GetEnvironmentVariable("E2E_EXAM_OPEN_BEFORE_MINUTES"), out var e2eOpenBefore)
+    && e2eOpenBefore > 0)
+    Settings.Put(db, "exam_open_before_minutes", e2eOpenBefore.ToString(System.Globalization.CultureInfo.InvariantCulture));
 try { PCI.Backend.Data.CommsSeed.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[comms seed] {e.Message}"); }
 try { PCI.Backend.Data.MarketingSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[marketing schema] {e.Message}"); }
 builder.Services.AddSingleton(db);
@@ -196,7 +203,10 @@ static string ClientIp(HttpContext ctx)
 // robust to route-handler shape (no per-endpoint chaining required).
 var _rlHits = new System.Collections.Concurrent.ConcurrentDictionary<string, (int count, long windowStart)>();
 string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login", "/api/inquiry", "/api/newsletter", "/api/form-submit" };
-const int RL_LIMIT = 10; const long RL_WINDOW_MS = 60_000;
+// Playwright boots this process with E2E_ADMIN_PASSWORD set; raise the window so the browser suite
+// (dozens of register/login/forgot posts) does not cascade 429s. Production never sets that env.
+var _rlE2e = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("E2E_ADMIN_PASSWORD"));
+int RL_LIMIT = _rlE2e ? 500 : 10; long RL_WINDOW_MS = 60_000;
 app.Use(async (ctx, next) =>
 {
     // ASP.NET routing is trailing-slash-insensitive, so POST /api/login/ still reaches the handler.
@@ -731,23 +741,32 @@ app.MapPost("/api/admin/auth/recover", async (HttpRequest req) =>
     return Json(new { ok = true });
 });
 
-// ---- optional TOTP MFA for privileged accounts: status + enrol (pending) → verify (active) → disable ----
+// ---- optional TOTP MFA for privileged accounts: enrol (pending) → verify (active) → disable ----
 app.MapGet("/api/admin/me/2fa", (HttpRequest req) =>
 {
     var a = Auth.AdminFromReq(req, db);
     if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
-    var r = db.QueryOne("SELECT totp_secret,totp_recovery FROM admin_users WHERE id=?", a.Id);
-    var secret = H.Str(r?["totp_secret"]) ?? "";
-    var pending = secret.StartsWith("pending:", StringComparison.Ordinal);
-    var enabled = secret.Length > 0 && !pending;
-    var recoveryRemaining = 0;
-    var rec = H.Str(r?["totp_recovery"]);
-    if (!string.IsNullOrWhiteSpace(rec))
+    var row = db.QueryOne("SELECT totp_secret,totp_recovery FROM admin_users WHERE id=?", a.Id);
+    var secret = row?["totp_secret"] as string ?? "";
+    var recovery = row?["totp_recovery"] as string ?? "";
+    var recoveryCount = 0;
+    try
     {
-        try { recoveryRemaining = JsonSerializer.Deserialize<List<string>>(rec)?.Count ?? 0; }
-        catch { recoveryRemaining = 0; }
+        recoveryCount = string.IsNullOrEmpty(recovery)
+            ? 0
+            : (JsonSerializer.Deserialize<List<string>>(recovery) ?? new()).Count;
     }
-    return Json(new { enabled, pending, recovery_remaining = recoveryRemaining });
+    catch
+    {
+        // A malformed legacy recovery-code payload must not break the Settings page. It is treated as
+        // an empty inventory; the active TOTP factor still remains enforced until explicitly disabled.
+    }
+    return Json(new
+    {
+        enabled = secret.Length > 0 && !secret.StartsWith("pending:"),
+        pending = secret.StartsWith("pending:"),
+        recovery_remaining = recoveryCount,
+    });
 });
 
 app.MapPost("/api/admin/me/2fa/setup", (HttpRequest req) =>
@@ -755,8 +774,10 @@ app.MapPost("/api/admin/me/2fa/setup", (HttpRequest req) =>
     var a = Auth.AdminFromReq(req, db);
     if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
     var existing = db.Scalar<string>("SELECT totp_secret FROM admin_users WHERE id=?", a.Id) ?? "";
-    if (existing.Length > 0 && !existing.StartsWith("pending:", StringComparison.Ordinal))
-        return Results.Json(new { error = "already_enabled", message = "Two-factor authentication is already enabled for this account." }, statusCode: 409);
+    // Never replace an active factor with an unverified pending secret. Doing so would make the next
+    // login skip MFA and let any stolen authenticated session silently downgrade the account.
+    if (existing.Length > 0 && !existing.StartsWith("pending:"))
+        return Results.Json(new { error = "already_enabled", message = "Two-factor authentication is already enabled." }, statusCode: 409);
     var secret = Security.NewTotpSecret();
     // Stored as pending until the admin proves their authenticator works — enabling MFA can never lock
     // an account out on a mis-scanned QR.
@@ -799,8 +820,9 @@ app.MapPost("/api/admin/me/2fa/disable", async (HttpRequest req) =>
             var recovHash = Security.Sha(code.Replace(" ", "").Replace("-", "").ToLowerInvariant());
             var rec = db.Scalar<string>("SELECT totp_recovery FROM admin_users WHERE id=?", a.Id) ?? "";
             var codes = string.IsNullOrEmpty(rec) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(rec) ?? new();
-            if (!codes.Contains(recovHash))
+            if (!codes.Remove(recovHash))
                 return Results.Json(new { error = "totp_invalid", message = "Enter a current authenticator or recovery code to disable MFA." }, statusCode: 400);
+            db.Execute("UPDATE admin_users SET totp_recovery=? WHERE id=?", JsonSerializer.Serialize(codes), a.Id);
         }
     }
     db.Execute("UPDATE admin_users SET totp_secret=NULL, totp_recovery=NULL, totp_last_step=0 WHERE id=?", a.Id);
@@ -1138,7 +1160,8 @@ app.Use(async (ctx, next) =>
         if (PCI.Backend.Core.PathRedirects.Target(db, ctx.Request) is { } red)
         {
             ctx.Response.StatusCode = red.status;
-            if (red.status != 410) ctx.Response.Headers.Location = red.to;   // 410 Gone carries no Location
+            if (red.status != 410)
+                ctx.Response.Headers.Location = PCI.Backend.Core.PathRedirects.WithQuery(red.to, ctx.Request.QueryString);
             return;
         }
         var reqPath = ctx.Request.Path.Value ?? "/";

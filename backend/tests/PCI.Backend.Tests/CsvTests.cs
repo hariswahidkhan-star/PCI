@@ -16,9 +16,9 @@ public class CsvTests
     [InlineData("=HYPERLINK(\"http://evil\",\"click\")")]
     [InlineData("+1+1")]
     [InlineData("@SUM(A1:A9)")]
-    [InlineData(" =1+1")]
-    [InlineData("  @SUM(A1)")]
     [InlineData("-cmd|' /c calc'!A1")]        // classic DDE payload — leading '-', not a number
+    [InlineData("  =HYPERLINK(\"http://evil\",\"click\")")]
+    [InlineData(" \t@SUM(A1:A9)")]
     [InlineData("\tstartswithtab")]
     [InlineData("\rstartswithcr")]
     public void Field_NeutralisesFormulaTriggers_OnNonNumericText(string payload)
@@ -32,10 +32,9 @@ public class CsvTests
 
     [Theory]
     [InlineData("-5")]
-    [InlineData(" -5")]
     [InlineData("-3.14")]
     [InlineData("+42")]
-    [InlineData(" +42")]
+    [InlineData("  -5")]
     [InlineData("1000")]
     [InlineData("12.5")]
     public void Field_LeavesGenuineNumbersIntact(string number)

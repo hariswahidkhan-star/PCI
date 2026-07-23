@@ -79,6 +79,7 @@ export default function HonoraryApplications() {
   const [err, setErr] = useState<string | null>(null)
   const [idvLink, setIdvLink] = useState<string | null>(null)
   const [linkMsg, setLinkMsg] = useState<string | null>(null)
+  const [decisionMsg, setDecisionMsg] = useState<{ text: string; setupUrl?: string } | null>(null)
 
   async function view(id: number) {
     setErr(null); setIdvLink(null); setLinkMsg(null)
@@ -95,9 +96,9 @@ export default function HonoraryApplications() {
     setBusy(true); setErr(null); setLinkMsg(null)
     try {
       const r = await adminApi.post<{ link: string; emailed: boolean; expires_days: number }>(`/api/admin/honorary-applications/${id}/shortlist`, {})
+      await view(id)
       setIdvLink(r.link)
       setLinkMsg(r.emailed ? `Secure link emailed to the applicant (expires in ${r.expires_days} days). You can also copy it below.` : `Secure link generated (expires in ${r.expires_days} days). Email is off — copy and send it to the applicant.`)
-      await view(id)
     } catch (e) { setErr(e instanceof Error ? e.message : 'Could not shortlist.') }
     finally { setBusy(false) }
   }
@@ -142,7 +143,16 @@ export default function HonoraryApplications() {
     setBusy(true)
     setErr(null)
     try {
-      await adminApi.post(`/api/admin/honorary-applications/${id}/decide`, { status: s, admin_note: note })
+      const r = await adminApi.post<{ status: string; award_no?: string | null; setup_url?: string | null }>(
+        `/api/admin/honorary-applications/${id}/decide`,
+        { status: s, admin_note: note },
+      )
+      setDecisionMsg({
+        text: s === 'approved'
+          ? `Approved and conferred${r.award_no ? ` — ${r.award_no}` : ''}.`
+          : s ? `Application marked ${r.status.replace(/_/g, ' ')}.` : 'Internal note saved.',
+        setupUrl: r.setup_url ?? undefined,
+      })
       setOpen(null)
       setNote('')
       refetch()
@@ -164,6 +174,17 @@ export default function HonoraryApplications() {
         Public applications for the board-conferred <strong>Honorary Fellow (PCI)</strong> recognition. Approving an
         application confers a real, verifiable PCI-HON award — it never issues an examined certification credential.
       </p>
+      {decisionMsg && (
+        <div className="notice" role="status">
+          <strong>{decisionMsg.text}</strong>
+          {decisionMsg.setupUrl && (
+            <div className="small" style={{ marginTop: '.35rem' }}>
+              Outbound email may be unavailable. Share this single-use setup link securely:{' '}
+              <a href={decisionMsg.setupUrl} target="_blank" rel="noreferrer">open password setup</a>
+            </div>
+          )}
+        </div>
+      )}
 
       <Card
         title="Applications"
