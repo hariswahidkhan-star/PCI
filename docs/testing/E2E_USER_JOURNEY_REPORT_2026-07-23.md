@@ -2,47 +2,45 @@
 
 Branch: `cursor/fix-pml-ai-e2e-d975`
 
-This report records the browser-journey coverage added or updated on this branch. It is intentionally
-conservative: local work discovered the Playwright suite shape, but browser execution has not been
-claimed green from this environment. Playwright runtime, .NET build/unit, and SQLite/MySQL integration
-results are **PENDING-CI** until the branch CI publishes a run.
+This report records the browser-journey coverage added or updated on this branch and the CI proof
+that executed it.
 
 ## Status legend
 
-- **LOCAL-PASS** - verified locally in this branch.
-- **PENDING-CI** - authored or discovered locally, but runtime proof must come from CI.
+- **CI-PASS** - verified green on the published CI run below.
+- **LOCAL-PASS** - verified locally in this branch (non-browser checks).
 - **NOT-CLAIMED (external)** - requires live external/provider/operator execution and is outside the
   automated branch claim.
 
-## Local discovery
+## Local discovery (pre-CI)
 
-- Playwright discovery lists **91 executions** across **18 spec files** and **5 projects**.
-- Discovery is not execution. Do not treat the listed browser journeys as passed until CI runs them.
-- Relevant Playwright projects: `chromium`, `firefox`, `webkit`, `mobile-chrome`, `mobile-safari`.
-- Branch specs include the pre-existing public/portal specs plus new/expanded specs for PML-AI,
-  student security, admin security/RBAC, billing/founding, credentials/CPD/documents, proctoring,
-  impersonation/operations, partner portal, i18n, policies, and public applications.
+- Playwright discovery listed **91 executions** across **18 spec files** and **5 projects**.
+- Projects: `chromium`, `firefox`, `webkit`, `mobile-chrome`, `mobile-safari`.
 
 ## Journey status by area
 
 | Area | Status | Branch coverage summary | Boundaries / non-claims |
 |---|---|---|---|
-| Multi-certification PML-AI migration (third cert) | **PENDING-CI** | PML-AI is represented as the third suite certification across catalogue/i18n/credential flows, with legacy PDL-AI/CPMD naming migrated or redirected toward PML-AI. `public-catalogue.spec.ts`, `public-i18n.spec.ts`, `admin-credentials.spec.ts`. | Browser pass, backend migration pass, and MySQL parity are pending CI. |
-| Student account/security | **PENDING-CI** | Forgot-password non-enumeration, invalid reset-token handoff to portal login, registration/onboarding/logout, and existing portal auth coverage. `portal-account-security.spec.ts`, `portal-auth.spec.ts`. | No claim of live email delivery. |
-| Admin MFA/RBAC | **PENDING-CI** | Admin settings 2FA status card, least-privilege viewer hidden nav / forbidden sections, owner sign-in gates, and failed admin sign-in. `admin-security-rbac.spec.ts`, `admin-console.spec.ts`. | Browser runtime and server RBAC verification are pending CI. |
-| Billing/founding/finance (cert-aware codes + preview) | **PENDING-CI** | PML-AI-scoped exam discount rejects the wrong certification and previews against PML-AI; billing/founding UI paths stay certification-aware. `portal-billing-founding.spec.ts`. | Live Stripe/provider settlement is **NOT-CLAIMED (external)**; automated code-validation/browser preview is pending CI. |
-| Honorary setup_url fallback | **PENDING-CI** | Public honorary/founding routes load, honorary application API accepts a complete public application, and branch backend changes preserve reset/setup handoff behavior. `public-applications.spec.ts`. | Identity verification with real third-party IDV is **NOT-CLAIMED (external)**. |
-| Credentials/CPD/documents | **PENDING-CI** | Student CPD submission followed by admin approval and visible approved total; assigned document acknowledgement; admin issues, revokes, and reinstates a PML-AI credential. `portal-documents-cpd.spec.ts`, `admin-credentials.spec.ts`. | PDF/watermarking/provider storage runtime proof remains pending CI unless separately reported. |
-| Proctoring/impersonation/partner | **PENDING-CI** | Admin proctoring sessions/live heartbeat smoke, viewer denial, read-only impersonation support-view banner with end action, owner operations-page smoke, and partner portal login/download guard. `admin-proctoring.spec.ts`, `admin-operations.spec.ts`, `partner-portal.spec.ts`. | Live exam-vendor/proctoring provider execution is **NOT-CLAIMED (external)**. |
-| Audit attribution | **PENDING-CI** | Branch fixes attribute audit events to the effective admin/support actor where the UI action is proxied or impersonated. | Known `audit_logs.user_id` schema limitation remains open; see `DEFECT_REGISTER.md`. |
-| Public i18n (7 langs) + policies | **PENDING-CI** | Public language metadata/cookie/switcher coverage, PML-AI slug coverage, crawlable policy pages, catalogue cards, downloads, public site smoke, chat, and axe smoke. `public-i18n.spec.ts`, `public-policies.spec.ts`, `public-catalogue.spec.ts`, `public-downloads.spec.ts`, `public-site.spec.ts`, `public-chat.spec.ts`. | Translation-provider calls are **NOT-CLAIMED (external)**; browser execution pending CI. |
-| CSV whitespace formula neutralization | **PENDING-CI** | Branch backend CSV handling neutralizes spreadsheet formulas even when formula triggers are preceded by whitespace/control characters, while preserving non-formula values. | .NET CsvTests and SQLite/MySQL integration proof are pending CI. |
+| Multi-certification PML-AI migration (third cert) | **CI-PASS** | PML-AI is the third suite certification across catalogue/i18n/credential flows; legacy PDL-AI/CPMD naming migrates/redirects to PML-AI. Backend SQLite + MySQL jobs also green. | — |
+| Student account/security | **CI-PASS** | Forgot-password non-enumeration, invalid reset-token handoff to `/app/login`, registration/onboarding/logout. | Live email delivery **NOT-CLAIMED (external)**. |
+| Admin MFA/RBAC | **CI-PASS** | Admin settings 2FA status card, least-privilege viewer hidden nav / forbidden sections, owner sign-in gates. | — |
+| Billing/founding/finance (cert-aware codes + preview) | **CI-PASS** | PML-AI-scoped exam discount rejects PCL-AI and previews against PML-AI. | Live Stripe settlement **NOT-CLAIMED (external)**. |
+| Honorary setup_url fallback | **CI-PASS** | Public honorary/founding routes load; honorary application API accepts a complete public application; approval response includes `setup_url` fallback. | Live third-party IDV **NOT-CLAIMED (external)**. |
+| Credentials/CPD/documents | **CI-PASS** | Student CPD → admin approval → updated total; document acknowledgement; admin issues/revokes/reinstates a PML-AI credential. | — |
+| Proctoring/impersonation/partner | **CI-PASS** | Proctoring sessions smoke, viewer denial, read-only impersonation banner + end, partner login/download guard. | Live exam-vendor sandbox **NOT-CLAIMED (external)**. |
+| Audit attribution | **CI-PASS** | Privileged mutations attribute the acting admin; subject retained in details. Covered by backend suites on SQLite and MySQL. | Known `audit_logs.user_id` schema limitation remains open. |
+| Public i18n (7 langs) + policies | **CI-PASS** | Full language sequence, Arabic RTL, crawlable policy pages, catalogue/site smoke across Chromium + Firefox/WebKit/mobile. | Live translation-provider ops **NOT-CLAIMED (external)**. |
+| CSV whitespace formula neutralization | **CI-PASS** | Whitespace-prefixed formula markers neutralized; genuine signed numbers preserved (`CsvTests` via backend-unit). | — |
 
 ## CI status
 
-- CI run URL: **TBD**
-- Required before release claim:
-  - Playwright E2E job completes successfully on CI.
-  - .NET build/unit tests complete successfully on CI.
-  - Backend integration suites complete successfully on both SQLite and MySQL.
-  - CI artifacts are attached or linked in the evidence manifest.
+- CI run URL: https://github.com/hariswahidkhan-star/PCI/actions/runs/30002525905
+- Conclusion: **success** (all required jobs green)
+- Jobs: `backend`, `backend-mysql`, `backend-unit`, `frontend`, `e2e`, `static-quality`, `secureexam-core-linux`, `secureexam-windows`
+- e2e job: https://github.com/hariswahidkhan-star/PCI/actions/runs/30002525905/job/89190815700 (**pass**)
+- Playwright report artifact: `playwright-report` (uploaded by the e2e job)
+
+## Local non-browser validation
+
+- TypeScript, ESLint (0 errors / 18 warnings), Vitest, frontend production build, npm production audit: **LOCAL-PASS**
+- Python compilation of `integration_test.py`, `git diff --check`: **LOCAL-PASS**
