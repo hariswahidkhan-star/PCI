@@ -59,7 +59,18 @@ jobs:
         env: { PORT: '8080', DATABASE_FILE: './ci.db' }
         run: |
           dotnet bin/Release/net8.0/PCI.Backend.dll &
-          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8080/api/health && break; sleep 1; done
+          # Fresh CI DBs run a full wwwroot content scan + seed (~15–40s on shared runners).
+          # Fail hard if health never answers — otherwise smoke starts against a dead port.
+          for i in $(seq 1 90); do
+            if curl -sf http://127.0.0.1:8080/api/health; then
+              echo
+              echo "backend healthy after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::backend did not become healthy within 90s"
+          exit 1
 
       - name: Live smoke suite
         run: ./smoke-test.sh
