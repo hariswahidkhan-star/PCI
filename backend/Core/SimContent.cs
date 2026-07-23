@@ -169,6 +169,41 @@ public static class SimContent
                 }
             }
 
+            // Variant safety (§6/§14): if the scenario generates seeded variants, EVERY variant must still be
+            // gradable — a variant that pushes an input out of range (e.g. a zero divisor) is an "impossible
+            // variant" and blocks publication. Reuses the same reference-solver check across sample seeds.
+            (string key, string why)? FirstAskProblem(JsonElement vroot)
+            {
+                if (!vroot.TryGetProperty("given", out var vg) || vg.ValueKind != JsonValueKind.Object) return ("given", "no inputs");
+                foreach (var a in ask)
+                {
+                    object? ans;
+                    try { ans = SimCalc.Resolve(task, a.Key, vg); }
+                    catch (Exception e) { return (a.Key, e.Message); }
+                    var ok = a.Type switch
+                    {
+                        "set" => ans is string[] s2 && s2.Length > 0,
+                        "bool" => ans is bool,
+                        _ => ans is double dd && !double.IsNaN(dd) && !double.IsInfinity(dd),
+                    };
+                    if (!ok) return (a.Key, "ungradable");
+                }
+                return null;
+            }
+            if (SimVariant.HasVariants(root))
+                for (long seed = 1; seed <= SimVariant.ValidationSeeds; seed++)
+                {
+                    JsonDocument vdoc;
+                    try { vdoc = JsonDocument.Parse(SimVariant.Derive(configJson, seed)); }
+                    catch { err("variant_invalid", $"Variant seed {seed} produced invalid JSON."); break; }
+                    using (vdoc)
+                        if (FirstAskProblem(vdoc.RootElement) is (string k, string why))
+                        {
+                            err("variant_unresolved", $"Variant seed {seed} makes measure '{k}' {why} — tighten the variant ranges so every seed stays gradable.");
+                            break;
+                        }
+                }
+
             if (root.TryGetProperty("pass_pct", out var pp) && pp.ValueKind == JsonValueKind.Number)
             {
                 var v = pp.GetDouble();

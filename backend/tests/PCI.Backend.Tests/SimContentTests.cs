@@ -198,6 +198,34 @@ public class SimContentTests
     }
 
     [Fact]
+    public void Safe_variant_ranges_publish()
+    {
+        var cfg = """
+            {"task":"evm","prompt":"x","given":{"pv":100000,"ev":90000,"ac":95000,"bac":200000},
+             "ask":[{"key":"cpi","type":"number"},{"key":"eac","type":"number"}],
+             "variant":{"vary":{"pv":{"min":80000,"max":120000,"step":1000},
+                                 "ac":{"min":80000,"max":115000,"step":1000}}}}
+            """;
+        var issues = SimContent.Validate(Valid("VAR-OK-1") with { ConfigJson = cfg });
+        Assert.True(SimContent.Publishable(issues));
+        Assert.DoesNotContain(issues, i => i.Code == "variant_unresolved");
+    }
+
+    [Fact]
+    public void Impossible_variant_range_is_rejected()
+    {
+        // ac can be driven to 0 → CPI 0 → EAC has no answer for that seed; publication must be blocked.
+        var cfg = """
+            {"task":"evm","prompt":"x","given":{"pv":100000,"ev":90000,"ac":95000,"bac":200000},
+             "ask":[{"key":"eac","type":"number"}],
+             "variant":{"vary":{"ac":{"min":0,"max":100000,"step":100000}}}}
+            """;
+        var issues = SimContent.Validate(Valid("VAR-BAD-1") with { ConfigJson = cfg });
+        Assert.False(SimContent.Publishable(issues));
+        Assert.True(Has(issues, "variant_unresolved"));
+    }
+
+    [Fact]
     public void Every_known_task_is_a_dispatcher_case()
     {
         // Guards against drift between SimContent's task set and the engine dispatcher.

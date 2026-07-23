@@ -233,7 +233,11 @@ public static class SimLabSchema
            {"key":"spi","label":"Schedule Performance Index (SPI)","type":"number"},
            {"key":"cpi","label":"Cost Performance Index (CPI)","type":"number"},
            {"key":"eac","label":"Estimate at Completion (EAC, CPI method)","type":"number"}],
-         "tolerance":0.01,"pass_pct":70,"competencies":["earned_value"]}
+         "tolerance":0.01,"pass_pct":70,"competencies":["earned_value"],
+         "variant":{"vary":{
+           "pv":{"min":80000,"max":120000,"step":1000},
+           "ev":{"min":70000,"max":110000,"step":1000},
+           "ac":{"min":80000,"max":115000,"step":1000}}}}
         """;
 
     const string ConfigEvmDrill = """
