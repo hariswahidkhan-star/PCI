@@ -20,6 +20,30 @@ public static class SimLabSchema
     {
         Tables(db);
         Seed(db);
+        Backfill(db);
+    }
+
+    // P0 deterministic-replay backfill (idempotent, no behaviour change): freeze a config snapshot into
+    // every existing attempt from the scenario config it currently replays against, and record an immutable
+    // version-ledger row per published scenario. Existing attempts keep replaying identically; future
+    // catalogue edits can no longer alter them. One UPDATE per scenario (provider-safe; no correlated
+    // subquery), and a no-op after the first boot once snapshots are populated.
+    static void Backfill(Db db)
+    {
+        try
+        {
+            foreach (var s in db.Query("SELECT id,config_json,status FROM simulation_scenarios"))
+            {
+                var sid = PCI.Backend.Core.H.L(s["id"]);
+                var cfg = PCI.Backend.Core.H.Str(s["config_json"]);
+                if (!string.IsNullOrWhiteSpace(cfg))
+                    db.Execute(@"UPDATE simulation_attempts SET config_snapshot=?
+                        WHERE scenario_id=? AND (config_snapshot IS NULL OR config_snapshot='')", cfg, sid);
+                if (PCI.Backend.Core.H.Str(s["status"]) == "published")
+                    PCI.Backend.Core.SimVersion.EnsureVersion(db, sid, null);
+            }
+        }
+        catch { /* backfill is best-effort; never block boot */ }
     }
 
     static void Tables(Db db)
@@ -120,6 +144,12 @@ public static class SimLabSchema
             updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_simattempts_user ON simulation_attempts(user_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_simattempts_scenario ON simulation_attempts(scenario_id)");
+        // ── P0 deterministic replay: pin each attempt to the EXACT scenario config it began with. Grading,
+        //    review-reload and Coach all read this frozen snapshot (Core/SimReplay), so a later revision,
+        //    republish or seed refresh can never alter a historical attempt. `version_id` links to the
+        //    immutable version ledger below for provenance. Additive & idempotent (parity with AddCol). ──
+        AddCol("simulation_attempts", "config_snapshot", "config_snapshot TEXT");
+        AddCol("simulation_attempts", "version_id", "version_id INTEGER");
 
         // ── Per-attempt competency evidence (score 0-100 + mastery level). Mastery is derived from MANY
         //    pieces of evidence in the service layer, never one isolated score (§25.4). ──
@@ -146,6 +176,26 @@ public static class SimLabSchema
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_simevents_attempt ON simulation_attempt_events(attempt_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_simevents_user ON simulation_attempt_events(user_id)");
+
+        // ── Immutable published-scenario version ledger (P0). One row per (scenario, version), frozen at
+        //    publish time and NEVER updated; checksum = SHA-256 of config_json for integrity. Attempts pin to
+        //    a row here (version_id) and/or carry their own config_snapshot, so replay is deterministic
+        //    regardless of later catalogue edits. Indexed only on INTEGER columns (MySQL-migration safe). ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS simulation_scenario_versions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            scenario_id INTEGER NOT NULL,
+            scenario_code VARCHAR(64) NOT NULL,
+            version INTEGER NOT NULL DEFAULT 1,
+            title TEXT,
+            difficulty VARCHAR(16),
+            competencies_json TEXT,
+            config_json TEXT,
+            checksum VARCHAR(64),
+            published_at TEXT,
+            published_by INTEGER,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_simversions_scenario ON simulation_scenario_versions(scenario_id)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_simversions_scenario_version ON simulation_scenario_versions(scenario_id, version)");
     }
 
     static void Seed(Db db)

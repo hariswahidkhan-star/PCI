@@ -156,7 +156,11 @@ public static class AdminSimLab
                 else if (from == SimReview.LearningReview) db.Execute("UPDATE simulation_scenarios SET learning_reviewed_by=? WHERE id=?", adm.Id, id);
                 else if (from == SimReview.SafetyReview) db.Execute("UPDATE simulation_scenarios SET safety_reviewed_by=? WHERE id=?", adm.Id, id);
                 if (to == SimReview.Approved) db.Execute("UPDATE simulation_scenarios SET approved_by=?, approved_at=datetime('now') WHERE id=?", adm.Id, id);
-                if (to == SimReview.Published) db.Execute("UPDATE simulation_scenarios SET status='published', published_at=COALESCE(published_at, datetime('now')) WHERE id=?", id);
+                if (to == SimReview.Published)
+                {
+                    db.Execute("UPDATE simulation_scenarios SET status='published', published_at=COALESCE(published_at, datetime('now')) WHERE id=?", id);
+                    SimVersion.EnsureVersion(db, id, adm.Id);   // freeze this published version into the immutable ledger
+                }
                 else if (to == SimReview.Retired) db.Execute("UPDATE simulation_scenarios SET status='archived' WHERE id=?", id);
                 else if (to == SimReview.Draft) db.Execute("UPDATE simulation_scenarios SET status='draft' WHERE id=?", id);
 
