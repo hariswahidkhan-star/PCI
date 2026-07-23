@@ -128,3 +128,14 @@ The `incomplete_profile` and `no_id` fixtures previously carried multiple unrela
 6. **P2 — broaden cross-browser/mobile tags:** current five-profile execution deliberately targets stable public/auth/catalogue smoke; most authenticated decision screens run in Chromium only.
 
 No unexecuted provider journey is reported as a pass, and no screenshot is claimed to exist until the CI runner has produced the corresponding artifact.
+
+## Social / Marketing deep verification (23 July 2026, later)
+
+Focused runner `backend/tests/social_deep_test.py` executed against a local Release build:
+
+- **§21 Social publishing** — 29/29 PASS (connect, redact, UTM on/off, schedule/cancel, drain, Discord https contract)
+- **§21B Social Media Management** — 24/24 PASS (profiles, share buttons, footer SSR, audit, RBAC)
+- **§56 Marketing centre** — 18/18 PASS (OAuth secrecy, approval gates, fail-closed provider jobs)
+
+**71/71 PASSED.** Live LinkedIn/Meta/Google posting remains **BLOCKED** pending provider secrets + app review (honest gates verified). No Playwright coverage for `/social` or Marketing Ads yet.
+

@@ -2075,7 +2075,256 @@ def test_social_publishing(admin):
     # RBAC: the social API requires authentication
     c, _ = jget("GET", "/api/admin/content/social/accounts")
     chk("21p social API requires authentication (401)", c == 401, c)
+
+    # Retire the deliberately-broken Discord account so later deep drafts target healthy connectors.
+    jget("POST", f"/api/admin/content/social/accounts/{fail_acct}/disconnect", token=admin)
+
+    # ---- deep coverage: cancel, UTM off, pre-utm link left alone, immediate publish ----
+    c, okd = connect({"platform_key": "discord", "label": "PCI Discord Deep", "secret": base + "/discord/webhook/deep"})
+    c, okt = connect({"platform_key": "telegram", "label": "PCI Telegram Deep", "secret": "tok-deep", "api_base": base + "/tg", "chat_id": "@pcideep"})
+    chk("21p2 reconnected healthy Discord + Telegram accounts", c == 200 and okd.get("id") and okt.get("id"), (okd, okt))
+    pid3, _ = _make_published_post(admin, "Social Deep Cancel And UTM Post")
+    c, gen3 = jget("POST", f"/api/admin/content/posts/{pid3}/social/generate", token=admin)
+    # generate returns {id, platform, account}; the drafts list carries platform_key + text/link.
+    drafts3 = jget("GET", f"/api/admin/content/social/drafts?post_id={pid3}", token=admin)[1].get("rows", [])
+    by3 = {d["platform_key"]: d for d in drafts3}
+    chk("21q generate still produces drafts for the reconnected live accounts",
+        c == 200 and len(gen3.get("created", [])) >= 2 and "discord" in by3 and "telegram" in by3,
+        (gen3.get("created"), list(by3)))
+
+    disc = by3["discord"]["id"]
+    jget("POST", f"/api/admin/content/social/drafts/{disc}/publish", token=admin)
+    c, can = jget("POST", f"/api/admin/content/social/drafts/{disc}/cancel", token=admin)
+    con = dbconn()
+    dst = con.execute("SELECT status FROM social_drafts WHERE id=?", (disc,)).fetchone()
+    jst = con.execute("SELECT status FROM content_jobs WHERE idempotency_key=?", ("socialdraft:" + str(disc),)).fetchone()
+    con.close()
+    chk("21r cancel marks the draft cancelled and cancels its pending job",
+        c == 200 and can.get("ok") is True and dst and dst[0] == "cancelled"
+        and (jst is None or jst[0] == "cancelled"), (can, dst, jst))
+
+    # Future-scheduled draft can also be cancelled (status='scheduled' is in the cancel set).
+    mas_future = by3["telegram"]["id"]
+    jget("PATCH", f"/api/admin/content/social/drafts/{mas_future}", token=admin, body={"scheduled_at": "2036-06-01 09:00:00"})
+    jget("POST", f"/api/admin/content/social/drafts/{mas_future}/publish", token=admin)
+    c, can2 = jget("POST", f"/api/admin/content/social/drafts/{mas_future}/cancel", token=admin)
+    con = dbconn(); fst = con.execute("SELECT status FROM social_drafts WHERE id=?", (mas_future,)).fetchone(); con.close()
+    chk("21r2 a future-scheduled draft can be cancelled before it fires",
+        c == 200 and can2.get("ok") is True and fst and fst[0] == "cancelled", (can2, fst))
+
+    # UTM off → shared link has no utm_*.
+    con = dbconn()
+    con.execute("DELETE FROM site_settings WHERE skey IN ('social_utm_enabled','social_utm_campaign')")
+    con.execute("INSERT INTO site_settings(skey,svalue) VALUES('social_utm_enabled','0')")
+    con.commit(); con.close()
+    pid4, _ = _make_published_post(admin, "Social Deep UTM Off Post")
+    c, gen4 = jget("POST", f"/api/admin/content/posts/{pid4}/social/generate", token=admin)
+    drafts4 = jget("GET", f"/api/admin/content/social/drafts?post_id={pid4}", token=admin)[1].get("rows", [])
+    tg4 = next((d for d in drafts4 if d.get("platform_key") == "telegram"), None)
+    chk("21s social_utm_enabled=0 suppresses UTM on generated draft text",
+        c == 200 and tg4 and "utm_source=" not in (tg4.get("text") or "") and "utm_medium=" not in (tg4.get("text") or "")
+        and "utm_source=" not in (tg4.get("link") or ""),
+        ((tg4 or {}).get("text", "")[:220], (tg4 or {}).get("link")))
+
+    # Restore UTM and prove a draft whose link already carries utm_ is left alone on edit.
+    con = dbconn()
+    con.execute("DELETE FROM site_settings WHERE skey='social_utm_enabled'")
+    con.execute("INSERT INTO site_settings(skey,svalue) VALUES('social_utm_enabled','1')")
+    con.commit(); con.close()
+    pid5, _ = _make_published_post(admin, "Social Deep PreUTM Post")
+    jget("POST", f"/api/admin/content/posts/{pid5}/social/generate", token=admin)
+    drafts5 = jget("GET", f"/api/admin/content/social/drafts?post_id={pid5}", token=admin)[1].get("rows", [])
+    tg5 = next((d for d in drafts5 if d.get("platform_key") == "telegram"), None)
+    disc5 = next((d for d in drafts5 if d.get("platform_key") == "discord"), None)
+    pre = "https://example.test/blog/pre?utm_source=keepme&utm_medium=social"
+    jget("PATCH", f"/api/admin/content/social/drafts/{tg5['id']}", token=admin, body={"text": "Keep my link " + pre, "link": pre})
+    con = dbconn(); linkrow = con.execute("SELECT link,text FROM social_drafts WHERE id=?", (tg5["id"],)).fetchone(); con.close()
+    chk("21t a draft link that already carries utm_ is left unmodified on save",
+        linkrow and linkrow[0] == pre and "utm_source=keepme" in (linkrow[1] or ""), linkrow)
+
+    # Immediate publish: blank scheduled_at → queued for now (not 'scheduled').
+    # Use Telegram (http mock is fine); Discord connectors require an https:// webhook URL.
+    jget("PATCH", f"/api/admin/content/social/drafts/{tg5['id']}", token=admin,
+         body={"scheduled_at": "", "text": "Immediate telegram deep post", "link": "https://example.test/blog/imm"})
+    c, imm = jget("POST", f"/api/admin/content/social/drafts/{tg5['id']}/publish", token=admin)
+    chk("21u blank scheduled_at publishes immediately (queued, not future-scheduled)",
+        c == 200 and imm.get("queued") is True and imm.get("scheduled") is not True, imm)
+    c, drn2 = jget("POST", "/api/admin/content/social/drain", token=admin)
+    con = dbconn(); nrow = con.execute("SELECT status,public_url FROM social_drafts WHERE id=?", (tg5["id"],)).fetchone(); con.close()
+    chk("21v immediate publish is delivered by the dispatcher",
+        c == 200 and drn2.get("delivered", 0) >= 1 and nrow and nrow[0] == "published", (drn2, nrow))
+
+    # Past scheduled_at on a fresh draft → due now.
+    pid6, _ = _make_published_post(admin, "Social Deep Past Schedule Post")
+    jget("POST", f"/api/admin/content/posts/{pid6}/social/generate", token=admin)
+    past_d = next((d for d in jget("GET", f"/api/admin/content/social/drafts?post_id={pid6}", token=admin)[1].get("rows", [])
+                   if d.get("platform_key") == "telegram"), None)
+    jget("PATCH", f"/api/admin/content/social/drafts/{past_d['id']}", token=admin, body={"scheduled_at": "2001-01-01 00:00:00"})
+    c, past = jget("POST", f"/api/admin/content/social/drafts/{past_d['id']}/publish", token=admin)
+    chk("21w a past scheduled_at is treated as due now (queued for immediate drain)",
+        c == 200 and past.get("queued") is True and past.get("scheduled") is not True, past)
+
+    # Discord webhook contract: connector refuses non-https webhook URLs (SSRF-safe / Discord real API).
+    c, disc_pub = jget("POST", f"/api/admin/content/social/drafts/{disc5['id']}/publish", token=admin)
+    jget("POST", "/api/admin/content/social/drain", token=admin)
+    con = dbconn(); dstat = con.execute("SELECT status FROM social_drafts WHERE id=?", (disc5["id"],)).fetchone(); con.close()
+    chk("21x Discord refuses http mock webhooks (https required) — draft stays retrying/failed, never published",
+        disc_pub.get("queued") is True and dstat and dstat[0] in ("retrying", "failed"), (disc_pub, dstat))
+
     srv.shutdown()
+
+
+def test_social_media_management(admin):
+    """Section 21B — Social Media Management (Endpoints/Social.cs): public profile icons, share
+    buttons, link checks, lifecycle (duplicate/activate/archive), domain validation, audit trail,
+    master enable switch, and SSR footer injection. This is the account-based API that replaced the
+    legacy flat URL map; the standalone backend/test_social.py covered only the old shape."""
+    print("\n=== 21B. Social Media Management (profiles, share buttons, footer, audit) ===")
+    srv, port = start_mock_vendor()
+    mock = f"http://127.0.0.1:{port}"
+
+    c0, _ = jget("GET", "/api/admin/social")
+    chk("21B·a admin social console requires authentication (401)", c0 == 401, c0)
+
+    c, pub0 = jget("GET", "/api/social")
+    chk("21B·b public catalogue is off/empty by default",
+        c == 200 and pub0.get("enabled") is False and pub0.get("links") == [], pub0)
+
+    c, adm0 = jget("GET", "/api/admin/social", token=admin)
+    plats = {p["key"] for p in adm0.get("platforms", [])}
+    locs = {l["key"] for l in adm0.get("locations", [])}
+    shares = {s["key"] for s in adm0.get("share_targets", [])}
+    chk("21B·c admin payload exposes platform/location/share registries",
+        c == 200 and {"linkedin", "x", "facebook", "instagram", "youtube", "website"}.issubset(plats)
+        and "footer" in locs and {"linkedin", "x", "facebook", "whatsapp", "copy"}.issubset(shares),
+        (sorted(plats)[:8], sorted(locs)[:4], sorted(shares)))
+
+    # Reject unsafe / invalid URLs; require override for domain mismatch.
+    c, bad = jget("POST", "/api/admin/social/account", token=admin,
+                  body={"platform": "linkedin", "url": "javascript:alert(1)"})
+    chk("21B·d javascript: URLs are refused", c == 200 and "error" in bad, bad)
+    c, ftp = jget("POST", "/api/admin/social/account", token=admin,
+                  body={"platform": "linkedin", "url": "ftp://linkedin.com/company/pci"})
+    chk("21B·e non-http schemes are refused", c == 200 and "error" in ftp, ftp)
+    c, mism = jget("POST", "/api/admin/social/account", token=admin,
+                   body={"platform": "linkedin", "url": "https://example.com/not-linkedin"})
+    chk("21B·f domain mismatch returns 422 needing override",
+        c == 422 and mism.get("needs_override") is True, (c, mism))
+
+    c, li = jget("POST", "/api/admin/social/account", token=admin, body={
+        "platform": "linkedin", "url": "https://www.linkedin.com/company/project-controls-institute",
+        "display_name": "PCI on LinkedIn", "handle": "@pci", "locations": ["footer"],
+        "active": True, "is_official": True, "approval_status": "approved",
+    })
+    lid = li.get("id")
+    chk("21B·g create an approved LinkedIn profile", c == 200 and li.get("ok") and lid, li)
+
+    c, web = jget("POST", "/api/admin/social/account", token=admin, body={
+        "platform": "website", "url": mock + "/social-profile-ok",
+        "display_name": "PCI Community", "locations": "footer,homepage",
+        "active": True, "approval_status": "approved", "aria_label": "PCI community hub",
+    })
+    wid = web.get("id")
+    chk("21B·h create a website profile targeting footer+homepage", c == 200 and wid, web)
+
+    # Master switch still off → public empty.
+    c, pub1 = jget("GET", "/api/social")
+    chk("21B·i profiles alone do not publish while master switch is off",
+        c == 200 and pub1.get("enabled") is False and pub1.get("links") == [], pub1)
+
+    c, en = jget("POST", "/api/admin/social", token=admin, body={"social_enabled": True, "social_analytics_enabled": True})
+    chk("21B·j enable master switch + analytics", c == 200 and en.get("ok"), en)
+    c, pub2 = jget("GET", "/api/social?loc=footer")
+    platforms = {l.get("platform") for l in pub2.get("links", [])}
+    chk("21B·k public footer lists the approved active profiles with svg/a11y metadata",
+        c == 200 and pub2.get("enabled") is True and platforms >= {"linkedin", "website"}
+        and all(l.get("svg") and l.get("label") and l.get("url") for l in pub2.get("links", [])),
+        pub2.get("links"))
+
+    c, home = jget("GET", "/api/social?loc=homepage")
+    home_plats = {l.get("platform") for l in home.get("links", [])}
+    chk("21B·l location filter: homepage only returns the website profile",
+        home_plats == {"website"}, home_plats)
+
+    # SSR footer injection (ListSections fills <!--PCI-SOCIAL-->).
+    st, body = req("GET", "/about.html")
+    chk("21B·m server-rendered about page injects the footer social bar + sameAs JSON-LD",
+        st == 200 and "ft-social" in body and "linkedin.com/company/project-controls-institute" in body
+        and "application/ld+json" in body and "sameAs" in body and 'data-social="linkedin"' in body, st)
+
+    # Link check against the mock vendor. HTTP mock hosts surface the HTTPS soft-warning (status
+    # 'warning', http_code 200) — never 'invalid'/'unreachable' for a reachable page.
+    c, chk1 = jget("POST", f"/api/admin/social/account/{wid}/check", token=admin)
+    chk("21B·n link check marks a reachable (http mock) profile valid/warning, never broken",
+        c == 200 and chk1.get("ok") and chk1.get("http_code") == 200
+        and chk1.get("status") in ("valid", "warning"), chk1)
+
+    # Duplicate → draft/inactive; archive (soft delete).
+    c, dup = jget("POST", f"/api/admin/social/account/{lid}/duplicate", token=admin)
+    did = dup.get("id")
+    chk("21B·o duplicate creates a draft clone", c == 200 and did and did != lid, dup)
+    con = dbconn(); drow = con.execute("SELECT active,approval_status FROM social_accounts WHERE id=?", (did,)).fetchone(); con.close()
+    chk("21B·p duplicate starts inactive + draft (not public)", drow and int(drow[0]) == 0 and drow[1] == "draft", drow)
+    c, arch = jget("POST", f"/api/admin/social/account/{did}/delete", token=admin, body={})
+    con = dbconn(); arow = con.execute("SELECT active,approval_status FROM social_accounts WHERE id=?", (did,)).fetchone(); con.close()
+    chk("21B·q soft-delete archives the profile (active=0, archived)",
+        c == 200 and arch.get("ok") and arow and int(arow[0]) == 0 and arow[1] == "archived", (arch, arow))
+
+    # Invalid link_status drops the profile from the public catalogue.
+    con = dbconn()
+    con.execute("UPDATE social_accounts SET link_status='invalid' WHERE id=?", (lid,))
+    con.commit(); con.close()
+    c, pub3 = jget("GET", "/api/social?loc=footer")
+    plats3 = {l.get("platform") for l in pub3.get("links", [])}
+    chk("21B·r known-invalid profiles are excluded from the public catalogue",
+        "linkedin" not in plats3 and "website" in plats3, plats3)
+    con = dbconn(); con.execute("UPDATE social_accounts SET link_status='valid' WHERE id=?", (lid,)); con.commit(); con.close()
+
+    # Share buttons per content type.
+    c, sh = jget("POST", "/api/admin/social/share", token=admin, body={
+        "rows": [
+            {"content_type": "blog", "enabled": True, "buttons": ["linkedin", "x", "copy", "not-a-target"]},
+            {"content_type": "news", "enabled": False, "buttons": ["facebook"]},
+        ]
+    })
+    chk("21B·s share config saves and filters unknown button keys", c == 200 and sh.get("ok"), sh)
+    c, sblog = jget("GET", "/api/social/share?type=blog")
+    c2, snews = jget("GET", "/api/social/share?type=news")
+    chk("21B·t public share endpoint reflects enabled buttons only",
+        c == 200 and sblog.get("enabled") is True and set(sblog.get("buttons", [])) == {"linkedin", "x", "copy"}
+        and c2 == 200 and snews.get("enabled") is False and snews.get("buttons") == [], (sblog, snews))
+
+    # Audit trail records the journey.
+    c, aud = jget("GET", "/api/admin/social/audit", token=admin)
+    actions = {r.get("action") for r in aud.get("rows", [])}
+    chk("21B·u audit trail records create/update/check/share/settings actions",
+        c == 200 and {"create", "check", "share", "settings", "archive", "duplicate"}.issubset(actions),
+        sorted(actions))
+
+    # Disable master switch → public empty again; footer social bar disappears.
+    jget("POST", "/api/admin/social", token=admin, body={"social_enabled": False})
+    c, pub4 = jget("GET", "/api/social")
+    st2, body2 = req("GET", "/about.html")
+    chk("21B·v disabling the master switch clears the public catalogue and footer bar",
+        c == 200 and pub4.get("links") == [] and "ft-social" not in body2, (pub4, "ft-social" in body2))
+
+    # Domain override path publishes a mismatched URL when authorised.
+    c, ov = jget("POST", "/api/admin/social/account", token=admin, body={
+        "platform": "x", "url": "https://example.com/pci-on-x", "override_domain": True,
+        "display_name": "PCI X (override)", "locations": ["footer"], "active": True, "approval_status": "approved",
+    })
+    chk("21B·w authorised domain override allows a mismatched host", c == 200 and ov.get("ok") and ov.get("id"), ov)
+
+    vtok = globals().get("_VIEWER_TOK")
+    if vtok:
+        cv, rv = jget("GET", "/api/admin/social", token=vtok)
+        chk("21B·x viewer without 'social' permission is forbidden",
+            cv == 403 and rv.get("error") == "forbidden", (cv, rv))
+    else:
+        chk("21B·x viewer without 'social' permission is forbidden (skipped — no viewer fixture)", True)
+
+    srv.shutdown()
+
 
 def test_syndication(admin):
     print("\n=== 22. Content syndication (WordPress / Ghost / Forem) ===")
@@ -3151,6 +3400,7 @@ def run(proc):
     test_exam_exceptions(admin)
     test_content_centre(admin)
     test_social_publishing(admin)
+    test_social_media_management(admin)
     test_syndication(admin)
     test_external_import(admin)
     test_backlinks(admin)
