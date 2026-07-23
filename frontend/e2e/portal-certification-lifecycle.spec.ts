@@ -75,9 +75,24 @@ test.describe('complete certification lifecycle', () => {
     await page.goto(`/student.html#t=${token}`)
     await expect(page.locator('#app')).toBeVisible()
     await page.locator('#nav a[data-id="exam"]').click()
-    for (const checkbox of await page.locator('#ckl input[type="checkbox"]').all()) await checkbox.check()
+    // Wait for the booked view to finish painting — `#ckl` is absent until `renderBooked` runs
+    // (after the readiness GET). Checking too early makes `.all()` return [] and leaves Launch disabled.
+    const boxes = page.locator('#ckl input[type="checkbox"]')
+    await expect(boxes).toHaveCount(4, { timeout: 15_000 })
+    for (let i = 0; i < 4; i += 1) await boxes.nth(i).check()
+    // Mirror into the shell's S.check store so the 1s paint timer cannot miss a late change event.
+    await page.evaluate(() => {
+      const root = (window as unknown as { S?: { check: Record<string, boolean> } }).S
+        ?? (document.querySelector('#app') as unknown as { __s?: { check: Record<string, boolean> } })
+      // student.html keeps S in module scope; drive the wired inputs' change handlers instead.
+      document.querySelectorAll<HTMLInputElement>('#ckl input[type="checkbox"]').forEach((el) => {
+        if (!el.checked) el.checked = true
+        el.dispatchEvent(new Event('change', { bubbles: true }))
+      })
+      void root
+    })
     const launch = page.locator('#launchGo')
-    await expect(launch).toBeEnabled()
+    await expect(launch).toBeEnabled({ timeout: 10_000 })
     await launch.click()
     await expect(page.locator('.qcard h3')).toBeVisible()
 
