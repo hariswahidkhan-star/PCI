@@ -57,7 +57,7 @@ services:
         sync: false
       - key: ADMIN_OWNER_EMAIL     # your real admin email (replaces owner@pci.local on first boot)
         sync: false
-      - key: ADMIN_OWNER_PASSWORD  # strong bootstrap password (you are forced to change it at first login anyway)
+      - key: ADMIN_OWNER_PASSWORD  # strong bootstrap password (change it in Settings → Security after first login)
         sync: false
       - key: STRIPE_SECRET_KEY     # optional until you enable payments (sk_test_… first, sk_live_… at go-live)
         sync: false

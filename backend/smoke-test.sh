@@ -16,15 +16,16 @@ OT=$(j POST /api/admin/auth/login -H 'Content-Type: application/json' -d '{"emai
 chk "S03 owner login" "$([ -n "$OT" ] && echo 1)"
 NP=$(j GET /api/admin/me -H "Authorization: Bearer $OT" | python3 -c 'import sys,json;d=json.load(sys.stdin);print(1 if d.get("role")=="owner" and len(d.get("permissions",[]))>=30 else 0)')
 chk "S04 owner + 32 perms" "$NP"
-chk "S05a forced pw change" "$([ "$(j POST /api/admin/me/password -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"new_password":"OwnerPass99!"}' | grep -c '"ok":true')" = 1 ] && echo 1)"
+chk "S05a owner pw change (self-service)" "$([ "$(j POST /api/admin/me/password -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"new_password":"OwnerPass99!"}' | grep -c '"ok":true')" = 1 ] && echo 1)"
 OT=$(j POST /api/admin/auth/login -H 'Content-Type: application/json' -d '{"email":"owner@pci.local","password":"OwnerPass99!"}' | python3 -c 'import sys,json;print(json.load(sys.stdin).get("token",""))')
 chk "S05b re-login new pw" "$([ -n "$OT" ] && echo 1)"
 TP=$(j POST /api/admin/team -H "Authorization: Bearer $OT" -H 'Content-Type: application/json' -d '{"email":"exam.mgr@pci.test","name":"Exa","role":"exam_manager"}' | python3 -c 'import sys,json;print(json.load(sys.stdin).get("temp_password",""))')
 chk "S06 create exam_manager" "$([ -n "$TP" ] && echo 1)"
 T2=$(j POST /api/admin/auth/login -H 'Content-Type: application/json' -d "{\"email\":\"exam.mgr@pci.test\",\"password\":\"$TP\"}" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("token",""))')
 chk "S07 manager login temp pw" "$([ -n "$T2" ] && echo 1)"
-# A freshly-provisioned admin is flagged must_change_pw; the server blocks the console (same gate the
-# SPA enforces) until a new password is set. Clear it so the RBAC probes below exercise real permissions.
+# must_change_pw is advisory only: a freshly-provisioned admin can use the console immediately on the
+# temp password. Verify there is no gate, then set a real password (self-service) for the probes below.
+chk "S07a console open on temp pw (no forced change)" "$([ "$(code GET /api/admin/exam-sessions -H "Authorization: Bearer $T2")" = 200 ] && echo 1)"
 chk "S07b manager password change clears must_change_pw" "$([ "$(j POST /api/admin/me/password -H "Authorization: Bearer $T2" -H 'Content-Type: application/json' -d '{"new_password":"MgrPass99!"}' | grep -c '"ok":true')" = 1 ] && echo 1)"
 chk "S08 manager CAN exam-sessions" "$([ "$(code GET /api/admin/exam-sessions -H "Authorization: Bearer $T2")" = 200 ] && echo 1)"
 chk "S09 manager BLOCKED members 403" "$([ "$(code GET /api/admin/members -H "Authorization: Bearer $T2")" = 403 ] && echo 1)"

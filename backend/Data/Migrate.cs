@@ -1354,9 +1354,10 @@ public static class Migrate
         }
         catch { /* admin_users may not exist on a very first pass; ignored */ }
 
-        // Explicit browser-suite operator. The real bootstrap owner deliberately remains behind the
-        // forced-password-change gate, which is itself an E2E journey. Broader admin/test-user journeys
-        // need a separate, deterministic operator that can call the same owner-gated APIs a human uses.
+        // Explicit browser-suite operator. The real bootstrap owner deliberately keeps the seeded
+        // password + advisory must_change_pw flag, which is itself an E2E journey. Broader
+        // admin/test-user journeys need a separate, deterministic operator that can call the same
+        // owner-gated APIs a human uses.
         // This account is created ONLY outside Production and ONLY when the Playwright server opts in
         // with E2E_ADMIN_PASSWORD; a production deployment can never activate it accidentally.
         try
@@ -1390,7 +1391,7 @@ public static class Migrate
         catch (Exception e) { Console.Error.WriteLine($"[seed] E2E admin skipped: {e.Message}"); }
 
         // Break-glass owner recovery: if ADMIN_OWNER_RESET_PASSWORD is set at boot, (re)activate the
-        // owner account and set its password to that value, forcing a change on next login. This lets
+        // owner account and set its password to that value, flagging it for a follow-up change. This lets
         // an operator who is locked out regain access by setting one Render environment variable and
         // redeploying — no database console needed. It targets ADMIN_OWNER_EMAIL if that owner exists,
         // otherwise the earliest owner; if no owner exists at all it creates one. REMOVE the env var
@@ -1409,7 +1410,7 @@ public static class Migrate
                 {
                     db.Execute("UPDATE admin_users SET password_hash=?, status='active', must_change_pw=1 WHERE id=?", hash, target["id"]);
                     db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", target["id"]);   // invalidate any stale sessions
-                    Console.WriteLine("[seed] ADMIN_OWNER_RESET_PASSWORD applied — owner password reset (must change on next login). REMOVE this env var now.");
+                    Console.WriteLine("[seed] ADMIN_OWNER_RESET_PASSWORD applied — owner password reset (change it in Settings → Security). REMOVE this env var now.");
                 }
                 else
                 {
