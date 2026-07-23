@@ -3375,6 +3375,19 @@ def test_simlab(admin):
     chk("43jj the PERT lab grades expected duration + std-dev + probability-on-time to 100",
         c == 200 and subpt.get("score") == 100 and subpt.get("passed") is True, (c, subpt.get("score")))
 
+    # Monte-Carlo scenario: the task carries a seeded, deterministic MC distribution for the dashboard,
+    # and the student is graded on the PERT normal-approximation.
+    c, stmc = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SC-MC-001"})
+    mctask = stmc.get("task", {}); mcv = mctask.get("montecarlo") or {}
+    ordered = all(k in mcv for k in ("p10", "p50", "p80", "p90")) and mcv.get("p50", 0) <= mcv.get("p80", 0) <= mcv.get("p90", 0)
+    chk("43kk the Monte-Carlo scenario attaches a seeded distribution (percentiles + histogram)",
+        c == 200 and isinstance(mcv.get("histogram"), list) and len(mcv.get("histogram", [])) >= 1 and ordered, (c, mcv.get("p50"), mcv.get("p80")))
+    mcid = stmc.get("attempt_id")
+    c, submc = jget("POST", f"/api/me/lab/attempts/{mcid}/submit", token=mtok,
+                    body={"answers": {"expected_duration": 19, "prob_on_time": 88.5}})
+    chk("43ll the Monte-Carlo scenario grades the PERT normal-approximation to 100",
+        c == 200 and submc.get("score") == 100 and submc.get("passed") is True, (c, submc.get("score")))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.

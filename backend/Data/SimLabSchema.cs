@@ -147,6 +147,9 @@ public static class SimLabSchema
         SeedScenario(db, "GL-PRT-001", "Three-point estimate and confidence (PERT)", "guided_lab", "Aerospace", "advanced", 20,
             "[\"schedule_analysis\",\"risk_management\"]", "Run a PERT analysis on a critical path: expected duration, standard deviation, and the probability of meeting a deadline.",
             ConfigPert);
+        SeedScenario(db, "SC-MC-001", "PERT vs Monte-Carlo: read the distribution", "scenario", "Pharmaceutical", "advanced", 22,
+            "[\"risk_management\",\"schedule_analysis\"]", "Compute the PERT normal-approximation for a chain, then compare it with a Monte-Carlo simulation of the finish date.",
+            ConfigMonteCarlo);
     }
 
     static void SeedScenario(Db db, string code, string title, string kind, string industry, string difficulty,
@@ -206,6 +209,20 @@ public static class SimLabSchema
            {"key":"critical_path","label":"Critical path (comma-separated activity IDs)","type":"set"},
            {"key":"float_C","label":"Total float of activity C (days)","type":"number"}],
          "tolerance":0.001,"pass_pct":70,"competencies":["schedule_analysis"]}
+        """;
+
+    const string ConfigMonteCarlo = """
+        {"task":"pert",
+         "prompt":"A three-activity chain has optimistic/most-likely/pessimistic estimates. Compute the PERT expected duration and the probability of finishing by day 22 (the normal approximation), then compare your answer with the Monte-Carlo distribution of the finish date shown below.",
+         "given":{"activities":[
+           {"id":"A","o":4,"m":6,"p":8,"preds":[]},
+           {"id":"B","o":5,"m":8,"p":17,"preds":["A"]},
+           {"id":"C","o":2,"m":3,"p":10,"preds":["B"]}],
+           "deadline":22,"seed":424242,"iterations":4000},
+         "ask":[
+           {"key":"expected_duration","label":"PERT expected duration (days)","type":"number"},
+           {"key":"prob_on_time","label":"Probability of finishing by day 22 (%)","type":"number"}],
+         "tolerance":0.02,"pass_pct":70,"competencies":["risk_management","schedule_analysis"]}
         """;
 
     const string ConfigRisk = """

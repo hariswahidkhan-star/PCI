@@ -54,6 +54,10 @@ public static class SimGrade
         var prompt = config.TryGetProperty("prompt", out var pr) ? pr.GetString() ?? "" : "";
         var given = config.TryGetProperty("given", out var g) ? (JsonElement?)g : null;
         var ask = ParseAsk(config).Select(a => new { key = a.Key, label = a.Label, type = a.Type });
+        // A schedule-risk task whose given carries seed + iterations gets the Monte-Carlo distribution
+        // attached for the histogram dashboard. This is analysis OUTPUT computed from the given inputs (not
+        // an answer key) — it shows the real distribution beside the PERT normal approximation.
+        object? montecarlo = given is JsonElement mg ? McPayload(SimCalc.MonteCarloFrom(mg)) : null;
         return new
         {
             task,
@@ -62,8 +66,16 @@ public static class SimGrade
             ask,
             mode,
             assessment = !RevealsAnswers(mode),   // the UI hides teaching hints when true
+            montecarlo,
         };
     }
+
+    static object? McPayload(SimCalc.McResult? r) => r is null ? null : new
+    {
+        iterations = r.Iterations, mean = r.Mean, min = r.Min, max = r.Max,
+        p10 = r.P10, p50 = r.P50, p80 = r.P80, p90 = r.P90,
+        histogram = r.Histogram.Select(b => new { lo = b.Lo, hi = b.Hi, count = b.Count }),
+    };
 
     /// <summary>
     /// Grade the submitted answers deterministically. <paramref name="answers"/> is a JSON object keyed by

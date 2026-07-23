@@ -350,4 +350,41 @@ public class SimCalcTests
         Assert.Equal(1.8257, (double)SimCalc.Resolve("pert", "std_dev", given)!, 4);
         Assert.InRange((double)SimCalc.Resolve("pert", "prob_on_time", given)!, 86.0, 87.0);
     }
+
+    // ── Monte-Carlo schedule simulation ───────────────────────────────────────────────────────────
+
+    static readonly SimCalc.McActivity[] McChain =
+    {
+        new("A", 2, 4, 6, Array.Empty<string>()),
+        new("B", 3, 5, 13, new[] { "A" }),
+        new("C", 1, 2, 3, new[] { "B" }),
+    };
+
+    [Fact]
+    public void MonteCarlo_IsDeterministicForAGivenSeed()
+    {
+        var a = SimCalc.MonteCarlo(McChain, seed: 12345, iterations: 3000);
+        var b = SimCalc.MonteCarlo(McChain, seed: 12345, iterations: 3000);
+        Assert.Equal(a.P50, b.P50, 6);      // identical run-to-run — the seeded PRNG guarantees it
+        Assert.Equal(a.P80, b.P80, 6);
+        Assert.Equal(a.Mean, b.Mean, 6);
+    }
+
+    [Fact]
+    public void MonteCarlo_PercentilesAreOrderedAndBracketTheMean()
+    {
+        var r = SimCalc.MonteCarlo(McChain, seed: 7, iterations: 5000);
+        Assert.True(r.Min <= r.P10 && r.P10 <= r.P50 && r.P50 <= r.P80 && r.P80 <= r.P90 && r.P90 <= r.Max);
+        Assert.InRange(r.Mean, r.Min, r.Max);
+        Assert.Equal(5000, r.Histogram.Sum(b => b.Count));   // every iteration lands in exactly one bucket
+    }
+
+    [Fact]
+    public void MonteCarlo_MeanApproachesTheTriangularExpectation()
+    {
+        // Each activity's triangular mean is (O+M+P)/3: A=4, B=7, C=2 → chain mean 13 (the PERT expected
+        // duration is 12; the divergence between the two is exactly what the dashboard illustrates).
+        var r = SimCalc.MonteCarlo(McChain, seed: 99, iterations: 20000);
+        Assert.InRange(r.Mean, 12.7, 13.3);
+    }
 }

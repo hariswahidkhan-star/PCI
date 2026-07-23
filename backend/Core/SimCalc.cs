@@ -391,6 +391,86 @@ public static class SimCalc
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────────
+    //  Monte-Carlo schedule simulation — deterministic (seeded), portable PRNG
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    public sealed record McActivity(string Id, double O, double M, double P, IReadOnlyList<string> Preds);
+
+    public sealed record McBucket(double Lo, double Hi, int Count);
+
+    public sealed record McResult(
+        int Iterations, double Mean, double Min, double Max,
+        double P10, double P50, double P80, double P90,
+        IReadOnlyList<McBucket> Histogram);
+
+    /// <summary>
+    /// Monte-Carlo of project duration: each iteration samples every activity's duration from a triangular
+    /// distribution (O/M/P) and runs the critical-path method over the network, giving the distribution of
+    /// finish dates. Uses a self-contained xorshift* PRNG seeded from <paramref name="seed"/>, so results
+    /// are fully deterministic and reproducible on any platform (unlike System.Random). Returns percentiles
+    /// and a fixed-bucket histogram for the dashboard.
+    /// </summary>
+    public static McResult MonteCarlo(IReadOnlyList<McActivity> acts, int seed, int iterations)
+    {
+        iterations = Math.Clamp(iterations, 1, 100_000);
+        var rng = new DetRng((ulong)seed + 0x9E3779B97F4A7C15UL);
+        var results = new double[iterations];
+        for (var i = 0; i < iterations; i++)
+        {
+            var sampled = acts.Select(a => new CpmActivity(a.Id, Triangular(rng.NextDouble(), a.O, a.M, a.P), a.Preds)).ToList();
+            results[i] = sampled.Count == 0 ? 0 : CriticalPath(sampled).ProjectDuration;
+        }
+        Array.Sort(results);
+        var mean = results.Average();
+        var min = results[0];
+        var max = results[^1];
+
+        const int buckets = 10;
+        var width = max > min ? (max - min) / buckets : 1;
+        var hist = new List<McBucket>();
+        for (var b = 0; b < buckets; b++)
+        {
+            var lo = min + b * width;
+            var hi = b == buckets - 1 ? max : lo + width;
+            var count = results.Count(v => v >= lo && (b == buckets - 1 ? v <= hi : v < hi));
+            hist.Add(new McBucket(R(lo), R(hi), count));
+        }
+        return new McResult(iterations, R(mean), R(min), R(max),
+            R(Percentile(results, 10)), R(Percentile(results, 50)), R(Percentile(results, 80)), R(Percentile(results, 90)), hist);
+    }
+
+    static double Triangular(double u, double o, double m, double p)
+    {
+        if (p <= o) return o;
+        var f = (m - o) / (p - o);
+        return u < f ? o + Math.Sqrt(u * (p - o) * (m - o)) : p - Math.Sqrt((1 - u) * (p - o) * (p - m));
+    }
+
+    static double Percentile(double[] sorted, double pct)
+    {
+        if (sorted.Length == 1) return sorted[0];
+        var rank = (pct / 100.0) * (sorted.Length - 1);
+        var lo = (int)Math.Floor(rank);
+        var hi = (int)Math.Ceiling(rank);
+        if (lo == hi) return sorted[lo];
+        return sorted[lo] + (rank - lo) * (sorted[hi] - sorted[lo]);
+    }
+
+    /// <summary>A tiny, self-contained deterministic PRNG (xorshift64*) so Monte-Carlo results are identical
+    /// on every machine — the "deterministic critical calculations" guarantee extends to the seeded sim.</summary>
+    sealed class DetRng
+    {
+        ulong _s;
+        public DetRng(ulong seed) => _s = seed == 0 ? 0xD1B54A32D192ED03UL : seed;
+        public double NextDouble()
+        {
+            _s ^= _s >> 12; _s ^= _s << 25; _s ^= _s >> 27;
+            var r = _s * 0x2545F4914F6CDD1DUL;
+            return (r >> 11) * (1.0 / (1UL << 53));
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
     //  Answer resolution — the values a scenario can ask a student to compute
     // ─────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -542,6 +622,28 @@ public static class SimCalc
                 list.Add(new RiskItem(id, prob, impact));
             }
         return list;
+    }
+
+    /// <summary>Run the Monte-Carlo directly from a scenario's <c>given</c> (activities with O/M/P/preds,
+    /// plus <c>seed</c> and <c>iterations</c>) — used to attach the distribution to a schedule-risk task.
+    /// Returns null when the block is absent so callers can omit the dashboard.</summary>
+    public static McResult? MonteCarloFrom(JsonElement given)
+    {
+        if (!given.TryGetProperty("activities", out var arr) || arr.ValueKind != JsonValueKind.Array) return null;
+        if (!given.TryGetProperty("seed", out var sd) || sd.ValueKind != JsonValueKind.Number) return null;
+        var seed = sd.GetInt32();
+        var iters = given.TryGetProperty("iterations", out var it) && it.ValueKind == JsonValueKind.Number ? it.GetInt32() : 2000;
+        var acts = new List<McActivity>();
+        foreach (var n in arr.EnumerateArray())
+        {
+            var id = n.TryGetProperty("id", out var i) ? i.GetString() ?? "" : "";
+            double G(string k) => n.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0;
+            var preds = new List<string>();
+            if (n.TryGetProperty("preds", out var pe) && pe.ValueKind == JsonValueKind.Array)
+                foreach (var p in pe.EnumerateArray()) if (p.GetString() is { } s) preds.Add(s);
+            acts.Add(new McActivity(id, G("o"), G("m"), G("p"), preds));
+        }
+        return acts.Count == 0 ? null : MonteCarlo(acts, seed, iters);
     }
 
     static List<(double o, double m, double p)> ParsePert(JsonElement given)

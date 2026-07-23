@@ -4,6 +4,7 @@ import { api, ApiError } from '../api/client'
 import { Card, Badge, Spinner, ErrorNote } from '../components/ui'
 import SCurve, { type EvmPoint } from '../components/SCurve'
 import Gantt, { type GanttBar } from '../components/Gantt'
+import Histogram, { type Mc } from '../components/Histogram'
 
 // PCI AI Project Controls Simulation Lab — interactive workspace (Phase 1 foundation).
 // Starts (or resumes) an attempt at a guided lab, presents the synthetic task and its inputs, collects the
@@ -11,7 +12,7 @@ import Gantt, { type GanttBar } from '../components/Gantt'
 // checked entirely on the server; in Assessment Mode the graded feedback deliberately withholds them.
 
 interface Ask { key: string; label: string; type: string }
-interface Task { task: string; prompt: string; given: Record<string, unknown>; ask: Ask[]; mode: string; assessment: boolean }
+interface Task { task: string; prompt: string; given: Record<string, unknown>; ask: Ask[]; mode: string; assessment: boolean; montecarlo?: Mc | null }
 interface ScenarioMeta { id: number; scenario_code: string; title: string; kind: string; difficulty?: string; summary?: string }
 interface StartResp { attempt_id: number; resumed: boolean; scenario: ScenarioMeta; task: Task }
 interface Measure { key: string; label: string; is_correct: boolean; correct_value: unknown; your_value: unknown }
@@ -255,6 +256,9 @@ export default function LabRunner() {
               <div style={{ margin: '.2rem 0 .8rem' }}><SCurve series={start.task.given.series as EvmPoint[]} /></div>
             )}
             <div style={{ overflowX: 'auto' }}><GivenView task={start.task} /></div>
+            {start.task.montecarlo && (
+              <div style={{ margin: '.8rem 0 .2rem' }}><Histogram mc={start.task.montecarlo} /></div>
+            )}
           </Card>
 
           {!grade ? (
