@@ -18,6 +18,9 @@ tests/_impersonation_boot.log
 tests/_payments_replay.db*
 tests/_payments_replay_storage/
 tests/_payments_replay_boot.log
+tests/_retake_wait.db*
+tests/_retake_wait_storage/
+tests/_retake_wait_boot.log
 tests/_server_boot.log
 tests/_sweep*
 tests/_s3*
