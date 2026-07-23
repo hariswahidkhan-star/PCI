@@ -22,8 +22,15 @@ public static class Migrate
         EnsureReviews();
         void AddCol(string table, string col, string ddl)
         {
-            var have = db.Columns(table);
-            if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+            try
+            {
+                var have = db.Columns(table);
+                if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+            }
+            catch
+            {
+                // Table may not exist yet on this provider (e.g. mkt_jobs is created later by MarketingSchema).
+            }
         }
         AddCol("users", "is_test", "is_test INTEGER DEFAULT 0");   // admin-created test accounts (excluded from real reporting)
         // Honorary application: explicit eligibility self-confirmation + terms & conditions acceptance,

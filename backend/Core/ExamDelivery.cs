@@ -224,15 +224,15 @@ public static class ExamDelivery
 
     /// <summary>Route a PCI exam booking to the selected delivery vendor. When the certification is
     /// configured for external delivery, an unavailable/unmapped vendor is an explicit failure — never a
-    /// silent in-house fallback (EXT-P0-03). Provisioning is queued on the order (status=pending) for the
-    /// ExamDeliveryDispatcher; it is not run inline, so a timeout cannot orphan a half-created vendor
-    /// registration without a durable retry (EXT-P0-04).</summary>
-    public static Task<RouteResult> RouteBooking(Db db, long bookingId, long userId, long certId, string? scheduledAt, string? timezone)
+    /// silent in-house fallback (EXT-P0-03). The order is durable (pending) and provision is attempted
+    /// once here; failures remain pending/failed for <see cref="ExamDeliveryDispatcher"/> retry
+    /// (EXT-P0-04) so a timeout cannot leave an unretriable orphan.</summary>
+    public static async Task<RouteResult> RouteBooking(Db db, long bookingId, long userId, long certId, string? scheduledAt, string? timezone)
     {
         try
         {
             var mode = ModeFor(db, certId);
-            if (mode == InHouse) return Task.FromResult(new RouteResult(true)); // in-house — nothing to route
+            if (mode == InHouse) return new RouteResult(true); // in-house — nothing to route
             var block = ExternalBlockReason(db, certId);
             if (block is not null)
             {
@@ -244,12 +244,18 @@ public static class ExamDelivery
                         "exam_booking", bookingId);
                 }
                 catch { }
-                return Task.FromResult(new RouteResult(false, block));
+                return new RouteResult(false, block);
             }
             var prov = db.QueryOne("SELECT * FROM exam_delivery_providers WHERE enabled=1 AND provider=? ORDER BY is_default DESC, id DESC LIMIT 1", mode)!;
             var providerId = H.L(prov["id"]);
             if (db.QueryOne("SELECT id FROM exam_delivery_orders WHERE booking_id=? AND provider_id=?", bookingId, providerId) is { } existing)
-                return Task.FromResult(new RouteResult(true, null, H.L(existing["id"])));
+            {
+                var existingId = H.L(existing["id"]);
+                // Resume provisioning if a prior attempt left the order pending/failed.
+                if (H.Str(existing["status"]) is "pending" or "failed")
+                    try { await Provision(db, Http, existingId); } catch { }
+                return new RouteResult(true, null, existingId);
+            }
             var p = CtxFor(prov);
             var certCode = H.Str(db.QueryOne("SELECT code FROM certifications WHERE id=?", certId)?["code"]);
             var examCode = p.ExamCodeFor(certId, certCode)!;
@@ -260,12 +266,14 @@ public static class ExamDelivery
             // Mark the PCI booking so students/admins see that remote provisioning is in progress, not a
             // local exam launch path.
             try { db.Execute("UPDATE exam_bookings SET delivery_status='external_pending' WHERE id=?", bookingId); } catch { /* column may be absent on very old DBs until migrate */ }
-            return Task.FromResult(new RouteResult(true, null, orderId));
+            // First-pass provision now (fast path for healthy vendors); dispatcher retries on failure.
+            try { await Provision(db, Http, orderId); } catch { /* status stays pending/failed for DrainDue */ }
+            return new RouteResult(true, null, orderId);
         }
         catch (Exception ex)
         {
             Console.Error.WriteLine($"[exam-delivery] RouteBooking failed: {ex.Message}");
-            return Task.FromResult(new RouteResult(false, "delivery_route_failed"));
+            return new RouteResult(false, "delivery_route_failed");
         }
     }
 

@@ -582,7 +582,7 @@ public static class AdminOps
         {
             // 404 (not 5xx) while unconfigured: the route does not exist as far as callers are concerned,
             // and the 500-sweep gate treats any 5xx as a defect.
-            var secret = Settings.Str(db, "certuvo_webhook_secret", "");
+            var secret = CertuvoLink.WebhookSecret(db);
             if (secret.Length == 0) return Results.Json(new { error = "webhook_not_configured" }, statusCode: 404);
             var given = ctx.Request.Headers["X-Certuvo-Secret"].ToString();
             if (!Security.FixedTimeEquals(given, secret)) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
