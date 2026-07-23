@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '../api/hooks'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../components/ui'
@@ -55,6 +56,7 @@ const COMPETENCY_LABEL: Record<string, string> = {
   cash_flow: 'Cash flow',
 }
 const titleCaseWords = (s: string) => s.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+const DIFFICULTY_ORDER = ['foundation', 'intermediate', 'advanced', 'expert']
 
 export default function Lab() {
   const { data: access, loading: aLoading, error: aError } = useQuery<Access>('/api/me/lab/access')
@@ -62,11 +64,37 @@ export default function Lab() {
   const { data: cat, loading: cLoading } = useQuery<{ rows: LabRow[] }>(
     access?.has_access ? '/api/me/lab/catalogue' : null,
   )
+  const [q, setQ] = useState('')
+  const [difficulty, setDifficulty] = useState('')
+  const [kind, setKind] = useState('')
+  const [competency, setCompetency] = useState('')
+
+  const rows = useMemo(() => cat?.rows ?? [], [cat])
+  const kindOptions = useMemo(() => [...new Set(rows.map((r) => r.kind))], [rows])
+  const difficultyOptions = useMemo(
+    () => DIFFICULTY_ORDER.filter((d) => rows.some((r) => (r.difficulty ?? 'foundation') === d)),
+    [rows],
+  )
+  const competencyOptions = useMemo(
+    () => [...new Set(rows.flatMap((r) => r.competencies ?? []))].sort(),
+    [rows],
+  )
+  const filtered = useMemo(() => {
+    const needle = q.trim().toLowerCase()
+    return rows.filter((r) => {
+      if (kind && r.kind !== kind) return false
+      if (difficulty && (r.difficulty ?? 'foundation') !== difficulty) return false
+      if (competency && !(r.competencies ?? []).includes(competency)) return false
+      if (needle) {
+        const hay = `${r.title} ${r.summary ?? ''} ${r.industry ?? ''} ${r.scenario_code}`.toLowerCase()
+        if (!hay.includes(needle)) return false
+      }
+      return true
+    })
+  }, [rows, q, difficulty, kind, competency])
 
   if (aLoading) return <Spinner />
   if (aError) return <ErrorNote>{aError}</ErrorNote>
-
-  const rows = cat?.rows ?? []
 
   return (
     <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
@@ -88,8 +116,40 @@ export default function Lab() {
       ) : rows.length === 0 ? (
         <Card><Empty>No practice labs have been published yet — new labs will appear here automatically.</Empty></Card>
       ) : (
+        <>
+        {rows.length > 8 && (
+          <Card>
+            <div className="row" style={{ flexWrap: 'wrap', gap: '.5rem', alignItems: 'center' }}>
+              <input
+                aria-label="Search labs"
+                placeholder="Search title, industry or code…"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                style={{ flex: '1 1 14rem', minWidth: '12rem' }}
+              />
+              <select aria-label="Filter by difficulty" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+                <option value="">All difficulties</option>
+                {difficultyOptions.map((d) => <option key={d} value={d}>{titleCaseWords(d)}</option>)}
+              </select>
+              <select aria-label="Filter by type" value={kind} onChange={(e) => setKind(e.target.value)}>
+                <option value="">All types</option>
+                {kindOptions.map((k) => <option key={k} value={k}>{KIND_LABEL[k] ?? titleCaseWords(k)}</option>)}
+              </select>
+              <select aria-label="Filter by competency" value={competency} onChange={(e) => setCompetency(e.target.value)}>
+                <option value="">All competencies</option>
+                {competencyOptions.map((c) => <option key={c} value={c}>{COMPETENCY_LABEL[c] ?? titleCaseWords(c)}</option>)}
+              </select>
+              <span className="muted small" style={{ marginLeft: 'auto' }}>
+                Showing {filtered.length} of {rows.length}
+              </span>
+            </div>
+          </Card>
+        )}
+        {filtered.length === 0 ? (
+          <Card><Empty>No labs match the current filters — clear a filter or change the search.</Empty></Card>
+        ) : (
         <div className="grid cols-2">
-          {rows.map((r) => (
+          {filtered.map((r) => (
             <Card
               key={r.id}
               title={r.title}
@@ -121,6 +181,8 @@ export default function Lab() {
             </Card>
           ))}
         </div>
+        )}
+        </>
       )}
 
       <p className="muted small" style={{ margin: 0 }}>
