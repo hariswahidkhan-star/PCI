@@ -61,7 +61,7 @@ test.describe('billing, discount and founding journeys', () => {
     const plansCard = studentPage.locator('.card').filter({ has: studentPage.getByRole('heading', { name: 'Membership & exam fees' }) })
     await plansCard.getByLabel('Discount or founding code').fill(discountCode)
     await plansCard.getByRole('button', { name: 'Check code' }).click()
-    await expect(plansCard.getByRole('status')).toContainText('only valid for PML-AI')
+    await expect(plansCard.getByRole('status')).toContainText(/only valid for.*PML-AI/)
 
     await plansCard.getByLabel('Certification').selectOption('PML-AI')
     await plansCard.getByRole('button', { name: 'Check code' }).click()
