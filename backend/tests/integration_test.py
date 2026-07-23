@@ -3662,6 +3662,24 @@ def test_simlab(admin):
     c, _stu = jget("POST", "/api/admin/lab/scenarios", token=mtok, body={"scenario_code": "X", "title": "x"})
     chk("43z13 scenario authoring is not reachable with a student token", c in (401, 403), c)
 
+    # ---- Phase 5A: edit / published-immutability / controlled revise-to-new-version (§18) ----
+    c, ed = jget("PATCH", f"/api/admin/lab/scenarios/{inc_id}", token=admin, body={"title": "Incomplete (edited)"})
+    chk("43z14 an in-review (non-published) scenario can be edited", c == 200 and ed.get("updated", 0) >= 1, (c, ed))
+    c, im = jget("PATCH", f"/api/admin/lab/scenarios/{new_id}", token=admin, body={"title": "tamper with the published one"})
+    chk("43z15 a PUBLISHED scenario is immutable to edits (409 immutable)", c == 409 and im.get("error") == "immutable", (c, im))
+    c, rv = jget("POST", f"/api/admin/lab/scenarios/{new_id}/revise", token=admin, body={"new_code": "IT-REV-001-v2"})
+    rev_id = rv.get("id")
+    chk("43z16 a published scenario revises into a new DRAFT version (source untouched)",
+        c == 200 and rev_id and rv.get("review_state") == "draft" and rv.get("revised_from") == new_id, (c, rv))
+    c, rve = jget("PATCH", f"/api/admin/lab/scenarios/{rev_id}", token=admin, body={"summary": "revised draft"})
+    chk("43z17 the revised draft is itself editable", c == 200 and rve.get("updated", 0) >= 1, (c, rve))
+    c, dupr = jget("POST", f"/api/admin/lab/scenarios/{new_id}/revise", token=admin, body={"new_code": "IT-REV-001-v2"})
+    chk("43z18 revising into an existing code is refused (409)", c == 409 and dupr.get("error") == "duplicate_code", (c, dupr))
+    # The original published scenario is unchanged and still served.
+    c, orig = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "IT-REV-001", "mode": "training"})
+    chk("43z19 the original published scenario is untouched by the revision (still served)",
+        c == 200 and orig.get("attempt_id"), c)
+
     # ---- Phase 2 engine: forecasting (three EAC methods) + CBS cost roll-up, graded deterministically ----
     c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})
     fid = stf.get("attempt_id")

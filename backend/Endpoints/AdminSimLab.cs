@@ -163,6 +163,77 @@ public static class AdminSimLab
                 return Results.Json(new { id, review_state = to, from });
             });
         });
+
+        // ---- edit a scenario's content — allowed only while it is still in authoring/review (§18: an
+        //      approved or published version is immutable; to change it, revise into a new version). ----
+        app.MapPatch("/api/admin/lab/scenarios/{id}", async (HttpContext ctx, long id) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, "content", adm =>
+            {
+                var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
+                if (s is null) return Results.NotFound(new { error = "not_found" });
+                var state = (s.TryGetValue("review_state", out var rs) ? H.Str(rs) : null) ?? "draft";
+                if (state is SimReview.Approved or SimReview.Published or SimReview.Retired)
+                    return Results.Json(new { error = "immutable", message = "Approved/published/retired scenarios are frozen — revise into a new version to change them." }, statusCode: 409);
+
+                var sets = new List<string>(); var vals = new List<object?>();
+                void SetIf(string key, string col, Func<JsonElement, object?> map)
+                {
+                    if (H.GetEl(b, key) is { } el) { sets.Add($"{col}=?"); vals.Add(map(el)); }
+                }
+                SetIf("title", "title", e => e.GetString());
+                SetIf("summary", "summary", e => e.GetString());
+                SetIf("kind", "kind", e => e.GetString());
+                SetIf("industry", "industry", e => e.GetString());
+                SetIf("difficulty", "difficulty", e => e.GetString());
+                SetIf("est_minutes", "est_minutes", e => e.ValueKind == JsonValueKind.Number ? e.GetInt32() : 15);
+                SetIf("competencies", "competencies_json", e => e.ValueKind == JsonValueKind.Array
+                    ? JsonSerializer.Serialize(e.EnumerateArray().Select(x => x.GetString()).Where(x => !string.IsNullOrWhiteSpace(x)))
+                    : e.GetString());
+                SetIf("certification_id", "certification_id", e => e.ValueKind == JsonValueKind.Number ? (object?)e.GetInt64() : null);
+                SetIf("config_json", "config_json", e => e.ValueKind == JsonValueKind.Object ? e.GetRawText() : e.GetString());
+                SetIf("objectives", "objectives_json", e => e.ValueKind == JsonValueKind.Array ? e.GetRawText() : e.GetString());
+                SetIf("provenance", "provenance", e => e.GetString());
+                SetIf("disclaimers", "disclaimers", e => e.GetString());
+                SetIf("worked_solution", "worked_solution", e => e.GetString());
+                SetIf("synthetic_declared", "synthetic_declared", e => Truthy(el: e) ? 1 : 0);
+                if (sets.Count == 0) return Results.Json(new { error = "no_fields" }, statusCode: 400);
+
+                vals.Add(id);
+                db.Execute($"UPDATE simulation_scenarios SET {string.Join(",", sets)}, updated_at=datetime('now') WHERE id=?", vals.ToArray());
+                log(adm.Id, "sim_scenario_edit", $"{H.Str(s["scenario_code"])} · {sets.Count} field(s)");
+                var issues = SimContent.Validate(InputFrom(db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id)!), OtherCodes(db, id));
+                return Results.Json(new { id, updated = sets.Count, publishable = SimContent.Publishable(issues) });
+            });
+        });
+
+        // ---- revise a scenario into a NEW draft version (§13 controlled clone/revision). The source stays
+        //      untouched (immutable if published); the copy starts at draft with version+1 and a new code. ----
+        app.MapPost("/api/admin/lab/scenarios/{id}/revise", async (HttpContext ctx, long id) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, "content", adm =>
+            {
+                var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
+                if (s is null) return Results.NotFound(new { error = "not_found" });
+                var newCode = (H.GetS(b, "new_code") ?? "").Trim();
+                if (newCode.Length == 0) return Results.Json(new { error = "bad_input", message = "new_code is required." }, statusCode: 400);
+                if (db.QueryOne("SELECT id FROM simulation_scenarios WHERE scenario_code=?", newCode) is not null)
+                    return Results.Json(new { error = "duplicate_code" }, statusCode: 409);
+
+                var newId = db.ExecuteReturningId(@"INSERT INTO simulation_scenarios
+                    (scenario_code,title,kind,industry,difficulty,est_minutes,competencies_json,certification_id,summary,
+                     config_json,objectives_json,provenance,disclaimers,worked_solution,status,review_state,version,
+                     synthetic_declared,authored_by,created_by)
+                    SELECT ?, title,kind,industry,difficulty,est_minutes,competencies_json,certification_id,summary,
+                     config_json,objectives_json,provenance,disclaimers,worked_solution,'draft','draft', version+1,
+                     synthetic_declared, ?, ? FROM simulation_scenarios WHERE id=?",
+                    newCode, adm.Id, adm.Id, id);
+                log(adm.Id, "sim_scenario_revise", $"{H.Str(s["scenario_code"])} → {newCode} (v{H.L(s["version"]) + 1})");
+                return Results.Json(new { id = newId, scenario_code = newCode, review_state = "draft", status = "draft", revised_from = id });
+            });
+        });
     }
 
     static SimContent.ScenarioInput InputFrom(Dictionary<string, object?> s) => new(
