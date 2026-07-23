@@ -31,7 +31,7 @@ Exit code 0 iff every assertion passes.  Run from backend/:
     python3 tests/migration_integrity_test.py                        # SQLite-only (checks 1,2,3)
     TEST_DB_PROVIDER=mysql python3 tests/migration_integrity_test.py # full, incl. parity (needs pymysql)
 """
-import os, re, secrets, socket, sqlite3, subprocess, sys, tempfile, time, urllib.request
+import hashlib, os, re, secrets, socket, sqlite3, subprocess, sys, tempfile, time, urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BACKEND = os.path.dirname(HERE)
@@ -250,10 +250,28 @@ def main():
     chk("1a first boot produced a populated schema and non-empty seeds " + str(counts1),
         len(schema1) > 100 and all(v > 0 for v in counts1.values()), counts1)
 
-    # sentinel planted BETWEEN boots (used by check 3): re-migration must not destroy operator data
+    # Plant a sentinel and simulate the exact production state immediately before the PDL-AI → PML-AI
+    # deployment. Boot 2 must update the existing certification row in place, not replace it, so every
+    # relationship keyed to certification_id=3 remains intact.
     sent_val = secrets.token_hex(16)
     con = sqlite3.connect(DB)
     con.execute("INSERT INTO site_settings(skey,svalue) VALUES('migration_integrity_sentinel',?)", (sent_val,))
+    legacy_route_ids = tuple(r[0] for r in con.execute(
+        "SELECT id FROM certification_routes WHERE certification_id=3 ORDER BY id"))
+    legacy_bok_id = con.execute(
+        "SELECT id FROM cert_documents WHERE certification_id=3 AND kind='bok' ORDER BY id LIMIT 1").fetchone()[0]
+    con.execute("UPDATE cert_documents SET filename='pdl-ai-bok.pdf', storage_ref='books/legacy-pdl-master.pdf' WHERE id=?",
+                (legacy_bok_id,))
+    con.execute("""INSERT INTO issued_credentials
+        (credential_id,holder_name,credential,certification_id,status)
+        VALUES('PCI-PDLAI-LEGACY-0001','Legacy Holder','PDL-AI',3,'active')""")
+    legacy_credential_row = con.execute(
+        "SELECT id FROM issued_credentials WHERE credential_id='PCI-PDLAI-LEGACY-0001'").fetchone()[0]
+    con.execute("""UPDATE certifications SET
+        code='PDL-AI', name='PCI AI Project Delivery Leader', public_title='PCI AI Project Delivery Leader',
+        acronym='PCI PDL-AI', short_name='PDL-AI', slug='pdl-ai', credential_prefix='PDL-AI',
+        category='Project Delivery'
+        WHERE id=3""")
     con.commit(); con.close()
 
     stop(boot_sqlite("sqlite_boot2"))
@@ -267,6 +285,48 @@ def main():
     dup_page = sqlite_dupes("pages", "slug")
     chk("1d no duplicated seed keys (certifications.code / comm_sender_profiles.key / pages.slug)",
         not (dup_cert or dup_snd or dup_page), (dup_cert, dup_snd, dup_page))
+    con = sqlite3.connect(DB)
+    migrated = con.execute("""SELECT id,code,name,slug,credential_prefix,category
+        FROM certifications WHERE id=3""").fetchone()
+    route_ids_after = tuple(r[0] for r in con.execute(
+        "SELECT id FROM certification_routes WHERE certification_id=3 ORDER BY id"))
+    cert3_count = con.execute("SELECT COUNT(*) FROM certifications WHERE id=3 OR code IN ('PDL-AI','PML-AI')").fetchone()[0]
+    bok_after = con.execute("SELECT id,filename,storage_ref,sha256 FROM cert_documents WHERE id=?", (legacy_bok_id,)).fetchone()
+    legacy_credential_after = con.execute("""SELECT id,credential_id,credential,certification_id,status
+        FROM issued_credentials WHERE id=?""", (legacy_credential_row,)).fetchone()
+    con.close()
+    chk("1e PDL-AI is migrated in place to the exact PML-AI identity",
+        migrated == (3, "PML-AI", "PCI Project Management Leader – AI", "pml-ai", "PML-AI", "Project Management"), migrated)
+    chk("1f certification_id=3 route relationships survive the rename without duplication",
+        bool(legacy_route_ids) and route_ids_after == legacy_route_ids and cert3_count == 1,
+        (legacy_route_ids, route_ids_after, cert3_count))
+    expected_bok_sha = hashlib.sha256(open(os.path.join(BACKEND, "books", "pml-ai-bok.pdf"), "rb").read()).hexdigest()
+    chk("1f·1 the known bundled PDL-AI book master upgrades in place to the PML-AI PDF",
+        bok_after is not None and bok_after[0] == legacy_bok_id and bok_after[1] == "pml-ai-bok.pdf"
+        and bok_after[2] != "books/legacy-pdl-master.pdf" and bok_after[3] == expected_bok_sha,
+        bok_after)
+    chk("1f·2 an already-issued PDL-AI credential keeps its immutable public ID and certification link",
+        legacy_credential_after == (legacy_credential_row, "PCI-PDLAI-LEGACY-0001", "PDL-AI", 3, "active"),
+        legacy_credential_after)
+
+    # An even older deployment briefly used the PML-AI code with a pre-final display identity. Because
+    # the machine code already matches the final code, this exercises the guarded identity repair path.
+    con = sqlite3.connect(DB)
+    con.execute("""UPDATE certifications SET name='PCI Project Management Leader',
+        public_title='PCI Project Management Leader', category='Project Delivery' WHERE id=3""")
+    con.commit(); con.close()
+    stop(boot_sqlite("sqlite_boot3_pre_pdl_alias"))
+    con = sqlite3.connect(DB)
+    alias_repaired = con.execute("""SELECT id,code,name,public_title,slug,credential_prefix,category
+        FROM certifications WHERE id=3""").fetchone()
+    route_ids_boot3 = tuple(r[0] for r in con.execute(
+        "SELECT id FROM certification_routes WHERE certification_id=3 ORDER BY id"))
+    con.close()
+    chk("1g pre-PDL PML-AI alias state also converges once without breaking relationships",
+        alias_repaired == (3, "PML-AI", "PCI Project Management Leader – AI", "PCI Project Management Leader – AI",
+                           "pml-ai", "PML-AI", "Project Management")
+        and route_ids_boot3 == legacy_route_ids,
+        (alias_repaired, route_ids_boot3))
 
     # ── 2. schema.sql conformance ──
     print("\n=== 2. schema.sql conformance (every declared table/column exists live) ===")

@@ -54,7 +54,7 @@ public static class Chat
                 return Err("rate_limited", 429);
             var token = Security.RandomHex(16);
             var greeting = (name.Length > 0 ? $"Hello {name}! " : "Hello! ")
-                + "I'm the PCI Assistant. Ask me about the PCI PCL-AI, PFL-AI and PDL-AI credentials, eligibility, fees, enrolment or membership — or ask to talk to a person at any time.";
+                + "I'm the PCI Assistant. Ask me about the PCI PCL-AI, PFL-AI and PML-AI credentials, eligibility, fees, enrolment or membership — or ask to talk to a person at any time.";
             long id = 0;
             db.Transaction(() =>
             {
@@ -253,7 +253,7 @@ public static class Chat
     // Case-insensitive keyword scoring over enabled chat_kb rows: single-word keywords must match a
     // whole token of the message; multi-word keywords count when the message contains the phrase;
     // a message that contains (or is contained by) the row's question gets a bonus. Best score >= 1 wins.
-    const string SMALLTALK_MENU = " I can help with the PCI PCL-AI, PFL-AI and PDL-AI credentials, the thirteen domains, eligibility, fees, enrolment, the exam or membership — what would you like to know? You can also ask to talk to a person any time.";
+    const string SMALLTALK_MENU = " I can help with the PCI PCL-AI, PFL-AI and PML-AI credentials, the thirteen domains, eligibility, fees, enrolment, the exam or membership — what would you like to know? You can also ask to talk to a person any time.";
 
     /// <summary>Handle greetings, thanks and farewells conversationally so a friendly "hi" or "how are you"
     /// never gets the "no answer" fallback. Returns null when the message isn't small talk (so the KB runs).</summary>

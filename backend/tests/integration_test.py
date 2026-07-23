@@ -1451,16 +1451,30 @@ def test_leadership_suite(admin):
     print("\n=== 18. Leadership Suite: one candidate, three certifications ===")
     NAMES = {"PCL-AI": "PCI AI Project Controls Leader",
              "PFL-AI": "PCI AI Project Finance Leader",
-             "PDL-AI": "PCI AI Project Delivery Leader"}
+             "PML-AI": "PCI Project Management Leader – AI"}
     c, cat = jget("GET", "/api/certifications")
     rows = {r.get("code"): r for r in cat.get("rows", [])}
     chk("18a all three Suite certifications are live together", c == 200 and all(k in rows for k in NAMES), sorted(rows))
     chk("18b official certification names", all(rows[k]["name"] == v for k, v in NAMES.items()),
         {k: rows.get(k, {}).get("name") for k in NAMES})
     ids = {k: rows[k]["id"] for k in NAMES}
+    chk("18b·1 PML-AI retains the established certification id=3 and clean machine identifiers",
+        ids["PML-AI"] == 3
+        and rows["PML-AI"].get("slug") == "pml-ai"
+        and rows["PML-AI"].get("credential_prefix") == "PML-AI"
+        and "PDL-AI" not in rows,
+        rows.get("PML-AI"))
+    c, canonical = req("GET", "/certifications/pml-ai")
+    chk("18b·2 canonical PML-AI page renders the exact official identity",
+        c == 200 and "PCI Project Management Leader – AI" in canonical and "PCI PML-AI" in canonical,
+        (c, canonical[:160]))
+    for legacy in ("cpmd", "cpmd-ai", "pdl-ai"):
+        c, location = no_follow("GET", f"/certifications/{legacy}?source=legacy")
+        chk(f"18b·3 retired {legacy} URL is a single-hop permanent redirect with its query intact",
+            c == 301 and location == "/certifications/pml-ai?source=legacy", (c, location))
 
-    # PFL-AI and PDL-AI need question banks (PCL-AI uses the seeded bank).
-    for code in ("PFL-AI", "PDL-AI"):
+    # PFL-AI and PML-AI need question banks (PCL-AI uses the seeded bank).
+    for code in ("PFL-AI", "PML-AI"):
         csv = "question,option_a,option_b,option_c,option_d,answer,domain\n" + "\n".join(
             f"{code} Q{i}: pick A,RightA{i},WrongB{i},WrongC{i},WrongD{i},A,Core" for i in range(1, 4))
         c, bu = jget("POST", "/api/admin/sample_questions/bulk", token=admin, body={"csv": csv, "certification": code})
@@ -1469,7 +1483,7 @@ def test_leadership_suite(admin):
     # One candidate buys all three examinations (webhook metadata routes each entitlement).
     stok, suid = make_paid_user("suite3@ex.co", product="exam", metadata={"certification": "PCL-AI"})
     sign_and_send_webhook("cs_suite3_pfl", "suite3@ex.co", "exam", "pi_suite3_pfl", metadata={"certification": "PFL-AI"})
-    sign_and_send_webhook("cs_suite3_pdl", "suite3@ex.co", "exam", "pi_suite3_pdl", metadata={"certification": "PDL-AI"})
+    sign_and_send_webhook("cs_suite3_pdl", "suite3@ex.co", "exam", "pi_suite3_pdl", metadata={"certification": "PML-AI"})
     accept_all_consents(stok); complete_profile(stok)
     con = dbconn()
     ents = {r[0] for r in con.execute("SELECT certification_id FROM exam_entitlements WHERE user_id=?", (suid,))}
@@ -1481,7 +1495,7 @@ def test_leadership_suite(admin):
     # Sit and pass each examination; the credential must carry that certification's prefix.
     creds = {}
     slot = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() + 3 * 3600))
-    for code, prefix in (("PCL-AI", "PCI-PCLAI-"), ("PFL-AI", "PCI-PFLAI-"), ("PDL-AI", "PCI-PDLAI-")):
+    for code, prefix in (("PCL-AI", "PCI-PCLAI-"), ("PFL-AI", "PCI-PFLAI-"), ("PML-AI", "PCI-PMLAI-")):
         cid = ids[code]
         c, bk = jget("POST", "/api/me/exam/book", token=stok, body={"scheduled_at": slot, "timezone": "UTC", "certification_id": cid})
         req("POST", "/api/me/readiness", token=stok, body={"camera": True, "microphone": True, "network": True})
@@ -1550,17 +1564,20 @@ def test_leadership_suite(admin):
     # the authored Body of Knowledge PDFs ship with the app (books/<code>-bok.pdf) and attach to the
     # seeded BoK rows at boot; an entitled candidate downloads a personalised copy immediately.
     # (Guarded: the assertions arm themselves once the authored books are committed under backend/books/.)
-    if not os.path.exists(os.path.join(BACKEND, "books", "pfl-ai-bok.pdf")):
+    if not os.path.exists(os.path.join(BACKEND, "books", "pml-ai-bok.pdf")):
         print("  SKIP  18t/18u shipped-BoK assertions (backend/books not present yet)")
         return
     c, bl2 = jget("GET", "/api/me/cert-documents", token=stok)
-    seeded_bok = next((r for r in bl2.get("rows", []) if r.get("kind") == "bok" and "PFL-AI" in (r.get("title") or "") and "Body of Knowledge" in (r.get("title") or "")), None)
-    chk("18t the authored PFL-AI Body of Knowledge is attached at boot", seeded_bok is not None and seeded_bok.get("has_file") == 1,
+    seeded_bok = next((r for r in bl2.get("rows", []) if r.get("kind") == "bok" and "PML-AI" in (r.get("title") or "") and "Body of Knowledge" in (r.get("title") or "")), None)
+    chk("18t the authored PML-AI Body of Knowledge is attached at boot", seeded_bok is not None and seeded_bok.get("has_file") == 1,
         [(r.get("title"), r.get("kind"), r.get("has_file")) for r in bl2.get("rows", [])])
     if seeded_bok is not None:
         stb, bokbody, _ = _raw_get(f"/api/me/cert-documents/{seeded_bok['id']}/download", token=stok)
-        chk("18u the shipped BoK downloads as a personalised watermarked PDF",
-            stb == 200 and bokbody[:5] == b"%PDF-" and "Personal Copy" in _pdf_text(bokbody), (stb, len(bokbody)))
+        boktext = _pdf_text(bokbody)
+        chk("18u the shipped PML-AI BoK downloads as a correctly named personalised PDF",
+            stb == 200 and bokbody[:5] == b"%PDF-" and "Personal Copy" in boktext
+            and "PCI Project Management Leader – AI" in boktext and "PDL-AI" not in boktext,
+            (stb, len(bokbody), boktext[:160]))
 
 def H0(v):
     try: return int(v or 0)

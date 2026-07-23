@@ -1006,7 +1006,8 @@ app.Use(async (ctx, next) =>
         if (PCI.Backend.Core.PathRedirects.Target(db, ctx.Request) is { } red)
         {
             ctx.Response.StatusCode = red.status;
-            if (red.status != 410) ctx.Response.Headers.Location = red.to;   // 410 Gone carries no Location
+            if (red.status != 410)
+                ctx.Response.Headers.Location = PCI.Backend.Core.PathRedirects.WithQuery(red.to, ctx.Request.QueryString);
             return;
         }
         var reqPath = ctx.Request.Path.Value ?? "/";
@@ -1157,7 +1158,7 @@ app.Use(async (ctx, next) =>
             {
                 "pcp-ai" or "pcp" => "pcl-ai",
                 "pfip" or "pfip-ai" => "pfl-ai",
-                "cpmd" or "cpmd-ai" or "pml-ai" => "pdl-ai",
+                "cpmd" or "cpmd-ai" or "pdl-ai" => "pml-ai",
                 _ => null,
             };
             if (certRedirect is not null)

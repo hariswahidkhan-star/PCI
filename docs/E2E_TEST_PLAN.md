@@ -60,7 +60,7 @@ Format: **ID — As a `<actor>`, I want `<goal>`** · _Steps_ → **Expected** �
 
 ### A. Public website (anonymous visitor)
 - **PW-01** Browse the homepage. → Loads, hero + catalogue render, no console errors. · Content admin-editable (Pages/Content).
-- **PW-02** Open each certification page (PCL-AI / PFL-AI / PDL-AI / all-certifications). → Correct copy + price tags. · Yes (Pricing, Content).
+- **PW-02** Open each certification page (PCL-AI / PFL-AI / PML-AI / all-certifications). → Correct copy + price tags. · Yes (Pricing, Content).
 - **PW-03** Switch language (en→ko→ar→es→fr→zh→ru). → Page + nav translate; Arabic renders RTL; choice persists via cookie. · Yes (Translations).
 - **PW-04** See the launch announcement popup; dismiss it. → Shows once, dismissable, stays dismissed; renders in the active language. · Yes (Announcement).
 - **PW-05** Submit the **Honorary Fellow** application (eligibility, qualifications/certs/experience rows, consents, T&C). → Reference returned; ack email queued. · Yes (Honorary applications).

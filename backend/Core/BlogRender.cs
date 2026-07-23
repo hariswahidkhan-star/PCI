@@ -21,7 +21,7 @@ public static class BlogRender
     }
 
     // Default site-wide keyword line + robots directive, used when a page supplies nothing more specific.
-    const string DefaultKeywords = "project controls, project finance, project delivery, AI, PCL-AI, PFL-AI, PDL-AI, certification, professional development";
+    const string DefaultKeywords = "project controls, project finance, project delivery, AI, PCL-AI, PFL-AI, PML-AI, certification, professional development";
     const string DefaultRobots = "index, follow, max-image-preview:large";
 
     static string Compose(Db db, string webRoot, string lang, string slugForSeo, string title, string desc,

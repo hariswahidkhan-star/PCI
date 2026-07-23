@@ -189,7 +189,7 @@ public static class StudentExam
 
         // Per-certification documents & books: the student sees general documents plus the documents for
         // every certification they are enrolled in (an entitlement or an issued credential). Grouped by
-        // certification so a PCL-AI candidate never sees PFL-AI/PDL-AI materials they are not entitled to.
+        // certification so a PCL-AI candidate never sees PFL-AI/PML-AI materials they are not entitled to.
         // (/api/me/documents is the per-student assigned-documents module in Endpoints/Documents.cs.)
         app.MapGet("/api/me/cert-documents", (HttpContext ctx) =>
         {

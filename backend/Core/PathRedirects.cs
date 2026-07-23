@@ -59,4 +59,15 @@ public static class PathRedirects
         if (hit.status != 410 && Norm(hit.to) == Norm(req.Path.Value)) return null;    // self-redirect guard (never loop); a 410 has no target
         return hit;
     }
+
+    /// <summary>Carry the incoming query string across a redirect without placing it after a fragment.</summary>
+    public static string WithQuery(string target, QueryString query)
+    {
+        if (!query.HasValue) return target;
+        var hash = target.IndexOf('#');
+        var beforeHash = hash < 0 ? target : target[..hash];
+        var fragment = hash < 0 ? "" : target[hash..];
+        var separator = beforeHash.Contains('?') ? "&" : "?";
+        return beforeHash + separator + query.Value!.TrimStart('?') + fragment;
+    }
 }
