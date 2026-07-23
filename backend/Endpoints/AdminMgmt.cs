@@ -24,12 +24,9 @@ public static class AdminMgmt
         JsonValueKind.String => (v.GetString() ?? "").Trim().ToLowerInvariant() is "1" or "true" or "yes",
         _ => false,
     };
-    static string CsvEsc(object? v)
-    {
-        var s = v?.ToString() ?? "";
-        if (System.Text.RegularExpressions.Regex.IsMatch(s, @"^[=+\-@]")) s = "'" + s;
-        return System.Text.RegularExpressions.Regex.IsMatch(s, "[\",\n]") ? "\"" + s.Replace("\"", "\"\"") + "\"" : s;
-    }
+    // SEC-2: delegate to the shared Csv.Field so every export shares one RFC-4180 + formula-injection
+    // guard (and, unlike the previous regex, keeps genuine negative numbers numeric).
+    static string CsvEsc(object? v) => Core.Csv.Field(v);
     static string ToCsv(List<Dictionary<string, object?>> rows)
     {
         if (rows.Count == 0) return "";
