@@ -53,6 +53,21 @@ test.describe('Simulation Lab student journey', () => {
     })
     expect(saved.ok(), `autosave ${saved.status()}`).toBeTruthy()
 
+    // Resume must round-trip the autosaved answers (not only the attempt id).
+    const resume = await request.post('/api/me/lab/attempts', {
+      headers: auth,
+      data: { scenario_code: 'GL-EVM-001', mode: 'training' },
+    })
+    expect(resume.ok(), `resume ${resume.status()}`).toBeTruthy()
+    const resumed = await resume.json() as {
+      attempt_id: number
+      resumed: boolean
+      answers?: Record<string, number>
+    }
+    expect(resumed.attempt_id).toBe(started.attempt_id)
+    expect(resumed.resumed).toBeTruthy()
+    expect(resumed.answers?.spi).toBeCloseTo(spi, 5)
+
     const hint = await request.post(`/api/me/lab/attempts/${started.attempt_id}/coach`, {
       headers: auth,
       data: { answers: { ...payload, spi: 9 }, coach_mode: 'guided', hint_level: 2 },

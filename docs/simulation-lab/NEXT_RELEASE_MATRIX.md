@@ -53,6 +53,16 @@ Simulation uses `simulation_*` tables only. Student/admin Lab endpoints never re
 | PHASE_0 PDL naming | Doc debt | `PHASE_0_AUDIT.md` | PDL → PML | Grep clean |
 | No attempt audit | Events / resume evidence | schema + endpoints | `simulation_attempt_events` + autosave | Unit + E2E autosave |
 
+## Follow-up wiring (post-merge)
+
+| Gap | Fix |
+|-----|-----|
+| Resume returned attempt id but not answers | Start/GET attempt return `answers` + `period`; `LabRunner` hydrates + debounced autosave |
+| Catalogue had no filters | Client filters: track / industry / difficulty / kind / duration / competency + search |
+| No mastery surface | `GET /api/me/lab/mastery` + recommended strip on Lab landing |
+| Content issues hard to report | LabRunner → `POST /api/me/tickets` with scenario/attempt context |
+| Coach evals covered 11 engines | `SimCoachEvalTests.AllTasks` now **18** engines |
+
 ## Deferred backlog (explicit)
 
 - Full SignalR live period clock and multi-session capstone resume UI.

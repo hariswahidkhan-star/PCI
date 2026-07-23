@@ -9,7 +9,9 @@ namespace PCI.Backend.Endpoints;
 ///
 ///   GET  /api/me/lab/access                 — whether the student can enter the Lab, and why (live entitlement)
 ///   GET  /api/me/lab/catalogue              — the published labs/drills/scenarios + this student's latest status
-///   POST /api/me/lab/attempts               — start (or resume) an attempt at a scenario; returns the task
+///   GET  /api/me/lab/mastery                — competency averages + next-scenario recommendations (practice only)
+///   POST /api/me/lab/attempts               — start (or resume) an attempt; returns task + saved answers when resumed
+///   POST /api/me/lab/attempts/{id}/autosave — persist working answers without grading
 ///   GET  /api/me/lab/attempts               — this student's recent attempts
 ///   GET  /api/me/lab/attempts/{id}          — load one attempt (resume in-progress, or review a completed one)
 ///   POST /api/me/lab/attempts/{id}/submit   — deterministic grading + competency evidence
@@ -144,15 +146,19 @@ public static class SimLab
             var scenarioId = H.L(s["id"]);
             var version = H.L(s["version"]);
             // Resume an existing in-progress attempt for this scenario+mode rather than spawning duplicates.
-            var existing = db.QueryOne(@"SELECT id,seed FROM simulation_attempts
+            var existing = db.QueryOne(@"SELECT id,seed,state_json,period FROM simulation_attempts
                 WHERE user_id=? AND scenario_id=? AND mode=? AND status='in_progress' ORDER BY id DESC LIMIT 1",
                 u.Id, scenarioId, mode);
             long attemptId, seed;
+            object? savedAnswers = null;
+            int period = 0;
             if (existing is not null)
             {
                 attemptId = H.L(existing["id"]);
                 seed = H.L(existing["seed"]);
-                RecordEvent(db, attemptId, u.Id, "resume", 0, null);
+                period = (int)H.L(existing["period"]);
+                savedAnswers = AnswersObject(H.Str(existing["state_json"]));
+                RecordEvent(db, attemptId, u.Id, "resume", period, null);
             }
             else
             {
@@ -167,7 +173,8 @@ public static class SimLab
                 RecordEvent(db, attemptId, u.Id, "start", 0, $"{{\"mode\":\"{mode}\",\"seed\":{seed}}}");
                 log(u.Id, "sim_attempt_start", $"{code} · {mode} · #{attemptId}");
             }
-            return J(new { attempt_id = attemptId, resumed = existing is not null,
+            return J(new { attempt_id = attemptId, resumed = existing is not null, period,
+                answers = savedAnswers,
                 scenario = ScenarioMeta(s), task = Core.SimGrade.TaskFor(EffectiveConfig(configRaw!, seed), mode) });
         });
 
@@ -228,6 +235,7 @@ public static class SimLab
             var completed = status is "completed" or "passed" or "failed";
 
             object? grade = null;
+            var savedAnswers = AnswersObject(H.Str(att["state_json"]));
             if (completed)
             {
                 var answers = LoadAnswers(H.Str(att["state_json"]));
@@ -237,12 +245,65 @@ public static class SimLab
             return J(new
             {
                 attempt_id = id, status, mode,
+                period = H.L(att["period"]),
+                answers = savedAnswers,
                 scenario = ScenarioMeta(s),
                 task = Core.SimGrade.TaskFor(config, mode),
                 score = att["score"],
                 started_at = H.Str(att["started_at"]), completed_at = H.Str(att["completed_at"]),
                 grade,
             });
+        });
+
+        // ---- mastery summary + explainable next-scenario recommendations (practice only) ----
+        app.MapGet("/api/me/lab/mastery", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, out var u) is { } blocked) return blocked;
+            if (!Core.SimLab.Eligible(db, u!.Id))
+                return Results.Json(new { error = "no_access", access = Core.SimLab.AccessFor(db, u.Id) }, statusCode: 403);
+
+            var mastery = new List<object>();
+            var weak = new List<string>();
+            foreach (var r in db.Query(@"SELECT competency,
+                    AVG(score) AS avg_score, COUNT(*) AS n, MAX(id) AS last_id
+                FROM simulation_competency WHERE user_id=? GROUP BY competency ORDER BY avg_score ASC, competency ASC", u.Id))
+            {
+                var comp = H.Str(r["competency"]) ?? "";
+                var avg = H.D(r["avg_score"]);
+                var last = db.QueryOne("SELECT level FROM simulation_competency WHERE id=?", H.L(r["last_id"]));
+                var level = last is null ? null : H.Str(last["level"]);
+                mastery.Add(new { competency = comp, avg_score = Math.Round(avg, 1), attempts = H.L(r["n"]), level });
+                if (avg < 70) weak.Add(comp);
+            }
+
+            // Recommend unpublished-to-the-student scenarios that exercise their weakest competencies.
+            var passed = new HashSet<long>();
+            foreach (var a in db.Query(@"SELECT DISTINCT scenario_id FROM simulation_attempts
+                WHERE user_id=? AND status IN ('passed','completed')", u.Id))
+                passed.Add(H.L(a["scenario_id"]));
+
+            var recommended = new List<object>();
+            foreach (var s in db.Query(@"SELECT id,scenario_code,title,kind,difficulty,est_minutes,competencies_json,summary
+                FROM simulation_scenarios WHERE status='published' ORDER BY sort_order ASC, id ASC"))
+            {
+                var sid = H.L(s["id"]);
+                if (passed.Contains(sid)) continue;
+                var comps = ParseArray(H.Str(s["competencies_json"]));
+                var hit = weak.Count == 0 ? comps.Take(1).ToArray() : comps.Where(c => weak.Contains(c)).ToArray();
+                if (hit.Length == 0 && weak.Count > 0) continue;
+                recommended.Add(new
+                {
+                    scenario_code = H.Str(s["scenario_code"]),
+                    title = H.Str(s["title"]),
+                    kind = H.Str(s["kind"]),
+                    difficulty = H.Str(s["difficulty"]),
+                    est_minutes = H.L(s["est_minutes"]),
+                    summary = H.Str(s["summary"]),
+                    because = hit.Length > 0 ? hit : comps.Take(1).ToArray(),
+                });
+                if (recommended.Count >= 5) break;
+            }
+            return J(new { mastery, recommended, weak_competencies = weak });
         });
 
         // ---- submit + grade (deterministic; writes competency evidence + audit + analytics) ----
@@ -361,6 +422,25 @@ public static class SimLab
             return root.TryGetProperty("answers", out var a) ? a.Clone() : default;
         }
         catch { return default; }
+    }
+
+    /// <summary>Serialize <c>state_json.answers</c> for start/resume payloads without exposing grade keys.
+    /// Returns a cloned <see cref="JsonElement"/> object so ASP.NET emits a plain JSON object.</summary>
+    static object AnswersObject(string? stateJson)
+    {
+        if (string.IsNullOrWhiteSpace(stateJson)) return new { };
+        try
+        {
+            using var doc = JsonDocument.Parse(stateJson);
+            if (doc.RootElement.TryGetProperty("answers", out var answers) &&
+                answers.ValueKind == JsonValueKind.Object)
+                return answers.Clone();
+        }
+        catch (JsonException)
+        {
+            // ignore corrupt state
+        }
+        return new { };
     }
 
     // Mode-aware grade payload: Assessment Mode reports only right/wrong (SimGrade already nulls the
