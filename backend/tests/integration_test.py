@@ -3603,8 +3603,9 @@ def test_simlab(admin):
     chk("43x admin scenario list shows all scenarios incl. the DRAFT, with published count",
         c == 200 and adm.get("total", 0) >= 5 and adm.get("published", 0) >= 4 and acodes.get("DRAFT-XYZ", {}).get("status") == "draft", (c, adm.get("total"), adm.get("published")))
     ev_admin = acodes.get("GL-EVM-001", {})
-    chk("43y the admin list carries per-scenario practice aggregates (attempts/completed)",
-        ev_admin.get("attempts", 0) >= 1 and ev_admin.get("completed", 0) >= 1 and ev_admin.get("interactive") is True, ev_admin)
+    chk("43y the admin list carries per-scenario practice aggregates (attempts/completed) + review_state",
+        ev_admin.get("attempts", 0) >= 1 and ev_admin.get("completed", 0) >= 1 and ev_admin.get("interactive") is True
+        and ev_admin.get("review_state") == "published", ev_admin)
     c, _ = jget("GET", "/api/admin/lab/scenarios", token=mtok)  # a student token is not an admin
     chk("43z the admin scenario list is not reachable with a student token", c in (401, 403), c)
 
