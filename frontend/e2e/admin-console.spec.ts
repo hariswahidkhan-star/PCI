@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
-import { OWNER_ADMIN, apiLoginAsE2EAdmin, uniqueEmail } from './util'
+import { OWNER_ADMIN, apiLoginAsE2EAdmin, captureStoryEvidence, uniqueEmail } from './util'
 
 // Admin console (React SPA under /admin/). The Development boot seeds a bootstrap owner
 // (owner@pci.local / changeme-owner) flagged must_change_pw, so a successful sign-in lands on
@@ -39,7 +39,7 @@ test.describe('admin console', () => {
     await expect(page).toHaveURL(/\/admin\/login$/)
   })
 
-  test('the E2E owner creates a scenario account through the real Students console', async ({ page, request }) => {
+  test('the E2E owner creates a scenario account through the real Students console', async ({ page, request }, testInfo) => {
     await apiLoginAsE2EAdmin(request, page)
     await page.goto('/admin/students')
     await expect(page.getByRole('heading', { name: 'Students' })).toBeVisible()
@@ -58,9 +58,10 @@ test.describe('admin console', () => {
     await expect(drawer.getByText(user.email, { exact: true })).toBeVisible()
     await expect(drawer.getByRole('link', { name: /Open portal as this user/i })).toHaveAttribute('href', /\/app\/#t=/)
     expect(user.scenario).toBe('no_id')
+    await captureStoryEvidence(page, testInfo, 'G3', 'test-user-created')
   })
 
-  test('analytics CSV export authenticates with the active admin session', async ({ page, request }) => {
+  test('analytics CSV export authenticates with the active admin session', async ({ page, request }, testInfo) => {
     await apiLoginAsE2EAdmin(request, page)
     await page.goto('/admin/analytics')
     await expect(page.getByRole('heading', { name: 'Analytics' })).toBeVisible()
@@ -73,5 +74,6 @@ test.describe('admin console', () => {
     expect(path).toBeTruthy()
     const csv = readFileSync(path!, 'utf8')
     expect(csv.split(/\r?\n/, 1)[0]).toBe('created_at,event,path,visitor,country,device,browser,utm_source,utm_medium,utm_campaign,referrer,landing,value,currency')
+    await captureStoryEvidence(page, testInfo, 'G2', 'analytics-export')
   })
 })

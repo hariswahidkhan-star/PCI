@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test'
-import { apiLoginAsE2EAdmin, preparePublicJourney, uniqueEmail } from './util'
+import { apiLoginAsE2EAdmin, captureStoryEvidence, preparePublicJourney, uniqueEmail } from './util'
 
 const minimalPdf = Buffer.from('%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\n%%EOF\n')
 
 test.describe('public form-to-admin journeys', () => {
-  test('honorary application submits its structured history and CV to the board queue', async ({ page, request }) => {
+  test('honorary application submits its structured history and CV to the board queue', async ({ page, request }, testInfo) => {
     await preparePublicJourney(page)
     const adminToken = await apiLoginAsE2EAdmin(request)
     const email = uniqueEmail('honorary')
@@ -47,6 +47,7 @@ test.describe('public form-to-admin journeys', () => {
     const result = (await submitted.json()) as { reference: string }
     await expect(page.locator('#honOk')).toContainText(result.reference)
     await expect(form).toBeHidden()
+    await captureStoryEvidence(page, testInfo, 'A5', 'honorary-submitted')
 
     const queueResponse = await request.get('/api/admin/honorary-applications?status=pending_review', {
       headers: { Authorization: `Bearer ${adminToken}` },
@@ -58,7 +59,7 @@ test.describe('public form-to-admin journeys', () => {
     ]))
   })
 
-  test('training-provider application reaches the partner review queue with evidence', async ({ page, request }) => {
+  test('training-provider application reaches the partner review queue with evidence', async ({ page, request }, testInfo) => {
     await preparePublicJourney(page)
     const adminToken = await apiLoginAsE2EAdmin(request)
     const email = uniqueEmail('training-partner')
@@ -89,6 +90,7 @@ test.describe('public form-to-admin journeys', () => {
     const result = (await submitted.json()) as { reference: string }
     await expect(page.locator('#tpOk')).toContainText(result.reference)
     await expect(form).toBeHidden()
+    await captureStoryEvidence(page, testInfo, 'A6', 'partner-application-submitted')
 
     const queueResponse = await request.get('/api/admin/training-partner-applications?status=pending_review', {
       headers: { Authorization: `Bearer ${adminToken}` },
@@ -100,7 +102,7 @@ test.describe('public form-to-admin journeys', () => {
     ]))
   })
 
-  test('contact enquiry and newsletter opt-in are visible to administrators', async ({ page, request }) => {
+  test('contact enquiry and newsletter opt-in are visible to administrators', async ({ page, request }, testInfo) => {
     await preparePublicJourney(page)
     const adminToken = await apiLoginAsE2EAdmin(request)
     const inquiryEmail = uniqueEmail('inquiry')
@@ -127,6 +129,7 @@ test.describe('public form-to-admin journeys', () => {
     await page.getByRole('button', { name: 'Subscribe' }).click()
     expect((await newsletterResponse).ok()).toBeTruthy()
     await expect(page.locator('#nlBtn')).toHaveText('Subscribed ✓')
+    await captureStoryEvidence(page, testInfo, 'A7', 'contact-and-newsletter')
 
     const [inquiriesResponse, subscribersResponse] = await Promise.all([
       request.get(`/api/admin/inquiries?q=${encodeURIComponent(inquiryEmail)}`, { headers: { Authorization: `Bearer ${adminToken}` } }),

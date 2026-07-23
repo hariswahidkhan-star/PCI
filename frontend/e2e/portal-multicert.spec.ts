@@ -1,12 +1,12 @@
 import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
 import { demoAnswers, sourceDemoQuestion } from './demo-exam'
-import { settleExamPurchase, uniqueEmail } from './util'
+import { captureStoryEvidence, settleExamPurchase, uniqueEmail } from './util'
 
 const tinyPng = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
 
 test.describe('three-certification isolation', () => {
-  test('one browser student keeps PCL-AI, PFL-AI and PML-AI enrolments separate', async ({ page, request }) => {
+  test('one browser student keeps PCL-AI, PFL-AI and PML-AI enrolments separate', async ({ page, request }, testInfo) => {
     const email = uniqueEmail('suite-isolation')
     await page.goto('/app/register')
     await page.getByLabel('First name').fill('Browser')
@@ -37,6 +37,7 @@ test.describe('three-certification isolation', () => {
       await expect(page.getByText(code, { exact: true }).first()).toBeVisible()
     }
     await expect(page.getByText('PCI AI Project Delivery Leader', { exact: true })).toHaveCount(0)
+    await captureStoryEvidence(page, testInfo, 'C2', 'three-enrolments')
 
     // Browser-created session + browser-triggered settlements, then a real authenticated read: the
     // three UI cards must be backed by three distinct certification_id relationships, not one row
@@ -113,6 +114,7 @@ test.describe('three-certification isolation', () => {
     const materialPath = await material.path()
     expect(materialPath).toBeTruthy()
     expect(readFileSync(materialPath!).subarray(0, 4).toString()).toBe('%PDF')
+    await captureStoryEvidence(page, testInfo, 'E2', 'pml-materials')
 
     // The legacy exam portal used to hard-code PCL-AI on every certificate. Its credential picker and
     // selected certificate must now bind the requested PML-AI record end-to-end.
@@ -127,5 +129,6 @@ test.describe('three-certification isolation', () => {
     await page.locator('.srow').filter({ hasText: 'PML-AI' }).getByRole('button', { name: 'View certificate' }).click()
     await expect(page.locator('#certWrap')).toContainText('PCI Project Management Leader – AI (PCI PML-AI)')
     await expect(page.locator('#certWrap')).not.toContainText('PCI AI Project Controls Leader')
+    await captureStoryEvidence(page, testInfo, 'E1', 'multi-cert-credential-isolation')
   })
 })

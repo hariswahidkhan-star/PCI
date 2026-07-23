@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { captureStoryEvidence } from './util'
 
 // Browser E2E + accessibility over the backend-served public site. Runs on CI runners (which boot the
 // backend). The CI job is gating; Chromium runs the full suite and the tagged smoke paths also run
 // in Firefox, WebKit, Mobile Chrome and Mobile Safari profiles.
 test.describe('public site', () => {
-  test('@cross-browser home page loads with the right title, language and a heading', async ({ page }) => {
+  test('@cross-browser home page loads with the right title, language and a heading', async ({ page }, testInfo) => {
     const resp = await page.goto('/')
     expect(resp?.status() ?? 0).toBeLessThan(400)
     await expect(page).toHaveTitle(/Project Controls Institute/i)
@@ -13,6 +14,7 @@ test.describe('public site', () => {
     await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
     // a skip-to-content affordance is present
     await expect(page.locator('a[href="#content"]').first()).toHaveText(/skip to main content/i)
+    await captureStoryEvidence(page, testInfo, 'A1', 'homepage')
   })
 
   test('@cross-browser the verify page renders the credential lookup', async ({ page }) => {
@@ -33,7 +35,7 @@ test.describe('public site', () => {
     expect(critical, `critical a11y violations: ${critical.map((v) => v.id).join(', ')}`).toEqual([])
   })
 
-  test('the admin-controlled announcement is accessible, dismissible and stays dismissed for the visit', async ({ page, request }) => {
+  test('the admin-controlled announcement is accessible, dismissible and stays dismissed for the visit', async ({ page, request }, testInfo) => {
     await page.addInitScript(() => {
       try { localStorage.setItem('pci-cookie-consent', 'essential') } catch { /* no storage */ }
     })
@@ -47,6 +49,7 @@ test.describe('public site', () => {
     await expect(dialog).toBeVisible()
     await expect(dialog).toHaveAttribute('role', 'dialog')
     await expect(dialog.getByRole('heading')).toHaveText(config.title)
+    await captureStoryEvidence(page, testInfo, 'A4', 'announcement-visible')
     await dialog.getByRole('button', { name: config.dismiss }).click()
     await expect(dialog).toHaveCount(0)
     expect(await page.evaluate((key) => sessionStorage.getItem(`pci.anx.${key}`), config.key)).toBe('1')

@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
-import { apiLoginAsE2EAdmin, createTestUser, uniqueEmail } from './util'
+import { apiLoginAsE2EAdmin, captureStoryEvidence, createTestUser, uniqueEmail } from './util'
 
 test.describe('student support, session security and privacy journeys', () => {
-  test('student ticket reaches the admin queue, receives a reply and becomes an in-app message', async ({ page, request }) => {
+  test('student ticket reaches the admin queue, receives a reply and becomes an in-app message', async ({ page, request }, testInfo) => {
     const adminToken = await apiLoginAsE2EAdmin(request)
     const user = await createTestUser(request, adminToken, 'ready', page)
     const subject = `Browser support ${uniqueEmail('case').split('@')[0]}`
@@ -41,6 +41,7 @@ test.describe('student support, session security and privacy journeys', () => {
     await page.goto('/app/messages')
     await expect(page.getByText('Support replied to your ticket', { exact: true })).toBeVisible()
     await expect(page.getByText(new RegExp(ticket.reference))).toBeVisible()
+    await captureStoryEvidence(page, testInfo, 'F3', 'support-notification')
     const markAll = page.getByRole('button', { name: 'Mark all read' })
     await expect(markAll).toBeVisible()
     await markAll.click()
@@ -55,9 +56,10 @@ test.describe('student support, session security and privacy journeys', () => {
     await page.getByRole('button', { name: 'Reply', exact: true }).click()
     expect((await studentReply).ok()).toBeTruthy()
     await expect(page.getByText('Thank you — confirmed from the student portal.', { exact: true })).toBeVisible()
+    await captureStoryEvidence(page, testInfo, 'F1', 'two-way-ticket-thread')
   })
 
-  test('student exports account data, revokes another session and submits an erasure request', async ({ page, request }) => {
+  test('student exports account data, revokes another session and submits an erasure request', async ({ page, request }, testInfo) => {
     const adminToken = await apiLoginAsE2EAdmin(request)
     const user = await createTestUser(request, adminToken, 'ready', page)
 
@@ -97,6 +99,7 @@ test.describe('student support, session security and privacy journeys', () => {
       headers: { Authorization: `Bearer ${sessionStorage.getItem('pci.session.token') ?? ''}` },
     })).status)
     expect(currentProbe, 'the session that requested the revocation must remain active').toBe(200)
+    await captureStoryEvidence(page, testInfo, 'F5', 'other-sessions-revoked')
 
     const reason = 'End-to-end privacy rights verification.'
     await page.getByLabel('Deletion request reason (optional)').fill(reason)
@@ -106,6 +109,7 @@ test.describe('student support, session security and privacy journeys', () => {
     await page.getByRole('button', { name: 'Request account deletion' }).click()
     expect((await deletionResponse).ok()).toBeTruthy()
     await expect(page.getByRole('status')).toContainText('within 30 days')
+    await captureStoryEvidence(page, testInfo, 'F4', 'erasure-requested')
 
     const erasuresResponse = await request.get('/api/admin/erasure-requests?status=pending', {
       headers: { Authorization: `Bearer ${adminToken}` },

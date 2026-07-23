@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
 import { demoAnswers } from './demo-exam'
-import { settleExamPurchase, uniqueEmail } from './util'
+import { captureStoryEvidence, settleExamPurchase, uniqueEmail } from './util'
 
 const tinyPng = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
 
@@ -13,7 +13,7 @@ async function browserLocalDateTime(page: import('@playwright/test').Page, hours
 }
 
 test.describe('complete certification lifecycle', () => {
-  test('student registers, pays, schedules, sits, passes, verifies and downloads', async ({ page, request }) => {
+  test('student registers, pays, schedules, sits, passes, verifies and downloads', async ({ page, request }, testInfo) => {
     const email = uniqueEmail('lifecycle')
     await page.goto('/app/register')
     await page.getByLabel('First name').fill('Browser')
@@ -61,6 +61,7 @@ test.describe('complete certification lifecycle', () => {
     const rescheduled = await rescheduledResponse
     expect(rescheduled.ok()).toBeTruthy()
     expect((await rescheduled.json()) as { reschedule_count?: number }).toMatchObject({ reschedule_count: 1 })
+    await captureStoryEvidence(page, testInfo, 'D3-D4', 'booked-and-rescheduled')
 
     const readiness = await request.post('/api/me/readiness', {
       headers,
@@ -91,6 +92,7 @@ test.describe('complete certification lifecycle', () => {
     await page.locator('#rSubmit').click()
     await page.locator('#mOK').click()
     await expect(page.locator('.verdict')).toHaveText('PASS')
+    await captureStoryEvidence(page, testInfo, 'D5-D6', 'exam-pass')
     const issued = await page.locator('.tag.gold').innerText()
     const credential = issued.match(/PCI-PCLAI-\d{4}-\d+/)?.[0]
     expect(credential, `result should expose the issued credential (got ${issued})`).toBeTruthy()
@@ -115,5 +117,6 @@ test.describe('complete certification lifecycle', () => {
     await expect(page.locator('#vres')).toContainText('Active & in good standing')
     await expect(page.locator('#vres')).toContainText(credential!)
     await expect(page.locator('#vres')).toContainText('PCI AI Project Controls Leader')
+    await captureStoryEvidence(page, testInfo, 'A9-E1', 'credential-verified')
   })
 })

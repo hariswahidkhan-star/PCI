@@ -1,4 +1,4 @@
-import type { APIRequestContext, Page } from '@playwright/test'
+import type { APIRequestContext, Page, TestInfo } from '@playwright/test'
 import { expect } from '@playwright/test'
 import { createHmac } from 'node:crypto'
 
@@ -20,6 +20,16 @@ let counter = 0
 export function uniqueEmail(prefix = 'e2e'): string {
   counter += 1
   return `${prefix}-${process.pid}-${Date.now()}-${counter}@e2e.pci.local`
+}
+
+/** Persist an explicit success-state screenshot in Playwright's per-test output and HTML report.
+ * Failure screenshots remain automatic; these named captures provide the audit evidence requested
+ * for successful user stories as well. */
+export async function captureStoryEvidence(page: Page, testInfo: TestInfo, storyId: string, moment?: string): Promise<void> {
+  const label = [storyId, moment].filter(Boolean).join('-').replace(/[^A-Za-z0-9._-]+/g, '-')
+  const path = testInfo.outputPath(`${label}.png`)
+  await page.screenshot({ path, fullPage: true, animations: 'disabled' })
+  await testInfo.attach(label, { path, contentType: 'image/png' })
 }
 
 /** Keep unrelated public-site consent/announcement overlays from intercepting clicks in a journey

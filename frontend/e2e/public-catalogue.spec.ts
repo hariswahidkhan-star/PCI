@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { captureStoryEvidence } from './util'
 
 interface CatalogueCertification {
   code: string
@@ -18,7 +19,7 @@ function amount(value: number): string {
 // from the certifications table (Core/CertCatalogue.cs fills the <!--PCI-CERTS--> region from
 // the MultiCert seed), so a rendered card proves the DB-backed pipeline end to end.
 test.describe('certification catalogue and enrolment hand-off', () => {
-  test('@cross-browser every certification stays consistent from API to catalogue card to detail page', async ({ page, request }) => {
+  test('@cross-browser every certification stays consistent from API to catalogue card to detail page', async ({ page, request }, testInfo) => {
     const catalogueResponse = await request.get('/api/certifications')
     expect(catalogueResponse.ok()).toBeTruthy()
     const catalogue = (await catalogueResponse.json()) as { rows: CatalogueCertification[] }
@@ -46,6 +47,7 @@ test.describe('certification catalogue and enrolment hand-off', () => {
         `/app/register?product=exam&cert=${certification.code}`,
       )
     }
+    await captureStoryEvidence(page, testInfo, 'A2', 'catalogue')
 
     // Follow each database-backed route. This catches a card/detail drift that a catalogue-only
     // assertion misses (wrong slug, stale name, stale fee or enrolment intent).
@@ -59,6 +61,7 @@ test.describe('certification catalogue and enrolment hand-off', () => {
         'href',
         `/app/register?product=exam&cert=${certification.code}`,
       )
+      await captureStoryEvidence(page, testInfo, 'A2', certification.code)
     }
   })
 

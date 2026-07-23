@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test'
-import { apiLoginAsE2EAdmin, uniqueEmail } from './util'
+import { apiLoginAsE2EAdmin, captureStoryEvidence, uniqueEmail } from './util'
 
 test.describe('institution partner persona', () => {
-  test('admin provisions a partner who changes password, creates a code and sponsors a PML-AI candidate', async ({ page, request }) => {
+  test('admin provisions a partner who changes password, creates a code and sponsors a PML-AI candidate', async ({ page, request }, testInfo) => {
     const adminToken = await apiLoginAsE2EAdmin(request)
     const headers = { Authorization: `Bearer ${adminToken}` }
     const institution = `Browser Institute ${Date.now()}`
@@ -89,6 +89,7 @@ test.describe('institution partner persona', () => {
       headers: { Authorization: `Bearer ${partnerToken}` },
     })
     expect(currentDeviceProbe.ok(), 'the partner session that changed the password must remain active').toBeTruthy()
+    await captureStoryEvidence(page, testInfo, 'H1-H5', 'first-login-and-session-revocation')
 
     // Partner-managed discount code, constrained by the agreement the PCI operator configured.
     await page.getByRole('button', { name: 'Codes', exact: true }).click()
@@ -105,6 +106,7 @@ test.describe('institution partner persona', () => {
     expect(await createdCode.json()).toMatchObject({ code, status: 'active' })
     await expect(page.locator('#codesTbl')).toContainText(code)
     await expect(page.locator('#codesTbl')).toContainText('active')
+    await captureStoryEvidence(page, testInfo, 'H4', 'partner-code')
 
     // Direct sponsorship creates the student account, approved application and certification-scoped
     // entitlement as one institution action, then exposes the same progress to PCI administrators.
@@ -125,6 +127,7 @@ test.describe('institution partner persona', () => {
     ])
     await expect(page.locator('#sponsorTbl')).toContainText(candidateEmail)
     await expect(page.locator('#sponsorTbl')).toContainText('PML-AI')
+    await captureStoryEvidence(page, testInfo, 'H2', 'sponsored-candidate')
 
     await page.getByRole('button', { name: 'Commissions', exact: true }).click()
     await expect(page.locator('#commTiles')).toContainText('7.5%')

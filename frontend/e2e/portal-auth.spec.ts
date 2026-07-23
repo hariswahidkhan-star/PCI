@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test'
-import { DEMO_STUDENT, uniqueEmail } from './util'
+import { captureStoryEvidence, DEMO_STUDENT, uniqueEmail } from './util'
 
 // Student-portal authentication journeys over the React SPA the backend serves under /app/
 // (SPA fallback in backend/Program.cs; router basename '/app'). All waits are locator-based
 // auto-waits or expect() polls — no fixed sleeps — and every test mints its own state.
 test.describe('student portal auth', () => {
-  test('a new student can register, skip onboarding and land on the dashboard', async ({ page }) => {
+  test('a new student can register, skip onboarding and land on the dashboard', async ({ page }, testInfo) => {
     const email = uniqueEmail('register')
     await page.goto('/app/register')
     // The auth shell renders a marketing headline beside the form card, so target the form itself.
@@ -30,9 +30,10 @@ test.describe('student portal auth', () => {
     await expect(page.getByRole('link', { name: 'Overview' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
     await expect(page.getByText(email).first()).toBeVisible()
+    await captureStoryEvidence(page, testInfo, 'B1', 'registered-dashboard')
   })
 
-  test('the seeded demo student can sign in, and sign out back to the login screen', async ({ page }) => {
+  test('the seeded demo student can sign in, and sign out back to the login screen', async ({ page }, testInfo) => {
     await page.goto('/app/login')
     await page.getByLabel('Email address').fill(DEMO_STUDENT.email)
     await page.getByLabel('Password', { exact: true }).fill(DEMO_STUDENT.password)
@@ -42,6 +43,7 @@ test.describe('student portal auth', () => {
     await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Overview' })).toBeVisible()
     await expect(page.getByText(DEMO_STUDENT.email).first()).toBeVisible()
+    await captureStoryEvidence(page, testInfo, 'B2', 'signed-in')
 
     // Signing out revokes the session and returns to the login screen.
     await page.getByRole('button', { name: 'Sign out' }).click()

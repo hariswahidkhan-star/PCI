@@ -1,5 +1,5 @@
 import { test, expect, type APIRequestContext } from '@playwright/test'
-import { apiLoginAsE2EAdmin, createTestUser, type TestUserScenario } from './util'
+import { apiLoginAsE2EAdmin, captureStoryEvidence, createTestUser, type TestUserScenario } from './util'
 
 interface JourneyStage {
   key: string
@@ -82,7 +82,7 @@ test.describe('admin-controlled test-user journeys', () => {
     }
   })
 
-  test('ready PML-AI candidate can schedule and is marked enrolled', async ({ page, request }) => {
+  test('ready PML-AI candidate can schedule and is marked enrolled', async ({ page, request }, testInfo) => {
     const adminToken = await apiLoginAsE2EAdmin(request)
     await createTestUser(request, adminToken, 'ready', page)
 
@@ -91,6 +91,7 @@ test.describe('admin-controlled test-user journeys', () => {
     await expect(page.getByText('PML-AI', { exact: true }).first()).toBeVisible()
     await expect(page.getByText('Enrolled', { exact: true })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Schedule exam', exact: true }).first()).toBeEnabled()
+    await captureStoryEvidence(page, testInfo, 'C1', 'ready-test-user')
   })
 
   test('waived candidate sees the waiver and can schedule without a checkout', async ({ page, request }) => {
@@ -102,7 +103,7 @@ test.describe('admin-controlled test-user journeys', () => {
     await expect(page.getByRole('button', { name: 'Schedule exam', exact: true }).first()).toBeEnabled()
   })
 
-  test('profile-only blocker disables scheduling without asking for another ID or payment', async ({ page, request }) => {
+  test('profile-only blocker disables scheduling without asking for another ID or payment', async ({ page, request }, testInfo) => {
     const adminToken = await apiLoginAsE2EAdmin(request)
     await createTestUser(request, adminToken, 'incomplete_profile', page)
 
@@ -110,9 +111,10 @@ test.describe('admin-controlled test-user journeys', () => {
     await expect(page.getByText(/complete your profile \(country is required\)/i)).toBeVisible()
     await expect(page.getByRole('button', { name: 'Schedule exam', exact: true }).first()).toBeDisabled()
     await expect(page.getByText(/upload your government-issued ID/i)).toHaveCount(0)
+    await captureStoryEvidence(page, testInfo, 'D1', 'profile-only-blocker')
   })
 
-  test('ID-only blocker offers upload and keeps the paid entitlement visible', async ({ page, request }) => {
+  test('ID-only blocker offers upload and keeps the paid entitlement visible', async ({ page, request }, testInfo) => {
     const adminToken = await apiLoginAsE2EAdmin(request)
     await createTestUser(request, adminToken, 'no_id', page)
 
@@ -121,6 +123,7 @@ test.describe('admin-controlled test-user journeys', () => {
     await expect(page.getByLabel(/File \(JPG, PNG, WEBP or PDF/i)).toBeVisible()
     await expect(page.getByText(/upload your government-issued ID/i)).toBeVisible()
     await expect(page.getByRole('button', { name: 'Schedule exam', exact: true }).first()).toBeDisabled()
+    await captureStoryEvidence(page, testInfo, 'D1-D2', 'id-only-blocker')
   })
 
   test('Certuvo failure is friendly to the member while the admin journey keeps diagnostics', async ({ page, request }) => {

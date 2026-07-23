@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { preparePublicJourney } from './util'
+import { captureStoryEvidence, preparePublicJourney } from './util'
 
 // Public-website internationalisation: the backend renders every page in the active language
 // (?lang= wins and is persisted to the pci_lang cookie — Core/I18nContent.cs), rewriting
@@ -12,10 +12,11 @@ test.describe('public site i18n', () => {
     await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
   })
 
-  test('@cross-browser ?lang=ar serves Arabic right-to-left (html lang + dir)', async ({ page }) => {
+  test('@cross-browser ?lang=ar serves Arabic right-to-left (html lang + dir)', async ({ page }, testInfo) => {
     await page.goto('/?lang=ar')
     await expect(page.locator('html')).toHaveAttribute('lang', 'ar')
     await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')
+    await captureStoryEvidence(page, testInfo, 'A3', 'arabic-rtl')
   })
 
   test('the language choice persists across navigation via the cookie', async ({ page }) => {

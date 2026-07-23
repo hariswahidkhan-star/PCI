@@ -1,12 +1,12 @@
 import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
-import { preparePublicJourney } from './util'
+import { captureStoryEvidence, preparePublicJourney } from './util'
 
 // Public Downloads Centre: the page shell is static (downloads-centre.html) but the document
 // grid is fetched from /api/public/documents, which Data/PublicDocsSeed.cs populates on first
 // boot — so a rendered card proves the API + seed pipeline, not just the HTML.
 test.describe('public downloads centre', () => {
-  test('the downloads centre lists seeded public documents', async ({ page }) => {
+  test('the downloads centre lists seeded public documents', async ({ page }, testInfo) => {
     await preparePublicJourney(page)
     const resp = await page.goto('/downloads-centre.html')
     expect(resp?.status() ?? 0).toBeLessThan(400)
@@ -26,6 +26,7 @@ test.describe('public downloads centre', () => {
     const path = await download.path()
     expect(path).toBeTruthy()
     expect(readFileSync(path!).subarray(0, 4).toString()).toBe('%PDF')
+    await captureStoryEvidence(page, testInfo, 'A8', 'download-centre')
   })
 
   test('the clean /downloads route serves the centre as well', async ({ page }) => {
