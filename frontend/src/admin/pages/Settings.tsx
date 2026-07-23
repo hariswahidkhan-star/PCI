@@ -1,8 +1,54 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, type FormEvent } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type Settings as SettingsMap } from '../api'
+import { useAdminAuth } from '../AdminAuth'
 import { Card, Spinner, ErrorNote } from '../../components/ui'
 import { titleCase } from '../../format'
+
+/** Self-service password change for the signed-in admin. Lives here in Settings → Security so a
+ *  password change is available on demand, not forced as a full-screen prompt at every sign-in. */
+function ChangePasswordCard() {
+  const { changePassword } = useAdminAuth()
+  const [pw, setPw] = useState('')
+  const [confirm, setConfirm] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
+
+  async function submit(e: FormEvent) {
+    e.preventDefault()
+    setMsg(null)
+    if (pw.length < 8) return setMsg({ ok: false, text: 'Password must be at least 8 characters.' })
+    if (pw !== confirm) return setMsg({ ok: false, text: 'Passwords do not match.' })
+    setBusy(true)
+    try {
+      await changePassword(pw)
+      setPw(''); setConfirm('')
+      setMsg({ ok: true, text: 'Password updated. It takes effect on your next sign-in; you stay signed in here.' })
+    } catch (err) {
+      setMsg({ ok: false, text: err instanceof Error ? err.message : 'Could not update password.' })
+    } finally { setBusy(false) }
+  }
+
+  return (
+    <Card title="Change password">
+      <p className="muted small" style={{ marginTop: 0 }}>
+        Set a new password for your admin account whenever you like — it is optional, not required at sign-in.
+      </p>
+      {msg && <div className={'notice' + (msg.ok ? '' : ' err')} role="status" style={{ marginBottom: '.6rem' }}>{msg.text}</div>}
+      <form onSubmit={submit} style={{ display: 'grid', gap: '.5rem', maxWidth: 360 }}>
+        <div className="field">
+          <label htmlFor="admin-np">New password</label>
+          <input id="admin-np" type="password" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} />
+        </div>
+        <div className="field">
+          <label htmlFor="admin-cp">Confirm password</label>
+          <input id="admin-cp" type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
+        </div>
+        <div><button className="btn sm" type="submit" disabled={busy || !pw || !confirm}>{busy ? 'Saving…' : 'Update password'}</button></div>
+      </form>
+    </Card>
+  )
+}
 
 const GROUPS: { key: string; label: string; match: (k: string) => boolean }[] = [
   { key: 'web', label: 'Website', match: (k) => k.startsWith('web_') || k.startsWith('site_') },
@@ -201,6 +247,7 @@ export default function Settings() {
         ),
       )}
 
+      <ChangePasswordCard />
       <TwoFactorCard />
     </div>
   )
