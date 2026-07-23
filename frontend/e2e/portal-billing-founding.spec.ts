@@ -120,16 +120,24 @@ test.describe('billing, discount and founding journeys', () => {
     })
     expect(meResponse.ok()).toBeTruthy()
     const member = (await meResponse.json()) as {
+      founding_member?: boolean
       lifecycle: { membership_status: string }
       exams: Array<{ certification_code?: string; entitlement_status?: string }>
-      payments: Array<{ payment_provider?: string; payment_status?: string; final_amount?: number }>
+      payments: Array<{ payment_status?: string; final_amount?: number; product_type?: string; reference?: string }>
     }
     expect(member.lifecycle.membership_status).toBe('active')
+    expect(member.founding_member).toBe(true)
     expect(member.exams).toEqual(expect.arrayContaining([
       expect.objectContaining({ entitlement_status: 'available' }),
     ]))
+    // Student /api/me payments omit payment_provider; founding settlements are $0 FOUND-* bundles.
     expect(member.payments).toEqual(expect.arrayContaining([
-      expect.objectContaining({ payment_provider: 'founding_waiver', payment_status: 'paid', final_amount: 0 }),
+      expect.objectContaining({
+        payment_status: 'paid',
+        final_amount: 0,
+        product_type: 'bundle',
+        reference: expect.stringMatching(/^FOUND-/),
+      }),
     ]))
 
     const auditResponse = await request.get('/api/admin/audit', {
