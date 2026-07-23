@@ -127,13 +127,15 @@ public static class AdminIntegrations
             }
             // Secret handling is write-only. Webhook: a plain signing-secret string. QuickBooks: a JSON of
             // OAuth secrets, merged with what's stored so a single field can be updated without re-entering all.
+            // EXT-P1-03 — envelope-encrypt secrets at rest.
             string MergeQbo(string? existing)
             {
+                var plain = Security.DecryptSecret(existing) ?? existing;
                 Dictionary<string, string> cur = new();
-                try { if (!string.IsNullOrEmpty(existing)) cur = JsonSerializer.Deserialize<Dictionary<string, string>>(existing) ?? new(); } catch { }
+                try { if (!string.IsNullOrEmpty(plain)) cur = JsonSerializer.Deserialize<Dictionary<string, string>>(plain) ?? new(); } catch { }
                 foreach (var k in QboSecretKeys)
                     if (H.GetS(b, k) is { } v) { if (v.Length == 0) cur.Remove(k); else cur[k] = v; }
-                return JsonSerializer.Serialize(cur);
+                return Security.EncryptSecret(JsonSerializer.Serialize(cur)) ?? JsonSerializer.Serialize(cur);
             }
             bool AnyQboSecretInBody() => QboSecretKeys.Any(k => H.GetEl(b, k) is not null);
 
@@ -147,11 +149,11 @@ public static class AdminIntegrations
                         db.Execute("UPDATE integrations SET secret=? WHERE id=?", MergeQbo(H.Str(existing["secret"])), id);
                 }
                 else if (H.GetEl(b, "secret") is { ValueKind: JsonValueKind.String } sEl)
-                    db.Execute("UPDATE integrations SET secret=? WHERE id=?", sEl.GetString() ?? "", id);
+                    db.Execute("UPDATE integrations SET secret=? WHERE id=?", Security.EncryptSecret(sEl.GetString() ?? "") ?? "", id);
                 log(actorId, "integration.update", $"{id} {name} ({provider})");
                 return J(new { ok = true, id });
             }
-            var secretVal = provider == "quickbooks" ? MergeQbo(null) : (H.GetS(b, "secret") ?? "");
+            var secretVal = provider == "quickbooks" ? MergeQbo(null) : (Security.EncryptSecret(H.GetS(b, "secret") ?? "") ?? "");
             var newId = db.ExecuteReturningId("INSERT INTO integrations(provider,name,endpoint_url,secret,config,event_filter,enabled) VALUES(?,?,?,?,?,?,?)",
                 provider, name, endpoint, secretVal, configJson, filter, enabled);
             log(actorId, "integration.create", $"{newId} {name} ({provider})");

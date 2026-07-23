@@ -48,16 +48,26 @@ public sealed class MarketingJobDispatcher : BackgroundService
     /// <summary>Process up to <paramref name="limit"/> due jobs. Also callable directly for an admin retry.</summary>
     public static int DrainOnce(Db db, int limit)
     {
-        var rows = db.Query(@"SELECT * FROM mkt_jobs
+        try { WorkerLease.RecoverExpired(db, "mkt_jobs", "retrying"); } catch { }
+        var rows = db.Query(@"SELECT id FROM mkt_jobs
             WHERE status IN('queued','retrying')
               AND (next_attempt_at IS NULL OR next_attempt_at<=datetime('now'))
+              AND (lease_until IS NULL OR lease_until<=datetime('now'))
             ORDER BY id LIMIT ?", limit);
+        var owner = WorkerLease.NewOwner();
         var n = 0;
-        foreach (var r in rows)
+        foreach (var row in rows)
         {
-            var id = H.L(r["id"]);
+            var id = H.L(row["id"]);
+            if (!WorkerLease.TryClaim(db, "mkt_jobs", id, owner, "'queued','retrying'")) continue;
+            var r = db.QueryOne("SELECT * FROM mkt_jobs WHERE id=?", id);
+            if (r is null) continue;
             try { RunOne(db, r); n++; }
-            catch (Exception e) { db.Execute("UPDATE mkt_jobs SET status='failed', last_error=?, updated_at=datetime('now') WHERE id=?", e.Message, id); }
+            catch (Exception e)
+            {
+                WorkerLease.Clear(db, "mkt_jobs", id);
+                db.Execute("UPDATE mkt_jobs SET status='failed', last_error=?, updated_at=datetime('now') WHERE id=?", e.Message, id);
+            }
         }
         return n;
     }
@@ -65,7 +75,7 @@ public sealed class MarketingJobDispatcher : BackgroundService
     static void RunOne(Db db, Dictionary<string, object?> job)
     {
         var id = H.L(job["id"]);
-        db.Execute("UPDATE mkt_jobs SET status='processing', updated_at=datetime('now') WHERE id=?", id);
+        // Already claimed as 'processing' via WorkerLease.
         var type = H.Str(job["job_type"]) ?? "";
         var entityId = H.L(job["entity_id"]);
         var attempt = (int)H.L(job["attempts"]) + 1;
@@ -88,7 +98,7 @@ public sealed class MarketingJobDispatcher : BackgroundService
 
         if (res.Ok)
         {
-            db.Execute("UPDATE mkt_jobs SET status='sent', attempts=?, provider_response=?, last_error=NULL, updated_at=datetime('now') WHERE id=?",
+            db.Execute("UPDATE mkt_jobs SET status='sent', attempts=?, provider_response=?, last_error=NULL, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
                 attempt, Trunc(res.Response), id);
             OnSuccess(db, type, entityId, res);
         }
@@ -101,12 +111,12 @@ public sealed class MarketingJobDispatcher : BackgroundService
                     or "no_developer_token" or "no_customer_id" or "no_provider_campaign_id"
                 || res.Response.StartsWith("unknown_job_type") || res.Response.EndsWith("_not_found");
             if (permanent || attempt >= maxAttempts)
-                db.Execute("UPDATE mkt_jobs SET status='failed', attempts=?, last_error=?, provider_response=?, updated_at=datetime('now') WHERE id=?",
+                db.Execute("UPDATE mkt_jobs SET status='failed', attempts=?, last_error=?, provider_response=?, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
                     attempt, res.Response, Trunc(res.Response), id);
             else
             {
                 var backoff = Math.Min(3600, (int)Math.Pow(2, attempt) * 30);   // 60s,120s,240s… capped 1h
-                db.Execute("UPDATE mkt_jobs SET status='retrying', attempts=?, last_error=?, next_attempt_at=datetime('now', ?), updated_at=datetime('now') WHERE id=?",
+                db.Execute("UPDATE mkt_jobs SET status='retrying', attempts=?, last_error=?, next_attempt_at=datetime('now', ?), lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
                     attempt, res.Response, $"+{backoff} seconds", id);
             }
         }

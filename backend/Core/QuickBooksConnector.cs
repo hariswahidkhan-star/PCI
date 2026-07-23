@@ -44,9 +44,10 @@ public static class QuickBooksConnector
 
     static (string? clientSecret, string? refreshToken, string? accessToken) ParseSecret(string? json)
     {
+        var plain = Security.DecryptSecret(json) ?? json;
         try
         {
-            var e = JsonDocument.Parse(json ?? "{}").RootElement;
+            var e = JsonDocument.Parse(plain ?? "{}").RootElement;
             string? G(string k) => e.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.String && v.GetString() is { Length: > 0 } s ? s : null;
             return (G("client_secret"), G("refresh_token"), G("access_token"));
         }
@@ -93,7 +94,7 @@ public static class QuickBooksConnector
 
     /// <summary>Build the QBO API request for a delivery, or null when the event is unmapped (skip).
     /// Throws with a clear message when the connector is misconfigured / not authorized.</summary>
-    public static async Task<HttpRequestMessage?> BuildRequest(HttpClient http, Dictionary<string, object?> integ, string eventType, string payloadRaw)
+    public static async Task<HttpRequestMessage?> BuildRequest(Db db, HttpClient http, Dictionary<string, object?> integ, string eventType, string payloadRaw)
     {
         var config = ParseConfig(H.Str(integ["config"]));
         if (config.realmId.Length == 0) throw new Exception("QuickBooks not configured — set the company (realm) id.");
@@ -101,7 +102,8 @@ public static class QuickBooksConnector
         var mapped = Map(eventType, data, config.itemRef);
         if (mapped is null) return null;
 
-        var token = await EnsureAccessToken(http, config, ParseSecret(H.Str(integ["secret"])));
+        var integId = H.L(integ["id"]);
+        var token = await EnsureAccessToken(db, http, integId, config, ParseSecret(H.Str(integ["secret"])));
         var apiBase = (config.apiBase ?? (config.environment == "sandbox" ? SandboxBase : ProdBase)).TrimEnd('/');
         var url = $"{apiBase}/v3/company/{Uri.EscapeDataString(config.realmId)}/{mapped.Value.entity}?minorversion={MinorVersion}";
         var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(mapped.Value.body, Encoding.UTF8, "application/json") };
@@ -112,8 +114,9 @@ public static class QuickBooksConnector
     }
 
     /// <summary>A manually-set access token wins; otherwise exchange the refresh token for one. With neither,
-    /// the connector is not authorized — surface that clearly instead of failing opaquely.</summary>
-    static async Task<string> EnsureAccessToken(HttpClient http, Config config, (string? clientSecret, string? refreshToken, string? accessToken) secret)
+    /// the connector is not authorized — surface that clearly instead of failing opaquely.
+    /// Rotated refresh/access tokens from Intuit are persisted encrypted (EXT-P1-05).</summary>
+    static async Task<string> EnsureAccessToken(Db db, HttpClient http, long integId, Config config, (string? clientSecret, string? refreshToken, string? accessToken) secret)
     {
         if (secret.accessToken is { Length: > 0 } at) return at;
         if (secret.refreshToken is { Length: > 0 } rt && config.clientId is { Length: > 0 } cid && secret.clientSecret is { Length: > 0 } cs)
@@ -129,7 +132,23 @@ public static class QuickBooksConnector
             var txt = await resp.Content.ReadAsStringAsync();
             if (!resp.IsSuccessStatusCode) throw new Exception($"QuickBooks token refresh failed (HTTP {(int)resp.StatusCode})");
             using var doc = JsonDocument.Parse(txt);
-            if (doc.RootElement.TryGetProperty("access_token", out var atEl) && atEl.GetString() is { Length: > 0 } fresh) return fresh;
+            if (doc.RootElement.TryGetProperty("access_token", out var atEl) && atEl.GetString() is { Length: > 0 } fresh)
+            {
+                var newRefresh = doc.RootElement.TryGetProperty("refresh_token", out var rtEl) && rtEl.GetString() is { Length: > 0 } nr ? nr : rt;
+                try
+                {
+                    var blob = JsonSerializer.Serialize(new Dictionary<string, string>
+                    {
+                        ["client_secret"] = cs,
+                        ["refresh_token"] = newRefresh,
+                        ["access_token"] = fresh,
+                    });
+                    db.Execute("UPDATE integrations SET secret=?, updated_at=datetime('now') WHERE id=?",
+                        Security.EncryptSecret(blob) ?? blob, integId);
+                }
+                catch (Exception e) { Console.Error.WriteLine($"[qbo] token persist failed: {e.Message}"); }
+                return fresh;
+            }
             throw new Exception("QuickBooks token refresh returned no access token");
         }
         throw new Exception("QuickBooks not authorized — provide an access token, or a refresh token with the app's client id/secret (OAuth).");

@@ -13,7 +13,8 @@ namespace PCI.Backend.Core;
 ///   • "s3" — any S3-compatible object store. Requires S3_BUCKET; optional S3_ENDPOINT (for MinIO/R2/…,
 ///     forces path-style addressing), S3_REGION (default us-east-1). Credentials via the standard AWS env
 ///     vars (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY) or the SDK's default chain. If S3 is selected but
-///     S3_BUCKET is missing, the app falls back to local with a startup warning (never silently drops data).
+///     S3_BUCKET is missing, production refuses to boot (EXT-P1-09); non-production logs an error and
+///     does not silently treat incomplete S3 as a working local backend when STORAGE_PROVIDER=s3.
 ///
 /// A stored reference looks like:  local:ev/ab/abcd…ef.jpg  or  s3:ev/ab/abcd…ef.jpg
 /// (provider:relativePath). Get() routes by the reference prefix, so a deployment can migrate from local
@@ -34,7 +35,11 @@ public static class Storage
     // ---- S3 configuration (env-gated seam, now wired) ----
     static string? S3Bucket => Environment.GetEnvironmentVariable("S3_BUCKET");
     static bool S3Configured => Provider == "s3" && !string.IsNullOrEmpty(S3Bucket);
-    public static bool UsingLocal => !S3Configured && (Provider == "local" || !KnownProviders.Contains(Provider) || Provider == "s3");
+    /// <summary>True when the effective backend is local disk. In production, selecting S3 without a
+    /// complete config is a hard boot failure (EXT-P1-09) — never silently fall back.</summary>
+    public static bool UsingLocal => !S3Configured && (Provider == "local" || (!KnownProviders.Contains(Provider) && Provider != "s3"));
+    /// <summary>True when STORAGE_PROVIDER=s3 but required settings are incomplete.</summary>
+    public static bool S3Misconfigured => Provider == "s3" && !S3Configured;
     static readonly HashSet<string> KnownProviders = new() { "local", "s3" };
 
     static Amazon.S3.IAmazonS3? _s3;
@@ -84,6 +89,8 @@ public static class Storage
         var shard = sha[..2];
         var rel = $"{Sanitise(category)}/{shard}/{sha}{ext}";
         var enc = Security.EncryptBytes(bytes);
+        if (S3Misconfigured)
+            throw new InvalidOperationException("STORAGE_PROVIDER=s3 but S3_BUCKET is not set — refusing local-disk fallback (EXT-P1-09).");
         if (S3Configured)
         {
             var put = new Amazon.S3.Model.PutObjectRequest

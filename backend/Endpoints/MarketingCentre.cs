@@ -610,12 +610,14 @@ public static class MarketingCentre
         });
         app.MapPost("/api/webhooks/meta-leads", async (HttpContext ctx) =>
         {
-            // Incremental hardening: when META_APP_SECRET is configured, require a valid X-Hub-Signature-256
-            // (HMAC-SHA256 of the raw body) so lead events can't be forged. Not configured → accept (keeps
-            // existing/dev flows working); this is the same non-breaking gate the rest of the seam uses.
+            // EXT-P1-02 — fail CLOSED without META_APP_SECRET. Missing configuration must return a
+            // non-success result and create no lead/job. When configured, require a valid
+            // X-Hub-Signature-256 (HMAC-SHA256 of the raw body).
             var raw = await H.RawString(ctx.Request);
             var appSecret = Environment.GetEnvironmentVariable("META_APP_SECRET");
-            if (!string.IsNullOrEmpty(appSecret) && !Security.VerifyHubSignature(
+            if (string.IsNullOrEmpty(appSecret))
+                return Results.Json(new { error = "webhook_not_configured", message = "META_APP_SECRET is required to accept Meta Lead Ads webhooks." }, statusCode: 503);
+            if (!Security.VerifyHubSignature(
                     ctx.Request.Headers["X-Hub-Signature-256"].ToString(), System.Text.Encoding.UTF8.GetBytes(raw), appSecret))
                 return Results.Json(new { error = "bad_signature" }, statusCode: 401);
             var b = H.MapFrom(raw);
@@ -630,6 +632,11 @@ public static class MarketingCentre
                                 {
                                     var leadgenId = val.TryGetProperty("leadgen_id", out var lg) ? lg.GetString() : null;
                                     if (string.IsNullOrEmpty(leadgenId)) continue;
+                                    // Deduplicate by leadgen id via webhook_events ledger (replay protection).
+                                    var (_, evChanges) = db.ExecuteWithChanges(
+                                        "INSERT OR IGNORE INTO webhook_events(provider,event_id,status) VALUES('meta_leads',?,'processed')",
+                                        "leadgen:" + leadgenId);
+                                    if (evChanges == 0) continue;
                                     var formId = val.TryGetProperty("form_id", out var fm) ? fm.GetString() : null;
                                     // Create a stub keyed by the leadgen id (dedup), then fetch details via the API.
                                     var lid = UpsertLead("meta", $"meta:leadgen:{leadgenId}", null, null, null, null, null, null, null, false, null,
@@ -640,7 +647,7 @@ public static class MarketingCentre
                 try { MarketingJobDispatcher.DrainOnce(db, 5); } catch { }
             }
             catch (Exception e) { Console.Error.WriteLine($"[mkt] meta-leads webhook: {e.Message}"); }
-            return Results.Ok(new { ok = true });   // always 200 so the provider doesn't retry-storm
+            return Results.Ok(new { ok = true });
         });
     }
 }

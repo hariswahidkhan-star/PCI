@@ -145,7 +145,7 @@ public static class AdminI18n
             Set("translate_model", H.GetS(b, "model"));
             Set("translate_endpoint", H.GetS(b, "endpoint"));
             var key = H.GetS(b, "api_key");                       // only overwrite when a new key is supplied
-            if (key is { Length: > 0 }) Set("translate_api_key", key);
+            if (key is { Length: > 0 }) Set("translate_api_key", Security.EncryptSecret(key)); // EXT-P1-03
             log(adm!.Id, "i18n.config", provider);
             return J(new { ok = true, configured = Translator.IsConfigured(db) });
         });
