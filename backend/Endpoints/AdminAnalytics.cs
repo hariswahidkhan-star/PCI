@@ -61,8 +61,8 @@ public static class AdminAnalytics
             var sb = new StringBuilder("created_at,event,path,visitor,country,device,browser,utm_source,utm_medium,utm_campaign,referrer,landing,value,currency\n");
             foreach (var r in db.Query("SELECT * FROM analytics_events WHERE created_at>=? ORDER BY id DESC LIMIT 50000", since))
             {
-                sb.Append(string.Join(',', new[] { "created_at", "event", "path", "visitor", "country", "device", "browser", "utm_source", "utm_medium", "utm_campaign", "referrer", "landing", "value", "currency" }
-                    .Select(k => Csv.Cell(r[k])))).Append('\n');
+                string F(string k) => Csv.Field(r[k]);   // SEC-2: RFC-4180 quote + formula-injection guard
+                sb.Append(string.Join(',', new[] { "created_at", "event", "path", "visitor", "country", "device", "browser", "utm_source", "utm_medium", "utm_campaign", "referrer", "landing", "value", "currency" }.Select(F))).Append('\n');
             }
             return Results.Text(sb.ToString(), "text/csv", Encoding.UTF8);
         }));

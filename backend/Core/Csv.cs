@@ -1,18 +1,37 @@
-using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace PCI.Backend.Core;
 
-/// <summary>CSV cell encoding for administrator downloads. Besides RFC-4180 quoting, string cells
-/// that spreadsheet software could execute as formulas are forced to text. Numeric CLR values stay
-/// numeric, so legitimate negative amounts are not changed.</summary>
+/// <summary>
+/// RFC-4180 CSV field encoding that is also safe against spreadsheet formula injection
+/// (CWE-1236 / "CSV injection"). A NON-NUMERIC value whose first character is a formula trigger
+/// (<c>= + - @</c>) or a control character (TAB / CR / LF) is prefixed with a single quote so Excel,
+/// Google Sheets and LibreOffice render it as literal text and never evaluate it as a formula.
+/// Genuine numbers (including negatives like <c>-5</c> and signed decimals like <c>+3.5</c>) are left
+/// intact, so numeric columns are not corrupted. The result is then quoted when it contains a comma,
+/// double-quote, or newline.
+///
+/// SEC-2: every CSV export must route user-influenced fields through this helper. Attacker-controlled
+/// analytics/marketing fields (utm_source, referrer, landing, …) and partner-portal fields flow into
+/// exports that admins open in a spreadsheet; without neutralisation a crafted value such as
+/// <c>=HYPERLINK("http://evil","click")</c> or <c>=cmd|'/c calc'!A1</c> would execute on open.
+/// </summary>
 public static class Csv
 {
-    static readonly Regex Formula = new(@"^[\t\r\n ]*[=+\-@]", RegexOptions.Compiled);
+    static readonly char[] Triggers = { '=', '+', '-', '@' };
+    static readonly char[] MustQuote = { ',', '"', '\n', '\r' };
 
-    public static string Cell(object? value)
+    public static string Field(object? value)
     {
-        var text = H.Str(value) ?? value?.ToString() ?? "";
-        if (value is string && Formula.IsMatch(text)) text = "'" + text;
-        return Regex.IsMatch(text, "[\",\r\n]") ? "\"" + text.Replace("\"", "\"\"") + "\"" : text;
+        var s = H.Str(value) ?? value?.ToString() ?? "";
+        // Spreadsheet engines ignore leading whitespace before a formula marker, so inspect the first
+        // non-whitespace character. Preserve genuine numbers (including signed values with whitespace).
+        var leadingControl = s.Length > 0 && s[0] is '\t' or '\r' or '\n';
+        var first = 0;
+        while (first < s.Length && char.IsWhiteSpace(s[first])) first++;
+        if ((leadingControl || (first < s.Length && System.Array.IndexOf(Triggers, s[first]) >= 0))
+            && !double.TryParse(s, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out _))
+            s = "'" + s;
+        return s.IndexOfAny(MustQuote) >= 0 ? "\"" + s.Replace("\"", "\"\"") + "\"" : s;
     }
 }
