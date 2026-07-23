@@ -15,6 +15,9 @@ tests/_integration_storage/
 tests/_impersonation.db*
 tests/_impersonation_storage/
 tests/_impersonation_boot.log
+tests/_retake_wait.db*
+tests/_retake_wait_storage/
+tests/_retake_wait_boot.log
 tests/_server_boot.log
 tests/_sweep*
 tests/_s3*

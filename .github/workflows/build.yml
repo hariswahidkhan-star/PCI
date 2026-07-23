@@ -85,6 +85,10 @@ jobs:
       - name: Impersonation read-only regression (P0-1 — central fail-closed enforcement)
         run: python3 tests/impersonation_readonly_test.py
 
+      - name: Retake waiting-period regression (P0-7 — persisted, enforced at booking, admin-waivable)
+        run: python3 tests/retake_wait_test.py
+
+
       - name: Founding-stage suite (codes, applications, waiver settlement)
         run: python3 tests/founding_test.py
 
