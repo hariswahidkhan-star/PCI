@@ -355,6 +355,38 @@ app.Use(async (ctx, next) =>
     await next();
 });
 
+// ========= impersonation ("view as student") is READ-ONLY — enforced centrally (P0-1) =========
+// A "view as student" session grants staff the SAME READ access as the student so support can see exactly
+// what the member sees — but it must NEVER change the member's data. Rather than trusting every student
+// endpoint to remember its own guard (several did not: 2FA/session, erasure, reviews, directory consent,
+// appeals/accommodations, events, Stripe portal/subscribe, preferences, messages, tickets, …), this
+// middleware fails CLOSED for every state-changing HTTP method: any impersonation-token request that is not
+// a safe read (GET/HEAD/OPTIONS) is refused with a stable 403 `impersonation_readonly` before it can reach
+// an endpoint. Per-endpoint checks stay in place as defence in depth. The refused attempt is written to the
+// impersonation ledger so the audit trail also covers blocked mutations (who/what/where).
+app.Use(async (ctx, next) =>
+{
+    var method = ctx.Request.Method;
+    var isSafe = HttpMethods.IsGet(method) || HttpMethods.IsHead(method) || HttpMethods.IsOptions(method);
+    if (!isSafe && Auth.ImpersonationToken(ctx.Request, db) is { } imp)
+    {
+        if (imp.SessionId > 0)
+        {
+            try
+            {
+                db.Execute("UPDATE impersonation_sessions SET last_seen_at=datetime('now') WHERE id=?", imp.SessionId);
+                db.Execute("INSERT INTO impersonation_events(session_id,method,path) VALUES(?,?,?)",
+                    imp.SessionId, method + " [blocked]", ctx.Request.Path.ToString());
+            }
+            catch { }
+        }
+        ctx.Response.StatusCode = 403;
+        await ctx.Response.WriteAsJsonAsync(new { error = "impersonation_readonly", message = "This action is disabled in support view." });
+        return;
+    }
+    await next();
+});
+
 // ================= health =================
 app.MapGet("/api/health", () => Json(new { ok = true, service = "pci-backend", time = DateTime.UtcNow.ToString("o"), recovery_configured = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ADMIN_RECOVERY_CODE")) }));
 
