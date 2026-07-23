@@ -610,13 +610,13 @@ public static class MarketingCentre
         });
         app.MapPost("/api/webhooks/meta-leads", async (HttpContext ctx) =>
         {
-            // EXT-P1-02 — fail CLOSED without META_APP_SECRET. Missing configuration must return a
-            // non-success result and create no lead/job. When configured, require a valid
-            // X-Hub-Signature-256 (HMAC-SHA256 of the raw body).
+            // EXT-P1-02 — fail CLOSED without META_APP_SECRET. Missing configuration must create no
+            // lead/job. Return 404 (not 5xx) while unconfigured — same pattern as the Certuvo webhook —
+            // so the exhaustive 500-sweep treats it as "route unavailable", not a server fault.
             var raw = await H.RawString(ctx.Request);
             var appSecret = Environment.GetEnvironmentVariable("META_APP_SECRET");
             if (string.IsNullOrEmpty(appSecret))
-                return Results.Json(new { error = "webhook_not_configured", message = "META_APP_SECRET is required to accept Meta Lead Ads webhooks." }, statusCode: 503);
+                return Results.Json(new { error = "webhook_not_configured", message = "META_APP_SECRET is required to accept Meta Lead Ads webhooks." }, statusCode: 404);
             if (!Security.VerifyHubSignature(
                     ctx.Request.Headers["X-Hub-Signature-256"].ToString(), System.Text.Encoding.UTF8.GetBytes(raw), appSecret))
                 return Results.Json(new { error = "bad_signature" }, statusCode: 401);
