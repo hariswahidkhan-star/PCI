@@ -198,6 +198,11 @@ public static class SimLabSchema
         SeedScenario(db, "SD-ESC-001", "Measure schedule performance in time (Earned Schedule)", "scenario", "Software", "advanced", 18,
             "[\"schedule_analysis\",\"forecasting\"]", "Read Earned Schedule off the planned-value curve: schedule variance and index in time units, and an independent time forecast.",
             ConfigEarnedSchedule);
+
+        // Full house content pack. The original starter seeds above remain for backward compatibility;
+        // the pack then densifies house-authored rows and adds the rest of the catalogue without touching
+        // operator-authored scenarios (authored_by IS NOT NULL).
+        SimLabContentPack.Seed(db);
     }
 
     static void SeedScenario(Db db, string code, string title, string kind, string industry, string difficulty,
