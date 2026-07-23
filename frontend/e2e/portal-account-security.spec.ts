@@ -183,6 +183,7 @@ test.describe('student account recovery, onboarding and security', () => {
 
     await page.goto('/app/profile')
     await expect(page.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible({ timeout: 30_000 })
+    await expect(page.getByRole('heading', { name: 'Two-factor authentication (2FA)' })).toBeVisible({ timeout: 30_000 })
     await expect(page.getByRole('button', { name: 'Turn off 2FA' })).toBeVisible({ timeout: 30_000 })
     page.once('dialog', async (dialog) => {
       expect(dialog.type()).toBe('prompt')

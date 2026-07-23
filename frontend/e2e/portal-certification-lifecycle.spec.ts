@@ -92,10 +92,16 @@ test.describe('complete certification lifecycle', () => {
     }
     await page.locator('#rSubmit').click()
     await page.locator('#mOK').waitFor({ state: 'attached', timeout: 15_000 })
+    // Modal animation / overlay makes Playwright's actionability click flaky; fire the bound handler
+    // directly and wait for the real submit round-trip before asserting the PASS verdict.
+    const examSubmit = page.waitForResponse((response) =>
+      response.url().endsWith('/api/me/exam/submit') && response.request().method() === 'POST', { timeout: 60_000 })
     await page.evaluate(() => {
       const btn = document.getElementById('mOK') as HTMLButtonElement | null
       if (btn) btn.click()
     })
+    const submitted = await examSubmit
+    expect(submitted.ok(), `exam submit should succeed (got ${submitted.status()})`).toBeTruthy()
     await expect(page.locator('.verdict')).toHaveText(/PASS/i, { timeout: 60_000 })
     await captureStoryEvidence(page, testInfo, 'D5-D6', 'exam-pass')
     const issued = await page.locator('.tag.gold').innerText()

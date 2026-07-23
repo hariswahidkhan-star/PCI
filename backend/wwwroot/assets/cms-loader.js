@@ -12,17 +12,20 @@
   /* publish the resolved base so inline form handlers on this page pick up the same-origin default */
   window.PCI_API_BASE=BASE;
 
-  /* Newsletter must bind even when /api/content is slow/unavailable — otherwise Subscribe is a no-op. */
+  /* Newsletter must bind even when /api/content is slow/unavailable — otherwise Subscribe is a no-op.
+     Use capture phase so we read the email before the static footer handler clears the input. */
   var btn=document.getElementById('nlBtn'), em=document.getElementById('nlEmail');
   if(btn&&em){
-    btn.addEventListener('click',function(){
+    btn.addEventListener('click',function(ev){
       var v=(em.value||'').trim();
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ em.focus(); return; }
+      /* Stop the static thank-you handler from clearing the field / faking success. */
+      if(ev&&ev.stopImmediatePropagation) ev.stopImmediatePropagation();
       btn.disabled=true;
       fetch(BASE+'/api/newsletter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v})})
         .then(function(){btn.textContent='Subscribed \u2713';})
         .catch(function(){btn.disabled=false;});
-    });
+    },true);
   }
 
   var ctrl=('AbortController' in window)?new AbortController():null;
