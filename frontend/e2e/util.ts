@@ -122,6 +122,22 @@ export async function storyScreenshot(page: Page, testInfo: TestInfo, name: stri
   await page.screenshot({ path: testInfo.outputPath(`${name}.png`), fullPage: true })
 }
 
+/** Dismiss the public cookie banner / overlays that can intercept clicks on static auth pages. */
+export async function dismissPublicOverlays(page: Page): Promise<void> {
+  const accept = page.locator('#ckAccept')
+  if (await accept.isVisible().catch(() => false)) {
+    await accept.click()
+  }
+  await page.evaluate(() => {
+    try {
+      localStorage.setItem('pci-cookie-consent', 'essential')
+    } catch {
+      /* ignore */
+    }
+    document.getElementById('ckBanner')?.classList.remove('show')
+  })
+}
+
 export async function certificationId(request: APIRequestContext, code: string): Promise<number> {
   const res = await request.get('/api/certifications')
   expect(res.ok(), `certifications should load (got ${res.status()})`).toBeTruthy()

@@ -13,7 +13,7 @@ test.describe('admin operations workflows', () => {
     const session = (await start.json()) as { token: string; login_url: string }
 
     await page.goto(session.login_url)
-    await expect(page.getByRole('status')).toContainText(/support view/i)
+    await expect(page.locator('.impersonation-banner')).toContainText(/support view/i)
     await expect(page.getByText(student.email).first()).toBeVisible()
     await storyScreenshot(page, testInfo, 'impersonation-banner')
 

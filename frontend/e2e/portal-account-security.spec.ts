@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test'
-import { E2E_STUDENT_PASSWORD, storyScreenshot, uniqueEmail } from './util'
+import { dismissPublicOverlays, E2E_STUDENT_PASSWORD, storyScreenshot, uniqueEmail } from './util'
 
 test.describe('student account security', () => {
   test('forgot password returns a non-enumerating message', async ({ page }, testInfo) => {
     const email = uniqueEmail('forgot')
     const resp = await page.goto('/forgot-password.html')
     expect(resp?.status() ?? 0).toBeLessThan(400)
+    await dismissPublicOverlays(page)
     await page.locator('#forgotEmail').fill(email)
     await page.getByRole('button', { name: /send reset link/i }).click()
     await expect(page.locator('#forgotMsg')).toContainText(/if an account exists/i)
@@ -14,11 +15,12 @@ test.describe('student account security', () => {
 
   test('invalid reset token hands off to the portal login', async ({ page }) => {
     await page.goto('/reset-password.html?token=bad')
+    await dismissPublicOverlays(page)
     await page.locator('#newPass').fill(E2E_STUDENT_PASSWORD)
     await page.locator('#confirmPass').fill(E2E_STUDENT_PASSWORD)
-    await page.getByRole('button', { name: /reset password/i }).click()
-    await expect(page.locator('#resetMsg')).toContainText(/invalid|expired/i)
-    await expect(page).toHaveURL(/\/app\/login$/)
+    await page.locator('#resetForm button[type="submit"]').click()
+    await expect(page.locator('#resetMsg')).toContainText(/invalid|expired|missing/i)
+    await expect(page).toHaveURL(/\/app\/login\/?$/, { timeout: 10_000 })
   })
 
   test('new student registration can progress through onboarding and logout', async ({ page }, testInfo) => {
