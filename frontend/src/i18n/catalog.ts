@@ -23,6 +23,7 @@ export const CATALOG: Record<string, Entry> = {
   'nav.credentials': { en: 'Credentials', ko: '자격 증명', ar: 'الاعتمادات', es: 'Credenciales', fr: 'Attestations', zh: '证书', ru: 'Удостоверения' },
   'nav.cpd': { en: 'CPD', ko: '보수교육(CPD)', ar: 'التطوير المهني', es: 'DPC', fr: 'DPC', zh: '继续专业发展', ru: 'НПР' },
   'nav.certuvo': { en: 'Certuvo', ko: 'Certuvo', ar: 'Certuvo', es: 'Certuvo', fr: 'Certuvo', zh: 'Certuvo', ru: 'Certuvo' },
+  'nav.lab': { en: 'Practice Lab', ko: '실습 랩', ar: 'مختبر التطبيق', es: 'Laboratorio de práctica', fr: 'Labo de pratique', zh: '实操实验室', ru: 'Практическая лаборатория' },
   'nav.billing': { en: 'Billing', ko: '결제', ar: 'الفواتير', es: 'Facturación', fr: 'Facturation', zh: '账单', ru: 'Оплата' },
   'nav.resources': { en: 'Resources', ko: '자료', ar: 'الموارد', es: 'Recursos', fr: 'Ressources', zh: '资源', ru: 'Ресурсы' },
   'nav.documents': { en: 'Documents', ko: '문서', ar: 'المستندات', es: 'Documentos', fr: 'Documents', zh: '文档', ru: 'Документы' },

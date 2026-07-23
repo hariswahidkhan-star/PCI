@@ -3165,8 +3165,55 @@ def run(proc):
     test_admin_extra_gaps(admin)
     test_proctoring_analytics_gaps(admin)
     test_time_sweeps(admin)
+    test_simlab(admin)
 
     print("\n(assertions complete)")
+
+def test_simlab(admin):
+    # PCI AI Project Controls Simulation Lab — Phase 1 foundation: live entitlement + published catalogue.
+    # The Lab reuses the existing student account; access is computed from membership / exam entitlement /
+    # explicit grant (never a parallel account), and the catalogue serves only PUBLISHED applied-practice
+    # labs (distinct from Certuvo's external MCQ prep). Verified on both SQLite and MySQL.
+    print("\n=== 43. Simulation Lab — access entitlement + published catalogue (Phase 1) ===")
+    c, _ = jget("GET", "/api/me/lab/access")
+    chk("43a anonymous is blocked from lab access (401)", c == 401, c)
+
+    btok, buid = register_student("simlab-bare@ex.co")
+    c, ba = jget("GET", "/api/me/lab/access", token=btok)
+    chk("43b bare student: enabled, no access yet, friendly reason (never a raw error)",
+        c == 200 and ba.get("enabled") is True and ba.get("has_access") is False and bool(ba.get("reason")), ba)
+    c, bc = jget("GET", "/api/me/lab/catalogue", token=btok)
+    chk("43c bare student: catalogue is access-gated (403 no_access, carries the access blob)",
+        c == 403 and bc.get("error") == "no_access" and isinstance(bc.get("access"), dict), bc)
+
+    mtok, muid = make_paid_user("simlab-member@ex.co")  # bundle → active membership
+    c, ma = jget("GET", "/api/me/lab/access", token=mtok)
+    chk("43d member: has access via active membership (source=membership)",
+        c == 200 and ma.get("has_access") is True and ma.get("source") == "membership", ma)
+
+    c, cat = jget("GET", "/api/me/lab/catalogue", token=mtok)
+    rows = cat.get("rows", []); codes = {r.get("scenario_code") for r in rows}
+    chk("43e member: catalogue lists the seeded PUBLISHED labs with codes",
+        c == 200 and len(rows) >= 4 and {"GL-WBS-001", "GL-EVM-001", "SD-EVM-001", "GL-SCH-001"} <= codes, (len(rows), sorted(codes)[:8]))
+    first = rows[0] if rows else {}
+    chk("43f catalogue rows carry the applied-practice shape (kind + difficulty + competencies[])",
+        bool(first.get("kind")) and bool(first.get("difficulty")) and isinstance(first.get("competencies"), list), first)
+    chk("43g a member who hasn't started sees no attempt status on any lab",
+        all(r.get("attempt_status") is None for r in rows), [r.get("attempt_status") for r in rows][:4])
+
+    # No draft/unpublished scenario ever leaks into the student catalogue.
+    con = dbconn(); con.execute("INSERT INTO simulation_scenarios(scenario_code,title,kind,status) VALUES(?,?,?,?)",
+                                ("DRAFT-XYZ", "Hidden draft", "guided_lab", "draft")); con.commit(); con.close()
+    c, cat2 = jget("GET", "/api/me/lab/catalogue", token=mtok)
+    chk("43h a DRAFT scenario is never served to students",
+        "DRAFT-XYZ" not in {r.get("scenario_code") for r in cat2.get("rows", [])}, "draft leaked" )
+
+    # An explicit, in-window complimentary grant confers access even without a membership (source=grant).
+    con = dbconn(); con.execute("INSERT INTO simulation_entitlements(user_id,source,status,expires_at) VALUES(?,?,?,datetime('now','+30 day'))",
+                                (buid, "complimentary", "active")); con.commit(); con.close()
+    c, ba2 = jget("GET", "/api/me/lab/access", token=btok)
+    chk("43i an explicit complimentary grant confers access (source=grant)",
+        c == 200 and ba2.get("has_access") is True and ba2.get("source") == "grant", ba2)
 
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
