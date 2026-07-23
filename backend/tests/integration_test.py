@@ -3292,6 +3292,17 @@ def test_simlab(admin):
         c == 200 and coach3.get("ok") is False and coach3.get("source") == "assessment" and "999" not in coach3.get("message", ""),
         (c, coach3.get("source")))
 
+    # ---- admin scenario catalogue: all statuses + per-scenario practice aggregates (gated 'content') ----
+    c, adm = jget("GET", "/api/admin/lab/scenarios", token=admin)
+    arows = adm.get("rows", []); acodes = {r.get("scenario_code"): r for r in arows}
+    chk("43x admin scenario list shows all scenarios incl. the DRAFT, with published count",
+        c == 200 and adm.get("total", 0) >= 5 and adm.get("published", 0) >= 4 and acodes.get("DRAFT-XYZ", {}).get("status") == "draft", (c, adm.get("total"), adm.get("published")))
+    ev_admin = acodes.get("GL-EVM-001", {})
+    chk("43y the admin list carries per-scenario practice aggregates (attempts/completed)",
+        ev_admin.get("attempts", 0) >= 1 and ev_admin.get("completed", 0) >= 1 and ev_admin.get("interactive") is True, ev_admin)
+    c, _ = jget("GET", "/api/admin/lab/scenarios", token=mtok)  # a student token is not an admin
+    chk("43z the admin scenario list is not reachable with a student token", c in (401, 403), c)
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.

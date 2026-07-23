@@ -986,6 +986,7 @@ PCI.Backend.Endpoints.AdminSeo.Map(app, db, logFn, GateFn, webRoot);   // Admin 
 PCI.Backend.Endpoints.AdminAnalytics.Map(app, db, GateFn);             // Admin Console → Analytics (/api/admin/analytics/...)
 PCI.Backend.Endpoints.AdminAiVisibility.Map(app, db, logFn, GateFn, webRoot); // Admin Console → AI Visibility (/api/admin/ai-visibility/...)
 PCI.Backend.Endpoints.AdminIntegrations.Map(app, db, logFn, GateFn);   // Admin Console → Integrations / ERP (/api/admin/integrations/...)
+PCI.Backend.Endpoints.AdminSimLab.Map(app, db, logFn, GateFn);         // Admin Console → Simulation Lab (/api/admin/lab/scenarios)
 PCI.Backend.Core.ExamDeliveryConnectors.Register();                    // register the 5 exam-delivery vendor connectors
 PCI.Backend.Endpoints.AdminExamDelivery.Map(app, db, logFn, GateFn);   // Admin Console → Exam Delivery (/api/admin/exam-delivery/...) + inbound callbacks
 PCI.Backend.Endpoints.AdminOps.Map(app, db, logFn, GateFn);            // operator toolkit: mark-paid, test users, student journey, Certuvo config
