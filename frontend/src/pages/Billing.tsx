@@ -50,7 +50,14 @@ function PlansCard() {
   const [certSel, setCertSel] = useState('')
   const [code, setCode] = useState('')
   const [codeProduct, setCodeProduct] = useState<'membership' | 'exam' | 'bundle'>('exam')
-  const [codePreview, setCodePreview] = useState<{ valid: boolean; message?: string; code_amount?: number; final_amount?: number } | null>(null)
+  const [codePreview, setCodePreview] = useState<{
+    valid: boolean
+    message?: string
+    applies_to?: string
+    code_amount?: number
+    final_amount?: number
+    savings?: number
+  } | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
 
@@ -103,13 +110,19 @@ function PlansCard() {
       // Validate a discount/founding code BEFORE opening Stripe, for THIS product — so an invalid or
       // wrong-product code is caught here instead of silently charging full price at checkout.
       const c = code.trim()
+      const certForProduct = product === 'exam' || product === 'bundle' ? certSel || undefined : product === 'recert' ? opts.cert : undefined
       if (c) {
-        const v = await api.post<{ valid: boolean; message?: string }>('/api/validate-code', {
-          code: c,
-          product,
-          email: me!.user.email,
-          cert: product === 'exam' || product === 'bundle' ? certSel || undefined : product === 'recert' ? opts.cert : undefined,
-        })
+        const validateBody: Record<string, unknown> = { code: c, product, email: me!.user.email }
+        if (certForProduct) validateBody.cert = certForProduct
+        const v = await api.post<{
+          valid: boolean
+          message?: string
+          applies_to?: string
+          code_amount?: number
+          final_amount?: number
+          savings?: number
+        }>('/api/validate-code', validateBody)
+        setCodePreview(v)
         if (!v.valid) {
           setErr(v.message || t('billing.codeInvalid'))
           setBusy(null)
@@ -119,7 +132,7 @@ function PlansCard() {
       await startCheckout({
         product,
         email: me!.user.email,
-        cert: product === 'exam' || product === 'bundle' ? certSel || undefined : product === 'recert' ? opts.cert : undefined,
+        cert: certForProduct,
         code: c || undefined,
         first: me!.user.first_name ?? undefined,
         last: me!.user.last_name ?? undefined,
@@ -302,10 +315,20 @@ function PlansCard() {
       </div>
       {codePreview && (
         <div className={'notice' + (codePreview.valid ? '' : ' err')} role="status" style={{ marginTop: '.65rem' }}>
-          {codePreview.message || (codePreview.valid ? 'Code is valid.' : t('billing.codeInvalid'))}
-          {codePreview.valid && codePreview.code_amount != null && codePreview.final_amount != null && (
-            <> Saves <strong>{fmtMoney(codePreview.code_amount, pricing?.currency ?? 'USD')}</strong>; preview total{' '}
-              <strong>{fmtMoney(codePreview.final_amount, pricing?.currency ?? 'USD')}</strong>.</>
+          {codePreview.valid ? (
+            <>
+              <strong>Discount preview:</strong>{' '}
+              applies to {codePreview.applies_to === 'exam' ? 'exam fee' : codePreview.applies_to === 'membership' ? 'membership' : 'membership and exam fees'}
+              {codePreview.code_amount != null && codePreview.final_amount != null && (
+                <>
+                  {' '}· savings {fmtMoney(codePreview.code_amount ?? codePreview.savings ?? 0, pricing?.currency ?? 'USD')}
+                  {' '}· final amount {fmtMoney(codePreview.final_amount, pricing?.currency ?? 'USD')}
+                </>
+              )}
+              {codePreview.message ? <> — {codePreview.message}</> : null}
+            </>
+          ) : (
+            codePreview.message || t('billing.codeInvalid')
           )}
         </div>
       )}
