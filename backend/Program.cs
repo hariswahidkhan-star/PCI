@@ -620,11 +620,32 @@ app.MapPost("/api/admin/auth/recover", async (HttpRequest req) =>
     return Json(new { ok = true });
 });
 
-// ---- optional TOTP MFA for privileged accounts: enrol (pending) → verify (active) → disable ----
+// ---- optional TOTP MFA for privileged accounts: status + enrol (pending) → verify (active) → disable ----
+app.MapGet("/api/admin/me/2fa", (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    var r = db.QueryOne("SELECT totp_secret,totp_recovery FROM admin_users WHERE id=?", a.Id);
+    var secret = H.Str(r?["totp_secret"]) ?? "";
+    var pending = secret.StartsWith("pending:", StringComparison.Ordinal);
+    var enabled = secret.Length > 0 && !pending;
+    var recoveryRemaining = 0;
+    var rec = H.Str(r?["totp_recovery"]);
+    if (!string.IsNullOrWhiteSpace(rec))
+    {
+        try { recoveryRemaining = JsonSerializer.Deserialize<List<string>>(rec)?.Count ?? 0; }
+        catch { recoveryRemaining = 0; }
+    }
+    return Json(new { enabled, pending, recovery_remaining = recoveryRemaining });
+});
+
 app.MapPost("/api/admin/me/2fa/setup", (HttpRequest req) =>
 {
     var a = Auth.AdminFromReq(req, db);
     if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    var existing = db.Scalar<string>("SELECT totp_secret FROM admin_users WHERE id=?", a.Id) ?? "";
+    if (existing.Length > 0 && !existing.StartsWith("pending:", StringComparison.Ordinal))
+        return Results.Json(new { error = "already_enabled", message = "Two-factor authentication is already enabled for this account." }, statusCode: 409);
     var secret = Security.NewTotpSecret();
     // Stored as pending until the admin proves their authenticator works — enabling MFA can never lock
     // an account out on a mis-scanned QR.
@@ -1157,7 +1178,7 @@ app.Use(async (ctx, next) =>
             {
                 "pcp-ai" or "pcp" => "pcl-ai",
                 "pfip" or "pfip-ai" => "pfl-ai",
-                "cpmd" or "cpmd-ai" or "pml-ai" => "pdl-ai",
+                "cpmd" or "cpmd-ai" or "pdl-ai" => "pml-ai",
                 _ => null,
             };
             if (certRedirect is not null)

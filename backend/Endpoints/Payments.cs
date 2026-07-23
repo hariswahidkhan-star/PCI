@@ -78,7 +78,7 @@ public static class Payments
                 // advisory). If it's invalid or scoped to the other product, reject the checkout rather than
                 // silently dropping the discount and charging full price.
                 var codeStr = H.GetS(d, "code");
-                var codeVal = !string.IsNullOrWhiteSpace(codeStr) ? Public.ValidateCode(db, codeStr, product, email) : new Public.CodeValidation(null, null);
+                var codeVal = !string.IsNullOrWhiteSpace(codeStr) ? Public.ValidateCode(db, codeStr, product, email, certSelIn) : new Public.CodeValidation(null, null);
                 if (codeVal.Error is not null) return Results.Json(new { error = "code_invalid", message = codeVal.Error }, statusCode: 400);
                 var pr = Public.Pricing(db, product, codeVal.Code, certRow);
                 // A code with a configured floor cannot push the payable amount below it.

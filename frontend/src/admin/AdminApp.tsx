@@ -19,6 +19,7 @@ import Books from './pages/Books'
 import SupportInbox from './pages/SupportInbox'
 import ErasureRequests from './pages/ErasureRequests'
 import Casework from './pages/Casework'
+import CpdReview from './pages/CpdReview'
 import ForumModeration from './pages/ForumModeration'
 import MembershipUpgrades from './pages/MembershipUpgrades'
 import AdminEvents from './pages/Events'
@@ -97,6 +98,7 @@ export default function AdminApp() {
         <Route path="credentials" element={<Perm section="credentials"><Credentials /></Perm>} />
         <Route path="tickets" element={<Perm section="tickets"><Tickets /></Perm>} />
         <Route path="casework" element={<Perm section="tickets"><Casework /></Perm>} />
+        <Route path="cpd-review" element={<Perm section="members"><CpdReview /></Perm>} />
         <Route path="documents" element={<Perm section="documents"><Documents /></Perm>} />
         <Route path="erasure-requests" element={<Perm section="members"><ErasureRequests /></Perm>} />
         <Route path="membership-grades" element={<Perm section="members"><MembershipUpgrades /></Perm>} />

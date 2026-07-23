@@ -112,6 +112,22 @@ describe('Billing (in-portal purchasing)', () => {
     await waitFor(() => expect(h.startCheckout).toHaveBeenCalledWith(expect.objectContaining({ product: 'membership', code: 'SAVE10' })))
   })
 
+  it('validates exam codes with the selected certification and renders the discount preview', async () => {
+    const user = userEvent.setup()
+    h.post.mockResolvedValueOnce({ valid: true, applies_to: 'exam', code_amount: 45, final_amount: 255 })
+    h.startCheckout.mockResolvedValue(undefined)
+    renderWithProviders(<Billing />)
+    await user.type(screen.getByLabelText('Discount or founding code'), 'EXAM15')
+    await user.click(screen.getByRole('button', { name: 'Pay exam fee' }))
+    await waitFor(() =>
+      expect(h.post).toHaveBeenCalledWith('/api/validate-code', { code: 'EXAM15', product: 'exam', email: 'sam@example.com', cert: 'PCL-AI' }),
+    )
+    const preview = (await screen.findByText(/Discount preview:/)).closest('[role="status"]')
+    expect(preview).toHaveTextContent('applies to exam fee')
+    expect(preview).toHaveTextContent('$45.00')
+    expect(preview).toHaveTextContent('$255.00')
+  })
+
   it('pays the exam fee for the selected certification', async () => {
     const user = userEvent.setup()
     h.startCheckout.mockResolvedValue(undefined)

@@ -5,17 +5,60 @@ import { ApiError } from '../../api/client'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
 import { fmtDate, isPast } from '../../format'
 
+interface MemberOption { id: number; first_name?: string | null; last_name?: string | null; email?: string | null }
+interface CertOption { id: number; code: string; name: string }
+
 function IssueForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
-  const [f, setF] = useState({ credential_id: '', holder_name: '', credential: 'PCL-AI', expires_at: '' })
+  const [f, setF] = useState({ credential_id: '', holder_name: '', credential: '', user_id: '', certification_id: '', expires_at: '' })
+  const [members, setMembers] = useState<MemberOption[]>([])
+  const [certs, setCerts] = useState<CertOption[]>([])
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const set = (k: keyof typeof f, v: string) => setF((p) => ({ ...p, [k]: v }))
+
+  useEffect(() => {
+    let live = true
+    adminApi.get<{ rows: MemberOption[] }>('/api/admin/members?limit=500')
+      .then((d) => { if (live) setMembers(d.rows ?? []) })
+      .catch(() => { if (live) setMembers([]) })
+    adminApi.get<{ rows: CertOption[] }>('/api/certifications')
+      .then((d) => {
+        if (!live) return
+        setCerts(d.rows ?? [])
+        if (d.rows?.[0]?.id) setF((p) => p.certification_id ? p : ({ ...p, certification_id: String(d.rows[0].id) }))
+      })
+      .catch(() => { if (live) setCerts([]) })
+    return () => { live = false }
+  }, [])
+
+  function memberName(m?: MemberOption | null) {
+    return [m?.first_name, m?.last_name].filter(Boolean).join(' ').trim()
+  }
+
+  function chooseUser(id: string) {
+    const m = members.find((x) => String(x.id) === id)
+    setF((p) => ({
+      ...p,
+      user_id: id,
+      holder_name: p.holder_name.trim() ? p.holder_name : (memberName(m) || p.holder_name),
+    }))
+  }
 
   async function save() {
     setBusy(true)
     setError(null)
     try {
-      await adminApi.post('/api/admin/credentials', { ...f, expires_at: f.expires_at || null })
+      const linked = members.find((m) => String(m.id) === f.user_id)
+      const holder = f.holder_name.trim() || memberName(linked)
+      const body: Record<string, unknown> = {
+        credential_id: f.credential_id.trim(),
+        holder_name: holder,
+        expires_at: f.expires_at || null,
+      }
+      if (f.credential.trim()) body.credential = f.credential.trim()
+      if (f.user_id) body.user_id = Number(f.user_id)
+      if (f.certification_id) body.certification_id = Number(f.certification_id)
+      await adminApi.post('/api/admin/credentials', body)
       onSaved()
     } catch (e) {
       const code = e instanceof ApiError && e.body && typeof e.body === 'object' && 'error' in e.body ? String((e.body as Record<string, unknown>).error) : ''
@@ -34,10 +77,27 @@ function IssueForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => v
         </div>
         {error && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{error}</div>}
         <div className="field"><label>Credential ID</label><input value={f.credential_id} onChange={(e) => set('credential_id', e.target.value.toUpperCase())} placeholder="PCI-PCLAI-2026-000001" /></div>
+        <div className="field">
+          <label>Link student account</label>
+          <input list="credential-members" value={f.user_id} onChange={(e) => chooseUser(e.target.value)} placeholder="Optional user ID" />
+          <datalist id="credential-members">
+            {members.map((m) => (
+              <option key={m.id} value={m.id}>{memberName(m) || m.email || `#${m.id}`} — {m.email}</option>
+            ))}
+          </datalist>
+          <p className="muted small" style={{ margin: '.25rem 0 0' }}>When linked, the certificate appears in the student's portal.</p>
+        </div>
         <div className="field"><label>Holder name</label><input value={f.holder_name} onChange={(e) => set('holder_name', e.target.value)} /></div>
-        <div className="field"><label>Credential</label><input value={f.credential} onChange={(e) => set('credential', e.target.value)} /></div>
+        <div className="field">
+          <label>Certification</label>
+          <select value={f.certification_id} onChange={(e) => set('certification_id', e.target.value)}>
+            {certs.map((c) => <option key={c.id} value={c.id}>{c.code} — {c.name}</option>)}
+            {certs.length === 0 && <option value="">Default certification</option>}
+          </select>
+        </div>
+        <div className="field"><label>Credential label (optional)</label><input value={f.credential} onChange={(e) => set('credential', e.target.value)} placeholder="Leave blank to use certification default" /></div>
         <div className="field"><label>Expires</label><input type="date" value={f.expires_at} onChange={(e) => set('expires_at', e.target.value)} /></div>
-        <button className="btn" disabled={busy || !f.credential_id || !f.holder_name} onClick={save}>{busy ? 'Issuing…' : 'Issue credential'}</button>
+        <button className="btn" disabled={busy || !f.credential_id || !(f.holder_name.trim() || memberName(members.find((m) => String(m.id) === f.user_id)))} onClick={save}>{busy ? 'Issuing…' : 'Issue credential'}</button>
       </div>
     </div>
   )

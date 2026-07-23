@@ -6,11 +6,11 @@ namespace PCI.Backend.Data;
 /// The PCI AI Project Leadership Certification Suite — the three co-launching credentials.
 ///
 /// Naming rules (Master Naming Update): identifiers are stored CLEAN (no ) — code, slug and
-/// credential_prefix are PCL-AI / PFL-AI / PDL-AI and pcl-ai / pfl-ai / pdl-ai. Trademark symbols
+/// credential_prefix are PCL-AI / PFL-AI / PML-AI and pcl-ai / pfl-ai / pml-ai. Trademark symbols
 /// live only in DISPLAY fields (name, public_title, acronym designation, short_name).
 ///
 /// Migration is in-place and id-stable: id 1 was PCP-AI → PCL-AI, id 2 was PFIP → PFL-AI, id 3 was
-/// CPMD → PDL-AI. Renames are keyed on the prior code, so they run once and never re-clobber later
+/// CPMD → PML-AI. Renames are keyed on the prior code, so they run once and never re-clobber later
 /// admin edits, and no duplicate rows are created.
 /// </summary>
 public static class MultiCert
@@ -75,8 +75,8 @@ public static class MultiCert
             },
             faqs = new[]
             {
-                new { q = "Who is PCI PDL-AI for?", a = "Project and delivery leaders who take projects end to end — initiation, governance, planning, execution and closure across predictive, agile and hybrid approaches." },
-                new { q = "Is PCI PDL-AI a project-management credential?", a = "Yes. PCI PDL-AI is a comprehensive project management, leadership and delivery credential; its official title is PCI AI Project Delivery Leader." },
+                new { q = "Who is PCI PML-AI for?", a = "Project and delivery leaders who take projects end to end — initiation, governance, planning, execution and closure across predictive, agile and hybrid approaches." },
+                new { q = "Is PCI PML-AI a project-management credential?", a = "Yes. PCI PML-AI is a comprehensive project management, leadership and delivery credential; its official title is PCI AI Project Management Leader." },
             },
         });
 
@@ -100,16 +100,16 @@ public static class MultiCert
               (id,code,name,description,credential_prefix,expiry_years,active,sort_order,
                acronym,short_name,public_title,short_description,category,level,status,slug,audience,
                membership_required,meta_title,meta_description,keywords,content_json)
-            VALUES(3,'PDL-AI','PCI AI Project Delivery Leader',
+            VALUES(3,'PML-AI','PCI AI Project Management Leader',
                'Comprehensive project management, leadership and delivery: initiation, governance, planning, execution, integrated cost/schedule/risk, agile and hybrid delivery, benefits realization and AI-enabled project management with human accountability.',
-               'PDL-AI',3,1,3,
-               'PCI PDL-AI','PDL-AI','PCI AI Project Delivery Leader',
+               'PML-AI',3,1,3,
+               'PCI PML-AI','PML-AI','PCI AI Project Management Leader',
                'Comprehensive project management, leadership and delivery — initiation, governance, planning, execution, integrated cost/schedule/risk, agile/hybrid delivery and AI-enabled project management.',
-               'Project Delivery','Leader','Active','pdl-ai',
+               'Project Management','Leader','Active','pml-ai',
                'Project managers, delivery and programme leaders.',
-               0,'PCI PDL-AI | PCI AI Project Delivery Leader',
-               'The PCI AI Project Delivery Leader (PCI PDL-AI) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.',
-               'pdl-ai, pci pdl-ai, project delivery leader, project management certification, project leadership, agile, hybrid delivery, benefits realization',
+               0,'PCI PML-AI | PCI AI Project Management Leader',
+               'The PCI AI Project Management Leader (PCI PML-AI) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.',
+               'pml-ai, pci pml-ai, project management leader, project management certification, project leadership, agile, hybrid delivery, benefits realization',
                ?)", delivery);
 
         // ── Migrate-once renames to the final Project Leadership Suite names (keyed on the prior code,
@@ -133,14 +133,15 @@ public static class MultiCert
             "The PCI AI Project Finance Leader (PCI PFL-AI) credential covers project finance, financial modelling, capital structure, bankability, coverage ratios, PPP structures and financial close.",
             "pfl-ai, pci pfl-ai, project finance leader, project finance certification, financial modelling, dscr, ppp, bankability",
             finance);
-        MigrateCert(db, 3, new[] { "CPMD", "CPMD-AI", "PML-AI" }, "PDL-AI", "PCI AI Project Delivery Leader", "PCI PDL-AI", "PDL-AI",
-            "pdl-ai", "PDL-AI", "Project Delivery",
+        // Prior interim name for id 3 was PDL-AI (and before that CPMD / CPMD-AI). Migrate those to PML-AI.
+        MigrateCert(db, 3, new[] { "CPMD", "CPMD-AI", "PDL-AI" }, "PML-AI", "PCI AI Project Management Leader", "PCI PML-AI", "PML-AI",
+            "pml-ai", "PML-AI", "Project Management",
             "Comprehensive project management, leadership and delivery — initiation, governance, planning, execution, integrated cost/schedule/risk, agile/hybrid delivery and AI-enabled project management.",
             "Comprehensive project management, leadership and delivery: initiation, governance, planning, execution, integrated cost/schedule/risk, agile and hybrid delivery, benefits realization and AI-enabled project management with human accountability.",
             "Project managers, delivery and programme leaders.",
-            "PCI PDL-AI | PCI AI Project Delivery Leader",
-            "The PCI AI Project Delivery Leader (PCI PDL-AI) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.",
-            "pdl-ai, pci pdl-ai, project delivery leader, project management certification, project leadership, agile, hybrid delivery",
+            "PCI PML-AI | PCI AI Project Management Leader",
+            "The PCI AI Project Management Leader (PCI PML-AI) credential is a comprehensive project management, leadership and delivery credential covering governance, planning, execution, agile/hybrid delivery and AI-enabled project management.",
+            "pml-ai, pci pml-ai, project management leader, project management certification, project leadership, agile, hybrid delivery",
             delivery);
 
         EnsureRoutes(db);
@@ -164,11 +165,13 @@ public static class MultiCert
             ("Certified Project Finance & Infrastructure Professional – AI", "PCI AI Project Finance Leader"),
             ("Certified Project Finance Professional – AI", "PCI AI Project Finance Leader"),
             ("Project Finance Leader – AI", "PCI AI Project Finance Leader"),
-            ("Project Management Leader – AI", "PCI AI Project Delivery Leader"),
-            ("PCI Project Management Leader", "PCI AI Project Delivery Leader"),
-            ("Project Management Leader", "Project Delivery Leader"),
+            ("PCI AI Project Delivery Leader", "PCI AI Project Management Leader"),
+            ("Project Management Leader – AI", "PCI AI Project Management Leader"),
+            ("PCI Project Management Leader", "PCI AI Project Management Leader"),
+            ("Project Delivery Leader", "Project Management Leader"),
+            ("PCI PDL-AI", "PCI PML-AI"),
             ("PCP-AI", "PCL-AI"), ("PFIP-AI", "PFL-AI"), ("PFIP", "PFL-AI"),
-            ("CPMD-AI", "PDL-AI"), ("CPMD", "PDL-AI"), ("PML-AI", "PDL-AI"),
+            ("CPMD-AI", "PML-AI"), ("CPMD", "PML-AI"), ("PDL-AI", "PML-AI"),
             // Bare retired acronym LAST: by this point every "PCP-AI" is already "PCL-AI", so any
             // remaining "PCP" is a standalone use — "(PCP)", "the PCP…" (truncated card copy) — that the
             // hyphenated map could never match.
@@ -176,9 +179,10 @@ public static class MultiCert
             // Lowercase variants: SQL REPLACE is case-sensitive, and translated content, hrefs
             // (pmp-vs-aace-vs-pcp-ai.html) and chat keywords store the retired names in lowercase.
             ("pcp-ai", "pcl-ai"), ("pfip-ai", "pfl-ai"), ("pfip", "pfl-ai"),
-            ("cpmd-ai", "pdl-ai"), ("cpmd", "pdl-ai"), ("pml-ai", "pdl-ai"),
+            ("cpmd-ai", "pml-ai"), ("cpmd", "pml-ai"), ("pdl-ai", "pml-ai"),
             ("pcp", "pcl-ai"),
             ("certified project controls professional", "pci ai project controls leader"),
+            ("project delivery leader", "project management leader"),
         };
         (string table, string col)[] targets =
         {
@@ -221,7 +225,7 @@ public static class MultiCert
     /// trademark symbols, so no PCI credential name may carry one. This runs unconditionally on every boot
     /// (idempotent — once stripped, the LIKE-guarded REPLACE is a no-op) so it heals production rows that a
     /// prior deployment seeded WITH the symbol, independent of whether MigrateCert re-runs for that cert.
-    /// Internal codes (PCL-AI/PFL-AI/PDL-AI) never contain a symbol, so they are untouched.</summary>
+    /// Internal codes (PCL-AI/PFL-AI/PML-AI) never contain a symbol, so they are untouched.</summary>
     static void TrademarkStrip(Db db)
     {
         // (table, column) covering every surface that can hold a rendered credential name.
@@ -251,11 +255,11 @@ public static class MultiCert
 
     static readonly (string a, string b)[] SingularMaps =
     {
-            (@"Enrolment for the PCL-AI is now open.", @"Enrolment for the PCI certifications — PCL-AI, PFL-AI and PDL-AI — is now open."),
-            (@"The step-by-step roadmap to the PCL-AI: eligibility", @"The step-by-step roadmap to a PCI certification — PCL-AI, PFL-AI or PDL-AI: eligibility"),
-            (@"Your step-by-step path to the PCL-AI — from eligibility to credential.", @"Your step-by-step path to a PCI certification — PCL-AI, PFL-AI or PDL-AI — from eligibility to credential."),
-            (@"Earning the PCL-AI follows a clear path", @"Earning a PCI certification — PCL-AI, PFL-AI or PDL-AI — follows a clear path"),
-            (@"separate from the examined PCL-AI credential", @"separate from PCI's examined certifications — PCL-AI, PFL-AI and PDL-AI"),
+            (@"Enrolment for the PCL-AI is now open.", @"Enrolment for the PCI certifications — PCL-AI, PFL-AI and PML-AI — is now open."),
+            (@"The step-by-step roadmap to the PCL-AI: eligibility", @"The step-by-step roadmap to a PCI certification — PCL-AI, PFL-AI or PML-AI: eligibility"),
+            (@"Your step-by-step path to the PCL-AI — from eligibility to credential.", @"Your step-by-step path to a PCI certification — PCL-AI, PFL-AI or PML-AI — from eligibility to credential."),
+            (@"Earning the PCL-AI follows a clear path", @"Earning a PCI certification — PCL-AI, PFL-AI or PML-AI — follows a clear path"),
+            (@"separate from the examined PCL-AI credential", @"separate from PCI's examined certifications — PCL-AI, PFL-AI and PML-AI"),
             (@"never the examined PCL-AI credential", @"never an examined PCI credential"),
             (@"You do not need to hold the PCL-AI credential", @"You do not need to hold a PCI credential"),
             (@"the PCL-AI rests on an independent", @"every PCI certification rests on an independent"),

@@ -1476,7 +1476,7 @@ def test_leadership_suite(admin):
     print("\n=== 18. Leadership Suite: one candidate, three certifications ===")
     NAMES = {"PCL-AI": "PCI AI Project Controls Leader",
              "PFL-AI": "PCI AI Project Finance Leader",
-             "PDL-AI": "PCI AI Project Delivery Leader"}
+             "PML-AI": "PCI AI Project Management Leader"}
     c, cat = jget("GET", "/api/certifications")
     rows = {r.get("code"): r for r in cat.get("rows", [])}
     chk("18a all three Suite certifications are live together", c == 200 and all(k in rows for k in NAMES), sorted(rows))
@@ -1484,8 +1484,8 @@ def test_leadership_suite(admin):
         {k: rows.get(k, {}).get("name") for k in NAMES})
     ids = {k: rows[k]["id"] for k in NAMES}
 
-    # PFL-AI and PDL-AI need question banks (PCL-AI uses the seeded bank).
-    for code in ("PFL-AI", "PDL-AI"):
+    # PFL-AI and PML-AI need question banks (PCL-AI uses the seeded bank).
+    for code in ("PFL-AI", "PML-AI"):
         csv = "question,option_a,option_b,option_c,option_d,answer,domain\n" + "\n".join(
             f"{code} Q{i}: pick A,RightA{i},WrongB{i},WrongC{i},WrongD{i},A,Core" for i in range(1, 4))
         c, bu = jget("POST", "/api/admin/sample_questions/bulk", token=admin, body={"csv": csv, "certification": code})
@@ -1494,7 +1494,7 @@ def test_leadership_suite(admin):
     # One candidate buys all three examinations (webhook metadata routes each entitlement).
     stok, suid = make_paid_user("suite3@ex.co", product="exam", metadata={"certification": "PCL-AI"})
     sign_and_send_webhook("cs_suite3_pfl", "suite3@ex.co", "exam", "pi_suite3_pfl", metadata={"certification": "PFL-AI"})
-    sign_and_send_webhook("cs_suite3_pdl", "suite3@ex.co", "exam", "pi_suite3_pdl", metadata={"certification": "PDL-AI"})
+    sign_and_send_webhook("cs_suite3_pdl", "suite3@ex.co", "exam", "pi_suite3_pdl", metadata={"certification": "PML-AI"})
     accept_all_consents(stok); complete_profile(stok)
     con = dbconn()
     ents = {r[0] for r in con.execute("SELECT certification_id FROM exam_entitlements WHERE user_id=?", (suid,))}
@@ -1506,7 +1506,7 @@ def test_leadership_suite(admin):
     # Sit and pass each examination; the credential must carry that certification's prefix.
     creds = {}
     slot = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() + 3 * 3600))
-    for code, prefix in (("PCL-AI", "PCI-PCLAI-"), ("PFL-AI", "PCI-PFLAI-"), ("PDL-AI", "PCI-PDLAI-")):
+    for code, prefix in (("PCL-AI", "PCI-PCLAI-"), ("PFL-AI", "PCI-PFLAI-"), ("PML-AI", "PCI-PMLAI-")):
         cid = ids[code]
         c, bk = jget("POST", "/api/me/exam/book", token=stok, body={"scheduled_at": slot, "timezone": "UTC", "certification_id": cid})
         req("POST", "/api/me/readiness", token=stok, body={"camera": True, "microphone": True, "network": True})

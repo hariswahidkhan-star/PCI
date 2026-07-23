@@ -12,6 +12,7 @@ const BASE = process.env.E2E_BASE_URL || `http://127.0.0.1:${PORT}`
 // When a Chromium is preinstalled (this sandbox: /opt/pw-browsers), point at it; on CI the browser
 // is fetched with `playwright install chromium` and this is unset.
 const executablePath = process.env.PW_CHROMIUM_PATH || undefined
+const smokeSpecs = /.*\/(public-catalogue|public-site)\.spec\.ts/
 
 export default defineConfig({
   testDir: './e2e',
@@ -26,11 +27,16 @@ export default defineConfig({
   timeout: 30_000,
   use: {
     baseURL: BASE,
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
     trace: 'on-first-retry',
-    ...(executablePath ? { launchOptions: { executablePath } } : {}),
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'], ...(executablePath ? { launchOptions: { executablePath } } : {}) } },
+    { name: 'firefox', testMatch: smokeSpecs, use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', testMatch: smokeSpecs, use: { ...devices['Desktop Safari'] } },
+    { name: 'mobile-chrome', testMatch: smokeSpecs, use: { ...devices['Pixel 7'] } },
+    { name: 'mobile-safari', testMatch: smokeSpecs, use: { ...devices['iPhone 15'] } },
   ],
   // Boot the built backend DLL and wait for health. Skipped when E2E_NO_SERVER is set (e.g. a run
   // against an already-running server) or when only listing tests.

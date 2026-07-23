@@ -25,6 +25,14 @@ interface PricingResp {
   recert: PriceBlock
   cert?: { code: string; name: string } | null
 }
+interface CodePreview {
+  valid: boolean
+  message?: string
+  applies_to?: string
+  code_amount?: number
+  savings?: number
+  final_amount?: number
+}
 
 /** Whole days from now until an ISO date (negative once it's in the past); null if unparseable. */
 function daysUntil(iso?: string | null): number | null {
@@ -49,6 +57,7 @@ function PlansCard() {
   const [params] = useSearchParams()
   const [certSel, setCertSel] = useState('')
   const [code, setCode] = useState('')
+  const [codePreview, setCodePreview] = useState<CodePreview | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
 
@@ -101,8 +110,12 @@ function PlansCard() {
       // Validate a discount/founding code BEFORE opening Stripe, for THIS product — so an invalid or
       // wrong-product code is caught here instead of silently charging full price at checkout.
       const c = code.trim()
+      const certForProduct = product === 'exam' || product === 'bundle' ? certSel || undefined : product === 'recert' ? opts.cert : undefined
       if (c) {
-        const v = await api.post<{ valid: boolean; message?: string }>('/api/validate-code', { code: c, product, email: me!.user.email })
+        const validateBody: Record<string, unknown> = { code: c, product, email: me!.user.email }
+        if (certForProduct) validateBody.cert = certForProduct
+        const v = await api.post<CodePreview>('/api/validate-code', validateBody)
+        setCodePreview(v)
         if (!v.valid) {
           setErr(v.message || t('billing.codeInvalid'))
           setBusy(null)
@@ -112,7 +125,7 @@ function PlansCard() {
       await startCheckout({
         product,
         email: me!.user.email,
-        cert: product === 'exam' || product === 'bundle' ? certSel || undefined : product === 'recert' ? opts.cert : undefined,
+        cert: certForProduct,
         code: c || undefined,
         first: me!.user.first_name ?? undefined,
         last: me!.user.last_name ?? undefined,
@@ -166,7 +179,7 @@ function PlansCard() {
           <div className="muted small" style={{ marginBottom: '.4rem' }}>
             {t('billing.examFeeDesc')}
           </div>
-          <select value={certSel} onChange={(ev) => setCertSel(ev.target.value)} aria-label={t('billing.certificationAria')}>
+          <select value={certSel} onChange={(ev) => { setCertSel(ev.target.value); setCodePreview(null) }} aria-label={t('billing.certificationAria')}>
             {(certs ?? []).map((c) => (
               <option key={c.id} value={c.code}>{c.code} — {c.name}</option>
             ))}
@@ -255,11 +268,19 @@ function PlansCard() {
           style={{ maxWidth: 220 }}
           placeholder={t('billing.discountCodePlaceholder')}
           value={code}
-          onChange={(ev) => setCode(ev.target.value)}
+          onChange={(ev) => { setCode(ev.target.value); setCodePreview(null) }}
           aria-label={t('billing.discountCodeAria')}
         />
         <span className="muted small">{t('billing.discountApplyIntro')}<strong>{t('billing.discountScopeMembership')}</strong>{t('billing.discountSep1')}<strong>{t('billing.discountScopeExam')}</strong>{t('billing.discountSep2')}<strong>{t('billing.discountScopeBoth')}</strong>{t('billing.discountApplyOutro')}</span>
       </div>
+      {codePreview?.valid && (
+        <div className="notice" style={{ marginTop: '.6rem' }} role="status">
+          <strong>Discount preview:</strong>{' '}
+          applies to {codePreview.applies_to === 'exam' ? 'exam fee' : codePreview.applies_to === 'membership' ? 'membership' : 'membership and exam fees'}
+          {' '}· savings {fmtMoney(codePreview.code_amount ?? codePreview.savings ?? 0, pricing?.currency ?? 'USD')}
+          {' '}· final amount {fmtMoney(codePreview.final_amount ?? 0, pricing?.currency ?? 'USD')}
+        </div>
+      )}
     </Card>
     </div>
   )
