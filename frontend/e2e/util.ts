@@ -58,7 +58,11 @@ export async function apiLoginAsDemoStudent(request: APIRequestContext, page: Pa
   const token = body.token as string
   await page.addInitScript((t) => {
     try {
+      // Plant once per tab. Re-applying on every navigation would overwrite a fresher UI login
+      // (and resurrect a token revoked by Sign out).
+      if (sessionStorage.getItem('pci.e2e.session.planted') === '1') return
       sessionStorage.setItem('pci.session.token', t)
+      sessionStorage.setItem('pci.e2e.session.planted', '1')
     } catch {
       /* storage unavailable — the test will fail on the auth redirect instead */
     }
@@ -71,7 +75,11 @@ export async function apiLoginAsE2EAdmin(request: APIRequestContext, page?: Page
   async function plant(token: string) {
     if (page) {
       await page.addInitScript((t) => {
-        try { sessionStorage.setItem('pci.admin.token', t) } catch { /* asserted by the auth redirect */ }
+        try {
+          if (sessionStorage.getItem('pci.e2e.admin.planted') === '1') return
+          sessionStorage.setItem('pci.admin.token', t)
+          sessionStorage.setItem('pci.e2e.admin.planted', '1')
+        } catch { /* asserted by the auth redirect */ }
       }, token)
     }
   }
@@ -138,7 +146,12 @@ export async function registerStudent(
   const token = body.token as string
   if (page) {
     await page.addInitScript((t) => {
-      try { sessionStorage.setItem('pci.session.token', t) } catch { /* asserted by the auth redirect */ }
+      try {
+        // Plant once per tab. After Sign out + UI re-login, do not resurrect this revoked token.
+        if (sessionStorage.getItem('pci.e2e.session.planted') === '1') return
+        sessionStorage.setItem('pci.session.token', t)
+        sessionStorage.setItem('pci.e2e.session.planted', '1')
+      } catch { /* asserted by the auth redirect */ }
     }, token)
   }
   return { id: body.user!.id!, email, password, token }
