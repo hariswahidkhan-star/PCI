@@ -3322,6 +3322,18 @@ def test_simlab(admin):
     chk("43cc the CBS lab grades the roll-up + variance to 100 (cost_control evidence)",
         c == 200 and subb.get("score") == 100 and subb.get("passed") is True and "cost_control" in bcomps, (c, subb.get("score"), sorted(bcomps)))
 
+    # S-curve scenario: the task carries a time-phased series (for the dashboard) + the final scalars; the
+    # student computes the EVM measures at the current period. Series is display data, never the answer.
+    c, sts = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SC-EVM-001"})
+    stask = sts.get("task", {}); series = (stask.get("given") or {}).get("series")
+    chk("43dd the S-curve scenario serves a time-phased series alongside the given scalars",
+        c == 200 and isinstance(series, list) and len(series) == 5 and series[-1].get("pv") == 500000, (c, len(series or [])))
+    sid2 = sts.get("attempt_id")
+    c, subs = jget("POST", f"/api/me/lab/attempts/{sid2}/submit", token=mtok,
+                   body={"answers": {"sv": -70000, "cv": -30000, "spi": 0.86, "cpi": 0.9348, "eac": 962790.6977}})
+    chk("43ee the S-curve scenario grades the current-period EVM measures to 100",
+        c == 200 and subs.get("score") == 100 and subs.get("passed") is True, (c, subs.get("score")))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.

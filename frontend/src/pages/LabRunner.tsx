@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { api, ApiError } from '../api/client'
 import { Card, Badge, Spinner, ErrorNote } from '../components/ui'
+import SCurve, { type EvmPoint } from '../components/SCurve'
 
 // PCI AI Project Controls Simulation Lab — interactive workspace (Phase 1 foundation).
 // Starts (or resumes) an attempt at a guided lab, presents the synthetic task and its inputs, collects the
@@ -195,6 +196,9 @@ export default function LabRunner() {
         <>
           <Card title="Brief">
             <p style={{ marginTop: 0 }}>{start.task.prompt}</p>
+            {Array.isArray(start.task.given.series) && (start.task.given.series as EvmPoint[]).length > 0 && (
+              <div style={{ margin: '.2rem 0 .8rem' }}><SCurve series={start.task.given.series as EvmPoint[]} /></div>
+            )}
             <div style={{ overflowX: 'auto' }}><GivenView task={start.task} /></div>
           </Card>
 

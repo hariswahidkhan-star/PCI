@@ -134,6 +134,9 @@ public static class SimLabSchema
         SeedScenario(db, "GL-CBS-001", "Roll up a cost breakdown and read the variance", "guided_lab", "Construction", "intermediate", 15,
             "[\"cost_control\"]", "Roll budget and actual cost up a cost breakdown structure and compute the variance at the root.",
             ConfigCbs);
+        SeedScenario(db, "SC-EVM-001", "Read the S-curve and compute earned value", "scenario", "Technology", "intermediate", 18,
+            "[\"earned_value\",\"forecasting\"]", "Interpret a five-month cost/value S-curve and compute the earned-value measures at the current period.",
+            ConfigScurve);
     }
 
     static void SeedScenario(Db db, string code, string title, string kind, string industry, string difficulty,
@@ -193,6 +196,25 @@ public static class SimLabSchema
            {"key":"critical_path","label":"Critical path (comma-separated activity IDs)","type":"set"},
            {"key":"float_C","label":"Total float of activity C (days)","type":"number"}],
          "tolerance":0.001,"pass_pct":70,"competencies":["schedule_analysis"]}
+        """;
+
+    const string ConfigScurve = """
+        {"task":"evm",
+         "prompt":"A data-centre fit-out has run for five months. The S-curve shows cumulative Planned Value, Earned Value and Actual Cost. Using the month-5 figures (PV 500000, EV 430000, AC 460000, BAC 900000), compute the earned-value measures.",
+         "given":{"pv":500000,"ev":430000,"ac":460000,"bac":900000,
+           "series":[
+             {"period":1,"pv":100000,"ev":90000,"ac":95000},
+             {"period":2,"pv":220000,"ev":195000,"ac":205000},
+             {"period":3,"pv":340000,"ev":300000,"ac":320000},
+             {"period":4,"pv":430000,"ev":370000,"ac":395000},
+             {"period":5,"pv":500000,"ev":430000,"ac":460000}]},
+         "ask":[
+           {"key":"sv","label":"Schedule Variance (SV)","type":"number"},
+           {"key":"cv","label":"Cost Variance (CV)","type":"number"},
+           {"key":"spi","label":"Schedule Performance Index (SPI)","type":"number"},
+           {"key":"cpi","label":"Cost Performance Index (CPI)","type":"number"},
+           {"key":"eac","label":"Estimate at Completion (EAC, CPI method)","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["earned_value","forecasting"]}
         """;
 
     const string ConfigForecast = """
