@@ -380,12 +380,16 @@ export default function LabRunner() {
   answersRef.current = answers
 
   const begin = useCallback(async (m: Mode) => {
-    setLoading(true); setError(null); setGrade(null); setAnswers({}); setCoach(null); setSaveNote(null); setReportNote(null)
+    // Drop the previous attempt immediately so debounced autosave cannot write empty answers
+    // into the old (or new) attempt while the start request is in flight.
     skipAutosave.current = true
+    setLoading(true); setError(null); setGrade(null); setStart(null); setAnswers({}); setCoach(null)
+    setSaveNote(null); setReportNote(null)
     try {
       const s = await api.post<StartResp>('/api/me/lab/attempts', { scenario_code: code, mode: m })
-      setStart(s)
       const restored = hydrateAnswers(s.task.ask, s.answers)
+      skipAutosave.current = true
+      setStart(s)
       setAnswers(restored)
       if (s.resumed && Object.keys(restored).length > 0) setSaveNote('Resumed your saved answers')
     } catch (e) {

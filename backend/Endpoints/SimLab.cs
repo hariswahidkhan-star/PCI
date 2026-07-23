@@ -424,7 +424,8 @@ public static class SimLab
         catch { return default; }
     }
 
-    /// <summary>Serialize <c>state_json.answers</c> for start/resume payloads without exposing grade keys.</summary>
+    /// <summary>Serialize <c>state_json.answers</c> for start/resume payloads without exposing grade keys.
+    /// Returns a cloned <see cref="JsonElement"/> object so ASP.NET emits a plain JSON object.</summary>
     static object AnswersObject(string? stateJson)
     {
         if (string.IsNullOrWhiteSpace(stateJson)) return new { };
@@ -433,12 +434,7 @@ public static class SimLab
             using var doc = JsonDocument.Parse(stateJson);
             if (doc.RootElement.TryGetProperty("answers", out var answers) &&
                 answers.ValueKind == JsonValueKind.Object)
-            {
-                var dict = new Dictionary<string, JsonElement>(StringComparer.Ordinal);
-                foreach (var p in answers.EnumerateObject())
-                    dict[p.Name] = p.Value.Clone();
-                return dict;
-            }
+                return answers.Clone();
         }
         catch (JsonException)
         {
