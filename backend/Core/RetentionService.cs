@@ -27,6 +27,12 @@ public sealed class RetentionService : BackgroundService
         {
             try
             {
+                // Membership expiry is a data-correctness sweep, not a deletion, so it is not subject to the
+                // retention-window guards below. Runs before them so a disabled retention config can't skip it.
+                var lapsed = Settlement.ExpireDueMemberships(_db);
+                if (lapsed > 0)
+                    Console.WriteLine($"[retention] expired {lapsed} lapsed membership(s)");
+
                 var days = (int)Settings.Num(_db, "evidence_retention_days", 365);
                 // 0 or negative → retention disabled; the scheduled job never auto-purges. This bounds the
                 // blast radius of a misconfiguration (a stray '0' can't mean "delete everything older than

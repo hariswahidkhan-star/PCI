@@ -3098,6 +3098,7 @@ def run(proc):
     test_marketing_centre(admin)
     test_admin_extra_gaps(admin)
     test_proctoring_analytics_gaps(admin)
+    test_time_sweeps(admin)
 
     print("\n(assertions complete)")
 
@@ -3355,17 +3356,18 @@ def test_support_assign_escalate(admin):
     chk("34h metrics reflect the assignment in agent_workload", any((w.get("n", 0) or 0) >= 1 for w in met.get("agent_workload", [])), met.get("agent_workload"))
 
 def test_membership_expiry(admin):
-    # Incremental Testing Programme — how the platform treats an expired membership. Pins the real
-    # (status-driven) behaviour AND documents that there is no time-based expiry sweep: a past expiry_date
-    # alone does not expire access; only status='expired' (which the platform sets on reversal) does.
-    print("\n=== 35. Membership expiry treatment (status-driven; no time-based sweep) ===")
+    # Incremental Testing Programme — how the platform treats an expired membership. Pins the
+    # status-driven read model: a past expiry_date alone does not expire access at READ time; the
+    # status column advances via reversal or the time-based expiry sweep (daily RetentionService tick
+    # or the owner's /api/admin/ops/sweeps/run — driven end-to-end by §60).
+    print("\n=== 35. Membership expiry treatment (status-driven reads; the sweep advances status) ===")
     def blocked(body): return isinstance(body, dict) and body.get("error") == "membership_required"
     mtok, muid = make_paid_user("expiremember@ex.co")  # bundle -> active member
     c, me = jget("GET", "/api/me", token=mtok)
     chk("35a a fresh bundle purchaser is an active member", c == 200 and me.get("lifecycle", {}).get("membership_status") == "active", me.get("lifecycle", {}).get("membership_status"))
     con = dbconn(); con.execute("UPDATE memberships SET expiry_date=datetime('now','-10 day') WHERE user_id=?", (muid,)); con.commit(); con.close()
     c, me2 = jget("GET", "/api/me", token=mtok)
-    chk("35b a past expiry_date with status='active' still reads active (no time-based sweep)", me2.get("lifecycle", {}).get("membership_status") == "active", me2.get("lifecycle", {}).get("membership_status"))
+    chk("35b a past expiry_date with status='active' still reads active until the expiry sweep runs", me2.get("lifecycle", {}).get("membership_status") == "active", me2.get("lifecycle", {}).get("membership_status"))
     c, gate1 = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "expiremember@ex.co"})
     chk("35c the exam-fee gate still passes while status='active'", not blocked(gate1), (c, gate1))
     con = dbconn(); con.execute("UPDATE memberships SET status='expired' WHERE user_id=?", (muid,)); con.commit(); con.close()
@@ -5644,6 +5646,58 @@ def test_proctoring_analytics_gaps(admin):
         stc == 200 and cct.startswith("text/csv")
         and header == "created_at,event,path,visitor,country,device,browser,utm_source,utm_medium,utm_campaign,referrer,landing,value,currency"
         and "zephyr59" in text and '"camp,59"' in text and "2020-01-01" not in text, (stc, cct, header))
+
+def test_time_sweeps(admin):
+    # Incremental Testing Programme §60 — the two findings resolved by the sweeps increment: the
+    # time-based membership expiry sweep (Settlement.ExpireDueMemberships, run daily by
+    # RetentionService) and the on-demand HTTP hook POST /api/admin/ops/sweeps/run (owner-only),
+    # which also fires the blog scheduled-publish due-sweep so the scheduled->published transition
+    # is HTTP-testable. Closes the last two open findings in the ledger.
+    print("\n=== 60. Time sweeps: membership expiry + blog scheduled-publish via the owner run-now hook ===")
+    def mstatus(tok):
+        c, me = jget("GET", "/api/me", token=tok)
+        return me.get("lifecycle", {}).get("membership_status")
+
+    ltok, luid = make_paid_user("lapsed-60@ex.co")     # will lapse
+    ctok, cuid = make_paid_user("current-60@ex.co")    # stays current (+3y expiry untouched)
+    con = dbconn(); con.execute("UPDATE memberships SET expiry_date=datetime('now','-1 day') WHERE user_id=?", (luid,)); con.commit(); con.close()
+
+    c1, r1 = jget("POST", "/api/admin/ops/sweeps/run")
+    vtok = globals().get("_VIEWER_TOK")
+    c2, r2 = jget("POST", "/api/admin/ops/sweeps/run", token=vtok)
+    chk("60a the run-now sweep hook is owner-only (401 anonymous, 403 for a viewer admin)",
+        c1 == 401 and r1.get("error") == "unauthorized" and bool(vtok) and c2 == 403 and r2.get("error") == "forbidden", (c1, c2))
+
+    chk("60b before any sweep the lapsed member still reads active (the status-driven read model of §35 is unchanged)",
+        mstatus(ltok) == "active", mstatus(ltok))
+
+    # A due scheduled post: take a seeded blog DRAFT (title+body present) and schedule it in the past —
+    # the sweep must publish it through the same ContentCentre.PublishPost path the admin endpoint uses.
+    con = dbconn()
+    post = con.execute("SELECT id, slug FROM blog_posts WHERE status='draft' AND structured_type<>'NewsArticle'"
+                       " AND title IS NOT NULL AND body IS NOT NULL ORDER BY id LIMIT 1").fetchone()
+    pid, slug = post[0], post[1]
+    con.execute("UPDATE blog_posts SET status='scheduled', scheduled_at='2020-01-03 00:00:00' WHERE id=?", (pid,))
+    con.commit(); con.close()
+
+    c, sw = jget("POST", "/api/admin/ops/sweeps/run", token=admin)
+    chk("60c the owner sweep runs both due-sweeps and reports its counts",
+        c == 200 and sw.get("ok") is True and H0(sw.get("memberships_expired")) >= 1 and H0(sw.get("published")) >= 1, sw)
+
+    c, gate = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "lapsed-60@ex.co"})
+    chk("60d the lapsed membership is now expired and the exam-fee gate blocks it (membership_required)",
+        mstatus(ltok) == "expired" and c == 400 and isinstance(gate, dict) and gate.get("error") == "membership_required",
+        (mstatus(ltok), c, gate))
+    chk("60e a membership with a future expiry_date is untouched by the sweep", mstatus(ctok) == "active", mstatus(ctok))
+
+    con = dbconn(); prow = con.execute("SELECT status, published FROM blog_posts WHERE id=?", (pid,)).fetchone(); con.close()
+    st, body, _ = _raw_get(f"/blog/{slug}")
+    chk("60f the due scheduled post published through the real publish path and serves publicly",
+        prow and prow[0] == "published" and H0(prow[1]) == 1 and st == 200, (prow, st))
+
+    c, sw2 = jget("POST", "/api/admin/ops/sweeps/run", token=admin)
+    chk("60g a second run is a clean no-op (nothing left due: 0 published, 0 expired)",
+        c == 200 and H0(sw2.get("published")) == 0 and H0(sw2.get("memberships_expired")) == 0, sw2)
 
 if __name__ == "__main__":
     main()

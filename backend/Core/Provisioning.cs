@@ -224,6 +224,12 @@ public static class Settlement
             $"A {product} settlement on your account was reversed by our team. If you believe this is an error, contact support."); } catch { }
         return new { ok = true, payment_id = payId, previous_status = status, new_status = "refunded", membership_lapsed = membershipLapsed };
     }
+
+    /// <summary>Time-based membership expiry: flip lapsed active memberships to 'expired'. The status column
+    /// stays the single source every gate reads; this sweep is what advances it once expiry_date passes —
+    /// run daily by RetentionService and on demand via POST /api/admin/ops/sweeps/run. Returns rows flipped.</summary>
+    public static int ExpireDueMemberships(Db db) =>
+        db.Execute("UPDATE memberships SET status='expired' WHERE status='active' AND expiry_date IS NOT NULL AND expiry_date<=datetime('now')");
 }
 
 /// <summary>

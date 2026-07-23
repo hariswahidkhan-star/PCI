@@ -603,5 +603,20 @@ public static class AdminOps
             log(uid, "certuvo.webhook", type);
             return Results.Json(new { ok = true });
         });
+
+        // ---------------- Sweeps (owner-only): fire the time-based background sweeps NOW ----------------
+        // The scheduled workers already run these (blog publisher every 60s; membership expiry daily via
+        // RetentionService). This hook lets an operator advance the scheduled->published and
+        // active->expired transitions on demand instead of waiting for the next tick.
+        app.MapPost("/api/admin/ops/sweeps/run", (HttpContext ctx) =>
+        {
+            var adm = Auth.AdminFromReq(ctx.Request, db);
+            if (adm is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+            if (!adm.IsOwner) return Results.Json(new { error = "forbidden" }, statusCode: 403);
+            var published = ScheduledPublisher.PublishDue(db);
+            var expired = Settlement.ExpireDueMemberships(db);
+            log(adm.Id, "ops_sweeps_run", $"published={published} memberships_expired={expired}");
+            return Results.Json(new { ok = true, published, memberships_expired = expired });
+        });
     }
 }
