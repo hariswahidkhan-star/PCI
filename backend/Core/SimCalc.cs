@@ -226,6 +226,86 @@ public static class SimCalc
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────────
+    //  Forecasting — the three standard Estimate-at-Completion methods
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    public readonly record struct ForecastResult(
+        double CPI, double SPI,
+        double EacCpi,        // BAC / CPI            — current cost performance continues
+        double EacComposite,  // AC + (BAC−EV)/(CPI·SPI) — cost AND schedule performance continue
+        double EacBudget,     // AC + (BAC−EV)        — remaining work at the budgeted rate
+        double Etc, double Vac, double Tcpi);
+
+    /// <summary>
+    /// The three conventional EAC forecasts, from the same PV/EV/AC/BAC. EacCpi assumes current cost
+    /// efficiency holds; EacComposite assumes both cost and schedule efficiency hold; EacBudget assumes the
+    /// remaining work runs at the original budgeted rate. Divisions guard zero (a degenerate index yields
+    /// the budget-rate estimate rather than an exception). ETC/VAC/TCPI use the CPI forecast.
+    /// </summary>
+    public static ForecastResult Forecast(double pv, double ev, double ac, double bac)
+    {
+        var cpi = ac == 0 ? 0 : ev / ac;
+        var spi = pv == 0 ? 0 : ev / pv;
+        var remaining = bac - ev;
+        var eacCpi = cpi == 0 ? ac + remaining : bac / cpi;
+        var eacComposite = (cpi * spi) == 0 ? ac + remaining : ac + remaining / (cpi * spi);
+        var eacBudget = ac + remaining;
+        var etc = eacCpi - ac;
+        var vac = bac - eacCpi;
+        var tcpi = (bac - ac) == 0 ? 0 : remaining / (bac - ac);
+        return new ForecastResult(R(cpi), R(spi), R(eacCpi), R(eacComposite), R(eacBudget), R(etc), R(vac), R(tcpi));
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    //  Cost Breakdown Structure — budget vs actual roll-up and variance
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    public sealed record CbsInputNode(string Id, string? Parent, double? Budget, double? Actual);
+
+    public sealed record CbsNode(string Id, string? Parent, double Budget, double Actual, double Variance, bool IsLeaf);
+
+    public sealed record CbsResult(double TotalBudget, double TotalActual, double Variance, IReadOnlyList<CbsNode> Nodes);
+
+    /// <summary>
+    /// Roll budget and actual cost up a cost breakdown structure from its leaf accounts, and compute the
+    /// variance (budget − actual; positive is under budget) at every node and at the root. Throws on a
+    /// missing parent or a cycle — structural errors, not scoring outcomes.
+    /// </summary>
+    public static CbsResult Cbs(IReadOnlyList<CbsInputNode> input)
+    {
+        if (input.Count == 0) return new CbsResult(0, 0, 0, Array.Empty<CbsNode>());
+        var byId = input.ToDictionary(n => n.Id);
+        var children = input.ToDictionary(n => n.Id, _ => new List<string>());
+        string? root = null;
+        foreach (var n in input)
+        {
+            if (n.Parent is null) { root ??= n.Id; continue; }
+            if (!byId.ContainsKey(n.Parent)) throw new ArgumentException($"cost account '{n.Id}' names unknown parent '{n.Parent}'");
+            children[n.Parent].Add(n.Id);
+        }
+
+        var budget = new Dictionary<string, double>();
+        var actual = new Dictionary<string, double>();
+        var guard = 0;
+        (double b, double a) Roll(string id)
+        {
+            if (++guard > input.Count * input.Count) throw new ArgumentException("CBS contains a cycle");
+            var kids = children[id];
+            if (kids.Count == 0) { budget[id] = byId[id].Budget ?? 0; actual[id] = byId[id].Actual ?? 0; return (budget[id], actual[id]); }
+            double b = 0, a = 0;
+            foreach (var k in kids) { var (kb, ka) = Roll(k); b += kb; a += ka; }
+            budget[id] = b; actual[id] = a; return (b, a);
+        }
+        foreach (var n in input) if (!budget.ContainsKey(n.Id)) Roll(n.Id);
+
+        var nodes = input.Select(n => new CbsNode(n.Id, n.Parent, R(budget[n.Id]), R(actual[n.Id]),
+            R(budget[n.Id] - actual[n.Id]), children[n.Id].Count == 0)).ToList();
+        var tb = root is null ? nodes.Where(n => n.Parent is null).Sum(n => n.Budget) : budget[root];
+        var ta = root is null ? nodes.Where(n => n.Parent is null).Sum(n => n.Actual) : actual[root];
+        return new CbsResult(R(tb), R(ta), R(tb - ta), nodes);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
     //  Answer resolution — the values a scenario can ask a student to compute
     // ─────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -245,13 +325,32 @@ public static class SimCalc
             case "evm":
             {
                 var r = Evm(G("pv"), G("ev"), G("ac"), GN("bac"));
-                return key switch
+                switch (key)
                 {
-                    "sv" => (object?)r.SV, "cv" => r.CV, "spi" => r.SPI, "cpi" => r.CPI,
-                    "eac" => r.EAC, "etc" => r.ETC, "vac" => r.VAC, "tcpi" => r.TCPI,
-                    "percent_complete" => r.PercentComplete, "percent_spent" => r.PercentSpent,
-                    _ => null,
-                };
+                    case "sv": return r.SV; case "cv": return r.CV; case "spi": return r.SPI; case "cpi": return r.CPI;
+                    case "eac": return r.EAC; case "etc": return r.ETC; case "vac": return r.VAC; case "tcpi": return r.TCPI;
+                    case "percent_complete": return r.PercentComplete; case "percent_spent": return r.PercentSpent;
+                }
+                // Forecasting keys share the EVM inputs; the three EAC methods come from Forecast().
+                if (key is "eac_cpi" or "eac_composite" or "eac_budget")
+                {
+                    var f = Forecast(G("pv"), G("ev"), G("ac"), G("bac"));
+                    return key switch { "eac_cpi" => (object?)f.EacCpi, "eac_composite" => f.EacComposite, "eac_budget" => f.EacBudget, _ => null };
+                }
+                return null;
+            }
+            case "cbs":
+            {
+                var r = Cbs(ParseCbs(given));
+                if (key == "root_budget") return r.TotalBudget;
+                if (key == "root_actual") return r.TotalActual;
+                if (key == "root_variance") return r.Variance;
+                if (key.StartsWith("variance_", StringComparison.Ordinal))
+                {
+                    var id = key.Substring("variance_".Length);
+                    return r.Nodes.FirstOrDefault(n => n.Id == id)?.Variance;
+                }
+                return null;
             }
             case "cpm":
             {
@@ -307,6 +406,21 @@ public static class SimCalc
                 string? parent = n.TryGetProperty("parent", out var p) && p.ValueKind == JsonValueKind.String ? p.GetString() : null;
                 double? val = n.TryGetProperty("value", out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : (double?)null;
                 list.Add(new WbsInputNode(id, parent, val));
+            }
+        return list;
+    }
+
+    static List<CbsInputNode> ParseCbs(JsonElement given)
+    {
+        var list = new List<CbsInputNode>();
+        if (given.TryGetProperty("nodes", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                var id = n.TryGetProperty("id", out var i) ? i.GetString() ?? "" : "";
+                string? parent = n.TryGetProperty("parent", out var p) && p.ValueKind == JsonValueKind.String ? p.GetString() : null;
+                double? budget = n.TryGetProperty("budget", out var b) && b.ValueKind == JsonValueKind.Number ? b.GetDouble() : (double?)null;
+                double? actual = n.TryGetProperty("actual", out var a) && a.ValueKind == JsonValueKind.Number ? a.GetDouble() : (double?)null;
+                list.Add(new CbsInputNode(id, parent, budget, actual));
             }
         return list;
     }

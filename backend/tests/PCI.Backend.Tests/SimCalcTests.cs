@@ -187,4 +187,71 @@ public class SimCalcTests
         Assert.Equal(90_000, (double)SimCalc.Resolve("wbs", "root_total", given)!, 4);
         Assert.Equal(true, SimCalc.Resolve("wbs", "hundred_percent_valid", given));
     }
+
+    // ── Forecasting (three EAC methods) ───────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Forecast_ThreeEacMethods_MatchHandComputedValues()
+    {
+        // PV 200k, EV 180k, AC 200k, BAC 400k → CPI 0.9, SPI 0.9.
+        var f = SimCalc.Forecast(200_000, 180_000, 200_000, 400_000);
+        Assert.Equal(0.9, f.CPI, 4);
+        Assert.Equal(0.9, f.SPI, 4);
+        Assert.Equal(444_444.4444, f.EacCpi, 4);        // BAC/CPI = 400000/0.9
+        // AC + (BAC−EV)/(CPI·SPI) = 200000 + 220000/0.81 = 471604.9383
+        Assert.Equal(471_604.9383, f.EacComposite, 4);
+        Assert.Equal(420_000, f.EacBudget, 4);          // AC + (BAC−EV) = 200000 + 220000
+        Assert.Equal(244_444.4444, f.Etc, 4);           // EacCpi − AC
+        Assert.Equal(-44_444.4444, f.Vac, 4);           // BAC − EacCpi
+    }
+
+    [Fact]
+    public void Resolve_Evm_ReturnsForecastingEacVariants()
+    {
+        var given = J("{\"pv\":200000,\"ev\":180000,\"ac\":200000,\"bac\":400000}");
+        Assert.Equal(444_444.4444, (double)SimCalc.Resolve("evm", "eac_cpi", given)!, 4);
+        Assert.Equal(471_604.9383, (double)SimCalc.Resolve("evm", "eac_composite", given)!, 4);
+        Assert.Equal(420_000, (double)SimCalc.Resolve("evm", "eac_budget", given)!, 4);
+    }
+
+    // ── CBS cost roll-up + variance ───────────────────────────────────────────────────────────────
+
+    static readonly SimCalc.CbsInputNode[] CostTree =
+    {
+        new("1", null, null, null),
+        new("1.1", "1", 50_000, 55_000),   // over by 5k
+        new("1.2", "1", 30_000, 25_000),   // under by 5k
+        new("1.3", "1", 20_000, 22_000),   // over by 2k
+    };
+
+    [Fact]
+    public void Cbs_RollsUpBudgetActualAndVariance()
+    {
+        var r = SimCalc.Cbs(CostTree);
+        Assert.Equal(100_000, r.TotalBudget, 4);
+        Assert.Equal(102_000, r.TotalActual, 4);
+        Assert.Equal(-2_000, r.Variance, 4);            // budget − actual → 2k over
+        Assert.Equal(-5_000, r.Nodes.Single(n => n.Id == "1.1").Variance, 4);
+    }
+
+    [Fact]
+    public void Resolve_Cbs_ReturnsRootBudgetActualVariance()
+    {
+        var given = J("{\"nodes\":[" +
+            "{\"id\":\"1\",\"parent\":null}," +
+            "{\"id\":\"1.1\",\"parent\":\"1\",\"budget\":50000,\"actual\":55000}," +
+            "{\"id\":\"1.2\",\"parent\":\"1\",\"budget\":30000,\"actual\":25000}," +
+            "{\"id\":\"1.3\",\"parent\":\"1\",\"budget\":20000,\"actual\":22000}]}");
+        Assert.Equal(100_000, (double)SimCalc.Resolve("cbs", "root_budget", given)!, 4);
+        Assert.Equal(102_000, (double)SimCalc.Resolve("cbs", "root_actual", given)!, 4);
+        Assert.Equal(-2_000, (double)SimCalc.Resolve("cbs", "root_variance", given)!, 4);
+        Assert.Equal(-5_000, (double)SimCalc.Resolve("cbs", "variance_1.1", given)!, 4);
+    }
+
+    [Fact]
+    public void Cbs_RejectsUnknownParent()
+    {
+        var bad = new[] { new SimCalc.CbsInputNode("x", "nope", 1, 1) };
+        Assert.Throws<ArgumentException>(() => SimCalc.Cbs(bad));
+    }
 }

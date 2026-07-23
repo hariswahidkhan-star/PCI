@@ -127,6 +127,13 @@ public static class SimLabSchema
         SeedScenario(db, "GL-SCH-001", "Identify the critical path", "guided_lab", "Infrastructure", "intermediate", 20,
             "[\"schedule_analysis\"]", "Run the forward/backward pass on a small network and identify the critical path and total float.",
             ConfigCpm);
+        // Phase 2 — forecasting + cost control.
+        SeedScenario(db, "SD-FCT-001", "Forecast the final cost (three EAC methods)", "skill_drill", "Energy", "advanced", 12,
+            "[\"forecasting\",\"earned_value\"]", "Compute the Estimate at Completion by the CPI, composite (CPI×SPI) and budget-rate methods.",
+            ConfigForecast);
+        SeedScenario(db, "GL-CBS-001", "Roll up a cost breakdown and read the variance", "guided_lab", "Construction", "intermediate", 15,
+            "[\"cost_control\"]", "Roll budget and actual cost up a cost breakdown structure and compute the variance at the root.",
+            ConfigCbs);
     }
 
     static void SeedScenario(Db db, string code, string title, string kind, string industry, string difficulty,
@@ -186,6 +193,32 @@ public static class SimLabSchema
            {"key":"critical_path","label":"Critical path (comma-separated activity IDs)","type":"set"},
            {"key":"float_C","label":"Total float of activity C (days)","type":"number"}],
          "tolerance":0.001,"pass_pct":70,"competencies":["schedule_analysis"]}
+        """;
+
+    const string ConfigForecast = """
+        {"task":"evm",
+         "prompt":"A wind-farm package reports PV 200000, EV 180000 and AC 200000 against a BAC of 400000. Forecast the final cost three ways: the CPI method, the composite (CPI×SPI) method, and the budget-rate method.",
+         "given":{"pv":200000,"ev":180000,"ac":200000,"bac":400000},
+         "ask":[
+           {"key":"eac_cpi","label":"EAC — CPI method (BAC ÷ CPI)","type":"number"},
+           {"key":"eac_composite","label":"EAC — composite (AC + (BAC−EV) ÷ (CPI×SPI))","type":"number"},
+           {"key":"eac_budget","label":"EAC — budget rate (AC + (BAC−EV))","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["forecasting","earned_value"]}
+        """;
+
+    const string ConfigCbs = """
+        {"task":"cbs",
+         "prompt":"A refurbishment project has three cost accounts with budgeted and actual costs. Roll them up and report the total budget, the total actual, and the variance (budget − actual) at the root.",
+         "given":{"nodes":[
+           {"id":"1","parent":null,"name":"Refurbishment"},
+           {"id":"1.1","parent":"1","name":"Demolition","budget":50000,"actual":55000},
+           {"id":"1.2","parent":"1","name":"Structure","budget":30000,"actual":25000},
+           {"id":"1.3","parent":"1","name":"Finishes","budget":20000,"actual":22000}]},
+         "ask":[
+           {"key":"root_budget","label":"Total budget (root roll-up)","type":"number"},
+           {"key":"root_actual","label":"Total actual (root roll-up)","type":"number"},
+           {"key":"root_variance","label":"Variance at the root (budget − actual)","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["cost_control"]}
         """;
 
     const string ConfigWbs = """

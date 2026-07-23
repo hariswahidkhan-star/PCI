@@ -3303,6 +3303,25 @@ def test_simlab(admin):
     c, _ = jget("GET", "/api/admin/lab/scenarios", token=mtok)  # a student token is not an admin
     chk("43z the admin scenario list is not reachable with a student token", c in (401, 403), c)
 
+    # ---- Phase 2 engine: forecasting (three EAC methods) + CBS cost roll-up, graded deterministically ----
+    c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})
+    fid = stf.get("attempt_id")
+    c, subf = jget("POST", f"/api/me/lab/attempts/{fid}/submit", token=mtok,
+                   body={"answers": {"eac_cpi": 444444.4444, "eac_composite": 471604.9383, "eac_budget": 420000}})
+    fcomps = {x.get("competency") for x in subf.get("competencies", [])}
+    chk("43aa the forecasting drill grades all three EAC methods to 100 (forecasting evidence)",
+        c == 200 and subf.get("score") == 100 and subf.get("passed") is True and "forecasting" in fcomps, (c, subf.get("score"), sorted(fcomps)))
+
+    c, stc2 = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "GL-CBS-001"})
+    bid = stc2.get("attempt_id"); btask = stc2.get("task", {})
+    chk("43bb the cost-control lab serves a CBS task with budget/actual given (no answer key leaked)",
+        c == 200 and btask.get("task") == "cbs" and "correct_value" not in _json.dumps(btask).lower(), (c, btask.get("task")))
+    c, subb = jget("POST", f"/api/me/lab/attempts/{bid}/submit", token=mtok,
+                   body={"answers": {"root_budget": 100000, "root_actual": 102000, "root_variance": -2000}})
+    bcomps = {x.get("competency") for x in subb.get("competencies", [])}
+    chk("43cc the CBS lab grades the roll-up + variance to 100 (cost_control evidence)",
+        c == 200 and subb.get("score") == 100 and subb.get("passed") is True and "cost_control" in bcomps, (c, subb.get("score"), sorted(bcomps)))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.

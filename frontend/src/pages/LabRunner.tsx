@@ -67,6 +67,24 @@ function GivenView({ task }: { task: Task }) {
       </table>
     )
   }
+  if (task.task === 'cbs') {
+    const nodes = (g.nodes as { id: string; parent: string | null; name?: string; budget?: number; actual?: number }[]) ?? []
+    return (
+      <table className="data">
+        <thead><tr><th>Account</th><th>Element</th><th>Budget</th><th>Actual</th></tr></thead>
+        <tbody>
+          {nodes.map((n) => (
+            <tr key={n.id}>
+              <td style={{ paddingLeft: `${(n.id.split('.').length - 1) * 1.2}rem` }}>{n.id}</td>
+              <td>{n.name ?? '—'}</td>
+              <td>{n.budget != null ? fmt(n.budget) : '—'}</td>
+              <td>{n.actual != null ? fmt(n.actual) : '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
   if (task.task === 'wbs') {
     const nodes = (g.nodes as { id: string; parent: string | null; name?: string; value?: number }[]) ?? []
     return (
