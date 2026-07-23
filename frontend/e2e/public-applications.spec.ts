@@ -1,12 +1,18 @@
+import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
-import { apiLoginAsE2EAdmin, captureStoryEvidence, preparePublicJourney, uniqueEmail } from './util'
+import { E2E_ADMIN, apiLoginAsE2EAdmin, captureStoryEvidence, preparePublicJourney, uniqueEmail } from './util'
 
 const minimalPdf = Buffer.from('%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\n%%EOF\n')
+const onePixelPng = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+  'base64',
+)
 
 test.describe('public form-to-admin journeys', () => {
-  test('honorary application submits its structured history and CV to the board queue', async ({ page, request }, testInfo) => {
+  test('honorary application completes identity review, board approval, portal delivery and revocation', async ({ page, context, request }, testInfo) => {
+    test.slow()
     await preparePublicJourney(page)
-    const adminToken = await apiLoginAsE2EAdmin(request)
+    const adminToken = await apiLoginAsE2EAdmin(request, page)
     const email = uniqueEmail('honorary')
 
     await page.goto('/honorary-application.html')
@@ -56,6 +62,144 @@ test.describe('public form-to-admin journeys', () => {
     const queue = (await queueResponse.json()) as { rows: Array<Record<string, unknown>> }
     expect(queue.rows).toEqual(expect.arrayContaining([
       expect.objectContaining({ email, reference: result.reference, doc_count: 1, certification_name: 'PCI Project Management Leader – AI' }),
+    ]))
+    const queued = queue.rows.find((row) => row.email === email && row.reference === result.reference)
+    expect(queued?.id).toBeTruthy()
+
+    await page.goto('/admin/honorary-applications')
+    const applicationRow = page.getByRole('row').filter({ hasText: result.reference })
+    await expect(applicationRow).toContainText('pending review')
+    await applicationRow.getByRole('button', { name: 'Review' }).click()
+    let drawer = page.locator('.drawer')
+    await expect(drawer).toContainText(email)
+    await expect(drawer).toContainText('browser-cv.pdf')
+    const shortlistResponsePromise = page.waitForResponse((response) =>
+      response.url().endsWith(`/api/admin/honorary-applications/${queued!.id}/shortlist`)
+      && response.request().method() === 'POST')
+    await drawer.getByRole('button', { name: /Shortlist & generate secure link/ }).click()
+    expect((await shortlistResponsePromise).ok()).toBeTruthy()
+    const secureLinkInput = drawer.locator('input[readonly]')
+    await expect(secureLinkInput).toHaveValue(/honorary-verification\.html\?token=/)
+    const secureLink = await secureLinkInput.inputValue()
+    await captureStoryEvidence(page, testInfo, 'G9', 'board-shortlists-and-generates-idv-link')
+
+    const applicantPage = await context.newPage()
+    await preparePublicJourney(applicantPage)
+    await applicantPage.goto(secureLink)
+    await expect(applicantPage.locator('#vForm')).toBeVisible()
+    await applicantPage.locator('#vPhoto').setInputFiles({
+      name: 'passport-photo.png',
+      mimeType: 'image/png',
+      buffer: onePixelPng,
+    })
+    await applicantPage.locator('#vGovId').setInputFiles({
+      name: 'government-id.pdf',
+      mimeType: 'application/pdf',
+      buffer: minimalPdf,
+    })
+    for (const id of ['vTruthful', 'vBackground', 'vConsent']) await applicantPage.locator(`#${id}`).check()
+    const idvResponsePromise = applicantPage.waitForResponse((response) =>
+      response.url().includes('/api/honorary-idv/') && response.request().method() === 'POST')
+    await applicantPage.getByRole('button', { name: /Submit securely/ }).click()
+    expect((await idvResponsePromise).ok()).toBeTruthy()
+    await expect(applicantPage.locator('#vDone')).toBeVisible()
+    await captureStoryEvidence(applicantPage, testInfo, 'A5', 'applicant-completes-one-time-idv')
+
+    const burnedToken = new URL(secureLink).searchParams.get('token')
+    expect(burnedToken).toBeTruthy()
+    const tokenReuse = await request.get(`/api/honorary-idv/${encodeURIComponent(burnedToken!)}`)
+    expect(tokenReuse.status()).toBe(404)
+
+    await page.reload()
+    const reviewedRow = page.getByRole('row').filter({ hasText: result.reference })
+    await reviewedRow.getByRole('button', { name: 'Review' }).click()
+    drawer = page.locator('.drawer')
+    await expect(drawer).toContainText('submitted')
+    await expect(drawer).toContainText('passport-photo.png')
+    await expect(drawer).toContainText('government-id.pdf')
+    await drawer.getByLabel('Internal note / decision note').fill('Approved after board review and identity verification.')
+    const approveResponsePromise = page.waitForResponse((response) =>
+      response.url().endsWith(`/api/admin/honorary-applications/${queued!.id}/decide`)
+      && response.request().method() === 'POST')
+    await drawer.getByRole('button', { name: 'Approve & confer' }).click()
+    const approveResponse = await approveResponsePromise
+    expect(approveResponse.ok()).toBeTruthy()
+    const approved = (await approveResponse.json()) as { award_no: string; setup_url: string }
+    expect(approved.award_no).toMatch(/^PCI-HON-/)
+    expect(approved.setup_url).toContain('/reset-password.html?token=')
+    await expect(page.getByRole('status')).toContainText(approved.award_no)
+    await expect(page.getByRole('link', { name: 'open password setup' })).toHaveAttribute('href', approved.setup_url)
+
+    const setupUrl = new URL(approved.setup_url)
+    const password = 'HonoraryBrowser-2026!'
+    await applicantPage.goto(setupUrl.pathname + setupUrl.search)
+    await applicantPage.getByLabel('New password').fill(password)
+    await applicantPage.getByLabel('Confirm new password').fill(password)
+    const setPasswordResponsePromise = applicantPage.waitForResponse((response) =>
+      response.url().endsWith('/api/set-password') && response.request().method() === 'POST')
+    await applicantPage.getByRole('button', { name: 'Reset password' }).click()
+    expect((await setPasswordResponsePromise).ok()).toBeTruthy()
+    await expect(applicantPage).toHaveURL(/\/app\/login$/)
+    await applicantPage.getByLabel('Email address').fill(email)
+    await applicantPage.getByLabel('Password', { exact: true }).fill(password)
+    await applicantPage.getByRole('button', { name: 'Sign in' }).click()
+    await applicantPage.goto('/app/credentials')
+    const honoraryCard = applicantPage.locator('.card').filter({ hasText: approved.award_no })
+    await expect(honoraryCard).toContainText('Honorary Fellow')
+    await expect(honoraryCard).toContainText('Board-conferred')
+    const certificateDownloadPromise = applicantPage.waitForEvent('download')
+    await honoraryCard.getByRole('button', { name: 'Download PDF' }).click()
+    const certificateDownload = await certificateDownloadPromise
+    const certificatePath = await certificateDownload.path()
+    expect(certificatePath).toBeTruthy()
+    expect(readFileSync(certificatePath!).subarray(0, 4).toString()).toBe('%PDF')
+    await captureStoryEvidence(applicantPage, testInfo, 'E5-G9', 'honorary-member-downloads-board-certificate')
+
+    const publicActive = await request.get(`/api/verify?id=${encodeURIComponent(approved.award_no)}`)
+    expect(await publicActive.json()).toMatchObject({
+      found: true,
+      type: 'honorary',
+      valid: true,
+      state: 'active',
+      award_no: approved.award_no,
+    })
+
+    await page.goto('/admin/honorary')
+    const awardRow = page.getByRole('row').filter({ hasText: approved.award_no })
+    await expect(awardRow).toContainText(email)
+    await page.getByLabel('Revocation reason (recorded with the action)').fill('E2E board lifecycle test')
+    page.once('dialog', (dialog) => dialog.accept())
+    const revokeResponsePromise = page.waitForResponse((response) =>
+      response.url().match(/\/api\/admin\/honorary\/\d+\/revoke$/) !== null
+      && response.request().method() === 'POST')
+    await awardRow.getByRole('button', { name: 'Revoke' }).click()
+    expect((await revokeResponsePromise).ok()).toBeTruthy()
+    await expect(awardRow).toContainText('revoked')
+
+    const publicRevoked = await request.get(`/api/verify?id=${encodeURIComponent(approved.award_no)}`)
+    expect(await publicRevoked.json()).toMatchObject({
+      found: true,
+      type: 'honorary',
+      valid: false,
+      state: 'revoked',
+    })
+    const studentToken = await applicantPage.evaluate(() => sessionStorage.getItem('pci.session.token'))
+    expect(studentToken).toBeTruthy()
+    const revokedDownload = await request.get('/api/me/honorary-certificate/pdf', {
+      headers: { Authorization: `Bearer ${studentToken}` },
+    })
+    expect(revokedDownload.status()).toBe(404)
+
+    const auditResponse = await request.get('/api/admin/audit', {
+      headers: { Authorization: `Bearer ${adminToken}` },
+    })
+    const audit = ((await auditResponse.json()) as {
+      rows: Array<{ action?: string; details?: string; actor?: string }>
+    }).rows
+    expect(audit).toEqual(expect.arrayContaining([
+      expect.objectContaining({ action: 'honorary_shortlisted', details: expect.stringContaining(result.reference), actor: E2E_ADMIN.email }),
+      expect.objectContaining({ action: 'honorary_application_approved', details: expect.stringContaining(approved.award_no), actor: E2E_ADMIN.email }),
+      expect.objectContaining({ action: 'honorary_revoked', details: expect.stringContaining(approved.award_no), actor: E2E_ADMIN.email }),
     ]))
   })
 

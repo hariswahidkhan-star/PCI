@@ -86,6 +86,51 @@ export interface TestUser {
   scenario: TestUserScenario
 }
 
+export interface RegisteredStudent {
+  id: number
+  email: string
+  password: string
+  token: string
+}
+
+/** Create an ordinary self-service student through the public registration API. Unlike scenario
+ * accounts, this exercises the same account/session path used by the registration form and leaves
+ * the profile empty enough for onboarding, account-security and recovery journeys. */
+export async function registerStudent(
+  request: APIRequestContext,
+  page?: Page,
+  prefix = 'student',
+): Promise<RegisteredStudent> {
+  const email = uniqueEmail(prefix)
+  const password = 'StudentBrowser-2026!'
+  const response = await request.post('/api/register', {
+    data: {
+      firstName: 'Browser',
+      lastName: 'Student',
+      email,
+      password,
+      confirmPassword: password,
+      country: 'United Kingdom',
+      mobile: '+44 7700 900000',
+    },
+  })
+  expect(response.ok(), `student registration should succeed (got ${response.status()})`).toBeTruthy()
+  const body = (await response.json()) as {
+    token?: string
+    user?: { id?: number; email?: string }
+  }
+  expect(body.token).toBeTruthy()
+  expect(body.user?.id).toBeGreaterThan(0)
+  expect(body.user?.email).toBe(email)
+  const token = body.token as string
+  if (page) {
+    await page.addInitScript((t) => {
+      try { sessionStorage.setItem('pci.session.token', t) } catch { /* asserted by the auth redirect */ }
+    }, token)
+  }
+  return { id: body.user!.id!, email, password, token }
+}
+
 /** Create a scenario account through the real admin operator API and optionally adopt its student
  * session in a page. This is deliberately not a DB seed: the journey verifies the admin control. */
 export async function createTestUser(
@@ -163,4 +208,29 @@ export async function settleExamPurchase(
     },
   })
   expect(response.ok(), `signed ${product} settlement for ${certification} should succeed (got ${response.status()})`).toBeTruthy()
+}
+
+/** Generate the RFC 6238 six-digit code used by both student and admin TOTP enrolment. Keeping the
+ * authenticator in the test process avoids any provider dependency while still exercising the real
+ * server secret, time-step validation, replay guard and login prompts. */
+export function totpCode(secret: string, atMs = Date.now()): string {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
+  let bits = ''
+  for (const ch of secret.replace(/=+$/g, '').replace(/\s+/g, '').toUpperCase()) {
+    const value = alphabet.indexOf(ch)
+    if (value < 0) throw new Error(`Invalid base32 character in TOTP secret: ${ch}`)
+    bits += value.toString(2).padStart(5, '0')
+  }
+  const bytes: number[] = []
+  for (let i = 0; i + 8 <= bits.length; i += 8) bytes.push(parseInt(bits.slice(i, i + 8), 2))
+  const counter = Buffer.alloc(8)
+  counter.writeBigUInt64BE(BigInt(Math.floor(atMs / 30_000)))
+  const digest = createHmac('sha1', Buffer.from(bytes)).update(counter).digest()
+  const offset = digest[digest.length - 1] & 0x0f
+  const binary =
+    ((digest[offset] & 0x7f) << 24) |
+    ((digest[offset + 1] & 0xff) << 16) |
+    ((digest[offset + 2] & 0xff) << 8) |
+    (digest[offset + 3] & 0xff)
+  return String(binary % 1_000_000).padStart(6, '0')
 }

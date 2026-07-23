@@ -1,5 +1,8 @@
+import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
 import { apiLoginAsE2EAdmin, captureStoryEvidence, uniqueEmail } from './util'
+
+const minimalPdf = Buffer.from('%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n')
 
 test.describe('institution partner persona', () => {
   test('admin provisions a partner who changes password, creates a code and sponsors a PML-AI candidate', async ({ page, request }, testInfo) => {
@@ -44,6 +47,25 @@ test.describe('institution partner persona', () => {
       },
     })
     expect(configurePartnerResponse.ok()).toBeTruthy()
+
+    const partnerDocumentTitle = `Browser institution agreement ${Date.now()}`
+    const partnerDocumentResponse = await request.post('/api/admin/documents', {
+      headers,
+      data: {
+        title: partnerDocumentTitle,
+        description: 'A private agreement scoped to exactly one institution.',
+        category: 'Institution agreements',
+        doc_type: 'agreement',
+        assignment_type: 'institution',
+        partner_id: partner.id,
+        filename: 'browser-institution-agreement.pdf',
+        file: `data:application/pdf;base64,${minimalPdf.toString('base64')}`,
+        watermark: true,
+        publish: true,
+      },
+    })
+    expect(partnerDocumentResponse.ok()).toBeTruthy()
+    const partnerDocument = (await partnerDocumentResponse.json()) as { id: number }
 
     const createUserResponse = await request.post(`/api/admin/training-partners/${partner.id}/users`, {
       headers,
@@ -90,6 +112,18 @@ test.describe('institution partner persona', () => {
     })
     expect(currentDeviceProbe.ok(), 'the partner session that changed the password must remain active').toBeTruthy()
     await captureStoryEvidence(page, testInfo, 'H1-H5', 'first-login-and-session-revocation')
+
+    await page.getByRole('button', { name: 'Documents', exact: true }).click()
+    const partnerDocumentRow = page.locator('#docsTbl tbody tr').filter({ hasText: partnerDocumentTitle })
+    await expect(partnerDocumentRow).toContainText('Institution agreements')
+    const documentDownload = page.waitForEvent('download')
+    await partnerDocumentRow.getByRole('button', { name: 'Download' }).click()
+    const downloadedDocument = await documentDownload
+    expect(downloadedDocument.suggestedFilename()).toBe('browser-institution-agreement.pdf')
+    const downloadedPath = await downloadedDocument.path()
+    expect(downloadedPath).toBeTruthy()
+    expect(readFileSync(downloadedPath!).subarray(0, 5).toString()).toBe('%PDF')
+    await captureStoryEvidence(page, testInfo, 'H3', 'institution-document-downloaded')
 
     // Partner-managed discount code, constrained by the agreement the PCI operator configured.
     await page.getByRole('button', { name: 'Codes', exact: true }).click()
@@ -194,6 +228,12 @@ test.describe('institution partner persona', () => {
     expect(isolatedCandidateRows.map((row) => row.candidate_email)).toContain(isolatedCandidateEmail)
     expect(isolatedCandidateRows.map((row) => row.candidate_email)).not.toContain(candidateEmail)
     expect(isolatedCodeRows.map((row) => row.code)).not.toContain(code)
+    const isolatedDocumentsResponse = await request.get('/api/partner/documents', { headers: isolatedHeaders })
+    expect(isolatedDocumentsResponse.ok()).toBeTruthy()
+    const isolatedDocuments = (await isolatedDocumentsResponse.json()) as { rows: Array<{ id: number; title: string }> }
+    expect(isolatedDocuments.rows.map((row) => row.id)).not.toContain(partnerDocument.id)
+    const isolatedDocumentDownload = await request.get(`/api/partner/documents/${partnerDocument.id}/download`, { headers: isolatedHeaders })
+    expect(isolatedDocumentDownload.status()).toBe(404)
 
     await page.getByRole('button', { name: 'Sign out' }).click()
     await expect(page.locator('#viewLogin')).toBeVisible()

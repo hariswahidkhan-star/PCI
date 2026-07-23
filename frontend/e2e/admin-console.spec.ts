@@ -76,4 +76,13 @@ test.describe('admin console', () => {
     expect(csv.split(/\r?\n/, 1)[0]).toBe('created_at,event,path,visitor,country,device,browser,utm_source,utm_medium,utm_campaign,referrer,landing,value,currency')
     await captureStoryEvidence(page, testInfo, 'G2', 'analytics-export')
   })
+
+  test('@cross-browser an authenticated owner can open a protected console screen', async ({ page, request }) => {
+    await apiLoginAsE2EAdmin(request, page)
+    await page.goto('/admin/students')
+    await expect(page).toHaveURL(/\/admin\/students$/)
+    await expect(page.getByRole('heading', { name: 'Students' })).toBeVisible()
+    await expect(page.getByText('Admin Console', { exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
+  })
 })
