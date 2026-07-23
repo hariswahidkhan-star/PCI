@@ -605,6 +605,109 @@ public static class SimCalc
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────────
+    //  Next-release template families — productivity, BOQ, resource, procurement, portfolio,
+    //  decision trade-off, data-quality. Pure, deterministic, unit-tested.
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    public sealed record ProductivityResult(double PlannedProductivity, double ActualProductivity, double Factor, double HoursVariance, double QtyVariance);
+    /// <summary>Productivity = quantity ÷ hours. Factor = actual ÷ planned (>1 ahead of plan).</summary>
+    public static ProductivityResult Productivity(double plannedQty, double plannedHours, double earnedQty, double actualHours)
+    {
+        var pp = plannedHours == 0 ? 0 : plannedQty / plannedHours;
+        var ap = actualHours == 0 ? 0 : earnedQty / actualHours;
+        var factor = pp == 0 ? 0 : ap / pp;
+        return new ProductivityResult(R(pp), R(ap), R(factor), R(actualHours - plannedHours), R(earnedQty - plannedQty));
+    }
+
+    public sealed record BoqResult(double Total, int LineCount, double AverageRate);
+    /// <summary>Bill of quantities / measurement: Σ(qty × rate).</summary>
+    public static BoqResult Boq(IReadOnlyList<(string id, double qty, double rate)> lines)
+    {
+        double total = 0;
+        foreach (var l in lines) total += l.qty * l.rate;
+        var avg = lines.Count == 0 ? 0 : lines.Average(l => l.rate);
+        return new BoqResult(R(total), lines.Count, R(avg));
+    }
+
+    public sealed record ResourceResult(double PeakDemand, double PeakCapacity, double PeakOverload, double TotalOverdemand, int OverloadedPeriods);
+    /// <summary>Resource loading: overload = max(0, demand − capacity) per period.</summary>
+    public static ResourceResult ResourceLoad(IReadOnlyList<(int period, double demand, double capacity)> periods)
+    {
+        double peakD = 0, peakC = 0, peakO = 0, totalO = 0;
+        var overloaded = 0;
+        foreach (var p in periods)
+        {
+            var o = Math.Max(0, p.demand - p.capacity);
+            if (p.demand > peakD) peakD = p.demand;
+            if (p.capacity > peakC) peakC = p.capacity;
+            if (o > peakO) peakO = o;
+            totalO += o;
+            if (o > 0) overloaded++;
+        }
+        return new ResourceResult(R(peakD), R(peakC), R(peakO), R(totalO), overloaded);
+    }
+
+    public sealed record ProcurementResult(double CriticalDelay, double NewProjectDuration, double FloatConsumed);
+    /// <summary>Supplier delay vs remaining float: critical delay = max(0, delay − float).</summary>
+    public static ProcurementResult Procurement(double projectDuration, double remainingFloat, double supplierDelayDays)
+    {
+        var critical = Math.Max(0, supplierDelayDays - remainingFloat);
+        var consumed = Math.Min(remainingFloat, Math.Max(0, supplierDelayDays));
+        return new ProcurementResult(R(critical), R(projectDuration + critical), R(consumed));
+    }
+
+    public sealed record PortfolioItem(string Id, double Score);
+    public sealed record PortfolioResult(IReadOnlyList<PortfolioItem> Ranked, string TopId, double TopScore, double TotalNpv);
+    /// <summary>Portfolio score = wNpv·norm(NPV) + wFit·fit − wRisk·risk. Rank descending.</summary>
+    public static PortfolioResult Portfolio(IReadOnlyList<(string id, double npv, double risk, double fit)> projects, double wNpv, double wRisk, double wFit)
+    {
+        var maxNpv = projects.Count == 0 ? 1 : Math.Max(1e-9, projects.Max(p => Math.Abs(p.npv)));
+        var scored = projects.Select(p =>
+        {
+            var n = p.npv / maxNpv;
+            var s = wNpv * n + wFit * p.fit - wRisk * p.risk;
+            return new PortfolioItem(p.id, R(s));
+        }).OrderByDescending(x => x.Score).ThenBy(x => x.Id, StringComparer.Ordinal).ToList();
+        var top = scored.FirstOrDefault() ?? new PortfolioItem("", 0);
+        return new PortfolioResult(scored, top.Id, top.Score, R(projects.Sum(p => p.npv)));
+    }
+
+    public sealed record DecisionResult(string BestOptionId, double BestScore, IReadOnlyList<(string id, double score)> Scores);
+    /// <summary>Decision trade-off: lower weighted impact is better. score = wC·|cost| + wS·|sched| + wR·risk.</summary>
+    public static DecisionResult Decision(IReadOnlyList<(string id, double cost, double schedule, double risk)> options, double wCost, double wSched, double wRisk)
+    {
+        var scores = options.Select(o => (o.id, score: R(wCost * Math.Abs(o.cost) + wSched * Math.Abs(o.schedule) + wRisk * o.risk)))
+            .OrderBy(x => x.score).ThenBy(x => x.id, StringComparer.Ordinal).ToList();
+        var best = scores.FirstOrDefault();
+        return new DecisionResult(best.id ?? "", best.score, scores);
+    }
+
+    public sealed record DataQualityResult(int AnomalyCount, double CompletenessPct, double MeanAbsError, int RecordCount);
+    /// <summary>Data-quality investigation: anomalies where |value−expected| > threshold; completeness = non-null/expected rows.</summary>
+    public static DataQualityResult DataQuality(IReadOnlyList<(double? value, double expected)> rows, double threshold)
+    {
+        var n = rows.Count;
+        var present = 0;
+        var anomalies = 0;
+        double absErr = 0;
+        var errN = 0;
+        foreach (var r in rows)
+        {
+            if (r.value is double v)
+            {
+                present++;
+                var e = Math.Abs(v - r.expected);
+                absErr += e;
+                errN++;
+                if (e > threshold) anomalies++;
+            }
+        }
+        var completeness = n == 0 ? 0 : 100.0 * present / n;
+        var mae = errN == 0 ? 0 : absErr / errN;
+        return new DataQualityResult(anomalies, R(completeness), R(mae), n);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
     //  Answer resolution — the values a scenario can ask a student to compute
     // ─────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -615,6 +718,7 @@ public static class SimCalc
     public static readonly IReadOnlySet<string> KnownTasks = new HashSet<string>(StringComparer.Ordinal)
     {
         "evm", "cbs", "progress", "risk", "pert", "change", "cashflow", "timeline", "earned_schedule", "cpm", "wbs",
+        "productivity", "boq", "resource", "procurement", "portfolio", "decision", "data_quality",
     };
 
     /// <summary>
@@ -765,6 +869,94 @@ public static class SimCalc
                 {
                     "root_total" => (object?)r.RootTotal,
                     "hundred_percent_valid" => r.HundredPercentValid,
+                    _ => null,
+                };
+            }
+            case "productivity":
+            {
+                var r = Productivity(G("planned_qty"), G("planned_hours"), G("earned_qty"), G("actual_hours"));
+                return key switch
+                {
+                    "planned_productivity" => (object?)r.PlannedProductivity,
+                    "actual_productivity" => r.ActualProductivity,
+                    "factor" => r.Factor,
+                    "hours_variance" => r.HoursVariance,
+                    "qty_variance" => r.QtyVariance,
+                    _ => null,
+                };
+            }
+            case "boq":
+            {
+                var r = Boq(ParseBoq(given));
+                return key switch
+                {
+                    "total" => (object?)r.Total,
+                    "line_count" => (double)r.LineCount,
+                    "average_rate" => r.AverageRate,
+                    _ => null,
+                };
+            }
+            case "resource":
+            {
+                var r = ResourceLoad(ParseResource(given));
+                return key switch
+                {
+                    "peak_demand" => (object?)r.PeakDemand,
+                    "peak_capacity" => r.PeakCapacity,
+                    "peak_overload" => r.PeakOverload,
+                    "total_overdemand" => r.TotalOverdemand,
+                    "overloaded_periods" => (double)r.OverloadedPeriods,
+                    _ => null,
+                };
+            }
+            case "procurement":
+            {
+                var r = Procurement(G("project_duration"), G("remaining_float"), G("supplier_delay_days"));
+                return key switch
+                {
+                    "critical_delay" => (object?)r.CriticalDelay,
+                    "new_project_duration" => r.NewProjectDuration,
+                    "float_consumed" => r.FloatConsumed,
+                    _ => null,
+                };
+            }
+            case "portfolio":
+            {
+                var r = Portfolio(ParsePortfolio(given),
+                    GN("w_npv") ?? 0.5, GN("w_risk") ?? 0.3, GN("w_fit") ?? 0.2);
+                if (key == "top_id") return r.TopId;
+                if (key == "top_score") return r.TopScore;
+                if (key == "total_npv") return r.TotalNpv;
+                if (key.StartsWith("score_", StringComparison.Ordinal))
+                {
+                    var id = key.Substring("score_".Length);
+                    return r.Ranked.FirstOrDefault(x => x.Id == id)?.Score;
+                }
+                return null;
+            }
+            case "decision":
+            {
+                var r = Decision(ParseDecision(given),
+                    GN("w_cost") ?? 1, GN("w_sched") ?? 1, GN("w_risk") ?? 1);
+                if (key == "best_option") return r.BestOptionId;
+                if (key == "best_score") return r.BestScore;
+                if (key.StartsWith("score_", StringComparison.Ordinal))
+                {
+                    var id = key.Substring("score_".Length);
+                    var hit = r.Scores.FirstOrDefault(x => x.id == id);
+                    return hit.id == id ? hit.score : null;
+                }
+                return null;
+            }
+            case "data_quality":
+            {
+                var r = DataQuality(ParseDataQuality(given), GN("threshold") ?? 0);
+                return key switch
+                {
+                    "anomaly_count" => (object?)(double)r.AnomalyCount,
+                    "completeness_pct" => r.CompletenessPct,
+                    "mean_abs_error" => r.MeanAbsError,
+                    "record_count" => (double)r.RecordCount,
                     _ => null,
                 };
             }
@@ -934,6 +1126,71 @@ public static class SimCalc
                 double? budget = n.TryGetProperty("budget", out var b) && b.ValueKind == JsonValueKind.Number ? b.GetDouble() : (double?)null;
                 double? actual = n.TryGetProperty("actual", out var a) && a.ValueKind == JsonValueKind.Number ? a.GetDouble() : (double?)null;
                 list.Add(new CbsInputNode(id, parent, budget, actual));
+            }
+        return list;
+    }
+
+    static List<(string id, double qty, double rate)> ParseBoq(JsonElement given)
+    {
+        var list = new List<(string, double, double)>();
+        if (given.TryGetProperty("lines", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                var id = n.TryGetProperty("id", out var i) ? i.GetString() ?? "" : "";
+                double G(string k) => n.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0;
+                list.Add((id, G("qty"), G("rate")));
+            }
+        return list;
+    }
+
+    static List<(int period, double demand, double capacity)> ParseResource(JsonElement given)
+    {
+        var list = new List<(int, double, double)>();
+        if (given.TryGetProperty("periods", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                var per = n.TryGetProperty("period", out var pd) && pd.ValueKind == JsonValueKind.Number ? pd.GetInt32() : 0;
+                double G(string k) => n.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0;
+                list.Add((per, G("demand"), G("capacity")));
+            }
+        return list;
+    }
+
+    static List<(string id, double npv, double risk, double fit)> ParsePortfolio(JsonElement given)
+    {
+        var list = new List<(string, double, double, double)>();
+        if (given.TryGetProperty("projects", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                var id = n.TryGetProperty("id", out var i) ? i.GetString() ?? "" : "";
+                double G(string k) => n.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0;
+                list.Add((id, G("npv"), G("risk"), G("fit")));
+            }
+        return list;
+    }
+
+    static List<(string id, double cost, double schedule, double risk)> ParseDecision(JsonElement given)
+    {
+        var list = new List<(string, double, double, double)>();
+        if (given.TryGetProperty("options", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                var id = n.TryGetProperty("id", out var i) ? i.GetString() ?? "" : "";
+                double G(string k) => n.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0;
+                list.Add((id, G("cost"), G("schedule"), G("risk")));
+            }
+        return list;
+    }
+
+    static List<(double? value, double expected)> ParseDataQuality(JsonElement given)
+    {
+        var list = new List<(double?, double)>();
+        if (given.TryGetProperty("rows", out var arr) && arr.ValueKind == JsonValueKind.Array)
+            foreach (var n in arr.EnumerateArray())
+            {
+                double? value = n.TryGetProperty("value", out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : (double?)null;
+                double expected = n.TryGetProperty("expected", out var e) && e.ValueKind == JsonValueKind.Number ? e.GetDouble() : 0;
+                list.Add((value, expected));
             }
         return list;
     }

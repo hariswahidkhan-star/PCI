@@ -98,4 +98,20 @@ describe('LabRunner (Simulation Lab workspace)', () => {
     expect(screen.getByText(/the worked answers are withheld/)).toBeInTheDocument()
     await waitFor(() => expect(post).toHaveBeenCalledTimes(2))
   })
+
+  it('hydrates saved answers when an in-progress attempt is resumed', async () => {
+    post.mockImplementation((path: string) => {
+      if (path === '/api/me/lab/attempts') {
+        return Promise.resolve({
+          ...startResp(false),
+          resumed: true,
+          answers: { spi: 0.9 },
+        })
+      }
+      return Promise.resolve({})
+    })
+    renderRunner()
+    expect(await screen.findByText('Resumed your saved answers')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('number')).toHaveValue('0.9')
+  })
 })
