@@ -1,35 +1,51 @@
 import { test, expect } from '@playwright/test'
-import { storyScreenshot } from './util'
+import { preparePublicJourney } from './util'
 
 const policyPages = [
-  'policies.html',
-  'privacy.html',
-  'cookie-policy.html',
-  'refund-policy.html',
-  'data-protection-policy.html',
-  'cpd-policy.html',
-  'impartiality-policy.html',
-  'quality-policy.html',
-  'eligibility-policy.html',
-  'disciplinary-policy.html',
-  'certification-decision-policy.html',
-  'membership-policy.html',
-  'ai-policy.html',
-  'ai-decision-policy.html',
-  'confidentiality-policy.html',
-  'copyright-policy.html',
-  'sanctions-policy.html',
-]
+  'policies',
+  'terms-of-enrollment',
+  'refund-policy',
+  'privacy',
+  'cookie-policy',
+  'data-protection-policy',
+  'terms',
+  'website-disclaimer',
+  'copyright-policy',
+  'accessibility-statement',
+  'quality-policy',
+  'confidentiality-policy',
+  'impartiality-policy',
+  'ai-policy',
+  'ai-decision-policy',
+  'eligibility-policy',
+  'certification-decision-policy',
+  'examination-security',
+  'exam-misconduct',
+  'retake-policy',
+  'cpd-policy',
+  'membership-policy',
+  'disciplinary-policy',
+  'sanctions-policy',
+  'records-retention',
+  'fellowship-policy',
+] as const
 
-test.describe('public policy pages', () => {
-  for (const route of policyPages) {
-    test(`${route} returns crawlable main content`, async ({ page }, testInfo) => {
-      const resp = await page.goto(`/${route}`)
-      expect(resp?.status() ?? 0).toBeLessThan(400)
-      const main = page.locator('main, #content').first()
-      await expect(page.locator('main h1, #content h1').first()).toBeVisible()
-      await expect.poll(async () => (await main.innerText()).trim().length).toBeGreaterThan(100)
-      await storyScreenshot(page, testInfo, route.replace('.html', ''))
-    })
-  }
+test.describe('public policy library', () => {
+  test('every named policy route opens with crawlable content and visual evidence', async ({ page }, testInfo) => {
+    test.slow()
+    await preparePublicJourney(page)
+
+    for (const slug of policyPages) {
+      const response = await page.goto(`/${slug}.html`)
+      expect(response?.status() ?? 0, `${slug} should return a successful document`).toBeLessThan(400)
+      expect(response?.headers()['content-type'] ?? '').toContain('text/html')
+      await expect(page.locator('main#content')).toBeVisible()
+      await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
+      await expect(page).not.toHaveTitle(/404|not found|error/i)
+
+      const path = testInfo.outputPath(`A10-${slug}.png`)
+      await page.screenshot({ path, animations: 'disabled' })
+      await testInfo.attach(`A10-${slug}`, { path, contentType: 'image/png' })
+    }
+  })
 })

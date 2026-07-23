@@ -19,6 +19,14 @@ public class PathRedirectsNormTests
     [InlineData("  /page/  ", "/page")]
     public void Norm_CanonicalisesPaths(string? input, string expected) =>
         Assert.Equal(expected, PathRedirects.Norm(input));
+
+    [Theory]
+    [InlineData("/new", "", "/new")]
+    [InlineData("/new", "?utm=legacy", "/new?utm=legacy")]
+    [InlineData("/new?lang=en", "?utm=legacy", "/new?lang=en&utm=legacy")]
+    [InlineData("/new#section", "?utm=legacy", "/new?utm=legacy#section")]
+    public void WithQuery_PreservesQueryBeforeFragment(string target, string query, string expected) =>
+        Assert.Equal(expected, PathRedirects.WithQuery(target, new QueryString(query)));
 }
 
 /// <summary>DB-backed redirect lookup — the cache/version handshake and the loop guards.</summary>

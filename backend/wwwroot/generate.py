@@ -112,6 +112,8 @@ FEATURE_JS = '''(function(){
  if(nb){nb.addEventListener('click',function(){
    var e=document.getElementById('nlEmail'),m=document.getElementById('nlMsg');
    if(!e.value||e.value.indexOf('@')<1){m.style.color='#ffb4ad';m.textContent='Please enter a valid email address.';return;}
+   /* When the live API base is set (cms-loader), that handler owns Subscribe — do not clear the field. */
+   if(window.PCI_API_BASE) return;
    m.style.color='#5fd0a0';m.textContent='Thanks — please check your inbox to confirm.';e.value='';
  });}
  try{

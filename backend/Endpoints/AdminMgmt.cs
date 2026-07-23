@@ -477,7 +477,20 @@ public static class AdminMgmt
             var g = Deny(req, "credentials"); if (g is not null) return g;
             var adm = adminFromReq(req)!;
             var b = await H.Body(req);
-            var cid = H.GetS(b, "credential_id"); var holder = H.GetS(b, "holder_name");
+            var cid = H.GetS(b, "credential_id");
+            var userId = H.GetNum(b, "user_id");
+            Dictionary<string, object?>? student = null;
+            if (userId is not null)
+            {
+                student = db.QueryOne("SELECT id,first_name,last_name,email FROM users WHERE id=?", userId);
+                if (student is null) return Results.Json(new { error = "bad_user", message = "Select a valid student account." }, statusCode: 400);
+            }
+            var holder = H.GetS(b, "holder_name");
+            if (string.IsNullOrWhiteSpace(holder) && student is not null)
+            {
+                holder = $"{H.Str(student["first_name"])} {H.Str(student["last_name"])}".Trim();
+                if (holder.Length == 0) holder = H.Str(student["email"]);
+            }
             if (string.IsNullOrEmpty(cid) || string.IsNullOrEmpty(holder)) return Results.Json(new { error = "missing_fields" }, statusCode: 400);
             // PCI-HON is the honorary registry's number space; /api/verify routes that prefix there
             // first, so a credential issued under it would be unverifiable. Reserved (same rule as the
@@ -494,8 +507,8 @@ public static class AdminMgmt
             var credCert = Certs.ById(db, credCertId);
             var credLabel = H.GetS(b, "credential") ?? (credCert is not null ? Certs.Prefix(credCert) : "PCL-AI");
             try { var id = db.ExecuteReturningId("INSERT INTO issued_credentials(credential_id,user_id,certification_id,holder_name,credential,status,expires_at) VALUES(?,?,?,?,?, 'active',?)",
-                cid.ToUpperInvariant(), H.GetNum(b, "user_id"), credCertId, holder, credLabel, H.GetS(b, "expires_at"));
-                log(adm.Id, "credential_issued", $"{cid} user {H.Ln(H.GetNum(b, "user_id"))?.ToString() ?? "-"}"); return J(new { id }); }
+                cid.ToUpperInvariant(), userId, credCertId, holder, credLabel, H.GetS(b, "expires_at"));
+                log(adm.Id, "credential_issued", $"{cid.ToUpperInvariant()} (subject {userId?.ToString() ?? "unlinked"}, cert {credCertId})"); return J(new { id }); }
             catch { return Results.Json(new { error = "duplicate_or_invalid" }, statusCode: 400); }
         });
         app.MapPost("/api/admin/credentials/{id}/status", async (HttpRequest req, long id) =>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { Card, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { adminApi } from '../api'
 
 // Admin Console → Analytics: first-party, privacy-first reporting (cookieless server-side events).
 // Visitors are daily-rotating hashes — no raw IPs here; country appears only when a CDN geo header
@@ -78,12 +79,16 @@ export default function Analytics() {
 
 async function exportCsv(days: number) {
   // fetch with the bearer token, then download — a plain <a href> would miss the Authorization header
-  const tok = localStorage.getItem('pci.admin.token')
+  const tok = adminApi.getToken()
+  if (!tok) throw new Error('Your admin session has expired.')
   const resp = await fetch(`/api/admin/analytics/export.csv?days=${days}`, { headers: { Authorization: `Bearer ${tok}` } })
+  if (!resp.ok) throw new Error(`Analytics export failed (${resp.status}).`)
   const blob = await resp.blob()
   const a = document.createElement('a')
   a.href = URL.createObjectURL(blob)
   a.download = `pci-analytics-${days}d.csv`
+  document.body.appendChild(a)
   a.click()
+  a.remove()
   URL.revokeObjectURL(a.href)
 }

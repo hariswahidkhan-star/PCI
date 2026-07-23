@@ -153,7 +153,7 @@ public static class SocialPublishing
 
         app.MapPost("/api/admin/content/social/drafts/{id:long}/cancel", (HttpRequest req, long id) => gate(req, "cc_social", adm =>
         {
-            db.Execute("UPDATE social_drafts SET status='cancelled', updated_at=datetime('now') WHERE id=? AND status IN ('draft','approved','retrying')", id);
+            db.Execute("UPDATE social_drafts SET status='cancelled', updated_at=datetime('now') WHERE id=? AND status IN ('draft','approved','scheduled','retrying')", id);
             db.Execute("UPDATE content_jobs SET status='cancelled', updated_at=datetime('now') WHERE idempotency_key=? AND status IN ('pending','retrying')", "socialdraft:" + id);
             log(adm.Id, "social_draft_cancel", "draft " + id);
             return J(new { ok = true });

@@ -64,11 +64,11 @@ public static class SeedContent
                 ("/certifications/pcp-ai", "/certifications/pcl-ai", "PCI PCL-AI"),
                 ("/certifications/pfip", "/certifications/pfl-ai", "PCI PFL-AI"),
                 ("/certifications/cpmd", "/certifications/pml-ai", "PCI PML-AI"),
+                ("/certifications/cpmd-ai", "/certifications/pml-ai", "PCI PML-AI"),
                 ("/certifications/pdl-ai", "/certifications/pml-ai", "PCI PML-AI") })
                 db.Execute("UPDATE nav_items SET url=?, label=? WHERE nav_group='Certifications' AND url=?", newUrl, newLbl, oldUrl);
-            // Replace retired third-cert acronyms in any nav label.
+            // Replace the retired acronym in any nav label (e.g. "PMP vs AACE vs PCP-AI") across every group.
             db.Execute("UPDATE nav_items SET label=REPLACE(label,'PCP-AI','PCL-AI') WHERE label LIKE '%PCP-AI%'");
-            db.Execute("UPDATE nav_items SET label=REPLACE(label,'PDL-AI','PML-AI') WHERE label LIKE '%PDL-AI%'");
             // The comparison article moved with the acronym rename; keep any old nav row pointing at it.
             db.Execute("UPDATE nav_items SET url='pmp-vs-aace-vs-pcl-ai.html' WHERE url='pmp-vs-aace-vs-pcp-ai.html'");
             // Deterministic order for the Certifications menu: the suite first (All → PCL → PFL → PML),
@@ -84,6 +84,9 @@ public static class SeedContent
                 db.Execute("UPDATE nav_items SET sort_order=? WHERE nav_group='Certifications' AND url=?", so, url);
             // 301 for the renamed article path so the old URL keeps its SEO value.
             db.Execute("INSERT OR IGNORE INTO seo_redirects(from_path,to_url,status,active,note) VALUES('/pmp-vs-aace-vs-pcp-ai.html','/pmp-vs-aace-vs-pcl-ai.html',301,1,'Master Naming Update')");
+            // Preserve every retired third-certification URL as a single-hop permanent redirect.
+            foreach (var oldPath in new[] { "/certifications/cpmd", "/certifications/cpmd-ai", "/certifications/pdl-ai" })
+                db.Execute("INSERT OR IGNORE INTO seo_redirects(from_path,to_url,status,active,note) VALUES(?, '/certifications/pml-ai', 301, 1, 'PML-AI naming migration')", oldPath);
             // Public Downloads Centre: a top-level header link, placed just after Resources (ties break by id
             // so it sorts immediately after). Idempotent — inserted once, then left for an operator to move.
             db.Execute("INSERT INTO nav_items(label,url,nav_group,sort_order,visible) SELECT 'Downloads','/downloads','Header', COALESCE((SELECT sort_order FROM nav_items WHERE nav_group='Header' AND label='Resources'),90), 1 WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE nav_group='Header' AND url='/downloads')");

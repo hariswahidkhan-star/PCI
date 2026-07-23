@@ -179,14 +179,15 @@ public static class Public
         // Each entry carries its effective exam price and headline exam parameters.
         app.MapGet("/api/certifications", () => J(new
         {
-            rows = db.Query("SELECT id,code,name,acronym,short_description,slug,category,status,description,expiry_years,sort_order FROM certifications WHERE active=1 ORDER BY sort_order,id")
+            rows = db.Query("SELECT id,code,name,acronym,short_description,slug,category,status,description,expiry_years,sort_order,credential_prefix FROM certifications WHERE active=1 ORDER BY sort_order,id")
                 .Select(c => {
                     var cert = Certs.ById(db, c["id"]);
                     var cfg = Certs.Cfg(db, H.L(c["id"]));
                     return new { id = c["id"], code = c["code"], name = c["name"],
                         acronym = c["acronym"], short_description = c["short_description"], slug = c["slug"],
                         category = c["category"], status = c["status"], description = c["description"],
-                        expiry_years = c["expiry_years"], duration_minutes = (int)cfg.Duration, pass_mark_pct = cfg.Pass,
+                        expiry_years = c["expiry_years"], credential_prefix = c["credential_prefix"],
+                        duration_minutes = (int)cfg.Duration, pass_mark_pct = cfg.Pass,
                         exam_price = Pricing(db, "exam", null, cert).final };
                 }).ToList()
         }));

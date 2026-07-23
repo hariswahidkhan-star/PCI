@@ -1,18 +1,68 @@
 import { test, expect } from '@playwright/test'
+import { captureStoryEvidence } from './util'
+
+interface CatalogueCertification {
+  code: string
+  name: string
+  acronym: string
+  slug: string
+  exam_price: number
+  duration_minutes: number
+  pass_mark_pct: number
+}
+
+function amount(value: number): string {
+  return Number.isInteger(value) ? String(value) : value.toFixed(2)
+}
 
 // Certification catalogue + enrolment hand-off. The catalogue cards are injected server-side
 // from the certifications table (Core/CertCatalogue.cs fills the <!--PCI-CERTS--> region from
 // the MultiCert seed), so a rendered card proves the DB-backed pipeline end to end.
 test.describe('certification catalogue and enrolment hand-off', () => {
-  test('the catalogue page renders seeded certification cards', async ({ page }) => {
+  test('@cross-browser every certification stays consistent from API to catalogue card to detail page', async ({ page, request }, testInfo) => {
+    const catalogueResponse = await request.get('/api/certifications')
+    expect(catalogueResponse.ok()).toBeTruthy()
+    const catalogue = (await catalogueResponse.json()) as { rows: CatalogueCertification[] }
+    const certifications = catalogue.rows.filter((certification) =>
+      ['PCL-AI', 'PFL-AI', 'PML-AI'].includes(certification.code),
+    )
+    expect(certifications.map((certification) => certification.code)).toEqual(['PCL-AI', 'PFL-AI', 'PML-AI'])
+
     const resp = await page.goto('/certifications.html')
     expect(resp?.status() ?? 0).toBeLessThan(400)
     await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
     const cards = page.locator('article.cert-card')
-    await expect(cards.first()).toBeVisible()
-    expect(await cards.count()).toBeGreaterThanOrEqual(1)
-    // Every card links out to its own certification page.
-    await expect(cards.first().getByRole('link', { name: 'Learn more' })).toBeVisible()
+    await expect(cards).toHaveCount(3)
+
+    for (const certification of certifications) {
+      const card = cards.filter({ hasText: certification.acronym })
+      await expect(card, `${certification.code} should have exactly one catalogue card`).toHaveCount(1)
+      await expect(card.getByRole('heading', { name: certification.name })).toBeVisible()
+      await expect(card).toContainText(`USD ${amount(certification.exam_price)}`)
+      await expect(card).toContainText(`${certification.duration_minutes} minutes`)
+      await expect(card).toContainText(`${amount(certification.pass_mark_pct)}% to pass`)
+      await expect(card.getByRole('link', { name: 'Learn more' })).toHaveAttribute('href', `/certifications/${certification.slug}`)
+      await expect(card.getByRole('link', { name: 'Apply now' })).toHaveAttribute(
+        'href',
+        `/app/register?product=exam&cert=${certification.code}`,
+      )
+    }
+    await captureStoryEvidence(page, testInfo, 'A2', 'catalogue')
+
+    // Follow each database-backed route. This catches a card/detail drift that a catalogue-only
+    // assertion misses (wrong slug, stale name, stale fee or enrolment intent).
+    for (const certification of certifications) {
+      const detail = await page.goto(`/certifications/${certification.slug}`)
+      expect(detail?.status() ?? 0, `${certification.code} detail route should load`).toBeLessThan(400)
+      await expect(page.getByRole('heading', { level: 1, name: certification.name })).toBeVisible()
+      await expect(page.locator('.cert-facts')).toContainText(`USD ${amount(certification.exam_price)}`)
+      await expect(page.locator('.cert-facts')).toContainText(`${certification.duration_minutes} minutes`)
+      await expect(page.getByRole('link', { name: 'Apply now' }).first()).toHaveAttribute(
+        'href',
+        `/app/register?product=exam&cert=${certification.code}`,
+      )
+      await captureStoryEvidence(page, testInfo, 'A2', certification.code)
+    }
   })
 
   test('the three AI certifications appear as distinct catalogue entries', async ({ page }) => {

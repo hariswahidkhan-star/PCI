@@ -192,7 +192,7 @@ public static class Support
                     "<p>Our support team has replied to your ticket. Sign in to your portal to read it.</p>", "ticket", id);
             }
             catch { }
-            log(adm.Id, "support_reply", $"ticket {id} user {uid} by {adm.Id}");
+            log(adm.Id, "support_reply", $"ticket {id} by {adm.Id} (subject {uid})");
             return J(new { ok = true });
         }));
 
@@ -239,7 +239,7 @@ public static class Support
                     $"<p>Ticket #{id} ({System.Net.WebUtility.HtmlEncode(H.Str(t["subject"]) ?? "")}) was escalated by {System.Net.WebUtility.HtmlEncode(adm.Email)}.</p>", "ticket", id); } catch { }
             if (status == "resolved")
                 try { db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Support', 'Your ticket was resolved', 'Let us know how we did — you can rate the conversation from the Support page.', 'Rate it', '/support')", H.L(t["user_id"])); } catch { }
-            log(adm.Id, "support_status", $"ticket {id} user {H.L(t["user_id"])} → {status} by {adm.Id}");
+            log(adm.Id, "support_status", $"ticket {id} → {status} by {adm.Id} (subject {H.L(t["user_id"])})");
             return J(new { ok = true, status });
         }));
 

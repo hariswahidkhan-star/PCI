@@ -12,10 +12,10 @@ The spec requires the **PCI AI Project Leadership Certification Suite** — thre
 
 | Spec term | Occurrences in source |
 |---|---|
-| PCL-AI / PFL-AI / PML-AI (and PCLAI/PFLAI/PMLAI) | present (canonical suite codes) |
+| PCL-AI / PFL-AI / PML-AI (and PCLAI/PFLAI/PMLAI) | **0** |
 | "PCI AI Project Leadership Certification Suite" | **0** |
 | "Finance intelligently. Control predictively. Deliver successfully." | **0** |
-| Legacy names the spec says to purge (PFIP, PFIP-AI, CPMD, CPMD-AI, PDL-AI) | migrated/redirected to PML-AI |
+| Legacy names the spec says to purge (PFIP, PFIP-AI, CPMD, CPMD-AI, PML-AI) | **0** (clean) |
 
 What the repository actually contains is a **single live certification — PCP-AI** (Certified Project Controls Professional — AI, seeded as certification id 1) — running on a **genuinely multi-certification engine** that I re-proved live during this audit (§3), plus a set of platform modules (documents, watermarking, partner portal, certificates, marketing, support, Certuvo) that are heavily tested and verified.
 

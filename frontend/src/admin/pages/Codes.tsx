@@ -140,7 +140,7 @@ function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => 
               <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_membership} onChange={(e) => setF({ ...f, grants_membership: e.target.checked })} /> Grants membership</label>
               <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_exam} onChange={(e) => setF({ ...f, grants_exam: e.target.checked })} /> Grants exam entry</label>
               <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_study_access} onChange={(e) => setF({ ...f, grants_study_access: e.target.checked })} /> Grants study access</label>
-              <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.requires_application} onChange={(e) => setF({ ...f, requires_application: e.target.checked })} /> Require an application (evidence + criteria)</label>
+              <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.requires_application} onChange={(e) => setF({ ...f, requires_application: e.target.checked, auto_approve: e.target.checked ? false : f.auto_approve })} /> Require an application (evidence + criteria)</label>
             </div>
             {f.requires_application && (
               <Card title="Eligibility criteria (board-set — enforced on application)">
@@ -292,7 +292,7 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
             <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_membership} onChange={(e) => setF({ ...f, grants_membership: e.target.checked })} /> Grants membership</label>
             <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_exam} onChange={(e) => setF({ ...f, grants_exam: e.target.checked })} /> Grants exam entry</label>
             <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.grants_study_access} onChange={(e) => setF({ ...f, grants_study_access: e.target.checked })} /> Grants study access</label>
-            <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.requires_application} onChange={(e) => setF({ ...f, requires_application: e.target.checked })} /> Require an application</label>
+            <label className="row" style={{ fontWeight: 400 }}><input type="checkbox" style={{ width: 'auto' }} checked={f.requires_application} onChange={(e) => setF({ ...f, requires_application: e.target.checked, auto_approve: e.target.checked ? false : f.auto_approve })} /> Require an application</label>
           </div>
         )}
         {founding && f.requires_application && (

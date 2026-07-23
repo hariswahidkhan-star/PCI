@@ -156,6 +156,7 @@ export default function Profile() {
 
       <DirectorySettings />
       <TwoFactorCard />
+      <AccountPrivacyCard />
       <CommPreferences />
     </div>
   )
@@ -259,9 +260,11 @@ function TwoFactorCard() {
         </div>
       )}
 
-      {status.enabled && !recovery && (
+      {status.enabled && (
         <div>
-          <p><span className="badge ok">Enabled</span> <span className="muted small">Recovery codes remaining: {status.recovery_remaining}</span></p>
+          {!recovery && (
+            <p><span className="badge ok">Enabled</span> <span className="muted small">Recovery codes remaining: {status.recovery_remaining}</span></p>
+          )}
           <button className="btn secondary" disabled={busy} onClick={disable}>Turn off 2FA</button>
         </div>
       )}
@@ -283,6 +286,75 @@ function TwoFactorCard() {
           </div>
         </div>
       )}
+    </Card>
+  )
+}
+
+/** Self-service security and privacy actions backed by the existing account-data, erasure and
+ * session-revocation APIs. Keeping these controls in Profile makes the rights usable without a
+ * support ticket; previously the endpoints existed but the student had no UI path to them. */
+function AccountPrivacyCard() {
+  const [reason, setReason] = useState('')
+  const [busy, setBusy] = useState<'export' | 'revoke' | 'delete' | null>(null)
+  const [note, setNote] = useState<{ ok: boolean; text: string } | null>(null)
+
+  async function exportData() {
+    setBusy('export'); setNote(null)
+    try {
+      const data = await api.get<Record<string, unknown>>('/api/me/account-data')
+      const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }))
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `pci-account-data-${new Date().toISOString().slice(0, 10)}.json`
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.setTimeout(() => URL.revokeObjectURL(url), 0)
+      setNote({ ok: true, text: 'Your account-data export has been downloaded.' })
+    } catch (e) {
+      setNote({ ok: false, text: e instanceof Error ? e.message : 'Could not export your account data.' })
+    } finally { setBusy(null) }
+  }
+
+  async function revokeOtherSessions() {
+    setBusy('revoke'); setNote(null)
+    try {
+      await api.post('/api/me/sessions/revoke-others', {})
+      setNote({ ok: true, text: 'Other sessions have been signed out. This session remains active.' })
+    } catch (e) {
+      setNote({ ok: false, text: e instanceof Error ? e.message : 'Could not sign out the other sessions.' })
+    } finally { setBusy(null) }
+  }
+
+  async function requestDeletion() {
+    if (!window.confirm('Submit a formal request to delete your personal data? PCI will review it and confirm what must be retained by law.')) return
+    setBusy('delete'); setNote(null)
+    try {
+      const result = await api.post<{ note?: string; due_at?: string; already_open?: boolean }>('/api/me/delete-request', { reason: reason.trim() })
+      const due = result.due_at ? ` Target completion: ${String(result.due_at).slice(0, 10)}.` : ''
+      setNote({ ok: true, text: (result.note || (result.already_open ? 'Your deletion request is already being processed.' : 'Your deletion request has been recorded.')) + due })
+      setReason('')
+    } catch (e) {
+      setNote({ ok: false, text: e instanceof Error ? e.message : 'Could not submit the deletion request.' })
+    } finally { setBusy(null) }
+  }
+
+  return (
+    <Card title="Account security & privacy">
+      <p className="muted small" style={{ marginTop: 0 }}>
+        Download a copy of the data attached to your account, sign out other devices, or submit a formal deletion request.
+        PCI may retain limited records where law or credential integrity requires it.
+      </p>
+      {note && <div className={'notice' + (note.ok ? '' : ' err')} role={note.ok ? 'status' : 'alert'} style={{ marginBottom: '.75rem' }}>{note.text}</div>}
+      <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
+        <button className="btn sm secondary" disabled={busy !== null} onClick={exportData}>{busy === 'export' ? 'Preparing export…' : 'Export my account data'}</button>
+        <button className="btn sm secondary" disabled={busy !== null} onClick={revokeOtherSessions}>{busy === 'revoke' ? 'Signing out…' : 'Sign out other sessions'}</button>
+      </div>
+      <div className="field" style={{ marginTop: '1rem', marginBottom: '.5rem' }}>
+        <label htmlFor="delete-reason">Deletion request reason (optional)</label>
+        <textarea id="delete-reason" rows={2} maxLength={2000} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Anything PCI should consider when reviewing your request." />
+      </div>
+      <button className="btn sm danger" disabled={busy !== null} onClick={requestDeletion}>{busy === 'delete' ? 'Submitting…' : 'Request account deletion'}</button>
     </Card>
   )
 }

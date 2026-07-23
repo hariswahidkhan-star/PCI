@@ -1,56 +1,107 @@
+import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
-import { apiLoginAsOwnerAdmin, apiRegisterStudent, certificationId, seedStudentSession, storyScreenshot } from './util'
+import {
+  E2E_ADMIN,
+  apiLoginAsE2EAdmin,
+  captureStoryEvidence,
+  registerStudent,
+} from './util'
 
-test.describe('credential issuing and verification', () => {
-  test('admin issues, revokes and reinstates a student credential', async ({ request, page }, testInfo) => {
-    const ownerToken = await apiLoginAsOwnerAdmin(request)
-    const student = await apiRegisterStudent(request, 'credential')
-    const certId = await certificationId(request, 'pml-ai')
-    const credentialId = `E2E-PML-${Date.now()}-${process.pid}`.toUpperCase()
+const customCertificate = Buffer.from(
+  '%PDF-1.4\n% PCI BROWSER CUSTOM CERTIFICATE\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n',
+)
 
-    const issue = await request.post('/api/admin/credentials', {
-      headers: { Authorization: `Bearer ${ownerToken}` },
-      data: {
-        credential_id: credentialId,
-        user_id: student.user.id,
-        certification_id: certId,
-        holder_name: 'E2E Student',
-        credential: 'PML-AI',
-        expires_at: '2099-12-31',
-      },
+test.describe('credential operator to holder journey', () => {
+  test('admin links, uploads, revokes and reinstates a credential the holder can download and verify', async ({ page, context, request }, testInfo) => {
+    const studentPage = await context.newPage()
+    const student = await registerStudent(request, studentPage, 'credential-holder')
+    const adminToken = await apiLoginAsE2EAdmin(request, page)
+    const credentialId = `PCI-PMLAI-E2E-${Date.now()}`
+    const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+
+    await page.goto('/admin/credentials')
+    await page.getByRole('button', { name: 'Issue credential' }).click()
+    const drawer = page.locator('.drawer')
+    await drawer.getByLabel('Credential ID').fill(credentialId)
+    await drawer.getByLabel('Find student').fill(student.email)
+    await expect(drawer.getByLabel('Student account').locator('option')).toHaveCount(2)
+    await drawer.getByLabel('Student account').selectOption(String(student.id))
+    await expect(drawer.getByLabel('Holder name')).toHaveValue('Browser Student')
+    const certSelect = drawer.getByLabel('Certification')
+    const pmlOpt = certSelect.locator('option').filter({ hasText: 'PML-AI' }).first()
+    await expect(pmlOpt).toHaveCount(1)
+    await certSelect.selectOption({ value: await pmlOpt.getAttribute('value') || '' })
+    await drawer.getByLabel('Expires').fill(expires)
+    const issueResponsePromise = page.waitForResponse((response) =>
+      response.url().endsWith('/api/admin/credentials') && response.request().method() === 'POST')
+    await drawer.getByRole('button', { name: 'Issue credential' }).click()
+    expect((await issueResponsePromise).ok()).toBeTruthy()
+
+    await page.getByPlaceholder('Search ID or holder…').fill(credentialId)
+    const row = page.getByRole('row').filter({ hasText: credentialId })
+    await expect(row).toContainText('Browser Student')
+    await expect(row).toContainText('PML-AI')
+
+    const uploadResponsePromise = page.waitForResponse((response) =>
+      response.url().includes(`/api/admin/credentials/${credentialId}/upload-certificate`)
+      && response.request().method() === 'POST')
+    page.once('dialog', async (dialog) => {
+      expect(dialog.message()).toContain(`Certificate uploaded for ${credentialId}`)
+      await dialog.accept()
     })
-    expect(issue.ok(), `credential issue should succeed (got ${issue.status()})`).toBeTruthy()
-    const issued = (await issue.json()) as { id: number }
-
-    await seedStudentSession(page, student.token)
-    await page.goto('/app/credentials')
-    await expect(page.getByRole('heading', { name: /credentials/i })).toBeVisible()
-    await expect(page.getByText(credentialId)).toBeVisible()
-    await expect(page.getByText(/PML-AI/).first()).toBeVisible()
-    await storyScreenshot(page, testInfo, 'student-pml-ai-credential')
-
-    const verifyActive = await request.get(`/api/verify?id=${encodeURIComponent(credentialId)}`)
-    expect(verifyActive.ok()).toBeTruthy()
-    expect(await verifyActive.json()).toMatchObject({ found: true, valid: true, state: 'active' })
-
-    const revoke = await request.post(`/api/admin/credentials/${issued.id}/status`, {
-      headers: { Authorization: `Bearer ${ownerToken}` },
-      data: { status: 'revoked' },
+    await row.locator('input[type="file"]').setInputFiles({
+      name: 'custom-pml-ai-certificate.pdf',
+      mimeType: 'application/pdf',
+      buffer: customCertificate,
     })
-    expect(revoke.ok(), `credential revoke should succeed (got ${revoke.status()})`).toBeTruthy()
-    const verifyRevoked = await request.get(`/api/verify?id=${encodeURIComponent(credentialId)}`)
-    expect(await verifyRevoked.json()).toMatchObject({ found: true, valid: false, state: 'revoked' })
+    expect((await uploadResponsePromise).ok()).toBeTruthy()
+    await captureStoryEvidence(page, testInfo, 'G6-E6', 'credential-linked-and-custom-certificate-uploaded')
 
-    const reinstate = await request.post(`/api/admin/credentials/${issued.id}/status`, {
-      headers: { Authorization: `Bearer ${ownerToken}` },
-      data: { status: 'active' },
+    await studentPage.goto('/app/credentials')
+    const holderCard = studentPage.locator('.card').filter({ hasText: credentialId })
+    await expect(holderCard).toContainText('PML-AI')
+    await expect(holderCard).toContainText(/active/i)
+    const holderDownload = studentPage.waitForEvent('download')
+    await holderCard.getByRole('button', { name: 'Download PDF' }).click()
+    const downloaded = await holderDownload
+    const path = await downloaded.path()
+    expect(path).toBeTruthy()
+    expect(readFileSync(path!, 'utf8')).toContain('PCI BROWSER CUSTOM CERTIFICATE')
+
+    const publicBefore = await request.get(`/api/verify?id=${encodeURIComponent(credentialId)}`)
+    expect(publicBefore.ok()).toBeTruthy()
+    expect(await publicBefore.json()).toMatchObject({
+      found: true,
+      valid: true,
+      state: 'active',
+      holder_name: 'Browser Student',
+      certification_code: 'PML-AI',
     })
-    expect(reinstate.ok(), `credential reinstate should succeed (got ${reinstate.status()})`).toBeTruthy()
-    const verifyReinstated = await request.get(`/api/verify?id=${encodeURIComponent(credentialId)}`)
-    expect(await verifyReinstated.json()).toMatchObject({ found: true, valid: true, state: 'active' })
+    await captureStoryEvidence(studentPage, testInfo, 'E6', 'holder-downloads-custom-certificate')
 
-    const verifyPage = await page.goto(`/verify.html?id=${encodeURIComponent(credentialId)}`)
-    expect(verifyPage?.status() ?? 0).toBeLessThan(400)
-    await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
+    page.once('dialog', (dialog) => dialog.accept())
+    await row.getByRole('button', { name: 'Revoke' }).click()
+    await expect(row.getByRole('button', { name: 'Reinstate' })).toBeVisible()
+    await studentPage.reload()
+    await expect(holderCard).toContainText(/revoked/i)
+    await expect(holderCard.getByRole('button', { name: 'Download PDF' })).toHaveCount(0)
+    const publicRevoked = await request.get(`/api/verify?id=${encodeURIComponent(credentialId)}`)
+    expect(await publicRevoked.json()).toMatchObject({ found: true, valid: false, state: 'revoked' })
+
+    await row.getByRole('button', { name: 'Reinstate' }).click()
+    await expect(row.getByRole('button', { name: 'Revoke' })).toBeVisible()
+    const publicRestored = await request.get(`/api/verify?id=${encodeURIComponent(credentialId)}`)
+    expect(await publicRestored.json()).toMatchObject({ found: true, valid: true, state: 'active' })
+
+    const auditResponse = await request.get('/api/admin/audit', {
+      headers: { Authorization: `Bearer ${adminToken}` },
+    })
+    const audit = ((await auditResponse.json()) as {
+      rows: Array<{ action?: string; details?: string; actor?: string }>
+    }).rows
+    expect(audit).toEqual(expect.arrayContaining([
+      expect.objectContaining({ action: 'credential_issued', details: expect.stringContaining(credentialId), actor: E2E_ADMIN.email }),
+      expect.objectContaining({ action: 'certificate_uploaded', details: expect.stringContaining(credentialId), actor: E2E_ADMIN.email }),
+    ]))
   })
 })

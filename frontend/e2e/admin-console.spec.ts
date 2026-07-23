@@ -1,5 +1,6 @@
+import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
-import { E2E_OWNER_PASSWORD, OWNER_ADMIN, uniqueEmail } from './util'
+import { OWNER_ADMIN, apiLoginAsE2EAdmin, captureStoryEvidence, uniqueEmail } from './util'
 
 // Admin console (React SPA under /admin/). The Development boot seeds a bootstrap owner
 // (owner@pci.local / changeme-owner) flagged must_change_pw, so a successful sign-in lands on
@@ -14,20 +15,17 @@ test.describe('admin console', () => {
     await expect(page.getByLabel('Password')).toBeVisible()
   })
 
-  test('the seeded owner signs in and reaches the expected security gate or console', async ({ page }) => {
+  test('the seeded owner signs in and is forced to set a new password before the console opens', async ({ page }) => {
     await page.goto('/admin/login')
     await page.getByLabel('Email address').fill(OWNER_ADMIN.email)
     await page.getByLabel('Password').fill(OWNER_ADMIN.password)
     await page.getByRole('button', { name: 'Sign in' }).click()
 
-    if (await page.getByRole('alert').isVisible()) {
-      await page.getByLabel('Password').fill(E2E_OWNER_PASSWORD)
-      await page.getByRole('button', { name: 'Sign in' }).click()
-    }
-
-    // Fresh databases still show the must_change_pw gate; later E2E flows may already have cleared it
-    // with the stable E2E password, in which case the owner should reach the console.
-    await expect(page.getByRole('heading', { name: /Set a new password|Dashboard|Overview|Admin Console/i }).first()).toBeVisible()
+    // must_change_pw gate: the console stays closed until a new password is set (also enforced
+    // server-side for every /api/admin/* call). We assert the gate and stop — never change it.
+    await expect(page.getByRole('heading', { name: 'Set a new password' })).toBeVisible()
+    await expect(page.getByLabel('New password', { exact: true })).toBeVisible()
+    await expect(page.getByLabel('Confirm password')).toBeVisible()
   })
 
   test('a failed staff sign-in shows an error and keeps the console closed', async ({ page }) => {
@@ -39,5 +37,52 @@ test.describe('admin console', () => {
 
     await expect(page.getByRole('alert')).toBeVisible()
     await expect(page).toHaveURL(/\/admin\/login$/)
+  })
+
+  test('the E2E owner creates a scenario account through the real Students console', async ({ page, request }, testInfo) => {
+    await apiLoginAsE2EAdmin(request, page)
+    await page.goto('/admin/students')
+    await expect(page.getByRole('heading', { name: 'Students' })).toBeVisible()
+
+    await page.getByLabel('Test-user scenario').selectOption('no_id')
+    const createdResponse = page.waitForResponse((response) =>
+      response.url().endsWith('/api/admin/test-users') && response.request().method() === 'POST')
+    await page.getByRole('button', { name: '+ Test user' }).click()
+    const created = await createdResponse
+    expect(created.ok()).toBeTruthy()
+    const user = (await created.json()) as { email: string; scenario: string }
+
+    const drawer = page.locator('.drawer')
+    await expect(drawer.getByRole('heading', { name: 'Test user' })).toBeVisible()
+    await expect(drawer.getByText(/Scenario:.*No ID/i)).toBeVisible()
+    await expect(drawer.getByText(user.email, { exact: true })).toBeVisible()
+    await expect(drawer.getByRole('link', { name: /Open portal as this user/i })).toHaveAttribute('href', /\/app\/#t=/)
+    expect(user.scenario).toBe('no_id')
+    await captureStoryEvidence(page, testInfo, 'G3', 'test-user-created')
+  })
+
+  test('analytics CSV export authenticates with the active admin session', async ({ page, request }, testInfo) => {
+    await apiLoginAsE2EAdmin(request, page)
+    await page.goto('/admin/analytics')
+    await expect(page.getByRole('heading', { name: 'Analytics' })).toBeVisible()
+
+    const downloadPromise = page.waitForEvent('download')
+    await page.getByRole('link', { name: 'Export CSV' }).click()
+    const download = await downloadPromise
+    expect(download.suggestedFilename()).toBe('pci-analytics-30d.csv')
+    const path = await download.path()
+    expect(path).toBeTruthy()
+    const csv = readFileSync(path!, 'utf8')
+    expect(csv.split(/\r?\n/, 1)[0]).toBe('created_at,event,path,visitor,country,device,browser,utm_source,utm_medium,utm_campaign,referrer,landing,value,currency')
+    await captureStoryEvidence(page, testInfo, 'G2', 'analytics-export')
+  })
+
+  test('@cross-browser an authenticated owner can open a protected console screen', async ({ page, request }) => {
+    await apiLoginAsE2EAdmin(request, page)
+    await page.goto('/admin/students')
+    await expect(page).toHaveURL(/\/admin\/students$/)
+    await expect(page.getByRole('heading', { name: 'Students' })).toBeVisible()
+    await expect(page.getByText('Admin Console', { exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible()
   })
 })

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { preparePublicJourney } from './util'
 
 // First-party site chat widget (assets/chat.js + Endpoints/Chat.cs): a bot greets on start and
 // answers every message — small talk, knowledge base, or a deterministic fallback — so a reply
@@ -6,6 +7,7 @@ import { test, expect } from '@playwright/test'
 // (the token lives in localStorage), keeping runs independent.
 test.describe('site chat widget', () => {
   test('a visitor can open the chat, send a message and receive a bot reply', async ({ page }) => {
+    await preparePublicJourney(page)
     await page.goto('/')
 
     await page.getByRole('button', { name: 'Open chat with the PCI Assistant' }).click()

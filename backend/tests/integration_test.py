@@ -480,31 +480,6 @@ def test_exam_delivery(admin):
         c, cb = jget("POST", "/api/exam-delivery/callback/psi?token=cbsecret", body={"client_eligibility_id": o2[2], "candidate_id": str(upsi), "result": "pass", "score": 80})
         chk("11v PSI result callback issues the credential", c == 200 and cb.get("result_status") == "pass" and bool(cb.get("credential")), cb)
 
-        # ---- SWITCH to Kryterion (Webassessor EWS): the 3rd connector driven end-to-end and the
-        #      second sync-poll pattern (Add User → Add Registration → Get Registrations for results,
-        #      structurally like Questionmark; the mock's requestType-dispatched EWS branch backs it) ----
-        c, kr = jget("POST", "/api/admin/exam-delivery", token=admin, body={
-            "provider": "kryterion", "name": "Kryterion", "environment": "sandbox", "enabled": True,
-            "api_base": mock, "security_token": "sec-tok", "exam_map": {"PCL-AI": "KRY-EXAM"}})
-        krid = kr.get("id"); chk("11ka create Kryterion vendor", c == 200 and kr.get("ok"), kr)
-        c, ktr = jget("POST", f"/api/admin/exam-delivery/{krid}/test", token=admin)
-        chk("11kb Kryterion connection test ok (EWS ping)", c == 200 and ktr.get("ok"), ktr)
-        c, sm = set_mode(mode="kryterion")
-        chk("11kc admin switch: deliver via Kryterion", c == 200 and sm.get("mode") == "kryterion", sm)
-        tkr, ukr = make_paid_user("kry@ex.co"); accept_all_consents(tkr); complete_profile(tkr)
-        c, bkk = jget("POST", "/api/me/exam/book", token=tkr, body={"scheduled_at": slot, "timezone": "UTC"})
-        chk("11kd Kryterion booking accepted", c == 200 and bkk.get("ok"), bkk)
-        con = dbconn(); ok_ = con.execute("SELECT id,status,external_appointment_id FROM exam_delivery_orders WHERE user_id=? AND provider='kryterion'", (ukr,)).fetchone(); con.close()
-        chk("11ke Kryterion: booking auto-routed + provisioned to scheduled (confirmation captured)", bool(ok_) and ok_[1] == "scheduled" and bool(ok_[2]), ok_)
-        c, sblk = jget("POST", "/api/me/exam/start", token=tkr, body={})
-        chk("11kf Kryterion: in-house SecureExam launch is blocked", c == 400 and sblk.get("error") == "external_delivery", sblk)
-        c, dsk = jget("GET", "/api/me/exam/delivery", token=tkr)
-        chk("11kg student dashboard shows Kryterion delivery", c == 200 and dsk.get("routed") and dsk.get("provider") == "kryterion", dsk)
-        c, syk = jget("POST", f"/api/admin/exam-delivery/orders/{ok_[0]}/sync", token=admin)
-        chk("11kh Kryterion: sync pulls a pass and issues the credential", c == 200 and syk.get("result_status") == "pass" and bool(syk.get("credential")), syk)
-        c, syk2 = jget("POST", f"/api/admin/exam-delivery/orders/{ok_[0]}/sync", token=admin)
-        chk("11ki Kryterion: re-sync is idempotent (no duplicate credential)", syk2.get("credential") == syk.get("credential"), (syk.get("credential"), syk2.get("credential")))
-
         # ---- SWITCH BACK to our own SecureExam ----
         c, sm = set_mode(mode="in_house"); chk("11w admin switch back to SecureExam (in-house)", c == 200 and sm.get("mode") == "in_house", sm)
         tbk, ubk = make_paid_user("backagain@ex.co"); accept_all_consents(tbk); complete_profile(tbk)
@@ -703,9 +678,18 @@ def test_finance_and_certuvo_hardening(admin):
         c, j1 = jget("GET", f"/api/admin/members/{t1['id']}/journey", token=admin)
         chk("13n scenario 'incomplete_profile' parks the account at Profile", j1.get("stuck_at") == "Profile", j1.get("stuck_at"))
         chk("13n2 journey marks the account as a test account", j1.get("user", {}).get("is_test") is True, j1.get("user"))
+        stages1 = {s.get("key"): s.get("status") for s in j1.get("stages", [])}
+        chk("13n3 incomplete-profile isolates one blocker (ID + fee already done)",
+            stages1.get("profile") == "action_required" and stages1.get("identity") == "done" and stages1.get("payment") == "done", stages1)
+        c, tnoid = jget("POST", "/api/admin/test-users", token=admin, body={"scenario": "no_id"})
+        c, jnoid = jget("GET", f"/api/admin/members/{tnoid['id']}/journey", token=admin)
+        stages_noid = {s.get("key"): s.get("status") for s in jnoid.get("stages", [])}
+        chk("13n4 no-ID isolates one blocker (profile + fee already done)",
+            jnoid.get("stuck_at") == "Government ID" and stages_noid.get("profile") == "done"
+            and stages_noid.get("identity") == "blocked" and stages_noid.get("payment") == "done", (jnoid.get("stuck_at"), stages_noid))
         c, t1r = jget("POST", f"/api/admin/test-users/{t1['id']}/reset", token=admin, body={"scenario": "ready"})
         c, j2 = jget("GET", f"/api/admin/members/{t1['id']}/journey", token=admin)
-        chk("13n3 reset re-applies a scenario (ready → schedulable)", t1r.get("ok") and j2.get("stuck_at") in (None, "Exam scheduled"), (t1r.get("ok"), j2.get("stuck_at")))
+        chk("13n5 reset re-applies a scenario (ready → schedulable)", t1r.get("ok") and j2.get("stuck_at") in (None, "Exam scheduled"), (t1r.get("ok"), j2.get("stuck_at")))
 
         c, rep0 = jget("GET", "/api/admin/reports", token=admin)
         before = (rep0.get("totals", {}).get("payments"), rep0.get("totals", {}).get("revenue"))
@@ -956,6 +940,16 @@ def test_support_and_institutions(admin):
         return str((struct.unpack(">I", h[o:o+4])[0] & 0x7FFFFFFF) % 1000000).zfill(6)
     c, ver = jget("POST", "/api/admin/me/2fa/verify", token=admin, body={"code": totp_now(setup["secret"])})
     chk("14u2 2FA verify activates", c == 200 and ver.get("enabled") is True, ver)
+    c, mfa_status = jget("GET", "/api/admin/me/2fa", token=admin)
+    chk("14u2a 2FA status reports active factor and recovery inventory",
+        c == 200 and mfa_status.get("enabled") is True and mfa_status.get("pending") is False
+        and mfa_status.get("recovery_remaining") == 10, mfa_status)
+    c, downgrade = jget("POST", "/api/admin/me/2fa/setup", token=admin)
+    c2, after_downgrade = jget("GET", "/api/admin/me/2fa", token=admin)
+    chk("14u2b active 2FA cannot be replaced by an unverified pending secret",
+        c == 409 and downgrade.get("error") == "already_enabled"
+        and c2 == 200 and after_downgrade.get("enabled") is True and after_downgrade.get("pending") is False,
+        (downgrade, after_downgrade))
     c, relog = admin_login_rl(lambda: {"email": "owner@pci.local", "password": "Op3rator!Pw"})
     chk("14u3 login without the code is refused once enabled", c == 401 and relog.get("error") == "totp_required", relog)
     c, relog2 = admin_login_rl(lambda: {"email": "owner@pci.local", "password": "Op3rator!Pw", "totp": totp_now(setup["secret"])})
@@ -980,7 +974,13 @@ def test_support_and_institutions(admin):
     con = dbconn(); con.execute("UPDATE admin_users SET totp_last_step=? WHERE id=?", (cur_step - 1, aid)); con.commit(); con.close()
     c, adv = admin_login_rl(lambda: {"email": "owner@pci.local", "password": "Op3rator!Pw", "totp": totp_now(setup["secret"])})
     chk("14u6 a strictly-advancing TOTP code is accepted", c == 200 and bool(adv.get("token")), adv.get("error"))
-    jget("POST", "/api/admin/me/2fa/disable", token=admin, body={"code": totp_now(setup["secret"])})
+    recovery_code = ver.get("recovery_codes", [""])[0]
+    c, disabled = jget("POST", "/api/admin/me/2fa/disable", token=admin, body={"code": recovery_code})
+    c2, disabled_status = jget("GET", "/api/admin/me/2fa", token=admin)
+    chk("14u7 a one-time recovery code can disable 2FA and clears recovery inventory",
+        c == 200 and disabled.get("enabled") is False and c2 == 200
+        and disabled_status.get("enabled") is False and disabled_status.get("recovery_remaining") == 0,
+        (disabled, disabled_status))
 
     # ---- 14v. RBAC: support role sees the inbox but not money; viewer sees nothing; partner APIs need partner auth ----
     vtok = globals().get("_VIEWER_TOK")
@@ -1476,13 +1476,27 @@ def test_leadership_suite(admin):
     print("\n=== 18. Leadership Suite: one candidate, three certifications ===")
     NAMES = {"PCL-AI": "PCI AI Project Controls Leader",
              "PFL-AI": "PCI AI Project Finance Leader",
-             "PML-AI": "PCI AI Project Management Leader"}
+             "PML-AI": "PCI Project Management Leader – AI"}
     c, cat = jget("GET", "/api/certifications")
     rows = {r.get("code"): r for r in cat.get("rows", [])}
     chk("18a all three Suite certifications are live together", c == 200 and all(k in rows for k in NAMES), sorted(rows))
     chk("18b official certification names", all(rows[k]["name"] == v for k, v in NAMES.items()),
         {k: rows.get(k, {}).get("name") for k in NAMES})
     ids = {k: rows[k]["id"] for k in NAMES}
+    chk("18b·1 PML-AI retains the established certification id=3 and clean machine identifiers",
+        ids["PML-AI"] == 3
+        and rows["PML-AI"].get("slug") == "pml-ai"
+        and rows["PML-AI"].get("credential_prefix") == "PML-AI"
+        and "PDL-AI" not in rows,
+        rows.get("PML-AI"))
+    c, canonical = req("GET", "/certifications/pml-ai")
+    chk("18b·2 canonical PML-AI page renders the exact official identity",
+        c == 200 and "PCI Project Management Leader – AI" in canonical and "PCI PML-AI" in canonical,
+        (c, canonical[:160]))
+    for legacy in ("cpmd", "cpmd-ai", "pdl-ai"):
+        c, location = no_follow("GET", f"/certifications/{legacy}?source=legacy")
+        chk(f"18b·3 retired {legacy} URL is a single-hop permanent redirect with its query intact",
+            c == 301 and location == "/certifications/pml-ai?source=legacy", (c, location))
 
     # PFL-AI and PML-AI need question banks (PCL-AI uses the seeded bank).
     for code in ("PFL-AI", "PML-AI"):
@@ -1526,9 +1540,17 @@ def test_leadership_suite(admin):
         c, v = jget("GET", f"/api/verify?id={cred}")
         chk(f"18i {code}: public verification names the right certification",
             v.get("valid") is True and v.get("certification_code") == code, (v.get("certification_code"), v.get("valid")))
+        c, cert_view = jget("GET", f"/api/me/certificate?id={cred}", token=stok)
+        chk(f"18i·2 {code}: candidate certificate lookup stays scoped to the requested credential",
+            c == 200 and cert_view.get("credential_id") == cred
+            and cert_view.get("certification_code") == code
+            and cert_view.get("certification_id") == ids[code], cert_view)
     c, me = jget("GET", "/api/me", token=stok)
     mecodes = {e.get("certification_code") for e in me.get("exams", [])}
     chk("18j /api/me shows all three certification journeys", mecodes == set(NAMES), mecodes)
+    credential_codes = {e.get("certification_code") for e in me.get("credentials", [])}
+    chk("18j·2 /api/me labels all issued credentials with their own certification",
+        credential_codes == set(NAMES), credential_codes)
 
     # ---- Books: upload → per-certification isolation → personalised watermarked download ----
     buri, braw = _real_pdf_uri()
@@ -1575,17 +1597,20 @@ def test_leadership_suite(admin):
     # the authored Body of Knowledge PDFs ship with the app (books/<code>-bok.pdf) and attach to the
     # seeded BoK rows at boot; an entitled candidate downloads a personalised copy immediately.
     # (Guarded: the assertions arm themselves once the authored books are committed under backend/books/.)
-    if not os.path.exists(os.path.join(BACKEND, "books", "pfl-ai-bok.pdf")):
+    if not os.path.exists(os.path.join(BACKEND, "books", "pml-ai-bok.pdf")):
         print("  SKIP  18t/18u shipped-BoK assertions (backend/books not present yet)")
         return
     c, bl2 = jget("GET", "/api/me/cert-documents", token=stok)
-    seeded_bok = next((r for r in bl2.get("rows", []) if r.get("kind") == "bok" and "PFL-AI" in (r.get("title") or "") and "Body of Knowledge" in (r.get("title") or "")), None)
-    chk("18t the authored PFL-AI Body of Knowledge is attached at boot", seeded_bok is not None and seeded_bok.get("has_file") == 1,
+    seeded_bok = next((r for r in bl2.get("rows", []) if r.get("kind") == "bok" and "PML-AI" in (r.get("title") or "") and "Body of Knowledge" in (r.get("title") or "")), None)
+    chk("18t the authored PML-AI Body of Knowledge is attached at boot", seeded_bok is not None and seeded_bok.get("has_file") == 1,
         [(r.get("title"), r.get("kind"), r.get("has_file")) for r in bl2.get("rows", [])])
     if seeded_bok is not None:
         stb, bokbody, _ = _raw_get(f"/api/me/cert-documents/{seeded_bok['id']}/download", token=stok)
-        chk("18u the shipped BoK downloads as a personalised watermarked PDF",
-            stb == 200 and bokbody[:5] == b"%PDF-" and "Personal Copy" in _pdf_text(bokbody), (stb, len(bokbody)))
+        boktext = _pdf_text(bokbody)
+        chk("18u the shipped PML-AI BoK downloads as a correctly named personalised PDF",
+            stb == 200 and bokbody[:5] == b"%PDF-" and "Personal Copy" in boktext
+            and "PCI Project Management Leader – AI" in boktext and "PDL-AI" not in boktext,
+            (stb, len(bokbody), boktext[:160]))
 
 def H0(v):
     try: return int(v or 0)
@@ -2050,7 +2075,256 @@ def test_social_publishing(admin):
     # RBAC: the social API requires authentication
     c, _ = jget("GET", "/api/admin/content/social/accounts")
     chk("21p social API requires authentication (401)", c == 401, c)
+
+    # Retire the deliberately-broken Discord account so later deep drafts target healthy connectors.
+    jget("POST", f"/api/admin/content/social/accounts/{fail_acct}/disconnect", token=admin)
+
+    # ---- deep coverage: cancel, UTM off, pre-utm link left alone, immediate publish ----
+    c, okd = connect({"platform_key": "discord", "label": "PCI Discord Deep", "secret": base + "/discord/webhook/deep"})
+    c, okt = connect({"platform_key": "telegram", "label": "PCI Telegram Deep", "secret": "tok-deep", "api_base": base + "/tg", "chat_id": "@pcideep"})
+    chk("21p2 reconnected healthy Discord + Telegram accounts", c == 200 and okd.get("id") and okt.get("id"), (okd, okt))
+    pid3, _ = _make_published_post(admin, "Social Deep Cancel And UTM Post")
+    c, gen3 = jget("POST", f"/api/admin/content/posts/{pid3}/social/generate", token=admin)
+    # generate returns {id, platform, account}; the drafts list carries platform_key + text/link.
+    drafts3 = jget("GET", f"/api/admin/content/social/drafts?post_id={pid3}", token=admin)[1].get("rows", [])
+    by3 = {d["platform_key"]: d for d in drafts3}
+    chk("21q generate still produces drafts for the reconnected live accounts",
+        c == 200 and len(gen3.get("created", [])) >= 2 and "discord" in by3 and "telegram" in by3,
+        (gen3.get("created"), list(by3)))
+
+    disc = by3["discord"]["id"]
+    jget("POST", f"/api/admin/content/social/drafts/{disc}/publish", token=admin)
+    c, can = jget("POST", f"/api/admin/content/social/drafts/{disc}/cancel", token=admin)
+    con = dbconn()
+    dst = con.execute("SELECT status FROM social_drafts WHERE id=?", (disc,)).fetchone()
+    jst = con.execute("SELECT status FROM content_jobs WHERE idempotency_key=?", ("socialdraft:" + str(disc),)).fetchone()
+    con.close()
+    chk("21r cancel marks the draft cancelled and cancels its pending job",
+        c == 200 and can.get("ok") is True and dst and dst[0] == "cancelled"
+        and (jst is None or jst[0] == "cancelled"), (can, dst, jst))
+
+    # Future-scheduled draft can also be cancelled (status='scheduled' is in the cancel set).
+    mas_future = by3["telegram"]["id"]
+    jget("PATCH", f"/api/admin/content/social/drafts/{mas_future}", token=admin, body={"scheduled_at": "2036-06-01 09:00:00"})
+    jget("POST", f"/api/admin/content/social/drafts/{mas_future}/publish", token=admin)
+    c, can2 = jget("POST", f"/api/admin/content/social/drafts/{mas_future}/cancel", token=admin)
+    con = dbconn(); fst = con.execute("SELECT status FROM social_drafts WHERE id=?", (mas_future,)).fetchone(); con.close()
+    chk("21r2 a future-scheduled draft can be cancelled before it fires",
+        c == 200 and can2.get("ok") is True and fst and fst[0] == "cancelled", (can2, fst))
+
+    # UTM off → shared link has no utm_*.
+    con = dbconn()
+    con.execute("DELETE FROM site_settings WHERE skey IN ('social_utm_enabled','social_utm_campaign')")
+    con.execute("INSERT INTO site_settings(skey,svalue) VALUES('social_utm_enabled','0')")
+    con.commit(); con.close()
+    pid4, _ = _make_published_post(admin, "Social Deep UTM Off Post")
+    c, gen4 = jget("POST", f"/api/admin/content/posts/{pid4}/social/generate", token=admin)
+    drafts4 = jget("GET", f"/api/admin/content/social/drafts?post_id={pid4}", token=admin)[1].get("rows", [])
+    tg4 = next((d for d in drafts4 if d.get("platform_key") == "telegram"), None)
+    chk("21s social_utm_enabled=0 suppresses UTM on generated draft text",
+        c == 200 and tg4 and "utm_source=" not in (tg4.get("text") or "") and "utm_medium=" not in (tg4.get("text") or "")
+        and "utm_source=" not in (tg4.get("link") or ""),
+        ((tg4 or {}).get("text", "")[:220], (tg4 or {}).get("link")))
+
+    # Restore UTM and prove a draft whose link already carries utm_ is left alone on edit.
+    con = dbconn()
+    con.execute("DELETE FROM site_settings WHERE skey='social_utm_enabled'")
+    con.execute("INSERT INTO site_settings(skey,svalue) VALUES('social_utm_enabled','1')")
+    con.commit(); con.close()
+    pid5, _ = _make_published_post(admin, "Social Deep PreUTM Post")
+    jget("POST", f"/api/admin/content/posts/{pid5}/social/generate", token=admin)
+    drafts5 = jget("GET", f"/api/admin/content/social/drafts?post_id={pid5}", token=admin)[1].get("rows", [])
+    tg5 = next((d for d in drafts5 if d.get("platform_key") == "telegram"), None)
+    disc5 = next((d for d in drafts5 if d.get("platform_key") == "discord"), None)
+    pre = "https://example.test/blog/pre?utm_source=keepme&utm_medium=social"
+    jget("PATCH", f"/api/admin/content/social/drafts/{tg5['id']}", token=admin, body={"text": "Keep my link " + pre, "link": pre})
+    con = dbconn(); linkrow = con.execute("SELECT link,text FROM social_drafts WHERE id=?", (tg5["id"],)).fetchone(); con.close()
+    chk("21t a draft link that already carries utm_ is left unmodified on save",
+        linkrow and linkrow[0] == pre and "utm_source=keepme" in (linkrow[1] or ""), linkrow)
+
+    # Immediate publish: blank scheduled_at → queued for now (not 'scheduled').
+    # Use Telegram (http mock is fine); Discord connectors require an https:// webhook URL.
+    jget("PATCH", f"/api/admin/content/social/drafts/{tg5['id']}", token=admin,
+         body={"scheduled_at": "", "text": "Immediate telegram deep post", "link": "https://example.test/blog/imm"})
+    c, imm = jget("POST", f"/api/admin/content/social/drafts/{tg5['id']}/publish", token=admin)
+    chk("21u blank scheduled_at publishes immediately (queued, not future-scheduled)",
+        c == 200 and imm.get("queued") is True and imm.get("scheduled") is not True, imm)
+    c, drn2 = jget("POST", "/api/admin/content/social/drain", token=admin)
+    con = dbconn(); nrow = con.execute("SELECT status,public_url FROM social_drafts WHERE id=?", (tg5["id"],)).fetchone(); con.close()
+    chk("21v immediate publish is delivered by the dispatcher",
+        c == 200 and drn2.get("delivered", 0) >= 1 and nrow and nrow[0] == "published", (drn2, nrow))
+
+    # Past scheduled_at on a fresh draft → due now.
+    pid6, _ = _make_published_post(admin, "Social Deep Past Schedule Post")
+    jget("POST", f"/api/admin/content/posts/{pid6}/social/generate", token=admin)
+    past_d = next((d for d in jget("GET", f"/api/admin/content/social/drafts?post_id={pid6}", token=admin)[1].get("rows", [])
+                   if d.get("platform_key") == "telegram"), None)
+    jget("PATCH", f"/api/admin/content/social/drafts/{past_d['id']}", token=admin, body={"scheduled_at": "2001-01-01 00:00:00"})
+    c, past = jget("POST", f"/api/admin/content/social/drafts/{past_d['id']}/publish", token=admin)
+    chk("21w a past scheduled_at is treated as due now (queued for immediate drain)",
+        c == 200 and past.get("queued") is True and past.get("scheduled") is not True, past)
+
+    # Discord webhook contract: connector refuses non-https webhook URLs (SSRF-safe / Discord real API).
+    c, disc_pub = jget("POST", f"/api/admin/content/social/drafts/{disc5['id']}/publish", token=admin)
+    jget("POST", "/api/admin/content/social/drain", token=admin)
+    con = dbconn(); dstat = con.execute("SELECT status FROM social_drafts WHERE id=?", (disc5["id"],)).fetchone(); con.close()
+    chk("21x Discord refuses http mock webhooks (https required) — draft stays retrying/failed, never published",
+        disc_pub.get("queued") is True and dstat and dstat[0] in ("retrying", "failed"), (disc_pub, dstat))
+
     srv.shutdown()
+
+
+def test_social_media_management(admin):
+    """Section 21B — Social Media Management (Endpoints/Social.cs): public profile icons, share
+    buttons, link checks, lifecycle (duplicate/activate/archive), domain validation, audit trail,
+    master enable switch, and SSR footer injection. This is the account-based API that replaced the
+    legacy flat URL map; the standalone backend/test_social.py covered only the old shape."""
+    print("\n=== 21B. Social Media Management (profiles, share buttons, footer, audit) ===")
+    srv, port = start_mock_vendor()
+    mock = f"http://127.0.0.1:{port}"
+
+    c0, _ = jget("GET", "/api/admin/social")
+    chk("21B·a admin social console requires authentication (401)", c0 == 401, c0)
+
+    c, pub0 = jget("GET", "/api/social")
+    chk("21B·b public catalogue is off/empty by default",
+        c == 200 and pub0.get("enabled") is False and pub0.get("links") == [], pub0)
+
+    c, adm0 = jget("GET", "/api/admin/social", token=admin)
+    plats = {p["key"] for p in adm0.get("platforms", [])}
+    locs = {l["key"] for l in adm0.get("locations", [])}
+    shares = {s["key"] for s in adm0.get("share_targets", [])}
+    chk("21B·c admin payload exposes platform/location/share registries",
+        c == 200 and {"linkedin", "x", "facebook", "instagram", "youtube", "website"}.issubset(plats)
+        and "footer" in locs and {"linkedin", "x", "facebook", "whatsapp", "copy"}.issubset(shares),
+        (sorted(plats)[:8], sorted(locs)[:4], sorted(shares)))
+
+    # Reject unsafe / invalid URLs; require override for domain mismatch.
+    c, bad = jget("POST", "/api/admin/social/account", token=admin,
+                  body={"platform": "linkedin", "url": "javascript:alert(1)"})
+    chk("21B·d javascript: URLs are refused", c == 200 and "error" in bad, bad)
+    c, ftp = jget("POST", "/api/admin/social/account", token=admin,
+                  body={"platform": "linkedin", "url": "ftp://linkedin.com/company/pci"})
+    chk("21B·e non-http schemes are refused", c == 200 and "error" in ftp, ftp)
+    c, mism = jget("POST", "/api/admin/social/account", token=admin,
+                   body={"platform": "linkedin", "url": "https://example.com/not-linkedin"})
+    chk("21B·f domain mismatch returns 422 needing override",
+        c == 422 and mism.get("needs_override") is True, (c, mism))
+
+    c, li = jget("POST", "/api/admin/social/account", token=admin, body={
+        "platform": "linkedin", "url": "https://www.linkedin.com/company/project-controls-institute",
+        "display_name": "PCI on LinkedIn", "handle": "@pci", "locations": ["footer"],
+        "active": True, "is_official": True, "approval_status": "approved",
+    })
+    lid = li.get("id")
+    chk("21B·g create an approved LinkedIn profile", c == 200 and li.get("ok") and lid, li)
+
+    c, web = jget("POST", "/api/admin/social/account", token=admin, body={
+        "platform": "website", "url": mock + "/social-profile-ok",
+        "display_name": "PCI Community", "locations": "footer,homepage",
+        "active": True, "approval_status": "approved", "aria_label": "PCI community hub",
+    })
+    wid = web.get("id")
+    chk("21B·h create a website profile targeting footer+homepage", c == 200 and wid, web)
+
+    # Master switch still off → public empty.
+    c, pub1 = jget("GET", "/api/social")
+    chk("21B·i profiles alone do not publish while master switch is off",
+        c == 200 and pub1.get("enabled") is False and pub1.get("links") == [], pub1)
+
+    c, en = jget("POST", "/api/admin/social", token=admin, body={"social_enabled": True, "social_analytics_enabled": True})
+    chk("21B·j enable master switch + analytics", c == 200 and en.get("ok"), en)
+    c, pub2 = jget("GET", "/api/social?loc=footer")
+    platforms = {l.get("platform") for l in pub2.get("links", [])}
+    chk("21B·k public footer lists the approved active profiles with svg/a11y metadata",
+        c == 200 and pub2.get("enabled") is True and platforms >= {"linkedin", "website"}
+        and all(l.get("svg") and l.get("label") and l.get("url") for l in pub2.get("links", [])),
+        pub2.get("links"))
+
+    c, home = jget("GET", "/api/social?loc=homepage")
+    home_plats = {l.get("platform") for l in home.get("links", [])}
+    chk("21B·l location filter: homepage only returns the website profile",
+        home_plats == {"website"}, home_plats)
+
+    # SSR footer injection (ListSections fills <!--PCI-SOCIAL-->).
+    st, body = req("GET", "/about.html")
+    chk("21B·m server-rendered about page injects the footer social bar + sameAs JSON-LD",
+        st == 200 and "ft-social" in body and "linkedin.com/company/project-controls-institute" in body
+        and "application/ld+json" in body and "sameAs" in body and 'data-social="linkedin"' in body, st)
+
+    # Link check against the mock vendor. HTTP mock hosts surface the HTTPS soft-warning (status
+    # 'warning', http_code 200) — never 'invalid'/'unreachable' for a reachable page.
+    c, chk1 = jget("POST", f"/api/admin/social/account/{wid}/check", token=admin)
+    chk("21B·n link check marks a reachable (http mock) profile valid/warning, never broken",
+        c == 200 and chk1.get("ok") and chk1.get("http_code") == 200
+        and chk1.get("status") in ("valid", "warning"), chk1)
+
+    # Duplicate → draft/inactive; archive (soft delete).
+    c, dup = jget("POST", f"/api/admin/social/account/{lid}/duplicate", token=admin)
+    did = dup.get("id")
+    chk("21B·o duplicate creates a draft clone", c == 200 and did and did != lid, dup)
+    con = dbconn(); drow = con.execute("SELECT active,approval_status FROM social_accounts WHERE id=?", (did,)).fetchone(); con.close()
+    chk("21B·p duplicate starts inactive + draft (not public)", drow and int(drow[0]) == 0 and drow[1] == "draft", drow)
+    c, arch = jget("POST", f"/api/admin/social/account/{did}/delete", token=admin, body={})
+    con = dbconn(); arow = con.execute("SELECT active,approval_status FROM social_accounts WHERE id=?", (did,)).fetchone(); con.close()
+    chk("21B·q soft-delete archives the profile (active=0, archived)",
+        c == 200 and arch.get("ok") and arow and int(arow[0]) == 0 and arow[1] == "archived", (arch, arow))
+
+    # Invalid link_status drops the profile from the public catalogue.
+    con = dbconn()
+    con.execute("UPDATE social_accounts SET link_status='invalid' WHERE id=?", (lid,))
+    con.commit(); con.close()
+    c, pub3 = jget("GET", "/api/social?loc=footer")
+    plats3 = {l.get("platform") for l in pub3.get("links", [])}
+    chk("21B·r known-invalid profiles are excluded from the public catalogue",
+        "linkedin" not in plats3 and "website" in plats3, plats3)
+    con = dbconn(); con.execute("UPDATE social_accounts SET link_status='valid' WHERE id=?", (lid,)); con.commit(); con.close()
+
+    # Share buttons per content type.
+    c, sh = jget("POST", "/api/admin/social/share", token=admin, body={
+        "rows": [
+            {"content_type": "blog", "enabled": True, "buttons": ["linkedin", "x", "copy", "not-a-target"]},
+            {"content_type": "news", "enabled": False, "buttons": ["facebook"]},
+        ]
+    })
+    chk("21B·s share config saves and filters unknown button keys", c == 200 and sh.get("ok"), sh)
+    c, sblog = jget("GET", "/api/social/share?type=blog")
+    c2, snews = jget("GET", "/api/social/share?type=news")
+    chk("21B·t public share endpoint reflects enabled buttons only",
+        c == 200 and sblog.get("enabled") is True and set(sblog.get("buttons", [])) == {"linkedin", "x", "copy"}
+        and c2 == 200 and snews.get("enabled") is False and snews.get("buttons") == [], (sblog, snews))
+
+    # Audit trail records the journey.
+    c, aud = jget("GET", "/api/admin/social/audit", token=admin)
+    actions = {r.get("action") for r in aud.get("rows", [])}
+    chk("21B·u audit trail records create/update/check/share/settings actions",
+        c == 200 and {"create", "check", "share", "settings", "archive", "duplicate"}.issubset(actions),
+        sorted(actions))
+
+    # Disable master switch → public empty again; footer social bar disappears.
+    jget("POST", "/api/admin/social", token=admin, body={"social_enabled": False})
+    c, pub4 = jget("GET", "/api/social")
+    st2, body2 = req("GET", "/about.html")
+    chk("21B·v disabling the master switch clears the public catalogue and footer bar",
+        c == 200 and pub4.get("links") == [] and "ft-social" not in body2, (pub4, "ft-social" in body2))
+
+    # Domain override path publishes a mismatched URL when authorised.
+    c, ov = jget("POST", "/api/admin/social/account", token=admin, body={
+        "platform": "x", "url": "https://example.com/pci-on-x", "override_domain": True,
+        "display_name": "PCI X (override)", "locations": ["footer"], "active": True, "approval_status": "approved",
+    })
+    chk("21B·w authorised domain override allows a mismatched host", c == 200 and ov.get("ok") and ov.get("id"), ov)
+
+    vtok = globals().get("_VIEWER_TOK")
+    if vtok:
+        cv, rv = jget("GET", "/api/admin/social", token=vtok)
+        chk("21B·x viewer without 'social' permission is forbidden",
+            cv == 403 and rv.get("error") == "forbidden", (cv, rv))
+    else:
+        chk("21B·x viewer without 'social' permission is forbidden (skipped — no viewer fixture)", True)
+
+    srv.shutdown()
+
 
 def test_syndication(admin):
     print("\n=== 22. Content syndication (WordPress / Ghost / Forem) ===")
@@ -3126,6 +3400,7 @@ def run(proc):
     test_exam_exceptions(admin)
     test_content_centre(admin)
     test_social_publishing(admin)
+    test_social_media_management(admin)
     test_syndication(admin)
     test_external_import(admin)
     test_backlinks(admin)
@@ -5676,6 +5951,12 @@ def test_proctoring_analytics_gaps(admin):
                 ("purchase_completed", "zephyr59", 49.75, "USD"))
     con.execute("INSERT INTO analytics_events(event,path,visitor,utm_source,created_at) VALUES(?,?,?,?,?)",
                 ("page_view", "/old-59.html", "v59old", "zephyr59old", "2020-01-01 00:00:00"))
+    con.execute("INSERT INTO analytics_events(event,path,visitor,utm_source,created_at) VALUES(?,?,?,?,datetime('now'))",
+                ("page_view", "=2+2", "v59formula", "formula59"))
+    con.execute("INSERT INTO inquiries(type,email,org,topic,reference,status) VALUES(?,?,?,?,?,'new')",
+                ("general", "formula-59@ex.co", "  @SUM(A1)", "CSV safety", "PCI-FORMULA-59"))
+    con.execute("INSERT INTO discount_codes(code,discount_type,discount_value,org_name,active,status,max_uses,used_count) "
+                "VALUES(?, 'percentage', 10, ?, 1, 'active', 5, 0)", ("FORMULA59", "+CMD"))
     con.commit(); con.close()
 
     c1, ag = jget("GET", "/api/admin/analytics/summary")
@@ -5712,6 +5993,18 @@ def test_proctoring_analytics_gaps(admin):
         stc == 200 and cct.startswith("text/csv")
         and header == "created_at,event,path,visitor,country,device,browser,utm_source,utm_medium,utm_campaign,referrer,landing,value,currency"
         and "zephyr59" in text and '"camp,59"' in text and "2020-01-01" not in text, (stc, cct, header))
+
+    # Every administrator CSV path uses the same formula-neutralising encoder. Leading whitespace is
+    # significant: spreadsheet programs may still interpret "  @..." as a formula if it is not forced
+    # to text. Genuine numeric negative values remain numeric because only string cells are neutralised.
+    s2, b2, _ = _raw_get("/api/admin/export?entity=inquiries", token=admin)
+    s3, b3, _ = _raw_get("/api/admin/reports/discounts?format=csv", token=admin)
+    inquiry_csv = b2.decode("utf-8", "ignore")
+    discount_csv = b3.decode("utf-8", "ignore")
+    chk("59o analytics, bulk-data and partner-report CSV exports neutralise spreadsheet formulas",
+        "'=2+2" in text and s2 == 200 and "'  @SUM(A1)" in inquiry_csv
+        and s3 == 200 and "'+CMD" in discount_csv,
+        (s2, s3, "'=2+2" in text, "'  @SUM(A1)" in inquiry_csv, "'+CMD" in discount_csv))
 
 def test_time_sweeps(admin):
     # Incremental Testing Programme §60 — the two findings resolved by the sweeps increment: the

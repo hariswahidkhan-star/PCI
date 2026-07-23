@@ -340,7 +340,7 @@
     var card = el('div', 'pci-anx-card');
     card.appendChild(el('div', 'pci-anx-glow'));
 
-    var x = el('button', 'pci-anx-x'); x.type = 'button'; x.setAttribute('aria-label', cfg.dismiss || 'Dismiss announcement');
+    var x = el('button', 'pci-anx-x'); x.type = 'button'; x.setAttribute('aria-label', 'Dismiss announcement');
     x.setAttribute('data-anx-close', '');
     x.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
     card.appendChild(x);

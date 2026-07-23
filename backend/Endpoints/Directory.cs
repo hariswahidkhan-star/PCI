@@ -109,7 +109,7 @@ public static class MemberDirectory
         app.MapPost("/api/admin/directory/{userId:long}/unlist", (HttpRequest req, long userId) => gate(req, "members", adm =>
         {
             db.Execute("UPDATE student_profiles SET directory_opt_in=0 WHERE user_id=?", userId);
-            log(adm.Id, "directory_unlisted_by_admin", $"user {userId}");
+            log(adm.Id, "directory_unlisted_by_admin", $"subject {userId}");
             return J(new { ok = true });
         }));
     }
