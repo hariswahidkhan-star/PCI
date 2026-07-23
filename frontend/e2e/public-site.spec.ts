@@ -2,10 +2,10 @@ import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 
 // Browser E2E + accessibility over the backend-served public site. Runs on CI runners (which boot the
-// backend); the local sandbox blocks a server bind. The CI job is non-blocking until it has a green
-// history, so these can never turn the pipeline red while unproven.
+// backend). The CI job is gating; Chromium runs the full suite and the tagged smoke paths also run
+// in Firefox, WebKit, Mobile Chrome and Mobile Safari profiles.
 test.describe('public site', () => {
-  test('home page loads with the right title, language and a heading', async ({ page }) => {
+  test('@cross-browser home page loads with the right title, language and a heading', async ({ page }) => {
     const resp = await page.goto('/')
     expect(resp?.status() ?? 0).toBeLessThan(400)
     await expect(page).toHaveTitle(/Project Controls Institute/i)
@@ -15,7 +15,7 @@ test.describe('public site', () => {
     await expect(page.locator('a[href="#content"]').first()).toHaveText(/skip to main content/i)
   })
 
-  test('the verify page renders the credential lookup', async ({ page }) => {
+  test('@cross-browser the verify page renders the credential lookup', async ({ page }) => {
     const resp = await page.goto('/verify.html')
     expect(resp?.status() ?? 0).toBeLessThan(400)
     await expect(page).toHaveTitle(/Verify a Credential/i)

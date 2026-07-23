@@ -80,7 +80,10 @@ public static class StudentExam
                 payments = db.Query("SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference,exam_schedule_deadline FROM payments WHERE user_id=? ORDER BY id DESC", u.Id),
                 exam = new { entitled = ent != null, deadline = ent?["exam_schedule_deadline"], payment_ref = ent?["reference"], booking, passed = passAtt != null,
                     certification_id = ent is null ? null : ent["certification_id"],
-                    certification = ent is null ? null : (object?)Certs.ById(db, ent["certification_id"])?["name"] },
+                    certification = ent is null ? null : (object?)Certs.ById(db, ent["certification_id"])?["name"],
+                    certification_code = ent is null ? null : (object?)Certs.ById(db, ent["certification_id"])?["code"],
+                    certification_name = ent is null ? null : (object?)Certs.ById(db, ent["certification_id"])?["name"],
+                    certification_acronym = ent is null ? null : (object?)Certs.ById(db, ent["certification_id"])?["acronym"] },
                 // Multi-certification view: one entry per paid entitlement, each with its own
                 // certification, booking, latest attempt and credential. The legacy `exam` object
                 // above remains for existing UI paths (it reflects the most recent entitlement).
@@ -129,12 +132,17 @@ public static class StudentExam
                     }).ToList(),
                 // Held attempts must not disclose pass/fail/score until released (Section A rule 6) —
                 // redacted SERVER-side, not merely hidden by the front-end.
-                attempts = db.Query("SELECT id,kind,started_at,submitted_at,percent,result,status,result_status,hold_reason,released_at,domain_breakdown,violations,duration_minutes FROM exam_attempts WHERE user_id=? ORDER BY id DESC LIMIT 25", u.Id)
+                attempts = db.Query(@"SELECT a.id,a.kind,a.started_at,a.submitted_at,a.percent,a.result,a.status,a.result_status,a.hold_reason,a.released_at,
+                        a.domain_breakdown,a.violations,a.duration_minutes,COALESCE(a.certification_id,1) certification_id,
+                        ct.code certification_code,ct.name certification_name
+                    FROM exam_attempts a LEFT JOIN certifications ct ON ct.id=COALESCE(a.certification_id,1)
+                    WHERE a.user_id=? ORDER BY a.id DESC LIMIT 25", u.Id)
                     .Select(a => {
                         if (H.Str(a["result_status"]) == "auto_held") { a["percent"] = null; a["result"] = null; a["domain_breakdown"] = null; }
                         return a;
                     }).ToList(),
                 credentials = db.Query(@"SELECT ic.credential_id,ic.credential,ic.status,ic.issued_at,ic.expires_at,ic.holder_name,ic.certificate_wording,
+                        COALESCE(ic.certification_id,1) certification_id,ct.code certification_code,
                         ct.name certification_name, ct.acronym certification_acronym
                     FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)
                     WHERE ic.user_id=? ORDER BY ic.id DESC", u.Id),
@@ -766,7 +774,7 @@ public static class StudentExam
         app.MapGet("/api/me/config", (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            var keys = new[]{ "sp_login_enabled","sp_exam_booking_open","sp_reschedule_enabled","sp_reschedule_cutoff_hours","sp_results_visible","sp_certificate_download","sp_cpd_enabled","sp_cpd_target_hours","sp_support_tickets_enabled","sp_practice_enabled","sp_banner_enabled","sp_banner_text" };
+            var keys = new[]{ "sp_login_enabled","sp_exam_booking_open","sp_reschedule_enabled","sp_reschedule_cutoff_hours","sp_results_visible","sp_certificate_download","sp_cpd_enabled","sp_cpd_target_hours","sp_support_tickets_enabled","sp_practice_enabled","sp_banner_enabled","sp_banner_text","exam_open_before_minutes" };
             var o = new Dictionary<string, object?>();
             foreach (var k in keys) { var v = db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", k); if (v is not null) o[k] = v; }
             o["sp_readiness_required"] = Settings.Bool(db, "sp_readiness_required", true) ? "1" : "0";

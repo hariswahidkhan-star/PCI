@@ -11,7 +11,7 @@ test.describe('public site i18n', () => {
     await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
   })
 
-  test('?lang=ar serves Arabic right-to-left (html lang + dir)', async ({ page }) => {
+  test('@cross-browser ?lang=ar serves Arabic right-to-left (html lang + dir)', async ({ page }) => {
     await page.goto('/?lang=ar')
     await expect(page.locator('html')).toHaveAttribute('lang', 'ar')
     await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')

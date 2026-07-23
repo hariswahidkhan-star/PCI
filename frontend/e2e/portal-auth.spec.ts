@@ -63,7 +63,7 @@ test.describe('student portal auth', () => {
     await expect(page.getByRole('button', { name: 'Sign out' })).toHaveCount(0)
   })
 
-  test('an unauthenticated visit to the portal redirects to the login screen', async ({ page }) => {
+  test('@cross-browser an unauthenticated visit to the portal redirects to the login screen', async ({ page }) => {
     await page.goto('/app/')
     await expect(page).toHaveURL(/\/app\/login$/)
     await expect(page.getByLabel('Email address')).toBeVisible()

@@ -1515,9 +1515,17 @@ def test_leadership_suite(admin):
         c, v = jget("GET", f"/api/verify?id={cred}")
         chk(f"18i {code}: public verification names the right certification",
             v.get("valid") is True and v.get("certification_code") == code, (v.get("certification_code"), v.get("valid")))
+        c, cert_view = jget("GET", f"/api/me/certificate?id={cred}", token=stok)
+        chk(f"18i·2 {code}: candidate certificate lookup stays scoped to the requested credential",
+            c == 200 and cert_view.get("credential_id") == cred
+            and cert_view.get("certification_code") == code
+            and cert_view.get("certification_id") == ids[code], cert_view)
     c, me = jget("GET", "/api/me", token=stok)
     mecodes = {e.get("certification_code") for e in me.get("exams", [])}
     chk("18j /api/me shows all three certification journeys", mecodes == set(NAMES), mecodes)
+    credential_codes = {e.get("certification_code") for e in me.get("credentials", [])}
+    chk("18j·2 /api/me labels all issued credentials with their own certification",
+        credential_codes == set(NAMES), credential_codes)
 
     # ---- Books: upload → per-certification isolation → personalised watermarked download ----
     buri, braw = _real_pdf_uri()

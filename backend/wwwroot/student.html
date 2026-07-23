@@ -875,7 +875,7 @@ ko:{
 'accom.errAlreadyOpen':'이미 처리 중인 요청이 있습니다',
 'accom.errCouldNotSubmit':'요청을 제출할 수 없습니다',
 'consent.modalTitle':'응시자 동의서',
-'consent.intro':'PCL-AI 시험을 예약하거나 응시하기 전에 PCI는 현재 응시자 동의서에 대한 동의를 요구합니다. 전체 정책은 PCI 웹사이트에 게시되어 있습니다.',
+'consent.intro':'PCI 인증 시험을 예약하거나 응시하기 전에 PCI는 현재 응시자 동의서에 대한 동의를 요구합니다. 전체 정책은 PCI 웹사이트에 게시되어 있습니다.',
 'consent.versionLabel':'버전 1.0',
 'consent.agreeLabel':'위의 모든 동의서(v1.0)를 읽었으며 이에 동의합니다.',
 'consent.acceptBtn':'동의 및 계속',
@@ -1094,7 +1094,7 @@ ar:{
 'accom.errAlreadyOpen':'لديك بالفعل طلب قيد المعالجة',
 'accom.errCouldNotSubmit':'تعذّر إرسال الطلب',
 'consent.modalTitle':'اتفاقيات المرشح',
-'consent.intro':'قبل حجز امتحان PCL-AI أو أدائه، تتطلب PCI الموافقة على اتفاقيات المرشح الحالية. السياسات الكاملة منشورة على موقع PCI.',
+'consent.intro':'قبل حجز امتحان شهادة PCI أو أدائه، تتطلب PCI الموافقة على اتفاقيات المرشح الحالية. السياسات الكاملة منشورة على موقع PCI.',
 'consent.versionLabel':'الإصدار 1.0',
 'consent.agreeLabel':'لقد قرأت جميع الاتفاقيات أعلاه وأوافق عليها (الإصدار 1.0).',
 'consent.acceptBtn':'الموافقة والمتابعة',
@@ -1313,7 +1313,7 @@ es:{
 'accom.errAlreadyOpen':'Ya tiene una solicitud abierta',
 'accom.errCouldNotSubmit':'No se pudo enviar la solicitud',
 'consent.modalTitle':'Acuerdos del candidato',
-'consent.intro':'Antes de reservar o presentarse al examen PCL-AI, PCI requiere la aceptación de los acuerdos vigentes del candidato. Las políticas completas están publicadas en el sitio web de PCI.',
+'consent.intro':'Antes de reservar o presentarse al examen de certificación PCI, PCI requiere la aceptación de los acuerdos vigentes del candidato. Las políticas completas están publicadas en el sitio web de PCI.',
 'consent.versionLabel':'versión 1.0',
 'consent.agreeLabel':'He leído y acepto todos los acuerdos anteriores (v1.0).',
 'consent.acceptBtn':'Aceptar y continuar',
@@ -1532,7 +1532,7 @@ fr:{
 'accom.errAlreadyOpen':'Vous avez déjà une demande en cours',
 'accom.errCouldNotSubmit':'Impossible d’envoyer la demande',
 'consent.modalTitle':'Accords du candidat',
-'consent.intro':'Avant de réserver ou de passer l’examen PCL-AI, PCI exige l’acceptation des accords du candidat en vigueur. Les politiques complètes sont publiées sur le site web de PCI.',
+'consent.intro':'Avant de réserver ou de passer l’examen de certification PCI, PCI exige l’acceptation des accords du candidat en vigueur. Les politiques complètes sont publiées sur le site web de PCI.',
 'consent.versionLabel':'version 1.0',
 'consent.agreeLabel':'J’ai lu et j’accepte l’ensemble des accords ci-dessus (v1.0).',
 'consent.acceptBtn':'Accepter et continuer',
@@ -1751,7 +1751,7 @@ zh:{
 'accom.errAlreadyOpen':'您已有一项待处理的申请',
 'accom.errCouldNotSubmit':'申请提交失败',
 'consent.modalTitle':'考生协议',
-'consent.intro':'在预约或参加 PCL-AI 考试之前，PCI 要求您接受当前的考生协议。完整政策已发布于 PCI 官网。',
+'consent.intro':'在预约或参加 PCI 认证考试之前，PCI 要求您接受当前的考生协议。完整政策已发布于 PCI 官网。',
 'consent.versionLabel':'版本 1.0',
 'consent.agreeLabel':'我已阅读并接受以上所有协议（v1.0）。',
 'consent.acceptBtn':'接受并继续',
@@ -1970,7 +1970,7 @@ ru:{
 'accom.errAlreadyOpen':'У вас уже есть открытый запрос',
 'accom.errCouldNotSubmit':'Не удалось отправить запрос',
 'consent.modalTitle':'Соглашения кандидата',
-'consent.intro':'Перед бронированием или сдачей экзамена PCL-AI PCI требует принятия действующих соглашений кандидата. Полные тексты политик опубликованы на сайте PCI.',
+'consent.intro':'Перед бронированием или сдачей сертификационного экзамена PCI требуется принять действующие соглашения кандидата. Полные тексты политик опубликованы на сайте PCI.',
 'consent.versionLabel':'версия 1.0',
 'consent.agreeLabel':'Я прочитал(а) и принимаю все указанные выше соглашения (v1.0).',
 'consent.acceptBtn':'Принять и продолжить',
@@ -2201,14 +2201,14 @@ document.addEventListener('click',e=>{if(!e.target.closest('#npop')&&!e.target.c
 /* ---------- HOME ---------- */
 function nextStep(me){
   if(me.enrollment)return{k:'Continue',h:'Pick up your enrolment where you left off',p:'Your progress is saved. You can return any time using the same email address — you’re on step '+me.enrollment.current_step+'.',b:'Resume enrolment',a:'__resume'};
-  if(me.credentials.length)return{h:'You’re certified. Congratulations, '+me.user.first_name+'.',p:'Your PCL-AI credential is active and verifiable. Keep it current with CPD and recertify within your three-year cycle.',b:'View certificate',a:'cert'};
+  if(me.credentials.length)return{h:'You’re certified. Congratulations, '+me.user.first_name+'.',p:'Your '+certCodeOf(me.credentials[0])+' credential is active and verifiable. Keep it current with CPD and recertify within your three-year cycle.',b:'View certificate',a:'cert'};
   const last=me.attempts.find(a=>a.kind==='exam'&&a.status==='submitted');
   if(last&&last.result==='fail')return{h:'Your result is in — the path forward is clear.',p:'Review your domain breakdown, target weaker areas in the practice centre, and rebook under the retake policy.',b:'Review results',a:'results'};
   if(me.exam.booking){const d=dTo(me.exam.booking.scheduled_at);return{h:d<=0?'Exam day. You’ve prepared for this.':'Your exam is booked. Now the goal is readiness.',p:'Work through the checklist, run the system check, and practise. Launch opens 15 minutes before your slot.',b:'Go to My exam',a:'exam'}}
   if(me.exam.entitled)return{h:'Your exam fee is paid — choose your moment',p:'Pick a date and time inside your 12-month window. Free to reschedule up to 72 hours before the slot.',b:'Schedule my exam',a:'exam'};
-  return{h:'Welcome, '+me.user.first_name+'.',p:'Your next step is the PCL-AI examination fee, which opens a 12-month scheduling window.',b:'See my exam',a:'exam'};
+  return{h:'Welcome, '+me.user.first_name+'.',p:'Your next step is the certification examination fee, which opens a 12-month scheduling window.',b:'See my exam',a:'exam'};
 }
-function credStatus(me){const c=me.credentials&&me.credentials[0];if(!c)return null;
+function credStatus(me,c){c=c||(me.credentials&&me.credentials[0]);if(!c)return null;
   const now=Date.now(),exp=new Date(c.expires_at).getTime();
   const memOK=me.membership&&me.membership.expiry_date&&new Date(me.membership.expiry_date).getTime()>now;
   const cpdOK=(me.cpd?me.cpd.total:0)>=(me.cpd?me.cpd.target:60);
@@ -2219,13 +2219,18 @@ function credStatus(me){const c=me.credentials&&me.credentials[0];if(!c)return n
   return{k:'active',t:'Active & in good standing',cls:'g',why:''};
 }
 function verifyURL(id){const b=(S.me&&S.me.site_base_url)||'https://projectcontrolsinstitute.org';return b.replace(/\/$/,'')+'/verify.html?id='+encodeURIComponent(id)}
+function certCodeOf(c){if(!c)return'PCL-AI';const acr=String(c.certification_acronym||'').replace(/^PCI\s+/i,'');return String(c.certification_code||c.cert_code||acr||c.credential||'PCL-AI')}
+function certNameOf(c){return String((c&&c.certification_name)||(c&&c.certification)||(c&&c.credential)||'PCI AI Project Controls Leader')}
+function certAcronymOf(c){return String((c&&c.certification_acronym)||('PCI '+certCodeOf(c)))}
+function certDesignationOf(c){return certNameOf(c)+' ('+certAcronymOf(c)+')'}
+function credentialForAttempt(a){return (S.me.credentials||[]).find(c=>String(c.certification_id)===String(a&&a.certification_id))||S.me.credentials[0]}
 function credCard(me){const c=me.credentials[0];const name=(me.user.first_name+' '+(me.user.last_name||'')).trim();
   const st=c?{t:'Active credential',w:0}:me.exam.booking?{t:'Exam booked',w:0}:me.exam.entitled?{t:'Window open',w:dTo(me.exam.deadline)<60}:{t:'Awaiting exam fee',w:1};
   const k1=c?['Credential ID',c.credential_id]:me.exam.entitled?['Exam window',Math.max(0,dTo(me.exam.deadline))+' days left']:['Exam fee',money(350)];
   const mOK=me.membership&&me.membership.expiry_date&&dTo(me.membership.expiry_date)>0;
   const k2=['Membership',me.membership?(mOK?'Active · to '+fD(me.membership.expiry_date):'Lapsed'):'—'];
   return `<div class="credcard"><div class="cc-top">${LOCKUP("card")}</div><span class="glow"></span>
-   <div class="cc-mid"><div class="who">${esc(name)}</div><div class="what">${c?'PCL-AI · Certified Professional':'PCL-AI Candidate'}</div></div>
+   <div class="cc-mid"><div class="who">${esc(name)}</div><div class="what">${esc(c?certCodeOf(c)+' · Certified Professional':certCodeOf(me.exam)+' Candidate')}</div></div>
    <div class="cc-bot"><div><div class="kk">${k1[0]}</div><div class="vv">${esc(String(k1[1]))}</div></div><div><div class="kk">${k2[0]}</div><div class="vv">${esc(k2[1])}</div></div><span class="st ${st.w?'warn':''}"><i></i>${st.t}</span></div></div>`}
 function ringHTML(done,total){const r=26,c=2*Math.PI*r,off=c*(1-done/total);
   return `<div class="ring"><svg width="64" height="64"><circle cx="32" cy="32" r="${r}" fill="none" stroke="#E7EBF1" stroke-width="7"/><circle cx="32" cy="32" r="${r}" fill="none" stroke="#1D4ED8" stroke-width="7" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"/></svg><div class="rv">${done}/${total}</div></div>`}
@@ -2244,7 +2249,8 @@ async function vHome(){const me=S.me;const ns=nextStep(me);const cs=credStatus(m
   const win=me.exam.entitled&&!me.exam.passed?`<div class="cdchip ${dTo(me.exam.deadline)<60?'warn':''}"><b>${Math.max(0,dTo(me.exam.deadline))}</b><span>days left in window</span></div>`:'';
   const bk=me.exam.booking?`<div class="cdchip"><b>${Math.max(0,dTo(me.exam.booking.scheduled_at))}</b><span>days to exam</span></div>`:'';
   const facts=[];
-  facts.push(me.exam.booking?['cal','PCL-AI Examination','Booked · '+fDT(me.exam.booking.scheduled_at),'b','On track']:me.exam.passed?['cert','PCL-AI Examination','Passed','g','Complete']:me.exam.entitled?['exam',(me.exam.certification||'PCL-AI')+' Examination','not yet booked','a','Action needed']:['exam','PCL-AI Examination','Fee not yet paid','n','Pending']);
+  const examLabel=(me.exam.certification||certCodeOf(me.exam))+' Examination';
+  facts.push(me.exam.booking?['cal',examLabel,'Booked · '+fDT(me.exam.booking.scheduled_at),'b','On track']:me.exam.passed?['cert',examLabel,'Passed','g','Complete']:me.exam.entitled?['exam',examLabel,'not yet booked','a','Action needed']:['exam','Certification examination','Fee not yet paid','n','Pending']);
   if(me.exam.entitled&&!me.exam.passed)facts.push(['cpd','Scheduling window','Closes '+fD(me.exam.deadline)+' · '+Math.max(0,dTo(me.exam.deadline))+' days remaining','b','On track']);
   facts.push(me.membership?['card','Student membership','Active · renews '+fD(me.membership.expiry_date),(me.membership.expiry_date&&dTo(me.membership.expiry_date)<45?'a':'g'),me.membership.expiry_date&&dTo(me.membership.expiry_date)<45?'Renewal soon':'Active']:['card','Student membership','No active membership','n','—']);
   const J=journey(me);
@@ -2262,7 +2268,7 @@ async function vHome(){const me=S.me;const ns=nextStep(me);const cs=credStatus(m
     <div class="grid g2">
      <div class="card"><div class="ch"><h3>Your certification</h3><button class="lnk" data-go="exam">View exam →</button></div><div class="cb">
       ${facts.map(f=>`<div class="fact"><div class="fico">${svg(f[0])}</div><div class="ft"><b>${esc(f[1])}</b><span>${esc(f[2])}</span></div><span class="tag ${f[3]}"><span class="dot"></span>${esc(f[4])}</span></div>`).join('')}
-      <div class="callout info" style="margin-top:16px">${svg('sup')}<div><b>Membership access does not itself constitute certification.</b> The PCL-AI credential is earned only by passing the examination.</div></div>
+      <div class="callout info" style="margin-top:16px">${svg('sup')}<div><b>Membership access does not itself constitute certification.</b> A PCI credential is earned only by passing its examination.</div></div>
      </div></div>
      <div class="card"><div class="ch"><h3>Quick actions</h3></div><div class="cb"><div class="ql">
       <a data-go="exam"><span class="qico">${svg('exam')}</span><b>${me.exam.booking?'View my booking':'Schedule my exam'}</b><span class="ar">›</span></a>
@@ -2313,7 +2319,7 @@ async function vMembership(){const me=S.me;const m=me.membership;
   $('#memPays').innerHTML=mp.length?mp.map(p=>`<div class="fact"><div class="fico">${svg('card')}</div><div class="ft"><b>${prodName(p.product_type)}</b><span>${fD(p.payment_date)} · ${esc(p.invoice_number)}</span></div><b style="margin-right:8px">${money(p.final_amount,p.currency)}</b><span class="tag ${payTag(p.payment_status)}">${esc(p.payment_status)}</span></div>`).join(''):'<div class="muted tiny">No membership payments yet.</div>';
 }
 /* ---------- PAYMENTS & INVOICES ---------- */
-function prodName(t){return{membership:'Student membership',exam:'PCL-AI Examination fee',bundle:'Membership + Exam bundle',renewal:'Annual membership renewal',recert:'PCL-AI recertification',retake:'Examination retake'}[t]||t}
+function prodName(t){return{membership:'Student membership',exam:'Certification examination fee',bundle:'Membership + Exam bundle',renewal:'Annual membership renewal',recert:'Certification recertification',retake:'Examination retake'}[t]||t}
 function payTag(s){return{paid:'g',pending:'a',failed:'r',refunded:'n',cancelled:'n'}[s]||'n'}
 async function vPayments(){const d=await api('/api/me/invoices');const rows=d.rows||[];
   const paid=rows.filter(r=>r.payment_status==='paid');const spent=paid.reduce((a,r)=>a+(+r.final_amount||0),0);
@@ -2385,7 +2391,7 @@ function downloadDoc(p,kind){const u=S.me.user;const isR=kind==='receipt';const 
    </body></html>`;
   const b=new Blob([html],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='PCI-'+(isR?'Receipt-'+(p.receipt_number||p.id):'Invoice-'+p.invoice_number)+'.html';a.click();toast((isR?'Receipt':'Invoice')+' downloaded','ok');
 }
-async function payFlow(product,label,amount){
+async function payFlow(product,label,amount,certification){
   if(S.mode==='demo'){modal(label,`<p>You’re about to pay <b>${money(amount)}</b>. In the live panel this opens secure Stripe checkout; the demo simulates a successful payment.</p>`,'Simulate payment',async()=>{
     const now=Date.now();
     if(product==='renewal'){const cur=D.membership.expiry_date&&new Date(D.membership.expiry_date)>now?new Date(D.membership.expiry_date).getTime():now;D.membership.expiry_date=new Date(cur+365*864e5).toISOString();D.membership.status='active';
@@ -2393,7 +2399,7 @@ async function payFlow(product,label,amount){
     if(product==='recert'&&D.credentials[0]){const c=D.credentials[0];const cur=new Date(c.expires_at)>now?new Date(c.expires_at).getTime():now;c.expires_at=new Date(cur+3*365*864e5).toISOString();c.status='active';
       D.payments.unshift({id:900+D.payments.length,product_type:'recert',standard_amount:99,final_amount:99,currency:'USD',payment_status:'paid',payment_provider:'stripe',payment_date:new Date().toISOString(),reference:'PCI-RC'+Date.now().toString(36).toUpperCase().slice(-5)})}
     persistD();await refresh();toast('Payment recorded — thank you','ok');go(S.route);return true});return}
-  try{const r=await api('/api/create-checkout-session',{method:'POST',body:JSON.stringify({product,email:S.me.user.email})});if(r&&r.url)location.href=r.url;else toast('Checkout could not be created','err')}catch(e){toast('Checkout unavailable: '+(e.data&&e.data.error||e.message),'err')}
+  try{const r=await api('/api/create-checkout-session',{method:'POST',body:JSON.stringify({product,email:S.me.user.email,...(certification?{certification}: {})})});if(r&&r.url)location.href=r.url;else toast('Checkout could not be created','err')}catch(e){toast('Checkout unavailable: '+(e.data&&e.data.error||e.message),'err')}
 }
 /* ---------- MESSAGES CENTRE ---------- */
 async function vMessages(){const d=await api('/api/me/messages');const rows=d.rows||[];S._msgs=rows;
@@ -2415,8 +2421,9 @@ async function vMessages(){const d=await api('/api/me/messages');const rows=d.ro
   document.querySelectorAll('[data-mgo]').forEach(b=>b.onclick=async()=>{await api('/api/me/messages/'+b.dataset.mid2+'/read',{method:'POST'});await loadMsgs();go(b.dataset.mgo)});
 }
 /* ---------- MY EXAM ---------- */
-function certLabel(ex){return (ex&&ex.certification)||(S.me&&S.me.exam&&S.me.exam.certification)||'PCL-AI'}
-function certShort(ex){return (ex&&ex.cert_code)||'PCL-AI'}
+function certLabel(ex){return certNameOf(ex||(S.me&&S.me.exam))}
+function certShort(ex){return certCodeOf(ex||(S.me&&S.me.exam))}
+function examForCert(certId){return ((S.me&&S.me.exams)||[]).find(e=>String(e.certification_id)===String(certId))||(S.me&&S.me.exam)}
 function renderExamPicker(list){
   _curRerender=()=>renderExamPicker(list);
   $('#view').innerHTML=`<div class="card"><div class="ch"><h3>${T('picker.title')}</h3><div class="sp"></div>${langSwitcherHTML()}</div><div class="cb">
@@ -2506,9 +2513,9 @@ function renderBooked(ex){const b=ex.booking,dt=new Date(b.scheduled_at);const C
    </div></div>`;
   document.querySelectorAll('[data-ck]').forEach(c=>c.onchange=()=>{S.check[c.dataset.ck]=c.checked;store.set('sp2_check',JSON.stringify(S.check))});
   $('#resched').onclick=()=>renderSched(ex,true);$('#sysGo').onclick=runReadiness;wireLangSwitcher();
-  const paint=()=>{const slot=new Date(b.scheduled_at).getTime(),now=Date.now(),open=slot-15*6e4,close=slot+30*6e4;const rdyReq=cfgOn('sp_readiness_required',true);const rdyOk=!!S.readinessOk;const allCk=[0,1,2,3].every(i=>S.check[i])&&(!rdyReq||rdyOk);let h='';
+  const paint=()=>{const slot=new Date(b.scheduled_at).getTime(),now=Date.now(),openBefore=Number((S.config||{}).exam_open_before_minutes||15),open=slot-openBefore*6e4,close=slot+30*6e4;const rdyReq=cfgOn('sp_readiness_required',true);const rdyOk=!!S.readinessOk;const allCk=[0,1,2,3].every(i=>S.check[i])&&(!rdyReq||rdyOk);let h='';
     if(now<open){const s=Math.floor((open-now)/1000),d=Math.floor(s/86400),hh=Math.floor(s%86400/3600),mm=Math.floor(s%3600/60),ss=s%60;
-      h=`<div style="text-align:center"><div class="kpi" style="margin-bottom:12px;display:inline-block"><div class="val">${d>0?d+'d ':''}${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</div><div class="sub">${T('launch.untilOpen')}</div></div><p class="tiny muted" style="margin:0">${T('launch.opensInfo')}</p>${S.mode==='demo'?'<button class="btn btn-sm" id="djump" style="margin-top:10px">'+T('launch.demoJump')+'</button>':''}</div>`;}
+      h=`<div style="text-align:center"><div class="kpi" style="margin-bottom:12px;display:inline-block"><div class="val">${d>0?d+'d ':''}${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</div><div class="sub">${T('launch.untilOpen')}</div></div><p class="tiny muted" style="margin:0">${T('launch.opensInfo').replace('15',String(openBefore))}</p>${S.mode==='demo'?'<button class="btn btn-sm" id="djump" style="margin-top:10px">'+T('launch.demoJump')+'</button>':''}</div>`;}
     else if(now<=close){h=`<div style="text-align:center"><span class="tag g" style="margin-bottom:12px"><span class="dot"></span>${T('launch.windowOpenClosesAt',{time:fDT(new Date(close).toISOString())})}</span><button class="btn btn-p btn-lg btn-bk" id="launchGo" ${allCk?'':'disabled'} style="margin-top:12px">${T('launch.launchExam')}</button>${allCk?`<button class="btn btn-bk" id="launchDesktop" style="margin-top:10px">${T('launch.openDesktopApp')}</button>`:''}${allCk?'':'<p class="tiny muted" style="margin:10px 0 0">'+(rdyReq&&!rdyOk?T('launch.needReadiness'):T('launch.needChecklist'))+' '+T('launch.toEnable')+'</p>'}</div>`;}
     else{h=`<div class="empty"><div class="ei">!</div><h4>${T('launch.windowClosedTitle')}</h4><p>${T('launch.windowClosedBody')}</p><button class="btn" data-go="sup">${T('launch.openTicket')}</button></div>`;}
     $('#launchBox').innerHTML=h;wireGo();const dj=$('#djump');if(dj)dj.onclick=()=>{D.booking.scheduled_at=new Date(Date.now()+60e3).toISOString();persistD();refresh().then(vExam)};const lg=$('#launchGo');if(lg)lg.onclick=()=>startExam(ex.certification_id);const ld=$('#launchDesktop');if(ld)ld.onclick=async()=>{try{const r=await api('/api/me/exam/launch-code',{method:'POST'});const url=(r.uri||('pciexam://start?code='+r.code))+'&api='+encodeURIComponent(S.api||location.origin);location.href=url;toast(T('launch.toastOpeningApp'),'ok')}catch(e){toast(T('launch.toastNoLaunchCode'),'err')}};};
@@ -2547,7 +2554,7 @@ async function runReadiness(){const out=$('#sysOut');if(!out)return;out.innerHTM
   out.insertAdjacentHTML('beforeend',`<div class="callout ${passed?'info':'warn'}" style="margin-top:10px">${svg('sup')}<div>${passed?'<b>'+T('ready.readyTitle')+'</b> '+T('ready.readyBody'):'<b>'+T('ready.notReadyTitle')+'</b> '+T('ready.notReadyBody')}</div></div>`);
   toast(passed?T('ready.toastPassed'):T('ready.toastIncomplete'),passed?'ok':'err');
 }
-async function startExam(certId){try{const r=await api('/api/me/exam/start',{method:'POST',body:JSON.stringify(certId?{certification_id:certId}:{})});openRunner({kind:'exam',attempt_id:r.attempt_id,items:r.items,mins:r.duration_minutes,started:r.started_at,saved:r.saved_answers||null,violations:r.violations||0,resumed:!!r.resumed})}
+async function startExam(certId){try{const r=await api('/api/me/exam/start',{method:'POST',body:JSON.stringify(certId?{certification_id:certId}:{})});openRunner({kind:'exam',attempt_id:r.attempt_id,certification_id:r.certification_id||certId,items:r.items,mins:r.duration_minutes,started:r.started_at,saved:r.saved_answers||null,violations:r.violations||0,resumed:!!r.resumed})}
   catch(e){const c=e.data&&e.data.error;toast(c==='not_open'?T('start.notOpen'):c==='missed'?T('start.missed'):T('start.couldNotStart'),'err');if(c==='missed')refresh().then(vExam)}}
 function openRunner(cfg){const key='sp2_ans_'+cfg.kind+'_'+(cfg.attempt_id||'p');const local=JSON.parse(store.get(key)||'{}');
   R={...cfg,idx:0,answers:Object.assign({},cfg.saved||{},local),flags:{},key,review:false,violations:cfg.violations||0};
@@ -2559,7 +2566,7 @@ function drawRunner(){const it=R.items[R.idx],n=R.items.length,ans=R.answers[it.
   _curRerender=drawRunner;
   const pal=R.items.map((q,i)=>`<button class="${R.answers[q.id]!=null?'a':''} ${R.flags[q.id]?'f':''} ${i===R.idx?'c':''}" data-i="${i}">${i+1}</button>`).join('');
   const opts=it.options.map((o,i)=>{let c='';if(R.review){if(i===it.answer_index)c='ok';else if(ans===i)c='no'}else if(ans===i)c='sel';return `<div class="opt ${c}" data-o="${i}" tabindex="0" role="button"><span class="k">${'ABCDE'[i]}</span><div dir="auto">${esc(o)}</div></div>`}).join('');
-  $('#runner').innerHTML=`<div class="rtop">${LOCKUP("sm")}<span class="md">${R.kind==='exam'?T('runner.examLabel',{cert:certShort(S.me&&S.me.exam)}):(R.review?T('runner.practiceReview'):T('runner.practiceSession'))}</span>
+  $('#runner').innerHTML=`<div class="rtop">${LOCKUP("sm")}<span class="md">${R.kind==='exam'?T('runner.examLabel',{cert:certShort(examForCert(R.certification_id))}):(R.review?T('runner.practiceReview'):T('runner.practiceSession'))}</span>
      ${R.kind==='exam'&&!R.review?`<span class="sec-chip${(R.violations||0)?' v':''}" id="secChip" title="${esc(T('sec.chipTitle'))}">${(R.violations||0)?'⚠ '+T(R.violations>1?'sec.violationPlural':'sec.violationSingular',{n:R.violations}):T('sec.secureMode')}</span><button class="btn btn-sm" id="rCalc" style="margin-inline-start:10px">${T('runner.calculator')}</button>`:''}
      ${R.mins&&!R.review?'<span class="timer" id="rTimer">--:--</span>':''}
      ${R.review?'<button class="btn btn-sm" style="margin-inline-start:auto" id="rClose">'+T('runner.closeReview')+'</button>':(R.mins?'':'<button class="btn btn-sm btn-g" style="margin-inline-start:auto" id="rQuit">'+T('runner.quit')+'</button>')}
@@ -2613,10 +2620,10 @@ function showResult(r){clearInterval(rTimer);secOff();
 function showPractice(r){const pass=r.pct>=65;_curRerender=()=>showPractice(r);$('#runner').innerHTML=`<div class="rtop">${LOCKUP("sm")}<span class="md">${T('practice.title')}</span><button class="btn btn-sm" style="margin-inline-start:auto" id="rClose">${T('result.close')}</button>${langSwitcherHTML()}</div>
    <div class="rbody" style="grid-template-columns:1fr"><div class="card" style="max-width:620px;margin:2vh auto 0"><div class="cb" style="text-align:center;padding:34px 28px">${dial(r.pct)}<div class="verdict ${pass?'p':'f'}" style="margin-top:8px">${pass?T('practice.onTrack'):T('practice.keepGoing')}</div><p class="muted">${T('practice.scoreLine',{sc:r.sc,max:r.max})}</p><div style="text-align:start;max-width:460px;margin:18px auto 0">${bands(r.breakdown)}</div><div style="display:flex;gap:10px;justify-content:center;margin-top:18px"><button class="btn btn-p" id="rReview">${T('practice.reviewAnswers')}</button><button class="btn" id="rAgain">${T('practice.newSession')}</button></div></div></div></div>`;
   wireLangSwitcher();$('#rClose').onclick=closeRunner;$('#rReview').onclick=()=>{R.review=true;R.idx=0;drawRunner()};$('#rAgain').onclick=()=>{closeRunner();go('learn')};}
-async function downloadScore(a){const bd=JSON.parse(a.domain_breakdown||'[]');const u=S.me.user;const cred=S.me.credentials[0];
+async function downloadScore(a){const bd=JSON.parse(a.domain_breakdown||'[]');const u=S.me.user;const cred=credentialForAttempt(a);const exam=certDesignationOf(a);
   let rep=null;try{if(S.mode!=='demo')rep=await api('/api/me/results/'+a.id+'/report');}catch(_){}
   const rows=bd.map(b=>`<tr><td style="padding:6px 10px;border-bottom:1px solid #eee">${esc(b.domain)}</td><td style="padding:6px 10px;border-bottom:1px solid #eee">${b.pct}%</td><td style="padding:6px 10px;border-bottom:1px solid #eee">${b.band==='above'?'Above target':b.band==='at'?'At target':'Below target'}</td></tr>`).join('');
-  const html=`<!doctype html><html><head><meta charset="utf-8"><title>PCI Score Report</title></head><body style="font-family:Georgia,serif;max-width:700px;margin:40px auto;color:#0B0F19"><div style="text-align:center"><div style="font-size:30px;font-weight:700;color:#15347F">PCI Global</div><div style="letter-spacing:4px;font-size:10px;color:#98A0AF">PROJECT CONTROLS INSTITUTE</div><h2 style="letter-spacing:3px;color:#96690C;font-weight:600;margin-top:24px">OFFICIAL SCORE REPORT</h2></div><p><b>Candidate:</b> ${esc((u.first_name+' '+(u.last_name||'')).trim())} &nbsp; <b>Email:</b> ${esc(u.email)}</p><p><b>Examination:</b> PCL-AI &nbsp; <b>Date:</b> ${fDT(a.submitted_at)} &nbsp; <b>Attempt:</b> #${a.id}</p><p><b>Overall:</b> ${a.percent}% — <b style="color:${a.result==='pass'?'#0E7C43':'#B4380F'}">${a.result==='pass'?'PASS':'NOT PASSED'}</b> (PCI pass mark applies)</p><p style="font-size:12.5px;color:#334155"><b>Registration:</b> ${esc((rep&&rep.registration_no)||u.registration_no||'—')}${rep&&rep.unanswered!=null?` &nbsp; <b>Unanswered:</b> ${rep.unanswered}`:''}${rep&&rep.flagged_events!=null?` &nbsp; <b>Integrity events:</b> ${rep.flagged_events}`:''}${rep&&rep.released_at?` &nbsp; <b>Released:</b> ${fDT(rep.released_at)}`:''}</p><table style="width:100%;border-collapse:collapse;font-family:Arial;font-size:13px"><tr><th align="left" style="padding:6px 10px;border-bottom:2px solid #ddd">Domain</th><th align="left" style="padding:6px 10px;border-bottom:2px solid #ddd">Score</th><th align="left" style="padding:6px 10px;border-bottom:2px solid #ddd">Band</th></tr>${rows}</table>${cred?`<p style="margin-top:18px"><b>Credential:</b> ${esc(cred.credential_id)} — verify: <a href="${verifyURL(cred.credential_id)}">${verifyURL(cred.credential_id)}</a></p>`:''}<p style="font-size:11px;color:#98A0AF;margin-top:26px">Bands report performance relative to the standard; item content is never disclosed.</p></body></html>`;
+  const html=`<!doctype html><html><head><meta charset="utf-8"><title>PCI Score Report</title></head><body style="font-family:Georgia,serif;max-width:700px;margin:40px auto;color:#0B0F19"><div style="text-align:center"><div style="font-size:30px;font-weight:700;color:#15347F">PCI Global</div><div style="letter-spacing:4px;font-size:10px;color:#98A0AF">PROJECT CONTROLS INSTITUTE</div><h2 style="letter-spacing:3px;color:#96690C;font-weight:600;margin-top:24px">OFFICIAL SCORE REPORT</h2></div><p><b>Candidate:</b> ${esc((u.first_name+' '+(u.last_name||'')).trim())} &nbsp; <b>Email:</b> ${esc(u.email)}</p><p><b>Examination:</b> ${esc(exam)} &nbsp; <b>Date:</b> ${fDT(a.submitted_at)} &nbsp; <b>Attempt:</b> #${a.id}</p><p><b>Overall:</b> ${a.percent}% — <b style="color:${a.result==='pass'?'#0E7C43':'#B4380F'}">${a.result==='pass'?'PASS':'NOT PASSED'}</b> (PCI pass mark applies)</p><p style="font-size:12.5px;color:#334155"><b>Registration:</b> ${esc((rep&&rep.registration_no)||u.registration_no||'—')}${rep&&rep.unanswered!=null?` &nbsp; <b>Unanswered:</b> ${rep.unanswered}`:''}${rep&&rep.flagged_events!=null?` &nbsp; <b>Integrity events:</b> ${rep.flagged_events}`:''}${rep&&rep.released_at?` &nbsp; <b>Released:</b> ${fDT(rep.released_at)}`:''}</p><table style="width:100%;border-collapse:collapse;font-family:Arial;font-size:13px"><tr><th align="left" style="padding:6px 10px;border-bottom:2px solid #ddd">Domain</th><th align="left" style="padding:6px 10px;border-bottom:2px solid #ddd">Score</th><th align="left" style="padding:6px 10px;border-bottom:2px solid #ddd">Band</th></tr>${rows}</table>${cred?`<p style="margin-top:18px"><b>Credential:</b> ${esc(cred.credential_id)} — verify: <a href="${verifyURL(cred.credential_id)}">${verifyURL(cred.credential_id)}</a></p>`:''}<p style="font-size:11px;color:#98A0AF;margin-top:26px">Bands report performance relative to the standard; item content is never disclosed.</p></body></html>`;
   const b=new Blob([html],{type:'text/html'});const el=document.createElement('a');el.href=URL.createObjectURL(b);el.download='PCI-Score-Report-'+a.id+'.html';el.click();toast('Score report downloaded','ok');}
 /* ---------- RESULTS ---------- */
 async function vResults(){const ex=S.me.attempts.filter(a=>a.kind==='exam'&&a.status==='submitted');
@@ -2624,18 +2631,18 @@ async function vResults(){const ex=S.me.attempts.filter(a=>a.kind==='exam'&&a.st
   const latest=ex[0];
   if(latest.result_status==='auto_held'){
     $('#view').innerHTML=`<div class="grid g2">
-      <div class="card"><div class="ch"><h3>Latest result</h3><div class="sp"></div><span class="tiny muted">${fDT(latest.submitted_at)}</span></div><div class="cb" style="text-align:center;padding:34px 26px">
+      <div class="card"><div class="ch"><h3>Latest ${esc(certCodeOf(latest))} result</h3><div class="sp"></div><span class="tiny muted">${fDT(latest.submitted_at)}</span></div><div class="cb" style="text-align:center;padding:34px 26px">
         <div class="ei" style="margin:0 auto 12px">!</div>
         <div class="verdict" style="color:#B45309;margin:6px 0 8px">Result on hold</div>
         <p class="muted" style="max-width:46ch;margin:0 auto">Your result could not be published automatically because the submission did not pass a technical validity check. PCI will look into it and notify you. This is not a proctoring or manual-marking review.</p>
         <p class="tiny muted" style="margin-top:10px">No pass/fail outcome is shown until the technical issue is resolved.</p>
       </div></div>
-      <div><div class="card"><div class="ch"><h3>Attempt history</h3></div><div class="cb">${ex.map(a=>a.result_status==='auto_held'?`<div class="fact"><span class="tag a"><span class="dot"></span>Held</span><div class="ft" style="margin-left:4px"><b>Under review</b><span>${fDT(a.submitted_at)}</span></div></div>`:`<div class="fact"><span class="tag ${a.result==='pass'?'g':'r'}"><span class="dot"></span>${a.result==='pass'?'Pass':'Not passed'}</span><div class="ft" style="margin-left:4px"><b>${a.percent}%</b><span>${fDT(a.submitted_at)}</span></div><button class="btn btn-sm" data-dl="${a.id}">Report</button></div>`).join('')}</div></div></div>
+      <div><div class="card"><div class="ch"><h3>Attempt history</h3></div><div class="cb">${ex.map(a=>a.result_status==='auto_held'?`<div class="fact"><span class="tag a"><span class="dot"></span>Held</span><div class="ft" style="margin-left:4px"><b>${esc(certCodeOf(a))} · Under review</b><span>${fDT(a.submitted_at)}</span></div></div>`:`<div class="fact"><span class="tag ${a.result==='pass'?'g':'r'}"><span class="dot"></span>${a.result==='pass'?'Pass':'Not passed'}</span><div class="ft" style="margin-left:4px"><b>${esc(certCodeOf(a))} · ${a.percent}%</b><span>${fDT(a.submitted_at)}</span></div><button class="btn btn-sm" data-dl="${a.id}">Report</button></div>`).join('')}</div></div></div>
     </div>`;
     wireGo();document.querySelectorAll('[data-dl]').forEach(b=>b.onclick=()=>downloadScore(ex.find(x=>x.id==b.dataset.dl)));return}
   if(latest.result_status==='invalidated'||latest.result_status==='credential_revoked'){
     let myAppeal=null;try{const ap=await api('/api/me/appeals');myAppeal=(ap.rows||[]).find(x=>x.attempt_id==latest.id)||null;}catch(_){}
-    $('#view').innerHTML=`<div class="card"><div class="ch"><h3>Latest result</h3><div class="sp"></div><span class="tiny muted">${fDT(latest.submitted_at)}</span></div><div class="cb" style="text-align:center;padding:34px 26px">
+    $('#view').innerHTML=`<div class="card"><div class="ch"><h3>Latest ${esc(certCodeOf(latest))} result</h3><div class="sp"></div><span class="tiny muted">${fDT(latest.submitted_at)}</span></div><div class="cb" style="text-align:center;padding:34px 26px">
       <div class="ei" style="margin:0 auto 12px">✕</div>
       <div class="verdict f" style="margin:6px 0 8px">Result invalidated</div>
       <p class="muted" style="max-width:48ch;margin:0 auto">This attempt was invalidated following an examination integrity review${latest.result_status==='credential_revoked'?' and the associated credential has been revoked':''}. You may appeal this decision.</p>
@@ -2653,24 +2660,27 @@ async function vResults(){const ex=S.me.attempts.filter(a=>a.kind==='exam'&&a.st
     return}
   const bd=JSON.parse(latest.domain_breakdown||'[]');const pass=latest.result==='pass';
   $('#view').innerHTML=`<div class="grid g2">
-    <div class="card"><div class="ch"><h3>Latest result</h3><div class="sp"></div><span class="tiny muted">${fDT(latest.submitted_at)}</span></div><div class="cb" style="text-align:center">${dial(latest.percent)}<div class="verdict ${pass?'p':'f'}" style="margin:10px 0 2px">${pass?'PASS':'Not passed'}</div><p class="muted tiny">Pass mark 65% · Above ≥80 · At 65–79 · Below &lt;65${latest.violations?' · '+latest.violations+' integrity event(s) recorded':''}</p><div style="text-align:left;max-width:520px;margin:16px auto 0" id="rBands">${bands(bd)}</div><div style="display:flex;gap:10px;justify-content:center;margin-top:16px"><button class="btn" data-dl="${latest.id}">Download score report</button>${pass?'<button class="btn btn-p" data-go="cert">View certificate</button>':'<button class="btn btn-p" data-go="learn">Target weak domains</button>'}</div></div></div>
-    <div><div class="card"><div class="ch"><h3>Attempt history</h3></div><div class="cb">${ex.map(a=>a.result_status==='auto_held'?`<div class="fact"><span class="tag a"><span class="dot"></span>Held</span><div class="ft" style="margin-left:4px"><b>Under review</b><span>${fDT(a.submitted_at)}</span></div></div>`:`<div class="fact"><span class="tag ${a.result==='pass'?'g':'r'}"><span class="dot"></span>${a.result==='pass'?'Pass':'Not passed'}</span><div class="ft" style="margin-left:4px"><b>${a.percent}%</b><span>${fDT(a.submitted_at)}</span></div><button class="btn btn-sm" data-dl="${a.id}">Report</button></div>`).join('')}</div></div>
+    <div class="card"><div class="ch"><h3>Latest ${esc(certCodeOf(latest))} result</h3><div class="sp"></div><span class="tiny muted">${fDT(latest.submitted_at)}</span></div><div class="cb" style="text-align:center">${dial(latest.percent)}<div class="verdict ${pass?'p':'f'}" style="margin:10px 0 2px">${pass?'PASS':'Not passed'}</div><p class="muted tiny">Pass mark 65% · Above ≥80 · At 65–79 · Below &lt;65${latest.violations?' · '+latest.violations+' integrity event(s) recorded':''}</p><div style="text-align:left;max-width:520px;margin:16px auto 0" id="rBands">${bands(bd)}</div><div style="display:flex;gap:10px;justify-content:center;margin-top:16px"><button class="btn" data-dl="${latest.id}">Download score report</button>${pass?'<button class="btn btn-p" data-go="cert">View certificate</button>':'<button class="btn btn-p" data-go="learn">Target weak domains</button>'}</div></div></div>
+    <div><div class="card"><div class="ch"><h3>Attempt history</h3></div><div class="cb">${ex.map(a=>a.result_status==='auto_held'?`<div class="fact"><span class="tag a"><span class="dot"></span>Held</span><div class="ft" style="margin-left:4px"><b>${esc(certCodeOf(a))} · Under review</b><span>${fDT(a.submitted_at)}</span></div></div>`:`<div class="fact"><span class="tag ${a.result==='pass'?'g':'r'}"><span class="dot"></span>${a.result==='pass'?'Pass':'Not passed'}</span><div class="ft" style="margin-left:4px"><b>${esc(certCodeOf(a))} · ${a.percent}%</b><span>${fDT(a.submitted_at)}</span></div><button class="btn btn-sm" data-dl="${a.id}">Report</button></div>`).join('')}</div></div>
      ${pass?'':'<div class="card" style="margin-top:18px"><div class="cb"><div class="callout warn">'+svg('sup')+'<div><b>Retake guidance.</b> Focus on domains marked Below target; the practice centre scores by domain. Retakes follow the retake policy — the fee is published before launch and a short interval applies.</div></div></div></div>'}
     </div></div>`;
   requestAnimationFrame(()=>document.querySelectorAll('#rBands .bbar i').forEach(i=>{const w=i.style.width;i.style.width='0';requestAnimationFrame(()=>i.style.width=w)}));
   wireGo();document.querySelectorAll('[data-dl]').forEach(b=>b.onclick=()=>downloadScore(ex.find(a=>a.id==b.dataset.dl)));
 }
 /* ---------- CERTIFICATE ---------- */
-async function vCert(){const me=S.me;const c=me.credentials[0];
-  if(c&&S.mode!=='demo'){try{const st=await api('/api/me/certificate');
+async function vCert(){const me=S.me;
+  if(me.credentials.length>1&&!S.selCred){_curRerender=vCert;$('#view').innerHTML=`<div class="card"><div class="ch"><h3>My certificates</h3><div class="sp"></div>${langSwitcherHTML()}</div><div class="cb"><p class="muted tiny" style="margin-top:0">Choose a credential to view, verify or download its certificate.</p>${me.credentials.map(c=>`<div class="srow" style="align-items:center"><div><b>${esc(certNameOf(c))}</b><div class="tiny muted">${esc(certAcronymOf(c))} · ${esc(c.credential_id)}</div></div><span class="tag ${c.status==='active'?'g':'a'}"><span class="dot"></span>${esc(c.status)}</span><button class="btn btn-sm btn-p" data-cred="${esc(c.credential_id)}">View certificate</button></div>`).join('')}</div></div>`;document.querySelectorAll('[data-cred]').forEach(b=>b.onclick=()=>{S.selCred=b.dataset.cred;vCert()});wireLangSwitcher();return}
+  const c=me.credentials.find(x=>x.credential_id===S.selCred)||me.credentials[0];
+  if(c&&S.mode!=='demo'){try{const st=await api('/api/me/certificate?id='+encodeURIComponent(c.credential_id));
     if(st&&st.found&&st.state==='revoked'){$('#view').innerHTML=`<div class="card"><div class="cb empty"><div class="ei">✕</div><h4>Credential revoked</h4><p>Credential ${esc(st.credential_id)} has been revoked and is no longer valid. The public verification page reflects this status. If you believe this is in error, you may appeal from your <b>Results</b> page.</p><button class="btn btn-p" data-go="results">Go to Results</button></div></div>`;wireGo();return}
   }catch(_){}}
   if(!c){$('#view').innerHTML=`<div class="card"><div class="cb empty"><div class="ei">${svg('cert')}</div><h4>No credential yet</h4><p>After you pass your PCI examination and your attempt clears PCI's automated exam integrity checks, your certificate — with a publicly verifiable credential ID — will appear here.</p><button class="btn btn-p" data-go="exam">Go to My exam</button></div></div>`;wireGo();return}
-  const rd=dTo(c.expires_at);const cs=credStatus(me);
-  $('#view').innerHTML=`<div class="noprint" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px"><span class="big-tag tag ${cs.cls}">${esc(cs.t)}</span><span class="tag ${rd<180?'a':'b'}"><span class="dot"></span>recertify within ${Math.max(0,rd)} days</span><a class="btn btn-sm" href="${verifyURL(c.credential_id)}" target="_blank" rel="noopener">Verify online ↗</a><div style="flex:1"></div><button class="btn" id="shareBtn">Copy share text</button><button class="btn" id="pdfCert">Download PDF</button><button class="btn btn-p" id="printCert">Download / print</button></div>
+  const rd=dTo(c.expires_at);const cs=credStatus(me,c);
+  $('#view').innerHTML=`<div class="noprint" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px">${me.credentials.length>1?'<button class="btn btn-sm" id="allCreds">← All certificates</button>':''}<span class="big-tag tag ${cs.cls}">${esc(cs.t)}</span><span class="tag ${rd<180?'a':'b'}"><span class="dot"></span>recertify within ${Math.max(0,rd)} days</span><a class="btn btn-sm" href="${verifyURL(c.credential_id)}" target="_blank" rel="noopener">Verify online ↗</a><div style="flex:1"></div><button class="btn" id="shareBtn">Copy share text</button><button class="btn" id="pdfCert">Download PDF</button><button class="btn btn-p" id="printCert">Download / print</button></div>
     <div id="certWrap">${certHTML(c)}</div>
     <div class="card noprint" style="margin-top:20px"><div class="cb"><div class="callout info">${svg('sup')}<div><b>Verification.</b> Anyone can confirm this credential and its live status at <a href="${verifyURL(c.credential_id)}" target="_blank" rel="noopener">${esc(verifyURL(c.credential_id))}</a>.</div></div>${cs.k!=='active'?`<div class="callout warn" style="margin-top:10px">${svg('sup')}<div><b>${esc(cs.t)}.</b> ${esc(cs.why)} <button class="lnk" data-go="cpd" style="padding:0;margin-left:4px">Resolve in CPD →</button></div></div>`:''}</div></div>`;
-  $('#printCert').onclick=()=>{$('#printzone').innerHTML=certHTML(S.me.credentials[0]);window.print()};
+  const all=$('#allCreds');if(all)all.onclick=()=>{S.selCred=null;vCert()};
+  $('#printCert').onclick=()=>{$('#printzone').innerHTML=certHTML(c);window.print()};
   const pc=$('#pdfCert');if(pc&&!cfgOn('sp_certificate_download',true)){pc.disabled=true;pc.title='Certificate download is temporarily unavailable';}
   if(pc)pc.onclick=async()=>{if(!cfgOn('sp_certificate_download',true)){toast('Certificate download is temporarily unavailable','err');return}if(!window.PDFLib){toast('PDF library still loading — try again in a moment','err');return}
     pc.disabled=true;const orig=pc.textContent;pc.textContent='Generating…';
@@ -2688,7 +2698,7 @@ async function vCert(){const me=S.me;const c=me.credentials[0];
       ctr('This is to certify that',height-212,11,helv,grey);
       ctr((c.holder_name||((u2.first_name||'')+' '+(u2.last_name||''))).trim(),height-252,28,bold,ink);
       ctr('has satisfied the requirements of the Project Controls Institute and is hereby awarded the',height-288,11,helv,ink);
-      ctr('PCI AI Project Controls Leader \u2014 AI (PCL-AI)',height-316,16,bold,blue);
+      ctr(certDesignationOf(c),height-316,16,bold,blue);
       ctr('Credential ID: '+c.credential_id+'    \u00b7    Registration: '+(u2.registration_no||'\u2014'),height-360,11,helv,ink);
       ctr('Issued: '+fD(c.issued_at)+'        Valid until: '+fD(c.expires_at),height-382,11,helv,ink);
       ctr('Verify this credential at any time: '+verifyURL(c.credential_id),96,9.5,helv,grey);
@@ -2700,7 +2710,7 @@ async function vCert(){const me=S.me;const c=me.credentials[0];
     finally{pc.disabled=false;pc.textContent=orig}};
   $('#shareBtn').onclick=()=>{const t=`I'm certified! ${(me.user.first_name+' '+(me.user.last_name||'')).trim()} has earned a PCI credential from the Project Controls Institute. Verify: ${verifyURL(c.credential_id)} · ID ${c.credential_id}`;navigator.clipboard&&navigator.clipboard.writeText(t);toast('Share text copied','ok')};wireGo();
 }
-function certHTML(c){return `<div class="cert"><div class="cmk">PCI</div><div class="cinst">Project Controls Institute Global, Inc.</div><div class="ct">Certificate of Professional Certification</div><p class="csub">This certifies that</p><div class="cnm">${esc(c.holder_name)}</div><p class="csub">has satisfied the examination and eligibility requirements of the Institute and is hereby recognised as a</p><div class="ccred">PCI AI Project Controls Leader (PCI PCL-AI)</div><div class="cseal">PCI</div><div class="cmeta"><div><b>${fD(c.issued_at)}</b>Date of award</div><div><b>${fD(c.expires_at)}</b>Valid until</div><div><b class="mono">${esc(c.credential_id)}</b>Credential ID</div></div><div class="cvfy">Verify at ${esc(verifyURL(c.credential_id).replace(/^https?:\/\//,''))} · Project Controls Institute Global, Inc., a Delaware Non-Stock Corporation</div></div>`}
+function certHTML(c){return `<div class="cert"><div class="cmk">PCI</div><div class="cinst">Project Controls Institute Global, Inc.</div><div class="ct">Certificate of Professional Certification</div><p class="csub">This certifies that</p><div class="cnm">${esc(c.holder_name)}</div><p class="csub">has satisfied the examination and eligibility requirements of the Institute and is hereby recognised as a</p><div class="ccred">${esc(certDesignationOf(c))}</div><div class="cseal">PCI</div><div class="cmeta"><div><b>${fD(c.issued_at)}</b>Date of award</div><div><b>${fD(c.expires_at)}</b>Valid until</div><div><b class="mono">${esc(c.credential_id)}</b>Credential ID</div></div><div class="cvfy">Verify at ${esc(verifyURL(c.credential_id).replace(/^https?:\/\//,''))} · Project Controls Institute Global, Inc., a Delaware Non-Stock Corporation</div></div>`}
 /* ---------- LEARNING ---------- */
 async function vLearn(){const [dl,pr]=await Promise.all([api('/api/me/downloads'),api('/api/me/practice')]);
   const docs=(dl.rows||[]).map(r=>`<div class="fact"><div class="fico">${svg('docs')}</div><div class="ft"><b>${esc(r.title)}</b><span>${esc(r.category||'')} · ${esc(r.doc_type||'PDF')}</span></div>${r.url?`<button class="btn btn-sm dl-wm" data-url="${esc(r.url)}" data-title="${esc(r.title)}">Download</button>`:'<span class="tag n">coming soon</span>'}</div>`).join('');
@@ -2769,13 +2779,13 @@ async function vCpd(){const me=S.me;const d=await api('/api/me/cpd');const rows=
      ${rows.length?rows.map(r=>`<div class="fact"><div class="fico" style="min-width:auto;padding:0 4px;font-weight:700;color:var(--brand-ink);background:var(--wash)">${r.hours}h</div><div class="ft"><b>${esc(r.category)}</b> <span class="tiny muted">· ${fD(r.activity_date)}</span><div class="tiny" style="color:var(--t2);margin-top:2px">${esc(r.description)}</div></div>${r.status==='approved'?'<span class="tag g"><span class="dot"></span>Approved</span>':r.status==='rejected'?`<span class="tag r" title="${esc(r.admin_note||'')}"><span class="dot"></span>Rejected</span>`:'<span class="tag a"><span class="dot"></span>In review</span>'}<button class="btn btn-sm" data-ev="${r.id}" title="${r.evidence_name?esc(r.evidence_name):'Attach evidence (PDF/image)'}">${r.evidence_name?'📎':'+ Evidence'}</button><button class="btn btn-sm btn-g" data-del="${r.id}">✕</button></div>`).join(''):'<div class="muted tiny">No entries yet. Structured learning, on-the-job stretch, contribution to the profession and formal study all count.</div>'}
    </div></div>
    <div><div class="card"><div class="ch"><h3>Membership fee</h3></div><div class="cb">${me.membership?`<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><span class="big-tag tag ${memOK?(memDays<45?'a':'g'):'r'}">${memOK?(memDays<45?'Renews in '+memDays+'d':'Active'):'Lapsed'}</span><div class="tiny muted" style="flex:1">Valid to ${fD(me.membership.expiry_date)} · ${money(99)}/year keeps your PCI membership active (credential renewal may also require CPD and recertification).</div></div>`:'<span class="muted">No membership record.</span>'}<button class="btn btn-p btn-bk" style="margin-top:14px" id="renewGo">${memOK?'Renew early':'Renew now'} — ${money(99)}/year</button></div></div>
-    <div class="card" style="margin-top:18px"><div class="ch"><h3>Recertification</h3></div><div class="cb">${c?`<div class="tiny muted">PCL-AI runs a 3-year cycle, ending <b>${fD(c.expires_at)}</b> (${Math.max(0,dTo(c.expires_at))} days). Requirements: ${target}h CPD ${total>=target?'✓ met':'('+total+'h)'}, membership in good standing ${memOK?'✓':'✕'}, ethics agreement.</div><button class="btn ${total>=target&&memOK?'btn-p':''} btn-bk" style="margin-top:14px" id="recertGo">Recertify — ${money(99)}/3-year cycle</button>${total<target?`<div class="callout warn" style="margin-top:10px">${svg('sup')}<div>Complete ${target-total} more CPD hours before recertifying, or your application is held pending verification.</div></div>`:''}`:'<div class="muted tiny">Available once you hold a PCI credential. Pass the exam and your 3-year cycle starts automatically.</div>'}</div></div>
+    <div class="card" style="margin-top:18px"><div class="ch"><h3>Recertification</h3></div><div class="cb">${c?`<div class="tiny muted">${esc(certCodeOf(c))} runs a 3-year cycle, ending <b>${fD(c.expires_at)}</b> (${Math.max(0,dTo(c.expires_at))} days). Requirements: ${target}h CPD ${total>=target?'✓ met':'('+total+'h)'}, membership in good standing ${memOK?'✓':'✕'}, ethics agreement.</div><button class="btn ${total>=target&&memOK?'btn-p':''} btn-bk" style="margin-top:14px" id="recertGo">Recertify — ${money(99)}/3-year cycle</button>${total<target?`<div class="callout warn" style="margin-top:10px">${svg('sup')}<div>Complete ${target-total} more CPD hours before recertifying, or your application is held pending verification.</div></div>`:''}`:'<div class="muted tiny">Available once you hold a PCI credential. Pass the exam and your 3-year cycle starts automatically.</div>'}</div></div>
    </div></div>`;
   requestAnimationFrame(()=>{const b=$('#cpdBar');if(b)b.style.width=pct+'%'});
   $('#cpdAdd').onclick=()=>modal('Record CPD activity',`<div class="fld"><label>Date of activity</label><input class="in" id="cD" type="date" value="${new Date().toISOString().slice(0,10)}"/></div><div class="fld"><label>Category</label><select class="in" id="cC"><option>Structured learning</option><option>Learning through work</option><option>Contribution to the profession</option><option>Formal study</option></select></div><div class="fld"><label>Hours</label><input class="in" id="cH" type="number" min="0.5" step="0.5" value="2"/></div><div class="fld"><label>What you did — and what changed in your practice</label><textarea class="in" id="cT" rows="4" placeholder="Specific, dated, reflective."></textarea></div>`,'Save entry',async()=>{const t=$('#cT').value.trim();if(!t||!(+$('#cH').value>0)){toast('Hours and description are required','err');return false}await api('/api/me/cpd',{method:'POST',body:JSON.stringify({activity_date:$('#cD').value,category:$('#cC').value,hours:+$('#cH').value,description:t})});toast('CPD recorded','ok');await refresh();vCpd();return true});
   document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this CPD entry?'))return;await api('/api/me/cpd/'+b.dataset.del,{method:'DELETE'});await refresh();vCpd()});
   document.querySelectorAll('[data-ev]').forEach(b=>b.onclick=()=>pickFile(async f=>{try{await api('/api/me/cpd/'+b.dataset.ev+'/evidence',{method:'POST',body:JSON.stringify({filename:f.name,data_uri:f.dataUri})});toast('Evidence attached — entry returned for review','ok');vCpd()}catch(e){toast('Could not attach evidence','err')}}));
-  $('#renewGo').onclick=()=>payFlow('renewal','Annual membership renewal',99);const rg=$('#recertGo');if(rg)rg.onclick=()=>{if(total<target)toast('CPD target not met — application would be held','err');payFlow('recert','PCL-AI recertification',99)};
+  $('#renewGo').onclick=()=>payFlow('renewal','Annual membership renewal',99);const rg=$('#recertGo');if(rg)rg.onclick=()=>{if(total<target)toast('CPD target not met — application would be held','err');payFlow('recert',(c?certCodeOf(c)+' ':'')+'recertification',99,c&&certCodeOf(c))};
 }
 /* ---------- SUPPORT ---------- */
 async function vSupport(){const d=await api('/api/me/tickets');const rows=d.rows||[];

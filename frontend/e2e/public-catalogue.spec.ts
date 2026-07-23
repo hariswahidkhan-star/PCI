@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test'
 // from the certifications table (Core/CertCatalogue.cs fills the <!--PCI-CERTS--> region from
 // the MultiCert seed), so a rendered card proves the DB-backed pipeline end to end.
 test.describe('certification catalogue and enrolment hand-off', () => {
-  test('the catalogue page renders seeded certification cards', async ({ page }) => {
+  test('@cross-browser the catalogue page renders seeded certification cards', async ({ page }) => {
     const resp = await page.goto('/certifications.html')
     expect(resp?.status() ?? 0).toBeLessThan(400)
     await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()

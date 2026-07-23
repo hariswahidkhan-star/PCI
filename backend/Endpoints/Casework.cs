@@ -174,10 +174,12 @@ public static class Casework
         app.MapGet("/api/me/certificate", (HttpContext ctx) =>
         {
             var u = User(ctx.Request); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var requested = ctx.Request.Query["id"].ToString().Trim();
             var c = db.QueryOne(@"SELECT ic.credential_id,ic.holder_name,ic.credential,ic.status,ic.issued_at,ic.expires_at,ic.attempt_id,ic.certificate_wording,
+                       COALESCE(ic.certification_id,1) certification_id,ct.code certification_code,
                        ct.name certification_name, ct.acronym certification_acronym
                 FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)
-                WHERE ic.user_id=? ORDER BY ic.id DESC", u.Id);
+                WHERE ic.user_id=? AND (?='' OR ic.credential_id=?) ORDER BY ic.id DESC", u.Id, requested, requested);
             if (c is null) return J(new { found = false });
             var status = H.Str(c["status"]) ?? "active";
             var expires = H.Str(c["expires_at"]);
@@ -188,6 +190,7 @@ public static class Casework
             {
                 found = true, state, valid = state == "active",
                 credential_id = c["credential_id"], holder_name = c["holder_name"], credential = c["credential"],
+                certification_id = c["certification_id"], certification_code = c["certification_code"],
                 certification_name = c["certification_name"], certification_acronym = c["certification_acronym"],
                 certificate_wording = c["certificate_wording"],
                 issued_at = c["issued_at"], expires_at = c["expires_at"], registration_no = regNo,

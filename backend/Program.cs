@@ -43,6 +43,13 @@ var schemaPath = Path.Combine(AppContext.BaseDirectory, schemaFile);
 if (!File.Exists(schemaPath)) schemaPath = schemaFile;
 Console.WriteLine($"[boot] database provider: {db.Provider} (schema: {schemaFile})");
 Migrate.Run(db, schemaPath);
+// Deterministic browser-lifecycle tests need to book a policy-valid future slot and launch it
+// immediately. This override is deliberately Development-only and opt-in; production continues to
+// read the operator-controlled site setting with no test back door or public mutation endpoint.
+if (builder.Environment.IsDevelopment()
+    && double.TryParse(Environment.GetEnvironmentVariable("E2E_EXAM_OPEN_BEFORE_MINUTES"), out var e2eOpenBefore)
+    && e2eOpenBefore > 0)
+    Settings.Put(db, "exam_open_before_minutes", e2eOpenBefore.ToString(System.Globalization.CultureInfo.InvariantCulture));
 try { PCI.Backend.Data.CommsSeed.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[comms seed] {e.Message}"); }
 try { PCI.Backend.Data.MarketingSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[marketing schema] {e.Message}"); }
 builder.Services.AddSingleton(db);
