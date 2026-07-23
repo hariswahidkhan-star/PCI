@@ -4,6 +4,11 @@ on:
   push: { branches: [main] }
   pull_request: {}
 
+# SQ-11 — least-privilege default token. No job in this workflow writes to the repo, so the
+# GITHUB_TOKEN is read-only everywhere; any job that ever needs more must opt in explicitly.
+permissions:
+  contents: read
+
 jobs:
   backend:
     runs-on: ubuntu-latest
@@ -181,6 +186,12 @@ jobs:
       - run: npm ci
       - name: Typecheck
         run: npm run typecheck
+      - name: Lint (ESLint — SQ-2, blocks on errors; warnings are advisory)
+        run: npm run lint
+      - name: Production dependency audit (SQ-6 — high/critical in shipped deps block)
+        # Dev-tooling advisories (vite/vitest chain) are intentionally out of scope: they never ship
+        # to users. --omit=dev scans only runtime dependencies; --audit-level=high gates on high+.
+        run: npm audit --omit=dev --audit-level=high
       - name: Unit + component tests with coverage (Vitest + React Testing Library)
         run: npm run test:coverage
       - name: Upload frontend coverage
@@ -252,3 +263,39 @@ jobs:
             frontend/test-results
           retention-days: 30
           if-no-files-found: ignore
+
+  static-quality:
+    # Static-quality & supply-chain gates (Increment A). BLOCKING: the NuGet vulnerable-package
+    # report (via an allow-list-aware wrapper) and secret scanning. INFORMATIONAL for now (a baseline
+    # is being established before promotion to blocking): workflow linting and Dockerfile linting.
+    # Container image tags are version-pinned; the first CI run establishes the observed baseline.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+
+      - name: Restore backend (needed for the vulnerable-package report)
+        working-directory: backend
+        run: dotnet restore
+
+      - name: NuGet vulnerability gate (SQ-5 — blocks on any non-allow-listed advisory)
+        working-directory: backend
+        run: python3 tools/check_nuget_vulns.py
+
+      - name: Secret scan (gitleaks — SQ-7, blocking)
+        # Filesystem scan of the checked-out tree (--no-git), using the repo's .gitleaks.toml
+        # allow-list. Exits non-zero on any finding outside the documented test-fixture exceptions.
+        run: |
+          docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.21.2 \
+            detect --source=/repo --no-git --config=/repo/.gitleaks.toml --redact --verbose
+
+      - name: Workflow lint (actionlint — SQ-11, informational baseline)
+        continue-on-error: true
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.7 -color
+
+      - name: Dockerfile lint (hadolint — SQ-10, informational baseline)
+        continue-on-error: true
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo hadolint/hadolint:v2.12.0 hadolint Dockerfile

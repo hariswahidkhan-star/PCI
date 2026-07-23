@@ -1,0 +1,17 @@
+# SQ-10 — hadolint (Dockerfile linter) configuration.
+#
+# The CI step runs hadolint in INFORMATIONAL mode for now (it reports findings but does not yet gate
+# the pipeline) while the baseline is established; it will be promoted to blocking once the tree is
+# clean against the ruleset below. See docs/testing/SUPPRESSION_PROCESS.md.
+failure-threshold: error
+
+ignored:
+  # DL3002 — "Last USER should not be root".
+  # Deliberately accepted for now. The runtime writes the SQLite database and the evidence/attachment
+  # store to the persistent /data mount, which the hosting platform (Render) mounts as root-owned at
+  # RUNTIME. Switching to a non-root USER without also arranging mount ownership (an entrypoint chown +
+  # privilege drop, or a platform-side fsGroup) would break those writes in production. Running as
+  # non-root is a tracked hardening follow-up that must be coordinated with the deploy/disk config —
+  # it is NOT a safe unilateral Dockerfile edit. Recorded as residual DEP hardening in the coverage
+  # matrix.
+  - DL3002

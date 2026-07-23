@@ -1,0 +1,32 @@
+# SQ-3 — shared editor settings so indentation/encoding/line-endings stay consistent across
+# contributors and tools. Reflects the conventions already in the tree (C# = 4 spaces, everything
+# else = 2 spaces, spaces not tabs). This is the source of truth editors read automatically; it
+# deliberately does NOT try to reformat existing files.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# C# is 4-space throughout the backend and SecureExam.
+[*.cs]
+indent_size = 4
+
+# Python test/tooling suites are 4-space (PEP 8).
+[*.py]
+indent_size = 4
+
+[*.{yml,yaml,json,jsonc}]
+indent_size = 2
+
+# Markdown: two trailing spaces are a hard line break, so don't strip them.
+[*.md]
+trim_trailing_whitespace = false
+
+# Makefiles require real tabs.
+[Makefile]
+indent_style = tab

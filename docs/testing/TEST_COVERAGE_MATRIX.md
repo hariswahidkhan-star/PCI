@@ -85,6 +85,143 @@ All three Critical / P0 zero-or-partial-coverage gaps from the baseline are now 
 - ~~**The blog scheduled-publish due-sweep has no on-demand HTTP hook** (§36)~~ — **FIXED (user-directed).** `POST /api/admin/ops/sweeps/run` (owner-only) fires `ScheduledPublisher.PublishDue` (and the membership sweep) on demand — exactly the parity trigger this finding recommended. §60 drives a due scheduled post through it and asserts the `scheduled → published` transition lands on the public web via the same `ContentCentre.PublishPost` path the admin publish endpoint uses.
 - ~~**Partner commission accrual from a paid redemption is not yet asserted** (§37)~~ — **closed by §41.** The ledger is derived from `code_redemptions ⋈ payments(paid)` scoped to the partner's discount codes; §37 asserted only the shape. §41 now drives a real partner-code redemption through the signed webhook and asserts `accrued == attributed × pct/100` (119 × 20% = 23.80) and the payout deduction (balance = accrued − paid_out).
 
+## Phase 2 — Remaining Gaps After PR #73
+
+_Audit-first output of the Phase-2 remaining-gaps programme. Read-only re-audit (four parallel agents) against PR #73 head `85ea328`. This is the gate before any Phase-2 implementation: it records what EXISTS after PR #73, the genuine remaining gap, and the increment to add. It does not claim the platform is defect-free._
+
+### Re-audit baseline (measured at `85ea328`, all green, 0 failures / 0 skips / 0 observed flakes)
+
+| Suite | Baseline count | Result |
+|---|---|---|
+| .NET build (backend) | — | clean, 19 pre-existing warnings (18× CS1998, 1× CS8321) |
+| Python integration — SQLite | 956 assertions | 956/956 |
+| Python integration — MySQL | 956 assertions | 956/956 |
+| Backend xUnit (`backend-unit`) | 45 tests / 112 cases | 112/112 |
+| Migration integrity | 8 (SQLite) / 10 (full parity) | pass; 191 shared tables, 0 drift |
+| Vitest (React) | 5 files / 30 tests | 30/30 |
+| Playwright E2E | 23 tests (Chromium only) | 23/23 |
+| SecureExam xUnit | 21 tests | 21/21 |
+| CI | 7 gating jobs | all green |
+
+This corrects the Phase-2 prompt's "~686" estimate: the true integration baseline is **956 assertions per provider**. PR #73 is on branch `claude/pci-production-readiness-yj8vz8` (open, not merged); per the Phase-2 rule its head is the working baseline and Phase-2 increments continue on the same branch/PR.
+
+### Remaining-gap register
+
+**Backend business-decision unit gaps (Increment B).** Enabling fact: `PCI.Backend.Tests/TestEnv.NewMigratedDb()` already gives a fresh migrated temp-SQLite `Db` with no host/HTTP, so every decision class below is unit-testable today.
+
+| ID | Module | Existing Coverage | Remaining Gap | Test Layer | Risk | Priority | A/M/E | Status | Evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| BD-1 | Public.Pricing + MinPayableViolation | §9h/§40l/§13e endpoint-level | Discount arithmetic boundaries (fixed>base, max_discount, min_transaction ==, banker's rounding, floor-0, stacking, per-cert override); min_payable floor never asserted | Unit | High(money) | P1 | Auto | **Closed** | PricingDecisionTests (18 pricing/min-payable cases; banker's rounding, floor-0, cert override, applies_to, min_transaction boundary) |
+| BD-2 | Public.ValidateCode | §40a-l rejection matrix | Boundary-equality: end_date/start_date == today, used_count==max−1 vs ==, per_user vs single_use, allocation==cap, country case, malformed criteria_json | Unit | High | P1 | Auto | **Closed** | PricingDecisionTests (18 validate-code cases; status/active/cert-scope/founding/dates/max_uses boundary/per-user/applies_to/waiver-lock/partner allocation+agreement) |
+| BD-3 | Settlement engine | §12/§13/§29/§60 endpoint-level | Direct matrix: waived-vs-paid classification, waived_amount math, EnsureDownstream idempotency, Reverse lapse-only-if-no-other-live, sweep boundary expiry==now | Unit | High | P1 | Auto | Open | Provisioning.cs:47-232 |
+| BD-4 | Membership term arithmetic + dues webhooks | R10/§29 | Renewal 3y from max(expiry,now); recert by cert cycle; invoice.paid/subscription.* mirror — **dues webhook path zero coverage at any layer** | Integration + Unit(date math) | High | P1 | Auto | Open | Payments.cs:284-456 |
+| BD-5 | MembershipGrades | none | Grade matrix: default associate, professional (credential+rank<2), fellow (rank==2, no pending), SetGrade no-row | Unit | Medium | P2 | Auto | Open | MembershipGrades.cs:24-76 |
+| BD-6 | CertuvoLink decisions | §15 default rule only | Eligible 3-mode × state matrix; DetectMemberType precedence; NextUsername collision | Unit | Medium | P2 | Auto | Open | Provisioning.cs:251-311 |
+| BD-7 | Founding route gates | founding_test f0-f8 | Usable day-inclusivity; CriteriaMet boundaries + role substring + malformed-JSON fail-closed; Grant stacking; cap-undo | Unit | Medium | P2 | Auto | Open | Founding.cs:24-159 |
+| BD-8 | Lifecycle eligibility + hold engine | §2-6/§19 + Python spec-mirror (does not execute C#) | Direct C#: BookingBlockers/LaunchBlockers isolation incl. sp_* toggles; AutoHoldReason 3 configurable rules × thresholds; next_step ladder | Unit | High | P1 | Auto | Open | Lifecycle.cs:37-328 |
+| BD-9 | ExamAuthorization windows | §19 default window only | ResolveWindow 8-scope precedence + field mixing; EnsureForPayment/SyncCert manual-extension protection; **retake_wait_until never set/enforced (dead-end)** | Unit | High | P1 | Auto | Open | ExamAuthorization.cs:29-247 |
+| BD-10 | Scoring + pass boundary | §2/§9e12/§3 | pct==passMark exact boundary; .05 rounding; band thresholds; ParseAnswers tolerance (needs small scorer seam) | Unit | Medium | P2 | Auto | Open | StudentExam.cs:1111-1159 |
+| BD-11 | Credential issuance + CPD gate | §9e8-10/§16/§5c-e/R10 | IssueCredential collision-retry/wording-snapshot/idempotent-second-call; CpdPolicy epsilon/AI-subset/cycle-window/undated | Unit | High | P1 | Auto | Open | Lifecycle.cs:198-283; CpdPolicy.cs:21-90 |
+| BD-12 | Comms.Fire/Enqueue channel matrix | §55 email leg; unit Render only | Channel matrix: toggles × WhatsApp opt-in × skip flags × consent/suppression × dedup key; template fallback | Unit | Medium | P1 | Auto | Open | Comms.cs:32-162 |
+| BD-13 | CommsReminderService.SweepOnce | none | Five reminder rules: window boundaries, dedup key, extended-deadline re-reminder, booked/inactive exclusions | Unit | Medium | P2 | Auto | Open | CommsReminders.cs:38-202 |
+| BD-14 | CommsRouting.Apply | none | Sensitive-floor escalation; first-match precedence; suggest/auto/escalate_all; tag merge | Unit | Medium | P2 | Auto | Open | CommsRouting.cs:22-160 |
+| BD-15 | OutboxDispatcher retry classification | §55i,k | Backoff 2→60min cap; attempts==max → terminal; scheduled-not-due skipped; malformed row fails without stopping batch | Unit | Medium | P3 | Auto | Open | OutboxDispatcher.cs:34-118 |
+
+**Static quality & supply chain (Increment A).**
+
+| ID | Module | Existing Coverage | Remaining Gap | Test Layer | Risk | Priority | A/M/E | Status | Evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| SQ-1 | backend/secureexam C# | Release build in CI; nullable enabled | Warnings never gate (no `-warnaserror`); 19 baseline warnings | Static | Medium | P1 | Auto | **Closed** | `-warnaserror` in Directory.Build.props; 19 warnings fixed (dead fn + CS1998 pragma/async-removal); 0 warnings, 112 xUnit green |
+| SQ-2 | frontend React/TS | `tsc --noEmit` strict | No ESLint at all | Static | Medium | P1 | Auto | **Closed** | eslint.config.js (flat, react-hooks errors); `npm run lint` gate in frontend job; 0 errors |
+| SQ-3 | whole repo | none | No `.editorconfig`/prettier/`dotnet format --verify` | Static | Low | P2 | Auto | **Closed** | .editorconfig (C#=4sp, TS/other=2sp, matches tree) |
+| SQ-4 | frontend test/e2e TS | src typechecked | Test/e2e/config TS excluded from typecheck | Static | Low | P2 | Auto | Open | tsconfig include |
+| SQ-5 | backend NuGet | none | No vuln gate; **2 High transitive live** (Newtonsoft.Json 12.0.3 via Stripe.net; SQLitePCLRaw 2.1.6 via Microsoft.Data.Sqlite) | SCA | High | P0 | Auto | **Closed (1 residual)** | Newtonsoft pinned 13.0.3 (resolved); SQLitePCLRaw pinned 2.1.11; allow-list-aware check_nuget_vulns.py gate; CVE-2025-6965 unpatched-upstream residual documented (LOW: no user-supplied SQL) |
+| SQ-6 | frontend npm | none | No `npm audit` gate; prod clean today, dev chain 2 critical | SCA | Medium | P1 | Auto | **Closed** | `npm audit --omit=dev --audit-level=high` gate; prod deps 0 vulns (dev-tooling advisories out of scope by design) |
+| SQ-7 | repo + history | none | No secret scanning | Secrets | High | P0 | Auto | **Closed** | gitleaks blocking gate + .gitleaks.toml allow-list (test placeholders only); tree grep-audited clean of real secrets |
+| SQ-8 | backend/frontend | none | No SAST (CodeQL/semgrep) | SAST | High | P1 | Auto | Open | workflows/=build.yml |
+| SQ-9 | whole repo | none | No licence report / repo LICENSE | Licence | Low | P3 | Auto | Open | no LICENSE |
+| SQ-10 | Dockerfile | multi-stage build | No hadolint; bases tag- not digest-pinned; **no USER (runs as root)** | Container cfg | Medium | P1 | Auto | **Partial** | hadolint informational gate + .hadolint.yaml; non-root USER deferred (Render /data mount is root-owned at runtime — needs operator-coordinated disk-perms) |
+| SQ-11 | build.yml | works | No actionlint; no `permissions:` block; actions @major-tag not SHA | CI cfg | Medium | P2 | Auto | **Partial** | top-level `permissions: contents: read` added; actionlint informational gate; SHA-pinning of actions deferred to a later increment |
+| SQ-12 | prod image | none | No image CVE scan (trivy) + no scheduled rescan | Container SCA | Medium | P1 | Auto | Open | no trivy |
+| SQ-13 | all manifests | none | No dependabot/renovate (root cause of SQ-5/6 staleness) | Updates | Medium | P1 | External | Open | .github/ |
+| SQ-14 | secureexam WPF | Windows CI builds it | NuGet vuln state unauditable (no step in windows job) | SCA | Medium | P2 | Auto | Open | build.yml:181-190 |
+
+**Frontend components, E2E journeys, cross-browser, accessibility (Increments C–G).**
+
+| ID | Module | Existing Coverage | Remaining Gap | Test Layer | Risk | Priority | A/M/E | Status | Evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| FE-1 | Student auth (Login+TOTP, Register) | RequireAuth test; E2E happy path | TOTP branch, validation, dial-code, error/busy states — no component test | Component | High | P1 | Auto | Open | Login.tsx:26-72 |
+| FE-3 | Certifications screen (EntryCard/ScheduleForm/IdentityCard) | none | Portal's most complex screen: holds/unlock, book vs reschedule, BOOK_ERRORS, vendor state, ID upload | Component | High | P1 | Auto | Open | Certifications.tsx |
+| FE-4 | Billing + discounts + FoundingCard | checkout error-copy only | Product cards, code validate (valid/invalid/founding), 503 payments-closed | Component | High | P1 | Auto | Open | Billing.tsx |
+| FE-8 | Profile security/privacy | axe only | 2FA card states, comm prefs, directory opt-in | Component | High | P1 | Auto | Open | Profile.tsx:187-321 |
+| FE-11 | Admin auth (AdminLogin+TOTP) | E2E gate | Admin TOTP branch never exercised anywhere | Component | High | P1 | Auto | Open | AdminLogin.tsx |
+| FE-12 | Admin operational consoles | none | 3,700+ lines of decision UI (Students/Payments/Documents/ExamExceptions/Credentials/Codes) untested | Component | High | P1 | Auto | Open | admin/pages/ |
+| FE-2,5,6,7,9,10,13,14,15 | Onboarding, Overview tracker, Documents, Messages, Support, remaining student + admin content/governance + UI kit | mostly none | Component tests across states (loading/empty/error/forbidden/interaction) | Component | Med-Low | P2-P3 | Auto | Open | frontend/src |
+| E2E-1 | Journey A membership lifecycle | checkout hand-off; API §1/§15/§26/§29/§60 | UI purchase → signed mock webhook → active → gate lifts (needs Stripe env + TS signer port) | E2E | High | P1 | Auto | Open | integration_test.py:80 |
+| E2E-2 | Journey B standard application | register+skip; API §12 | Consents→profile→ID upload→fee→booking→tracker via UI | E2E | High | P1 | Auto | Open | portal-auth.spec.ts |
+| E2E-5 | Journey E examination lifecycle | none; API §2/§32 | Book→reschedule(err copy)→launch→result/credential in UI | E2E | High | P1 | Auto | Open | Certifications.tsx:57 |
+| E2E-7 | Journey G admin role separation | login gate; API §38/§14v | Scoped admin nav hiding + denied-section 403 screen; owner-only pages | E2E | High | P1 | Auto | Open | AdminApp.tsx:94-142 |
+| E2E-3,4,6 | Journeys C founding / D honorary+IDV / F multi-cert isolation | none; API §40i/§54/§18 | Founding card, honorary IDV console, three independent cert journeys in browser | E2E | Medium | P2 | Auto | Open | integration_test.py |
+| XB-1 | Browser matrix | Chromium only | Firefox + WebKit projects + tagged smoke subset | E2E | Medium | P2 | Auto | Open | playwright.config.ts:33-35 |
+| XB-2 | Mobile viewports | none | Mobile Chrome (Pixel 7) + Mobile Safari (iPhone 14) smoke | E2E | Medium | P2 | Auto | Open | playwright.config.ts |
+| XB-3 | Visual regression | zero toHaveScreenshot | First chromium baselines for stable pages + maxDiffPixelRatio | Visual | Low | P3 | Auto | Open | grep toHaveScreenshot=0 |
+| A11Y-1 | Student portal axe | login/dashboard/profile | Register, onboarding, certifications, billing, documents, messages, support | axe | Medium | P2 | Auto | Open | portal-a11y.spec.ts |
+| A11Y-2 | Admin console axe | zero | Admin login, dashboard, Students, Payments, Documents, ExamExceptions, Team | axe | Medium | P2 | Auto | Open | admin-console.spec.ts |
+| A11Y-3 | Public + RTL axe | home only | verify.html, certifications.html, downloads-centre.html; one ?lang=ar RTL pass | axe | Low | P3 | Auto | Open | public-site.spec.ts:26 |
+
+**Contracts, MySQL integration, security, performance, resilience, backup/DR, deployment, coverage/mutation, docs (Increments E, H, I, J).**
+
+| ID | Module | Existing Coverage | Remaining Gap | Test Layer | Risk | Priority | A/M/E | Status | Evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| CT-3 | Exam connectors (PVUE/Kryterion/TestReach) | §11a registered; Questionmark/PSI full-cycle | Never driven book→provision→result→credential against the mock | Integration | High | P1 | Auto | Open | integration_test.py:414-501 |
+| CT-1 | React↔API contract | E2E happy paths; client unit-mocked | No recorded response fixtures / schema pinning; no OpenAPI | Contract | Medium | P2 | Auto | Open | client.test.ts |
+| CT-2 | SecureExam↔API contract | DtoContractTests (5) client-side | No live-server-vs-client-DTO deserialization test | Contract | Medium | P2 | Auto | Open | DtoContractTests.cs |
+| CT-4 | Live provider contracts | sanitized fixtures/mock vendor | Real sandbox/test-mode runs, recorded live fixtures | Contract | High | P1 | External | External Provider Pending | _MockVendor |
+| SEC-2 | CSV export formula injection | §59n quoting | **App defect:** leading `= + - @` never neutralized (attacker utm_* → export.csv); same AdminMgmt/PartnerPortal — fix + regression test | API + app fix | High | P1 | Auto | Open | AdminAnalytics.cs:58-67 |
+| SEC-1 | CORS | middleware + boot-validation | Zero test assertions: Allow-Origin value, OPTIONS preflight, arbitrary-Origin non-reflection | API | High | P1 | Auto | Open | Program.cs:165-177 |
+| SEC-3 | Unasserted headers | §9b nosniff/CSP/XFO/HSTS | Permissions-Policy, COOP, X-Robots-Tag emitted but unasserted | API | Low | P2 | Auto | Open | Program.cs:148-155 |
+| SEC-4 | Hostile-file robustness | sniff/size caps unit; SVG/HTML excluded | Malformed-PDF corpus for PdfWatermark; SVG-refused regression; badge SVG escaping | Unit/API | Low | P2 | Auto | Open | DocStore.cs:70-95 |
+| SEC-5 | DAST + scanning | in-repo adversarial API tests | ZAP baseline (localhost CI feasible; authenticated staging = external); overlaps SQ-5..13 | Pipeline | Medium | P1 | Auto/External | Open | workflows/=build.yml |
+| DB-MY-1 | MySQL-specific behaviour | dual-provider parity (§all) + migration parity | Decimal precision, Arabic/Unicode, collation, FK/unique enforcement, tx rollback asserted against real MySQL directly | Integration (MySQL) | Medium | P2 | Auto | Open | migration_integrity_test.py |
+| PERF-1 | Performance assets | 50 indexes; sweep_500 once | No k6 scripts/scenarios/thresholds/CI perf smoke | Performance | Medium | P1 | Auto | Open | grep k6=0 |
+| PERF-2 | Production-scale load | deferred in docs | Staging load at prod scale, slow-query review | Performance | Medium | P1 | External | Operator Execution Pending | RUN.md:174 |
+| RES-1 | MySQL down/slow | healthy-DB parity | DB outage/latency injection + recovery-after-return | Resilience | High | P1 | Auto | Open | build.yml:103-147 |
+| RES-3 | Worker stop/restart recovery | manual drain + §60 | BackgroundService loop + queued-job recovery across restart (double-boot harness reusable) | Resilience | Medium | P1 | Auto | Open | migration_integrity_test.py |
+| RES-4 | Concurrency single-outcome | serial idempotency (§1/§55/§56) | Concurrent-request race tests (parallel redeem/submit); single-instance assumption undocumented | Resilience | High | P1 | Auto+Manual | Open | render.yaml single service |
+| RES-2 | Storage provider down | dangling-ref 404; moto happy path | S3 unreachable/permission-denied on upload+serve | Resilience | Medium | P2 | Auto | Open | integration_test.py §59 |
+| DR-1 | Backup→restore round trip | mysql_backup.sh; migration re-migrate proof | No test runs backup→restore-into-scratch→boot against CI MySQL | DR | High | P1 | Auto | Open | tools/mysql_backup.sh |
+| DR-2 | DB+STORAGE_ROOT restore set | documented | No check restored DB refs resolve to restored bytes | DR | Medium | P2 | Auto | Open | RUN.md:238-247 |
+| DR-3 | Prod restore rehearsal, RPO/RTO | policy documented | Rehearsal on Render + managed MySQL, RPO/RTO, off-box encrypted verify | DR | High | P1 | External | Operator Execution Pending | MYSQL_MIGRATION.md |
+| DEP-1 | Post-deploy smoke (non-destructive) | smoke-test.sh (destructive, CI-only) | Read-only prod smoke script (health/headers/catalogue/verify/401 gates/system-check) | Deployment | High | P1 | Auto+External | Open + Operator Pending | smoke-test.sh |
+| DEP-2 | Health/system-check body | 401 gate only | Health body, recovery_configured, system-check authz sweep + checks-map | API | Medium | P2 | Auto | Open | Program.cs:359-391 |
+| DEP-3 | Staging environment | single prod blueprint | No staging service / seed / validation checklist | Deployment | Medium | P2 | External+Manual | Operator Execution Pending | render.yaml |
+| COV-1 | Coverage collection | all suites gate; no numbers | coverlet XPlat on dotnet-test jobs + vitest --coverage, artifacts, floors | Pipeline | Medium | P1 | Auto | Open | build.yml:158,190,199 |
+| COV-2 | Mutation testing | none | Scoped Stryker over pure logic (Security/Rbac/Egress/pricing) with thresholds | Pipeline | Low | P2 | Auto | Open | grep stryker=0 |
+| COV-3 | Requirement traceability | matrix maps 37 modules | Formal REQUIREMENT_TRACEABILITY_MATRIX (requirement→tests→evidence) | Documentation | Medium | P2 | Manual | Open | docs/testing/ |
+| DOC-1 | Governance docs | matrix only | TEST_STRATEGY, TEST_ENVIRONMENTS, TEST_DATA_PLAN, REQUIREMENT_TRACEABILITY_MATRIX, DEFECT_REGISTER, EXTERNAL_PROVIDER_TEST_PLAN, DR_RESTORE_RUNBOOK, RELEASE_READINESS_TEMPLATE absent | Documentation | Medium | P1 | Manual | Open | ls docs/testing/=1 |
+
+### Phase-2 gap summary
+
+- **72 remaining-gap rows** (15 BD · 14 SQ · 27 FE/E2E/XB/A11Y · 16 CT/SEC/DB/PERF/RES/DR/DEP/COV/DOC).
+- **Priority:** 2 P0 (SQ-5 NuGet vulns, SQ-7 secret scanning) · ~40 P1 · ~26 P2 · ~4 P3. **Both P0s closed in Increment A** (NuGet vuln gate with the 2 High transitive advisories resolved/allow-listed; blocking secret scan).
+- **Classification:** most Automatable inside existing CI infra (temp-SQLite Db, CI MySQL service, mock-vendor seam, Playwright webServer, double-boot harness). **Hard-blocked → Operator/External Pending** (never fake-automated): CT-4, PERF-2, DR-3, DEP-3, DEP-1 execution-half, SEC-5 staging-half, SQ-13, real-bucket S3.
+- **One confirmed application defect surfaced by the audit:** SEC-2 (CSV formula injection) — to be fixed with a regression test inside the security increment, mirroring the PR-#73 discipline of fixing confirmed defects rather than only asserting them.
+
+### Increment plan (small reviewable commits, in order)
+
+- **A — Static-quality gates — ✅ DELIVERED:** 19 compiler warnings fixed + `-warnaserror` (SQ-1); blocking NuGet-vuln gate with the 2 High transitive advisories pinned/allow-listed (SQ-5), blocking `npm audit --omit=dev` (SQ-6), blocking gitleaks + `.gitleaks.toml` (SQ-7); actionlint + hadolint wired informational-until-baselined (SQ-10/11); ESLint flat config + `npm run lint` gate (SQ-2); `.editorconfig` (SQ-3); top-level `permissions: contents: read` (SQ-11); `SUPPRESSION_PROCESS.md`. Verified: backend 0-warning build, 112 xUnit, integration suite 956/956 on **both** SQLite and MySQL, frontend typecheck+lint+30 vitest+build. Deferred to later increments (recorded above): SHA-pinning actions, non-root container USER (operator-coordinated), SAST/trivy/dependabot (SQ-8/12/13).
+- **B — Backend decision unit tests:** the 6 xUnit classes (PricingDecision, SettlementAndMembership, LifecycleEligibility, ExamAuthorizationWindow, CredentialAndCpd, CommsDecision) — ~230 data-driven cases; items 1–3 (money, settlement, exam eligibility) first.
+- **C — React component tranche:** shared `renderWithProviders`; first 10–12 P1 screens across states.
+- **D — Membership + application E2E** (Journeys A, B) incl. TS webhook signer.
+- **E — Exam + result + certificate E2E** (Journeys E, F) + CT-3 connectors + DB-MY-1.
+- **F — Founding + honorary + admin-role E2E** (Journeys C, D, G).
+- **G — Cross-browser/mobile matrix + first visual baselines + axe expansion.**
+- **H — Contract + security completion** (SEC-2 fix+test, SEC-1 CORS, SEC-3 headers, ZAP baseline, coverage collection).
+- **I — Performance (k6 smoke) + resilience (RES-1/3/4) + backup-restore (DR-1/2) assets + Render runbook.**
+- **J — Traceability + governance docs + release-readiness report.**
+
+_Phase-2 implementation begins only after this table is committed (Phase-0 gate). Rows are marked FIXED/struck through as increments land, mirroring the PR-#73 findings-ledger discipline._
+
 ## Coverage Matrix
 
 | Pri | Risk | Module | Coverage present | Classification | Main gap (abridged) | Incremental tests to add (abridged) |
