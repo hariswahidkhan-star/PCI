@@ -133,8 +133,8 @@ test.describe('public form-to-admin journeys', () => {
     const setupUrl = new URL(approved.setup_url)
     const password = 'HonoraryBrowser-2026!'
     await applicantPage.goto(setupUrl.pathname + setupUrl.search)
-    await applicantPage.getByLabel('New password').fill(password)
-    await applicantPage.getByLabel('Confirm new password').fill(password)
+    await applicantPage.getByLabel('New password', { exact: true }).fill(password)
+    await applicantPage.getByLabel('Confirm new password', { exact: true }).fill(password)
     const setPasswordResponsePromise = applicantPage.waitForResponse((response) =>
       response.url().endsWith('/api/set-password') && response.request().method() === 'POST')
     await applicantPage.getByRole('button', { name: 'Reset password' }).click()
@@ -256,7 +256,7 @@ test.describe('public form-to-admin journeys', () => {
     await page.goto('/contact.html')
     await page.waitForFunction(() => Boolean((window as typeof window & { PCI_API_BASE?: string }).PCI_API_BASE))
     await page.getByLabel('Name').fill('Browser Visitor')
-    await page.getByLabel('Email').fill(inquiryEmail)
+    await page.getByLabel('Email', { exact: true }).fill(inquiryEmail)
     await page.getByLabel('Subject').fill(subject)
     await page.getByLabel('Message').fill('Please send details about the three-certification journey.')
     const inquiryResponse = page.waitForResponse((response) =>

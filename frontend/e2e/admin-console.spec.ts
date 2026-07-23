@@ -24,7 +24,7 @@ test.describe('admin console', () => {
     // must_change_pw gate: the console stays closed until a new password is set (also enforced
     // server-side for every /api/admin/* call). We assert the gate and stop — never change it.
     await expect(page.getByRole('heading', { name: 'Set a new password' })).toBeVisible()
-    await expect(page.getByLabel('New password')).toBeVisible()
+    await expect(page.getByLabel('New password', { exact: true })).toBeVisible()
     await expect(page.getByLabel('Confirm password')).toBeVisible()
   })
 
@@ -83,6 +83,6 @@ test.describe('admin console', () => {
     await expect(page).toHaveURL(/\/admin\/students$/)
     await expect(page.getByRole('heading', { name: 'Students' })).toBeVisible()
     await expect(page.getByText('Admin Console', { exact: true })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible()
   })
 })

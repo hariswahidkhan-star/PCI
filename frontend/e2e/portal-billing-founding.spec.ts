@@ -24,7 +24,9 @@ test.describe('billing, discount and founding journeys', () => {
     await drawer.locator('.field').filter({ hasText: 'Applies to' }).locator('select').selectOption('exam')
     const certificationSelect = drawer.locator('.field').filter({ hasText: 'Certification' }).locator('select')
     await expect(certificationSelect.locator('option', { hasText: 'PML-AI' })).toHaveCount(1)
-    await certificationSelect.selectOption({ label: /PML-AI/ })
+    const pmlOption = certificationSelect.locator('option').filter({ hasText: 'PML-AI' }).first()
+    await expect(pmlOption).toHaveCount(1)
+    await certificationSelect.selectOption({ value: await pmlOption.getAttribute('value') || '' })
     await drawer.getByLabel('One use per email').check()
     const discountCreatePromise = page.waitForResponse((response) =>
       response.url().endsWith('/api/admin/codes') && response.request().method() === 'POST')

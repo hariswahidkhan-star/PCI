@@ -50,7 +50,8 @@ test.describe('public site', () => {
     await expect(dialog).toHaveAttribute('role', 'dialog')
     await expect(dialog.getByRole('heading')).toHaveText(config.title)
     await captureStoryEvidence(page, testInfo, 'A4', 'announcement-visible')
-    await dialog.getByRole('button', { name: config.dismiss }).click()
+    // Prefer the secondary CTA — the X control shares data-anx-close but must not share this name.
+    await dialog.locator('.pci-anx-secondary').click()
     await expect(dialog).toHaveCount(0)
     expect(await page.evaluate((key) => sessionStorage.getItem(`pci.anx.${key}`), config.key)).toBe('1')
 

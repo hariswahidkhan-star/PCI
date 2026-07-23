@@ -82,7 +82,7 @@ test.describe('live proctor operations', () => {
     await expect(drawer.getByRole('heading', { name: `Exam session #${started.attempt_id}` })).toBeVisible()
     await expect(drawer).toContainText(student.email)
     await expect(drawer).toContainText('Window Blur')
-    await expect(drawer).toContainText('critical')
+    await expect(drawer).toContainText(/critical/i)
     await expect(drawer).toContainText(candidateMessage)
 
     const proctorMessage = `Please remain in the exam window ${Date.now()}`

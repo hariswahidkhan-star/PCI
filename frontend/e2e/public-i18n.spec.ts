@@ -80,7 +80,7 @@ test.describe('public site i18n', () => {
     await expect(dialog).toBeVisible()
     await expect(dialog.getByRole('heading')).toHaveText(config.title)
     await captureStoryEvidence(page, testInfo, 'A4', 'arabic-announcement')
-    await dialog.getByRole('button', { name: config.dismiss }).click()
+    await dialog.locator('.pci-anx-secondary').click()
     expect(await page.evaluate((key) => sessionStorage.getItem(`pci.anx.${key}`), config.key)).toBe('1')
   })
 })

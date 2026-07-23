@@ -44,7 +44,7 @@ test.describe('student records handed off to PCI operators', () => {
     expect(download.suggestedFilename()).toBe('candidate-policy.pdf')
     const path = await download.path()
     expect(path).toBeTruthy()
-    expect(readFileSync(path!).subarray(0, 5).toString()).toBe('%PDF')
+    expect(readFileSync(path!).subarray(0, 4).toString()).toBe('%PDF')
     await captureStoryEvidence(page, testInfo, 'E4', 'document-acknowledged-and-downloaded')
 
     const auditResponse = await request.get(`/api/admin/documents/${created.id}/audit`, {
@@ -109,7 +109,8 @@ test.describe('student records handed off to PCI operators', () => {
     await page.reload()
     const approvedRow = page.getByRole('row').filter({ hasText: activity })
     await expect(approvedRow).toContainText(/approved/i)
-    await expect(page.getByText(/2\.5.*of.*60.*hours/i)).toBeVisible()
+    // Seeded sp_cpd_target_hours is 30 (frontend only falls back to 60 when /api/me has not loaded).
+    await expect(page.getByText(/2\.5 of 30 hours/i)).toBeVisible({ timeout: 15_000 })
     await page.getByLabel('Your CPD position').selectOption('compliant')
     await page.getByLabel('Notes (optional)').fill('All required CPD is being tracked through the member portal.')
     await page.getByRole('button', { name: 'Submit declaration' }).click()

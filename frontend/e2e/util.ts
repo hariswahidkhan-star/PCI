@@ -14,6 +14,9 @@ export const E2E_ADMIN = { email: 'browser-admin@pci.test', password: 'BrowserSu
 export const E2E_STRIPE_WEBHOOK_SECRET = 'whsec_e2e_browser_suite'
 
 let counter = 0
+/** Cache the E2E operator token across specs. /api/admin/auth/login is rate-limited (10/min/IP);
+ * without a cache the expanded browser suite burns the window and cascades 429 failures. */
+let e2eAdminTokenCache: string | null = null
 
 /** A unique, valid email per call: pid + wall-clock + a process-local counter, so parallel
  *  workers, retries and repeated runs against the same reused dev database never collide. */
@@ -28,7 +31,9 @@ export function uniqueEmail(prefix = 'e2e'): string {
 export async function captureStoryEvidence(page: Page, testInfo: TestInfo, storyId: string, moment?: string): Promise<void> {
   const label = [storyId, moment].filter(Boolean).join('-').replace(/[^A-Za-z0-9._-]+/g, '-')
   const path = testInfo.outputPath(`${label}.png`)
-  await page.screenshot({ path, fullPage: true, animations: 'disabled' })
+  // Prefer the viewport: full-page screenshots of tall public pages exceed Chromium's ~32767px
+  // dimension limit and abort otherwise-green journeys.
+  await page.screenshot({ path, fullPage: false, animations: 'disabled' })
   await testInfo.attach(label, { path, contentType: 'image/png' })
 }
 
@@ -63,17 +68,25 @@ export async function apiLoginAsDemoStudent(request: APIRequestContext, page: Pa
 /** Sign in as the opt-in, non-Production browser-suite owner. The Playwright webServer is the only
  * caller that sets E2E_ADMIN_PASSWORD, so this account never exists in a normal deployment. */
 export async function apiLoginAsE2EAdmin(request: APIRequestContext, page?: Page): Promise<string> {
+  async function plant(token: string) {
+    if (page) {
+      await page.addInitScript((t) => {
+        try { sessionStorage.setItem('pci.admin.token', t) } catch { /* asserted by the auth redirect */ }
+      }, token)
+    }
+  }
+  if (e2eAdminTokenCache) {
+    await plant(e2eAdminTokenCache)
+    return e2eAdminTokenCache
+  }
   const res = await request.post('/api/admin/auth/login', { data: E2E_ADMIN })
   expect(res.ok(), `E2E admin login should succeed (got ${res.status()})`).toBeTruthy()
   const body = (await res.json()) as { token?: string; admin?: { must_change_pw?: boolean } }
   expect(body.token, 'admin login response should carry a session token').toBeTruthy()
   expect(body.admin?.must_change_pw, 'E2E operator should not be behind the bootstrap password gate').toBe(false)
   const token = body.token as string
-  if (page) {
-    await page.addInitScript((t) => {
-      try { sessionStorage.setItem('pci.admin.token', t) } catch { /* asserted by the auth redirect */ }
-    }, token)
-  }
+  e2eAdminTokenCache = token
+  await plant(token)
   return token
 }
 

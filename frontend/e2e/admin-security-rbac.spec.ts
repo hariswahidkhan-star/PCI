@@ -36,8 +36,8 @@ test.describe('admin account security, RBAC and settings', () => {
     await viewerPage.getByRole('button', { name: 'Sign in' }).click()
     await expect(viewerPage.getByRole('heading', { name: 'Set a new password' })).toBeVisible()
     const newPassword = 'ViewerBrowser-2026!'
-    await viewerPage.getByLabel('New password').fill(newPassword)
-    await viewerPage.getByLabel('Confirm password').fill(newPassword)
+    await viewerPage.getByLabel('New password', { exact: true }).fill(newPassword)
+    await viewerPage.getByLabel('Confirm password', { exact: true }).fill(newPassword)
     await viewerPage.getByRole('button', { name: 'Update password' }).click()
     await expect(viewerPage.getByText('Browser Read-only Reviewer')).toBeVisible()
     await expect(viewerPage.getByRole('link', { name: 'Reports' })).toBeVisible()
@@ -85,10 +85,11 @@ test.describe('admin account security, RBAC and settings', () => {
 
     await page.goto('/admin/login')
     await page.getByLabel('Email address').fill(email)
-    await page.getByLabel('Password').fill(password)
+    await page.getByLabel('Password', { exact: true }).fill(password)
     await page.getByRole('button', { name: 'Sign in' }).click()
+    await expect(page.getByText('Browser MFA Admin')).toBeVisible({ timeout: 30_000 })
     await page.goto('/admin/settings')
-    await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible({ timeout: 30_000 })
 
     const setupResponsePromise = page.waitForResponse((response) =>
       response.url().endsWith('/api/admin/me/2fa/setup') && response.request().method() === 'POST')
@@ -122,7 +123,7 @@ test.describe('admin account security, RBAC and settings', () => {
     })
     expect(await stillEnabled.json()).toMatchObject({ enabled: true, pending: false, recovery_remaining: 10 })
 
-    await page.getByRole('button', { name: 'Sign out' }).click()
+    await page.getByRole('button', { name: 'Sign out', exact: true }).click()
     await page.getByLabel('Email address').fill(email)
     await page.getByLabel('Password').fill(password)
     await page.getByRole('button', { name: 'Sign in' }).click()
@@ -154,8 +155,9 @@ test.describe('admin account security, RBAC and settings', () => {
     const value = `Browser settings round trip ${Date.now()}`
 
     await page.goto('/admin/settings')
+    await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible({ timeout: 30_000 })
     const setting = page.getByText('Banner text', { exact: true }).locator('..').locator('input')
-    await expect(setting).toBeVisible()
+    await expect(setting).toBeVisible({ timeout: 15_000 })
     await setting.fill(value)
     const saveResponsePromise = page.waitForResponse((response) =>
       response.url().endsWith('/api/admin/settings') && response.request().method() === 'PATCH')

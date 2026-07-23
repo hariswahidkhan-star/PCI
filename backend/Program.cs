@@ -202,7 +202,10 @@ static string ClientIp(HttpContext ctx)
 // robust to route-handler shape (no per-endpoint chaining required).
 var _rlHits = new System.Collections.Concurrent.ConcurrentDictionary<string, (int count, long windowStart)>();
 string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login", "/api/inquiry", "/api/newsletter", "/api/form-submit" };
-const int RL_LIMIT = 10; const long RL_WINDOW_MS = 60_000;
+// Playwright boots this process with E2E_ADMIN_PASSWORD set; raise the window so the browser suite
+// (dozens of register/login/forgot posts) does not cascade 429s. Production never sets that env.
+var _rlE2e = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("E2E_ADMIN_PASSWORD"));
+int RL_LIMIT = _rlE2e ? 500 : 10; long RL_WINDOW_MS = 60_000;
 app.Use(async (ctx, next) =>
 {
     // ASP.NET routing is trailing-slash-insensitive, so POST /api/login/ still reaches the handler.

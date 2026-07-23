@@ -27,7 +27,10 @@ test.describe('credential operator to holder journey', () => {
     await expect(drawer.getByLabel('Student account').locator('option')).toHaveCount(2)
     await drawer.getByLabel('Student account').selectOption(String(student.id))
     await expect(drawer.getByLabel('Holder name')).toHaveValue('Browser Student')
-    await drawer.getByLabel('Certification').selectOption({ label: /PML-AI/ })
+    const certSelect = drawer.getByLabel('Certification')
+    const pmlOpt = certSelect.locator('option').filter({ hasText: 'PML-AI' }).first()
+    await expect(pmlOpt).toHaveCount(1)
+    await certSelect.selectOption({ value: await pmlOpt.getAttribute('value') || '' })
     await drawer.getByLabel('Expires').fill(expires)
     const issueResponsePromise = page.waitForResponse((response) =>
       response.url().endsWith('/api/admin/credentials') && response.request().method() === 'POST')

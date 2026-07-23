@@ -58,12 +58,12 @@ test.describe('student account recovery, onboarding and security', () => {
 
     await preparePublicJourney(page)
     await page.goto(setupPath)
-    await page.getByLabel('New password').fill(password)
-    await page.getByLabel('Confirm new password').fill('does-not-match')
+    await page.getByLabel('New password', { exact: true }).fill(password)
+    await page.getByLabel('Confirm new password', { exact: true }).fill('does-not-match')
     await page.getByRole('button', { name: 'Reset password' }).click()
     await expect(page.locator('#resetMsg')).toContainText('The two passwords do not match')
 
-    await page.getByLabel('Confirm new password').fill(password)
+    await page.getByLabel('Confirm new password', { exact: true }).fill(password)
     const setResponsePromise = page.waitForResponse((response) =>
       response.url().endsWith('/api/set-password') && response.request().method() === 'POST')
     await page.getByRole('button', { name: 'Reset password' }).click()
@@ -75,12 +75,12 @@ test.describe('student account recovery, onboarding and security', () => {
     await page.getByLabel('Email address').fill(email)
     await page.getByLabel('Password', { exact: true }).fill(password)
     await page.getByRole('button', { name: 'Sign in' }).click()
-    await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible()
 
     // The same token is single-use and cannot replace the password a second time.
     await page.goto(setupPath)
-    await page.getByLabel('New password').fill('ReplacementBrowser-2026!')
-    await page.getByLabel('Confirm new password').fill('ReplacementBrowser-2026!')
+    await page.getByLabel('New password', { exact: true }).fill('ReplacementBrowser-2026!')
+    await page.getByLabel('Confirm new password', { exact: true }).fill('ReplacementBrowser-2026!')
     await page.getByRole('button', { name: 'Reset password' }).click()
     await expect(page.locator('#resetMsg')).toContainText('invalid_or_expired_token')
   })
@@ -168,7 +168,7 @@ test.describe('student account recovery, onboarding and security', () => {
     expect(verified.recovery_codes).toHaveLength(10)
     await expect(page.getByText('2FA is on. Save your recovery codes now.')).toBeVisible()
 
-    await page.getByRole('button', { name: 'Sign out' }).click()
+    await page.getByRole('button', { name: 'Sign out', exact: true }).click()
     await page.getByLabel('Email address').fill(student.email)
     await page.getByLabel('Password', { exact: true }).fill(student.password)
     await page.getByRole('button', { name: 'Sign in' }).click()
@@ -178,7 +178,7 @@ test.describe('student account recovery, onboarding and security', () => {
     await expect(page.getByRole('alert')).toContainText('not valid')
     await page.getByLabel('Authentication code').fill(totpCode(setup.secret))
     await page.getByRole('button', { name: 'Verify & sign in' }).click()
-    await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible()
 
     await page.goto('/app/profile')
     page.once('dialog', async (dialog) => {
@@ -189,11 +189,11 @@ test.describe('student account recovery, onboarding and security', () => {
     await expect(page.getByRole('button', { name: 'Set up 2FA' })).toBeVisible()
     await captureStoryEvidence(page, testInfo, 'F5', 'student-totp-lifecycle')
 
-    await page.getByRole('button', { name: 'Sign out' }).click()
+    await page.getByRole('button', { name: 'Sign out', exact: true }).click()
     await page.getByLabel('Email address').fill(student.email)
     await page.getByLabel('Password', { exact: true }).fill(student.password)
     await page.getByRole('button', { name: 'Sign in' }).click()
-    await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible()
     await expect(page.getByLabel('Authentication code')).toHaveCount(0)
   })
 })

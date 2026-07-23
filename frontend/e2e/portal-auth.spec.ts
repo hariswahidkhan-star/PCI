@@ -28,7 +28,7 @@ test.describe('student portal auth', () => {
     // Dashboard chrome: sidebar navigation and the signed-in header controls.
     await expect(page).toHaveURL(/\/app\/?$/)
     await expect(page.getByRole('link', { name: 'Overview' })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible()
     await expect(page.getByText(email).first()).toBeVisible()
     await captureStoryEvidence(page, testInfo, 'B1', 'registered-dashboard')
   })
@@ -40,13 +40,13 @@ test.describe('student portal auth', () => {
     await page.getByRole('button', { name: 'Sign in' }).click()
 
     // Portal dashboard renders for the signed-in student.
-    await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Overview' })).toBeVisible()
     await expect(page.getByText(DEMO_STUDENT.email).first()).toBeVisible()
     await captureStoryEvidence(page, testInfo, 'B2', 'signed-in')
 
     // Signing out revokes the session and returns to the login screen.
-    await page.getByRole('button', { name: 'Sign out' }).click()
+    await page.getByRole('button', { name: 'Sign out', exact: true }).click()
     await expect(page).toHaveURL(/\/app\/login$/)
     await expect(page.getByLabel('Email address')).toBeVisible()
   })
@@ -62,7 +62,7 @@ test.describe('student portal auth', () => {
     await expect(page.getByRole('alert')).toBeVisible()
     await expect(page).toHaveURL(/\/app\/login$/)
     // Still unauthenticated: the protected shell never appeared.
-    await expect(page.getByRole('button', { name: 'Sign out' })).toHaveCount(0)
+    await expect(page.getByRole('button', { name: 'Sign out', exact: true })).toHaveCount(0)
   })
 
   test('@cross-browser an unauthenticated visit to the portal redirects to the login screen', async ({ page }) => {

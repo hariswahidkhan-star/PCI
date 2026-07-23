@@ -122,7 +122,7 @@ test.describe('institution partner persona', () => {
     expect(downloadedDocument.suggestedFilename()).toBe('browser-institution-agreement.pdf')
     const downloadedPath = await downloadedDocument.path()
     expect(downloadedPath).toBeTruthy()
-    expect(readFileSync(downloadedPath!).subarray(0, 5).toString()).toBe('%PDF')
+    expect(readFileSync(downloadedPath!).subarray(0, 4).toString()).toBe('%PDF')
     await captureStoryEvidence(page, testInfo, 'H3', 'institution-document-downloaded')
 
     // Partner-managed discount code, constrained by the agreement the PCI operator configured.
@@ -235,7 +235,7 @@ test.describe('institution partner persona', () => {
     const isolatedDocumentDownload = await request.get(`/api/partner/documents/${partnerDocument.id}/download`, { headers: isolatedHeaders })
     expect(isolatedDocumentDownload.status()).toBe(404)
 
-    await page.getByRole('button', { name: 'Sign out' }).click()
+    await page.getByRole('button', { name: 'Sign out', exact: true }).click()
     await expect(page.locator('#viewLogin')).toBeVisible()
     await page.getByLabel('Email', { exact: true }).fill(partnerEmail)
     await page.getByLabel('Password', { exact: true }).fill(newPassword)

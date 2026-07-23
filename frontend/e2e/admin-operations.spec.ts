@@ -73,17 +73,18 @@ test.describe('admin student operations', () => {
     await expect(history).toContainText(supportReason)
     await expect(history).not.toContainText('active')
 
-    const markPaid = drawer.locator('.card').filter({
-      has: drawer.getByRole('heading', { name: 'Mark as paid / waive fee' }),
-    })
-    await markPaid.getByLabel('Product').selectOption('membership')
-    await markPaid.getByLabel('Amount (USD)').fill('149')
-    await markPaid.getByLabel('Note (optional)').fill('E2E bank reconciliation')
+    // Scope by card title text — nesting drawer.getByRole(...) inside filter({ has }) never
+    // matches relative to each .card, so Product/Amount never resolve.
+    const markPaid = drawer.locator('.card').filter({ hasText: 'Mark as paid / waive fee' }).first()
+    await expect(markPaid.getByRole('heading', { name: 'Mark as paid / waive fee' })).toBeVisible()
+    await markPaid.locator('label').filter({ hasText: /^Product$/ }).locator('select').selectOption('membership')
+    await markPaid.locator('label').filter({ hasText: 'Amount (USD)' }).locator('input').fill('149')
+    await markPaid.locator('label').filter({ hasText: 'Note (optional)' }).locator('input').fill('E2E bank reconciliation')
     await markPaid.getByText('Payment evidence (optional)').click()
-    await markPaid.getByLabel('Method').selectOption('bank_transfer')
-    await markPaid.getByLabel('Bank reference').fill(gatewayReference)
-    await markPaid.getByLabel('Gateway reference').fill(gatewayReference)
-    await markPaid.getByLabel('Receipt no.').fill(`RCT-${Date.now()}`)
+    await markPaid.locator('label').filter({ hasText: /^Method$/ }).locator('select').selectOption('bank_transfer')
+    await markPaid.locator('label').filter({ hasText: 'Bank reference' }).locator('input').fill(gatewayReference)
+    await markPaid.locator('label').filter({ hasText: 'Gateway reference' }).locator('input').fill(gatewayReference)
+    await markPaid.locator('label').filter({ hasText: 'Receipt no.' }).locator('input').fill(`RCT-${Date.now()}`)
     const paidResponsePromise = page.waitForResponse((response) =>
       response.url().endsWith(`/api/admin/students/${student.id}/mark-paid`)
       && response.request().method() === 'POST')
@@ -93,12 +94,11 @@ test.describe('admin student operations', () => {
     const paid = (await paidResponse.json()) as { payment_id: number }
     await expect(markPaid).toContainText('Recorded')
 
-    const waive = drawer.locator('.card').filter({
-      has: drawer.getByRole('heading', { name: 'Waive fee', exact: true }),
-    })
-    await waive.getByLabel('Product').selectOption('exam')
-    await waive.getByLabel('Percent').fill('100')
-    await waive.getByLabel('Reason (required)').fill('E2E scholarship approval')
+    const waive = drawer.locator('.card').filter({ hasText: /^Waive fee/ }).first()
+    await expect(waive.getByRole('heading', { name: 'Waive fee', exact: true })).toBeVisible()
+    await waive.locator('label').filter({ hasText: /^Product$/ }).locator('select').selectOption('exam')
+    await waive.locator('label').filter({ hasText: /^Percent$/ }).locator('input').fill('100')
+    await waive.locator('label').filter({ hasText: 'Reason (required)' }).locator('input').fill('E2E scholarship approval')
     const waiverResponsePromise = page.waitForResponse((response) =>
       response.url().endsWith(`/api/admin/students/${student.id}/waive`)
       && response.request().method() === 'POST')

@@ -66,15 +66,15 @@ function IssueForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => v
           <button className="btn secondary sm" onClick={onClose}>Close</button>
         </div>
         {error && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{error}</div>}
-        <div className="field"><label>Credential ID</label><input value={f.credential_id} onChange={(e) => set('credential_id', e.target.value.toUpperCase())} placeholder="PCI-PCLAI-2026-000001" /></div>
+        <div className="field"><label htmlFor="cred-issue-id">Credential ID</label><input id="cred-issue-id" value={f.credential_id} onChange={(e) => set('credential_id', e.target.value.toUpperCase())} placeholder="PCI-PCLAI-2026-000001" /></div>
         <div className="field">
-          <label>Find student <span className="muted small">(linking enables portal download)</span></label>
-          <input value={studentQuery} onChange={(e) => setStudentQuery(e.target.value)} placeholder="Search by name or email…" />
+          <label htmlFor="cred-find-student">Find student <span className="muted small">(linking enables portal download)</span></label>
+          <input id="cred-find-student" value={studentQuery} onChange={(e) => setStudentQuery(e.target.value)} placeholder="Search by name or email…" />
         </div>
         {studentSearch.length >= 2 && (
           <div className="field">
-            <label>Student account</label>
-            <select value={f.user_id} onChange={(e) => chooseStudent(e.target.value)}>
+            <label htmlFor="cred-student-account">Student account</label>
+            <select id="cred-student-account" value={f.user_id} onChange={(e) => chooseStudent(e.target.value)}>
               <option value="">— leave unlinked —</option>
               {(members?.rows ?? []).map((m) => (
                 <option key={m.id} value={m.id}>
@@ -85,17 +85,17 @@ function IssueForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => v
             {members && members.rows.length === 0 && <div className="muted small">No matching student.</div>}
           </div>
         )}
-        <div className="field"><label>Holder name</label><input value={f.holder_name} onChange={(e) => set('holder_name', e.target.value)} /></div>
+        <div className="field"><label htmlFor="cred-holder-name">Holder name</label><input id="cred-holder-name" value={f.holder_name} onChange={(e) => set('holder_name', e.target.value)} /></div>
         <div className="field">
-          <label>Certification</label>
-          <select value={f.certification_id} onChange={(e) => set('certification_id', e.target.value)}>
+          <label htmlFor="cred-certification">Certification</label>
+          <select id="cred-certification" value={f.certification_id} onChange={(e) => set('certification_id', e.target.value)}>
             <option value="">Default certification</option>
             {(certifications?.rows ?? []).map((c) => (
               <option key={c.id} value={c.id}>{c.code || c.acronym} — {c.name}</option>
             ))}
           </select>
         </div>
-        <div className="field"><label>Expires</label><input type="date" value={f.expires_at} onChange={(e) => set('expires_at', e.target.value)} /></div>
+        <div className="field"><label htmlFor="cred-expires">Expires</label><input id="cred-expires" type="date" value={f.expires_at} onChange={(e) => set('expires_at', e.target.value)} /></div>
         <button className="btn" disabled={busy || !f.credential_id || !f.holder_name} onClick={save}>{busy ? 'Issuing…' : 'Issue credential'}</button>
       </div>
     </div>

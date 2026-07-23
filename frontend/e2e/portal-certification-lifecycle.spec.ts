@@ -42,24 +42,24 @@ test.describe('complete certification lifecycle', () => {
     ] as const)
       expect(response.ok(), `${label} prerequisite should succeed (got ${response.status()})`).toBeTruthy()
 
-    // Book and then reschedule through the React portal. A slot more than 24 hours away exercises the
-    // normal reschedule policy instead of bypassing its cutoff.
+    // Book and then reschedule through the React portal. Seeded sp_reschedule_cutoff_hours is 72, so
+    // both slots must sit beyond that window or /reschedule returns { error: "locked" }.
     await page.goto('/app/certifications')
     const schedule = page.getByRole('button', { name: 'Schedule exam', exact: true })
     await expect(schedule).toBeEnabled()
     await schedule.click()
-    await page.locator('#sched-when').fill(await browserLocalDateTime(page, 30))
+    await page.locator('#sched-when').fill(await browserLocalDateTime(page, 80))
     const bookedResponse = page.waitForResponse((r) => r.url().endsWith('/api/me/exam/book') && r.request().method() === 'POST')
     await page.getByRole('button', { name: 'Confirm slot', exact: true }).click()
     expect((await bookedResponse).ok()).toBeTruthy()
     await expect(page.getByText(/Your exam is scheduled for/i)).toBeVisible()
 
     await page.getByRole('button', { name: 'Reschedule', exact: true }).click()
-    await page.locator('#sched-when').fill(await browserLocalDateTime(page, 34))
+    await page.locator('#sched-when').fill(await browserLocalDateTime(page, 96))
     const rescheduledResponse = page.waitForResponse((r) => r.url().endsWith('/api/me/exam/reschedule') && r.request().method() === 'POST')
     await page.getByRole('button', { name: 'Confirm slot', exact: true }).click()
     const rescheduled = await rescheduledResponse
-    expect(rescheduled.ok()).toBeTruthy()
+    expect(rescheduled.ok(), `reschedule should succeed (got ${rescheduled.status()}: ${await rescheduled.text()})`).toBeTruthy()
     expect((await rescheduled.json()) as { reschedule_count?: number }).toMatchObject({ reschedule_count: 1 })
     await captureStoryEvidence(page, testInfo, 'D3-D4', 'booked-and-rescheduled')
 
