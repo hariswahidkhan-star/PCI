@@ -3578,6 +3578,17 @@ def test_simlab(admin):
     c, _ = jget("GET", "/api/admin/lab/scenarios", token=mtok)  # a student token is not an admin
     chk("43z the admin scenario list is not reachable with a student token", c in (401, 403), c)
 
+    # ---- Phase 5A: scenario content-quality validation (§14 publication gate), gated 'content' ----
+    ev_id = ev_admin.get("id")
+    c, val = jget("GET", f"/api/admin/lab/scenarios/{ev_id}/validate", token=admin)
+    chk("43z1 a published house scenario passes the content validator (publishable, no errors)",
+        c == 200 and val.get("publishable") is True and val.get("errors") == 0 and val.get("review_state") == "published",
+        (c, val.get("publishable"), val.get("errors"), val.get("review_state")))
+    c, _vr = jget("GET", f"/api/admin/lab/scenarios/{ev_id}/validate", token=mtok)  # student token
+    chk("43z2 the scenario validator is not reachable with a student token", c in (401, 403), c)
+    c, _vn = jget("GET", "/api/admin/lab/scenarios/99999999/validate", token=admin)
+    chk("43z3 validating an unknown scenario id returns 404", c == 404, c)
+
     # ---- Phase 2 engine: forecasting (three EAC methods) + CBS cost roll-up, graded deterministically ----
     c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})
     fid = stf.get("attempt_id")

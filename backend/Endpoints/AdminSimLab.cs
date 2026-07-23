@@ -58,6 +58,41 @@ public static class AdminSimLab
             }
             return Results.Json(new { rows, total = rows.Count, published });
         }));
+
+        // ---- content-quality validation for one scenario (§14 publication gate) ----
+        // Runs the deterministic SimContent validator: metadata completeness, retired-name check, and the
+        // reference-solver pass (every asked measure must resolve through the engine). Read-only.
+        app.MapGet("/api/admin/lab/scenarios/{id}/validate", (HttpRequest req, long id) => gate(req, "content", _ =>
+        {
+            var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
+            if (s is null) return Results.NotFound(new { error = "not_found" });
+
+            var others = new List<string>();
+            foreach (var r in db.Query("SELECT scenario_code FROM simulation_scenarios WHERE id<>?", id))
+                others.Add(H.Str(r["scenario_code"]) ?? "");
+
+            var input = new SimContent.ScenarioInput(
+                H.Str(s["scenario_code"]) ?? "",
+                H.Str(s["title"]),
+                H.Str(s["summary"]),
+                H.Str(s["difficulty"]),
+                s.TryGetValue("certification_id", out var cv) && cv is not null ? H.L(cv) : (long?)null,
+                H.Str(s["competencies_json"]),
+                H.Str(s["config_json"]),
+                s.TryGetValue("synthetic_declared", out var sd) && sd is not null && H.L(sd) == 1);
+
+            var issues = SimContent.Validate(input, others);
+            return Results.Json(new
+            {
+                id,
+                scenario_code = input.ScenarioCode,
+                review_state = s.TryGetValue("review_state", out var rs) ? H.Str(rs) : "draft",
+                publishable = SimContent.Publishable(issues),
+                errors = issues.Count(i => i.Severity == SimContent.Severity.Error),
+                warnings = issues.Count(i => i.Severity == SimContent.Severity.Warning),
+                issues = issues.Select(i => new { severity = i.Severity.ToString().ToLowerInvariant(), code = i.Code, message = i.Message }),
+            });
+        }));
     }
 
     static string[] ParseArray(string? json)

@@ -608,6 +608,15 @@ public static class SimCalc
     //  Answer resolution — the values a scenario can ask a student to compute
     // ─────────────────────────────────────────────────────────────────────────────────────────────
 
+    /// <summary>Every task type the engine can compute — the single source of truth shared by the
+    /// dispatcher below and the content validator (Core/SimContent). A scenario whose <c>task</c> is not in
+    /// this set can never be graded, so publication must reject it. Keep in lockstep with the switch in
+    /// <see cref="Resolve"/>.</summary>
+    public static readonly IReadOnlySet<string> KnownTasks = new HashSet<string>(StringComparer.Ordinal)
+    {
+        "evm", "cbs", "progress", "risk", "pert", "change", "cashflow", "timeline", "earned_schedule", "cpm", "wbs",
+    };
+
     /// <summary>
     /// Compute the authoritative value of a single named measure for a scenario's <c>given</c> inputs.
     /// The grader in Core/SimLab calls this so there is exactly ONE definition of every answer. Numeric
