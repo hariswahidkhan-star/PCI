@@ -133,6 +133,19 @@ public static class SimLabSchema
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_simcompetency_user ON simulation_competency(user_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_simcompetency_attempt ON simulation_competency(attempt_id)");
+
+        // ── Append-only attempt audit / state events (start, autosave, hint, submit, coach, period).
+        //    Never UPDATE/DELETE; resume and grading lease evidence read the latest relevant row. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS simulation_attempt_events(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            attempt_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            event_type VARCHAR(32) NOT NULL,
+            period INTEGER DEFAULT 0,
+            payload_json TEXT,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_simevents_attempt ON simulation_attempt_events(attempt_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_simevents_user ON simulation_attempt_events(user_id)");
     }
 
     static void Seed(Db db)
@@ -198,6 +211,11 @@ public static class SimLabSchema
         SeedScenario(db, "SD-ESC-001", "Measure schedule performance in time (Earned Schedule)", "scenario", "Software", "advanced", 18,
             "[\"schedule_analysis\",\"forecasting\"]", "Read Earned Schedule off the planned-value curve: schedule variance and index in time units, and an independent time forecast.",
             ConfigEarnedSchedule);
+
+        // Full house content pack. The original starter seeds above remain for backward compatibility;
+        // the pack then densifies house-authored rows and adds the rest of the catalogue without touching
+        // operator-authored scenarios (authored_by IS NOT NULL).
+        SimLabContentPack.Seed(db);
     }
 
     static void SeedScenario(Db db, string code, string title, string kind, string industry, string difficulty,
