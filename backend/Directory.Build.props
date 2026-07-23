@@ -1,0 +1,14 @@
+<Project>
+  <!-- The unit-test project lives at tests/PCI.Backend.Tests. Without this exclude the Web SDK's
+       default **/*.cs glob would compile the test sources into PCI.Backend itself (and fail: xunit
+       is not an app dependency). Paths here are relative to EACH project directory, so the test
+       project still globs its own sources normally. -->
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);tests/**</DefaultItemExcludes>
+    <!-- SQ-1: fail the build on any compiler warning so warnings cannot accumulate silently. The
+         tree is warning-clean at adoption; deliberate, reviewed exceptions use a scoped
+         #pragma warning disable with a justification comment (see SUPPRESSION_PROCESS.md). Applies to
+         PCI.Backend and PCI.Backend.Tests (both Linux-built); SecureExam keeps its own props. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

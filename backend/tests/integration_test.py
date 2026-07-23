@@ -77,16 +77,27 @@ def no_follow(method, path, token=None):
 
 def sha256hex(s): return hashlib.sha256(s.encode()).hexdigest()
 
-def sign_and_send_webhook(session_id, email, product, pi_id, metadata=None, amount=9900, event_id=None, etype="checkout.session.completed"):
-    """Construct a Stripe event exactly as Stripe would, HMAC-sign it, POST to /api/webhook."""
+def sign_and_send_webhook(session_id, email, product, pi_id, metadata=None, amount=9900, event_id=None, etype="checkout.session.completed", refunded=True):
+    """Construct a Stripe event exactly as Stripe would, HMAC-sign it, POST to /api/webhook.
+
+    The data.object is shaped for the event type so Stripe.NET deserializes it into the concrete
+    model the handler casts to: a Charge for charge.refunded, a Dispute for charge.dispute.*, a bare
+    PaymentIntent for the failure events, and a full Checkout Session otherwise. For charge.refunded,
+    refunded=True is a FULL refund (revokes access); refunded=False is a partial refund (access kept)."""
     meta = {"product": product, "first_name": "Test", "last_name": "User", "country": "PK",
             "final_amount": str(amount/100), "code_amount": "0", "standard_amount": str(amount/100), "default_discount": "0"}
     if metadata: meta.update(metadata)
     obj = {"id": session_id, "object": "checkout.session", "amount_total": amount,
            "customer_email": email, "customer_details": {"email": email},
            "payment_intent": pi_id, "metadata": meta, "mode": "payment", "payment_status": "paid"}
-    if etype != "checkout.session.completed":
+    if etype in ("checkout.session.async_payment_failed", "payment_intent.payment_failed"):
         obj = {"id": pi_id, "object": "payment_intent"}
+    elif etype == "charge.refunded":
+        obj = {"id": "ch_" + sha256hex(pi_id + "ch")[:16], "object": "charge", "payment_intent": pi_id,
+               "refunded": bool(refunded), "amount": amount, "amount_refunded": amount, "amount_captured": amount}
+    elif etype.startswith("charge.dispute"):
+        obj = {"id": "dp_" + sha256hex(pi_id + "dp")[:16], "object": "dispute", "payment_intent": pi_id,
+               "amount": amount, "status": "lost"}
     # Stripe.net's EventConverter dereferences data.object and request without null-guards,
     # so a genuine event's top-level shape is required: object/api_version/data/request/
     # pending_webhooks all present (a bare {type,data} crashes ConstructEvent with an NRE).
@@ -342,6 +353,16 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
                           {"keys": ["2026-07-02"], "clicks": 110, "impressions": 3700, "ctr": 0.029, "position": 4.4}],
             }.get(dim, [])
             return self._send(200, {"rows": rows})
+        if "/chat/completions" in self.path:                                             # OpenAI-compatible translator (custom provider)
+            # Echo the prompt's Input array back with a "[t] " prefix, same length/order — the
+            # contract Translator.ParseArray expects from a real model.
+            try:
+                content = ((body.get("messages") or [{}])[0].get("content") or "")
+                arr = json.loads(content[content.rindex("Input:") + 6:].strip())
+                outs = ["[t] " + s for s in arr]
+            except Exception:
+                outs = []
+            return self._send(200, {"choices": [{"message": {"content": json.dumps(outs)}}]})
         if ":runReport" in self.path:                                                    # Google Analytics 4 (Phase 6)
             return self._send(200, {"rows": [
                 {"dimensionValues": [{"value": "20260701"}], "metricValues": [{"value": "200"}, {"value": "150"}, {"value": "320"}]},
@@ -458,6 +479,31 @@ def test_exam_delivery(admin):
         chk("11u inbound callback rejected without the shared secret", c in (400, 401), c)
         c, cb = jget("POST", "/api/exam-delivery/callback/psi?token=cbsecret", body={"client_eligibility_id": o2[2], "candidate_id": str(upsi), "result": "pass", "score": 80})
         chk("11v PSI result callback issues the credential", c == 200 and cb.get("result_status") == "pass" and bool(cb.get("credential")), cb)
+
+        # ---- SWITCH to Kryterion (Webassessor EWS): the 3rd connector driven end-to-end and the
+        #      second sync-poll pattern (Add User → Add Registration → Get Registrations for results,
+        #      structurally like Questionmark; the mock's requestType-dispatched EWS branch backs it) ----
+        c, kr = jget("POST", "/api/admin/exam-delivery", token=admin, body={
+            "provider": "kryterion", "name": "Kryterion", "environment": "sandbox", "enabled": True,
+            "api_base": mock, "security_token": "sec-tok", "exam_map": {"PCL-AI": "KRY-EXAM"}})
+        krid = kr.get("id"); chk("11ka create Kryterion vendor", c == 200 and kr.get("ok"), kr)
+        c, ktr = jget("POST", f"/api/admin/exam-delivery/{krid}/test", token=admin)
+        chk("11kb Kryterion connection test ok (EWS ping)", c == 200 and ktr.get("ok"), ktr)
+        c, sm = set_mode(mode="kryterion")
+        chk("11kc admin switch: deliver via Kryterion", c == 200 and sm.get("mode") == "kryterion", sm)
+        tkr, ukr = make_paid_user("kry@ex.co"); accept_all_consents(tkr); complete_profile(tkr)
+        c, bkk = jget("POST", "/api/me/exam/book", token=tkr, body={"scheduled_at": slot, "timezone": "UTC"})
+        chk("11kd Kryterion booking accepted", c == 200 and bkk.get("ok"), bkk)
+        con = dbconn(); ok_ = con.execute("SELECT id,status,external_appointment_id FROM exam_delivery_orders WHERE user_id=? AND provider='kryterion'", (ukr,)).fetchone(); con.close()
+        chk("11ke Kryterion: booking auto-routed + provisioned to scheduled (confirmation captured)", bool(ok_) and ok_[1] == "scheduled" and bool(ok_[2]), ok_)
+        c, sblk = jget("POST", "/api/me/exam/start", token=tkr, body={})
+        chk("11kf Kryterion: in-house SecureExam launch is blocked", c == 400 and sblk.get("error") == "external_delivery", sblk)
+        c, dsk = jget("GET", "/api/me/exam/delivery", token=tkr)
+        chk("11kg student dashboard shows Kryterion delivery", c == 200 and dsk.get("routed") and dsk.get("provider") == "kryterion", dsk)
+        c, syk = jget("POST", f"/api/admin/exam-delivery/orders/{ok_[0]}/sync", token=admin)
+        chk("11kh Kryterion: sync pulls a pass and issues the credential", c == 200 and syk.get("result_status") == "pass" and bool(syk.get("credential")), syk)
+        c, syk2 = jget("POST", f"/api/admin/exam-delivery/orders/{ok_[0]}/sync", token=admin)
+        chk("11ki Kryterion: re-sync is idempotent (no duplicate credential)", syk2.get("credential") == syk.get("credential"), (syk.get("credential"), syk2.get("credential")))
 
         # ---- SWITCH BACK to our own SecureExam ----
         c, sm = set_mode(mode="in_house"); chk("11w admin switch back to SecureExam (in-house)", c == 200 and sm.get("mode") == "in_house", sm)
@@ -914,6 +960,26 @@ def test_support_and_institutions(admin):
     chk("14u3 login without the code is refused once enabled", c == 401 and relog.get("error") == "totp_required", relog)
     c, relog2 = admin_login_rl(lambda: {"email": "owner@pci.local", "password": "Op3rator!Pw", "totp": totp_now(setup["secret"])})
     chk("14u4 login with a valid code succeeds", c == 200 and relog2.get("token"), relog2.get("error"))
+    # 14u5/u6 — TOTP replay guard. The server records the last consumed timestep (totp_last_step) and
+    # requires each accepted code to strictly ADVANCE it, so a captured code cannot open a second session
+    # inside its ±1 validity window. Driven deterministically by seeding totp_last_step in the DB and
+    # presenting a code for a KNOWN timestep (totp_at) — no dependence on which code 14u4 happened to
+    # consume, and one login per assertion (well under the per-IP throttle; admin_login_rl absorbs a 429).
+    def totp_at(secret, step):
+        pad = "=" * ((8 - len(secret) % 8) % 8)
+        key = _b64.b32decode(secret + pad)
+        h = _hmac.new(key, struct.pack(">Q", step), _hashlib.sha1).digest()
+        o = h[-1] & 0x0F
+        return str((struct.unpack(">I", h[o:o+4])[0] & 0x7FFFFFFF) % 1000000).zfill(6)
+    cur_step = int(_time.time()) // 30
+    con = dbconn(); aid = con.execute("SELECT id FROM admin_users WHERE lower(email)=?", ("owner@pci.local",)).fetchone()[0]
+    con.execute("UPDATE admin_users SET totp_last_step=? WHERE id=?", (cur_step, aid)); con.commit(); con.close()
+    replay_code = totp_at(setup["secret"], cur_step)  # a code for the timestep we just marked consumed
+    c, rep = admin_login_rl(lambda: {"email": "owner@pci.local", "password": "Op3rator!Pw", "totp": replay_code})
+    chk("14u5 a consumed TOTP timestep cannot be replayed (totp_invalid)", c == 401 and rep.get("error") == "totp_invalid", rep)
+    con = dbconn(); con.execute("UPDATE admin_users SET totp_last_step=? WHERE id=?", (cur_step - 1, aid)); con.commit(); con.close()
+    c, adv = admin_login_rl(lambda: {"email": "owner@pci.local", "password": "Op3rator!Pw", "totp": totp_now(setup["secret"])})
+    chk("14u6 a strictly-advancing TOTP code is accepted", c == 200 and bool(adv.get("token")), adv.get("error"))
     jget("POST", "/api/admin/me/2fa/disable", token=admin, body={"code": totp_now(setup["secret"])})
 
     # ---- 14v. RBAC: support role sees the inbox but not money; viewer sees nothing; partner APIs need partner auth ----
@@ -2572,6 +2638,47 @@ def run(proc):
         rejected = True  # Kestrel aborts the connection on oversized body → also a rejection
     chk("9b7 oversized request body rejected", rejected)
 
+    # SEC-3 — headers the Phase-2 header pass set but that were never asserted. Pin them so a future
+    # refactor that drops one is caught here (defence-in-depth: clickjacking/opener isolation, powerful
+    # -feature lock-down, and keeping authenticated surfaces out of search indexes).
+    chk("9b8 Cross-Origin-Opener-Policy same-origin", hdrs.get("cross-origin-opener-policy") == "same-origin", hdrs.get("cross-origin-opener-policy"))
+    _pp = hdrs.get("permissions-policy") or ""
+    chk("9b9 Permissions-Policy locks camera/microphone/geolocation",
+        all(f"{k}=()" in _pp for k in ("camera", "microphone", "geolocation")), _pp)
+    # X-Robots-Tag: present (noindex) on private /api surfaces, absent on the public homepage.
+    chk("9b10 X-Robots-Tag noindex on private /api path", "noindex" in (h2.get("x-robots-tag") or ""), h2.get("x-robots-tag"))
+    chk("9b11 no X-Robots-Tag on public homepage", "x-robots-tag" not in hdrs, hdrs.get("x-robots-tag"))
+
+    # SEC-1 — CORS. The server answers with a FIXED Access-Control-Allow-Origin (the configured
+    # ALLOWED_ORIGIN, or '*' only in development) and must NEVER echo an attacker-supplied Origin back —
+    # a reflected Origin paired with credentials is the classic CORS-bypass. We prove non-reflection by
+    # sending two different crafted Origins and confirming the allow-origin is identical (fixed) and
+    # equals neither request Origin.
+    def _aco(origin):
+        rq = urllib.request.Request(BASE + "/api/health", headers={"Origin": origin})
+        with urllib.request.urlopen(rq) as rp:
+            return rp.headers.get("Access-Control-Allow-Origin")
+    aco_a = _aco("https://evil.example")
+    aco_b = _aco("https://attacker.test")
+    chk("9b12 Access-Control-Allow-Origin present on API responses", bool(aco_a), aco_a)
+    chk("9b13 arbitrary request Origin is not reflected", aco_a != "https://evil.example" and aco_b != "https://attacker.test", (aco_a, aco_b))
+    chk("9b14 Allow-Origin is fixed, independent of the request Origin", aco_a == aco_b, (aco_a, aco_b))
+    # Preflight: OPTIONS short-circuits to 204 and advertises the constrained method/header allow-lists.
+    pf = urllib.request.Request(BASE + "/api/login", method="OPTIONS",
+                                headers={"Origin": "https://evil.example", "Access-Control-Request-Method": "POST"})
+    try:
+        with urllib.request.urlopen(pf) as rp:
+            pf_status, pf_hdrs = rp.status, rp.headers
+    except urllib.error.HTTPError as e:
+        pf_status, pf_hdrs = e.code, e.headers
+    pf_methods = pf_hdrs.get("Access-Control-Allow-Methods") or ""
+    pf_allow_headers = pf_hdrs.get("Access-Control-Allow-Headers") or ""
+    pf_aco = pf_hdrs.get("Access-Control-Allow-Origin")
+    chk("9b15 OPTIONS preflight returns 204", pf_status == 204, pf_status)
+    chk("9b16 preflight advertises the GET/POST method allow-list", "POST" in pf_methods and "GET" in pf_methods, pf_methods)
+    chk("9b17 preflight allows the Authorization header", "authorization" in pf_allow_headers.lower(), pf_allow_headers)
+    chk("9b18 preflight does not reflect arbitrary Origin", pf_aco != "https://evil.example", pf_aco)
+
     # ---------- 9c. Regressions for adversarial-review findings ----------
     print("\n=== 9c. Review-finding regressions ===")
 
@@ -3024,8 +3131,2639 @@ def run(proc):
     test_backlinks(admin)
     test_analytics(admin)
     test_membership_gate()
+    test_privacy_erasure(admin)
+    test_login_lockout()
+    test_payment_reversal_webhooks(admin)
+    test_support_attachment_idor()
+    test_certificate_suspension(admin)
+    test_exam_self_reschedule(admin)
+    test_training_partner_application(admin)
+    test_support_assign_escalate(admin)
+    test_membership_expiry(admin)
+    test_blog_scheduled_publish(admin)
+    test_partner_sponsorship_commissions(admin)
+    test_admin_rbac_viewer_sweep()
+    test_partner_login_lockout(admin)
+    test_discount_code_validation_edges(admin)
+    test_partner_commission_accrual(admin)
+    test_reviews_moderation(admin)
+    test_careers_module(admin)
+    test_events_module(admin)
+    test_announcement_config(admin)
+    test_notifications_config(admin)
+    test_member_directory(admin)
+    test_forum_module(admin)
+    test_campaigns_module(admin)
+    test_badges_module(admin)
+    test_site_chat(admin)
+    test_admin_seo(admin)
+    test_admin_i18n(admin)
+    test_honorary_idv(admin)
+    test_comms_centre(admin)
+    test_public_documents(admin)
+    test_marketing_centre(admin)
+    test_admin_extra_gaps(admin)
+    test_proctoring_analytics_gaps(admin)
+    test_time_sweeps(admin)
 
     print("\n(assertions complete)")
+
+def test_privacy_erasure(admin):
+    # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
+    # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.
+    print("\n=== 27. Privacy erasure request lifecycle (student request -> admin review state machine) ===")
+    # --- Subject A: pending -> acknowledge -> complete (anonymise) ---
+    atok, auid = make_paid_user("erasure-a@ex.co")  # bundle → full member (a realistic erasure subject)
+    c, r1 = jget("POST", "/api/me/delete-request", token=atok, body={"reason": "No longer require my account."})
+    chk("27a student erasure request is recorded with a fulfilment deadline", c == 200 and r1.get("ok") and r1.get("id") and r1.get("due_at"), r1)
+    con = dbconn(); prow = con.execute("SELECT status FROM erasure_requests WHERE user_id=?", (auid,)).fetchone(); con.close()
+    chk("27b the request is created in 'pending' state", prow and prow[0] == "pending", prow)
+    c, r2 = jget("POST", "/api/me/delete-request", token=atok, body={"reason": "again"})
+    chk("27c a second request while one is open is de-duplicated (already_open)", c == 200 and r2.get("already_open") == True, r2)
+    c, lst = jget("GET", "/api/admin/erasure-requests", token=admin)
+    mine = next((x for x in lst.get("rows", []) if x.get("user_id") == auid), None)
+    chk("27d admin erasure queue lists the open request", mine is not None and lst.get("open", 0) >= 1, (lst.get("open"), mine is not None))
+    rid = mine["id"]
+    c, ack = jget("POST", f"/api/admin/erasure-requests/{rid}/acknowledge", token=admin, body={})
+    chk("27e admin can acknowledge a pending request", c == 200 and ack.get("status") == "acknowledged", ack)
+    c, ack2 = jget("POST", f"/api/admin/erasure-requests/{rid}/acknowledge", token=admin, body={})
+    chk("27f re-acknowledging a non-pending request is refused (bad_state)", c == 400 and ack2.get("error") == "bad_state", ack2)
+    c, nc = jget("POST", f"/api/admin/erasure-requests/{rid}/complete", token=admin, body={})
+    chk("27g completing erasure requires explicit confirm=true", c == 400 and nc.get("error") == "confirm_required", nc)
+    c, done = jget("POST", f"/api/admin/erasure-requests/{rid}/complete", token=admin, body={"confirm": True})
+    con = dbconn(); st = con.execute("SELECT status FROM erasure_requests WHERE id=?", (rid,)).fetchone(); con.close()
+    chk("27h confirmed completion anonymises the member and closes the request", c == 200 and done.get("ok") and st and st[0] == "completed", (c, st))
+    # --- Subject B: reject path (note required, then closed cannot be re-rejected) ---
+    btok, buid = make_paid_user("erasure-b@ex.co")
+    jget("POST", "/api/me/delete-request", token=btok, body={"reason": "please remove me"})
+    con = dbconn(); brid = con.execute("SELECT id FROM erasure_requests WHERE user_id=?", (buid,)).fetchone()[0]; con.close()
+    c, rj0 = jget("POST", f"/api/admin/erasure-requests/{brid}/reject", token=admin, body={"note": "no"})
+    chk("27i rejecting requires a substantive reason (note_required)", c == 400 and rj0.get("error") == "note_required", rj0)
+    c, rj1 = jget("POST", f"/api/admin/erasure-requests/{brid}/reject", token=admin, body={"note": "Legal retention basis: active dispute."})
+    chk("27j admin can reject with a documented legal basis", c == 200 and rj1.get("status") == "rejected", rj1)
+    c, rj2 = jget("POST", f"/api/admin/erasure-requests/{brid}/reject", token=admin, body={"note": "already handled"})
+    chk("27k a closed (rejected) request cannot be re-rejected (bad_state)", c == 400 and rj2.get("error") == "bad_state", rj2)
+    # --- Authorization: a student cannot reach the admin erasure queue ---
+    c, _ = jget("GET", "/api/admin/erasure-requests", token=btok)
+    chk("27l the admin erasure queue is not reachable with a student token", c in (401, 403), c)
+
+def test_login_lockout():
+    # Incremental Testing Programme — per-account brute-force lockout (Core/Auth.cs LoginGuard, previously
+    # only exercised implicitly). A fresh student with a known password via /api/login, kept isolated from
+    # the heavily-used admin login path. failed_logins is seeded in the DB so the whole check needs only a
+    # few login requests — far under the per-IP throttle (10/min) and with no wall-clock timing, so it
+    # can't flake.
+    print("\n=== 28. Per-account login lockout (LoginGuard: threshold -> refuse-while-locked -> reset) ===")
+    email = "lockme@ex.co"
+    make_paid_user(email, real_login=True)              # sets a known password + proves login works
+    con = dbconn(); uid = con.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()[0]; con.close()
+    pw = "Passw0rd!" + email[:3]
+    # Seed the counter to one below the threshold (MaxFails=10) so a single wrong attempt trips the lock.
+    con = dbconn(); con.execute("UPDATE users SET failed_logins=9, lockout_until=NULL WHERE id=?", (uid,)); con.commit(); con.close()
+    c, r = jget("POST", "/api/login", body={"email": email, "password": "wrong-" + pw})
+    chk("28a the threshold-crossing wrong password is rejected (invalid_credentials)", c == 401 and r.get("error") == "invalid_credentials", (c, r))
+    con = dbconn(); row = con.execute("SELECT failed_logins, lockout_until FROM users WHERE id=?", (uid,)).fetchone(); con.close()
+    chk("28b crossing the threshold sets lockout_until and resets the failure counter", bool(row) and row[1] is not None and (row[0] or 0) == 0, row)
+    # While locked, even the CORRECT password is refused (IsLocked short-circuits the password verify).
+    c, r2 = jget("POST", "/api/login", body={"email": email, "password": pw})
+    chk("28c the correct password is refused while locked (account_locked, 429)", c == 429 and r2.get("error") == "account_locked", (c, r2))
+    # Simulate the lock expiring (its natural clearing path) — the correct password now succeeds and the
+    # successful login clears the counter (OnSuccess).
+    con = dbconn(); con.execute("UPDATE users SET lockout_until=NULL WHERE id=?", (uid,)); con.commit(); con.close()
+    c, r3 = jget("POST", "/api/login", body={"email": email, "password": pw})
+    chk("28d after the lock clears the correct password logs in again", c == 200 and bool(r3.get("token")), (c, r3.get("error")))
+    con = dbconn(); row = con.execute("SELECT failed_logins, lockout_until FROM users WHERE id=?", (uid,)).fetchone(); con.close()
+    chk("28e a successful login clears the failure counter and lockout (OnSuccess)", bool(row) and (row[0] or 0) == 0 and row[1] is None, row)
+
+def test_payment_reversal_webhooks(admin):
+    # Incremental Testing Programme — Stripe reversal branch (Payments.cs charge.refunded /
+    # charge.dispute.*), previously exercised only via the admin manual-reversal path, never through a
+    # signed webhook event. Money returned -> access revoked; a partial refund leaves access intact.
+    print("\n=== 29. Payment reversal webhooks (refund / dispute revoke access; partial refund does not) ===")
+    # (a) full refund of a bundle -> payment refunded, membership lapsed, unused entitlement revoked
+    _, ruid = make_paid_user("refundme@ex.co", pi="pi_refundme", sid="cs_refundme")
+    con = dbconn()
+    m0 = con.execute("SELECT status FROM memberships WHERE user_id=?", (ruid,)).fetchone()
+    p0 = con.execute("SELECT payment_status FROM payments WHERE provider_payment_id=?", ("pi_refundme",)).fetchone()
+    con.close()
+    chk("29a bundle purchase is active before the refund", bool(m0) and m0[0] == "active" and bool(p0) and p0[0] == "paid", (m0, p0))
+    code, _ = sign_and_send_webhook("cs_refund_ev", "refundme@ex.co", "bundle", "pi_refundme", etype="charge.refunded")
+    chk("29b charge.refunded webhook accepted (200)", code == 200, code)
+    con = dbconn()
+    p1 = con.execute("SELECT payment_status FROM payments WHERE provider_payment_id=?", ("pi_refundme",)).fetchone()
+    m1 = con.execute("SELECT status FROM memberships WHERE user_id=?", (ruid,)).fetchone()
+    e1 = con.execute("SELECT status FROM exam_entitlements WHERE user_id=?", (ruid,)).fetchall()
+    con.close()
+    chk("29c a full refund flips the payment to refunded", bool(p1) and p1[0] == "refunded", p1)
+    chk("29d a full refund lapses the membership it activated", bool(m1) and m1[0] == "expired", m1)
+    chk("29e a full refund revokes the unused exam entitlement", bool(e1) and all(r[0] == "revoked" for r in e1), e1)
+    # (b) dispute created -> payment reversed, membership lapsed
+    _, duid = make_paid_user("disputeme@ex.co", pi="pi_disputeme", sid="cs_disputeme")
+    code, _ = sign_and_send_webhook("cs_dispute_ev", "disputeme@ex.co", "bundle", "pi_disputeme", etype="charge.dispute.created")
+    con = dbconn()
+    pd = con.execute("SELECT payment_status FROM payments WHERE provider_payment_id=?", ("pi_disputeme",)).fetchone()
+    md = con.execute("SELECT status FROM memberships WHERE user_id=?", (duid,)).fetchone()
+    con.close()
+    chk("29f a dispute reverses the payment", code == 200 and bool(pd) and pd[0] == "reversed", (code, pd))
+    chk("29g a dispute lapses the membership", bool(md) and md[0] == "expired", md)
+    # (c) partial refund (refunded=false) -> access retained
+    _, puid = make_paid_user("partialref@ex.co", pi="pi_partialref", sid="cs_partialref")
+    code, _ = sign_and_send_webhook("cs_partial_ev", "partialref@ex.co", "bundle", "pi_partialref", etype="charge.refunded", refunded=False)
+    con = dbconn()
+    pp = con.execute("SELECT payment_status FROM payments WHERE provider_payment_id=?", ("pi_partialref",)).fetchone()
+    mp = con.execute("SELECT status FROM memberships WHERE user_id=?", (puid,)).fetchone()
+    con.close()
+    chk("29h a partial refund does not reverse the payment", bool(pp) and pp[0] == "paid", (code, pp))
+    chk("29i a partial refund does not lapse the membership", bool(mp) and mp[0] == "active", mp)
+    # (d) idempotency — re-delivering the full-refund event is a no-op (already refunded)
+    code2, _ = sign_and_send_webhook("cs_refund_ev2", "refundme@ex.co", "bundle", "pi_refundme", etype="charge.refunded")
+    con = dbconn()
+    p2 = con.execute("SELECT payment_status FROM payments WHERE provider_payment_id=?", ("pi_refundme",)).fetchone()
+    con.close()
+    chk("29j re-delivering the refund event stays refunded (idempotent)", code2 == 200 and bool(p2) and p2[0] == "refunded", (code2, p2))
+
+def test_support_attachment_idor():
+    # Incremental Testing Programme — private-file access control on support-ticket attachments. Isolation
+    # was proven for documents/partner-docs but NOT for support attachments (the /api/me/tickets/{tid}/
+    # attachments/{aid} serve endpoint joins on t.user_id, so another student must get 404).
+    print("\n=== 30. Support attachment isolation (IDOR: one student cannot read another's attachment) ===")
+    atok, auid = make_paid_user("attach-a@ex.co")
+    c, tk = jget("POST", "/api/me/tickets", token=atok, body={"subject": "receipt", "category": "Billing", "body": "need it"})
+    tid = tk.get("id")
+    chk("30a student A opens a ticket", c == 200 and tid, tk)
+    real_pdf = "data:application/pdf;base64," + base64.b64encode(b"%PDF-1.4 idor-A").decode()
+    c, up = jget("POST", f"/api/me/tickets/{tid}/attachments", token=atok, body={"filename": "a.pdf", "data_uri": real_pdf})
+    chk("30b student A uploads an attachment", c == 200, (c, up))
+    con = dbconn(); aid = con.execute("SELECT id FROM support_attachments WHERE ticket_id=? ORDER BY id DESC", (tid,)).fetchone()[0]; con.close()
+    st, _, _ = _raw_get(f"/api/me/tickets/{tid}/attachments/{aid}", token=atok)
+    chk("30c student A can download their own attachment (200)", st == 200, st)
+    btok, buid = make_paid_user("attach-b@ex.co")
+    c2, r2 = jget("GET", f"/api/me/tickets/{tid}/attachments/{aid}", token=btok)
+    chk("30d student B is refused A's attachment (404 — IDOR blocked)", c2 == 404, (c2, r2))
+    c3, r3 = jget("GET", f"/api/me/tickets/{tid}/attachments/{aid}")
+    chk("30e an anonymous request for the attachment is refused (401)", c3 == 401, (c3, r3))
+
+def test_certificate_suspension(admin):
+    # Incremental Testing Programme — the download gate on a SUSPENDED credential (Certificates.cs), which
+    # was unwired from the admin status endpoint (that endpoint exposes only active/expired/revoked) and had
+    # no test. Suspend is applied by DB surgery (its real setter is a separate provisioning path); reinstate
+    # goes through the real admin endpoint.
+    print("\n=== 31. Certificate suspend / reinstate (download gate on the suspended status) ===")
+    stok, suid = register_student("suspendcert@ex.co")
+    cid = "PCI-CPPC-2026-88001"
+    fut = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time() + 3 * 365 * 86400))
+    c, iss = jget("POST", "/api/admin/credentials", token=admin, body={"credential_id": cid, "holder_name": "Suzy Suspend", "user_id": suid, "expires_at": fut})
+    rowid = iss.get("id")
+    chk("31a admin issues a credential", c == 200 and rowid, iss)
+    st, body, ctype = _raw_get(f"/api/me/certificate/pdf?id={cid}", token=stok)
+    chk("31b an active certificate downloads (200, PDF)", st == 200 and body[:5] == b"%PDF-", (st, ctype))
+    con = dbconn(); con.execute("UPDATE issued_credentials SET status='suspended' WHERE id=?", (rowid,)); con.commit(); con.close()
+    st2, body2, _ = _raw_get(f"/api/me/certificate/pdf?id={cid}", token=stok)
+    chk("31c a suspended certificate is not downloadable (403)", st2 == 403, st2)
+    chk("31d the 403 body names the suspension", b"suspended" in body2, body2[:160])
+    # The public register must agree with the download gate: a suspended credential is NOT valid.
+    # (This was a recorded finding — verify used to fall through to 'active' for suspended.)
+    c, ver = jget("GET", f"/api/verify?id={cid}")
+    chk("31d2 /api/verify reports a suspended credential as state=suspended, valid=false",
+        c == 200 and ver.get("found") is True and ver.get("state") == "suspended" and ver.get("valid") is False, ver)
+    c, rn = jget("POST", f"/api/admin/credentials/{rowid}/status", token=admin, body={"status": "active"})
+    chk("31e admin reinstates the credential to active", c == 200 and rn.get("ok"), rn)
+    st3, body3, _ = _raw_get(f"/api/me/certificate/pdf?id={cid}", token=stok)
+    chk("31f the reinstated certificate downloads again (200)", st3 == 200 and body3[:5] == b"%PDF-", st3)
+    c, ver2 = jget("GET", f"/api/verify?id={cid}")
+    chk("31f2 after reinstatement /api/verify reports the credential valid again",
+        c == 200 and ver2.get("state") == "active" and ver2.get("valid") is True, ver2)
+
+def test_exam_self_reschedule(admin):
+    # Incremental Testing Programme — the candidate self-service reschedule endpoint POST /api/me/exam/reschedule
+    # had ZERO coverage. A scheduled booking is inserted directly (payment already settled) so the test controls
+    # the time-to-exam deterministically without depending on the booking-eligibility window.
+    print("\n=== 32. Candidate self-service exam reschedule (toggle / free-window / lock / cap) ===")
+    def slot(n): return time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time() + n * 86400))
+    rtok, ruid = make_paid_user("resched@ex.co")
+    con = dbconn()
+    payId = con.execute("SELECT id FROM payments WHERE user_id=? AND payment_status='paid' ORDER BY id DESC", (ruid,)).fetchone()[0]
+    con.execute("INSERT INTO exam_bookings(user_id,payment_id,certification_id,scheduled_at,status,reschedule_count) VALUES(?,?,1,datetime('now','+5 day'),'scheduled',0)", (ruid, payId))
+    con.commit(); con.close()
+    c, r = jget("POST", "/api/me/exam/reschedule", token=rtok, body={"scheduled_at": slot(4), "timezone": "UTC"})
+    chk("32a a candidate can reschedule an upcoming booking (count increments)", c == 200 and r.get("ok") and r.get("reschedule_count") == 1, (c, r))
+    chk("32b a reschedule made >72h out is flagged free", r.get("free") is True, r)
+    c, rb = jget("POST", "/api/me/exam/reschedule", token=rtok, body={"scheduled_at": slot(-1), "timezone": "UTC"})
+    chk("32c a past/too-soon slot is rejected (bad_slot)", c == 400 and rb.get("error") == "bad_slot", (c, rb))
+    req("PATCH", "/api/admin/settings", token=admin, body={"sp_reschedule_enabled": "false"})
+    c, rd = jget("POST", "/api/me/exam/reschedule", token=rtok, body={"scheduled_at": slot(3), "timezone": "UTC"})
+    chk("32d the admin toggle disables rescheduling (403 reschedule_disabled)", c == 403 and rd.get("error") == "reschedule_disabled", (c, rd))
+    req("PATCH", "/api/admin/settings", token=admin, body={"sp_reschedule_enabled": "true"})
+    con = dbconn(); bid = con.execute("SELECT id FROM exam_bookings WHERE user_id=? ORDER BY id DESC", (ruid,)).fetchone()[0]
+    con.execute("UPDATE exam_bookings SET scheduled_at=datetime('now','+5 hour') WHERE id=?", (bid,)); con.commit(); con.close()
+    c, rl = jget("POST", "/api/me/exam/reschedule", token=rtok, body={"scheduled_at": slot(3), "timezone": "UTC"})
+    chk("32e inside the cutoff window a reschedule is locked (400)", c == 400 and rl.get("error") == "locked", (c, rl))
+    con = dbconn(); con.execute("UPDATE exam_bookings SET scheduled_at=datetime('now','+5 day'), reschedule_count=3 WHERE id=?", (bid,)); con.commit(); con.close()
+    c, rm = jget("POST", "/api/me/exam/reschedule", token=rtok, body={"scheduled_at": slot(4), "timezone": "UTC"})
+    chk("32f the per-candidate reschedule cap is enforced (max_reschedules)", c == 400 and rm.get("error") == "max_reschedules", (c, rm))
+
+def test_training_partner_application(admin):
+    # Incremental Testing Programme — the public training-partner APPLICATION flow (apply -> admin decide ->
+    # auto-created directory entry) had ZERO coverage; only directly-created partners were tested.
+    print("\n=== 33. Training-partner application (public apply -> admin decide -> auto directory entry) ===")
+    app_body = {
+        "org_name": "Acme Controls Academy", "website": "https://acme-academy.example",
+        "contact_name": "Dana Trainer", "contact_email": "partner-apply@ex.co",
+        "contact_phone": "+441234567890", "country": "United Kingdom", "city": "Leeds",
+        "specialties": "Project controls, earned-value management",
+        "description": "We deliver accredited project-controls training across the UK.",
+        "declaration": True,
+    }
+    c, r = jget("POST", "/api/training-partner-application", body=app_body)
+    ref = r.get("reference")
+    chk("33a a complete application is accepted with a PCI-TPA reference", c == 200 and r.get("ok") and isinstance(ref, str) and ref.startswith("PCI-TPA-"), r)
+    c, r2 = jget("POST", "/api/training-partner-application", body={**app_body, "declaration": False})
+    chk("33b the partner declaration is mandatory (declaration_required)", c == 400 and r2.get("error") == "declaration_required", r2)
+    c, r3 = jget("POST", "/api/training-partner-application", body={**app_body, "contact_email": "not-an-email"})
+    chk("33c an invalid contact email is rejected (invalid_email)", c == 400 and r3.get("error") == "invalid_email", r3)
+    c, r4 = jget("POST", "/api/training-partner-application", body={**app_body, "org_name": ""})
+    chk("33d a missing organisation name is rejected (org_name_required)", c == 400 and r4.get("error") == "org_name_required", r4)
+    con = dbconn(); appid = con.execute("SELECT id FROM training_partner_applications WHERE reference=?", (ref,)).fetchone()[0]; con.close()
+    c, lst = jget("GET", "/api/admin/training-partner-applications", token=admin)
+    chk("33e admin queue lists the pending application", c == 200 and any(row.get("reference") == ref for row in lst.get("rows", [])), len(lst.get("rows", [])))
+    c, bad = jget("POST", f"/api/admin/training-partner-applications/{appid}/decide", token=admin, body={"status": "bogus"})
+    chk("33f an unknown decision status is rejected (bad_status)", c == 400 and bad.get("error") == "bad_status", bad)
+    c, dec = jget("POST", f"/api/admin/training-partner-applications/{appid}/decide", token=admin, body={"status": "approved", "tier": "registered", "admin_note": "Accredited; approved."})
+    chk("33g admin approves -> application approved + partner_id linked", c == 200 and dec.get("ok") and dec.get("status") == "approved" and dec.get("partner_id"), dec)
+    con = dbconn(); prow = con.execute("SELECT listed,source_application_id FROM training_partners WHERE source_application_id=?", (appid,)).fetchone(); con.close()
+    chk("33h approval auto-creates an UNLISTED directory entry linked to the application", bool(prow) and (prow[0] or 0) == 0 and prow[1] == appid, prow)
+    c, again = jget("POST", f"/api/admin/training-partner-applications/{appid}/decide", token=admin, body={"status": "approved"})
+    chk("33i an already-approved application cannot be re-decided (already_decided, 409)", c == 409 and again.get("error") == "already_decided", again)
+    vtok = globals().get("_VIEWER_TOK")
+    chk("33j the partner-applications queue is not reachable with a viewer token (403)", jget("GET", "/api/admin/training-partner-applications", token=vtok)[0] == 403)
+
+def test_support_assign_escalate(admin):
+    # Incremental Testing Programme — the support inbox workflow: ASSIGN (POST .../assign) was never called,
+    # and the status endpoint was only ever driven to 'resolved' — 'escalated' and 'bad_status' were untested.
+    print("\n=== 34. Support ticket assign + escalate (inbox workflow) ===")
+    stok, suid = make_paid_user("supportflow@ex.co")
+    c, tk = jget("POST", "/api/me/tickets", token=stok, body={"subject": "assign me", "category": "general", "body": "please help"})
+    tid = tk.get("id")
+    chk("34a student opens a ticket", c == 200 and tid, tk)
+    con = dbconn(); ownerId = con.execute("SELECT id FROM admin_users WHERE lower(email)=?", ("owner@pci.local",)).fetchone()[0]; con.close()
+    c, asg = jget("POST", f"/api/support/tickets/{tid}/assign", token=admin, body={"admin_id": ownerId})
+    chk("34b admin assigns the ticket to an active agent", c == 200 and asg.get("ok"), asg)
+    con = dbconn(); at = con.execute("SELECT assigned_to FROM tickets WHERE id=?", (tid,)).fetchone(); con.close()
+    chk("34c the assignment is persisted (tickets.assigned_to)", bool(at) and at[0] == ownerId, at)
+    c, bad = jget("POST", f"/api/support/tickets/{tid}/assign", token=admin, body={"admin_id": 99999999})
+    chk("34d assigning to a nonexistent admin is refused (admin_not_found, 404)", c == 404 and bad.get("error") == "admin_not_found", bad)
+    c, esc = jget("POST", f"/api/support/tickets/{tid}/status", token=admin, body={"status": "escalated"})
+    chk("34e admin escalates the ticket", c == 200 and esc.get("status") == "escalated", esc)
+    con = dbconn(); er = con.execute("SELECT status,escalated FROM tickets WHERE id=?", (tid,)).fetchone(); con.close()
+    chk("34f escalation sets status='escalated' and the sticky escalated flag", bool(er) and er[0] == "escalated" and (er[1] or 0) == 1, er)
+    c, badst = jget("POST", f"/api/support/tickets/{tid}/status", token=admin, body={"status": "not-a-status"})
+    chk("34g an unknown ticket status is rejected (bad_status)", c == 400 and badst.get("error") == "bad_status", badst)
+    c, met = jget("GET", "/api/support/metrics", token=admin)
+    chk("34h metrics reflect the assignment in agent_workload", any((w.get("n", 0) or 0) >= 1 for w in met.get("agent_workload", [])), met.get("agent_workload"))
+
+def test_membership_expiry(admin):
+    # Incremental Testing Programme — how the platform treats an expired membership. Pins the
+    # status-driven read model: a past expiry_date alone does not expire access at READ time; the
+    # status column advances via reversal or the time-based expiry sweep (daily RetentionService tick
+    # or the owner's /api/admin/ops/sweeps/run — driven end-to-end by §60).
+    print("\n=== 35. Membership expiry treatment (status-driven reads; the sweep advances status) ===")
+    def blocked(body): return isinstance(body, dict) and body.get("error") == "membership_required"
+    mtok, muid = make_paid_user("expiremember@ex.co")  # bundle -> active member
+    c, me = jget("GET", "/api/me", token=mtok)
+    chk("35a a fresh bundle purchaser is an active member", c == 200 and me.get("lifecycle", {}).get("membership_status") == "active", me.get("lifecycle", {}).get("membership_status"))
+    con = dbconn(); con.execute("UPDATE memberships SET expiry_date=datetime('now','-10 day') WHERE user_id=?", (muid,)); con.commit(); con.close()
+    c, me2 = jget("GET", "/api/me", token=mtok)
+    chk("35b a past expiry_date with status='active' still reads active until the expiry sweep runs", me2.get("lifecycle", {}).get("membership_status") == "active", me2.get("lifecycle", {}).get("membership_status"))
+    c, gate1 = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "expiremember@ex.co"})
+    chk("35c the exam-fee gate still passes while status='active'", not blocked(gate1), (c, gate1))
+    con = dbconn(); con.execute("UPDATE memberships SET status='expired' WHERE user_id=?", (muid,)); con.commit(); con.close()
+    c, me3 = jget("GET", "/api/me", token=mtok)
+    chk("35d status='expired' is reflected as an expired membership", me3.get("lifecycle", {}).get("membership_status") == "expired", me3.get("lifecycle", {}).get("membership_status"))
+    c, gate2 = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "expiremember@ex.co"})
+    chk("35e an expired member is blocked from the exam-fee gate (membership_required)", c == 400 and blocked(gate2), (c, gate2))
+
+def test_blog_scheduled_publish(admin):
+    # Incremental Testing Programme — the blog post scheduled-publish endpoint (ContentCentre .../schedule)
+    # had ZERO coverage (only social drafts scheduling was tested). The due-sweep worker (ScheduledPublisher)
+    # has no on-demand HTTP hook, so this mirrors the social "queued-not-fired + direct-DB + public-404" style.
+    print("\n=== 36. Blog scheduled-publish (a future schedule stays queued + non-public) ===")
+    c, p = jget("POST", "/api/admin/content/posts", token=admin,
+                body={"title": "Scheduled AI Forecasting Post", "summary": "About scheduling.",
+                      "body": "<p>" + ("Body about AI in project controls. " * 20) + "</p>"})
+    pid = p.get("id"); slug = p.get("slug")
+    chk("36a admin creates a draft post", c == 200 and pid and slug, p)
+    c, _ = jget("GET", f"/api/blog/posts/{slug}")
+    chk("36b a draft post is not public (404)", c == 404, c)
+    c, nr = jget("POST", f"/api/admin/content/posts/{pid}/schedule", token=admin, body={})
+    chk("36c scheduling requires scheduled_at (400)", c == 400 and nr.get("error") == "scheduled_at_required", nr)
+    c, sch = jget("POST", f"/api/admin/content/posts/{pid}/schedule", token=admin, body={"scheduled_at": "2035-01-01 10:00:00"})
+    chk("36d scheduling returns status='scheduled'", c == 200 and sch.get("status") == "scheduled", sch)
+    con = dbconn(); row = con.execute("SELECT status,scheduled_at,published FROM blog_posts WHERE id=?", (pid,)).fetchone(); con.close()
+    chk("36e the post is stored scheduled (not published) with the future time", bool(row) and row[0] == "scheduled" and str(row[1]).startswith("2035") and (row[2] or 0) == 0, row)
+    c1, _ = jget("GET", f"/api/blog/posts/{slug}")
+    sc, _ = req("GET", f"/blog/{slug}")
+    chk("36f a scheduled (future) post is not yet public (API 404 + page not 200)", c1 == 404 and sc != 200, (c1, sc))
+    vtok = globals().get("_VIEWER_TOK")
+    c, _ = jget("POST", f"/api/admin/content/posts/{pid}/schedule", token=vtok, body={"scheduled_at": "2035-01-01 10:00:00"})
+    chk("36g scheduling is refused for a viewer lacking cc_publish (403)", c == 403, c)
+
+def test_partner_sponsorship_commissions(admin):
+    # Incremental Testing Programme — the partner-portal SPONSORSHIP + COMMISSION ledger endpoints (Partners.cs)
+    # were untested. Also proves cross-partner isolation and that the endpoints reject non-partner tokens.
+    print("\n=== 37. Partner portal: sponsorship + commission ledger + isolation ===")
+    c, tpA = jget("POST", "/api/admin/training-partners", token=admin, body={"name": "Sponsor Academy A"})
+    pidA = tpA["id"]
+    jget("PATCH", f"/api/admin/training-partners/{pidA}", token=admin, body={"sponsor_enabled": True, "commission_pct": 20})
+    c, puA = jget("POST", f"/api/admin/training-partners/{pidA}/users", token=admin, body={"email": "sponsor-a@ex.co", "name": "Alba", "role": "admin"})
+    c, plA = jget("POST", "/api/partner/auth/login", body={"email": "sponsor-a@ex.co", "password": puA.get("temp_password", "")})
+    ptokA = plA.get("token")
+    jget("POST", "/api/partner/auth/password", token=ptokA, body={"new_password": "Sponsor!2026aa"})
+    chk("37a partner A can sign in to their portal", bool(ptokA) and plA.get("institution") == "Sponsor Academy A", plA)
+    c, cand0 = jget("GET", "/api/partner/candidates", token=ptokA)
+    chk("37b candidates list is empty and sponsorship is enabled", c == 200 and cand0.get("sponsor_enabled") in (True, 1) and len(cand0.get("rows", [])) == 0, cand0)
+    c, spon = jget("POST", "/api/partner/candidates", token=ptokA, body={"candidates": [{"email": "sponsored-a1@ex.co", "first_name": "Sam", "last_name": "Sponsored", "certification": "PCL-AI"}]})
+    res0 = (spon.get("results") or [{}])[0]
+    chk("37c a candidate is sponsored (account + entitlement created)", c == 200 and res0.get("status") in ("sponsored", "sponsored_already_entitled"), spon)
+    c, cand1 = jget("GET", "/api/partner/candidates", token=ptokA)
+    chk("37d the sponsored candidate appears in partner A's list", any(r.get("candidate_email") == "sponsored-a1@ex.co" for r in cand1.get("rows", [])), cand1.get("rows"))
+    c, dup = jget("POST", "/api/partner/candidates", token=ptokA, body={"candidates": [{"email": "sponsored-a1@ex.co", "first_name": "Sam", "last_name": "Sponsored", "certification": "PCL-AI"}]})
+    dres = (dup.get("results") or [{}])[0]
+    chk("37e re-sponsoring the same candidate is deduped (already_sponsored)", dres.get("status") == "already_sponsored", dup)
+    c, comm = jget("GET", "/api/partner/commissions", token=ptokA)
+    chk("37f commission ledger returns the configured pct and a computed balance", c == 200 and comm.get("commission_pct") == 20 and "accrued" in comm and "balance" in comm, comm)
+    c, tpB = jget("POST", "/api/admin/training-partners", token=admin, body={"name": "Sponsor Academy B"})
+    pidB = tpB["id"]
+    c, puB = jget("POST", f"/api/admin/training-partners/{pidB}/users", token=admin, body={"email": "sponsor-b@ex.co", "name": "Beto", "role": "admin"})
+    c, plB = jget("POST", "/api/partner/auth/login", body={"email": "sponsor-b@ex.co", "password": puB.get("temp_password", "")})
+    ptokB = plB.get("token")
+    jget("POST", "/api/partner/auth/password", token=ptokB, body={"new_password": "Sponsor!2026bb"})
+    c, sdis = jget("POST", "/api/partner/candidates", token=ptokB, body={"candidates": [{"email": "nope-b@ex.co", "certification": "PCL-AI"}]})
+    chk("37g sponsorship is refused when disabled (sponsorship_disabled, 403)", c == 403 and sdis.get("error") == "sponsorship_disabled", sdis)
+    c, candB = jget("GET", "/api/partner/candidates", token=ptokB)
+    chk("37h partner B cannot see partner A's sponsored candidates (isolation)", all(r.get("candidate_email") != "sponsored-a1@ex.co" for r in candB.get("rows", [])), candB.get("rows"))
+    stok, _ = make_paid_user("sponsorstu@ex.co")
+    chk("37i partner sponsorship/commission endpoints reject non-partner tokens (401)",
+        jget("GET", "/api/partner/candidates", token=admin)[0] == 401
+        and jget("GET", "/api/partner/commissions", token=stok)[0] == 401
+        and jget("GET", "/api/partner/candidates")[0] == 401)
+
+def test_admin_rbac_viewer_sweep():
+    # Incremental Testing Programme — RBAC section gating. A 'viewer' admin (perms {overview, reports} only)
+    # must be denied every privileged admin GET section. Closes the section-gating gap the audit flagged.
+    print("\n=== 38. Admin RBAC: a viewer is denied every privileged section ===")
+    vtok = globals().get("_VIEWER_TOK")
+    gated = [
+        ("/api/admin/students", "members"), ("/api/admin/members", "members"),
+        ("/api/admin/erasure-requests", "members"), ("/api/admin/payments", "payments"),
+        ("/api/admin/credentials", "credentials"), ("/api/admin/pricing", "pricing"),
+        ("/api/admin/codes", "codes"), ("/api/admin/enrollments", "enrollments"),
+        ("/api/admin/audit", "audit"), ("/api/admin/inquiries", "inquiries"),
+        ("/api/admin/subscribers", "subscribers"), ("/api/support/inbox", "inbox"),
+        ("/api/admin/integrations", "integrations"), ("/api/admin/training-partner-applications", "partners"),
+        ("/api/admin/exam-sessions", "proctoring"), ("/api/admin/exam-delivery", "exam_delivery"),
+    ]
+    leaks = [(path, perm, jget("GET", path, token=vtok)[0]) for path, perm in gated]
+    leaks = [x for x in leaks if x[2] != 403]
+    chk(f"38a a viewer is 403 on all {len(gated)} privileged admin GET sections", len(leaks) == 0, leaks)
+    ov = jget("GET", "/api/admin/overview", token=vtok)[0]
+    rp = jget("GET", "/api/admin/reports", token=vtok)[0]
+    chk("38b the viewer CAN reach its granted sections (overview + reports)", ov == 200 and rp == 200, (ov, rp))
+
+def test_partner_login_lockout(admin):
+    # Incremental Testing Programme — the partner-portal login also has a per-account LoginGuard lockout
+    # (partner_users, MaxFails=10, 15-min lock), previously untested. Seeded via DB so it needs only a few
+    # login requests — well under the per-IP throttle — mirroring the deterministic style of section 28.
+    print("\n=== 39. Partner portal login lockout (LoginGuard on partner_users) ===")
+    c, tp = jget("POST", "/api/admin/training-partners", token=admin, body={"name": "Lockout College 39"})
+    pid = tp["id"]
+    c, pu = jget("POST", f"/api/admin/training-partners/{pid}/users", token=admin, body={"email": "partner-lock@ex.co", "name": "Lena Lock", "role": "admin"})
+    pw = pu.get("temp_password")
+    chk("39a partner user is created with a temp password", c == 200 and bool(pw), pu)
+    con = dbconn(); puid = con.execute("SELECT id FROM partner_users WHERE email=?", ("partner-lock@ex.co",)).fetchone()[0]
+    con.execute("UPDATE partner_users SET failed_logins=9, lockout_until=NULL WHERE id=?", (puid,)); con.commit(); con.close()
+    c, r = jget("POST", "/api/partner/auth/login", body={"email": "partner-lock@ex.co", "password": "wrong-" + str(pw)})
+    chk("39b the threshold-crossing wrong password is rejected (invalid_credentials)", c == 401 and r.get("error") == "invalid_credentials", (c, r))
+    con = dbconn(); row = con.execute("SELECT failed_logins, lockout_until FROM partner_users WHERE id=?", (puid,)).fetchone(); con.close()
+    chk("39c crossing the threshold sets lockout_until and resets the failure counter", bool(row) and row[1] is not None and (row[0] or 0) == 0, row)
+    c, r2 = jget("POST", "/api/partner/auth/login", body={"email": "partner-lock@ex.co", "password": pw})
+    chk("39d the correct password is refused while locked (account_locked, 429)", c == 429 and r2.get("error") == "account_locked", (c, r2))
+    con = dbconn(); con.execute("UPDATE partner_users SET lockout_until=NULL WHERE id=?", (puid,)); con.commit(); con.close()
+    c, r3 = jget("POST", "/api/partner/auth/login", body={"email": "partner-lock@ex.co", "password": pw})
+    chk("39e after the lock clears the correct password signs in again", c == 200 and bool(r3.get("token")), (c, r3.get("error")))
+
+def test_discount_code_validation_edges(admin):
+    # Incremental Testing Programme — the discount-engine's public /api/validate-code rejection matrix.
+    # Prior sections cover waiver email-locking (§6), partner allocation (§13/14) and per-email limits; the
+    # engine's *other* refusal branches (lifecycle status, date windows, usage cap, product/cert scope,
+    # founding-code misuse, country eligibility) were unproven. Each code is seeded straight into
+    # discount_codes so exactly one branch is exercised in isolation — codes are stored UPPERCASE because
+    # ValidateCode uppercases the lookup key (a lowercase row would read as "not found" on case-sensitive
+    # SQLite). No application code changes; this is a test-only, both-provider assertion.
+    print("\n=== 40. Discount-code validation edges (/api/validate-code rejection matrix) ===")
+
+    def mkcode(code, **cols):
+        cols.setdefault("discount_type", "percentage")
+        cols.setdefault("discount_value", 20)
+        cols.setdefault("applies_to", "all")
+        cols.setdefault("active", 1)
+        keys = ["code"] + list(cols.keys())
+        con = dbconn()
+        con.execute(f"INSERT INTO discount_codes({','.join(keys)}) VALUES({','.join('?' * len(keys))})",
+                    tuple([code] + list(cols.values())))
+        con.commit(); con.close()
+
+    # Each check validates ONE distinct pre-seeded code as ONE prospective buyer. Public /api/validate-code
+    # is throttled 10/min per real client IP (the LAST X-Forwarded-For hop, appended by our proxy), so a
+    # distinct last-hop per check models a dozen independent buyers rather than one client hammering the
+    # endpoint — otherwise the branch matrix would trip the anti-enumeration limiter it isn't testing.
+    _client = [0]
+    def val(code, product="membership", email=None, cert=None):
+        body = {"code": code, "product": product}
+        if email is not None: body["email"] = email
+        if cert is not None: body["cert"] = cert
+        _client[0] += 1
+        return jget("POST", "/api/validate-code", body=body,
+                    headers={"X-Forwarded-For": f"198.51.100.{_client[0]}"})[1]
+
+    # 40a. A code that was never issued is refused (not silently treated as 0% off).
+    r = val("EDGE40NOSUCHCODE")
+    chk("40a an unknown code is rejected", r.get("valid") is not True and "not valid" in str(r.get("message", "")).lower(), r)
+
+    # 40b. Lifecycle: a draft (engine-managed, not yet approved) code does not validate.
+    mkcode("EDGE40DRAFT", status="draft")
+    r = val("EDGE40DRAFT")
+    chk("40b a draft code is not active yet", r.get("valid") is not True and "not active yet" in str(r.get("message", "")).lower(), r)
+
+    # 40c. Lifecycle: a rejected code is gone for good.
+    mkcode("EDGE40REJECTED", status="rejected")
+    r = val("EDGE40REJECTED")
+    chk("40c a rejected code is no longer available", r.get("valid") is not True and "no longer available" in str(r.get("message", "")).lower(), r)
+
+    # 40d. A legacy (status NULL) code with active=0 is refused by the active flag alone.
+    mkcode("EDGE40INACTIVE", active=0)
+    r = val("EDGE40INACTIVE")
+    chk("40d an inactive legacy code is rejected", r.get("valid") is not True and "not valid" in str(r.get("message", "")).lower(), r)
+
+    # 40e. Date window: an end_date in the past reads as expired.
+    mkcode("EDGE40EXPIRED", end_date="2000-01-01")
+    r = val("EDGE40EXPIRED")
+    chk("40e a code past its end_date is expired", r.get("valid") is not True and "expired" in str(r.get("message", "")).lower(), r)
+
+    # 40f. Date window: a start_date in the future is not yet active.
+    mkcode("EDGE40FUTURE", start_date="2999-01-01")
+    r = val("EDGE40FUTURE")
+    chk("40f a code before its start_date is not yet active", r.get("valid") is not True and "not yet active" in str(r.get("message", "")).lower(), r)
+
+    # 40g. Usage cap: used_count has reached max_uses.
+    mkcode("EDGE40MAXED", max_uses=5, used_count=5)
+    r = val("EDGE40MAXED")
+    chk("40g a fully-used code hits its usage limit", r.get("valid") is not True and "usage limit" in str(r.get("message", "")).lower(), r)
+
+    # 40h. Product scope: an exam-only code offered against a membership purchase is refused.
+    mkcode("EDGE40EXAMONLY", applies_to="exam")
+    r = val("EDGE40EXAMONLY", product="membership")
+    chk("40h an exam-only code is refused on a membership purchase", r.get("valid") is not True and "exam fee" in str(r.get("message", "")).lower(), r)
+
+    # 40i. A founding code pasted into the discount field is called out (not accepted as a 0% code).
+    mkcode("EDGE40FOUNDING", founding_route="founding")
+    r = val("EDGE40FOUNDING")
+    chk("40i a founding code is redirected to the Founding card, not honoured as a discount",
+        r.get("valid") is not True and "founding code" in str(r.get("message", "")).lower(), r)
+
+    # 40j. Certification scope: a code tied to one credential is rejected against another.
+    c, cat = jget("GET", "/api/certifications")
+    certs = {row.get("code"): row.get("id") for row in cat.get("rows", [])}
+    if "PCL-AI" in certs and "PFL-AI" in certs:
+        mkcode("EDGE40CERTSCOPE", certification_id=certs["PCL-AI"])
+        r = val("EDGE40CERTSCOPE", cert="PFL-AI")
+        chk("40j a cert-scoped code is rejected for a different certification",
+            r.get("valid") is not True and "only valid for" in str(r.get("message", "")).lower(), r)
+
+    # 40k. Country eligibility: a country-restricted code is refused for a student outside the allow-list.
+    gtok, guid = make_paid_user("code-geo-40@ex.co")
+    jget("PATCH", "/api/me/profile", token=gtok, body={"country": "Pakistan"})
+    mkcode("EDGE40GEO", eligible_countries="Canada,United States")
+    r = val("EDGE40GEO", email="code-geo-40@ex.co")
+    chk("40k a country-restricted code is refused outside its allow-list",
+        r.get("valid") is not True and "your country" in str(r.get("message", "")).lower(), r)
+
+    # 40l. Positive control: a clean, active, all-scope code validates and prices the purchase.
+    mkcode("EDGE40OK", discount_value=10, status="active")
+    r = val("EDGE40OK")
+    chk("40l a clean active code validates and returns a price", r.get("valid") is True and r.get("final_amount") is not None, r)
+
+def test_partner_commission_accrual(admin):
+    # Incremental Testing Programme — closes the recorded §37 follow-up. The commission ledger is DERIVED
+    # (accrued = attributed × pct/100 over PAID partner-code redemptions; balance = accrued − payouts), and
+    # §37 asserted only its shape with a zero balance. §41 drives a REAL paid redemption of a partner-linked
+    # code through the signed Stripe webhook and asserts a non-zero accrual, then records a payout via the
+    # admin endpoint and checks the balance deducts. No application changes.
+    print("\n=== 41. Partner commission accrual from a paid redemption (derived ledger) ===")
+    c, tp = jget("POST", "/api/admin/training-partners", token=admin, body={"name": "Commission College 41"})
+    pid = tp["id"]
+    jget("PATCH", f"/api/admin/training-partners/{pid}", token=admin, body={"commission_pct": 20})
+    c, pu = jget("POST", f"/api/admin/training-partners/{pid}/users", token=admin, body={"email": "commission-41@ex.co", "name": "Cora Ledger", "role": "admin"})
+    c, pl = jget("POST", "/api/partner/auth/login", body={"email": "commission-41@ex.co", "password": pu.get("temp_password", "")})
+    ptok = pl.get("token")
+    jget("POST", "/api/partner/auth/password", token=ptok, body={"new_password": "Commission!2026x"})
+    # A partner-linked, active discount code. Stored UPPERCASE — the webhook matches the metadata value verbatim.
+    con = dbconn()
+    con.execute("INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,active,status,partner_id) VALUES(?,?,?,?,?,?,?)",
+                ("PART41CODE", "percentage", 20, "all", 1, "active", pid))
+    con.commit(); con.close()
+    c, comm0 = jget("GET", "/api/partner/commissions", token=ptok)
+    chk("41a before any paid redemption the ledger accrues nothing",
+        c == 200 and (comm0.get("attributed_revenue") or 0) == 0 and (comm0.get("accrued") or 0) == 0, comm0)
+    # Drive a REAL paid redemption of the partner code through the signed webhook (final_amount = 119).
+    stok, suid = make_paid_user("commission-buyer-41@ex.co", product="membership",
+                                metadata={"discount_code": "PART41CODE", "standard_amount": "149", "code_amount": "30", "final_amount": "119"})
+    c, comm1 = jget("GET", "/api/partner/commissions", token=ptok)
+    chk("41b the paid redemption attributes its final_amount to the partner",
+        c == 200 and round(comm1.get("attributed_revenue", 0), 2) == 119.0, comm1.get("attributed_revenue"))
+    chk("41c commission accrues at the configured pct (119 × 20% = 23.80)", round(comm1.get("accrued", 0), 2) == 23.80, comm1.get("accrued"))
+    chk("41d the redemption's payment appears in the ledger detail", any(p.get("code") == "PART41CODE" for p in comm1.get("payments", [])), comm1.get("payments"))
+    # An admin-recorded payout deducts from the outstanding balance; a zero payout is rejected.
+    jget("POST", f"/api/admin/training-partners/{pid}/payouts", token=admin, body={"amount": 10, "note": "Q1 settlement"})
+    chk("41e a $0 payout is rejected (bad_amount, 400)",
+        jget("POST", f"/api/admin/training-partners/{pid}/payouts", token=admin, body={"amount": 0})[0] == 400)
+    c, comm2 = jget("GET", "/api/partner/commissions", token=ptok)
+    chk("41f a recorded payout deducts from the balance (23.80 − 10 = 13.80)",
+        round(comm2.get("paid_out", 0), 2) == 10.0 and round(comm2.get("balance", 0), 2) == 13.80, comm2)
+    # Admin sees the identical derived ledger; the admin route needs the 'partners' permission.
+    c, admledger = jget("GET", f"/api/admin/training-partners/{pid}/commissions", token=admin)
+    chk("41g admin sees the same derived ledger numbers as the partner",
+        c == 200 and round(admledger.get("accrued", 0), 2) == 23.80 and round(admledger.get("balance", 0), 2) == 13.80, admledger)
+    vtok = globals().get("_VIEWER_TOK")
+    chk("41h the admin commission ledger needs the 'partners' permission (viewer 403)",
+        bool(vtok) and jget("GET", f"/api/admin/training-partners/{pid}/commissions", token=vtok)[0] == 403)
+
+def test_reviews_moderation(admin):
+    # Incremental Testing Programme — the student reviews module (Endpoints/Reviews.cs) had no dedicated
+    # coverage: a public read (published only), an authed submit with a one-live-review-per-user rule and a
+    # rating clamp, and an admin moderation state machine (publish/reject/feature/delete) gated on 'content'.
+    # No application changes.
+    print("\n=== 42. Reviews: submit → moderation state machine → publish/feature (Reviews.cs) ===")
+    # Anonymous submit is refused.
+    c, r = jget("POST", "/api/me/reviews", body={"body": "A great programme, highly recommended to peers."})
+    chk("42a submitting a review requires authentication (401)", c == 401, (c, r))
+    stok, suid = make_paid_user("reviewer-42@ex.co")
+    # A too-short body is rejected.
+    c, short = jget("POST", "/api/me/reviews", token=stok, body={"body": "short"})
+    chk("42b a too-short review body is rejected (review_too_short, 400)", c == 400 and short.get("error") == "review_too_short", short)
+    # A valid submit lands as pending; the rating is clamped into 1–5.
+    c, sub = jget("POST", "/api/me/reviews", token=stok,
+                  body={"body": "PCI's programme genuinely lifted my project-controls practice.", "rating": 9, "title": "Excellent", "company": "Acme"})
+    rid = sub.get("id")
+    chk("42c a valid review is accepted as pending", c == 200 and sub.get("status") == "pending" and bool(rid), sub)
+    con = dbconn(); rrow = con.execute("SELECT rating,status FROM reviews WHERE id=?", (rid,)).fetchone(); con.close()
+    chk("42d the rating is clamped to the 1–5 range (9 → 5)", bool(rrow) and rrow[0] == 5, rrow)
+    # A pending review is not public yet, but its author can see it.
+    c, pub0 = jget("GET", "/api/reviews")
+    chk("42e a pending review is NOT in the public list", all(rv.get("id") != rid for rv in pub0.get("reviews", [])), None)
+    c, mine = jget("GET", "/api/me/reviews", token=stok)
+    chk("42f the author sees their own pending review", any(rv.get("id") == rid and rv.get("status") == "pending" for rv in mine.get("reviews", [])), mine.get("reviews"))
+    # Resubmitting while pending updates the SAME row (one live review per user).
+    c, sub2 = jget("POST", "/api/me/reviews", token=stok,
+                   body={"body": "Updated: still a first-rate programme after finishing my exam.", "rating": 4})
+    chk("42g resubmitting while pending updates the same row (no duplicate)", sub2.get("id") == rid and sub2.get("status") == "pending", sub2)
+    con = dbconn(); cnt = con.execute("SELECT COUNT(*) FROM reviews WHERE user_id=?", (suid,)).fetchone()[0]; con.close()
+    chk("42g2 the author still has exactly one review row", cnt == 1, cnt)
+    # The admin moderation queue is gated on 'content' (viewer 403) and surfaces the pending review.
+    vtok = globals().get("_VIEWER_TOK")
+    chk("42h the admin moderation queue needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/reviews", token=vtok)[0] == 403)
+    c, q = jget("GET", "/api/admin/reviews", token=admin)
+    chk("42i the pending review shows in the admin queue with a pending count",
+        c == 200 and (q.get("counts", {}).get("pending", 0) >= 1) and any(rv.get("id") == rid for rv in q.get("reviews", [])), q.get("counts"))
+    # An unknown moderation status is rejected.
+    c, bs = jget("POST", f"/api/admin/reviews/{rid}/status", token=admin, body={"status": "banana"})
+    chk("42j an unknown moderation status is rejected (bad_status, 400)", c == 400 and bs.get("error") == "bad_status", bs)
+    # Publishing makes it public and stamps published_at.
+    c, pubd = jget("POST", f"/api/admin/reviews/{rid}/status", token=admin, body={"status": "published"})
+    c, pub1 = jget("GET", "/api/reviews")
+    chk("42k publishing makes the review public", pubd.get("ok") and any(rv.get("id") == rid for rv in pub1.get("reviews", [])), None)
+    con = dbconn(); pat = con.execute("SELECT published_at FROM reviews WHERE id=?", (rid,)).fetchone()[0]; con.close()
+    chk("42k2 publishing stamps published_at", bool(pat), pat)
+    # Featuring surfaces it in the featured-only list.
+    jget("PATCH", f"/api/admin/reviews/{rid}", token=admin, body={"featured": 1})
+    c, feat = jget("GET", "/api/reviews?featured=1")
+    chk("42l featuring surfaces the review in the featured list", any(rv.get("id") == rid for rv in feat.get("reviews", [])), None)
+    # Rejecting drops it back out of the public list.
+    jget("POST", f"/api/admin/reviews/{rid}/status", token=admin, body={"status": "rejected"})
+    c, pub2 = jget("GET", "/api/reviews")
+    chk("42m rejecting removes the review from the public list", all(rv.get("id") != rid for rv in pub2.get("reviews", [])), None)
+    # Admin delete removes the row entirely.
+    c, deld = jget("DELETE", f"/api/admin/reviews/{rid}", token=admin)
+    con = dbconn(); gone = con.execute("SELECT COUNT(*) FROM reviews WHERE id=?", (rid,)).fetchone()[0]; con.close()
+    chk("42n admin delete removes the review row", deld.get("ok") and gone == 0, gone)
+
+def test_careers_module(admin):
+    # Incremental Testing Programme — the careers module (Endpoints/Careers.cs) had no dedicated coverage:
+    # admin CRUD (content-gated), the public listing/detail (published-only), and a public in-platform
+    # application path with a honeypot, name/email validation, an external-apply guard and a
+    # one-application-per-email rule, plus admin application-status moderation. No application changes.
+    print("\n=== 43. Careers: admin posting + public apply (honeypot/validation/dedup) + moderation ===")
+    # Admin creates a published in-platform posting → auto job code.
+    c, job = jget("POST", "/api/admin/careers", token=admin,
+                  body={"title": "Project Controls Lead 43", "status": "published", "apply_method": "inplatform",
+                        "organisation": "PCI", "location": "Remote", "country": "United Kingdom", "description": "Lead role."})
+    jid = job.get("id")
+    chk("43a admin creates a published posting and it gets a job code", c == 200 and bool(jid) and bool(job.get("job_code")), job)
+    # A too-short title is rejected.
+    c, bt = jget("POST", "/api/admin/careers", token=admin, body={"title": "PC", "status": "published"})
+    chk("43b a too-short title is rejected (bad_title, 400)", c == 400 and bt.get("error") == "bad_title", bt)
+    # The published posting is publicly listed and its detail resolves.
+    c, pub = jget("GET", "/api/careers")
+    chk("43c the published posting appears in the public listing", any(r.get("id") == jid for r in pub.get("rows", [])), None)
+    c, det = jget("GET", f"/api/careers/{jid}")
+    chk("43d the public detail endpoint returns the job", c == 200 and det.get("job", {}).get("id") == jid, det)
+    # A honeypot submission is silently accepted but records nothing.
+    c, hp = jget("POST", f"/api/careers/{jid}/apply", body={"website": "http://spam.example", "name": "Bot Spammer", "email": "honeypot-43@ex.co"})
+    chk("43e a honeypot submission is accepted but records no application", c == 200 and hp.get("ok") is True, hp)
+    # Name/email validation.
+    c, bn = jget("POST", f"/api/careers/{jid}/apply", body={"name": "A", "email": "applicant-43@ex.co"})
+    chk("43f a too-short applicant name is rejected (bad_name, 400)", c == 400 and bn.get("error") == "bad_name", bn)
+    c, be = jget("POST", f"/api/careers/{jid}/apply", body={"name": "Ada Applicant", "email": "not-an-email"})
+    chk("43g a malformed applicant email is rejected (bad_email, 400)", c == 400 and be.get("error") == "bad_email", be)
+    # A valid in-platform application is accepted.
+    c, ap = jget("POST", f"/api/careers/{jid}/apply", body={"name": "Ada Applicant", "email": "applicant-43@ex.co", "cover_message": "Keen to contribute."})
+    chk("43h a valid in-platform application is accepted", c == 200 and ap.get("ok") is True, ap)
+    # A second application from the same email is refused.
+    c, dup = jget("POST", f"/api/careers/{jid}/apply", body={"name": "Ada Applicant", "email": "applicant-43@ex.co"})
+    chk("43i a duplicate application from the same email is refused (already_applied, 409)", c == 409 and dup.get("error") == "already_applied", dup)
+    # An externally-applied posting refuses in-platform applications.
+    c, ext = jget("POST", "/api/admin/careers", token=admin,
+                  body={"title": "External Role 43", "status": "published", "apply_method": "url", "apply_url": "https://example.org/jobs/1"})
+    exid = ext.get("id")
+    c, exap = jget("POST", f"/api/careers/{exid}/apply", body={"name": "Ada Applicant", "email": "applicant-43@ex.co"})
+    chk("43j applying in-platform to an external posting is refused (external_apply, 400)", c == 400 and exap.get("error") == "external_apply", exap)
+    # Admin sees exactly the one real application (the honeypot recorded nothing).
+    c, apps = jget("GET", f"/api/admin/careers/{jid}/applications", token=admin)
+    emails = [r.get("email") for r in apps.get("rows", [])]
+    chk("43k the admin sees the real application and NOT the honeypot",
+        "applicant-43@ex.co" in emails and "honeypot-43@ex.co" not in emails, emails)
+    appid = next((r.get("id") for r in apps.get("rows", []) if r.get("email") == "applicant-43@ex.co"), None)
+    # Application-status moderation: bad status rejected, a valid transition persists.
+    c, bs = jget("POST", f"/api/admin/careers/applications/{appid}/status", token=admin, body={"status": "banana"})
+    chk("43l an unknown application status is rejected (bad_status, 400)", c == 400 and bs.get("error") == "bad_status", bs)
+    jget("POST", f"/api/admin/careers/applications/{appid}/status", token=admin, body={"status": "shortlisted", "admin_note": "Strong fit"})
+    con = dbconn(); st = con.execute("SELECT status FROM job_applications WHERE id=?", (appid,)).fetchone(); con.close()
+    chk("43m a valid application status transition persists (shortlisted)", bool(st) and st[0] == "shortlisted", st)
+    # The admin surface is content-gated (viewer 403).
+    vtok = globals().get("_VIEWER_TOK")
+    chk("43n the admin careers surface needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/careers", token=vtok)[0] == 403)
+    # Delete removes the posting and cascades its applications.
+    c, deld = jget("POST", f"/api/admin/careers/{jid}/delete", token=admin)
+    con = dbconn()
+    gone = con.execute("SELECT COUNT(*) FROM job_postings WHERE id=?", (jid,)).fetchone()[0]
+    orphans = con.execute("SELECT COUNT(*) FROM job_applications WHERE job_id=?", (jid,)).fetchone()[0]
+    con.close()
+    chk("43o admin delete removes the posting and its applications", deld.get("ok") and gone == 0 and orphans == 0, (gone, orphans))
+
+def test_events_module(admin):
+    # Incremental Testing Programme — the events module (Endpoints/Events.cs) had no dedicated coverage:
+    # capacity-limited registration, join-link visibility (registered members only), a cancel rule
+    # (can't cancel after attending) and admin attendance that idempotently credits an APPROVED CPD entry.
+    # No application changes.
+    print("\n=== 44. Events: capacity registration + join-link gating + attendance→CPD crediting ===")
+    # Admin creates a published, capacity-1 event worth 2 CPD hours.
+    c, ev = jget("POST", "/api/admin/events", token=admin,
+                 body={"title": "Project Controls Webinar 44", "status": "published", "event_type": "webinar",
+                       "capacity": 1, "cpd_hours": 2, "join_url": "https://meet.example/pc44", "starts_at": "2026-09-01"})
+    eid = ev.get("id")
+    chk("44a admin creates a published event", c == 200 and bool(eid), ev)
+    c, bt = jget("POST", "/api/admin/events", token=admin, body={"title": "PC", "status": "published"})
+    chk("44b a too-short event title is rejected (bad_title, 400)", c == 400 and bt.get("error") == "bad_title", bt)
+    ta, ua = make_paid_user("event-a-44@ex.co")
+    tb, ub = make_paid_user("event-b-44@ex.co")
+    tc, uc = make_paid_user("event-c-44@ex.co")
+    # Before registering: the event is visible, the join link is hidden, one seat is free.
+    def my_event(tok):
+        _, r = jget("GET", "/api/me/events", token=tok)
+        return next((e for e in r.get("rows", []) if e.get("id") == eid), None)
+    ea = my_event(ta)
+    chk("44c an unregistered member sees the event but not the join link, with seats_left=1",
+        bool(ea) and ea.get("registered") is False and ea.get("join_url") in (None, "") and ea.get("seats_left") == 1, ea)
+    # Member A registers → the join link is now revealed to them.
+    c, rega = jget("POST", f"/api/me/events/{eid}/register", token=ta)
+    chk("44d member A registers successfully", c == 200 and rega.get("ok") is True, rega)
+    ea2 = my_event(ta)
+    chk("44e after registering the join link is revealed and registered=true",
+        bool(ea2) and ea2.get("registered") is True and ea2.get("join_url") == "https://meet.example/pc44", ea2)
+    # Capacity is 1, so member B is refused.
+    c, regb = jget("POST", f"/api/me/events/{eid}/register", token=tb)
+    chk("44f a second registration is refused once capacity is reached (full, 409)", c == 409 and regb.get("error") == "full", regb)
+    # Member A cancels → the seat frees up and member B can now register.
+    c, cana = jget("POST", f"/api/me/events/{eid}/cancel", token=ta)
+    chk("44g member A cancels their registration", c == 200 and cana.get("ok") is True, cana)
+    c, regb2 = jget("POST", f"/api/me/events/{eid}/register", token=tb)
+    chk("44h the freed seat lets member B register", c == 200 and regb2.get("ok") is True, regb2)
+    # Member C never registered → cancel is not_registered.
+    c, canc = jget("POST", f"/api/me/events/{eid}/cancel", token=tc)
+    chk("44i cancelling without a registration is refused (not_registered, 404)", c == 404 and canc.get("error") == "not_registered", canc)
+    # Admin registrations list reflects B registered and A cancelled.
+    c, regs = jget("GET", f"/api/admin/events/{eid}/registrations", token=admin)
+    byuid = {r.get("user_id"): r.get("status") for r in regs.get("rows", [])}
+    chk("44j the admin registrations list reflects B=registered and A=cancelled",
+        byuid.get(ub) == "registered" and byuid.get(ua) == "cancelled", byuid)
+    # Admin marks B attended → an APPROVED CPD entry for the event hours is credited.
+    c, att = jget("POST", f"/api/admin/events/{eid}/attendance", token=admin, body={"user_id": ub, "attended": True})
+    chk("44k marking attendance succeeds and reports the CPD hours", c == 200 and att.get("cpd_hours") == 2, att)
+    # (The LIKE pattern is passed as a parameter, not inline, so its literal '%' survives the MySQL wrapper.)
+    con = dbconn(); cnt1 = con.execute("SELECT COUNT(*) FROM cpd_entries WHERE user_id=? AND status='approved' AND hours=2 AND description LIKE ?", (ub, "Attended:%")).fetchone()[0]; con.close()
+    chk("44l attendance credits exactly one approved CPD entry for the event hours", cnt1 == 1, cnt1)
+    # Marking attendance again is idempotent — no double CPD credit.
+    c, att2 = jget("POST", f"/api/admin/events/{eid}/attendance", token=admin, body={"user_id": ub, "attended": True})
+    con = dbconn(); cnt2 = con.execute("SELECT COUNT(*) FROM cpd_entries WHERE user_id=? AND description LIKE ?", (ub, "Attended:%")).fetchone()[0]; con.close()
+    chk("44m re-marking attendance is idempotent (still one CPD entry)", att2.get("already") is True and cnt2 == 1, (att2, cnt2))
+    # A member who has attended cannot cancel.
+    c, canb = jget("POST", f"/api/me/events/{eid}/cancel", token=tb)
+    chk("44n an attended registration cannot be cancelled (already_attended, 400)", c == 400 and canb.get("error") == "already_attended", canb)
+    # Un-marking attendance reverts the status and removes the auto-credited CPD entry.
+    jget("POST", f"/api/admin/events/{eid}/attendance", token=admin, body={"user_id": ub, "attended": False})
+    con = dbconn()
+    cnt3 = con.execute("SELECT COUNT(*) FROM cpd_entries WHERE user_id=? AND description LIKE ?", (ub, "Attended:%")).fetchone()[0]
+    st = con.execute("SELECT status FROM event_registrations WHERE event_id=? AND user_id=?", (eid, ub)).fetchone()
+    con.close()
+    chk("44o un-marking attendance removes the CPD entry and reverts to registered", cnt3 == 0 and bool(st) and st[0] == "registered", (cnt3, st))
+    # The admin events surface is content-gated (viewer 403).
+    vtok = globals().get("_VIEWER_TOK")
+    chk("44p the admin events surface needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/events", token=vtok)[0] == 403)
+
+def test_announcement_config(admin):
+    # Incremental Testing Programme — the admin-controlled site announcement (Endpoints/Announcement.cs)
+    # had no dedicated coverage: a public read that resolves the {date} token and sanitises the CTA href,
+    # an enable/disable toggle, and content-gated admin read/write. No application changes. Left enabled at
+    # the end so the public banner is not silently disabled for other readers.
+    print("\n=== 45. Announcement: public {date}-resolution + CTA sanitising + enable toggle + RBAC ===")
+    # Public read: enabled by default (seeded), and the {date} token is resolved inside the title.
+    c, pub = jget("GET", "/api/announcement")
+    date0 = pub.get("date")
+    chk("45a the public announcement is enabled by default with a resolved title",
+        c == 200 and pub.get("enabled") is True and bool(pub.get("title")), pub)
+    chk("45b the {date} token is resolved (no literal '{date}' leaks to the client)",
+        "{date}" not in str(pub.get("title", "")) and "{date}" not in str(pub.get("intro", "")), pub.get("title"))
+    # Admin read is content-gated.
+    vtok = globals().get("_VIEWER_TOK")
+    chk("45c the admin announcement read needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/announcement", token=vtok)[0] == 403)
+    c, adm = jget("GET", "/api/admin/announcement", token=admin)
+    chk("45d admin sees the stored config including the enabled flag", c == 200 and "announce_enabled" in adm, list(adm.keys())[:4] if isinstance(adm, dict) else adm)
+    # An admin edit propagates to the public read, with the {date} token still resolved.
+    jget("POST", "/api/admin/announcement", token=admin, body={"title": "Custom Notice 45 for {date}"})
+    c, pub2 = jget("GET", "/api/announcement")
+    chk("45e an admin title edit propagates to the public read with {date} resolved",
+        pub2.get("title") == "Custom Notice 45 for " + str(pub2.get("date")), (pub2.get("title"), pub2.get("date")))
+    # A hostile CTA href is refused — the public read never emits a javascript: URL.
+    jget("POST", "/api/admin/announcement", token=admin, body={"cta_href": "javascript:alert(1)"})
+    c, pub3 = jget("GET", "/api/announcement")
+    chk("45f a non-http CTA href is sanitised back to the safe default",
+        pub3.get("cta", {}).get("href") == "honorary-application.html", pub3.get("cta"))
+    # Disabling hides the whole announcement from the public read.
+    jget("POST", "/api/admin/announcement", token=admin, body={"announce_enabled": False})
+    c, pub4 = jget("GET", "/api/announcement")
+    chk("45g disabling the announcement hides it entirely from the public read",
+        pub4.get("enabled") is False and "title" not in pub4, pub4)
+    # A viewer cannot change the announcement (content-gated write).
+    chk("45h the admin announcement write needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("POST", "/api/admin/announcement", token=vtok, body={"announce_enabled": True})[0] == 403)
+    # Re-enable + change the date; the public title resolves the NEW date. Leaves the banner enabled.
+    jget("POST", "/api/admin/announcement", token=admin, body={"announce_enabled": True, "date": "2027-12-31"})
+    c, pub5 = jget("GET", "/api/announcement")
+    chk("45i re-enabling with a new date re-resolves the token in the title",
+        pub5.get("enabled") is True and "2027-12-31" in str(pub5.get("title", "")), (pub5.get("enabled"), pub5.get("title")))
+
+def test_notifications_config(admin):
+    # Incremental Testing Programme — the operator notification-service config (Endpoints/Notifications.cs)
+    # had no dedicated coverage: recipient list + per-event toggles (content-gated), a resolved fan-out list,
+    # and a test-send that records to notification_history. No application changes.
+    print("\n=== 46. Notifications: recipients + per-event toggles + test-send + RBAC ===")
+    vtok = globals().get("_VIEWER_TOK")
+    chk("46a the admin notifications read needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/notifications", token=vtok)[0] == 403)
+    c, cfg = jget("GET", "/api/admin/notifications", token=admin)
+    chk("46b admin sees the config (events, toggles, resolved recipients)",
+        c == 200 and isinstance(cfg.get("events"), list) and isinstance(cfg.get("toggles"), dict) and "resolved" in cfg, list(cfg.keys())[:6] if isinstance(cfg, dict) else cfg)
+    # Set a recipient — it appears in the raw setting and the resolved fan-out list.
+    jget("POST", "/api/admin/notifications", token=admin, body={"recipients": "ops-46@ex.co"})
+    c, cfg2 = jget("GET", "/api/admin/notifications", token=admin)
+    chk("46c a saved recipient appears in the raw setting and the resolved fan-out",
+        "ops-46@ex.co" in str(cfg2.get("recipients", "")) and "ops-46@ex.co" in [str(x) for x in cfg2.get("resolved", [])], (cfg2.get("recipients"), cfg2.get("resolved")))
+    # Toggle an event off, then back on — the stored flag round-trips.
+    jget("POST", "/api/admin/notifications", token=admin, body={"enrollment": False})
+    c, cfg3 = jget("GET", "/api/admin/notifications", token=admin)
+    con = dbconn(); flag = con.execute("SELECT svalue FROM site_settings WHERE skey='notify_enrollment_enabled'").fetchone(); con.close()
+    chk("46d toggling an event off persists (toggle false + stored '0')",
+        cfg3.get("toggles", {}).get("enrollment") in (False, 0) and bool(flag) and flag[0] == "0", (cfg3.get("toggles", {}).get("enrollment"), flag))
+    jget("POST", "/api/admin/notifications", token=admin, body={"enrollment": True})
+    c, cfg4 = jget("GET", "/api/admin/notifications", token=admin)
+    chk("46e toggling it back on round-trips", cfg4.get("toggles", {}).get("enrollment") in (True, 1), cfg4.get("toggles", {}).get("enrollment"))
+    # A test-send fans out to the resolved recipients and records to notification_history.
+    c, test = jget("POST", "/api/admin/notifications/test", token=admin)
+    con = dbconn(); trow = con.execute("SELECT COUNT(*) FROM notification_history WHERE related_type='test' AND recipient=?", ("ops-46@ex.co",)).fetchone()[0]; con.close()
+    chk("46f a test-send records a 'test' delivery for the configured recipient", test.get("ok") is True and trow >= 1, (test, trow))
+    # The write is content-gated.
+    chk("46g the admin notifications write needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("POST", "/api/admin/notifications", token=vtok, body={"recipients": "x@y.co"})[0] == 403)
+
+def test_member_directory(admin):
+    # Incremental Testing Programme — the public member directory (Endpoints/Directory.cs) had no dedicated
+    # coverage: visibility is gated on BOTH an opt-in AND holding an active credential, with per-field consent
+    # (country/org/LinkedIn) and admin unlisting. No application changes.
+    print("\n=== 47. Member directory: opt-in + credential-gated visibility + per-field consent + admin unlist ===")
+    tok, uid = make_paid_user("dir-listed-47@ex.co")
+    # A member only appears once they hold an active credential — seed one, and ensure the account is active.
+    con = dbconn()
+    con.execute("INSERT INTO issued_credentials(credential_id,user_id,holder_name,credential,status) VALUES(?,?,?,?, 'active')",
+                ("PCI-DIR-47A", uid, "Dana Director", "PCP-AI"))
+    con.execute("UPDATE users SET status='active' WHERE id=?", (uid,))
+    con.commit(); con.close()
+    jget("PATCH", "/api/me/profile", token=tok, body={"country": "Canada", "company": "Acme", "current_role": "PC Lead"})
+    # Management requires auth.
+    chk("47a managing a directory listing requires authentication (401)", jget("GET", "/api/me/directory")[0] == 401)
+    # Eligible (holds a credential) but not opted in by default → not public.
+    c, mine = jget("GET", "/api/me/directory", token=tok)
+    chk("47b a credential-holder is eligible but not opted in by default",
+        c == 200 and mine.get("eligible") is True and mine.get("opt_in") in (False, 0), mine)
+    c, pub0 = jget("GET", "/api/directory")
+    chk("47c an opted-out member does not appear publicly", all(r.get("id") != uid for r in pub0.get("rows", [])), None)
+    # Opt in, set a headline, hide the country.
+    jget("POST", "/api/me/directory", token=tok, body={"opt_in": True, "headline": "Project controls leader", "show_country": False})
+    c, mine2 = jget("GET", "/api/me/directory", token=tok)
+    chk("47d opting in persists the prefs (opt_in, headline, show_country off)",
+        mine2.get("opt_in") in (True, 1) and mine2.get("headline") == "Project controls leader" and mine2.get("show_country") in (False, 0), mine2)
+    # Now public — with per-field consent applied (country hidden) and credentials surfaced.
+    c, pub1 = jget("GET", "/api/directory")
+    row = next((r for r in pub1.get("rows", []) if r.get("id") == uid), None)
+    chk("47e the opted-in member appears with headline + credentials, country hidden by consent",
+        bool(row) and row.get("headline") == "Project controls leader" and row.get("country") is None
+        and any(cc.get("acronym") for cc in row.get("credentials", [])), row)
+    # A second member opts in but holds NO credential → not eligible, not public.
+    tok2, uid2 = make_paid_user("dir-nocred-47@ex.co")
+    jget("POST", "/api/me/directory", token=tok2, body={"opt_in": True})
+    c, mine3 = jget("GET", "/api/me/directory", token=tok2)
+    c, pub2 = jget("GET", "/api/directory")
+    chk("47f an opted-in member without an active credential is NOT eligible and NOT public",
+        mine3.get("eligible") in (False, 0) and all(r.get("id") != uid2 for r in pub2.get("rows", [])), (mine3.get("eligible"), uid2))
+    # Admin moderation is members-gated and can unlist a member.
+    vtok = globals().get("_VIEWER_TOK")
+    chk("47g the admin directory needs the 'members' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/directory", token=vtok)[0] == 403)
+    c, adm = jget("GET", "/api/admin/directory", token=admin)
+    chk("47h the admin sees the listed member", c == 200 and any(r.get("id") == uid for r in adm.get("rows", [])), None)
+    jget("POST", f"/api/admin/directory/{uid}/unlist", token=admin)
+    c, pub3 = jget("GET", "/api/directory")
+    con = dbconn(); optin = con.execute("SELECT directory_opt_in FROM student_profiles WHERE user_id=?", (uid,)).fetchone()[0]; con.close()
+    chk("47i admin unlist removes the member from the public directory and clears opt_in",
+        all(r.get("id") != uid for r in pub3.get("rows", [])) and (optin in (0, None)), optin)
+
+def test_forum_module(admin):
+    # Incremental Testing Programme — the public discussion forum (Endpoints/Forum.cs) had no coverage:
+    # anonymous display-name posting with validation + honeypot + link cap + per-IP-hash fixed-window
+    # rate limits, community flagging with a 3-flag auto-hold, and content-gated admin moderation that
+    # never exposes the ip_hash. The limiter keys on the trusted LAST X-Forwarded-For hop, so distinct
+    # last hops model independent clients and each check exercises its own branch in isolation.
+    print("\n=== 48. Forum: anonymous posting + honeypot + flag auto-hold + moderation ===")
+    _hop = [0]
+    def fj(method, path, body=None):
+        _hop[0] += 1
+        return jget(method, path, body=body, headers={"X-Forwarded-For": f"203.0.113.{_hop[0]}"})
+
+    # 48a. The fixed category list is public and serves the documented keys.
+    c, cats = jget("GET", "/api/forum/categories")
+    keys = [x.get("key") for x in cats.get("categories", [])] if isinstance(cats, dict) else []
+    chk("48a public category list serves the fixed keys", c == 200 and "general" in keys and "exam-prep" in keys, keys)
+
+    # 48b. Honeypot: a filled 'website' field fake-succeeds (so the bot believes it) but stores NOTHING.
+    c, hp = fj("POST", "/api/forum/threads", body={"website": "http://spam.example", "name": "Bot",
+                                                   "title": "Honeypot title 48", "body": "x" * 40, "category": "general"})
+    con = dbconn(); nhp = con.execute("SELECT COUNT(*) FROM forum_threads WHERE title=?", ("Honeypot title 48",)).fetchone()[0]; con.close()
+    chk("48b honeypot submission fake-succeeds, returns no id, stores nothing",
+        c == 200 and hp.get("ok") is True and "id" not in hp and nhp == 0, (hp, nhp))
+
+    # 48c. Validation: short title / unknown category / >2 links are each rejected with their own code.
+    c1, r1 = fj("POST", "/api/forum/threads", body={"name": "Ana", "title": "short", "body": "b" * 40, "category": "general"})
+    c2, r2 = fj("POST", "/api/forum/threads", body={"name": "Ana", "title": "A valid title 48", "body": "b" * 40, "category": "nope"})
+    c3, r3 = fj("POST", "/api/forum/threads", body={"name": "Ana", "title": "A valid title 48",
+                                                    "body": "see http://a.co http://b.co http://c.co padding padding", "category": "general"})
+    chk("48c bad title / bad category / >2 links are each rejected",
+        (c1, r1.get("error")) == (400, "bad_title") and (c2, r2.get("error")) == (400, "bad_category")
+        and (c3, r3.get("error")) == (400, "too_many_links"), (r1, r2, r3))
+
+    # 48d. A valid thread is created and listed in its category with its opening post live.
+    hop_d = "203.0.113.201"
+    c, t = jget("POST", "/api/forum/threads", headers={"X-Forwarded-For": hop_d},
+                body={"name": "Asma", "title": "Scheduling EVM questions 48",
+                      "body": "How do you baseline schedule variance on hybrid programmes?", "category": "exam-prep"})
+    tid = t.get("id") if isinstance(t, dict) else None
+    c2, lst = jget("GET", "/api/forum/threads?category=exam-prep")
+    row = next((r for r in lst.get("threads", []) if r.get("id") == tid), None)
+    chk("48d a valid thread is created and listed in its category",
+        c == 200 and t.get("ok") is True and bool(tid) and bool(row)
+        and row.get("author_name") == "Asma" and row.get("reply_count") == 0, (t, row))
+
+    # 48e. Fixed-window rate limit: the same client cannot open a second thread within 2 minutes.
+    c, rl = jget("POST", "/api/forum/threads", headers={"X-Forwarded-For": hop_d},
+                 body={"name": "Asma", "title": "Second thread too soon 48",
+                       "body": "This one should hit the 2-minute window.", "category": "exam-prep"})
+    chk("48e a second thread from the same client inside 2 minutes is 429 rate_limited",
+        c == 429 and rl.get("error") == "rate_limited", (c, rl))
+
+    # 48f. A reply (different client) increments reply_count and appears in the public thread view.
+    c, p = jget("POST", f"/api/forum/threads/{tid}/posts", headers={"X-Forwarded-For": "203.0.113.202"},
+                body={"name": "Bilal", "body": "Track SV against the re-baselined PMB."})
+    pid = p.get("id") if isinstance(p, dict) else None
+    c2, tv = jget("GET", f"/api/forum/threads/{tid}")
+    chk("48f a reply increments reply_count and shows in the thread view",
+        c == 200 and bool(pid) and tv.get("thread", {}).get("reply_count") == 1
+        and any(pp.get("id") == pid and pp.get("author_name") == "Bilal" for pp in tv.get("posts", [])), (p, tv.get("thread")))
+
+    # 48g. Community flagging: 3 flags auto-hold the post; the report response never reveals the outcome.
+    rr = None
+    for _ in range(3):
+        c, rr = jget("POST", f"/api/forum/posts/{pid}/report", headers={"X-Forwarded-For": "203.0.113.203"})
+    c2, tv2 = jget("GET", f"/api/forum/threads/{tid}")
+    chk("48g three community flags auto-hide the post and the response stays opaque",
+        c == 200 and rr == {"ok": True} and all(pp.get("id") != pid for pp in tv2.get("posts", [])), (rr, tv2.get("posts")))
+
+    # 48h/48i. The moderation queue is content-gated; it surfaces the held post but NEVER the ip_hash.
+    vtok = globals().get("_VIEWER_TOK")
+    chk("48h the moderation queue needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/forum/queue", token=vtok)[0] == 403)
+    c, q = jget("GET", "/api/admin/forum/queue", token=admin)
+    qrow = next((r for r in q.get("posts", []) if r.get("id") == pid), None)
+    chk("48i admin queue surfaces the auto-held post (status, flags, joined title) without any ip_hash",
+        c == 200 and bool(qrow) and qrow.get("status") == "hidden" and (qrow.get("flags") or 0) >= 3
+        and qrow.get("thread_title") == "Scheduling EVM questions 48" and "ip_hash" not in json.dumps(q), qrow)
+
+    # 48j. Admin restore puts the post back live with flags cleared → publicly visible again.
+    jget("POST", f"/api/admin/forum/posts/{pid}", token=admin, body={"action": "restore"})
+    con = dbconn(); strow = con.execute("SELECT status,flags FROM forum_posts WHERE id=?", (pid,)).fetchone(); con.close()
+    c, tv3 = jget("GET", f"/api/forum/threads/{tid}")
+    chk("48j admin restore returns the post to live with flags cleared",
+        tuple(strow) == ("live", 0) and any(pp.get("id") == pid for pp in tv3.get("posts", [])), strow)
+
+    # 48k. Locking a thread refuses new replies with 409.
+    jget("POST", f"/api/admin/forum/threads/{tid}", token=admin, body={"action": "lock"})
+    c, lk = fj("POST", f"/api/forum/threads/{tid}/posts", body={"name": "Cara", "body": "Am I too late to join this one?"})
+    chk("48k a locked thread refuses new replies (409 locked)", c == 409 and lk.get("error") == "locked", (c, lk))
+
+    # 48l. Thread moderation is content-gated; hiding a thread 404s it publicly and delists it.
+    chk("48l thread moderation needs the 'content' permission (viewer 403)",
+        bool(vtok) and jget("POST", f"/api/admin/forum/threads/{tid}", token=vtok, body={"action": "hide"})[0] == 403)
+    jget("POST", f"/api/admin/forum/threads/{tid}", token=admin, body={"action": "hide"})
+    c1 = jget("GET", f"/api/forum/threads/{tid}")[0]
+    c2, lst2 = jget("GET", "/api/forum/threads?category=exam-prep")
+    chk("48m a hidden thread 404s publicly and vanishes from the listing",
+        c1 == 404 and all(r.get("id") != tid for r in lst2.get("threads", [])), (c1, lst2.get("total")))
+
+    # 48n. Deleting a thread purges it and every one of its posts.
+    jget("POST", f"/api/admin/forum/threads/{tid}", token=admin, body={"action": "delete"})
+    con = dbconn()
+    nt = con.execute("SELECT COUNT(*) FROM forum_threads WHERE id=?", (tid,)).fetchone()[0]
+    np = con.execute("SELECT COUNT(*) FROM forum_posts WHERE thread_id=?", (tid,)).fetchone()[0]
+    con.close()
+    chk("48n deleting a thread purges it and all its posts", nt == 0 and np == 0, (nt, np))
+
+def test_campaigns_module(admin):
+    # Incremental Testing Programme — bulk email campaigns (Endpoints/Campaigns.cs) had no coverage:
+    # draft validation, audience resolution honouring the suppression list + subscriber status, the
+    # personalised "[TEST]" test-send, the batched background dispatch with a double-send guard, and the
+    # HMAC-token one-click unsubscribe (neutral page on a bad token — no address/token oracle).
+    # Audience-size assertions are DELTA-based so pre-existing subscribers from earlier sections can't skew them.
+    print("\n=== 49. Campaigns: drafts + audience suppression + test-send + dispatch + one-click unsubscribe ===")
+    from urllib.parse import quote
+    vtok = globals().get("_VIEWER_TOK")
+    chk("49a campaign list and suppression writes need the 'subscribers' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/campaigns", token=vtok)[0] == 403
+        and jget("POST", "/api/admin/suppression", token=vtok, body={"email": "x-49@ex.co"})[0] == 403)
+
+    # 49b. Draft validation: missing name / short body / unknown audience each carry their own code.
+    c1, r1 = jget("POST", "/api/admin/campaigns", token=admin, body={"subject": "S", "body": "long enough body", "audience": "all"})
+    c2, r2 = jget("POST", "/api/admin/campaigns", token=admin, body={"name": "N", "subject": "S", "body": "short", "audience": "all"})
+    c3, r3 = jget("POST", "/api/admin/campaigns", token=admin, body={"name": "N", "subject": "S", "body": "long enough body", "audience": "everyone"})
+    chk("49b missing name / short body / unknown audience are each rejected",
+        (c1, r1.get("error")) == (400, "name_required") and (c2, r2.get("error")) == (400, "body_too_short")
+        and (c3, r3.get("error")) == (400, "invalid_audience"), (r1, r2, r3))
+
+    # 49c. A valid draft is created and listed as 'draft'.
+    c, mk = jget("POST", "/api/admin/campaigns", token=admin,
+                 body={"name": "July digest 49", "subject": "Hello {{first_name}}",
+                       "body": "<p>Hi {{first_name}}, news for {{email}}.</p>", "audience": "subscribers"})
+    cid = mk.get("id") if isinstance(mk, dict) else None
+    c2, lst = jget("GET", "/api/admin/campaigns", token=admin)
+    lrow = next((r for r in lst.get("rows", []) if r.get("id") == cid), None)
+    chk("49c a valid draft is created and listed as draft", c == 200 and bool(cid) and bool(lrow) and lrow.get("status") == "draft", (mk, lrow))
+
+    # Baseline audience size, then seed: one live subscriber, one already-unsubscribed, one admin-suppressed.
+    c, pv0 = jget("POST", "/api/admin/campaigns/audience-preview", token=admin, body={"audience": "subscribers"})
+    con = dbconn()
+    con.execute("INSERT INTO newsletter_subscribers(email,status) VALUES(?, 'subscribed')", ("sub-live-49@ex.co",))
+    con.execute("INSERT INTO newsletter_subscribers(email,status) VALUES(?, 'unsubscribed')", ("sub-gone-49@ex.co",))
+    con.execute("INSERT INTO newsletter_subscribers(email,status) VALUES(?, 'subscribed')", ("sub-supp-49@ex.co",))
+    con.commit(); con.close()
+    # 49d. A manual suppression added through the admin API appears in the suppression list.
+    jget("POST", "/api/admin/suppression", token=admin, body={"email": "sub-supp-49@ex.co"})
+    c, sl = jget("GET", "/api/admin/suppression", token=admin)
+    chk("49d a manually-suppressed address appears in the suppression list (reason 'manual')",
+        c == 200 and any(r.get("email") == "sub-supp-49@ex.co" and r.get("reason") == "manual" for r in sl.get("rows", [])), sl.get("rows", [])[:3])
+
+    # 49e. Audience preview: only the live subscriber is deliverable; the unsubscribed + suppressed count as suppressed.
+    c, pv1 = jget("POST", "/api/admin/campaigns/audience-preview", token=admin, body={"audience": "subscribers"})
+    chk("49e preview counts +1 deliverable and +2 suppressed after seeding",
+        c == 200 and pv1.get("count") == pv0.get("count") + 1 and pv1.get("suppressed") == pv0.get("suppressed") + 2, (pv0, pv1))
+
+    # 49f/49g. Test-send: a bad address is rejected; a good one goes out personalised with the "[TEST]" prefix.
+    chk("49f a test-send to a malformed address is 400 invalid_email",
+        jget("POST", f"/api/admin/campaigns/{cid}/test", token=admin, body={"to": "not-an-email"})[0] == 400)
+    c, ts = jget("POST", f"/api/admin/campaigns/{cid}/test", token=admin, body={"to": "test-send-49@ex.co"})
+    con = dbconn()
+    subj = con.execute("SELECT subject FROM email_logs WHERE email=? ORDER BY id DESC", ("test-send-49@ex.co",)).fetchone()
+    nh = con.execute("SELECT COUNT(*) FROM notification_history WHERE related_type='campaign' AND related_id=? AND recipient=?",
+                     (cid, "test-send-49@ex.co")).fetchone()[0]
+    con.close()
+    chk("49g a test-send is personalised, '[TEST]'-prefixed and recorded to the notification ledger",
+        c == 200 and ts.get("ok") is True and bool(subj) and subj[0] == "[TEST] Hello there" and nh >= 1, (ts, subj, nh))
+
+    # 49h. Send: the ledger is written for exactly the deliverable audience (suppressed never enter it).
+    c, snd = jget("POST", f"/api/admin/campaigns/{cid}/send", token=admin)
+    chk("49h send accepts the draft and reports the previewed audience size",
+        c == 200 and snd.get("ok") is True and snd.get("total") == pv1.get("count") and snd.get("suppressed") == pv1.get("suppressed"), (snd, pv1))
+    # 49i. The background dispatcher completes: campaign 'sent', the live subscriber's row 'sent',
+    #      and neither the unsubscribed nor the suppressed address ever entered the recipient ledger.
+    det = {}
+    for _ in range(40):
+        c, det = jget("GET", f"/api/admin/campaigns/{cid}", token=admin)
+        if det.get("campaign", {}).get("status") == "sent": break
+        time.sleep(0.5)
+    con = dbconn()
+    excl = con.execute("SELECT COUNT(*) FROM campaign_recipients WHERE campaign_id=? AND email IN (?,?)",
+                       (cid, "sub-gone-49@ex.co", "sub-supp-49@ex.co")).fetchone()[0]
+    con.close()
+    live = next((r for r in det.get("recipients", []) if r.get("email") == "sub-live-49@ex.co"), None)
+    chk("49i background dispatch completes: status sent, live subscriber sent, suppressed never enrolled",
+        det.get("campaign", {}).get("status") == "sent" and det.get("counts", {}).get("sent") == snd.get("total")
+        and det.get("counts", {}).get("failed") == 0 and bool(live) and live.get("status") == "sent" and excl == 0,
+        (det.get("campaign", {}).get("status"), det.get("counts"), live, excl))
+    # 49j. Double-send guard: a second send of the same (now non-draft) campaign is 409 not_draft.
+    c, dbl = jget("POST", f"/api/admin/campaigns/{cid}/send", token=admin)
+    chk("49j a second send is refused (409 not_draft)", c == 409 and dbl.get("error") == "not_draft", (c, dbl))
+
+    # 49k. One-click unsubscribe with a BAD token: a neutral page, and nothing is suppressed.
+    c, page = jget("GET", "/api/unsubscribe?e=" + quote("sub-live-49@ex.co", safe="") + "&t=" + "0" * 24)
+    con = dbconn()
+    supp_bad = con.execute("SELECT COUNT(*) FROM email_suppression WHERE email=?", ("sub-live-49@ex.co",)).fetchone()[0]
+    st_bad = con.execute("SELECT status FROM newsletter_subscribers WHERE email=?", ("sub-live-49@ex.co",)).fetchone()[0]
+    con.close()
+    chk("49k a bad unsubscribe token gets a neutral page and suppresses nothing",
+        c == 200 and "If your request was valid" in str(page) and supp_bad == 0 and st_bad == "subscribed", (supp_bad, st_bad))
+
+    # 49l. With the VALID HMAC token (recomputed here with the server's secret precedence) the address is
+    #      suppressed with reason 'unsubscribe' and the subscriber flips to 'unsubscribed'.
+    secret = os.environ.get("NEWSLETTER_SALT") or os.environ.get("FORUM_SALT") or "pci-unsub-secret"
+    tok = hmac.new(secret.encode(), b"sub-live-49@ex.co", hashlib.sha256).hexdigest()[:24]
+    c, page2 = jget("GET", "/api/unsubscribe?e=" + quote("sub-live-49@ex.co", safe="") + "&t=" + tok)
+    con = dbconn()
+    supp_ok = con.execute("SELECT reason FROM email_suppression WHERE email=?", ("sub-live-49@ex.co",)).fetchone()
+    st_ok = con.execute("SELECT status FROM newsletter_subscribers WHERE email=?", ("sub-live-49@ex.co",)).fetchone()[0]
+    con.close()
+    chk("49l a valid one-click unsubscribe suppresses the address and flips the subscriber",
+        c == 200 and "You've been unsubscribed" in str(page2) and bool(supp_ok) and supp_ok[0] == "unsubscribe"
+        and st_ok == "unsubscribed", (supp_ok, st_ok))
+
+    # 49m. The unsubscribe is honoured by the next audience resolution (deliverable -1, suppressed +1).
+    c, pv2 = jget("POST", "/api/admin/campaigns/audience-preview", token=admin, body={"audience": "subscribers"})
+    chk("49m the unsubscribed address is excluded from the next audience resolution",
+        c == 200 and pv2.get("count") == pv1.get("count") - 1 and pv2.get("suppressed") == pv1.get("suppressed") + 1, (pv1, pv2))
+
+    # 49n. A manual suppression can be removed again through the admin API.
+    jget("POST", "/api/admin/suppression", token=admin, body={"email": "sub-supp-49@ex.co", "action": "remove"})
+    c, sl2 = jget("GET", "/api/admin/suppression", token=admin)
+    chk("49n removing a manual suppression drops it from the list",
+        c == 200 and all(r.get("email") != "sub-supp-49@ex.co" for r in sl2.get("rows", [])), None)
+
+def test_badges_module(admin):
+    # Incremental Testing Programme — native Open Badges 2.0 (Endpoints/Badges.cs) had no coverage.
+    # The whole surface is deliberately public (badge validators must read it unauthenticated), so there
+    # is no RBAC gate to prove; the security contract instead is: the recipient is a salted SHA-256 email
+    # hash (the raw email never appears), revocation is flagged without leaking the recipient, and
+    # test-account credentials are excluded (parity with /api/verify). No application changes.
+    print("\n=== 50. Badges: Open Badges issuer/class/assertion + hashed recipient + revocation/expiry ===")
+    tok, uid = make_paid_user("badge-holder-50@ex.co")
+    con = dbconn()
+    con.execute("INSERT INTO issued_credentials(credential_id,user_id,holder_name,certification_id,status) VALUES(?,?,?,?, 'active')",
+                ("PCI-BDG-50A", uid, "Bea Badger", 1))
+    con.commit(); con.close()
+
+    # 50a. The issuer profile is a valid Open Badges Issuer that self-references its hosted id.
+    c, iss = jget("GET", "/api/badges/issuer")
+    chk("50a issuer profile: type Issuer, self-referencing id, org name, image URL",
+        c == 200 and iss.get("type") == "Issuer" and str(iss.get("id", "")).endswith("/api/badges/issuer")
+        and iss.get("name") == "Project Controls Institute" and str(iss.get("image", "")).endswith("/api/badges/issuer/image"), iss)
+
+    # 50b. Badge images are branded SVGs; an unknown cert ref falls back to the PCI mark (no 500).
+    c1, svg = jget("GET", "/api/badges/image/PCL-AI")
+    c2, fsvg = jget("GET", "/api/badges/image/does-not-exist")
+    chk("50b badge image is an SVG carrying the cert acronym; unknown ref falls back to 'PCI'",
+        c1 == 200 and str(svg).startswith("<svg") and ">PCI PCL-AI</text>" in str(svg)
+        and c2 == 200 and ">PCI</text>" in str(fsvg), str(svg)[:80])
+
+    # 50c. The BadgeClass resolves by code AND by numeric id, both canonicalised to the code-based id.
+    c1, bc = jget("GET", "/api/badges/class/PCL-AI")
+    c2, bc2 = jget("GET", "/api/badges/class/1")
+    chk("50c BadgeClass by code and by id: canonical id, name, image, criteria slug, issuer link",
+        c1 == 200 and bc.get("type") == "BadgeClass" and str(bc.get("id", "")).endswith("/api/badges/class/PCL-AI")
+        and bool(bc.get("name")) and str(bc.get("image", "")).endswith("/api/badges/image/PCL-AI")
+        and "/certifications/pcl-ai" in str(bc.get("criteria", {}).get("id", ""))
+        and str(bc.get("issuer", "")).endswith("/api/badges/issuer")
+        and c2 == 200 and str(bc2.get("id", "")).endswith("/api/badges/class/PCL-AI"), bc)
+    # 50d. An unknown certification ref is a clean 404.
+    c, nf = jget("GET", "/api/badges/class/no-such-cert")
+    chk("50d unknown BadgeClass ref is 404 not_found", c == 404 and nf.get("error") == "not_found", (c, nf))
+
+    # 50e. The Assertion is HostedBadge-verified: its id is its own URL, badge links the class,
+    #      issuedOn is ISO-8601 Zulu and evidence points at the public verify page.
+    c, a = jget("GET", "/api/badges/assertion/PCI-BDG-50A")
+    chk("50e assertion: self-id, HostedBadge verification, class link, ISO issuedOn, verify evidence",
+        c == 200 and a.get("type") == "Assertion" and str(a.get("id", "")).endswith("/api/badges/assertion/PCI-BDG-50A")
+        and a.get("verification", {}).get("type") == "HostedBadge" and str(a.get("badge", "")).endswith("/api/badges/class/PCL-AI")
+        and "T" in str(a.get("issuedOn", "")) and str(a.get("issuedOn", "")).endswith("Z")
+        and "verify.html?id=PCI-BDG-50A" in str(a.get("evidence", "")), a)
+
+    # 50f. Recipient privacy: a salted SHA-256 of the lowercased email (salt = the public credential id),
+    #      recomputable by a verifier the holder shares their email with — and the raw email NEVER appears.
+    rec = a.get("recipient", {})
+    expected = "sha256$" + sha256hex("badge-holder-50@ex.co" + "PCI-BDG-50A")
+    chk("50f recipient is the salted email hash and the raw email never appears in the assertion",
+        rec.get("hashed") is True and rec.get("salt") == "PCI-BDG-50A" and rec.get("identity") == expected
+        and "badge-holder-50@ex.co" not in json.dumps(a), rec)
+
+    # 50g. The credential id is matched case-insensitively (shared links survive lowercasing).
+    c, al = jget("GET", "/api/badges/assertion/pci-bdg-50a")
+    chk("50g a lowercased credential id still resolves to the same recipient",
+        c == 200 and al.get("recipient", {}).get("salt") == "PCI-BDG-50A", (c, al.get("recipient")))
+
+    # 50h. The public badge-page view summarises the credential with share/verify links.
+    c, v = jget("GET", "/api/badges/view/PCI-BDG-50A")
+    chk("50h badge view: found, active+valid, holder, acronym, assertion/image/verify links",
+        c == 200 and v.get("found") is True and v.get("state") == "active" and v.get("valid") is True
+        and v.get("holder_name") == "Bea Badger" and v.get("certification_acronym") == "PCI PCL-AI"
+        and str(v.get("assertion_url", "")).endswith("/api/badges/assertion/PCI-BDG-50A")
+        and "verify.html?id=PCI-BDG-50A" in str(v.get("verify_url", "")), v)
+
+    # 50i. Revocation: the assertion still resolves (per Open Badges) but is flagged revoked, with NO
+    #      recipient block (no hash leak for a revoked holder); the view mirrors revoked/invalid.
+    con = dbconn(); con.execute("UPDATE issued_credentials SET status='revoked' WHERE credential_id=?", ("PCI-BDG-50A",)); con.commit(); con.close()
+    c, ar = jget("GET", "/api/badges/assertion/PCI-BDG-50A")
+    c2, vr = jget("GET", "/api/badges/view/PCI-BDG-50A")
+    chk("50i a revoked credential is flagged revoked with a reason and no recipient block; view mirrors it",
+        c == 200 and ar.get("revoked") is True and bool(ar.get("revocationReason")) and "recipient" not in ar
+        and vr.get("state") == "revoked" and vr.get("valid") is False, (ar, vr.get("state")))
+
+    # 50j. Expiry: a lapsed expires_at (status still 'active') surfaces as an ISO 'expires' on the
+    #      assertion, and the view computes state 'expired' / valid false (parity with /api/verify).
+    con = dbconn()
+    con.execute("INSERT INTO issued_credentials(credential_id,user_id,holder_name,certification_id,status,expires_at) VALUES(?,?,?,?, 'active', ?)",
+                ("PCI-BDG-50B", uid, "Bea Badger", 1, "2020-01-01 00:00:00"))
+    con.commit(); con.close()
+    c, ae = jget("GET", "/api/badges/assertion/PCI-BDG-50B")
+    c2, ve = jget("GET", "/api/badges/view/PCI-BDG-50B")
+    chk("50j a lapsed credential carries an ISO expires and the view reads expired/invalid",
+        c == 200 and ae.get("expires") == "2020-01-01T00:00:00Z" and ve.get("state") == "expired" and ve.get("valid") is False,
+        (ae.get("expires"), ve.get("state")))
+
+    # 50k. Test-account credentials are excluded from the public badge surface (parity with /api/verify).
+    tok2, uid2 = make_paid_user("badge-test-50@ex.co")
+    con = dbconn()
+    con.execute("UPDATE users SET is_test=1 WHERE id=?", (uid2,))
+    con.execute("INSERT INTO issued_credentials(credential_id,user_id,holder_name,certification_id,status) VALUES(?,?,?,?, 'active')",
+                ("PCI-BDG-50C", uid2, "Testy Tester", 1))
+    con.commit(); con.close()
+    c1, at = jget("GET", "/api/badges/assertion/PCI-BDG-50C")
+    c2, vt = jget("GET", "/api/badges/view/PCI-BDG-50C")
+    chk("50k a test-account credential is invisible: assertion 404 and view not found",
+        c1 == 404 and at.get("error") == "not_found" and vt.get("found") is False, (c1, vt))
+
+    # 50l. An unknown credential id is a clean miss on both surfaces.
+    c1, an = jget("GET", "/api/badges/assertion/PCI-NOPE-50")
+    c2, vn = jget("GET", "/api/badges/view/PCI-NOPE-50")
+    chk("50l an unknown credential id: assertion 404 and view not found",
+        c1 == 404 and an.get("error") == "not_found" and vn.get("found") is False, (c1, vn))
+
+def test_site_chat(admin):
+    # Incremental Testing Programme — the self-hosted site chat (Endpoints/Chat.cs) had no coverage: the
+    # bot brain (small talk → KB keyword match → fallback), human-handoff escalation, the visitor poll,
+    # and the inbox-gated admin console that never emits ip_hash or the visitor's bearer token. The visitor
+    # runs on a distinct trusted last-hop (X-Forwarded-For) so the per-IP-hash limits see one clean client.
+    print("\n=== 51. Site chat: bot brain (KB/small-talk/fallback) + escalation + admin console privacy ===")
+    V = {"X-Forwarded-For": "203.0.113.51"}   # the visitor's stable client hop
+    c, st = jget("POST", "/api/chat/start", body={"name": "Cleo51"}, headers=V)
+    tok = st.get("token")
+    chk("51a starting a chat issues a token and a personalised bot greeting",
+        c == 200 and bool(tok) and st.get("status") == "bot" and "Cleo51" in str(st.get("greeting", "")), st)
+    c, nf = jget("POST", "/api/chat/send", body={"token": "no-such-token-51", "body": "hello"}, headers=V)
+    chk("51b sending with an unknown token is not_found (404)", c == 404 and nf.get("error") == "not_found", (c, nf))
+    c, bb = jget("POST", "/api/chat/send", body={"token": tok, "body": ""}, headers=V)
+    chk("51c an empty message without escalate is bad_body (400)", c == 400 and bb.get("error") == "bad_body", (c, bb))
+    # Admin KB: validation + seed an entry with a unique keyword so no seeded KB row can shadow it.
+    c, bq = jget("POST", "/api/admin/chat/kb", token=admin, body={"question": "hm", "answer": "too short question"})
+    chk("51d a too-short KB question is rejected (bad_question, 400)", c == 400 and bq.get("error") == "bad_question", bq)
+    c, kb = jget("POST", "/api/admin/chat/kb", token=admin,
+                 body={"question": "What is the zephyrfee51 cost?", "answer": "The zephyrfee51 costs 42 credits.", "keywords": "zephyrfee51"})
+    kbid = kb.get("id")
+    chk("51e an admin KB entry is created", c == 200 and bool(kbid), kb)
+    # Bot brain: KB keyword match → the seeded answer.
+    c, r1 = jget("POST", "/api/chat/send", body={"token": tok, "body": "how much is the zephyrfee51 please"}, headers=V)
+    bot1 = (r1.get("replies") or [{}])[0].get("body", "")
+    chk("51f a KB-keyword question gets the seeded answer", c == 200 and bot1 == "The zephyrfee51 costs 42 credits.", bot1)
+    # Fallback for a question nothing matches.
+    c, r2 = jget("POST", "/api/chat/send", body={"token": tok, "body": "qqrx bzzt vlomp"}, headers=V)
+    bot2 = (r2.get("replies") or [{}])[0].get("body", "")
+    chk("51g an unmatched question gets the helpful fallback", bot2.startswith("I'm sorry"), bot2)
+    # Small talk beats the fallback.
+    c, r3 = jget("POST", "/api/chat/send", body={"token": tok, "body": "thanks"}, headers=V)
+    bot3 = (r3.get("replies") or [{}])[0].get("body", "")
+    chk("51h small talk is answered conversationally (never the fallback)", bot3.startswith("You're very welcome"), bot3)
+    # Human handoff: the word 'person' queues the session.
+    c, r4 = jget("POST", "/api/chat/send", body={"token": tok, "body": "can I talk to a person about enrolment"}, headers=V)
+    chk("51i asking for a person moves the session to the queue (status waiting)",
+        c == 200 and r4.get("status") == "waiting" and "queue" in str((r4.get("replies") or [{}])[0].get("body", "")), r4)
+    c, pol = jget("GET", f"/api/chat/poll?token={tok}", headers=V)
+    chk("51j the visitor poll returns the transcript and the waiting status",
+        c == 200 and pol.get("status") == "waiting" and len(pol.get("messages", [])) >= 6, (pol.get("status"), len(pol.get("messages", []))))
+    # Admin console: inbox-gated; the session shows in the waiting queue; ip_hash/token are never emitted.
+    vtok = globals().get("_VIEWER_TOK")
+    chk("51k the admin chat console needs the 'inbox' permission (viewer 403)",
+        bool(vtok) and jget("GET", "/api/admin/chat/sessions", token=vtok)[0] == 403
+        and jget("GET", "/api/admin/chat/kb", token=vtok)[0] == 403)
+    c, adm = jget("GET", "/api/admin/chat/sessions?status=waiting", token=admin)
+    row = next((s for s in adm.get("sessions", []) if s.get("visitor_name") == "Cleo51"), None)
+    sid = row.get("id") if row else None
+    chk("51l the waiting session is listed for admins WITHOUT ip_hash or the visitor token",
+        bool(row) and adm.get("counts", {}).get("waiting", 0) >= 1
+        and "ip_hash" not in row and "token" not in row, row)
+    # Agent reply goes live and reaches the visitor's poll.
+    c, rep = jget("POST", f"/api/admin/chat/sessions/{sid}/reply", token=admin, body={"body": "Hello from the PCI team — happy to help."})
+    c, pol2 = jget("GET", f"/api/chat/poll?token={tok}", headers=V)
+    chk("51m an agent reply flips the session live and reaches the visitor",
+        rep.get("status") == "live" and pol2.get("status") == "live"
+        and any(m.get("sender") == "agent" for m in pol2.get("messages", [])), (rep, pol2.get("status")))
+    # Close: the visitor can no longer send, and the closing notice is in the transcript.
+    jget("POST", f"/api/admin/chat/sessions/{sid}/close", token=admin)
+    c, cs = jget("POST", "/api/chat/send", body={"token": tok, "body": "one more thing"}, headers=V)
+    c2, pol3 = jget("GET", f"/api/chat/poll?token={tok}", headers=V)
+    chk("51n a closed chat refuses new visitor messages (409) and shows the closing notice",
+        c == 409 and cs.get("error") == "closed" and pol3.get("status") == "closed"
+        and any("closed by the team" in str(m.get("body", "")) for m in pol3.get("messages", [])), (c, pol3.get("status")))
+    # Disabling the KB entry removes it from the bot brain (enabled=1 filter). The probe is the bare
+    # unique token — phrasing with real words ("how much…") can legitimately match a seeded fees row.
+    jget("POST", f"/api/admin/chat/kb/{kbid}", token=admin, body={"action": "toggle"})
+    c, st2 = jget("POST", "/api/chat/start", body={"name": "Nia51"}, headers=V)
+    tok2 = st2.get("token")
+    c, r5 = jget("POST", "/api/chat/send", body={"token": tok2, "body": "zephyrfee51"}, headers=V)
+    bot5 = (r5.get("replies") or [{}])[0].get("body", "")
+    chk("51o a toggled-off KB entry no longer answers (falls back)",
+        bot5.startswith("I'm sorry") and "42 credits" not in bot5, bot5)
+
+def test_admin_seo(admin):
+    # Incremental Testing Programme §52 — Admin SEO console (Endpoints/AdminSeo.cs, 'pages' permission):
+    # overview/pages issue detection, the redirect manager's single-hop write-time guards proven LIVE
+    # against the serving middleware, write-only PSI secret, IndexNow ownership file + URL allow-list,
+    # and the practical audit. All from_paths are fictitious (seo52-*) so no real page is ever redirected.
+    print("\n=== 52. Admin SEO console: overview, redirect guards (live), integrations secrecy, audit ===")
+    import urllib.request as _ur, urllib.error as _ue
+
+    class _NoRedir(_ur.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, headers, newurl): return None
+    _op = _ur.build_opener(_NoRedir)
+
+    def raw_status(path):
+        # (status, Location) without following redirects — the point IS the redirect response itself.
+        try:
+            with _op.open(BASE + path) as r: return r.status, r.headers.get("Location")
+        except _ue.HTTPError as e:
+            return e.code, e.headers.get("Location")
+
+    c, _ = jget("GET", "/api/admin/seo/overview")
+    chk("52a the SEO console requires an admin token (401)", c == 401, c)
+    vtok = globals().get("_VIEWER_TOK")
+    c, _ = jget("GET", "/api/admin/seo/overview", token=vtok)
+    chk("52b a viewer admin without the pages permission is refused (403)", c == 403, c)
+
+    c, ov = jget("GET", "/api/admin/seo/overview", token=admin)
+    chk("52c overview reports page counts and a self-consistent sitemap size",
+        c == 200 and ov.get("pages", 0) > 0 and ov.get("canonical_host")
+        and ov.get("sitemap_urls") == ov.get("published") - ov.get("noindex")
+        and isinstance(ov.get("issues", {}).get("missing_title"), int), ov)
+
+    c, pl = jget("GET", "/api/admin/seo/pages", token=admin)
+    rows = pl.get("rows", [])
+    flags_ok = all(r["issues"]["missing_title"] == (not r.get("title")) and
+                   r["issues"]["missing_meta"] == (not r.get("meta_description")) for r in rows)
+    chk("52d per-page issue flags agree with the underlying fields on every row",
+        c == 200 and len(rows) > 0 and flags_ok, len(rows))
+
+    # --- redirect manager: create (input path normalised), then prove it live ---
+    c, r = jget("POST", "/api/admin/seo/redirects", token=admin,
+                body={"from_path": "seo52-old.html", "to_url": "/membership.html"})
+    c2, lst = jget("GET", "/api/admin/seo/redirects", token=admin)
+    mine = next((x for x in lst.get("rows", []) if x.get("from_path") == "/seo52-old.html"), None)
+    chk("52e a redirect is created with its path normalised to a leading slash",
+        c == 200 and r.get("ok") and mine and mine.get("to_url") == "/membership.html"
+        and int(mine.get("status")) == 301, mine)
+    st, loc = raw_status("/seo52-old.html")
+    chk("52f the redirect is served live as a 301 to the stored target", st == 301 and loc == "/membership.html", (st, loc))
+
+    c, r = jget("POST", "/api/admin/seo/redirects", token=admin,
+                body={"from_path": "/seo52-self.html", "to_url": "/seo52-self.html"})
+    chk("52g a self-redirect is rejected at write time (400)", c == 400 and r.get("error") == "self_redirect", r)
+
+    # Single-hop guarantee, both directions. First a mid rule to build the chain against.
+    jget("POST", "/api/admin/seo/redirects", token=admin, body={"from_path": "/seo52-mid.html", "to_url": "/membership.html"})
+    c, r = jget("POST", "/api/admin/seo/redirects", token=admin,
+                body={"from_path": "/seo52-x.html", "to_url": "/seo52-mid.html"})
+    chk("52h pointing at an already-redirected path is rejected as a chain", c == 400 and r.get("error") == "chain", r)
+    c, r = jget("POST", "/api/admin/seo/redirects", token=admin,
+                body={"from_path": "/membership.html", "to_url": "/index.html"})
+    chk("52i redirecting a path that existing rules target is rejected as a chain", c == 400 and r.get("error") == "chain", r)
+    if c == 200:  # never leave a real page redirected if the guard ever regressed
+        c2, lst = jget("GET", "/api/admin/seo/redirects", token=admin)
+        bad = next((x for x in lst.get("rows", []) if x.get("from_path") == "/membership.html"), None)
+        if bad: jget("POST", f"/api/admin/seo/redirects/{bad['id']}/delete", token=admin)
+
+    c, r = jget("POST", "/api/admin/seo/redirects", token=admin,
+                body={"from_path": "/api/seo52-nope", "to_url": "/index.html"})
+    chk("52j private/app paths can never be redirected (400)", c == 400 and r.get("error") == "private_path", r)
+
+    jget("POST", "/api/admin/seo/redirects", token=admin,
+         body={"from_path": "/seo52-coerce.html", "to_url": "/membership.html", "status": 307})
+    c, lst = jget("GET", "/api/admin/seo/redirects", token=admin)
+    co = next((x for x in lst.get("rows", []) if x.get("from_path") == "/seo52-coerce.html"), None)
+    chk("52k an unsupported redirect status is coerced to 301", co and int(co.get("status")) == 301, co)
+
+    jget("POST", "/api/admin/seo/redirects", token=admin, body={"from_path": "/seo52-gone.html", "status": 410})
+    st, loc = raw_status("/seo52-gone.html")
+    chk("52l a 410 Gone rule is served live with no Location target", st == 410 and loc is None, (st, loc))
+
+    oldid = mine.get("id") if mine else None
+    jget("POST", f"/api/admin/seo/redirects/{oldid}/delete", token=admin)
+    st, _loc = raw_status("/seo52-old.html")
+    c, lst = jget("GET", "/api/admin/seo/redirects", token=admin)
+    chk("52m a deleted redirect stops being served immediately (404, gone from the list)",
+        st == 404 and not any(x.get("from_path") == "/seo52-old.html" for x in lst.get("rows", [])), st)
+
+    # --- integrations: public IDs echoed, the PSI key write-only ---
+    c, r = jget("POST", "/api/admin/seo/integrations", token=admin,
+                body={"ga4_measurement_id": "G-TEST52", "psi_api_key": "psi-secret-52"})
+    c2, ig = jget("GET", "/api/admin/seo/integrations", token=admin)
+    chk("52n integrations store settings; the PSI key reads back only as has_key, never the value",
+        c == 200 and ig.get("ga4_measurement_id") == "G-TEST52" and ig.get("psi_has_key") is True
+        and "psi-secret-52" not in json.dumps(ig), ig.get("psi_has_key"))
+    jget("POST", "/api/admin/seo/integrations", token=admin, body={"ga4_measurement_id": "G-TEST52B"})
+    c, ig2 = jget("GET", "/api/admin/seo/integrations", token=admin)
+    chk("52o an update that omits the PSI key leaves the stored secret untouched",
+        ig2.get("ga4_measurement_id") == "G-TEST52B" and ig2.get("psi_has_key") is True, ig2.get("ga4_measurement_id"))
+
+    key = ig2.get("indexnow_key") or ""
+    st, body, _ct = _raw_get("/" + key + ".txt")
+    chk("52p the IndexNow ownership key is generated and served at /{key}.txt",
+        len(key) == 32 and st == 200 and key in body.decode("utf-8", "ignore"), (len(key), st))
+
+    # Foreign URLs are filtered by the canonical-host allow-list BEFORE any submission —
+    # an all-foreign list therefore submits nothing and never leaves the process.
+    c, sub = jget("POST", "/api/admin/seo/indexnow/submit", token=admin,
+                  body={"urls": ["https://evil.example/x", "http://attacker.test/y"]})
+    chk("52q foreign URLs never reach IndexNow (filtered to an empty submission)",
+        c == 200 and sub.get("submitted") == 0 and "no URLs" in str(sub.get("detail", "")), sub)
+
+    c, aud = jget("GET", "/api/admin/seo/audit", token=admin)
+    chk("52r the practical audit scans the real page set and confirms our rules created no chain",
+        c == 200 and aud.get("page_count", 0) > 0 and isinstance(aud.get("missing_h1"), list)
+        and not any(ch.get("from") in ("/seo52-mid.html", "/seo52-coerce.html") for ch in aud.get("redirect_chains", [])), aud.get("page_count"))
+
+    c, r = jget("POST", "/api/admin/seo/pagespeed", token=admin, body={"url": "notaurl"})
+    chk("52s PageSpeed refuses a schemeless URL before any outbound call (400)",
+        c == 400 and r.get("error") == "bad_url", r)
+
+def test_admin_i18n(admin):
+    # Incremental Testing Programme §53 — backend-owned website translations (Endpoints/AdminI18n.cs,
+    # owner-only). Proves the gate, coverage/regions shapes, a hand-edited translation rendered LIVE on
+    # the public page (?lang= + <html lang>/RTL dir), the write-only provider key, a full auto-translate
+    # round-trip through a mock OpenAI-compatible endpoint, and the page-scoped clear.
+    print("\n=== 53. Admin translations: owner gate, live rendering, provider secrecy, auto-translate ===")
+    c, _ = jget("GET", "/api/admin/i18n/coverage")
+    chk("53a the translations console requires an admin token (401)", c == 401, c)
+    vtok = globals().get("_VIEWER_TOK")
+    c, _ = jget("GET", "/api/admin/i18n/coverage", token=vtok)
+    chk("53b a non-owner admin is refused — translations are owner-only (403)", c == 403, c)
+
+    c, cov = jget("GET", "/api/admin/i18n/coverage", token=admin)
+    langs = {l.get("code") for l in cov.get("languages", [])}
+    chk("53c coverage reports the 6 target languages, per-language progress and the page list",
+        c == 200 and cov.get("coverage", {}).get("total", 0) > 0
+        and langs == {"ko", "ar", "es", "fr", "zh", "ru"}
+        and "es" in cov.get("coverage", {}).get("langs", {}) and len(cov.get("pages", [])) > 0, langs)
+
+    c, r = jget("GET", "/api/admin/i18n/regions?slug=index.html&lang=xx", token=admin)
+    chk("53d an unsupported language is rejected (400 bad_lang)", c == 400 and r.get("error") == "bad_lang", r)
+    c, r = jget("GET", "/api/admin/i18n/regions?slug=..%2Fsecrets&lang=es", token=admin)
+    chk("53e a traversal slug is rejected (400 bad_slug)", c == 400 and r.get("error") == "bad_slug", r)
+
+    # Find a page with a body ('p'-scope) text region to hand-translate. _h1 preferred — its
+    # replacement semantics are positional and easy to spot in the served HTML.
+    slug, region = None, None
+    for cand in [s for s in cov.get("pages", []) if s != "index.html"][:12]:
+        c, rg = jget("GET", f"/api/admin/i18n/regions?slug={cand}&lang=es", token=admin)
+        rows = rg.get("rows", [])
+        pick = next((x for x in rows if x.get("ckey") == "_h1"), None) or \
+               next((x for x in rows if x.get("scope") == "p" and x.get("ctype") == "text"), None)
+        if pick and rows:
+            slug, region = cand, pick
+            chk("53f a page's regions list its English source text for translation",
+                all((x.get("english") or "") != "" for x in rows), cand)
+            break
+    if slug is None:
+        chk("53f a page's regions list its English source text for translation", False, "no page with a p-scope region")
+        return
+
+    c, r = jget("POST", "/api/admin/i18n/set", token=admin,
+                body={"lang": "es", "scope": "q", "slug": slug, "ckey": "_h1", "cvalue": "x"})
+    chk("53g an unknown scope is rejected (400 bad_key)", c == 400 and r.get("error") == "bad_key", r)
+
+    sentinel = "Zephyr53 seccion"
+    c, r = jget("POST", "/api/admin/i18n/set", token=admin,
+                body={"lang": "es", "scope": "p", "slug": slug, "ckey": region["ckey"], "cvalue": sentinel})
+    c2, rg = jget("GET", f"/api/admin/i18n/regions?slug={slug}&lang=es", token=admin)
+    got = next((x for x in rg.get("rows", []) if x.get("ckey") == region["ckey"]), {})
+    chk("53h a hand-edited translation is stored and echoed by the regions view",
+        c == 200 and r.get("ok") and got.get("translation") == sentinel, got.get("translation"))
+
+    st, hb, _ = _raw_get(f"/{slug}?lang=es")
+    hes = hb.decode("utf-8", "ignore")
+    st2, hb2, _ = _raw_get(f"/{slug}")
+    hen = hb2.decode("utf-8", "ignore")
+    chk("53i the translation renders LIVE on the public page (?lang=es sets <html lang>); English untouched",
+        st == 200 and sentinel in hes and 'lang="es"' in hes and st2 == 200 and sentinel not in hen, (st, st2))
+    st, hb, _ = _raw_get(f"/{slug}?lang=ar")
+    har = hb.decode("utf-8", "ignore")
+    chk("53j an RTL language serves the page with lang=\"ar\" and dir=\"rtl\"",
+        st == 200 and 'lang="ar"' in har and 'dir="rtl"' in har, st)
+
+    c, r = jget("POST", "/api/admin/i18n/translate", token=admin, body={"lang": "es"})
+    chk("53k auto-translate refuses until a provider is configured (400)",
+        c == 400 and r.get("error") == "provider_not_configured", r)
+    c, r = jget("POST", "/api/admin/i18n/config", token=admin, body={"provider": "sketchy"})
+    chk("53l an unknown provider is rejected (400 bad_provider)", c == 400 and r.get("error") == "bad_provider", r)
+
+    srv, mport = start_mock_vendor()
+    c, r = jget("POST", "/api/admin/i18n/config", token=admin,
+                body={"provider": "custom", "endpoint": f"http://127.0.0.1:{mport}/v1", "api_key": "tr-key-53", "model": "mock-mt"})
+    c2, cov2 = jget("GET", "/api/admin/i18n/coverage", token=admin)
+    prov = cov2.get("provider", {})
+    chk("53m a custom provider configures; the API key reads back only as has_key, never the value",
+        c == 200 and r.get("ok") and r.get("configured") is True and prov.get("provider") == "custom"
+        and prov.get("has_key") is True and "tr-key-53" not in json.dumps(cov2), prov)
+
+    c, r = jget("POST", "/api/admin/i18n/translate", token=admin,
+                body={"lang": "fr", "slug": slug, "overwrite": True, "limit": 2})
+    c2, rgf = jget("GET", f"/api/admin/i18n/regions?slug={slug}&lang=fr", token=admin)
+    auto = [x for x in rgf.get("rows", []) if str(x.get("translation") or "").startswith("[t] ")]
+    chk("53n auto-translate round-trips through the OpenAI-compatible provider and stores the batch",
+        c == 200 and r.get("ok") and r.get("translated") == 2 and len(auto) >= 1, (r, len(auto)))
+
+    c, r = jget("POST", "/api/admin/i18n/clear", token=admin, body={"lang": "es", "slug": slug})
+    c2, rg2 = jget("GET", f"/api/admin/i18n/regions?slug={slug}&lang=es", token=admin)
+    got2 = next((x for x in rg2.get("rows", []) if x.get("ckey") == region["ckey"]), {})
+    st, hb, _ = _raw_get(f"/{slug}?lang=es")
+    chk("53o a page-scoped clear removes the translation and the live page reverts to English",
+        c == 200 and r.get("ok") and got2.get("translation") is None
+        and sentinel not in hb.decode("utf-8", "ignore"), got2.get("translation"))
+
+    c, r = jget("POST", "/api/admin/i18n/config", token=admin, body={"provider": "custom", "model": "mock-mt-2"})
+    chk("53p a config update that omits the API key keeps the stored secret (still configured)",
+        c == 200 and r.get("configured") is True, r)
+    srv.shutdown()
+
+def test_honorary_idv(admin):
+    # Incremental Testing Programme §54 — shortlist-gated honorary identity verification
+    # (Endpoints/HonoraryIdv.cs, ZERO prior coverage): the owner-only shortlist mints a one-time
+    # 14-day link whose raw token is never stored (SHA-256 only); the public tokenised GET/POST
+    # (data minimisation, declaration ladder, MIME allow-list), token burn + replay defence,
+    # metadata-only admin doc list, byte-exact owner download, one-click delete, and 410 expiry.
+    print("\n=== 54. Honorary IDV: hashed one-time token, declarations, protected docs, delete, expiry ===")
+
+    def _tok(resp):
+        l = resp.get("link", "") or ""
+        return l.split("token=", 1)[1] if "token=" in l else ""
+
+    email = "idv-54@ex.co"
+    c, ha = jget("POST", "/api/honorary-application", body=_hon_app(email))
+    ref = ha.get("reference")
+    con = dbconn(); aid = con.execute("SELECT id FROM honorary_applications WHERE email=? ORDER BY id DESC LIMIT 1", (email,)).fetchone()[0]; con.close()
+
+    # --- owner gate + unknown id ---
+    vtok = globals().get("_VIEWER_TOK")
+    chk("54a the shortlist is owner-only (401 unauthenticated, 403 for a viewer admin)",
+        jget("POST", f"/api/admin/honorary-applications/{aid}/shortlist")[0] == 401
+        and bool(vtok) and jget("POST", f"/api/admin/honorary-applications/{aid}/shortlist", token=vtok)[0] == 403)
+    c, nf = jget("POST", "/api/admin/honorary-applications/99999999/shortlist", token=admin)
+    chk("54b shortlisting an unknown application is not_found (404)", c == 404 and nf.get("error") == "not_found", (c, nf))
+
+    # --- shortlist mints a one-time link; the DB keeps only the token's SHA-256 ---
+    c, sl = jget("POST", f"/api/admin/honorary-applications/{aid}/shortlist", token=admin)
+    raw = _tok(sl)
+    chk("54c shortlisting mints a one-time verification link that expires in 14 days",
+        c == 200 and sl.get("ok") is True and "/honorary-verification.html?token=" in sl.get("link", "")
+        and sl.get("expires_days") == 14 and len(raw) == 64, sl)
+    con = dbconn(); row = con.execute("SELECT idv_token,idv_status,shortlisted FROM honorary_applications WHERE id=?", (aid,)).fetchone(); con.close()
+    chk("54d the DB stores ONLY the SHA-256 of the token (never the raw), status invited + shortlisted",
+        row and row[0] == sha256hex(raw) and row[0] != raw and row[1] == "invited" and H0(row[2]) == 1, row)
+
+    # --- public GET: minimum context, no email; bad tokens miss cleanly ---
+    c, g = jget("GET", f"/api/honorary-idv/{raw}")
+    chk("54e the public link returns the MINIMUM context: first name + reference, not yet submitted",
+        c == 200 and g.get("ok") is True and g.get("first_name") == "Ada" and bool(ref) and g.get("reference") == ref
+        and g.get("already_submitted") is False and g.get("stage") == "shortlisted", g)
+    chk("54f the tokenised response never contains the applicant's email (data minimisation)",
+        email not in json.dumps(g).lower(), g)
+    c1, g1 = jget("GET", "/api/honorary-idv/" + "f" * 64)
+    c2, g2 = jget("GET", "/api/honorary-idv/tooshort")
+    chk("54g a garbage token and a <16-char token both miss cleanly (404 invalid_token)",
+        c1 == 404 and g1.get("error") == "invalid_token" and c2 == 404 and g2.get("error") == "invalid_token", (c1, c2))
+
+    # --- declaration ladder, missing photo, and the storage intake's MIME allow-list ---
+    ca, d1 = jget("POST", f"/api/honorary-idv/{raw}", body={})
+    cb, d2 = jget("POST", f"/api/honorary-idv/{raw}", body={"declaration_truthful": True})
+    cc, d3 = jget("POST", f"/api/honorary-idv/{raw}", body={"declaration_truthful": True, "background_declaration": True})
+    chk("54h the declaration ladder rejects step by step: truthfulness, background, consent (all 400)",
+        (ca, d1.get("error")) == (400, "declaration_required")
+        and (cb, d2.get("error")) == (400, "background_required")
+        and (cc, d3.get("error")) == (400, "consent_required"), (d1, d2, d3))
+    FLAGS = {"declaration_truthful": True, "background_declaration": True, "consent": True}
+    c, d4 = jget("POST", f"/api/honorary-idv/{raw}", body=dict(FLAGS))
+    chk("54i all declarations but no files is photo_required (400)", c == 400 and d4.get("error") == "photo_required", (c, d4))
+    c, d5 = jget("POST", f"/api/honorary-idv/{raw}",
+                 body=dict(FLAGS, photo=TINY_PNG, government_id="data:text/plain;base64,aGVsbG8="))
+    chk("54j a disallowed file type is refused by the intake, naming the offending document",
+        c == 400 and d5.get("error") == "file_type_not_allowed" and d5.get("doc_kind") == "government_id", d5)
+
+    # --- full submission: 2 docs stored, metadata-only listing, token burned ---
+    PNG_BYTES = base64.b64decode(TINY_PNG.split(",", 1)[1])
+    c, sub = jget("POST", f"/api/honorary-idv/{raw}",
+                  body=dict(FLAGS, photo=TINY_PNG, photo_filename="face-54.png",
+                            government_id=TINY_PNG, government_id_filename="passport-54.png"))
+    chk("54k a full submission (photo + government ID + declarations) is received", c == 200 and sub.get("ok") is True, sub)
+    c, dl = jget("GET", f"/api/admin/honorary-applications/{aid}/idv", token=admin)
+    docs = dl.get("documents", [])
+    chk("54l the admin list shows exactly the 2 documents as METADATA ONLY (no storage_ref/sha256)",
+        c == 200 and len(docs) == 2 and sorted(d.get("doc_kind") for d in docs) == ["government_id", "photo"]
+        and all("storage_ref" not in d and "sha256" not in d for d in docs)
+        and all(d.get("mime") == "image/png" and d.get("size_bytes") == len(PNG_BYTES)
+                and d.get("filename") and d.get("created_at") for d in docs), docs)
+    con = dbconn(); row = con.execute("SELECT idv_status,idv_token,background_declaration FROM honorary_applications WHERE id=?", (aid,)).fetchone(); con.close()
+    chk("54m submission records submitted + the attestation and BURNS the one-time token (NULL)",
+        row and row[0] == "submitted" and row[1] is None and H0(row[2]) == 1, row)
+    c1, _g = jget("GET", f"/api/honorary-idv/{raw}")
+    c2, r2 = jget("POST", f"/api/honorary-idv/{raw}", body=dict(FLAGS, photo=TINY_PNG, government_id=TINY_PNG))
+    chk("54n the used link is dead: GET and a POST replay both miss (404, one-time)",
+        c1 == 404 and c2 == 404 and r2.get("error") == "invalid_token", (c1, c2))
+
+    # --- re-shortlist: a DIFFERENT token, already_submitted page, the CASE WHEN status guard ---
+    c, sl2 = jget("POST", f"/api/admin/honorary-applications/{aid}/shortlist", token=admin)
+    raw2 = _tok(sl2)
+    c2, g3 = jget("GET", f"/api/honorary-idv/{raw2}")
+    con = dbconn(); st2 = con.execute("SELECT idv_status FROM honorary_applications WHERE id=?", (aid,)).fetchone()[0]; con.close()
+    chk("54o re-shortlisting mints a DIFFERENT token; the page reports already submitted; status stays submitted",
+        c == 200 and len(raw2) == 64 and raw2 != raw and c2 == 200 and g3.get("already_submitted") is True
+        and st2 == "submitted", (raw2 == raw, g3.get("already_submitted"), st2))
+    c, rp = jget("POST", f"/api/honorary-idv/{raw2}", body=dict(FLAGS, photo=TINY_PNG, government_id=TINY_PNG))
+    chk("54p a second submission on the fresh link is refused (409 already_submitted)",
+        c == 409 and rp.get("error") == "already_submitted", (c, rp))
+
+    # --- owner download is byte-exact; viewer admin cannot even list the docs ---
+    photo_id = next((d.get("id") for d in docs if d.get("doc_kind") == "photo"), None)
+    st, blob, ct = _raw_get(f"/api/admin/honorary-applications/{aid}/idv/{photo_id}/file", token=admin)
+    chk("54q the owner downloads the EXACT stored bytes (envelope encryption round-trips); viewer 403 on the list",
+        st == 200 and blob == PNG_BYTES and "image/png" in ct
+        and bool(vtok) and jget("GET", f"/api/admin/honorary-applications/{aid}/idv", token=vtok)[0] == 403, (st, ct))
+
+    # --- one-click delete: files gone, status deleted, the download dies ---
+    c, de = jget("POST", f"/api/admin/honorary-applications/{aid}/idv/delete", token=admin)
+    c2, dl2 = jget("GET", f"/api/admin/honorary-applications/{aid}/idv", token=admin)
+    st, _b, _ct = _raw_get(f"/api/admin/honorary-applications/{aid}/idv/{photo_id}/file", token=admin)
+    con = dbconn(); st3 = con.execute("SELECT idv_status FROM honorary_applications WHERE id=?", (aid,)).fetchone()[0]; con.close()
+    chk("54r one-click delete erases both files: list empty, status deleted, the download now 404",
+        c == 200 and de.get("ok") is True and de.get("deleted") == 2 and dl2.get("documents") == []
+        and st == 404 and st3 == "deleted", (de, st, st3))
+
+    # --- expiry: a lapsed link on a second fresh application is 410 Gone, reason 'expired' ---
+    email2 = "idv-54b@ex.co"
+    jget("POST", "/api/honorary-application", body=_hon_app(email2))
+    con = dbconn(); aid2 = con.execute("SELECT id FROM honorary_applications WHERE email=? ORDER BY id DESC LIMIT 1", (email2,)).fetchone()[0]; con.close()
+    c, sl3 = jget("POST", f"/api/admin/honorary-applications/{aid2}/shortlist", token=admin)
+    raw3 = _tok(sl3)
+    con = dbconn(); con.execute("UPDATE honorary_applications SET idv_token_expires='2020-01-01 00:00:00' WHERE id=?", (aid2,)); con.commit(); con.close()
+    c, ex = jget("GET", f"/api/honorary-idv/{raw3}")
+    chk("54s a lapsed link is 410 Gone with the expired reason (never a silent 404)",
+        c == 410 and ex.get("error") == "expired", (c, ex))
+
+def test_comms_centre(admin):
+    # Incremental Testing Programme §55 — Unified Communications Centre (Endpoints/CommsCentre.cs +
+    # Core/Comms.cs + Core/OutboxDispatcher.cs, 'comms' permission): ZERO prior coverage. Proves the
+    # outbox delivery lifecycle end-to-end (no provider configured → the console sink, so rows really
+    # drain to 'sent'), template publish/version state machine, the campaign approval gate with
+    # consent + suppression + dedup, the signed one-click unsubscribe, and fail-closed inbound webhooks.
+    print("\n=== 55. Communications Centre: outbox lifecycle, campaign consent/suppression, unsubscribe, webhook guards ===")
+
+    def _ob(oid):
+        # GET one outbox message, waiting out any transient dispatcher state (bg drain runs every ~15s).
+        c, o = 0, {}
+        for _ in range(10):
+            c, o = jget("GET", f"/api/admin/comms/outbox/{oid}", token=admin)
+            if (o.get("message") or {}).get("status") not in ("queued", "processing", "scheduled", "retrying"):
+                break
+            time.sleep(0.3)
+        return c, o
+
+    # --- gate + provider secrecy ---
+    c1, r1 = jget("GET", "/api/admin/comms/overview")
+    c2, r2 = jget("POST", "/api/admin/comms/campaigns/999/approve")
+    chk("55a the comms centre requires an admin token on reads and writes (401 unauthorized)",
+        c1 == 401 and r1.get("error") == "unauthorized" and c2 == 401, (c1, c2))
+    vtok = globals().get("_VIEWER_TOK")
+    chk("55b a viewer admin without the 'comms' permission is refused reads and writes (403)",
+        bool(vtok) and jget("GET", "/api/admin/comms/overview", token=vtok)[0] == 403
+        and jget("POST", "/api/admin/comms/suppression", token=vtok, body={"address": "probe-55@ex.co"})[0] == 403)
+    c, pv = jget("GET", "/api/admin/comms/providers", token=admin)
+    chk("55c provider settings report configuration booleans ONLY — never a secret value",
+        c == 200 and isinstance(pv, dict) and len(pv) > 0 and all(isinstance(v, bool) for v in pv.values()), pv)
+
+    # --- sender profiles: creating a new default clears every other default ---
+    c1, s1 = jget("POST", "/api/admin/comms/senders", token=admin, body={
+        "key": "ops55", "name": "Operations 55", "display_name": "PCI Ops 55",
+        "from_email": "ops55@pci.test", "reply_to": "ops55@pci.test", "category": "operational", "is_default": 1})
+    c2, s2 = jget("POST", "/api/admin/comms/senders", token=admin, body={
+        "key": "mkt55", "name": "Marketing 55", "display_name": "PCI Mkt 55",
+        "from_email": "mkt55@pci.test", "category": "marketing", "is_default": 1})
+    con = dbconn()
+    dflt = dict(con.execute("SELECT `key`, is_default FROM comm_sender_profiles WHERE `key` IN ('ops55','mkt55')").fetchall())
+    con.close()
+    chk("55d creating a new default sender clears the previous default (exactly one default)",
+        c1 == 200 and s1.get("ok") and c2 == 200 and s2.get("ok")
+        and int(dflt.get("ops55", 9)) == 0 and int(dflt.get("mkt55", 0)) == 1, dflt)
+
+    # --- templates: draft → publish gated on declared variables; edits snapshot + re-draft ---
+    c, t = jget("POST", "/api/admin/comms/templates", token=admin, body={
+        "key": "welcome55", "name": "Welcome 55", "kind": "email", "category": "operational",
+        "subject": "Hi {{first_name}}", "body": "<p>Welcome aboard.</p>", "required_vars": "first_name,cta_link"})
+    tid = t.get("id")
+    c2, pub = jget("POST", f"/api/admin/comms/templates/{tid}/status", token=admin, body={"status": "published"})
+    con = dbconn(); trow = con.execute("SELECT status, version FROM comm_templates WHERE id=?", (tid,)).fetchone(); con.close()
+    chk("55e a new template lands as a draft and publish is refused while a declared variable is missing",
+        c == 200 and bool(tid) and c2 == 400 and pub.get("error") == "missing_variables"
+        and "cta_link" in (pub.get("missing") or []) and trow and trow[0] == "draft" and int(trow[1]) == 1, (pub, trow))
+    c, up = jget("POST", "/api/admin/comms/templates", token=admin, body={
+        "id": tid, "key": "welcome55", "name": "Welcome 55", "kind": "email", "category": "operational",
+        "subject": "Hi {{first_name}}", "body": "<p>Hi {{first_name}}, start here: {{cta_link}}</p>",
+        "required_vars": "first_name,cta_link"})
+    con = dbconn()
+    trow2 = con.execute("SELECT status, version FROM comm_templates WHERE id=?", (tid,)).fetchone()
+    snap = con.execute("SELECT version, body FROM comm_template_versions WHERE template_id=? ORDER BY id DESC", (tid,)).fetchone()
+    con.close()
+    chk("55f editing a template snapshots the prior version and returns it to draft (v1 preserved, now v2 draft)",
+        c == 200 and up.get("ok") and tuple(trow2) == ("draft", 2)
+        and snap and int(snap[0]) == 1 and "Welcome aboard" in (snap[1] or ""), (trow2, snap))
+    c, pub2 = jget("POST", f"/api/admin/comms/templates/{tid}/status", token=admin, body={"status": "published"})
+    con = dbconn()
+    prow = con.execute("SELECT status, approved_by, published_at FROM comm_templates WHERE id=?", (tid,)).fetchone()
+    con.close()
+    chk("55g once every declared variable is present the template publishes, stamped with approver + time",
+        c == 200 and pub2.get("status") == "published" and prow
+        and prow[0] == "published" and prow[1] is not None and prow[2] is not None, prow)
+    chk("55h bad inputs are refused with exact codes: template key_required/bad_status, compose body_required/no_recipient",
+        jget("POST", "/api/admin/comms/templates", token=admin, body={"name": "no key 55"})[1].get("error") == "key_required"
+        and jget("POST", f"/api/admin/comms/templates/{tid}/status", token=admin, body={"status": "live"})[1].get("error") == "bad_status"
+        and jget("POST", "/api/admin/comms/compose", token=admin, body={"channel": "email", "subject": "x", "body": ""})[1].get("error") == "body_required"
+        and jget("POST", "/api/admin/comms/compose", token=admin, body={"channel": "email", "subject": "x", "body": "<p>x</p>"})[1].get("error") == "no_recipient")
+
+    # --- outbox lifecycle: compose delivers for real (console sink), terminal states are guarded ---
+    c0, dr = jget("POST", "/api/admin/comms/outbox/drain", token=admin)   # clear any backlog first
+    c, cm = jget("POST", "/api/admin/comms/compose", token=admin, body={
+        "channel": "email", "to": "dot.compose-55@ex.co", "subject": "Compose 55",
+        "body": "<p>Hello from the Communications Centre.</p>", "sender_profile_key": "ops55"})
+    oid = (cm.get("outbox_ids") or [None])[0]
+    c2, ob = _ob(oid); msg = ob.get("message") or {}
+    chk("55i a composed message drains through the outbox to 'sent' via the console provider, with an attempt row",
+        c0 == 200 and dr.get("ok") and c == 200 and cm.get("queued") == 1 and bool(oid)
+        and msg.get("status") == "sent" and msg.get("provider") == "console"
+        and len(ob.get("attempts") or []) >= 1, (cm, msg.get("status"), msg.get("provider")))
+    con = dbconn()
+    con.execute("INSERT INTO comm_outbox(dedup_key,channel,category,to_email,subject,body,status,scheduled_at) "
+                "VALUES('55:sched:cancel','email','operational','eve.scheduled-55@ex.co','Sched 55','<p>later</p>','scheduled','2030-01-01 00:00:00')")
+    con.execute("INSERT INTO comm_outbox(dedup_key,channel,category,to_email,subject,body,status,attempts,last_error) "
+                "VALUES('55:failed:retry','email','operational','fay.retry-55@ex.co','Retry 55','<p>again</p>','failed',1,'boom55')")
+    con.commit()
+    sched_id = con.execute("SELECT id FROM comm_outbox WHERE dedup_key=?", ("55:sched:cancel",)).fetchone()[0]
+    fail_id = con.execute("SELECT id FROM comm_outbox WHERE dedup_key=?", ("55:failed:retry",)).fetchone()[0]
+    con.close()
+    cr1, rr1 = jget("POST", f"/api/admin/comms/outbox/{oid}/retry", token=admin)
+    cr2, rr2 = jget("POST", f"/api/admin/comms/outbox/{oid}/cancel", token=admin)
+    cc, _ = jget("POST", f"/api/admin/comms/outbox/{sched_id}/cancel", token=admin)
+    con = dbconn(); sst = con.execute("SELECT status FROM comm_outbox WHERE id=?", (sched_id,)).fetchone()[0]; con.close()
+    chk("55j a sent message is terminal (retry AND cancel are 409 already_sent) while a pending scheduled one cancels",
+        cr1 == 409 and rr1.get("error") == "already_sent" and cr2 == 409 and rr2.get("error") == "already_sent"
+        and cc == 200 and sst == "cancelled", (cr1, cr2, sst))
+    c, rt = jget("POST", f"/api/admin/comms/outbox/{fail_id}/retry", token=admin)
+    c2, ob2 = _ob(fail_id); m2 = ob2.get("message") or {}
+    chk("55k retrying a failed message requeues and delivers it (attempt 2 recorded, status 'sent')",
+        c == 200 and rt.get("ok") and m2.get("status") == "sent" and int(m2.get("attempts") or 0) == 2,
+        (m2.get("status"), m2.get("attempts")))
+
+    # --- campaigns: audience = consent-scoped; suppression + dedup enforced per recipient ---
+    u1t, u1 = register_student("ada.consent-55@ex.co")
+    u2t, u2 = register_student("bea.suppressed-55@ex.co")
+    u3t, u3 = register_student("cyd.noconsent-55@ex.co")
+    jget("POST", "/api/me/preferences", token=u1t, body={"email_marketing": 1})
+    jget("POST", "/api/me/preferences", token=u2t, body={"email_marketing": 1})   # u3: no marketing consent
+    for tk in (u1t, u2t, u3t):   # cohort membership via the real profile repeater (both providers)
+        jget("POST", "/api/me/certifications-held", token=tk, body={"name": "zephyr55 cohort", "issuer": "PCI"})
+    csup, sp = jget("POST", "/api/admin/comms/suppression", token=admin,
+                    body={"address": "bea.suppressed-55@ex.co", "reason": "manual-55", "category": "marketing"})
+    c, cr = jget("POST", "/api/admin/comms/campaigns", token=admin, body={
+        "name": "Zephyr55 launch", "channel": "email", "category": "marketing",
+        "subject": "PCI news 55", "body": "<p>Big news.</p>", "sender_profile_key": "mkt55",
+        "filters": {"certification": "zephyr55"}})
+    cid1 = cr.get("id")
+    c2, sd = jget("POST", f"/api/admin/comms/campaigns/{cid1}/send", token=admin)
+    chk("55l a campaign can never be sent before approval (409 not_approved)",
+        c == 200 and bool(cid1) and c2 == 409 and sd.get("error") == "not_approved", (c2, sd))
+    c, pvw = jget("POST", f"/api/admin/comms/campaigns/{cid1}/preview", token=admin)
+    chk("55m preview counts only consented recipients, nets off suppression, and MASKS every sampled address",
+        c == 200 and csup == 200 and sp.get("ok") and pvw.get("raw") == 2 and pvw.get("suppressed") == 1
+        and pvw.get("total") == 1 and pvw.get("sample") == ["a*****@ex.co"]
+        and "ada.consent-55" not in json.dumps(pvw), pvw)
+    jget("POST", f"/api/admin/comms/campaigns/{cid1}/approve", token=admin)
+    c, sd2 = jget("POST", f"/api/admin/comms/campaigns/{cid1}/send", token=admin)
+    con = dbconn()
+    crows = con.execute("SELECT id, to_email FROM comm_outbox WHERE campaign_id=?", (cid1,)).fetchall()
+    camp = con.execute("SELECT status, total, queued FROM comm_campaigns WHERE id=?", (cid1,)).fetchone()
+    con.close()
+    sent_ok = len(crows) == 1 and (_ob(crows[0][0])[1].get("message") or {}).get("status") == "sent"
+    chk("55n an approved send queues EXACTLY the consented, unsuppressed recipient and delivers it (suppressed user never enqueued)",
+        c == 200 and sd2.get("audience") == 2 and sd2.get("queued") == 1
+        and len(crows) == 1 and crows[0][1] == "ada.consent-55@ex.co" and sent_ok
+        and camp and camp[0] == "sent" and int(camp[1]) == 2 and int(camp[2]) == 1, (sd2, crows, camp))
+    jget("POST", f"/api/admin/comms/campaigns/{cid1}/approve", token=admin)
+    c, sd3 = jget("POST", f"/api/admin/comms/campaigns/{cid1}/send", token=admin)
+    con = dbconn(); n2 = con.execute("SELECT COUNT(*) FROM comm_outbox WHERE campaign_id=?", (cid1,)).fetchone()[0]; con.close()
+    chk("55o a re-approved re-send queues nothing — the per-recipient dedup key blocks any double-send",
+        c == 200 and sd3.get("queued") == 0 and sd3.get("audience") == 2 and int(n2) == 1, (sd3, n2))
+
+    # --- one-click unsubscribe: forged token refused; a valid signed token withdraws consent + suppresses ---
+    cb, bad = jget("POST", "/api/comms/unsubscribe", body={"token": "424242.deadbeefdeadbeefdead"})
+    _sec = (os.environ.get("UNSUBSCRIBE_SECRET") or os.environ.get("CREDENTIAL_ENCRYPTION_KEY")
+            or "pci-unsubscribe-v1") + "|pci-unsub"   # same precedence the server uses (Core/Comms.cs)
+    utok = f"{u1}." + hashlib.sha256(f"{u1}.{_sec}".encode()).hexdigest()[:24]
+    cg, good = jget("POST", "/api/comms/unsubscribe", body={"token": utok})
+    con = dbconn()
+    pref = con.execute("SELECT email_marketing, withdrawn_at FROM comm_preferences WHERE user_id=?", (u1,)).fetchone()
+    nsup = con.execute("SELECT COUNT(*) FROM comm_suppression WHERE channel='email' AND address=? AND source='one_click'",
+                       ("ada.consent-55@ex.co",)).fetchone()[0]
+    con.close()
+    chk("55p one-click unsubscribe: a forged token is invalid_token (400); the signed token withdraws consent and suppresses",
+        cb == 400 and bad.get("error") == "invalid_token" and cg == 200 and good.get("ok")
+        and pref and int(pref[0]) == 0 and pref[1] is not None and int(nsup) >= 1, (cb, pref, nsup))
+    c, cr2 = jget("POST", "/api/admin/comms/campaigns", token=admin, body={
+        "name": "Zephyr55 relaunch", "channel": "email", "category": "marketing",
+        "subject": "PCI news 55b", "body": "<p>More news.</p>", "sender_profile_key": "mkt55",
+        "filters": {"certification": "zephyr55"}})
+    cid2 = cr2.get("id")
+    jget("POST", f"/api/admin/comms/campaigns/{cid2}/approve", token=admin)
+    c2, sd4 = jget("POST", f"/api/admin/comms/campaigns/{cid2}/send", token=admin)
+    con = dbconn(); n3 = con.execute("SELECT COUNT(*) FROM comm_outbox WHERE campaign_id=?", (cid2,)).fetchone()[0]; con.close()
+    chk("55q after the unsubscribe a fresh campaign reaches nobody: consent withdrawal + suppression both honoured",
+        c == 200 and c2 == 200 and sd4.get("audience") == 1 and sd4.get("queued") == 0 and int(n3) == 0, (sd4, n3))
+
+    # --- inbound webhooks fail closed (secret unset OR wrong → refused; nothing is ever stored) ---
+    cw, wi = jget("POST", "/api/webhooks/email-inbound?secret=guess-55",
+                  body={"from": "probe-55@ex.co", "to": "support@pci.test", "subject": "Probe inbound 55", "text": "hello"})
+    cwa, _ = jget("GET", "/api/webhooks/whatsapp?hub.mode=subscribe&hub.verify_token=guess55&hub.challenge=c55")
+    con = dbconn(); nconv = con.execute("SELECT COUNT(*) FROM comm_conversations WHERE subject=?", ("Probe inbound 55",)).fetchone()[0]; con.close()
+    chk("55r inbound webhooks fail closed: email-inbound 401 without the shared secret, WhatsApp verification 403, no conversation created",
+        cw == 401 and wi.get("error") == "unauthorized" and cwa == 403 and int(nconv) == 0, (cw, cwa, nconv))
+
+    # Leave the platform's seeded default sender ('no-reply') as the default again — §55 only borrowed it.
+    con = dbconn()
+    con.execute("UPDATE comm_sender_profiles SET is_default=0 WHERE `key` IN ('ops55','mkt55')")
+    con.execute("UPDATE comm_sender_profiles SET is_default=1 WHERE `key`=?", ("no-reply",))
+    con.commit(); con.close()
+
+def test_public_documents(admin):
+    # Incremental Testing Programme §57 — Public Downloads Centre (Endpoints/PublicDocuments.cs, 12 routes,
+    # ZERO coverage): the anonymous catalogue/detail/file surfaces vs the 'documents'-gated admin module.
+    # Proves the serving invariant (only status='published' AND visibility='public' AND is_current=1 is ever
+    # distributed) across the full version chain (draft → publish → replace → supersede → withdraw), byte-exact
+    # file integrity + download analytics, and the public projection that never leaks storage/review internals.
+    print("\n=== 57. Public Downloads Centre: lifecycle on the public surface, byte integrity, privacy ===")
+    png = base64.b64decode(TINY_PNG.split(",", 1)[1])
+
+    # The seeded register is read-only for us: published+current rows only, and the public projection
+    # must never contain a storage reference, hash or internal review field anywhere in the JSON.
+    c, cat = jget("GET", "/api/public/documents")
+    rows = cat.get("rows", []) if isinstance(cat, dict) else []
+    seeded = next((r for r in rows if r.get("doc_group") == "global-privacy-policy"), None)
+    blob = json.dumps(cat)
+    chk("57a the anonymous catalogue serves the seeded register (published+current only) and never leaks storage/review internals",
+        c == 200 and bool(seeded) and seeded.get("has_file") is True
+        and all(r.get("status") == "published" and r.get("is_current") is True for r in rows)
+        and all(k not in blob for k in ('"storage_ref"', '"sha256"', '"legal_review_status"', '"visibility"', '"created_by"')),
+        (len(rows), bool(seeded)))
+
+    chk("57b the admin module refuses without a token (401 on list and create)",
+        jget("GET", "/api/admin/public-documents")[0] == 401
+        and jget("POST", "/api/admin/public-documents", body={"title": "x57"})[0] == 401)
+
+    vtok = globals().get("_VIEWER_TOK")
+    c, fb = jget("GET", "/api/admin/public-documents", token=vtok)
+    chk("57c a viewer admin (overview+reports only) is refused — the module reuses the 'documents' permission (403)",
+        bool(vtok) and c == 403 and fb.get("error") == "forbidden" and fb.get("section") == "documents"
+        and jget("POST", "/api/admin/public-documents", token=vtok, body={"title": "x57"})[0] == 403, (c, fb))
+
+    # Create the working document plus a throwaway draft that also probes group-collision + category coercion.
+    c, mk = jget("POST", "/api/admin/public-documents", token=admin,
+                 body={"title": "Zephyr57 Fees Notice", "description": "Zephyr57 notice for integration coverage.",
+                       "category": "fees-and-refunds"})
+    did = mk.get("id"); grp = mk.get("doc_group")
+    c2, tk = jget("POST", "/api/admin/public-documents", token=admin,
+                  body={"title": "Zephyr57 Throwaway", "doc_group": "zephyr57-fees-notice", "category": "totally-bogus-57"})
+    tid = tk.get("id"); tgrp = tk.get("doc_group") or ""
+    c3, det = jget("GET", f"/api/admin/public-documents/{did}", token=admin)
+    doc = det.get("document", {})
+    c4, tdet = jget("GET", f"/api/admin/public-documents/{tid}", token=admin)
+    chk("57d create slugs the doc_group from the title, uniquifies a colliding group, coerces an unknown category to 'general', and lands as draft v1.0 (en)",
+        c == 200 and grp == "zephyr57-fees-notice" and c2 == 200
+        and tgrp.startswith("zephyr57-fees-notice-") and tgrp != grp
+        and c3 == 200 and doc.get("status") == "draft" and doc.get("version") == "1.0" and doc.get("language") == "en"
+        and tdet.get("document", {}).get("category") == "general", (grp, tgrp, doc.get("status")))
+
+    c, r = jget("PATCH", f"/api/admin/public-documents/{did}", token=admin, body={"certification": "no-such-cert-57"})
+    c2, r2 = jget("PATCH", f"/api/admin/public-documents/{did}", token=admin,
+                  body={"description": "Zephyr57 revised notice.", "owner": "Registrar 57"})
+    c3, det = jget("GET", f"/api/admin/public-documents/{did}", token=admin)
+    chk("57e metadata PATCH refuses an unknown certification (400 invalid_certification) and stores ordinary field edits",
+        c == 400 and r.get("error") == "invalid_certification" and c2 == 200 and r2.get("ok") is True
+        and det.get("document", {}).get("description") == "Zephyr57 revised notice."
+        and det.get("document", {}).get("owner") == "Registrar 57", (c, r, det.get("document", {}).get("owner")))
+
+    c, pl = jget("GET", "/api/public/documents?q=zephyr57")
+    c2, pd = jget("GET", f"/api/public/documents/{grp}")
+    st, _b, _ct = _raw_get(f"/api/public/documents/{grp}/file")
+    chk("57f a draft is invisible on every public surface (absent from the catalogue; detail and file both 404)",
+        c == 200 and len(pl.get("rows", [])) == 0 and c2 == 404 and pd.get("error") == "not_found" and st == 404,
+        (len(pl.get("rows", [])), c2, st))
+
+    c, r = jget("POST", f"/api/admin/public-documents/{did}/status", token=admin, body={"status": "published"})
+    chk("57g publishing without an attached file is refused (400 no_file: 'Attach a file before publishing.')",
+        c == 400 and r.get("error") == "no_file" and "Attach a file" in str(r.get("message", "")), r)
+
+    c, up = jget("POST", f"/api/admin/public-documents/{did}/file", token=admin,
+                 body={"data_uri": TINY_PNG, "filename": "zephyr57.png"})
+    c2, det = jget("GET", f"/api/admin/public-documents/{did}", token=admin)
+    doc = det.get("document", {})
+    st, abody, actype = _raw_get(f"/api/admin/public-documents/{did}/file", token=admin)
+    chk("57h an uploaded file records exact size + sha256 and round-trips byte-exact through the admin preview (image/png)",
+        c == 200 and up.get("size_bytes") == len(png)
+        and doc.get("sha256") == hashlib.sha256(png).hexdigest() and doc.get("mime") == "image/png"
+        and doc.get("has_file") is True and st == 200 and abody == png and actype.startswith("image/png"),
+        (up, doc.get("sha256")))
+
+    c, r = jget("POST", f"/api/admin/public-documents/{did}/file", token=admin, body={"data_uri": "hello57"})
+    c2, r2 = jget("POST", f"/api/admin/public-documents/{did}/file", token=admin,
+                  body={"data_uri": "data:text/plain;base64," + base64.b64encode(b"zephyr 57").decode()})
+    chk("57i the storage intake refuses a non-data-URI (not_a_data_uri) and a disallowed MIME (file_type_not_allowed)",
+        c == 400 and r.get("error") == "not_a_data_uri" and c2 == 400 and r2.get("error") == "file_type_not_allowed", (r, r2))
+
+    c, r = jget("POST", f"/api/admin/public-documents/{did}/status", token=admin, body={"status": "published"})
+    c2, pd = jget("GET", f"/api/public/documents/{grp}")
+    d = pd.get("document", {})
+    c3, q1 = jget("GET", "/api/public/documents?q=zephyr57")
+    c4, q2 = jget("GET", "/api/public/documents?category=fees-and-refunds")
+    chk("57j publishing puts it live: public detail 200 (published, current, stamped published_at), found by search and category, still leak-free",
+        c == 200 and r.get("status") == "published" and c2 == 200
+        and d.get("status") == "published" and d.get("is_current") is True and bool(d.get("published_at"))
+        and len(q1.get("rows", [])) == 1 and q1["rows"][0].get("doc_group") == grp
+        and any(x.get("doc_group") == grp for x in q2.get("rows", []))
+        and all(k not in json.dumps(pd) for k in ('"storage_ref"', '"sha256"', '"legal_review_status"')), (c2, d.get("status")))
+
+    st, fbody, ctype = _raw_get(f"/api/public/documents/{grp}/file")
+    c2, pd = jget("GET", f"/api/public/documents/{grp}")
+    con = dbconn()
+    ndl = con.execute("SELECT COUNT(*) FROM public_document_downloads WHERE doc_group=?", (grp,)).fetchone()[0]
+    con.close()
+    chk("57k the public file serves anonymously byte-exact as image/png, bumps download_count and writes a download-audit row",
+        st == 200 and fbody == png and ctype.startswith("image/png")
+        and pd.get("document", {}).get("download_count") == 1 and ndl == 1, (st, ctype, ndl))
+
+    c, rp = jget("POST", f"/api/admin/public-documents/{did}/replace", token=admin, body={})
+    nid = rp.get("id")
+    c2, det = jget("GET", f"/api/admin/public-documents/{nid}", token=admin)
+    nd = det.get("document", {})
+    c3, pd = jget("GET", f"/api/public/documents/{grp}")
+    chk("57l replace mints a draft v1.1 in the same group (file carried forward, supersedes_id set) while the public surface still serves v1.0",
+        c == 200 and rp.get("version") == "1.1" and nid != did
+        and nd.get("status") == "draft" and nd.get("doc_group") == grp and nd.get("has_file") is True
+        and nd.get("supersedes_id") == did and nd.get("is_current") is False
+        and pd.get("document", {}).get("id") == did, (rp, nd.get("status")))
+
+    jget("POST", f"/api/admin/public-documents/{nid}/status", token=admin, body={"status": "published"})
+    c, pd = jget("GET", f"/api/public/documents/{grp}")
+    old = next((v for v in pd.get("versions", []) if v.get("id") == did), None)
+    c2, q1 = jget("GET", "/api/public/documents?q=zephyr57")
+    mine = [x for x in q1.get("rows", []) if x.get("doc_group") == grp]
+    st, obody, _ = _raw_get(f"/api/public/documents/{grp}/file?v={did}")
+    chk("57m publishing v1.1 demotes v1.0 to superseded: one current catalogue row, both versions in the public history, and the old explicit ?v= link still resolves byte-exact",
+        c == 200 and pd.get("document", {}).get("id") == nid and pd.get("document", {}).get("version") == "1.1"
+        and old is not None and old.get("status") == "superseded"
+        and len(mine) == 1 and mine[0].get("id") == nid and st == 200 and obody == png, (old, len(mine), st))
+
+    st1, _r1, _ = _raw_get(f"/api/public/documents/global-privacy-policy/file?v={did}")
+    st2, _r2, _ = _raw_get("/api/public/documents/..%2F..%2Fstorage%2Fsecrets/file")
+    c3, r3 = jget("GET", "/api/public/documents/no-such-group-57")
+    c4, r4 = jget("POST", f"/api/admin/public-documents/{nid}/status", token=admin, body={"status": "vaporised57"})
+    chk("57n a cross-group ?v= probe, a traversal group and an unknown group all miss (404), and an unknown lifecycle status is rejected (400 bad_status)",
+        st1 == 404 and st2 == 404 and c3 == 404 and r3.get("error") == "not_found"
+        and c4 == 400 and r4.get("error") == "bad_status", (st1, st2, c3, c4))
+
+    c, r = jget("POST", f"/api/admin/public-documents/{nid}/status", token=admin, body={"status": "withdrawn"})
+    c2, pd = jget("GET", f"/api/public/documents/{grp}")
+    st, _b, _ = _raw_get(f"/api/public/documents/{grp}/file")
+    c3, dl = jget("DELETE", f"/api/admin/public-documents/{nid}", token=admin)
+    c4, dl2 = jget("DELETE", f"/api/admin/public-documents/{tid}", token=admin)
+    c5, _gone = jget("GET", f"/api/admin/public-documents/{tid}", token=admin)
+    chk("57o withdrawing pulls the document from the public web immediately; only a draft can be hard-deleted (withdrawn → 400 not_deletable) and the deleted draft is gone",
+        c == 200 and r.get("status") == "withdrawn" and c2 == 404 and st == 404
+        and c3 == 400 and dl.get("error") == "not_deletable" and "Only a draft" in str(dl.get("message", ""))
+        and c4 == 200 and dl2.get("ok") is True and c5 == 404, (c2, st, c3, c4, c5))
+
+def test_marketing_centre(admin):
+    # Incremental Testing Programme §56 — Marketing, Ads & Search Console centre (Endpoints/MarketingCentre.cs
+    # + Core/Marketing*.cs + Data/MarketingSchema.cs): ZERO prior coverage. Proves the 9-section RBAC gate, the
+    # booleans-only provider registry and token-free connection listing, the signed OAuth-state callback, the
+    # honest capability ceiling (a live connection never unlocks an approval-gated feature), post/campaign
+    # approval chains whose provider jobs fail CLOSED (no token → no fake publish/launch), idempotent re-clicks,
+    # and the fail-closed public lead webhooks. No provider env vars exist, so nothing ever leaves the process.
+    print("\n=== 56. Marketing centre: honest capability registry, OAuth secrecy, approval gates, fail-closed provider jobs ===")
+    M = "/api/admin/marketing"
+
+    def _job(col, val):
+        # One mkt_jobs row by id/idempotency_key, waiting out the inline/background drain race (col is a
+        # literal column name from this test, never input). no_access_token failures are permanent, so the
+        # settled state is deterministic.
+        row = None
+        for _ in range(10):
+            con = dbconn()
+            row = con.execute("SELECT status, attempts, last_error FROM mkt_jobs WHERE " + col + "=?", (val,)).fetchone()
+            con.close()
+            if row and row[0] not in ("queued", "processing"): break
+            time.sleep(0.3)
+        return row
+
+    # --- the gate: 401 unauthenticated, viewer 403 across the permission sections ---
+    c1, r1 = jget("GET", f"{M}/overview")
+    c2, _ = jget("POST", "/api/admin/marketing/posts/1/approve")
+    vtok = globals().get("_VIEWER_TOK")
+    cv, rv = jget("GET", f"{M}/overview", token=vtok)
+    chk("56a every marketing route is admin-gated: 401 unauthenticated, viewer 403 on the view/posts/gsc/leads/jobs sections",
+        c1 == 401 and r1.get("error") == "unauthorized" and c2 == 401
+        and bool(vtok) and cv == 403 and rv.get("error") == "forbidden" and rv.get("section") == "mkt_view"
+        and jget("POST", f"{M}/posts", token=vtok, body={"body": "probe 56"})[0] == 403
+        and jget("GET", f"{M}/gsc/properties", token=vtok)[0] == 403
+        and jget("GET", f"{M}/leads", token=vtok)[0] == 403
+        and jget("POST", f"{M}/jobs/drain", token=vtok)[0] == 403, (c1, c2, cv, rv))
+
+    # --- provider registry: configuration booleans ONLY, never a secret value ---
+    def _bools(x): return all(_bools(v) for v in x.values()) if isinstance(x, dict) else isinstance(x, bool)
+    c, pv = jget("GET", f"{M}/providers", token=admin)
+    chk("56b provider settings report booleans only — every leaf is true/false and 'configured' is derived from id+secret presence",
+        c == 200 and set(pv) >= {"token_encryption", "linkedin", "google", "meta"} and _bools(pv)
+        and pv["linkedin"]["configured"] == (pv["linkedin"]["client_id"] and pv["linkedin"]["client_secret"]), pv)
+
+    # --- connections: register → token-free listing → honest oauth-url refusal ---
+    c0, badp = jget("POST", f"{M}/connections", token=admin, body={"platform_code": "nope56"})
+    c1, cn = jget("POST", f"{M}/connections", token=admin,
+                  body={"platform_code": "linkedin_page", "label": "li page 56", "external_org_id": "90056"})
+    li = cn.get("id")
+    c2, urf = jget("POST", f"{M}/connections/{li}/oauth-url", token=admin)
+    c3, u404 = jget("POST", f"{M}/connections/999999/oauth-url", token=admin)
+    c4, lst = jget("GET", f"{M}/connections", token=admin)
+    row = next((r for r in lst.get("rows", []) if r.get("id") == li), None)
+    chk("56c a registered connection starts disconnected/not_requested, the list NEVER carries token or PKCE columns, and oauth-url is an honest operator action while the provider app is unconfigured (unknown platform 400, ghost id 404)",
+        c0 == 400 and badp.get("error") == "unknown_platform"
+        and c1 == 200 and bool(li) and cn.get("family_configured") is False
+        and c2 == 200 and urf.get("ok") is False and urf.get("reason") == "provider_not_configured"
+        and "linkedin" in str(urf.get("operator_action", ""))
+        and c3 == 404 and u404.get("error") == "not_found"
+        and c4 == 200 and row and row.get("status") == "disconnected" and row.get("approval_status") == "not_requested"
+        and "access_token_enc" not in row and "refresh_token_enc" not in row and "oauth_verifier" not in row,
+        (c0, c2, urf.get("reason"), row and row.get("status")))
+
+    # --- public OAuth callback: signed-state machine, recomputed with the server's exact secret precedence ---
+    _mksec = (os.environ.get("MARKETING_OAUTH_SECRET") or os.environ.get("CREDENTIAL_ENCRYPTION_KEY")
+              or "pci-marketing-oauth-v1") + "|pci-mkt-oauth"   # Core/MarketingOAuth.StateSecret
+    exp = int(time.time()) + 3600
+    good_state = f"{li}.{exp}." + hashlib.sha256(f"{li}.{exp}.{_mksec}".encode()).hexdigest()[:24]
+    s1, b1, _ = _raw_get(f"/api/marketing/oauth/callback?code=x&state={li}.{exp}.aaaaaaaaaaaaaaaaaaaaaaaa")
+    s2, b2, _ = _raw_get("/api/marketing/oauth/callback?error=access_denied")
+    s3, b3, _ = _raw_get(f"/api/marketing/oauth/callback?code=fake56&state={good_state}")
+    con = dbconn(); crow = con.execute("SELECT status, last_error FROM mkt_connections WHERE id=?", (li,)).fetchone(); con.close()
+    chk("56d the OAuth callback is state-verified: a forged state is refused, a provider error is reported, and a valid signed state whose token exchange dies records an honest error status — never a fake connect",
+        s1 == 200 and b"Link invalid or expired" in b1
+        and s2 == 200 and b"Connection cancelled" in b2 and b"access_denied" in b2
+        and s3 == 200 and b"Could not complete the connection" in b3
+        and crow and crow[0] == "error" and crow[1] == "token_exchange_failed", (s1, s2, s3, tuple(crow or ())))
+
+    # --- LinkedIn posts: draft → approval gate → capability honesty gate ---
+    c1, p1 = jget("POST", f"{M}/posts", token=admin,
+                  body={"post_type": "text", "body": "marketing centre integration post 56", "hashtags": "#pci56"})
+    pid = p1.get("id")
+    c2, pub0 = jget("POST", f"{M}/posts/{pid}/publish", token=admin)
+    c3, p404 = jget("POST", f"{M}/posts/999999/publish", token=admin)
+    con = dbconn(); prow = con.execute("SELECT status, approval_status FROM mkt_linkedin_posts WHERE id=?", (pid,)).fetchone(); con.close()
+    chk("56e a new post lands draft/draft and can never publish unapproved (400 not_approved; ghost id 404)",
+        c1 == 200 and bool(pid) and tuple(prow) == ("draft", "draft")
+        and c2 == 400 and pub0.get("error") == "not_approved" and c3 == 404 and p404.get("error") == "not_found", (prow, pub0))
+
+    jget("POST", f"{M}/posts/{pid}/approve", token=admin)
+    c, pubq = jget("POST", f"{M}/posts/{pid}/publish", token=admin)
+    con = dbconn(); st = con.execute("SELECT status, approval_status FROM mkt_linkedin_posts WHERE id=?", (pid,)).fetchone(); con.close()
+    chk("56f even an approved post cannot fake-publish: the seeded provider_approval_required capability queues it as 'scheduled' with an honest operator action",
+        c == 200 and pubq.get("ok") is False and pubq.get("queued") is True
+        and pubq.get("reason") == "provider_approval_required" and "LinkedIn" in str(pubq.get("operator_action", ""))
+        and tuple(st) == ("scheduled", "approved"), (pubq, st))
+
+    # DB surgery: the account is now "connected" (no token) — the honesty layer must still not inflate.
+    con = dbconn(); con.execute("UPDATE mkt_connections SET status='connected' WHERE id=?", (li,)); con.commit(); con.close()
+    c, caps = jget("GET", f"{M}/capabilities", token=admin)
+    rows = caps.get("rows", [])
+    def _cap(pc, feat): return next((r for r in rows if r.get("platform_code") == pc and r.get("feature") == feat), None)
+    org, dm, sm = _cap("linkedin_page", "Organisation page posts"), _cap("linkedin_page", "Personal direct messages"), _cap("google_search_console", "Sitemap list & submit")
+    chk("56g the capability registry never inflates: a live connection leaves an approval-gated feature gated, manual-only stays terminal, and an unconnected feature reads not_connected",
+        c == 200 and org and org.get("connected") == 1 and org.get("effective_status") == "provider_approval_required"
+        and dm and dm.get("effective_status") == "manual_workflow_only"
+        and sm and sm.get("connected") == 0 and sm.get("effective_status") == "not_connected",
+        [(r or {}).get("effective_status") for r in (org, dm, sm)])
+
+    # DB surgery: the operator records LinkedIn's approval — publish may now enqueue a REAL provider job.
+    con = dbconn()
+    con.execute("UPDATE mkt_capabilities SET status='available' WHERE platform_code='linkedin_page' AND feature='Organisation page posts'")
+    con.commit(); con.close()
+    c1, pub1 = jget("POST", f"{M}/posts/{pid}/publish", token=admin)
+    jid = pub1.get("job_id")
+    jrow = _job("id", jid)
+    c2, pub2 = jget("POST", f"{M}/posts/{pid}/publish", token=admin)   # the re-click
+    con = dbconn()
+    prow2 = con.execute("SELECT status, linkedin_post_id FROM mkt_linkedin_posts WHERE id=?", (pid,)).fetchone()
+    njobs = con.execute("SELECT COUNT(*) FROM mkt_jobs WHERE idempotency_key=?", (f"linkedin_post:{pid}",)).fetchone()[0]
+    con.close()
+    chk("56h publish enqueues a real provider job that fails CLOSED on the missing token (post stays 'publishing', no provider id invented) and a re-click reuses the idempotency key — one job ever",
+        c1 == 200 and pub1.get("ok") is True and pub1.get("status") == "publishing" and bool(jid)
+        and jrow and jrow[0] == "failed" and jrow[2] == "no_access_token"
+        and prow2 and prow2[0] == "publishing" and prow2[1] is None
+        and c2 == 200 and pub2.get("job_id") is None and int(njobs) == 1, (pub1, jrow, prow2, njobs))
+
+    cr, rr = jget("POST", f"{M}/jobs/{jid}/retry", token=admin)
+    j2 = _job("id", jid)
+    cl, jl = jget("GET", f"{M}/jobs", token=admin)
+    jvis = next((r for r in jl.get("rows", []) if r.get("id") == jid), None)
+    cd, drn = jget("POST", f"{M}/jobs/drain", token=admin)
+    chk("56i an admin retry re-runs the failed job through the same honest gate (attempt 2, failed again), the queue view omits payload/provider blobs, and drain reports its processed count",
+        cr == 200 and rr.get("ok") and j2 and j2[0] == "failed" and int(j2[1]) == 2 and j2[2] == "no_access_token"
+        and cl == 200 and jvis and "payload_json" not in jvis and "provider_response" not in jvis
+        and cd == 200 and drn.get("ok") and isinstance(drn.get("processed"), int), (j2, drn))
+
+    # --- campaigns: validation → approval chain → connected launch, all honestly gated ---
+    c0, camp = jget("POST", f"{M}/campaigns", token=admin,
+                    body={"name": "aurora launch 56", "objective": "leads", "total_budget": 900, "alloc_meta": 400})
+    cid = camp.get("id")
+    chk("56j creates are validated with exact codes: campaign and promotion need a name, a variant needs a platform, and a variant under a ghost campaign is 404",
+        c0 == 200 and bool(cid)
+        and jget("POST", f"{M}/campaigns", token=admin, body={})[1].get("error") == "name_required"
+        and jget("POST", f"{M}/promotions", token=admin, body={})[1].get("error") == "name_required"
+        and jget("POST", f"{M}/campaigns/{cid}/platforms", token=admin, body={})[1].get("error") == "platform_required"
+        and jget("POST", f"{M}/campaigns/999999/platforms", token=admin, body={"platform_code": "meta_ads"})[0] == 404)
+
+    c1, var = jget("POST", f"{M}/campaigns/{cid}/platforms", token=admin,
+                   body={"platform_code": "meta_ads", "name": "aurora meta 56", "objective": "leads", "daily_budget": 25})
+    vid = var.get("id")
+    c2, l0 = jget("POST", f"{M}/platform-campaigns/{vid}/launch", token=admin)
+    jget("POST", f"{M}/campaigns/{cid}/approve", token=admin)
+    c3, l1 = jget("POST", f"{M}/platform-campaigns/{vid}/launch", token=admin)
+    c4, _ = jget("POST", f"{M}/platform-campaigns/999999/launch", token=admin)
+    con = dbconn(); vrow = con.execute("SELECT status FROM mkt_platform_campaigns WHERE id=?", (vid,)).fetchone(); con.close()
+    chk("56k a variant cannot launch before PCI approval (400 campaign_not_approved) nor without a connected account (honest refusal — the variant stays draft; ghost id 404)",
+        c1 == 200 and bool(vid) and c2 == 400 and l0.get("error") == "campaign_not_approved"
+        and c3 == 200 and l1.get("ok") is False and l1.get("reason") == "not_connected"
+        and "meta_ads" in str(l1.get("operator_action", "")) and c4 == 404 and vrow and vrow[0] == "draft", (l0, l1, vrow))
+
+    cm, mc = jget("POST", f"{M}/connections", token=admin,
+                  body={"platform_code": "meta_ads", "label": "meta ads 56", "external_ad_account_id": "act_9056"})
+    mid = mc.get("id")
+    con = dbconn(); con.execute("UPDATE mkt_connections SET status='connected' WHERE id=?", (mid,)); con.commit(); con.close()
+    c, l2 = jget("POST", f"{M}/platform-campaigns/{vid}/launch", token=admin)
+    jrow = _job("idempotency_key", f"meta_campaign_create:{vid}")
+    c2, det = jget("GET", f"{M}/campaigns/{cid}", token=admin)
+    con = dbconn(); vrow2 = con.execute("SELECT status, provider_campaign_id FROM mkt_platform_campaigns WHERE id=?", (vid,)).fetchone(); con.close()
+    chk("56l a connected launch promises a PAUSED provider campaign and enqueues the create job, which fails closed without a real token — no provider campaign id is ever invented",
+        cm == 200 and c == 200 and l2.get("ok") is True and l2.get("status") == "launching" and "PAUSED" in str(l2.get("note", ""))
+        and jrow and jrow[0] == "failed" and jrow[2] == "no_access_token"
+        and c2 == 200 and len(det.get("variants", [])) == 1
+        and vrow2 and vrow2[0] == "launching" and vrow2[1] is None, (l2, jrow, vrow2))
+
+    # --- Google Search Console: refusal → field validation → honest submit ---
+    c0, g0 = jget("POST", f"{M}/gsc/sitemaps/submit", token=admin,
+                  body={"property": "sc-domain:pci56.example", "sitemap_url": "https://pci56.example/sitemap.xml"})
+    cg, gc = jget("POST", f"{M}/connections", token=admin,
+                  body={"platform_code": "google_search_console", "label": "gsc 56", "external_property": "sc-domain:pci56.example"})
+    gid = gc.get("id")
+    con = dbconn(); con.execute("UPDATE mkt_connections SET status='connected' WHERE id=?", (gid,)); con.commit(); con.close()
+    c1, g1 = jget("POST", f"{M}/gsc/sitemaps/submit", token=admin, body={})
+    c2, g2 = jget("POST", f"{M}/gsc/search-analytics", token=admin, body={"property": "sc-domain:pci56.example"})
+    c3, g3 = jget("POST", f"{M}/gsc/sitemaps/submit", token=admin,
+                  body={"property": "sc-domain:pci56.example", "sitemap_url": "https://pci56.example/sitemap-56.xml"})
+    jrow = _job("id", g3.get("job_id"))
+    con = dbconn(); nsm = con.execute("SELECT COUNT(*) FROM mkt_gsc_sitemaps").fetchone()[0]; con.close()
+    chk("56m GSC is honestly gated: unconnected refusal names the operator action, missing fields are exact 400s, and a submit carries the no-indexing-guarantee note while the job fails closed (no sitemap row is faked)",
+        c0 == 200 and g0.get("ok") is False and g0.get("reason") == "not_connected" and "Search Console" in str(g0.get("operator_action", ""))
+        and c1 == 400 and g1.get("error") == "property_and_sitemap_required"
+        and c2 == 400 and g2.get("error") == "property_start_end_required"
+        and c3 == 200 and "does not guarantee" in str(g3.get("note", ""))
+        and jrow and jrow[0] == "failed" and jrow[2] == "no_access_token" and int(nsm) == 0, (g0, g1, g2, jrow, nsm))
+
+    # --- public lead webhooks fail closed / dedup ---
+    c1, w1 = jget("POST", "/api/webhooks/lead-intake?secret=guess-56", body={"email": "intake-56@ex.co", "consent": 1})
+    c2, _ = jget("POST", "/api/webhooks/lead-intake", headers={"X-Webhook-Secret": "guess-56"}, body={"email": "intake-56@ex.co"})
+    con = dbconn(); nl = con.execute("SELECT COUNT(*) FROM mkt_leads WHERE email=?", ("intake-56@ex.co",)).fetchone()[0]; con.close()
+    chk("56n the public lead-intake webhook fails closed while no shared secret is configured: 401 via query AND header, and no lead row is ever stored",
+        c1 == 401 and w1.get("error") == "unauthorized" and c2 == 401 and int(nl) == 0, (c1, c2, nl))
+
+    cv2, _ = jget("GET", "/api/webhooks/meta-leads?hub.mode=subscribe&hub.verify_token=guess56&hub.challenge=c56")
+    payload = {"entry": [{"changes": [{"field": "leadgen", "value": {"leadgen_id": "lg-mk56", "form_id": "f-mk56"}}]}]}
+    c1, m1 = jget("POST", "/api/webhooks/meta-leads", body=payload)
+    c2, _ = jget("POST", "/api/webhooks/meta-leads", body=payload)   # provider retry-storm replay
+    jrow = _job("idempotency_key", "meta_lead_fetch:lg-mk56")
+    con = dbconn()
+    lead = con.execute("SELECT id, source_platform, provider_lead_id, consent, status, email FROM mkt_leads WHERE dedup_key=?",
+                       ("meta:leadgen:lg-mk56",)).fetchall()
+    con.close()
+    lid = lead[0][0] if lead else None
+    chk("56o Meta lead events: the verification handshake fails closed (403), a leadgen notification stores ONE consent-0 stub lead (a prospect, never a member) that a replay dedups, and the detail-fetch job fails honestly without a token",
+        cv2 == 403 and c1 == 200 and m1.get("ok") is True and c2 == 200
+        and len(lead) == 1 and lead[0][1] == "meta" and lead[0][2] == "lg-mk56" and int(lead[0][3]) == 0
+        and lead[0][4] == "new" and lead[0][5] is None
+        and jrow and jrow[0] == "failed" and jrow[2] in ("no_access_token", "no_connected_meta_account"), (cv2, lead, jrow))
+
+    c1, su = jget("POST", f"{M}/leads/{lid}/status", token=admin,
+                  body={"status": "contacted", "assign_self": 1, "next_followup_at": "2026-08-01"})
+    c2, fl = jget("GET", f"{M}/leads?status=contacted", token=admin)
+    con = dbconn(); lrow = con.execute("SELECT status, owner_admin_id, last_contact_at, next_followup_at FROM mkt_leads WHERE id=?", (lid,)).fetchone(); con.close()
+    chk("56p the Lead Centre pipeline: a status move with assign_self stamps the owner, contact time and follow-up date, and the status filter finds the lead",
+        c1 == 200 and su.get("ok") and lrow and lrow[0] == "contacted" and lrow[1] is not None
+        and lrow[2] is not None and lrow[3] == "2026-08-01"
+        and c2 == 200 and any(r.get("id") == lid for r in fl.get("rows", [])), (su, lrow))
+
+    # --- overview counts + alert ack, then audit trail + disconnect wipe (which also restores state) ---
+    con = dbconn()
+    con.execute("INSERT INTO mkt_alerts(kind,severity,platform_code,message,status) VALUES('pace_56','warning','meta_ads','probe alert 56','open')")
+    aid = con.execute("SELECT id FROM mkt_alerts WHERE message=?", ("probe alert 56",)).fetchone()[0]
+    con.commit(); con.close()
+    c1, ov = jget("GET", f"{M}/overview", token=admin)
+    counts = ov.get("counts", {})
+    c2, ack = jget("POST", f"{M}/alerts/{aid}/ack", token=admin)
+    con = dbconn(); arow = con.execute("SELECT status, acknowledged_by FROM mkt_alerts WHERE id=?", (aid,)).fetchone(); con.close()
+    chk("56q the overview dashboard reports the live truth (3 connected accounts, the post, the campaign, the lead, the open alert) and an ack stamps who acknowledged",
+        c1 == 200 and counts.get("connections", 0) >= 3 and counts.get("posts", 0) >= 1 and counts.get("campaigns", 0) >= 1
+        and counts.get("leads", 0) >= 1 and counts.get("open_alerts", 0) >= 1
+        and any(a.get("message") == "probe alert 56" for a in ov.get("alerts", []))
+        and c2 == 200 and ack.get("ok") and arow and arow[0] == "acknowledged" and arow[1] is not None, (counts, arow))
+
+    con = dbconn()   # plant sentinel token material so the disconnect wipe is provable (all its jobs are already terminal)
+    con.execute("UPDATE mkt_connections SET access_token_enc='enc-wipe-56', refresh_token_enc='enc-wipe-56r', token_expires_at='2020-01-01 00:00:00' WHERE id=?", (gid,))
+    con.commit(); con.close()
+    for c_id in (li, mid, gid):   # the real endpoint is the restoration path
+        jget("POST", f"{M}/connections/{c_id}/disconnect", token=admin)
+    con = dbconn()
+    grow = con.execute("SELECT status, access_token_enc, refresh_token_enc, token_expires_at FROM mkt_connections WHERE id=?", (gid,)).fetchone()
+    # restore the capability ceiling §56 borrowed — the platform is back to its honest seeded state
+    con.execute("UPDATE mkt_capabilities SET status='provider_approval_required' WHERE platform_code='linkedin_page' AND feature='Organisation page posts'")
+    con.commit(); con.close()
+    ca, aud = jget("GET", f"{M}/audit", token=admin)
+    acts = [r.get("action") for r in aud.get("rows", [])]
+    chk("56r disconnect wipes stored tokens and expiry in one stroke, and the marketing audit trail is scoped to mkt_* actions recording the whole journey",
+        grow and grow[0] == "disconnected" and grow[1] is None and grow[2] is None and grow[3] is None
+        and ca == 200 and len(acts) > 0 and all(str(a).startswith("mkt_") for a in acts)
+        and {"mkt_post_create", "mkt_campaign_approved", "mkt_platform_campaign_launch", "mkt_connection_disconnected"} <= set(acts),
+        (grow, acts[:8]))
+
+def test_admin_extra_gaps(admin):
+    # Incremental Testing Programme §58 — the AdminExtra remainder (Endpoints/AdminExtra.cs): the legacy
+    # admin tickets console ('tickets' permission — distinct from §34's /api/support 'inbox' console),
+    # the codes-v2 browser + bulk generator + per-code redemption drill-down ('codes'), and the public
+    # enrolment wizards (/api/session start/save/resume + /api/enrollment save/resume) whose resume
+    # tokens are stored hash-only and must never let an email alone touch another party's saved session.
+    print("\n=== 58. AdminExtra gaps: legacy tickets console, codes-v2 bulk generate, enrolment save/resume ===")
+    import re as _re
+    vtok = globals().get("_VIEWER_TOK")
+
+    # Fixture: a student with one open ticket (opening message lands with sender 'user').
+    stok, _ = register_student("tickets-58@ex.co")
+    c, tk = jget("POST", "/api/me/tickets", token=stok,
+                 body={"subject": "Voucher missing 58", "category": "general", "body": "Where is my exam voucher? (58)"})
+    tid, tref = tk.get("id"), tk.get("reference")
+
+    # --- RBAC: both consoles refuse anonymous (401) and a viewer admin (403 naming the section) ---
+    c1, e1 = jget("GET", "/api/admin/tickets")
+    c2, _e2 = jget("GET", "/api/admin/codes-v2")
+    c3, f1 = jget("GET", "/api/admin/tickets", token=vtok)
+    c4, f2 = jget("GET", "/api/admin/codes-v2", token=vtok)
+    c5, _f3 = jget("POST", "/api/admin/codes/generate", token=vtok, body={"count": 1})
+    chk("58a the tickets and codes consoles are 401 anonymous and viewer-403 naming their sections",
+        c1 == 401 and e1.get("error") == "unauthorized" and c2 == 401
+        and c3 == 403 and f1.get("section") == "tickets"
+        and c4 == 403 and f2.get("section") == "codes" and c5 == 403, (c1, c2, f1, f2, c5))
+
+    c, lst = jget("GET", "/api/admin/tickets", token=admin)
+    row = next((t for t in lst.get("rows", []) if t.get("reference") == tref), None)
+    c2, res = jget("GET", "/api/admin/tickets?status=resolved", token=admin)
+    chk("58b the ticket list joins the student's identity + message count, and the status filter excludes it",
+        c == 200 and bool(row) and row.get("email") == "tickets-58@ex.co" and row.get("first_name") == "Jo"
+        and H0(row.get("msg_count")) == 1
+        and not any(t.get("reference") == tref for t in res.get("rows", [])), row)
+
+    c, nf = jget("GET", "/api/admin/tickets/99999958", token=admin)
+    c2, det = jget("GET", f"/api/admin/tickets/{tid}", token=admin)
+    msgs = det.get("messages", []) if isinstance(det, dict) else []
+    chk("58c an unknown ticket is 404 not_found; a real one returns the joined identity and the thread",
+        c == 404 and nf.get("error") == "not_found" and c2 == 200 and det.get("email") == "tickets-58@ex.co"
+        and len(msgs) == 1 and msgs[0].get("sender") == "user"
+        and "voucher" in str(msgs[0].get("body", "")).lower(), (c, det.get("email"), msgs))
+
+    c, r = jget("POST", f"/api/admin/tickets/{tid}/reply", token=admin, body={"message": ""})
+    chk("58d an empty admin reply is rejected (400 missing_message)", c == 400 and r.get("error") == "missing_message", (c, r))
+
+    jget("POST", f"/api/admin/tickets/{tid}/reply", token=admin, body={"message": "Your voucher is on its way. (58)"})
+    con = dbconn(); fra1 = con.execute("SELECT first_response_at FROM tickets WHERE id=?", (tid,)).fetchone()[0]; con.close()
+    jget("POST", f"/api/admin/tickets/{tid}/reply", token=admin, body={"message": "Anything else we can help with? (58)"})
+    con = dbconn()
+    trow = con.execute("SELECT status, first_response_at FROM tickets WHERE id=?", (tid,)).fetchone()
+    nadm = con.execute("SELECT COUNT(*) FROM ticket_messages WHERE ticket_id=? AND sender='admin'", (tid,)).fetchone()[0]
+    con.close()
+    chk("58e replies store admin messages, park the ticket awaiting_student, and first_response_at is stamped exactly once",
+        bool(trow) and trow[0] == "awaiting_student" and fra1 is not None and trow[1] == fra1 and H0(nadm) == 2,
+        (trow, fra1, nadm))
+
+    c, bs = jget("POST", f"/api/admin/tickets/{tid}/status", token=admin, body={"status": "reopened"})
+    c2, ok = jget("POST", f"/api/admin/tickets/{tid}/status", token=admin, body={"status": "resolved"})
+    c3, res = jget("GET", "/api/admin/tickets?status=resolved", token=admin)
+    c4, opn = jget("GET", "/api/admin/tickets?status=open", token=admin)
+    chk("58f a made-up ticket status is 400 bad_status; 'resolved' is stored and drives the filter",
+        c == 400 and bs.get("error") == "bad_status" and c2 == 200 and ok.get("ok")
+        and any(t.get("reference") == tref for t in res.get("rows", []))
+        and not any(t.get("reference") == tref for t in opn.get("rows", [])), (c, bs, c2))
+
+    # --- codes v2: bulk generate (count clamped, prefix sanitised) + batch browser + drill-down ---
+    c0, g0 = jget("POST", "/api/admin/codes/generate", token=admin, body={"count": 0, "prefix": "clamp58"})
+    c, gen = jget("POST", "/api/admin/codes/generate", token=admin,
+                  body={"count": 3, "prefix": "q4 58!", "discount_type": "fixed", "discount_value": 25,
+                        "applies_to": "exam", "code_type": "institution", "org_name": "Acme Institute 58",
+                        "max_uses": 5, "per_user_limit": 2, "end_date": "2030-01-01", "notes": "bulk batch 58"})
+    batch = gen.get("batch_id", ""); codes = gen.get("codes", [])
+    chk("58g generate clamps count 0 to 1 and mints a sanitised-prefix batch (Q458-XXXXXXXX x3)",
+        c0 == 200 and g0.get("count") == 1 and c == 200 and gen.get("count") == 3
+        and batch.startswith("Q458-") and len(codes) == len(set(codes)) == 3
+        and all(_re.fullmatch(r"Q458-[0-9A-F]{8}", x) for x in codes), (g0, gen))
+
+    c, v2 = jget("GET", f"/api/admin/codes-v2?batch={batch}", token=admin)
+    rows = v2.get("rows", [])
+    chk("58h codes-v2 filtered by batch returns exactly the 3 with their stored terms and zeroed rollups",
+        c == 200 and len(rows) == 3 and {x.get("code") for x in rows} == set(codes)
+        and all(x.get("discount_type") == "fixed" and abs(float(x.get("discount_value") or 0) - 25) < 1e-6
+                and x.get("applies_to") == "exam" and x.get("code_type") == "institution"
+                and x.get("org_name") == "Acme Institute 58" and H0(x.get("active")) == 1
+                and H0(x.get("max_uses")) == 5 and H0(x.get("per_user_limit")) == 2
+                and str(x.get("end_date") or "").startswith("2030-01-01")
+                and H0(x.get("redemptions")) == 0 and abs(float(x.get("discount_given") or 0)) < 1e-6
+                and abs(float(x.get("revenue_attributed") or 0)) < 1e-6 for x in rows), rows)
+
+    con = dbconn()
+    crow = con.execute("SELECT id, code FROM discount_codes WHERE batch_id=? ORDER BY id LIMIT 1", (batch,)).fetchone()
+    cid = crow[0]
+    con.execute("INSERT INTO code_redemptions(code_id,code,user_id,email,product_type,amount_before,discount_amount) VALUES(?,?,NULL,?, 'exam', 200, 25)",
+                (cid, crow[1], "redeemer-58@ex.co"))
+    con.commit(); con.close()
+    c, dd = jget("GET", f"/api/admin/codes/{cid}/redemptions", token=admin)
+    c2, v2b = jget("GET", f"/api/admin/codes-v2?batch={batch}", token=admin)
+    mine = next((x for x in v2b.get("rows", []) if x.get("id") == cid), {})
+    chk("58i a redemption shows in the per-code drill-down and rolls up into the codes-v2 counters",
+        c == 200 and len(dd.get("rows", [])) == 1 and dd["rows"][0].get("email") == "redeemer-58@ex.co"
+        and abs(float(dd["rows"][0].get("discount_amount") or 0) - 25) < 1e-6
+        and H0(mine.get("redemptions")) == 1 and abs(float(mine.get("discount_given") or 0) - 25) < 1e-6, (dd, mine))
+
+    # --- public enrolment wizard v1: /api/session start / save / resume (token stored hash-only) ---
+    c, bad = jget("POST", "/api/session/start", body={"email": "not-an-email"})
+    c2, s1 = jget("POST", "/api/session/start", body={"email": "wizard-58@ex.co"})
+    sid = s1.get("session_id")
+    con = dbconn(); srow = con.execute("SELECT session_status, resume_token_hash, resume_token_expiry FROM enrollment_sessions WHERE id=?", (sid,)).fetchone(); con.close()
+    chk("58j session/start rejects a bad email (400 invalid_email) and opens an in_progress session with a hashed resume token",
+        c == 400 and bad.get("error") == "invalid_email" and c2 == 200 and bool(sid)
+        and int(s1.get("current_step") or 0) == 1 and bool(srow) and srow[0] == "in_progress"
+        and bool(srow[1]) and bool(srow[2]), (c, s1, srow))
+
+    c, s2 = jget("POST", "/api/session/start", body={"email": "wizard-58@ex.co"})
+    con = dbconn(); h2 = con.execute("SELECT resume_token_hash FROM enrollment_sessions WHERE id=?", (sid,)).fetchone()[0]; con.close()
+    chk("58k restarting with the same email resumes the SAME session and rotates its token hash",
+        c == 200 and s2.get("session_id") == sid and bool(h2) and h2 != srow[1], (s2, h2))
+
+    c, ns = jget("POST", "/api/session/save", body={"email": "ghost-58@ex.co", "current_step": 2})
+    c2, sv = jget("POST", "/api/session/save", body={"email": "wizard-58@ex.co", "current_step": 3,
+                                                    "selected_product": "bundle", "pricing_snapshot": {"plan": "pro58", "total": 149}})
+    con = dbconn(); srow2 = con.execute("SELECT current_step, selected_product, pricing_snapshot FROM enrollment_sessions WHERE id=?", (sid,)).fetchone(); con.close()
+    chk("58l session/save is 404 no_session for an unknown email and stores step / product / pricing snapshot",
+        c == 404 and ns.get("error") == "no_session" and c2 == 200 and sv.get("ok")
+        and bool(srow2) and int(float(srow2[0] or 0)) == 3 and srow2[1] == "bundle" and "pro58" in str(srow2[2]),
+        (c, sv, srow2))
+
+    # Plant a KNOWN token's hash (Security.Sha == sha256hex) so the resume lookup can be driven end-to-end.
+    con = dbconn(); con.execute("UPDATE enrollment_sessions SET resume_token_hash=? WHERE id=?", (sha256hex("sess58-resume-token"), sid)); con.commit(); con.close()
+    c, rr = jget("GET", "/api/session/resume?token=sess58-resume-token")
+    c2, rj = jget("GET", "/api/session/resume?token=junk-58")
+    chk("58m session/resume returns the saved state for a valid token — never any token hash — and 404s junk",
+        c == 200 and rr.get("email") == "wizard-58@ex.co" and int(rr.get("current_step") or 0) == 3
+        and rr.get("selected_product") == "bundle" and (rr.get("pricing_snapshot") or {}).get("plan") == "pro58"
+        and "resume_token" not in json.dumps(rr) and sha256hex("sess58-resume-token") not in json.dumps(rr)
+        and c2 == 404 and rj.get("error") == "invalid_or_expired", (rr, c2))
+
+    con = dbconn(); con.execute("UPDATE enrollment_sessions SET resume_token_expiry='2020-01-01 00:00:00' WHERE id=?", (sid,)); con.commit(); con.close()
+    c, rx = jget("GET", "/api/session/resume?token=sess58-resume-token")
+    chk("58n an expired resume token is refused (404 invalid_or_expired)",
+        c == 404 and rx.get("error") == "invalid_or_expired", (c, rx))
+
+    # --- enrolment wizard v2: /api/enrollment save/resume — the #10 token-or-fresh-session guard ---
+    c, bd = jget("POST", "/api/enrollment/save", body={"email": "junk58"})
+    c2, ev1 = jget("POST", "/api/enrollment/save", body={"email": "wizardv2-58@ex.co", "step": 42, "data": {"cert": "pcl58"}})
+    tA = ev1.get("resume_token") or ""
+    c3, ev2 = jget("POST", "/api/enrollment/save", body={"email": "wizardv2-58@ex.co", "resume_token": tA, "step": 4,
+                                                         "data": {"cert": "pcl58", "seat": "night"}})
+    c4, rz = jget("GET", f"/api/enrollment/resume?token={tA}")
+    chk("58o enrollment/save rejects a bad email, clamps step 42 to 9, and a token-verified update round-trips through resume",
+        c == 400 and bd.get("error") == "invalid_email" and c2 == 200 and int(ev1.get("step") or 0) == 9
+        and len(tA) == 40 and c3 == 200 and ev2.get("resume_token") == tA
+        and c4 == 200 and rz.get("email") == "wizardv2-58@ex.co" and int(rz.get("step") or 0) == 4
+        and (rz.get("data") or {}).get("seat") == "night", (bd, ev1, ev2, rz))
+
+    c, ev3 = jget("POST", "/api/enrollment/save", body={"email": "wizardv2-58@ex.co", "resume_token": "wrong-58",
+                                                        "step": 1, "data": {"cert": "hijack58"}})
+    tB = ev3.get("resume_token") or ""
+    con = dbconn(); nrows = con.execute("SELECT COUNT(*) FROM enrollment_sessions WHERE email=? AND session_status='in_progress'", ("wizardv2-58@ex.co",)).fetchone()[0]; con.close()
+    c2, rz2 = jget("GET", f"/api/enrollment/resume?token={tA}")
+    c3, tr = jget("GET", "/api/enrollment/resume")
+    c4, iv = jget("GET", "/api/enrollment/resume?token=junk-58")
+    chk("58p a save without the session's token never touches the existing row (fresh session instead); blank/junk resume is 400/404",
+        c == 200 and bool(tB) and tB != tA and H0(nrows) == 2
+        and c2 == 200 and int(rz2.get("step") or 0) == 4 and (rz2.get("data") or {}).get("cert") == "pcl58"
+        and "hijack58" not in json.dumps(rz2)
+        and c3 == 400 and tr.get("error") == "token_required"
+        and c4 == 404 and iv.get("error") == "invalid_or_expired", (tB[:8], nrows, rz2, c3, c4))
+
+def test_proctoring_analytics_gaps(admin):
+    # Incremental Testing Programme §59 — the two adjacent read-side admin surfaces still uncovered:
+    # AdminProctoring.cs beyond the review lifecycle (the evidence stream + its access control, live board,
+    # session dossier, proctor messaging, admin launch-code mint, review edge branches) and AdminAnalytics.cs
+    # (reports-gated summary + CSV export, ZERO prior references). Evidence rides the REAL desktop upload
+    # path (/api/exam/evidence); DB inserts only for the broken/legacy artefacts no HTTP path can create.
+    print("\n=== 59. Proctoring evidence access control + live/dossier/launch-code edges + first-party analytics ===")
+    vtok = globals().get("_VIEWER_TOK")
+
+    # Fixture: a paid candidate with an in-progress browser sitting (never submitted in this section).
+    tok, uid = make_paid_user("proctor-59@ex.co")
+    accept_all_consents(tok); complete_profile(tok)
+    c, bk, st = book_and_start(tok, admin)
+    aid = st["attempt_id"]
+
+    # Real desktop-client evidence upload: bytes land in blob storage, the DB keeps only ref + metadata.
+    raw = base64.b64decode(TINY_PNG.split(",", 1)[1])
+    c, up = jget("POST", "/api/exam/evidence", token=tok,
+                 body={"attempt_id": aid, "kind": "frame", "data_uri": TINY_PNG})
+    con = dbconn()
+    ev = con.execute("SELECT id,storage_ref,sha256,size_bytes,mime FROM exam_evidence WHERE attempt_id=? ORDER BY id DESC",
+                     (aid,)).fetchone()
+    ecount = con.execute("SELECT evidence_count FROM exam_attempts WHERE id=?", (aid,)).fetchone()[0]
+    con.close()
+    evid = ev[0] if ev else None
+    chk("59a a real evidence upload stores a blob reference + sha256/size metadata and bumps evidence_count",
+        c == 200 and up.get("ok") is True and ev is not None and str(ev[1] or "").startswith("local:evidence/")
+        and ev[2] == hashlib.sha256(raw).hexdigest() and H0(ev[3]) == len(raw) and ev[4] == "image/png"
+        and H0(ecount) == 1, (c, ev))
+
+    stc, body, ct = _raw_get(f"/api/admin/evidence/{evid}", token=admin)
+    chk("59b the admin evidence stream round-trips the uploaded bytes exactly as image/png",
+        stc == 200 and body == raw and ct.startswith("image/png"), (stc, ct, len(body or b"")))
+
+    c1, an = jget("GET", f"/api/admin/evidence/{evid}")
+    c2, vw = jget("GET", f"/api/admin/evidence/{evid}", token=vtok)
+    chk("59c the evidence stream is proctoring-gated (anon 401 unauthorized; viewer 403 naming the section)",
+        c1 == 401 and an.get("error") == "unauthorized" and bool(vtok) and c2 == 403
+        and vw.get("error") == "forbidden" and vw.get("section") == "proctoring", (c1, c2, vw))
+
+    # Per-certification scope: an exam_manager scoped to certification 2 HAS the proctoring permission
+    # yet must be refused this cert-1 artefact, and the attempt must vanish from their session list.
+    c, sb = jget("POST", "/api/admin/team", token=admin,
+                 body={"email": "scoped-59@pci.test", "name": "Scoped 59", "role": "exam_manager", "cert_scope": [2]})
+    c, sl = admin_login_rl(lambda: {"email": "scoped-59@pci.test", "password": sb.get("temp_password", "")})
+    sctok = clear_must_change(sl.get("token"))
+    c1, sfe = jget("GET", f"/api/admin/evidence/{evid}", token=sctok)
+    c2, sls = jget("GET", "/api/admin/exam-sessions", token=sctok)
+    chk("59d a cert-scoped admin is cert_forbidden on the artefact and never sees the attempt listed",
+        c1 == 403 and sfe.get("error") == "cert_forbidden" and c2 == 200
+        and not any(H0(r.get("id")) == H0(aid) for r in sls.get("rows", [])), (c1, sfe, c2))
+
+    # Misses are clean 404s; a pre-migration inline artefact still serves via the legacy branch.
+    dangling_ref = "local:evidence/zz/" + "0" * 64 + ".png"
+    con = dbconn()
+    con.execute("INSERT INTO exam_evidence(attempt_id,user_id,kind,mime,storage_ref) VALUES(?,?,?,?,?)",
+                (aid, uid, "frame", "image/png", dangling_ref))
+    con.execute("INSERT INTO exam_evidence(attempt_id,user_id,kind,mime,data_uri) VALUES(?,?,?,?,?)",
+                (aid, uid, "legacy", "image/png", TINY_PNG))
+    dgl = con.execute("SELECT id FROM exam_evidence WHERE storage_ref=?", (dangling_ref,)).fetchone()[0]
+    leg = con.execute("SELECT id FROM exam_evidence WHERE attempt_id=? AND data_uri IS NOT NULL ORDER BY id DESC",
+                      (aid,)).fetchone()[0]
+    con.commit(); con.close()
+    c1, nf = jget("GET", "/api/admin/evidence/99999999", token=admin)
+    c2, dg = jget("GET", f"/api/admin/evidence/{dgl}", token=admin)
+    st3, lbody, lct = _raw_get(f"/api/admin/evidence/{leg}", token=admin)
+    chk("59e unknown id and a dangling storage ref both 404 not_found; a legacy inline data_uri streams as text/plain verbatim",
+        c1 == 404 and nf.get("error") == "not_found" and c2 == 404 and dg.get("error") == "not_found"
+        and st3 == 200 and lct.startswith("text/plain") and lbody.decode() == TINY_PNG, (c1, c2, st3, lct))
+
+    c, lv = jget("GET", "/api/admin/exam-sessions/live", token=admin)
+    lrow = next((r for r in lv.get("rows", []) if H0(r.get("id")) == H0(aid)), None)
+    chk("59f the live board lists the in-progress sitting with its clock and counters",
+        c == 200 and bool(lv.get("now")) and lrow is not None and lrow.get("email") == "proctor-59@ex.co"
+        and H0(lrow.get("remaining_s")) > 0 and H0(lrow.get("evidence_count")) == 1
+        and H0(lrow.get("candidate_msgs")) == 0, (c, lrow))
+
+    c1, mn = jget("POST", "/api/admin/exam-sessions/99999999/message", token=admin, body={"body": "hello"})
+    c2, mb = jget("POST", f"/api/admin/exam-sessions/{aid}/message", token=admin, body={"body": "   "})
+    c3, mk = jget("POST", f"/api/admin/exam-sessions/{aid}/message", token=admin,
+                  body={"body": "please keep your face in frame (59)"})
+    con = dbconn()
+    pm = con.execute("SELECT sender,body FROM proctor_messages WHERE attempt_id=? ORDER BY id DESC", (aid,)).fetchone()
+    con.close()
+    chk("59g proctor messaging: unknown attempt 404, blank body 400 body_required, a real message lands as sender=proctor",
+        c1 == 404 and mn.get("error") == "not_found" and c2 == 400 and mb.get("error") == "body_required"
+        and c3 == 200 and mk.get("ok") is True
+        and tuple(pm) == ("proctor", "please keep your face in frame (59)"), (c1, c2, c3, pm))
+
+    c, det = jget("GET", f"/api/admin/exam-sessions/{aid}", token=admin)
+    evrows = det.get("evidence", [])
+    legrow = next((r for r in evrows if H0(r.get("id")) == H0(leg)), None)
+    c2, d404 = jget("GET", "/api/admin/exam-sessions/99999999", token=admin)
+    chk("59h the session dossier joins user/evidence/message metadata but never the raw artefact; unknown attempt 404",
+        c == 200 and H0(det.get("attempt", {}).get("id")) == H0(aid)
+        and det.get("user", {}).get("email") == "proctor-59@ex.co" and len(evrows) == 3
+        and legrow is not None and H0(legrow.get("legacy_inline")) == 1
+        and any(m.get("sender") == "proctor" and "face in frame (59)" in str(m.get("body")) for m in det.get("messages", []))
+        and H0(det.get("summary", {}).get("total_events")) == 0
+        and TINY_PNG not in json.dumps(det)
+        and c2 == 404 and d404.get("error") == "not_found", (c, len(evrows), c2))
+
+    c1, nh = jget("POST", f"/api/admin/exam-sessions/{aid}/review", token=admin,
+                  body={"action": "release", "note": "premature"})
+    c2, cl = jget("POST", f"/api/admin/exam-sessions/{aid}/review", token=admin,
+                  body={"note": "routine check 59 - clean"})
+    con = dbconn()
+    rv = con.execute("SELECT review_status,review_note,reviewed_at FROM exam_attempts WHERE id=?", (aid,)).fetchone()
+    con.close()
+    chk("59i review edges: releasing a never-held attempt is 400 not_held; a plain review clears with the note stamped",
+        c1 == 400 and nh.get("error") == "not_held" and c2 == 200 and cl.get("ok") is True
+        and rv[0] == "cleared" and rv[1] == "routine check 59 - clean" and rv[2] is not None, (c1, c2, rv))
+
+    c1, l1 = jget("POST", "/api/admin/exam-sessions/launch-code", token=admin, body={})
+    nbtok, nbuid = make_paid_user("nobooking-59@ex.co")   # paid but never booked
+    c2, l2 = jget("POST", "/api/admin/exam-sessions/launch-code", token=admin, body={"user_id": nbuid})
+    c3, l3 = jget("POST", "/api/admin/exam-sessions/launch-code", token=admin, body={"user_id": uid})
+    code = l3.get("code", "")
+    con = dbconn()
+    lcrow = con.execute("SELECT user_id, code FROM exam_launch_codes WHERE code_hash=?", (sha256hex(code),)).fetchone()
+    con.close()
+    chk("59j admin launch-code: user_id_required, no_booking, then a 15-minute code stored only as its SHA-256",
+        c1 == 400 and l1.get("error") == "user_id_required" and c2 == 400 and l2.get("error") == "no_booking"
+        and c3 == 200 and code.startswith("PCI-") and l3.get("expires_in_seconds") == 900
+        and l3.get("uri") == "pciexam://start?code=" + code
+        and lcrow is not None and H0(lcrow[0]) == H0(uid) and lcrow[1] is None, (c1, c2, c3, lcrow))
+
+    # ---- AdminAnalytics: seed a uniquely-attributed slice of the ledger, then prove the contract ----
+    con = dbconn()
+    con.execute("INSERT INTO analytics_events(event,path,visitor,country,device,browser,utm_source,utm_campaign,created_at) "
+                "VALUES(?,?,?,?,?,?,?,?,datetime('now'))",
+                ("page_view", "/cert-59.html", "v59page", "PK", "desktop", "Chrome", "zephyr59", "camp,59"))
+    con.execute("INSERT INTO analytics_events(event,path,utm_source,created_at) VALUES(?,?,?,datetime('now'))",
+                ("registration_completed", "/register.html", "zephyr59"))
+    con.execute("INSERT INTO analytics_events(event,utm_source,value,currency,created_at) VALUES(?,?,?,?,datetime('now'))",
+                ("purchase_completed", "zephyr59", 100.25, "USD"))
+    con.execute("INSERT INTO analytics_events(event,utm_source,value,currency,created_at) VALUES(?,?,?,?,datetime('now'))",
+                ("purchase_completed", "zephyr59", 49.75, "USD"))
+    con.execute("INSERT INTO analytics_events(event,path,visitor,utm_source,created_at) VALUES(?,?,?,?,?)",
+                ("page_view", "/old-59.html", "v59old", "zephyr59old", "2020-01-01 00:00:00"))
+    con.commit(); con.close()
+
+    c1, ag = jget("GET", "/api/admin/analytics/summary")
+    c2, _v = jget("GET", "/api/admin/analytics/summary", token=vtok)
+    c3, sm = jget("GET", "/api/admin/analytics/summary", token=admin)
+    chk("59k the analytics summary is reports-gated, not proctoring (anon 401; the viewer CAN read it) with sane counters",
+        c1 == 401 and ag.get("error") == "unauthorized" and bool(vtok) and c2 == 200
+        and c3 == 200 and H0(sm.get("page_views")) >= 1 and H0(sm.get("visitors")) >= 1
+        and H0(sm.get("registrations")) >= 1 and H0(sm.get("purchases")) >= 2
+        and float(sm.get("revenue") or 0) >= 150.0, (c1, c2, c3))
+
+    src = next((r for r in sm.get("sources", []) if r.get("source") == "zephyr59"), None)
+    camp = next((r for r in sm.get("campaigns", []) if r.get("campaign") == "camp,59"), None)
+    cbs = next((r for r in sm.get("conversions_by_source", []) if r.get("source") == "zephyr59"), None)
+    today = time.strftime("%Y-%m-%d", time.gmtime())
+    chk("59l every dimension aggregates the seeded traffic exactly (source, campaign, country, device, day, revenue attribution)",
+        src is not None and H0(src.get("n")) == 1 and camp is not None and H0(camp.get("n")) == 1
+        and any(r.get("country") == "PK" for r in sm.get("countries", []))
+        and any(r.get("device") == "desktop" for r in sm.get("devices", []))
+        and any(d.get("day") == today for d in sm.get("daily", []))
+        and cbs is not None and H0(cbs.get("registrations")) == 1 and H0(cbs.get("purchases")) == 2
+        and float(cbs.get("revenue") or 0) == 150.0, (src, camp, cbs))
+
+    c, sm365 = jget("GET", "/api/admin/analytics/summary?days=9999", token=admin)
+    chk("59m the days window clamps at 365: the 2020 event never surfaces even when 9999 days are requested",
+        c == 200 and not any(r.get("source") == "zephyr59old" for r in sm365.get("sources", []))
+        and not any(p.get("path") == "/old-59.html" for p in sm365.get("top_pages", []))
+        and not any(d.get("day") == "2020-01-01" for d in sm365.get("daily", [])), c)
+
+    stc, cbody, cct = _raw_get("/api/admin/analytics/export.csv", token=admin)
+    text = cbody.decode("utf-8", "ignore")
+    header = text.splitlines()[0] if text else ""
+    chk("59n the CSV export serves text/csv with the exact 14-column header, the seeded row, quoted commas, and the window applied",
+        stc == 200 and cct.startswith("text/csv")
+        and header == "created_at,event,path,visitor,country,device,browser,utm_source,utm_medium,utm_campaign,referrer,landing,value,currency"
+        and "zephyr59" in text and '"camp,59"' in text and "2020-01-01" not in text, (stc, cct, header))
+
+def test_time_sweeps(admin):
+    # Incremental Testing Programme §60 — the two findings resolved by the sweeps increment: the
+    # time-based membership expiry sweep (Settlement.ExpireDueMemberships, run daily by
+    # RetentionService) and the on-demand HTTP hook POST /api/admin/ops/sweeps/run (owner-only),
+    # which also fires the blog scheduled-publish due-sweep so the scheduled->published transition
+    # is HTTP-testable. Closes the last two open findings in the ledger.
+    print("\n=== 60. Time sweeps: membership expiry + blog scheduled-publish via the owner run-now hook ===")
+    def mstatus(tok):
+        c, me = jget("GET", "/api/me", token=tok)
+        return me.get("lifecycle", {}).get("membership_status")
+
+    ltok, luid = make_paid_user("lapsed-60@ex.co")     # will lapse
+    ctok, cuid = make_paid_user("current-60@ex.co")    # stays current (+3y expiry untouched)
+    con = dbconn(); con.execute("UPDATE memberships SET expiry_date=datetime('now','-1 day') WHERE user_id=?", (luid,)); con.commit(); con.close()
+
+    c1, r1 = jget("POST", "/api/admin/ops/sweeps/run")
+    vtok = globals().get("_VIEWER_TOK")
+    c2, r2 = jget("POST", "/api/admin/ops/sweeps/run", token=vtok)
+    chk("60a the run-now sweep hook is owner-only (401 anonymous, 403 for a viewer admin)",
+        c1 == 401 and r1.get("error") == "unauthorized" and bool(vtok) and c2 == 403 and r2.get("error") == "forbidden", (c1, c2))
+
+    chk("60b before any sweep the lapsed member still reads active (the status-driven read model of §35 is unchanged)",
+        mstatus(ltok) == "active", mstatus(ltok))
+
+    # A due scheduled post: take a seeded blog DRAFT (title+body present) and schedule it in the past —
+    # the sweep must publish it through the same ContentCentre.PublishPost path the admin endpoint uses.
+    con = dbconn()
+    post = con.execute("SELECT id, slug FROM blog_posts WHERE status='draft' AND structured_type<>'NewsArticle'"
+                       " AND title IS NOT NULL AND body IS NOT NULL ORDER BY id LIMIT 1").fetchone()
+    pid, slug = post[0], post[1]
+    con.execute("UPDATE blog_posts SET status='scheduled', scheduled_at='2020-01-03 00:00:00' WHERE id=?", (pid,))
+    con.commit(); con.close()
+
+    c, sw = jget("POST", "/api/admin/ops/sweeps/run", token=admin)
+    chk("60c the owner sweep runs both due-sweeps and reports its counts",
+        c == 200 and sw.get("ok") is True and H0(sw.get("memberships_expired")) >= 1 and H0(sw.get("published")) >= 1, sw)
+
+    c, gate = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "lapsed-60@ex.co"})
+    chk("60d the lapsed membership is now expired and the exam-fee gate blocks it (membership_required)",
+        mstatus(ltok) == "expired" and c == 400 and isinstance(gate, dict) and gate.get("error") == "membership_required",
+        (mstatus(ltok), c, gate))
+    chk("60e a membership with a future expiry_date is untouched by the sweep", mstatus(ctok) == "active", mstatus(ctok))
+
+    con = dbconn(); prow = con.execute("SELECT status, published FROM blog_posts WHERE id=?", (pid,)).fetchone(); con.close()
+    st, body, _ = _raw_get(f"/blog/{slug}")
+    chk("60f the due scheduled post published through the real publish path and serves publicly",
+        prow and prow[0] == "published" and H0(prow[1]) == 1 and st == 200, (prow, st))
+
+    c, sw2 = jget("POST", "/api/admin/ops/sweeps/run", token=admin)
+    chk("60g a second run is a clean no-op (nothing left due: 0 published, 0 expired)",
+        c == 200 and H0(sw2.get("published")) == 0 and H0(sw2.get("memberships_expired")) == 0, sw2)
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,17 @@
+{
+  "_comment": "SQ-5 residual-vulnerability allow-list. Each entry is a transitive advisory with NO upstream patch available at the time of writing. New/patchable vulnerabilities are NOT allowed here — fix them by pinning a patched version (see PCI.Backend.csproj). Every entry must carry a reason, a residual-risk assessment, and a review_by date. Governed by docs/testing/SUPPRESSION_PROCESS.md.",
+  "allow": [
+    {
+      "advisory": "https://github.com/advisories/GHSA-2m69-gcr7-jv3q",
+      "cve": "CVE-2025-6965",
+      "package": "SQLitePCLRaw.lib.e_sqlite3",
+      "severity": "High",
+      "pulled_in_by": "Microsoft.Data.Sqlite 8.0.7 -> Microsoft.Data.Sqlite.Core -> SQLitePCLRaw.bundle_e_sqlite3",
+      "reason": "Memory-corruption defect in the native SQLite library bundled by SQLitePCLRaw. The advisory covers all versions <= 2.1.11 with NO patched release available upstream as of 2026-07 (we already pin the newest available, 2.1.11, which supersedes the transitive 2.1.6).",
+      "residual_risk": "Exploitation requires an attacker to run attacker-controlled SQL (a crafted statement with a very large number of aggregate terms). The PCI backend issues only parameterised, developer-authored SQL and never executes user-supplied SQL text, so the vulnerable code path is not reachable from any request surface. Production additionally runs on MySQL (dual-provider), where this native SQLite library is not loaded at all. Risk is assessed LOW in our deployment.",
+      "added": "2026-07-23",
+      "review_by": "2026-10-23",
+      "action_when_patched": "Remove this entry and bump the SQLitePCLRaw.bundle_e_sqlite3 pin (or Microsoft.Data.Sqlite) to the first patched version; the gate will then block again if it ever regresses."
+    }
+  ]
+}

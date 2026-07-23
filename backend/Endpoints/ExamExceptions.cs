@@ -20,7 +20,6 @@ public static class ExamExceptions
     {
         IResult J(object o) => Results.Json(o);
         static string? S(Dictionary<string, System.Text.Json.JsonElement> b, string k) => H.GetS(b, k);
-        string? Ip(HttpContext ctx) => ctx.Connection.RemoteIpAddress?.ToString();
 
         Dictionary<string, object?>? UserRow(long uid) => db.QueryOne("SELECT id,email,first_name,last_name FROM users WHERE id=?", uid);
         string CertName(long certId) => H.Str(db.QueryOne("SELECT name FROM certifications WHERE id=?", certId)?["name"]) ?? ("Certification " + certId);
