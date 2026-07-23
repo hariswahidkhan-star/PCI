@@ -62,6 +62,13 @@ describe('Admin SimLab Studio', () => {
     expect(screen.getByRole('button', { name: '→ Calc Review' })).toBeInTheDocument()
   })
 
+  it('flags a scenario whose review-due date has passed', () => {
+    h.resp = { rows: [row({ governance: 'review_overdue', review_due: '2020-01-01', days_to_review: -900 })], total: 1, published: 1 }
+    render(<SimLab />)
+    expect(screen.getByText('Review overdue')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Dates' })).toBeInTheDocument()
+  })
+
   it('shows the empty state when no scenarios exist', () => {
     h.resp = { rows: [], total: 0, published: 0 }
     render(<SimLab />)

@@ -30,14 +30,19 @@ public static class AdminSimLab
 
             var rows = new List<object>();
             var published = 0;
+            var now = DateTime.UtcNow;
             foreach (var s in db.Query(@"SELECT id,scenario_code,title,kind,industry,difficulty,est_minutes,
-                    competencies_json,status,review_state,version,sort_order,config_json,updated_at
+                    competencies_json,status,review_state,version,sort_order,config_json,updated_at,review_due,expires_at
                 FROM simulation_scenarios ORDER BY sort_order ASC, id ASC"))
             {
                 var id = H.L(s["id"]);
                 var status = H.Str(s["status"]);
                 if (status == "published") published++;
                 var has = stats.TryGetValue(id, out var st);
+                // Review-due / expiry governance (§13): computed against "now" from the two authored dates.
+                var gov = SimGovernance.Evaluate(
+                    s.TryGetValue("review_due", out var rdv) ? H.Str(rdv) : null,
+                    s.TryGetValue("expires_at", out var exv) ? H.Str(exv) : null, now);
                 rows.Add(new
                 {
                     id,
@@ -55,6 +60,11 @@ public static class AdminSimLab
                     attempts = has ? st.attempts : 0,
                     completed = has ? st.completed : 0,
                     updated_at = H.Str(s["updated_at"]),
+                    review_due = gov.ReviewDue,
+                    expires_at = gov.ExpiresAt,
+                    governance = gov.Code,
+                    days_to_review = gov.DaysToReview,
+                    days_to_expiry = gov.DaysToExpiry,
                 });
             }
             return Results.Json(new { rows, total = rows.Count, published });
@@ -233,6 +243,44 @@ public static class AdminSimLab
                     newCode, adm.Id, adm.Id, id);
                 log(adm.Id, "sim_scenario_revise", $"{H.Str(s["scenario_code"])} → {newCode} (v{H.L(s["version"]) + 1})");
                 return Results.Json(new { id = newId, scenario_code = newCode, review_state = "draft", status = "draft", revised_from = id });
+            });
+        });
+
+        // ---- set the review-due / expiry governance dates (§13). These are governance METADATA, not
+        //      scenario content, so they may be set at any lifecycle state (including published) without
+        //      breaching published-immutability. Either date may be cleared by sending an empty/null value;
+        //      a present-but-unparseable date is rejected before it can reach the column. ----
+        app.MapPatch("/api/admin/lab/scenarios/{id}/governance", async (HttpContext ctx, long id) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, "content", adm =>
+            {
+                var s = db.QueryOne("SELECT id,scenario_code FROM simulation_scenarios WHERE id=?", id);
+                if (s is null) return Results.NotFound(new { error = "not_found" });
+
+                var sets = new List<string>(); var vals = new List<object?>(); var touched = new List<string>();
+                foreach (var key in new[] { "review_due", "expires_at" })
+                {
+                    if (H.GetEl(b, key) is not { } el) continue;   // key absent → leave column untouched
+                    var raw = el.ValueKind == JsonValueKind.String ? el.GetString() : null;
+                    var val = string.IsNullOrWhiteSpace(raw) ? null : raw.Trim();   // blank/null clears
+                    if (val is not null && !SimGovernance.IsValidDate(val))
+                        return Results.Json(new { error = "bad_date", field = key, message = "Use YYYY-MM-DD (or a full timestamp)." }, statusCode: 400);
+                    sets.Add($"{key}=?"); vals.Add(val); touched.Add(key);
+                }
+                if (sets.Count == 0)
+                    return Results.Json(new { error = "no_fields", message = "Provide review_due and/or expires_at." }, statusCode: 400);
+
+                vals.Add(id);
+                db.Execute($"UPDATE simulation_scenarios SET {string.Join(",", sets)}, updated_at=datetime('now') WHERE id=?", vals.ToArray());
+                log(adm.Id, "sim_scenario_governance", $"{H.Str(s["scenario_code"])} · {string.Join("+", touched)}");
+                var row = db.QueryOne("SELECT review_due,expires_at FROM simulation_scenarios WHERE id=?", id)!;
+                var gov = SimGovernance.Evaluate(H.Str(row["review_due"]), H.Str(row["expires_at"]), DateTime.UtcNow);
+                return Results.Json(new
+                {
+                    id, review_due = gov.ReviewDue, expires_at = gov.ExpiresAt,
+                    governance = gov.Code, days_to_review = gov.DaysToReview, days_to_expiry = gov.DaysToExpiry,
+                });
             });
         });
     }
