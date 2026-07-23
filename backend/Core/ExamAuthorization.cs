@@ -91,12 +91,35 @@ public static class ExamAuthorization
         {
             db.Execute("UPDATE exam_entitlements SET valid_until=? WHERE id=?", deadline, H.L(ent["id"]));
         }
-        var authId = db.ExecuteReturningId(@"INSERT INTO exam_authorizations(user_id,certification_id,payment_id,entitlement_id,eligibility_start,original_deadline,current_deadline,access_expiry,attempts_permitted,attempts_used,window_days,window_source,route_key,country,status,created_at,updated_at)
-            VALUES(?,?,?,?,?,?,?,?,?,0,?,?,?,?, 'active', datetime('now'), datetime('now'))",
+        // Retake waiting period (P0-7): when THIS seat is a retake — i.e. the candidate already has a
+        // finalized FAILED sitting for this certification — it cannot be scheduled until the configured
+        // cool-off has elapsed since that failure. Persist the concrete date so the booking gate can enforce
+        // it and an admin can audibly waive it. The FIRST seat (no prior failure) has no wait → stays NULL.
+        var retakeWaitUntil = ResolveRetakeWaitUntil(db, userId, certId, w.RetakeWaitDays);
+        var authId = db.ExecuteReturningId(@"INSERT INTO exam_authorizations(user_id,certification_id,payment_id,entitlement_id,eligibility_start,original_deadline,current_deadline,access_expiry,attempts_permitted,attempts_used,window_days,window_source,route_key,country,retake_wait_until,status,created_at,updated_at)
+            VALUES(?,?,?,?,?,?,?,?,?,0,?,?,?,?,?, 'active', datetime('now'), datetime('now'))",
             userId, certId, paymentId, ent is not null ? H.L(ent["id"]) : null, start.ToString("yyyy-MM-dd HH:mm:ss"),
-            deadline, deadline, expiry, w.AttemptsPermitted, w.WindowDays, w.Source, routeKey, country);
+            deadline, deadline, expiry, w.AttemptsPermitted, w.WindowDays, w.Source, routeKey, country, retakeWaitUntil);
         if (ent is not null) db.Execute("UPDATE exam_entitlements SET authorization_id=? WHERE id=?", authId, H.L(ent["id"]));
         return authId;
+    }
+
+    /// <summary>The retake cool-off expiry for a NEW (user, cert) seat, or null when it does not apply.
+    /// Returns <c>last finalized failed sitting + waitDays</c> when that date is still in the future; null when
+    /// there is no prior failure, the configured wait is zero, or the cool-off has already elapsed. A held or
+    /// invalidated attempt is not a "failure" (result not yet final / does not count), so it never starts a wait.</summary>
+    public static string? ResolveRetakeWaitUntil(Db db, long userId, long certId, int waitDays)
+    {
+        if (waitDays <= 0) return null;
+        var lastFail = db.QueryOne(@"SELECT submitted_at FROM exam_attempts
+            WHERE user_id=? AND COALESCE(certification_id,1)=? AND kind='exam' AND status='submitted'
+              AND COALESCE(counts_as_attempt,1)=1 AND result='fail' AND COALESCE(result_status,'')!='auto_held'
+            ORDER BY id DESC LIMIT 1", userId, certId);
+        var failAt = H.Str(lastFail?["submitted_at"]);
+        if (string.IsNullOrEmpty(failAt)) return null;
+        var from = DateTime.TryParse(failAt, out var fd) ? fd.ToUniversalTime() : DateTime.UtcNow;
+        var until = DaysFrom(from, waitDays);
+        return H.After(until, Now) ? until : null;
     }
 
     /// <summary>Re-point an authorization to a certification when a settlement retargets its entitlement AFTER
