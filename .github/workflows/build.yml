@@ -83,6 +83,9 @@ jobs:
       - name: Migration versioning + lock regression (P0-6 — ledger, compatibility gate, concurrent boot)
         run: python3 tests/migration_versioning_test.py
 
+      - name: Worker leasing regression (P0-5 — atomic claim, deliver-once, crash-lease reclaim)
+        run: python3 tests/worker_leasing_test.py
+
       - name: Founding-stage suite (codes, applications, waiver settlement)
         run: python3 tests/founding_test.py
 

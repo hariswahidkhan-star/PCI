@@ -24,6 +24,9 @@ tests/_retake_wait_boot.log
 tests/_migv.db*
 tests/_migv_storage/
 tests/_migv_boot_*.log
+tests/_worker_lease.db*
+tests/_worker_lease_storage/
+tests/_worker_lease_boot.log
 tests/_server_boot.log
 tests/_sweep*
 tests/_s3*
