@@ -4720,8 +4720,14 @@ def test_membership_expiry(admin):
     con = dbconn(); con.execute("UPDATE memberships SET expiry_date=datetime('now','-10 day') WHERE user_id=?", (muid,)); con.commit(); con.close()
     c, me2 = jget("GET", "/api/me", token=mtok)
     chk("35b a past expiry_date with status='active' still reads active until the expiry sweep runs", me2.get("lifecycle", {}).get("membership_status") == "active", me2.get("lifecycle", {}).get("membership_status"))
+    # The exam-fee gate is EXPIRY-AWARE: a lapsed membership (past expiry_date) cannot buy a standalone
+    # exam even while status is still 'active' pre-sweep — the student must renew (or use the bundle) first.
     c, gate1 = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "expiremember@ex.co"})
-    chk("35c the exam-fee gate still passes while status='active'", not blocked(gate1), (c, gate1))
+    chk("35c the exam-fee gate blocks a lapsed membership (past expiry) even before the sweep", c == 400 and blocked(gate1), (c, gate1))
+    # Positive control: restore a future expiry and the same account passes the gate again.
+    con = dbconn(); con.execute("UPDATE memberships SET expiry_date=datetime('now','+30 day') WHERE user_id=?", (muid,)); con.commit(); con.close()
+    c, gate1b = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "expiremember@ex.co"})
+    chk("35c2 a membership with a future expiry passes the exam-fee gate", not blocked(gate1b), (c, gate1b))
     con = dbconn(); con.execute("UPDATE memberships SET status='expired' WHERE user_id=?", (muid,)); con.commit(); con.close()
     c, me3 = jget("GET", "/api/me", token=mtok)
     chk("35d status='expired' is reflected as an expired membership", me3.get("lifecycle", {}).get("membership_status") == "expired", me3.get("lifecycle", {}).get("membership_status"))
