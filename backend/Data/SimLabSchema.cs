@@ -198,6 +198,41 @@ public static class SimLabSchema
         SeedScenario(db, "SD-ESC-001", "Measure schedule performance in time (Earned Schedule)", "scenario", "Software", "advanced", 18,
             "[\"schedule_analysis\",\"forecasting\"]", "Read Earned Schedule off the planned-value curve: schedule variance and index in time units, and an independent time forecast.",
             ConfigEarnedSchedule);
+
+        // ── Content expansion (2026-07): additional synthetic scenarios across every task type, new
+        //    industries and difficulty bands. Each reuses a proven task shape so the reference solver
+        //    (SimCalc.Resolve) always resolves; several carry deterministic variant ranges. All are
+        //    validated as publishable + gradable by SimSeedContentTests. ──
+        SeedScenario(db, "GL-EVM-002", "EVM core measures — water utility", "guided_lab", "Water", "foundation", 15,
+            "[\"earned_value\"]", "A water-treatment upgrade reports PV, EV, AC and BAC at month 4. Compute SV, CV, SPI, CPI and the CPI-method EAC.",
+            ConfigEvm2);
+        SeedScenario(db, "SD-EVM-002", "EVM five-measure drill — hospital build", "skill_drill", "Healthcare", "intermediate", 10,
+            "[\"earned_value\",\"forecasting\"]", "A focused drill on a hospital-wing package: compute the five core earned-value measures against the clock.",
+            ConfigEvmDrill2);
+        SeedScenario(db, "GL-SCH-002", "Critical path on a six-activity network", "guided_lab", "Construction", "intermediate", 20,
+            "[\"schedule_analysis\"]", "Run the forward/backward pass on a bridge-construction network, identify the critical path, and read the float of an off-path activity.",
+            ConfigCpm2);
+        SeedScenario(db, "GL-PRT-002", "Three-point estimate and confidence (PERT) — marine", "guided_lab", "Marine", "advanced", 20,
+            "[\"schedule_analysis\",\"risk_management\"]", "Run a PERT analysis on a marine-works critical path: expected duration, standard deviation, and the probability of meeting the deadline.",
+            ConfigPert2);
+        SeedScenario(db, "GL-CBS-002", "Cost breakdown roll-up and variance — retail rollout", "guided_lab", "Retail", "intermediate", 15,
+            "[\"cost_control\"]", "Roll a four-account cost breakdown up to the root and report total budget, total actual, and the variance.",
+            ConfigCbs2);
+        SeedScenario(db, "GL-CASH-002", "Cash flow and peak funding — data centre", "guided_lab", "Technology", "intermediate", 16,
+            "[\"cash_flow\"]", "Roll a five-period data-centre cash flow into its cumulative position and find the peak funding requirement.",
+            ConfigCash2);
+        SeedScenario(db, "GL-CHG-002", "Apply the change register to the baseline — aerospace", "guided_lab", "Aerospace", "intermediate", 14,
+            "[\"change_control\"]", "Roll ONLY the approved changes from a five-item register onto an aerospace baseline for the revised budget and duration.",
+            ConfigChange2);
+        SeedScenario(db, "GL-PRG-002", "Weighted physical progress — shipbuilding", "guided_lab", "Shipbuilding", "foundation", 12,
+            "[\"progress_measurement\"]", "Compute a ship block's overall percent-complete as the budget-weighted average of its four work packages.",
+            ConfigProgress2);
+        SeedScenario(db, "GL-WBS-002", "Structure a software-platform WBS", "guided_lab", "Software", "foundation", 15,
+            "[\"scope_structuring\"]", "Roll a software-platform Work Breakdown Structure up from its leaf budgets and confirm the 100% rule.",
+            ConfigWbs2);
+        SeedScenario(db, "SD-FCT-002", "Forecast the final cost (three EAC methods) — rail", "skill_drill", "Rail", "advanced", 12,
+            "[\"forecasting\",\"earned_value\"]", "Compute the Estimate at Completion by the CPI, composite (CPI×SPI) and budget-rate methods for a rail package.",
+            ConfigForecast2);
     }
 
     static void SeedScenario(Db db, string code, string title, string kind, string industry, string difficulty,
@@ -447,5 +482,158 @@ public static class SimLabSchema
            {"key":"root_total","label":"Total project budget (root roll-up)","type":"number"},
            {"key":"hundred_percent_valid","label":"Does the WBS satisfy the 100% rule? (yes/no)","type":"bool"}],
          "pass_pct":70,"competencies":["scope_structuring"]}
+        """;
+
+    // ── Content expansion configs (synthetic; same shapes as above so SimCalc.Resolve always resolves) ──
+
+    const string ConfigEvm2 = """
+        {"task":"evm",
+         "prompt":"At the end of month 4, a water-treatment upgrade reports Planned Value (PV) 120000, Earned Value (EV) 108000 and Actual Cost (AC) 112000, against a Budget at Completion (BAC) of 240000. Compute the core earned-value measures (indices to 2 decimal places).",
+         "given":{"pv":120000,"ev":108000,"ac":112000,"bac":240000},
+         "ask":[
+           {"key":"sv","label":"Schedule Variance (SV)","type":"number"},
+           {"key":"cv","label":"Cost Variance (CV)","type":"number"},
+           {"key":"spi","label":"Schedule Performance Index (SPI)","type":"number"},
+           {"key":"cpi","label":"Cost Performance Index (CPI)","type":"number"},
+           {"key":"eac","label":"Estimate at Completion (EAC, CPI method)","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["earned_value"],
+         "variant":{"vary":{
+           "pv":{"min":100000,"max":140000,"step":1000},
+           "ev":{"min":90000,"max":130000,"step":1000},
+           "ac":{"min":95000,"max":135000,"step":1000}}}}
+        """;
+
+    const string ConfigEvmDrill2 = """
+        {"task":"evm",
+         "prompt":"Rapid drill. A hospital-wing package reports PV 300000, EV 270000, AC 290000, against a BAC of 720000. Compute the five core earned-value measures.",
+         "given":{"pv":300000,"ev":270000,"ac":290000,"bac":720000},
+         "ask":[
+           {"key":"sv","label":"Schedule Variance (SV)","type":"number"},
+           {"key":"cv","label":"Cost Variance (CV)","type":"number"},
+           {"key":"spi","label":"Schedule Performance Index (SPI)","type":"number"},
+           {"key":"cpi","label":"Cost Performance Index (CPI)","type":"number"},
+           {"key":"eac","label":"Estimate at Completion (EAC, CPI method)","type":"number"}],
+         "tolerance":0.01,"pass_pct":80,"competencies":["earned_value","forecasting"],
+         "variant":{"vary":{
+           "ev":{"min":240000,"max":300000,"step":5000},
+           "ac":{"min":260000,"max":320000,"step":5000}}}}
+        """;
+
+    const string ConfigCpm2 = """
+        {"task":"cpm",
+         "prompt":"Run the forward and backward pass on this bridge-construction network (durations in days). Identify the critical path and the total float of activity C.",
+         "given":{"activities":[
+           {"id":"A","dur":2,"preds":[]},
+           {"id":"B","dur":6,"preds":["A"]},
+           {"id":"C","dur":3,"preds":["A"]},
+           {"id":"D","dur":3,"preds":["B"]},
+           {"id":"E","dur":4,"preds":["C"]},
+           {"id":"F","dur":2,"preds":["D","E"]}]},
+         "ask":[
+           {"key":"project_duration","label":"Project duration (days)","type":"number"},
+           {"key":"critical_path","label":"Critical path (comma-separated activity IDs)","type":"set"},
+           {"key":"float_C","label":"Total float of activity C (days)","type":"number"}],
+         "tolerance":0.001,"pass_pct":70,"competencies":["schedule_analysis"]}
+        """;
+
+    const string ConfigPert2 = """
+        {"task":"pert",
+         "prompt":"Three activities on a marine-works critical path have optimistic (O), most-likely (M) and pessimistic (P) estimates in days. Compute the path's PERT expected duration, its standard deviation, and the probability of finishing by day 18 (%).",
+         "given":{"activities":[
+           {"id":"A","o":3,"m":5,"p":13},
+           {"id":"B","o":2,"m":4,"p":6},
+           {"id":"C","o":4,"m":6,"p":8}],"deadline":18},
+         "ask":[
+           {"key":"expected_duration","label":"PERT expected duration (days)","type":"number"},
+           {"key":"std_dev","label":"Path standard deviation (days)","type":"number"},
+           {"key":"prob_on_time","label":"Probability of finishing by day 18 (%)","type":"number"}],
+         "tolerance":0.02,"pass_pct":70,"competencies":["schedule_analysis","risk_management"]}
+        """;
+
+    const string ConfigCbs2 = """
+        {"task":"cbs",
+         "prompt":"A retail-rollout project has four cost accounts with budgeted and actual costs. Roll them up and report the total budget, the total actual, and the variance (budget − actual) at the root.",
+         "given":{"nodes":[
+           {"id":"1","parent":null,"name":"Store rollout"},
+           {"id":"1.1","parent":"1","name":"Fit-out","budget":120000,"actual":132000},
+           {"id":"1.2","parent":"1","name":"IT & POS","budget":80000,"actual":74000},
+           {"id":"1.3","parent":"1","name":"Signage","budget":25000,"actual":28000},
+           {"id":"1.4","parent":"1","name":"Training","budget":15000,"actual":13000}]},
+         "ask":[
+           {"key":"root_budget","label":"Total budget (root roll-up)","type":"number"},
+           {"key":"root_actual","label":"Total actual (root roll-up)","type":"number"},
+           {"key":"root_variance","label":"Variance at the root (budget − actual)","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["cost_control"]}
+        """;
+
+    const string ConfigCash2 = """
+        {"task":"cashflow",
+         "prompt":"A data-centre build's monthly cash inflows and outflows are below. Roll them into the cumulative net position: give the final (closing) position and the peak funding requirement (the deepest cumulative deficit, as a positive amount).",
+         "given":{"periods":[
+           {"period":1,"inflow":0,"outflow":80000},
+           {"period":2,"inflow":30000,"outflow":90000},
+           {"period":3,"inflow":60000,"outflow":70000},
+           {"period":4,"inflow":150000,"outflow":50000},
+           {"period":5,"inflow":180000,"outflow":40000}]},
+         "ask":[
+           {"key":"final_position","label":"Final (closing) cash position","type":"number"},
+           {"key":"peak_funding","label":"Peak funding requirement","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["cash_flow"]}
+        """;
+
+    const string ConfigChange2 = """
+        {"task":"change",
+         "prompt":"An aerospace project baseline is BAC 800000 over 160 days. The change register below lists five changes. Roll ONLY the approved changes onto the baseline: give the revised BAC, the revised duration, and how many changes were approved.",
+         "given":{"baseline_bac":800000,"baseline_duration":160,"changes":[
+           {"id":"C1","title":"Additional wind-tunnel test","status":"approved","cost_delta":45000,"schedule_delta":8},
+           {"id":"C2","title":"Premium alloy upgrade","status":"rejected","cost_delta":60000,"schedule_delta":6},
+           {"id":"C3","title":"Descope redundant sensor","status":"approved","cost_delta":-15000,"schedule_delta":-3},
+           {"id":"C4","title":"Client review gate","status":"pending","cost_delta":25000,"schedule_delta":5},
+           {"id":"C5","title":"Revised certification pack","status":"approved","cost_delta":20000,"schedule_delta":4}]},
+         "ask":[
+           {"key":"revised_bac","label":"Revised BAC","type":"number"},
+           {"key":"revised_duration","label":"Revised duration (days)","type":"number"},
+           {"key":"approved_count","label":"Number of changes approved","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["change_control"]}
+        """;
+
+    const string ConfigProgress2 = """
+        {"task":"progress",
+         "prompt":"A ship block has four work packages, each with a budget weight and its own percent-complete. Compute the block's overall physical progress as the budget-weighted average.",
+         "given":{"nodes":[
+           {"id":"1.1","name":"Hull fabrication","weight":50000,"percent":100},
+           {"id":"1.2","name":"Outfitting","weight":30000,"percent":60},
+           {"id":"1.3","name":"Piping","weight":15000,"percent":40},
+           {"id":"1.4","name":"Painting","weight":5000,"percent":0}]},
+         "ask":[
+           {"key":"overall_percent","label":"Overall percent-complete (budget-weighted)","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["progress_measurement"]}
+        """;
+
+    const string ConfigWbs2 = """
+        {"task":"wbs",
+         "prompt":"A software-platform delivery has the work breakdown below with leaf-level budgets. Roll the costs up to the root and confirm the structure satisfies the 100% rule.",
+         "given":{"nodes":[
+           {"id":"1","parent":null,"name":"Platform delivery"},
+           {"id":"1.1","parent":"1","name":"Discovery","value":30000},
+           {"id":"1.2","parent":"1","name":"Build"},
+           {"id":"1.2.1","parent":"1.2","name":"Backend","value":60000},
+           {"id":"1.2.2","parent":"1.2","name":"Frontend","value":45000},
+           {"id":"1.3","parent":"1","name":"Launch","value":15000}]},
+         "ask":[
+           {"key":"root_total","label":"Total project budget (root roll-up)","type":"number"},
+           {"key":"hundred_percent_valid","label":"Does the WBS satisfy the 100% rule? (yes/no)","type":"bool"}],
+         "pass_pct":70,"competencies":["scope_structuring"]}
+        """;
+
+    const string ConfigForecast2 = """
+        {"task":"evm",
+         "prompt":"A rail-signalling package reports PV 350000, EV 315000 and AC 350000 against a BAC of 700000. Forecast the final cost three ways: the CPI method, the composite (CPI×SPI) method, and the budget-rate method.",
+         "given":{"pv":350000,"ev":315000,"ac":350000,"bac":700000},
+         "ask":[
+           {"key":"eac_cpi","label":"EAC — CPI method (BAC ÷ CPI)","type":"number"},
+           {"key":"eac_composite","label":"EAC — composite (AC + (BAC−EV) ÷ (CPI×SPI))","type":"number"},
+           {"key":"eac_budget","label":"EAC — budget rate (AC + (BAC−EV))","type":"number"}],
+         "tolerance":0.01,"pass_pct":70,"competencies":["forecasting","earned_value"]}
         """;
 }
