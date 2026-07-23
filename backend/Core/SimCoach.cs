@@ -124,22 +124,78 @@ public static class SimCoach
         }
         if (task == "cpm") return "Remember the critical path drives the finish date — its activities have zero float.";
         if (task == "wbs") return "The roll-up satisfies the 100% rule: each parent equals the sum of its parts.";
+        if (task == "cbs") return "With the accounts rolled up, the root variance tells you whether the project is over or under its plan.";
+        if (task == "progress") return "The budget-weighted average is the honest progress figure — a big cheap package cannot flatter the number.";
+        if (task == "risk") return "A negative EMV is a net threat to carry as contingency; a positive EMV is a net opportunity.";
+        if (task == "pert") return "PERT expected durations and variances add along the path; the on-time probability comes from the normal approximation.";
+        if (task == "change") return "Only the approved changes move the baseline — that discipline is the point of formal change control.";
+        if (task == "cashflow") return "Watch the peak-funding line: that is the cash you must finance before the project turns positive.";
+        if (task == "timeline") return "Read the whole trajectory — the worst period and the CPI-method forecast matter more than any single snapshot.";
+        if (task == "earned_schedule") return "Earned Schedule reads performance in time, so it keeps telling the truth about lateness even as the project nears completion.";
         return "";
     }
 
     static string Explain(string task, string key)
     {
-        if (task == "evm" && EvmConcept.TryGetValue(key, out var e)) return e;
-        if (task == "cpm")
+        switch (task)
         {
-            if (key == "project_duration") return "Project duration is the earliest finish of the last activity — the length of the longest path through the network.";
-            if (key == "critical_path") return "The critical path is the chain of zero-float activities; delaying any of them delays the whole project.";
-            if (key.StartsWith("float_", StringComparison.Ordinal)) return "Total float is how far an activity can slip without moving the finish date (Late Start − Early Start).";
-        }
-        if (task == "wbs")
-        {
-            if (key == "root_total") return "Roll costs up from the leaves — each parent is the sum of its children, and the root is the grand total.";
-            if (key == "hundred_percent_valid") return "The 100% rule: a parent equals the sum of its parts, with nothing missing and nothing double-counted.";
+            case "evm":
+                if (EvmConcept.TryGetValue(key, out var e)) return e;
+                break;
+            case "cpm":
+                if (key == "project_duration") return "Project duration is the earliest finish of the last activity — the length of the longest path through the network.";
+                if (key == "critical_path") return "The critical path is the chain of zero-float activities; delaying any of them delays the whole project.";
+                if (key.StartsWith("float_", StringComparison.Ordinal)) return "Total float is how far an activity can slip without moving the finish date (Late Start − Early Start).";
+                break;
+            case "wbs":
+                if (key == "root_total") return "Roll costs up from the leaves — each parent is the sum of its children, and the root is the grand total.";
+                if (key == "hundred_percent_valid") return "The 100% rule: a parent equals the sum of its parts, with nothing missing and nothing double-counted.";
+                break;
+            case "cbs":
+                if (key == "root_budget") return "The root budget is the sum of every cost account's budget — the project's total planned cost.";
+                if (key == "root_actual") return "The root actual is the sum of every account's actual cost to date.";
+                if (key == "root_variance") return "Cost variance at the root is total budget − total actual: a negative figure is an overrun.";
+                if (key.StartsWith("variance_", StringComparison.Ordinal)) return "An account's variance is its budget − actual; roll the leaves up before you read a parent.";
+                break;
+            case "progress":
+                if (key == "overall_percent") return "Overall progress is the budget-weighted average of each package's percent-complete — weight by budget, not by a simple count.";
+                if (key == "total_weight") return "The total weight is the sum of the package budgets that weight the average.";
+                break;
+            case "risk":
+                if (key == "emv") return "Expected Monetary Value is Σ(probability × impact) across the register — threats (negative impact) and opportunities (positive) net off.";
+                if (key.StartsWith("emv_", StringComparison.Ordinal)) return "A single risk's EMV is its probability × its impact.";
+                break;
+            case "pert":
+                if (key == "expected_duration") return "The PERT expected duration is (O + 4M + P) ÷ 6 per activity, summed along the path.";
+                if (key == "std_dev") return "A path's standard deviation is the square root of the summed activity variances.";
+                if (key == "variance") return "An activity's variance is ((P − O) ÷ 6)²; variances add along the path.";
+                if (key == "prob_on_time") return "The probability of finishing by a deadline is the normal CDF of (deadline − expected) ÷ standard deviation.";
+                break;
+            case "change":
+                if (key == "revised_bac") return "The revised BAC is the baseline plus ONLY the approved cost changes — pending and rejected changes are excluded.";
+                if (key == "revised_duration") return "The revised duration is the baseline plus only the approved schedule changes.";
+                if (key == "approved_cost_delta") return "The approved cost delta sums the cost impact of the approved changes only.";
+                if (key == "approved_schedule_delta") return "The approved schedule delta sums the schedule impact of the approved changes only.";
+                if (key == "approved_count") return "Count only the changes whose status is approved — formal change control ignores pending and rejected ones.";
+                break;
+            case "cashflow":
+                if (key == "final_position") return "The closing position is the last period's cumulative net — inflows minus outflows, accumulated over time.";
+                if (key == "peak_funding") return "Peak funding is the deepest cumulative deficit: the most you must have financed before the project turns cash-positive.";
+                if (key.StartsWith("cumulative_", StringComparison.Ordinal)) return "The cumulative position at a period adds every prior net cash flow up to that period.";
+                break;
+            case "timeline":
+                if (key == "worst_spi_period" || key == "worst_cpi_period") return "The worst period is the reporting period with the lowest index across the trajectory — read the trend, not only the latest snapshot.";
+                if (key == "final_cpi") return "The final cumulative CPI is EV ÷ AC at the last reporting period.";
+                if (key == "final_eac") return "The CPI-method forecast is EAC = BAC ÷ CPI at the latest period.";
+                if (key == "vac") return "Variance at Completion is BAC − EAC — the forecast over- or under-run at the end.";
+                if (EvmConcept.TryGetValue(key, out var te)) return te;   // final_spi etc. reuse the EVM concepts
+                break;
+            case "earned_schedule":
+                if (key == "es") return "Earned Schedule is the point on the planned-value curve at which the plan meant to have earned the current EV.";
+                if (key == "sv_time") return "Schedule variance in time is ES − AT: negative means behind schedule, measured in periods.";
+                if (key == "spi_time") return "The time-based schedule index is ES ÷ AT — it stays meaningful late in a project where the classic SPI drifts to 1.";
+                if (key == "eac_time") return "The independent time forecast is the planned duration ÷ SPI(t).";
+                break;
         }
         return "Revisit the definition of this measure and recompute from the given inputs.";
     }
@@ -156,6 +212,9 @@ public static class SimCoach
         ["tcpi"] = "The To-Complete Performance Index is (BAC − EV) ÷ (BAC − AC) — the efficiency needed on the remaining work to still hit the budget.",
         ["percent_complete"] = "Percent complete is EV ÷ BAC — the share of the budgeted work that has been earned.",
         ["percent_spent"] = "Percent spent is AC ÷ BAC — the share of the budget that has been consumed.",
+        ["eac_cpi"] = "EAC by the CPI method is BAC ÷ CPI — it assumes current cost efficiency continues to the end.",
+        ["eac_composite"] = "EAC by the composite method is AC + (BAC − EV) ÷ (CPI × SPI) — it assumes both cost and schedule performance persist.",
+        ["eac_budget"] = "EAC by the budget-rate method is AC + (BAC − EV) — it assumes the remaining work runs exactly to the original budget.",
     };
 
     static string Fmt(object? v)

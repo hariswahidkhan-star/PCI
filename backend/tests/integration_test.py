@@ -3432,6 +3432,16 @@ def test_simlab(admin):
     chk("43rr the earned-schedule lab grades ES + time indices + time forecast to 100 (schedule_analysis evidence)",
         c == 200 and subes.get("score") == 100 and subes.get("passed") is True and "schedule_analysis" in escomps, (c, subes.get("score"), sorted(escomps)))
 
+    # ---- Phase 4 AI-Coach evals: the coach grounds a Phase-3 task type (not the generic fallback) ----
+    c, stec = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-ESC-001", "mode": "training"})
+    ecid = stec.get("attempt_id")
+    c, coachec = jget("POST", f"/api/me/lab/attempts/{ecid}/coach", token=mtok,
+                      body={"answers": {"spi_time": 9}, "question": "why is my SPI(t) off?"})
+    ecmsg = coachec.get("message", "")
+    chk("43ss the coach grounds an earned-schedule miss in a real concept (not the generic fallback)",
+        c == 200 and coachec.get("ok") is True and "Revisit the definition of this measure" not in ecmsg
+        and ("Earned Schedule" in ecmsg or "ES " in ecmsg or "time" in ecmsg), (c, ecmsg[:80]))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.
