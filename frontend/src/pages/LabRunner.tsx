@@ -498,7 +498,7 @@ export default function LabRunner() {
                           {[1, 2, 3, 4, 5].map((n) => <option key={n} value={n}>{n}</option>)}
                         </select>
                       </label>
-                      <button className="btn secondary sm" type="button" onClick={askCoach} disabled={coaching}>
+                      <button className="btn secondary sm" type="button" onClick={() => { void askCoach() }} disabled={coaching}>
                         {coaching ? 'Asking…' : 'Ask for a hint'}
                       </button>
                     </div>
