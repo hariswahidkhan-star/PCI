@@ -176,7 +176,11 @@ export async function createTestUser(
   expect(user.scenario).toBe(scenario)
   if (page) {
     await page.addInitScript((t) => {
-      try { sessionStorage.setItem('pci.session.token', t) } catch { /* asserted by the auth redirect */ }
+      try {
+        if (sessionStorage.getItem('pci.e2e.session.planted') === '1') return
+        sessionStorage.setItem('pci.session.token', t)
+        sessionStorage.setItem('pci.e2e.session.planted', '1')
+      } catch { /* asserted by the auth redirect */ }
     }, user.token)
   }
   return user
