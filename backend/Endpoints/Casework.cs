@@ -310,6 +310,7 @@ public static class Casework
         app.MapPost("/api/me/cpd/{id}/evidence", async (HttpContext ctx, long id) =>
         {
             var u = User(ctx.Request); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var e = db.QueryOne("SELECT id,status FROM cpd_entries WHERE id=? AND user_id=?", id, u.Id);
             if (e is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var b = await H.Body(ctx.Request);
