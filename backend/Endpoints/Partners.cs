@@ -200,5 +200,145 @@ public static class Partners
             log(adm.Id, "partner_payout_recorded", $"partner {id} USD {amount}");
             return J(new { ok = true, ledger = CommissionLedger(db.QueryOne("SELECT * FROM training_partners WHERE id=?", id)!) });
         }));
+
+        // ================= immutable commission ledger (Phase 1) =================
+        // The derived CommissionLedger above stays the response contract during the migration window;
+        // these surfaces expose the real per-transaction ledger that will replace it in Phase 3.
+
+        // Shape one ledger row for an API response. Minor units are rendered as decimals here — the only
+        // place money leaves integer form — and user_id is never included.
+        object TxnDto(Dictionary<string, object?> r) => new
+        {
+            id = H.L(r["id"]),
+            reference = H.Str(r["txn_ref"]),
+            status = H.Str(r["status"]),
+            payment_id = r["payment_id"] is null ? (long?)null : H.L(r["payment_id"]),
+            certification_id = r["certification_id"] is null ? (long?)null : H.L(r["certification_id"]),
+            product_type = H.Str(r["product_type"]),
+            currency = H.Str(r["currency"]),
+            gross = Money.ToDecimal(H.L(r["gross_minor"])),
+            discount = Money.ToDecimal(H.L(r["discount_minor"])),
+            eligible_net = Money.ToDecimal(H.L(r["eligible_net_minor"])),
+            commission_type = H.Str(r["commission_type"]),
+            commission_percent = Money.BasisPointsToPercent(H.L(r["commission_rate_bp"])),
+            commission_basis = H.Str(r["commission_basis"]),
+            commission = Money.ToDecimal(H.L(r["commission_minor"])),
+            earned_at = H.Str(r["earned_at"]),
+            hold_until = H.Str(r["hold_until"]),
+            approved_at = H.Str(r["approved_at"]),
+            reversal_of = r["reversal_of_transaction_id"] is null ? (long?)null : H.L(r["reversal_of_transaction_id"]),
+            requires_finance_review = H.L(r["requires_finance_review"]) == 1,
+            created_at = H.Str(r["created_at"]),
+        };
+
+        object LedgerView(long partnerId, int limit, int offset)
+        {
+            var t = PartnerCommission.Totals(db, partnerId);
+            var rows = db.Query(@"SELECT * FROM partner_commission_transactions WHERE partner_id=?
+                ORDER BY id DESC LIMIT ? OFFSET ?", partnerId, limit, offset).Select(TxnDto).ToList();
+            return new
+            {
+                totals = new
+                {
+                    gross = Money.ToDecimal(t["gross"]),
+                    net = Money.ToDecimal(t["net"]),
+                    commission = Money.ToDecimal(t["commission"]),
+                    pending = Money.ToDecimal(t["pending"]),
+                    due = Money.ToDecimal(t["due"]),
+                    approved = Money.ToDecimal(t["approved"]),
+                    paid = Money.ToDecimal(t["paid"]),
+                    reversed = Money.ToDecimal(t["reversed"]),
+                },
+                count = db.Scalar<long>("SELECT COUNT(*) FROM partner_commission_transactions WHERE partner_id=?", partnerId),
+                limit, offset, transactions = rows,
+            };
+        }
+
+        static (int limit, int offset) Page(HttpRequest req)
+        {
+            var limit = int.TryParse(req.Query["limit"], out var l) ? Math.Clamp(l, 1, 200) : 50;
+            var offset = int.TryParse(req.Query["offset"], out var o) ? Math.Max(0, o) : 0;
+            return (limit, offset);
+        }
+
+        // ── Partner portal: its own ledger, paginated (no LIMIT 500 wall) ──
+        app.MapGet("/api/partner/commission-ledger", (HttpContext ctx) =>
+        {
+            if (Need(ctx, out var p) is { } deny) return deny;
+            var (limit, offset) = Page(ctx.Request);
+            return J(LedgerView(p!.PartnerId, limit, offset));
+        });
+
+        // ── Admin: the same ledger ──
+        app.MapGet("/api/admin/partner-finance/{id}/ledger", (HttpRequest req, long id) => gate(req, "partners", _ =>
+        {
+            var (limit, offset) = Page(req);
+            return J(LedgerView(id, limit, offset));
+        }));
+
+        // ── Finance: effective-dated agreements and commission rules ──
+        app.MapGet("/api/admin/partner-finance/{id}/agreements", (HttpRequest req, long id) => gate(req, "partners", _ =>
+            J(new
+            {
+                agreements = db.Query("SELECT * FROM partner_agreements WHERE partner_id=? ORDER BY effective_from DESC, id DESC", id),
+                rules = db.Query("SELECT * FROM partner_commission_rules WHERE partner_id=? ORDER BY priority ASC, id DESC", id),
+            })));
+
+        app.MapPost("/api/admin/partner-finance/{id}/agreements", (HttpContext ctx, long id) => gate(ctx.Request, "finance", adm =>
+        {
+            if (db.QueryOne("SELECT id FROM training_partners WHERE id=?", id) is null)
+                return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var from = (H.GetS(b, "effective_from") ?? "").Trim();
+            if (from.Length != 10) return Results.Json(new { error = "effective_from_required", message = "effective_from must be YYYY-MM-DD." }, statusCode: 400);
+            var to = (H.GetS(b, "effective_to") ?? "").Trim();
+            if (to.Length > 0 && string.CompareOrdinal(to, from) < 0)
+                return Results.Json(new { error = "bad_window", message = "effective_to cannot precede effective_from." }, statusCode: 400);
+            var number = (H.GetS(b, "agreement_number") ?? $"AGR-{id}-{DateTime.UtcNow:yyyyMMddHHmmss}").Trim();
+            if (db.QueryOne("SELECT id FROM partner_agreements WHERE agreement_number=?", number) is not null)
+                return Results.Json(new { error = "agreement_number_taken" }, statusCode: 409);
+            var holdDays = (int)Math.Clamp(H.GetNum(b, "refund_hold_days") ?? 30, 0, 365);
+            var termsDays = (int)Math.Clamp(H.GetNum(b, "payment_terms_days") ?? 30, 0, 365);
+            var minPayout = Money.ToMinor(H.GetNum(b, "minimum_payout") ?? 0);
+            // Supersede the previous open agreement so exactly one is in force at a time.
+            db.Execute("UPDATE partner_agreements SET status='superseded', updated_at=datetime('now') WHERE partner_id=? AND status='active'", id);
+            var aid = db.ExecuteReturningId(@"INSERT INTO partner_agreements
+                (partner_id,agreement_number,effective_from,effective_to,currency,payment_terms_days,minimum_payout_minor,refund_hold_days,tax_treatment,status,note,created_by)
+                VALUES(?,?,?,?,?,?,?,?,?, 'active',?,?)",
+                id, number, from, to.Length == 0 ? null : to, (H.GetS(b, "currency") ?? "USD").ToUpperInvariant(),
+                termsDays, minPayout, holdDays, H.GetS(b, "tax_treatment"), H.GetS(b, "note"), adm.Id);
+            log(adm.Id, "partner_agreement_created", $"partner {id} agreement {number} from {from} by {adm.Id}");
+            return J(new { ok = true, id = aid, agreement_number = number });
+        }));
+
+        app.MapPost("/api/admin/partner-finance/agreements/{agreementId}/rules", (HttpContext ctx, long agreementId) => gate(ctx.Request, "finance", adm =>
+        {
+            var agreement = db.QueryOne("SELECT id,partner_id FROM partner_agreements WHERE id=?", agreementId);
+            if (agreement is null) return Results.Json(new { error = "agreement_not_found" }, statusCode: 404);
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var type = (H.GetS(b, "commission_type") ?? "percentage").Trim().ToLowerInvariant();
+            if (type is not ("percentage" or "fixed")) return Results.Json(new { error = "bad_commission_type" }, statusCode: 400);
+            var basis = (H.GetS(b, "commission_basis") ?? "net_after_discount").Trim().ToLowerInvariant();
+            if (basis is not ("gross" or "net_after_discount" or "net_after_tax")) return Results.Json(new { error = "bad_basis" }, statusCode: 400);
+            // Reject an out-of-range rate rather than clamping it — a silently altered commission rate is
+            // exactly the class of bug this module exists to remove.
+            var percent = H.GetNum(b, "commission_percent") ?? 0;
+            if (type == "percentage" && (percent < 0 || percent > 100))
+                return Results.Json(new { error = "bad_percent", message = "commission_percent must be between 0 and 100." }, statusCode: 422);
+            var fixedMinor = Money.ToMinor(H.GetNum(b, "commission_fixed") ?? 0);
+            if (type == "fixed" && fixedMinor <= 0)
+                return Results.Json(new { error = "bad_fixed_amount", message = "commission_fixed must be greater than zero." }, statusCode: 422);
+            var rid = db.ExecuteReturningId(@"INSERT INTO partner_commission_rules
+                (agreement_id,partner_id,certification_id,route_key,product_type,country,commission_type,commission_rate_bp,commission_fixed_minor,commission_basis,effective_from,effective_to,priority,active,created_by)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,1,?)",
+                agreementId, H.L(agreement["partner_id"]),
+                H.GetNum(b, "certification_id") is { } c && c > 0 ? (long?)c : null,
+                H.GetS(b, "route_key"), H.GetS(b, "product_type"), H.GetS(b, "country"),
+                type, Money.PercentToBasisPoints(percent), fixedMinor, basis,
+                H.GetS(b, "effective_from"), H.GetS(b, "effective_to"),
+                (long)Math.Clamp(H.GetNum(b, "priority") ?? 100, 1, 1000), adm.Id);
+            log(adm.Id, "partner_commission_rule_created", $"agreement {agreementId} rule {rid} {type} by {adm.Id}");
+            return J(new { ok = true, id = rid });
+        }));
     }
 }

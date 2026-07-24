@@ -176,6 +176,11 @@ public static class Settlement
                 if (after == "active" && before != "active") did.Add("certuvo_provisioned");
             }
         }
+        // Partner commission (Phase 1): a settled, partner-attributed payment earns exactly one immutable
+        // commission transaction with the rate snapshotted now. Idempotent via a UNIQUE dedupe_key, so the
+        // Stripe webhook, an admin reprocess and the backfill can all reach here safely. Best-effort — a
+        // ledger hiccup must never block the student's entitlement.
+        try { if (PartnerCommission.EnsureForPayment(db, payId) > 0) did.Add("partner_commission_recorded"); } catch { }
         return new { ok = true, payment_id = payId, product, status, ensured = did, already_complete = did.Count == 0 };
     }
 

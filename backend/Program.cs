@@ -55,6 +55,7 @@ try { PCI.Backend.Data.MarketingSchema.Ensure(db); } catch (Exception e) { Conso
 try { PCI.Backend.Data.SimLabSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[simlab schema] {e.Message}"); }
 try { PCI.Backend.Data.TemplatesSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[templates schema] {e.Message}"); }
 try { PCI.Backend.Data.WorldSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[pciworld schema] {e.Message}"); }
+try { PCI.Backend.Data.FinanceSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[finance schema] {e.Message}"); }
 builder.Services.AddSingleton(db);
 // Scheduled retention: purge stored artefacts past evidence_retention_days, daily (manual endpoint stays).
 builder.Services.AddHostedService<PCI.Backend.Core.RetentionService>();
