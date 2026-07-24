@@ -358,6 +358,9 @@ public static class PartnerPortal
                     (code_id,code,user_id,email,payment_id,product_type,amount_before,discount_amount,redeemed_at)
                     VALUES(?,?,?,?,?, 'exam',?,?,?)",
                     codeId, "TESTMKT-" + stamp, uid, email, payId, listPrice, Math.Round(listPrice - discounted, 2), paidAt);
+                // The redemption is written after Settlement.Grant, so the commission hook inside
+                // EnsureDownstream saw no attribution yet — record it now that the link exists.
+                try { PartnerCommission.EnsureForPayment(db, payId); } catch { }
             }
             db.Execute("UPDATE discount_codes SET used_count=3 WHERE id=?", codeId);
         }
@@ -388,7 +391,13 @@ public static class PartnerPortal
                 // excluded from every report), never fail the whole partner cleanup.
                 try { db.Execute("DELETE FROM users WHERE id=? AND is_test=1", uid); } catch { }
             }
-            foreach (var t in new[] { "partner_sponsorships", "partner_payouts", "partner_notices" })
+            // Commission events hang off the transactions, so clear them before their parents.
+            try { db.Execute(@"DELETE FROM partner_commission_events WHERE transaction_id IN
+                (SELECT id FROM partner_commission_transactions WHERE partner_id=?)", partnerId); } catch { }
+            try { db.Execute(@"DELETE FROM partner_settlement_items WHERE settlement_id IN
+                (SELECT id FROM partner_settlements WHERE partner_id=?)", partnerId); } catch { }
+            foreach (var t in new[] { "partner_commission_transactions", "partner_commission_rules", "partner_agreements",
+                "partner_settlements", "partner_sponsorships", "partner_payouts", "partner_notices" })
                 try { db.Execute($"DELETE FROM {t} WHERE partner_id=?", partnerId); } catch { }
             if (!keepPartner)
             {
