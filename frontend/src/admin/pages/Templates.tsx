@@ -20,6 +20,7 @@ interface Row {
   published: boolean
   sort_order: number
   download_count: number
+  downloaders: number
   updated_at?: string | null
 }
 interface Resp { rows: Row[]; total: number; published: number }
@@ -44,6 +45,29 @@ function downloadCsv(r: Row) {
   const a = document.createElement('a')
   a.href = url
   a.download = `${r.slug}.${r.format || 'csv'}`
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
+}
+
+// Export the full per-template usage report (every template, not just the top-8 dashboard list) as a CSV the
+// operator can open in a spreadsheet. Built client-side from the already-loaded rows — no separate endpoint.
+const csvEsc = (v: unknown) => {
+  const s = String(v ?? '')
+  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
+}
+function exportUsageCsv(rows: Row[]) {
+  const header = ['slug', 'title', 'category', 'certification', 'status', 'downloads', 'students']
+  const lines = [header.join(',')]
+  for (const r of rows)
+    lines.push([r.slug, r.title, r.category, certLabel(r.certification_id),
+      r.published ? 'published' : 'draft', r.download_count, r.downloaders].map(csvEsc).join(','))
+  const blob = new Blob([lines.join('\n') + '\n'], { type: 'text/csv' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'templates-usage.csv'
   document.body.appendChild(a)
   a.click()
   a.remove()
@@ -165,7 +189,9 @@ export default function Templates() {
         <Stat n={data?.published ?? 0} k="Published" />
         <Stat n={drafts} k="Drafts" />
         <Stat n={totalDownloads} k="Downloads" />
-        <button className="btn" style={{ marginLeft: 'auto' }} onClick={() => (showForm ? (setShowForm(false), resetForm()) : openCreate())}>
+        <button className="btn secondary" style={{ marginLeft: 'auto' }} disabled={rows.length === 0}
+          onClick={() => exportUsageCsv(rows)}>Export CSV</button>
+        <button className="btn" onClick={() => (showForm ? (setShowForm(false), resetForm()) : openCreate())}>
           {showForm ? 'Cancel' : '+ New template'}
         </button>
       </div>
@@ -258,7 +284,7 @@ export default function Templates() {
               <thead>
                 <tr>
                   <th>Slug</th><th>Title</th><th>Category</th><th>Cert</th><th>Status</th>
-                  <th style={{ textAlign: 'right' }}>Downloads</th><th>Actions</th>
+                  <th style={{ textAlign: 'right' }}>Downloads</th><th style={{ textAlign: 'right' }}>Students</th><th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -269,7 +295,8 @@ export default function Templates() {
                     <td>{titleCase(r.category)}</td>
                     <td>{certLabel(r.certification_id)}</td>
                     <td><Badge tone={r.published ? 'ok' : 'neutral'}>{r.published ? 'Published' : 'Draft'}</Badge></td>
-                    <td style={{ textAlign: 'right' }}>{r.download_count}</td>
+                    <td style={{ textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{r.download_count}</td>
+                    <td style={{ textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{r.downloaders}</td>
                     <td>
                       <div className="row" style={{ gap: '.3rem', flexWrap: 'wrap' }}>
                         <button className="btn sm" disabled={busy} onClick={() => openEdit(r)}>Edit</button>

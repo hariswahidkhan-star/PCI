@@ -19,7 +19,7 @@ import Templates from './Templates'
 const row = (over: Record<string, unknown> = {}) => ({
   id: 1, slug: 'wbs-template', title: 'Work Breakdown Structure (WBS) template', category: 'scope',
   certification_id: 1, summary: 'Roll scope down to work packages.', format: 'csv',
-  body: 'WBS ID,Parent ID\n1,,', published: true, sort_order: 0, download_count: 7,
+  body: 'WBS ID,Parent ID\n1,,', published: true, sort_order: 0, download_count: 7, downloaders: 3,
   ...over,
 })
 
@@ -37,6 +37,17 @@ describe('Admin Free Templates', () => {
     expect(screen.getByText('Hidden draft')).toBeInTheDocument()   // draft visible to admins
     expect(screen.getByText('Draft')).toBeInTheDocument()
     expect(screen.getAllByText('Published').length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('shows a per-template Students (reach) column and an Export CSV control', () => {
+    h.resp = { rows: [row({ download_count: 7, downloaders: 3 })], total: 1, published: 1 }
+    render(<Templates />)
+    expect(screen.getByRole('columnheader', { name: 'Students' })).toBeInTheDocument()
+    // The row shows both the raw download count and the distinct-student reach.
+    const cells = screen.getAllByRole('cell').map((c) => c.textContent)
+    expect(cells).toContain('7')
+    expect(cells).toContain('3')
+    expect(screen.getByRole('button', { name: 'Export CSV' })).toBeInTheDocument()
   })
 
   it('reveals the create form when + New template is clicked', () => {
