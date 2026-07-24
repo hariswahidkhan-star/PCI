@@ -10,8 +10,9 @@ namespace PCI.Backend.Endpoints;
 /// competencies and interactivity, and how much practice each has seen (attempt + completion counts).
 /// Authoring / publishing lifecycle arrives in a later increment; this gives operators visibility now.
 ///
-/// Gated by the existing 'content' permission (the Lab is educational content). Read-only, self-contained,
-/// no external credentials, and it never exposes student-identifying data — only per-scenario aggregates.
+/// Gated by the dedicated 'sim_lab' permission (least privilege — a simulation author no longer needs full
+/// marketing-'content' rights to manage the Lab). 'content' is grandfathered to 'sim_lab' in Rbac.PermsFor so
+/// no existing operator loses access. Never exposes student-identifying data — only per-scenario aggregates.
 /// </summary>
 public static class AdminSimLab
 {
@@ -19,7 +20,7 @@ public static class AdminSimLab
         Func<HttpRequest, string, Func<AdminCtx, IResult>, IResult> gate)
     {
         // ---- scenario catalogue (all statuses) + per-scenario practice aggregates ----
-        app.MapGet("/api/admin/lab/scenarios", (HttpRequest req) => gate(req, "content", _ =>
+        app.MapGet("/api/admin/lab/scenarios", (HttpRequest req) => gate(req, "sim_lab", _ =>
         {
             // Per-scenario attempt + completion counts (aggregate only — no student identity).
             var stats = new Dictionary<long, (long attempts, long completed)>();
@@ -73,7 +74,7 @@ public static class AdminSimLab
         // ---- content-quality validation for one scenario (§14 publication gate) ----
         // Runs the deterministic SimContent validator: metadata completeness, retired-name check, and the
         // reference-solver pass (every asked measure must resolve through the engine). Read-only.
-        app.MapGet("/api/admin/lab/scenarios/{id}/validate", (HttpRequest req, long id) => gate(req, "content", _ =>
+        app.MapGet("/api/admin/lab/scenarios/{id}/validate", (HttpRequest req, long id) => gate(req, "sim_lab", _ =>
         {
             var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
             if (s is null) return Results.NotFound(new { error = "not_found" });
@@ -97,7 +98,7 @@ public static class AdminSimLab
         app.MapPost("/api/admin/lab/scenarios", async (HttpContext ctx) =>
         {
             var b = await H.Body(ctx.Request);
-            return gate(ctx.Request, "content", adm =>
+            return gate(ctx.Request, "sim_lab", adm =>
             {
                 var code = (H.GetS(b, "scenario_code") ?? "").Trim();
                 var title = (H.GetS(b, "title") ?? "").Trim();
@@ -131,7 +132,7 @@ public static class AdminSimLab
         app.MapPost("/api/admin/lab/scenarios/{id}/review", async (HttpContext ctx, long id) =>
         {
             var b = await H.Body(ctx.Request);
-            return gate(ctx.Request, "content", adm =>
+            return gate(ctx.Request, "sim_lab", adm =>
             {
                 var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
                 if (s is null) return Results.NotFound(new { error = "not_found" });
@@ -180,7 +181,7 @@ public static class AdminSimLab
         app.MapPatch("/api/admin/lab/scenarios/{id}", async (HttpContext ctx, long id) =>
         {
             var b = await H.Body(ctx.Request);
-            return gate(ctx.Request, "content", adm =>
+            return gate(ctx.Request, "sim_lab", adm =>
             {
                 var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
                 if (s is null) return Results.NotFound(new { error = "not_found" });
@@ -224,7 +225,7 @@ public static class AdminSimLab
         app.MapPost("/api/admin/lab/scenarios/{id}/revise", async (HttpContext ctx, long id) =>
         {
             var b = await H.Body(ctx.Request);
-            return gate(ctx.Request, "content", adm =>
+            return gate(ctx.Request, "sim_lab", adm =>
             {
                 var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
                 if (s is null) return Results.NotFound(new { error = "not_found" });
@@ -253,7 +254,7 @@ public static class AdminSimLab
         app.MapPatch("/api/admin/lab/scenarios/{id}/governance", async (HttpContext ctx, long id) =>
         {
             var b = await H.Body(ctx.Request);
-            return gate(ctx.Request, "content", adm =>
+            return gate(ctx.Request, "sim_lab", adm =>
             {
                 var s = db.QueryOne("SELECT id,scenario_code FROM simulation_scenarios WHERE id=?", id);
                 if (s is null) return Results.NotFound(new { error = "not_found" });

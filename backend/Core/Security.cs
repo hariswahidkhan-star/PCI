@@ -263,7 +263,7 @@ public static class Rbac
     public static readonly Dictionary<string, string[]> Sections = new()
     {
         ["platform"] = new[]{ "overview","reports","audit","emails","settings","team","integrations" },
-        ["website"]  = new[]{ "set_web","pricing","codes","content","pages","news","faqs","bok","governance","resources","media","nav","partners","social","sitesettings","subscribers","submissions","inquiries" },
+        ["website"]  = new[]{ "set_web","pricing","codes","content","sim_lab","pages","news","faqs","bok","governance","resources","media","nav","partners","social","sitesettings","subscribers","submissions","inquiries" },
         ["student"]  = new[]{ "set_sp","members","enrollments","payments","credentials","tickets","documents" },
         ["exam"]     = new[]{ "set_exam","exams","proctoring","sampleq","exam_delivery" },
         // Exam Exceptions & Authorizations — granular per-action permissions so deadline extensions,
@@ -324,6 +324,10 @@ public static class Rbac
         var set = new HashSet<string>();
         if (role != "custom") foreach (var s in baseGrants) set.Add(s);
         foreach (var s in extra) set.Add(s);
+        // Grandfather: the Simulation Lab admin used to be gated on 'content'. Now it has a dedicated
+        // 'sim_lab' permission (least privilege — a simulation author can be granted sim_lab alone). Anyone
+        // who could manage the Lab via 'content' keeps that access, so no existing operator is locked out.
+        if (set.Contains("content")) set.Add("sim_lab");
         return set.ToList();
     }
 }
