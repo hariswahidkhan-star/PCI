@@ -69,6 +69,7 @@ builder.Services.AddHostedService<PCI.Backend.Core.MarketingJobDispatcher>();   
 builder.Services.AddHostedService<PCI.Backend.Core.ExamDeliveryDispatcher>();   // EXT-P0-04: durable exam-vendor provisioning
 builder.Services.AddHostedService<PCI.Backend.Core.CommsReminderService>();     // Comms §13: scheduled reminder sequences
 builder.Services.AddHostedService<PCI.Backend.Core.WorldRotationService>();     // PCI World: open each day's rotation period at the boundary
+builder.Services.AddHostedService<PCI.Backend.Core.WorldRetentionService>();   // PCI World: expire sessions/tokens/events (learner history untouched)
 
 var app = builder.Build();
 

@@ -399,6 +399,21 @@ public static class World
             Track("invite_created", H.L(att["challenge_id"]), H.L(sess["id"]));
             return Results.Json(new { ok = true, url = "/world/i/" + token });
         });
+
+        // Invitations were documented as revocable but nothing could revoke them: `revoked` was
+        // only ever read. A link you cannot withdraw is not revocable, and it carries the name the
+        // inviter typed, so this is the control that makes that promise true.
+        app.MapPost("/api/world/attempts/{id:long}/invite/revoke", (HttpContext ctx, long id) =>
+        {
+            if (!Enabled()) return Disabled();
+            var sess = Session(ctx);
+            if (sess is null) return Results.Json(new { error = "no_session" }, statusCode: 401);
+            // Ownership is enforced in SQL — an attempt id alone is never authority.
+            var n = db.Execute(@"UPDATE pciworld_invites SET revoked=1
+                WHERE revoked=0 AND attempt_id IN (SELECT id FROM pciworld_attempts WHERE id=? AND session_id=?)",
+                id, H.L(sess["id"]));
+            return Results.Json(new { ok = true, revoked = n });
+        });
     }
 
     public static readonly string[] WorldReportCategories =

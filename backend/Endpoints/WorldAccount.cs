@@ -104,19 +104,45 @@ public static class WorldAccount
 
     /// <summary>The account's evidence rows (own view — includes hidden items so they can be toggled).</summary>
     public static List<Dictionary<string, object?>> EvidenceRows(Db db, long userId, bool visibleOnly) =>
+        // Deliberately NO answers_json and NO session_id: this shape feeds the PUBLIC Passport and
+        // the PDF, so anything selected here is one careless interpolation away from publication.
+        // The data export fetches answers on its own, separate path.
         db.Query($@"SELECT a.id, a.score, a.profile_key, a.completed_at, a.passport_visible,
-                a.result_token_sha, a.result_revoked, v.title, v.industry, v.track, v.difficulty
+                a.result_token_sha, a.result_revoked, c.code,
+                v.title, v.industry, v.track, v.difficulty
             FROM pciworld_attempts a
+            JOIN pciworld_challenges c ON c.id=a.challenge_id
             JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
             WHERE a.user_id=? AND a.status='completed' {(visibleOnly ? "AND a.passport_visible=1" : "")}
             ORDER BY a.completed_at DESC, a.id DESC LIMIT 200", userId);
 
-    /// <summary>Self-service deletion: unlink and de-identify. Attempts stay as anonymous
-    /// statistics, but every public surface tied to the identity dies with the account.</summary>
+    /// <summary>
+    /// Erase the account and DE-IDENTIFY everything it leaves behind.
+    ///
+    /// Detaching `user_id` is not de-identification on its own: `session_id` is a durable
+    /// pseudonymous key that still links every one of these attempts to each other, to the
+    /// browser holding the raw session token, and to any content report filed from it. Answer
+    /// text is personal content the person asked us to delete. Both go. What remains is a
+    /// completed-challenge statistic with nothing that points back to anyone (Phase 0 §7).
+    ///
+    /// Completed scores are deliberately KEPT, unlinked: they are anonymous aggregate evidence of
+    /// how a challenge performs, which the content-quality gates depend on.
+    /// </summary>
     public static void DeleteAccount(Db db, long userId)
     {
+        // Any public link minted from this account's attempts stops resolving first.
+        db.Execute(@"UPDATE pciworld_invites SET revoked=1
+            WHERE attempt_id IN (SELECT id FROM pciworld_attempts WHERE user_id=?)", userId);
+        // Content reports and analytics events lose the session linkage that could re-identify them.
+        db.Execute(@"UPDATE pciworld_reports SET session_id=NULL
+            WHERE session_id IN (SELECT session_id FROM pciworld_attempts WHERE user_id=?)", userId);
+        db.Execute(@"UPDATE pciworld_events SET session_id=NULL
+            WHERE session_id IN (SELECT session_id FROM pciworld_attempts WHERE user_id=?)", userId);
+        // The browser sessions themselves are removed, then the attempts are stripped.
+        db.Execute(@"DELETE FROM pciworld_sessions
+            WHERE id IN (SELECT session_id FROM pciworld_attempts WHERE user_id=?)", userId);
         db.Execute(@"UPDATE pciworld_attempts SET user_id=NULL, passport_visible=0, display_name=NULL,
-            result_token_sha=NULL, result_revoked=1 WHERE user_id=?", userId);
+            result_token_sha=NULL, result_revoked=1, answers_json=NULL, session_id=0 WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_user_tokens WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_users WHERE id=?", userId);
@@ -316,14 +342,36 @@ public static class WorldAccount
             if (!Enabled()) return Disabled();
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
-            var attempts = EvidenceRows(db, u.Id, visibleOnly: false).Select(r => new
-            {
-                title = H.Str(r["title"]), industry = H.Str(r["industry"]), track = H.Str(r["track"]),
-                difficulty = H.Str(r["difficulty"]), score = r["score"], profile = H.Str(r["profile_key"]),
-                completed_at = H.Str(r["completed_at"]), passport_visible = H.L(r["passport_visible"]) == 1,
-            });
-            return J(new { email = u.Email, display_name = u.DisplayName, email_verified = u.EmailVerified,
-                passport_public = u.PassportPublic, attempts });
+            // The export is what a person gets under a data-access request, so unlike every other
+            // read path it DOES include the answers they gave. Queried here rather than through
+            // EvidenceRows, which must stay publication-safe.
+            var attempts = db.Query(@"SELECT a.score, a.profile_key, a.completed_at, a.passport_visible,
+                    a.answers_json, c.code, v.title, v.industry, v.track, v.difficulty
+                FROM pciworld_attempts a
+                JOIN pciworld_challenges c ON c.id=a.challenge_id
+                JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
+                WHERE a.user_id=? AND a.status='completed' ORDER BY a.completed_at DESC, a.id DESC", u.Id)
+                .Select(r => new
+                {
+                    code = H.Str(r["code"]), title = H.Str(r["title"]), industry = H.Str(r["industry"]),
+                    track = H.Str(r["track"]), difficulty = H.Str(r["difficulty"]),
+                    score = r["score"], profile = H.Str(r["profile_key"]),
+                    completed_at = H.Str(r["completed_at"]), passport_visible = H.L(r["passport_visible"]) == 1,
+                    answers = H.Str(r["answers_json"]),
+                });
+            // Content reports are user-authored free text tied to this account's sessions: they
+            // belong in the export too, or the export is not a complete copy of their data.
+            var reports = db.Query(@"SELECT r.category, r.message, r.status, r.created_at, c.code
+                    FROM pciworld_reports r LEFT JOIN pciworld_challenges c ON c.id=r.challenge_id
+                    WHERE r.session_id IN (SELECT session_id FROM pciworld_attempts WHERE user_id=?)
+                    ORDER BY r.id", u.Id)
+                .Select(r => new { challenge = H.Str(r["code"]), category = H.Str(r["category"]),
+                                   message = H.Str(r["message"]), status = H.Str(r["status"]),
+                                   created_at = H.Str(r["created_at"]) });
+            ctx.Response.Headers["Content-Disposition"] = "attachment; filename=\"pciworld-my-data.json\"";
+            return J(new { exported_at = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                email = u.Email, display_name = u.DisplayName, email_verified = u.EmailVerified,
+                passport_public = u.PassportPublic, attempts, reports });
         });
 
         app.MapPost("/api/world/account/delete", async (HttpContext ctx) =>
@@ -355,6 +403,8 @@ public static class WorldAccount
                 score = r["score"], profile = H.Str(r["profile_key"]),
                 completed_at = H.Str(r["completed_at"]), passport_visible = H.L(r["passport_visible"]) == 1,
             });
+            var me = db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", u.Id)!;
+            var show = WorldPassport.Disclosure.From(me);
             return J(new
             {
                 display_name = u.DisplayName, email_verified = u.EmailVerified, passport_public = u.PassportPublic,
@@ -362,7 +412,41 @@ public static class WorldAccount
                 industries = rows.Select(r => H.Str(r["industry"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count(),
                 tracks = rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count(),
                 evidence,
+                show_scores = show.Scores, show_profiles = show.Profiles, show_dates = show.Dates,
+                expires_at = H.Str(me["passport_expires_at"])?.Split(' ')[0],
+                expired = WorldPassport.Expired(me),
             });
+        });
+
+        // Field-level disclosure and link expiry. Consent is not a single switch: a person can be
+        // happy to show WHAT they have practised without publishing their scores.
+        app.MapPost("/api/world/passport/disclosure", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            foreach (var (key, col) in new[] { ("show_scores", "passport_show_scores"),
+                                               ("show_profiles", "passport_show_profiles"),
+                                               ("show_dates", "passport_show_dates") })
+                if (H.GetBool(b, key) is { } v)
+                    db.Execute($"UPDATE pciworld_users SET {col}=? WHERE id=?", v ? 1 : 0, u.Id);
+
+            // expires_in_days: 0 or absent clears the expiry; a positive value sets one. Capped at
+            // five years so "expiry" always means something.
+            if (H.GetNum(b, "expires_in_days") is { } days)
+            {
+                if (days <= 0) db.Execute("UPDATE pciworld_users SET passport_expires_at=NULL WHERE id=?", u.Id);
+                else
+                {
+                    var when = DateTime.UtcNow.AddDays(Math.Min(days, 1825)).ToString("yyyy-MM-dd HH:mm:ss");
+                    db.Execute("UPDATE pciworld_users SET passport_expires_at=? WHERE id=?", when, u.Id);
+                }
+            }
+            var me = db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", u.Id)!;
+            var show = WorldPassport.Disclosure.From(me);
+            return J(new { ok = true, show_scores = show.Scores, show_profiles = show.Profiles,
+                           show_dates = show.Dates, expires_at = H.Str(me["passport_expires_at"])?.Split(' ')[0] });
         });
 
         app.MapPost("/api/world/passport/evidence", async (HttpContext ctx) =>
@@ -400,15 +484,72 @@ public static class WorldAccount
             return J(new { ok = true, passport_public = true, url });
         });
 
-        app.MapGet("/world/p/{token}", (string token) =>
+        /// Resolve a published Passport token. Absent, unpublished, suspended and EXPIRED all
+        /// collapse to the same NULL — a viewer must not be able to distinguish "never existed"
+        /// from "withdrawn", which would leak that a Passport once existed at that address.
+        Dictionary<string, object?>? PassportByToken(string token)
         {
-            if (!Enabled()) return Disabled();
             var u = db.QueryOne(@"SELECT * FROM pciworld_users
                 WHERE passport_token_sha=? AND passport_public=1 AND status='active'", Security.Sha(token));
+            return u is null || WorldPassport.Expired(u) ? null : u;
+        }
+
+        app.MapGet("/world/p/{token}", (HttpContext ctx, string token) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = PassportByToken(token);
             if (u is null) return Results.NotFound();
             var rows = EvidenceRows(db, H.L(u["id"]), visibleOnly: true);
-            return Results.Content(WorldPages.PublicPassport(db, H.Str(u["display_name"]) ?? "PCI World participant", rows),
+            var verifyUrl = WorldUrl.Abs(ctx.Request, "/world/p/" + token);
+            return Results.Content(
+                WorldPages.PublicPassport(db, H.Str(u["display_name"]) ?? "PCI World participant", rows,
+                    WorldPassport.Disclosure.From(u), verifyUrl, token, H.Str(u["passport_expires_at"])),
                 "text/html; charset=utf-8");
+        });
+
+        // The same Passport as a one-page document. It carries the verification QR and says plainly
+        // that the live record — not the file — is the authority, so a stale copy can never be
+        // passed off as current.
+        app.MapGet("/world/p/{token}.pdf", (HttpContext ctx, string token) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = PassportByToken(token);
+            if (u is null) return Results.NotFound();
+            var rows = EvidenceRows(db, H.L(u["id"]), visibleOnly: true);
+            var show = WorldPassport.Disclosure.From(u);
+            var doc = new WorldPassport.PassportDoc
+            {
+                Name = H.Str(u["display_name"]) ?? "PCI World participant",
+                VerifyUrl = WorldUrl.Abs(ctx.Request, "/world/p/" + token),
+                Completed = rows.Count,
+                Industries = rows.Select(r => H.Str(r["industry"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count(),
+                Tracks = rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count(),
+                IssuedOn = DateTime.UtcNow.ToString("yyyy-MM-dd"),
+                ExpiresOn = H.Str(u["passport_expires_at"])?.Split(' ')[0],
+                Show = show,
+            };
+            foreach (var r in rows)
+                doc.Rows.Add((H.Str(r["title"]) ?? "", H.Str(r["industry"]) ?? "", H.Str(r["difficulty"]) ?? "",
+                    r["score"] is null ? "" : Convert.ToDouble(r["score"]).ToString("0.#"),
+                    H.Str(r["profile_key"])?.Replace('_', ' ') ?? "",
+                    (H.Str(r["completed_at"]) ?? "").Split(' ')[0]));
+            return Results.File(WorldPassport.Pdf(doc), "application/pdf", "pci-world-passport.pdf");
+        });
+
+        // A verification entry point for someone who was handed a Passport: paste the link or the
+        // code from the document and land on the live record, or be told plainly that it does not
+        // resolve. Recruiters should never have to trust the artefact in their hand.
+        app.MapGet("/world/verify", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var q = (ctx.Request.Query["t"].ToString() ?? "").Trim();
+            if (q.Length == 0) return Results.Content(WorldPages.VerifyPassport(db, null, null), "text/html; charset=utf-8");
+            // Accept a full URL as readily as a bare token — people paste what they were sent.
+            var token = q.Contains('/') ? q.TrimEnd('/').Split('/')[^1] : q;
+            token = token.Split('?')[0].Trim();
+            var u = token.Length >= 16 ? PassportByToken(token) : null;
+            if (u is null) return Results.Content(WorldPages.VerifyPassport(db, q, null), "text/html; charset=utf-8");
+            return Results.Redirect("/world/p/" + token);
         });
 
         app.MapGet("/world/account", () => !Enabled() ? Disabled()

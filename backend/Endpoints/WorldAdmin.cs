@@ -544,13 +544,20 @@ public static class WorldAdmin
           l.href='https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap';
           document.head.appendChild(l);});</script>
         <style>
-        :root{--bg:#F1F5F9;--ink:#0F172A;--muted:#64748B;--line:#E3E8EF;--accent:#1D4ED8;--accent-deep:#1E3A8A;
+        :root{--bg:#F1F5F9;--ink:#0F172A;--muted:#475569;--line:#E3E8EF;--field:#94A3B8;--accent:#1D4ED8;--accent-deep:#1E3A8A;
               --noir:#0E1525;--crimson:#C13329;--bad:#C2410C;--ok:#15803D;
               --display:'Archivo',system-ui,sans-serif;--sans:'Inter',system-ui,sans-serif}
         *{box-sizing:border-box;margin:0}
         body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
         header{background:var(--noir);color:#E2E8F0;padding:16px 22px;display:flex;gap:14px;align-items:center}
-        header b{font-family:var(--display);font-weight:900;font-size:17px;letter-spacing:-.02em;color:#fff}
+        a.skip{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+        a.skip:focus{position:fixed;top:12px;left:12px;width:auto;height:auto;clip:auto;z-index:100;
+             background:#fff;color:var(--ink);border:2px solid var(--accent);padding:10px 16px;
+             font-weight:600;text-decoration:none}
+        :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+        header :focus-visible{outline-color:#93C5FD}
+        @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+        header h1{font-family:var(--display);font-weight:900;font-size:17px;letter-spacing:-.02em;color:#fff;margin:0}
         header .bar{width:2px;height:24px;background:var(--crimson);border-radius:2px}
         header small{color:#94A3B8;font-weight:500}
         header button{margin-left:auto}
@@ -565,47 +572,52 @@ public static class WorldAdmin
         button{background:var(--accent);border:2px solid var(--accent);color:#fff;border-radius:0;
                padding:8px 15px;font:600 13px var(--sans);cursor:pointer}
         button:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
-        button.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+        button.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--field)}
         button.ghost:hover{border-color:var(--ink);background:#fff}
         button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-        input,select,textarea{padding:11px 12px;border:1.5px solid var(--line);border-radius:0;font-size:14px;width:100%;
+        input,select,textarea{padding:11px 12px;border:1.5px solid var(--field);border-radius:0;font-size:14px;width:100%;
                font-family:var(--sans);color:var(--ink);background:#fff}
         textarea{font-family:ui-monospace,Menlo,Consolas,monospace;min-height:220px}
         label{display:block;font-weight:600;margin:12px 0 5px;font-size:13px}
         .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
         .bad{color:var(--bad);font-weight:600} .ok{color:var(--ok);font-weight:600}
-        .pill{display:inline-block;border:1.5px solid var(--line);border-radius:999px;padding:2px 11px;font-size:12px;font-weight:600}
+        .pill{display:inline-block;border:1.5px solid var(--field);border-radius:999px;padding:2px 11px;font-size:12px;font-weight:600}
         #login{max-width:400px;margin:70px auto;padding:30px}
         #login h2{font-size:22px}
         nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
-        nav.tabs button{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+        nav.tabs button{background:transparent;color:var(--ink);border:1.5px solid var(--field)}
         nav.tabs button[aria-selected=true]{background:var(--noir);color:#fff;border-color:var(--noir)}
         </style>
         </head>
         <body>
-        <header><b>PCI World Administration</b><span class="bar" aria-hidden="true"></span>
+        <a class="skip" href="#main">Skip to content</a>
+        <header><h1>PCI World Administration</h1><span class="bar" aria-hidden="true"></span>
           <small>separate from the PCI Institute admin</small>
           <button id="logout" hidden>Sign out</button></header>
-        <main>
-        <div id="login" class="card">
+        <main id="main" tabindex="-1">
+        <div id="login" class="card" tabindex="-1">
           <h2>Sign in</h2>
           <label for="em">Email</label><input id="em" type="email" autocomplete="username">
           <label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password">
           <p style="margin-top:12px"><button id="doLogin">Sign in</button> <span id="loginerr" class="bad" role="alert"></span></p>
         </div>
         <div id="appmain" hidden>
-          <nav class="tabs" role="tablist">
-            <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
-            <button role="tab" data-tab="challenges" aria-selected="false">Challenges</button>
-            <button role="tab" data-tab="editor" aria-selected="false">Editor</button>
-            <button role="tab" data-tab="rotation" aria-selected="false">Rotation</button>
-            <button role="tab" data-tab="calendar" aria-selected="false">Calendar</button>
-            <button role="tab" data-tab="reports" aria-selected="false">Reports</button>
-            <button role="tab" data-tab="audit" aria-selected="false">Audit</button>
+          <!-- A complete ARIA tabs pattern: every tab points at its panel, every panel names its
+               tab, and only the selected tab is in the tab order (arrow keys move between them).
+               Half a pattern — role="tab" with no aria-controls or key handling, as this was —
+               reads as broken to assistive technology rather than as plain buttons. -->
+          <nav class="tabs" role="tablist" aria-label="Administration sections">
+            <button role="tab" id="t-overview" aria-controls="tab-overview" data-tab="overview" aria-selected="true" tabindex="0">Overview</button>
+            <button role="tab" id="t-challenges" aria-controls="tab-challenges" data-tab="challenges" aria-selected="false" tabindex="-1">Challenges</button>
+            <button role="tab" id="t-editor" aria-controls="tab-editor" data-tab="editor" aria-selected="false" tabindex="-1">Editor</button>
+            <button role="tab" id="t-rotation" aria-controls="tab-rotation" data-tab="rotation" aria-selected="false" tabindex="-1">Rotation</button>
+            <button role="tab" id="t-calendar" aria-controls="tab-calendar" data-tab="calendar" aria-selected="false" tabindex="-1">Calendar</button>
+            <button role="tab" id="t-reports" aria-controls="tab-reports" data-tab="reports" aria-selected="false" tabindex="-1">Reports</button>
+            <button role="tab" id="t-audit" aria-controls="tab-audit" data-tab="audit" aria-selected="false" tabindex="-1">Audit</button>
           </nav>
-          <div id="tab-overview" class="card"></div>
-          <div id="tab-challenges" class="card" hidden></div>
-          <div id="tab-editor" class="card" hidden>
+          <div id="tab-overview" class="card" role="tabpanel" aria-labelledby="t-overview" tabindex="0"></div>
+          <div id="tab-challenges" class="card" role="tabpanel" aria-labelledby="t-challenges" tabindex="0" hidden></div>
+          <div id="tab-editor" class="card" role="tabpanel" aria-labelledby="t-editor" tabindex="0" hidden>
             <h2>Challenge editor</h2>
             <div class="row">
               <div><label for="f_code">Code</label><input id="f_code" placeholder="WC-XXX-000"></div>
@@ -630,10 +642,10 @@ public static class WorldAdmin
               <span id="edmsg" role="status"></span></p>
             <div id="valout"></div>
           </div>
-          <div id="tab-rotation" class="card" hidden></div>
-          <div id="tab-calendar" class="card" hidden></div>
-          <div id="tab-reports" class="card" hidden></div>
-          <div id="tab-audit" class="card" hidden></div>
+          <div id="tab-rotation" class="card" role="tabpanel" aria-labelledby="t-rotation" tabindex="0" hidden></div>
+          <div id="tab-calendar" class="card" role="tabpanel" aria-labelledby="t-calendar" tabindex="0" hidden></div>
+          <div id="tab-reports" class="card" role="tabpanel" aria-labelledby="t-reports" tabindex="0" hidden></div>
+          <div id="tab-audit" class="card" role="tabpanel" aria-labelledby="t-audit" tabindex="0" hidden></div>
         </div>
         </main>
         <script>
@@ -649,16 +661,31 @@ public static class WorldAdmin
           .then(function(r){return r.json().then(function(j){if(!r.ok)throw j;return j;});});
         }
         function show(logged){$('login').hidden=logged;$('appmain').hidden=!logged;$('logout').hidden=!logged;}
-        function tab(name){
-          ['overview','challenges','editor','rotation','calendar','reports','audit'].forEach(function(t){
+        var TABS=['overview','challenges','editor','rotation','calendar','reports','audit'];
+        function tab(name,moveFocus){
+          TABS.forEach(function(t){
             $('tab-'+t).hidden=t!==name;
-            document.querySelector('[data-tab='+t+']').setAttribute('aria-selected',t===name?'true':'false');
+            var b=document.querySelector('[data-tab='+t+']');
+            b.setAttribute('aria-selected',t===name?'true':'false');
+            // Roving tabindex: exactly one tab is in the document tab order; the arrow keys move
+            // between the tabs themselves. This is what the ARIA tabs pattern requires.
+            b.tabIndex=t===name?0:-1;
+            if(t===name&&moveFocus)b.focus();
           });
           if(name==='overview')loadOverview(); if(name==='challenges')loadChallenges();
           if(name==='rotation')loadRotation();
           if(name==='calendar')loadCalendar(); if(name==='reports')loadReports(); if(name==='audit')loadAudit();
         }
-        document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){tab(b.dataset.tab);});});
+        document.querySelectorAll('[data-tab]').forEach(function(b){
+          b.addEventListener('click',function(){tab(b.dataset.tab);});
+          b.addEventListener('keydown',function(ev){
+            var i=TABS.indexOf(b.dataset.tab),n=TABS.length;
+            if(ev.key==='ArrowRight'||ev.key==='ArrowDown')  {ev.preventDefault();tab(TABS[(i+1)%n],true);}
+            else if(ev.key==='ArrowLeft'||ev.key==='ArrowUp'){ev.preventDefault();tab(TABS[(i-1+n)%n],true);}
+            else if(ev.key==='Home')                         {ev.preventDefault();tab(TABS[0],true);}
+            else if(ev.key==='End')                          {ev.preventDefault();tab(TABS[n-1],true);}
+          });
+        });
         $('doLogin').addEventListener('click',function(){
           $('loginerr').textContent='';
           api('/api/world-admin/auth/login','POST',{email:$('em').value,password:$('pw').value})

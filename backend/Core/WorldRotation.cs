@@ -416,3 +416,61 @@ public sealed class WorldRotationService : BackgroundService
     static async Task<bool> WaitAsync(PeriodicTimer t, CancellationToken ct)
     { try { return await t.WaitForNextTickAsync(ct); } catch (OperationCanceledException) { return false; } }
 }
+
+/// <summary>
+/// PCI World retention sweep. Nothing in the world realm expired before this existed: anonymous
+/// sessions accumulated for ever with no `expires_at`, expired account sessions and single-use
+/// tokens were never collected, and `pciworld_events` — a row per page view — grew unbounded.
+///
+/// Keeping a pseudonymous session id indefinitely is keeping personal data indefinitely, so this
+/// is a privacy control, not only a housekeeping one. It deletes ONLY continuity and analytics
+/// rows: attempts, scores and Passport evidence are learner history and are never touched here.
+/// Windows are operator-settable; 0 disables a sweep (the platform's retention convention).
+/// </summary>
+public sealed class WorldRetentionService : BackgroundService
+{
+    private readonly Db _db;
+    private static readonly TimeSpan Interval = TimeSpan.FromHours(24);
+    public WorldRetentionService(Db db) => _db = db;
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        using var timer = new PeriodicTimer(Interval);
+        // Wait a full interval before the first sweep (while, not do-while), like RetentionService:
+        // a fresh boot must never delete anything before an operator can review the configuration.
+        while (await WaitAsync(timer, stoppingToken))
+        {
+            try { var n = Sweep(_db); if (n > 0) Console.WriteLine($"[world-retention] removed {n} expired row(s)"); }
+            catch (Exception e) { Console.Error.WriteLine($"[world-retention] sweep failed: {e.Message}"); }
+        }
+    }
+
+    static async Task<bool> WaitAsync(PeriodicTimer t, CancellationToken ct)
+    { try { return await t.WaitForNextTickAsync(ct); } catch (OperationCanceledException) { return false; } }
+
+    /// <summary>One sweep. Returns rows removed. Also callable directly by tests.</summary>
+    public static int Sweep(Db db)
+    {
+        var removed = 0;
+        // Expired sign-in sessions and used/expired single-use tokens: no reason to keep either.
+        removed += db.Execute("DELETE FROM pciworld_user_sessions WHERE expires_at<=datetime('now')");
+        removed += db.Execute("DELETE FROM pciworld_admin_sessions WHERE expires_at<=datetime('now')");
+        removed += db.Execute("DELETE FROM pciworld_user_tokens WHERE expires_at<=datetime('now')");
+
+        // Dormant anonymous sessions. An anonymous session is browser continuity; once it has been
+        // idle this long it can only serve to link past activity together. Sessions that still own
+        // an attempt are kept — deleting those would orphan learner history.
+        var sessionDays = (int)Settings.Num(db, "world_session_retention_days", 180);
+        if (sessionDays > 0)
+            removed += db.Execute($@"DELETE FROM pciworld_sessions
+                WHERE last_seen_at <= datetime('now','-{sessionDays} days')
+                  AND id NOT IN (SELECT session_id FROM pciworld_attempts)");
+
+        // Analytics events: the aggregate is what matters, the individual rows are not kept for ever.
+        var eventDays = (int)Settings.Num(db, "world_event_retention_days", 400);
+        if (eventDays > 0)
+            removed += db.Execute($"DELETE FROM pciworld_events WHERE created_at <= datetime('now','-{eventDays} days')");
+
+        return removed;
+    }
+}
