@@ -87,10 +87,87 @@ test.describe('PCI World — public journey', () => {
     await expect(page.locator('#rep_out')).toContainText('ref WR-')
   })
 
-  test('the home page passes an automated WCAG 2.x AA scan', async ({ page }) => {
-    await page.goto('/world')
+  // Scanning only the home page is how three contrast failures survived the Phase 0 audit: they
+  // render on the result, Passport and account surfaces, none of which were ever scanned.
+  for (const [name, path] of [
+    ['home', '/world'],
+    ['challenge workspace', '/world/challenge/WC-EVM-001'],
+    ['archive', '/world/archive'],
+    ['about', '/world/about'],
+    ['account', '/world/account'],
+  ] as const) {
+    test(`the ${name} page passes an automated WCAG 2.x AA scan`, async ({ page }) => {
+      await page.goto(path)
+      const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
+      expect(results.violations).toEqual([])
+    })
+  }
+
+  test('the completed-result view passes an automated WCAG 2.x AA scan', async ({ page }) => {
+    // The result is rendered client-side after grading, so it needs a real completed attempt.
+    await page.goto('/world/challenge/WC-WBS-026')
+    await page.getByRole('button', { name: 'Start the challenge' }).click()
+    await page.locator('#ask_root_total').fill('1200000')
+    await page.getByRole('radio', { name: 'Yes' }).check()
+    await page.getByRole('button', { name: 'Submit my answers' }).click()
+    await expect(page.locator('#result')).toContainText('Your result')
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
     expect(results.violations).toEqual([])
+  })
+
+  test('a Passport link that does not resolve is reported without revealing whether it ever did', async ({ page }) => {
+    await page.goto('/world/verify')
+    await expect(page.locator('h1')).toContainText('Verify a PCI World Passport')
+    await page.locator('#vt').fill('https://example.test/world/p/' + 'f'.repeat(64))
+    await page.getByRole('button', { name: 'Verify' }).click()
+    await expect(page.locator('main')).toContainText('does not resolve')
+    // "withdrawn" / "expired" would confirm a Passport once existed at that address.
+    const html = await page.locator('main').innerHTML()
+    expect(html).not.toContain('was withdrawn')
+    expect(html).not.toContain('has expired')
+  })
+
+  test('a new account can set field-level Passport disclosure', async ({ page }) => {
+    await page.goto('/world/account')
+    const email = `e2e-passport-${Date.now()}@example.test`
+    await page.locator('#r_email').fill(email)
+    await page.locator('#r_pw').fill('a-long-enough-password')
+    await page.locator('#r_name').fill('E2E Participant')
+    await page.getByRole('button', { name: 'Create account' }).click()
+
+    // Disclosure is per field, not one switch: publishing what you practised must not force
+    // publishing your scores.
+    const scores = page.locator('#sw_scores')
+    await expect(scores).toBeVisible()
+    await expect(scores).toBeChecked()
+    await scores.uncheck()
+    await page.locator('#sw_exp').selectOption('90')
+    await page.getByRole('button', { name: 'Save these settings' }).click()
+    await expect(page.locator('#showmsg')).toContainText('Saved')
+    await expect(page.locator('#sw_scores')).not.toBeChecked()   // survives the reload
+    await expect(page.locator('main')).toContainText('Current link expires')
+  })
+
+  test('the skip link becomes visible on focus and moves focus to the content', async ({ page }) => {
+    await page.goto('/world')
+    await page.keyboard.press('Tab')                       // the skip link is the first stop
+    const skip = page.getByRole('link', { name: 'Skip to content' })
+    await expect(skip).toBeFocused()
+    await expect(skip).toBeVisible()                       // it must not stay clipped when focused
+    await page.keyboard.press('Enter')
+    await expect(page.locator('#main')).toBeFocused()
+  })
+
+  test('starting and submitting a challenge keeps focus inside the page', async ({ page }) => {
+    // Hiding the container that holds the focused control drops focus to <body>, stranding
+    // keyboard and screen-reader users at the top of the document with no announcement.
+    await page.goto('/world/challenge/WC-WBS-026')
+    await page.getByRole('button', { name: 'Start the challenge' }).click()
+    await expect(page.locator('#work')).toBeFocused()
+    await page.locator('#ask_root_total').fill('1200000')
+    await page.getByRole('radio', { name: 'Yes' }).check()
+    await page.getByRole('button', { name: 'Submit my answers' }).click()
+    await expect(page.locator('#result')).toBeFocused()
   })
 })
 

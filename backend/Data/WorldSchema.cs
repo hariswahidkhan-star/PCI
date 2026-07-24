@@ -203,6 +203,10 @@ public static class WorldSchema
             email_verified INTEGER DEFAULT 0,
             passport_public INTEGER DEFAULT 0,
             passport_token_sha VARCHAR(64),
+            passport_show_scores INTEGER DEFAULT 1,
+            passport_show_profiles INTEGER DEFAULT 1,
+            passport_show_dates INTEGER DEFAULT 1,
+            passport_expires_at TEXT,
             failed_logins INTEGER DEFAULT 0,
             lockout_until TEXT,
             last_login_at TEXT,
@@ -231,6 +235,16 @@ public static class WorldSchema
         }
         AddCol("pciworld_attempts", "user_id", "user_id INTEGER");
         AddCol("pciworld_attempts", "passport_visible", "passport_visible INTEGER DEFAULT 0");
+
+        // Passport disclosure is per FIELD as well as per item: publishing evidence of what you
+        // have practised should not force you to publish your scores. Defaults preserve the
+        // behaviour of every Passport published before these columns existed.
+        AddCol("pciworld_users", "passport_show_scores", "passport_show_scores INTEGER DEFAULT 1");
+        AddCol("pciworld_users", "passport_show_profiles", "passport_show_profiles INTEGER DEFAULT 1");
+        AddCol("pciworld_users", "passport_show_dates", "passport_show_dates INTEGER DEFAULT 1");
+        // A public link that never expires is a decision nobody consciously made. NULL = no expiry
+        // (the existing behaviour); a date makes the link stop resolving on its own.
+        AddCol("pciworld_users", "passport_expires_at", "passport_expires_at TEXT");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_user ON pciworld_attempts(user_id)");
 
         // ── Separate PCI World admin realm (partner-portal precedent: wholly separate from

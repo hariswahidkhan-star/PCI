@@ -48,7 +48,7 @@ public static class WorldPages
     const string Css = """
         :root{--ink:#0F172A;--paper:#FFFFFF;--paper-2:#F1F5F9;--noir:#0E1525;--line:#E3E8EF;
               --slate:#475569;--mist:#64748B;--blue:#1D4ED8;--blue-deep:#1E3A8A;--crimson:#C13329;
-              --ok:#15803D;--bad:#C2410C;--muted:var(--slate);
+              --ok:#15803D;--bad:#C2410C;--muted:var(--slate);--field:#94A3B8;
               --display:'Archivo',system-ui,sans-serif;--sans:'Inter',system-ui,sans-serif;
               --shadow-rest:0 1px 2px rgba(13,32,90,.05),0 10px 28px -20px rgba(29,78,216,.14);
               --shadow-hover:0 2px 5px rgba(13,32,90,.06),0 26px 56px -24px rgba(29,78,216,.25),0 0 0 1px rgba(29,78,216,.10);
@@ -58,7 +58,12 @@ public static class WorldPages
         body{background:var(--paper);color:var(--ink);font:16.5px/1.62 var(--sans);-webkit-font-smoothing:antialiased}
         a{color:var(--blue);text-decoration-thickness:1px;text-underline-offset:3px}
         a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
-        summary:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+        summary:focus-visible,[tabindex]:focus-visible,details:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+        /* The blue ring is 2.76:1 on the noir header/footer — below the 3:1 WCAG 1.4.11 requires of a
+           focus indicator. Dark surfaces get a light ring instead (10.25:1). */
+        header.world a:focus-visible,header.world button:focus-visible,
+        footer.world a:focus-visible,.card--noir a:focus-visible,
+        .card--noir button:focus-visible,.card--noir input:focus-visible{outline-color:#93C5FD}
         .shell{max-width:1020px;margin:0 auto;padding:0 22px}
         header.world{background:var(--noir);color:#E2E8F0}
         header.world .shell{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;padding:18px 22px}
@@ -111,12 +116,16 @@ public static class WorldPages
         td.num{text-align:right;white-space:nowrap;font-weight:600}
         .ok{color:var(--ok);font-weight:700}.bad{color:var(--bad);font-weight:700}
         label{display:block;font-weight:600;margin:18px 0 7px;font-size:15px}
+        /* --field is the border colour for anything a person types into. --line (1.23:1 on white)
+           is fine for decorative card edges but fails WCAG 1.4.11's 3:1 for a control boundary —
+           the field is literally invisible to some users. --field is 3.03:1. */
         input[type=text],input[type=number],input[type=email],input[type=password]{width:100%;max-width:360px;
-             padding:14px 16px;font-size:16px;border:1.5px solid var(--line);border-radius:0;background:var(--paper);
+             padding:14px 16px;font-size:16px;border:1.5px solid var(--field);border-radius:0;background:var(--paper);
              color:var(--ink);font-variant-numeric:tabular-nums;font-family:var(--sans)}
-        input:hover{border-color:var(--mist)}
+        input:hover{border-color:var(--slate)}
         select,textarea{font-family:var(--sans);font-size:15.5px;color:var(--ink);background:var(--paper);
-             border:1.5px solid var(--line);border-radius:0;padding:12px 14px}
+             border:1.5px solid var(--field);border-radius:0;padding:12px 14px}
+        input[type=radio],input[type=checkbox]{accent-color:var(--blue)}
         fieldset{border:1.5px solid var(--line);border-radius:12px;padding:20px 22px 14px;margin:20px 0}
         legend{font-family:var(--display);font-weight:800;font-size:16.5px;letter-spacing:-.01em;padding:0 8px}
         .opt{display:flex;gap:12px;align-items:flex-start;padding:10px 8px;border-radius:8px}
@@ -125,7 +134,9 @@ public static class WorldPages
         .opt label{font-weight:500;margin:0;line-height:1.5}
         .dim{display:flex;gap:40px;flex-wrap:wrap;margin:14px 0}
         .dim div{min-width:118px}
-        .dim .kicker{margin-bottom:4px;color:var(--mist)}
+        /* --mist (#64748B) on white is 4.42:1 — an AA failure at this size. These labels carry the
+           meaning of the numbers beside them, so they use --slate (7.59:1). */
+        .dim .kicker{margin-bottom:4px;color:var(--slate)}
         .card--noir .dim .kicker{color:#94A3B8}
         .dim b{font-family:var(--display);font-weight:800;font-size:38px;letter-spacing:-.02em;display:block;line-height:1.05}
         details.card summary{cursor:pointer;font-weight:600}
@@ -150,7 +161,12 @@ public static class WorldPages
         footer.world .ft-brand .wordmark{font-family:var(--display);font-weight:900;font-size:19px;letter-spacing:-.03em;color:#fff}
         footer.world .ft-brand .bar{width:2px;height:26px;background:var(--crimson);border-radius:2px}
         footer.world .fine{font-size:13px;line-height:1.65;color:#7C8CA0;max-width:88ch}
-        .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+        .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+        /* A skip link that stays invisible when focused is not a skip link (WCAG 2.4.7). Focusing
+           it brings it back into the page as the first visible control. */
+        a.visually-hidden:focus{position:fixed;top:12px;left:12px;width:auto;height:auto;clip:auto;
+             z-index:100;background:var(--paper);color:var(--ink);border:2px solid var(--blue);
+             padding:12px 20px;font-weight:600;text-decoration:none;box-shadow:var(--shadow-hover)}
         @media (max-width:680px){
           main{padding:38px 0 60px}
           .card{padding:20px;border-radius:12px}
@@ -210,7 +226,7 @@ public static class WorldPages
                 </nav>
               </div>
             </header>
-            <main id="main" class="shell">
+            <main id="main" class="shell" tabindex="-1">
             {body}
             </main>
             <footer class="world">
@@ -346,7 +362,10 @@ public static class WorldPages
                 <p style="margin-top:16px"><button class="btn" id="start">Start the challenge</button>
                 <span id="starterr" role="alert" class="bad"></span></p>
               </div>
-              <form id="work" hidden aria-describedby="savestate">
+              <!-- No aria-describedby="savestate": that pointed the form's description at a LIVE
+                   region, so the form announced "Progress saved." as its description. Autosave
+                   state belongs in its own polite region, which is what #savestate is. -->
+              <form id="work" hidden tabindex="-1">
                 <div class="card">
                   <h2 style="margin-top:0">Evidence</h2>
                   <table id="evidence"><caption class="visually-hidden">Project evidence</caption>
@@ -357,13 +376,18 @@ public static class WorldPages
                 <p><button class="btn" id="submit" type="submit">Submit my answers</button>
                    <span id="savestate" aria-live="polite" style="margin-left:12px;color:var(--muted);font-size:14px"></span></p>
               </form>
-              <section id="result" hidden aria-live="polite"></section>
+              <!-- Deliberately NOT aria-live. The whole result — scores, measure table, decision
+                   replay — is written here in one go; as a live region a screen reader announces
+                   the entire page as a single utterance. Focus is moved here instead, which is
+                   both quieter and navigable. -->
+              <section id="result" hidden tabindex="-1" aria-labelledby="resulthead"></section>
+              <p id="submiterr" role="alert" class="bad"></p>
             </div>
             <details class="card">
               <summary style="cursor:pointer;font-weight:600">Report an issue with this challenge</summary>
               <p style="margin-top:10px;color:var(--muted)">Spotted a content error, a calculation problem or an accessibility barrier? The PCI World content team reviews every report. No personal details are required.</p>
               <label for="rep_cat">What kind of issue?</label>
-              <select id="rep_cat" style="padding:9px 10px;border:1px solid var(--line);border-radius:8px">
+              <select id="rep_cat" style="padding:9px 10px;border:1.5px solid var(--field);border-radius:8px">
                 <option value="content_error">Content error</option>
                 <option value="calculation">Calculation problem</option>
                 <option value="accessibility">Accessibility barrier</option>
@@ -371,7 +395,7 @@ public static class WorldPages
                 <option value="other">Something else</option>
               </select>
               <label for="rep_msg">Describe it</label>
-              <textarea id="rep_msg" rows="4" maxlength="2000" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit"></textarea>
+              <textarea id="rep_msg" rows="4" maxlength="2000" style="width:100%;padding:10px 12px;border:1.5px solid var(--field);border-radius:8px;font:inherit"></textarea>
               <p style="margin-top:10px"><button class="btn secondary" type="button" id="rep_go">Send report</button>
                  <span id="rep_out" role="status"></span></p>
             </details>
@@ -496,7 +520,7 @@ public static class WorldPages
         function renderResult(r){
           $('work').hidden = true;
           var el = $('result'); el.hidden = false;
-          var h = '<div class="card"><span class="kicker">Your result</span>' +
+          var h = '<div class="card"><h2 id="resulthead"><span class="kicker">Your result</span></h2>' +
             '<div class="dim">' +
             '<div><span class="kicker">Overall</span><b class="score num">' + esc(r.score) + '</b></div>' +
             (r.calculation != null ? '<div><span class="kicker">Calculation</span><b class="score num">' + esc(r.calculation) + '</b></div>' : '') +
@@ -547,7 +571,12 @@ public static class WorldPages
                 '<p>Send this to someone who thinks they can do better:</p>' + shareLinks(s.url); })
               .catch(function(){ $('invitebox').innerHTML = '<p class="bad">Could not create the invitation — try again.</p>'; });
           });
-          el.scrollIntoView({ behavior: 'smooth' });
+          // Honour prefers-reduced-motion: a smooth scroll is motion the user asked us not to make.
+          var smooth = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+          el.scrollIntoView(smooth ? { behavior: 'smooth' } : undefined);
+          // Focus the result. Hiding the form would otherwise drop focus to <body>, stranding
+          // keyboard and screen-reader users at the top of the document with no announcement.
+          el.focus();
         }
         $('start').addEventListener('click', function(){
           $('starterr').textContent = '';
@@ -561,6 +590,8 @@ public static class WorldPages
             if (r.completed && r.result) { renderResult(r.result); return; }
             $('work').addEventListener('input', autosave);
             $('work').addEventListener('change', autosave);
+            // Focus moves to the revealed form: the button that had focus was just hidden.
+            $('work').focus();
           }).catch(function(e){
             $('starterr').textContent = (e && e.message) || 'Could not start — please try again.';
           });
@@ -573,7 +604,9 @@ public static class WorldPages
             .then(function(r){ att.completed = true; renderResult(r); })
             .catch(function(e){
               btn.disabled = false;
-              $('savestate').textContent = (e && e.message) || 'Submission failed — your work is saved, try again.';
+              // A failed submission is an error, not a status: it goes to role="alert", not to the
+              // polite autosave region where it was previously easy to miss entirely.
+              $('submiterr').textContent = (e && e.message) || 'Submission failed — your work is saved, try again.';
             });
         });
         $('rep_go').addEventListener('click', function(){
@@ -634,11 +667,11 @@ public static class WorldPages
             <p class="lede">The daily rotation brings one challenge forward each day — the archive keeps them all playable.</p>
             <form class="card" method="get" action="/world/archive" style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
               <div><label for="f_ind" style="margin-top:0">Industry</label>
-                <select id="f_ind" name="industry" style="padding:9px 10px;border:1px solid var(--line);border-radius:8px">{industryOpts}</select></div>
+                <select id="f_ind" name="industry" style="padding:9px 10px;border:1.5px solid var(--field);border-radius:8px">{industryOpts}</select></div>
               <div><label for="f_dif" style="margin-top:0">Difficulty</label>
-                <select id="f_dif" name="difficulty" style="padding:9px 10px;border:1px solid var(--line);border-radius:8px">{difficultyOpts}</select></div>
+                <select id="f_dif" name="difficulty" style="padding:9px 10px;border:1.5px solid var(--field);border-radius:8px">{difficultyOpts}</select></div>
               <div><label for="f_trk" style="margin-top:0">Track</label>
-                <select id="f_trk" name="track" style="padding:9px 10px;border:1px solid var(--line);border-radius:8px">{trackOpts}</select></div>
+                <select id="f_trk" name="track" style="padding:9px 10px;border:1.5px solid var(--field);border-radius:8px">{trackOpts}</select></div>
               <div><button class="btn secondary" type="submit">Filter</button></div>
             </form>
             <div class="card">
@@ -779,20 +812,40 @@ public static class WorldPages
 
     /// <summary>Public Passport: consent-based, name-led, evidence only — never an email, never an
     /// answer, never presented as a credential.</summary>
-    public static string PublicPassport(Db db, string name, List<Dictionary<string, object?>> rows)
+    public static string PublicPassport(Db db, string name, List<Dictionary<string, object?>> rows,
+        WorldPassport.Disclosure? show = null, string? verifyUrl = null, string? token = null, string? expiresAt = null)
     {
+        // Field-level disclosure is enforced HERE, at render, not by hiding columns in CSS: a value
+        // the owner did not publish never reaches the page at all.
+        show ??= new WorldPassport.Disclosure(true, true, true);
         var items = string.Join("", rows.Select(r => $"""
             <tr>
               <td>{E(H.Str(r["title"]))}</td>
               <td>{E(H.Str(r["industry"]))}</td>
               <td>{E(Cap(H.Str(r["difficulty"])))}</td>
-              <td class="num">{H.D(r["score"]):0.#}</td>
-              <td>{E(H.Str(r["profile_key"]))}</td>
-              <td class="num">{E((H.Str(r["completed_at"]) ?? "").Split(' ')[0])}</td>
+              {(show.Scores ? $"<td class=\"num\">{H.D(r["score"]):0.#}</td>" : "")}
+              {(show.Profiles ? $"<td>{E(Cap((H.Str(r["profile_key"]) ?? "").Replace('_', ' ')))}</td>" : "")}
+              {(show.Dates ? $"<td class=\"num\">{E((H.Str(r["completed_at"]) ?? "").Split(' ')[0])}</td>" : "")}
             </tr>
             """));
         var industries = rows.Select(r => H.Str(r["industry"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
         var tracks = rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
+        var verifyBlock = verifyUrl is null ? "" : $"""
+            <div class="card" id="verify">
+              <div style="display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start">
+                <div>{WorldPassport.QrSvg(verifyUrl)}</div>
+                <div style="flex:1;min-width:260px">
+                  <h2 style="margin-top:0">Verify this Passport</h2>
+                  <p>This page <em>is</em> the record. Scan the code or open the address below to
+                     confirm you are looking at the live version — a PDF or screenshot can be out of
+                     date, and its owner can withdraw this link at any time.</p>
+                  <p class="num" style="word-break:break-all"><a href="{E(verifyUrl)}">{E(verifyUrl)}</a></p>
+                  <p><a class="btn secondary" href="/world/p/{E(token)}.pdf">Download as PDF</a></p>
+                  {(string.IsNullOrWhiteSpace(expiresAt) ? "" : $"<p class=\"meta\"><span>Link expires {E(expiresAt.Split(' ')[0])}</span></p>")}
+                </div>
+              </div>
+            </div>
+            """;
         return Layout(db,
             $"{name} — PCI World Passport",
             $"Verified virtual project experience: {rows.Count} completed PCI World challenge{(rows.Count == 1 ? "" : "s")} across {industries} industr{(industries == 1 ? "y" : "ies")}.",
@@ -809,13 +862,17 @@ public static class WorldPages
             <div class="card">
               <h2 style="margin-top:0">Selected evidence</h2>
               <table>
+                <caption class="visually-hidden">Challenges this participant chose to publish</caption>
                 <thead><tr><th scope="col">Challenge</th><th scope="col">Industry</th><th scope="col">Difficulty</th>
-                <th scope="col">Score</th><th scope="col">Decision profile</th><th scope="col">Date</th></tr></thead>
+                {(show.Scores ? "<th scope=\"col\">Score</th>" : "")}
+                {(show.Profiles ? "<th scope=\"col\">Decision profile</th>" : "")}
+                {(show.Dates ? "<th scope=\"col\">Date</th>" : "")}</tr></thead>
                 <tbody>{items}</tbody>
               </table>
             </div>
+            {verifyBlock}
             <p><a class="btn" href="/world">Take today&rsquo;s challenge yourself</a></p>
-            <p class="notice">This Passport shows verified practice evidence its owner chose to publish. Answers are never shown. {E(PracticeNotice)}</p>
+            <p class="notice">This Passport shows verified practice evidence its owner chose to publish. Answers are never shown, and nothing here ranks or compares people. {E(PracticeNotice)}</p>
             """,
             "/world",
             ogTitle: $"{name} — PCI World Passport",
@@ -824,6 +881,40 @@ public static class WorldPages
             // a search index would outlive both. Sharing the link still works everywhere.
             noindex: true);
     }
+
+    /// <summary>
+    /// Passport verification entry point — the page someone lands on when they have been handed a
+    /// PDF or a link and want to know whether it is real. It answers exactly one question and does
+    /// not editorialise: either the link resolves to a live Passport, or it does not.
+    /// </summary>
+    public static string VerifyPassport(Db db, string? attempted, string? _) => Layout(db,
+        attempted is null ? "Verify a PCI World Passport" : "That Passport link does not resolve — PCI World",
+        "Check whether a PCI World Passport link is live, and see the record it points to.",
+        $"""
+        <span class="kicker">Verification</span>
+        <h1>Verify a PCI World Passport</h1>
+        <p class="lede">Paste the link or the code from the document you were given. You will be taken
+           to the live record, which is the only authority — documents can be copies, and their owners
+           can withdraw them.</p>
+        {(attempted is null ? "" : $"""
+        <div class="card" style="border-color:var(--crimson)">
+          <h2 style="margin-top:0">That link does not resolve</h2>
+          <p>Nothing live is published at that address. There are three ordinary explanations:
+             the owner has withdrawn or replaced the link, the link has passed the expiry its owner
+             set, or the address was mistyped or truncated when it was copied.</p>
+          <p class="notice">A link that does not resolve is not evidence that a document was forged —
+             but it does mean nothing here can confirm it. Ask the holder for a current link.</p>
+        </div>
+        """)}
+        <form class="card" method="get" action="/world/verify">
+          <label for="vt">Passport link or code</label>
+          <input id="vt" name="t" type="text" style="max-width:520px" value="{E(attempted)}"
+                 placeholder="https://&hellip;/world/p/&hellip; or the code alone" autocomplete="off">
+          <p style="margin-top:14px"><button class="btn" type="submit">Verify</button></p>
+        </form>
+        <p class="notice">{E(PracticeNotice)}</p>
+        """,
+        "/world/verify");
 
     /// <summary>404 for a PCI World-only deployment. A real not-found page, not a redirect to
     /// /world — a blanket redirect tells crawlers every mistyped URL is a live duplicate.</summary>
@@ -848,7 +939,7 @@ public static class WorldPages
         <span class="kicker">Account &amp; Passport</span>
         <h1>Keep the evidence</h1>
         <p class="lede">A free account turns completed challenges into a PCI World Passport — verified virtual project experience you control and can share.</p>
-        <div id="auth" class="card" hidden>
+        <div id="auth" class="card" hidden tabindex="-1">
           <div style="display:grid;gap:26px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
             <div>
               <h2 style="margin-top:0">Create your Passport</h2>
@@ -868,7 +959,7 @@ public static class WorldPages
           <p id="autherr" class="bad" role="alert"></p>
           <p class="notice">Challenges you completed anonymously in this browser are added to your account automatically. {E(PracticeNotice)}</p>
         </div>
-        <div id="me" hidden></div>
+        <div id="me" hidden tabindex="-1"></div>
         <script>{AccountJs}</script>
         """,
         "/world/account", noindex: true);
@@ -886,10 +977,13 @@ public static class WorldPages
             body:body?JSON.stringify(body):undefined})
           .then(function(r){return r.json().then(function(j){if(!r.ok)throw j;return j;});});
         }
-        function showAuth(){$('auth').hidden=false;$('me').hidden=true;}
+        // Every hidden/shown pair moves focus into the panel that just appeared. Toggling `hidden`
+        // on the container holding the focused button silently drops focus to <body>, which strands
+        // keyboard users and announces nothing at all.
+        function showAuth(){$('auth').hidden=false;$('me').hidden=true;$('auth').focus();}
         function load(){
           api('/api/world/passport').then(function(p){
-            $('auth').hidden=true;$('me').hidden=false;
+            $('auth').hidden=true;$('me').hidden=false;$('me').focus();
             var h='<div class="card"><h2 style="margin-top:0">Your Passport</h2>'+
               '<div class="dim"><div><span class="kicker">Completed</span><b class="score num">'+p.completed+'</b></div>'+
               '<div><span class="kicker">Industries</span><b class="score num">'+p.industries+'</b></div>'+
@@ -903,6 +997,37 @@ public static class WorldPages
                 ?'<button class="btn secondary" id="unpub">Make Passport private</button>'
                 :'<button class="btn" id="pub">Publish my public Passport</button>')+
               ' <span id="puburl"></span> <span id="pubmsg" class="bad" role="alert"></span></p></div>';
+            // Field-level disclosure: publishing WHAT you have practised should never force you to
+            // publish your scores as well. These switches apply to the public page and the PDF alike.
+            h+='<div class="card"><h2 style="margin-top:0">What your Passport shows</h2>'+
+               '<fieldset><legend>Fields visible to anyone with your link</legend>'+
+               '<div class="opt"><input type="checkbox" id="sw_scores"'+(p.show_scores?' checked':'')+'>'+
+               '<label for="sw_scores">Scores</label></div>'+
+               '<div class="opt"><input type="checkbox" id="sw_profiles"'+(p.show_profiles?' checked':'')+'>'+
+               '<label for="sw_profiles">Decision profiles</label></div>'+
+               '<div class="opt"><input type="checkbox" id="sw_dates"'+(p.show_dates?' checked':'')+'>'+
+               '<label for="sw_dates">Completion dates</label></div>'+
+               '<p><small>Challenge titles, industries and difficulty are always shown — without them '+
+               'a Passport says nothing. Your answers are never shown.</small></p></fieldset>'+
+               '<label for="sw_exp">Link expiry</label>'+
+               '<select id="sw_exp">'+
+               '<option value="0"'+(p.expires_at?'':' selected')+'>Never expires</option>'+
+               '<option value="90">Expires in 90 days</option>'+
+               '<option value="180">Expires in 6 months</option>'+
+               '<option value="365">Expires in 12 months</option>'+
+               '</select>'+
+               (p.expires_at?'<p class="meta"><span>Current link expires '+esc(p.expires_at)+'</span></p>':'')+
+               '<p style="margin-top:14px"><button class="btn secondary" id="saveShow">Save these settings</button> '+
+               '<span id="showmsg" role="status"></span></p>'+
+               // The public link is stored only as a SHA, so the server genuinely cannot show it
+               // again. This browser remembers the last one it minted; from anywhere else the
+               // honest answer is "generate a new link", which rotates and retires the old one.
+               (p.passport_public
+                 ?'<p id="lastlink" class="meta"></p>'+
+                  '<p><button class="btn secondary" id="regen">Generate a new link</button> '+
+                  '<small>The current link stops working immediately.</small></p>'
+                 :'')+
+               '</div>';
             h+='<div class="card"><h2 style="margin-top:0">Evidence</h2>'+
                '<p>Tick the results you want on your public Passport. Nothing is shown without your choice.</p>'+
                '<table><thead><tr><th>Show</th><th>Challenge</th><th>Score</th><th>Profile</th><th>Date</th></tr></thead><tbody>';
@@ -914,9 +1039,23 @@ public static class WorldPages
             });
             h+='</tbody></table></div>'+
                '<div class="card"><h2 style="margin-top:0">Your data</h2>'+
-               '<p><a class="btn secondary" href="/api/world/account/export">Export my data (JSON)</a> '+
+               // A plain link cannot work here: the export is authenticated by the X-World-Account
+               // header, which a navigation never sends, so this always answered 401. It is fetched
+               // and saved as a blob instead.
+               '<p><button class="btn secondary" id="dlexport">Export my data (JSON)</button> '+
                '<button class="btn secondary" id="signout">Sign out</button> '+
                '<button class="btn secondary" id="delacct">Delete my account</button></p>'+
+               // A labelled password field, not window.prompt(): prompt() shows the password in
+               // clear text, carries no label, cannot be styled or translated, and is blocked
+               // outright by some browsers.
+               '<div id="delbox" hidden class="card" style="border-color:var(--crimson)">'+
+               '<h2 style="margin-top:0">Delete your account</h2>'+
+               '<p>This removes your Passport, every public link you minted and your sign-in. '+
+               'Completed challenges are kept as anonymous statistics with nothing that identifies you.</p>'+
+               '<label for="delpw">Confirm your password</label>'+
+               '<input id="delpw" type="password" autocomplete="current-password">'+
+               '<p style="margin-top:14px"><button class="btn" id="delgo">Delete my account permanently</button> '+
+               '<button class="btn secondary" id="delno">Keep my account</button></p></div>'+
                '<p id="acctmsg" role="status"></p></div>';
             $('me').innerHTML=h;
             $('saveName').addEventListener('click',function(){
@@ -927,7 +1066,9 @@ public static class WorldPages
             });
             if($('pub'))$('pub').addEventListener('click',function(){
               api('/api/world/passport/publish',{publish:true})
-                .then(function(r){$('puburl').innerHTML='<a href="'+r.url+'">'+esc(location.origin+r.url)+'</a>';load();})
+                .then(function(r){
+                  localStorage.setItem('pciworld_passport_url',location.origin+r.url);
+                  $('puburl').innerHTML='<a href="'+r.url+'">'+esc(location.origin+r.url)+'</a>';load();})
                 .catch(function(e2){$('pubmsg').textContent=(e2&&e2.message)||(e2&&e2.error)||'Could not publish.';});
             });
             if($('unpub'))$('unpub').addEventListener('click',function(){
@@ -942,12 +1083,48 @@ public static class WorldPages
               api('/api/world/account/logout',{}).catch(function(){});
               localStorage.removeItem(KEY);showAuth();
             });
+            if($('lastlink')){
+              var saved=localStorage.getItem('pciworld_passport_url');
+              $('lastlink').innerHTML=saved
+                ?'<span>Your link on this device: <a href="'+esc(saved)+'">'+esc(saved)+'</a></span>'
+                :'<span>This browser has not minted a link. Generate a new one to get a shareable address.</span>';
+            }
+            if($('regen'))$('regen').addEventListener('click',function(){
+              api('/api/world/passport/publish',{publish:true})
+                .then(function(r){localStorage.setItem('pciworld_passport_url',location.origin+r.url);load();})
+                .catch(function(e2){$('pubmsg').textContent=(e2&&e2.message)||(e2&&e2.error)||'Could not generate a link.';});
+            });
+            $('saveShow').addEventListener('click',function(){
+              $('showmsg').textContent='';
+              api('/api/world/passport/disclosure',{
+                show_scores:$('sw_scores').checked,show_profiles:$('sw_profiles').checked,
+                show_dates:$('sw_dates').checked,expires_in_days:parseInt($('sw_exp').value,10)||0})
+                .then(function(){$('showmsg').textContent='Saved.';load();})
+                .catch(function(){$('showmsg').textContent='Could not save — try again.';});
+            });
+            $('dlexport').addEventListener('click',function(){
+              fetch('/api/world/account/export',{headers:{'X-World-Account':localStorage.getItem(KEY)||''}})
+                .then(function(r){if(!r.ok)throw r;return r.blob();})
+                .then(function(blob){
+                  var url=URL.createObjectURL(blob),a=document.createElement('a');
+                  a.href=url;a.download='pciworld-my-data.json';document.body.appendChild(a);a.click();
+                  a.remove();URL.revokeObjectURL(url);
+                  $('acctmsg').textContent='Your data has been downloaded.';
+                })
+                .catch(function(){$('acctmsg').textContent='Could not prepare the export — try again.';});
+            });
             $('delacct').addEventListener('click',function(){
-              var pw=prompt('Deleting your account removes your Passport and all public links. Enter your password to confirm:');
-              if(!pw)return;
+              $('delbox').hidden=false;$('delpw').focus();
+            });
+            $('delno').addEventListener('click',function(){
+              $('delbox').hidden=true;$('delpw').value='';$('delacct').focus();
+            });
+            $('delgo').addEventListener('click',function(){
+              var pw=$('delpw').value;
+              if(!pw){$('acctmsg').textContent='Enter your password to confirm.';$('delpw').focus();return;}
               api('/api/world/account/delete',{password:pw})
                 .then(function(){localStorage.removeItem(KEY);showAuth();})
-                .catch(function(){$('acctmsg').textContent='Password incorrect — account not deleted.';});
+                .catch(function(){$('acctmsg').textContent='Password incorrect — account not deleted.';$('delpw').focus();});
             });
           }).catch(showAuth);
         }
