@@ -1,10 +1,10 @@
-# Marketing Partner finance module — completion reports, Phases 1–4
+# Marketing Partner finance module — completion reports, Phases 1–6
 
 Design, gap map and decisions: [`PARTNER_FINANCE_PHASE0_AUDIT.md`](./PARTNER_FINANCE_PHASE0_AUDIT.md).
 Each report follows the twelve-item format fixed in Phase 0 §12.
 
-Findings closed so far: **P0-B, P0-C, P0-D, P1-F, P1-G, P1-H, P1-I, P2-M**.
-Still open: **P0-Q, P1-R, P1-S, P2-T** (all platform-wide, listed in §5 below), plus Phases 5–6.
+Findings closed: **P0-B, P0-C, P0-D, P1-F, P1-G, P1-H, P1-I, P2-M, P2-T**.
+Still open: **P0-Q** (now *visible* to CI, see Phase 6), **P1-R**, **P1-S** — all platform-wide, listed in §5 below.
 
 ---
 
@@ -95,3 +95,49 @@ These sit outside the partner module but were found during it and remain unfixed
 | **P2-T** | `migration_integrity_test.py` compares table and column **names only**, so it cannot see P0-Q. Hardening it to assert finance column *types* and unique-index existence is still outstanding. |
 | **P1-R** | `CREATE INDEX IF NOT EXISTS` is MariaDB-only. CI runs MariaDB 10.11, so this is invisible today and would fail on MySQL 8. |
 | **P1-S** | A suspected pre-existing MySQL DDL failure in `certification_routes` (err-1170), swallowed by a `catch` — exactly the trap the finance tables were designed to avoid. Unverified. |
+
+---
+
+## Phase 5 completion report — campaign links, attribution and exports
+
+1. **Inspected** — the existing `Analytics` module (attribution cookie, visitor hash, event pipeline), `analytics_events`, the redemption chain, and every scope column's enforcement point in `Endpoints/Public.cs`.
+2. **Changed** — partners can create shareable tracked links (`/r/{token}`) carrying one of their own codes, and see a funnel for each. Dashboard filters, pagination and CSV export were added to the student list.
+3. **Migrations** — two additive tables (`partner_campaign_links`, `partner_link_clicks`) in `FinanceSchema`. Nothing existing altered; `analytics_events` was deliberately **not** touched.
+4. **Files changed** — new: `Core/PartnerCampaign.cs`, `tests/…/PartnerCampaignTests.cs`. Modified: `Data/FinanceSchema.cs`, `Endpoints/PartnerPortal.cs`, `Core/Analytics.cs` (one new public `Fingerprint`), `Core/PartnerStatement.cs`, `frontend/e2e/partner-portal.spec.ts`.
+5. **Tests run** — 18 campaign facts, six of them hostile-destination cases. Full CI green.
+6. **E2E evidence** — the partner-portal suite passed after its nav assertion was corrected (see item 10).
+7. **Reconciliation** — the funnel is counted from real rows: clicks from this module's own table, everything downstream through the **code** the link carries, on the same `code_redemptions` chain the ledger uses. Nothing is modelled or estimated.
+8. **Security/privacy** — the link wears PCI's domain, so `SafeDestination` refuses absolute URLs, protocol-relative URLs, backslash variants and control characters (the CR/LF response-splitting vector); `ForwardTo` re-applies it as defence in depth. Links of a suspended institution stop working. Bot traffic is not counted as a human click. The CSV export is built from the already privacy-filtered rows, so a download can never widen what a partner may see.
+9. **Existing data preserved** — additive only. `analytics_events` was left alone on purpose: adding a column there would have touched a shared table whose parity is checked by name, for no attribution benefit the code chain does not already give exactly.
+10. **Risks / decisions** —
+    - **No cookie-based journey stitching.** The platform's visitor hash is salted with the current date *and* a per-boot secret, so it rotates daily and cannot be joined across days. That is a privacy property worth keeping. Stitching on it would silently under-report and present a broken number as real. Unique visitors are reported as a **same-day** figure and labelled as such.
+    - A link with no code reports clicks and says it tracks nothing further, rather than showing zeroes that read as a failed campaign; a link with no clicks reports a **null** conversion rate, not 0%, because "nobody arrived" and "nobody converted" are different facts.
+    - `route_key` is still not exposed (Phase 4 rationale unchanged).
+    - The partner-portal e2e asserted a bare count of six nav buttons and broke when Payments became the seventh. Corrected to name the sections: a count fails opaquely on the next addition and says nothing about which section went missing when one genuinely does.
+    - **A security fix found in my own Phase 3 work**: the statement CSV was hand-rolling its quoting. Both writers now use the shared `Csv.Field`, which also neutralises the leading `=`/`+`/`-`/`@` a spreadsheet executes as a formula — and codes and campaign names are partner-supplied text.
+11. **Rollback** — drop the two tables and revert one file; the `/r/{token}` route disappears with it.
+12. **Recommended next** — Phase 6.
+
+---
+
+## Phase 6 completion report — hardening
+
+1. **Inspected** — `backend/tests/migration_integrity_test.py` (all four existing sections), the CI workflow's `backend-mysql` job, the live MariaDB `information_schema`, and `Rbac`.
+2. **Changed** — closes **P2-T** and makes **P0-Q** visible to CI for the first time. Adds cross-partner isolation and permission tests.
+3. **Migrations** — none.
+4. **Files changed** — modified: `backend/tests/migration_integrity_test.py` (new section 5). New: `tests/…/PartnerIsolationTests.cs`.
+5. **Tests run** — 9 isolation/permission facts, plus four new gating migration checks and one inventory. Full CI green, including `backend-mysql`, which is what proves the gates hold against a real MariaDB schema rather than only SQLite.
+6. **E2E evidence** — full suite green.
+7. **Reconciliation** — section 5 now asserts, against the live MySQL schema: no finance column is inexact floating point; every `*_minor` column is an integer type; all six finance UNIQUE indexes exist with exactly their declared columns; and none is narrower than the guarantee it stands in for.
+8. **Security/privacy** — isolation is now proven rather than assumed: two partners with overlapping-looking data are asserted to keep separate totals, payable balances, settlement allocations, statements and reversals — a lost `partner_id` scope would make both read the combined figure. Permission posture is pinned: no named role bundle implies a `pf_*` capability (owner excepted), the owner bypass is real (which is *why* maker-checker lives in the engine), every capability is grantable, and a statement never carries the student's identity.
+9. **Existing data preserved** — test-only changes.
+10. **Risks / the one judgement call worth stating** — the first draft of check 5a scanned money columns **platform-wide**. That would have been a true positive and would have hard-broken the build over a large pre-existing condition. Changing those column types is a migration against live tables belonging to its own reviewed change, not to a test tightening, and gating on it would block every unrelated commit until that landed. So the **gate** is scoped to the finance module's own tables, and the platform-wide situation is a **non-gating inventory** printed on every run. The condition cannot now grow unnoticed. Making it gating is a one-line change once the remediation is scheduled.
+11. **Rollback** — revert one test file and one test suite.
+12. **Recommended next** — see "Not done" below.
+
+### Not done, and why
+
+- **Load testing.** Not meaningful in this container. It needs a target environment with representative data volumes.
+- **A migration rehearsal against a production restore.** Needs a real backup to point at. Note that CI *does* already run a **DR-1 backup → restore round-trip** on MariaDB (dump, decompress, restore into a scratch database, sentinel row byte-for-byte, row counts, no duplicated setting keys) and it passes **7/7** — but it is marked `continue-on-error`, so it is evidence rather than a gate, and it runs against seeded rather than production data.
+- **P1-R** (`CREATE INDEX IF NOT EXISTS` is MariaDB-only) is unaddressed because CI runs MariaDB 10.11, so it is invisible today and would only bite on MySQL 8. Whether that is a real target is a decision for PCI, not an assumption to build on.
+- **P1-S** (a suspected pre-existing `certification_routes` err-1170 swallowed by a `catch`) remains unverified.
