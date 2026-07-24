@@ -365,22 +365,29 @@ public static class PartnerPortal
         void WipePartnerData(long partnerId, bool keepPartner)
         {
             db.Execute("DELETE FROM partner_sessions WHERE partner_user_id IN (SELECT id FROM partner_users WHERE partner_id=?)", partnerId);
-            // Seeded test redeemers (marketing scenario) go with the partner's codes — but only
-            // accounts flagged is_test are ever touched.
+            // Seeded test redeemers (marketing scenario). Identify them BEFORE the redemption rows that
+            // link them are removed, and only ever touch accounts this mechanism created: is_test=1 AND
+            // the seeded address pattern — a real student is never deleted because a partner was.
             var redeemers = db.Query(@"SELECT DISTINCT u.id FROM code_redemptions r
                 JOIN discount_codes dc ON dc.id=r.code_id
                 JOIN users u ON u.id=r.user_id
-                WHERE dc.partner_id=? AND u.is_test=1", partnerId);
+                WHERE dc.partner_id=? AND u.is_test=1 AND u.email LIKE 'test.redeemer.%@pci.test'", partnerId);
+            // Partner-owned rows first: redemptions reference the payments deleted below.
+            db.Execute("DELETE FROM code_redemptions WHERE code_id IN (SELECT id FROM discount_codes WHERE partner_id=?)", partnerId);
+            db.Execute("DELETE FROM discount_codes WHERE partner_id=?", partnerId);
             foreach (var r in redeemers)
             {
                 var uid = H.L(r["id"]);
-                foreach (var t in new[] { "payments", "exam_entitlements", "exam_bookings", "certuvo_accounts",
-                    "login_tokens", "notifications", "student_profiles", "candidate_consents" })
+                // FK-safe order (foreign_keys=ON, Db.cs): rows that reference payments go before payments,
+                // and everything referencing users goes before the user row itself.
+                foreach (var t in new[] { "exam_entitlements", "exam_bookings", "exam_attempts", "issued_credentials",
+                    "memberships", "fee_waivers", "payments", "enrollment_sessions", "certuvo_accounts",
+                    "login_tokens", "login_events", "notifications", "reviews", "student_profiles", "candidate_consents" })
                     try { db.Execute($"DELETE FROM {t} WHERE user_id=?", uid); } catch { }
-                db.Execute("DELETE FROM users WHERE id=? AND is_test=1", uid);
+                // A residual reference must degrade to "account left behind" (harmless: is_test rows are
+                // excluded from every report), never fail the whole partner cleanup.
+                try { db.Execute("DELETE FROM users WHERE id=? AND is_test=1", uid); } catch { }
             }
-            db.Execute("DELETE FROM code_redemptions WHERE code_id IN (SELECT id FROM discount_codes WHERE partner_id=?)", partnerId);
-            db.Execute("DELETE FROM discount_codes WHERE partner_id=?", partnerId);
             foreach (var t in new[] { "partner_sponsorships", "partner_payouts", "partner_notices" })
                 try { db.Execute($"DELETE FROM {t} WHERE partner_id=?", partnerId); } catch { }
             if (!keepPartner)
