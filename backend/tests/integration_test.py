@@ -4074,6 +4074,106 @@ def test_simlab(admin):
         c == 200 and mtu_start.get("attempt_id") and (mtu_start.get("task") or {}).get("task") == "evm", (c, bool(mtu_start.get("attempt_id"))))
     jget("POST", f"/api/admin/test-users/{mtu_id}/delete", token=admin)   # keep the harness clean
 
+    # ---- P1: linked MULTI-STEP scenarios (steps + decisions + deterministic downstream effects) ----
+    def _ms_answers(mtask, decisions):
+        """Correct per-step answers for a multi-step task under the given decisions — applies each chosen
+        option's effects to the downstream given (mirror of Core/SimStep.EffectiveGiven), then reuses the
+        single-task reference solver per step. Returns the { steps, decisions } submit body's answers."""
+        steps = mtask.get("steps") or []
+        def eff_given(step):
+            g = dict(step.get("given") or {})
+            for s in steps:
+                dec = s.get("decision")
+                if not dec:
+                    continue
+                chosen = decisions.get(dec.get("key"))
+                if not chosen:
+                    continue
+                opt = next((o for o in dec.get("options", []) if o.get("value") == chosen), None)
+                if not opt:
+                    continue
+                for e in opt.get("effects", []):
+                    if e.get("step") != step.get("id"):
+                        continue
+                    path, op, val = e.get("path"), e.get("op"), float(e.get("value") or 0)
+                    cur = float(g.get(path) or 0)
+                    g[path] = cur + val if op == "add" else cur * val if op == "mul" else val
+            return g
+        out = {}
+        for st in steps:
+            out[st.get("id")] = sim_lab_answers({"task": st.get("task"), "given": eff_given(st), "ask": st.get("ask")})
+        return {"steps": out, "decisions": decisions}
+
+    print("\n=== 43vv. Simulation Lab — linked multi-step scenario (P1) ===")
+    c, ms = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "MS-RECOVERY-001", "mode": "training"})
+    mtask = ms.get("task", {}); msid = ms.get("attempt_id")
+    chk("43vv the seeded multi-step scenario starts with steps[] and never leaks an answer key",
+        c == 200 and msid and mtask.get("multistep") is True and len(mtask.get("steps") or []) >= 4
+        and not any(k in _json.dumps(mtask).lower() for k in ("correct_value", "\"solution\"", "\"answer\"")), (c, list(mtask.keys())))
+    c, sub = jget("POST", f"/api/me/lab/attempts/{msid}/submit", token=mtok,
+                  body={"answers": _ms_answers(mtask, {"recovery": "crash", "funding": "request"})})
+    chk("43ww correct per-step answers under the chosen decisions grade to 100 and pass",
+        c == 200 and sub.get("score") == 100 and sub.get("passed") is True, (c, sub.get("score")))
+
+    # Determinism: the SAME computed answers submitted against a DIFFERENT recovery decision no longer match
+    # the (now different) downstream forecast — the learner's choice deterministically changes grading.
+    c, ms2 = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "MS-RECOVERY-001", "mode": "training"})
+    mtask2 = ms2.get("task", {}); msid2 = ms2.get("attempt_id")
+    mixed = _ms_answers(mtask2, {"recovery": "crash", "funding": "request"})
+    mixed["decisions"]["recovery"] = "descope"   # answers computed for crash, recorded decision descope
+    c, sub2 = jget("POST", f"/api/me/lab/attempts/{msid2}/submit", token=mtok, body={"answers": mixed})
+    chk("43xx a different decision deterministically changes the downstream grade (< 100)",
+        c == 200 and sub2.get("score") < 100, (c, sub2.get("score")))
+
+    # ---- admin author -> validate -> publish -> student-run journey for a MULTI-STEP scenario ----
+    ms_cfg = {"multistep": True, "prompt": "Author-journey linked scenario (synthetic).", "pass_pct": 70,
+              "competencies": ["earned_value", "decision_making"],
+              "steps": [
+                  {"id": "s1", "task": "evm", "prompt": "Compute CPI.", "given": {"pv": 100, "ev": 90, "ac": 95, "bac": 200},
+                   "ask": [{"key": "cpi", "label": "CPI", "type": "number"}],
+                   "decision": {"key": "d", "prompt": "Recover how?", "options": [
+                       {"value": "a", "label": "Crash (+20 AC downstream)", "effects": [{"step": "s2", "path": "ac", "op": "add", "value": 20}]},
+                       {"value": "b", "label": "No change", "effects": []}]}},
+                  {"id": "s2", "task": "evm", "prompt": "Compute EAC.", "given": {"pv": 100, "ev": 90, "ac": 100, "bac": 200},
+                   "ask": [{"key": "eac", "label": "EAC", "type": "number"}]}]}
+    c, cms = jget("POST", "/api/admin/lab/scenarios", token=admin, body={
+        "scenario_code": "IT-MS-001", "title": "Author multi-step", "difficulty": "intermediate",
+        "competencies": ["earned_value", "decision_making"], "certification_id": 1, "config_json": ms_cfg,
+        "synthetic_declared": True, "summary": "synthetic multi-step author test"})
+    ms_id = cms.get("id")
+    chk("43yy an admin authors a multi-step DRAFT", c == 200 and ms_id and cms.get("review_state") == "draft", (c, cms))
+    c, mval = jget("GET", f"/api/admin/lab/scenarios/{ms_id}/validate", token=admin)
+    chk("43yy2 the multi-step draft passes the publication validator (every step + branch reference-solves)",
+        c == 200 and mval.get("publishable") is True and mval.get("errors") == 0, (c, mval))
+    for stage in ("calc_review", "learning_review", "safety_review", "pilot"):
+        jget("POST", f"/api/admin/lab/scenarios/{ms_id}/review", token=admin, body={"to": stage})
+    jget("POST", f"/api/admin/lab/scenarios/{ms_id}/review", token=admin2, body={"to": "approved"})
+    c, mpub = jget("POST", f"/api/admin/lab/scenarios/{ms_id}/review", token=admin2, body={"to": "published"})
+    chk("43zz a second admin approves + publishes the multi-step scenario (maker-checker)",
+        c == 200 and mpub.get("review_state") == "published", (c, mpub))
+    c, msr = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "IT-MS-001", "mode": "training"})
+    rtask = msr.get("task", {}); rid = msr.get("attempt_id")
+    c, rsub = jget("POST", f"/api/me/lab/attempts/{rid}/submit", token=mtok, body={"answers": _ms_answers(rtask, {"d": "a"})})
+    chk("43zz2 a student runs the just-published multi-step scenario end-to-end to 100",
+        c == 200 and rsub.get("score") == 100, (c, rsub.get("score")))
+
+    # An ungradable multi-step (a step asking a measure the engine cannot resolve) is blocked at approval.
+    bad_cfg = {"multistep": True, "prompt": "bad", "pass_pct": 70, "competencies": ["earned_value"],
+               "steps": [{"id": "s1", "task": "evm", "prompt": "x", "given": {"pv": 1, "ev": 1, "ac": 1, "bac": 2},
+                          "ask": [{"key": "not_a_measure", "label": "nope", "type": "number"}]},
+                         {"id": "s2", "task": "evm", "prompt": "y", "given": {"pv": 1, "ev": 1, "ac": 1, "bac": 2},
+                          "ask": [{"key": "cpi", "label": "CPI", "type": "number"}]}]}
+    c, cbad = jget("POST", "/api/admin/lab/scenarios", token=admin, body={
+        "scenario_code": "IT-MS-BAD", "title": "Bad multi-step", "difficulty": "intermediate",
+        "competencies": ["earned_value"], "certification_id": 1, "config_json": bad_cfg,
+        "synthetic_declared": True, "summary": "synthetic"})
+    bad_id = cbad.get("id")
+    for stage in ("calc_review", "learning_review", "safety_review", "pilot"):
+        jget("POST", f"/api/admin/lab/scenarios/{bad_id}/review", token=admin, body={"to": stage})
+    c, ngb = jget("POST", f"/api/admin/lab/scenarios/{bad_id}/review", token=admin2, body={"to": "approved"})
+    chk("43zz3 an ungradable multi-step (unresolvable measure) is blocked at approval (not_publishable)",
+        c == 409 and ngb.get("error") == "not_publishable", (c, ngb.get("error")))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.
