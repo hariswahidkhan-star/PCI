@@ -317,6 +317,34 @@ public class WorldTests
         WorldLifecycle.Restore(db, Convert.ToInt64(target["id"]));
     }
 
+    // ───────────────────────── content reports ─────────────────────────
+
+    [Fact]
+    public void Content_reports_open_resolve_once_and_keep_the_audit_trail()
+    {
+        var db = NewWorldDb();
+        var ch = db.QueryOne("SELECT id FROM pciworld_challenges WHERE code='WC-EVM-001'")!;
+        var id = db.ExecuteReturningId(
+            "INSERT INTO pciworld_reports(challenge_id,category,message) VALUES(?, 'calculation', 'The tolerance note could state units.')",
+            ch["id"]);
+
+        Assert.Contains("calculation", Endpoints.World.WorldReportCategories);
+        Assert.Equal(5, Endpoints.World.WorldReportCategories.Length);
+
+        // First resolve wins; a second resolve finds nothing open (same guard the endpoint uses).
+        var reviewer = Admin(db, "rep-rev@t.local", "reviewer");
+        var n1 = db.Execute(@"UPDATE pciworld_reports SET status='resolved', resolution='Wording clarified in v2.',
+            resolved_by=?, resolved_at=datetime('now') WHERE id=? AND status='open'", reviewer, id);
+        var n2 = db.Execute(@"UPDATE pciworld_reports SET status='resolved', resolution='dup',
+            resolved_by=?, resolved_at=datetime('now') WHERE id=? AND status='open'", reviewer, id);
+        Assert.Equal(1, n1);
+        Assert.Equal(0, n2);
+        var row = db.QueryOne("SELECT * FROM pciworld_reports WHERE id=?", id)!;
+        Assert.Equal("resolved", Convert.ToString(row["status"]));
+        Assert.Equal("Wording clarified in v2.", Convert.ToString(row["resolution"]));
+        Assert.Equal(reviewer, Convert.ToInt64(row["resolved_by"]));
+    }
+
     // ───────────────────────── realm separation + RBAC + tokens ─────────────────────────
 
     [Fact]

@@ -339,6 +339,35 @@ public static class World
             return Results.Json(new { ok = true, url = "/world/r/" + token });
         });
 
+        // ---- content reports: anonymous-friendly, no PII required, rate-limited ----
+        app.MapPost("/api/world/report", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            if (Throttled("report|" + Ip(ctx), 10))
+                return Results.Json(new { error = "rate_limited" }, statusCode: 429);
+            var b = await H.Body(ctx.Request);
+            var category = (H.GetS(b, "category") ?? "").Trim();
+            if (!WorldReportCategories.Contains(category))
+                return Results.Json(new { error = "bad_category", message = $"Category must be one of: {string.Join(", ", WorldReportCategories)}." }, statusCode: 400);
+            var message = (H.GetS(b, "message") ?? "").Trim();
+            if (message.Length < 10 || message.Length > 2000)
+                return Results.Json(new { error = "bad_message", message = "Describe the issue in 10–2000 characters." }, statusCode: 400);
+            long? challengeId = null;
+            var code = (H.GetS(b, "code") ?? "").Trim();
+            if (code.Length > 0)
+            {
+                var ch = db.QueryOne("SELECT id FROM pciworld_challenges WHERE code=?", code);
+                if (ch is not null) challengeId = H.L(ch["id"]);
+            }
+            var sess = Session(ctx);
+            var id = db.ExecuteReturningId("INSERT INTO pciworld_reports(challenge_id,category,message,session_id) VALUES(?,?,?,?)",
+                challengeId, category, message, sess is null ? null : H.L(sess["id"]));
+            Track("content_reported", challengeId, sess is null ? null : H.L(sess["id"]));
+            log(null, "world_report", $"#{id} {category} {code}");
+            return Results.Json(new { ok = true, reference = $"WR-{id}",
+                message = "Thank you — the PCI World content team reviews every report." });
+        });
+
         app.MapPost("/api/world/attempts/{id:long}/invite", async (HttpContext ctx, long id) =>
         {
             if (!Enabled()) return Disabled();
@@ -359,6 +388,9 @@ public static class World
             return Results.Json(new { ok = true, url = "/world/i/" + token });
         });
     }
+
+    public static readonly string[] WorldReportCategories =
+        { "content_error", "calculation", "accessibility", "inappropriate", "other" };
 
     /// <summary>The post-submit payload — the ONLY place reference values and consequences are
     /// serialized, and only after grading (reveal policy: after_submit).</summary>

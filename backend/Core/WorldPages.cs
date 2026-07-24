@@ -233,6 +233,22 @@ public static class WorldPages
               </form>
               <section id="result" hidden aria-live="polite"></section>
             </div>
+            <details class="card">
+              <summary style="cursor:pointer;font-weight:600">Report an issue with this challenge</summary>
+              <p style="margin-top:10px;color:var(--muted)">Spotted a content error, a calculation problem or an accessibility barrier? The PCI World content team reviews every report. No personal details are required.</p>
+              <label for="rep_cat">What kind of issue?</label>
+              <select id="rep_cat" style="padding:9px 10px;border:1px solid var(--line);border-radius:8px">
+                <option value="content_error">Content error</option>
+                <option value="calculation">Calculation problem</option>
+                <option value="accessibility">Accessibility barrier</option>
+                <option value="inappropriate">Inappropriate content</option>
+                <option value="other">Something else</option>
+              </select>
+              <label for="rep_msg">Describe it</label>
+              <textarea id="rep_msg" rows="4" maxlength="2000" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit"></textarea>
+              <p style="margin-top:10px"><button class="btn secondary" type="button" id="rep_go">Send report</button>
+                 <span id="rep_out" role="status"></span></p>
+            </details>
             <script>const WORLD = {payload};</script>
             <script>{WorkspaceJs}</script>
             """,
@@ -403,6 +419,12 @@ public static class WorldPages
               btn.disabled = false;
               $('savestate').textContent = (e && e.message) || 'Submission failed — your work is saved, try again.';
             });
+        });
+        $('rep_go').addEventListener('click', function(){
+          $('rep_out').textContent = '';
+          api('/api/world/report', { code: WORLD.code, category: $('rep_cat').value, message: $('rep_msg').value })
+            .then(function(r){ $('rep_out').textContent = r.message + ' (ref ' + r.reference + ')'; $('rep_msg').value=''; })
+            .catch(function(e){ $('rep_out').textContent = (e && e.message) || 'Could not send the report — try again.'; });
         });
         renderBrief();
         })();
