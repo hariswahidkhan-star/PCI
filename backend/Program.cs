@@ -150,6 +150,30 @@ app.Use(async (ctx, next) =>
     await next();
 });
 
+// ── PCI World host mapping: a dedicated PCI World service or domain lands directly on the
+// product instead of the Institute site. PCIWORLD_STANDALONE=true maps this whole service
+// (the setup for a separate "pciworld" Render service); PCIWORLD_HOSTS / PCIWORLD_ADMIN_HOSTS
+// map by request host (pciworld.org / admin.pciworld.org) so one deployment can serve both
+// sites. Only "/" is redirected — every other route keeps working on every host. ──
+{
+    var worldStandalone = string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_STANDALONE"), "true", StringComparison.OrdinalIgnoreCase);
+    var worldHosts = (Environment.GetEnvironmentVariable("PCIWORLD_HOSTS") ?? "")
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
+    var worldAdminHosts = (Environment.GetEnvironmentVariable("PCIWORLD_ADMIN_HOSTS") ?? "")
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
+    if (worldStandalone || worldHosts.Count > 0 || worldAdminHosts.Count > 0)
+        app.Use(async (ctx, next) =>
+        {
+            if (ctx.Request.Path == "/")
+            {
+                var host = ctx.Request.Host.Host;
+                if (worldAdminHosts.Contains(host)) { ctx.Response.Redirect("/world-admin"); return; }
+                if (worldStandalone || worldHosts.Contains(host)) { ctx.Response.Redirect("/world"); return; }
+            }
+            await next();
+        });
+}
+
 app.Use(async (ctx, next) =>
 {
     var h = ctx.Response.Headers;
