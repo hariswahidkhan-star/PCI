@@ -339,30 +339,63 @@ public static class ListSections
         ("delivery", "Delivery & governance"), ("quality", "Quality & lessons"),
     };
 
+    // Certification tracks a template can be tagged to (NULL = applies to any track). Kept in id order.
+    static readonly (long id, string code)[] TemplateTracks = { (1, "PCL-AI"), (2, "PFL-AI"), (3, "PML-AI") };
+
     static string? Templates(Db db)
     {
-        var rows = db.Query("SELECT slug,title,category,summary,format FROM templates WHERE published=1 ORDER BY sort_order, id");
+        var rows = db.Query("SELECT slug,title,category,certification_id,summary,format FROM templates WHERE published=1 ORDER BY sort_order, id");
         if (rows.Count == 0) return null;
         var sb = new StringBuilder();
         // Known categories first (in a sensible controls order), then any others the operator added.
         var known = new HashSet<string>(TemplateCategories.Select(c => c.key), StringComparer.Ordinal);
         var extras = rows.Select(r => H.Str(r["category"]) ?? "general").Where(c => !known.Contains(c)).Distinct();
-        foreach (var (key, label) in TemplateCategories.Concat(extras.Select(e => (e, Title(e)))))
+        var ordered = TemplateCategories.Concat(extras.Select(e => (e, Title(e)))).ToList();
+
+        // Only render a chip for a topic/track that actually has published templates.
+        var presentCats = new HashSet<string>(rows.Select(r => H.Str(r["category"]) ?? "general"), StringComparer.Ordinal);
+        var presentTracks = rows.Where(r => r["certification_id"] is not null).Select(r => H.L(r["certification_id"])).ToHashSet();
+
+        // ---- filter bar (progressive enhancement: without JS every template stays visible) ----
+        sb.Append("<div class=\"tpl-filter\" data-tpl-filter>");
+        sb.Append("<div class=\"tpl-chips\" data-axis=\"cat\"><span class=\"tpl-lbl\">Topic</span>")
+          .Append("<button type=\"button\" class=\"tpl-chip on\" data-cat=\"all\">All</button>");
+        foreach (var (key, label) in ordered)
+            if (presentCats.Contains(key))
+                sb.Append("<button type=\"button\" class=\"tpl-chip\" data-cat=\"").Append(EscAttr(key)).Append("\">").Append(Esc(label)).Append("</button>");
+        sb.Append("</div>");
+        if (presentTracks.Count > 0)
+        {
+            sb.Append("<div class=\"tpl-chips\" data-axis=\"cert\"><span class=\"tpl-lbl\">Track</span>")
+              .Append("<button type=\"button\" class=\"tpl-chip on\" data-cert=\"all\">All</button>");
+            foreach (var (id, code) in TemplateTracks)
+                if (presentTracks.Contains(id))
+                    sb.Append("<button type=\"button\" class=\"tpl-chip\" data-cert=\"").Append(id).Append("\">").Append(Esc(code)).Append("</button>");
+            sb.Append("</div>");
+        }
+        sb.Append("</div>");
+
+        // ---- grouped list; data-cat on each group, data-cert on each item (empty = any track) ----
+        foreach (var (key, label) in ordered)
         {
             var inCat = rows.Where(r => (H.Str(r["category"]) ?? "general") == key).ToList();
             if (inCat.Count == 0) continue;
-            sb.Append("<div class=\"dlg\"><h3>").Append(Esc(label)).Append("</h3><ul>");
+            sb.Append("<div class=\"dlg\" data-cat=\"").Append(EscAttr(key)).Append("\"><h3>").Append(Esc(label)).Append("</h3><ul>");
             foreach (var r in inCat)
             {
                 var slug = H.Str(r["slug"]) ?? "";
                 var fmt = (H.Str(r["format"]) ?? "csv").ToUpperInvariant();
-                sb.Append("<li><a href=\"/api/public/templates/").Append(EscAttr(slug)).Append("/file\" rel=\"nofollow\">")
+                var cert = r["certification_id"] is null ? "" : H.L(r["certification_id"]).ToString();
+                sb.Append("<li data-cert=\"").Append(cert).Append("\"><a href=\"/api/public/templates/").Append(EscAttr(slug)).Append("/file\" rel=\"nofollow\">")
                   .Append(Esc(H.Str(r["title"]) ?? "")).Append(" <span class=\"tag\">").Append(Esc(fmt)).Append("</span></a>");
                 if (H.Str(r["summary"]) is { Length: > 0 } d) sb.Append("<span>").Append(Esc(d)).Append("</span>");
                 sb.Append("</li>");
             }
             sb.Append("</ul></div>");
         }
+        // Revealed by JS only when a filter combination empties the list.
+        sb.Append("<p class=\"tpl-none\" data-tpl-none hidden>No templates match that filter. ")
+          .Append("<button type=\"button\" class=\"tpl-reset\" data-tpl-reset>Show all</button></p>");
         return sb.ToString();
     }
 
