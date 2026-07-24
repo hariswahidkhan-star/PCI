@@ -85,6 +85,12 @@ public static class Templates
         // ---- admin: list every template (incl. drafts), with body + counts (gated 'content') ----
         app.MapGet("/api/admin/templates", (HttpRequest req) => gate(req, SECTION, _ =>
         {
+            // §6F — distinct-student reach per template (from the §6D history table), so the admin table can show
+            // "students" alongside raw downloads and an operator can export the full usage report.
+            var byTemplate = new Dictionary<long, long>();
+            foreach (var r in db.Query("SELECT template_id, COUNT(DISTINCT user_id) AS u FROM template_user_downloads GROUP BY template_id"))
+                byTemplate[H.L(r["template_id"])] = H.L(r["u"]);
+
             var rows = new List<object>();
             var published = 0;
             foreach (var t in db.Query("SELECT * FROM templates ORDER BY sort_order ASC, id ASC"))
@@ -103,6 +109,7 @@ public static class Templates
                     published = H.L(t["published"]) == 1,
                     sort_order = H.L(t["sort_order"]),
                     download_count = H.L(t["download_count"]),
+                    downloaders = byTemplate.TryGetValue(H.L(t["id"]), out var du) ? du : 0,
                     updated_at = H.Str(t["updated_at"]),
                 });
             }

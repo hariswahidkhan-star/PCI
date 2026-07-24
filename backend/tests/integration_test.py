@@ -6097,6 +6097,16 @@ def test_free_templates(admin):
         and evm2.get("downloaders", 0) >= 1 and evm2["downloaders"] < evm2["download_count"],
         (a2.get("unique_downloaders"), evm2))
 
+    # §6F — the admin templates list carries the same per-template distinct-downloader reach (drives the
+    # "Students" column and the full CSV export). evm-tracker was taken twice by one student, so its distinct
+    # downloader count is at least 1 and never exceeds its raw download count.
+    c, lst = jget("GET", "/api/admin/templates", token=admin)
+    levm = next((r for r in (lst.get("rows", []) if isinstance(lst, dict) else []) if r.get("slug") == "evm-tracker"), None)
+    chk("61w the admin templates list reports per-template distinct-student reach",
+        c == 200 and bool(levm) and "downloaders" in levm
+        and levm["downloaders"] >= 1 and levm["downloaders"] <= levm["download_count"],
+        (c, levm and {k: levm.get(k) for k in ("slug", "download_count", "downloaders")}))
+
 
 def test_public_documents(admin):
     # Incremental Testing Programme §57 — Public Downloads Centre (Endpoints/PublicDocuments.cs, 12 routes,
