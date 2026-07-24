@@ -14,12 +14,15 @@ namespace PCI.Backend.Tests;
 /// </summary>
 public class SimLabContentSeedTests
 {
-    // House starter catalogue seeded by SimLabSchema — pack codes must never collide with these.
+    // House starter catalogue seeded in-code by SimLabSchema and SimLabContentPack — pack codes must never
+    // collide with these. House content owns the -001/-002/-900 numbering; this library owns -101 upward.
     static readonly string[] HouseCodes =
     {
         "GL-WBS-001", "GL-EVM-001", "SD-EVM-001", "GL-SCH-001", "SD-FCT-001", "GL-CBS-001", "SC-EVM-001",
         "GL-PRG-001", "SD-RSK-001", "GL-PRT-001", "SC-MC-001", "GL-CHG-001", "GL-CASH-001", "SC-EVT-001",
-        "SD-ESC-001",
+        "SD-ESC-001", "GL-BOQ-001", "GL-DQ-001", "GL-PORT-001", "GL-PROC-001", "GL-PROD-001", "GL-RES-001",
+        "SD-DEC-001", "SC-CASH-002", "SC-CBS-002", "SC-PORT-002", "SC-PRG-002", "SC-RSK-002",
+        "CP-EVM-900", "CP-INT-900", "CP-SCH-900", "MS-RECOVERY-001",
     };
 
     static readonly string[] Kinds = { "guided_lab", "skill_drill", "scenario", "capstone", "team" };
@@ -84,6 +87,33 @@ public class SimLabContentSeedTests
             Assert.True(SimContent.Publishable(issues),
                 $"{r.Code} is not publishable: {string.Join("; ", errors.Select(i => $"{i.Code}: {i.Message}"))}");
         }
+    }
+
+    /// <summary>
+    /// Curriculum breadth. The first library shipped 48 foundation + 48 intermediate scenarios and nothing
+    /// harder — a generation bug that silently capped the practice ceiling well below the certifications the
+    /// Lab feeds. Pin both axes so that regression cannot recur unnoticed: every difficulty band is stocked,
+    /// and the pack spans a broad range of engine task types rather than clustering on the easy ones.
+    /// Deliberately NOT asserted against SimCalc.KnownTasks in full — a newly added engine should not fail
+    /// this suite before its content is authored; it should show up as a thin band here instead.
+    /// </summary>
+    [Fact]
+    public void Pack_stocks_every_difficulty_band_and_spans_the_engine_task_range()
+    {
+        var rows = Load();
+        foreach (var band in new[] { "foundation", "intermediate", "advanced", "expert" })
+            Assert.True(rows.Count(r => r.Difficulty == band) >= 5,
+                $"difficulty band '{band}' has only {rows.Count(r => r.Difficulty == band)} scenarios — the library must stock every band");
+
+        var tasks = new SortedSet<string>(StringComparer.Ordinal);
+        foreach (var r in rows)
+        {
+            if (string.IsNullOrWhiteSpace(r.ConfigJson)) continue;
+            using var doc = JsonDocument.Parse(r.ConfigJson);
+            if (doc.RootElement.TryGetProperty("task", out var t) && t.GetString() is { Length: > 0 } name)
+                tasks.Add(name);
+        }
+        Assert.True(tasks.Count >= 15, $"pack covers only {tasks.Count} engine task types: {string.Join(", ", tasks)}");
     }
 
     [Fact]

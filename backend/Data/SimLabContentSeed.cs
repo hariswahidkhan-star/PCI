@@ -19,7 +19,11 @@ public static class SimLabContentSeed
 {
     // v2: every scenario carries a certification_id (1/2/3) — 24 rows shipped without one in v1, so v2
     // re-applies to backfill them on installs that already loaded the library.
-    const int Version = 2;
+    // v3: expansion pack — the seven engine tasks added after v1 (productivity, BoQ, resource, procurement,
+    // portfolio, decision, data quality) plus the advanced/expert difficulty bands the first pass never
+    // generated. Re-applies so installs already holding v2 pick up the new scenarios (existing rows are
+    // untouched: inserts are guarded by scenario_code and the governance backfill only fills NULLs).
+    const int Version = 3;
 
     public static void Apply(Db db)
     {
