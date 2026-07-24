@@ -54,6 +54,7 @@ try { PCI.Backend.Data.CommsSeed.Ensure(db); } catch (Exception e) { Console.Err
 try { PCI.Backend.Data.MarketingSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[marketing schema] {e.Message}"); }
 try { PCI.Backend.Data.SimLabSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[simlab schema] {e.Message}"); }
 try { PCI.Backend.Data.TemplatesSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[templates schema] {e.Message}"); }
+try { PCI.Backend.Data.WorldSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[pciworld schema] {e.Message}"); }
 builder.Services.AddSingleton(db);
 // Scheduled retention: purge stored artefacts past evidence_retention_days, daily (manual endpoint stays).
 builder.Services.AddHostedService<PCI.Backend.Core.RetentionService>();
@@ -1090,6 +1091,8 @@ PCI.Backend.Endpoints.TrainingPartners.Map(app, db, logFn, GateFn);   // Trainin
 PCI.Backend.Endpoints.Partners.Map(app, db, logFn, GateFn);           // Partner dashboards: portal token, sponsorship, commissions
 PCI.Backend.Endpoints.Certuvo.Map(app, db, logFn);                    // Certuvo study & practice engine (Phase 8)
 PCI.Backend.Endpoints.SimLab.Map(app, db, logFn);                     // AI Project Controls Simulation Lab (applied practice)
+PCI.Backend.Endpoints.World.Map(app, db, logFn);                      // PCI World — public challenge platform (separate product)
+PCI.Backend.Endpoints.WorldAdmin.Map(app, db, logFn);                 // PCI World — SEPARATE admin realm (never linked from PCI admin)
 PCI.Backend.Endpoints.AdminI18n.Map(app, db, logFn);
 PCI.Backend.Endpoints.Social.Map(app, db, logFn, GateFn);              // footer social-media links (admin-controlled)
 PCI.Backend.Endpoints.Notifications.Map(app, db, logFn, GateFn);       // owner alert recipients + per-event toggles
