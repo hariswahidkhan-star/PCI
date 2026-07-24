@@ -95,6 +95,63 @@ test.describe('Simulation Lab student journey', () => {
       .toBeVisible({ timeout: 20_000 })
     await captureStoryEvidence(page, testInfo, 'simlab-student', 'runner')
   })
+
+  test('runs the linked multi-step recovery scenario end-to-end', async ({ page, request }, testInfo) => {
+    await preparePublicJourney(page)
+    const login = await request.post('/api/login', { data: DEMO_STUDENT })
+    const { token } = (await login.json()) as { token: string }
+    const auth = { Authorization: `Bearer ${token}` }
+    await apiLoginAsDemoStudent(request, page)
+
+    const start = await request.post('/api/me/lab/attempts', {
+      headers: auth, data: { scenario_code: 'MS-RECOVERY-001', mode: 'training' },
+    })
+    if (start.status() === 403) {
+      testInfo.annotations.push({ type: 'note', description: 'Demo student lacks Lab entitlement; multi-step member path covered by integration_test.' })
+      test.skip()
+      return
+    }
+    expect(start.ok(), `start ${start.status()} ${await start.text()}`).toBeTruthy()
+    const started = await start.json() as {
+      attempt_id: number
+      task: { multistep?: boolean; steps?: { id: string; task: string; given: Record<string, number>; ask: { key: string }[]; decision?: { key: string; options: { value: string; effects: { step: string; path: string; op: string; value: number }[] }[] } | null }[] }
+    }
+    expect(started.task.multistep, 'served task is multi-step').toBeTruthy()
+    expect((started.task.steps ?? []).length).toBeGreaterThanOrEqual(4)
+
+    // Correct per-step answers under chosen decisions — mirror of Core/SimStep.EffectiveGiven + EVM solver.
+    const decisions: Record<string, string> = { recovery: 'crash', funding: 'request' }
+    const steps = started.task.steps!
+    const effGiven = (id: string, base: Record<string, number>) => {
+      const g = { ...base }
+      for (const s of steps) {
+        const chosen = s.decision ? decisions[s.decision.key] : undefined
+        const opt = s.decision?.options.find((o) => o.value === chosen)
+        for (const e of opt?.effects ?? []) if (e.step === id) g[e.path] = e.op === 'add' ? (g[e.path] ?? 0) + e.value : e.op === 'mul' ? (g[e.path] ?? 0) * e.value : e.value
+      }
+      return g
+    }
+    const evm = (g: Record<string, number>): Record<string, number> => {
+      const { pv, ev, ac, bac } = g
+      const cpi = ac === 0 ? 0 : ev / ac, spi = pv === 0 ? 0 : ev / pv, eac = cpi === 0 ? 0 : bac / cpi
+      return { sv: ev - pv, cv: ev - ac, spi, cpi, eac, vac: bac - eac, tcpi: (bac - ac) === 0 ? 0 : (bac - ev) / (bac - ac), percent_complete: bac === 0 ? 0 : ev / bac }
+    }
+    const stepAns: Record<string, Record<string, number>> = {}
+    for (const s of steps) {
+      const solved = evm(effGiven(s.id, s.given))
+      stepAns[s.id] = Object.fromEntries(s.ask.map((a) => [a.key, solved[a.key]]))
+    }
+    const submit = await request.post(`/api/me/lab/attempts/${started.attempt_id}/submit`, {
+      headers: auth, data: { answers: { steps: stepAns, decisions } },
+    })
+    expect(submit.ok(), `submit ${submit.status()} ${await submit.text()}`).toBeTruthy()
+    const grade = await submit.json() as { score: number }
+    expect(grade.score).toBe(100)
+
+    await page.goto('/lab/MS-RECOVERY-001')
+    await expect(page.getByText(/recover|baseline|decision|forecast/i).first()).toBeVisible({ timeout: 20_000 })
+    await captureStoryEvidence(page, testInfo, 'simlab-student', 'multistep-runner')
+  })
 })
 
 test.describe('Simulation Lab admin studio', () => {
@@ -140,6 +197,32 @@ test.describe('Simulation Lab admin studio', () => {
       },
     })
     expect(create.ok(), await create.text()).toBeTruthy()
+
+    // A multi-step draft authored through the studio must also pass the publication validator (every step
+    // and every decision branch reference-solves).
+    const msCode = `E2E-MS-${Date.now()}`
+    const createMs = await request.post('/api/admin/lab/scenarios', {
+      headers: { Authorization: `Bearer ${token}` },
+      data: {
+        scenario_code: msCode, title: 'E2E multi-step draft', kind: 'scenario', industry: 'Infrastructure',
+        difficulty: 'intermediate', synthetic_declared: true, competencies: ['earned_value', 'decision_making'],
+        config_json: {
+          multistep: true, prompt: 'E2E linked scenario', pass_pct: 70, competencies: ['earned_value', 'decision_making'],
+          steps: [
+            { id: 's1', task: 'evm', prompt: 'CPI', given: { pv: 100, ev: 90, ac: 95, bac: 200 }, ask: [{ key: 'cpi', label: 'CPI', type: 'number' }],
+              decision: { key: 'd', prompt: 'Recover?', options: [
+                { value: 'a', label: 'Crash (+20 AC downstream)', effects: [{ step: 's2', path: 'ac', op: 'add', value: 20 }] },
+                { value: 'b', label: 'No change', effects: [] }] } },
+            { id: 's2', task: 'evm', prompt: 'EAC', given: { pv: 100, ev: 90, ac: 100, bac: 200 }, ask: [{ key: 'eac', label: 'EAC', type: 'number' }] },
+          ],
+        },
+      },
+    })
+    expect(createMs.ok(), await createMs.text()).toBeTruthy()
+    const msId = ((await createMs.json()) as { id: number }).id
+    const validateMs = await request.get(`/api/admin/lab/scenarios/${msId}/validate`, { headers: { Authorization: `Bearer ${token}` } })
+    expect(validateMs.ok()).toBeTruthy()
+    expect(((await validateMs.json()) as { publishable: boolean }).publishable, 'multi-step draft is publishable').toBeTruthy()
 
     await page.goto('/admin/lab')
     await expect(page.getByRole('heading', { name: /simulation lab/i }).first()).toBeVisible({ timeout: 20_000 })
