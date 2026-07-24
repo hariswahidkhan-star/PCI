@@ -5866,30 +5866,34 @@ def test_comms_centre(admin):
     con.commit(); con.close()
 
 def test_free_templates(admin):
-    # Free Templates Library (§6A–6C, Endpoints/Templates.cs): the anonymous catalogue + CSV download vs the
-    # 'content'-gated admin CRUD. Proves the serving invariant (only PUBLISHED templates are ever distributed),
-    # byte-exact CSV integrity, slug normalisation + duplicate refusal, and the server-rendered public page.
-    print("\n=== 61. Free Templates Library: public catalogue, CSV download, admin CRUD ===")
+    # Templates Library (§6A–6C, Endpoints/Templates.cs): the MEMBERS-ONLY student catalogue + authenticated CSV
+    # download vs the 'content'-gated admin CRUD. Templates are not on the public site — every student surface
+    # requires a portal session. Proves login gating, the serving invariant (only PUBLISHED templates are ever
+    # distributed), byte-exact CSV integrity, slug normalisation + duplicate refusal, and the download analytics.
+    print("\n=== 61. Templates Library: student catalogue, authenticated CSV download, admin CRUD ===")
 
-    c, cat = jget("GET", "/api/public/templates")
+    stok, _suid = register_student("templates61@ex.co")
+
+    # Login gating: both student surfaces are 401 to an anonymous caller (the library is not public).
+    chk("61a0 the student catalogue and file download require a login (401 when anonymous)",
+        jget("GET", "/api/me/templates")[0] == 401 and _raw_get("/api/me/templates/wbs-template/file")[0] == 401)
+
+    c, cat = jget("GET", "/api/me/templates", token=stok)
     rows = cat.get("rows", []) if isinstance(cat, dict) else []
     wbs = next((r for r in rows if r.get("slug") == "wbs-template"), None)
     blob = json.dumps(cat)
-    chk("61a the public catalogue serves the seeded published templates and never leaks the body in the list",
+    chk("61a the student catalogue serves the seeded published templates and never leaks the body in the list",
         c == 200 and cat.get("total", 0) >= 12 and bool(wbs)
-        and wbs.get("download_url") == "/api/public/templates/wbs-template/file" and '"body"' not in blob,
+        and wbs.get("download_url") == "/api/me/templates/wbs-template/file" and '"body"' not in blob,
         (c, cat.get("total"), bool(wbs)))
 
-    st, body, ctype = _raw_get("/api/public/templates/wbs-template/file")
+    st, body, ctype = _raw_get("/api/me/templates/wbs-template/file", token=stok)
     text = body.decode("utf-8", "replace") if body else ""
     chk("61b the CSV download streams the template body with a text/csv content-type",
         st == 200 and "text/csv" in (ctype or "") and text.startswith("WBS ID,Parent ID"), (st, ctype, text[:24]))
 
-    c, one = jget("GET", "/api/public/templates/evm-tracker")
-    chk("61c the public single endpoint returns the body for preview",
-        c == 200 and one.get("slug") == "evm-tracker" and "PV (Planned Value)" in (one.get("body") or ""), (c, one.get("slug")))
-    c, _ = jget("GET", "/api/public/templates/does-not-exist")
-    chk("61d an unknown template slug returns 404", c == 404, c)
+    st, _b, _ct = _raw_get("/api/me/templates/does-not-exist/file", token=stok)
+    chk("61d an unknown template slug returns 404", st == 404, st)
 
     chk("61e the admin templates module refuses without a token (401 on list and create)",
         jget("GET", "/api/admin/templates")[0] == 401
@@ -5905,37 +5909,22 @@ def test_free_templates(admin):
     tid = mk.get("id"); tslug = mk.get("slug")
     chk("61f an admin creates a template and the slug is normalised to a url-safe form",
         c == 200 and tid and tslug == "it-test-template-58", (c, mk))
-    c, _ = jget("GET", f"/api/public/templates/{tslug}")
-    chk("61g a DRAFT template is not served publicly (404)", c == 404, c)
-    st, _b, _ct = _raw_get(f"/api/public/templates/{tslug}/file")
-    chk("61h a DRAFT template file is not downloadable publicly (404)", st == 404, st)
+    # A DRAFT is invisible to students — absent from the catalogue and not downloadable.
+    _c, cat2 = jget("GET", "/api/me/templates", token=stok)
+    in_list = any(r.get("slug") == tslug for r in (cat2.get("rows", []) if isinstance(cat2, dict) else []))
+    st, _b, _ct = _raw_get(f"/api/me/templates/{tslug}/file", token=stok)
+    chk("61g a DRAFT template is invisible to students (absent from catalogue, file 404)", (not in_list) and st == 404, (in_list, st))
 
     c, dup = jget("POST", "/api/admin/templates", token=admin, body={"slug": tslug, "title": "dup", "body": "x,y\n"})
     chk("61i a duplicate slug is refused (409)", c == 409 and dup.get("error") == "duplicate_slug", (c, dup))
 
     c, _ = jget("PATCH", f"/api/admin/templates/{tid}", token=admin, body={"published": True})
-    c2, _ = jget("GET", f"/api/public/templates/{tslug}")
-    st, _b, _ct = _raw_get(f"/api/public/templates/{tslug}/file")
-    chk("61j publishing a draft makes it public and downloadable", c == 200 and c2 == 200 and st == 200, (c, c2, st))
+    st, _b, _ct = _raw_get(f"/api/me/templates/{tslug}/file", token=stok)
+    chk("61j publishing a draft makes it downloadable to students", c == 200 and st == 200, (c, st))
 
     c, _ = jget("DELETE", f"/api/admin/templates/{tid}", token=admin)
-    c2, _ = jget("GET", f"/api/public/templates/{tslug}")
-    chk("61k deleting a template removes it from the public library", c == 200 and c2 == 404, (c, c2))
-
-    st, page, _ct = _raw_get("/free-templates.html")
-    html = page.decode("utf-8", "replace") if page else ""
-    chk("61l the free-templates.html page server-renders the templates section (a real download link is present)",
-        st == 200 and "/api/public/templates/wbs-template/file" in html, (st, "/api/public/templates/wbs-template/file" in html))
-
-    # §6B — the public catalogue renders a topic + track filter bar (progressive enhancement) with chips for
-    # only the tracks/topics that actually have published templates.
-    chk("61m the page renders the filter bar with both a topic and a track axis",
-        'data-tpl-filter' in html and 'data-axis="cat"' in html and 'data-axis="cert"' in html
-        and 'data-cat="scope"' in html and 'data-cert="1"' in html and 'data-cert="3"' in html,
-        ('data-tpl-filter' in html, 'data-axis="cert"' in html, 'data-cat="scope"' in html))
-    # Each group is tagged with its topic and each item with its track, so client-side filtering can target them.
-    chk("61n the WBS group carries its topic and the WBS item carries its PCL-AI track",
-        'class="dlg" data-cat="scope"' in html and '<li data-cert="1">' in html, html.count('data-cat='))
+    st, _b, _ct = _raw_get(f"/api/me/templates/{tslug}/file", token=stok)
+    chk("61k deleting a template removes it from the student library (file 404)", c == 200 and st == 404, (c, st))
 
     # §6C — per-template download analytics (admin, gated 'content'). A daily aggregate drives a dense 30-day
     # trend + a top list; the grand total is the canonical per-template counter.
@@ -5953,13 +5942,13 @@ def test_free_templates(admin):
         and series0[-1].get("day") and isinstance(a0.get("top"), list) and a0["total_downloads"] >= a0["window_downloads"],
         (c, len(series0), a0.get("window_days")))
 
-    # Two more public downloads of a known published template must move both the grand total and today's bucket.
+    # Two more authenticated student downloads must move both the grand total and today's bucket.
     for _ in range(2):
-        _raw_get("/api/public/templates/evm-tracker/file")
+        _raw_get("/api/me/templates/evm-tracker/file", token=stok)
     c, a1 = jget("GET", "/api/admin/templates/analytics", token=admin)
     today1 = a1["series"][-1]["count"]
     today0 = series0[-1]["count"]
-    chk("61q a public download increments the daily aggregate, the 30-day window and the grand total",
+    chk("61q a student download increments the daily aggregate, the 30-day window and the grand total",
         c == 200 and a1["window_downloads"] == win0 + 2 and a1["total_downloads"] == tot0 + 2 and today1 == today0 + 2,
         (a1.get("window_downloads"), win0, a1.get("total_downloads"), tot0, today1, today0))
     evm = next((t for t in a1["top"] if t.get("slug") == "evm-tracker"), None)
