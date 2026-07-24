@@ -31,6 +31,7 @@ export default function Templates() {
   const [cat, setCat] = useState<string>('all')
   const [track, setTrack] = useState<number | 'all'>('all')
   const [show, setShow] = useState<'all' | 'new'>('all')
+  const [q, setQ] = useState('')
   // Slugs downloaded this session — merged with the server's `downloaded` flag so a freshly grabbed template
   // shows its badge immediately, without a refetch.
   const [got, setGot] = useState<Set<string>>(new Set())
@@ -47,11 +48,14 @@ export default function Templates() {
   const tracks = [...new Set(rows.map((r) => r.certification_id).filter((x): x is number => x != null))].sort()
   const anyDownloaded = rows.some((r) => isDownloaded(r))
 
+  // A free-text search over the title, summary and slug — trimmed and case-insensitive.
+  const needle = q.trim().toLowerCase()
   // A NULL-track template applies to every track, so it stays visible under any track filter.
   const visible = rows.filter(
     (r) => (cat === 'all' || (r.category || 'general') === cat)
       && (track === 'all' || r.certification_id == null || r.certification_id === track)
-      && (show === 'all' || !isDownloaded(r)),
+      && (show === 'all' || !isDownloaded(r))
+      && (needle === '' || `${r.title} ${r.summary ?? ''} ${r.slug}`.toLowerCase().includes(needle)),
   )
   const groups = new Map<string, Row[]>()
   for (const r of visible) {
@@ -95,6 +99,14 @@ export default function Templates() {
         <Card><Empty>No templates are available yet — check back soon.</Empty></Card>
       ) : (
         <>
+          <input
+            type="search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search templates…"
+            aria-label="Search templates"
+            style={{ maxWidth: 360 }}
+          />
           <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
             <span className="small muted" style={{ fontWeight: 700 }}>Topic</span>
             <button className={'btn sm' + (cat === 'all' ? '' : ' secondary')} onClick={() => setCat('all')}>All</button>

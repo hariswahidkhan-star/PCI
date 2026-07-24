@@ -49,6 +49,24 @@ describe('Templates (student portal)', () => {
     expect(screen.getByRole('button', { name: 'Scope & WBS' })).toBeInTheDocument()
   })
 
+  it('filters the list by the search box (title/summary match)', () => {
+    h.resp = {
+      rows: [row(), row({ slug: 'cashflow-forecast', title: 'Cash-flow forecast', category: 'cashflow', certification_id: 2 })],
+      total: 2, categories: ['scope', 'cashflow'],
+    }
+    renderWithProviders(<Templates />)
+    // Both visible before searching.
+    expect(screen.getByText('Work Breakdown Structure (WBS) template')).toBeInTheDocument()
+    expect(screen.getByText('Cash-flow forecast')).toBeInTheDocument()
+    // Searching for "cash" leaves only the cash-flow template.
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Search templates' }), { target: { value: 'cash' } })
+    expect(screen.queryByText('Work Breakdown Structure (WBS) template')).not.toBeInTheDocument()
+    expect(screen.getByText('Cash-flow forecast')).toBeInTheDocument()
+    // A term that matches nothing shows the empty-filter message.
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Search templates' }), { target: { value: 'zzzzz' } })
+    expect(screen.getByText('No templates match that filter.')).toBeInTheDocument()
+  })
+
   it('badges a template the student already downloaded and offers a New-only filter', () => {
     h.resp = {
       rows: [
