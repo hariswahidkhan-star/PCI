@@ -12,7 +12,17 @@ import Histogram, { type Mc } from '../components/Histogram'
 // checked entirely on the server; in Assessment Mode the graded feedback deliberately withholds them.
 
 interface Ask { key: string; label: string; type: string }
-interface Task { task: string; prompt: string; given: Record<string, unknown>; ask: Ask[]; mode: string; assessment: boolean; montecarlo?: Mc | null }
+// Multi-step (P1): a scenario can be a linked sequence of steps; a step may carry a decision whose chosen
+// option applies deterministic effects to a LATER step's given. Effects are visible scenario mechanics
+// (the consequence of a choice), never the answer key — every answer is still graded server-side.
+interface StepEffect { step: string; path: string; op: string; value: number }
+interface StepOption { value: string; label: string; effects: StepEffect[] }
+interface StepDecision { key: string; prompt: string; options: StepOption[] }
+interface StepDef { id: string; title: string; task: string; prompt: string; given: Record<string, unknown>; ask: Ask[]; decision?: StepDecision | null }
+interface Task {
+  task?: string; prompt: string; given?: Record<string, unknown>; ask?: Ask[]; mode: string; assessment: boolean; montecarlo?: Mc | null
+  multistep?: boolean; steps?: StepDef[]
+}
 interface ScenarioMeta { id: number; scenario_code: string; title: string; kind: string; difficulty?: string; summary?: string }
 interface StartResp {
   attempt_id: number
@@ -65,8 +75,27 @@ function mapError(e: unknown): string {
 }
 
 // ── Given-data renderers (one per engine) ─────────────────────────────────────────────────────────
+// Apply the effects of the learner's recorded decisions to a step's given — the client-side mirror of the
+// server's SimStep.EffectiveGiven, so the learner sees the numbers their choice produces before computing.
+function effectiveGiven(step: StepDef, steps: StepDef[], decisions: Record<string, string>): Record<string, unknown> {
+  const g: Record<string, unknown> = { ...step.given }
+  for (const s of steps) {
+    if (!s.decision) continue
+    const chosen = decisions[s.decision.key]
+    if (!chosen) continue
+    const opt = s.decision.options.find((o) => o.value === chosen)
+    if (!opt) continue
+    for (const e of opt.effects) {
+      if (e.step !== step.id) continue
+      const cur = typeof g[e.path] === 'number' ? (g[e.path] as number) : Number(g[e.path]) || 0
+      g[e.path] = e.op === 'add' ? cur + e.value : e.op === 'mul' ? cur * e.value : e.value
+    }
+  }
+  return g
+}
+
 function GivenView({ task }: { task: Task }) {
-  const g = task.given
+  const g = task.given ?? {}
   if (task.task === 'evm') {
     const labels: Record<string, string> = { pv: 'Planned Value (PV)', ev: 'Earned Value (EV)', ac: 'Actual Cost (AC)', bac: 'Budget at Completion (BAC)' }
     return (
@@ -364,6 +393,8 @@ export default function LabRunner() {
   const [mode, setMode] = useState<Mode>('training')
   const [start, setStart] = useState<StartResp | null>(null)
   const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [stepAnswers, setStepAnswers] = useState<Record<string, Record<string, string>>>({})   // multi-step: per-step measures
+  const [decisions, setDecisions] = useState<Record<string, string>>({})                        // multi-step: chosen options
   const [grade, setGrade] = useState<Grade | null>(null)
   const [coach, setCoach] = useState<{ ok: boolean; message: string; ai: boolean; coach_mode?: string; hint_level?: number } | null>(null)
   const [coaching, setCoaching] = useState(false)
@@ -378,20 +409,37 @@ export default function LabRunner() {
   const skipAutosave = useRef(true)
   const answersRef = useRef(answers)
   answersRef.current = answers
+  const stepAnswersRef = useRef(stepAnswers)
+  stepAnswersRef.current = stepAnswers
+  const decisionsRef = useRef(decisions)
+  decisionsRef.current = decisions
 
   const begin = useCallback(async (m: Mode) => {
     // Drop the previous attempt immediately so debounced autosave cannot write empty answers
     // into the old (or new) attempt while the start request is in flight.
     skipAutosave.current = true
-    setLoading(true); setError(null); setGrade(null); setStart(null); setAnswers({}); setCoach(null)
+    setLoading(true); setError(null); setGrade(null); setStart(null); setAnswers({}); setStepAnswers({}); setDecisions({}); setCoach(null)
     setSaveNote(null); setReportNote(null)
     try {
       const s = await api.post<StartResp>('/api/me/lab/attempts', { scenario_code: code, mode: m })
-      const restored = hydrateAnswers(s.task.ask, s.answers)
       skipAutosave.current = true
       setStart(s)
-      setAnswers(restored)
-      if (s.resumed && Object.keys(restored).length > 0) setSaveNote('Resumed your saved answers')
+      let restoredCount = 0
+      if (s.task.multistep && s.task.steps) {
+        // Resume: saved multi-step answers arrive as { steps: {id:{key:val}}, decisions: {key:val} }.
+        const saved = (s.answers ?? {}) as { steps?: Record<string, Record<string, unknown>>; decisions?: Record<string, unknown> }
+        const sa: Record<string, Record<string, string>> = {}
+        for (const st of s.task.steps) sa[st.id] = hydrateAnswers(st.ask, saved.steps?.[st.id])
+        const dec: Record<string, string> = {}
+        for (const [k, v] of Object.entries(saved.decisions ?? {})) if (v != null) dec[k] = String(v)
+        setStepAnswers(sa); setDecisions(dec)
+        restoredCount = Object.values(sa).reduce((n, m) => n + Object.keys(m).length, 0) + Object.keys(dec).length
+      } else {
+        const restored = hydrateAnswers(s.task.ask ?? [], s.answers)
+        setAnswers(restored)
+        restoredCount = Object.keys(restored).length
+      }
+      if (s.resumed && restoredCount > 0) setSaveNote('Resumed your saved answers')
     } catch (e) {
       setError(mapError(e)); setStart(null)
     } finally {
@@ -401,16 +449,28 @@ export default function LabRunner() {
 
   useEffect(() => { begin(mode) }, [begin, mode])
 
-  const buildAnswersPayload = useCallback((from?: Record<string, string>) => {
+  const coerce = (a: Ask, raw: string): unknown => {
+    const v = (raw ?? '').trim()
+    if (a.type === 'set') return v.split(/[,\s]+/).filter(Boolean)
+    if (a.type === 'bool') return /^(y|yes|true|valid)$/i.test(v) ? true : /^(n|no|false|invalid)$/i.test(v) ? false : null
+    return v === '' ? null : Number(v)
+  }
+
+  const buildAnswersPayload = useCallback((from?: Record<string, string>): Record<string, unknown> => {
     if (!start) return {}
+    // Multi-step: { steps: { id: { key: value } }, decisions: { key: option } } — the shape SimStep grades.
+    if (start.task.multistep && start.task.steps) {
+      const steps: Record<string, Record<string, unknown>> = {}
+      for (const st of start.task.steps) {
+        const m: Record<string, unknown> = {}
+        for (const a of st.ask) m[a.key] = coerce(a, stepAnswersRef.current[st.id]?.[a.key] ?? '')
+        steps[st.id] = m
+      }
+      return { steps, decisions: decisionsRef.current }
+    }
     const src = from ?? answersRef.current
     const payload: Record<string, unknown> = {}
-    for (const a of start.task.ask) {
-      const raw = (src[a.key] ?? '').trim()
-      if (a.type === 'set') payload[a.key] = raw.split(/[,\s]+/).filter(Boolean)
-      else if (a.type === 'bool') payload[a.key] = /^(y|yes|true|valid)$/i.test(raw) ? true : /^(n|no|false|invalid)$/i.test(raw) ? false : null
-      else payload[a.key] = raw === '' ? null : Number(raw)
-    }
+    for (const a of start.task.ask ?? []) payload[a.key] = coerce(a, src[a.key] ?? '')
     return payload
   }, [start])
 
@@ -434,7 +494,7 @@ export default function LabRunner() {
     }
     const t = window.setTimeout(() => { void autosave(true) }, 1500)
     return () => window.clearTimeout(t)
-  }, [answers, start, grade, autosave])
+  }, [answers, stepAnswers, decisions, start, grade, autosave])
 
   const reportProblem = async () => {
     if (!start) return
@@ -491,6 +551,56 @@ export default function LabRunner() {
     }
   }
 
+  // Shared submit / save / report row + the progressive-hint coach, used by both the single-task and the
+  // multi-step answer panels so the two flows behave identically.
+  const answerActions = start && !grade ? (
+    <>
+      {error && <ErrorNote>{error}</ErrorNote>}
+      <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <button className="btn" onClick={submit} disabled={busy}>{busy ? 'Grading…' : 'Submit for grading'}</button>
+        <button className="btn secondary" type="button" onClick={() => { void autosave(false) }} disabled={busy}>Save progress</button>
+        <button className="btn secondary" type="button" onClick={() => { void reportProblem() }} disabled={reporting || busy}>
+          {reporting ? 'Opening ticket…' : 'Report a problem'}
+        </button>
+        {saveNote && <span className="small muted" role="status">{saveNote}</span>}
+        {reportNote && <span className="small muted" role="status">{reportNote}</span>}
+      </div>
+      {!start.task.assessment && (
+        <div className="stack" style={{ display: 'grid', gap: '.4rem', marginTop: '.4rem' }}>
+          <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
+            <label className="small">Coach mode
+              <select value={coachMode} onChange={(e) => setCoachMode(e.target.value)} aria-label="Coach mode">
+                <option value="socratic">Socratic</option>
+                <option value="guided">Guided</option>
+                <option value="explain">Explain</option>
+                <option value="review">Review</option>
+                <option value="language">Language / accessibility</option>
+              </select>
+            </label>
+            <label className="small">Hint level
+              <select value={hintLevel} onChange={(e) => setHintLevel(Number(e.target.value))} aria-label="Hint level">
+                {[1, 2, 3, 4, 5].map((n) => <option key={n} value={n}>{n}</option>)}
+              </select>
+            </label>
+            <button className="btn secondary sm" type="button" onClick={() => { void askCoach() }} disabled={coaching}>
+              {coaching ? 'Asking…' : 'Ask for a hint'}
+            </button>
+          </div>
+          {coach && (
+            <div style={{ background: 'var(--wash, #f6f8fb)', borderRadius: '.5rem', padding: '.7rem .8rem' }}>
+              <div className="row" style={{ gap: '.4rem', alignItems: 'center', marginBottom: '.3rem' }}>
+                <strong>Coach</strong>
+                <Badge tone={coach.ai ? 'brand' : 'neutral'}>{coach.ai ? 'AI' : 'Guide'}</Badge>
+                {coach.coach_mode && <Badge tone="neutral">{titleCase(coach.coach_mode)}</Badge>}
+              </div>
+              <div style={{ whiteSpace: 'pre-wrap' }}>{coach.message}</div>
+            </div>
+          )}
+        </div>
+      )}
+    </>
+  ) : null
+
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       <div className="row" style={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
@@ -522,75 +632,87 @@ export default function LabRunner() {
         <>
           <Card title="Brief">
             <p style={{ marginTop: 0 }}>{start.task.prompt}</p>
-            {Array.isArray(start.task.given.series) && (start.task.given.series as EvmPoint[]).length > 0 && (
-              <div style={{ margin: '.2rem 0 .8rem' }}><SCurve series={start.task.given.series as EvmPoint[]} /></div>
-            )}
-            <div style={{ overflowX: 'auto' }}><GivenView task={start.task} /></div>
-            {start.task.montecarlo && (
-              <div style={{ margin: '.8rem 0 .2rem' }}><Histogram mc={start.task.montecarlo} /></div>
+            {!start.task.multistep && (
+              <>
+                {Array.isArray(start.task.given?.series) && (start.task.given!.series as EvmPoint[]).length > 0 && (
+                  <div style={{ margin: '.2rem 0 .8rem' }}><SCurve series={start.task.given!.series as EvmPoint[]} /></div>
+                )}
+                <div style={{ overflowX: 'auto' }}><GivenView task={start.task} /></div>
+                {start.task.montecarlo && (
+                  <div style={{ margin: '.8rem 0 .2rem' }}><Histogram mc={start.task.montecarlo} /></div>
+                )}
+              </>
             )}
           </Card>
 
           {!grade ? (
-            <Card title="Your answers" action={start.task.assessment ? <Badge tone="warn">Assessment</Badge> : undefined}>
-              <div className="stack" style={{ display: 'grid', gap: '.6rem' }}>
-                {start.task.ask.map((a) => (
-                  <label key={a.key} className="row" style={{ justifyContent: 'space-between', gap: '1rem', alignItems: 'center' }}>
-                    <span>{a.label}</span>
-                    <input
-                      style={{ maxWidth: '14rem' }}
-                      inputMode={a.type === 'number' ? 'decimal' : 'text'}
-                      placeholder={a.type === 'set' ? 'e.g. A, B, D' : a.type === 'bool' ? 'yes / no' : 'number'}
-                      value={answers[a.key] ?? ''}
-                      onChange={(e) => setAnswers((s) => ({ ...s, [a.key]: e.target.value }))}
-                    />
-                  </label>
-                ))}
-                {error && <ErrorNote>{error}</ErrorNote>}
-                <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                  <button className="btn" onClick={submit} disabled={busy}>{busy ? 'Grading…' : 'Submit for grading'}</button>
-                  <button className="btn secondary" type="button" onClick={() => { void autosave(false) }} disabled={busy}>Save progress</button>
-                  <button className="btn secondary" type="button" onClick={() => { void reportProblem() }} disabled={reporting || busy}>
-                    {reporting ? 'Opening ticket…' : 'Report a problem'}
-                  </button>
-                  {saveNote && <span className="small muted" role="status">{saveNote}</span>}
-                  {reportNote && <span className="small muted" role="status">{reportNote}</span>}
+            start.task.multistep && start.task.steps ? (
+              <Card title="Your answers" action={start.task.assessment ? <Badge tone="warn">Assessment</Badge> : undefined}>
+                <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+                  <ol className="stack" style={{ display: 'grid', gap: '1rem', margin: 0, paddingLeft: '1.1rem' }}>
+                    {start.task.steps.map((st, i) => {
+                      const eg = effectiveGiven(st, start.task.steps!, decisions)
+                      const chosen = st.decision ? decisions[st.decision.key] : undefined
+                      return (
+                        <li key={st.id} aria-label={`Step ${i + 1}${st.title ? `: ${st.title}` : ''}`}>
+                          <div style={{ fontWeight: 600 }}>{st.title || `Step ${i + 1}`}</div>
+                          {st.prompt && <p className="small" style={{ margin: '.2rem 0 .5rem' }}>{st.prompt}</p>}
+                          <div style={{ overflowX: 'auto', marginBottom: '.5rem' }}><GivenView task={{ task: st.task, given: eg, prompt: '', mode: start.task.mode, assessment: start.task.assessment }} /></div>
+                          {st.decision && (
+                            <fieldset style={{ border: '1px solid var(--line, #e2e8f0)', borderRadius: '.5rem', padding: '.6rem .8rem', margin: '0 0 .6rem' }}>
+                              <legend className="small" style={{ padding: '0 .3rem' }}>{st.decision.prompt || 'Decision'}</legend>
+                              <div className="stack" style={{ display: 'grid', gap: '.3rem' }}>
+                                {st.decision.options.map((o) => (
+                                  <label key={o.value} className="row small" style={{ gap: '.4rem', alignItems: 'flex-start' }}>
+                                    <input type="radio" name={`dec-${st.decision!.key}`} value={o.value}
+                                      checked={chosen === o.value}
+                                      onChange={() => setDecisions((d) => ({ ...d, [st.decision!.key]: o.value }))} />
+                                    <span>{o.label}</span>
+                                  </label>
+                                ))}
+                              </div>
+                            </fieldset>
+                          )}
+                          <div className="stack" style={{ display: 'grid', gap: '.4rem' }}>
+                            {st.ask.map((a) => (
+                              <label key={a.key} className="row" style={{ justifyContent: 'space-between', gap: '1rem', alignItems: 'center' }}>
+                                <span>{a.label}</span>
+                                <input
+                                  style={{ maxWidth: '14rem' }}
+                                  inputMode={a.type === 'number' ? 'decimal' : 'text'}
+                                  placeholder={a.type === 'set' ? 'e.g. A, B, D' : a.type === 'bool' ? 'yes / no' : 'number'}
+                                  value={stepAnswers[st.id]?.[a.key] ?? ''}
+                                  onChange={(e) => setStepAnswers((s) => ({ ...s, [st.id]: { ...s[st.id], [a.key]: e.target.value } }))}
+                                />
+                              </label>
+                            ))}
+                          </div>
+                        </li>
+                      )
+                    })}
+                  </ol>
+                  {answerActions}
                 </div>
-                {!start.task.assessment && (
-                  <div className="stack" style={{ display: 'grid', gap: '.4rem', marginTop: '.4rem' }}>
-                    <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
-                      <label className="small">Coach mode
-                        <select value={coachMode} onChange={(e) => setCoachMode(e.target.value)} aria-label="Coach mode">
-                          <option value="socratic">Socratic</option>
-                          <option value="guided">Guided</option>
-                          <option value="explain">Explain</option>
-                          <option value="review">Review</option>
-                          <option value="language">Language / accessibility</option>
-                        </select>
-                      </label>
-                      <label className="small">Hint level
-                        <select value={hintLevel} onChange={(e) => setHintLevel(Number(e.target.value))} aria-label="Hint level">
-                          {[1, 2, 3, 4, 5].map((n) => <option key={n} value={n}>{n}</option>)}
-                        </select>
-                      </label>
-                      <button className="btn secondary sm" type="button" onClick={() => { void askCoach() }} disabled={coaching}>
-                        {coaching ? 'Asking…' : 'Ask for a hint'}
-                      </button>
-                    </div>
-                    {coach && (
-                      <div style={{ background: 'var(--wash, #f6f8fb)', borderRadius: '.5rem', padding: '.7rem .8rem' }}>
-                        <div className="row" style={{ gap: '.4rem', alignItems: 'center', marginBottom: '.3rem' }}>
-                          <strong>Coach</strong>
-                          <Badge tone={coach.ai ? 'brand' : 'neutral'}>{coach.ai ? 'AI' : 'Guide'}</Badge>
-                          {coach.coach_mode && <Badge tone="neutral">{titleCase(coach.coach_mode)}</Badge>}
-                        </div>
-                        <div style={{ whiteSpace: 'pre-wrap' }}>{coach.message}</div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </Card>
+              </Card>
+            ) : (
+              <Card title="Your answers" action={start.task.assessment ? <Badge tone="warn">Assessment</Badge> : undefined}>
+                <div className="stack" style={{ display: 'grid', gap: '.6rem' }}>
+                  {(start.task.ask ?? []).map((a) => (
+                    <label key={a.key} className="row" style={{ justifyContent: 'space-between', gap: '1rem', alignItems: 'center' }}>
+                      <span>{a.label}</span>
+                      <input
+                        style={{ maxWidth: '14rem' }}
+                        inputMode={a.type === 'number' ? 'decimal' : 'text'}
+                        placeholder={a.type === 'set' ? 'e.g. A, B, D' : a.type === 'bool' ? 'yes / no' : 'number'}
+                        value={answers[a.key] ?? ''}
+                        onChange={(e) => setAnswers((s) => ({ ...s, [a.key]: e.target.value }))}
+                      />
+                    </label>
+                  ))}
+                  {answerActions}
+                </div>
+              </Card>
+            )
           ) : (
             <Card
               title={`Result — ${grade.score}%`}

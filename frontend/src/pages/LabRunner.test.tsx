@@ -99,6 +99,64 @@ describe('LabRunner (Simulation Lab workspace)', () => {
     await waitFor(() => expect(post).toHaveBeenCalledTimes(2))
   })
 
+  it('runs a linked multi-step scenario: a decision updates the downstream given and submit sends per-step answers + decisions', async () => {
+    const multistepStart = {
+      attempt_id: 9, resumed: false,
+      scenario: { id: 2, scenario_code: 'MS-RECOVERY-001', title: 'Recover a programme', kind: 'scenario', difficulty: 'intermediate' },
+      task: {
+        multistep: true, prompt: 'Linked recovery scenario.', mode: 'training', assessment: false,
+        steps: [
+          {
+            id: 's1', title: 'Baseline', task: 'evm', prompt: 'Compute CPI.',
+            given: { pv: 100, ev: 90, ac: 95, bac: 200 }, ask: [{ key: 'cpi', label: 'CPI', type: 'number' }],
+            decision: { key: 'recovery', prompt: 'Recover how?', options: [
+              { value: 'crash', label: 'Crash (+50 AC)', effects: [{ step: 's2', path: 'ac', op: 'add', value: 50 }] },
+              { value: 'descope', label: 'Descope', effects: [] },
+            ] },
+          },
+          {
+            id: 's2', title: 'Forecast', task: 'evm', prompt: 'Compute EAC.',
+            given: { pv: 100, ev: 90, ac: 100, bac: 200 }, ask: [{ key: 'eac', label: 'EAC', type: 'number' }],
+          },
+        ],
+      },
+    }
+    post.mockImplementation((path: string) => {
+      if (path === '/api/me/lab/attempts') return Promise.resolve(multistepStart)
+      if (String(path).endsWith('/submit')) return Promise.resolve({
+        score: 100, passed: true, correct: 2, total: 2, mode: 'training', assessment: false,
+        measures: [
+          { key: 's1.cpi', label: 'Baseline: CPI', is_correct: true, correct_value: 0.95, your_value: 0.95 },
+          { key: 's2.eac', label: 'Forecast: EAC', is_correct: true, correct_value: 296, your_value: 296 },
+        ],
+        competencies: [],
+      })
+      return Promise.resolve({})
+    })
+    renderRunner()
+    await screen.findByText('Linked recovery scenario.')
+    expect(screen.getByText('Baseline')).toBeInTheDocument()
+    expect(screen.getByText('Forecast')).toBeInTheDocument()
+    expect(screen.getByText('Recover how?')).toBeInTheDocument()
+
+    // Downstream step s2 starts at AC 100; choosing "crash" applies +50 → 150 (client mirror of the engine).
+    expect(screen.queryByText('150')).toBeNull()
+    fireEvent.click(screen.getByRole('radio', { name: 'Crash (+50 AC)' }))
+    expect(await screen.findByText('150')).toBeInTheDocument()
+
+    const nums = screen.getAllByPlaceholderText('number')
+    fireEvent.change(nums[0], { target: { value: '0.95' } })   // s1.cpi
+    fireEvent.change(nums[1], { target: { value: '296' } })    // s2.eac
+    fireEvent.click(screen.getByRole('button', { name: 'Submit for grading' }))
+
+    await screen.findByText('Result — 100%')
+    const submitCall = post.mock.calls.find((c) => String(c[0]).endsWith('/submit'))!
+    const body = submitCall[1] as { answers: { steps: Record<string, Record<string, unknown>>; decisions: Record<string, unknown> } }
+    expect(body.answers.decisions).toEqual({ recovery: 'crash' })
+    expect(body.answers.steps.s1.cpi).toBe(0.95)
+    expect(body.answers.steps.s2.eac).toBe(296)
+  })
+
   it('hydrates saved answers when an in-progress attempt is resumed', async () => {
     post.mockImplementation((path: string) => {
       if (path === '/api/me/lab/attempts') {
