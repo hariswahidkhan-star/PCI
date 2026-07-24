@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '../api/hooks'
+import { useT } from '../i18n'
 import { Card, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
 
 // Student portal → Templates. The members-only project-controls templates library (WBS, EVM tracker, risk
@@ -27,6 +28,7 @@ const CERTS: Record<number, string> = { 1: 'PCL-AI', 2: 'PFL-AI', 3: 'PML-AI' }
 const catLabel = (c: string) => CAT_LABELS[c] || c.charAt(0).toUpperCase() + c.slice(1)
 
 export default function Templates() {
+  const t = useT()
   const { data, loading, error } = useQuery<Resp>('/api/me/templates')
   const [cat, setCat] = useState<string>('all')
   const [track, setTrack] = useState<number | 'all'>('all')
@@ -69,7 +71,7 @@ export default function Templates() {
     const tok = sessionStorage.getItem('pci.session.token')
     try {
       const res = await fetch(r.download_url, { headers: tok ? { Authorization: 'Bearer ' + tok } : {} })
-      if (!res.ok) { setMsg('Could not download that template right now. Please try again shortly.'); return }
+      if (!res.ok) { setMsg(t('tpl.downloadError')); return }
       const blob = await res.blob()
       const href = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -79,44 +81,41 @@ export default function Templates() {
       setTimeout(() => URL.revokeObjectURL(href), 60_000)
       // Mark it downloaded so the badge appears immediately (the server has recorded it in the student's history).
       setGot((prev) => new Set(prev).add(r.slug))
-    } catch { setMsg('Could not download that template right now. Please try again shortly.') }
+    } catch { setMsg(t('tpl.downloadError')) }
     finally { setBusy(null) }
   }
 
   return (
     <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
       <div>
-        <h1>Templates</h1>
-        <p className="muted">
-          Ready-to-use project-controls templates — download, adapt and reuse them on your own projects. Content is
-          synthetic and freely reusable.
-        </p>
+        <h1>{t('tpl.title')}</h1>
+        <p className="muted">{t('tpl.subtitle')}</p>
       </div>
 
       {msg && <div className="notice err" role="alert">{msg}</div>}
 
       {rows.length === 0 ? (
-        <Card><Empty>No templates are available yet — check back soon.</Empty></Card>
+        <Card><Empty>{t('tpl.emptyAll')}</Empty></Card>
       ) : (
         <>
           <input
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search templates…"
-            aria-label="Search templates"
+            placeholder={t('tpl.searchPlaceholder')}
+            aria-label={t('tpl.searchLabel')}
             style={{ maxWidth: 360 }}
           />
           <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-            <span className="small muted" style={{ fontWeight: 700 }}>Topic</span>
-            <button className={'btn sm' + (cat === 'all' ? '' : ' secondary')} onClick={() => setCat('all')}>All</button>
+            <span className="small muted" style={{ fontWeight: 700 }}>{t('tpl.topic')}</span>
+            <button className={'btn sm' + (cat === 'all' ? '' : ' secondary')} onClick={() => setCat('all')}>{t('tpl.all')}</button>
             {cats.map((c) => (
               <button key={c} className={'btn sm' + (cat === c ? '' : ' secondary')} onClick={() => setCat(c)}>{catLabel(c)}</button>
             ))}
             {tracks.length > 0 && (
               <>
-                <span className="small muted" style={{ fontWeight: 700, marginLeft: '.5rem' }}>Track</span>
-                <button className={'btn sm' + (track === 'all' ? '' : ' secondary')} onClick={() => setTrack('all')}>All</button>
+                <span className="small muted" style={{ fontWeight: 700, marginLeft: '.5rem' }}>{t('tpl.track')}</span>
+                <button className={'btn sm' + (track === 'all' ? '' : ' secondary')} onClick={() => setTrack('all')}>{t('tpl.all')}</button>
                 {tracks.map((tk) => (
                   <button key={tk} className={'btn sm' + (track === tk ? '' : ' secondary')} onClick={() => setTrack(tk)}>{CERTS[tk] || `Track ${tk}`}</button>
                 ))}
@@ -124,15 +123,15 @@ export default function Templates() {
             )}
             {anyDownloaded && (
               <>
-                <span className="small muted" style={{ fontWeight: 700, marginLeft: '.5rem' }}>Show</span>
-                <button className={'btn sm' + (show === 'all' ? '' : ' secondary')} onClick={() => setShow('all')}>All</button>
-                <button className={'btn sm' + (show === 'new' ? '' : ' secondary')} onClick={() => setShow('new')}>New</button>
+                <span className="small muted" style={{ fontWeight: 700, marginLeft: '.5rem' }}>{t('tpl.show')}</span>
+                <button className={'btn sm' + (show === 'all' ? '' : ' secondary')} onClick={() => setShow('all')}>{t('tpl.all')}</button>
+                <button className={'btn sm' + (show === 'new' ? '' : ' secondary')} onClick={() => setShow('new')}>{t('tpl.new')}</button>
               </>
             )}
           </div>
 
           {visible.length === 0 ? (
-            <Card><Empty>No templates match that filter.</Empty></Card>
+            <Card><Empty>{t('tpl.emptyFilter')}</Empty></Card>
           ) : (
             [...groups.entries()].map(([category, items]) => (
               <Card title={catLabel(category)} key={category}>
@@ -148,9 +147,9 @@ export default function Templates() {
                       </div>
                       <div className="rep-item-actions row" style={{ gap: '.4rem', alignItems: 'center' }}>
                         {r.certification_id != null && <Badge>{CERTS[r.certification_id] || `Track ${r.certification_id}`}</Badge>}
-                        {isDownloaded(r) && <Badge tone="ok">Downloaded</Badge>}
+                        {isDownloaded(r) && <Badge tone="ok">{t('tpl.downloaded')}</Badge>}
                         <button className="btn sm" disabled={busy === r.slug} onClick={() => download(r)}>
-                          {busy === r.slug ? 'Downloading…' : isDownloaded(r) ? 'Download again' : 'Download'}
+                          {busy === r.slug ? t('tpl.downloading') : isDownloaded(r) ? t('tpl.downloadAgain') : t('tpl.download')}
                         </button>
                       </div>
                     </div>
