@@ -135,7 +135,9 @@ public static class WorldPages
 
     public static string Home(Db db, Dictionary<string, object?>? today, Dictionary<string, object?>? version)
     {
-        var simlab = E(Settings.Str(db, "world_simlab_url", "/app/lab"));
+        // On a world-only deployment the Simulation Lab lives on the Institute platform, not on
+        // this host — the progression link must never dead-end inside our own allowlist.
+        var simlab = WorldOnly.Enabled ? E(InstituteUrl(db)) : E(Settings.Str(db, "world_simlab_url", "/app/lab"));
         var todayCard = today is null || version is null
             ? """
               <div class="card"><span class="kicker">Today's challenge</span>

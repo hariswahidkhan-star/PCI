@@ -156,19 +156,36 @@ app.Use(async (ctx, next) =>
 // map by request host (pciworld.org / admin.pciworld.org) so one deployment can serve both
 // sites. Only "/" is redirected — every other route keeps working on every host. ──
 {
-    var worldStandalone = string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_STANDALONE"), "true", StringComparison.OrdinalIgnoreCase);
+    // PCIWORLD_ONLY=true is the strict shape ("deploy only PCI World"): the service serves
+    // exclusively the PCI World surfaces — every other page redirects to /world and every other
+    // API returns 404, so the Institute site and portals are unreachable on this deployment.
+    var worldOnly = PCI.Backend.Core.WorldOnly.Enabled;
+    var worldStandalone = worldOnly ||
+        string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_STANDALONE"), "true", StringComparison.OrdinalIgnoreCase);
     var worldHosts = (Environment.GetEnvironmentVariable("PCIWORLD_HOSTS") ?? "")
         .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
     var worldAdminHosts = (Environment.GetEnvironmentVariable("PCIWORLD_ADMIN_HOSTS") ?? "")
         .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
-    if (worldStandalone || worldHosts.Count > 0 || worldAdminHosts.Count > 0)
+    if (worldOnly || worldStandalone || worldHosts.Count > 0 || worldAdminHosts.Count > 0)
         app.Use(async (ctx, next) =>
         {
-            if (ctx.Request.Path == "/")
+            var path = ctx.Request.Path;
+            if (path == "/")
             {
                 var host = ctx.Request.Host.Host;
                 if (worldAdminHosts.Contains(host)) { ctx.Response.Redirect("/world-admin"); return; }
                 if (worldStandalone || worldHosts.Contains(host)) { ctx.Response.Redirect("/world"); return; }
+            }
+            if (worldOnly && !PCI.Backend.Core.WorldOnly.Allowed(path))
+            {
+                if (path.StartsWithSegments("/api"))
+                {
+                    ctx.Response.StatusCode = 404;
+                    await ctx.Response.WriteAsJsonAsync(new { error = "not_found", message = "This deployment serves PCI World only." });
+                    return;
+                }
+                ctx.Response.Redirect("/world");
+                return;
             }
             await next();
         });
