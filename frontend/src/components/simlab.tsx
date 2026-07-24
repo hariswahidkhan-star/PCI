@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import '../simlab.css'
 
 // Simulation Lab reusable primitives, shared by the student catalogue, the
@@ -181,7 +182,9 @@ export function ConfirmDialog({ open, title, body, confirmLabel, cancelLabel = '
     return () => previous?.focus?.()
   }, [open])
   if (!open) return null
-  return (
+  // Portal to <body>: ancestors with transform animations (route transitions)
+  // would otherwise become the containing block and mis-position the overlay.
+  return createPortal(
     <div
       className="sl-dialog-backdrop"
       onMouseDown={(e) => { if (e.target === e.currentTarget) onCancel() }}
@@ -195,11 +198,96 @@ export function ConfirmDialog({ open, title, body, confirmLabel, cancelLabel = '
           <button type="button" className={'btn' + (danger ? ' danger' : '')} onClick={onConfirm}>{confirmLabel}</button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
 
 /** Quiet uppercase section subheading used inside work panels. */
 export function PanelSub({ children }: { children: ReactNode }) {
   return <h3 className="sl-panel-sub">{children}</h3>
+}
+
+/** Accessible slide-over panel (scenario details). Focus moves to the close
+ *  control on open, Escape/backdrop close, focus returns on unmount. */
+export function SidePanel({ open, title, eyebrow, onClose, children }: {
+  open: boolean
+  title: ReactNode
+  eyebrow?: ReactNode
+  onClose: () => void
+  children: ReactNode
+}) {
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const titleId = useId()
+  useEffect(() => {
+    if (!open) return
+    const previous = document.activeElement as HTMLElement | null
+    closeRef.current?.focus()
+    return () => previous?.focus?.()
+  }, [open])
+  if (!open) return null
+  // Portal to <body> — see ConfirmDialog: keeps position:fixed viewport-relative.
+  return createPortal(
+    <div
+      className="sl-panel-backdrop"
+      onMouseDown={(e) => { if (e.target === e.currentTarget) onClose() }}
+      onKeyDown={(e) => { if (e.key === 'Escape') { e.stopPropagation(); onClose() } }}
+    >
+      <div className="sl-panel" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+        <div className="sl-panel-head">
+          <div>
+            {eyebrow && <div className="sl-eyebrow">{eyebrow}</div>}
+            <h2 id={titleId}>{title}</h2>
+          </div>
+          <button ref={closeRef} type="button" className="sl-panel-close" aria-label="Close details" onClick={onClose}>✕</button>
+        </div>
+        {children}
+      </div>
+    </div>,
+    document.body,
+  )
+}
+
+/** Competency progress meter: score out of 100 with an accessible value. */
+export function CompetencyMeter({ label, score, detail }: { label: string; score: number; detail?: string }) {
+  const clamped = Math.max(0, Math.min(100, score))
+  const band = clamped < 70 ? 'low' : clamped >= 85 ? 'high' : ''
+  return (
+    <div className={'sl-meter' + (band ? ' ' + band : '')}>
+      <span className="lbl">{label}</span>
+      <div
+        className="bar"
+        role="progressbar"
+        aria-label={`${label}: ${clamped} out of 100`}
+        aria-valuenow={clamped}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
+        <i style={{ width: `${clamped}%` }} />
+      </div>
+      <span className="val">{clamped}%{detail ? ` · ${detail}` : ''}</span>
+    </div>
+  )
+}
+
+/** Sortable column header button; exposes state via aria-sort on the th. */
+export function SortHeader({ label, active, dir, onSort, align }: {
+  label: string
+  active: boolean
+  dir: 'asc' | 'desc'
+  onSort: () => void
+  align?: 'start' | 'end'
+}) {
+  return (
+    <th
+      className="sl-sortable"
+      aria-sort={active ? (dir === 'asc' ? 'ascending' : 'descending') : undefined}
+      style={align === 'end' ? { textAlign: 'end' } : undefined}
+    >
+      <button type="button" onClick={onSort} style={align === 'end' ? { justifyContent: 'flex-end' } : undefined}>
+        {label}
+        {active && <span className="dir" aria-hidden="true">{dir === 'asc' ? '▲' : '▼'}</span>}
+      </button>
+    </th>
+  )
 }

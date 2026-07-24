@@ -55,6 +55,24 @@ describe('Admin SimLab Studio', () => {
     expect(screen.getByText('Analyse the critical path')).toBeInTheDocument()
   })
 
+  it('sorts the table by attempts and flips direction on a second click', () => {
+    h.resp = {
+      rows: [
+        row({ id: 1, scenario_code: 'A-LOW', title: 'Low attempts', attempts: 2 }),
+        row({ id: 2, scenario_code: 'B-HIGH', title: 'High attempts', attempts: 90 }),
+      ],
+      total: 2, published: 2,
+    }
+    render(<SimLab />)
+    const attemptsSort = screen.getByRole('button', { name: 'Attempts' })
+    fireEvent.click(attemptsSort) // ascending
+    let cells = screen.getAllByRole('row').slice(1).map((r) => r.textContent ?? '')
+    expect(cells[0]).toContain('A-LOW')
+    fireEvent.click(attemptsSort) // descending
+    cells = screen.getAllByRole('row').slice(1).map((r) => r.textContent ?? '')
+    expect(cells[0]).toContain('B-HIGH')
+  })
+
   it('asks for confirmation before retiring a published scenario', () => {
     h.resp = { rows: [row()], total: 1, published: 1 }
     api.post.mockResolvedValue({})

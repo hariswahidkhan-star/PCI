@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, useSearchParams, Link } from 'react-router-dom'
 import { api, ApiError } from '../api/client'
+import { fmtDateTime } from '../format'
+import { openPrintable } from '../print'
 import { Card, Badge, Spinner, ErrorNote } from '../components/ui'
 import {
-  SegmentedControl, SaveIndicator, ConfirmDialog, InsightCallout, LevelDots, PanelSub,
+  SegmentedControl, SaveIndicator, ConfirmDialog, InsightCallout, LevelDots, PanelSub, Chip,
   type SaveState,
 } from '../components/simlab'
 import SCurve, { type EvmPoint } from '../components/SCurve'
@@ -33,8 +35,108 @@ interface Competency { competency: string; score: number; level: string }
 interface Schedule { project_duration: number; critical_path: string[]; bars: GanttBar[] }
 interface Grade { score: number; passed: boolean; correct: number; total: number; mode: string; assessment: boolean; measures: Measure[]; competencies: Competency[]; schedule?: Schedule | null }
 interface CoachResp { ok: boolean; message: string; ai: boolean; coach_mode?: string; hint_level?: number }
+interface AttemptDetail {
+  attempt_id: number
+  status: string
+  mode: string
+  answers?: Record<string, unknown> | null
+  scenario: ScenarioMeta
+  task: Task
+  score?: number | null
+  started_at?: string | null
+  completed_at?: string | null
+  grade?: Grade | null
+}
 
 type Mode = 'training' | 'assessment'
+
+// Per-engine method reference shown in the workspace rail. Generic course knowledge
+// only — definitions and formulas, never a scenario number or an answer.
+const REFERENCE: Record<string, { term: string; formula: string }[]> = {
+  evm: [
+    { term: 'Schedule Variance', formula: 'SV = EV − PV' },
+    { term: 'Cost Variance', formula: 'CV = EV − AC' },
+    { term: 'Schedule Performance Index', formula: 'SPI = EV ÷ PV' },
+    { term: 'Cost Performance Index', formula: 'CPI = EV ÷ AC' },
+    { term: 'Estimate at Completion (CPI basis)', formula: 'EAC = BAC ÷ CPI' },
+    { term: 'Estimate to Complete', formula: 'ETC = EAC − AC' },
+    { term: 'Variance at Completion', formula: 'VAC = BAC − EAC' },
+    { term: 'To-Complete Performance Index', formula: 'TCPI = (BAC − EV) ÷ (BAC − AC)' },
+    { term: 'Percent complete', formula: '% complete = EV ÷ BAC' },
+  ],
+  earned_schedule: [
+    { term: 'Earned Schedule', formula: 'ES = time at which cumulative PV equals current EV (interpolate between periods)' },
+    { term: 'Schedule Variance (time)', formula: 'SV(t) = ES − AT' },
+    { term: 'Schedule Performance Index (time)', formula: 'SPI(t) = ES ÷ AT' },
+    { term: 'Forecast duration', formula: 'planned duration ÷ SPI(t)' },
+  ],
+  cpm: [
+    { term: 'Forward pass', formula: 'ES = max(EF of predecessors) · EF = ES + duration' },
+    { term: 'Backward pass', formula: 'LF = min(LS of successors) · LS = LF − duration' },
+    { term: 'Total float', formula: 'TF = LS − ES = LF − EF' },
+    { term: 'Critical path', formula: 'the longest path — activities with zero total float' },
+  ],
+  pert: [
+    { term: 'Expected duration', formula: 'tₑ = (O + 4M + P) ÷ 6' },
+    { term: 'Standard deviation', formula: 'σ = (P − O) ÷ 6' },
+    { term: 'Path deviation', formula: 'σ(path) = √(Σ σ²) along the path' },
+    { term: 'Confidence', formula: 'Z = (deadline − tₑ) ÷ σ(path)' },
+  ],
+  risk: [
+    { term: 'Risk exposure', formula: 'exposure = probability × impact' },
+    { term: 'Ranking', formula: 'order the register by exposure, highest first' },
+  ],
+  cashflow: [
+    { term: 'Net cash flow', formula: 'net = inflow − outflow (per period)' },
+    { term: 'Cumulative position', formula: 'running total of net cash flow' },
+    { term: 'Peak funding exposure', formula: 'the most negative cumulative position' },
+  ],
+  timeline: [
+    { term: 'Schedule Variance', formula: 'SV = EV − PV' },
+    { term: 'Cost Variance', formula: 'CV = EV − AC' },
+    { term: 'Schedule Performance Index', formula: 'SPI = EV ÷ PV' },
+    { term: 'Cost Performance Index', formula: 'CPI = EV ÷ AC' },
+    { term: 'Estimate at Completion (CPI basis)', formula: 'EAC = BAC ÷ CPI' },
+  ],
+  progress: [
+    { term: 'Weighted progress', formula: '% complete = Σ(weight × %) ÷ Σ(weight)' },
+  ],
+  productivity: [
+    { term: 'Productivity factor', formula: 'PF = earned ÷ actual (quantities or hours)' },
+    { term: 'Unit rate', formula: 'rate = hours ÷ quantity' },
+  ],
+  boq: [
+    { term: 'Line amount', formula: 'amount = quantity × rate' },
+    { term: 'Bill total', formula: 'Σ line amounts' },
+  ],
+  resource: [
+    { term: 'Overload', formula: 'overload = max(0, demand − capacity) per period' },
+  ],
+  wbs: [
+    { term: 'Roll-up', formula: 'parent value = Σ of its children · only leaves carry budget' },
+  ],
+  cbs: [
+    { term: 'Roll-up', formula: 'parent budget/actual = Σ of its children' },
+    { term: 'Variance', formula: 'variance = budget − actual' },
+  ],
+  change: [
+    { term: 'Revised budget', formula: 'revised BAC = baseline BAC + Σ approved cost Δ' },
+    { term: 'Revised duration', formula: 'revised duration = baseline + Σ approved schedule Δ' },
+    { term: 'Scope discipline', formula: 'only approved changes move the baseline' },
+  ],
+  portfolio: [
+    { term: 'Weighted score', formula: 'score = w₁×NPV′ + w₂×fit′ − w₃×risk′ (normalised criteria, given weights)' },
+  ],
+  decision: [
+    { term: 'Weighted score', formula: 'score per option = Σ(weight × criterion), using the given weights' },
+  ],
+  procurement: [
+    { term: 'Schedule impact', formula: 'impact = max(0, supplier delay − remaining float)' },
+  ],
+  data_quality: [
+    { term: 'Anomaly test', formula: 'flag when |value − expected| > threshold, or the value is missing' },
+  ],
+}
 
 const titleCase = (s: string) => s.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 const fmt = (v: unknown): string => {
@@ -385,7 +487,13 @@ function CoachMessage({ coach }: { coach: CoachResp }) {
 
 export default function LabRunner() {
   const { code } = useParams<{ code: string }>()
-  const [mode, setMode] = useState<Mode>('training')
+  const [params, setParams] = useSearchParams()
+  // /lab/:code?mode=assessment launches straight into Assessment Mode (from the details panel);
+  // /lab/:code?attempt=ID opens a completed attempt read-only for review.
+  const reviewId = params.get('attempt')
+  const [mode, setMode] = useState<Mode>(() => (params.get('mode') === 'assessment' ? 'assessment' : 'training'))
+  const [review, setReview] = useState<AttemptDetail | null>(null)
+  const [railTab, setRailTab] = useState<'coach' | 'reference'>('coach')
   const [pendingMode, setPendingMode] = useState<Mode | null>(null)
   const [start, setStart] = useState<StartResp | null>(null)
   const [answers, setAnswers] = useState<Record<string, string>>({})
@@ -411,7 +519,7 @@ export default function LabRunner() {
     // into the old (or new) attempt while the start request is in flight.
     skipAutosave.current = true
     setLoading(true); setError(null); setGrade(null); setStart(null); setAnswers({}); setCoach(null)
-    setSaveState('idle'); setSaveNote(null); setReportNote(null)
+    setReview(null); setSaveState('idle'); setSaveNote(null); setReportNote(null)
     try {
       const s = await api.post<StartResp>('/api/me/lab/attempts', { scenario_code: code, mode: m })
       const restored = hydrateAnswers(s.task.ask, s.answers)
@@ -428,7 +536,38 @@ export default function LabRunner() {
     }
   }, [code])
 
-  useEffect(() => { begin(mode) }, [begin, mode])
+  // Load a past attempt read-only. An in-progress attempt falls back to the normal
+  // resume flow (the server resumes it when a new start is requested in its mode).
+  const loadReview = useCallback(async (id: string) => {
+    skipAutosave.current = true
+    setLoading(true); setError(null); setGrade(null); setStart(null); setAnswers({}); setCoach(null)
+    setReview(null); setSaveState('idle'); setSaveNote(null); setReportNote(null)
+    try {
+      const a = await api.get<AttemptDetail>(`/api/me/lab/attempts/${id}`)
+      if (a.status === 'in_progress' || !a.grade) {
+        if (a.mode === 'assessment') setMode('assessment')
+        setParams((prev) => {
+          const p = new URLSearchParams(prev)
+          p.delete('attempt')
+          return p
+        }, { replace: true })
+        return // the effect re-runs without ?attempt and resumes normally
+      }
+      skipAutosave.current = true
+      setReview(a)
+      setStart({ attempt_id: a.attempt_id, resumed: false, answers: a.answers, scenario: a.scenario, task: a.task })
+      setGrade(a.grade)
+    } catch (e) {
+      setError(mapError(e)); setStart(null)
+    } finally {
+      setLoading(false)
+    }
+  }, [setParams])
+
+  useEffect(() => {
+    if (reviewId) void loadReview(reviewId)
+    else void begin(mode)
+  }, [begin, loadReview, mode, reviewId])
 
   const buildAnswersPayload = useCallback((from?: Record<string, string>) => {
     if (!start) return {}
@@ -466,6 +605,18 @@ export default function LabRunner() {
     const t = window.setTimeout(() => { void autosave(true) }, 1500)
     return () => window.clearTimeout(t)
   }, [answers, start, grade, autosave])
+
+  // Ctrl/Cmd+S saves progress instead of invoking the browser's save dialog.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault()
+        if (start && !grade) void autosave(false)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [start, grade, autosave])
 
   // A mode switch opens a separate attempt: confirm first when visible work could leave the screen.
   const requestMode = (m: Mode) => {
@@ -544,6 +695,42 @@ export default function LabRunner() {
 
   const assessment = !!start?.task.assessment
 
+  // Printable debrief summary via the platform's existing printable-document pattern.
+  const printSummary = () => {
+    if (!start || !grade) return
+    const esc = (s: unknown) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    const rows = grade.measures.map((m) => `<tr>
+      <td>${esc(m.label)}</td>
+      <td>${m.is_correct ? '✓ Correct' : '✗ Check this'}</td>
+      <td class="r">${esc(grade.assessment ? '—' : fmt(m.your_value))}</td>
+      ${grade.assessment ? '' : `<td class="r">${esc(fmt(m.correct_value))}</td>`}
+    </tr>`).join('')
+    const comps = grade.competencies.map((c) => `${esc(titleCase(c.competency))} · ${esc(titleCase(c.level))}`).join(', ')
+    openPrintable(`Simulation debrief — ${start.scenario.scenario_code}`, `
+      <div class="brand">PCI Simulation Lab</div>
+      <h1>${esc(start.scenario.title)}</h1>
+      <div class="muted">${esc(start.scenario.scenario_code)} · ${esc(titleCase(start.scenario.kind))}
+        · ${grade.assessment ? 'Assessment Mode' : 'Training Mode'}
+        · ${esc(fmtDateTime(review?.completed_at ?? new Date().toISOString()))}</div>
+      <div class="big">${grade.score}% — ${grade.correct} of ${grade.total} measures correct</div>
+      <table><thead><tr><th>Measure</th><th>Verdict</th><th class="r">Your answer</th>${grade.assessment ? '' : '<th class="r">Correct</th>'}</tr></thead>
+      <tbody>${rows}</tbody></table>
+      ${comps ? `<p class="muted">Competency evidence: ${comps}</p>` : ''}
+      ${grade.assessment ? '<p class="muted">Assessment Mode reports marks only — the worked answers are withheld.</p>' : ''}
+      <p class="muted">Educational simulator using synthetic project data. Practice never affects a formal PCI examination or certification.</p>
+    `)
+  }
+
+  // Retrying from a review starts a fresh attempt in the reviewed attempt's mode.
+  const retryFromReview = () => {
+    if (review?.mode === 'assessment') setMode('assessment')
+    setParams((prev) => {
+      const p = new URLSearchParams(prev)
+      p.delete('attempt')
+      return p
+    }, { replace: true })
+  }
+
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       <header className="sl-runhead">
@@ -562,16 +749,25 @@ export default function LabRunner() {
               </div>
             )}
           </div>
-          <SegmentedControl<Mode>
-            legend="Mode"
-            value={mode}
-            onChange={requestMode}
-            disabled={busy || loading}
-            options={[{ value: 'training', label: 'Training' }, { value: 'assessment', label: 'Assessment' }]}
-            hint={mode === 'training'
-              ? 'Training reveals the worked answers after grading.'
-              : 'Assessment reports marks only — answers are withheld.'}
-          />
+          {review ? (
+            <InsightCallout tone="info" title="Reviewing a completed attempt">
+              <p>
+                {review.mode === 'assessment' ? 'Assessment' : 'Training'} attempt
+                {review.completed_at ? ` · completed ${fmtDateTime(review.completed_at)}` : ''}. This view is read-only.
+              </p>
+            </InsightCallout>
+          ) : (
+            <SegmentedControl<Mode>
+              legend="Mode"
+              value={mode}
+              onChange={requestMode}
+              disabled={busy || loading}
+              options={[{ value: 'training', label: 'Training' }, { value: 'assessment', label: 'Assessment' }]}
+              hint={mode === 'training'
+                ? 'Training reveals the worked answers after grading.'
+                : 'Assessment reports marks only — answers are withheld.'}
+            />
+          )}
         </div>
       </header>
 
@@ -621,7 +817,7 @@ export default function LabRunner() {
                   {error && <ErrorNote>{error}</ErrorNote>}
                   <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'center', marginTop: '.3rem' }}>
                     <button className="btn" onClick={submit} disabled={busy}>{busy ? 'Grading…' : 'Submit for grading'}</button>
-                    <button className="btn secondary" type="button" onClick={() => { void autosave(false) }} disabled={busy}>Save progress</button>
+                    <button className="btn secondary" type="button" onClick={() => { void autosave(false) }} disabled={busy} title="Ctrl+S / ⌘S">Save progress</button>
                     <button className="btn ghost sm" type="button" onClick={() => { void reportProblem() }} disabled={reporting || busy}>
                       {reporting ? 'Opening ticket…' : 'Report a problem'}
                     </button>
@@ -694,7 +890,10 @@ export default function LabRunner() {
                   )}
 
                   <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', marginTop: '.4rem' }}>
-                    <button className="btn secondary" onClick={() => begin(mode)}>Try again</button>
+                    <button className="btn secondary" onClick={() => (review ? retryFromReview() : void begin(mode))}>
+                      Try again
+                    </button>
+                    <button className="btn secondary sm" type="button" onClick={printSummary}>Print summary</button>
                     <Link className="btn sm ghost" to="/lab">Back to labs</Link>
                     <button className="btn ghost sm" type="button" onClick={() => { void reportProblem() }} disabled={reporting}>
                       {reporting ? 'Opening ticket…' : 'Report a problem'}
@@ -706,8 +905,32 @@ export default function LabRunner() {
             )}
           </div>
 
-          <aside className="sl-rail" aria-label="Coach">
-            <Card title="Coach">
+          <aside className="sl-rail" aria-label="Coach and reference">
+            <Card
+              title={railTab === 'coach' ? 'Coach' : 'Method reference'}
+              action={
+                <span className="row" style={{ gap: '.3rem' }}>
+                  <Chip pressed={railTab === 'coach'} onClick={() => setRailTab('coach')}>Coach</Chip>
+                  <Chip pressed={railTab === 'reference'} onClick={() => setRailTab('reference')}>Reference</Chip>
+                </span>
+              }
+            >
+              {railTab === 'reference' ? (
+                <div className="sl-ref">
+                  <p className="sl-footnote">
+                    Definitions and formulas for this task type — generic course knowledge, never a
+                    scenario figure.
+                  </p>
+                  <dl>
+                    {(REFERENCE[start.task.task] ?? [{ term: 'Method', formula: 'Work from the definitions in the brief — the Coach can explain the approach.' }]).map((f) => (
+                      <span key={f.term}>
+                        <dt>{f.term}</dt>
+                        <dd><code>{f.formula}</code></dd>
+                      </span>
+                    ))}
+                  </dl>
+                </div>
+              ) : (
               <div className="sl-coach">
                 <div className="sl-coach-head">
                   <span className="sl-coach-id" aria-hidden="true">PC</span>
@@ -770,6 +993,7 @@ export default function LabRunner() {
 
                 {!assessment && coach && <CoachMessage coach={coach} />}
               </div>
+              )}
             </Card>
           </aside>
         </div>

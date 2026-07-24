@@ -10,6 +10,7 @@ const h = vi.hoisted(() => ({
   access: null as unknown,
   cat: { rows: [] as unknown[] } as unknown,
   mastery: { mastery: [] as unknown[], recommended: [] as unknown[], weak_competencies: [] as string[] } as unknown,
+  attempts: { rows: [] as unknown[] } as unknown,
 }))
 
 vi.mock('../api/hooks', () => ({
@@ -17,6 +18,7 @@ vi.mock('../api/hooks', () => ({
     const data = path === '/api/me/lab/access' ? h.access
       : path === '/api/me/lab/catalogue' ? h.cat
       : path === '/api/me/lab/mastery' ? h.mastery
+      : path === '/api/me/lab/attempts' ? h.attempts
       : null
     return { data, loading: false, error: null, refetch: vi.fn() }
   },
@@ -24,7 +26,8 @@ vi.mock('../api/hooks', () => ({
 
 import Lab from './Lab'
 
-const renderLab = () => render(<MemoryRouter><Lab /></MemoryRouter>)
+const renderLab = (initialEntries: string[] = ['/lab']) =>
+  render(<MemoryRouter initialEntries={initialEntries}><Lab /></MemoryRouter>)
 
 const lab = (over: Record<string, unknown> = {}) => ({
   id: 1, scenario_code: 'GL-WBS-001', title: 'Structure a project WBS', kind: 'guided_lab',
@@ -110,5 +113,56 @@ describe('Lab (Simulation Lab landing)', () => {
     renderLab()
     expect(screen.getByText('Continue where you left off')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Resume scenario' })).toHaveAttribute('href', '/lab/GL-WBS-001')
+  })
+
+  it('initialises filters from the URL so a filtered view survives reload', () => {
+    h.cat = {
+      rows: [
+        lab({ id: 1, industry: 'Construction' }),
+        lab({ id: 2, scenario_code: 'GL-CASH-001', title: 'Model cash exposure', industry: 'Finance' }),
+      ],
+    }
+    renderLab(['/lab?industry=Finance'])
+    expect(screen.getByLabelText('Filter by industry')).toHaveValue('Finance')
+    expect(screen.getByRole('status')).toHaveTextContent('Showing 1 of 2 labs')
+    expect(screen.queryByText('Structure a project WBS')).toBeNull()
+  })
+
+  it('opens the scenario details panel with both launch modes', () => {
+    h.cat = { rows: [lab()] }
+    renderLab()
+    fireEvent.click(screen.getByRole('button', { name: 'Details — Structure a project WBS' }))
+    const dialog = screen.getByRole('dialog', { name: 'Structure a project WBS' })
+    expect(dialog).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Start in Training Mode' })).toHaveAttribute('href', '/lab/GL-WBS-001')
+    expect(screen.getByRole('link', { name: 'Start in Assessment Mode' })).toHaveAttribute('href', '/lab/GL-WBS-001?mode=assessment')
+    fireEvent.click(screen.getByRole('button', { name: 'Close details' }))
+    expect(screen.queryByRole('dialog')).toBeNull()
+  })
+
+  it('renders competency progress meters from mastery data', () => {
+    h.cat = { rows: [lab()] }
+    h.mastery = {
+      mastery: [{ competency: 'earned_value', avg_score: 74.2, attempts: 3, level: 'developing' }],
+      recommended: [], weak_competencies: [],
+    }
+    renderLab()
+    expect(screen.getByRole('progressbar', { name: 'Earned value: 74 out of 100' })).toBeInTheDocument()
+    expect(screen.getByText(/3 attempts · Developing/)).toBeInTheDocument()
+  })
+
+  it('lists recent attempts with Resume and Review actions', () => {
+    h.cat = { rows: [lab()] }
+    h.attempts = {
+      rows: [
+        { id: 11, mode: 'training', status: 'in_progress', score: null, scenario_code: 'GL-WBS-001', title: 'Structure a project WBS', kind: 'guided_lab', started_at: '2026-07-20T10:00:00Z', completed_at: null },
+        { id: 9, mode: 'assessment', status: 'passed', score: 92, scenario_code: 'GL-WBS-001', title: 'Structure a project WBS', kind: 'guided_lab', started_at: '2026-07-18T10:00:00Z', completed_at: '2026-07-18T10:20:00Z' },
+      ],
+    }
+    renderLab()
+    expect(screen.getByText('Recent attempts')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Resume' })).toHaveAttribute('href', '/lab/GL-WBS-001')
+    expect(screen.getByRole('link', { name: 'Review' })).toHaveAttribute('href', '/lab/GL-WBS-001?attempt=9')
+    expect(screen.getByText('92%')).toBeInTheDocument()
   })
 })

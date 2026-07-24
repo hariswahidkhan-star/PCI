@@ -19,3 +19,10 @@ mocked API responses (realistic synthetic scenario data; no real accounts).
 language set to Arabic (the shell mirrors; SimLab styles use logical
 properties). Lab content copy itself is English-only today — unchanged from
 before the redesign and listed as a known limitation.
+
+`round2/` captures the feature round that followed the visual redesign:
+competency progress meters + attempt history on the catalogue
+(`catalogue-meters-history.png`), the scenario details drawer with both launch
+modes (`details-drawer.png`), the per-task method reference tab in the
+workspace rail (`reference-tab.png`), and the read-only review of a completed
+attempt (`attempt-review.png`).
