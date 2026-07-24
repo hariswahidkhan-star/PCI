@@ -125,6 +125,49 @@ public static class WorldSchema
             revoked INTEGER DEFAULT 0,
             created_at TEXT DEFAULT (datetime('now')))");
 
+        // ── Participant accounts (Phase 1b). Wholly separate from the platform's `users` — a PCI
+        //    World account is practice identity only and can never reach exam or credential data.
+        //    The passport token is the opaque, revocable public-profile URL; publication is
+        //    consent-based and requires a verified email + a chosen display name. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_users(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email VARCHAR(190) UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            display_name TEXT,
+            status VARCHAR(16) NOT NULL DEFAULT 'active',
+            email_verified INTEGER DEFAULT 0,
+            passport_public INTEGER DEFAULT 0,
+            passport_token_sha VARCHAR(64),
+            failed_logins INTEGER DEFAULT 0,
+            lockout_until TEXT,
+            last_login_at TEXT,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_user_sessions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            token VARCHAR(64) NOT NULL,
+            expires_at TEXT NOT NULL,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldusess_token ON pciworld_user_sessions(token)");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_user_tokens(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            purpose VARCHAR(16) NOT NULL,                  -- verify | reset
+            token_sha VARCHAR(64) UNIQUE NOT NULL,
+            expires_at TEXT NOT NULL,
+            created_at TEXT DEFAULT (datetime('now')))");
+
+        // Additive upgrade columns for installs created before Phase 1b (fresh installs get them
+        // from CREATE TABLE below/above; both providers share this code path).
+        void AddCol(string table, string col, string ddl)
+        {
+            var have = db.Columns(table);
+            if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+        }
+        AddCol("pciworld_attempts", "user_id", "user_id INTEGER");
+        AddCol("pciworld_attempts", "passport_visible", "passport_visible INTEGER DEFAULT 0");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_user ON pciworld_attempts(user_id)");
+
         // ── Separate PCI World admin realm (partner-portal precedent: wholly separate from
         //    admin_users and students). Roles: owner|author|reviewer|publisher|viewer. ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_admin_users(
