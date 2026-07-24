@@ -106,6 +106,102 @@ public static class SimManifest
         return doc.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
     }
 
+    /// <summary>Reasons a manifest cannot be imported.</summary>
+    public enum Reject { None, BadManifest, WrongKind, UnsupportedVersion, ChecksumMismatch }
+
+    /// <summary>The API error code for a rejection — the wire contract lives with the enum it describes.</summary>
+    public static string Code(Reject r) => r switch
+    {
+        Reject.BadManifest => "bad_manifest",
+        Reject.WrongKind => "wrong_kind",
+        Reject.UnsupportedVersion => "unsupported_version",
+        Reject.ChecksumMismatch => "checksum_mismatch",
+        _ => "ok",
+    };
+
+    /// <summary>
+    /// Turn an exported manifest's `scenario` block back into a row-shaped dictionary — the same shape
+    /// <see cref="Content"/> and <see cref="Checksum"/> read, and the same shape the INSERT needs.
+    ///
+    /// Going back through the canonical projection (rather than hashing the uploaded bytes) is what makes
+    /// the checksum check meaningful: a file that was pretty-printed, re-ordered or re-encoded on its way
+    /// between environments still verifies, while a file whose VALUES were altered does not.
+    /// </summary>
+    public static Dictionary<string, object?> RowFromManifest(JsonObject scenario)
+    {
+        string? S(string k) => scenario[k] is { } n && n.GetValueKind() == JsonValueKind.String ? n.GetValue<string>() : null;
+        long? N(string k) => scenario[k] is { } n && n.GetValueKind() == JsonValueKind.Number ? n.GetValue<long>() : null;
+        // A nested object/array is carried as its JSON text (the column format); a plain string is carried
+        // as-is, which is how the exporter preserves content it could not parse.
+        string? J(string k) => scenario[k] switch
+        {
+            null => null,
+            var n when n.GetValueKind() is JsonValueKind.Object or JsonValueKind.Array => n.ToJsonString(),
+            var n when n.GetValueKind() == JsonValueKind.String => n.GetValue<string>(),
+            _ => null,
+        };
+
+        return new Dictionary<string, object?>
+        {
+            ["scenario_code"] = S("scenario_code"),
+            ["version"] = N("version") ?? 1,
+            ["title"] = S("title"),
+            ["kind"] = S("kind"),
+            ["industry"] = S("industry"),
+            ["project_type"] = S("project_type"),
+            ["difficulty"] = S("difficulty"),
+            ["est_minutes"] = N("est_minutes") ?? 0,
+            ["certification_id"] = N("certification_id"),
+            ["competencies_json"] = J("competencies"),
+            ["summary"] = S("summary"),
+            ["brief"] = S("brief"),
+            ["objectives_json"] = J("objectives"),
+            ["provenance"] = S("provenance"),
+            ["disclaimers"] = S("disclaimers"),
+            ["worked_solution"] = S("worked_solution"),
+            ["synthetic_declared"] = scenario["synthetic_declared"]?.GetValueKind() == JsonValueKind.True ? 1L : 0L,
+            ["config_json"] = J("config"),
+        };
+    }
+
+    /// <summary>
+    /// Validate an uploaded manifest and hand back the row it describes. Checks the envelope (kind and a
+    /// manifest version this build understands), that the scenario block carries the minimum identity a
+    /// scenario needs, and that the recomputed content checksum matches the one the file claims — so a
+    /// truncated, corrupted or edited manifest is refused rather than silently imported as different content.
+    ///
+    /// It deliberately says nothing about lifecycle: the caller always lands an import in draft. Nothing in
+    /// the file can grant published state.
+    /// </summary>
+    public static Reject Verify(JsonObject? manifest, out Dictionary<string, object?> row, out string checksum)
+    {
+        row = new Dictionary<string, object?>();
+        checksum = "";
+        if (manifest is null) return Reject.BadManifest;
+
+        var kind = manifest["kind"]?.GetValue<string>();
+        if (!string.Equals(kind, Kind, StringComparison.Ordinal)) return Reject.WrongKind;
+
+        var version = manifest["manifest_version"]?.GetValueKind() == JsonValueKind.Number
+            ? manifest["manifest_version"]!.GetValue<int>() : 0;
+        // A newer manifest may carry fields this build would silently drop, so refuse it rather than
+        // import a lossy copy. Older versions stay importable.
+        if (version <= 0 || version > ManifestVersion) return Reject.UnsupportedVersion;
+
+        if (manifest["scenario"] is not JsonObject scenario) return Reject.BadManifest;
+        var built = RowFromManifest(scenario);
+        if (string.IsNullOrWhiteSpace(H.Str(built["scenario_code"])) || string.IsNullOrWhiteSpace(H.Str(built["title"])))
+            return Reject.BadManifest;
+
+        var recomputed = Checksum(built);
+        var claimed = manifest["checksum"]?.GetValue<string>();
+        if (!string.Equals(recomputed, claimed, StringComparison.OrdinalIgnoreCase)) return Reject.ChecksumMismatch;
+
+        row = built;
+        checksum = recomputed;
+        return Reject.None;
+    }
+
     /// <summary>Download filename for a scenario version. The code is operator-authored, so it is reduced to
     /// a safe alphabet before it reaches a Content-Disposition header — a quote or newline in a scenario code
     /// must never be able to forge a response header.</summary>

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent, act } from '@testing-library/react'
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
 
 // FE — the Admin Console → Simulation Lab Studio (Phase 5A). A governed authoring surface over the scenario
 // engine: create a draft, validate against the §14 publication gate, walk the review workflow, revise a
@@ -192,6 +192,67 @@ describe('Admin SimLab Studio', () => {
       await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Export' })) })
       expect(screen.getByRole('alert')).toHaveTextContent('Export failed (403).')
       expect(clicked).toHaveLength(0)
+    })
+  })
+
+  // §5B.5 manifest import. The server verifies the checksum and forces the row to draft; the page's job
+  // is to hand over the file, surface the verdict, and keep a colliding code recoverable.
+  describe('manifest import', () => {
+    const doc = { manifest_version: 1, kind: 'pci.simulation.scenario', checksum: 'abc123', scenario: { scenario_code: 'GL-EVM-001', title: 'Imported' } }
+    const ok = { id: 9, scenario_code: 'GL-EVM-001', checksum: 'abc123', imported_version: 3, publishable: true, errors: 0, warnings: 0, issues: [] }
+
+    // The file is read asynchronously (FileReader), so settle on a rendered outcome rather than assuming
+    // the handler has finished when the change event returns.
+    const pick = async (contents: string) => {
+      const input = screen.getByTestId('manifest-file')
+      Object.defineProperty(input, 'files', { value: [new File([contents], 'm.pcisim.json', { type: 'application/json' })], configurable: true })
+      await act(async () => { fireEvent.change(input) })
+      await waitFor(() => expect(screen.queryByRole('status') ?? screen.queryByRole('alert') ?? screen.queryByRole('dialog')).not.toBeNull())
+    }
+
+    beforeEach(() => { h.resp = { rows: [], total: 0, published: 0 } })
+
+    it('posts the manifest and reports the imported draft with its validation verdict', async () => {
+      api.post.mockResolvedValue(ok)
+      render(<SimLab />)
+      await pick(JSON.stringify(doc))
+
+      expect(api.post).toHaveBeenCalledWith('/api/admin/lab/scenarios/import', { manifest: doc })
+      expect(screen.getByRole('status')).toHaveTextContent('Imported “GL-EVM-001” as a draft')
+      expect(screen.getByText('Publishable')).toBeInTheDocument()
+    })
+
+    it('reports how many errors block an import that does not validate here', async () => {
+      api.post.mockResolvedValue({ ...ok, publishable: false, errors: 2, issues: [{ severity: 'error', code: 'retired_name', message: 'Uses a retired name.' }] })
+      render(<SimLab />)
+      await pick(JSON.stringify(doc))
+
+      expect(screen.getByRole('status')).toHaveTextContent('validation found 2 error(s) to fix')
+      expect(screen.getByText('Not publishable')).toBeInTheDocument()
+      expect(screen.getByText(/Uses a retired name/)).toBeInTheDocument()
+    })
+
+    it('offers a different code when the manifest collides with an existing scenario', async () => {
+      api.post.mockRejectedValueOnce(new Error('duplicate_code')).mockResolvedValueOnce({ ...ok, scenario_code: 'GL-EVM-001-imported' })
+      render(<SimLab />)
+      await pick(JSON.stringify(doc))
+
+      // the upload is not lost — it reopens as a dialog pre-filled with a free code
+      const dialog = screen.getByRole('dialog', { name: 'That scenario code is already in use' })
+      expect(dialog).toBeInTheDocument()
+      expect(screen.getByLabelText('Import as code')).toHaveValue('GL-EVM-001-imported')
+
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Import as draft' })) })
+      expect(api.post).toHaveBeenLastCalledWith('/api/admin/lab/scenarios/import',
+        { manifest: doc, as_code: 'GL-EVM-001-imported' })
+      expect(screen.getByRole('status')).toHaveTextContent('Imported “GL-EVM-001-imported” as a draft')
+    })
+
+    it('refuses a file that is not JSON without calling the server', async () => {
+      render(<SimLab />)
+      await pick('this is not a manifest')
+      expect(api.post).not.toHaveBeenCalled()
+      expect(screen.getByRole('alert')).toHaveTextContent('That file is not valid JSON.')
     })
   })
 

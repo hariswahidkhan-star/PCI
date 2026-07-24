@@ -4010,6 +4010,81 @@ def test_simlab(admin):
         c8, _t8, _d8 = manifest(new_id, vtok)
         chk("43zm11 a viewer is refused the manifest export (403)", c8 == 403, c8)
 
+    # ---- §5B.5: validated manifest IMPORT. Verifies the envelope + recomputed checksum, then lands the
+    #      scenario as a draft that must walk the whole review workflow here. ----
+    def clone(doc):
+        return json.loads(json.dumps(doc))   # deep copy without importing copy
+
+    c, imp = jget("POST", "/api/admin/lab/scenarios/import", token=admin,
+                  body={"manifest": mjson, "as_code": "IT-IMP-001"})
+    imp_id = imp.get("id")
+    chk("43zi1 an admin imports a manifest as a new DRAFT under a chosen code",
+        c == 200 and imp_id and imp.get("scenario_code") == "IT-IMP-001"
+        and imp.get("review_state") == "draft" and imp.get("status") == "draft"
+        and imp.get("publishable") is True,
+        (c, imp.get("review_state"), imp.get("publishable"), imp.get("errors")))
+    # The safety property: the manifest describes a PUBLISHED scenario, and the import still lands in draft.
+    c, arows2 = jget("GET", "/api/admin/lab/scenarios", token=admin)
+    imported = next((r for r in arows2.get("rows", []) if r.get("id") == imp_id), {})
+    chk("43zi2 a manifest of a PUBLISHED scenario still imports as draft — a file can never grant published state",
+        (mjson.get("governance") or {}).get("review_state") == "published"
+        and imported.get("status") == "draft" and imported.get("review_state") == "draft"
+        and imported.get("version") == 1,
+        (imported.get("status"), imported.get("review_state"), imported.get("version")))
+    # Content survived the round trip even though the code (and so the fingerprint) changed.
+    c3i, itext, _ = manifest(imp_id, admin)
+    ijson = json.loads(itext) if c3i == 200 else {}
+    chk("43zi3 the imported draft carries the source's graded content, under its own fingerprint",
+        c3i == 200
+        and (ijson.get("scenario") or {}).get("config") == (mjson.get("scenario") or {}).get("config")
+        and (ijson.get("scenario") or {}).get("competencies") == (mjson.get("scenario") or {}).get("competencies")
+        and ijson.get("checksum") != mjson.get("checksum"),
+        (ijson.get("checksum") == mjson.get("checksum"),))
+    # Re-importing without a free code collides rather than silently overwriting the original.
+    c, dupi = jget("POST", "/api/admin/lab/scenarios/import", token=admin, body={"manifest": mjson})
+    chk("43zi4 importing over an existing scenario_code is refused (409 duplicate_code)",
+        c == 409 and dupi.get("error") == "duplicate_code", (c, dupi.get("error")))
+
+    # Integrity: content edited after export no longer matches the checksum the file carries.
+    tampered = clone(mjson)
+    tampered["scenario"]["title"] = "Quietly retitled in transit"
+    c, tam = jget("POST", "/api/admin/lab/scenarios/import", token=admin,
+                  body={"manifest": tampered, "as_code": "IT-IMP-TAM"})
+    chk("43zi5 a manifest edited after export is refused (409 checksum_mismatch)",
+        c == 409 and tam.get("error") == "checksum_mismatch", (c, tam.get("error")))
+    foreign = clone(mjson); foreign["kind"] = "some.other.export"
+    c, frn = jget("POST", "/api/admin/lab/scenarios/import", token=admin, body={"manifest": foreign, "as_code": "IT-IMP-FGN"})
+    chk("43zi6 a file that is not a scenario manifest is refused (400 wrong_kind)",
+        c == 400 and frn.get("error") == "wrong_kind", (c, frn.get("error")))
+    future = clone(mjson); future["manifest_version"] = 99
+    c, fut = jget("POST", "/api/admin/lab/scenarios/import", token=admin, body={"manifest": future, "as_code": "IT-IMP-FUT"})
+    chk("43zi7 a manifest from a newer platform version is refused rather than imported lossily (400)",
+        c == 400 and fut.get("error") == "unsupported_version", (c, fut.get("error")))
+    c, bad = jget("POST", "/api/admin/lab/scenarios/import", token=admin, body={"manifest": {"kind": "pci.simulation.scenario", "manifest_version": 1}})
+    chk("43zi8 a manifest with no scenario block is refused (400 bad_manifest)",
+        c == 400 and bad.get("error") == "bad_manifest", (c, bad.get("error")))
+
+    # Maker-checker still applies: the importer is recorded as the author, so they cannot approve their
+    # own import — an import cannot be used to slip content past the second pair of eyes.
+    for stage in ("calc_review", "learning_review", "safety_review", "pilot"):
+        jget("POST", f"/api/admin/lab/scenarios/{imp_id}/review", token=admin, body={"to": stage})
+    c, selfap = jget("POST", f"/api/admin/lab/scenarios/{imp_id}/review", token=admin, body={"to": "approved"})
+    chk("43zi9 the importing admin cannot approve their own import (maker_checker, 409)",
+        c == 409 and selfap.get("error") == "maker_checker", (c, selfap.get("error")))
+    c, ap2 = jget("POST", f"/api/admin/lab/scenarios/{imp_id}/review", token=admin2, body={"to": "approved"})
+    chk("43zi10 a different admin can approve the imported scenario (the workflow is intact)",
+        c == 200 and ap2.get("review_state") == "approved", (c, ap2))
+
+    # Permission wiring matches the rest of the Lab.
+    c, _si = jget("POST", "/api/admin/lab/scenarios/import", token=mtok, body={"manifest": mjson, "as_code": "IT-IMP-STU"})
+    chk("43zi11 manifest import is not reachable with a student token", c in (401, 403), c)
+    if vtok:
+        c, _vi = jget("POST", "/api/admin/lab/scenarios/import", token=vtok, body={"manifest": mjson, "as_code": "IT-IMP-VWR"})
+        chk("43zi12 a viewer is refused manifest import (403)", c == 403, c)
+    c, sli = jget("POST", "/api/admin/lab/scenarios/import", token=sltok, body={"manifest": mjson, "as_code": "IT-IMP-SL1"})
+    chk("43zi13 a 'sim_lab'-only admin can import a manifest (200, as a draft)",
+        c == 200 and sli.get("review_state") == "draft", (c, sli.get("review_state")))
+
     # ---- Phase 2 engine: forecasting (three EAC methods) + CBS cost roll-up, graded deterministically ----
     c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})
     fid = stf.get("attempt_id")

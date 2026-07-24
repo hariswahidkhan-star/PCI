@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using PCI.Backend.Core;
 using Xunit;
 
@@ -202,5 +203,113 @@ public class SimManifestTests
     {
         var name = SimManifest.FileName(new string('A', 400), 9);
         Assert.Equal(new string('A', 64) + "-v9.pcisim.json", name);
+    }
+
+    // ---- §5B.5 import verification ----
+
+    static JsonObject Exported(params (string Col, object? Val)[] overrides) =>
+        (JsonObject)JsonNode.Parse(SimManifest.Build(Row(overrides), NoIssues))!;
+
+    [Fact]
+    public void Verify_AcceptsAnUnmodifiedExportAndRecoversTheRow()
+    {
+        var reject = SimManifest.Verify(Exported(), out var row, out var checksum);
+        Assert.Equal(SimManifest.Reject.None, reject);
+        Assert.Equal(SimManifest.Checksum(Row()), checksum);
+        // the recovered row is the shape the INSERT needs, with JSON columns back in column format
+        Assert.Equal("GL-EVM-010", row["scenario_code"]);
+        Assert.Equal("Calculate the core EVM measures", row["title"]);
+        Assert.Equal(3L, row["version"]);
+        Assert.Equal(1L, row["certification_id"]);
+        Assert.Equal(1L, row["synthetic_declared"]);
+        Assert.Contains("earned_value", (string)row["competencies_json"]!);
+        Assert.Contains("\"task\":\"evm\"", (string)row["config_json"]!);
+    }
+
+    [Fact]
+    public void Verify_IgnoresReformattingAndKeyOrder()
+    {
+        // The checksum is recomputed through the canonical projection, not over the uploaded bytes, so a
+        // manifest that was pretty-printed or had its keys re-ordered in transit still verifies.
+        var doc = Exported();
+        var scenario = (JsonObject)doc["scenario"]!;
+        var shuffled = new JsonObject();
+        foreach (var kv in scenario.ToArray().Reverse())
+            shuffled[kv.Key] = kv.Value is null ? null : JsonNode.Parse(kv.Value.ToJsonString());
+        doc["scenario"] = shuffled;
+
+        Assert.Equal(SimManifest.Reject.None, SimManifest.Verify(doc, out _, out var checksum));
+        Assert.Equal(SimManifest.Checksum(Row()), checksum);
+    }
+
+    [Fact]
+    public void Verify_RejectsContentEditedAfterExport()
+    {
+        // Editing any graded value without recomputing the checksum must be caught — that is the whole
+        // point of shipping the hash alongside the content.
+        var edited = Exported();
+        ((JsonObject)edited["scenario"]!)["title"] = "A quietly different title";
+        Assert.Equal(SimManifest.Reject.ChecksumMismatch, SimManifest.Verify(edited, out _, out _));
+
+        var retasked = Exported();
+        ((JsonObject)retasked["scenario"]!)["config"] = JsonNode.Parse("{\"task\":\"cpm\"}");
+        Assert.Equal(SimManifest.Reject.ChecksumMismatch, SimManifest.Verify(retasked, out _, out _));
+
+        var noSum = Exported();
+        noSum.Remove("checksum");
+        Assert.Equal(SimManifest.Reject.ChecksumMismatch, SimManifest.Verify(noSum, out _, out _));
+    }
+
+    [Fact]
+    public void Verify_RejectsAForeignOrFutureManifest()
+    {
+        Assert.Equal(SimManifest.Reject.BadManifest, SimManifest.Verify(null, out _, out _));
+
+        var foreign = Exported();
+        foreign["kind"] = "some.other.export";
+        Assert.Equal(SimManifest.Reject.WrongKind, SimManifest.Verify(foreign, out _, out _));
+
+        // A newer manifest may carry fields this build would drop, so it is refused rather than imported lossily.
+        var future = Exported();
+        future["manifest_version"] = SimManifest.ManifestVersion + 1;
+        Assert.Equal(SimManifest.Reject.UnsupportedVersion, SimManifest.Verify(future, out _, out _));
+
+        var versionless = Exported();
+        versionless.Remove("manifest_version");
+        Assert.Equal(SimManifest.Reject.UnsupportedVersion, SimManifest.Verify(versionless, out _, out _));
+    }
+
+    [Fact]
+    public void Verify_RejectsAManifestMissingScenarioIdentity()
+    {
+        var noScenario = Exported();
+        noScenario.Remove("scenario");
+        Assert.Equal(SimManifest.Reject.BadManifest, SimManifest.Verify(noScenario, out _, out _));
+
+        foreach (var field in new[] { "scenario_code", "title" })
+        {
+            var stripped = Exported();
+            ((JsonObject)stripped["scenario"]!)[field] = null;
+            Assert.Equal(SimManifest.Reject.BadManifest, SimManifest.Verify(stripped, out _, out _));
+        }
+    }
+
+    [Fact]
+    public void Verify_RoundTripsContentTheExporterCouldNotParse()
+    {
+        // The exporter preserves unparseable JSON as a string; import must carry it back to the column
+        // unchanged so nothing is lost by a round trip.
+        var reject = SimManifest.Verify(Exported(("config_json", "{not json")), out var row, out _);
+        Assert.Equal(SimManifest.Reject.None, reject);
+        Assert.Equal("{not json", row["config_json"]);
+    }
+
+    [Fact]
+    public void Code_NamesEveryRejectionOnTheWire()
+    {
+        Assert.Equal("bad_manifest", SimManifest.Code(SimManifest.Reject.BadManifest));
+        Assert.Equal("wrong_kind", SimManifest.Code(SimManifest.Reject.WrongKind));
+        Assert.Equal("unsupported_version", SimManifest.Code(SimManifest.Reject.UnsupportedVersion));
+        Assert.Equal("checksum_mismatch", SimManifest.Code(SimManifest.Reject.ChecksumMismatch));
     }
 }
