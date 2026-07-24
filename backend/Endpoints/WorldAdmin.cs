@@ -269,6 +269,163 @@ public static class WorldAdmin
             return J(new { ok = true });
         });
 
+        // ───────────── editorial: articles, sources, entities, reviews ─────────────
+
+        app.MapGet("/api/world-admin/articles", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "read", out _) is { } blocked) return blocked;
+            var limit = Math.Clamp((int)(H.QL(ctx, "limit") ?? 100), 1, 500);
+            var offset = Math.Max(0, (int)(H.QL(ctx, "offset") ?? 0));
+            var kind = ctx.Request.Query["kind"].ToString();
+            var where = WorldEditorial.Kinds.Contains(kind) ? " WHERE kind=?" : "";
+            var args = where.Length > 0 ? new object?[] { kind } : Array.Empty<object?>();
+            var total = db.Scalar<long>($"SELECT COUNT(*) FROM pciworld_articles{where}", args);
+            var rows = db.Query($@"SELECT id,slug,kind,title,status,current_version,author_name,published_at,updated_at
+                    FROM pciworld_articles{where} ORDER BY id DESC LIMIT {limit} OFFSET {offset}", args)
+                .Select(r => new { id = H.L(r["id"]), slug = H.Str(r["slug"]), kind = H.Str(r["kind"]),
+                                   title = H.Str(r["title"]), status = H.Str(r["status"]),
+                                   version = H.L(r["current_version"]), author = H.Str(r["author_name"]),
+                                   published_at = H.Str(r["published_at"]), updated_at = H.Str(r["updated_at"]) });
+            return J(new { rows, total, limit, offset });
+        });
+
+        app.MapGet("/api/world-admin/articles/{id:long}", (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, "read", out _) is { } blocked) return blocked;
+            var a = db.QueryOne("SELECT * FROM pciworld_articles WHERE id=?", id);
+            if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var issues = WorldEditorial.Validate(WorldEditorial.InputFor(db, a));
+            return J(new
+            {
+                id, slug = H.Str(a["slug"]), kind = H.Str(a["kind"]), title = H.Str(a["title"]),
+                dek = H.Str(a["dek"]), body_md = H.Str(a["body_md"]), author_name = H.Str(a["author_name"]),
+                tags_json = H.Str(a["tags_json"]), seo_title = H.Str(a["seo_title"]), seo_desc = H.Str(a["seo_desc"]),
+                status = H.Str(a["status"]), version = H.L(a["current_version"]),
+                words = WorldEditorial.WordCount(H.Str(a["body_md"])),
+                corrections = WorldEditorial.ParseCorrections(H.Str(a["corrections_json"])),
+                issues = issues.Select(i => new { code = i.Code, message = i.Message }),
+                sources = db.Query(@"SELECT s.id, s.url, s.publisher, s.title, s.published_at, s.tier, asrc.claim
+                        FROM pciworld_article_sources asrc JOIN pciworld_sources s ON s.id=asrc.source_id
+                        WHERE asrc.article_id=? ORDER BY asrc.id", id)
+                    .Select(s => new { id = H.L(s["id"]), url = H.Str(s["url"]), publisher = H.Str(s["publisher"]),
+                                       title = H.Str(s["title"]), published_at = H.Str(s["published_at"]),
+                                       tier = H.Str(s["tier"]), claim = H.Str(s["claim"]) }),
+                reviews = db.Query("SELECT * FROM pciworld_article_reviews WHERE article_id=? ORDER BY id DESC", id)
+                    .Select(r => new { kind = H.Str(r["kind"]), outcome = H.Str(r["outcome"]),
+                                       note = H.Str(r["note"]), at = H.Str(r["created_at"]) }),
+            });
+        });
+
+        app.MapPost("/api/world-admin/articles", async (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "author", out var adm) is { } blocked) return blocked;
+            var b = await H.Body(ctx.Request);
+            var kind = H.GetS(b, "kind") ?? "blog";
+            if (!WorldEditorial.Kinds.Contains(kind)) return Results.Json(new { error = "bad_kind" }, statusCode: 400);
+            var title = (H.GetS(b, "title") ?? "").Trim();
+            var slug = (H.GetS(b, "slug") ?? "").Trim();
+            if (slug.Length == 0) slug = WorldEditorial.Slugify(title);
+            if (slug.Length < 3) return Results.Json(new { error = "bad_slug", message = "A slug of at least three characters is required." }, statusCode: 400);
+            if (db.QueryOne("SELECT id FROM pciworld_articles WHERE slug=?", slug) is not null)
+                return Results.Json(new { error = "duplicate_slug", message = "That address is already in use." }, statusCode: 409);
+            // author_id is stamped at creation so maker-checker has something to compare against.
+            var id = db.ExecuteReturningId(@"INSERT INTO pciworld_articles(slug,kind,title,dek,body_md,author_name,author_id,status)
+                VALUES(?,?,?,?,?,?,?, 'drafting')",
+                slug, kind, title, H.GetS(b, "dek"), H.GetS(b, "body_md"),
+                H.GetS(b, "author_name") ?? WorldEditorial.EditorialByline, adm!.Id);
+            Audit(adm.Id, "article_create", $"{kind} #{id} {slug}");
+            return J(new { ok = true, id, slug });
+        });
+
+        app.MapPut("/api/world-admin/articles/{id:long}", async (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, "author", out var adm) is { } blocked) return blocked;
+            var a = db.QueryOne("SELECT status FROM pciworld_articles WHERE id=?", id);
+            if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            // Published text changes ONLY through the correction path, which records why.
+            if (!WorldEditorial.CanEdit(H.Str(a["status"])))
+                return Results.Json(new { error = "not_editable", message = "Published or in-review articles change through the correction path, which records the reason." }, statusCode: 409);
+            var b = await H.Body(ctx.Request);
+            db.Execute(@"UPDATE pciworld_articles SET title=?, dek=?, body_md=?, author_name=?, tags_json=?,
+                    seo_title=?, seo_desc=?, author_id=?, updated_at=datetime('now') WHERE id=?",
+                H.GetS(b, "title"), H.GetS(b, "dek"), H.GetS(b, "body_md"),
+                H.GetS(b, "author_name") ?? WorldEditorial.EditorialByline, H.GetS(b, "tags_json"),
+                H.GetS(b, "seo_title"), H.GetS(b, "seo_desc"), adm!.Id, id);
+            Audit(adm.Id, "article_update", $"#{id}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world-admin/articles/{id:long}/status", async (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, "author", out var adm) is { } blocked) return blocked;
+            var b = await H.Body(ctx.Request);
+            var to = H.GetS(b, "status") ?? "";
+            var err = WorldEditorial.Submit(db, id, to);
+            if (err is not null) return Results.Json(new { error = err }, statusCode: 409);
+            Audit(adm!.Id, "article_status", $"#{id} → {to}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world-admin/articles/{id:long}/review", async (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, "review", out var adm) is { } blocked) return blocked;
+            var b = await H.Body(ctx.Request);
+            var err = WorldEditorial.Review(db, id, H.GetS(b, "kind") ?? "", adm!.Id,
+                H.GetS(b, "outcome") ?? "", H.GetS(b, "note"));
+            if (err is not null) return Results.Json(new { error = err }, statusCode: 409);
+            Audit(adm.Id, "article_review", $"#{id} {H.GetS(b, "kind")}={H.GetS(b, "outcome")}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world-admin/articles/{id:long}/approve", (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, "review", out var adm) is { } blocked) return blocked;
+            var err = WorldEditorial.Approve(db, id, adm!.Id);
+            if (err is not null) return Results.Json(new { error = err }, statusCode: 409);
+            Audit(adm.Id, "article_approve", $"#{id}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world-admin/articles/{id:long}/publish", (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, "publish", out var adm) is { } blocked) return blocked;
+            var err = WorldEditorial.Publish(db, id, adm!.Id);
+            if (err is not null) return Results.Json(new { error = err }, statusCode: 409);
+            Audit(adm.Id, "article_publish", $"#{id}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world-admin/articles/{id:long}/correct", async (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, "publish", out var adm) is { } blocked) return blocked;
+            var b = await H.Body(ctx.Request);
+            var err = WorldEditorial.Correct(db, id, adm!.Id, H.GetS(b, "note") ?? "",
+                H.GetS(b, "title"), H.GetS(b, "dek"), H.GetS(b, "body_md"));
+            if (err is not null) return Results.Json(new { error = err, message = err == "note_required"
+                ? "A correction must say what was corrected — the note is published." : null }, statusCode: 409);
+            Audit(adm.Id, "article_correct", $"#{id}: {H.GetS(b, "note")}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world-admin/articles/{id:long}/sources", async (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, "author", out var adm) is { } blocked) return blocked;
+            var b = await H.Body(ctx.Request);
+            var url = (H.GetS(b, "url") ?? "").Trim();
+            if (!url.StartsWith("https://", StringComparison.OrdinalIgnoreCase) && !url.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
+                return Results.Json(new { error = "bad_url", message = "A source must be a reachable http(s) address — model memory is not a source." }, statusCode: 400);
+            var claim = (H.GetS(b, "claim") ?? "").Trim();
+            if (claim.Length < 8)
+                return Results.Json(new { error = "claim_required", message = "Record WHICH claim this source supports. A bibliography proves nothing." }, statusCode: 400);
+            var sourceId = db.ExecuteReturningId(@"INSERT INTO pciworld_sources(url,publisher,title,published_at,tier,note)
+                VALUES(?,?,?,?,?,?)", url, H.GetS(b, "publisher"), H.GetS(b, "title"),
+                H.GetS(b, "published_at"), H.GetS(b, "tier"), H.GetS(b, "note"));
+            db.Execute("INSERT INTO pciworld_article_sources(article_id,source_id,claim,confidence) VALUES(?,?,?,?)",
+                id, sourceId, claim, H.GetS(b, "confidence"));
+            Audit(adm!.Id, "article_source_add", $"#{id} ← {url}");
+            return J(new { ok = true, source_id = sourceId });
+        });
+
         // ───────────── rotation console (docs/pciworld/EXPANSION_PHASE0.md §12) ─────────────
 
         object? RotationCard(Dictionary<string, object?>? ch, Dictionary<string, object?>? period) =>
@@ -611,6 +768,7 @@ public static class WorldAdmin
             <button role="tab" id="t-challenges" aria-controls="tab-challenges" data-tab="challenges" aria-selected="false" tabindex="-1">Challenges</button>
             <button role="tab" id="t-editor" aria-controls="tab-editor" data-tab="editor" aria-selected="false" tabindex="-1">Editor</button>
             <button role="tab" id="t-rotation" aria-controls="tab-rotation" data-tab="rotation" aria-selected="false" tabindex="-1">Rotation</button>
+            <button role="tab" id="t-editorial" aria-controls="tab-editorial" data-tab="editorial" aria-selected="false" tabindex="-1">Editorial</button>
             <button role="tab" id="t-calendar" aria-controls="tab-calendar" data-tab="calendar" aria-selected="false" tabindex="-1">Calendar</button>
             <button role="tab" id="t-reports" aria-controls="tab-reports" data-tab="reports" aria-selected="false" tabindex="-1">Reports</button>
             <button role="tab" id="t-audit" aria-controls="tab-audit" data-tab="audit" aria-selected="false" tabindex="-1">Audit</button>
@@ -643,6 +801,7 @@ public static class WorldAdmin
             <div id="valout"></div>
           </div>
           <div id="tab-rotation" class="card" role="tabpanel" aria-labelledby="t-rotation" tabindex="0" hidden></div>
+          <div id="tab-editorial" class="card" role="tabpanel" aria-labelledby="t-editorial" tabindex="0" hidden></div>
           <div id="tab-calendar" class="card" role="tabpanel" aria-labelledby="t-calendar" tabindex="0" hidden></div>
           <div id="tab-reports" class="card" role="tabpanel" aria-labelledby="t-reports" tabindex="0" hidden></div>
           <div id="tab-audit" class="card" role="tabpanel" aria-labelledby="t-audit" tabindex="0" hidden></div>
@@ -661,7 +820,7 @@ public static class WorldAdmin
           .then(function(r){return r.json().then(function(j){if(!r.ok)throw j;return j;});});
         }
         function show(logged){$('login').hidden=logged;$('appmain').hidden=!logged;$('logout').hidden=!logged;}
-        var TABS=['overview','challenges','editor','rotation','calendar','reports','audit'];
+        var TABS=['overview','challenges','editor','rotation','editorial','calendar','reports','audit'];
         function tab(name,moveFocus){
           TABS.forEach(function(t){
             $('tab-'+t).hidden=t!==name;
@@ -674,6 +833,7 @@ public static class WorldAdmin
           });
           if(name==='overview')loadOverview(); if(name==='challenges')loadChallenges();
           if(name==='rotation')loadRotation();
+          if(name==='editorial')loadEditorial();
           if(name==='calendar')loadCalendar(); if(name==='reports')loadReports(); if(name==='audit')loadAudit();
         }
         document.querySelectorAll('[data-tab]').forEach(function(b){
@@ -728,6 +888,94 @@ public static class WorldAdmin
           if(r.status==='published')act('revise','Revise',true);
           if(!r.retired)act('retire','Retire',true); else act('restore','Restore',true);
           return b;
+        }
+        function loadEditorial(){
+          api('/api/world-admin/articles?limit=200').then(function(o){
+            var h='<h2>Editorial ('+o.total+') <button id="newart" class="ghost">New article</button> '+
+                  '<button id="newnews" class="ghost">New news item</button></h2>'+
+              '<p><small>Published text changes only through the correction path, which records a dated, public note. '+
+              'A news item cannot be approved without at least one recorded source.</small></p>'+
+              '<table><thead><tr><th scope="col">Slug</th><th scope="col">Title</th><th scope="col">Kind</th>'+
+              '<th scope="col">Status</th><th scope="col">v</th><th scope="col">Author</th><th scope="col">Actions</th></tr></thead><tbody>';
+            o.rows.forEach(function(r){
+              h+='<tr><td>'+esc(r.slug)+'</td><td>'+esc(r.title)+'</td><td>'+esc(r.kind)+'</td>'+
+                 '<td><span class="pill">'+esc(r.status)+'</span></td><td>'+r.version+'</td>'+
+                 '<td>'+esc(r.author||'')+'</td><td>'+articleButtons(r)+'</td></tr>';
+            });
+            h+='</tbody></table><div id="artedit"></div>';
+            $('tab-editorial').innerHTML=h;
+            $('newart').addEventListener('click',function(){newArticle('blog');});
+            $('newnews').addEventListener('click',function(){newArticle('news');});
+            $('tab-editorial').querySelectorAll('[data-aact]').forEach(function(btn){
+              btn.addEventListener('click',function(){articleAction(btn.dataset.aact,btn.dataset.id);});
+            });
+          });
+        }
+        function articleButtons(r){
+          var b='<button class="ghost" data-aact="open" data-id="'+r.id+'">Open</button> ';
+          if(r.status==='drafting')b+='<button class="ghost" data-aact="fact_check" data-id="'+r.id+'">To fact-check</button> ';
+          if(r.status!=='published')b+='<button class="ghost" data-aact="approve" data-id="'+r.id+'">Approve</button> ';
+          if(r.status==='approved')b+='<button data-aact="publish" data-id="'+r.id+'">Publish</button> ';
+          if(r.status==='published')b+='<button class="ghost" data-aact="correct" data-id="'+r.id+'">Correct</button> ';
+          return b;
+        }
+        function newArticle(kind){
+          var title=window.prompt('Working title for the new '+(kind==='news'?'news item':'article')+':');
+          if(!title)return;
+          api('/api/world-admin/articles','POST',{kind:kind,title:title})
+            .then(function(r){loadEditorial();openArticle(r.id);})
+            .catch(function(e){alert((e&&(e.message||e.error))||'Could not create');});
+        }
+        function articleAction(act,id){
+          if(act==='open'){openArticle(id);return;}
+          if(act==='fact_check'){
+            api('/api/world-admin/articles/'+id+'/status','POST',{status:'fact_check'})
+              .then(loadEditorial).catch(function(e){alert((e&&(e.message||e.error))||'Failed');});
+            return;
+          }
+          if(act==='correct'){
+            var note=window.prompt('What is being corrected? This note is published with a date.');
+            if(!note)return;
+            api('/api/world-admin/articles/'+id+'/correct','POST',{note:note})
+              .then(loadEditorial).catch(function(e){alert((e&&(e.message||e.error))||'Failed');});
+            return;
+          }
+          api('/api/world-admin/articles/'+id+'/'+act,'POST',{})
+            .then(loadEditorial).catch(function(e){alert((e&&(e.message||e.error))||'Failed');});
+        }
+        function openArticle(id){
+          api('/api/world-admin/articles/'+id).then(function(a){
+            var issues=a.issues.length
+              ? '<p class="bad">Not publishable: '+a.issues.map(function(i){return esc(i.message);}).join(' ')+'</p>'
+              : '<p class="ok">Passes the publication gate.</p>';
+            var srcs=a.sources.length
+              ? '<ul>'+a.sources.map(function(s){return '<li>'+esc(s.url)+' — <small>supports: '+esc(s.claim||'')+'</small></li>';}).join('')+'</ul>'
+              : '<p><small>No sources recorded.</small></p>';
+            $('artedit').innerHTML='<h2 style="margin-top:26px">'+esc(a.title)+' <span class="pill">'+esc(a.status)+'</span></h2>'+
+              '<p><small>/world/'+esc(a.kind)+'/'+esc(a.slug)+' · '+a.words+' words · v'+a.version+'</small></p>'+issues+
+              '<label for="a_title">Title</label><input id="a_title" value="'+esc(a.title||'')+'">'+
+              '<label for="a_dek">Standfirst</label><input id="a_dek" value="'+esc(a.dek||'')+'">'+
+              '<label for="a_author">Author (a real name, or PCI World Editorial)</label><input id="a_author" value="'+esc(a.author_name||'')+'">'+
+              '<label for="a_body">Body (Markdown subset)</label><textarea id="a_body" rows="14">'+esc(a.body_md||'')+'</textarea>'+
+              '<p style="margin-top:12px"><button id="a_save">Save draft</button> <span id="a_msg" role="status"></span></p>'+
+              '<h2 style="margin-top:22px">Sources</h2>'+srcs+
+              '<div class="row"><div><label for="s_url">Source URL</label><input id="s_url" placeholder="https://"></div>'+
+              '<div><label for="s_claim">Claim it supports</label><input id="s_claim"></div>'+
+              '<div><label for="s_pub">Publisher</label><input id="s_pub"></div></div>'+
+              '<p style="margin-top:10px"><button id="s_add" class="ghost">Add source</button> <span id="s_msg" role="status"></span></p>';
+            $('a_save').addEventListener('click',function(){
+              api('/api/world-admin/articles/'+id,'PUT',{title:$('a_title').value,dek:$('a_dek').value,
+                   author_name:$('a_author').value,body_md:$('a_body').value})
+                .then(function(){$('a_msg').textContent='Saved.';openArticle(id);})
+                .catch(function(e){$('a_msg').textContent=(e&&(e.message||e.error))||'Save failed';});
+            });
+            $('s_add').addEventListener('click',function(){
+              api('/api/world-admin/articles/'+id+'/sources','POST',
+                  {url:$('s_url').value,claim:$('s_claim').value,publisher:$('s_pub').value})
+                .then(function(){openArticle(id);})
+                .catch(function(e){$('s_msg').textContent=(e&&(e.message||e.error))||'Failed';});
+            });
+          });
         }
         function loadRotation(){
           Promise.all([api('/api/world-admin/rotation'),api('/api/world-admin/rotation/periods?limit=30'),
