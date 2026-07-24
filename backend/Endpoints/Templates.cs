@@ -133,19 +133,30 @@ public static class Templates
             var series = keys.Select(k => new { day = k, count = byDay[k] }).ToList();
             var windowTotal = series.Sum(s => s.count);
 
+            // §6E — "reach": how many DISTINCT students have taken templates, overall and per template. Raw
+            // download counts can be inflated by one keen student pulling the same file repeatedly, so the
+            // distinct-downloader count is the truer engagement signal. Reuses the §6D per-student history table.
+            var udRow = db.QueryOne("SELECT COUNT(DISTINCT user_id) AS u FROM template_user_downloads");
+            var uniqueDownloaders = udRow is null ? 0 : H.L(udRow["u"]);
+            var byTemplate = new Dictionary<long, long>();
+            foreach (var r in db.Query("SELECT template_id, COUNT(DISTINCT user_id) AS u FROM template_user_downloads GROUP BY template_id"))
+                byTemplate[H.L(r["template_id"])] = H.L(r["u"]);
+
             var top = new List<object>();
-            foreach (var r in db.Query("SELECT slug,title,download_count,published FROM templates ORDER BY download_count DESC, id ASC LIMIT 8"))
+            foreach (var r in db.Query("SELECT id,slug,title,download_count,published FROM templates ORDER BY download_count DESC, id ASC LIMIT 8"))
                 top.Add(new
                 {
                     slug = H.Str(r["slug"]),
                     title = H.Str(r["title"]),
                     download_count = H.L(r["download_count"]),
+                    downloaders = byTemplate.TryGetValue(H.L(r["id"]), out var du) ? du : 0,
                     published = H.L(r["published"]) == 1,
                 });
 
             return Results.Json(new
             {
                 total_downloads = totalDownloads,
+                unique_downloaders = uniqueDownloaders,
                 templates = totals is null ? 0 : H.L(totals["n"]),
                 published = totals is null ? 0 : H.L(totals["pub"]),
                 window_days = Days,
