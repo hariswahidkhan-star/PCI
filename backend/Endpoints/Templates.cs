@@ -25,10 +25,16 @@ public static class Templates
         // ---- student catalogue (requires a logged-in portal session). Metadata only — never the body here. ----
         app.MapGet("/api/me/templates", (HttpContext ctx) =>
         {
-            if (Auth.UserFromReq(ctx.Request, db) is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (Auth.UserFromReq(ctx.Request, db) is not { } user) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            // §6D — which templates has THIS student already downloaded? Drives the "Downloaded" badge and the
+            // new-only filter in the panel. Personal to the student; a support "view as student" session still
+            // reads the student's own history here (it just never writes new rows).
+            var mine = new HashSet<long>();
+            foreach (var d in db.Query("SELECT template_id FROM template_user_downloads WHERE user_id=?", user.Id))
+                mine.Add(H.L(d["template_id"]));
             var rows = new List<object>();
             var categories = new SortedSet<string>(StringComparer.Ordinal);
-            foreach (var t in db.Query(@"SELECT slug,title,category,certification_id,summary,format,download_count,
+            foreach (var t in db.Query(@"SELECT id,slug,title,category,certification_id,summary,format,download_count,
                     LENGTH(body) AS bytes
                 FROM templates WHERE published=1 ORDER BY sort_order ASC, id ASC"))
             {
@@ -44,6 +50,7 @@ public static class Templates
                     format = H.Str(t["format"]) ?? "csv",
                     bytes = H.L(t["bytes"]),
                     download_count = H.L(t["download_count"]),
+                    downloaded = mine.Contains(H.L(t["id"])),
                     download_url = $"/api/me/templates/{H.Str(t["slug"])}/file",
                 });
             }
@@ -53,7 +60,7 @@ public static class Templates
         // ---- student file download (requires a logged-in portal session). Streams the CSV, counts the download. ----
         app.MapGet("/api/me/templates/{slug}/file", (HttpContext ctx, string slug) =>
         {
-            if (Auth.UserFromReq(ctx.Request, db) is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (Auth.UserFromReq(ctx.Request, db) is not { } user) return Results.Json(new { error = "no_token" }, statusCode: 401);
             var t = db.QueryOne("SELECT id,slug,title,format,body FROM templates WHERE slug=? AND published=1", slug);
             if (t is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var tid = H.L(t["id"]);
@@ -62,6 +69,13 @@ public static class Templates
             var day = DateTime.UtcNow.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
             db.Execute("INSERT OR IGNORE INTO template_download_daily(template_id,day,count) VALUES(?,?,0)", tid, day);
             db.Execute("UPDATE template_download_daily SET count=count+1 WHERE template_id=? AND day=?", tid, day);
+            // §6D — record this download in the student's own history (upsert). Skipped for an impersonating staff
+            // session: "view as student" is a read-only view and must not write to the student's record.
+            if (!user.Impersonated)
+            {
+                db.Execute("INSERT OR IGNORE INTO template_user_downloads(user_id,template_id,count) VALUES(?,?,0)", user.Id, tid);
+                db.Execute("UPDATE template_user_downloads SET count=count+1, last_at=datetime('now') WHERE user_id=? AND template_id=?", user.Id, tid);
+            }
             var ext = (H.Str(t["format"]) ?? "csv").Trim();
             var name = $"{H.Str(t["slug"])}.{(ext.Length == 0 ? "csv" : ext)}";
             var mime = ext == "csv" ? "text/csv" : "text/plain";
@@ -208,6 +222,8 @@ public static class Templates
             db.Execute("DELETE FROM templates WHERE id=?", id);
             // §6C — clear the template's analytics too, so no orphan daily rows survive the delete.
             db.Execute("DELETE FROM template_download_daily WHERE template_id=?", id);
+            // §6D — and the per-student history rows, so no orphan download records survive the delete.
+            db.Execute("DELETE FROM template_user_downloads WHERE template_id=?", id);
             ListSections.Bump();
             log(adm.Id, "template_delete", H.Str(t["slug"]));
             return Results.Json(new { id, deleted = true });

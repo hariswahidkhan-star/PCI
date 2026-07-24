@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen } from '@testing-library/react'
+import { screen, fireEvent } from '@testing-library/react'
 import { renderWithProviders } from '../test/utils'
 
 // FE — the members-only Templates page in the student portal. Pins: templates group by topic, a track badge +
@@ -47,5 +47,24 @@ describe('Templates (student portal)', () => {
     expect(screen.getByText('Track')).toBeInTheDocument()
     // The topic chip is a button (the group heading with the same label is not).
     expect(screen.getByRole('button', { name: 'Scope & WBS' })).toBeInTheDocument()
+  })
+
+  it('badges a template the student already downloaded and offers a New-only filter', () => {
+    h.resp = {
+      rows: [
+        row({ downloaded: true }),
+        row({ slug: 'cashflow-forecast', title: 'Cash-flow forecast', category: 'cashflow', certification_id: 2 }),
+      ],
+      total: 2, categories: ['scope', 'cashflow'],
+    }
+    renderWithProviders(<Templates />)
+    // The already-downloaded item carries a "Downloaded" badge; its action reads "Download again".
+    expect(screen.getByText('Downloaded')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Download again' })).toBeInTheDocument()
+    // The Show/New filter appears once anything is downloaded; picking New hides the downloaded item.
+    expect(screen.getByText('Show')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'New' }))
+    expect(screen.queryByText('Work Breakdown Structure (WBS) template')).not.toBeInTheDocument()
+    expect(screen.getByText('Cash-flow forecast')).toBeInTheDocument()
   })
 })

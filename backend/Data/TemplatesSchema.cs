@@ -45,6 +45,20 @@ public static class TemplatesSchema
             PRIMARY KEY(template_id, day))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_tpl_dl_day ON template_download_daily(day)");
 
+        // §6D — per-student download history. One row per (student, template) the student has downloaded, with a
+        // running count and first/last timestamps, so the student panel can show which templates they've already
+        // taken (a "Downloaded" badge + a new-only filter). This is the student's own record — an impersonating
+        // staff session ("view as student") is read-only and never writes here. The unique (user_id, template_id)
+        // pair drives an INSERT-OR-IGNORE + UPDATE upsert on both providers.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS template_user_downloads(
+            user_id INTEGER NOT NULL,
+            template_id INTEGER NOT NULL,
+            count INTEGER NOT NULL DEFAULT 0,
+            first_at TEXT DEFAULT (datetime('now')),
+            last_at TEXT DEFAULT (datetime('now')),
+            PRIMARY KEY(user_id, template_id))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_tpl_user_dl ON template_user_downloads(user_id)");
+
         Seed(db);
 
         // Templates are a members-only resource served inside the student panel, not the public site. Remove
