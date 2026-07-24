@@ -383,38 +383,55 @@ public static class WorldAdmin
         <html lang="en">
         <head>
         <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="robots" content="noindex">
+        <meta name="robots" content="noindex"><meta name="color-scheme" content="light only">
         <title>PCI World Administration</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <script>window.addEventListener('load',function(){var l=document.createElement('link');l.rel='stylesheet';
+          l.href='https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap';
+          document.head.appendChild(l);});</script>
         <style>
-        :root{--bg:#f6f5f2;--ink:#191c1f;--muted:#5b6167;--line:#e3e1da;--accent:#0d5c8d;--bad:#9f2d24;--ok:#186f47}
+        :root{--bg:#F1F5F9;--ink:#0F172A;--muted:#64748B;--line:#E3E8EF;--accent:#1D4ED8;--accent-deep:#1E3A8A;
+              --noir:#0E1525;--crimson:#C13329;--bad:#C2410C;--ok:#15803D;
+              --display:'Archivo',system-ui,sans-serif;--sans:'Inter',system-ui,sans-serif}
         *{box-sizing:border-box;margin:0}
-        body{background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-        header{background:#12212e;color:#e9edf1;padding:12px 20px;display:flex;gap:16px;align-items:center}
-        header b{font-size:16px} header small{color:#9fb1c1}
+        body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+        header{background:var(--noir);color:#E2E8F0;padding:16px 22px;display:flex;gap:14px;align-items:center}
+        header b{font-family:var(--display);font-weight:900;font-size:17px;letter-spacing:-.02em;color:#fff}
+        header .bar{width:2px;height:24px;background:var(--crimson);border-radius:2px}
+        header small{color:#94A3B8;font-weight:500}
         header button{margin-left:auto}
-        main{max-width:1080px;margin:0 auto;padding:22px 20px}
-        .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0}
-        h2{font-size:17px;margin:0 0 10px}
+        main{max-width:1120px;margin:0 auto;padding:26px 22px}
+        .card{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:22px;margin:16px 0;
+              box-shadow:0 1px 2px rgba(13,32,90,.05),0 10px 28px -20px rgba(29,78,216,.14)}
+        h2{font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.01em;margin:0 0 12px}
         table{border-collapse:collapse;width:100%;font-size:14px}
-        th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-        th{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
-        button{background:var(--accent);border:0;color:#fff;border-radius:6px;padding:7px 12px;font-size:13px;cursor:pointer}
-        button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+        th,td{padding:10px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+        th{font-family:var(--display);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink)}
+        tbody tr:hover{background:var(--bg)}
+        button{background:var(--accent);border:2px solid var(--accent);color:#fff;border-radius:0;
+               padding:8px 15px;font:600 13px var(--sans);cursor:pointer}
+        button:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
+        button.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+        button.ghost:hover{border-color:var(--ink);background:#fff}
         button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-        input,select,textarea{padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:14px;width:100%}
+        input,select,textarea{padding:11px 12px;border:1.5px solid var(--line);border-radius:0;font-size:14px;width:100%;
+               font-family:var(--sans);color:var(--ink);background:#fff}
         textarea{font-family:ui-monospace,Menlo,Consolas,monospace;min-height:220px}
-        label{display:block;font-weight:600;margin:10px 0 4px;font-size:13px}
-        .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
-        .bad{color:var(--bad)} .ok{color:var(--ok)}
-        .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:1px 9px;font-size:12px}
-        #login{max-width:380px;margin:60px auto}
-        nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 4px}
-        nav.tabs button{background:transparent;color:var(--ink);border:1px solid var(--line)}
-        nav.tabs button[aria-selected=true]{background:var(--accent);color:#fff;border-color:var(--accent)}
+        label{display:block;font-weight:600;margin:12px 0 5px;font-size:13px}
+        .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+        .bad{color:var(--bad);font-weight:600} .ok{color:var(--ok);font-weight:600}
+        .pill{display:inline-block;border:1.5px solid var(--line);border-radius:999px;padding:2px 11px;font-size:12px;font-weight:600}
+        #login{max-width:400px;margin:70px auto;padding:30px}
+        #login h2{font-size:22px}
+        nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+        nav.tabs button{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+        nav.tabs button[aria-selected=true]{background:var(--noir);color:#fff;border-color:var(--noir)}
         </style>
         </head>
         <body>
-        <header><b>PCI World Administration</b><small>separate from the PCI Institute admin</small>
+        <header><b>PCI World Administration</b><span class="bar" aria-hidden="true"></span>
+          <small>separate from the PCI Institute admin</small>
           <button id="logout" hidden>Sign out</button></header>
         <main>
         <div id="login" class="card">

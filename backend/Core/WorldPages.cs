@@ -31,54 +31,137 @@ public static class WorldPages
     public static string InstituteUrl(Db db) =>
         Settings.Str(db, "world_institute_url", "https://projectcontrolsinstitute.org");
 
+    /// <summary>Brand fonts load AFTER window load so no page ever waits on a font host — system
+    /// fallbacks render immediately, Archivo/Inter swap in when available (display=swap). This
+    /// also keeps the E2E suite deterministic in offline environments.</summary>
+    const string FontLoader = """
+        <script>window.addEventListener('load',function(){var l=document.createElement('link');l.rel='stylesheet';
+        l.href='https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap';
+        document.head.appendChild(l);});</script>
+        """;
+
+    // Design system: the PCI brand (backend/wwwroot/assets/styles.css) applied to PCI World —
+    // Archivo 800/900 display type with tight tracking, Inter text, ink/noir/blue/crimson tokens,
+    // crimson eyebrows + underline strokes, squared CTAs, layered blue-tinted shadows. Light-only,
+    // exactly like the Institute site (meta color-scheme in Layout) — a brand commitment, not an
+    // omission. Class names are stable API for the workspace/admin scripts and the E2E suite.
     const string Css = """
-        :root{--bg:#f6f5f2;--surface:#ffffff;--ink:#191c1f;--muted:#5b6167;--line:#e3e1da;
-              --accent:#0d5c8d;--accent-ink:#ffffff;--ok:#186f47;--bad:#9f2d24;--warn:#8a5a00;
-              --baseline:#7a8087;--focus:#0d5c8d}
+        :root{--ink:#0F172A;--paper:#FFFFFF;--paper-2:#F1F5F9;--noir:#0E1525;--line:#E3E8EF;
+              --slate:#475569;--mist:#64748B;--blue:#1D4ED8;--blue-deep:#1E3A8A;--crimson:#C13329;
+              --ok:#15803D;--bad:#C2410C;--muted:var(--slate);
+              --display:'Archivo',system-ui,sans-serif;--sans:'Inter',system-ui,sans-serif;
+              --shadow-rest:0 1px 2px rgba(13,32,90,.05),0 10px 28px -20px rgba(29,78,216,.14);
+              --shadow-hover:0 2px 5px rgba(13,32,90,.06),0 26px 56px -24px rgba(29,78,216,.25),0 0 0 1px rgba(29,78,216,.10);
+              --ease:cubic-bezier(.22,.61,.36,1)}
         *{box-sizing:border-box;margin:0}
         html{-webkit-text-size-adjust:100%}
-        body{background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
-        a{color:var(--accent)} a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
-        .shell{max-width:880px;margin:0 auto;padding:0 20px}
-        header.world{background:#12212e;color:#e9edf1}
-        header.world .shell{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;padding:14px 20px}
-        .brand{font-weight:700;letter-spacing:.4px;color:#fff;text-decoration:none;font-size:18px}
-        .brand small{display:block;font-weight:400;font-size:11px;letter-spacing:.6px;color:#9fb1c1;text-transform:uppercase}
-        header.world nav{display:flex;flex-wrap:wrap;gap:16px;margin-left:auto;font-size:14px}
-        header.world nav a{color:#c9d4dd;text-decoration:none} header.world nav a:hover{color:#fff;text-decoration:underline}
-        header.world nav a.ext{color:#9fd0ef}
-        main{padding:34px 0 56px}
-        h1{font-size:30px;line-height:1.2;letter-spacing:-.3px;margin:0 0 10px}
-        h2{font-size:20px;margin:34px 0 10px}
-        p.lede{font-size:18px;color:var(--muted);max-width:56ch}
+        body{background:var(--paper);color:var(--ink);font:16.5px/1.62 var(--sans);-webkit-font-smoothing:antialiased}
+        a{color:var(--blue);text-decoration-thickness:1px;text-underline-offset:3px}
+        a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+        summary:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+        .shell{max-width:1020px;margin:0 auto;padding:0 22px}
+        header.world{background:var(--noir);color:#E2E8F0}
+        header.world .shell{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;padding:18px 22px}
+        .brand{display:flex;align-items:center;gap:13px;color:#fff;text-decoration:none}
+        .brand .wordmark{font-family:var(--display);font-weight:900;font-size:23px;letter-spacing:-.035em;line-height:.9;white-space:nowrap}
+        .brand .bar{width:2px;height:32px;background:var(--crimson);border-radius:2px;flex:0 0 auto}
+        .brand small{display:block;font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.02em;
+             color:#94A3B8;line-height:1.25;max-width:150px;white-space:normal}
+        header.world nav{display:flex;flex-wrap:wrap;gap:8px 22px;margin-left:auto;font-size:15px;align-items:center}
+        header.world nav a{color:#CBD5E1;text-decoration:none;font-weight:500;padding:4px 0;position:relative}
+        header.world nav a:hover{color:#fff}
+        header.world nav a:not(.ext):hover::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--crimson)}
+        header.world nav a.ext{color:#93C5FD;font-weight:600}
+        main{padding:56px 0 80px}
+        .kicker{display:block;font-family:var(--sans);font-weight:700;font-size:12.5px;letter-spacing:.16em;
+             text-transform:uppercase;color:var(--crimson);margin-bottom:14px}
+        h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,5.4vw,58px);line-height:1.04;
+             letter-spacing:-.025em;margin:0 0 18px;text-wrap:balance;max-width:21ch}
+        h2{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.015em;line-height:1.15;margin:0 0 14px}
+        h2.sec{margin:52px 0 6px}
+        .uline{width:64px;height:3px;background:var(--crimson);border-radius:2px;margin:0 0 22px}
+        p.lede{font-size:19px;line-height:1.6;color:var(--slate);max-width:58ch}
         .num,td.num,.score{font-variant-numeric:tabular-nums}
-        .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;margin:18px 0}
-        .kicker{font-size:12px;letter-spacing:1.1px;text-transform:uppercase;color:var(--muted)}
-        .meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:var(--muted);margin:8px 0 0}
-        .btn{display:inline-block;background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;
-             padding:11px 20px;font-size:16px;font-weight:600;text-decoration:none;cursor:pointer}
-        .btn.secondary{background:transparent;color:var(--accent);border:1px solid var(--accent)}
-        .notice{border-inline-start:3px solid var(--baseline);background:var(--surface);padding:12px 16px;color:var(--muted);font-size:14px;margin:18px 0}
-        table{border-collapse:collapse;width:100%;font-size:15px}
-        th{text-align:left;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
-        th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-        td.num{text-align:right;white-space:nowrap}
-        .ok{color:var(--ok);font-weight:600}.bad{color:var(--bad);font-weight:600}
-        label{display:block;font-weight:600;margin:16px 0 6px}
-        input[type=text],input[type=number]{width:100%;max-width:340px;padding:10px 12px;font-size:16px;
-             border:1px solid var(--line);border-radius:8px;background:var(--surface);font-variant-numeric:tabular-nums}
-        fieldset{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:16px 0}
-        legend{font-weight:600;padding:0 6px}
-        .opt{display:flex;gap:10px;align-items:flex-start;padding:8px 4px}
-        .opt input{margin-top:4px}
-        .dim{display:flex;gap:26px;flex-wrap:wrap;margin:12px 0}
-        .dim div{min-width:120px}
-        .dim b{font-size:26px;display:block}
-        footer.world{border-top:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:14px}
-        footer.world .shell{padding:26px 20px;display:grid;gap:8px}
+        .card{background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:30px;margin:22px 0;
+             box-shadow:var(--shadow-rest)}
+        .card .kicker{margin-bottom:10px}
+        .card--noir{background:var(--noir);border-color:var(--noir);color:#E2E8F0}
+        .card--noir h2{color:#fff}
+        .card--noir .kicker{color:#F0A9A3}
+        .meta{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0 0;padding:0;list-style:none}
+        .meta span{border:1.5px solid var(--line);border-radius:30px;padding:6px 15px;font-weight:600;
+             font-size:13.5px;color:var(--ink);background:var(--paper)}
+        .card--noir .meta span{border-color:#26334a;color:#CBD5E1;background:transparent}
+        .btn{display:inline-flex;align-items:center;gap:10px;background:var(--blue);color:#fff;border:2px solid var(--blue);
+             font-family:var(--sans);font-weight:600;font-size:15.5px;padding:15px 28px;cursor:pointer;text-decoration:none;
+             border-radius:0;transition:background .16s var(--ease),border-color .16s var(--ease),color .16s var(--ease)}
+        .btn:hover{background:var(--blue-deep);border-color:var(--blue-deep)}
+        .btn.secondary{background:transparent;color:var(--ink);border:1.5px solid var(--line);padding:15.5px 28px}
+        .btn.secondary:hover{border-color:var(--ink);background:var(--paper)}
+        .btn+.btn{margin-left:12px}
+        .notice{border-inline-start:3px solid var(--crimson);background:var(--paper-2);padding:16px 20px;
+             color:var(--slate);font-size:14.5px;line-height:1.6;margin:26px 0;border-radius:0 10px 10px 0}
+        .tbl-wrap{overflow-x:auto}
+        table{border-collapse:collapse;width:100%;font-size:15.5px}
+        caption{text-align:left}
+        th{text-align:left;font-family:var(--display);font-weight:800;font-size:12.5px;letter-spacing:.05em;
+             text-transform:uppercase;color:var(--ink)}
+        th,td{padding:13px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+        tbody tr:hover{background:var(--paper-2)}
+        td.num{text-align:right;white-space:nowrap;font-weight:600}
+        .ok{color:var(--ok);font-weight:700}.bad{color:var(--bad);font-weight:700}
+        label{display:block;font-weight:600;margin:18px 0 7px;font-size:15px}
+        input[type=text],input[type=number],input[type=email],input[type=password]{width:100%;max-width:360px;
+             padding:14px 16px;font-size:16px;border:1.5px solid var(--line);border-radius:0;background:var(--paper);
+             color:var(--ink);font-variant-numeric:tabular-nums;font-family:var(--sans)}
+        input:hover{border-color:var(--mist)}
+        select,textarea{font-family:var(--sans);font-size:15.5px;color:var(--ink);background:var(--paper);
+             border:1.5px solid var(--line);border-radius:0;padding:12px 14px}
+        fieldset{border:1.5px solid var(--line);border-radius:12px;padding:20px 22px 14px;margin:20px 0}
+        legend{font-family:var(--display);font-weight:800;font-size:16.5px;letter-spacing:-.01em;padding:0 8px}
+        .opt{display:flex;gap:12px;align-items:flex-start;padding:10px 8px;border-radius:8px}
+        .opt:hover{background:var(--paper-2)}
+        .opt input{margin-top:5px;accent-color:var(--blue);width:16px;height:16px;flex:0 0 auto}
+        .opt label{font-weight:500;margin:0;line-height:1.5}
+        .dim{display:flex;gap:40px;flex-wrap:wrap;margin:14px 0}
+        .dim div{min-width:118px}
+        .dim .kicker{margin-bottom:4px;color:var(--mist)}
+        .card--noir .dim .kicker{color:#94A3B8}
+        .dim b{font-family:var(--display);font-weight:800;font-size:38px;letter-spacing:-.02em;display:block;line-height:1.05}
+        details.card summary{cursor:pointer;font-weight:600}
+        .steps{padding-left:0;list-style:none;counter-reset:step;display:grid;gap:22px}
+        .steps li{counter-increment:step;display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:start}
+        .steps li::before{content:counter(step,decimal-leading-zero);font-family:var(--display);font-weight:800;
+             font-size:30px;color:var(--crimson);line-height:1.1}
+        .steps b{font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.01em;display:block;margin-bottom:3px}
+        .steps li div{color:var(--slate)}
+        .hero-panel{background:var(--noir);border-radius:16px;padding:26px 26px 18px;margin:34px 0 6px;overflow:hidden}
+        .hero-panel .plabel{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+             font-family:var(--sans);font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#94A3B8}
+        .hero-panel svg{width:100%;height:auto;display:block;margin-top:10px}
+        .legend-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;font-weight:600;color:#CBD5E1}
+        .legend-row span::before{content:"";display:inline-block;width:18px;height:3px;border-radius:2px;
+             margin-right:8px;vertical-align:middle;background:var(--swatch,#fff)}
+        footer.world{background:var(--noir);color:#94A3B8;font-size:14.5px;margin-top:30px}
+        footer.world .shell{padding:44px 22px 48px;display:grid;gap:12px}
+        footer.world a{color:#CBD5E1}
+        footer.world a:hover{color:#fff}
+        footer.world .ft-brand{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+        footer.world .ft-brand .wordmark{font-family:var(--display);font-weight:900;font-size:19px;letter-spacing:-.03em;color:#fff}
+        footer.world .ft-brand .bar{width:2px;height:26px;background:var(--crimson);border-radius:2px}
+        footer.world .fine{font-size:13px;line-height:1.65;color:#7C8CA0;max-width:88ch}
         .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-        @media (max-width:640px){h1{font-size:24px} .card{padding:16px} header.world nav{gap:12px}}
-        @media (prefers-reduced-motion:no-preference){.btn{transition:filter .15s} .btn:hover{filter:brightness(1.08)}}
+        @media (max-width:680px){
+          main{padding:38px 0 60px}
+          .card{padding:20px;border-radius:12px}
+          .btn{width:100%;justify-content:center}
+          .btn+.btn{margin-left:0;margin-top:10px}
+          .dim{gap:24px}
+          .dim b{font-size:31px}
+          header.world nav{gap:6px 16px;font-size:14px}
+          .brand small{display:none}
+        }
+        @media (prefers-reduced-motion:reduce){*{transition:none!important}}
         """;
 
     /// <summary>Every PCI World page: institute link in header and footer, operated-by disclosure,
@@ -93,21 +176,31 @@ public static class WorldPages
             <head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta name="color-scheme" content="light only">
+            <meta name="theme-color" content="#0E1525">
             <title>{E(title)}</title>
             <meta name="description" content="{E(metaDesc)}">
             {(noindex ? "<meta name=\"robots\" content=\"noindex\">" : "")}
             <link rel="canonical" href="{E(canonicalPath)}">
+            <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%230E1525%27/%3E%3Crect x=%2712%27 y=%2744%27 width=%2740%27 height=%274%27 rx=%272%27 fill=%27%23C13329%27/%3E%3Ctext x=%2732%27 y=%2738%27 font-family=%27Archivo,Arial%27 font-weight=%27900%27 font-size=%2722%27 fill=%27white%27 text-anchor=%27middle%27 letter-spacing=%27-1%27%3EPW%3C/text%3E%3C/svg%3E">
             <meta property="og:site_name" content="PCI World">
             <meta property="og:title" content="{E(ogTitle ?? title)}">
             <meta property="og:description" content="{E(ogDesc ?? metaDesc)}">
             <meta property="og:type" content="website">
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            {FontLoader}
             <style>{Css}</style>
             </head>
             <body>
             <a class="visually-hidden" href="#main">Skip to content</a>
             <header class="world">
               <div class="shell">
-                <a class="brand" href="/world">PCI World<small>From the Project Controls Institute</small></a>
+                <a class="brand" href="/world">
+                  <span class="wordmark">PCI World</span>
+                  <span class="bar" aria-hidden="true"></span>
+                  <small>From the Project<br>Controls Institute</small>
+                </a>
                 <nav aria-label="Primary">
                   <a href="/world">Today&rsquo;s Challenge</a>
                   <a href="/world/archive">Challenge Library</a>
@@ -122,10 +215,12 @@ public static class WorldPages
             </main>
             <footer class="world">
               <div class="shell">
+                <div class="ft-brand"><span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span></div>
                 <div>{E(OperatedBy)}</div>
                 <div><a href="{inst}" target="_blank" rel="noopener noreferrer">{InstituteLinkLabel} <span aria-hidden="true">&#8599;</span></a>
-                     &nbsp;&middot;&nbsp; <a href="/world/about">About PCI World</a></div>
-                <div>{E(PracticeNotice)}</div>
+                     &nbsp;&middot;&nbsp; <a href="/world/about">About PCI World</a>
+                     &nbsp;&middot;&nbsp; <a href="/world/archive">Challenge Library</a></div>
+                <div class="fine">{E(PracticeNotice)}</div>
               </div>
             </footer>
             </body>
@@ -138,26 +233,27 @@ public static class WorldPages
         // On a world-only deployment the Simulation Lab lives on the Institute platform, not on
         // this host — the progression link must never dead-end inside our own allowlist.
         var simlab = WorldOnly.Enabled ? E(InstituteUrl(db)) : E(Settings.Str(db, "world_simlab_url", "/app/lab"));
+        var primaryHref = today is not null ? $"/world/challenge/{E(H.Str(today["code"]))}" : "/world/archive";
         var todayCard = today is null || version is null
             ? """
               <div class="card"><span class="kicker">Today's challenge</span>
-              <h2 style="margin-top:6px">The first challenge is being prepared</h2>
-              <p>PCI World rotates a new project challenge every day at 00:00 UTC. Check back shortly.</p></div>
+              <h2>The first challenge is being prepared</h2>
+              <p style="color:var(--slate)">PCI World rotates a new project challenge every day at 00:00 UTC. Check back shortly.</p></div>
               """
             : $"""
-              <div class="card">
-                <span class="kicker">Today&rsquo;s challenge &middot; changes daily at 00:00 UTC</span>
-                <h2 style="margin-top:6px">{E(H.Str(version["title"]))}</h2>
-                <p>{E(H.Str(version["hook"]))}</p>
+              <div class="card card--noir">
+                <span class="kicker">Today&rsquo;s challenge &middot; rotates daily at 00:00 UTC</span>
+                <h2>{E(H.Str(version["title"]))}</h2>
+                <p style="color:#CBD5E1;max-width:64ch">{E(H.Str(version["hook"]))}</p>
                 <div class="meta">
                   <span>{E(H.Str(version["industry"]))}</span>
                   <span>{E(Cap(H.Str(version["difficulty"])))}</span>
                   <span class="num">~{H.L(version["est_minutes"])} minutes</span>
                   <span>Free &middot; no account needed</span>
                 </div>
-                <p style="margin-top:18px">
-                  <a class="btn" href="/world/challenge/{E(H.Str(today["code"]))}">Take today&rsquo;s challenge</a>
-                  <a class="btn secondary" style="margin-left:10px" href="/world/about">See how PCI World works</a>
+                <p style="margin-top:24px">
+                  <a class="btn" href="/world/challenge/{E(H.Str(today["code"]))}">Take today&rsquo;s challenge
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
                 </p>
               </div>
               """;
@@ -166,20 +262,48 @@ public static class WorldPages
             "A free daily project challenge from the Project Controls Institute. Step into a realistic project situation, examine the evidence and decide what happens next.",
             $"""
             <span class="kicker">PCI World Challenge</span>
-            <h1>The project is already moving.<br>The decision is now yours.</h1>
+            <h1>The project is already moving. The decision is now yours.</h1>
+            <div class="uline" aria-hidden="true"></div>
             <p class="lede">Step into a realistic project situation, examine the evidence and decide what happens next. Five to ten minutes. Free. No project experience required.</p>
+            <p style="margin-top:28px">
+              <a class="btn" href="{primaryHref}">Take today&rsquo;s challenge
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              <a class="btn secondary" href="/world/about">See how PCI World works</a>
+            </p>
+            <div class="hero-panel" role="img" aria-label="A project performance chart: planned value as a dashed baseline, earned value tracking below plan, and actual cost running above earned value at the data date — the situation a PCI World challenge drops you into.">
+              <div class="plabel"><span>Live project position &middot; synthetic data</span><span>Data date &middot; month 4 of 12</span></div>
+              <svg viewBox="0 0 720 232" aria-hidden="true">
+                <g stroke="#1c2739" stroke-width="1">
+                  <line x1="16" y1="192" x2="704" y2="192"/><line x1="16" y1="136" x2="704" y2="136"/>
+                  <line x1="16" y1="80" x2="704" y2="80"/><line x1="16" y1="24" x2="704" y2="24"/>
+                </g>
+                <line x1="432" y1="14" x2="432" y2="206" stroke="#3b4a63" stroke-width="1.5" stroke-dasharray="3 5"/>
+                <path d="M16,206 C170,201 280,158 400,104 S600,26 704,14" fill="none" stroke="#94A3B8" stroke-width="2" stroke-dasharray="7 6"/>
+                <path d="M16,206 C160,203 260,178 350,150 S415,128 432,122" fill="none" stroke="#C13329" stroke-width="2.5"/>
+                <path d="M16,206 C150,202 250,172 345,138 S415,108 432,100" fill="none" stroke="#5B8DEF" stroke-width="2.5"/>
+                <circle cx="432" cy="122" r="4.5" fill="#C13329"/>
+                <circle cx="432" cy="100" r="4.5" fill="#5B8DEF"/>
+              </svg>
+              <div class="legend-row">
+                <span style="--swatch:#94A3B8">Planned value — the promise</span>
+                <span style="--swatch:#C13329">Earned value — the truth</span>
+                <span style="--swatch:#5B8DEF">Actual cost — the bill</span>
+              </div>
+            </div>
             {todayCard}
-            <h2>How it works</h2>
+            <h2 class="sec">How it works</h2>
+            <div class="uline" aria-hidden="true"></div>
             <div class="card">
-              <ol style="padding-left:20px;display:grid;gap:8px">
-                <li><b>Read the situation.</b> A real-shaped project moment with the evidence in front of you — synthetic data, real methods.</li>
-                <li><b>Do the work.</b> Compute the measures that matter and make the judgement calls a professional would face.</li>
-                <li><b>See the consequences.</b> Deterministic scoring, your professional decision profile, and what each choice would have caused.</li>
+              <ol class="steps">
+                <li><div><b>Read the situation</b>A real-shaped project moment with the evidence in front of you — synthetic data, real methods.</div></li>
+                <li><div><b>Do the work</b>Compute the measures that matter and make the judgement calls a professional would face.</div></li>
+                <li><div><b>See the consequences</b>Deterministic scoring, your professional decision profile, and what each choice would have caused.</div></li>
               </ol>
             </div>
-            <h2>Where it leads</h2>
+            <h2 class="sec">Where it leads</h2>
+            <div class="uline" aria-hidden="true"></div>
             <div class="card">
-              <p>PCI World is practice with evidence. When you want the full discipline — multi-step simulations, coaching and competency tracking — continue in the <a href="{simlab}">PCI Simulation Lab</a>. When you are ready for formal recognition, explore the certifications on the official <a href="{E(InstituteUrl(db))}" target="_blank" rel="noopener noreferrer">Project Controls Institute website <span aria-hidden="true">&#8599;</span></a>.</p>
+              <p style="color:var(--slate);max-width:78ch">PCI World is practice with evidence. When you want the full discipline — multi-step simulations, coaching and competency tracking — continue in the <a href="{simlab}">PCI Simulation Lab</a>. When you are ready for formal recognition, explore the certifications on the official <a href="{E(InstituteUrl(db))}" target="_blank" rel="noopener noreferrer">Project Controls Institute website <span aria-hidden="true">&#8599;</span></a>.</p>
             </div>
             <p class="notice">{E(PracticeNotice)}</p>
             """,
@@ -403,7 +527,7 @@ public static class WorldPages
             att = r;
             renderWork(r.answers || null);
             $('work').hidden = false;
-            $('start').disabled = true;
+            $('start').hidden = true;
             if (r.completed && r.result) { renderResult(r.result); return; }
             $('work').addEventListener('input', autosave);
             $('work').addEventListener('change', autosave);
