@@ -121,6 +121,7 @@ public static class AiVisibility
             sb.Append("Sitemap: ").Append(host).Append("/sitemap.xml\n");
             sb.Append("Sitemap: ").Append(host).Append("/blog-sitemap.xml\n");
             sb.Append("Sitemap: ").Append(host).Append("/news-sitemap.xml\n");
+            sb.Append("Sitemap: ").Append(host).Append("/world-sitemap.xml\n");   // PCI World's own catalogue
             _robots = sb.ToString();
             _robotsVer = v;
             return _robots;
