@@ -53,10 +53,10 @@ test.describe('PCI World — public journey', () => {
 
   test('archive filters narrow the catalogue server-side', async ({ page }) => {
     await page.goto('/world/archive')
-    await expect(page.locator('main')).toContainText('30 challenges')
+    await expect(page.locator('main')).toContainText('50 challenges')
     await page.locator('#f_dif').selectOption('expert')
     await page.getByRole('button', { name: 'Filter' }).click()
-    await expect(page.locator('main')).toContainText('2 challenges')
+    await expect(page.locator('main')).toContainText('5 challenges')
     await expect(page.locator('main')).toContainText('The wind farm at the crossroads')
   })
 
@@ -178,7 +178,7 @@ test.describe('PCI World — separate admin realm', () => {
     await page.locator('#em').fill('owner@pciworld.local')
     await page.locator('#pw').fill(process.env.PCIWORLD_OWNER_PASSWORD || 'changeme-world-owner')
     await page.getByRole('button', { name: 'Sign in' }).click()
-    await expect(page.locator('#tab-overview')).toContainText('servable 30')
+    await expect(page.locator('#tab-overview')).toContainText('servable 50')
 
     // The reports queue is reachable and renders (empty or with the public test's report).
     await page.getByRole('tab', { name: 'Reports' }).click()
@@ -190,7 +190,7 @@ test.describe('PCI World — separate admin realm', () => {
     await page.locator('#em').fill('owner@pciworld.local')
     await page.locator('#pw').fill(process.env.PCIWORLD_OWNER_PASSWORD || 'changeme-world-owner')
     await page.getByRole('button', { name: 'Sign in' }).click()
-    await expect(page.locator('#tab-overview')).toContainText('servable 30')
+    await expect(page.locator('#tab-overview')).toContainText('servable 50')
 
     await page.getByRole('tab', { name: 'Rotation' }).click()
     const panel = page.locator('#tab-rotation')

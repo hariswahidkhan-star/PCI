@@ -48,14 +48,23 @@ public class WorldTests
         var db = NewWorldDb();
         var rows = db.Query("SELECT * FROM pciworld_challenges WHERE author_id IS NULL");
         Assert.Equal(WorldContentPack.Count, rows.Count);
-        Assert.Equal(30, rows.Count);
+        // Gate A (EXPANSION_GOVERNANCE §3): 50 flagship challenges, every one reviewed and
+        // reference-solved. The count is asserted here so it can never be claimed before it is real.
+        Assert.Equal(50, rows.Count);
 
         // Release-2 gates: every difficulty and every track is represented, across a broad industry set.
         string S2(Dictionary<string, object?> r, string k) => Convert.ToString(r[k]) ?? "";
         foreach (var d in WorldContent.Difficulties) Assert.Contains(rows, r => S2(r, "difficulty") == d);
         foreach (var t in WorldContent.Tracks) Assert.Contains(rows, r => S2(r, "track") == t);
-        Assert.True(rows.Select(r => S2(r, "industry")).Distinct().Count() >= 15,
-            "expected broad industry coverage in the 30-challenge library");
+        Assert.True(rows.Select(r => S2(r, "industry")).Distinct().Count() >= 30,
+            "expected broad industry coverage across the Gate A library");
+        // Every deterministic engine is exercised at least twice, so no solver ships with a single
+        // worked example behind it.
+        var tasks = rows.Select(r => System.Text.Json.JsonDocument.Parse(S2(r, "config_json")).RootElement)
+            .Where(c => c.TryGetProperty("task", out _))
+            .Select(c => c.GetProperty("task").GetString()!).ToList();
+        foreach (var engine in SimCalc.KnownTasks)
+            Assert.True(tasks.Count(t => t == engine) >= 2, $"engine '{engine}' needs at least two published challenges");
 
         foreach (var r in rows)
         {
