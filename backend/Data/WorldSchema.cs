@@ -197,6 +197,22 @@ public static class WorldSchema
             detail TEXT,
             created_at TEXT DEFAULT (datetime('now')))");
 
+        // ── Content reports (§ content correction/reporting): anyone — anonymous included — can
+        //    flag a challenge. No PII is required or stored; the optional session link exists only
+        //    so abuse can be rate-limited and mass reports deduplicated. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_reports(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            challenge_id INTEGER,
+            category VARCHAR(24) NOT NULL,                 -- content_error | calculation | accessibility | inappropriate | other
+            message TEXT NOT NULL,
+            session_id INTEGER,
+            status VARCHAR(16) NOT NULL DEFAULT 'open',    -- open | resolved
+            resolution TEXT,
+            resolved_by INTEGER,
+            resolved_at TEXT,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldreports_status ON pciworld_reports(status)");
+
         // ── Privacy-aware analytics: event name + optional challenge/session ids only. ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_events(
             id INTEGER PRIMARY KEY AUTOINCREMENT,

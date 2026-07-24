@@ -118,6 +118,17 @@ grant or modify any formal PCI certification — structurally, not just editoria
 - Evidence: World tests **17/17** with the 30-challenge gates; live smoke of filters and the
   full reset journey; full-suite results in the PR.
 
+## Phase 2 continuation addendum — content reports + first browser E2E
+
+- **Content correction/reporting**: an anonymous-friendly report form on every challenge
+  workspace (category + free text, no PII required, rate-limited, 10–2000 chars) feeding
+  `pciworld_reports`; a Reports queue in the separate admin with resolve-notes required (the
+  resolution is the audit trail), first-resolve-wins, and audit entries.
+- **First Playwright coverage** (`frontend/e2e/portal-world.spec.ts`, runs in the existing gating
+  e2e harness): anonymous complete→share journey with public-page answer-leak assertions; archive
+  filter narrowing; the report flow; an axe WCAG 2.x AA scan of the home page; world-admin login
+  on its own realm; and a structural check that the PCI admin SPA carries no PCI World navigation.
+
 ## Not built (do not present as existing)
 
 Share-image PNG rendering,

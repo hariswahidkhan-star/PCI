@@ -255,6 +255,41 @@ public static class WorldAdmin
             return J(new { ok = true });
         });
 
+        // ───────────── content reports ─────────────
+
+        app.MapGet("/api/world-admin/reports", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "read", out _) is { } blocked) return blocked;
+            var status = ctx.Request.Query["status"].ToString();
+            if (status != "resolved") status = "open";
+            var rows = db.Query(@"SELECT r.id, r.category, r.message, r.status, r.resolution, r.created_at, r.resolved_at,
+                    c.code, c.title
+                FROM pciworld_reports r LEFT JOIN pciworld_challenges c ON c.id=r.challenge_id
+                WHERE r.status=? ORDER BY r.id DESC LIMIT 200", status)
+                .Select(r => new
+                {
+                    id = H.L(r["id"]), category = H.Str(r["category"]), message = H.Str(r["message"]),
+                    status = H.Str(r["status"]), resolution = H.Str(r["resolution"]),
+                    code = H.Str(r["code"]), title = H.Str(r["title"]),
+                    created_at = H.Str(r["created_at"]), resolved_at = H.Str(r["resolved_at"]),
+                });
+            return J(new { rows });
+        });
+
+        app.MapPost("/api/world-admin/reports/{id:long}/resolve", async (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, "review", out var adm) is { } blocked) return blocked;
+            var b = await H.Body(ctx.Request);
+            var note = (H.GetS(b, "note") ?? "").Trim();
+            if (note.Length < 3) return Results.Json(new { error = "note_required",
+                message = "Record what was checked or changed — the resolution is the audit trail." }, statusCode: 400);
+            var n = db.Execute(@"UPDATE pciworld_reports SET status='resolved', resolution=?, resolved_by=?,
+                resolved_at=datetime('now') WHERE id=? AND status='open'", note, adm!.Id, id);
+            if (n == 0) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            Audit(adm.Id, "report_resolve", $"#{id}");
+            return J(new { ok = true });
+        });
+
         app.MapGet("/api/world-admin/audit", (HttpContext ctx) =>
         {
             if (Gate(ctx, "read", out _) is { } blocked) return blocked;
@@ -394,6 +429,7 @@ public static class WorldAdmin
             <button role="tab" data-tab="challenges" aria-selected="false">Challenges</button>
             <button role="tab" data-tab="editor" aria-selected="false">Editor</button>
             <button role="tab" data-tab="calendar" aria-selected="false">Calendar</button>
+            <button role="tab" data-tab="reports" aria-selected="false">Reports</button>
             <button role="tab" data-tab="audit" aria-selected="false">Audit</button>
           </nav>
           <div id="tab-overview" class="card"></div>
@@ -424,6 +460,7 @@ public static class WorldAdmin
             <div id="valout"></div>
           </div>
           <div id="tab-calendar" class="card" hidden></div>
+          <div id="tab-reports" class="card" hidden></div>
           <div id="tab-audit" class="card" hidden></div>
         </div>
         </main>
@@ -441,12 +478,12 @@ public static class WorldAdmin
         }
         function show(logged){$('login').hidden=logged;$('appmain').hidden=!logged;$('logout').hidden=!logged;}
         function tab(name){
-          ['overview','challenges','editor','calendar','audit'].forEach(function(t){
+          ['overview','challenges','editor','calendar','reports','audit'].forEach(function(t){
             $('tab-'+t).hidden=t!==name;
             document.querySelector('[data-tab='+t+']').setAttribute('aria-selected',t===name?'true':'false');
           });
           if(name==='overview')loadOverview(); if(name==='challenges')loadChallenges();
-          if(name==='calendar')loadCalendar(); if(name==='audit')loadAudit();
+          if(name==='calendar')loadCalendar(); if(name==='reports')loadReports(); if(name==='audit')loadAudit();
         }
         document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){tab(b.dataset.tab);});});
         $('doLogin').addEventListener('click',function(){
@@ -562,6 +599,30 @@ public static class WorldAdmin
                 challenge_id:parseInt($('c_id').value,10),note:$('c_note').value})
                 .then(function(){$('c_msg').textContent='Scheduled.';loadCalendar();})
                 .catch(function(e){$('c_msg').textContent=(e&&(e.message||e.error))||'Failed.';});
+            });
+          });
+        }
+        function loadReports(){
+          api('/api/world-admin/reports?status=open').then(function(o){
+            var h='<h2>Open content reports ('+o.rows.length+')</h2>';
+            if(!o.rows.length)h+='<p>No open reports — the queue is clear.</p>';
+            else{
+              h+='<table><thead><tr><th>Ref</th><th>When (UTC)</th><th>Challenge</th><th>Category</th><th>Report</th><th></th></tr></thead><tbody>';
+              o.rows.forEach(function(r){
+                h+='<tr><td>WR-'+r.id+'</td><td>'+esc(r.created_at)+'</td><td>'+esc(r.code||'—')+'</td>'+
+                   '<td>'+esc(r.category)+'</td><td style="max-width:380px">'+esc(r.message)+'</td>'+
+                   '<td><button data-resolve="'+r.id+'">Resolve</button></td></tr>';
+              });
+              h+='</tbody></table>';
+            }
+            $('tab-reports').innerHTML=h;
+            $('tab-reports').querySelectorAll('[data-resolve]').forEach(function(btn){
+              btn.addEventListener('click',function(){
+                var note=prompt('Resolution note (what was checked or changed):')||'';
+                api('/api/world-admin/reports/'+btn.dataset.resolve+'/resolve','POST',{note:note})
+                  .then(loadReports)
+                  .catch(function(e){alert((e&&(e.message||e.error))||'Could not resolve');});
+              });
             });
           });
         }
