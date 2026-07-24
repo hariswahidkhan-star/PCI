@@ -188,10 +188,10 @@ public static class PartnerFinanceBackfill
         var attributedPaid = db.Scalar<long>(@"SELECT COUNT(*)
             FROM code_redemptions r JOIN discount_codes dc ON dc.id=r.code_id JOIN payments p ON p.id=r.payment_id
             WHERE dc.partner_id IS NOT NULL AND p.payment_status='paid' AND (? IS NULL OR dc.partner_id=?)",
-            onlyPartnerId, onlyPartnerId) ?? 0;
+            onlyPartnerId, onlyPartnerId);
         var originals = db.Scalar<long>(@"SELECT COUNT(*) FROM partner_commission_transactions
             WHERE (reversal_of_transaction_id IS NULL OR reversal_of_transaction_id=0) AND (? IS NULL OR partner_id=?)",
-            onlyPartnerId, onlyPartnerId) ?? 0;
+            onlyPartnerId, onlyPartnerId);
 
         // Paid, attributed payments with no commission row at all.
         var missing = db.Query(@"SELECT p.id, dc.partner_id
@@ -212,7 +212,7 @@ public static class PartnerFinanceBackfill
             ORDER BY p.id LIMIT 200", onlyPartnerId, onlyPartnerId);
 
         var needsReview = db.Scalar<long>(@"SELECT COUNT(*) FROM partner_commission_transactions
-            WHERE requires_finance_review=1 AND (? IS NULL OR partner_id=?)", onlyPartnerId, onlyPartnerId) ?? 0;
+            WHERE requires_finance_review=1 AND (? IS NULL OR partner_id=?)", onlyPartnerId, onlyPartnerId);
 
         // Over-allocation: a transaction settled for more than it is worth.
         var overAllocated = db.Query(@"SELECT t.id, t.commission_minor, COALESCE(SUM(i.amount_allocated_minor),0) allocated

@@ -50,8 +50,8 @@ public static class PartnerCommissionReversal
         // Commission that SHOULD stand given the refund, and therefore how much must be clawed back.
         var reverseTarget = Money.Apportion(commissionMinor, refundedMinor, netMinor);
         // Reversals carry negative commission, so negating the sum gives what has already been clawed back.
-        var alreadyReversed = -(db.Scalar<long>(@"SELECT COALESCE(SUM(commission_minor),0)
-            FROM partner_commission_transactions WHERE reversal_of_transaction_id=?", H.L(source["id"])) ?? 0L);
+        var alreadyReversed = -db.Scalar<long>(@"SELECT COALESCE(SUM(commission_minor),0)
+            FROM partner_commission_transactions WHERE reversal_of_transaction_id=?", H.L(source["id"]));
         var deltaMinor = reverseTarget - alreadyReversed;   // incremental: a bigger refund reverses the rest
         if (deltaMinor <= 0) return 0;
 
@@ -107,6 +107,6 @@ public static class PartnerCommissionReversal
         return db.Scalar<long>(@"SELECT COALESCE(SUM(-r.commission_minor),0)
             FROM partner_commission_transactions r
             JOIN partner_commission_transactions s ON s.id=r.reversal_of_transaction_id
-            WHERE r.partner_id=? AND s.status IN ('paid','partially_paid')", partnerId) ?? 0L;
+            WHERE r.partner_id=? AND s.status IN ('paid','partially_paid')", partnerId);
     }
 }
