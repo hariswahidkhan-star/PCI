@@ -181,7 +181,7 @@ public static class WorldPages
             <title>{E(title)}</title>
             <meta name="description" content="{E(metaDesc)}">
             {(noindex ? "<meta name=\"robots\" content=\"noindex\">" : "")}
-            <link rel="canonical" href="{E(canonicalPath)}">
+            <link rel="canonical" href="{E(WorldUrl.Base() + canonicalPath)}">
             <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%230E1525%27/%3E%3Crect x=%2712%27 y=%2744%27 width=%2740%27 height=%274%27 rx=%272%27 fill=%27%23C13329%27/%3E%3Ctext x=%2732%27 y=%2738%27 font-family=%27Archivo,Arial%27 font-weight=%27900%27 font-size=%2722%27 fill=%27white%27 text-anchor=%27middle%27 letter-spacing=%27-1%27%3EPW%3C/text%3E%3C/svg%3E">
             <meta property="og:site_name" content="PCI World">
             <meta property="og:title" content="{E(ogTitle ?? title)}">
@@ -587,8 +587,10 @@ public static class WorldPages
         """;
 
     public static string Archive(Db db, List<Dictionary<string, object?>> rows,
-        List<string>? industries = null, string? fIndustry = null, string? fDifficulty = null, string? fTrack = null)
+        List<string>? industries = null, string? fIndustry = null, string? fDifficulty = null, string? fTrack = null,
+        long total = -1, int page = 1, int pages = 1)
     {
+        if (total < 0) total = rows.Count;
         var items = string.Join("", rows.Select(r => $"""
             <tr>
               <td><a href="/world/challenge/{E(H.Str(r["code"]))}">{E(H.Str(r["title"]))}</a></td>
@@ -605,6 +607,24 @@ public static class WorldPages
             string.Join("", WorldContent.Difficulties.Select(d => Opt(d, Cap(d), fDifficulty)));
         var trackOpts = Opt("", "All tracks", fTrack) +
             string.Join("", WorldContent.Tracks.Select(t => Opt(t, Cap(t.Replace('_', ' ')), fTrack)));
+        // Pagination keeps the whole catalogue reachable — and crawlable — at any bank size. The
+        // links carry the active filters so paging never silently resets them.
+        string PageHref(int p)
+        {
+            var qs = new List<string>();
+            if (!string.IsNullOrEmpty(fIndustry)) qs.Add("industry=" + Uri.EscapeDataString(fIndustry));
+            if (!string.IsNullOrEmpty(fDifficulty)) qs.Add("difficulty=" + Uri.EscapeDataString(fDifficulty));
+            if (!string.IsNullOrEmpty(fTrack)) qs.Add("track=" + Uri.EscapeDataString(fTrack));
+            if (p > 1) qs.Add("page=" + p);
+            return "/world/archive" + (qs.Count > 0 ? "?" + string.Join("&amp;", qs) : "");
+        }
+        var pager = pages <= 1 ? "" : $"""
+            <nav class="pager" aria-label="Challenge library pages" style="display:flex;gap:12px;align-items:center;margin-top:14px">
+              {(page > 1 ? $"<a class=\"btn secondary\" href=\"{PageHref(page - 1)}\" rel=\"prev\">Previous</a>" : "")}
+              <span class="kicker">Page {page} of {pages}</span>
+              {(page < pages ? $"<a class=\"btn secondary\" href=\"{PageHref(page + 1)}\" rel=\"next\">Next</a>" : "")}
+            </nav>
+            """;
         return Layout(db,
             "Challenge Library — PCI World",
             "Every published PCI World challenge: realistic project situations across industries, free to enter.",
@@ -622,11 +642,13 @@ public static class WorldPages
               <div><button class="btn secondary" type="submit">Filter</button></div>
             </form>
             <div class="card">
-            <p class="kicker" style="margin-bottom:10px">{rows.Count} challenge{(rows.Count == 1 ? "" : "s")}</p>
+            <p class="kicker" style="margin-bottom:10px">{total} challenge{(total == 1 ? "" : "s")}{(pages > 1 ? $" &middot; page {page} of {pages}" : "")}</p>
             <table>
+              <caption class="visually-hidden">Published PCI World challenges, filtered by the controls above</caption>
               <thead><tr><th scope="col">Challenge</th><th scope="col">Industry</th><th scope="col">Difficulty</th><th scope="col">Time</th></tr></thead>
               <tbody>{items}</tbody>
             </table>
+            {pager}
             </div>
             """,
             "/world/archive");
@@ -701,7 +723,12 @@ public static class WorldPages
             """,
             "/world",
             ogTitle: $"{who} — {title} — PCI World Challenge",
-            ogDesc: share.Length > 0 ? share : $"Verified PCI World challenge result: {title}.");
+            ogDesc: share.Length > 0 ? share : $"Verified PCI World challenge result: {title}.",
+            // A shared result is for the person the participant sent it to, not for a search index.
+            // Revoking the link removes the page but cannot remove it from an index or a cache, so
+            // this surface stays out of the index by default while remaining fully shareable —
+            // social unfurls read the og: tags directly and are unaffected.
+            noindex: true);
     }
 
     public static string VerifyEmail(Db db, bool ok) => Layout(db,
@@ -792,8 +819,25 @@ public static class WorldPages
             """,
             "/world",
             ogTitle: $"{name} — PCI World Passport",
-            ogDesc: $"Verified virtual project experience: {rows.Count} completed PCI World challenges.");
+            ogDesc: $"Verified virtual project experience: {rows.Count} completed PCI World challenges.",
+            // Same reasoning as a shared result: the Passport token is revocable and rotatable, and
+            // a search index would outlive both. Sharing the link still works everywhere.
+            noindex: true);
     }
+
+    /// <summary>404 for a PCI World-only deployment. A real not-found page, not a redirect to
+    /// /world — a blanket redirect tells crawlers every mistyped URL is a live duplicate.</summary>
+    public static string NotFound(Db db) => Layout(db,
+        "Page not found — PCI World",
+        "That page does not exist on PCI World.",
+        """
+        <span class="kicker">404</span>
+        <h1>That page doesn&rsquo;t exist</h1>
+        <p class="lede">The link may be mistyped, or the page may have moved.</p>
+        <p><a class="btn" href="/world">Go to today&rsquo;s challenge</a>
+           <a class="btn secondary" href="/world/archive">Browse the archive</a></p>
+        """,
+        "/world", noindex: true);
 
     /// <summary>Account page: register/sign-in, then Passport management. All state via the JSON
     /// API; this shell renders no personal data server-side.</summary>

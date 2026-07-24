@@ -21,6 +21,24 @@ public static class Security
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Trusted client IP: the LAST X-Forwarded-For hop — the value appended by our own
+    /// TLS-terminating proxy. Never the first hop (client-controlled and forgeable) and never the
+    /// raw socket address behind a proxy, which is the proxy itself: keying a rate limiter on that
+    /// turns every "per-IP" limit into one shared global bucket that any single script can exhaust
+    /// for all users. Mirrors the platform limiter's key in Program.cs.
+    /// </summary>
+    public static string ClientIp(HttpContext ctx)
+    {
+        var xff = ctx.Request.Headers["X-Forwarded-For"].ToString();
+        if (!string.IsNullOrEmpty(xff))
+        {
+            var parts = xff.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            if (parts.Length > 0) return parts[^1];
+        }
+        return ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+    }
+
     /// <summary>Constant-time secret comparison (webhook shared secrets etc.).</summary>
     public static bool FixedTimeEquals(string? a, string? b)
     {

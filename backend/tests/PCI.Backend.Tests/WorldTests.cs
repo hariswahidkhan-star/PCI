@@ -349,7 +349,7 @@ public class WorldTests
     // ───────────────────────── rotation + calendar ─────────────────────────
 
     [Fact]
-    public void Daily_rotation_is_deterministic_and_calendar_overrides_it()
+    public void Daily_rotation_is_stable_calendar_scheduled_and_never_serves_ineligible_content()
     {
         var db = NewWorldDb();
         var day = new DateTime(2026, 7, 24, 12, 0, 0, DateTimeKind.Utc);
@@ -358,14 +358,22 @@ public class WorldTests
         Assert.NotNull(a);
         Assert.Equal(Convert.ToInt64(a!["id"]), Convert.ToInt64(b!["id"]));   // same day, same challenge
 
-        // Calendar override wins; a retired challenge cannot serve.
+        // A calendar entry made BEFORE the day opens is honoured when the period is created. (The
+        // stability rule is the whole point: once a day is open, its challenge no longer moves.)
         var target = db.QueryOne("SELECT id FROM pciworld_challenges WHERE code='WC-AIA-010'")!;
+        var tomorrow = day.AddDays(1);
         db.Execute("INSERT INTO pciworld_calendar(day_utc,challenge_id) VALUES(?,?)",
-            day.ToString("yyyy-MM-dd"), target["id"]);
-        Assert.Equal(Convert.ToInt64(target["id"]), Convert.ToInt64(WorldLifecycle.Today(db, day)!["id"]));
+            tomorrow.ToString("yyyy-MM-dd"), target["id"]);
+        Assert.Equal(Convert.ToInt64(target["id"]), Convert.ToInt64(WorldLifecycle.Today(db, tomorrow)!["id"]));
 
+        // Retiring the featured challenge mid-day must take it off the front page immediately: the
+        // engine substitutes automatically and records it, rather than serving withdrawn content.
         WorldLifecycle.Retire(db, Convert.ToInt64(target["id"]));
-        Assert.NotEqual(Convert.ToInt64(target["id"]), Convert.ToInt64(WorldLifecycle.Today(db, day)!["id"]));
+        Assert.NotEqual(Convert.ToInt64(target["id"]), Convert.ToInt64(WorldLifecycle.Today(db, tomorrow)!["id"]));
+        var superseded = db.QueryOne(
+            "SELECT COUNT(*) c FROM pciworld_rotation_periods WHERE day_key=? AND superseded_at IS NOT NULL",
+            tomorrow.ToString("yyyy-MM-dd"))!;
+        Assert.Equal(1L, Convert.ToInt64(superseded["c"]));   // the displaced day is kept, not deleted
         WorldLifecycle.Restore(db, Convert.ToInt64(target["id"]));
     }
 
@@ -471,5 +479,86 @@ public class WorldTests
         // The bootstrap owner exists with a bcrypt hash, never a plaintext password.
         var owner = db.QueryOne("SELECT * FROM pciworld_admin_users WHERE email='owner@pciworld.local'")!;
         Assert.StartsWith("$2", Convert.ToString(owner["password_hash"]));
+    }
+
+    // ───────────────────────── Phase 1 security hardening regressions ─────────────────────────
+
+    /// <summary>
+    /// Phase 0 finding H1 — mailed verify/reset links must not be built from the request's Host
+    /// header. A forged Host would deliver a VALID reset token pointing at an attacker's origin,
+    /// which is account takeover for anyone who can reach the public /forgot endpoint.
+    /// </summary>
+    [Fact]
+    public void Mailed_links_never_trust_the_request_host_header()
+    {
+        var saved = new[] { "PCIWORLD_BASE_URL", "APP_BASE_URL", "SITE_BASE_URL", "RENDER_EXTERNAL_URL", "RENDER_EXTERNAL_HOSTNAME" }
+            .ToDictionary(k => k, Environment.GetEnvironmentVariable);
+        try
+        {
+            foreach (var k in saved.Keys) Environment.SetEnvironmentVariable(k, null);
+
+            var forged = new DefaultHttpContext();
+            forged.Request.Scheme = "https";
+            forged.Request.Host = new HostString("evil.example");
+
+            // With nothing configured, an unrecognised Host is refused and a constant is used.
+            var fallback = WorldUrl.Base(forged.Request);
+            Assert.DoesNotContain("evil.example", fallback);
+            Assert.Equal(Redirects.CanonicalBase, fallback);
+            Assert.StartsWith(Redirects.CanonicalBase, WorldUrl.Abs(forged.Request, "/world/reset-password?t=abc"));
+
+            // Explicit configuration always wins, whatever the requester claims.
+            Environment.SetEnvironmentVariable("PCIWORLD_BASE_URL", "https://pciworld.example");
+            Assert.Equal("https://pciworld.example", WorldUrl.Base(forged.Request));
+            Assert.Equal("https://pciworld.example/world/verify-email?t=x",
+                WorldUrl.Abs(forged.Request, "/world/verify-email?t=x"));
+            Environment.SetEnvironmentVariable("PCIWORLD_BASE_URL", null);
+
+            // A host we know we answer on is echoed back — local development still works.
+            var local = new DefaultHttpContext();
+            local.Request.Scheme = "http";
+            local.Request.Host = new HostString("localhost:5000");
+            Assert.Equal("http://localhost:5000", WorldUrl.Base(local.Request));
+        }
+        finally
+        {
+            foreach (var (k, v) in saved) Environment.SetEnvironmentVariable(k, v);
+        }
+    }
+
+    /// <summary>Phase 0 SEO/security finding — the world admin realm must be excluded from crawling
+    /// (robots + X-Robots-Tag), while the PUBLIC world surfaces must stay indexable.</summary>
+    [Fact]
+    public void World_admin_is_private_to_crawlers_and_world_public_pages_are_not()
+    {
+        Assert.True(Redirects.IsPrivatePath("/world-admin"));
+        Assert.True(Redirects.IsPrivatePath("/world-admin/"));
+        Assert.True(Redirects.IsPrivatePath("/world-admin/settings"));
+        Assert.False(Redirects.IsPrivatePath("/world"));
+        Assert.False(Redirects.IsPrivatePath("/world/archive"));
+        Assert.False(Redirects.IsPrivatePath("/world/challenge/WC-EVM-001"));
+    }
+
+    /// <summary>Token-addressed pages carry a revocable link, and revocation cannot remove a page
+    /// from a search index — so they must not enter one. Public catalogue pages still must.</summary>
+    [Fact]
+    public void Token_addressed_pages_are_noindex_and_catalogue_pages_are_indexable()
+    {
+        var db = NewWorldDb();
+        var attempt = new Dictionary<string, object?>
+        {
+            ["display_name"] = "A participant", ["score"] = 82.0, ["dimensions_json"] = null,
+            ["profile_key"] = null, ["completed_at"] = "2026-07-24 10:00:00",
+        };
+        var version = db.QueryOne("SELECT * FROM pciworld_challenge_versions LIMIT 1")!;
+
+        Assert.Contains("name=\"robots\" content=\"noindex\"", WorldPages.PublicResult(db, attempt, version));
+        Assert.Contains("name=\"robots\" content=\"noindex\"", WorldPages.NotFound(db));
+        Assert.DoesNotContain("name=\"robots\" content=\"noindex\"", WorldPages.About(db));
+        Assert.DoesNotContain("name=\"robots\" content=\"noindex\"", WorldPages.Archive(db, new()));
+
+        // Canonicals are absolute, so the same page served on two hosts consolidates instead of
+        // competing with itself.
+        Assert.Contains($"rel=\"canonical\" href=\"{WorldUrl.Base()}/world/about\"", WorldPages.About(db));
     }
 }

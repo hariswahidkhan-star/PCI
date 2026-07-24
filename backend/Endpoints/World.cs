@@ -34,7 +34,9 @@ public static class World
             var e = rl.AddOrUpdate(key, (1, now), (_, c) => now - c.start >= windowMs ? (1, now) : (c.count + 1, c.start));
             return e.count > limit;
         }
-        string Ip(HttpContext ctx) => ctx.Connection.RemoteIpAddress?.ToString() ?? "?";
+        // Behind a TLS-terminating proxy the socket address is the PROXY's, so keying on it would
+        // make every "per-IP" limit one global bucket. Key on the trusted last X-Forwarded-For hop.
+        string Ip(HttpContext ctx) => Security.ClientIp(ctx);
 
         Dictionary<string, object?>? Session(HttpContext ctx)
         {
@@ -96,17 +98,24 @@ public static class World
             if (!WorldContent.Difficulties.Contains(difficulty)) difficulty = "";
             if (!WorldContent.Tracks.Contains(track)) track = "";
 
-            var sql = "SELECT code,title,industry,track,difficulty,est_minutes FROM pciworld_challenges WHERE current_version>=1 AND retired=0";
+            // Paginated, with a real total. The previous hard LIMIT 200 silently truncated: at a
+            // 10,000-challenge bank most of the catalogue would have been unreachable and unlinkable.
+            const int perPage = 60;
+            var page = Math.Max(1, (int)(H.QL(ctx, "page") ?? 1));
+            var where = " WHERE current_version>=1 AND retired=0";
             var args = new List<object?>();
-            if (industry.Length > 0) { sql += " AND industry=?"; args.Add(industry); }
-            if (difficulty.Length > 0) { sql += " AND difficulty=?"; args.Add(difficulty); }
-            if (track.Length > 0) { sql += " AND track=?"; args.Add(track); }
-            sql += " ORDER BY id ASC LIMIT 200";
-            var rows = db.Query(sql, args.ToArray());
+            if (industry.Length > 0) { where += " AND industry=?"; args.Add(industry); }
+            if (difficulty.Length > 0) { where += " AND difficulty=?"; args.Add(difficulty); }
+            if (track.Length > 0) { where += " AND track=?"; args.Add(track); }
+            var total = db.Scalar<long>("SELECT COUNT(*) FROM pciworld_challenges" + where, args.ToArray());
+            var pages = (int)Math.Max(1, (total + perPage - 1) / perPage);
+            if (page > pages) page = pages;
+            var rows = db.Query("SELECT code,title,industry,track,difficulty,est_minutes FROM pciworld_challenges" + where +
+                $" ORDER BY id ASC LIMIT {perPage} OFFSET {(page - 1) * perPage}", args.ToArray());
             var industries = db.Query(@"SELECT DISTINCT industry FROM pciworld_challenges
                     WHERE current_version>=1 AND retired=0 AND industry IS NOT NULL ORDER BY industry")
                 .Select(r => H.Str(r["industry"]) ?? "").Where(s => s.Length > 0).ToList();
-            return Html(WorldPages.Archive(db, rows, industries, industry, difficulty, track));
+            return Html(WorldPages.Archive(db, rows, industries, industry, difficulty, track, total, page, pages));
         });
 
         app.MapGet("/world/about", () => !Enabled() ? Disabled() : Html(WorldPages.About(db)));
@@ -166,7 +175,10 @@ public static class World
                 difficulty = H.Str(version["difficulty"]),
                 est_minutes = H.L(version["est_minutes"]),
                 version = H.L(version["version"]),
-                changes_at_utc = "00:00",
+                // The real boundary from the rotation engine, not a hard-coded string: operators can
+                // set the rotation timezone, so "00:00 UTC" was simply wrong wherever they had.
+                changes_at = WorldRotation.NextBoundaryUtc(WorldRotation.Zone(db), DateTime.UtcNow).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                timezone = Settings.Str(db, "world_rotation_timezone", "UTC"),
             });
         });
 

@@ -25,10 +25,10 @@ In the Render dashboard, inside the project you created:
    | `PCIWORLD_ONLY` | `true` — **the service serves PCI World exclusively**: every other page redirects to `/world`, every other API returns 404; the Institute site and portals are unreachable on this deployment |
    | `APP_BASE_URL` | the exact service URL, e.g. `https://pciworld.onrender.com` |
    | `ALLOWED_ORIGIN` | same value as `APP_BASE_URL` |
-   | `DATABASE_FILE` | `/var/data/pciworld.db` |
+   | `DATABASE_FILE` | `/var/data/pciworld.db` — **must be an absolute path on the mounted disk** (step 4). A relative path lives in the container filesystem, which Render replaces on every deploy: every account, attempt and Passport would be destroyed. Boot refuses to start on a relative path when `PCIWORLD_ALLOW_SQLITE=true`. |
    | `CREDENTIAL_ENCRYPTION_KEY` | any strong 32-byte secret (Render → Generate) |
    | `PCIWORLD_OWNER_PASSWORD` | the initial world-admin owner password you want |
-   | `ALLOW_INSECURE_PRODUCTION` | `true` — **preview-grade only**: acknowledges SQLite instead of MySQL (see below) |
+   | `PCIWORLD_ALLOW_SQLITE` | `true` — the explicit, temporary bridge: run on disk-backed SQLite until MySQL 8 is provisioned (see below) |
 
    Leave Stripe/SMTP unset: payments stay disabled (PCI World is free) and email falls back to
    the console sink until you configure Resend/SMTP (needed later for account verification
@@ -42,16 +42,66 @@ Then:
 - **Admin** → `https://<your-service>.onrender.com/world-admin`
   — sign in `owner@pciworld.local` + your `PCIWORLD_OWNER_PASSWORD`, change it in the console.
 
-## Production hardening (before public launch — not optional)
+## Durability comes first (PCI World's product law)
 
-The master programme requires **MySQL 8 for production data**. The SQLite + 
-`ALLOW_INSECURE_PRODUCTION=true` combination above is preview-grade. Before launch:
+**Learner history is never lost.** Attempts, accounts and Passport evidence must survive every
+deploy. Two things make that true, in this order:
+
+1. **A mounted disk** (step 4) with `DATABASE_FILE` pointing onto it. Without this, the database
+   is a file in the container filesystem and every redeploy wipes it. The app now says so loudly
+   in the boot log — look for `[pciworld] EPHEMERAL STORAGE` and fix it before letting anyone
+   register.
+2. **MySQL 8** for production, which is what the programme requires. The disk-backed SQLite step
+   is an honest bridge, not the destination.
+
+`PCIWORLD_ALLOW_SQLITE=true` is what makes the bridge explicit: it downgrades the MySQL
+requirement to a warning **and** hard-fails the boot if `DATABASE_FILE` is not an absolute path,
+so the waiver can never be used to run on ephemeral storage by accident. It replaces the old
+blanket `ALLOW_INSECURE_PRODUCTION=true`, which silently waived CORS, the encryption key and the
+public base URL as well.
+
+### Moving to MySQL 8 (the launch gate)
 
 1. Provision MySQL 8 (Render has no managed MySQL — use PlanetScale/Aiven/RDS etc.).
 2. Set `DB_PROVIDER=mysql` + `MYSQL_CONNECTION_STRING` (or `MYSQL_HOST`/`MYSQL_USER`/
-   `MYSQL_PASSWORD`/`MYSQL_DATABASE`), remove `ALLOW_INSECURE_PRODUCTION`, redeploy — the boot
+   `MYSQL_PASSWORD`/`MYSQL_DATABASE`), remove `PCIWORLD_ALLOW_SQLITE`, redeploy — the boot
    validator then enforces the safe configuration for you.
 3. Configure `RESEND_API_KEY` (or SMTP) so verification and reset email really sends.
+
+## Security settings that are NOT waived
+
+A `PCIWORLD_ONLY` deployment waives only the payment, exam and object-storage checks — the
+subsystems it genuinely does not serve. These stay required in production and the service will
+refuse to boot without them:
+
+| Key | Why |
+|---|---|
+| `ALLOWED_ORIGIN` | otherwise CORS answers `*` and any site can call the world APIs from a visitor's browser |
+| `CREDENTIAL_ENCRYPTION_KEY` | data-at-rest encryption falls back to a derivable key without it |
+| `APP_BASE_URL` (or `PCIWORLD_BASE_URL`) | the origin used to build verification and password-reset links. These are **never** built from the request's `Host` header: a forged host would mail a real reset token pointing at an attacker. Render's own `RENDER_EXTERNAL_URL` is used automatically when neither is set. |
+
+Two more worth setting deliberately:
+
+- `PCIWORLD_OWNER_PASSWORD` — when unset, a production boot mints a random owner password and
+  prints it **once** in the deploy log (`ONE-TIME PASSWORD:`). There is no published default in
+  production. If the owner is ever left on the development default, boot warns on every start.
+- `RESEND_API_KEY`/SMTP — until set, verification and reset mail prints to the log instead of
+  sending.
+
+## Rotation settings (world admin → Rotation)
+
+The daily challenge is a recorded rotation period, not a computed guess. Operators control it in
+the admin console rather than through environment variables:
+
+| Setting | Default | Meaning |
+|---|---|---|
+| Timezone | `UTC` | whose midnight is the boundary — an IANA id (`Europe/London`) or a fixed offset (`+04:00`) |
+| Shuffle | on | deterministic reshuffle each cycle; off plays the catalogue in order |
+| Flag threshold | 3 | open content reports at which a challenge stops being featured |
+| Pause | off | freezes the featured challenge without taking PCI World offline |
+
+The boundary job runs inside the web service on the platform's worker-lease pattern, so running
+multiple Render instances is safe — exactly one of them opens each day.
 
 ## Custom domains (when you have them)
 

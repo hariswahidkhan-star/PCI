@@ -24,11 +24,21 @@ credentials — are unreachable on this deployment). Optional variables:
 
 | Key | Effect |
 |---|---|
-| `PCIWORLD_OWNER_PASSWORD` | sets the initial admin password (otherwise `changeme-world-owner` — change it in the console immediately) |
+| `PCIWORLD_OWNER_PASSWORD` | sets the initial admin password (otherwise `changeme-world-owner`, and boot warns on every start until it is changed — in a production posture a random one is minted and printed once instead) |
 | `DATABASE_FILE` / `STORAGE_ROOT` | override the data paths (default `/data/...` when a disk is mounted, container-local otherwise) |
+| `PCIWORLD_BASE_URL` | the public origin used in verification and reset emails. Render's `RENDER_EXTERNAL_URL` is used automatically, so this is only needed behind a custom domain. Links are never built from the request's `Host` header. |
 
-Without a disk, data resets on every deploy/restart — fine for a preview, add the `/data` disk
-when you want persistence.
+**Without a disk, data resets on every deploy/restart.** That is acceptable for a look-at-it
+preview and unacceptable the moment anyone creates an account: PCI World's product law is that
+learner history is never lost. The boot log says which one you are running —
+
+```
+[pciworld] EPHEMERAL STORAGE — the database is a relative SQLite path, so every PCI World
+account, attempt and Passport is DESTROYED on the next deploy or restart.
+```
+
+Add the `/data` disk (Starter instance) before inviting anyone in; MySQL 8 is the production
+destination. Both steps are in `docs/pciworld/DEPLOY_RENDER.md`.
 
 > If you prefer to set **Root Directory = `PCIWorld`**, you must also set the advanced
 > **Docker Build Context Directory** to the repository root (`.`) — the Dockerfile copies
