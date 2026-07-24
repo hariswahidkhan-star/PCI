@@ -981,8 +981,10 @@ public static class WorldPages
         // on the container holding the focused button silently drops focus to <body>, which strands
         // keyboard users and announces nothing at all.
         function showAuth(){$('auth').hidden=false;$('me').hidden=true;$('auth').focus();}
+        // Returns its promise: load() replaces the whole panel, so anything that wants to leave a
+        // message on screen has to write it AFTER the re-render, onto the node that survives.
         function load(){
-          api('/api/world/passport').then(function(p){
+          return api('/api/world/passport').then(function(p){
             $('auth').hidden=true;$('me').hidden=false;$('me').focus();
             var h='<div class="card"><h2 style="margin-top:0">Your Passport</h2>'+
               '<div class="dim"><div><span class="kicker">Completed</span><b class="score num">'+p.completed+'</b></div>'+
@@ -1068,7 +1070,8 @@ public static class WorldPages
               api('/api/world/passport/publish',{publish:true})
                 .then(function(r){
                   localStorage.setItem('pciworld_passport_url',location.origin+r.url);
-                  $('puburl').innerHTML='<a href="'+r.url+'">'+esc(location.origin+r.url)+'</a>';load();})
+                  return load().then(function(){
+                    $('puburl').innerHTML='<a href="'+esc(r.url)+'">'+esc(location.origin+r.url)+'</a>';});})
                 .catch(function(e2){$('pubmsg').textContent=(e2&&e2.message)||(e2&&e2.error)||'Could not publish.';});
             });
             if($('unpub'))$('unpub').addEventListener('click',function(){
@@ -1099,7 +1102,7 @@ public static class WorldPages
               api('/api/world/passport/disclosure',{
                 show_scores:$('sw_scores').checked,show_profiles:$('sw_profiles').checked,
                 show_dates:$('sw_dates').checked,expires_in_days:parseInt($('sw_exp').value,10)||0})
-                .then(function(){$('showmsg').textContent='Saved.';load();})
+                .then(load).then(function(){$('showmsg').textContent='Saved.';})
                 .catch(function(){$('showmsg').textContent='Could not save — try again.';});
             });
             $('dlexport').addEventListener('click',function(){
