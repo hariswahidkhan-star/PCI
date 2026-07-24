@@ -3826,9 +3826,13 @@ def test_simlab(admin):
     con.close()
     pub_house = [(code, cid) for (code, cid, st) in cert_rows
                  if st == "published" and str(code).startswith(("GL-", "SD-", "SC-", "CP-"))]
-    bad_cert = [code for (code, cid) in pub_house if cid not in (1, 2, 3)]
-    certs_present = {cid for (_code, cid) in pub_house}
-    chk("43zd every published house scenario maps to a live certification (1/2/3) and all three are represented",
+    # NULL certification_id is a designed state, not a bad mapping — the schema ("NULL = any") and the
+    # validator (SimContent.CertificationIds: "NULL is allowed on a scenario (any certification)") both
+    # bless it, and the content library ships any-certification scenarios. Only a non-null id outside
+    # 1/2/3 is dangling; coverage of all three certifications is asserted over the mapped rows.
+    bad_cert = [code for (code, cid) in pub_house if cid is not None and cid not in (1, 2, 3)]
+    certs_present = {cid for (_code, cid) in pub_house if cid is not None}
+    chk("43zd every published house scenario maps to a live certification (1/2/3 or any) and all three are represented",
         len(pub_house) >= 20 and not bad_cert and {1, 2, 3}.issubset(certs_present),
         (len(pub_house), bad_cert[:5], sorted(certs_present)))
 
