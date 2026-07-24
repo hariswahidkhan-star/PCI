@@ -83,6 +83,15 @@ public static class SimLab
             if (!Core.SimLab.Eligible(db, u!.Id))
                 return Results.Json(new { error = "no_access", access = Core.SimLab.AccessFor(db, u.Id) }, statusCode: 403);
 
+            // Server-side search + faceted filtering (P2). With no params the response is unchanged (every
+            // published scenario). Facets are computed over the FULL published set so the filter controls
+            // stay stable regardless of the active filter; rows carry only the matches.
+            var q = (ctx.Request.Query["q"].ToString() ?? "").Trim().ToLowerInvariant();
+            var fDifficulty = (ctx.Request.Query["difficulty"].ToString() ?? "").Trim().ToLowerInvariant();
+            var fKind = (ctx.Request.Query["kind"].ToString() ?? "").Trim().ToLowerInvariant();
+            var fIndustry = (ctx.Request.Query["industry"].ToString() ?? "").Trim().ToLowerInvariant();
+            var fCompetency = (ctx.Request.Query["competency"].ToString() ?? "").Trim().ToLowerInvariant();
+
             // The student's latest attempt per scenario (for status/score badges), keyed by scenario_id.
             var latest = new Dictionary<long, (string status, object? score, long attemptId)>();
             foreach (var a in db.Query(@"SELECT id,scenario_id,status,score FROM simulation_attempts
@@ -90,10 +99,37 @@ public static class SimLab
                 latest[H.L(a["scenario_id"])] = (H.Str(a["status"]) ?? "in_progress", a["score"], H.L(a["id"]));
 
             var rows = new List<object>();
+            var difficulties = new SortedSet<string>();
+            var kinds = new SortedSet<string>();
+            var industries = new SortedSet<string>();
+            var competencySet = new SortedSet<string>();
+            var total = 0;
             foreach (var s in db.Query(@"SELECT id,scenario_code,title,kind,industry,project_type,difficulty,
                 est_minutes,competencies_json,certification_id,summary,version,config_json FROM simulation_scenarios
                 WHERE status='published' ORDER BY sort_order ASC, id ASC"))
             {
+                total++;
+                var difficulty = H.Str(s["difficulty"]) ?? "";
+                var kind = H.Str(s["kind"]) ?? "";
+                var industry = H.Str(s["industry"]) ?? "";
+                var comps = ParseArray(H.Str(s["competencies_json"]));
+                if (difficulty.Length > 0) difficulties.Add(difficulty);
+                if (kind.Length > 0) kinds.Add(kind);
+                if (industry.Length > 0) industries.Add(industry);
+                foreach (var c in comps) competencySet.Add(c);
+
+                // Filter predicate: exact (case-insensitive) facet matches + a substring search over
+                // title / summary / code / industry.
+                if (fDifficulty.Length > 0 && !difficulty.Equals(fDifficulty, StringComparison.OrdinalIgnoreCase)) continue;
+                if (fKind.Length > 0 && !kind.Equals(fKind, StringComparison.OrdinalIgnoreCase)) continue;
+                if (fIndustry.Length > 0 && !industry.Equals(fIndustry, StringComparison.OrdinalIgnoreCase)) continue;
+                if (fCompetency.Length > 0 && !comps.Any(c => c.Equals(fCompetency, StringComparison.OrdinalIgnoreCase))) continue;
+                if (q.Length > 0)
+                {
+                    var hay = $"{H.Str(s["title"])} {H.Str(s["summary"])} {H.Str(s["scenario_code"])} {industry}".ToLowerInvariant();
+                    if (!hay.Contains(q)) continue;
+                }
+
                 var sid = H.L(s["id"]);
                 var has = latest.TryGetValue(sid, out var at);
                 rows.Add(new
@@ -101,12 +137,12 @@ public static class SimLab
                     id = sid,
                     scenario_code = H.Str(s["scenario_code"]),
                     title = H.Str(s["title"]),
-                    kind = H.Str(s["kind"]),
-                    industry = H.Str(s["industry"]),
+                    kind,
+                    industry,
                     project_type = H.Str(s["project_type"]),
-                    difficulty = H.Str(s["difficulty"]),
+                    difficulty,
                     est_minutes = H.L(s["est_minutes"]),
-                    competencies = ParseArray(H.Str(s["competencies_json"])),
+                    competencies = comps,
                     certification_id = s["certification_id"] is null ? (long?)null : H.L(s["certification_id"]),
                     summary = H.Str(s["summary"]),
                     version = H.L(s["version"]),
@@ -116,7 +152,13 @@ public static class SimLab
                     score = has ? at.score : null,
                 });
             }
-            return J(new { rows });
+            return J(new
+            {
+                rows,
+                total,                 // total published scenarios (before filtering)
+                matched = rows.Count,  // after filtering
+                facets = new { difficulties, kinds, industries, competencies = competencySet },
+            });
         });
 
         // ---- start (or resume) an attempt ----
