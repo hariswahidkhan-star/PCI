@@ -317,6 +317,28 @@ public class WorldTests
         WorldLifecycle.Restore(db, Convert.ToInt64(target["id"]));
     }
 
+    // ───────────────────────── world-only deployment allowlist ─────────────────────────
+
+    [Fact]
+    public void World_only_allowlist_admits_exactly_the_pci_world_surfaces()
+    {
+        string[] allowed =
+        {
+            "/", "/world", "/world/challenge/WC-EVM-001", "/world/archive", "/world/account",
+            "/world/r/abc", "/world/i/abc", "/world/p/abc", "/world/verify-email", "/world/reset-password",
+            "/world-admin", "/api/world/session", "/api/world/attempts/5/submit",
+            "/api/world-admin/challenges", "/api/health", "/robots.txt", "/favicon.ico",
+        };
+        string[] blocked =
+        {
+            "/app", "/app/lab", "/admin", "/admin/index.html", "/student.html", "/exam-ui.html",
+            "/api/login", "/api/register", "/api/admin/auth/login", "/api/me/lab/catalogue",
+            "/api/certifications", "/blog", "/about", "/worldfoo", "/api/worldx",
+        };
+        foreach (var p in allowed) Assert.True(WorldOnly.Allowed(p), $"expected allowed: {p}");
+        foreach (var p in blocked) Assert.False(WorldOnly.Allowed(p), $"expected blocked: {p}");
+    }
+
     // ───────────────────────── content reports ─────────────────────────
 
     [Fact]

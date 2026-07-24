@@ -22,7 +22,7 @@ In the Render dashboard, inside the project you created:
 
    | Key | Value |
    |---|---|
-   | `PCIWORLD_STANDALONE` | `true` — the service's root URL lands directly on PCI World |
+   | `PCIWORLD_ONLY` | `true` — **the service serves PCI World exclusively**: every other page redirects to `/world`, every other API returns 404; the Institute site and portals are unreachable on this deployment |
    | `APP_BASE_URL` | the exact service URL, e.g. `https://pciworld.onrender.com` |
    | `ALLOWED_ORIGIN` | same value as `APP_BASE_URL` |
    | `DATABASE_FILE` | `/var/data/pciworld.db` |
@@ -61,5 +61,10 @@ On the service → Settings → Custom Domains: add `pciworld.org` (and optional
 - `PCIWORLD_HOSTS=pciworld.org,www.pciworld.org` — these hosts land on `/world`
 - `PCIWORLD_ADMIN_HOSTS=admin.pciworld.org` — this host lands on `/world-admin`
 
-(`PCIWORLD_STANDALONE=true` already covers the `.onrender.com` URL; the host lists exist so a
-single combined deployment can also serve both sites by hostname.)
+## Mode reference
+
+| Variable | Effect |
+|---|---|
+| `PCIWORLD_ONLY=true` | Strict: the deployment serves ONLY PCI World (`/world*`, `/world-admin*`, their APIs, health). Everything else → redirect to `/world` (pages) or 404 (APIs). Implies the root redirect. Use this for a dedicated PCI World service. |
+| `PCIWORLD_STANDALONE=true` | Soft: only `/` redirects to `/world`; the rest of the platform stays reachable on this host. |
+| `PCIWORLD_HOSTS` / `PCIWORLD_ADMIN_HOSTS` | Host-based mapping of `/` for a combined deployment serving both sites (e.g. `pciworld.org` / `admin.pciworld.org`). |

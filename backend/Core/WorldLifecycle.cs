@@ -2,6 +2,25 @@ using PCI.Backend.Data;
 
 namespace PCI.Backend.Core;
 
+/// <summary>PCI World-only deployment mode (PCIWORLD_ONLY=true): the service serves EXCLUSIVELY
+/// the PCI World surfaces — the Institute website, portals and their APIs are unreachable on it.
+/// This is the "deploy only PCI World" shape for a dedicated pciworld.org / Render service.</summary>
+public static class WorldOnly
+{
+    /// <summary>Paths a world-only deployment serves. Everything else is redirected (HTML) or
+    /// 404'd (API) by the middleware in Program.cs. Segment-boundary matching: "/world" does not
+    /// leak "/worldfoo".</summary>
+    public static bool Allowed(Microsoft.AspNetCore.Http.PathString p) =>
+        p == "/" ||
+        p.StartsWithSegments("/world") || p.StartsWithSegments("/world-admin") ||
+        p.StartsWithSegments("/api/world") || p.StartsWithSegments("/api/world-admin") ||
+        p.StartsWithSegments("/api/health") ||
+        p == "/robots.txt" || p == "/favicon.ico" || p == "/favicon.svg";
+
+    public static bool Enabled =>
+        string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_ONLY"), "true", StringComparison.OrdinalIgnoreCase);
+}
+
 /// <summary>PCI World admin RBAC — server-side, per action group. Hiding a button is not
 /// authorization; every world-admin endpoint calls Allowed() before touching data.</summary>
 public static class WorldRbac
