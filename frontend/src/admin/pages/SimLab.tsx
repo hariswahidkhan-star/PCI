@@ -214,27 +214,42 @@ export default function SimLab() {
     await sendImport(doc)
   }
 
-  // Manifest export (§5B.4). Downloads the server's exact bytes via fetch rather than the shared JSON
-  // client: re-serialising the parsed document would reformat it and break the byte/checksum comparison
-  // the manifest exists for. The server names the file (it sanitises the operator-authored code).
+  // Manifest downloads (§5B.4 single, §5B.6 bundle). Fetched as raw text rather than through the shared
+  // JSON client: re-serialising the parsed document would reformat it and break the byte/checksum
+  // comparison the manifests exist for. The server names the file; the fallback only covers a proxy that
+  // strips the header.
+  async function downloadJson(url: string, fallbackName: string) {
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${adminApi.getToken() ?? ''}` } })
+    if (!res.ok) throw new Error(`Export failed (${res.status}).`)
+    const text = await res.text()
+    const named = /filename="([^"]+)"/.exec(res.headers.get('Content-Disposition') ?? '')?.[1]
+    const objUrl = URL.createObjectURL(new Blob([text], { type: 'application/json' }))
+    const a = document.createElement('a')
+    a.href = objUrl
+    a.download = named || fallbackName
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(objUrl)
+  }
+
   async function doExport(r: ScenarioRow) {
     setBusy(true); setErr(''); setMsg('')
     try {
-      const res = await fetch(`/api/admin/lab/scenarios/${r.id}/manifest`, {
-        headers: { Authorization: `Bearer ${adminApi.getToken() ?? ''}` },
-      })
-      if (!res.ok) throw new Error(`Export failed (${res.status}).`)
-      const text = await res.text()
-      const named = /filename="([^"]+)"/.exec(res.headers.get('Content-Disposition') ?? '')?.[1]
-      const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }))
-      const a = document.createElement('a')
-      a.href = url
-      a.download = named || `${r.scenario_code.replace(/[^A-Za-z0-9._-]/g, '')}-v${r.version}.pcisim.json`
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-      URL.revokeObjectURL(url)
+      await downloadJson(`/api/admin/lab/scenarios/${r.id}/manifest`,
+        `${r.scenario_code.replace(/[^A-Za-z0-9._-]/g, '')}-v${r.version}.pcisim.json`)
       flash(`Exported manifest for “${r.scenario_code}”.`)
+    } catch (e) { fail(e) } finally { setBusy(false) }
+  }
+
+  // Whole-catalogue bundle — one file for backup or migration, instead of exporting row by row. The API
+  // also takes ?status= for scripted backups; the button deliberately exports everything, since a partial
+  // backup that looks like a whole one is the more dangerous default.
+  async function doExportAll() {
+    setBusy(true); setErr(''); setMsg('')
+    try {
+      await downloadJson('/api/admin/lab/manifest-bundle', 'pci-simulation-catalogue.pcisim-bundle.json')
+      flash(`Exported a bundle of all ${rows.length} scenarios.`)
     } catch (e) { fail(e) } finally { setBusy(false) }
   }
 
@@ -293,6 +308,9 @@ export default function SimLab() {
           <>
             <input ref={fileRef} type="file" accept="application/json,.json" onChange={(e) => { void onImportFile(e) }}
               style={{ display: 'none' }} data-testid="manifest-file" aria-hidden="true" tabIndex={-1} />
+            <button className="btn secondary" disabled={busy || rows.length === 0} onClick={() => { void doExportAll() }}>
+              Export all
+            </button>
             <button className="btn secondary" disabled={busy} onClick={() => fileRef.current?.click()}>
               Import manifest
             </button>

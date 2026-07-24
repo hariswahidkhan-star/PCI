@@ -4085,6 +4085,56 @@ def test_simlab(admin):
     chk("43zi13 a 'sim_lab'-only admin can import a manifest (200, as a draft)",
         c == 200 and sli.get("review_state") == "draft", (c, sli.get("review_state")))
 
+    # ---- §5B.6: whole-catalogue manifest bundle (bulk export for backup / migration) ----
+    def bundle(qs="", token=None):
+        r = urllib.request.Request(f"{BASE}/api/admin/lab/manifest-bundle{qs}", method="GET",
+                                   headers={"Authorization": "Bearer " + token} if token else {})
+        try:
+            with urllib.request.urlopen(r) as resp:
+                return resp.status, resp.read().decode(), resp.headers.get("Content-Disposition", "")
+        except urllib.error.HTTPError as e:
+            return e.code, e.read().decode(), e.headers.get("Content-Disposition", "")
+
+    c, btext, bdispo = bundle(token=admin)
+    bjson = json.loads(btext) if c == 200 else {}
+    c, alist = jget("GET", "/api/admin/lab/scenarios", token=admin)
+    chk("43zb1 an admin exports the whole catalogue as one bundle",
+        c == 200 and bjson.get("kind") == "pci.simulation.bundle" and bjson.get("manifest_version") == 1
+        and bjson.get("count") == alist.get("total") and len(bjson.get("scenarios", [])) == alist.get("total")
+        and len(bjson.get("checksum") or "") == 64,
+        (bjson.get("kind"), bjson.get("count"), alist.get("total")))
+    codes = [(s.get("scenario") or {}).get("scenario_code") for s in bjson.get("scenarios", [])]
+    chk("43zb2 bundle entries are ordered by scenario_code, so two environments agree regardless of ids",
+        codes == sorted(codes), codes[:6])
+    # Each entry is a full single-scenario manifest — identical to what the per-scenario export produces.
+    entry = next((s for s in bjson.get("scenarios", []) if (s.get("scenario") or {}).get("scenario_code") == "IT-REV-001"), {})
+    chk("43zb3 a bundle entry is byte-equivalent to that scenario's own manifest (same checksum)",
+        entry.get("kind") == "pci.simulation.scenario" and entry.get("checksum") == mjson.get("checksum"),
+        (entry.get("checksum") == mjson.get("checksum"),))
+    chk("43zb4 the bundle downloads as an attachment", 'attachment' in bdispo and 'pcisim-bundle.json' in bdispo, bdispo)
+    # Determinism: same catalogue, byte-identical bundle.
+    c2b, btext2, _ = bundle(token=admin)
+    chk("43zb5 exporting the bundle twice is byte-identical (deterministic)", c2b == 200 and btext2 == btext, c2b)
+    # Filtered export for scripted backups.
+    c, ptext, _ = bundle("?status=published", token=admin)
+    pjson = json.loads(ptext) if c == 200 else {}
+    pub_only = all((s.get("governance") or {}).get("status") == "published" for s in pjson.get("scenarios", []))
+    chk("43zb6 ?status=published narrows the bundle to published scenarios only",
+        c == 200 and pub_only and pjson.get("count") == alist.get("published"),
+        (c, pjson.get("count"), alist.get("published")))
+    c, bad_s, _ = bundle("?status=not-a-status", token=admin)
+    chk("43zb7 an unknown status is refused (400 bad_status)",
+        c == 400 and json.loads(bad_s).get("error") == "bad_status", c)
+    # Permission wiring matches the rest of the Lab.
+    c, _sb, _ = bundle(token=mtok)
+    chk("43zb8 the bundle export is not reachable with a student token", c in (401, 403), c)
+    if vtok:
+        c, _vb, _ = bundle(token=vtok)
+        chk("43zb9 a viewer is refused the bundle export (403)", c == 403, c)
+    c, slb, _ = bundle(token=sltok)
+    chk("43zb10 a 'sim_lab'-only admin can export the bundle (200)",
+        c == 200 and json.loads(slb).get("kind") == "pci.simulation.bundle", c)
+
     # ---- Phase 2 engine: forecasting (three EAC methods) + CBS cost roll-up, graded deterministically ----
     c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})
     fid = stf.get("attempt_id")

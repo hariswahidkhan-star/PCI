@@ -114,6 +114,32 @@ public static class AdminSimLab
             return Results.Text(json, "application/json", Encoding.UTF8);
         }));
 
+        // ---- whole-catalogue manifest bundle (§5B.6). One deterministic file for backup or migration,
+        //      instead of exporting scenarios one at a time. `status` narrows it (default: everything);
+        //      ordering is by scenario_code so two environments holding the same content agree. ----
+        app.MapGet("/api/admin/lab/manifest-bundle", (HttpContext ctx, string? status) => gate(ctx.Request, "sim_lab", adm =>
+        {
+            // Validated against the operational status vocabulary rather than sanitised, so the value is
+            // safe by construction both in the query and in the response header.
+            var wanted = (status ?? "").Trim().ToLowerInvariant();
+            if (wanted.Length > 0 && wanted is not ("draft" or "published" or "suspended" or "archived"))
+                return Results.Json(new { error = "bad_status", message = "Use draft, published, suspended or archived." }, statusCode: 400);
+
+            var rows = wanted.Length == 0
+                ? db.Query("SELECT * FROM simulation_scenarios")
+                : db.Query("SELECT * FROM simulation_scenarios WHERE status=?", wanted);
+
+            var all = new List<(Dictionary<string, object?>, IReadOnlyList<SimContent.Issue>)>();
+            foreach (var s in rows)
+                all.Add((s, SimContent.Validate(InputFrom(s), OtherCodes(db, H.L(s["id"])))));
+
+            var json = SimManifest.Bundle(all);
+            var name = wanted.Length == 0 ? "catalogue" : wanted;
+            ctx.Response.Headers["Content-Disposition"] = $"attachment; filename=\"pci-simulation-{name}.pcisim-bundle.json\"";
+            log(adm.Id, "sim_bundle_export", $"{all.Count} scenario(s){(wanted.Length > 0 ? $" · {wanted}" : "")}");
+            return Results.Text(json, "application/json", Encoding.UTF8);
+        }));
+
         // ---- import a manifest as a NEW DRAFT (§5B.5 — the other half of manifest I/O). Verifies the
         //      envelope and recomputed content checksum, then lands the scenario in draft.
         //
