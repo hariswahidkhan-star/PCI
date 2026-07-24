@@ -183,6 +183,23 @@ describe('Admin SimLab Studio', () => {
       expect(clicked[0].download).toBe('badcodex-v2.pcisim.json')
     })
 
+    it('exports the whole catalogue as one bundle', async () => {
+      const f = mockFetch('attachment; filename="pci-simulation-catalogue.pcisim-bundle.json"')
+      render(<SimLab />)
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Export all' })) })
+
+      expect(f).toHaveBeenCalledWith('/api/admin/lab/manifest-bundle',
+        { headers: { Authorization: 'Bearer admin-tok' } })
+      expect(clicked[0].download).toBe('pci-simulation-catalogue.pcisim-bundle.json')
+      expect(screen.getByText('Exported a bundle of all 1 scenarios.')).toBeInTheDocument()
+    })
+
+    it('offers no bundle to export when the catalogue is empty', () => {
+      h.resp = { rows: [], total: 0, published: 0 }
+      render(<SimLab />)
+      expect(screen.getByRole('button', { name: 'Export all' })).toBeDisabled()
+    })
+
     it('surfaces a failed export instead of downloading an error page', async () => {
       vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
         ok: false, status: 403, text: () => Promise.resolve('{"error":"forbidden"}'),

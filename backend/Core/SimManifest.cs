@@ -106,6 +106,40 @@ public static class SimManifest
         return doc.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
     }
 
+    public const string BundleKind = "pci.simulation.bundle";
+
+    /// <summary>
+    /// A whole-catalogue bundle (§5B.6): every supplied scenario's manifest in one deterministic document,
+    /// so an operator can back up or migrate the authored catalogue instead of exporting row by row.
+    ///
+    /// Scenarios are emitted in scenario_code order, not database order, so two environments holding the
+    /// same content produce the same bundle regardless of the ids they happen to have assigned. The bundle
+    /// checksum is the hash of the ordered per-scenario checksums, which makes "is this catalogue the same
+    /// as that one" a single string comparison — and, because each entry keeps its own checksum, a
+    /// difference can still be narrowed to the scenario that caused it.
+    /// </summary>
+    public static string Bundle(IEnumerable<(Dictionary<string, object?> Row, IReadOnlyList<SimContent.Issue> Issues)> scenarios)
+    {
+        var entries = scenarios
+            .Select(s => (Code: H.Str(s.Row["scenario_code"]) ?? "", Sum: Checksum(s.Row), s.Row, s.Issues))
+            .OrderBy(e => e.Code, StringComparer.Ordinal)
+            .ToList();
+
+        var items = new JsonArray();
+        foreach (var e in entries) items.Add(JsonNode.Parse(Build(e.Row, e.Issues))!);
+
+        var doc = new JsonObject
+        {
+            ["manifest_version"] = ManifestVersion,
+            ["kind"] = BundleKind,
+            // One comparison answers "same catalogue?"; each entry's own checksum localises any difference.
+            ["checksum"] = Security.Sha(string.Join("\n", entries.Select(e => $"{e.Code}:{e.Sum}"))),
+            ["count"] = entries.Count,
+            ["scenarios"] = items,
+        };
+        return doc.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+    }
+
     /// <summary>Reasons a manifest cannot be imported.</summary>
     public enum Reject { None, BadManifest, WrongKind, UnsupportedVersion, ChecksumMismatch }
 

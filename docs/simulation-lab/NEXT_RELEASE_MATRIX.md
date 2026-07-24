@@ -70,7 +70,8 @@ Simulation uses `simulation_*` tables only. Student/admin Lab endpoints never re
 - Load test harness at 10k tasks (validation + solver coverage shipped; k6 deferred).
 - Independent multi-admin maker-checker E2E with two live admin accounts (API maker-checker covered in integration).
 - Multi-dimension scoring UI (calculation / reasoning / decision / evidence / process / communication) beyond existing competency evidence rows.
-- Bulk / multi-scenario manifest transfer (single-scenario export and import both shipped — see below).
+- Bundle **import** (bulk export shipped — see below; applying a whole bundle in one action is deferred,
+  since each scenario in a bundle can already be imported individually).
 
 ### Cleared since this matrix was written
 
@@ -90,6 +91,11 @@ Simulation uses `simulation_*` tables only. Student/admin Lab endpoints never re
     are refused), then lands the scenario as a **draft**. Nothing in a file can grant published state, and
     the importing admin is recorded as the author so maker-checker still forces a second pair of eyes.
     Governance dates are not carried across environments. The Studio exposes it as **Import manifest**.
+  - **Bundle** (§5B.6): `GET /api/admin/lab/manifest-bundle[?status=…]` returns every scenario's manifest
+    in one deterministic file for backup or migration. Entries are ordered by `scenario_code` (not id), so
+    two environments holding the same content produce the same bundle; the bundle checksum answers "same
+    catalogue?" in one comparison while each entry keeps its own checksum to localise a difference. The
+    Studio exposes it as **Export all**.
 
 ## Baseline → slice evidence
 

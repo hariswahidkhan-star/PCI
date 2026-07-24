@@ -304,6 +304,68 @@ public class SimManifestTests
         Assert.Equal("{not json", row["config_json"]);
     }
 
+    // ---- §5B.6 catalogue bundle ----
+
+    static (Dictionary<string, object?>, IReadOnlyList<SimContent.Issue>) Entry(string code, params (string, object?)[] over) =>
+        (Row(over.Append(("scenario_code", (object?)code)).ToArray()), NoIssues);
+
+    [Fact]
+    public void Bundle_IsDeterministicAndOrderedByCodeNotInputOrder()
+    {
+        // Two environments holding the same content must produce the same bundle even if their rows come
+        // back in a different order (different ids, different insert history).
+        var forward = SimManifest.Bundle(new[] { Entry("A-001"), Entry("B-002"), Entry("C-003") });
+        var shuffled = SimManifest.Bundle(new[] { Entry("C-003"), Entry("A-001"), Entry("B-002") });
+        Assert.Equal(forward, shuffled);
+
+        using var doc = JsonDocument.Parse(forward);
+        var root = doc.RootElement;
+        Assert.Equal(SimManifest.BundleKind, root.GetProperty("kind").GetString());
+        Assert.Equal(3, root.GetProperty("count").GetInt32());
+        var codes = root.GetProperty("scenarios").EnumerateArray()
+            .Select(s => s.GetProperty("scenario").GetProperty("scenario_code").GetString()).ToArray();
+        Assert.Equal(new[] { "A-001", "B-002", "C-003" }, codes);
+    }
+
+    [Fact]
+    public void Bundle_EntriesKeepTheirOwnChecksumSoADifferenceCanBeLocalised()
+    {
+        using var doc = JsonDocument.Parse(SimManifest.Bundle(new[] { Entry("A-001"), Entry("B-002") }));
+        foreach (var s in doc.RootElement.GetProperty("scenarios").EnumerateArray())
+        {
+            Assert.Equal(SimManifest.Kind, s.GetProperty("kind").GetString());
+            Assert.Equal(64, s.GetProperty("checksum").GetString()!.Length);
+        }
+    }
+
+    [Fact]
+    public void Bundle_ChecksumTracksCatalogueContent()
+    {
+        var baseline = Sum(SimManifest.Bundle(new[] { Entry("A-001"), Entry("B-002") }));
+
+        // Same content, same fingerprint — a governance edit is not a catalogue change.
+        Assert.Equal(baseline, Sum(SimManifest.Bundle(new[] { Entry("A-001"), Entry("B-002", ("review_due", "2031-01-01")) })));
+        // Editing a scenario, adding one, or removing one all move it.
+        Assert.NotEqual(baseline, Sum(SimManifest.Bundle(new[] { Entry("A-001", ("title", "Changed")), Entry("B-002") })));
+        Assert.NotEqual(baseline, Sum(SimManifest.Bundle(new[] { Entry("A-001"), Entry("B-002"), Entry("C-003") })));
+        Assert.NotEqual(baseline, Sum(SimManifest.Bundle(new[] { Entry("A-001") })));
+    }
+
+    [Fact]
+    public void Bundle_HandlesAnEmptyCatalogue()
+    {
+        using var doc = JsonDocument.Parse(SimManifest.Bundle(Array.Empty<(Dictionary<string, object?>, IReadOnlyList<SimContent.Issue>)>()));
+        Assert.Equal(0, doc.RootElement.GetProperty("count").GetInt32());
+        Assert.Empty(doc.RootElement.GetProperty("scenarios").EnumerateArray());
+        Assert.Equal(64, doc.RootElement.GetProperty("checksum").GetString()!.Length);
+    }
+
+    static string Sum(string bundleJson)
+    {
+        using var d = JsonDocument.Parse(bundleJson);
+        return d.RootElement.GetProperty("checksum").GetString()!;
+    }
+
     [Fact]
     public void Code_NamesEveryRejectionOnTheWire()
     {
