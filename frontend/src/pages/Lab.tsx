@@ -1,8 +1,11 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useCallback, useMemo, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useQuery } from '../api/hooks'
+import { fmtDateTime } from '../format'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../components/ui'
-import { LabHeader, KpiRow, SkeletonCards, InsightCallout } from '../components/simlab'
+import {
+  LabHeader, KpiRow, SkeletonCards, InsightCallout, SidePanel, CompetencyMeter,
+} from '../components/simlab'
 
 // PCI AI Project Controls Simulation Lab — student catalogue.
 // Applied, in-portal project-controls practice (WBS, schedule, cost, EVM, forecasting, risk, reporting)
@@ -51,6 +54,17 @@ interface MasteryResp {
   recommended: Recommended[]
   weak_competencies: string[]
 }
+interface AttemptRow {
+  id: number
+  mode: string
+  status: string
+  score?: number | null
+  scenario_code: string
+  title: string
+  kind: string
+  started_at?: string | null
+  completed_at?: string | null
+}
 
 const KIND_LABEL: Record<string, string> = {
   guided_lab: 'Guided lab',
@@ -98,6 +112,19 @@ function matchesDuration(mins: number | undefined, bucket: DurationBucket): bool
 }
 
 const DONE = new Set(['passed', 'completed'])
+const DIFF_RANK: Record<string, number> = { foundation: 0, intermediate: 1, advanced: 2, expert: 3 }
+
+type SortKey = '' | 'title' | 'difficulty' | 'shortest' | 'longest'
+
+function sortRows(rows: LabRow[], sort: SortKey): LabRow[] {
+  if (!sort) return rows // recommended: the server's curated order
+  const out = [...rows]
+  if (sort === 'title') out.sort((a, b) => a.title.localeCompare(b.title))
+  else if (sort === 'difficulty') out.sort((a, b) => (DIFF_RANK[a.difficulty ?? 'foundation'] ?? 0) - (DIFF_RANK[b.difficulty ?? 'foundation'] ?? 0))
+  else if (sort === 'shortest') out.sort((a, b) => (a.est_minutes ?? 0) - (b.est_minutes ?? 0))
+  else if (sort === 'longest') out.sort((a, b) => (b.est_minutes ?? 0) - (a.est_minutes ?? 0))
+  return out
+}
 
 /** The card meta line: difficulty · industry · duration · track, tabular and quiet. */
 function metaLine(r: LabRow): string {
@@ -117,14 +144,31 @@ export default function Lab() {
   const { data: mastery } = useQuery<MasteryResp>(
     access?.has_access ? '/api/me/lab/mastery' : null,
   )
+  const { data: history } = useQuery<{ rows: AttemptRow[] }>(
+    access?.has_access ? '/api/me/lab/attempts' : null,
+  )
 
-  const [q, setQ] = useState('')
-  const [track, setTrack] = useState('')
-  const [industry, setIndustry] = useState('')
-  const [difficulty, setDifficulty] = useState('')
-  const [kind, setKind] = useState('')
-  const [competency, setCompetency] = useState('')
-  const [duration, setDuration] = useState<DurationBucket>('')
+  // Filters live in the URL so a filtered view survives reload, back/forward and sharing.
+  const [params, setParams] = useSearchParams()
+  const setParam = useCallback((k: string, v: string) => {
+    setParams((prev) => {
+      const p = new URLSearchParams(prev)
+      if (v) p.set(k, v)
+      else p.delete(k)
+      return p
+    }, { replace: true })
+  }, [setParams])
+  const q = params.get('q') ?? ''
+  const track = params.get('track') ?? ''
+  const industry = params.get('industry') ?? ''
+  const difficulty = params.get('difficulty') ?? ''
+  const kind = params.get('kind') ?? ''
+  const competency = params.get('competency') ?? ''
+  const duration = (params.get('duration') ?? '') as DurationBucket
+  const sort = (params.get('sort') ?? '') as SortKey
+
+  const [detail, setDetail] = useState<LabRow | null>(null)
+  const [allHistory, setAllHistory] = useState(false)
 
   const rows = useMemo(() => cat?.rows ?? [], [cat])
 
@@ -139,7 +183,7 @@ export default function Lab() {
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase()
-    return rows.filter((r) => {
+    return sortRows(rows.filter((r) => {
       if (track && String(r.certification_id ?? '') !== track) return false
       if (industry && r.industry !== industry) return false
       if (difficulty && (r.difficulty ?? 'foundation') !== difficulty) return false
@@ -152,12 +196,16 @@ export default function Lab() {
         if (!hay.includes(needle)) return false
       }
       return true
-    })
-  }, [rows, q, track, industry, difficulty, kind, competency, duration])
+    }), sort)
+  }, [rows, q, track, industry, difficulty, kind, competency, duration, sort])
 
   const anyFilter = !!(q || track || industry || difficulty || kind || competency || duration)
   const clearFilters = () => {
-    setQ(''); setTrack(''); setIndustry(''); setDifficulty(''); setKind(''); setCompetency(''); setDuration('')
+    setParams((prev) => {
+      const p = new URLSearchParams(prev)
+      for (const k of ['q', 'track', 'industry', 'difficulty', 'kind', 'competency', 'duration']) p.delete(k)
+      return p
+    }, { replace: true })
   }
 
   const inProgress = useMemo(() => rows.filter((r) => r.attempt_status === 'in_progress'), [rows])
@@ -222,9 +270,21 @@ export default function Lab() {
             </Card>
           )}
 
-          {mastery && (mastery.recommended.length > 0 || mastery.weak_competencies.length > 0) && (
+          {mastery && (mastery.recommended.length > 0 || mastery.weak_competencies.length > 0 || mastery.mastery.length > 0) && (
             <Card title="Your practice focus">
               <div className="stack" style={{ display: 'grid', gap: '.6rem' }}>
+                {mastery.mastery.length > 0 && (
+                  <div className="sl-meters">
+                    {mastery.mastery.slice(0, 8).map((m) => (
+                      <CompetencyMeter
+                        key={m.competency}
+                        label={compLabel(m.competency)}
+                        score={Math.round(m.avg_score)}
+                        detail={`${m.attempts} attempt${m.attempts === 1 ? '' : 's'}${m.level ? ` · ${titleCaseWords(m.level)}` : ''}`}
+                      />
+                    ))}
+                  </div>
+                )}
                 {mastery.weak_competencies.length > 0 && (
                   <div className="row small" style={{ flexWrap: 'wrap', gap: '.3rem', alignItems: 'center' }}>
                     <span className="muted">Strengthen:</span>
@@ -255,11 +315,11 @@ export default function Lab() {
             <div className="sl-toolbar-row">
               <label className="sl-search">
                 <span>Search</span>
-                <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Title, code, industry…" aria-label="Search labs" />
+                <input value={q} onChange={(e) => setParam('q', e.target.value)} placeholder="Title, code, industry…" aria-label="Search labs" />
               </label>
               <label>
                 <span>Track</span>
-                <select value={track} onChange={(e) => setTrack(e.target.value)} aria-label="Filter by track">
+                <select value={track} onChange={(e) => setParam('track', e.target.value)} aria-label="Filter by track">
                   <option value="">All tracks</option>
                   <option value="1">PCL-AI</option>
                   <option value="2">PFL-AI</option>
@@ -268,14 +328,14 @@ export default function Lab() {
               </label>
               <label>
                 <span>Industry</span>
-                <select value={industry} onChange={(e) => setIndustry(e.target.value)} aria-label="Filter by industry">
+                <select value={industry} onChange={(e) => setParam('industry', e.target.value)} aria-label="Filter by industry">
                   <option value="">All industries</option>
                   {industries.map((i) => <option key={i} value={i}>{i}</option>)}
                 </select>
               </label>
               <label>
                 <span>Difficulty</span>
-                <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} aria-label="Filter by difficulty">
+                <select value={difficulty} onChange={(e) => setParam('difficulty', e.target.value)} aria-label="Filter by difficulty">
                   <option value="">All levels</option>
                   <option value="foundation">Foundation</option>
                   <option value="intermediate">Intermediate</option>
@@ -285,14 +345,14 @@ export default function Lab() {
               </label>
               <label>
                 <span>Kind</span>
-                <select value={kind} onChange={(e) => setKind(e.target.value)} aria-label="Filter by kind">
+                <select value={kind} onChange={(e) => setParam('kind', e.target.value)} aria-label="Filter by kind">
                   <option value="">All kinds</option>
                   {Object.entries(KIND_LABEL).map(([k, label]) => <option key={k} value={k}>{label}</option>)}
                 </select>
               </label>
               <label>
                 <span>Duration</span>
-                <select value={duration} onChange={(e) => setDuration(e.target.value as DurationBucket)} aria-label="Filter by duration">
+                <select value={duration} onChange={(e) => setParam('duration', e.target.value)} aria-label="Filter by duration">
                   <option value="">Any length</option>
                   <option value="short">≤ 15 min</option>
                   <option value="medium">16–25 min</option>
@@ -301,11 +361,21 @@ export default function Lab() {
               </label>
               <label>
                 <span>Competency</span>
-                <select value={competency} onChange={(e) => setCompetency(e.target.value)} aria-label="Filter by competency">
+                <select value={competency} onChange={(e) => setParam('competency', e.target.value)} aria-label="Filter by competency">
                   <option value="">All competencies</option>
                   {competencies.map((c) => (
                     <option key={c} value={c}>{compLabel(c)}</option>
                   ))}
+                </select>
+              </label>
+              <label>
+                <span>Sort</span>
+                <select value={sort} onChange={(e) => setParam('sort', e.target.value)} aria-label="Sort labs">
+                  <option value="">Recommended</option>
+                  <option value="title">Title A–Z</option>
+                  <option value="difficulty">Easiest first</option>
+                  <option value="shortest">Shortest first</option>
+                  <option value="longest">Longest first</option>
                 </select>
               </label>
             </div>
@@ -358,22 +428,123 @@ export default function Lab() {
                       <span className="sl-score">
                         {typeof r.score === 'number' ? `Score ${r.score}%` : ''}
                       </span>
-                      {r.interactive !== false
-                        ? <Link className="btn sm" to={`/lab/${r.scenario_code}`}>{r.attempt_status ? 'Open again' : 'Open lab'}</Link>
-                        : (
-                          <span className="sl-status-line">
-                            <button className="btn sm" disabled aria-describedby={`na-${r.id}`}>Open lab</button>
-                            <span id={`na-${r.id}`} className="muted small">Interactive workspace coming soon</span>
-                          </span>
-                        )}
+                      <span className="sl-status-line">
+                        <button className="btn ghost sm" type="button" onClick={() => setDetail(r)} aria-label={`Details — ${r.title}`}>
+                          Details
+                        </button>
+                        {r.interactive !== false
+                          ? <Link className="btn sm" to={`/lab/${r.scenario_code}`}>{r.attempt_status ? 'Open again' : 'Open lab'}</Link>
+                          : (
+                            <>
+                              <button className="btn sm" disabled aria-describedby={`na-${r.id}`}>Open lab</button>
+                              <span id={`na-${r.id}`} className="muted small">Interactive workspace coming soon</span>
+                            </>
+                          )}
+                      </span>
                     </div>
                   </article>
                 )
               })}
             </div>
           )}
+
+          {history && history.rows.length > 0 && (
+            <Card title="Recent attempts">
+              <div style={{ overflowX: 'auto' }}>
+                <table className="data sl-history">
+                  <thead>
+                    <tr>
+                      <th className="t">Scenario</th><th>Mode</th><th>Status</th>
+                      <th style={{ textAlign: 'end' }}>Score</th><th>When</th><th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(allHistory ? history.rows : history.rows.slice(0, 8)).map((a) => (
+                      <tr key={a.id}>
+                        <td className="t">{a.title}</td>
+                        <td>{a.mode === 'assessment' ? 'Assessment' : 'Training'}</td>
+                        <td>
+                          <Badge tone={DONE.has(a.status) ? 'ok' : a.status === 'failed' ? 'warn' : 'neutral'}>
+                            {titleCaseWords(a.status)}
+                          </Badge>
+                        </td>
+                        <td style={{ textAlign: 'end', fontVariantNumeric: 'tabular-nums' }}>
+                          {typeof a.score === 'number' ? `${a.score}%` : '—'}
+                        </td>
+                        <td className="muted">{fmtDateTime(a.completed_at ?? a.started_at)}</td>
+                        <td>
+                          {a.status === 'in_progress'
+                            ? <Link className="btn sm secondary" to={`/lab/${a.scenario_code}`}>Resume</Link>
+                            : <Link className="btn sm secondary" to={`/lab/${a.scenario_code}?attempt=${a.id}`}>Review</Link>}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {history.rows.length > 8 && (
+                <p style={{ margin: '.6rem 0 0' }}>
+                  <button type="button" className="sl-clear" onClick={() => setAllHistory((v) => !v)}>
+                    {allHistory ? 'Show fewer attempts' : `Show all ${history.rows.length} attempts`}
+                  </button>
+                </p>
+              )}
+            </Card>
+          )}
         </>
       )}
+
+      <SidePanel
+        open={detail !== null}
+        eyebrow={detail ? (KIND_LABEL[detail.kind] ?? titleCaseWords(detail.kind)) : undefined}
+        title={detail?.title ?? ''}
+        onClose={() => setDetail(null)}
+      >
+        {detail && (
+          <>
+            {detail.summary && <p style={{ margin: 0 }}>{detail.summary}</p>}
+            <dl>
+              <dt>Code</dt><dd>{detail.scenario_code}</dd>
+              <dt>Difficulty</dt><dd>{detail.difficulty ? titleCaseWords(detail.difficulty) : 'Foundation'}</dd>
+              {detail.industry && <><dt>Industry</dt><dd>{detail.industry}</dd></>}
+              {detail.est_minutes ? <><dt>Duration</dt><dd>~{detail.est_minutes} min</dd></> : null}
+              {detail.certification_id != null && CERT_LABEL[detail.certification_id] && (
+                <><dt>Track</dt><dd>{CERT_LABEL[detail.certification_id]}</dd></>
+              )}
+              <dt>Your status</dt>
+              <dd>
+                {detail.attempt_status ? titleCaseWords(detail.attempt_status) : 'Not started'}
+                {typeof detail.score === 'number' ? ` · ${detail.score}%` : ''}
+              </dd>
+            </dl>
+            {detail.competencies && detail.competencies.length > 0 && (
+              <div className="sl-comps">
+                {detail.competencies.map((c) => <span key={c} className="sl-comp">{compLabel(c)}</span>)}
+              </div>
+            )}
+            <InsightCallout tone="info" title="Modes">
+              <p>
+                Training grades your work and then reveals the worked answers, with the Coach available
+                throughout. Assessment reports marks only and withholds both the answers and the Coach.
+              </p>
+            </InsightCallout>
+            <div className="sl-panel-actions">
+              {detail.interactive !== false ? (
+                <>
+                  <Link className="btn" to={`/lab/${detail.scenario_code}`} onClick={() => setDetail(null)}>
+                    {detail.attempt_status === 'in_progress' ? 'Resume scenario' : 'Start in Training Mode'}
+                  </Link>
+                  <Link className="btn secondary" to={`/lab/${detail.scenario_code}?mode=assessment`} onClick={() => setDetail(null)}>
+                    Start in Assessment Mode
+                  </Link>
+                </>
+              ) : (
+                <p className="sl-footnote">The interactive workspace for this lab is not available yet.</p>
+              )}
+            </div>
+          </>
+        )}
+      </SidePanel>
 
       <p className="sl-footnote">
         The Practice Lab is an educational simulator using synthetic project data — it is not a

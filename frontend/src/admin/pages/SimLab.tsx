@@ -2,7 +2,7 @@ import { useMemo, useState, type FormEvent } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
-import { LabHeader, KpiRow, ConfirmDialog, InsightCallout } from '../../components/simlab'
+import { LabHeader, KpiRow, ConfirmDialog, InsightCallout, SortHeader } from '../../components/simlab'
 
 // Admin Console → Simulation Lab Studio (Phase 5A). A governed authoring surface over the deterministic
 // scenario engine: create a draft, validate it against the §14 publication gate (the reference solver runs
@@ -52,6 +52,16 @@ const govLabel = (g?: string) =>
   g === 'expired' ? 'Expired' : g === 'review_overdue' ? 'Review overdue' : g === 'review_due_soon' ? 'Review due soon' : ''
 const govTone = (g?: string) => (g === 'expired' || g === 'review_overdue' ? 'err' : g === 'review_due_soon' ? 'warn' : 'neutral')
 
+const DIFF_RANK: Record<string, number> = { foundation: 0, intermediate: 1, advanced: 2, expert: 3 }
+type SortCol = 'code' | 'title' | 'difficulty' | 'state' | 'attempts'
+const COMPARE: Record<SortCol, (a: ScenarioRow, b: ScenarioRow) => number> = {
+  code: (a, b) => a.scenario_code.localeCompare(b.scenario_code),
+  title: (a, b) => a.title.localeCompare(b.title),
+  difficulty: (a, b) => (DIFF_RANK[a.difficulty ?? 'foundation'] ?? 0) - (DIFF_RANK[b.difficulty ?? 'foundation'] ?? 0),
+  state: (a, b) => FORWARD.indexOf(a.review_state) - FORWARD.indexOf(b.review_state),
+  attempts: (a, b) => a.attempts - b.attempts,
+}
+
 export default function SimLab() {
   const { data, loading, error, refetch } = useAdminQuery<Resp>('/api/admin/lab/scenarios')
   const [msg, setMsg] = useState('')
@@ -59,9 +69,11 @@ export default function SimLab() {
   const [busy, setBusy] = useState(false)
   const [showCreate, setShowCreate] = useState(false)
   const [validation, setValidation] = useState<Validation | null>(null)
-  // catalogue search / filter (client-side over the loaded rows)
+  // catalogue search / filter / sort (client-side over the loaded rows)
   const [q, setQ] = useState('')
   const [stateFilter, setStateFilter] = useState('')
+  const [sortCol, setSortCol] = useState<SortCol | null>(null)
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
   // dialogs (replacing window.prompt / silent retire)
   const [govRow, setGovRow] = useState<ScenarioRow | null>(null)
   const [govReview, setGovReview] = useState('')
@@ -81,7 +93,7 @@ export default function SimLab() {
   const rows = useMemo(() => data?.rows ?? [], [data])
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase()
-    return rows.filter((r) => {
+    const out = rows.filter((r) => {
       if (stateFilter && r.review_state !== stateFilter) return false
       if (needle) {
         const hay = [r.scenario_code, r.title, r.industry, r.difficulty, ...(r.competencies ?? [])]
@@ -90,7 +102,17 @@ export default function SimLab() {
       }
       return true
     })
-  }, [rows, q, stateFilter])
+    if (sortCol) {
+      out.sort(COMPARE[sortCol])
+      if (sortDir === 'desc') out.reverse()
+    }
+    return out
+  }, [rows, q, stateFilter, sortCol, sortDir])
+
+  const toggleSort = (col: SortCol) => {
+    if (sortCol === col) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
+    else { setSortCol(col); setSortDir('asc') }
+  }
 
   if (loading) return <Spinner />
   if (error) return <ErrorNote>{error}</ErrorNote>
@@ -298,8 +320,13 @@ export default function SimLab() {
                 <table className="data">
                   <thead>
                     <tr>
-                      <th>Code</th><th>Title</th><th>Difficulty</th><th>Status</th><th>Review state</th>
-                      <th style={{ textAlign: 'end' }}>Attempts</th><th>Actions</th>
+                      <SortHeader label="Code" active={sortCol === 'code'} dir={sortDir} onSort={() => toggleSort('code')} />
+                      <SortHeader label="Title" active={sortCol === 'title'} dir={sortDir} onSort={() => toggleSort('title')} />
+                      <SortHeader label="Difficulty" active={sortCol === 'difficulty'} dir={sortDir} onSort={() => toggleSort('difficulty')} />
+                      <th>Status</th>
+                      <SortHeader label="Review state" active={sortCol === 'state'} dir={sortDir} onSort={() => toggleSort('state')} />
+                      <SortHeader label="Attempts" active={sortCol === 'attempts'} dir={sortDir} onSort={() => toggleSort('attempts')} align="end" />
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>

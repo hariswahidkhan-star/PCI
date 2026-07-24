@@ -6,10 +6,13 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom'
 // answer inputs; submitting shows the deterministic grade; and Assessment Mode withholds the correct
 // values from the result table. The API client is mocked at the module boundary and routed by path.
 const post = vi.fn()
+const get = vi.fn()
 vi.mock('../api/client', () => ({
-  api: { post: (...a: unknown[]) => post(...a) },
+  api: { post: (...a: unknown[]) => post(...a), get: (...a: unknown[]) => get(...a) },
   ApiError: class ApiError extends Error {},
 }))
+const openPrintable = vi.fn()
+vi.mock('../print', () => ({ openPrintable: (...a: unknown[]) => openPrintable(...a) }))
 
 import LabRunner from './LabRunner'
 
@@ -24,14 +27,14 @@ const startResp = (assessment: boolean) => ({
   },
 })
 
-const renderRunner = () => render(
-  <MemoryRouter initialEntries={['/lab/GL-EVM-001']}>
+const renderRunner = (entry = '/lab/GL-EVM-001') => render(
+  <MemoryRouter initialEntries={[entry]}>
     <Routes><Route path="/lab/:code" element={<LabRunner />} /></Routes>
   </MemoryRouter>,
 )
 
 describe('LabRunner (Simulation Lab workspace)', () => {
-  beforeEach(() => post.mockReset())
+  beforeEach(() => { post.mockReset(); get.mockReset(); openPrintable.mockReset() })
 
   it('starts an attempt, shows the brief + inputs, and renders the deterministic grade on submit', async () => {
     post.mockImplementation((path: string) => {
@@ -145,6 +148,58 @@ describe('LabRunner (Simulation Lab workspace)', () => {
     await screen.findByText('Compute the earned-value measures.')
     fireEvent.click(screen.getByRole('button', { name: 'Save progress' }))
     expect(await screen.findByText('Progress saved')).toBeInTheDocument()
+  })
+
+  it('starts directly in Assessment Mode from a ?mode=assessment launch link', async () => {
+    post.mockImplementation((path: string, body?: unknown) => {
+      if (path === '/api/me/lab/attempts') {
+        expect((body as { mode: string }).mode).toBe('assessment')
+        return Promise.resolve(startResp(true))
+      }
+      return Promise.resolve({})
+    })
+    renderRunner('/lab/GL-EVM-001?mode=assessment')
+    await screen.findByText('Compute the earned-value measures.')
+    expect(screen.getByRole('radio', { name: 'Assessment' })).toBeChecked()
+  })
+
+  it('opens a completed attempt read-only for review and prints a summary', async () => {
+    get.mockResolvedValue({
+      attempt_id: 9, status: 'passed', mode: 'training',
+      answers: { spi: 0.9 },
+      scenario: startResp(false).scenario,
+      task: startResp(false).task,
+      score: 100, started_at: '2026-07-18T10:00:00Z', completed_at: '2026-07-18T10:20:00Z',
+      grade: {
+        score: 100, passed: true, correct: 1, total: 1, mode: 'training', assessment: false,
+        measures: [{ key: 'spi', label: 'Schedule Performance Index (SPI)', is_correct: true, correct_value: 0.9, your_value: 0.9 }],
+        competencies: [],
+      },
+    })
+    renderRunner('/lab/GL-EVM-001?attempt=9')
+    expect(await screen.findByText('Reviewing a completed attempt')).toBeInTheDocument()
+    expect(get).toHaveBeenCalledWith('/api/me/lab/attempts/9')
+    expect(post).not.toHaveBeenCalled()                       // no new attempt started
+    expect(screen.getByText('Result — 100%')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Submit for grading' })).toBeNull()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Print summary' }))
+    expect(openPrintable).toHaveBeenCalledWith(
+      'Simulation debrief — GL-EVM-001',
+      expect.stringContaining('100%'),
+    )
+  })
+
+  it('shows the per-task method reference in the rail without scenario figures', async () => {
+    post.mockImplementation((path: string) =>
+      path === '/api/me/lab/attempts' ? Promise.resolve(startResp(false)) : Promise.resolve({}))
+    renderRunner()
+    await screen.findByText('Compute the earned-value measures.')
+    fireEvent.click(screen.getByRole('button', { name: 'Reference' }))
+    expect(screen.getByText('SPI = EV ÷ PV')).toBeInTheDocument()
+    expect(screen.getByText('Schedule Variance')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Coach' }))
+    expect(screen.getByRole('button', { name: 'Ask for a hint' })).toBeInTheDocument()
   })
 
   it('hydrates saved answers when an in-progress attempt is resumed', async () => {
