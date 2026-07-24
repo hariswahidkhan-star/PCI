@@ -1,7 +1,8 @@
 // PCI AI Project Controls Simulation Lab — Monte-Carlo histogram (hand-authored SVG; no chart library).
 // Shows the distribution of simulated finish dates with median (P50) and P80 confidence markers. Purely
 // presentational: it draws the simulation OUTPUT computed server-side from the given inputs (a seeded,
-// deterministic run) — not an answer to any graded question.
+// deterministic run) — not an answer to any graded question. A collapsed data table provides the
+// accessible non-visual alternative.
 
 export interface McBucket { lo: number; hi: number; count: number }
 export interface Mc {
@@ -30,32 +31,49 @@ export default function Histogram({ mc }: { mc: Mc }) {
 
   return (
     <figure style={{ margin: 0 }}>
-      <div className="row small muted" style={{ gap: '1rem', flexWrap: 'wrap', marginBottom: '.3rem' }}>
-        <span>Monte-Carlo · {mc.iterations.toLocaleString()} runs</span>
-        <span>P50 {n(mc.p50)}</span>
-        <span>P80 {n(mc.p80)}</span>
-        <span>P90 {n(mc.p90)}</span>
+      <div className="sl-legend" style={{ fontVariantNumeric: 'tabular-nums' }}>
+        <span className="it">Monte-Carlo · {mc.iterations.toLocaleString()} runs</span>
+        <span className="it" style={{ color: 'var(--sl-chart-earned, #15803d)' }}>P50 {n(mc.p50)}</span>
+        <span className="it" style={{ color: 'var(--sl-chart-actual, #b45309)' }}>P80 {n(mc.p80)}</span>
+        <span className="it">P90 {n(mc.p90)}</span>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label} style={{ width: '100%', height: 'auto', maxWidth: W }}>
-        <line x1={pad.l} x2={W - pad.r} y1={pad.t + plotH} y2={pad.t + plotH} stroke="#e5e7eb" strokeWidth={1} />
+        <line x1={pad.l} x2={W - pad.r} y1={pad.t + plotH} y2={pad.t + plotH} style={{ stroke: 'var(--sl-chart-grid, #e5e7eb)' }} strokeWidth={1} />
         {/* bars */}
         {bins.map((b, i) => {
           const bx = x(b.lo)
           const bw = Math.max(1, x(b.hi) - x(b.lo) - 1)
           const by = yTop(b.count)
-          return <rect key={i} x={bx} y={by} width={bw} height={pad.t + plotH - by} fill="#0e7490" fillOpacity={0.75} rx={1} />
+          return <rect key={i} x={bx} y={by} width={bw} height={pad.t + plotH - by} style={{ fill: 'var(--sl-chart-forecast, #0e7490)' }} fillOpacity={0.75} rx={1} />
         })}
         {/* P50 / P80 markers */}
-        {([['P50', mc.p50, '#15803d'], ['P80', mc.p80, '#b45309']] as const).map(([lbl, v, col]) => (
+        {([['P50', mc.p50, 'var(--sl-chart-earned, #15803d)'], ['P80', mc.p80, 'var(--sl-chart-actual, #b45309)']] as const).map(([lbl, v, col]) => (
           <g key={lbl}>
-            <line x1={x(v)} x2={x(v)} y1={pad.t} y2={pad.t + plotH} stroke={col} strokeWidth={1.5} strokeDasharray="4 3" />
-            <text x={x(v)} y={pad.t - 2} textAnchor="middle" fontSize={10} fill={col}>{lbl}</text>
+            <line x1={x(v)} x2={x(v)} y1={pad.t} y2={pad.t + plotH} style={{ stroke: col }} strokeWidth={1.5} strokeDasharray="4 3" />
+            <text x={x(v)} y={pad.t - 2} textAnchor="middle" fontSize={10} style={{ fill: col }}>{lbl}</text>
           </g>
         ))}
         {/* x-axis endpoints */}
-        <text x={pad.l} y={H - 8} textAnchor="start" fontSize={10} fill="#94a3b8">{n(mc.min)}</text>
-        <text x={W - pad.r} y={H - 8} textAnchor="end" fontSize={10} fill="#94a3b8">{n(mc.max)}</text>
+        <text x={pad.l} y={H - 8} textAnchor="start" fontSize={10} style={{ fill: 'var(--sl-chart-axis, #94a3b8)', fontVariantNumeric: 'tabular-nums' }}>{n(mc.min)}</text>
+        <text x={W - pad.r} y={H - 8} textAnchor="end" fontSize={10} style={{ fill: 'var(--sl-chart-axis, #94a3b8)', fontVariantNumeric: 'tabular-nums' }}>{n(mc.max)}</text>
       </svg>
+      <details className="sl-chart-data">
+        <summary>View the distribution as a table</summary>
+        <table className="data">
+          <caption className="sr-only">Monte-Carlo simulation buckets and confidence levels</caption>
+          <thead>
+            <tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Runs</th></tr>
+          </thead>
+          <tbody>
+            {bins.map((b, i) => (
+              <tr key={i}><td>{n(b.lo)}</td><td>{n(b.hi)}</td><td>{b.count.toLocaleString()}</td></tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr><td colSpan={3}>Mean {n(mc.mean)} · P10 {n(mc.p10)} · P50 {n(mc.p50)} · P80 {n(mc.p80)} · P90 {n(mc.p90)}</td></tr>
+          </tfoot>
+        </table>
+      </details>
     </figure>
   )
 }

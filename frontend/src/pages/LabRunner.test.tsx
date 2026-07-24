@@ -99,6 +99,54 @@ describe('LabRunner (Simulation Lab workspace)', () => {
     await waitFor(() => expect(post).toHaveBeenCalledTimes(2))
   })
 
+  it('confirms before a mode switch when answers have been entered, and cancels safely', async () => {
+    post.mockImplementation((path: string, body?: unknown) => {
+      if (path === '/api/me/lab/attempts') {
+        const mode = (body as { mode: string } | undefined)?.mode === 'assessment'
+        return Promise.resolve(startResp(mode))
+      }
+      return Promise.resolve({})
+    })
+    renderRunner()
+    await screen.findByText('Compute the earned-value measures.')
+
+    // With no work entered the switch is immediate — no dialog.
+    fireEvent.click(screen.getByRole('radio', { name: 'Assessment' }))
+    expect(screen.queryByRole('dialog')).toBeNull()
+    await screen.findByText(/answers are withheld/)
+
+    // Back in Training with an answer typed, switching asks first.
+    fireEvent.click(screen.getByRole('radio', { name: 'Training' }))
+    await screen.findByText(/reveals the worked answers/)
+    fireEvent.change(screen.getByPlaceholderText('number'), { target: { value: '0.9' } })
+    fireEvent.click(screen.getByRole('radio', { name: 'Assessment' }))
+    const dialog = await screen.findByRole('dialog', { name: 'Switch to Assessment Mode?' })
+    expect(dialog).toBeInTheDocument()
+
+    // Cancelling keeps the Training attempt and the typed answer.
+    fireEvent.click(screen.getByRole('button', { name: 'Stay here' }))
+    expect(screen.queryByRole('dialog')).toBeNull()
+    expect(screen.getByRole('radio', { name: 'Training' })).toBeChecked()
+    expect(screen.getByPlaceholderText('number')).toHaveValue('0.9')
+
+    // Confirming switches the mode (a separate attempt).
+    fireEvent.click(screen.getByRole('radio', { name: 'Assessment' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Switch mode' }))
+    await screen.findByText(/answers are withheld/)
+    expect(screen.getByRole('radio', { name: 'Assessment' })).toBeChecked()
+  })
+
+  it('shows the save indicator after an explicit save', async () => {
+    post.mockImplementation((path: string) => {
+      if (path === '/api/me/lab/attempts') return Promise.resolve(startResp(false))
+      return Promise.resolve({})
+    })
+    renderRunner()
+    await screen.findByText('Compute the earned-value measures.')
+    fireEvent.click(screen.getByRole('button', { name: 'Save progress' }))
+    expect(await screen.findByText('Progress saved')).toBeInTheDocument()
+  })
+
   it('hydrates saved answers when an in-progress attempt is resumed', async () => {
     post.mockImplementation((path: string) => {
       if (path === '/api/me/lab/attempts') {
