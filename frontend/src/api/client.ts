@@ -63,6 +63,10 @@ function humanize(code: string): string {
       return 'Password must be at least 8 characters.'
     case 'password_mismatch':
       return 'Passwords do not match. Please re-enter them.'
+    case 'maker_checker':
+      // Not a failure to retry: the scenario needs a different admin, and saying so stops an
+      // operator hunting for a fault that isn't there.
+      return 'The approver must be different from the author — a second admin has to approve this.'
     default:
       return code
   }
