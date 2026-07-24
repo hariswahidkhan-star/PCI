@@ -5937,6 +5937,35 @@ def test_free_templates(admin):
     chk("61n the WBS group carries its topic and the WBS item carries its PCL-AI track",
         'class="dlg" data-cat="scope"' in html and '<li data-cert="1">' in html, html.count('data-cat='))
 
+    # §6C — per-template download analytics (admin, gated 'content'). A daily aggregate drives a dense 30-day
+    # trend + a top list; the grand total is the canonical per-template counter.
+    chk("61o the analytics endpoint refuses without a token (401) and to a viewer without 'content' (403)",
+        jget("GET", "/api/admin/templates/analytics")[0] == 401
+        and (globals().get("_VIEWER_TOK") is None
+             or jget("GET", "/api/admin/templates/analytics", token=globals()["_VIEWER_TOK"])[0] == 403))
+
+    c, a0 = jget("GET", "/api/admin/templates/analytics", token=admin)
+    win0 = a0.get("window_downloads", 0) if isinstance(a0, dict) else 0
+    tot0 = a0.get("total_downloads", 0) if isinstance(a0, dict) else 0
+    series0 = a0.get("series", []) if isinstance(a0, dict) else []
+    chk("61p the analytics shape is a dense 30-day series ending today plus a top list",
+        c == 200 and a0.get("window_days") == 30 and len(series0) == 30
+        and series0[-1].get("day") and isinstance(a0.get("top"), list) and a0["total_downloads"] >= a0["window_downloads"],
+        (c, len(series0), a0.get("window_days")))
+
+    # Two more public downloads of a known published template must move both the grand total and today's bucket.
+    for _ in range(2):
+        _raw_get("/api/public/templates/evm-tracker/file")
+    c, a1 = jget("GET", "/api/admin/templates/analytics", token=admin)
+    today1 = a1["series"][-1]["count"]
+    today0 = series0[-1]["count"]
+    chk("61q a public download increments the daily aggregate, the 30-day window and the grand total",
+        c == 200 and a1["window_downloads"] == win0 + 2 and a1["total_downloads"] == tot0 + 2 and today1 == today0 + 2,
+        (a1.get("window_downloads"), win0, a1.get("total_downloads"), tot0, today1, today0))
+    evm = next((t for t in a1["top"] if t.get("slug") == "evm-tracker"), None)
+    chk("61r the downloaded template appears in the top list with a positive count",
+        bool(evm) and evm["download_count"] >= 2, evm)
+
 
 def test_public_documents(admin):
     # Incremental Testing Programme §57 — Public Downloads Centre (Endpoints/PublicDocuments.cs, 12 routes,

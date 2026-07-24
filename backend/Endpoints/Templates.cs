@@ -73,7 +73,12 @@ public static class Templates
         {
             var t = db.QueryOne("SELECT id,slug,title,format,body FROM templates WHERE slug=? AND published=1", slug);
             if (t is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-            db.Execute("UPDATE templates SET download_count=download_count+1 WHERE id=?", H.L(t["id"]));
+            var tid = H.L(t["id"]);
+            db.Execute("UPDATE templates SET download_count=download_count+1 WHERE id=?", tid);
+            // §6C — also bump today's per-template daily aggregate (INSERT-OR-IGNORE the row, then increment).
+            var day = DateTime.UtcNow.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+            db.Execute("INSERT OR IGNORE INTO template_download_daily(template_id,day,count) VALUES(?,?,0)", tid, day);
+            db.Execute("UPDATE template_download_daily SET count=count+1 WHERE template_id=? AND day=?", tid, day);
             var ext = (H.Str(t["format"]) ?? "csv").Trim();
             var name = $"{H.Str(t["slug"])}.{(ext.Length == 0 ? "csv" : ext)}";
             var mime = ext == "csv" ? "text/csv" : "text/plain";
@@ -105,6 +110,52 @@ public static class Templates
                 });
             }
             return Results.Json(new { rows, total = rows.Count, published });
+        }));
+
+        // ---- admin: download analytics (gated 'content') — totals, a 30-day daily trend, and the top titles ----
+        app.MapGet("/api/admin/templates/analytics", (HttpRequest req) => gate(req, SECTION, _ =>
+        {
+            // Grand total is the canonical per-template counter (covers downloads recorded before the daily
+            // table existed); the daily table drives the trend only.
+            var totals = db.QueryOne(@"SELECT COUNT(*) AS n, COALESCE(SUM(download_count),0) AS dl,
+                    COALESCE(SUM(CASE WHEN published=1 THEN 1 ELSE 0 END),0) AS pub FROM templates");
+            var totalDownloads = totals is null ? 0 : H.L(totals["dl"]);
+
+            // 30-day window ending today (UTC). Build the day keys in C#, then fold the grouped sums in so
+            // missing days render as zero — the SVG trend needs a dense, ordered series.
+            const int Days = 30;
+            var today = DateTime.UtcNow.Date;
+            var keys = Enumerable.Range(0, Days).Select(i => today.AddDays(i - (Days - 1))
+                .ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)).ToList();
+            var byDay = keys.ToDictionary(k => k, _ => 0L);
+            foreach (var r in db.Query("SELECT day, SUM(count) AS n FROM template_download_daily WHERE day>=? GROUP BY day", keys[0]))
+            {
+                var d = H.Str(r["day"]) ?? "";
+                if (byDay.ContainsKey(d)) byDay[d] = H.L(r["n"]);
+            }
+            var series = keys.Select(k => new { day = k, count = byDay[k] }).ToList();
+            var windowTotal = series.Sum(s => s.count);
+
+            var top = new List<object>();
+            foreach (var r in db.Query("SELECT slug,title,download_count,published FROM templates ORDER BY download_count DESC, id ASC LIMIT 8"))
+                top.Add(new
+                {
+                    slug = H.Str(r["slug"]),
+                    title = H.Str(r["title"]),
+                    download_count = H.L(r["download_count"]),
+                    published = H.L(r["published"]) == 1,
+                });
+
+            return Results.Json(new
+            {
+                total_downloads = totalDownloads,
+                templates = totals is null ? 0 : H.L(totals["n"]),
+                published = totals is null ? 0 : H.L(totals["pub"]),
+                window_days = Days,
+                window_downloads = windowTotal,
+                series,
+                top,
+            });
         }));
 
         // ---- admin: create a template ----

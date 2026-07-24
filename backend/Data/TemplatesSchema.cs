@@ -35,6 +35,16 @@ public static class TemplatesSchema
         db.Exec("CREATE INDEX IF NOT EXISTS ix_templates_pub ON templates(published)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_templates_cat ON templates(category)");
 
+        // §6C — per-template download analytics. A daily aggregate (one row per template per UTC day) rather
+        // than a per-event log, so the table stays bounded and a 30-day trend is a cheap range scan. The unique
+        // (template_id, day) pair lets the download path do an INSERT-OR-IGNORE + UPDATE upsert on both providers.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS template_download_daily(
+            template_id INTEGER NOT NULL,
+            day VARCHAR(10) NOT NULL,                          -- UTC calendar day, YYYY-MM-DD
+            count INTEGER NOT NULL DEFAULT 0,
+            PRIMARY KEY(template_id, day))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_tpl_dl_day ON template_download_daily(day)");
+
         Seed(db);
 
         // Make the library discoverable: a footer nav link under the existing "Resources" group. Idempotent
