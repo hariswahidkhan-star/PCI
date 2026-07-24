@@ -28,6 +28,8 @@ interface Partner {
   // token portal / commissions / sponsorship dashboard
   partner_type?: string | null; contact_name?: string | null
   commission_pct?: number | null; sponsor_enabled?: number | null
+  /** scenario-based test institution (never listed publicly, excluded from reports) */
+  is_test?: number | null
 }
 interface PartnerUser {
   id: number; email: string; name?: string | null; role: string; status?: string | null
@@ -76,6 +78,70 @@ export default function TrainingPartners() {
   )
 }
 
+// ---------------- Test institutions ----------------
+// Scenario-based test partner accounts (mirrors the student test-user mechanism): a flagged,
+// never-listed institution with a portal login and a ready session into /partner.html, so every
+// partner-dashboard journey can be exercised without touching a real institution.
+const TEST_PARTNER_SCENARIOS = [
+  { value: 'active', label: 'Active — sponsorship enabled' },
+  { value: 'fresh_login', label: 'Fresh login — must change password' },
+  { value: 'no_sponsor', label: 'Sponsorship disabled' },
+  { value: 'suspended', label: 'Suspended institution' },
+]
+interface TestPartnerResult {
+  institution: string; email: string; password: string
+  token?: string | null; scenario: string
+}
+function TestPartnerButton({ onCreated }: { onCreated: () => void }) {
+  const [scenario, setScenario] = useState('active')
+  const [busy, setBusy] = useState(false)
+  const [res, setRes] = useState<TestPartnerResult | null>(null)
+  const [err, setErr] = useState<string | null>(null)
+  async function create() {
+    setBusy(true); setErr(null); setRes(null)
+    try { setRes(await adminApi.post('/api/admin/test-partners', { scenario })); onCreated() }
+    catch (e) { setErr((e as Error).message) } finally { setBusy(false) }
+  }
+  return (
+    <>
+      <select value={scenario} onChange={(e) => setScenario(e.target.value)} aria-label="Test-partner scenario" style={{ width: 'auto', maxWidth: 240 }}>
+        {TEST_PARTNER_SCENARIOS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+      </select>
+      <button className="btn sm secondary" disabled={busy} onClick={create}>{busy ? 'Creating…' : '+ Test partner'}</button>
+      {(res || err) && (
+        <div className="drawer-backdrop" onClick={() => { setRes(null); setErr(null) }}>
+          <div className="drawer" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
+            <div className="spread" style={{ marginBottom: '.8rem' }}>
+              <h2 style={{ margin: 0 }}>Test partner</h2>
+              <button className="btn secondary sm" onClick={() => { setRes(null); setErr(null) }}>Close</button>
+            </div>
+            {err ? <ErrorNote>{err}</ErrorNote> : res ? (
+              <Card title="Test institution created">
+                <p className="muted small" style={{ marginTop: 0 }}>
+                  Ready to exercise the partner dashboard without touching a real institution. Test
+                  institutions are never listed publicly and are excluded from discount and commission
+                  reports.
+                </p>
+                <div className="small" style={{ display: 'grid', gap: '.35rem' }}>
+                  <div>Scenario: <strong>{TEST_PARTNER_SCENARIOS.find((s) => s.value === res.scenario)?.label ?? res.scenario}</strong></div>
+                  <div>Institution: <strong>{res.institution}</strong></div>
+                  <div>Email: <strong>{res.email}</strong></div>
+                  <div>Password: <strong>{res.password}</strong></div>
+                </div>
+                <div className="row" style={{ marginTop: '.7rem' }}>
+                  {res.token
+                    ? <a className="btn sm" href={`/partner.html#t=${res.token}`} target="_blank" rel="noreferrer">Open partner dashboard as this institution ↗</a>
+                    : <span className="muted small">No session for this scenario — sign in at /partner.html to exercise the lockout.</span>}
+                </div>
+              </Card>
+            ) : null}
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
 // ---------------- Directory (CRUD) ----------------
 function DirectoryTab() {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Partner[] }>('/api/admin/training-partners')
@@ -93,14 +159,28 @@ function DirectoryTab() {
     catch (e) { setErr(e instanceof Error ? e.message : 'Update failed.') }
   }
   async function del(p: Partner) {
-    if (!confirm(`Delete “${p.name}” from the directory?`)) return
+    if (!confirm(p.is_test
+      ? `Delete test institution “${p.name}” and all of its data (logins, codes, sponsorships)?`
+      : `Delete “${p.name}” from the directory?`)) return
     setErr(null)
-    try { await adminApi.post(`/api/admin/training-partners/${p.id}/delete`); refetch() }
-    catch (e) { setErr(e instanceof Error ? e.message : 'Delete failed.') }
+    try {
+      // Test institutions are removed through the test-partner endpoint so their portal logins,
+      // codes and sponsorships are cleaned up with them.
+      await adminApi.post(p.is_test ? `/api/admin/test-partners/${p.id}/delete` : `/api/admin/training-partners/${p.id}/delete`)
+      refetch()
+    } catch (e) { setErr(e instanceof Error ? e.message : 'Delete failed.') }
   }
 
   return (
-    <Card title={`Partner directory (${rows.length})`} action={<button className="btn sm" onClick={() => setEdit('new')}>Add partner</button>}>
+    <Card
+      title={`Partner directory (${rows.length})`}
+      action={
+        <span className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
+          <TestPartnerButton onCreated={refetch} />
+          <button className="btn sm" onClick={() => setEdit('new')}>Add partner</button>
+        </span>
+      }
+    >
       {err && <div className="notice err" role="alert" style={{ marginBottom: '.6rem' }}>{err}</div>}
       {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : rows.length === 0 ? (
         <Empty>No partners yet. Add one, or approve an application.</Empty>
@@ -110,7 +190,10 @@ function DirectoryTab() {
           <tbody>
             {rows.map((p) => (
               <tr key={p.id}>
-                <td><strong>{p.name}</strong>{p.website && <div className="muted small">{p.website}</div>}</td>
+                <td>
+                  <strong>{p.name}</strong>{p.is_test ? <> <Badge tone="warn">Test</Badge></> : null}
+                  {p.website && <div className="muted small">{p.website}</div>}
+                </td>
                 <td><Badge tone={TIER_TONE[p.tier] ?? 'ok'}>{p.tier}</Badge></td>
                 <td className="small">{[p.city, p.region, p.country].filter(Boolean).join(', ') || '—'}</td>
                 <td>{p.listed ? <Badge tone="ok">published</Badge> : <Badge tone="warn">draft</Badge>}</td>

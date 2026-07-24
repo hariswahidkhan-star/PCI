@@ -437,6 +437,9 @@ public static class Migrate
         AddCol("training_partners", "auto_approve_codes", "auto_approve_codes INTEGER DEFAULT 0");
         AddCol("training_partners", "privacy_fields", "privacy_fields TEXT");            // JSON list of extra fields the partner may see
         AddCol("training_partners", "eligible_countries", "eligible_countries TEXT");
+        // Test institutions (mirrors users.is_test): scenario-based partner-portal test accounts,
+        // never listed publicly and excluded from discount/commission reporting.
+        AddCol("training_partners", "is_test", "is_test INTEGER DEFAULT 0");
         // Discount-engine v2: full lifecycle + constraints. Legacy rows keep status NULL and are governed
         // by the existing `active` flag; new engine rows use the status column as the source of truth.
         AddCol("discount_codes", "status", "status VARCHAR(20)");                        // draft|pending_approval|active|suspended|rejected|cancelled
