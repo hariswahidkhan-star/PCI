@@ -3446,6 +3446,7 @@ def run(proc):
     test_honorary_idv(admin)
     test_comms_centre(admin)
     test_public_documents(admin)
+    test_free_templates(admin)
     test_marketing_centre(admin)
     test_admin_extra_gaps(admin)
     test_proctoring_analytics_gaps(admin)
@@ -5861,6 +5862,69 @@ def test_comms_centre(admin):
     con.execute("UPDATE comm_sender_profiles SET is_default=0 WHERE `key` IN ('ops55','mkt55')")
     con.execute("UPDATE comm_sender_profiles SET is_default=1 WHERE `key`=?", ("no-reply",))
     con.commit(); con.close()
+
+def test_free_templates(admin):
+    # Free Templates Library (§6A–6C, Endpoints/Templates.cs): the anonymous catalogue + CSV download vs the
+    # 'content'-gated admin CRUD. Proves the serving invariant (only PUBLISHED templates are ever distributed),
+    # byte-exact CSV integrity, slug normalisation + duplicate refusal, and the server-rendered public page.
+    print("\n=== 61. Free Templates Library: public catalogue, CSV download, admin CRUD ===")
+
+    c, cat = jget("GET", "/api/public/templates")
+    rows = cat.get("rows", []) if isinstance(cat, dict) else []
+    wbs = next((r for r in rows if r.get("slug") == "wbs-template"), None)
+    blob = json.dumps(cat)
+    chk("61a the public catalogue serves the seeded published templates and never leaks the body in the list",
+        c == 200 and cat.get("total", 0) >= 12 and bool(wbs)
+        and wbs.get("download_url") == "/api/public/templates/wbs-template/file" and '"body"' not in blob,
+        (c, cat.get("total"), bool(wbs)))
+
+    st, body, ctype = _raw_get("/api/public/templates/wbs-template/file")
+    text = body.decode("utf-8", "replace") if body else ""
+    chk("61b the CSV download streams the template body with a text/csv content-type",
+        st == 200 and "text/csv" in (ctype or "") and text.startswith("WBS ID,Parent ID"), (st, ctype, text[:24]))
+
+    c, one = jget("GET", "/api/public/templates/evm-tracker")
+    chk("61c the public single endpoint returns the body for preview",
+        c == 200 and one.get("slug") == "evm-tracker" and "PV (Planned Value)" in (one.get("body") or ""), (c, one.get("slug")))
+    c, _ = jget("GET", "/api/public/templates/does-not-exist")
+    chk("61d an unknown template slug returns 404", c == 404, c)
+
+    chk("61e the admin templates module refuses without a token (401 on list and create)",
+        jget("GET", "/api/admin/templates")[0] == 401
+        and jget("POST", "/api/admin/templates", body={"slug": "x58", "title": "x", "body": "a,b\n"})[0] == 401)
+    vtok = globals().get("_VIEWER_TOK")
+    if vtok:
+        c, fb = jget("GET", "/api/admin/templates", token=vtok)
+        chk("61e2 a viewer admin without the 'content' permission is refused (403)", c == 403, (c, fb))
+
+    c, mk = jget("POST", "/api/admin/templates", token=admin,
+                 body={"slug": "IT Test Template 58!!", "title": "IT Test Template", "category": "cost",
+                       "certification_id": 1, "summary": "integration test", "body": "A,B\n1,2\n", "published": False})
+    tid = mk.get("id"); tslug = mk.get("slug")
+    chk("61f an admin creates a template and the slug is normalised to a url-safe form",
+        c == 200 and tid and tslug == "it-test-template-58", (c, mk))
+    c, _ = jget("GET", f"/api/public/templates/{tslug}")
+    chk("61g a DRAFT template is not served publicly (404)", c == 404, c)
+    st, _b, _ct = _raw_get(f"/api/public/templates/{tslug}/file")
+    chk("61h a DRAFT template file is not downloadable publicly (404)", st == 404, st)
+
+    c, dup = jget("POST", "/api/admin/templates", token=admin, body={"slug": tslug, "title": "dup", "body": "x,y\n"})
+    chk("61i a duplicate slug is refused (409)", c == 409 and dup.get("error") == "duplicate_slug", (c, dup))
+
+    c, _ = jget("PATCH", f"/api/admin/templates/{tid}", token=admin, body={"published": True})
+    c2, _ = jget("GET", f"/api/public/templates/{tslug}")
+    st, _b, _ct = _raw_get(f"/api/public/templates/{tslug}/file")
+    chk("61j publishing a draft makes it public and downloadable", c == 200 and c2 == 200 and st == 200, (c, c2, st))
+
+    c, _ = jget("DELETE", f"/api/admin/templates/{tid}", token=admin)
+    c2, _ = jget("GET", f"/api/public/templates/{tslug}")
+    chk("61k deleting a template removes it from the public library", c == 200 and c2 == 404, (c, c2))
+
+    st, page, _ct = _raw_get("/free-templates.html")
+    html = page.decode("utf-8", "replace") if page else ""
+    chk("61l the free-templates.html page server-renders the templates section (a real download link is present)",
+        st == 200 and "/api/public/templates/wbs-template/file" in html, (st, "/api/public/templates/wbs-template/file" in html))
+
 
 def test_public_documents(admin):
     # Incremental Testing Programme §57 — Public Downloads Centre (Endpoints/PublicDocuments.cs, 12 routes,

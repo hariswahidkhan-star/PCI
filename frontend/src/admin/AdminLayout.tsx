@@ -49,6 +49,7 @@ const NAV: NavItem[] = [
   { to: '/content-centre', label: 'Content & Distribution', perm: 'cc_view', group: 'Website' },
   { to: '/pages', label: 'Pages & content', perm: 'pages', group: 'Website' },
   { to: '/public-downloads', label: 'Downloads Centre', perm: 'documents', group: 'Website' },
+  { to: '/templates', label: 'Free templates', perm: 'content', group: 'Website' },
   { to: '/content', label: 'Site content', perm: 'content', group: 'Website' },
   { to: '/announcement', label: 'Announcement', perm: 'content', group: 'Website' },
   { to: '/translations', label: 'Translations', owner: true, group: 'Website' },
