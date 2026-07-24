@@ -47,11 +47,9 @@ public static class TemplatesSchema
 
         Seed(db);
 
-        // Make the library discoverable: a footer nav link under the existing "Resources" group. Idempotent
-        // (WHERE NOT EXISTS by url) so an operator who renames/moves it in the admin console keeps their edit.
-        db.Execute(@"INSERT INTO nav_items(label,url,nav_group,sort_order,visible)
-            SELECT 'Free templates','/free-templates.html','Resources', 2, 1
-            WHERE NOT EXISTS(SELECT 1 FROM nav_items WHERE url='/free-templates.html')");
+        // Templates are a members-only resource served inside the student panel, not the public site. Remove
+        // any legacy public footer link (seeded by earlier builds) so it never appears on the marketing site.
+        db.Execute("DELETE FROM nav_items WHERE url='/free-templates.html'");
     }
 
     static void Seed(Db db)

@@ -6,14 +6,14 @@ using PCI.Backend.Data;
 namespace PCI.Backend.Endpoints;
 
 /// <summary>
-/// PCI Free Templates Library (§6A–6C). A public, free library of ready-to-use project-controls templates
+/// PCI Templates Library (§6A–6C). A members-only library of ready-to-use project-controls templates
 /// (WBS, EVM tracker, risk register, cash-flow forecast, RACI, …), each a small CSV whose content is stored
-/// inline in the row. Two public, no-login endpoints serve the catalogue and the file download; the admin
-/// side (gated on the existing 'content' permission) manages the library. Every admin mutation bumps the
-/// server-rendered public section cache (ListSections) so the website reflects a change immediately.
+/// inline in the row. Two student endpoints (both require a logged-in portal session) serve the catalogue and
+/// the file download inside the student panel — the library is NOT exposed on the public marketing site. The
+/// admin side (gated on the existing 'content' permission) manages the library.
 ///
-/// Only PUBLISHED templates are ever served publicly — a draft is admin-only. Content is synthetic; there is
-/// no student data and no exam answer key here.
+/// Only PUBLISHED templates are ever served to students — a draft is admin-only. Content is synthetic; there
+/// is no student data and no exam answer key here.
 /// </summary>
 public static class Templates
 {
@@ -22,9 +22,10 @@ public static class Templates
     {
         const string SECTION = "content";
 
-        // ---- public catalogue (no login) ----
-        app.MapGet("/api/public/templates", () =>
+        // ---- student catalogue (requires a logged-in portal session). Metadata only — never the body here. ----
+        app.MapGet("/api/me/templates", (HttpContext ctx) =>
         {
+            if (Auth.UserFromReq(ctx.Request, db) is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             var rows = new List<object>();
             var categories = new SortedSet<string>(StringComparer.Ordinal);
             foreach (var t in db.Query(@"SELECT slug,title,category,certification_id,summary,format,download_count,
@@ -43,34 +44,16 @@ public static class Templates
                     format = H.Str(t["format"]) ?? "csv",
                     bytes = H.L(t["bytes"]),
                     download_count = H.L(t["download_count"]),
-                    download_url = $"/api/public/templates/{H.Str(t["slug"])}/file",
+                    download_url = $"/api/me/templates/{H.Str(t["slug"])}/file",
                 });
             }
             return Results.Json(new { rows, total = rows.Count, categories });
         });
 
-        // ---- public single template (metadata + body preview); free content, so the body is not secret ----
-        app.MapGet("/api/public/templates/{slug}", (string slug) =>
+        // ---- student file download (requires a logged-in portal session). Streams the CSV, counts the download. ----
+        app.MapGet("/api/me/templates/{slug}/file", (HttpContext ctx, string slug) =>
         {
-            var t = db.QueryOne("SELECT * FROM templates WHERE slug=? AND published=1", slug);
-            if (t is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-            return Results.Json(new
-            {
-                slug = H.Str(t["slug"]),
-                title = H.Str(t["title"]),
-                category = H.Str(t["category"]),
-                certification_id = t["certification_id"] is null ? (long?)null : H.L(t["certification_id"]),
-                summary = H.Str(t["summary"]),
-                format = H.Str(t["format"]) ?? "csv",
-                body = H.Str(t["body"]),
-                download_count = H.L(t["download_count"]),
-                download_url = $"/api/public/templates/{H.Str(t["slug"])}/file",
-            });
-        });
-
-        // ---- public file download (no login). Streams the CSV as an attachment and counts the download. ----
-        app.MapGet("/api/public/templates/{slug}/file", (string slug) =>
-        {
+            if (Auth.UserFromReq(ctx.Request, db) is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             var t = db.QueryOne("SELECT id,slug,title,format,body FROM templates WHERE slug=? AND published=1", slug);
             if (t is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var tid = H.L(t["id"]);

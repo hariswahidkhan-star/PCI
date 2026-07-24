@@ -26,6 +26,7 @@ export const CATALOG: Record<string, Entry> = {
   'nav.lab': { en: 'Practice Lab', ko: '실습 랩', ar: 'مختبر التطبيق', es: 'Laboratorio de práctica', fr: 'Labo de pratique', zh: '实操实验室', ru: 'Практическая лаборатория' },
   'nav.billing': { en: 'Billing', ko: '결제', ar: 'الفواتير', es: 'Facturación', fr: 'Facturation', zh: '账单', ru: 'Оплата' },
   'nav.resources': { en: 'Resources', ko: '자료', ar: 'الموارد', es: 'Recursos', fr: 'Ressources', zh: '资源', ru: 'Ресурсы' },
+  'nav.templates': { en: 'Templates', ko: '템플릿', ar: 'القوالب', es: 'Plantillas', fr: 'Modèles', zh: '模板', ru: 'Шаблоны' },
   'nav.documents': { en: 'Documents', ko: '문서', ar: 'المستندات', es: 'Documentos', fr: 'Documents', zh: '文档', ru: 'Документы' },
   'nav.messages': { en: 'Messages', ko: '메시지', ar: 'الرسائل', es: 'Mensajes', fr: 'Messages', zh: '消息', ru: 'Сообщения' },
   'nav.support': { en: 'Support', ko: '지원', ar: 'الدعم', es: 'Soporte', fr: 'Assistance', zh: '支持', ru: 'Поддержка' },

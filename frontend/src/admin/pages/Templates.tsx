@@ -3,10 +3,10 @@ import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty, Stat } from '../../components/ui'
 
-// Admin Console → Free Templates Library (§6A–6C). Manage the public library of free, downloadable
+// Admin Console → Templates Library (§6A–6C). Manage the members-only library of downloadable
 // project-controls templates (WBS, EVM tracker, risk register, cash-flow, RACI, …). Each template's body is
-// plain CSV stored inline; only PUBLISHED templates appear on the public /free-templates.html page and are
-// downloadable at /api/public/templates/{slug}/file. Content is synthetic — no student data, no answer keys.
+// plain CSV stored inline; only PUBLISHED templates appear in the student portal (Templates) and download
+// for logged-in students at /api/me/templates/{slug}/file. Content is synthetic — no student data, no answer keys.
 
 interface Row {
   id: number
@@ -35,6 +35,20 @@ const CATEGORIES = ['scope', 'schedule', 'cost', 'evm', 'risk', 'change', 'cashf
 const CERTS: Record<string, string> = { '1': 'PCL-AI', '2': 'PFL-AI', '3': 'PML-AI' }
 const titleCase = (s: string) => s.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 const certLabel = (id: number | null) => (id && CERTS[String(id)]) || '—'
+
+// Admin download builds the file client-side from the row's inline body — there is no public file endpoint
+// (templates are members-only, served to students at /api/me/templates/{slug}/file).
+function downloadCsv(r: Row) {
+  const blob = new Blob([r.body ?? ''], { type: r.format === 'csv' || !r.format ? 'text/csv' : 'text/plain' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${r.slug}.${r.format || 'csv'}`
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
+}
 
 // Hand-authored SVG bar trend for the 30-day download series — no chart library. Scales to the window max,
 // draws a faint baseline, and gives each day a native <title> tooltip. Renders responsively via viewBox.
@@ -138,8 +152,8 @@ export default function Templates() {
       <div>
         <h1 style={{ marginBottom: '.2rem' }}>Free Templates Library</h1>
         <p className="muted" style={{ marginTop: 0 }}>
-          Free, downloadable project-controls templates for the public website. Published templates appear on{' '}
-          <code>/free-templates.html</code> and download as CSV. Content is synthetic and freely reusable.
+          Ready-to-use project-controls templates for members. Published templates appear in the student portal
+          under <code>Templates</code> and download as CSV. Content is synthetic and freely reusable.
         </p>
       </div>
 
@@ -258,7 +272,7 @@ export default function Templates() {
                         <button className="btn sm secondary" disabled={busy} onClick={() => togglePublish(r)}>
                           {r.published ? 'Unpublish' : 'Publish'}
                         </button>
-                        <a className="btn sm secondary" href={`/api/public/templates/${r.slug}/file`} target="_blank" rel="noreferrer">Download</a>
+                        <button className="btn sm secondary" onClick={() => downloadCsv(r)}>Download</button>
                         <button className="btn sm secondary" disabled={busy} onClick={() => doDelete(r)}>Delete</button>
                       </div>
                     </td>
