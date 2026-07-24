@@ -64,14 +64,27 @@ describe('Admin Free Templates', () => {
   it('renders the download analytics panel with an SVG trend and a top list', () => {
     h.resp = { rows: [row()], total: 1, published: 1 }
     h.an = {
-      total_downloads: 42, templates: 1, published: 1, window_days: 30, window_downloads: 12,
+      total_downloads: 42, unique_downloaders: 9, templates: 1, published: 1, window_days: 30, window_downloads: 12,
       series: Array.from({ length: 30 }, (_, i) => ({ day: `2026-07-${String(i + 1).padStart(2, '0')}`, count: i % 4 })),
-      top: [{ slug: 'wbs-template', title: 'Roll-down WBS pack', download_count: 42, published: true }],
+      top: [{ slug: 'wbs-template', title: 'Roll-down WBS pack', download_count: 42, downloaders: 9, published: true }],
     }
     render(<Templates />)
     expect(screen.getByText('Total downloads')).toBeInTheDocument()
     expect(screen.getByText('Most downloaded')).toBeInTheDocument()
     expect(screen.getByText('Roll-down WBS pack')).toBeInTheDocument()
     expect(screen.getByRole('img', { name: /Downloads over the last 30 days/i })).toBeInTheDocument()
+  })
+
+  it('surfaces distinct-student reach: a Unique students stat and a per-template student count', () => {
+    h.resp = { rows: [row()], total: 1, published: 1 }
+    h.an = {
+      total_downloads: 42, unique_downloaders: 9, templates: 1, published: 1, window_days: 30, window_downloads: 12,
+      series: Array.from({ length: 30 }, (_, i) => ({ day: `2026-07-${String(i + 1).padStart(2, '0')}`, count: 0 })),
+      top: [{ slug: 'wbs-template', title: 'Roll-down WBS pack', download_count: 42, downloaders: 9, published: true }],
+    }
+    render(<Templates />)
+    expect(screen.getByText('Unique students')).toBeInTheDocument()
+    // The top row shows both raw downloads and the distinct-student reach.
+    expect(screen.getByText(/42 downloads · 9 students/)).toBeInTheDocument()
   })
 })

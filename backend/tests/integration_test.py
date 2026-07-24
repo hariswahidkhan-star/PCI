@@ -6087,6 +6087,16 @@ def test_free_templates(admin):
         bool(risk5) and risk5.get("downloaded") is True and bool(risk6) and risk6.get("downloaded") is False,
         (risk5 and risk5.get("downloaded"), risk6 and risk6.get("downloaded")))
 
+    # §6E — reach: the admin analytics report DISTINCT-student counts, not just raw downloads. evm-tracker was
+    # pulled twice by one student (61q), so its download_count exceeds its distinct-downloader count; overall at
+    # least two students (student one + student two) have taken templates.
+    c, a2 = jget("GET", "/api/admin/templates/analytics", token=admin)
+    evm2 = next((t for t in (a2.get("top", []) if isinstance(a2, dict) else []) if t.get("slug") == "evm-tracker"), None)
+    chk("61v the analytics report distinct-student reach (unique downloaders overall + per template)",
+        c == 200 and a2.get("unique_downloaders", 0) >= 2 and bool(evm2)
+        and evm2.get("downloaders", 0) >= 1 and evm2["downloaders"] < evm2["download_count"],
+        (a2.get("unique_downloaders"), evm2))
+
 
 def test_public_documents(admin):
     # Incremental Testing Programme §57 — Public Downloads Centre (Endpoints/PublicDocuments.cs, 12 routes,

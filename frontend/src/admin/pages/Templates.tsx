@@ -25,9 +25,9 @@ interface Row {
 interface Resp { rows: Row[]; total: number; published: number }
 
 interface DayPoint { day: string; count: number }
-interface TopRow { slug: string; title: string; download_count: number; published: boolean }
+interface TopRow { slug: string; title: string; download_count: number; downloaders: number; published: boolean }
 interface Analytics {
-  total_downloads: number; templates: number; published: number
+  total_downloads: number; unique_downloaders: number; templates: number; published: number
   window_days: number; window_downloads: number; series: DayPoint[]; top: TopRow[]
 }
 
@@ -176,6 +176,7 @@ export default function Templates() {
             <div>
               <div className="row" style={{ gap: '1rem', flexWrap: 'wrap', marginBottom: '.4rem' }}>
                 <Stat n={an.total_downloads} k="Total downloads" />
+                <Stat n={an.unique_downloaders} k="Unique students" />
                 <Stat n={an.window_downloads} k={`Last ${an.window_days} days`} />
               </div>
               <DownloadTrend series={an.series} />
@@ -190,7 +191,10 @@ export default function Templates() {
                   {an.top.filter((t) => t.download_count > 0).map((t) => (
                     <li key={t.slug} style={{ fontSize: 13 }}>
                       <span>{t.title}</span>{' '}
-                      <span className="muted" style={{ fontVariantNumeric: 'tabular-nums' }}>· {t.download_count}</span>
+                      <span className="muted" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                        · {t.download_count} download{t.download_count === 1 ? '' : 's'}
+                        {t.downloaders > 0 && ` · ${t.downloaders} student${t.downloaders === 1 ? '' : 's'}`}
+                      </span>
                       {!t.published && <Badge tone="neutral">Draft</Badge>}
                     </li>
                   ))}
