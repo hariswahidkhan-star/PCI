@@ -50,6 +50,7 @@ public static class SimGrade
     /// </summary>
     public static object TaskFor(JsonElement config, string mode)
     {
+        if (SimStep.IsMultiStep(config)) return SimStep.TaskFor(config, mode);   // linked multi-step scenario
         var task = config.TryGetProperty("task", out var tk) ? tk.GetString() ?? "" : "";
         var prompt = config.TryGetProperty("prompt", out var pr) ? pr.GetString() ?? "" : "";
         var given = config.TryGetProperty("given", out var g) ? (JsonElement?)g : null;
@@ -84,6 +85,7 @@ public static class SimGrade
     /// </summary>
     public static GradeResult Grade(JsonElement config, JsonElement answers, string mode)
     {
+        if (SimStep.IsMultiStep(config)) return SimStep.Grade(config, answers, mode);   // linked multi-step scenario
         var task = config.TryGetProperty("task", out var tk) ? tk.GetString() ?? "" : "";
         var given = config.TryGetProperty("given", out var g) ? g : default;
         var ask = ParseAsk(config);
@@ -97,7 +99,7 @@ public static class SimGrade
         {
             var answer = SimCalc.Resolve(task, a.Key, given);
             var submitted = answers.ValueKind == JsonValueKind.Object && answers.TryGetProperty(a.Key, out var sv) ? (JsonElement?)sv : null;
-            var (ok, yourVal) = Compare(a.Type, answer, submitted, relTol);
+            var (ok, yourVal) = CompareAnswer(a.Type, answer, submitted, relTol);
             if (ok) correctCount++;
             results.Add(new MeasureResult(a.Key, a.Label, ok,
                 reveal ? answer : null,           // Assessment Mode: never surface the correct value
@@ -130,7 +132,10 @@ public static class SimGrade
         _ => "introduced",
     };
 
-    static (bool ok, object? your) Compare(string type, object? answer, JsonElement? submitted, double relTol)
+    /// <summary>Compare one submitted measure to its authoritative answer (numeric tolerance, unordered set,
+    /// or boolean). Public so the multi-step engine (<see cref="SimStep"/>) grades each step's measures with
+    /// the identical rule.</summary>
+    public static (bool ok, object? your) CompareAnswer(string type, object? answer, JsonElement? submitted, double relTol)
     {
         if (submitted is not JsonElement s) return (false, null);
         switch (type)
