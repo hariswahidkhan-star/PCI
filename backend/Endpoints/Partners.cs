@@ -340,5 +340,40 @@ public static class Partners
             log(adm.Id, "partner_commission_rule_created", $"agreement {agreementId} rule {rid} {type} by {adm.Id}");
             return J(new { ok = true, id = rid });
         }));
+
+        // ── Finance: historical backfill. Dry run unless dry_run=0 is passed explicitly. ──
+        app.MapPost("/api/admin/partner-finance/backfill", (HttpContext ctx) => gate(ctx.Request, "finance", adm =>
+        {
+            var dryRun = ctx.Request.Query["dry_run"] != "0";
+            var partnerId = long.TryParse(ctx.Request.Query["partner_id"], out var p) && p > 0 ? p : (long?)null;
+            var report = PartnerFinanceBackfill.Run(db, dryRun, partnerId);
+            // A live run moves money-relevant history; a dry run does not, so only the former is audited
+            // as a mutation (the dry run is still visible as a request in the access log).
+            if (!dryRun)
+                log(adm.Id, "partner_finance_backfill", $"partner {(partnerId?.ToString() ?? "all")} by {adm.Id}: " +
+                    $"{report.CommissionsCreated} created, {report.ReversalsCreated} reversed, {report.LegacyPayoutsImported} legacy payouts imported");
+            return J(new
+            {
+                dry_run = report.DryRun,
+                payments_examined = report.PaymentsExamined,
+                commissions_created = report.CommissionsCreated,
+                commissions_already_present = report.CommissionsAlreadyPresent,
+                reversals_created = report.ReversalsCreated,
+                requires_finance_review = report.NeedsFinanceReview,
+                legacy_payouts_imported = report.LegacyPayoutsImported,
+                commission_total = Money.ToDecimal(report.CommissionMinor),
+                exceptions = report.Exceptions,
+                note = report.DryRun
+                    ? "Dry run — nothing was written. Re-send with ?dry_run=0 to apply."
+                    : "Applied. Re-running is safe: creation is idempotent.",
+            });
+        }));
+
+        // ── Finance: reconciliation. Reports discrepancies; never repairs them silently. ──
+        app.MapGet("/api/admin/partner-finance/reconcile", (HttpRequest req) => gate(req, "finance", _ =>
+        {
+            var partnerId = long.TryParse(req.Query["partner_id"], out var p) && p > 0 ? p : (long?)null;
+            return J(PartnerFinanceBackfill.Reconcile(db, partnerId));
+        }));
     }
 }

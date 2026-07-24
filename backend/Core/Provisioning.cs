@@ -225,6 +225,9 @@ public static class Settlement
                 membershipLapsed = true;
             }
         }
+        // Any partner commission this settlement earned is clawed back as a linked reversal — the original
+        // transaction is never edited, so the ledger keeps showing what was earned and what was returned.
+        try { PartnerCommissionReversal.EnsureForPayment(db, payId, "reversal"); } catch { }
         try { db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Account', 'A payment record was reversed', ?)", userId,
             $"A {product} settlement on your account was reversed by our team. If you believe this is an error, contact support."); } catch { }
         return new { ok = true, payment_id = payId, previous_status = status, new_status = "refunded", membership_lapsed = membershipLapsed };
