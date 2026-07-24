@@ -22,6 +22,7 @@ public static class WorldSchema
         Tables(db);
         Seed(db);
         WorldContentPack.Seed(db);
+        WorldArticlePack.Seed(db);
     }
 
     static void Tables(Db db)
@@ -291,6 +292,102 @@ public static class WorldSchema
             resolved_at TEXT,
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldreports_status ON pciworld_reports(status)");
+
+        // ── Editorial platform (Core/WorldEditorial.cs). One CMS serves the blog and the newsroom:
+        //    they differ in OBLIGATIONS (a news item must trace every material claim to a saved
+        //    source) rather than in machinery. Published text is versioned and corrections are
+        //    appended visibly — there is deliberately no code path that edits a published article
+        //    silently. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_articles(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            slug VARCHAR(160) UNIQUE NOT NULL,
+            kind VARCHAR(8) NOT NULL DEFAULT 'blog',       -- blog | news
+            title TEXT NOT NULL,
+            dek TEXT,                                      -- standfirst: used by every listing and search result
+            body_md TEXT,                                  -- authored Markdown subset; rendered server-side after escaping
+            author_name TEXT,                              -- a real named person, or 'PCI World Editorial'. Never invented.
+            tags_json TEXT,
+            seo_title TEXT,
+            seo_desc TEXT,
+            corrections_json TEXT,                         -- appended, dated, public. Never rewritten.
+            status VARCHAR(20) NOT NULL DEFAULT 'idea',    -- idea|drafting|technical_review|fact_check|legal_review|seo_review|approved|published|archived
+            current_version INTEGER DEFAULT 0,
+            author_id INTEGER,                             -- pciworld_admin_users.id; NULL = house content
+            approved_by INTEGER,
+            review_note TEXT,
+            published_at TEXT,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldart_kind ON pciworld_articles(kind, status, published_at)");
+
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_article_versions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            article_id INTEGER NOT NULL,
+            version INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            dek TEXT,
+            body_md TEXT,
+            author_name TEXT,
+            seo_title TEXT,
+            seo_desc TEXT,
+            tags_json TEXT,
+            published_by INTEGER,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_worldartver ON pciworld_article_versions(article_id, version)");
+
+        // ── Source registry. A source is a record of something we actually read: where it was, who
+        //    published it, when, and when we retrieved it. Model memory is never a source. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_sources(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            url TEXT NOT NULL,
+            publisher TEXT,
+            title TEXT,
+            published_at TEXT,                             -- the source's own publication date
+            retrieved_at TEXT DEFAULT (datetime('now')),
+            tier VARCHAR(24),                              -- official|regulator|company|exchange|multilateral|journalism
+            note TEXT,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldsrc_url ON pciworld_sources(url)");
+
+        // Each link records WHICH claim the source supports — a bibliography proves nothing.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_article_sources(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            article_id INTEGER NOT NULL,
+            source_id INTEGER NOT NULL,
+            claim TEXT,
+            confidence TEXT,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldartsrc ON pciworld_article_sources(article_id)");
+
+        // ── Entity registry + mentions. Naming a company is a legal exposure, so a mention is a
+        //    tracked object that forces a legal review before approval. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_entities(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            legal_name TEXT NOT NULL,
+            trademark_spelling TEXT,
+            aliases_json TEXT,
+            risk_note TEXT,
+            logo_permission INTEGER DEFAULT 0,             -- 0 = no logo may be used. The default is deliberate.
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_entity_mentions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            article_id INTEGER NOT NULL,
+            entity_id INTEGER NOT NULL,
+            context TEXT,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldentmention ON pciworld_entity_mentions(article_id)");
+
+        // ── Review evidence: append-only, one row per review performed. Not a status field, because
+        //    'who checked this, when, and what did they conclude' has to survive the next edit. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_article_reviews(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            article_id INTEGER NOT NULL,
+            kind VARCHAR(16) NOT NULL,                     -- technical | fact_check | legal | seo
+            reviewer_id INTEGER,
+            outcome VARCHAR(8) NOT NULL,                   -- pass | fail
+            note TEXT,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldartrev ON pciworld_article_reviews(article_id, kind)");
 
         // ── Privacy-aware analytics: event name + optional challenge/session ids only. ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_events(

@@ -120,6 +120,44 @@ public static class World
 
         app.MapGet("/world/about", () => !Enabled() ? Disabled() : Html(WorldPages.About(db)));
 
+        // ── Editorial surfaces. Blog and newsroom share one route shape because they share one CMS;
+        //    their obligations differ (a news item must carry sources), not their machinery. Readers
+        //    are always served the immutable version snapshot, never the working copy. ──
+        IResult ArticleIndex(HttpContext ctx, string kind)
+        {
+            if (!Enabled()) return Disabled();
+            const int perPage = 12;
+            var page = Math.Max(1, (int)(H.QL(ctx, "page") ?? 1));
+            var total = db.Scalar<long>("SELECT COUNT(*) FROM pciworld_articles WHERE kind=? AND status='published'", kind);
+            var pages = (int)Math.Max(1, (total + perPage - 1) / perPage);
+            if (page > pages) page = pages;
+            var rows = db.Query($@"SELECT slug,title,dek,author_name,published_at,body_md
+                    FROM pciworld_articles WHERE kind=? AND status='published'
+                    ORDER BY published_at DESC, id DESC LIMIT {perPage} OFFSET {(page - 1) * perPage}", kind);
+            foreach (var r in rows) r["reading_minutes"] = (long)WorldEditorial.ReadingMinutes(H.Str(r["body_md"]));
+            return Html(WorldPages.ArticleIndex(db, kind, rows, total, page, pages));
+        }
+
+        IResult ArticlePage(string kind, string slug)
+        {
+            if (!Enabled()) return Disabled();
+            var a = db.QueryOne("SELECT * FROM pciworld_articles WHERE slug=? AND kind=? AND status='published'", slug, kind);
+            if (a is null) return Results.NotFound();
+            var version = WorldEditorial.LiveVersion(db, H.L(a["id"]));
+            if (version is null) return Results.NotFound();
+            a["reading_minutes"] = (long)WorldEditorial.ReadingMinutes(H.Str(version["body_md"]));
+            var sources = db.Query(@"SELECT s.url, s.publisher, s.title, s.published_at, asrc.claim
+                FROM pciworld_article_sources asrc JOIN pciworld_sources s ON s.id=asrc.source_id
+                WHERE asrc.article_id=? ORDER BY asrc.id", H.L(a["id"]));
+            Track(kind == "news" ? "news_viewed" : "article_viewed");
+            return Html(WorldPages.ArticlePage(db, kind, a, version, sources));
+        }
+
+        app.MapGet("/world/blog", (HttpContext ctx) => ArticleIndex(ctx, "blog"));
+        app.MapGet("/world/blog/{slug}", (string slug) => ArticlePage("blog", slug));
+        app.MapGet("/world/news", (HttpContext ctx) => ArticleIndex(ctx, "news"));
+        app.MapGet("/world/news/{slug}", (string slug) => ArticlePage("news", slug));
+
         app.MapGet("/world/r/{token}", (string token) =>
         {
             if (!Enabled()) return Disabled();

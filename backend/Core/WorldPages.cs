@@ -101,8 +101,12 @@ public static class WorldPages
              font-family:var(--sans);font-weight:600;font-size:15.5px;padding:15px 28px;cursor:pointer;text-decoration:none;
              border-radius:0;transition:background .16s var(--ease),border-color .16s var(--ease),color .16s var(--ease)}
         .btn:hover{background:var(--blue-deep);border-color:var(--blue-deep)}
-        .btn.secondary{background:transparent;color:var(--ink);border:1.5px solid var(--line);padding:15.5px 28px}
+        .btn.secondary{background:transparent;color:var(--ink);border:1.5px solid var(--field);padding:15.5px 28px}
         .btn.secondary:hover{border-color:var(--ink);background:var(--paper)}
+        /* On a noir surface the default ink-on-transparent secondary button is unreadable. It needs
+           its own light treatment or it fails contrast wherever the dark card is used. */
+        .card--noir .btn.secondary{color:#F1F5F9;border-color:#64748B}
+        .card--noir .btn.secondary:hover{border-color:#F1F5F9;background:rgba(255,255,255,.06)}
         .btn+.btn{margin-left:12px}
         .notice{border-inline-start:3px solid var(--crimson);background:var(--paper-2);padding:16px 20px;
              color:var(--slate);font-size:14.5px;line-height:1.6;margin:26px 0;border-radius:0 10px 10px 0}
@@ -161,6 +165,18 @@ public static class WorldPages
         footer.world .ft-brand .wordmark{font-family:var(--display);font-weight:900;font-size:19px;letter-spacing:-.03em;color:#fff}
         footer.world .ft-brand .bar{width:2px;height:26px;background:var(--crimson);border-radius:2px}
         footer.world .fine{font-size:13px;line-height:1.65;color:#7C8CA0;max-width:88ch}
+        .crumbs{font-size:14px;color:var(--slate);margin-bottom:18px}
+        .crumbs a{color:var(--slate)}
+        .prose{max-width:70ch;font-size:17.5px;line-height:1.72}
+        .prose h2{margin:38px 0 12px}
+        .prose h3{font-family:var(--display);font-weight:800;font-size:18px;margin:28px 0 8px}
+        .prose p{margin:0 0 18px}
+        .prose ul,.prose ol{margin:0 0 20px;padding-inline-start:24px}
+        .prose li{margin:0 0 8px}
+        .prose blockquote{border-inline-start:3px solid var(--crimson);margin:22px 0;padding:2px 0 2px 18px;color:var(--slate)}
+        .prose code{background:var(--paper-2);padding:2px 6px;font-size:.92em}
+        article.card h2 a{text-decoration:none}
+        article.card h2 a:hover{text-decoration:underline}
         .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
         /* A skip link that stays invisible when focused is not a skip link (WCAG 2.4.7). Focusing
            it brings it back into the page as the first visible control. */
@@ -220,6 +236,7 @@ public static class WorldPages
                 <nav aria-label="Primary">
                   <a href="/world">Today&rsquo;s Challenge</a>
                   <a href="/world/archive">Challenge Library</a>
+                  <a href="/world/blog">Writing</a>
                   <a href="/world/account">Passport</a>
                   <a href="/world/about">About</a>
                   <a class="ext" href="{inst}" target="_blank" rel="noopener noreferrer">{InstituteLinkLabel} <span aria-hidden="true">&#8599;</span><span class="visually-hidden">(opens the official Institute website in a new tab)</span></a>
@@ -881,6 +898,155 @@ public static class WorldPages
             // a search index would outlive both. Sharing the link still works everywhere.
             noindex: true);
     }
+
+    // ───────────────────────────── editorial surfaces ─────────────────────────────
+
+    /// <summary>Listing page for a kind (blog or news). Paginated, so the archive stays reachable
+    /// and crawlable however many articles exist.</summary>
+    public static string ArticleIndex(Db db, string kind, List<Dictionary<string, object?>> rows,
+        long total, int page, int pages)
+    {
+        var isNews = kind == "news";
+        var items = rows.Count == 0
+            ? "<p class=\"lede\">Nothing published here yet.</p>"
+            : string.Join("", rows.Select(r => $"""
+                <article class="card">
+                  <span class="kicker">{E(FormatDate(H.Str(r["published_at"])))} &middot; {H.L(r["reading_minutes"])} min read</span>
+                  <h2 style="margin-top:0"><a href="/world/{E(kind)}/{E(H.Str(r["slug"]))}">{E(H.Str(r["title"]))}</a></h2>
+                  <p>{E(H.Str(r["dek"]))}</p>
+                  <p class="meta"><span>{E(H.Str(r["author_name"]))}</span></p>
+                </article>
+                """));
+        string PageHref(int p) => $"/world/{kind}" + (p > 1 ? $"?page={p}" : "");
+        var pager = pages <= 1 ? "" : $"""
+            <nav class="pager" aria-label="Pages" style="display:flex;gap:12px;align-items:center;margin-top:14px">
+              {(page > 1 ? $"<a class=\"btn secondary\" href=\"{PageHref(page - 1)}\" rel=\"prev\">Previous</a>" : "")}
+              <span class="kicker">Page {page} of {pages}</span>
+              {(page < pages ? $"<a class=\"btn secondary\" href=\"{PageHref(page + 1)}\" rel=\"next\">Next</a>" : "")}
+            </nav>
+            """;
+        return Layout(db,
+            isNews ? "Newsroom — PCI World" : "Writing — PCI World",
+            isNews
+                ? "Project controls news, with every material claim traceable to a named source."
+                : "Practical writing on project controls: how the techniques behave, and where they catch people out.",
+            $"""
+            {Breadcrumb(("PCI World", "/world"), (isNews ? "Newsroom" : "Writing", null))}
+            <span class="kicker">{(isNews ? "Newsroom" : "Writing")}</span>
+            <h1>{(isNews ? "Project controls, as it happens" : "How the techniques actually behave")}</h1>
+            <p class="lede">{(isNews
+                ? "Reporting on the projects and decisions that shape the profession. Every material claim carries a source you can open."
+                : "Written by practitioners for practitioners. No statistics without a source, no advice without a reason, and every piece tied to something you can go and practise.")}</p>
+            <p class="kicker">{total} article{(total == 1 ? "" : "s")}</p>
+            {items}
+            {pager}
+            """,
+            $"/world/{kind}");
+    }
+
+    /// <summary>
+    /// A published article. Serves the immutable version snapshot, shows any corrections as a dated
+    /// visible record, and emits BlogPosting/NewsArticle + BreadcrumbList structured data — only the
+    /// fields the visible page actually supports, per the SEO policy.
+    /// </summary>
+    public static string ArticlePage(Db db, string kind, Dictionary<string, object?> article,
+        Dictionary<string, object?> version, List<Dictionary<string, object?>> sources)
+    {
+        var isNews = kind == "news";
+        var title = H.Str(version["title"]) ?? "";
+        var dek = H.Str(version["dek"]) ?? "";
+        var author = H.Str(version["author_name"]) ?? WorldEditorial.EditorialByline;
+        var slug = H.Str(article["slug"]) ?? "";
+        var published = FormatDate(H.Str(article["published_at"]));
+        var corrections = WorldEditorial.ParseCorrections(H.Str(article["corrections_json"]));
+        var url = WorldUrl.Base() + $"/world/{kind}/{slug}";
+
+        var correctionBlock = corrections.Count == 0 ? "" : $"""
+            <div class="card" style="border-color:var(--crimson)">
+              <h2 style="margin-top:0">Corrections</h2>
+              <ul>{string.Join("", corrections.Select(c => $"<li><b>{E(c.Date)}</b> — {E(c.Note)}</li>"))}</ul>
+              <p><small>Published text is versioned. Corrections are appended here and never applied silently.</small></p>
+            </div>
+            """;
+
+        var sourceBlock = sources.Count == 0 ? "" : $"""
+            <div class="card">
+              <h2 style="margin-top:0">Sources</h2>
+              <ol>{string.Join("", sources.Select(s => $"""
+                <li><a href="{E(H.Str(s["url"]))}" rel="nofollow noopener" target="_blank">{E(H.Str(s["title"]) ?? H.Str(s["url"]))}</a>
+                    {(string.IsNullOrWhiteSpace(H.Str(s["publisher"])) ? "" : $" — {E(H.Str(s["publisher"]))}")}
+                    {(string.IsNullOrWhiteSpace(H.Str(s["published_at"])) ? "" : $" ({E(FormatDate(H.Str(s["published_at"])))})")}
+                    {(string.IsNullOrWhiteSpace(H.Str(s["claim"])) ? "" : $"<br><small>Supports: {E(H.Str(s["claim"]))}</small>")}</li>
+                """))}</ol>
+            </div>
+            """;
+
+        // Structured data describing exactly what the page shows — no ratings, no invented author
+        // identity, no claims the visible page does not make.
+        var ld = Json(new Dictionary<string, object?>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = isNews ? "NewsArticle" : "BlogPosting",
+            ["headline"] = title,
+            ["description"] = dek,
+            ["datePublished"] = H.Str(article["published_at"])?.Replace(' ', 'T'),
+            ["dateModified"] = H.Str(article["updated_at"])?.Replace(' ', 'T'),
+            ["author"] = new Dictionary<string, object?> { ["@type"] = "Organization", ["name"] = author },
+            ["publisher"] = new Dictionary<string, object?> { ["@type"] = "Organization", ["name"] = "PCI World" },
+            ["mainEntityOfPage"] = url,
+            ["isAccessibleForFree"] = true,
+        });
+
+        return Layout(db, $"{title} — PCI World", dek,
+            $"""
+            <script type="application/ld+json">{ld}</script>
+            {Breadcrumb(("PCI World", "/world"), (isNews ? "Newsroom" : "Writing", $"/world/{kind}"), (title, null))}
+            <span class="kicker">{E(published)} &middot; {WorldEditorial.ReadingMinutes(H.Str(version["body_md"]))} min read</span>
+            <h1>{E(title)}</h1>
+            <p class="lede">{E(dek)}</p>
+            <p class="meta"><span>{E(author)}</span>{(corrections.Count > 0 ? "<span>Corrected</span>" : "")}</p>
+            <div class="prose">{WorldEditorial.RenderBody(H.Str(version["body_md"]))}</div>
+            {sourceBlock}
+            {correctionBlock}
+            <div class="card card--noir">
+              <span class="kicker">Practise it</span>
+              <h2 style="margin-top:0">Reading about it is half the work</h2>
+              <p>PCI World turns these situations into challenges you actually have to decide. Free, anonymous, no account needed.</p>
+              <p><a class="btn" href="/world">Take today&rsquo;s challenge</a>
+                 <a class="btn secondary" href="/world/archive">Browse the library</a></p>
+            </div>
+            <p class="notice">{E(PracticeNotice)}</p>
+            """,
+            $"/world/{kind}/{slug}",
+            ogTitle: title, ogDesc: dek);
+    }
+
+    /// <summary>A visible breadcrumb trail plus its BreadcrumbList structured data — the two must
+    /// agree, so they are generated together.</summary>
+    static string Breadcrumb(params (string Label, string? Href)[] crumbs)
+    {
+        var links = string.Join(" <span aria-hidden=\"true\">/</span> ", crumbs.Select(c =>
+            c.Href is null ? $"<span aria-current=\"page\">{E(c.Label)}</span>" : $"<a href=\"{E(c.Href)}\">{E(c.Label)}</a>"));
+        var items = crumbs.Select((c, i) => new Dictionary<string, object?>
+        {
+            ["@type"] = "ListItem",
+            ["position"] = i + 1,
+            ["name"] = c.Label,
+            ["item"] = c.Href is null ? null : WorldUrl.Base() + c.Href,
+        }).ToList();
+        var ld = Json(new Dictionary<string, object?>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "BreadcrumbList",
+            ["itemListElement"] = items,
+        });
+        return $"""
+            <script type="application/ld+json">{ld}</script>
+            <nav aria-label="Breadcrumb" class="crumbs">{links}</nav>
+            """;
+    }
+
+    static string FormatDate(string? sqlDate) => (sqlDate ?? "").Split(' ')[0];
 
     /// <summary>
     /// Passport verification entry point — the page someone lands on when they have been handed a

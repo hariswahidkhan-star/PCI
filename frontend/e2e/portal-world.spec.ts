@@ -148,6 +148,31 @@ test.describe('PCI World — public journey', () => {
     await expect(page.locator('main')).toContainText('Current link expires')
   })
 
+  test('the writing index and an article render with breadcrumbs and structured data', async ({ page }) => {
+    await page.goto('/world/blog')
+    await expect(page.locator('h1')).toContainText('How the techniques actually behave')
+    await expect(page.locator('main')).toContainText('10 articles')
+
+    await page.getByRole('link', { name: 'Why your SPI recovers as the project ends' }).click()
+    await expect(page.locator('h1')).toContainText('Why your SPI recovers')
+    await expect(page.locator('nav[aria-label="Breadcrumb"]')).toContainText('Writing')
+    await expect(page.locator('.prose h2').first()).toBeVisible()
+    // Attribution is the transparent editorial byline, never an invented person.
+    await expect(page.locator('main')).toContainText('PCI World Editorial')
+    await expect(page.locator('main')).toContainText('not PCI certification examinations')
+
+    const ld = (await page.locator('script[type="application/ld+json"]').allTextContents()).join(' ')
+    expect(ld).toContain('BlogPosting')
+    expect(ld).toContain('BreadcrumbList')
+    expect(ld).toContain('PCI World Editorial')
+  })
+
+  test('the writing index passes an automated WCAG 2.x AA scan', async ({ page }) => {
+    await page.goto('/world/blog/the-hundred-percent-rule-is-not-bureaucracy')
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
+    expect(results.violations).toEqual([])
+  })
+
   test('the skip link becomes visible on focus and moves focus to the content', async ({ page }) => {
     await page.goto('/world')
     await page.keyboard.press('Tab')                       // the skip link is the first stop
