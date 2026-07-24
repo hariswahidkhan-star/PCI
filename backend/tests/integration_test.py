@@ -3793,6 +3793,28 @@ def test_simlab(admin):
     c, _ = jget("GET", "/api/admin/lab/scenarios", token=mtok)  # a student token is not an admin
     chk("43z the admin scenario list is not reachable with a student token", c in (401, 403), c)
 
+    # ---- §5B.3: the Simulation Lab admin now has a DEDICATED 'sim_lab' permission (least privilege), with
+    #      'content' grandfathered so no existing operator loses access. ----
+    vtok = globals().get("_VIEWER_TOK")
+    if vtok:
+        c, _ = jget("GET", "/api/admin/lab/scenarios", token=vtok)
+        chk("43z4 a viewer (no content, no sim_lab) is refused the admin scenario list (403)", c == 403, c)
+    # A custom admin granted ONLY 'sim_lab' can manage the Lab...
+    c, cb = jget("POST", "/api/admin/team", token=admin, body={"email": "simonly@pci.test", "name": "SimOnly", "role": "custom", "permissions": ["sim_lab"]})
+    c, cl = jget("POST", "/api/admin/auth/login", body={"email": "simonly@pci.test", "password": cb.get("temp_password", "")})
+    sltok = clear_must_change(cl.get("token"))
+    c, _ = jget("GET", "/api/admin/lab/scenarios", token=sltok)
+    chk("43z5 a 'sim_lab'-only admin can read the admin scenario list (200)", c == 200, c)
+    # ...but NOT the 'content'-gated modules — proving least privilege (sim_lab is not content).
+    c, _ = jget("GET", "/api/admin/templates", token=sltok)
+    chk("43z6 a 'sim_lab'-only admin is refused the 'content'-gated templates admin (403)", c == 403, c)
+    # Grandfather: a custom admin granted ONLY 'content' still reaches the Lab (content ⇒ sim_lab).
+    c, gb = jget("POST", "/api/admin/team", token=admin, body={"email": "cononly@pci.test", "name": "ConOnly", "role": "custom", "permissions": ["content"]})
+    c, gl = jget("POST", "/api/admin/auth/login", body={"email": "cononly@pci.test", "password": gb.get("temp_password", "")})
+    contok = clear_must_change(gl.get("token"))
+    c, _ = jget("GET", "/api/admin/lab/scenarios", token=contok)
+    chk("43z7 a 'content'-only admin is grandfathered into the Lab (200)", c == 200, c)
+
     # ---- Phase 5A: scenario content-quality validation (§14 publication gate), gated 'content' ----
     ev_id = ev_admin.get("id")
     c, val = jget("GET", f"/api/admin/lab/scenarios/{ev_id}/validate", token=admin)
