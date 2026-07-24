@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using PCI.Backend.Core;
 using PCI.Backend.Data;
 
@@ -112,6 +113,77 @@ public static class AdminSimLab
             log(adm.Id, "sim_scenario_export", $"{code} v{version}");
             return Results.Text(json, "application/json", Encoding.UTF8);
         }));
+
+        // ---- import a manifest as a NEW DRAFT (§5B.5 — the other half of manifest I/O). Verifies the
+        //      envelope and recomputed content checksum, then lands the scenario in draft.
+        //
+        //      An import can never publish. Whatever lifecycle the file claims, the row is written at
+        //      draft/draft and must walk the full review workflow here — and because the importing admin is
+        //      recorded as the author, maker-checker still forces a different admin to approve it. Governance
+        //      dates are NOT carried either: a review-due or expiry from the source environment is a
+        //      statement about that environment's schedule, and silently importing one could expire content
+        //      the moment it lands. ----
+        app.MapPost("/api/admin/lab/scenarios/import", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, "sim_lab", adm =>
+            {
+                var manifest = H.GetEl(b, "manifest") is { ValueKind: JsonValueKind.Object } mEl
+                    ? JsonNode.Parse(mEl.GetRawText()) as JsonObject : null;
+
+                var verdict = SimManifest.Verify(manifest, out var row, out var checksum);
+                if (verdict != SimManifest.Reject.None)
+                    return Results.Json(new
+                    {
+                        error = SimManifest.Code(verdict),
+                        message = verdict switch
+                        {
+                            SimManifest.Reject.WrongKind => "This file is not a PCI simulation scenario manifest.",
+                            SimManifest.Reject.UnsupportedVersion => "This manifest was written by a newer version of the platform.",
+                            SimManifest.Reject.ChecksumMismatch => "The manifest's content does not match its checksum — it was modified or truncated.",
+                            _ => "The manifest is missing the fields a scenario needs.",
+                        },
+                    }, statusCode: verdict == SimManifest.Reject.ChecksumMismatch ? 409 : 400);
+
+                // The operator may land the import under a different code (importing alongside a scenario
+                // that already owns the original code).
+                var code = (H.GetS(b, "as_code") ?? H.Str(row["scenario_code"]) ?? "").Trim();
+                if (code.Length == 0) return Results.Json(new { error = "bad_manifest" }, statusCode: 400);
+                if (db.QueryOne("SELECT id FROM simulation_scenarios WHERE scenario_code=?", code) is not null)
+                    return Results.Json(new { error = "duplicate_code", message = "A scenario with this code already exists — import it under a different code." }, statusCode: 409);
+
+                // version starts at 1: version numbers are a per-environment lineage, not a property of the
+                // content, so an imported v7 becomes this environment's v1 (its content is pinned by checksum).
+                var id = db.ExecuteReturningId(@"INSERT INTO simulation_scenarios
+                    (scenario_code,title,kind,industry,project_type,difficulty,est_minutes,competencies_json,
+                     certification_id,summary,brief,config_json,objectives_json,provenance,disclaimers,
+                     worked_solution,status,review_state,version,synthetic_declared,authored_by,created_by)
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'draft','draft', 1, ?, ?, ?)",
+                    code, H.Str(row["title"]), H.Str(row["kind"]) ?? "scenario", H.Str(row["industry"]),
+                    H.Str(row["project_type"]), H.Str(row["difficulty"]) ?? "foundation",
+                    (int)H.L(row["est_minutes"]), H.Str(row["competencies_json"]),
+                    row["certification_id"], H.Str(row["summary"]), H.Str(row["brief"]),
+                    H.Str(row["config_json"]), H.Str(row["objectives_json"]), H.Str(row["provenance"]),
+                    H.Str(row["disclaimers"]), H.Str(row["worked_solution"]),
+                    H.L(row["synthetic_declared"]) == 1 ? 1 : 0, adm.Id, adm.Id);
+
+                // Re-run the §14 validator here: content that was publishable in the source environment may
+                // not be publishable in this one (a retired name, a colliding code, a task this build cannot
+                // solve), and the operator should see that immediately rather than at the approval gate.
+                var stored = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id)!;
+                var issues = SimContent.Validate(InputFrom(stored), OtherCodes(db, id));
+                log(adm.Id, "sim_scenario_import", $"{code} · #{id} · {checksum[..12]}");
+                return Results.Json(new
+                {
+                    id, scenario_code = code, review_state = "draft", status = "draft", checksum,
+                    imported_version = H.L(row["version"]),
+                    publishable = SimContent.Publishable(issues),
+                    errors = issues.Count(i => i.Severity == SimContent.Severity.Error),
+                    warnings = issues.Count(i => i.Severity == SimContent.Severity.Warning),
+                    issues = issues.Select(i => new { severity = i.Severity.ToString().ToLowerInvariant(), code = i.Code, message = i.Message }),
+                });
+            });
+        });
 
         // ---- create a DRAFT scenario (§13 authoring). Records the author for maker-checker; starts in the
         //      draft review state and is never served to students until it walks the review workflow. ----

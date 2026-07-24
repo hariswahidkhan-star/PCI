@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from 'react'
+import { useMemo, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
@@ -36,6 +36,23 @@ interface ScenarioRow {
 interface Resp { rows: ScenarioRow[]; total: number; published: number }
 interface Issue { severity: string; code: string; message: string }
 interface Validation { id: number; scenario_code: string; review_state: string; publishable: boolean; errors: number; warnings: number; issues: Issue[] }
+interface ImportResult { id: number; scenario_code: string; checksum: string; imported_version: number; publishable: boolean; errors: number; warnings: number; issues: Issue[] }
+
+// Read a picked file as text. FileReader rather than Blob.text(): it is available in every environment
+// the console runs in, including older Safari and the jsdom used by the tests.
+const readText = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const r = new FileReader()
+    r.onload = () => resolve(String(r.result ?? ''))
+    r.onerror = () => reject(new Error('The file could not be read.'))
+    r.readAsText(file)
+  })
+
+// The scenario code a manifest names, used only to suggest a non-colliding code on a duplicate.
+const manifestCode = (doc: unknown): string => {
+  const s = (doc as { scenario?: { scenario_code?: unknown } } | null)?.scenario?.scenario_code
+  return typeof s === 'string' ? s : 'scenario'
+}
 
 const titleCase = (s: string) => s.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 
@@ -80,6 +97,9 @@ export default function SimLab() {
   const [govRow, setGovRow] = useState<ScenarioRow | null>(null)
   const [govReview, setGovReview] = useState('')
   const [govExpiry, setGovExpiry] = useState('')
+  const [importDoc, setImportDoc] = useState<unknown>(null)
+  const [importCode, setImportCode] = useState('')
+  const fileRef = useRef<HTMLInputElement>(null)
   const [reviseRow, setReviseRow] = useState<ScenarioRow | null>(null)
   const [reviseCode, setReviseCode] = useState('')
   const [retireRow, setRetireRow] = useState<ScenarioRow | null>(null)
@@ -151,6 +171,47 @@ export default function SimLab() {
       const v = await adminApi.get<Validation>(`/api/admin/lab/scenarios/${id}/validate`)
       setValidation(v)
     } catch (e) { fail(e) } finally { setBusy(false) }
+  }
+
+  // Manifest import (§5B.5). Reads a manifest file, posts it for verification, and lands a new DRAFT —
+  // the server refuses a file whose content no longer matches its checksum, and nothing in the file can
+  // grant published state. A code collision reopens as a dialog so the operator can land it under a
+  // different code rather than losing the upload.
+  async function sendImport(doc: unknown, asCode?: string) {
+    setBusy(true); setErr(''); setMsg(''); setValidation(null)
+    try {
+      const r = await adminApi.post<ImportResult>('/api/admin/lab/scenarios/import',
+        asCode ? { manifest: doc, as_code: asCode } : { manifest: doc })
+      setImportDoc(null)
+      flash(`Imported “${r.scenario_code}” as a draft — ${r.publishable
+        ? 'it passes validation here and can walk the review workflow.'
+        : `validation found ${r.errors} error(s) to fix before it can be approved.`}`)
+      // Surface the verdict in the same panel the Validate button uses.
+      setValidation({ id: r.id, scenario_code: r.scenario_code, review_state: 'draft',
+        publishable: r.publishable, errors: r.errors, warnings: r.warnings, issues: r.issues })
+      refetch()
+    } catch (e) {
+      // The client passes an unrecognised backend code through as the message (see humanize()).
+      if (e instanceof Error && e.message === 'duplicate_code' && doc) {
+        setImportDoc(doc)
+        setImportCode(`${manifestCode(doc)}-imported`)
+        setErr('')
+      } else fail(e)
+    } finally { setBusy(false) }
+  }
+
+  async function onImportFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = ''          // let the same file be picked again after a failed attempt
+    if (!file) return
+    let doc: unknown
+    try {
+      doc = JSON.parse(await readText(file))
+    } catch {
+      fail(new Error('That file is not valid JSON. Choose a manifest exported from the Simulation Lab.'))
+      return
+    }
+    await sendImport(doc)
   }
 
   // Manifest export (§5B.4). Downloads the server's exact bytes via fetch rather than the shared JSON
@@ -229,9 +290,16 @@ export default function SimLab() {
           approved or published once the validator confirms the engine can grade every measure, and
           practice stays entirely separate from formal exam records."
         actions={
-          <button className="btn" onClick={() => setShowCreate((v) => !v)}>
-            {showCreate ? 'Cancel' : '+ New scenario'}
-          </button>
+          <>
+            <input ref={fileRef} type="file" accept="application/json,.json" onChange={(e) => { void onImportFile(e) }}
+              style={{ display: 'none' }} data-testid="manifest-file" aria-hidden="true" tabIndex={-1} />
+            <button className="btn secondary" disabled={busy} onClick={() => fileRef.current?.click()}>
+              Import manifest
+            </button>
+            <button className="btn" onClick={() => setShowCreate((v) => !v)}>
+              {showCreate ? 'Cancel' : '+ New scenario'}
+            </button>
+          </>
         }
       />
 
@@ -435,6 +503,27 @@ export default function SimLab() {
         confirmLabel="Save dates"
         onConfirm={() => { void doGovernance() }}
         onCancel={() => setGovRow(null)}
+      />
+
+      {/* A manifest whose code is already taken here — land it under a different one. */}
+      <ConfirmDialog
+        open={importDoc !== null}
+        title="That scenario code is already in use"
+        body={
+          <div className="stack" style={{ display: 'grid', gap: '.6rem' }}>
+            <p>
+              This environment already has a scenario called <code>{manifestCode(importDoc)}</code>.
+              Import the manifest under a different code — the content is unchanged, and it lands as a draft
+              that still has to walk the review workflow.
+            </p>
+            <label>Import as code
+              <input value={importCode} onChange={(e) => setImportCode(e.target.value)} required aria-label="Import as code" />
+            </label>
+          </div>
+        }
+        confirmLabel="Import as draft"
+        onConfirm={() => { const d = importDoc; setImportDoc(null); void sendImport(d, importCode.trim()) }}
+        onCancel={() => setImportDoc(null)}
       />
 
       {/* Revise a frozen scenario into a new draft. */}

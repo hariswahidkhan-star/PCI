@@ -70,7 +70,7 @@ Simulation uses `simulation_*` tables only. Student/admin Lab endpoints never re
 - Load test harness at 10k tasks (validation + solver coverage shipped; k6 deferred).
 - Independent multi-admin maker-checker E2E with two live admin accounts (API maker-checker covered in integration).
 - Multi-dimension scoring UI (calculation / reasoning / decision / evidence / process / communication) beyond existing competency evidence rows.
-- Manifest **import** (export shipped — see below; validated import / apply is deferred).
+- Bulk / multi-scenario manifest transfer (single-scenario export and import both shipped — see below).
 
 ### Cleared since this matrix was written
 
@@ -80,11 +80,16 @@ Simulation uses `simulation_*` tables only. Student/admin Lab endpoints never re
 - ~~Dedicated `sim_lab` RBAC permission~~ — shipped (§5B.3). The Lab has its own first-class permission;
   `content` is grandfathered to it in `Rbac.PermsFor` so no existing operator lost access, and `sim_lab`
   alone confers no marketing-`content` rights.
-- ~~Export half of "import/export validated manifest"~~ — shipped (§5B.4).
-  `GET /api/admin/lab/scenarios/{id}/manifest` (gated `sim_lab`) emits a deterministic, byte-stable JSON
-  manifest — content + governance + the live §14 validation verdict — checksummed over the graded content
-  alone, with no export timestamp, no admin identities and no student usage. `Core/SimManifest.cs` is the
-  pure builder; the Studio table exposes it as **Export**.
+- ~~Import/export of a validated manifest~~ — both halves shipped.
+  - **Export** (§5B.4): `GET /api/admin/lab/scenarios/{id}/manifest` (gated `sim_lab`) emits a
+    deterministic, byte-stable JSON manifest — content + governance + the live §14 validation verdict —
+    checksummed over the graded content alone, with no export timestamp, no admin identities and no
+    student usage. `Core/SimManifest.cs` is the pure builder; the Studio table exposes it as **Export**.
+  - **Import** (§5B.5): `POST /api/admin/lab/scenarios/import` verifies the envelope and recomputes the
+    checksum through the same canonical projection (so reformatting in transit is fine, but edited values
+    are refused), then lands the scenario as a **draft**. Nothing in a file can grant published state, and
+    the importing admin is recorded as the author so maker-checker still forces a second pair of eyes.
+    Governance dates are not carried across environments. The Studio exposes it as **Import manifest**.
 
 ## Baseline → slice evidence
 
