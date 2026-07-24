@@ -9,6 +9,7 @@
    "project_type": "Rural flood levee and pump station upgrade",
    "difficulty": "foundation",
    "est_minutes": 12,
+   "certification_id": 1,
    "competencies": [
     "cash_flow"
    ],
@@ -458,6 +459,7 @@
    "project_type": "42 m hybrid-electric harbour ferry fit-out",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 2,
    "competencies": [
     "cost_control"
    ],
@@ -1085,6 +1087,7 @@
    "project_type": "4.2 km elevated busway viaduct",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 3,
    "competencies": [
     "earned_value",
     "forecasting"
@@ -1437,6 +1440,7 @@
    "project_type": "28 m harbour tug hull-block fabrication",
    "difficulty": "foundation",
    "est_minutes": 12,
+   "certification_id": 1,
    "competencies": [
     "earned_value",
     "forecasting"
@@ -1852,6 +1856,7 @@
    "project_type": "Hybrid-electric ferry propulsion refit",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 3,
    "competencies": [
     "schedule_analysis",
     "risk_management"
@@ -2030,6 +2035,7 @@
    "project_type": "Urban stormwater diversion tunnel and pump station",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 2,
    "competencies": [
     "risk_management"
    ],
@@ -2190,6 +2196,7 @@
    "project_type": "28 m harbour tug fit-out",
    "difficulty": "foundation",
    "est_minutes": 12,
+   "certification_id": 1,
    "competencies": [
     "schedule_analysis"
    ],
@@ -2586,6 +2593,7 @@
    "project_type": "estuary flood barrier gate refurbishment",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 2,
    "competencies": [
     "scope_structuring"
    ],
@@ -3153,6 +3161,7 @@
    "project_type": "logistics dispatch SaaS microservices replatform",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 3,
    "competencies": [
     "cost_control"
    ],
@@ -3450,6 +3459,7 @@
    "project_type": "6,500-seat community arena fit-out",
    "difficulty": "foundation",
    "est_minutes": 12,
+   "certification_id": 1,
    "competencies": [
     "change_control"
    ],
@@ -3636,6 +3646,7 @@
    "project_type": "Demountable 4,500-seat beach volleyball grandstand",
    "difficulty": "foundation",
    "est_minutes": 12,
+   "certification_id": 2,
    "competencies": [
     "schedule_analysis",
     "forecasting"
@@ -3909,6 +3920,7 @@
    "project_type": "legacy billing engine microservices rewrite",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 3,
    "competencies": [
     "earned_value",
     "forecasting"
@@ -3971,6 +3983,7 @@
    "project_type": "warehouse robot dispatch console rewrite",
    "difficulty": "foundation",
    "est_minutes": 12,
+   "certification_id": 2,
    "competencies": [
     "earned_value",
     "forecasting"
@@ -4426,6 +4439,7 @@
    "project_type": "Retractable-roof arena modernisation",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 1,
    "competencies": [
     "progress_measurement"
    ],
@@ -4589,6 +4603,7 @@
    "project_type": "recommendation feature-store migration",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 3,
    "competencies": [
     "schedule_analysis",
     "risk_management"
@@ -5308,6 +5323,7 @@
    "project_type": "temporary 4,000-seat beach-sports arena build-out",
    "difficulty": "foundation",
    "est_minutes": 12,
+   "certification_id": 2,
    "competencies": [
     "schedule_analysis"
    ],
@@ -5699,6 +5715,7 @@
    "project_type": "CubeSat reaction-wheel retrofit production line",
    "difficulty": "foundation",
    "est_minutes": 12,
+   "certification_id": 3,
    "competencies": [
     "cash_flow"
    ],
@@ -6005,6 +6022,7 @@
    "project_type": "Regional airfield apron LED floodlighting retrofit",
    "difficulty": "foundation",
    "est_minutes": 12,
+   "certification_id": 2,
    "competencies": [
     "change_control"
    ],
@@ -6266,6 +6284,7 @@
    "project_type": "Terminal baggage screening line retrofit",
    "difficulty": "foundation",
    "est_minutes": 12,
+   "certification_id": 1,
    "competencies": [
     "schedule_analysis",
     "forecasting"
@@ -6570,6 +6589,7 @@
    "project_type": "Satellite reaction wheel assembly qualification program",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 1,
    "competencies": [
     "earned_value",
     "forecasting"
@@ -7174,6 +7194,7 @@
    "project_type": "Airport hold baggage handling system replacement",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 3,
    "competencies": [
     "progress_measurement"
    ],
@@ -7737,6 +7758,7 @@
    "project_type": "16U smallsat electric-propulsion qualification test campaign",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 1,
    "competencies": [
     "risk_management"
    ],
@@ -7935,6 +7957,7 @@
    "project_type": "Remote-stand bus-gate apron conversion",
    "difficulty": "foundation",
    "est_minutes": 12,
+   "certification_id": 2,
    "competencies": [
     "schedule_analysis"
    ],
@@ -8366,6 +8389,7 @@
    "project_type": "CubeSat deployer pod qualification program",
    "difficulty": "intermediate",
    "est_minutes": 16,
+   "certification_id": 3,
    "competencies": [
     "scope_structuring"
    ],

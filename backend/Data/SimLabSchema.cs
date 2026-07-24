@@ -19,6 +19,7 @@ public static class SimLabSchema
     public static void Ensure(Db db)
     {
         Tables(db);
+        FreezeAttemptedVersions(db);   // must run BEFORE Seed: pin history before any seeder rewrites rows
         Seed(db);
     }
 
@@ -146,6 +147,31 @@ public static class SimLabSchema
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_simevents_attempt ON simulation_attempt_events(attempt_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_simevents_user ON simulation_attempt_events(user_id)");
+
+        // ── Immutable per-version config snapshots (Core/SimVersion — the P0 replay guarantee). Written
+        //    once when a (scenario, version) pair is first served to an attempt and NEVER updated, so a
+        //    Studio revision or a content-pack deploy that rewrites simulation_scenarios.config_json in
+        //    place cannot change how a historical attempt replays, grades or coaches. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS simulation_scenario_versions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            scenario_id INTEGER NOT NULL,
+            version INTEGER NOT NULL,
+            config_json TEXT,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_simversions_scenario ON simulation_scenario_versions(scenario_id, version)");
+    }
+
+    /// <summary>Backfill: attempts recorded before simulation_scenario_versions existed have no snapshot,
+    /// so freeze every attempted (scenario, version) pair at the live row's CURRENT config — exactly what
+    /// those attempts were being served — before any seeder runs this boot. INSERT OR IGNORE makes this
+    /// one-shot per pair: later boots and later content changes can no longer move historical replay.</summary>
+    static void FreezeAttemptedVersions(Db db)
+    {
+        db.Execute(@"INSERT OR IGNORE INTO simulation_scenario_versions(scenario_id,version,config_json)
+            SELECT DISTINCT a.scenario_id, COALESCE(a.scenario_version,1), s.config_json
+            FROM simulation_attempts a
+            JOIN simulation_scenarios s ON s.id=a.scenario_id
+            WHERE s.config_json IS NOT NULL AND s.config_json<>''");
     }
 
     static void Seed(Db db)

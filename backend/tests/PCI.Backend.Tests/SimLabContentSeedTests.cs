@@ -95,6 +95,8 @@ public class SimLabContentSeedTests
             Assert.Contains(r.Kind, Kinds);
             Assert.False(string.IsNullOrWhiteSpace(r.Industry), $"{r.Code}: industry");
             Assert.True(r.Minutes > 0, $"{r.Code}: est_minutes");
+            Assert.True(r.CertificationId is 1 or 2 or 3,
+                $"{r.Code}: certification_id must map to a live certification (1=PCL-AI, 2=PFL, 3=PML-AI)");
             Assert.False(string.IsNullOrWhiteSpace(r.Summary), $"{r.Code}: summary");
             Assert.False(string.IsNullOrWhiteSpace(r.Brief), $"{r.Code}: brief");
             Assert.False(string.IsNullOrWhiteSpace(r.ObjectivesJson), $"{r.Code}: objectives");

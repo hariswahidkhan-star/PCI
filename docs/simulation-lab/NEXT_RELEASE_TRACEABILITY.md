@@ -20,6 +20,42 @@ is `docs/simulation-lab/NEXT_RELEASE_MATRIX.md` (slice evidence) and
 commit; the "Verified test evidence" section records which runtime gates were actually executed
 during this audit and which remain unverified.
 
+## Addendum — P0 residual closed (audited and fixed at `main` @ `fe9a0e0`)
+
+Everything below this section describes `d21b7cc`. After that audit merged, `main` moved again
+(PR #92/#93/#94/#96: the 96-scenario `simlab_scenarios_seed.json` library, catalogue filters,
+catalogue-wide reference-solver + certification-coverage gates, mastery/recommendations, coach
+evals, review-due/expiry governance), and the accompanying change to this document closes the P0
+residual identified below plus two defects found while verifying it:
+
+- **Historical replay is now pinned.** `simulation_scenario_versions` freezes each
+  (scenario, version) config the first time it is served (`Core/SimVersion.cs`); attempt
+  start/resume, load, submit and coach all replay from the frozen snapshot
+  (`Endpoints/SimLab.cs`), a boot-time backfill freezes attempts that predate the table
+  (`SimLabSchema.FreezeAttemptedVersions`, ordered before any seeder), and the content pack now
+  bumps `version` when — and only when — a scenario's `config_json` actually changes
+  (`SimLabContentPack.Upsert`). A pack-changing deploy therefore no longer rewrites what an
+  existing attempt replays, grades or coaches as. Proven by `SimReplayTests.cs` (4 tests).
+- **Count correction.** The evidence table below says "45 published house scenarios (15 + 30)";
+  in fact the pack's 30 codes *include* the original 15 seeds (it densifies them in place), so the
+  house catalogue is 30 scenarios, plus the 96-scenario JSON library seeded at app boot — 126
+  published scenarios in a production boot.
+- **Pre-existing defect fixed: 24 library scenarios had no certification mapping.** 24 of the 96
+  `simlab_scenarios_seed.json` rows shipped without `certification_id`, violating the
+  certification-coverage gate PR #93 itself added (integration assertion 43zd) on any install that
+  loads the library. Certifications are now assigned (library balance restored to 32/32/32 across
+  PCL-AI/PFL/PML-AI, task families kept near-even), the seed version bumped to 2 with a
+  NULL-only backfill for already-seeded installs, and `SimLabContentSeedTests` now asserts the
+  mapping so CI catches any recurrence. The integration harness line that crashed on the NULL
+  (`sorted()` over ints and `None`) is also fixed so this gate fails cleanly instead of aborting
+  the run.
+
+Test evidence for this addendum (this container, 2026-07-24): backend Sim suite **167/167**
+(includes the 4 new replay tests), full integration suite **1092/1092** (exit 0, library loaded,
+coverage gate green), migration integrity **13/13**, `dotnet build -c Release` clean. The
+integration suite at unmodified `fe9a0e0` crashes at assertion 43zd in any environment that loads
+the JSON library — the failure predates this change and is fixed by it.
+
 ## What landed between the two audit baselines
 
 The `0288f01` audit predates all Phase 5A and next-release work. Since then, `main` merged:

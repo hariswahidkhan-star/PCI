@@ -3833,7 +3833,8 @@ def test_simlab(admin):
     certs_present = {cid for (_code, cid) in pub_house if cid is not None}
     chk("43zd every published house scenario maps to a live certification (1/2/3, or NULL=any) and all three are represented",
         len(pub_house) >= 20 and not bad_cert and {1, 2, 3}.issubset(certs_present),
-        (len(pub_house), bad_cert[:5], sorted(certs_present)))
+        # None sorts (a NULL certification_id is exactly what this assertion catches — it must not crash the run)
+        (len(pub_house), bad_cert[:5], sorted(certs_present, key=lambda c: (c is None, c))))
 
     # ---- Phase 5B: review-due / expiry governance dates (§13). Governance METADATA, so settable even on a
     #      published scenario without breaching immutability; drives the amber/overdue/expired operator flag. ----
