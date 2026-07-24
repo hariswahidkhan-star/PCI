@@ -212,13 +212,22 @@ public static class WorldPages
             <meta name="theme-color" content="#0E1525">
             <title>{E(title)}</title>
             <meta name="description" content="{E(metaDesc)}">
-            {(noindex ? "<meta name=\"robots\" content=\"noindex\">" : "")}
+            {(noindex
+                ? "<meta name=\"robots\" content=\"noindex, nofollow\">"
+                // Being explicit on indexable pages is worth the line: it authorises a large image
+                // preview and a full snippet, which the default leaves to each engine's guess.
+                : "<meta name=\"robots\" content=\"index, follow, max-image-preview:large, max-snippet:-1\">")}
             <link rel="canonical" href="{E(WorldUrl.Base() + canonicalPath)}">
             <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%230E1525%27/%3E%3Crect x=%2712%27 y=%2744%27 width=%2740%27 height=%274%27 rx=%272%27 fill=%27%23C13329%27/%3E%3Ctext x=%2732%27 y=%2738%27 font-family=%27Archivo,Arial%27 font-weight=%27900%27 font-size=%2722%27 fill=%27white%27 text-anchor=%27middle%27 letter-spacing=%27-1%27%3EPW%3C/text%3E%3C/svg%3E">
             <meta property="og:site_name" content="PCI World">
             <meta property="og:title" content="{E(ogTitle ?? title)}">
             <meta property="og:description" content="{E(ogDesc ?? metaDesc)}">
             <meta property="og:type" content="website">
+            <meta property="og:url" content="{E(WorldUrl.Base() + canonicalPath)}">
+            <meta property="og:locale" content="en">
+            <meta name="twitter:card" content="summary">
+            <meta name="twitter:title" content="{E(ogTitle ?? title)}">
+            <meta name="twitter:description" content="{E(ogDesc ?? metaDesc)}">
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             {FontLoader}
@@ -294,6 +303,7 @@ public static class WorldPages
             "PCI World — Make the decision. Control the outcome.",
             "A free daily project challenge from the Project Controls Institute. Step into a realistic project situation, examine the evidence and decide what happens next.",
             $"""
+            {WorldSeo.HomeJsonLd(db)}
             <span class="kicker">PCI World Challenge</span>
             <h1>The project is already moving. The decision is now yours.</h1>
             <div class="uline" aria-hidden="true"></div>
@@ -363,6 +373,8 @@ public static class WorldPages
             $"{title} — PCI World Challenge",
             H.Str(version["hook"]) ?? "A free daily project challenge from the Project Controls Institute.",
             $"""
+            {WorldSeo.ChallengeJsonLd(db, code, version)}
+            {Breadcrumb(("PCI World", "/world"), ("Challenge Library", "/world/archive"), (title, null))}
             <span class="kicker">PCI World Challenge &middot; {E(H.Str(version["industry"]))} &middot; {E(Cap(H.Str(version["difficulty"])))}</span>
             <h1>{E(title)}</h1>
             <p class="lede">{E(H.Str(version["hook"]))}</p>

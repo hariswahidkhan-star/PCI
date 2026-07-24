@@ -75,7 +75,9 @@ public static class Sitemap
         var sb = new StringBuilder(512);
         sb.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         sb.Append("<sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
-        foreach (var path in new[] { "/sitemap.xml", "/blog-sitemap.xml", "/news-sitemap.xml" })
+        // PCI World has its own catalogue (challenges + articles) and its own sitemap; without an
+        // entry here it would be orphaned from the index entirely.
+        foreach (var path in new[] { "/sitemap.xml", "/blog-sitemap.xml", "/news-sitemap.xml", "/world-sitemap.xml" })
             sb.Append("  <sitemap><loc>").Append(Esc(host + path)).Append("</loc></sitemap>\n");
         sb.Append("</sitemapindex>\n");
         return sb.ToString();

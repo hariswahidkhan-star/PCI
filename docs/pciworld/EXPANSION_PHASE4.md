@@ -107,3 +107,50 @@ SEO layer including sitemaps and hreflang.
 3. Institute URL mapping for contextual links.
 4. Company-logo permissions (default: none, enforced in the schema).
 5. Arabic review capacity before the localization phase exits.
+
+---
+
+# Addendum — Phase 7a: the world SEO layer
+
+_Delivered directly after Phase 4, because §6's findings were fully unblocked and the editorial
+surfaces had just made the gap larger._
+
+## What was closed
+
+The Phase 0 audit's finding was blunt: **not one `/world` URL appeared in any sitemap**, and a
+world-only deployment served the Institute's robots.txt — advertising four sitemaps on a different
+domain and disallowing paths that host does not have. PCI World was undiscoverable except to
+people who already had a link.
+
+- **`/world-sitemap.xml`** — core pages, every servable challenge, every published article, with
+  absolute URLs, lastmod from real timestamps, and a content-signature cache that invalidates when
+  the catalogue moves. Registered in the platform's sitemap index and robots, and allowlisted so a
+  world-only host can actually serve it.
+- **World-aware robots.txt** — on a `PCIWORLD_ONLY` host, `/robots.txt` now describes *that host*:
+  one sitemap line on its own origin, `/world-admin` and `/api/` disallowed, and the token-addressed
+  paths (`/world/r/`, `/world/p/`, `/world/i/`, `/world/account`) discouraged as a second layer over
+  their `noindex` tags. `/sitemap.xml` answers with the world sitemap rather than a catalogue the
+  host does not serve.
+- **Head tags** — `og:url`, `og:locale`, Twitter card tags, and explicit robots directives:
+  `index, follow, max-image-preview:large, max-snippet:-1` on indexable pages, `noindex, nofollow`
+  on token pages.
+- **Structured data** — `Organization` + `WebSite` on the home page, `LearningResource` on every
+  challenge (free, timed, practice — never an assessment or a credential), `BreadcrumbList` with a
+  matching visible trail on challenge and article pages.
+
+## What is deliberately absent
+
+No `aggregateRating`, no review markup, no award claims, no participant counts. PCI World publishes
+none of those, so its structured data must not either — asserted in the tests, because structured
+data is the easiest place in a codebase for an unsupported claim to appear.
+
+Token-addressed pages stay out of the sitemap entirely. Their owners can revoke them; a search
+index cannot be un-published on request.
+
+Still open from §6: `og:image` per page, which needs the share-asset rasteriser decision, and
+`hreflang`, which is only meaningful once Arabic content exists.
+
+## Evidence
+
+.NET **773 passed / 0 failed** (9 new SEO tests), Python integration **1158 / 1158**, Playwright
+**19 / 19**.

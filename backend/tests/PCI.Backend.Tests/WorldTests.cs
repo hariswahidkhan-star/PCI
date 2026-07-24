@@ -561,10 +561,11 @@ public class WorldTests
         };
         var version = db.QueryOne("SELECT * FROM pciworld_challenge_versions LIMIT 1")!;
 
-        Assert.Contains("name=\"robots\" content=\"noindex\"", WorldPages.PublicResult(db, attempt, version));
-        Assert.Contains("name=\"robots\" content=\"noindex\"", WorldPages.NotFound(db));
-        Assert.DoesNotContain("name=\"robots\" content=\"noindex\"", WorldPages.About(db));
-        Assert.DoesNotContain("name=\"robots\" content=\"noindex\"", WorldPages.Archive(db, new()));
+        // Token pages also decline to pass link equity onward — nofollow alongside noindex.
+        Assert.Contains("name=\"robots\" content=\"noindex, nofollow\"", WorldPages.PublicResult(db, attempt, version));
+        Assert.Contains("name=\"robots\" content=\"noindex, nofollow\"", WorldPages.NotFound(db));
+        Assert.DoesNotContain("noindex", WorldPages.About(db));
+        Assert.DoesNotContain("noindex", WorldPages.Archive(db, new()));
 
         // Canonicals are absolute, so the same page served on two hosts consolidates instead of
         // competing with itself.

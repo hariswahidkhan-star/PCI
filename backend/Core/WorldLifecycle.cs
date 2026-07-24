@@ -15,7 +15,10 @@ public static class WorldOnly
         p.StartsWithSegments("/world") || p.StartsWithSegments("/world-admin") ||
         p.StartsWithSegments("/api/world") || p.StartsWithSegments("/api/world-admin") ||
         p.StartsWithSegments("/api/health") ||
-        p == "/robots.txt" || p == "/favicon.ico" || p == "/favicon.svg";
+        // A host that cannot serve its own sitemap cannot be crawled properly, so these are part of
+        // the world surface rather than platform extras.
+        p == "/robots.txt" || p == "/world-sitemap.xml" || p == "/sitemap.xml" ||
+        p == "/favicon.ico" || p == "/favicon.svg";
 
     public static bool Enabled =>
         string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_ONLY"), "true", StringComparison.OrdinalIgnoreCase);

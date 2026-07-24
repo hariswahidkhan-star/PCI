@@ -1486,12 +1486,24 @@ app.Use(async (ctx, next) =>
             await ctx.Response.WriteAsync(PCI.Backend.Core.SearchIndex.Json(db, webRoot));
             return;
         }
+        // The PCI World sitemap: core world pages, every servable challenge, every published
+        // article. Before this existed, not one /world URL appeared in any sitemap.
+        if (reqPath.Equals("/world-sitemap.xml", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.ContentType = "application/xml; charset=utf-8";
+            await ctx.Response.WriteAsync(PCI.Backend.Core.WorldSeo.Sitemap(db));
+            return;
+        }
         // Dynamic sitemap.xml from the pages table (published, indexable, canonical host) — overrides
         // the static file so it always reflects real content and excludes private/noindex pages.
+        // On a PCI World-only deployment the pages table is not served at all, so /sitemap.xml
+        // answers with the world sitemap rather than advertising a catalogue this host does not have.
         if (reqPath.Equals("/sitemap.xml", StringComparison.OrdinalIgnoreCase))
         {
             ctx.Response.ContentType = "application/xml; charset=utf-8";
-            await ctx.Response.WriteAsync(PCI.Backend.Core.Sitemap.Xml(db));
+            await ctx.Response.WriteAsync(PCI.Backend.Core.WorldOnly.Enabled
+                ? PCI.Backend.Core.WorldSeo.Sitemap(db)
+                : PCI.Backend.Core.Sitemap.Xml(db));
             return;
         }
         // Sitemap index — unifies the page sitemap and the blog (image) sitemap under one entry point.
@@ -1506,7 +1518,12 @@ app.Use(async (ctx, next) =>
         if (reqPath.Equals("/robots.txt", StringComparison.OrdinalIgnoreCase))
         {
             ctx.Response.ContentType = "text/plain; charset=utf-8";
-            await ctx.Response.WriteAsync(PCI.Backend.Core.AiVisibility.Robots(db));
+            // A PCI World-only host must describe ITSELF. Serving the Institute's robots.txt there
+            // advertised sitemaps on another domain and disallowed paths this deployment does not
+            // have — worse than no robots file at all (Phase 0 audit §6).
+            await ctx.Response.WriteAsync(PCI.Backend.Core.WorldOnly.Enabled
+                ? PCI.Backend.Core.WorldSeo.Robots()
+                : PCI.Backend.Core.AiVisibility.Robots(db));
             return;
         }
         // llms.txt (llmstxt.org) — a curated Markdown map of indexable content for language models.
