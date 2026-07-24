@@ -146,18 +146,22 @@ public static class SimLab
             var scenarioId = H.L(s["id"]);
             var version = H.L(s["version"]);
             // Resume an existing in-progress attempt for this scenario+mode rather than spawning duplicates.
-            var existing = db.QueryOne(@"SELECT id,seed,state_json,period FROM simulation_attempts
+            var existing = db.QueryOne(@"SELECT id,seed,state_json,period,scenario_version FROM simulation_attempts
                 WHERE user_id=? AND scenario_id=? AND mode=? AND status='in_progress' ORDER BY id DESC LIMIT 1",
                 u.Id, scenarioId, mode);
             long attemptId, seed;
             object? savedAnswers = null;
             int period = 0;
+            var servedRaw = configRaw!;   // what THIS attempt runs: its pinned snapshot, not whatever is live
             if (existing is not null)
             {
                 attemptId = H.L(existing["id"]);
                 seed = H.L(existing["seed"]);
                 period = (int)H.L(existing["period"]);
                 savedAnswers = AnswersObject(H.Str(existing["state_json"]));
+                // Resume replays the attempt's pinned version — a revision or content-pack deploy since the
+                // attempt started must not swap its task mid-flight (the boot backfill covers legacy attempts).
+                servedRaw = Core.SimVersion.PinnedConfig(db, scenarioId, H.L(existing["scenario_version"]), configRaw) ?? configRaw!;
                 RecordEvent(db, attemptId, u.Id, "resume", period, null);
             }
             else
@@ -165,6 +169,9 @@ public static class SimLab
                 attemptId = db.ExecuteReturningId(@"INSERT INTO simulation_attempts
                     (user_id,scenario_id,scenario_version,mode,status,seed,state_json)
                     VALUES(?,?,?,?, 'in_progress', 0, '{}')", u.Id, scenarioId, version, mode);
+                // Freeze what this (scenario, version) means before serving it: load, grading and coaching
+                // replay from this snapshot even if the live row is rewritten later (Core/SimVersion).
+                Core.SimVersion.Snapshot(db, scenarioId, version, configRaw);
                 // A scenario with a variant block draws a per-attempt instance: the seed is the attempt id —
                 // unique, non-zero and stored — so serving, resume and grading all re-derive the same numbers.
                 // Non-variant scenarios keep seed 0, so existing content behaves exactly as before.
@@ -175,7 +182,7 @@ public static class SimLab
             }
             return J(new { attempt_id = attemptId, resumed = existing is not null, period,
                 answers = savedAnswers,
-                scenario = ScenarioMeta(s), task = Core.SimGrade.TaskFor(EffectiveConfig(configRaw!, seed), mode) });
+                scenario = ScenarioMeta(s), task = Core.SimGrade.TaskFor(EffectiveConfig(servedRaw, seed), mode) });
         });
 
         // ---- autosave working answers (idempotent; never grades; never touches exam records) ----
@@ -226,10 +233,14 @@ public static class SimLab
             if (att is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var s = db.QueryOne(@"SELECT id,scenario_code,title,kind,difficulty,summary,config_json,version
                 FROM simulation_scenarios WHERE id=?", H.L(att["scenario_id"]));
-            if (s is null || string.IsNullOrWhiteSpace(H.Str(s["config_json"])))
+            // Replay from the attempt's pinned snapshot, never the live row — a revision or content-pack
+            // deploy after the attempt started must not change what it resumes or re-grades as.
+            var pinned = s is null ? null
+                : Core.SimVersion.PinnedConfig(db, H.L(att["scenario_id"]), H.L(att["scenario_version"]), H.Str(s["config_json"]));
+            if (s is null || string.IsNullOrWhiteSpace(pinned))
                 return Results.Json(new { error = "not_interactive" }, statusCode: 409);
 
-            var config = EffectiveConfig(H.Str(s["config_json"])!, H.L(att["seed"]));
+            var config = EffectiveConfig(pinned!, H.L(att["seed"]));
             var mode = H.Str(att["mode"]) ?? "training";
             var status = H.Str(att["status"]) ?? "in_progress";
             var completed = status is "completed" or "passed" or "failed";
@@ -318,9 +329,12 @@ public static class SimLab
                 return Results.Json(new { error = "already_submitted" }, statusCode: 409);
 
             var s = db.QueryOne("SELECT id,scenario_code,config_json FROM simulation_scenarios WHERE id=?", H.L(att["scenario_id"]));
-            if (s is null || string.IsNullOrWhiteSpace(H.Str(s["config_json"])))
+            // Grade against the attempt's pinned snapshot — the exact config it was served at start.
+            var pinned = s is null ? null
+                : Core.SimVersion.PinnedConfig(db, H.L(att["scenario_id"]), H.L(att["scenario_version"]), H.Str(s["config_json"]));
+            if (s is null || string.IsNullOrWhiteSpace(pinned))
                 return Results.Json(new { error = "not_interactive" }, statusCode: 409);
-            var config = EffectiveConfig(H.Str(s["config_json"])!, H.L(att["seed"]));
+            var config = EffectiveConfig(pinned!, H.L(att["seed"]));
             var mode = H.Str(att["mode"]) ?? "training";
 
             var b = await H.Body(ctx.Request);
@@ -362,9 +376,12 @@ public static class SimLab
             var att = db.QueryOne("SELECT * FROM simulation_attempts WHERE id=? AND user_id=?", id, u.Id);
             if (att is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var s = db.QueryOne("SELECT scenario_code,config_json FROM simulation_scenarios WHERE id=?", H.L(att["scenario_id"]));
-            if (s is null || string.IsNullOrWhiteSpace(H.Str(s["config_json"])))
+            // Coach from the attempt's pinned snapshot — same numbers the student is being graded on.
+            var pinned = s is null ? null
+                : Core.SimVersion.PinnedConfig(db, H.L(att["scenario_id"]), H.L(att["scenario_version"]), H.Str(s["config_json"]));
+            if (s is null || string.IsNullOrWhiteSpace(pinned))
                 return Results.Json(new { error = "not_interactive" }, statusCode: 409);
-            var config = EffectiveConfig(H.Str(s["config_json"])!, H.L(att["seed"]));
+            var config = EffectiveConfig(pinned!, H.L(att["seed"]));
             var attemptMode = H.Str(att["mode"]) ?? "training";
             var submitted = H.Str(att["status"]) is "completed" or "passed" or "failed";
 
