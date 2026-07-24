@@ -24,13 +24,44 @@ interface Row {
 }
 interface Resp { rows: Row[]; total: number; published: number }
 
+interface DayPoint { day: string; count: number }
+interface TopRow { slug: string; title: string; download_count: number; published: boolean }
+interface Analytics {
+  total_downloads: number; templates: number; published: number
+  window_days: number; window_downloads: number; series: DayPoint[]; top: TopRow[]
+}
+
 const CATEGORIES = ['scope', 'schedule', 'cost', 'evm', 'risk', 'change', 'cashflow', 'finance', 'delivery', 'quality']
 const CERTS: Record<string, string> = { '1': 'PCL-AI', '2': 'PFL-AI', '3': 'PML-AI' }
 const titleCase = (s: string) => s.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 const certLabel = (id: number | null) => (id && CERTS[String(id)]) || '—'
 
+// Hand-authored SVG bar trend for the 30-day download series — no chart library. Scales to the window max,
+// draws a faint baseline, and gives each day a native <title> tooltip. Renders responsively via viewBox.
+function DownloadTrend({ series }: { series: DayPoint[] }) {
+  const n = series.length || 1
+  const max = Math.max(1, ...series.map((s) => s.count))
+  const W = 320, H = 64, gap = 2, bw = Math.max(1, W / n - gap)
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="72" role="img"
+      aria-label={`Downloads over the last ${n} days`} style={{ display: 'block' }}>
+      <line x1="0" y1={H - 1} x2={W} y2={H - 1} stroke="#e5e7eb" strokeWidth="1" />
+      {series.map((s, i) => {
+        const h = s.count === 0 ? 0 : Math.max(2, Math.round((s.count / max) * (H - 6)))
+        const x = i * (W / n)
+        return (
+          <rect key={s.day} x={x} y={H - 1 - h} width={bw} height={h} rx="1" fill="#2563eb">
+            <title>{`${s.day}: ${s.count} download${s.count === 1 ? '' : 's'}`}</title>
+          </rect>
+        )
+      })}
+    </svg>
+  )
+}
+
 export default function Templates() {
   const { data, loading, error, refetch } = useAdminQuery<Resp>('/api/admin/templates')
+  const { data: an } = useAdminQuery<Analytics>('/api/admin/templates/analytics')
   const [msg, setMsg] = useState('')
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
@@ -124,6 +155,37 @@ export default function Templates() {
           {showForm ? 'Cancel' : '+ New template'}
         </button>
       </div>
+
+      {an && (
+        <Card title="Downloads">
+          <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'minmax(280px, 2fr) minmax(220px, 1fr)' }}>
+            <div>
+              <div className="row" style={{ gap: '1rem', flexWrap: 'wrap', marginBottom: '.4rem' }}>
+                <Stat n={an.total_downloads} k="Total downloads" />
+                <Stat n={an.window_downloads} k={`Last ${an.window_days} days`} />
+              </div>
+              <DownloadTrend series={an.series} />
+              <p className="muted" style={{ fontSize: 12, marginTop: '.3rem' }}>Downloads per day over the last {an.window_days} days (UTC).</p>
+            </div>
+            <div>
+              <div className="muted" style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: '.3rem' }}>Most downloaded</div>
+              {an.top.filter((t) => t.download_count > 0).length === 0 ? (
+                <p className="muted" style={{ fontSize: 13 }}>No downloads recorded yet.</p>
+              ) : (
+                <ol style={{ margin: 0, paddingLeft: '1.1rem', display: 'grid', gap: '.25rem' }}>
+                  {an.top.filter((t) => t.download_count > 0).map((t) => (
+                    <li key={t.slug} style={{ fontSize: 13 }}>
+                      <span>{t.title}</span>{' '}
+                      <span className="muted" style={{ fontVariantNumeric: 'tabular-nums' }}>· {t.download_count}</span>
+                      {!t.published && <Badge tone="neutral">Draft</Badge>}
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </div>
+          </div>
+        </Card>
+      )}
 
       {showForm && (
         <Card title={editId ? 'Edit template' : 'New template'}>
