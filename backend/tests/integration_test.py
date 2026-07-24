@@ -5927,6 +5927,16 @@ def test_free_templates(admin):
     chk("61l the free-templates.html page server-renders the templates section (a real download link is present)",
         st == 200 and "/api/public/templates/wbs-template/file" in html, (st, "/api/public/templates/wbs-template/file" in html))
 
+    # §6B — the public catalogue renders a topic + track filter bar (progressive enhancement) with chips for
+    # only the tracks/topics that actually have published templates.
+    chk("61m the page renders the filter bar with both a topic and a track axis",
+        'data-tpl-filter' in html and 'data-axis="cat"' in html and 'data-axis="cert"' in html
+        and 'data-cat="scope"' in html and 'data-cert="1"' in html and 'data-cert="3"' in html,
+        ('data-tpl-filter' in html, 'data-axis="cert"' in html, 'data-cat="scope"' in html))
+    # Each group is tagged with its topic and each item with its track, so client-side filtering can target them.
+    chk("61n the WBS group carries its topic and the WBS item carries its PCL-AI track",
+        'class="dlg" data-cat="scope"' in html and '<li data-cert="1">' in html, html.count('data-cat='))
+
 
 def test_public_documents(admin):
     # Incremental Testing Programme §57 — Public Downloads Centre (Endpoints/PublicDocuments.cs, 12 routes,
