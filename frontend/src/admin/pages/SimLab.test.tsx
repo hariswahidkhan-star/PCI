@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 
 // FE — the Admin Console → Simulation Lab Studio (Phase 5A). A governed authoring surface over the scenario
 // engine: create a draft, validate against the §14 publication gate, walk the review workflow, revise a
@@ -10,7 +10,7 @@ vi.mock('../hooks', () => ({
   useAdminQuery: (path: string | null) =>
     ({ data: path === '/api/admin/lab/scenarios' ? h.resp : null, loading: false, error: null, refetch: vi.fn() }),
 }))
-const api = vi.hoisted(() => ({ post: vi.fn(), get: vi.fn(), patch: vi.fn(), del: vi.fn() }))
+const api = vi.hoisted(() => ({ post: vi.fn(), get: vi.fn(), patch: vi.fn(), del: vi.fn(), getToken: vi.fn(() => 'admin-tok') }))
 vi.mock('../api', () => ({ adminApi: api }))
 
 import SimLab from './SimLab'
@@ -131,6 +131,68 @@ describe('Admin SimLab Studio', () => {
     render(<SimLab />)
     expect(screen.getByText('Review overdue')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Dates' })).toBeInTheDocument()
+  })
+
+  // §5B.4 manifest export. The download must carry the server's exact bytes (the manifest is meant to be
+  // diffed and checksum-compared), so the page fetches raw text rather than round-tripping the JSON client.
+  describe('manifest export', () => {
+    const body = '{\n  "manifest_version": 1,\n  "checksum": "abc123",\n  "scenario": {}\n}'
+    let blobs: Blob[]
+    let clicked: HTMLAnchorElement[]
+
+    const mockFetch = (dispo: string | null) => {
+      const f = vi.fn().mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve(body),
+        headers: { get: (h: string) => (h === 'Content-Disposition' ? dispo : null) },
+      })
+      vi.stubGlobal('fetch', f)
+      return f
+    }
+
+    beforeEach(() => {
+      blobs = []; clicked = []
+      URL.createObjectURL = vi.fn((b: Blob) => { blobs.push(b); return 'blob:manifest' })
+      URL.revokeObjectURL = vi.fn()
+      vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) { clicked.push(this) })
+      h.resp = { rows: [row()], total: 1, published: 1 }
+    })
+    afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks() })
+
+    it('downloads the raw manifest bytes under the filename the server chose', async () => {
+      const f = mockFetch('attachment; filename="GL-EVM-001-v1.pcisim.json"')
+      render(<SimLab />)
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Export' })) })
+
+      expect(f).toHaveBeenCalledWith('/api/admin/lab/scenarios/1/manifest',
+        { headers: { Authorization: 'Bearer admin-tok' } })
+      expect(screen.getByText('Exported manifest for “GL-EVM-001”.')).toBeInTheDocument()
+      expect(clicked[0].download).toBe('GL-EVM-001-v1.pcisim.json')
+      // byte-for-byte: the blob is the server's response, not a re-serialised object
+      expect(blobs[0].size).toBe(body.length)
+      expect(blobs[0].type).toBe('application/json')
+      expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:manifest')
+    })
+
+    it('falls back to a sanitised local filename when the server sends no disposition', async () => {
+      mockFetch(null)
+      h.resp = { rows: [row({ scenario_code: 'bad"code/x', version: 2 })], total: 1, published: 1 }
+      render(<SimLab />)
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Export' })) })
+      expect(screen.getByText(/Exported manifest/)).toBeInTheDocument()
+      expect(clicked[0].download).toBe('badcodex-v2.pcisim.json')
+    })
+
+    it('surfaces a failed export instead of downloading an error page', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+        ok: false, status: 403, text: () => Promise.resolve('{"error":"forbidden"}'),
+        headers: { get: () => null },
+      }))
+      render(<SimLab />)
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Export' })) })
+      expect(screen.getByRole('alert')).toHaveTextContent('Export failed (403).')
+      expect(clicked).toHaveLength(0)
+    })
   })
 
   it('shows the empty state when no scenarios exist', () => {
