@@ -440,6 +440,96 @@ public static class PartnerPortal
             return J(new { ok = true, end_date = end });
         });
 
+
+        // ================= campaign links (Phase 5) =================
+
+        // PUBLIC tracked redirect. No auth by design — this is the link a partner shares. It records the
+        // click, then forwards to a SITE-RELATIVE destination with the code and UTM values applied.
+        // PartnerCampaign.SafeDestination refuses absolute and protocol-relative targets, so a tracked
+        // link can never be turned into an open redirect wearing PCI's domain.
+        app.MapGet("/r/{token}", (HttpContext ctx, string token) =>
+        {
+            var link = db.QueryOne("SELECT * FROM partner_campaign_links WHERE token=?", (token ?? "").Trim().ToLowerInvariant());
+            if (link is null || H.L(link["active"]) != 1) return Results.Redirect("/");
+            // A suspended or cancelled institution's links stop working, exactly as its codes do.
+            var partner = db.QueryOne("SELECT status FROM training_partners WHERE id=?", H.L(link["partner_id"]));
+            if (partner is null || (H.Str(partner["status"]) ?? "active") != "active") return Results.Redirect("/");
+
+            var code = link["code_id"] is null ? null
+                : H.Str(db.QueryOne("SELECT code,status,active FROM discount_codes WHERE id=?", H.L(link["code_id"]))?["code"]);
+            var (visitor, country, device, browser) = Analytics.Fingerprint(ctx);
+            // A null visitor means Analytics identified a bot; the click is not counted as a human one.
+            if (visitor is not null)
+                PartnerCampaign.RecordClick(db, H.L(link["id"]), visitor, country, device, browser,
+                    ctx.Request.Headers.Referer.ToString());
+            return Results.Redirect(PartnerCampaign.ForwardTo(link, code));
+        });
+
+        app.MapGet("/api/partner/links", (HttpContext ctx) =>
+        {
+            if (Need(ctx, out var p) is { } deny) return deny;
+            var from = ctx.Request.Query["from"].ToString().Trim();
+            var to = ctx.Request.Query["to"].ToString().Trim();
+            var links = db.Query(@"SELECT l.*, dc.code FROM partner_campaign_links l
+                LEFT JOIN discount_codes dc ON dc.id=l.code_id
+                WHERE l.partner_id=? ORDER BY l.id DESC LIMIT 200", p!.PartnerId);
+            var rows = new List<object>();
+            foreach (var l in links)
+            {
+                var r = PartnerCampaign.Report(db, l, from, to);
+                r["code"] = H.Str(l["code"]);
+                rows.Add(r);
+            }
+            return J(new { rows, share_base = $"{ctx.Request.Scheme}://{ctx.Request.Host}/r/" });
+        });
+
+        app.MapPost("/api/partner/links", async (HttpContext ctx) =>
+        {
+            if (Need(ctx, out var p) is { } deny) return deny;
+            if (p!.Role is not ("admin" or "finance")) return Err(403, "role_forbidden", "Only institution admin/finance users can create campaign links.");
+            var b = await H.Body(ctx.Request);
+            var name = (H.GetS(b, "name") ?? "").Trim();
+            if (name.Length < 2) return Err(422, "name_required", "Give the link a name you will recognise later.");
+            if (name.Length > 120) name = name[..120];
+
+            long? codeId = null;
+            if (H.GetNum(b, "code_id") is { } c && c > 0)
+            {
+                // Only the partner's own code, or a link could quietly attribute someone else's traffic.
+                if (db.QueryOne("SELECT id FROM discount_codes WHERE id=? AND partner_id=?", (long)c, p.PartnerId) is null)
+                    return Err(404, "code_not_found", "That code is not one of yours.");
+                codeId = (long)c;
+            }
+
+            // Collisions are astronomically unlikely but the column is UNIQUE, so retry rather than 500.
+            string token = PartnerCampaign.NewToken();
+            for (var i = 0; i < 5 && db.QueryOne("SELECT id FROM partner_campaign_links WHERE token=?", token) is not null; i++)
+                token = PartnerCampaign.NewToken();
+
+            var id = db.ExecuteReturningId(@"INSERT INTO partner_campaign_links
+                (token,partner_id,code_id,name,destination,utm_source,utm_medium,utm_campaign,created_by_partner_user)
+                VALUES(?,?,?,?,?,?,?,?,?)",
+                token, p.PartnerId, codeId, name,
+                PartnerCampaign.SafeDestination(H.GetS(b, "destination")),
+                H.GetS(b, "utm_source"), H.GetS(b, "utm_medium"), H.GetS(b, "utm_campaign"), p.Id);
+            log(null, "partner_link_created", $"partner {p.PartnerId} link {id} ({token})");
+            return J(new { ok = true, id, token, url = $"{ctx.Request.Scheme}://{ctx.Request.Host}/r/{token}" });
+        });
+
+        app.MapPost("/api/partner/links/{id}/toggle", (HttpContext ctx, long id) =>
+        {
+            if (Need(ctx, out var p) is { } deny) return deny;
+            if (p!.Role is not ("admin" or "finance")) return Err(403, "role_forbidden", "Only institution admin/finance users can change campaign links.");
+            var l = db.QueryOne("SELECT id,active FROM partner_campaign_links WHERE id=? AND partner_id=?", id, p.PartnerId);
+            if (l is null) return Err(404, "not_found");
+            var next = H.L(l["active"]) == 1 ? 0 : 1;
+            // The link row is kept whatever happens: deleting it would orphan the clicks already recorded
+            // against it and silently shrink the partner's own history.
+            db.Execute("UPDATE partner_campaign_links SET active=?, updated_at=datetime('now') WHERE id=?", next, id);
+            log(null, "partner_link_toggled", $"link {id} active={next} by partner_user {p.Id}");
+            return J(new { ok = true, active = next });
+        });
+
         // ================= partner students (privacy-masked) =================
         app.MapGet("/api/partner/students", (HttpContext ctx) =>
         {
@@ -453,12 +543,43 @@ public static class PartnerPortal
                         if (el.GetString() is { } f) extra.Add(f);
             }
             catch { }
+            // Filters. Each is optional and applied with the same "NULL means no filter" shape used across
+            // the finance module, so one query serves every combination on both providers.
+            var q = ctx.Request.Query;
+            var codeFilter = q["code"].ToString().Trim();
+            var statusFilter = q["payment_status"].ToString().Trim().ToLowerInvariant();
+            var from = q["from"].ToString().Trim();
+            var to = q["to"].ToString().Trim();
+            long? certFilter = long.TryParse(q["certification_id"], out var cf) && cf > 0 ? cf : null;
+            var f = from.Length == 10 ? from : "0000-01-01";
+            var t = to.Length == 10 ? to + " 23:59:59" : "9999-12-31 23:59:59";
+
+            const string where = @"FROM code_redemptions r JOIN discount_codes dc ON dc.id=r.code_id
+                LEFT JOIN users u ON u.id=r.user_id LEFT JOIN payments p2 ON p2.id=r.payment_id
+                WHERE dc.partner_id=?
+                  AND r.redeemed_at>=? AND r.redeemed_at<=?
+                  AND (? = '' OR dc.code=?)
+                  AND (? = '' OR p2.payment_status=?)
+                  AND (? IS NULL OR dc.certification_id=?)";
+            object?[] Args(params object?[] tail)
+            {
+                var a = new List<object?> { p.PartnerId, f, t, codeFilter, codeFilter, statusFilter, statusFilter, certFilter, certFilter };
+                a.AddRange(tail);
+                return a.ToArray();
+            }
+
+            // Pagination replaces the old blunt LIMIT 500, which silently truncated a large partner's list
+            // with no indication that anything was missing.
+            var total = db.Scalar<long>("SELECT COUNT(*) " + where, Args());
+            var export = q["format"].ToString().Equals("csv", StringComparison.OrdinalIgnoreCase);
+            var limit = export ? 10000 : (int.TryParse(q["limit"], out var lv) ? Math.Clamp(lv, 1, 500) : 100);
+            var offset = export ? 0 : (int.TryParse(q["offset"], out var ov) ? Math.Max(0, ov) : 0);
+
             var rows = db.Query(@"SELECT r.redeemed_at, r.code, r.product_type, r.discount_amount, r.amount_before,
                        u.id uid, u.first_name, u.last_name, u.email, p2.payment_status,
                        (SELECT m.status FROM memberships m WHERE m.user_id=u.id) membership_status
-                FROM code_redemptions r JOIN discount_codes dc ON dc.id=r.code_id
-                LEFT JOIN users u ON u.id=r.user_id LEFT JOIN payments p2 ON p2.id=r.payment_id
-                WHERE dc.partner_id=? ORDER BY r.redeemed_at DESC LIMIT 500", p.PartnerId);
+                " + where + " ORDER BY r.redeemed_at DESC LIMIT ? OFFSET ?", Args(limit, offset));
+
             // Minimum data by default: masked email + programme + status. Names and certification status
             // appear only when PCI has switched those fields on for this institution.
             var outRows = rows.Select(r => new Dictionary<string, object?>
@@ -472,7 +593,28 @@ public static class PartnerPortal
                 ["membership_status"] = r["membership_status"],
                 ["name"] = extra.Contains("name") ? ($"{H.Str(r["first_name"])} {H.Str(r["last_name"])}".Trim()) : null,
             }).ToList();
-            return J(new { rows = outRows, fields_authorised = extra.ToArray() });
+
+            if (export)
+            {
+                // The export carries exactly the columns the screen shows — the privacy rules are applied
+                // before the CSV is built, so a download can never widen what the partner is entitled to.
+                var sb = new System.Text.StringBuilder();
+                var withName = extra.Contains("name");
+                sb.Append(withName ? "Name," : "").Append("Registered,Code,Programme,Email,Discount,Payment,Membership\n");
+                foreach (var r in outRows)
+                {
+                    if (withName) sb.Append(Csv.Field(H.Str(r["name"]))).Append(',');
+                    sb.Append(Csv.Field(H.Str(r["registered_at"]))).Append(',')
+                      .Append(Csv.Field(H.Str(r["code"]))).Append(',')
+                      .Append(Csv.Field(H.Str(r["programme"]))).Append(',')
+                      .Append(Csv.Field(H.Str(r["email_masked"]))).Append(',')
+                      .Append(Csv.Field(H.Str(r["discount_amount"]))).Append(',')
+                      .Append(Csv.Field(H.Str(r["payment_status"]))).Append(',')
+                      .Append(Csv.Field(H.Str(r["membership_status"]))).Append('\n');
+                }
+                return Results.Text(sb.ToString(), "text/csv", System.Text.Encoding.UTF8);
+            }
+            return J(new { rows = outRows, fields_authorised = extra.ToArray(), total, limit, offset });
         });
 
         // ================= admin: institution logins =================

@@ -143,13 +143,12 @@ public static class PartnerStatement
         return (first.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), last.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
     }
 
-    static string Esc(string? s)
-    {
-        s ??= "";
-        return s.Contains(',') || s.Contains('"') || s.Contains('\n') || s.Contains('\r')
-            ? "\"" + s.Replace("\"", "\"\"") + "\""
-            : s;
-    }
+    /// <summary>
+    /// Quote a CSV cell through the platform's shared helper, which also neutralises the leading
+    /// =/+/-/@ that a spreadsheet would execute as a formula. Codes and campaign names are
+    /// partner-supplied text, so this file must not hand-roll its own quoting.
+    /// </summary>
+    static string Esc(string? s) => Csv.Field(s);
 
     public static string Csv(Statement st)
     {

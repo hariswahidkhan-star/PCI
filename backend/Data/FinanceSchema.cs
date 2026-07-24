@@ -182,5 +182,34 @@ public static class FinanceSchema
             internal INTEGER NOT NULL DEFAULT 0,               -- 1 = admin-only note, never shown to the partner
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_dispute_msgs ON partner_dispute_messages(dispute_id, id)");
+
+        // ---- campaign links: a shareable, tracked URL that carries one of the partner's codes ----
+        // The link is the top of the funnel; the CODE it carries is what ties the funnel to money, through
+        // the same code_redemptions chain the commission ledger already uses. Nothing is inferred.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_campaign_links(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            token VARCHAR(24) NOT NULL,                        -- the /r/{token} slug; opaque and unguessable
+            partner_id INTEGER NOT NULL,
+            code_id INTEGER,                                   -- NULL = an untracked-to-money link (clicks only)
+            name VARCHAR(120) NOT NULL,
+            destination VARCHAR(255),                          -- site-relative path only; never an absolute URL
+            utm_source VARCHAR(80), utm_medium VARCHAR(80), utm_campaign VARCHAR(120),
+            active INTEGER NOT NULL DEFAULT 1,
+            click_count INTEGER NOT NULL DEFAULT 0,
+            created_by_partner_user INTEGER,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_pcl_token ON partner_campaign_links(token)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_pcl_partner ON partner_campaign_links(partner_id)");
+
+        // One row per click. 'visitor' is the platform's existing rotating, non-reversible daily hash, so
+        // it de-duplicates traffic WITHIN a day and cannot identify anyone across days — by design.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_link_clicks(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            link_id INTEGER NOT NULL,
+            visitor VARCHAR(32), country VARCHAR(80), device VARCHAR(24), browser VARCHAR(32),
+            referrer VARCHAR(255),
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_plc_link ON partner_link_clicks(link_id, created_at)");
     }
 }
