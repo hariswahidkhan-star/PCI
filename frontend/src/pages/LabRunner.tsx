@@ -2,14 +2,20 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { api, ApiError } from '../api/client'
 import { Card, Badge, Spinner, ErrorNote } from '../components/ui'
+import {
+  SegmentedControl, SaveIndicator, ConfirmDialog, InsightCallout, LevelDots, PanelSub,
+  type SaveState,
+} from '../components/simlab'
 import SCurve, { type EvmPoint } from '../components/SCurve'
 import Gantt, { type GanttBar } from '../components/Gantt'
 import Histogram, { type Mc } from '../components/Histogram'
 
-// PCI AI Project Controls Simulation Lab — interactive workspace (Phase 1 foundation).
-// Starts (or resumes) an attempt at a guided lab, presents the synthetic task and its inputs, collects the
-// student's computed measures, and shows the deterministic grade. The correct answers are computed and
+// PCI AI Project Controls Simulation Lab — interactive workspace.
+// Starts (or resumes) an attempt, presents the synthetic task and its evidence, collects the
+// student's computed measures, and shows the deterministic grade. Correct answers are computed and
 // checked entirely on the server; in Assessment Mode the graded feedback deliberately withholds them.
+// The premium layer adds the workspace shell (header + analytical canvas + Coach rail), a persistent
+// save indicator, and a confirmation before a mode switch discards the visible working state.
 
 interface Ask { key: string; label: string; type: string }
 interface Task { task: string; prompt: string; given: Record<string, unknown>; ask: Ask[]; mode: string; assessment: boolean; montecarlo?: Mc | null }
@@ -26,6 +32,7 @@ interface Measure { key: string; label: string; is_correct: boolean; correct_val
 interface Competency { competency: string; score: number; level: string }
 interface Schedule { project_duration: number; critical_path: string[]; bars: GanttBar[] }
 interface Grade { score: number; passed: boolean; correct: number; total: number; mode: string; assessment: boolean; measures: Measure[]; competencies: Competency[]; schedule?: Schedule | null }
+interface CoachResp { ok: boolean; message: string; ai: boolean; coach_mode?: string; hint_level?: number }
 
 type Mode = 'training' | 'assessment'
 
@@ -73,7 +80,7 @@ function GivenView({ task }: { task: Task }) {
       <table className="data">
         <tbody>
           {Object.keys(labels).filter((k) => k in g).map((k) => (
-            <tr key={k}><th style={{ textAlign: 'left' }}>{labels[k]}</th><td>{fmt(g[k])}</td></tr>
+            <tr key={k}><th style={{ textAlign: 'start' }}>{labels[k]}</th><td>{fmt(g[k])}</td></tr>
           ))}
         </tbody>
       </table>
@@ -222,7 +229,7 @@ function GivenView({ task }: { task: Task }) {
         <tbody>
           {nodes.map((n) => (
             <tr key={n.id}>
-              <td style={{ paddingLeft: `${(n.id.split('.').length - 1) * 1.2}rem` }}>{n.id}</td>
+              <td style={{ paddingInlineStart: `${(n.id.split('.').length - 1) * 1.2}rem` }}>{n.id}</td>
               <td>{n.name ?? '—'}</td>
               <td>{n.budget != null ? fmt(n.budget) : '—'}</td>
               <td>{n.actual != null ? fmt(n.actual) : '—'}</td>
@@ -240,7 +247,7 @@ function GivenView({ task }: { task: Task }) {
         <tbody>
           {nodes.map((n) => (
             <tr key={n.id}>
-              <td style={{ paddingLeft: `${(n.id.split('.').length - 1) * 1.2}rem` }}>{n.id}</td>
+              <td style={{ paddingInlineStart: `${(n.id.split('.').length - 1) * 1.2}rem` }}>{n.id}</td>
               <td>{n.name ?? '—'}</td>
               <td>{n.value != null ? fmt(n.value) : '—'}</td>
             </tr>
@@ -258,7 +265,7 @@ function GivenView({ task }: { task: Task }) {
       <table className="data">
         <tbody>
           {Object.keys(labels).filter((k) => k in g).map((k) => (
-            <tr key={k}><th style={{ textAlign: 'left' }}>{labels[k]}</th><td>{fmt(g[k])}</td></tr>
+            <tr key={k}><th style={{ textAlign: 'start' }}>{labels[k]}</th><td>{fmt(g[k])}</td></tr>
           ))}
         </tbody>
       </table>
@@ -297,9 +304,9 @@ function GivenView({ task }: { task: Task }) {
     return (
       <table className="data">
         <tbody>
-          <tr><th style={{ textAlign: 'left' }}>Project duration (days)</th><td>{fmt(g.project_duration)}</td></tr>
-          <tr><th style={{ textAlign: 'left' }}>Remaining float (days)</th><td>{fmt(g.remaining_float)}</td></tr>
-          <tr><th style={{ textAlign: 'left' }}>Supplier delay (days)</th><td>{fmt(g.supplier_delay_days)}</td></tr>
+          <tr><th style={{ textAlign: 'start' }}>Project duration (days)</th><td>{fmt(g.project_duration)}</td></tr>
+          <tr><th style={{ textAlign: 'start' }}>Remaining float (days)</th><td>{fmt(g.remaining_float)}</td></tr>
+          <tr><th style={{ textAlign: 'start' }}>Supplier delay (days)</th><td>{fmt(g.supplier_delay_days)}</td></tr>
         </tbody>
       </table>
     )
@@ -359,16 +366,35 @@ function GivenView({ task }: { task: Task }) {
   return <pre className="small muted" style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(g, null, 2)}</pre>
 }
 
+/** Coach message with identity, source and mode — calm, never dominating the canvas. */
+function CoachMessage({ coach }: { coach: CoachResp }) {
+  return (
+    <div>
+      <div className="sl-coach-head" style={{ marginBottom: '.35rem' }}>
+        <strong>Coach</strong>
+        <Badge tone={coach.ai ? 'brand' : 'neutral'}>{coach.ai ? 'AI' : 'Guide'}</Badge>
+        {coach.coach_mode && <Badge tone="neutral">{titleCase(coach.coach_mode)}</Badge>}
+        {coach.hint_level != null && coach.hint_level > 0 && (
+          <LevelDots level={coach.hint_level} max={6} label={`Hint level ${coach.hint_level} of 6`} />
+        )}
+      </div>
+      <div className="sl-coach-msg" role="status">{coach.message}</div>
+    </div>
+  )
+}
+
 export default function LabRunner() {
   const { code } = useParams<{ code: string }>()
   const [mode, setMode] = useState<Mode>('training')
+  const [pendingMode, setPendingMode] = useState<Mode | null>(null)
   const [start, setStart] = useState<StartResp | null>(null)
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [grade, setGrade] = useState<Grade | null>(null)
-  const [coach, setCoach] = useState<{ ok: boolean; message: string; ai: boolean; coach_mode?: string; hint_level?: number } | null>(null)
+  const [coach, setCoach] = useState<CoachResp | null>(null)
   const [coaching, setCoaching] = useState(false)
   const [coachMode, setCoachMode] = useState('guided')
   const [hintLevel, setHintLevel] = useState(2)
+  const [saveState, setSaveState] = useState<SaveState>('idle')
   const [saveNote, setSaveNote] = useState<string | null>(null)
   const [reportNote, setReportNote] = useState<string | null>(null)
   const [reporting, setReporting] = useState(false)
@@ -378,20 +404,23 @@ export default function LabRunner() {
   const skipAutosave = useRef(true)
   const answersRef = useRef(answers)
   answersRef.current = answers
+  const debriefRef = useRef<HTMLDivElement>(null)
 
   const begin = useCallback(async (m: Mode) => {
     // Drop the previous attempt immediately so debounced autosave cannot write empty answers
     // into the old (or new) attempt while the start request is in flight.
     skipAutosave.current = true
     setLoading(true); setError(null); setGrade(null); setStart(null); setAnswers({}); setCoach(null)
-    setSaveNote(null); setReportNote(null)
+    setSaveState('idle'); setSaveNote(null); setReportNote(null)
     try {
       const s = await api.post<StartResp>('/api/me/lab/attempts', { scenario_code: code, mode: m })
       const restored = hydrateAnswers(s.task.ask, s.answers)
       skipAutosave.current = true
       setStart(s)
       setAnswers(restored)
-      if (s.resumed && Object.keys(restored).length > 0) setSaveNote('Resumed your saved answers')
+      if (s.resumed && Object.keys(restored).length > 0) {
+        setSaveState('saved'); setSaveNote('Resumed your saved answers')
+      }
     } catch (e) {
       setError(mapError(e)); setStart(null)
     } finally {
@@ -416,12 +445,14 @@ export default function LabRunner() {
 
   const autosave = useCallback(async (silent = false) => {
     if (!start || grade) return
+    setSaveState('saving'); if (!silent) setSaveNote(null)
     try {
       await api.post(`/api/me/lab/attempts/${start.attempt_id}/autosave`, { answers: buildAnswersPayload() })
-      if (!silent) setSaveNote('Progress saved')
-      else setSaveNote('Autosaved')
+      setSaveState('saved')
+      setSaveNote(silent ? null : 'Progress saved')
     } catch {
-      if (!silent) setSaveNote('Autosave unavailable — your answers stay in this browser until you submit.')
+      setSaveState('error')
+      setSaveNote(silent ? null : 'Autosave unavailable — your answers stay in this browser until you submit.')
     }
   }, [start, grade, buildAnswersPayload])
 
@@ -435,6 +466,20 @@ export default function LabRunner() {
     const t = window.setTimeout(() => { void autosave(true) }, 1500)
     return () => window.clearTimeout(t)
   }, [answers, start, grade, autosave])
+
+  // A mode switch opens a separate attempt: confirm first when visible work could leave the screen.
+  const requestMode = (m: Mode) => {
+    if (m === mode) return
+    const hasWork = !grade && Object.values(answersRef.current).some((v) => v.trim() !== '')
+    if (hasWork) setPendingMode(m)
+    else setMode(m)
+  }
+  const confirmMode = () => {
+    if (!pendingMode) return
+    void autosave(true) // best effort: capture anything the debounce has not flushed yet
+    setMode(pendingMode)
+    setPendingMode(null)
+  }
 
   const reportProblem = async () => {
     if (!start) return
@@ -461,7 +506,7 @@ export default function LabRunner() {
   }
 
   const submit = async () => {
-    if (!start) return
+    if (!start || busy) return
     setBusy(true); setError(null)
     try {
       const g = await api.post<Grade>(`/api/me/lab/attempts/${start.attempt_id}/submit`, { answers: buildAnswersPayload() })
@@ -473,12 +518,18 @@ export default function LabRunner() {
     }
   }
 
+  // Move focus to the debrief once the grade lands so keyboard and screen-reader
+  // users are not left on an unmounted submit button.
+  useEffect(() => {
+    if (grade) debriefRef.current?.focus()
+  }, [grade])
+
   const askCoach = async (levelOverride?: number) => {
     if (!start) return
     setCoaching(true)
     const level = levelOverride ?? hintLevel
     try {
-      const r = await api.post<{ ok: boolean; message: string; ai: boolean; coach_mode?: string; hint_level?: number }>(
+      const r = await api.post<CoachResp>(
         `/api/me/lab/attempts/${start.attempt_id}/coach`,
         { answers: buildAnswersPayload(), coach_mode: coachMode, hint_level: level },
       )
@@ -491,75 +542,189 @@ export default function LabRunner() {
     }
   }
 
+  const assessment = !!start?.task.assessment
+
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="row" style={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
-        <div>
-          <Link to="/lab" className="small muted">← Back to the Practice Lab</Link>
-          <h1 style={{ margin: '.2rem 0 0' }}>{start?.scenario.title ?? code}</h1>
-          {start && (
-            <div className="row small muted" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
-              <Badge tone="neutral">{titleCase(start.scenario.kind)}</Badge>
-              {start.scenario.difficulty && <Badge tone="neutral">{titleCase(start.scenario.difficulty)}</Badge>}
-              <span>{start.scenario.scenario_code}</span>
-            </div>
-          )}
+      <header className="sl-runhead">
+        <div className="sl-runhead-top">
+          <Link to="/lab" className="sl-back">← Back to the Practice Lab</Link>
+          <SaveIndicator state={saveState} note={saveNote} />
         </div>
-        <label className="small" style={{ display: 'grid', gap: '.2rem' }}>
-          <span className="muted">Mode</span>
-          <select value={mode} onChange={(e) => setMode(e.target.value as Mode)} disabled={busy}>
-            <option value="training">Training — shows the worked answers</option>
-            <option value="assessment">Assessment — marks only, answers withheld</option>
-          </select>
-        </label>
-      </div>
+        <div className="sl-runhead-main">
+          <div>
+            <h1>{start?.scenario.title ?? code}</h1>
+            {start && (
+              <div className="row small muted" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
+                <Badge tone="neutral">{titleCase(start.scenario.kind)}</Badge>
+                {start.scenario.difficulty && <Badge tone="neutral">{titleCase(start.scenario.difficulty)}</Badge>}
+                <span style={{ fontVariantNumeric: 'tabular-nums' }}>{start.scenario.scenario_code}</span>
+              </div>
+            )}
+          </div>
+          <SegmentedControl<Mode>
+            legend="Mode"
+            value={mode}
+            onChange={requestMode}
+            disabled={busy || loading}
+            options={[{ value: 'training', label: 'Training' }, { value: 'assessment', label: 'Assessment' }]}
+            hint={mode === 'training'
+              ? 'Training reveals the worked answers after grading.'
+              : 'Assessment reports marks only — answers are withheld.'}
+          />
+        </div>
+      </header>
+
+      <ConfirmDialog
+        open={pendingMode !== null}
+        title={`Switch to ${pendingMode === 'assessment' ? 'Assessment' : 'Training'} Mode?`}
+        body="Switching mode opens a separate attempt of this scenario. The answers you have entered stay saved with your current attempt."
+        confirmLabel="Switch mode"
+        cancelLabel="Stay here"
+        onConfirm={confirmMode}
+        onCancel={() => setPendingMode(null)}
+      />
 
       {loading ? (
         <Spinner />
       ) : error && !start ? (
         <Card><ErrorNote>{error}</ErrorNote></Card>
       ) : start ? (
-        <>
-          <Card title="Brief">
-            <p style={{ marginTop: 0 }}>{start.task.prompt}</p>
-            {Array.isArray(start.task.given.series) && (start.task.given.series as EvmPoint[]).length > 0 && (
-              <div style={{ margin: '.2rem 0 .8rem' }}><SCurve series={start.task.given.series as EvmPoint[]} /></div>
-            )}
-            <div style={{ overflowX: 'auto' }}><GivenView task={start.task} /></div>
-            {start.task.montecarlo && (
-              <div style={{ margin: '.8rem 0 .2rem' }}><Histogram mc={start.task.montecarlo} /></div>
-            )}
-          </Card>
+        <div className="sl-workspace">
+          <div className="sl-canvas">
+            <Card title="Brief">
+              <p style={{ marginTop: 0 }}>{start.task.prompt}</p>
+              <PanelSub>Evidence</PanelSub>
+              {Array.isArray(start.task.given.series) && (start.task.given.series as EvmPoint[]).length > 0 && (
+                <div style={{ margin: '.2rem 0 .8rem' }}><SCurve series={start.task.given.series as EvmPoint[]} /></div>
+              )}
+              <div style={{ overflowX: 'auto' }}><GivenView task={start.task} /></div>
+              {start.task.montecarlo && (
+                <div style={{ margin: '.8rem 0 .2rem' }}><Histogram mc={start.task.montecarlo} /></div>
+              )}
+            </Card>
 
-          {!grade ? (
-            <Card title="Your answers" action={start.task.assessment ? <Badge tone="warn">Assessment</Badge> : undefined}>
-              <div className="stack" style={{ display: 'grid', gap: '.6rem' }}>
-                {start.task.ask.map((a) => (
-                  <label key={a.key} className="row" style={{ justifyContent: 'space-between', gap: '1rem', alignItems: 'center' }}>
-                    <span>{a.label}</span>
-                    <input
-                      style={{ maxWidth: '14rem' }}
-                      inputMode={a.type === 'number' ? 'decimal' : 'text'}
-                      placeholder={a.type === 'set' ? 'e.g. A, B, D' : a.type === 'bool' ? 'yes / no' : 'number'}
-                      value={answers[a.key] ?? ''}
-                      onChange={(e) => setAnswers((s) => ({ ...s, [a.key]: e.target.value }))}
-                    />
-                  </label>
-                ))}
-                {error && <ErrorNote>{error}</ErrorNote>}
-                <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                  <button className="btn" onClick={submit} disabled={busy}>{busy ? 'Grading…' : 'Submit for grading'}</button>
-                  <button className="btn secondary" type="button" onClick={() => { void autosave(false) }} disabled={busy}>Save progress</button>
-                  <button className="btn secondary" type="button" onClick={() => { void reportProblem() }} disabled={reporting || busy}>
-                    {reporting ? 'Opening ticket…' : 'Report a problem'}
-                  </button>
-                  {saveNote && <span className="small muted" role="status">{saveNote}</span>}
-                  {reportNote && <span className="small muted" role="status">{reportNote}</span>}
+            {!grade ? (
+              <Card title="Your answers" action={assessment ? <Badge tone="warn">Assessment</Badge> : undefined}>
+                <div className="sl-answers">
+                  {start.task.ask.map((a) => (
+                    <label key={a.key} className="sl-answer">
+                      <span>{a.label}</span>
+                      <input
+                        inputMode={a.type === 'number' ? 'decimal' : 'text'}
+                        placeholder={a.type === 'set' ? 'e.g. A, B, D' : a.type === 'bool' ? 'yes / no' : 'number'}
+                        value={answers[a.key] ?? ''}
+                        onChange={(e) => setAnswers((s) => ({ ...s, [a.key]: e.target.value }))}
+                      />
+                    </label>
+                  ))}
+                  {error && <ErrorNote>{error}</ErrorNote>}
+                  <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'center', marginTop: '.3rem' }}>
+                    <button className="btn" onClick={submit} disabled={busy}>{busy ? 'Grading…' : 'Submit for grading'}</button>
+                    <button className="btn secondary" type="button" onClick={() => { void autosave(false) }} disabled={busy}>Save progress</button>
+                    <button className="btn ghost sm" type="button" onClick={() => { void reportProblem() }} disabled={reporting || busy}>
+                      {reporting ? 'Opening ticket…' : 'Report a problem'}
+                    </button>
+                    {reportNote && <span className="small muted" role="status">{reportNote}</span>}
+                  </div>
                 </div>
-                {!start.task.assessment && (
-                  <div className="stack" style={{ display: 'grid', gap: '.4rem', marginTop: '.4rem' }}>
-                    <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
-                      <label className="small">Coach mode
+              </Card>
+            ) : (
+              <Card className="entity" title="Debrief" action={<Badge tone={grade.passed ? 'ok' : 'warn'}>{grade.passed ? 'Passed' : 'Keep practising'}</Badge>}>
+                <div ref={debriefRef} tabIndex={-1} style={{ outline: 'none' }} className="stack" >
+                  <div className="sl-scorehero">
+                    <span className="n" aria-hidden="true">{grade.score}<small>%</small></span>
+                    <div className="sl-scoresub">
+                      <span className="t">
+                        <span className="sr-only">{`Result — ${grade.score}%`}</span>
+                        <span aria-hidden="true">{grade.passed ? 'Scenario passed' : 'Scenario graded'}</span>
+                      </span>
+                      <span className="d">{grade.correct} of {grade.total} measures correct · {assessment ? 'Assessment Mode' : 'Training Mode'}</span>
+                    </div>
+                  </div>
+
+                  <PanelSub>Measures</PanelSub>
+                  <table className="data">
+                    <thead>
+                      <tr><th>Measure</th><th>Verdict</th><th>Your answer</th>{!grade.assessment && <th>Correct</th>}</tr>
+                    </thead>
+                    <tbody>
+                      {grade.measures.map((m) => (
+                        <tr key={m.key}>
+                          <td>{m.label}</td>
+                          <td>
+                            {m.is_correct
+                              ? <span className="sl-verdict ok">✓ Correct</span>
+                              : <span className="sl-verdict miss">✗ Check this</span>}
+                          </td>
+                          <td>{grade.assessment ? '—' : fmt(m.your_value)}</td>
+                          {!grade.assessment && <td>{fmt(m.correct_value)}</td>}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {grade.assessment && (
+                    <p className="small muted" style={{ margin: 0 }}>
+                      Assessment Mode reports your marks only — the worked answers are withheld. Switch to Training
+                      Mode to see the full solution.
+                    </p>
+                  )}
+
+                  {grade.schedule?.bars && grade.schedule.bars.length > 0 && (
+                    <div>
+                      <PanelSub>Computed schedule</PanelSub>
+                      <div className="small muted" style={{ marginBottom: '.2rem', fontVariantNumeric: 'tabular-nums' }}>
+                        Critical path {grade.schedule.critical_path.join(' → ')} · duration {grade.schedule.project_duration}
+                      </div>
+                      <div style={{ overflowX: 'auto' }}>
+                        <Gantt bars={grade.schedule.bars} projectDuration={grade.schedule.project_duration} />
+                      </div>
+                    </div>
+                  )}
+
+                  {grade.competencies.length > 0 && (
+                    <div>
+                      <PanelSub>Competency evidence</PanelSub>
+                      <div className="row" style={{ flexWrap: 'wrap', gap: '.3rem', alignItems: 'center' }}>
+                        {grade.competencies.map((c) => (
+                          <Badge key={c.competency} tone="brand">{titleCase(c.competency)} · {titleCase(c.level)}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', marginTop: '.4rem' }}>
+                    <button className="btn secondary" onClick={() => begin(mode)}>Try again</button>
+                    <Link className="btn sm ghost" to="/lab">Back to labs</Link>
+                    <button className="btn ghost sm" type="button" onClick={() => { void reportProblem() }} disabled={reporting}>
+                      {reporting ? 'Opening ticket…' : 'Report a problem'}
+                    </button>
+                    {reportNote && <span className="small muted" role="status">{reportNote}</span>}
+                  </div>
+                </div>
+              </Card>
+            )}
+          </div>
+
+          <aside className="sl-rail" aria-label="Coach">
+            <Card title="Coach">
+              <div className="sl-coach">
+                <div className="sl-coach-head">
+                  <span className="sl-coach-id" aria-hidden="true">PC</span>
+                  <div className="small muted">
+                    Professional project-controls mentor. Hints reference the brief and evidence — never the answer key.
+                  </div>
+                </div>
+
+                {assessment ? (
+                  <InsightCallout tone="info" title="Assessment Mode">
+                    The Coach steps back during assessment so your marks reflect your own analysis. Switch to
+                    Training Mode for guided help.
+                  </InsightCallout>
+                ) : !grade ? (
+                  <div className="sl-coach-controls">
+                    <div className="row-2">
+                      <label className="small" style={{ margin: 0 }}>Coach mode
                         <select value={coachMode} onChange={(e) => setCoachMode(e.target.value)} aria-label="Coach mode">
                           <option value="socratic">Socratic</option>
                           <option value="guided">Guided</option>
@@ -568,123 +733,52 @@ export default function LabRunner() {
                           <option value="language">Language / accessibility</option>
                         </select>
                       </label>
-                      <label className="small">Hint level
+                      <label className="small" style={{ margin: 0 }}>Hint level
                         <select value={hintLevel} onChange={(e) => setHintLevel(Number(e.target.value))} aria-label="Hint level">
                           {[1, 2, 3, 4, 5].map((n) => <option key={n} value={n}>{n}</option>)}
                         </select>
                       </label>
+                    </div>
+                    <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
                       <button className="btn secondary sm" type="button" onClick={() => { void askCoach() }} disabled={coaching}>
                         {coaching ? 'Asking…' : 'Ask for a hint'}
                       </button>
-                    </div>
-                    {coach && (
-                      <div style={{ background: 'var(--wash, #f6f8fb)', borderRadius: '.5rem', padding: '.7rem .8rem' }}>
-                        <div className="row" style={{ gap: '.4rem', alignItems: 'center', marginBottom: '.3rem' }}>
-                          <strong>Coach</strong>
-                          <Badge tone={coach.ai ? 'brand' : 'neutral'}>{coach.ai ? 'AI' : 'Guide'}</Badge>
-                          {coach.coach_mode && <Badge tone="neutral">{titleCase(coach.coach_mode)}</Badge>}
-                        </div>
-                        <div style={{ whiteSpace: 'pre-wrap' }}>{coach.message}</div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </Card>
-          ) : (
-            <Card
-              title={`Result — ${grade.score}%`}
-              action={<Badge tone={grade.passed ? 'ok' : 'warn'}>{grade.passed ? 'Passed' : 'Keep practising'}</Badge>}
-            >
-              <div className="stack" style={{ display: 'grid', gap: '.6rem' }}>
-                <p className="muted" style={{ marginTop: 0 }}>{grade.correct} of {grade.total} correct.</p>
-                <table className="data">
-                  <thead>
-                    <tr><th>Measure</th><th></th><th>Your answer</th>{!grade.assessment && <th>Correct</th>}</tr>
-                  </thead>
-                  <tbody>
-                    {grade.measures.map((m) => (
-                      <tr key={m.key}>
-                        <td>{m.label}</td>
-                        <td>{m.is_correct ? <Badge tone="ok">✓</Badge> : <Badge tone="warn">✗</Badge>}</td>
-                        <td>{grade.assessment ? '—' : fmt(m.your_value)}</td>
-                        {!grade.assessment && <td>{fmt(m.correct_value)}</td>}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {grade.assessment && (
-                  <p className="small muted" style={{ margin: 0 }}>
-                    Assessment Mode reports your marks only — the worked answers are withheld. Switch to Training
-                    Mode to see the full solution.
-                  </p>
-                )}
-                {grade.schedule?.bars && grade.schedule.bars.length > 0 && (
-                  <div>
-                    <div className="small muted" style={{ marginBottom: '.2rem' }}>
-                      Computed schedule — critical path {grade.schedule.critical_path.join(' → ')}, duration {grade.schedule.project_duration}
-                    </div>
-                    <div style={{ overflowX: 'auto' }}>
-                      <Gantt bars={grade.schedule.bars} projectDuration={grade.schedule.project_duration} />
+                      {coach && !coaching && hintLevel > 1 && (
+                        <button className="btn ghost sm" type="button" onClick={() => { void askCoach(1) }} disabled={coaching}>
+                          Give me a smaller hint
+                        </button>
+                      )}
                     </div>
                   </div>
-                )}
-                {grade.competencies.length > 0 && (
-                  <div className="row" style={{ flexWrap: 'wrap', gap: '.3rem', alignItems: 'center' }}>
-                    <span className="small muted">Competency evidence:</span>
-                    {grade.competencies.map((c) => (
-                      <Badge key={c.competency} tone="brand">{titleCase(c.competency)} · {titleCase(c.level)}</Badge>
-                    ))}
-                  </div>
-                )}
-                {!grade.assessment && (
-                  coach ? (
-                    <div style={{ background: 'var(--wash, #f6f8fb)', borderRadius: '.5rem', padding: '.7rem .8rem' }}>
-                      <div className="row" style={{ gap: '.4rem', alignItems: 'center', marginBottom: '.3rem' }}>
-                        <strong>Coach</strong>
-                        <Badge tone={coach.ai ? 'brand' : 'neutral'}>{coach.ai ? 'AI' : 'Guide'}</Badge>
-                        {coach.coach_mode && <Badge tone="neutral">{titleCase(coach.coach_mode)}</Badge>}
-                      </div>
-                      <div style={{ whiteSpace: 'pre-wrap' }}>{coach.message}</div>
-                    </div>
-                  ) : (
-                    <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
-                      <label className="small">Debrief mode
-                        <select value={coachMode} onChange={(e) => setCoachMode(e.target.value)} aria-label="Debrief coach mode">
-                          <option value="debrief">Debrief</option>
-                          <option value="explain">Explain</option>
-                          <option value="review">Review</option>
-                          <option value="language">Language / accessibility</option>
-                        </select>
-                      </label>
+                ) : (
+                  <div className="sl-coach-controls">
+                    <label className="small" style={{ margin: 0 }}>Debrief mode
+                      <select value={coachMode} onChange={(e) => setCoachMode(e.target.value)} aria-label="Debrief coach mode">
+                        <option value="debrief">Debrief</option>
+                        <option value="explain">Explain</option>
+                        <option value="review">Review</option>
+                        <option value="language">Language / accessibility</option>
+                      </select>
+                    </label>
+                    <div>
                       <button className="btn secondary sm" onClick={() => { setCoachMode('debrief'); void askCoach(6) }} disabled={coaching}>
                         {coaching ? 'Asking the coach…' : 'Ask the coach'}
                       </button>
                     </div>
-                  )
+                  </div>
                 )}
-                <div className="row" style={{ gap: '.5rem' }}>
-                  <button className="btn secondary" onClick={() => begin(mode)}>Try again</button>
-                  <Link className="btn sm" to="/lab">Back to labs</Link>
-                </div>
+
+                {!assessment && coach && <CoachMessage coach={coach} />}
               </div>
             </Card>
-          )}
-
-          <div className="row" style={{ gap: '.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
-            <p className="muted small" style={{ margin: 0 }}>
-              Educational simulator using synthetic project data. Practice never affects your formal PCI
-              examination or certification.
-            </p>
-            {grade && (
-              <button className="btn secondary sm" type="button" onClick={() => { void reportProblem() }} disabled={reporting}>
-                {reporting ? 'Opening ticket…' : 'Report a problem'}
-              </button>
-            )}
-            {reportNote && grade && <span className="small muted" role="status">{reportNote}</span>}
-          </div>
-        </>
+          </aside>
+        </div>
       ) : null}
+
+      <p className="sl-footnote">
+        Educational simulator using synthetic project data. Practice never affects your formal PCI
+        examination or certification.
+      </p>
     </div>
   )
 }

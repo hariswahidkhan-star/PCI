@@ -96,7 +96,9 @@ export default function Layout() {
               <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>
               <div>
                 <div className="tb-crumb">{t('shell.studentPortal')}</div>
-                <strong className="tb-title">{t(TITLE_KEYS[loc.pathname] ?? 'shell.studentPortal')}</strong>
+                <strong className="tb-title">
+                  {t(TITLE_KEYS[loc.pathname] ?? (loc.pathname.startsWith('/lab/') ? 'nav.lab' : 'shell.studentPortal'))}
+                </strong>
               </div>
             </div>
             <div className="row">

@@ -88,4 +88,27 @@ describe('Lab (Simulation Lab landing)', () => {
     expect(screen.getByText('Model cash exposure')).toBeInTheDocument()
     expect(screen.getByText(/· PFL-AI/)).toBeInTheDocument()
   })
+
+  it('announces the result count and restores the catalogue via Clear all filters', () => {
+    h.cat = {
+      rows: [
+        lab({ id: 1, industry: 'Construction' }),
+        lab({ id: 2, scenario_code: 'GL-CASH-001', title: 'Model cash exposure', industry: 'Finance' }),
+      ],
+    }
+    renderLab()
+    expect(screen.getByRole('status')).toHaveTextContent('Showing 2 of 2 labs')
+    fireEvent.change(screen.getByLabelText('Filter by industry'), { target: { value: 'Finance' } })
+    expect(screen.getByRole('status')).toHaveTextContent('Showing 1 of 2 labs')
+    fireEvent.click(screen.getByRole('button', { name: 'Clear all filters' }))
+    expect(screen.getByRole('status')).toHaveTextContent('Showing 2 of 2 labs')
+    expect(screen.getByText('Structure a project WBS')).toBeInTheDocument()
+  })
+
+  it('surfaces in-progress labs in a resume strip', () => {
+    h.cat = { rows: [lab({ attempt_status: 'in_progress' })] }
+    renderLab()
+    expect(screen.getByText('Continue where you left off')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Resume scenario' })).toHaveAttribute('href', '/lab/GL-WBS-001')
+  })
 })

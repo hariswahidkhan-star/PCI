@@ -34,8 +34,36 @@ describe('Admin SimLab Studio', () => {
     expect(screen.getByRole('heading', { name: 'Simulation Lab Studio' })).toBeInTheDocument()
     expect(screen.getByText('Calculate the core EVM measures')).toBeInTheDocument()
     expect(screen.getByText('Hidden draft')).toBeInTheDocument()  // draft visible to admins
-    expect(screen.getByText('Draft')).toBeInTheDocument()          // review-state badge (title-cased)
+    // review-state badge (title-cased); also appears as a review-state filter option
+    expect(screen.getAllByText('Draft').length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('Published').length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('filters the scenario table by search text and announces the result count', () => {
+    h.resp = {
+      rows: [
+        row(),
+        row({ id: 2, scenario_code: 'GL-CPM-001', title: 'Analyse the critical path', competencies: ['schedule_analysis'] }),
+      ],
+      total: 2, published: 2,
+    }
+    render(<SimLab />)
+    expect(screen.getByRole('status')).toHaveTextContent('Showing 2 of 2 scenarios')
+    fireEvent.change(screen.getByLabelText('Search scenarios'), { target: { value: 'critical path' } })
+    expect(screen.getByRole('status')).toHaveTextContent('Showing 1 of 2 scenarios')
+    expect(screen.queryByText('Calculate the core EVM measures')).toBeNull()
+    expect(screen.getByText('Analyse the critical path')).toBeInTheDocument()
+  })
+
+  it('asks for confirmation before retiring a published scenario', () => {
+    h.resp = { rows: [row()], total: 1, published: 1 }
+    api.post.mockResolvedValue({})
+    render(<SimLab />)
+    fireEvent.click(screen.getByRole('button', { name: 'Retire' }))
+    expect(api.post).not.toHaveBeenCalled() // nothing happens until confirmed
+    expect(screen.getByRole('dialog', { name: 'Retire GL-EVM-001?' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Retire scenario' }))
+    expect(api.post).toHaveBeenCalledWith('/api/admin/lab/scenarios/1/review', { to: 'retired' })
   })
 
   it('reveals the create form when + New scenario is clicked', () => {
