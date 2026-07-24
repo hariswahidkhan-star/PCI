@@ -5956,6 +5956,37 @@ def test_free_templates(admin):
     chk("61r the downloaded template appears in the top list with a positive count",
         bool(evm) and evm["download_count"] >= 2, evm)
 
+    # §6D — per-student download history. The catalogue flags which templates THIS student has already taken
+    # (drives the "Downloaded" badge + new-only filter), and the flag is personal: another student sees only
+    # their own history. Student one has downloaded wbs-template (61b) and evm-tracker (61q), never risk-register.
+    _c, cat3 = jget("GET", "/api/me/templates", token=stok)
+    rows3 = cat3.get("rows", []) if isinstance(cat3, dict) else []
+    wbs3 = next((r for r in rows3 if r.get("slug") == "wbs-template"), None)
+    evm3 = next((r for r in rows3 if r.get("slug") == "evm-tracker"), None)
+    risk3 = next((r for r in rows3 if r.get("slug") == "risk-register"), None)
+    chk("61s the catalogue marks the templates this student has downloaded and leaves the rest unflagged",
+        bool(wbs3) and wbs3.get("downloaded") is True and bool(evm3) and evm3.get("downloaded") is True
+        and bool(risk3) and risk3.get("downloaded") is False,
+        (wbs3 and wbs3.get("downloaded"), evm3 and evm3.get("downloaded"), risk3 and risk3.get("downloaded")))
+
+    stok2, _suid2 = register_student("templates61b@ex.co")
+    _c, cat4 = jget("GET", "/api/me/templates", token=stok2)
+    rows4 = cat4.get("rows", []) if isinstance(cat4, dict) else []
+    wbs4 = next((r for r in rows4 if r.get("slug") == "wbs-template"), None)
+    chk("61t download history is per-student — a fresh student starts with nothing flagged",
+        bool(wbs4) and wbs4.get("downloaded") is False and not any(r.get("downloaded") for r in rows4),
+        (bool(wbs4), [r.get("slug") for r in rows4 if r.get("downloaded")]))
+
+    # A download by student two flags it for THEM only — student one still sees risk-register as new.
+    _raw_get("/api/me/templates/risk-register/file", token=stok2)
+    _c, cat5 = jget("GET", "/api/me/templates", token=stok2)
+    risk5 = next((r for r in (cat5.get("rows", []) if isinstance(cat5, dict) else []) if r.get("slug") == "risk-register"), None)
+    _c, cat6 = jget("GET", "/api/me/templates", token=stok)
+    risk6 = next((r for r in (cat6.get("rows", []) if isinstance(cat6, dict) else []) if r.get("slug") == "risk-register"), None)
+    chk("61u a student's download flags it for them only, never for another student",
+        bool(risk5) and risk5.get("downloaded") is True and bool(risk6) and risk6.get("downloaded") is False,
+        (risk5 and risk5.get("downloaded"), risk6 and risk6.get("downloaded")))
+
 
 def test_public_documents(admin):
     # Incremental Testing Programme §57 — Public Downloads Centre (Endpoints/PublicDocuments.cs, 12 routes,

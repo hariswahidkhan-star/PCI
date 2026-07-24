@@ -13,6 +13,7 @@ interface Row {
   certification_id: number | null
   summary?: string | null
   format: string
+  downloaded?: boolean
   download_url: string
 }
 interface Resp { rows: Row[]; total: number; categories: string[] }
@@ -29,6 +30,10 @@ export default function Templates() {
   const { data, loading, error } = useQuery<Resp>('/api/me/templates')
   const [cat, setCat] = useState<string>('all')
   const [track, setTrack] = useState<number | 'all'>('all')
+  const [show, setShow] = useState<'all' | 'new'>('all')
+  // Slugs downloaded this session — merged with the server's `downloaded` flag so a freshly grabbed template
+  // shows its badge immediately, without a refetch.
+  const [got, setGot] = useState<Set<string>>(new Set())
   const [busy, setBusy] = useState<string | null>(null)
   const [msg, setMsg] = useState('')
 
@@ -36,14 +41,17 @@ export default function Templates() {
   if (error) return <ErrorNote>{error}</ErrorNote>
 
   const rows = data?.rows ?? []
+  const isDownloaded = (r: Row) => got.has(r.slug) || !!r.downloaded
   // Only offer chips for topics/tracks that actually have templates.
   const cats = [...new Set(rows.map((r) => r.category || 'general'))]
   const tracks = [...new Set(rows.map((r) => r.certification_id).filter((x): x is number => x != null))].sort()
+  const anyDownloaded = rows.some((r) => isDownloaded(r))
 
   // A NULL-track template applies to every track, so it stays visible under any track filter.
   const visible = rows.filter(
     (r) => (cat === 'all' || (r.category || 'general') === cat)
-      && (track === 'all' || r.certification_id == null || r.certification_id === track),
+      && (track === 'all' || r.certification_id == null || r.certification_id === track)
+      && (show === 'all' || !isDownloaded(r)),
   )
   const groups = new Map<string, Row[]>()
   for (const r of visible) {
@@ -65,6 +73,8 @@ export default function Templates() {
       a.download = `${r.slug}.${r.format || 'csv'}`
       document.body.appendChild(a); a.click(); a.remove()
       setTimeout(() => URL.revokeObjectURL(href), 60_000)
+      // Mark it downloaded so the badge appears immediately (the server has recorded it in the student's history).
+      setGot((prev) => new Set(prev).add(r.slug))
     } catch { setMsg('Could not download that template right now. Please try again shortly.') }
     finally { setBusy(null) }
   }
@@ -100,6 +110,13 @@ export default function Templates() {
                 ))}
               </>
             )}
+            {anyDownloaded && (
+              <>
+                <span className="small muted" style={{ fontWeight: 700, marginLeft: '.5rem' }}>Show</span>
+                <button className={'btn sm' + (show === 'all' ? '' : ' secondary')} onClick={() => setShow('all')}>All</button>
+                <button className={'btn sm' + (show === 'new' ? '' : ' secondary')} onClick={() => setShow('new')}>New</button>
+              </>
+            )}
           </div>
 
           {visible.length === 0 ? (
@@ -119,8 +136,9 @@ export default function Templates() {
                       </div>
                       <div className="rep-item-actions row" style={{ gap: '.4rem', alignItems: 'center' }}>
                         {r.certification_id != null && <Badge>{CERTS[r.certification_id] || `Track ${r.certification_id}`}</Badge>}
+                        {isDownloaded(r) && <Badge tone="ok">Downloaded</Badge>}
                         <button className="btn sm" disabled={busy === r.slug} onClick={() => download(r)}>
-                          {busy === r.slug ? 'Downloading…' : 'Download'}
+                          {busy === r.slug ? 'Downloading…' : isDownloaded(r) ? 'Download again' : 'Download'}
                         </button>
                       </div>
                     </div>
