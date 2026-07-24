@@ -148,7 +148,8 @@ public static class PartnerStatement
     /// =/+/-/@ that a spreadsheet would execute as a formula. Codes and campaign names are
     /// partner-supplied text, so this file must not hand-roll its own quoting.
     /// </summary>
-    static string Esc(string? s) => Csv.Field(s);
+    /// Fully qualified because this class has its own <c>Csv</c> method, which shadows the type name.
+    static string Esc(string? s) => global::PCI.Backend.Core.Csv.Field(s);
 
     public static string Csv(Statement st)
     {

@@ -551,8 +551,8 @@ public static class PartnerPortal
             var from = q["from"].ToString().Trim();
             var to = q["to"].ToString().Trim();
             long? certFilter = long.TryParse(q["certification_id"], out var cf) && cf > 0 ? cf : null;
-            var f = from.Length == 10 ? from : "0000-01-01";
-            var t = to.Length == 10 ? to + " 23:59:59" : "9999-12-31 23:59:59";
+            var winFrom = from.Length == 10 ? from : "0000-01-01";
+            var winTo = to.Length == 10 ? to + " 23:59:59" : "9999-12-31 23:59:59";
 
             const string where = @"FROM code_redemptions r JOIN discount_codes dc ON dc.id=r.code_id
                 LEFT JOIN users u ON u.id=r.user_id LEFT JOIN payments p2 ON p2.id=r.payment_id
@@ -563,7 +563,7 @@ public static class PartnerPortal
                   AND (? IS NULL OR dc.certification_id=?)";
             object?[] Args(params object?[] tail)
             {
-                var a = new List<object?> { p.PartnerId, f, t, codeFilter, codeFilter, statusFilter, statusFilter, certFilter, certFilter };
+                var a = new List<object?> { p!.PartnerId, winFrom, winTo, codeFilter, codeFilter, statusFilter, statusFilter, certFilter, certFilter };
                 a.AddRange(tail);
                 return a.ToArray();
             }
