@@ -84,6 +84,7 @@ export default function TrainingPartners() {
 // partner-dashboard journey can be exercised without touching a real institution.
 const TEST_PARTNER_SCENARIOS = [
   { value: 'active', label: 'Active — sponsorship enabled' },
+  { value: 'marketing', label: 'Marketing — codes + seeded performance' },
   { value: 'fresh_login', label: 'Fresh login — must change password' },
   { value: 'no_sponsor', label: 'Sponsorship disabled' },
   { value: 'suspended', label: 'Suspended institution' },

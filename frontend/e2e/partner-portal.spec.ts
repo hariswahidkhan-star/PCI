@@ -306,4 +306,54 @@ test.describe('admin test-partner mechanism', () => {
     })
     expect(loginAfterDelete.status()).toBe(401)
   })
+
+  test('marketing scenario seeds a live code with tracked performance and commission', async ({ page, request }, testInfo) => {
+    const adminToken = await apiLoginAsE2EAdmin(request)
+    const headers = { Authorization: `Bearer ${adminToken}` }
+
+    const created = await request.post('/api/admin/test-partners', { headers, data: { scenario: 'marketing' } })
+    expect(created.ok(), await created.text()).toBeTruthy()
+    const tp = (await created.json()) as { partner_id: number; email: string; password: string; token: string }
+    const partnerHeaders = { Authorization: `Bearer ${tp.token}` }
+
+    // The marketing-partner concept end to end: an active code the partner owns…
+    const codes = await request.get('/api/partner/codes', { headers: partnerHeaders })
+    expect(codes.ok()).toBeTruthy()
+    const codeRows = ((await codes.json()) as { rows: Array<{ code: string; used_count: number }> }).rows
+    const campaign = codeRows.find((c) => c.code.startsWith('TESTMKT-'))
+    expect(campaign, 'the seeded campaign code must be visible to the partner').toBeTruthy()
+    expect(campaign!.used_count).toBe(3)
+
+    // …performance tracked on the dashboard…
+    const dash = await request.get('/api/partner/dashboard', { headers: partnerHeaders })
+    expect(dash.ok()).toBeTruthy()
+    const dashboard = (await dash.json()) as { used_total: number; discount_given: number }
+    expect(dashboard.used_total).toBe(3)
+    expect(dashboard.discount_given).toBeGreaterThan(0)
+
+    // …the students who used the codes (privacy-masked)…
+    const students = await request.get('/api/partner/students', { headers: partnerHeaders })
+    expect(students.ok()).toBeTruthy()
+    const studentRows = ((await students.json()) as { rows: unknown[] }).rows
+    expect(studentRows.length).toBe(3)
+
+    // …and the payments/commission derived from those paid redemptions.
+    const commissions = await request.get('/api/partner/commissions', { headers: partnerHeaders })
+    expect(commissions.ok()).toBeTruthy()
+    const ledger = (await commissions.json()) as {
+      attributed_revenue: number; accrued: number; balance: number; payments: unknown[]
+    }
+    expect(ledger.attributed_revenue).toBeGreaterThan(0)
+    expect(ledger.accrued).toBeGreaterThan(0)
+    expect(ledger.payments.length).toBe(3)
+
+    // The dashboard shows it all signed-in via the hand-off.
+    await page.goto(`/partner.html#t=${tp.token}`)
+    await expect(page.locator('#app')).toBeVisible({ timeout: 20_000 })
+    await captureStoryEvidence(page, testInfo, 'test-partner', 'marketing-performance')
+
+    // Delete cleans the seeded activity with the institution.
+    const deleted = await request.post(`/api/admin/test-partners/${tp.partner_id}/delete`, { headers })
+    expect(deleted.ok()).toBeTruthy()
+  })
 })
