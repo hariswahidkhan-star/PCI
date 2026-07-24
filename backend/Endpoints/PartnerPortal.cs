@@ -311,22 +311,74 @@ public static class PartnerPortal
         //   fresh_login— must_change_pw=1: exercises the forced first-password journey
         //   no_sponsor — sponsorship/codes disabled: exercises the limits UX
         //   suspended  — institution suspended: exercises the lockout (no session is minted)
-        var partnerScenarios = new[] { "active", "fresh_login", "no_sponsor", "suspended" };
+        //   marketing  — marketing-partner concept: codes auto-approved, plus a seeded live code with
+        //                three test-student redemptions so code performance, the masked students list
+        //                and the commission ledger all show real derived numbers immediately
+        var partnerScenarios = new[] { "active", "fresh_login", "no_sponsor", "suspended", "marketing" };
 
         void ApplyPartnerScenario(long partnerId, string scenario)
         {
             var status = scenario == "suspended" ? "suspended" : "active";
-            var sponsor = scenario == "no_sponsor" ? 0 : 1;
-            db.Execute(@"UPDATE training_partners SET status=?, sponsor_enabled=?, listed=0,
+            var sponsor = scenario is "no_sponsor" or "marketing" ? 0 : 1;
+            var ptype = scenario == "marketing" ? "marketing" : "training";
+            var autoApprove = scenario == "marketing" ? 1 : 0;
+            db.Execute(@"UPDATE training_partners SET status=?, sponsor_enabled=?, partner_type=?, auto_approve_codes=?, listed=0,
                 max_discount_percent=25, max_codes=10, commission_pct=10, agreement_end=NULL,
-                updated_at=datetime('now') WHERE id=? AND is_test=1", status, sponsor, partnerId);
+                updated_at=datetime('now') WHERE id=? AND is_test=1", status, sponsor, ptype, autoApprove, partnerId);
             db.Execute("UPDATE partner_users SET status='active', must_change_pw=? WHERE partner_id=?",
                 scenario == "fresh_login" ? 1 : 0, partnerId);
+        }
+
+        // Marketing scenario: one live campaign code + three flagged test students who redeemed it on
+        // paid (test-provider) exam settlements over recent weeks. Everything is derived from these
+        // rows by the existing dashboard/students/commissions endpoints — nothing is faked in the UI —
+        // and it is all excluded from reports (users.is_test / training_partners.is_test) and removed
+        // again by WipePartnerData.
+        void SeedMarketingActivity(long partnerId)
+        {
+            var partner = db.QueryOne("SELECT name FROM training_partners WHERE id=? AND is_test=1", partnerId);
+            if (partner is null) return;
+            var stamp = Security.RandomHex(3).ToUpperInvariant();
+            var listPrice = Settlement.ListPrice(db, "exam");
+            var discounted = Math.Round(listPrice * 0.85, 2);
+            var codeId = db.ExecuteReturningId(@"INSERT INTO discount_codes
+                (code,discount_type,discount_value,applies_to,max_uses,active,status,code_type,org_name,partner_id,campaign_name,notes)
+                VALUES(?, 'percentage',15,'exam',50,1,'active','campaign',?,?, 'Test campaign','Seeded by the test-partner mechanism')",
+                "TESTMKT-" + stamp, H.Str(partner["name"]), partnerId);
+            for (var i = 0; i < 3; i++)
+            {
+                var email = $"test.redeemer.{stamp.ToLowerInvariant()}.{i + 1}@pci.test";
+                var uid = db.ExecuteReturningId(
+                    "INSERT INTO users(email,first_name,last_name,role,status,password_hash,is_test) VALUES(?, 'Test','Redeemer','student','active',?,1)",
+                    email, BCrypt.Net.BCrypt.HashPassword(Security.RandomHex(12)));
+                var paidAt = DateTime.UtcNow.AddDays(-(i * 9 + 2)).ToString("yyyy-MM-dd HH:mm:ss");
+                var payId = Settlement.Grant(db, uid, email, "exam", 1, discounted, $"TESTMKT-{stamp}-{i + 1}", "admin_test_partner",
+                    new Settlement.Meta { OriginalAmount = listPrice, Note = "Test marketing-partner redemption", PaidAt = paidAt });
+                db.Execute(@"INSERT OR IGNORE INTO code_redemptions
+                    (code_id,code,user_id,email,payment_id,product_type,amount_before,discount_amount,redeemed_at)
+                    VALUES(?,?,?,?,?, 'exam',?,?,?)",
+                    codeId, "TESTMKT-" + stamp, uid, email, payId, listPrice, Math.Round(listPrice - discounted, 2), paidAt);
+            }
+            db.Execute("UPDATE discount_codes SET used_count=3 WHERE id=?", codeId);
         }
 
         void WipePartnerData(long partnerId, bool keepPartner)
         {
             db.Execute("DELETE FROM partner_sessions WHERE partner_user_id IN (SELECT id FROM partner_users WHERE partner_id=?)", partnerId);
+            // Seeded test redeemers (marketing scenario) go with the partner's codes — but only
+            // accounts flagged is_test are ever touched.
+            var redeemers = db.Query(@"SELECT DISTINCT u.id FROM code_redemptions r
+                JOIN discount_codes dc ON dc.id=r.code_id
+                JOIN users u ON u.id=r.user_id
+                WHERE dc.partner_id=? AND u.is_test=1", partnerId);
+            foreach (var r in redeemers)
+            {
+                var uid = H.L(r["id"]);
+                foreach (var t in new[] { "payments", "exam_entitlements", "exam_bookings", "certuvo_accounts",
+                    "login_tokens", "notifications", "student_profiles", "candidate_consents" })
+                    try { db.Execute($"DELETE FROM {t} WHERE user_id=?", uid); } catch { }
+                db.Execute("DELETE FROM users WHERE id=? AND is_test=1", uid);
+            }
             db.Execute("DELETE FROM code_redemptions WHERE code_id IN (SELECT id FROM discount_codes WHERE partner_id=?)", partnerId);
             db.Execute("DELETE FROM discount_codes WHERE partner_id=?", partnerId);
             foreach (var t in new[] { "partner_sponsorships", "partner_payouts", "partner_notices" })
@@ -368,6 +420,8 @@ public static class PartnerPortal
                 (partner_id,email,name,role,password_hash,status,must_change_pw,created_by)
                 VALUES(?,?, 'Test Partner','admin',?, 'active',?,?)",
                 partnerId, email, BCrypt.Net.BCrypt.HashPassword(password), scenario == "fresh_login" ? 1 : 0, adm.Id);
+            ApplyPartnerScenario(partnerId, scenario); // normalizes partner_type / auto-approve / limits per scenario
+            if (scenario == "marketing") SeedMarketingActivity(partnerId);
             // Ready hand-off session — pointless for the suspended scenario (validation rejects it).
             var token = scenario == "suspended" ? null : MintPartnerSession(puId);
             log(adm.Id, "admin_test_partner_create", $"{instName} ({email}) scenario {scenario} by {adm.Id} (partner {partnerId})");
@@ -390,6 +444,7 @@ public static class PartnerPortal
             if (!partnerScenarios.Contains(scenario)) return Err(400, "bad_scenario");
             WipePartnerData(id, keepPartner: true);
             ApplyPartnerScenario(id, scenario);
+            if (scenario == "marketing") SeedMarketingActivity(id);
             var pu = db.QueryOne("SELECT id FROM partner_users WHERE partner_id=? ORDER BY id LIMIT 1", id);
             var token = pu is null || scenario == "suspended" ? null : MintPartnerSession(H.L(pu["id"]));
             log(adm.Id, "admin_test_partner_reset", $"scenario {scenario} by {adm.Id} (partner {id})");
