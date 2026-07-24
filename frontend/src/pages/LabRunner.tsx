@@ -11,6 +11,9 @@ import {
 import SCurve, { type EvmPoint } from '../components/SCurve'
 import Gantt, { type GanttBar } from '../components/Gantt'
 import Histogram, { type Mc } from '../components/Histogram'
+import CashflowChart from '../components/CashflowChart'
+import RiskMatrix from '../components/RiskMatrix'
+import ResourceChart from '../components/ResourceChart'
 
 // PCI AI Project Controls Simulation Lab — interactive workspace.
 // Starts (or resumes) an attempt, presents the synthetic task and its evidence, collects the
@@ -255,14 +258,17 @@ function GivenView({ task }: { task: Task }) {
   if (task.task === 'cashflow') {
     const periods = (g.periods as { period: number; inflow: number; outflow: number }[]) ?? []
     return (
-      <table className="data">
-        <thead><tr><th>Period</th><th>Inflow</th><th>Outflow</th><th>Net</th></tr></thead>
-        <tbody>
-          {periods.map((p) => (
-            <tr key={p.period}><td>{p.period}</td><td>{fmt(p.inflow)}</td><td>{fmt(p.outflow)}</td><td>{fmt(p.inflow - p.outflow)}</td></tr>
-          ))}
-        </tbody>
-      </table>
+      <>
+        <div style={{ margin: '.2rem 0 .8rem' }}><CashflowChart periods={periods} /></div>
+        <table className="data">
+          <thead><tr><th>Period</th><th>Inflow</th><th>Outflow</th><th>Net</th></tr></thead>
+          <tbody>
+            {periods.map((p) => (
+              <tr key={p.period}><td>{p.period}</td><td>{fmt(p.inflow)}</td><td>{fmt(p.outflow)}</td><td>{fmt(p.inflow - p.outflow)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </>
     )
   }
   if (task.task === 'timeline') {
@@ -302,19 +308,22 @@ function GivenView({ task }: { task: Task }) {
   if (task.task === 'risk') {
     const risks = (g.risks as { id: string; name?: string; probability: number; impact: number }[]) ?? []
     return (
-      <table className="data">
-        <thead><tr><th>Risk</th><th>Description</th><th>Probability</th><th>Impact</th></tr></thead>
-        <tbody>
-          {risks.map((r) => (
-            <tr key={r.id}>
-              <td>{r.id}</td>
-              <td>{r.name ?? '—'}</td>
-              <td>{fmt(r.probability)}</td>
-              <td>{fmt(r.impact)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <>
+        <div style={{ margin: '.2rem 0 .8rem' }}><RiskMatrix risks={risks} /></div>
+        <table className="data">
+          <thead><tr><th>Risk</th><th>Description</th><th>Probability</th><th>Impact</th></tr></thead>
+          <tbody>
+            {risks.map((r) => (
+              <tr key={r.id}>
+                <td>{r.id}</td>
+                <td>{r.name ?? '—'}</td>
+                <td>{fmt(r.probability)}</td>
+                <td>{fmt(r.impact)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
     )
   }
   if (task.task === 'pert') {
@@ -418,17 +427,20 @@ function GivenView({ task }: { task: Task }) {
   if (task.task === 'resource') {
     const periods = (g.periods as { period: number; demand: number; capacity: number }[]) ?? []
     return (
-      <table className="data">
-        <thead><tr><th>Period</th><th>Demand</th><th>Capacity</th><th>Overload</th></tr></thead>
-        <tbody>
-          {periods.map((p) => (
-            <tr key={p.period}>
-              <td>{p.period}</td><td>{fmt(p.demand)}</td><td>{fmt(p.capacity)}</td>
-              <td>{fmt(Math.max(0, p.demand - p.capacity))}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <>
+        <div style={{ margin: '.2rem 0 .8rem' }}><ResourceChart periods={periods} /></div>
+        <table className="data">
+          <thead><tr><th>Period</th><th>Demand</th><th>Capacity</th><th>Overload</th></tr></thead>
+          <tbody>
+            {periods.map((p) => (
+              <tr key={p.period}>
+                <td>{p.period}</td><td>{fmt(p.demand)}</td><td>{fmt(p.capacity)}</td>
+                <td>{fmt(Math.max(0, p.demand - p.capacity))}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
     )
   }
   if (task.task === 'procurement') {
@@ -735,6 +747,23 @@ export default function LabRunner() {
     if (grade) debriefRef.current?.focus()
   }, [grade])
 
+  // After grading, surface the mastery engine's next-scenario recommendations in the debrief.
+  const [nextUp, setNextUp] = useState<{ scenario_code: string; title: string; because?: string[] }[] | null>(null)
+  useEffect(() => {
+    if (!grade) { setNextUp(null); return }
+    let cancelled = false
+    Promise.resolve(api.get<{ recommended?: { scenario_code: string; title: string; because?: string[] }[] }>('/api/me/lab/mastery'))
+      .then((r) => {
+        if (cancelled) return
+        const recs = Array.isArray(r?.recommended)
+          ? r.recommended.filter((x) => x.scenario_code !== code).slice(0, 3)
+          : []
+        setNextUp(recs)
+      })
+      .catch(() => { if (!cancelled) setNextUp([]) })
+    return () => { cancelled = true }
+  }, [grade, code])
+
   const askCoach = async (levelOverride?: number) => {
     if (!start) return
     setCoaching(true)
@@ -1003,6 +1032,25 @@ export default function LabRunner() {
                       <div className="row" style={{ flexWrap: 'wrap', gap: '.3rem', alignItems: 'center' }}>
                         {grade.competencies.map((c) => (
                           <Badge key={c.competency} tone="brand">{titleCase(c.competency)} · {titleCase(c.level)}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {nextUp && nextUp.length > 0 && (
+                    <div>
+                      <PanelSub>Recommended next</PanelSub>
+                      <div className="stack" style={{ display: 'grid', gap: '.45rem' }}>
+                        {nextUp.map((r) => (
+                          <div key={r.scenario_code} className="row" style={{ justifyContent: 'space-between', gap: '.5rem', flexWrap: 'wrap' }}>
+                            <div className="small" style={{ minWidth: 0 }}>
+                              <strong>{r.title}</strong>
+                              {r.because && r.because.length > 0 && (
+                                <span className="muted"> — strengthens {r.because.map(titleCase).join(', ')}</span>
+                              )}
+                            </div>
+                            <Link className="btn sm secondary" to={`/lab/${r.scenario_code}`}>Open</Link>
+                          </div>
                         ))}
                       </div>
                     </div>

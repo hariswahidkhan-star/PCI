@@ -202,6 +202,38 @@ describe('LabRunner (Simulation Lab workspace)', () => {
     expect(screen.getByRole('button', { name: 'Ask for a hint' })).toBeInTheDocument()
   })
 
+  it('surfaces the mastery recommendations in the debrief after grading', async () => {
+    post.mockImplementation((path: string) => {
+      if (path === '/api/me/lab/attempts') return Promise.resolve(startResp(false))
+      if (String(path).endsWith('/submit')) return Promise.resolve({
+        score: 100, passed: true, correct: 1, total: 1, mode: 'training', assessment: false,
+        measures: [{ key: 'spi', label: 'Schedule Performance Index (SPI)', is_correct: true, correct_value: 0.9, your_value: 0.9 }],
+        competencies: [],
+      })
+      return Promise.resolve({})
+    })
+    get.mockImplementation((path: string) => {
+      if (path === '/api/me/lab/mastery') return Promise.resolve({
+        recommended: [
+          { scenario_code: 'GL-CASH-003', title: 'Model the programme cash exposure', because: ['cash_flow'] },
+          { scenario_code: 'GL-EVM-001', title: 'Same scenario — must be filtered out', because: [] },
+        ],
+      })
+      return Promise.resolve({})
+    })
+    renderRunner()
+    await screen.findByText('Compute the earned-value measures.')
+    fireEvent.change(screen.getByPlaceholderText('number'), { target: { value: '0.9' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Submit for grading' }))
+    await screen.findByText('Result — 100%')
+
+    expect(await screen.findByText('Recommended next')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Open' })).toHaveAttribute('href', '/lab/GL-CASH-003')
+    expect(screen.getByText(/strengthens Cash Flow/)).toBeInTheDocument()
+    // the scenario just completed is not recommended back to the student
+    expect(screen.queryByText('Same scenario — must be filtered out')).toBeNull()
+  })
+
   it('hydrates saved answers when an in-progress attempt is resumed', async () => {
     post.mockImplementation((path: string) => {
       if (path === '/api/me/lab/attempts') {

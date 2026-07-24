@@ -53,13 +53,15 @@ const govLabel = (g?: string) =>
 const govTone = (g?: string) => (g === 'expired' || g === 'review_overdue' ? 'err' : g === 'review_due_soon' ? 'warn' : 'neutral')
 
 const DIFF_RANK: Record<string, number> = { foundation: 0, intermediate: 1, advanced: 2, expert: 3 }
-type SortCol = 'code' | 'title' | 'difficulty' | 'state' | 'attempts'
+type SortCol = 'code' | 'title' | 'difficulty' | 'state' | 'attempts' | 'completion'
 const COMPARE: Record<SortCol, (a: ScenarioRow, b: ScenarioRow) => number> = {
   code: (a, b) => a.scenario_code.localeCompare(b.scenario_code),
   title: (a, b) => a.title.localeCompare(b.title),
   difficulty: (a, b) => (DIFF_RANK[a.difficulty ?? 'foundation'] ?? 0) - (DIFF_RANK[b.difficulty ?? 'foundation'] ?? 0),
   state: (a, b) => FORWARD.indexOf(a.review_state) - FORWARD.indexOf(b.review_state),
   attempts: (a, b) => a.attempts - b.attempts,
+  // Unattempted scenarios sort below any real completion rate.
+  completion: (a, b) => (a.attempts > 0 ? a.completed / a.attempts : -1) - (b.attempts > 0 ? b.completed / b.attempts : -1),
 }
 
 export default function SimLab() {
@@ -326,6 +328,7 @@ export default function SimLab() {
                       <th>Status</th>
                       <SortHeader label="Review state" active={sortCol === 'state'} dir={sortDir} onSort={() => toggleSort('state')} />
                       <SortHeader label="Attempts" active={sortCol === 'attempts'} dir={sortDir} onSort={() => toggleSort('attempts')} align="end" />
+                      <SortHeader label="Completion" active={sortCol === 'completion'} dir={sortDir} onSort={() => toggleSort('completion')} align="end" />
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -345,6 +348,9 @@ export default function SimLab() {
                             )}
                           </td>
                           <td style={{ textAlign: 'end', fontVariantNumeric: 'tabular-nums' }}>{r.attempts}</td>
+                          <td style={{ textAlign: 'end', fontVariantNumeric: 'tabular-nums' }}>
+                            {r.attempts > 0 ? `${Math.round((r.completed / r.attempts) * 100)}%` : '—'}
+                          </td>
                           <td>
                             <div className="sl-actions">
                               <button className="btn sm" disabled={busy} onClick={() => doValidate(r.id)}>Validate</button>
