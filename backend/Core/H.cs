@@ -28,6 +28,11 @@ public static class H
     }
 
     // ---- JSON request body ----
+    /// <summary>Read an integer query-string parameter ("?limit=50"), NULL when absent or unparsable.
+    /// Callers clamp — this only parses.</summary>
+    public static long? QL(HttpContext ctx, string key) =>
+        long.TryParse(ctx.Request.Query[key].ToString(), out var n) ? n : null;
+
     public static async Task<JsonElement> BodyEl(HttpRequest r)
     {
         try

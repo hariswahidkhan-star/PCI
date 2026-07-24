@@ -96,8 +96,14 @@ public static class WorldAdmin
             if (!Security.VerifyPassword(current, a?["password_hash"] as string))
                 return Results.Json(new { error = "invalid_credentials" }, statusCode: 401);
             db.Execute("UPDATE pciworld_admin_users SET password_hash=? WHERE id=?", BCrypt.Net.BCrypt.HashPassword(next), adm.Id);
-            Audit(adm.Id, "password_change", null);
-            return J(new { ok = true });
+            // A password change is the response to a suspected compromise: every OTHER session for
+            // this admin dies with the old password. Keeping them alive would let a stolen bearer
+            // token outlive the very action taken to revoke it. The caller's own session survives.
+            var mine = ctx.Request.Headers.Authorization.ToString();
+            var mineSha = mine.StartsWith("Bearer ") ? Security.Sha(mine[7..]) : "";
+            var revoked = db.Execute("DELETE FROM pciworld_admin_sessions WHERE admin_id=? AND token<>?", adm.Id, mineSha);
+            Audit(adm.Id, "password_change", revoked > 0 ? $"revoked {revoked} other session(s)" : null);
+            return J(new { ok = true, sessions_revoked = revoked });
         });
 
         // ───────────────────────────── challenges ─────────────────────────────
@@ -105,8 +111,16 @@ public static class WorldAdmin
         app.MapGet("/api/world-admin/challenges", (HttpContext ctx) =>
         {
             if (Gate(ctx, "read", out _) is { } blocked) return blocked;
-            var rows = db.Query(@"SELECT id,code,title,industry,track,difficulty,status,retired,current_version,
-                    author_id,approved_by,updated_at FROM pciworld_challenges ORDER BY id ASC")
+            // Paginated in SQL. The unbounded list was the sharpest admin-scale break in the Phase 0
+            // audit: at a 10,000-challenge bank it loaded every row and built a 10,000-row table.
+            var limit = Math.Clamp((int)(H.QL(ctx, "limit") ?? 100), 1, 500);
+            var offset = Math.Max(0, (int)(H.QL(ctx, "offset") ?? 0));
+            var q = (ctx.Request.Query["q"].ToString() ?? "").Trim();
+            var where = ""; var args = new List<object?>();
+            if (q.Length > 0) { where = " WHERE (code LIKE ? OR title LIKE ?)"; args.Add("%" + q + "%"); args.Add("%" + q + "%"); }
+            var total = db.Scalar<long>($"SELECT COUNT(*) FROM pciworld_challenges{where}", args.ToArray());
+            var rows = db.Query($@"SELECT id,code,title,industry,track,difficulty,status,retired,current_version,
+                    author_id,approved_by,updated_at FROM pciworld_challenges{where} ORDER BY id ASC LIMIT {limit} OFFSET {offset}", args.ToArray())
                 .Select(r => new
                 {
                     id = H.L(r["id"]), code = H.Str(r["code"]), title = H.Str(r["title"]),
@@ -114,7 +128,7 @@ public static class WorldAdmin
                     status = H.Str(r["status"]), retired = H.L(r["retired"]) == 1,
                     current_version = H.L(r["current_version"]), updated_at = H.Str(r["updated_at"]),
                 }).ToList();
-            return J(new { rows, total = rows.Count });
+            return J(new { rows, total, limit, offset });
         });
 
         app.MapPost("/api/world-admin/challenges", async (HttpContext ctx) =>
@@ -252,6 +266,145 @@ public static class WorldAdmin
             db.Execute("DELETE FROM pciworld_calendar WHERE day_utc=?", day);
             db.Execute("INSERT INTO pciworld_calendar(day_utc,challenge_id,note) VALUES(?,?,?)", day, challengeId, H.GetS(b, "note"));
             Audit(adm!.Id, "calendar_set", $"{day} → #{challengeId}");
+            return J(new { ok = true });
+        });
+
+        // ───────────── rotation console (docs/pciworld/EXPANSION_PHASE0.md §12) ─────────────
+
+        object? RotationCard(Dictionary<string, object?>? ch, Dictionary<string, object?>? period) =>
+            ch is null ? null : new
+            {
+                id = H.L(ch["id"]), code = H.Str(ch["code"]), title = H.Str(ch["title"]),
+                difficulty = H.Str(ch["difficulty"]), industry = H.Str(ch["industry"]),
+                day_key = period is null ? null : H.Str(period["day_key"]),
+                cycle_no = period is null ? (long?)null : H.L(period["cycle_no"]),
+                seq_no = period is null ? (long?)null : H.L(period["seq_no"]),
+                source = period is null ? null : H.Str(period["source"]),
+                reason = period is null ? null : H.Str(period["reason"]),
+            };
+
+        app.MapGet("/api/world-admin/rotation", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "read", out _) is { } blocked) return blocked;
+            var now = DateTime.UtcNow;
+            var day = WorldRotation.DayKey(db, now);
+            var period = WorldRotation.ActivePeriod(db, day);
+            var current = period is null ? null : db.QueryOne("SELECT * FROM pciworld_challenges WHERE id=?", period["challenge_id"]);
+            var next = WorldRotation.PeekNext(db, now);
+            var lastRun = db.QueryOne("SELECT * FROM pciworld_rotation_runs ORDER BY id DESC LIMIT 1");
+            var cycle = period is null ? 1 : H.L(period["cycle_no"]);
+            return J(new
+            {
+                day_key = day,
+                timezone = Settings.Str(db, "world_rotation_timezone", "UTC"),
+                changes_at = WorldRotation.NextBoundaryUtc(WorldRotation.Zone(db), now).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                paused = WorldRotation.Paused(db),
+                shuffle = WorldRotation.ShuffleEnabled(db),
+                cycle_no = cycle,
+                cycle_length = db.Scalar<long>("SELECT COUNT(*) FROM pciworld_rotation_order WHERE cycle_no=?", cycle),
+                eligible = WorldRotation.Eligible(db).Count,
+                periods = db.Scalar<long>("SELECT COUNT(*) FROM pciworld_rotation_periods"),
+                current = RotationCard(current, period),
+                next = RotationCard(next, null),
+                last_run = lastRun is null ? null : new
+                {
+                    outcome = H.Str(lastRun["outcome"]), day_key = H.Str(lastRun["day_key"]),
+                    created = H.L(lastRun["periods_created"]), detail = H.Str(lastRun["detail"]),
+                    ran_at = H.Str(lastRun["ran_at"]), duration_ms = H.L(lastRun["duration_ms"]),
+                },
+            });
+        });
+
+        app.MapGet("/api/world-admin/rotation/periods", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "read", out _) is { } blocked) return blocked;
+            var limit = Math.Clamp((int)(H.QL(ctx, "limit") ?? 60), 1, 365);
+            var offset = Math.Max(0, (int)(H.QL(ctx, "offset") ?? 0));
+            var total = db.Scalar<long>("SELECT COUNT(*) FROM pciworld_rotation_periods");
+            var rows = db.Query($@"SELECT p.*, c.code, c.title FROM pciworld_rotation_periods p
+                    LEFT JOIN pciworld_challenges c ON c.id=p.challenge_id
+                    ORDER BY p.day_key DESC, p.revision DESC LIMIT {limit} OFFSET {offset}")
+                .Select(r => new
+                {
+                    day_key = H.Str(r["day_key"]), revision = H.L(r["revision"]),
+                    code = H.Str(r["code"]), title = H.Str(r["title"]),
+                    version = H.L(r["version"]), cycle_no = H.L(r["cycle_no"]), seq_no = H.L(r["seq_no"]),
+                    source = H.Str(r["source"]), reason = H.Str(r["reason"]),
+                    superseded = H.Str(r["superseded_at"]) is not null, opened_at = H.Str(r["opened_at"]),
+                });
+            return J(new { rows, total, limit, offset });
+        });
+
+        app.MapGet("/api/world-admin/rotation/runs", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "read", out _) is { } blocked) return blocked;
+            var limit = Math.Clamp((int)(H.QL(ctx, "limit") ?? 40), 1, 200);
+            var rows = db.Query($"SELECT * FROM pciworld_rotation_runs ORDER BY id DESC LIMIT {limit}")
+                .Select(r => new { outcome = H.Str(r["outcome"]), day_key = H.Str(r["day_key"]),
+                                   created = H.L(r["periods_created"]), detail = H.Str(r["detail"]),
+                                   owner = H.Str(r["owner"]), duration_ms = H.L(r["duration_ms"]), ran_at = H.Str(r["ran_at"]) });
+            return J(new { rows });
+        });
+
+        app.MapPost("/api/world-admin/rotation/run", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "publish", out var adm) is { } blocked) return blocked;
+            var r = WorldRotation.RunDue(db, DateTime.UtcNow);
+            Audit(adm!.Id, "rotation_run", $"{r.Detail}; {r.Created} period(s) created");
+            return J(new { ok = true, created = r.Created, outcome = r.Detail });
+        });
+
+        app.MapPost("/api/world-admin/rotation/pause", async (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "publish", out var adm) is { } blocked) return blocked;
+            var b = await H.Body(ctx.Request);
+            var paused = H.GetBool(b, "paused") ?? true;
+            // Pausing rotation freezes the featured challenge; it does NOT take PCI World offline
+            // (that is world_enabled) and it never touches attempts already in progress.
+            Settings.Put(db, "world_rotation_enabled", paused ? "0" : "1");
+            Audit(adm!.Id, paused ? "rotation_pause" : "rotation_resume", null);
+            return J(new { ok = true, paused });
+        });
+
+        app.MapPost("/api/world-admin/rotation/settings", async (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "publish", out var adm) is { } blocked) return blocked;
+            var b = await H.Body(ctx.Request);
+            var tz = (H.GetS(b, "timezone") ?? "").Trim();
+            if (tz.Length > 0)
+            {
+                // Validate by resolution, not by pattern: an unresolvable id would silently fall back
+                // to UTC at read time and the operator would never know the boundary they set is not
+                // the boundary in force.
+                Settings.Put(db, "world_rotation_timezone", tz);
+                var resolved = WorldRotation.Zone(db).Id;
+                if (!tz.Equals("UTC", StringComparison.OrdinalIgnoreCase) && resolved == TimeZoneInfo.Utc.Id)
+                {
+                    Settings.Put(db, "world_rotation_timezone", "UTC");
+                    return Results.Json(new { error = "bad_timezone", message = $"'{tz}' is not a timezone this host can resolve. Use an IANA id (Europe/London) or a fixed offset (+04:00)." }, statusCode: 400);
+                }
+            }
+            if (H.GetBool(b, "shuffle") is { } sh) Settings.Put(db, "world_rotation_shuffle", sh ? "1" : "0");
+            Audit(adm!.Id, "rotation_settings", $"tz={Settings.Str(db, "world_rotation_timezone", "UTC")} shuffle={WorldRotation.ShuffleEnabled(db)}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world-admin/rotation/substitute", async (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "publish", out var adm) is { } blocked) return blocked;
+            var b = await H.Body(ctx.Request);
+            var day = (H.GetS(b, "day_key") ?? WorldRotation.DayKey(db, DateTime.UtcNow)).Trim();
+            var reason = (H.GetS(b, "reason") ?? "").Trim();
+            if (!DateTime.TryParseExact(day, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out _))
+                return Results.Json(new { error = "bad_day", message = "day_key must be YYYY-MM-DD." }, statusCode: 400);
+            if (reason.Length < 4)
+                return Results.Json(new { error = "reason_required", message = "Record why the day is being changed — the ledger keeps it." }, statusCode: 400);
+            var code = (H.GetS(b, "code") ?? "").Trim();
+            var ch = db.QueryOne("SELECT id FROM pciworld_challenges WHERE code=?", code);
+            if (ch is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var err = WorldRotation.Substitute(db, day, H.L(ch["id"]), adm!.Id, reason);
+            if (err is not null) return Results.Json(new { error = err }, statusCode: 409);
+            Audit(adm.Id, "rotation_substitute", $"{day} → {code}: {reason}");
             return J(new { ok = true });
         });
 
@@ -445,6 +598,7 @@ public static class WorldAdmin
             <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
             <button role="tab" data-tab="challenges" aria-selected="false">Challenges</button>
             <button role="tab" data-tab="editor" aria-selected="false">Editor</button>
+            <button role="tab" data-tab="rotation" aria-selected="false">Rotation</button>
             <button role="tab" data-tab="calendar" aria-selected="false">Calendar</button>
             <button role="tab" data-tab="reports" aria-selected="false">Reports</button>
             <button role="tab" data-tab="audit" aria-selected="false">Audit</button>
@@ -476,6 +630,7 @@ public static class WorldAdmin
               <span id="edmsg" role="status"></span></p>
             <div id="valout"></div>
           </div>
+          <div id="tab-rotation" class="card" hidden></div>
           <div id="tab-calendar" class="card" hidden></div>
           <div id="tab-reports" class="card" hidden></div>
           <div id="tab-audit" class="card" hidden></div>
@@ -495,11 +650,12 @@ public static class WorldAdmin
         }
         function show(logged){$('login').hidden=logged;$('appmain').hidden=!logged;$('logout').hidden=!logged;}
         function tab(name){
-          ['overview','challenges','editor','calendar','reports','audit'].forEach(function(t){
+          ['overview','challenges','editor','rotation','calendar','reports','audit'].forEach(function(t){
             $('tab-'+t).hidden=t!==name;
             document.querySelector('[data-tab='+t+']').setAttribute('aria-selected',t===name?'true':'false');
           });
           if(name==='overview')loadOverview(); if(name==='challenges')loadChallenges();
+          if(name==='rotation')loadRotation();
           if(name==='calendar')loadCalendar(); if(name==='reports')loadReports(); if(name==='audit')loadAudit();
         }
         document.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){tab(b.dataset.tab);});});
@@ -545,6 +701,70 @@ public static class WorldAdmin
           if(r.status==='published')act('revise','Revise',true);
           if(!r.retired)act('retire','Retire',true); else act('restore','Restore',true);
           return b;
+        }
+        function loadRotation(){
+          Promise.all([api('/api/world-admin/rotation'),api('/api/world-admin/rotation/periods?limit=30'),
+                       api('/api/world-admin/rotation/runs?limit=12')])
+          .then(function(res){
+            var s=res[0],p=res[1],r=res[2];
+            function card(c,label){
+              if(!c)return '<div><span class="kicker">'+label+'</span><p>None</p></div>';
+              return '<div><span class="kicker">'+label+'</span><p><b>'+esc(c.code)+'</b> — '+esc(c.title)+'<br>'+
+                '<small>'+esc(c.difficulty||'')+(c.source?' · '+esc(c.source):'')+
+                (c.reason?' · '+esc(c.reason):'')+'</small></p></div>';
+            }
+            var health=s.last_run
+              ? esc(s.last_run.outcome)+' · '+esc(s.last_run.ran_at||'')+' · '+s.last_run.created+' created'+
+                (s.last_run.detail?' · '+esc(s.last_run.detail):'')
+              : 'never run';
+            var h='<h2>Daily rotation</h2>'+
+              '<p>Day <b>'+esc(s.day_key)+'</b> ('+esc(s.timezone)+') · changes at '+esc(s.changes_at)+
+              ' · cycle <b>'+s.cycle_no+'</b> of '+s.cycle_length+' · '+s.eligible+' eligible · '+s.periods+' recorded days'+
+              (s.paused?' · <b>PAUSED</b>':'')+'</p>'+
+              '<div class="row">'+card(s.current,'Today')+card(s.next,'Next')+'</div>'+
+              '<p><small>Health: '+health+'</small></p>'+
+              '<p><button id="rot_run">Run the boundary now</button> '+
+              '<button id="rot_pause" class="ghost">'+(s.paused?'Resume rotation':'Pause rotation')+'</button></p>'+
+              '<h2 style="margin-top:18px">Emergency substitution</h2>'+
+              '<p><small>Replaces what is featured on a day. The day it replaces is kept in the ledger, never deleted.</small></p>'+
+              '<div class="row" style="max-width:720px">'+
+              '<div><label for="sub_day">Day (YYYY-MM-DD)</label><input id="sub_day" value="'+esc(s.day_key)+'"></div>'+
+              '<div><label for="sub_code">Challenge code</label><input id="sub_code" placeholder="WC-EVM-001"></div>'+
+              '<div><label for="sub_why">Reason (recorded)</label><input id="sub_why" placeholder="Calculation error reported"></div>'+
+              '</div><p><button id="rot_sub">Substitute</button> <span id="rot_msg" role="status"></span></p>'+
+              '<h2 style="margin-top:18px">Recorded days</h2>'+
+              '<table><thead><tr><th scope="col">Day</th><th scope="col">Challenge</th><th scope="col">Cycle</th>'+
+              '<th scope="col">Source</th><th scope="col">Note</th></tr></thead><tbody>';
+            p.rows.forEach(function(x){
+              h+='<tr'+(x.superseded?' style="opacity:.55"':'')+'><td>'+esc(x.day_key)+(x.revision>1?' r'+x.revision:'')+'</td>'+
+                 '<td>'+esc(x.code||'—')+' <small>'+esc(x.title||'')+'</small></td>'+
+                 '<td>'+x.cycle_no+'.'+x.seq_no+'</td><td><span class="pill">'+esc(x.source)+'</span></td>'+
+                 '<td>'+esc(x.reason||'')+(x.superseded?' (superseded)':'')+'</td></tr>';
+            });
+            h+='</tbody></table><h2 style="margin-top:18px">Scheduler log</h2><table><thead><tr>'+
+               '<th scope="col">When</th><th scope="col">Outcome</th><th scope="col">Detail</th></tr></thead><tbody>';
+            r.rows.forEach(function(x){
+              h+='<tr><td>'+esc(x.ran_at||'')+'</td><td><span class="pill">'+esc(x.outcome)+'</span></td>'+
+                 '<td>'+esc(x.detail||'')+'</td></tr>';
+            });
+            h+='</tbody></table>';
+            $('tab-rotation').innerHTML=h;
+            $('rot_run').addEventListener('click',function(){
+              api('/api/world-admin/rotation/run','POST',{}).then(loadRotation)
+                .catch(function(e){$('rot_msg').textContent=(e&&(e.message||e.error))||'Failed';});
+            });
+            $('rot_pause').addEventListener('click',function(){
+              api('/api/world-admin/rotation/pause','POST',{paused:!s.paused}).then(loadRotation)
+                .catch(function(e){$('rot_msg').textContent=(e&&(e.message||e.error))||'Failed';});
+            });
+            $('rot_sub').addEventListener('click',function(){
+              $('rot_msg').textContent='';
+              api('/api/world-admin/rotation/substitute','POST',
+                  {day_key:$('sub_day').value,code:$('sub_code').value,reason:$('sub_why').value})
+                .then(function(){$('rot_msg').textContent='Substituted.';loadRotation();})
+                .catch(function(e){$('rot_msg').textContent=(e&&(e.message||e.error))||'Failed';});
+            });
+          });
         }
         function loadChallenges(){
           api('/api/world-admin/challenges').then(function(o){

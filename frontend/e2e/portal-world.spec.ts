@@ -108,6 +108,33 @@ test.describe('PCI World — separate admin realm', () => {
     await expect(page.locator('#tab-reports h2')).toContainText('Open content reports')
   })
 
+  test('the rotation console shows the recorded day and substitutes without erasing it', async ({ page }) => {
+    await page.goto('/world-admin')
+    await page.locator('#em').fill('owner@pciworld.local')
+    await page.locator('#pw').fill(process.env.PCIWORLD_OWNER_PASSWORD || 'changeme-world-owner')
+    await page.getByRole('button', { name: 'Sign in' }).click()
+    await expect(page.locator('#tab-overview')).toContainText('servable 30')
+
+    await page.getByRole('tab', { name: 'Rotation' }).click()
+    const panel = page.locator('#tab-rotation')
+    await expect(panel.getByRole('heading', { name: 'Daily rotation' })).toBeVisible()
+    // The day is a recorded period with a cycle position — not a value recomputed per request.
+    await expect(panel).toContainText('cycle')
+    await expect(panel).toContainText('Recorded days')
+
+    // Re-running the boundary is idempotent: the scheduler log records the no-op rather than
+    // opening the day twice.
+    await panel.getByRole('button', { name: 'Run the boundary now' }).click()
+    await expect(panel).toContainText('skipped_exists')
+
+    // A substitution needs a reason, and the day it replaces stays in the ledger.
+    await panel.locator('#sub_code').fill('WC-EVM-001')
+    await panel.locator('#sub_why').fill('E2E: verifying the substitution ledger')
+    await panel.getByRole('button', { name: 'Substitute' }).click()
+    await expect(panel).toContainText('substitution')
+    await expect(panel).toContainText('(superseded)')
+  })
+
   test('the PCI admin SPA carries no PCI World navigation', async ({ page }) => {
     // Structural separation: the Institute admin never links into PCI World administration.
     await page.goto('/admin/')

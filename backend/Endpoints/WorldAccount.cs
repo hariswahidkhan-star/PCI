@@ -140,7 +140,9 @@ public static class WorldAccount
             var e = rl.AddOrUpdate(key, (1, now), (_, c) => now - c.start >= windowMs ? (1, now) : (c.count + 1, c.start));
             return e.count > limit;
         }
-        string Ip(HttpContext ctx) => ctx.Connection.RemoteIpAddress?.ToString() ?? "?";
+        // Trusted proxy-appended hop — see Security.ClientIp. The socket address behind Render's
+        // proxy is identical for every visitor, which would collapse these limits into one bucket.
+        string Ip(HttpContext ctx) => Security.ClientIp(ctx);
 
         long? WorldSessionId(HttpContext ctx)
         {
@@ -156,7 +158,9 @@ public static class WorldAccount
             db.Execute("DELETE FROM pciworld_user_tokens WHERE user_id=? AND purpose='verify'", userId);
             db.Execute("INSERT INTO pciworld_user_tokens(user_id,purpose,token_sha,expires_at) VALUES(?, 'verify', ?, datetime('now','+2 days'))",
                 userId, Security.Sha(token));
-            var url = $"{ctx.Request.Scheme}://{ctx.Request.Host}/world/verify-email?t={token}";
+            // Never the request Host header — see WorldUrl: a forged Host would mail the recipient
+            // a valid token pointing at an attacker-controlled origin.
+            var url = WorldUrl.Abs(ctx.Request, $"/world/verify-email?t={token}");
             Mailer.Send(db, null, email, "world_verify",
                 "Verify your PCI World email",
                 $"<p>Welcome to PCI World.</p><p><a href=\"{url}\">Verify your email address</a> (link valid for 48 hours).</p>" +
@@ -238,7 +242,9 @@ public static class WorldAccount
                 db.Execute("DELETE FROM pciworld_user_tokens WHERE user_id=? AND purpose='reset'", u["id"]);
                 db.Execute("INSERT INTO pciworld_user_tokens(user_id,purpose,token_sha,expires_at) VALUES(?, 'reset', ?, datetime('now','+2 hours'))",
                     u["id"], Security.Sha(token));
-                var url = $"{ctx.Request.Scheme}://{ctx.Request.Host}/world/reset-password?t={token}";
+                // Host-header independent (WorldUrl): the reset token is the account, so the link
+                // target must come from configuration, never from the requester.
+                var url = WorldUrl.Abs(ctx.Request, $"/world/reset-password?t={token}");
                 Mailer.Send(db, null, email, "world_reset", "Reset your PCI World password",
                     $"<p>Someone asked to reset the password for this PCI World account.</p>" +
                     $"<p><a href=\"{url}\">Choose a new password</a> (link valid for 2 hours). If this wasn't you, ignore this email.</p>" +

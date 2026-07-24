@@ -68,6 +68,7 @@ builder.Services.AddHostedService<PCI.Backend.Core.SyndicationDispatcher>();   /
 builder.Services.AddHostedService<PCI.Backend.Core.MarketingJobDispatcher>();   // Marketing Phase 2: provider job queue
 builder.Services.AddHostedService<PCI.Backend.Core.ExamDeliveryDispatcher>();   // EXT-P0-04: durable exam-vendor provisioning
 builder.Services.AddHostedService<PCI.Backend.Core.CommsReminderService>();     // Comms §13: scheduled reminder sequences
+builder.Services.AddHostedService<PCI.Backend.Core.WorldRotationService>();     // PCI World: open each day's rotation period at the boundary
 
 var app = builder.Build();
 
@@ -150,47 +151,6 @@ app.Use(async (ctx, next) =>
     await next();
 });
 
-// ── PCI World host mapping: a dedicated PCI World service or domain lands directly on the
-// product instead of the Institute site. PCIWORLD_STANDALONE=true maps this whole service
-// (the setup for a separate "pciworld" Render service); PCIWORLD_HOSTS / PCIWORLD_ADMIN_HOSTS
-// map by request host (pciworld.org / admin.pciworld.org) so one deployment can serve both
-// sites. Only "/" is redirected — every other route keeps working on every host. ──
-{
-    // PCIWORLD_ONLY=true is the strict shape ("deploy only PCI World"): the service serves
-    // exclusively the PCI World surfaces — every other page redirects to /world and every other
-    // API returns 404, so the Institute site and portals are unreachable on this deployment.
-    var worldOnly = PCI.Backend.Core.WorldOnly.Enabled;
-    var worldStandalone = worldOnly ||
-        string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_STANDALONE"), "true", StringComparison.OrdinalIgnoreCase);
-    var worldHosts = (Environment.GetEnvironmentVariable("PCIWORLD_HOSTS") ?? "")
-        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
-    var worldAdminHosts = (Environment.GetEnvironmentVariable("PCIWORLD_ADMIN_HOSTS") ?? "")
-        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
-    if (worldOnly || worldStandalone || worldHosts.Count > 0 || worldAdminHosts.Count > 0)
-        app.Use(async (ctx, next) =>
-        {
-            var path = ctx.Request.Path;
-            if (path == "/")
-            {
-                var host = ctx.Request.Host.Host;
-                if (worldAdminHosts.Contains(host)) { ctx.Response.Redirect("/world-admin"); return; }
-                if (worldStandalone || worldHosts.Contains(host)) { ctx.Response.Redirect("/world"); return; }
-            }
-            if (worldOnly && !PCI.Backend.Core.WorldOnly.Allowed(path))
-            {
-                if (path.StartsWithSegments("/api"))
-                {
-                    ctx.Response.StatusCode = 404;
-                    await ctx.Response.WriteAsJsonAsync(new { error = "not_found", message = "This deployment serves PCI World only." });
-                    return;
-                }
-                ctx.Response.Redirect("/world");
-                return;
-            }
-            await next();
-        });
-}
-
 app.Use(async (ctx, next) =>
 {
     var h = ctx.Response.Headers;
@@ -228,6 +188,59 @@ app.Use(async (ctx, next) =>
     await next();
 });
 
+// ── PCI World host mapping: a dedicated PCI World service or domain lands directly on the
+// product instead of the Institute site. PCIWORLD_STANDALONE=true maps this whole service
+// (the setup for a separate "pciworld" Render service); PCIWORLD_HOSTS / PCIWORLD_ADMIN_HOSTS
+// map by request host (pciworld.org / admin.pciworld.org) so one deployment can serve both
+// sites. Only "/" is redirected — every other route keeps working on every host.
+//
+// ORDERING: this runs AFTER the security-headers and CORS middleware, never before. It answers
+// some requests itself (the redirect, the 404) without calling next(), so registering it earlier
+// — as it originally was — shipped exactly those responses with no CSP, no nosniff and no CORS
+// headers, contradicting the "EVERY response" guarantee above (Phase 0 audit finding). ──
+{
+    // PCIWORLD_ONLY=true is the strict shape ("deploy only PCI World"): the service serves
+    // exclusively the PCI World surfaces — every other path 404s, so the Institute site and
+    // portals are unreachable on this deployment.
+    var worldOnly = PCI.Backend.Core.WorldOnly.Enabled;
+    var worldStandalone = worldOnly ||
+        string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_STANDALONE"), "true", StringComparison.OrdinalIgnoreCase);
+    var worldHosts = (Environment.GetEnvironmentVariable("PCIWORLD_HOSTS") ?? "")
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
+    var worldAdminHosts = (Environment.GetEnvironmentVariable("PCIWORLD_ADMIN_HOSTS") ?? "")
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
+    if (worldOnly || worldStandalone || worldHosts.Count > 0 || worldAdminHosts.Count > 0)
+        app.Use(async (ctx, next) =>
+        {
+            var path = ctx.Request.Path;
+            if (path == "/")
+            {
+                // 301, not 302: the home page's permanent location on a world host is /world, and a
+                // temporary redirect leaves search engines indexing "/" as a separate URL forever.
+                var host = ctx.Request.Host.Host;
+                if (worldAdminHosts.Contains(host)) { ctx.Response.Redirect("/world-admin", permanent: true); return; }
+                if (worldStandalone || worldHosts.Contains(host)) { ctx.Response.Redirect("/world", permanent: true); return; }
+            }
+            if (worldOnly && !PCI.Backend.Core.WorldOnly.Allowed(path))
+            {
+                if (path.StartsWithSegments("/api"))
+                {
+                    ctx.Response.StatusCode = 404;
+                    await ctx.Response.WriteAsJsonAsync(new { error = "not_found", message = "This deployment serves PCI World only." });
+                    return;
+                }
+                // A real 404 — not a redirect to /world. Redirecting every unknown path was a
+                // blanket soft-404: crawlers treat it as "this URL exists and is a duplicate of
+                // /world", which pollutes the index and hides genuinely broken links from us.
+                ctx.Response.StatusCode = 404;
+                ctx.Response.ContentType = "text/html; charset=utf-8";
+                await ctx.Response.WriteAsync(PCI.Backend.Core.WorldPages.NotFound(db));
+                return;
+            }
+            await next();
+        });
+}
+
 // Trusted client IP: the LAST X-Forwarded-For hop (appended by our own TLS-terminating proxy),
 // falling back to the socket address. Never the first hop — that value is client-controlled and
 // forgeable, which would let an attacker rotate the rate-limit bucket and spoof the audit IP.
@@ -246,7 +259,13 @@ static string ClientIp(HttpContext ctx)
 // per client IP with a fixed-window in-memory counter. Applied by path prefix via middleware so it is
 // robust to route-handler shape (no per-endpoint chaining required).
 var _rlHits = new System.Collections.Concurrent.ConcurrentDictionary<string, (int count, long windowStart)>();
-string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login", "/api/inquiry", "/api/newsletter", "/api/form-submit" };
+string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login", "/api/inquiry", "/api/newsletter", "/api/form-submit",
+    // PCI World credential endpoints. The world modules carry their own per-key throttles, but those
+    // are session-scoped or coarse; brute-forceable credential paths belong on the platform's
+    // IP-keyed limiter like every other realm's login — the world admin especially, since it had
+    // only per-account lockout, which an attacker can trigger deliberately as a denial of service.
+    "/api/world-admin/auth/login", "/api/world/account/login", "/api/world/account/register",
+    "/api/world/account/forgot", "/api/world/account/reset" };
 // Playwright boots this process with E2E_ADMIN_PASSWORD set; raise the window so the browser suite
 // (dozens of register/login/forgot posts) does not cascade 429s. Production never sets that env.
 var _rlE2e = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("E2E_ADMIN_PASSWORD"));
@@ -337,14 +356,33 @@ static List<(string sev, string key, string msg)> ConfigIssues()
         if (!string.IsNullOrWhiteSpace(stripeWhUrl) && !stripeWhUrl.TrimEnd('/').EndsWith("/api/webhook", StringComparison.OrdinalIgnoreCase))
             Err("STRIPE_WEBHOOK_URL", "must end with /api/webhook (not /api/payments/webhook) — see docs/OPERATIONS.md §9");
     }
-    // A PCI World-only preview deployment (PCIWORLD_ONLY=true) runs none of the subsystems these
-    // hard blockers protect — no payments, no exams, no credentials, no stored identity documents,
-    // and every non-world surface is unreachable. Boot anyway (zero-config preview), keep every
-    // finding visible as a warning, and gate the real launch on docs/pciworld/DEPLOY_RENDER.md.
-    if (PCI.Backend.Core.WorldOnly.Enabled && issues.Any(i => i.Item1 == "error"))
+    // A PCI World-only deployment (PCIWORLD_ONLY=true) runs none of the PAYMENT, EXAM, CREDENTIAL or
+    // identity-document subsystems, so those blockers protect nothing here and are downgraded. The
+    // rest are NOT waived: CORS origin, the data-at-rest key, the public base URL and the legacy
+    // admin token all guard the world surfaces themselves, and a blanket waiver (the Phase 0 audit's
+    // finding H3) silently turned a production world deployment into an unprotected one.
+    if (PCI.Backend.Core.WorldOnly.Enabled)
     {
-        issues = issues.Select(i => i.Item1 == "error" ? ("warn", i.Item2, i.Item3 + " (not blocking in PCI World preview mode)") : i).ToList();
-        issues.Add(("warn", "PCIWORLD_ONLY", "world-preview defaults active — complete the production hardening in docs/pciworld/DEPLOY_RENDER.md before public launch"));
+        // Payments/exams/storage only — everything else keeps its severity.
+        var waivable = new HashSet<string> { "STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "STRIPE_WEBHOOK_URL", "S3_BUCKET", "SMTP_HOST" };
+        issues = issues.Select(i => i.Item1 == "error" && waivable.Contains(i.Item2)
+            ? ("warn", i.Item2, i.Item3 + " (subsystem not served by a PCI World-only deployment)") : i).ToList();
+
+        // Durable storage is the one exception with a deliberate, explicit bridge. PCI World's
+        // product law is that learner history is never lost, and a container filesystem is erased on
+        // every redeploy — so SQLite is permitted here ONLY when the operator opts in AND points the
+        // database at an absolute path, which on Render means a mounted persistent disk. MySQL 8
+        // remains the target; this keeps a preview honest instead of quietly losing accounts.
+        if (string.Equals(E("PCIWORLD_ALLOW_SQLITE"), "true", StringComparison.OrdinalIgnoreCase))
+        {
+            issues = issues.Select(i => i.Item1 == "error" && i.Item2 is "DB_PROVIDER" or "MYSQL_HOST"
+                ? ("warn", i.Item2, i.Item3 + " (PCIWORLD_ALLOW_SQLITE=true — interim persistent-disk posture)") : i).ToList();
+            var dbFile = E("DATABASE_FILE") ?? "";
+            if (!dbFile.StartsWith('/'))
+                issues.Add(("error", "DATABASE_FILE",
+                    "PCIWORLD_ALLOW_SQLITE=true requires DATABASE_FILE to be an absolute path on a persistent disk (e.g. /data/pciworld.db) — a relative path lives in the container filesystem and every learner account, attempt and Passport is destroyed on redeploy"));
+        }
+        issues.Add(("warn", "PCIWORLD_ONLY", "PCI World-only deployment — complete the production hardening in docs/pciworld/DEPLOY_RENDER.md before public launch"));
     }
     return issues;
 }
@@ -359,6 +397,31 @@ static List<(string sev, string key, string msg)> ConfigIssues()
             "Fix them, or set ALLOW_INSECURE_PRODUCTION=true to override (not recommended).");
         Environment.Exit(78); // EX_CONFIG
     }
+}
+
+// ── PCI World data-durability + credential posture (docs/pciworld/EXPANSION_PHASE0.md §4, §7) ──
+// PCI World's product law is that learner history is never lost. These checks cannot enforce that
+// from inside the process, but they refuse to let an operator believe it holds when it does not:
+// a SQLite file on a container filesystem is erased by the next deploy, taking every account,
+// attempt and Passport with it. Warnings only — the deployment stays up and the operator is told.
+{
+    var worldOn = PCI.Backend.Core.Settings.Bool(db, "world_enabled", true);
+    var worldDbProvider = (Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "sqlite").Trim().ToLowerInvariant();
+    if (worldOn && worldDbProvider is not ("mysql" or "mariadb"))
+    {
+        var file = Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "";
+        if (!file.StartsWith('/'))
+            Console.WriteLine("[pciworld] EPHEMERAL STORAGE — the database is a relative SQLite path, so every " +
+                "PCI World account, attempt and Passport is DESTROYED on the next deploy or restart. " +
+                "Mount a persistent disk and set DATABASE_FILE=/data/pciworld.db, or move to MySQL 8. " +
+                "See docs/pciworld/DEPLOY_RENDER.md.");
+        else
+            Console.WriteLine($"[pciworld] storage: SQLite at '{file}' — durable only if that path is a mounted " +
+                "persistent disk. MySQL 8 remains the production target.");
+    }
+    if (worldOn && PCI.Backend.Data.WorldSchema.OwnerHasDefaultPassword(db))
+        Console.WriteLine("[pciworld] The PCI World owner admin still uses the published default password. " +
+            "Sign in at /world-admin and change it, or set PCIWORLD_OWNER_PASSWORD before first boot.");
 }
 
 // ---- helpers ----

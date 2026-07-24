@@ -21,6 +21,56 @@ public static class WorldOnly
         string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_ONLY"), "true", StringComparison.OrdinalIgnoreCase);
 }
 
+/// <summary>
+/// Absolute base URL for links PCI World mails out (verify, reset) and for canonical tags.
+///
+/// SECURITY: never build a mailed link from the request's Host header. `Host` is attacker-supplied
+/// on every request, so `https://{Host}/world/reset-password?t=…` lets anyone who can reach /forgot
+/// mail a victim a VALID reset token pointing at a host they control. This resolver trusts only
+/// values the operator (or the platform) set, and accepts the request host solely when it is
+/// demonstrably one of ours; otherwise it falls back to the canonical base, which is a constant.
+/// </summary>
+public static class WorldUrl
+{
+    static string? Env(string k)
+    {
+        var v = Environment.GetEnvironmentVariable(k);
+        return string.IsNullOrWhiteSpace(v) ? null : v.Trim().TrimEnd('/');
+    }
+
+    /// <summary>Hosts we will echo back from a request: the configured canonical/world hosts plus
+    /// loopback for local development.</summary>
+    static HashSet<string> KnownHosts()
+    {
+        var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "localhost", "127.0.0.1", "[::1]" };
+        set.Add(Redirects.CanonicalHost);
+        foreach (var k in new[] { "PCIWORLD_HOSTS", "PCIWORLD_ADMIN_HOSTS", "REDIRECT_HOSTS" })
+            foreach (var h in (Environment.GetEnvironmentVariable(k) ?? "")
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                set.Add(h);
+        return set;
+    }
+
+    public static string Base(HttpRequest? req = null)
+    {
+        // 1. Explicit operator configuration always wins.
+        var configured = Env("PCIWORLD_BASE_URL") ?? Env("APP_BASE_URL") ?? Env("SITE_BASE_URL")
+        // 2. Render exports the service's real external URL — makes zero-config previews safe too.
+                      ?? Env("RENDER_EXTERNAL_URL");
+        if (configured is not null) return configured;
+        if (Env("RENDER_EXTERNAL_HOSTNAME") is { } rh) return "https://" + rh;
+        // 3. The request host, but only when it is a host we know we answer on.
+        if (req is not null && req.Host.HasValue && KnownHosts().Contains(req.Host.Host))
+            return $"{req.Scheme}://{req.Host}";
+        // 4. Fail closed on a constant rather than echoing an unverified Host header.
+        return Redirects.CanonicalBase;
+    }
+
+    /// <summary>Absolute URL for a world path ("/world/reset-password?t=…").</summary>
+    public static string Abs(HttpRequest? req, string path) =>
+        Base(req) + (path.StartsWith('/') ? path : "/" + path);
+}
+
 /// <summary>PCI World admin RBAC — server-side, per action group. Hiding a button is not
 /// authorization; every world-admin endpoint calls Allowed() before touching data.</summary>
 public static class WorldRbac
@@ -133,19 +183,11 @@ public static class WorldLifecycle
     public static Dictionary<string, object?>? PinnedVersion(Db db, long challengeId, long version) =>
         db.QueryOne("SELECT * FROM pciworld_challenge_versions WHERE challenge_id=? AND version=?", challengeId, version);
 
-    /// <summary>Today's challenge (UTC day): the calendar override when set and servable, else the
-    /// deterministic day-of-year rotation over servable challenges. Returns the challenge row.</summary>
-    public static Dictionary<string, object?>? Today(Db db, DateTime utcNow)
-    {
-        var day = utcNow.ToString("yyyy-MM-dd");
-        var cal = db.QueryOne("SELECT challenge_id FROM pciworld_calendar WHERE day_utc=?", day);
-        if (cal is not null)
-        {
-            var pick = db.QueryOne("SELECT * FROM pciworld_challenges WHERE id=? AND current_version>=1 AND retired=0", cal["challenge_id"]);
-            if (pick is not null) return pick;
-        }
-        var servable = db.Query("SELECT * FROM pciworld_challenges WHERE current_version>=1 AND retired=0 ORDER BY id ASC");
-        if (servable.Count == 0) return null;
-        return servable[(int)(utcNow.DayOfYear % servable.Count)];
-    }
+    /// <summary>
+    /// Today's featured challenge. Delegates to the rotation ledger (Core/WorldRotation.cs): the day's
+    /// selection is a recorded, immutable period, so it is stable for the whole day, survives
+    /// catalogue changes, and can be answered historically. The calendar override still wins — it is
+    /// now recorded as the period's source rather than being re-evaluated on every request.
+    /// </summary>
+    public static Dictionary<string, object?>? Today(Db db, DateTime utcNow) => WorldRotation.Current(db, utcNow);
 }

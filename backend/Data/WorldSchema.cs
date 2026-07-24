@@ -53,6 +53,11 @@ public static class WorldSchema
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldch_status ON pciworld_challenges(status)");
+        // Servability — `current_version>=1 AND retired=0` — is the predicate on the archive, the
+        // rotation eligibility query and every admin count. Unindexed it was a full table scan on
+        // each one, which is survivable at 30 challenges and is not at 10,000.
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldch_servable ON pciworld_challenges(retired, current_version)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldch_facets ON pciworld_challenges(industry, difficulty, track)");
 
         // ── Immutable published snapshots — the ONLY replay/serving authority for attempts.
         //    Written once at publish; never updated, never deleted (retire hides the challenge
@@ -82,6 +87,66 @@ public static class WorldSchema
             challenge_id INTEGER NOT NULL,
             note TEXT,
             created_at TEXT DEFAULT (datetime('now')))");
+
+        // ── Daily rotation ledger (Core/WorldRotation.cs). The featured challenge used to be a
+        //    stateless `DayOfYear % count` recomputed per request: it moved mid-day whenever the
+        //    catalogue changed, left no record of what had been featured, and could never reach more
+        //    than ~366 challenges. These three tables replace that with an append-only ledger.
+        //
+        //    periods: one row per rotation day. UNIQUE(day_key, revision) is what makes the boundary
+        //    idempotent — a second run of the same day is an ignored insert, not a re-pick. A
+        //    substitution appends revision+1 and stamps superseded_at on the row it replaces, so the
+        //    record of what was displaced survives. `version` records the snapshot that was live
+        //    when the day opened; attempts still pin their own version independently. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_rotation_periods(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            day_key VARCHAR(10) NOT NULL,                  -- YYYY-MM-DD in the configured rotation timezone
+            revision INTEGER NOT NULL DEFAULT 1,
+            challenge_id INTEGER NOT NULL,
+            version INTEGER NOT NULL,
+            cycle_no INTEGER NOT NULL DEFAULT 1,
+            seq_no INTEGER NOT NULL DEFAULT 0,
+            source VARCHAR(16) NOT NULL DEFAULT 'auto',    -- auto | calendar | substitution
+            reason TEXT,
+            superseded_at TEXT,
+            created_by INTEGER,                            -- pciworld_admin_users.id for substitutions
+            opened_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_worldrotper ON pciworld_rotation_periods(day_key, revision)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldrotper_ch ON pciworld_rotation_periods(challenge_id)");
+
+        // ── The materialised running order for a cycle: a deterministic seeded shuffle computed
+        //    ONCE per cycle. Never recompute an order over a live query — that is how a rotation
+        //    silently reorders itself when the catalogue changes. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_rotation_order(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            cycle_no INTEGER NOT NULL,
+            seq_no INTEGER NOT NULL,
+            challenge_id INTEGER NOT NULL,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_worldrotord ON pciworld_rotation_order(cycle_no, seq_no)");
+
+        // ── What the scheduler did on each wake, INCLUDING when it did nothing and why. Without
+        //    this an operator cannot distinguish "healthy and idle" from "silently broken". ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_rotation_runs(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            day_key VARCHAR(10),
+            outcome VARCHAR(32) NOT NULL,                  -- created|catch_up|skipped_exists|skipped_locked|paused|no_content|calendar_ineligible|catch_up_truncated|error
+            periods_created INTEGER DEFAULT 0,
+            detail TEXT,
+            owner VARCHAR(64),
+            duration_ms INTEGER,
+            ran_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldrotrun_at ON pciworld_rotation_runs(ran_at)");
+
+        // ── Single-row advisory lock for the boundary job, claimed through WorkerLease exactly like
+        //    the platform's dispatchers. Render runs multiple instances; without this, two of them
+        //    open the same day and the cycle double-advances. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_rotation_lock(
+            id INTEGER PRIMARY KEY,
+            status VARCHAR(16) NOT NULL DEFAULT 'queued',
+            lease_owner VARCHAR(64),
+            lease_until TEXT,
+            updated_at TEXT DEFAULT (datetime('now')))");
 
         // ── Anonymous participant sessions: an opaque 128-bit token, stored only as SHA-256.
         //    No email, no name, no IP — continuity only. ──
@@ -221,6 +286,24 @@ public static class WorldSchema
             session_id INTEGER,
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldev_event ON pciworld_events(event)");
+        // Highest-volume table in the realm (a row per page view) — the retention sweep and every
+        // time-bounded analytics query need a date index or they scan the whole history.
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldev_at ON pciworld_events(created_at)");
+
+        // ── Remaining hot-path indexes identified by the Phase 0 scale audit. Each backs a query
+        //    that runs on a public request or an admin page load. ──
+        // Public Passport URL lookup — a per-request key that was entirely unindexed.
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldusers_passport ON pciworld_users(passport_token_sha)");
+        // Attempt resume: filters session_id + challenge_id + version + status together.
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_resume ON pciworld_attempts(session_id, challenge_id, version, status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_completed ON pciworld_attempts(status, completed_at)");
+        // Admin queues, ordered and paginated by recency.
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldaudit_at ON pciworld_audit(created_at)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldreports_ch ON pciworld_reports(challenge_id, status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldinv_attempt ON pciworld_invites(attempt_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldsess_seen ON pciworld_sessions(last_seen_at)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldusess_exp ON pciworld_user_sessions(expires_at)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldutok_user ON pciworld_user_tokens(user_id, purpose)");
     }
 
     static void Seed(Db db)
@@ -230,16 +313,58 @@ public static class WorldSchema
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('world_institute_url','https://projectcontrolsinstitute.org')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('world_simlab_url','/app/lab')");
 
+        // Rotation controls — operator-owned, never hard-coded. `world_rotation_timezone` accepts an
+        // IANA id (Europe/London) or a fixed offset (+04:00); `world_rotation_shuffle` off means the
+        // bank plays in catalogue order; `world_rotation_flag_threshold` is the number of OPEN content
+        // reports at which a challenge stops being eligible to be featured.
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('world_rotation_enabled','1')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('world_rotation_timezone','UTC')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('world_rotation_shuffle','1')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('world_rotation_flag_threshold','3')");
+
         // Bootstrap the PCI World owner admin on first boot — separate credentials from every other
         // realm. Override the initial password via PCIWORLD_OWNER_PASSWORD; change it after first
         // sign-in (Settings). Same bootstrap posture as the platform's owner admin.
         if (db.Scalar<long>("SELECT COUNT(*) FROM pciworld_admin_users") == 0)
         {
             var pw = Environment.GetEnvironmentVariable("PCIWORLD_OWNER_PASSWORD");
-            if (string.IsNullOrWhiteSpace(pw)) pw = "changeme-world-owner";
+            var generated = false;
+            if (string.IsNullOrWhiteSpace(pw))
+            {
+                // A published default password is a published credential: the world admin holds
+                // publication rights over every challenge, so a production install must never boot
+                // with one an attacker can read in this repository. When the operator has not set
+                // PCIWORLD_OWNER_PASSWORD, mint a random one and print it once — the operator reads
+                // it from the deploy log and changes it at first sign-in. Development and the E2E
+                // harness keep the well-known default so the suites stay deterministic.
+                if (IsProductionPosture()) { pw = Core.Security.RandomHex(12); generated = true; }
+                else pw = "changeme-world-owner";
+            }
             db.Execute("INSERT INTO pciworld_admin_users(email,name,role,password_hash) VALUES(?,?,?,?)",
                 "owner@pciworld.local", "PCI World Owner", "owner", BCrypt.Net.BCrypt.HashPassword(pw));
-            Console.WriteLine("[seed] PCI World owner admin created: owner@pciworld.local — change the password after first sign-in");
+            Console.WriteLine(generated
+                ? $"[seed] PCI World owner admin created: owner@pciworld.local — ONE-TIME PASSWORD: {pw}\n" +
+                  "[seed] Sign in at /world-admin and change it now. This password is not shown again."
+                : "[seed] PCI World owner admin created: owner@pciworld.local — change the password after first sign-in");
         }
+    }
+
+    /// <summary>True when this process is configured as a real deployment rather than a developer
+    /// machine or test run. Mirrors the boot config validator's definition.</summary>
+    internal static bool IsProductionPosture() =>
+        string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Production", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(Environment.GetEnvironmentVariable("APP_ENV"), "production", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>True when the bootstrap owner still holds the well-known development password.
+    /// Surfaced as a boot warning so an install can never quietly sit on a published credential.</summary>
+    public static bool OwnerHasDefaultPassword(Db db)
+    {
+        try
+        {
+            var a = db.QueryOne("SELECT password_hash FROM pciworld_admin_users WHERE email='owner@pciworld.local'");
+            var hash = a?["password_hash"] as string;
+            return hash is not null && BCrypt.Net.BCrypt.Verify("changeme-world-owner", hash);
+        }
+        catch { return false; }
     }
 }

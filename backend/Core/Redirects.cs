@@ -64,6 +64,10 @@ public static class Redirects
         if (string.IsNullOrEmpty(path)) return false;
         var p = path.TrimEnd('/');
         return p.StartsWith("/admin", StringComparison.OrdinalIgnoreCase)
+            // The PCI World admin realm — noindex header as defence in depth alongside its meta tag
+            // and robots.txt. The public "/world" surfaces are NOT private and must not match here.
+            || p.Equals("/world-admin", StringComparison.OrdinalIgnoreCase)
+            || p.StartsWith("/world-admin/", StringComparison.OrdinalIgnoreCase)
             || p.StartsWith("/app", StringComparison.OrdinalIgnoreCase)
             || p.StartsWith("/api", StringComparison.OrdinalIgnoreCase)
             || p.Equals("/student.html", StringComparison.OrdinalIgnoreCase)
