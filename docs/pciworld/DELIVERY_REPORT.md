@@ -76,9 +76,32 @@ verification, invite and about pages — all rendered from constants. No PCI Wor
 touches exams, entitlements, credentials, membership or `users`. **PCI World activity does not
 grant or modify any formal PCI certification — structurally, not just editorially.**
 
+## Phase 1b addendum — participant accounts + PCI World Passport (same branch, second commit)
+
+- `pciworld_users` / `_user_sessions` / `_user_tokens`: a separate practice-identity realm — a
+  world account creates no row in the platform's `users`, and a student session token is
+  meaningless to the world-account resolver (test-verified). bcrypt + lockout + timing
+  equalisation + sha-stored 30-day sessions.
+- **Anonymous-first is preserved**: register/login "claim" the caller's anonymous session — only
+  unclaimed attempts, never another account's (test-verified).
+- **Passport is consent all the way down**: evidence is opt-in per completed attempt (default
+  hidden); publication requires a verified email AND a chosen display name; the public URL is an
+  opaque token that rotates on republish and dies on unpublish; the page vocabulary is fixed to
+  "verified virtual project experience" — never a credential. Export (JSON) and delete
+  (de-identify attempts, revoke all public surfaces) are self-service.
+- Email verification uses the platform mailer: Resend/SMTP in production, console sink + email
+  log in dev — no new email infrastructure.
+- Pages: `/world/account` (register/sign-in/manage), `/world/p/{token}` (public Passport),
+  `/world/verify-email`; result page now carries the Passport upsell.
+- Evidence: World tests **17/17** (6 new: claiming, login hygiene/lockout, publication gates +
+  token rotation, per-item consent, delete de-identification, realm separation); live HTTP smoke
+  of the entire journey including the verification link, zero email leakage on the public page,
+  and 404 after unpublish. Full-suite results recorded in the PR.
+
 ## Not built (do not present as existing)
 
-Participant accounts/Passport, email, share-image PNG rendering, AI Coach, Human vs AI live
-feature (one governed-AI *challenge* ships), World Project Series, universities/employers,
-rankings/leaderboards (none rendered anywhere), Arabic localization of PCI World copy,
-Playwright/axe automation for `/world`, MFA, hostname wiring. Each is scheduled in PLAN.md.
+Password reset flow (token table supports it; endpoint pending), share-image PNG rendering,
+AI Coach, Human vs AI live feature (one governed-AI *challenge* ships), World Project Series,
+universities/employers, rankings/leaderboards (none rendered anywhere), Arabic localization of
+PCI World copy, Playwright/axe automation for `/world`, MFA, hostname wiring, CV-bullet/LinkedIn
+generators for the Passport. Each is scheduled in PLAN.md.

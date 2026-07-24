@@ -6,7 +6,7 @@
 |---|---|---|
 | **0 — Foundation** | ADR, threat model, data/content model, schema on both providers, separate admin realm, validator, Institute-link config | **This change** |
 | **1 slice — Anonymous vertical journey** | Premium server-rendered home/challenge/result, 10 reviewed pilot challenges, anonymous start→submit→result, deterministic scoring + decision profiles, share/verify tokens, challenge-a-friend, separate admin author→review→approve→publish→revise→retire with audit + calendar | **This change** |
-| 1b — Accounts & Passport | pciworld_users, email verification, basic Passport, save-after-result upsell | Backlog (next) |
+| 1b — Accounts & Passport | pciworld_users (separate realm), email verification (console sink until SMTP/Resend configured), anonymous-session claiming, per-item evidence consent, publish gated on verified email + display name, opaque rotating passport tokens, export/delete, account page + public Passport page, result-page upsell | **Delivered** |
 | 2 — Foundation launch | 30 reviewed challenges, archive search/filter, Decision Replay UI, Coach (behind the AI gate below), content correction flow, full E2E/a11y/security passes | Backlog |
 | 3 — Retention | 90 challenges, daily calendar automation, recommendations, Human vs AI, return comms, friend comparison views | Backlog |
 | 4 — Ecosystem | 180 challenges, World Project Series, real university cohorts, real employer missions, governed talent opt-in, ranking thresholds | Backlog |

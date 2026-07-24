@@ -111,6 +111,7 @@ public static class WorldPages
                 <nav aria-label="Primary">
                   <a href="/world">Today&rsquo;s Challenge</a>
                   <a href="/world/archive">Challenge Library</a>
+                  <a href="/world/account">Passport</a>
                   <a href="/world/about">About</a>
                   <a class="ext" href="{inst}" target="_blank" rel="noopener noreferrer">{InstituteLinkLabel} <span aria-hidden="true">&#8599;</span><span class="visually-hidden">(opens the official Institute website in a new tab)</span></a>
                 </nav>
@@ -360,6 +361,7 @@ public static class WorldPages
                '<p style="margin-top:12px"><button class="btn" type="button" id="mkshare">Get my verified result link</button> ' +
                '<button class="btn secondary" type="button" id="mkinvite">Challenge a friend</button></p>' +
                '<div id="sharebox"></div><div id="invitebox"></div>' +
+               '<p style="margin-top:14px"><a href="/world/account">Create your free PCI World Passport</a> to keep this result as verified evidence — challenges completed in this browser are added automatically.</p>' +
                '<p class="notice">Your answers are never shown on the public result page.</p></div>';
           el.innerHTML = h;
           $('mkshare').addEventListener('click', function(){
@@ -504,6 +506,194 @@ public static class WorldPages
             ogTitle: $"{who} — {title} — PCI World Challenge",
             ogDesc: share.Length > 0 ? share : $"Verified PCI World challenge result: {title}.");
     }
+
+    public static string VerifyEmail(Db db, bool ok) => Layout(db,
+        ok ? "Email verified — PCI World" : "Verification link invalid — PCI World",
+        "PCI World email verification.",
+        ok
+            ? """
+              <h1>Email verified</h1>
+              <p class="lede">Your PCI World account email is confirmed. You can now publish your Passport when you choose to.</p>
+              <p><a class="btn" href="/world/account">Go to your account</a></p>
+              """
+            : """
+              <h1>That link didn&rsquo;t work</h1>
+              <p class="lede">The verification link is invalid or has expired. Sign in and request a new one from your account page.</p>
+              <p><a class="btn" href="/world/account">Go to your account</a></p>
+              """,
+        "/world/account", noindex: true);
+
+    /// <summary>Public Passport: consent-based, name-led, evidence only — never an email, never an
+    /// answer, never presented as a credential.</summary>
+    public static string PublicPassport(Db db, string name, List<Dictionary<string, object?>> rows)
+    {
+        var items = string.Join("", rows.Select(r => $"""
+            <tr>
+              <td>{E(H.Str(r["title"]))}</td>
+              <td>{E(H.Str(r["industry"]))}</td>
+              <td>{E(Cap(H.Str(r["difficulty"])))}</td>
+              <td class="num">{H.D(r["score"]):0.#}</td>
+              <td>{E(H.Str(r["profile_key"]))}</td>
+              <td class="num">{E((H.Str(r["completed_at"]) ?? "").Split(' ')[0])}</td>
+            </tr>
+            """));
+        var industries = rows.Select(r => H.Str(r["industry"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
+        var tracks = rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
+        return Layout(db,
+            $"{name} — PCI World Passport",
+            $"Verified virtual project experience: {rows.Count} completed PCI World challenge{(rows.Count == 1 ? "" : "s")} across {industries} industr{(industries == 1 ? "y" : "ies")}.",
+            $"""
+            <span class="kicker">PCI World Passport &middot; verified virtual project experience</span>
+            <h1>{E(name)}</h1>
+            <div class="card">
+              <div class="dim">
+                <div><span class="kicker">Challenges</span><b class="score num">{rows.Count}</b></div>
+                <div><span class="kicker">Industries</span><b class="score num">{industries}</b></div>
+                <div><span class="kicker">Tracks</span><b class="score num">{tracks}</b></div>
+              </div>
+            </div>
+            <div class="card">
+              <h2 style="margin-top:0">Selected evidence</h2>
+              <table>
+                <thead><tr><th scope="col">Challenge</th><th scope="col">Industry</th><th scope="col">Difficulty</th>
+                <th scope="col">Score</th><th scope="col">Decision profile</th><th scope="col">Date</th></tr></thead>
+                <tbody>{items}</tbody>
+              </table>
+            </div>
+            <p><a class="btn" href="/world">Take today&rsquo;s challenge yourself</a></p>
+            <p class="notice">This Passport shows verified practice evidence its owner chose to publish. Answers are never shown. {E(PracticeNotice)}</p>
+            """,
+            "/world",
+            ogTitle: $"{name} — PCI World Passport",
+            ogDesc: $"Verified virtual project experience: {rows.Count} completed PCI World challenges.");
+    }
+
+    /// <summary>Account page: register/sign-in, then Passport management. All state via the JSON
+    /// API; this shell renders no personal data server-side.</summary>
+    public static string Account(Db db) => Layout(db,
+        "Your PCI World account",
+        "Create a free PCI World account to keep your challenge evidence and build a shareable Passport.",
+        $"""
+        <span class="kicker">Account &amp; Passport</span>
+        <h1>Keep the evidence</h1>
+        <p class="lede">A free account turns completed challenges into a PCI World Passport — verified virtual project experience you control and can share.</p>
+        <div id="auth" class="card" hidden>
+          <div style="display:grid;gap:26px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+            <div>
+              <h2 style="margin-top:0">Create your Passport</h2>
+              <label for="r_name">Display name (shown on your public Passport)</label><input id="r_name" type="text" maxlength="80" autocomplete="name">
+              <label for="r_email">Email</label><input id="r_email" type="email" autocomplete="email">
+              <label for="r_pw">Password (min 10 characters)</label><input id="r_pw" type="password" autocomplete="new-password">
+              <p style="margin-top:12px"><button class="btn" id="doRegister">Create account</button></p>
+            </div>
+            <div>
+              <h2 style="margin-top:0">Sign in</h2>
+              <label for="l_email">Email</label><input id="l_email" type="email" autocomplete="email">
+              <label for="l_pw">Password</label><input id="l_pw" type="password" autocomplete="current-password">
+              <p style="margin-top:12px"><button class="btn secondary" id="doLogin">Sign in</button></p>
+            </div>
+          </div>
+          <p id="autherr" class="bad" role="alert"></p>
+          <p class="notice">Challenges you completed anonymously in this browser are added to your account automatically. {E(PracticeNotice)}</p>
+        </div>
+        <div id="me" hidden></div>
+        <script>{AccountJs}</script>
+        """,
+        "/world/account", noindex: true);
+
+    const string AccountJs = """
+        (function(){
+        'use strict';
+        var KEY='world_account';
+        function $(id){return document.getElementById(id);}
+        function esc(s){var d=document.createElement('span');d.textContent=s==null?'':String(s);return d.innerHTML;}
+        function api(path,body,method){
+          return fetch(path,{method:method||(body?'POST':'GET'),headers:{'Content-Type':'application/json',
+            'X-World-Account':localStorage.getItem(KEY)||'',
+            'X-World-Session':localStorage.getItem('world_session')||''},
+            body:body?JSON.stringify(body):undefined})
+          .then(function(r){return r.json().then(function(j){if(!r.ok)throw j;return j;});});
+        }
+        function showAuth(){$('auth').hidden=false;$('me').hidden=true;}
+        function load(){
+          api('/api/world/passport').then(function(p){
+            $('auth').hidden=true;$('me').hidden=false;
+            var h='<div class="card"><h2 style="margin-top:0">Your Passport</h2>'+
+              '<div class="dim"><div><span class="kicker">Completed</span><b class="score num">'+p.completed+'</b></div>'+
+              '<div><span class="kicker">Industries</span><b class="score num">'+p.industries+'</b></div>'+
+              '<div><span class="kicker">Tracks</span><b class="score num">'+p.tracks+'</b></div></div>'+
+              '<label for="dn">Display name</label><input id="dn" maxlength="80" value="'+esc(p.display_name||'')+'">'+
+              '<p style="margin-top:10px"><button class="btn secondary" id="saveName">Save name</button> '+
+              (p.email_verified?'<span class="ok">Email verified.</span>'
+                :'<span class="bad">Email not verified.</span> <button class="btn secondary" id="resend">Resend verification</button>')+'</p>'+
+              '<p style="margin-top:10px">'+
+              (p.passport_public
+                ?'<button class="btn secondary" id="unpub">Make Passport private</button>'
+                :'<button class="btn" id="pub">Publish my public Passport</button>')+
+              ' <span id="puburl"></span> <span id="pubmsg" class="bad" role="alert"></span></p></div>';
+            h+='<div class="card"><h2 style="margin-top:0">Evidence</h2>'+
+               '<p>Tick the results you want on your public Passport. Nothing is shown without your choice.</p>'+
+               '<table><thead><tr><th>Show</th><th>Challenge</th><th>Score</th><th>Profile</th><th>Date</th></tr></thead><tbody>';
+            (p.evidence||[]).forEach(function(e2){
+              h+='<tr><td><input type="checkbox" data-att="'+e2.attempt_id+'" '+(e2.passport_visible?'checked':'')+
+                 ' aria-label="Show '+esc(e2.title)+' on public Passport"></td>'+
+                 '<td>'+esc(e2.title)+'</td><td class="num">'+esc(e2.score)+'</td><td>'+esc(e2.profile)+'</td>'+
+                 '<td class="num">'+esc((e2.completed_at||'').split(' ')[0])+'</td></tr>';
+            });
+            h+='</tbody></table></div>'+
+               '<div class="card"><h2 style="margin-top:0">Your data</h2>'+
+               '<p><a class="btn secondary" href="/api/world/account/export">Export my data (JSON)</a> '+
+               '<button class="btn secondary" id="signout">Sign out</button> '+
+               '<button class="btn secondary" id="delacct">Delete my account</button></p>'+
+               '<p id="acctmsg" role="status"></p></div>';
+            $('me').innerHTML=h;
+            $('saveName').addEventListener('click',function(){
+              api('/api/world/account/profile',{display_name:$('dn').value}).then(load);
+            });
+            if($('resend'))$('resend').addEventListener('click',function(){
+              api('/api/world/account/resend-verification',{}).then(function(){$('acctmsg').textContent='Verification email sent.';});
+            });
+            if($('pub'))$('pub').addEventListener('click',function(){
+              api('/api/world/passport/publish',{publish:true})
+                .then(function(r){$('puburl').innerHTML='<a href="'+r.url+'">'+esc(location.origin+r.url)+'</a>';load();})
+                .catch(function(e2){$('pubmsg').textContent=(e2&&e2.message)||(e2&&e2.error)||'Could not publish.';});
+            });
+            if($('unpub'))$('unpub').addEventListener('click',function(){
+              api('/api/world/passport/publish',{publish:false}).then(load);
+            });
+            $('me').querySelectorAll('input[data-att]').forEach(function(cb){
+              cb.addEventListener('change',function(){
+                api('/api/world/passport/evidence',{attempt_id:parseInt(cb.dataset.att,10),visible:cb.checked});
+              });
+            });
+            $('signout').addEventListener('click',function(){
+              api('/api/world/account/logout',{}).catch(function(){});
+              localStorage.removeItem(KEY);showAuth();
+            });
+            $('delacct').addEventListener('click',function(){
+              var pw=prompt('Deleting your account removes your Passport and all public links. Enter your password to confirm:');
+              if(!pw)return;
+              api('/api/world/account/delete',{password:pw})
+                .then(function(){localStorage.removeItem(KEY);showAuth();})
+                .catch(function(){$('acctmsg').textContent='Password incorrect — account not deleted.';});
+            });
+          }).catch(showAuth);
+        }
+        $('doRegister').addEventListener('click',function(){
+          $('autherr').textContent='';
+          api('/api/world/account/register',{email:$('r_email').value,password:$('r_pw').value,display_name:$('r_name').value})
+            .then(function(r){localStorage.setItem(KEY,r.token);load();})
+            .catch(function(e2){$('autherr').textContent=(e2&&e2.message)||(e2&&e2.error)||'Could not create the account.';});
+        });
+        $('doLogin').addEventListener('click',function(){
+          $('autherr').textContent='';
+          api('/api/world/account/login',{email:$('l_email').value,password:$('l_pw').value})
+            .then(function(r){localStorage.setItem(KEY,r.token);load();})
+            .catch(function(e2){$('autherr').textContent=(e2&&e2.error)==='account_locked'?'Too many attempts — try later.':'Sign-in failed.';});
+        });
+        if(localStorage.getItem(KEY))load();else showAuth();
+        })();
+        """;
 
     public static string InvitePage(Db db, string? inviterName, Dictionary<string, object?> version, string code, string token)
     {
