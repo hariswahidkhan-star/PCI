@@ -223,6 +223,8 @@ public static class Templates
             var t = db.QueryOne("SELECT slug FROM templates WHERE id=?", id);
             if (t is null) return Results.NotFound(new { error = "not_found" });
             db.Execute("DELETE FROM templates WHERE id=?", id);
+            // §6C — clear the template's analytics too, so no orphan daily rows survive the delete.
+            db.Execute("DELETE FROM template_download_daily WHERE template_id=?", id);
             ListSections.Bump();
             log(adm.Id, "template_delete", H.Str(t["slug"]));
             return Results.Json(new { id, deleted = true });
