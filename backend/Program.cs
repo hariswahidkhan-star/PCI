@@ -337,6 +337,15 @@ static List<(string sev, string key, string msg)> ConfigIssues()
         if (!string.IsNullOrWhiteSpace(stripeWhUrl) && !stripeWhUrl.TrimEnd('/').EndsWith("/api/webhook", StringComparison.OrdinalIgnoreCase))
             Err("STRIPE_WEBHOOK_URL", "must end with /api/webhook (not /api/payments/webhook) — see docs/OPERATIONS.md §9");
     }
+    // A PCI World-only preview deployment (PCIWORLD_ONLY=true) runs none of the subsystems these
+    // hard blockers protect — no payments, no exams, no credentials, no stored identity documents,
+    // and every non-world surface is unreachable. Boot anyway (zero-config preview), keep every
+    // finding visible as a warning, and gate the real launch on docs/pciworld/DEPLOY_RENDER.md.
+    if (PCI.Backend.Core.WorldOnly.Enabled && issues.Any(i => i.Item1 == "error"))
+    {
+        issues = issues.Select(i => i.Item1 == "error" ? ("warn", i.Item2, i.Item3 + " (not blocking in PCI World preview mode)") : i).ToList();
+        issues.Add(("warn", "PCIWORLD_ONLY", "world-preview defaults active — complete the production hardening in docs/pciworld/DEPLOY_RENDER.md before public launch"));
+    }
     return issues;
 }
 {

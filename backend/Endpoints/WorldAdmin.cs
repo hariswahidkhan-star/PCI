@@ -503,7 +503,19 @@ public static class WorldAdmin
             ' · draft '+o.challenges.draft+' · in review '+o.challenges.in_review+
             ' · approved '+o.challenges.approved+' · retired '+o.challenges.retired+'</p>'+
             '<p>Attempts: '+o.attempts.total+' · completed '+o.attempts.completed+
-            ' · shared results '+o.attempts.shared+' · live invitations '+o.attempts.invites+'</p>';
+            ' · shared results '+o.attempts.shared+' · live invitations '+o.attempts.invites+'</p>'+
+            '<h2 style="margin-top:18px">Security</h2>'+
+            '<div class="row" style="max-width:640px">'+
+            '<div><label for="pw_cur">Current password</label><input id="pw_cur" type="password" autocomplete="current-password"></div>'+
+            '<div><label for="pw_new">New password (min 12 chars)</label><input id="pw_new" type="password" autocomplete="new-password"></div>'+
+            '</div>'+
+            '<p style="margin-top:10px"><button id="pw_go">Change password</button> <span id="pw_msg" role="status"></span></p>';
+            $('pw_go').addEventListener('click',function(){
+              api('/api/world-admin/auth/password','POST',{current:$('pw_cur').value,next:$('pw_new').value})
+                .then(function(){$('pw_msg').textContent='Password changed — sign in again.';
+                  localStorage.removeItem(KEY);setTimeout(function(){show(false);},1200);})
+                .catch(function(e){$('pw_msg').textContent=(e&&(e.message||e.error))||'Could not change the password.';});
+            });
           }).catch(function(){show(false);});
         }
         function lifecycleButtons(r){
