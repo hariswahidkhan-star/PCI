@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using PCI.Backend.Core;
 using PCI.Backend.Data;
@@ -91,6 +92,25 @@ public static class AdminSimLab
                 warnings = issues.Count(i => i.Severity == SimContent.Severity.Warning),
                 issues = issues.Select(i => new { severity = i.Severity.ToString().ToLowerInvariant(), code = i.Code, message = i.Message }),
             });
+        }));
+
+        // ---- deterministic manifest export for one scenario version (§5B.4). Read-only: content +
+        //      governance state + the live validation verdict, checksummed over the graded content alone.
+        //      Byte-identical on every call for the same content — there is no export timestamp, no exporter
+        //      identity, no reviewer identity and no attempt counts (see SimManifest for why each is out). ----
+        app.MapGet("/api/admin/lab/scenarios/{id}/manifest", (HttpContext ctx, long id) => gate(ctx.Request, "sim_lab", adm =>
+        {
+            var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
+            if (s is null) return Results.NotFound(new { error = "not_found" });
+
+            var json = SimManifest.Build(s, SimContent.Validate(InputFrom(s), OtherCodes(db, id)));
+            var code = H.Str(s["scenario_code"]);
+            var version = H.L(s["version"]);
+            // FileName reduces the operator-authored code to a safe alphabet — a quote or newline in a
+            // scenario code must never be able to forge a response header.
+            ctx.Response.Headers["Content-Disposition"] = $"attachment; filename=\"{SimManifest.FileName(code, version)}\"";
+            log(adm.Id, "sim_scenario_export", $"{code} v{version}");
+            return Results.Text(json, "application/json", Encoding.UTF8);
         }));
 
         // ---- create a DRAFT scenario (§13 authoring). Records the author for maker-checker; starts in the

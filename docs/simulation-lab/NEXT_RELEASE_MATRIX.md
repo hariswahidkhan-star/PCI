@@ -66,13 +66,25 @@ Simulation uses `simulation_*` tables only. Student/admin Lab endpoints never re
 ## Deferred backlog (explicit)
 
 - Full SignalR live period clock and multi-session capstone resume UI.
-- Free Templates Library (out of scope by prompt).
-- Dedicated `sim_lab` RBAC permission (still uses `content`).
 - Full Arabic catalogue copy pack (RTL shell + Coach language mode shipped; full AR scenario text deferred).
 - Load test harness at 10k tasks (validation + solver coverage shipped; k6 deferred).
 - Independent multi-admin maker-checker E2E with two live admin accounts (API maker-checker covered in integration).
 - Multi-dimension scoring UI (calculation / reasoning / decision / evidence / process / communication) beyond existing competency evidence rows.
-- Import/export validated manifest UI (API revise/clone path exists; full manifest I/O deferred).
+- Manifest **import** (export shipped — see below; validated import / apply is deferred).
+
+### Cleared since this matrix was written
+
+- ~~Free Templates Library~~ — shipped end-to-end (§6A–6H): members-only catalogue in the student
+  portal with topic/track filters, search, per-student download history and full i18n, plus the admin
+  library with reach metrics and CSV export.
+- ~~Dedicated `sim_lab` RBAC permission~~ — shipped (§5B.3). The Lab has its own first-class permission;
+  `content` is grandfathered to it in `Rbac.PermsFor` so no existing operator lost access, and `sim_lab`
+  alone confers no marketing-`content` rights.
+- ~~Export half of "import/export validated manifest"~~ — shipped (§5B.4).
+  `GET /api/admin/lab/scenarios/{id}/manifest` (gated `sim_lab`) emits a deterministic, byte-stable JSON
+  manifest — content + governance + the live §14 validation verdict — checksummed over the graded content
+  alone, with no export timestamp, no admin identities and no student usage. `Core/SimManifest.cs` is the
+  pure builder; the Studio table exposes it as **Export**.
 
 ## Baseline → slice evidence
 

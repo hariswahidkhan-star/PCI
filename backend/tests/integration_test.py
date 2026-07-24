@@ -3798,22 +3798,22 @@ def test_simlab(admin):
     vtok = globals().get("_VIEWER_TOK")
     if vtok:
         c, _ = jget("GET", "/api/admin/lab/scenarios", token=vtok)
-        chk("43z4 a viewer (no content, no sim_lab) is refused the admin scenario list (403)", c == 403, c)
+        chk("43zp1 a viewer (no content, no sim_lab) is refused the admin scenario list (403)", c == 403, c)
     # A custom admin granted ONLY 'sim_lab' can manage the Lab...
     c, cb = jget("POST", "/api/admin/team", token=admin, body={"email": "simonly@pci.test", "name": "SimOnly", "role": "custom", "permissions": ["sim_lab"]})
     c, cl = jget("POST", "/api/admin/auth/login", body={"email": "simonly@pci.test", "password": cb.get("temp_password", "")})
     sltok = clear_must_change(cl.get("token"))
     c, _ = jget("GET", "/api/admin/lab/scenarios", token=sltok)
-    chk("43z5 a 'sim_lab'-only admin can read the admin scenario list (200)", c == 200, c)
+    chk("43zp2 a 'sim_lab'-only admin can read the admin scenario list (200)", c == 200, c)
     # ...but NOT the 'content'-gated modules — proving least privilege (sim_lab is not content).
     c, _ = jget("GET", "/api/admin/templates", token=sltok)
-    chk("43z6 a 'sim_lab'-only admin is refused the 'content'-gated templates admin (403)", c == 403, c)
+    chk("43zp3 a 'sim_lab'-only admin is refused the 'content'-gated templates admin (403)", c == 403, c)
     # Grandfather: a custom admin granted ONLY 'content' still reaches the Lab (content ⇒ sim_lab).
     c, gb = jget("POST", "/api/admin/team", token=admin, body={"email": "cononly@pci.test", "name": "ConOnly", "role": "custom", "permissions": ["content"]})
     c, gl = jget("POST", "/api/admin/auth/login", body={"email": "cononly@pci.test", "password": gb.get("temp_password", "")})
     contok = clear_must_change(gl.get("token"))
     c, _ = jget("GET", "/api/admin/lab/scenarios", token=contok)
-    chk("43z7 a 'content'-only admin is grandfathered into the Lab (200)", c == 200, c)
+    chk("43zp4 a 'content'-only admin is grandfathered into the Lab (200)", c == 200, c)
 
     # ---- Phase 5A: scenario content-quality validation (§14 publication gate), gated 'content' ----
     ev_id = ev_admin.get("id")
@@ -3939,6 +3939,76 @@ def test_simlab(admin):
     c, orig = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "IT-REV-001", "mode": "training"})
     chk("43z19 the original published scenario is untouched by the revision (still served)",
         c == 200 and orig.get("attempt_id"), c)
+
+    # ---- §5B.4: deterministic scenario manifest export. Read-only content + governance + validation
+    #      verdict, checksummed over the graded content alone, byte-stable across repeated exports. ----
+    def manifest(sid, token):
+        """GET the manifest → (status, raw_text, content_disposition). _raw_get drops headers, and the
+        Content-Disposition filename is part of what this endpoint promises, so fetch it directly."""
+        r = urllib.request.Request(f"{BASE}/api/admin/lab/scenarios/{sid}/manifest", method="GET",
+                                   headers={"Authorization": "Bearer " + token} if token else {})
+        try:
+            with urllib.request.urlopen(r) as resp:
+                return resp.status, resp.read().decode(), resp.headers.get("Content-Disposition", "")
+        except urllib.error.HTTPError as e:
+            return e.code, e.read().decode(), e.headers.get("Content-Disposition", "")
+
+    c, mtext, mdispo = manifest(new_id, admin)
+    mjson = json.loads(mtext) if c == 200 else {}
+    chk("43zm1 an admin exports a scenario manifest (content + governance + validation verdict)",
+        c == 200 and mjson.get("manifest_version") == 1 and mjson.get("kind") == "pci.simulation.scenario"
+        and (mjson.get("scenario") or {}).get("scenario_code") == "IT-REV-001"
+        and (mjson.get("governance") or {}).get("review_state") == "published"
+        and (mjson.get("validation") or {}).get("publishable") is True,
+        (c, mjson.get("manifest_version"), (mjson.get("scenario") or {}).get("scenario_code")))
+    # The config column round-trips as real JSON (not a quoted blob), so the manifest is diffable.
+    chk("43zm2 the manifest carries the scenario config as real JSON and a SHA-256 content checksum",
+        isinstance((mjson.get("scenario") or {}).get("config"), dict)
+        and (mjson.get("scenario") or {}).get("config", {}).get("task") == "evm"
+        and len(mjson.get("checksum") or "") == 64,
+        ((mjson.get("scenario") or {}).get("config"), mjson.get("checksum")))
+    # Determinism: the same content must export byte-for-byte identically (no timestamp, no exporter).
+    c2, mtext2, _ = manifest(new_id, admin)
+    chk("43zm3 exporting the same scenario twice is byte-identical (deterministic, diffable)",
+        c2 == 200 and mtext2 == mtext, (c2, len(mtext), len(mtext2)))
+    chk("43zm4 the manifest downloads as an attachment named for the scenario code and version",
+        'attachment' in mdispo and 'filename="IT-REV-001-v1.pcisim.json"' in mdispo, mdispo)
+    # Privacy: reviewer/author/approver columns are reduced to boolean sign-off flags, never identities.
+    _ident = ("authored_by", "approved_by", "calc_reviewed_by", "learning_reviewed_by",
+              "safety_reviewed_by", "created_by")
+    chk("43zm5 the manifest reduces reviewer attribution to sign-off flags, never admin identities",
+        not any(k in mtext for k in _ident)
+        and isinstance((mjson.get("governance") or {}).get("signed_off"), dict),
+        [k for k in _ident if k in mtext])
+    # Governance dates are metadata, not content (§18 does not freeze them) — re-setting them must not
+    # move the checksum of a frozen published version.
+    c, _gv = jget("PATCH", f"/api/admin/lab/scenarios/{new_id}/governance", token=admin,
+                  body={"review_due": "2029-01-01", "expires_at": "2030-01-01"})
+    c3, mtext3, _ = manifest(new_id, admin)
+    mjson3 = json.loads(mtext3) if c3 == 200 else {}
+    chk("43zm6 re-setting governance dates changes the manifest but NOT the content checksum",
+        c3 == 200 and mjson3.get("checksum") == mjson.get("checksum")
+        and ((mjson3.get("governance") or {}).get("review_due") or "").startswith("2029-01-01")
+        and mtext3 != mtext,
+        (mjson3.get("checksum") == mjson.get("checksum"), (mjson3.get("governance") or {}).get("review_due")))
+    # A revised version is different content, so it must fingerprint differently.
+    c4, mtext4, dispo4 = manifest(rev_id, admin)
+    mjson4 = json.loads(mtext4) if c4 == 200 else {}
+    chk("43zm7 a revised version exports a different checksum and its own version filename",
+        c4 == 200 and mjson4.get("checksum") != mjson.get("checksum")
+        and 'filename="IT-REV-001-v2-v2.pcisim.json"' in dispo4
+        and (mjson4.get("governance") or {}).get("review_state") == "draft",
+        (mjson4.get("checksum") == mjson.get("checksum"), dispo4))
+    c5, _t5, _d5 = manifest(99999999, admin)
+    chk("43zm8 exporting an unknown scenario id returns 404", c5 == 404, c5)
+    c6, _t6, _d6 = manifest(new_id, mtok)   # student token
+    chk("43zm9 the manifest export is not reachable with a student token", c6 in (401, 403), c6)
+    # Permission wiring matches the rest of the Lab: 'sim_lab' opens it, a viewer is refused.
+    c7, _t7, _d7 = manifest(new_id, sltok)
+    chk("43zm10 a 'sim_lab'-only admin can export a manifest (200)", c7 == 200, c7)
+    if vtok:
+        c8, _t8, _d8 = manifest(new_id, vtok)
+        chk("43zm11 a viewer is refused the manifest export (403)", c8 == 403, c8)
 
     # ---- Phase 2 engine: forecasting (three EAC methods) + CBS cost roll-up, graded deterministically ----
     c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})

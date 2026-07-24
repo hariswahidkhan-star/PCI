@@ -153,6 +153,30 @@ export default function SimLab() {
     } catch (e) { fail(e) } finally { setBusy(false) }
   }
 
+  // Manifest export (§5B.4). Downloads the server's exact bytes via fetch rather than the shared JSON
+  // client: re-serialising the parsed document would reformat it and break the byte/checksum comparison
+  // the manifest exists for. The server names the file (it sanitises the operator-authored code).
+  async function doExport(r: ScenarioRow) {
+    setBusy(true); setErr(''); setMsg('')
+    try {
+      const res = await fetch(`/api/admin/lab/scenarios/${r.id}/manifest`, {
+        headers: { Authorization: `Bearer ${adminApi.getToken() ?? ''}` },
+      })
+      if (!res.ok) throw new Error(`Export failed (${res.status}).`)
+      const text = await res.text()
+      const named = /filename="([^"]+)"/.exec(res.headers.get('Content-Disposition') ?? '')?.[1]
+      const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }))
+      const a = document.createElement('a')
+      a.href = url
+      a.download = named || `${r.scenario_code.replace(/[^A-Za-z0-9._-]/g, '')}-v${r.version}.pcisim.json`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+      flash(`Exported manifest for “${r.scenario_code}”.`)
+    } catch (e) { fail(e) } finally { setBusy(false) }
+  }
+
   async function doReview(id: number, to: string) {
     setBusy(true); setErr(''); setMsg('')
     try {
@@ -354,6 +378,7 @@ export default function SimLab() {
                           <td>
                             <div className="sl-actions">
                               <button className="btn sm" disabled={busy} onClick={() => doValidate(r.id)}>Validate</button>
+                              <button className="btn sm secondary" disabled={busy} onClick={() => { void doExport(r) }}>Export</button>
                               <button
                                 className="btn sm secondary" disabled={busy}
                                 onClick={() => {
