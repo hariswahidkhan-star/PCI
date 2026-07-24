@@ -149,7 +149,7 @@ public class PartnerCommissionReversalTests
         // recoverable balance rather than being silently netted away.
         Assert.Equal(PartnerCommission.StatusPaid,
             H.Str(db.QueryOne("SELECT status FROM partner_commission_transactions WHERE id=?", txnId)!["status"]));
-        Assert.Equal(10_000L, PartnerCommission.RecoverableMinor(db, pid));
+        Assert.Equal(10_000L, PartnerCommissionReversal.RecoverableMinor(db, pid));
         Assert.Equal(0L, Commission(db, pid));
     }
 

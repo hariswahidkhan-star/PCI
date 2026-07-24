@@ -12,10 +12,21 @@ namespace PCI.Backend.Endpoints;
 ///   POST /api/partner/auth/login | logout | password
 ///   GET  /api/partner/me
 ///   GET  /api/partner/dashboard          — code/usage/registration metrics + notices + limits
-///   GET  /api/partner/codes              — own codes with status/usage
+///   GET  /api/partner/codes              — own codes with status/usage and scope
+///   GET  /api/partner/certifications     — the certifications a code may be scoped to (never hard-coded)
 ///   POST /api/partner/codes              — create a code WITHIN the PCI-configured limits
-///   POST /api/partner/codes/{id}/cancel  — cancel an own unused code
+///   POST /api/partner/codes/{id}/edit    — change terms while the code is draft/pending/rejected and unused
+///   POST /api/partner/codes/{id}/submit  — submit a draft, or resubmit a rejected code, for approval
+///   POST /api/partner/codes/{id}/duplicate — copy the terms into a fresh draft under a new code string
+///   POST /api/partner/codes/{id}/extend  — push the end date out (additive only, capped by the agreement)
+///   POST /api/partner/codes/{id}/suspend | resume — stop/restart redemptions without rewriting history
+///   POST /api/partner/codes/{id}/cancel  — withdraw an own UNUSED code (a used code must be suspended)
+///   GET  /api/partner/settlements | statement | disputes — see <see cref="Partners"/> (finance module)
 ///   GET  /api/partner/students           — privacy-masked sponsored registrations (own codes only)
+///
+/// The decisions behind the code endpoints live in <see cref="PartnerCodeRules"/> rather than in these
+/// handlers, so "can this code be cancelled?" is answerable without standing up the web app. Money-facing
+/// and code-mutating routes are restricted to the institution's own admin/finance logins.
 ///
 /// Admin-facing:
 ///   GET/POST /api/admin/training-partners/{id}/users        — gate 'partners': manage institution logins
@@ -142,11 +153,74 @@ public static class PartnerPortal
         });
 
         // ================= partner codes =================
+
+        // Thin adapters over PartnerCodeRules — the decisions live there so they are testable without the
+        // web app; these only pull the values out of the JSON body.
+        static string? Nz(string? s) => PartnerCodeRules.Nz(s);
+
+        static long? CertScope(Dictionary<string, JsonElement> b)
+            => H.GetNum(b, "certification_id") is { } c && c > 0 ? (long)c : null;
+
+        static long? PerUserLimit(Dictionary<string, JsonElement> b)
+            => H.GetNum(b, "per_user_limit") is { } v && v > 0 ? (long)v : null;
+
+        static string? Countries(Dictionary<string, JsonElement> b)
+            => PartnerCodeRules.NormaliseCountries(H.GetS(b, "eligible_countries"));
+
+        // Every scope field offered here is genuinely enforced at redemption (Public.ValidateCode /
+        // Public.Pricing), so these are real controls rather than decorative form fields.
+        PartnerCodeRules.Refusal? ScopeError(Dictionary<string, JsonElement> b)
+        {
+            if (PartnerCodeRules.DateWindowError(H.GetS(b, "start_date"), H.GetS(b, "end_date")) is { } dateErr)
+                return dateErr;
+            if (CertScope(b) is { } certId && db.QueryOne("SELECT id FROM certifications WHERE id=?", certId) is null)
+                return new PartnerCodeRules.Refusal("bad_certification", "That certification does not exist.");
+            return PartnerCodeRules.ScopeValueError(
+                H.GetNum(b, "min_transaction"), H.GetNum(b, "max_discount"), H.GetNum(b, "per_user_limit"));
+        }
+
+        // A code a partner is allowed to act on: theirs.
+        Dictionary<string, object?>? OwnCode(long id, long partnerId)
+            => db.QueryOne("SELECT * FROM discount_codes WHERE id=? AND partner_id=?", id, partnerId);
+
+        // The agreement ceilings PCI configured, re-checked whenever a code's terms change or it is
+        // submitted for approval — not only at creation. Otherwise a draft saved under yesterday's limits
+        // could be edited or submitted straight past today's. excludeCodeId keeps the code being changed
+        // out of its own count. (POST /api/partner/codes keeps its original inline checks so that its
+        // established error payloads, which carry a `limit` field the portal displays, are unchanged.)
+        PartnerCodeRules.Refusal? LimitError(Dictionary<string, object?> partner, double percent, long maxUses, long partnerId, long excludeCodeId)
+        {
+            var codeCount = db.Scalar<long>(@"SELECT COUNT(*) FROM discount_codes
+                WHERE partner_id=? AND id<>? AND COALESCE(status,'active') NOT IN ('rejected','cancelled')", partnerId, excludeCodeId);
+            var committed = db.Scalar<long>(@"SELECT COALESCE(SUM(COALESCE(max_uses,0)),0) FROM discount_codes
+                WHERE partner_id=? AND id<>? AND COALESCE(status,'active') IN ('active','pending_approval')", partnerId, excludeCodeId);
+            return PartnerCodeRules.LimitError(
+                partner["max_discount_percent"] is null ? null : H.D(partner["max_discount_percent"]),
+                H.L(partner["allow_full_sponsorship"]) == 1,
+                partner["max_uses_per_code"] is null ? null : H.L(partner["max_uses_per_code"]),
+                partner["max_codes"] is null ? null : H.L(partner["max_codes"]),
+                partner["total_allocation"] is null ? null : H.L(partner["total_allocation"]),
+                percent, maxUses, codeCount, committed);
+        }
+
         app.MapGet("/api/partner/codes", (HttpContext ctx) =>
         {
             if (Need(ctx, out var p) is { } deny) return deny;
-            return J(new { rows = db.Query(@"SELECT id,code,status,active,discount_type,discount_value,applies_to,max_uses,used_count,
-                start_date,end_date,campaign_name,rejection_reason,notes FROM discount_codes WHERE partner_id=? ORDER BY id DESC", p!.PartnerId) });
+            return J(new { rows = db.Query(@"SELECT dc.id,dc.code,dc.status,dc.active,dc.discount_type,dc.discount_value,dc.applies_to,
+                    dc.max_uses,dc.used_count,dc.start_date,dc.end_date,dc.campaign_name,dc.rejection_reason,dc.notes,
+                    dc.certification_id,dc.per_user_limit,dc.min_transaction,dc.max_discount,dc.eligible_countries,
+                    c.acronym cert_acronym, c.name cert_name
+                FROM discount_codes dc LEFT JOIN certifications c ON c.id=dc.certification_id
+                WHERE dc.partner_id=? ORDER BY dc.id DESC", p!.PartnerId) });
+        });
+
+        // The certifications a partner may scope a code to. Read from the certifications table so the three
+        // current credentials are never hard-coded — a fourth appears here the day it is created.
+        app.MapGet("/api/partner/certifications", (HttpContext ctx) =>
+        {
+            if (Need(ctx, out _) is { } deny) return deny;
+            return J(new { rows = db.Query(
+                "SELECT id,acronym,name,code FROM certifications WHERE COALESCE(active,1)=1 ORDER BY sort_order, code") });
         });
 
         app.MapPost("/api/partner/codes", async (HttpContext ctx) =>
@@ -156,10 +230,18 @@ public static class PartnerPortal
             var partner = db.QueryOne("SELECT * FROM training_partners WHERE id=?", p.PartnerId);
             if (partner is null) return Err(404, "institution_not_found");
             var b = await H.Body(ctx.Request);
-            var percent = Math.Clamp(H.GetNum(b, "percent") ?? 0, 1, 100);
-            var maxUses = (long)Math.Max(1, H.GetNum(b, "max_uses") ?? 1);
+            // Reject out-of-range input rather than clamping it. A partner who typed 150% and silently got a
+            // 100% full-sponsorship code — or typed 0 and got 1% — would have no way to know the terms they
+            // are now bound to are not the terms they entered.
+            var percent = H.GetNum(b, "percent") ?? 0;
+            if (PartnerCodeRules.PercentError(percent) is { } pe) return Err(422, pe.Error, pe.Message);
+            var maxUsesIn = H.GetNum(b, "max_uses") ?? 1;
+            if (PartnerCodeRules.MaxUsesError(maxUsesIn) is { } ue) return Err(422, ue.Error, ue.Message);
+            var maxUses = (long)maxUsesIn;
             var appliesTo = (H.GetS(b, "applies_to") ?? "all").Trim().ToLowerInvariant();
-            if (appliesTo is not ("all" or "membership" or "exam")) appliesTo = "all";
+            if (PartnerCodeRules.AppliesToError(appliesTo) is { } ae) return Err(422, ae.Error, ae.Message);
+
+            if (ScopeError(b) is { } scopeErr) return Err(422, scopeErr.Error, scopeErr.Message);
 
             // The same ceilings PCI configured — validated server-side before anything is saved.
             if (partner["max_discount_percent"] is not null && percent > H.D(partner["max_discount_percent"]))
@@ -186,11 +268,14 @@ public static class PartnerPortal
             var draft = H.GetEl(b, "draft") is { ValueKind: JsonValueKind.True };
             var autoApprove = H.L(partner["auto_approve_codes"]) == 1;
             var status = draft ? "draft" : autoApprove ? "active" : "pending_approval";
-            var codeId = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,active,code_type,org_name,partner_id,created_by_partner_user,campaign_name,notes,status)
-                VALUES(?, 'percentage', ?, ?, ?, ?, ?, ?, 'institution', ?, ?, ?, ?, ?, ?)",
-                codeStr, percent, appliesTo, H.GetS(b, "start_date"), H.GetS(b, "end_date"), maxUses,
+            var codeId = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,active,code_type,org_name,partner_id,created_by_partner_user,campaign_name,notes,status,
+                    certification_id,per_user_limit,min_transaction,max_discount,eligible_countries)
+                VALUES(?, 'percentage', ?, ?, ?, ?, ?, ?, 'institution', ?, ?, ?, ?, ?, ?, ?,?,?,?,?)",
+                codeStr, percent, appliesTo, Nz(H.GetS(b, "start_date")), Nz(H.GetS(b, "end_date")), maxUses,
                 status == "active" ? 1 : 0, H.Str(partner["name"]), p.PartnerId, p.Id,
-                H.GetS(b, "campaign_name"), H.GetS(b, "notes"), status);
+                H.GetS(b, "campaign_name"), H.GetS(b, "notes"), status,
+                CertScope(b), PerUserLimit(b), H.GetNum(b, "min_transaction"), H.GetNum(b, "max_discount"),
+                Countries(b));
             if (status == "pending_approval")
                 try { Notify.Alert(db, "partners", $"Institution code awaiting approval: {codeStr}",
                     $"<p>{System.Net.WebUtility.HtmlEncode(H.Str(partner["name"]) ?? "")} submitted code <b>{codeStr}</b> ({percent:0.#}% × {maxUses}) for approval.</p>", "discount_code", codeId); } catch { }
@@ -202,11 +287,157 @@ public static class PartnerPortal
         app.MapPost("/api/partner/codes/{id}/cancel", (HttpContext ctx, long id) =>
         {
             if (Need(ctx, out var p) is { } deny) return deny;
-            var c = db.QueryOne("SELECT id,used_count FROM discount_codes WHERE id=? AND partner_id=?", id, p!.PartnerId);
+            if (p!.Role is not ("admin" or "finance")) return Err(403, "role_forbidden", "Only institution admin/finance users can cancel codes.");
+            var c = OwnCode(id, p.PartnerId);
             if (c is null) return Err(404, "not_found");
+            if (H.Str(c["status"]) == PartnerCodeRules.StatusCancelled) return J(new { ok = true, already = true });
+            if (PartnerCodeRules.CancelError(H.Str(c["status"]), H.L(c["used_count"])) is { } ce) return Err(409, ce.Error, ce.Message);
             db.Execute("UPDATE discount_codes SET status='cancelled', active=0 WHERE id=?", id);
             log(null, "partner_code_cancelled", $"code {id} by partner_user {p.Id}");
             return J(new { ok = true });
+        });
+
+        // Stop further redemptions of a code that is already in use, without touching what it has already
+        // done. This is the honest counterpart to the cancellation refused above.
+        app.MapPost("/api/partner/codes/{id}/suspend", (HttpContext ctx, long id) =>
+        {
+            if (Need(ctx, out var p) is { } deny) return deny;
+            if (p!.Role is not ("admin" or "finance")) return Err(403, "role_forbidden", "Only institution admin/finance users can suspend codes.");
+            var c = OwnCode(id, p.PartnerId);
+            if (c is null) return Err(404, "not_found");
+            if (PartnerCodeRules.SuspendError(H.Str(c["status"])) is { } se) return Err(409, se.Error, se.Message);
+            db.Execute("UPDATE discount_codes SET status='suspended', active=0 WHERE id=?", id);
+            log(null, "partner_code_suspended", $"code {id} by partner_user {p.Id}");
+            return J(new { ok = true, status = "suspended" });
+        });
+
+        app.MapPost("/api/partner/codes/{id}/resume", (HttpContext ctx, long id) =>
+        {
+            if (Need(ctx, out var p) is { } deny) return deny;
+            if (p!.Role is not ("admin" or "finance")) return Err(403, "role_forbidden", "Only institution admin/finance users can resume codes.");
+            var c = OwnCode(id, p.PartnerId);
+            if (c is null) return Err(404, "not_found");
+            if (PartnerCodeRules.ResumeError(H.Str(c["status"])) is { } re) return Err(409, re.Error, re.Message);
+            db.Execute("UPDATE discount_codes SET status='active', active=1 WHERE id=?", id);
+            log(null, "partner_code_resumed", $"code {id} by partner_user {p.Id}");
+            return J(new { ok = true, status = "active" });
+        });
+
+        // Edit a code that has not yet gone anywhere. Once a code is live or has been redeemed its terms
+        // are what students agreed to, so they are not editable — extend or duplicate instead.
+        app.MapPost("/api/partner/codes/{id}/edit", async (HttpContext ctx, long id) =>
+        {
+            if (Need(ctx, out var p) is { } deny) return deny;
+            if (p!.Role is not ("admin" or "finance")) return Err(403, "role_forbidden", "Only institution admin/finance users can edit codes.");
+            var c = OwnCode(id, p.PartnerId);
+            if (c is null) return Err(404, "not_found");
+            var status = H.Str(c["status"]) ?? PartnerCodeRules.StatusActive;
+            if (PartnerCodeRules.EditError(status, H.L(c["used_count"])) is { } ee) return Err(409, ee.Error, ee.Message);
+
+            var partner = db.QueryOne("SELECT * FROM training_partners WHERE id=?", p.PartnerId);
+            if (partner is null) return Err(404, "institution_not_found");
+            var b = await H.Body(ctx.Request);
+
+            var percent = H.GetNum(b, "percent") ?? H.D(c["discount_value"]);
+            if (PartnerCodeRules.PercentError(percent) is { } pe) return Err(422, pe.Error, pe.Message);
+            var maxUsesIn = H.GetNum(b, "max_uses") ?? H.L(c["max_uses"]);
+            if (PartnerCodeRules.MaxUsesError(maxUsesIn) is { } ue) return Err(422, ue.Error, ue.Message);
+            var maxUses = (long)maxUsesIn;
+            if (LimitError(partner, percent, maxUses, p.PartnerId, id) is { } limitErr) return Err(422, limitErr.Error, limitErr.Message);
+            if (ScopeError(b) is { } scopeErr) return Err(422, scopeErr.Error, scopeErr.Message);
+            var appliesTo = (H.GetS(b, "applies_to") ?? H.Str(c["applies_to"]) ?? "all").Trim().ToLowerInvariant();
+            if (PartnerCodeRules.AppliesToError(appliesTo) is { } ae) return Err(422, ae.Error, ae.Message);
+
+            db.Execute(@"UPDATE discount_codes SET discount_value=?, applies_to=?, max_uses=?, start_date=?, end_date=?,
+                    campaign_name=?, notes=?, certification_id=?, per_user_limit=?, min_transaction=?, max_discount=?, eligible_countries=?
+                WHERE id=?",
+                percent, appliesTo, maxUses, Nz(H.GetS(b, "start_date")), Nz(H.GetS(b, "end_date")),
+                H.GetS(b, "campaign_name"), H.GetS(b, "notes"), CertScope(b), PerUserLimit(b),
+                H.GetNum(b, "min_transaction"), H.GetNum(b, "max_discount"), Countries(b), id);
+            log(null, "partner_code_edited", $"code {id} by partner_user {p.Id}");
+            return J(new { ok = true, id, status });
+        });
+
+        // Submit a draft, or resubmit a rejected code, for PCI approval.
+        app.MapPost("/api/partner/codes/{id}/submit", (HttpContext ctx, long id) =>
+        {
+            if (Need(ctx, out var p) is { } deny) return deny;
+            if (p!.Role is not ("admin" or "finance")) return Err(403, "role_forbidden", "Only institution admin/finance users can submit codes.");
+            var c = OwnCode(id, p.PartnerId);
+            if (c is null) return Err(404, "not_found");
+            var status = H.Str(c["status"]) ?? PartnerCodeRules.StatusActive;
+            if (PartnerCodeRules.SubmitError(status) is { } sube) return Err(409, sube.Error, sube.Message);
+            var partner = db.QueryOne("SELECT * FROM training_partners WHERE id=?", p.PartnerId);
+            if (partner is null) return Err(404, "institution_not_found");
+
+            // Re-check the agreement ceilings at submission: a draft may have been saved before PCI tightened
+            // the limits, and approving it unchecked would let a stale draft bypass the current agreement.
+            if (LimitError(partner, H.D(c["discount_value"]), c["max_uses"] is null ? 0 : H.L(c["max_uses"]), p.PartnerId, id) is { } limitErr)
+                return Err(422, limitErr.Error, limitErr.Message);
+
+            var next = PartnerCodeRules.SubmittedStatus(H.L(partner["auto_approve_codes"]) == 1);
+            db.Execute("UPDATE discount_codes SET status=?, active=?, rejection_reason=NULL WHERE id=?",
+                next, next == PartnerCodeRules.StatusActive ? 1 : 0, id);
+            if (next == PartnerCodeRules.StatusPendingApproval)
+                try { Notify.Alert(db, "partners", $"Institution code awaiting approval: {H.Str(c["code"])}",
+                    $"<p>{System.Net.WebUtility.HtmlEncode(H.Str(partner["name"]) ?? "")} submitted code <b>{System.Net.WebUtility.HtmlEncode(H.Str(c["code"]) ?? "")}</b> for approval.</p>", "discount_code", id); } catch { }
+            log(null, "partner_code_submitted", $"code {id} -> {next} by partner_user {p.Id}");
+            return J(new { ok = true, status = next });
+        });
+
+        // Copy an existing code's terms into a new draft under a fresh code string. Usage history, approval
+        // state and the rejection reason are deliberately NOT copied — the clone starts clean.
+        app.MapPost("/api/partner/codes/{id}/duplicate", async (HttpContext ctx, long id) =>
+        {
+            if (Need(ctx, out var p) is { } deny) return deny;
+            if (p!.Role is not ("admin" or "finance")) return Err(403, "role_forbidden", "Only institution admin/finance users can duplicate codes.");
+            var c = OwnCode(id, p.PartnerId);
+            if (c is null) return Err(404, "not_found");
+            var partner = db.QueryOne("SELECT * FROM training_partners WHERE id=?", p.PartnerId);
+            if (partner is null) return Err(404, "institution_not_found");
+
+            var b = await H.Body(ctx.Request);
+            var codeStr = (H.GetS(b, "code") ?? "").Trim().ToUpperInvariant();
+            if (codeStr.Length == 0) codeStr = "INST-" + Security.RandomHex(4).ToUpperInvariant();
+            if (codeStr.Length > 40 || db.QueryOne("SELECT id FROM discount_codes WHERE code=?", codeStr) is not null)
+                return Err(409, "code_taken");
+            // The code-count ceiling applies to the copy exactly as it would to a new code.
+            var codeCount = db.Scalar<long>("SELECT COUNT(*) FROM discount_codes WHERE partner_id=? AND COALESCE(status,'active') NOT IN ('rejected','cancelled')", p.PartnerId);
+            if (partner["max_codes"] is not null && codeCount >= H.L(partner["max_codes"]))
+                return Err(422, "over_code_limit", $"Your agreement allows {H.L(partner["max_codes"])} codes.");
+
+            var newId = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,active,code_type,org_name,partner_id,created_by_partner_user,campaign_name,notes,status,
+                    certification_id,per_user_limit,min_transaction,max_discount,eligible_countries)
+                VALUES(?, 'percentage', ?, ?, ?, ?, ?, 0, 'institution', ?, ?, ?, ?, ?, 'draft', ?,?,?,?,?)",
+                codeStr, H.D(c["discount_value"]), H.Str(c["applies_to"]) ?? "all",
+                Nz(H.GetS(b, "start_date")) ?? H.Str(c["start_date"]), Nz(H.GetS(b, "end_date")) ?? H.Str(c["end_date"]),
+                c["max_uses"] is null ? null : (object)H.L(c["max_uses"]),
+                H.Str(partner["name"]), p.PartnerId, p.Id,
+                H.GetS(b, "campaign_name") ?? H.Str(c["campaign_name"]), H.Str(c["notes"]),
+                c["certification_id"], c["per_user_limit"], c["min_transaction"], c["max_discount"], c["eligible_countries"]);
+            log(null, "partner_code_duplicated", $"code {id} -> {newId} ({codeStr}) by partner_user {p.Id}");
+            return J(new { ok = true, id = newId, code = codeStr, status = "draft" });
+        });
+
+        // Push a live code's end date out. Additive only — a code cannot be shortened this way, because
+        // students who already hold it were told it runs until the date it currently shows.
+        app.MapPost("/api/partner/codes/{id}/extend", async (HttpContext ctx, long id) =>
+        {
+            if (Need(ctx, out var p) is { } deny) return deny;
+            if (p!.Role is not ("admin" or "finance")) return Err(403, "role_forbidden", "Only institution admin/finance users can extend codes.");
+            var c = OwnCode(id, p.PartnerId);
+            if (c is null) return Err(404, "not_found");
+            var b = await H.Body(ctx.Request);
+            var end = Nz(H.GetS(b, "end_date"));
+            var current = H.Str(c["end_date"]);
+            // An institution's agreement end is a hard ceiling — a code cannot outlive the contract it sits under.
+            var agreementEnd = H.Str(db.QueryOne("SELECT agreement_end FROM training_partners WHERE id=?", p.PartnerId)?["agreement_end"]);
+            if (PartnerCodeRules.ExtendError(H.Str(c["status"]), current, H.Str(c["start_date"]), end, agreementEnd) is { } xe)
+                return Err(xe.Error == "bad_status" ? 409 : 422, xe.Error, xe.Message);
+
+            db.Execute("UPDATE discount_codes SET end_date=? WHERE id=?", end, id);
+            log(null, "partner_code_extended", $"code {id} end_date {current ?? "(none)"} -> {end} by partner_user {p.Id}");
+            return J(new { ok = true, end_date = end });
         });
 
         // ================= partner students (privacy-masked) =================
