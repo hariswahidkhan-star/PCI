@@ -223,6 +223,53 @@ public static class WorldAccount
             return J(new { ok = true });
         });
 
+        // ───────────── password reset ─────────────
+
+        app.MapPost("/api/world/account/forgot", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            if (Throttled("forgot|" + Ip(ctx), 10)) return Err("rate_limited", 429);
+            var b = await H.Body(ctx.Request);
+            var email = (H.GetS(b, "email") ?? "").Trim().ToLowerInvariant();
+            var u = db.QueryOne("SELECT id FROM pciworld_users WHERE email=? AND status='active'", email);
+            if (u is not null)
+            {
+                var token = Security.RandomHex(32);
+                db.Execute("DELETE FROM pciworld_user_tokens WHERE user_id=? AND purpose='reset'", u["id"]);
+                db.Execute("INSERT INTO pciworld_user_tokens(user_id,purpose,token_sha,expires_at) VALUES(?, 'reset', ?, datetime('now','+2 hours'))",
+                    u["id"], Security.Sha(token));
+                var url = $"{ctx.Request.Scheme}://{ctx.Request.Host}/world/reset-password?t={token}";
+                Mailer.Send(db, null, email, "world_reset", "Reset your PCI World password",
+                    $"<p>Someone asked to reset the password for this PCI World account.</p>" +
+                    $"<p><a href=\"{url}\">Choose a new password</a> (link valid for 2 hours). If this wasn't you, ignore this email.</p>" +
+                    $"<p>{WorldPages.OperatedBy}</p>");
+            }
+            // Same response whether or not the account exists — no enumeration.
+            return J(new { ok = true, message = "If that address has an account, a reset link is on its way." });
+        });
+
+        app.MapPost("/api/world/account/reset", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            if (Throttled("reset|" + Ip(ctx), 10)) return Err("rate_limited", 429);
+            var b = await H.Body(ctx.Request);
+            var token = H.GetS(b, "token") ?? "";
+            var next = H.GetS(b, "password") ?? "";
+            if (next.Length < 10) return Err("weak_password", 400, "Use at least 10 characters.");
+            var row = token.Length > 0 ? db.QueryOne(@"SELECT * FROM pciworld_user_tokens
+                WHERE token_sha=? AND purpose='reset' AND expires_at>datetime('now')", Security.Sha(token)) : null;
+            if (row is null) return Err("invalid_token", 400, "This reset link is invalid or has expired — request a new one.");
+            db.Execute("UPDATE pciworld_users SET password_hash=?, failed_logins=0, lockout_until=NULL WHERE id=?",
+                BCrypt.Net.BCrypt.HashPassword(next), row["user_id"]);
+            db.Execute("DELETE FROM pciworld_user_tokens WHERE user_id=?", row["user_id"]);
+            db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=?", row["user_id"]);   // sign out everywhere
+            log(null, "world_password_reset", $"#{H.L(row["user_id"])}");
+            return J(new { ok = true });
+        });
+
+        app.MapGet("/world/reset-password", () => !Enabled() ? Disabled()
+            : Results.Content(WorldPages.ResetPassword(db), "text/html; charset=utf-8"));
+
         app.MapGet("/api/world/account", (HttpContext ctx) =>
         {
             if (!Enabled()) return Disabled();

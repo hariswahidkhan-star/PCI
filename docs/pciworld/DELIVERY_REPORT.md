@@ -98,9 +98,29 @@ grant or modify any formal PCI certification — structurally, not just editoria
   of the entire journey including the verification link, zero email leakage on the public page,
   and 404 after unpublish. Full-suite results recorded in the PR.
 
+## Phase 2 slice addendum — 30-challenge library, archive filters, password reset
+
+- **Content: 10 → 30 validated challenges** (`WC-…-001…030`), now spanning **all 18 deterministic
+  engine families** (adding productivity, BoQ, resource levelling, procurement delay, portfolio
+  scoring, weighted decision, data quality), all five tracks, five difficulty levels and 20+
+  industries (oil & gas, mining, ports, water, defence, telecoms, events, real estate, marine,
+  education, PMO…). Every ask reference-solves in CI; the pack test now also asserts full
+  difficulty/track coverage and ≥15 industries. Counts by status at seed: 30 published, 0 draft.
+  This satisfies the Foundation-launch content floor; independent SME review before public launch
+  remains a stated gate, not a claim.
+- **Archive filters**: server-side industry/difficulty/track filtering (exact-match parameters,
+  enum-validated; injection-shaped values are simply ignored) with an accessible GET filter form.
+- **Password reset**: no-enumeration responses (identical message for unknown addresses),
+  2-hour single-use sha-stored tokens, reset revokes all sessions, mail via the platform sink.
+  Live-verified: old password 401, new password 200, token reuse rejected.
+- Test-guard refinement: the workspace no-leak test now asserts absence of rubric/solver **JSON
+  keys** (`"quality":` …) rather than banning English words — structure is the guarantee.
+- Evidence: World tests **17/17** with the 30-challenge gates; live smoke of filters and the
+  full reset journey; full-suite results in the PR.
+
 ## Not built (do not present as existing)
 
-Password reset flow (token table supports it; endpoint pending), share-image PNG rendering,
+Share-image PNG rendering,
 AI Coach, Human vs AI live feature (one governed-AI *challenge* ships), World Project Series,
 universities/employers, rankings/leaderboards (none rendered anywhere), Arabic localization of
 PCI World copy, Playwright/axe automation for `/world`, MFA, hostname wiring, CV-bullet/LinkedIn

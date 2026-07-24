@@ -85,12 +85,28 @@ public static class World
             return Html(WorldPages.Workspace(db, code, version, view, invite.Length > 0 ? invite : null));
         });
 
-        app.MapGet("/world/archive", () =>
+        app.MapGet("/world/archive", (HttpContext ctx) =>
         {
             if (!Enabled()) return Disabled();
-            var rows = db.Query(@"SELECT code,title,industry,difficulty,est_minutes FROM pciworld_challenges
-                WHERE current_version>=1 AND retired=0 ORDER BY id ASC LIMIT 200");
-            return Html(WorldPages.Archive(db, rows));
+            // Server-side filters; values are matched exactly as parameters (never concatenated),
+            // and difficulty/track are additionally constrained to the known enums.
+            var industry = ctx.Request.Query["industry"].ToString();
+            var difficulty = ctx.Request.Query["difficulty"].ToString();
+            var track = ctx.Request.Query["track"].ToString();
+            if (!WorldContent.Difficulties.Contains(difficulty)) difficulty = "";
+            if (!WorldContent.Tracks.Contains(track)) track = "";
+
+            var sql = "SELECT code,title,industry,track,difficulty,est_minutes FROM pciworld_challenges WHERE current_version>=1 AND retired=0";
+            var args = new List<object?>();
+            if (industry.Length > 0) { sql += " AND industry=?"; args.Add(industry); }
+            if (difficulty.Length > 0) { sql += " AND difficulty=?"; args.Add(difficulty); }
+            if (track.Length > 0) { sql += " AND track=?"; args.Add(track); }
+            sql += " ORDER BY id ASC LIMIT 200";
+            var rows = db.Query(sql, args.ToArray());
+            var industries = db.Query(@"SELECT DISTINCT industry FROM pciworld_challenges
+                    WHERE current_version>=1 AND retired=0 AND industry IS NOT NULL ORDER BY industry")
+                .Select(r => H.Str(r["industry"]) ?? "").Where(s => s.Length > 0).ToList();
+            return Html(WorldPages.Archive(db, rows, industries, industry, difficulty, track));
         });
 
         app.MapGet("/world/about", () => !Enabled() ? Disabled() : Html(WorldPages.About(db)));

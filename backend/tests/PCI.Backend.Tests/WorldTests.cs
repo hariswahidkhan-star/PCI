@@ -48,7 +48,14 @@ public class WorldTests
         var db = NewWorldDb();
         var rows = db.Query("SELECT * FROM pciworld_challenges WHERE author_id IS NULL");
         Assert.Equal(WorldContentPack.Count, rows.Count);
-        Assert.Equal(10, rows.Count);
+        Assert.Equal(30, rows.Count);
+
+        // Release-2 gates: every difficulty and every track is represented, across a broad industry set.
+        string S2(Dictionary<string, object?> r, string k) => Convert.ToString(r[k]) ?? "";
+        foreach (var d in WorldContent.Difficulties) Assert.Contains(rows, r => S2(r, "difficulty") == d);
+        foreach (var t in WorldContent.Tracks) Assert.Contains(rows, r => S2(r, "track") == t);
+        Assert.True(rows.Select(r => S2(r, "industry")).Distinct().Count() >= 15,
+            "expected broad industry coverage in the 30-challenge library");
 
         foreach (var r in rows)
         {
@@ -102,12 +109,15 @@ public class WorldTests
         {
             var snap = WorldLifecycle.PinnedVersion(db, Convert.ToInt64(r["id"]), Convert.ToInt64(r["current_version"]))!;
             var view = JsonSerializer.Serialize(WorldContent.PublicView(Convert.ToString(snap["config_json"])!));
-            Assert.DoesNotContain("quality", view);
-            Assert.DoesNotContain("consequence", view);
-            Assert.DoesNotContain("principle", view);
-            Assert.DoesNotContain("share_line", view);
-            Assert.DoesNotContain("given", view);
-            Assert.DoesNotContain("profile_map", view);
+            // Guard the STRUCTURE: no rubric/solver field may be serialized as a key. (Prose may
+            // legitimately mention e.g. a Quality department — keys are what leak answers.)
+            Assert.DoesNotContain("\"quality\":", view);
+            Assert.DoesNotContain("\"consequence\":", view);
+            Assert.DoesNotContain("\"principle\":", view);
+            Assert.DoesNotContain("\"share_line\":", view);
+            Assert.DoesNotContain("\"given\":", view);
+            Assert.DoesNotContain("\"profile_map\":", view);
+            Assert.DoesNotContain("\"tolerance\":", view);
         }
     }
 
