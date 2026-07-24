@@ -148,5 +148,39 @@ public static class FinanceSchema
         // SUM(allocated) <= commission_minor check in the settlement service prevents double payment.
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_psi_pair ON partner_settlement_items(settlement_id, transaction_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_psi_txn ON partner_settlement_items(transaction_id)");
+
+        // ---- disputes: a partner's formal challenge to a figure, with a threaded, append-only history ----
+        // A dispute never edits the ledger. It records the challenge and its outcome; any correction is
+        // made as a NEW adjustment transaction, so the original figure and the reason it changed both
+        // survive. Either a transaction or a settlement may be disputed (or neither — a general query).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_disputes(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            dispute_no VARCHAR(32) NOT NULL,
+            partner_id INTEGER NOT NULL,
+            transaction_id INTEGER, settlement_id INTEGER,
+            category VARCHAR(32) NOT NULL DEFAULT 'other',     -- missing_commission|wrong_rate|wrong_amount|not_paid|other
+            subject VARCHAR(200) NOT NULL,
+            detail TEXT,
+            claimed_amount_minor INTEGER NOT NULL DEFAULT 0,
+            currency VARCHAR(3) NOT NULL DEFAULT 'USD',
+            status VARCHAR(20) NOT NULL DEFAULT 'open',        -- open|under_review|resolved|rejected|withdrawn
+            resolution TEXT,
+            adjustment_transaction_id INTEGER,                 -- set when the outcome created an adjustment
+            raised_by_partner_user_id INTEGER,
+            assigned_to INTEGER, resolved_by INTEGER, resolved_at TEXT,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_dispute_no ON partner_disputes(dispute_no)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_disputes_partner ON partner_disputes(partner_id, status)");
+
+        db.Exec(@"CREATE TABLE IF NOT EXISTS partner_dispute_messages(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            dispute_id INTEGER NOT NULL,
+            author_type VARCHAR(12) NOT NULL,                  -- partner|admin|system
+            author_id INTEGER,
+            body TEXT NOT NULL,
+            internal INTEGER NOT NULL DEFAULT 0,               -- 1 = admin-only note, never shown to the partner
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_dispute_msgs ON partner_dispute_messages(dispute_id, id)");
     }
 }

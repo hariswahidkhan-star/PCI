@@ -38,7 +38,9 @@ public static class PartnerCommission
         [StatusDue] = new[] { StatusPendingReview, StatusApproved, StatusOnHold, StatusDisputed, StatusReversed },
         [StatusPendingReview] = new[] { StatusApproved, StatusOnHold, StatusDisputed, StatusReversed },
         [StatusApproved] = new[] { StatusScheduled, StatusPartiallyPaid, StatusPaid, StatusOnHold, StatusDisputed, StatusReversed },
-        [StatusScheduled] = new[] { StatusPartiallyPaid, StatusPaid, StatusOnHold, StatusDisputed, StatusReversed },
+        // StatusApproved is reachable from StatusScheduled so that cancelling a settlement releases its
+        // commissions back into the payable pool instead of stranding them as permanently 'scheduled'.
+        [StatusScheduled] = new[] { StatusApproved, StatusPartiallyPaid, StatusPaid, StatusOnHold, StatusDisputed, StatusReversed },
         [StatusPartiallyPaid] = new[] { StatusPartiallyPaid, StatusPaid, StatusOnHold, StatusDisputed, StatusReversed },
         [StatusPaid] = new[] { StatusDisputed, StatusReversed },
         [StatusOnHold] = new[] { StatusDue, StatusPendingReview, StatusApproved, StatusDisputed, StatusReversed },

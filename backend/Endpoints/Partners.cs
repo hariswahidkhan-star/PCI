@@ -13,9 +13,17 @@ namespace PCI.Backend.Endpoints;
 ///   sponsor-funded exam entitlement for the chosen certification, then tracks per-candidate progress
 ///   (application → exam access → result → credential), always scoped per certification.
 ///
-///   Commission ledger — DERIVED from paid redemptions of discount codes attributed to the partner
-///   (discount_codes.partner_id) at the partner's commission_pct; nothing hooks into the payment
-///   path. Payouts are the only materialized rows; balance = accrued − paid out.
+///   Commission ledger — an IMMUTABLE, transaction-level ledger (see <see cref="PartnerCommission"/>).
+///   A settled payment writes one commission transaction whose rate, basis and rule are snapshotted at
+///   that moment, so changing an agreement can never restate history; refunds and chargebacks add a
+///   negative reversal rather than editing the original. Settlements (<see cref="PartnerSettlement"/>)
+///   allocate specific transactions to a payout batch under prepare → approve → pay, with the approver
+///   required to differ from the preparer. Statements and remittance advice are rendered on demand from
+///   the same ledger (<see cref="PartnerStatement"/>), so they can never drift from it.
+///
+///   The pre-ledger derived view (attributed revenue × the partner's CURRENT commission_pct, offset by
+///   partner_payouts) is still served by <c>CommissionLedger</c> below for the legacy portal screens.
+///   It is a display of the old model only — nothing settles or pays from it.
 /// </summary>
 public static class Partners
 {
@@ -374,6 +382,358 @@ public static class Partners
         {
             var partnerId = long.TryParse(req.Query["partner_id"], out var p) && p > 0 ? p : (long?)null;
             return J(PartnerFinanceBackfill.Reconcile(db, partnerId));
+        }));
+
+        // ══ Phase 3 — settlements, statements and disputes ═══════════════════════════════════════════
+
+        // Refusals carry the engine's own reason code so the console can explain WHY, not just that it
+        // failed. 409 for a state/duty conflict (wrong status, self-approval, duplicate reference),
+        // 422 for a request that is well-formed but financially invalid (over-payment, nothing payable).
+        IResult Settle(PartnerSettlement.Result r)
+        {
+            if (r.Ok) return J(new { ok = true, id = r.Id, data = r.Data });
+            var code = r.Error switch
+            {
+                "not_found" or "partner_not_found" => 404,
+                "bad_status" or "maker_checker" or "maker_unknown" or "already_paid" or "duplicate_reference" => 409,
+                _ => 422,
+            };
+            return Results.Json(new { error = r.Error, message = r.Message }, statusCode: code);
+        }
+
+        object SettlementSummary(long partnerId) => new
+        {
+            payable = Money.ToDecimal(PartnerSettlement.PayableMinor(db, partnerId)),
+            recoverable = Money.ToDecimal(PartnerCommissionReversal.RecoverableMinor(db, partnerId)),
+            recoverable_outstanding = Money.ToDecimal(PartnerSettlement.UnrecoveredMinor(db, partnerId)),
+            settlements = db.Query(@"SELECT id, settlement_no, period_start, period_end, currency,
+                    eligible_commission_minor, adjustments_minor, amount_approved_minor, amount_paid_minor,
+                    closing_balance_minor, status, prepared_by, approved_by, paid_at, payment_method,
+                    payment_reference, proof_storage_ref, internal_note, partner_note, created_at
+                FROM partner_settlements WHERE partner_id=? ORDER BY id DESC LIMIT 200", partnerId),
+        };
+
+        app.MapGet("/api/admin/partner-finance/{id}/settlements", (HttpRequest req, long id) =>
+            gate(req, "pf_view", _ => J(SettlementSummary(id))));
+
+        app.MapGet("/api/admin/partner-finance/settlements/{sid}", (HttpRequest req, long sid) => gate(req, "pf_view", _ =>
+        {
+            var s = db.QueryOne("SELECT * FROM partner_settlements WHERE id=?", sid);
+            if (s is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            return J(new
+            {
+                settlement = s,
+                items = db.Query(@"SELECT i.id, i.transaction_id, i.amount_allocated_minor, t.txn_ref, t.earned_at,
+                        t.product_type, t.commission_minor, t.status, dc.code
+                    FROM partner_settlement_items i
+                    JOIN partner_commission_transactions t ON t.id=i.transaction_id
+                    LEFT JOIN discount_codes dc ON dc.id=t.discount_code_id
+                    WHERE i.settlement_id=? ORDER BY t.earned_at ASC, t.id ASC", sid),
+            });
+        }));
+
+        // Maker: assemble the batch. Nothing is payable until a DIFFERENT person approves it.
+        app.MapPost("/api/admin/partner-finance/{id}/settlements", (HttpContext ctx, long id) => gate(ctx.Request, "pf_prepare", adm =>
+        {
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var capNum = H.GetNum(b, "cap_amount", "max_amount");
+            var cap = capNum is { } c && c > 0 ? (long?)Money.ToMinor(c) : null;
+            var r = PartnerSettlement.Prepare(db, id, adm.Id,
+                H.GetS(b, "period_start"), H.GetS(b, "period_end"), cap, H.GetS(b, "note"));
+            if (r.Ok) log(adm.Id, "partner_settlement_prepared", $"partner {id} settlement {r.Id} by {adm.Id}");
+            return Settle(r);
+        }));
+
+        // Checker: authorise it. The engine refuses when the approver is the preparer.
+        app.MapPost("/api/admin/partner-finance/settlements/{sid}/approve", (HttpContext ctx, long sid) => gate(ctx.Request, "pf_approve", adm =>
+        {
+            var r = PartnerSettlement.Approve(db, sid, adm.Id);
+            if (r.Ok) log(adm.Id, "partner_settlement_approved", $"settlement {sid} by {adm.Id}");
+            else if (r.Error is "maker_checker" or "maker_unknown")
+                // A blocked self-approval is a control working, and is worth seeing in the audit trail.
+                log(adm.Id, "partner_settlement_approval_refused", $"settlement {sid} by {adm.Id}: {r.Error}");
+            return Settle(r);
+        }));
+
+        // Record the money leaving, with its evidence. Partial payments are supported and re-checked.
+        app.MapPost("/api/admin/partner-finance/settlements/{sid}/pay", (HttpContext ctx, long sid) => gate(ctx.Request, "pf_pay", adm =>
+        {
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var s = db.QueryOne("SELECT amount_approved_minor,amount_paid_minor FROM partner_settlements WHERE id=?", sid);
+            if (s is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            // Omitting the amount pays the outstanding balance in full — the common case, and one where a
+            // hand-typed figure is the likeliest source of an error.
+            var amountMinor = H.GetNum(b, "amount") is { } a
+                ? Money.ToMinor(a)
+                : H.L(s["amount_approved_minor"]) - H.L(s["amount_paid_minor"]);
+            var r = PartnerSettlement.Pay(db, sid, adm.Id, amountMinor,
+                H.GetS(b, "method"), H.GetS(b, "reference"), H.GetS(b, "proof_ref"), H.GetS(b, "partner_note"));
+            if (r.Ok) log(adm.Id, "partner_settlement_paid", $"settlement {sid} {Money.Format(amountMinor)} by {adm.Id}");
+            return Settle(r);
+        }));
+
+        app.MapPost("/api/admin/partner-finance/settlements/{sid}/cancel", (HttpContext ctx, long sid) => gate(ctx.Request, "pf_prepare", adm =>
+        {
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var r = PartnerSettlement.Cancel(db, sid, adm.Id, H.GetS(b, "reason") ?? "");
+            if (r.Ok) log(adm.Id, "partner_settlement_cancelled", $"settlement {sid} by {adm.Id}");
+            return Settle(r);
+        }));
+
+        // ── Statements ──
+        // One builder serves admin and partner, so the two never disagree about a number.
+        (string start, string end) PeriodOf(HttpRequest req)
+        {
+            var from = req.Query["from"].ToString().Trim();
+            var to = req.Query["to"].ToString().Trim();
+            if (from.Length == 10 && to.Length == 10) return (from, to);
+            var month = req.Query["month"].ToString().Trim();             // YYYY-MM
+            if (month.Length == 7 && DateTime.TryParse(month + "-01", System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal, out var m))
+                return PartnerStatement.MonthOf(m);
+            return PartnerStatement.MonthOf(DateTime.UtcNow);
+        }
+
+        object StatementJson(PartnerStatement.Statement st) => new
+        {
+            partner_id = st.PartnerId,
+            partner = st.PartnerName,
+            period_start = st.PeriodStart,
+            period_end = st.PeriodEnd,
+            currency = st.Currency,
+            opening = Money.ToDecimal(st.OpeningMinor),
+            earned = Money.ToDecimal(st.EarnedMinor),
+            reversed = Money.ToDecimal(st.ReversedMinor),
+            paid = Money.ToDecimal(st.PaidMinor),
+            closing = Money.ToDecimal(st.ClosingMinor),
+            recoverable = Money.ToDecimal(st.RecoverableMinor),
+            lines = st.Lines.Select(l => new
+            {
+                l.Id, reference = l.Ref, date = l.Date, kind = l.Kind, code = l.Code, product = l.Product,
+                currency = l.Currency,
+                gross = Money.ToDecimal(l.GrossMinor),
+                discount = Money.ToDecimal(l.DiscountMinor),
+                eligible_net = Money.ToDecimal(l.NetMinor),
+                rate_percent = Money.BasisPointsToPercent(l.RateBp),
+                commission = Money.ToDecimal(l.CommissionMinor),
+                status = l.Status,
+            }).ToArray(),
+            settlements = st.Settlements,
+        };
+
+        IResult StatementResult(HttpRequest req, long partnerId, string format)
+        {
+            var (from, to) = PeriodOf(req);
+            var st = PartnerStatement.Build(db, partnerId, from, to);
+            var stem = $"statement-{partnerId}-{from}-to-{to}";
+            return format switch
+            {
+                "csv" => Results.Text(PartnerStatement.Csv(st), "text/csv", System.Text.Encoding.UTF8),
+                "pdf" => Results.File(PartnerStatement.Pdf(st, PartnerStatement.OrgName(db)), "application/pdf", $"{stem}.pdf"),
+                _ => J(StatementJson(st)),
+            };
+        }
+
+        app.MapGet("/api/admin/partner-finance/{id}/statement", (HttpRequest req, long id) =>
+            gate(req, "pf_view", _ => StatementResult(req, id, req.Query["format"].ToString().ToLowerInvariant())));
+
+        app.MapGet("/api/admin/partner-finance/settlements/{sid}/remittance", (HttpRequest req, long sid) => gate(req, "pf_view", _ =>
+        {
+            var pdf = PartnerStatement.RemittancePdf(db, sid, PartnerStatement.OrgName(db));
+            return pdf is null
+                ? Results.Json(new { error = "not_found" }, statusCode: 404)
+                : Results.File(pdf, "application/pdf", $"remittance-{sid}.pdf");
+        }));
+
+        // ── Partner portal: read-only money views ──
+        // Money is restricted to the institution's admin/finance users, matching the existing rule on code
+        // creation. A reporting or support login can see performance, never the payout ledger.
+        IResult? NeedFinance(HttpContext ctx, out PartnerCtx? p)
+        {
+            var deny = Need(ctx, out p);
+            if (deny is not null) return deny;
+            return p!.Role is "admin" or "finance"
+                ? null
+                : Results.Json(new { error = "role_forbidden", message = "Only institution admin/finance users can view settlements and statements." }, statusCode: 403);
+        }
+
+        app.MapGet("/api/partner/settlements", (HttpContext ctx) =>
+        {
+            if (NeedFinance(ctx, out var p) is { } deny) return deny;
+            // internal_note and prepared_by/approved_by are ours, not the partner's — deliberately omitted.
+            return J(new
+            {
+                payable = Money.ToDecimal(PartnerSettlement.PayableMinor(db, p!.PartnerId)),
+                settlements = db.Query(@"SELECT id, settlement_no, period_start, period_end, currency,
+                        amount_approved_minor, amount_paid_minor, closing_balance_minor, status, paid_at,
+                        payment_method, payment_reference, partner_note, created_at
+                    FROM partner_settlements
+                    WHERE partner_id=? AND status IN ('approved','scheduled','paid') ORDER BY id DESC LIMIT 200", p.PartnerId),
+            });
+        });
+
+        app.MapGet("/api/partner/settlements/{sid}/remittance", (HttpContext ctx, long sid) =>
+        {
+            if (NeedFinance(ctx, out var p) is { } deny) return deny;
+            var owner = db.QueryOne("SELECT partner_id,status FROM partner_settlements WHERE id=?", sid);
+            if (owner is null || H.L(owner["partner_id"]) != p!.PartnerId)
+                return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (H.Str(owner["status"]) != PartnerSettlement.StatusPaid)
+                return Results.Json(new { error = "not_paid", message = "A remittance advice is available once the settlement has been paid." }, statusCode: 409);
+            var pdf = PartnerStatement.RemittancePdf(db, sid, PartnerStatement.OrgName(db));
+            return pdf is null
+                ? Results.Json(new { error = "not_found" }, statusCode: 404)
+                : Results.File(pdf, "application/pdf", $"remittance-{sid}.pdf");
+        });
+
+        app.MapGet("/api/partner/statement", (HttpContext ctx) =>
+        {
+            if (NeedFinance(ctx, out var p) is { } deny) return deny;
+            return StatementResult(ctx.Request, p!.PartnerId, ctx.Request.Query["format"].ToString().ToLowerInvariant());
+        });
+
+        // ── Disputes ──
+        string DisputeNo(long partnerId) => $"PD-{partnerId}-{DateTime.UtcNow:yyyyMMddHHmmss}";
+
+        app.MapGet("/api/partner/disputes", (HttpContext ctx) =>
+        {
+            if (NeedFinance(ctx, out var p) is { } deny) return deny;
+            var rows = db.Query(@"SELECT id, dispute_no, transaction_id, settlement_id, category, subject, detail,
+                    claimed_amount_minor, currency, status, resolution, resolved_at, created_at, updated_at
+                FROM partner_disputes WHERE partner_id=? ORDER BY id DESC LIMIT 200", p!.PartnerId);
+            return J(new { disputes = rows });
+        });
+
+        app.MapPost("/api/partner/disputes", async (HttpContext ctx) =>
+        {
+            if (NeedFinance(ctx, out var p) is { } deny) return deny;
+            var b = await H.Body(ctx.Request);
+            var subject = (H.GetS(b, "subject") ?? "").Trim();
+            if (subject.Length < 4) return Results.Json(new { error = "subject_required", message = "Describe the dispute in a short subject line." }, statusCode: 400);
+            var category = (H.GetS(b, "category") ?? "other").Trim().ToLowerInvariant();
+            if (category is not ("missing_commission" or "wrong_rate" or "wrong_amount" or "not_paid" or "other"))
+                return Results.Json(new { error = "bad_category" }, statusCode: 400);
+
+            // A partner may only dispute their own rows. Silently accepting someone else's id would let one
+            // partner probe another's ledger through the error responses.
+            long? txnId = null, setId = null;
+            if (H.GetNum(b, "transaction_id") is { } t && t > 0)
+            {
+                var row = db.QueryOne("SELECT partner_id FROM partner_commission_transactions WHERE id=?", (long)t);
+                if (row is null || H.L(row["partner_id"]) != p!.PartnerId)
+                    return Results.Json(new { error = "transaction_not_found" }, statusCode: 404);
+                txnId = (long)t;
+            }
+            if (H.GetNum(b, "settlement_id") is { } s2 && s2 > 0)
+            {
+                var row = db.QueryOne("SELECT partner_id FROM partner_settlements WHERE id=?", (long)s2);
+                if (row is null || H.L(row["partner_id"]) != p!.PartnerId)
+                    return Results.Json(new { error = "settlement_not_found" }, statusCode: 404);
+                setId = (long)s2;
+            }
+
+            var no = DisputeNo(p!.PartnerId);
+            var detail = H.GetS(b, "detail");
+            var id = db.ExecuteReturningId(@"INSERT INTO partner_disputes
+                (dispute_no,partner_id,transaction_id,settlement_id,category,subject,detail,claimed_amount_minor,currency,raised_by_partner_user_id)
+                VALUES(?,?,?,?,?,?,?,?,?,?)",
+                no, p.PartnerId, txnId, setId, category, subject, detail,
+                Money.ToMinor(H.GetNum(b, "claimed_amount") ?? 0),
+                (H.GetS(b, "currency") ?? "USD").ToUpperInvariant(), p.Id);
+            if (!string.IsNullOrWhiteSpace(detail))
+                db.Execute("INSERT INTO partner_dispute_messages(dispute_id,author_type,author_id,body) VALUES(?, 'partner',?,?)", id, p.Id, detail);
+            return J(new { ok = true, id, dispute_no = no });
+        });
+
+        app.MapGet("/api/partner/disputes/{did}/messages", (HttpContext ctx, long did) =>
+        {
+            if (NeedFinance(ctx, out var p) is { } deny) return deny;
+            var d = db.QueryOne("SELECT partner_id FROM partner_disputes WHERE id=?", did);
+            if (d is null || H.L(d["partner_id"]) != p!.PartnerId) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            // internal=1 notes are the reviewer's working notes and are never returned to the partner.
+            return J(new
+            {
+                messages = db.Query(@"SELECT id, author_type, body, created_at FROM partner_dispute_messages
+                    WHERE dispute_id=? AND internal=0 ORDER BY id ASC", did),
+            });
+        });
+
+        app.MapPost("/api/partner/disputes/{did}/messages", async (HttpContext ctx, long did) =>
+        {
+            if (NeedFinance(ctx, out var p) is { } deny) return deny;
+            var d = db.QueryOne("SELECT partner_id,status FROM partner_disputes WHERE id=?", did);
+            if (d is null || H.L(d["partner_id"]) != p!.PartnerId) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (H.Str(d["status"]) is "resolved" or "rejected" or "withdrawn")
+                return Results.Json(new { error = "closed", message = "This dispute is closed. Raise a new one if the issue persists." }, statusCode: 409);
+            var b = await H.Body(ctx.Request);
+            var body = (H.GetS(b, "body") ?? "").Trim();
+            if (body.Length == 0) return Results.Json(new { error = "body_required" }, statusCode: 400);
+            var id = db.ExecuteReturningId("INSERT INTO partner_dispute_messages(dispute_id,author_type,author_id,body) VALUES(?, 'partner',?,?)", did, p!.Id, body);
+            db.Execute("UPDATE partner_disputes SET updated_at=datetime('now') WHERE id=?", did);
+            return J(new { ok = true, id });
+        });
+
+        app.MapGet("/api/admin/partner-finance/disputes", (HttpRequest req) => gate(req, "pf_dispute", _ =>
+        {
+            var status = req.Query["status"].ToString().Trim().ToLowerInvariant();
+            var partnerId = long.TryParse(req.Query["partner_id"], out var pv) && pv > 0 ? pv : (long?)null;
+            return J(new
+            {
+                disputes = db.Query(@"SELECT d.*, tp.name partner_name FROM partner_disputes d
+                    LEFT JOIN training_partners tp ON tp.id=d.partner_id
+                    WHERE (? = '' OR d.status=?) AND (? IS NULL OR d.partner_id=?)
+                    ORDER BY d.id DESC LIMIT 200", status, status, partnerId, partnerId),
+            });
+        }));
+
+        app.MapGet("/api/admin/partner-finance/disputes/{did}", (HttpRequest req, long did) => gate(req, "pf_dispute", _ =>
+        {
+            var d = db.QueryOne("SELECT * FROM partner_disputes WHERE id=?", did);
+            if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            return J(new
+            {
+                dispute = d,
+                messages = db.Query("SELECT * FROM partner_dispute_messages WHERE dispute_id=? ORDER BY id ASC", did),
+            });
+        }));
+
+        app.MapPost("/api/admin/partner-finance/disputes/{did}", (HttpContext ctx, long did) => gate(ctx.Request, "pf_dispute", adm =>
+        {
+            var d = db.QueryOne("SELECT id,status FROM partner_disputes WHERE id=?", did);
+            if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+
+            var reply = (H.GetS(b, "reply") ?? "").Trim();
+            var isInternal = (H.GetS(b, "visibility") ?? "partner") == "internal";
+            var status = (H.GetS(b, "status") ?? "").Trim().ToLowerInvariant();
+            if (status.Length > 0 && status is not ("open" or "under_review" or "resolved" or "rejected" or "withdrawn"))
+                return Results.Json(new { error = "bad_status" }, statusCode: 400);
+            var resolution = (H.GetS(b, "resolution") ?? "").Trim();
+            var closing = status is "resolved" or "rejected";
+            // Closing a dispute without saying why leaves the partner with an outcome and no reason for it.
+            if (closing && resolution.Length == 0)
+                return Results.Json(new { error = "resolution_required", message = "Record the reason before closing a dispute." }, statusCode: 422);
+
+            var now = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            db.Transaction(() =>
+            {
+                if (reply.Length > 0)
+                    db.Execute("INSERT INTO partner_dispute_messages(dispute_id,author_type,author_id,body,internal) VALUES(?, 'admin',?,?,?)",
+                        did, adm.Id, reply, isInternal ? 1 : 0);
+                // Every "leave this alone" is a NULL parameter under COALESCE rather than a conditional SQL
+                // expression, so the statement is identical on MySQL and SQLite.
+                if (status.Length > 0 || resolution.Length > 0)
+                    db.Execute(@"UPDATE partner_disputes SET status=COALESCE(?,status), resolution=COALESCE(?,resolution),
+                            resolved_by=COALESCE(?,resolved_by), resolved_at=COALESCE(?,resolved_at), updated_at=?
+                        WHERE id=?",
+                        status.Length > 0 ? status : null,
+                        resolution.Length > 0 ? resolution : null,
+                        closing ? (long?)adm.Id : null,
+                        closing ? now : null,
+                        now, did);
+            });
+            log(adm.Id, "partner_dispute_updated", $"dispute {did} status {(status.Length > 0 ? status : "unchanged")} by {adm.Id}");
+            return J(new { ok = true, id = did });
         }));
     }
 }

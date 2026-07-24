@@ -309,6 +309,12 @@ public static class Rbac
         // wrappers; higher-risk actions (connect accounts, publish, approve, budgets, export leads)
         // stay explicit grants rather than a side-effect of a job title.
         ["marketing"] = new[]{ "mkt_view","mkt_connect","mkt_posts","mkt_publish","mkt_ads","mkt_gsc","mkt_promos","mkt_leads","mkt_leads_export","mkt_budgets","mkt_approve" },
+        // Marketing-partner commission and settlement controls. Split so that separation of duties is a
+        // permission decision, not just a convention: 'pf_prepare' assembles a payout batch, 'pf_approve'
+        // authorises it, 'pf_pay' records the money leaving. The engine additionally requires the approver
+        // to be a different PERSON from the preparer, so holding all three still cannot self-approve.
+        // Like the operations bundle these are owner + explicit-grant only — never implied by a job title.
+        ["partner_finance"] = new[]{ "pf_view","pf_agreements","pf_prepare","pf_approve","pf_pay","pf_dispute" },
     };
 
     public static string[] AllSections => Sections.Values.SelectMany(x => x).ToArray();
