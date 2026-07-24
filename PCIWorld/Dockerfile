@@ -28,12 +28,15 @@ RUN dotnet publish -c Release -o /app --no-restore
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app .
-# /data is the single persistent mount: database + any stored files. Both paths overridable;
-# one mount point suits hosts that attach exactly one disk per service (e.g. Render).
+# Zero-config boot: if a persistent disk is mounted at /data the database lives there; without
+# one, /data is created inside the (ephemeral) container layer so the service still starts —
+# data then resets on redeploy, which is exactly the preview posture. Explicit DATABASE_FILE /
+# STORAGE_ROOT env vars always win.
 ENV PCIWORLD_ONLY=true \
-    DATABASE_FILE=/data/pciworld.db \
-    STORAGE_ROOT=/data/storage \
     PORT=8080
 VOLUME /data
 EXPOSE 8080
-ENTRYPOINT ["dotnet", "PCI.Backend.dll"]
+ENTRYPOINT ["/bin/sh","-c","mkdir -p /data 2>/dev/null || true; \
+  if [ -d /data ] && [ -w /data ]; then export DATABASE_FILE=\"${DATABASE_FILE:-/data/pciworld.db}\" STORAGE_ROOT=\"${STORAGE_ROOT:-/data/storage}\"; \
+  else export DATABASE_FILE=\"${DATABASE_FILE:-./pciworld.db}\" STORAGE_ROOT=\"${STORAGE_ROOT:-./storage}\"; fi; \
+  exec dotnet PCI.Backend.dll"]

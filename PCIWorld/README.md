@@ -17,18 +17,18 @@ Create the service with **New → Web Service** on this repository, then:
 | Instance type | Starter (allows the persistent disk) or Free (data resets on each deploy) |
 | Disk (Starter) | mount path `/data`, 1 GB |
 
-Environment variables:
+Environment variables: **none are required.** The image is zero-config preview-grade — it boots
+with no variables and no disk (the platform's production config blockers are downgraded to
+logged warnings in PCI World-only mode, because the subsystems they protect — payments, exams,
+credentials — are unreachable on this deployment). Optional variables:
 
-| Key | Value |
+| Key | Effect |
 |---|---|
-| `APP_BASE_URL` | the service URL, e.g. `https://pciworld.onrender.com` |
-| `ALLOWED_ORIGIN` | same as `APP_BASE_URL` |
-| `CREDENTIAL_ENCRYPTION_KEY` | click **Generate** |
-| `PCIWORLD_OWNER_PASSWORD` | your admin password |
-| `ALLOW_INSECURE_PRODUCTION` | `true` — preview-grade only, until MySQL 8 is attached (see `docs/pciworld/DEPLOY_RENDER.md`) |
+| `PCIWORLD_OWNER_PASSWORD` | sets the initial admin password (otherwise `changeme-world-owner` — change it in the console immediately) |
+| `DATABASE_FILE` / `STORAGE_ROOT` | override the data paths (default `/data/...` when a disk is mounted, container-local otherwise) |
 
-No `PCIWORLD_ONLY` variable is needed — the image sets it. `DATABASE_FILE` defaults to
-`/data/pciworld.db` inside the image, matching the disk mount above.
+Without a disk, data resets on every deploy/restart — fine for a preview, add the `/data` disk
+when you want persistence.
 
 > If you prefer to set **Root Directory = `PCIWorld`**, you must also set the advanced
 > **Docker Build Context Directory** to the repository root (`.`) — the Dockerfile copies
