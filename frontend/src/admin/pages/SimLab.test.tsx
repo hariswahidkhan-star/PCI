@@ -73,6 +73,24 @@ describe('Admin SimLab Studio', () => {
     expect(cells[0]).toContain('B-HIGH')
   })
 
+  it('shows the completion rate per scenario and sorts by it', () => {
+    h.resp = {
+      rows: [
+        row({ id: 1, scenario_code: 'A-HALF', title: 'Half done', attempts: 10, completed: 5 }),
+        row({ id: 2, scenario_code: 'B-FULL', title: 'All done', attempts: 4, completed: 4 }),
+        row({ id: 3, scenario_code: 'C-NONE', title: 'Untouched', attempts: 0, completed: 0 }),
+      ],
+      total: 3, published: 3,
+    }
+    render(<SimLab />)
+    expect(screen.getByText('50%')).toBeInTheDocument()
+    expect(screen.getByText('100%')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Completion' })) // ascending: unattempted first
+    const rowsText = screen.getAllByRole('row').slice(1).map((r) => r.textContent ?? '')
+    expect(rowsText[0]).toContain('C-NONE')
+    expect(rowsText[2]).toContain('B-FULL')
+  })
+
   it('asks for confirmation before retiring a published scenario', () => {
     h.resp = { rows: [row()], total: 1, published: 1 }
     api.post.mockResolvedValue({})
