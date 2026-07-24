@@ -408,7 +408,8 @@ public static class WorldPages
         })();
         """;
 
-    public static string Archive(Db db, List<Dictionary<string, object?>> rows)
+    public static string Archive(Db db, List<Dictionary<string, object?>> rows,
+        List<string>? industries = null, string? fIndustry = null, string? fDifficulty = null, string? fTrack = null)
     {
         var items = string.Join("", rows.Select(r => $"""
             <tr>
@@ -418,6 +419,14 @@ public static class WorldPages
               <td class="num">~{H.L(r["est_minutes"])} min</td>
             </tr>
             """));
+        string Opt(string value, string label, string? current) =>
+            $"<option value=\"{E(value)}\"{(value == (current ?? "") ? " selected" : "")}>{E(label)}</option>";
+        var industryOpts = Opt("", "All industries", fIndustry) +
+            string.Join("", (industries ?? new()).Select(i => Opt(i, i, fIndustry)));
+        var difficultyOpts = Opt("", "All difficulties", fDifficulty) +
+            string.Join("", WorldContent.Difficulties.Select(d => Opt(d, Cap(d), fDifficulty)));
+        var trackOpts = Opt("", "All tracks", fTrack) +
+            string.Join("", WorldContent.Tracks.Select(t => Opt(t, Cap(t.Replace('_', ' ')), fTrack)));
         return Layout(db,
             "Challenge Library — PCI World",
             "Every published PCI World challenge: realistic project situations across industries, free to enter.",
@@ -425,7 +434,17 @@ public static class WorldPages
             <span class="kicker">Challenge Library</span>
             <h1>Every challenge stays open</h1>
             <p class="lede">The daily rotation brings one challenge forward each day — the archive keeps them all playable.</p>
+            <form class="card" method="get" action="/world/archive" style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+              <div><label for="f_ind" style="margin-top:0">Industry</label>
+                <select id="f_ind" name="industry" style="padding:9px 10px;border:1px solid var(--line);border-radius:8px">{industryOpts}</select></div>
+              <div><label for="f_dif" style="margin-top:0">Difficulty</label>
+                <select id="f_dif" name="difficulty" style="padding:9px 10px;border:1px solid var(--line);border-radius:8px">{difficultyOpts}</select></div>
+              <div><label for="f_trk" style="margin-top:0">Track</label>
+                <select id="f_trk" name="track" style="padding:9px 10px;border:1px solid var(--line);border-radius:8px">{trackOpts}</select></div>
+              <div><button class="btn secondary" type="submit">Filter</button></div>
+            </form>
             <div class="card">
+            <p class="kicker" style="margin-bottom:10px">{rows.Count} challenge{(rows.Count == 1 ? "" : "s")}</p>
             <table>
               <thead><tr><th scope="col">Challenge</th><th scope="col">Industry</th><th scope="col">Difficulty</th><th scope="col">Time</th></tr></thead>
               <tbody>{items}</tbody>
@@ -523,6 +542,36 @@ public static class WorldPages
               """,
         "/world/account", noindex: true);
 
+    public static string ResetPassword(Db db) => Layout(db,
+        "Reset your password — PCI World",
+        "Choose a new PCI World account password.",
+        """
+        <span class="kicker">Account</span>
+        <h1>Choose a new password</h1>
+        <div class="card" style="max-width:420px">
+          <label for="rp_pw">New password (min 10 characters)</label>
+          <input id="rp_pw" type="password" autocomplete="new-password">
+          <p style="margin-top:12px"><button class="btn" id="rp_go">Set new password</button></p>
+          <p id="rp_msg" role="alert"></p>
+        </div>
+        <script>
+        (function(){
+        'use strict';
+        document.getElementById('rp_go').addEventListener('click', function(){
+          var t = new URLSearchParams(location.search).get('t') || '';
+          fetch('/api/world/account/reset', { method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ token: t, password: document.getElementById('rp_pw').value }) })
+          .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw j; return j; }); })
+          .then(function(){ document.getElementById('rp_msg').innerHTML =
+            '<span class="ok">Password changed.</span> <a href="/world/account">Sign in</a>'; })
+          .catch(function(e){ document.getElementById('rp_msg').textContent =
+            (e && e.message) || 'This link is invalid or expired — request a new one from the sign-in page.'; });
+        });
+        })();
+        </script>
+        """,
+        "/world/account", noindex: true);
+
     /// <summary>Public Passport: consent-based, name-led, evidence only — never an email, never an
     /// answer, never presented as a credential.</summary>
     public static string PublicPassport(Db db, string name, List<Dictionary<string, object?>> rows)
@@ -590,7 +639,8 @@ public static class WorldPages
               <h2 style="margin-top:0">Sign in</h2>
               <label for="l_email">Email</label><input id="l_email" type="email" autocomplete="email">
               <label for="l_pw">Password</label><input id="l_pw" type="password" autocomplete="current-password">
-              <p style="margin-top:12px"><button class="btn secondary" id="doLogin">Sign in</button></p>
+              <p style="margin-top:12px"><button class="btn secondary" id="doLogin">Sign in</button>
+                 <button class="btn secondary" id="doForgot" type="button">Forgot password</button></p>
             </div>
           </div>
           <p id="autherr" class="bad" role="alert"></p>
@@ -690,6 +740,12 @@ public static class WorldPages
           api('/api/world/account/login',{email:$('l_email').value,password:$('l_pw').value})
             .then(function(r){localStorage.setItem(KEY,r.token);load();})
             .catch(function(e2){$('autherr').textContent=(e2&&e2.error)==='account_locked'?'Too many attempts — try later.':'Sign-in failed.';});
+        });
+        $('doForgot').addEventListener('click',function(){
+          if(!$('l_email').value){$('autherr').textContent='Enter your email first, then press Forgot password.';return;}
+          api('/api/world/account/forgot',{email:$('l_email').value})
+            .then(function(r){$('autherr').textContent=r.message||'If that address has an account, a reset link is on its way.';})
+            .catch(function(){$('autherr').textContent='Could not send the reset email — try again shortly.';});
         });
         if(localStorage.getItem(KEY))load();else showAuth();
         })();
