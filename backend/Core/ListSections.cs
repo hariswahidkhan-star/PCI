@@ -31,7 +31,7 @@ public static class ListSections
     static readonly Dictionary<string, string> _cache = new(StringComparer.Ordinal);
     static readonly object _lock = new();
 
-    static readonly Regex RxMarker = new(@"<!--PCI-(NAV-HEADER|NAV-FOOTER|FAQS|BOK|GOVERNANCE|RESOURCES|NEWS|PARTNERS|SOCIAL)-->.*?<!--/PCI-\1-->",
+    static readonly Regex RxMarker = new(@"<!--PCI-(NAV-HEADER|NAV-FOOTER|FAQS|BOK|GOVERNANCE|RESOURCES|NEWS|PARTNERS|TEMPLATES|SOCIAL)-->.*?<!--/PCI-\1-->",
         RegexOptions.Singleline | RegexOptions.Compiled);
 
     /// <summary>Replace every known marker region with its table-rendered markup. A section whose
@@ -72,6 +72,7 @@ public static class ListSections
                 "RESOURCES" => Resources(db),
                 "NEWS" => News(db),
                 "PARTNERS" => Partners(db),
+                "TEMPLATES" => Templates(db),
                 "SOCIAL" => SocialLinks.RenderFooter(db),
                 _ => null,
             };
@@ -327,6 +328,45 @@ public static class ListSections
     }
 
     static string TierLabel(string tier) => tier switch { "premier" => "Premier", "authorized" => "Authorized", _ => "Registered" };
+
+    // ---- free templates library (§6A–6C) ----
+    // Published templates grouped by category, each with a title, one-line summary and a direct CSV download
+    // link. Empty ⇒ keep the static fallback between the markers. Category keys map to friendly headings.
+    static readonly (string key, string label)[] TemplateCategories =
+    {
+        ("scope", "Scope & WBS"), ("schedule", "Schedule"), ("cost", "Cost control"), ("evm", "Earned value"),
+        ("risk", "Risk"), ("change", "Change control"), ("cashflow", "Cash flow"), ("finance", "Project finance"),
+        ("delivery", "Delivery & governance"), ("quality", "Quality & lessons"),
+    };
+
+    static string? Templates(Db db)
+    {
+        var rows = db.Query("SELECT slug,title,category,summary,format FROM templates WHERE published=1 ORDER BY sort_order, id");
+        if (rows.Count == 0) return null;
+        var sb = new StringBuilder();
+        // Known categories first (in a sensible controls order), then any others the operator added.
+        var known = new HashSet<string>(TemplateCategories.Select(c => c.key), StringComparer.Ordinal);
+        var extras = rows.Select(r => H.Str(r["category"]) ?? "general").Where(c => !known.Contains(c)).Distinct();
+        foreach (var (key, label) in TemplateCategories.Concat(extras.Select(e => (e, Title(e)))))
+        {
+            var inCat = rows.Where(r => (H.Str(r["category"]) ?? "general") == key).ToList();
+            if (inCat.Count == 0) continue;
+            sb.Append("<div class=\"dlg\"><h3>").Append(Esc(label)).Append("</h3><ul>");
+            foreach (var r in inCat)
+            {
+                var slug = H.Str(r["slug"]) ?? "";
+                var fmt = (H.Str(r["format"]) ?? "csv").ToUpperInvariant();
+                sb.Append("<li><a href=\"/api/public/templates/").Append(EscAttr(slug)).Append("/file\" rel=\"nofollow\">")
+                  .Append(Esc(H.Str(r["title"]) ?? "")).Append(" <span class=\"tag\">").Append(Esc(fmt)).Append("</span></a>");
+                if (H.Str(r["summary"]) is { Length: > 0 } d) sb.Append("<span>").Append(Esc(d)).Append("</span>");
+                sb.Append("</li>");
+            }
+            sb.Append("</ul></div>");
+        }
+        return sb.ToString();
+    }
+
+    static string Title(string s) => s.Length == 0 ? s : char.ToUpperInvariant(s[0]) + s[1..];
 
     static string Esc(string s) => s.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
     static string EscAttr(string s)

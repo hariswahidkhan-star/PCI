@@ -53,6 +53,7 @@ if (builder.Environment.IsDevelopment()
 try { PCI.Backend.Data.CommsSeed.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[comms seed] {e.Message}"); }
 try { PCI.Backend.Data.MarketingSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[marketing schema] {e.Message}"); }
 try { PCI.Backend.Data.SimLabSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[simlab schema] {e.Message}"); }
+try { PCI.Backend.Data.TemplatesSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[templates schema] {e.Message}"); }
 builder.Services.AddSingleton(db);
 // Scheduled retention: purge stored artefacts past evidence_retention_days, daily (manual endpoint stays).
 builder.Services.AddHostedService<PCI.Backend.Core.RetentionService>();
@@ -1120,6 +1121,7 @@ PCI.Backend.Endpoints.AdminAnalytics.Map(app, db, GateFn);             // Admin 
 PCI.Backend.Endpoints.AdminAiVisibility.Map(app, db, logFn, GateFn, webRoot); // Admin Console → AI Visibility (/api/admin/ai-visibility/...)
 PCI.Backend.Endpoints.AdminIntegrations.Map(app, db, logFn, GateFn);   // Admin Console → Integrations / ERP (/api/admin/integrations/...)
 PCI.Backend.Endpoints.AdminSimLab.Map(app, db, logFn, GateFn);         // Admin Console → Simulation Lab (/api/admin/lab/scenarios)
+PCI.Backend.Endpoints.Templates.Map(app, db, logFn, GateFn);           // Free Templates Library (public /api/public/templates + admin /api/admin/templates)
 PCI.Backend.Core.ExamDeliveryConnectors.Register();                    // register the 5 exam-delivery vendor connectors
 PCI.Backend.Endpoints.AdminExamDelivery.Map(app, db, logFn, GateFn);   // Admin Console → Exam Delivery (/api/admin/exam-delivery/...) + inbound callbacks
 PCI.Backend.Endpoints.AdminOps.Map(app, db, logFn, GateFn);            // operator toolkit: mark-paid, test users, student journey, Certuvo config
