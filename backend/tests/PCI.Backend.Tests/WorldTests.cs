@@ -163,6 +163,58 @@ public class WorldTests
     }
 
     [Fact]
+    public void Bool_asks_grade_yes_no_in_every_form_people_type_it()
+    {
+        var db = NewWorldDb();
+        var snap = db.QueryOne(@"SELECT v.config_json FROM pciworld_challenge_versions v
+            JOIN pciworld_challenges c ON c.id=v.challenge_id AND c.code='WC-WBS-026'
+            WHERE v.version=c.current_version")!;
+        var config = JsonDocument.Parse(Convert.ToString(snap["config_json"])!).RootElement;
+
+        foreach (var yes in new[] { "yes", "YES", "Yes ", "y", "true", "TRUE" })
+        {
+            var r = WorldScore.Grade(config, JsonDocument.Parse($$"""{"root_total":"1,200,000","hundred_percent_valid":"{{yes}}"}""").RootElement);
+            Assert.True(r.Measures.Single(m => m.Key == "hundred_percent_valid").Correct, yes);
+            Assert.True(r.Measures.Single(m => m.Key == "root_total").Correct, "comma-formatted number must grade");
+        }
+        var wrong = WorldScore.Grade(config, JsonDocument.Parse("""{"hundred_percent_valid":"no"}""").RootElement);
+        var m2 = wrong.Measures.Single(m => m.Key == "hundred_percent_valid");
+        Assert.False(m2.Correct);
+        Assert.Equal("yes", m2.Reference);   // reference shown as yes/no, never True/False
+        Assert.Equal("no", m2.Yours);
+        // Unanswered stays unanswered — no crash, no accidental credit.
+        var blank = WorldScore.Grade(config, JsonDocument.Parse("{}").RootElement);
+        Assert.False(blank.Measures.Single(m => m.Key == "hundred_percent_valid").Correct);
+        Assert.Null(blank.Measures.Single(m => m.Key == "hundred_percent_valid").Yours);
+    }
+
+    [Theory]
+    [InlineData("1,200,000", 1200000)]
+    [InlineData("1 200 000", 1200000)]
+    [InlineData("$450,000", 450000)]
+    [InlineData("88.6%", 88.6)]
+    [InlineData(" -320,000 ", -320000)]
+    [InlineData("0.92", 0.92)]
+    public void Numeric_entry_is_forgiving_about_formatting(string raw, double expected)
+    {
+        Assert.Equal(expected, WorldScore.ParseNumber(raw));
+    }
+
+    [Fact]
+    public void Numeric_and_type_edge_cases_never_grade_garbage()
+    {
+        Assert.Null(WorldScore.ParseNumber("abc"));
+        Assert.Null(WorldScore.ParseNumber(""));
+        Assert.Null(WorldScore.ParseBool("maybe"));
+        // A declared type that contradicts the solver output blocks publication.
+        var mismatched = MinimalConfig.Replace("\"key\":\"cv\",\"label\":\"Cost Variance\",\"type\":\"number\"",
+            "\"key\":\"cv\",\"label\":\"Cost Variance\",\"type\":\"bool\"");
+        Assert.Contains(WorldContent.Validate(Input(config: mismatched)), i => i.Code == "ask_type");
+        var unknown = MinimalConfig.Replace("\"type\":\"number\"", "\"type\":\"slider\"");
+        Assert.Contains(WorldContent.Validate(Input(config: unknown)), i => i.Code == "ask_type");
+    }
+
+    [Fact]
     public void Decision_profiles_derive_from_dimensions_and_explain_themselves()
     {
         var config = JsonDocument.Parse(MinimalConfig).RootElement;

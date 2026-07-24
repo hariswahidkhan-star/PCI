@@ -32,31 +32,39 @@ public static class WorldScore
                 var reference = SimCalc.Resolve(task, ask.Key, given);
                 JsonElement a = default;
                 var has = answers.ValueKind == JsonValueKind.Object && answers.TryGetProperty(ask.Key, out a);
+                var raw = !has ? "" : a.ValueKind switch
+                {
+                    JsonValueKind.String => a.GetString() ?? "",
+                    JsonValueKind.Number => a.GetRawText(),
+                    JsonValueKind.True => "yes",
+                    JsonValueKind.False => "no",
+                    _ => "",
+                };
                 switch (reference)
                 {
                     case double want:
                     {
-                        double? got = null;
-                        if (has)
-                        {
-                            if (a.ValueKind == JsonValueKind.Number) got = a.GetDouble();
-                            else if (a.ValueKind == JsonValueKind.String &&
-                                     double.TryParse(a.GetString(), System.Globalization.NumberStyles.Any,
-                                         System.Globalization.CultureInfo.InvariantCulture, out var p)) got = p;
-                        }
+                        var got = ParseNumber(raw);
                         var correct = got is { } g && Math.Abs(g - want) <= Math.Max(0.01, relTol * Math.Abs(want));
-                        measures.Add(new MeasureRow(ask.Key, ask.Label, correct, want, got));
+                        measures.Add(new MeasureRow(ask.Key, ask.Label, correct, want, got ?? (object?)(raw.Length > 0 ? raw : null)));
                         break;
                     }
                     case string[] wantSet:
                     {
                         // Ordered set (e.g. the critical path): comma-separated, whitespace/case-insensitive.
-                        var raw = has && a.ValueKind == JsonValueKind.String ? a.GetString() ?? "" : "";
                         var gotSet = raw.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                         var correct = gotSet.Length == wantSet.Length &&
                             gotSet.Zip(wantSet).All(p => string.Equals(p.First, p.Second, StringComparison.OrdinalIgnoreCase));
                         measures.Add(new MeasureRow(ask.Key, ask.Label, correct,
                             string.Join(",", wantSet), raw.Length > 0 ? raw : null));
+                        break;
+                    }
+                    case bool wantBool:
+                    {
+                        // Yes/no judgement (e.g. "does the WBS satisfy the 100% rule?").
+                        var got = ParseBool(raw);
+                        measures.Add(new MeasureRow(ask.Key, ask.Label, got is { } b && b == wantBool,
+                            wantBool ? "yes" : "no", got is { } g ? (g ? "yes" : "no") : (raw.Length > 0 ? raw : null)));
                         break;
                     }
                 }
@@ -119,6 +127,27 @@ public static class WorldScore
             "Your calculation accuracy and decision quality were evenly matched.",
             calc <= deci ? calcImprove : deciImprove);
     }
+
+    /// <summary>Forgiving numeric entry: people type numbers the way the evidence shows them —
+    /// "1,200,000", "1 200 000", "88.6%", "$450,000". Strip the formatting, keep the number.</summary>
+    public static double? ParseNumber(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return null;
+        var s = raw.Trim()
+            .Replace(",", "").Replace(" ", "").Replace(" ", "").Replace("_", "").Replace("'", "")
+            .Replace("$", "").Replace("£", "").Replace("€", "");
+        if (s.EndsWith('%')) s = s[..^1];
+        return double.TryParse(s, System.Globalization.NumberStyles.Any,
+            System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : null;
+    }
+
+    /// <summary>Yes/no entry in the forms people actually type it.</summary>
+    public static bool? ParseBool(string? raw) => raw?.Trim().ToLowerInvariant() switch
+    {
+        "yes" or "y" or "true" or "t" or "1" => true,
+        "no" or "n" or "false" or "f" or "0" => false,
+        _ => null,
+    };
 
     static string? Str(JsonElement el, string key) =>
         el.ValueKind == JsonValueKind.Object && el.TryGetProperty(key, out var v) && v.ValueKind == JsonValueKind.String

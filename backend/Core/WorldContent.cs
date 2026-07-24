@@ -75,6 +75,15 @@ public static class WorldContent
                     askCount++;
                     var answer = SimCalc.Resolve(task, ask.Key, given);
                     if (answer is null) { Err("ask", $"Ask '{ask.Key}' does not resolve through the reference solver."); continue; }
+                    // The declared type decides which input control the participant gets and which
+                    // grader runs — it must exist and it must match what the solver returns, or the
+                    // question ships un-answerable (e.g. a yes/no behind a numeric keypad).
+                    var declared = string.IsNullOrWhiteSpace(ask.Type) ? "number" : ask.Type;
+                    var expected = answer switch { double => "number", string[] => "set", bool => "bool", _ => "?" };
+                    if (declared is not ("number" or "set" or "bool"))
+                        Err("ask_type", $"Ask '{ask.Key}' declares unsupported type '{declared}' (number, set or bool).");
+                    else if (declared != expected)
+                        Err("ask_type", $"Ask '{ask.Key}' declares type '{declared}' but the reference solver returns a {expected}.");
                     if (answer is double d)
                     {
                         if (double.IsNaN(d) || double.IsInfinity(d)) Err("ask", $"Ask '{ask.Key}' resolves to a non-finite value.");

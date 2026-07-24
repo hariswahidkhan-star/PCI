@@ -60,6 +60,24 @@ test.describe('PCI World — public journey', () => {
     await expect(page.locator('main')).toContainText('The wind farm at the crossroads')
   })
 
+  test('yes/no questions render real choices and forgiving number entry grades correctly', async ({ page }) => {
+    await page.goto('/world/challenge/WC-WBS-026')
+    await page.getByRole('button', { name: 'Start the challenge' }).click()
+    // The 100%-rule question is a radio pair — never a numeric keypad text box.
+    const yes = page.getByRole('radio', { name: 'Yes' })
+    await expect(yes).toBeVisible()
+    await expect(page.locator('#ask_hundred_percent_valid')).toHaveCount(0)
+    // Numbers typed the way the evidence shows them (with thousands separators) must grade.
+    await page.locator('#ask_root_total').fill('1,200,000')
+    await yes.check()
+    await page.getByRole('button', { name: 'Submit my answers' }).click()
+    const rows = page.locator('#result table tbody tr')
+    await expect(rows).toHaveCount(2)
+    await expect(rows.nth(0)).toContainText('Correct')
+    await expect(rows.nth(1)).toContainText('Correct')
+    await expect(rows.nth(1)).toContainText('yes')
+  })
+
   test('a participant can report a content issue from the workspace', async ({ page }) => {
     await page.goto('/world/challenge/WC-SCH-002')
     await page.getByText('Report an issue with this challenge').click()

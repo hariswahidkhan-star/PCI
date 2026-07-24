@@ -409,9 +409,32 @@ public static class WorldPages
             asks.innerHTML = '<h2 style="margin-top:0">Work the numbers</h2>';
             WORLD.view.ask.forEach(function(a){
               var id = 'ask_' + a.key;
+              if (a.type === 'bool'){
+                // Yes/no judgement — real choices, never a numeric keypad.
+                var fs = document.createElement('fieldset');
+                var lg = document.createElement('legend'); lg.textContent = a.label; fs.appendChild(lg);
+                ['yes','no'].forEach(function(v){
+                  var oid = id + '_' + v;
+                  var row = document.createElement('div'); row.className = 'opt';
+                  var r = document.createElement('input'); r.type = 'radio';
+                  r.name = 'ask_' + a.key; r.value = v; r.id = oid;
+                  if (saved && String(saved[a.key]).toLowerCase() === v) r.checked = true;
+                  var lb = document.createElement('label'); lb.setAttribute('for', oid);
+                  lb.textContent = v === 'yes' ? 'Yes' : 'No';
+                  row.appendChild(r); row.appendChild(lb); fs.appendChild(row);
+                });
+                asks.appendChild(fs);
+                return;
+              }
               var l = document.createElement('label'); l.setAttribute('for', id); l.textContent = a.label;
               var i = document.createElement('input');
-              i.type = 'text'; i.id = id; i.name = a.key; i.inputMode = 'decimal'; i.autocomplete = 'off';
+              i.type = 'text'; i.id = id; i.name = a.key; i.autocomplete = 'off';
+              if (a.type === 'set'){
+                i.inputMode = 'text'; i.autocapitalize = 'characters';
+                i.placeholder = 'Comma-separated — e.g. A,C,E';
+              } else {
+                i.inputMode = 'decimal';
+              }
               if (saved && saved[a.key] != null) i.value = saved[a.key];
               asks.appendChild(l); asks.appendChild(i);
             });
@@ -438,7 +461,14 @@ public static class WorldPages
         function answers(){
           var out = {};
           (WORLD.view.ask || []).forEach(function(a){
-            var v = $('ask_' + a.key).value.trim(); if (v.length) out[a.key] = v;
+            if (a.type === 'bool'){
+              var sel = document.querySelector('input[name="ask_' + a.key + '"]:checked');
+              if (sel) out[a.key] = sel.value;
+              return;
+            }
+            var el = $('ask_' + a.key);
+            if (!el) return;
+            var v = el.value.trim(); if (v.length) out[a.key] = v;
           });
           (WORLD.view.decisions || []).forEach(function(d){
             var sel = document.querySelector('input[name="decision_' + d.key + '"]:checked');
