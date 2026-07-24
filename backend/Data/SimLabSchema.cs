@@ -245,6 +245,17 @@ public static class SimLabSchema
             "[\"earned_value\",\"forecasting\",\"decision_making\"]",
             "A four-step recovery scenario: assess baseline EVM health, choose a recovery path, then re-forecast and confirm the final position under the consequences of your decisions.",
             ConfigRecovery);
+        // P2 — multi-step family. An advanced rail-electrification recovery (4 linked steps, 2 decisions)
+        // and an expert capstone (5 linked steps, 3 decisions) that exercise the linked-state engine across
+        // the difficulty band. All synthetic; every task reference-solves on the base given and each branch.
+        SeedScenario(db, "MS-RAIL-002", "Rail electrification: recover the delivery programme", "scenario", "Rail", "advanced", 30,
+            "[\"earned_value\",\"forecasting\",\"decision_making\"]",
+            "A four-step recovery on a rail electrification package: read the baseline, pick a recovery path, re-forecast, then confirm the outturn under the consequences of your choices.",
+            ConfigRail);
+        SeedScenario(db, "MS-CAPSTONE-001", "Programme controls capstone: baseline to outturn", "capstone", "Infrastructure", "expert", 45,
+            "[\"earned_value\",\"forecasting\",\"schedule_analysis\",\"decision_making\"]",
+            "An expert five-step capstone: diagnose a distressed programme, take three linked recovery decisions, and carry their deterministic consequences through to the final outturn position.",
+            ConfigCapstone);
 
         // Full house content pack. The original starter seeds above remain for backward compatibility;
         // the pack then densifies house-authored rows and adds the rest of the catalogue without touching
@@ -488,6 +499,85 @@ public static class SimLabSchema
     // P1 first multi-step scenario: four linked EVM steps + two decisions with deterministic downstream
     // effects (all synthetic). 9 graded measures. Every measure reference-solves on the base given and under
     // each decision branch (SimContent.ValidateSteps), and grading is deterministic from snapshot + choices.
+    // P2 advanced multi-step: rail electrification recovery (4 linked EVM steps, 2 decisions, 9 measures).
+    const string ConfigRail = """
+        {"multistep":true,
+         "prompt":"A rail electrification package is behind at the mid-point (all figures synthetic, USD). Read the baseline, choose a recovery path, re-forecast, then confirm the outturn under the consequences of your choices.",
+         "pass_pct":70,"competencies":["earned_value","forecasting","decision_making"],
+         "steps":[
+           {"id":"s1","title":"Baseline health","task":"evm","competencies":["earned_value"],
+            "prompt":"Compute the schedule variance (SV), cost performance index (CPI) and schedule performance index (SPI).",
+            "given":{"pv":400000,"ev":340000,"ac":380000,"bac":1000000},"tolerance":0.01,
+            "ask":[{"key":"sv","label":"Schedule variance (SV)","type":"number"},
+                   {"key":"cpi","label":"Cost performance index (CPI)","type":"number"},
+                   {"key":"spi","label":"Schedule performance index (SPI)","type":"number"}]},
+           {"id":"s2","title":"Choose a recovery path","task":"evm","competencies":["earned_value","decision_making"],
+            "prompt":"Compute the cost variance (CV), then choose how to recover.",
+            "given":{"pv":400000,"ev":340000,"ac":380000,"bac":1000000},"tolerance":0.01,
+            "ask":[{"key":"cv","label":"Cost variance (CV)","type":"number"}],
+            "decision":{"key":"recovery","prompt":"How do you recover the programme?","options":[
+              {"value":"crash","label":"Crash — accelerate works, adding 80000 to the actual cost","effects":[{"step":"s3","path":"ac","op":"add","value":80000}]},
+              {"value":"descope","label":"Descope — defer non-critical scope, cutting the budget by 60000","effects":[{"step":"s3","path":"bac","op":"add","value":-60000}]}]}},
+           {"id":"s3","title":"Re-forecast","task":"evm","competencies":["forecasting"],
+            "prompt":"Using the actuals AFTER your recovery decision, forecast the estimate at completion (CPI method), the variance at completion (VAC) and the to-complete performance index (TCPI).",
+            "given":{"pv":520000,"ev":460000,"ac":520000,"bac":1000000},"tolerance":0.01,
+            "ask":[{"key":"eac","label":"Estimate at completion (EAC)","type":"number"},
+                   {"key":"vac","label":"Variance at completion (VAC)","type":"number"},
+                   {"key":"tcpi","label":"To-complete performance index (TCPI)","type":"number"}],
+            "decision":{"key":"funding","prompt":"Request additional funding?","options":[
+              {"value":"request","label":"Request 100000 additional funding (raises the approved budget)","effects":[{"step":"s4","path":"bac","op":"add","value":100000}]},
+              {"value":"absorb","label":"Absorb within contingency (no budget change)","effects":[]}]}},
+           {"id":"s4","title":"Confirm outturn","task":"evm","competencies":["earned_value"],
+            "prompt":"At handover, confirm the final CPI and percent complete against the approved budget.",
+            "given":{"pv":950000,"ev":920000,"ac":960000,"bac":1000000},"tolerance":0.01,
+            "ask":[{"key":"cpi","label":"Final CPI","type":"number"},
+                   {"key":"percent_complete","label":"Percent complete (EV / BAC)","type":"number"}]}]}
+        """;
+
+    // P2 expert capstone: distressed programme, five linked EVM steps, three decisions, 12 measures.
+    const string ConfigCapstone = """
+        {"multistep":true,
+         "prompt":"An expert capstone (all figures synthetic, USD). Diagnose a distressed programme, take three linked recovery decisions, and carry their deterministic consequences through to the final outturn.",
+         "pass_pct":70,"competencies":["earned_value","forecasting","schedule_analysis","decision_making"],
+         "steps":[
+           {"id":"s1","title":"Diagnose the baseline","task":"evm","competencies":["earned_value"],
+            "prompt":"Compute the schedule variance (SV), cost variance (CV) and cost performance index (CPI).",
+            "given":{"pv":500000,"ev":420000,"ac":480000,"bac":1500000},"tolerance":0.01,
+            "ask":[{"key":"sv","label":"Schedule variance (SV)","type":"number"},
+                   {"key":"cv","label":"Cost variance (CV)","type":"number"},
+                   {"key":"cpi","label":"Cost performance index (CPI)","type":"number"}]},
+           {"id":"s2","title":"Labour response","task":"evm","competencies":["schedule_analysis","decision_making"],
+            "prompt":"Compute the schedule performance index (SPI), then choose the labour response.",
+            "given":{"pv":500000,"ev":420000,"ac":480000,"bac":1500000},"tolerance":0.01,
+            "ask":[{"key":"spi","label":"Schedule performance index (SPI)","type":"number"}],
+            "decision":{"key":"labour","prompt":"How do you respond on labour?","options":[
+              {"value":"overtime","label":"Authorise overtime — adds 120000 to the downstream actual cost","effects":[{"step":"s3","path":"ac","op":"add","value":120000}]},
+              {"value":"rephase","label":"Re-phase the crews — no immediate cost change","effects":[]}]}},
+           {"id":"s3","title":"Re-forecast","task":"evm","competencies":["forecasting"],
+            "prompt":"Using the actuals after the labour decision, forecast the estimate at completion (EAC) and the to-complete performance index (TCPI).",
+            "given":{"pv":800000,"ev":700000,"ac":820000,"bac":1500000},"tolerance":0.01,
+            "ask":[{"key":"eac","label":"Estimate at completion (EAC)","type":"number"},
+                   {"key":"tcpi","label":"To-complete performance index (TCPI)","type":"number"}],
+            "decision":{"key":"scope","prompt":"Adjust the scope?","options":[
+              {"value":"cut","label":"Cut deferrable scope — reduces the budget by 100000","effects":[{"step":"s4","path":"bac","op":"add","value":-100000}]},
+              {"value":"keep","label":"Keep the full scope — no budget change","effects":[]}]}},
+           {"id":"s4","title":"Funding position","task":"evm","competencies":["earned_value"],
+            "prompt":"Compute the variance at completion (VAC) and percent complete, then decide on funding.",
+            "given":{"pv":1200000,"ev":1150000,"ac":1250000,"bac":1500000},"tolerance":0.01,
+            "ask":[{"key":"vac","label":"Variance at completion (VAC)","type":"number"},
+                   {"key":"percent_complete","label":"Percent complete (EV / BAC)","type":"number"}],
+            "decision":{"key":"funding","prompt":"Request additional funding?","options":[
+              {"value":"request","label":"Request 150000 additional funding (raises the approved budget)","effects":[{"step":"s5","path":"bac","op":"add","value":150000}]},
+              {"value":"absorb","label":"Absorb within contingency (no budget change)","effects":[]}]}},
+           {"id":"s5","title":"Final outturn","task":"evm","competencies":["earned_value","forecasting"],
+            "prompt":"At handover, confirm the final CPI, the estimate to complete (ETC), the schedule variance (SV) and percent complete against the approved budget.",
+            "given":{"pv":1450000,"ev":1420000,"ac":1480000,"bac":1500000},"tolerance":0.01,
+            "ask":[{"key":"cpi","label":"Final CPI","type":"number"},
+                   {"key":"etc","label":"Estimate to complete (ETC)","type":"number"},
+                   {"key":"sv","label":"Schedule variance (SV)","type":"number"},
+                   {"key":"percent_complete","label":"Percent complete (EV / BAC)","type":"number"}]}]}
+        """;
+
     const string ConfigRecovery = """
         {"multistep":true,
          "prompt":"A data-centre fit-out is behind at month 4 (all figures synthetic, USD). Assess the baseline, choose a recovery path, then re-forecast and confirm the final position under the consequences of your decisions.",
