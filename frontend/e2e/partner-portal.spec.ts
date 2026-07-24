@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
-import { apiLoginAsE2EAdmin, captureStoryEvidence, uniqueEmail } from './util'
+import { apiLoginAsE2EAdmin, captureStoryEvidence, uniqueEmail, DEMO_STUDENT } from './util'
 
 const minimalPdf = Buffer.from('%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n')
 
@@ -242,5 +242,68 @@ test.describe('institution partner persona', () => {
     await page.getByRole('button', { name: 'Sign in', exact: true }).click()
     await expect(page.locator('#app')).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Set a new password' })).toBeHidden()
+  })
+})
+
+test.describe('admin test-partner mechanism', () => {
+  test('create a test institution, hand off into the dashboard, reset and delete it', async ({ page, request }, testInfo) => {
+    const adminToken = await apiLoginAsE2EAdmin(request)
+    const headers = { Authorization: `Bearer ${adminToken}` }
+
+    // Create an active-scenario test institution (flagged is_test, never listed).
+    const created = await request.post('/api/admin/test-partners', { headers, data: { scenario: 'active' } })
+    expect(created.ok(), await created.text()).toBeTruthy()
+    const tp = (await created.json()) as {
+      partner_id: number; institution: string; email: string; password: string; token: string
+    }
+    expect(tp.partner_id).toBeGreaterThan(0)
+    expect(tp.token).toBeTruthy()
+
+    // The minted session is live for the partner APIs.
+    const sessionProbe = await request.get('/api/partner/me', { headers: { Authorization: `Bearer ${tp.token}` } })
+    expect(sessionProbe.ok()).toBeTruthy()
+
+    // Hash hand-off signs straight into the dashboard, then scrubs the token from the URL.
+    await page.goto(`/partner.html#t=${tp.token}`)
+    await expect(page.locator('#app')).toBeVisible({ timeout: 20_000 })
+    expect(page.url()).not.toContain('#t=')
+    await captureStoryEvidence(page, testInfo, 'test-partner', 'dashboard-handoff')
+
+    // The returned credentials also work through the normal login.
+    const pwLogin = await request.post('/api/partner/auth/login', {
+      data: { email: tp.email, password: tp.password },
+    })
+    expect(pwLogin.ok()).toBeTruthy()
+
+    // Reset into the suspended scenario: existing sessions are revoked and login is locked out
+    // with the institution-inactive message.
+    const reset = await request.post(`/api/admin/test-partners/${tp.partner_id}/reset`, {
+      headers, data: { scenario: 'suspended' },
+    })
+    expect(reset.ok(), await reset.text()).toBeTruthy()
+    const revokedProbe = await request.get('/api/partner/me', { headers: { Authorization: `Bearer ${tp.token}` } })
+    expect(revokedProbe.status()).toBe(401)
+    const suspendedLogin = await request.post('/api/partner/auth/login', {
+      data: { email: tp.email, password: tp.password },
+    })
+    expect(suspendedLogin.status()).toBe(403)
+
+    // A student token cannot reach the test-partner admin APIs.
+    const studentLogin = await request.post('/api/login', { data: DEMO_STUDENT })
+    if (studentLogin.ok()) {
+      const studentToken = ((await studentLogin.json()) as { token?: string }).token
+      const denied = await request.get('/api/admin/test-partners', {
+        headers: { Authorization: `Bearer ${studentToken}` },
+      })
+      expect([401, 403]).toContain(denied.status())
+    }
+
+    // Delete removes the institution, its login and its data in one action.
+    const deleted = await request.post(`/api/admin/test-partners/${tp.partner_id}/delete`, { headers })
+    expect(deleted.ok()).toBeTruthy()
+    const loginAfterDelete = await request.post('/api/partner/auth/login', {
+      data: { email: tp.email, password: tp.password },
+    })
+    expect(loginAfterDelete.status()).toBe(401)
   })
 })

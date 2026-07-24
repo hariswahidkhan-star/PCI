@@ -302,6 +302,109 @@ public static class PartnerPortal
             return J(new { ok = true });
         }));
 
+        // ================= test partners =================
+        // Scenario-based test institutions (mirrors /api/admin/test-users, same 'test_users' gate):
+        // exercise the partner dashboard end to end without paying, emailing anyone or touching a real
+        // institution. Test partners are flagged is_test=1, never listed in the public directory
+        // (listed=0), excluded from the discount/commission report, and removable in one action.
+        //   active     — active institution, sponsorship enabled, ready session into /partner.html
+        //   fresh_login— must_change_pw=1: exercises the forced first-password journey
+        //   no_sponsor — sponsorship/codes disabled: exercises the limits UX
+        //   suspended  — institution suspended: exercises the lockout (no session is minted)
+        var partnerScenarios = new[] { "active", "fresh_login", "no_sponsor", "suspended" };
+
+        void ApplyPartnerScenario(long partnerId, string scenario)
+        {
+            var status = scenario == "suspended" ? "suspended" : "active";
+            var sponsor = scenario == "no_sponsor" ? 0 : 1;
+            db.Execute(@"UPDATE training_partners SET status=?, sponsor_enabled=?, listed=0,
+                max_discount_percent=25, max_codes=10, commission_pct=10, agreement_end=NULL,
+                updated_at=datetime('now') WHERE id=? AND is_test=1", status, sponsor, partnerId);
+            db.Execute("UPDATE partner_users SET status='active', must_change_pw=? WHERE partner_id=?",
+                scenario == "fresh_login" ? 1 : 0, partnerId);
+        }
+
+        void WipePartnerData(long partnerId, bool keepPartner)
+        {
+            db.Execute("DELETE FROM partner_sessions WHERE partner_user_id IN (SELECT id FROM partner_users WHERE partner_id=?)", partnerId);
+            db.Execute("DELETE FROM code_redemptions WHERE code_id IN (SELECT id FROM discount_codes WHERE partner_id=?)", partnerId);
+            db.Execute("DELETE FROM discount_codes WHERE partner_id=?", partnerId);
+            foreach (var t in new[] { "partner_sponsorships", "partner_payouts", "partner_notices" })
+                try { db.Execute($"DELETE FROM {t} WHERE partner_id=?", partnerId); } catch { }
+            if (!keepPartner)
+            {
+                db.Execute("DELETE FROM partner_users WHERE partner_id=?", partnerId);
+                db.Execute("DELETE FROM training_partners WHERE id=? AND is_test=1", partnerId);
+            }
+        }
+
+        string MintPartnerSession(long partnerUserId)
+        {
+            var session = Security.RandomHex(32);
+            db.Execute("INSERT INTO partner_sessions(partner_user_id,token,expires_at) VALUES(?,?, datetime('now','+7 day'))",
+                partnerUserId, Security.Sha(session));
+            return session;
+        }
+
+        app.MapPost("/api/admin/test-partners", (HttpContext ctx) => gate(ctx.Request, "test_users", adm =>
+        {
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var scenario = (H.GetS(b, "scenario") ?? "active").Trim().ToLowerInvariant();
+            if (!partnerScenarios.Contains(scenario))
+                return Err(400, "bad_scenario", "scenario must be one of: " + string.Join(", ", partnerScenarios));
+            var stamp = Security.RandomHex(4).ToLowerInvariant();
+            var email = (H.GetS(b, "email") ?? $"test.partner.{stamp}@pci.test").Trim().ToLowerInvariant();
+            if (db.QueryOne("SELECT id FROM partner_users WHERE email=?", email) is not null) return Err(409, "email_taken");
+            var password = H.GetS(b, "password") is { Length: >= 6 } pw ? pw : "TestPass!" + stamp;
+            var instName = (H.GetS(b, "institution") ?? $"Test Institution {stamp.ToUpperInvariant()}").Trim();
+
+            var partnerId = db.ExecuteReturningId(@"INSERT INTO training_partners
+                (name,slug,tier,partner_type,contact_name,contact_email,listed,is_test,status,sponsor_enabled,
+                 max_discount_percent,max_codes,commission_pct,summary)
+                VALUES(?,?, 'registered','training','Test Partner',?,0,1,?,?,25,10,10,'Test institution — not a real partner.')",
+                instName, "test-institution-" + stamp,
+                email, scenario == "suspended" ? "suspended" : "active", scenario == "no_sponsor" ? 0 : 1);
+            var puId = db.ExecuteReturningId(@"INSERT INTO partner_users
+                (partner_id,email,name,role,password_hash,status,must_change_pw,created_by)
+                VALUES(?,?, 'Test Partner','admin',?, 'active',?,?)",
+                partnerId, email, BCrypt.Net.BCrypt.HashPassword(password), scenario == "fresh_login" ? 1 : 0, adm.Id);
+            // Ready hand-off session — pointless for the suspended scenario (validation rejects it).
+            var token = scenario == "suspended" ? null : MintPartnerSession(puId);
+            log(adm.Id, "admin_test_partner_create", $"{instName} ({email}) scenario {scenario} by {adm.Id} (partner {partnerId})");
+            return J(new { ok = true, partner_id = partnerId, partner_user_id = puId, institution = instName,
+                email, password, token, login_url = "/partner.html", scenario,
+                note = "Test institution — not a real partner. Never listed publicly; excluded from discount and commission reports." });
+        }));
+
+        app.MapGet("/api/admin/test-partners", (HttpContext ctx) => gate(ctx.Request, "test_users", _ =>
+            J(new { rows = db.Query(@"SELECT tp.id, tp.name, tp.status, tp.sponsor_enabled, tp.created_at,
+                    (SELECT pu.email FROM partner_users pu WHERE pu.partner_id=tp.id ORDER BY pu.id LIMIT 1) email
+                FROM training_partners tp WHERE tp.is_test=1 ORDER BY tp.id DESC"), scenarios = partnerScenarios })));
+
+        app.MapPost("/api/admin/test-partners/{id}/reset", (HttpContext ctx, long id) => gate(ctx.Request, "test_users", adm =>
+        {
+            if (db.QueryOne("SELECT id FROM training_partners WHERE id=? AND is_test=1", id) is null)
+                return Err(404, "not_found", "not a test partner");
+            var b = H.Body(ctx.Request).GetAwaiter().GetResult();
+            var scenario = (H.GetS(b, "scenario") ?? "active").Trim().ToLowerInvariant();
+            if (!partnerScenarios.Contains(scenario)) return Err(400, "bad_scenario");
+            WipePartnerData(id, keepPartner: true);
+            ApplyPartnerScenario(id, scenario);
+            var pu = db.QueryOne("SELECT id FROM partner_users WHERE partner_id=? ORDER BY id LIMIT 1", id);
+            var token = pu is null || scenario == "suspended" ? null : MintPartnerSession(H.L(pu["id"]));
+            log(adm.Id, "admin_test_partner_reset", $"scenario {scenario} by {adm.Id} (partner {id})");
+            return J(new { ok = true, id, scenario, token, login_url = "/partner.html" });
+        }));
+
+        app.MapPost("/api/admin/test-partners/{id}/delete", (HttpContext ctx, long id) => gate(ctx.Request, "test_users", adm =>
+        {
+            if (db.QueryOne("SELECT id FROM training_partners WHERE id=? AND is_test=1", id) is null)
+                return Err(404, "not_found", "not a test partner");
+            WipePartnerData(id, keepPartner: false);
+            log(adm.Id, "admin_test_partner_delete", $"by {adm.Id} (partner {id})");
+            return J(new { ok = true });
+        }));
+
         // ================= admin: code approval queue =================
         app.MapGet("/api/admin/code-approvals", (HttpContext ctx) => gate(ctx.Request, "codes", _ =>
             J(new { rows = db.Query(@"SELECT dc.id,dc.code,dc.discount_value,dc.applies_to,dc.max_uses,dc.start_date,dc.end_date,dc.campaign_name,dc.notes,
@@ -350,6 +453,7 @@ public static class PartnerPortal
                        COALESCE((SELECT SUM(r.discount_amount) FROM code_redemptions r WHERE r.code_id=dc.id),0) discount_given,
                        COALESCE((SELECT SUM(p.final_amount) FROM code_redemptions r JOIN payments p ON p.id=r.payment_id WHERE r.code_id=dc.id AND p.payment_status='paid'),0) revenue
                 FROM discount_codes dc LEFT JOIN training_partners tp ON tp.id=dc.partner_id
+                WHERE dc.partner_id IS NULL OR COALESCE(tp.is_test,0)=0
                 ORDER BY dc.used_count DESC, dc.id DESC LIMIT 500");
             if (ctx.Request.Query["format"] == "csv")
             {

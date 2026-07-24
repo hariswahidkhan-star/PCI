@@ -343,6 +343,15 @@ var store={
   set:function(v){try{sessionStorage.setItem(KEY,v);}catch(e){mem=v;}},
   del:function(){try{sessionStorage.removeItem(KEY);}catch(e){mem=null;}}
 };
+/* Test-account / support hand-off: /partner.html#t=<token> adopts a ready session (admin test
+   partners) and scrubs the hash so the token never lingers in the address bar or history. */
+try{
+  if(location.hash&&location.hash.indexOf('#t=')===0){
+    var handoff=decodeURIComponent(location.hash.slice(3));
+    if(handoff)store.set(handoff);
+    history.replaceState(null,'',location.pathname+location.search);
+  }
+}catch(e){}
 var st={token:store.get()||'', me:null, whoTxt:'', tab:'overview'};
 
 function el(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n;}
