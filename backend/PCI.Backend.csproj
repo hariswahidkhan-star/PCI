@@ -9,6 +9,14 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.7" />
+    <!-- SQ-5: direct pins that override known-vulnerable TRANSITIVE versions with patched ones.
+         Microsoft.Data.Sqlite 8.0.7 pulls SQLitePCLRaw.bundle_e_sqlite3 2.1.6 (GHSA-2m69-gcr7-jv3q,
+         a vulnerable bundled SQLite); Stripe.net 45.14.0 pulls Newtonsoft.Json 12.0.3
+         (GHSA-5crp-9r3c-p9vr, deep-recursion DoS). Pinning the fixed versions directly is the
+         supported NuGet mechanism to lift a transitive dependency. Re-check the vulnerable-package
+         report (the CI static-quality job) when bumping the parent packages. -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.11" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="MySqlConnector" Version="2.3.7" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Stripe.net" Version="45.14.0" />
@@ -30,7 +38,10 @@
     <None Include="schema.mysql.sql" CopyToOutputDirectory="PreserveNewest" />
     <None Include="i18n_seed.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('i18n_seed.json')" />
     <None Include="certuvo_seed.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('certuvo_seed.json')" />
+    <None Include="blog_seed_articles.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('blog_seed_articles.json')" />
+    <None Include="news_seed_articles.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('news_seed_articles.json')" />
     <None Include="demo_exam_seed.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('demo_exam_seed.json')" />
+    <None Include="simlab_scenarios_seed.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('simlab_scenarios_seed.json')" />
     <None Include="emails/**/*" CopyToOutputDirectory="PreserveNewest" />
     <None Include="books/**/*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

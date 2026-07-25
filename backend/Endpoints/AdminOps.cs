@@ -86,7 +86,7 @@ public static class AdminOps
                 PaidAt = H.GetS(b, "paid_at"), OriginalAmount = listPrice > 0 ? listPrice : null,
             };
             var payId = Settlement.Grant(db, id, H.Str(u["email"]), product, certId, amount, reference, provider, meta);
-            if (product is "exam" && certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
+            if ((product is "exam" or "bundle") && certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
             if (amount <= 0)
                 db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,payment_id) VALUES(?,?,?, 'full', ?, ?, 0, 'complimentary', ?, ?, ?)",
                     id, product, certId, listPrice, listPrice, note.Length > 0 ? note : null, adm.Id, payId);
@@ -134,12 +134,12 @@ public static class AdminOps
                 var reference = "WAIVE-" + Security.RandomHex(5).ToUpperInvariant();
                 var payId = Settlement.Grant(db, id, H.Str(u["email"]), product, certId, 0, reference, "admin_waiver",
                     new Settlement.Meta { Note = note.Length > 0 ? note : reason, RecordedBy = adm.Id, OriginalAmount = listPrice });
-                if (product is "exam" && certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
+                if ((product is "exam" or "bundle") && certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
                 db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,payment_id) VALUES(?,?,?, 'full', ?, ?, 0, ?, ?, ?, ?)",
                     id, product, certId, listPrice, listPrice, reason, note.Length > 0 ? note : null, adm.Id, payId);
                 db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Account', 'Your fee has been waived', ?)", id,
                     $"The institute has waived your {product} fee in full ({reason}). Your access is active — no payment is needed.");
-                log(id, "fee_waiver_full", $"{product} 100% ({reason}) by {adm.Id} pay {payId}");
+                log(adm.Id, "fee_waiver_full", $"{product} 100% ({reason}) by {adm.Id} (subject {id}) pay {payId}");
                 return J(new { ok = true, kind = "full", payment_id = payId, waived_amount = listPrice, payable = 0 });
             }
 
@@ -155,7 +155,7 @@ public static class AdminOps
                 id, product, certId, listPrice, waivedAmt, Math.Max(0, listPrice - waivedAmt), reason, note.Length > 0 ? note : null, adm.Id, codeId, expires.Length > 0 ? expires : null);
             db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Account', 'A fee reduction has been applied for you', ?, 'Go to billing', '/billing')", id,
                 $"The institute has granted you a {percent:0.#}% reduction on your {product} fee ({reason}). Use code {codeStr} at checkout{(expires.Length > 0 ? $" before {expires}" : "")}.");
-            log(id, "fee_waiver_partial", $"{product} {percent:0.#}% code {codeStr} ({reason}) by {adm.Id}");
+            log(adm.Id, "fee_waiver_partial", $"{product} {percent:0.#}% code {codeStr} ({reason}) by {adm.Id} (subject {id})");
             return J(new { ok = true, kind = "partial", code = codeStr, percent, original = listPrice, waived_amount = waivedAmt, payable = Math.Max(0, listPrice - waivedAmt), expires = expires.Length > 0 ? expires : null });
         }));
 
@@ -244,7 +244,10 @@ public static class AdminOps
             var stamp = Security.RandomHex(3).ToUpperInvariant();
             var withConsents = scenario is not "unpaid";
             var withProfile = scenario is not ("incomplete_profile" or "unpaid");
-            var withId = scenario is "ready" or "member" or "waived" or "certuvo_failed";
+            // Each negative scenario must isolate the named blocker. Previously both `no_id` and
+            // `incomplete_profile` also had no entitlement, while `incomplete_profile` had no ID;
+            // the resulting account was multiply blocked and could not faithfully test either UX.
+            var withId = scenario is not ("unpaid" or "no_id");
             if (withProfile) db.Execute("INSERT INTO student_profiles(user_id,country,city,mobile) VALUES(?, 'United Kingdom','London','+440000000000')", uid);
             else db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", uid);
             if (withConsents)
@@ -254,9 +257,25 @@ public static class AdminOps
                 db.Execute("INSERT INTO identity_documents(user_id,doc_kind,filename,mime,size_bytes,storage_ref,sha256,status,reviewed_at) VALUES(?, 'passport','test-id.png','image/png',64,'test','test','approved',datetime('now'))", uid);
             switch (scenario)
             {
-                case "ready": Settlement.Grant(db, uid, email, "bundle", certId, 0, "TESTUSER-" + stamp, "admin_test_user"); break;
-                case "member": case "certuvo_failed": Settlement.Grant(db, uid, email, "membership", certId, 0, "TESTUSER-" + stamp, "admin_test_user"); break;
-                case "waived": Settlement.Grant(db, uid, email, "exam", certId, 0, "TESTWAIVE-" + stamp, "admin_waiver"); break;
+                case "ready": case "incomplete_profile": case "no_id":
+                {
+                    var payId = Settlement.Grant(db, uid, email, "bundle", certId, 0, "TESTUSER-" + stamp, "admin_test_user");
+                    if (certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
+                    break;
+                }
+                case "member": case "certuvo_failed":
+                    Settlement.Grant(db, uid, email, "membership", certId, 0, "TESTUSER-" + stamp, "admin_test_user");
+                    break;
+                case "waived":
+                {
+                    var listPrice = Settlement.ListPrice(db, "exam");
+                    var payId = Settlement.Grant(db, uid, email, "exam", certId, 0, "TESTWAIVE-" + stamp, "admin_waiver",
+                        new Settlement.Meta { OriginalAmount = listPrice, Note = "Browser test-user waiver" });
+                    if (certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
+                    db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,payment_id) VALUES(?, 'exam', ?, 'full', ?, ?, 0, 'test_user', 'Browser test-user waiver', ?)",
+                        uid, certId, listPrice, listPrice, payId);
+                    break;
+                }
             }
             if (scenario == "certuvo_failed")
             {
@@ -290,7 +309,7 @@ public static class AdminOps
             // Mint a ready student session so the operator can open the portal AS this test user immediately.
             var session = Security.RandomHex(32);
             db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'session', datetime('now','+30 day'))", uid, Security.Sha(session));
-            log(uid, "admin_test_user_create", $"{email} scenario {scenario} by {adm.Id}");
+            log(adm.Id, "admin_test_user_create", $"{email} scenario {scenario} by {adm.Id} (subject {uid})");
             return J(new { ok = true, id = uid, email, password, token = session, login_url = "/app/", scenario,
                 note = "Test account — not a real candidate. Excluded from revenue reports and the public credential register." });
         }));
@@ -320,7 +339,7 @@ public static class AdminOps
             ApplyScenario(id, H.Str(u["email"]) ?? "", scenario, Certs.Resolve(db, H.GetS(b, "certification_id", "certification", "cert")));
             var session = Security.RandomHex(32);
             db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'session', datetime('now','+30 day'))", id, Security.Sha(session));
-            log(id, "admin_test_user_reset", $"scenario {scenario} by {adm.Id}");
+            log(adm.Id, "admin_test_user_reset", $"scenario {scenario} by {adm.Id} (subject {id})");
             return J(new { ok = true, id, scenario, token = session, login_url = "/app/" });
         }));
 
@@ -329,7 +348,7 @@ public static class AdminOps
             var u = db.QueryOne("SELECT id FROM users WHERE id=? AND is_test=1", id);
             if (u is null) return Err(404, "not_found", "not a test user");
             WipeUserData(id, keepUser: false);
-            log(id, "admin_test_user_delete", $"by {adm.Id}");
+            log(adm.Id, "admin_test_user_delete", $"by {adm.Id} (subject {id})");
             return J(new { ok = true });
         }));
 
@@ -355,7 +374,7 @@ public static class AdminOps
         {
             var n = db.ExecuteWithChanges("DELETE FROM login_tokens WHERE user_id=? AND purpose='impersonation'", id);
             db.Execute("UPDATE impersonation_sessions SET ended_at=datetime('now') WHERE user_id=? AND ended_at IS NULL", id);
-            log(id, "impersonation_ended", $"admin {adm.Id} revoked {n} session(s)");
+            log(adm.Id, "impersonation_ended", $"admin {adm.Id} revoked {n} session(s) (subject {id})");
             return J(new { ok = true, revoked = n });
         }));
 
@@ -503,6 +522,11 @@ public static class AdminOps
             Put("certuvo_api_base", "api_base"); Put("certuvo_provision_path", "provision_path");
             Put("certuvo_deactivate_path", "deactivate_path");
             Put("certuvo_login_url", "login_url"); Put("certuvo_auth_header", "auth_header");
+            // EXT-P1-01 — validate outbound URLs at save time (SSRF / private egress guard).
+            if (H.GetS(b, "api_base") is { Length: > 0 } abCheck && Egress.UrlProblem(abCheck.Trim()) is { } abProb)
+                return Results.Json(new { error = "bad_api_base", message = abProb }, statusCode: 400);
+            if (H.GetS(b, "login_url") is { Length: > 0 } luCheck && Egress.UrlProblem(luCheck.Trim()) is { } luProb)
+                return Results.Json(new { error = "bad_login_url", message = luProb }, statusCode: 400);
             if (H.GetS(b, "requires") is { } rq && rq is "membership" or "membership_and_enrolment" or "membership_or_exam") Settings.Put(db, "certuvo_requires", rq);
             if (H.GetNum(b, "retry_max") is { } rm) Settings.Put(db, "certuvo_retry_max", ((int)Math.Clamp(rm, 0, 50)).ToString());
             // PCI credential policy: username prefix, temp-password length, and email-conflict rule.
@@ -510,8 +534,9 @@ public static class AdminOps
             if (H.GetNum(b, "password_length") is { } pl) Settings.Put(db, "certuvo_password_length", ((int)Math.Clamp(pl, 10, 64)).ToString());
             if (H.GetS(b, "email_conflict") is { } ec && ec is "dedicated" or "manual") Settings.Put(db, "certuvo_email_conflict", ec);
             if (H.GetEl(b, "honorary_grants_membership") is { } hg) Settings.Put(db, "honorary_grants_membership", (hg.ValueKind == JsonValueKind.True || (hg.ValueKind == JsonValueKind.String && hg.GetString() is "1" or "true")) ? "1" : "0");
-            if (H.GetS(b, "api_key") is { } k && k.Length > 0) Settings.Put(db, "certuvo_api_key", k);                     // write-only
-            if (H.GetS(b, "webhook_secret") is { } ws && ws.Length > 0) Settings.Put(db, "certuvo_webhook_secret", ws);    // write-only
+            // EXT-P1-03 — envelope-encrypt secrets at rest (DecryptSecret tolerates legacy plaintext).
+            if (H.GetS(b, "api_key") is { } k && k.Length > 0) Settings.Put(db, "certuvo_api_key", Security.EncryptSecret(k)!);
+            if (H.GetS(b, "webhook_secret") is { } ws && ws.Length > 0) Settings.Put(db, "certuvo_webhook_secret", Security.EncryptSecret(ws)!);
             log(adm.Id, "certuvo.config", $"by {adm.Id}");
             return J(new { ok = true });
         }));
@@ -523,28 +548,28 @@ public static class AdminOps
             var reactivate = H.GetEl(b, "reactivate") is { ValueKind: JsonValueKind.True };
             CertuvoLink.Provision(db, CertuvoLink.Http, userId, reactivate).GetAwaiter().GetResult();
             var a = db.QueryOne("SELECT status,last_error,retry_count,next_retry_at FROM certuvo_accounts WHERE user_id=?", userId);
-            log(userId, "certuvo.provision", $"by {adm.Id} → {H.Str(a?["status"])}");
+            log(adm.Id, "certuvo.provision", $"by {adm.Id} (subject {userId}) → {H.Str(a?["status"])}");
             return J(new { ok = H.Str(a?["status"]) == "active", status = H.Str(a?["status"]), error = H.Str(a?["last_error"]), retry_count = H.L(a?["retry_count"]), next_retry_at = H.Str(a?["next_retry_at"]) });
         }));
 
         app.MapPost("/api/admin/certuvo/{userId}/suspend", (HttpContext ctx, long userId) => gate(ctx.Request, "members", adm =>
         {
             var r = CertuvoLink.Deactivate(db, CertuvoLink.Http, userId, revoke: false).GetAwaiter().GetResult();
-            log(userId, "certuvo.suspend", $"by {adm.Id}");
+            log(adm.Id, "certuvo.suspend", $"by {adm.Id} (subject {userId})");
             return J(r);
         }));
 
         app.MapPost("/api/admin/certuvo/{userId}/revoke", (HttpContext ctx, long userId) => gate(ctx.Request, "members", adm =>
         {
             var r = CertuvoLink.Deactivate(db, CertuvoLink.Http, userId, revoke: true).GetAwaiter().GetResult();
-            log(userId, "certuvo.revoke", $"by {adm.Id}");
+            log(adm.Id, "certuvo.revoke", $"by {adm.Id} (subject {userId})");
             return J(r);
         }));
 
         app.MapPost("/api/admin/certuvo/{userId}/resend", (HttpContext ctx, long userId) => gate(ctx.Request, "members", adm =>
         {
             var ok = CertuvoLink.SendAccessInstructions(db, userId);
-            log(userId, "certuvo.resend", $"by {adm.Id} → {(ok ? "sent" : "not_active")}");
+            log(adm.Id, "certuvo.resend", $"by {adm.Id} (subject {userId}) → {(ok ? "sent" : "not_active")}");
             return ok ? J(new { ok = true }) : Err(409, "not_active", "Instructions can only be re-sent for an active account.");
         }));
 
@@ -554,7 +579,7 @@ public static class AdminOps
             if (db.QueryOne("SELECT id FROM users WHERE id=?", userId) is null) return Err(404, "not_found");
             var name = CertuvoLink.RegenerateUsername(db, CertuvoLink.Http, userId).GetAwaiter().GetResult();
             var a = db.QueryOne("SELECT status,last_error FROM certuvo_accounts WHERE user_id=?", userId);
-            log(userId, "certuvo.regenerate_username", $"by {adm.Id} → {name}");
+            log(adm.Id, "certuvo.regenerate_username", $"by {adm.Id} (subject {userId}) → {name}");
             return J(new { ok = H.Str(a?["status"]) == "active", username = name, status = H.Str(a?["status"]), error = H.Str(a?["last_error"]) });
         }));
 
@@ -566,7 +591,7 @@ public static class AdminOps
             if (db.QueryOne("SELECT id FROM users WHERE id=?", userId) is null) return Err(404, "not_found");
             var ok = CertuvoLink.NewTempPassword(db, CertuvoLink.Http, userId).GetAwaiter().GetResult();
             var a = db.QueryOne("SELECT status,last_error FROM certuvo_accounts WHERE user_id=?", userId);
-            log(userId, "certuvo.new_password", $"by {adm.Id} → {(ok ? "ok" : "failed")}");
+            log(adm.Id, "certuvo.new_password", $"by {adm.Id} (subject {userId}) → {(ok ? "ok" : "failed")}");
             return J(new { ok, status = H.Str(a?["status"]), error = H.Str(a?["last_error"]) });
         }));
 
@@ -576,7 +601,7 @@ public static class AdminOps
         {
             // 404 (not 5xx) while unconfigured: the route does not exist as far as callers are concerned,
             // and the 500-sweep gate treats any 5xx as a defect.
-            var secret = Settings.Str(db, "certuvo_webhook_secret", "");
+            var secret = CertuvoLink.WebhookSecret(db);
             if (secret.Length == 0) return Results.Json(new { error = "webhook_not_configured" }, statusCode: 404);
             var given = ctx.Request.Headers["X-Certuvo-Secret"].ToString();
             if (!Security.FixedTimeEquals(given, secret)) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
@@ -602,6 +627,21 @@ public static class AdminOps
             }
             log(uid, "certuvo.webhook", type);
             return Results.Json(new { ok = true });
+        });
+
+        // ---------------- Sweeps (owner-only): fire the time-based background sweeps NOW ----------------
+        // The scheduled workers already run these (blog publisher every 60s; membership expiry daily via
+        // RetentionService). This hook lets an operator advance the scheduled->published and
+        // active->expired transitions on demand instead of waiting for the next tick.
+        app.MapPost("/api/admin/ops/sweeps/run", (HttpContext ctx) =>
+        {
+            var adm = Auth.AdminFromReq(ctx.Request, db);
+            if (adm is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+            if (!adm.IsOwner) return Results.Json(new { error = "forbidden" }, statusCode: 403);
+            var published = ScheduledPublisher.PublishDue(db);
+            var expired = Settlement.ExpireDueMemberships(db);
+            log(adm.Id, "ops_sweeps_run", $"published={published} memberships_expired={expired}");
+            return Results.Json(new { ok = true, published, memberships_expired = expired });
         });
     }
 }

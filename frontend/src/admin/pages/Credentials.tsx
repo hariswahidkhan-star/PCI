@@ -1,25 +1,58 @@
 import { useState, useEffect } from 'react'
 import { useAdminQuery } from '../hooks'
-import { adminApi, type CredentialRow } from '../api'
+import { adminApi, type CredentialRow, type MemberRow } from '../api'
 import { ApiError } from '../../api/client'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
 import { fmtDate, isPast } from '../../format'
 
 function IssueForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
-  const [f, setF] = useState({ credential_id: '', holder_name: '', credential: 'PCL-AI', expires_at: '' })
+  const [f, setF] = useState({ credential_id: '', user_id: '', holder_name: '', certification_id: '', expires_at: '' })
+  const [studentQuery, setStudentQuery] = useState('')
+  const [studentSearch, setStudentSearch] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const set = (k: keyof typeof f, v: string) => setF((p) => ({ ...p, [k]: v }))
+  const { data: certifications } = useAdminQuery<{ rows: { id: number; code: string; acronym?: string; name: string }[] }>('/api/certifications')
+  const { data: members } = useAdminQuery<{ rows: MemberRow[] }>(
+    studentSearch.length >= 2 ? `/api/admin/members?q=${encodeURIComponent(studentSearch)}&limit=20` : null,
+  )
+  useEffect(() => {
+    const t = setTimeout(() => setStudentSearch(studentQuery.trim()), 300)
+    return () => clearTimeout(t)
+  }, [studentQuery])
+
+  function chooseStudent(id: string) {
+    const member = members?.rows.find((m) => String(m.id) === id)
+    setF((prev) => ({
+      ...prev,
+      user_id: id,
+      holder_name: member
+        ? `${member.first_name ?? ''} ${member.last_name ?? ''}`.trim() || member.email
+        : prev.holder_name,
+    }))
+  }
 
   async function save() {
     setBusy(true)
     setError(null)
     try {
-      await adminApi.post('/api/admin/credentials', { ...f, expires_at: f.expires_at || null })
+      await adminApi.post('/api/admin/credentials', {
+        credential_id: f.credential_id,
+        user_id: f.user_id ? Number(f.user_id) : null,
+        holder_name: f.holder_name,
+        certification_id: f.certification_id ? Number(f.certification_id) : undefined,
+        expires_at: f.expires_at || null,
+      })
       onSaved()
     } catch (e) {
       const code = e instanceof ApiError && e.body && typeof e.body === 'object' && 'error' in e.body ? String((e.body as Record<string, unknown>).error) : ''
-      setError(code === 'duplicate_or_invalid' ? 'That credential ID already exists.' : code === 'missing_fields' ? 'Credential ID and holder name are required.' : e instanceof Error ? e.message : 'Could not issue.')
+      setError(code === 'duplicate_or_invalid'
+        ? 'That credential ID already exists.'
+        : code === 'bad_user'
+          ? 'Select a valid student account.'
+          : code === 'missing_fields'
+            ? 'Credential ID and holder name are required.'
+            : e instanceof Error ? e.message : 'Could not issue.')
     } finally {
       setBusy(false)
     }
@@ -33,10 +66,36 @@ function IssueForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => v
           <button className="btn secondary sm" onClick={onClose}>Close</button>
         </div>
         {error && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{error}</div>}
-        <div className="field"><label>Credential ID</label><input value={f.credential_id} onChange={(e) => set('credential_id', e.target.value.toUpperCase())} placeholder="PCI-PCLAI-2026-000001" /></div>
-        <div className="field"><label>Holder name</label><input value={f.holder_name} onChange={(e) => set('holder_name', e.target.value)} /></div>
-        <div className="field"><label>Credential</label><input value={f.credential} onChange={(e) => set('credential', e.target.value)} /></div>
-        <div className="field"><label>Expires</label><input type="date" value={f.expires_at} onChange={(e) => set('expires_at', e.target.value)} /></div>
+        <div className="field"><label htmlFor="cred-issue-id">Credential ID</label><input id="cred-issue-id" value={f.credential_id} onChange={(e) => set('credential_id', e.target.value.toUpperCase())} placeholder="PCI-PCLAI-2026-000001" /></div>
+        <div className="field">
+          <label htmlFor="cred-find-student">Find student <span className="muted small">(linking enables portal download)</span></label>
+          <input id="cred-find-student" value={studentQuery} onChange={(e) => setStudentQuery(e.target.value)} placeholder="Search by name or email…" />
+        </div>
+        {studentSearch.length >= 2 && (
+          <div className="field">
+            <label htmlFor="cred-student-account">Student account</label>
+            <select id="cred-student-account" value={f.user_id} onChange={(e) => chooseStudent(e.target.value)}>
+              <option value="">— leave unlinked —</option>
+              {(members?.rows ?? []).map((m) => (
+                <option key={m.id} value={m.id}>
+                  {`${m.first_name ?? ''} ${m.last_name ?? ''}`.trim() || 'Unnamed'} — {m.email}
+                </option>
+              ))}
+            </select>
+            {members && members.rows.length === 0 && <div className="muted small">No matching student.</div>}
+          </div>
+        )}
+        <div className="field"><label htmlFor="cred-holder-name">Holder name</label><input id="cred-holder-name" value={f.holder_name} onChange={(e) => set('holder_name', e.target.value)} /></div>
+        <div className="field">
+          <label htmlFor="cred-certification">Certification</label>
+          <select id="cred-certification" value={f.certification_id} onChange={(e) => set('certification_id', e.target.value)}>
+            <option value="">Default certification</option>
+            {(certifications?.rows ?? []).map((c) => (
+              <option key={c.id} value={c.id}>{c.code || c.acronym} — {c.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="field"><label htmlFor="cred-expires">Expires</label><input id="cred-expires" type="date" value={f.expires_at} onChange={(e) => set('expires_at', e.target.value)} /></div>
         <button className="btn" disabled={busy || !f.credential_id || !f.holder_name} onClick={save}>{busy ? 'Issuing…' : 'Issue credential'}</button>
       </div>
     </div>

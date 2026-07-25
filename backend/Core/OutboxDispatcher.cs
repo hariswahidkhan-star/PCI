@@ -30,17 +30,26 @@ public sealed class OutboxDispatcher : BackgroundService
     /// <summary>Process up to <paramref name="limit"/> due rows. Also callable directly by an admin retry.</summary>
     public static void DrainOnce(Db db, int limit)
     {
-        var rows = db.Query(@"SELECT * FROM comm_outbox
+        // Recover crash-stranded processing rows whose lease expired, then claim each due row atomically
+        // so two dispatcher instances cannot both send the same message (EXT-P0-05).
+        try { WorkerLease.RecoverExpired(db, "comm_outbox", "retrying"); } catch { }
+        var rows = db.Query(@"SELECT id FROM comm_outbox
             WHERE status IN ('queued','scheduled','retrying')
               AND (scheduled_at IS NULL OR scheduled_at<=datetime('now'))
               AND (next_attempt_at IS NULL OR next_attempt_at<=datetime('now'))
+              AND (lease_until IS NULL OR lease_until<=datetime('now'))
             ORDER BY id LIMIT ?", limit);
+        var owner = WorkerLease.NewOwner();
         foreach (var r in rows)
         {
             var id = H.L(r["id"]);
-            try { DeliverOne(db, r); }
+            if (!WorkerLease.TryClaim(db, "comm_outbox", id, owner, "'queued','scheduled','retrying'")) continue;
+            var full = db.QueryOne("SELECT * FROM comm_outbox WHERE id=?", id);
+            if (full is null) continue;
+            try { DeliverOne(db, full); }
             catch (Exception e)
             {
+                WorkerLease.Clear(db, "comm_outbox", id);
                 db.Execute("UPDATE comm_outbox SET status='failed', last_error=?, updated_at=datetime('now') WHERE id=?", e.Message, id);
             }
         }
@@ -49,7 +58,7 @@ public sealed class OutboxDispatcher : BackgroundService
     static void DeliverOne(Db db, Dictionary<string, object?> r)
     {
         var id = H.L(r["id"]);
-        db.Execute("UPDATE comm_outbox SET status='processing', updated_at=datetime('now') WHERE id=?", id);
+        // Status already 'processing' via WorkerLease.TryClaim — do not re-claim here.
         var channel = H.Str(r["channel"]) ?? "email";
         var attempt = (int)H.L(r["attempts"]) + 1;
         var maxAttempts = (int)Math.Max(1, H.L(r["max_attempts"]));
@@ -97,25 +106,28 @@ public sealed class OutboxDispatcher : BackgroundService
         if (ok)
         {
             db.Execute(@"UPDATE comm_outbox SET status=?, attempts=?, provider=?, provider_message_id=?,
-                provider_response=?, sent_at=datetime('now'), last_error=NULL, updated_at=datetime('now') WHERE id=?",
+                provider_response=?, sent_at=datetime('now'), last_error=NULL, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
                 res.Status == "console" ? "sent" : "sent", attempt, res.Provider, res.ProviderMessageId, Trim(res.Response), id);
         }
         else if (res.Status is "rejected" or "hard_bounced" or "unsubscribed")
         {
-            db.Execute("UPDATE comm_outbox SET status=?, attempts=?, provider=?, last_error=?, updated_at=datetime('now') WHERE id=?",
+            db.Execute("UPDATE comm_outbox SET status=?, attempts=?, provider=?, last_error=?, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
                 res.Status, attempt, res.Provider, Trim(res.Response), id);
         }
         else if (attempt >= maxAttempts)
         {
-            db.Execute("UPDATE comm_outbox SET status='failed', attempts=?, provider=?, last_error=?, updated_at=datetime('now') WHERE id=?",
+            db.Execute("UPDATE comm_outbox SET status='failed', attempts=?, provider=?, last_error=?, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
                 attempt, res.Provider, Trim(res.Response), id);
         }
         else
         {
             var backoffMin = Math.Min(60, (int)Math.Pow(2, attempt)); // 2,4,8,16,32,60 min
+            // The next-attempt instant is computed here rather than as datetime('now','+' || ? || ' minutes'):
+            // that expression is SQLite-only, and because DrainOnce dead-letters a row whose delivery throws,
+            // its failure on MySQL turned every FIRST transient failure into a permanent one.
             db.Execute(@"UPDATE comm_outbox SET status='retrying', attempts=?, provider=?, last_error=?,
-                next_attempt_at=datetime('now', '+' || ? || ' minutes'), updated_at=datetime('now') WHERE id=?",
-                attempt, res.Provider, Trim(res.Response), backoffMin, id);
+                next_attempt_at=?, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
+                attempt, res.Provider, Trim(res.Response), H.StampInMinutes(backoffMin), id);
         }
     }
 

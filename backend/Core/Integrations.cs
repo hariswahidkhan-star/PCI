@@ -29,24 +29,41 @@ public static class Integrations
     public static readonly string[] KnownEvents = { "payment.recorded", "membership.activated", "member.registered", "ping" };
 
     /// <summary>Record a canonical business event and queue it for every subscribed connector. Returns the
-    /// event id (0 on failure). Never throws.</summary>
+    /// event id (0 only when the event row itself could not be written). Fan-out failures never lose the
+    /// event — a sweeper / admin retry can rebuild missing delivery rows from the outbox (EXT-P1-05).</summary>
     public static long Emit(Db db, string eventType, string? entityType, long? entityId, object payload)
     {
+        long eventId;
         try
         {
             var json = JsonSerializer.Serialize(payload);
-            var eventId = db.ExecuteReturningId(
+            eventId = db.ExecuteReturningId(
                 "INSERT INTO integration_events(event_type,entity_type,entity_id,payload) VALUES(?,?,?,?)",
                 eventType, entityType, entityId, json);
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine($"[integrations] emit {eventType} FAILED — business event NOT recorded: {e.Message}");
+            return 0;
+        }
+        try
+        {
             foreach (var i in db.Query("SELECT id,event_filter FROM integrations WHERE enabled=1"))
             {
                 if (!Subscribes(H.Str(i["event_filter"]), eventType)) continue;
-                db.Execute("INSERT OR IGNORE INTO integration_deliveries(event_id,integration_id,status,next_attempt_at) VALUES(?,?,'pending',datetime('now'))",
-                    eventId, H.L(i["id"]));
+                try
+                {
+                    db.Execute("INSERT OR IGNORE INTO integration_deliveries(event_id,integration_id,status,next_attempt_at) VALUES(?,?,'pending',datetime('now'))",
+                        eventId, H.L(i["id"]));
+                }
+                catch (Exception fe)
+                {
+                    Console.Error.WriteLine($"[integrations] fan-out event {eventId} → connector {i["id"]} failed: {fe.Message}");
+                }
             }
-            return eventId;
         }
-        catch (Exception e) { Console.Error.WriteLine($"[integrations] emit {eventType} failed: {e.Message}"); return 0; }
+        catch (Exception e) { Console.Error.WriteLine($"[integrations] fan-out {eventType}#{eventId} failed: {e.Message}"); }
+        return eventId;
     }
 
     /// <summary>Empty/null filter = every event; otherwise the filter is a JSON array of subscribed event types.</summary>
@@ -76,9 +93,22 @@ public static class Integrations
     /// <summary>Deliver all pending deliveries whose next_attempt_at is due. Returns the count attempted.</summary>
     public static async Task<int> DeliverDue(Db db, HttpClient http, int max = 25)
     {
-        var due = db.Query("SELECT * FROM integration_deliveries WHERE status='pending' AND (next_attempt_at IS NULL OR next_attempt_at<=datetime('now')) ORDER BY id LIMIT ?", max);
-        foreach (var d in due) await DeliverOne(db, http, d);
-        return due.Count;
+        // Atomic claim (EXT-P0-05): select candidates, then UPDATE…WHERE status still claimable so two
+        // IntegrationDispatcher instances cannot both POST the same ERP/webhook delivery.
+        try { WorkerLease.RecoverExpired(db, "integration_deliveries", "pending"); } catch { }
+        var due = db.Query("SELECT id FROM integration_deliveries WHERE status='pending' AND (next_attempt_at IS NULL OR next_attempt_at<=datetime('now')) AND (lease_until IS NULL OR lease_until<=datetime('now')) ORDER BY id LIMIT ?", max);
+        var owner = WorkerLease.NewOwner();
+        var n = 0;
+        foreach (var row in due)
+        {
+            var id = H.L(row["id"]);
+            if (!WorkerLease.TryClaim(db, "integration_deliveries", id, owner, "'pending'")) continue;
+            var d = db.QueryOne("SELECT * FROM integration_deliveries WHERE id=?", id);
+            if (d is null) continue;
+            await DeliverOne(db, http, d);
+            n++;
+        }
+        return n;
     }
 
     /// <summary>Attempt a single delivery: build the signed envelope, POST it, and record the outcome
@@ -90,7 +120,7 @@ public static class Integrations
         var ev = db.QueryOne("SELECT * FROM integration_events WHERE id=?", H.L(d["event_id"]));
         if (integ is null || ev is null)
         {
-            db.Execute("UPDATE integration_deliveries SET status='failed', last_error='missing connector or event', updated_at=datetime('now') WHERE id=?", deliveryId);
+            db.Execute("UPDATE integration_deliveries SET status='failed', last_error='missing connector or event', lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?", deliveryId);
             return;
         }
         var integId = H.L(integ["id"]);
@@ -107,10 +137,10 @@ public static class Integrations
             HttpRequestMessage req;
             if (provider == "quickbooks")
             {
-                var built = await QuickBooksConnector.BuildRequest(http, integ, eventType, payloadRaw);
+                var built = await QuickBooksConnector.BuildRequest(db, http, integ, eventType, payloadRaw);
                 if (built is null)
                 {
-                    db.Execute("UPDATE integration_deliveries SET status='skipped', attempts=?, last_error=?, updated_at=datetime('now') WHERE id=?",
+                    db.Execute("UPDATE integration_deliveries SET status='skipped', attempts=?, last_error=?, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
                         attempts, "event not mapped for QuickBooks", deliveryId);
                     return;
                 }
@@ -124,7 +154,7 @@ public static class Integrations
                 var code = (int)resp.StatusCode;
                 if (resp.IsSuccessStatusCode)
                 {
-                    db.Execute("UPDATE integration_deliveries SET status='delivered', attempts=?, response_code=?, last_error=NULL, updated_at=datetime('now') WHERE id=?", attempts, code, deliveryId);
+                    db.Execute("UPDATE integration_deliveries SET status='delivered', attempts=?, response_code=?, last_error=NULL, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?", attempts, code, deliveryId);
                     db.Execute("UPDATE integrations SET status='ok', last_delivery_at=datetime('now'), updated_at=datetime('now') WHERE id=?", integId);
                 }
                 else
@@ -151,20 +181,24 @@ public static class Integrations
         req.Headers.TryAddWithoutValidation("X-PCI-Event", eventType);
         req.Headers.TryAddWithoutValidation("X-PCI-Delivery", deliveryId.ToString());
         req.Headers.TryAddWithoutValidation("X-PCI-Timestamp", ts);
-        if (H.Str(integ["secret"]) is { Length: > 0 } secret)
-            req.Headers.TryAddWithoutValidation("X-PCI-Signature", Sign(secret, ts, body));
+        if (H.Str(integ["secret"]) is { Length: > 0 } secretEnc)
+        {
+            var secret = Security.DecryptSecret(secretEnc) ?? secretEnc;
+            if (secret.Length > 0)
+                req.Headers.TryAddWithoutValidation("X-PCI-Signature", Sign(secret, ts, body));
+        }
         return req;
     }
 
     static void Fail(Db db, long deliveryId, int attempts, int? code, string error, long integId)
     {
         if (attempts >= MaxAttempts)
-            db.Execute("UPDATE integration_deliveries SET status='failed', attempts=?, response_code=?, last_error=?, updated_at=datetime('now') WHERE id=?",
+            db.Execute("UPDATE integration_deliveries SET status='failed', attempts=?, response_code=?, last_error=?, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
                 attempts, code, Clip(error), deliveryId);
         else
         {
             var next = DateTime.UtcNow.AddSeconds(BackoffSeconds(attempts)).ToString("yyyy-MM-dd HH:mm:ss");
-            db.Execute("UPDATE integration_deliveries SET status='pending', attempts=?, response_code=?, last_error=?, next_attempt_at=?, updated_at=datetime('now') WHERE id=?",
+            db.Execute("UPDATE integration_deliveries SET status='pending', attempts=?, response_code=?, last_error=?, next_attempt_at=?, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
                 attempts, code, Clip(error), next, deliveryId);
         }
         db.Execute("UPDATE integrations SET status='error', updated_at=datetime('now') WHERE id=?", integId);

@@ -430,11 +430,12 @@ public static class Careers
         app.MapGet("/api/admin/careers/applications/{id:long}/events", (HttpRequest req, long id) => gate(req, "content", _ =>
             J(new { rows = db.Query("SELECT id,kind,from_status,to_status,body,scheduled_at,actor_name,created_at FROM job_app_events WHERE application_id=? ORDER BY id", id) })));
 
-        app.MapGet("/api/admin/careers/applications/{id:long}/cv", (HttpRequest req, long id) => gate(req, "content", _ =>
+        app.MapGet("/api/admin/careers/applications/{id:long}/cv", (HttpRequest req, long id) => gate(req, "content", adm =>
         {
             var a = db.QueryOne("SELECT cv_ref,cv_name FROM job_applications WHERE id=?", id);
             var got = a is null ? null : Storage.Get(H.Str(a["cv_ref"]));
             if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            log(adm.Id, "job_application_cv_view", $"application {id} '{H.Str(a!["cv_name"])}'");
             return Results.Bytes(got.Value.bytes!, got.Value.mime, H.Str(a!["cv_name"]));
         }));
     }

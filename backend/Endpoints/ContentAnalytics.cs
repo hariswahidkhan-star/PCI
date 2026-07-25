@@ -109,5 +109,30 @@ public static class ContentAnalytics
                     WHERE s.active=1 ORDER BY s.id DESC");
             return J(new { sources, totals });
         }));
+
+        // Per-article analytics — first-party, cookieless. Reuses the page_view events recorded when each
+        // blog/news article is served, grouped by URL and joined to the post, plus its outbound link clicks.
+        app.MapGet("/api/admin/content/analytics/articles", (HttpRequest req) => gate(req, PERM, _ =>
+        {
+            int.TryParse(req.Query["days"], out var days); if (days <= 0 || days > 365) days = 28;
+            var cutoff = DateTime.UtcNow.AddDays(-days).ToString("yyyy-MM-dd HH:mm:ss");
+            var grouped = db.Query(@"SELECT path, COUNT(*) AS views FROM analytics_events
+                WHERE event='page_view' AND (path LIKE '/blog/%' OR path LIKE '/news/%') AND created_at>=?
+                GROUP BY path ORDER BY views DESC LIMIT 200", cutoff);
+            var outp = new List<object>();
+            foreach (var r in grouped)
+            {
+                var path = H.Str(r["path"]) ?? "";
+                var slug = path.Contains('/') ? path[(path.LastIndexOf('/') + 1)..] : path;
+                if (slug.Length == 0) continue;
+                var post = db.QueryOne("SELECT id,title,structured_type,status FROM blog_posts WHERE slug=?", slug);
+                if (post is null) continue;   // a facet/unknown path is not an article
+                var clicks = db.Scalar<long>("SELECT COALESCE(SUM(clicks),0) FROM cc_content_links WHERE post_id=?", H.L(post["id"]));
+                outp.Add(new { path, slug, title = H.Str(post["title"]),
+                    section = H.Str(post["structured_type"]) == "NewsArticle" ? "news" : "blog",
+                    status = H.Str(post["status"]), views = H.L(r["views"]), link_clicks = clicks });
+            }
+            return J(new { days, articles = outp });
+        }));
     }
 }

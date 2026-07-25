@@ -43,7 +43,10 @@ public static class Payments
                 {
                     var em = (email ?? "").Trim().ToLowerInvariant();
                     var urow = em.Length > 0 ? db.QueryOne("SELECT id FROM users WHERE email=?", em) : null;
-                    var memberActive = urow is not null && db.QueryOne("SELECT id FROM memberships WHERE user_id=? AND status='active'", H.L(urow["id"])) is not null;
+                    // Expiry-AWARE membership check: a lapsed membership (expiry_date in the past) does not
+                    // qualify for a standalone exam purchase even before the daily expiry sweep flips its
+                    // status to 'expired'. A NULL expiry means no expiry (always valid).
+                    var memberActive = urow is not null && db.QueryOne("SELECT id FROM memberships WHERE user_id=? AND status='active' AND (expiry_date IS NULL OR expiry_date>datetime('now'))", H.L(urow["id"])) is not null;
                     if (!memberActive)
                         return Results.Json(new { error = "membership_required", message = "Please pay your membership fee first, or choose the membership + exam bundle to pay both together." }, statusCode: 400);
                 }
@@ -78,7 +81,7 @@ public static class Payments
                 // advisory). If it's invalid or scoped to the other product, reject the checkout rather than
                 // silently dropping the discount and charging full price.
                 var codeStr = H.GetS(d, "code");
-                var codeVal = !string.IsNullOrWhiteSpace(codeStr) ? Public.ValidateCode(db, codeStr, product, email) : new Public.CodeValidation(null, null);
+                var codeVal = !string.IsNullOrWhiteSpace(codeStr) ? Public.ValidateCode(db, codeStr, product, email, certSelIn) : new Public.CodeValidation(null, null);
                 if (codeVal.Error is not null) return Results.Json(new { error = "code_invalid", message = codeVal.Error }, statusCode: 400);
                 var pr = Public.Pricing(db, product, codeVal.Code, certRow);
                 // A code with a configured floor cannot push the payable amount below it.
@@ -88,7 +91,7 @@ public static class Payments
                     product, JsonSerializer.Serialize(pr), (email ?? "").ToLowerInvariant());
 
                 var label = PRODUCT_LABEL[product];
-                if (product is "exam" or "bundle" && certRow is not null)
+                if (product is "exam" or "bundle" or "recert" && certRow is not null)
                     label = label.Replace("PCL-AI", H.Str(certRow["code"]) ?? "PCL-AI");
                 var options = new SessionCreateOptions
                 {
@@ -110,12 +113,16 @@ public static class Payments
                     // where the webhook-applied membership/entitlement shows up on reload.
                     SuccessUrl = (H.GetS(d, "portal") is "1" or "true")
                         ? $"{Base}/app/billing?paid={{CHECKOUT_SESSION_ID}}"
-                        : $"{Base}/payment-success.html?ref={{CHECKOUT_SESSION_ID}}&product={Uri.EscapeDataString(PRODUCT_LABEL[product])}",
+                        : $"{Base}/payment-success.html?ref={{CHECKOUT_SESSION_ID}}&product={Uri.EscapeDataString(label)}",
                     CancelUrl = (H.GetS(d, "portal") is "1" or "true")
                         ? $"{Base}/app/billing?cancelled=1"
                         : $"{Base}/payment-failed.html"
                 };
-                var session = await new SessionService().CreateAsync(options);
+                // Deterministic Stripe idempotency key: a retried create (network blip, double-click) within
+                // the same minute returns the SAME Checkout Session instead of creating a duplicate; genuinely
+                // separate purchases (different product/cert/amount, or a later minute) get a fresh session.
+                var idemKey = "cs_" + Security.Sha($"{(email ?? "").ToLowerInvariant()}|{product}|{certSelIn}|{pr.final}|{DateTime.UtcNow:yyyyMMddHHmm}");
+                var session = await new SessionService().CreateAsync(options, new RequestOptions { IdempotencyKey = idemKey });
                 return J(new { url = session.Url });
             }
             catch (Exception e) { Console.Error.WriteLine(e); return Results.Json(new { error = "session_failed" }, statusCode: 500); }
@@ -147,7 +154,9 @@ public static class Payments
                     CancelUrl = $"{Base}/app/billing?cancelled=1",
                 };
                 if (!string.IsNullOrEmpty(existingCust)) opts.Customer = existingCust; else opts.CustomerEmail = u.Email;
-                var session = await new SessionService().CreateAsync(opts);
+                // Deterministic idempotency key (see create-checkout-session): dedupes a retried subscribe.
+                var idemKey = "sub_" + Security.Sha($"{u.Id}|{price}|{DateTime.UtcNow:yyyyMMddHHmm}");
+                var session = await new SessionService().CreateAsync(opts, new RequestOptions { IdempotencyKey = idemKey });
                 return J(new { url = session.Url });
             }
             catch (Exception e) { Console.Error.WriteLine(e); return Results.Json(new { error = "session_failed" }, statusCode: 500); }
@@ -206,15 +215,30 @@ public static class Payments
                 return Results.Ok();
             }
 
-            if (ev.Type == "checkout.session.completed")
+            if (ev.Type is "checkout.session.completed" or "checkout.session.async_payment_succeeded")
             {
                 var s = ev.Data.Object as Session;
+                // Subscriptions are settled in the dedicated branch above; a stray async event for a
+                // subscription session carries no one-off PaymentIntent, so never settle it as a one-off here.
+                if (s?.Mode == "subscription") return Results.Ok();
+                // Fulfil ONLY when Stripe confirms the money settled. For delayed-notification payment methods
+                // (e.g. bank debits), checkout.session.completed can arrive with payment_status='unpaid'; the
+                // funds are confirmed LATER by checkout.session.async_payment_succeeded. Granting access on
+                // 'completed' regardless would hand over the product before payment. 'no_payment_required' is a
+                // genuine $0 settlement (e.g. a 100%-off code) and IS fulfilled. (EXT-P0-02)
+                if (s is not null && s.PaymentStatus is not ("paid" or "no_payment_required"))
+                {
+                    log(null, "checkout_unpaid_deferred", $"{ev.Id} status={s.PaymentStatus}");
+                    return Results.Ok();
+                }
                 var m = s?.Metadata ?? new();
                 var email = (s?.CustomerDetails?.Email ?? s?.CustomerEmail ?? "").ToLowerInvariant();
                 if (!string.IsNullOrEmpty(email))
                 {
                   // Fully atomic settlement: user, membership, payment, redemption, tokens all commit
                   // together or roll back together. Combined with INSERT OR IGNORE this is idempotent.
+                  // Critical welcome email is enqueued INSIDE the transaction (EXT-P0-06) so a provider
+                  // outage cannot lose the setup link after money has settled.
                   long? welcomeUserId = null; string? welcomeEmail = null, welcomeFirst = null, welcomeLink = null, welcomeBase = null, welcomeRef = null;
                   long? provisionCertuvoUserId = null;
                   db.Transaction(() =>
@@ -327,6 +351,10 @@ public static class Payments
                                 db.Execute(@"INSERT OR IGNORE INTO code_redemptions(code_id,code,user_id,email,payment_id,product_type,amount_before,discount_amount) VALUES(?,?,?,?,?,?,?,?)",
                                     codeRow["id"], discountCode, userId, email, payId, product, MetaNum("standard_amount"), MetaNum("code_amount"));
                                 try { FraudChecks.OnRedemption(db, H.L(codeRow["id"]), discountCode!, email, codeRow["partner_id"] is null ? null : H.L(codeRow["partner_id"])); } catch { }
+                                // Partner commission (Phase 1): immutable, rate snapshotted now, recorded in
+                                // the same atomic transaction as the redemption it is derived from. Idempotent
+                                // via a UNIQUE dedupe_key, so a replayed webhook records nothing further.
+                                try { PCI.Backend.Core.PartnerCommission.EnsureForPayment(db, payId); } catch { }
                             }
                         }
                         if (sess is not null) db.Execute("UPDATE enrollment_sessions SET session_status='paid', last_activity_at=datetime('now') WHERE id=?", sess["id"]);
@@ -340,6 +368,9 @@ public static class Payments
                         var mailBase = Mailer.BaseUrl(req);
                         welcomeUserId = userId; welcomeEmail = email; welcomeFirst = m.GetValueOrDefault("first_name"); welcomeRef = reference;
                         welcomeLink = Mailer.SetupLink(mailBase, token); welcomeBase = mailBase;
+                        // Durable critical email: enqueue inside the settlement transaction so a Resend/SMTP
+                        // outage never leaves a paid student without a setup link and automatic retry (EXT-P0-06).
+                        Mailer.EnqueueWelcome(db, userId, email, m.GetValueOrDefault("first_name"), welcomeLink!, mailBase, reference);
 
                         if (product == "exam" || product == "bundle")
                         {
@@ -357,10 +388,9 @@ public static class Payments
                         }
                     }
                   });
-                  // Deliver the setup email outside the transaction so a slow SMTP server never holds the DB lock.
-                  if (welcomeEmail is not null)
-                      try { Mailer.SendWelcome(db, welcomeUserId!.Value, welcomeEmail, welcomeFirst, welcomeLink!, welcomeBase!); }
-                      catch (Exception mex) { log(welcomeUserId, "welcome_email_failed", mex.Message); }
+                  // Welcome email is durable via the outbox (enqueued above). Kick a drain so console/dev
+                  // environments still deliver promptly; production delivery is owned by OutboxDispatcher.
+                  try { OutboxDispatcher.DrainOnce(db, 5); } catch { }
                   // Provision Certuvo outside the transaction: this is a blocking outbound HTTP call whose async
                   // continuation re-enters the shared DB connection, so running it here (no lock held) avoids the
                   // deadlock that an in-transaction call would cause. Best-effort — the retry worker recovers failures.
@@ -400,24 +430,51 @@ public static class Payments
                 var pi = ch?.PaymentIntentId ?? (ev.Data.Object as Dispute)?.PaymentIntentId;
                 var reversed = ev.Type != "charge.refunded" ? "reversed" : "refunded";
                 // A PARTIAL refund (amount_refunded < amount) leaves the purchase substantially paid —
-                // don't revoke access. Full refunds (ch.Refunded) and disputes/chargebacks do revoke.
+                // record the financial state but don't revoke access (EXT-P0-02).
                 if (ev.Type == "charge.refunded" && ch is not null && ch.Refunded != true)
                 {
-                    log(0, "partial_refund_ignored", $"{ev.Id} pi={pi}");
-                    pi = null;
+                    var refundedAmt = (ch.AmountRefunded) / 100.0;
+                    if (!string.IsNullOrEmpty(pi))
+                    {
+                        db.Execute("UPDATE payments SET amount_refunded=?, payment_status='partially_refunded', refunded_at=datetime('now') WHERE provider_payment_id=? AND payment_status IN ('paid','partially_refunded')",
+                            refundedAmt, pi);
+                        // Partner commission follows the money back: reverse the refunded proportion.
+                        // Idempotent on the cumulative refunded amount, so Stripe's retries are no-ops.
+                        try
+                        {
+                            var partial = db.QueryOne("SELECT id FROM payments WHERE provider_payment_id=?", pi);
+                            if (partial is not null) PCI.Backend.Core.PartnerCommissionReversal.EnsureForPayment(db, H.L(partial["id"]), "refund");
+                        }
+                        catch { }
+                    }
+                    log(0, "partial_refund_recorded", $"{ev.Id} pi={pi} amount={refundedAmt}");
+                    pi = null; // skip revocation path below
                 }
                 if (!string.IsNullOrEmpty(pi))
                     db.Transaction(() =>
                     {
-                        var pay = db.QueryOne("SELECT id,user_id,product_type FROM payments WHERE provider_payment_id=? AND payment_status='paid'", pi);
+                        var pay = db.QueryOne("SELECT id,user_id,product_type FROM payments WHERE provider_payment_id=? AND payment_status IN ('paid','partially_refunded')", pi);
                         if (pay is null) return;
                         var payId = pay["id"]; var uid = pay["user_id"];
-                        db.Execute("UPDATE payments SET payment_status=? WHERE id=?", reversed, payId);
+                        var refundedAmt = ch is not null ? (ch.AmountRefunded) / 100.0 : 0;
+                        db.Execute("UPDATE payments SET payment_status=?, amount_refunded=?, refunded_at=datetime('now') WHERE id=?", reversed, refundedAmt, payId);
                         db.Execute("UPDATE exam_entitlements SET status='revoked' WHERE payment_id=? AND status IN ('available','booked')", payId);
                         db.Execute("UPDATE exam_bookings SET status='cancelled', updated_at=datetime('now') WHERE payment_id=? AND status='scheduled'", payId);
-                        // membership/bundle purchases: lapse the membership this payment activated
+                        // membership/bundle purchases: lapse the membership only when NO other paid supporting
+                        // payment remains for this user (EXT-P0-02 — multi-payment entitlement safety).
                         if (H.Str(pay["product_type"]) is "membership" or "bundle" or "renewal")
-                            db.Execute("UPDATE memberships SET status='expired', expiry_date=datetime('now') WHERE user_id=? AND status='active'", uid);
+                        {
+                            var other = db.QueryOne(
+                                "SELECT id FROM payments WHERE user_id=? AND id!=? AND payment_status='paid' AND product_type IN ('membership','bundle','renewal') LIMIT 1",
+                                uid, payId);
+                            if (other is null)
+                                db.Execute("UPDATE memberships SET status='expired', expiry_date=datetime('now') WHERE user_id=? AND status='active'", uid);
+                            else
+                                log(H.Ln(uid), "refund_membership_kept_other_payment", $"{ev.Id} other_pay={other["id"]}");
+                        }
+                        // Money returned in full (refund or chargeback) → reverse the whole commission,
+                        // inside the same transaction that revoked the access it bought.
+                        try { PCI.Backend.Core.PartnerCommissionReversal.EnsureForPayment(db, H.L(payId), ev.Type == "charge.refunded" ? "refund" : "chargeback"); } catch { }
                         log(H.Ln(uid), "payment_" + reversed, $"{ev.Id} pi={pi}");
                     });
             }
@@ -427,17 +484,23 @@ public static class Payments
             {
                 var inv = ev.Data.Object as Stripe.Invoice;
                 if (inv is not null && inv.BillingReason == "subscription_cycle" && !string.IsNullOrEmpty(inv.CustomerId))
-                {
-                    var mem = db.QueryOne("SELECT id,user_id,expiry_date FROM memberships WHERE stripe_customer_id=? ORDER BY id DESC", inv.CustomerId);
-                    if (mem is not null)
+                    db.Transaction(() =>
                     {
+                        // Claim the event FIRST, atomically with the extension: a replayed (or duplicate)
+                        // invoice.paid must be a NO-OP, never a second year silently granted (EXT-P0-02).
+                        var (_, evChanges) = db.ExecuteWithChanges("INSERT OR IGNORE INTO webhook_events(provider,event_id,status) VALUES('stripe',?,'processed')", ev.Id);
+                        if (evChanges == 0) { log(null, "webhook_event_replay_ignored", ev.Id); return; }
+                        var mem = db.QueryOne("SELECT id,user_id,expiry_date FROM memberships WHERE stripe_customer_id=? ORDER BY id DESC", inv.CustomerId);
+                        if (mem is null) return;
+                        // Reconcile the term to Stripe's authoritative billing-period END when present.
                         var nowIso = H.IsoNow;
-                        var baseD = H.Str(mem["expiry_date"]) is { } ex && H.After(ex, nowIso) ? ex : nowIso;
-                        var newExp = H.IsoFromMillis(H.JsMillis(baseD) + 365L * 86400_000L);
+                        var periodEnd = inv.PeriodEnd.Year > 2000 ? inv.PeriodEnd.ToUniversalTime().ToString("o") : null;
+                        string newExp;
+                        if (periodEnd is not null && H.After(periodEnd, nowIso)) newExp = periodEnd;
+                        else { var baseD = H.Str(mem["expiry_date"]) is { } ex && H.After(ex, nowIso) ? ex : nowIso; newExp = H.IsoFromMillis(H.JsMillis(baseD) + 365L * 86400_000L); }
                         db.Execute("UPDATE memberships SET status='active', subscription_status='active', expiry_date=? WHERE id=?", newExp, mem["id"]);
                         log(H.Ln(mem["user_id"]), "dues_renewed", inv.CustomerId);
-                    }
-                }
+                    });
             }
             // Subscription state changes (cancellation scheduled, past_due, canceled) mirror into the member's row.
             else if (ev.Type is "customer.subscription.updated" or "customer.subscription.deleted")

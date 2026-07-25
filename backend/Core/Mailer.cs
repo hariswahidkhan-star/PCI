@@ -103,6 +103,8 @@ public static class Mailer
             {
                 var from = E("SMTP_FROM") ?? E("SMTP_USER") ?? "no-reply@projectcontrolsinstitute.org";
                 using var client = new System.Net.Mail.SmtpClient(host, int.TryParse(E("SMTP_PORT"), out var p) ? p : 587);
+                // Explicit timeout so a hung SMTP peer cannot block a worker forever (EXT-P0-06).
+                client.Timeout = int.TryParse(E("SMTP_TIMEOUT_MS"), out var tms) ? Math.Clamp(tms, 3_000, 60_000) : 20_000;
                 var user = E("SMTP_USER");
                 if (!string.IsNullOrEmpty(user)) client.Credentials = new System.Net.NetworkCredential(user, E("SMTP_PASS"));
                 client.EnableSsl = !string.Equals(E("SMTP_SSL"), "false", StringComparison.OrdinalIgnoreCase);
@@ -143,6 +145,32 @@ public static class Mailer
                 skipEmail: true);
         }
         catch { }
+    }
+
+    /// <summary>Enqueue the critical welcome/setup email on the durable Communications outbox
+    /// (EXT-P0-06). Prefer this inside payment settlement transactions: delivery is retried with
+    /// backoff by <see cref="OutboxDispatcher"/>, so a Resend/SMTP outage cannot lose credentials.</summary>
+    public static long? EnqueueWelcome(Db db, long userId, string to, string? firstName, string setupUrl, string baseUrl, string? dedupSuffix = null)
+    {
+        var html = Template("welcome", new()
+        {
+            ["FIRST_NAME"] = string.IsNullOrWhiteSpace(firstName) ? "there" : firstName!,
+            ["LOGIN_URL"] = setupUrl,
+            ["DOWNLOADS_URL"] = baseUrl + "/downloads.html",
+        });
+        var dedup = "welcome:" + userId + ":" + (dedupSuffix ?? to);
+        var id = Comms.Enqueue(db, "email", dedup, userId, to, null,
+            "Welcome to PCI — set your password", html,
+            category: "transactional", triggerCode: "account.welcome");
+        try
+        {
+            Comms.Fire(db, "account.welcome", userId, to, null,
+                new Dictionary<string, string?> { ["student_name"] = string.IsNullOrWhiteSpace(firstName) ? "there" : firstName!, ["portal_link"] = baseUrl + "/app/" },
+                "Welcome to PCI", "<p>Welcome to the Project Controls Institute. Your account is ready — sign in to get started.</p>",
+                skipEmail: true, dedupSuffix: dedupSuffix);
+        }
+        catch { }
+        return id;
     }
 
     static IEnumerable<string> ExtractLinks(string html)

@@ -22,9 +22,19 @@ public sealed class Db
     public enum Kind { Sqlite, MySql }
     public Kind Provider { get; }
 
+    /// <summary>
+    /// True when the server is MariaDB rather than Oracle MySQL. Both answer to DB_PROVIDER=mysql
+    /// and speak the same wire protocol, but they disagree about DDL in ways that matter here:
+    /// MariaDB supports `CREATE INDEX IF NOT EXISTS` and silently prefixes a lone TEXT key, and
+    /// MySQL 8 does neither. Detected from the server's own version banner — MariaDB always
+    /// includes "MariaDB" in it — rather than from configuration, which can be wrong.
+    /// </summary>
+    public bool IsMariaDb { get; private set; }
+
     private readonly DbConnection _conn;
     private readonly object _gate = new();
     private DbTransaction? _activeTx;
+    private readonly string _sqlitePath = "";
 
     public Db(string path)
     {
@@ -37,9 +47,12 @@ public sealed class Db
         else
         {
             Provider = Kind.Sqlite;
+            _sqlitePath = path;
             _conn = new SqliteConnection($"Data Source={path};Cache=Shared");
         }
         OpenWithRetry();
+        if (Provider == Kind.MySql)
+            IsMariaDb = (_conn.ServerVersion ?? "").Contains("MariaDB", StringComparison.OrdinalIgnoreCase);
         if (Provider == Kind.Sqlite)
         {
             Execute("PRAGMA journal_mode=WAL");
@@ -109,15 +122,30 @@ public sealed class Db
         new(@"datetime\('now',\s*'([+-]?\d+)\s+(year|years|month|months|day|days|hour|hours|minute|minutes|second|seconds)'\)",
             System.Text.RegularExpressions.RegexOptions.Compiled | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
+    /// <summary>The DATE-only sibling of the above. It was missing, so `date('now','-1 day')` — used
+    /// by the world admin's calendar query — passed through untranslated and MySQL rejected it:
+    /// DATE() takes one argument there. Same shape, day-precision output.</summary>
+    private static readonly System.Text.RegularExpressions.Regex RxDateMod =
+        new(@"date\('now',\s*'([+-]?\d+)\s+(year|years|month|months|day|days|hour|hours|minute|minutes|second|seconds)'\)",
+            System.Text.RegularExpressions.RegexOptions.Compiled | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
     private static string Unit(string u) => u.TrimEnd('s').ToUpperInvariant();  // minutes→MINUTE, day→DAY
 
-    private string Translate(string sql)
+    private string Translate(string sql) =>
+        Provider == Kind.Sqlite ? sql : TranslateFor(sql, IsMariaDb);
+
+    /// <summary>
+    /// The SQLite→MySQL/MariaDB rewrite, as a pure function so the dialect rules can be tested
+    /// without a database server. `mariaDb` selects between the two engines wherever they differ.
+    /// </summary>
+    public static string TranslateFor(string sql, bool mariaDb)
     {
-        if (Provider == Kind.Sqlite) return sql;
         var s = sql;
         // datetime('now','+N unit') → DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL N UNIT),'…')
         s = RxDatetimeMod.Replace(s, m =>
             $"DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL {m.Groups[1].Value} {Unit(m.Groups[2].Value)}),'%Y-%m-%d %H:%i:%s')");
+        s = RxDateMod.Replace(s, m =>
+            $"DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL {m.Groups[1].Value} {Unit(m.Groups[2].Value)}),'%Y-%m-%d')");
         // date('now','start of month') → first day of the current UTC month at midnight
         s = s.Replace("date('now','start of month')", "CONCAT(DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m'),'-01')");
         s = s.Replace("datetime('now','start of month')", "CONCAT(DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m'),'-01 00:00:00')");
@@ -145,6 +173,15 @@ public sealed class Db
         // DDL (Migrate.cs idempotent statements written in SQLite dialect)
         s = s.Replace("INTEGER PRIMARY KEY AUTOINCREMENT", "BIGINT PRIMARY KEY AUTO_INCREMENT");
         s = System.Text.RegularExpressions.Regex.Replace(s, @"\bINTEGER\b", "BIGINT");
+        // CREATE INDEX IF NOT EXISTS: valid on MariaDB, a SYNTAX ERROR on MySQL 8. Strip it ONLY for
+        // MySQL, and let Exec() absorb the duplicate-key error instead — same idempotence, both
+        // engines. On MariaDB the clause is load-bearing: the core schema declares some indexes both
+        // inline and again as a guarded CREATE INDEX, and removing the guard turns a skip into a real
+        // creation attempt that fails on key length. (CREATE TABLE IF NOT EXISTS is fine on both.)
+        if (!mariaDb)
+            s = System.Text.RegularExpressions.Regex.Replace(s,
+                @"(CREATE\s+(UNIQUE\s+)?INDEX\s+)IF\s+NOT\s+EXISTS\s+", "$1",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         // partial unique index → plain (MySQL exempts NULLs from UNIQUE already)
         s = System.Text.RegularExpressions.Regex.Replace(s, @"(CREATE UNIQUE INDEX[^;]*?)\s+WHERE[^;]*", "$1");
         // remaining CAST(... AS INT) → SIGNED
@@ -282,10 +319,60 @@ public sealed class Db
     {
         lock (_gate)
         {
-            using var cmd = NewCmd();
-            cmd.CommandText = Translate(sqlScript);
-            cmd.ExecuteNonQuery();
+            var sql = Translate(sqlScript);
+            try
+            {
+                using var cmd = NewCmd();
+                cmd.CommandText = sql;
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlConnector.MySqlException e) when (Provider == Kind.MySql && IsIndexDdl(sql))
+            {
+                // ── MySQL 8 vs MariaDB: the two engines disagree about CREATE INDEX, and the schema
+                // is written once in the SQLite dialect for both. MariaDB hides both differences
+                // (it accepts IF NOT EXISTS and silently prefixes a TEXT key); MySQL 8 rejects them,
+                // and because schema installation is wrapped in a catch-and-log, the FIRST rejection
+                // would abort the rest of the install and leave the product half-created. So the two
+                // known divergences are handled here, explicitly, rather than left to chance.
+                switch (e.ErrorCode)
+                {
+                    // 1061 duplicate key name — the index already exists. This IS the "IF NOT EXISTS"
+                    // semantics the statement asked for, which MySQL 8 cannot express in syntax.
+                    case MySqlErrorCode.DuplicateKeyName:
+                        return;
+                    // 1170 BLOB/TEXT column used in key specification without a key length. MariaDB
+                    // adds a prefix itself; MySQL 8 refuses. Retry with an explicit prefix that fits
+                    // inside the 3072-byte InnoDB limit under utf8mb4 (191 chars × 4 = 764 bytes).
+                    case MySqlErrorCode.BlobKeyWithoutLength:
+                        try
+                        {
+                            using var retry = NewCmd();
+                            retry.CommandText = PrefixIndexedColumns(sql);
+                            retry.ExecuteNonQuery();
+                            return;
+                        }
+                        catch (MySqlConnector.MySqlException r) when (r.ErrorCode == MySqlErrorCode.DuplicateKeyName) { return; }
+                    default: throw;
+                }
+            }
         }
+    }
+
+    static bool IsIndexDdl(string sql) =>
+        sql.TrimStart().StartsWith("CREATE", StringComparison.OrdinalIgnoreCase) &&
+        sql.Contains("INDEX", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>Rewrite `CREATE INDEX x ON t(a, b)` as `… (a(191), b(191))`. Applied only after MySQL
+    /// has told us a column in this index is a BLOB/TEXT that needs a length; a prefix on a column
+    /// that does not need one is harmless and indexes the same leading characters MariaDB would.</summary>
+    static string PrefixIndexedColumns(string sql)
+    {
+        var open = sql.LastIndexOf('(');
+        var close = sql.LastIndexOf(')');
+        if (open < 0 || close < open) return sql;
+        var cols = sql[(open + 1)..close].Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        var rewritten = cols.Select(c => c.Contains('(') ? c : c + "(191)");
+        return sql[..(open + 1)] + string.Join(", ", rewritten) + sql[close..];
     }
 
     /// <summary>Runs an action inside a transaction on the shared connection. Commits on success,
@@ -300,6 +387,33 @@ public sealed class Db
             catch { try { tx.Rollback(); } catch { } throw; }
             finally { _activeTx = null; }
         }
+    }
+
+    /// <summary>Run <paramref name="body"/> under a cross-instance schema-migration lock so that when several
+    /// app instances boot at once (rolling deploy, scale-out) only ONE runs DDL at a time and the others wait —
+    /// preventing DDL races and duplicate-key inserts into the migration ledger. MySQL uses a connection-scoped
+    /// advisory lock (GET_LOCK); SQLite uses a best-effort lock file next to the database (single-host).</summary>
+    public void WithMigrationLock(Action body)
+    {
+        if (Provider == Kind.MySql)
+        {
+            var got = Scalar<long>("SELECT GET_LOCK('pci_schema_migrate', 120)");
+            if (got != 1) throw new Exception("could not acquire the MySQL schema-migration lock (GET_LOCK timed out)");
+            try { body(); }
+            finally { try { Execute("DO RELEASE_LOCK('pci_schema_migrate')"); } catch { } }
+            return;
+        }
+        var lockPath = (_sqlitePath is { Length: > 0 } p && p != ":memory:") ? p + ".migrate.lock" : null;
+        if (lockPath is null) { body(); return; }   // in-memory db: nothing to coordinate across processes
+        FileStream? fl = null;
+        var deadline = DateTime.UtcNow.AddSeconds(120);
+        while (fl is null)
+        {
+            try { fl = new FileStream(lockPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None); }
+            catch (IOException) { if (DateTime.UtcNow > deadline) { body(); return; } Thread.Sleep(200); }
+        }
+        try { body(); }
+        finally { fl.Dispose(); }
     }
 
     public HashSet<string> Columns(string table)

@@ -112,7 +112,7 @@ public static class PublicDocsSeed
         new Doc("certification-scheme-and-governance-framework", "PCI Certification Scheme and Governance Framework",
             "certification-governance", null, "external_legal_review_pending", new (B,string)[]{
             (B.H1,"Purpose"),
-            (B.Body,"This framework describes how the Project Controls Institute (PCI) governs its certification scheme for the PCI AI Project Leadership Certification Suite — PCI AI Project Controls Leader (PCI PCL-AI), PCI AI Project Finance Leader (PCI PFL-AI) and PCI AI Project Delivery Leader (PCI PDL-AI). It sets out the roles, decision-making, and safeguards that keep certification decisions competence-based, impartial and consistent."),
+            (B.Body,"This framework describes how the Project Controls Institute (PCI) governs its certification scheme for the PCI AI Project Leadership Certification Suite — PCI AI Project Controls Leader (PCI PCL-AI), PCI AI Project Finance Leader (PCI PFL-AI) and PCI Project Management Leader – AI (PCI PML-AI). It sets out the roles, decision-making, and safeguards that keep certification decisions competence-based, impartial and consistent."),
             (B.H1,"Scheme ownership and independence"),
             (B.Body,"PCI owns and operates the certification scheme as an independent certifying body. Certification decisions are made solely on the basis of a candidate's assessed competence against published requirements. Training and preparation are kept separate from the certification decision so that no candidate can obtain a credential other than by meeting the standard."),
             (B.H1,"Governance bodies"),
@@ -206,7 +206,7 @@ public static class PublicDocsSeed
             (B.H1,"About this handbook"),
             (B.Body,"This handbook explains, in one place, how PCI certification works from eligibility to credential across the PCI AI Project Leadership Certification Suite. Where it summarises a policy, the full policy prevails."),
             (B.H1,"Choosing a certification"),
-            (B.Body,"PCI offers three certifications: PCI AI Project Controls Leader (PCI PCL-AI), PCI AI Project Finance Leader (PCI PFL-AI) and PCI AI Project Delivery Leader (PCI PDL-AI). Each has its own body of knowledge and examination blueprint. You may pursue more than one over time."),
+            (B.Body,"PCI offers three certifications: PCI AI Project Controls Leader (PCI PCL-AI), PCI AI Project Finance Leader (PCI PFL-AI) and PCI Project Management Leader – AI (PCI PML-AI). Each has its own body of knowledge and examination blueprint. You may pursue more than one over time."),
             (B.H1,"Eligibility and application"),
             (B.Body,"Check the eligibility requirements for your chosen certification and route, then apply. Provide accurate information; misrepresentation may invalidate an application or credential."),
             (B.H1,"Preparing and sitting the examination"),

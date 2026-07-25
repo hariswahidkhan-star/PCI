@@ -3,3 +3,9 @@ dist/
 dist-admin/
 *.tsbuildinfo
 .vite/
+coverage/
+
+# Playwright
+test-results/
+playwright-report/
+.playwright/

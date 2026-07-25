@@ -24,12 +24,9 @@ public static class AdminMgmt
         JsonValueKind.String => (v.GetString() ?? "").Trim().ToLowerInvariant() is "1" or "true" or "yes",
         _ => false,
     };
-    static string CsvEsc(object? v)
-    {
-        var s = v?.ToString() ?? "";
-        if (System.Text.RegularExpressions.Regex.IsMatch(s, @"^[=+\-@]")) s = "'" + s;
-        return System.Text.RegularExpressions.Regex.IsMatch(s, "[\",\n]") ? "\"" + s.Replace("\"", "\"\"") + "\"" : s;
-    }
+    // SEC-2: delegate to the shared Csv.Field so every export shares one RFC-4180 + formula-injection
+    // guard (and, unlike the previous regex, keeps genuine negative numbers numeric).
+    static string CsvEsc(object? v) => Core.Csv.Field(v);
     static string ToCsv(List<Dictionary<string, object?>> rows)
     {
         if (rows.Count == 0) return "";
@@ -478,8 +475,22 @@ public static class AdminMgmt
         app.MapPost("/api/admin/credentials", async (HttpRequest req) =>
         {
             var g = Deny(req, "credentials"); if (g is not null) return g;
+            var adm = adminFromReq(req)!;
             var b = await H.Body(req);
-            var cid = H.GetS(b, "credential_id"); var holder = H.GetS(b, "holder_name");
+            var cid = H.GetS(b, "credential_id");
+            var userId = H.GetNum(b, "user_id");
+            Dictionary<string, object?>? student = null;
+            if (userId is not null)
+            {
+                student = db.QueryOne("SELECT id,first_name,last_name,email FROM users WHERE id=?", userId);
+                if (student is null) return Results.Json(new { error = "bad_user", message = "Select a valid student account." }, statusCode: 400);
+            }
+            var holder = H.GetS(b, "holder_name");
+            if (string.IsNullOrWhiteSpace(holder) && student is not null)
+            {
+                holder = $"{H.Str(student["first_name"])} {H.Str(student["last_name"])}".Trim();
+                if (holder.Length == 0) holder = H.Str(student["email"]);
+            }
             if (string.IsNullOrEmpty(cid) || string.IsNullOrEmpty(holder)) return Results.Json(new { error = "missing_fields" }, statusCode: 400);
             // PCI-HON is the honorary registry's number space; /api/verify routes that prefix there
             // first, so a credential issued under it would be unverifiable. Reserved (same rule as the
@@ -491,13 +502,13 @@ public static class AdminMgmt
             var credCertSel = Certs.TryResolve(db, H.GetS(b, "certification_id", "certification"));
             if (credCertSel is null) return Results.Json(new { error = "bad_certification" }, statusCode: 400);
             var credCertId = credCertSel.Value;
-            if (adminFromReq(req) is { } cadm && !cadm.CanCert(credCertId))
+            if (!adm.CanCert(credCertId))
                 return Results.Json(new { error = "cert_forbidden" }, statusCode: 403);
             var credCert = Certs.ById(db, credCertId);
             var credLabel = H.GetS(b, "credential") ?? (credCert is not null ? Certs.Prefix(credCert) : "PCL-AI");
             try { var id = db.ExecuteReturningId("INSERT INTO issued_credentials(credential_id,user_id,certification_id,holder_name,credential,status,expires_at) VALUES(?,?,?,?,?, 'active',?)",
-                cid.ToUpperInvariant(), H.GetNum(b, "user_id"), credCertId, holder, credLabel, H.GetS(b, "expires_at"));
-                log(H.Ln(H.GetNum(b, "user_id")), "credential_issued", cid); return J(new { id }); }
+                cid.ToUpperInvariant(), userId, credCertId, holder, credLabel, H.GetS(b, "expires_at"));
+                log(adm.Id, "credential_issued", $"{cid.ToUpperInvariant()} (subject {userId?.ToString() ?? "unlinked"}, cert {credCertId})"); return J(new { id }); }
             catch { return Results.Json(new { error = "duplicate_or_invalid" }, statusCode: 400); }
         });
         app.MapPost("/api/admin/credentials/{id}/status", async (HttpRequest req, long id) =>

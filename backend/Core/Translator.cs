@@ -32,7 +32,9 @@ public static class Translator
     public static Config Load(Db db)
     {
         string S(string k) => db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", k) ?? "";
-        return new Config(S("translate_provider").Trim().ToLowerInvariant(), S("translate_api_key").Trim(),
+        var rawKey = S("translate_api_key").Trim();
+        var apiKey = (Security.DecryptSecret(rawKey) ?? rawKey).Trim();
+        return new Config(S("translate_provider").Trim().ToLowerInvariant(), apiKey,
                           S("translate_model").Trim(), S("translate_endpoint").Trim());
     }
 
@@ -81,7 +83,7 @@ Return ONLY a JSON array of strings, the SAME length and order as the input — 
 
 Rules:
 - Natural, fluent, professional human-quality translation.
-- Do NOT translate brand/proper nouns: PCI, PCL-AI, PFL-AI, PDL-AI, Project Controls Institute, Project Controls Institute Global, Inc., and standard/product codes (ISO/IEC, PMP, CCP, PSP, PRINCE2, EVM). Keep URLs, emails and numbers verbatim.
+- Do NOT translate brand/proper nouns: PCI, PCL-AI, PFL-AI, PML-AI, Project Controls Institute, Project Controls Institute Global, Inc., and standard/product codes (ISO/IEC, PMP, CCP, PSP, PRINCE2, EVM). Keep URLs, emails and numbers verbatim.
 - Keep symbols such as ·, —, →, %, © and any {{placeholder}} tokens exactly as they appear.
 - If a string contains HTML tags, translate ONLY the human-visible text and keep every tag, attribute, href/src and entity EXACTLY as in the source.
 

@@ -102,10 +102,10 @@ function Editor({ member, meta, onClose, onSaved }: { member: TeamMember | null;
           </div>
         )}
 
-        <div className="field"><label>Email</label><input type="email" value={email} disabled={!isNew} onChange={(e) => setEmail(e.target.value)} /></div>
-        <div className="field"><label>Name</label><input value={name} onChange={(e) => setName(e.target.value)} /></div>
-        <div className="field"><label>Role</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
+        <div className="field"><label htmlFor="team-email">Email</label><input id="team-email" type="email" value={email} disabled={!isNew} onChange={(e) => setEmail(e.target.value)} /></div>
+        <div className="field"><label htmlFor="team-name">Name</label><input id="team-name" value={name} onChange={(e) => setName(e.target.value)} /></div>
+        <div className="field"><label htmlFor="team-role">Role</label>
+          <select id="team-role" value={role} onChange={(e) => setRole(e.target.value)}>
             {meta.roles.map((r) => <option key={r} value={r}>{titleCase(r)}</option>)}
           </select>
         </div>

@@ -53,7 +53,7 @@ public static class AdminStudents
         // Changing a student's account status is a member-management action; gate it on the 'members'
         // section like every other member endpoint (previously auth-only, letting any admin — even a
         // viewer — deactivate/activate any student).
-        app.MapPost("/api/admin/members/{id}/status", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
+        app.MapPost("/api/admin/members/{id}/status", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var status = H.GetS(b, "status");
@@ -62,13 +62,13 @@ public static class AdminStudents
             db.Execute("UPDATE users SET status=?, updated_at=datetime('now') WHERE id=?", status, id);
             if (prev == "deactivated" && status == "active")
                 try { db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Account', 'Your account has been unlocked', 'Your PCI account is active again — you can sign in as normal.')", id); } catch { }
-            log(id, "member_status", status);
+            log(adm.Id, "member_status", $"subject {id} → {status}");
             return J(new { ok = true });
         }));
 
         // Minting a password-setup link for a student is account-takeover-capable; gate on 'members'
         // (previously auth-only — any admin could obtain a set-password link for any account).
-        app.MapPost("/api/admin/members/{id}/resend-setup", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
+        app.MapPost("/api/admin/members/{id}/resend-setup", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
             var u = db.QueryOne("SELECT * FROM users WHERE id=?", id);
             if (u is null) return Results.Json(new { error = "no_user" }, statusCode: 404);
@@ -79,7 +79,7 @@ public static class AdminStudents
             var baseUrl = Mailer.BaseUrl(ctx.Request);
             var setupUrl = Mailer.SetupLink(baseUrl, token);
             Mailer.SendWelcome(db, id, (string)u["email"]!, H.Str(u["first_name"]), setupUrl, baseUrl);
-            log(id, "resend_setup", "");
+            log(adm.Id, "resend_setup", $"subject {id}");
             return J(new { ok = true, setup_url = setupUrl });
         }));
 
@@ -279,7 +279,7 @@ public static class AdminStudents
                 id, certId, listPrice, listPrice, note.Length > 0 ? note : null, adm.Id, payId);
             db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Exams', 'Exam fee waived', ?, 'Schedule your exam', '/certifications')",
                 id, $"The institute has granted you exam access for {H.Str(cert["name"])} at no charge. You can schedule your sitting from the Certifications page once your eligibility items are complete.");
-            log(id, "exam_fee_waived", $"cert {certId} by admin {adm.Id} ref {reference}{(note.Length > 0 ? " note: " + note : "")}");
+            log(adm.Id, "exam_fee_waived", $"subject {id} cert {certId} by admin {adm.Id} ref {reference}{(note.Length > 0 ? " note: " + note : "")}");
             return J(new { ok = true, reference, certification_id = certId, payment_id = payId });
         }));
 
@@ -300,14 +300,16 @@ public static class AdminStudents
                 status == "verified"
                     ? "Your government-issued ID has been verified. No further action is needed."
                     : $"Your government-issued ID could not be accepted{(note.Length > 0 ? ": " + note : "")}. Please upload a new document to keep exam scheduling available.");
-            log(id, "identity_document_" + status, $"doc {docId} by admin {adm.Id}");
+            log(adm.Id, "identity_document_" + status, $"subject {id} doc {docId} by admin {adm.Id}");
             return J(new { ok = true, status });
         }));
-        app.MapGet("/api/admin/students/{id}/identity-document/{docId}/file", (HttpContext ctx, long id, long docId) => gate(ctx.Request, "members", _ =>
+        app.MapGet("/api/admin/students/{id}/identity-document/{docId}/file", (HttpContext ctx, long id, long docId) => gate(ctx.Request, "members", adm =>
         {
             var d = db.QueryOne("SELECT storage_ref FROM identity_documents WHERE id=? AND user_id=?", docId, id);
             var got = d is null ? null : Storage.Get(H.Str(d["storage_ref"]));
             if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            // A government ID is about as sensitive as a stored file gets — every staff view is logged.
+            log(adm.Id, "identity_document_view", $"subject {id} doc {docId}");
             return Results.File(got.Value.bytes!, got.Value.mime);
         }));
 
@@ -332,7 +334,7 @@ public static class AdminStudents
             if (r is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             if (H.Str(r["status"]) != "pending") return Results.Json(new { error = "bad_state", message = "Only a pending request can be acknowledged." }, statusCode: 400);
             db.Execute("UPDATE erasure_requests SET status='acknowledged', acknowledged_at=datetime('now'), reviewed_by=?, reviewed_at=datetime('now') WHERE id=?", adm.Id, id);
-            log(H.Ln(r["user_id"]), "erasure_acknowledged", $"request {id} by {adm.Id}");
+            log(adm.Id, "erasure_acknowledged", $"request {id} by {adm.Id} (subject {H.Ln(r["user_id"])})");
             try { Comms.Fire(db, "privacy.under_review", H.L(r["user_id"]), H.Str(r["email"]), null,
                 new Dictionary<string, string?> { ["student_name"] = H.Str(r["email"]) }, "Your data deletion request is under review",
                 "<p>Your data deletion request is now under review. We will confirm once it has been actioned.</p>"); } catch { }
@@ -348,7 +350,7 @@ public static class AdminStudents
             if (r is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             if (H.Str(r["status"]) is "completed" or "rejected") return Results.Json(new { error = "bad_state", message = "This request is already closed." }, statusCode: 400);
             db.Execute("UPDATE erasure_requests SET status='rejected', admin_note=?, reviewed_by=?, reviewed_at=datetime('now') WHERE id=?", note, adm.Id, id);
-            log(H.Ln(r["user_id"]), "erasure_rejected", $"request {id} by {adm.Id}");
+            log(adm.Id, "erasure_rejected", $"request {id} by {adm.Id} (subject {H.Ln(r["user_id"])})");
             return J(new { ok = true, status = "rejected" });
         }));
 
@@ -378,7 +380,7 @@ public static class AdminStudents
             {
                 if (!MembershipGrades.SetGrade(db, uid, to)) return Results.Json(new { error = "no_membership", message = "The member has no active membership to grade." }, statusCode: 400);
                 db.Execute("UPDATE membership_upgrades SET status='approved', admin_note=?, reviewed_by=?, reviewed_at=datetime('now'), decided_at=datetime('now') WHERE id=?", note, adm.Id, id);
-                log(uid, "grade_upgrade_approved", $"{to} (#{id}) by {adm.Id}");
+                log(adm.Id, "grade_upgrade_approved", $"{to} (#{id}) by {adm.Id} (subject {uid})");
                 var g = MembershipGrades.ByKey(to);
                 try { Comms.Fire(db, "membership.activated", uid, H.Str(r["email"]), null,
                     new Dictionary<string, string?> { ["student_name"] = H.Str(r["email"]) }, $"You have been admitted as {g.Label} ({g.PostNominal})",
@@ -387,7 +389,7 @@ public static class AdminStudents
             else
             {
                 db.Execute("UPDATE membership_upgrades SET status='rejected', admin_note=?, reviewed_by=?, reviewed_at=datetime('now'), decided_at=datetime('now') WHERE id=?", note, adm.Id, id);
-                log(uid, "grade_upgrade_rejected", $"{to} (#{id}) by {adm.Id}");
+                log(adm.Id, "grade_upgrade_rejected", $"{to} (#{id}) by {adm.Id} (subject {uid})");
             }
             return J(new { ok = true, status = action == "approve" ? "approved" : "rejected" });
         }));
@@ -399,7 +401,7 @@ public static class AdminStudents
             var grade = H.GetS(b, "grade") ?? "";
             if (!MembershipGrades.IsGrade(grade)) return Results.Json(new { error = "bad_grade" }, statusCode: 400);
             if (!MembershipGrades.SetGrade(db, id, grade)) return Results.Json(new { error = "no_membership", message = "This member has no membership to grade." }, statusCode: 400);
-            log(id, "grade_set", $"{grade} by {adm.Id}");
+            log(adm.Id, "grade_set", $"{grade} by {adm.Id} (subject {id})");
             return J(new { ok = true, grade });
         }));
 
@@ -421,7 +423,7 @@ public static class AdminStudents
             try { summary = Erasure.Anonymise(db, userId); }
             catch (Exception e) { Console.Error.WriteLine($"[erasure] request {id} failed: {e.Message}"); return Results.Json(new { error = "erasure_failed", message = "The anonymisation could not be completed. No changes were committed." }, statusCode: 500); }
             db.Execute("UPDATE erasure_requests SET status='completed', completed_at=datetime('now'), reviewed_by=?, reviewed_at=datetime('now') WHERE id=?", adm.Id, id);
-            log(userId, "erasure_completed", $"request {id} by {adm.Id}");
+            log(adm.Id, "erasure_completed", $"request {id} by {adm.Id} (subject {userId})");
             return J(new { ok = true, status = "completed", summary });
         }));
     }

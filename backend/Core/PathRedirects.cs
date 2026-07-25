@@ -28,8 +28,9 @@ public static class PathRedirects
             {
                 var from = Norm(H.Str(r["from_path"]));
                 var to = (H.Str(r["to_url"]) ?? "").Trim();
-                if (from.Length == 0 || to.Length == 0) continue;
-                var st = (int)H.L(r["status"]); if (st is not (301 or 302 or 308)) st = 301;
+                var st = (int)H.L(r["status"]); if (st is not (301 or 302 or 308 or 410)) st = 301;
+                if (from.Length == 0) continue;
+                if (st != 410 && to.Length == 0) continue;    // a redirect needs a target; a 410 Gone does not
                 m[from] = (to, st);
             }
             _map = m; _cacheVer = v;
@@ -55,7 +56,18 @@ public static class PathRedirects
         var map = Load(db);
         if (map.Count == 0) return null;
         if (!map.TryGetValue(Norm(req.Path.Value), out var hit)) return null;
-        if (Norm(hit.to) == Norm(req.Path.Value)) return null;    // self-redirect guard (never loop)
+        if (hit.status != 410 && Norm(hit.to) == Norm(req.Path.Value)) return null;    // self-redirect guard (never loop); a 410 has no target
         return hit;
+    }
+
+    /// <summary>Carry the incoming query string across a redirect without placing it after a fragment.</summary>
+    public static string WithQuery(string target, QueryString query)
+    {
+        if (!query.HasValue) return target;
+        var hash = target.IndexOf('#');
+        var beforeHash = hash < 0 ? target : target[..hash];
+        var fragment = hash < 0 ? "" : target[hash..];
+        var separator = beforeHash.Contains('?') ? "&" : "?";
+        return beforeHash + separator + query.Value!.TrimStart('?') + fragment;
     }
 }

@@ -10,8 +10,11 @@ import Certifications from './pages/Certifications'
 import Credentials from './pages/Credentials'
 import Cpd from './pages/Cpd'
 import Certuvo from './pages/Certuvo'
+import Lab from './pages/Lab'
+import LabRunner from './pages/LabRunner'
 import Billing from './pages/Billing'
 import Resources from './pages/Resources'
+import Templates from './pages/Templates'
 import Documents from './pages/Documents'
 import Messages from './pages/Messages'
 import Support from './pages/Support'
@@ -42,8 +45,11 @@ export default function App() {
           <Route path="credentials" element={<Credentials />} />
           <Route path="cpd" element={<Cpd />} />
           <Route path="certuvo" element={<Certuvo />} />
+          <Route path="lab" element={<Lab />} />
+          <Route path="lab/:code" element={<LabRunner />} />
           <Route path="billing" element={<Billing />} />
           <Route path="resources" element={<Resources />} />
+          <Route path="templates" element={<Templates />} />
           <Route path="events" element={<Events />} />
           <Route path="documents" element={<Documents />} />
           <Route path="messages" element={<Messages />} />

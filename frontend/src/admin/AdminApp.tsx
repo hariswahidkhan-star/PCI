@@ -19,6 +19,7 @@ import Books from './pages/Books'
 import SupportInbox from './pages/SupportInbox'
 import ErasureRequests from './pages/ErasureRequests'
 import Casework from './pages/Casework'
+import CpdReview from './pages/CpdReview'
 import ForumModeration from './pages/ForumModeration'
 import MembershipUpgrades from './pages/MembershipUpgrades'
 import AdminEvents from './pages/Events'
@@ -38,6 +39,8 @@ import AiVisibility from './pages/AiVisibility'
 import ContentCentre from './pages/ContentCentre'
 import TrainingPartners from './pages/TrainingPartners'
 import Integrations from './pages/Integrations'
+import SimLab from './pages/SimLab'
+import Templates from './pages/Templates'
 import Marketing from './pages/Marketing'
 import ExamDelivery from './pages/ExamDelivery'
 import Enquiries from './pages/Enquiries'
@@ -97,9 +100,11 @@ export default function AdminApp() {
         <Route path="credentials" element={<Perm section="credentials"><Credentials /></Perm>} />
         <Route path="tickets" element={<Perm section="tickets"><Tickets /></Perm>} />
         <Route path="casework" element={<Perm section="tickets"><Casework /></Perm>} />
+        <Route path="cpd-review" element={<Perm section="members"><CpdReview /></Perm>} />
         <Route path="documents" element={<Perm section="documents"><Documents /></Perm>} />
         <Route path="erasure-requests" element={<Perm section="members"><ErasureRequests /></Perm>} />
         <Route path="membership-grades" element={<Perm section="members"><MembershipUpgrades /></Perm>} />
+        <Route path="cpd" element={<Perm section="members"><CpdReview /></Perm>} />
         <Route path="member-directory" element={<Perm section="members"><AdminMemberDirectory /></Perm>} />
         <Route path="books" element={<Perm section="resources"><Books /></Perm>} />
         <Route path="communications" element={<Perm section="comms"><Communications /></Perm>} />
@@ -128,6 +133,8 @@ export default function AdminApp() {
         <Route path="content-centre" element={<Perm section="cc_view"><ContentCentre /></Perm>} />
         <Route path="training-partners" element={<Perm section="partners"><TrainingPartners /></Perm>} />
         <Route path="integrations" element={<Perm section="integrations"><Integrations /></Perm>} />
+        <Route path="lab" element={<Perm section="sim_lab"><SimLab /></Perm>} />
+        <Route path="templates" element={<Perm section="content"><Templates /></Perm>} />
         <Route path="marketing" element={<AnyPerm sections={['subscribers', 'reports']}><Marketing /></AnyPerm>} />
         <Route path="marketing-ads" element={<Perm section="mkt_view"><MarketingAds /></Perm>} />
         <Route path="exam-delivery" element={<Perm section="exam_delivery"><ExamDelivery /></Perm>} />

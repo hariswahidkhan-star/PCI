@@ -12,8 +12,10 @@ const NAV = [
   { to: '/credentials', tkey: 'nav.credentials' },
   { to: '/cpd', tkey: 'nav.cpd' },
   { to: '/certuvo', tkey: 'nav.certuvo' },
+  { to: '/lab', tkey: 'nav.lab' },
   { to: '/billing', tkey: 'nav.billing' },
   { to: '/resources', tkey: 'nav.resources' },
+  { to: '/templates', tkey: 'nav.templates' },
   { to: '/events', tkey: 'nav.events' },
   { to: '/documents', tkey: 'nav.documents' },
   { to: '/messages', tkey: 'nav.messages', badgeKey: 'unread' as const },
@@ -29,8 +31,10 @@ const TITLE_KEYS: Record<string, string> = {
   '/credentials': 'nav.credentials',
   '/cpd': 'nav.cpd',
   '/certuvo': 'nav.certuvo',
+  '/lab': 'nav.lab',
   '/billing': 'nav.billing',
   '/resources': 'nav.resources',
+  '/templates': 'nav.templates',
   '/events': 'nav.events',
   '/documents': 'nav.documents',
   '/applications': 'nav.applications',
@@ -96,7 +100,9 @@ export default function Layout() {
               <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>
               <div>
                 <div className="tb-crumb">{t('shell.studentPortal')}</div>
-                <strong className="tb-title">{t(TITLE_KEYS[loc.pathname] ?? 'shell.studentPortal')}</strong>
+                <strong className="tb-title">
+                  {t(TITLE_KEYS[loc.pathname] ?? (loc.pathname.startsWith('/lab/') ? 'nav.lab' : 'shell.studentPortal'))}
+                </strong>
               </div>
             </div>
             <div className="row">

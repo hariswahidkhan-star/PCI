@@ -38,6 +38,12 @@ public record AdminCtx(long Id, string Email, string? Name, string Role, string?
 
 public record UserCtx(long Id, string Email, string? FirstName, string? LastName, string Status, bool Impersonated = false);
 
+/// <summary>A resolved "view as student" (impersonation) bearer token — a staff member acting with a
+/// student's READ access. Carries the ledger session id so a blocked mutation can still be audited.
+/// <c>SessionId == 0</c> means the token is a valid, unexpired impersonation token whose ledger row
+/// could not be located (still treated as read-only — fail closed).</summary>
+public record ImpersonationRef(long SessionId, long AdminId, long UserId, string TokenSha);
+
 /// <summary>An institution-portal login — wholly separate from admin_users and students. Everything a
 /// partner session can see is scoped to its own PartnerId; there is no cross-institution read path.</summary>
 public record PartnerCtx(long Id, long PartnerId, string Email, string? Name, string Role, string Status, bool MustChangePw);
@@ -127,6 +133,23 @@ public static class Auth
         }
         return new UserCtx(Convert.ToInt64(u["id"]), (string)u["email"]!, u["first_name"] as string, u["last_name"] as string, (string)u["status"]!,
             impersonated);
+    }
+
+    /// <summary>Resolve an <b>impersonation</b> ("view as student") bearer token to its ledger session,
+    /// or null when the request carries no bearer, a non-impersonation token, or an expired token. Used by
+    /// the central read-only guard so a support session can never reach a state-changing endpoint even if
+    /// that endpoint forgot its own check. Cheap when there is no bearer (returns immediately).</summary>
+    public static ImpersonationRef? ImpersonationToken(HttpRequest req, Db db)
+    {
+        var bearer = Bearer(req);
+        if (bearer is null) return null;
+        var sha = Security.Sha(bearer);
+        var tok = db.QueryOne("SELECT user_id FROM login_tokens WHERE token=? AND purpose='impersonation' AND expires_at>datetime('now')", sha);
+        if (tok is null) return null;
+        var sess = db.QueryOne("SELECT id,admin_id,user_id FROM impersonation_sessions WHERE token_sha=? AND ended_at IS NULL", sha);
+        return sess is null
+            ? new ImpersonationRef(0, 0, Convert.ToInt64(tok["user_id"]), sha)
+            : new ImpersonationRef(Convert.ToInt64(sess["id"]), Convert.ToInt64(sess["admin_id"]), Convert.ToInt64(sess["user_id"]), sha);
     }
 
     /// <summary>Bearer institution-portal session. Requires an active partner user AND an active,

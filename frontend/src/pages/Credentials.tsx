@@ -64,7 +64,8 @@ export default function Credentials() {
       const a = document.createElement('a')
       a.href = URL.createObjectURL(blob)
       a.download = `${honorary ? 'honorary-certificate' : 'certificate'}-${id}.pdf`
-      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href)
+      document.body.appendChild(a); a.click(); a.remove()
+      setTimeout(() => URL.revokeObjectURL(a.href), 60_000)
     } catch { alert('Could not download the certificate right now. Please try again shortly or contact support.') }
   }
 

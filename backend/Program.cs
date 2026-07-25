@@ -42,9 +42,35 @@ var schemaFile = db.Provider == Db.Kind.MySql ? "schema.mysql.sql" : "schema.sql
 var schemaPath = Path.Combine(AppContext.BaseDirectory, schemaFile);
 if (!File.Exists(schemaPath)) schemaPath = schemaFile;
 Console.WriteLine($"[boot] database provider: {db.Provider} (schema: {schemaFile})");
-Migrate.Run(db, schemaPath);
+// Versioned + locked migration. A compatibility failure (older binary vs newer schema) or any migration
+// error must PREVENT startup — the service is never reported ready on a half-migrated/incompatible database.
+try
+{
+    Migrate.Run(db, schemaPath);
+}
+catch (PCI.Backend.Data.SchemaCompatibilityException ce)
+{
+    Console.Error.WriteLine($"[migrate] refusing to start: {ce.Message}");
+    Environment.Exit(75); // EX_TEMPFAIL — incompatible schema; a different build is required
+}
+catch (Exception me)
+{
+    Console.Error.WriteLine($"[migrate] refusing to start: schema migration failed — {me.Message}");
+    Environment.Exit(70); // EX_SOFTWARE — migration error; do not serve on a half-migrated database
+}
+// Deterministic browser-lifecycle tests need to book a policy-valid future slot and launch it
+// immediately. This override is deliberately Development-only and opt-in; production continues to
+// read the operator-controlled site setting with no test back door or public mutation endpoint.
+if (builder.Environment.IsDevelopment()
+    && double.TryParse(Environment.GetEnvironmentVariable("E2E_EXAM_OPEN_BEFORE_MINUTES"), out var e2eOpenBefore)
+    && e2eOpenBefore > 0)
+    Settings.Put(db, "exam_open_before_minutes", e2eOpenBefore.ToString(System.Globalization.CultureInfo.InvariantCulture));
 try { PCI.Backend.Data.CommsSeed.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[comms seed] {e.Message}"); }
 try { PCI.Backend.Data.MarketingSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[marketing schema] {e.Message}"); }
+try { PCI.Backend.Data.SimLabSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[simlab schema] {e.Message}"); }
+try { PCI.Backend.Data.TemplatesSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[templates schema] {e.Message}"); }
+try { PCI.Backend.Data.WorldSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[pciworld schema] {e.Message}"); }
+try { PCI.Backend.Data.FinanceSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[finance schema] {e.Message}"); }
 builder.Services.AddSingleton(db);
 // Scheduled retention: purge stored artefacts past evidence_retention_days, daily (manual endpoint stays).
 builder.Services.AddHostedService<PCI.Backend.Core.RetentionService>();
@@ -53,9 +79,13 @@ builder.Services.AddHostedService<PCI.Backend.Core.IntegrationDispatcher>();
 // Communications outbox worker: drains comm_outbox (email/WhatsApp/in-app) with retries + backoff.
 builder.Services.AddHostedService<PCI.Backend.Core.OutboxDispatcher>();
 builder.Services.AddHostedService<PCI.Backend.Core.SocialDispatcher>();   // Phase 2: social publish outbox
+builder.Services.AddHostedService<PCI.Backend.Core.ScheduledPublisher>();   // Content Centre: publish scheduled blog posts when due
 builder.Services.AddHostedService<PCI.Backend.Core.SyndicationDispatcher>();   // Phase 3: syndication outbox
 builder.Services.AddHostedService<PCI.Backend.Core.MarketingJobDispatcher>();   // Marketing Phase 2: provider job queue
+builder.Services.AddHostedService<PCI.Backend.Core.ExamDeliveryDispatcher>();   // EXT-P0-04: durable exam-vendor provisioning
 builder.Services.AddHostedService<PCI.Backend.Core.CommsReminderService>();     // Comms §13: scheduled reminder sequences
+builder.Services.AddHostedService<PCI.Backend.Core.WorldRotationService>();     // PCI World: open each day's rotation period at the boundary
+builder.Services.AddHostedService<PCI.Backend.Core.WorldRetentionService>();   // PCI World: expire sessions/tokens/events (learner history untouched)
 
 var app = builder.Build();
 
@@ -175,6 +205,59 @@ app.Use(async (ctx, next) =>
     await next();
 });
 
+// ── PCI World host mapping: a dedicated PCI World service or domain lands directly on the
+// product instead of the Institute site. PCIWORLD_STANDALONE=true maps this whole service
+// (the setup for a separate "pciworld" Render service); PCIWORLD_HOSTS / PCIWORLD_ADMIN_HOSTS
+// map by request host (pciworld.org / admin.pciworld.org) so one deployment can serve both
+// sites. Only "/" is redirected — every other route keeps working on every host.
+//
+// ORDERING: this runs AFTER the security-headers and CORS middleware, never before. It answers
+// some requests itself (the redirect, the 404) without calling next(), so registering it earlier
+// — as it originally was — shipped exactly those responses with no CSP, no nosniff and no CORS
+// headers, contradicting the "EVERY response" guarantee above (Phase 0 audit finding). ──
+{
+    // PCIWORLD_ONLY=true is the strict shape ("deploy only PCI World"): the service serves
+    // exclusively the PCI World surfaces — every other path 404s, so the Institute site and
+    // portals are unreachable on this deployment.
+    var worldOnly = PCI.Backend.Core.WorldOnly.Enabled;
+    var worldStandalone = worldOnly ||
+        string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_STANDALONE"), "true", StringComparison.OrdinalIgnoreCase);
+    var worldHosts = (Environment.GetEnvironmentVariable("PCIWORLD_HOSTS") ?? "")
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
+    var worldAdminHosts = (Environment.GetEnvironmentVariable("PCIWORLD_ADMIN_HOSTS") ?? "")
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
+    if (worldOnly || worldStandalone || worldHosts.Count > 0 || worldAdminHosts.Count > 0)
+        app.Use(async (ctx, next) =>
+        {
+            var path = ctx.Request.Path;
+            if (path == "/")
+            {
+                // 301, not 302: the home page's permanent location on a world host is /world, and a
+                // temporary redirect leaves search engines indexing "/" as a separate URL forever.
+                var host = ctx.Request.Host.Host;
+                if (worldAdminHosts.Contains(host)) { ctx.Response.Redirect("/world-admin", permanent: true); return; }
+                if (worldStandalone || worldHosts.Contains(host)) { ctx.Response.Redirect("/world", permanent: true); return; }
+            }
+            if (worldOnly && !PCI.Backend.Core.WorldOnly.Allowed(path))
+            {
+                if (path.StartsWithSegments("/api"))
+                {
+                    ctx.Response.StatusCode = 404;
+                    await ctx.Response.WriteAsJsonAsync(new { error = "not_found", message = "This deployment serves PCI World only." });
+                    return;
+                }
+                // A real 404 — not a redirect to /world. Redirecting every unknown path was a
+                // blanket soft-404: crawlers treat it as "this URL exists and is a duplicate of
+                // /world", which pollutes the index and hides genuinely broken links from us.
+                ctx.Response.StatusCode = 404;
+                ctx.Response.ContentType = "text/html; charset=utf-8";
+                await ctx.Response.WriteAsync(PCI.Backend.Core.WorldPages.NotFound(db));
+                return;
+            }
+            await next();
+        });
+}
+
 // Trusted client IP: the LAST X-Forwarded-For hop (appended by our own TLS-terminating proxy),
 // falling back to the socket address. Never the first hop — that value is client-controlled and
 // forgeable, which would let an attacker rotate the rate-limit bucket and spoof the audit IP.
@@ -193,8 +276,17 @@ static string ClientIp(HttpContext ctx)
 // per client IP with a fixed-window in-memory counter. Applied by path prefix via middleware so it is
 // robust to route-handler shape (no per-endpoint chaining required).
 var _rlHits = new System.Collections.Concurrent.ConcurrentDictionary<string, (int count, long windowStart)>();
-string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login", "/api/inquiry", "/api/newsletter", "/api/form-submit" };
-const int RL_LIMIT = 10; const long RL_WINDOW_MS = 60_000;
+string[] _rlPaths = { "/api/login", "/api/admin/auth/login", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login", "/api/inquiry", "/api/newsletter", "/api/form-submit",
+    // PCI World credential endpoints. The world modules carry their own per-key throttles, but those
+    // are session-scoped or coarse; brute-forceable credential paths belong on the platform's
+    // IP-keyed limiter like every other realm's login — the world admin especially, since it had
+    // only per-account lockout, which an attacker can trigger deliberately as a denial of service.
+    "/api/world-admin/auth/login", "/api/world/account/login", "/api/world/account/register",
+    "/api/world/account/forgot", "/api/world/account/reset" };
+// Playwright boots this process with E2E_ADMIN_PASSWORD set; raise the window so the browser suite
+// (dozens of register/login/forgot posts) does not cascade 429s. Production never sets that env.
+var _rlE2e = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("E2E_ADMIN_PASSWORD"));
+int RL_LIMIT = _rlE2e ? 500 : 10; long RL_WINDOW_MS = 60_000;
 app.Use(async (ctx, next) =>
 {
     // ASP.NET routing is trailing-slash-insensitive, so POST /api/login/ still reaches the handler.
@@ -225,29 +317,6 @@ app.Use(async (ctx, next) =>
     await next();
 });
 
-// Enforce the forced-password-change server-side, not just in the UI. An admin still flagged
-// must_change_pw (e.g. logged in with the default bootstrap password) can reach ONLY logout,
-// their own profile, and the change-password endpoint until they set a new password — so a
-// direct API caller can't bypass the change the way the SPA gate can't. Read paths and the auth
-// endpoints stay open so the change flow itself works.
-var _mcpAllow = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-{ "/api/admin/auth/login", "/api/admin/auth/logout", "/api/admin/me", "/api/admin/me/password", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover" };
-app.Use(async (ctx, next) =>
-{
-    var path = ctx.Request.Path.Value ?? "";
-    if (path.StartsWith("/api/admin/", StringComparison.OrdinalIgnoreCase) && !_mcpAllow.Contains(path))
-    {
-        var a = Auth.AdminFromReq(ctx.Request, db);
-        if (a is not null && a.MustChangePw)
-        {
-            ctx.Response.StatusCode = 403;
-            await ctx.Response.WriteAsJsonAsync(new { error = "must_change_password", message = "Set a new password before using the console." });
-            return;
-        }
-    }
-    await next();
-});
-
 var stripeKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
 if(!string.IsNullOrEmpty(stripeKey)) Stripe.StripeConfiguration.ApiKey = stripeKey;
 if (string.IsNullOrEmpty(stripeKey)) Console.WriteLine("[boot] STRIPE_SECRET_KEY not set — payment endpoints will answer 503 until configured.");
@@ -258,7 +327,7 @@ if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SMTP_HOST")) && str
     var sr = Environment.GetEnvironmentVariable("STORAGE_ROOT") ?? "./storage";
     if (sp == "local") Console.WriteLine($"[boot] storage: local at '{sr}' (evidence/attachments stored as files; DB holds references).");
     else if (!PCI.Backend.Core.Storage.UsingLocal) Console.WriteLine($"[boot] storage: s3 bucket '{Environment.GetEnvironmentVariable("S3_BUCKET")}'" + (Environment.GetEnvironmentVariable("S3_ENDPOINT") is { } ep ? $" via endpoint '{ep}'" : "") + " (DB holds references).");
-    else if (sp == "s3") Console.WriteLine($"[boot] storage: STORAGE_PROVIDER=s3 but S3_BUCKET is not set — falling back to local at '{sr}'.");
+    else if (sp == "s3") Console.WriteLine($"[boot] storage: STORAGE_PROVIDER=s3 but S3_BUCKET is not set — this is a configuration error (no silent local fallback).");
     else Console.WriteLine($"[boot] storage: unknown provider '{sp}' — falling back to local at '{sr}'. Set STORAGE_PROVIDER=local or s3.");
 }
 
@@ -296,6 +365,41 @@ static List<(string sev, string key, string msg)> ConfigIssues()
         // secrets are known. (ISO/IEC 27001 A.8.24 / 27018 cryptographic protection of PII.)
         if (!Security.HasDedicatedEncryptionKey())
             Err("CREDENTIAL_ENCRYPTION_KEY", "set a 32-byte key (base64/hex/passphrase) — required to encrypt credentials and stored identity documents at rest in production");
+        // EXT-P1-09 — incomplete S3 config must never silently fall back to node-local disk in production.
+        if (Storage.S3Misconfigured)
+            Err("S3_BUCKET", "STORAGE_PROVIDER=s3 requires S3_BUCKET (and AWS credentials / role); refusing silent local-disk fallback");
+        // EXT-P0-01 — if the operator documents the Stripe webhook URL they configured, it must match /api/webhook.
+        var stripeWhUrl = E("STRIPE_WEBHOOK_URL");
+        if (!string.IsNullOrWhiteSpace(stripeWhUrl) && !stripeWhUrl.TrimEnd('/').EndsWith("/api/webhook", StringComparison.OrdinalIgnoreCase))
+            Err("STRIPE_WEBHOOK_URL", "must end with /api/webhook (not /api/payments/webhook) — see docs/OPERATIONS.md §9");
+    }
+    // A PCI World-only deployment (PCIWORLD_ONLY=true) runs none of the PAYMENT, EXAM, CREDENTIAL or
+    // identity-document subsystems, so those blockers protect nothing here and are downgraded. The
+    // rest are NOT waived: CORS origin, the data-at-rest key, the public base URL and the legacy
+    // admin token all guard the world surfaces themselves, and a blanket waiver (the Phase 0 audit's
+    // finding H3) silently turned a production world deployment into an unprotected one.
+    if (PCI.Backend.Core.WorldOnly.Enabled)
+    {
+        // Payments/exams/storage only — everything else keeps its severity.
+        var waivable = new HashSet<string> { "STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "STRIPE_WEBHOOK_URL", "S3_BUCKET", "SMTP_HOST" };
+        issues = issues.Select(i => i.Item1 == "error" && waivable.Contains(i.Item2)
+            ? ("warn", i.Item2, i.Item3 + " (subsystem not served by a PCI World-only deployment)") : i).ToList();
+
+        // Durable storage is the one exception with a deliberate, explicit bridge. PCI World's
+        // product law is that learner history is never lost, and a container filesystem is erased on
+        // every redeploy — so SQLite is permitted here ONLY when the operator opts in AND points the
+        // database at an absolute path, which on Render means a mounted persistent disk. MySQL 8
+        // remains the target; this keeps a preview honest instead of quietly losing accounts.
+        if (string.Equals(E("PCIWORLD_ALLOW_SQLITE"), "true", StringComparison.OrdinalIgnoreCase))
+        {
+            issues = issues.Select(i => i.Item1 == "error" && i.Item2 is "DB_PROVIDER" or "MYSQL_HOST"
+                ? ("warn", i.Item2, i.Item3 + " (PCIWORLD_ALLOW_SQLITE=true — interim persistent-disk posture)") : i).ToList();
+            var dbFile = E("DATABASE_FILE") ?? "";
+            if (!dbFile.StartsWith('/'))
+                issues.Add(("error", "DATABASE_FILE",
+                    "PCIWORLD_ALLOW_SQLITE=true requires DATABASE_FILE to be an absolute path on a persistent disk (e.g. /data/pciworld.db) — a relative path lives in the container filesystem and every learner account, attempt and Passport is destroyed on redeploy"));
+        }
+        issues.Add(("warn", "PCIWORLD_ONLY", "PCI World-only deployment — complete the production hardening in docs/pciworld/DEPLOY_RENDER.md before public launch"));
     }
     return issues;
 }
@@ -310,6 +414,31 @@ static List<(string sev, string key, string msg)> ConfigIssues()
             "Fix them, or set ALLOW_INSECURE_PRODUCTION=true to override (not recommended).");
         Environment.Exit(78); // EX_CONFIG
     }
+}
+
+// ── PCI World data-durability + credential posture (docs/pciworld/EXPANSION_PHASE0.md §4, §7) ──
+// PCI World's product law is that learner history is never lost. These checks cannot enforce that
+// from inside the process, but they refuse to let an operator believe it holds when it does not:
+// a SQLite file on a container filesystem is erased by the next deploy, taking every account,
+// attempt and Passport with it. Warnings only — the deployment stays up and the operator is told.
+{
+    var worldOn = PCI.Backend.Core.Settings.Bool(db, "world_enabled", true);
+    var worldDbProvider = (Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "sqlite").Trim().ToLowerInvariant();
+    if (worldOn && worldDbProvider is not ("mysql" or "mariadb"))
+    {
+        var file = Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "";
+        if (!file.StartsWith('/'))
+            Console.WriteLine("[pciworld] EPHEMERAL STORAGE — the database is a relative SQLite path, so every " +
+                "PCI World account, attempt and Passport is DESTROYED on the next deploy or restart. " +
+                "Mount a persistent disk and set DATABASE_FILE=/data/pciworld.db, or move to MySQL 8. " +
+                "See docs/pciworld/DEPLOY_RENDER.md.");
+        else
+            Console.WriteLine($"[pciworld] storage: SQLite at '{file}' — durable only if that path is a mounted " +
+                "persistent disk. MySQL 8 remains the production target.");
+    }
+    if (worldOn && PCI.Backend.Data.WorldSchema.OwnerHasDefaultPassword(db))
+        Console.WriteLine("[pciworld] The PCI World owner admin still uses the published default password. " +
+            "Sign in at /world-admin and change it, or set PCIWORLD_OWNER_PASSWORD before first boot.");
 }
 
 // ---- helpers ----
@@ -354,6 +483,38 @@ app.Use(async (ctx, next) =>
     await next();
 });
 
+// ========= impersonation ("view as student") is READ-ONLY — enforced centrally (P0-1) =========
+// A "view as student" session grants staff the SAME READ access as the student so support can see exactly
+// what the member sees — but it must NEVER change the member's data. Rather than trusting every student
+// endpoint to remember its own guard (several did not: 2FA/session, erasure, reviews, directory consent,
+// appeals/accommodations, events, Stripe portal/subscribe, preferences, messages, tickets, …), this
+// middleware fails CLOSED for every state-changing HTTP method: any impersonation-token request that is not
+// a safe read (GET/HEAD/OPTIONS) is refused with a stable 403 `impersonation_readonly` before it can reach
+// an endpoint. Per-endpoint checks stay in place as defence in depth. The refused attempt is written to the
+// impersonation ledger so the audit trail also covers blocked mutations (who/what/where).
+app.Use(async (ctx, next) =>
+{
+    var method = ctx.Request.Method;
+    var isSafe = HttpMethods.IsGet(method) || HttpMethods.IsHead(method) || HttpMethods.IsOptions(method);
+    if (!isSafe && Auth.ImpersonationToken(ctx.Request, db) is { } imp)
+    {
+        if (imp.SessionId > 0)
+        {
+            try
+            {
+                db.Execute("UPDATE impersonation_sessions SET last_seen_at=datetime('now') WHERE id=?", imp.SessionId);
+                db.Execute("INSERT INTO impersonation_events(session_id,method,path) VALUES(?,?,?)",
+                    imp.SessionId, method + " [blocked]", ctx.Request.Path.ToString());
+            }
+            catch { }
+        }
+        ctx.Response.StatusCode = 403;
+        await ctx.Response.WriteAsJsonAsync(new { error = "impersonation_readonly", message = "This action is disabled in support view." });
+        return;
+    }
+    await next();
+});
+
 // ================= health =================
 app.MapGet("/api/health", () => Json(new { ok = true, service = "pci-backend", time = DateTime.UtcNow.ToString("o"), recovery_configured = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ADMIN_RECOVERY_CODE")) }));
 
@@ -381,12 +542,95 @@ app.MapGet("/api/admin/system-check", (HttpRequest req) =>
         owner_password_changed = db.Scalar<long>("SELECT COUNT(*) FROM admin_users WHERE email=? AND must_change_pw=0", (E("ADMIN_OWNER_EMAIL") ?? "owner@pci.local").ToLowerInvariant()) > 0,
         migrations_applied = db.Columns("exam_score_snapshots").Count > 0,   // provider-agnostic (sqlite_master is SQLite-only)
         storage_local = PCI.Backend.Core.Storage.UsingLocal,
+        storage_s3_misconfigured = PCI.Backend.Core.Storage.S3Misconfigured,
+        stripe_webhook_path = "/api/webhook",
+        stripe_webhook_url_ok = string.IsNullOrWhiteSpace(E("STRIPE_WEBHOOK_URL"))
+            || (E("STRIPE_WEBHOOK_URL") ?? "").TrimEnd('/').EndsWith("/api/webhook", StringComparison.OrdinalIgnoreCase),
+        meta_leads_secret_configured = !string.IsNullOrEmpty(E("META_APP_SECRET")),
         security_headers = true,                         // CSP + nosniff + frame-ancestors + referrer-policy
         csp_enforced = !string.Equals(E("CSP_REPORT_ONLY"), "true", StringComparison.OrdinalIgnoreCase),
         request_body_capped = true,                      // Kestrel MaxRequestBodySize = 6 MB
         retention_scheduled = true,                      // daily RetentionService hosted service
     };
     return Json(new { ok = issues.All(i => i.sev != "error"), environment = E("ASPNETCORE_ENVIRONMENT") ?? "Development", checks, issues = issues.Select(i => new { i.sev, i.key, i.msg }) });
+});
+
+// EXT-P1-11 — Integration Health: queue depth, DLQ, connector status, credential readiness (no secret values).
+app.MapGet("/api/admin/integrations/health", (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorised" }, statusCode: 401);
+    if (!a.IsOwner && !a.Perms.Contains("integrations")) return Results.Json(new { error = "forbidden" }, statusCode: 403);
+    string? E(string k) => Environment.GetEnvironmentVariable(k);
+    // The age is derived in C# from MIN(created_at) rather than in SQL: julianday() is SQLite-only, and this
+    // particular shape (ROUND(...*1440) AS INTEGER) is not one the SQLite→MySQL rewrite recognises, so the
+    // whole endpoint returned 500 on MySQL — which is production.
+    long? OldestPendingAgeMin(string table, string pendingSql)
+    {
+        var oldest = db.Scalar<string>($"SELECT MIN(created_at) FROM {table} WHERE {pendingSql}");
+        return DateTime.TryParse(oldest, System.Globalization.CultureInfo.InvariantCulture,
+                                 System.Globalization.DateTimeStyles.AdjustToUniversal |
+                                 System.Globalization.DateTimeStyles.AssumeUniversal, out var t)
+            ? (long)Math.Round((DateTime.UtcNow - t).TotalMinutes)
+            : null;
+    }
+    object Queue(string table, string pendingSql, string failedSql) => new
+    {
+        pending = db.Scalar<long>($"SELECT COUNT(*) FROM {table} WHERE {pendingSql}"),
+        failed = db.Scalar<long>($"SELECT COUNT(*) FROM {table} WHERE {failedSql}"),
+        oldest_pending_age_min = OldestPendingAgeMin(table, pendingSql),
+    };
+    var stripeConfigured = !string.IsNullOrEmpty(E("STRIPE_SECRET_KEY"));
+    var stripeWh = E("STRIPE_WEBHOOK_URL");
+    return Json(new
+    {
+        ok = true,
+        generated_at = DateTime.UtcNow.ToString("o"),
+        stripe = new
+        {
+            configured = stripeConfigured,
+            webhook_secret_configured = !string.IsNullOrEmpty(E("STRIPE_WEBHOOK_SECRET")),
+            webhook_path = "/api/webhook",
+            webhook_url_aligned = string.IsNullOrWhiteSpace(stripeWh) || stripeWh.TrimEnd('/').EndsWith("/api/webhook", StringComparison.OrdinalIgnoreCase),
+            recent_events = db.Scalar<long>("SELECT COUNT(*) FROM webhook_events WHERE provider='stripe' AND processed_at>=datetime('now','-1 day')"),
+        },
+        email = new
+        {
+            resend = !string.IsNullOrEmpty(E("RESEND_API_KEY")),
+            smtp = !string.IsNullOrEmpty(E("SMTP_HOST")),
+            outbox = Queue("comm_outbox", "status IN ('queued','scheduled','retrying','processing')", "status='failed'"),
+        },
+        integrations = new
+        {
+            connectors = db.Query("SELECT id,provider,name,enabled,status,last_delivery_at FROM integrations ORDER BY id"),
+            deliveries = Queue("integration_deliveries", "status='pending'", "status='failed'"),
+        },
+        certuvo = new
+        {
+            enabled = PCI.Backend.Core.Settings.Bool(db, "certuvo_enabled", false),
+            has_api_key = PCI.Backend.Core.CertuvoLink.ApiKey(db).Length > 0,
+            accounts = db.Query("SELECT status, COUNT(*) AS n FROM certuvo_accounts GROUP BY status"),
+            due_retries = db.Scalar<long>("SELECT COUNT(*) FROM certuvo_accounts WHERE status='error' AND next_retry_at IS NOT NULL AND next_retry_at<=datetime('now')"),
+        },
+        exam_delivery = new
+        {
+            mode = PCI.Backend.Core.Settings.Str(db, "exam_delivery_mode", "in_house"),
+            providers = db.Query("SELECT provider,enabled,environment,status FROM exam_delivery_providers ORDER BY id"),
+            orders = Queue("exam_delivery_orders", "status IN ('pending','failed','processing')", "status='failed'"),
+        },
+        marketing = new
+        {
+            meta_app_secret = !string.IsNullOrEmpty(E("META_APP_SECRET")),
+            jobs = Queue("mkt_jobs", "status IN ('queued','retrying','processing')", "status='failed'"),
+        },
+        storage = new
+        {
+            provider = E("STORAGE_PROVIDER") ?? "local",
+            using_local = PCI.Backend.Core.Storage.UsingLocal,
+            s3_misconfigured = PCI.Backend.Core.Storage.S3Misconfigured,
+        },
+        content_jobs = Queue("content_jobs", "status IN ('pending','retrying','processing')", "status='failed'"),
+    });
 });
 
 // ================= public content =================
@@ -620,10 +864,42 @@ app.MapPost("/api/admin/auth/recover", async (HttpRequest req) =>
 });
 
 // ---- optional TOTP MFA for privileged accounts: enrol (pending) → verify (active) → disable ----
+app.MapGet("/api/admin/me/2fa", (HttpRequest req) =>
+{
+    var a = Auth.AdminFromReq(req, db);
+    if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    var row = db.QueryOne("SELECT totp_secret,totp_recovery FROM admin_users WHERE id=?", a.Id);
+    var secret = row?["totp_secret"] as string ?? "";
+    var recovery = row?["totp_recovery"] as string ?? "";
+    var recoveryCount = 0;
+    try
+    {
+        recoveryCount = string.IsNullOrEmpty(recovery)
+            ? 0
+            : (JsonSerializer.Deserialize<List<string>>(recovery) ?? new()).Count;
+    }
+    catch
+    {
+        // A malformed legacy recovery-code payload must not break the Settings page. It is treated as
+        // an empty inventory; the active TOTP factor still remains enforced until explicitly disabled.
+    }
+    return Json(new
+    {
+        enabled = secret.Length > 0 && !secret.StartsWith("pending:"),
+        pending = secret.StartsWith("pending:"),
+        recovery_remaining = recoveryCount,
+    });
+});
+
 app.MapPost("/api/admin/me/2fa/setup", (HttpRequest req) =>
 {
     var a = Auth.AdminFromReq(req, db);
     if (a is null) return Results.Json(new { error = "unauthorized" }, statusCode: 401);
+    var existing = db.Scalar<string>("SELECT totp_secret FROM admin_users WHERE id=?", a.Id) ?? "";
+    // Never replace an active factor with an unverified pending secret. Doing so would make the next
+    // login skip MFA and let any stolen authenticated session silently downgrade the account.
+    if (existing.Length > 0 && !existing.StartsWith("pending:"))
+        return Results.Json(new { error = "already_enabled", message = "Two-factor authentication is already enabled." }, statusCode: 409);
     var secret = Security.NewTotpSecret();
     // Stored as pending until the admin proves their authenticator works — enabling MFA can never lock
     // an account out on a mis-scanned QR.
@@ -666,8 +942,9 @@ app.MapPost("/api/admin/me/2fa/disable", async (HttpRequest req) =>
             var recovHash = Security.Sha(code.Replace(" ", "").Replace("-", "").ToLowerInvariant());
             var rec = db.Scalar<string>("SELECT totp_recovery FROM admin_users WHERE id=?", a.Id) ?? "";
             var codes = string.IsNullOrEmpty(rec) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(rec) ?? new();
-            if (!codes.Contains(recovHash))
+            if (!codes.Remove(recovHash))
                 return Results.Json(new { error = "totp_invalid", message = "Enter a current authenticator or recovery code to disable MFA." }, statusCode: 400);
+            db.Execute("UPDATE admin_users SET totp_recovery=? WHERE id=?", JsonSerializer.Serialize(codes), a.Id);
         }
     }
     db.Execute("UPDATE admin_users SET totp_secret=NULL, totp_recovery=NULL, totp_last_step=0 WHERE id=?", a.Id);
@@ -756,9 +1033,11 @@ app.MapPost("/api/admin/team", async (HttpRequest req) =>
         if (ids.Length > 0) certScope = JsonSerializer.Serialize(ids);
     }
     var tempPw = S(b, "password") ?? Security.RandomHex(5);
-    // Whether a new admin must change their password at first sign-in is operator-configurable
-    // (Settings → 'admin_force_password_change', default on). A per-request `force_password_change`
-    // still overrides it either way.
+    // must_change_pw is advisory only: it marks an admin still on an issued temp password (surfaced
+    // via /api/admin/me and the deploy status endpoint) and never blocks the console — password
+    // changes are self-service in Settings → Security. Whether new admins get the flag is
+    // operator-configurable (Settings → 'admin_force_password_change', default on). A per-request
+    // `force_password_change` still overrides it either way.
     var forcePw = (H.GetEl(b, "force_password_change") is { } fpc
         ? fpc.ValueKind is JsonValueKind.True || (fpc.ValueKind is JsonValueKind.String && fpc.GetString() is "1" or "true")
         : Settings.Bool(db, "admin_force_password_change", true)) ? 1 : 0;
@@ -953,6 +1232,10 @@ PCI.Backend.Endpoints.Announcement.Map(app, db, logFn, GateFn);       // Admin-c
 PCI.Backend.Endpoints.TrainingPartners.Map(app, db, logFn, GateFn);   // Training Partner framework (Phase 7)
 PCI.Backend.Endpoints.Partners.Map(app, db, logFn, GateFn);           // Partner dashboards: portal token, sponsorship, commissions
 PCI.Backend.Endpoints.Certuvo.Map(app, db, logFn);                    // Certuvo study & practice engine (Phase 8)
+PCI.Backend.Endpoints.SimLab.Map(app, db, logFn);                     // AI Project Controls Simulation Lab (applied practice)
+PCI.Backend.Endpoints.World.Map(app, db, logFn);                      // PCI World — public challenge platform (separate product)
+PCI.Backend.Endpoints.WorldAdmin.Map(app, db, logFn);                 // PCI World — SEPARATE admin realm (never linked from PCI admin)
+PCI.Backend.Endpoints.WorldAccount.Map(app, db, logFn);               // PCI World — participant accounts + Passport (practice identity only)
 PCI.Backend.Endpoints.AdminI18n.Map(app, db, logFn);
 PCI.Backend.Endpoints.Social.Map(app, db, logFn, GateFn);              // footer social-media links (admin-controlled)
 PCI.Backend.Endpoints.Notifications.Map(app, db, logFn, GateFn);       // owner alert recipients + per-event toggles
@@ -979,10 +1262,13 @@ app.MapPost("/api/admin/storage/purge", (HttpRequest req) =>
 // overrides fall straight through to the static-file middleware, so untouched pages pay nothing.
 var webRoot = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
 try { PCI.Backend.Data.PublicDocsSeed.Ensure(db, webRoot); } catch { } // Public Downloads Centre core documents (idempotent)
+try { PCI.Backend.Data.TemplatesLibrarySeed.Ensure(db); } catch { }     // Free Templates Library: working CSV artefacts mirroring each Lab engine (idempotent)
 PCI.Backend.Endpoints.AdminSeo.Map(app, db, logFn, GateFn, webRoot);   // Admin Console → SEO (/api/admin/seo/...)
 PCI.Backend.Endpoints.AdminAnalytics.Map(app, db, GateFn);             // Admin Console → Analytics (/api/admin/analytics/...)
 PCI.Backend.Endpoints.AdminAiVisibility.Map(app, db, logFn, GateFn, webRoot); // Admin Console → AI Visibility (/api/admin/ai-visibility/...)
 PCI.Backend.Endpoints.AdminIntegrations.Map(app, db, logFn, GateFn);   // Admin Console → Integrations / ERP (/api/admin/integrations/...)
+PCI.Backend.Endpoints.AdminSimLab.Map(app, db, logFn, GateFn);         // Admin Console → Simulation Lab (/api/admin/lab/scenarios)
+PCI.Backend.Endpoints.Templates.Map(app, db, logFn, GateFn);           // Free Templates Library (public /api/public/templates + admin /api/admin/templates)
 PCI.Backend.Core.ExamDeliveryConnectors.Register();                    // register the 5 exam-delivery vendor connectors
 PCI.Backend.Endpoints.AdminExamDelivery.Map(app, db, logFn, GateFn);   // Admin Console → Exam Delivery (/api/admin/exam-delivery/...) + inbound callbacks
 PCI.Backend.Endpoints.AdminOps.Map(app, db, logFn, GateFn);            // operator toolkit: mark-paid, test users, student journey, Certuvo config
@@ -992,7 +1278,11 @@ PCI.Backend.Endpoints.PartnerPortal.Map(app, db, logFn, GateFn);       // instit
 PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
 PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
 PCI.Backend.Data.CertuvoSeed.Apply(db); // Certuvo starter practice pack (scenario MCQs across BoK domains)
+PCI.Backend.Data.BlogSeed.Ensure(db);  // Content Centre: default byline author + content-pillar categories (idempotent by slug)
+PCI.Backend.Data.BlogContentSeed.Ensure(db);  // Content Centre: 20 PCI blog articles as DRAFTS (idempotent by slug; never auto-published)
+PCI.Backend.Data.NewsContentSeed.Ensure(db);  // Content Centre: source-verified news items as DRAFTS (idempotent by slug; never auto-published)
 PCI.Backend.Data.DemoExamSeed.Apply(db); // optional demo LIVE-exam bank — only when SEED_DEMO_EXAM=true (fresh-deploy testing)
+PCI.Backend.Data.SimLabContentSeed.Apply(db); // Simulation Lab scenario library (validated synthetic practice content, idempotent by scenario_code)
 app.Use(async (ctx, next) =>
 {
     if (ctx.Request.Method == "GET")
@@ -1002,7 +1292,8 @@ app.Use(async (ctx, next) =>
         if (PCI.Backend.Core.PathRedirects.Target(db, ctx.Request) is { } red)
         {
             ctx.Response.StatusCode = red.status;
-            ctx.Response.Headers.Location = red.to;
+            if (red.status != 410)
+                ctx.Response.Headers.Location = PCI.Backend.Core.PathRedirects.WithQuery(red.to, ctx.Request.QueryString);
             return;
         }
         var reqPath = ctx.Request.Path.Value ?? "/";
@@ -1041,55 +1332,75 @@ app.Use(async (ctx, next) =>
         //    Full article HTML is present in the initial response (crawler-safe). Feeds/sitemap are exact
         //    paths; the index, category/author/tag facets and each article are rendered from blog_posts.
         {
+            const StringComparison OIC = StringComparison.OrdinalIgnoreCase;
             var bp = PCI.Backend.Core.Blog.BasePath(db);                     // configurable, default "/blog"
+            var nbp = PCI.Backend.Core.Blog.NewsBasePath(db);               // configurable, default "/news"
             var blang = PCI.Backend.Core.I18nContent.ActiveLang(ctx);
-            if (reqPath.Equals("/blog-sitemap.xml", StringComparison.OrdinalIgnoreCase))
+            if (reqPath.Equals("/blog-sitemap.xml", OIC))
             { ctx.Response.ContentType = "application/xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Sitemap(db)); return; }
-            if (reqPath.Equals(bp + "/feed.xml", StringComparison.OrdinalIgnoreCase))
-            { ctx.Response.ContentType = "application/rss+xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Rss(db)); return; }
-            if (reqPath.Equals(bp + "/atom.xml", StringComparison.OrdinalIgnoreCase))
-            { ctx.Response.ContentType = "application/atom+xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Atom(db)); return; }
-            if (reqPath.Equals(bp + "/feed.json", StringComparison.OrdinalIgnoreCase))
-            { ctx.Response.ContentType = "application/feed+json; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Json(db)); return; }
-            if (reqPath.Equals(bp, StringComparison.OrdinalIgnoreCase) || reqPath.Equals(bp + "/", StringComparison.OrdinalIgnoreCase))
+            if (reqPath.Equals("/news-sitemap.xml", OIC))
+            { ctx.Response.ContentType = "application/xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.NewsSitemap(db)); return; }
+
+            // Serve one content section (blog or news): feeds, listing, category/author/tag facets, article.
+            // News and blog share one store + CMS but live at separate URL spaces; a post has exactly one
+            // canonical home, so a wrong-section article URL 301s to the correct section.
+            async Task<bool> ServeSection(string secBase, bool secNews)
             {
-                int.TryParse(ctx.Request.Query["page"], out var pg);
-                ctx.Response.ContentType = "text/html; charset=utf-8"; ctx.Response.Headers.CacheControl = "no-cache"; ctx.Response.Headers.Vary = "Cookie";
-                await ctx.Response.WriteAsync(PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg <= 0 ? 1 : pg, null, null, null, null));
-                return;
-            }
-            if (reqPath.StartsWith(bp + "/", StringComparison.OrdinalIgnoreCase))
-            {
-                var rest = reqPath.Substring(bp.Length + 1).Trim('/');
-                int.TryParse(ctx.Request.Query["page"], out var pg);
-                if (pg <= 0) pg = 1;
-                string? html = null;
-                if (rest.StartsWith("category/", StringComparison.OrdinalIgnoreCase))
+                if (reqPath.Equals(secBase + "/feed.xml", OIC))
+                { ctx.Response.ContentType = "application/rss+xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Rss(db, secNews)); return true; }
+                if (reqPath.Equals(secBase + "/atom.xml", OIC))
+                { ctx.Response.ContentType = "application/atom+xml; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Atom(db, secNews)); return true; }
+                if (reqPath.Equals(secBase + "/feed.json", OIC))
+                { ctx.Response.ContentType = "application/feed+json; charset=utf-8"; await ctx.Response.WriteAsync(PCI.Backend.Core.BlogFeeds.Json(db, secNews)); return true; }
+                if (reqPath.Equals(secBase, OIC) || reqPath.Equals(secBase + "/", OIC))
                 {
-                    var c = db.QueryOne("SELECT id,name FROM blog_categories WHERE slug=? AND active=1", rest.Substring(9).ToLowerInvariant());
-                    if (c is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, PCI.Backend.Core.H.L(c["id"]), PCI.Backend.Core.H.Str(c["name"]), null, null);
-                }
-                else if (rest.StartsWith("author/", StringComparison.OrdinalIgnoreCase))
-                {
-                    var a = db.QueryOne("SELECT id,name FROM blog_authors WHERE slug=? AND active=1", rest.Substring(7).ToLowerInvariant());
-                    if (a is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, null, null, PCI.Backend.Core.H.L(a["id"]), "Articles by " + (PCI.Backend.Core.H.Str(a["name"]) ?? ""));
-                }
-                else if (rest.StartsWith("tag/", StringComparison.OrdinalIgnoreCase))
-                {
-                    var t = db.QueryOne("SELECT id,name FROM blog_tags WHERE slug=?", rest.Substring(4).ToLowerInvariant());
-                    if (t is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, null, null, null, null, PCI.Backend.Core.H.L(t["id"]), "#" + (PCI.Backend.Core.H.Str(t["name"]) ?? ""));
-                }
-                else if (!rest.Contains('/') && !rest.Contains('.'))
-                {
-                    html = PCI.Backend.Core.BlogRender.RenderArticle(db, webRoot, rest, blang);   // null → draft/unknown → 404 below
-                }
-                if (html is not null)
-                {
+                    int.TryParse(ctx.Request.Query["page"], out var pg);
                     ctx.Response.ContentType = "text/html; charset=utf-8"; ctx.Response.Headers.CacheControl = "no-cache"; ctx.Response.Headers.Vary = "Cookie";
-                    await ctx.Response.WriteAsync(html); return;
+                    await ctx.Response.WriteAsync(PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg <= 0 ? 1 : pg, null, null, null, null, null, null, secNews));
+                    return true;
                 }
-                // no match (draft, unknown slug/category/author/tag) → fall through to normal 404 handling
+                if (reqPath.StartsWith(secBase + "/", OIC))
+                {
+                    var rest = reqPath.Substring(secBase.Length + 1).Trim('/');
+                    int.TryParse(ctx.Request.Query["page"], out var pg);
+                    if (pg <= 0) pg = 1;
+                    string? html = null;
+                    if (rest.StartsWith("category/", OIC))
+                    {
+                        var c = db.QueryOne("SELECT id,name FROM blog_categories WHERE slug=? AND active=1", rest.Substring(9).ToLowerInvariant());
+                        if (c is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, PCI.Backend.Core.H.L(c["id"]), PCI.Backend.Core.H.Str(c["name"]), null, null, null, null, secNews);
+                    }
+                    else if (rest.StartsWith("author/", OIC))
+                    {
+                        var a = db.QueryOne("SELECT id,name FROM blog_authors WHERE slug=? AND active=1", rest.Substring(7).ToLowerInvariant());
+                        if (a is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, null, null, PCI.Backend.Core.H.L(a["id"]), (secNews ? "News by " : "Articles by ") + (PCI.Backend.Core.H.Str(a["name"]) ?? ""), null, null, secNews);
+                    }
+                    else if (rest.StartsWith("tag/", OIC))
+                    {
+                        var t = db.QueryOne("SELECT id,name FROM blog_tags WHERE slug=?", rest.Substring(4).ToLowerInvariant());
+                        if (t is not null) html = PCI.Backend.Core.BlogRender.RenderIndex(db, webRoot, blang, pg, null, null, null, null, PCI.Backend.Core.H.L(t["id"]), "#" + (PCI.Backend.Core.H.Str(t["name"]) ?? ""), secNews);
+                    }
+                    else if (!rest.Contains('/') && !rest.Contains('.'))
+                    {
+                        var (ahtml, aredirect) = PCI.Backend.Core.BlogRender.Article(db, webRoot, rest, blang, secNews);
+                        if (aredirect is not null) { ctx.Response.StatusCode = 301; ctx.Response.Headers.Location = aredirect; return true; }
+                        html = ahtml;
+                        // Per-article, cookieless page view (articles are served here, before the static-page
+                        // PageView call) — feeds the per-article analytics rollup.
+                        if (html is not null) PCI.Backend.Core.Analytics.PageView(db, ctx, (secBase + "/" + rest).TrimStart('/'));
+                    }
+                    if (html is not null)
+                    {
+                        ctx.Response.ContentType = "text/html; charset=utf-8"; ctx.Response.Headers.CacheControl = "no-cache"; ctx.Response.Headers.Vary = "Cookie";
+                        await ctx.Response.WriteAsync(html); return true;
+                    }
+                    // no match under this section (draft, unknown slug/category/author/tag) → 404 fall-through
+                }
+                return false;
             }
+
+            if (await ServeSection(bp, false)) return;
+            if (await ServeSection(nbp, true)) return;
         }
         // ── Multi-certification clean URLs: /certifications (catalogue) and /certifications/{slug} (per credential) ──
         if (reqPath.StartsWith("/certifications", StringComparison.OrdinalIgnoreCase))
@@ -1133,7 +1444,7 @@ app.Use(async (ctx, next) =>
             {
                 "pcp-ai" or "pcp" => "pcl-ai",
                 "pfip" or "pfip-ai" => "pfl-ai",
-                "cpmd" or "cpmd-ai" or "pml-ai" => "pdl-ai",
+                "cpmd" or "cpmd-ai" or "pdl-ai" => "pml-ai",
                 _ => null,
             };
             if (certRedirect is not null)
@@ -1240,12 +1551,31 @@ app.Use(async (ctx, next) =>
             await ctx.Response.WriteAsync(PCI.Backend.Core.SearchIndex.Json(db, webRoot));
             return;
         }
+        // The PCI World sitemap: core world pages, every servable challenge, every published
+        // article. Before this existed, not one /world URL appeared in any sitemap.
+        if (reqPath.Equals("/world-sitemap.xml", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.ContentType = "application/xml; charset=utf-8";
+            await ctx.Response.WriteAsync(PCI.Backend.Core.WorldSeo.Sitemap(db));
+            return;
+        }
         // Dynamic sitemap.xml from the pages table (published, indexable, canonical host) — overrides
         // the static file so it always reflects real content and excludes private/noindex pages.
+        // On a PCI World-only deployment the pages table is not served at all, so /sitemap.xml
+        // answers with the world sitemap rather than advertising a catalogue this host does not have.
         if (reqPath.Equals("/sitemap.xml", StringComparison.OrdinalIgnoreCase))
         {
             ctx.Response.ContentType = "application/xml; charset=utf-8";
-            await ctx.Response.WriteAsync(PCI.Backend.Core.Sitemap.Xml(db));
+            await ctx.Response.WriteAsync(PCI.Backend.Core.WorldOnly.Enabled
+                ? PCI.Backend.Core.WorldSeo.Sitemap(db)
+                : PCI.Backend.Core.Sitemap.Xml(db));
+            return;
+        }
+        // Sitemap index — unifies the page sitemap and the blog (image) sitemap under one entry point.
+        if (reqPath.Equals("/sitemap-index.xml", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.ContentType = "application/xml; charset=utf-8";
+            await ctx.Response.WriteAsync(PCI.Backend.Core.Sitemap.Index(db));
             return;
         }
         // Policy-aware robots.txt (Phase 6) — overrides the static file so blocked AI crawlers
@@ -1253,7 +1583,12 @@ app.Use(async (ctx, next) =>
         if (reqPath.Equals("/robots.txt", StringComparison.OrdinalIgnoreCase))
         {
             ctx.Response.ContentType = "text/plain; charset=utf-8";
-            await ctx.Response.WriteAsync(PCI.Backend.Core.AiVisibility.Robots(db));
+            // A PCI World-only host must describe ITSELF. Serving the Institute's robots.txt there
+            // advertised sitemaps on another domain and disallowed paths this deployment does not
+            // have — worse than no robots file at all (Phase 0 audit §6).
+            await ctx.Response.WriteAsync(PCI.Backend.Core.WorldOnly.Enabled
+                ? PCI.Backend.Core.WorldSeo.Robots()
+                : PCI.Backend.Core.AiVisibility.Robots(db));
             return;
         }
         // llms.txt (llmstxt.org) — a curated Markdown map of indexable content for language models.

@@ -284,11 +284,12 @@ public static class Founding
             return J(new { rows });
         }));
 
-        app.MapGet("/api/admin/founding-applications/{id}/evidence", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
+        app.MapGet("/api/admin/founding-applications/{id}/evidence", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
-            var a = db.QueryOne("SELECT evidence_ref FROM founding_applications WHERE id=?", id);
+            var a = db.QueryOne("SELECT user_id,evidence_ref FROM founding_applications WHERE id=?", id);
             var got = a is null ? null : Storage.Get(H.Str(a["evidence_ref"]));
             if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            log(adm.Id, "founding_evidence_view", $"application {id} (user {H.Ln(a!["user_id"])})");
             return Results.File(got.Value.bytes!, got.Value.mime);
         }));
 
@@ -310,7 +311,7 @@ public static class Founding
                 var (granted, reason, reference) = Grant(db, log, uid, code, $"manual_approve_admin{adm.Id}");
                 if (!granted && reason != "already_redeemed") return Results.Json(new { error = reason }, statusCode: 400);
                 db.Execute("UPDATE founding_applications SET status='approved', decided_by=?, decided_at=datetime('now'), admin_note=? WHERE id=?", adm.Id, note, id);
-                log(uid, "founding_app_approved", $"app {id} by admin {adm.Id}");
+                log(adm.Id, "founding_app_approved", $"app {id} by admin {adm.Id} (subject {uid})");
                 return J(new { ok = true, status = "approved", reference });
             }
             if (status == "rejected")
@@ -318,7 +319,7 @@ public static class Founding
                 db.Execute("UPDATE founding_applications SET status='rejected', decided_by=?, decided_at=datetime('now'), admin_note=? WHERE id=?", adm.Id, note, id);
                 db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Founding', 'Founding application update', ?)",
                     uid, $"Your founding application was not approved{(note.Length > 0 ? ": " + note : "")}. The standard enrolment route remains open to you.");
-                log(uid, "founding_app_rejected", $"app {id} by admin {adm.Id}");
+                log(adm.Id, "founding_app_rejected", $"app {id} by admin {adm.Id} (subject {uid})");
                 return J(new { ok = true, status = "rejected" });
             }
             // revoke: kill the UNUSED grant only. An earned credential is NEVER touched — if the
@@ -340,7 +341,7 @@ public static class Founding
             db.Execute("UPDATE founding_applications SET status='revoked', decided_by=?, decided_at=datetime('now'), admin_note=? WHERE id=?", adm.Id, note, id);
             db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Founding', 'Founding access revoked', ?)",
                 uid, $"Your founding-stage access has been revoked{(note.Length > 0 ? ": " + note : "")}. Any credential you have already earned is unaffected.");
-            log(uid, "founding_app_revoked", $"app {id} by admin {adm.Id} (entitlements revoked: {revokedEnt})");
+            log(adm.Id, "founding_app_revoked", $"app {id} by admin {adm.Id} (subject {uid}, entitlements revoked: {revokedEnt})");
             return J(new { ok = true, status = "revoked", entitlements_revoked = revokedEnt });
         }));
 

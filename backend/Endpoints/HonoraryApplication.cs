@@ -266,11 +266,12 @@ public static class HonoraryApplication
 
         app.MapGet("/api/admin/honorary-applications/{id}/documents/{docId}/file", (HttpContext ctx, long id, long docId) =>
         {
-            var (_, deny) = Owner(ctx.Request); if (deny is not null) return deny;
+            var (adm, deny) = Owner(ctx.Request); if (deny is not null) return deny;
             var d = db.QueryOne("SELECT storage_ref,mime,filename FROM honorary_application_documents WHERE id=? AND application_id=?", docId, id);
             if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var got = Storage.Get(H.Str(d["storage_ref"]));
             if (got is null || got.Value.bytes is null) return Results.Json(new { error = "file_unavailable" }, statusCode: 404);
+            log(adm!.Id, "honorary_application_document_view", $"application {id} doc {docId} '{H.Str(d["filename"])}'");
             return Results.File(got.Value.bytes!, got.Value.mime);
         });
 
@@ -291,6 +292,7 @@ public static class HonoraryApplication
             var email = H.Str(a["email"]) ?? "";
             var fullName = $"{H.Str(a["first_name"])} {H.Str(a["last_name"])}".Trim();
             string? awardNo = H.Str(a["award_no"]);
+            string? setupUrl = null;
 
             if (status == "approved")
             {
@@ -302,7 +304,6 @@ public static class HonoraryApplication
                 // activates an honorary membership, and — via the normal settlement path — hands off to
                 // Certuvo. Gated by a configurable rule so an operator can keep honorary purely ceremonial.
                 var grantsMembership = Settings.Bool(db, "honorary_grants_membership", true);
-                string? setupUrl = null;
                 if (grantsMembership)
                 {
                     if (userId is null)
@@ -317,7 +318,7 @@ public static class HonoraryApplication
                         setupUrl = Mailer.SetupLink(baseUrl, token);
                         try { Mailer.SendWelcome(db, newId, email, H.Str(a["first_name"]), setupUrl, baseUrl); } catch { }
                         userId = newId;
-                        log(newId, "honorary_account_created", $"{H.Str(a["reference"])} by admin {adm!.Id}");
+                        log(adm!.Id, "honorary_account_created", $"{H.Str(a["reference"])} by admin {adm.Id} (subject {newId})");
                     }
                 }
 
@@ -338,7 +339,7 @@ public static class HonoraryApplication
                 if (userId is not null)
                     db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Recognition', 'Honorary Fellow (PCI)', ?, 'View membership', '/credentials')",
                         userId, $"The board has conferred on you the designation Honorary Fellow (PCI) — award number {awardNo}. Your membership and practice access are being set up.");
-                log(userId, "honorary_application_approved", $"{H.Str(a["reference"])} → {awardNo} by admin {adm.Id}");
+                log(adm.Id, "honorary_application_approved", $"{H.Str(a["reference"])} → {awardNo} by admin {adm.Id} (subject {userId?.ToString() ?? "unlinked"})");
             }
             else if (status.Length > 0)
             {
@@ -390,7 +391,9 @@ public static class HonoraryApplication
                 }
                 catch { }
 
-            return J(new { ok = true, status = status.Length > 0 ? status : H.Str(a["status"]), award_no = awardNo });
+            // The route is owner-only. Returning the newly-created one-time setup link mirrors manual
+            // student provisioning and gives the board a secure handoff when outbound email is disabled.
+            return J(new { ok = true, status = status.Length > 0 ? status : H.Str(a["status"]), award_no = awardNo, setup_url = setupUrl });
         });
     }
 }

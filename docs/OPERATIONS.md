@@ -33,9 +33,9 @@ Required environment variables (set the `sync:false` ones in the host dashboard 
 The persistent disk (mounted at `/data`, auto-detected) holds **only uploaded files** (exam evidence,
 ID documents, attachments); the database is MySQL.
 
-> **First boot:** the bootstrap owner has a forced-password-change flag. Sign in at `/admin/`, set a
-> new password (every `/api/admin/*` call except auth returns 403 until you do), then **deactivate or
-> rotate the seeded demo student** `student@pci.local`.
+> **First boot:** sign in at `/admin/` with the bootstrap owner credentials and change the password in
+> Settings → Security (self-service — the console is not blocked, but the account stays on the seeded
+> password until you do), then **deactivate or rotate the seeded demo student** `student@pci.local`.
 
 ---
 
@@ -146,8 +146,10 @@ metadata) live under the other SEO tabs.
 ## 9. Payments (Stripe)
 
 - Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`. Point a Stripe webhook at
-  `POST /api/payments/webhook`. Inbound events are **HMAC-verified** and processed exactly once
-  (idempotent by event id). Until configured, payment endpoints answer 503.
+  `POST /api/webhook` (not `/api/payments/webhook` — that route does not exist). Inbound events are
+  **HMAC-verified** and processed exactly once (idempotent by event id). Until configured, payment
+  endpoints answer 503. Optionally set `STRIPE_WEBHOOK_URL` to the exact URL registered in Stripe so
+  the production config preflight and `/api/admin/system-check` can verify it ends with `/api/webhook`.
 
 ---
 
@@ -207,13 +209,13 @@ Maps `member.registered → Customer` and `payment.recorded → SalesReceipt` vi
 - **Private surfaces** (`/admin`, `/app`, `/api`) carry `X-Robots-Tag: noindex` and are excluded from
   `robots.txt`, `sitemap.xml` and `llms.txt`.
 - **No hardcoded credentials.** The only seeded default is the bootstrap owner, overridable by env and
-  gated by a forced password change.
+  flagged for a self-service password change after first sign-in.
 
 ---
 
 ## 13. Post-deploy smoke checklist
 
-- [ ] `/admin/` loads; owner signs in; forced password change done; demo student deactivated.
+- [ ] `/admin/` loads; owner signs in; owner password changed (Settings → Security); demo student deactivated.
 - [ ] Public site loads on the canonical host; `www`/`pciglobal.ai` 301 to it.
 - [ ] `/robots.txt`, `/sitemap.xml`, `/llms.txt` all respond.
 - [ ] Language switcher appears; a non-English homepage renders.

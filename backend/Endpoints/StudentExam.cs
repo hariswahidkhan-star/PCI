@@ -80,7 +80,10 @@ public static class StudentExam
                 payments = db.Query("SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference,exam_schedule_deadline FROM payments WHERE user_id=? ORDER BY id DESC", u.Id),
                 exam = new { entitled = ent != null, deadline = ent?["exam_schedule_deadline"], payment_ref = ent?["reference"], booking, passed = passAtt != null,
                     certification_id = ent is null ? null : ent["certification_id"],
-                    certification = ent is null ? null : (object?)Certs.ById(db, ent["certification_id"])?["name"] },
+                    certification = ent is null ? null : (object?)Certs.ById(db, ent["certification_id"])?["name"],
+                    certification_code = ent is null ? null : (object?)Certs.ById(db, ent["certification_id"])?["code"],
+                    certification_name = ent is null ? null : (object?)Certs.ById(db, ent["certification_id"])?["name"],
+                    certification_acronym = ent is null ? null : (object?)Certs.ById(db, ent["certification_id"])?["acronym"] },
                 // Multi-certification view: one entry per paid entitlement, each with its own
                 // certification, booking, latest attempt and credential. The legacy `exam` object
                 // above remains for existing UI paths (it reflects the most recent entitlement).
@@ -93,7 +96,10 @@ public static class StudentExam
                         var cert = Certs.ById(db, cid);
                         var bk = db.QueryOne("SELECT id,scheduled_at,timezone,status FROM exam_bookings WHERE user_id=? AND payment_id=? AND status='scheduled' ORDER BY id DESC", u.Id, r["payment_id"]);
                         var att = db.QueryOne("SELECT id,status,result_status,submitted_at FROM exam_attempts WHERE user_id=? AND kind='exam' AND COALESCE(certification_id,1)=? ORDER BY id DESC", u.Id, cid);
-                        var cred = db.QueryOne("SELECT credential_id,status,expires_at FROM issued_credentials WHERE user_id=? AND COALESCE(certification_id,1)=? AND status='active' ORDER BY id DESC", u.Id, cid);
+                        // certification_id is required by CpdPolicy.ForCredential/CycleStart below (they read
+                        // cred["certification_id"]); omitting it 500'd /api/me for any user holding an active
+                        // credential (e.g. a multi-certification candidate who has passed).
+                        var cred = db.QueryOne("SELECT credential_id,certification_id,status,expires_at FROM issued_credentials WHERE user_id=? AND COALESCE(certification_id,1)=? AND status='active' ORDER BY id DESC", u.Id, cid);
                         // Exam Exceptions & Authorizations: surface the seat's authorization (deadline history,
                         // attempt policy, retake wait), any fee waiver, and a computed scheduling status so the
                         // portal can show extensions / reopened scheduling / granted attempts / waivers.
@@ -126,12 +132,17 @@ public static class StudentExam
                     }).ToList(),
                 // Held attempts must not disclose pass/fail/score until released (Section A rule 6) —
                 // redacted SERVER-side, not merely hidden by the front-end.
-                attempts = db.Query("SELECT id,kind,started_at,submitted_at,percent,result,status,result_status,hold_reason,released_at,domain_breakdown,violations,duration_minutes FROM exam_attempts WHERE user_id=? ORDER BY id DESC LIMIT 25", u.Id)
+                attempts = db.Query(@"SELECT a.id,a.kind,a.started_at,a.submitted_at,a.percent,a.result,a.status,a.result_status,a.hold_reason,a.released_at,
+                        a.domain_breakdown,a.violations,a.duration_minutes,COALESCE(a.certification_id,1) certification_id,
+                        ct.code certification_code,ct.name certification_name
+                    FROM exam_attempts a LEFT JOIN certifications ct ON ct.id=COALESCE(a.certification_id,1)
+                    WHERE a.user_id=? ORDER BY a.id DESC LIMIT 25", u.Id)
                     .Select(a => {
                         if (H.Str(a["result_status"]) == "auto_held") { a["percent"] = null; a["result"] = null; a["domain_breakdown"] = null; }
                         return a;
                     }).ToList(),
                 credentials = db.Query(@"SELECT ic.credential_id,ic.credential,ic.status,ic.issued_at,ic.expires_at,ic.holder_name,ic.certificate_wording,
+                        COALESCE(ic.certification_id,1) certification_id,ct.code certification_code,
                         ct.name certification_name, ct.acronym certification_acronym
                     FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)
                     WHERE ic.user_id=? ORDER BY ic.id DESC", u.Id),
@@ -171,7 +182,11 @@ public static class StudentExam
                 // Cap free-text profile fields so a client can't store unbounded blobs (DoS / storage
                 // abuse). 1000 chars is generous for every field here (roles, company, LinkedIn URL, etc.).
                 var vals = set.Select(k => { var s = H.GetS(b, k) ?? ""; return (object?)(s.Length > 1000 ? s[..1000] : s); }).Append(u.Id).ToArray();
-                db.Execute($"UPDATE student_profiles SET {string.Join(",", set.Select(k => k + "=?"))} WHERE user_id=?", vals);
+                // Back-quote each column. `current_role` is a RESERVED WORD on MySQL and MariaDB, so
+                // the unquoted form was a syntax error there and every profile save failed with a 500 —
+                // invisible on SQLite, which has no such reserved word. Back-quotes are accepted as
+                // identifier quoting by all three engines, so one form works everywhere.
+                db.Execute($"UPDATE student_profiles SET {string.Join(",", set.Select(k => $"`{k}`=?"))} WHERE user_id=?", vals);
             }
             Account.RecomputeCompletion(db, u.Id);
             log(u.Id, "profile_update", string.Join(",", set));
@@ -186,7 +201,7 @@ public static class StudentExam
 
         // Per-certification documents & books: the student sees general documents plus the documents for
         // every certification they are enrolled in (an entitlement or an issued credential). Grouped by
-        // certification so a PCL-AI candidate never sees PFL-AI/PDL-AI materials they are not entitled to.
+        // certification so a PCL-AI candidate never sees PFL-AI/PML-AI materials they are not entitled to.
         // (/api/me/documents is the per-student assigned-documents module in Endpoints/Documents.cs.)
         app.MapGet("/api/me/cert-documents", (HttpContext ctx) =>
         {
@@ -348,20 +363,42 @@ public static class StudentExam
             if (priorForPayment is not null) return Results.Json(new { error = "payment_already_used" }, statusCode: 400);
             var submittedForPayment = db.QueryOne(@"SELECT a.id FROM exam_attempts a JOIN exam_bookings bk ON bk.id=a.booking_id WHERE bk.payment_id=? AND a.kind='exam' AND a.status='submitted' LIMIT 1", ent["id"]);
             if (submittedForPayment is not null) return Results.Json(new { error = "exam_already_taken" }, statusCode: 400);
+            // Retake waiting period (P0-7): a retake seat carries a persisted retake_wait_until (set at
+            // seat creation from the last failed sitting + the configured cool-off). Block scheduling until it
+            // passes; an admin can waive it (Exam Exceptions → waive waiting period), which clears the date.
+            var retakeWaitUntil = H.Str(db.QueryOne("SELECT retake_wait_until FROM exam_authorizations WHERE payment_id=?", ent["id"])?["retake_wait_until"]);
+            if (!string.IsNullOrEmpty(retakeWaitUntil) && !H.IsPast(retakeWaitUntil))
+                return Results.Json(new { error = "retake_wait_active", retake_wait_until = retakeWaitUntil,
+                    message = $"A retake cannot be scheduled until the waiting period ends on {retakeWaitUntil} UTC." }, statusCode: 400);
             var scheduledAt = H.GetS(b, "scheduled_at");
             var timezone = H.GetS(b, "timezone");
             if (scheduledAt is null || H.JsMillis(scheduledAt) < DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 2 * 3600_000)
                 return Results.Json(new { error = "bad_slot" }, statusCode: 400);
             if (deadline is not null && H.After(scheduledAt, deadline)) return Results.Json(new { error = "beyond_window" }, statusCode: 400);
+            // EXT-P0-03 — if this certification is configured for an external vendor, refuse the booking
+            // when that vendor is missing/disabled/unmapped. Never silently fall back to an in-house sitting.
+            if (PCI.Backend.Core.ExamDelivery.ExternalBlockReason(db, certId) is { } blockReason)
+                return Results.Json(new {
+                    error = blockReason,
+                    message = "External exam delivery is required for this certification but the vendor is not available. Please contact support — a local exam will not be started."
+                }, statusCode: 503);
             var id = db.ExecuteReturningId("INSERT INTO exam_bookings(user_id,payment_id,certification_id,scheduled_at,timezone) VALUES(?,?,?,?,?)", u.Id, ent["id"], certId, scheduledAt, timezone);
             // Link the formal entitlement to this booking and mark it booked, so submit can consume it
             // by booking_id (one-attempt-per-entitlement).
             db.Execute("UPDATE exam_entitlements SET status='booked', booking_id=? WHERE payment_id=? AND status IN ('available','booked')", id, ent["id"]);
             log(u.Id, "exam_booked", $"{scheduledAt} (cert {certId})");
-            // Route to the configured third-party exam-delivery vendor (Pearson VUE/OnVUE, Kryterion, PSI,
-            // TestReach, Questionmark) if one is set as default and the certification is mapped. Best-effort:
-            // never blocks or fails the PCI booking; unrouted/failed orders are retryable from the admin.
-            await PCI.Backend.Core.ExamDelivery.RouteBooking(db, id, u.Id, certId, scheduledAt, timezone);
+            // Route to the configured third-party exam-delivery vendor. Fail-closed: if routing fails after
+            // the booking insert, cancel the booking and restore the entitlement (never leave a local path).
+            var routed = await PCI.Backend.Core.ExamDelivery.RouteBooking(db, id, u.Id, certId, scheduledAt, timezone);
+            if (!routed.Ok)
+            {
+                db.Execute("UPDATE exam_bookings SET status='cancelled', delivery_status=?, updated_at=datetime('now') WHERE id=?", routed.Error ?? "delivery_route_failed", id);
+                db.Execute("UPDATE exam_entitlements SET status='available', booking_id=NULL WHERE payment_id=? AND status='booked'", ent["id"]);
+                return Results.Json(new {
+                    error = routed.Error ?? "delivery_route_failed",
+                    message = "External exam delivery could not be started. Your seat is still available — please try again or contact support."
+                }, statusCode: 503);
+            }
             // Booking-confirmation email (best-effort; admin-toggleable via notify_exam_booking_enabled).
             if (Notify.Enabled(db, "exam_booking"))
                 try
@@ -763,7 +800,7 @@ public static class StudentExam
         app.MapGet("/api/me/config", (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            var keys = new[]{ "sp_login_enabled","sp_exam_booking_open","sp_reschedule_enabled","sp_reschedule_cutoff_hours","sp_results_visible","sp_certificate_download","sp_cpd_enabled","sp_cpd_target_hours","sp_support_tickets_enabled","sp_practice_enabled","sp_banner_enabled","sp_banner_text" };
+            var keys = new[]{ "sp_login_enabled","sp_exam_booking_open","sp_reschedule_enabled","sp_reschedule_cutoff_hours","sp_results_visible","sp_certificate_download","sp_cpd_enabled","sp_cpd_target_hours","sp_support_tickets_enabled","sp_practice_enabled","sp_banner_enabled","sp_banner_text","exam_open_before_minutes" };
             var o = new Dictionary<string, object?>();
             foreach (var k in keys) { var v = db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", k); if (v is not null) o[k] = v; }
             o["sp_readiness_required"] = Settings.Bool(db, "sp_readiness_required", true) ? "1" : "0";
@@ -829,6 +866,7 @@ public static class StudentExam
         app.MapPost("/api/me/cpd/declaration", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             var position = H.GetS(b, "position") ?? "";
             if (position is not ("compliant" or "career_break" or "not_met"))
@@ -893,6 +931,7 @@ public static class StudentExam
         app.MapPost("/api/me/cpd", async (HttpContext ctx) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var b = await H.Body(ctx.Request);
             var cols = db.Columns("cpd_entries");
             var map = new Dictionary<string, object?> {
@@ -903,12 +942,15 @@ public static class StudentExam
                 ["activity_date"] = H.GetS(b, "activity_date", "date") ?? DateTime.UtcNow.ToString("yyyy-MM-dd")
             };
             var use = map.Keys.Where(k => cols.Contains(k)).ToList();
-            db.Execute($"INSERT INTO cpd_entries({string.Join(",", use)}) VALUES({string.Join(",", use.Select(_ => "?"))})", use.Select(k => map[k]).ToArray());
+            // Same identifier quoting as the profile update above: any dynamically-assembled column
+            // list must survive a column whose name is reserved on one engine and not another.
+            db.Execute($"INSERT INTO cpd_entries({string.Join(",", use.Select(k => $"`{k}`"))}) VALUES({string.Join(",", use.Select(_ => "?"))})", use.Select(k => map[k]).ToArray());
             return J(new { ok = true });
         });
         app.MapDelete("/api/me/cpd/{id}", (HttpContext ctx, long id) =>
         {
             var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             db.Execute("DELETE FROM cpd_entries WHERE id=? AND user_id=?", id, u.Id);
             return J(new { ok = true });
         });
@@ -1068,6 +1110,53 @@ public static class StudentExam
         app.MapGet("/api/me/invoices", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             var rows = db.Query("SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference,waived_amount FROM payments WHERE user_id=? AND payment_status IN ('paid','waived') ORDER BY id DESC", u.Id);
             return J(new { rows }); });
+
+        // Downloadable PDF receipt for one of the caller's OWN settled payments. Generated per
+        // request (never stored) via the dependency-free SimplePdf used for governance documents;
+        // `?inline=1` serves it for the in-app viewer. Every download is audit-logged.
+        app.MapGet("/api/me/payments/{id:long}/receipt.pdf", (HttpContext ctx, long id) =>
+        {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var p = db.QueryOne(@"SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference,waived_amount,payment_provider
+                FROM payments WHERE id=? AND user_id=? AND payment_status IN ('paid','waived','partially_refunded')", id, u.Id);
+            if (p is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var status = H.Str(p["payment_status"]) ?? "paid";
+            var currency = (H.Str(p["currency"]) ?? "USD").ToUpperInvariant();
+            var amount = H.D(p["final_amount"]);
+            var reference = H.Str(p["reference"]) ?? ("PCI-" + id);
+            var holder = db.QueryOne("SELECT first_name,last_name,email,registration_no FROM users WHERE id=?", u.Id);
+            var holderName = ((H.Str(holder?["first_name"]) ?? "") + " " + (H.Str(holder?["last_name"]) ?? "")).Trim();
+            if (holderName.Length == 0) holderName = u.Email;
+            var product = (H.Str(p["product_type"]) ?? "purchase").Replace('_', ' ');
+            var waived = H.D(p["waived_amount"]);
+            var blocks = new List<(SimplePdf.Block, string)>
+            {
+                (SimplePdf.Block.H1, "Payment receipt"),
+                (SimplePdf.Block.Body, $"Receipt reference: {reference}"),
+                (SimplePdf.Block.Body, $"Received from: {holderName} ({u.Email})" +
+                    (H.Str(holder?["registration_no"]) is { Length: > 0 } rn ? $" — registration {rn}" : "")),
+                (SimplePdf.Block.Body, $"Item: {product}"),
+                (SimplePdf.Block.Body, $"Amount: {currency} {amount:0.00}" + (waived > 0 ? $" (of which waived: {currency} {waived:0.00})" : "")),
+                (SimplePdf.Block.Body, $"Status: {status.Replace('_', ' ')}"),
+                (SimplePdf.Block.Body, $"Payment date: {H.Str(p["payment_date"]) ?? "-"}"),
+                (SimplePdf.Block.Space, ""),
+                (SimplePdf.Block.Body, "This receipt confirms the payment recorded against your PCI account. " +
+                    "It is generated from the payment ledger and requires no signature."),
+            };
+            var pdf = SimplePdf.Build(
+                Core.PartnerStatement.OrgName(db) + " — Payment receipt",
+                $"{reference} · issued {DateTime.UtcNow:yyyy-MM-dd}",
+                blocks,
+                $"Receipt {reference}");
+            log(u.Id, "receipt_pdf_download", $"payment {id} ({reference})");
+            var name = $"pci-receipt-{reference}.pdf";
+            if (ctx.Request.Query["inline"].ToString() == "1")
+            {
+                ctx.Response.Headers["Content-Disposition"] = "inline; filename=\"" + name.Replace("\"", "") + "\"";
+                return Results.Bytes(pdf, "application/pdf");
+            }
+            return Results.Bytes(pdf, "application/pdf", name);
+        });
         app.MapGet("/api/me/faqs", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             return J(new { rows = db.Query("SELECT question,answer,category FROM faqs WHERE published=1 ORDER BY sort_order,id") }); });
 

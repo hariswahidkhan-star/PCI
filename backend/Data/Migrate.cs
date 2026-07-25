@@ -1,8 +1,61 @@
 namespace PCI.Backend.Data;
 
+/// <summary>Thrown when the database schema was migrated by a NEWER build than the one now starting.
+/// Starting an older binary against a newer schema risks reading/writing columns it doesn't understand,
+/// so boot is refused rather than silently running against an incompatible schema.</summary>
+public sealed class SchemaCompatibilityException : Exception
+{
+    public SchemaCompatibilityException(string message) : base(message) { }
+}
+
 public static class Migrate
 {
+    /// <summary>Schema/convergence version recorded in the <c>schema_migrations</c> ledger. BUMP this whenever
+    /// the base schema or the idempotent upgrades below change, so the compatibility gate and checksum-drift
+    /// detection stay meaningful.</summary>
+    public const int SchemaVersion = 1;
+
+    /// <summary>Versioned + LOCKED entry point. Acquires the cross-instance migration lock, refuses to start an
+    /// older binary against a newer schema, converges the schema idempotently, then records the applied version
+    /// and a checksum in the <c>schema_migrations</c> ledger (detecting drift). A failure here propagates so the
+    /// caller can refuse to start — the service is never reported ready on a half-migrated database.</summary>
     public static void Run(Db db, string schemaPath)
+    {
+        db.WithMigrationLock(() =>
+        {
+            // The ledger itself must exist before we can consult/record versions (dialect-neutral DDL).
+            db.Exec("CREATE TABLE IF NOT EXISTS schema_migrations(version INTEGER PRIMARY KEY, checksum TEXT, description TEXT, applied_at TEXT DEFAULT (datetime('now')))");
+            var dbVersion = db.Scalar<long>("SELECT COALESCE(MAX(version),0) FROM schema_migrations");
+            if (dbVersion > SchemaVersion)
+                throw new SchemaCompatibilityException(
+                    $"database schema version {dbVersion} is newer than this build supports (v{SchemaVersion}). " +
+                    "Deploy the newer build, or roll the schema back, before starting this one.");
+
+            Converge(db, schemaPath);
+
+            var checksum = Checksum(schemaPath);
+            var recorded = db.Scalar<string>("SELECT checksum FROM schema_migrations WHERE version=?", SchemaVersion);
+            if (recorded is null)
+                db.Execute("INSERT INTO schema_migrations(version,checksum,description,applied_at) VALUES(?,?,?, datetime('now'))",
+                    SchemaVersion, checksum, "base schema + idempotent convergence");
+            else if (recorded != checksum)
+            {
+                Console.Error.WriteLine($"[migrate] checksum drift for schema v{SchemaVersion}: recorded {recorded[..Math.Min(8, recorded.Length)]}…, computed {checksum[..8]}… — schema changed without a version bump; recording the new checksum.");
+                db.Execute("UPDATE schema_migrations SET checksum=?, applied_at=datetime('now') WHERE version=?", checksum, SchemaVersion);
+            }
+        });
+    }
+
+    /// <summary>SHA-256 of the base schema file (dialect-specific) plus the schema version — the fingerprint
+    /// stored in the ledger so a schema change without a version bump is detectable as drift.</summary>
+    static string Checksum(string schemaPath)
+    {
+        var payload = File.ReadAllText(schemaPath) + "|schemaVersion=" + SchemaVersion;
+        var bytes = System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(payload));
+        return Convert.ToHexString(bytes).ToLowerInvariant();
+    }
+
+    static void Converge(Db db, string schemaPath)
     {
         db.Exec(File.ReadAllText(schemaPath));
         // ensure production lifecycle tables exist on pre-existing databases
@@ -22,8 +75,15 @@ public static class Migrate
         EnsureReviews();
         void AddCol(string table, string col, string ddl)
         {
-            var have = db.Columns(table);
-            if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+            try
+            {
+                var have = db.Columns(table);
+                if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+            }
+            catch
+            {
+                // Table may not exist yet on this provider (e.g. mkt_jobs is created later by MarketingSchema).
+            }
         }
         AddCol("users", "is_test", "is_test INTEGER DEFAULT 0");   // admin-created test accounts (excluded from real reporting)
         // Honorary application: explicit eligibility self-confirmation + terms & conditions acceptance,
@@ -490,6 +550,9 @@ public static class Migrate
         AddCol("training_partners", "auto_approve_codes", "auto_approve_codes INTEGER DEFAULT 0");
         AddCol("training_partners", "privacy_fields", "privacy_fields TEXT");            // JSON list of extra fields the partner may see
         AddCol("training_partners", "eligible_countries", "eligible_countries TEXT");
+        // Test institutions (mirrors users.is_test): scenario-based partner-portal test accounts,
+        // never listed publicly and excluded from discount/commission reporting.
+        AddCol("training_partners", "is_test", "is_test INTEGER DEFAULT 0");
         // Discount-engine v2: full lifecycle + constraints. Legacy rows keep status NULL and are governed
         // by the existing `active` flag; new engine rows use the status column as the source of truth.
         AddCol("discount_codes", "status", "status VARCHAR(20)");                        // draft|pending_approval|active|suspended|rejected|cancelled
@@ -790,6 +853,11 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS document_acknowledgements(id INTEGER PRIMARY KEY AUTOINCREMENT,document_id INTEGER NOT NULL,user_id INTEGER NOT NULL,
             ip VARCHAR(64),acknowledged_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_docack ON document_acknowledgements(document_id, user_id)");
+        // Replacement provenance: why a version superseded its predecessor, and — when a version was
+        // created by restoring an earlier one — which version it was restored from. Additive AddCol so
+        // existing installs upgrade in place.
+        AddCol("documents", "replace_reason", "replace_reason TEXT");
+        AddCol("documents", "restored_from_id", "restored_from_id INTEGER");
         // First-run category set (only when empty — never overwrites admin edits).
         try
         {
@@ -913,6 +981,24 @@ public static class Migrate
             ip VARCHAR(64),
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_certdocdl_doc ON cert_document_downloads(cert_document_id)");
+
+        // Superseded-file history for books/study materials. The CURRENT file stays on cert_documents
+        // (backward compatible); every replace/restore snapshots the outgoing file here first, so a
+        // book's bytes are never silently lost and any prior version can be inspected or restored.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cert_document_versions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            cert_document_id INTEGER NOT NULL,
+            version INTEGER NOT NULL,
+            storage_ref TEXT,
+            filename VARCHAR(255),
+            mime VARCHAR(80),
+            size_bytes INTEGER,
+            sha256 VARCHAR(64),
+            replaced_by INTEGER,
+            replace_reason TEXT,
+            restored_from_id INTEGER,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_certdocver_doc ON cert_document_versions(cert_document_id)");
 
         // ── Public Downloads Centre: governance/legal/policy documents distributed to anyone, no login. ──
         // Version-chained: every version is its own row sharing a stable doc_group (the public "document ID");
@@ -1251,6 +1337,8 @@ public static class Migrate
         db.Exec("CREATE INDEX IF NOT EXISTS ix_social_drafts_post ON social_drafts(post_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_social_drafts_status ON social_drafts(status)");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_default_base_urls','')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_utm_enabled','1')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('social_utm_campaign','social')");
 
         // Content Syndication (Phase 3) — outbound publishing to partner CMS platforms whose official APIs need
         // no provider review (WordPress self-hosted, Ghost, Forem/DEV). Credentials ENCRYPTED at rest, never
@@ -1355,12 +1443,29 @@ public static class Migrate
             fetched_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_anmetric_source ON cc_analytics_metrics(source_id, dimension)");
 
+        // Content link registry (Phase C) — the hyperlinks a post publishes, extracted from its body. Each row
+        // is classified internal (relative or same-site) vs external, carries an editor-set rel policy
+        // (auto/dofollow/nofollow/sponsored/ugc), an optional citation + approval flag, and an on-demand HTTP
+        // status (checked ONLY for external links, through the SSRF-guarded egress client — never for private
+        // targets). url_norm is VARCHAR so it can back the per-post unique index (MySQL can't index TEXT).
+        // cc_* namespaced; gated by the cc_links permission.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cc_content_links(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            post_id INTEGER NOT NULL, url VARCHAR(500) NOT NULL, url_norm VARCHAR(500),
+            kind VARCHAR(12) DEFAULT 'external', anchor_text VARCHAR(300), rel VARCHAR(24) DEFAULT 'auto',
+            is_citation INTEGER DEFAULT 0, approved INTEGER DEFAULT 0,
+            status VARCHAR(16) DEFAULT 'unchecked', http_code INTEGER, last_checked_at TEXT, clicks INTEGER DEFAULT 0,
+            active INTEGER DEFAULT 1, created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_cc_links_post ON cc_content_links(post_id, kind)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_cc_links_post_url ON cc_content_links(post_id, url_norm)");
+        AddCol("cc_content_links", "clicks", "clicks INTEGER DEFAULT 0");   // Phase D: outbound-click counter (idempotent for DBs created before this)
+
         // Configurable defaults (operator-tunable via Settings; no hardcoded values in React/.NET) + the
         // content-centre notification master toggle.
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('backlink_our_domain','projectcontrolsinstitute.org')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('backlink_verify_enabled','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('analytics_default_range_days','28')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_base_path','/blog')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('news_base_path','/news')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_posts_per_page','12')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('blog_indexnow_on_publish','1')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('notify_content_enabled','1')");
@@ -1388,8 +1493,44 @@ public static class Migrate
         }
         catch { /* admin_users may not exist on a very first pass; ignored */ }
 
+        // Explicit browser-suite operator. The real bootstrap owner deliberately keeps the seeded
+        // password + advisory must_change_pw flag, which is itself an E2E journey. Broader
+        // admin/test-user journeys need a separate, deterministic operator that can call the same
+        // owner-gated APIs a human uses.
+        // This account is created ONLY outside Production and ONLY when the Playwright server opts in
+        // with E2E_ADMIN_PASSWORD; a production deployment can never activate it accidentally.
+        try
+        {
+            // Treat an unset environment as Production (the safe default) and honour either .NET
+            // environment variable. The opt-in secret alone must never create this account on an
+            // ambiguously configured deployment.
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+                ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
+                ?? "Production";
+            var isProd = string.Equals(environment, "Production", StringComparison.OrdinalIgnoreCase);
+            var e2ePw = Environment.GetEnvironmentVariable("E2E_ADMIN_PASSWORD");
+            if (!isProd && !string.IsNullOrWhiteSpace(e2ePw))
+            {
+                var email = (Environment.GetEnvironmentVariable("E2E_ADMIN_EMAIL") ?? "browser-admin@pci.test").Trim().ToLowerInvariant();
+                var hash = BCrypt.Net.BCrypt.HashPassword(e2ePw);
+                var existing = db.QueryOne("SELECT id FROM admin_users WHERE lower(email)=?", email);
+                long id;
+                if (existing is null)
+                    id = db.ExecuteReturningId("INSERT INTO admin_users(email,name,password_hash,role,status,must_change_pw) VALUES(?,?,?,?, 'active',0)",
+                        email, "Browser Test Admin", hash, "owner");
+                else
+                {
+                    id = Convert.ToInt64(existing["id"]);
+                    db.Execute("UPDATE admin_users SET name='Browser Test Admin',password_hash=?,role='owner',status='active',must_change_pw=0 WHERE id=?", hash, id);
+                }
+                db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", id);
+                Console.WriteLine($"[seed] opt-in E2E admin ready: {email}");
+            }
+        }
+        catch (Exception e) { Console.Error.WriteLine($"[seed] E2E admin skipped: {e.Message}"); }
+
         // Break-glass owner recovery: if ADMIN_OWNER_RESET_PASSWORD is set at boot, (re)activate the
-        // owner account and set its password to that value, forcing a change on next login. This lets
+        // owner account and set its password to that value, flagging it for a follow-up change. This lets
         // an operator who is locked out regain access by setting one Render environment variable and
         // redeploying — no database console needed. It targets ADMIN_OWNER_EMAIL if that owner exists,
         // otherwise the earliest owner; if no owner exists at all it creates one. REMOVE the env var
@@ -1408,7 +1549,7 @@ public static class Migrate
                 {
                     db.Execute("UPDATE admin_users SET password_hash=?, status='active', must_change_pw=1 WHERE id=?", hash, target["id"]);
                     db.Execute("DELETE FROM admin_sessions WHERE admin_id=?", target["id"]);   // invalidate any stale sessions
-                    Console.WriteLine("[seed] ADMIN_OWNER_RESET_PASSWORD applied — owner password reset (must change on next login). REMOVE this env var now.");
+                    Console.WriteLine("[seed] ADMIN_OWNER_RESET_PASSWORD applied — owner password reset (change it in Settings → Security). REMOVE this env var now.");
                 }
                 else
                 {
@@ -1420,6 +1561,28 @@ public static class Migrate
             }
         }
         catch (Exception e) { Console.Error.WriteLine($"[seed] owner reset skipped: {e.Message}"); }
+
+        // EXT-P0-05 — atomic worker leases: multi-instance dispatchers claim due work with a conditional
+        // UPDATE (lease_owner + lease_until). Expired leases are reclaimed so a crashed worker cannot
+        // permanently strand a row, and two workers cannot both deliver the same outbound action.
+        void AddLeaseCols(string table)
+        {
+            AddCol(table, "lease_owner", "lease_owner VARCHAR(64)");
+            AddCol(table, "lease_until", "lease_until TEXT");
+        }
+        AddLeaseCols("comm_outbox");
+        AddLeaseCols("integration_deliveries");
+        AddLeaseCols("mkt_jobs");
+        AddLeaseCols("content_jobs");
+        AddLeaseCols("certuvo_accounts");
+        AddLeaseCols("exam_delivery_orders");
+
+        // EXT-P0-03 — surface external-delivery pending/blocked state on the PCI booking itself.
+        AddCol("exam_bookings", "delivery_status", "delivery_status VARCHAR(32)");
+
+        // EXT-P0-02 — partial refunds update financial state without revoking access.
+        AddCol("payments", "amount_refunded", "amount_refunded REAL DEFAULT 0");
+        AddCol("payments", "refunded_at", "refunded_at TEXT");
 
         // Backfill Exam Authorizations for any pre-existing settled exam seat (idempotent; best-effort).
         PCI.Backend.Core.ExamAuthorization.BackfillAll(db);

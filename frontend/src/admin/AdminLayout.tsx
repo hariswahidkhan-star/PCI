@@ -20,6 +20,7 @@ const NAV: NavItem[] = [
   { to: '/payments', label: 'Payments', perm: 'payments', group: 'Students' },
   { to: '/tickets', label: 'Support tickets', perm: 'tickets', group: 'Students' },
   { to: '/casework', label: 'Appeals & accommodations', perm: 'tickets', group: 'Students' },
+  { to: '/cpd-review', label: 'CPD review', perm: 'members', group: 'Students' },
   { to: '/documents', label: 'Documents', perm: 'documents', group: 'Students' },
   { to: '/books', label: 'Books & materials', perm: 'resources', group: 'Students' },
   { to: '/membership-grades', label: 'Membership grades', perm: 'members', group: 'Students' },
@@ -37,6 +38,7 @@ const NAV: NavItem[] = [
   { to: '/exam-delivery', label: 'Exam delivery vendors', perm: 'exam_delivery', group: 'Examinations' },
   crudItem('questions', 'Examinations'),
   { to: '/credentials', label: 'Credentials', perm: 'credentials', group: 'Examinations' },
+  { to: '/lab', label: 'Simulation Lab', perm: 'sim_lab', group: 'Examinations' },
 
   { to: '/codes', label: 'Discount codes', perm: 'codes', group: 'Access & pricing' },
   { to: '/founding', label: 'Founding stage', anyPerm: ['members', 'codes'], group: 'Access & pricing' },
@@ -47,6 +49,7 @@ const NAV: NavItem[] = [
   { to: '/content-centre', label: 'Content & Distribution', perm: 'cc_view', group: 'Website' },
   { to: '/pages', label: 'Pages & content', perm: 'pages', group: 'Website' },
   { to: '/public-downloads', label: 'Downloads Centre', perm: 'documents', group: 'Website' },
+  { to: '/templates', label: 'Free templates', perm: 'content', group: 'Website' },
   { to: '/content', label: 'Site content', perm: 'content', group: 'Website' },
   { to: '/announcement', label: 'Announcement', perm: 'content', group: 'Website' },
   { to: '/translations', label: 'Translations', owner: true, group: 'Website' },

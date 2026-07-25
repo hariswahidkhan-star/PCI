@@ -56,6 +56,9 @@ export interface ExamEntry {
 export interface Attempt {
   id: number
   kind: string
+  certification_id?: number | null
+  certification_code?: string | null
+  certification_name?: string | null
   started_at?: string | null
   submitted_at?: string | null
   percent?: number | null
@@ -70,6 +73,8 @@ export interface Attempt {
 export interface Credential {
   credential_id: string
   credential?: string | null
+  certification_id?: number | null
+  certification_code?: string | null
   status: string
   issued_at?: string | null
   expires_at?: string | null
@@ -138,6 +143,9 @@ export interface Me {
     passed: boolean
     certification_id?: number | null
     certification?: string | null
+    certification_code?: string | null
+    certification_name?: string | null
+    certification_acronym?: string | null
   }
   exams: ExamEntry[]
   attempts: Attempt[]

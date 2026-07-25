@@ -75,7 +75,9 @@ public static class AiVisibility
     }
 
     // Private/app surfaces kept out of every crawler's reach (mirrors the historic static robots.txt).
-    static readonly string[] Private = { "/admin", "/admin/", "/admin.html", "/app", "/app/", "/student.html", "/exam-ui.html", "/api/" };
+    // "/world-admin" is the PCI World administration realm — a separate admin app that must stay out
+    // of every index. Note "/world" itself is public and deliberately absent from this list.
+    static readonly string[] Private = { "/admin", "/admin/", "/admin.html", "/app", "/app/", "/student.html", "/exam-ui.html", "/api/", "/world-admin", "/world-admin/" };
 
     // ---- cache -------------------------------------------------------------------------------
     static int _bump;
@@ -113,7 +115,13 @@ public static class AiVisibility
                     sb.Append("\nUser-agent: ").Append(c.Token).Append("\nDisallow: /\n");
             }
             sb.Append("\n# Curated map for language models: ").Append(host).Append("/llms.txt\n");
+            // Advertise the sitemap index (which links both the page + blog sitemaps) plus each sitemap
+            // directly, so crawlers that don't follow an index still discover the blog sitemap.
+            sb.Append("Sitemap: ").Append(host).Append("/sitemap-index.xml\n");
             sb.Append("Sitemap: ").Append(host).Append("/sitemap.xml\n");
+            sb.Append("Sitemap: ").Append(host).Append("/blog-sitemap.xml\n");
+            sb.Append("Sitemap: ").Append(host).Append("/news-sitemap.xml\n");
+            sb.Append("Sitemap: ").Append(host).Append("/world-sitemap.xml\n");   // PCI World's own catalogue
             _robots = sb.ToString();
             _robotsVer = v;
             return _robots;

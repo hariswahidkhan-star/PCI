@@ -176,6 +176,11 @@ public static class Settlement
                 if (after == "active" && before != "active") did.Add("certuvo_provisioned");
             }
         }
+        // Partner commission (Phase 1): a settled, partner-attributed payment earns exactly one immutable
+        // commission transaction with the rate snapshotted now. Idempotent via a UNIQUE dedupe_key, so the
+        // Stripe webhook, an admin reprocess and the backfill can all reach here safely. Best-effort — a
+        // ledger hiccup must never block the student's entitlement.
+        try { if (PartnerCommission.EnsureForPayment(db, payId) > 0) did.Add("partner_commission_recorded"); } catch { }
         return new { ok = true, payment_id = payId, product, status, ensured = did, already_complete = did.Count == 0 };
     }
 
@@ -220,10 +225,19 @@ public static class Settlement
                 membershipLapsed = true;
             }
         }
+        // Any partner commission this settlement earned is clawed back as a linked reversal — the original
+        // transaction is never edited, so the ledger keeps showing what was earned and what was returned.
+        try { PartnerCommissionReversal.EnsureForPayment(db, payId, "reversal"); } catch { }
         try { db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Account', 'A payment record was reversed', ?)", userId,
             $"A {product} settlement on your account was reversed by our team. If you believe this is an error, contact support."); } catch { }
         return new { ok = true, payment_id = payId, previous_status = status, new_status = "refunded", membership_lapsed = membershipLapsed };
     }
+
+    /// <summary>Time-based membership expiry: flip lapsed active memberships to 'expired'. The status column
+    /// stays the single source every gate reads; this sweep is what advances it once expiry_date passes —
+    /// run daily by RetentionService and on demand via POST /api/admin/ops/sweeps/run. Returns rows flipped.</summary>
+    public static int ExpireDueMemberships(Db db) =>
+        db.Execute("UPDATE memberships SET status='expired' WHERE status='active' AND expiry_date IS NOT NULL AND expiry_date<=datetime('now')");
 }
 
 /// <summary>
@@ -236,9 +250,23 @@ public static class Settlement
 /// </summary>
 public static class CertuvoLink
 {
-    public static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(20) };
+    public static readonly HttpClient Http = Egress.CreateClient(TimeSpan.FromSeconds(20));
 
     public static bool Enabled(Db db) => Settings.Bool(db, "certuvo_enabled", false);
+
+    /// <summary>Decrypt the Certuvo API key (envelope-encrypted at rest; plaintext legacy tolerated).</summary>
+    public static string ApiKey(Db db)
+    {
+        var raw = Settings.Str(db, "certuvo_api_key", "");
+        return Security.DecryptSecret(raw) ?? raw;
+    }
+
+    /// <summary>Decrypt the Certuvo webhook secret (envelope-encrypted at rest).</summary>
+    public static string WebhookSecret(Db db)
+    {
+        var raw = Settings.Str(db, "certuvo_webhook_secret", "");
+        return Security.DecryptSecret(raw) ?? raw;
+    }
 
     /// <summary>Configurable business rule: does Certuvo access require only an active membership
     /// (default), or membership plus a certification enrolment (exam entitlement)?</summary>
@@ -380,6 +408,20 @@ public static class CertuvoLink
                 "Certuvo API base not configured — set it in Admin → Integrations → Certuvo, then retry.", userId);
             return;
         }
+        // EXT-P1-01 — refuse private/loopback/metadata targets at request time (in addition to save-time).
+        if (Egress.UrlProblem(apiBase) is { } urlProb)
+        {
+            db.Execute("UPDATE certuvo_accounts SET status='error', last_error=?, updated_at=datetime('now') WHERE user_id=?",
+                "Blocked Certuvo API base: " + urlProb, userId);
+            return;
+        }
+        if (!apiBase.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+            && string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Production", StringComparison.OrdinalIgnoreCase))
+        {
+            db.Execute("UPDATE certuvo_accounts SET status='error', last_error=?, updated_at=datetime('now') WHERE user_id=?",
+                "Certuvo API base must be HTTPS in production.", userId);
+            return;
+        }
         try
         {
             var path = Settings.Str(db, "certuvo_provision_path", "/api/accounts");
@@ -410,7 +452,7 @@ public static class CertuvoLink
             { Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json") };
             req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             req.Headers.TryAddWithoutValidation("Idempotency-Key", idemKey);
-            if (Settings.Str(db, "certuvo_api_key", "") is { Length: > 0 } key)
+            if (ApiKey(db) is { Length: > 0 } key)
             {
                 var header = Settings.Str(db, "certuvo_auth_header", "Authorization");
                 if (string.Equals(header, "Authorization", StringComparison.OrdinalIgnoreCase)) req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", key);
@@ -482,12 +524,25 @@ public static class CertuvoLink
         }
     }
 
-    /// <summary>Drain due retries — called from the background dispatcher loop.</summary>
+    /// <summary>Drain due retries — called from the background dispatcher loop. Atomic leases prevent
+    /// multi-instance double-provisioning (EXT-P0-05).</summary>
     public static async Task RetryDue(Db db, HttpClient http, int limit = 5)
     {
         if (!Enabled(db)) return;
-        var due = db.Query("SELECT user_id FROM certuvo_accounts WHERE status='error' AND next_retry_at IS NOT NULL AND next_retry_at<=datetime('now') ORDER BY next_retry_at LIMIT " + Math.Clamp(limit, 1, 25));
-        foreach (var r in due) await Provision(db, http, H.L(r["user_id"]));
+        try
+        {
+            db.Execute("UPDATE certuvo_accounts SET status='error', lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE status='processing' AND lease_until IS NOT NULL AND lease_until<=datetime('now')");
+        }
+        catch { }
+        var due = db.Query("SELECT id,user_id FROM certuvo_accounts WHERE status='error' AND next_retry_at IS NOT NULL AND next_retry_at<=datetime('now') AND (lease_until IS NULL OR lease_until<=datetime('now')) ORDER BY next_retry_at LIMIT " + Math.Clamp(limit, 1, 25));
+        var owner = WorkerLease.NewOwner();
+        foreach (var r in due)
+        {
+            var id = H.L(r["id"]);
+            if (!WorkerLease.TryClaim(db, "certuvo_accounts", id, owner, "'error'")) continue;
+            try { await Provision(db, http, H.L(r["user_id"])); }
+            finally { WorkerLease.Clear(db, "certuvo_accounts", id); }
+        }
     }
 
     /// <summary>Re-send the access instructions to the student (in-app + email).</summary>
@@ -511,13 +566,15 @@ public static class CertuvoLink
         return true;
     }
 
-    /// <summary>Suspend or revoke a member's Certuvo access. Best-effort remote deactivation via the
-    /// configured endpoint; the local status is authoritative for what the student sees.</summary>
+    /// <summary>Suspend or revoke a member's Certuvo access. When a remote deactivate endpoint is
+    /// configured, a remote failure does NOT flip local status to revoked/suspended (EXT-P1-06) —
+    /// the row is marked for retry with the desired action so observed state can catch up.</summary>
     public static async Task<object> Deactivate(Db db, HttpClient http, long userId, bool revoke)
     {
         var a = db.QueryOne("SELECT external_id,status FROM certuvo_accounts WHERE user_id=?", userId);
         if (a is null) return new { ok = false, error = "no_account" };
         string? remote = null;
+        var remoteOk = true;
         var deactPath = Settings.Str(db, "certuvo_deactivate_path", "");
         var apiBase = Settings.Str(db, "certuvo_api_base", "").TrimEnd('/');
         if (deactPath.Length > 0 && apiBase.Length > 0 && H.Str(a["external_id"]) is { Length: > 0 } ext)
@@ -526,7 +583,7 @@ public static class CertuvoLink
             {
                 var req = new HttpRequestMessage(HttpMethod.Post, apiBase + "/" + deactPath.TrimStart('/'))
                 { Content = new StringContent(JsonSerializer.Serialize(new { external_id = ext, action = revoke ? "revoke" : "suspend" }), Encoding.UTF8, "application/json") };
-                if (Settings.Str(db, "certuvo_api_key", "") is { Length: > 0 } key)
+                if (ApiKey(db) is { Length: > 0 } key)
                 {
                     var header = Settings.Str(db, "certuvo_auth_header", "Authorization");
                     if (string.Equals(header, "Authorization", StringComparison.OrdinalIgnoreCase)) req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", key);
@@ -534,12 +591,19 @@ public static class CertuvoLink
                 }
                 using var resp = await http.SendAsync(req);
                 remote = $"HTTP {(int)resp.StatusCode}";
+                remoteOk = resp.IsSuccessStatusCode;
             }
-            catch (Exception ex) { remote = "error: " + ex.Message; }
+            catch (Exception ex) { remote = "error: " + ex.Message; remoteOk = false; }
+            if (!remoteOk)
+            {
+                db.Execute("UPDATE certuvo_accounts SET last_error=?, updated_at=datetime('now') WHERE user_id=?",
+                    $"deactivate_pending:{revoke}:{remote}", userId);
+                return new { ok = false, error = "remote_deactivate_failed", status = H.Str(a["status"]), remote, desired = revoke ? "revoked" : "suspended" };
+            }
         }
         db.Execute(revoke
-            ? "UPDATE certuvo_accounts SET status='revoked', revoked_at=datetime('now'), next_retry_at=NULL, updated_at=datetime('now') WHERE user_id=?"
-            : "UPDATE certuvo_accounts SET status='suspended', suspended_at=datetime('now'), next_retry_at=NULL, updated_at=datetime('now') WHERE user_id=?", userId);
+            ? "UPDATE certuvo_accounts SET status='revoked', revoked_at=datetime('now'), next_retry_at=NULL, last_error=NULL, updated_at=datetime('now') WHERE user_id=?"
+            : "UPDATE certuvo_accounts SET status='suspended', suspended_at=datetime('now'), next_retry_at=NULL, last_error=NULL, updated_at=datetime('now') WHERE user_id=?", userId);
         return new { ok = true, status = revoke ? "revoked" : "suspended", remote };
     }
 

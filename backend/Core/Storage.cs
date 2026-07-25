@@ -13,7 +13,8 @@ namespace PCI.Backend.Core;
 ///   • "s3" — any S3-compatible object store. Requires S3_BUCKET; optional S3_ENDPOINT (for MinIO/R2/…,
 ///     forces path-style addressing), S3_REGION (default us-east-1). Credentials via the standard AWS env
 ///     vars (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY) or the SDK's default chain. If S3 is selected but
-///     S3_BUCKET is missing, the app falls back to local with a startup warning (never silently drops data).
+///     S3_BUCKET is missing, production refuses to boot (EXT-P1-09); non-production logs an error and
+///     does not silently treat incomplete S3 as a working local backend when STORAGE_PROVIDER=s3.
 ///
 /// A stored reference looks like:  local:ev/ab/abcd…ef.jpg  or  s3:ev/ab/abcd…ef.jpg
 /// (provider:relativePath). Get() routes by the reference prefix, so a deployment can migrate from local
@@ -34,7 +35,11 @@ public static class Storage
     // ---- S3 configuration (env-gated seam, now wired) ----
     static string? S3Bucket => Environment.GetEnvironmentVariable("S3_BUCKET");
     static bool S3Configured => Provider == "s3" && !string.IsNullOrEmpty(S3Bucket);
-    public static bool UsingLocal => !S3Configured && (Provider == "local" || !KnownProviders.Contains(Provider) || Provider == "s3");
+    /// <summary>True when the effective backend is local disk. In production, selecting S3 without a
+    /// complete config is a hard boot failure (EXT-P1-09) — never silently fall back.</summary>
+    public static bool UsingLocal => !S3Configured && (Provider == "local" || (!KnownProviders.Contains(Provider) && Provider != "s3"));
+    /// <summary>True when STORAGE_PROVIDER=s3 but required settings are incomplete.</summary>
+    public static bool S3Misconfigured => Provider == "s3" && !S3Configured;
     static readonly HashSet<string> KnownProviders = new() { "local", "s3" };
 
     static Amazon.S3.IAmazonS3? _s3;
@@ -84,6 +89,8 @@ public static class Storage
         var shard = sha[..2];
         var rel = $"{Sanitise(category)}/{shard}/{sha}{ext}";
         var enc = Security.EncryptBytes(bytes);
+        if (S3Misconfigured)
+            throw new InvalidOperationException("STORAGE_PROVIDER=s3 but S3_BUCKET is not set — refusing local-disk fallback (EXT-P1-09).");
         if (S3Configured)
         {
             var put = new Amazon.S3.Model.PutObjectRequest
@@ -98,8 +105,28 @@ public static class Storage
         }
         var full = Path.Combine(Root, rel);
         Directory.CreateDirectory(Path.GetDirectoryName(full)!);
-        if (!File.Exists(full)) File.WriteAllBytes(full, enc); // content-addressed → dedupe for free
+        // Content addressing makes an existing file a dedupe hit — but ONLY if we can still read it
+        // back. Artefacts are persisted as ciphertext, and the key can legitimately change: an
+        // explicit CREDENTIAL_ENCRYPTION_KEY set for the first time, a key rotation, or a move
+        // between database providers (the derived fallback key mixes in DATABASE_FILE and
+        // MYSQL_DATABASE). After any of those, every existing file is undecryptable.
+        //
+        // A blind "it exists, skip the write" made that damage PERMANENT: re-uploading byte-identical
+        // content would take the same content-addressed path, skip the write again, and the store
+        // would serve file_missing for ever with no signal and no way to repair it short of deleting
+        // files by hand. Verifying instead of assuming costs one read on the dedupe path — which was
+        // skipping a write anyway — and makes the store self-healing.
+        if (!File.Exists(full) || !Readable(full)) File.WriteAllBytes(full, enc);
         return new StoredObject($"local:{rel}", mime, bytes.LongLength, sha);
+    }
+
+    /// <summary>True when a stored artefact can actually be decrypted with the CURRENT key. Used to
+    /// decide whether an existing content-addressed file is a genuine dedupe hit or a stale one left
+    /// behind by a key change.</summary>
+    static bool Readable(string full)
+    {
+        try { return Security.DecryptBytes(File.ReadAllBytes(full)).Length > 0; }
+        catch { return false; }
     }
 
     /// <summary>Read bytes back for a reference (used by the authenticated serve endpoints). Null if missing.
@@ -129,7 +156,18 @@ public static class Storage
         }
         var full = Path.Combine(Root, rel);
         if (!File.Exists(full)) return null;
-        try { return (Security.DecryptBytes(File.ReadAllBytes(full)), mime); } catch { return null; }
+        try { return (Security.DecryptBytes(File.ReadAllBytes(full)), mime); }
+        catch (Exception e)
+        {
+            // The object IS on disk and still could not be opened — almost always because the at-rest key
+            // changed under it (CREDENTIAL_ENCRYPTION_KEY, or the secrets it is derived from when that is
+            // unset). Callers can only answer "file_missing", which reads as "never stored" and sends the
+            // investigation the wrong way: a whole class of download failures was once attributed to the
+            // database engine on the strength of that word. Say which of the two actually happened.
+            Console.Error.WriteLine($"[storage] {rel} is present but unreadable ({e.GetType().Name}) — the " +
+                                    "at-rest encryption key does not match the one it was written with.");
+            return null;
+        }
     }
 
     /// <summary>Delete a single stored object by its reference (provider:rel). Used for immediate erasure
@@ -209,10 +247,13 @@ public static class Storage
         new(@"^[0-9a-f]{64}\.(jpg|png|webp|pdf|bin|docx|doc|xlsx|xls|pptx|ppt|csv|txt|zip)$", System.Text.RegularExpressions.RegexOptions.Compiled);
 
     // Top-level category folders whose contents the retention sweep must never delete (both backends).
-    // Purgeable categories stay implicit: evidence, idd, appeal, accommodation, support, cpd — all
-    // candidate-submitted case/identity evidence, which is what evidence_retention_days governs.
+    // Purgeable categories stay implicit: evidence, idd, appeal, accommodation, support, cpd,
+    // incidents — all candidate-submitted case/identity evidence, which is what
+    // evidence_retention_days governs. public-docs holds PUBLISHED governance/legal PDFs served to
+    // the anonymous public and cv holds job-applicant CVs under an open posting — neither is case
+    // evidence, so neither may silently age out.
     static readonly HashSet<string> ProtectedCategories = new(StringComparer.OrdinalIgnoreCase)
-        { "documents", "certificates", "books", "founding", "honorary", "honorary-idv", "partners" };
+        { "documents", "certificates", "books", "founding", "honorary", "honorary-idv", "partners", "public-docs", "cv" };
 
     /// <summary>Delete a SINGLE stored object by reference (used for targeted, policy-driven deletion of
     /// sensitive artefacts such as honorary identity documents — not the blanket retention sweep). Returns

@@ -92,7 +92,7 @@ public static class SocialPublishing
             {
                 var post = db.QueryOne("SELECT * FROM blog_posts WHERE id=?", id);
                 if (post is null) return Results.Json(new { error = "post_not_found" }, statusCode: 404);
-                var link = Blog.PublicUrl(db, H.Str(post["slug"]) ?? "");
+                var baseLink = Blog.PublicUrl(db, H.Str(post["slug"]) ?? "");   // canonical /blog or /news URL by type
                 var tags = Blog.Tags(db, id).Select(t => H.Str(t["name"]) ?? "").Where(s => s.Length > 0).ToList();
                 var accounts = db.Query("SELECT * FROM social_pub_accounts WHERE active=1");
                 var created = new List<object>();
@@ -102,6 +102,9 @@ public static class SocialPublishing
                     // skip if a draft already exists for this (post, account) that isn't published/failed
                     var dup = db.QueryOne("SELECT id FROM social_drafts WHERE post_id=? AND account_id=? AND status NOT IN ('published','failed','cancelled')", id, H.L(a["id"]));
                     if (dup is not null) continue;
+                    // The SHARED link carries UTM attribution (utm_source=<platform>) so social-driven traffic is
+                    // measurable; the stored canonical on the post stays clean.
+                    var link = UtmLink(db, baseLink, platform);
                     var (text, hashtags) = Compose(platform, H.Str(post["title"]) ?? "", H.Str(post["summary"]) ?? "", tags, link);
                     var did = db.ExecuteReturningId(@"INSERT INTO social_drafts(post_id,platform_key,account_id,text,link,hashtags,status,created_by,created_at,updated_at)
                         VALUES(?,?,?,?,?,?, 'draft', ?, datetime('now'), datetime('now'))",
@@ -135,18 +138,22 @@ public static class SocialPublishing
             if (acct is null) return Results.Json(new { error = "account_inactive" }, statusCode: 400);
             if (!SocialConnectors.IsLive(H.Str(acct["platform_key"]) ?? ""))
                 return Results.Json(new { error = "requires_approval" }, statusCode: 400);
+            // Real scheduling: a draft with a future scheduled_at is queued to fire THEN (the dispatcher only
+            // drains jobs whose next_attempt_at has passed); otherwise it goes out on the next tick.
+            var nextAt = PublishAt(H.Str(d["scheduled_at"]));
+            var scheduled = nextAt.at > DateTime.UtcNow.AddMinutes(1);
             var (jobId, changes) = db.ExecuteWithChanges(@"INSERT OR IGNORE INTO content_jobs(job_type,idempotency_key,post_id,target,payload,status,next_attempt_at,created_by,created_at,updated_at)
-                VALUES('social_publish', ?, ?, ?, ?, 'pending', datetime('now'), ?, datetime('now'), datetime('now'))",
-                "socialdraft:" + id, H.L(d["post_id"]), H.Str(d["platform_key"]), "{\"draft_id\":" + id + "}", adm.Id);
+                VALUES('social_publish', ?, ?, ?, ?, 'pending', ?, ?, datetime('now'), datetime('now'))",
+                "socialdraft:" + id, H.L(d["post_id"]), H.Str(d["platform_key"]), "{\"draft_id\":" + id + "}", nextAt.str, adm.Id);
             db.Execute("UPDATE social_drafts SET status=?, approved_by=?, job_id=?, updated_at=datetime('now') WHERE id=?",
-                "approved", adm.Id, changes > 0 ? jobId : H.L(d["job_id"]), id);
-            log(adm.Id, "social_draft_publish", "draft " + id + (changes > 0 ? " queued" : " already_queued"));
-            return J(new { ok = true, queued = changes > 0 });
+                scheduled ? "scheduled" : "approved", adm.Id, changes > 0 ? jobId : H.L(d["job_id"]), id);
+            log(adm.Id, "social_draft_publish", "draft " + id + (changes > 0 ? (scheduled ? " scheduled @ " + nextAt.str : " queued") : " already_queued"));
+            return J(new { ok = true, queued = changes > 0, scheduled, scheduled_at = scheduled ? nextAt.str : null });
         }));
 
         app.MapPost("/api/admin/content/social/drafts/{id:long}/cancel", (HttpRequest req, long id) => gate(req, "cc_social", adm =>
         {
-            db.Execute("UPDATE social_drafts SET status='cancelled', updated_at=datetime('now') WHERE id=? AND status IN ('draft','approved','retrying')", id);
+            db.Execute("UPDATE social_drafts SET status='cancelled', updated_at=datetime('now') WHERE id=? AND status IN ('draft','approved','scheduled','retrying')", id);
             db.Execute("UPDATE content_jobs SET status='cancelled', updated_at=datetime('now') WHERE idempotency_key=? AND status IN ('pending','retrying')", "socialdraft:" + id);
             log(adm.Id, "social_draft_cancel", "draft " + id);
             return J(new { ok = true });
@@ -160,6 +167,28 @@ public static class SocialPublishing
             var n = await SocialDispatcher.DrainOnce(db, 25);
             return J(new { ok = true, delivered = n });
         });
+    }
+
+    /// <summary>Resolve when a draft should fire: a future scheduled_at (UTC) → that time; else now.</summary>
+    static (DateTime at, string str) PublishAt(string? scheduledAt)
+    {
+        if (!string.IsNullOrWhiteSpace(scheduledAt) &&
+            DateTime.TryParse(scheduledAt, System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal, out var dt)
+            && dt > DateTime.UtcNow)
+            return (dt, dt.ToString("yyyy-MM-dd HH:mm:ss"));
+        var now = DateTime.UtcNow;
+        return (now, now.ToString("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    /// <summary>Append UTM attribution to the SHARED link (the stored canonical stays clean). Operator-tunable
+    /// via site_settings (social_utm_enabled / social_utm_campaign); a link already carrying utm_* is left alone.</summary>
+    static string UtmLink(Db db, string url, string platform)
+    {
+        if (Settings.Str(db, "social_utm_enabled", "1") != "1" || url.Contains("utm_")) return url;
+        var campaign = Settings.Str(db, "social_utm_campaign", "social");
+        var sep = url.Contains('?') ? "&" : "?";
+        return url + sep + "utm_source=" + Uri.EscapeDataString(platform) + "&utm_medium=social&utm_campaign=" + Uri.EscapeDataString(campaign);
     }
 
     /// <summary>Platform-tailored copy. LinkedIn-style long form isn't here (approval-gated); the live

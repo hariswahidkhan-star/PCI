@@ -1,0 +1,183 @@
+using System.Security.Cryptography;
+using PCI.Backend.Core;
+using Xunit;
+
+namespace PCI.Backend.Tests;
+
+public class StorageTests
+{
+    // valid PNG magic + unique payload so content-addressing never collides across tests
+    internal static byte[] PngBytes() =>
+        new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A }
+            .Concat(Guid.NewGuid().ToByteArray()).ToArray();
+
+    [Theory]
+    [InlineData(null, "no_file")]
+    [InlineData("", "no_file")]
+    [InlineData("hello", "not_a_data_uri")]
+    [InlineData("DATA:image/png;base64,AAAA", "not_a_data_uri")]          // prefix is case-sensitive
+    [InlineData("data:image/png", "malformed_data_uri")]                  // no comma
+    [InlineData("data:image/pngbase64,iVBORw0KGgo=", "malformed_data_uri")] // no semicolon
+    [InlineData("data:image/png,abc;def", "malformed_data_uri")]          // comma before semicolon
+    [InlineData("data:text/plain;base64,aGVsbG8=", "file_type_not_allowed")]
+    // SEC-4: scriptable formats are refused by the declared-MIME allow-list before any decode.
+    [InlineData("data:image/svg+xml;base64,PHN2Zy8+", "file_type_not_allowed")]        // "<svg/>"
+    [InlineData("data:text/html;base64,PHNjcmlwdD4=", "file_type_not_allowed")]         // "<script>"
+    [InlineData("data:image/png;base64,%%%", "invalid_base64")]
+    [InlineData("data:image/png;base64,aGVsbG8=", "content_mime_mismatch")] // "hello" is not a PNG
+    // SEC-4: an SVG payload smuggled under an allowed PNG MIME is caught by content sniffing.
+    [InlineData("data:image/png;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxzY3JpcHQvPjwvc3ZnPg==", "content_mime_mismatch")]
+    public void DecodeDataUri_ReportsEachRejection(string? uri, string expectedError)
+    {
+        var (bytes, _, error) = Storage.DecodeDataUri(uri);
+        Assert.Null(bytes);
+        Assert.Equal(expectedError, error);
+    }
+
+    [Fact]
+    public void DecodeDataUri_RejectsOversizedPayloadBeforeDecoding()
+    {
+        // > (MaxBytes + 1024) * 4/3 base64 chars trips the pre-allocation guard
+        var big = "data:image/png;base64," + new string('A', 4_200_000);
+        var (bytes, _, error) = Storage.DecodeDataUri(big);
+        Assert.Null(bytes);
+        Assert.Equal("file_too_large", error);
+    }
+
+    [Fact]
+    public void DecodeDataUri_AcceptsSniffedPngAndPdf()
+    {
+        var png = PngBytes();
+        var (bytes, mime, error) = Storage.DecodeDataUri("data:image/png;base64," + Convert.ToBase64String(png));
+        Assert.Null(error);
+        Assert.Equal("image/png", mime);
+        Assert.Equal(png, bytes);
+
+        var pdf = System.Text.Encoding.ASCII.GetBytes("%PDF-1.4 unit test");
+        var (pbytes, pmime, perror) = Storage.DecodeDataUri("data:application/pdf;base64," + Convert.ToBase64String(pdf));
+        Assert.Null(perror);
+        Assert.Equal("application/pdf", pmime);
+        Assert.Equal(pdf, pbytes);
+    }
+
+    [Fact]
+    public void PutGet_RoundTripsAndEncryptsAtRest()
+    {
+        var plain = PngBytes();
+        var obj = Storage.Put(plain, "image/png", "evidence");
+        Assert.StartsWith("local:evidence/", obj.Reference);
+        Assert.Equal(plain.Length, obj.SizeBytes);
+        Assert.Equal(Convert.ToHexString(SHA256.HashData(plain)).ToLowerInvariant(), obj.Sha256);
+        Assert.DoesNotContain(TestEnv.StorageRoot, obj.Reference);   // reference never leaks a path
+
+        // on disk: envelope-encrypted, never the raw PII bytes
+        var onDisk = File.ReadAllBytes(Path.Combine(TestEnv.StorageRoot, obj.Reference["local:".Length..]));
+        Assert.True(Security.IsEncryptedBlob(onDisk));
+        Assert.NotEqual(plain, onDisk);
+
+        var got = Storage.Get(obj.Reference);
+        Assert.NotNull(got);
+        Assert.Equal(plain, got!.Value.bytes);
+        Assert.Equal("image/png", got.Value.mime);
+
+        Assert.Equal(obj.Reference, Storage.Put(plain, "image/png", "evidence").Reference);  // content-addressed dedup
+    }
+
+    /// <summary>
+    /// A content-addressed store that dedupes on the PLAINTEXT hash while persisting CIPHERTEXT is
+    /// only self-consistent while the key stays the same. Keys legitimately change — an explicit
+    /// CREDENTIAL_ENCRYPTION_KEY set for the first time, a rotation, or a move between database
+    /// providers (the derived fallback mixes in DATABASE_FILE and MYSQL_DATABASE).
+    ///
+    /// After such a change every existing artefact is undecryptable. The dangerous part was not that
+    /// — it was that re-uploading byte-identical content took the same content-addressed path, saw a
+    /// file already there, and SKIPPED the write. The store then served file_missing for ever with
+    /// no signal and no route back short of deleting files by hand. This test simulates a stale file
+    /// (unreadable ciphertext at the exact content-addressed path) and proves Put repairs it.
+    /// </summary>
+    [Fact]
+    public void Put_Repairs_A_File_It_Cannot_Read_Back()
+    {
+        var bytes = System.Text.Encoding.UTF8.GetBytes("%PDF-1.4 a document that will be stored twice");
+        var stored = Storage.Put(bytes, "application/pdf", "documents");
+        Assert.NotNull(Storage.Get(stored.Reference)?.bytes);
+
+        // Corrupt the stored artefact exactly as a key change would: the bytes on disk are no longer
+        // decryptable, while the path — derived from the plaintext hash — is unchanged.
+        var rel = stored.Reference.Split(':', 2)[1];
+        var full = Path.Combine(Environment.GetEnvironmentVariable("STORAGE_ROOT") ?? "./storage", rel);
+        Assert.True(File.Exists(full));
+        var corrupt = File.ReadAllBytes(full);
+        corrupt[^1] ^= 0xFF;                       // breaks the AES-GCM authentication tag
+        File.WriteAllBytes(full, corrupt);
+        Assert.Null(Storage.Get(stored.Reference)?.bytes);   // unreadable, as after a key change
+
+        // Re-uploading the SAME content must repair it rather than dedupe against the broken file.
+        var again = Storage.Put(bytes, "application/pdf", "documents");
+        Assert.Equal(stored.Reference, again.Reference);     // still content-addressed
+        Assert.Equal(bytes, Storage.Get(again.Reference)?.bytes);
+    }
+
+    [Fact]
+    public void Put_Still_Dedupes_A_Healthy_File()
+    {
+        var bytes = System.Text.Encoding.UTF8.GetBytes("%PDF-1.4 dedupe me");
+        var first = Storage.Put(bytes, "application/pdf", "documents");
+        var full = Path.Combine(Environment.GetEnvironmentVariable("STORAGE_ROOT") ?? "./storage", first.Reference.Split(':', 2)[1]);
+        var writtenAt = File.GetLastWriteTimeUtc(full);
+
+        var second = Storage.Put(bytes, "application/pdf", "documents");
+
+        // Same address, and the healthy file was left alone — the dedupe optimisation still holds.
+        Assert.Equal(first.Reference, second.Reference);
+        Assert.Equal(writtenAt, File.GetLastWriteTimeUtc(full));
+        Assert.Equal(bytes, Storage.Get(second.Reference)?.bytes);
+    }
+
+    [Fact]
+    public void Get_And_Deletes_RefusePathTraversal()
+    {
+        Assert.Null(Storage.Get("local:../secrets.txt"));
+        Assert.Null(Storage.Get("local:/etc/passwd"));
+        Assert.Null(Storage.Get("noprefix"));
+        Assert.Null(Storage.Get(null));
+        Assert.False(Storage.DeleteRef("local:../../etc/passwd"));
+        Assert.False(Storage.DeleteOne(@"local:evidence\..\x.png"));
+        Assert.False(Storage.DeleteOne("noprefix"));
+        Assert.False(Storage.DeleteOne(""));
+    }
+
+    [Fact]
+    public void DeleteOne_RemovesTheObject()
+    {
+        var obj = Storage.Put(PngBytes(), "image/png", "evidence");
+        var full = Path.Combine(TestEnv.StorageRoot, obj.Reference["local:".Length..]);
+        Assert.True(File.Exists(full));
+        Assert.True(Storage.DeleteOne(obj.Reference));
+        Assert.False(File.Exists(full));
+        Assert.Null(Storage.Get(obj.Reference));
+        Assert.True(Storage.DeleteOne(obj.Reference));   // already gone still reports success
+    }
+
+    [Fact]
+    public void PurgeOlderThan_SkipsFreshProtectedAndForeignFiles()
+    {
+        string PathOf(Storage.StoredObject o) => Path.Combine(TestEnv.StorageRoot, o.Reference["local:".Length..]);
+        var old = DateTime.UtcNow.AddDays(-40);
+
+        var expired = Storage.Put(PngBytes(), "image/png", "evidence");
+        File.SetLastWriteTimeUtc(PathOf(expired), old);
+        var fresh = Storage.Put(PngBytes(), "image/png", "evidence");
+        var protectedDoc = Storage.Put(PngBytes(), "image/png", "honorary-idv");   // protected category
+        File.SetLastWriteTimeUtc(PathOf(protectedDoc), old);
+        var stray = Path.Combine(TestEnv.StorageRoot, "evidence", "operator-notes.txt");  // not content-addressed
+        File.WriteAllText(stray, "keep me");
+        File.SetLastWriteTimeUtc(stray, old);
+
+        Assert.Equal(1, Storage.PurgeOlderThan(30));
+        Assert.False(File.Exists(PathOf(expired)));
+        Assert.True(File.Exists(PathOf(fresh)));
+        Assert.True(File.Exists(PathOf(protectedDoc)));
+        Assert.True(File.Exists(stray));
+    }
+}

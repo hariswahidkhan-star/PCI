@@ -91,11 +91,21 @@ public static class AdminSeo
             var b = await H.Body(ctx.Request);
             var from = PathRedirects.Norm(H.GetS(b, "from_path"));
             var to = (H.GetS(b, "to_url") ?? "").Trim();
-            var status = (int)(H.GetNum(b, "status") ?? 301); if (status is not (301 or 302 or 308)) status = 301;
+            var status = (int)(H.GetNum(b, "status") ?? 301); if (status is not (301 or 302 or 308 or 410)) status = 301;
             var note = (H.GetS(b, "note") ?? "").Trim(); if (note.Length > 500) note = note[..500];
             if (from.Length < 2) return Results.Json(new { error = "bad_from", message = "from_path must be a site path like /old-page.html" }, statusCode: 400);
-            if (to.Length == 0) return Results.Json(new { error = "bad_to" }, statusCode: 400);
             if (Redirects.IsPrivatePath(from)) return Results.Json(new { error = "private_path", message = "private/app paths cannot be redirected" }, statusCode: 400);
+            // 410 Gone: the URL is permanently removed. There is no target, so the chain/self-redirect
+            // guards don't apply; store an empty target and return early.
+            if (status == 410)
+            {
+                db.Execute("DELETE FROM seo_redirects WHERE from_path=?", from);
+                db.Execute("INSERT INTO seo_redirects(from_path,to_url,status,active,note) VALUES(?,?,410,1,?)", from, "", note);
+                PathRedirects.Bump();
+                log(actorId, "seo.redirect_set", $"{from} -> 410 Gone");
+                return J(new { ok = true });
+            }
+            if (to.Length == 0) return Results.Json(new { error = "bad_to" }, statusCode: 400);
             // single-hop guarantee: no self-redirects, and the target must not itself be redirected (chain)
             if (string.Equals(PathRedirects.Norm(to), from, StringComparison.OrdinalIgnoreCase))
                 return Results.Json(new { error = "self_redirect" }, statusCode: 400);

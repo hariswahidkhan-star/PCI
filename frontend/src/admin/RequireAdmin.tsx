@@ -1,10 +1,9 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { useAdminAuth } from './AdminAuth'
-import ChangePassword from './pages/ChangePassword'
 
-/** Gate for the admin console: wait for the token check, force login, then force a password
- *  change if the account is flagged (must_change_pw) before any section is reachable. */
+/** Gate for the admin console: wait for the token check, then require a signed-in admin. Password
+ *  changes are self-service in Settings → Security — there is no forced full-screen prompt on sign-in. */
 export default function RequireAdmin({ children }: { children: ReactNode }) {
   const { me, ready } = useAdminAuth()
   const loc = useLocation()
@@ -17,6 +16,5 @@ export default function RequireAdmin({ children }: { children: ReactNode }) {
     )
   }
   if (!me) return <Navigate to="/login" replace state={{ from: loc.pathname }} />
-  if (me.must_change_pw) return <ChangePassword />
   return <>{children}</>
 }

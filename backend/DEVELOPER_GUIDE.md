@@ -281,7 +281,9 @@ hash** is stored server-side (the raw token is never persisted).
 - `POST /api/admin/auth/login` with email + password → issues an admin session in `admin_sessions`.
 - `Auth.AdminFromReq` accepts **either** a `Bearer <admin-session>` token **or**, for backward compatibility, a
   legacy environment token (`ADMIN_TOKEN`) which resolves to the bootstrap owner (id 0).
-- First login is forced through a password change when `must_change_pw = 1`.
+- `must_change_pw = 1` is advisory only — it marks an admin still on a seeded/temp password (surfaced by
+  `/api/admin/me` and the deploy status endpoint) but never blocks the console. Password changes are
+  self-service in Settings → Security.
 
 ### 8.3 Context records
 `Auth.cs` exposes two immutable records used throughout the endpoints:

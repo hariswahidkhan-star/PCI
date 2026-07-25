@@ -6,6 +6,8 @@ import { api } from '../api/client'
 import { startCheckout, checkoutErrorMessage } from '../api/checkout'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
 import FoundingCard from '../components/FoundingCard'
+import { ViewDownloadActions } from '../components/documents/DocumentActions'
+import { studentToken } from '../files'
 import { fmtDate, fmtMoney, titleCase } from '../format'
 import { openPrintable, escapeHtml as e } from '../print'
 import { useT } from '../i18n'
@@ -49,6 +51,15 @@ function PlansCard() {
   const [params] = useSearchParams()
   const [certSel, setCertSel] = useState('')
   const [code, setCode] = useState('')
+  const [codeProduct, setCodeProduct] = useState<'membership' | 'exam' | 'bundle'>('exam')
+  const [codePreview, setCodePreview] = useState<{
+    valid: boolean
+    message?: string
+    applies_to?: string
+    code_amount?: number
+    final_amount?: number
+    savings?: number
+  } | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
 
@@ -101,8 +112,19 @@ function PlansCard() {
       // Validate a discount/founding code BEFORE opening Stripe, for THIS product — so an invalid or
       // wrong-product code is caught here instead of silently charging full price at checkout.
       const c = code.trim()
+      const certForProduct = product === 'exam' || product === 'bundle' ? certSel || undefined : product === 'recert' ? opts.cert : undefined
       if (c) {
-        const v = await api.post<{ valid: boolean; message?: string }>('/api/validate-code', { code: c, product, email: me!.user.email })
+        const validateBody: Record<string, unknown> = { code: c, product, email: me!.user.email }
+        if (certForProduct) validateBody.cert = certForProduct
+        const v = await api.post<{
+          valid: boolean
+          message?: string
+          applies_to?: string
+          code_amount?: number
+          final_amount?: number
+          savings?: number
+        }>('/api/validate-code', validateBody)
+        setCodePreview(v)
         if (!v.valid) {
           setErr(v.message || t('billing.codeInvalid'))
           setBusy(null)
@@ -112,13 +134,33 @@ function PlansCard() {
       await startCheckout({
         product,
         email: me!.user.email,
-        cert: product === 'exam' || product === 'bundle' ? certSel || undefined : product === 'recert' ? opts.cert : undefined,
+        cert: certForProduct,
         code: c || undefined,
         first: me!.user.first_name ?? undefined,
         last: me!.user.last_name ?? undefined,
       })
     } catch (e2) {
       setErr(checkoutErrorMessage(e2))
+      setBusy(null)
+    }
+  }
+
+  async function previewCode() {
+    const value = code.trim()
+    if (!value) return
+    setBusy('code-preview')
+    setErr(null)
+    setCodePreview(null)
+    try {
+      setCodePreview(await api.post<{ valid: boolean; message?: string; code_amount?: number; final_amount?: number }>('/api/validate-code', {
+        code: value,
+        product: codeProduct,
+        email: me!.user.email,
+        cert: codeProduct === 'exam' || codeProduct === 'bundle' ? certSel || undefined : undefined,
+      }))
+    } catch (e2) {
+      setErr(e2 instanceof Error ? e2.message : t('billing.codeInvalid'))
+    } finally {
       setBusy(null)
     }
   }
@@ -255,11 +297,43 @@ function PlansCard() {
           style={{ maxWidth: 220 }}
           placeholder={t('billing.discountCodePlaceholder')}
           value={code}
-          onChange={(ev) => setCode(ev.target.value)}
+          onChange={(ev) => { setCode(ev.target.value); setCodePreview(null) }}
           aria-label={t('billing.discountCodeAria')}
         />
+        <select
+          value={codeProduct}
+          onChange={(ev) => { setCodeProduct(ev.target.value as typeof codeProduct); setCodePreview(null) }}
+          aria-label="Purchase to preview"
+          style={{ maxWidth: 180 }}
+        >
+          <option value="membership">Membership</option>
+          <option value="exam">Exam fee</option>
+          <option value="bundle">Membership + exam</option>
+        </select>
+        <button className="btn ghost sm" disabled={busy !== null || !code.trim()} onClick={previewCode}>
+          {busy === 'code-preview' ? 'Checking…' : 'Check code'}
+        </button>
         <span className="muted small">{t('billing.discountApplyIntro')}<strong>{t('billing.discountScopeMembership')}</strong>{t('billing.discountSep1')}<strong>{t('billing.discountScopeExam')}</strong>{t('billing.discountSep2')}<strong>{t('billing.discountScopeBoth')}</strong>{t('billing.discountApplyOutro')}</span>
       </div>
+      {codePreview && (
+        <div className={'notice' + (codePreview.valid ? '' : ' err')} role="status" style={{ marginTop: '.65rem' }}>
+          {codePreview.valid ? (
+            <>
+              <strong>Discount preview:</strong>{' '}
+              applies to {codePreview.applies_to === 'exam' ? 'exam fee' : codePreview.applies_to === 'membership' ? 'membership' : 'membership and exam fees'}
+              {codePreview.code_amount != null && codePreview.final_amount != null && (
+                <>
+                  {' '}· savings {fmtMoney(codePreview.code_amount ?? codePreview.savings ?? 0, pricing?.currency ?? 'USD')}
+                  {' '}· final amount {fmtMoney(codePreview.final_amount, pricing?.currency ?? 'USD')}
+                </>
+              )}
+              {codePreview.message ? <> — {codePreview.message}</> : null}
+            </>
+          ) : (
+            codePreview.message || t('billing.codeInvalid')
+          )}
+        </div>
+      )}
     </Card>
     </div>
   )
@@ -413,8 +487,20 @@ export default function Billing() {
                   <td>{fmtMoney(p.final_amount, p.currency)}</td>
                   <td><StatusBadge status={p.payment_status} /></td>
                   <td>
-                    {p.payment_status === 'paid' && (
-                      <button className="btn ghost sm" onClick={() => receipt(p)}>{t('billing.receipt')}</button>
+                    {/* Print stays for a quick paper copy; the PDF is the durable, audited artefact
+                        served over the authenticated receipt endpoint (own payments only). */}
+                    {['paid', 'waived', 'partially_refunded'].includes(p.payment_status) && (
+                      <div className="row" style={{ gap: '.35rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                        {p.payment_status === 'paid' && (
+                          <button className="btn ghost sm" onClick={() => receipt(p)}>{t('billing.receipt')}</button>
+                        )}
+                        <ViewDownloadActions
+                          info={{ title: `${t('billing.receiptHeading')} ${p.reference || p.id}`, filename: `pci-receipt-${p.reference || p.id}.pdf`, mime: 'application/pdf' }}
+                          inlineUrl={`/api/me/payments/${p.id}/receipt.pdf?inline=1`}
+                          downloadUrl={`/api/me/payments/${p.id}/receipt.pdf`}
+                          token={studentToken()}
+                        />
+                      </div>
                     )}
                   </td>
                 </tr>

@@ -34,6 +34,25 @@ public static class Casework
         IResult J(object o) => Results.Json(o);
         UserCtx? User(HttpRequest r) => Auth.UserFromReq(r, db);
 
+        // Serve an evidence value that is either a Storage reference (current) or a legacy inline
+        // data URI (early rows). Shared by the admin review routes and the student view-back routes
+        // so both sides of a case see exactly the same bytes. `inline` controls Content-Disposition
+        // so the in-app viewer can render without forcing a save dialog.
+        IResult ServeEvidence(string? reference, string? filename, bool inline)
+        {
+            if (string.IsNullOrEmpty(reference)) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (reference.StartsWith("local:") || reference.StartsWith("s3:"))
+            {
+                var got = Storage.Get(reference);
+                if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+                if (inline)
+                    return Results.File(got.Value.bytes, got.Value.mime); // no filename → inline display
+                return Results.Bytes(got.Value.bytes, got.Value.mime, filename);
+            }
+            return Results.Content(reference, "text/plain"); // legacy inline data URI
+        }
+        static bool Inline(HttpRequest r) => r.Query["inline"].ToString() == "1";
+
         // ─────────────────────────── APPEALS (student) ───────────────────────────
         app.MapPost("/api/me/appeals", async (HttpContext ctx) =>
         {
@@ -89,6 +108,15 @@ public static class Casework
             return J(new { rows = db.Query("SELECT id,attempt_id,credential_id,type,reason,evidence_name,status,submitted_at,decision,decided_at FROM appeals WHERE user_id=? ORDER BY id DESC", u.Id) });
         });
 
+        // Student: view/download back the evidence attached to their OWN appeal (ownership enforced).
+        app.MapGet("/api/me/appeals/{id}/evidence", (HttpContext ctx, long id) =>
+        {
+            var u = User(ctx.Request); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var r = db.QueryOne("SELECT evidence_name,evidence_data FROM appeals WHERE id=? AND user_id=?", id, u.Id);
+            if (r is null || r["evidence_data"] is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            return ServeEvidence(H.Str(r["evidence_data"]), H.Str(r["evidence_name"]), Inline(ctx.Request));
+        });
+
         // ─────────────────────────── ACCOMMODATIONS (student) ───────────────────────────
         app.MapPost("/api/me/accommodations", async (HttpContext ctx) =>
         {
@@ -121,6 +149,15 @@ public static class Casework
         {
             var u = User(ctx.Request); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             return J(new { rows = db.Query("SELECT id,request_type,description,evidence_name,status,approved_extra_minutes,admin_note,created_at,decided_at FROM accommodation_requests WHERE user_id=? ORDER BY id DESC", u.Id) });
+        });
+
+        // Student: view/download back the evidence attached to their OWN accommodation request.
+        app.MapGet("/api/me/accommodations/{id}/evidence", (HttpContext ctx, long id) =>
+        {
+            var u = User(ctx.Request); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var r = db.QueryOne("SELECT evidence_name,evidence_data FROM accommodation_requests WHERE id=? AND user_id=?", id, u.Id);
+            if (r is null || r["evidence_data"] is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            return ServeEvidence(H.Str(r["evidence_data"]), H.Str(r["evidence_name"]), Inline(ctx.Request));
         });
 
         // ─────────────────────────── SUPPORT ATTACHMENTS ───────────────────────────
@@ -168,16 +205,39 @@ public static class Casework
             return Results.Json(new { error = "not_found" }, statusCode: 404);
         });
 
+        // Staff (support inbox): list a ticket's attachments. Students could already upload and
+        // re-download their own files, but the inbox had no way to see them — this closes that gap.
+        app.MapGet("/api/support/tickets/{id}/attachments", (HttpRequest req, long id) => gate(req, "inbox", _ =>
+        {
+            if (db.QueryOne("SELECT id FROM tickets WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            return J(new { rows = db.Query("SELECT id,filename,mime,size_bytes,user_id,created_at FROM support_attachments WHERE ticket_id=? ORDER BY id", id) });
+        }));
+
+        // Staff (support inbox): stream one attachment. Every staff read of a student file is logged.
+        app.MapGet("/api/support/tickets/{tid}/attachments/{aid}", (HttpContext ctx, long tid, long aid) => gate(ctx.Request, "inbox", adm =>
+        {
+            var a = db.QueryOne("SELECT mime,storage_ref,data_uri,filename FROM support_attachments WHERE id=? AND ticket_id=?", aid, tid);
+            if (a is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            log(adm.Id, "ticket_attachment_view", $"ticket {tid} attachment {aid} '{H.Str(a["filename"])}'");
+            var reference = H.Str(a["storage_ref"]);
+            if (!string.IsNullOrEmpty(reference)) return ServeEvidence(reference, H.Str(a["filename"]), Inline(ctx.Request));
+            var legacy = H.Str(a["data_uri"]);
+            if (!string.IsNullOrEmpty(legacy)) return Results.Content(legacy, "text/plain");
+            return Results.Json(new { error = "not_found" }, statusCode: 404);
+        }));
+
         // ─────────────────────────── CERTIFICATE DATA (student) ───────────────────────────
         // Returns the data the portal renders into the certificate document. A certificate is only
         // "active" while the credential is active AND unexpired — same rule as the public verify.
         app.MapGet("/api/me/certificate", (HttpContext ctx) =>
         {
             var u = User(ctx.Request); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var requested = ctx.Request.Query["id"].ToString().Trim();
             var c = db.QueryOne(@"SELECT ic.credential_id,ic.holder_name,ic.credential,ic.status,ic.issued_at,ic.expires_at,ic.attempt_id,ic.certificate_wording,
+                       COALESCE(ic.certification_id,1) certification_id,ct.code certification_code,
                        ct.name certification_name, ct.acronym certification_acronym
                 FROM issued_credentials ic LEFT JOIN certifications ct ON ct.id=COALESCE(ic.certification_id,1)
-                WHERE ic.user_id=? ORDER BY ic.id DESC", u.Id);
+                WHERE ic.user_id=? AND (?='' OR ic.credential_id=?) ORDER BY ic.id DESC", u.Id, requested, requested);
             if (c is null) return J(new { found = false });
             var status = H.Str(c["status"]) ?? "active";
             var expires = H.Str(c["expires_at"]);
@@ -188,6 +248,7 @@ public static class Casework
             {
                 found = true, state, valid = state == "active",
                 credential_id = c["credential_id"], holder_name = c["holder_name"], credential = c["credential"],
+                certification_id = c["certification_id"], certification_code = c["certification_code"],
                 certification_name = c["certification_name"], certification_acronym = c["certification_acronym"],
                 certificate_wording = c["certificate_wording"],
                 issued_at = c["issued_at"], expires_at = c["expires_at"], registration_no = regNo,
@@ -201,18 +262,12 @@ public static class Casework
                        u.email,u.first_name,u.last_name
                 FROM appeals ap LEFT JOIN users u ON u.id=ap.user_id ORDER BY (ap.status IN ('submitted','under_review')) DESC, ap.id DESC") })));
 
-        app.MapGet("/api/admin/appeals/{id}/evidence", (HttpRequest req, long id) => gate(req, "tickets", _ =>
+        app.MapGet("/api/admin/appeals/{id}/evidence", (HttpContext ctx, long id) => gate(ctx.Request, "tickets", adm =>
         {
-            var r = db.QueryOne("SELECT evidence_name,evidence_data FROM appeals WHERE id=?", id);
+            var r = db.QueryOne("SELECT user_id,evidence_name,evidence_data FROM appeals WHERE id=?", id);
             if (r is null || r["evidence_data"] is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-            var reference = H.Str(r["evidence_data"]);
-            if (reference is not null && (reference.StartsWith("local:") || reference.StartsWith("s3:")))
-            {
-                var got = Storage.Get(reference);
-                if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-                return Results.Bytes(got.Value.bytes, got.Value.mime, H.Str(r["evidence_name"]));
-            }
-            return Results.Content(reference ?? "", "text/plain"); // legacy inline data URI
+            log(adm.Id, "appeal_evidence_view", $"appeal {id} (user {H.Ln(r["user_id"])})");
+            return ServeEvidence(H.Str(r["evidence_data"]), H.Str(r["evidence_name"]), Inline(ctx.Request));
         }));
 
         app.MapPost("/api/admin/appeals/{id}/decide", (HttpContext ctx, long id) => gate(ctx.Request, "tickets", adm =>
@@ -235,18 +290,12 @@ public static class Casework
                        u.email,u.first_name,u.last_name
                 FROM accommodation_requests ar LEFT JOIN users u ON u.id=ar.user_id ORDER BY (ar.status IN ('submitted','under_review')) DESC, ar.id DESC") })));
 
-        app.MapGet("/api/admin/accommodations/{id}/evidence", (HttpRequest req, long id) => gate(req, "tickets", _ =>
+        app.MapGet("/api/admin/accommodations/{id}/evidence", (HttpContext ctx, long id) => gate(ctx.Request, "tickets", adm =>
         {
-            var r = db.QueryOne("SELECT evidence_name,evidence_data FROM accommodation_requests WHERE id=?", id);
+            var r = db.QueryOne("SELECT user_id,evidence_name,evidence_data FROM accommodation_requests WHERE id=?", id);
             if (r is null || r["evidence_data"] is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-            var reference = H.Str(r["evidence_data"]);
-            if (reference is not null && (reference.StartsWith("local:") || reference.StartsWith("s3:")))
-            {
-                var got = Storage.Get(reference);
-                if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-                return Results.Bytes(got.Value.bytes, got.Value.mime, H.Str(r["evidence_name"]));
-            }
-            return Results.Content(reference ?? "", "text/plain"); // legacy inline data URI
+            log(adm.Id, "accommodation_evidence_view", $"request {id} (user {H.Ln(r["user_id"])})");
+            return ServeEvidence(H.Str(r["evidence_data"]), H.Str(r["evidence_name"]), Inline(ctx.Request));
         }));
 
         app.MapPost("/api/admin/accommodations/{id}/decide", (HttpContext ctx, long id) => gate(ctx.Request, "tickets", adm =>
@@ -278,18 +327,12 @@ public static class Casework
             return J(new { rows });
         }));
 
-        app.MapGet("/api/admin/cpd/{id}/evidence", (HttpRequest req, long id) => gate(req, "members", _ =>
+        app.MapGet("/api/admin/cpd/{id}/evidence", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
-            var r = db.QueryOne("SELECT evidence_name,evidence_data FROM cpd_entries WHERE id=?", id);
+            var r = db.QueryOne("SELECT user_id,evidence_name,evidence_data FROM cpd_entries WHERE id=?", id);
             if (r is null || r["evidence_data"] is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-            var reference = H.Str(r["evidence_data"]);
-            if (reference is not null && (reference.StartsWith("local:") || reference.StartsWith("s3:")))
-            {
-                var got = Storage.Get(reference);
-                if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-                return Results.Bytes(got.Value.bytes, got.Value.mime, H.Str(r["evidence_name"]));
-            }
-            return Results.Content(reference ?? "", "text/plain"); // legacy inline data URI
+            log(adm.Id, "cpd_evidence_view", $"entry {id} (user {H.Ln(r["user_id"])})");
+            return ServeEvidence(H.Str(r["evidence_data"]), H.Str(r["evidence_name"]), Inline(ctx.Request));
         }));
 
         app.MapPost("/api/admin/cpd/{id}/review", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
@@ -307,6 +350,7 @@ public static class Casework
         app.MapPost("/api/me/cpd/{id}/evidence", async (HttpContext ctx, long id) =>
         {
             var u = User(ctx.Request); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            if (u.Impersonated) return Results.Json(new { error = "impersonation_readonly", message = "This action is disabled in support view." }, statusCode: 403);
             var e = db.QueryOne("SELECT id,status FROM cpd_entries WHERE id=? AND user_id=?", id, u.Id);
             if (e is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var b = await H.Body(ctx.Request);
@@ -316,6 +360,15 @@ public static class Casework
             db.Execute("UPDATE cpd_entries SET evidence_name=?, evidence_data=?, status='recorded' WHERE id=?", clean, reference, id);
             log(u.Id, "cpd_evidence", $"entry {id} file '{clean}'");
             return J(new { ok = true, filename = clean });
+        });
+
+        // Student: view/download back the evidence attached to their OWN CPD entry.
+        app.MapGet("/api/me/cpd/{id}/evidence", (HttpContext ctx, long id) =>
+        {
+            var u = User(ctx.Request); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var r = db.QueryOne("SELECT evidence_name,evidence_data FROM cpd_entries WHERE id=? AND user_id=?", id, u.Id);
+            if (r is null || r["evidence_data"] is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            return ServeEvidence(H.Str(r["evidence_data"]), H.Str(r["evidence_name"]), Inline(ctx.Request));
         });
     }
 }

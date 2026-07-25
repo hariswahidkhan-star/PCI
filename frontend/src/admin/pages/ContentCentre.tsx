@@ -23,19 +23,19 @@ interface Capability { id: number; platform_key: string; platform: string; kind:
 const TABS = ['Dashboard', 'Blog posts', 'Taxonomy', 'Social', 'Syndication', 'Import', 'Backlinks', 'Analytics', 'Distribution', 'AI Studio'] as const
 
 export default function ContentCentre() {
-  const { can } = useAdminAuth()
+  const { can, me } = useAdminAuth()
   const [tab, setTab] = useState<(typeof TABS)[number]>('Dashboard')
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       <div>
         <h1>Content, SEO &amp; Distribution</h1>
-        <p className="muted">A dynamic blog CMS with editorial workflow, server-rendered public articles, SEO, sitemaps and syndication feeds, an honest integration capability registry, and an assist-only AI studio for PCL-AI, PFL-AI and PDL-AI content.</p>
+        <p className="muted">A dynamic blog CMS with editorial workflow, server-rendered public articles, SEO, sitemaps and syndication feeds, an honest integration capability registry, and an assist-only AI studio for PCL-AI, PFL-AI and PML-AI content.</p>
       </div>
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
         {TABS.map((t) => (<button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>))}
       </div>
       {tab === 'Dashboard' && <DashboardTab />}
-      {tab === 'Blog posts' && <PostsTab canEdit={can('cc_edit') || can('cc_author')} canPublish={can('cc_publish')} />}
+      {tab === 'Blog posts' && <PostsTab canEdit={can('cc_edit') || can('cc_author')} canPublish={can('cc_publish')} canReview={can('cc_review')} canArchive={can('cc_archive')} canDelete={can('cc_delete')} canLinks={can('cc_links')} isOwner={!!me?.is_owner} />}
       {tab === 'Taxonomy' && <TaxonomyTab canEdit={can('cc_edit')} />}
       {tab === 'Social' && <SocialTab canSocial={can('cc_social')} />}
       {tab === 'Syndication' && <SyndicationTab canSyndicate={can('cc_syndicate')} />}
@@ -89,17 +89,19 @@ function StatusPill({ status }: { status: string }) {
   return <Badge tone={tone as never}>{status.replace(/_/g, ' ')}</Badge>
 }
 
-function PostsTab({ canEdit, canPublish }: { canEdit: boolean; canPublish: boolean }) {
+interface PostPerms { canEdit: boolean; canPublish: boolean; canReview: boolean; canArchive: boolean; canDelete: boolean; canLinks: boolean; isOwner: boolean }
+function PostsTab(perms: PostPerms) {
+  const { canEdit } = perms
   const [statusFilter, setStatusFilter] = useState('')
   const [editing, setEditing] = useState<number | 'new' | null>(null)
   const { data, loading, error, refetch } = useAdminQuery<{ rows: PostRow[] }>('/api/admin/content/posts' + (statusFilter ? '?status=' + statusFilter : ''))
-  if (editing !== null) return <PostEditor id={editing} canPublish={canPublish} onClose={() => { setEditing(null); refetch() }} />
+  if (editing !== null) return <PostEditor id={editing} perms={perms} onClose={() => { setEditing(null); refetch() }} />
   return (
-    <Card title="Blog posts" action={canEdit ? <button className="btn sm" onClick={() => setEditing('new')}>New post</button> : null}>
+    <Card title="Blog &amp; news posts" action={canEdit ? <button className="btn sm" onClick={() => setEditing('new')}>New post</button> : null}>
       <div className="row" style={{ gap: '.4rem', marginBottom: '.6rem' }}>
         <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
           <option value="">All statuses</option>
-          {['draft', 'editorial_review', 'approved', 'scheduled', 'published', 'unpublished'].map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
+          {['draft', 'editorial_review', 'approved', 'scheduled', 'published', 'unpublished', 'archived', 'deleted'].map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
         </select>
       </div>
       {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : !data || data.rows.length === 0 ? <Empty>No posts</Empty> : (
@@ -115,37 +117,52 @@ function PostsTab({ canEdit, canPublish }: { canEdit: boolean; canPublish: boole
   )
 }
 
-function PostEditor({ id, canPublish, onClose }: { id: number | 'new'; canPublish: boolean; onClose: () => void }) {
+function PostEditor({ id, perms, onClose }: { id: number | 'new'; perms: PostPerms; onClose: () => void }) {
   const isNew = id === 'new'
-  const { data, loading } = useAdminQuery<{ post: Record<string, string | number | null>; tags: string[]; versions: Array<Record<string, string | number | null>>; public_url: string; seo: Array<{ code: string; severity: string; message: string }> }>(isNew ? null : `/api/admin/content/posts/${id}`)
+  const { data, loading, refetch } = useAdminQuery<{ post: Record<string, string | number | null>; tags: string[]; versions: Array<Record<string, string | number | null>>; public_url: string; seo: Array<{ code: string; severity: string; message: string }> }>(isNew ? null : `/api/admin/content/posts/${id}`)
   const authors = useAdminQuery<{ rows: Author[] }>('/api/admin/content/authors')
   const cats = useAdminQuery<{ rows: Category[] }>('/api/admin/content/categories')
   const [f, setF] = useState<Record<string, string>>({})
+  const [tags, setTags] = useState<string | null>(null)   // null = untouched; a string once the editor edits it
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
   const post = data?.post
+  const status = String(post?.status ?? '')
   const val = (k: string) => (k in f ? f[k] : String(post?.[k] ?? ''))
   const set = (k: string) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value })
+  const tagsVal = tags !== null ? tags : (data?.tags || []).join(', ')
 
   async function save(): Promise<number | null> {
     setBusy(true); setMsg('')
     try {
       const body: Record<string, unknown> = { ...f }
-      if (isNew) { const r = await adminApi.post<{ id: number }>('/api/admin/content/posts', body); setMsg('Created'); setBusy(false); return r.id }
-      await adminApi.patch(`/api/admin/content/posts/${id}`, body); setMsg('Saved'); setBusy(false); return id as number
+      let outId: number
+      if (isNew) { const r = await adminApi.post<{ id: number }>('/api/admin/content/posts', body); outId = r.id }
+      else { await adminApi.patch(`/api/admin/content/posts/${id}`, body); outId = id as number }
+      if (!isNew && tags !== null) await adminApi.post(`/api/admin/content/posts/${outId}/tags`, { tags: tags.split(',').map((t) => t.trim()).filter(Boolean) })
+      setMsg('Saved'); setBusy(false); return outId
     } catch (e) { setMsg((e as Error).message); setBusy(false); return null }
   }
   async function act(path: string, extra?: Record<string, unknown>) {
     setBusy(true); setMsg('')
-    try { await adminApi.post(`/api/admin/content/posts/${id}${path}`, extra || {}); setMsg('Done'); setBusy(false) }
+    try { await adminApi.post(`/api/admin/content/posts/${id}${path}`, extra || {}); setMsg('Done'); setBusy(false); if (!isNew) refetch() }
     catch (e) { setMsg((e as Error).message); setBusy(false) }
   }
+  async function confirmAct(path: string, prompt: string) { if (window.confirm(prompt)) await act(path) }
+  const inReview = ['author_review', 'editorial_review', 'technical_review', 'seo_review', 'legal_review', 'changes_requested'].includes(status)
 
   if (!isNew && loading) return <Spinner />
   return (
     <Card title={isNew ? 'New post' : `Edit: ${post?.title || ''}`} action={<button className="btn sm ghost" onClick={onClose}>← Back</button>}>
       <div style={{ display: 'grid', gap: '.7rem', maxWidth: 780 }}>
-        <label>Title<input value={val('title')} onChange={set('title')} /></label>
+        <div className="row" style={{ gap: '.6rem' }}>
+          <label style={{ flex: 2 }}>Title<input value={val('title')} onChange={set('title')} /></label>
+          <label style={{ width: 170 }}>Type
+            <select value={val('structured_type') || 'BlogPosting'} onChange={set('structured_type')}>
+              <option value="BlogPosting">Blog post</option><option value="NewsArticle">News article</option><option value="Article">Article</option>
+            </select></label>
+        </div>
+        {!isNew && <label>Slug (URL)<input value={val('slug')} onChange={set('slug')} placeholder="my-post" /><span className="muted" style={{ fontSize: '.78rem' }}>Renaming a live post keeps the old URL working via a 301.</span></label>}
         <label>Subtitle<input value={val('subtitle')} onChange={set('subtitle')} /></label>
         <label>Summary<textarea rows={2} value={val('summary')} onChange={set('summary')} /></label>
         <div className="row" style={{ gap: '.6rem' }}>
@@ -160,6 +177,7 @@ function PostEditor({ id, canPublish, onClose }: { id: number | 'new'; canPublis
           <label style={{ width: 120 }}>Format
             <select value={val('body_format') || 'html'} onChange={set('body_format')}><option value="html">HTML</option><option value="markdown">Markdown</option></select></label>
         </div>
+        {!isNew && <label>Tags (comma-separated)<input value={tagsVal} onChange={(e) => setTags(e.target.value)} placeholder="AI, EVM, forecasting" /></label>}
         <label>Body<textarea rows={12} value={val('body')} onChange={set('body')} style={{ fontFamily: 'monospace', fontSize: '.85rem' }} /></label>
         <label>Featured image URL<input value={val('featured_image')} onChange={set('featured_image')} placeholder="/assets/..." /></label>
         <label>Featured image alt text<input value={val('featured_image_alt')} onChange={set('featured_image_alt')} /></label>
@@ -168,6 +186,7 @@ function PostEditor({ id, canPublish, onClose }: { id: number | 'new'; canPublis
             <label>SEO title<input value={val('seo_title')} onChange={set('seo_title')} /></label>
             <label>Meta description<textarea rows={2} value={val('meta_description')} onChange={set('meta_description')} /></label>
             <label>Primary keyword<input value={val('primary_keyword')} onChange={set('primary_keyword')} /></label>
+            <label>Secondary keywords (comma-separated)<input value={val('secondary_keywords')} onChange={set('secondary_keywords')} /></label>
             <label>Canonical URL (leave blank for the default)<input value={val('canonical_url')} onChange={set('canonical_url')} /></label>
           </div>
         </details>
@@ -176,20 +195,62 @@ function PostEditor({ id, canPublish, onClose }: { id: number | 'new'; canPublis
         )}
         {msg && <div className="muted">{msg}</div>}
         <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
-          <button className="btn sm" disabled={busy} onClick={async () => { const nid = await save(); if (isNew && nid) onClose() }}>Save</button>
+          <button className="btn sm" disabled={busy} onClick={async () => { const nid = await save(); if (isNew && nid) onClose(); else refetch() }}>Save</button>
           {!isNew && <button className="btn sm ghost" disabled={busy} onClick={() => act('/submit', { stage: 'editorial_review' })}>Submit for review</button>}
-          {!isNew && canPublish && post?.status !== 'published' && <button className="btn sm" disabled={busy} onClick={() => act('/publish')}>Publish</button>}
-          {!isNew && canPublish && post?.status === 'published' && <button className="btn sm ghost" disabled={busy} onClick={() => act('/unpublish')}>Unpublish</button>}
+          {!isNew && perms.canReview && inReview && <>
+            <button className="btn sm" disabled={busy} onClick={() => act('/review', { decision: 'approved' })}>Approve</button>
+            <button className="btn sm ghost" disabled={busy} onClick={() => act('/review', { decision: 'changes_requested' })}>Request changes</button>
+            <button className="btn sm ghost" disabled={busy} onClick={() => act('/review', { decision: 'rejected' })}>Reject</button>
+          </>}
+          {!isNew && perms.canPublish && status !== 'published' && <button className="btn sm" disabled={busy} onClick={() => act('/publish')}>Publish</button>}
+          {!isNew && perms.canPublish && status === 'published' && <button className="btn sm ghost" disabled={busy} onClick={() => act('/unpublish')}>Unpublish</button>}
           {!isNew && post?.published === 1 && <a className="btn sm ghost" href={data?.public_url} target="_blank" rel="noreferrer">View live ↗</a>}
+          {!isNew && perms.canArchive && status !== 'archived' && status !== 'deleted' && <button className="btn sm ghost" disabled={busy} onClick={() => confirmAct('/archive', 'Archive this post? It leaves the public site but keeps its full history.')}>Archive</button>}
+          {!isNew && perms.canDelete && status !== 'deleted' && <button className="btn sm ghost" disabled={busy} style={{ color: '#b91c1c' }} onClick={() => confirmAct('/delete', 'Soft-delete this post? It is hidden but recoverable, and its version history is kept.')}>Delete</button>}
+          {!isNew && perms.isOwner && <button className="btn sm ghost" disabled={busy} style={{ color: '#b91c1c' }} onClick={() => confirmAct('/purge', 'PERMANENTLY delete this post and its entire history? This cannot be undone.')}>Purge</button>}
         </div>
         {!isNew && data && data.versions.length > 0 && (
           <details><summary style={{ cursor: 'pointer' }}>Version history ({data.versions.length}) — nothing is ever overwritten</summary>
-            <table className="tbl" style={{ marginTop: '.4rem' }}><thead><tr><th>v</th><th>Status</th><th>Reason</th><th>When</th></tr></thead>
-              <tbody>{data.versions.map((v) => <tr key={String(v.id)}><td>{String(v.version)}</td><td>{String(v.status_at || '')}</td><td>{String(v.change_reason || '')}</td><td className="muted">{String(v.created_at || '')}</td></tr>)}</tbody></table>
+            <table className="tbl" style={{ marginTop: '.4rem' }}><thead><tr><th>v</th><th>Status</th><th>Reason</th><th>When</th>{perms.canEdit ? <th></th> : null}</tr></thead>
+              <tbody>{data.versions.map((v) => <tr key={String(v.id)}><td>{String(v.version)}</td><td>{String(v.status_at || '')}</td><td>{String(v.change_reason || '')}</td><td className="muted">{String(v.created_at || '')}</td>{perms.canEdit ? <td><button className="btn sm ghost" disabled={busy} onClick={() => confirmAct(`/restore/${v.version}`, `Restore version ${v.version}? The current content is snapshotted first, so nothing is lost.`)}>Restore</button></td> : null}</tr>)}</tbody></table>
           </details>
         )}
+        {!isNew && perms.canLinks && <LinksPanel postId={id as number} />}
       </div>
     </Card>
+  )
+}
+
+interface LinkRow { id: number; url: string; kind: string; anchor_text?: string; rel: string; is_citation: number; approved: number; status: string; http_code?: number | null; last_checked_at?: string | null; clicks?: number; active: number }
+function LinksPanel({ postId }: { postId: number }) {
+  const { data, loading, refetch } = useAdminQuery<{ rows: LinkRow[] }>(`/api/admin/content/posts/${postId}/links`)
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState('')
+  async function scan() { setBusy(true); setMsg(''); try { const r = await adminApi.post<{ found: number; added: number }>(`/api/admin/content/posts/${postId}/links/scan`, {}); setMsg(`Scanned: ${r.found} link(s), ${r.added} new`); refetch() } catch (e) { setMsg((e as Error).message) } setBusy(false) }
+  async function patch(id: number, body: Record<string, unknown>) { setBusy(true); try { await adminApi.patch(`/api/admin/content/links/${id}`, body); refetch() } catch (e) { setMsg((e as Error).message) } setBusy(false) }
+  async function check(id: number) { setBusy(true); try { const r = await adminApi.post<{ status: string; code: number }>(`/api/admin/content/links/${id}/check`, {}); setMsg(`Checked: ${r.status}${r.code ? ' (' + r.code + ')' : ''}`); refetch() } catch (e) { setMsg((e as Error).message) } setBusy(false) }
+  const rows = (data?.rows || []).filter((r) => r.active)
+  return (
+    <details><summary style={{ cursor: 'pointer', fontWeight: 600 }}>Links ({rows.length}) — internal &amp; external, rel policy, citations, status</summary>
+      <div className="row" style={{ gap: '.4rem', margin: '.5rem 0', alignItems: 'center' }}>
+        <button className="btn sm" disabled={busy} onClick={scan}>Scan body for links</button>
+        {msg && <span className="muted" style={{ fontSize: '.82rem' }}>{msg}</span>}
+      </div>
+      {loading ? <Spinner /> : rows.length === 0 ? <Empty>No links recorded. Scan the body to build the registry.</Empty> : (
+        <table className="tbl"><thead><tr><th>URL</th><th>Kind</th><th>rel</th><th>Citation</th><th>Status</th><th>Clicks</th><th></th></tr></thead>
+          <tbody>{rows.map((l) => (
+            <tr key={l.id}>
+              <td style={{ maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}><span title={l.url}>{l.url}</span>{l.anchor_text ? <div className="muted" style={{ fontSize: '.75rem' }}>{l.anchor_text}</div> : null}</td>
+              <td><Badge tone={l.kind === 'internal' ? 'neutral' : 'ok' as never}>{l.kind}</Badge></td>
+              <td><select value={l.rel} onChange={(e) => patch(l.id, { rel: e.target.value })}>{['auto', 'dofollow', 'nofollow', 'sponsored', 'ugc'].map((r) => <option key={r} value={r}>{r}</option>)}</select></td>
+              <td><input type="checkbox" checked={l.is_citation === 1} onChange={(e) => patch(l.id, { is_citation: e.target.checked })} />{l.is_citation === 1 ? <span className="muted" style={{ fontSize: '.72rem' }}> {l.approved === 1 ? 'approved' : 'unapproved'}</span> : null}</td>
+              <td>{l.status === 'unchecked' ? <span className="muted">—</span> : <Badge tone={l.status === 'live' ? 'ok' : l.status === 'internal' ? 'neutral' : 'err' as never}>{l.status}{l.http_code ? ' ' + l.http_code : ''}</Badge>}</td>
+              <td style={{ fontVariantNumeric: 'tabular-nums' }}>{l.clicks || 0}</td>
+              <td className="row" style={{ gap: '.3rem' }}>{l.kind === 'external' ? <button className="btn sm ghost" disabled={busy} onClick={() => check(l.id)}>Check</button> : null}{l.is_citation === 1 ? <button className="btn sm ghost" disabled={busy} onClick={() => patch(l.id, { approved: l.approved !== 1 })}>{l.approved === 1 ? 'Unapprove' : 'Approve'}</button> : null}</td>
+            </tr>))}</tbody>
+        </table>
+      )}
+    </details>
   )
 }
 
@@ -661,6 +722,30 @@ interface AnMetric { id: number; source_id: number; dimension: string; dim_value
 
 const AN_PROVIDERS = [{ v: 'gsc', l: 'Google Search Console' }, { v: 'bing', l: 'Bing Webmaster Tools' }, { v: 'ga4', l: 'Google Analytics 4' }]
 
+interface ArticleStat { path: string; slug: string; title: string; section: string; status: string; views: number; link_clicks: number }
+function PerArticlePanel() {
+  const [days, setDays] = useState(28)
+  const { data, loading } = useAdminQuery<{ days: number; articles: ArticleStat[] }>(`/api/admin/content/analytics/articles?days=${days}`)
+  const arts = data?.articles || []
+  return (
+    <Card title="Per-article performance (first-party, cookieless)" action={
+      <select value={days} onChange={(e) => setDays(Number(e.target.value))}>{[7, 28, 90, 365].map((d) => <option key={d} value={d}>Last {d} days</option>)}</select>
+    }>
+      {loading ? <Spinner /> : arts.length === 0 ? <Empty>No article views recorded yet in this window.</Empty> : (
+        <table className="tbl"><thead><tr><th>Article</th><th>Section</th><th>Views</th><th>Link clicks</th></tr></thead>
+          <tbody>{arts.map((a) => (
+            <tr key={a.path}>
+              <td><a href={a.path} target="_blank" rel="noreferrer">{a.title || a.slug}</a>{a.status !== 'published' ? <span className="muted" style={{ fontSize: '.75rem' }}> ({a.status})</span> : null}</td>
+              <td><Badge tone={a.section === 'news' ? 'ok' : 'neutral' as never}>{a.section}</Badge></td>
+              <td style={{ fontVariantNumeric: 'tabular-nums' }}>{a.views}</td>
+              <td style={{ fontVariantNumeric: 'tabular-nums' }}>{a.link_clicks}</td>
+            </tr>))}</tbody>
+        </table>
+      )}
+    </Card>
+  )
+}
+
 function AnalyticsTab({ canManage }: { canManage: boolean }) {
   const overview = useAdminQuery<{ sources: AnSource[]; totals: AnTotal[] }>('/api/admin/content/analytics/overview')
   const [f, setF] = useState<Record<string, string>>({ provider: 'gsc' })
@@ -679,6 +764,8 @@ function AnalyticsTab({ canManage }: { canManage: boolean }) {
     <div style={{ display: 'grid', gap: '1rem' }}>
       <p className="muted" style={{ margin: 0 }}>Read-only search &amp; traffic analytics. PCI connects to providers whose official APIs are read-only — Google Search Console, Bing Webmaster Tools and Google Analytics 4 — and only ever <strong>reads</strong>: nothing is written back. Credentials are stored encrypted and never shown again. Google access tokens are short-lived; mint one via a service account or OAuth and re-paste it when a sync reports an auth error (automatic refresh is a planned follow-up).</p>
       {msg && <ErrorNote>{msg}</ErrorNote>}
+
+      <PerArticlePanel />
 
       {canManage && (
         <Card title="Connect an analytics source">

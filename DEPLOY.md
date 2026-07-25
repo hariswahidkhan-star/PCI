@@ -29,7 +29,7 @@ website; everything students do appears in the dashboard. There is nothing separ
    - Leave the Stripe/SMTP ones empty for now if you just want to see the site (payments answer
      503 and emails print to the logs until configured).
 5. Click **Apply**. First build takes a few minutes. When it's live, open the URL — that's your
-   website. Then `/admin.html`, log in, and it forces a password change.
+   website. Then `/admin.html`, log in, and change the seeded password in Settings → Security.
 6. Verify: log into `/admin.html` and open **System check** (owner-only) — everything should be
    green except Stripe/SMTP if you skipped them.
 
@@ -107,7 +107,7 @@ wildcard), the database path must not be temporary, and `STRIPE_WEBHOOK_SECRET` 
 
 ## After first login — 3-minute checklist
 
-1. Change the owner password (forced) and open **System check** — aim for all green.
+1. Change the owner password (Settings → Security) and open **System check** — aim for all green.
 2. Admin → Settings: confirm pricing, pass mark, retention days.
 3. Create your real team accounts (roles: website/student/exam manager, viewer) and stop using
    the owner account for daily work.

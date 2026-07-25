@@ -4,6 +4,14 @@ using System.Text.Json;
 
 namespace PCI.Backend.Core;
 
+// CS1998 (async method lacks 'await') is intentionally suppressed for this file. Several connector
+// methods implement the async IExamDeliveryConnector contract but are legitimately synchronous: the
+// vendor either folds the step into another call (e.g. Pearson VUE authorize → schedule) or makes it
+// candidate-driven (self-scheduling), so the method returns a truthful ConnResult without any network
+// I/O to await. Keeping the async signature preserves the uniform interface while honestly modelling a
+// no-op step. See SUPPRESSION_PROCESS.md for the review record.
+#pragma warning disable CS1998
+
 /// <summary>
 /// The five concrete exam-delivery vendor connectors, each mapping PCI's canonical lifecycle
 /// (<see cref="IExamDeliveryConnector"/>) onto that vendor's real, documented integration model:

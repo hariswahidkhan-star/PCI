@@ -76,7 +76,7 @@ public static class Honorary
             if (userId is not null)
                 db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Recognition', 'Honorary Fellow (PCI)', ?)",
                     userId, $"The board has conferred on you the designation Honorary Fellow (PCI) — award number {awardNo}. This is an honorary recognition, distinct from PCI's examined certification credentials.");
-            log(userId, "honorary_conferred", $"{awardNo} to \"{name}\" by admin {adm!.Id}");
+            log(adm!.Id, "honorary_conferred", $"{awardNo} to \"{name}\" by admin {adm.Id} (subject {userId?.ToString() ?? "unlinked"})");
             return J(new { ok = true, award_no = awardNo, designation = "Honorary Fellow (PCI)" });
         });
 
@@ -96,7 +96,7 @@ public static class Honorary
             var reason = (H.GetS(b, "reason") ?? "").Trim(); if (reason.Length > 500) reason = reason[..500];
             // Revokes ONLY the honorary record — never any exam-earned credential.
             db.Execute("UPDATE honorary_awards SET status='revoked', revoked_by=?, revoked_at=datetime('now'), revoke_reason=? WHERE id=?", adm!.Id, reason, id);
-            log(H.Ln(a["user_id"]), "honorary_revoked", $"{H.Str(a["award_no"])} by admin {adm.Id}{(reason.Length > 0 ? ": " + reason : "")}");
+            log(adm!.Id, "honorary_revoked", $"{H.Str(a["award_no"])} by admin {adm.Id} (subject {H.Ln(a["user_id"])?.ToString() ?? "unlinked"}){(reason.Length > 0 ? ": " + reason : "")}");
             return J(new { ok = true });
         });
     }

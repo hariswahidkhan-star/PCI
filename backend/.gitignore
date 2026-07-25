@@ -12,9 +12,29 @@ wwwroot/admin/
 # integration test artifacts
 tests/_integration.db*
 tests/_integration_storage/
+tests/_impersonation.db*
+tests/_impersonation_storage/
+tests/_impersonation_boot.log
+tests/_retake_wait.db*
+tests/_retake_wait_storage/
+tests/_retake_wait_boot.log
+tests/_migv.db*
+tests/_migv_storage/
+tests/_migv_boot_*.log
 tests/_server_boot.log
 tests/_sweep*
 tests/_s3*
 backend/u.db*
 backend/unused.db*
 storage/
+# Browser E2E object stores — one per provider, emptied when the suite starts its server
+e2e_storage_sqlite/
+e2e_storage_mysql/
+e2e_ci.db*
+
+# Load-harness run artefacts. cohort*.json holds PLAINTEXT session tokens for the seeded students —
+# it is a credential file and must never be committed, even though the accounts are disposable.
+tests/load/cohort*.json
+load.db*
+load_storage/
+load_storage_mysql/
