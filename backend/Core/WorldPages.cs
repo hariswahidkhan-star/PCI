@@ -48,7 +48,7 @@ public static class WorldPages
     const string Css = """
         :root{--ink:#0F172A;--paper:#FFFFFF;--paper-2:#F1F5F9;--noir:#0E1525;--line:#E3E8EF;
               --slate:#475569;--mist:#64748B;--blue:#1D4ED8;--blue-deep:#1E3A8A;--crimson:#C13329;
-              --ok:#15803D;--bad:#C2410C;--muted:var(--slate);--field:#94A3B8;
+              --gilt:#C8A24B;--ok:#15803D;--bad:#C2410C;--muted:var(--slate);--field:#94A3B8;
               --display:'Archivo',system-ui,sans-serif;--sans:'Inter',system-ui,sans-serif;
               --shadow-rest:0 1px 2px rgba(13,32,90,.05),0 10px 28px -20px rgba(29,78,216,.14);
               --shadow-hover:0 2px 5px rgba(13,32,90,.06),0 26px 56px -24px rgba(29,78,216,.25),0 0 0 1px rgba(29,78,216,.10);
@@ -64,6 +64,10 @@ public static class WorldPages
         header.world a:focus-visible,header.world button:focus-visible,
         footer.world a:focus-visible,.card--noir a:focus-visible,
         .card--noir button:focus-visible,.card--noir input:focus-visible{outline-color:#93C5FD}
+        /* Programmatic focus targets (skip-link destination, revealed panels) are not controls:
+           they receive focus so screen readers announce arrival, but a page-wide ring around a
+           whole section is noise, not indication. Controls inside them keep their rings. */
+        #main:focus,#me:focus,#auth:focus,#work:focus,#result:focus{outline:none}
         .shell{max-width:1020px;margin:0 auto;padding:0 22px}
         header.world{background:var(--noir);color:#E2E8F0}
         header.world .shell{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;padding:18px 22px}
@@ -105,8 +109,8 @@ public static class WorldPages
         .btn.secondary:hover{border-color:var(--ink);background:var(--paper)}
         /* On a noir surface the default ink-on-transparent secondary button is unreadable. It needs
            its own light treatment or it fails contrast wherever the dark card is used. */
-        .card--noir .btn.secondary{color:#F1F5F9;border-color:#64748B}
-        .card--noir .btn.secondary:hover{border-color:#F1F5F9;background:rgba(255,255,255,.06)}
+        .card--noir .btn.secondary,.ppt-cover .btn.secondary{color:#F1F5F9;border-color:#64748B}
+        .card--noir .btn.secondary:hover,.ppt-cover .btn.secondary:hover{border-color:#F1F5F9;background:rgba(255,255,255,.06)}
         .btn+.btn{margin-left:12px}
         .notice{border-inline-start:3px solid var(--crimson);background:var(--paper-2);padding:16px 20px;
              color:var(--slate);font-size:14.5px;line-height:1.6;margin:26px 0;border-radius:0 10px 10px 0}
@@ -157,14 +161,89 @@ public static class WorldPages
         .legend-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;font-weight:600;color:#CBD5E1}
         .legend-row span::before{content:"";display:inline-block;width:18px;height:3px;border-radius:2px;
              margin-right:8px;vertical-align:middle;background:var(--swatch,#fff)}
-        footer.world{background:var(--noir);color:#94A3B8;font-size:14.5px;margin-top:30px}
-        footer.world .shell{padding:44px 22px 48px;display:grid;gap:12px}
+        footer.world{background:var(--noir);color:#94A3B8;font-size:14.5px;margin-top:30px;border-top:3px solid var(--crimson)}
+        footer.world .shell{padding:54px 22px 44px}
         footer.world a{color:#CBD5E1}
         footer.world a:hover{color:#fff}
-        footer.world .ft-brand{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+        footer.world .ft-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
         footer.world .ft-brand .wordmark{font-family:var(--display);font-weight:900;font-size:19px;letter-spacing:-.03em;color:#fff}
         footer.world .ft-brand .bar{width:2px;height:26px;background:var(--crimson);border-radius:2px}
         footer.world .fine{font-size:13px;line-height:1.65;color:#7C8CA0;max-width:88ch}
+        .ft-grid{display:grid;gap:36px 44px;grid-template-columns:minmax(240px,1.5fr) repeat(3,minmax(150px,1fr))}
+        .ft-h{font-family:var(--sans);font-weight:700;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
+             color:#7C8CA0;margin:0 0 14px}
+        .ft-grid ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+        .ft-grid a{text-decoration:none}
+        .ft-grid a:hover{text-decoration:underline;text-underline-offset:3px}
+        .ft-base{border-top:1px solid #1E293B;margin-top:40px;padding-top:24px;display:grid;gap:10px}
+        @media (max-width:860px){.ft-grid{grid-template-columns:1fr 1fr}}
+        @media (max-width:520px){.ft-grid{grid-template-columns:1fr}}
+        /* ── the Passport artefact ─────────────────────────────────────────────
+           A passport cover, not a web card: deep noir with a corner sheen, hairline gilt frame,
+           engraved guilloché rings (pure CSS, deterministic), a seal, and letter-spaced labels.
+           Gilt (#C8A24B) is 7.5:1 on noir; slate labels 5.2:1; the name is white. */
+        .ppt-cover{position:relative;background:radial-gradient(130% 150% at 88% -30%,#1C2C4E 0%,var(--noir) 56%);
+             border-radius:18px;color:#CBD5E1;padding:42px 42px 34px;margin:28px 0;overflow:hidden;
+             box-shadow:0 2px 6px rgba(8,15,35,.16),0 40px 80px -34px rgba(8,15,35,.55)}
+        .ppt-cover::before{content:"";position:absolute;inset:11px;border:1px solid rgba(200,162,75,.42);
+             border-radius:11px;pointer-events:none}
+        .ppt-cover::after{content:"";position:absolute;inset:14px;border:1px solid rgba(200,162,75,.16);
+             border-radius:9px;pointer-events:none}
+        .ppt-lines{position:absolute;inset:0;pointer-events:none;
+             background:repeating-radial-gradient(circle at 106% 112%,transparent 0 10px,rgba(200,162,75,.075) 10px 11px),
+                        repeating-radial-gradient(circle at -8% -14%,transparent 0 13px,rgba(148,163,184,.05) 13px 14px)}
+        .ppt-top{position:relative;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:30px}
+        .ppt-top .wordmark{font-family:var(--display);font-weight:900;font-size:19px;letter-spacing:-.03em;color:#fff;white-space:nowrap}
+        .ppt-top .bar{width:2px;height:24px;background:var(--crimson);border-radius:2px;flex:0 0 auto}
+        .ppt-top .ppt-word{margin-left:auto;font-weight:700;font-size:12px;letter-spacing:.42em;
+             text-transform:uppercase;color:var(--gilt);padding-left:4px}
+        .ppt-kicker{position:relative;display:block;font-weight:700;font-size:11.5px;letter-spacing:.22em;
+             text-transform:uppercase;color:var(--gilt);margin-bottom:12px}
+        .ppt-name{position:relative;font-family:var(--display);font-weight:800;font-size:clamp(30px,4.8vw,46px);
+             line-height:1.05;letter-spacing:-.02em;color:#fff;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+        .ppt-sub{position:relative;color:#94A3B8;font-size:15px;max-width:60ch;margin:0}
+        .ppt-cover h2{position:relative}
+        .ppt-stats{position:relative;display:flex;flex-wrap:wrap;gap:0;margin-top:30px;padding-top:6px;
+             border-top:1px solid rgba(148,163,184,.28)}
+        .ppt-stats>div{padding:16px 36px 0 0;margin-right:36px;border-right:1px solid rgba(148,163,184,.16)}
+        .ppt-stats>div:last-child{border-right:0;margin-right:0;padding-right:0}
+        .ppt-stats .kicker{color:#94A3B8;margin-bottom:5px;font-size:11.5px;letter-spacing:.18em}
+        .ppt-stats b{font-family:var(--display);font-weight:800;font-size:40px;letter-spacing:-.02em;
+             display:block;line-height:1.05;color:#fff;font-variant-numeric:tabular-nums}
+        .ppt-seal{flex:0 0 auto;display:block}
+        .ppt-foot{position:relative;display:flex;gap:10px 26px;flex-wrap:wrap;margin-top:26px;
+             font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#7C8CA0}
+        /* Disclosure switches: still real checkboxes (the tests and assistive tech depend on that),
+           drawn as instrument toggles. The control itself is the track, so it stays visible,
+           focusable and clickable exactly as before. */
+        input[type=checkbox].switch{appearance:none;-webkit-appearance:none;width:46px;height:26px;
+             border-radius:26px;background:#CBD5E1;border:1.5px solid #64748B;position:relative;
+             cursor:pointer;margin:0;flex:0 0 auto;transition:background .18s var(--ease),border-color .18s var(--ease)}
+        input[type=checkbox].switch::after{content:"";position:absolute;top:2px;left:2px;width:19px;height:19px;
+             border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(15,23,42,.4);transition:transform .18s var(--ease)}
+        input[type=checkbox].switch:checked{background:var(--blue);border-color:var(--blue)}
+        input[type=checkbox].switch:checked::after{transform:translateX(20px)}
+        .opt-row{display:flex;align-items:center;justify-content:space-between;gap:18px;
+             padding:15px 2px;border-bottom:1px solid var(--line)}
+        .opt-row:last-of-type{border-bottom:0}
+        .opt-row label{margin:0;font-weight:600;font-size:15.5px}
+        .opt-row small{display:block;font-weight:400;color:var(--slate);font-size:13.5px;margin-top:2px}
+        .ev-check{width:19px;height:19px;accent-color:var(--blue)}
+        .defn{display:grid;gap:16px;margin:6px 0 0}
+        .defn>div{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:start;
+             padding:14px 0;border-bottom:1px solid var(--line)}
+        .defn>div:last-child{border-bottom:0}
+        .defn b{font-family:var(--display);font-weight:800;font-size:14.5px;letter-spacing:-.01em}
+        .defn span{color:var(--slate);font-size:15px;line-height:1.6}
+        .auth-alt{border-inline-start:1.5px solid var(--line);padding-inline-start:34px}
+        @media (max-width:700px){.auth-alt{border-inline-start:0;padding-inline-start:0;
+             border-top:1.5px solid var(--line);padding-top:26px}}
+        @media (max-width:560px){
+          .ppt-cover{padding:28px 22px 24px}
+          .ppt-stats>div{padding-right:22px;margin-right:22px}
+          .ppt-stats b{font-size:31px}
+          .defn>div{grid-template-columns:1fr;gap:4px}
+        }
         .crumbs{font-size:14px;color:var(--slate);margin-bottom:18px}
         .crumbs a{color:var(--slate)}
         .prose{max-width:70ch;font-size:17.5px;line-height:1.72}
@@ -257,12 +336,42 @@ public static class WorldPages
             </main>
             <footer class="world">
               <div class="shell">
-                <div class="ft-brand"><span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span></div>
-                <div>{E(OperatedBy)}</div>
-                <div><a href="{inst}" target="_blank" rel="noopener noreferrer">{InstituteLinkLabel} <span aria-hidden="true">&#8599;</span></a>
-                     &nbsp;&middot;&nbsp; <a href="/world/about">About PCI World</a>
-                     &nbsp;&middot;&nbsp; <a href="/world/archive">Challenge Library</a></div>
-                <div class="fine">{E(PracticeNotice)}</div>
+                <div class="ft-grid">
+                  <div>
+                    <div class="ft-brand"><span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span></div>
+                    <p style="margin:0;max-width:38ch;line-height:1.65">{E(OperatedBy)}</p>
+                    <p style="margin:14px 0 0;max-width:38ch;line-height:1.65;color:#7C8CA0;font-size:13.5px">
+                      A realistic project decision every day. Deterministic scoring, synthetic data,
+                      and evidence you choose to keep.</p>
+                  </div>
+                  <nav aria-label="Practise">
+                    <p class="ft-h">Practise</p>
+                    <ul>
+                      <li><a href="/world">Today&rsquo;s Challenge</a></li>
+                      <li><a href="/world/archive">Challenge Library</a></li>
+                      <li><a href="/world/blog">Writing</a></li>
+                      <li><a href="/world/news">Newsroom</a></li>
+                    </ul>
+                  </nav>
+                  <nav aria-label="Passport">
+                    <p class="ft-h">Passport</p>
+                    <ul>
+                      <li><a href="/world/account">Your Passport</a></li>
+                      <li><a href="/world/verify">Verify a Passport</a></li>
+                      <li><a href="/world/about">How scoring works</a></li>
+                    </ul>
+                  </nav>
+                  <nav aria-label="The Institute">
+                    <p class="ft-h">The Institute</p>
+                    <ul>
+                      <li><a href="{inst}" target="_blank" rel="noopener noreferrer">{InstituteLinkLabel} <span aria-hidden="true">&#8599;</span></a></li>
+                      <li><a href="/world/about">About PCI World</a></li>
+                    </ul>
+                  </nav>
+                </div>
+                <div class="ft-base">
+                  <div class="fine">{E(PracticeNotice)}</div>
+                </div>
               </div>
             </footer>
             </body>
@@ -343,6 +452,33 @@ public static class WorldPages
                 <li><div><b>See the consequences</b>Deterministic scoring, your professional decision profile, and what each choice would have caused.</div></li>
               </ol>
             </div>
+            <h2 class="sec">The Passport</h2>
+            <div class="uline" aria-hidden="true"></div>
+            <div class="ppt-cover">
+              <div class="ppt-lines" aria-hidden="true"></div>
+              <div class="ppt-top">
+                <span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span>
+                {SealSvg(66)}
+                <span class="ppt-word">Passport</span>
+              </div>
+              <span class="ppt-kicker">Verified virtual project experience</span>
+              <h2 style="color:#fff;font-size:clamp(24px,3.6vw,34px);max-width:24ch;margin-bottom:12px">Every challenge you complete becomes evidence you own</h2>
+              <p class="ppt-sub" style="max-width:64ch">A free account keeps each completed challenge as a verified record — the situation, the difficulty, your score and your decision profile. You choose what appears, publish one link, and anyone you hand it to can check it against the live record. Withdraw it whenever you like.</p>
+              <p style="position:relative;margin:26px 0 0">
+                <a class="btn" href="/world/account">Start your Passport</a>
+                <a class="btn secondary" href="/world/verify">Verify one you&rsquo;ve been given</a>
+              </p>
+            </div>
+            <h2 class="sec">Built to be trusted</h2>
+            <div class="uline" aria-hidden="true"></div>
+            <div class="card">
+              <div class="defn">
+                <div><b>Deterministic scoring</b><span>The same answers always earn the same result. A score here is reproducible arithmetic, never opinion.</span></div>
+                <div><b>Synthetic data, real methods</b><span>Every situation is authored from synthetic project data, so nothing confidential is ever behind a challenge — but the techniques are the ones the profession actually uses.</span></div>
+                <div><b>No rankings, no leaderboards</b><span>Nothing here compares you with anyone else. A Passport states what its owner practised and how they decided — that is all it claims.</span></div>
+                <div><b>Consent before publication</b><span>Nothing about you is public until you publish it, item by item and field by field. Answers are never shown to anyone.</span></div>
+              </div>
+            </div>
             <h2 class="sec">Where it leads</h2>
             <div class="uline" aria-hidden="true"></div>
             <div class="card">
@@ -354,6 +490,28 @@ public static class WorldPages
     }
 
     public static string Cap(string? s) => string.IsNullOrEmpty(s) ? "" : char.ToUpperInvariant(s[0]) + s[1..];
+
+    /// <summary>The Passport seal — an engraved-style emblem drawn as inline SVG. Deterministic,
+    /// self-contained (no external references) and decorative by role: it never carries meaning
+    /// the surrounding text does not state.</summary>
+    public static string SealSvg(int size = 92) => $"""
+        <svg class="ppt-seal" width="{size}" height="{size}" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
+          <circle cx="48" cy="48" r="45" fill="none" stroke="#C8A24B" stroke-width="1.5" opacity=".9"/>
+          <circle cx="48" cy="48" r="40.5" fill="none" stroke="#C8A24B" stroke-width=".7" opacity=".5"/>
+          <circle cx="48" cy="48" r="31" fill="none" stroke="#C8A24B" stroke-width=".9" opacity=".65"/>
+          <g stroke="#C8A24B" stroke-width="1.1" opacity=".75">
+            <line x1="89" y1="48" x2="93" y2="48"/><line x1="83.5" y1="68.5" x2="87" y2="70.5"/>
+            <line x1="68.5" y1="83.5" x2="70.5" y2="87"/><line x1="48" y1="89" x2="48" y2="93"/>
+            <line x1="27.5" y1="83.5" x2="25.5" y2="87"/><line x1="12.5" y1="68.5" x2="9" y2="70.5"/>
+            <line x1="7" y1="48" x2="3" y2="48"/><line x1="12.5" y1="27.5" x2="9" y2="25.5"/>
+            <line x1="27.5" y1="12.5" x2="25.5" y2="9"/><line x1="48" y1="7" x2="48" y2="3"/>
+            <line x1="68.5" y1="12.5" x2="70.5" y2="9"/><line x1="83.5" y1="27.5" x2="87" y2="25.5"/>
+          </g>
+          <text x="48" y="55" text-anchor="middle" font-family="Archivo,Arial,sans-serif" font-weight="900"
+                font-size="24" fill="#C8A24B" letter-spacing="-1">PW</text>
+          <rect x="39" y="61" width="18" height="2.5" rx="1.25" fill="#C13329"/>
+        </svg>
+        """;
 
     /// <summary>Challenge briefing + workspace. The embedded JSON is the allow-listed PublicView
     /// only — qualities, consequences and reference values arrive exclusively in the submit
@@ -758,6 +916,26 @@ public static class WorldPages
             <div class="card">
               <h2 style="margin-top:0">What a challenge is</h2>
               <p>Each challenge is a realistic project moment built on synthetic data: a situation, an evidence pack, the calculations a professional would run, and the judgement calls they would face. Scoring is deterministic — the same answers always earn the same result — and every decision shows its consequence afterwards, so the result is something you can defend, not a trophy.</p>
+              <p style="margin-top:14px">Challenges span five difficulty levels, from foundation to expert, across five professional tracks — project controls, project management, project finance, governed AI and cross-functional work — and a broad range of industries. The daily rotation brings one forward each day; the <a href="/world/archive">Challenge Library</a> keeps every published challenge playable.</p>
+            </div>
+            <div class="card">
+              <h2 style="margin-top:0">How scoring works</h2>
+              <p>A challenge grades two different kinds of work, because real project roles demand both:</p>
+              <div class="defn">
+                <div><b>Calculation</b><span>The numeric asks — variances, indices, forecasts — are graded against a reference solver with a stated tolerance. Type the numbers the way the evidence shows them; formatting is forgiven, method is not.</span></div>
+                <div><b>Decision quality</b><span>The judgement calls are scored against an authored rubric in which every option carries a consequence. After you submit, the debrief replays each decision: what you chose, what it would have caused, and the principle behind the strongest available call.</span></div>
+                <div><b>Decision profile</b><span>Your pattern of choices maps to a named profile — a description of <em>how</em> you decide, not a grade or a rank. Two people with the same score can carry different profiles, and both can be right.</span></div>
+              </div>
+            </div>
+            <div class="card">
+              <h2 style="margin-top:0">The Passport</h2>
+              <p>A free account turns completed challenges into a PCI World Passport: a page of verified practice evidence that its owner controls entirely. Publication is consent at every level — you choose which results appear, and separately whether scores, decision profiles and completion dates are shown at all. Answers are never published, to anyone, under any setting.</p>
+              <p style="margin-top:14px">A published Passport is one link. Hand it to a recruiter or a colleague and they are looking at the live record — not a claim about it. The owner can rotate the link, set it to expire, or withdraw it at any moment, and a withdrawn link simply stops resolving. The matching one-page PDF says the same thing and points back to the live page, so a stale copy can never masquerade as current.</p>
+              <p style="margin-top:14px"><a href="/world/account">Start your Passport</a> &middot; <a href="/world/verify">Verify a Passport you&rsquo;ve been given</a></p>
+            </div>
+            <div class="card">
+              <h2 style="margin-top:0">What PCI World is not</h2>
+              <p>PCI World does not rank participants, publish leaderboards, count members in public, or compare one person with another — there is no honest basis for any of that in practice data. It is not a certification: completing a challenge grants no credential and affects no standing with the Institute. What it offers is narrower and more defensible — reproducible evidence of practice, on the record, on your terms.</p>
             </div>
             <div class="card">
               <h2 style="margin-top:0">The Project Controls Institute</h2>
@@ -890,8 +1068,10 @@ public static class WorldPages
         var tracks = rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
         var verifyBlock = verifyUrl is null ? "" : $"""
             <div class="card" id="verify">
-              <div style="display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start">
-                <div>{WorldPassport.QrSvg(verifyUrl)}</div>
+              <span class="kicker">Verification</span>
+              <div style="display:flex;gap:30px;flex-wrap:wrap;align-items:flex-start">
+                <div style="flex:0 0 auto;border:1.5px solid var(--line);border-radius:12px;padding:12px;background:#fff;
+                            box-shadow:var(--shadow-rest)">{WorldPassport.QrSvg(verifyUrl)}</div>
                 <div style="flex:1;min-width:260px">
                   <h2 style="margin-top:0">Verify this Passport</h2>
                   <p>This page <em>is</em> the record. Scan the code or open the address below to
@@ -908,17 +1088,34 @@ public static class WorldPages
             $"{name} — PCI World Passport",
             $"Verified virtual project experience: {rows.Count} completed PCI World challenge{(rows.Count == 1 ? "" : "s")} across {industries} industr{(industries == 1 ? "y" : "ies")}.",
             $"""
-            <span class="kicker">PCI World Passport &middot; verified virtual project experience</span>
-            <h1>{E(name)}</h1>
-            <div class="card">
-              <div class="dim">
+            <div class="ppt-cover" style="margin-top:6px">
+              <div class="ppt-lines" aria-hidden="true"></div>
+              <div class="ppt-top">
+                <span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span>
+                <span class="ppt-word">Passport</span>
+              </div>
+              <div style="position:relative;display:flex;gap:28px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+                <div style="flex:1;min-width:240px">
+                  <span class="ppt-kicker">Verified virtual project experience</span>
+                  <h1 class="ppt-name">{E(name)}</h1>
+                  <p class="ppt-sub">Practice evidence published by its owner &middot; Verified by PCI World</p>
+                </div>
+                {SealSvg()}
+              </div>
+              <div class="ppt-stats">
                 <div><span class="kicker">Challenges</span><b class="score num">{rows.Count}</b></div>
                 <div><span class="kicker">Industries</span><b class="score num">{industries}</b></div>
                 <div><span class="kicker">Tracks</span><b class="score num">{tracks}</b></div>
               </div>
+              <div class="ppt-foot">
+                <span>Operated by the Project Controls Institute</span>
+                <span>Practice evidence &middot; not a certification</span>
+              </div>
             </div>
             <div class="card">
               <h2 style="margin-top:0">Selected evidence</h2>
+              <p style="color:var(--slate);margin-bottom:6px">Each row is a completed challenge its owner chose to publish{(show.Scores || show.Profiles || show.Dates ? "" : " — titles only, by their choice")}.</p>
+              <div class="tbl-wrap">
               <table>
                 <caption class="visually-hidden">Challenges this participant chose to publish</caption>
                 <thead><tr><th scope="col">Challenge</th><th scope="col">Industry</th><th scope="col">Difficulty</th>
@@ -927,6 +1124,16 @@ public static class WorldPages
                 {(show.Dates ? "<th scope=\"col\">Date</th>" : "")}</tr></thead>
                 <tbody>{items}</tbody>
               </table>
+              </div>
+            </div>
+            <div class="card">
+              <h2 style="margin-top:0">How to read this Passport</h2>
+              <div class="defn">
+                {(show.Scores ? "<div><b>Scores</b><span>Deterministic, out of 100: the same answers always earn the same score, so a number here is reproducible arithmetic against a reference solution — not an opinion, and not a curve.</span></div>" : "")}
+                {(show.Profiles ? "<div><b>Decision profiles</b><span>A named description of how this person decides under pressure — evidence-led, schedule-first, and so on. Profiles characterise judgement style; they do not rank people.</span></div>" : "")}
+                <div><b>Consent</b><span>Every row was published deliberately, item by item. Fields the owner withheld are absent from this page entirely, and answers are never shown to anyone.</span></div>
+                <div><b>The live record</b><span>This page is served from PCI World&rsquo;s records at the moment you load it. If the owner withdraws the link, it stops resolving — which is exactly what makes it worth trusting while it does.</span></div>
+              </div>
             </div>
             {verifyBlock}
             <p><a class="btn" href="/world">Take today&rsquo;s challenge yourself</a></p>
@@ -1146,20 +1353,23 @@ public static class WorldPages
         <span class="kicker">Account &amp; Passport</span>
         <h1>Keep the evidence</h1>
         <p class="lede">A free account turns completed challenges into a PCI World Passport — verified virtual project experience you control and can share.</p>
+        <template id="sealTpl">{SealSvg(74)}</template>
         <div id="auth" class="card" hidden tabindex="-1">
-          <div style="display:grid;gap:26px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+          <div style="display:grid;gap:34px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
             <div>
               <h2 style="margin-top:0">Create your Passport</h2>
+              <p style="color:var(--slate);font-size:15px;margin-bottom:4px">Free, and it always will be. Challenges you completed anonymously in this browser join your record automatically.</p>
               <label for="r_name">Display name (shown on your public Passport)</label><input id="r_name" type="text" maxlength="80" autocomplete="name">
               <label for="r_email">Email</label><input id="r_email" type="email" autocomplete="email">
               <label for="r_pw">Password (min 10 characters)</label><input id="r_pw" type="password" autocomplete="new-password">
-              <p style="margin-top:12px"><button class="btn" id="doRegister">Create account</button></p>
+              <p style="margin-top:16px"><button class="btn" id="doRegister">Create account</button></p>
             </div>
-            <div>
+            <div class="auth-alt">
               <h2 style="margin-top:0">Sign in</h2>
+              <p style="color:var(--slate);font-size:15px;margin-bottom:4px">Welcome back — your evidence is where you left it.</p>
               <label for="l_email">Email</label><input id="l_email" type="email" autocomplete="email">
               <label for="l_pw">Password</label><input id="l_pw" type="password" autocomplete="current-password">
-              <p style="margin-top:12px"><button class="btn secondary" id="doLogin">Sign in</button>
+              <p style="margin-top:16px"><button class="btn secondary" id="doLogin">Sign in</button>
                  <button class="btn secondary" id="doForgot" type="button">Forgot password</button></p>
             </div>
           </div>
@@ -1167,6 +1377,24 @@ public static class WorldPages
           <p class="notice">Challenges you completed anonymously in this browser are added to your account automatically. {E(PracticeNotice)}</p>
         </div>
         <div id="me" hidden tabindex="-1"></div>
+        <h2 class="sec">How your Passport works</h2>
+        <div class="uline" aria-hidden="true"></div>
+        <div class="card">
+          <ol class="steps">
+            <li><div><b>Practise</b>Complete challenges — anonymously or signed in. Every completed challenge becomes a verified record: title, industry, difficulty, score, decision profile, date.</div></li>
+            <li><div><b>Choose what the world sees</b>Publication is consent at every level. Pick the results that appear, then decide separately whether scores, decision profiles and completion dates are shown at all. Answers are never published.</div></li>
+            <li><div><b>Share one link</b>Publish and you get a single address — and a matching one-page PDF. Anyone you hand it to is reading the live record, and you can rotate, expire or withdraw the link whenever you choose.</div></li>
+          </ol>
+        </div>
+        <div class="card">
+          <h2 style="margin-top:0">Privacy, plainly</h2>
+          <div class="defn">
+            <div><b>Your email</b><span>Used to sign in and to verify the account. It never appears on your Passport, the PDF, or any public page.</span></div>
+            <div><b>Your answers</b><span>Grading detail stays between you and the scoring engine. No public surface shows an answer, under any setting.</span></div>
+            <div><b>Your link</b><span>Stored only as a hash — the server itself cannot reprint it. Generating a new link retires the old one immediately.</span></div>
+            <div><b>Leaving</b><span>Export everything as JSON at any time. Deleting your account removes your identity, sign-in and every public link; completed challenges survive only as anonymous statistics.</span></div>
+          </div>
+        </div>
         <script>{AccountJs}</script>
         """,
         "/world/account", noindex: true);
@@ -1193,29 +1421,61 @@ public static class WorldPages
         function load(){
           return api('/api/world/passport').then(function(p){
             $('auth').hidden=true;$('me').hidden=false;$('me').focus();
-            var h='<div class="card"><h2 style="margin-top:0">Your Passport</h2>'+
-              '<div class="dim"><div><span class="kicker">Completed</span><b class="score num">'+p.completed+'</b></div>'+
+            var seal=(document.getElementById('sealTpl')||{innerHTML:''}).innerHTML;
+            function pretty(s){s=(s||'').replace(/_/g,' ');return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+            // The cover: the owner's own Passport drawn as the artefact a reader of the public
+            // page will see — same seal, same stats, same honesty line.
+            var h='<div class="ppt-cover">'+
+              '<div class="ppt-lines" aria-hidden="true"></div>'+
+              '<div class="ppt-top"><span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span>'+
+              '<span class="ppt-word">Passport</span></div>'+
+              '<div style="position:relative;display:flex;gap:28px;flex-wrap:wrap;align-items:center;justify-content:space-between">'+
+              '<div style="flex:1;min-width:240px"><span class="ppt-kicker">Verified virtual project experience</span>'+
+              '<h2 class="ppt-name" style="font-size:clamp(26px,4vw,38px)">'+esc(p.display_name||'Unnamed participant')+'</h2>'+
+              '<p class="ppt-sub">'+(p.passport_public?'Published — anyone with your link sees the live record.':'Private — nothing is public until you publish.')+'</p></div>'+
+              seal+'</div>'+
+              '<div class="ppt-stats">'+
+              '<div><span class="kicker">Completed</span><b class="score num">'+p.completed+'</b></div>'+
               '<div><span class="kicker">Industries</span><b class="score num">'+p.industries+'</b></div>'+
               '<div><span class="kicker">Tracks</span><b class="score num">'+p.tracks+'</b></div></div>'+
+              '<div class="ppt-foot"><span>Operated by the Project Controls Institute</span>'+
+              '<span>Practice evidence &middot; not a certification</span></div>'+
+              '</div>';
+            h+='<div class="card"><span class="kicker">Identity &amp; publication</span>'+
+              '<h2 style="margin-top:0">Your name on the record</h2>'+
               '<label for="dn">Display name</label><input id="dn" maxlength="80" value="'+esc(p.display_name||'')+'">'+
-              '<p style="margin-top:10px"><button class="btn secondary" id="saveName">Save name</button> '+
+              '<p style="margin-top:12px"><button class="btn secondary" id="saveName">Save name</button> '+
               (p.email_verified?'<span class="ok">Email verified.</span>'
                 :'<span class="bad">Email not verified.</span> <button class="btn secondary" id="resend">Resend verification</button>')+'</p>'+
-              '<p style="margin-top:10px">'+
+              '<p style="margin-top:16px">'+
               (p.passport_public
                 ?'<button class="btn secondary" id="unpub">Make Passport private</button>'
                 :'<button class="btn" id="pub">Publish my public Passport</button>')+
-              ' <span id="puburl"></span> <span id="pubmsg" class="bad" role="alert"></span></p></div>';
+              ' <span id="puburl" class="num" style="word-break:break-all"></span> <span id="pubmsg" class="bad" role="alert"></span></p>'+
+              // The public link is stored only as a SHA, so the server genuinely cannot show it
+              // again. This browser remembers the last one it minted; from anywhere else the
+              // honest answer is "generate a new link", which rotates and retires the old one.
+              (p.passport_public
+                ?'<p id="lastlink" class="meta"></p>'+
+                 '<p><button class="btn secondary" id="regen">Generate a new link</button> '+
+                 '<small>The current link stops working immediately.</small></p>'
+                :((p.email_verified&&p.display_name)?''
+                  :'<p style="color:var(--slate);font-size:14px">Publishing needs a verified email and a display name — the two things that make the record worth reading.</p>'))+
+              '</div>';
             // Field-level disclosure: publishing WHAT you have practised should never force you to
             // publish your scores as well. These switches apply to the public page and the PDF alike.
-            h+='<div class="card"><h2 style="margin-top:0">What your Passport shows</h2>'+
-               '<fieldset><legend>Fields visible to anyone with your link</legend>'+
-               '<div class="opt"><input type="checkbox" id="sw_scores"'+(p.show_scores?' checked':'')+'>'+
-               '<label for="sw_scores">Scores</label></div>'+
-               '<div class="opt"><input type="checkbox" id="sw_profiles"'+(p.show_profiles?' checked':'')+'>'+
-               '<label for="sw_profiles">Decision profiles</label></div>'+
-               '<div class="opt"><input type="checkbox" id="sw_dates"'+(p.show_dates?' checked':'')+'>'+
-               '<label for="sw_dates">Completion dates</label></div>'+
+            h+='<div class="card"><span class="kicker">Disclosure</span>'+
+               '<h2 style="margin-top:0">What your Passport shows</h2>'+
+               '<fieldset style="padding-top:6px"><legend>Fields visible to anyone with your link</legend>'+
+               '<div class="opt-row"><label for="sw_scores">Scores'+
+               '<small>Out of 100 — deterministic, so a reader can trust the number</small></label>'+
+               '<input type="checkbox" class="switch" id="sw_scores"'+(p.show_scores?' checked':'')+'></div>'+
+               '<div class="opt-row"><label for="sw_profiles">Decision profiles'+
+               '<small>How you decide — a style, never a rank</small></label>'+
+               '<input type="checkbox" class="switch" id="sw_profiles"'+(p.show_profiles?' checked':'')+'></div>'+
+               '<div class="opt-row"><label for="sw_dates">Completion dates'+
+               '<small>When each challenge was completed</small></label>'+
+               '<input type="checkbox" class="switch" id="sw_dates"'+(p.show_dates?' checked':'')+'></div>'+
                '<p><small>Challenge titles, industries and difficulty are always shown — without them '+
                'a Passport says nothing. Your answers are never shown.</small></p></fieldset>'+
                '<label for="sw_exp">Link expiry</label>'+
@@ -1226,28 +1486,28 @@ public static class WorldPages
                '<option value="365">Expires in 12 months</option>'+
                '</select>'+
                (p.expires_at?'<p class="meta"><span>Current link expires '+esc(p.expires_at)+'</span></p>':'')+
-               '<p style="margin-top:14px"><button class="btn secondary" id="saveShow">Save these settings</button> '+
+               '<p style="margin-top:16px"><button class="btn secondary" id="saveShow">Save these settings</button> '+
                '<span id="showmsg" role="status"></span></p>'+
-               // The public link is stored only as a SHA, so the server genuinely cannot show it
-               // again. This browser remembers the last one it minted; from anywhere else the
-               // honest answer is "generate a new link", which rotates and retires the old one.
-               (p.passport_public
-                 ?'<p id="lastlink" class="meta"></p>'+
-                  '<p><button class="btn secondary" id="regen">Generate a new link</button> '+
-                  '<small>The current link stops working immediately.</small></p>'
-                 :'')+
                '</div>';
-            h+='<div class="card"><h2 style="margin-top:0">Evidence</h2>'+
-               '<p>Tick the results you want on your public Passport. Nothing is shown without your choice.</p>'+
-               '<table><thead><tr><th>Show</th><th>Challenge</th><th>Score</th><th>Profile</th><th>Date</th></tr></thead><tbody>';
+            h+='<div class="card"><span class="kicker">Evidence</span>'+
+               '<h2 style="margin-top:0">Choose what appears</h2>'+
+               '<p style="color:var(--slate)">Tick the results you want on your public Passport. Nothing is shown without your choice.</p>'+
+               '<div class="tbl-wrap"><table><thead><tr><th scope="col">Show</th><th scope="col">Challenge</th>'+
+               '<th scope="col">Score</th><th scope="col">Profile</th><th scope="col">Date</th></tr></thead><tbody>';
             (p.evidence||[]).forEach(function(e2){
-              h+='<tr><td><input type="checkbox" data-att="'+e2.attempt_id+'" '+(e2.passport_visible?'checked':'')+
+              h+='<tr><td><input type="checkbox" class="ev-check" data-att="'+e2.attempt_id+'" '+(e2.passport_visible?'checked':'')+
                  ' aria-label="Show '+esc(e2.title)+' on public Passport"></td>'+
-                 '<td>'+esc(e2.title)+'</td><td class="num">'+esc(e2.score)+'</td><td>'+esc(e2.profile)+'</td>'+
+                 '<td><b>'+esc(e2.title)+'</b><br><small style="color:var(--slate)">'+esc(e2.industry||'')+
+                 (e2.difficulty?' &middot; '+esc(pretty(e2.difficulty)):'')+'</small></td>'+
+                 '<td class="num">'+esc(e2.score)+'</td><td>'+esc(pretty(e2.profile))+'</td>'+
                  '<td class="num">'+esc((e2.completed_at||'').split(' ')[0])+'</td></tr>';
             });
             h+='</tbody></table></div>'+
-               '<div class="card"><h2 style="margin-top:0">Your data</h2>'+
+               ((p.evidence||[]).length?'':'<p style="color:var(--slate)">No completed challenges yet — '+
+                 '<a href="/world">today&rsquo;s challenge</a> takes five to ten minutes, and it will appear here the moment you finish.</p>')+
+               '</div>'+
+               '<div class="card"><span class="kicker">Your data</span>'+
+               '<h2 style="margin-top:0">Yours to take or erase</h2>'+
                // A plain link cannot work here: the export is authenticated by the X-World-Account
                // header, which a navigation never sends, so this always answered 401. It is fetched
                // and saved as a blob instead.
