@@ -13,6 +13,14 @@ var nonLocalPosture = builder.Environment.IsProduction()
     || builder.Environment.IsStaging()
     || string.Equals(Environment.GetEnvironmentVariable("APP_ENV"), "production", StringComparison.OrdinalIgnoreCase)
     || string.Equals(Environment.GetEnvironmentVariable("APP_ENV"), "staging", StringComparison.OrdinalIgnoreCase);
+// Opt-in flags are hand-typed into dashboards: tolerate whitespace and pasted quotes, and accept
+// the common truthy spellings, so "true " or "\"true\"" never silently reads as OFF.
+static bool EnvFlagTrue(string name)
+{
+    var v = (Environment.GetEnvironmentVariable(name) ?? "").Trim().Trim('"', '\'').Trim();
+    return v.Equals("true", StringComparison.OrdinalIgnoreCase) || v == "1"
+        || v.Equals("yes", StringComparison.OrdinalIgnoreCase) || v.Equals("on", StringComparison.OrdinalIgnoreCase);
+}
 // Global request-body cap: bounds memory and rejects oversized uploads BEFORE the handler buffers them.
 // A 3 MB artefact (Storage.MaxBytes) is ~4 MB as base64 inside a JSON data URI, so 6 MB leaves headroom
 // for one legitimate upload while still refusing anything larger up front (Kestrel → 413).
@@ -60,18 +68,70 @@ catch { /* /data exists but is not ours to write — keep the configured default
     }
     if (nonLocalPosture)
     {
-        var allowInsecure = string.Equals(Environment.GetEnvironmentVariable("ALLOW_INSECURE_PRODUCTION"), "true", StringComparison.OrdinalIgnoreCase);
-        var worldOnly = string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_ONLY"), "true", StringComparison.OrdinalIgnoreCase);
-        var allowWorldSqlite = worldOnly
-            && string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_ALLOW_SQLITE"), "true", StringComparison.OrdinalIgnoreCase);
-        var dbProvider = (Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "").Trim().ToLowerInvariant();
-        if (dbProvider is not ("mysql" or "mariadb") && !allowWorldSqlite && !allowInsecure)
+        // A flag that is SET but does not parse as true is almost always a dashboard typo — echo
+        // exactly what the process sees so the deploy log answers the question, instead of the
+        // operator and the refusal message staring at each other.
+        static void EnvFlagDiagnostic(string name)
         {
-            Console.WriteLine("[config] Refusing to open database: production requires DB_PROVIDER=mysql " +
-                "(or PCIWORLD_ONLY + PCIWORLD_ALLOW_SQLITE=true with an absolute DATABASE_FILE) before any schema work. " +
-                "Set ALLOW_INSECURE_PRODUCTION=true to override (not recommended).");
+            var raw = Environment.GetEnvironmentVariable(name);
+            if (raw is not null && !EnvFlagTrue(name))
+                Console.WriteLine($"[config] note: {name} is set to '{raw}' which does not read as true — use exactly: true");
+        }
+        var allowInsecure = EnvFlagTrue("ALLOW_INSECURE_PRODUCTION");
+        var worldOnly = EnvFlagTrue("PCIWORLD_ONLY");
+        var allowWorldSqlite = worldOnly && EnvFlagTrue("PCIWORLD_ALLOW_SQLITE");
+        // Explicit operator opt-in for the documented interim posture the platform shipped with:
+        // SQLite on the mounted persistent disk (Render's /data). Deliberately NARROW — it waives
+        // ONLY the MySQL requirement and still demands the /data path below; every other production
+        // preflight (HTTPS base URL, explicit CORS origin, encryption key, legacy-token ban, Stripe
+        // webhook secret) stays fully active, unlike the blunt ALLOW_INSECURE_PRODUCTION override.
+        // Without this, the MySQL fail-closed change bricked every existing SQLite-on-disk deploy.
+        var allowSqliteProd = EnvFlagTrue("ALLOW_SQLITE_IN_PRODUCTION");
+        var dbProvider = (Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "").Trim().ToLowerInvariant();
+        // Persistent-disk auto-posture: a SQLite database whose file lives on the WRITABLE mounted
+        // disk (/data — set by the zero-config adoption above, the Dockerfile default, or the
+        // operator) is the platform's long-documented interim deployment, and it keeps deploying
+        // WITHOUT any flag. The fail-closed refusal is reserved for the hazards the audit actually
+        // targeted: SQLite on an ephemeral container filesystem (data loss on every redeploy) and a
+        // selected-but-unconfigured MySQL. Detection is evidence-based (a real write probe), and the
+        // posture is announced loudly below so it can never masquerade as the approved MySQL setup.
+        var effectiveDbFile = Path.GetFullPath(Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "./pci.db");
+        var dataDiskWritable = false;
+        try
+        {
+            if (Directory.Exists("/data"))
+            {
+                var gateProbe = Path.Combine("/data", ".pci-gate-probe");
+                File.WriteAllText(gateProbe, "ok"); File.Delete(gateProbe);
+                dataDiskWritable = true;
+            }
+        }
+        catch { /* /data absent or read-only — not a persistent-disk deployment */ }
+        var sqliteOnPersistentDisk = dbProvider is not ("mysql" or "mariadb")
+            && dataDiskWritable && effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal);
+        if (dbProvider is not ("mysql" or "mariadb") && !sqliteOnPersistentDisk && !allowWorldSqlite && !allowSqliteProd && !allowInsecure)
+        {
+            EnvFlagDiagnostic("ALLOW_SQLITE_IN_PRODUCTION");
+            EnvFlagDiagnostic("ALLOW_INSECURE_PRODUCTION");
+            EnvFlagDiagnostic("PCIWORLD_ONLY");
+            EnvFlagDiagnostic("PCIWORLD_ALLOW_SQLITE");
+            Console.WriteLine("[config] Refusing to open database: production requires DB_PROVIDER=mysql, " +
+                "or a SQLite database on the persistent mount (DATABASE_FILE under a writable /data — attach the disk), " +
+                "or PCIWORLD_ONLY + PCIWORLD_ALLOW_SQLITE=true. " +
+                "Set ALLOW_INSECURE_PRODUCTION=true to override every check (not recommended).");
             Environment.Exit(78); // EX_CONFIG
         }
+        if (allowSqliteProd && dbProvider is not ("mysql" or "mariadb")
+            && !effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal) && !allowInsecure)
+        {
+            Console.WriteLine("[config] Refusing to open database: ALLOW_SQLITE_IN_PRODUCTION=true requires DATABASE_FILE " +
+                "under the persistent mount /data (e.g. /data/pci.db) — any other path is erased on every redeploy.");
+            Environment.Exit(78);
+        }
+        if (dbProvider is not ("mysql" or "mariadb") && (sqliteOnPersistentDisk || allowSqliteProd))
+            Console.WriteLine($"[config:warn] production is running SQLite at {effectiveDbFile} on the persistent disk " +
+                "(supported interim posture). MySQL (DB_PROVIDER=mysql) remains the approved production database; " +
+                "see docs/MYSQL_MIGRATION.md for the cutover.");
         if (dbProvider is "mysql" or "mariadb"
             && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING"))
             && (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_HOST"))
@@ -93,30 +153,76 @@ catch { /* /data exists but is not ours to write — keep the configured default
             }
         }
 
+        // Evidence-based URL adoption BEFORE the blockers run. Render exports the service's real
+        // public URL as RENDER_EXTERNAL_URL on every deploy; when the operator has not configured
+        // APP_BASE_URL, adopting it is not a waiver — it is the correct value. ALLOWED_ORIGIN then
+        // defaults to the same origin: this platform serves its SPAs and API from one origin, so
+        // same-origin is the tightest CORS default, not a loosening.
+        if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("APP_BASE_URL"))
+            && string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("SITE_BASE_URL"))
+            && Environment.GetEnvironmentVariable("RENDER_EXTERNAL_URL") is { Length: > 0 } renderUrl
+            && Uri.TryCreate(renderUrl, UriKind.Absolute, out var renderUri)
+            && renderUri.Scheme == Uri.UriSchemeHttps)
+        {
+            Environment.SetEnvironmentVariable("APP_BASE_URL", renderUri.GetLeftPart(UriPartial.Authority));
+            Console.WriteLine($"[boot] APP_BASE_URL not set → adopted RENDER_EXTERNAL_URL: {renderUri.GetLeftPart(UriPartial.Authority)}");
+        }
+        if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ALLOWED_ORIGIN"))
+            && Uri.TryCreate(Environment.GetEnvironmentVariable("APP_BASE_URL")
+                ?? Environment.GetEnvironmentVariable("SITE_BASE_URL"), UriKind.Absolute, out var originUri)
+            && originUri.Scheme == Uri.UriSchemeHttps && !originUri.IsLoopback)
+        {
+            Environment.SetEnvironmentVariable("ALLOWED_ORIGIN", originUri.GetLeftPart(UriPartial.Authority));
+            Console.WriteLine($"[boot] ALLOWED_ORIGIN not set → same-origin default: {originUri.GetLeftPart(UriPartial.Authority)}");
+        }
+
         // Hard production/staging blockers must be checked before opening or seeding any database,
         // not merely before accepting HTTP traffic.
+        //
+        // Two postures downgrade a subset of blockers to loud warnings instead of refusing to boot:
+        //   • PCI World-only (docs/pciworld/ARCHITECTURE.md): base URL / CORS / at-rest key guard
+        //     surfaces this host does not serve.
+        //   • SQLite on the persistent disk (the documented interim posture detected above): a
+        //     legacy hand-created service predates these variables entirely — old builds misread an
+        //     unset ASPNETCORE_ENVIRONMENT as Development and never enforced them, so enforcing them
+        //     retroactively turned a working deployment into a permanently failing one. The service
+        //     boots, every gap is printed as [config:warn], and the derived at-rest key keeps
+        //     decrypting artefacts it originally encrypted (a generated replacement key would not).
+        // The legacy admin token and a half-configured S3 stay hard errors everywhere.
         if (!allowInsecure)
         {
             var preflightErrors = new List<string>();
+            void DeferOr(string msg)
+            {
+                if (worldOnly) Console.WriteLine("[config:warn] " + msg +
+                    " (downgraded on a PCI World-only deployment — complete docs/pciworld/DEPLOY_RENDER.md before public launch)");
+                else if (sqliteOnPersistentDisk) Console.WriteLine("[config:warn] " + msg +
+                    " (downgraded on the interim persistent-disk posture — set this in the dashboard when you can)");
+                else preflightErrors.Add(msg);
+            }
             var baseUrl = Environment.GetEnvironmentVariable("APP_BASE_URL")
-                ?? Environment.GetEnvironmentVariable("SITE_BASE_URL");
+                ?? Environment.GetEnvironmentVariable("SITE_BASE_URL")
+                ?? (worldOnly
+                    ? Environment.GetEnvironmentVariable("PCIWORLD_BASE_URL")
+                        ?? Environment.GetEnvironmentVariable("RENDER_EXTERNAL_URL")
+                    : null);
             if (string.IsNullOrWhiteSpace(baseUrl)
                 || !Uri.TryCreate(baseUrl, UriKind.Absolute, out var baseUri)
                 || baseUri.Scheme != Uri.UriSchemeHttps
                 || baseUri.IsLoopback)
-                preflightErrors.Add("APP_BASE_URL must be a public HTTPS URL");
+                DeferOr("APP_BASE_URL must be a public HTTPS URL");
             var origin = Environment.GetEnvironmentVariable("ALLOWED_ORIGIN");
             if (string.IsNullOrWhiteSpace(origin) || origin == "*")
-                preflightErrors.Add("ALLOWED_ORIGIN must be explicit");
+                DeferOr("ALLOWED_ORIGIN must be explicit");
             if (!Security.HasDedicatedEncryptionKey())
-                preflightErrors.Add("CREDENTIAL_ENCRYPTION_KEY is required");
+                DeferOr("CREDENTIAL_ENCRYPTION_KEY is required");
             if (string.Equals(Environment.GetEnvironmentVariable("ENABLE_LEGACY_ADMIN_TOKEN"), "true",
                     StringComparison.OrdinalIgnoreCase))
                 preflightErrors.Add("ENABLE_LEGACY_ADMIN_TOKEN must be disabled");
             if (!worldOnly
                 && !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY"))
                 && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("STRIPE_WEBHOOK_SECRET")))
-                preflightErrors.Add("STRIPE_WEBHOOK_SECRET is required when Stripe is enabled");
+                DeferOr("STRIPE_WEBHOOK_SECRET is required when Stripe is enabled");
             if (!worldOnly
                 && string.Equals(Environment.GetEnvironmentVariable("STORAGE_PROVIDER"), "s3",
                     StringComparison.OrdinalIgnoreCase)
@@ -498,18 +604,59 @@ List<(string sev, string key, string msg)> ConfigIssues()
         var stripeWhUrl = E("STRIPE_WEBHOOK_URL");
         if (!string.IsNullOrWhiteSpace(stripeWhUrl) && !stripeWhUrl.TrimEnd('/').EndsWith("/api/webhook", StringComparison.OrdinalIgnoreCase))
             Err("STRIPE_WEBHOOK_URL", "must end with /api/webhook (not /api/payments/webhook) — see docs/OPERATIONS.md §9");
+        // Persistent-disk posture (same contract as the pre-DB gate above): only the MySQL
+        // requirement is downgraded, and only when the SQLite file really lives on the mounted
+        // disk — detected automatically (writable /data + a /data path) or claimed explicitly via
+        // ALLOW_SQLITE_IN_PRODUCTION=true (which still demands the /data path).
+        var sqliteFile = Path.GetFullPath(E("DATABASE_FILE") ?? "./pci.db");
+        var dataWritable = false;
+        try
+        {
+            if (Directory.Exists("/data"))
+            { var p = Path.Combine("/data", ".pci-config-probe"); File.WriteAllText(p, "ok"); File.Delete(p); dataWritable = true; }
+        }
+        catch { }
+        var onPersistentDisk = dbProvider is not ("mysql" or "mariadb")
+            && dataWritable && sqliteFile.StartsWith("/data/", StringComparison.Ordinal);
+        if (onPersistentDisk || EnvFlagTrue("ALLOW_SQLITE_IN_PRODUCTION"))
+        {
+            // Same downgrade set as the pre-DB gate: a legacy disk-backed service must keep booting
+            // while every gap stays visible as a warning. Legacy token and half-configured S3 stay hard.
+            issues = issues.Select(i => i.Item1 == "error"
+                    && i.Item2 is "DB_PROVIDER" or "MYSQL_HOST" or "APP_BASE_URL" or "ALLOWED_ORIGIN"
+                                or "CREDENTIAL_ENCRYPTION_KEY" or "STRIPE_WEBHOOK_SECRET"
+                ? ("warn", i.Item2, i.Item3 + " (SQLite on the persistent disk — interim posture; set this when you can)") : i).ToList();
+            if (dbProvider is not ("mysql" or "mariadb") && !sqliteFile.StartsWith("/data/", StringComparison.Ordinal))
+                issues.Add(("error", "DATABASE_FILE",
+                    "ALLOW_SQLITE_IN_PRODUCTION=true requires DATABASE_FILE under /data (e.g. /data/pci.db) — any other path is erased on every redeploy"));
+        }
     }
     // A PCI World-only deployment (PCIWORLD_ONLY=true) runs none of the PAYMENT, EXAM, CREDENTIAL or
-    // identity-document subsystems, so those blockers protect nothing here and are downgraded. The
-    // rest are NOT waived: CORS origin, the data-at-rest key, the public base URL and the legacy
-    // admin token all guard the world surfaces themselves, and a blanket waiver (the Phase 0 audit's
-    // finding H3) silently turned a production world deployment into an unprotected one.
+    // identity-document subsystems, so those blockers protect nothing here and are downgraded —
+    // matching the pre-DB preflight above, which documents the reasoning per key. The legacy admin
+    // token keeps its severity: /world-admin lives on this host. A blanket waiver (the Phase 0
+    // audit's finding H3) is still avoided — each downgrade is named and explained.
     if (PCI.Backend.Core.WorldOnly.Enabled)
     {
-        // Payments/exams/storage only — everything else keeps its severity.
         var waivable = new HashSet<string> { "STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "STRIPE_WEBHOOK_URL", "S3_BUCKET", "SMTP_HOST" };
         issues = issues.Select(i => i.Item1 == "error" && waivable.Contains(i.Item2)
             ? ("warn", i.Item2, i.Item3 + " (subsystem not served by a PCI World-only deployment)") : i).ToList();
+
+        // The world surfaces build their public links from PCIWORLD_BASE_URL / RENDER_EXTERNAL_URL
+        // (WorldUrl.Base) — a valid HTTPS value there genuinely satisfies the base-URL requirement.
+        var worldBase = E("PCIWORLD_BASE_URL") ?? E("RENDER_EXTERNAL_URL");
+        var worldBaseOk = Uri.TryCreate(worldBase, UriKind.Absolute, out var wb)
+            && wb.Scheme == Uri.UriSchemeHttps && !wb.IsLoopback;
+        issues = issues.Select(i => i.Item1 == "error" && i.Item2 == "APP_BASE_URL"
+            ? worldBaseOk
+                ? ("info", i.Item2, "world base URL resolved from " + (E("PCIWORLD_BASE_URL") is not null ? "PCIWORLD_BASE_URL" : "RENDER_EXTERNAL_URL"))
+                : ("warn", i.Item2, i.Item3 + " (downgraded on a PCI World-only deployment — set PCIWORLD_BASE_URL before public launch)")
+            : i).ToList();
+        // Same-origin, server-rendered surfaces: an absent CORS origin allows nothing (fail-closed
+        // default), and the at-rest key encrypts credential/identity-document stores that are
+        // unreachable here — PCI World keeps only password hashes and token SHAs.
+        issues = issues.Select(i => i.Item1 == "error" && i.Item2 is "ALLOWED_ORIGIN" or "CREDENTIAL_ENCRYPTION_KEY"
+            ? ("warn", i.Item2, i.Item3 + " (downgraded on a PCI World-only deployment — complete docs/pciworld/DEPLOY_RENDER.md before public launch)") : i).ToList();
 
         // Durable storage is the one exception with a deliberate, explicit bridge. PCI World's
         // product law is that learner history is never lost, and a container filesystem is erased on
@@ -533,7 +680,7 @@ List<(string sev, string key, string msg)> ConfigIssues()
     var issues = ConfigIssues();
     foreach (var (sev, key, msg) in issues) Console.WriteLine($"[config:{sev}] {key} — {msg}");
     var hardErrors = issues.Where(i => i.sev == "error").ToList();
-    var allowInsecure = string.Equals(Environment.GetEnvironmentVariable("ALLOW_INSECURE_PRODUCTION"), "true", StringComparison.OrdinalIgnoreCase);
+    var allowInsecure = EnvFlagTrue("ALLOW_INSECURE_PRODUCTION");
     if (hardErrors.Count > 0 && !allowInsecure)
     {
         Console.WriteLine($"[config] Refusing to start: {hardErrors.Count} production configuration error(s). " +

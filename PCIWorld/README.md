@@ -17,22 +17,26 @@ Create the service with **New → Web Service** on this repository, then:
 | Instance type | Starter or above |
 | Disk | mount path `/data`, sized for uploaded evidence |
 
-The image is production/fail-closed and requires an external managed MySQL service. `render.yaml`
-does not provision the database. Required environment variables:
+**Environment variables: none are required to boot.** With no configuration the image runs the
+validator's explicit SQLite bridge (`PCIWORLD_ALLOW_SQLITE` on an absolute `/data` path): mount
+the `/data` disk and learner history is durable; without a disk the boot log prints the
+`EPHEMERAL STORAGE` banner and data resets on every deploy — a posture for looking at the
+product, never for inviting anyone in. **MySQL 8 is the production destination**: the moment
+`MYSQL_HOST` (or `MYSQL_CONNECTION_STRING`) is set, the entrypoint switches to fail-closed
+MySQL and the SQLite bridge is not engaged.
 
 | Key | Value / effect |
 |---|---|
-| `MYSQL_HOST`, `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD` | external MySQL 8 / MariaDB 10.11 connection |
+| `MYSQL_HOST`, `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD` | external MySQL 8 / MariaDB 10.11 connection — setting these is what flips the image to production MySQL |
 | `MYSQL_SSL` | `required` for managed production |
-| `APP_BASE_URL`, `ALLOWED_ORIGIN` | public HTTPS origin |
-| `CREDENTIAL_ENCRYPTION_KEY` | dedicated 32-byte/long passphrase |
+| `APP_BASE_URL`, `ALLOWED_ORIGIN` | public HTTPS origin — recommended before public launch; on a world-only deployment their absence downgrades to logged warnings because the surfaces they guard are same-origin and server-rendered |
+| `CREDENTIAL_ENCRYPTION_KEY` | dedicated 32-byte key/passphrase — recommended; the stores it encrypts (credentials, identity documents) are unreachable on this deployment, so its absence warns rather than blocks |
 | `PCIWORLD_OWNER_PASSWORD` | sets the initial admin password (otherwise `changeme-world-owner`, and boot warns on every start until it is changed — in a production posture a random one is minted and printed once instead) |
 | `STORAGE_ROOT` | uploaded-file path (default `/data/storage`) |
 | `PCIWORLD_BASE_URL` | the public origin used in verification and reset emails. Render's `RENDER_EXTERNAL_URL` is used automatically, so this is only needed behind a custom domain. Links are never built from the request's `Host` header. |
 
-Missing MySQL or security settings terminate with exit 78 **before any database is opened**.
-SQLite is not the container's preview fallback. For a local preview, run the main image explicitly
-in Development as documented in `DEPLOY.md`.
+Incomplete MySQL settings (host set, credentials missing) still terminate with exit 78 **before
+any database is opened** — there is no silent fallback from a configured MySQL to SQLite.
 
 > If you prefer to set **Root Directory = `PCIWorld`**, you must also set the advanced
 > **Docker Build Context Directory** to the repository root (`.`) — the Dockerfile copies

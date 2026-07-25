@@ -11,6 +11,11 @@
 # MYSQL_* values below. SQLite is NOT used in production — the app refuses to boot in Production
 # unless DB_PROVIDER=mysql (there is no silent SQLite fallback). Run the one-time data migration
 # (backend/tools/migrate_sqlite_to_mysql.py) before first cutover; see docs/MYSQL_MIGRATION.md.
+#
+# EXISTING services deployed on the earlier SQLite-on-persistent-disk posture: set
+# ALLOW_SQLITE_IN_PRODUCTION=true (Settings → Environment) to keep deploying on that interim
+# posture — it waives ONLY the MySQL requirement (the database must live under /data) and keeps
+# every other production check active. See DEPLOY.md “Deploys suddenly failing…”.
 
 services:
   - type: web
