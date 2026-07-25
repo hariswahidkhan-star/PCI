@@ -32,6 +32,39 @@ def check(name, overrides):
         print(f"  FAIL  {name}: exit={proc.returncode} db_exists={os.path.exists(db)}")
         print(proc.stdout[-1200:])
 
+def check_boots(name, overrides, db_file):
+    """The inverse contract: this configuration must get PAST the fail-closed preflight and open
+    its database. Passing the preflight is observable as the DB file appearing; the process is
+    then terminated — a full HTTP boot is the E2E suite's job, not this one's."""
+    global passed, failed
+    env = dict(os.environ)
+    for key in (
+        "ASPNETCORE_ENVIRONMENT", "DOTNET_ENVIRONMENT", "APP_ENV", "DB_PROVIDER",
+        "MYSQL_CONNECTION_STRING", "MYSQL_HOST", "MYSQL_PASSWORD",
+        "ALLOW_INSECURE_PRODUCTION", "PCIWORLD_ONLY", "PCIWORLD_ALLOW_SQLITE",
+        "ALLOW_SQLITE_IN_PRODUCTION",
+        "APP_BASE_URL", "SITE_BASE_URL", "ALLOWED_ORIGIN", "CREDENTIAL_ENCRYPTION_KEY",
+    ):
+        env.pop(key, None)
+    env.update(DATABASE_FILE=db_file, PORT="0")
+    env.update(overrides)
+    proc = subprocess.Popen(
+        ["dotnet", DLL], cwd=BACKEND, env=env, text=True,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    try:
+        out = proc.communicate(timeout=45)[0]
+    except subprocess.TimeoutExpired:
+        proc.terminate()          # still running at 45s = it booted and is serving
+        out = proc.communicate(timeout=15)[0]
+    ok = proc.returncode != 78 and os.path.exists(db_file)
+    if ok:
+        passed += 1
+        print(f"  PASS  {name}")
+    else:
+        failed += 1
+        print(f"  FAIL  {name}: exit={proc.returncode} db_exists={os.path.exists(db_file)}")
+        print(out[-1200:])
+
 check("framework-default Production rejects SQLite before open", {"DB_PROVIDER": "sqlite"})
 check("DOTNET_ENVIRONMENT=Production rejects SQLite before open",
       {"DOTNET_ENVIRONMENT": "Production", "DB_PROVIDER": "sqlite"})
@@ -43,6 +76,8 @@ check("PCI World SQLite waiver rejects ephemeral /tmp path",
       {"ASPNETCORE_ENVIRONMENT": "Production", "PCIWORLD_ONLY": "true",
        "PCIWORLD_ALLOW_SQLITE": "true", "DB_PROVIDER": "sqlite",
        "DATABASE_FILE": os.path.join("/tmp", "pciworld-must-not-open.db")})
+check("PCI World WITHOUT the explicit bridge still rejects SQLite",
+      {"ASPNETCORE_ENVIRONMENT": "Production", "PCIWORLD_ONLY": "true", "DB_PROVIDER": "sqlite"})
 # The whole-platform persistent-disk opt-in has the same shape as the World waiver: the flag alone
 # is NOT enough — the database must live on the mounted disk, or boot still fails closed.
 check("ALLOW_SQLITE_IN_PRODUCTION rejects an ephemeral (non-/data) path",
@@ -50,51 +85,40 @@ check("ALLOW_SQLITE_IN_PRODUCTION rejects an ephemeral (non-/data) path",
        "ALLOW_SQLITE_IN_PRODUCTION": "true",
        "DATABASE_FILE": os.path.join("/tmp", "platform-must-not-open.db")})
 
-# Positive case: the opt-in with a /data path must get PAST the database gate (the deploy-recovery
-# path for pre-MySQL services). Requires a writable /data, which CI runners may not have — skip
-# honestly rather than fake a pass. "Past the gate" = the boot log reaches the provider line and
-# never prints a refusal; the process is killed before it has to finish seeding.
-def check_boots_past_gate(name, overrides):
-    global passed, failed
-    if not (os.path.isdir("/data") and os.access("/data", os.W_OK)):
-        print(f"  SKIP  {name} (no writable /data on this runner)")
-        return
-    db = os.path.join("/data", "preflight-optin-test.db")
-    for suffix in ("", "-wal", "-shm"):
-        try: os.remove(db + suffix)
-        except FileNotFoundError: pass
-    env = dict(os.environ)
-    for key in ("ASPNETCORE_ENVIRONMENT", "DOTNET_ENVIRONMENT", "APP_ENV", "DB_PROVIDER",
-                "MYSQL_CONNECTION_STRING", "MYSQL_HOST", "MYSQL_PASSWORD",
-                "ALLOW_INSECURE_PRODUCTION", "PCIWORLD_ONLY", "PCIWORLD_ALLOW_SQLITE",
-                "ALLOW_SQLITE_IN_PRODUCTION"):
-        env.pop(key, None)
-    env.update(DATABASE_FILE=db, PORT="0")
-    env.update(overrides)
-    try:
-        proc = subprocess.run(["dotnet", DLL], cwd=BACKEND, env=env, text=True,
-                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=25)
-        out = proc.stdout
-    except subprocess.TimeoutExpired as e:  # still running = it booted past every fail-closed gate
-        out = (e.stdout or b"").decode() if isinstance(e.stdout, bytes) else (e.stdout or "")
-    ok = "Refusing" not in out and "database provider: Sqlite" in out and os.path.exists(db)
-    for suffix in ("", "-wal", "-shm"):
-        try: os.remove(db + suffix)
-        except FileNotFoundError: pass
-    if ok:
-        passed += 1
-        print(f"  PASS  {name}")
-    else:
-        failed += 1
-        print(f"  FAIL  {name}")
-        print(out[-1200:])
+# The PCIWorld image's zero-config contract (PCIWorld/README.md): world-only + the explicit
+# bridge + a /data database must BOOT — with the base-URL/CORS/at-rest-key blockers downgraded
+# to warnings, because the surfaces they guard are not served on a world-only deployment. This
+# is exactly the posture the PCIWorld/Dockerfile entrypoint produces with no variables set.
+# Needs a writable /data (the container always has one); skip where the sandbox does not.
+data_dir = "/data"
+try:
+    os.makedirs(data_dir, exist_ok=True)
+    probe = os.path.join(data_dir, ".pci-test-probe")
+    open(probe, "w").write("ok"); os.remove(probe)
+    world_db = os.path.join(data_dir, "pciworld-boot-test.db")
+    if os.path.exists(world_db): os.remove(world_db)
+    check_boots("PCI World zero-config bridge boots on /data (blockers downgrade to warnings)",
+                {"ASPNETCORE_ENVIRONMENT": "Production", "PCIWORLD_ONLY": "true",
+                 "PCIWORLD_ALLOW_SQLITE": "true", "DB_PROVIDER": "sqlite",
+                 "RENDER_EXTERNAL_URL": "https://pciworld.example.onrender.com"},
+                world_db)
+    if os.path.exists(world_db): os.remove(world_db)
 
-check_boots_past_gate("ALLOW_SQLITE_IN_PRODUCTION + /data path opens the database (deploy recovery)",
-      {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "sqlite",
-       "ALLOW_SQLITE_IN_PRODUCTION": "true",
-       "APP_BASE_URL": "https://pci-platform.example.org",
-       "ALLOWED_ORIGIN": "https://pci-platform.example.org",
-       "CREDENTIAL_ENCRYPTION_KEY": "preflight-test-key-0123456789abcdef0123456789abcdef"})
+    # Whole-platform deploy recovery: ALLOW_SQLITE_IN_PRODUCTION + a /data database must get past
+    # the fail-closed gate too — but unlike world-only, the base-URL/CORS/at-rest-key blockers stay
+    # ACTIVE, so the overrides must satisfy them for boot to proceed.
+    platform_db = os.path.join(data_dir, "platform-optin-boot-test.db")
+    if os.path.exists(platform_db): os.remove(platform_db)
+    check_boots("ALLOW_SQLITE_IN_PRODUCTION + /data path opens the database (deploy recovery)",
+                {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "sqlite",
+                 "ALLOW_SQLITE_IN_PRODUCTION": "true",
+                 "APP_BASE_URL": "https://pci-platform.example.org",
+                 "ALLOWED_ORIGIN": "https://pci-platform.example.org",
+                 "CREDENTIAL_ENCRYPTION_KEY": "preflight-test-key-0123456789abcdef0123456789abcdef"},
+                platform_db)
+    if os.path.exists(platform_db): os.remove(platform_db)
+except OSError:
+    print("  SKIP  /data boot-through checks (no writable /data in this environment)")
 
 print(f"\n  == {passed}/{passed + failed} PASSED ==")
 raise SystemExit(0 if failed == 0 else 1)

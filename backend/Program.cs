@@ -115,21 +115,43 @@ catch { /* /data exists but is not ours to write — keep the configured default
 
         // Hard production/staging blockers must be checked before opening or seeding any database,
         // not merely before accepting HTTP traffic.
+        //
+        // On a PCI World-only deployment (docs/pciworld/ARCHITECTURE.md; PCIWorld/README.md's
+        // zero-config contract) three of these guard surfaces this host does not serve, so they
+        // downgrade to loud warnings instead of refusing to boot:
+        //   base URL  — the world surfaces build links from PCIWORLD_BASE_URL / RENDER_EXTERNAL_URL
+        //               (WorldUrl.Base), so those sources genuinely SATISFY the requirement when
+        //               present; only their absence downgrades.
+        //   CORS      — the world pages are server-rendered and same-origin; an absent
+        //               ALLOWED_ORIGIN allows nothing, which is the fail-closed default.
+        //   at-rest key — it encrypts Certuvo credentials and identity documents, stores that are
+        //               unreachable here; PCI World keeps only password hashes and token SHAs.
+        // The legacy admin token stays a hard error everywhere: /world-admin lives on this host.
         if (!allowInsecure)
         {
             var preflightErrors = new List<string>();
+            void WorldOr(string msg)
+            {
+                if (worldOnly) Console.WriteLine("[config:warn] " + msg +
+                    " (downgraded on a PCI World-only deployment — complete docs/pciworld/DEPLOY_RENDER.md before public launch)");
+                else preflightErrors.Add(msg);
+            }
             var baseUrl = Environment.GetEnvironmentVariable("APP_BASE_URL")
-                ?? Environment.GetEnvironmentVariable("SITE_BASE_URL");
+                ?? Environment.GetEnvironmentVariable("SITE_BASE_URL")
+                ?? (worldOnly
+                    ? Environment.GetEnvironmentVariable("PCIWORLD_BASE_URL")
+                        ?? Environment.GetEnvironmentVariable("RENDER_EXTERNAL_URL")
+                    : null);
             if (string.IsNullOrWhiteSpace(baseUrl)
                 || !Uri.TryCreate(baseUrl, UriKind.Absolute, out var baseUri)
                 || baseUri.Scheme != Uri.UriSchemeHttps
                 || baseUri.IsLoopback)
-                preflightErrors.Add("APP_BASE_URL must be a public HTTPS URL");
+                WorldOr("APP_BASE_URL must be a public HTTPS URL");
             var origin = Environment.GetEnvironmentVariable("ALLOWED_ORIGIN");
             if (string.IsNullOrWhiteSpace(origin) || origin == "*")
-                preflightErrors.Add("ALLOWED_ORIGIN must be explicit");
+                WorldOr("ALLOWED_ORIGIN must be explicit");
             if (!Security.HasDedicatedEncryptionKey())
-                preflightErrors.Add("CREDENTIAL_ENCRYPTION_KEY is required");
+                WorldOr("CREDENTIAL_ENCRYPTION_KEY is required");
             if (string.Equals(Environment.GetEnvironmentVariable("ENABLE_LEGACY_ADMIN_TOKEN"), "true",
                     StringComparison.OrdinalIgnoreCase))
                 preflightErrors.Add("ENABLE_LEGACY_ADMIN_TOKEN must be disabled");
@@ -504,16 +526,31 @@ List<(string sev, string key, string msg)> ConfigIssues()
         }
     }
     // A PCI World-only deployment (PCIWORLD_ONLY=true) runs none of the PAYMENT, EXAM, CREDENTIAL or
-    // identity-document subsystems, so those blockers protect nothing here and are downgraded. The
-    // rest are NOT waived: CORS origin, the data-at-rest key, the public base URL and the legacy
-    // admin token all guard the world surfaces themselves, and a blanket waiver (the Phase 0 audit's
-    // finding H3) silently turned a production world deployment into an unprotected one.
+    // identity-document subsystems, so those blockers protect nothing here and are downgraded —
+    // matching the pre-DB preflight above, which documents the reasoning per key. The legacy admin
+    // token keeps its severity: /world-admin lives on this host. A blanket waiver (the Phase 0
+    // audit's finding H3) is still avoided — each downgrade is named and explained.
     if (PCI.Backend.Core.WorldOnly.Enabled)
     {
-        // Payments/exams/storage only — everything else keeps its severity.
         var waivable = new HashSet<string> { "STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "STRIPE_WEBHOOK_URL", "S3_BUCKET", "SMTP_HOST" };
         issues = issues.Select(i => i.Item1 == "error" && waivable.Contains(i.Item2)
             ? ("warn", i.Item2, i.Item3 + " (subsystem not served by a PCI World-only deployment)") : i).ToList();
+
+        // The world surfaces build their public links from PCIWORLD_BASE_URL / RENDER_EXTERNAL_URL
+        // (WorldUrl.Base) — a valid HTTPS value there genuinely satisfies the base-URL requirement.
+        var worldBase = E("PCIWORLD_BASE_URL") ?? E("RENDER_EXTERNAL_URL");
+        var worldBaseOk = Uri.TryCreate(worldBase, UriKind.Absolute, out var wb)
+            && wb.Scheme == Uri.UriSchemeHttps && !wb.IsLoopback;
+        issues = issues.Select(i => i.Item1 == "error" && i.Item2 == "APP_BASE_URL"
+            ? worldBaseOk
+                ? ("info", i.Item2, "world base URL resolved from " + (E("PCIWORLD_BASE_URL") is not null ? "PCIWORLD_BASE_URL" : "RENDER_EXTERNAL_URL"))
+                : ("warn", i.Item2, i.Item3 + " (downgraded on a PCI World-only deployment — set PCIWORLD_BASE_URL before public launch)")
+            : i).ToList();
+        // Same-origin, server-rendered surfaces: an absent CORS origin allows nothing (fail-closed
+        // default), and the at-rest key encrypts credential/identity-document stores that are
+        // unreachable here — PCI World keeps only password hashes and token SHAs.
+        issues = issues.Select(i => i.Item1 == "error" && i.Item2 is "ALLOWED_ORIGIN" or "CREDENTIAL_ENCRYPTION_KEY"
+            ? ("warn", i.Item2, i.Item3 + " (downgraded on a PCI World-only deployment — complete docs/pciworld/DEPLOY_RENDER.md before public launch)") : i).ToList();
 
         // Durable storage is the one exception with a deliberate, explicit bridge. PCI World's
         // product law is that learner history is never lost, and a container filesystem is erased on
