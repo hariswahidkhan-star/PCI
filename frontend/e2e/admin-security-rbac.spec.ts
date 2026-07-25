@@ -34,12 +34,8 @@ test.describe('admin account security, RBAC and settings', () => {
     await viewerPage.getByLabel('Email address').fill(email)
     await viewerPage.getByLabel('Password').fill(temporaryPassword)
     await viewerPage.getByRole('button', { name: 'Sign in' }).click()
-    // Temporary credentials are bootstrap-only: complete the required first-login rotation.
-    await expect(viewerPage.getByRole('heading', { name: 'Set a new password' })).toBeVisible()
-    const viewerPassword = 'BrowserViewer-2026!'
-    await viewerPage.getByLabel('New password', { exact: true }).fill(viewerPassword)
-    await viewerPage.getByLabel('Confirm password').fill(viewerPassword)
-    await viewerPage.getByRole('button', { name: 'Update password' }).click()
+    // No forced password gate: the viewer lands straight in the console with its temporary password.
+    await expect(viewerPage.getByRole('heading', { name: 'Set a new password' })).toHaveCount(0)
     await expect(viewerPage.getByText('Browser Read-only Reviewer')).toBeVisible()
     await expect(viewerPage.getByRole('link', { name: 'Reports' })).toBeVisible()
     await expect(viewerPage.getByRole('link', { name: 'Students' })).toHaveCount(0)

@@ -400,16 +400,31 @@ public sealed class Db
         sql.TrimStart().StartsWith("CREATE", StringComparison.OrdinalIgnoreCase) &&
         sql.Contains("INDEX", StringComparison.OrdinalIgnoreCase);
 
-    /// <summary>Rewrite `CREATE INDEX x ON t(a, b)` as `… (a(191), b(191))`. Applied only after MySQL
-    /// has told us a column in this index is a BLOB/TEXT that needs a length; a prefix on a column
-    /// that does not need one is harmless and indexes the same leading characters MariaDB would.</summary>
-    static string PrefixIndexedColumns(string sql)
+    /// <summary>Rewrite `CREATE INDEX x ON t(a, b)` as `… (a(191), b)` — a prefix is added ONLY to
+    /// the columns MySQL reports as BLOB/TEXT. Applied only after MySQL has told us a column in this
+    /// index needs a length; prefixing a non-string column (e.g. a BIGINT in a composite key) is a
+    /// hard error (1089), so column types are read from information_schema first.</summary>
+    string PrefixIndexedColumns(string sql)
     {
         var open = sql.LastIndexOf('(');
         var close = sql.LastIndexOf(')');
         if (open < 0 || close < open) return sql;
+        var tableMatch = System.Text.RegularExpressions.Regex.Match(
+            sql[..open], @"ON\s+`?([A-Za-z0-9_]+)`?\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        var textCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (tableMatch.Success)
+        {
+            using var cmd = NewCmd();
+            cmd.CommandText = @"SELECT column_name FROM information_schema.columns
+                WHERE table_schema=DATABASE() AND table_name=@tableName
+                  AND data_type IN ('text','tinytext','mediumtext','longtext','blob','tinyblob','mediumblob','longblob')";
+            var p = cmd.CreateParameter(); p.ParameterName = "@tableName"; p.Value = tableMatch.Groups[1].Value;
+            cmd.Parameters.Add(p);
+            using var rd = cmd.ExecuteReader();
+            while (rd.Read()) textCols.Add(rd.GetString(0));
+        }
         var cols = sql[(open + 1)..close].Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        var rewritten = cols.Select(c => c.Contains('(') ? c : c + "(191)");
+        var rewritten = cols.Select(c => !c.Contains('(') && textCols.Contains(c.Trim('`')) ? c + "(191)" : c);
         return sql[..(open + 1)] + string.Join(", ", rewritten) + sql[close..];
     }
 
