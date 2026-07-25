@@ -136,7 +136,8 @@ public static class WorldSchema
             detail TEXT,
             owner VARCHAR(64),
             duration_ms INTEGER,
-            ran_at TEXT DEFAULT (datetime('now')))");
+            ran_at VARCHAR(32) DEFAULT (datetime('now')))");
+        Bound(db, "pciworld_rotation_runs", "ran_at", "VARCHAR(32)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldrotrun_at ON pciworld_rotation_runs(ran_at)");
 
         // ── Single-row advisory lock for the boundary job, claimed through WorkerLease exactly like
@@ -155,7 +156,7 @@ public static class WorldSchema
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             token_sha VARCHAR(64) UNIQUE NOT NULL,
             created_at TEXT DEFAULT (datetime('now')),
-            last_seen_at TEXT DEFAULT (datetime('now')))");
+            last_seen_at VARCHAR(32) DEFAULT (datetime('now')))");
 
         // ── Attempts pin (challenge_id, version) at start and replay only from the snapshot.
         //    result_token_sha is the opaque public verification token (nullable until shared,
@@ -216,7 +217,7 @@ public static class WorldSchema
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
             token VARCHAR(64) NOT NULL,
-            expires_at TEXT NOT NULL,
+            expires_at VARCHAR(32) NOT NULL,
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldusess_token ON pciworld_user_sessions(token)");
         db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_user_tokens(
@@ -275,7 +276,7 @@ public static class WorldSchema
             admin_id INTEGER,
             action VARCHAR(64) NOT NULL,
             detail TEXT,
-            created_at TEXT DEFAULT (datetime('now')))");
+            created_at VARCHAR(32) DEFAULT (datetime('now')))");
 
         // ── Content reports (§ content correction/reporting): anyone — anonymous included — can
         //    flag a challenge. No PII is required or stored; the optional session link exists only
@@ -322,11 +323,7 @@ public static class WorldSchema
         // MySQL silently prefixes a lone TEXT key at 3072 bytes, but a COMPOSITE key containing one is
         // rejected outright (error 1071) — which aborted this whole installer on MySQL and left the
         // newsroom tables uncreated. An ISO-8601 stamp never exceeds 32 characters.
-        if (db.Provider == Db.Kind.MySql &&
-            db.Scalar<long>(@"SELECT COUNT(*) FROM information_schema.columns
-                              WHERE table_schema=DATABASE() AND table_name='pciworld_articles'
-                                AND column_name='published_at' AND data_type='text'") > 0)
-            db.Exec("ALTER TABLE pciworld_articles MODIFY published_at VARCHAR(32)");
+        Bound(db, "pciworld_articles", "published_at", "VARCHAR(32)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldart_kind ON pciworld_articles(kind, status, published_at)");
 
         db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_article_versions(
@@ -348,7 +345,7 @@ public static class WorldSchema
         //    published it, when, and when we retrieved it. Model memory is never a source. ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_sources(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            url TEXT NOT NULL,
+            url VARCHAR(512) NOT NULL,
             publisher TEXT,
             title TEXT,
             published_at TEXT,                             -- the source's own publication date
@@ -356,6 +353,7 @@ public static class WorldSchema
             tier VARCHAR(24),                              -- official|regulator|company|exchange|multilateral|journalism
             note TEXT,
             created_at TEXT DEFAULT (datetime('now')))");
+        Bound(db, "pciworld_sources", "url", "VARCHAR(512)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldsrc_url ON pciworld_sources(url)");
 
         // Each link records WHICH claim the source supports — a bibliography proves nothing.
@@ -404,10 +402,11 @@ public static class WorldSchema
             event VARCHAR(48) NOT NULL,
             challenge_id INTEGER,
             session_id INTEGER,
-            created_at TEXT DEFAULT (datetime('now')))");
+            created_at VARCHAR(32) DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldev_event ON pciworld_events(event)");
         // Highest-volume table in the realm (a row per page view) — the retention sweep and every
         // time-bounded analytics query need a date index or they scan the whole history.
+        Bound(db, "pciworld_events", "created_at", "VARCHAR(32)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldev_at ON pciworld_events(created_at)");
 
         // ── Remaining hot-path indexes identified by the Phase 0 scale audit. Each backs a query
@@ -420,19 +419,40 @@ public static class WorldSchema
         // TEXT column on MySQL. This one predates the editorial platform — it used to be the LAST
         // statement to fail, so only trailing indexes were lost and the table-set parity check still
         // passed. It has to be repaired here too, or the abort simply moves back to this line.
-        if (db.Provider == Db.Kind.MySql &&
-            db.Scalar<long>(@"SELECT COUNT(*) FROM information_schema.columns
-                              WHERE table_schema=DATABASE() AND table_name='pciworld_attempts'
-                                AND column_name='completed_at' AND data_type='text'") > 0)
-            db.Exec("ALTER TABLE pciworld_attempts MODIFY completed_at VARCHAR(32)");
+        Bound(db, "pciworld_attempts", "completed_at", "VARCHAR(32)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_completed ON pciworld_attempts(status, completed_at)");
         // Admin queues, ordered and paginated by recency.
+        Bound(db, "pciworld_audit", "created_at", "VARCHAR(32)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldaudit_at ON pciworld_audit(created_at)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldreports_ch ON pciworld_reports(challenge_id, status)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldinv_attempt ON pciworld_invites(attempt_id)");
+        Bound(db, "pciworld_sessions", "last_seen_at", "VARCHAR(32)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldsess_seen ON pciworld_sessions(last_seen_at)");
+        Bound(db, "pciworld_user_sessions", "expires_at", "VARCHAR(32)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldusess_exp ON pciworld_user_sessions(expires_at)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldutok_user ON pciworld_user_tokens(user_id, purpose)");
+    }
+
+    /// <summary>
+    /// Narrow a column that is still TEXT on an existing MySQL/MariaDB install.
+    ///
+    /// Any column that appears in an index has to be bounded. MariaDB hides the problem for a LONE
+    /// text key by silently prefixing it; MySQL 8 refuses outright (error 1170), and BOTH engines
+    /// reject a composite key containing one (error 1071). Because schema installation is wrapped in
+    /// a catch-and-log, one rejection aborts every statement after it — which is how this installer
+    /// once left the newsroom tables uncreated. SQLite is typeless, so this is a no-op there.
+    /// </summary>
+    static void Bound(Db db, string table, string column, string type)
+    {
+        if (db.Provider != Db.Kind.MySql) return;
+        try
+        {
+            if (db.Scalar<long>(@"SELECT COUNT(*) FROM information_schema.columns
+                    WHERE table_schema=DATABASE() AND table_name=? AND column_name=? AND data_type='text'",
+                    table, column) > 0)
+                db.Exec($"ALTER TABLE {table} MODIFY {column} {type}");
+        }
+        catch (Exception e) { Console.Error.WriteLine($"[pciworld schema] could not bound {table}.{column}: {e.Message}"); }
     }
 
     static void Seed(Db db)
