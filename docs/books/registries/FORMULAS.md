@@ -39,6 +39,10 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
 | Cost of delay | Value forgone per unit of elapsed time; the price at which governance latency, gate duration and escalation paths are all evaluated | currency/period | PML-AI D1/D3 | ✅ |
 | Gate net value | `P(defect)` × build-fix cost − [review + elapsed × cost of delay + `P(defect)` × (`P(detect)` × design-fix + `P(miss)` × build-fix)] | currency | PML-AI D3 | ✅ |
 | Committee capacity | meetings per year × substantive items per meeting; utilisation = demand ÷ capacity | count | PML-AI D3 | ✅ |
+| Mesh / layered interfaces | `n(n−1)/2` possible pairwise interfaces against `n` to an integration layer — the architecture choice, priced | count | PML-AI D4 | ✅ |
+| Hundred-per-cent rule | Σ children − parent = 0 at every WBS level; a non-zero result is an omission or a duplication | currency | PML-AI D4 | ✅ |
+| Assessed total impact | direct + (schedule weeks × cost of delay) + rework + interface re-verification + regression + documentation (+ risk, + benefit) — the basis a delegation threshold must read on | currency | PML-AI D4 | ✅ |
+| Baseline drift | (change count × average direct cost) + (affected count × average weeks × cost of delay); cumulative-test threshold derived from the observed change rate | currency | PML-AI D4 | ✅ |
 | `EVA(benefit)` | Benefit measure in benefits register (named in words to avoid EV clash) | currency | PML-AI D2/D16 | ⏳ |
 
 ## 3. New symbols — PFL-AI

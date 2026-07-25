@@ -301,13 +301,78 @@ a structure that guarantees delay.
 - PML-AI volume now typesets at **129 pp** across Domains 1, 2, 3, 6, 7 and 8 (13 figures, 137 index
   entries), with the **Part Two** divider live. Both volumes together stand at **224 typeset pages**.
 
+**Batch 13 (loop iteration 11) — PML-AI Domain 4, Integration and delivery architecture.**
+(~10.4k words) **PML-AI Part One is now complete.** The domain that assembles Domains 1–3 into a
+project, on the observation that integration fails in one characteristic way: **the parts are managed
+and the joins are not.**
+
+- KA 4.1 the charter as a conferral of authority rather than a plan, with the authority statement
+  named as its irreplaceable content; the plan of plans integrated by consistency checks that only
+  appear when plans are read against each other — including the one where a report produced three
+  days after the steering committee's papers close makes a programme report last month's position
+  *every month, for its whole life*; and tailoring as a recorded decision with three stated limits.
+- KA 4.2 the WBS and the **hundred-per-cent rule as an arithmetic invariant, therefore auditable**:
+  Meridian's five level-2 elements sum to **2,332,000** against an approved **2,400,000**, and the
+  missing element is **clinician training and enabling change** at **214,000** — the same column
+  Domain 2's benefits map omitted, for the same reason (it belongs to somebody else, so nobody
+  decomposes it). The honest baseline is **6.1 %** above approved and still returns NPV
+  **+1,186,898** against Domain 2's +1,332,898, an **11.0 %** reduction: the omission bought nothing.
+- **Interface economics, the domain's flagship arithmetic.** Components grow linearly and interfaces
+  combinatorially. Meridian's 12 components admit **66** point-to-point interfaces costing
+  **USD 1,188,000** against **12** plus a layer at **536,000** — a **54.9 %** saving, worth building
+  below **972,000**. The decisive figure is marginal: a thirteenth component costs **216,000** meshed
+  and **18,000** layered, a factor of 12 that grows with every component, so the architecture is a
+  bet on the future component count. Three cautions stated (partial meshes, the layer's single point
+  of failure and throughput constraint, and the averaged unit cost).
+- KA 4.3 the baseline as one three-dimensional statement, with the invariant that **the time-phased
+  cost baseline must move whenever the schedule does** — the first thing abandoned under pressure,
+  after which earned value measures the distance between two documents. Configuration audit with its
+  finding classes *not* totalled: of 340 items, 28 unidentified, 11 ambiguous and **5 whose recorded
+  version differs from what is deployed** — a 12.94 % headline rate that understates the position,
+  because those five invalidate any verification performed against the register.
+- **Baseline drift quantified**: Meridian's baseline moved **12.1 %** (USD 291,176) through 34
+  individually authorised changes averaging **0.28 %** each, with no decision anywhere on the total —
+  Domain 3's Case study B mechanism with a number attached. And the honest follow-through: a
+  "100,000 in a rolling 90 days" cumulative rule **would not have caught it**, because a quarter's
+  changes aggregate to **57,800**; catching it needs a threshold below 57,800 at 90 days or the same
+  100,000 at 180 days (115,600). A cumulative test set at a round number without reference to the
+  observed change rate has the appearance of a control and none of the function.
+- KA 4.4 the change flow with change/clarification/defect separated (a defect misclassified as a
+  change pays a supplier twice); **assessed impact versus quoted cost** — a change quoted at
+  **40,000** truly costs **131,560**, **3.29×**, of which the quote is **30.4 %** — and the
+  structural consequence that connects straight back to Domain 3: **a delegation threshold applied to
+  quoted direct cost is not a control**, since a change quoted at 22,000 with two weeks of
+  critical-path impact truly costs 50,560, twice the threshold, and is decided without escalation.
+  The remedy is one sentence in the delegation schedule. Plus the rejection entry as the change-log
+  record most often missing and the reason requests recur.
+- Advanced topics (integration across organisational boundaries and the four contract provisions that
+  address it; **architectural decisions as governance decisions** — a decision costing 40,000 to take
+  and 2,000,000 to reverse is not a 40,000 decision, which a value-only delegation schedule cannot
+  see; the reviewer's integration eye), industry variations, two case studies — **"the interface
+  nobody owned"**, where the required count was **31** (not the theoretical 66 nor the architecture's
+  promised 12), **9** had no owner on the far side, and the 342,000 of unplanned interface effort
+  came from planning to the promise; and **"the baseline that could no longer answer the question"**,
+  a third baseline reporting `CPI` 0.99 where performance against the original was `CPI` **0.87** —
+  a 14.9 % overrun that three replacements had made invisible without ever stating an untruth —
+  executive perspective, 4 exercises, 3 toolkits, exam prep, 17 tagged MCQs.
+- Figures 4.2.1 (interface growth, mesh against layered) and 4.4.1 (the change-cost waterfall with
+  the delegation threshold drawn across it).
+- Harness: **661 golden checks, all passing** (was 581). It caught three drifted values during
+  authoring — a case-study week count that exceeded its own overrun, a `CPI`-to-overrun conversion
+  stated as 13 % where 0.87 implies 14.9 %, and an MCQ distractor labelled as omitting rework that
+  actually omitted the direct cost. Interface counts, the hundred-per-cent rule, assessed total impact
+  and baseline drift registered as verified formulas.
+- PML-AI volume now typesets at **156 pp** across Domains 1, 2, 3, 4, 6, 7 and 8 (15 figures, 165
+  index entries). Both volumes together stand at **251 typeset pages**.
+
 ## Next production batch
 
-Queued in loop order: (1) PML-AI Domain 4 (Integration and delivery architecture), which **closes
-PML-AI Part One** — Domain 3's closing note already points at it, since governing the parts of a
-hybrid programme separately requires a single integrated view of the whole; (2) PFL-AI Domain 5
-(Cost of capital and capital structure), which Domain 10's coverage work motivates directly and which
-Domain 4's 8 % discount rate has so far taken as given; (3) PML-AI Domain 5 (Scope, requirements and
-value definition), opening Part Two properly. Phase 2 completes when all foundation domains of both
-books pass gates: **PFL-AI Part One is complete** (with Part Three opened by Domain 10); PML-AI
-Part One needs only Domain 4.
+**Phase 2's foundation scope is now met on both books** — PML-AI Part One (Domains 1–4) and PFL-AI
+Part One (Domains 1–4) are complete, with PFL-AI Part Three opened by Domain 10 and PML-AI Part Two
+opened by Domains 6–8. Production continues into the remaining domains in loop order:
+(1) PFL-AI Domain 5 (Cost of capital and capital structure) — Domain 4 has taken its 8 % discount
+rate as given and Domain 10's coverage work now motivates the leverage question directly;
+(2) PML-AI Domain 5 (Scope, requirements and value definition), which completes the front of Part Two
+that Domains 6–8 already assume; (3) PFL-AI Domain 6 (Financial modelling and model governance),
+which Domains 3, 4 and 10 have each deferred a model-audit point to. A Phase 2 gate report closes the
+phase once these three land; Phase 3 (cases and question banks) follows per the charter §8.

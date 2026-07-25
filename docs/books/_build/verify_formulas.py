@@ -791,6 +791,137 @@ check("EX 3.4 common error (intervals only, no lead times)",
 check("EX 3.4 understatement from omitting lead times", TOTX - 10, 7)
 
 
+# ---------- PML-AI Domain 4 — Integration and delivery architecture ----------
+BASE4 = D(2400000)              # Meridian approved cost baseline (Domain 2)
+
+
+def mesh(n):                    # possible pairwise interfaces among n components
+    return n * (n - 1) // 2
+
+
+# WE 4.2.1 — the hundred-per-cent rule
+KIDS4 = [D(780000), D(536000), D(310000), D(520000), D(186000)]
+check("WE 4.2.1 sum of level-2 elements", sum(KIDS4), 2332000)
+check("WE 4.2.1 unallocated against parent", BASE4 - sum(KIDS4), 68000)
+check("WE 4.2.1 unallocated as % of parent",
+      ((BASE4 - sum(KIDS4)) / BASE4 * 100).quantize(D("0.01")), D("2.83"))
+OMIT4 = D(214000)               # clinician training and enabling change (Domain 2's omitted column)
+check("WE 4.2.1 honest baseline with omission restored", sum(KIDS4) + OMIT4, 2546000)
+check("WE 4.2.1 shortfall against approved", sum(KIDS4) + OMIT4 - BASE4, 146000)
+check("WE 4.2.1 shortfall as % of approved",
+      ((sum(KIDS4) + OMIT4 - BASE4) / BASE4 * 100).quantize(D("0.1")), D("6.1"), tol=D("0.05"))
+check("WE 4.2.1 honest NPV (Domain 2 ramped PV less honest cost)",
+      D(3732898) - (sum(KIDS4) + OMIT4), 1186898)
+check("WE 4.2.1 NPV reduction vs Domain 2", (D(3732898) - BASE4) - (D(3732898) - (sum(KIDS4) + OMIT4)),
+      146000)
+check("WE 4.2.1 NPV reduction %",
+      (D(146000) / (D(3732898) - BASE4) * 100).quantize(D("0.1")), D("11.0"), tol=D("0.05"))
+# WE 4.2.3 — interface economics
+N4, IC4, LAYER4 = 12, D(18000), D(320000)
+check("WE 4.2.3 mesh interface count", mesh(N4), 66)
+check("WE 4.2.3 layered interface count", N4, 12)
+check("WE 4.2.3 mesh cost", D(mesh(N4)) * IC4, 1188000)
+check("WE 4.2.3 layered cost including layer", D(N4) * IC4 + LAYER4, 536000)
+check("WE 4.2.3 saving", D(mesh(N4)) * IC4 - (D(N4) * IC4 + LAYER4), 652000)
+check("WE 4.2.3 saving %",
+      ((D(mesh(N4)) * IC4 - (D(N4) * IC4 + LAYER4)) / (D(mesh(N4)) * IC4) * 100).quantize(D("0.1")),
+      D("54.9"), tol=D("0.05"))
+check("WE 4.2.3 breakeven layer cost", D(mesh(N4)) * IC4 - D(N4) * IC4, 972000)
+check("WE 4.2.3 interfaces avoided", mesh(N4) - N4, 54)
+check("WE 4.2.3 marginal 13th component on a mesh", D(mesh(13) - mesh(12)) * IC4, 216000)
+check("WE 4.2.3 marginal 13th component layered", IC4, 18000)
+check("WE 4.2.3 marginal ratio", D(mesh(13) - mesh(12)), 12)
+check("Fig 4.2.1 mesh count at 20 components", mesh(20), 190)
+# WE 4.3.2 — configuration audit
+CONF4 = {"conforming": 296, "no version": 28, "two current": 11, "wrong version": 5}
+check("WE 4.3.2 register total", sum(CONF4.values()), 340)
+NONC4 = CONF4["no version"] + CONF4["two current"] + CONF4["wrong version"]
+check("WE 4.3.2 non-conforming items", NONC4, 44)
+check("WE 4.3.2 defect rate %", (D(NONC4) / 340 * 100).quantize(D("0.01")), D("12.94"))
+# WE 4.3.3 — baseline drift by accumulation
+N_CH, AVG4, AFF4, WKS4 = 34, D(6800), 14, D("0.3")
+DIRECT4 = D(N_CH) * AVG4
+DELAY4 = D(AFF4) * WKS4 * COD3
+check("WE 4.3.3 direct drift", DIRECT4, 231200)
+check("WE 4.3.3 schedule weeks affected", D(AFF4) * WKS4, D("4.2"))
+check("WE 4.3.3 schedule drift cost", DELAY4, D("59976"))
+check("WE 4.3.3 total drift", DIRECT4 + DELAY4, D("291176"))
+check("WE 4.3.3 drift as % of baseline",
+      ((DIRECT4 + DELAY4) / BASE4 * 100).quantize(D("0.1")), D("12.1"), tol=D("0.05"))
+check("WE 4.3.3 each change as % of baseline", (AVG4 / BASE4 * 100).quantize(D("0.01")), D("0.28"))
+check("WE 4.3.3 90-day aggregate", D(N_CH) / 4 * AVG4, D("57800"))
+check("WE 4.3.3 90-day aggregate below a 100,000 rule", 1 if D(N_CH) / 4 * AVG4 < 100000 else 0, 1)
+check("WE 4.3.3 180-day aggregate", D(N_CH) / 2 * AVG4, 115600)
+check("WE 4.3.3 180-day aggregate trips a 100,000 rule", 1 if D(N_CH) / 2 * AVG4 > 100000 else 0, 1)
+# WE 4.4.2 — assessed impact versus quoted cost
+Q4 = D(40000)
+COMP4 = [("direct", Q4), ("schedule", 2 * COD3), ("rework", D(22000)),
+         ("interfaces", 3 * D(6000)), ("regression", D(14000)), ("documentation", D(9000))]
+TRUE4 = sum(v for _, v in COMP4)
+check("WE 4.4.2 schedule component", 2 * COD3, 28560)
+check("WE 4.4.2 interface re-verification component", 3 * D(6000), 18000)
+check("WE 4.4.2 assessed total impact", TRUE4, 131560)
+check("WE 4.4.2 ratio to quoted", (TRUE4 / Q4).quantize(D("0.001")), D("3.289"))
+check("WE 4.4.2 quoted as % of true cost", (Q4 / TRUE4 * 100).quantize(D("0.01")), D("30.40"))
+check("WE 4.4.2 below-threshold change true cost", D(22000) + 2 * COD3, 50560)
+check("WE 4.4.2 below-threshold change exceeds the 25,000 threshold",
+      1 if D(22000) + 2 * COD3 > 25000 else 0, 1)
+check("4.4.3 change board latency M=2 L=1", ew(2, 1), 2)
+# MCQ distractors
+check("MCQ 4.2-A distractor C (each pair counted twice)", 12 * 11, 132)
+check("MCQ 4.2-A distractor D (n squared)", 12 ** 2, 144)
+check("MCQ 4.3-C distractor D (schedule impact on all 34)",
+      DIRECT4 + D(N_CH) * WKS4 * COD3, D("376856"))
+check("MCQ 4.4-A distractor B (omits schedule impact)", TRUE4 - 2 * COD3, 103000)
+check("MCQ 4.4-A distractor D (omits rework)", TRUE4 - D(22000), 109560)
+# Case study A — the interface nobody owned
+REQ4 = 31
+check("CS 4A required interfaces below theoretical maximum", 1 if REQ4 < mesh(N4) else 0, 1)
+check("CS 4A required interfaces above the layered promise", 1 if REQ4 > N4 else 0, 1)
+check("CS 4A cost of required interfaces", D(REQ4) * IC4, 558000)
+check("CS 4A planned interface cost", D(N4) * IC4, 216000)
+check("CS 4A unplanned interface effort", D(REQ4) * IC4 - D(N4) * IC4, 342000)
+check("CS 4A integration overrun weeks", 11 - 5, 6)
+# Case study B — performance against the original baseline
+check("CS 4B overrun implied by CPI 0.87 %",
+      ((1 / D("0.87") - 1) * 100).quantize(D("0.1")), D("14.9"), tol=D("0.05"))
+# Exercises 4.1-4.4
+N41, IC41, LAY41 = 9, D(24000), D(200000)
+check("EX 4.1 mesh count", mesh(N41), 36)
+check("EX 4.1 mesh cost", D(mesh(N41)) * IC41, 864000)
+check("EX 4.1 layered cost", D(N41) * IC41 + LAY41, 416000)
+check("EX 4.1 saving", D(mesh(N41)) * IC41 - (D(N41) * IC41 + LAY41), 448000)
+check("EX 4.1 breakeven layer cost", D(mesh(N41)) * IC41 - D(N41) * IC41, 648000)
+check("EX 4.1 marginal 10th on a mesh", D(mesh(10) - mesh(9)) * IC41, 216000)
+check("EX 4.1 marginal 10th layered", IC41, 24000)
+P42 = D(6500000)
+KIDS42 = [D(1900000), D(1250000), D(880000), D(1640000), D(410000)]
+check("EX 4.2 children sum", sum(KIDS42), 6080000)
+check("EX 4.2 unallocated", P42 - sum(KIDS42), 420000)
+check("EX 4.2 unallocated %", ((P42 - sum(KIDS42)) / P42 * 100).quantize(D("0.01")), D("6.46"))
+check("EX 4.2 honest total with omission", sum(KIDS42) + 690000, 6770000)
+check("EX 4.2 shortfall", D(690000) - (P42 - sum(KIDS42)), 270000)
+check("EX 4.2 shortfall %",
+      ((D(690000) - (P42 - sum(KIDS42))) / P42 * 100).quantize(D("0.01")), D("4.15"))
+Q43, C43 = D(75000), D(9500)
+COMP43 = [Q43, 3 * C43, D(34000), 4 * D(7500), D(19000), D(11000)]
+check("EX 4.3 schedule component", 3 * C43, 28500)
+check("EX 4.3 interface component", 4 * D(7500), 30000)
+check("EX 4.3 assessed total", sum(COMP43), 197500)
+check("EX 4.3 ratio to quoted", (sum(COMP43) / Q43).quantize(D("0.001")), D("2.633"))
+check("EX 4.3 quoted as % of true", (Q43 / sum(COMP43) * 100).quantize(D("0.1")), D("38.0"))
+N44, AVG44, AFF44, WKS44, B44 = 48, D(5200), 18, D("0.25"), D(3200000)
+check("EX 4.4 direct drift", D(N44) * AVG44, 249600)
+check("EX 4.4 schedule weeks", D(AFF44) * WKS44, D("4.5"))
+check("EX 4.4 schedule drift cost", D(AFF44) * WKS44 * C43, D("42750"))
+check("EX 4.4 total drift", D(N44) * AVG44 + D(AFF44) * WKS44 * C43, D("292350"))
+check("EX 4.4 drift as % of baseline",
+      ((D(N44) * AVG44 + D(AFF44) * WKS44 * C43) / B44 * 100).quantize(D("0.01")), D("9.14"))
+check("EX 4.4 each change as % of baseline", (AVG44 / B44 * 100).quantize(D("0.0001")), D("0.1625"))
+check("EX 4.4 90-day aggregate", D(N44) / 4 * AVG44, 62400)
+check("EX 4.4 a 100,000 rule would not trip", 1 if D(N44) / 4 * AVG44 < 100000 else 0, 1)
+
+
 print()
 if FAILURES:
     print(f"✗ {len(FAILURES)} FAILURES:", *FAILURES, sep="\n  ")

@@ -25,6 +25,7 @@ BOOKS = {
         "order": ["manuscript/domain-01-profession.md",
                   "manuscript/domain-02-strategy-selection.md",
                   "manuscript/domain-03-governance-decision-rights.md",
+                  "manuscript/domain-04-integration-delivery-architecture.md",
                   "manuscript/domain-06-planning-scheduling-flow.md",
                   "manuscript/domain-07-cost-resources-commercial.md",
                   "manuscript/domain-08-risk-uncertainty-resilience.md"],

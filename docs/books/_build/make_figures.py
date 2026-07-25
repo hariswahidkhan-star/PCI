@@ -753,5 +753,98 @@ body += (f'<line x1="{BARX}" y1="{H-52}" x2="{W-24}" y2="{H-52}" stroke="{GRID}"
          'priced at USD 14,280 per week</text>')
 (PML / "fig_3_3_1.svg").write_text(svg(W, H, body))
 
+# ---- Fig 4.2.1 interfaces grow combinatorially -------------------------------------
+IC4 = 18000
+W, H, L_, R, T, B = 660, 400, 84, 106, 46, 62
+def Xn(n): return L_ + (n - 2) / 18 * (W - L_ - R)
+def Yi(v): return H - B - v / 200 * (H - T - B)
+grid = "".join(f'<line x1="{L_}" y1="{Yi(v)}" x2="{W-R}" y2="{Yi(v)}" stroke="{GRID}"/>'
+               f'<text x="{L_-8}" y="{Yi(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v}</text>'
+               for v in range(0, 201, 50))
+xt = "".join(f'<text x="{Xn(n)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{n}</text>'
+             for n in (2, 5, 8, 12, 16, 20))
+mesh_pts = " ".join(f"{Xn(n):.1f},{Yi(n*(n-1)/2):.1f}" for n in range(2, 21))
+lay_pts = " ".join(f"{Xn(n):.1f},{Yi(n):.1f}" for n in range(2, 21))
+body = (grid + xt + axes(L_, T, W - R, H - B, "Number of components n", "Interfaces to specify, build and test")
+        + f'<polyline points="{mesh_pts}" fill="none" stroke="{CRIMSON}" stroke-width="2.8"/>'
+        + f'<polyline points="{lay_pts}" fill="none" stroke="{BLUE}" stroke-width="2.6" stroke-dasharray="7 4"/>'
+        + f'<text x="{W-R+6}" y="{Yi(190)+4:.1f}" font-size="10.5" font-weight="700" fill="{CRIMSON}">'
+          'mesh</text>'
+        + f'<text x="{W-R+6}" y="{Yi(190)+18:.1f}" font-size="9.6" fill="{CRIMSON}">n(n&#8722;1)/2 = 190</text>'
+        + f'<text x="{W-R+6}" y="{Yi(20)+4:.1f}" font-size="10.5" font-weight="700" fill="{BLUE}">layered</text>'
+        + f'<text x="{W-R+6}" y="{Yi(20)+18:.1f}" font-size="9.6" fill="{BLUE}">n = 20</text>'
+        + f'<line x1="{Xn(12):.1f}" y1="{Yi(66):.1f}" x2="{Xn(12):.1f}" y2="{Yi(12):.1f}" '
+          f'stroke="{INK}" stroke-width="1.4" stroke-dasharray="3 3"/>'
+        + f'<circle cx="{Xn(12):.1f}" cy="{Yi(66):.1f}" r="4" fill="{CRIMSON}"/>'
+        + f'<circle cx="{Xn(12):.1f}" cy="{Yi(12):.1f}" r="4" fill="{BLUE}"/>'
+        + f'<text x="{Xn(12)+9:.1f}" y="{Yi(66)-6:.1f}" font-size="10.5" font-weight="700" fill="{CRIMSON}">'
+          '66 at Meridian&#8217;s 12 components</text>'
+        + f'<text x="{Xn(12)+9:.1f}" y="{Yi(12)+14:.1f}" font-size="10.5" font-weight="700" fill="{BLUE}">12</text>'
+        + f'<text x="{Xn(12)+9:.1f}" y="{(Yi(66)+Yi(12))/2:.1f}" font-size="10.2" font-weight="700" '
+          f'fill="{INK}">54 interfaces &#8212; USD 972,000 of avoidable work</text>'
+        + f'<text x="24" y="26" font-size="11.5" font-weight="700" fill="{INK}">'
+          'Components grow linearly; interfaces grow combinatorially &#8212; and the plan was written for the old count</text>'
+        + f'<text x="{L_}" y="{H-B+42}" font-size="10.2" fill="{SLATE}">'
+          f'Marginal cost of a 13th component: +12 interfaces (USD {12*IC4:,}) on a mesh &#183; '
+          f'+1 (USD {IC4:,}) layered</text>')
+(PML / "fig_4_2_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 4.4.1 what a change actually costs ---------------------------------------
+W, H, L_, R, T, B = 680, 400, 92, 24, 62, 74
+steps = [("Quoted direct build", 40000, SLATE), ("Schedule: 2 wk x 14,280", 28560, CRIMSON),
+         ("Rework of completed work", 22000, CRIMSON), ("3 interfaces x 6,000", 18000, CRIMSON),
+         ("Regression testing", 14000, CRIMSON), ("Docs and training", 9000, CRIMSON)]
+TOTAL4 = sum(v for _, v, _ in steps)
+def Yc(v): return H - B - v / 140000 * (H - T - B)
+grid = "".join(f'<line x1="{L_}" y1="{Yc(v)}" x2="{W-R}" y2="{Yc(v)}" stroke="{GRID}"/>'
+               f'<text x="{L_-8}" y="{Yc(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v//1000}k</text>'
+               for v in range(0, 140001, 20000))
+nb = len(steps) + 1
+slot = (W - L_ - R) / nb
+bw = slot * 0.56
+body = grid + axes(L_, T, W - R, H - B, "", "Cost of the change (USD)")
+run = 0
+for i, (label, val, colour) in enumerate(steps):
+    x = L_ + i * slot + (slot - bw) / 2
+    y0, y1 = Yc(run), Yc(run + val)
+    op = "0.55" if i == 0 else "0.9"
+    body += (f'<rect x="{x:.1f}" y="{y1:.1f}" width="{bw:.1f}" height="{y0-y1:.1f}" fill="{colour}" '
+             f'opacity="{op}"/>'
+             f'<text x="{x+bw/2:.1f}" y="{y1-6:.1f}" font-size="9.6" font-weight="700" fill="{INK}" '
+             f'text-anchor="middle">{"" if i == 0 else "+"}{val:,}</text>')
+    words, lines, cur = label.split(), [], ""
+    for wd in words:
+        if len(cur + wd) < 15:
+            cur += wd + " "
+        else:
+            lines.append(cur.strip()); cur = wd + " "
+    lines.append(cur.strip())
+    for k, ln in enumerate(lines[:3]):
+        body += (f'<text x="{x+bw/2:.1f}" y="{H-B+16+k*11}" font-size="8.6" fill="{SLATE}" '
+                 f'text-anchor="middle">{ln}</text>')
+    if i:
+        body += (f'<line x1="{x-(slot-bw):.1f}" y1="{y0:.1f}" x2="{x:.1f}" y2="{y0:.1f}" '
+                 f'stroke="{SLATE}" stroke-width="1" stroke-dasharray="2 2"/>')
+    run += val
+xt = L_ + len(steps) * slot + (slot - bw) / 2
+body += (f'<rect x="{xt:.1f}" y="{Yc(TOTAL4):.1f}" width="{bw:.1f}" height="{(H-B)-Yc(TOTAL4):.1f}" '
+         f'fill="{INK}"/>'
+         f'<text x="{xt+bw/2:.1f}" y="{Yc(TOTAL4)-6:.1f}" font-size="11" font-weight="800" fill="{INK}" '
+         f'text-anchor="middle">{TOTAL4:,}</text>'
+         f'<text x="{xt+bw/2:.1f}" y="{H-B+16}" font-size="8.8" font-weight="700" fill="{INK}" '
+         f'text-anchor="middle">Assessed total</text>'
+         f'<text x="{xt+bw/2:.1f}" y="{H-B+27}" font-size="8.8" font-weight="700" fill="{INK}" '
+         f'text-anchor="middle">3.29 x quoted</text>')
+body += (f'<line x1="{L_}" y1="{Yc(25000):.1f}" x2="{W-R}" y2="{Yc(25000):.1f}" stroke="{BLUE}" '
+         'stroke-width="1.5" stroke-dasharray="5 3"/>'
+         f'<text x="{W-R-4}" y="{Yc(25000)-6:.1f}" font-size="10" font-weight="700" fill="{BLUE}" '
+         'text-anchor="end">Delegation threshold 25,000 &#8212; read on the quoted figure</text>'
+         f'<text x="24" y="26" font-size="11.5" font-weight="700" fill="{INK}">'
+         'The quoted cost is 30.4 % of the true cost &#8212; and it is the only figure on the change form</text>'
+         f'<text x="24" y="42" font-size="10.2" fill="{SLATE}">'
+         'A change quoted at 22,000 with the same two weeks of critical-path impact truly costs 50,560 '
+         '&#8212; twice the threshold, decided without escalation</text>')
+(PML / "fig_4_4_1.svg").write_text(svg(W, H, body))
+
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")
