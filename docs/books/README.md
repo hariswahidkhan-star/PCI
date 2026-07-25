@@ -23,8 +23,12 @@ their subject matter without inheriting its defects.
 
 ## Phase state
 
-- **Phase 0 — Governance and blueprint:** this directory.
-- Phases 1–8 proceed per the charter §8; no phase is skipped to meet page count.
+- **Phase 0 — Governance and blueprint:** complete ([`PHASE0_REPORT.md`](PHASE0_REPORT.md)).
+- **Phase 1 — Prototype domains:** production model proven; prototypes apparatus-complete with a
+  depth-expansion condition ([`PHASE1_REPORT.md`](PHASE1_REPORT.md)). Toolchain in
+  [`_build/`](_build/): `verify_formulas.py` (99 golden checks), `make_figures.py`,
+  `build_book.py` + `print.css`.
+- Phases 2–8 proceed per the charter §8; no phase is skipped to meet page count.
 
 ## Relationship to the rest of the repository
 
