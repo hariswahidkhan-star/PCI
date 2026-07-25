@@ -88,30 +88,50 @@ catch { /* /data exists but is not ours to write — keep the configured default
         // Without this, the MySQL fail-closed change bricked every existing SQLite-on-disk deploy.
         var allowSqliteProd = EnvFlagTrue("ALLOW_SQLITE_IN_PRODUCTION");
         var dbProvider = (Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "").Trim().ToLowerInvariant();
-        if (dbProvider is not ("mysql" or "mariadb") && !allowWorldSqlite && !allowSqliteProd && !allowInsecure)
+        // Persistent-disk auto-posture: a SQLite database whose file lives on the WRITABLE mounted
+        // disk (/data — set by the zero-config adoption above, the Dockerfile default, or the
+        // operator) is the platform's long-documented interim deployment, and it keeps deploying
+        // WITHOUT any flag. The fail-closed refusal is reserved for the hazards the audit actually
+        // targeted: SQLite on an ephemeral container filesystem (data loss on every redeploy) and a
+        // selected-but-unconfigured MySQL. Detection is evidence-based (a real write probe), and the
+        // posture is announced loudly below so it can never masquerade as the approved MySQL setup.
+        var effectiveDbFile = Path.GetFullPath(Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "./pci.db");
+        var dataDiskWritable = false;
+        try
+        {
+            if (Directory.Exists("/data"))
+            {
+                var gateProbe = Path.Combine("/data", ".pci-gate-probe");
+                File.WriteAllText(gateProbe, "ok"); File.Delete(gateProbe);
+                dataDiskWritable = true;
+            }
+        }
+        catch { /* /data absent or read-only — not a persistent-disk deployment */ }
+        var sqliteOnPersistentDisk = dbProvider is not ("mysql" or "mariadb")
+            && dataDiskWritable && effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal);
+        if (dbProvider is not ("mysql" or "mariadb") && !sqliteOnPersistentDisk && !allowWorldSqlite && !allowSqliteProd && !allowInsecure)
         {
             EnvFlagDiagnostic("ALLOW_SQLITE_IN_PRODUCTION");
             EnvFlagDiagnostic("ALLOW_INSECURE_PRODUCTION");
             EnvFlagDiagnostic("PCIWORLD_ONLY");
             EnvFlagDiagnostic("PCIWORLD_ALLOW_SQLITE");
-            Console.WriteLine("[config] Refusing to open database: production requires DB_PROVIDER=mysql " +
-                "(or an explicit persistent-disk opt-in: ALLOW_SQLITE_IN_PRODUCTION=true with DATABASE_FILE under /data, " +
-                "or PCIWORLD_ONLY + PCIWORLD_ALLOW_SQLITE=true) before any schema work. " +
+            Console.WriteLine("[config] Refusing to open database: production requires DB_PROVIDER=mysql, " +
+                "or a SQLite database on the persistent mount (DATABASE_FILE under a writable /data — attach the disk), " +
+                "or PCIWORLD_ONLY + PCIWORLD_ALLOW_SQLITE=true. " +
                 "Set ALLOW_INSECURE_PRODUCTION=true to override every check (not recommended).");
             Environment.Exit(78); // EX_CONFIG
         }
-        if (allowSqliteProd && dbProvider is not ("mysql" or "mariadb"))
+        if (allowSqliteProd && dbProvider is not ("mysql" or "mariadb")
+            && !effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal) && !allowInsecure)
         {
-            var sqliteFile = Path.GetFullPath(Environment.GetEnvironmentVariable("DATABASE_FILE") ?? ".");
-            if (!sqliteFile.StartsWith("/data/", StringComparison.Ordinal) && !allowInsecure)
-            {
-                Console.WriteLine("[config] Refusing to open database: ALLOW_SQLITE_IN_PRODUCTION=true requires DATABASE_FILE " +
-                    "under the persistent mount /data (e.g. /data/pci.db) — any other path is erased on every redeploy.");
-                Environment.Exit(78);
-            }
-            Console.WriteLine($"[config:warn] ALLOW_SQLITE_IN_PRODUCTION=true — production is running SQLite at {sqliteFile}. " +
-                "MySQL (DB_PROVIDER=mysql) remains the approved production database; see docs/MYSQL_MIGRATION.md for the cutover.");
+            Console.WriteLine("[config] Refusing to open database: ALLOW_SQLITE_IN_PRODUCTION=true requires DATABASE_FILE " +
+                "under the persistent mount /data (e.g. /data/pci.db) — any other path is erased on every redeploy.");
+            Environment.Exit(78);
         }
+        if (dbProvider is not ("mysql" or "mariadb") && (sqliteOnPersistentDisk || allowSqliteProd))
+            Console.WriteLine($"[config:warn] production is running SQLite at {effectiveDbFile} on the persistent disk " +
+                "(supported interim posture). MySQL (DB_PROVIDER=mysql) remains the approved production database; " +
+                "see docs/MYSQL_MIGRATION.md for the cutover.");
         if (dbProvider is "mysql" or "mariadb"
             && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING"))
             && (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_HOST"))
@@ -533,13 +553,24 @@ List<(string sev, string key, string msg)> ConfigIssues()
         var stripeWhUrl = E("STRIPE_WEBHOOK_URL");
         if (!string.IsNullOrWhiteSpace(stripeWhUrl) && !stripeWhUrl.TrimEnd('/').EndsWith("/api/webhook", StringComparison.OrdinalIgnoreCase))
             Err("STRIPE_WEBHOOK_URL", "must end with /api/webhook (not /api/payments/webhook) — see docs/OPERATIONS.md §9");
-        // Explicit persistent-disk opt-in (same contract as the pre-DB gate above): only the MySQL
-        // requirement is downgraded, and only when the SQLite file really lives on the mounted disk.
-        if (EnvFlagTrue("ALLOW_SQLITE_IN_PRODUCTION"))
+        // Persistent-disk posture (same contract as the pre-DB gate above): only the MySQL
+        // requirement is downgraded, and only when the SQLite file really lives on the mounted
+        // disk — detected automatically (writable /data + a /data path) or claimed explicitly via
+        // ALLOW_SQLITE_IN_PRODUCTION=true (which still demands the /data path).
+        var sqliteFile = Path.GetFullPath(E("DATABASE_FILE") ?? "./pci.db");
+        var dataWritable = false;
+        try
+        {
+            if (Directory.Exists("/data"))
+            { var p = Path.Combine("/data", ".pci-config-probe"); File.WriteAllText(p, "ok"); File.Delete(p); dataWritable = true; }
+        }
+        catch { }
+        var onPersistentDisk = dbProvider is not ("mysql" or "mariadb")
+            && dataWritable && sqliteFile.StartsWith("/data/", StringComparison.Ordinal);
+        if (onPersistentDisk || EnvFlagTrue("ALLOW_SQLITE_IN_PRODUCTION"))
         {
             issues = issues.Select(i => i.Item1 == "error" && i.Item2 is "DB_PROVIDER" or "MYSQL_HOST"
-                ? ("warn", i.Item2, i.Item3 + " (ALLOW_SQLITE_IN_PRODUCTION=true — interim persistent-disk posture; plan the MySQL cutover)") : i).ToList();
-            var sqliteFile = Path.GetFullPath(E("DATABASE_FILE") ?? ".");
+                ? ("warn", i.Item2, i.Item3 + " (SQLite on the persistent disk — interim posture; plan the MySQL cutover)") : i).ToList();
             if (dbProvider is not ("mysql" or "mariadb") && !sqliteFile.StartsWith("/data/", StringComparison.Ordinal))
                 issues.Add(("error", "DATABASE_FILE",
                     "ALLOW_SQLITE_IN_PRODUCTION=true requires DATABASE_FILE under /data (e.g. /data/pci.db) — any other path is erased on every redeploy"));

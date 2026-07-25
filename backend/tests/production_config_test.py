@@ -117,6 +117,20 @@ try:
                  "CREDENTIAL_ENCRYPTION_KEY": "preflight-test-key-0123456789abcdef0123456789abcdef"},
                 platform_db)
     if os.path.exists(platform_db): os.remove(platform_db)
+
+    # Zero-config persistent-disk auto-posture: the SAME configuration WITHOUT any flag must also
+    # boot when the database file lives on the writable mounted disk — this is what un-bricks an
+    # existing Render service with a /data disk and no dashboard changes at all. The ephemeral-path
+    # refusals above prove the auto-posture never extends beyond /data.
+    auto_db = os.path.join(data_dir, "platform-auto-boot-test.db")
+    if os.path.exists(auto_db): os.remove(auto_db)
+    check_boots("SQLite on a writable /data boots WITHOUT any flag (persistent-disk auto-posture)",
+                {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "sqlite",
+                 "APP_BASE_URL": "https://pci-platform.example.org",
+                 "ALLOWED_ORIGIN": "https://pci-platform.example.org",
+                 "CREDENTIAL_ENCRYPTION_KEY": "preflight-test-key-0123456789abcdef0123456789abcdef"},
+                auto_db)
+    if os.path.exists(auto_db): os.remove(auto_db)
 except OSError:
     print("  SKIP  /data boot-through checks (no writable /data in this environment)")
 
