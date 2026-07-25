@@ -83,6 +83,57 @@ public class StorageTests
         Assert.Equal(obj.Reference, Storage.Put(plain, "image/png", "evidence").Reference);  // content-addressed dedup
     }
 
+    /// <summary>
+    /// A content-addressed store that dedupes on the PLAINTEXT hash while persisting CIPHERTEXT is
+    /// only self-consistent while the key stays the same. Keys legitimately change — an explicit
+    /// CREDENTIAL_ENCRYPTION_KEY set for the first time, a rotation, or a move between database
+    /// providers (the derived fallback mixes in DATABASE_FILE and MYSQL_DATABASE).
+    ///
+    /// After such a change every existing artefact is undecryptable. The dangerous part was not that
+    /// — it was that re-uploading byte-identical content took the same content-addressed path, saw a
+    /// file already there, and SKIPPED the write. The store then served file_missing for ever with
+    /// no signal and no route back short of deleting files by hand. This test simulates a stale file
+    /// (unreadable ciphertext at the exact content-addressed path) and proves Put repairs it.
+    /// </summary>
+    [Fact]
+    public void Put_Repairs_A_File_It_Cannot_Read_Back()
+    {
+        var bytes = System.Text.Encoding.UTF8.GetBytes("%PDF-1.4 a document that will be stored twice");
+        var stored = Storage.Put(bytes, "application/pdf", "documents");
+        Assert.NotNull(Storage.Get(stored.Reference)?.bytes);
+
+        // Corrupt the stored artefact exactly as a key change would: the bytes on disk are no longer
+        // decryptable, while the path — derived from the plaintext hash — is unchanged.
+        var rel = stored.Reference.Split(':', 2)[1];
+        var full = Path.Combine(Environment.GetEnvironmentVariable("STORAGE_ROOT") ?? "./storage", rel);
+        Assert.True(File.Exists(full));
+        var corrupt = File.ReadAllBytes(full);
+        corrupt[^1] ^= 0xFF;                       // breaks the AES-GCM authentication tag
+        File.WriteAllBytes(full, corrupt);
+        Assert.Null(Storage.Get(stored.Reference)?.bytes);   // unreadable, as after a key change
+
+        // Re-uploading the SAME content must repair it rather than dedupe against the broken file.
+        var again = Storage.Put(bytes, "application/pdf", "documents");
+        Assert.Equal(stored.Reference, again.Reference);     // still content-addressed
+        Assert.Equal(bytes, Storage.Get(again.Reference)?.bytes);
+    }
+
+    [Fact]
+    public void Put_Still_Dedupes_A_Healthy_File()
+    {
+        var bytes = System.Text.Encoding.UTF8.GetBytes("%PDF-1.4 dedupe me");
+        var first = Storage.Put(bytes, "application/pdf", "documents");
+        var full = Path.Combine(Environment.GetEnvironmentVariable("STORAGE_ROOT") ?? "./storage", first.Reference.Split(':', 2)[1]);
+        var writtenAt = File.GetLastWriteTimeUtc(full);
+
+        var second = Storage.Put(bytes, "application/pdf", "documents");
+
+        // Same address, and the healthy file was left alone — the dedupe optimisation still holds.
+        Assert.Equal(first.Reference, second.Reference);
+        Assert.Equal(writtenAt, File.GetLastWriteTimeUtc(full));
+        Assert.Equal(bytes, Storage.Get(second.Reference)?.bytes);
+    }
+
     [Fact]
     public void Get_And_Deletes_RefusePathTraversal()
     {

@@ -105,8 +105,28 @@ public static class Storage
         }
         var full = Path.Combine(Root, rel);
         Directory.CreateDirectory(Path.GetDirectoryName(full)!);
-        if (!File.Exists(full)) File.WriteAllBytes(full, enc); // content-addressed → dedupe for free
+        // Content addressing makes an existing file a dedupe hit — but ONLY if we can still read it
+        // back. Artefacts are persisted as ciphertext, and the key can legitimately change: an
+        // explicit CREDENTIAL_ENCRYPTION_KEY set for the first time, a key rotation, or a move
+        // between database providers (the derived fallback key mixes in DATABASE_FILE and
+        // MYSQL_DATABASE). After any of those, every existing file is undecryptable.
+        //
+        // A blind "it exists, skip the write" made that damage PERMANENT: re-uploading byte-identical
+        // content would take the same content-addressed path, skip the write again, and the store
+        // would serve file_missing for ever with no signal and no way to repair it short of deleting
+        // files by hand. Verifying instead of assuming costs one read on the dedupe path — which was
+        // skipping a write anyway — and makes the store self-healing.
+        if (!File.Exists(full) || !Readable(full)) File.WriteAllBytes(full, enc);
         return new StoredObject($"local:{rel}", mime, bytes.LongLength, sha);
+    }
+
+    /// <summary>True when a stored artefact can actually be decrypted with the CURRENT key. Used to
+    /// decide whether an existing content-addressed file is a genuine dedupe hit or a stale one left
+    /// behind by a key change.</summary>
+    static bool Readable(string full)
+    {
+        try { return Security.DecryptBytes(File.ReadAllBytes(full)).Length > 0; }
+        catch { return false; }
     }
 
     /// <summary>Read bytes back for a reference (used by the authenticated serve endpoints). Null if missing.
