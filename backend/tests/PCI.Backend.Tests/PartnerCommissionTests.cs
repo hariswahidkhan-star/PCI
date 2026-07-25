@@ -15,8 +15,10 @@ namespace PCI.Backend.Tests;
 ///   · money is exact integer minor-unit arithmetic, including the half-away-from-zero boundary;
 ///   · sponsored routes and unsettled/unattributed payments earn nothing;
 ///   · the status machine refuses illegal moves and records every legal one.
-/// Runs against a real migrated SQLite DB (TestEnv.NewMigratedDb) — the same schema production migrates.
+/// Runs against a real migrated database (TestEnv.NewMigratedDb) — the same schema production migrates,
+/// on SQLite by default and on MySQL/MariaDB when TEST_DB_PROVIDER=mysql.
 /// </summary>
+[Collection(DbCollection.Name)]
 public class PartnerCommissionTests
 {
     // ---- helpers ---------------------------------------------------------------------------------

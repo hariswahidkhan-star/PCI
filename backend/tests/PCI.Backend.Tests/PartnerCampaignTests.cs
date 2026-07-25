@@ -13,6 +13,7 @@ namespace PCI.Backend.Tests;
 /// everything downstream through the code the link carries, using the same redemption chain the
 /// commission ledger runs on. Nothing is modelled, estimated or stitched from a rotating visitor hash.
 /// </summary>
+[Collection(DbCollection.Name)]
 public class PartnerCampaignTests
 {
     static Db Fresh()

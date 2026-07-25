@@ -15,6 +15,7 @@ namespace PCI.Backend.Tests;
 /// Every refusal is asserted by its reason code, not merely by "it failed", so a future change that
 /// blocks the right thing for the wrong reason still shows up.
 /// </summary>
+[Collection(DbCollection.Name)]
 public class PartnerSettlementTests
 {
     const long Maker = 11, Checker = 22, Payer = 33;

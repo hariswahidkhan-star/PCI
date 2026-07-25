@@ -13,6 +13,7 @@ namespace PCI.Backend.Tests;
 /// reverses only the incremental difference; a chargeback behaves as a full refund; and a reversal after
 /// payout leaves the original 'paid' while creating a recoverable balance rather than hiding it.
 /// </summary>
+[Collection(DbCollection.Name)]
 public class PartnerCommissionReversalTests
 {
     static Db Fresh()
