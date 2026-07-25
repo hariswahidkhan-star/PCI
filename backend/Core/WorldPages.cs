@@ -25,19 +25,59 @@ public static class WorldPages
     public const string InstituteLinkLabel = "Visit the Project Controls Institute";
 
     public static string E(string? s) => WebUtility.HtmlEncode(s ?? "");
+
+    /// <summary>Marks the nav item for the page being viewed. aria-current is the accessible signal;
+    /// the underline in the stylesheet hangs off the same attribute, so the visible state and the
+    /// announced state can never disagree. "/world" matches only itself — every other World page
+    /// lives under a longer path, so a prefix test would light up Today's Challenge everywhere.</summary>
+    static string Cur(string canonicalPath, string href) =>
+        canonicalPath == href || (href != "/world" && canonicalPath.StartsWith(href + "/", StringComparison.Ordinal))
+            ? " aria-current=\"page\"" : "";
     public static string Json(object o) =>
         System.Text.Json.JsonSerializer.Serialize(o).Replace("</", "<\\/");
 
     public static string InstituteUrl(Db db) =>
         Settings.Str(db, "world_institute_url", "https://projectcontrolsinstitute.org");
 
-    /// <summary>Brand fonts load AFTER window load so no page ever waits on a font host — system
-    /// fallbacks render immediately, Archivo/Inter swap in when available (display=swap). This
-    /// also keeps the E2E suite deterministic in offline environments.</summary>
+    /// <summary>Brand type is served from this origin, not from a font CDN.
+    ///
+    /// It used to be a stylesheet appended from fonts.googleapis.com after window load. That never
+    /// blocked paint, which was the point — but it meant every visit painted in a system fallback and
+    /// then reflowed into Archivo, and this design system is Archivo 900 at 52px with tight tracking,
+    /// so the swap is the most visible thing on the page. Worse, a network that cannot reach Google
+    /// (corporate proxies, some countries, privacy blockers, an offline demo) never got the brand at
+    /// all — it silently rendered in Helvetica.
+    ///
+    /// Self-hosted and preloaded, the right typeface is there on first paint, and no third party is
+    /// told who is reading an Institute page. These are variable subsets: one file spans Archivo
+    /// 700-900 and one spans Inter 400-700, and unicode-range means an English page fetches only the
+    /// two latin files (~83 KB) while latin-ext stays unrequested until a page actually contains
+    /// those characters. A glyph outside both subsets — a Passport holder whose name is in Cyrillic
+    /// or Greek — falls back per-glyph to a system face, which is the browser behaving correctly
+    /// rather than a hole. Regenerate with tools/fetch-brand-fonts.sh.</summary>
     const string FontLoader = """
-        <script>window.addEventListener('load',function(){var l=document.createElement('link');l.rel='stylesheet';
-        l.href='https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap';
-        document.head.appendChild(l);});</script>
+        <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+        """;
+
+    /// <summary>One behaviour, inline so it costs no request and blocks no paint: the header's hairline
+    /// once the page has scrolled. Nothing here is load-bearing — stickiness is pure CSS and this only
+    /// adds the shadow, so with scripting off the page is complete.
+    ///
+    /// A scroll-triggered entrance for the sections was tried and removed. It starts content at
+    /// opacity:0 and depends on IntersectionObserver to bring it back, which means anything that
+    /// renders the page without scrolling it — print, a full-page capture, a reader view — gets blank
+    /// space where the sections should be. That is a poor trade for an effect this file's own design
+    /// direction ("no decorative noise") does not ask for.</summary>
+    const string Behaviour = """
+        <script>
+        (function(){
+          var h=document.querySelector('header.world');
+          if(!h) return;
+          var t=function(){h.classList.toggle('is-stuck',window.scrollY>4)};
+          addEventListener('scroll',t,{passive:true});t();
+        })();
+        </script>
         """;
 
     // Design system: the PCI brand (backend/wwwroot/assets/styles.css) applied to PCI World —
@@ -46,6 +86,18 @@ public static class WorldPages
     // exactly like the Institute site (meta color-scheme in Layout) — a brand commitment, not an
     // omission. Class names are stable API for the workspace/admin scripts and the E2E suite.
     const string Css = """
+        @font-face{font-family:'Archivo';font-style:normal;font-weight:700 900;font-display:swap;
+             src:url(/assets/fonts/archivo-latin.woff2) format('woff2');
+             unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+        @font-face{font-family:'Archivo';font-style:normal;font-weight:700 900;font-display:swap;
+             src:url(/assets/fonts/archivo-latin-ext.woff2) format('woff2');
+             unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+        @font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:swap;
+             src:url(/assets/fonts/inter-latin.woff2) format('woff2');
+             unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+        @font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:swap;
+             src:url(/assets/fonts/inter-latin-ext.woff2) format('woff2');
+             unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
         :root{--ink:#0F172A;--paper:#FFFFFF;--paper-2:#F1F5F9;--noir:#0E1525;--line:#E3E8EF;
               --slate:#475569;--mist:#64748B;--blue:#1D4ED8;--blue-deep:#1E3A8A;--crimson:#C13329;
               --gilt:#C8A24B;--ok:#15803D;--bad:#C2410C;--muted:var(--slate);--field:#94A3B8;
@@ -55,7 +107,15 @@ public static class WorldPages
               --ease:cubic-bezier(.22,.61,.36,1)}
         *{box-sizing:border-box;margin:0}
         html{-webkit-text-size-adjust:100%}
-        body{background:var(--paper);color:var(--ink);font:16.5px/1.62 var(--sans);-webkit-font-smoothing:antialiased}
+        /* A cool wash across the top of the page so the first screen reads as a lit control room
+           rather than a blank sheet. Painted as a background layer rather than an absolutely
+           positioned element: a full-bleed div wider than the viewport adds a horizontal scrollbar
+           (it did — the page measured 1470px in a 1440px window and 488px on a 390px phone), whereas
+           a background can never overflow its box. */
+        body{background-color:var(--paper);color:var(--ink);font:16.5px/1.62 var(--sans);-webkit-font-smoothing:antialiased;
+             background-image:radial-gradient(56% 44% at 66% 0,rgba(29,78,216,.10),transparent 68%),
+                              radial-gradient(46% 32% at 4% 0,rgba(193,51,41,.055),transparent 70%);
+             background-repeat:no-repeat;background-size:100% 720px}
         a{color:var(--blue);text-decoration-thickness:1px;text-underline-offset:3px}
         a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
         summary:focus-visible,[tabindex]:focus-visible,details:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
@@ -69,18 +129,37 @@ public static class WorldPages
            whole section is noise, not indication. Controls inside them keep their rings. */
         #main:focus,#me:focus,#auth:focus,#work:focus,#result:focus{outline:none}
         .shell{max-width:1020px;margin:0 auto;padding:0 22px}
-        header.world{background:var(--noir);color:#E2E8F0}
-        header.world .shell{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;padding:18px 22px}
+        /* Sticky, because on a page whose job is "start the challenge" the way back to it should never
+           scroll away. The hairline only appears once the page has moved, so the header sits flush
+           with the hero at rest. */
+        header.world{background:var(--noir);color:#E2E8F0;position:sticky;top:0;z-index:60;
+             box-shadow:0 1px 0 rgba(255,255,255,0);transition:box-shadow .2s var(--ease)}
+        header.world.is-stuck{box-shadow:0 1px 0 rgba(255,255,255,.09),0 18px 40px -30px rgba(0,0,0,.9)}
+        /* The Institute relationship is product law on every page. Given its own rail it reads as
+           provenance rather than as one more nav item competing with the primary journey. */
+        .toprail{border-bottom:1px solid rgba(255,255,255,.07);background:#0A101C}
+        .toprail .shell{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;justify-content:space-between;
+             padding:9px 22px;font-size:12.5px;letter-spacing:.01em;color:#7F8EA3}
+        .toprail a.ext{color:#A9C6FF;font-weight:600;text-decoration:none;white-space:nowrap}
+        .toprail a.ext:hover{color:#fff;text-decoration:underline;text-underline-offset:3px}
+        header.world .shell{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;padding:16px 22px}
         .brand{display:flex;align-items:center;gap:13px;color:#fff;text-decoration:none}
         .brand .wordmark{font-family:var(--display);font-weight:900;font-size:23px;letter-spacing:-.035em;line-height:.9;white-space:nowrap}
-        .brand .bar{width:2px;height:32px;background:var(--crimson);border-radius:2px;flex:0 0 auto}
+        /* The lockup is ONE unit: the crimson rule is drawn as the endorsement line's own border, not
+           as a separate element. A breakpoint that hides the words therefore cannot strand the rule.
+           That is precisely what shipped before — the tagline was display:none under 680px while the
+           divider stayed, so phones read "PCI World |" with nothing after it. */
         .brand small{display:block;font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.02em;
-             color:#94A3B8;line-height:1.25;max-width:150px;white-space:normal}
+             color:#94A3B8;line-height:1.25;max-width:150px;white-space:normal;
+             padding:3px 0 3px 13px;border-inline-start:2px solid var(--crimson)}
+        .brand:hover small{color:#B6C2D2}
         header.world nav{display:flex;flex-wrap:wrap;gap:8px 22px;margin-left:auto;font-size:15px;align-items:center}
         header.world nav a{color:#CBD5E1;text-decoration:none;font-weight:500;padding:4px 0;position:relative}
         header.world nav a:hover{color:#fff}
-        header.world nav a:not(.ext):hover::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--crimson)}
-        header.world nav a.ext{color:#93C5FD;font-weight:600}
+        header.world nav a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;
+             background:var(--crimson);transform:scaleX(0);transform-origin:left;transition:transform .2s var(--ease)}
+        header.world nav a:hover::after,header.world nav a[aria-current="page"]::after{transform:scaleX(1)}
+        header.world nav a[aria-current="page"]{color:#fff;font-weight:600}
         main{padding:56px 0 80px}
         .kicker{display:block;font-family:var(--sans);font-weight:700;font-size:12.5px;letter-spacing:.16em;
              text-transform:uppercase;color:var(--crimson);margin-bottom:14px}
@@ -154,20 +233,100 @@ public static class WorldPages
              font-size:30px;color:var(--crimson);line-height:1.1}
         .steps b{font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.01em;display:block;margin-bottom:3px}
         .steps li div{color:var(--slate)}
-        .hero-panel{background:var(--noir);border-radius:16px;padding:26px 26px 18px;margin:34px 0 6px;overflow:hidden}
+        /* The panel is the product, so it gets real material: a lit top edge, a soft floor shadow and
+           a faint control-room grid — depth from light, not from decoration. */
+        .hero-panel{background:linear-gradient(168deg,#141D30 0%,var(--noir) 46%,#0A101C 100%);
+             border-radius:18px;padding:26px 26px 18px;margin:34px 0 6px;overflow:hidden;position:relative;
+             box-shadow:0 1px 0 rgba(255,255,255,.10) inset,0 0 0 1px rgba(255,255,255,.05),
+                        0 40px 70px -46px rgba(8,17,40,.85)}
+        .hero-panel::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+             background:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px) 0 0/100% 34px,
+                        linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px) 0 0/34px 100%;
+             -webkit-mask-image:radial-gradient(120% 90% at 70% 0,#000 25%,transparent 78%);
+             mask-image:radial-gradient(120% 90% at 70% 0,#000 25%,transparent 78%)}
+        .hero-panel>*{position:relative}
         .hero-panel .plabel{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
              font-family:var(--sans);font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#94A3B8}
         .hero-panel svg{width:100%;height:auto;display:block;margin-top:10px}
         .legend-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;font-weight:600;color:#CBD5E1}
         .legend-row span::before{content:"";display:inline-block;width:18px;height:3px;border-radius:2px;
              margin-right:8px;vertical-align:middle;background:var(--swatch,#fff)}
+        /* The three plotted series draw in left-to-right on first paint, in the order a controller
+           reads them: the plan, then what was earned, then what it cost. Purely additive — the paths
+           are already in the markup, so with JS off or motion reduced the chart is simply there. */
+        @media (prefers-reduced-motion:no-preference){
+          .hero-panel .draw{stroke-dasharray:var(--len,1200);stroke-dashoffset:var(--len,1200);
+               animation:draw 1.15s var(--ease) forwards;animation-delay:var(--d,0s)}
+          /* The baseline is dashed on purpose — "planned value" is the promise, drawn as a promise —
+             and stroke-dasharray is how that dash pattern is expressed. A draw-on animation needs the
+             same property, and CSS beats the presentation attribute, so animating this line that way
+             silently turns it solid and the legend starts describing something the chart isn't doing.
+             It fades in instead. */
+          .hero-panel .dot,.hero-panel .fade-in{opacity:0;animation:fade .6s var(--ease) forwards;
+               animation-delay:var(--d,0s)}
+          @keyframes draw{to{stroke-dashoffset:0}}
+          @keyframes fade{to{opacity:1}}
+        }
+
+        /* ---- home: hero ---------------------------------------------------------------------- */
+        /* Copy and evidence share the first screen at desktop width: the claim on the left, the
+           project position it refers to on the right. Below 980px it stacks in reading order. */
+        .hero{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:20px 54px;align-items:center;
+             margin-bottom:8px}
+        .hero .hero-copy{min-width:0}
+        .hero .hero-panel{margin:0}
+        /* The global 21ch cap keeps long-form headings readable, but inside the hero the column is
+           already the measure — capping again forces a five-line rag against empty space. */
+        .hero h1{max-width:none;font-size:clamp(34px,4.1vw,52px)}
+        .hero .lede{max-width:46ch}
+        .hero .legend-row{gap:8px 18px;font-size:12px}
+        @media (max-width:980px){.hero{grid-template-columns:1fr;gap:30px}.hero .hero-panel{margin-top:4px}
+          .hero h1{font-size:clamp(34px,5.4vw,50px)}}
+        .hero-wrap{position:relative}
+        .hero h1{margin-bottom:16px}
+        .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+        .cta-row .btn+.btn{margin-left:0}
+        /* Facts about the offer that are already true elsewhere on this page — no invented numbers. */
+        .hero-facts{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:22px;padding:0;list-style:none;
+             font-size:13.5px;font-weight:600;color:var(--slate)}
+        .hero-facts li{display:flex;align-items:center;gap:8px}
+        .hero-facts li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--crimson);flex:0 0 auto}
+
+        /* ---- home: sections ------------------------------------------------------------------ */
+        /* The trailing 10px is not slack: the .uline that follows has no top margin, so without it the
+           rule sits on the heading's descenders and reads as a strike-through rather than an underline. */
+        .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:18px;flex-wrap:wrap;margin:64px 0 10px}
+        .sec-head h2{margin:0}
+        .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:22px 0}
+        .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:22px 0}
+        @media (max-width:860px){.grid-3,.grid-2{grid-template-columns:1fr}}
+        .tile{background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:26px 24px;margin:0;
+             box-shadow:var(--shadow-rest);transition:transform .22s var(--ease),box-shadow .22s var(--ease),border-color .22s var(--ease)}
+        .tile:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);border-color:rgba(29,78,216,.22)}
+        .tile .step-n{font-family:var(--display);font-weight:800;font-size:13px;letter-spacing:.14em;
+             color:var(--crimson);display:block;margin-bottom:12px}
+        .tile h3{font-family:var(--display);font-weight:800;font-size:18.5px;letter-spacing:-.012em;margin:0 0 8px}
+        .tile p{color:var(--slate);margin:0;font-size:15.5px}
+        .tile .go{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-weight:600;
+             font-size:15px;text-decoration:none}
+        .tile .go svg{transition:transform .22s var(--ease)}
+        .tile:hover .go svg{transform:translateX(4px)}
+        /* A hairline that grows out of the numeral, so the three steps read as one sequence. */
+        .grid-3 .tile{position:relative;overflow:hidden}
+        .grid-3 .tile::after{content:"";position:absolute;left:0;top:0;height:3px;width:100%;
+             background:linear-gradient(90deg,var(--crimson),rgba(193,51,41,0));transform:scaleX(0);
+             transform-origin:left;transition:transform .3s var(--ease)}
+        .grid-3 .tile:hover::after{transform:scaleX(1)}
         footer.world{background:var(--noir);color:#94A3B8;font-size:14.5px;margin-top:30px;border-top:3px solid var(--crimson)}
         footer.world .shell{padding:54px 22px 44px}
         footer.world a{color:#CBD5E1}
         footer.world a:hover{color:#fff}
         footer.world .ft-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
         footer.world .ft-brand .wordmark{font-family:var(--display);font-weight:900;font-size:19px;letter-spacing:-.03em;color:#fff}
-        footer.world .ft-brand .bar{width:2px;height:26px;background:var(--crimson);border-radius:2px}
+        /* Same one-piece lockup as the header. The footer previously rendered the crimson rule with
+           nothing after it at every width, because there was no endorsement line here at all. */
+        footer.world .ft-brand small{font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.02em;
+             color:#8A99AD;line-height:1.25;padding:3px 0 3px 12px;border-inline-start:2px solid var(--crimson)}
         footer.world .fine{font-size:13px;line-height:1.65;color:#7C8CA0;max-width:88ch}
         .ft-grid{display:grid;gap:36px 44px;grid-template-columns:minmax(240px,1.5fr) repeat(3,minmax(150px,1fr))}
         .ft-h{font-family:var(--sans);font-weight:700;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
@@ -267,9 +426,30 @@ public static class WorldPages
           .card{padding:20px;border-radius:12px}
           .btn{width:100%;justify-content:center}
           .btn+.btn{margin-left:0;margin-top:10px}
+          .cta-row{gap:10px}
           .dim{gap:24px}
           .dim b{font-size:31px}
           header.world nav{gap:6px 16px;font-size:14px}
+          /* Not sticky on phones. The brand row plus a two-line nav plus the rail is ~200px of chrome;
+             pinned to a 844px viewport that is a quarter of the screen permanently spent on
+             navigation. Sticky is a desktop affordance here, where the header is a single 64px row. */
+          header.world{position:static}
+          .toprail .shell{justify-content:center;text-align:center}
+          .toprail .rail-note{display:none}
+          .hero-panel{padding:20px 18px 16px;border-radius:14px}
+          .sec-head{margin-top:48px}
+          .tile{padding:22px 20px}
+          /* The tagline stays on phones — it fits, and it is the endorsement the wordmark is trading
+             on. Only below 380px does it go, and then the crimson rule goes with it because the rule
+             IS its border. There is no width at which one can appear without the other. */
+          .brand{gap:11px}
+          .brand .wordmark{font-size:21px}
+          .brand small{font-size:10.5px;max-width:132px;padding-left:11px}
+        }
+        /* 340px is where the lockup genuinely stops fitting: wordmark 118 + rule 2 + gaps 22 + tagline
+           132 = 274px against 320-44=276px of usable width. Above it the endorsement stays, including
+           on 360 and 375px phones. Below it both halves go together. */
+        @media (max-width:339px){
           .brand small{display:none}
         }
         @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -315,19 +495,23 @@ public static class WorldPages
             <body>
             <a class="visually-hidden" href="#main">Skip to content</a>
             <header class="world">
+              <div class="toprail">
+                <div class="shell">
+                  <span class="rail-note">{E(OperatedBy)}</span>
+                  <a class="ext" href="{inst}" target="_blank" rel="noopener noreferrer">{InstituteLinkLabel} <span aria-hidden="true">&#8599;</span><span class="visually-hidden">(opens the official Institute website in a new tab)</span></a>
+                </div>
+              </div>
               <div class="shell">
                 <a class="brand" href="/world">
                   <span class="wordmark">PCI World</span>
-                  <span class="bar" aria-hidden="true"></span>
                   <small>From the Project<br>Controls Institute</small>
                 </a>
                 <nav aria-label="Primary">
-                  <a href="/world">Today&rsquo;s Challenge</a>
-                  <a href="/world/archive">Challenge Library</a>
-                  <a href="/world/blog">Writing</a>
-                  <a href="/world/account">Passport</a>
-                  <a href="/world/about">About</a>
-                  <a class="ext" href="{inst}" target="_blank" rel="noopener noreferrer">{InstituteLinkLabel} <span aria-hidden="true">&#8599;</span><span class="visually-hidden">(opens the official Institute website in a new tab)</span></a>
+                  <a href="/world"{Cur(canonicalPath, "/world")}>Today&rsquo;s Challenge</a>
+                  <a href="/world/archive"{Cur(canonicalPath, "/world/archive")}>Challenge Library</a>
+                  <a href="/world/blog"{Cur(canonicalPath, "/world/blog")}>Writing</a>
+                  <a href="/world/account"{Cur(canonicalPath, "/world/account")}>Passport</a>
+                  <a href="/world/about"{Cur(canonicalPath, "/world/about")}>About</a>
                 </nav>
               </div>
             </header>
@@ -338,7 +522,7 @@ public static class WorldPages
               <div class="shell">
                 <div class="ft-grid">
                   <div>
-                    <div class="ft-brand"><span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span></div>
+                    <div class="ft-brand"><span class="wordmark">PCI World</span><small>From the Project Controls Institute</small></div>
                     <p style="margin:0;max-width:38ch;line-height:1.65">{E(OperatedBy)}</p>
                     <p style="margin:14px 0 0;max-width:38ch;line-height:1.65;color:#7C8CA0;font-size:13.5px">
                       A realistic project decision every day. Deterministic scoring, synthetic data,
@@ -374,6 +558,7 @@ public static class WorldPages
                 </div>
               </div>
             </footer>
+            {Behaviour}
             </body>
             </html>
             """;
@@ -413,46 +598,57 @@ public static class WorldPages
             "A free daily project challenge from the Project Controls Institute. Step into a realistic project situation, examine the evidence and decide what happens next.",
             $"""
             {WorldSeo.HomeJsonLd(db)}
-            <span class="kicker">PCI World Challenge</span>
-            <h1>The project is already moving. The decision is now yours.</h1>
-            <div class="uline" aria-hidden="true"></div>
-            <p class="lede">Step into a realistic project situation, examine the evidence and decide what happens next. Five to ten minutes. Free. No project experience required.</p>
-            <p style="margin-top:28px">
-              <a class="btn" href="{primaryHref}">Take today&rsquo;s challenge
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-              <a class="btn secondary" href="/world/about">See how PCI World works</a>
-            </p>
-            <div class="hero-panel" role="img" aria-label="A project performance chart: planned value as a dashed baseline, earned value tracking below plan, and actual cost running above earned value at the data date — the situation a PCI World challenge drops you into.">
-              <div class="plabel"><span>Live project position &middot; synthetic data</span><span>Data date &middot; month 4 of 12</span></div>
-              <svg viewBox="0 0 720 232" aria-hidden="true">
-                <g stroke="#1c2739" stroke-width="1">
-                  <line x1="16" y1="192" x2="704" y2="192"/><line x1="16" y1="136" x2="704" y2="136"/>
-                  <line x1="16" y1="80" x2="704" y2="80"/><line x1="16" y1="24" x2="704" y2="24"/>
-                </g>
-                <line x1="432" y1="14" x2="432" y2="206" stroke="#3b4a63" stroke-width="1.5" stroke-dasharray="3 5"/>
-                <path d="M16,206 C170,201 280,158 400,104 S600,26 704,14" fill="none" stroke="#94A3B8" stroke-width="2" stroke-dasharray="7 6"/>
-                <path d="M16,206 C160,203 260,178 350,150 S415,128 432,122" fill="none" stroke="#C13329" stroke-width="2.5"/>
-                <path d="M16,206 C150,202 250,172 345,138 S415,108 432,100" fill="none" stroke="#5B8DEF" stroke-width="2.5"/>
-                <circle cx="432" cy="122" r="4.5" fill="#C13329"/>
-                <circle cx="432" cy="100" r="4.5" fill="#5B8DEF"/>
-              </svg>
-              <div class="legend-row">
-                <span style="--swatch:#94A3B8">Planned value — the promise</span>
-                <span style="--swatch:#C13329">Earned value — the truth</span>
-                <span style="--swatch:#5B8DEF">Actual cost — the bill</span>
+            <div class="hero-wrap">
+              <div class="hero">
+                <div class="hero-copy">
+                  <span class="kicker">PCI World Challenge</span>
+                  <h1>The project is already moving. The decision is now yours.</h1>
+                  <div class="uline" aria-hidden="true"></div>
+                  <p class="lede">Step into a realistic project situation, examine the evidence and decide what happens next. Five to ten minutes. Free. No project experience required.</p>
+                  <div class="cta-row">
+                    <a class="btn" href="{primaryHref}">Take today&rsquo;s challenge
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                    <a class="btn secondary" href="/world/about">See how PCI World works</a>
+                  </div>
+                  <ul class="hero-facts">
+                    <li>Free</li><li>No account needed</li><li>New challenge daily at 00:00 UTC</li>
+                  </ul>
+                </div>
+                <div class="hero-panel" role="img" aria-label="A project performance chart: planned value as a dashed baseline, earned value tracking below plan, and actual cost running above earned value at the data date — the situation a PCI World challenge drops you into.">
+                  <div class="plabel"><span>Live project position &middot; synthetic data</span><span>Data date &middot; month 4 of 12</span></div>
+                  <svg viewBox="0 0 720 232" aria-hidden="true">
+                    <g stroke="#1c2739" stroke-width="1">
+                      <line x1="16" y1="192" x2="704" y2="192"/><line x1="16" y1="136" x2="704" y2="136"/>
+                      <line x1="16" y1="80" x2="704" y2="80"/><line x1="16" y1="24" x2="704" y2="24"/>
+                    </g>
+                    <line x1="432" y1="14" x2="432" y2="206" stroke="#3b4a63" stroke-width="1.5" stroke-dasharray="3 5"/>
+                    <text x="424" y="224" text-anchor="end" fill="#64748B" font-size="11" font-weight="700" letter-spacing="1.4">DATA DATE</text>
+                    <path class="fade-in" style="--d:.05s" d="M16,206 C170,201 280,158 400,104 S600,26 704,14" fill="none" stroke="#94A3B8" stroke-width="2" stroke-dasharray="7 6"/>
+                    <path class="draw" style="--len:520;--d:.30s" d="M16,206 C160,203 260,178 350,150 S415,128 432,122" fill="none" stroke="#C13329" stroke-width="2.5"/>
+                    <path class="draw" style="--len:520;--d:.52s" d="M16,206 C150,202 250,172 345,138 S415,108 432,100" fill="none" stroke="#5B8DEF" stroke-width="2.5"/>
+                    <circle class="dot" style="--d:1.5s" cx="432" cy="122" r="4.5" fill="#C13329"/>
+                    <circle class="dot" style="--d:1.62s" cx="432" cy="100" r="4.5" fill="#5B8DEF"/>
+                  </svg>
+                  <div class="legend-row">
+                    <span style="--swatch:#94A3B8">Planned value — the promise</span>
+                    <span style="--swatch:#C13329">Earned value — the truth</span>
+                    <span style="--swatch:#5B8DEF">Actual cost — the bill</span>
+                  </div>
+                </div>
               </div>
             </div>
             {todayCard}
-            <h2 class="sec">How it works</h2>
+            <div class="sec-head"><h2>How it works</h2></div>
             <div class="uline" aria-hidden="true"></div>
-            <div class="card">
-              <ol class="steps">
-                <li><div><b>Read the situation</b>A real-shaped project moment with the evidence in front of you — synthetic data, real methods.</div></li>
-                <li><div><b>Do the work</b>Compute the measures that matter and make the judgement calls a professional would face.</div></li>
-                <li><div><b>See the consequences</b>Deterministic scoring, your professional decision profile, and what each choice would have caused.</div></li>
-              </ol>
+            <div class="grid-3">
+              <div class="tile"><span class="step-n">STEP 01</span><h3>Read the situation</h3>
+                <p>A real-shaped project moment with the evidence in front of you — synthetic data, real methods.</p></div>
+              <div class="tile"><span class="step-n">STEP 02</span><h3>Do the work</h3>
+                <p>Compute the measures that matter and make the judgement calls a professional would face.</p></div>
+              <div class="tile"><span class="step-n">STEP 03</span><h3>See the consequences</h3>
+                <p>Deterministic scoring, your professional decision profile, and what each choice would have caused.</p></div>
             </div>
-            <h2 class="sec">The Passport</h2>
+            <div class="sec-head"><h2>The Passport</h2></div>
             <div class="uline" aria-hidden="true"></div>
             <div class="ppt-cover">
               <div class="ppt-lines" aria-hidden="true"></div>
@@ -469,7 +665,7 @@ public static class WorldPages
                 <a class="btn secondary" href="/world/verify">Verify one you&rsquo;ve been given</a>
               </p>
             </div>
-            <h2 class="sec">Built to be trusted</h2>
+            <div class="sec-head"><h2>Built to be trusted</h2></div>
             <div class="uline" aria-hidden="true"></div>
             <div class="card">
               <div class="defn">
@@ -479,10 +675,17 @@ public static class WorldPages
                 <div><b>Consent before publication</b><span>Nothing about you is public until you publish it, item by item and field by field. Answers are never shown to anyone.</span></div>
               </div>
             </div>
-            <h2 class="sec">Where it leads</h2>
+            <div class="sec-head"><h2>Where it leads</h2></div>
             <div class="uline" aria-hidden="true"></div>
-            <div class="card">
-              <p style="color:var(--slate);max-width:78ch">PCI World is practice with evidence. When you want the full discipline — multi-step simulations, coaching and competency tracking — continue in the <a href="{simlab}">PCI Simulation Lab</a>. When you are ready for formal recognition, explore the certifications on the official <a href="{E(InstituteUrl(db))}" target="_blank" rel="noopener noreferrer">Project Controls Institute website <span aria-hidden="true">&#8599;</span></a>.</p>
+            <div class="grid-2">
+              <div class="tile"><span class="step-n">GO DEEPER</span><h3>PCI Simulation Lab</h3>
+                <p>Multi-step simulations, coaching and competency tracking — the full discipline rather than a single decision.</p>
+                <a class="go" href="{simlab}">Open the Simulation Lab
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+              <div class="tile"><span class="step-n">BE RECOGNISED</span><h3>Institute certifications</h3>
+                <p>PCI World is practice with evidence. Formal recognition is earned through the Institute&rsquo;s own examinations.</p>
+                <a class="go" href="{E(InstituteUrl(db))}" target="_blank" rel="noopener noreferrer">Explore certifications
+                  <span aria-hidden="true">&#8599;</span><span class="visually-hidden">(opens the official Institute website in a new tab)</span></a></div>
             </div>
             <p class="notice">{E(PracticeNotice)}</p>
             """,
@@ -892,11 +1095,16 @@ public static class WorldPages
             </form>
             <div class="card">
             <p class="kicker" style="margin-bottom:10px">{total} challenge{(total == 1 ? "" : "s")}{(pages > 1 ? $" &middot; page {page} of {pages}" : "")}</p>
-            <table>
-              <caption class="visually-hidden">Published PCI World challenges, filtered by the controls above</caption>
-              <thead><tr><th scope="col">Challenge</th><th scope="col">Industry</th><th scope="col">Difficulty</th><th scope="col">Time</th></tr></thead>
-              <tbody>{items}</tbody>
-            </table>
+            <!-- .tbl-wrap is what keeps a four-column table from widening the whole document on a
+                 phone: its min-content width is ~567px, so without a scroll container every PCI World
+                 page rendered at 320-414px got a horizontal scrollbar and the layout drifted. -->
+            <div class="tbl-wrap">
+              <table>
+                <caption class="visually-hidden">Published PCI World challenges, filtered by the controls above</caption>
+                <thead><tr><th scope="col">Challenge</th><th scope="col">Industry</th><th scope="col">Difficulty</th><th scope="col">Time</th></tr></thead>
+                <tbody>{items}</tbody>
+              </table>
+            </div>
             {pager}
             </div>
             """,
