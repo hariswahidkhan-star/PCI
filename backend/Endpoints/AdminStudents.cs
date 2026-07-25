@@ -303,11 +303,13 @@ public static class AdminStudents
             log(adm.Id, "identity_document_" + status, $"subject {id} doc {docId} by admin {adm.Id}");
             return J(new { ok = true, status });
         }));
-        app.MapGet("/api/admin/students/{id}/identity-document/{docId}/file", (HttpContext ctx, long id, long docId) => gate(ctx.Request, "members", _ =>
+        app.MapGet("/api/admin/students/{id}/identity-document/{docId}/file", (HttpContext ctx, long id, long docId) => gate(ctx.Request, "members", adm =>
         {
             var d = db.QueryOne("SELECT storage_ref FROM identity_documents WHERE id=? AND user_id=?", docId, id);
             var got = d is null ? null : Storage.Get(H.Str(d["storage_ref"]));
             if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            // A government ID is about as sensitive as a stored file gets — every staff view is logged.
+            log(adm.Id, "identity_document_view", $"subject {id} doc {docId}");
             return Results.File(got.Value.bytes!, got.Value.mime);
         }));
 

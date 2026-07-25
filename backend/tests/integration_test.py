@@ -1347,7 +1347,8 @@ def test_documents_module(admin):
 
     # ---- versioning: never overwrites; old becomes 'replaced', student gets the new bytes ----
     nuri, nsha = _pdf_uri("welcome doc A v2")
-    c, ver = jget("POST", f"/api/admin/documents/{doc_id}/version", token=admin, body={"file": nuri, "filename": "welcome-v2.pdf"})
+    c, ver = jget("POST", f"/api/admin/documents/{doc_id}/version", token=admin,
+                  body={"file": nuri, "filename": "welcome-v2.pdf", "reason": "annual refresh"})
     chk("17u admin uploads a new version", c == 200 and ver.get("version") == 2 and ver.get("id") != doc_id, ver)
     new_id = ver.get("id")
     con = dbconn(); oldstat = con.execute("SELECT status FROM documents WHERE id=?", (doc_id,)).fetchone()[0]; con.close()
@@ -1356,6 +1357,32 @@ def test_documents_module(admin):
     chk("17w student now downloads the NEW version bytes", st == 200 and hashlib.sha256(vbody).hexdigest() == nsha, st)
     c, det = jget("GET", f"/api/admin/documents/{new_id}", token=admin)
     chk("17x version history lists both versions", len(det.get("versions", [])) == 2, len(det.get("versions", [])))
+
+    # ---- restore: an older version comes back as ANOTHER new version; newer history is never erased ----
+    c, res = jget("POST", f"/api/admin/documents/{new_id}/restore", token=admin,
+                  body={"version_id": doc_id, "reason": "reverting bad upload"})
+    chk("17va restore creates a NEW version pointing at the old file",
+        c == 200 and res.get("version") == 3 and res.get("restored_from") == doc_id, res)
+    res_id = res.get("id")
+    st, rbody, _ = _raw_get(f"/api/me/documents/{res_id}/download", token=a_tok)
+    chk("17vb student now downloads the RESTORED (v1) bytes", st == 200 and hashlib.sha256(rbody).hexdigest() == sha, st)
+    c, det = jget("GET", f"/api/admin/documents/{res_id}", token=admin)
+    vers = det.get("versions", [])
+    chk("17vc history keeps all three versions (two replaced, one live)",
+        len(vers) == 3 and sum(1 for v in vers if v.get("status") == "replaced") == 2, vers)
+    chk("17vd replacement reasons are recorded per version",
+        any(v.get("replace_reason") == "annual refresh" for v in vers)
+        and any(v.get("replace_reason") == "reverting bad upload" and v.get("restored_from_id") == doc_id for v in vers), vers)
+    chk("17ve restoring across chains is refused (400)",
+        jget("POST", f"/api/admin/documents/{res_id}/restore", token=admin, body={"version_id": ack_id})[0] == 400)
+    chk("17vf student token cannot restore (401/403)",
+        jget("POST", f"/api/admin/documents/{res_id}/restore", token=a_tok, body={"version_id": doc_id})[0] in (401, 403))
+
+    # ---- in-app viewing: ?inline=1 serves inline and audits as a VIEW, not a download ----
+    st, ibody, _ = _raw_get(f"/api/me/documents/{res_id}/download?inline=1", token=a_tok)
+    chk("17vg inline view serves the same bytes", st == 200 and hashlib.sha256(ibody).hexdigest() == sha, st)
+    con = dbconn(); nview = con.execute("SELECT COUNT(*) FROM document_downloads WHERE document_id=? AND action='view'", (res_id,)).fetchone()[0]; con.close()
+    chk("17vh in-app view is audited as a view", nview >= 1, nview)
 
     # ---- restriction window: listed but not downloadable until a future date ----
     ruri, _ = _pdf_uri("restricted future doc")
@@ -3419,7 +3446,8 @@ def run(proc):
     test_privacy_erasure(admin)
     test_login_lockout()
     test_payment_reversal_webhooks(admin)
-    test_support_attachment_idor()
+    test_support_attachment_idor(admin)
+    test_student_evidence_viewback(admin)
     test_certificate_suspension(admin)
     test_exam_self_reschedule(admin)
     test_training_partner_application(admin)
@@ -4568,7 +4596,7 @@ def test_payment_reversal_webhooks(admin):
     con.close()
     chk("29j re-delivering the refund event stays refunded (idempotent)", code2 == 200 and bool(p2) and p2[0] == "refunded", (code2, p2))
 
-def test_support_attachment_idor():
+def test_support_attachment_idor(admin):
     # Incremental Testing Programme — private-file access control on support-ticket attachments. Isolation
     # was proven for documents/partner-docs but NOT for support attachments (the /api/me/tickets/{tid}/
     # attachments/{aid} serve endpoint joins on t.user_id, so another student must get 404).
@@ -4588,6 +4616,61 @@ def test_support_attachment_idor():
     chk("30d student B is refused A's attachment (404 — IDOR blocked)", c2 == 404, (c2, r2))
     c3, r3 = jget("GET", f"/api/me/tickets/{tid}/attachments/{aid}")
     chk("30e an anonymous request for the attachment is refused (401)", c3 == 401, (c3, r3))
+    # Staff side: the support inbox can now list and stream the ticket's attachments, and every
+    # staff read is written to the audit log. A student token is refused the staff routes.
+    c4, lst = jget("GET", f"/api/support/tickets/{tid}/attachments", token=admin)
+    chk("30f support staff list the ticket's attachments", c4 == 200 and any(r.get("id") == aid for r in lst.get("rows", [])), (c4, lst))
+    st5, sbody, _ = _raw_get(f"/api/support/tickets/{tid}/attachments/{aid}", token=admin)
+    chk("30g support staff stream the attachment bytes (200, %PDF)", st5 == 200 and sbody[:5] == b"%PDF-", st5)
+    con = dbconn(); nlog = con.execute("SELECT COUNT(*) FROM audit_logs WHERE action='ticket_attachment_view'").fetchone()[0]; con.close()
+    chk("30h the staff read is audit-logged", nlog >= 1, nlog)
+    chk("30i a student token is refused the staff attachment routes (401/403)",
+        jget("GET", f"/api/support/tickets/{tid}/attachments", token=atok)[0] in (401, 403))
+
+def test_student_evidence_viewback(admin):
+    # Universal document actions — students can VIEW/DOWNLOAD back what they submitted (appeal,
+    # accommodation and CPD evidence), strictly own-rows-only; admin evidence reads are audit-logged.
+    print("\n=== 30B. Student evidence view-back (appeals / accommodations / CPD) ===")
+    tok, uid = register_student("viewback@ex.co")
+    other, _ = register_student("viewback-other@ex.co")
+    ev = b"%PDF-1.4 viewback-evidence"
+    ev_uri = "data:application/pdf;base64," + base64.b64encode(ev).decode()
+
+    c, ap = jget("POST", "/api/me/appeals", token=tok,
+                 body={"type": "complaint", "reason": "This complaint has enough characters to be accepted.",
+                       "evidence_name": "proof.pdf", "evidence_data": ev_uri})
+    apid = ap.get("id")
+    chk("30B-a appeal with evidence submits", c == 200 and apid, ap)
+    st, body, _ = _raw_get(f"/api/me/appeals/{apid}/evidence", token=tok)
+    chk("30B-b the student views their own appeal evidence back (exact bytes)", st == 200 and body == ev, st)
+    chk("30B-c another student is refused it (404)", _raw_get(f"/api/me/appeals/{apid}/evidence", token=other)[0] == 404)
+    chk("30B-d anonymous is refused it (401)", _raw_get(f"/api/me/appeals/{apid}/evidence")[0] == 401)
+
+    c, ar = jget("POST", "/api/me/accommodations", token=tok,
+                 body={"request_type": "extra_time", "description": "A description long enough to be accepted here.",
+                       "evidence_name": "medical.pdf", "evidence_data": ev_uri})
+    arid = ar.get("id")
+    chk("30B-e accommodation with evidence submits", c == 200 and arid, ar)
+    st, body, _ = _raw_get(f"/api/me/accommodations/{arid}/evidence", token=tok)
+    chk("30B-f the student views their own accommodation evidence back", st == 200 and body == ev, st)
+    chk("30B-g another student is refused it (404)", _raw_get(f"/api/me/accommodations/{arid}/evidence", token=other)[0] == 404)
+
+    c, ce = jget("POST", "/api/me/cpd", token=tok, body={"description": "Course", "category": "Structured learning", "hours": 2})
+    con = dbconn(); cid = con.execute("SELECT id FROM cpd_entries WHERE user_id=? ORDER BY id DESC", (uid,)).fetchone()[0]; con.close()
+    c, at = jget("POST", f"/api/me/cpd/{cid}/evidence", token=tok, body={"filename": "cert.pdf", "data_uri": ev_uri})
+    chk("30B-h CPD evidence attaches", c == 200, (c, at))
+    st, body, _ = _raw_get(f"/api/me/cpd/{cid}/evidence", token=tok)
+    chk("30B-i the student views their own CPD evidence back", st == 200 and body == ev, st)
+    chk("30B-j another student is refused it (404)", _raw_get(f"/api/me/cpd/{cid}/evidence", token=other)[0] == 404)
+
+    # Admin evidence reads flow through the same serve path and are audit-logged per case type.
+    st, _, _ = _raw_get(f"/api/admin/appeals/{apid}/evidence", token=admin)
+    st2, _, _ = _raw_get(f"/api/admin/cpd/{cid}/evidence", token=admin)
+    con = dbconn()
+    nap = con.execute("SELECT COUNT(*) FROM audit_logs WHERE action='appeal_evidence_view'").fetchone()[0]
+    ncp = con.execute("SELECT COUNT(*) FROM audit_logs WHERE action='cpd_evidence_view'").fetchone()[0]
+    con.close()
+    chk("30B-k admin evidence reads succeed and are audit-logged", st == 200 and st2 == 200 and nap >= 1 and ncp >= 1, (st, st2, nap, ncp))
 
 def test_certificate_suspension(admin):
     # Incremental Testing Programme — the download gate on a SUSPENDED credential (Certificates.cs), which
@@ -6493,6 +6576,14 @@ def test_public_documents(admin):
     chk("57k the public file serves anonymously byte-exact as image/png, bumps download_count and writes a download-audit row",
         st == 200 and fbody == png and ctype.startswith("image/png")
         and pd.get("document", {}).get("download_count") == 1 and ndl == 1, (st, ctype, ndl))
+
+    # Once published, the version's bytes are immutable history: the in-place /file attach is refused
+    # (409) and the file on disk is untouched — replacing requires the /replace new-version route.
+    c, r = jget("POST", f"/api/admin/public-documents/{did}/file", token=admin,
+                body={"data_uri": TINY_PNG, "filename": "sneaky-swap.png"})
+    st, fbody2, _ = _raw_get(f"/api/public/documents/{grp}/file")
+    chk("57k2 a published version's file cannot be overwritten in place (409 published_file_immutable; bytes unchanged)",
+        c == 409 and r.get("error") == "published_file_immutable" and st == 200 and fbody2 == png, (c, r))
 
     c, rp = jget("POST", f"/api/admin/public-documents/{did}/replace", token=admin, body={})
     nid = rp.get("id")

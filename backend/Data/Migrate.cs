@@ -740,6 +740,11 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS document_acknowledgements(id INTEGER PRIMARY KEY AUTOINCREMENT,document_id INTEGER NOT NULL,user_id INTEGER NOT NULL,
             ip VARCHAR(64),acknowledged_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_docack ON document_acknowledgements(document_id, user_id)");
+        // Replacement provenance: why a version superseded its predecessor, and — when a version was
+        // created by restoring an earlier one — which version it was restored from. Additive AddCol so
+        // existing installs upgrade in place.
+        AddCol("documents", "replace_reason", "replace_reason TEXT");
+        AddCol("documents", "restored_from_id", "restored_from_id INTEGER");
         // First-run category set (only when empty — never overwrites admin edits).
         try
         {

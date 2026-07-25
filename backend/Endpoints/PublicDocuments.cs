@@ -225,15 +225,26 @@ public static class PublicDocuments
             });
         });
 
-        // Upload / replace the file bytes on a specific row (does not create a new version).
+        // Upload / attach the file bytes on a specific row (does not create a new version). Allowed
+        // ONLY while the row is still pre-publication: once a version has been published (or has left
+        // the pre-publication pipeline), its bytes are immutable history — replacing the file requires
+        // the /replace route, which creates a NEW version and preserves this one. This closes the gap
+        // where a published, legally-reviewed public PDF could be silently swapped in place.
         app.MapPost("/api/admin/public-documents/{id:long}/file", async (HttpContext ctx, long id) =>
         {
             AllowUpload(ctx);
             var b = await H.Body(ctx.Request);
             return gate(ctx.Request, SECTION, adm =>
             {
-                var r = db.QueryOne("SELECT id FROM public_documents WHERE id=?", id);
+                var r = db.QueryOne("SELECT id,status FROM public_documents WHERE id=?", id);
                 if (r is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+                var status = (H.Str(r["status"]) ?? "draft").ToLowerInvariant();
+                if (status is not ("draft" or "under_review" or "legal_review_required" or "approved"))
+                    return Results.Json(new
+                    {
+                        error = "published_file_immutable",
+                        message = "This version has been published — its file is immutable history. Use “Replace” to create a new version instead.",
+                    }, statusCode: 409);
                 var (bytes, mime, err) = Storage.DecodeDataUri(H.GetS(b, "data_uri", "dataUri", "data"));
                 if (err is not null) return Results.Json(new { error = err }, statusCode: 400);
                 var obj = Storage.Put(bytes!, mime, "public-docs");
@@ -313,13 +324,17 @@ public static class PublicDocuments
             });
         });
 
-        // Admin file fetch — any status (for preview/QA before publishing).
-        app.MapGet("/api/admin/public-documents/{id:long}/file", (HttpRequest req, long id) => gate(req, SECTION, _ =>
+        // Admin file fetch — any status (for preview/QA before publishing). Logged: this is the one
+        // route that can read internal/withdrawn versions, so every access leaves an audit trail.
+        app.MapGet("/api/admin/public-documents/{id:long}/file", (HttpContext ctx, long id) => gate(ctx.Request, SECTION, adm =>
         {
-            var r = db.QueryOne("SELECT storage_ref,mime,filename FROM public_documents WHERE id=?", id);
+            var r = db.QueryOne("SELECT storage_ref,mime,filename,doc_group,version,status FROM public_documents WHERE id=?", id);
             if (r is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var got = Storage.Get(H.Str(r["storage_ref"]));
             if (got is null || got.Value.bytes is null) return Results.Json(new { error = "file_unavailable" }, statusCode: 404);
+            log(adm.Id, "public_document_file_view", $"#{id} {H.Str(r["doc_group"])} v{H.Str(r["version"])} ({H.Str(r["status"])})");
+            if (ctx.Request.Query["dl"].ToString() == "1")
+                return Results.Bytes(got.Value.bytes!, got.Value.mime ?? "application/pdf", H.Str(r["filename"]) ?? ("document-" + id + ".pdf"));
             return Results.File(got.Value.bytes!, got.Value.mime ?? "application/pdf");
         }));
 

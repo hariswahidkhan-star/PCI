@@ -63,10 +63,15 @@ public static class Books
                     (long)(H.GetNum(b, "sort_order") ?? 0));
             }
 
+            // Replacement provenance: the previous checksum is recorded in the audit log before the
+            // pointer moves, and content-addressed storage keeps the old bytes — so a prior file
+            // remains identifiable and recoverable even though cert_documents has no version chain.
+            var prevSha = existing is null ? null : db.Scalar<string>("SELECT sha256 FROM cert_documents WHERE id=?", id);
             var stored = DocStore.Put(file);
             db.Execute("UPDATE cert_documents SET storage_ref=?, filename=?, mime=?, size_bytes=?, sha256=?, updated_at=datetime('now') WHERE id=?",
                 stored.Reference, DocStore.SafeName(H.GetS(b, "filename"), file.Ext), file.Mime, file.Bytes.LongLength, stored.Sha256, id);
-            log(adm.Id, "cert_document_file_uploaded", $"cert_document {id} ({file.Mime}, {file.Bytes.LongLength} bytes)");
+            log(adm.Id, "cert_document_file_uploaded", $"cert_document {id} ({file.Mime}, {file.Bytes.LongLength} bytes)"
+                + (string.IsNullOrEmpty(prevSha) || prevSha == stored.Sha256 ? "" : $" replaced sha256 {prevSha[..Math.Min(prevSha.Length, 12)]}… → {stored.Sha256[..12]}…"));
             var row = db.QueryOne("SELECT id,certification_id,kind,title,watermark,published,filename,mime,size_bytes,sha256 FROM cert_documents WHERE id=?", id)!;
             return J(new { ok = true, row });
         }));
@@ -128,9 +133,37 @@ public static class Books
                     $"Personal Copy - Not for Redistribution | Copy {copyId} | Downloaded {DateTime.UtcNow:yyyy-MM-dd}");
                 if (wm is not null) { bytes = wm; wmResult = "ok_watermarked"; } else wmResult = "ok_unwatermarked";
             }
-            DlAudit(id, u.Id, copyId, wmResult, Ip(ctx));
+            // `?inline=1` serves for the in-app viewer (still watermarked, still audited — the copy id
+            // makes a screen-captured page as traceable as a saved file).
+            var inline = ctx.Request.Query["inline"].ToString() == "1";
+            DlAudit(id, u.Id, copyId, inline ? wmResult + "_view" : wmResult, Ip(ctx));
             var name = H.Str(d["filename"]) ?? ("book-" + id + ".pdf");
+            if (inline)
+            {
+                ctx.Response.Headers["Content-Disposition"] = "inline; filename=\"" + name.Replace("\"", "") + "\"";
+                return Results.Bytes(bytes, mime);
+            }
             return Results.Bytes(bytes, mime, name);
         });
+
+        // ── Admin: view/download the stored file behind a book (verify what was uploaded) ──
+        app.MapGet("/api/admin/cert-documents/{id:long}/file", (HttpContext ctx, long id) => gate(ctx.Request, "resources", adm =>
+        {
+            var d = db.QueryOne("SELECT certification_id,storage_ref,filename,mime FROM cert_documents WHERE id=?", id);
+            if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (!adm.CanCert(d["certification_id"] is null ? Certs.DefaultId : H.L(d["certification_id"])))
+                return Results.Json(new { error = "certification_forbidden" }, statusCode: 403);
+            var bytes = DocStore.Get(H.Str(d["storage_ref"]));
+            if (bytes is null) return Results.Json(new { error = "file_missing" }, statusCode: 404);
+            log(adm.Id, "cert_document_file_view", $"cert_document {id}");
+            var mime = H.Str(d["mime"]) ?? "application/octet-stream";
+            var name = H.Str(d["filename"]) ?? ("book-" + id + ".pdf");
+            if (ctx.Request.Query["inline"].ToString() == "1")
+            {
+                ctx.Response.Headers["Content-Disposition"] = "inline; filename=\"" + name.Replace("\"", "") + "\"";
+                return Results.Bytes(bytes, mime);
+            }
+            return Results.Bytes(bytes, mime, name);
+        }));
     }
 }

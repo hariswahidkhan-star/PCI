@@ -216,10 +216,13 @@ public static class Storage
         new(@"^[0-9a-f]{64}\.(jpg|png|webp|pdf|bin|docx|doc|xlsx|xls|pptx|ppt|csv|txt|zip)$", System.Text.RegularExpressions.RegexOptions.Compiled);
 
     // Top-level category folders whose contents the retention sweep must never delete (both backends).
-    // Purgeable categories stay implicit: evidence, idd, appeal, accommodation, support, cpd — all
-    // candidate-submitted case/identity evidence, which is what evidence_retention_days governs.
+    // Purgeable categories stay implicit: evidence, idd, appeal, accommodation, support, cpd,
+    // incidents — all candidate-submitted case/identity evidence, which is what
+    // evidence_retention_days governs. public-docs holds PUBLISHED governance/legal PDFs served to
+    // the anonymous public and cv holds job-applicant CVs under an open posting — neither is case
+    // evidence, so neither may silently age out.
     static readonly HashSet<string> ProtectedCategories = new(StringComparer.OrdinalIgnoreCase)
-        { "documents", "certificates", "books", "founding", "honorary", "honorary-idv", "partners" };
+        { "documents", "certificates", "books", "founding", "honorary", "honorary-idv", "partners", "public-docs", "cv" };
 
     /// <summary>Delete a SINGLE stored object by reference (used for targeted, policy-driven deletion of
     /// sensitive artefacts such as honorary identity documents — not the blanket retention sweep). Returns
