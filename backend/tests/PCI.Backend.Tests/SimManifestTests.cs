@@ -360,6 +360,94 @@ public class SimManifestTests
         Assert.Equal(64, doc.RootElement.GetProperty("checksum").GetString()!.Length);
     }
 
+    [Fact]
+    public void Checksum_SurvivesTheNumberReformattingAnyJsonToolDoes()
+    {
+        // The defect this pins: JsonNode re-emits a number's ORIGINAL token, so 1.50 stayed "1.50" and
+        // 2e3 stayed "2e3". Every honest tool in a transfer pipeline — jq, Python, a formatter — rewrites
+        // those to 1.5 and 2000. The values are identical; only the spelling changed. Before the fix the
+        // recomputed checksum differed and a genuine export came back as checksum_mismatch.
+        var verbose = Row(("config_json", "{\"tolerance\":0.0100,\"pv\":2e3,\"bac\":200.0,\"id\":9007199254740993}"));
+        var tidy = Row(("config_json", "{\"tolerance\":0.01,\"pv\":2000,\"bac\":200,\"id\":9007199254740993}"));
+        Assert.Equal(SimManifest.Checksum(tidy), SimManifest.Checksum(verbose));
+
+        // A real change in value must still move the hash.
+        Assert.NotEqual(SimManifest.Checksum(tidy),
+            SimManifest.Checksum(Row(("config_json", "{\"tolerance\":0.02,\"pv\":2000,\"bac\":200,\"id\":9007199254740993}"))));
+
+        // And the round trip holds end to end: a manifest reformatted in transit still verifies.
+        var manifest = (JsonObject)JsonNode.Parse(SimManifest.Build(verbose, NoIssues))!;
+        var reserialised = (JsonObject)JsonNode.Parse(manifest.ToJsonString())!;
+        Assert.Equal(SimManifest.Reject.None, SimManifest.Verify(reserialised, out _, out _));
+    }
+
+    // ---- §5B.8 bundle verification ----
+
+    static JsonObject Bun(params (string, object?)[][] rows) =>
+        (JsonObject)JsonNode.Parse(SimManifest.Bundle(
+            rows.Select(r => (Row(r), (IReadOnlyList<SimContent.Issue>)NoIssues))))!;
+
+    [Fact]
+    public void VerifyBundle_AcceptsAnUnmodifiedBundleAndReturnsEveryEntryInCodeOrder()
+    {
+        var bundle = Bun(new[] { ("scenario_code", (object?)"B-002") }, new[] { ("scenario_code", (object?)"A-001") });
+        Assert.Equal(SimManifest.Reject.None, SimManifest.VerifyBundle(bundle, out var entries));
+        Assert.Equal(new[] { "A-001", "B-002" }, entries.Select(e => e.Code).ToArray());
+        Assert.All(entries, e => Assert.Equal(64, e.Checksum.Length));
+    }
+
+    [Fact]
+    public void VerifyBundle_IgnoresReformattingButRefusesAnEditedEntry()
+    {
+        var bundle = Bun(new[] { ("scenario_code", (object?)"A-001") }, new[] { ("scenario_code", (object?)"B-002") });
+
+        // Re-encoded in transit: same values, different bytes.
+        var reformatted = (JsonObject)JsonNode.Parse(bundle.ToJsonString(new JsonSerializerOptions { WriteIndented = false }))!;
+        Assert.Equal(SimManifest.Reject.None, SimManifest.VerifyBundle(reformatted, out _));
+
+        // One entry's graded content altered — the per-entry checksum no longer reconciles.
+        var tampered = (JsonObject)JsonNode.Parse(bundle.ToJsonString())!;
+        ((JsonObject)tampered["scenarios"]![1]!["scenario"]!)["title"] = "Edited in transit";
+        Assert.Equal(SimManifest.Reject.ChecksumMismatch, SimManifest.VerifyBundle(tampered, out var none));
+        Assert.Empty(none);
+    }
+
+    [Fact]
+    public void VerifyBundle_RefusesATruncatedBundleEvenThoughEveryRemainingEntryIsIntact()
+    {
+        // The failure mode a per-entry check alone would miss: drop a scenario and every surviving entry
+        // still verifies on its own, but the catalogue is no longer the one that was exported.
+        var bundle = Bun(new[] { ("scenario_code", (object?)"A-001") }, new[] { ("scenario_code", (object?)"B-002") });
+        ((JsonArray)bundle["scenarios"]!).RemoveAt(1);
+        Assert.Equal(SimManifest.Reject.ChecksumMismatch, SimManifest.VerifyBundle(bundle, out _));
+    }
+
+    [Fact]
+    public void VerifyBundle_RefusesASingleManifestAFutureVersionAndRubbish()
+    {
+        // A single-scenario manifest is not a bundle, even though it is a valid document.
+        var single = (JsonObject)JsonNode.Parse(SimManifest.Build(Row(("scenario_code", "A-001")), NoIssues))!;
+        Assert.Equal(SimManifest.Reject.WrongKind, SimManifest.VerifyBundle(single, out _));
+
+        var future = Bun(new[] { ("scenario_code", (object?)"A-001") });
+        future["manifest_version"] = SimManifest.ManifestVersion + 1;
+        Assert.Equal(SimManifest.Reject.UnsupportedVersion, SimManifest.VerifyBundle(future, out _));
+
+        Assert.Equal(SimManifest.Reject.BadManifest, SimManifest.VerifyBundle(null, out _));
+        var noList = Bun(new[] { ("scenario_code", (object?)"A-001") });
+        noList.Remove("scenarios");
+        Assert.Equal(SimManifest.Reject.BadManifest, SimManifest.VerifyBundle(noList, out _));
+    }
+
+    [Fact]
+    public void VerifyBundle_AcceptsAnEmptyCatalogue()
+    {
+        var empty = (JsonObject)JsonNode.Parse(
+            SimManifest.Bundle(Array.Empty<(Dictionary<string, object?>, IReadOnlyList<SimContent.Issue>)>()))!;
+        Assert.Equal(SimManifest.Reject.None, SimManifest.VerifyBundle(empty, out var entries));
+        Assert.Empty(entries);
+    }
+
     static string Sum(string bundleJson)
     {
         using var d = JsonDocument.Parse(bundleJson);
