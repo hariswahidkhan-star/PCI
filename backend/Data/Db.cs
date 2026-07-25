@@ -37,7 +37,11 @@ public sealed class Db
 
     public Db(string path)
     {
-        var prov = (Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "sqlite").Trim().ToLowerInvariant();
+        var configuredProvider = Environment.GetEnvironmentVariable("DB_PROVIDER");
+        var prov = (configuredProvider ?? "sqlite").Trim().ToLowerInvariant();
+        if (configuredProvider is not null && prov is not ("sqlite" or "mysql" or "mariadb"))
+            throw new InvalidOperationException(
+                $"Unknown DB_PROVIDER '{configuredProvider}'. Expected sqlite, mysql, or mariadb; refusing fallback.");
         if (prov is "mysql" or "mariadb")
         {
             Provider = Kind.MySql;
@@ -317,6 +321,8 @@ public sealed class Db
     {
         lock (_gate)
         {
+            if (Provider == Kind.MySql && !IsMariaDb)
+                sqlScript = RemoveExistingMySqlIndexes(sqlScript);
             var sql = Translate(sqlScript);
             try
             {
@@ -354,6 +360,29 @@ public sealed class Db
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Oracle MySQL 8 does not support CREATE INDEX IF NOT EXISTS. The base schema is a multi-statement
+    /// script, so the normal single-index duplicate handler cannot recover once a duplicate aborts the
+    /// batch. Remove only index statements whose names already exist; missing indexes remain in the
+    /// script and TranslateFor strips their unsupported IF NOT EXISTS clause.
+    /// </summary>
+    string RemoveExistingMySqlIndexes(string script)
+    {
+        var rx = new System.Text.RegularExpressions.Regex(
+            @"CREATE\s+(?:UNIQUE\s+)?INDEX\s+IF\s+NOT\s+EXISTS\s+`?([A-Za-z0-9_]+)`?\s+ON\s+`?([A-Za-z0-9_]+)`?[^;]*;",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        return rx.Replace(script, match =>
+        {
+            using var cmd = NewCmd();
+            cmd.CommandText = @"SELECT COUNT(*) FROM information_schema.statistics
+                WHERE table_schema=DATABASE() AND index_name=@indexName AND table_name=@tableName";
+            var p1 = cmd.CreateParameter(); p1.ParameterName = "@indexName"; p1.Value = match.Groups[1].Value;
+            var p2 = cmd.CreateParameter(); p2.ParameterName = "@tableName"; p2.Value = match.Groups[2].Value;
+            cmd.Parameters.Add(p1); cmd.Parameters.Add(p2);
+            return Convert.ToInt64(cmd.ExecuteScalar()) > 0 ? "" : match.Value;
+        });
     }
 
     static bool IsIndexDdl(string sql) =>

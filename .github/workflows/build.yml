@@ -23,6 +23,9 @@ jobs:
       - name: Restore & build
         run: dotnet build -c Release
 
+      - name: Production and staging fail closed before database open
+        run: python3 tests/production_config_test.py
+
       - name: Logic tests (6 suites)
         run: |
           set -e
@@ -56,7 +59,7 @@ jobs:
           PY
 
       - name: Boot the backend
-        env: { PORT: '8080', DATABASE_FILE: './ci.db' }
+        env: { ASPNETCORE_ENVIRONMENT: Development, PORT: '8080', DATABASE_FILE: './ci.db' }
         run: |
           dotnet bin/Release/net8.0/PCI.Backend.dll &
           # Fresh CI DBs run a full wwwroot content scan + seed (~15–40s on shared runners).
@@ -137,11 +140,14 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with: { dotnet-version: '8.0.x' }
       - run: dotnet build -c Release
+      - name: Generated MySQL schema is current
+        run: python3 tools/sqlite_to_mysql.py --check
       - name: Grant the pci user database-create rights (for the test harness reset)
         run: mysql -h 127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'pci'@'%'; FLUSH PRIVILEGES;"
       - name: Adversarial integration suite against MySQL
         env:
           TEST_DB_PROVIDER: mysql
+          REQUIRE_MYSQL_TEST: '1'
           MYSQL_HOST: 127.0.0.1
           MYSQL_USER: pci
           MYSQL_PASSWORD: pcipass
@@ -157,6 +163,7 @@ jobs:
       - name: Migration & DB-integrity suite (full mode incl. SQLite/MySQL schema parity)
         env:
           TEST_DB_PROVIDER: mysql
+          REQUIRE_MYSQL_TEST: '1'
           MYSQL_HOST: 127.0.0.1
           MYSQL_USER: pci
           MYSQL_PASSWORD: pcipass
@@ -166,14 +173,50 @@ jobs:
           pip install --quiet --break-system-packages pymysql || pip install --quiet pymysql
           python3 tests/migration_integrity_test.py
 
-      - name: DR-1 backup → restore round-trip (non-gating until baselined on CI)
-        continue-on-error: true
+      - name: DR-1 backup → restore round-trip
         env:
           MYSQL_HOST: 127.0.0.1
           MYSQL_PORT: '3306'
           MYSQL_USER: pci
           MYSQL_PASSWORD: pcipass
         run: python3 tests/backup_restore_test.py
+
+  backend-mysql8:
+    # Oracle MySQL has a distinct DDL path (notably no CREATE INDEX IF NOT EXISTS).
+    # Double-boot migration integrity is a required gate, not inferred from MariaDB compatibility.
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: backend } }
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: pci
+          MYSQL_USER: pci
+          MYSQL_PASSWORD: pcipass
+        ports: [ '3306:3306' ]
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
+          --health-interval=5s --health-timeout=5s --health-retries=30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - run: dotnet build -c Release
+      - name: Grant reset rights to isolated test schemas
+        run: mysql -h 127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'pci'@'%'; FLUSH PRIVILEGES;"
+      - name: Oracle MySQL double-boot, schema, index, and money parity
+        env:
+          TEST_DB_PROVIDER: mysql
+          REQUIRE_MYSQL_TEST: '1'
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_USER: pci
+          MYSQL_PASSWORD: pcipass
+          MYSQL_DATABASE: pci
+          MYSQL_SSL: 'false'
+        run: |
+          pip install --quiet --break-system-packages pymysql || pip install --quiet pymysql
+          python3 tests/migration_integrity_test.py
 
   backend-unit-mysql:
     # The xUnit layer, run against a real MariaDB instead of SQLite.

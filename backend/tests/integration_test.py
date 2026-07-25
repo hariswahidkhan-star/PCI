@@ -22,7 +22,7 @@ which is the standard way to make such cases fast and deterministic.
 
 Exit code 0 iff every assertion passes.  Run from backend/:  python3 tests/integration_test.py
 """
-import base64, hashlib, hmac, http.server, json, os, socket, sqlite3, subprocess, sys, threading, time, urllib.error, urllib.request
+import base64, hashlib, hmac, http.server, json, os, re, socket, sqlite3, subprocess, sys, threading, time, urllib.error, urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BACKEND = os.path.dirname(HERE)
@@ -115,9 +115,17 @@ def sign_and_send_webhook(session_id, email, product, pi_id, metadata=None, amou
 # not assumed. On MySQL the DB-surgery statements below are translated (? → %s, datetime() → MySQL) by
 # a thin wrapper, so the test body is identical for both providers.
 PROVIDER = os.environ.get("TEST_DB_PROVIDER", "sqlite").lower()
+if PROVIDER not in {"sqlite", "mysql"}:
+    raise SystemExit(f"unknown TEST_DB_PROVIDER={PROVIDER!r}")
+if os.environ.get("REQUIRE_MYSQL_TEST") == "1" and PROVIDER != "mysql":
+    raise SystemExit("REQUIRE_MYSQL_TEST=1 but TEST_DB_PROVIDER is not mysql")
+mysql_base = os.environ.get("MYSQL_DATABASE", "pci")
+if not re.fullmatch(r"[A-Za-z0-9_]+", mysql_base):
+    raise SystemExit(f"unsafe MYSQL_DATABASE={mysql_base!r}")
+mysql_test_db = mysql_base if mysql_base.endswith("_integration") else mysql_base + "_integration"
 MYSQL = dict(host=os.environ.get("MYSQL_HOST", "127.0.0.1"), port=int(os.environ.get("MYSQL_PORT", "3306")),
              user=os.environ.get("MYSQL_USER", "pci"), password=os.environ.get("MYSQL_PASSWORD", "pcipass"),
-             database=os.environ.get("MYSQL_DATABASE", "pci"))
+             database=mysql_test_db)
 
 def _mysql_translate(sql):
     # Percent literals in the SQL (DATE_FORMAT specifiers) are written as %% so pymysql's
@@ -152,8 +160,8 @@ def _reset_mysql():
     import pymysql
     root = pymysql.connect(host=MYSQL["host"], port=MYSQL["port"], user=MYSQL["user"], password=MYSQL["password"])
     cur = root.cursor()
-    cur.execute("DROP DATABASE IF EXISTS " + MYSQL["database"])
-    cur.execute("CREATE DATABASE " + MYSQL["database"] + " CHARACTER SET utf8mb4")
+    cur.execute(f"DROP DATABASE IF EXISTS `{MYSQL['database']}`")
+    cur.execute(f"CREATE DATABASE `{MYSQL['database']}` CHARACTER SET utf8mb4")
     root.commit(); root.close()
 
 # ---- server lifecycle ----
@@ -167,7 +175,9 @@ def boot():
                    INTEGRATIONS_ALLOW_PRIVATE_EGRESS="true",
                    # Meta Lead Ads fail closed without META_APP_SECRET (EXT-P1-02); tests sign with this key.
                    META_APP_SECRET="meta-test-secret-56",
-                   ASPNETCORE_ENVIRONMENT="Development", DATABASE_FILE=DB)
+                   ASPNETCORE_ENVIRONMENT="Development", DATABASE_FILE=DB,
+                   MYSQL_DATABASE=MYSQL["database"])
+        env.pop("MYSQL_CONNECTION_STRING", None)
     else:
         for f in (DB, DB+"-wal", DB+"-shm"):
             try: os.remove(f)
@@ -211,7 +221,7 @@ def make_paid_user(email, product="bundle", amount=9900, pi=None, sid=None, real
     exam flows to the rate-limit test. The set-password + /api/login path is proven once, explicitly,
     via real_login=True (the happy-path user)."""
     pi = pi or ("pi_" + sha256hex(email+"pi")[:16]); sid = sid or ("cs_" + sha256hex(email+"cs")[:16])
-    code, _ = sign_and_send_webhook(sid, email, product, pi, metadata=metadata)
+    code, _ = sign_and_send_webhook(sid, email, product, pi, metadata=metadata, amount=amount)
     if code != 200: raise SystemExit(f"webhook failed for {email}: {code}")
     con = dbconn()
     row = con.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()
@@ -2639,6 +2649,17 @@ def run(proc):
     chk("1c replay accepted (200)", code == 200, code)
     con = dbconn(); c2 = counts(email); con.close()
     chk("1d replay created nothing new", c2 == (1,1,1,1), c2)
+    # Metadata is client-created descriptive data; Stripe's integer amount_total is authoritative.
+    code, _ = sign_and_send_webhook(
+        "cs_amount_authority", "amount-authority@ex.co", "membership", "pi_amount_authority",
+        amount=4512, metadata={"final_amount": "45.125", "standard_amount": "47.50"})
+    con = dbconn()
+    settled = con.execute(
+        "SELECT final_amount FROM payments WHERE provider_payment_id='pi_amount_authority'").fetchone()
+    con.close()
+    chk("1e Stripe amount_total wins over disagreeing floating metadata",
+        code == 200 and settled is not None and round(float(settled[0]), 2) == 45.12,
+        (code, settled))
     # tampered signature rejected
     code, _ = req("POST", "/api/webhook", raw=b'{"id":"evt_x"}',
                   headers={"Content-Type":"application/json","Stripe-Signature":"t=1,v1=deadbeef"})

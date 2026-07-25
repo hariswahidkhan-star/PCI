@@ -30,7 +30,9 @@ test.describe('public site', () => {
     await page.goto('/student-login.html')
     await expect(page).toHaveURL(/\/app\/login/)
     await page.goto('/student-dashboard.html')
-    await expect(page).toHaveURL(/\/app\/?(\?|$)/)
+    // The redirect stub hands off to /app/; the unauthenticated React guard then correctly
+    // continues to /app/login. Either observation proves the legacy fake dashboard is unreachable.
+    await expect(page).toHaveURL(/\/app\/(?:login)?(?:\?|$)/)
   })
 
   test('home page has no CRITICAL accessibility violations (axe, WCAG 2 A/AA)', async ({ page }) => {

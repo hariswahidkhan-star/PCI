@@ -132,7 +132,7 @@ public static class Migrate
         // remote_type: onsite|remote|hybrid. apply_method: inplatform|url|email. status: draft|published|closed.
         db.Exec(@"CREATE TABLE IF NOT EXISTS job_postings(id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT NOT NULL,organisation TEXT,location TEXT,
             employment_type TEXT DEFAULT 'full_time',remote_type TEXT DEFAULT 'onsite',sector TEXT,description TEXT,requirements TEXT,responsibilities TEXT,
-            salary_min REAL,salary_max REAL,salary_currency TEXT DEFAULT 'USD',salary_period TEXT DEFAULT 'year',
+            salary_min DECIMAL(12,2),salary_max DECIMAL(12,2),salary_currency TEXT DEFAULT 'USD',salary_period TEXT DEFAULT 'year',
             apply_method TEXT DEFAULT 'inplatform',apply_url TEXT,apply_email TEXT,featured INTEGER DEFAULT 0,status VARCHAR(24) DEFAULT 'draft',
             posted_at TEXT,closes_at TEXT,created_by INTEGER,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_jobs_status ON job_postings(status)");
@@ -1369,10 +1369,11 @@ public static class Migrate
             // Treat an unset environment as Production (the safe default) and honour either .NET
             // environment variable. The opt-in secret alone must never create this account on an
             // ambiguously configured deployment.
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+            var environment = Environment.GetEnvironmentVariable("PCI_RUNTIME_ENVIRONMENT")
+                ?? Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
                 ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
                 ?? "Production";
-            var isProd = string.Equals(environment, "Production", StringComparison.OrdinalIgnoreCase);
+            var isProd = !string.Equals(environment, "Development", StringComparison.OrdinalIgnoreCase);
             var e2ePw = Environment.GetEnvironmentVariable("E2E_ADMIN_PASSWORD");
             if (!isProd && !string.IsNullOrWhiteSpace(e2ePw))
             {
@@ -1449,11 +1450,6 @@ public static class Migrate
         AddCol("payments", "amount_refunded", "amount_refunded DECIMAL(12,2) DEFAULT 0");
         AddCol("payments", "refunded_at", "refunded_at TEXT");
 
-        // Phase 1 audit — MySQL money columns must be DECIMAL(12,2), not DOUBLE/FLOAT.
-        // CREATE TABLE IF NOT EXISTS / ADD COLUMN cannot change an existing inexact type; upgrade in place.
-        if (db.Provider == Db.Kind.MySql)
-            EnsureMoneyDecimals(db);
-
         // Backfill Exam Authorizations for any pre-existing settled exam seat (idempotent; best-effort).
         PCI.Backend.Core.ExamAuthorization.BackfillAll(db);
 
@@ -1468,7 +1464,11 @@ public static class Migrate
             // that seeds a real, authenticatable student on the live site. Seed the demo student only
             // outside Production, OR when the operator explicitly sets DEMO_STUDENT_PASSWORD (an opt-in
             // that proves intent). Everywhere else, launch starts with zero student accounts.
-            var isProd = string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Production", StringComparison.OrdinalIgnoreCase);
+            var environment = Environment.GetEnvironmentVariable("PCI_RUNTIME_ENVIRONMENT")
+                ?? Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+                ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
+                ?? "Production";
+            var isProd = !string.Equals(environment, "Development", StringComparison.OrdinalIgnoreCase);
             var demoOptIn = Environment.GetEnvironmentVariable("DEMO_STUDENT_PASSWORD") is not null;
             var n = db.Scalar<long>("SELECT COUNT(*) FROM users");
             if (n == 0 && (!isProd || demoOptIn))
@@ -1487,56 +1487,79 @@ public static class Migrate
     /// <summary>
     /// Idempotent MySQL-only upgrade: known currency columns that landed as DOUBLE/FLOAT/REAL
     /// (via older schema.mysql.sql regenerations or Migrate DDL written with REAL) become
-    /// DECIMAL(12,2). Never drops tables or deletes rows; skips columns already exact.
+    /// the required DECIMAL precision/scale. Never drops tables or deletes rows.
     /// </summary>
-    static void EnsureMoneyDecimals(Db db)
+    public static void EnsureMoneyDecimals(Db db, bool failOnError = false)
     {
-        // Keep in sync with tools/sqlite_to_mysql.py MONEY_COLUMNS + runtime Migrate money cols.
-        var targets = new (string Table, string Column)[]
+        if (db.Provider != Db.Kind.MySql) return;
+
+        // Keep in sync with migration_integrity_test.py MONEY_COLUMNS. Provider ad metrics/CPC retain
+        // micro-unit precision; ordinary prices, payouts, fees and budgets use cents.
+        var targets = new (string Table, string Column, int Precision, int Scale)[]
         {
-            ("pricing_rules", "standard_price"),
-            ("discount_codes", "discount_value"),
-            ("discount_codes", "min_payable"),
-            ("discount_codes", "min_transaction"),
-            ("discount_codes", "max_discount"),
-            ("payments", "standard_amount"),
-            ("payments", "default_discount_amount"),
-            ("payments", "discount_code_amount"),
-            ("payments", "final_amount"),
-            ("payments", "waived_amount"),
-            ("payments", "amount_refunded"),
-            ("memberships", "renewal_fee"),
-            ("memberships", "amount_paid"),
-            ("certifications", "exam_price"),
-            ("certifications", "application_fee"),
-            ("code_redemptions", "amount_before"),
-            ("code_redemptions", "discount_amount"),
-            ("partner_payouts", "amount"),
-            ("fee_waivers", "original_amount"),
-            ("fee_waivers", "waived_amount"),
-            ("fee_waivers", "final_amount"),
-            ("fee_waivers", "payable_amount"),
-            ("analytics_events", "value"),
-            ("certification_routes", "fee_amount"),
-            ("mkt_promotions", "original_amount"),
-            ("mkt_promotions", "discount_amount"),
-            ("mkt_promotions", "net_amount"),
-            ("mkt_conversions", "value"),
-            ("mkt_conversion_events", "value"),
-            ("mkt_budget_approvals", "requested_amount"),
+            ("pricing_rules", "standard_price", 12, 2),
+            ("discount_codes", "discount_value", 12, 2),
+            ("discount_codes", "min_payable", 12, 2),
+            ("discount_codes", "min_transaction", 12, 2),
+            ("discount_codes", "max_discount", 12, 2),
+            ("payments", "standard_amount", 12, 2),
+            ("payments", "default_discount_amount", 12, 2),
+            ("payments", "discount_code_amount", 12, 2),
+            ("payments", "final_amount", 12, 2),
+            ("payments", "waived_amount", 12, 2),
+            ("payments", "amount_refunded", 12, 2),
+            ("memberships", "renewal_fee", 12, 2),
+            ("memberships", "amount_paid", 12, 2),
+            ("certifications", "exam_price", 12, 2),
+            ("certifications", "application_fee", 12, 2),
+            ("code_redemptions", "amount_before", 12, 2),
+            ("code_redemptions", "discount_amount", 12, 2),
+            ("partner_payouts", "amount", 12, 2),
+            ("fee_waivers", "original_amount", 12, 2),
+            ("fee_waivers", "waived_amount", 12, 2),
+            ("fee_waivers", "final_amount", 12, 2),
+            ("fee_waivers", "payable_amount", 12, 2),
+            ("analytics_events", "value", 12, 2),
+            ("certification_routes", "fee_amount", 12, 2),
+            ("job_postings", "salary_min", 12, 2),
+            ("job_postings", "salary_max", 12, 2),
+            ("mkt_campaigns", "total_budget", 12, 2),
+            ("mkt_campaigns", "alloc_linkedin", 12, 2),
+            ("mkt_campaigns", "alloc_google", 12, 2),
+            ("mkt_campaigns", "alloc_meta", 12, 2),
+            ("mkt_platform_campaigns", "daily_budget", 12, 2),
+            ("mkt_platform_campaigns", "lifetime_budget", 12, 2),
+            ("mkt_conversation_ads", "daily_budget", 12, 2),
+            ("mkt_conversation_ads", "lifetime_budget", 12, 2),
+            ("mkt_promotions", "original_amount", 12, 2),
+            ("mkt_promotions", "discount_amount", 12, 2),
+            ("mkt_promotions", "net_amount", 12, 2),
+            ("mkt_conversions", "value", 12, 2),
+            ("mkt_conversion_events", "value", 12, 2),
+            ("mkt_budget_approvals", "requested_amount", 12, 2),
+            ("mkt_keywords", "max_cpc", 18, 6),
+            ("mkt_campaign_metrics", "spend", 18, 6),
+            ("mkt_campaign_metrics", "conversion_value", 18, 6),
         };
 
-        foreach (var (table, column) in targets)
+        var errors = new List<string>();
+        foreach (var (table, column, precision, scale) in targets)
         {
             try
             {
                 var row = db.QueryOne(
-                    "SELECT DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT FROM information_schema.COLUMNS "
+                    "SELECT DATA_TYPE, NUMERIC_PRECISION, NUMERIC_SCALE, IS_NULLABLE, COLUMN_DEFAULT FROM information_schema.COLUMNS "
                     + "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?",
                     table, column);
-                if (row is null) continue;
+                if (row is null)
+                {
+                    errors.Add($"{table}.{column} is missing");
+                    continue;
+                }
                 var dataType = Convert.ToString(row["DATA_TYPE"])?.ToLowerInvariant();
-                if (dataType is not ("double" or "float" or "real")) continue;
+                var havePrecision = row["NUMERIC_PRECISION"] is null ? 0 : Convert.ToInt32(row["NUMERIC_PRECISION"]);
+                var haveScale = row["NUMERIC_SCALE"] is null ? 0 : Convert.ToInt32(row["NUMERIC_SCALE"]);
+                if (dataType == "decimal" && havePrecision == precision && haveScale == scale) continue;
 
                 var nullable = string.Equals(Convert.ToString(row["IS_NULLABLE"]), "YES", StringComparison.OrdinalIgnoreCase);
                 var nullSql = nullable ? "NULL" : "NOT NULL";
@@ -1549,12 +1572,28 @@ public static class Migrate
                         defSql = " DEFAULT " + defText;
                 }
 
-                db.Exec($"ALTER TABLE `{table}` MODIFY COLUMN `{column}` DECIMAL(12,2) {nullSql}{defSql}");
+                db.Exec($"ALTER TABLE `{table}` MODIFY COLUMN `{column}` DECIMAL({precision},{scale}) {nullSql}{defSql}");
+
+                var verified = db.QueryOne(
+                    "SELECT DATA_TYPE, NUMERIC_PRECISION, NUMERIC_SCALE FROM information_schema.COLUMNS "
+                    + "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?",
+                    table, column);
+                if (verified is null
+                    || !string.Equals(Convert.ToString(verified["DATA_TYPE"]), "decimal", StringComparison.OrdinalIgnoreCase)
+                    || Convert.ToInt32(verified["NUMERIC_PRECISION"]) != precision
+                    || Convert.ToInt32(verified["NUMERIC_SCALE"]) != scale)
+                    errors.Add($"{table}.{column} did not converge to DECIMAL({precision},{scale})");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[migrate] money DECIMAL upgrade skipped for {table}.{column}: {ex.Message}");
+                errors.Add($"{table}.{column}: {ex.Message}");
             }
         }
+
+        foreach (var error in errors)
+            Console.Error.WriteLine($"[migrate] money DECIMAL invariant: {error}");
+        if (failOnError && errors.Count > 0)
+            throw new InvalidOperationException(
+                $"MySQL money-column invariant failed for {errors.Count} column(s); refusing non-local startup.");
     }
 }

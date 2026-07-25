@@ -184,7 +184,11 @@ public static class MarketingConnectors
         var loginCustomer = (H.Str(conn["external_business_id"]) ?? customerId).Replace("-", "");
         try
         {
-            long micros = (long)(dailyBudget <= 0 ? 10 : dailyBudget) * 1_000_000;
+            if (!double.IsFinite(dailyBudget))
+                return Fail("daily_budget_must_be_finite");
+            var budgetMajor = dailyBudget <= 0 ? 10m : Convert.ToDecimal(dailyBudget);
+            long micros = checked((long)decimal.Round(
+                budgetMajor * 1_000_000m, 0, MidpointRounding.AwayFromZero));
             // 1) Campaign budget
             var budgetReq = new { operations = new[] { new { create = new { name = name + " budget", amountMicros = micros, deliveryMethod = "STANDARD" } } } };
             var budget = GoogleAdsMutate(db, customerId, loginCustomer, token, devToken!, "campaignBudgets", budgetReq);

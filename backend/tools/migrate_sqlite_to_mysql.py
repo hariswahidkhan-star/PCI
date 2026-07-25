@@ -18,6 +18,7 @@ USAGE (target defaults come from the same MYSQL_* env vars the app uses):
 Exit code 0 = migration + reconciliation clean; 2 = completed with reconciliation discrepancies; 1 = error.
 """
 import argparse, os, sqlite3, sys, hashlib, json, datetime
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 
 try:
     import pymysql
@@ -26,12 +27,27 @@ except ImportError:
 
 # Money columns (must reconcile to the cent). Keep in sync with the DECIMAL columns in schema.mysql.sql.
 MONEY = {
-    "payments": ["standard_amount", "default_discount_amount", "discount_code_amount", "final_amount"],
-    "memberships": ["renewal_fee", "amount_paid"],
-    "pricing_rules": ["standard_price"],
-    "certifications": ["standard_price", "exam_price"],
-    "discount_codes": ["discount_value"],
-    "code_redemptions": ["amount_before", "discount_amount"],
+    "payments": {"standard_amount": 2, "default_discount_amount": 2, "discount_code_amount": 2,
+                 "final_amount": 2, "waived_amount": 2, "amount_refunded": 2},
+    "memberships": {"renewal_fee": 2, "amount_paid": 2},
+    "pricing_rules": {"standard_price": 2},
+    "certifications": {"exam_price": 2, "application_fee": 2},
+    "discount_codes": {"discount_value": 2, "min_payable": 2, "min_transaction": 2, "max_discount": 2},
+    "code_redemptions": {"amount_before": 2, "discount_amount": 2},
+    "partner_payouts": {"amount": 2},
+    "fee_waivers": {"original_amount": 2, "waived_amount": 2, "final_amount": 2, "payable_amount": 2},
+    "analytics_events": {"value": 2},
+    "certification_routes": {"fee_amount": 2},
+    "job_postings": {"salary_min": 2, "salary_max": 2},
+    "mkt_campaigns": {"total_budget": 2, "alloc_linkedin": 2, "alloc_google": 2, "alloc_meta": 2},
+    "mkt_platform_campaigns": {"daily_budget": 2, "lifetime_budget": 2},
+    "mkt_conversation_ads": {"daily_budget": 2, "lifetime_budget": 2},
+    "mkt_promotions": {"original_amount": 2, "discount_amount": 2, "net_amount": 2},
+    "mkt_conversions": {"value": 2},
+    "mkt_conversion_events": {"value": 2},
+    "mkt_budget_approvals": {"requested_amount": 2},
+    "mkt_keywords": {"max_cpc": 6},
+    "mkt_campaign_metrics": {"spend": 6, "conversion_value": 6},
 }
 # Key foreign keys to check for orphans after import (child.col -> parent.id).
 FKS = [
@@ -79,6 +95,16 @@ def mysql_cols(mc, t):
         return [r[0] for r in cur.fetchall()]
 
 
+def quantize_money(value, scale):
+    if value is None:
+        return None
+    quantum = Decimal(1).scaleb(-scale)
+    try:
+        return Decimal(str(value)).quantize(quantum, rounding=ROUND_HALF_UP)
+    except (InvalidOperation, ValueError) as exc:
+        raise ValueError(f"invalid money value {value!r}") from exc
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", default=os.environ.get("DATABASE_FILE", "./pci.db"))
@@ -112,7 +138,10 @@ def main():
 
     report = {"generated_at": datetime.datetime.utcnow().isoformat() + "Z", "source": args.source,
               "source_sha256": sha256(args.source), "tables": {}, "money": {}, "fk_orphans": {},
-              "unique_dups": {}, "discrepancies": []}
+              "unique_dups": {}, "quantized_values": {}, "discrepancies": []}
+    if only_src:
+        report["discrepancies"].append(
+            f"{len(only_src)} source table(s) missing in target: {', '.join(only_src)}")
 
     if not args.dry_run:
         with mc.cursor() as cur:
@@ -123,10 +152,29 @@ def main():
     for t in shared:
         scols, tcols = sqlite_cols(sc, t), set(mysql_cols(mc, t))
         cols = [c for c in scols if c in tcols]          # intersection, preserving source order
+        source_only_cols = sorted(set(scols) - tcols)
+        if source_only_cols:
+            report["discrepancies"].append(
+                f"{t}: source column(s) missing in target: {', '.join(source_only_cols)}")
         if not cols:
             log(f"  {t}: no shared columns, skipped")
             continue
         rows = sc.execute(f'SELECT {",".join(chr(34)+c+chr(34) for c in cols)} FROM "{t}"').fetchall()
+        money_cols = MONEY.get(t, {})
+        quantized = 0
+        if money_cols:
+            rewritten = []
+            for row in rows:
+                row = list(row)
+                for i, col in enumerate(cols):
+                    if col in money_cols and row[i] is not None:
+                        exact = quantize_money(row[i], money_cols[col])
+                        if str(exact) != str(row[i]):
+                            quantized += 1
+                        row[i] = exact
+                rewritten.append(tuple(row))
+            rows = rewritten
+            report["quantized_values"][t] = quantized
         src_n = len(rows)
         if not args.dry_run:
             with mc.cursor() as cur:
@@ -162,16 +210,16 @@ def main():
     for t, colz in MONEY.items():
         if t not in shared:
             continue
-        for col in colz:
+        for col, scale in colz.items():
             if col not in sqlite_cols(sc, t):
                 continue
-            s_sum = sc.execute(f'SELECT COALESCE(ROUND(SUM("{col}"),2),0) FROM "{t}"').fetchone()[0]
+            source_values = sc.execute(f'SELECT "{col}" FROM "{t}" WHERE "{col}" IS NOT NULL').fetchall()
+            s_sum = sum((quantize_money(row[0], scale) for row in source_values), Decimal(0))
             with mc.cursor() as cur:
-                cur.execute(f"SELECT COALESCE(ROUND(SUM(`{col}`),2),0) FROM `{t}`")
-                t_sum = float(cur.fetchone()[0])
-            s_sum = round(float(s_sum), 2)
-            ok = abs(s_sum - t_sum) < 0.005
-            report["money"][f"{t}.{col}"] = {"source": s_sum, "target": t_sum, "ok": ok}
+                cur.execute(f"SELECT `{col}` FROM `{t}` WHERE `{col}` IS NOT NULL")
+                t_sum = sum((quantize_money(row[0], scale) for row in cur.fetchall()), Decimal(0))
+            ok = s_sum == t_sum
+            report["money"][f"{t}.{col}"] = {"source": str(s_sum), "target": str(t_sum), "ok": ok}
             if not ok:
                 report["discrepancies"].append(f"financial mismatch {t}.{col}: source={s_sum} target={t_sum}")
 

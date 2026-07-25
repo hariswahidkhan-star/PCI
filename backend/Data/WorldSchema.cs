@@ -501,8 +501,13 @@ public static class WorldSchema
     /// <summary>True when this process is configured as a real deployment rather than a developer
     /// machine or test run. Mirrors the boot config validator's definition.</summary>
     internal static bool IsProductionPosture() =>
-        string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Production", StringComparison.OrdinalIgnoreCase)
-        || string.Equals(Environment.GetEnvironmentVariable("APP_ENV"), "production", StringComparison.OrdinalIgnoreCase);
+        !string.Equals(
+            Environment.GetEnvironmentVariable("PCI_RUNTIME_ENVIRONMENT")
+                ?? Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+                ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
+                ?? "Production",
+            "Development",
+            StringComparison.OrdinalIgnoreCase);
 
     /// <summary>True when the bootstrap owner still holds the well-known development password.
     /// Surfaced as a boot warning so an install can never quietly sit on a published credential.</summary>

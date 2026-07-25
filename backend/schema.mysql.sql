@@ -3,7 +3,7 @@
 -- format so the app's string-based date handling is identical across providers.
 -- Money columns are DECIMAL(12,2); regenerate — do not hand-tune types.
 
-SET sql_mode='';
+SET SESSION sql_mode='PIPES_AS_CONCAT';
 
 -- PCI student enrollment schema (USD pricing, sessions/resume, discount codes)
 CREATE TABLE IF NOT EXISTS users (

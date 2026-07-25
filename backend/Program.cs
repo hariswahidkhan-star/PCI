@@ -4,6 +4,15 @@ using PCI.Backend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "8080"}");
+// One canonical runtime environment for code that runs before app.Build(). ASP.NET defaults to
+// Production when neither environment variable is set; reading ASPNETCORE_ENVIRONMENT directly
+// therefore incorrectly treated that default as Development.
+var runtimeEnvironment = builder.Environment.EnvironmentName;
+Environment.SetEnvironmentVariable("PCI_RUNTIME_ENVIRONMENT", runtimeEnvironment);
+var nonLocalPosture = builder.Environment.IsProduction()
+    || builder.Environment.IsStaging()
+    || string.Equals(Environment.GetEnvironmentVariable("APP_ENV"), "production", StringComparison.OrdinalIgnoreCase)
+    || string.Equals(Environment.GetEnvironmentVariable("APP_ENV"), "staging", StringComparison.OrdinalIgnoreCase);
 // Global request-body cap: bounds memory and rejects oversized uploads BEFORE the handler buffers them.
 // A 3 MB artefact (Storage.MaxBytes) is ~4 MB as base64 inside a JSON data URI, so 6 MB leaves headroom
 // for one legitimate upload while still refusing anything larger up front (Kestrel → 413).
@@ -42,10 +51,14 @@ catch { /* /data exists but is not ours to write — keep the configured default
 // ConfigIssues() below still runs after Build for the full issue list, but a misconfigured
 // production host must never open SQLite, apply schema, or seed data first.
 {
-    static bool IsProductionBoot() =>
-        string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Production", StringComparison.OrdinalIgnoreCase)
-        || string.Equals(Environment.GetEnvironmentVariable("APP_ENV"), "production", StringComparison.OrdinalIgnoreCase);
-    if (IsProductionBoot())
+    var configuredProvider = Environment.GetEnvironmentVariable("DB_PROVIDER");
+    var normalizedProvider = (configuredProvider ?? "sqlite").Trim().ToLowerInvariant();
+    if (configuredProvider is not null && normalizedProvider is not ("sqlite" or "mysql" or "mariadb"))
+    {
+        Console.WriteLine($"[config] Refusing to open database: unknown DB_PROVIDER '{configuredProvider}'.");
+        Environment.Exit(78);
+    }
+    if (nonLocalPosture)
     {
         var allowInsecure = string.Equals(Environment.GetEnvironmentVariable("ALLOW_INSECURE_PRODUCTION"), "true", StringComparison.OrdinalIgnoreCase);
         var worldOnly = string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_ONLY"), "true", StringComparison.OrdinalIgnoreCase);
@@ -71,11 +84,47 @@ catch { /* /data exists but is not ours to write — keep the configured default
         }
         if (allowWorldSqlite)
         {
-            var dbFile = Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "";
-            if (!dbFile.StartsWith('/') && !allowInsecure)
+            var dbFile = Path.GetFullPath(Environment.GetEnvironmentVariable("DATABASE_FILE") ?? ".");
+            if (!dbFile.StartsWith("/data/", StringComparison.Ordinal) && !allowInsecure)
             {
                 Console.WriteLine("[config] Refusing to open database: PCIWORLD_ALLOW_SQLITE=true requires DATABASE_FILE " +
-                    "to be an absolute path on a persistent disk (e.g. /data/pciworld.db).");
+                    "under the explicit persistent mount /data (e.g. /data/pciworld.db).");
+                Environment.Exit(78);
+            }
+        }
+
+        // Hard production/staging blockers must be checked before opening or seeding any database,
+        // not merely before accepting HTTP traffic.
+        if (!allowInsecure)
+        {
+            var preflightErrors = new List<string>();
+            var baseUrl = Environment.GetEnvironmentVariable("APP_BASE_URL")
+                ?? Environment.GetEnvironmentVariable("SITE_BASE_URL");
+            if (string.IsNullOrWhiteSpace(baseUrl)
+                || !Uri.TryCreate(baseUrl, UriKind.Absolute, out var baseUri)
+                || baseUri.Scheme != Uri.UriSchemeHttps
+                || baseUri.IsLoopback)
+                preflightErrors.Add("APP_BASE_URL must be a public HTTPS URL");
+            var origin = Environment.GetEnvironmentVariable("ALLOWED_ORIGIN");
+            if (string.IsNullOrWhiteSpace(origin) || origin == "*")
+                preflightErrors.Add("ALLOWED_ORIGIN must be explicit");
+            if (!Security.HasDedicatedEncryptionKey())
+                preflightErrors.Add("CREDENTIAL_ENCRYPTION_KEY is required");
+            if (string.Equals(Environment.GetEnvironmentVariable("ENABLE_LEGACY_ADMIN_TOKEN"), "true",
+                    StringComparison.OrdinalIgnoreCase))
+                preflightErrors.Add("ENABLE_LEGACY_ADMIN_TOKEN must be disabled");
+            if (!worldOnly
+                && !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY"))
+                && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("STRIPE_WEBHOOK_SECRET")))
+                preflightErrors.Add("STRIPE_WEBHOOK_SECRET is required when Stripe is enabled");
+            if (!worldOnly
+                && string.Equals(Environment.GetEnvironmentVariable("STORAGE_PROVIDER"), "s3",
+                    StringComparison.OrdinalIgnoreCase)
+                && string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("S3_BUCKET")))
+                preflightErrors.Add("S3_BUCKET is required when STORAGE_PROVIDER=s3");
+            if (preflightErrors.Count > 0)
+            {
+                Console.WriteLine("[config] Refusing to open database: " + string.Join("; ", preflightErrors));
                 Environment.Exit(78);
             }
         }
@@ -104,6 +153,9 @@ try { PCI.Backend.Data.SimLabSchema.Ensure(db); } catch (Exception e) { Console.
 try { PCI.Backend.Data.TemplatesSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[templates schema] {e.Message}"); }
 try { PCI.Backend.Data.WorldSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[pciworld schema] {e.Message}"); }
 try { PCI.Backend.Data.FinanceSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[finance schema] {e.Message}"); }
+// Runtime installers run after Migrate.Run and own several financial tables. Validate/upgrade only
+// after all installers have run; a non-local deployment must not start with inexact money columns.
+Migrate.EnsureMoneyDecimals(db, failOnError: nonLocalPosture);
 builder.Services.AddSingleton(db);
 // Scheduled retention: purge stored artefacts past evidence_retention_days, daily (manual endpoint stays).
 builder.Services.AddHostedService<PCI.Backend.Core.RetentionService>();
@@ -367,11 +419,10 @@ if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SMTP_HOST")) && str
 // ── Production configuration validation (Section 21): warn loudly on unsafe production config ──
 // Reports every issue; in production it refuses to boot when a hard blocker is present (unless the operator
 // explicitly sets ALLOW_INSECURE_PRODUCTION=true), so the app never silently runs in an unsafe state.
-static List<(string sev, string key, string msg)> ConfigIssues()
+List<(string sev, string key, string msg)> ConfigIssues()
 {
     string? E(string k) => Environment.GetEnvironmentVariable(k);
-    bool prod = string.Equals(E("ASPNETCORE_ENVIRONMENT"), "Production", StringComparison.OrdinalIgnoreCase)
-             || string.Equals(E("APP_ENV"), "production", StringComparison.OrdinalIgnoreCase);
+    bool prod = nonLocalPosture;
     var issues = new List<(string, string, string)>();
     void Err(string k, string m) => issues.Add(("error", k, m));
     void Warn(string k, string m) => issues.Add(("warn", k, m));
@@ -427,10 +478,10 @@ static List<(string sev, string key, string msg)> ConfigIssues()
         {
             issues = issues.Select(i => i.Item1 == "error" && i.Item2 is "DB_PROVIDER" or "MYSQL_HOST"
                 ? ("warn", i.Item2, i.Item3 + " (PCIWORLD_ALLOW_SQLITE=true — interim persistent-disk posture)") : i).ToList();
-            var dbFile = E("DATABASE_FILE") ?? "";
-            if (!dbFile.StartsWith('/'))
+            var dbFile = Path.GetFullPath(E("DATABASE_FILE") ?? ".");
+            if (!dbFile.StartsWith("/data/", StringComparison.Ordinal))
                 issues.Add(("error", "DATABASE_FILE",
-                    "PCIWORLD_ALLOW_SQLITE=true requires DATABASE_FILE to be an absolute path on a persistent disk (e.g. /data/pciworld.db) — a relative path lives in the container filesystem and every learner account, attempt and Passport is destroyed on redeploy"));
+                    "PCIWORLD_ALLOW_SQLITE=true requires DATABASE_FILE under /data (e.g. /data/pciworld.db) — other paths can live in the ephemeral container filesystem"));
         }
         issues.Add(("warn", "PCIWORLD_ONLY", "PCI World-only deployment — complete the production hardening in docs/pciworld/DEPLOY_RENDER.md before public launch"));
     }
@@ -549,7 +600,13 @@ app.Use(async (ctx, next) =>
 });
 
 // ================= health =================
-app.MapGet("/api/health", () => Json(new { ok = true, service = "pci-backend", time = DateTime.UtcNow.ToString("o"), recovery_configured = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ADMIN_RECOVERY_CODE")) }));
+app.MapGet("/api/health", () => Json(new {
+    ok = true,
+    service = "pci-backend",
+    database_provider = db.Provider == Db.Kind.MySql ? (db.IsMariaDb ? "mariadb" : "mysql") : "sqlite",
+    time = DateTime.UtcNow.ToString("o"),
+    recovery_configured = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ADMIN_RECOVERY_CODE"))
+}));
 
 // Operational readiness for admins (owner-only). Reports booleans/severities only — never the secret values.
 app.MapGet("/api/admin/system-check", (HttpRequest req) =>
@@ -585,7 +642,7 @@ app.MapGet("/api/admin/system-check", (HttpRequest req) =>
         request_body_capped = true,                      // Kestrel MaxRequestBodySize = 6 MB
         retention_scheduled = true,                      // daily RetentionService hosted service
     };
-    return Json(new { ok = issues.All(i => i.sev != "error"), environment = E("ASPNETCORE_ENVIRONMENT") ?? "Development", checks, issues = issues.Select(i => new { i.sev, i.key, i.msg }) });
+    return Json(new { ok = issues.All(i => i.sev != "error"), environment = runtimeEnvironment, checks, issues = issues.Select(i => new { i.sev, i.key, i.msg }) });
 });
 
 // EXT-P1-11 — Integration Health: queue depth, DLQ, connector status, credential readiness (no secret values).
