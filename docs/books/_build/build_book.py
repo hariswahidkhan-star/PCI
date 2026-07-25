@@ -23,6 +23,7 @@ BOOKS = {
         "subtitle": ("The reference for the PCI Project Management Leader – AI<br/>"
                      "Leadership · delivery systems · governance · the governed use of AI"),
         "order": ["manuscript/domain-01-profession.md",
+                  "manuscript/domain-02-strategy-selection.md",
                   "manuscript/domain-06-planning-scheduling-flow.md",
                   "manuscript/domain-07-cost-resources-commercial.md",
                   "manuscript/domain-08-risk-uncertainty-resilience.md"],

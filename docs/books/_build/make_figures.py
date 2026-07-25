@@ -561,5 +561,66 @@ body += (f'<text x="{600}" y="{(96+286)/2+4}" font-size="11.5" font-weight="700"
          f'<text x="30" y="26" font-size="11.5" font-weight="700" fill="{INK}">Survey worth buying: it converts a reactive 300,000 into a planned 90,000 in the 40 % of futures where the problem exists</text>')
 (PML / "fig_8_2_1.svg").write_text(svg(W, H, body))
 
+# ---- Fig 2.2.1 two Meridian business cases ----------------------------------------
+W, H, L, R, T, B = 660, 400, 90, 26, 40, 64
+POT, RAMP = 979200.0, [0.40, 0.60] + [0.70] * 6
+def Xy2(y): return L + (y - 0.5) / 8 * (W - L - R)
+def Yv2(v): return H - B - v / 1050000 * (H - T - B)
+grid = "".join(f'<line x1="{L}" y1="{Yv2(v)}" x2="{W-R}" y2="{Yv2(v)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yv2(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v/1000:.0f}k</text>'
+               for v in range(0, 1050001, 200000))
+bw2 = (W - L - R) / 8 * 0.34
+bars2 = ""
+for i in range(8):
+    x = Xy2(i + 1) - bw2 - 2
+    bars2 += (f'<rect x="{x:.1f}" y="{Yv2(POT):.1f}" width="{bw2:.1f}" height="{(H-B)-Yv2(POT):.1f}" fill="{SLATE}" opacity="0.5"/>'
+              f'<rect x="{x+bw2+4:.1f}" y="{Yv2(POT*RAMP[i]):.1f}" width="{bw2:.1f}" height="{(H-B)-Yv2(POT*RAMP[i]):.1f}" fill="{BLUE}"/>'
+              f'<text x="{Xy2(i+1):.1f}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{i+1}</text>')
+body = (grid + bars2 + axes(L, T, W - R, H - B, "Year", "Annual benefit (USD)")
+        + f'<rect x="{L+10}" y="{T-30}" width="11" height="11" fill="{SLATE}" opacity="0.5"/>'
+        + f'<text x="{L+26}" y="{T-21}" font-size="10.5" fill="{INK}">Flat, full potential (979,200) — NPV +3,447,096</text>'
+        + f'<rect x="{L+10}" y="{T-14}" width="11" height="11" fill="{BLUE}"/>'
+        + f'<text x="{L+26}" y="{T-5}" font-size="10.5" fill="{INK}">Ramped to 70 % steady state — NPV +1,332,898</text>'
+        + f'<text x="{W-R-6}" y="{Yv2(880000)}" font-size="10.5" font-weight="700" fill="{CRIMSON}" text-anchor="end">USD 2,114,198 of present value</text>'
+        + f'<text x="{W-R-6}" y="{Yv2(880000)+14}" font-size="10.5" font-weight="700" fill="{CRIMSON}" text-anchor="end">promised and never deliverable</text>'
+        + f'<text x="{W-R-6}" y="{Yv2(880000)+28}" font-size="10" fill="{CRIMSON}" text-anchor="end">158.6 % of the honest NPV</text>'
+        + f'<text x="{L+10}" y="{H-B+40}" font-size="10.5" fill="{INK}">Breakeven sustained adoption: 41.05 % — the sentence a board can actually monitor</text>')
+(PML / "fig_2_2_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 2.3.1 Meridian benefits map ----------------------------------------------
+W, H = 720, 420
+cols = [("OUTPUTS", ["Records system installed (40 clinics)", "Data migrated", "Interfaces live"], BLUE, "Programme"),
+        ("ENABLING CHANGE", ["Clinicians trained", "Workflows redesigned", "Clinical champions in place",
+                             "Legacy process retired"], CRIMSON, "Owned OUTSIDE the project"),
+        ("OUTCOME", ["28 clinics using it in daily practice (70 % adoption)"], INK, "Clinical directorate"),
+        ("BENEFIT", ["6 clinician-hours/week per adopting clinic", "= USD 685,440 per year"], INK, "Ops director"),
+        ("OBJECTIVE", ["Improved access and clinician capacity"], SLATE, "Executive")]
+cw, gap2 = 124, 22
+body = f'<text x="24" y="26" font-size="11.5" font-weight="700" fill="{INK}">Each link can fail independently — and the highlighted column is the one most maps omit</text>'
+for i, (title, items, col, owner) in enumerate(cols):
+    x = 24 + i * (cw + gap2)
+    hl = ' opacity="0.07"' if col == CRIMSON else ' opacity="0"'
+    body += (f'<rect x="{x-5}" y="52" width="{cw+10}" height="330" rx="8" fill="{col}"{hl}/>'
+             f'<text x="{x+cw/2}" y="70" font-size="10" font-weight="800" fill="{col}" text-anchor="middle">{title}</text>')
+    for j, it in enumerate(items):
+        y = 84 + j * 62
+        words, lines, cur = it.split(), [], ""
+        for wd in words:
+            if len(cur + wd) < 19:
+                cur += wd + " "
+            else:
+                lines.append(cur.strip()); cur = wd + " "
+        lines.append(cur.strip())
+        body += f'<rect x="{x}" y="{y}" width="{cw}" height="{max(34, 13*len(lines)+16)}" rx="5" fill="white" stroke="{col}" stroke-width="1.5"/>'
+        for k, ln in enumerate(lines[:4]):
+            body += f'<text x="{x+cw/2}" y="{y+17+k*12}" font-size="8.4" fill="{INK}" text-anchor="middle">{ln}</text>'
+    body += f'<text x="{x+cw/2}" y="372" font-size="8.6" fill="{col}" text-anchor="middle" font-weight="600">{owner}</text>'
+    if i < len(cols) - 1:
+        body += (f'<line x1="{x+cw+6}" y1="200" x2="{x+cw+gap2-6}" y2="200" stroke="{SLATE}" stroke-width="2" marker-end="url(#bm)"/>')
+body = ('<defs><marker id="bm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">'
+        f'<path d="M0 0L10 5L0 10z" fill="{SLATE}"/></marker></defs>' + body
+        + f'<text x="{24+cw+gap2+cw/2}" y="398" font-size="9.5" font-weight="700" fill="{CRIMSON}" text-anchor="middle">usually omitted — and where Meridian stalled at 40 %</text>')
+(PML / "fig_2_3_1.svg").write_text(svg(W, H, body))
+
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")

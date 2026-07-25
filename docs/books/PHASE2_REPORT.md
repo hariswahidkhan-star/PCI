@@ -159,11 +159,46 @@ from, and how the contingency inside the baseline is actually sized:
   verified in the shared registry. PML-AI volume now typesets at **81 pp** across Domains 1, 6, 7
   and 8 (9 figures, 90 index entries).
 
+**Batch 10 (loop iteration 8) — PML-AI Domain 2, Strategy, selection and business alignment.**
+(~8.7k words) Answers the question Domain 1 left prior: how work gets chosen, and how anyone knows
+it was worth choosing:
+
+- KA 2.1 strategy→portfolio (the three symptoms of a gap), drivers with their misidentification
+  failure modes, hard vs **soft** constraints (only soft ones are tradeable), and alignment as a
+  repeated test that decays after approval.
+- KA 2.2 the business case as decision instrument — the test being whether it **could have concluded
+  "no"** — genuine options sets versus straw ones, and the domain's central arithmetic: Meridian's
+  approved case claimed full potential (**979,200**, Domain 1's own output-based claim) from year
+  one for NPV **+3,447,096**; the same facts ramped as adoption actually arrives (40/60/70 % to a
+  **685,440** steady state, tying to Domain 1) give NPV **+1,332,898** — an overstatement of
+  **USD 2,114,198**, or **158.6 %** of the honest figure, which changed no approval decision and
+  therefore was never challenged. Breakeven sustained adoption **41.05 %** is offered as the
+  sentence a board can actually monitor. Selection: weighted scoring (Beta 4.05 over Meridian 3.95)
+  and constrained ranking where **Beta + Gamma's 2,100,000 beats Meridian's 1,693,072** inside a
+  3-unit capacity limit — the delivery twin of PFL-AI's capital rationing, with the same
+  lumpy-candidate caveat.
+- KA 2.3 benefits mapping with the **enabling change** column most maps omit (and where Meridian
+  stalled at 40 %), baselines measured before not reconstructed after, attribution,
+  double-counting with one claimant per benefit, cash-releasing versus capacity benefits, ESG as
+  constraint *or* value but never confused, and the assumption register with falsifying triggers.
+- KA 2.4 strategic termination: forward-looking NPV only — **780,000 of value for 900,000 of spend
+  is a stop**, whatever the 1,800,000 already spent suggests — escalation of commitment as a
+  structural problem, and kill criteria whose power is entirely in advance agreement.
+- Advanced topics (real options thinking, portfolio balance vs ranking, reviewer invariants),
+  industry variations, two case studies (the Meridian case that should have been written; the
+  platform that could not be stopped — resolved by descoping to where remaining benefit exceeds
+  remaining cost), executive perspective, 4 exercises, 3 toolkits, exam prep, 13 tagged MCQs.
+- Figures 2.2.1 (two business cases from identical facts) and 2.3.1 (benefits map with the enabling
+  change restored).
+- Harness: **403 golden checks, all passing** (was 368); it caught one drifted figure and one
+  rounding-boundary tolerance during authoring. PML-AI volume now typesets at **101 pp** across
+  Domains 1, 2, 6, 7 and 8 (11 figures, 112 index entries).
+
 ## Next production batch
 
-Queued in loop order: (1) PML-AI Domain 2 (Strategy, selection and business alignment), continuing
-the Meridian thread into benefits mapping; (2) PFL-AI Domain 10 (Debt sizing, covenants and credit
-metrics), which Domains 2–4 have now fully prepared (`CFADS` defined, discounting built, appraisal
-in place) and which registers `DSCR`/`LLCR`/`PLCR`; (3) PML-AI Domain 3 (Governance, organization
-and decision rights), which Domains 1 and 8 both now depend on. Phase 2 completes when all
-foundation domains of both books pass gates; PFL-AI Part One is done.
+Queued in loop order: (1) PFL-AI Domain 10 (Debt sizing, covenants and credit metrics) — Domains
+2–4 have fully prepared it (`CFADS` defined and verified, discounting built, appraisal in place) and
+it registers `DSCR`/`LLCR`/`PLCR`; (2) PML-AI Domain 3 (Governance, organization and decision
+rights), which Domains 1, 2 and 8 all now depend on and which completes PML-AI Part One alongside
+Domain 4; (3) PML-AI Domain 4 (Integration and delivery architecture). Phase 2 completes when all
+foundation domains of both books pass gates; PFL-AI Part One is done, PML-AI Part One is half done.

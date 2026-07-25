@@ -470,6 +470,59 @@ check("EX 8.3 EMV before", D("0.30") * D(400000), 120000)
 check("EX 8.3 EMV after", D("0.10") * D(400000), 40000)
 check("EX 8.3 net of mitigation", (D("0.30") - D("0.10")) * D(400000) - 70000, 10000)
 
+# ---------- PML-AI Domain 2 — Strategy, selection and business alignment ----------
+R2, POT2, COST2 = D("0.07"), D(979200), D(2400000)   # POT2 is Domain 1's output-based claim
+AF8 = af(R2, 8)
+check("D2 AF(7%,8)", AF8.quantize(D("0.000001")), D("5.971299"), tol=D("0.0000005"))
+flat_pv = POT2 * AF8
+check("WE 2.2.2 flat full-potential PV", flat_pv, D("5847096"), tol=D("0.51"))
+check("WE 2.2.2 flat NPV", flat_pv - COST2, D("3447096"), tol=D("0.51"))
+RAMP2 = [D("0.40"), D("0.60")] + [D("0.70")] * 6
+ramp_pv = sum(POT2 * a / (1 + R2) ** (t + 1) for t, a in enumerate(RAMP2))
+check("WE 2.2.2 ramped PV", ramp_pv, D("3732898"), tol=D("0.5"))
+check("WE 2.2.2 ramped NPV", ramp_pv - COST2, D("1332898"), tol=D("0.5"))
+check("WE 2.2.2 overstatement", flat_pv - ramp_pv, D("2114198"), tol=D("0.5"))
+check("WE 2.2.2 overstatement as % of honest NPV",
+      ((flat_pv - ramp_pv) / (ramp_pv - COST2) * 100).quantize(D("0.1")), D("158.6"), tol=D("0.05"))
+check("WE 2.2.2 yr1 benefit", POT2 * D("0.40"), 391680)
+check("WE 2.2.2 yr2 benefit", POT2 * D("0.60"), 587520)
+check("WE 2.2.2 steady state ties to Domain 1", POT2 * D("0.70"), 685440)
+check("WE 2.2.2 breakeven flat adoption %", (COST2 / AF8 / POT2 * 100).quantize(D("0.01")), D("41.05"), tol=D("0.005"))
+check("Case A actual benefit at 40% adoption", POT2 * D("0.40"), 391680)
+# Weighted scoring
+W2 = [D("0.35"), D("0.30"), D("0.20"), D("0.15")]
+for name, scores, expected in (("Meridian", [4, 5, 3, 3], "3.95"), ("Beta", [5, 3, 4, 4], "4.05"),
+                               ("Gamma", [3, 4, 5, 4], "3.85"), ("Delta", [2, 2, 5, 5], "3.05")):
+    check(f"WE 2.2.3 weighted score {name}", sum(w * D(s) for w, s in zip(W2, scores)), D(expected))
+# Constrained selection
+check("WE 2.2.3 Meridian NPV per capacity unit", (D(1693072) / 3).quantize(D("0.01")), D("564357.33"))
+check("WE 2.2.3 Beta NPV per capacity unit", D(1200000) / 2, 600000)
+check("WE 2.2.3 Gamma NPV per capacity unit", D(900000) / 1, 900000)
+check("WE 2.2.3 Beta+Gamma combined NPV", D(1200000) + 900000, 2100000)
+check("WE 2.2.3 combined beats Meridian alone", D(2100000) - D(1693072), 406928)
+# Sunk cost
+check("WE 2.4.2 forward NPV", D(780000) - D(900000), -120000)
+check("EX 2.4 forward NPV", D(1950000) - D(1600000), 350000)
+# Exercises
+R2X, POTX, COSTX = D("0.08"), D(600000), D(1300000)
+AF6 = af(R2X, 6)
+check("EX 2.1 AF(8%,6)", AF6.quantize(D("0.000001")), D("4.622880"), tol=D("0.0000005"))
+check("EX 2.1 flat PV", POTX * AF6, D("2773728"), tol=D("0.5"))
+check("EX 2.1 flat NPV", POTX * AF6 - COSTX, D("1473728"), tol=D("0.5"))
+RAMPX = [D("0.30"), D("0.60")] + [D("0.75")] * 4
+rampx_pv = sum(POTX * a / (1 + R2X) ** (t + 1) for t, a in enumerate(RAMPX))
+check("EX 2.1 ramped PV", rampx_pv, D("1753135"), tol=D("0.5"))
+check("EX 2.1 ramped NPV", rampx_pv - COSTX, D("453135"), tol=D("0.5"))
+check("EX 2.1 overstatement", POTX * AF6 - rampx_pv, D("1020592"), tol=D("0.5"))
+check("EX 2.1 yrs 3-6 factor sum", sum(1 / (1 + R2X) ** t for t in range(3, 7)).quantize(D("0.000001")),
+      D("2.839615"), tol=D("0.0000005"))
+check("EX 2.2 required annual benefit", COSTX / AF6, D("281210"), tol=D("0.5"))
+check("EX 2.2 breakeven adoption %", (COSTX / AF6 / POTX * 100).quantize(D("0.01")), D("46.87"), tol=D("0.005"))
+check("EX 2.2 naive undiscounted error %", (COSTX / (POTX * 6) * 100).quantize(D("0.1")), D("36.1"), tol=D("0.05"))
+WX = [D("0.40"), D("0.30"), D("0.20"), D("0.10")]
+check("EX 2.3 score P", sum(w * D(s) for w, s in zip(WX, [4, 5, 2, 2])), D("3.70"))
+check("EX 2.3 score Q", sum(w * D(s) for w, s in zip(WX, [5, 3, 4, 3])), D("4.00"))
+
 print()
 if FAILURES:
     print(f"✗ {len(FAILURES)} FAILURES:", *FAILURES, sep="\n  ")
