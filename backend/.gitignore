@@ -32,6 +32,10 @@ e2e_storage_sqlite/
 e2e_storage_mysql/
 e2e_ci.db*
 
+# Local PCI World design-pass server
+world.db*
+world_storage/
+
 # Load-harness run artefacts. cohort*.json holds PLAINTEXT session tokens for the seeded students —
 # it is a credential file and must never be committed, even though the accounts are disposable.
 tests/load/cohort*.json
