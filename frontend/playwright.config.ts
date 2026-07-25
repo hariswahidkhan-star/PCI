@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test'
-import { E2E_ADMIN } from './e2e/util'
+import { E2E_ADMIN, E2E_CREDENTIAL_KEY, E2E_STORAGE_ROOT } from './e2e/util'
 
 // Browser end-to-end + accessibility (axe) over the public site, which the ASP.NET backend serves
 // directly. Playwright boots the built backend DLL as its webServer and waits for /api/health.
@@ -13,6 +13,25 @@ const BASE = process.env.E2E_BASE_URL || `http://127.0.0.1:${PORT}`
 // When Chromium is preinstalled, point only Chromium-based projects at it. Firefox/WebKit retain
 // their own engines; CI installs all three browser families.
 const executablePath = process.env.PW_CHROMIUM_PATH || undefined
+
+
+// The database the suite drives the browser against. A SQLite file by default — no service to stand
+// up, which is what keeps the ordinary `e2e` job cheap. `DB_PROVIDER=mysql` points the SAME specs at
+// a real MariaDB, because that is what production runs: every layer below this one (the xUnit suite,
+// the live-HTTP integration suite, the migration-integrity checks) is already exercised on both, and
+// the browser journeys were the last that never had been.
+const database =
+  process.env.DB_PROVIDER === 'mysql'
+    ? {
+        DB_PROVIDER: 'mysql',
+        MYSQL_HOST: process.env.MYSQL_HOST || '127.0.0.1',
+        MYSQL_PORT: process.env.MYSQL_PORT || '3306',
+        MYSQL_USER: process.env.MYSQL_USER || 'pci',
+        MYSQL_PASSWORD: process.env.MYSQL_PASSWORD || '',
+        MYSQL_DATABASE: process.env.MYSQL_DATABASE || 'pci',
+        MYSQL_SSL: process.env.MYSQL_SSL || 'false',
+      }
+    : { DATABASE_FILE: './e2e_ci.db' }
 
 export default defineConfig({
   testDir: './e2e',
@@ -43,12 +62,23 @@ export default defineConfig({
   webServer: process.env.E2E_NO_SERVER
     ? undefined
     : {
-        command: 'dotnet bin/Release/net8.0/PCI.Backend.dll',
+        // The store is emptied as part of starting the server, for the same reason the database
+        // starts empty: the two are one state. It is content-addressed and skips writing a blob
+        // whose hash is already on disk, so a store that outlives its database hands the next run
+        // bytes no row accounts for. This belongs in the COMMAND, not in globalSetup (which runs
+        // after the server has already seeded) and not at config load (which every worker re-runs).
+        command: `node -e "require('fs').rmSync('${E2E_STORAGE_ROOT}',{recursive:true,force:true})" `
+          + '&& dotnet bin/Release/net8.0/PCI.Backend.dll',
         cwd: '../backend',
         url: `http://127.0.0.1:${PORT}/api/health`,
         env: {
           PORT,
-          DATABASE_FILE: './e2e_ci.db',
+          ...database,
+          // Pinned, not derived: the fallback key is built from configuration that DIFFERS between
+          // the two legs (DATABASE_FILE vs MYSQL_DATABASE), so it would silently change with the
+          // provider and leave a surviving object store unreadable.
+          CREDENTIAL_ENCRYPTION_KEY: E2E_CREDENTIAL_KEY,
+          STORAGE_ROOT: E2E_STORAGE_ROOT,
           ASPNETCORE_ENVIRONMENT: 'Development',
           STRIPE_SECRET_KEY: 'sk_test_e2e_browser_suite',
           STRIPE_WEBHOOK_SECRET: 'whsec_e2e_browser_suite',

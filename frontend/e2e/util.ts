@@ -13,6 +13,23 @@ export const OWNER_ADMIN = { email: 'owner@pci.local', password: 'changeme-owner
 export const E2E_ADMIN = { email: 'browser-admin@pci.test', password: 'BrowserSuiteAdmin-2026' }
 export const E2E_STRIPE_WEBHOOK_SECRET = 'whsec_e2e_browser_suite'
 
+/** True when the suite is driving the backend against MySQL/MariaDB rather than a SQLite file. */
+export const E2E_ON_MYSQL = process.env.DB_PROVIDER === 'mysql'
+
+/**
+ * Object store for the run, relative to backend/ — one per provider so the two legs never share a
+ * store, and never write into the `storage/` a local dev server uses.
+ */
+export const E2E_STORAGE_ROOT = E2E_ON_MYSQL ? './e2e_storage_mysql' : './e2e_storage_sqlite'
+
+/**
+ * A fixed at-rest key for the run. Without it the backend derives one from other configuration —
+ * including DATABASE_FILE and MYSQL_DATABASE — so the key silently CHANGES when the provider does,
+ * and a store that outlives a run becomes unreadable. Pinning it is also what production is told to
+ * do (docs/MYSQL_PARITY.md), so the suite exercises the configured path rather than the fallback.
+ */
+export const E2E_CREDENTIAL_KEY = 'e2e-browser-suite-at-rest-key-v1'
+
 let counter = 0
 /** Cache the E2E operator token across specs. /api/admin/auth/login is rate-limited (10/min/IP);
  * without a cache the expanded browser suite burns the window and cascades 429 failures. */

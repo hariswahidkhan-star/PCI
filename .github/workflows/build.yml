@@ -189,10 +189,12 @@ jobs:
     # what that blind spot produces, and schema parity alone would not have caught a behavioural
     # difference in SUM(), type affinity or date comparison.
     #
-    # Scoped to the finance suites deliberately. They own their fixtures and share the DbCollection, so
-    # the between-test wipe is safe for them; the rest of the unit layer has never been run on MySQL and
-    # would need its own pass over fixed keys and seeded-row assumptions first. Widening the filter is the
-    # next step, not a silent one.
+    # This used to be scoped to the finance suites, because the between-test reset was a hand-written list
+    # of "tables the tests own" that only ever covered the finance module — every other suite therefore ran
+    # against whatever the previous test had left behind. TestEnv now resets the run database to its exact
+    # post-migration state instead, with no list to rot, so the whole suite runs here. Widening it found
+    # three defects that were live on MySQL only: the comms and marketing retry schedulers, and the
+    # integration-health endpoint.
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -211,7 +213,7 @@ jobs:
         run: |
           mysql -h 127.0.0.1 -uroot -proot -e "CREATE DATABASE IF NOT EXISTS pci_unit CHARACTER SET utf8mb4;"
           mysql -h 127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'pci'@'%'; FLUSH PRIVILEGES;"
-      - name: Finance unit suite against MySQL
+      - name: Full unit suite against MySQL
         env:
           TEST_DB_PROVIDER: mysql
           MYSQL_HOST: 127.0.0.1
@@ -220,9 +222,13 @@ jobs:
           MYSQL_PASSWORD: pcipass
           MYSQL_DATABASE: pci
           MYSQL_SSL: 'false'
+        # Collections run one at a time because the MySQL leg shares ONE database for the run — two
+        # collections in flight would reset it out from under each other. It costs nothing here: a MySQL
+        # reset is a single statement batch, where SQLite re-migrates 175 tables per test, so this leg
+        # finishes in about a minute against the SQLite leg's several.
         run: >-
           dotnet test backend/tests/PCI.Backend.Tests/PCI.Backend.Tests.csproj -c Release
-          --filter "FullyQualifiedName~PCI.Backend.Tests.Partner"
+          -- xUnit.ParallelizeTestCollections=false
 
   backend-unit:
     # Hermetic xUnit layer over backend logic the live-HTTP suites cannot reach directly (retention
@@ -332,6 +338,60 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
+          path: |
+            frontend/playwright-report
+            frontend/test-results
+          retention-days: 30
+          if-no-files-found: ignore
+
+  e2e-mysql:
+    # The same browser suite, driven against a real MariaDB instead of a SQLite file.
+    #
+    # Every layer below this one already runs on both engines — the xUnit suite, the live-HTTP
+    # integration suite, the migration-integrity index parity check. The browser journeys were the
+    # last that never had, which meant the only database production actually runs was unexercised by
+    # the tests closest to what a student sees. Chromium only: the cross-browser projects are a smoke
+    # subset whose value is engine coverage, not database coverage, so running them twice buys nothing.
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mariadb:10.11
+        env: { MARIADB_ROOT_PASSWORD: root, MARIADB_DATABASE: pci_e2e, MARIADB_USER: pci, MARIADB_PASSWORD: pcipass }
+        ports: [ '3306:3306' ]
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - name: Build backend (served by Playwright's webServer)
+        working-directory: backend
+        run: dotnet build -c Release
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: 'npm', cache-dependency-path: frontend/package-lock.json }
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+      - name: Install Chromium
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Playwright E2E against MariaDB (boots the backend on :8080)
+        working-directory: frontend
+        env:
+          DB_PROVIDER: mysql
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_PORT: '3306'
+          MYSQL_USER: pci
+          MYSQL_PASSWORD: pcipass
+          MYSQL_DATABASE: pci_e2e
+          MYSQL_SSL: 'false'
+        run: npx playwright test --project=chromium
+      - name: Upload Playwright report and failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-mysql
           path: |
             frontend/playwright-report
             frontend/test-results

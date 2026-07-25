@@ -22,7 +22,7 @@ which is the standard way to make such cases fast and deterministic.
 
 Exit code 0 iff every assertion passes.  Run from backend/:  python3 tests/integration_test.py
 """
-import base64, hashlib, hmac, http.server, json, os, socket, sqlite3, subprocess, sys, threading, time, urllib.error, urllib.request
+import base64, hashlib, hmac, http.server, json, os, shutil, socket, sqlite3, subprocess, sys, threading, time, urllib.error, urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BACKEND = os.path.dirname(HERE)
@@ -158,6 +158,16 @@ def _reset_mysql():
 
 # ---- server lifecycle ----
 def boot():
+    # The object store is wiped with the database, on BOTH providers, because the two are one state.
+    #
+    # Leaving it behind does not just orphan files, it breaks the run: the store is content-addressed and
+    # skips writing a blob whose hash is already on disk, while the at-rest encryption key is derived from
+    # STRIPE_WEBHOOK_SECRET — which this harness regenerates every run. So a second run re-uses the FIRST
+    # run's ciphertext under a key that cannot open it, every download 500s with "file_missing", and the
+    # blame lands on whatever else changed. That is exactly how 17 document/BoK assertions came to be
+    # recorded as MySQL-only failures: SQLite ran first against a clean tree and MySQL ran second against
+    # its leftovers. Neither provider was at fault.
+    shutil.rmtree(STORAGE, ignore_errors=True)
     if PROVIDER == "mysql":
         _reset_mysql()
         env = dict(os.environ, DB_PROVIDER="mysql", PORT=str(PORT), STORAGE_ROOT=STORAGE,
@@ -3451,6 +3461,7 @@ def run(proc):
     test_admin_extra_gaps(admin)
     test_proctoring_analytics_gaps(admin)
     test_time_sweeps(admin)
+    test_integration_health(admin)
     test_simlab(admin)
 
     print("\n(assertions complete)")
@@ -7226,6 +7237,38 @@ def test_time_sweeps(admin):
     c, sw2 = jget("POST", "/api/admin/ops/sweeps/run", token=admin)
     chk("60g a second run is a clean no-op (nothing left due: 0 published, 0 expired)",
         c == 200 and H0(sw2.get("published")) == 0 and H0(sw2.get("memberships_expired")) == 0, sw2)
+
+
+def test_integration_health(admin):
+    # Incremental Testing Programme §62 — GET /api/admin/integrations/health, the operator's queue-depth and
+    # connector-readiness view. It was unreachable on MySQL: its oldest_pending_age_min column was computed
+    # with julianday(), a SQLite-only function whose shape here (ROUND(...*1440) AS INTEGER) no rewrite rule
+    # recognised, so the whole endpoint answered 500 on the only database production runs. Nothing asserted
+    # it, on either provider. This section runs on BOTH, which is what makes it the regression guard.
+    print("\n=== 62. Integration health: queue depth + connector readiness on both providers ===")
+    c, h = jget("GET", "/api/admin/integrations/health", token=admin)
+    chk("62a the endpoint answers 200 with ok=true (it returned 500 on MySQL before the julianday fix)",
+        c == 200 and isinstance(h, dict) and h.get("ok") is True, (c, h))
+
+    queues = {k: v for k, v in h.items() if isinstance(v, dict) and "pending" in v and "failed" in v}
+    chk("62b it reports at least one queue, each with pending/failed counts and an oldest-pending age field",
+        len(queues) >= 1 and all(
+            isinstance(q.get("pending"), int) and isinstance(q.get("failed"), int)
+            and "oldest_pending_age_min" in q for q in queues.values()),
+        {k: v for k, v in list(queues.items())[:3]})
+
+    # An empty queue must report age None rather than 0 — MIN over no rows is NULL, and a 0 there would read
+    # as "something has been pending for under a minute", which is the opposite of the truth.
+    empty = [k for k, q in queues.items() if q.get("pending") == 0]
+    chk("62c a queue with nothing pending reports oldest_pending_age_min = null, not 0",
+        all(queues[k].get("oldest_pending_age_min") is None for k in empty), 
+        {k: queues[k] for k in empty[:3]})
+
+    c2, h2 = jget("GET", "/api/admin/integrations/health")
+    vtok = globals().get("_VIEWER_TOK")
+    c3, h3 = jget("GET", "/api/admin/integrations/health", token=vtok)
+    chk("62d it is gated: 401 anonymous, 403 for an admin without the 'integrations' permission",
+        c2 == 401 and bool(vtok) and c3 == 403, (c2, c3))
 
 if __name__ == "__main__":
     main()

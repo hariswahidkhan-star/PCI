@@ -11,7 +11,9 @@ import path from 'node:path'
 // The backend reads the shells from disk per request, so boot order vs the webServer is irrelevant.
 export default function globalSetup(): void {
   const frontendRoot = process.cwd() // `npm run e2e` always runs from frontend/ (locally and on CI)
-  const wwwroot = path.resolve(frontendRoot, '..', 'backend', 'wwwroot')
+  const backend = path.resolve(frontendRoot, '..', 'backend')
+  const wwwroot = path.join(backend, 'wwwroot')
+
   const appIndex = path.join(wwwroot, 'app', 'index.html')
   const adminIndex = path.join(wwwroot, 'admin', 'index.html')
   if (fs.existsSync(appIndex) && fs.existsSync(adminIndex)) return
