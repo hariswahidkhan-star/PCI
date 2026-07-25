@@ -4135,6 +4135,69 @@ def test_simlab(admin):
     chk("43zb10 a 'sim_lab'-only admin can export the bundle (200)",
         c == 200 and json.loads(slb).get("kind") == "pci.simulation.bundle", c)
 
+    # ---- §5B.8: importing a bundle. Integrity is all-or-nothing; a taken code is skipped, not fatal ----
+    def import_bundle(doc, token=admin):
+        return jget("POST", "/api/admin/lab/scenarios/import-bundle", token=token, body={"bundle": doc})
+
+    # The environment's own bundle re-imported: every entry verifies, every code is already taken, so
+    # nothing is created. That is what makes re-running an interrupted migration safe.
+    before_total = alist.get("total")
+    c, res = import_bundle(bjson)
+    chk("43zk1 a genuine bundle verifies and reports one outcome per entry",
+        c == 200 and res.get("total") == before_total, (c, res.get("total"), before_total))
+    chk("43zk2 entries whose code is already taken are skipped, not imported",
+        res.get("imported_count") == 0 and res.get("skipped_count") == before_total
+        and all(r.get("reason") == "duplicate_code" for r in res.get("skipped", [])),
+        (res.get("imported_count"), res.get("skipped_count")))
+    c, after = jget("GET", "/api/admin/lab/scenarios", token=admin)
+    chk("43zk3 re-importing the catalogue created no duplicate scenarios",
+        after.get("total") == before_total, (after.get("total"), before_total))
+
+    # Integrity: one altered entry condemns the whole file, and nothing is written.
+    tampered = json.loads(btext)
+    tampered["scenarios"][0]["scenario"]["title"] = "Edited in transit"
+    c, res = import_bundle(tampered)
+    chk("43zk4 an edited entry is refused (409 checksum_mismatch)",
+        c == 409 and res.get("error") == "checksum_mismatch", (c, res.get("error")))
+    c, after = jget("GET", "/api/admin/lab/scenarios", token=admin)
+    chk("43zk5 a refused bundle imported nothing at all", after.get("total") == before_total, after.get("total"))
+
+    # Dropping an entry leaves every survivor individually valid — only the bundle checksum catches it.
+    truncated = json.loads(btext)
+    if truncated.get("scenarios"):
+        truncated["scenarios"].pop()
+        c, res = import_bundle(truncated)
+        chk("43zk6 a truncated bundle is refused even though every remaining entry is intact",
+            c == 409 and res.get("error") == "checksum_mismatch", (c, res.get("error")))
+
+    # Envelope checks.
+    c, res = import_bundle(mjson)
+    chk("43zk7 a single-scenario manifest is not a bundle (400 wrong_kind)",
+        c == 400 and res.get("error") == "wrong_kind", (c, res.get("error")))
+    future_b = json.loads(btext); future_b["manifest_version"] = 99
+    c, res = import_bundle(future_b)
+    chk("43zk8 a bundle from a newer build is refused rather than imported lossily",
+        c == 400 and res.get("error") == "unsupported_version", (c, res.get("error")))
+    c, res = import_bundle({})
+    chk("43zk9 a document with no bundle envelope is refused",
+        c == 400 and res.get("error") in ("bad_manifest", "wrong_kind"), (c, res.get("error")))
+
+    # An empty catalogue is a legitimate bundle: it verifies and imports nothing.
+    c, empty_txt, _ = bundle("?status=suspended", token=admin)
+    if c == 200 and json.loads(empty_txt).get("count") == 0:
+        c, res = import_bundle(json.loads(empty_txt))
+        chk("43zk10 an empty bundle verifies and imports nothing",
+            c == 200 and res.get("total") == 0 and res.get("imported_count") == 0, (c, res))
+
+    # Permission wiring matches the rest of the Lab.
+    c, _r = import_bundle(bjson, token=mtok)
+    chk("43zk11 bundle import is not reachable with a student token", c in (401, 403), c)
+    if vtok:
+        c, _r = import_bundle(bjson, token=vtok)
+        chk("43zk12 a viewer is refused bundle import (403)", c == 403, c)
+    c, res = import_bundle(bjson, token=sltok)
+    chk("43zk13 a 'sim_lab'-only admin may import a bundle (200)", c == 200, c)
+
     # ---- Phase 2 engine: forecasting (three EAC methods) + CBS cost roll-up, graded deterministically ----
     c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})
     fid = stf.get("attempt_id")
