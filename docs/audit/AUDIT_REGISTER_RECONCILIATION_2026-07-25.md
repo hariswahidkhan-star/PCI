@@ -69,8 +69,8 @@ to main's `WorkerLease` semantics, and wired into CI.
 
 ## 4. New defects found *and fixed* by running the gates (this branch)
 
-Executing the previously-blocked gates surfaced three genuine defects, each now fixed with a
-regression test (see `docs/testing/DEFECT_REGISTER.md` DEF-22..24 and the commit history):
+Executing the previously-blocked gates surfaced five genuine defects, each now fixed with a
+regression test (see `docs/testing/DEFECT_REGISTER.md` DEF-22..26 and the commit history):
 
 1. **DEF-22 — schema generator dropped a table from its type map** (`tools/sqlite_to_mysql.py`).
    A one-line `CREATE TABLE` made the body-parsing regex swallow the next table
@@ -95,13 +95,34 @@ regression test (see `docs/testing/DEFECT_REGISTER.md` DEF-22..24 and the commit
 
 Plus one audit item implemented as designed:
 
-4. **RES-026 / DEF-24 — waiver idempotency.** The audit's one *diagnosed-and-still-real* code gap.
+4. **DEF-25 — the MySQL schema gate was made green against broken output.** PR #169 regenerated
+   `schema.mysql.sql` to fix a red `backend-mysql` "schema is current" gate, diagnosing the
+   `email(191)` prefix as stale. It was not stale: `code_redemptions.email` is still `TEXT`, and
+   the regeneration was performed with the DEF-22 generator bug, which silently drops the prefix.
+   Verified directly against Oracle MySQL 8.0.46: `CREATE INDEX … ON code_redemptions(email)` →
+   **ERROR 1170 (BLOB/TEXT column used in key specification without a key length)**, while the
+   `(191)` form succeeds. Fixing the generator (item 1) and regenerating restores the correct DDL;
+   the schema gate now passes against *correct* output rather than matching the broken output.
+
+5. **DEF-26 — an idempotency key could bridge students.** Main's `FeeWaiverLedger.Find` matched on
+   the key alone, so reusing a key for a different subject returned `ok/replayed:true` carrying the
+   *first* student's `waiver_id`, `payment_id` and discount code, while granting the second student
+   nothing. Fail-safe against over-granting, but it silently no-ops a legitimate grant and discloses
+   an unrelated financial record. New `FindForSubject` guards every pre-check and race path in
+   `AdminOps` and `ExamExceptions` with **409 `idempotency_key_conflict`**.
+
+Plus the audit item that main and this branch fixed independently:
+
+6. **RES-026 / DEF-24 — waiver idempotency.** The audit's one *diagnosed-and-still-real* code gap.
    All three admin waiver paths were check-then-write; a retried request could settle a second $0
    payment/membership, mint a second single-use discount code, or grant a second $0 exam seat.
-   Every waiver grant now accepts a client `idempotency_key`: replays return the original outcome
-   (`replay:true`), a unique index (`ux_fee_waivers_idem`) is the race backstop, cross-student key
-   reuse is refused (409), keyless requests keep their historical behaviour, and the admin UI mints
-   one key per grant intent. Regression: `waiver_idempotency_test.py` **18/18**, wired into CI.
+   Both lineages fixed it; **main's implementation is the one that ships** — it claims the ledger
+   row inside the transaction *before* settling, so a race cannot `Grant` twice (strictly stronger
+   than catching the unique-index violation afterwards). A client key travels in the JSON body or
+   an `Idempotency-Key` header, is *required* for partial and reschedule-only waivers, and replays
+   return the original outcome with `replayed:true`. Hardened here with the cross-subject guard
+   (DEF-26). Regression: xUnit `FeeWaiverIdempotencyTests` plus the end-to-end
+   `waiver_idempotency_test.py` **19/19**, wired into CI.
 
 ## 5. Browser and smoke evidence
 
@@ -152,7 +173,8 @@ Plus one audit item implemented as designed:
 | RES-023 lint debt | Lint passes with warnings only; CI blocks on errors (SQ-2). Warning burn-down remains housekeeping. |
 | RES-024 live public/SEO crawl | **Blocked in any local environment** — needs the deployed site. Deterministic URL inventory + redirect/canonical logic are covered by RedirectTests/SeoTags/Sitemap units and public-site browser specs. |
 | RES-025 historical naming | **Tracked as DEF-21** (open, deliberate: published-content changes need a coordinated pass); `QuestionBankTests` block retired names from seeded banks; `SimContent.RetiredNames` is the canonical list. |
-| RES-026 waiver idempotency | **Fixed this branch** — see §4.4. |
+| RES-026 waiver idempotency | **Fixed** — main's `FeeWaiverLedger` (PR #164) is the implementation, hardened here with a cross-subject guard (§4.4). |
+| RES-001/002 checkout reservation | **Implemented on main** after this document's first revision (`checkout_reservations`, `discount_codes.reserved_count` capacity holds, snapshotted partner attribution on `payments`) — see `PHASE_1_REMEDIATION_REGISTER_2026-07-25.md`. Supersedes the "remains open" note above. |
 
 ## 7. What remains genuinely open (honest list)
 
