@@ -97,7 +97,9 @@ public static class WorldPassport
         public string? IssuedOn;
         public string? ExpiresOn;
         public Disclosure Show = new(true, true, true);
-        public List<(string Title, string Industry, string Difficulty, string Score, string Profile, string Date)> Rows = new();
+        /// <summary>Ref is the traceability citation — challenge code + pinned published version
+        /// (e.g. "WC-EVM-001 · v1") — so every row in the document names its immutable source.</summary>
+        public List<(string Title, string Ref, string Industry, string Difficulty, string Score, string Profile, string Date)> Rows = new();
     }
 
     const double W = 595, H2 = 842;   // A4 portrait, points
@@ -168,7 +170,7 @@ public static class WorldPassport
             if (y < 252) break;
             y -= 22;
             Text(cs, Clip(r.Title, 52), 44, y, 10.5, bold: true, 0.06, 0.09, 0.16);
-            var sub = string.Join("  ·  ", new[] { r.Industry, r.Difficulty, d.Show.Profiles ? r.Profile : null }
+            var sub = string.Join("  ·  ", new[] { r.Ref, r.Industry, r.Difficulty, d.Show.Profiles ? r.Profile : null }
                 .Where(s => !string.IsNullOrWhiteSpace(s)));
             if (sub.Length > 0) { y -= 12; Text(cs, Clip(sub, 62), 44, y, 8.8, bold: false, 0.35, 0.40, 0.48); y += 12; }
             if (d.Show.Scores) Text(cs, r.Score, 400, y, 10.5, bold: true, 0.06, 0.09, 0.16);

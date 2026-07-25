@@ -108,7 +108,7 @@ public static class WorldAccount
         // the PDF, so anything selected here is one careless interpolation away from publication.
         // The data export fetches answers on its own, separate path.
         db.Query($@"SELECT a.id, a.score, a.profile_key, a.completed_at, a.passport_visible,
-                a.result_token_sha, a.result_revoked, c.code,
+                a.result_token_sha, a.result_revoked, c.code, a.version,
                 v.title, v.industry, v.track, v.difficulty
             FROM pciworld_attempts a
             JOIN pciworld_challenges c ON c.id=a.challenge_id
@@ -402,6 +402,9 @@ public static class WorldAccount
                 track = H.Str(r["track"]), difficulty = H.Str(r["difficulty"]),
                 score = r["score"], profile = H.Str(r["profile_key"]),
                 completed_at = H.Str(r["completed_at"]), passport_visible = H.L(r["passport_visible"]) == 1,
+                // Traceability: the challenge code and the immutable published version this attempt
+                // was graded against — the record a reader can follow back to the source.
+                code = H.Str(r["code"]), version = H.L(r["version"]),
             });
             var me = db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", u.Id)!;
             var show = WorldPassport.Disclosure.From(me);
@@ -529,7 +532,9 @@ public static class WorldAccount
                 Show = show,
             };
             foreach (var r in rows)
-                doc.Rows.Add((H.Str(r["title"]) ?? "", H.Str(r["industry"]) ?? "", H.Str(r["difficulty"]) ?? "",
+                doc.Rows.Add((H.Str(r["title"]) ?? "",
+                    $"{H.Str(r["code"])} · v{H.L(r["version"])}",
+                    H.Str(r["industry"]) ?? "", H.Str(r["difficulty"]) ?? "",
                     r["score"] is null ? "" : Convert.ToDouble(r["score"]).ToString("0.#"),
                     H.Str(r["profile_key"])?.Replace('_', ' ') ?? "",
                     (H.Str(r["completed_at"]) ?? "").Split(' ')[0]));
