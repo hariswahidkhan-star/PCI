@@ -27,8 +27,19 @@ public static class TemplatesLibrarySeed
     const string EffectiveDate = "25 July 2026";
 
     /// <summary>One template: a stable group id, catalogue metadata, the engine it mirrors, the column
-    /// header, worked example rows, and the notes appended under the table.</summary>
-    record Tpl(string Group, string Title, string Engine, string Description, string[] Header, string[][] Rows, string[] Notes);
+    /// header, worked example rows, and the notes appended under the table. <c>Engine</c> is the
+    /// <see cref="SimCalc.KnownTasks"/> selector this artefact belongs to, or empty for a general
+    /// project-controls artefact with no Lab engine behind it.</summary>
+    public record Tpl(string Group, string Title, string Engine, string Description, string[] Header, string[][] Rows, string[] Notes);
+
+    /// <summary>The catalogue, for callers that need the engine mapping without touching the database —
+    /// notably the student-facing "working template for this scenario" link in the Lab.</summary>
+    public static IReadOnlyList<Tpl> Catalogue => Items();
+
+    /// <summary>The template that mirrors a Lab engine, or null when the engine has no artefact.</summary>
+    public static Tpl? ForEngine(string? task) => string.IsNullOrWhiteSpace(task)
+        ? null
+        : Items().FirstOrDefault(t => string.Equals(t.Engine, task, StringComparison.Ordinal));
 
     public static void Ensure(Db db)
     {
@@ -330,6 +341,125 @@ public static class TemplatesLibrarySeed
                 "Completeness = records with a reported value / total records, as a percentage.",
                 "Compute the mean absolute error over REPORTED rows only — averaging blanks as zero hides the gap and flatters the data.",
                 "A missing reading is a finding, not a blank cell: chase it before the reporting cut-off.",
+            }),
+
+        // ── General project-controls artefacts. These have no Lab engine behind them (Engine is empty):
+        //    they are the everyday reporting and control sheets that surround the graded techniques. ──
+
+        new Tpl("template-raid-log", "RAID Log — Risks, Assumptions, Issues, Dependencies (CSV)", "",
+            "The single control log for risks, assumptions, issues and dependencies, with owners and due dates. The assumptions and dependencies most teams never write down are usually what bites them.",
+            new[] { "raid_id", "type", "description", "impact_if_realised", "owner", "raised_date", "due_date", "status", "linked_risk_id" },
+            new[] {
+                new[] { "A-01", "assumption", "Client supplies survey data by week 4", "3-week design delay", "Design lead", "2026-03-02", "2026-03-30", "open", "R1" },
+                new[] { "I-01", "issue", "Two structural drawings conflict", "Rework of pile caps", "Structures engineer", "2026-03-11", "2026-03-18", "in progress", "" },
+                new[] { "D-01", "dependency", "Grid connection energised by others", "No commissioning window", "Project manager", "2026-03-14", "2026-07-01", "open", "R4" },
+            },
+            new[] {
+                "Type must be one of risk / assumption / issue / dependency.",
+                "An ISSUE has already happened; a RISK has not. Do not file one as the other — the response differs.",
+                "Every assumption needs a due date: it is a risk with a timer, and it converts to an issue if it is not confirmed.",
+                "Link to the quantified register (linked_risk_id) so the RAID log and the EMV stay in step.",
+            }),
+
+        new Tpl("template-milestone-tracker", "Milestone Tracker and Slip Analysis (CSV)", "",
+            "Baseline, forecast and actual milestone dates with the resulting slip, so trend is visible rather than a single date being restated each month.",
+            new[] { "milestone_id", "milestone", "baseline_date", "forecast_date", "actual_date", "slip_days", "status", "gate" },
+            new[] {
+                new[] { "M1", "Design freeze", "2026-04-30", "2026-05-14", "2026-05-12", "12", "achieved late", "yes" },
+                new[] { "M2", "Foundations complete", "2026-07-15", "2026-08-03", "", "19", "forecast late", "no" },
+                new[] { "M3", "Energisation", "2026-11-02", "2026-11-02", "", "0", "on track", "yes" },
+            },
+            new[] {
+                "Slip days = forecast (or actual) date - baseline date. Positive is late.",
+                "Never overwrite the baseline date; that is the whole point of a baseline. Record movement in forecast_date.",
+                "Keep the slip trend month on month — a milestone that slips two weeks every month is not 'on track for recovery'.",
+                "Mark contractual gates so the ones with commercial consequences are visible at a glance.",
+            }),
+
+        new Tpl("template-contingency-drawdown", "Contingency Drawdown Register (CSV)", "",
+            "Contingency held, drawn and remaining over time, against the risk exposure it was sized to cover — the check that answers whether the remaining pot is still adequate.",
+            new[] { "period", "opening_contingency", "drawn_this_period", "drawdown_reason", "closing_contingency", "risk_exposure_emv", "cover_ratio" },
+            new[] {
+                new[] { "1", "500000", "0", "", "500000", "180000", "2.78" },
+                new[] { "2", "500000", "60000", "Ground conditions worse than surveyed", "440000", "165000", "2.67" },
+                new[] { "3", "440000", "120000", "Switchgear delay acceleration", "320000", "150000", "2.13" },
+            },
+            new[] {
+                "Closing = opening - drawn. Cover ratio = closing contingency / remaining risk exposure (EMV).",
+                "A falling cover ratio is the early warning: contingency is being consumed faster than risk is retiring.",
+                "Record a reason for every drawdown. Unexplained drawdown is indistinguishable from an overspend.",
+                "Contingency covers identified risk within scope; it is not a budget for approved scope change — that is what the change log is for.",
+            }),
+
+        new Tpl("template-variance-analysis", "Variance Analysis and Corrective Action (CSV)", "",
+            "The narrative half of earned value: for each account that breached its threshold, the cause, the impact and the corrective action with an owner and a date.",
+            new[] { "account_id", "account_name", "sv", "cv", "threshold_breached", "root_cause", "impact", "corrective_action", "owner", "due_date" },
+            new[] {
+                new[] { "CA-101", "Civils", "-45000", "-32000", "yes", "Wet weather and a late permit", "3-week slip to foundations", "Second crew from week 9; re-sequence drainage", "Construction lead", "2026-05-29" },
+                new[] { "CA-102", "Mechanical", "8000", "-4000", "no", "", "", "", "", "" },
+            },
+            new[] {
+                "Set the reporting threshold before the period, not after — commonly a variance beyond +/-10% or a set value.",
+                "Root cause is not a restatement of the number. 'CV is negative because we overspent' explains nothing.",
+                "Every breach needs a corrective action with a named owner and a date, or the analysis is commentary rather than control.",
+                "Track whether last period's actions worked; unclosed actions are the reason variances persist.",
+            }),
+
+        new Tpl("template-status-report", "Period Status Report Data Sheet (CSV)", "",
+            "The structured data behind a period report — performance, forecast, top risks and the movement since last period — so the narrative is generated from figures rather than recalled.",
+            new[] { "period", "section", "metric", "value", "prior_value", "movement", "commentary" },
+            new[] {
+                new[] { "3", "performance", "SPI", "0.86", "0.91", "-0.05", "Slip concentrated in civils" },
+                new[] { "3", "performance", "CPI", "0.83", "0.87", "-0.04", "Acceleration cost of the second crew" },
+                new[] { "3", "forecast", "EAC", "722892", "689655", "33237", "CPI method; excludes pending change C4" },
+                new[] { "3", "risk", "Register EMV", "-150000", "-165000", "15000", "Two threats retired at design freeze" },
+            },
+            new[] {
+                "Report movement, not just level: a stable CPI of 0.83 and a CPI falling to 0.83 are different projects.",
+                "State the forecast method and what it excludes; an EAC that quietly omits pending change is not comparable month to month.",
+                "Keep the commentary in the same row as its number so the report cannot drift from the data.",
+            }),
+
+        new Tpl("template-lessons-learned", "Lessons Learned Register (CSV)", "",
+            "Lessons captured during delivery rather than at closeout, each with the recommendation and where it must land to change anything.",
+            new[] { "lesson_id", "phase", "category", "what_happened", "root_cause", "recommendation", "action_owner", "embed_into", "status" },
+            new[] {
+                new[] { "L-01", "procurement", "schedule", "Switchgear ordered after design freeze slipped", "Long-lead list not re-baselined with the design", "Re-run the long-lead review at every design gate", "Procurement lead", "gate checklist", "adopted" },
+                new[] { "L-02", "execution", "cost", "Second crew mobilised without a change", "Acceleration treated as recovery, not scope", "Route all acceleration through the change board", "Project manager", "change procedure", "proposed" },
+            },
+            new[] {
+                "Capture lessons in the period they occur; a closeout workshop recovers a fraction and none of it in time to help.",
+                "'embed_into' is what makes a lesson real — a procedure, checklist or template that changes. A lesson with no destination is an anecdote.",
+                "Separate what happened from the root cause, or the recommendation treats the symptom.",
+            }),
+
+        new Tpl("template-s-curve-data", "S-Curve Data Sheet (CSV)", "",
+            "The time-phased data behind a cost/value S-curve: cumulative planned, earned and actual per period, ready to chart.",
+            new[] { "period", "period_label", "pv_period", "pv_cumulative", "ev_cumulative", "ac_cumulative", "percent_planned", "percent_earned" },
+            new[] {
+                new[] { "1", "Jan", "100000", "100000", "90000", "100000", "16.7", "15.0" },
+                new[] { "2", "Feb", "120000", "220000", "200000", "230000", "36.7", "33.3" },
+                new[] { "3", "Mar", "130000", "350000", "300000", "360000", "58.3", "50.0" },
+                new[] { "4", "Apr", "120000", "470000", "420000", "500000", "78.3", "70.0" },
+            },
+            new[] {
+                "Percent planned = cumulative PV / BAC. Percent earned = cumulative EV / BAC.",
+                "Chart the three cumulative columns against period to draw the classic S-curve.",
+                "The gap between the planned and earned curves is schedule performance; between earned and actual is cost performance.",
+                "Keep the per-period PV column: a cumulative-only sheet hides which period the plan actually loaded.",
+            }),
+
+        new Tpl("template-stakeholder-register", "Stakeholder Register and Engagement Plan (CSV)", "",
+            "Who must be informed, consulted or persuaded, with current versus required engagement — the gap that drives the communication plan.",
+            new[] { "stakeholder_id", "name_or_role", "organisation", "interest", "influence", "current_engagement", "required_engagement", "engagement_action", "owner", "frequency" },
+            new[] {
+                new[] { "S-01", "Operations director", "Client", "high", "high", "neutral", "supportive", "Monthly walkthrough of the commissioning plan", "Project manager", "monthly" },
+                new[] { "S-02", "Grid connection body", "External", "low", "high", "unaware", "neutral", "Formal notification and connection milestone review", "Engineering manager", "quarterly" },
+            },
+            new[] {
+                "Score interest and influence as low / medium / high; high influence with low interest is the group that derails projects late.",
+                "The gap between current and required engagement is the plan — where they match, no action is needed.",
+                "Every action needs an owner and a frequency, or engagement quietly stops after mobilisation.",
             }),
     };
 }

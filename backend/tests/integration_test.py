@@ -3763,6 +3763,25 @@ def test_simlab(admin):
     chk("43g a member who hasn't started sees no attempt status on any lab",
         all(r.get("attempt_status") is None for r in rows), [r.get("attempt_status") for r in rows][:4])
 
+    # Server-side catalogue search + faceted filtering (P2). Facets are computed over the FULL published
+    # set; rows carry only the matches; total/matched report the counts.
+    chk("43g1 the catalogue exposes facets (difficulties/kinds/industries/competencies) over the full set",
+        isinstance(cat.get("facets"), dict) and {"foundation", "intermediate", "advanced", "expert"} <= set(cat["facets"].get("difficulties", []))
+        and "earned_value" in cat["facets"].get("competencies", []) and cat.get("total", 0) >= 30, cat.get("facets"))
+    c, fd = jget("GET", "/api/me/lab/catalogue?difficulty=expert", token=mtok)
+    chk("43g2 filtering by difficulty=expert returns only expert labs (matched < total)",
+        c == 200 and len(fd.get("rows", [])) >= 1 and all(r.get("difficulty") == "expert" for r in fd.get("rows", []))
+        and fd.get("matched") == len(fd.get("rows", [])) and fd.get("matched") < fd.get("total"), (fd.get("matched"), fd.get("total")))
+    c, fc = jget("GET", "/api/me/lab/catalogue?competency=earned_value", token=mtok)
+    chk("43g3 filtering by competency returns only labs that exercise it",
+        c == 200 and len(fc.get("rows", [])) >= 1 and all("earned_value" in (r.get("competencies") or []) for r in fc.get("rows", [])), fc.get("matched"))
+    c, fq = jget("GET", "/api/me/lab/catalogue?q=recover", token=mtok)
+    chk("43g4 free-text search matches title/summary/code (and finds the recovery scenarios)",
+        c == 200 and len(fq.get("rows", [])) >= 1 and any("MS-" in (r.get("scenario_code") or "") for r in fq.get("rows", [])), fq.get("matched"))
+    c, fk = jget("GET", "/api/me/lab/catalogue?kind=capstone", token=mtok)
+    chk("43g5 filtering by kind=capstone returns only capstones",
+        c == 200 and all(r.get("kind") == "capstone" for r in fk.get("rows", [])) and len(fk.get("rows", [])) >= 1, fk.get("matched"))
+
     # No draft/unpublished scenario ever leaks into the student catalogue.
     con = dbconn(); con.execute("INSERT INTO simulation_scenarios(scenario_code,title,kind,status) VALUES(?,?,?,?)",
                                 ("DRAFT-XYZ", "Hidden draft", "guided_lab", "draft")); con.commit(); con.close()

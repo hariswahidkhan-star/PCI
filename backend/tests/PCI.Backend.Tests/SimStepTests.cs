@@ -138,6 +138,33 @@ public class SimStepTests
         Assert.Equal(100, g.Score);
     }
 
+    [Fact]
+    public void Every_seeded_multistep_scenario_validates_and_grades_to_100()
+    {
+        var db = TestEnv.NewMigratedDb();
+        SimLabSchema.Ensure(db);
+        var rows = db.Query("SELECT scenario_code,config_json,competencies_json FROM simulation_scenarios WHERE status='published' AND config_json LIKE '%multistep%'");
+        Assert.True(rows.Count >= 3, $"expected a multi-step family, found {rows.Count}");
+        foreach (var r in rows)
+        {
+            var code = H.Str(r["scenario_code"])!;
+            var cfg = H.Str(r["config_json"])!;
+            var config = Parse(cfg);
+            Assert.True(SimStep.IsMultiStep(config), code);
+            var issues = SimContent.Validate(Input(cfg, H.Str(r["competencies_json"]) ?? "[\"earned_value\"]"));
+            Assert.True(SimContent.Publishable(issues),
+                $"{code}: {string.Join("; ", issues.Where(i => i.Severity == SimContent.Severity.Error).Select(i => i.Code))}");
+
+            // Grade to 100 with engine-derived answers under the first option of every decision.
+            var decisions = new Dictionary<string, string>();
+            foreach (var s in SimStep.ParseSteps(config))
+                if (s.Decision is not null && s.Decision.Options.Count > 0) decisions[s.Decision.Key] = s.Decision.Options[0].Value;
+            var g = SimGrade.Grade(config, CorrectAnswers(cfg, decisions), "training");
+            Assert.Equal(100, g.Score);
+            Assert.True(g.Total >= 8, $"{code} has only {g.Total} measures");
+        }
+    }
+
     static SimContent.ScenarioInput Input(string config, string competencies = "[\"earned_value\",\"forecasting\",\"decision_making\"]") =>
         new("MS-TEST-001", "Recovery multi-step", "A synthetic linked EVM recovery scenario.", "intermediate", 1, competencies, config, SyntheticDeclared: true);
 
