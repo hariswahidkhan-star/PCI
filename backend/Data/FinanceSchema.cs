@@ -209,7 +209,18 @@ public static class FinanceSchema
             link_id INTEGER NOT NULL,
             visitor VARCHAR(32), country VARCHAR(80), device VARCHAR(24), browser VARCHAR(32),
             referrer VARCHAR(255),
-            created_at TEXT DEFAULT (datetime('now')))");
+            -- Bounded, not TEXT: it is the second column of the index below, and MySQL rejects a
+            -- COMPOSITE key containing an unbounded text column (error 1071) even though it happily
+            -- prefixes a lone one. The failure is swallowed by the installer, so the only symptom
+            -- would be this index quietly not existing on the production provider — on the
+            -- highest-volume table in the module. An ISO-8601 stamp never exceeds 32 characters.
+            created_at VARCHAR(32) DEFAULT (datetime('now')))");
+        // CREATE TABLE IF NOT EXISTS cannot alter a table an earlier build already created.
+        if (db.Provider == Db.Kind.MySql &&
+            db.Scalar<long>(@"SELECT COUNT(*) FROM information_schema.columns
+                              WHERE table_schema=DATABASE() AND table_name='partner_link_clicks'
+                                AND column_name='created_at' AND data_type='text'") > 0)
+            db.Exec("ALTER TABLE partner_link_clicks MODIFY created_at VARCHAR(32)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_plc_link ON partner_link_clicks(link_id, created_at)");
     }
 }
