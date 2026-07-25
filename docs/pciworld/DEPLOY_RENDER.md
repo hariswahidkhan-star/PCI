@@ -60,6 +60,21 @@ so the waiver can never be used to run on ephemeral storage by accident. It repl
 blanket `ALLOW_INSECURE_PRODUCTION=true`, which silently waived CORS, the encryption key and the
 public base URL as well.
 
+### MySQL 8 and MariaDB are both supported
+
+The app is written once in the SQLite dialect and translated at runtime, and it now detects which
+engine it is talking to, because the two disagree about DDL in ways that break a boot rather than a
+page:
+
+| | MariaDB | MySQL 8 |
+|---|---|---|
+| `CREATE INDEX IF NOT EXISTS` | supported | **syntax error** — the clause is stripped and a duplicate-index error is absorbed instead |
+| index on a lone `TEXT` column | silently prefixed | **rejected** (1170) — retried with an explicit prefix |
+| `TEXT` inside a composite key | rejected | rejected (1071) — those columns are bounded `VARCHAR` |
+
+Verified on MariaDB 10.11: clean install, all 25 world tables, 50 challenges, 10 articles, the
+rotation ledger, and every admin endpoint answering 200.
+
 ### Moving to MySQL 8 (the launch gate)
 
 1. Provision MySQL 8 (Render has no managed MySQL — use PlanetScale/Aiven/RDS etc.).
