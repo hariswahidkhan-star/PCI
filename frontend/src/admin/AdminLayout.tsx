@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAdminAuth } from './AdminAuth'
 import { CRUD_SECTIONS } from './crudConfigs'
 import { initials } from '../format'
+import { Icon, type IconName } from '../components/icons'
+import CommandPalette from './CommandPalette'
 
 // Sections ported to the React admin so far. `perm` null = any authenticated admin;
 // `owner` = owner-only; `anyPerm` = visible if the admin holds any listed permission.
@@ -89,18 +91,75 @@ const NAV: NavItem[] = [
   { to: '/team', label: 'Team & Access', owner: true, group: 'Operations' },
 ]
 
+// One icon per category — rendered on the sidebar group heading and beside each result in the
+// Ctrl+K palette, so a 60-section console stays scannable.
+const GROUP_ICONS: Record<string, IconName> = {
+  'Overview': 'dashboard',
+  'Students': 'users',
+  'Support': 'life-buoy',
+  'Examinations': 'award',
+  'Access & pricing': 'tag',
+  'Website': 'globe',
+  'SEO': 'search',
+  'Analytics': 'bar-chart',
+  'AI Visibility': 'sparkles',
+  'Training Partners': 'briefcase',
+  'Integrations': 'link',
+  'Marketing': 'megaphone',
+  'Community': 'message-circle',
+  'Operations': 'sliders',
+}
+const groupIcon = (group: string): IconName => GROUP_ICONS[group] ?? 'folder'
+
 export default function AdminLayout() {
   const { me, logout, can } = useAdminAuth()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [filter, setFilter] = useState('')
+  const [paletteOpen, setPaletteOpen] = useState(false)
   const loc = useLocation()
   // .main is the app's scroll container (not the body), so reset it on navigation
   const mainRef = useRef<HTMLDivElement>(null)
   useEffect(() => { mainRef.current?.scrollTo(0, 0) }, [loc.pathname])
-  const items = NAV.filter((n) => {
+  const items = useMemo(() => NAV.filter((n) => {
     if (n.owner) return !!me?.is_owner
     if (n.anyPerm) return !!me?.is_owner || n.anyPerm.some((p) => can(p))
     return n.perm == null || can(n.perm)
-  })
+  }), [me, can])
+
+  // sidebar quick-filter: narrow ~60 sections as you type (matches label or category)
+  const needle = filter.trim().toLowerCase()
+  const shown = needle
+    ? items.filter((n) => n.label.toLowerCase().includes(needle) || n.group.toLowerCase().includes(needle))
+    : items
+
+  // Ctrl/Cmd+K opens the command palette from anywhere in the console
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setPaletteOpen((o) => !o)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  // breadcrumb: longest nav path that prefixes the current URL names the section
+  const current = useMemo(() => {
+    const path = loc.pathname.replace(/\/+$/, '') || '/'
+    let best: NavItem | undefined
+    for (const n of items) {
+      if (path === n.to || (n.to !== '/' && path.startsWith(n.to + '/'))) {
+        if (!best || n.to.length > best.to.length) best = n
+      }
+    }
+    return best
+  }, [items, loc.pathname])
+
+  const paletteItems = useMemo(
+    () => items.map((n) => ({ to: n.to, label: n.label, group: n.group, icon: groupIcon(n.group) })),
+    [items],
+  )
 
   return (
     <div className="shell">
@@ -110,10 +169,30 @@ export default function AdminLayout() {
           <img src="/assets/logo.png" alt="PCI Global" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
           <span>PCI Global Admin</span>
         </div>
+        <div className="nav-filter">
+          <Icon name="search" size={15} />
+          <input
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            placeholder="Filter sections…"
+            aria-label="Filter sections"
+          />
+          {filter && (
+            <button type="button" aria-label="Clear filter" onClick={() => setFilter('')}>
+              <Icon name="x" size={14} />
+            </button>
+          )}
+        </div>
         <nav className="nav">
-          {items.map((n, i) => (
+          {shown.length === 0 && <div className="nav-empty">No section matches.</div>}
+          {shown.map((n, i) => (
             <span key={n.to} style={{ display: 'contents' }}>
-              {(i === 0 || items[i - 1].group !== n.group) && <div className="nav-label">{n.group}</div>}
+              {(i === 0 || shown[i - 1].group !== n.group) && (
+                <div className="nav-label has-ic">
+                  <Icon name={groupIcon(n.group)} size={13} />
+                  {n.group}
+                </div>
+              )}
               <NavLink to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
                 {n.label}
               </NavLink>
@@ -126,9 +205,17 @@ export default function AdminLayout() {
         <header className="topbar">
           <div className="row">
             <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>
-            <strong>Admin Console</strong>
+            <div>
+              <div className="tb-crumb">Admin Console{current ? ` · ${current.group}` : ''}</div>
+              <strong className="tb-title">{current?.label ?? 'Dashboard'}</strong>
+            </div>
           </div>
           <div className="row">
+            <button className="cmdk-btn" onClick={() => setPaletteOpen(true)} aria-label="Go to section (Ctrl+K)">
+              <Icon name="search" size={15} />
+              <span className="cmdk-btn-text">Go to…</span>
+              <kbd>Ctrl K</kbd>
+            </button>
             <div className="avatar" title={me?.email}>{initials(me?.name?.split(' ')[0], me?.name?.split(' ')[1])}</div>
             <div className="small" style={{ lineHeight: 1.2 }}>
               <div style={{ fontWeight: 700 }}>{me?.name || me?.email}</div>
@@ -137,10 +224,12 @@ export default function AdminLayout() {
             <button className="btn secondary sm" onClick={logout}>Sign out</button>
           </div>
         </header>
-        <main className="content" style={{ maxWidth: 1180 }}>
+        <main className="content route-fade" key={loc.pathname} style={{ maxWidth: 1180 }}>
           <Outlet />
         </main>
       </div>
+
+      <CommandPalette items={paletteItems} open={paletteOpen} onClose={() => setPaletteOpen(false)} />
     </div>
   )
 }
