@@ -94,6 +94,25 @@ public static class Analytics
         return attr;
     }
 
+    /// <summary>
+    /// The same visitor/country/device signals this module records, exposed for other features that need
+    /// to count traffic in their own table (partner campaign links). Returns nulls for a bot, so callers
+    /// can skip recording it. The visitor hash carries this module's privacy properties unchanged: salted
+    /// with the current date and a per-boot secret, so it de-duplicates within a day and cannot be joined
+    /// across days or reversed to a person.
+    /// </summary>
+    public static (string? visitor, string? country, string? device, string? browser) Fingerprint(HttpContext ctx)
+    {
+        try
+        {
+            var ua = ctx.Request.Headers.UserAgent.ToString();
+            if (IsBot(ua)) return (null, null, null, null);
+            var (device, browser) = Client(ua);
+            return (VisitorHash(ctx), Country(ctx), device, browser);
+        }
+        catch { return (null, null, null, null); }
+    }
+
     /// <summary>Record a public page view (called from the page-serving middleware). Never throws.</summary>
     public static void PageView(Db db, HttpContext ctx, string slug)
     {

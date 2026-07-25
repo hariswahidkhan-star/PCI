@@ -89,6 +89,8 @@ main{flex:1;width:100%;max-width:1180px;margin:0 auto;padding:26px 22px 60px}
 .tile .k{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mist)}
 .tile .v{font-family:var(--display);font-weight:800;font-size:28px;margin-top:8px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .tile .s{font-size:12px;color:var(--slate);margin-top:4px;font-variant-numeric:tabular-nums}
+.rowacts{white-space:normal}
+.rowacts .btn{margin:2px 4px 2px 0}
 .grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
 @media (max-width:820px){.grid2{grid-template-columns:1fr}}
 .trend{width:100%;height:76px;display:block}
@@ -198,6 +200,7 @@ td.num,th.num{text-align:right}
       <button data-tab="students">Students</button>
       <button data-tab="sponsor">Sponsorships</button>
       <button data-tab="commissions">Commissions</button>
+      <button data-tab="payments">Payments</button>
       <button data-tab="documents">Documents</button>
     </nav>
   </header>
@@ -225,7 +228,7 @@ td.num,th.num{text-align:right}
     <section class="tab" id="tab-codes">
       <div class="bar-row"><h2>Discount codes</h2><span class="spacer"></span><button class="btn btn-primary" id="btnNew">New code</button></div>
       <div class="card" id="codeFormCard" hidden>
-        <h3>Create a code</h3>
+        <h3 id="codeFormTitle">Create a code</h3>
         <div class="formhint" id="codeFormHint"></div>
         <div class="note err" id="codeErr" hidden></div>
         <div class="note ok" id="codeOk" hidden></div>
@@ -238,12 +241,19 @@ td.num,th.num{text-align:right}
             </div>
             <div class="fld"><label for="cStart">Start date <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="cStart" type="date"/></div>
             <div class="fld"><label for="cEnd">End date <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="cEnd" type="date"/></div>
-            <div class="fld"><label for="cCode">Custom code <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="cCode" maxlength="40" placeholder="Leave blank to auto-generate" autocomplete="off"/></div>
+            <div class="fld" id="cCodeFld"><label for="cCode">Custom code <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="cCode" maxlength="40" placeholder="Leave blank to auto-generate" autocomplete="off"/></div>
             <div class="fld"><label for="cCampaign">Campaign name <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="cCampaign" maxlength="120" placeholder="e.g. Autumn intake 2026"/></div>
+            <div class="fld"><label for="cCert">Certification <span style="font-weight:400;color:var(--mist)">(optional)</span></label>
+              <select id="cCert"><option value="">Any certification</option></select>
+            </div>
+            <div class="fld"><label for="cPerUser">Uses per student <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="cPerUser" type="number" min="1" step="1" placeholder="e.g. 1"/></div>
+            <div class="fld"><label for="cMinTxn">Minimum transaction <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="cMinTxn" type="number" min="0" step="0.01" placeholder="Below this the code does not apply"/></div>
+            <div class="fld"><label for="cMaxDisc">Maximum discount <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="cMaxDisc" type="number" min="0" step="0.01" placeholder="Caps the amount taken off"/></div>
+            <div class="fld span-all"><label for="cCountries">Eligible countries <span style="font-weight:400;color:var(--mist)">(optional, comma separated)</span></label><input id="cCountries" maxlength="500" placeholder="Leave blank for all countries"/></div>
             <div class="fld span-all"><label for="cNotes">Notes <span style="font-weight:400;color:var(--mist)">(optional, internal)</span></label><textarea id="cNotes" rows="2"></textarea></div>
           </div>
           <div class="frow">
-            <label class="chk"><input type="checkbox" id="cDraft"/> Save as draft (do not submit yet)</label>
+            <label class="chk" id="cDraftFld"><input type="checkbox" id="cDraft"/> Save as draft (do not submit yet)</label>
             <span class="spacer" style="flex:1"></span>
             <button class="btn" type="button" id="btnCodeCancel">Close</button>
             <button class="btn btn-primary" type="submit" id="btnCodeSave">Create code</button>
@@ -313,6 +323,74 @@ td.num,th.num{text-align:right}
         <div class="card tblwrap"><h3>Payouts</h3>
           <table id="commOutTbl"><thead><tr><th>Date</th><th>Note</th><th class="num">Amount</th></tr></thead>
             <tbody><tr><td colspan="3"><span class="empty">Loading…</span></td></tr></tbody></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAYMENTS: settlements, statements and disputes (finance module) -->
+    <section class="tab" id="tab-payments">
+      <div class="bar-row"><h2>Payments &amp; statements</h2></div>
+      <p style="color:var(--slate);font-size:13px;margin:-6px 0 16px;max-width:70ch">Commission is earned when a student pays, held until the refund window in your agreement has passed, then approved and settled. Figures here come from the commission ledger itself, so they always match your statement.</p>
+
+      <div class="tiles" id="payTiles"></div>
+
+      <div class="card">
+        <div class="bar-row"><h3>Monthly statement</h3></div>
+        <div class="frow" style="align-items:flex-end;gap:12px;flex-wrap:wrap">
+          <div class="fld"><label for="stMonth">Month</label><input id="stMonth" type="month"/></div>
+          <button class="btn" type="button" id="btnStView">View</button>
+          <button class="btn" type="button" id="btnStCsv">Download CSV</button>
+          <button class="btn" type="button" id="btnStPdf">Download PDF</button>
+        </div>
+        <div id="stSummary" style="margin-top:14px"><div class="empty">Choose a month and select View.</div></div>
+      </div>
+
+      <div class="card tblwrap">
+        <h3>Statement detail</h3>
+        <table id="stTbl" aria-label="Commission lines for the selected month">
+          <thead><tr><th>Date</th><th>Reference</th><th>Type</th><th>Code</th><th>Product</th><th class="num">Eligible net</th><th class="num">Rate</th><th class="num">Commission</th><th>Status</th></tr></thead>
+          <tbody><tr><td colspan="9"><span class="empty">No month selected.</span></td></tr></tbody>
+        </table>
+      </div>
+
+      <div class="card tblwrap">
+        <h3>Settlements</h3>
+        <table id="setTbl" aria-label="Your settlements">
+          <thead><tr><th>Settlement</th><th>Period</th><th>Status</th><th class="num">Approved</th><th class="num">Paid</th><th>Paid on</th><th>Reference</th><th></th></tr></thead>
+          <tbody><tr><td colspan="8"><span class="empty">Loading…</span></td></tr></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="bar-row"><h3>Disputes</h3><span class="spacer"></span><button class="btn btn-primary" id="btnNewDispute">Raise a dispute</button></div>
+        <p style="color:var(--slate);font-size:13px;margin:-4px 0 12px;max-width:70ch">If a figure does not match your records, raise it here rather than amending your own copy. Nothing in the ledger is edited &mdash; any correction is recorded as a new adjustment, so the original figure and the reason it changed both remain visible.</p>
+        <div class="note err" id="dispErr" hidden></div>
+        <div class="note ok" id="dispOk" hidden></div>
+        <form id="dispForm" novalidate hidden>
+          <div class="fgrid">
+            <div class="fld"><label for="dCat">What is the issue?</label>
+              <select id="dCat">
+                <option value="missing_commission">Commission is missing</option>
+                <option value="wrong_rate">The rate looks wrong</option>
+                <option value="wrong_amount">The amount looks wrong</option>
+                <option value="not_paid">A settlement has not been paid</option>
+                <option value="other">Something else</option>
+              </select>
+            </div>
+            <div class="fld"><label for="dAmount">Amount in question <span style="font-weight:400;color:var(--mist)">(optional)</span></label><input id="dAmount" type="number" min="0" step="0.01"/></div>
+            <div class="fld span-all"><label for="dSubject">Subject</label><input id="dSubject" maxlength="200" placeholder="e.g. March commission for code AUTUMN26 is missing"/></div>
+            <div class="fld span-all"><label for="dDetail">Detail</label><textarea id="dDetail" rows="3" placeholder="What you expected, what you see, and any reference numbers."></textarea></div>
+          </div>
+          <div class="frow"><span class="spacer" style="flex:1"></span>
+            <button class="btn" type="button" id="btnDispCancel">Close</button>
+            <button class="btn btn-primary" type="submit" id="btnDispSave">Submit dispute</button>
+          </div>
+        </form>
+        <div class="tblwrap" style="margin-top:12px">
+          <table id="dispTbl" aria-label="Your disputes">
+            <thead><tr><th>Reference</th><th>Raised</th><th>Subject</th><th>Category</th><th>Status</th><th>Outcome</th></tr></thead>
+            <tbody><tr><td colspan="6"><span class="empty">Loading…</span></td></tr></tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -561,25 +639,62 @@ function renderCodes(rows){
     tr.appendChild(el('td','num',fmtN(r.used_count||0)+' / '+fmtN(r.max_uses)));
     tr.appendChild(el('td',null,validityLabel(r)));
     tr.appendChild(el('td',null,r.campaign_name||'—'));
-    var tdA=el('td');
-    var unused=(Number(r.used_count)||0)===0;
-    var cancellable=unused&&['cancelled','rejected','expired'].indexOf(s)<0;
-    if(cancellable){
-      var b=el('button','btn btn-sm btn-danger','Cancel');
-      b.addEventListener('click',function(){
-        if(!confirm('Cancel code '+(r.code||'')+'? This cannot be undone.'))return;
-        b.disabled=true;
-        api('/api/partner/codes/'+encodeURIComponent(r.id)+'/cancel',{method:'POST',body:'{}'})
-          .then(function(){toast('Code cancelled.');loadCodes();})
-          .catch(function(e){b.disabled=false;if(!e.silent)toast('Could not cancel this code.','err');});
+    var tdA=el('td','rowacts');
+    var used=Number(r.used_count)||0;
+    var status=r.status||'active';
+    function act(label,cls,fn){var b=el('button','btn btn-sm'+(cls?' '+cls:''),label);b.addEventListener('click',function(){fn(b);});tdA.appendChild(b);return b;}
+    function post(path,body,okMsg,b){
+      b.disabled=true;
+      api('/api/partner/codes/'+encodeURIComponent(r.id)+path,{method:'POST',body:JSON.stringify(body||{})})
+        .then(function(){toast(okMsg);loadCodes();})
+        .catch(function(e){
+          b.disabled=false;
+          if(e.silent)return;
+          toast((e.data&&e.data.message)||'That action could not be completed.','err');
+        });
+    }
+    if(status==='draft'||status==='rejected'){
+      act('Submit','btn-primary',function(b){post('/submit',{},'Code submitted.',b);});
+    }
+    if(['draft','pending_approval','rejected'].indexOf(status)>=0&&used===0){
+      act('Edit',null,function(){openCodeForm(r);});
+    }
+    if(status==='active'){
+      act('Suspend',null,function(b){
+        if(!confirm('Suspend '+(r.code||'')+'? Students will no longer be able to use it. Existing registrations are unaffected.'))return;
+        post('/suspend',{},'Code suspended.',b);
       });
-      tdA.appendChild(b);
+    }
+    if(status==='suspended'){
+      act('Resume',null,function(b){post('/resume',{},'Code resumed.',b);});
+    }
+    if(['cancelled','rejected'].indexOf(status)<0){
+      act('Extend',null,function(b){
+        var current=r.end_date?String(r.end_date).slice(0,10):null;
+        var v=prompt('New end date (YYYY-MM-DD)'+(current?'. Currently '+current+'.':'. Currently open-ended.'),current||'');
+        if(!v)return;
+        post('/extend',{end_date:v.trim()},'End date updated.',b);
+      });
+    }
+    act('Duplicate',null,function(b){
+      var v=prompt('New code (leave blank to auto-generate):','');
+      if(v===null)return;
+      post('/duplicate',{code:v.trim()},'Copied to a new draft.',b);
+    });
+    // Cancellation withdraws the code entirely, so it is offered only while nothing has been redeemed.
+    // A used code is suspended instead — the server enforces this too.
+    if(used===0&&['cancelled','rejected'].indexOf(status)<0){
+      act('Cancel','btn-danger',function(b){
+        if(!confirm('Cancel code '+(r.code||'')+'? This cannot be undone.'))return;
+        post('/cancel',{},'Code cancelled.',b);
+      });
     }
     tr.appendChild(tdA);
     tb.appendChild(tr);
   });
 }
 function loadCodes(){
+  loadCertOptions();
   api('/api/partner/codes').then(function(d){renderCodes(d.rows||d||[]);})
     .catch(function(e){loadFail(e,'your codes');});
   var p=st.me?Promise.resolve(st.me):api('/api/partner/me').then(function(m){st.me=m;return m;});
@@ -615,10 +730,55 @@ function codeErrText(e){
       return d.message||'The code could not be created. Please check the details and try again.';
   }
 }
+/* The form does double duty: blank for a new code, populated for an edit. st.editCode holds the id
+   being edited, or 0 when creating — the only difference downstream is which endpoint is called. */
+function openCodeForm(row){
+  var card=$('#codeFormCard');
+  $('#codeErr').hidden=true;$('#codeOk').hidden=true;
+  st.editCode=row?Number(row.id):0;
+  $('#codeFormTitle').textContent=row?('Edit code '+(row.code||'')):'Create a code';
+  $('#btnCodeSave').textContent=row?'Save changes':'Create code';
+  // The code string itself and the draft toggle only apply when creating.
+  $('#cCodeFld').hidden=!!row;
+  $('#cDraftFld').hidden=!!row;
+  if(row){
+    $('#cPercent').value=row.discount_value!=null?row.discount_value:'';
+    $('#cMaxUses').value=row.max_uses!=null?row.max_uses:'';
+    $('#cApplies').value=row.applies_to||'all';
+    $('#cStart').value=row.start_date?String(row.start_date).slice(0,10):'';
+    $('#cEnd').value=row.end_date?String(row.end_date).slice(0,10):'';
+    $('#cCampaign').value=row.campaign_name||'';
+    $('#cNotes').value=row.notes||'';
+    $('#cCert').value=row.certification_id!=null?String(row.certification_id):'';
+    $('#cPerUser').value=row.per_user_limit!=null?row.per_user_limit:'';
+    $('#cMinTxn').value=row.min_transaction!=null?row.min_transaction:'';
+    $('#cMaxDisc').value=row.max_discount!=null?row.max_discount:'';
+    $('#cCountries').value=row.eligible_countries||'';
+  }else{
+    $('#codeForm').reset();
+  }
+  card.hidden=false;
+  card.scrollIntoView({behavior:'smooth',block:'nearest'});
+  setTimeout(function(){$('#cPercent').focus();},50);
+}
+function loadCertOptions(){
+  api('/api/partner/certifications').then(function(d){
+    var sel=$('#cCert'),cur=sel.value;
+    while(sel.options.length>1)sel.remove(1);
+    (d.rows||[]).forEach(function(c){
+      var o=document.createElement('option');
+      o.value=String(c.id);
+      o.textContent=(c.acronym||c.code||('#'+c.id))+' — '+(c.name||'');
+      sel.appendChild(o);
+    });
+    sel.value=cur;
+  }).catch(function(){});
+}
 function submitCode(ev){
   ev.preventDefault();
   var errBox=$('#codeErr'),okBox=$('#codeOk');
   errBox.hidden=true;okBox.hidden=true;
+  var editing=Number(st.editCode)||0;
   var percent=Number($('#cPercent').value),maxUses=Number($('#cMaxUses').value);
   if(!percent||percent<1||percent>100){errBox.textContent='Enter a discount percentage between 1 and 100.';errBox.hidden=false;return;}
   if(!maxUses||maxUses<1){errBox.textContent='Enter how many times the code may be used (at least 1).';errBox.hidden=false;return;}
@@ -627,21 +787,34 @@ function submitCode(ev){
   if($('#cEnd').value)payload.end_date=$('#cEnd').value;
   if($('#cStart').value&&$('#cEnd').value&&$('#cEnd').value<$('#cStart').value){
     errBox.textContent='The end date must be on or after the start date.';errBox.hidden=false;return;}
-  var custom=$('#cCode').value.trim();if(custom)payload.code=custom;
   var camp=$('#cCampaign').value.trim();if(camp)payload.campaign_name=camp;
   var notes=$('#cNotes').value.trim();if(notes)payload.notes=notes;
-  if($('#cDraft').checked)payload.draft=true;
-  var btn=$('#btnCodeSave');btn.disabled=true;btn.textContent='Creating…';
-  api('/api/partner/codes',{method:'POST',body:JSON.stringify(payload)}).then(function(d){
-    var msg='Code '+(d.code||'')+' created — status: '+String(d.status||'pending').replace(/_/g,' ')+'.';
-    if(d.note)msg+=' '+d.note;
-    okBox.textContent=msg;okBox.hidden=false;
-    $('#codeForm').reset();
+  if($('#cCert').value)payload.certification_id=Number($('#cCert').value);
+  if($('#cPerUser').value)payload.per_user_limit=Number($('#cPerUser').value);
+  if($('#cMinTxn').value!=='')payload.min_transaction=Number($('#cMinTxn').value);
+  if($('#cMaxDisc').value!=='')payload.max_discount=Number($('#cMaxDisc').value);
+  var countries=$('#cCountries').value.trim();if(countries)payload.eligible_countries=countries;
+  if(!editing){
+    var custom=$('#cCode').value.trim();if(custom)payload.code=custom;
+    if($('#cDraft').checked)payload.draft=true;
+  }
+  var btn=$('#btnCodeSave');btn.disabled=true;btn.textContent=editing?'Saving…':'Creating…';
+  var url=editing?('/api/partner/codes/'+encodeURIComponent(editing)+'/edit'):'/api/partner/codes';
+  api(url,{method:'POST',body:JSON.stringify(payload)}).then(function(d){
+    if(editing){
+      okBox.textContent='Changes saved.';okBox.hidden=false;
+      $('#codeFormCard').hidden=true;st.editCode=0;
+    }else{
+      var msg='Code '+(d.code||'')+' created — status: '+String(d.status||'pending').replace(/_/g,' ')+'.';
+      if(d.note)msg+=' '+d.note;
+      okBox.textContent=msg;okBox.hidden=false;
+      $('#codeForm').reset();
+    }
     loadCodes();
   }).catch(function(e){
     if(e.silent)return;
     errBox.textContent=codeErrText(e);errBox.hidden=false;
-  }).then(function(){btn.disabled=false;btn.textContent='Create code';});
+  }).then(function(){btn.disabled=false;btn.textContent=editing?'Save changes':'Create code';});
 }
 
 /* ---- students ---- */
@@ -813,13 +986,202 @@ function loadDocuments(){
     .catch(function(e){loadFail(e,'your documents');});
 }
 
-var loaders={overview:loadOverview,codes:loadCodes,students:loadStudents,sponsor:loadSponsor,commissions:loadCommissions,documents:loadDocuments};
+
+/* ---- payments: settlements, statements and disputes ---- */
+function money2(n){return (n==null||isNaN(Number(n)))?'—':Number(n).toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function tile(label,value,sub){
+  var d=el('div','tile');
+  d.appendChild(el('div','k',label));
+  d.appendChild(el('div','v',value));
+  if(sub)d.appendChild(el('div','s',sub));
+  return d;
+}
+function stMonthValue(){
+  var v=$('#stMonth').value;
+  if(v)return v;
+  var d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+}
+function statementUrl(fmt){
+  var q='?month='+encodeURIComponent(stMonthValue());
+  if(fmt)q+='&format='+fmt;
+  return '/api/partner/statement'+q;
+}
+/* Downloads go through fetch so the bearer token travels with them; a plain link would be
+   unauthenticated and simply bounce to the sign-in gate. */
+function downloadStatement(fmt,ext){
+  var btn=(fmt==='csv')?$('#btnStCsv'):$('#btnStPdf');
+  btn.disabled=true;
+  fetch(statementUrl(fmt),{headers:{'Authorization':'Bearer '+st.token}}).then(function(r){
+    if(r.status===401){signOut(false);return null;}
+    if(!r.ok)throw new Error('http_'+r.status);
+    return r.blob();
+  }).then(function(b){
+    if(!b)return;
+    var url=URL.createObjectURL(b),a=document.createElement('a');
+    a.href=url;a.download='statement-'+stMonthValue()+'.'+ext;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(url);},1000);
+  }).catch(function(){toast('Could not download the statement.','err');})
+    .then(function(){btn.disabled=false;});
+}
+function renderStatement(d){
+  var box=$('#stSummary');box.textContent='';
+  var t=el('div','tiles');
+  t.appendChild(tile('Opening balance',money2(d.opening)));
+  t.appendChild(tile('Earned this month',money2(d.earned)));
+  t.appendChild(tile('Reversals',money2(d.reversed)));
+  t.appendChild(tile('Settled and paid',money2(d.paid)));
+  t.appendChild(tile('Closing balance',money2(d.closing),d.currency||'USD'));
+  box.appendChild(t);
+  if(Number(d.recoverable)>0){
+    box.appendChild(el('div','note','Recoverable from previously settled commission: '+money2(d.recoverable)+'. This is offset against future settlements rather than invoiced.'));
+  }
+  var tb=$('#stTbl tbody');tb.textContent='';
+  var lines=d.lines||[];
+  if(!lines.length){
+    var tr0=el('tr'),td0=el('td');td0.colSpan=9;
+    td0.appendChild(el('span','empty','No commission activity in this month.'));
+    tr0.appendChild(td0);tb.appendChild(tr0);return;
+  }
+  lines.forEach(function(l){
+    var tr=el('tr');
+    tr.appendChild(el('td',null,fmtDate(l.date)));
+    tr.appendChild(el('td','mono',l.reference||('#'+l.Id)));
+    tr.appendChild(el('td',null,l.kind==='reversal'?'Reversal':'Commission'));
+    tr.appendChild(el('td','mono',l.code||'—'));
+    tr.appendChild(el('td',null,l.product||'—'));
+    tr.appendChild(el('td','num',money2(l.eligible_net)));
+    tr.appendChild(el('td','num',(l.rate_percent!=null?Number(l.rate_percent)+'%':'—')));
+    tr.appendChild(el('td','num',money2(l.commission)));
+    tr.appendChild(el('td',null,(l.status||'').replace(/_/g,' ')));
+    tb.appendChild(tr);
+  });
+}
+function loadStatement(){
+  $('#stSummary').textContent='';$('#stSummary').appendChild(el('div','empty','Loading…'));
+  api(statementUrl('')).then(renderStatement)
+    .catch(function(e){$('#stSummary').textContent='';$('#stSummary').appendChild(el('div','empty','Could not load this statement.'));loadFail(e,'your statement');});
+}
+function renderSettlements(d){
+  var tb=$('#setTbl tbody');tb.textContent='';
+  var rows=(d&&d.settlements)||[];
+  if(!rows.length){
+    var tr0=el('tr'),td0=el('td');td0.colSpan=8;
+    td0.appendChild(el('span','empty','No settlements yet. Approved commission appears here once PCI prepares a payment run.'));
+    tr0.appendChild(td0);tb.appendChild(tr0);return;
+  }
+  rows.forEach(function(r){
+    var tr=el('tr');
+    tr.appendChild(el('td','mono',r.settlement_no||'—'));
+    var period=(r.period_start&&r.period_end)?(fmtDate(r.period_start)+' – '+fmtDate(r.period_end)):'—';
+    tr.appendChild(el('td',null,period));
+    tr.appendChild(el('td',null,(r.status||'').replace(/_/g,' ')));
+    tr.appendChild(el('td','num',money2((r.amount_approved_minor||0)/100)));
+    tr.appendChild(el('td','num',money2((r.amount_paid_minor||0)/100)));
+    tr.appendChild(el('td',null,r.paid_at?fmtDate(r.paid_at):'—'));
+    tr.appendChild(el('td','mono',r.payment_reference||'—'));
+    var tdA=el('td');
+    if(r.status==='paid'){
+      var b=el('button','btn btn-sm','Remittance');
+      b.addEventListener('click',function(){
+        b.disabled=true;
+        fetch('/api/partner/settlements/'+encodeURIComponent(r.id)+'/remittance',{headers:{'Authorization':'Bearer '+st.token}})
+          .then(function(res){if(res.status===401){signOut(false);return null;}if(!res.ok)throw new Error('x');return res.blob();})
+          .then(function(bl){
+            if(!bl)return;
+            var url=URL.createObjectURL(bl),a=document.createElement('a');
+            a.href=url;a.download='remittance-'+(r.settlement_no||r.id)+'.pdf';
+            document.body.appendChild(a);a.click();document.body.removeChild(a);
+            setTimeout(function(){URL.revokeObjectURL(url);},1000);
+          })
+          .catch(function(){toast('Could not download the remittance advice.','err');})
+          .then(function(){b.disabled=false;});
+      });
+      tdA.appendChild(b);
+    }
+    tr.appendChild(tdA);
+    tb.appendChild(tr);
+  });
+}
+function renderDisputes(rows){
+  var tb=$('#dispTbl tbody');tb.textContent='';
+  rows=Array.isArray(rows)?rows:[];
+  if(!rows.length){
+    var tr0=el('tr'),td0=el('td');td0.colSpan=6;
+    td0.appendChild(el('span','empty','No disputes raised.'));
+    tr0.appendChild(td0);tb.appendChild(tr0);return;
+  }
+  rows.forEach(function(r){
+    var tr=el('tr');
+    tr.appendChild(el('td','mono',r.dispute_no||'—'));
+    tr.appendChild(el('td',null,fmtDate(r.created_at)));
+    tr.appendChild(el('td',null,r.subject||'—'));
+    tr.appendChild(el('td',null,(r.category||'').replace(/_/g,' ')));
+    tr.appendChild(el('td',null,(r.status||'').replace(/_/g,' ')));
+    tr.appendChild(el('td',null,r.resolution||'—'));
+    tb.appendChild(tr);
+  });
+}
+function loadPayments(){
+  if(!$('#stMonth').value)$('#stMonth').value=stMonthValue();
+  api('/api/partner/settlements').then(function(d){
+    renderSettlements(d);
+    var t=$('#payTiles');t.textContent='';
+    t.appendChild(tile('Payable now',money2(d.payable),'approved and not yet settled'));
+  }).catch(function(e){
+    var tb=$('#setTbl tbody');tb.textContent='';
+    var tr=el('tr'),td=el('td');td.colSpan=8;
+    td.appendChild(el('span','empty',e.status===403?'Your login does not have access to payment information. Ask your institution administrator.':'Could not load settlements.'));
+    tr.appendChild(td);tb.appendChild(tr);
+    if(e.status!==403)loadFail(e,'your settlements');
+  });
+  api('/api/partner/disputes').then(function(d){renderDisputes(d.rows||d.disputes||[]);})
+    .catch(function(e){if(e.status!==403)loadFail(e,'your disputes');});
+}
+
+var loaders={overview:loadOverview,codes:loadCodes,students:loadStudents,sponsor:loadSponsor,commissions:loadCommissions,payments:loadPayments,documents:loadDocuments};
 function setTab(name){
   st.tab=name;
   Array.prototype.forEach.call($('#tabs').children,function(b){b.classList.toggle('on',b.dataset.tab===name);});
-  ['overview','codes','students','sponsor','commissions','documents'].forEach(function(t){$('#tab-'+t).classList.toggle('on',t===name);});
+  ['overview','codes','students','sponsor','commissions','payments','documents'].forEach(function(t){$('#tab-'+t).classList.toggle('on',t===name);});
   if(loaders[name])loaders[name]();
 }
+
+/* ---- payments: controls ---- */
+$('#btnStView').addEventListener('click',loadStatement);
+$('#btnStCsv').addEventListener('click',function(){downloadStatement('csv','csv');});
+$('#btnStPdf').addEventListener('click',function(){downloadStatement('pdf','pdf');});
+$('#btnNewDispute').addEventListener('click',function(){
+  var f=$('#dispForm');f.hidden=!f.hidden;
+  $('#dispErr').hidden=true;$('#dispOk').hidden=true;
+  if(!f.hidden)setTimeout(function(){$('#dSubject').focus();},50);
+});
+$('#btnDispCancel').addEventListener('click',function(){$('#dispForm').hidden=true;});
+$('#dispForm').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  var errBox=$('#dispErr'),okBox=$('#dispOk');
+  errBox.hidden=true;okBox.hidden=true;
+  var subject=$('#dSubject').value.trim();
+  if(subject.length<4){errBox.textContent='Give the dispute a short subject line.';errBox.hidden=false;$('#dSubject').focus();return;}
+  var payload={category:$('#dCat').value,subject:subject,detail:$('#dDetail').value.trim()};
+  var amt=parseFloat($('#dAmount').value);
+  if(!isNaN(amt)&&amt>0)payload.claimed_amount=amt;
+  var btn=$('#btnDispSave');btn.disabled=true;btn.textContent='Submitting…';
+  api('/api/partner/disputes',{method:'POST',body:JSON.stringify(payload)})
+    .then(function(d){
+      okBox.textContent='Dispute '+(d.dispute_no||'')+' raised. PCI will respond in the portal.';okBox.hidden=false;
+      $('#dSubject').value='';$('#dDetail').value='';$('#dAmount').value='';
+      $('#dispForm').hidden=true;
+      loadPayments();
+    })
+    .catch(function(e){
+      if(e.silent)return;
+      errBox.textContent=(e.data&&e.data.message)||'Could not raise this dispute.';errBox.hidden=false;
+    })
+    .then(function(){btn.disabled=false;btn.textContent='Submit dispute';});
+});
+
 $('#tabs').addEventListener('click',function(ev){
   var b=ev.target.closest('button');if(b&&b.dataset.tab)setTab(b.dataset.tab);
 });
@@ -868,10 +1230,10 @@ $('#pwForm').addEventListener('submit',doPw);
 $('#pwBack').addEventListener('click',function(ev){ev.preventDefault();signOut(false);});
 $('#btnOut').addEventListener('click',function(){signOut(true);});
 $('#btnNew').addEventListener('click',function(){
-  var c=$('#codeFormCard');c.hidden=!c.hidden;
-  if(!c.hidden){$('#codeErr').hidden=true;$('#codeOk').hidden=true;$('#cPercent').focus();}
+  if(!$('#codeFormCard').hidden&&!Number(st.editCode)){$('#codeFormCard').hidden=true;return;}
+  openCodeForm(null);
 });
-$('#btnCodeCancel').addEventListener('click',function(){$('#codeFormCard').hidden=true;});
+$('#btnCodeCancel').addEventListener('click',function(){$('#codeFormCard').hidden=true;st.editCode=0;});
 $('#codeForm').addEventListener('submit',submitCode);
 $('#btnSponsor').addEventListener('click',function(){
   var c=$('#sponsorFormCard');c.hidden=!c.hidden;
