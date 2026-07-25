@@ -397,12 +397,18 @@ public class WorldTests
             "/world/r/abc", "/world/i/abc", "/world/p/abc", "/world/verify-email", "/world/reset-password",
             "/world-admin", "/api/world/session", "/api/world/attempts/5/submit",
             "/api/world-admin/challenges", "/api/health", "/robots.txt", "/favicon.ico",
+            // The self-hosted brand fonts — without them a world-only deployment silently loses
+            // its typography, because nothing else may serve them on this host.
+            "/assets/fonts/archivo-latin.woff2", "/assets/fonts/inter-latin-ext.woff2",
         };
         string[] blocked =
         {
             "/app", "/app/lab", "/admin", "/admin/index.html", "/student.html", "/exam-ui.html",
             "/api/login", "/api/register", "/api/admin/auth/login", "/api/me/lab/catalogue",
             "/api/certifications", "/blog", "/about", "/worldfoo", "/api/worldx",
+            // Only the fonts directory is admitted from /assets — the Institute site's other
+            // assets stay unreachable on a world-only deployment.
+            "/assets/premium.css", "/assets/og-image.jpg", "/assetsfonts",
         };
         foreach (var p in allowed) Assert.True(WorldOnly.Allowed(p), $"expected allowed: {p}");
         foreach (var p in blocked) Assert.False(WorldOnly.Allowed(p), $"expected blocked: {p}");

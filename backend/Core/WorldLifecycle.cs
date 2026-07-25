@@ -15,6 +15,9 @@ public static class WorldOnly
         p.StartsWithSegments("/world") || p.StartsWithSegments("/world-admin") ||
         p.StartsWithSegments("/api/world") || p.StartsWithSegments("/api/world-admin") ||
         p.StartsWithSegments("/api/health") ||
+        // The self-hosted brand fonts the world pages reference. Only the fonts directory — the
+        // rest of /assets belongs to the Institute site, which this deployment does not serve.
+        p.StartsWithSegments("/assets/fonts") ||
         // A host that cannot serve its own sitemap cannot be crawled properly, so these are part of
         // the world surface rather than platform extras.
         p == "/robots.txt" || p == "/world-sitemap.xml" || p == "/sitemap.xml" ||
