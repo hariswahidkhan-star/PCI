@@ -180,6 +180,97 @@ public class WorldPassportTests
     }
 
     [Fact]
+    public void The_cover_endorsement_follows_the_crimson_rule()
+    {
+        var db = NewWorldDb();
+        var (userId, _) = Participant(db);
+        var rows = WorldAccount.EvidenceRows(db, userId, visibleOnly: true);
+        var html = WorldPages.PublicPassport(db, "Sam Rivera", rows);
+
+        // The cover lockup is ordered: the PCI World wordmark, the crimson bar, then who the
+        // artefact is from — the same endorsement the site header carries. Anchor the search
+        // inside .ppt-top, because the page header contains its own copy of the words.
+        var top = html.IndexOf("class=\"ppt-top\"", StringComparison.Ordinal);
+        Assert.True(top >= 0);
+        var bar = html.IndexOf("class=\"bar\"", top, StringComparison.Ordinal);
+        var from = html.IndexOf("class=\"ppt-from\">From the Project<br>Controls Institute", top, StringComparison.Ordinal);
+        Assert.True(bar > top && from > bar);
+
+        // The PDF says the same thing after its crimson rule.
+        var pdf = Encoding.ASCII.GetString(WorldPassport.Pdf(new WorldPassport.PassportDoc
+        { Name = "Sam Rivera", VerifyUrl = "https://pciworld.example/world/p/x" }));
+        Assert.Contains("FROM THE PROJECT CONTROLS INSTITUTE", pdf);
+    }
+
+    [Fact]
+    public void The_photograph_appears_only_when_provided_and_is_erased_with_the_account()
+    {
+        var db = NewWorldDb();
+        var (userId, _) = Participant(db);
+        var rows = WorldAccount.EvidenceRows(db, userId, visibleOnly: true);
+
+        // No photo: no <img> reaches the page at all — absence, not display:none. (The stylesheet
+        // always carries the class, so the assertion targets the markup.)
+        Assert.DoesNotContain("<img class=\"ppt-photo\"", WorldPages.PublicPassport(db, "Sam Rivera", rows));
+
+        // Store one through the same validation path the endpoint uses: data URI → sniff → Put.
+        var png = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x70, 0x63, 0x69 };
+        var (bytes, mime, err) = Storage.DecodeDataUri("data:image/png;base64," + Convert.ToBase64String(png));
+        Assert.Null(err);
+        var obj = Storage.Put(bytes!, mime, "world-passport");
+        db.Execute("UPDATE pciworld_users SET passport_photo_ref=?, passport_photo_mime=? WHERE id=?",
+            obj.Reference, mime, userId);
+
+        var withPhoto = WorldPages.PublicPassport(db, "Sam Rivera", rows, photoUrl: "/world/p/tok/photo");
+        Assert.Contains("<img class=\"ppt-photo\"", withPhoto);
+        Assert.Contains("src=\"/world/p/tok/photo\"", withPhoto);
+        Assert.Contains("Photograph of Sam Rivera", withPhoto);   // the image carries an accessible name
+
+        // A PDF is a valid stored artefact elsewhere, but never a Passport photograph.
+        var (_, pdfMime, pdfErr) = Storage.DecodeDataUri("data:application/pdf;base64," +
+            Convert.ToBase64String(new byte[] { 0x25, 0x50, 0x44, 0x46, 0x2D }));
+        Assert.Null(pdfErr);
+        Assert.False(pdfMime.StartsWith("image/"));               // the endpoint's image-only gate
+
+        // Deleting the account erases the stored image itself, not just the row pointing to it.
+        Assert.NotNull(Storage.Get(obj.Reference));
+        WorldAccount.DeleteAccount(db, userId);
+        Assert.Null(Storage.Get(obj.Reference));
+    }
+
+    [Fact]
+    public void Student_login_reaches_the_passport_without_a_second_account()
+    {
+        var db = NewWorldDb();
+
+        // First use from the portal: a world account is created, linked and verified — the
+        // student's portal login is the login, so there is no usable world password to manage.
+        var (err, id) = WorldAccount.LinkStudent(db, 42, "Student@Example.com", "Alex Chen");
+        Assert.Null(err);
+        var u = db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", id)!;
+        Assert.Equal("student@example.com", H.Str(u["email"]));
+        Assert.Equal(1L, H.L(u["email_verified"]));
+        Assert.Equal(42L, H.L(u["student_user_id"]));
+        Assert.Equal("Alex Chen", H.Str(u["display_name"]));
+
+        // Every later use resolves to the same account — never a duplicate.
+        var (err2, id2) = WorldAccount.LinkStudent(db, 42, "student@example.com", null);
+        Assert.Null(err2);
+        Assert.Equal(id, id2);
+
+        // A standalone world account with the student's own email is adopted, keeping its evidence…
+        var (rerr, standaloneId, _) = WorldAccount.Register(db, "solo@example.com", "a-long-enough-password", "Solo", null);
+        Assert.Null(rerr);
+        var (err3, id3) = WorldAccount.LinkStudent(db, 77, "solo@example.com", null);
+        Assert.Null(err3);
+        Assert.Equal(standaloneId, id3);
+        Assert.Equal(77L, H.L(db.QueryOne("SELECT student_user_id FROM pciworld_users WHERE id=?", id3)!["student_user_id"]));
+
+        // …and an email already linked to a DIFFERENT student is refused, never hijacked.
+        Assert.Equal("email_in_use", WorldAccount.LinkStudent(db, 99, "solo@example.com", null).Error);
+    }
+
+    [Fact]
     public void The_verification_qr_is_self_contained_svg_with_an_accessible_name()
     {
         var svg = WorldPassport.QrSvg("https://pciworld.example/world/p/abc");

@@ -102,6 +102,35 @@ public static class WorldAccount
     public static void UnpublishPassport(Db db, long userId) =>
         db.Execute("UPDATE pciworld_users SET passport_public=0, passport_token_sha=NULL WHERE id=?", userId);
 
+    /// <summary>
+    /// Find-or-create the PCI World account behind a student sign-in — the one-login path from the
+    /// student portal to the Passport. Resolution order: an account already linked to this student;
+    /// then a standalone account with the student's own email, which is adopted (same person, and
+    /// the portal already delivers exam and credential mail to that address, so it counts as
+    /// verified); otherwise a fresh account is created, verified, with no usable password — the
+    /// student portal login IS the login. An email linked to a DIFFERENT student is refused, never
+    /// hijacked. Returns an error key or the world user id.
+    /// </summary>
+    public static (string? Error, long UserId) LinkStudent(Db db, long studentId, string email, string? displayName)
+    {
+        email = email.Trim().ToLowerInvariant();
+        var u = db.QueryOne("SELECT * FROM pciworld_users WHERE student_user_id=?", studentId);
+        if (u is null)
+        {
+            var byEmail = db.QueryOne("SELECT * FROM pciworld_users WHERE email=?", email);
+            if (byEmail is null)
+                return (null, db.ExecuteReturningId(
+                    "INSERT INTO pciworld_users(email,password_hash,display_name,email_verified,student_user_id) VALUES(?,?,?,1,?)",
+                    email, BCrypt.Net.BCrypt.HashPassword(Security.RandomHex(24)), Trunc(displayName, 80), studentId));
+            var linked = H.L(byEmail["student_user_id"]);
+            if (linked != 0 && linked != studentId) return ("email_in_use", 0);
+            db.Execute("UPDATE pciworld_users SET student_user_id=?, email_verified=1 WHERE id=?", studentId, byEmail["id"]);
+            u = byEmail;
+        }
+        if (H.Str(u["status"]) != "active") return ("account_suspended", 0);
+        return (null, H.L(u["id"]));
+    }
+
     /// <summary>The account's evidence rows (own view — includes hidden items so they can be toggled).</summary>
     public static List<Dictionary<string, object?>> EvidenceRows(Db db, long userId, bool visibleOnly) =>
         // Deliberately NO answers_json and NO session_id: this shape feeds the PUBLIC Passport and
@@ -130,6 +159,11 @@ public static class WorldAccount
     /// </summary>
     public static void DeleteAccount(Db db, long userId)
     {
+        // The Passport photograph is PII sitting in the object store, not just a row: erase the
+        // stored bytes themselves, not merely the reference to them.
+        var photoRef = H.Str(db.QueryOne("SELECT passport_photo_ref FROM pciworld_users WHERE id=?", userId)
+            ?["passport_photo_ref"]);
+        if (!string.IsNullOrEmpty(photoRef)) Storage.DeleteOne(photoRef);
         // Any public link minted from this account's attempts stops resolving first.
         db.Execute(@"UPDATE pciworld_invites SET revoked=1
             WHERE attempt_id IN (SELECT id FROM pciworld_attempts WHERE user_id=?)", userId);
@@ -388,6 +422,30 @@ public static class WorldAccount
             return J(new { ok = true, deleted = true });
         });
 
+        // ───────────── student-login SSO (portal → Passport) ─────────────
+        //
+        // A signed-in STUDENT reaches their Passport without a second sign-in (owner decision).
+        // The realms stay separate — this endpoint authenticates on the student side of the fence,
+        // links or creates the matching world account once (LinkStudent), and mints an ordinary
+        // PCI World session for the browser to carry to /world/account. World code still never
+        // reads exam, entitlement or credential data.
+        app.MapPost("/api/me/world-passport/sso", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var s = Auth.UserFromReq(ctx.Request, db);
+            if (s is null) return Err("no_token", 401);
+            // A support "view as student" session must never mint the student's Passport session:
+            // the Passport is consent-controlled personal evidence, not case data.
+            if (s.Impersonated) return Err("impersonation_readonly", 403, "This action is disabled in support view.");
+            var (err, worldId) = LinkStudent(db, s.Id, s.Email, ($"{s.FirstName} {s.LastName}").Trim());
+            if (err is not null) return Err(err, err == "email_in_use" ? 409 : 403, err == "email_in_use"
+                ? "A PCI World account with your email address is linked to a different sign-in — contact support."
+                : null);
+            var token = MintSession(db, worldId);
+            log(s.Id, "world_passport_sso", $"student #{s.Id} → world #{worldId}");
+            return J(new { ok = true, token, url = "/world/account" });
+        });
+
         // ───────────── passport ─────────────
 
         app.MapGet("/api/world/passport", (HttpContext ctx) =>
@@ -418,7 +476,53 @@ public static class WorldAccount
                 show_scores = show.Scores, show_profiles = show.Profiles, show_dates = show.Dates,
                 expires_at = H.Str(me["passport_expires_at"])?.Split(' ')[0],
                 expired = WorldPassport.Expired(me),
+                has_photo = !string.IsNullOrEmpty(H.Str(me["passport_photo_ref"])),
             });
+        });
+
+        // The optional Passport photograph. Uploading is the consent — it exists only because the
+        // owner chose it, it is served publicly only through the published token, and removing it
+        // (or the account) erases the stored bytes, not just the reference. Images only, through
+        // Core/Storage's sniff/size/traversal guards like every other binary artefact.
+        app.MapPost("/api/world/passport/photo", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var old = H.Str(db.QueryOne("SELECT passport_photo_ref FROM pciworld_users WHERE id=?", u.Id)
+                ?["passport_photo_ref"]);
+            if (H.GetEl(b, "remove") is { ValueKind: JsonValueKind.True })
+            {
+                if (!string.IsNullOrEmpty(old)) Storage.DeleteOne(old);
+                db.Execute("UPDATE pciworld_users SET passport_photo_ref=NULL, passport_photo_mime=NULL WHERE id=?", u.Id);
+                return J(new { ok = true, has_photo = false });
+            }
+            if (Throttled("photo|" + u.Id, 10)) return Err("rate_limited", 429);
+            var (bytes, mime, err) = Storage.DecodeDataUri(H.GetS(b, "photo"));
+            if (err is not null) return Err(err, 400, err == "file_too_large" ? "Use an image under 3 MB." : null);
+            if (!mime.StartsWith("image/")) return Err("file_type_not_allowed", 400, "Use a JPEG, PNG or WebP image.");
+            var obj = Storage.Put(bytes!, mime, "world-passport");
+            // Content-addressed store: replacing with the same picture yields the same reference,
+            // in which case the "old" file IS the new one and must not be deleted.
+            if (!string.IsNullOrEmpty(old) && old != obj.Reference) Storage.DeleteOne(old);
+            db.Execute("UPDATE pciworld_users SET passport_photo_ref=?, passport_photo_mime=? WHERE id=?",
+                obj.Reference, mime, u.Id);
+            log(null, "world_passport_photo", $"#{u.Id}");
+            return J(new { ok = true, has_photo = true });
+        });
+
+        // The owner's own preview. Authenticated by the X-World-Account header — which an <img>
+        // navigation never sends — so the account page fetches it as a blob.
+        app.MapGet("/api/world/passport/photo", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var r = db.QueryOne("SELECT passport_photo_ref, passport_photo_mime FROM pciworld_users WHERE id=?", u.Id);
+            var got = Storage.Get(H.Str(r?["passport_photo_ref"]));
+            if (got is null || got.Value.bytes is null) return Err("not_found", 404);
+            return Results.File(got.Value.bytes!, H.Str(r?["passport_photo_mime"]) ?? got.Value.mime);
         });
 
         // Field-level disclosure and link expiry. Consent is not a single switch: a person can be
@@ -506,8 +610,22 @@ public static class WorldAccount
             var verifyUrl = WorldUrl.Abs(ctx.Request, "/world/p/" + token);
             return Results.Content(
                 WorldPages.PublicPassport(db, H.Str(u["display_name"]) ?? "PCI World participant", rows,
-                    WorldPassport.Disclosure.From(u), verifyUrl, token, H.Str(u["passport_expires_at"])),
+                    WorldPassport.Disclosure.From(u), verifyUrl, token, H.Str(u["passport_expires_at"]),
+                    string.IsNullOrEmpty(H.Str(u["passport_photo_ref"])) ? null : $"/world/p/{token}/photo"),
                 "text/html; charset=utf-8");
+        });
+
+        // The Passport photograph, addressed by the same revocable token as the page itself:
+        // unpublishing, rotating and expiry all cut off the image at the same instant they cut
+        // off the record it belongs to.
+        app.MapGet("/world/p/{token}/photo", (string token) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = PassportByToken(token);
+            if (u is null) return Results.NotFound();
+            var got = Storage.Get(H.Str(u["passport_photo_ref"]));
+            if (got is null || got.Value.bytes is null) return Results.NotFound();
+            return Results.File(got.Value.bytes!, H.Str(u["passport_photo_mime"]) ?? got.Value.mime);
         });
 
         // The same Passport as a one-page document. It carries the verification QR and says plainly

@@ -154,11 +154,43 @@ export default function Profile() {
         />
       </Card>
 
+      <PassportCard />
       <DirectorySettings />
       <TwoFactorCard />
       <AccountPrivacyCard />
       <CommPreferences />
     </div>
+  )
+}
+
+/** One login for everything: opens the student's PCI World Passport, creating or linking the
+ * world account on first use — no separate sign-in, password or registration. The Passport page
+ * itself manages the photograph, publication and field-level disclosure. */
+function PassportCard() {
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  async function open() {
+    setBusy(true)
+    setErr(null)
+    try {
+      const r = await api.post<{ token: string; url?: string }>('/api/me/world-passport/sso', {})
+      localStorage.setItem('world_account', r.token)
+      window.location.assign(r.url || '/world/account')
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Could not open your Passport.')
+      setBusy(false)
+    }
+  }
+  return (
+    <Card title="PCI World Passport">
+      <p className="muted small" style={{ marginTop: 0 }}>
+        Your Passport is verified practice evidence from PCI World challenges — with your photograph, if you
+        choose to add one. It opens with this login; no separate account or password is needed. Upload or
+        remove your photo, choose exactly what is published, and share one verifiable link from the Passport page.
+      </p>
+      {err && <ErrorNote>{err}</ErrorNote>}
+      <button className="btn" disabled={busy} onClick={open}>{busy ? 'Opening…' : 'Open my Passport'}</button>
+    </Card>
   )
 }
 

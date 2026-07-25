@@ -354,8 +354,16 @@ public static class WorldPages
         .ppt-top{position:relative;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:30px}
         .ppt-top .wordmark{font-family:var(--display);font-weight:900;font-size:19px;letter-spacing:-.03em;color:#fff;white-space:nowrap}
         .ppt-top .bar{width:2px;height:24px;background:var(--crimson);border-radius:2px;flex:0 0 auto}
+        /* The endorsement after the crimson rule — the same lockup the header draws: PCI World,
+           the red line, then who it is from. */
+        .ppt-top .ppt-from{font-weight:600;font-size:11.5px;letter-spacing:.02em;color:#94A3B8;
+             line-height:1.25;max-width:150px}
         .ppt-top .ppt-word{margin-left:auto;font-weight:700;font-size:12px;letter-spacing:.42em;
              text-transform:uppercase;color:var(--gilt);padding-left:4px}
+        /* The owner's photograph, framed like the artefact's other engraved elements. */
+        .ppt-photo{flex:0 0 auto;width:112px;height:140px;object-fit:cover;border-radius:9px;
+             border:1px solid rgba(200,162,75,.6);box-shadow:0 0 0 5px rgba(200,162,75,.12);
+             display:block;background:#0A101C}
         .ppt-kicker{position:relative;display:block;font-weight:700;font-size:11.5px;letter-spacing:.22em;
              text-transform:uppercase;color:var(--gilt);margin-bottom:12px}
         .ppt-name{position:relative;font-family:var(--display);font-weight:800;font-size:clamp(30px,4.8vw,46px);
@@ -401,6 +409,7 @@ public static class WorldPages
           .ppt-cover{padding:28px 22px 24px}
           .ppt-stats>div{padding-right:22px;margin-right:22px}
           .ppt-stats b{font-size:31px}
+          .ppt-photo{width:88px;height:110px}
           .defn>div{grid-template-columns:1fr;gap:4px}
         }
         .crumbs{font-size:14px;color:var(--slate);margin-bottom:18px}
@@ -654,6 +663,7 @@ public static class WorldPages
               <div class="ppt-lines" aria-hidden="true"></div>
               <div class="ppt-top">
                 <span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span>
+                <span class="ppt-from">From the Project<br>Controls Institute</span>
                 {SealSvg(66)}
                 <span class="ppt-word">Passport</span>
               </div>
@@ -1257,7 +1267,8 @@ public static class WorldPages
     /// <summary>Public Passport: consent-based, name-led, evidence only — never an email, never an
     /// answer, never presented as a credential.</summary>
     public static string PublicPassport(Db db, string name, List<Dictionary<string, object?>> rows,
-        WorldPassport.Disclosure? show = null, string? verifyUrl = null, string? token = null, string? expiresAt = null)
+        WorldPassport.Disclosure? show = null, string? verifyUrl = null, string? token = null, string? expiresAt = null,
+        string? photoUrl = null)
     {
         // Field-level disclosure is enforced HERE, at render, not by hiding columns in CSS: a value
         // the owner did not publish never reaches the page at all.
@@ -1301,9 +1312,11 @@ public static class WorldPages
               <div class="ppt-lines" aria-hidden="true"></div>
               <div class="ppt-top">
                 <span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span>
+                <span class="ppt-from">From the Project<br>Controls Institute</span>
                 <span class="ppt-word">Passport</span>
               </div>
               <div style="position:relative;display:flex;gap:28px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+                {(photoUrl is null ? "" : $"<img class=\"ppt-photo\" src=\"{E(photoUrl)}\" alt=\"Photograph of {E(name)}, provided by the Passport owner\">")}
                 <div style="flex:1;min-width:240px">
                   <span class="ppt-kicker">Verified virtual project experience</span>
                   <h1 class="ppt-name">{E(name)}</h1>
@@ -1638,8 +1651,10 @@ public static class WorldPages
             var h='<div class="ppt-cover">'+
               '<div class="ppt-lines" aria-hidden="true"></div>'+
               '<div class="ppt-top"><span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span>'+
+              '<span class="ppt-from">From the Project<br>Controls Institute</span>'+
               '<span class="ppt-word">Passport</span></div>'+
               '<div style="position:relative;display:flex;gap:28px;flex-wrap:wrap;align-items:center;justify-content:space-between">'+
+              (p.has_photo?'<img id="photoPrev" class="ppt-photo" alt="Your Passport photograph">':'')+
               '<div style="flex:1;min-width:240px"><span class="ppt-kicker">Verified virtual project experience</span>'+
               '<h2 class="ppt-name" style="font-size:clamp(26px,4vw,38px)">'+esc(p.display_name||'Unnamed participant')+'</h2>'+
               '<p class="ppt-sub">'+(p.passport_public?'Published — anyone with your link sees the live record.':'Private — nothing is public until you publish.')+'</p></div>'+
@@ -1664,6 +1679,16 @@ public static class WorldPages
               '<p style="margin-top:12px"><button class="btn secondary" id="saveName">Save name</button> '+
               (p.email_verified?'<span class="ok">Email verified.</span>'
                 :'<span class="bad">Email not verified.</span> <button class="btn secondary" id="resend">Resend verification</button>')+'</p>'+
+              // The optional photograph. Uploading it is the consent to show it: it appears on the
+              // cover above and on the public page while published, and Remove deletes the stored
+              // image itself, not just the link to it.
+              '<label for="photoFile">Passport photograph (optional &mdash; shown on your public Passport)</label>'+
+              '<input id="photoFile" type="file" accept="image/jpeg,image/png,image/webp">'+
+              '<p style="margin-top:12px"><button class="btn secondary" id="photoUp">'+
+              (p.has_photo?'Replace photo':'Upload photo')+'</button> '+
+              (p.has_photo?'<button class="btn secondary" id="photoRm">Remove photo</button> ':'')+
+              '<span id="photomsg" role="status"></span></p>'+
+              '<p><small>JPEG, PNG or WebP, up to 3&nbsp;MB. Removing it deletes the image &mdash; it is not kept anywhere.</small></p>'+
               '<p style="margin-top:16px">'+
               (p.passport_public
                 ?'<button class="btn secondary" id="unpub">Make Passport private</button>'
@@ -1750,6 +1775,29 @@ public static class WorldPages
             $('me').innerHTML=h;
             $('saveName').addEventListener('click',function(){
               api('/api/world/account/profile',{display_name:$('dn').value}).then(load);
+            });
+            // The cover preview is authenticated by the account header, which an <img> navigation
+            // never sends — so it is fetched as a blob, the same way the data export is.
+            if($('photoPrev')){
+              fetch('/api/world/passport/photo',{headers:{'X-World-Account':localStorage.getItem(KEY)||''}})
+                .then(function(r){if(!r.ok)throw r;return r.blob();})
+                .then(function(b){$('photoPrev').src=URL.createObjectURL(b);})
+                .catch(function(){});
+            }
+            $('photoUp').addEventListener('click',function(){
+              var f=($('photoFile').files||[])[0];
+              if(!f){$('photomsg').textContent='Choose an image first.';return;}
+              var rd=new FileReader();
+              rd.onload=function(){
+                api('/api/world/passport/photo',{photo:rd.result})
+                  .then(load)
+                  .catch(function(e2){$('photomsg').textContent=(e2&&e2.message)||(e2&&e2.error)||'Could not upload the photo.';});
+              };
+              rd.readAsDataURL(f);
+            });
+            if($('photoRm'))$('photoRm').addEventListener('click',function(){
+              api('/api/world/passport/photo',{remove:true}).then(load)
+                .catch(function(){$('photomsg').textContent='Could not remove the photo.';});
             });
             if($('resend'))$('resend').addEventListener('click',function(){
               api('/api/world/account/resend-verification',{}).then(function(){$('acctmsg').textContent='Verification email sent.';});
