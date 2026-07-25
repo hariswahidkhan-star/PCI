@@ -492,6 +492,11 @@ public static class Migrate
         AddCol("fee_waivers", "appeal_id", "appeal_id INTEGER");
         AddCol("fee_waivers", "evidence_ref", "evidence_ref TEXT");
         AddCol("fee_waivers", "payable_amount", "payable_amount DECIMAL(12,2)");
+        // RES-026 — waiver idempotency: a client-supplied request key makes every waiver grant safe to
+        // retry across network/process boundaries. The unique index is the race backstop: two concurrent
+        // requests with one key can settle at most one ledger row; the loser replays the winner's outcome.
+        AddCol("fee_waivers", "idempotency_key", "idempotency_key VARCHAR(80)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_fee_waivers_idem ON fee_waivers(idempotency_key)");
 
         // Authorization links so history + policy join cleanly.
         AddCol("exam_bookings", "authorization_id", "authorization_id INTEGER");

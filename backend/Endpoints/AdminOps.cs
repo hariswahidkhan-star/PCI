@@ -43,6 +43,26 @@ public static class AdminOps
         IResult J(object o) => Results.Json(o);
         IResult Err(int code, string error, string? message = null) => Results.Json(new { error, message }, statusCode: code);
 
+        // RES-026 — replay a previously settled waiver by its client idempotency key. Returns null when
+        // the key is unseen (proceed normally); 409 when the key belongs to a different student (a key
+        // must never bridge subjects); otherwise the original grant's outcome with replay:true.
+        IResult? WaiverReplay(string key, long userId)
+        {
+            var w = db.QueryOne("SELECT * FROM fee_waivers WHERE idempotency_key=?", key);
+            if (w is null) return null;
+            if (H.L(w["user_id"]) != userId) return Err(409, "idempotency_key_conflict", "This idempotency key was already used for a different student.");
+            if (H.Str(w["kind"]) == "partial" && w["code_id"] is not null)
+            {
+                var code = db.QueryOne("SELECT code,discount_value,end_date FROM discount_codes WHERE id=?", H.L(w["code_id"]));
+                return J(new { ok = true, kind = "partial", code = H.Str(code?["code"]), percent = H.D(code?["discount_value"]),
+                    original = H.D(w["original_amount"]), waived_amount = H.D(w["waived_amount"]), payable = H.D(w["final_amount"]),
+                    expires = H.Str(w["expires_at"]), replay = true });
+            }
+            return J(new { ok = true, kind = H.Str(w["kind"]) ?? "full", payment_id = w["payment_id"] is null ? (long?)null : H.L(w["payment_id"]),
+                fee_type = H.Str(w["fee_type"]), original = H.D(w["original_amount"]), waived_amount = H.D(w["waived_amount"]),
+                payable = H.D(w["payable_amount"] ?? w["final_amount"]), replay = true });
+        }
+
         // ================= mark as paid (offline settlement) =================
         app.MapPost("/api/admin/students/{id}/mark-paid", (HttpContext ctx, long id) => gate(ctx.Request, "finance", adm =>
         {
@@ -118,6 +138,13 @@ public static class AdminOps
             var expires = (H.GetS(b, "expires") ?? "").Trim();       // yyyy-MM-dd for partial-waiver codes
             var listPrice = Settlement.ListPrice(db, product);
 
+            // RES-026 — durable request identity: a retried waiver (network blip, double-click, worker
+            // replay) must not settle twice. When the client sends idempotency_key, an existing ledger
+            // row with that key replays the original outcome instead of granting again.
+            var idem = (H.GetS(b, "idempotency_key") ?? "").Trim();
+            if (idem.Length > 80) return Err(400, "bad_idempotency_key");
+            if (idem.Length > 0 && WaiverReplay(idem, id) is { } prior) return prior;
+
             if (percent >= 100)
             {
                 // Already-entitled guard (parity with mark-paid): a full exam waiver must not grant a
@@ -135,8 +162,18 @@ public static class AdminOps
                 var payId = Settlement.Grant(db, id, H.Str(u["email"]), product, certId, 0, reference, "admin_waiver",
                     new Settlement.Meta { Note = note.Length > 0 ? note : reason, RecordedBy = adm.Id, OriginalAmount = listPrice });
                 if ((product is "exam" or "bundle") && certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
-                db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,payment_id) VALUES(?,?,?, 'full', ?, ?, 0, ?, ?, ?, ?)",
-                    id, product, certId, listPrice, listPrice, reason, note.Length > 0 ? note : null, adm.Id, payId);
+                try
+                {
+                    db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,payment_id,idempotency_key) VALUES(?,?,?, 'full', ?, ?, 0, ?, ?, ?, ?, ?)",
+                        id, product, certId, listPrice, listPrice, reason, note.Length > 0 ? note : null, adm.Id, payId, idem.Length > 0 ? idem : null);
+                }
+                catch when (idem.Length > 0 && WaiverReplay(idem, id) is not null)
+                {
+                    // Unique-key race: a concurrent request with the same key settled first. Return ITS
+                    // outcome; this request's settlement is superseded (logged for reconciliation).
+                    log(adm.Id, "fee_waiver_idem_race", $"key {idem} superseded pay {payId} (subject {id})");
+                    return WaiverReplay(idem, id)!;
+                }
                 db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Account', 'Your fee has been waived', ?)", id,
                     $"The institute has waived your {product} fee in full ({reason}). Your access is active — no payment is needed.");
                 log(adm.Id, "fee_waiver_full", $"{product} 100% ({reason}) by {adm.Id} (subject {id}) pay {payId}");
@@ -151,8 +188,18 @@ public static class AdminOps
                 VALUES(?, 'percentage', ?, ?, ?, 1, 1, 1, 'waiver', ?, 1, ?)",
                 codeStr, percent, product == "bundle" ? "all" : product, expires.Length > 0 ? expires : null, $"Partial waiver: {reason} (admin {adm.Id})", criteria);
             var waivedAmt = Math.Round(listPrice * percent / 100 * 100) / 100;
-            db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,code_id,expires_at) VALUES(?,?,?, 'partial', ?, ?, ?, ?, ?, ?, ?, ?)",
-                id, product, certId, listPrice, waivedAmt, Math.Max(0, listPrice - waivedAmt), reason, note.Length > 0 ? note : null, adm.Id, codeId, expires.Length > 0 ? expires : null);
+            try
+            {
+                db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,code_id,expires_at,idempotency_key) VALUES(?,?,?, 'partial', ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    id, product, certId, listPrice, waivedAmt, Math.Max(0, listPrice - waivedAmt), reason, note.Length > 0 ? note : null, adm.Id, codeId, expires.Length > 0 ? expires : null, idem.Length > 0 ? idem : null);
+            }
+            catch when (idem.Length > 0 && WaiverReplay(idem, id) is not null)
+            {
+                // Unique-key race: retire this request's (unreferenced) discount code and replay the winner.
+                db.Execute("UPDATE discount_codes SET active=0 WHERE id=?", codeId);
+                log(adm.Id, "fee_waiver_idem_race", $"key {idem} superseded code {codeStr} (subject {id})");
+                return WaiverReplay(idem, id)!;
+            }
             db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Account', 'A fee reduction has been applied for you', ?, 'Go to billing', '/billing')", id,
                 $"The institute has granted you a {percent:0.#}% reduction on your {product} fee ({reason}). Use code {codeStr} at checkout{(expires.Length > 0 ? $" before {expires}" : "")}.");
             log(adm.Id, "fee_waiver_partial", $"{product} {percent:0.#}% code {codeStr} ({reason}) by {adm.Id} (subject {id})");

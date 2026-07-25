@@ -94,6 +94,15 @@ jobs:
       - name: Migration versioning + lock regression (P0-6 — ledger, compatibility gate, concurrent boot)
         run: python3 tests/migration_versioning_test.py
 
+      - name: Stripe fulfillment replay-safety regression (P0-2 — paid gate, async success, replay no-op)
+        run: python3 tests/payments_replay_test.py
+
+      - name: Worker leasing regression (EXT-P0-05 — atomic claim, crash recovery, exactly-once delivery)
+        run: python3 tests/worker_leasing_test.py
+
+      - name: Waiver idempotency regression (RES-026 — durable request key on every waiver grant)
+        run: python3 tests/waiver_idempotency_test.py
+
       - name: Founding-stage suite (codes, applications, waiver settlement)
         run: python3 tests/founding_test.py
 

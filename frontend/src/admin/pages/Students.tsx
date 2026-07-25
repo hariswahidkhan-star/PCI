@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type MemberRow, type MemberDetail, type IdentityDocRow } from '../api'
 import { Card, StatusBadge, Badge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
@@ -595,13 +595,17 @@ function WaiveCard({ id, onDone }: { id: number; onDone: () => void }) {
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const pct = parseFloat(percent) || 0
+  // One durable key per grant intent: a retried/double-clicked submit replays the same waiver
+  // server-side instead of granting twice; a fresh key is minted only after a confirmed success.
+  const idemRef = useRef(`wvr-${crypto.randomUUID()}`)
   async function go() {
     if (!reason.trim()) { setMsg({ ok: false, text: 'A reason is required — every waiver must record why.' }); return }
     setBusy(true); setMsg(null)
     try {
-      const body: Record<string, unknown> = { product, percent: pct || 100, reason: reason.trim(), note: note || undefined }
+      const body: Record<string, unknown> = { product, percent: pct || 100, reason: reason.trim(), note: note || undefined, idempotency_key: idemRef.current }
       if (pct < 100 && expires) body.expires = expires
       const r = await adminApi.post<{ kind: string; payment_id?: number; code?: string; percent?: number; payable?: number }>(`/api/admin/students/${id}/waive`, body)
+      idemRef.current = `wvr-${crypto.randomUUID()}`
       setMsg({
         ok: true,
         text: r.kind === 'full'
