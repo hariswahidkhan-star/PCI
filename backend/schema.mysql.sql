@@ -12,15 +12,15 @@ CREATE TABLE IF NOT EXISTS users (
   first_name TEXT, last_name TEXT,
   registration_no TEXT,
   password_hash TEXT,                       -- set by user via secure link; never an emailed plain password
-  role TEXT NOT NULL DEFAULT 'student',
-  status TEXT NOT NULL DEFAULT 'pending',   -- pending | active | deactivated
+  role TEXT NOT NULL DEFAULT ('student'),
+  status TEXT NOT NULL DEFAULT ('pending'),   -- pending | active | deactivated
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE TABLE IF NOT EXISTS enrollment_sessions (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   email TEXT NOT NULL, user_id BIGINT,
   current_step BIGINT DEFAULT 1,
-  session_status TEXT DEFAULT 'in_progress',-- in_progress | paid | abandoned
+  session_status TEXT DEFAULT ('in_progress'),-- in_progress | paid | abandoned
   resume_token_hash TEXT, resume_token_expiry TEXT,
   selected_product TEXT,                     -- membership | exam | bundle
   selected_membership TEXT,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS student_profiles (
 );
 CREATE TABLE IF NOT EXISTS pricing_rules (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  currency TEXT DEFAULT 'USD', product_type TEXT,           -- membership | exam | renewal | retake
+  currency TEXT DEFAULT ('USD'), product_type TEXT,           -- membership | exam | renewal | retake
   standard_price DECIMAL(12,2), default_discount_percentage DOUBLE DEFAULT 0,
   active BIGINT DEFAULT 1, start_date TEXT, end_date TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
@@ -50,11 +50,11 @@ CREATE TABLE IF NOT EXISTS discount_codes (
   code VARCHAR(500) UNIQUE NOT NULL,
   discount_type TEXT,                        -- percentage | fixed
   discount_value DECIMAL(12,2),
-  applies_to TEXT DEFAULT 'all',             -- membership | exam | all
+  applies_to TEXT DEFAULT ('all'),             -- membership | exam | all
   start_date TEXT, end_date TEXT,
   max_uses BIGINT, used_count BIGINT DEFAULT 0,
   single_use_per_email BIGINT DEFAULT 0, active BIGINT DEFAULT 1,
-  code_type TEXT DEFAULT 'general',          -- general | institution | student | referral | campaign
+  code_type TEXT DEFAULT ('general'),          -- general | institution | student | referral | campaign
   org_name TEXT,                             -- institution / employer the code was issued to
   owner_user_id BIGINT,                     -- referral: the member who owns this code
   batch_id TEXT,                             -- set when generated in bulk
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS payments (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT, enrollment_session_id BIGINT,
   product_type TEXT, standard_amount DECIMAL(12,2), default_discount_amount DECIMAL(12,2),
-  discount_code TEXT, discount_code_amount DECIMAL(12,2), final_amount DECIMAL(12,2), currency TEXT DEFAULT 'USD',
+  discount_code TEXT, discount_code_amount DECIMAL(12,2), final_amount DECIMAL(12,2), currency TEXT DEFAULT ('USD'),
   payment_provider TEXT, provider_payment_id TEXT,
   payment_status TEXT,                       -- paid | failed | refunded
   payment_date TEXT, invoice_url TEXT, receipt_url TEXT,
@@ -86,14 +86,14 @@ CREATE TABLE IF NOT EXISTS payments (
 CREATE TABLE IF NOT EXISTS memberships (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT NOT NULL,
-  membership_type TEXT, status TEXT DEFAULT 'inactive',   -- inactive | active | expired
+  membership_type TEXT, status TEXT DEFAULT ('inactive'),   -- inactive | active | expired
   start_date TEXT, expiry_date TEXT,
-  renewal_fee DECIMAL(12,2) DEFAULT 99, renewal_cycle TEXT DEFAULT '3 years',
-  amount_paid DECIMAL(12,2), currency TEXT DEFAULT 'USD'
+  renewal_fee DECIMAL(12,2) DEFAULT 99, renewal_cycle TEXT DEFAULT ('3 years'),
+  amount_paid DECIMAL(12,2), currency TEXT DEFAULT ('USD')
 );
 CREATE TABLE IF NOT EXISTS login_tokens (
   id BIGINT PRIMARY KEY AUTO_INCREMENT, user_id BIGINT NOT NULL,
-  token VARCHAR(500) UNIQUE NOT NULL, purpose TEXT DEFAULT 'set_password',
+  token VARCHAR(500) UNIQUE NOT NULL, purpose TEXT DEFAULT ('set_password'),
   expires_at TEXT, used_at TEXT, created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE TABLE IF NOT EXISTS email_logs (
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS reviews (
   rating BIGINT,                 -- 1..5
   title TEXT,
   body TEXT NOT NULL,
-  status TEXT DEFAULT 'pending',  -- pending | published | rejected
+  status TEXT DEFAULT ('pending'),  -- pending | published | rejected
   featured BIGINT DEFAULT 0,     -- show on the home page
   sort_order BIGINT DEFAULT 0,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS exam_entitlements (
   payment_id BIGINT,
   product_type TEXT,
   certification_id BIGINT DEFAULT 1,
-  status TEXT DEFAULT 'available',   -- available | booked | consumed | expired | refunded
+  status TEXT DEFAULT ('available'),   -- available | booked | consumed | expired | refunded
   valid_until TEXT,
   booking_id BIGINT,
   attempt_id BIGINT,
@@ -171,7 +171,7 @@ CREATE INDEX IF NOT EXISTS ix_consents_user ON candidate_consents(user_id, conse
 -- Stripe webhook idempotency ledger (records processing before side effects).
 CREATE TABLE IF NOT EXISTS webhook_events (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  provider TEXT DEFAULT 'stripe',
+  provider TEXT DEFAULT ('stripe'),
   event_id TEXT,
   processed_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
   status TEXT, error TEXT
@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS appeals (
   type TEXT NOT NULL,                -- result_appeal | invalidation_appeal | complaint | ethics
   reason TEXT NOT NULL,
   evidence_name TEXT, evidence_data TEXT,   -- optional small supporting file (data URI, size-capped)
-  status TEXT DEFAULT 'submitted',   -- submitted | under_review | upheld | dismissed | withdrawn
+  status TEXT DEFAULT ('submitted'),   -- submitted | under_review | upheld | dismissed | withdrawn
   submitted_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
   decision TEXT, decided_by BIGINT, decided_at TEXT
 );
@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXISTS accommodation_requests (
   request_type TEXT NOT NULL,        -- extra_time | separate_setting | assistive_technology | other
   description TEXT NOT NULL,
   evidence_name TEXT, evidence_data TEXT,
-  status TEXT DEFAULT 'submitted',   -- submitted | under_review | approved | rejected
+  status TEXT DEFAULT ('submitted'),   -- submitted | under_review | approved | rejected
   approved_extra_minutes BIGINT DEFAULT 0,
   admin_note TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
@@ -269,10 +269,10 @@ INSERT IGNORE INTO discount_codes (code,discount_type,discount_value,applies_to,
 -- Inquiries (contact / info / corporate / partnership) with auto-response tracking
 CREATE TABLE IF NOT EXISTS inquiries (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  type TEXT DEFAULT 'general',               -- general | info | corporate | partnership
+  type TEXT DEFAULT ('general'),               -- general | info | corporate | partnership
   email TEXT NOT NULL, first_name TEXT,
   topic TEXT, seats TEXT, org TEXT, message TEXT,
-  reference TEXT, status TEXT DEFAULT 'new', -- new | in_progress | closed
+  reference TEXT, status TEXT DEFAULT ('new'), -- new | in_progress | closed
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 
@@ -282,9 +282,9 @@ CREATE TABLE IF NOT EXISTS issued_credentials (
   credential_id VARCHAR(500) UNIQUE NOT NULL,            -- e.g. PCP-AI-2026-04821
   user_id BIGINT,
   attempt_id BIGINT,
-  holder_name TEXT, credential TEXT DEFAULT 'PCP-AI',
+  holder_name TEXT, credential TEXT DEFAULT ('PCP-AI'),
   certification_id BIGINT DEFAULT 1,
-  status TEXT DEFAULT 'active',                  -- active | expired | revoked
+  status TEXT DEFAULT ('active'),                  -- active | expired | revoked
   issued_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), expires_at TEXT
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ux_credential_attempt ON issued_credentials(attempt_id);
@@ -304,7 +304,7 @@ CREATE TABLE IF NOT EXISTS pages (
 CREATE TABLE IF NOT EXISTS page_blocks (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   slug TEXT NOT NULL, block_key TEXT NOT NULL,
-  label TEXT, ctype TEXT DEFAULT 'text', cvalue TEXT,
+  label TEXT, ctype TEXT DEFAULT ('text'), cvalue TEXT,
   sort_order BIGINT DEFAULT 0,
   updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
@@ -312,12 +312,12 @@ CREATE UNIQUE INDEX IF NOT EXISTS ux_page_block ON page_blocks(slug(191), block_
 CREATE INDEX IF NOT EXISTS ix_page_block_slug ON page_blocks(slug(191));
 CREATE TABLE IF NOT EXISTS site_content (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  ckey VARCHAR(500) UNIQUE NOT NULL, cgroup TEXT, label TEXT, ctype TEXT DEFAULT 'text', cvalue TEXT,
+  ckey VARCHAR(500) UNIQUE NOT NULL, cgroup TEXT, label TEXT, ctype TEXT DEFAULT ('text'), cvalue TEXT,
   updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE TABLE IF NOT EXISTS faqs (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  question VARCHAR(500) NOT NULL UNIQUE, answer TEXT, category TEXT DEFAULT 'General',
+  question VARCHAR(500) NOT NULL UNIQUE, answer TEXT, category TEXT DEFAULT ('General'),
   sort_order BIGINT DEFAULT 0, published BIGINT DEFAULT 1
 );
 CREATE TABLE IF NOT EXISTS bok_domains (
@@ -337,11 +337,11 @@ CREATE TABLE IF NOT EXISTS sample_questions (
 CREATE TABLE IF NOT EXISTS practice_attempts (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT NOT NULL,
-  mode TEXT NOT NULL DEFAULT 'quiz',          -- quiz | mock
+  mode TEXT NOT NULL DEFAULT ('quiz'),          -- quiz | mock
   domain TEXT,                                -- null = mixed
   question_ids TEXT, answers TEXT,            -- JSON: served id order, and {qid:index}
   score BIGINT, total BIGINT, domain_breakdown TEXT,
-  status TEXT NOT NULL DEFAULT 'in_progress', -- in_progress | completed
+  status TEXT NOT NULL DEFAULT ('in_progress'), -- in_progress | completed
   duration_seconds BIGINT,
   started_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), completed_at TEXT
 );
@@ -349,11 +349,11 @@ CREATE INDEX IF NOT EXISTS ix_practice_user ON practice_attempts(user_id);
 -- ERP / integrations foundation (Phase 9): durable event outbox + connector registry + delivery ledger.
 CREATE TABLE IF NOT EXISTS integrations (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  provider TEXT NOT NULL DEFAULT 'webhook',    -- webhook (generic) | future ERP connectors
+  provider TEXT NOT NULL DEFAULT ('webhook'),    -- webhook (generic) | future ERP connectors
   name TEXT, enabled BIGINT DEFAULT 0,
   endpoint_url TEXT, secret TEXT,              -- secret is write-only via the API (never returned)
   event_filter TEXT,                           -- JSON array of event types; empty/null = all
-  config TEXT, status TEXT DEFAULT 'idle', last_delivery_at TEXT,
+  config TEXT, status TEXT DEFAULT ('idle'), last_delivery_at TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE TABLE IF NOT EXISTS integration_events (
@@ -366,7 +366,7 @@ CREATE INDEX IF NOT EXISTS ix_intevent_created ON integration_events(created_at(
 CREATE TABLE IF NOT EXISTS integration_deliveries (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   event_id BIGINT NOT NULL, integration_id BIGINT NOT NULL,
-  status TEXT NOT NULL DEFAULT 'pending',      -- pending | delivered | failed
+  status TEXT NOT NULL DEFAULT ('pending'),      -- pending | delivered | failed
   attempts BIGINT DEFAULT 0, response_code BIGINT, last_error TEXT, next_attempt_at TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
@@ -398,11 +398,11 @@ INSERT IGNORE INTO certifications(id,code,name,description,expiry_years,sort_ord
          'The integrated project-controls credential: planning, cost engineering, project finance and the governed use of AI.',3,1);
 CREATE TABLE IF NOT EXISTS governance_roles (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  role VARCHAR(500) NOT NULL UNIQUE, holder TEXT, status TEXT DEFAULT 'open', remit TEXT, sort_order BIGINT DEFAULT 0
+  role VARCHAR(500) NOT NULL UNIQUE, holder TEXT, status TEXT DEFAULT ('open'), remit TEXT, sort_order BIGINT DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS resources (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  title TEXT NOT NULL, category TEXT, doc_type TEXT DEFAULT 'PDF', url TEXT, description TEXT,
+  title TEXT NOT NULL, category TEXT, doc_type TEXT DEFAULT ('PDF'), url TEXT, description TEXT,
   published BIGINT DEFAULT 1, sort_order BIGINT DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS news (
@@ -411,16 +411,16 @@ CREATE TABLE IF NOT EXISTS news (
 );
 CREATE TABLE IF NOT EXISTS nav_items (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  label TEXT NOT NULL, url TEXT, nav_group TEXT DEFAULT 'Footer', sort_order BIGINT DEFAULT 0, visible BIGINT DEFAULT 1
+  label TEXT NOT NULL, url TEXT, nav_group TEXT DEFAULT ('Footer'), sort_order BIGINT DEFAULT 0, visible BIGINT DEFAULT 1
 );
 CREATE TABLE IF NOT EXISTS newsletter_subscribers (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  email VARCHAR(500) UNIQUE NOT NULL, status TEXT DEFAULT 'subscribed', created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+  email VARCHAR(500) UNIQUE NOT NULL, status TEXT DEFAULT ('subscribed'), created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE TABLE IF NOT EXISTS form_submissions (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   form_type TEXT, name TEXT, email TEXT, subject TEXT, message TEXT, reference TEXT,
-  status TEXT DEFAULT 'new', created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+  status TEXT DEFAULT ('new'), created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE TABLE IF NOT EXISTS media_assets (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -776,7 +776,7 @@ CREATE TABLE IF NOT EXISTS exam_bookings (
   user_id BIGINT NOT NULL, payment_id BIGINT,
   certification_id BIGINT DEFAULT 1,
   scheduled_at TEXT NOT NULL, timezone TEXT,
-  status TEXT DEFAULT 'scheduled',           -- scheduled | completed | missed | cancelled
+  status TEXT DEFAULT ('scheduled'),           -- scheduled | completed | missed | cancelled
   reschedule_count BIGINT DEFAULT 0,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
@@ -785,23 +785,23 @@ CREATE TABLE IF NOT EXISTS exam_attempts (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT NOT NULL, booking_id BIGINT,
   certification_id BIGINT DEFAULT 1,
-  kind TEXT DEFAULT 'exam',                  -- exam | practice
+  kind TEXT DEFAULT ('exam'),                  -- exam | practice
   violations BIGINT DEFAULT 0,
   started_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), submitted_at TEXT,
   duration_minutes BIGINT DEFAULT 90,
   item_ids TEXT, answers TEXT,
   score DOUBLE, max_score DOUBLE, percent DOUBLE, result TEXT,   -- pass | fail
   domain_breakdown TEXT,
-  status TEXT DEFAULT 'in_progress',           -- in_progress | submitted | expired
-  result_status TEXT DEFAULT 'not_started', hold_reason TEXT, released_at TEXT, answer_key_version TEXT, bank_version TEXT
+  status TEXT DEFAULT ('in_progress'),           -- in_progress | submitted | expired
+  result_status TEXT DEFAULT ('not_started'), hold_reason TEXT, released_at TEXT, answer_key_version TEXT, bank_version TEXT
 );
 CREATE INDEX IF NOT EXISTS ix_attempts_user ON exam_attempts(user_id);
 CREATE TABLE IF NOT EXISTS tickets (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT NOT NULL, reference VARCHAR(500) UNIQUE,
-  subject TEXT NOT NULL, category TEXT DEFAULT 'General',
-  status TEXT DEFAULT 'open',                -- open | awaiting_student | resolved | closed
-  priority TEXT DEFAULT 'normal',
+  subject TEXT NOT NULL, category TEXT DEFAULT ('General'),
+  status TEXT DEFAULT ('open'),                -- open | awaiting_student | resolved | closed
+  priority TEXT DEFAULT ('normal'),
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE TABLE IF NOT EXISTS ticket_messages (
@@ -818,27 +818,27 @@ CREATE TABLE IF NOT EXISTS cpd_entries (
   user_id BIGINT NOT NULL, activity_date TEXT, category TEXT,
   hours DOUBLE DEFAULT 0, description TEXT,
   evidence_name TEXT, evidence_data TEXT, admin_note TEXT, reviewed_by BIGINT, reviewed_at TEXT,
-  status TEXT DEFAULT 'recorded', created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+  status TEXT DEFAULT ('recorded'), created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_cpd_user ON cpd_entries(user_id);
 
 -- ===== panel: security, messages, enrollment resume =====
 CREATE TABLE IF NOT EXISTS login_events (
   id BIGINT PRIMARY KEY AUTO_INCREMENT, user_id BIGINT NOT NULL,
-  ip TEXT, user_agent TEXT, device TEXT, outcome TEXT DEFAULT 'success',
+  ip TEXT, user_agent TEXT, device TEXT, outcome TEXT DEFAULT ('success'),
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_login_events_user ON login_events(user_id);
 CREATE TABLE IF NOT EXISTS notifications (
   id BIGINT PRIMARY KEY AUTO_INCREMENT, user_id BIGINT,
-  category TEXT DEFAULT 'General', title TEXT NOT NULL, body TEXT,
+  category TEXT DEFAULT ('General'), title TEXT NOT NULL, body TEXT,
   cta_label TEXT, cta_route TEXT, dedupe_key TEXT,
   read_at TEXT, created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_notif_user ON notifications(user_id);
 CREATE TABLE IF NOT EXISTS account_requests (
   id BIGINT PRIMARY KEY AUTO_INCREMENT, user_id BIGINT NOT NULL,
-  kind TEXT, detail TEXT, status TEXT DEFAULT 'received', created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+  kind TEXT, detail TEXT, status TEXT DEFAULT ('received'), created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 
 -- ===== secure exam client integration: launch, proctoring, evidence, identity =====
@@ -850,13 +850,13 @@ CREATE TABLE IF NOT EXISTS exam_launch_codes (
 CREATE INDEX IF NOT EXISTS ix_launch_code ON exam_launch_codes(code(191));
 CREATE TABLE IF NOT EXISTS proctor_events (
   id BIGINT PRIMARY KEY AUTO_INCREMENT, attempt_id BIGINT NOT NULL, user_id BIGINT,
-  type TEXT NOT NULL, severity TEXT DEFAULT 'Info', detail TEXT, evidence_ref TEXT,
+  type TEXT NOT NULL, severity TEXT DEFAULT ('Info'), detail TEXT, evidence_ref TEXT,
   at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_proctor_attempt ON proctor_events(attempt_id);
 CREATE TABLE IF NOT EXISTS exam_evidence (
   id BIGINT PRIMARY KEY AUTO_INCREMENT, attempt_id BIGINT NOT NULL, user_id BIGINT,
-  kind TEXT, mime TEXT DEFAULT 'image/jpeg', data_uri TEXT, storage_ref TEXT, size_bytes BIGINT, sha256 TEXT, note TEXT,
+  kind TEXT, mime TEXT DEFAULT ('image/jpeg'), data_uri TEXT, storage_ref TEXT, size_bytes BIGINT, sha256 TEXT, note TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_evidence_attempt ON exam_evidence(attempt_id);
@@ -868,7 +868,7 @@ CREATE TABLE IF NOT EXISTS identity_checks (
 
 CREATE TABLE IF NOT EXISTS proctor_messages (
   id BIGINT PRIMARY KEY AUTO_INCREMENT, attempt_id BIGINT NOT NULL, user_id BIGINT,
-  sender TEXT NOT NULL DEFAULT 'proctor',            -- proctor | candidate
+  sender TEXT NOT NULL DEFAULT ('proctor'),            -- proctor | candidate
   body TEXT NOT NULL, created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), delivered_at TEXT
 );
 CREATE INDEX IF NOT EXISTS ix_pm_attempt ON proctor_messages(attempt_id);
@@ -926,9 +926,9 @@ INSERT IGNORE INTO site_settings(skey,svalue) VALUES
 CREATE TABLE IF NOT EXISTS admin_users (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(500) UNIQUE NOT NULL, name TEXT, password_hash TEXT,
-  role TEXT NOT NULL DEFAULT 'viewer',           -- owner | website_manager | student_manager | exam_manager | custom | viewer
-  permissions TEXT DEFAULT '[]',                 -- JSON array of section ids this admin may access (custom/override)
-  status TEXT NOT NULL DEFAULT 'active',          -- active | suspended
+  role TEXT NOT NULL DEFAULT ('viewer'),           -- owner | website_manager | student_manager | exam_manager | custom | viewer
+  permissions TEXT DEFAULT ('[]'),                 -- JSON array of section ids this admin may access (custom/override)
+  status TEXT NOT NULL DEFAULT ('active'),          -- active | suspended
   must_change_pw BIGINT DEFAULT 1,
   last_login_at TEXT, created_by BIGINT, created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
@@ -971,9 +971,9 @@ CREATE INDEX IF NOT EXISTS ix_heldcert_user ON held_certifications(user_id);
 CREATE TABLE IF NOT EXISTS identity_documents (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT NOT NULL,
-  doc_kind TEXT DEFAULT 'passport',            -- passport | national_id | driving_licence | other
+  doc_kind TEXT DEFAULT ('passport'),            -- passport | national_id | driving_licence | other
   filename TEXT, mime TEXT, size_bytes BIGINT, storage_ref TEXT, sha256 TEXT,
-  status TEXT NOT NULL DEFAULT 'submitted',
+  status TEXT NOT NULL DEFAULT ('submitted'),
   review_note TEXT, reviewed_by BIGINT, reviewed_at TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
@@ -991,7 +991,7 @@ CREATE TABLE IF NOT EXISTS founding_applications (
   declared_qualification TEXT,
   evidence_ref TEXT,                         -- Storage reference (local:/s3:), required
   evidence_name TEXT, evidence_mime TEXT, evidence_size BIGINT,
-  status TEXT NOT NULL DEFAULT 'pending_review', -- auto_approved | pending_review | approved | rejected | revoked
+  status TEXT NOT NULL DEFAULT ('pending_review'), -- auto_approved | pending_review | approved | rejected | revoked
   decided_by BIGINT, decided_at TEXT, admin_note TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
@@ -1007,8 +1007,8 @@ CREATE TABLE IF NOT EXISTS honorary_awards (
   recipient_name TEXT NOT NULL,
   user_id BIGINT,                           -- optional link when the recipient has an account
   citation TEXT,                             -- the board's reason (shown on certificate/verify)
-  designation TEXT DEFAULT 'Honorary Fellow (PCI)',
-  status TEXT DEFAULT 'active',              -- active | revoked
+  designation TEXT DEFAULT ('Honorary Fellow (PCI)'),
+  status TEXT DEFAULT ('active'),              -- active | revoked
   conferred_by BIGINT NOT NULL,             -- admin id (board/owner)
   conferred_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
   revoked_by BIGINT, revoked_at TEXT, revoke_reason TEXT
@@ -1027,7 +1027,7 @@ CREATE TABLE IF NOT EXISTS honorary_applications (
   highest_qualification TEXT, professional_certifications TEXT,
   relevant_experience TEXT, professional_summary TEXT,
   declaration BIGINT DEFAULT 0,
-  status TEXT NOT NULL DEFAULT 'pending_review', -- pending_review | under_review | approved | rejected
+  status TEXT NOT NULL DEFAULT ('pending_review'), -- pending_review | under_review | approved | rejected
   award_no TEXT,                             -- set on approval (links to honorary_awards.award_no)
   decided_by BIGINT, decided_at TEXT, admin_note TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
@@ -1037,7 +1037,7 @@ CREATE INDEX IF NOT EXISTS ix_honapp_status ON honorary_applications(status(191)
 CREATE TABLE IF NOT EXISTS honorary_application_documents (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   application_id BIGINT NOT NULL,
-  doc_kind TEXT DEFAULT 'supporting',        -- resume | academic | certifications | supporting
+  doc_kind TEXT DEFAULT ('supporting'),        -- resume | academic | certifications | supporting
   filename TEXT, mime TEXT, size_bytes BIGINT, storage_ref TEXT, sha256 TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
@@ -1051,7 +1051,7 @@ CREATE TABLE IF NOT EXISTS training_partners (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name TEXT NOT NULL,
   slug VARCHAR(500) UNIQUE,
-  tier TEXT NOT NULL DEFAULT 'registered',   -- registered | authorized | premier
+  tier TEXT NOT NULL DEFAULT ('registered'),   -- registered | authorized | premier
   country TEXT, region TEXT, city TEXT,
   website TEXT, logo_url TEXT,
   summary TEXT, description TEXT, specialties TEXT,
@@ -1074,7 +1074,7 @@ CREATE TABLE IF NOT EXISTS training_partner_applications (
   delivery_modes TEXT, specialties TEXT, learners_per_year BIGINT,
   description TEXT,
   declaration BIGINT DEFAULT 0,
-  status TEXT NOT NULL DEFAULT 'pending_review', -- pending_review | under_review | approved | rejected
+  status TEXT NOT NULL DEFAULT ('pending_review'), -- pending_review | under_review | approved | rejected
   proposed_tier TEXT,                        -- tier granted on approval
   partner_id BIGINT,                        -- set on approval (links to training_partners.id)
   decided_by BIGINT, decided_at TEXT, admin_note TEXT,
@@ -1085,7 +1085,7 @@ CREATE INDEX IF NOT EXISTS ix_tpapp_status ON training_partner_applications(stat
 CREATE TABLE IF NOT EXISTS training_partner_application_documents (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   application_id BIGINT NOT NULL,
-  doc_kind TEXT DEFAULT 'supporting',        -- accreditation | company_profile | curriculum | supporting
+  doc_kind TEXT DEFAULT ('supporting'),        -- accreditation | company_profile | curriculum | supporting
   filename TEXT, mime TEXT, size_bytes BIGINT, storage_ref TEXT, sha256 TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
@@ -1095,7 +1095,7 @@ CREATE INDEX IF NOT EXISTS ix_tpappdoc_app ON training_partner_application_docum
 -- sms / in_app are seams for later). Recipients/sender/enable live in site_settings, never hardcoded. =====
 CREATE TABLE IF NOT EXISTS notification_history (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  channel TEXT NOT NULL DEFAULT 'email',     -- email | sms | in_app
+  channel TEXT NOT NULL DEFAULT ('email'),     -- email | sms | in_app
   recipient TEXT, subject TEXT,
   status TEXT,                               -- sent | console | failed | skipped | disabled
   related_type TEXT, related_id BIGINT,     -- e.g. honorary_application / 42
@@ -1148,7 +1148,7 @@ CREATE TABLE IF NOT EXISTS content_i18n (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   lang TEXT NOT NULL,                         -- ko | ar | es | fr | zh | ru
   scope TEXT NOT NULL,                        -- p | g | nav | meta
-  slug TEXT NOT NULL DEFAULT '',              -- page slug for p/meta; '' for g/nav
+  slug TEXT NOT NULL DEFAULT (''),              -- page slug for p/meta; '' for g/nav
   ckey TEXT NOT NULL,                         -- block_key (t:…) | gkey (g:…) | English nav label | title|meta
   cvalue TEXT,
   updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))

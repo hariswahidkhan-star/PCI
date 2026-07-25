@@ -175,6 +175,15 @@ public sealed class Db
         // DDL (Migrate.cs idempotent statements written in SQLite dialect)
         s = s.Replace("INTEGER PRIMARY KEY AUTOINCREMENT", "BIGINT PRIMARY KEY AUTO_INCREMENT");
         s = System.Text.RegularExpressions.Regex.Replace(s, @"\bINTEGER\b", "BIGINT");
+        // Oracle MySQL permits defaults on BLOB/TEXT only when written as expressions. A quoted
+        // literal therefore needs parentheses (`TEXT DEFAULT ('active')`); MariaDB accepts the
+        // SQLite spelling directly. This applies to runtime installers as well as the base schema.
+        if (!mariaDb)
+            s = System.Text.RegularExpressions.Regex.Replace(
+                s,
+                @"\bTEXT\b(\s+NOT\s+NULL)?\s+DEFAULT\s+('(?:''|[^'])*')",
+                "TEXT$1 DEFAULT ($2)",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         // CREATE INDEX IF NOT EXISTS: valid on MariaDB, a SYNTAX ERROR on MySQL 8. Strip it ONLY for
         // MySQL, and let Exec() absorb the duplicate-key error instead — same idempotence, both
         // engines. On MariaDB the clause is load-bearing: the core schema declares some indexes both

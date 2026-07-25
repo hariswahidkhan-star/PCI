@@ -92,6 +92,14 @@ def convert(sql):
     out = re.sub(r"\bREAL\b", "DOUBLE", out)
     # ---- money: exact fixed-point on MySQL (must follow REAL→DOUBLE) ----
     out = money_as_decimal(out)
+    # ---- Oracle MySQL requires BLOB/TEXT literal defaults to be parenthesised expressions.
+    # MariaDB accepts this spelling too, so the generated schema remains portable. ----
+    out = re.sub(
+        r"\bTEXT\b(\s+NOT\s+NULL)?\s+DEFAULT\s+('(?:''|[^'])*')",
+        r"TEXT\1 DEFAULT (\2)",
+        out,
+        flags=re.IGNORECASE,
+    )
     # ---- strip inline REFERENCES: SQLite FKs here are advisory (the app enforces relationships in
     #      code); MySQL would enforce them strictly with load-order/type constraints, changing behaviour. ----
     out = re.sub(r"\s+REFERENCES\s+\w+\s*\([^)]*\)", "", out)
