@@ -60,6 +60,25 @@ this container, so the prototype PDFs render with metric-similar fallbacks — f
 and yield measurement; the release build container must install the brand fonts. WeasyPrint 69
 installed cleanly; pandoc is not needed by the new pipeline.
 
+## 3a. Re-gate addendum (batch 2 — depth expansions applied)
+
+The §3 expansion list has been partially executed and re-gated:
+
+- **PFL-AI D3** (+~1,650 words → ~8,200; 22 → 27 pp): added WE 3.2.1b annuity-due, WE 3.2.1c
+  deferred annuity, WE 3.2.2b level-principal schedule with three-shape lifetime-interest
+  comparison, topic 3.3.4 day-count conventions with worked example, WE 3.A.2 exact-date
+  discounting, +6 MCQs (now 5 per KA), SAR parallel, and figures 3.1.2 / 3.2.2 / 3.3.2 (second
+  figure per KA achieved).
+- **PML-AI D6** (+~1,480 words → ~8,340; 21 → 24 pp): added WE 6.1.2 lag re-choice, WE 6.3.1b
+  hard-cap levelling priced (second shift vs extension), the earned-schedule bridge to Domain 7,
+  advanced topic 6.A.3 PDM edge cases (SS/FF float), +8 MCQs (now 4–5 per KA), and figure 6.3.2
+  rolling-wave horizon.
+- **Harness:** 136 golden checks, all passing (was 99). Every new printed number verified; one
+  MCQ distractor set corrected pre-commit by the harness (MCQ 3.1-E).
+- **Remaining to full production depth (~15k words/domain):** more sector variation in cases,
+  6–8 MCQs per KA, SAR cadence throughout, and one further advanced worked example each — queued
+  for the production loop alongside Phase 2 domains.
+
 ## 4. Standard phase reporting
 
 1. **Sections completed:** 2 prototype domains (all 20 family sections each, where applicable).

@@ -83,6 +83,22 @@ lag labelled nothing is often an activity somebody didn't model — unresourced,
 invisible to progress measurement. Audit rule: every lag has a stated reason, and long lags
 (> 10 % of project duration) are activities in disguise.
 
+**Worked example 6.1.2 — re-choosing a dependency.**
+
+1. **Setup.** Survey work P (4 weeks) precedes report drafting Q (6 weeks), currently linked
+   `FS+2` (two weeks of data cleaning after all surveying ends). The team proposes drafting in
+   parallel as survey sections complete: `SS+1`. Compute Q's dates both ways (P starts week 0).
+2. **Formula.** FS+lag: `ES(Q) = EF(P) + lag`. SS+lag: `ES(Q) = ES(P) + lag`.
+3. **Substitution.** FS+2: `ES(Q) = 4 + 2 = 6`, `EF(Q) = 12`. SS+1: `ES(Q) = 0 + 1 = 1`,
+   `EF(Q) = 7`.
+4. **Result.** The chain finishes week **12** under FS+2 and week **7** under SS+1 — five weeks
+   earlier from one logic choice.
+5. **Interpretation.** Nothing was crashed and nobody works faster: the saving comes from
+   overlapping, and its price is rework risk if early sections change after later surveying.
+   This is why chosen logic must be visibly chosen (not fossilised as physics) — it is the
+   cheapest recovery currency the project owns (KA 6.4.2), and spending it is a risk decision,
+   not a scheduling trick.
+
 ### 6.1.3 Network rules and quality
 
 A network the passes can trust obeys checkable rules: every activity except the first has a
@@ -137,6 +153,26 @@ milestones reported to the board. The most accurate reading is:
 *Rationale:* Pins override logic: the network can be slipping while pinned milestones hold still,
 hiding negative float until it is unrecoverable. A and B mistake suppression for control; D is
 false — every pin degrades the model's predictive value.
+
+**MCQ 6.1-C `[6.1.2 · Application]`** Survey P (4 wk) feeds report Q (6 wk). Under `FS+2` the
+chain completes week 12. Re-linked `SS+1`, it completes week:
+- A. 7 ✅
+- B. 11
+- C. 12
+- D. 5
+
+*Rationale:* `ES(Q) = ES(P) + 1 = 1`, `EF(Q) = 7`. B subtracts one lag week from 12; C assumes
+logic changes nothing; D forgets Q's own duration must still run.
+
+**MCQ 6.1-D `[6.1.3 · Recall]`** A "dangle" in a schedule network is:
+- A. an activity with negative float
+- B. an activity missing a predecessor or successor link ✅
+- C. a milestone with zero duration
+- D. a lag longer than its predecessor
+
+*Rationale:* Dangles are unbound activity ends — the passes cannot constrain them, so their
+dates and float are unreliable. A describes constraint-driven lateness; C describes every
+milestone; D is unusual but legal when justified.
 
 ### Self-check — KA 6.1
 
@@ -274,6 +310,27 @@ the second crashed week buys nothing — duration stays 24. A assumes both weeks
 weeks; C forgets the crash entirely; D subtracts from the wrong baseline. (The full economics:
 KA 6.4.)
 
+**MCQ 6.2-D `[6.2.1 · Application]`** Auriga's training activity G runs ES 15–EF 17 with
+`LF` = 25. Its total float is:
+- A. 8 ✅
+- B. 10
+- C. 2
+- D. 0
+
+*Rationale:* `TF = LF − EF = 25 − 17 = 8` (equivalently `LS − ES = 23 − 15`). B ignores G's
+duration (25 − 15); C is G's duration; D confuses G with the critical path.
+
+**MCQ 6.2-E `[6.2.3 · Analysis]`** A programme's binding path shows `TF` = −3 after a
+constraint-honest pass. The professional reading is:
+- A. the software has malfunctioned — float cannot be negative
+- B. the plan, as constrained, is already three weeks late; the number sizes the recovery problem and must be reported now ✅
+- C. delete the constraints so the float returns to zero
+- D. the project will finish three weeks early
+
+*Rationale:* Negative float is the gap between what logic needs and what constraints allow —
+information, not error (A) and not good news (D). C is the pin-and-squeeze suppression this
+domain's Case B dissects; it hides the problem until it is unrecoverable.
+
 ### Self-check — KA 6.2
 
 1. *State both definitions of the critical path and why they are equivalent.* — Longest path
@@ -318,6 +375,25 @@ it in a progress meeting.
    expensive ones are overtime, second shifts and extension. A leader asks for the histogram
    *with the options priced*, not just the spike.
 
+**Worked example 6.3.1b — when the cap is hard: levelling, priced.**
+
+1. **Setup.** Now suppose the site cap is **3 crews** (a permit condition, not a preference).
+   D needs all 3 for weeks 9–15; the 4-week staging package (2 crews) must finish before E can
+   start (week 16). Delay costs USD 45,000 per week (the client's bonus forgone); a second-shift
+   waiver for the staging crew costs USD 20,000 per week. What does the leader do?
+2. **Formula.** Compare total cost of each feasible plan: pure levelling (extend) vs paid
+   capacity (second shift) vs any float-funded re-sequence.
+3. **Substitution.** Levelling: staging cannot start until D releases crews (week 16); it runs
+   weeks 16–19, E starts week 20 — project 25 → 29, cost `4 × 45,000 = 180,000`. Second shift:
+   staging runs weeks 12–15 off-shift, E starts on time — cost `4 × 20,000 = 80,000`. No
+   float-funded option exists: D's `TF` = 1 cannot host a 4-week move.
+4. **Result.** **Buy the second shift: USD 80,000** against USD 180,000 of extension — and the
+   end date holds.
+5. **Interpretation.** A hard cap converts a scheduling problem into a procurement problem. The
+   histogram's job is to surface that conversion early enough for the cheap option to exist —
+   second shifts, pre-assembly, off-site staging all have lead times of their own. Levelling
+   that silently extends the project is a decision someone should have been asked to make.
+
 > **Fig 6.3.1 — Auriga field-crew histogram, before and after smoothing.** Paired bar chart,
 > x-axis weeks 8–17, y-axis crews 0–6, cap line at 4. "Before" bars peak at 5 in weeks 9–15;
 > "after" bars max at 4, with the staging demand moved to weeks 14–16. Source: PCI original.
@@ -343,7 +419,15 @@ reported honestly to the counterparty (Domain 11's reporting ethics).
 **The principle.** Detail decays with distance: estimating month 18's tasks at daily granularity
 today manufactures precision, not knowledge. **Rolling wave** plans near-term work at execution
 detail (L4) and far work at planning packages (L3 summary), elaborating each wave as it
-approaches under change control. The honesty conditions: the far waves carry *ranged* durations
+approaches under change control.
+
+> **Fig 6.3.2 — The rolling-wave horizon.** Horizontal timeline diagram, 0–24 months. Three
+> bands: "Execution detail (L4)" covering months 0–3 with dense small task bars; "Control detail
+> (L3)" months 3–9 with medium activity bars; "Planning packages" months 9–24 with three wide
+> ranged bars carrying duration ranges (e.g. "14–18 wk"). A vertical "elaboration point" marker
+> at month 3 with an arrow showing the wave advancing. Source: PCI original. Alt text: timeline
+> showing fine-grained near-term schedule detail giving way to broad ranged planning packages in
+> the far term, with an arrow marking where packages are elaborated into detail as they approach. The honesty conditions: the far waves carry *ranged* durations
 consistent with the estimate class (bridging Domain 7's estimate classes and Domain 8's ranges);
 elaboration is an *event* with a date, an owner and a re-baselining rule (Domain 4, KA 4.3); and
 the total float shown to stakeholders reflects the planning-package uncertainty, not the false
@@ -391,6 +475,29 @@ including month 30. The strongest inference is:
 *Rationale:* Detail beyond the knowable horizon creates update churn and false confidence —
 the opposite of diligence in effect (A) and the opposite of rolling wave (D); constant churn
 makes re-baselining more likely, not less (C).
+
+**MCQ 6.3-C `[6.3.1 · Application]`** A hard 3-crew cap forces either a 4-week project extension
+(delay cost USD 45,000/week) or a second-shift waiver at USD 20,000/week for the same 4 weeks
+(end date held). The value-maximising choice and its saving are:
+- A. extend: saves USD 100,000
+- B. second shift: saves USD 100,000 ✅
+- C. second shift: saves USD 25,000
+- D. they cost the same
+
+*Rationale:* Extension costs `4 × 45,000 = 180,000`; the shift premium `4 × 20,000 = 80,000` —
+choosing the shift saves USD 100,000 and keeps the date. A picks the dearer plan; C compares one
+week only; D ignores the 65,000-per-week difference... which compounds four times.
+
+**MCQ 6.3-D `[6.3.3 · Recall]`** A legitimate planning package in a rolling-wave schedule must
+carry:
+- A. daily-level task detail for its whole span
+- B. a ranged duration consistent with its estimate class and a dated elaboration event under change control ✅
+- C. zero float, to keep pressure on the team
+- D. a pinned finish date agreed with the sponsor
+
+*Rationale:* Far-wave honesty is ranged duration plus a governed elaboration point. A is the
+manufactured precision rolling wave exists to avoid; C fabricates criticality; D is the typed
+milestone anti-pattern (Case study B).
 
 ### Self-check — KA 6.3
 
@@ -483,6 +590,15 @@ passes* under stated assumptions, each with owners for the assumptions that diff
 cheap, auditable, and — because each is a real network — they expose path migration that a
 percentage-confidence number hides.
 
+**The earned-schedule bridge.** Once cost joins schedule (Domain 7), progress data yields a
+time-based forecast: **earned schedule `ES`** asks *when the value now earned was planned to
+have been earned*, and `SPI(t) = ES / AT` (actual time) measures schedule efficiency in time
+units. If Auriga's week-22 status shows work that the baseline expected by week 20,
+`SPI(t) = 20/22 = 0.91` — the programme is running at 91 % of planned tempo, a signal the
+currency-based `SPI` famously loses late in a project. Domain 7 (KA 7.3) builds the full
+machinery; it is flagged here because schedule forecasting belongs to whoever owns the network,
+not only to the cost engineer.
+
 ### AI in this KA
 
 Machine forecasting earns trust in exactly one way: calibration. A model that ingests progress
@@ -538,6 +654,28 @@ team for an integration milestone. The schedule-sound way to join the two worlds
 requirement out. A dictates without evidence; C leaves the network blind at a convergence point;
 D destroys the team's delivery system to decorate the network.
 
+**MCQ 6.4-D `[6.4.3 · Application]`** At week 22, a programme has earned the value its baseline
+planned to earn by week 20. Its time-based schedule performance index `SPI(t)` is:
+- A. 1.10
+- B. 0.91 ✅
+- C. 0.80
+- D. 20.0
+
+*Rationale:* `SPI(t) = ES/AT = 20/22 = 0.91` — the programme delivers at 91 % of planned tempo.
+A inverts the ratio; C subtracts the two weeks from the wrong base; D reports earned schedule
+itself, not the index.
+
+**MCQ 6.4-E `[6.4.3 · Analysis]`** Compared with quoting "78 % confidence of the date", giving
+the board three fully re-run schedule scenarios is stronger because:
+- A. three numbers always beat one
+- B. each scenario is an auditable network with named assumptions, showing how the date moves and where the path migrates ✅
+- C. percentages are always statistically invalid
+- D. scenarios eliminate the need for risk analysis
+
+*Rationale:* The scenario's power is auditability and mechanism — assumptions with owners,
+visible path migration. A is numerology; C overclaims (a calibrated percentage is legitimate,
+Domain 8); D reverses the relationship — scenarios are inputs to risk analysis, not substitutes.
+
 ### Self-check — KA 6.4
 
 1. *Why does compression show diminishing returns?* — Each crash promotes the next-longest path;
@@ -568,7 +706,20 @@ change control. Two integrity rules carried from the family's controls tradition
 history (actualised dates are records), and never re-baseline to hide variance — a re-baseline
 is a governance decision with an audit trail, not a cosmetic one.
 
-### 6.A.3 Negative float and the honest schedule
+### 6.A.3 PDM edge cases: float under SS and FF links
+
+Precedence-diagram (PDM) links change how float behaves, and two edge cases bite reviewers.
+**(1) The SS-linked short successor.** P (10 weeks) `SS+2` Q (3 weeks): Q can run weeks 2–5,
+finishing seven weeks before its predecessor — legal, and correct if the dependency truly binds
+only the starts; but if Q *also* needs P's output to finish, the network is missing an FF link,
+and Q's float is fiction. Paired `SS+FF` links express "starts together, finishes together"
+honestly. **(2) Duration-driven float.** Under an FF link the successor's float depends on its
+own duration: lengthen Q and its `LS` moves *earlier* — planners who "add duration for safety"
+on FF-linked activities silently destroy their float. The audit habit: on every SS/FF link, ask
+which end of each activity the logic genuinely binds, and whether the unbound end needs its own
+link. A network is only as honest as its least-considered link type.
+
+### 6.A.4 Negative float and the honest schedule
 
 A constraint-bound network can compute `TF < 0`: the plan, as constrained, is late already.
 Negative float is information — the size of the recovery problem — and suppressing it (deleting
@@ -620,7 +771,7 @@ at a political cost several times what a computed date would have cost eighteen 
 
 **What the domain teaches here.** A typed milestone is a promise without a plan. Negative float
 is not embarrassment to be formatted away; it is the earliest, cheapest warning the programme
-will ever get (6.A.3). And the leader's protection is procedural, not heroic: milestones enter
+will ever get (6.A.4). And the leader's protection is procedural, not heroic: milestones enter
 public commitments only *after* the backward pass says they exist.
 
 ---
@@ -675,7 +826,7 @@ the recovery families and the governance step each requires.
 and resource harvesting from non-binding paths — float-policy authority; (3) crashing the binding
 path — expected-value case, budget authority; (4) fast-tracking — risk acceptance recorded in
 the register; (5) scope/acceptance renegotiation — sponsor and change control. Reporting the −2
-honestly precedes all five (6.A.3).
+honestly precedes all five (6.A.4).
 
 ## Practitioner's toolkit — Domain 6
 

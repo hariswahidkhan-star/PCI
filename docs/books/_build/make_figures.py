@@ -136,5 +136,94 @@ body = (grid + bars + axes(L, T, W - R, H - B, "Week", "Field crews")
         + f'<rect x="{L+86}" y="{T-2}" width="11" height="11" fill="{BLUE}"/><text x="{L+102}" y="{T+7}" font-size="11" fill="{INK}">After smoothing</text>')
 (PML / "fig_6_3_1.svg").write_text(svg(W, H, body))
 
+# ---- Fig 3.1.2 discount-factor curves ---------------------------------------------
+W, H, L, R, T, B = 640, 400, 76, 60, 24, 56
+def Xy(t): return L + t / 25 * (W - L - R)
+def Yd(v): return H - B - v * (H - T - B)
+grid = "".join(f'<line x1="{L}" y1="{Yd(v/10)}" x2="{W-R}" y2="{Yd(v/10)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yd(v/10)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v/10:.1f}</text>'
+               for v in range(0, 11, 2))
+xt = "".join(f'<text x="{Xy(t)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{t}</text>' for t in range(0, 26, 5))
+curves = ""
+for r, col in ((0.06, BLUE), (0.10, INK), (0.14, CRIMSON)):
+    pts = " ".join(f"{Xy(t)},{Yd(1/(1+r)**t)}" for t in range(26))
+    curves += (f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="2.4"/>'
+               f'<text x="{W-R+6}" y="{Yd(1/(1+r)**25)+4}" font-size="11" font-weight="600" fill="{col}">{int(r*100)}%</text>')
+mark = (f'<line x1="{Xy(10)}" y1="{Yd(0)}" x2="{Xy(10)}" y2="{Yd(1/1.06**10)}" stroke="{SLATE}" stroke-dasharray="4 4"/>'
+        + "".join(f'<circle cx="{Xy(10)}" cy="{Yd(1/(1+r)**10)}" r="3" fill="{c}"/>'
+                  for r, c in ((0.06, BLUE), (0.10, INK), (0.14, CRIMSON))))
+body = grid + curves + mark + axes(L, T, W - R, H - B, "Years", "Discount factor DF(t)") + xt
+(PFL / "fig_3_1_2.svg").write_text(svg(W, H, body))
+
+# ---- Fig 3.2.2 three loan shapes --------------------------------------------------
+pay = 5009635.23
+W, H, L, R, T, B = 640, 420, 84, 24, 30, 56
+def Xr(y): return L + (y - 0.5) / 12 * (W - L - R)
+def Ys(v): return H - B - v / 46000000 * (H - T - B)
+lp = [3500000 + (42000000 - 3500000 * k) * 0.06 for k in range(12)]
+bullet = [2520000] * 11 + [44520000]
+grid = "".join(f'<line x1="{L}" y1="{Ys(v)}" x2="{W-R}" y2="{Ys(v)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Ys(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v//1000000}m</text>'
+               for v in range(0, 46000001, 10000000))
+series = ""
+for vals, col, w in ((bullet, CRIMSON, 2.0), (lp, INK, 2.2), ([pay] * 12, BLUE, 2.6)):
+    pts = " ".join(f"{Xr(y+1)},{Ys(v)}" for y, v in enumerate(vals))
+    series += f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="{w}"/>'
+series += "".join(f'<circle cx="{Xr(12)}" cy="{Ys(v)}" r="3.2" fill="{c}"/>'
+                  for v, c in ((44520000, CRIMSON), (3710000, INK), (pay, BLUE)))
+xt = "".join(f'<text x="{Xr(y)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{y}</text>' for y in range(1, 13))
+leg = (f'<text x="{L+10}" y="{T+10}" font-size="11" fill="{BLUE}" font-weight="600">Annuity — interest 18.12m</text>'
+       f'<text x="{L+10}" y="{T+26}" font-size="11" fill="{INK}" font-weight="600">Level-principal — interest 16.38m</text>'
+       f'<text x="{L+10}" y="{T+42}" font-size="11" fill="{CRIMSON}" font-weight="600">Bullet — interest 30.24m, balloon yr 12</text>')
+body = grid + series + leg + axes(L, T, W - R, H - B, "Year", "Debt service (USD)") + xt
+(PFL / "fig_3_2_2.svg").write_text(svg(W, H, body))
+
+# ---- Fig 3.3.2 compound vs simple escalation --------------------------------------
+W, H, L, R, T, B = 640, 400, 84, 24, 24, 56
+def Xe(t): return L + t / 25 * (W - L - R)
+def Ye(v): return H - B - (v - 10000000) / 17000000 * (H - T - B)
+comp_pts = [(t, 10000000 * 1.04 ** t) for t in range(26)]
+simp_pts = [(t, 10000000 * (1 + 0.04 * t)) for t in range(26)]
+shade = ("M" + " L".join(f"{Xe(t)},{Ye(v)}" for t, v in comp_pts)
+         + " L" + " L".join(f"{Xe(t)},{Ye(v)}" for t, v in reversed(simp_pts)) + " Z")
+grid = "".join(f'<line x1="{L}" y1="{Ye(v)}" x2="{W-R}" y2="{Ye(v)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Ye(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v//1000000}m</text>'
+               for v in range(10000000, 27000001, 4000000))
+xt = "".join(f'<text x="{Xe(t)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{t}</text>' for t in range(0, 26, 5))
+body = (grid + f'<path d="{shade}" fill="{BLUE}" opacity="0.10"/>'
+        + f'<polyline points="{" ".join(f"{Xe(t)},{Ye(v)}" for t, v in comp_pts)}" fill="none" stroke="{BLUE}" stroke-width="2.6"/>'
+        + f'<polyline points="{" ".join(f"{Xe(t)},{Ye(v)}" for t, v in simp_pts)}" fill="none" stroke="{SLATE}" stroke-width="2.2" stroke-dasharray="6 4"/>'
+        + f'<text x="{Xe(20)}" y="{Ye(10000000*1.04**21)-10}" font-size="11.5" fill="{BLUE}" font-weight="600">Compound 4%</text>'
+        + f'<text x="{Xe(20)}" y="{Ye(10000000*(1+0.04*18))+22}" font-size="11.5" fill="{SLATE}" font-weight="600">Simple 4%</text>'
+        + f'<text x="{Xe(24.6)}" y="{Ye(23300000)}" font-size="10.5" fill="{CRIMSON}" font-weight="600" text-anchor="end">+6.66m by yr 25</text>'
+        + axes(L, T, W - R, H - B, "Years", "Escalated cost (USD)") + xt)
+(PFL / "fig_3_3_2.svg").write_text(svg(W, H, body))
+
+# ---- Fig 6.3.2 rolling-wave horizon -----------------------------------------------
+W, H, L, R, T, B = 700, 320, 30, 20, 46, 40
+def Xm(mo): return L + mo / 24 * (W - L - R)
+bars = ""
+for i in range(14):  # L4 dense small bars, months 0-3
+    x = Xm(i * 0.21 + 0.05); yy = 70 + (i % 4) * 28
+    bars += f'<rect x="{x:.1f}" y="{yy}" width="{Xm(0.18)-Xm(0):.1f}" height="16" rx="2" fill="{BLUE}"/>'
+for i in range(6):  # L3 medium bars, months 3-9
+    x = Xm(3.2 + i * 0.95); yy = 76 + (i % 3) * 34
+    bars += f'<rect x="{x:.1f}" y="{yy}" width="{Xm(0.8)-Xm(0):.1f}" height="18" rx="2" fill="{INK}" opacity="0.75"/>'
+for i, (mo, span, lab) in enumerate([(9.5, 4.4, "12–16 wk"), (14.4, 4.6, "14–18 wk"), (19.4, 4.2, "13–17 wk")]):
+    yy = 84 + i * 42
+    bars += (f'<rect x="{Xm(mo):.1f}" y="{yy}" width="{Xm(span)-Xm(0):.1f}" height="24" rx="4" fill="white" '
+             f'stroke="{SLATE}" stroke-width="1.6" stroke-dasharray="7 4"/>'
+             f'<text x="{Xm(mo+span/2):.1f}" y="{yy+16}" font-size="10.5" fill="{SLATE}" text-anchor="middle">package · {lab}</text>')
+zones = (f'<text x="{Xm(1.5)}" y="{T+12}" font-size="11" font-weight="700" fill="{BLUE}" text-anchor="middle">EXECUTION DETAIL (L4)</text>'
+         f'<text x="{Xm(6)}" y="{T+12}" font-size="11" font-weight="700" fill="{INK}" text-anchor="middle">CONTROL DETAIL (L3)</text>'
+         f'<text x="{Xm(16.5)}" y="{T+12}" font-size="11" font-weight="700" fill="{SLATE}" text-anchor="middle">PLANNING PACKAGES (ranged)</text>'
+         f'<line x1="{Xm(3)}" y1="{T+20}" x2="{Xm(3)}" y2="{H-B}" stroke="{CRIMSON}" stroke-width="2" stroke-dasharray="5 4"/>'
+         f'<text x="{Xm(3)+6}" y="{H-B-10}" font-size="10.5" fill="{CRIMSON}" font-weight="600">elaboration point — wave advances →</text>')
+axis = (f'<line x1="{L}" y1="{H-B}" x2="{W-R}" y2="{H-B}" stroke="{INK}" stroke-width="1.2"/>'
+        + "".join(f'<text x="{Xm(mo)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{mo}</text>'
+                  for mo in range(0, 25, 6))
+        + f'<text x="{(L+W-R)/2}" y="{H-B+32}" font-size="12" fill="{SLATE}" text-anchor="middle">Months</text>')
+(PML / "fig_6_3_2.svg").write_text(svg(W, H, bars + zones + axis))
+
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")

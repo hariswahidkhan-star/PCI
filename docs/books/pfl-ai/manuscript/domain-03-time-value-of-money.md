@@ -109,7 +109,8 @@ rate `r` used in this role is called the **discount rate**; choosing it is a Dom
    board discounts at 7.0 % for this risk. What is the rebate worth today?
 2. **Formula.** `PV(x) = x / (1 + r)^n`, with `x` = 500,000, `r` = 0.07, `n` = 5.
 3. **Substitution.** `PV(x) = 500,000 / 1.07⁵ = 500,000 / 1.402552`.
-4. **Result.** **USD 356,493** (356,493.09 at full precision).
+4. **Result.** **USD 356,493** (356,493.09 at full precision; indicatively ≈ SAR 1,336,849 at
+   `USD 1 ≈ SAR 3.75`).
 5. **Interpretation.** A five-year wait at 7 % costs the rebate just under 29 % of its face value.
    If a counterparty offered USD 380,000 cash today to extinguish the obligation, Kestrel should
    accept — and if offered USD 330,000, decline. `PV(x)` turns "later" into a number that can be
@@ -141,6 +142,13 @@ At `r` = 10 %:
 Two sanity rules a reviewer applies on sight: factors must **decline monotonically**, and each
 factor must equal the previous factor divided by `(1 + r)`. A factor table that violates either has
 a hard-coded cell or a broken formula — a Domain 6 model-check classic (KA 6.4).
+
+> **Fig 3.1.2 — Discount-factor curves at 6 %, 10 % and 14 %.** Line chart, x-axis years 0–25,
+> y-axis `DF(t)` 0–1. Three curves: `1/1.06^t` (reaching 0.233 at year 25), `1/1.10^t` (0.092),
+> `1/1.14^t` (0.038), labelled at the right edge. A vertical marker at year 10 shows the spread
+> (0.558 / 0.386 / 0.270). Caption: the rate choice dominates long-dated value. Source: PCI
+> original. Alt text: three downward-curving discount-factor lines showing higher rates crushing
+> far-future value toward zero over twenty-five years.
 
 **Rounding discipline.** Factors are displayed to four decimals but **calculations use full
 precision**. Multiplying a USD 900,000,000 programme cash flow by a four-decimal factor can move
@@ -199,6 +207,28 @@ affordability using simple interest "as a conservative shortcut". The analyst's 
 ≈ 6.85 versus 3.0 simple — the shortcut is anti-conservative, the opposite of the analyst's claim
 (so A is wrong); the methods diverge rather than converge (C); D is arithmetic nonsense.
 
+**MCQ 3.1-D `[3.1.3 · Recall]`** Which statement about discount factors is an invariant a
+reviewer can test without knowing the project?
+- A. `DF(t)` rises when cash flows are contracted
+- B. `DF(t+1) = DF(t) / (1 + r)` for every `t` ✅
+- C. `DF(t)` equals `1 − r × t`
+- D. factors below 0.5 indicate an error
+
+*Rationale:* Each factor is the prior factor discounted one more period — B holds for any `r`.
+A confuses risk of flows with the factor row; C is the simple-interest approximation; D is false —
+any long horizon at a normal rate passes 0.5 (see Fig 3.1.2).
+
+**MCQ 3.1-E `[3.1.2 · Application]`** At 9 %, which is worth more today: USD 400,000 in 2 years,
+or USD 470,000 in 4 years?
+- A. the 470,000 — larger amounts always win
+- B. the 400,000: PV 336,672 vs 332,960 ✅
+- C. the 470,000: PV 395,590 vs 336,672
+- D. they are equal at 9 %
+
+*Rationale:* `400,000/1.09² = 336,672`; `470,000/1.09⁴ = 332,960` — the earlier, smaller amount
+wins by USD 3,712. A ignores discounting entirely; C discounts the 470,000 across only two
+periods instead of four; D asserts an equality the arithmetic denies.
+
 ### Self-check — KA 3.1
 
 1. *Why must discount factors decline monotonically?* — Because `(1+r)^t` grows with `t` for any
@@ -253,9 +283,38 @@ USD 27,385,500 — USD 137 adrift here, but scale the stream by 100× and the dr
 Factors are display; arithmetic is full precision (KA 3.1.3).
 
 **Timing variants.** An **annuity-due** (payments in advance, common in leases and some
-availability regimes) is worth `(1 + r)` times the ordinary annuity. Misreading the payment
-convention in a concession agreement misprices the whole stream by one period's discounting —
-check the contract, not the habit (Domain 12, KA 12.2).
+availability regimes) is worth `(1 + r)` times the ordinary annuity; a **deferred annuity** starts
+after a gap and is discounted twice — as a stream, then back across the deferral. Misreading the
+payment convention in a concession agreement misprices the whole stream by one period's
+discounting — check the contract, not the habit (Domain 12, KA 12.2).
+
+**Worked example 3.2.1b — the lease quoted in advance.**
+
+1. **Setup.** Kestrel's operations base is leased at USD 500,000 per year for 5 years, payable
+   **in advance**. Discount rate 8.0 %. Value the obligation.
+2. **Formula.** `PV(due) = A × AF(r, n) × (1 + r)`, with `A` = 500,000, `r` = 0.08, `n` = 5.
+3. **Substitution.** `AF(0.08, 5) = 3.992710`; ordinary value `500,000 × 3.992710 = 1,996,355`;
+   due value `1,996,355 × 1.08`.
+4. **Result.** **USD 2,156,063** (2,156,063.42). The in-advance convention adds USD 159,708 —
+   exactly one period's discounting on the whole stream.
+5. **Interpretation.** Eight per cent of the stream's value hangs on one word in the lease.
+   Reading "payable annually in advance" as an ordinary annuity is the commonest annuity mistake
+   in diligence reviews (Domain 13, KA 13.1) — and it always flatters the tenant's model.
+
+**Worked example 3.2.1c — the deferred availability stream.**
+
+1. **Setup.** A grantor variant offers Kestrel the same USD 5,600,000 × 25-year availability
+   supplement, but with the **first payment at the end of year 4** (a three-year deferral while
+   the plant ramps up). Discount rate 8.0 %.
+2. **Formula.** `PV = A × AF(r, n) / (1 + r)^d`, `d` = 3 (the stream's own valuation point sits
+   at the end of year 3, one period before its first payment).
+3. **Substitution.** `5,600,000 × 10.674776 = 59,778,747` (the stream valued at end-year 3);
+   `59,778,747 / 1.08³ = 59,778,747 / 1.259712`.
+4. **Result.** **USD 47,454,296**.
+5. **Interpretation.** The three-year wait costs USD 12.3 million — a fifth of the stream's
+   value — which is precisely what the grantor saves by deferring. Any negotiation over payment
+   *timing* is a negotiation over value at compound rates; Case study A prices the whole family
+   of such trades.
 
 ### 3.2.2 Loan schedules
 
@@ -288,6 +347,32 @@ scheduled three ways, and a project finance leader must read all three on sight:
    balance after year 12 must be exactly zero (a residual means a formula error), and total
    principal across all rows must equal `P`. This schedule is the direct input to Kestrel's debt
    service line — and therefore to its DSCR — in Domains 6 and 10.
+
+**Worked example 3.2.2b — the same loan, level-principal.**
+
+1. **Setup.** Kestrel's ECA co-lender offers the same USD 42,000,000 over 12 years at 6.0 % but
+   on a **level-principal** schedule. Build the first two rows and the final row, and compare
+   lifetime interest across all three shapes.
+2. **Formula.** Principal each year `P/n = 42,000,000/12 = 3,500,000`; interest = opening
+   balance × 6 %; total = principal + interest.
+3. **Substitution.** Year 1: `3,500,000 + 42,000,000 × 0.06`. Year 2:
+   `3,500,000 + 38,500,000 × 0.06`. Year 12: `3,500,000 + 3,500,000 × 0.06`.
+4. **Result.** Year 1 **USD 6,020,000** · year 2 **USD 5,810,000** · year 12 **USD 3,710,000**
+   — a declining profile. Lifetime interest: level-principal **USD 16,380,000** · annuity
+   **USD 18,115,623** · bullet **USD 30,240,000**.
+5. **Interpretation.** Level-principal is the cheapest shape in total interest because principal
+   retires fastest — but its year-1 debt service is USD 1,010,365 *heavier* than the annuity's,
+   exactly when a ramping project is cash-poorest. Shape selection is a cash-timing decision, not
+   a cost minimisation: Domain 10 (KA 10.1) sizes debt against the early-year coverage this
+   choice determines.
+
+> **Fig 3.2.2 — Three shapes, one loan: annual debt service under annuity, level-principal and
+> bullet.** Line/step chart, x-axis years 1–12, y-axis USD 0–45m (log-free, broken axis note for
+> the bullet's year-12 spike). Annuity: level at 5,009,635. Level-principal: 6,020,000 declining
+> to 3,710,000. Bullet: 2,520,000 flat, then 44,520,000 at year 12. Legend with lifetime interest
+> totals (16.38m / 18.12m / 30.24m). Source: PCI original. Alt text: comparison of level,
+> declining and balloon-shaped repayment profiles for the same loan, showing the bullet's large
+> final payment.
 
 > **Fig 3.2.1 — Anatomy of an annuity loan: Kestrel's USD 42,000,000, 12 years at 6 %.** Stacked
 > bar chart, x-axis years 1–12, y-axis USD; each bar totals 5,009,635, split into an interest
@@ -380,6 +465,29 @@ factor to four decimals. The most defensible statement is:
 conservative direction (B, D wrong); materiality depends on scale, not convention (C wrong); model
 audit standards require full-precision arithmetic with display-only rounding.
 
+**MCQ 3.2-D `[3.2.1 · Application]`** A 5-year, USD 500,000-per-year lease payable **in advance**
+is valued at 8 %. Its present value is closest to:
+- A. USD 1,996,355
+- B. USD 2,156,063 ✅
+- C. USD 2,500,000
+- D. USD 1,848,477
+
+*Rationale:* Annuity-due = ordinary annuity × `(1+r)`: `500,000 × 3.992710 × 1.08 = 2,156,063`.
+A prices it as an ordinary annuity (the classic misread); C is the undiscounted total; D divides
+the ordinary value by 1.08 — the adjustment applied backwards.
+
+**MCQ 3.2-E `[3.2.2 · Analysis]`** For the same principal, tenor and rate, which repayment shape
+has the lowest lifetime interest, and why?
+- A. the annuity — its instalments are level, so interest is averaged down
+- B. the bullet — deferral shrinks the money's time exposure
+- C. level-principal — the balance falls fastest, so less principal is outstanding for less time ✅
+- D. all three are equal because rate and tenor are equal
+
+*Rationale:* Interest is rate × outstanding balance × time; level-principal retires balance
+fastest (Kestrel: 16.38m vs 18.12m annuity vs 30.24m bullet). A's "averaging" is not a
+mechanism; B reverses the truth — the bullet maximises exposure; D ignores the balance path
+entirely.
+
 ### Self-check — KA 3.2
 
 1. *What two instant checks validate any amortising schedule?* — Final closing balance exactly
@@ -393,7 +501,8 @@ audit standards require full-precision arithmetic with display-only rounding.
 
 ## Knowledge Area 3.3 — Real-world adjustments: inflation, escalation and currency
 
-*Topics: 3.3.1 nominal and real rates · 3.3.2 inflation and escalation · 3.3.3 currency effects.*
+*Topics: 3.3.1 nominal and real rates · 3.3.2 inflation and escalation · 3.3.3 currency effects ·
+3.3.4 day-count conventions.*
 
 ### 3.3.1 Nominal and real rates — the Fisher relation
 
@@ -446,6 +555,13 @@ caps and floors (Domain 7, KA 7.3; Domain 12). A model's escalation assumptions 
 contractual index and its mechanics, not a bare percentage — the toolkit's escalation register
 (3.T.3) exists for exactly this.
 
+> **Fig 3.3.2 — Compound versus simple escalation of a USD 10,000,000 cost at 4 %.** Line chart,
+> x-axis years 0–25, y-axis USD 10m–27m. Compound curve `10m × 1.04^t` reaching 26.66m at year
+> 25; simple line `10m × (1 + 0.04t)` reaching 20.0m. Shaded gap between them, annotated
+> "+6.66m by year 25". Source: PCI original. Alt text: two rising lines showing compound
+> escalation pulling away from simple escalation, with the gap between them shaded and growing
+> to a third of the total by year twenty-five.
+
 > **Fig 3.3.1 — What 3 % inflation does to USD 1,000,000 of purchasing power.** Line chart,
 > x-axis years 0–20, y-axis USD (real purchasing power of a fixed nominal 1,000,000):
 > `1,000,000 / 1.03^t`. Sample points: year 5 — 862,609; year 10 — 744,094; year 20 — 553,676.
@@ -478,6 +594,32 @@ F ≈ S × (1 + i_quote) / (1 + i_base)
    Domain 12 allocates. **Assumption honesty:** actual pegs, spreads and convertibility
    restrictions are jurisdiction- and time-specific; every currency figure in this book is
    illustrative.
+
+### 3.3.4 Day-count conventions
+
+**The problem.** "Three months' interest" is not one number. Facility agreements specify a
+**day-count convention** — how days are counted and over what year they are divided — and the
+convention moves real money on large balances:
+
+| Convention | Rule | Typical home |
+|---|---|---|
+| **30/360** | Every month 30 days, year 360 | Bonds, some term loans |
+| **actual/360** | Actual days elapsed, year 360 | Money markets, most floating-rate loans |
+| **actual/365** | Actual days elapsed, year 365 | Sterling markets, some jurisdictions |
+
+**Worked example 3.3.4 — one quarter, three conventions.**
+
+1. **Setup.** Interest accrues on Kestrel's USD 42,000,000 drawn balance at 6.0 % for one
+   calendar quarter that contains **92 actual days**. Compute the interest under each convention.
+2. **Formula.** Interest = balance × rate × (days counted / year basis).
+3. **Substitution.** 30/360: `42,000,000 × 0.06 × 90/360`. actual/360:
+   `× 92/360`. actual/365: `× 92/365`.
+4. **Result.** 30/360 **USD 630,000** · actual/365 **USD 635,178** · actual/360 **USD 644,000**.
+5. **Interpretation.** The spread between conventions is USD 14,000 on one quarter of one
+   drawdown — and actual/360 is systematically the most expensive because it counts every real
+   day over a short year. Models must implement the convention *named in the facility agreement*
+   (Domain 12), and the assumption register (3.T.1) records it per instrument; "6 % divided by
+   4" is not a convention, it is a guess.
 
 ### AI in this domain — the systematic view
 
@@ -538,6 +680,28 @@ sponsor's nominal 9 % hurdle. The result:
 inside the rate — so value is systematically understated. The consistency rule admits no threshold
 (C) and no default (D); A reverses the direction of the error.
 
+**MCQ 3.3-D `[3.3.4 · Application]`** A USD 42,000,000 balance accrues at 6 % over a 92-day
+quarter. Under **actual/360** the interest is:
+- A. USD 630,000
+- B. USD 635,178
+- C. USD 644,000 ✅
+- D. USD 620,548
+
+*Rationale:* `42,000,000 × 0.06 × 92/360 = 644,000`. A is 30/360 (90/360); B is actual/365;
+D uses 90/365 — mixing the two conventions' halves.
+
+**MCQ 3.3-E `[3.3.2 · Analysis]`** A 25-year operating model escalates O&M at "4 % simple" to
+be "conservative". The effect is:
+- A. conservative — simple escalation always overstates cost
+- B. anti-conservative — compound escalation exceeds simple by an amount that grows every year, so late-life costs are materially understated ✅
+- C. neutral — the choice only redistributes cost between years
+- D. correct — operating contracts always escalate simply
+
+*Rationale:* Escalation compounds (contracts index on last year's indexed price): by year 25 the
+compound multiple `1.04²⁵ ≈ 2.67` far exceeds the simple `2.00`. A claims the reverse; C ignores
+the widening gap; D asserts a contractual universal that KA 3.3.2's indexation discipline
+contradicts.
+
 ### Self-check — KA 3.3
 
 1. *State the consistency rule.* — Nominal flows with nominal rates, real flows with real rates;
@@ -568,6 +732,20 @@ appropriate for continuous operations revenue); and **period-end** (conservative
 default in lender base cases). The convention is an *assumption* — it belongs in the assumption
 register, it changes results by up to half a period's discounting, and model audits (Domain 13,
 KA 13.2) check that one convention is applied everywhere.
+
+**Worked example 3.A.2 — the payment on day 500.**
+
+1. **Setup.** A USD 1,000,000 completion payment falls on **day 500** from the valuation date;
+   the discount rate is 9.0 % annual. Compare exact-date discounting with the period-end habit of
+   "call it year 2".
+2. **Formula.** Exact-date: `PV = x / (1 + r)^(days/365)`.
+3. **Substitution.** `1,000,000 / 1.09^(500/365) = 1,000,000 / 1.09^1.36986`.
+4. **Result.** **USD 888,650**. "Year 2" rounding gives 841,680 — **USD 46,970 low**; "year 1"
+   gives 917,431 — USD 28,781 high.
+5. **Interpretation.** Bucketing a mid-period flow to the nearer anniversary mis-states value by
+   up to half a period's discounting — nearly 5 % here. Transaction models discount on dates;
+   period models declare mid-period or period-end explicitly and apply it everywhere. The
+   convention chosen matters less than its disclosure and consistency.
 
 ### 3.A.3 Term structures — when one rate is not enough
 
