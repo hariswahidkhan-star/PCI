@@ -14,13 +14,17 @@ builder.WebHost.ConfigureKestrel(o => o.Limits.MaxRequestBodySize = 6_000_000);
 // writable, and no explicit paths were configured, the database and uploaded files go there — so
 // attaching the disk in the dashboard is the ONLY step needed for durable data. Explicit
 // DATABASE_FILE / STORAGE_ROOT always win, and a missing or read-only /data changes nothing.
+// DATABASE_FILE is only auto-set for the SQLite provider — never invent a /data/pci.db path when
+// DB_PROVIDER=mysql (production MySQL must not silently fall back to a local SQLite file).
 try
 {
     if (Directory.Exists("/data"))
     {
         var probe = Path.Combine("/data", ".pci-write-probe");
         File.WriteAllText(probe, "ok"); File.Delete(probe);
-        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DATABASE_FILE")))
+        var bootProvider = (Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "sqlite").Trim().ToLowerInvariant();
+        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DATABASE_FILE"))
+            && bootProvider is not ("mysql" or "mariadb"))
         {
             Environment.SetEnvironmentVariable("DATABASE_FILE", "/data/pci.db");
             Console.WriteLine("[boot] persistent disk detected at /data → DATABASE_FILE=/data/pci.db");
@@ -33,6 +37,50 @@ try
     }
 }
 catch { /* /data exists but is not ours to write — keep the configured defaults */ }
+
+// ---- Production fail-closed BEFORE any DB open / migration ----
+// ConfigIssues() below still runs after Build for the full issue list, but a misconfigured
+// production host must never open SQLite, apply schema, or seed data first.
+{
+    static bool IsProductionBoot() =>
+        string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Production", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(Environment.GetEnvironmentVariable("APP_ENV"), "production", StringComparison.OrdinalIgnoreCase);
+    if (IsProductionBoot())
+    {
+        var allowInsecure = string.Equals(Environment.GetEnvironmentVariable("ALLOW_INSECURE_PRODUCTION"), "true", StringComparison.OrdinalIgnoreCase);
+        var worldOnly = string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_ONLY"), "true", StringComparison.OrdinalIgnoreCase);
+        var allowWorldSqlite = worldOnly
+            && string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_ALLOW_SQLITE"), "true", StringComparison.OrdinalIgnoreCase);
+        var dbProvider = (Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "").Trim().ToLowerInvariant();
+        if (dbProvider is not ("mysql" or "mariadb") && !allowWorldSqlite && !allowInsecure)
+        {
+            Console.WriteLine("[config] Refusing to open database: production requires DB_PROVIDER=mysql " +
+                "(or PCIWORLD_ONLY + PCIWORLD_ALLOW_SQLITE=true with an absolute DATABASE_FILE) before any schema work. " +
+                "Set ALLOW_INSECURE_PRODUCTION=true to override (not recommended).");
+            Environment.Exit(78); // EX_CONFIG
+        }
+        if (dbProvider is "mysql" or "mariadb"
+            && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING"))
+            && (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_HOST"))
+                || string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_PASSWORD")))
+            && !allowInsecure)
+        {
+            Console.WriteLine("[config] Refusing to open database: MySQL is selected but connection settings are incomplete " +
+                "(need MYSQL_HOST + MYSQL_PASSWORD, or MYSQL_CONNECTION_STRING).");
+            Environment.Exit(78);
+        }
+        if (allowWorldSqlite)
+        {
+            var dbFile = Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "";
+            if (!dbFile.StartsWith('/') && !allowInsecure)
+            {
+                Console.WriteLine("[config] Refusing to open database: PCIWORLD_ALLOW_SQLITE=true requires DATABASE_FILE " +
+                    "to be an absolute path on a persistent disk (e.g. /data/pciworld.db).");
+                Environment.Exit(78);
+            }
+        }
+    }
+}
 
 // ---- DB: open + auto-migrate (BEFORE Build so the retention hosted service can depend on it) ----
 var dbPath = Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "./pci.db";

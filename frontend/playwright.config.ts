@@ -48,7 +48,19 @@ export default defineConfig({
         url: `http://127.0.0.1:${PORT}/api/health`,
         env: {
           PORT,
-          DATABASE_FILE: './e2e_ci.db',
+          // Default remains SQLite for local/dev speed. CI job `e2e-mysql` sets
+          // E2E_DB_PROVIDER=mysql (+ MYSQL_*) so the browser suite proves the MySQL path.
+          ...(process.env.E2E_DB_PROVIDER === 'mysql' || process.env.E2E_DB_PROVIDER === 'mariadb'
+            ? {
+                DB_PROVIDER: 'mysql',
+                MYSQL_HOST: process.env.MYSQL_HOST || '127.0.0.1',
+                MYSQL_PORT: process.env.MYSQL_PORT || '3306',
+                MYSQL_DATABASE: process.env.MYSQL_DATABASE || 'pci_e2e',
+                MYSQL_USER: process.env.MYSQL_USER || 'root',
+                MYSQL_PASSWORD: process.env.MYSQL_PASSWORD || 'pci',
+                MYSQL_SSL: process.env.MYSQL_SSL || 'false',
+              }
+            : { DATABASE_FILE: './e2e_ci.db' }),
           ASPNETCORE_ENVIRONMENT: 'Development',
           STRIPE_SECRET_KEY: 'sk_test_e2e_browser_suite',
           STRIPE_WEBHOOK_SECRET: 'whsec_e2e_browser_suite',

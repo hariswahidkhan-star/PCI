@@ -71,6 +71,8 @@ public static class Redirects
             || p.StartsWith("/app", StringComparison.OrdinalIgnoreCase)
             || p.StartsWith("/api", StringComparison.OrdinalIgnoreCase)
             || p.Equals("/student.html", StringComparison.OrdinalIgnoreCase)
+            || p.Equals("/student-login.html", StringComparison.OrdinalIgnoreCase)
+            || p.Equals("/student-dashboard.html", StringComparison.OrdinalIgnoreCase)
             || p.Equals("/admin.html", StringComparison.OrdinalIgnoreCase)
             || p.Equals("/exam-ui.html", StringComparison.OrdinalIgnoreCase);
     }

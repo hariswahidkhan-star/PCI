@@ -301,6 +301,7 @@ jobs:
     # webServer boots the built backend DLL and waits for /api/health, then runs the specs headless.
     # GATING since it accumulated a long unbroken green history across the coverage-programme heads —
     # a red browser run now blocks the pipeline like any other job.
+    # Default provider is still SQLite for speed; `e2e-mysql` below proves the same suite on MySQL.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -326,6 +327,56 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
+          path: |
+            frontend/playwright-report
+            frontend/test-results
+          retention-days: 30
+          if-no-files-found: ignore
+
+  e2e-mysql:
+    # Browser E2E against MySQL/MariaDB — required for the MySQL-only production posture. Chromium
+    # only (full matrix stays on the SQLite `e2e` job) so wall-clock stays reasonable while still
+    # exercising UI → API → MySQL for the critical journeys.
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mariadb:10.11
+        env: { MARIADB_ROOT_PASSWORD: root, MARIADB_DATABASE: pci_e2e, MARIADB_USER: pci, MARIADB_PASSWORD: pcipass }
+        ports: [ '3306:3306' ]
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - name: Build backend (served by Playwright's webServer)
+        working-directory: backend
+        run: dotnet build -c Release
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: 'npm', cache-dependency-path: frontend/package-lock.json }
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+      - name: Install Playwright Chromium
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Playwright E2E on MySQL (Chromium)
+        working-directory: frontend
+        env:
+          E2E_DB_PROVIDER: mysql
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_PORT: '3306'
+          MYSQL_DATABASE: pci_e2e
+          MYSQL_USER: pci
+          MYSQL_PASSWORD: pcipass
+          MYSQL_SSL: 'false'
+        run: npx playwright test --project=chromium
+      - name: Upload Playwright MySQL report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-mysql
           path: |
             frontend/playwright-report
             frontend/test-results

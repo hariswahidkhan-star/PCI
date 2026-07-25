@@ -24,6 +24,15 @@ test.describe('public site', () => {
     await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
   })
 
+  test('legacy student-login and student-dashboard pages hand off to the React portal (no auth bypass)', async ({ page }) => {
+    // DEF-AUDIT-01: the old static student-login button previously navigated to student-dashboard.html
+    // without calling /api/login. Both pages must now redirect into /app.
+    await page.goto('/student-login.html')
+    await expect(page).toHaveURL(/\/app\/login/)
+    await page.goto('/student-dashboard.html')
+    await expect(page).toHaveURL(/\/app\/?(\?|$)/)
+  })
+
   test('home page has no CRITICAL accessibility violations (axe, WCAG 2 A/AA)', async ({ page }) => {
     await page.goto('/')
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
