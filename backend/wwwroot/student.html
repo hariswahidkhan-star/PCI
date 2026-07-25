@@ -2399,7 +2399,7 @@ async function payFlow(product,label,amount,certification){
     if(product==='recert'&&D.credentials[0]){const c=D.credentials[0];const cur=new Date(c.expires_at)>now?new Date(c.expires_at).getTime():now;c.expires_at=new Date(cur+3*365*864e5).toISOString();c.status='active';
       D.payments.unshift({id:900+D.payments.length,product_type:'recert',standard_amount:99,final_amount:99,currency:'USD',payment_status:'paid',payment_provider:'stripe',payment_date:new Date().toISOString(),reference:'PCI-RC'+Date.now().toString(36).toUpperCase().slice(-5)})}
     persistD();await refresh();toast('Payment recorded — thank you','ok');go(S.route);return true});return}
-  try{const r=await api('/api/create-checkout-session',{method:'POST',body:JSON.stringify({product,email:S.me.user.email,...(certification?{certification}: {})})});if(r&&r.url)location.href=r.url;else toast('Checkout could not be created','err')}catch(e){toast('Checkout unavailable: '+(e.data&&e.data.error||e.message),'err')}
+  try{const r=await api('/api/create-checkout-session',{method:'POST',body:JSON.stringify({product,email:S.me.user.email,...(certification?{certification}: {}),idempotency_key:(crypto.randomUUID&&crypto.randomUUID())||('cs_'+Date.now()+'_'+Math.random().toString(16).slice(2))})});if(r&&r.url)location.href=r.url;else toast('Checkout could not be created','err')}catch(e){toast('Checkout unavailable: '+(e.data&&e.data.error||e.message),'err')}
 }
 /* ---------- MESSAGES CENTRE ---------- */
 async function vMessages(){const d=await api('/api/me/messages');const rows=d.rows||[];S._msgs=rows;

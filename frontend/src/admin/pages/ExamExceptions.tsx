@@ -252,7 +252,10 @@ function WaiveFeeCard({ userId, certificationId, onDone }: { userId: number; cer
 
   async function go() {
     if (!reason.trim()) { setMsg({ ok: false, text: 'A reason is required — every waiver must record why.' }); return }
+    if (busy) return
     setBusy(true); setMsg(null)
+    // Durable client key — required server-side for partial and reschedule-only waivers.
+    const idempotencyKey = crypto.randomUUID()
     try {
       const r = await adminApi.post<{ payable?: number; skips_checkout?: boolean }>('/api/admin/exam-fee-waiver', {
         user_id: userId,
@@ -264,6 +267,7 @@ function WaiveFeeCard({ userId, certificationId, onDone }: { userId: number; cer
         sponsor: sponsor || undefined,
         evidence_ref: evidence || undefined,
         expires: toIso(expires),
+        idempotency_key: idempotencyKey,
       })
       setMsg({ ok: true, text: r.skips_checkout ? `${titleCase(feeType)} fee waived — access granted (no checkout needed).` : `${titleCase(feeType)} fee waiver recorded — payable $${r.payable ?? 0}.` })
       setReason(''); setNote('')

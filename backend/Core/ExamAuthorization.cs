@@ -206,7 +206,8 @@ public static class ExamAuthorization
     /// new authorization, and records a classified exam_attempt_grants row. When a replacement is for a verified
     /// system/provider failure, pass countsAsAttempt=false so it does not consume the candidate's allowance.</summary>
     public static object GrantAttempt(Db db, long userId, long certId, string grantType, bool countsAsAttempt,
-        string? reason, string? note, long? incidentId, bool feeApplies, bool feeWaived, long? approverId)
+        string? reason, string? note, long? incidentId, bool feeApplies, bool feeWaived, long? approverId,
+        bool recordFeeWaiver = true, string feeType = "retake")
     {
         var email = H.Str(db.QueryOne("SELECT email FROM users WHERE id=?", userId)?["email"]);
         long payId;
@@ -215,14 +216,19 @@ public static class ExamAuthorization
             var reference = "GRANT-" + Security.RandomHex(5).ToUpperInvariant();
             payId = Settlement.Grant(db, userId, email, "exam", certId, 0, reference, "admin_waiver",
                 new Settlement.Meta { RecordedBy = approverId, Note = $"attempt grant: {grantType}" + (reason is { Length: > 0 } ? " — " + reason : "") });
-            try
+            // Callers that own the fee_waivers ledger row (exam-fee-waiver with idempotency) pass
+            // recordFeeWaiver=false so we do not create a duplicate complimentary ledger line.
+            if (recordFeeWaiver)
             {
-                var lp = Settlement.ListPrice(db, "exam");
-                db.Execute(@"INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,fee_type,waiver_type,original_amount,waived_amount,final_amount,payable_amount,reason,note,approved_by,payment_id,incident_id,status)
-                    VALUES(?, 'exam', ?, 'full', 'retake', ?, ?, ?, 0, 0, ?, ?, ?, ?, ?, 'granted')",
-                    userId, certId, grantType, lp, lp, reason ?? grantType, note, approverId, payId, incidentId);
+                try
+                {
+                    var lp = Settlement.ListPrice(db, "exam");
+                    db.Execute(@"INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,fee_type,waiver_type,original_amount,waived_amount,final_amount,payable_amount,reason,note,approved_by,payment_id,incident_id,status)
+                        VALUES(?, 'exam', ?, 'full', ?, ?, ?, ?, 0, 0, ?, ?, ?, ?, ?, 'granted')",
+                        userId, certId, feeType, grantType, lp, lp, reason ?? grantType, note, approverId, payId, incidentId);
+                }
+                catch { }
             }
-            catch { }
         }
         else
         {

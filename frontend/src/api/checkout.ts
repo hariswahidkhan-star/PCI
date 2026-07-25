@@ -11,6 +11,9 @@ export async function startCheckout(opts: {
   first?: string
   last?: string
 }): Promise<void> {
+  // Durable client key so a retried create (network blip / double-click) cannot open a second
+  // Stripe session or consume a second discount-code capacity hold.
+  const idempotencyKey = crypto.randomUUID()
   const res = await api.post<{ url?: string }>('/api/create-checkout-session', {
     product: opts.product,
     email: opts.email,
@@ -19,6 +22,7 @@ export async function startCheckout(opts: {
     first: opts.first,
     last: opts.last,
     portal: '1',
+    idempotency_key: idempotencyKey,
   })
   if (!res.url) throw new Error('Could not start checkout.')
   window.location.href = res.url
@@ -33,6 +37,7 @@ export function checkoutErrorMessage(e: unknown): string {
     if (body?.error === 'code_invalid' && body.message) return body.message
     // Exam purchase blocked until membership is paid — surface the server's guidance.
     if (body?.error === 'membership_required') return body.message || 'Please pay your membership fee before purchasing an exam.'
+    if (body?.error === 'idempotency_key_required') return 'Please try checkout again.'
     return 'That selection is not available right now. Please refresh and try again.'
   }
   return e instanceof Error ? e.message : 'Could not start checkout.'

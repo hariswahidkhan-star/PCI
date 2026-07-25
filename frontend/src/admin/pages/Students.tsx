@@ -597,9 +597,12 @@ function WaiveCard({ id, onDone }: { id: number; onDone: () => void }) {
   const pct = parseFloat(percent) || 0
   async function go() {
     if (!reason.trim()) { setMsg({ ok: false, text: 'A reason is required — every waiver must record why.' }); return }
+    if (busy) return
     setBusy(true); setMsg(null)
+    // Durable client key so a retried/partial network submit cannot mint a second waiver or code.
+    const idempotencyKey = crypto.randomUUID()
     try {
-      const body: Record<string, unknown> = { product, percent: pct || 100, reason: reason.trim(), note: note || undefined }
+      const body: Record<string, unknown> = { product, percent: pct || 100, reason: reason.trim(), note: note || undefined, idempotency_key: idempotencyKey }
       if (pct < 100 && expires) body.expires = expires
       const r = await adminApi.post<{ kind: string; payment_id?: number; code?: string; percent?: number; payable?: number }>(`/api/admin/students/${id}/waive`, body)
       setMsg({
