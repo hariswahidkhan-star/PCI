@@ -44,12 +44,16 @@ services:
       - key: MYSQL_SSL           # "required" for managed providers; "false" only for a private-network DB
         value: required
       # ---- data-at-rest encryption (REQUIRED in production) ----
-      # A 32-byte key (base64, hex, or a long passphrase) used to AES-256-GCM encrypt stored identity
-      # documents and displayable credentials. Production refuses to boot without it. Generate one with:
-      #   openssl rand -base64 32
-      # Store it in a vault; rotating it requires re-encrypting existing artefacts.
+      # A key used to AES-256-GCM encrypt stored identity documents and displayable credentials.
+      # Production REFUSES TO BOOT without it (exit 78), so it is generated at provision time rather
+      # than left blank: a missing value here fails every deploy until someone notices the log line.
+      # Render generates this once when the service is created and preserves it across deploys and
+      # blueprint syncs; an existing value (yours or a previous generation) is never overwritten.
+      # Treat it as a vault secret — rotating it requires re-encrypting existing artefacts, so copy
+      # it out of the dashboard and keep it. To supply your own instead, set it in the dashboard
+      # (openssl rand -base64 32) before the first deploy.
       - key: CREDENTIAL_ENCRYPTION_KEY
-        sync: false
+        generateValue: true
       # ---- fill these in on the Render dashboard (Settings → Environment) ----
       - key: APP_BASE_URL          # your public URL, e.g. https://pci-platform.onrender.com or https://www.yourdomain.org
         sync: false

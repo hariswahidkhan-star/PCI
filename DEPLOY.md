@@ -109,11 +109,38 @@ docker run -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Development pci-platform
 
 ## Boot-time guard rails (expected behaviour, not errors)
 
-In `Production` the app **refuses to start** (exit 78, each problem named in the logs) until the
-config is safe: `APP_BASE_URL` must be a public https URL, `ALLOWED_ORIGIN` must be explicit (no
-wildcard), the database path must not be temporary, and `STRIPE_WEBHOOK_SECRET` is required once
-`STRIPE_SECRET_KEY` is set. Fix the variable it names and redeploy; do not use
-`ALLOW_INSECURE_PRODUCTION` outside of an emergency.
+In `Production` (and `Staging`) the app **refuses to start** rather than run unsafely. Every problem
+is named in the logs on the line that begins `[config] Refusing to open database:` or
+`[db] refusing to start:` — read that line first; it tells you exactly which variable to fix.
+
+**The complete set of hard blockers** — all five must be satisfied or the deploy fails:
+
+| Variable | Requirement |
+|---|---|
+| `DB_PROVIDER` | must be `mysql` (or `mariadb`) — SQLite is not an approved production database |
+| `MYSQL_HOST` + `MYSQL_PASSWORD` | required (or a single `MYSQL_CONNECTION_STRING`) |
+| `APP_BASE_URL` | a public **https** URL, not loopback |
+| `ALLOWED_ORIGIN` | an explicit origin, never `*` |
+| `CREDENTIAL_ENCRYPTION_KEY` | required — encrypts identity documents and credentials at rest |
+
+Conditional blockers: `STRIPE_WEBHOOK_SECRET` once `STRIPE_SECRET_KEY` is set; `S3_BUCKET` when
+`STORAGE_PROVIDER=s3`; `ENABLE_LEGACY_ADMIN_TOKEN` must not be `true`.
+
+**Exit codes** (visible in the Render deploy log / `docker inspect`):
+
+| Code | Meaning | What to do |
+|---|---|---|
+| **78** | `EX_CONFIG` — a required variable is missing or unsafe | set the named variable, redeploy |
+| **75** | `EX_TEMPFAIL` — the database could not be opened, or the schema is newer than this build | check MySQL reachability/credentials/TLS, or deploy the matching build |
+| **70** | `EX_SOFTWARE` — schema migration failed | read the `[migrate]` line; do not retry blindly |
+
+> On Render, the values above marked `sync: false` in `render.yaml` are **blank until you fill them
+> in** (Settings → Environment). A brand-new service therefore fails its first deploy by design
+> until they are set — that is the guard rail working, not a build error. `CREDENTIAL_ENCRYPTION_KEY`
+> is generated automatically at provision time; the rest are yours to supply.
+
+Fix the variable it names and redeploy; do not use `ALLOW_INSECURE_PRODUCTION` outside of an
+emergency (it downgrades every blocker above to a warning and boots anyway).
 
 ## After first login — 3-minute checklist
 

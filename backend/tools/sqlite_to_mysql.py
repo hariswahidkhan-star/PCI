@@ -116,11 +116,52 @@ def convert(sql):
     # done by post-processing: add a default at connection level instead (simpler + safe).
     return out
 
+def table_blocks(sql):
+    """Yield (table, body) for every CREATE TABLE, delimited by balanced parentheses.
+
+    A previous version ended each block at the first "\\n)", which silently mis-parsed any
+    single-line table (e.g. `CREATE TABLE site_settings ( skey TEXT PRIMARY KEY, svalue TEXT );`):
+    with no newline before its ")", the match ran on for hundreds of lines and swallowed the
+    CREATE TABLE statements that followed. Those tables then had no entry in the column-type map,
+    so add_index_prefixes() could not know their TEXT columns and emitted MySQL-invalid indexes
+    without a key length (this is how ix_redemptions_email lost its (191) prefix and had to be
+    hand-patched into schema.mysql.sql). Balanced scanning is indifferent to line breaks; the
+    string-literal check keeps parentheses inside seed/DEFAULT text from unbalancing the count.
+    """
+    for m in re.finditer(r"CREATE TABLE(?: IF NOT EXISTS)?\s+`?(\w+)`?\s*\(", sql):
+        table = m.group(1)
+        open_paren = m.end() - 1
+        depth, in_string, i = 0, False, open_paren
+        while i < len(sql):
+            ch = sql[i]
+            if in_string:
+                if ch == "'":
+                    if i + 1 < len(sql) and sql[i + 1] == "'":
+                        i += 1          # escaped '' inside a literal
+                    else:
+                        in_string = False
+            elif ch == "-" and sql.startswith("--", i):
+                # A trailing comment may contain an unpaired apostrophe ("the board's reason") or a
+                # stray parenthesis; skip to end of line so neither is mistaken for SQL.
+                nl = sql.find("\n", i)
+                i = len(sql) if nl == -1 else nl
+                continue
+            elif ch == "'":
+                in_string = True
+            elif ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth -= 1
+                if depth == 0:
+                    yield table, sql[open_paren + 1:i]
+                    break
+            i += 1
+
+
 def add_index_prefixes(sql):
     # column type map: {table: {col: type_keyword}}
     types = {}
-    for m in re.finditer(r"CREATE TABLE(?: IF NOT EXISTS)?\s+(\w+)\s*\((.*?)\n\)", sql, re.S):
-        table, body = m.group(1), m.group(2)
+    for table, body in table_blocks(sql):
         cols = {}
         for line in body.split("\n"):
             line = line.strip().strip(",")

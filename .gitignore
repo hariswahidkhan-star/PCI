@@ -2,3 +2,7 @@
 # Local translation/working scratch (not part of the app)
 scratchpad/
 node_modules/
+
+# Python bytecode (regenerated on import; never useful in VCS)
+__pycache__/
+*.pyc

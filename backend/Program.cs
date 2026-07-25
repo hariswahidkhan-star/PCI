@@ -133,7 +133,27 @@ catch { /* /data exists but is not ours to write — keep the configured default
 
 // ---- DB: open + auto-migrate (BEFORE Build so the retention hosted service can depend on it) ----
 var dbPath = Environment.GetEnvironmentVariable("DATABASE_FILE") ?? "./pci.db";
-var db = new Db(dbPath);
+// An unopenable database is the commonest production deploy failure (wrong host, firewall, TLS,
+// credentials, database not yet created). OpenWithRetry already retries transient unavailability;
+// once it gives up the exception must not escape as an unhandled crash — the operator reading the
+// deploy log needs the cause and the fix, not a stack trace. Same posture as the migration guards
+// below: name the problem, exit with a documented code, never serve.
+Db db;
+try
+{
+    db = new Db(dbPath);
+}
+catch (Exception dbe)
+{
+    var failedProvider = (Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "sqlite").Trim().ToLowerInvariant();
+    Console.Error.WriteLine($"[db] refusing to start: cannot open the '{failedProvider}' database — {dbe.Message}");
+    if (failedProvider is "mysql" or "mariadb")
+        Console.Error.WriteLine("[db] check MYSQL_HOST/MYSQL_PORT reachability from this host, MYSQL_USER/MYSQL_PASSWORD, " +
+            "that MYSQL_DATABASE exists, and MYSQL_SSL (managed providers usually need 'required'). " +
+            "Raise MYSQL_CONNECT_RETRIES if the database is still starting up.");
+    Environment.Exit(75); // EX_TEMPFAIL — infrastructure, not code: a later attempt may succeed
+    return;
+}
 // the base schema is dialect-specific: schema.mysql.sql (generated from schema.sql) for MySQL.
 var schemaFile = db.Provider == Db.Kind.MySql ? "schema.mysql.sql" : "schema.sql";
 var schemaPath = Path.Combine(AppContext.BaseDirectory, schemaFile);
@@ -444,7 +464,14 @@ List<(string sev, string key, string msg)> ConfigIssues()
     if (prod)
     {
         var baseUrl = E("APP_BASE_URL") ?? E("SITE_BASE_URL");
-        if (string.IsNullOrEmpty(baseUrl) || baseUrl.Contains("localhost") || baseUrl.Contains("127.0.0.1")) Err("APP_BASE_URL", "must be a public HTTPS URL in production");
+        // Must match the pre-Build preflight above (which requires an absolute, non-loopback https
+        // URL): a weaker test here reported "no issues" for an http:// base URL that the preflight
+        // had already rejected, so system-check disagreed with the reason the deploy actually failed.
+        if (string.IsNullOrWhiteSpace(baseUrl)
+            || !Uri.TryCreate(baseUrl, UriKind.Absolute, out var appBaseUri)
+            || appBaseUri.Scheme != Uri.UriSchemeHttps
+            || appBaseUri.IsLoopback)
+            Err("APP_BASE_URL", "must be a public HTTPS URL in production");
         if (string.IsNullOrEmpty(E("STRIPE_SECRET_KEY"))) Warn("STRIPE_SECRET_KEY", "payments will be disabled (503) until set");
         else if (string.IsNullOrEmpty(E("STRIPE_WEBHOOK_SECRET"))) Err("STRIPE_WEBHOOK_SECRET", "required to verify webhooks when Stripe is enabled");
         if (string.IsNullOrEmpty(E("SMTP_HOST"))) Warn("SMTP_HOST", "emails will not send");
