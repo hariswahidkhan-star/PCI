@@ -169,9 +169,14 @@ describe('Billing (in-portal purchasing)', () => {
     const table = screen.getByRole('table')
     const rows = within(table).getAllByRole('row').slice(1) // drop the header row
     expect(rows).toHaveLength(2)
-    // The paid row has a Receipt button; the pending one does not.
+    // The paid row has the printable Receipt plus the universal View + Download pair for the
+    // PDF receipt; the pending row offers no document actions at all.
     expect(within(rows[0]).getByRole('button', { name: 'Receipt' })).toBeInTheDocument()
+    expect(within(rows[0]).getByRole('button', { name: 'View' })).toBeInTheDocument()
+    expect(within(rows[0]).getByRole('button', { name: 'Download' })).toBeInTheDocument()
     expect(within(rows[1]).queryByRole('button', { name: 'Receipt' })).not.toBeInTheDocument()
+    expect(within(rows[1]).queryByRole('button', { name: 'View' })).not.toBeInTheDocument()
+    expect(within(rows[1]).queryByRole('button', { name: 'Download' })).not.toBeInTheDocument()
   })
 
   it('shows the empty state when there are no payments', () => {

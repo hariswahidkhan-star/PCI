@@ -869,6 +869,24 @@ public static class Migrate
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_certdocdl_doc ON cert_document_downloads(cert_document_id)");
 
+        // Superseded-file history for books/study materials. The CURRENT file stays on cert_documents
+        // (backward compatible); every replace/restore snapshots the outgoing file here first, so a
+        // book's bytes are never silently lost and any prior version can be inspected or restored.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cert_document_versions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            cert_document_id INTEGER NOT NULL,
+            version INTEGER NOT NULL,
+            storage_ref TEXT,
+            filename VARCHAR(255),
+            mime VARCHAR(80),
+            size_bytes INTEGER,
+            sha256 VARCHAR(64),
+            replaced_by INTEGER,
+            replace_reason TEXT,
+            restored_from_id INTEGER,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_certdocver_doc ON cert_document_versions(cert_document_id)");
+
         // ── Public Downloads Centre: governance/legal/policy documents distributed to anyone, no login. ──
         // Version-chained: every version is its own row sharing a stable doc_group (the public "document ID");
         // is_current flags the live version. A public request only ever sees status='published' + visibility

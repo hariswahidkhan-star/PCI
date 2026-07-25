@@ -75,11 +75,14 @@ export default function Books() {
   }
 
   const replaceFile = async (row: BookRow, f: File) => {
+    // Optional provenance: recorded on the superseded file's history row.
+    const reason = window.prompt('Reason for replacing this file (optional):', '')
+    if (reason === null) return
     setBusy(true); setErr(''); setMsg('')
     try {
       const dataUri = await readAsDataUrl(f)
-      await adminApi.post('/api/admin/cert-documents/upload', { id: row.id, file: dataUri, filename: f.name })
-      setMsg('File replaced.'); refetch()
+      await adminApi.post('/api/admin/cert-documents/upload', { id: row.id, file: dataUri, filename: f.name, reason: reason.trim() || undefined })
+      setMsg('File replaced — the previous file is kept in the version history.'); refetch()
     } catch (e) { setErr(e instanceof Error ? e.message : 'Upload failed.') }
     finally { setBusy(false) }
   }
@@ -98,6 +101,8 @@ export default function Books() {
     catch (e) { setErr(e instanceof Error ? e.message : 'Delete failed.') }
     finally { setBusy(false) }
   }
+
+  const [history, setHistory] = useState<BookRow | null>(null)
 
   if (loading && !data) return <Spinner />
   if (error) return <ErrorNote>{error}</ErrorNote>
@@ -169,6 +174,7 @@ export default function Books() {
                       <input type="file" accept="application/pdf" style={{ display: 'none' }}
                         onChange={(e) => { const f = e.target.files?.[0]; if (f) replaceFile(r, f); e.target.value = '' }} />
                     </label>{' '}
+                    <button className="btn ghost sm" disabled={busy} onClick={() => setHistory(r)}>History</button>{' '}
                     <button className="btn ghost sm" disabled={busy} onClick={() => patch(r, { published: r.published ? 0 : 1 }, r.published ? 'Hidden.' : 'Published.')}>
                       {r.published ? 'Hide' : 'Publish'}
                     </button>{' '}
@@ -180,6 +186,87 @@ export default function Books() {
           </table>
         )}
       </Card>
+
+      {history && <BookHistoryDrawer book={history} onClose={() => setHistory(null)} onChanged={() => { refetch(); setHistory(null) }} />}
+    </div>
+  )
+}
+
+interface BookVersion {
+  id: number
+  version: number
+  filename?: string | null
+  mime?: string | null
+  size_bytes?: number | null
+  sha256?: string | null
+  replaced_by?: number | null
+  replace_reason?: string | null
+  restored_from_id?: number | null
+  created_at?: string | null
+}
+
+/** Superseded-file history for one book: every replaced file with who/why, per-version
+ *  View/Download, and Restore (which snapshots the current file first — nothing is lost). */
+function BookHistoryDrawer({ book, onClose, onChanged }: { book: BookRow; onClose: () => void; onChanged: () => void }) {
+  const { data, loading, error, refetch } = useAdminQuery<{ rows: BookVersion[] }>(`/api/admin/cert-documents/${book.id}/versions`)
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  const rows = data?.rows ?? []
+
+  async function restore(v: BookVersion) {
+    const reason = window.prompt(`Restore v${v.version} (${v.filename || 'file'}) as the current file?\nOptional reason:`)
+    if (reason === null) return
+    setBusy(true); setErr(null)
+    try {
+      await adminApi.post(`/api/admin/cert-documents/${book.id}/restore`, { version_id: v.id, reason: reason.trim() || undefined })
+      refetch(); onChanged()
+    } catch (e) { setErr(e instanceof Error ? e.message : 'Restore failed.') }
+    finally { setBusy(false) }
+  }
+
+  return (
+    <div className="drawer-backdrop" onClick={onClose}>
+      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+        <div className="spread" style={{ marginBottom: '1rem' }}>
+          <h2 style={{ margin: 0 }}>Version history — {book.title}</h2>
+          <button className="btn secondary sm" onClick={onClose}>Close</button>
+        </div>
+        {err && <ErrorNote>{err}</ErrorNote>}
+        <p className="muted small" style={{ marginTop: 0 }}>
+          Current file: <strong>{book.filename || '—'}</strong> ({fmtBytes(book.size_bytes)}).
+          Every replaced file is kept below and can be inspected or restored; restoring snapshots the
+          current file too, so no version is ever lost.
+        </p>
+        {loading && !data ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : rows.length === 0 ? (
+          <Empty>No superseded versions — this file has never been replaced.</Empty>
+        ) : (
+          <table className="data">
+            <thead><tr><th>Ver</th><th>File</th><th>Checksum</th><th>Reason</th><th>Replaced</th><th /></tr></thead>
+            <tbody>
+              {rows.map((v) => (
+                <tr key={v.id}>
+                  <td className="small">v{v.version}{v.restored_from_id != null && <div className="muted">restored</div>}</td>
+                  <td className="small">{v.filename || '—'}<div className="muted">{fmtBytes(v.size_bytes)}</div></td>
+                  <td className="small muted" title={v.sha256 ?? undefined}>{v.sha256 ? v.sha256.slice(0, 10) + '…' : '—'}</td>
+                  <td className="small muted">{v.replace_reason || '—'}</td>
+                  <td className="small muted">{v.created_at || '—'}</td>
+                  <td>
+                    <div className="row" style={{ gap: '.25rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                      <ViewDownloadActions
+                        info={{ title: `${book.title} — v${v.version}`, filename: v.filename, mime: v.mime, sizeBytes: v.size_bytes, version: v.version }}
+                        inlineUrl={`/api/admin/cert-documents/${book.id}/versions/${v.id}/file?inline=1`}
+                        downloadUrl={`/api/admin/cert-documents/${book.id}/versions/${v.id}/file`}
+                        token={adminApi.getToken()}
+                      />
+                      <button className="btn ghost sm" disabled={busy} onClick={() => { void restore(v) }}>Restore</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   )
 }

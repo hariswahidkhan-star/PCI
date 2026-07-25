@@ -1629,6 +1629,33 @@ def test_leadership_suite(admin):
     con.close()
     chk("18s downloads are audited with per-copy ids", dl[0] >= 2 and dl[1] >= 2, dl)
 
+    # ---- replacing a book file snapshots the outgoing one; history is viewable and restorable ----
+    b2uri, b2sha = _pdf_uri("suite3 handbook v2")
+    c, rep = jget("POST", "/api/admin/cert-documents/upload", token=admin,
+                  body={"id": bid, "file": b2uri, "filename": "pfl-handbook-v2.pdf", "reason": "typo fixes"})
+    chk("18s1 replacing the book's file succeeds", c == 200 and rep.get("ok") is True, rep)
+    c, hist = jget("GET", f"/api/admin/cert-documents/{bid}/versions", token=admin)
+    v1 = (hist.get("rows") or [None])[0]
+    chk("18s2 the outgoing file is snapshotted with reason + checksum",
+        c == 200 and v1 is not None and v1.get("version") == 1
+        and v1.get("replace_reason") == "typo fixes" and v1.get("sha256") == hashlib.sha256(braw).hexdigest(), v1)
+    stv, vbytes, _ = _raw_get(f"/api/admin/cert-documents/{bid}/versions/{v1['id']}/file", token=admin)
+    chk("18s3 the superseded bytes are retrievable byte-exact", stv == 200 and vbytes == braw, (stv, len(vbytes)))
+    con = dbconn(); cursha = con.execute("SELECT sha256 FROM cert_documents WHERE id=?", (bid,)).fetchone()[0]; con.close()
+    chk("18s4 the current pointer moved to the new file", cursha == b2sha, cursha)
+    c, res = jget("POST", f"/api/admin/cert-documents/{bid}/restore", token=admin,
+                  body={"version_id": v1["id"], "reason": "regression in v2"})
+    con = dbconn()
+    cursha = con.execute("SELECT sha256 FROM cert_documents WHERE id=?", (bid,)).fetchone()[0]
+    nver = con.execute("SELECT COUNT(*) FROM cert_document_versions WHERE cert_document_id=?", (bid,)).fetchone()[0]
+    con.close()
+    chk("18s5 restore brings the original bytes back and keeps BOTH snapshots (nothing lost)",
+        c == 200 and cursha == hashlib.sha256(braw).hexdigest() and nver == 2, (c, cursha, nver))
+    chk("18s6 restoring a version belonging to a different book is refused (404)",
+        jget("POST", f"/api/admin/cert-documents/{pid2}/restore", token=admin, body={"version_id": v1["id"]})[0] == 404)
+    chk("18s7 a student token cannot reach the version surface (401/403)",
+        jget("GET", f"/api/admin/cert-documents/{bid}/versions", token=stok)[0] in (401, 403))
+
     # the authored Body of Knowledge PDFs ship with the app (books/<code>-bok.pdf) and attach to the
     # seeded BoK rows at boot; an entitled candidate downloads a personalised copy immediately.
     # (Guarded: the assertions arm themselves once the authored books are committed under backend/books/.)
@@ -3448,6 +3475,7 @@ def run(proc):
     test_payment_reversal_webhooks(admin)
     test_support_attachment_idor(admin)
     test_student_evidence_viewback(admin)
+    test_receipt_pdf(admin)
     test_certificate_suspension(admin)
     test_exam_self_reschedule(admin)
     test_training_partner_application(admin)
@@ -4671,6 +4699,28 @@ def test_student_evidence_viewback(admin):
     ncp = con.execute("SELECT COUNT(*) FROM audit_logs WHERE action='cpd_evidence_view'").fetchone()[0]
     con.close()
     chk("30B-k admin evidence reads succeed and are audit-logged", st == 200 and st2 == 200 and nap >= 1 and ncp >= 1, (st, st2, nap, ncp))
+
+def test_receipt_pdf(admin):
+    # Universal document actions — a settled payment yields a downloadable PDF receipt (generated
+    # per request, never stored), own-payments-only, audit-logged, inline-capable for the viewer.
+    print("\n=== 30C. Payment receipt PDFs ===")
+    tok, uid = make_paid_user("receipt-pdf@ex.co")
+    c, inv = jget("GET", "/api/me/invoices", token=tok)
+    pay = (inv.get("rows") or [None])[0]
+    chk("30C-a the settled payment lists in invoices", c == 200 and pay is not None, inv)
+    pid = pay["id"]; ref = pay.get("reference") or f"PCI-{pid}"
+    st, body, ctype = _raw_get(f"/api/me/payments/{pid}/receipt.pdf", token=tok)
+    chk("30C-b the receipt downloads as a real PDF", st == 200 and body[:5] == b"%PDF-" and ctype.startswith("application/pdf"), (st, ctype))
+    txt = _pdf_text(body)
+    chk("30C-c the receipt carries the reference, holder email and amount",
+        ref in txt and "receipt-pdf@ex.co" in txt and "Payment receipt" in txt, txt[:160])
+    st2, body2, _ = _raw_get(f"/api/me/payments/{pid}/receipt.pdf?inline=1", token=tok)
+    chk("30C-d inline serve returns the same document for the in-app viewer", st2 == 200 and body2[:5] == b"%PDF-", st2)
+    other, _ = register_student("receipt-other@ex.co")
+    chk("30C-e another student is refused the receipt (404)", _raw_get(f"/api/me/payments/{pid}/receipt.pdf", token=other)[0] == 404)
+    chk("30C-f anonymous is refused (401)", _raw_get(f"/api/me/payments/{pid}/receipt.pdf")[0] == 401)
+    con = dbconn(); nlog = con.execute("SELECT COUNT(*) FROM audit_logs WHERE action='receipt_pdf_download'").fetchone()[0]; con.close()
+    chk("30C-g receipt downloads are audit-logged", nlog >= 2, nlog)
 
 def test_certificate_suspension(admin):
     # Incremental Testing Programme — the download gate on a SUSPENDED credential (Certificates.cs), which

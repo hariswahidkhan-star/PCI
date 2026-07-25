@@ -126,25 +126,38 @@ Results are recorded in the PR description for the exact run.
   code; no data transformation occurred. The 409 publish-lock and category protections disappear on
   rollback (they are code-level guards), everything else degrades cleanly.
 
-## 5. Remaining work (recorded, not silently dropped)
+## 5. Increment 2 (same programme, second slice)
+
+- **Books (`cert_documents`) version history + restore — DELIVERED.** New
+  `cert_document_versions` table (additive, idempotent): every replace/restore snapshots the
+  outgoing file (storage ref, filename, checksum, who, why, restored-from) before the current
+  pointer moves. Admin routes: `GET /api/admin/cert-documents/{id}/versions`,
+  `GET …/versions/{vid}/file` (logged, inline-capable),
+  `POST …/restore` `{version_id, reason?}` (snapshots the current file first — restore never
+  erases history). Admin Books page gains a per-book History drawer with per-version
+  View/Download/Restore, and Replace prompts for an optional reason. Integration assertions
+  `18s1–18s7`.
+- **Payment receipt PDFs — DELIVERED.** `GET /api/me/payments/{id}/receipt.pdf` (own settled
+  payments only: paid/waived/partially refunded) generates a selectable-text PDF per request via
+  the dependency-free `SimplePdf` (never stored), `?inline=1` for the in-app viewer, every download
+  audit-logged. Billing page pairs the existing printable copy with universal View + Download of
+  the PDF. Integration assertions `30C-a–30C-g`.
+
+## 6. Remaining work (recorded, not silently dropped)
 
 Tracked from the Phase 0 audit; in rough priority order:
-1. **`cert_documents` (books) true version chain** — replacement now logs old→new checksum and old
-   bytes remain recoverable in content-addressed storage, but there is no first-class version table
-   or restore UI for books.
-2. **Certificate custom-PDF vs regenerate** still share one `pdf_ref` with no version chain (each
+1. **Certificate custom-PDF vs regenerate** still share one `pdf_ref` with no version chain (each
    overwrite is at least audited in `certificate_downloads`). An explicit reissue workflow is the
    right long-term shape.
-3. **Server-generated Office previews** — DOCX/XLSX/PPTX currently get the honest download fallback;
+2. **Server-generated Office previews** — DOCX/XLSX/PPTX currently get the honest download fallback;
    a server-side conversion (e.g. LibreOffice worker) would enable inline preview without exposing
    files to a third-party viewer.
-4. **Upload progress via XHR** — uploads are JSON/base64 (backend contract); progress is currently
+3. **Upload progress via XHR** — uploads are JSON/base64 (backend contract); progress is currently
    indeterminate busy-state. Real per-byte progress needs an XHR/stream path.
-5. **Comms/email attachments and Events resources** — no attachment columns exist (`comm_outbox`,
+4. **Comms/email attachments and Events resources** — no attachment columns exist (`comm_outbox`,
    `events`); building them is new-feature work, inventoried in the matrix.
-6. **GDPR erasure gaps** for `documents`/`job_applications`/honorary+partner application files, and
+5. **GDPR erasure gaps** for `documents`/`job_applications`/honorary+partner application files, and
    content-addressed dedupe vs per-record delete (needs refcounting) — pre-existing, documented in
    the audit (§3.12).
-7. **Receipt/invoice PDFs** — receipts remain client-rendered printable HTML; no stored artefact.
-8. **Admin SPA i18n** — the admin panel remains English-only (pre-existing; the shared components
+6. **Admin SPA i18n** — the admin panel remains English-only (pre-existing; the shared components
    are ready via `useTSafe`).
