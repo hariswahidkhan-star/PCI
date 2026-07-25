@@ -497,6 +497,32 @@ public static class Migrate
         AddCol("fee_waivers", "idempotency_key", "idempotency_key VARCHAR(120)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_fee_waivers_idem ON fee_waivers(idempotency_key)");
 
+        // RES-001/002 — checkout reservation holds + immutable partner attribution on payments.
+        // reserved_count is capacity held by open Stripe sessions; used_count is settled redemptions.
+        AddCol("discount_codes", "reserved_count", "reserved_count INTEGER DEFAULT 0");
+        AddCol("payments", "discount_code_id", "discount_code_id INTEGER");
+        AddCol("payments", "partner_id", "partner_id INTEGER");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS checkout_reservations(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            idempotency_key VARCHAR(120) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            product_type VARCHAR(32) NOT NULL,
+            certification_id INTEGER,
+            discount_code_id INTEGER,
+            partner_id INTEGER,
+            amount_minor INTEGER NOT NULL DEFAULT 0,
+            currency VARCHAR(8) NOT NULL DEFAULT 'USD',
+            stripe_session_id VARCHAR(128),
+            status VARCHAR(16) NOT NULL DEFAULT 'reserved',
+            payment_id INTEGER,
+            expires_at TEXT NOT NULL,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_checkout_res_idem ON checkout_reservations(idempotency_key)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_checkout_res_code ON checkout_reservations(discount_code_id, status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_checkout_res_session ON checkout_reservations(stripe_session_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_payments_partner ON payments(partner_id)");
+
         // Authorization links so history + policy join cleanly.
         AddCol("exam_bookings", "authorization_id", "authorization_id INTEGER");
         AddCol("exam_entitlements", "authorization_id", "authorization_id INTEGER");

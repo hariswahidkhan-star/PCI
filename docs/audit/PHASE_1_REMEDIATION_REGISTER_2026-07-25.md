@@ -28,6 +28,8 @@ The narrative register below was authored against `codex/fix-pml-ai`. That tip i
 | ID | Change | Status |
 |----|--------|--------|
 | RES-026 | Partial and reschedule-only fee-waiver ledger idempotency (client key + unique schema guard + replay + no duplicate `fee_waiver` on full exam-fee grant) | **Testing** (local xUnit + integration assertions updated; CI/MySQL concurrency still required) |
+| RES-001 | Checkout reservation: durable client idempotency key, `checkout_reservations` table, `discount_codes.reserved_count` capacity holds converted on settle | **Testing** |
+| RES-002 | Immutable partner attribution snapshotted onto reservation → payment; commission / legacy ledger prefer `payments.partner_id` | **Testing** |
 
 ### This-cycle local verification
 
@@ -90,8 +92,8 @@ Severity reflects potential impact, not proof of exploitability. Product items m
 
 | ID | Module | Severity | Status | Notes |
 |----|--------|----------|--------|-------|
-| RES-001 | Checkout concurrency | P1 | Diagnosed | Pre-reservation/idempotency incomplete |
-| RES-002 | Partner checkout | P1 | Diagnosed | Attribution not immutable through ledger |
+| RES-001 | Checkout concurrency | P1 | **Testing (fixed this cycle)** | See §5a |
+| RES-002 | Partner checkout | P1 | **Testing (fixed this cycle)** | See §5a |
 | RES-003 | Commission lifecycle | P1 | Discovered | Full due/review/approval/dispute ledger incomplete |
 | RES-004 | Certification applications | P1 | Discovered | Complete six-route save/resume wizard incomplete |
 | RES-005 | PCI World | P1 | *Stale — product present on main* | Still needs React-migration / acceptance gates |
@@ -109,6 +111,28 @@ Severity reflects potential impact, not proof of exploitability. Product items m
 | RES-017 | Browser release gate | P1 | Blocked | Playwright must run in CI |
 | RES-018 | Backend release gate | P1 | Blocked locally previously; **build runnable here** | Full xUnit suite still needs CI artifact |
 | RES-026 | Exam waiver ledger idempotency | P1 | **Testing (fixed this cycle)** | See §5 |
+
+---
+
+## 5a. RES-001 / RES-002 remediation detail (this cycle)
+
+### Issues
+
+- Checkout create used a minute-bucket Stripe idempotency key and did not hold discount-code capacity, so concurrent checkouts could oversell `max_uses` / partner allocation at settlement.
+- Partner attribution was re-read from live `discount_codes.partner_id` at settle / in the derived admin ledger, so reassignment could restate history.
+
+### Fix
+
+- `checkout_reservations` + `discount_codes.reserved_count` + `payments.discount_code_id` / `payments.partner_id`
+- `Core/CheckoutReservation.cs` — reserve / replay / expire / settle / stamp attribution
+- `POST /api/create-checkout-session` requires client idempotency key; Stripe key = client key; capacity held before session create
+- Webhook converts hold → `used_count` (Founding-style abort if oversold); stamps payment partner snapshot
+- `PartnerCommission.EnsureForPayment` and `Partners.CommissionLedger` prefer snapshotted `payments.partner_id`
+- Student portal + classic `student.html` send `idempotency_key`
+
+### Tests
+
+`CheckoutReservationTests` (6), existing `PartnerCommissionTests` still green.
 
 ---
 

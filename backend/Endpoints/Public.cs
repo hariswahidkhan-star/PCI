@@ -78,7 +78,8 @@ public static class Public
         var today = DateTime.UtcNow.ToString("yyyy-MM-dd");
         if (H.Str(c["end_date"]) is { } ed && string.Compare(ed, today, StringComparison.Ordinal) < 0) return new("This discount code has expired.", null);
         if (H.Str(c["start_date"]) is { } sd && string.Compare(sd, today, StringComparison.Ordinal) > 0) return new("This discount code is not yet active.", null);
-        if (c["max_uses"] is not null && H.L(c["used_count"]) >= H.L(c["max_uses"])) return new("This discount code has reached its usage limit.", null);
+        if (c["max_uses"] is not null && H.L(c["used_count"]) + H.L(c.GetValueOrDefault("reserved_count")) >= H.L(c["max_uses"]))
+            return new("This discount code has reached its usage limit.", null);
         if (!string.IsNullOrEmpty(email) && (c["per_user_limit"] is not null || H.B(c["single_use_per_email"])))
         {
             var lim = c["per_user_limit"] is not null ? H.L(c["per_user_limit"]) : 1;
@@ -113,7 +114,7 @@ public static class Public
                 return new("This institution's agreement has ended; the code can no longer be used.", null);
             if (partner["total_allocation"] is not null)
             {
-                var usedTotal = db.Scalar<long>("SELECT COALESCE(SUM(dc.used_count),0) FROM discount_codes dc WHERE dc.partner_id=?", pid);
+                var usedTotal = db.Scalar<long>("SELECT COALESCE(SUM(dc.used_count + COALESCE(dc.reserved_count,0)),0) FROM discount_codes dc WHERE dc.partner_id=?", pid);
                 if (usedTotal >= H.L(partner["total_allocation"]))
                     return new("This institution's sponsorship allocation has been fully used.", null);
             }
