@@ -24,7 +24,7 @@ public static class PublicDocuments
     {
         "certification-governance", "candidate-handbooks", "application-routes", "exams",
         "privacy-and-legal", "fees-and-refunds", "marketing-partners", "institutions",
-        "accessibility", "policies", "general",
+        "accessibility", "policies", "templates", "general",
     };
     static readonly HashSet<string> Statuses = new(StringComparer.OrdinalIgnoreCase)
     { "draft", "under_review", "legal_review_required", "approved", "scheduled", "published", "superseded", "archived", "withdrawn" };

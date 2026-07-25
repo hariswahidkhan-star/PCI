@@ -19,6 +19,16 @@ public static class AdminSimLab
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log,
         Func<HttpRequest, string, Func<AdminCtx, IResult>, IResult> gate)
     {
+        // ---- authoring templates: one known-good starter config per engine task ----
+        // The Studio's config textarea is otherwise a blank page against 18 different engine contracts.
+        // Every template is proven publishable by SimTemplatesTests, so "start from template" always yields
+        // a draft that passes the validator before the author has written a word.
+        app.MapGet("/api/admin/lab/templates", (HttpRequest req) => gate(req, "sim_lab", _ =>
+            Results.Json(new
+            {
+                rows = SimTemplates.All.Select(t => new { task = t.Task, label = t.Label, hint = t.Hint, config = t.Config }),
+            })));
+
         // ---- scenario catalogue (all statuses) + per-scenario practice aggregates ----
         app.MapGet("/api/admin/lab/scenarios", (HttpRequest req) => gate(req, "sim_lab", _ =>
         {

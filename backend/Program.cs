@@ -1170,6 +1170,7 @@ app.MapPost("/api/admin/storage/purge", (HttpRequest req) =>
 // overrides fall straight through to the static-file middleware, so untouched pages pay nothing.
 var webRoot = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
 try { PCI.Backend.Data.PublicDocsSeed.Ensure(db, webRoot); } catch { } // Public Downloads Centre core documents (idempotent)
+try { PCI.Backend.Data.TemplatesLibrarySeed.Ensure(db); } catch { }     // Free Templates Library: working CSV artefacts mirroring each Lab engine (idempotent)
 PCI.Backend.Endpoints.AdminSeo.Map(app, db, logFn, GateFn, webRoot);   // Admin Console → SEO (/api/admin/seo/...)
 PCI.Backend.Endpoints.AdminAnalytics.Map(app, db, GateFn);             // Admin Console → Analytics (/api/admin/analytics/...)
 PCI.Backend.Endpoints.AdminAiVisibility.Map(app, db, logFn, GateFn, webRoot); // Admin Console → AI Visibility (/api/admin/ai-visibility/...)
