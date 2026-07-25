@@ -4563,6 +4563,15 @@ def test_simlab(admin):
     chk("43zz3 an ungradable multi-step (unresolvable measure) is blocked at approval (not_publishable)",
         c == 409 and ngb.get("error") == "not_publishable", (c, ngb.get("error")))
 
+    # Coach red-team: a different signed-in student cannot coach (or read) another student's attempt.
+    otok, _ouid = make_paid_user("simlab-coach-intruder@ex.co")
+    c, xco = jget("POST", f"/api/me/lab/attempts/{msid}/coach", token=otok,
+                  body={"answers": {}, "coach_mode": "guided", "hint_level": 6})
+    chk("43zz4 the AI coach is owner-scoped — another student cannot coach someone else's attempt (404)",
+        c == 404, (c, xco.get("error")))
+    c, xld = jget("GET", f"/api/me/lab/attempts/{msid}", token=otok)
+    chk("43zz5 another student cannot load someone else's attempt either (404)", c == 404, (c, xld.get("error")))
+
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
     # Fresh throwaway subjects so the completing "anonymise" step cannot disturb users other assertions rely on.
