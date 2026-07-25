@@ -175,7 +175,7 @@ public static class WorldSchema
             result_revoked INTEGER DEFAULT 0,
             invite_id INTEGER,
             started_at TEXT DEFAULT (datetime('now')),
-            completed_at TEXT,
+            completed_at VARCHAR(32),                      -- bounded: indexed with status, see the note there
             updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_session ON pciworld_attempts(session_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_challenge ON pciworld_attempts(challenge_id)");
@@ -315,9 +315,18 @@ public static class WorldSchema
             author_id INTEGER,                             -- pciworld_admin_users.id; NULL = house content
             approved_by INTEGER,
             review_note TEXT,
-            published_at TEXT,
+            published_at VARCHAR(32),                      -- bounded: indexed below, see the note there
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now')))");
+        // published_at is bounded rather than TEXT because it is the third column of the index below.
+        // MySQL silently prefixes a lone TEXT key at 3072 bytes, but a COMPOSITE key containing one is
+        // rejected outright (error 1071) — which aborted this whole installer on MySQL and left the
+        // newsroom tables uncreated. An ISO-8601 stamp never exceeds 32 characters.
+        if (db.Provider == Db.Kind.MySql &&
+            db.Scalar<long>(@"SELECT COUNT(*) FROM information_schema.columns
+                              WHERE table_schema=DATABASE() AND table_name='pciworld_articles'
+                                AND column_name='published_at' AND data_type='text'") > 0)
+            db.Exec("ALTER TABLE pciworld_articles MODIFY published_at VARCHAR(32)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldart_kind ON pciworld_articles(kind, status, published_at)");
 
         db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_article_versions(
@@ -407,6 +416,15 @@ public static class WorldSchema
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldusers_passport ON pciworld_users(passport_token_sha)");
         // Attempt resume: filters session_id + challenge_id + version + status together.
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_resume ON pciworld_attempts(session_id, challenge_id, version, status)");
+        // Same bounded-column rule as pciworld_articles.published_at: a composite key may not contain a
+        // TEXT column on MySQL. This one predates the editorial platform — it used to be the LAST
+        // statement to fail, so only trailing indexes were lost and the table-set parity check still
+        // passed. It has to be repaired here too, or the abort simply moves back to this line.
+        if (db.Provider == Db.Kind.MySql &&
+            db.Scalar<long>(@"SELECT COUNT(*) FROM information_schema.columns
+                              WHERE table_schema=DATABASE() AND table_name='pciworld_attempts'
+                                AND column_name='completed_at' AND data_type='text'") > 0)
+            db.Exec("ALTER TABLE pciworld_attempts MODIFY completed_at VARCHAR(32)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_completed ON pciworld_attempts(status, completed_at)");
         // Admin queues, ordered and paginated by recency.
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldaudit_at ON pciworld_audit(created_at)");

@@ -68,7 +68,6 @@ Simulation uses `simulation_*` tables only. Student/admin Lab endpoints never re
 - Full SignalR live period clock and multi-session capstone resume UI.
 - Full Arabic catalogue copy pack (RTL shell + Coach language mode shipped; full AR scenario text deferred).
 - Load test harness at 10k tasks (validation + solver coverage shipped; k6 deferred).
-- Independent multi-admin maker-checker E2E with two live admin accounts (API maker-checker covered in integration).
 - Multi-dimension scoring UI (calculation / reasoning / decision / evidence / process / communication) beyond existing competency evidence rows.
 - Bundle **import** (bulk export shipped — see below; applying a whole bundle in one action is deferred,
   since each scenario in a bundle can already be imported individually).
@@ -96,6 +95,10 @@ Simulation uses `simulation_*` tables only. Student/admin Lab endpoints never re
     two environments holding the same content produce the same bundle; the bundle checksum answers "same
     catalogue?" in one comparison while each entry keeps its own checksum to localise a difference. The
     Studio exposes it as **Export all**.
+- ~~Independent multi-admin maker-checker E2E~~ — shipped (§5B.7). `portal-simlab.spec.ts` drives two real
+  admin sessions against the same scenario: the author is refused approval in the Studio and a second,
+  `sim_lab`-only admin approves it, with the audit trail attributing the approval to the checker. The
+  Studio now explains the refusal in a sentence instead of showing the raw `maker_checker` code.
 
 ## Baseline → slice evidence
 

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { apiLoginAsDemoStudent, apiLoginAsE2EAdmin, captureStoryEvidence, preparePublicJourney, DEMO_STUDENT } from './util'
+import { apiLoginAsDemoStudent, apiLoginAsE2EAdmin, captureStoryEvidence, preparePublicJourney, uniqueEmail, DEMO_STUDENT } from './util'
 
 // Simulation Lab — student API journey + admin studio. Practice must never touch formal exam records.
 
@@ -234,5 +234,95 @@ test.describe('Simulation Lab admin studio', () => {
       headers: { Authorization: `Bearer ${studentTok}` },
     })
     expect([401, 403]).toContain(denied.status())
+  })
+})
+
+// Maker-checker is the control that gates publication of assessment content: the admin who authored a
+// scenario must not be the one who approves it. The integration suite asserts this over the API; this
+// proves it where an operator actually meets it — two real admin sessions in the Studio, one refused
+// and one allowed on the same row.
+test.describe('Simulation Lab maker-checker', () => {
+  test('the author is refused approval in the Studio and a second admin can approve the same scenario', async ({ page, context, request }, testInfo) => {
+    const authorToken = await apiLoginAsE2EAdmin(request, page)
+
+    // A publishable scenario authored by admin A, walked up to the stage before approval. Those
+    // earlier moves are the author's to make — only the approval is gated.
+    const code = `E2E-MC-${Date.now()}`
+    const create = await request.post('/api/admin/lab/scenarios', {
+      headers: { Authorization: `Bearer ${authorToken}` },
+      data: {
+        scenario_code: code,
+        title: 'E2E maker-checker scenario',
+        kind: 'scenario',
+        industry: 'Infrastructure',
+        difficulty: 'foundation',
+        synthetic_declared: true,
+        competencies: ['earned_value'],
+        config_json: {
+          task: 'evm', prompt: 'Maker-checker', given: { pv: 100, ev: 90, ac: 95, bac: 200 },
+          ask: [{ key: 'spi', label: 'SPI', type: 'number' }],
+          tolerance: 0.01, pass_pct: 70, competencies: ['earned_value'],
+        },
+      },
+    })
+    expect(create.ok(), await create.text()).toBeTruthy()
+    const id = ((await create.json()) as { id: number }).id
+    for (const to of ['calc_review', 'learning_review', 'safety_review', 'pilot']) {
+      const step = await request.post(`/api/admin/lab/scenarios/${id}/review`, {
+        headers: { Authorization: `Bearer ${authorToken}` }, data: { to },
+      })
+      expect(step.ok(), `author advances to ${to}: ${await step.text()}`).toBeTruthy()
+    }
+
+    // Admin A meets the gate in the UI: the row offers Approved, and the Studio refuses it by name.
+    await page.goto('/admin/lab')
+    const authorRow = page.getByRole('row', { name: new RegExp(code) })
+    await expect(authorRow).toBeVisible({ timeout: 20_000 })
+    await authorRow.getByRole('button', { name: '→ Approved' }).click()
+    await expect(page.getByRole('alert')).toContainText('a second admin has to approve this')
+    await expect(authorRow).toContainText('Pilot')
+    await captureStoryEvidence(page, testInfo, 'simlab-maker-checker', 'author-refused')
+
+    // A second, independent admin — sim_lab only, so this proves the permission carries approval
+    // rights without owner privileges.
+    const checkerEmail = uniqueEmail('sim-checker')
+    const checkerPassword = 'BrowserLabChecker-2026!'
+    const invite = await request.post('/api/admin/team', {
+      headers: { Authorization: `Bearer ${authorToken}` },
+      data: {
+        email: checkerEmail, name: 'Browser Lab Checker', role: 'custom',
+        permissions: ['sim_lab'], password: checkerPassword, force_password_change: false,
+      },
+    })
+    expect(invite.ok(), await invite.text()).toBeTruthy()
+
+    const checkerPage = await context.newPage()
+    await checkerPage.goto('/admin/login')
+    await checkerPage.getByLabel('Email address').fill(checkerEmail)
+    await checkerPage.getByLabel('Password', { exact: true }).fill(checkerPassword)
+    await checkerPage.getByRole('button', { name: 'Sign in' }).click()
+    await expect(checkerPage.getByText('Browser Lab Checker')).toBeVisible({ timeout: 30_000 })
+
+    await checkerPage.goto('/admin/lab')
+    const checkerRow = checkerPage.getByRole('row', { name: new RegExp(code) })
+    await expect(checkerRow).toBeVisible({ timeout: 20_000 })
+    await checkerRow.getByRole('button', { name: '→ Approved' }).click()
+    await expect(checkerPage.getByRole('alert')).toHaveCount(0)
+    await expect(checkerRow).toContainText('Approved')
+    await captureStoryEvidence(checkerPage, testInfo, 'simlab-maker-checker', 'second-admin-approved')
+
+    // The approval is attributed to the checker, not to the author who tried first.
+    const after = await request.get('/api/admin/lab/scenarios', {
+      headers: { Authorization: `Bearer ${authorToken}` },
+    })
+    const row = ((await after.json()) as { rows: Array<{ scenario_code: string; review_state: string }> })
+      .rows.find((r) => r.scenario_code === code)
+    expect(row?.review_state, 'the second admin moved it to approved').toBe('approved')
+
+    const audit = await request.get('/api/admin/audit', { headers: { Authorization: `Bearer ${authorToken}` } })
+    const entries = ((await audit.json()) as { rows: Array<{ action?: string; details?: string; actor?: string }> }).rows
+    expect(entries).toEqual(expect.arrayContaining([
+      expect.objectContaining({ action: 'sim_scenario_review', details: expect.stringContaining(`${code} pilot→approved`), actor: checkerEmail }),
+    ]))
   })
 })
