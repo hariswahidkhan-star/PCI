@@ -48,11 +48,16 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
 | `EAV` | Equivalent annual value | currency/period | PFL-AI D4 | ✅ |
 | `WACC` | Weighted average cost of capital | %/period | PFL-AI D4/D9 | ⏳ |
 | `CFADS` | Cash flow available for debt service (a **defined term** — see PFL-AI D2 KA 2.3.1: whether it is struck before or after working-capital movements changes every ratio built on it) | currency/period | PFL-AI D2/D10 | ✅ |
-| `DSCR` | Debt service coverage ratio = CFADS/(interest + scheduled principal) per period | ratio | PFL-AI D10 | ⏳ |
-| `LLCR` | Loan life coverage ratio = PV(CFADS over loan life, at loan rate)/outstanding debt | ratio | PFL-AI D10 | ⏳ |
-| `PLCR` | Project life coverage ratio = PV(CFADS over project life)/outstanding debt | ratio | PFL-AI D10 | ⏳ |
-| `ICR` | Interest coverage ratio | ratio | PFL-AI D10 | ⏳ |
-| `D/E` | Gearing (debt : equity) | ratio | PFL-AI D9 | ⏳ |
+| `DSCR` | Debt service coverage ratio = CFADS/(interest + scheduled principal) per period | ratio | PFL-AI D10 | ✅ |
+| `LLCR` | Loan life coverage ratio = PV(CFADS over loan life, at loan rate)/outstanding debt | ratio | PFL-AI D10 | ✅ |
+| `PLCR` | Project life coverage ratio = PV(CFADS over project life)/outstanding debt | ratio | PFL-AI D10 | ✅ |
+| `ICR` | Interest coverage ratio = EBIT (or EBITDA)/interest — accounting-based; ignores principal | ratio | PFL-AI D2/D10 | ✅ |
+| Max debt service | `CFADS` ÷ target `DSCR` per period | currency/period | PFL-AI D10 | ✅ |
+| Max debt capacity | max debt service × `AF(r, n)` at the loan rate and tenor | currency | PFL-AI D10 | ✅ |
+| Sculpted debt service | `CFADS(t)` ÷ target `DSCR` — coverage constant by construction | currency/period | PFL-AI D10 | ✅ |
+| Covenant / lock-up trigger in cash | debt service × threshold ratio (the number that belongs on a dashboard) | currency/period | PFL-AI D10 | ✅ |
+| DSRA | debt service × months/12 (funded reserve; expressed as the shortfall it survives) | currency | PFL-AI D10 | ✅ |
+| `D/E` | Gearing (debt : equity) | ratio | PFL-AI D9/D10 | ✅ |
 | `i_nom`, `i_real`, `π` | Nominal rate, real rate, inflation (Fisher: `1+i_nom = (1+i_real)(1+π)`) | %/period | PFL-AI D3 | ✅ |
 | `DF(t)` | Discount factor at period `t` = 1/(1+r)ᵗ | ratio | PFL-AI D3 | ✅ |
 | `A` | Annuity payment (context-flagged; PCP-AI uses `A` = Assets in accounting chapters — write "annuity payment `A`" at first use) | currency/period | PFL-AI D3 | ✅ |

@@ -194,11 +194,53 @@ it was worth choosing:
   rounding-boundary tolerance during authoring. PML-AI volume now typesets at **101 pp** across
   Domains 1, 2, 6, 7 and 8 (11 figures, 112 index entries).
 
+**Batch 11 (loop iteration 9) — PFL-AI Domain 10, Debt sizing, covenants and credit metrics.**
+(~7.9k words) The volume's quantitative flagship, and the point where Domains 2, 3 and 4 converge:
+Domain 2 defined `CFADS` as a *documented* term, Domain 3 built the annuity factor and amortisation
+schedule, Domain 4 valued the project — this domain decides how much debt it can carry.
+
+- KA 10.1 `CFADS` line-by-line with the negotiation points named, then the domain's central
+  arithmetic: Kestrel's `CFADS` of **6,384,000** at a **1.30×** target supports debt service of
+  **4,910,769** and therefore **41,171,123** of debt — **828,877 short** of the 42,000,000 request,
+  which is exactly the additional equity the sponsors must find. Sizing depends on cash, coverage,
+  rate and tenor and on nothing else, which is what makes the four negotiating levers enumerable.
+  Sculpting, cash sweeps and balloons complete the shape of debt service.
+- KA 10.2 the four ratios and what each is blind to, with **an identity worth teaching**: where
+  `CFADS` is level and debt service is an annuity at the loan rate, `LLCR` equals `DSCR` **exactly**
+  (both **1.2743** for Kestrel) — a reviewer's check, because level-cash models whose two ratios
+  differ contain an inconsistency. `PLCR` **1.9431** quantifies the 13-year tail. Headroom is
+  restated in cash: the covenant fails below `CFADS` of **6,011,562**, i.e. **372,438** (5.8 %) of
+  annual cash — the sentence that belongs in a board paper. A 20 % shortfall gives `DSCR` **1.0195**:
+  breach, with the lenders paid in full — the domain's key distinction.
+- KA 10.3 the reserve family and the waterfall's top; the six-month DSRA of **2,504,818** expressed
+  as the shortfall it survives (a collapse to 39 % of base-case cash) rather than as months, with
+  the explicit note that it buys payment continuity, not covenant compliance.
+- KA 10.4 covenant types, the lock-up as a graduated remedy short of default, events of default,
+  cure rights and equity cures, and living with covenants (early disclosure as the negotiating
+  asset).
+- Advanced topics (forward-looking tests and whose forecast counts; refinancing, tails and
+  mini-perms; the reviewer's coverage eye), industry variations, two case studies — **"the 828,877
+  that changed the structure"**, in which the bank's 1.25× concession applied to its own 5 %-stressed
+  case supports only **40,677,069**, *less* than the 1.30× base-case answer (a lower ratio on a lower
+  cash case is not a concession), resolved at **41,000,000** of senior debt (`DSCR` **1.3054**) plus
+  1,000,000 of equity; and **"paid in full and in breach"**, a toll road at `DSCR` **1.0591** whose
+  sponsors modelled the covenant and not the lock-up — executive perspective, 4 exercises, 3
+  toolkits, exam prep, 13 tagged MCQs.
+- Figure 10.1.1 (debt capacity against coverage and tenor, with the request line and the coverage it
+  actually delivers).
+- Harness: **483 golden checks, all passing** (was 403). It caught a drifted maximum-debt figure in
+  Exercise 10.1 (47,861,672 → **47,864,408**) and the two values downstream of it in Exercise 10.2,
+  plus a truncated capacity figure and an over-rounded equity-cure ratio in the case studies — all
+  corrected before commit. `DSCR`, `LLCR`, `PLCR`, `ICR`, `D/E` and five sizing/reserve formulas
+  flipped to verified in the shared registry.
+- PFL-AI volume now typesets at **95 pp** across Domains 1–4 and 10 (14 figures, 93 index entries),
+  with the **Part Three** divider live. Both volumes together stand at **196 typeset pages**.
+
 ## Next production batch
 
-Queued in loop order: (1) PFL-AI Domain 10 (Debt sizing, covenants and credit metrics) — Domains
-2–4 have fully prepared it (`CFADS` defined and verified, discounting built, appraisal in place) and
-it registers `DSCR`/`LLCR`/`PLCR`; (2) PML-AI Domain 3 (Governance, organization and decision
-rights), which Domains 1, 2 and 8 all now depend on and which completes PML-AI Part One alongside
-Domain 4; (3) PML-AI Domain 4 (Integration and delivery architecture). Phase 2 completes when all
-foundation domains of both books pass gates; PFL-AI Part One is done, PML-AI Part One is half done.
+Queued in loop order: (1) PML-AI Domain 3 (Governance, organization and decision rights) — Domains
+1, 2 and 8 all now depend on it, and it is the first half of what completes PML-AI Part One;
+(2) PML-AI Domain 4 (Integration and delivery architecture), which closes Part One; (3) PFL-AI
+Domain 5 (Cost of capital and capital structure), which Domain 10's coverage work now motivates
+directly. Phase 2 completes when all foundation domains of both books pass gates: **PFL-AI Part One
+is done** (and Part Three opened with Domain 10); PML-AI Part One is half done.

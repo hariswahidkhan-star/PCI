@@ -40,11 +40,16 @@ BOOKS = {
         "order": ["manuscript/domain-01-foundations.md",
                   "manuscript/domain-02-accounting-foundations.md",
                   "manuscript/domain-03-time-value-of-money.md",
-                  "manuscript/domain-04-investment-appraisal.md"],
+                  "manuscript/domain-04-investment-appraisal.md",
+                  "manuscript/domain-10-debt-sizing-covenants.md"],
         "parts": [("Part One", "Foundations",
                    "Domains 1–4 — the profession, accounting foundations, financial mathematics and "
                    "investment appraisal: the financial grammar of project finance leadership.",
-                   "Domain 1 —")],
+                   "Domain 1 —"),
+                  ("Part Three", "Executing the transaction",
+                   "Domains 10–13 — debt sizing and covenants, risk allocation, financial close and "
+                   "model governance: turning an appraised project into a funded one.",
+                   "Domain 10 —")],
     },
 }
 
@@ -130,9 +135,10 @@ def build(book: str, out: pathlib.Path) -> None:
 
     # Part divider before its first chapter.
     for i, (num, title, desc, first_chap) in enumerate(cfg["parts"], start=1):
+        # Match the kicker exactly ("Domain 1" must not match "Domain 10").
+        kicker = " ".join(first_chap.split(" ")[:2])
         kick_m = re.search(r'<div class="chapter"><div class="chapnum">\d+</div>'
-                           r'<div class="chapkicker">' + re.escape(first_chap.split(" ")[0]) +
-                           r' ' + re.escape(first_chap.split(" ")[1]), html)
+                           r'<div class="chapkicker">' + re.escape(kicker) + r'</div>', html)
         part_html = (f'<div class="partpage"><div class="partghost">{i:02d}</div>'
                      f'<div class="partnum">{num}</div><div class="parttitle">{title}</div>'
                      f'<div class="partdesc">{desc}</div><div class="partbar"></div></div>')

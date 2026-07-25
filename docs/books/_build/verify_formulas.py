@@ -523,6 +523,124 @@ WX = [D("0.40"), D("0.30"), D("0.20"), D("0.10")]
 check("EX 2.3 score P", sum(w * D(s) for w, s in zip(WX, [4, 5, 2, 2])), D("3.70"))
 check("EX 2.3 score Q", sum(w * D(s) for w, s in zip(WX, [5, 3, 4, 3])), D("4.00"))
 
+# ---------- PFL-AI Domain 10 — Debt sizing, covenants and credit metrics ----------
+CF10 = D(6384000)               # Kestrel documented CFADS, after working capital (Domain 2)
+DS10 = D("5009635.23")          # Domain 3's annual instalment on 42,000,000 @ 6% / 12y
+DEBT10, EQ10 = D(42000000), D(18000000)
+AF6_12, AF6_25 = af(D("0.06"), 12), af(D("0.06"), 25)
+check("D10 AF(6%,12)", AF6_12.quantize(D("0.000001")), D("8.383844"), tol=D("0.0000005"))
+check("D10 AF(6%,25)", AF6_25.quantize(D("0.000001")), D("12.783356"), tol=D("0.0000005"))
+check("10.1.1 CFADS before working capital", CF10 + 600000, 6984000)
+check("10.1.1 DSCR on pre-WC CFADS", ((CF10 + 600000) / DS10).quantize(D("0.01")), D("1.39"))
+check("10.1.1 DSCR on documented CFADS", (CF10 / DS10).quantize(D("0.01")), D("1.27"))
+# WE 10.1.2 — sizing from coverage
+MAXDS10 = CF10 / D("1.30")
+check("WE 10.1.2 max debt service at 1.30x", MAXDS10, D("4910769.23"), tol=D("0.51"))
+check("WE 10.1.2 max debt at 1.30x", MAXDS10 * AF6_12, D("41171123"), tol=D("0.51"))
+check("WE 10.1.2 shortfall vs 42m request", DEBT10 - MAXDS10 * AF6_12, D("828877"), tol=D("0.51"))
+check("WE 10.1.2 actual DSCR at 42m", (CF10 / DS10).quantize(D("0.0001")), D("1.2743"))
+check("Fig 10.1.1 capacity at 1.10x (USD m)",
+      (CF10 / D("1.10") * AF6_12 / 1000000).quantize(D("0.01")), D("48.66"))
+check("Fig 10.1.1 capacity at 1.30x (USD m)",
+      (CF10 / D("1.30") * AF6_12 / 1000000).quantize(D("0.01")), D("41.17"))
+# WE 10.2.1 — thresholds, headroom and stress
+check("WE 10.2.1 covenant CFADS at 1.20x", DS10 * D("1.20"), D("6011562"), tol=D("0.51"))
+check("WE 10.2.1 lock-up CFADS at 1.15x", DS10 * D("1.15"), D("5761081"), tol=D("0.51"))
+check("WE 10.2.1 headroom to covenant", CF10 - DS10 * D("1.20"), D("372438"), tol=D("0.51"))
+check("WE 10.2.1 headroom as % of CFADS",
+      ((CF10 - DS10 * D("1.20")) / CF10 * 100).quantize(D("0.1")), D("5.8"), tol=D("0.05"))
+check("WE 10.2.1 stressed CFADS (-20%)", CF10 * D("0.80"), 5107200)
+check("WE 10.2.1 stressed DSCR", (CF10 * D("0.80") / DS10).quantize(D("0.0001")), D("1.0195"))
+check("WE 10.2.1 stressed cash still exceeds debt service", CF10 * D("0.80") - DS10, D("97564.77"), tol=D("0.51"))
+# WE 10.2.2 — LLCR, PLCR and the level-cash identity
+LLCR10 = CF10 * AF6_12 / DEBT10
+PLCR10 = CF10 * AF6_25 / DEBT10
+check("WE 10.2.2 LLCR", LLCR10.quantize(D("0.0001")), D("1.2743"))
+check("WE 10.2.2 PLCR", PLCR10.quantize(D("0.0001")), D("1.9431"))
+check("WE 10.2.2 identity: LLCR - DSCR = 0 on level cash and annuity service",
+      (LLCR10 - CF10 / DS10).quantize(D("0.000001")), D("0"), tol=D("0.0000015"))
+check("WE 10.2.2 PLCR exceeds LLCR (tail exists)", 1 if PLCR10 > LLCR10 else 0, 1)
+check("10.A.2 tail length (years)", 25 - 12, 13)
+# 10.2.3 — ICR and leverage (ties to Domain 2)
+check("10.2.3 EBIT-based ICR", (D(5100000) / D(2520000)).quantize(D("0.01")), D("2.02"))
+check("10.2.3 EBITDA-based ICR", (D(7500000) / D(2520000)).quantize(D("0.01")), D("2.98"))
+check("10.2.3 debt/equity", (DEBT10 / EQ10).quantize(D("0.01")), D("2.33"))
+# WE 10.3.2 — DSRA
+DSRA10 = DS10 * 6 / 12
+check("WE 10.3.2 six-month DSRA", DSRA10, D("2504818"), tol=D("0.51"))
+check("WE 10.3.2 absorbable CFADS floor", DS10 - DSRA10, D("2504818"), tol=D("0.51"))
+check("WE 10.3.2 floor as % of base CFADS", (DSRA10 / CF10 * 100).quantize(D("1")), D("39"))
+check("WE 10.3.2 loss survivable %", (100 - DSRA10 / CF10 * 100).quantize(D("1")), D("61"))
+# 10.3.3 — schedule ties to Domain 3
+check("10.3.3 year-one interest", DEBT10 * D("0.06"), 2520000)
+check("10.3.3 year-one principal", DS10 - DEBT10 * D("0.06"), D("2489635.23"), tol=D("0.51"))
+check("10.3.3 interest + principal = debt service", D(2520000) + D("2489635.23"), DS10, tol=D("0.005"))
+# MCQ distractors
+check("MCQ 10.1-A distractor C (no coverage divisor)", CF10 * AF6_12, D("53522460"), tol=D("0.51"))
+check("MCQ 10.1-A distractor D (10-year tenor)", MAXDS10 * af(D("0.06"), 10), D("36143689"), tol=D("0.51"))
+check("MCQ 10.1-A AF(6%,10) distractor factor", af(D("0.06"), 10).quantize(D("0.000001")),
+      D("7.360087"), tol=D("0.0000005"))
+check("MCQ 10.2-A distractor B (inverted ratio)", (DS10 / CF10).quantize(D("0.0001")), D("0.7847"))
+check("MCQ 10.2-A distractor C (pre-WC CFADS)", ((CF10 + 600000) / DS10).quantize(D("0.0001")), D("1.3941"))
+check("MCQ 10.2-A distractor D (interest only)", (CF10 / D(2520000)).quantize(D("0.0001")), D("2.5333"))
+check("MCQ 10.3-A distractor C (three months)", DS10 * 3 / 12, D("1252409"), tol=D("0.51"))
+check("MCQ 10.3-A distractor D (one month)", DS10 / 12, D("417470"), tol=D("0.51"))
+# Case study A — the four levers
+check("CS 10A capacity at 1.25x base case", CF10 / D("1.25") * AF6_12, D("42817968"), tol=D("0.51"))
+check("CS 10A bank stressed CFADS (-5%)", CF10 * D("0.95"), 6064800)
+check("CS 10A capacity at 1.25x on stressed cash", CF10 * D("0.95") / D("1.25") * AF6_12,
+      D("40677069"), tol=D("0.51"))
+check("CS 10A lower ratio on lower case is no concession",
+      1 if CF10 * D("0.95") / D("1.25") * AF6_12 < MAXDS10 * AF6_12 else 0, 1)
+DS10OUT = D(41000000) / AF6_12
+check("CS 10A outcome debt service on 41,000,000", DS10OUT, D("4890358"), tol=D("0.51"))
+check("CS 10A outcome DSCR", (CF10 / DS10OUT).quantize(D("0.0001")), D("1.3054"))
+check("CS 10A outcome clears the 1.30x requirement", 1 if CF10 / DS10OUT >= D("1.30") else 0, 1)
+check("CS 10A residual funded as equity", DEBT10 - D(41000000), 1000000)
+check("CS 10A revised equity", EQ10 + 1000000, 19000000)
+check("CS 10A revised gearing debt %",
+      (D(41000000) / D(60000000) * 100).quantize(D("0.1")), D("68.3"))
+check("CS 10A revised gearing equity %",
+      (D(19000000) / D(60000000) * 100).quantize(D("0.1")), D("31.7"))
+check("CS 10A revised debt/equity", (D(41000000) / D(19000000)).quantize(D("0.01")), D("2.16"))
+# Case study B — paid in full and in breach
+CFB, DSB = D(19700000), D(18600000)
+check("CS 10B DSCR", (CFB / DSB).quantize(D("0.0001")), D("1.0591"))
+check("CS 10B CFADS fall from base %", ((1 - CFB / D(24000000)) * 100).quantize(D("0.1")), D("17.9"))
+check("CS 10B covenant cash at 1.25x", DSB * D("1.25"), 23250000)
+check("CS 10B lock-up cash at 1.15x", DSB * D("1.15"), 21390000)
+check("CS 10B locked up (CFADS below lock-up cash)", 1 if CFB < DSB * D("1.15") else 0, 1)
+check("CS 10B debt service still paid from cash", 1 if CFB > DSB else 0, 1)
+check("CS 10B six-month DSRA", DSB * 6 / 12, 9300000)
+check("CS 10B minimum cure to clear 1.25x", DSB * D("1.25") - CFB, 3550000)
+check("CS 10B ratio after 3,700,000 cure", ((CFB + 3700000) / DSB).quantize(D("0.0001")), D("1.2581"))
+check("CS 10B cure headroom above minimum", D(3700000) - (DSB * D("1.25") - CFB), 150000)
+# Exercises 10.1-10.4
+CFX, DSCRX = D(9200000), D("1.35")
+AF7_10, AF7_20 = af(D("0.07"), 10), af(D("0.07"), 20)
+check("EX 10.1 AF(7%,10)", AF7_10.quantize(D("0.000001")), D("7.023582"), tol=D("0.0000005"))
+DSX = CFX / DSCRX
+check("EX 10.1 max debt service", DSX, D("6814815"), tol=D("0.51"))
+check("EX 10.1 max debt", DSX * AF7_10, D("47864408"), tol=D("0.51"))
+check("EX 10.1 common error (full CFADS)", CFX * AF7_10, D("64616950"), tol=D("0.51"))
+DEBTX = D(47864408)
+check("EX 10.2 AF(7%,20)", AF7_20.quantize(D("0.000001")), D("10.594014"), tol=D("0.0000005"))
+check("EX 10.2 LLCR", (CFX * AF7_10 / DEBTX).quantize(D("0.0001")), D("1.3500"))
+check("EX 10.2 PLCR", (CFX * AF7_20 / DEBTX).quantize(D("0.0001")), D("2.0363"))
+check("EX 10.2 DSCR", (CFX / D("6814815")).quantize(D("0.0001")), D("1.3500"))
+check("EX 10.2 identity holds", (CFX * AF7_10 / DEBTX - CFX / D("6814815")).quantize(D("0.0001")),
+      D("0"), tol=D("0.00005"))
+check("EX 10.3 covenant CFADS at 1.20x", D("6814815") * D("1.20"), D("8177778"), tol=D("0.51"))
+check("EX 10.3 lock-up CFADS at 1.10x", D("6814815") * D("1.10"), D("7496297"), tol=D("0.51"))
+check("EX 10.3 headroom to covenant", CFX - D("6814815") * D("1.20"), D("1022222"), tol=D("0.51"))
+check("EX 10.3 headroom as % of base CFADS",
+      ((CFX - D("6814815") * D("1.20")) / CFX * 100).quantize(D("0.1")), D("11.1"), tol=D("0.05"))
+check("EX 10.4 stressed CFADS (-25%)", CFX * D("0.75"), 6900000)
+check("EX 10.4 stressed DSCR", (CFX * D("0.75") / D("6814815")).quantize(D("0.0001")), D("1.0125"))
+check("EX 10.4 covenant breached", 1 if CFX * D("0.75") / D("6814815") < D("1.20") else 0, 1)
+check("EX 10.4 payment still made from cash", 1 if CFX * D("0.75") > D("6814815") else 0, 1)
+
+
 print()
 if FAILURES:
     print(f"✗ {len(FAILURES)} FAILURES:", *FAILURES, sep="\n  ")

@@ -622,5 +622,47 @@ body = ('<defs><marker id="bm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth
         + f'<text x="{24+cw+gap2+cw/2}" y="398" font-size="9.5" font-weight="700" fill="{CRIMSON}" text-anchor="middle">usually omitted — and where Meridian stalled at 40 %</text>')
 (PML / "fig_2_3_1.svg").write_text(svg(W, H, body))
 
+# ---- Fig 10.1.1 debt capacity vs coverage and tenor -------------------------------
+CF10 = 6384000.0
+def afx(r, n): return (1 - (1 + r) ** -n) / r
+W, H, L, R, T, B = 660, 410, 92, 118, 46, 64
+def Xd(d): return L + (d - 1.10) / 0.50 * (W - L - R)
+def Yd(v): return H - B - (v - 30) / 30 * (H - T - B)     # 30m..60m
+grid = "".join(f'<line x1="{L}" y1="{Yd(v)}" x2="{W-R}" y2="{Yd(v)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yd(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v}m</text>'
+               for v in range(30, 61, 5))
+xt = "".join(f'<text x="{Xd(d/100)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">'
+             f'{d/100:.2f}x</text>' for d in range(110, 165, 10))
+lines = ""
+for tenor, colour, width in ((10, SLATE, 2.0), (12, BLUE, 2.8), (15, INK, 2.0)):
+    af_t = afx(0.06, tenor)
+    pts = " ".join(f"{Xd(1.10 + k * 0.01):.1f},{Yd(CF10 / (1.10 + k * 0.01) * af_t / 1e6):.1f}"
+                   for k in range(51))
+    dash = "" if tenor == 12 else ' stroke-dasharray="6 4"'
+    yend = Yd(CF10 / 1.60 * af_t / 1e6)
+    lines += (f'<polyline points="{pts}" fill="none" stroke="{colour}" stroke-width="{width}"{dash}/>'
+              f'<text x="{W-R+6}" y="{yend+4}" font-size="10.5" font-weight="600" fill="{colour}">'
+              f'{tenor}-year</text>')
+af12 = afx(0.06, 12)
+req = Yd(42.0)
+body = (grid + xt + axes(L, T, W - R, H - B, "Target DSCR (base case)", "Maximum senior debt (USD m)")
+        + f'<line x1="{L}" y1="{req}" x2="{W-R}" y2="{req}" stroke="{CRIMSON}" stroke-width="1.4" stroke-dasharray="4 3"/>'
+        + f'<text x="{L+6}" y="{req-6}" font-size="10.5" font-weight="700" fill="{CRIMSON}">'
+          'Sponsors&#8217; request: USD 42.0m</text>'
+        + lines
+        + f'<circle cx="{Xd(1.30):.1f}" cy="{Yd(CF10/1.30*af12/1e6):.1f}" r="4" fill="{BLUE}"/>'
+        + f'<text x="{Xd(1.30)+9:.1f}" y="{Yd(CF10/1.30*af12/1e6)+15:.1f}" font-size="10.5" '
+          f'font-weight="700" fill="{BLUE}">41.17m at 1.30x — the lender&#8217;s answer</text>'
+        + f'<circle cx="{Xd(1.2743):.1f}" cy="{req}" r="4" fill="{CRIMSON}"/>'
+        + f'<text x="{Xd(1.2743)-6:.1f}" y="{req+30:.1f}" font-size="10.5" font-weight="700" '
+          f'fill="{CRIMSON}" text-anchor="end">1.2743x — the coverage 42.0m actually delivers</text>'
+        + f'<circle cx="{Xd(1.10):.1f}" cy="{Yd(CF10/1.10*af12/1e6):.1f}" r="3.5" fill="{BLUE}" opacity="0.7"/>'
+        + f'<text x="{Xd(1.10)+8:.1f}" y="{Yd(CF10/1.10*af12/1e6)-7:.1f}" font-size="10" fill="{BLUE}">48.66m</text>'
+        + f'<text x="24" y="26" font-size="11.5" font-weight="700" fill="{INK}">'
+          'Debt capacity is arithmetic: CFADS 6,384,000 at 6 % — capacity falls as required coverage rises</text>'
+        + f'<text x="{L}" y="{H-B+42}" font-size="10.2" fill="{SLATE}">'
+          'The 828,877 gap at 1.30x is exactly the additional equity the sponsors must find</text>')
+(PFL / "fig_10_1_1.svg").write_text(svg(W, H, body))
+
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")
