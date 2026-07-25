@@ -185,7 +185,7 @@ public static class Migrate
         // remote_type: onsite|remote|hybrid. apply_method: inplatform|url|email. status: draft|published|closed.
         db.Exec(@"CREATE TABLE IF NOT EXISTS job_postings(id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT NOT NULL,organisation TEXT,location TEXT,
             employment_type TEXT DEFAULT 'full_time',remote_type TEXT DEFAULT 'onsite',sector TEXT,description TEXT,requirements TEXT,responsibilities TEXT,
-            salary_min REAL,salary_max REAL,salary_currency TEXT DEFAULT 'USD',salary_period TEXT DEFAULT 'year',
+            salary_min DECIMAL(12,2),salary_max DECIMAL(12,2),salary_currency TEXT DEFAULT 'USD',salary_period TEXT DEFAULT 'year',
             apply_method TEXT DEFAULT 'inplatform',apply_url TEXT,apply_email TEXT,featured INTEGER DEFAULT 0,status VARCHAR(24) DEFAULT 'draft',
             posted_at TEXT,closes_at TEXT,created_by INTEGER,created_at TEXT DEFAULT (datetime('now')),updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_jobs_status ON job_postings(status)");
@@ -360,7 +360,7 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS partner_payouts(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             partner_id INTEGER NOT NULL,
-            amount REAL NOT NULL,
+            amount DECIMAL(12,2) NOT NULL,
             currency TEXT DEFAULT 'USD',
             note TEXT,
             paid_by INTEGER,
@@ -424,12 +424,13 @@ public static class Migrate
         AddCol("payments", "receipt_no", "receipt_no TEXT");
         AddCol("payments", "note", "note TEXT");
         AddCol("payments", "recorded_by", "recorded_by INTEGER");          // admin_users.id for manual entries
-        AddCol("payments", "waived_amount", "waived_amount REAL");
+        AddCol("payments", "waived_amount", "waived_amount DECIMAL(12,2)");
         AddCol("payments", "reversed_at", "reversed_at TEXT");
         AddCol("payments", "reversed_by", "reversed_by INTEGER");
         AddCol("payments", "reversal_reason", "reversal_reason TEXT");
         // Waiver ledger: every full/partial waiver as a first-class record (who, what, why, how much).
-        db.Exec(@"CREATE TABLE IF NOT EXISTS fee_waivers(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,product_type VARCHAR(24),certification_id INTEGER,kind VARCHAR(16) DEFAULT 'full',original_amount REAL,waived_amount REAL,final_amount REAL,currency VARCHAR(8) DEFAULT 'USD',reason TEXT,note TEXT,approved_by INTEGER,code_id INTEGER,payment_id INTEGER,expires_at TEXT,status VARCHAR(16) DEFAULT 'granted',created_at TEXT DEFAULT (datetime('now')))");
+        // Money columns use DECIMAL(12,2) so MySQL stores exact cents (SQLite treats DECIMAL as NUMERIC affinity).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS fee_waivers(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,product_type VARCHAR(24),certification_id INTEGER,kind VARCHAR(16) DEFAULT 'full',original_amount DECIMAL(12,2),waived_amount DECIMAL(12,2),final_amount DECIMAL(12,2),currency VARCHAR(8) DEFAULT 'USD',reason TEXT,note TEXT,approved_by INTEGER,code_id INTEGER,payment_id INTEGER,expires_at TEXT,status VARCHAR(16) DEFAULT 'granted',created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_fee_waivers_user ON fee_waivers(user_id)");
 
         // ── Exam Exceptions & Authorizations ──────────────────────────────────────────────────────────
@@ -490,7 +491,7 @@ public static class Migrate
         AddCol("fee_waivers", "incident_id", "incident_id INTEGER");
         AddCol("fee_waivers", "appeal_id", "appeal_id INTEGER");
         AddCol("fee_waivers", "evidence_ref", "evidence_ref TEXT");
-        AddCol("fee_waivers", "payable_amount", "payable_amount REAL");
+        AddCol("fee_waivers", "payable_amount", "payable_amount DECIMAL(12,2)");
 
         // Authorization links so history + policy join cleanly.
         AddCol("exam_bookings", "authorization_id", "authorization_id INTEGER");
@@ -561,7 +562,7 @@ public static class Migrate
         AddCol("discount_codes", "approved_at", "approved_at TEXT");
         AddCol("discount_codes", "rejection_reason", "rejection_reason TEXT");
         AddCol("discount_codes", "campaign_name", "campaign_name TEXT");
-        AddCol("discount_codes", "min_payable", "min_payable REAL");
+        AddCol("discount_codes", "min_payable", "min_payable DECIMAL(12,2)");
         AddCol("discount_codes", "eligible_countries", "eligible_countries TEXT");       // CSV of ISO/plain names; NULL = all
         // Fraud/abuse review queue — nothing is auto-blocked without a human path.
         db.Exec(@"CREATE TABLE IF NOT EXISTS fraud_flags(id INTEGER PRIMARY KEY AUTOINCREMENT,kind VARCHAR(40) NOT NULL,code_id INTEGER,user_id INTEGER,email TEXT,detail TEXT,status VARCHAR(16) DEFAULT 'open',actioned_by INTEGER,actioned_at TEXT,created_at TEXT DEFAULT (datetime('now')))");
@@ -925,7 +926,7 @@ public static class Migrate
             ("acronym","acronym TEXT"), ("short_name","short_name TEXT"), ("public_title","public_title TEXT"),
             ("tagline","tagline TEXT"), ("short_description","short_description TEXT"), ("category","category TEXT"),
             ("level","level TEXT"), ("status","status TEXT"), ("slug","slug TEXT"), ("audience","audience TEXT"),
-            ("overview","overview TEXT"), ("application_fee","application_fee REAL"),
+            ("overview","overview TEXT"), ("application_fee","application_fee DECIMAL(12,2)"),
             ("membership_required","membership_required INTEGER DEFAULT 0"), ("next_exam_note","next_exam_note TEXT"),
             ("meta_title","meta_title TEXT"), ("meta_description","meta_description TEXT"), ("keywords","keywords TEXT"),
             ("og_title","og_title TEXT"), ("og_description","og_description TEXT"), ("social_image","social_image TEXT"),
@@ -1211,8 +1212,8 @@ public static class Migrate
         // certification_id NULL = valid for every certification; route_key NULL = every route.
         AddCol("discount_codes", "certification_id", "certification_id INTEGER");
         AddCol("discount_codes", "route_key", "route_key TEXT");
-        AddCol("discount_codes", "min_transaction", "min_transaction REAL");
-        AddCol("discount_codes", "max_discount", "max_discount REAL");
+        AddCol("discount_codes", "min_transaction", "min_transaction DECIMAL(12,2)");
+        AddCol("discount_codes", "max_discount", "max_discount DECIMAL(12,2)");
 
         // Granular per-certification admin permissions: JSON array of certification ids an admin is
         // restricted to (NULL/empty = all certifications — the default, and forced for owners).
@@ -1504,10 +1505,11 @@ public static class Migrate
             // Treat an unset environment as Production (the safe default) and honour either .NET
             // environment variable. The opt-in secret alone must never create this account on an
             // ambiguously configured deployment.
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+            var environment = Environment.GetEnvironmentVariable("PCI_RUNTIME_ENVIRONMENT")
+                ?? Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
                 ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
                 ?? "Production";
-            var isProd = string.Equals(environment, "Production", StringComparison.OrdinalIgnoreCase);
+            var isProd = !string.Equals(environment, "Development", StringComparison.OrdinalIgnoreCase);
             var e2ePw = Environment.GetEnvironmentVariable("E2E_ADMIN_PASSWORD");
             if (!isProd && !string.IsNullOrWhiteSpace(e2ePw))
             {
@@ -1581,7 +1583,7 @@ public static class Migrate
         AddCol("exam_bookings", "delivery_status", "delivery_status VARCHAR(32)");
 
         // EXT-P0-02 — partial refunds update financial state without revoking access.
-        AddCol("payments", "amount_refunded", "amount_refunded REAL DEFAULT 0");
+        AddCol("payments", "amount_refunded", "amount_refunded DECIMAL(12,2) DEFAULT 0");
         AddCol("payments", "refunded_at", "refunded_at TEXT");
 
         // Backfill Exam Authorizations for any pre-existing settled exam seat (idempotent; best-effort).
@@ -1598,7 +1600,11 @@ public static class Migrate
             // that seeds a real, authenticatable student on the live site. Seed the demo student only
             // outside Production, OR when the operator explicitly sets DEMO_STUDENT_PASSWORD (an opt-in
             // that proves intent). Everywhere else, launch starts with zero student accounts.
-            var isProd = string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Production", StringComparison.OrdinalIgnoreCase);
+            var environment = Environment.GetEnvironmentVariable("PCI_RUNTIME_ENVIRONMENT")
+                ?? Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+                ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
+                ?? "Production";
+            var isProd = !string.Equals(environment, "Development", StringComparison.OrdinalIgnoreCase);
             var demoOptIn = Environment.GetEnvironmentVariable("DEMO_STUDENT_PASSWORD") is not null;
             var n = db.Scalar<long>("SELECT COUNT(*) FROM users");
             if (n == 0 && (!isProd || demoOptIn))
@@ -1612,5 +1618,118 @@ public static class Migrate
             }
         }
         catch { /* users may not exist on a very first pass; ignored */ }
+    }
+
+    /// <summary>
+    /// Idempotent MySQL-only upgrade: known currency columns that landed as DOUBLE/FLOAT/REAL
+    /// (via older schema.mysql.sql regenerations or Migrate DDL written with REAL) become
+    /// the required DECIMAL precision/scale. Never drops tables or deletes rows.
+    /// </summary>
+    public static void EnsureMoneyDecimals(Db db, bool failOnError = false)
+    {
+        if (db.Provider != Db.Kind.MySql) return;
+
+        // Keep in sync with migration_integrity_test.py MONEY_COLUMNS. Provider ad metrics/CPC retain
+        // micro-unit precision; ordinary prices, payouts, fees and budgets use cents.
+        var targets = new (string Table, string Column, int Precision, int Scale)[]
+        {
+            ("pricing_rules", "standard_price", 12, 2),
+            ("discount_codes", "discount_value", 12, 2),
+            ("discount_codes", "min_payable", 12, 2),
+            ("discount_codes", "min_transaction", 12, 2),
+            ("discount_codes", "max_discount", 12, 2),
+            ("payments", "standard_amount", 12, 2),
+            ("payments", "default_discount_amount", 12, 2),
+            ("payments", "discount_code_amount", 12, 2),
+            ("payments", "final_amount", 12, 2),
+            ("payments", "waived_amount", 12, 2),
+            ("payments", "amount_refunded", 12, 2),
+            ("memberships", "renewal_fee", 12, 2),
+            ("memberships", "amount_paid", 12, 2),
+            ("certifications", "exam_price", 12, 2),
+            ("certifications", "application_fee", 12, 2),
+            ("code_redemptions", "amount_before", 12, 2),
+            ("code_redemptions", "discount_amount", 12, 2),
+            ("partner_payouts", "amount", 12, 2),
+            ("fee_waivers", "original_amount", 12, 2),
+            ("fee_waivers", "waived_amount", 12, 2),
+            ("fee_waivers", "final_amount", 12, 2),
+            ("fee_waivers", "payable_amount", 12, 2),
+            ("analytics_events", "value", 12, 2),
+            ("certification_routes", "fee_amount", 12, 2),
+            ("job_postings", "salary_min", 12, 2),
+            ("job_postings", "salary_max", 12, 2),
+            ("mkt_campaigns", "total_budget", 12, 2),
+            ("mkt_campaigns", "alloc_linkedin", 12, 2),
+            ("mkt_campaigns", "alloc_google", 12, 2),
+            ("mkt_campaigns", "alloc_meta", 12, 2),
+            ("mkt_platform_campaigns", "daily_budget", 12, 2),
+            ("mkt_platform_campaigns", "lifetime_budget", 12, 2),
+            ("mkt_conversation_ads", "daily_budget", 12, 2),
+            ("mkt_conversation_ads", "lifetime_budget", 12, 2),
+            ("mkt_promotions", "original_amount", 12, 2),
+            ("mkt_promotions", "discount_amount", 12, 2),
+            ("mkt_promotions", "net_amount", 12, 2),
+            ("mkt_conversions", "value", 12, 2),
+            ("mkt_conversion_events", "value", 12, 2),
+            ("mkt_budget_approvals", "requested_amount", 12, 2),
+            ("mkt_keywords", "max_cpc", 18, 6),
+            ("mkt_campaign_metrics", "spend", 18, 6),
+            ("mkt_campaign_metrics", "conversion_value", 18, 6),
+        };
+
+        var errors = new List<string>();
+        foreach (var (table, column, precision, scale) in targets)
+        {
+            try
+            {
+                var row = db.QueryOne(
+                    "SELECT DATA_TYPE, NUMERIC_PRECISION, NUMERIC_SCALE, IS_NULLABLE, COLUMN_DEFAULT FROM information_schema.COLUMNS "
+                    + "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?",
+                    table, column);
+                if (row is null)
+                {
+                    errors.Add($"{table}.{column} is missing");
+                    continue;
+                }
+                var dataType = Convert.ToString(row["DATA_TYPE"])?.ToLowerInvariant();
+                var havePrecision = row["NUMERIC_PRECISION"] is null ? 0 : Convert.ToInt32(row["NUMERIC_PRECISION"]);
+                var haveScale = row["NUMERIC_SCALE"] is null ? 0 : Convert.ToInt32(row["NUMERIC_SCALE"]);
+                if (dataType == "decimal" && havePrecision == precision && haveScale == scale) continue;
+
+                var nullable = string.Equals(Convert.ToString(row["IS_NULLABLE"]), "YES", StringComparison.OrdinalIgnoreCase);
+                var nullSql = nullable ? "NULL" : "NOT NULL";
+                var defSql = "";
+                var def = row["COLUMN_DEFAULT"];
+                if (def is not null and not DBNull)
+                {
+                    var defText = Convert.ToString(def)?.Trim();
+                    if (!string.IsNullOrEmpty(defText) && !defText.Equals("NULL", StringComparison.OrdinalIgnoreCase))
+                        defSql = " DEFAULT " + defText;
+                }
+
+                db.Exec($"ALTER TABLE `{table}` MODIFY COLUMN `{column}` DECIMAL({precision},{scale}) {nullSql}{defSql}");
+
+                var verified = db.QueryOne(
+                    "SELECT DATA_TYPE, NUMERIC_PRECISION, NUMERIC_SCALE FROM information_schema.COLUMNS "
+                    + "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?",
+                    table, column);
+                if (verified is null
+                    || !string.Equals(Convert.ToString(verified["DATA_TYPE"]), "decimal", StringComparison.OrdinalIgnoreCase)
+                    || Convert.ToInt32(verified["NUMERIC_PRECISION"]) != precision
+                    || Convert.ToInt32(verified["NUMERIC_SCALE"]) != scale)
+                    errors.Add($"{table}.{column} did not converge to DECIMAL({precision},{scale})");
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"{table}.{column}: {ex.Message}");
+            }
+        }
+
+        foreach (var error in errors)
+            Console.Error.WriteLine($"[migrate] money DECIMAL invariant: {error}");
+        if (failOnError && errors.Count > 0)
+            throw new InvalidOperationException(
+                $"MySQL money-column invariant failed for {errors.Count} column(s); refusing non-local startup.");
     }
 }

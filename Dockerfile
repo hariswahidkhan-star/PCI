@@ -38,9 +38,10 @@ COPY --from=build /app .
 # are gitignored, so never stale in source — assembled here from the freshly-built frontend).
 COPY --from=webbuild /web/dist ./wwwroot/app
 COPY --from=webbuild /web/dist-admin ./wwwroot/admin
-# /data is the single persistent mount: SQLite database + evidence/attachment files.
-# Both paths are overridable; keeping them under one mount point suits hosts that
-# attach exactly one disk per service (e.g. Render).
+# /data is the persistent mount for evidence/attachment files (and optional local SQLite).
+# Production on Render uses MySQL (DB_PROVIDER=mysql in render.yaml) — DATABASE_FILE below is
+# only adopted when the provider is SQLite/local; it is NOT a production MySQL fail-open.
+# Both paths are overridable; one mount suits hosts that attach a single disk per service.
 ENV DATABASE_FILE=/data/pci.db \
     STORAGE_ROOT=/data/storage \
     PORT=8080

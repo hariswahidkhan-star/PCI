@@ -119,6 +119,16 @@ public class WorldMySqlParityTests
     }
 
     [Fact]
+    public void Text_literal_defaults_are_expressions_on_oracle_mysql_only()
+    {
+        const string sql = "CREATE TABLE t(role TEXT NOT NULL DEFAULT 'viewer', status TEXT DEFAULT 'active')";
+        var mysql = Db.TranslateFor(sql, mariaDb: false);
+        Assert.Contains("role TEXT NOT NULL DEFAULT ('viewer')", mysql);
+        Assert.Contains("status TEXT DEFAULT ('active')", mysql);
+        Assert.Equal(sql, Db.TranslateFor(sql, mariaDb: true));
+    }
+
+    [Fact]
     public void The_shared_dialect_rules_apply_on_both_engines()
     {
         foreach (var maria in new[] { true, false })

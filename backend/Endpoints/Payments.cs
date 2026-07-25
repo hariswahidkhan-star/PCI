@@ -84,6 +84,11 @@ public static class Payments
                 var codeVal = !string.IsNullOrWhiteSpace(codeStr) ? Public.ValidateCode(db, codeStr, product, email, certSelIn) : new Public.CodeValidation(null, null);
                 if (codeVal.Error is not null) return Results.Json(new { error = "code_invalid", message = codeVal.Error }, statusCode: 400);
                 var pr = Public.Pricing(db, product, codeVal.Code, certRow);
+                long ToEvenMinor(double value) =>
+                    checked((long)Math.Round(value * 100.0, MidpointRounding.ToEven));
+                var amountMinor = ToEvenMinor(pr.final); // preserve the pricing engine's established policy
+                string MoneyText(double value) => Money.ToDecimal(ToEvenMinor(value))
+                    .ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
                 // A code with a configured floor cannot push the payable amount below it.
                 if (codeVal.Code is not null && Public.MinPayableViolation(codeVal.Code, pr.final) is { } floorMsg)
                     return Results.Json(new { error = "code_invalid", message = floorMsg }, statusCode: 400);
@@ -98,7 +103,7 @@ public static class Payments
                     Mode = "payment",
                     LineItems = new List<SessionLineItemOptions> {
                         new() { Quantity = 1, PriceData = new SessionLineItemPriceDataOptions {
-                            Currency = "usd", UnitAmount = (long)Math.Round(pr.final * 100),
+                            Currency = "usd", UnitAmount = amountMinor,
                             ProductData = new SessionLineItemPriceDataProductDataOptions {
                                 Name = label, Description = "Access only. Certification is awarded separately under PCI policies." } } } },
                     CustomerEmail = email,
@@ -107,8 +112,10 @@ public static class Payments
                         ["certification"] = certRow is null ? "PCL-AI" : (H.Str(certRow["code"]) ?? "PCL-AI"),
                         ["first_name"] = H.GetS(d, "first") ?? "", ["last_name"] = H.GetS(d, "last") ?? "",
                         ["country"] = H.GetS(d, "country") ?? "", ["discount_code"] = codeVal.Code is null ? "" : (H.Str(codeVal.Code["code"]) ?? ""),
-                        ["final_amount"] = pr.final.ToString(), ["code_amount"] = pr.codeAmount.ToString(),
-                        ["standard_amount"] = pr.standard.ToString(), ["default_discount"] = pr.defaultDiscount.ToString() },
+                        ["final_amount"] = Money.ToDecimal(amountMinor).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture),
+                        ["code_amount"] = MoneyText(pr.codeAmount),
+                        ["standard_amount"] = MoneyText(pr.standard),
+                        ["default_discount"] = MoneyText(pr.defaultDiscount) },
                     // Purchases started inside the student portal return to the portal's Billing page,
                     // where the webhook-applied membership/entitlement shows up on reload.
                     SuccessUrl = (H.GetS(d, "portal") is "1" or "true")
@@ -244,9 +251,17 @@ public static class Payments
                   db.Transaction(() =>
                   {
                     var product = m.GetValueOrDefault("product", "membership");
-                    double MetaNum(string k) => double.TryParse(m.GetValueOrDefault(k, ""), out var v) ? v : 0;
+                    decimal MetaNum(string k) => decimal.TryParse(
+                        m.GetValueOrDefault(k, ""),
+                        System.Globalization.NumberStyles.Number,
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        out var v) ? v : 0m;
                     var reference = "PCI-" + (s!.Id.Length >= 8 ? s.Id[^8..] : s.Id).ToUpperInvariant();
-                    var amountTotal = (s.AmountTotal ?? 0) / 100.0;
+                    // Stripe's integer amount_total is authoritative. Metadata describes the price
+                    // decomposition but must never override the amount actually settled.
+                    var amountTotalMinor = s.AmountTotal
+                        ?? throw new InvalidOperationException("Stripe completed session omitted amount_total");
+                    var amountTotal = Money.ToDecimal(amountTotalMinor);
 
                     // ── IDEMPOTENCY GATE (runs BEFORE any side effect, incl. user creation) ──
                     // Resolve the existing user id if any (do NOT create yet). The payment is keyed on the
@@ -258,7 +273,7 @@ public static class Payments
                     var (payId, payChanges) = db.ExecuteWithChanges(@"INSERT OR IGNORE INTO payments(user_id,enrollment_session_id,product_type,standard_amount,default_discount_amount,discount_code,discount_code_amount,final_amount,currency,payment_provider,provider_payment_id,payment_status,payment_date,reference)
                         VALUES(?,?,?,?,?,?,?,?,'USD','stripe',?,'paid',datetime('now'),?)",
                         existingId, sess?["id"], product, MetaNum("standard_amount"), MetaNum("default_discount"),
-                        m.GetValueOrDefault("discount_code"), MetaNum("code_amount"), MetaNum("final_amount") != 0 ? MetaNum("final_amount") : amountTotal, s.PaymentIntentId, reference);
+                        m.GetValueOrDefault("discount_code"), MetaNum("code_amount"), amountTotal, s.PaymentIntentId, reference);
 
                     // Record the webhook event in the idempotency ledger (belt-and-braces alongside the
                     // payment unique index). A replayed event id inserts 0 rows.
@@ -278,8 +293,8 @@ public static class Payments
                     else { userId = existingId.Value; db.Execute("UPDATE users SET status='active', updated_at=datetime('now') WHERE id=?", userId); }
 
                     // First-party analytics: revenue + activation events (server-to-server — no visitor context).
-                    var finalAmount = MetaNum("final_amount") != 0 ? MetaNum("final_amount") : amountTotal;
-                    PCI.Backend.Core.Analytics.Track(db, null, "purchase_completed", userId, finalAmount, "USD", product);
+                    var finalAmount = amountTotal;
+                    PCI.Backend.Core.Analytics.Track(db, null, "purchase_completed", userId, Convert.ToDouble(finalAmount), "USD", product);
                     // ERP / integrations outbox (Phase 9): a canonical revenue event for accounting/ERP sync.
                     PCI.Backend.Core.Integrations.Emit(db, "payment.recorded", "payment", payId, new
                     {
@@ -289,7 +304,7 @@ public static class Payments
                     if (product == "membership" || product == "bundle")
                     {
                         db.Execute("INSERT INTO memberships(user_id,membership_type,status,start_date,expiry_date,renewal_fee,renewal_cycle,amount_paid,currency) VALUES(?,?, 'active', datetime('now'), datetime('now','+3 year'), 99, '3 years', ?, 'USD')",
-                            userId, "Student Membership", MetaNum("final_amount"));
+                            userId, "Student Membership", finalAmount);
                         PCI.Backend.Core.Analytics.Track(db, null, "membership_activated", userId, null, null, product);
                         PCI.Backend.Core.Integrations.Emit(db, "membership.activated", "user", userId, new
                         {

@@ -22,7 +22,7 @@ which is the standard way to make such cases fast and deterministic.
 
 Exit code 0 iff every assertion passes.  Run from backend/:  python3 tests/integration_test.py
 """
-import base64, hashlib, hmac, http.server, json, os, shutil, socket, sqlite3, subprocess, sys, threading, time, urllib.error, urllib.request
+import base64, hashlib, hmac, http.server, json, os, re, shutil, socket, sqlite3, subprocess, sys, threading, time, urllib.error, urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BACKEND = os.path.dirname(HERE)
@@ -31,6 +31,7 @@ DB = os.path.join(HERE, "_integration.db")
 STORAGE = os.path.join(HERE, "_integration_storage")
 WEBHOOK_SECRET = "whsec_integration_test_secret"
 STRIPE_KEY = "sk_test_integration"
+ENCRYPTION_KEY = "integration-test-encryption-key-32-bytes"
 
 passed = failed = 0
 def chk(name, cond, extra=""):
@@ -115,9 +116,17 @@ def sign_and_send_webhook(session_id, email, product, pi_id, metadata=None, amou
 # not assumed. On MySQL the DB-surgery statements below are translated (? → %s, datetime() → MySQL) by
 # a thin wrapper, so the test body is identical for both providers.
 PROVIDER = os.environ.get("TEST_DB_PROVIDER", "sqlite").lower()
+if PROVIDER not in {"sqlite", "mysql"}:
+    raise SystemExit(f"unknown TEST_DB_PROVIDER={PROVIDER!r}")
+if os.environ.get("REQUIRE_MYSQL_TEST") == "1" and PROVIDER != "mysql":
+    raise SystemExit("REQUIRE_MYSQL_TEST=1 but TEST_DB_PROVIDER is not mysql")
+mysql_base = os.environ.get("MYSQL_DATABASE", "pci")
+if not re.fullmatch(r"[A-Za-z0-9_]+", mysql_base):
+    raise SystemExit(f"unsafe MYSQL_DATABASE={mysql_base!r}")
+mysql_test_db = mysql_base if mysql_base.endswith("_integration") else mysql_base + "_integration"
 MYSQL = dict(host=os.environ.get("MYSQL_HOST", "127.0.0.1"), port=int(os.environ.get("MYSQL_PORT", "3306")),
              user=os.environ.get("MYSQL_USER", "pci"), password=os.environ.get("MYSQL_PASSWORD", "pcipass"),
-             database=os.environ.get("MYSQL_DATABASE", "pci"))
+             database=mysql_test_db)
 
 def _mysql_translate(sql):
     # Percent literals in the SQL (DATE_FORMAT specifiers) are written as %% so pymysql's
@@ -152,8 +161,8 @@ def _reset_mysql():
     import pymysql
     root = pymysql.connect(host=MYSQL["host"], port=MYSQL["port"], user=MYSQL["user"], password=MYSQL["password"])
     cur = root.cursor()
-    cur.execute("DROP DATABASE IF EXISTS " + MYSQL["database"])
-    cur.execute("CREATE DATABASE " + MYSQL["database"] + " CHARACTER SET utf8mb4")
+    cur.execute(f"DROP DATABASE IF EXISTS `{MYSQL['database']}`")
+    cur.execute(f"CREATE DATABASE `{MYSQL['database']}` CHARACTER SET utf8mb4")
     root.commit(); root.close()
 
 # ---- server lifecycle ----
@@ -161,12 +170,11 @@ def boot():
     # The object store is wiped with the database, on BOTH providers, because the two are one state.
     #
     # Leaving it behind does not just orphan files, it breaks the run: the store is content-addressed and
-    # skips writing a blob whose hash is already on disk, while the at-rest encryption key is derived from
-    # STRIPE_WEBHOOK_SECRET — which this harness regenerates every run. So a second run re-uses the FIRST
-    # run's ciphertext under a key that cannot open it, every download 500s with "file_missing", and the
+    # skips writing a blob whose hash is already on disk. A second run can otherwise re-use the FIRST
+    # run's ciphertext under incompatible configuration, every download 500s with "file_missing", and the
     # blame lands on whatever else changed. That is exactly how 17 document/BoK assertions came to be
     # recorded as MySQL-only failures: SQLite ran first against a clean tree and MySQL ran second against
-    # its leftovers. Neither provider was at fault.
+    # its leftovers. Neither provider was at fault. The explicit test key keeps each run internally stable.
     shutil.rmtree(STORAGE, ignore_errors=True)
     if PROVIDER == "mysql":
         _reset_mysql()
@@ -177,7 +185,10 @@ def boot():
                    INTEGRATIONS_ALLOW_PRIVATE_EGRESS="true",
                    # Meta Lead Ads fail closed without META_APP_SECRET (EXT-P1-02); tests sign with this key.
                    META_APP_SECRET="meta-test-secret-56",
-                   ASPNETCORE_ENVIRONMENT="Development", DATABASE_FILE=DB)
+                   CREDENTIAL_ENCRYPTION_KEY=ENCRYPTION_KEY,
+                   ASPNETCORE_ENVIRONMENT="Development", DATABASE_FILE=DB,
+                   MYSQL_DATABASE=MYSQL["database"])
+        env.pop("MYSQL_CONNECTION_STRING", None)
     else:
         for f in (DB, DB+"-wal", DB+"-shm"):
             try: os.remove(f)
@@ -186,6 +197,7 @@ def boot():
                    STRIPE_SECRET_KEY=STRIPE_KEY, STRIPE_WEBHOOK_SECRET=WEBHOOK_SECRET,
                    INTEGRATIONS_ALLOW_PRIVATE_EGRESS="true",   # mock vendors run on loopback (see mysql branch note)
                    META_APP_SECRET="meta-test-secret-56",
+                   CREDENTIAL_ENCRYPTION_KEY=ENCRYPTION_KEY,
                    ASPNETCORE_ENVIRONMENT="Development")
     boot_log = os.path.join(HERE, "_server_boot.log")
     logf = open(boot_log, "wb")
@@ -221,7 +233,7 @@ def make_paid_user(email, product="bundle", amount=9900, pi=None, sid=None, real
     exam flows to the rate-limit test. The set-password + /api/login path is proven once, explicitly,
     via real_login=True (the happy-path user)."""
     pi = pi or ("pi_" + sha256hex(email+"pi")[:16]); sid = sid or ("cs_" + sha256hex(email+"cs")[:16])
-    code, _ = sign_and_send_webhook(sid, email, product, pi, metadata=metadata)
+    code, _ = sign_and_send_webhook(sid, email, product, pi, metadata=metadata, amount=amount)
     if code != 200: raise SystemExit(f"webhook failed for {email}: {code}")
     con = dbconn()
     row = con.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()
@@ -2703,6 +2715,17 @@ def run(proc):
     chk("1c replay accepted (200)", code == 200, code)
     con = dbconn(); c2 = counts(email); con.close()
     chk("1d replay created nothing new", c2 == (1,1,1,1), c2)
+    # Metadata is client-created descriptive data; Stripe's integer amount_total is authoritative.
+    code, _ = sign_and_send_webhook(
+        "cs_amount_authority", "amount-authority@ex.co", "membership", "pi_amount_authority",
+        amount=4512, metadata={"final_amount": "45.125", "standard_amount": "47.50"})
+    con = dbconn()
+    settled = con.execute(
+        "SELECT final_amount FROM payments WHERE provider_payment_id='pi_amount_authority'").fetchone()
+    con.close()
+    chk("1e Stripe amount_total wins over disagreeing floating metadata",
+        code == 200 and settled is not None and round(float(settled[0]), 2) == 45.12,
+        (code, settled))
     # tampered signature rejected
     code, _ = req("POST", "/api/webhook", raw=b'{"id":"evt_x"}',
                   headers={"Content-Type":"application/json","Stripe-Signature":"t=1,v1=deadbeef"})
@@ -5130,7 +5153,7 @@ def test_partner_commission_accrual(admin):
     chk("41a before any paid redemption the ledger accrues nothing",
         c == 200 and (comm0.get("attributed_revenue") or 0) == 0 and (comm0.get("accrued") or 0) == 0, comm0)
     # Drive a REAL paid redemption of the partner code through the signed webhook (final_amount = 119).
-    stok, suid = make_paid_user("commission-buyer-41@ex.co", product="membership",
+    stok, suid = make_paid_user("commission-buyer-41@ex.co", product="membership", amount=11900,
                                 metadata={"discount_code": "PART41CODE", "standard_amount": "149", "code_amount": "30", "final_amount": "119"})
     c, comm1 = jget("GET", "/api/partner/commissions", token=ptok)
     chk("41b the paid redemption attributes its final_amount to the partner",
@@ -6378,7 +6401,7 @@ def test_comms_centre(admin):
 
     # --- one-click unsubscribe: forged token refused; a valid signed token withdraws consent + suppresses ---
     cb, bad = jget("POST", "/api/comms/unsubscribe", body={"token": "424242.deadbeefdeadbeefdead"})
-    _sec = (os.environ.get("UNSUBSCRIBE_SECRET") or os.environ.get("CREDENTIAL_ENCRYPTION_KEY")
+    _sec = (os.environ.get("UNSUBSCRIBE_SECRET") or ENCRYPTION_KEY
             or "pci-unsubscribe-v1") + "|pci-unsub"   # same precedence the server uses (Core/Comms.cs)
     utok = f"{u1}." + hashlib.sha256(f"{u1}.{_sec}".encode()).hexdigest()[:24]
     cg, good = jget("POST", "/api/comms/unsubscribe", body={"token": utok})
@@ -6775,7 +6798,7 @@ def test_marketing_centre(admin):
         (c0, c2, urf.get("reason"), row and row.get("status")))
 
     # --- public OAuth callback: signed-state machine, recomputed with the server's exact secret precedence ---
-    _mksec = (os.environ.get("MARKETING_OAUTH_SECRET") or os.environ.get("CREDENTIAL_ENCRYPTION_KEY")
+    _mksec = (os.environ.get("MARKETING_OAUTH_SECRET") or ENCRYPTION_KEY
               or "pci-marketing-oauth-v1") + "|pci-mkt-oauth"   # Core/MarketingOAuth.StateSecret
     exp = int(time.time()) + 3600
     good_state = f"{li}.{exp}." + hashlib.sha256(f"{li}.{exp}.{_mksec}".encode()).hexdigest()[:24]
@@ -7421,7 +7444,7 @@ def test_integration_health(admin):
     # as "something has been pending for under a minute", which is the opposite of the truth.
     empty = [k for k, q in queues.items() if q.get("pending") == 0]
     chk("62c a queue with nothing pending reports oldest_pending_age_min = null, not 0",
-        all(queues[k].get("oldest_pending_age_min") is None for k in empty), 
+        all(queues[k].get("oldest_pending_age_min") is None for k in empty),
         {k: queues[k] for k in empty[:3]})
 
     c2, h2 = jget("GET", "/api/admin/integrations/health")

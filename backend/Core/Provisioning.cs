@@ -416,7 +416,13 @@ public static class CertuvoLink
             return;
         }
         if (!apiBase.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
-            && string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Production", StringComparison.OrdinalIgnoreCase))
+            && !string.Equals(
+                Environment.GetEnvironmentVariable("PCI_RUNTIME_ENVIRONMENT")
+                    ?? Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+                    ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
+                    ?? "Production",
+                "Development",
+                StringComparison.OrdinalIgnoreCase))
         {
             db.Execute("UPDATE certuvo_accounts SET status='error', last_error=?, updated_at=datetime('now') WHERE user_id=?",
                 "Certuvo API base must be HTTPS in production.", userId);

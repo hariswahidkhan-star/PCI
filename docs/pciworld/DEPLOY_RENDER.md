@@ -1,5 +1,9 @@
 # Deploying PCI World on its own Render service
 
+> Current dedicated image posture: external MySQL is required from first boot. Any interim
+> disk-backed SQLite bridge described below applies only to an explicitly custom deployment using
+> `PCIWORLD_ALLOW_SQLITE=true`; it is not the `PCIWorld/Dockerfile` default.
+
 Two supported shapes:
 
 - **A — One platform deployment** (the existing `pci-platform` service): PCI World is already

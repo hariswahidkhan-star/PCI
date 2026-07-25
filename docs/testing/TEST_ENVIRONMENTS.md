@@ -7,14 +7,16 @@ _Every environment a PCI test can run in, how it is provisioned, and its boundar
 
 | Environment | DB | Purpose | Egress | Notes |
 |---|---|---|---|---|
-| **CI `backend`** | SQLite (temp file) | Full live-HTTP integration suite | Blocked (mock vendors on loopback) | boots the built `PCI.Backend.dll` |
-| **CI `backend-mysql`** | MySQL service | Same suite against real MySQL | Blocked | `TEST_DB_PROVIDER=mysql`; dedicated DB per run |
-| **CI `backend-unit`** | temp SQLite per test | xUnit decision-logic layer | none (in-process) | `TestEnv.NewMigratedDb()` |
+| **CI `backend`** | SQLite (temp file) | Fast live-HTTP integration smoke | Blocked (mock vendors on loopback) | boots the built `PCI.Backend.dll` |
+| **CI `backend-mysql`** | MariaDB 10.11 | **Production-parity** adversarial + migration integrity | Blocked | `TEST_DB_PROVIDER=mysql`; dedicated DB per run |
+| **CI `backend-unit`** | temp SQLite per test | xUnit decision-logic smoke | none (in-process) | `TestEnv.NewMigratedDb()` |
+| **CI `backend-unit-mysql`** | MariaDB 10.11 | **Production-parity** finance xUnit (scoped filter) | none | full unit suite not yet MySQL-safe |
 | **CI `frontend`** | — | Vitest + lint + tsc + SPA build | npm registry only | jsdom; no browser |
-| **CI `e2e`** | SQLite (booted backend) | Playwright + axe | localhost only | `globalSetup` stages SPAs into `wwwroot` |
+| **CI `e2e`** | SQLite (booted backend) | Playwright smoke + axe | localhost only | `globalSetup` stages SPAs into `wwwroot` |
+| **CI `e2e-mysql`** | MariaDB 10.11 | **Production-parity** Playwright UI→API→MySQL | localhost only | `E2E_DB_PROVIDER=mysql` |
 | **CI `static-quality`** | — | dep/secret/lint/dockerfile gates | pinned container images | gitleaks blocking; nuget vuln blocking |
 | **CI `secureexam-*`** | — | SecureExam Core/Tests | none | Linux (Core) + Windows (WPF) |
-| **Local dev** | MariaDB via socket | Author-side verification | per host | MariaDB started on a scratchpad socket |
+| **Local dev** | SQLite or MariaDB | Author-side verification | per host | Prefer MySQL before money/release work |
 | **Render (staging/prod)** | Managed MySQL | Operator smoke / DR rehearsal | full | Operator-executed; see `EXTERNAL_PROVIDER_TEST_PLAN.md` |
 
 ## 2. Booting the backend for tests

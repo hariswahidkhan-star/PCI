@@ -16,10 +16,20 @@ namespace PCI.Backend.Core;
 public static class Money
 {
     /// <summary>Convert a major-unit amount (e.g. 149.5) to minor units (14950), half away from zero.</summary>
-    public static long ToMinor(double major) => (long)Math.Round(major * 100.0, MidpointRounding.AwayFromZero);
+    public static long ToMinor(double major)
+    {
+        if (!double.IsFinite(major)) throw new ArgumentOutOfRangeException(nameof(major), "Money must be finite.");
+        return ToMinor(Convert.ToDecimal(major));
+    }
+
+    /// <summary>Exact decimal overload; preferred for MySQL DECIMAL and provider amounts.</summary>
+    public static long ToMinor(decimal major) =>
+        checked((long)decimal.Round(major * 100m, 0, MidpointRounding.AwayFromZero));
 
     /// <summary>Convert a nullable DB value (REAL/DECIMAL/NULL) to minor units. NULL → 0.</summary>
-    public static long ToMinor(object? dbValue) => dbValue is null ? 0L : ToMinor(Convert.ToDouble(dbValue));
+    public static long ToMinor(object? dbValue) => dbValue is null or DBNull
+        ? 0L
+        : ToMinor(Convert.ToDecimal(dbValue, System.Globalization.CultureInfo.InvariantCulture));
 
     /// <summary>Render minor units as a major-unit decimal for API/display. Exact — no float involved.</summary>
     public static decimal ToDecimal(long minor) => minor / 100m;
@@ -37,11 +47,10 @@ public static class Money
     {
         if (minor == 0 || basisPoints == 0) return 0L;
         var negative = (minor < 0) ^ (basisPoints < 0);
-        var a = Math.Abs(minor);
-        var b = Math.Abs(basisPoints);
-        var scaled = a * b;                       // cents × bp; far inside long range for real money
-        var quotient = (scaled + 5_000L) / 10_000L;  // + half of 10_000 → round half up on the magnitude
-        return negative ? -quotient : quotient;
+        var a = Int128.Abs((Int128)minor);
+        var b = Int128.Abs((Int128)basisPoints);
+        var quotient = (a * b + 5_000) / 10_000;  // round half up on the magnitude
+        return checked((long)(negative ? -quotient : quotient));
     }
 
     /// <summary>
@@ -52,12 +61,12 @@ public static class Money
     {
         if (minor == 0 || part == 0 || whole == 0) return 0L;
         var negative = (minor < 0) ^ (part < 0) ^ (whole < 0);
-        var a = Math.Abs(minor);
-        var p = Math.Abs(part);
-        var w = Math.Abs(whole);
-        if (p >= w) return negative ? -a : a;     // a full (or over-) refund apportions the whole amount
+        var a = Int128.Abs((Int128)minor);
+        var p = Int128.Abs((Int128)part);
+        var w = Int128.Abs((Int128)whole);
+        if (p >= w) return checked((long)(negative ? -a : a)); // full/over-refund apportions the whole
         var quotient = (a * p + w / 2) / w;
-        return negative ? -quotient : quotient;
+        return checked((long)(negative ? -quotient : quotient));
     }
 
     /// <summary>Percentage (e.g. 7.5) expressed as basis points (750), rounded half away from zero.</summary>

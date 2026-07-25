@@ -7,8 +7,12 @@ The app treats every datetime as a STRING in the exact SQLite format
 defaults become a DATE_FORMAT(UTC_TIMESTAMP(),...) expression producing the
 same string — this keeps all the app's string-based date handling identical
 across providers. Run from backend/:  python3 tools/sqlite_to_mysql.py
+
+Money columns are emitted as DECIMAL(12,2) (not DOUBLE). Percentages, scores,
+and other non-currency REAL columns remain DOUBLE. Do not hand-tune money
+types in schema.mysql.sql — regenerate this file after schema.sql changes.
 """
-import re, os, sys
+import argparse, re, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "..", "schema.sql")
@@ -21,6 +25,35 @@ RESERVED = ["current_role", "usage"]
 
 NOW = "DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')"
 
+# Currency / fee columns that must be exact on MySQL. Matched only as DDL column definitions
+# (`col DOUBLE` → `col DECIMAL(12,2)`). Percentages (e.g. default_discount_percentage,
+# commission_pct, pass_mark_pct) and scores stay DOUBLE.
+MONEY_COLUMNS = (
+    "standard_price",
+    "discount_value",
+    "standard_amount",
+    "default_discount_amount",
+    "discount_code_amount",
+    "final_amount",
+    "renewal_fee",
+    "amount_paid",
+    "exam_price",
+    "amount_before",
+    "discount_amount",
+    "application_fee",
+    "waived_amount",
+    "original_amount",
+    "payable_amount",
+    "amount_refunded",
+    "min_payable",
+    "min_transaction",
+    "max_discount",
+    "fee_amount",
+    "requested_amount",
+    "net_amount",
+    "amount",  # partner_payouts.amount (and any other plain amount money column)
+)
+
 def translate_datetime_default(sql):
     # DEFAULT (datetime('now'))  →  DEFAULT (<NOW expression>)
     return sql.replace("DEFAULT (datetime('now'))", f"DEFAULT ({NOW})")
@@ -29,6 +62,18 @@ def backtick_reserved(sql):
     for w in RESERVED:
         sql = re.sub(rf"\b{w}\b", f"`{w}`", sql)
     return sql
+
+def money_as_decimal(sql):
+    """Rewrite known money DOUBLE columns to DECIMAL(12,2). Runs after REAL→DOUBLE."""
+    out = sql
+    for col in MONEY_COLUMNS:
+        out = re.sub(
+            rf"\b({re.escape(col)})\s+DOUBLE\b",
+            r"\1 DECIMAL(12,2)",
+            out,
+            flags=re.IGNORECASE,
+        )
+    return out
 
 def convert(sql):
     out = sql
@@ -45,6 +90,16 @@ def convert(sql):
     # ---- scalar types ----
     out = re.sub(r"\bINTEGER\b", "BIGINT", out)
     out = re.sub(r"\bREAL\b", "DOUBLE", out)
+    # ---- money: exact fixed-point on MySQL (must follow REAL→DOUBLE) ----
+    out = money_as_decimal(out)
+    # ---- Oracle MySQL requires BLOB/TEXT literal defaults to be parenthesised expressions.
+    # MariaDB accepts this spelling too, so the generated schema remains portable. ----
+    out = re.sub(
+        r"\bTEXT\b(\s+NOT\s+NULL)?\s+DEFAULT\s+('(?:''|[^'])*')",
+        r"TEXT\1 DEFAULT (\2)",
+        out,
+        flags=re.IGNORECASE,
+    )
     # ---- strip inline REFERENCES: SQLite FKs here are advisory (the app enforces relationships in
     #      code); MySQL would enforce them strictly with load-order/type constraints, changing behaviour. ----
     out = re.sub(r"\s+REFERENCES\s+\w+\s*\([^)]*\)", "", out)
@@ -94,13 +149,27 @@ def add_index_prefixes(sql):
     return re.sub(r"(CREATE (?:UNIQUE )?INDEX(?: IF NOT EXISTS)? \w+ ON )(\w+)\(([^)]*)\)", fix_index, sql)
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check", action="store_true",
+                        help="fail if committed schema.mysql.sql is not current")
+    args = parser.parse_args()
     sql = open(SRC, encoding="utf-8").read()
     header = ("-- GENERATED from schema.sql by tools/sqlite_to_mysql.py — DO NOT EDIT BY HAND.\n"
               "-- Regenerate after changing schema.sql. Datetimes are VARCHAR strings in the SQLite\n"
-              "-- format so the app's string-based date handling is identical across providers.\n\n"
-              "SET sql_mode='';\n\n")
-    open(DST, "w", encoding="utf-8").write(header + convert(sql))
+              "-- format so the app's string-based date handling is identical across providers.\n"
+              "-- Money columns are DECIMAL(12,2); regenerate — do not hand-tune types.\n\n"
+              "SET SESSION sql_mode='PIPES_AS_CONCAT';\n\n")
+    generated = header + convert(sql)
+    if args.check:
+        current = open(DST, encoding="utf-8").read() if os.path.exists(DST) else ""
+        if current != generated:
+            print("schema.mysql.sql is stale; run python3 tools/sqlite_to_mysql.py", file=sys.stderr)
+            return 1
+        print("schema.mysql.sql is current")
+        return 0
+    open(DST, "w", encoding="utf-8").write(generated)
     print("wrote", DST)
+    return 0
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

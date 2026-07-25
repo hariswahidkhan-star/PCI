@@ -1,5 +1,10 @@
 # Project Controls Institute — Developer Guide
 
+> **Historical reference:** sections describing a SQLite-only backend, vanilla-only frontend, or
+> `student.html`/`admin.html` as the primary portals predate the React + MySQL production architecture.
+> Use `docs/audit/PHASE_0_PLATFORM_AUDIT_2026-07-25.md`, `MYSQL.md`, and current code for
+> authoritative deployment decisions. SQLite is local/CI smoke only.
+
 **Version:** 1.0 · **Backend:** ASP.NET Core 8 (`PCI.Backend`) · **Status:** compile- and boot-verified (.NET 8.0.128)
 
 This is the complete engineering reference for the Project Controls Institute (PCI) certification platform:

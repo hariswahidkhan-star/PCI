@@ -97,8 +97,8 @@ public static class TestEnv
 
     /// <summary>
     /// The app's schema file for the active provider — the SAME file the app boots from, so the tests
-    /// exercise the production schema (including the hand-tuned DECIMAL money columns and index prefix
-    /// lengths in schema.mysql.sql) rather than a translated approximation of it.
+    /// exercise the production schema (including DECIMAL money columns and index prefix lengths in
+    /// schema.mysql.sql) rather than a translated approximation of it.
     /// </summary>
     public static string SchemaPath()
     {

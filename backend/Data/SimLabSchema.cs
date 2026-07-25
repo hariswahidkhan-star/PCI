@@ -12,7 +12,7 @@ namespace PCI.Backend.Data;
 /// Follows the MarketingSchema pattern: a self-contained, idempotent Ensure(db) using the SQLite dialect
 /// that Db.cs auto-translates to MySQL. Runs on every boot on BOTH providers (so migration-integrity
 /// table-set parity holds); not declared in schema.sql. Scores/percentages are REAL (→ DOUBLE); there are
-/// no money columns here, so the schema.mysql.sql DECIMAL hand-fix does not apply to this module.
+/// no money columns here, so the schema.mysql.sql DECIMAL money mapping does not apply to this module.
 /// </summary>
 public static class SimLabSchema
 {

@@ -9,6 +9,11 @@ import { E2E_ADMIN, E2E_CREDENTIAL_KEY, E2E_STORAGE_ROOT } from './e2e/util'
 // the same reused dev database as well as a fresh CI one.
 const PORT = process.env.E2E_PORT || '8080'
 const BASE = process.env.E2E_BASE_URL || `http://127.0.0.1:${PORT}`
+const requestedProvider = (process.env.E2E_DB_PROVIDER || process.env.DB_PROVIDER || 'sqlite').toLowerCase()
+if (!['sqlite', 'mysql', 'mariadb'].includes(requestedProvider)) {
+  throw new Error(`Unknown E2E_DB_PROVIDER '${requestedProvider}'`)
+}
+const mysqlParity = requestedProvider === 'mysql' || requestedProvider === 'mariadb'
 
 // When Chromium is preinstalled, point only Chromium-based projects at it. Firefox/WebKit retain
 // their own engines; CI installs all three browser families.
@@ -21,7 +26,7 @@ const executablePath = process.env.PW_CHROMIUM_PATH || undefined
 // the live-HTTP integration suite, the migration-integrity checks) is already exercised on both, and
 // the browser journeys were the last that never had been.
 const database =
-  process.env.DB_PROVIDER === 'mysql'
+  mysqlParity
     ? {
         DB_PROVIDER: 'mysql',
         MYSQL_HOST: process.env.MYSQL_HOST || '127.0.0.1',
@@ -41,7 +46,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI || mysqlParity ? 1 : undefined,
   reporter: process.env.CI ? [['github'], ['list'], ['html', { open: 'never' }]] : [['list'], ['html', { open: 'never' }]],
   timeout: 30_000,
   use: {
@@ -87,7 +92,7 @@ export default defineConfig({
           SEED_DEMO_EXAM: 'true',
           E2E_EXAM_OPEN_BEFORE_MINUTES: '100000',
         },
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: !process.env.CI && !mysqlParity,
         timeout: 120_000,
       },
 })

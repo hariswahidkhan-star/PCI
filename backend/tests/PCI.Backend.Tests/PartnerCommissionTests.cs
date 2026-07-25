@@ -112,6 +112,23 @@ public class PartnerCommissionTests
     }
 
     [Fact]
+    public void Apportion_uses_wide_intermediate_math_at_DECIMAL_12_2_boundaries()
+    {
+        Assert.Equal(1_000_000_000L,
+            Money.Apportion(2_000_000_000L, 10_000_000_000L, 20_000_000_000L));
+        Assert.Equal(-1_000_000_000L,
+            Money.Apportion(-2_000_000_000L, 10_000_000_000L, 20_000_000_000L));
+    }
+
+    [Fact]
+    public void ToMinor_preserves_decimal_values_and_rejects_non_finite_doubles()
+    {
+        Assert.Equal(4_513L, Money.ToMinor(45.125m));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Money.ToMinor(double.NaN));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Money.ToMinor(double.PositiveInfinity));
+    }
+
+    [Fact]
     public void PercentToBasisPoints_round_trips()
     {
         Assert.Equal(750L, Money.PercentToBasisPoints(7.5));

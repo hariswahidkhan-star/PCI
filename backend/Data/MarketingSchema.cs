@@ -75,8 +75,8 @@ public static class MarketingSchema
             audience_summary TEXT, geography TEXT, language VARCHAR(10),
             landing_page_id INTEGER, promotion_id INTEGER,
             start_date TEXT, end_date TEXT,
-            total_budget REAL DEFAULT 0, budget_currency VARCHAR(8) DEFAULT 'USD',
-            alloc_linkedin REAL DEFAULT 0, alloc_google REAL DEFAULT 0, alloc_meta REAL DEFAULT 0,
+            total_budget DECIMAL(12,2) DEFAULT 0, budget_currency VARCHAR(8) DEFAULT 'USD',
+            alloc_linkedin DECIMAL(12,2) DEFAULT 0, alloc_google DECIMAL(12,2) DEFAULT 0, alloc_meta DECIMAL(12,2) DEFAULT 0,
             conversion_goal TEXT, status VARCHAR(30) DEFAULT 'draft', approval_status VARCHAR(30) DEFAULT 'draft',
             created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_mkt_camp_status ON mkt_campaigns(status)");
@@ -86,7 +86,7 @@ public static class MarketingSchema
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             campaign_id INTEGER NOT NULL, platform_code VARCHAR(40) NOT NULL, connection_id INTEGER,
             provider_campaign_id TEXT, name TEXT, objective TEXT, campaign_type TEXT,
-            daily_budget REAL, lifetime_budget REAL, bid_strategy TEXT,
+            daily_budget DECIMAL(12,2), lifetime_budget DECIMAL(12,2), bid_strategy TEXT,
             targeting_json TEXT, landing_page_id INTEGER, lead_form_id INTEGER, conversion_id INTEGER,
             status VARCHAR(30) DEFAULT 'draft', provider_status TEXT, approval_status VARCHAR(30) DEFAULT 'draft',
             last_synced_at TEXT, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
@@ -114,7 +114,7 @@ public static class MarketingSchema
         db.Exec(@"CREATE TABLE IF NOT EXISTS mkt_promotions(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL, code VARCHAR(60), promo_type VARCHAR(40), certification_id INTEGER, route_key TEXT,
-            fee_type VARCHAR(40), original_amount REAL, discount_amount REAL, discount_percent REAL, net_amount REAL,
+            fee_type VARCHAR(40), original_amount DECIMAL(12,2), discount_amount DECIMAL(12,2), discount_percent REAL, net_amount DECIMAL(12,2),
             currency VARCHAR(8) DEFAULT 'USD', start_date TEXT, end_date TEXT,
             countries TEXT, languages TEXT, usage_limit INTEGER, per_user_limit INTEGER,
             landing_page_id INTEGER, status VARCHAR(24) DEFAULT 'draft', approval_status VARCHAR(30) DEFAULT 'draft',
@@ -155,7 +155,7 @@ public static class MarketingSchema
             campaign_id INTEGER, connection_id INTEGER, name TEXT NOT NULL, objective TEXT,
             sender_identity TEXT, intro_message TEXT, steps_json TEXT, buttons_json TEXT,
             audience_id INTEGER, landing_page_id INTEGER, lead_form_id INTEGER,
-            daily_budget REAL, lifetime_budget REAL, start_date TEXT, end_date TEXT, frequency_cap TEXT,
+            daily_budget DECIMAL(12,2), lifetime_budget DECIMAL(12,2), start_date TEXT, end_date TEXT, frequency_cap TEXT,
             status VARCHAR(30) DEFAULT 'draft', approval_status VARCHAR(30) DEFAULT 'draft',
             provider_campaign_id TEXT, metrics_json TEXT,
             created_by INTEGER, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))");
@@ -186,11 +186,11 @@ public static class MarketingSchema
         db.Exec(@"CREATE TABLE IF NOT EXISTS mkt_conversions(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL, platform_code VARCHAR(40), provider_conversion_id TEXT,
-            business_event VARCHAR(60), value REAL, currency VARCHAR(8) DEFAULT 'USD',
+            business_event VARCHAR(60), value DECIMAL(12,2), currency VARCHAR(8) DEFAULT 'USD',
             enabled INTEGER DEFAULT 1, created_by INTEGER, created_at TEXT DEFAULT (datetime('now')))");
         db.Exec(@"CREATE TABLE IF NOT EXISTS mkt_conversion_events(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            conversion_id INTEGER, campaign_id INTEGER, user_ref TEXT, value REAL, currency VARCHAR(8),
+            conversion_id INTEGER, campaign_id INTEGER, user_ref TEXT, value DECIMAL(12,2), currency VARCHAR(8),
             utm_json TEXT, event_at TEXT, upload_status VARCHAR(24) DEFAULT 'pending', provider_response TEXT,
             dedup_key VARCHAR(160), created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_mkt_conv_evt_dedup ON mkt_conversion_events(dedup_key)");
@@ -219,12 +219,12 @@ public static class MarketingSchema
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             platform_campaign_id INTEGER, list_name TEXT, keyword TEXT NOT NULL, match_type VARCHAR(16),
             kind VARCHAR(12) DEFAULT 'keyword',  -- keyword | negative
-            status VARCHAR(16) DEFAULT 'active', max_cpc REAL, created_by INTEGER, created_at TEXT DEFAULT (datetime('now')))");
+            status VARCHAR(16) DEFAULT 'active', max_cpc DECIMAL(18,6), created_by INTEGER, created_at TEXT DEFAULT (datetime('now')))");
 
         // ── Budget approvals ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS mkt_budget_approvals(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            campaign_id INTEGER, requested_amount REAL, currency VARCHAR(8), reason TEXT,
+            campaign_id INTEGER, requested_amount DECIMAL(12,2), currency VARCHAR(8), reason TEXT,
             tier VARCHAR(30),  -- marketing|finance|senior|two_person
             requested_by INTEGER, status VARCHAR(20) DEFAULT 'pending', decided_by INTEGER, decided_at TEXT, note TEXT,
             created_at TEXT DEFAULT (datetime('now')))");
@@ -264,8 +264,8 @@ public static class MarketingSchema
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             platform_campaign_id INTEGER, platform_code VARCHAR(40), day TEXT,
             impressions INTEGER DEFAULT 0, reach INTEGER DEFAULT 0, clicks INTEGER DEFAULT 0,
-            spend REAL DEFAULT 0, currency VARCHAR(8) DEFAULT 'USD',
-            leads INTEGER DEFAULT 0, conversions INTEGER DEFAULT 0, conversion_value REAL DEFAULT 0,
+            spend DECIMAL(18,6) DEFAULT 0, currency VARCHAR(8) DEFAULT 'USD',
+            leads INTEGER DEFAULT 0, conversions INTEGER DEFAULT 0, conversion_value DECIMAL(18,6) DEFAULT 0,
             video_views INTEGER DEFAULT 0, dedup_key VARCHAR(160),
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_mkt_metrics_dedup ON mkt_campaign_metrics(dedup_key)");

@@ -8,12 +8,12 @@ know exactly where the trust boundary is before you rely on it.
 
 ## 0. What this system is (architecture in one paragraph)
 
-- **Backend** — ASP.NET Core 8 **Minimal API** (not MVC controllers). ~157 HTTP endpoints across
-  `PCI.Backend/Endpoints/*.cs`, backed by **SQLite** (`schema.sql` + idempotent `Data/Migrate.cs`).
-  Validation is inline in each endpoint (~170 guards: RBAC, ownership, timing, type/size, entitlement).
-- **Frontend** — static single-file HTML/CSS/vanilla-JS apps in `PCI.Backend/wwwroot/`
-  (public site, `student.html`, `admin.html`, `exam-ui.html`, `checkout.html`, `enroll.html`).
-  Served by the backend itself (`app.UseStaticFiles()`), so there is no separate web server to run.
+- **Backend** — ASP.NET Core 8 **Minimal API** (not MVC controllers). Endpoints across
+  `Endpoints/*.cs`, dual-provider DB: **SQLite for local/CI smoke**, **MySQL/MariaDB for
+  production** (`schema.sql` / `schema.mysql.sql` + idempotent `Data/Migrate.cs`). See `MYSQL.md`.
+  Validation is inline in each endpoint (RBAC, ownership, timing, type/size, entitlement).
+- **Frontend** — public site HTML under `wwwroot/`, plus React SPAs at `/app` (student) and
+  `/admin` (admin console), served by the backend (`app.UseStaticFiles()`).
 - **Desktop secure exam client** — `PCI.SecureExam/`, a **Windows-only** WPF app (`net8.0-windows`,
   OpenCV + NAudio). `PCI.SecureExam.Core` (pure `net8.0`) holds the shared, testable logic.
 - **Payments** — Stripe (checkout + webhook), keyed off environment variables.
@@ -57,7 +57,8 @@ First-run admin (from `Data/Migrate.cs`): `owner@pci.local` / `changeme-owner` �
 
 | Var | Needed when | Notes |
 |---|---|---|
-| `DATABASE_FILE` | always | use a **persistent** path in prod (not `/tmp`). If a writable disk is mounted at `/data` and this is unset, the app adopts `/data/pci.db` automatically |
+| `DATABASE_FILE` | SQLite local/dev | use a persistent path locally. If `/data` is writable and provider is **not** MySQL, the app may adopt `/data/pci.db`. Production uses MySQL (`DB_PROVIDER=mysql`) — see `MYSQL.md` |
+| `DB_PROVIDER` | production | `mysql` required in Production (`render.yaml`); default `sqlite` for local |
 | `PORT` | optional | default 8080 |
 | `STRIPE_SECRET_KEY` | payments on | without it, payment endpoints return 503 |
 | `STRIPE_WEBHOOK_SECRET` | payments on | **required in prod**; used to verify webhook signatures |
@@ -126,7 +127,7 @@ There is **no pre-built `.exe` in this repo** — you must run the `publish` com
 ## 5. Tests
 
 ```bash
-# Backend logic suites (real SQLite, replicate production SQL) — from PCI.Backend/
+# Backend logic suites (fast SQLite smoke; MySQL jobs are production parity) — from PCI.Backend/
 python3 tests/lifecycle_test.py   # result lifecycle, consents, auto-hold, entitlement, webhook idempotency
 python3 tests/release_test.py     # admin release/invalidate/reinstate, configured pass mark, expiry-aware verify
 python3 tests/casework_test.py    # appeals, accommodations (+duration effect), attachments, CPD, certificate
@@ -237,12 +238,10 @@ proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for;
 
 ### 8.3 Persistent volumes + backup
 
-- Mount a **persistent volume** for **both** `DATABASE_FILE` (the SQLite DB + `-wal`/`-shm`) and
-  `STORAGE_ROOT` (evidence/attachment bytes). Neither may live under `/tmp` — the config validator refuses
-  a `/tmp` database in production.
-- **Backup**: snapshot the DB with `sqlite3 pci.db ".backup '/backups/pci-$(date +%F).db'"` (or copy while
-  the app is quiesced — WAL mode makes a live file copy risky), and back up `STORAGE_ROOT` alongside it so
-  references and bytes stay consistent. Keep them in the same restore set.
+- Production/staging uses managed **MySQL** (`DB_PROVIDER=mysql`) plus a persistent
+  `STORAGE_ROOT` for evidence/attachment bytes. `DATABASE_FILE` is local-development only.
+- **Backup**: use `tools/mysql_backup.sh` (or your managed provider's snapshot/PITR) and back up
+  `STORAGE_ROOT` alongside it. Keep database and object bytes in the same restore set.
 
 ### 8.4 Scheduled retention
 
@@ -252,9 +251,10 @@ remains for on-demand runs.
 
 ### 8.5 Production env checklist
 
-Set: `ASPNETCORE_ENVIRONMENT=Production`, `DATABASE_FILE` (persistent), `STORAGE_ROOT` (persistent),
+Set: `ASPNETCORE_ENVIRONMENT=Production`, `DB_PROVIDER=mysql`, `MYSQL_*` (`MYSQL_SSL=required`),
+`STORAGE_ROOT` (persistent),
 `APP_BASE_URL` (public https), `ALLOWED_ORIGIN` (exact origin, no wildcard), `STRIPE_SECRET_KEY` +
-`STRIPE_WEBHOOK_SECRET`, `ADMIN_OWNER_PASSWORD`, `SMTP_HOST` (+creds). Do **not** set
+`STRIPE_WEBHOOK_SECRET`, `CREDENTIAL_ENCRYPTION_KEY`, `ADMIN_OWNER_PASSWORD`, `SMTP_HOST` (+creds). Do **not** set
 `ENABLE_LEGACY_ADMIN_TOKEN` or `ALLOW_INSECURE_PRODUCTION`. Boot, then `GET /api/admin/system-check`
 (owner) must report `ok:true`. `owner_password_changed` stays false until the owner completes the forced
 first-login password change — do that before go-live.

@@ -38,7 +38,11 @@ public sealed class Db
 
     public Db(string path)
     {
-        var prov = (Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "sqlite").Trim().ToLowerInvariant();
+        var configuredProvider = Environment.GetEnvironmentVariable("DB_PROVIDER");
+        var prov = (configuredProvider ?? "sqlite").Trim().ToLowerInvariant();
+        if (configuredProvider is not null && prov is not ("sqlite" or "mysql" or "mariadb"))
+            throw new InvalidOperationException(
+                $"Unknown DB_PROVIDER '{configuredProvider}'. Expected sqlite, mysql, or mariadb; refusing fallback.");
         if (prov is "mysql" or "mariadb")
         {
             Provider = Kind.MySql;
@@ -173,6 +177,15 @@ public sealed class Db
         // DDL (Migrate.cs idempotent statements written in SQLite dialect)
         s = s.Replace("INTEGER PRIMARY KEY AUTOINCREMENT", "BIGINT PRIMARY KEY AUTO_INCREMENT");
         s = System.Text.RegularExpressions.Regex.Replace(s, @"\bINTEGER\b", "BIGINT");
+        // Oracle MySQL permits defaults on BLOB/TEXT only when written as expressions. A quoted
+        // literal therefore needs parentheses (`TEXT DEFAULT ('active')`); MariaDB accepts the
+        // SQLite spelling directly. This applies to runtime installers as well as the base schema.
+        if (!mariaDb)
+            s = System.Text.RegularExpressions.Regex.Replace(
+                s,
+                @"\bTEXT\b(\s+NOT\s+NULL)?\s+DEFAULT\s+('(?:''|[^'])*')",
+                "TEXT$1 DEFAULT ($2)",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         // CREATE INDEX IF NOT EXISTS: valid on MariaDB, a SYNTAX ERROR on MySQL 8. Strip it ONLY for
         // MySQL, and let Exec() absorb the duplicate-key error instead — same idempotence, both
         // engines. On MariaDB the clause is load-bearing: the core schema declares some indexes both
@@ -319,6 +332,8 @@ public sealed class Db
     {
         lock (_gate)
         {
+            if (Provider == Kind.MySql && !IsMariaDb)
+                sqlScript = RemoveExistingMySqlIndexes(sqlScript);
             var sql = Translate(sqlScript);
             try
             {
@@ -358,20 +373,58 @@ public sealed class Db
         }
     }
 
+    /// <summary>
+    /// Oracle MySQL 8 does not support CREATE INDEX IF NOT EXISTS. The base schema is a multi-statement
+    /// script, so the normal single-index duplicate handler cannot recover once a duplicate aborts the
+    /// batch. Remove only index statements whose names already exist; missing indexes remain in the
+    /// script and TranslateFor strips their unsupported IF NOT EXISTS clause.
+    /// </summary>
+    string RemoveExistingMySqlIndexes(string script)
+    {
+        var rx = new System.Text.RegularExpressions.Regex(
+            @"CREATE\s+(?:UNIQUE\s+)?INDEX\s+IF\s+NOT\s+EXISTS\s+`?([A-Za-z0-9_]+)`?\s+ON\s+`?([A-Za-z0-9_]+)`?[^;]*;",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        return rx.Replace(script, match =>
+        {
+            using var cmd = NewCmd();
+            cmd.CommandText = @"SELECT COUNT(*) FROM information_schema.statistics
+                WHERE table_schema=DATABASE() AND index_name=@indexName AND table_name=@tableName";
+            var p1 = cmd.CreateParameter(); p1.ParameterName = "@indexName"; p1.Value = match.Groups[1].Value;
+            var p2 = cmd.CreateParameter(); p2.ParameterName = "@tableName"; p2.Value = match.Groups[2].Value;
+            cmd.Parameters.Add(p1); cmd.Parameters.Add(p2);
+            return Convert.ToInt64(cmd.ExecuteScalar()) > 0 ? "" : match.Value;
+        });
+    }
+
     static bool IsIndexDdl(string sql) =>
         sql.TrimStart().StartsWith("CREATE", StringComparison.OrdinalIgnoreCase) &&
         sql.Contains("INDEX", StringComparison.OrdinalIgnoreCase);
 
-    /// <summary>Rewrite `CREATE INDEX x ON t(a, b)` as `… (a(191), b(191))`. Applied only after MySQL
-    /// has told us a column in this index is a BLOB/TEXT that needs a length; a prefix on a column
-    /// that does not need one is harmless and indexes the same leading characters MariaDB would.</summary>
-    static string PrefixIndexedColumns(string sql)
+    /// <summary>Rewrite `CREATE INDEX x ON t(a, b)` as `… (a(191), b)` — a prefix is added ONLY to
+    /// the columns MySQL reports as BLOB/TEXT. Applied only after MySQL has told us a column in this
+    /// index needs a length; prefixing a non-string column (e.g. a BIGINT in a composite key) is a
+    /// hard error (1089), so column types are read from information_schema first.</summary>
+    string PrefixIndexedColumns(string sql)
     {
         var open = sql.LastIndexOf('(');
         var close = sql.LastIndexOf(')');
         if (open < 0 || close < open) return sql;
+        var tableMatch = System.Text.RegularExpressions.Regex.Match(
+            sql[..open], @"ON\s+`?([A-Za-z0-9_]+)`?\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        var textCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (tableMatch.Success)
+        {
+            using var cmd = NewCmd();
+            cmd.CommandText = @"SELECT column_name FROM information_schema.columns
+                WHERE table_schema=DATABASE() AND table_name=@tableName
+                  AND data_type IN ('text','tinytext','mediumtext','longtext','blob','tinyblob','mediumblob','longblob')";
+            var p = cmd.CreateParameter(); p.ParameterName = "@tableName"; p.Value = tableMatch.Groups[1].Value;
+            cmd.Parameters.Add(p);
+            using var rd = cmd.ExecuteReader();
+            while (rd.Read()) textCols.Add(rd.GetString(0));
+        }
         var cols = sql[(open + 1)..close].Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        var rewritten = cols.Select(c => c.Contains('(') ? c : c + "(191)");
+        var rewritten = cols.Select(c => !c.Contains('(') && textCols.Contains(c.Trim('`')) ? c + "(191)" : c);
         return sql[..(open + 1)] + string.Join(", ", rewritten) + sql[close..];
     }
 

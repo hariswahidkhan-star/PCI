@@ -3,7 +3,7 @@
 The PCI platform runs on **MySQL 8.x / MariaDB 10.11+** in every non-local environment
 (staging, production, and DB integration tests). SQLite is permitted only for quick local
 development; it is **not** a production or fallback database. The app enforces this: in
-`ASPNETCORE_ENVIRONMENT=Production` it refuses to boot unless `DB_PROVIDER=mysql`, and there is
+framework-default Production, explicit Production, or Staging it refuses to boot unless `DB_PROVIDER=mysql`, and there is
 no silent SQLite fallback if MySQL is unreachable — it fails loudly and retries the connection.
 
 The backend is provider-agnostic (raw SQL through `Data/Db.cs`, which translates SQLite-dialect
@@ -26,7 +26,8 @@ FLUSH PRIVILEGES;
 ```
 
 The schema is created automatically on first boot (`schema.mysql.sql` + idempotent migrations in
-`Data/Migrate.cs`). Money columns are `DECIMAL(12,2)`; the app never uses floating point at rest for money.
+`Data/Migrate.cs`). The explicit money manifest is exact (`DECIMAL(12,2)`, with `DECIMAL(18,6)` for
+provider CPC/spend values); integer-minor-unit partner-finance columns remain BIGINT.
 
 ---
 
@@ -34,7 +35,7 @@ The schema is created automatically on first boot (`schema.mysql.sql` + idempote
 
 | Variable | Purpose | Example |
 |---|---|---|
-| `DB_PROVIDER` | `mysql` (or `mariadb`) selects MySQL; anything else = SQLite (local dev only) | `mysql` |
+| `DB_PROVIDER` | `mysql` (or `mariadb`) selects MySQL; `sqlite` is explicit local dev; unknown values fail | `mysql` |
 | `MYSQL_HOST` | server hostname | `db.internal` |
 | `MYSQL_PORT` | port | `3306` |
 | `MYSQL_DATABASE` | database name | `pci` |
@@ -59,7 +60,8 @@ DB_PROVIDER=mysql MYSQL_HOST=127.0.0.1 MYSQL_PORT=3306 MYSQL_DATABASE=pci MYSQL_
 On Render these are in `render.yaml` (`sync:false` for secrets).
 
 **DB integration tests on MySQL:** the Python suites honour `TEST_DB_PROVIDER=mysql` + the `MYSQL_*`
-vars; the CI `backend-mysql` job runs the adversarial suites against MariaDB 10.11 on every push.
+vars; CI runs the adversarial suites against MariaDB 10.11 and double-boot migration integrity
+against both MariaDB 10.11 and Oracle MySQL 8.4.
 
 ---
 
@@ -85,7 +87,8 @@ python3 backend/tools/migrate_sqlite_to_mysql.py --source /backup/pci.sqlite.<da
   --mysql-host <host> --mysql-db pci --mysql-user pci --mysql-password *** --report migration-report.json
 ```
 
-Exit code `0` = clean (row counts, financial totals, FK integrity, uniqueness all reconciled);
+Exit code `0` = clean (schema coverage, row counts, exact Decimal financial totals, FK integrity,
+uniqueness all reconciled); source tables/columns absent from the target are discrepancies;
 `2` = completed but with discrepancies (inspect the report / `DISCREPANCIES` list); `1` = error.
 A matching row count is necessary but **not sufficient** — the tool also reconciles financial sums
 and relationships. Review `migration-report.json` before cutover.
