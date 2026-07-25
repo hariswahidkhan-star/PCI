@@ -118,9 +118,9 @@ public static class Careers
             string? cvRef = null, cvName = null;
             if (H.GetS(b, "cv_data", "cv") is { Length: > 0 } dataUri)
             {
-                var (reference, clean, err) = StoreUpload(H.GetS(b, "cv_name", "filename"), dataUri, "cv");
+                var (storedRef, clean, err) = StoreUpload(H.GetS(b, "cv_name", "filename"), dataUri, "cv");
                 if (err is not null) return Results.Json(new { error = err, message = "That CV file could not be accepted." }, statusCode: 400);
-                cvRef = reference; cvName = clean;
+                cvRef = storedRef; cvName = clean;
             }
             // Job-specific questions: validate required answers and capture them (label+value) for the reviewer.
             var questions = db.Query("SELECT id,label,required FROM job_questions WHERE job_id=? ORDER BY sort_order,id", id);
