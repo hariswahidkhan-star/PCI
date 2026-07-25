@@ -127,7 +127,8 @@ public static class WorldPassport
         // ── header band, in the brand's noir, with the gilt seal ──
         cs.Append($"{Noir} rg ").Append($"20 {H2 - 130:0.##} {W - 40:0.##} 110 re f ");
         cs.Append($"{Crimson} rg ").Append($"44 {H2 - 116:0.##} 62 4 re f ");           // crimson rule
-        cs.Append($"{Gilt} rg ").Append($"110 {H2 - 116:0.##} 30 1.2 re f ");           // gilt echo
+        // The endorsement follows the crimson rule, exactly as the web lockup draws it.
+        Text(cs, "FROM THE PROJECT CONTROLS INSTITUTE", 114, H2 - 115.5, 7.5, bold: false, 0.72, 0.78, 0.86, spacing: 1.6);
         Text(cs, "PCI WORLD", 44, H2 - 62, 26, bold: true, 1, 1, 1);
         Text(cs, "PASSPORT — VERIFIED PRACTICE EVIDENCE", 44, H2 - 84, 9.5, bold: false, 0.72, 0.78, 0.86, spacing: 2.2);
         Seal(cs, W - 88, H2 - 75, 33);

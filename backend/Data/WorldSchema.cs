@@ -209,6 +209,8 @@ public static class WorldSchema
             passport_show_profiles INTEGER DEFAULT 1,
             passport_show_dates INTEGER DEFAULT 1,
             passport_expires_at TEXT,
+            passport_photo_ref VARCHAR(255),
+            passport_photo_mime VARCHAR(32),
             failed_logins INTEGER DEFAULT 0,
             lockout_until TEXT,
             last_login_at TEXT,
@@ -247,6 +249,11 @@ public static class WorldSchema
         // A public link that never expires is a decision nobody consciously made. NULL = no expiry
         // (the existing behaviour); a date makes the link stop resolving on its own.
         AddCol("pciworld_users", "passport_expires_at", "passport_expires_at TEXT");
+        // The optional Passport photograph. The DB holds only a Core/Storage reference (never the
+        // bytes), and uploading is itself the consent: NULL simply means no photo, which is how
+        // every account created before these columns behaves.
+        AddCol("pciworld_users", "passport_photo_ref", "passport_photo_ref VARCHAR(255)");
+        AddCol("pciworld_users", "passport_photo_mime", "passport_photo_mime VARCHAR(32)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_user ON pciworld_attempts(user_id)");
 
         // ── Separate PCI World admin realm (partner-portal precedent: wholly separate from
