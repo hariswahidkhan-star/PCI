@@ -370,9 +370,20 @@ and the joins are not.**
 **Phase 2's foundation scope is now met on both books** — PML-AI Part One (Domains 1–4) and PFL-AI
 Part One (Domains 1–4) are complete, with PFL-AI Part Three opened by Domain 10 and PML-AI Part Two
 opened by Domains 6–8. Production continues into the remaining domains in loop order:
-(1) PFL-AI Domain 5 (Cost of capital and capital structure) — Domain 4 has taken its 8 % discount
-rate as given and Domain 10's coverage work now motivates the leverage question directly;
-(2) PML-AI Domain 5 (Scope, requirements and value definition), which completes the front of Part Two
-that Domains 6–8 already assume; (3) PFL-AI Domain 6 (Financial modelling and model governance),
-which Domains 3, 4 and 10 have each deferred a model-audit point to. A Phase 2 gate report closes the
-phase once these three land; Phase 3 (cases and question banks) follows per the charter §8.
+(1) **PFL-AI Domain 5 — Project development and bankability**, opening PFL-AI Part Two, per the
+Phase 0 TOC (`pfl-ai/TOC.md`); note the correction, since Batch 12's queue named this slot "cost of
+capital and capital structure", which the blueprint does not have as a domain — cost of capital and
+the instruments live in **Domain 9 (Funding structure and sources of capital)** and returns in
+Domain 6, and the TOC governs. (2) **PML-AI Domain 5 — Scope, requirements and value definition**,
+which completes the front of Part Two that Domains 6–8 already assume. (3) **PFL-AI Domain 6 —
+Financial modelling and model governance**, which Domains 3, 4 and 10 have each deferred a model-audit
+point to, and which PML-AI Domain 4's baseline-reconciliation discipline maps onto directly. A Phase 2
+gate report closes the phase once these three land; Phase 3 (cases and question banks) follows per the
+charter §8.
+
+**Standing note for the next author.** Both books now have a *pair* of master threads rather than one,
+and the pairing is deliberate: PML-AI runs **Meridian Care Records** at programme scale (Domains 1–4)
+and **Project Auriga** at single-project scale (Domains 6–8), which Domain 4's opening states
+explicitly; PFL-AI runs **Kestrel Water SPC** throughout. New domains must join an existing thread
+rather than introduce a third, and any figure reused across domains must carry the same numbers — the
+harness enforces this, since a value that appears in two domains has one golden check, not two.
