@@ -43,7 +43,10 @@ public static class Payments
                 {
                     var em = (email ?? "").Trim().ToLowerInvariant();
                     var urow = em.Length > 0 ? db.QueryOne("SELECT id FROM users WHERE email=?", em) : null;
-                    var memberActive = urow is not null && db.QueryOne("SELECT id FROM memberships WHERE user_id=? AND status='active'", H.L(urow["id"])) is not null;
+                    // Expiry-AWARE membership check: a lapsed membership (expiry_date in the past) does not
+                    // qualify for a standalone exam purchase even before the daily expiry sweep flips its
+                    // status to 'expired'. A NULL expiry means no expiry (always valid).
+                    var memberActive = urow is not null && db.QueryOne("SELECT id FROM memberships WHERE user_id=? AND status='active' AND (expiry_date IS NULL OR expiry_date>datetime('now'))", H.L(urow["id"])) is not null;
                     if (!memberActive)
                         return Results.Json(new { error = "membership_required", message = "Please pay your membership fee first, or choose the membership + exam bundle to pay both together." }, statusCode: 400);
                 }
