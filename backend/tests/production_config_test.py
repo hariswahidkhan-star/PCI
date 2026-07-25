@@ -15,6 +15,7 @@ def check(name, overrides):
         "ASPNETCORE_ENVIRONMENT", "DOTNET_ENVIRONMENT", "APP_ENV", "DB_PROVIDER",
         "MYSQL_CONNECTION_STRING", "MYSQL_HOST", "MYSQL_PASSWORD",
         "ALLOW_INSECURE_PRODUCTION", "PCIWORLD_ONLY", "PCIWORLD_ALLOW_SQLITE",
+        "ALLOW_SQLITE_IN_PRODUCTION",
     ):
         env.pop(key, None)
     env.update(DATABASE_FILE=db, PORT="0")
@@ -41,6 +42,7 @@ def check_boots(name, overrides, db_file):
         "ASPNETCORE_ENVIRONMENT", "DOTNET_ENVIRONMENT", "APP_ENV", "DB_PROVIDER",
         "MYSQL_CONNECTION_STRING", "MYSQL_HOST", "MYSQL_PASSWORD",
         "ALLOW_INSECURE_PRODUCTION", "PCIWORLD_ONLY", "PCIWORLD_ALLOW_SQLITE",
+        "ALLOW_SQLITE_IN_PRODUCTION",
         "APP_BASE_URL", "SITE_BASE_URL", "ALLOWED_ORIGIN", "CREDENTIAL_ENCRYPTION_KEY",
     ):
         env.pop(key, None)
@@ -76,6 +78,12 @@ check("PCI World SQLite waiver rejects ephemeral /tmp path",
        "DATABASE_FILE": os.path.join("/tmp", "pciworld-must-not-open.db")})
 check("PCI World WITHOUT the explicit bridge still rejects SQLite",
       {"ASPNETCORE_ENVIRONMENT": "Production", "PCIWORLD_ONLY": "true", "DB_PROVIDER": "sqlite"})
+# The whole-platform persistent-disk opt-in has the same shape as the World waiver: the flag alone
+# is NOT enough — the database must live on the mounted disk, or boot still fails closed.
+check("ALLOW_SQLITE_IN_PRODUCTION rejects an ephemeral (non-/data) path",
+      {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "sqlite",
+       "ALLOW_SQLITE_IN_PRODUCTION": "true",
+       "DATABASE_FILE": os.path.join("/tmp", "platform-must-not-open.db")})
 
 # The PCIWorld image's zero-config contract (PCIWorld/README.md): world-only + the explicit
 # bridge + a /data database must BOOT — with the base-URL/CORS/at-rest-key blockers downgraded
@@ -95,8 +103,22 @@ try:
                  "RENDER_EXTERNAL_URL": "https://pciworld.example.onrender.com"},
                 world_db)
     if os.path.exists(world_db): os.remove(world_db)
+
+    # Whole-platform deploy recovery: ALLOW_SQLITE_IN_PRODUCTION + a /data database must get past
+    # the fail-closed gate too — but unlike world-only, the base-URL/CORS/at-rest-key blockers stay
+    # ACTIVE, so the overrides must satisfy them for boot to proceed.
+    platform_db = os.path.join(data_dir, "platform-optin-boot-test.db")
+    if os.path.exists(platform_db): os.remove(platform_db)
+    check_boots("ALLOW_SQLITE_IN_PRODUCTION + /data path opens the database (deploy recovery)",
+                {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "sqlite",
+                 "ALLOW_SQLITE_IN_PRODUCTION": "true",
+                 "APP_BASE_URL": "https://pci-platform.example.org",
+                 "ALLOWED_ORIGIN": "https://pci-platform.example.org",
+                 "CREDENTIAL_ENCRYPTION_KEY": "preflight-test-key-0123456789abcdef0123456789abcdef"},
+                platform_db)
+    if os.path.exists(platform_db): os.remove(platform_db)
 except OSError:
-    print("  SKIP  PCI World zero-config bridge boot (no writable /data in this environment)")
+    print("  SKIP  /data boot-through checks (no writable /data in this environment)")
 
 print(f"\n  == {passed}/{passed + failed} PASSED ==")
 raise SystemExit(0 if failed == 0 else 1)

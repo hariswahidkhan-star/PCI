@@ -64,13 +64,33 @@ catch { /* /data exists but is not ours to write — keep the configured default
         var worldOnly = string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_ONLY"), "true", StringComparison.OrdinalIgnoreCase);
         var allowWorldSqlite = worldOnly
             && string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_ALLOW_SQLITE"), "true", StringComparison.OrdinalIgnoreCase);
+        // Explicit operator opt-in for the documented interim posture the platform shipped with:
+        // SQLite on the mounted persistent disk (Render's /data). Deliberately NARROW — it waives
+        // ONLY the MySQL requirement and still demands the /data path below; every other production
+        // preflight (HTTPS base URL, explicit CORS origin, encryption key, legacy-token ban, Stripe
+        // webhook secret) stays fully active, unlike the blunt ALLOW_INSECURE_PRODUCTION override.
+        // Without this, the MySQL fail-closed change bricked every existing SQLite-on-disk deploy.
+        var allowSqliteProd = string.Equals(Environment.GetEnvironmentVariable("ALLOW_SQLITE_IN_PRODUCTION"), "true", StringComparison.OrdinalIgnoreCase);
         var dbProvider = (Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "").Trim().ToLowerInvariant();
-        if (dbProvider is not ("mysql" or "mariadb") && !allowWorldSqlite && !allowInsecure)
+        if (dbProvider is not ("mysql" or "mariadb") && !allowWorldSqlite && !allowSqliteProd && !allowInsecure)
         {
             Console.WriteLine("[config] Refusing to open database: production requires DB_PROVIDER=mysql " +
-                "(or PCIWORLD_ONLY + PCIWORLD_ALLOW_SQLITE=true with an absolute DATABASE_FILE) before any schema work. " +
-                "Set ALLOW_INSECURE_PRODUCTION=true to override (not recommended).");
+                "(or an explicit persistent-disk opt-in: ALLOW_SQLITE_IN_PRODUCTION=true with DATABASE_FILE under /data, " +
+                "or PCIWORLD_ONLY + PCIWORLD_ALLOW_SQLITE=true) before any schema work. " +
+                "Set ALLOW_INSECURE_PRODUCTION=true to override every check (not recommended).");
             Environment.Exit(78); // EX_CONFIG
+        }
+        if (allowSqliteProd && dbProvider is not ("mysql" or "mariadb"))
+        {
+            var sqliteFile = Path.GetFullPath(Environment.GetEnvironmentVariable("DATABASE_FILE") ?? ".");
+            if (!sqliteFile.StartsWith("/data/", StringComparison.Ordinal) && !allowInsecure)
+            {
+                Console.WriteLine("[config] Refusing to open database: ALLOW_SQLITE_IN_PRODUCTION=true requires DATABASE_FILE " +
+                    "under the persistent mount /data (e.g. /data/pci.db) — any other path is erased on every redeploy.");
+                Environment.Exit(78);
+            }
+            Console.WriteLine($"[config:warn] ALLOW_SQLITE_IN_PRODUCTION=true — production is running SQLite at {sqliteFile}. " +
+                "MySQL (DB_PROVIDER=mysql) remains the approved production database; see docs/MYSQL_MIGRATION.md for the cutover.");
         }
         if (dbProvider is "mysql" or "mariadb"
             && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING"))
@@ -493,6 +513,17 @@ List<(string sev, string key, string msg)> ConfigIssues()
         var stripeWhUrl = E("STRIPE_WEBHOOK_URL");
         if (!string.IsNullOrWhiteSpace(stripeWhUrl) && !stripeWhUrl.TrimEnd('/').EndsWith("/api/webhook", StringComparison.OrdinalIgnoreCase))
             Err("STRIPE_WEBHOOK_URL", "must end with /api/webhook (not /api/payments/webhook) — see docs/OPERATIONS.md §9");
+        // Explicit persistent-disk opt-in (same contract as the pre-DB gate above): only the MySQL
+        // requirement is downgraded, and only when the SQLite file really lives on the mounted disk.
+        if (string.Equals(E("ALLOW_SQLITE_IN_PRODUCTION"), "true", StringComparison.OrdinalIgnoreCase))
+        {
+            issues = issues.Select(i => i.Item1 == "error" && i.Item2 is "DB_PROVIDER" or "MYSQL_HOST"
+                ? ("warn", i.Item2, i.Item3 + " (ALLOW_SQLITE_IN_PRODUCTION=true — interim persistent-disk posture; plan the MySQL cutover)") : i).ToList();
+            var sqliteFile = Path.GetFullPath(E("DATABASE_FILE") ?? ".");
+            if (dbProvider is not ("mysql" or "mariadb") && !sqliteFile.StartsWith("/data/", StringComparison.Ordinal))
+                issues.Add(("error", "DATABASE_FILE",
+                    "ALLOW_SQLITE_IN_PRODUCTION=true requires DATABASE_FILE under /data (e.g. /data/pci.db) — any other path is erased on every redeploy"));
+        }
     }
     // A PCI World-only deployment (PCIWORLD_ONLY=true) runs none of the PAYMENT, EXAM, CREDENTIAL or
     // identity-document subsystems, so those blockers protect nothing here and are downgraded —
