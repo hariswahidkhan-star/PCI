@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { api, ApiError } from '../api/client'
 import { Card, Badge, Spinner, ErrorNote } from '../components/ui'
@@ -14,7 +14,14 @@ import Histogram, { type Mc } from '../components/Histogram'
 interface Ask { key: string; label: string; type: string }
 interface Task { task: string; prompt: string; given: Record<string, unknown>; ask: Ask[]; mode: string; assessment: boolean; montecarlo?: Mc | null }
 interface ScenarioMeta { id: number; scenario_code: string; title: string; kind: string; difficulty?: string; summary?: string }
-interface StartResp { attempt_id: number; resumed: boolean; scenario: ScenarioMeta; task: Task }
+interface StartResp {
+  attempt_id: number
+  resumed: boolean
+  period?: number
+  answers?: Record<string, unknown> | null
+  scenario: ScenarioMeta
+  task: Task
+}
 interface Measure { key: string; label: string; is_correct: boolean; correct_value: unknown; your_value: unknown }
 interface Competency { competency: string; score: number; level: string }
 interface Schedule { project_duration: number; critical_path: string[]; bars: GanttBar[] }
@@ -29,6 +36,20 @@ const fmt = (v: unknown): string => {
   if (typeof v === 'boolean') return v ? 'Yes' : 'No'
   if (typeof v === 'number') return Number.isInteger(v) ? String(v) : String(Number(v.toFixed(2)))
   return String(v)
+}
+
+/** Map server-saved answers back into the string-keyed form fields. */
+function hydrateAnswers(ask: Ask[], saved: Record<string, unknown> | null | undefined): Record<string, string> {
+  const out: Record<string, string> = {}
+  if (!saved) return out
+  for (const a of ask) {
+    const v = saved[a.key]
+    if (v == null) continue
+    if (a.type === 'set' && Array.isArray(v)) out[a.key] = v.map(String).join(', ')
+    else if (a.type === 'bool') out[a.key] = v === true || v === 'true' ? 'yes' : v === false || v === 'false' ? 'no' : String(v)
+    else out[a.key] = String(v)
+  }
+  return out
 }
 
 function mapError(e: unknown): string {
@@ -228,6 +249,113 @@ function GivenView({ task }: { task: Task }) {
       </table>
     )
   }
+  if (task.task === 'productivity') {
+    const labels: Record<string, string> = {
+      planned_qty: 'Planned quantity', planned_hours: 'Planned hours',
+      earned_qty: 'Earned quantity', actual_hours: 'Actual hours',
+    }
+    return (
+      <table className="data">
+        <tbody>
+          {Object.keys(labels).filter((k) => k in g).map((k) => (
+            <tr key={k}><th style={{ textAlign: 'left' }}>{labels[k]}</th><td>{fmt(g[k])}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+  if (task.task === 'boq') {
+    const lines = (g.lines as { id: string; qty: number; rate: number }[]) ?? []
+    return (
+      <table className="data">
+        <thead><tr><th>Line</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>
+        <tbody>
+          {lines.map((l) => (
+            <tr key={l.id}><td>{l.id}</td><td>{fmt(l.qty)}</td><td>{fmt(l.rate)}</td><td>{fmt(l.qty * l.rate)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+  if (task.task === 'resource') {
+    const periods = (g.periods as { period: number; demand: number; capacity: number }[]) ?? []
+    return (
+      <table className="data">
+        <thead><tr><th>Period</th><th>Demand</th><th>Capacity</th><th>Overload</th></tr></thead>
+        <tbody>
+          {periods.map((p) => (
+            <tr key={p.period}>
+              <td>{p.period}</td><td>{fmt(p.demand)}</td><td>{fmt(p.capacity)}</td>
+              <td>{fmt(Math.max(0, p.demand - p.capacity))}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+  if (task.task === 'procurement') {
+    return (
+      <table className="data">
+        <tbody>
+          <tr><th style={{ textAlign: 'left' }}>Project duration (days)</th><td>{fmt(g.project_duration)}</td></tr>
+          <tr><th style={{ textAlign: 'left' }}>Remaining float (days)</th><td>{fmt(g.remaining_float)}</td></tr>
+          <tr><th style={{ textAlign: 'left' }}>Supplier delay (days)</th><td>{fmt(g.supplier_delay_days)}</td></tr>
+        </tbody>
+      </table>
+    )
+  }
+  if (task.task === 'portfolio') {
+    const projects = (g.projects as { id: string; npv: number; risk: number; fit: number }[]) ?? []
+    return (
+      <>
+        <div className="small muted" style={{ marginBottom: '.3rem' }}>
+          Weights — NPV {fmt(g.w_npv)} · risk {fmt(g.w_risk)} · fit {fmt(g.w_fit)}
+        </div>
+        <table className="data">
+          <thead><tr><th>Project</th><th>NPV</th><th>Risk</th><th>Fit</th></tr></thead>
+          <tbody>
+            {projects.map((p) => (
+              <tr key={p.id}><td>{p.id}</td><td>{fmt(p.npv)}</td><td>{fmt(p.risk)}</td><td>{fmt(p.fit)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    )
+  }
+  if (task.task === 'decision') {
+    const options = (g.options as { id: string; cost: number; schedule: number; risk: number }[]) ?? []
+    return (
+      <>
+        <div className="small muted" style={{ marginBottom: '.3rem' }}>
+          Weights — cost {fmt(g.w_cost)} · schedule {fmt(g.w_sched)} · risk {fmt(g.w_risk)}
+        </div>
+        <table className="data">
+          <thead><tr><th>Option</th><th>Cost impact</th><th>Schedule impact</th><th>Risk</th></tr></thead>
+          <tbody>
+            {options.map((o) => (
+              <tr key={o.id}><td>{o.id}</td><td>{fmt(o.cost)}</td><td>{fmt(o.schedule)}</td><td>{fmt(o.risk)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    )
+  }
+  if (task.task === 'data_quality') {
+    const rowsDq = (g.rows as { value: number | null; expected: number }[]) ?? []
+    return (
+      <>
+        <div className="small muted" style={{ marginBottom: '.3rem' }}>Anomaly threshold: {fmt(g.threshold)}</div>
+        <table className="data">
+          <thead><tr><th>#</th><th>Value</th><th>Expected</th></tr></thead>
+          <tbody>
+            {rowsDq.map((r, i) => (
+              <tr key={i}><td>{i + 1}</td><td>{r.value == null ? '—' : fmt(r.value)}</td><td>{fmt(r.expected)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    )
+  }
   return <pre className="small muted" style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(g, null, 2)}</pre>
 }
 
@@ -237,17 +365,33 @@ export default function LabRunner() {
   const [start, setStart] = useState<StartResp | null>(null)
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [grade, setGrade] = useState<Grade | null>(null)
-  const [coach, setCoach] = useState<{ ok: boolean; message: string; ai: boolean } | null>(null)
+  const [coach, setCoach] = useState<{ ok: boolean; message: string; ai: boolean; coach_mode?: string; hint_level?: number } | null>(null)
   const [coaching, setCoaching] = useState(false)
+  const [coachMode, setCoachMode] = useState('guided')
+  const [hintLevel, setHintLevel] = useState(2)
+  const [saveNote, setSaveNote] = useState<string | null>(null)
+  const [reportNote, setReportNote] = useState<string | null>(null)
+  const [reporting, setReporting] = useState(false)
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const skipAutosave = useRef(true)
+  const answersRef = useRef(answers)
+  answersRef.current = answers
 
   const begin = useCallback(async (m: Mode) => {
-    setLoading(true); setError(null); setGrade(null); setAnswers({}); setCoach(null)
+    // Drop the previous attempt immediately so debounced autosave cannot write empty answers
+    // into the old (or new) attempt while the start request is in flight.
+    skipAutosave.current = true
+    setLoading(true); setError(null); setGrade(null); setStart(null); setAnswers({}); setCoach(null)
+    setSaveNote(null); setReportNote(null)
     try {
       const s = await api.post<StartResp>('/api/me/lab/attempts', { scenario_code: code, mode: m })
+      const restored = hydrateAnswers(s.task.ask, s.answers)
+      skipAutosave.current = true
       setStart(s)
+      setAnswers(restored)
+      if (s.resumed && Object.keys(restored).length > 0) setSaveNote('Resumed your saved answers')
     } catch (e) {
       setError(mapError(e)); setStart(null)
     } finally {
@@ -257,18 +401,70 @@ export default function LabRunner() {
 
   useEffect(() => { begin(mode) }, [begin, mode])
 
+  const buildAnswersPayload = useCallback((from?: Record<string, string>) => {
+    if (!start) return {}
+    const src = from ?? answersRef.current
+    const payload: Record<string, unknown> = {}
+    for (const a of start.task.ask) {
+      const raw = (src[a.key] ?? '').trim()
+      if (a.type === 'set') payload[a.key] = raw.split(/[,\s]+/).filter(Boolean)
+      else if (a.type === 'bool') payload[a.key] = /^(y|yes|true|valid)$/i.test(raw) ? true : /^(n|no|false|invalid)$/i.test(raw) ? false : null
+      else payload[a.key] = raw === '' ? null : Number(raw)
+    }
+    return payload
+  }, [start])
+
+  const autosave = useCallback(async (silent = false) => {
+    if (!start || grade) return
+    try {
+      await api.post(`/api/me/lab/attempts/${start.attempt_id}/autosave`, { answers: buildAnswersPayload() })
+      if (!silent) setSaveNote('Progress saved')
+      else setSaveNote('Autosaved')
+    } catch {
+      if (!silent) setSaveNote('Autosave unavailable — your answers stay in this browser until you submit.')
+    }
+  }, [start, grade, buildAnswersPayload])
+
+  // Debounced autosave after the student edits answers (skips the resume hydrate tick).
+  useEffect(() => {
+    if (!start || grade) return
+    if (skipAutosave.current) {
+      skipAutosave.current = false
+      return
+    }
+    const t = window.setTimeout(() => { void autosave(true) }, 1500)
+    return () => window.clearTimeout(t)
+  }, [answers, start, grade, autosave])
+
+  const reportProblem = async () => {
+    if (!start) return
+    setReporting(true); setReportNote(null)
+    try {
+      const r = await api.post<{ reference: string }>('/api/me/tickets', {
+        subject: `Lab content issue: ${start.scenario.scenario_code}`,
+        category: 'simlab',
+        body: [
+          `Scenario: ${start.scenario.scenario_code} — ${start.scenario.title}`,
+          `Attempt: #${start.attempt_id}`,
+          `Mode: ${mode}`,
+          '',
+          'Please describe what looks wrong (typo, wrong figure, unclear brief, grading concern):',
+          '',
+        ].join('\n'),
+      })
+      setReportNote(`Ticket ${r.reference} opened — reply from Support with more detail if needed.`)
+    } catch {
+      setReportNote('Could not open a ticket — use Support from your account menu.')
+    } finally {
+      setReporting(false)
+    }
+  }
+
   const submit = async () => {
     if (!start) return
     setBusy(true); setError(null)
     try {
-      const payload: Record<string, unknown> = {}
-      for (const a of start.task.ask) {
-        const raw = (answers[a.key] ?? '').trim()
-        if (a.type === 'set') payload[a.key] = raw.split(/[,\s]+/).filter(Boolean)
-        else if (a.type === 'bool') payload[a.key] = /^(y|yes|true|valid)$/i.test(raw) ? true : /^(n|no|false|invalid)$/i.test(raw) ? false : null
-        else payload[a.key] = raw === '' ? null : Number(raw)
-      }
-      const g = await api.post<Grade>(`/api/me/lab/attempts/${start.attempt_id}/submit`, { answers: payload })
+      const g = await api.post<Grade>(`/api/me/lab/attempts/${start.attempt_id}/submit`, { answers: buildAnswersPayload() })
       setGrade(g)
     } catch (e) {
       setError(mapError(e))
@@ -277,12 +473,17 @@ export default function LabRunner() {
     }
   }
 
-  const askCoach = async () => {
+  const askCoach = async (levelOverride?: number) => {
     if (!start) return
     setCoaching(true)
+    const level = levelOverride ?? hintLevel
     try {
-      const r = await api.post<{ ok: boolean; message: string; ai: boolean }>(`/api/me/lab/attempts/${start.attempt_id}/coach`, {})
+      const r = await api.post<{ ok: boolean; message: string; ai: boolean; coach_mode?: string; hint_level?: number }>(
+        `/api/me/lab/attempts/${start.attempt_id}/coach`,
+        { answers: buildAnswersPayload(), coach_mode: coachMode, hint_level: level },
+      )
       setCoach(r)
+      if (r.ok && !grade) setHintLevel((h) => Math.min(6, Math.max(h, level) + 1))
     } catch {
       setCoach({ ok: false, message: 'The coach is unavailable right now — please try again shortly.', ai: false })
     } finally {
@@ -346,9 +547,48 @@ export default function LabRunner() {
                   </label>
                 ))}
                 {error && <ErrorNote>{error}</ErrorNote>}
-                <div className="row" style={{ gap: '.5rem' }}>
+                <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
                   <button className="btn" onClick={submit} disabled={busy}>{busy ? 'Grading…' : 'Submit for grading'}</button>
+                  <button className="btn secondary" type="button" onClick={() => { void autosave(false) }} disabled={busy}>Save progress</button>
+                  <button className="btn secondary" type="button" onClick={() => { void reportProblem() }} disabled={reporting || busy}>
+                    {reporting ? 'Opening ticket…' : 'Report a problem'}
+                  </button>
+                  {saveNote && <span className="small muted" role="status">{saveNote}</span>}
+                  {reportNote && <span className="small muted" role="status">{reportNote}</span>}
                 </div>
+                {!start.task.assessment && (
+                  <div className="stack" style={{ display: 'grid', gap: '.4rem', marginTop: '.4rem' }}>
+                    <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
+                      <label className="small">Coach mode
+                        <select value={coachMode} onChange={(e) => setCoachMode(e.target.value)} aria-label="Coach mode">
+                          <option value="socratic">Socratic</option>
+                          <option value="guided">Guided</option>
+                          <option value="explain">Explain</option>
+                          <option value="review">Review</option>
+                          <option value="language">Language / accessibility</option>
+                        </select>
+                      </label>
+                      <label className="small">Hint level
+                        <select value={hintLevel} onChange={(e) => setHintLevel(Number(e.target.value))} aria-label="Hint level">
+                          {[1, 2, 3, 4, 5].map((n) => <option key={n} value={n}>{n}</option>)}
+                        </select>
+                      </label>
+                      <button className="btn secondary sm" type="button" onClick={() => { void askCoach() }} disabled={coaching}>
+                        {coaching ? 'Asking…' : 'Ask for a hint'}
+                      </button>
+                    </div>
+                    {coach && (
+                      <div style={{ background: 'var(--wash, #f6f8fb)', borderRadius: '.5rem', padding: '.7rem .8rem' }}>
+                        <div className="row" style={{ gap: '.4rem', alignItems: 'center', marginBottom: '.3rem' }}>
+                          <strong>Coach</strong>
+                          <Badge tone={coach.ai ? 'brand' : 'neutral'}>{coach.ai ? 'AI' : 'Guide'}</Badge>
+                          {coach.coach_mode && <Badge tone="neutral">{titleCase(coach.coach_mode)}</Badge>}
+                        </div>
+                        <div style={{ whiteSpace: 'pre-wrap' }}>{coach.message}</div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </Card>
           ) : (
@@ -403,12 +643,21 @@ export default function LabRunner() {
                       <div className="row" style={{ gap: '.4rem', alignItems: 'center', marginBottom: '.3rem' }}>
                         <strong>Coach</strong>
                         <Badge tone={coach.ai ? 'brand' : 'neutral'}>{coach.ai ? 'AI' : 'Guide'}</Badge>
+                        {coach.coach_mode && <Badge tone="neutral">{titleCase(coach.coach_mode)}</Badge>}
                       </div>
                       <div style={{ whiteSpace: 'pre-wrap' }}>{coach.message}</div>
                     </div>
                   ) : (
-                    <div>
-                      <button className="btn secondary sm" onClick={askCoach} disabled={coaching}>
+                    <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
+                      <label className="small">Debrief mode
+                        <select value={coachMode} onChange={(e) => setCoachMode(e.target.value)} aria-label="Debrief coach mode">
+                          <option value="debrief">Debrief</option>
+                          <option value="explain">Explain</option>
+                          <option value="review">Review</option>
+                          <option value="language">Language / accessibility</option>
+                        </select>
+                      </label>
+                      <button className="btn secondary sm" onClick={() => { setCoachMode('debrief'); void askCoach(6) }} disabled={coaching}>
                         {coaching ? 'Asking the coach…' : 'Ask the coach'}
                       </button>
                     </div>
@@ -422,10 +671,18 @@ export default function LabRunner() {
             </Card>
           )}
 
-          <p className="muted small" style={{ margin: 0 }}>
-            Educational simulator using synthetic project data. Practice never affects your formal PCI
-            examination or certification.
-          </p>
+          <div className="row" style={{ gap: '.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            <p className="muted small" style={{ margin: 0 }}>
+              Educational simulator using synthetic project data. Practice never affects your formal PCI
+              examination or certification.
+            </p>
+            {grade && (
+              <button className="btn secondary sm" type="button" onClick={() => { void reportProblem() }} disabled={reporting}>
+                {reporting ? 'Opening ticket…' : 'Report a problem'}
+              </button>
+            )}
+            {reportNote && grade && <span className="small muted" role="status">{reportNote}</span>}
+          </div>
         </>
       ) : null}
     </div>

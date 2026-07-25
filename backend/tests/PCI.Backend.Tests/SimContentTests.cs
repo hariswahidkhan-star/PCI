@@ -1,5 +1,7 @@
 using System.Linq;
+using System.Text.Json;
 using PCI.Backend.Core;
+using PCI.Backend.Data;
 using Xunit;
 
 namespace PCI.Backend.Tests;
@@ -231,6 +233,84 @@ public class SimContentTests
         // Guards against drift between SimContent's task set and the engine dispatcher.
         Assert.Contains("evm", SimCalc.KnownTasks);
         Assert.Contains("earned_schedule", SimCalc.KnownTasks);
-        Assert.Equal(11, SimCalc.KnownTasks.Count);
+        Assert.Contains("data_quality", SimCalc.KnownTasks);
+        Assert.Equal(18, SimCalc.KnownTasks.Count);
+    }
+
+    [Fact]
+    public void Content_pack_scenarios_validate_and_every_ask_resolves()
+    {
+        var db = TestEnv.NewMigratedDb();
+        SimLabSchema.Ensure(db);
+
+        // Scope to the pack's own codes: other house seeds (SimLabSchema starter + expansion
+        // scenarios) are also published and synthetic_declared, and are validated separately
+        // by SimSeedContentTests.
+        var packCodes = SimLabContentPack.ScenarioCodes.ToHashSet();
+        var rows = db.Query(@"SELECT scenario_code,title,summary,difficulty,certification_id,
+                competencies_json,config_json,synthetic_declared,industry
+            FROM simulation_scenarios
+            WHERE status='published' AND synthetic_declared=1
+            ORDER BY scenario_code")
+            .Where(r => packCodes.Contains(Convert.ToString(r["scenario_code"]) ?? ""))
+            .ToList();
+
+        Assert.Equal(30, SimLabContentPack.ScenarioCount);
+        Assert.True(SimLabContentPack.TotalAskCount >= 240);
+        Assert.Equal(SimLabContentPack.ScenarioCount, rows.Count);
+
+        string S(System.Collections.Generic.Dictionary<string, object?> row, string key) => Convert.ToString(row[key]) ?? "";
+        long L(System.Collections.Generic.Dictionary<string, object?> row, string key) => Convert.ToInt64(row[key]);
+
+        Assert.Equal(10, rows.Count(r => S(r, "difficulty") == "foundation"));
+        Assert.Equal(10, rows.Count(r => S(r, "difficulty") == "intermediate"));
+        Assert.Equal(7, rows.Count(r => S(r, "difficulty") == "advanced"));
+        Assert.Equal(3, rows.Count(r => S(r, "difficulty") == "expert"));
+        Assert.Equal(new[] { 1L, 2L, 3L }, rows.Select(r => L(r, "certification_id")).Distinct().OrderBy(x => x).ToArray());
+        Assert.True(rows.Select(r => S(r, "industry")).Distinct().Count() >= 8);
+
+        var totalAsks = 0;
+        foreach (var row in rows)
+        {
+            var input = new SimContent.ScenarioInput(
+                S(row, "scenario_code"),
+                S(row, "title"),
+                S(row, "summary"),
+                S(row, "difficulty"),
+                L(row, "certification_id"),
+                S(row, "competencies_json"),
+                S(row, "config_json"),
+                L(row, "synthetic_declared") == 1);
+
+            var issues = SimContent.Validate(input);
+            Assert.True(SimContent.Publishable(issues),
+                $"{input.ScenarioCode}: {string.Join("; ", issues.Where(i => i.Severity == SimContent.Severity.Error).Select(i => $"{i.Code}:{i.Message}"))}");
+
+            using var doc = JsonDocument.Parse(input.ConfigJson!);
+            var root = doc.RootElement;
+            var task = root.GetProperty("task").GetString()!;
+            var given = root.GetProperty("given");
+            var asks = SimGrade.ParseAsk(root);
+            totalAsks += asks.Count;
+
+            foreach (var ask in asks)
+            {
+                var answer = SimCalc.Resolve(task, ask.Key, given);
+                switch (ask.Type)
+                {
+                    case "set":
+                        Assert.True(answer is string[] set && set.Length > 0, $"{input.ScenarioCode}:{ask.Key}");
+                        break;
+                    case "bool":
+                        Assert.True(answer is bool, $"{input.ScenarioCode}:{ask.Key}");
+                        break;
+                    default:
+                        Assert.True(answer is double d && !double.IsNaN(d) && !double.IsInfinity(d), $"{input.ScenarioCode}:{ask.Key}");
+                        break;
+                }
+            }
+        }
+
+        Assert.Equal(SimLabContentPack.TotalAskCount, totalAsks);
     }
 }
