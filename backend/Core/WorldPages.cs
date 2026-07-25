@@ -39,13 +39,25 @@ public static class WorldPages
     public static string InstituteUrl(Db db) =>
         Settings.Str(db, "world_institute_url", "https://projectcontrolsinstitute.org");
 
-    /// <summary>Brand fonts load AFTER window load so no page ever waits on a font host — system
-    /// fallbacks render immediately, Archivo/Inter swap in when available (display=swap). This
-    /// also keeps the E2E suite deterministic in offline environments.</summary>
+    /// <summary>Brand type is served from this origin, not from a font CDN.
+    ///
+    /// It used to be a stylesheet appended from fonts.googleapis.com after window load. That never
+    /// blocked paint, which was the point — but it meant every visit painted in a system fallback and
+    /// then reflowed into Archivo, and this design system is Archivo 900 at 52px with tight tracking,
+    /// so the swap is the most visible thing on the page. Worse, a network that cannot reach Google
+    /// (corporate proxies, some countries, privacy blockers, an offline demo) never got the brand at
+    /// all — it silently rendered in Helvetica.
+    ///
+    /// Self-hosted and preloaded, the right typeface is there on first paint, and no third party is
+    /// told who is reading an Institute page. These are variable subsets: one file spans Archivo
+    /// 700-900 and one spans Inter 400-700, and unicode-range means an English page fetches only the
+    /// two latin files (~83 KB) while latin-ext stays unrequested until a page actually contains
+    /// those characters. A glyph outside both subsets — a Passport holder whose name is in Cyrillic
+    /// or Greek — falls back per-glyph to a system face, which is the browser behaving correctly
+    /// rather than a hole. Regenerate with tools/fetch-brand-fonts.sh.</summary>
     const string FontLoader = """
-        <script>window.addEventListener('load',function(){var l=document.createElement('link');l.rel='stylesheet';
-        l.href='https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap';
-        document.head.appendChild(l);});</script>
+        <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
         """;
 
     /// <summary>One behaviour, inline so it costs no request and blocks no paint: the header's hairline
@@ -74,6 +86,18 @@ public static class WorldPages
     // exactly like the Institute site (meta color-scheme in Layout) — a brand commitment, not an
     // omission. Class names are stable API for the workspace/admin scripts and the E2E suite.
     const string Css = """
+        @font-face{font-family:'Archivo';font-style:normal;font-weight:700 900;font-display:swap;
+             src:url(/assets/fonts/archivo-latin.woff2) format('woff2');
+             unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+        @font-face{font-family:'Archivo';font-style:normal;font-weight:700 900;font-display:swap;
+             src:url(/assets/fonts/archivo-latin-ext.woff2) format('woff2');
+             unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+        @font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:swap;
+             src:url(/assets/fonts/inter-latin.woff2) format('woff2');
+             unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+        @font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:swap;
+             src:url(/assets/fonts/inter-latin-ext.woff2) format('woff2');
+             unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
         :root{--ink:#0F172A;--paper:#FFFFFF;--paper-2:#F1F5F9;--noir:#0E1525;--line:#E3E8EF;
               --slate:#475569;--mist:#64748B;--blue:#1D4ED8;--blue-deep:#1E3A8A;--crimson:#C13329;
               --gilt:#C8A24B;--ok:#15803D;--bad:#C2410C;--muted:var(--slate);--field:#94A3B8;
