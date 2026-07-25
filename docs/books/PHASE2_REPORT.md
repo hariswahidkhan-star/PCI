@@ -63,11 +63,43 @@ attached (`BAC` 4,000,000; at week 13 `PV` 2,080,000, `EV` 1,920,000, `AC` 2,120
 - Harness: **276 golden checks, all passing** (was 241). PML-AI volume now typesets at **45 pp**
   across Domains 6–7 (7 figures, 47 index entries).
 
+**Batch 7 (loop iteration 5) — PML-AI Domain 1, The project leadership profession.**
+The book's opening domain (~7.1k words), introducing the master programme **Meridian Care
+Records** (40-clinic public-health records rollout) that returns in Domains 2 and 16:
+
+- KA 1.1 the delivery landscape (project/programme/portfolio as different objects of management,
+  each with its own success test), project vs operational leadership (irreversibility as the
+  defining failure mode; lead time as the cheapest resource), the temporary organisation, and the
+  suite's responsible-AI principle stated for the first time.
+- KA 1.2 accountability defined precisely — responsibility is delegable, the obligation to answer
+  is not, one name per outcome — from which the AI corollary follows structurally rather than by
+  policy: a tool cannot be asked to answer, so accountability never moves to it. Plus the
+  four-direction obligation set, the escalation duty, the honesty asymmetry, and the standard of
+  care.
+- KA 1.3 systems thinking (feedback and delay, local optimisation, pressure relocating rather
+  than vanishing) and the outputs→outcomes→benefits→value chain made **arithmetic**: Meridian's
+  40 installed clinics yield **USD 685,440**/yr at 70 % adoption, not the **USD 979,200** an
+  output-based claim asserts — a **30.0 %** overstatement that is exactly the non-adoption rate
+  reappearing as fictitious value. Cost of delay priced at **USD 14,280/week**, acceleration
+  breaking even at **4.20 weeks**, and an adoption sensitivity (50/70/90 % →
+  489,600 / 685,440 / 881,280) showing the leader's attention belongs on adoption, not schedule.
+- KA 1.4 professional ethics (the daylight test), the four responsible-AI obligations, the honest
+  failure-mode list including over-trust through fluency, and the leader's three concrete acts
+  (name the owner, proportionate verification, protect the team's judgment).
+- Advanced topics (authority vs influence in borrowed teams, the multiple-verdict problem,
+  reviewer invariants), industry variations, two case studies (Meridian under scrutiny — praised
+  then called a failure on true facts both times, with adoption owned by nobody; the plan nobody
+  could critique), executive perspective, 3 exercises, 3 toolkits, exam prep, 13 tagged MCQs.
+- Figure 1.3.1 (the value chain and where it leaks).
+- Harness: **296 golden checks, all passing** (was 276), including the invariant that the
+  overstatement equals the non-adoption rate. PML-AI volume now typesets at **64 pp** across
+  Domains 1, 6 and 7 (8 figures, 69 index entries), with the Part One divider now leading.
+
 ## Next production batch
 
-Queued in loop order: (1) PML-AI Domain 1 (The project leadership profession) — that book's
-opening domain, establishing accountability, systems thinking and the responsible-AI principle;
-(2) PFL-AI Domain 2 (Accounting foundations), building the accrual-to-cash bridge its Domain 1
-promised; (3) PML-AI Domain 8 (Risk, uncertainty and resilience), which the cost domain's
-contingency treatment now depends on; prototype residual depth folded alongside. Phase 2
-completes when all foundation domains of both books pass gates.
+Queued in loop order: (1) PFL-AI Domain 2 (Accounting foundations) — the accrual-to-cash bridge
+its Domain 1 promised, and the last unstarted Part One domain of that book; (2) PML-AI Domain 8
+(Risk, uncertainty and resilience), which Domain 7's contingency treatment now depends on and
+which registers `EMV`; (3) PML-AI Domain 2 (Strategy, selection and business alignment),
+continuing the Meridian thread into benefits mapping; prototype residual depth folded alongside.
+Phase 2 completes when all foundation domains of both books pass gates.

@@ -22,12 +22,13 @@ BOOKS = {
         "run_title": "PCI PML-AI Body of Knowledge",
         "subtitle": ("The reference for the PCI Project Management Leader – AI<br/>"
                      "Leadership · delivery systems · governance · the governed use of AI"),
-        "order": ["manuscript/domain-06-planning-scheduling-flow.md",
+        "order": ["manuscript/domain-01-profession.md",
+                  "manuscript/domain-06-planning-scheduling-flow.md",
                   "manuscript/domain-07-cost-resources-commercial.md"],
-        "parts": [("Part Two", "Delivering the work",
-                   "Domains 5–10 — scope, planning and scheduling, cost and commercial awareness, "
-                   "risk, quality and procurement: the delivery disciplines a leader integrates.",
-                   "Domain 6 —")],
+        "parts": [("Part One", "Leading projects",
+                   "Domains 1–4 — the profession, strategy and selection, governance and decision rights, "
+                   "and delivery architecture: what a project leader is for and answerable for.",
+                   "Domain 1 —")],
     },
     "pfl-ai": {
         "title": "PFL-AI<br/>Body of Knowledge",

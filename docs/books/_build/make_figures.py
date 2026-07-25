@@ -476,5 +476,35 @@ body += (f'<line x1="{400+62}" y1="{base-hgt(0.9057,1.25)}" x2="{400+96}" y2="{b
          f'<line x1="30" y1="{base}" x2="{W-24}" y2="{base}" stroke="{INK}" stroke-width="1.2"/>')
 (PML / "fig_7_3_2.svg").write_text(svg(W, H, body))
 
+# ---- Fig 1.3.1 the value chain and where it leaks ---------------------------------
+W, H = 700, 330
+stages = [("OUTPUT", "40 clinics installed", BLUE), ("OUTCOME", "28 clinics using it (70 %)", INK),
+          ("BENEFIT", "USD 685,440 / year released", INK), ("VALUE", "benefit vs cost and risk", SLATE)]
+bw, gap, y0 = 148, 24, 96
+body = f'<text x="30" y="44" font-size="12.5" font-weight="700" fill="{INK}">Each link can fail independently — an output claimed as a benefit overstates by construction</text>'
+for i, (title, sub, col) in enumerate(stages):
+    x = 30 + i * (bw + gap)
+    body += (f'<rect x="{x}" y="{y0}" width="{bw}" height="72" rx="8" fill="white" stroke="{col}" stroke-width="2.2"/>'
+             f'<text x="{x+bw/2}" y="{y0+27}" font-size="11.5" font-weight="800" fill="{col}" text-anchor="middle">{title}</text>')
+    # wrap the sub-label onto two lines at a sensible break
+    words, line1 = sub.split(), ""
+    while words and len(line1 + words[0]) < 20:
+        line1 += words.pop(0) + " "
+    body += (f'<text x="{x+bw/2}" y="{y0+46}" font-size="9.5" fill="{SLATE}" text-anchor="middle">{line1.strip()}</text>'
+             f'<text x="{x+bw/2}" y="{y0+60}" font-size="9.5" fill="{SLATE}" text-anchor="middle">{" ".join(words)}</text>')
+    if i < 3:
+        ax = x + bw
+        body += f'<line x1="{ax+3}" y1="{y0+36}" x2="{ax+gap-4}" y2="{y0+36}" stroke="{SLATE}" stroke-width="2" marker-end="url(#vc)"/>'
+leak_x = 30 + bw + gap / 2
+body = ('<defs><marker id="vc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">'
+        f'<path d="M0 0L10 5L0 10z" fill="{SLATE}"/></marker>'
+        '<marker id="vcr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">'
+        f'<path d="M0 0L10 5L0 10z" fill="{CRIMSON}"/></marker></defs>' + body
+        + f'<line x1="{leak_x}" y1="{y0+80}" x2="{leak_x}" y2="{y0+126}" stroke="{CRIMSON}" stroke-width="2.2" marker-end="url(#vcr)"/>'
+        + f'<text x="{leak_x+10}" y="{y0+110}" font-size="11" font-weight="700" fill="{CRIMSON}">30 % leaks here</text>'
+        + f'<text x="{leak_x+10}" y="{y0+126}" font-size="10" fill="{CRIMSON}">USD 293,760 of claimed value that never existed</text>'
+        + f'<text x="30" y="{y0+180}" font-size="10.5" fill="{SLATE}">Adoption is the outcome measure that links an output to any benefit at all — so it needs its own owner (Toolkit 1.T.1).</text>')
+(PML / "fig_1_3_1.svg").write_text(svg(W, H, body))
+
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")

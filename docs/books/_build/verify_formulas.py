@@ -342,6 +342,31 @@ check("EX 7.4 PTA", D(2400000) + (D(2900000) - (D(2400000) + D(180000))) / D("0.
 # Cash
 check("7.4.4 unpaid at 60-day terms", AC7 * D("0.35"), 742000)
 
+# ---------- PML-AI Domain 1 — The project leadership profession ----------
+CLIN, ADOPT, HRS, RATE, WKS = D(40), D("0.70"), D(6), D(85), D(48)
+check("WE 1.3.2 adopting clinics", CLIN * ADOPT, 28)
+check("WE 1.3.2 annual benefit", CLIN * ADOPT * HRS * RATE * WKS, 685440)
+check("WE 1.3.2 output-based claim", CLIN * HRS * RATE * WKS, 979200)
+check("WE 1.3.2 overstatement", CLIN * HRS * RATE * WKS - CLIN * ADOPT * HRS * RATE * WKS, 293760)
+# The overstatement is exactly the non-adoption rate — the point the example is built to make.
+check("WE 1.3.2 overstatement == non-adoption rate",
+      ((CLIN * HRS * RATE * WKS - CLIN * ADOPT * HRS * RATE * WKS) / (CLIN * HRS * RATE * WKS) * 100).quantize(D("0.1")),
+      D("30.0"), tol=D("0.05"))
+check("WE 1.3.2 SAR parallel (millions)", (D(685440) * D("3.75") / 1000000).quantize(D("0.01")), D("2.57"), tol=D("0.005"))
+for a, v in (("0.50", 489600), ("0.70", 685440), ("0.90", 881280)):
+    check(f"WE 1.3.2 sensitivity at {a} adoption", CLIN * D(a) * HRS * RATE * WKS, v)
+check("WE 1.3.3 benefit per week", CLIN * ADOPT * HRS * RATE, 14280)
+check("WE 1.3.3 eight weeks", CLIN * ADOPT * HRS * RATE * 8, 114240)
+check("WE 1.3.3 net of acceleration", CLIN * ADOPT * HRS * RATE * 8 - 60000, 54240)
+check("WE 1.3.3 breakeven weeks", (D(60000) / (CLIN * ADOPT * HRS * RATE)).quantize(D("0.01")), D("4.20"), tol=D("0.005"))
+check("Case A actual at 40% adoption", CLIN * D("0.40") * HRS * RATE * WKS, 391680)
+check("EX 1.1 adopting sites", D(60) * D("0.65"), 39)
+check("EX 1.1 benefit", D(60) * D("0.65") * 5 * 90 * 46, 807300)
+check("EX 1.1 output claim", D(60) * 5 * 90 * 46, 1242000)
+check("EX 1.1 overstatement pct", ((D(1242000) - D(807300)) / D(1242000) * 100).quantize(D("0.1")), D("35.0"), tol=D("0.05"))
+check("EX 1.2 five-week cost of delay", CLIN * ADOPT * HRS * RATE * 5, 71400)
+check("EX 1.3 adoption spread 50→90", CLIN * D("0.90") * HRS * RATE * WKS - CLIN * D("0.50") * HRS * RATE * WKS, 391680)
+
 print()
 if FAILURES:
     print(f"✗ {len(FAILURES)} FAILURES:", *FAILURES, sep="\n  ")
