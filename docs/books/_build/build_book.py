@@ -24,7 +24,8 @@ BOOKS = {
                      "Leadership · delivery systems · governance · the governed use of AI"),
         "order": ["manuscript/domain-01-profession.md",
                   "manuscript/domain-06-planning-scheduling-flow.md",
-                  "manuscript/domain-07-cost-resources-commercial.md"],
+                  "manuscript/domain-07-cost-resources-commercial.md",
+                  "manuscript/domain-08-risk-uncertainty-resilience.md"],
         "parts": [("Part One", "Leading projects",
                    "Domains 1–4 — the profession, strategy and selection, governance and decision rights, "
                    "and delivery architecture: what a project leader is for and answerable for.",

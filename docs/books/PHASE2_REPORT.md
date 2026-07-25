@@ -125,12 +125,45 @@ if profit does not pay debt service, how do you get from one to the other:
   Domain 3's instalment split. PFL-AI volume now typesets at **76 pp** across Domains 1–4
   (13 figures, 71 index entries) — **Part One complete**.
 
+**Batch 9 (loop iteration 7) — PML-AI Domain 8, Risk, uncertainty and resilience.**
+(~7.5k words) Closes the two obligations Domains 6 and 7 left open — where schedule ranges come
+from, and how the contingency inside the baseline is actually sized:
+
+- KA 8.1 risk/uncertainty/issue kept apart, the **cause → event → consequence** statement (each
+  part mapping to a different response type), identification methods *with their blind spots*, and
+  the observation that registers running 90 % threats reflect defensive framing rather than reality.
+- KA 8.2 the analysis ladder: qualitative screening and why ordinal scores must not be multiplied
+  as money; `EMV` on Auriga's register (**278,000**, 6.95 % of `BAC`; 314,000 if the opportunity is
+  ignored) with the two cautions that `EMV` averages outcomes that will not occur and that ranking
+  by it reorders the register; a decision tree pricing the **value of information** at
+  **59,000** against a 25,000 survey — plus the sensitivity where the same survey *destroys*
+  value; and aggregation to a stated confidence: mean 278,000, σ **252,642**, **P80 ≈ 490,624**,
+  set against the worst-case sum (1,140,000 = 28.5 % of `BAC`), the `EMV` sum and the reasoning-free
+  10 % rule of thumb.
+- KA 8.3 responses as investments judged on `EMV` reduction (reusing Domain 6's fast-track at
+  **+33,000**), the rule that impact governs survivability even at low probability, secondary
+  risks, reserve authority, and the draw-protocol/retirement governance.
+- KA 8.4 resilience as distinct from prediction (buffers, optionality, modularity, redundancy, fast
+  detection — bought at an efficiency cost that should be chosen), a bias table with countermeasures
+  including the pre-mortem, the crisis sequence, and AI risk sensing with its structural blind spot
+  (novel risk) and its real failure mode (displaced judgment).
+- Advanced topics: correlation and why aggregate risk exceeds the independent estimate; schedule
+  risk analysis and **merge bias** (two 0.80 paths converging give **0.64**, which deterministic
+  CPM cannot see — the arithmetic behind Domain 6's convergence warning); reviewer invariants.
+- Industry variations, two case studies (the survey Auriga did not commission — the same event
+  Domain 6 recovered, now priced; the "diversified" portfolio where 14 of 22 risks shared one
+  six-person team), executive perspective, 4 exercises, 3 toolkits, exam prep, 12 tagged MCQs.
+- Figure 8.2.1 (the survey decision tree).
+- Harness: **368 golden checks, all passing** (was 334); it caught two drifted figures during
+  authoring (a P80 and an overstatement percentage), both corrected before commit. `EMV` flipped to
+  verified in the shared registry. PML-AI volume now typesets at **81 pp** across Domains 1, 6, 7
+  and 8 (9 figures, 90 index entries).
+
 ## Next production batch
 
-Queued in loop order: (1) PML-AI Domain 8 (Risk, uncertainty and resilience) — Domain 7's
-contingency treatment depends on it, and it registers `EMV`; (2) PML-AI Domain 2 (Strategy,
-selection and business alignment), continuing the Meridian thread into benefits mapping and
-completing PML-AI Part One alongside Domains 3–4; (3) PFL-AI Domain 10 (Debt sizing, covenants and
-credit metrics), which Domains 2–4 have now fully prepared (`CFADS` defined, discounting built,
-appraisal in place) and which registers `DSCR`/`LLCR`/`PLCR`. Phase 2 completes when all
-foundation domains of both books pass gates; PFL-AI Part One is now done.
+Queued in loop order: (1) PML-AI Domain 2 (Strategy, selection and business alignment), continuing
+the Meridian thread into benefits mapping; (2) PFL-AI Domain 10 (Debt sizing, covenants and credit
+metrics), which Domains 2–4 have now fully prepared (`CFADS` defined, discounting built, appraisal
+in place) and which registers `DSCR`/`LLCR`/`PLCR`; (3) PML-AI Domain 3 (Governance, organization
+and decision rights), which Domains 1 and 8 both now depend on. Phase 2 completes when all
+foundation domains of both books pass gates; PFL-AI Part One is done.

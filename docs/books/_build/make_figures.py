@@ -536,5 +536,30 @@ body += (f'<text x="{L+22}" y="{T-8}" font-size="11" fill="{SLATE}">the accrual 
          + axes(L, T, W - R, H - B, "", "USD"))
 (PFL / "fig_2_2_1.svg").write_text(svg(W, H, body))
 
+# ---- Fig 8.2.1 the survey decision tree -------------------------------------------
+W, H = 700, 380
+dx, dy = 70, H / 2
+body = (f'<rect x="{dx-11}" y="{dy-11}" width="22" height="22" fill="white" stroke="{INK}" stroke-width="2.2"/>'
+        f'<text x="{dx}" y="{dy+38}" font-size="10" fill="{SLATE}" text-anchor="middle">decide</text>')
+branches = [("Proceed directly", 96, 120000, [("0.40", 300000), ("0.60", 0)], SLATE, True),
+            ("Survey first (25,000)", 286, 61000, [("0.40", 115000), ("0.60", 25000)], BLUE, False)]
+for label, cy, ev, outcomes, col, rejected in branches:
+    body += (f'<line x1="{dx+12}" y1="{dy}" x2="{240-14}" y2="{cy}" stroke="{col}" stroke-width="2"/>'
+             f'<text x="{(dx+240)/2-6}" y="{(dy+cy)/2 - 8}" font-size="10" fill="{col}" text-anchor="middle">{label}</text>'
+             f'<circle cx="240" cy="{cy}" r="11" fill="white" stroke="{col}" stroke-width="2.2"/>')
+    for j, (p, val) in enumerate(outcomes):
+        oy = cy - 46 + j * 92
+        body += (f'<line x1="252" y1="{cy}" x2="{470}" y2="{oy}" stroke="{col}" stroke-width="1.5"/>'
+                 f'<text x="{356}" y="{(cy+oy)/2 - 5}" font-size="9.5" fill="{SLATE}" text-anchor="middle">p {p}</text>'
+                 f'<text x="480" y="{oy+4}" font-size="10.5" fill="{INK}">cost {val:,}</text>')
+    body += (f'<text x="{600}" y="{cy+4}" font-size="12" font-weight="700" fill="{col}">EV {ev:,}</text>')
+    if rejected:
+        body += f'<line x1="{dx+16}" y1="{dy-6}" x2="{224}" y2="{cy+10}" stroke="{CRIMSON}" stroke-width="1.6" stroke-dasharray="5 4"/>'
+body += (f'<text x="{600}" y="{(96+286)/2+4}" font-size="11.5" font-weight="700" fill="{CRIMSON}" text-anchor="middle">value of</text>'
+         f'<text x="{600}" y="{(96+286)/2+19}" font-size="11.5" font-weight="700" fill="{CRIMSON}" text-anchor="middle">information</text>'
+         f'<text x="{600}" y="{(96+286)/2+36}" font-size="12.5" font-weight="800" fill="{CRIMSON}" text-anchor="middle">59,000</text>'
+         f'<text x="30" y="26" font-size="11.5" font-weight="700" fill="{INK}">Survey worth buying: it converts a reactive 300,000 into a planned 90,000 in the 40 % of futures where the problem exists</text>')
+(PML / "fig_8_2_1.svg").write_text(svg(W, H, body))
+
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")

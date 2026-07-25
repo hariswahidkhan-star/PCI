@@ -34,7 +34,7 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
 | `ES` | Earned Schedule (time-based schedule measure) | time | PML-AI D6 | ✅ |
 | `SPI(t)` | Schedule Performance Index (time) = `ES/AT` | ratio | PML-AI D6 | ✅ |
 | `TF`, `FF` | Total float, free float | time | PML-AI D6 | ✅ |
-| `EMV` | Expected monetary value = Σ(probability × impact) | currency | PML-AI D8 | ⏳ |
+| `EMV` | Expected monetary value = Σ(probability × impact) | currency | PML-AI D8 | ✅ |
 | `EVA(benefit)` | Benefit measure in benefits register (named in words to avoid EV clash) | currency | PML-AI D2/D16 | ⏳ |
 
 ## 3. New symbols — PFL-AI

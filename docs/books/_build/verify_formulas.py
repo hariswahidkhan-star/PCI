@@ -420,6 +420,56 @@ check("EX 2.3 CFADS after WC", EBITDA_X - PBT_X * D("0.20") - 850000, 7430000)
 check("EX 2.3 DSCR after WC", ((EBITDA_X - PBT_X * D("0.20") - 850000) / D(4400000)).quantize(D("0.01")), D("1.69"), tol=D("0.005"))
 check("EX 2.4 profit difference", D(2400000) - D(2400000) / 8, 2100000)
 
+# ---------- PML-AI Domain 8 — Risk, uncertainty and resilience ----------
+import math as _math
+AURIGA_RISKS = [("R1", D("0.35"), D(240000), 84000), ("R2", D("0.50"), D(180000), 90000),
+                ("R3", D("0.25"), D(320000), 80000), ("R4", D("0.15"), D(400000), 60000),
+                ("R5", D("0.30"), D(-120000), -36000)]
+emv_total = D(0)
+var_total = D(0)
+for rid, p, impact, expected in AURIGA_RISKS:
+    check(f"WE 8.2.2 EMV {rid}", p * impact, expected)
+    emv_total += p * impact
+    var_total += p * (1 - p) * impact * impact
+check("WE 8.2.2 total exposure", emv_total, 278000)
+check("WE 8.2.2 exposure as % of BAC", (emv_total / D(4000000) * 100).quantize(D("0.01")), D("6.95"), tol=D("0.005"))
+check("WE 8.2.2 threats-only total", emv_total + 36000, 314000)
+check("WE 8.2.4 worst-case sum", D(240000) + 180000 + 320000 + 400000, 1140000)
+check("WE 8.2.4 worst case as % of BAC", (D(1140000) / D(4000000) * 100).quantize(D("0.1")), D("28.5"), tol=D("0.05"))
+check("WE 8.2.4 variance", var_total, D("63828000000"))
+sigma8 = D(str(_math.sqrt(float(var_total))))
+check("WE 8.2.4 sigma", sigma8.quantize(D("1")), 252642, tol=D("1"))
+check("WE 8.2.4 P80 contingency", (emv_total + D("0.8416") * sigma8).quantize(D("1")), 490624, tol=D("1"))
+check("WE 8.2.4 10% rule of thumb", D(4000000) * D("0.10"), 400000)
+# Decision tree / value of information
+check("WE 8.2.3 proceed-directly EV", D("0.40") * D(300000), 120000)
+check("WE 8.2.3 survey-first EV", D(25000) + D("0.40") * D(90000), 61000)
+check("WE 8.2.3 value of information", D("0.40") * D(300000) - (D(25000) + D("0.40") * D(90000)), 59000)
+check("WE 8.2.3 sensitivity destroys value at 250k", D(25000) + D("0.40") * D(250000), 125000)
+# Response economics (ties to Domain 6's fast-track)
+check("8.3.1 fast-track EV ties to D6", D(45000) - D("0.20") * D(60000), 33000)
+check("MCQ 8.3-A EMV reduction", D(84000) - 20000, 64000)
+check("MCQ 8.4-B / 8.A.2 merge bias", D("0.80") * D("0.80"), D("0.64"))
+# Exercises
+EX8 = [(D("0.40"), D(150000), 60000), (D("0.20"), D(500000), 100000),
+       (D("0.60"), D(80000), 48000), (D("0.25"), D(-200000), -50000)]
+ex_mean = D(0)
+ex_var = D(0)
+for p, impact, expected in EX8:
+    check(f"EX 8.1 EMV p={p}", p * impact, expected)
+    ex_mean += p * impact
+    ex_var += p * (1 - p) * impact * impact
+check("EX 8.1 total exposure", ex_mean, 158000)
+check("EX 8.1 threats-only", ex_mean + 50000, 208000)
+check("EX 8.1 overstatement pct", ((D(208000) - D(158000)) / D(158000) * 100).quantize(D("0.1")), D("31.6"), tol=D("0.05"))
+check("EX 8.2 variance", ex_var, D("54436000000"))
+sigma_ex = D(str(_math.sqrt(float(ex_var))))
+check("EX 8.2 sigma", sigma_ex.quantize(D("1")), 233315, tol=D("1"))
+check("EX 8.2 P80", (ex_mean + D("0.8416") * sigma_ex).quantize(D("1")), 354358, tol=D("1"))
+check("EX 8.3 EMV before", D("0.30") * D(400000), 120000)
+check("EX 8.3 EMV after", D("0.10") * D(400000), 40000)
+check("EX 8.3 net of mitigation", (D("0.30") - D("0.10")) * D(400000) - 70000, 10000)
+
 print()
 if FAILURES:
     print(f"✗ {len(FAILURES)} FAILURES:", *FAILURES, sep="\n  ")
