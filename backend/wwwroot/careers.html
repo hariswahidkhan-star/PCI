@@ -23,6 +23,9 @@
   .job-meta{color:#64748b;font-size:.9rem;margin-top:.35rem;display:flex;gap:.9rem;flex-wrap:wrap}
   .tag{display:inline-block;background:#eff6ff;color:#1e40af;border-radius:999px;padding:.1rem .6rem;font-size:.8rem;font-weight:600}
   .tag.feat{background:#fef3c7;color:#92400e}
+  .tag.urg{background:#fee2e2;color:#991b1b}
+  .tag.new{background:#dcfce7;color:#166534}
+  .tag.soon{background:#fef9c3;color:#854d0e}
   .muted{color:#64748b}
   .c-empty{text-align:center;color:#64748b;padding:2.5rem}
   /* detail */
@@ -51,6 +54,9 @@
       <select id="f-type"><option value="">All types</option><option value="full_time">Full-time</option><option value="part_time">Part-time</option><option value="contract">Contract</option><option value="internship">Internship</option><option value="temporary">Temporary</option></select>
       <select id="f-remote"><option value="">Any location type</option><option value="onsite">On-site</option><option value="remote">Remote</option><option value="hybrid">Hybrid</option></select>
       <select id="f-sector"><option value="">All sectors</option></select>
+      <select id="f-department"><option value="">All departments</option></select>
+      <select id="f-experience"><option value="">Any experience</option><option value="entry">Entry</option><option value="junior">Junior</option><option value="mid">Mid</option><option value="senior">Senior</option><option value="lead">Lead</option><option value="principal">Principal</option><option value="director">Director</option></select>
+      <select id="f-sort"><option value="">Newest</option><option value="closing">Closing soon</option><option value="title">Title A–Z</option></select>
     </div>
     <div id="jobs"></div>
     <div id="empty" class="c-empty" style="display:none">No open positions match your search right now. Please check back soon.</div>
@@ -63,34 +69,63 @@
   var TYPE={full_time:'Full-time',part_time:'Part-time',contract:'Contract',internship:'Internship',temporary:'Temporary'};
   var REMOTE={onsite:'On-site',remote:'Remote',hybrid:'Hybrid'};
   function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  function salary(j){ if(!j.salary_min&&!j.salary_max) return ''; var c=j.salary_currency||'USD',p=j.salary_period||'year';
+  function cap(s){return s?String(s).charAt(0).toUpperCase()+String(s).slice(1):'';}
+  function salary(j){ if(j.salary_visible===0||j.salary_visible==='0') return ''; if(!j.salary_min&&!j.salary_max) return ''; var c=j.salary_currency||'USD',p=j.salary_period||'year';
     var v=j.salary_min&&j.salary_max?(j.salary_min+'–'+j.salary_max):(j.salary_min||j.salary_max); return c+' '+v+'/'+p; }
+  function labels(j){ var out=[],now=Date.now(); function days(a,b){return Math.round((a-b)/86400000);}
+    if(j.featured)out.push('<span class="tag feat">Featured</span>');
+    if(j.urgent)out.push('<span class="tag urg">Urgent</span>');
+    if(j.remote_type==='remote')out.push('<span class="tag">Remote</span>');
+    if(j.posted_at){var p=Date.parse(j.posted_at); if(!isNaN(p)&&days(now,p)<=14)out.push('<span class="tag new">New</span>');}
+    if(j.closes_at){var c=Date.parse(j.closes_at); if(!isNaN(c)){var dd=days(c,now); if(dd>=0&&dd<=14)out.push('<span class="tag soon">Closing soon</span>');}}
+    return out.length?(' '+out.join(' ')):''; }
   function load(){
     var p=new URLSearchParams();
     if($('f-q').value)p.set('q',$('f-q').value); if($('f-type').value)p.set('type',$('f-type').value);
     if($('f-remote').value)p.set('remote',$('f-remote').value); if($('f-sector').value)p.set('sector',$('f-sector').value);
     if($('f-country').value)p.set('country',$('f-country').value);
+    if($('f-department').value)p.set('department',$('f-department').value);
+    if($('f-experience').value)p.set('experience',$('f-experience').value);
+    if($('f-sort').value)p.set('sort',$('f-sort').value);
     fetch(API+'/api/careers?'+p.toString()).then(function(r){return r.json();}).then(function(d){
-      // populate the sector + country dropdowns once
+      // populate the sector + country + department dropdowns once
       function fill(sel,vals){ if(sel.options.length<=1 && vals){ vals.filter(Boolean).forEach(function(s){var o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o);}); } }
-      fill($('f-sector'), d.sectors); fill($('f-country'), d.countries);
+      fill($('f-sector'), d.sectors); fill($('f-country'), d.countries); fill($('f-department'), d.departments);
       var box=$('jobs'); box.innerHTML='';
       if(!d.rows||!d.rows.length){ $('empty').style.display='block'; return; } $('empty').style.display='none';
       d.rows.forEach(function(j){
         var el=document.createElement('div'); el.className='job-card'; el.onclick=function(){openJob(j.id);};
         var meta=[]; var loc=[j.location,j.country].filter(Boolean).join(', '); if(loc)meta.push('📍 '+esc(loc)); meta.push(esc(TYPE[j.employment_type]||j.employment_type)); if(j.remote_type&&j.remote_type!=='onsite')meta.push(esc(REMOTE[j.remote_type])); var sal=salary(j); if(sal)meta.push(esc(sal)); if(j.sector)meta.push(esc(j.sector));
-        el.innerHTML='<h3>'+esc(j.title)+(j.featured?' <span class="tag feat">Featured</span>':'')+'</h3>'+(j.organisation?'<div class="org">'+esc(j.organisation)+'</div>':'')+'<div class="job-meta">'+meta.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>'+(j.job_code?'<div class="muted" style="font-size:.78rem;margin-top:.3rem">Ref '+esc(j.job_code)+'</div>':'');
+        if(j.department)meta.unshift('🏢 '+esc(j.department));
+        el.innerHTML='<h3>'+esc(j.title)+labels(j)+'</h3>'+(j.organisation?'<div class="org">'+esc(j.organisation)+'</div>':'')+'<div class="job-meta">'+meta.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>'+(j.job_code?'<div class="muted" style="font-size:.78rem;margin-top:.3rem">Ref '+esc(j.job_code)+'</div>':'');
         box.appendChild(el);
       });
     });
   }
   function openJob(id){
     fetch(API+'/api/careers/'+id).then(function(r){return r.json();}).then(function(d){
-      if(!d.job){ return; } var j=d.job;
+      if(!d.job){ return; } var j=d.job; window._jobQuestions=d.questions||[];
+      // Google for Jobs: inject the JobPosting structured data for this role (removed again on Back).
+      var oldLd=document.getElementById('jobposting-ld'); if(oldLd)oldLd.remove();
+      if(d.jsonld){ var ld=document.createElement('script'); ld.type='application/ld+json'; ld.id='jobposting-ld'; ld.textContent=d.jsonld; document.head.appendChild(ld); }
       $('list-view').style.display='none'; var v=$('detail-view'); v.style.display='block'; window.scrollTo(0,0);
       var sal=salary(j);
       var loc=[j.location,j.country].filter(Boolean).join(', ');
-      var meta=[]; if(loc)meta.push('📍 '+esc(loc)); meta.push(esc(TYPE[j.employment_type]||j.employment_type)); if(j.remote_type)meta.push(esc(REMOTE[j.remote_type]||j.remote_type)); if(sal)meta.push(esc(sal)); if(j.sector)meta.push(esc(j.sector)); if(j.job_code)meta.push('Ref '+esc(j.job_code));
+      var meta=[]; if(j.department)meta.push('🏢 '+esc(j.department)); if(loc)meta.push('📍 '+esc(loc)); meta.push(esc(TYPE[j.employment_type]||j.employment_type)); if(j.remote_type)meta.push(esc(REMOTE[j.remote_type]||j.remote_type)); if(j.experience_level)meta.push(esc(cap(j.experience_level))); if(j.vacancies>1)meta.push(esc(j.vacancies)+' vacancies'); if(sal)meta.push(esc(sal)); if(j.sector)meta.push(esc(j.sector)); if(j.job_code)meta.push('Ref '+esc(j.job_code));
+      function qField(q){
+        var req=q.required?' <span style="color:#b91c1c">*</span>':'';
+        var lab='<label>'+esc(q.label)+req+'</label>';
+        var opts=(q.options||'').split('\n').map(function(s){return s.trim();}).filter(Boolean);
+        if(q.qtype==='long_text')return lab+'<textarea data-q="'+q.id+'" rows="3"></textarea>';
+        if(q.qtype==='yesno')return lab+'<select data-q="'+q.id+'"><option value="">—</option><option>Yes</option><option>No</option></select>';
+        if(q.qtype==='single'||q.qtype==='dropdown')return lab+'<select data-q="'+q.id+'"><option value="">—</option>'+opts.map(function(o){return '<option>'+esc(o)+'</option>';}).join('')+'</select>';
+        if(q.qtype==='multi')return lab+'<div data-qmulti="'+q.id+'">'+opts.map(function(o){return '<label style="display:inline-flex;gap:.3rem;margin:.1rem .8rem .1rem 0;font-weight:400"><input type="checkbox" value="'+esc(o)+'" style="width:auto"/> '+esc(o)+'</label>';}).join('')+'</div>';
+        if(q.qtype==='consent')return '<label style="display:flex;gap:.4rem;font-weight:400;margin-top:.5rem"><input type="checkbox" data-q="'+q.id+'" value="Yes" style="width:auto"/> '+esc(q.label)+req+'</label>';
+        if(q.qtype==='number')return lab+'<input data-q="'+q.id+'" type="number"/>';
+        if(q.qtype==='date')return lab+'<input data-q="'+q.id+'" type="date"/>';
+        return lab+'<input data-q="'+q.id+'"/>';
+      }
+      var qhtml=(d.questions&&d.questions.length)?d.questions.map(qField).join(''):'';
       var apply='';
       if(j.apply_method==='inplatform'){
         apply='<div class="apply-box"><h4>Apply for this role</h4><div id="apply-form">'
@@ -99,6 +134,7 @@
           +'<label>Email</label><input id="a-email" type="email"/>'
           +'<label>Phone (optional)</label><input id="a-phone"/>'
           +'<label>Cover message (optional)</label><textarea id="a-cover" rows="4"></textarea>'
+          +qhtml
           +'<label>CV / résumé (optional, PDF)</label><input id="a-cv" type="file" accept=".pdf,.doc,.docx"/>'
           +'<div style="margin-top:.9rem"><button class="btn" id="a-submit">Submit application</button></div>'
           +'<div id="a-msg"></div></div></div>';
@@ -112,17 +148,27 @@
         +'<div class="detail"><h2>'+esc(j.title)+'</h2>'+(j.organisation?'<div class="org" style="color:#1D4ED8;font-weight:600">'+esc(j.organisation)+'</div>':'')
         +'<div class="job-meta" style="margin-top:.4rem">'+meta.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>'
         +sec('About the role',j.description)+sec('Responsibilities',j.responsibilities)+sec('Requirements',j.requirements)
-        +apply+'</div>';
-      $('back').onclick=function(){ v.style.display='none'; $('list-view').style.display='block'; };
+        +sec('Education',j.education)+sec('Language requirements',j.languages)+sec('Certifications',j.certifications)+sec('Benefits',j.benefits)
+        +sec('Reporting line',j.reporting_line)+sec('Expected start',j.expected_start)+sec('How to apply',j.application_instructions)
+        +apply
+        +(j.eo_statement?'<section><p class="muted" style="font-size:.85rem">'+esc(j.eo_statement)+'</p></section>':'')+'</div>';
+      $('back').onclick=function(){ var ld=document.getElementById('jobposting-ld'); if(ld)ld.remove(); v.style.display='none'; $('list-view').style.display='block'; };
       var sb=$('a-submit');
       if(sb) sb.onclick=function(){
         var msg=$('a-msg'); msg.innerHTML='';
         var file=$('a-cv').files[0];
         function send(cvData,cvName){
           sb.disabled=true; sb.textContent='Submitting…';
-          fetch(API+'/api/careers/'+id+'/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+          var answers={};
+          (window._jobQuestions||[]).forEach(function(q){
+            if(q.qtype==='multi'){ var box=document.querySelector('[data-qmulti="'+q.id+'"]'); if(box){ var vals=[].slice.call(box.querySelectorAll('input:checked')).map(function(c){return c.value;}); if(vals.length)answers[q.id]=vals; } }
+            else if(q.qtype==='consent'){ var c=document.querySelector('[data-q="'+q.id+'"]'); if(c&&c.checked)answers[q.id]='Yes'; }
+            else { var el=document.querySelector('[data-q="'+q.id+'"]'); if(el&&el.value)answers[q.id]=el.value; }
+          });
+          var hdr={'Content-Type':'application/json'}; try{ var tok=sessionStorage.getItem('pci.session.token'); if(tok)hdr['Authorization']='Bearer '+tok; }catch(e){}
+          fetch(API+'/api/careers/'+id+'/apply',{method:'POST',headers:hdr,body:JSON.stringify({
             website:$('a-website').value, name:$('a-name').value, email:$('a-email').value, phone:$('a-phone').value,
-            cover_message:$('a-cover').value, cv_data:cvData||undefined, cv_name:cvName||undefined })})
+            cover_message:$('a-cover').value, answers:answers, cv_data:cvData||undefined, cv_name:cvName||undefined })})
           .then(function(r){return r.json().then(function(b){return{ok:r.ok,b:b};});}).then(function(x){
             if(x.ok){ $('apply-form').innerHTML='<div class="notice ok">'+esc(x.b.message||'Application received. Thank you.')+'</div>'; }
             else { msg.innerHTML='<div class="notice err">'+esc((x.b&&x.b.message)||'Could not submit your application.')+'</div>'; sb.disabled=false; sb.textContent='Submit application'; }
@@ -134,8 +180,10 @@
       };
     });
   }
-  ['f-q','f-country','f-type','f-remote','f-sector'].forEach(function(idv){ var e=$(idv); e.addEventListener(idv==='f-q'?'input':'change',function(){ clearTimeout(window._ct); window._ct=setTimeout(load,idv==='f-q'?250:0); }); });
+  ['f-q','f-country','f-type','f-remote','f-sector','f-department','f-experience','f-sort'].forEach(function(idv){ var e=$(idv); e.addEventListener(idv==='f-q'?'input':'change',function(){ clearTimeout(window._ct); window._ct=setTimeout(load,idv==='f-q'?250:0); }); });
   load();
+  // Deep link from the server-rendered /careers/{code} pages (and shared links): ?job=ID opens that role.
+  try{ var _jp=new URLSearchParams(location.search).get('job'); if(_jp&&/^\d+$/.test(_jp)) openJob(Number(_jp)); }catch(e){}
 })();
 </script>
 </body></html>

@@ -21,6 +21,7 @@ const NAV = [
   { to: '/messages', tkey: 'nav.messages', badgeKey: 'unread' as const },
   { to: '/support', tkey: 'nav.support' },
   { to: '/appeals', tkey: 'nav.appeals' },
+  { to: '/applications', tkey: 'nav.applications' },
   { to: '/profile', tkey: 'nav.profile', badgeKey: 'profile' as const },
 ]
 
@@ -36,6 +37,7 @@ const TITLE_KEYS: Record<string, string> = {
   '/templates': 'nav.templates',
   '/events': 'nav.events',
   '/documents': 'nav.documents',
+  '/applications': 'nav.applications',
   '/messages': 'nav.messages',
   '/support': 'nav.support',
   '/appeals': 'nav.appeals',

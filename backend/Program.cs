@@ -1576,6 +1576,43 @@ app.Use(async (ctx, next) =>
                 reqPath = "/certifications.html";  // render the catalogue landing through the normal pipeline
             }
         }
+        // ── Clean per-job URLs: /careers/{code}/{slug} → server-rendered detail page with JobPosting
+        // structured data (careers.html itself remains the interactive board and is served statically). ──
+        if (reqPath.StartsWith("/careers/", StringComparison.OrdinalIgnoreCase))
+        {
+            var rest = reqPath.Substring("/careers/".Length).Trim('/');
+            if (rest.Length == 0)
+            {
+                ctx.Response.StatusCode = 301;
+                ctx.Response.Headers.Location = "/careers.html";
+                return;
+            }
+            var jobCode = rest.Split('/')[0];   // first segment identifies the posting; the slug is cosmetic
+            if (!jobCode.Contains('.'))
+            {
+                var job = PCI.Backend.Core.CareerPage.ByCode(db, jobCode);
+                if (job is not null)
+                {
+                    var canonical = PCI.Backend.Core.CareerPage.Path(job);
+                    if (!reqPath.Equals(canonical, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ctx.Response.StatusCode = 301;
+                        ctx.Response.Headers.Location = canonical;
+                        return;
+                    }
+                    var page = PCI.Backend.Core.CareerPage.Render(db, webRoot, jobCode, PCI.Backend.Core.I18nContent.ActiveLang(ctx));
+                    if (page is not null)
+                    {
+                        ctx.Response.ContentType = "text/html; charset=utf-8";
+                        ctx.Response.Headers.CacheControl = "no-cache";
+                        ctx.Response.Headers.Vary = "Cookie";
+                        await ctx.Response.WriteAsync(page);
+                        return;
+                    }
+                }
+                // unknown/closed job code → fall through to normal 404 handling
+            }
+        }
         var slug = reqPath == "/" ? "index.html" : reqPath.TrimStart('/');
         var isPage = slug.EndsWith(".html", StringComparison.OrdinalIgnoreCase) && !slug.Contains("..");
         // Active public-website language (?lang= persisted to a cookie, else cookie, else English).

@@ -102,41 +102,60 @@ public static class WorldPassport
 
     const double W = 595, H2 = 842;   // A4 portrait, points
 
+    // Brand colours in PDF RGB. Gilt is the passport-cover accent the web artefact uses; the
+    // muted variant strokes hairlines that must sit behind, not compete with, the content.
+    const string Noir = "0.055 0.082 0.145";
+    const string Crimson = "0.757 0.200 0.161";
+    const string Gilt = "0.784 0.635 0.294";
+    const string GiltFaint = "0.855 0.780 0.600";
+
     /// <summary>
     /// A one-page Passport PDF: same content, same disclosure rules and same practice notice as the
     /// web page — a document that claims more than the page it came from would be a forgery of our
     /// own making. Deterministic for a given input, with no font embedding and no native libraries.
+    /// Drawn as the artefact, not a printout: noir cover band with the gilt seal, a hairline page
+    /// frame, ruled stat plinths and separated evidence rows.
     /// </summary>
     public static byte[] Pdf(PassportDoc d)
     {
         var cs = new StringBuilder();
 
-        // ── header band, in the brand's noir ──
-        cs.Append("0.055 0.082 0.145 rg ").Append($"0 {H2 - 108:0.##} {W:0.##} 108 re f ");
-        cs.Append("0.757 0.200 0.161 rg ").Append($"44 {H2 - 116:0.##} 62 4 re f ");   // crimson rule
+        // ── hairline page frame, the way a security document rules its edge ──
+        cs.Append($"{GiltFaint} RG 0.9 w ").Append($"20 20 {W - 40:0.##} {H2 - 40:0.##} re S ");
+        cs.Append($"{GiltFaint} RG 0.5 w ").Append($"24 24 {W - 48:0.##} {H2 - 48:0.##} re S ");
+
+        // ── header band, in the brand's noir, with the gilt seal ──
+        cs.Append($"{Noir} rg ").Append($"20 {H2 - 130:0.##} {W - 40:0.##} 110 re f ");
+        cs.Append($"{Crimson} rg ").Append($"44 {H2 - 116:0.##} 62 4 re f ");           // crimson rule
+        cs.Append($"{Gilt} rg ").Append($"110 {H2 - 116:0.##} 30 1.2 re f ");           // gilt echo
         Text(cs, "PCI WORLD", 44, H2 - 62, 26, bold: true, 1, 1, 1);
         Text(cs, "PASSPORT — VERIFIED PRACTICE EVIDENCE", 44, H2 - 84, 9.5, bold: false, 0.72, 0.78, 0.86, spacing: 2.2);
+        Seal(cs, W - 88, H2 - 75, 33);
 
-        double y = H2 - 158;
-        Text(cs, d.Name, 44, y, 24, bold: true, 0.06, 0.09, 0.16);
-        y -= 26;
+        double y = H2 - 178;
+        Text(cs, d.Name, 44, y, 25, bold: true, 0.06, 0.09, 0.16);
+        y -= 24;
         Text(cs, "Project Controls Institute · PCI World", 44, y, 11, bold: false, 0.28, 0.33, 0.41);
 
-        // ── the three counts ──
-        y -= 46;
+        // ── the three counts, on ruled plinths ──
+        y -= 48;
+        cs.Append("0.89 0.91 0.94 RG 1 w ").Append($"44 {y + 16:0.##} m {W - 44:0.##} {y + 16:0.##} l S ");
         void Stat(double x, string label, string value)
         {
             Text(cs, label.ToUpperInvariant(), x, y, 8.5, bold: true, 0.28, 0.33, 0.41, spacing: 1.6);
             Text(cs, value, x, y - 30, 27, bold: true, 0.06, 0.09, 0.16);
         }
         Stat(44, "Challenges completed", d.Completed.ToString());
-        Stat(200, "Industries", d.Industries.ToString());
-        Stat(320, "Tracks", d.Tracks.ToString());
+        Stat(230, "Industries", d.Industries.ToString());
+        Stat(350, "Tracks", d.Tracks.ToString());
+        cs.Append($"{GiltFaint} RG 0.8 w ")
+          .Append($"212 {y - 38:0.##} m 212 {y + 10:0.##} l S ")
+          .Append($"332 {y - 38:0.##} m 332 {y + 10:0.##} l S ");
         y -= 58;
 
         // ── evidence table, honouring the owner's field-level disclosure ──
         y -= 34;
-        cs.Append("0.89 0.91 0.94 RG 1 w ").Append($"44 {y + 16:0.##} m {W - 44:0.##} {y + 16:0.##} l S ");
+        cs.Append($"{Gilt} RG 1.1 w ").Append($"44 {y + 16:0.##} m {W - 44:0.##} {y + 16:0.##} l S ");
         Text(cs, "CHALLENGE", 44, y, 8.5, bold: true, 0.28, 0.33, 0.41, spacing: 1.4);
         if (d.Show.Scores) Text(cs, "SCORE", 400, y, 8.5, bold: true, 0.28, 0.33, 0.41, spacing: 1.4);
         if (d.Show.Dates) Text(cs, "COMPLETED", 462, y, 8.5, bold: true, 0.28, 0.33, 0.41, spacing: 1.4);
@@ -144,7 +163,9 @@ public static class WorldPassport
 
         foreach (var r in d.Rows)
         {
-            if (y < 210) break;                                    // one page, by design
+            // One page, by design — and the rows stop above the verification band, so the
+            // evidence can never collide with the QR frame however much of it there is.
+            if (y < 252) break;
             y -= 22;
             Text(cs, Clip(r.Title, 52), 44, y, 10.5, bold: true, 0.06, 0.09, 0.16);
             var sub = string.Join("  ·  ", new[] { r.Industry, r.Difficulty, d.Show.Profiles ? r.Profile : null }
@@ -153,9 +174,11 @@ public static class WorldPassport
             if (d.Show.Scores) Text(cs, r.Score, 400, y, 10.5, bold: true, 0.06, 0.09, 0.16);
             if (d.Show.Dates) Text(cs, r.Date, 462, y, 10.5, bold: false, 0.28, 0.33, 0.41);
             y -= 12;
+            cs.Append("0.93 0.94 0.96 RG 0.7 w ").Append($"44 {y - 6:0.##} m {W - 44:0.##} {y - 6:0.##} l S ");
         }
 
         // ── verification block: the QR and the URL in text, so neither is the only route ──
+        cs.Append($"{GiltFaint} RG 0.9 w ").Append($"{W - 158:0.##} 118 124 124 re S ");
         DrawQr(cs, d.VerifyUrl, W - 148, 128, 104);
         Text(cs, "VERIFY THIS PASSPORT", 44, 214, 8.5, bold: true, 0.28, 0.33, 0.41, spacing: 1.6);
         Text(cs, "Scan the code or open the link below. The live record is the authority —", 44, 196, 9.5, bold: false, 0.28, 0.33, 0.41);
@@ -170,12 +193,46 @@ public static class WorldPassport
         Text(cs, meta, 44, 150, 8.5, bold: false, 0.45, 0.50, 0.57);
 
         // ── the practice notice, verbatim from the product constant ──
-        cs.Append("0.757 0.200 0.161 rg ").Append("44 62 3 46 re f ");
+        cs.Append($"{Crimson} rg ").Append("44 62 3 46 re f ");
         var notice = Wrap(WorldPages.PracticeNotice, 92);
         var ny = 96.0;
         foreach (var line in notice.Take(4)) { Text(cs, line, 56, ny, 8.8, bold: false, 0.35, 0.40, 0.48); ny -= 11; }
+        Text(cs, WorldPages.OperatedBy, 44, 42, 8, bold: false, 0.45, 0.50, 0.57);
 
         return Assemble(cs.ToString());
+    }
+
+    /// <summary>The gilt seal from the web cover, in PDF strokes: two Bézier-drawn rings, tick
+    /// marks, the monogram and the crimson underline. Purely decorative; every claim it decorates
+    /// is stated in text.</summary>
+    static void Seal(StringBuilder cs, double cx, double cy, double r)
+    {
+        cs.Append($"{Gilt} RG 1.1 w ");
+        Circle(cs, cx, cy, r);
+        cs.Append($"{Gilt} RG 0.5 w ");
+        Circle(cs, cx, cy, r * 0.86);
+        cs.Append($"{Gilt} RG 0.8 w ");
+        for (var i = 0; i < 12; i++)
+        {
+            var a = Math.PI * i / 6.0;
+            var (dx, dy) = (Math.Cos(a), Math.Sin(a));
+            cs.Append($"{cx + dx * r * 0.90:0.##} {cy + dy * r * 0.90:0.##} m ")
+              .Append($"{cx + dx * r * 0.98:0.##} {cy + dy * r * 0.98:0.##} l S ");
+        }
+        Text(cs, "PW", cx - 10.5, cy - 4, 14, bold: true, 0.784, 0.635, 0.294);
+        cs.Append($"{Crimson} rg ").Append($"{cx - 6:0.##} {cy - 10:0.##} 12 1.6 re f ");
+    }
+
+    /// <summary>A circle as four Bézier arcs (k = 0.5523·r), stroked with the current settings —
+    /// PDF content streams have no circle primitive.</summary>
+    static void Circle(StringBuilder cs, double cx, double cy, double r)
+    {
+        var k = 0.552284749831 * r;
+        cs.Append($"{cx + r:0.##} {cy:0.##} m ")
+          .Append($"{cx + r:0.##} {cy + k:0.##} {cx + k:0.##} {cy + r:0.##} {cx:0.##} {cy + r:0.##} c ")
+          .Append($"{cx - k:0.##} {cy + r:0.##} {cx - r:0.##} {cy + k:0.##} {cx - r:0.##} {cy:0.##} c ")
+          .Append($"{cx - r:0.##} {cy - k:0.##} {cx - k:0.##} {cy - r:0.##} {cx:0.##} {cy - r:0.##} c ")
+          .Append($"{cx + k:0.##} {cy - r:0.##} {cx + r:0.##} {cy - k:0.##} {cx + r:0.##} {cy:0.##} c S ");
     }
 
     // ───────────────────────── PDF primitives (CertPdf's approach) ─────────────────────────
