@@ -208,6 +208,38 @@ public class WorldPassportTests
     }
 
     [Fact]
+    public void Student_login_reaches_the_passport_without_a_second_account()
+    {
+        var db = NewWorldDb();
+
+        // First use from the portal: a world account is created, linked and verified — the
+        // student's portal login is the login, so there is no usable world password to manage.
+        var (err, id) = WorldAccount.LinkStudent(db, 42, "Student@Example.com", "Alex Chen");
+        Assert.Null(err);
+        var u = db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", id)!;
+        Assert.Equal("student@example.com", H.Str(u["email"]));
+        Assert.Equal(1L, H.L(u["email_verified"]));
+        Assert.Equal(42L, H.L(u["student_user_id"]));
+        Assert.Equal("Alex Chen", H.Str(u["display_name"]));
+
+        // Every later use resolves to the same account — never a duplicate.
+        var (err2, id2) = WorldAccount.LinkStudent(db, 42, "student@example.com", null);
+        Assert.Null(err2);
+        Assert.Equal(id, id2);
+
+        // A standalone world account with the student's own email is adopted, keeping its evidence…
+        var (rerr, standaloneId, _) = WorldAccount.Register(db, "solo@example.com", "a-long-enough-password", "Solo", null);
+        Assert.Null(rerr);
+        var (err3, id3) = WorldAccount.LinkStudent(db, 77, "solo@example.com", null);
+        Assert.Null(err3);
+        Assert.Equal(standaloneId, id3);
+        Assert.Equal(77L, H.L(db.QueryOne("SELECT student_user_id FROM pciworld_users WHERE id=?", id3)!["student_user_id"]));
+
+        // …and an email already linked to a DIFFERENT student is refused, never hijacked.
+        Assert.Equal("email_in_use", WorldAccount.LinkStudent(db, 99, "solo@example.com", null).Error);
+    }
+
+    [Fact]
     public void The_verification_qr_is_self_contained_svg_with_an_accessible_name()
     {
         var svg = WorldPassport.QrSvg("https://pciworld.example/world/p/abc");

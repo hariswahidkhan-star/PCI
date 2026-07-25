@@ -102,6 +102,35 @@ public static class WorldAccount
     public static void UnpublishPassport(Db db, long userId) =>
         db.Execute("UPDATE pciworld_users SET passport_public=0, passport_token_sha=NULL WHERE id=?", userId);
 
+    /// <summary>
+    /// Find-or-create the PCI World account behind a student sign-in — the one-login path from the
+    /// student portal to the Passport. Resolution order: an account already linked to this student;
+    /// then a standalone account with the student's own email, which is adopted (same person, and
+    /// the portal already delivers exam and credential mail to that address, so it counts as
+    /// verified); otherwise a fresh account is created, verified, with no usable password — the
+    /// student portal login IS the login. An email linked to a DIFFERENT student is refused, never
+    /// hijacked. Returns an error key or the world user id.
+    /// </summary>
+    public static (string? Error, long UserId) LinkStudent(Db db, long studentId, string email, string? displayName)
+    {
+        email = email.Trim().ToLowerInvariant();
+        var u = db.QueryOne("SELECT * FROM pciworld_users WHERE student_user_id=?", studentId);
+        if (u is null)
+        {
+            var byEmail = db.QueryOne("SELECT * FROM pciworld_users WHERE email=?", email);
+            if (byEmail is null)
+                return (null, db.ExecuteReturningId(
+                    "INSERT INTO pciworld_users(email,password_hash,display_name,email_verified,student_user_id) VALUES(?,?,?,1,?)",
+                    email, BCrypt.Net.BCrypt.HashPassword(Security.RandomHex(24)), Trunc(displayName, 80), studentId));
+            var linked = H.L(byEmail["student_user_id"]);
+            if (linked != 0 && linked != studentId) return ("email_in_use", 0);
+            db.Execute("UPDATE pciworld_users SET student_user_id=?, email_verified=1 WHERE id=?", studentId, byEmail["id"]);
+            u = byEmail;
+        }
+        if (H.Str(u["status"]) != "active") return ("account_suspended", 0);
+        return (null, H.L(u["id"]));
+    }
+
     /// <summary>The account's evidence rows (own view — includes hidden items so they can be toggled).</summary>
     public static List<Dictionary<string, object?>> EvidenceRows(Db db, long userId, bool visibleOnly) =>
         // Deliberately NO answers_json and NO session_id: this shape feeds the PUBLIC Passport and
@@ -391,6 +420,30 @@ public static class WorldAccount
             DeleteAccount(db, u.Id);
             log(null, "world_account_delete", $"#{u.Id}");
             return J(new { ok = true, deleted = true });
+        });
+
+        // ───────────── student-login SSO (portal → Passport) ─────────────
+        //
+        // A signed-in STUDENT reaches their Passport without a second sign-in (owner decision).
+        // The realms stay separate — this endpoint authenticates on the student side of the fence,
+        // links or creates the matching world account once (LinkStudent), and mints an ordinary
+        // PCI World session for the browser to carry to /world/account. World code still never
+        // reads exam, entitlement or credential data.
+        app.MapPost("/api/me/world-passport/sso", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var s = Auth.UserFromReq(ctx.Request, db);
+            if (s is null) return Err("no_token", 401);
+            // A support "view as student" session must never mint the student's Passport session:
+            // the Passport is consent-controlled personal evidence, not case data.
+            if (s.Impersonated) return Err("impersonation_readonly", 403, "This action is disabled in support view.");
+            var (err, worldId) = LinkStudent(db, s.Id, s.Email, ($"{s.FirstName} {s.LastName}").Trim());
+            if (err is not null) return Err(err, err == "email_in_use" ? 409 : 403, err == "email_in_use"
+                ? "A PCI World account with your email address is linked to a different sign-in — contact support."
+                : null);
+            var token = MintSession(db, worldId);
+            log(s.Id, "world_passport_sso", $"student #{s.Id} → world #{worldId}");
+            return J(new { ok = true, token, url = "/world/account" });
         });
 
         // ───────────── passport ─────────────
