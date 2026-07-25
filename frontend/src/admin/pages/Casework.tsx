@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../../components/ui'
+import { ViewDownloadActions } from '../../components/documents/DocumentActions'
 import { fmtDate } from '../../format'
 
 // Admin review of the casework students submit from their portal (Appeals & Accommodations page):
@@ -29,15 +30,19 @@ const ACCOM_LABEL: Record<string, string> = {
   extra_time: 'Additional time', separate_setting: 'Separate / quiet setting', assistive_technology: 'Assistive technology', other: 'Other',
 }
 
-// Authenticated evidence download (mirrors the admin document blob flow).
-async function downloadEvidence(kind: 'appeals' | 'accommodations', id: number, filename?: string | null) {
-  const tok = adminApi.getToken() ?? ''
-  const res = await fetch(`/api/admin/${kind}/${id}/evidence`, { headers: { Authorization: 'Bearer ' + tok } })
-  if (!res.ok) { alert('Could not open the evidence file.'); return }
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(await res.blob())
-  a.download = filename || `${kind}-evidence-${id}`
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href)
+// Evidence view/download over the audited admin routes, via the universal document actions.
+function EvidenceActions({ kind, id, filename }: { kind: 'appeals' | 'accommodations'; id: number; filename: string }) {
+  return (
+    <div style={{ display: 'grid', gap: '.15rem' }}>
+      <span className="muted small">Evidence: {filename}</span>
+      <ViewDownloadActions
+        info={{ title: filename, filename }}
+        inlineUrl={`/api/admin/${kind}/${id}/evidence?inline=1`}
+        downloadUrl={`/api/admin/${kind}/${id}/evidence`}
+        token={adminApi.getToken()}
+      />
+    </div>
+  )
 }
 
 function name(r: { first_name?: string | null; last_name?: string | null; email?: string | null; user_id: number }) {
@@ -68,7 +73,7 @@ function Appeals() {
                   <td className="small">{APPEAL_LABEL[r.type] ?? r.type}</td>
                   <td className="small" style={{ maxWidth: 300 }}>
                     <div>{r.reason}</div>
-                    {r.evidence_name && <button className="btn ghost sm" onClick={() => downloadEvidence('appeals', r.id, r.evidence_name)}>Evidence: {r.evidence_name}</button>}
+                    {r.evidence_name && <EvidenceActions kind="appeals" id={r.id} filename={r.evidence_name} />}
                     {r.decision && <div className="muted">Decision: {r.decision}</div>}
                   </td>
                   <td className="small">{fmtDate(r.submitted_at)}</td>
@@ -120,7 +125,7 @@ function Accommodations() {
                   <td className="small">{ACCOM_LABEL[r.request_type] ?? r.request_type}</td>
                   <td className="small" style={{ maxWidth: 300 }}>
                     <div>{r.description}</div>
-                    {r.evidence_name && <button className="btn ghost sm" onClick={() => downloadEvidence('accommodations', r.id, r.evidence_name)}>Evidence: {r.evidence_name}</button>}
+                    {r.evidence_name && <EvidenceActions kind="accommodations" id={r.id} filename={r.evidence_name} />}
                     {r.admin_note && <div className="muted">Note: {r.admin_note}</div>}
                     {!!r.approved_extra_minutes && <div className="muted">+{r.approved_extra_minutes} min approved</div>}
                   </td>

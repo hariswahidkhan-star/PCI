@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { I18nProvider } from '../i18n'
 
 // FE — the student "My Documents" page. Its real logic is renderActions(): a per-document state
 // machine with a strict precedence — time-restricted → locked → acknowledgement-required →
@@ -23,6 +24,8 @@ vi.mock('../api/hooks', () => ({
 vi.mock('../api/client', () => ({ api: { post: (p: string, b?: unknown) => h.post(p, b) } }))
 
 import Documents from './Documents'
+
+const renderPage = () => render(<I18nProvider><Documents /></I18nProvider>)
 
 const doc = (over: Record<string, unknown> = {}) => ({
   id: 5,
@@ -56,20 +59,21 @@ describe('Documents (student — renderActions state machine)', () => {
   })
 
   it('shows the empty state when the student has no documents', () => {
-    render(<Documents />)
+    renderPage()
     expect(screen.getByText("You don't have any documents yet.")).toBeInTheDocument()
   })
 
   it('shows a time-restricted document as an "Available {date}" badge, not an action', () => {
     h.docs = { rows: [doc({ restricted: true, restricted_until: '2027-01-01T00:00:00Z', downloadable: false })] }
-    render(<Documents />)
+    renderPage()
     expect(screen.getByText(/Available/)).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Download' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'View' })).toBeNull()
   })
 
   it('shows the friendly lock label for a locked document', () => {
     h.docs = { rows: [doc({ locked: true, lock_reason: 'archived', downloadable: false })] }
-    render(<Documents />)
+    renderPage()
     expect(screen.getByText('Archived')).toBeInTheDocument() // titleCase(lock_reason)
     expect(screen.queryByRole('button', { name: 'Download' })).toBeNull()
   })
@@ -77,31 +81,57 @@ describe('Documents (student — renderActions state machine)', () => {
   it('requires acknowledgement before download and posts it on click', async () => {
     const user = userEvent.setup()
     h.docs = { rows: [doc({ ack_required: true, acknowledged: false, downloadable: false })] }
-    render(<Documents />)
+    renderPage()
     expect(screen.getByText('Acknowledgement required before download.')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Download' })).toBeNull()
     await user.click(screen.getByRole('button', { name: 'Acknowledge' }))
     await waitFor(() => expect(h.post).toHaveBeenCalledWith('/api/me/documents/5/acknowledge', {}))
     expect(h.refetch).toHaveBeenCalled()
   })
 
-  it('labels a view-only document "View" rather than "Download"', () => {
+  it('gives a view-only document View but never Download', () => {
     h.docs = { rows: [doc({ view_only: true, downloadable: true })] }
-    render(<Documents />)
+    renderPage()
     expect(screen.getByRole('button', { name: 'View' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Download' })).toBeNull()
   })
 
-  it('offers Download and marks an acknowledged document', () => {
+  it('pairs View AND Download on a downloadable document, and marks it acknowledged', () => {
     h.docs = { rows: [doc({ downloadable: true, ack_required: true, acknowledged: true })] }
-    render(<Documents />)
+    renderPage()
+    expect(screen.getByRole('button', { name: 'View' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Download' })).toBeInTheDocument()
     expect(screen.getByText('Acknowledged')).toBeInTheDocument()
   })
 
+  it('opens the secure viewer from View (dialog with title, loading state, close)', async () => {
+    const user = userEvent.setup()
+    const fetchMock = vi.fn(() => new Promise<Response>(() => { /* stay loading */ }))
+    vi.stubGlobal('fetch', fetchMock)
+    h.docs = { rows: [doc({ downloadable: true })] }
+    renderPage()
+    await user.click(screen.getByRole('button', { name: 'View' }))
+    const dialog = await screen.findByRole('dialog', { name: 'Candidate handbook' })
+    expect(dialog).toBeInTheDocument()
+    expect(fetchMock).toHaveBeenCalledWith('/api/me/documents/5/download?inline=1', expect.anything())
+    await user.click(screen.getByRole('button', { name: 'Close' }))
+    expect(screen.queryByRole('dialog')).toBeNull()
+    vi.unstubAllGlobals()
+  })
+
   it('groups documents by category and shows the version badge past v1', () => {
     h.docs = { rows: [doc({ id: 9, title: 'Exam rules', category: 'Policies', version: 3 })] }
-    render(<Documents />)
+    renderPage()
     expect(screen.getByText('Policies')).toBeInTheDocument() // category group card title
-    expect(screen.getByText('v3')).toBeInTheDocument()
+    expect(screen.getByText('Version 3')).toBeInTheDocument()
+  })
+
+  it('books section pairs View and Download for stored files', () => {
+    h.books = { rows: [{ id: 2, kind: 'bok', title: 'PFL-AI Body of Knowledge', watermark: 1, has_file: 1, filename: 'bok.pdf', size_bytes: 1024 }] }
+    renderPage()
+    expect(screen.getByText('PFL-AI Body of Knowledge')).toBeInTheDocument()
+    expect(screen.getByText(/Personalised copy/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'View' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Download' })).toBeInTheDocument()
   })
 })

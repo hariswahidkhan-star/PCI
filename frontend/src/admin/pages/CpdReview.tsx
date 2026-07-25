@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Empty, ErrorNote, Spinner, StatusBadge } from '../../components/ui'
+import { ViewDownloadActions } from '../../components/documents/DocumentActions'
 import { fmtDate } from '../../format'
 
 interface CpdRow {
@@ -17,23 +18,6 @@ interface CpdRow {
   evidence_name?: string | null
   status?: string | null
   admin_note?: string | null
-}
-
-async function downloadEvidence(row: CpdRow) {
-  const response = await fetch(`/api/admin/cpd/${row.id}/evidence`, {
-    headers: { Authorization: `Bearer ${adminApi.getToken() ?? ''}` },
-  })
-  if (!response.ok) {
-    alert('Could not download the CPD evidence.')
-    return
-  }
-  const link = document.createElement('a')
-  link.href = URL.createObjectURL(await response.blob())
-  link.download = row.evidence_name || `cpd-evidence-${row.id}`
-  document.body.appendChild(link)
-  link.click()
-  link.remove()
-  URL.revokeObjectURL(link.href)
 }
 
 export default function CpdReview() {
@@ -109,7 +93,15 @@ export default function CpdReview() {
                   <td className="small" style={{ maxWidth: 280 }}>
                     {row.description || '—'}
                     {row.evidence_name && (
-                      <div><button className="btn ghost sm" onClick={() => downloadEvidence(row)}>Evidence: {row.evidence_name}</button></div>
+                      <div style={{ display: 'grid', gap: '.15rem' }}>
+                        <span className="muted small">Evidence: {row.evidence_name}</span>
+                        <ViewDownloadActions
+                          info={{ title: row.evidence_name, filename: row.evidence_name }}
+                          inlineUrl={`/api/admin/cpd/${row.id}/evidence?inline=1`}
+                          downloadUrl={`/api/admin/cpd/${row.id}/evidence`}
+                          token={adminApi.getToken()}
+                        />
+                      </div>
                     )}
                     {row.admin_note && <div className="muted">Previous note: {row.admin_note}</div>}
                   </td>

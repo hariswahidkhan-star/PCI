@@ -1,8 +1,10 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { useQuery, runMutation } from '../api/hooks'
 import { useMe } from '../data/MeContext'
 import { api } from '../api/client'
 import { Card, Spinner, ErrorNote, Empty, StatusBadge } from '../components/ui'
+import { ViewDownloadActions } from '../components/documents/DocumentActions'
+import { fileToDataUri, fmtBytes, studentToken } from '../files'
 import { fmtDate } from '../format'
 import { useT } from '../i18n'
 
@@ -12,7 +14,59 @@ interface CpdRow {
   category?: string | null
   hours?: number | null
   description?: string | null
+  evidence_name?: string | null
   status?: string | null
+}
+
+// Evidence uploads go through Storage.DecodeDataUri server-side (3 MB, jpeg/png/webp/pdf).
+const EVIDENCE_MAX_BYTES = 3_000_000
+const EVIDENCE_ACCEPT = '.pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp'
+
+/** Per-entry evidence cell: view/download what is on file, or attach a file (returns the entry to
+ *  the review queue). Backed by POST/GET /api/me/cpd/{id}/evidence with ownership checks. */
+function CpdEvidenceCell({ row, onChanged }: { row: CpdRow; onChanged: () => void }) {
+  const t = useT()
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  async function attach(f: File | null) {
+    if (!f) return
+    setErr(null)
+    if (f.size > EVIDENCE_MAX_BYTES) { setErr(t('doc.fileTooLarge', { size: fmtBytes(EVIDENCE_MAX_BYTES) ?? '3 MB' })); return }
+    setBusy(true)
+    try {
+      await api.post(`/api/me/cpd/${row.id}/evidence`, { filename: f.name, data_uri: await fileToDataUri(f) })
+      onChanged()
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : t('doc.uploadFailed'))
+    } finally {
+      setBusy(false)
+      if (inputRef.current) inputRef.current.value = ''
+    }
+  }
+
+  return (
+    <div style={{ display: 'grid', gap: '.25rem', justifyItems: 'start' }}>
+      {row.evidence_name ? (
+        <ViewDownloadActions
+          info={{ title: row.evidence_name, filename: row.evidence_name }}
+          inlineUrl={`/api/me/cpd/${row.id}/evidence?inline=1`}
+          downloadUrl={`/api/me/cpd/${row.id}/evidence`}
+          token={studentToken()}
+        />
+      ) : (
+        <>
+          <button className="btn ghost sm" disabled={busy} onClick={() => inputRef.current?.click()}>
+            {busy ? t('doc.uploading') : t('doc.addEvidence')}
+          </button>
+          <input ref={inputRef} type="file" accept={EVIDENCE_ACCEPT} style={{ display: 'none' }}
+            onChange={(e) => attach(e.target.files?.[0] ?? null)} aria-label={t('doc.addEvidence')} />
+        </>
+      )}
+      {err && <span className="small" role="alert" style={{ color: 'var(--err, #c2410c)' }}>{err}</span>}
+    </div>
+  )
 }
 interface CpdData {
   rows: CpdRow[]
@@ -121,7 +175,7 @@ export default function Cpd() {
         ) : (
           <table className="data">
             <thead>
-              <tr><th>{t('cpd.date')}</th><th>{t('cpd.activity')}</th><th>{t('cpd.category')}</th><th>{t('cpd.hours')}</th><th>{t('cpd.status')}</th><th></th></tr>
+              <tr><th>{t('cpd.date')}</th><th>{t('cpd.activity')}</th><th>{t('cpd.category')}</th><th>{t('cpd.hours')}</th><th>{t('cpd.status')}</th><th>{t('doc.evidence')}</th><th></th></tr>
             </thead>
             <tbody>
               {data.rows.map((r) => (
@@ -131,6 +185,7 @@ export default function Cpd() {
                   <td>{r.category}</td>
                   <td>{r.hours}</td>
                   <td><StatusBadge status={r.status || 'pending'} /></td>
+                  <td><CpdEvidenceCell row={r} onChanged={() => { refetch(); refetchMe() }} /></td>
                   <td><button className="btn ghost sm" onClick={() => remove(r.id)} aria-label={t('cpd.deleteAria')}>{t('cpd.remove')}</button></td>
                 </tr>
               ))}

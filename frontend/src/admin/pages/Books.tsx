@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Spinner, ErrorNote, Empty, Badge } from '../../components/ui'
+import { ViewDownloadActions } from '../../components/documents/DocumentActions'
 
 interface BookRow {
   id: number
@@ -155,6 +156,14 @@ export default function Books() {
                   <td>{r.watermark ? <Badge tone="ok">Personalised</Badge> : <span className="muted small">—</span>}</td>
                   <td>{r.published ? <Badge tone="ok">Published</Badge> : <Badge tone="warn">Hidden</Badge>}</td>
                   <td style={{ whiteSpace: 'nowrap' }}>
+                    {r.storage_ref && (
+                      <ViewDownloadActions
+                        info={{ title: r.title, filename: r.filename, mime: r.mime, sizeBytes: r.size_bytes }}
+                        inlineUrl={`/api/admin/cert-documents/${r.id}/file?inline=1`}
+                        downloadUrl={`/api/admin/cert-documents/${r.id}/file`}
+                        token={adminApi.getToken()}
+                      />
+                    )}
                     <label className="btn ghost sm" style={{ cursor: 'pointer' }}>
                       Replace file
                       <input type="file" accept="application/pdf" style={{ display: 'none' }}

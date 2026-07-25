@@ -79,3 +79,15 @@ export function useI18n(): I18nValue {
 export function useT() {
   return useI18n().t
 }
+
+/** Like useT, but safe outside an I18nProvider (the admin SPA has none): falls back to English.
+ *  Lets shared components — the document viewer/actions — render in both SPAs. */
+export function useTSafe() {
+  const ctx = useContext(I18nContext)
+  if (ctx) return ctx.t
+  return (key: string, vars?: Record<string, string | number>) => {
+    let out = CATALOG[key]?.en ?? key
+    if (vars) for (const [k, v] of Object.entries(vars)) out = out.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v))
+    return out
+  }
+}
