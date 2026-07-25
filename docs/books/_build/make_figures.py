@@ -664,5 +664,94 @@ body = (grid + xt + axes(L, T, W - R, H - B, "Target DSCR (base case)", "Maximum
           'The 828,877 gap at 1.30x is exactly the additional equity the sponsors must find</text>')
 (PFL / "fig_10_1_1.svg").write_text(svg(W, H, body))
 
+# ---- Fig 3.2.1 governance latency and its two levers ------------------------------
+COD3 = 14280
+W, H, L_, R, T, B = 660, 400, 84, 96, 46, 62
+def Xm(m): return L_ + (m - 1) / 12 * (W - L_ - R)
+def Yw(v): return H - B - v / 10 * (H - T - B)
+grid = "".join(f'<line x1="{L_}" y1="{Yw(v)}" x2="{W-R}" y2="{Yw(v)}" stroke="{GRID}"/>'
+               f'<text x="{L_-8}" y="{Yw(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v}</text>'
+               for v in range(0, 11, 2))
+xt = "".join(f'<text x="{Xm(m)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{m}</text>'
+             for m in (1, 2, 4, 6, 8, 10, 13))
+lines = ""
+for lead, colour, width in ((0.5, GRID, 1.8), (1, SLATE, 2.0), (2, BLUE, 2.8), (3, INK, 2.0)):
+    pts = " ".join(f"{Xm(m):.1f},{Yw(m/2 + lead):.1f}" for m in range(1, 14))
+    dash = "" if lead == 2 else ' stroke-dasharray="6 4"'
+    lab = colour if lead != 0.5 else SLATE
+    lines += (f'<polyline points="{pts}" fill="none" stroke="{colour}" stroke-width="{width}"{dash}/>'
+              f'<text x="{W-R+6}" y="{Yw(13/2 + lead)+4:.1f}" font-size="10.5" font-weight="600" '
+              f'fill="{lab}">L = {lead:g} w</text>')
+mx, my = Xm(4), Yw(4.0)
+body = (grid + xt + axes(L_, T, W - R, H - B, "Meeting interval M (weeks)",
+                         "Expected wait E[wait] = M/2 + L (weeks)") + lines
+        + f'<circle cx="{mx:.1f}" cy="{my:.1f}" r="4.5" fill="{CRIMSON}"/>'
+        + f'<text x="{mx+10:.1f}" y="{my-16:.1f}" font-size="10.5" font-weight="700" fill="{CRIMSON}">'
+          'Meridian steering: M = 4, L = 2</text>'
+        + f'<text x="{mx+10:.1f}" y="{my-3:.1f}" font-size="10.5" font-weight="700" fill="{CRIMSON}">'
+          f'&#8594; 4.0 weeks = USD {4*COD3:,} per escalated decision</text>'
+        + f'<line x1="{mx:.1f}" y1="{my:.1f}" x2="{mx:.1f}" y2="{Yw(3.0):.1f}" stroke="{CRIMSON}" '
+          'stroke-width="1.6" marker-end="url(#gv)"/>'
+        + f'<text x="{mx-8:.1f}" y="{(my+Yw(3.0))/2+4:.1f}" font-size="10" font-weight="700" '
+          f'fill="{CRIMSON}" text-anchor="end">L: &#8722;1 w &#8594; saves 1.0 w</text>'
+        + f'<line x1="{mx:.1f}" y1="{my:.1f}" x2="{Xm(3):.1f}" y2="{Yw(3.5):.1f}" stroke="{SLATE}" '
+          'stroke-width="1.6" marker-end="url(#gv2)"/>'
+        + f'<text x="{Xm(3)-6:.1f}" y="{Yw(3.5)-8:.1f}" font-size="10" font-weight="700" '
+          f'fill="{SLATE}" text-anchor="end">M: &#8722;1 w &#8594; saves 0.5 w</text>'
+        + f'<text x="24" y="26" font-size="11.5" font-weight="700" fill="{INK}">'
+          'The paper deadline is twice the lever the meeting interval is &#8212; and the cheaper one to move</text>')
+body = ('<defs>'
+        f'<marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" '
+        f'orient="auto"><path d="M0 0L10 5L0 10z" fill="{CRIMSON}"/></marker>'
+        f'<marker id="gv2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" '
+        f'orient="auto"><path d="M0 0L10 5L0 10z" fill="{SLATE}"/></marker>'
+        '</defs>' + body)
+(PML / "fig_3_2_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 3.3.1 the price of an escalation path ------------------------------------
+W, H = 700, 330
+BARX, BARW, TOTW = 210, 330, 15.5
+def wx(weeks): return weeks / TOTW * BARW
+segs = [("Project board", 2.0, SLATE), ("Programme board", 4.0, BLUE), ("Executive committee", 9.5, CRIMSON)]
+body = (f'<text x="24" y="26" font-size="11.5" font-weight="700" fill="{INK}">'
+        'Count the tiers, add the latency, price it &#8212; then justify each tier against its cost</text>')
+y = 62
+x = BARX
+for name, wk, colour in segs:
+    body += (f'<rect x="{x:.1f}" y="{y}" width="{wx(wk):.1f}" height="34" fill="{colour}" opacity="0.9"/>'
+             f'<text x="{x+wx(wk)/2:.1f}" y="{y+22}" font-size="10.5" font-weight="700" fill="white" '
+             f'text-anchor="middle">{wk:g} w</text>')
+    x += wx(wk)
+body += (f'<text x="{BARX-10}" y="{y+15}" font-size="11" font-weight="700" fill="{INK}" text-anchor="end">'
+         'As designed</text>'
+         f'<text x="{BARX-10}" y="{y+29}" font-size="9.6" fill="{SLATE}" text-anchor="end">three tiers</text>'
+         f'<text x="{BARX+BARW+10}" y="{y+15}" font-size="11" font-weight="800" fill="{INK}">15.5 weeks</text>'
+         f'<text x="{BARX+BARW+10}" y="{y+29}" font-size="10.5" font-weight="700" fill="{CRIMSON}">'
+         f'USD {int(15.5*14280):,}</text>')
+for name, wk, colour in segs[2:]:
+    body += (f'<text x="{BARX+wx(2.0)+wx(4.0)+wx(9.5)/2:.1f}" y="{y+50}" font-size="10" '
+             f'font-weight="700" fill="{CRIMSON}" text-anchor="middle">61 % of the latency &#8212; '
+             f'USD {int(9.5*14280):,}</text>')
+rows = [("One tier, executive informed", "programme board only", 4.0, BLUE, 164220, 74.2),
+        ("One tier, written resolution", "5 working days", 1.0, "#0F8A5F", 207060, 93.5)]
+y = 148
+for label, sub, wk, colour, sav, pct in rows:
+    body += (f'<rect x="{BARX}" y="{y}" width="{max(wx(wk), 26):.1f}" height="34" fill="{colour}"/>'
+             f'<text x="{BARX+max(wx(wk),26)+8:.1f}" y="{y+22}" font-size="10.5" font-weight="700" '
+             f'fill="{INK}">{wk:g} w &#183; USD {int(wk*14280):,}</text>'
+             f'<text x="{BARX-10}" y="{y+15}" font-size="11" font-weight="700" fill="{INK}" '
+             f'text-anchor="end">{label}</text>'
+             f'<text x="{BARX-10}" y="{y+29}" font-size="9.6" fill="{SLATE}" text-anchor="end">{sub}</text>'
+             f'<text x="{W-24}" y="{y+15}" font-size="10.5" font-weight="800" fill="{colour}" '
+             f'text-anchor="end">saves USD {sav:,}</text>'
+             f'<text x="{W-24}" y="{y+29}" font-size="10" font-weight="700" fill="{colour}" '
+             f'text-anchor="end">{pct} %</text>')
+    y += 62
+body += (f'<line x1="{BARX}" y1="{H-52}" x2="{W-24}" y2="{H-52}" stroke="{GRID}" stroke-width="1.2"/>'
+         f'<text x="{BARX}" y="{H-30}" font-size="10.2" fill="{SLATE}">'
+         'Each tier&#8217;s wait is M/2 + L: 2/2+1 = 2.0 &#183; 4/2+2 = 4.0 &#183; 13/2+3 = 9.5 &#8212; '
+         'priced at USD 14,280 per week</text>')
+(PML / "fig_3_3_1.svg").write_text(svg(W, H, body))
+
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")

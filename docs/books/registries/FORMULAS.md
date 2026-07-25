@@ -35,6 +35,10 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
 | `SPI(t)` | Schedule Performance Index (time) = `ES/AT` | ratio | PML-AI D6 | ✅ |
 | `TF`, `FF` | Total float, free float | time | PML-AI D6 | ✅ |
 | `EMV` | Expected monetary value = Σ(probability × impact) | currency | PML-AI D8 | ✅ |
+| `E[wait]` | Governance latency = `M`/2 + `L` (meeting interval `M`, paper lead time `L`) — the expected wait for a committee decision; sums across escalation tiers | time | PML-AI D3 | ✅ |
+| Cost of delay | Value forgone per unit of elapsed time; the price at which governance latency, gate duration and escalation paths are all evaluated | currency/period | PML-AI D1/D3 | ✅ |
+| Gate net value | `P(defect)` × build-fix cost − [review + elapsed × cost of delay + `P(defect)` × (`P(detect)` × design-fix + `P(miss)` × build-fix)] | currency | PML-AI D3 | ✅ |
+| Committee capacity | meetings per year × substantive items per meeting; utilisation = demand ÷ capacity | count | PML-AI D3 | ✅ |
 | `EVA(benefit)` | Benefit measure in benefits register (named in words to avoid EV clash) | currency | PML-AI D2/D16 | ⏳ |
 
 ## 3. New symbols — PFL-AI

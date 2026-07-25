@@ -236,11 +236,78 @@ schedule, Domain 4 valued the project — this domain decides how much debt it c
 - PFL-AI volume now typesets at **95 pp** across Domains 1–4 and 10 (14 figures, 93 index entries),
   with the **Part Three** divider live. Both volumes together stand at **196 typeset pages**.
 
+**Batch 12 (loop iteration 10) — PML-AI Domain 3, Governance, organization and decision rights.**
+(~9.2k words) The domain Domains 1, 2 and 8 all depend on, and the one that turns a habitually
+qualitative subject into a computable one. Its central claim: **governance is a delivery variable
+with a price, not a compliance overhead** — and a leader who cannot price it will be asked to accept
+a structure that guarantees delay.
+
+- KA 3.1 what governance is *for*, defined by exclusion (not management, not assurance, not
+  administration — an organisation can hold every governance artefact and have no governance,
+  because nobody in the chain can decide); the four testable products — decidability, timeliness,
+  legitimacy, traceability; structures across functional, matrix, projectised and multi-party forms
+  each with its **characteristic weakness and countermeasure** (undefined matrix precedence does not
+  split authority, it awards it to escalation behaviour; unanimity is indistinguishable from an
+  inability to decide); and governing iterative delivery through a bounded envelope rather than
+  either abandoning control or destroying cadence.
+- KA 3.2 the sponsor as **seven testable obligations** with an evidence test each, and the four
+  sponsor failure modes with their detection tests; the five steering-committee design faults
+  (including the under-noticed one that a committee's effective authority is the *minimum* of its
+  members' on the decision in hand); committee capacity computed — **104** item-slots against **77**
+  of demand, of which 26 are standing reports consuming a quarter of the scarcest resource in the
+  programme.
+- **The formula this domain contributes:** `E[wait] = M/2 + L`. The expected wait for a committee
+  decision is half the meeting interval plus the *whole* paper lead time — so Meridian's "monthly"
+  committee imposes a full **4.0-week** wait, not the fortnight everyone assumes, and the two levers
+  are unequal: **cutting the paper lead time by a week saves a full week; cutting the meeting
+  interval by a week saves only half of one.** The administrative deadline, which is free to change,
+  is twice the lever meeting frequency is. The harness re-derives the formula independently by
+  numeric integration over arrival times.
+- Delegation priced: at a 10,000 threshold Meridian escalates **36** of 60 changes, costing
+  **USD 514,080** a year in delay; at 25,000 it costs **342,720** — a **171,360** saving against a
+  worst case of **81,600** *even if the delegate decided every one of the twelve delegated changes
+  wrongly and destroyed 40 % of its value*. Breakeven value destruction **84 %** per decision;
+  breakeven critical-path share **11.9 %**. The general result — the cost of escalation is certain,
+  recurring and invisible while the cost of a delegated error is uncertain, occasional and highly
+  visible, so organisations optimise against the visible cost — with three stated cautions
+  (irreversibility and externality are not priced by this test; the critical-path share is an
+  assumption; delegation without information is abdication).
+- KA 3.3 gates as the purchase of **optionality against irreversibility**, with gate economics
+  computed: Meridian's design gate is worth **USD 56,520**, stops paying beyond **9.96 weeks** of
+  elapsed time (the arithmetic behind the usually unquantified complaint that assurance has become an
+  obstacle) and needs a detection probability above **55.85 %** to be worth holding at all. Three
+  assurance lines with capture named as the worst failure because the product still looks
+  independent. Escalation as a **timed** pathway: Meridian's three tiers total **15.5 weeks** and
+  **USD 221,340** for one decision, of which the quarterly committee alone is **61 %** — reducible to
+  4.0 weeks (**74.2 %** saving) by removing a tier no one can justify, or 1.0 week (**93.5 %**) with a
+  written-resolution route. And the decision record, whose most consequential missing field is the
+  **versioned reference to the information relied on**, because the retrospective question is never
+  "was it right?" but "was it reasonable on what was known?" RACI single-A audit: **25.0 %** defect
+  rate, with two-A and zero-A classes failing differently under stress.
+- Advanced topics (governance under stress and the recovery structure; governance *of* AI-assisted
+  delivery, with the three questions a body must be able to answer about any AI-informed
+  recommendation; the reviewer's governance eye), industry variations, two case studies — **"the
+  four-week month"**, in which the same complaint that had gone nowhere for two quarters as a
+  cultural objection was approved in one meeting as arithmetic; and **"the decision nobody made"**, in
+  which four changes each individually within authority and cumulatively worth 700,000 never reached
+  a decision record, fixed by adding reversibility, externality and a **cumulative test** to the
+  delegation schedule — executive perspective, 4 exercises, 3 toolkits, exam prep, 15 tagged MCQs.
+- Figures 3.2.1 (governance latency and its two levers) and 3.3.1 (the price of an escalation path).
+- Harness: **581 golden checks, all passing** (was 483), including an independent re-derivation of
+  the latency formula. It caught one broken MCQ during authoring — 3.2-B had two correct options
+  because at `M` = 4, `L` = 2 both levers happen to reach 3.0 weeks — rebuilt on a one-week cut so
+  the asymmetry is the answer. `E[wait]`, cost of delay, gate net value and committee capacity
+  registered as verified formulas.
+- PML-AI volume now typesets at **129 pp** across Domains 1, 2, 3, 6, 7 and 8 (13 figures, 137 index
+  entries), with the **Part Two** divider live. Both volumes together stand at **224 typeset pages**.
+
 ## Next production batch
 
-Queued in loop order: (1) PML-AI Domain 3 (Governance, organization and decision rights) — Domains
-1, 2 and 8 all now depend on it, and it is the first half of what completes PML-AI Part One;
-(2) PML-AI Domain 4 (Integration and delivery architecture), which closes Part One; (3) PFL-AI
-Domain 5 (Cost of capital and capital structure), which Domain 10's coverage work now motivates
-directly. Phase 2 completes when all foundation domains of both books pass gates: **PFL-AI Part One
-is done** (and Part Three opened with Domain 10); PML-AI Part One is half done.
+Queued in loop order: (1) PML-AI Domain 4 (Integration and delivery architecture), which **closes
+PML-AI Part One** — Domain 3's closing note already points at it, since governing the parts of a
+hybrid programme separately requires a single integrated view of the whole; (2) PFL-AI Domain 5
+(Cost of capital and capital structure), which Domain 10's coverage work motivates directly and which
+Domain 4's 8 % discount rate has so far taken as given; (3) PML-AI Domain 5 (Scope, requirements and
+value definition), opening Part Two properly. Phase 2 completes when all foundation domains of both
+books pass gates: **PFL-AI Part One is complete** (with Part Three opened by Domain 10); PML-AI
+Part One needs only Domain 4.

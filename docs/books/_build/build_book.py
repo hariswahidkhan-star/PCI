@@ -24,13 +24,18 @@ BOOKS = {
                      "Leadership · delivery systems · governance · the governed use of AI"),
         "order": ["manuscript/domain-01-profession.md",
                   "manuscript/domain-02-strategy-selection.md",
+                  "manuscript/domain-03-governance-decision-rights.md",
                   "manuscript/domain-06-planning-scheduling-flow.md",
                   "manuscript/domain-07-cost-resources-commercial.md",
                   "manuscript/domain-08-risk-uncertainty-resilience.md"],
         "parts": [("Part One", "Leading projects",
                    "Domains 1–4 — the profession, strategy and selection, governance and decision rights, "
                    "and delivery architecture: what a project leader is for and answerable for.",
-                   "Domain 1 —")],
+                   "Domain 1 —"),
+                  ("Part Two", "Delivering the work",
+                   "Domains 5–10 — scope, planning and flow, cost and commercial, risk and resilience, "
+                   "quality and assurance, and procurement: the machinery of delivery.",
+                   "Domain 6 —")],
     },
     "pfl-ai": {
         "title": "PFL-AI<br/>Body of Knowledge",

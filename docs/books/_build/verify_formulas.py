@@ -641,6 +641,156 @@ check("EX 10.4 covenant breached", 1 if CFX * D("0.75") / D("6814815") < D("1.20
 check("EX 10.4 payment still made from cash", 1 if CFX * D("0.75") > D("6814815") else 0, 1)
 
 
+# ---------- PML-AI Domain 3 — Governance, organization and decision rights ----------
+COD3 = D(14280)                 # Meridian cost of delay per week (Domain 1)
+
+
+def ew(M, L):                   # governance latency: expected wait for a committee decision
+    return D(M) / 2 + D(L)
+
+
+def ew_sim(M, L, n=200000):     # independent re-derivation by numeric integration over arrivals
+    M, L, tot = D(M), D(L), D(0)
+    for k in range(n):
+        t = D(k) / n * M
+        tot += (M - t) if t < M - L else (2 * M - t)
+    return tot / n
+
+
+for _M, _L, _e in ((2, 1, "2.0"), (4, 2, "4.0"), (13, 3, "9.5"), (8, 2, "6.0"), (6, 2, "5.0"),
+                   (4, 1, "3.0"), (12, 4, "10.0"), (3, 2, "3.5")):
+    check(f"D3 E[wait] M={_M} L={_L}", ew(_M, _L), D(_e))
+check("D3 latency formula independently re-derived (M=4,L=2)",
+      ew_sim(4, 2).quantize(D("0.001")), D("4.000"), tol=D("0.0005"))
+check("D3 latency formula independently re-derived (M=13,L=3)",
+      ew_sim(13, 3).quantize(D("0.001")), D("9.500"), tol=D("0.0005"))
+check("3.2.3 lever asymmetry: 1 week off L saves 1 week", ew(4, 2) - ew(4, 1), 1)
+check("3.2.3 lever asymmetry: 1 week off M saves half a week",
+      (ew(4, 2) - ew(3, 2)).quantize(D("0.01")), D("0.50"))
+check("3.2.3 Meridian latency cost of one escalated decision", ew(4, 2) * COD3, 57120)
+# WE 3.2.2 — committee capacity
+check("WE 3.2.2 capacity (13 meetings x 8 items)", 13 * 8, 104)
+check("WE 3.2.2 demand at 10k threshold", 36 + 26 + 15, 77)
+check("WE 3.2.2 utilisation at 10k", (D(77) / 104 * 100).quantize(D("0.1")), D("74.0"))
+check("WE 3.2.2 utilisation with reports pre-read", (D(51) / 104 * 100).quantize(D("0.1")), D("49.0"))
+check("WE 3.2.2 demand at 25k threshold", 24 + 26 + 15, 65)
+check("WE 3.2.2 utilisation at 25k", (D(65) / 104 * 100).quantize(D("0.1")), D("62.5"))
+# WE 3.2.3 — delegation threshold priced
+BANDS3 = [24, 12, 15, 7, 2]                     # <=10k, 10-25k, 25-100k, 100-500k, >500k
+check("WE 3.2.3 total change requests", sum(BANDS3), 60)
+ESC10, ESC25 = sum(BANDS3) - BANDS3[0], sum(BANDS3) - BANDS3[0] - BANDS3[1]
+check("WE 3.2.3 escalated at 10k threshold", ESC10, 36)
+check("WE 3.2.3 escalated at 25k threshold", ESC25, 24)
+PER3 = ew(4, 2) * COD3
+check("WE 3.2.3 delay cost per delaying change", PER3, 57120)
+check("WE 3.2.3 annual delay cost at 10k", D(ESC10) * D("0.25") * PER3, 514080)
+check("WE 3.2.3 annual delay cost at 25k", D(ESC25) * D("0.25") * PER3, 342720)
+SAV3 = (D(ESC10) - ESC25) * D("0.25") * PER3
+check("WE 3.2.3 annual saving", SAV3, 171360)
+check("WE 3.2.3 delegated band value", D(12) * 17000, 204000)
+WORST3 = D(12) * 17000 * D("0.40")
+check("WE 3.2.3 worst case (all 12 wrong, 40% destroyed)", WORST3, 81600)
+check("WE 3.2.3 margin over worst case", SAV3 - WORST3, 89760)
+check("WE 3.2.3 breakeven value-destruction rate %",
+      (SAV3 / (D(12) * 17000) * 100).quantize(D("0.1")), D("84.0"))
+check("WE 3.2.3 breakeven critical-path share %",
+      (WORST3 / (D(12) * PER3) * 100).quantize(D("0.1")), D("11.9"), tol=D("0.05"))
+# WE 3.3.1 — gate economics
+GREV, GWKS = D(45000), D(6)
+GDELAY = GWKS * COD3
+GREM = D("0.30") * (D("0.80") * D(120000) + D("0.20") * D(900000))
+check("WE 3.3.1 gate delay cost", GDELAY, 85680)
+check("WE 3.3.1 expected remediation with gate", GREM, 82800)
+check("WE 3.3.1 expected cost without gate", D("0.30") * D(900000), 270000)
+check("WE 3.3.1 expected cost with gate", GREV + GDELAY + GREM, 213480)
+check("WE 3.3.1 net value of the gate", D("0.30") * D(900000) - (GREV + GDELAY + GREM), 56520)
+check("WE 3.3.1 breakeven elapsed weeks",
+      ((D(270000) - GREV - GREM) / COD3).quantize(D("0.01")), D("9.96"))
+check("WE 3.3.1 breakeven detection probability %",
+      ((D(900000) - (D(270000) - GREV - GDELAY) / D("0.30")) / D(780000) * 100).quantize(D("0.01")),
+      D("55.85"))
+# WE 3.3.3 — three-tier escalation
+TIERS3 = [(2, 1, "2.0"), (4, 2, "4.0"), (13, 3, "9.5")]
+for _M, _L, _e in TIERS3:
+    check(f"WE 3.3.3 tier latency M={_M} L={_L}", ew(_M, _L), D(_e))
+TOT3 = sum(ew(m, l) for m, l, _ in TIERS3)
+check("WE 3.3.3 total escalation latency (weeks)", TOT3, D("15.5"))
+check("WE 3.3.3 total escalation cost", TOT3 * COD3, D("221340"))
+check("WE 3.3.3 executive committee cost", ew(13, 3) * COD3, D("135660"))
+check("WE 3.3.3 executive share of latency %", (ew(13, 3) / TOT3 * 100).quantize(D("1")), D("61"))
+check("WE 3.3.3 single-tier cost", ew(4, 2) * COD3, 57120)
+check("WE 3.3.3 single-tier saving", TOT3 * COD3 - ew(4, 2) * COD3, D("164220"))
+check("WE 3.3.3 single-tier saving %", ((TOT3 - 4) / TOT3 * 100).quantize(D("0.1")), D("74.2"))
+check("WE 3.3.3 written-resolution cost", COD3, 14280)
+check("WE 3.3.3 written-resolution saving", TOT3 * COD3 - COD3, D("207060"))
+check("WE 3.3.3 written-resolution saving %", ((TOT3 - 1) / TOT3 * 100).quantize(D("0.1")), D("93.5"))
+# WE 3.3.4 — RACI integrity
+check("WE 3.3.4 defective decision classes", 2 + 1, 3)
+check("WE 3.3.4 single-A defect rate %", (D(3) / 12 * 100).quantize(D("0.1")), D("25.0"))
+# MCQ distractors
+check("MCQ 3.2-A E[wait] M=6 L=2", ew(6, 2), 5)
+check("MCQ 3.2-A distractor A (half interval only)", D(6) / 2, 3)
+check("MCQ 3.2-A distractor D (whole interval + lead)", D(6) + 2, 8)
+check("MCQ 3.3-A distractor A (omits delay cost)", D(270000) - (GREV + GREM), D("142200"))
+check("MCQ 3.3-A distractor D (omits remediation)", D(270000) - (GREV + GDELAY), D("139320"))
+check("MCQ 3.3-C distractor D (half intervals, no lead times)",
+      D(2) / 2 + D(4) / 2 + D(13) / 2, D("9.5"))
+# Case study A — the four-week month
+check("CS 3A latency after paper lead time cut", ew(4, 1), 3)
+check("CS 3A latency weeks saved", ew(4, 2) - ew(4, 1), 1)
+# Exercises 3.1-3.4
+check("EX 3.1 E[wait] M=8 L=2", ew(8, 2), 6)
+check("EX 3.1 cost", ew(8, 2) * COD3, 85680)
+check("EX 3.1 (a) halve M to 4", ew(4, 2), 4)
+check("EX 3.1 (a) saving", (ew(8, 2) - ew(4, 2)) * COD3, 28560)
+check("EX 3.1 (b) halve L to 1", ew(8, 1), 5)
+check("EX 3.1 (b) saving", (ew(8, 2) - ew(8, 1)) * COD3, 14280)
+COD3X = D(9500)
+BANDSX = [30, 20, 22, 8]
+check("EX 3.2 total requests", sum(BANDSX), 80)
+EX, EY = sum(BANDSX) - BANDSX[0], sum(BANDSX) - BANDSX[0] - BANDSX[1]
+check("EX 3.2 escalated at 5k", EX, 50)
+check("EX 3.2 escalated at 20k", EY, 30)
+check("EX 3.2 E[wait]", ew(4, 1), 3)
+PERX = ew(4, 1) * COD3X
+check("EX 3.2 delay cost per delaying change", PERX, 28500)
+check("EX 3.2 delaying changes at 5k", D(EX) * D("0.30"), 15)
+check("EX 3.2 delaying changes at 20k", D(EY) * D("0.30"), 9)
+check("EX 3.2 annual cost at 5k", D(EX) * D("0.30") * PERX, 427500)
+check("EX 3.2 annual cost at 20k", D(EY) * D("0.30") * PERX, 256500)
+SAVX = (D(EX) - EY) * D("0.30") * PERX
+check("EX 3.2 saving", SAVX, 171000)
+check("EX 3.2 delegated band value", D(20) * 11000, 220000)
+check("EX 3.2 breakeven value-destruction rate %",
+      (SAVX / (D(20) * 11000) * 100).quantize(D("0.1")), D("77.7"), tol=D("0.05"))
+GREVX, GDELAYX = D(30000), D(4) * COD3X
+GREMX = D("0.25") * (D("0.75") * D(80000) + D("0.25") * D(600000))
+check("EX 3.3 delay cost", GDELAYX, 38000)
+check("EX 3.3 expected remediation", GREMX, 52500)
+check("EX 3.3 cost without gate", D("0.25") * D(600000), 150000)
+check("EX 3.3 cost with gate", GREVX + GDELAYX + GREMX, 120500)
+check("EX 3.3 net value", D(150000) - (GREVX + GDELAYX + GREMX), 29500)
+check("EX 3.3 breakeven elapsed weeks",
+      ((D(150000) - GREVX - GREMX) / COD3X).quantize(D("0.001")), D("7.105"))
+check("EX 3.3 breakeven detection probability %",
+      ((D(600000) - (D(150000) - GREVX - GDELAYX) / D("0.25")) / D(520000) * 100).quantize(D("0.01")),
+      D("52.31"))
+TIERSX = [(2, 1, "2.0"), (6, 2, "5.0"), (12, 4, "10.0")]
+for _M, _L, _e in TIERSX:
+    check(f"EX 3.4 tier latency M={_M} L={_L}", ew(_M, _L), D(_e))
+TOTX = sum(ew(m, l) for m, l, _ in TIERSX)
+check("EX 3.4 total latency (weeks)", TOTX, 17)
+check("EX 3.4 total cost", TOTX * COD3X, 161500)
+check("EX 3.4 investment committee cost", ew(12, 4) * COD3X, 95000)
+check("EX 3.4 written-resolution saving", TOTX * COD3X - COD3X, 152000)
+check("EX 3.4 written-resolution saving %", ((TOTX - 1) / TOTX * 100).quantize(D("0.1")), D("94.1"))
+check("EX 3.4 portfolio-board-only cost", ew(6, 2) * COD3X, 47500)
+check("EX 3.4 portfolio-board-only saving", (TOTX - ew(6, 2)) * COD3X, 114000)
+check("EX 3.4 common error (intervals only, no lead times)",
+      D(2) / 2 + D(6) / 2 + D(12) / 2, 10)
+check("EX 3.4 understatement from omitting lead times", TOTX - 10, 7)
+
+
 print()
 if FAILURES:
     print(f"✗ {len(FAILURES)} FAILURES:", *FAILURES, sep="\n  ")

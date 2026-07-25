@@ -26,13 +26,13 @@ their subject matter without inheriting its defects.
 - **Phase 0 — Governance and blueprint:** complete ([`PHASE0_REPORT.md`](PHASE0_REPORT.md)).
 - **Phase 1 — Prototype domains:** production model proven; prototypes apparatus-complete with a
   depth-expansion condition ([`PHASE1_REPORT.md`](PHASE1_REPORT.md)). Toolchain in
-  [`_build/`](_build/): `verify_formulas.py` (**483 golden checks**, all passing — no domain
-  passes gate while it fails), `make_figures.py` (25 PCI-original SVG masters),
+  [`_build/`](_build/): `verify_formulas.py` (**581 golden checks**, all passing — no domain
+  passes gate while it fails), `make_figures.py` (27 PCI-original SVG masters),
   `build_book.py` + `print.css`.
 - **Phase 2 — Foundation domains:** in progress under the production loop
-  ([`PHASE2_REPORT.md`](PHASE2_REPORT.md)). **10 domains delivered, 196 typeset pages:**
-  PML-AI D1, D2, D6, D7, D8 (101 pp) · PFL-AI D1, D2, D3, D4, D10 (95 pp). PFL-AI Part One is
-  complete; PML-AI Part One needs D3 and D4. The report's *next production batch* section is
+  ([`PHASE2_REPORT.md`](PHASE2_REPORT.md)). **11 domains delivered, 224 typeset pages:**
+  PML-AI D1, D2, D3, D6, D7, D8 (129 pp) · PFL-AI D1, D2, D3, D4, D10 (95 pp). PFL-AI Part One
+  is complete; PML-AI Part One needs only D4. The report's *next production batch* section is
   the loop's work queue.
 - Phases 3–8 proceed per the charter §8; no phase is skipped to meet page count.
 
