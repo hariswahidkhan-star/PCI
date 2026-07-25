@@ -24,10 +24,23 @@ First Phase 2 domain authored to the family pattern (~6.2k words first pass, app
 - Formula registry: NPV, IRR/MIRR, PI, EAV, FV(x), DF(t), Fisher symbols, annuity `A`, ES,
   SPI(t), TF/FF flipped to ✅ (verified golden examples exist).
 
+**Batch 5 (loop iteration 3) — PFL-AI Domain 1, Foundations of project finance leadership.**
+The book's opening domain (~6.4k words first pass): the leader's role across the lifecycle;
+the recourse spectrum (what limited recourse buys and costs); the SPV and its stakeholder
+table; the infrastructure-finance market and asset-capital matching; value–cash–risk logic
+with two fully worked demonstrations (profitable-but-out-of-cash: profit +2.0m vs operating
+cash −1.5m; leverage's two faces: 26 %/16 %/6 %/0 % levered vs 12 %/9 %/6 %/4.2 % unlevered,
+with the −65 % equity-zero cliff); the bankability triangle; ethics/fiduciary/conflicts
+(daylight test) and the responsible-AI foundations. Two case studies (how Kestrel chose
+project finance; the adviser with two hats), 9 tagged MCQs, 3 exercises, 3 toolkits, industry
+variations, exam prep. Figures 1.1.1 (recourse spectrum), 1.1.2 (SPV hub), 1.2.1 (bankability
+triangle). Harness: **241 golden checks, all passing**. PFL-AI volume: **56 pp** across
+Domains 1, 3, 4 (12 figures, 50 index entries).
+
 ## Next production batch
 
-Queued in loop order: (1) PFL-AI Domain 1 (Foundations of project finance leadership) — the
-book's opening domain, mostly qualitative, establishes the recourse spectrum and stakeholder
-map; (2) PML-AI Domain 7 (Cost, resources and commercial awareness) — the EVM flagship,
-restating the family symbols; (3) prototype residual depth (D3/D6 remaining expansions) folded
+Queued in loop order: (1) PML-AI Domain 7 (Cost, resources and commercial awareness) — the
+EVM flagship, restating the family symbols; (2) PML-AI Domain 1 (The project leadership
+profession) — that book's opening domain; (3) PFL-AI Domain 2 (Accounting foundations),
+building the accrual-to-cash bridge Domain 1 promised; prototype residual depth folded
 alongside. Phase 2 completes when all foundation domains of both books pass gates.

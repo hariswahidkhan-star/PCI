@@ -348,5 +348,69 @@ body = (grid + f'<line x1="{L}" y1="{Yn5(0)}" x2="{W-R}" y2="{Yn5(0)}" stroke="{
         + axes(L, T, W - R, H - B, "Discount rate", "NPV (USD)") + xt)
 (PFL / "fig_4_3_1.svg").write_text(svg(W, H, body))
 
+# ---- Fig 1.1.1 recourse spectrum --------------------------------------------------
+W, H = 700, 330
+L2, R2 = 60, 60
+def Xs(f): return L2 + f * (W - L2 - R2)
+positions = [(0.0, "Corporate loan", "full recourse"), (0.33, "Guaranteed project loan", "parent guarantee"),
+             (0.62, "Limited recourse", "completion support"), (1.0, "Non-recourse", "reserves only")]
+body = (f'<line x1="{Xs(0)}" y1="120" x2="{Xs(1)}" y2="120" stroke="{INK}" stroke-width="2.4"/>'
+        f'<text x="{Xs(0)}" y="66" font-size="12" font-weight="700" fill="{INK}">FULL RECOURSE</text>'
+        f'<text x="{Xs(0)}" y="82" font-size="9.5" fill="{SLATE}">lender looks to the whole balance sheet</text>'
+        f'<text x="{Xs(1)}" y="66" font-size="12" font-weight="700" fill="{BLUE}" text-anchor="end">NON-RECOURSE</text>'
+        f'<text x="{Xs(1)}" y="82" font-size="9.5" fill="{SLATE}" text-anchor="end">lender looks only to project cash and security</text>')
+for f, t, sub in positions:
+    x = Xs(f)
+    body += (f'<circle cx="{x}" cy="120" r="6" fill="white" stroke="{CRIMSON}" stroke-width="2.4"/>'
+             f'<text x="{x}" y="147" font-size="10.5" font-weight="600" fill="{INK}" text-anchor="middle">{t}</text>'
+             f'<text x="{x}" y="161" font-size="9" fill="{SLATE}" text-anchor="middle">{sub}</text>')
+for label, y0, col, left_h, right_h in (("Sponsor risk retained", 200, SLATE, 44, 6),
+                                        ("Financing cost & complexity", 262, BLUE, 8, 40)):
+    body += f'<text x="{Xs(0)}" y="{y0-8}" font-size="10" font-weight="600" fill="{col}">{label}</text>'
+    for i in range(9):
+        f = i / 8
+        h = left_h + (right_h - left_h) * f
+        body += f'<rect x="{Xs(f)-7}" y="{y0+44-h}" width="14" height="{h}" rx="2" fill="{col}" opacity="0.55"/>'
+(PFL / "fig_1_1_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 1.1.2 SPV hub ------------------------------------------------------------
+import math as _m
+W, H = 700, 460
+cx, cy = W / 2, H / 2
+spokes = [("Sponsors", "equity in · distributions out", -90), ("Lenders", "debt in · debt service out", -30),
+          ("Offtaker", "service out · availability payments in", 30), ("EPC contractor", "plant in · milestone payments out", 90),
+          ("O&M contractor", "operations in · fees out", 150), ("Government", "permits & direct agreement", 210)]
+body = ""
+for name, flow, ang in spokes:
+    a = _m.radians(ang)
+    x, y = cx + 240 * _m.cos(a), cy + 165 * _m.sin(a)
+    body += (f'<line x1="{cx + 62*_m.cos(a):.0f}" y1="{cy + 44*_m.sin(a):.0f}" x2="{x - 60*_m.cos(a):.0f}" y2="{y - 26*_m.sin(a):.0f}" stroke="{SLATE}" stroke-width="1.6"/>'
+             f'<rect x="{x-78:.0f}" y="{y-26:.0f}" width="156" height="52" rx="8" fill="white" stroke="{INK}" stroke-width="1.4"/>'
+             f'<text x="{x:.0f}" y="{y-6:.0f}" font-size="12" font-weight="700" fill="{INK}" text-anchor="middle">{name}</text>'
+             f'<text x="{x:.0f}" y="{y+12:.0f}" font-size="8.6" fill="{SLATE}" text-anchor="middle">{flow}</text>')
+body += (f'<ellipse cx="{cx}" cy="{cy}" rx="86" ry="52" fill="white" stroke="{BLUE}" stroke-width="3"/>'
+         f'<text x="{cx}" y="{cy-4}" font-size="14" font-weight="800" fill="{BLUE}" text-anchor="middle">PROJECT SPV</text>'
+         f'<text x="{cx}" y="{cy+15}" font-size="9" fill="{SLATE}" text-anchor="middle">ring-fenced · single purpose</text>')
+(PFL / "fig_1_1_2.svg").write_text(svg(W, H, body))
+
+# ---- Fig 1.2.1 bankability triangle -----------------------------------------------
+W, H = 640, 470
+ax, ay = W / 2, 62
+bx, by = 96, 396
+cxx, cyy = W - 96, 396
+body = (f'<polygon points="{ax},{ay} {bx},{by} {cxx},{cyy}" fill="{BLUE}" opacity="0.05" stroke="{BLUE}" stroke-width="2.4"/>'
+        f'<text x="{ax}" y="{ay-30}" font-size="13" font-weight="800" fill="{INK}" text-anchor="middle">VALUE</text>'
+        f'<text x="{ax}" y="{ay-14}" font-size="9.5" fill="{SLATE}" text-anchor="middle">worth doing — NPV (Domain 4)</text>'
+        f'<text x="{bx}" y="{by+24}" font-size="13" font-weight="800" fill="{INK}" text-anchor="middle">CASH</text>'
+        f'<text x="{bx}" y="{by+40}" font-size="9.5" fill="{SLATE}" text-anchor="middle">arrives when needed (D6–8)</text>'
+        f'<text x="{cxx}" y="{by+24}" font-size="13" font-weight="800" fill="{INK}" text-anchor="middle">RISK</text>'
+        f'<text x="{cxx}" y="{by+40}" font-size="9.5" fill="{SLATE}" text-anchor="middle">sits with those who can bear it (D11–12)</text>'
+        f'<text x="{W/2}" y="{(ay+by+by)/3+4}" font-size="12.5" font-weight="800" fill="{CRIMSON}" text-anchor="middle">BANKABLE</text>'
+        f'<text x="{W/2}" y="{(ay+by+by)/3+21}" font-size="9.5" fill="{SLATE}" text-anchor="middle">all three, together (Domain 5)</text>'
+        f'<text x="{(ax+bx)/2-14}" y="{(ay+by)/2}" font-size="9" fill="{SLATE}" text-anchor="end" transform="rotate(-60 {(ax+bx)/2-14} {(ay+by)/2})">no risk corner → repriced at close</text>'
+        f'<text x="{(ax+cxx)/2+14}" y="{(ay+cyy)/2}" font-size="9" fill="{SLATE}" transform="rotate(60 {(ax+cxx)/2+14} {(ay+cyy)/2})">no cash corner → liquidity failure</text>'
+        f'<text x="{W/2}" y="{by-12}" font-size="9" fill="{SLATE}" text-anchor="middle">no value corner → no equity</text>')
+(PFL / "fig_1_2_1.svg").write_text(svg(W, H, body))
+
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")

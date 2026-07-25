@@ -277,6 +277,24 @@ check("EX 4.5 greedy set", D("2.6") + D("1.84") + D("1.4"), D("5.84"))
 check("EX 4.5 optimal set", D("2.6") + D("3.3"), D("5.9"))
 check("4.A.3 EAV invariant", ((D(8900000) * AF15 - 60000000) / AF15 * AF15), D(8900000) * AF15 - 60000000, tol=D("0.01"))
 
+# ---------- PFL-AI Domain 1 — Foundations ----------
+check("WE 1.2.2 profit", 10000000 - 8000000, 2000000, tol=D("0"))
+check("WE 1.2.2 operating cash", D(2000000) - 3000000 - 1000000 + 500000, -1500000, tol=D("0"))
+check("WE 1.2.3 debt service", D(70000000) * D("0.06"), 4200000)
+for cash, unlev, eqcash, lev in ((12000000, "0.12", 7800000, "0.26"), (9000000, "0.09", 4800000, "0.16"),
+                                 (6000000, "0.06", 1800000, "0.06"), (4200000, "0.042", 0, "0.0")):
+    check(f"WE 1.2.3 unlevered at {cash}", (D(cash) / 100000000).quantize(D("0.001")), D(unlev), tol=D("0.0005"))
+    check(f"WE 1.2.3 equity cash at {cash}", D(cash) - 4200000, eqcash, tol=D("0"))
+    check(f"WE 1.2.3 levered at {cash}", (D(max(cash - 4200000, 0)) / 30000000).quantize(D("0.001")), D(lev), tol=D("0.0005"))
+check("WE 1.2.3 equity-zero decline", ((D(12000000) - 4200000) / 12000000).quantize(D("0.001")), D("0.65"), tol=D("0.0005"))
+check("EX 1.1 operating cash", D(3500000) - 2200000 - 900000 + 600000, 1000000, tol=D("0"))
+check("EX 1.1 wrong-sign variant", D(3500000) - 2200000 - 900000 - 600000, -200000, tol=D("0"))
+check("EX 1.2 debt service 80m@6.5%", D(80000000) * D("0.065"), 5200000)
+check("EX 1.2 base levered", ((D(12000000) - 5200000) / 20000000).quantize(D("0.001")), D("0.34"), tol=D("0.0005"))
+check("EX 1.2 cliff decline", ((D(12000000) - 5200000) / 12000000).quantize(D("0.001")), D("0.567"), tol=D("0.0005"))
+check("MCQ 1.2-A distractor D", D(2000000) - 3000000 - 1000000 - 500000, -2500000, tol=D("0"))
+check("MCQ 1.2-B distractor D", (D(9000000) / 30000000).quantize(D("0.001")), D("0.30"), tol=D("0.0005"))
+
 print()
 if FAILURES:
     print(f"✗ {len(FAILURES)} FAILURES:", *FAILURES, sep="\n  ")

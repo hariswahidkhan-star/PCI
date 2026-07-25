@@ -33,12 +33,13 @@ BOOKS = {
         "run_title": "PCI PFL-AI Body of Knowledge",
         "subtitle": ("The reference for the PCI AI Project Finance Leader<br/>"
                      "Project economics · structuring · financial mathematics · the governed use of AI"),
-        "order": ["manuscript/domain-03-time-value-of-money.md",
+        "order": ["manuscript/domain-01-foundations.md",
+                  "manuscript/domain-03-time-value-of-money.md",
                   "manuscript/domain-04-investment-appraisal.md"],
         "parts": [("Part One", "Foundations",
                    "Domains 1–4 — the profession, accounting foundations, financial mathematics and "
                    "investment appraisal: the financial grammar of project finance leadership.",
-                   "Domain 3 —")],
+                   "Domain 1 —")],
     },
 }
 
