@@ -48,8 +48,8 @@ public static class CheckoutReservation
         var n = 0;
         foreach (var r in rows)
         {
-            long? codeId = r["discount_code_id"] is null or DBNull ? null : H.L(r["discount_code_id"]);
-            ReleaseHold(db, H.L(r["id"]), codeId is > 0 ? codeId : null, "expired");
+            long? heldCodeId = r["discount_code_id"] is null or DBNull ? null : H.L(r["discount_code_id"]);
+            ReleaseHold(db, H.L(r["id"]), heldCodeId is > 0 ? heldCodeId : null, "expired");
             n++;
         }
         return n;
