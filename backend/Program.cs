@@ -13,6 +13,14 @@ var nonLocalPosture = builder.Environment.IsProduction()
     || builder.Environment.IsStaging()
     || string.Equals(Environment.GetEnvironmentVariable("APP_ENV"), "production", StringComparison.OrdinalIgnoreCase)
     || string.Equals(Environment.GetEnvironmentVariable("APP_ENV"), "staging", StringComparison.OrdinalIgnoreCase);
+// Opt-in flags are hand-typed into dashboards: tolerate whitespace and pasted quotes, and accept
+// the common truthy spellings, so "true " or "\"true\"" never silently reads as OFF.
+static bool EnvFlagTrue(string name)
+{
+    var v = (Environment.GetEnvironmentVariable(name) ?? "").Trim().Trim('"', '\'').Trim();
+    return v.Equals("true", StringComparison.OrdinalIgnoreCase) || v == "1"
+        || v.Equals("yes", StringComparison.OrdinalIgnoreCase) || v.Equals("on", StringComparison.OrdinalIgnoreCase);
+}
 // Global request-body cap: bounds memory and rejects oversized uploads BEFORE the handler buffers them.
 // A 3 MB artefact (Storage.MaxBytes) is ~4 MB as base64 inside a JSON data URI, so 6 MB leaves headroom
 // for one legitimate upload while still refusing anything larger up front (Kestrel → 413).
@@ -60,20 +68,32 @@ catch { /* /data exists but is not ours to write — keep the configured default
     }
     if (nonLocalPosture)
     {
-        var allowInsecure = string.Equals(Environment.GetEnvironmentVariable("ALLOW_INSECURE_PRODUCTION"), "true", StringComparison.OrdinalIgnoreCase);
-        var worldOnly = string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_ONLY"), "true", StringComparison.OrdinalIgnoreCase);
-        var allowWorldSqlite = worldOnly
-            && string.Equals(Environment.GetEnvironmentVariable("PCIWORLD_ALLOW_SQLITE"), "true", StringComparison.OrdinalIgnoreCase);
+        // A flag that is SET but does not parse as true is almost always a dashboard typo — echo
+        // exactly what the process sees so the deploy log answers the question, instead of the
+        // operator and the refusal message staring at each other.
+        static void EnvFlagDiagnostic(string name)
+        {
+            var raw = Environment.GetEnvironmentVariable(name);
+            if (raw is not null && !EnvFlagTrue(name))
+                Console.WriteLine($"[config] note: {name} is set to '{raw}' which does not read as true — use exactly: true");
+        }
+        var allowInsecure = EnvFlagTrue("ALLOW_INSECURE_PRODUCTION");
+        var worldOnly = EnvFlagTrue("PCIWORLD_ONLY");
+        var allowWorldSqlite = worldOnly && EnvFlagTrue("PCIWORLD_ALLOW_SQLITE");
         // Explicit operator opt-in for the documented interim posture the platform shipped with:
         // SQLite on the mounted persistent disk (Render's /data). Deliberately NARROW — it waives
         // ONLY the MySQL requirement and still demands the /data path below; every other production
         // preflight (HTTPS base URL, explicit CORS origin, encryption key, legacy-token ban, Stripe
         // webhook secret) stays fully active, unlike the blunt ALLOW_INSECURE_PRODUCTION override.
         // Without this, the MySQL fail-closed change bricked every existing SQLite-on-disk deploy.
-        var allowSqliteProd = string.Equals(Environment.GetEnvironmentVariable("ALLOW_SQLITE_IN_PRODUCTION"), "true", StringComparison.OrdinalIgnoreCase);
+        var allowSqliteProd = EnvFlagTrue("ALLOW_SQLITE_IN_PRODUCTION");
         var dbProvider = (Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "").Trim().ToLowerInvariant();
         if (dbProvider is not ("mysql" or "mariadb") && !allowWorldSqlite && !allowSqliteProd && !allowInsecure)
         {
+            EnvFlagDiagnostic("ALLOW_SQLITE_IN_PRODUCTION");
+            EnvFlagDiagnostic("ALLOW_INSECURE_PRODUCTION");
+            EnvFlagDiagnostic("PCIWORLD_ONLY");
+            EnvFlagDiagnostic("PCIWORLD_ALLOW_SQLITE");
             Console.WriteLine("[config] Refusing to open database: production requires DB_PROVIDER=mysql " +
                 "(or an explicit persistent-disk opt-in: ALLOW_SQLITE_IN_PRODUCTION=true with DATABASE_FILE under /data, " +
                 "or PCIWORLD_ONLY + PCIWORLD_ALLOW_SQLITE=true) before any schema work. " +
@@ -515,7 +535,7 @@ List<(string sev, string key, string msg)> ConfigIssues()
             Err("STRIPE_WEBHOOK_URL", "must end with /api/webhook (not /api/payments/webhook) — see docs/OPERATIONS.md §9");
         // Explicit persistent-disk opt-in (same contract as the pre-DB gate above): only the MySQL
         // requirement is downgraded, and only when the SQLite file really lives on the mounted disk.
-        if (string.Equals(E("ALLOW_SQLITE_IN_PRODUCTION"), "true", StringComparison.OrdinalIgnoreCase))
+        if (EnvFlagTrue("ALLOW_SQLITE_IN_PRODUCTION"))
         {
             issues = issues.Select(i => i.Item1 == "error" && i.Item2 is "DB_PROVIDER" or "MYSQL_HOST"
                 ? ("warn", i.Item2, i.Item3 + " (ALLOW_SQLITE_IN_PRODUCTION=true — interim persistent-disk posture; plan the MySQL cutover)") : i).ToList();
@@ -574,7 +594,7 @@ List<(string sev, string key, string msg)> ConfigIssues()
     var issues = ConfigIssues();
     foreach (var (sev, key, msg) in issues) Console.WriteLine($"[config:{sev}] {key} — {msg}");
     var hardErrors = issues.Where(i => i.sev == "error").ToList();
-    var allowInsecure = string.Equals(Environment.GetEnvironmentVariable("ALLOW_INSECURE_PRODUCTION"), "true", StringComparison.OrdinalIgnoreCase);
+    var allowInsecure = EnvFlagTrue("ALLOW_INSECURE_PRODUCTION");
     if (hardErrors.Count > 0 && !allowInsecure)
     {
         Console.WriteLine($"[config] Refusing to start: {hardErrors.Count} production configuration error(s). " +
