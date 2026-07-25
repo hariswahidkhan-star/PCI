@@ -10,6 +10,7 @@ namespace PCI.Backend.Endpoints;
 ///   GET  /api/me/lab/access                 — whether the student can enter the Lab, and why (live entitlement)
 ///   GET  /api/me/lab/catalogue              — the published labs/drills/scenarios + this student's latest status
 ///   GET  /api/me/lab/mastery                — competency averages + next-scenario recommendations (practice only)
+///   GET  /api/me/lab/templates              — the Free Templates Library, mapped to the engine each artefact serves
 ///   POST /api/me/lab/attempts               — start (or resume) an attempt; returns task + saved answers when resumed
 ///   POST /api/me/lab/attempts/{id}/autosave — persist working answers without grading
 ///   GET  /api/me/lab/attempts               — this student's recent attempts
@@ -77,6 +78,37 @@ public static class SimLab
         });
 
         // ---- catalogue: published labs/drills/scenarios + this student's latest attempt per scenario ----
+        // The Free Templates Library, mapped to the Lab engines. The Lab teaches a technique on synthetic
+        // data; this is the seam that lets a student take it to their own project — the working sheet for
+        // the engine they just practised. Access-gated like the rest of the Lab, but the files themselves
+        // are public documents, so the returned url is the ordinary public download route (no token needed,
+        // and the Downloads Centre's own counters keep working).
+        app.MapGet("/api/me/lab/templates", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, out var u) is { } blocked) return blocked;
+            if (!Core.SimLab.Eligible(db, u!.Id))
+                return Results.Json(new { error = "no_access", access = Core.SimLab.AccessFor(db, u.Id) }, statusCode: 403);
+
+            // Only offer what is actually published — a template still being drafted or withdrawn by an
+            // operator must not appear as a broken download inside the portal.
+            var live = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var r in db.Query("SELECT doc_group FROM public_documents WHERE category='templates' AND status='published' AND visibility='public' AND is_current=1"))
+                if (H.Str(r["doc_group"]) is { Length: > 0 } g) live.Add(g);
+
+            var rows = Data.TemplatesLibrarySeed.Catalogue
+                .Where(t => live.Contains(t.Group))
+                .Select(t => new
+                {
+                    doc_group = t.Group,
+                    title = t.Title,
+                    engine = t.Engine,            // "" = a general artefact with no Lab engine behind it
+                    description = t.Description,
+                    url = $"/api/public/documents/{t.Group}/file",
+                })
+                .ToList();
+            return J(new { rows });
+        });
+
         app.MapGet("/api/me/lab/catalogue", (HttpContext ctx) =>
         {
             if (Gate(ctx, out var u) is { } blocked) return blocked;
