@@ -27,3 +27,7 @@ tests/_s3*
 backend/u.db*
 backend/unused.db*
 storage/
+# Browser E2E object stores — one per provider, emptied when the suite starts its server
+e2e_storage_sqlite/
+e2e_storage_mysql/
+e2e_ci.db*

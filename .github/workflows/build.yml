@@ -344,6 +344,60 @@ jobs:
           retention-days: 30
           if-no-files-found: ignore
 
+  e2e-mysql:
+    # The same browser suite, driven against a real MariaDB instead of a SQLite file.
+    #
+    # Every layer below this one already runs on both engines — the xUnit suite, the live-HTTP
+    # integration suite, the migration-integrity index parity check. The browser journeys were the
+    # last that never had, which meant the only database production actually runs was unexercised by
+    # the tests closest to what a student sees. Chromium only: the cross-browser projects are a smoke
+    # subset whose value is engine coverage, not database coverage, so running them twice buys nothing.
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mariadb:10.11
+        env: { MARIADB_ROOT_PASSWORD: root, MARIADB_DATABASE: pci_e2e, MARIADB_USER: pci, MARIADB_PASSWORD: pcipass }
+        ports: [ '3306:3306' ]
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - name: Build backend (served by Playwright's webServer)
+        working-directory: backend
+        run: dotnet build -c Release
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: 'npm', cache-dependency-path: frontend/package-lock.json }
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+      - name: Install Chromium
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Playwright E2E against MariaDB (boots the backend on :8080)
+        working-directory: frontend
+        env:
+          DB_PROVIDER: mysql
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_PORT: '3306'
+          MYSQL_USER: pci
+          MYSQL_PASSWORD: pcipass
+          MYSQL_DATABASE: pci_e2e
+          MYSQL_SSL: 'false'
+        run: npx playwright test --project=chromium
+      - name: Upload Playwright report and failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-mysql
+          path: |
+            frontend/playwright-report
+            frontend/test-results
+          retention-days: 30
+          if-no-files-found: ignore
+
   static-quality:
     # Static-quality & supply-chain gates (Increment A). BLOCKING: the NuGet vulnerable-package
     # report (via an allow-list-aware wrapper) and secret scanning. INFORMATIONAL for now (a baseline
