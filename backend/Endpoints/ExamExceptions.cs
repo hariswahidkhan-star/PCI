@@ -301,53 +301,63 @@ public static class ExamExceptions
                 var reason = S(b, "reason"); if (string.IsNullOrWhiteSpace(reason)) return Results.Json(new { error = "reason_required" }, statusCode: 400);
                 var percent = Math.Clamp((int)(H.GetNum(b, "percent") ?? 100), 1, 100);
                 var waiverType = S(b, "waiver_type") ?? (percent >= 100 ? "full" : "partial");
-
-                // RES-026 — durable request identity: a retried waiver (network blip, double-submit, worker
-                // replay) must not grant a second $0 seat or a second ledger row. An existing row with the
-                // client's idempotency_key replays the original outcome.
-                var idem = (S(b, "idempotency_key") ?? "").Trim();
-                if (idem.Length > 80) return Results.Json(new { error = "bad_idempotency_key" }, statusCode: 400);
-                IResult? Replay()
+                // Partial and reschedule-only paths never materialise a seat under a uniqueness guard of
+                // their own — require a durable client idempotency key so retries cannot duplicate them.
+                var requiresIdem = percent < 100 || feeType == "reschedule";
+                var idemKey = FeeWaiverLedger.ResolveKey(ctx.Request, b);
+                if (requiresIdem && idemKey is null)
+                    return Results.Json(new { error = "idempotency_key_required", message = "Partial and reschedule-only waivers require an Idempotency-Key (header or body)." }, statusCode: 400);
+                if (idemKey is not null)
                 {
-                    var w = db.QueryOne("SELECT * FROM fee_waivers WHERE idempotency_key=?", idem);
-                    if (w is null) return null;
-                    if (H.L(w["user_id"]) != uid) return Results.Json(new { error = "idempotency_key_conflict" }, statusCode: 409);
-                    var pay = H.D(w["payable_amount"] ?? w["final_amount"]);
-                    return J(new { ok = true, fee_type = H.Str(w["fee_type"]) ?? feeType,
-                        percent = H.D(w["original_amount"]) > 0 ? (int)Math.Round(H.D(w["waived_amount"]) / H.D(w["original_amount"]) * 100) : percent,
-                        original = H.D(w["original_amount"]), waived_amount = H.D(w["waived_amount"]), payable = pay,
-                        skips_checkout = pay <= 0, replay = true });
+                    var (prior, mismatch) = FeeWaiverLedger.FindForSubject(db, idemKey, uid);
+                    if (mismatch) return Results.Json(new { error = "idempotency_key_conflict", message = "This idempotency key was already used for a different student." }, statusCode: 409);
+                    if (prior is not null) return J(FeeWaiverLedger.ReplayResponse(db, prior));
                 }
-                if (idem.Length > 0 && Replay() is { } prior) return prior;
-                var original = Settlement.ListPrice(db, feeType == "reschedule" ? "exam" : "exam");
+                var original = Settlement.ListPrice(db, "exam");
                 var waived = Math.Round(original * percent / 100.0, 2);
                 var payable = Math.Round(original - waived, 2);
                 var incidentId = H.GetNum(b, "incident_id") is double iid && iid > 0 ? (long?)(long)iid : null;
+                var institutionId = H.GetNum(b, "institution_id") is double i2 && i2 > 0 ? (long?)(long)i2 : null;
                 long? seatPayId = null;
-                // A full exam/retake waiver materialises a schedulable $0 seat immediately (no checkout);
-                // reschedule fees never gate booking, so those are recorded but grant no new seat.
-                if (percent >= 100 && feeType != "reschedule")
+                long waiverId = 0;
+                var raced = false;
+                db.Transaction(() =>
                 {
-                    var g = ExamAuthorization.GrantAttempt(db, uid, cid, feeType == "retake" ? "complimentary" : "complimentary", true, reason, S(b, "note"), incidentId, false, true, adm.Id);
-                    seatPayId = (g.GetType().GetProperty("payment_id")?.GetValue(g) as long?);
-                }
-                try
+                    // Claim the idempotency key on the ledger first so a concurrent retry cannot grant a
+                    // second seat / second ledger line after the first request already succeeded.
+                    bool created;
+                    (waiverId, created) = FeeWaiverLedger.TryInsert(db, idemKey, uid, "exam", cid,
+                        percent >= 100 ? "full" : "partial", feeType, waiverType,
+                        original, waived, payable, payable, reason, S(b, "note"), adm.Id,
+                        expiresAt: S(b, "expires"), sponsor: S(b, "sponsor"),
+                        institutionId: institutionId, incidentId: incidentId, evidenceRef: S(b, "evidence_ref"));
+                    if (!created && idemKey is not null)
+                    {
+                        raced = true;
+                        return;
+                    }
+                    // A full exam/retake waiver materialises a schedulable $0 seat immediately (no checkout);
+                    // reschedule fees never gate booking, so those are recorded but grant no new seat.
+                    // recordFeeWaiver:false — this handler owns the single ledger row (with idempotency).
+                    if (percent >= 100 && feeType != "reschedule")
+                    {
+                        var g = ExamAuthorization.GrantAttempt(db, uid, cid, "complimentary", true, reason, S(b, "note"), incidentId, false, true, adm.Id,
+                            recordFeeWaiver: false, feeType: feeType);
+                        seatPayId = g.GetType().GetProperty("payment_id")?.GetValue(g) as long?;
+                        if (seatPayId is not null)
+                            db.Execute("UPDATE fee_waivers SET payment_id=? WHERE id=?", seatPayId, waiverId);
+                    }
+                });
+                if (raced)
                 {
-                    db.Execute(@"INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,fee_type,waiver_type,original_amount,waived_amount,final_amount,payable_amount,currency,reason,note,sponsor,institution_id,incident_id,evidence_ref,approved_by,payment_id,expires_at,status,idempotency_key)
-                        VALUES(?, 'exam', ?, ?, ?, ?, ?, ?, ?, ?, 'USD', ?, ?, ?, ?, ?, ?, ?, ?, ?, 'granted', ?)",
-                        uid, cid, percent >= 100 ? "full" : "partial", feeType, waiverType, original, waived, payable, payable,
-                        reason, S(b, "note"), S(b, "sponsor"), H.GetNum(b, "institution_id") is double i2 && i2 > 0 ? (long)i2 : null, incidentId, S(b, "evidence_ref"), adm.Id, seatPayId, S(b, "expires"), idem.Length > 0 ? idem : null);
-                }
-                catch when (idem.Length > 0 && Replay() is not null)
-                {
-                    // Unique-key race: a concurrent request with the same key settled first — replay its outcome.
-                    log(adm.Id, "exam_fee_waiver_idem_race", $"key {idem} user {uid} cert {cid}");
-                    return Replay()!;
+                    var (won, wonMismatch) = FeeWaiverLedger.FindForSubject(db, idemKey!, uid);
+                    if (wonMismatch) return Results.Json(new { error = "idempotency_key_conflict", message = "This idempotency key was already used for a different student." }, statusCode: 409);
+                    return J(FeeWaiverLedger.ReplayResponse(db, won!));
                 }
                 log(adm.Id, "exam_fee_waived", $"user {uid} cert {cid} {feeType} {percent}% payable {payable} — {reason}");
                 NotifyStudent(uid, "An exam fee has been waived",
                     payable <= 0 ? $"your {feeType} fee for the {CertName(cid)} exam has been fully waived — you can schedule without payment." : $"a {percent}% waiver has been applied to your {feeType} fee; the remaining ${payable:0.##} is payable at checkout.");
-                return J(new { ok = true, fee_type = feeType, percent, original, waived_amount = waived, payable, skips_checkout = payable <= 0 });
+                return J(new { ok = true, waiver_id = waiverId, fee_type = feeType, percent, original, waived_amount = waived, payable, skips_checkout = payable <= 0, replayed = false });
             });
         });
 

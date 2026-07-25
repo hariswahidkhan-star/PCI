@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type ReactNode, type CSSProperties } from 'react'
+import { useState, useEffect, type ReactNode, type CSSProperties } from 'react'
 import { useAdminQuery } from '../hooks'
 import { useAdminAuth } from '../AdminAuth'
 import {
@@ -249,13 +249,13 @@ function WaiveFeeCard({ userId, certificationId, onDone }: { userId: number; cer
   const [msg, setMsg] = useState<Note>(null)
   const perm = feeType === 'exam' ? 'ex_waive_exam' : feeType === 'retake' ? 'ex_waive_retake' : 'ex_waive_resched'
   const allowed = can(perm)
-  // One durable key per grant intent: a retried/double-clicked submit replays the same waiver
-  // server-side instead of granting twice; a fresh key is minted only after a confirmed success.
-  const idemRef = useRef(`wvr-${crypto.randomUUID()}`)
 
   async function go() {
     if (!reason.trim()) { setMsg({ ok: false, text: 'A reason is required — every waiver must record why.' }); return }
+    if (busy) return
     setBusy(true); setMsg(null)
+    // Durable client key — required server-side for partial and reschedule-only waivers.
+    const idempotencyKey = crypto.randomUUID()
     try {
       const r = await adminApi.post<{ payable?: number; skips_checkout?: boolean }>('/api/admin/exam-fee-waiver', {
         user_id: userId,
@@ -267,9 +267,8 @@ function WaiveFeeCard({ userId, certificationId, onDone }: { userId: number; cer
         sponsor: sponsor || undefined,
         evidence_ref: evidence || undefined,
         expires: toIso(expires),
-        idempotency_key: idemRef.current,
+        idempotency_key: idempotencyKey,
       })
-      idemRef.current = `wvr-${crypto.randomUUID()}`
       setMsg({ ok: true, text: r.skips_checkout ? `${titleCase(feeType)} fee waived — access granted (no checkout needed).` : `${titleCase(feeType)} fee waiver recorded — payable $${r.payable ?? 0}.` })
       setReason(''); setNote('')
       onDone()

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { apiLoginAsDemoStudent, apiLoginAsE2EAdmin, captureStoryEvidence, preparePublicJourney, uniqueEmail, DEMO_STUDENT } from './util'
+import { apiLoginAsDemoStudent, apiLoginAsE2EAdmin, captureStoryEvidence, createTestUser, preparePublicJourney, uniqueEmail, DEMO_STUDENT } from './util'
 
 // Simulation Lab — student API journey + admin studio. Practice must never touch formal exam records.
 
@@ -324,5 +324,52 @@ test.describe('Simulation Lab maker-checker', () => {
     expect(entries).toEqual(expect.arrayContaining([
       expect.objectContaining({ action: 'sim_scenario_review', details: expect.stringContaining(`${code} pilot→approved`), actor: checkerEmail }),
     ]))
+  })
+})
+
+test.describe('Simulation Lab catalogue — server-side filtering', () => {
+  // The catalogue is filtered/searched SERVER-side (the capacity path). An entitled member sees the
+  // real catalogue; selecting a facet refetches only the matched rows, while the whole-catalogue KPIs
+  // (Published labs) and the "of N" total stay put — proving the summary is full-set, not the match.
+  test('a facet filter refetches matched rows and leaves the full-set KPIs unchanged', async ({ page, request }) => {
+    const adminToken = await apiLoginAsE2EAdmin(request)
+    await createTestUser(request, adminToken, 'member', page)
+
+    await page.goto('/app/lab')
+    await expect(page.getByRole('heading', { name: /Project Controls Practice Lab/i })).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByRole('status', { name: 'Loading' })).toHaveCount(0)
+
+    // Baseline: the "Showing X of N" line and the "Published labs" KPI.
+    const results = page.getByText(/Showing \d+ of \d+ labs/)
+    await expect(results).toBeVisible()
+    const parse = async () => {
+      const m = (await results.textContent())?.match(/Showing (\d+) of (\d+) labs/)
+      expect(m, 'results line should report counts').toBeTruthy()
+      return { shown: Number(m![1]), total: Number(m![2]) }
+    }
+    const before = await parse()
+    expect(before.total).toBeGreaterThan(1)
+    const publishedKpi = page.locator('.sl-kpi', { hasText: 'Published labs' }).locator('.v')
+    const publishedBefore = (await publishedKpi.textContent())?.trim()
+    expect(Number(publishedBefore)).toBe(before.total)
+
+    // Filter to Expert only — a strict subset of the catalogue.
+    await page.getByLabel('Filter by difficulty').selectOption('expert')
+    await expect(page).toHaveURL(/difficulty=expert/)
+    // The server round-trip settles: fewer rows shown, same full-set total, unchanged KPI.
+    await expect
+      .poll(async () => (await parse()).shown, { timeout: 10_000 })
+      .toBeLessThan(before.total)
+    const after = await parse()
+    expect(after.total, 'the "of N" total is the full published set, not the match').toBe(before.total)
+    expect((await publishedKpi.textContent())?.trim(), 'the Published-labs KPI is full-set').toBe(publishedBefore)
+
+    // Every visible card is Expert (the server filtered, the browser did not).
+    const metas = page.locator('.sl-scenario .sl-meta')
+    const count = await metas.count()
+    expect(count).toBeGreaterThan(0)
+    for (let i = 0; i < count; i++) {
+      expect((await metas.nth(i).textContent())?.toLowerCase()).toContain('expert')
+    }
   })
 })

@@ -492,11 +492,36 @@ public static class Migrate
         AddCol("fee_waivers", "appeal_id", "appeal_id INTEGER");
         AddCol("fee_waivers", "evidence_ref", "evidence_ref TEXT");
         AddCol("fee_waivers", "payable_amount", "payable_amount DECIMAL(12,2)");
-        // RES-026 — waiver idempotency: a client-supplied request key makes every waiver grant safe to
-        // retry across network/process boundaries. The unique index is the race backstop: two concurrent
-        // requests with one key can settle at most one ledger row; the loser replays the winner's outcome.
-        AddCol("fee_waivers", "idempotency_key", "idempotency_key VARCHAR(80)");
+        // Client idempotency for partial / reschedule-only (and optional full) waiver requests.
+        // Unique when present so retries cannot create duplicate ledger rows or discount codes.
+        AddCol("fee_waivers", "idempotency_key", "idempotency_key VARCHAR(120)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_fee_waivers_idem ON fee_waivers(idempotency_key)");
+
+        // RES-001/002 — checkout reservation holds + immutable partner attribution on payments.
+        // reserved_count is capacity held by open Stripe sessions; used_count is settled redemptions.
+        AddCol("discount_codes", "reserved_count", "reserved_count INTEGER DEFAULT 0");
+        AddCol("payments", "discount_code_id", "discount_code_id INTEGER");
+        AddCol("payments", "partner_id", "partner_id INTEGER");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS checkout_reservations(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            idempotency_key VARCHAR(120) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            product_type VARCHAR(32) NOT NULL,
+            certification_id INTEGER,
+            discount_code_id INTEGER,
+            partner_id INTEGER,
+            amount_minor INTEGER NOT NULL DEFAULT 0,
+            currency VARCHAR(8) NOT NULL DEFAULT 'USD',
+            stripe_session_id VARCHAR(128),
+            status VARCHAR(16) NOT NULL DEFAULT 'reserved',
+            payment_id INTEGER,
+            expires_at TEXT NOT NULL,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_checkout_res_idem ON checkout_reservations(idempotency_key)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_checkout_res_code ON checkout_reservations(discount_code_id, status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_checkout_res_session ON checkout_reservations(stripe_session_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_payments_partner ON payments(partner_id)");
 
         // Authorization links so history + policy join cleanly.
         AddCol("exam_bookings", "authorization_id", "authorization_id INTEGER");

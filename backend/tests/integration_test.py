@@ -638,8 +638,13 @@ def test_finance_and_certuvo_hardening(admin):
         chk("13d student billing shows the waived settlement", any(r.get("payment_status") == "waived" for r in inv.get("rows", inv if isinstance(inv, list) else [])), inv)
 
         # ---- 13e-f. Partial waiver → a single-use code locked to that student ----
-        c, pw = jget("POST", f"/api/admin/students/{wuid}/waive", token=admin, body={"product": "membership", "percent": 50, "reason": "institutional sponsorship"})
+        c, missing = jget("POST", f"/api/admin/students/{wuid}/waive", token=admin, body={"product": "membership", "percent": 50, "reason": "institutional sponsorship"})
+        chk("13e0 partial waiver without idempotency key refused (400)", c == 400 and missing.get("error") == "idempotency_key_required", missing)
+        partial_key = "it-partial-waiver-13e"
+        c, pw = jget("POST", f"/api/admin/students/{wuid}/waive", token=admin, body={"product": "membership", "percent": 50, "reason": "institutional sponsorship", "idempotency_key": partial_key})
         chk("13e partial waiver issues a personal code", c == 200 and pw.get("kind") == "partial" and pw.get("code", "").startswith("WVR-"), pw)
+        c, pw_replay = jget("POST", f"/api/admin/students/{wuid}/waive", token=admin, body={"product": "membership", "percent": 50, "reason": "institutional sponsorship", "idempotency_key": partial_key})
+        chk("13e1 partial waiver replay is idempotent", c == 200 and pw_replay.get("replayed") is True and pw_replay.get("code") == pw.get("code"), pw_replay)
         c, v1 = jget("POST", "/api/validate-code", body={"code": pw["code"], "product": "membership", "email": "someoneelse@ex.co"})
         c2, v2 = jget("POST", "/api/validate-code", body={"code": pw["code"], "product": "membership", "email": "waive13@ex.co"})
         chk("13f partial-waiver code only validates for its student",
@@ -1747,8 +1752,16 @@ def test_exam_exceptions(admin):
     # (11,12) full retake waiver → payable 0 + skips checkout; (13) partial → payable remains.
     c, w = jget("POST", "/api/admin/exam-fee-waiver", token=admin, body={"user_id": uid, "certification_id": 1, "fee_type": "retake", "percent": 100, "reason": "goodwill"})
     chk("19g full waiver → payable 0 + skips checkout", c == 200 and w.get("payable") == 0 and w.get("skips_checkout") is True, w)
-    c, wp = jget("POST", "/api/admin/exam-fee-waiver", token=admin, body={"user_id": uid, "certification_id": 1, "fee_type": "retake", "percent": 50, "reason": "partial"})
+    c, wp_missing = jget("POST", "/api/admin/exam-fee-waiver", token=admin, body={"user_id": uid, "certification_id": 1, "fee_type": "retake", "percent": 50, "reason": "partial"})
+    chk("19h0 partial exam-fee waiver without idempotency key refused", c == 400 and wp_missing.get("error") == "idempotency_key_required", wp_missing)
+    c, wp = jget("POST", "/api/admin/exam-fee-waiver", token=admin, body={"user_id": uid, "certification_id": 1, "fee_type": "retake", "percent": 50, "reason": "partial", "idempotency_key": "it-exam-partial-19h"})
     chk("19h partial waiver leaves a payable balance", c == 200 and (wp.get("payable") or 0) > 0, wp)
+    c, wp2 = jget("POST", "/api/admin/exam-fee-waiver", token=admin, body={"user_id": uid, "certification_id": 1, "fee_type": "retake", "percent": 50, "reason": "partial", "idempotency_key": "it-exam-partial-19h"})
+    chk("19h1 partial exam-fee waiver replay is idempotent", c == 200 and wp2.get("replayed") is True and wp2.get("waiver_id") == wp.get("waiver_id"), wp2)
+    c, rs = jget("POST", "/api/admin/exam-fee-waiver", token=admin, body={"user_id": uid, "certification_id": 1, "fee_type": "reschedule", "percent": 100, "reason": "weather", "idempotency_key": "it-resched-19h2"})
+    chk("19h2 reschedule-only waiver records without a second seat grant", c == 200 and rs.get("skips_checkout") is True, rs)
+    c, rs2 = jget("POST", "/api/admin/exam-fee-waiver", token=admin, body={"user_id": uid, "certification_id": 1, "fee_type": "reschedule", "percent": 100, "reason": "weather", "idempotency_key": "it-resched-19h2"})
+    chk("19h3 reschedule-only waiver replay is idempotent", c == 200 and rs2.get("replayed") is True, rs2)
 
     # (8,9,10,15) grant an additional attempt → a new schedulable seat, classified; allowance grows.
     con = dbconn(); before = con.execute("SELECT COUNT(*) FROM exam_entitlements WHERE user_id=? AND COALESCE(certification_id,1)=1", (uid,)).fetchone()[0]; con.close()
@@ -3782,6 +3795,21 @@ def test_simlab(admin):
     chk("43g5 filtering by kind=capstone returns only capstones",
         c == 200 and all(r.get("kind") == "capstone" for r in fk.get("rows", [])) and len(fk.get("rows", [])) >= 1, fk.get("matched"))
 
+    # Whole-catalogue summary (KPIs) + resume list — computed server-side over the FULL published set so
+    # the client can fetch only the matched rows without losing the KPIs. A member who hasn't started
+    # anything has zero progress and an empty resume list.
+    sm = cat.get("summary") or {}
+    chk("43g6 the catalogue carries a full-set summary (published/completed/in_progress/avg_score)",
+        isinstance(sm, dict) and sm.get("published") == cat.get("total")
+        and sm.get("completed") == 0 and sm.get("in_progress") == 0 and sm.get("avg_score") is None, sm)
+    chk("43g7 a fresh member has an empty resume list",
+        cat.get("resume") == [], cat.get("resume"))
+    # The summary is INVARIANT under the active filter: filtering the rows must not change the
+    # whole-catalogue KPIs (published stays the full published count, not the matched count).
+    chk("43g8 summary.published is unaffected by an active filter (full set, not the matched count)",
+        (fd.get("summary") or {}).get("published") == cat.get("total")
+        and fd.get("matched") < fd.get("total"), (fd.get("summary"), fd.get("matched"), fd.get("total")))
+
     # No draft/unpublished scenario ever leaks into the student catalogue.
     con = dbconn(); con.execute("INSERT INTO simulation_scenarios(scenario_code,title,kind,status) VALUES(?,?,?,?)",
                                 ("DRAFT-XYZ", "Hidden draft", "guided_lab", "draft")); con.commit(); con.close()
@@ -4562,6 +4590,15 @@ def test_simlab(admin):
     c, ngb = jget("POST", f"/api/admin/lab/scenarios/{bad_id}/review", token=admin2, body={"to": "approved"})
     chk("43zz3 an ungradable multi-step (unresolvable measure) is blocked at approval (not_publishable)",
         c == 409 and ngb.get("error") == "not_publishable", (c, ngb.get("error")))
+
+    # Coach red-team: a different signed-in student cannot coach (or read) another student's attempt.
+    otok, _ouid = make_paid_user("simlab-coach-intruder@ex.co")
+    c, xco = jget("POST", f"/api/me/lab/attempts/{msid}/coach", token=otok,
+                  body={"answers": {}, "coach_mode": "guided", "hint_level": 6})
+    chk("43zz4 the AI coach is owner-scoped — another student cannot coach someone else's attempt (404)",
+        c == 404, (c, xco.get("error")))
+    c, xld = jget("GET", f"/api/me/lab/attempts/{msid}", token=otok)
+    chk("43zz5 another student cannot load someone else's attempt either (404)", c == 404, (c, xld.get("error")))
 
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).

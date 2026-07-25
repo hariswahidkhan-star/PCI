@@ -48,13 +48,13 @@ public static class Partners
                 FROM code_redemptions r
                 JOIN discount_codes dc ON dc.id=r.code_id
                 JOIN payments p ON p.id=r.payment_id
-                WHERE dc.partner_id=? AND p.payment_status='paid'
+                WHERE COALESCE(p.partner_id, dc.partner_id)=? AND p.payment_status='paid'
                 ORDER BY p.payment_date DESC LIMIT 500", pid);
             var attributed = db.Scalar<double>(@"SELECT COALESCE(SUM(p.final_amount),0)
                 FROM code_redemptions r
                 JOIN discount_codes dc ON dc.id=r.code_id
                 JOIN payments p ON p.id=r.payment_id
-                WHERE dc.partner_id=? AND p.payment_status='paid'", pid);
+                WHERE COALESCE(p.partner_id, dc.partner_id)=? AND p.payment_status='paid'", pid);
             var accrued = Math.Round(attributed * pct / 100.0, 2);
             var paidOut = db.Scalar<double>("SELECT COALESCE(SUM(amount),0) FROM partner_payouts WHERE partner_id=?", pid);
             var payouts = db.Query("SELECT amount,currency,note,paid_at FROM partner_payouts WHERE partner_id=? ORDER BY id DESC", pid);

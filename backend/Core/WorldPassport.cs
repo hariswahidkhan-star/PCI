@@ -97,7 +97,9 @@ public static class WorldPassport
         public string? IssuedOn;
         public string? ExpiresOn;
         public Disclosure Show = new(true, true, true);
-        public List<(string Title, string Industry, string Difficulty, string Score, string Profile, string Date)> Rows = new();
+        /// <summary>Ref is the traceability citation — challenge code + pinned published version
+        /// (e.g. "WC-EVM-001 · v1") — so every row in the document names its immutable source.</summary>
+        public List<(string Title, string Ref, string Industry, string Difficulty, string Score, string Profile, string Date)> Rows = new();
     }
 
     const double W = 595, H2 = 842;   // A4 portrait, points
@@ -127,7 +129,8 @@ public static class WorldPassport
         // ── header band, in the brand's noir, with the gilt seal ──
         cs.Append($"{Noir} rg ").Append($"20 {H2 - 130:0.##} {W - 40:0.##} 110 re f ");
         cs.Append($"{Crimson} rg ").Append($"44 {H2 - 116:0.##} 62 4 re f ");           // crimson rule
-        cs.Append($"{Gilt} rg ").Append($"110 {H2 - 116:0.##} 30 1.2 re f ");           // gilt echo
+        // The endorsement follows the crimson rule, exactly as the web lockup draws it.
+        Text(cs, "FROM THE PROJECT CONTROLS INSTITUTE", 114, H2 - 115.5, 7.5, bold: false, 0.72, 0.78, 0.86, spacing: 1.6);
         Text(cs, "PCI WORLD", 44, H2 - 62, 26, bold: true, 1, 1, 1);
         Text(cs, "PASSPORT — VERIFIED PRACTICE EVIDENCE", 44, H2 - 84, 9.5, bold: false, 0.72, 0.78, 0.86, spacing: 2.2);
         Seal(cs, W - 88, H2 - 75, 33);
@@ -168,7 +171,7 @@ public static class WorldPassport
             if (y < 252) break;
             y -= 22;
             Text(cs, Clip(r.Title, 52), 44, y, 10.5, bold: true, 0.06, 0.09, 0.16);
-            var sub = string.Join("  ·  ", new[] { r.Industry, r.Difficulty, d.Show.Profiles ? r.Profile : null }
+            var sub = string.Join("  ·  ", new[] { r.Ref, r.Industry, r.Difficulty, d.Show.Profiles ? r.Profile : null }
                 .Where(s => !string.IsNullOrWhiteSpace(s)));
             if (sub.Length > 0) { y -= 12; Text(cs, Clip(sub, 62), 44, y, 8.8, bold: false, 0.35, 0.40, 0.48); y += 12; }
             if (d.Show.Scores) Text(cs, r.Score, 400, y, 10.5, bold: true, 0.06, 0.09, 0.16);

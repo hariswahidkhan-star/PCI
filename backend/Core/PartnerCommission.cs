@@ -189,22 +189,61 @@ public static class PartnerCommission
         // Only money PCI actually collected earns commission. A waiver/sponsorship collected nothing.
         if (H.Str(pay["payment_status"]) != "paid") return 0;
 
-        var red = db.QueryOne(@"SELECT r.id, r.code_id, r.amount_before, r.discount_amount, dc.partner_id, dc.certification_id, dc.route_key
-            FROM code_redemptions r JOIN discount_codes dc ON dc.id=r.code_id
-            WHERE r.payment_id=? AND dc.partner_id IS NOT NULL LIMIT 1", paymentId);
-        if (red is null) return 0;
+        // Prefer the payment's snapshotted partner_id (RES-002). Fall back to the live discount_codes
+        // join only for legacy rows settled before attribution was stamped on payments.
+        long partnerId = 0;
+        long codeId = 0;
+        long redemptionId = 0;
+        long? certId = null;
+        string? routeKey = null;
+        object? amountBefore = null;
+        object? discountAmount = null;
 
-        var partnerId = H.L(red["partner_id"]);
+        if (pay["partner_id"] is not null && H.L(pay["partner_id"]) > 0)
+        {
+            partnerId = H.L(pay["partner_id"]);
+            var red = db.QueryOne(@"SELECT r.id, r.code_id, r.amount_before, r.discount_amount, dc.certification_id, dc.route_key
+                FROM code_redemptions r LEFT JOIN discount_codes dc ON dc.id=r.code_id
+                WHERE r.payment_id=? LIMIT 1", paymentId);
+            if (red is not null)
+            {
+                redemptionId = H.L(red["id"]);
+                codeId = red["code_id"] is null ? (pay["discount_code_id"] is null ? 0 : H.L(pay["discount_code_id"])) : H.L(red["code_id"]);
+                certId = red["certification_id"] is null ? null : H.L(red["certification_id"]);
+                routeKey = H.Str(red["route_key"]);
+                amountBefore = red["amount_before"];
+                discountAmount = red["discount_amount"];
+            }
+            else if (pay["discount_code_id"] is not null)
+            {
+                codeId = H.L(pay["discount_code_id"]);
+                var dc = db.QueryOne("SELECT certification_id,route_key FROM discount_codes WHERE id=?", codeId);
+                certId = dc?["certification_id"] is null ? null : H.L(dc!["certification_id"]);
+                routeKey = H.Str(dc?["route_key"]);
+            }
+        }
+        else
+        {
+            var red = db.QueryOne(@"SELECT r.id, r.code_id, r.amount_before, r.discount_amount, dc.partner_id, dc.certification_id, dc.route_key
+                FROM code_redemptions r JOIN discount_codes dc ON dc.id=r.code_id
+                WHERE r.payment_id=? AND dc.partner_id IS NOT NULL LIMIT 1", paymentId);
+            if (red is null) return 0;
+            partnerId = H.L(red["partner_id"]);
+            redemptionId = H.L(red["id"]);
+            codeId = H.L(red["code_id"]);
+            certId = red["certification_id"] is null ? null : H.L(red["certification_id"]);
+            routeKey = H.Str(red["route_key"]);
+            amountBefore = red["amount_before"];
+            discountAmount = red["discount_amount"];
+        }
         if (partnerId == 0) return 0;
 
-        var routeKey = H.Str(red["route_key"]);
         // Sponsorship is the opposite money direction — the partner is funding the candidate, not
         // introducing one, so it never earns commission (D7).
         if (string.Equals(routeKey, "sponsored", StringComparison.OrdinalIgnoreCase)) return 0;
 
         var productType = (H.Str(pay["product_type"]) ?? "").ToLowerInvariant();
         var userId = H.L(pay["user_id"]);
-        long? certId = red["certification_id"] is null ? null : H.L(red["certification_id"]);
         var country = H.Str(db.QueryOne("SELECT country FROM student_profiles WHERE user_id=?", userId)?["country"]);
         // The platform stores timestamps as 'yyyy-MM-dd HH:mm:ss'; keep the fallback in that shape too
         // (H.IsoNow is round-trip ISO and would make earned_at inconsistent with every other column).
@@ -214,8 +253,8 @@ public static class PartnerCommission
         var rule = ResolveRule(db, partnerId, paidOn, certId, routeKey, productType, country);
 
         var netMinor = Money.ToMinor(pay["final_amount"]);
-        var discountMinor = Money.ToMinor(red["discount_amount"]);
-        var grossMinor = red["amount_before"] is not null ? Money.ToMinor(red["amount_before"]) : netMinor + discountMinor;
+        var discountMinor = Money.ToMinor(discountAmount);
+        var grossMinor = amountBefore is not null ? Money.ToMinor(amountBefore) : netMinor + discountMinor;
 
         // Basis decides what the rate is applied to. net_after_tax has no distinct meaning until tax is
         // modelled, so it currently equals net_after_discount — stated, not silently conflated.
@@ -239,7 +278,7 @@ public static class PartnerCommission
              certification_id,route_key,product_type,currency,gross_minor,discount_minor,eligible_net_minor,
              commission_type,commission_rate_bp,commission_basis,commission_minor,status,earned_at,hold_until,requires_finance_review)
             VALUES(?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?)",
-            dedupe, partnerId, rule.AgreementId, rule.RuleId, H.L(red["code_id"]), H.L(red["id"]), paymentId, userId,
+            dedupe, partnerId, rule.AgreementId, rule.RuleId, codeId > 0 ? codeId : null, redemptionId > 0 ? redemptionId : null, paymentId, userId,
             certId, routeKey, productType, rule.Currency, grossMinor, discountMinor, netMinor,
             rule.CommissionType, rule.RateBp, rule.Basis, commissionMinor,
             status, paidOn, holdUntil, rule.NeedsReview ? 1 : 0);

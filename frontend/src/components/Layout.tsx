@@ -5,24 +5,25 @@ import { useMe } from '../data/MeContext'
 import { useT } from '../i18n'
 import LanguageSwitcher from './LanguageSwitcher'
 import { initials } from '../format'
+import { Icon, type IconName } from './icons'
 
-const NAV = [
-  { to: '/', tkey: 'nav.overview', end: true },
-  { to: '/certifications', tkey: 'nav.certifications' },
-  { to: '/credentials', tkey: 'nav.credentials' },
-  { to: '/cpd', tkey: 'nav.cpd' },
-  { to: '/certuvo', tkey: 'nav.certuvo' },
-  { to: '/lab', tkey: 'nav.lab' },
-  { to: '/billing', tkey: 'nav.billing' },
-  { to: '/resources', tkey: 'nav.resources' },
-  { to: '/templates', tkey: 'nav.templates' },
-  { to: '/events', tkey: 'nav.events' },
-  { to: '/documents', tkey: 'nav.documents' },
-  { to: '/messages', tkey: 'nav.messages', badgeKey: 'unread' as const },
-  { to: '/support', tkey: 'nav.support' },
-  { to: '/appeals', tkey: 'nav.appeals' },
-  { to: '/applications', tkey: 'nav.applications' },
-  { to: '/profile', tkey: 'nav.profile', badgeKey: 'profile' as const },
+const NAV: { to: string; tkey: string; icon: IconName; end?: boolean; badgeKey?: 'unread' | 'profile' }[] = [
+  { to: '/', tkey: 'nav.overview', icon: 'dashboard', end: true },
+  { to: '/certifications', tkey: 'nav.certifications', icon: 'award' },
+  { to: '/credentials', tkey: 'nav.credentials', icon: 'shield-check' },
+  { to: '/cpd', tkey: 'nav.cpd', icon: 'refresh' },
+  { to: '/certuvo', tkey: 'nav.certuvo', icon: 'sparkles' },
+  { to: '/lab', tkey: 'nav.lab', icon: 'flask' },
+  { to: '/billing', tkey: 'nav.billing', icon: 'credit-card' },
+  { to: '/resources', tkey: 'nav.resources', icon: 'book-open' },
+  { to: '/templates', tkey: 'nav.templates', icon: 'file-text' },
+  { to: '/events', tkey: 'nav.events', icon: 'calendar' },
+  { to: '/documents', tkey: 'nav.documents', icon: 'folder' },
+  { to: '/messages', tkey: 'nav.messages', icon: 'mail', badgeKey: 'unread' },
+  { to: '/support', tkey: 'nav.support', icon: 'life-buoy' },
+  { to: '/appeals', tkey: 'nav.appeals', icon: 'scale' },
+  { to: '/applications', tkey: 'nav.applications', icon: 'clipboard' },
+  { to: '/profile', tkey: 'nav.profile', icon: 'user', badgeKey: 'profile' },
 ]
 
 const TITLE_KEYS: Record<string, string> = {
@@ -71,6 +72,7 @@ export default function Layout() {
         <nav className="nav">
           {NAV.map((n) => (
             <NavLink key={n.to} to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
+              <Icon name={n.icon} size={17} className="nav-ic" />
               <span>{t(n.tkey)}</span>
               {n.badgeKey === 'unread' && unread > 0 && <span className="pill">{unread}</span>}
               {n.badgeKey === 'profile' && completion < 100 && <span className="pill dim">{completion}%</span>}
