@@ -115,122 +115,15 @@ public static class SimLab
             if (!Core.SimLab.Eligible(db, u!.Id))
                 return Results.Json(new { error = "no_access", access = Core.SimLab.AccessFor(db, u.Id) }, statusCode: 403);
 
-            // Server-side search + faceted filtering (P2). With no params the response is unchanged (every
-            // published scenario). Facets are computed over the FULL published set so the filter controls
-            // stay stable regardless of the active filter; rows carry only the matches.
-            var q = (ctx.Request.Query["q"].ToString() ?? "").Trim().ToLowerInvariant();
-            var fDifficulty = (ctx.Request.Query["difficulty"].ToString() ?? "").Trim().ToLowerInvariant();
-            var fKind = (ctx.Request.Query["kind"].ToString() ?? "").Trim().ToLowerInvariant();
-            var fIndustry = (ctx.Request.Query["industry"].ToString() ?? "").Trim().ToLowerInvariant();
-            var fCompetency = (ctx.Request.Query["competency"].ToString() ?? "").Trim().ToLowerInvariant();
-
-            // The student's latest attempt per scenario (for status/score badges), keyed by scenario_id.
-            var latest = new Dictionary<long, (string status, object? score, long attemptId)>();
-            foreach (var a in db.Query(@"SELECT id,scenario_id,status,score FROM simulation_attempts
-                WHERE user_id=? ORDER BY id ASC", u.Id))
-                latest[H.L(a["scenario_id"])] = (H.Str(a["status"]) ?? "in_progress", a["score"], H.L(a["id"]));
-
-            var rows = new List<object>();
-            var difficulties = new SortedSet<string>();
-            var kinds = new SortedSet<string>();
-            var industries = new SortedSet<string>();
-            var competencySet = new SortedSet<string>();
-            var total = 0;
-            // Full-set student-progress aggregates (the catalogue KPIs) and the resume list. These are
-            // computed over EVERY published scenario — before the filter predicate — so a filtered view
-            // still shows whole-catalogue progress and can carry its own "continue where you left off"
-            // strip. This is what lets the client fetch only the matched rows without losing the KPIs.
-            var completedCount = 0;
-            var inProgressCount = 0;
-            long scoreSum = 0;
-            var scoredCount = 0;
-            var resume = new List<object>();
-            var DONE = new HashSet<string>(StringComparer.Ordinal) { "passed", "completed" };
-            foreach (var s in db.Query(@"SELECT id,scenario_code,title,kind,industry,project_type,difficulty,
-                est_minutes,competencies_json,certification_id,summary,version,config_json FROM simulation_scenarios
-                WHERE status='published' ORDER BY sort_order ASC, id ASC"))
-            {
-                total++;
-                var difficulty = H.Str(s["difficulty"]) ?? "";
-                var kind = H.Str(s["kind"]) ?? "";
-                var industry = H.Str(s["industry"]) ?? "";
-                var comps = ParseArray(H.Str(s["competencies_json"]));
-                if (difficulty.Length > 0) difficulties.Add(difficulty);
-                if (kind.Length > 0) kinds.Add(kind);
-                if (industry.Length > 0) industries.Add(industry);
-                foreach (var c in comps) competencySet.Add(c);
-
-                var sid = H.L(s["id"]);
-                var has = latest.TryGetValue(sid, out var at);
-                if (has)
-                {
-                    if (DONE.Contains(at.status)) completedCount++;
-                    else if (at.status == "in_progress")
-                    {
-                        inProgressCount++;
-                        if (resume.Count < 12)
-                            resume.Add(new
-                            {
-                                scenario_code = H.Str(s["scenario_code"]),
-                                title = H.Str(s["title"]),
-                                kind,
-                                difficulty,
-                                industry,
-                                est_minutes = H.L(s["est_minutes"]),
-                                certification_id = s["certification_id"] is null ? (long?)null : H.L(s["certification_id"]),
-                            });
-                    }
-                    if (at.score is not null) { scoreSum += H.L(at.score); scoredCount++; }
-                }
-
-                // Filter predicate: exact (case-insensitive) facet matches + a substring search over
-                // title / summary / code / industry.
-                if (fDifficulty.Length > 0 && !difficulty.Equals(fDifficulty, StringComparison.OrdinalIgnoreCase)) continue;
-                if (fKind.Length > 0 && !kind.Equals(fKind, StringComparison.OrdinalIgnoreCase)) continue;
-                if (fIndustry.Length > 0 && !industry.Equals(fIndustry, StringComparison.OrdinalIgnoreCase)) continue;
-                if (fCompetency.Length > 0 && !comps.Any(c => c.Equals(fCompetency, StringComparison.OrdinalIgnoreCase))) continue;
-                if (q.Length > 0)
-                {
-                    var hay = $"{H.Str(s["title"])} {H.Str(s["summary"])} {H.Str(s["scenario_code"])} {industry}".ToLowerInvariant();
-                    if (!hay.Contains(q)) continue;
-                }
-
-                rows.Add(new
-                {
-                    id = sid,
-                    scenario_code = H.Str(s["scenario_code"]),
-                    title = H.Str(s["title"]),
-                    kind,
-                    industry,
-                    project_type = H.Str(s["project_type"]),
-                    difficulty,
-                    est_minutes = H.L(s["est_minutes"]),
-                    competencies = comps,
-                    certification_id = s["certification_id"] is null ? (long?)null : H.L(s["certification_id"]),
-                    summary = H.Str(s["summary"]),
-                    version = H.L(s["version"]),
-                    interactive = !string.IsNullOrWhiteSpace(H.Str(s["config_json"])),   // has a runnable task
-                    attempt_status = has ? at.status : (string?)null,
-                    attempt_id = has ? at.attemptId : (long?)null,
-                    score = has ? at.score : null,
-                });
-            }
-            return J(new
-            {
-                rows,
-                total,                 // total published scenarios (before filtering)
-                matched = rows.Count,  // after filtering
-                facets = new { difficulties, kinds, industries, competencies = competencySet },
-                // Whole-catalogue KPIs + resume list (unaffected by the active filter).
-                summary = new
-                {
-                    published = total,
-                    completed = completedCount,
-                    in_progress = inProgressCount,
-                    avg_score = scoredCount > 0 ? (double?)Math.Round((double)scoreSum / scoredCount) : null,
-                },
-                resume,
-            });
+            // Server-side search + faceted filtering (P2/P3 capacity path). With no params the response is
+            // unchanged (every published scenario). The build is a single pass in Core.SimLab.Catalogue so
+            // it is unit-testable at scale; facets + the whole-catalogue summary/resume are full-set.
+            return J(Core.SimLab.Catalogue(db, u.Id,
+                ctx.Request.Query["q"].ToString(),
+                ctx.Request.Query["difficulty"].ToString(),
+                ctx.Request.Query["kind"].ToString(),
+                ctx.Request.Query["industry"].ToString(),
+                ctx.Request.Query["competency"].ToString()));
         });
 
         // ---- start (or resume) an attempt ----
