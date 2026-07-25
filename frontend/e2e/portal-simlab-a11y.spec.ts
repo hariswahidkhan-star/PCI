@@ -36,4 +36,32 @@ test.describe('Simulation Lab accessibility (axe)', () => {
     // Keyboard smoke: the primary action is reachable and operable by keyboard.
     await expect(page.getByRole('button', { name: 'Submit for grading' })).toBeVisible()
   })
+
+  // P3 Arabic/RTL viewport pass. Selecting Arabic flips <html dir="rtl" lang="ar"> (I18nProvider →
+  // applyToDocument), which drives the right-to-left layout. We plant the language before the app
+  // boots and confirm the catalogue and the multi-step runner both render right-to-left with no
+  // critical axe violations — the RTL reflow must not break the semantic structure axe checks.
+  test('the catalogue and runner render right-to-left (Arabic) with no critical violations', async ({ page, request }) => {
+    const adminToken = await apiLoginAsE2EAdmin(request)
+    await createTestUser(request, adminToken, 'member', page)
+    // Pin the SPA to Arabic before any page script runs, on the app origin.
+    await page.addInitScript(() => {
+      try { localStorage.setItem('pci.lang', 'ar') } catch { /* storage blocked */ }
+    })
+
+    // ── Catalogue (RTL) ──
+    await page.goto('/app/lab')
+    await expect(page.getByRole('heading', { name: /Project Controls Practice Lab/i })).toBeVisible({ timeout: 20_000 })
+    // The document is in right-to-left mode for Arabic.
+    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ar')
+    await expect(page.getByRole('status', { name: 'Loading' })).toHaveCount(0)
+    await expectNoCriticalViolations(page, 'catalogue (RTL)')
+
+    // ── Multi-step runner (RTL) ──
+    await page.goto('/app/lab/MS-RECOVERY-001')
+    await expect(page.getByText(/Baseline health|Choose a recovery path|Re-forecast/i).first()).toBeVisible({ timeout: 20_000 })
+    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')
+    await expectNoCriticalViolations(page, 'multi-step runner (RTL)')
+  })
 })
