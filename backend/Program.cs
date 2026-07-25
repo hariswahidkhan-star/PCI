@@ -153,27 +153,51 @@ catch { /* /data exists but is not ours to write — keep the configured default
             }
         }
 
+        // Evidence-based URL adoption BEFORE the blockers run. Render exports the service's real
+        // public URL as RENDER_EXTERNAL_URL on every deploy; when the operator has not configured
+        // APP_BASE_URL, adopting it is not a waiver — it is the correct value. ALLOWED_ORIGIN then
+        // defaults to the same origin: this platform serves its SPAs and API from one origin, so
+        // same-origin is the tightest CORS default, not a loosening.
+        if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("APP_BASE_URL"))
+            && string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("SITE_BASE_URL"))
+            && Environment.GetEnvironmentVariable("RENDER_EXTERNAL_URL") is { Length: > 0 } renderUrl
+            && Uri.TryCreate(renderUrl, UriKind.Absolute, out var renderUri)
+            && renderUri.Scheme == Uri.UriSchemeHttps)
+        {
+            Environment.SetEnvironmentVariable("APP_BASE_URL", renderUri.GetLeftPart(UriPartial.Authority));
+            Console.WriteLine($"[boot] APP_BASE_URL not set → adopted RENDER_EXTERNAL_URL: {renderUri.GetLeftPart(UriPartial.Authority)}");
+        }
+        if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ALLOWED_ORIGIN"))
+            && Uri.TryCreate(Environment.GetEnvironmentVariable("APP_BASE_URL")
+                ?? Environment.GetEnvironmentVariable("SITE_BASE_URL"), UriKind.Absolute, out var originUri)
+            && originUri.Scheme == Uri.UriSchemeHttps && !originUri.IsLoopback)
+        {
+            Environment.SetEnvironmentVariable("ALLOWED_ORIGIN", originUri.GetLeftPart(UriPartial.Authority));
+            Console.WriteLine($"[boot] ALLOWED_ORIGIN not set → same-origin default: {originUri.GetLeftPart(UriPartial.Authority)}");
+        }
+
         // Hard production/staging blockers must be checked before opening or seeding any database,
         // not merely before accepting HTTP traffic.
         //
-        // On a PCI World-only deployment (docs/pciworld/ARCHITECTURE.md; PCIWorld/README.md's
-        // zero-config contract) three of these guard surfaces this host does not serve, so they
-        // downgrade to loud warnings instead of refusing to boot:
-        //   base URL  — the world surfaces build links from PCIWORLD_BASE_URL / RENDER_EXTERNAL_URL
-        //               (WorldUrl.Base), so those sources genuinely SATISFY the requirement when
-        //               present; only their absence downgrades.
-        //   CORS      — the world pages are server-rendered and same-origin; an absent
-        //               ALLOWED_ORIGIN allows nothing, which is the fail-closed default.
-        //   at-rest key — it encrypts Certuvo credentials and identity documents, stores that are
-        //               unreachable here; PCI World keeps only password hashes and token SHAs.
-        // The legacy admin token stays a hard error everywhere: /world-admin lives on this host.
+        // Two postures downgrade a subset of blockers to loud warnings instead of refusing to boot:
+        //   • PCI World-only (docs/pciworld/ARCHITECTURE.md): base URL / CORS / at-rest key guard
+        //     surfaces this host does not serve.
+        //   • SQLite on the persistent disk (the documented interim posture detected above): a
+        //     legacy hand-created service predates these variables entirely — old builds misread an
+        //     unset ASPNETCORE_ENVIRONMENT as Development and never enforced them, so enforcing them
+        //     retroactively turned a working deployment into a permanently failing one. The service
+        //     boots, every gap is printed as [config:warn], and the derived at-rest key keeps
+        //     decrypting artefacts it originally encrypted (a generated replacement key would not).
+        // The legacy admin token and a half-configured S3 stay hard errors everywhere.
         if (!allowInsecure)
         {
             var preflightErrors = new List<string>();
-            void WorldOr(string msg)
+            void DeferOr(string msg)
             {
                 if (worldOnly) Console.WriteLine("[config:warn] " + msg +
                     " (downgraded on a PCI World-only deployment — complete docs/pciworld/DEPLOY_RENDER.md before public launch)");
+                else if (sqliteOnPersistentDisk) Console.WriteLine("[config:warn] " + msg +
+                    " (downgraded on the interim persistent-disk posture — set this in the dashboard when you can)");
                 else preflightErrors.Add(msg);
             }
             var baseUrl = Environment.GetEnvironmentVariable("APP_BASE_URL")
@@ -186,19 +210,19 @@ catch { /* /data exists but is not ours to write — keep the configured default
                 || !Uri.TryCreate(baseUrl, UriKind.Absolute, out var baseUri)
                 || baseUri.Scheme != Uri.UriSchemeHttps
                 || baseUri.IsLoopback)
-                WorldOr("APP_BASE_URL must be a public HTTPS URL");
+                DeferOr("APP_BASE_URL must be a public HTTPS URL");
             var origin = Environment.GetEnvironmentVariable("ALLOWED_ORIGIN");
             if (string.IsNullOrWhiteSpace(origin) || origin == "*")
-                WorldOr("ALLOWED_ORIGIN must be explicit");
+                DeferOr("ALLOWED_ORIGIN must be explicit");
             if (!Security.HasDedicatedEncryptionKey())
-                WorldOr("CREDENTIAL_ENCRYPTION_KEY is required");
+                DeferOr("CREDENTIAL_ENCRYPTION_KEY is required");
             if (string.Equals(Environment.GetEnvironmentVariable("ENABLE_LEGACY_ADMIN_TOKEN"), "true",
                     StringComparison.OrdinalIgnoreCase))
                 preflightErrors.Add("ENABLE_LEGACY_ADMIN_TOKEN must be disabled");
             if (!worldOnly
                 && !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY"))
                 && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("STRIPE_WEBHOOK_SECRET")))
-                preflightErrors.Add("STRIPE_WEBHOOK_SECRET is required when Stripe is enabled");
+                DeferOr("STRIPE_WEBHOOK_SECRET is required when Stripe is enabled");
             if (!worldOnly
                 && string.Equals(Environment.GetEnvironmentVariable("STORAGE_PROVIDER"), "s3",
                     StringComparison.OrdinalIgnoreCase)
@@ -569,8 +593,12 @@ List<(string sev, string key, string msg)> ConfigIssues()
             && dataWritable && sqliteFile.StartsWith("/data/", StringComparison.Ordinal);
         if (onPersistentDisk || EnvFlagTrue("ALLOW_SQLITE_IN_PRODUCTION"))
         {
-            issues = issues.Select(i => i.Item1 == "error" && i.Item2 is "DB_PROVIDER" or "MYSQL_HOST"
-                ? ("warn", i.Item2, i.Item3 + " (SQLite on the persistent disk — interim posture; plan the MySQL cutover)") : i).ToList();
+            // Same downgrade set as the pre-DB gate: a legacy disk-backed service must keep booting
+            // while every gap stays visible as a warning. Legacy token and half-configured S3 stay hard.
+            issues = issues.Select(i => i.Item1 == "error"
+                    && i.Item2 is "DB_PROVIDER" or "MYSQL_HOST" or "APP_BASE_URL" or "ALLOWED_ORIGIN"
+                                or "CREDENTIAL_ENCRYPTION_KEY" or "STRIPE_WEBHOOK_SECRET"
+                ? ("warn", i.Item2, i.Item3 + " (SQLite on the persistent disk — interim posture; set this when you can)") : i).ToList();
             if (dbProvider is not ("mysql" or "mariadb") && !sqliteFile.StartsWith("/data/", StringComparison.Ordinal))
                 issues.Add(("error", "DATABASE_FILE",
                     "ALLOW_SQLITE_IN_PRODUCTION=true requires DATABASE_FILE under /data (e.g. /data/pci.db) — any other path is erased on every redeploy"));

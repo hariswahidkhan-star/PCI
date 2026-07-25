@@ -118,17 +118,17 @@ try:
                 platform_db)
     if os.path.exists(platform_db): os.remove(platform_db)
 
-    # Zero-config persistent-disk auto-posture: the SAME configuration WITHOUT any flag must also
-    # boot when the database file lives on the writable mounted disk — this is what un-bricks an
-    # existing Render service with a /data disk and no dashboard changes at all. The ephemeral-path
-    # refusals above prove the auto-posture never extends beyond /data.
+    # Zero-config persistent-disk auto-posture — the exact shape of a legacy hand-created Render
+    # service: a /data disk, RENDER_EXTERNAL_URL (which Render always exports), and NOTHING else —
+    # no flags, no APP_BASE_URL, no ALLOWED_ORIGIN, no CREDENTIAL_ENCRYPTION_KEY. It must boot:
+    # the base URL is adopted from RENDER_EXTERNAL_URL, CORS defaults to same-origin, and the
+    # remaining gaps downgrade to loud warnings. The ephemeral-path refusals above prove the
+    # auto-posture never extends beyond /data.
     auto_db = os.path.join(data_dir, "platform-auto-boot-test.db")
     if os.path.exists(auto_db): os.remove(auto_db)
-    check_boots("SQLite on a writable /data boots WITHOUT any flag (persistent-disk auto-posture)",
+    check_boots("bare legacy service (/data + RENDER_EXTERNAL_URL only) boots with zero config",
                 {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "sqlite",
-                 "APP_BASE_URL": "https://pci-platform.example.org",
-                 "ALLOWED_ORIGIN": "https://pci-platform.example.org",
-                 "CREDENTIAL_ENCRYPTION_KEY": "preflight-test-key-0123456789abcdef0123456789abcdef"},
+                 "RENDER_EXTERNAL_URL": "https://pci-legacy.example.onrender.com"},
                 auto_db)
     if os.path.exists(auto_db): os.remove(auto_db)
 except OSError:
