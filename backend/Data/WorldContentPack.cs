@@ -2033,5 +2033,105 @@ public static class WorldContentPack
              "profile_map":{"calculation":"Schedule Analyst","decision":"Delivery Realist","balanced":"Strategic Project Controller"},
              "share_line":"Found the near-critical path in an airport expansion before four weeks of acceleration made it the critical one."}
             """),
+
+        // ── Traceability pair (051–052): the discipline of walking any reported number back to its
+        //    source — the baseline through the change register, and the cost pack through the ledger.
+        new("WC-TRC-051", "Walk me back to the signed number",
+            "An auditor, a baseline, and a change register that must explain the difference.",
+            "Museums & Culture", "Project Controls Engineer", "project_controls", "developing", 9,
+            """["change_control","baseline_traceability","audit_readiness"]""",
+            """
+            {"context":"A museum wing restoration signed at a baseline of 8,200,000 over 300 days. An external auditor has asked the question every baseline must survive: walk me from the signed number to the number in this month's report. The change register below is the only bridge. Build the revised position from approved changes only, then answer the auditor.",
+             "evidence":[
+               {"label":"Signed baseline","value":"8,200,000 · 300 days"},
+               {"label":"T1 — Structural steel reinforcement","value":"APPROVED · +240,000 · +10 days"},
+               {"label":"T2 — Climate-controlled archive store","value":"REJECTED · +410,000 · +15 days"},
+               {"label":"T3 — Reuse salvaged stone facings","value":"APPROVED · -60,000 · 0 days"},
+               {"label":"T4 — Accessibility lift upgrade","value":"PENDING · +180,000 · +8 days"},
+               {"label":"T5 — Fire-suppression rerouting","value":"APPROVED · +95,000 · +5 days"}],
+             "task":"change","given":{"baseline_bac":8200000,"baseline_duration":300,"changes":[
+               {"id":"T1","status":"approved","cost_delta":240000,"schedule_delta":10},
+               {"id":"T2","status":"rejected","cost_delta":410000,"schedule_delta":15},
+               {"id":"T3","status":"approved","cost_delta":-60000,"schedule_delta":0},
+               {"id":"T4","status":"pending","cost_delta":180000,"schedule_delta":8},
+               {"id":"T5","status":"approved","cost_delta":95000,"schedule_delta":5}]},
+             "ask":[
+               {"key":"revised_bac","label":"Revised budget (approved changes only)","type":"number"},
+               {"key":"approved_cost_delta","label":"Net approved cost delta","type":"number"},
+               {"key":"revised_duration","label":"Revised duration (days)","type":"number"},
+               {"key":"approved_count","label":"Approved change count","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"audit","prompt":"The auditor is in the room. How do you walk them from the signed baseline to this month's reported budget?",
+                "options":[
+                  {"key":"register","label":"Reconcile it live: signed baseline plus each approved change equals the current baseline, with the pending item shown separately as exposure — then hand over the register extract","quality":100,
+                   "consequence":"The walk takes four minutes, every step has a decision date and a signature, and the audit note records a clean trace.",
+                   "principle":"A baseline is only a control if every step from the signed number to today's number has a name, a date and a decision."},
+                  {"key":"forecast","label":"Present the current forecast as the baseline — it is the most realistic number in the room","quality":10,
+                   "consequence":"The gap between the contract and the report now has no explanation on paper, and the auditor writes that down instead.",
+                   "principle":"A number you cannot trace is an assertion, not a position."},
+                  {"key":"fold","label":"Fold the pending lift upgrade into the baseline first, so the report matches what the site is actually building","quality":0,
+                   "consequence":"The register and the baseline now disagree by exactly one unapproved change — which is the first thing a register is designed to catch.",
+                   "principle":"Pending means pending. The moment an unapproved change moves the baseline, the audit trail is fiction."}]}],
+             "profile_map":{"calculation":"Cost Guardian","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Walked an auditor from a museum restoration's signed baseline to the current report through a clean change register."}
+            """),
+
+        new("WC-TRC-052", "Every number in this pack has a source — prove it",
+            "A stage-gate cost pack, a finance ledger, and eight figures that must agree.",
+            "Medical Devices", "Cost Assurance Analyst", "cross_functional", "professional", 10,
+            """["data_quality","traceability","assurance","reporting_integrity"]""",
+            """
+            {"context":"A device-serialisation compliance programme reaches its stage gate. The month-end cost pack cites eight control accounts; gate rules say every reported figure must trace to the finance ledger, and a discrepancy above 1,000 breaks the trace. The reconciliation below is what came back. Establish how traceable the pack really is, then decide what goes to the gate.",
+             "evidence":[
+               {"label":"CA-01 — reported / ledger","value":"118,400 / 118,400"},
+               {"label":"CA-02 — reported / ledger","value":"76,250 / 74,830"},
+               {"label":"CA-03 — reported / ledger","value":"no ledger reference cited / 63,750"},
+               {"label":"CA-04 — reported / ledger","value":"205,000 / 205,380"},
+               {"label":"CA-05 — reported / ledger","value":"41,900 / 44,150"},
+               {"label":"CA-06 — reported / ledger","value":"9,800 / 9,800"},
+               {"label":"CA-07 — reported / ledger","value":"152,610 / 152,100"},
+               {"label":"CA-08 — reported / ledger","value":"no ledger reference cited / 88,000"},
+               {"label":"Traceability threshold","value":"a gap above 1,000 breaks the trace"}],
+             "task":"data_quality","given":{"threshold":1000,"rows":[
+               {"value":118400,"expected":118400},
+               {"value":76250,"expected":74830},
+               {"expected":63750},
+               {"value":205000,"expected":205380},
+               {"value":41900,"expected":44150},
+               {"value":9800,"expected":9800},
+               {"value":152610,"expected":152100},
+               {"expected":88000}]},
+             "ask":[
+               {"key":"anomaly_count","label":"Accounts whose reported figure breaks the trace","type":"number"},
+               {"key":"completeness_pct","label":"Accounts with a ledger citation (%)","type":"number"},
+               {"key":"mean_abs_error","label":"Mean absolute gap across the cited accounts","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"gate","prompt":"The gate board meets tomorrow morning. Two accounts break the trace and two cite no ledger entry at all.",
+                "options":[
+                  {"key":"annex","label":"Submit the pack with a traceability annex: every figure keyed to its ledger entry, each exception named with an owner and a correction date","quality":100,
+                   "consequence":"The board passes the gate conditionally against the annex — and the two broken traces are fixed by people who were named in a document, not blamed in a meeting.",
+                   "principle":"A pack the reader can trace line by line survives scrutiny; a clean-looking pack survives only until someone checks."},
+                  {"key":"correct","label":"Correct the two figures to the ledger values yourself and submit a clean pack","quality":25,
+                   "consequence":"Tomorrow's numbers are right and nobody knows why last month's were wrong — so the same feed breaks the same way next month.",
+                   "principle":"A silent correction deletes the evidence that a correction was needed."},
+                  {"key":"asis","label":"Submit as reported — finance signed the ledger, the pack cites the report, and the gate is about progress anyway","quality":5,
+                   "consequence":"The board cross-checks one figure at random, it fails, and every other number in the pack is now suspect.",
+                   "principle":"One untraceable number costs the credibility of all the traceable ones."}]},
+               {"key":"root","prompt":"Both broken traces and both missing citations come from accounts that pass through the same monthly spreadsheet re-keying step.",
+                "options":[
+                  {"key":"handoff","label":"Fix the handoff: replace the re-keying step with a direct extract, and make the ledger reference a required field in the pack template","quality":100,
+                   "consequence":"Next month's reconciliation is boring — which is exactly what a reconciliation should be.",
+                   "principle":"When every failure shares a step, fix the step, not the failures."},
+                  {"key":"check","label":"Add a second person to check the re-keying each month","quality":40,
+                   "consequence":"The error rate drops and the cost of producing the pack rises, permanently, for a step that should not exist.",
+                   "principle":"A second pair of eyes on a broken process is a slower broken process."},
+                  {"key":"people","label":"Ask the two account owners to be more careful","quality":15,
+                   "consequence":"They are careful for two months; the fourth month looks exactly like this one.",
+                   "principle":"Blaming people for a process defect guarantees the defect a long career."}]}],
+             "profile_map":{"calculation":"Data Investigator","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Proved a stage-gate cost pack against the ledger line by line, and put names and dates on every broken trace."}
+            """),
     };
 }
