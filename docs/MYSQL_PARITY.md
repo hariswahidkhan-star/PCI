@@ -54,13 +54,30 @@ Any difference is a parity defect.
 3. **Only use relative-time forms the translator knows** (`datetime('now','±N unit')`,
    `date('now','±N unit')`). An unrecognised form is not an error; it is valid SQL that compares
    against a literal string and silently matches nothing.
+4. **Write the modifier as a literal, never as a parameter.** The rewrite is textual, so it can see
+   `datetime('now','+30 minutes')` and cannot see `datetime('now', ?)` or
+   `datetime('now','+' || ? || ' minutes')` — those reach MySQL as a call to a function it does not
+   have. When the offset is a runtime value, compute the instant in C# with `H.StampInMinutes` and
+   bind it. Both background workers scheduled their retries the invisible way, and because each
+   dead-letters a row whose delivery throws, the first transient failure on MySQL became a permanent
+   one: no comms message and no marketing job was ever retried.
+5. **Do not compute dates in SQL at all if a C# expression will do.** `julianday()` is SQLite-only
+   and the translator recognises only two shapes of it. A third shape took out the whole
+   integration-health endpoint on MySQL.
 
 ## Current parity status (verified on MariaDB 10.11)
 
 - **PCI World: full parity.** Clean install creates all 25 tables with zero indexed `TEXT` columns;
   50 challenges, 10 articles, the rotation ledger; anonymous session → attempt → grading works; all
   public pages, the sitemap and robots serve; every admin endpoint answers 200.
-- **Platform: 1141 / 1158 integration assertions pass** (SQLite: 1158 / 1158).
+- **Platform: full parity — 1175 / 1175 integration assertions on MariaDB 10.11, and the same
+  1175 / 1175 on SQLite.** No assertion passes on one engine and fails on the other.
+- **The whole xUnit suite runs on MySQL too** — 906 tests, not the finance subset it was once
+  filtered to. Three are skipped there, each stating why in its skip reason: two read SQLite's own
+  catalogue to answer a MySQL question without a server, and one needs a corrupt row an `INTEGER`
+  column will not hold.
+- **The browser suite runs on MySQL too** — 83 Playwright journeys on each engine (`e2e` and
+  `e2e-mysql`), the last layer that had only ever seen SQLite.
 - **Platform: 1158 / 1158 on BOTH providers**, including against a storage directory left over from
   a run under the *other* provider — the condition that used to fail (see below).
 

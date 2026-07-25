@@ -189,10 +189,12 @@ jobs:
     # what that blind spot produces, and schema parity alone would not have caught a behavioural
     # difference in SUM(), type affinity or date comparison.
     #
-    # Scoped to the finance suites deliberately. They own their fixtures and share the DbCollection, so
-    # the between-test wipe is safe for them; the rest of the unit layer has never been run on MySQL and
-    # would need its own pass over fixed keys and seeded-row assumptions first. Widening the filter is the
-    # next step, not a silent one.
+    # This used to be scoped to the finance suites, because the between-test reset was a hand-written list
+    # of "tables the tests own" that only ever covered the finance module — every other suite therefore ran
+    # against whatever the previous test had left behind. TestEnv now resets the run database to its exact
+    # post-migration state instead, with no list to rot, so the whole suite runs here. Widening it found
+    # three defects that were live on MySQL only: the comms and marketing retry schedulers, and the
+    # integration-health endpoint.
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -211,7 +213,7 @@ jobs:
         run: |
           mysql -h 127.0.0.1 -uroot -proot -e "CREATE DATABASE IF NOT EXISTS pci_unit CHARACTER SET utf8mb4;"
           mysql -h 127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'pci'@'%'; FLUSH PRIVILEGES;"
-      - name: Finance unit suite against MySQL
+      - name: Full unit suite against MySQL
         env:
           TEST_DB_PROVIDER: mysql
           MYSQL_HOST: 127.0.0.1
@@ -220,9 +222,13 @@ jobs:
           MYSQL_PASSWORD: pcipass
           MYSQL_DATABASE: pci
           MYSQL_SSL: 'false'
+        # Collections run one at a time because the MySQL leg shares ONE database for the run — two
+        # collections in flight would reset it out from under each other. It costs nothing here: a MySQL
+        # reset is a single statement batch, where SQLite re-migrates 175 tables per test, so this leg
+        # finishes in about a minute against the SQLite leg's several.
         run: >-
           dotnet test backend/tests/PCI.Backend.Tests/PCI.Backend.Tests.csproj -c Release
-          --filter "FullyQualifiedName~PCI.Backend.Tests.Partner"
+          -- xUnit.ParallelizeTestCollections=false
 
   backend-unit:
     # Hermetic xUnit layer over backend logic the live-HTTP suites cannot reach directly (retention

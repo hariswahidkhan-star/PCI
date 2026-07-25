@@ -562,11 +562,23 @@ app.MapGet("/api/admin/integrations/health", (HttpRequest req) =>
     if (a is null) return Results.Json(new { error = "unauthorised" }, statusCode: 401);
     if (!a.IsOwner && !a.Perms.Contains("integrations")) return Results.Json(new { error = "forbidden" }, statusCode: 403);
     string? E(string k) => Environment.GetEnvironmentVariable(k);
+    // The age is derived in C# from MIN(created_at) rather than in SQL: julianday() is SQLite-only, and this
+    // particular shape (ROUND(...*1440) AS INTEGER) is not one the SQLite→MySQL rewrite recognises, so the
+    // whole endpoint returned 500 on MySQL — which is production.
+    long? OldestPendingAgeMin(string table, string pendingSql)
+    {
+        var oldest = db.Scalar<string>($"SELECT MIN(created_at) FROM {table} WHERE {pendingSql}");
+        return DateTime.TryParse(oldest, System.Globalization.CultureInfo.InvariantCulture,
+                                 System.Globalization.DateTimeStyles.AdjustToUniversal |
+                                 System.Globalization.DateTimeStyles.AssumeUniversal, out var t)
+            ? (long)Math.Round((DateTime.UtcNow - t).TotalMinutes)
+            : null;
+    }
     object Queue(string table, string pendingSql, string failedSql) => new
     {
         pending = db.Scalar<long>($"SELECT COUNT(*) FROM {table} WHERE {pendingSql}"),
         failed = db.Scalar<long>($"SELECT COUNT(*) FROM {table} WHERE {failedSql}"),
-        oldest_pending_age_min = db.Scalar<long?>($"SELECT CAST(ROUND((julianday('now')-julianday(MIN(created_at)))*1440) AS INTEGER) FROM {table} WHERE {pendingSql}"),
+        oldest_pending_age_min = OldestPendingAgeMin(table, pendingSql),
     };
     var stripeConfigured = !string.IsNullOrEmpty(E("STRIPE_SECRET_KEY"));
     var stripeWh = E("STRIPE_WEBHOOK_URL");

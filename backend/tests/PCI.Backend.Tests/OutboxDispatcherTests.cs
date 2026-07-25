@@ -1,3 +1,4 @@
+using System.Globalization;
 using PCI.Backend.Core;
 using PCI.Backend.Data;
 using Xunit;
@@ -26,7 +27,8 @@ public class OutboxDispatcherTests
     }
 
     /// <summary>Seed one outbox row. <paramref name="scheduledMod"/>/<paramref name="nextAttemptMod"/> are
-    /// SQLite datetime modifiers (e.g. "+30 minutes", "-5 minutes"); null leaves the column NULL (= due now).</summary>
+    /// SQLite datetime modifiers (e.g. "+30 minutes", "-5 minutes"), resolved by <see cref="TestEnv.Stamp"/> so
+    /// the statement runs on MySQL too; null leaves the column NULL (= due now).</summary>
     static long SeedOutbox(Db db, string channel, string status,
         long? userId = null, string? toEmail = null,
         long attempts = 0, long maxAttempts = 5,
@@ -37,9 +39,9 @@ public class OutboxDispatcherTests
               VALUES(?,?,?,?,?,?,?,?)",
             channel, status, userId, toEmail, "Subject", "Body", attempts, maxAttempts);
         if (scheduledMod is not null)
-            db.Execute("UPDATE comm_outbox SET scheduled_at=datetime('now', ?) WHERE id=?", scheduledMod, id);
+            db.Execute("UPDATE comm_outbox SET scheduled_at=? WHERE id=?", TestEnv.Stamp(scheduledMod), id);
         if (nextAttemptMod is not null)
-            db.Execute("UPDATE comm_outbox SET next_attempt_at=datetime('now', ?) WHERE id=?", nextAttemptMod, id);
+            db.Execute("UPDATE comm_outbox SET next_attempt_at=? WHERE id=?", TestEnv.Stamp(nextAttemptMod), id);
         return id;
     }
 
@@ -47,10 +49,16 @@ public class OutboxDispatcherTests
     static string? Status(Db db, long id) => db.Scalar<string>("SELECT status FROM comm_outbox WHERE id=?", id);
     static long Attempts(Db db, long id) => db.Scalar<long>("SELECT attempts FROM comm_outbox WHERE id=?", id);
 
-    /// <summary>Whole minutes from now until next_attempt_at (rounded). The row is written with
-    /// datetime('now','+N minutes') moments earlier, so the tiny elapsed fraction rounds cleanly back to N.</summary>
-    static long BackoffMinutes(Db db, long id) =>
-        db.Scalar<long>("SELECT CAST(ROUND((julianday(next_attempt_at)-julianday('now'))*1440) AS INTEGER) FROM comm_outbox WHERE id=?", id);
+    /// <summary>Whole minutes from now until next_attempt_at (rounded). The dispatcher stamps the column
+    /// moments earlier, so the tiny elapsed fraction rounds cleanly back to N. The arithmetic is done here
+    /// rather than in SQL because julianday() is SQLite-only.</summary>
+    static long BackoffMinutes(Db db, long id)
+    {
+        var at = db.Scalar<string>("SELECT next_attempt_at FROM comm_outbox WHERE id=?", id);
+        var t = DateTime.Parse(at!, CultureInfo.InvariantCulture,
+                               DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+        return (long)Math.Round((t - DateTime.UtcNow).TotalMinutes);
+    }
 
     // ---- Retry backoff progression ---------------------------------------------------------------
 
@@ -193,7 +201,8 @@ public class OutboxDispatcherTests
 
     // ---- Robustness: one bad row never stops the batch -------------------------------------------
 
-    [Fact]
+    [SqliteOnlyFact("The corrupt row this needs cannot exist on MySQL: an INTEGER column there refuses "
+        + "non-numeric text, so the classify-time throw the batch fail-safe catches never happens.")]
     public void MalformedRow_IsMarkedFailed_WithoutStoppingTheBatch()
     {
         var db = Fresh();

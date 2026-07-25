@@ -156,7 +156,18 @@ public static class Storage
         }
         var full = Path.Combine(Root, rel);
         if (!File.Exists(full)) return null;
-        try { return (Security.DecryptBytes(File.ReadAllBytes(full)), mime); } catch { return null; }
+        try { return (Security.DecryptBytes(File.ReadAllBytes(full)), mime); }
+        catch (Exception e)
+        {
+            // The object IS on disk and still could not be opened — almost always because the at-rest key
+            // changed under it (CREDENTIAL_ENCRYPTION_KEY, or the secrets it is derived from when that is
+            // unset). Callers can only answer "file_missing", which reads as "never stored" and sends the
+            // investigation the wrong way: a whole class of download failures was once attributed to the
+            // database engine on the strength of that word. Say which of the two actually happened.
+            Console.Error.WriteLine($"[storage] {rel} is present but unreadable ({e.GetType().Name}) — the " +
+                                    "at-rest encryption key does not match the one it was written with.");
+            return null;
+        }
     }
 
     /// <summary>Delete a single stored object by its reference (provider:rel). Used for immediate erasure
