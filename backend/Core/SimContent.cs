@@ -111,6 +111,76 @@ public static class SimContent
         catch { return 0; }
     }
 
+    // Reference-solve one measure through the real engine and confirm a deterministic answer of the right
+    // shape — the shared check used by both the single-task and multi-step validators.
+    static void CheckMeasure(string task, SimGrade.Ask a, JsonElement given, string ctx, Action<string, string> err)
+    {
+        object? answer;
+        try { answer = SimCalc.Resolve(task, a.Key, given); }
+        catch (Exception e) { err("answer_error", $"{ctx}resolving '{a.Key}' threw: {e.Message}"); return; }
+        switch (a.Type)
+        {
+            case "set":
+                if (answer is not string[] set || set.Length == 0)
+                    err("answer_unresolved", $"{ctx}measure '{a.Key}' (set) has no deterministic answer from the engine.");
+                break;
+            case "bool":
+                if (answer is not bool)
+                    err("answer_unresolved", $"{ctx}measure '{a.Key}' (bool) has no deterministic answer from the engine.");
+                break;
+            default:
+                if (answer is not double d)
+                    err("answer_unresolved", $"{ctx}measure '{a.Key}' has no deterministic numeric answer from the engine.");
+                else if (double.IsNaN(d) || double.IsInfinity(d))
+                    err("answer_nonfinite", $"{ctx}measure '{a.Key}' resolves to a non-finite value ({d}) — inputs are impossible or inconsistent.");
+                break;
+        }
+    }
+
+    // Validate a multi-step scenario: every step is a gradable task, and every decision option leaves the
+    // steps it affects still gradable (deterministic reference solve across each branch).
+    static void ValidateSteps(JsonElement root, Action<string, string> err, Action<string, string> warn)
+    {
+        if (!root.TryGetProperty("prompt", out var pr) || string.IsNullOrWhiteSpace(pr.GetString()))
+            warn("prompt_missing", "Scenario has no overall brief — the learner has nothing to read.");
+        var steps = SimStep.ParseSteps(root);
+        if (steps.Count < 2) { err("steps_too_few", "A multi-step scenario must have at least two steps."); return; }
+
+        var ids = new HashSet<string>();
+        foreach (var s in steps)
+        {
+            var ctx = $"Step '{s.Id}': ";
+            if (!ids.Add(s.Id)) err("step_duplicate_id", $"{ctx}duplicate step id.");
+            if (string.IsNullOrWhiteSpace(s.Task)) { err("task_missing", $"{ctx}has no 'task' selector."); continue; }
+            if (!SimCalc.KnownTasks.Contains(s.Task)) { err("task_unknown", $"{ctx}task '{s.Task}' is not one the engine can grade."); continue; }
+            if (s.Given.ValueKind != JsonValueKind.Object) { err("given_missing", $"{ctx}has no 'given' inputs object."); continue; }
+            if (s.Ask.Count == 0) { err("ask_missing", $"{ctx}asks the learner to compute nothing."); continue; }
+            foreach (var a in s.Ask) CheckMeasure(s.Task, a, s.Given, ctx, err);   // base given
+        }
+
+        // Each decision option's effects must leave every downstream step it touches gradable.
+        foreach (var s in steps)
+        {
+            if (s.Decision is null) continue;
+            if (s.Decision.Options.Count < 2) warn("decision_thin", $"Decision '{s.Decision.Key}' offers fewer than two options.");
+            foreach (var opt in s.Decision.Options)
+            {
+                var decisions = new Dictionary<string, string> { [s.Decision.Key] = opt.Value };
+                foreach (var target in steps)
+                {
+                    if (!opt.Effects.Any(e => e.Step == target.Id)) continue;
+                    if (!SimCalc.KnownTasks.Contains(target.Task) || target.Given.ValueKind != JsonValueKind.Object) continue;
+                    var eff = SimStep.EffectiveGiven(steps, target, decisions);
+                    foreach (var a in target.Ask)
+                        CheckMeasure(target.Task, a, eff, $"Step '{target.Id}' under decision '{s.Decision.Key}={opt.Value}': ", err);
+                }
+            }
+        }
+
+        if (steps.All(s => s.Decision is null))
+            warn("decision_missing", "Multi-step scenario has no decisions — the steps are not linked by learner choices.");
+    }
+
     static void ValidateConfig(string? configJson, Action<string, string> err, Action<string, string> warn)
     {
         if (string.IsNullOrWhiteSpace(configJson)) { err("config_missing", "Scenario has no task definition (config_json)."); return; }
@@ -123,6 +193,11 @@ public static class SimContent
         {
             var root = doc.RootElement;
             if (root.ValueKind != JsonValueKind.Object) { err("config_invalid", "Task definition must be a JSON object."); return; }
+
+            // Multi-step scenarios (P1): validate every step as a task, and reference-solve each step both on
+            // its base given AND under each decision branch that affects it — so no delivered task is left
+            // ungradable regardless of the learner's choices.
+            if (SimStep.IsMultiStep(root)) { ValidateSteps(root, err, warn); return; }
 
             var task = root.TryGetProperty("task", out var tk) ? tk.GetString() ?? "" : "";
             if (string.IsNullOrWhiteSpace(task)) { err("task_missing", "Task definition has no 'task' selector."); return; }

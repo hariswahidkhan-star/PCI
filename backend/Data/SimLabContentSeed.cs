@@ -17,7 +17,13 @@ namespace PCI.Backend.Data;
 /// </summary>
 public static class SimLabContentSeed
 {
-    const int Version = 1;
+    // v2: every scenario carries a certification_id (1/2/3) — 24 rows shipped without one in v1, so v2
+    // re-applies to backfill them on installs that already loaded the library.
+    // v3: expansion pack — the seven engine tasks added after v1 (productivity, BoQ, resource, procurement,
+    // portfolio, decision, data quality) plus the advanced/expert difficulty bands the first pass never
+    // generated. Re-applies so installs already holding v2 pick up the new scenarios (existing rows are
+    // untouched: inserts are guarded by scenario_code and the governance backfill only fills NULLs).
+    const int Version = 3;
 
     public static void Apply(Db db)
     {
@@ -63,6 +69,11 @@ public static class SimLabContentSeed
                             worked_solution=COALESCE(worked_solution, ?)
                         WHERE scenario_code=? AND (review_state IS NULL OR review_state='draft')",
                         Raw("objectives"), S("provenance"), S("disclaimers"), S("worked_solution"), code);
+                    // Certification mapping is catalogue metadata the coverage gate requires (§4): backfill
+                    // rows a v1 seed left unmapped, but never overwrite an operator's assignment.
+                    if (cert is not null)
+                        db.Execute("UPDATE simulation_scenarios SET certification_id=? WHERE scenario_code=? AND certification_id IS NULL",
+                            cert, code);
                     n++;
                 }
                 db.Execute("DELETE FROM site_settings WHERE skey='simlab_content_seed_version'");

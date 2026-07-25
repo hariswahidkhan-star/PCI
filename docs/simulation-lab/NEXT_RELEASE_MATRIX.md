@@ -66,13 +66,39 @@ Simulation uses `simulation_*` tables only. Student/admin Lab endpoints never re
 ## Deferred backlog (explicit)
 
 - Full SignalR live period clock and multi-session capstone resume UI.
-- Free Templates Library (out of scope by prompt).
-- Dedicated `sim_lab` RBAC permission (still uses `content`).
 - Full Arabic catalogue copy pack (RTL shell + Coach language mode shipped; full AR scenario text deferred).
 - Load test harness at 10k tasks (validation + solver coverage shipped; k6 deferred).
-- Independent multi-admin maker-checker E2E with two live admin accounts (API maker-checker covered in integration).
 - Multi-dimension scoring UI (calculation / reasoning / decision / evidence / process / communication) beyond existing competency evidence rows.
-- Import/export validated manifest UI (API revise/clone path exists; full manifest I/O deferred).
+- Bundle **import** (bulk export shipped — see below; applying a whole bundle in one action is deferred,
+  since each scenario in a bundle can already be imported individually).
+
+### Cleared since this matrix was written
+
+- ~~Free Templates Library~~ — shipped end-to-end (§6A–6H): members-only catalogue in the student
+  portal with topic/track filters, search, per-student download history and full i18n, plus the admin
+  library with reach metrics and CSV export.
+- ~~Dedicated `sim_lab` RBAC permission~~ — shipped (§5B.3). The Lab has its own first-class permission;
+  `content` is grandfathered to it in `Rbac.PermsFor` so no existing operator lost access, and `sim_lab`
+  alone confers no marketing-`content` rights.
+- ~~Import/export of a validated manifest~~ — both halves shipped.
+  - **Export** (§5B.4): `GET /api/admin/lab/scenarios/{id}/manifest` (gated `sim_lab`) emits a
+    deterministic, byte-stable JSON manifest — content + governance + the live §14 validation verdict —
+    checksummed over the graded content alone, with no export timestamp, no admin identities and no
+    student usage. `Core/SimManifest.cs` is the pure builder; the Studio table exposes it as **Export**.
+  - **Import** (§5B.5): `POST /api/admin/lab/scenarios/import` verifies the envelope and recomputes the
+    checksum through the same canonical projection (so reformatting in transit is fine, but edited values
+    are refused), then lands the scenario as a **draft**. Nothing in a file can grant published state, and
+    the importing admin is recorded as the author so maker-checker still forces a second pair of eyes.
+    Governance dates are not carried across environments. The Studio exposes it as **Import manifest**.
+  - **Bundle** (§5B.6): `GET /api/admin/lab/manifest-bundle[?status=…]` returns every scenario's manifest
+    in one deterministic file for backup or migration. Entries are ordered by `scenario_code` (not id), so
+    two environments holding the same content produce the same bundle; the bundle checksum answers "same
+    catalogue?" in one comparison while each entry keeps its own checksum to localise a difference. The
+    Studio exposes it as **Export all**.
+- ~~Independent multi-admin maker-checker E2E~~ — shipped (§5B.7). `portal-simlab.spec.ts` drives two real
+  admin sessions against the same scenario: the author is refused approval in the Studio and a second,
+  `sim_lab`-only admin approves it, with the audit trail attributing the approval to the checker. The
+  Studio now explains the refusal in a sentence instead of showing the raw `maker_checker` code.
 
 ## Baseline → slice evidence
 

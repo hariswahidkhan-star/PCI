@@ -348,6 +348,10 @@ public static class Payments
                                 db.Execute(@"INSERT OR IGNORE INTO code_redemptions(code_id,code,user_id,email,payment_id,product_type,amount_before,discount_amount) VALUES(?,?,?,?,?,?,?,?)",
                                     codeRow["id"], discountCode, userId, email, payId, product, MetaNum("standard_amount"), MetaNum("code_amount"));
                                 try { FraudChecks.OnRedemption(db, H.L(codeRow["id"]), discountCode!, email, codeRow["partner_id"] is null ? null : H.L(codeRow["partner_id"])); } catch { }
+                                // Partner commission (Phase 1): immutable, rate snapshotted now, recorded in
+                                // the same atomic transaction as the redemption it is derived from. Idempotent
+                                // via a UNIQUE dedupe_key, so a replayed webhook records nothing further.
+                                try { PCI.Backend.Core.PartnerCommission.EnsureForPayment(db, payId); } catch { }
                             }
                         }
                         if (sess is not null) db.Execute("UPDATE enrollment_sessions SET session_status='paid', last_activity_at=datetime('now') WHERE id=?", sess["id"]);
@@ -428,8 +432,18 @@ public static class Payments
                 {
                     var refundedAmt = (ch.AmountRefunded) / 100.0;
                     if (!string.IsNullOrEmpty(pi))
+                    {
                         db.Execute("UPDATE payments SET amount_refunded=?, payment_status='partially_refunded', refunded_at=datetime('now') WHERE provider_payment_id=? AND payment_status IN ('paid','partially_refunded')",
                             refundedAmt, pi);
+                        // Partner commission follows the money back: reverse the refunded proportion.
+                        // Idempotent on the cumulative refunded amount, so Stripe's retries are no-ops.
+                        try
+                        {
+                            var partial = db.QueryOne("SELECT id FROM payments WHERE provider_payment_id=?", pi);
+                            if (partial is not null) PCI.Backend.Core.PartnerCommissionReversal.EnsureForPayment(db, H.L(partial["id"]), "refund");
+                        }
+                        catch { }
+                    }
                     log(0, "partial_refund_recorded", $"{ev.Id} pi={pi} amount={refundedAmt}");
                     pi = null; // skip revocation path below
                 }
@@ -455,6 +469,9 @@ public static class Payments
                             else
                                 log(H.Ln(uid), "refund_membership_kept_other_payment", $"{ev.Id} other_pay={other["id"]}");
                         }
+                        // Money returned in full (refund or chargeback) → reverse the whole commission,
+                        // inside the same transaction that revoked the access it bought.
+                        try { PCI.Backend.Core.PartnerCommissionReversal.EnsureForPayment(db, H.L(payId), ev.Type == "charge.refunded" ? "refund" : "chargeback"); } catch { }
                         log(H.Ln(uid), "payment_" + reversed, $"{ev.Id} pi={pi}");
                     });
             }

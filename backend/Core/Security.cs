@@ -21,6 +21,24 @@ public static class Security
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Trusted client IP: the LAST X-Forwarded-For hop — the value appended by our own
+    /// TLS-terminating proxy. Never the first hop (client-controlled and forgeable) and never the
+    /// raw socket address behind a proxy, which is the proxy itself: keying a rate limiter on that
+    /// turns every "per-IP" limit into one shared global bucket that any single script can exhaust
+    /// for all users. Mirrors the platform limiter's key in Program.cs.
+    /// </summary>
+    public static string ClientIp(HttpContext ctx)
+    {
+        var xff = ctx.Request.Headers["X-Forwarded-For"].ToString();
+        if (!string.IsNullOrEmpty(xff))
+        {
+            var parts = xff.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            if (parts.Length > 0) return parts[^1];
+        }
+        return ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+    }
+
     /// <summary>Constant-time secret comparison (webhook shared secrets etc.).</summary>
     public static bool FixedTimeEquals(string? a, string? b)
     {
@@ -263,7 +281,7 @@ public static class Rbac
     public static readonly Dictionary<string, string[]> Sections = new()
     {
         ["platform"] = new[]{ "overview","reports","audit","emails","settings","team","integrations" },
-        ["website"]  = new[]{ "set_web","pricing","codes","content","pages","news","faqs","bok","governance","resources","media","nav","partners","social","sitesettings","subscribers","submissions","inquiries" },
+        ["website"]  = new[]{ "set_web","pricing","codes","content","sim_lab","pages","news","faqs","bok","governance","resources","media","nav","partners","social","sitesettings","subscribers","submissions","inquiries" },
         ["student"]  = new[]{ "set_sp","members","enrollments","payments","credentials","tickets","documents" },
         ["exam"]     = new[]{ "set_exam","exams","proctoring","sampleq","exam_delivery" },
         // Exam Exceptions & Authorizations — granular per-action permissions so deadline extensions,
@@ -291,6 +309,12 @@ public static class Rbac
         // wrappers; higher-risk actions (connect accounts, publish, approve, budgets, export leads)
         // stay explicit grants rather than a side-effect of a job title.
         ["marketing"] = new[]{ "mkt_view","mkt_connect","mkt_posts","mkt_publish","mkt_ads","mkt_gsc","mkt_promos","mkt_leads","mkt_leads_export","mkt_budgets","mkt_approve" },
+        // Marketing-partner commission and settlement controls. Split so that separation of duties is a
+        // permission decision, not just a convention: 'pf_prepare' assembles a payout batch, 'pf_approve'
+        // authorises it, 'pf_pay' records the money leaving. The engine additionally requires the approver
+        // to be a different PERSON from the preparer, so holding all three still cannot self-approve.
+        // Like the operations bundle these are owner + explicit-grant only — never implied by a job title.
+        ["partner_finance"] = new[]{ "pf_view","pf_agreements","pf_prepare","pf_approve","pf_pay","pf_dispute" },
     };
 
     public static string[] AllSections => Sections.Values.SelectMany(x => x).ToArray();
@@ -324,6 +348,10 @@ public static class Rbac
         var set = new HashSet<string>();
         if (role != "custom") foreach (var s in baseGrants) set.Add(s);
         foreach (var s in extra) set.Add(s);
+        // Grandfather: the Simulation Lab admin used to be gated on 'content'. Now it has a dedicated
+        // 'sim_lab' permission (least privilege — a simulation author can be granted sim_lab alone). Anyone
+        // who could manage the Lab via 'content' keeps that access, so no existing operator is locked out.
+        if (set.Contains("content")) set.Add("sim_lab");
         return set.ToList();
     }
 }

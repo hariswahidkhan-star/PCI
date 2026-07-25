@@ -458,13 +458,21 @@ public static class SimLabContentPack
             VALUES(?,?,?,?,?,?,?,?,?,?, 'published', 1, 'published', 1)",
             s.Code, s.Title, s.Kind, s.Industry, s.Difficulty, s.Minutes, s.CompetenciesJson, s.Summary, configJson, s.CertificationId);
 
+        // A config change is a NEW version, never an in-place rewrite of the old one: bumping `version`
+        // keeps (scenario, version) naming exactly one config, so attempts pinned to the previous version
+        // (simulation_scenario_versions) replay identically after this deploy. Metadata-only changes
+        // (title, summary, minutes…) don't affect grading and keep the version. A row just inserted above
+        // already carries this config, so it never bumps.
+        var cur = db.QueryOne("SELECT config_json FROM simulation_scenarios WHERE scenario_code=? AND authored_by IS NULL", s.Code);
+        var bump = cur is not null && (Convert.ToString(cur["config_json"]) ?? "") != configJson ? 1 : 0;
+
         db.Execute(@"UPDATE simulation_scenarios
             SET title=?, kind=?, industry=?, difficulty=?, est_minutes=?, competencies_json=?,
                 summary=?, config_json=?, certification_id=?, review_state='published',
-                synthetic_declared=1, status='published', updated_at=datetime('now'),
+                synthetic_declared=1, status='published', version=version+?, updated_at=datetime('now'),
                 published_at=COALESCE(published_at, datetime('now'))
             WHERE scenario_code=? AND authored_by IS NULL",
             s.Title, s.Kind, s.Industry, s.Difficulty, s.Minutes, s.CompetenciesJson,
-            s.Summary, configJson, s.CertificationId, s.Code);
+            s.Summary, configJson, s.CertificationId, bump, s.Code);
     }
 }

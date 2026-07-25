@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
-import { apiLoginAsE2EAdmin, captureStoryEvidence, uniqueEmail } from './util'
+import { apiLoginAsE2EAdmin, captureStoryEvidence, uniqueEmail, DEMO_STUDENT } from './util'
 
 const minimalPdf = Buffer.from('%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n')
 
@@ -100,7 +100,10 @@ test.describe('institution partner persona', () => {
     expect((await passwordResponse).ok()).toBeTruthy()
     await expect(page.locator('#app')).toBeVisible()
     await expect(page.locator('#instName')).toHaveText(institution)
-    await expect(page.getByRole('navigation', { name: 'Portal sections' }).getByRole('button')).toHaveCount(6)
+    // Naming the sections rather than counting them: a bare count fails opaquely the next time a tab is
+    // added, and says nothing about which section went missing when one genuinely disappears.
+    await expect(page.getByRole('navigation', { name: 'Portal sections' }).getByRole('button'))
+      .toHaveText(['Overview', 'Codes', 'Students', 'Sponsorships', 'Commissions', 'Payments', 'Documents'])
     const partnerToken = await page.evaluate(() => sessionStorage.getItem('pci.partner.token'))
     expect(partnerToken).toBeTruthy()
     const revokedDeviceProbe = await request.get('/api/partner/me', {
@@ -242,5 +245,118 @@ test.describe('institution partner persona', () => {
     await page.getByRole('button', { name: 'Sign in', exact: true }).click()
     await expect(page.locator('#app')).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Set a new password' })).toBeHidden()
+  })
+})
+
+test.describe('admin test-partner mechanism', () => {
+  test('create a test institution, hand off into the dashboard, reset and delete it', async ({ page, request }, testInfo) => {
+    const adminToken = await apiLoginAsE2EAdmin(request)
+    const headers = { Authorization: `Bearer ${adminToken}` }
+
+    // Create an active-scenario test institution (flagged is_test, never listed).
+    const created = await request.post('/api/admin/test-partners', { headers, data: { scenario: 'active' } })
+    expect(created.ok(), await created.text()).toBeTruthy()
+    const tp = (await created.json()) as {
+      partner_id: number; institution: string; email: string; password: string; token: string
+    }
+    expect(tp.partner_id).toBeGreaterThan(0)
+    expect(tp.token).toBeTruthy()
+
+    // The minted session is live for the partner APIs.
+    const sessionProbe = await request.get('/api/partner/me', { headers: { Authorization: `Bearer ${tp.token}` } })
+    expect(sessionProbe.ok()).toBeTruthy()
+
+    // Hash hand-off signs straight into the dashboard, then scrubs the token from the URL.
+    await page.goto(`/partner.html#t=${tp.token}`)
+    await expect(page.locator('#app')).toBeVisible({ timeout: 20_000 })
+    expect(page.url()).not.toContain('#t=')
+    await captureStoryEvidence(page, testInfo, 'test-partner', 'dashboard-handoff')
+
+    // The returned credentials also work through the normal login.
+    const pwLogin = await request.post('/api/partner/auth/login', {
+      data: { email: tp.email, password: tp.password },
+    })
+    expect(pwLogin.ok()).toBeTruthy()
+
+    // Reset into the suspended scenario: existing sessions are revoked and login is locked out
+    // with the institution-inactive message.
+    const reset = await request.post(`/api/admin/test-partners/${tp.partner_id}/reset`, {
+      headers, data: { scenario: 'suspended' },
+    })
+    expect(reset.ok(), await reset.text()).toBeTruthy()
+    const revokedProbe = await request.get('/api/partner/me', { headers: { Authorization: `Bearer ${tp.token}` } })
+    expect(revokedProbe.status()).toBe(401)
+    const suspendedLogin = await request.post('/api/partner/auth/login', {
+      data: { email: tp.email, password: tp.password },
+    })
+    expect(suspendedLogin.status()).toBe(403)
+
+    // A student token cannot reach the test-partner admin APIs.
+    const studentLogin = await request.post('/api/login', { data: DEMO_STUDENT })
+    if (studentLogin.ok()) {
+      const studentToken = ((await studentLogin.json()) as { token?: string }).token
+      const denied = await request.get('/api/admin/test-partners', {
+        headers: { Authorization: `Bearer ${studentToken}` },
+      })
+      expect([401, 403]).toContain(denied.status())
+    }
+
+    // Delete removes the institution, its login and its data in one action.
+    const deleted = await request.post(`/api/admin/test-partners/${tp.partner_id}/delete`, { headers })
+    expect(deleted.ok()).toBeTruthy()
+    const loginAfterDelete = await request.post('/api/partner/auth/login', {
+      data: { email: tp.email, password: tp.password },
+    })
+    expect(loginAfterDelete.status()).toBe(401)
+  })
+
+  test('marketing scenario seeds a live code with tracked performance and commission', async ({ page, request }, testInfo) => {
+    const adminToken = await apiLoginAsE2EAdmin(request)
+    const headers = { Authorization: `Bearer ${adminToken}` }
+
+    const created = await request.post('/api/admin/test-partners', { headers, data: { scenario: 'marketing' } })
+    expect(created.ok(), await created.text()).toBeTruthy()
+    const tp = (await created.json()) as { partner_id: number; email: string; password: string; token: string }
+    const partnerHeaders = { Authorization: `Bearer ${tp.token}` }
+
+    // The marketing-partner concept end to end: an active code the partner owns…
+    const codes = await request.get('/api/partner/codes', { headers: partnerHeaders })
+    expect(codes.ok()).toBeTruthy()
+    const codeRows = ((await codes.json()) as { rows: Array<{ code: string; used_count: number }> }).rows
+    const campaign = codeRows.find((c) => c.code.startsWith('TESTMKT-'))
+    expect(campaign, 'the seeded campaign code must be visible to the partner').toBeTruthy()
+    expect(campaign!.used_count).toBe(3)
+
+    // …performance tracked on the dashboard…
+    const dash = await request.get('/api/partner/dashboard', { headers: partnerHeaders })
+    expect(dash.ok()).toBeTruthy()
+    const dashboard = (await dash.json()) as { used_total: number; discount_given: number }
+    expect(dashboard.used_total).toBe(3)
+    expect(dashboard.discount_given).toBeGreaterThan(0)
+
+    // …the students who used the codes (privacy-masked)…
+    const students = await request.get('/api/partner/students', { headers: partnerHeaders })
+    expect(students.ok()).toBeTruthy()
+    const studentRows = ((await students.json()) as { rows: unknown[] }).rows
+    expect(studentRows.length).toBe(3)
+
+    // …and the payments/commission derived from those paid redemptions.
+    const commissions = await request.get('/api/partner/commissions', { headers: partnerHeaders })
+    expect(commissions.ok()).toBeTruthy()
+    const ledger = (await commissions.json()) as {
+      attributed_revenue: number; accrued: number; balance: number; payments: unknown[]
+    }
+    expect(ledger.attributed_revenue).toBeGreaterThan(0)
+    expect(ledger.accrued).toBeGreaterThan(0)
+    expect(ledger.payments.length).toBe(3)
+
+    // The dashboard shows it all signed-in via the hand-off.
+    await page.goto(`/partner.html#t=${tp.token}`)
+    await expect(page.locator('#app')).toBeVisible({ timeout: 20_000 })
+    await captureStoryEvidence(page, testInfo, 'test-partner', 'marketing-performance')
+
+    // Delete cleans the seeded activity with the institution.
+    const deleted = await request.post(`/api/admin/test-partners/${tp.partner_id}/delete`, { headers })
+    expect(deleted.ok()).toBeTruthy()
   })
 })

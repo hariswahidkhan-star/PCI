@@ -38,7 +38,7 @@ const NAV: NavItem[] = [
   { to: '/exam-delivery', label: 'Exam delivery vendors', perm: 'exam_delivery', group: 'Examinations' },
   crudItem('questions', 'Examinations'),
   { to: '/credentials', label: 'Credentials', perm: 'credentials', group: 'Examinations' },
-  { to: '/lab', label: 'Simulation Lab', perm: 'content', group: 'Examinations' },
+  { to: '/lab', label: 'Simulation Lab', perm: 'sim_lab', group: 'Examinations' },
 
   { to: '/codes', label: 'Discount codes', perm: 'codes', group: 'Access & pricing' },
   { to: '/founding', label: 'Founding stage', anyPerm: ['members', 'codes'], group: 'Access & pricing' },
@@ -49,6 +49,7 @@ const NAV: NavItem[] = [
   { to: '/content-centre', label: 'Content & Distribution', perm: 'cc_view', group: 'Website' },
   { to: '/pages', label: 'Pages & content', perm: 'pages', group: 'Website' },
   { to: '/public-downloads', label: 'Downloads Centre', perm: 'documents', group: 'Website' },
+  { to: '/templates', label: 'Free templates', perm: 'content', group: 'Website' },
   { to: '/content', label: 'Site content', perm: 'content', group: 'Website' },
   { to: '/announcement', label: 'Announcement', perm: 'content', group: 'Website' },
   { to: '/translations', label: 'Translations', owner: true, group: 'Website' },

@@ -2,6 +2,7 @@
 // Renders the computed schedule (early start → early finish per activity) with critical activities
 // highlighted and total float shown as a lighter tail out to the late finish. Shown only in the result
 // view once an attempt has been graded — it is the schedule the student was asked to work out.
+// A collapsed data table provides the accessible non-visual alternative.
 
 export interface GanttBar {
   id: string
@@ -13,6 +14,10 @@ export interface GanttBar {
   total_float: number
   critical: boolean
 }
+
+const critColor = 'var(--sl-chart-critical, #b91c1c)'
+const barColor = 'var(--sl-chart-forecast, #0e7490)'
+const floatColor = 'var(--sl-chart-float, #cbd5e1)'
 
 export default function Gantt({ bars, projectDuration }: { bars: GanttBar[]; projectDuration: number }) {
   if (!bars || bars.length === 0) return null
@@ -31,21 +36,20 @@ export default function Gantt({ bars, projectDuration }: { bars: GanttBar[]; pro
   const ticks: number[] = []
   for (let t = 0; t <= span; t += step) ticks.push(t)
 
-  const critColor = '#b91c1c', barColor = '#0e7490', floatColor = '#cbd5e1'
   const label = `Gantt chart: ${bars.length} activities, project duration ${projectDuration}. Critical activities: ${bars.filter((b) => b.critical).map((b) => b.id).join(', ') || 'none'}.`
 
   return (
     <figure style={{ margin: 0 }}>
-      <div className="row small muted" style={{ gap: '1rem', flexWrap: 'wrap', marginBottom: '.3rem' }}>
-        <span className="row" style={{ gap: '.3rem', alignItems: 'center' }}><span style={{ width: 12, height: 8, background: critColor, borderRadius: 2 }} /> Critical</span>
-        <span className="row" style={{ gap: '.3rem', alignItems: 'center' }}><span style={{ width: 12, height: 8, background: barColor, borderRadius: 2 }} /> Activity</span>
-        <span className="row" style={{ gap: '.3rem', alignItems: 'center' }}><span style={{ width: 12, height: 8, background: floatColor, borderRadius: 2 }} /> Total float</span>
+      <div className="sl-legend">
+        <span className="it" style={{ color: critColor }}><span className="bx" style={{ background: critColor }} aria-hidden="true" /> Critical</span>
+        <span className="it" style={{ color: barColor }}><span className="bx" style={{ background: barColor }} aria-hidden="true" /> Activity</span>
+        <span className="it"><span className="bx" style={{ background: floatColor }} aria-hidden="true" /> Total float</span>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label} style={{ width: '100%', height: 'auto', maxWidth: W }}>
         {ticks.map((t) => (
           <g key={t}>
-            <line x1={x(t)} x2={x(t)} y1={pad.t} y2={H - pad.b} stroke="#eef2f7" strokeWidth={1} />
-            <text x={x(t)} y={H - 6} textAnchor="middle" fontSize={10} fill="#94a3b8">{t}</text>
+            <line x1={x(t)} x2={x(t)} y1={pad.t} y2={H - pad.b} style={{ stroke: 'var(--sl-chart-grid, #eef2f7)' }} strokeWidth={1} />
+            <text x={x(t)} y={H - 6} textAnchor="middle" fontSize={10} style={{ fill: 'var(--sl-chart-axis, #94a3b8)', fontVariantNumeric: 'tabular-nums' }}>{t}</text>
           </g>
         ))}
         {bars.map((b, i) => {
@@ -53,16 +57,37 @@ export default function Gantt({ bars, projectDuration }: { bars: GanttBar[]; pro
           const h = rowH - 12
           return (
             <g key={b.id}>
-              <text x={pad.l - 8} y={y + h - 1} textAnchor="end" fontSize={11} fill="#334155">{b.id}</text>
+              <text x={pad.l - 8} y={y + h - 1} textAnchor="end" fontSize={11} style={{ fill: '#334155' }}>{b.id}</text>
               {b.total_float > 0 && (
-                <rect x={x(b.ef)} y={y + h / 2 - 2} width={Math.max(0, x(b.lf) - x(b.ef))} height={4} fill={floatColor} rx={2} />
+                <rect x={x(b.ef)} y={y + h / 2 - 2} width={Math.max(0, x(b.lf) - x(b.ef))} height={4} style={{ fill: floatColor }} rx={2} />
               )}
               <rect x={x(b.es)} y={y} width={Math.max(2, x(b.ef) - x(b.es))} height={h} rx={3}
-                fill={b.critical ? critColor : barColor} />
+                style={{ fill: b.critical ? critColor : barColor }} />
             </g>
           )
         })}
       </svg>
+      <details className="sl-chart-data">
+        <summary>View the schedule as a table</summary>
+        <table className="data">
+          <caption className="sr-only">Computed schedule: early/late dates, total float and criticality per activity</caption>
+          <thead>
+            <tr>
+              <th scope="col">Activity</th><th scope="col">Duration</th><th scope="col">Early start</th>
+              <th scope="col">Early finish</th><th scope="col">Late start</th><th scope="col">Late finish</th>
+              <th scope="col">Total float</th><th scope="col">Critical</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bars.map((b) => (
+              <tr key={b.id}>
+                <td>{b.id}</td><td>{b.duration}</td><td>{b.es}</td><td>{b.ef}</td>
+                <td>{b.ls}</td><td>{b.lf}</td><td>{b.total_float}</td><td>{b.critical ? 'Yes' : 'No'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </details>
     </figure>
   )
 }

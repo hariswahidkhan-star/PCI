@@ -26,6 +26,7 @@ export const CATALOG: Record<string, Entry> = {
   'nav.lab': { en: 'Practice Lab', ko: '실습 랩', ar: 'مختبر التطبيق', es: 'Laboratorio de práctica', fr: 'Labo de pratique', zh: '实操实验室', ru: 'Практическая лаборатория' },
   'nav.billing': { en: 'Billing', ko: '결제', ar: 'الفواتير', es: 'Facturación', fr: 'Facturation', zh: '账单', ru: 'Оплата' },
   'nav.resources': { en: 'Resources', ko: '자료', ar: 'الموارد', es: 'Recursos', fr: 'Ressources', zh: '资源', ru: 'Ресурсы' },
+  'nav.templates': { en: 'Templates', ko: '템플릿', ar: 'القوالب', es: 'Plantillas', fr: 'Modèles', zh: '模板', ru: 'Шаблоны' },
   'nav.documents': { en: 'Documents', ko: '문서', ar: 'المستندات', es: 'Documentos', fr: 'Documents', zh: '文档', ru: 'Документы' },
   'nav.messages': { en: 'Messages', ko: '메시지', ar: 'الرسائل', es: 'Mensajes', fr: 'Messages', zh: '消息', ru: 'Сообщения' },
   'nav.support': { en: 'Support', ko: '지원', ar: 'الدعم', es: 'Soporte', fr: 'Assistance', zh: '支持', ru: 'Поддержка' },
@@ -220,6 +221,24 @@ export const CATALOG: Record<string, Entry> = {
   'res.subtitle': { en: 'Handbooks, policies and study documents — everything the institute publishes, in one place.', ko: '안내서, 정책 및 학습 자료 — 협회가 발행하는 모든 자료를 한곳에서.', ar: 'الأدلة والسياسات والوثائق الدراسية — كل ما ينشره المعهد في مكان واحد.', es: 'Manuales, políticas y documentos de estudio: todo lo que publica el instituto, en un solo lugar.', fr: 'Manuels, politiques et documents d\'étude — tout ce que l\'institut publie, au même endroit.', zh: '手册、政策与学习文档 — 学会发布的所有内容，尽在一处。', ru: 'Руководства, регламенты и учебные документы — всё, что публикует институт, в одном месте.' },
   'res.empty': { en: 'No resources have been published yet — new documents will appear here automatically.', ko: '아직 게시된 자료가 없습니다 — 새 문서가 여기에 자동으로 표시됩니다.', ar: 'لم يُنشر أي مورد بعد — ستظهر المستندات الجديدة هنا تلقائيًا.', es: 'Aún no se ha publicado ningún recurso: los documentos nuevos aparecerán aquí automáticamente.', fr: 'Aucune ressource n\'a encore été publiée — les nouveaux documents apparaîtront ici automatiquement.', zh: '尚未发布任何资源 — 新文档将自动显示在此处。', ru: 'Пока не опубликовано ни одного ресурса — новые документы появятся здесь автоматически.' },
   'res.download': { en: 'Download', ko: '다운로드', ar: 'تنزيل', es: 'Descargar', fr: 'Télécharger', zh: '下载', ru: 'Скачать' },
+
+  // ---- templates library (student) ----
+  'tpl.title': { en: 'Templates', ko: '템플릿', ar: 'القوالب', es: 'Plantillas', fr: 'Modèles', zh: '模板', ru: 'Шаблоны' },
+  'tpl.subtitle': { en: 'Ready-to-use project-controls templates — download, adapt and reuse them on your own projects. Content is synthetic and freely reusable.', ko: '바로 사용할 수 있는 프로젝트 관리 템플릿 — 다운로드하여 자신의 프로젝트에 맞게 수정하고 재사용하세요. 콘텐츠는 예시용이며 자유롭게 재사용할 수 있습니다.', ar: 'قوالب ضبط المشاريع جاهزة للاستخدام — نزّلها وعدّلها وأعد استخدامها في مشاريعك. المحتوى توضيحي ويمكن إعادة استخدامه بحرية.', es: 'Plantillas de control de proyectos listas para usar: descárguelas, adáptelas y reutilícelas en sus propios proyectos. El contenido es sintético y de libre reutilización.', fr: 'Modèles de contrôle de projet prêts à l\'emploi — téléchargez-les, adaptez-les et réutilisez-les dans vos propres projets. Le contenu est synthétique et librement réutilisable.', zh: '开箱即用的项目控制模板 — 下载、调整并在您自己的项目中重复使用。内容为示例性质，可自由重复使用。', ru: 'Готовые шаблоны управления проектами — скачивайте, адаптируйте и повторно используйте их в своих проектах. Содержимое синтетическое и свободно для повторного использования.' },
+  'tpl.searchPlaceholder': { en: 'Search templates…', ko: '템플릿 검색…', ar: 'ابحث في القوالب…', es: 'Buscar plantillas…', fr: 'Rechercher des modèles…', zh: '搜索模板…', ru: 'Поиск шаблонов…' },
+  'tpl.searchLabel': { en: 'Search templates', ko: '템플릿 검색', ar: 'ابحث في القوالب', es: 'Buscar plantillas', fr: 'Rechercher des modèles', zh: '搜索模板', ru: 'Поиск шаблонов' },
+  'tpl.topic': { en: 'Topic', ko: '주제', ar: 'الموضوع', es: 'Tema', fr: 'Thème', zh: '主题', ru: 'Тема' },
+  'tpl.track': { en: 'Track', ko: '트랙', ar: 'المسار', es: 'Itinerario', fr: 'Parcours', zh: '方向', ru: 'Трек' },
+  'tpl.show': { en: 'Show', ko: '표시', ar: 'عرض', es: 'Mostrar', fr: 'Afficher', zh: '显示', ru: 'Показать' },
+  'tpl.all': { en: 'All', ko: '전체', ar: 'الكل', es: 'Todos', fr: 'Tous', zh: '全部', ru: 'Все' },
+  'tpl.new': { en: 'New', ko: '신규', ar: 'جديد', es: 'Nuevos', fr: 'Nouveaux', zh: '新', ru: 'Новые' },
+  'tpl.download': { en: 'Download', ko: '다운로드', ar: 'تنزيل', es: 'Descargar', fr: 'Télécharger', zh: '下载', ru: 'Скачать' },
+  'tpl.downloading': { en: 'Downloading…', ko: '다운로드 중…', ar: 'جارٍ التنزيل…', es: 'Descargando…', fr: 'Téléchargement…', zh: '下载中…', ru: 'Скачивание…' },
+  'tpl.downloaded': { en: 'Downloaded', ko: '다운로드함', ar: 'تم التنزيل', es: 'Descargado', fr: 'Téléchargé', zh: '已下载', ru: 'Скачано' },
+  'tpl.downloadAgain': { en: 'Download again', ko: '다시 다운로드', ar: 'تنزيل مرة أخرى', es: 'Descargar de nuevo', fr: 'Télécharger à nouveau', zh: '再次下载', ru: 'Скачать снова' },
+  'tpl.emptyAll': { en: 'No templates are available yet — check back soon.', ko: '아직 사용할 수 있는 템플릿이 없습니다 — 곧 다시 확인해 주세요.', ar: 'لا توجد قوالب متاحة بعد — يرجى التحقق قريبًا.', es: 'Aún no hay plantillas disponibles: vuelva a consultar pronto.', fr: 'Aucun modèle n\'est encore disponible — revenez bientôt.', zh: '暂无可用模板 — 请稍后再来查看。', ru: 'Пока нет доступных шаблонов — загляните позже.' },
+  'tpl.emptyFilter': { en: 'No templates match that filter.', ko: '해당 필터와 일치하는 템플릿이 없습니다.', ar: 'لا توجد قوالب تطابق هذا المرشّح.', es: 'Ninguna plantilla coincide con ese filtro.', fr: 'Aucun modèle ne correspond à ce filtre.', zh: '没有符合该筛选条件的模板。', ru: 'Нет шаблонов, соответствующих этому фильтру.' },
+  'tpl.downloadError': { en: 'Could not download that template right now. Please try again shortly.', ko: '지금 해당 템플릿을 다운로드할 수 없습니다. 잠시 후 다시 시도해 주세요.', ar: 'تعذّر تنزيل هذا القالب الآن. يرجى المحاولة مرة أخرى بعد قليل.', es: 'No se pudo descargar esa plantilla ahora mismo. Inténtelo de nuevo en breve.', fr: 'Impossible de télécharger ce modèle pour le moment. Veuillez réessayer sous peu.', zh: '目前无法下载该模板。请稍后重试。', ru: 'Не удалось скачать этот шаблон сейчас. Повторите попытку чуть позже.' },
   'res.comingSoon': { en: 'Coming soon', ko: '곧 제공 예정', ar: 'قريبًا', es: 'Próximamente', fr: 'Bientôt disponible', zh: '即将推出', ru: 'Скоро' },
 
   // ===== Certifications page (cert.*) =====

@@ -244,8 +244,8 @@ public class SimContentTests
         SimLabSchema.Ensure(db);
 
         // Scope to the pack's own codes: other house seeds (SimLabSchema starter + expansion
-        // scenarios) are also published and synthetic_declared, and are validated separately
-        // by SimSeedContentTests.
+        // scenarios, and the P1 multi-step MS-RECOVERY-001 validated in SimStepTests) are also
+        // published and synthetic_declared, and are validated separately by SimSeedContentTests.
         var packCodes = SimLabContentPack.ScenarioCodes.ToHashSet();
         var rows = db.Query(@"SELECT scenario_code,title,summary,difficulty,certification_id,
                 competencies_json,config_json,synthetic_declared,industry

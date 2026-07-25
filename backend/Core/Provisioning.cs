@@ -176,6 +176,11 @@ public static class Settlement
                 if (after == "active" && before != "active") did.Add("certuvo_provisioned");
             }
         }
+        // Partner commission (Phase 1): a settled, partner-attributed payment earns exactly one immutable
+        // commission transaction with the rate snapshotted now. Idempotent via a UNIQUE dedupe_key, so the
+        // Stripe webhook, an admin reprocess and the backfill can all reach here safely. Best-effort — a
+        // ledger hiccup must never block the student's entitlement.
+        try { if (PartnerCommission.EnsureForPayment(db, payId) > 0) did.Add("partner_commission_recorded"); } catch { }
         return new { ok = true, payment_id = payId, product, status, ensured = did, already_complete = did.Count == 0 };
     }
 
@@ -220,6 +225,9 @@ public static class Settlement
                 membershipLapsed = true;
             }
         }
+        // Any partner commission this settlement earned is clawed back as a linked reversal — the original
+        // transaction is never edited, so the ledger keeps showing what was earned and what was returned.
+        try { PartnerCommissionReversal.EnsureForPayment(db, payId, "reversal"); } catch { }
         try { db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Account', 'A payment record was reversed', ?)", userId,
             $"A {product} settlement on your account was reversed by our team. If you believe this is an error, contact support."); } catch { }
         return new { ok = true, payment_id = payId, previous_status = status, new_status = "refunded", membership_lapsed = membershipLapsed };

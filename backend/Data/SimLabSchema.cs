@@ -19,6 +19,7 @@ public static class SimLabSchema
     public static void Ensure(Db db)
     {
         Tables(db);
+        FreezeAttemptedVersions(db);   // must run BEFORE Seed: pin history before any seeder rewrites rows
         Seed(db);
     }
 
@@ -146,6 +147,31 @@ public static class SimLabSchema
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_simevents_attempt ON simulation_attempt_events(attempt_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_simevents_user ON simulation_attempt_events(user_id)");
+
+        // ── Immutable per-version config snapshots (Core/SimVersion — the P0 replay guarantee). Written
+        //    once when a (scenario, version) pair is first served to an attempt and NEVER updated, so a
+        //    Studio revision or a content-pack deploy that rewrites simulation_scenarios.config_json in
+        //    place cannot change how a historical attempt replays, grades or coaches. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS simulation_scenario_versions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            scenario_id INTEGER NOT NULL,
+            version INTEGER NOT NULL,
+            config_json TEXT,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_simversions_scenario ON simulation_scenario_versions(scenario_id, version)");
+    }
+
+    /// <summary>Backfill: attempts recorded before simulation_scenario_versions existed have no snapshot,
+    /// so freeze every attempted (scenario, version) pair at the live row's CURRENT config — exactly what
+    /// those attempts were being served — before any seeder runs this boot. INSERT OR IGNORE makes this
+    /// one-shot per pair: later boots and later content changes can no longer move historical replay.</summary>
+    static void FreezeAttemptedVersions(Db db)
+    {
+        db.Execute(@"INSERT OR IGNORE INTO simulation_scenario_versions(scenario_id,version,config_json)
+            SELECT DISTINCT a.scenario_id, COALESCE(a.scenario_version,1), s.config_json
+            FROM simulation_attempts a
+            JOIN simulation_scenarios s ON s.id=a.scenario_id
+            WHERE s.config_json IS NOT NULL AND s.config_json<>''");
     }
 
     static void Seed(Db db)
@@ -211,6 +237,14 @@ public static class SimLabSchema
         SeedScenario(db, "SD-ESC-001", "Measure schedule performance in time (Earned Schedule)", "scenario", "Software", "advanced", 18,
             "[\"schedule_analysis\",\"forecasting\"]", "Read Earned Schedule off the planned-value curve: schedule variance and index in time units, and an independent time forecast.",
             ConfigEarnedSchedule);
+
+        // P1 — first reviewed MULTI-STEP scenario: four linked EVM steps with two decisions whose effects
+        // change the downstream numbers the learner must compute (crash vs descope; request funding vs
+        // absorb). Deterministic: every task reference-solves on the base given and under each decision.
+        SeedScenario(db, "MS-RECOVERY-001", "Recover a data-centre fit-out programme", "scenario", "Data Centres", "intermediate", 25,
+            "[\"earned_value\",\"forecasting\",\"decision_making\"]",
+            "A four-step recovery scenario: assess baseline EVM health, choose a recovery path, then re-forecast and confirm the final position under the consequences of your decisions.",
+            ConfigRecovery);
 
         // ── Content expansion (2026-07): additional synthetic scenarios across every task type, new
         //    industries and difficulty bands. Each reuses a proven task shape so the reference solver
@@ -485,6 +519,46 @@ public static class SimLabSchema
            {"key":"root_actual","label":"Total actual (root roll-up)","type":"number"},
            {"key":"root_variance","label":"Variance at the root (budget − actual)","type":"number"}],
          "tolerance":0.01,"pass_pct":70,"competencies":["cost_control"]}
+        """;
+
+    // P1 first multi-step scenario: four linked EVM steps + two decisions with deterministic downstream
+    // effects (all synthetic). 9 graded measures. Every measure reference-solves on the base given and under
+    // each decision branch (SimContent.ValidateSteps), and grading is deterministic from snapshot + choices.
+    const string ConfigRecovery = """
+        {"multistep":true,
+         "prompt":"A data-centre fit-out is behind at month 4 (all figures synthetic, USD). Assess the baseline, choose a recovery path, then re-forecast and confirm the final position under the consequences of your decisions.",
+         "pass_pct":70,
+         "competencies":["earned_value","forecasting","decision_making"],
+         "steps":[
+           {"id":"s1","title":"Baseline health","task":"evm","competencies":["earned_value"],
+            "prompt":"At month 4 the programme reports PV, EV and AC against a 600000 BAC. Compute the schedule variance (SV), cost performance index (CPI) and schedule performance index (SPI).",
+            "given":{"pv":240000,"ev":210000,"ac":250000,"bac":600000},"tolerance":0.01,
+            "ask":[{"key":"sv","label":"Schedule variance (SV)","type":"number"},
+                   {"key":"cpi","label":"Cost performance index (CPI)","type":"number"},
+                   {"key":"spi","label":"Schedule performance index (SPI)","type":"number"}]},
+           {"id":"s2","title":"Choose a recovery path","task":"evm","competencies":["earned_value","decision_making"],
+            "prompt":"Compute the cost variance (CV) now, then choose how to recover the programme.",
+            "given":{"pv":240000,"ev":210000,"ac":250000,"bac":600000},"tolerance":0.01,
+            "ask":[{"key":"cv","label":"Cost variance (CV)","type":"number"}],
+            "decision":{"key":"recovery","prompt":"How do you recover the programme?",
+              "options":[
+                {"value":"crash","label":"Crash the critical path — adds 60000 to the actual cost at completion","effects":[{"step":"s3","path":"ac","op":"add","value":60000}]},
+                {"value":"descope","label":"Descope non-critical works — reduces the budget at completion by 50000","effects":[{"step":"s3","path":"bac","op":"add","value":-50000}]}]}},
+           {"id":"s3","title":"Re-forecast at completion","task":"evm","competencies":["forecasting"],
+            "prompt":"Using the actuals AFTER your recovery decision, forecast the estimate at completion (CPI method), the variance at completion (VAC) and the to-complete performance index (TCPI).",
+            "given":{"pv":300000,"ev":260000,"ac":300000,"bac":600000},"tolerance":0.01,
+            "ask":[{"key":"eac","label":"Estimate at completion (EAC, CPI method)","type":"number"},
+                   {"key":"vac","label":"Variance at completion (VAC)","type":"number"},
+                   {"key":"tcpi","label":"To-complete performance index (TCPI)","type":"number"}],
+            "decision":{"key":"funding","prompt":"Given your forecast, do you request additional funding?",
+              "options":[
+                {"value":"request","label":"Request 40000 additional funding (raises the approved budget)","effects":[{"step":"s4","path":"bac","op":"add","value":40000}]},
+                {"value":"absorb","label":"Absorb the overrun within contingency (no budget change)","effects":[]}]}},
+           {"id":"s4","title":"Confirm the final position","task":"evm","competencies":["earned_value"],
+            "prompt":"At handover, confirm the final cost performance index (CPI) and percent complete against the approved budget.",
+            "given":{"pv":560000,"ev":540000,"ac":560000,"bac":600000},"tolerance":0.01,
+            "ask":[{"key":"cpi","label":"Final cost performance index (CPI)","type":"number"},
+                   {"key":"percent_complete","label":"Percent complete (EV / BAC)","type":"number"}]}]}
         """;
 
     const string ConfigWbs = """

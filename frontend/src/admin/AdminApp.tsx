@@ -40,6 +40,7 @@ import ContentCentre from './pages/ContentCentre'
 import TrainingPartners from './pages/TrainingPartners'
 import Integrations from './pages/Integrations'
 import SimLab from './pages/SimLab'
+import Templates from './pages/Templates'
 import Marketing from './pages/Marketing'
 import ExamDelivery from './pages/ExamDelivery'
 import Enquiries from './pages/Enquiries'
@@ -132,7 +133,8 @@ export default function AdminApp() {
         <Route path="content-centre" element={<Perm section="cc_view"><ContentCentre /></Perm>} />
         <Route path="training-partners" element={<Perm section="partners"><TrainingPartners /></Perm>} />
         <Route path="integrations" element={<Perm section="integrations"><Integrations /></Perm>} />
-        <Route path="lab" element={<Perm section="content"><SimLab /></Perm>} />
+        <Route path="lab" element={<Perm section="sim_lab"><SimLab /></Perm>} />
+        <Route path="templates" element={<Perm section="content"><Templates /></Perm>} />
         <Route path="marketing" element={<AnyPerm sections={['subscribers', 'reports']}><Marketing /></AnyPerm>} />
         <Route path="marketing-ads" element={<Perm section="mkt_view"><MarketingAds /></Perm>} />
         <Route path="exam-delivery" element={<Perm section="exam_delivery"><ExamDelivery /></Perm>} />

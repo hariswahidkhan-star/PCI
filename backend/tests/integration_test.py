@@ -3446,6 +3446,7 @@ def run(proc):
     test_honorary_idv(admin)
     test_comms_centre(admin)
     test_public_documents(admin)
+    test_free_templates(admin)
     test_marketing_centre(admin)
     test_admin_extra_gaps(admin)
     test_proctoring_analytics_gaps(admin)
@@ -3792,6 +3793,28 @@ def test_simlab(admin):
     c, _ = jget("GET", "/api/admin/lab/scenarios", token=mtok)  # a student token is not an admin
     chk("43z the admin scenario list is not reachable with a student token", c in (401, 403), c)
 
+    # ---- §5B.3: the Simulation Lab admin now has a DEDICATED 'sim_lab' permission (least privilege), with
+    #      'content' grandfathered so no existing operator loses access. ----
+    vtok = globals().get("_VIEWER_TOK")
+    if vtok:
+        c, _ = jget("GET", "/api/admin/lab/scenarios", token=vtok)
+        chk("43zp1 a viewer (no content, no sim_lab) is refused the admin scenario list (403)", c == 403, c)
+    # A custom admin granted ONLY 'sim_lab' can manage the Lab...
+    c, cb = jget("POST", "/api/admin/team", token=admin, body={"email": "simonly@pci.test", "name": "SimOnly", "role": "custom", "permissions": ["sim_lab"]})
+    c, cl = jget("POST", "/api/admin/auth/login", body={"email": "simonly@pci.test", "password": cb.get("temp_password", "")})
+    sltok = clear_must_change(cl.get("token"))
+    c, _ = jget("GET", "/api/admin/lab/scenarios", token=sltok)
+    chk("43zp2 a 'sim_lab'-only admin can read the admin scenario list (200)", c == 200, c)
+    # ...but NOT the 'content'-gated modules — proving least privilege (sim_lab is not content).
+    c, _ = jget("GET", "/api/admin/templates", token=sltok)
+    chk("43zp3 a 'sim_lab'-only admin is refused the 'content'-gated templates admin (403)", c == 403, c)
+    # Grandfather: a custom admin granted ONLY 'content' still reaches the Lab (content ⇒ sim_lab).
+    c, gb = jget("POST", "/api/admin/team", token=admin, body={"email": "cononly@pci.test", "name": "ConOnly", "role": "custom", "permissions": ["content"]})
+    c, gl = jget("POST", "/api/admin/auth/login", body={"email": "cononly@pci.test", "password": gb.get("temp_password", "")})
+    contok = clear_must_change(gl.get("token"))
+    c, _ = jget("GET", "/api/admin/lab/scenarios", token=contok)
+    chk("43zp4 a 'content'-only admin is grandfathered into the Lab (200)", c == 200, c)
+
     # ---- Phase 5A: scenario content-quality validation (§14 publication gate), gated 'content' ----
     ev_id = ev_admin.get("id")
     c, val = jget("GET", f"/api/admin/lab/scenarios/{ev_id}/validate", token=admin)
@@ -3826,11 +3849,14 @@ def test_simlab(admin):
     con.close()
     pub_house = [(code, cid) for (code, cid, st) in cert_rows
                  if st == "published" and str(code).startswith(("GL-", "SD-", "SC-", "CP-"))]
-    bad_cert = [code for (code, cid) in pub_house if cid not in (1, 2, 3)]
-    certs_present = {cid for (_code, cid) in pub_house}
-    chk("43zd every published house scenario maps to a live certification (1/2/3) and all three are represented",
+    # NULL certification_id is a valid mapping ("= any certification" per the schema); only a present-but-
+    # out-of-range id (e.g. a dangling 4) is bad. Exclude None before sorting so the diagnostic never crashes.
+    bad_cert = [code for (code, cid) in pub_house if cid is not None and cid not in (1, 2, 3)]
+    certs_present = {cid for (_code, cid) in pub_house if cid is not None}
+    chk("43zd every published house scenario maps to a live certification (1/2/3, or NULL=any) and all three are represented",
         len(pub_house) >= 20 and not bad_cert and {1, 2, 3}.issubset(certs_present),
-        (len(pub_house), bad_cert[:5], sorted(certs_present)))
+        # None sorts (a NULL certification_id is exactly what this assertion catches — it must not crash the run)
+        (len(pub_house), bad_cert[:5], sorted(certs_present, key=lambda c: (c is None, c))))
 
     # ---- Phase 5B: review-due / expiry governance dates (§13). Governance METADATA, so settable even on a
     #      published scenario without breaching immutability; drives the amber/overdue/expired operator flag. ----
@@ -3913,6 +3939,264 @@ def test_simlab(admin):
     c, orig = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "IT-REV-001", "mode": "training"})
     chk("43z19 the original published scenario is untouched by the revision (still served)",
         c == 200 and orig.get("attempt_id"), c)
+
+    # ---- §5B.4: deterministic scenario manifest export. Read-only content + governance + validation
+    #      verdict, checksummed over the graded content alone, byte-stable across repeated exports. ----
+    def manifest(sid, token):
+        """GET the manifest → (status, raw_text, content_disposition). _raw_get drops headers, and the
+        Content-Disposition filename is part of what this endpoint promises, so fetch it directly."""
+        r = urllib.request.Request(f"{BASE}/api/admin/lab/scenarios/{sid}/manifest", method="GET",
+                                   headers={"Authorization": "Bearer " + token} if token else {})
+        try:
+            with urllib.request.urlopen(r) as resp:
+                return resp.status, resp.read().decode(), resp.headers.get("Content-Disposition", "")
+        except urllib.error.HTTPError as e:
+            return e.code, e.read().decode(), e.headers.get("Content-Disposition", "")
+
+    c, mtext, mdispo = manifest(new_id, admin)
+    mjson = json.loads(mtext) if c == 200 else {}
+    chk("43zm1 an admin exports a scenario manifest (content + governance + validation verdict)",
+        c == 200 and mjson.get("manifest_version") == 1 and mjson.get("kind") == "pci.simulation.scenario"
+        and (mjson.get("scenario") or {}).get("scenario_code") == "IT-REV-001"
+        and (mjson.get("governance") or {}).get("review_state") == "published"
+        and (mjson.get("validation") or {}).get("publishable") is True,
+        (c, mjson.get("manifest_version"), (mjson.get("scenario") or {}).get("scenario_code")))
+    # The config column round-trips as real JSON (not a quoted blob), so the manifest is diffable.
+    chk("43zm2 the manifest carries the scenario config as real JSON and a SHA-256 content checksum",
+        isinstance((mjson.get("scenario") or {}).get("config"), dict)
+        and (mjson.get("scenario") or {}).get("config", {}).get("task") == "evm"
+        and len(mjson.get("checksum") or "") == 64,
+        ((mjson.get("scenario") or {}).get("config"), mjson.get("checksum")))
+    # Determinism: the same content must export byte-for-byte identically (no timestamp, no exporter).
+    c2, mtext2, _ = manifest(new_id, admin)
+    chk("43zm3 exporting the same scenario twice is byte-identical (deterministic, diffable)",
+        c2 == 200 and mtext2 == mtext, (c2, len(mtext), len(mtext2)))
+    chk("43zm4 the manifest downloads as an attachment named for the scenario code and version",
+        'attachment' in mdispo and 'filename="IT-REV-001-v1.pcisim.json"' in mdispo, mdispo)
+    # Privacy: reviewer/author/approver columns are reduced to boolean sign-off flags, never identities.
+    _ident = ("authored_by", "approved_by", "calc_reviewed_by", "learning_reviewed_by",
+              "safety_reviewed_by", "created_by")
+    chk("43zm5 the manifest reduces reviewer attribution to sign-off flags, never admin identities",
+        not any(k in mtext for k in _ident)
+        and isinstance((mjson.get("governance") or {}).get("signed_off"), dict),
+        [k for k in _ident if k in mtext])
+    # Governance dates are metadata, not content (§18 does not freeze them) — re-setting them must not
+    # move the checksum of a frozen published version.
+    c, _gv = jget("PATCH", f"/api/admin/lab/scenarios/{new_id}/governance", token=admin,
+                  body={"review_due": "2029-01-01", "expires_at": "2030-01-01"})
+    c3, mtext3, _ = manifest(new_id, admin)
+    mjson3 = json.loads(mtext3) if c3 == 200 else {}
+    chk("43zm6 re-setting governance dates changes the manifest but NOT the content checksum",
+        c3 == 200 and mjson3.get("checksum") == mjson.get("checksum")
+        and ((mjson3.get("governance") or {}).get("review_due") or "").startswith("2029-01-01")
+        and mtext3 != mtext,
+        (mjson3.get("checksum") == mjson.get("checksum"), (mjson3.get("governance") or {}).get("review_due")))
+    # A revised version is different content, so it must fingerprint differently.
+    c4, mtext4, dispo4 = manifest(rev_id, admin)
+    mjson4 = json.loads(mtext4) if c4 == 200 else {}
+    chk("43zm7 a revised version exports a different checksum and its own version filename",
+        c4 == 200 and mjson4.get("checksum") != mjson.get("checksum")
+        and 'filename="IT-REV-001-v2-v2.pcisim.json"' in dispo4
+        and (mjson4.get("governance") or {}).get("review_state") == "draft",
+        (mjson4.get("checksum") == mjson.get("checksum"), dispo4))
+    c5, _t5, _d5 = manifest(99999999, admin)
+    chk("43zm8 exporting an unknown scenario id returns 404", c5 == 404, c5)
+    c6, _t6, _d6 = manifest(new_id, mtok)   # student token
+    chk("43zm9 the manifest export is not reachable with a student token", c6 in (401, 403), c6)
+    # Permission wiring matches the rest of the Lab: 'sim_lab' opens it, a viewer is refused.
+    c7, _t7, _d7 = manifest(new_id, sltok)
+    chk("43zm10 a 'sim_lab'-only admin can export a manifest (200)", c7 == 200, c7)
+    if vtok:
+        c8, _t8, _d8 = manifest(new_id, vtok)
+        chk("43zm11 a viewer is refused the manifest export (403)", c8 == 403, c8)
+
+    # ---- §5B.5: validated manifest IMPORT. Verifies the envelope + recomputed checksum, then lands the
+    #      scenario as a draft that must walk the whole review workflow here. ----
+    def clone(doc):
+        return json.loads(json.dumps(doc))   # deep copy without importing copy
+
+    c, imp = jget("POST", "/api/admin/lab/scenarios/import", token=admin,
+                  body={"manifest": mjson, "as_code": "IT-IMP-001"})
+    imp_id = imp.get("id")
+    chk("43zi1 an admin imports a manifest as a new DRAFT under a chosen code",
+        c == 200 and imp_id and imp.get("scenario_code") == "IT-IMP-001"
+        and imp.get("review_state") == "draft" and imp.get("status") == "draft"
+        and imp.get("publishable") is True,
+        (c, imp.get("review_state"), imp.get("publishable"), imp.get("errors")))
+    # The safety property: the manifest describes a PUBLISHED scenario, and the import still lands in draft.
+    c, arows2 = jget("GET", "/api/admin/lab/scenarios", token=admin)
+    imported = next((r for r in arows2.get("rows", []) if r.get("id") == imp_id), {})
+    chk("43zi2 a manifest of a PUBLISHED scenario still imports as draft — a file can never grant published state",
+        (mjson.get("governance") or {}).get("review_state") == "published"
+        and imported.get("status") == "draft" and imported.get("review_state") == "draft"
+        and imported.get("version") == 1,
+        (imported.get("status"), imported.get("review_state"), imported.get("version")))
+    # Content survived the round trip even though the code (and so the fingerprint) changed.
+    c3i, itext, _ = manifest(imp_id, admin)
+    ijson = json.loads(itext) if c3i == 200 else {}
+    chk("43zi3 the imported draft carries the source's graded content, under its own fingerprint",
+        c3i == 200
+        and (ijson.get("scenario") or {}).get("config") == (mjson.get("scenario") or {}).get("config")
+        and (ijson.get("scenario") or {}).get("competencies") == (mjson.get("scenario") or {}).get("competencies")
+        and ijson.get("checksum") != mjson.get("checksum"),
+        (ijson.get("checksum") == mjson.get("checksum"),))
+    # Re-importing without a free code collides rather than silently overwriting the original.
+    c, dupi = jget("POST", "/api/admin/lab/scenarios/import", token=admin, body={"manifest": mjson})
+    chk("43zi4 importing over an existing scenario_code is refused (409 duplicate_code)",
+        c == 409 and dupi.get("error") == "duplicate_code", (c, dupi.get("error")))
+
+    # Integrity: content edited after export no longer matches the checksum the file carries.
+    tampered = clone(mjson)
+    tampered["scenario"]["title"] = "Quietly retitled in transit"
+    c, tam = jget("POST", "/api/admin/lab/scenarios/import", token=admin,
+                  body={"manifest": tampered, "as_code": "IT-IMP-TAM"})
+    chk("43zi5 a manifest edited after export is refused (409 checksum_mismatch)",
+        c == 409 and tam.get("error") == "checksum_mismatch", (c, tam.get("error")))
+    foreign = clone(mjson); foreign["kind"] = "some.other.export"
+    c, frn = jget("POST", "/api/admin/lab/scenarios/import", token=admin, body={"manifest": foreign, "as_code": "IT-IMP-FGN"})
+    chk("43zi6 a file that is not a scenario manifest is refused (400 wrong_kind)",
+        c == 400 and frn.get("error") == "wrong_kind", (c, frn.get("error")))
+    future = clone(mjson); future["manifest_version"] = 99
+    c, fut = jget("POST", "/api/admin/lab/scenarios/import", token=admin, body={"manifest": future, "as_code": "IT-IMP-FUT"})
+    chk("43zi7 a manifest from a newer platform version is refused rather than imported lossily (400)",
+        c == 400 and fut.get("error") == "unsupported_version", (c, fut.get("error")))
+    c, bad = jget("POST", "/api/admin/lab/scenarios/import", token=admin, body={"manifest": {"kind": "pci.simulation.scenario", "manifest_version": 1}})
+    chk("43zi8 a manifest with no scenario block is refused (400 bad_manifest)",
+        c == 400 and bad.get("error") == "bad_manifest", (c, bad.get("error")))
+
+    # Maker-checker still applies: the importer is recorded as the author, so they cannot approve their
+    # own import — an import cannot be used to slip content past the second pair of eyes.
+    for stage in ("calc_review", "learning_review", "safety_review", "pilot"):
+        jget("POST", f"/api/admin/lab/scenarios/{imp_id}/review", token=admin, body={"to": stage})
+    c, selfap = jget("POST", f"/api/admin/lab/scenarios/{imp_id}/review", token=admin, body={"to": "approved"})
+    chk("43zi9 the importing admin cannot approve their own import (maker_checker, 409)",
+        c == 409 and selfap.get("error") == "maker_checker", (c, selfap.get("error")))
+    c, ap2 = jget("POST", f"/api/admin/lab/scenarios/{imp_id}/review", token=admin2, body={"to": "approved"})
+    chk("43zi10 a different admin can approve the imported scenario (the workflow is intact)",
+        c == 200 and ap2.get("review_state") == "approved", (c, ap2))
+
+    # Permission wiring matches the rest of the Lab.
+    c, _si = jget("POST", "/api/admin/lab/scenarios/import", token=mtok, body={"manifest": mjson, "as_code": "IT-IMP-STU"})
+    chk("43zi11 manifest import is not reachable with a student token", c in (401, 403), c)
+    if vtok:
+        c, _vi = jget("POST", "/api/admin/lab/scenarios/import", token=vtok, body={"manifest": mjson, "as_code": "IT-IMP-VWR"})
+        chk("43zi12 a viewer is refused manifest import (403)", c == 403, c)
+    c, sli = jget("POST", "/api/admin/lab/scenarios/import", token=sltok, body={"manifest": mjson, "as_code": "IT-IMP-SL1"})
+    chk("43zi13 a 'sim_lab'-only admin can import a manifest (200, as a draft)",
+        c == 200 and sli.get("review_state") == "draft", (c, sli.get("review_state")))
+
+    # ---- §5B.6: whole-catalogue manifest bundle (bulk export for backup / migration) ----
+    def bundle(qs="", token=None):
+        r = urllib.request.Request(f"{BASE}/api/admin/lab/manifest-bundle{qs}", method="GET",
+                                   headers={"Authorization": "Bearer " + token} if token else {})
+        try:
+            with urllib.request.urlopen(r) as resp:
+                return resp.status, resp.read().decode(), resp.headers.get("Content-Disposition", "")
+        except urllib.error.HTTPError as e:
+            return e.code, e.read().decode(), e.headers.get("Content-Disposition", "")
+
+    c, btext, bdispo = bundle(token=admin)
+    bjson = json.loads(btext) if c == 200 else {}
+    c, alist = jget("GET", "/api/admin/lab/scenarios", token=admin)
+    chk("43zb1 an admin exports the whole catalogue as one bundle",
+        c == 200 and bjson.get("kind") == "pci.simulation.bundle" and bjson.get("manifest_version") == 1
+        and bjson.get("count") == alist.get("total") and len(bjson.get("scenarios", [])) == alist.get("total")
+        and len(bjson.get("checksum") or "") == 64,
+        (bjson.get("kind"), bjson.get("count"), alist.get("total")))
+    codes = [(s.get("scenario") or {}).get("scenario_code") for s in bjson.get("scenarios", [])]
+    chk("43zb2 bundle entries are ordered by scenario_code, so two environments agree regardless of ids",
+        codes == sorted(codes), codes[:6])
+    # Each entry is a full single-scenario manifest — identical to what the per-scenario export produces.
+    entry = next((s for s in bjson.get("scenarios", []) if (s.get("scenario") or {}).get("scenario_code") == "IT-REV-001"), {})
+    chk("43zb3 a bundle entry is byte-equivalent to that scenario's own manifest (same checksum)",
+        entry.get("kind") == "pci.simulation.scenario" and entry.get("checksum") == mjson.get("checksum"),
+        (entry.get("checksum") == mjson.get("checksum"),))
+    chk("43zb4 the bundle downloads as an attachment", 'attachment' in bdispo and 'pcisim-bundle.json' in bdispo, bdispo)
+    # Determinism: same catalogue, byte-identical bundle.
+    c2b, btext2, _ = bundle(token=admin)
+    chk("43zb5 exporting the bundle twice is byte-identical (deterministic)", c2b == 200 and btext2 == btext, c2b)
+    # Filtered export for scripted backups.
+    c, ptext, _ = bundle("?status=published", token=admin)
+    pjson = json.loads(ptext) if c == 200 else {}
+    pub_only = all((s.get("governance") or {}).get("status") == "published" for s in pjson.get("scenarios", []))
+    chk("43zb6 ?status=published narrows the bundle to published scenarios only",
+        c == 200 and pub_only and pjson.get("count") == alist.get("published"),
+        (c, pjson.get("count"), alist.get("published")))
+    c, bad_s, _ = bundle("?status=not-a-status", token=admin)
+    chk("43zb7 an unknown status is refused (400 bad_status)",
+        c == 400 and json.loads(bad_s).get("error") == "bad_status", c)
+    # Permission wiring matches the rest of the Lab.
+    c, _sb, _ = bundle(token=mtok)
+    chk("43zb8 the bundle export is not reachable with a student token", c in (401, 403), c)
+    if vtok:
+        c, _vb, _ = bundle(token=vtok)
+        chk("43zb9 a viewer is refused the bundle export (403)", c == 403, c)
+    c, slb, _ = bundle(token=sltok)
+    chk("43zb10 a 'sim_lab'-only admin can export the bundle (200)",
+        c == 200 and json.loads(slb).get("kind") == "pci.simulation.bundle", c)
+
+    # ---- §5B.8: importing a bundle. Integrity is all-or-nothing; a taken code is skipped, not fatal ----
+    def import_bundle(doc, token=admin):
+        return jget("POST", "/api/admin/lab/scenarios/import-bundle", token=token, body={"bundle": doc})
+
+    # The environment's own bundle re-imported: every entry verifies, every code is already taken, so
+    # nothing is created. That is what makes re-running an interrupted migration safe.
+    before_total = alist.get("total")
+    c, res = import_bundle(bjson)
+    chk("43zk1 a genuine bundle verifies and reports one outcome per entry",
+        c == 200 and res.get("total") == before_total, (c, res.get("total"), before_total))
+    chk("43zk2 entries whose code is already taken are skipped, not imported",
+        res.get("imported_count") == 0 and res.get("skipped_count") == before_total
+        and all(r.get("reason") == "duplicate_code" for r in res.get("skipped", [])),
+        (res.get("imported_count"), res.get("skipped_count")))
+    c, after = jget("GET", "/api/admin/lab/scenarios", token=admin)
+    chk("43zk3 re-importing the catalogue created no duplicate scenarios",
+        after.get("total") == before_total, (after.get("total"), before_total))
+
+    # Integrity: one altered entry condemns the whole file, and nothing is written.
+    tampered = json.loads(btext)
+    tampered["scenarios"][0]["scenario"]["title"] = "Edited in transit"
+    c, res = import_bundle(tampered)
+    chk("43zk4 an edited entry is refused (409 checksum_mismatch)",
+        c == 409 and res.get("error") == "checksum_mismatch", (c, res.get("error")))
+    c, after = jget("GET", "/api/admin/lab/scenarios", token=admin)
+    chk("43zk5 a refused bundle imported nothing at all", after.get("total") == before_total, after.get("total"))
+
+    # Dropping an entry leaves every survivor individually valid — only the bundle checksum catches it.
+    truncated = json.loads(btext)
+    if truncated.get("scenarios"):
+        truncated["scenarios"].pop()
+        c, res = import_bundle(truncated)
+        chk("43zk6 a truncated bundle is refused even though every remaining entry is intact",
+            c == 409 and res.get("error") == "checksum_mismatch", (c, res.get("error")))
+
+    # Envelope checks.
+    c, res = import_bundle(mjson)
+    chk("43zk7 a single-scenario manifest is not a bundle (400 wrong_kind)",
+        c == 400 and res.get("error") == "wrong_kind", (c, res.get("error")))
+    future_b = json.loads(btext); future_b["manifest_version"] = 99
+    c, res = import_bundle(future_b)
+    chk("43zk8 a bundle from a newer build is refused rather than imported lossily",
+        c == 400 and res.get("error") == "unsupported_version", (c, res.get("error")))
+    c, res = import_bundle({})
+    chk("43zk9 a document with no bundle envelope is refused",
+        c == 400 and res.get("error") in ("bad_manifest", "wrong_kind"), (c, res.get("error")))
+
+    # An empty catalogue is a legitimate bundle: it verifies and imports nothing.
+    c, empty_txt, _ = bundle("?status=suspended", token=admin)
+    if c == 200 and json.loads(empty_txt).get("count") == 0:
+        c, res = import_bundle(json.loads(empty_txt))
+        chk("43zk10 an empty bundle verifies and imports nothing",
+            c == 200 and res.get("total") == 0 and res.get("imported_count") == 0, (c, res))
+
+    # Permission wiring matches the rest of the Lab.
+    c, _r = import_bundle(bjson, token=mtok)
+    chk("43zk11 bundle import is not reachable with a student token", c in (401, 403), c)
+    if vtok:
+        c, _r = import_bundle(bjson, token=vtok)
+        chk("43zk12 a viewer is refused bundle import (403)", c == 403, c)
+    c, res = import_bundle(bjson, token=sltok)
+    chk("43zk13 a 'sim_lab'-only admin may import a bundle (200)", c == 200, c)
 
     # ---- Phase 2 engine: forecasting (three EAC methods) + CBS cost roll-up, graded deterministically ----
     c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})
@@ -4069,6 +4353,106 @@ def test_simlab(admin):
     chk("43uu the test user can open a lab end-to-end (attempt starts, task served)",
         c == 200 and mtu_start.get("attempt_id") and (mtu_start.get("task") or {}).get("task") == "evm", (c, bool(mtu_start.get("attempt_id"))))
     jget("POST", f"/api/admin/test-users/{mtu_id}/delete", token=admin)   # keep the harness clean
+
+    # ---- P1: linked MULTI-STEP scenarios (steps + decisions + deterministic downstream effects) ----
+    def _ms_answers(mtask, decisions):
+        """Correct per-step answers for a multi-step task under the given decisions — applies each chosen
+        option's effects to the downstream given (mirror of Core/SimStep.EffectiveGiven), then reuses the
+        single-task reference solver per step. Returns the { steps, decisions } submit body's answers."""
+        steps = mtask.get("steps") or []
+        def eff_given(step):
+            g = dict(step.get("given") or {})
+            for s in steps:
+                dec = s.get("decision")
+                if not dec:
+                    continue
+                chosen = decisions.get(dec.get("key"))
+                if not chosen:
+                    continue
+                opt = next((o for o in dec.get("options", []) if o.get("value") == chosen), None)
+                if not opt:
+                    continue
+                for e in opt.get("effects", []):
+                    if e.get("step") != step.get("id"):
+                        continue
+                    path, op, val = e.get("path"), e.get("op"), float(e.get("value") or 0)
+                    cur = float(g.get(path) or 0)
+                    g[path] = cur + val if op == "add" else cur * val if op == "mul" else val
+            return g
+        out = {}
+        for st in steps:
+            out[st.get("id")] = sim_lab_answers({"task": st.get("task"), "given": eff_given(st), "ask": st.get("ask")})
+        return {"steps": out, "decisions": decisions}
+
+    print("\n=== 43vv. Simulation Lab — linked multi-step scenario (P1) ===")
+    c, ms = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "MS-RECOVERY-001", "mode": "training"})
+    mtask = ms.get("task", {}); msid = ms.get("attempt_id")
+    chk("43vv the seeded multi-step scenario starts with steps[] and never leaks an answer key",
+        c == 200 and msid and mtask.get("multistep") is True and len(mtask.get("steps") or []) >= 4
+        and not any(k in _json.dumps(mtask).lower() for k in ("correct_value", "\"solution\"", "\"answer\"")), (c, list(mtask.keys())))
+    c, sub = jget("POST", f"/api/me/lab/attempts/{msid}/submit", token=mtok,
+                  body={"answers": _ms_answers(mtask, {"recovery": "crash", "funding": "request"})})
+    chk("43ww correct per-step answers under the chosen decisions grade to 100 and pass",
+        c == 200 and sub.get("score") == 100 and sub.get("passed") is True, (c, sub.get("score")))
+
+    # Determinism: the SAME computed answers submitted against a DIFFERENT recovery decision no longer match
+    # the (now different) downstream forecast — the learner's choice deterministically changes grading.
+    c, ms2 = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "MS-RECOVERY-001", "mode": "training"})
+    mtask2 = ms2.get("task", {}); msid2 = ms2.get("attempt_id")
+    mixed = _ms_answers(mtask2, {"recovery": "crash", "funding": "request"})
+    mixed["decisions"]["recovery"] = "descope"   # answers computed for crash, recorded decision descope
+    c, sub2 = jget("POST", f"/api/me/lab/attempts/{msid2}/submit", token=mtok, body={"answers": mixed})
+    chk("43xx a different decision deterministically changes the downstream grade (< 100)",
+        c == 200 and sub2.get("score") < 100, (c, sub2.get("score")))
+
+    # ---- admin author -> validate -> publish -> student-run journey for a MULTI-STEP scenario ----
+    ms_cfg = {"multistep": True, "prompt": "Author-journey linked scenario (synthetic).", "pass_pct": 70,
+              "competencies": ["earned_value", "decision_making"],
+              "steps": [
+                  {"id": "s1", "task": "evm", "prompt": "Compute CPI.", "given": {"pv": 100, "ev": 90, "ac": 95, "bac": 200},
+                   "ask": [{"key": "cpi", "label": "CPI", "type": "number"}],
+                   "decision": {"key": "d", "prompt": "Recover how?", "options": [
+                       {"value": "a", "label": "Crash (+20 AC downstream)", "effects": [{"step": "s2", "path": "ac", "op": "add", "value": 20}]},
+                       {"value": "b", "label": "No change", "effects": []}]}},
+                  {"id": "s2", "task": "evm", "prompt": "Compute EAC.", "given": {"pv": 100, "ev": 90, "ac": 100, "bac": 200},
+                   "ask": [{"key": "eac", "label": "EAC", "type": "number"}]}]}
+    c, cms = jget("POST", "/api/admin/lab/scenarios", token=admin, body={
+        "scenario_code": "IT-MS-001", "title": "Author multi-step", "difficulty": "intermediate",
+        "competencies": ["earned_value", "decision_making"], "certification_id": 1, "config_json": ms_cfg,
+        "synthetic_declared": True, "summary": "synthetic multi-step author test"})
+    ms_id = cms.get("id")
+    chk("43yy an admin authors a multi-step DRAFT", c == 200 and ms_id and cms.get("review_state") == "draft", (c, cms))
+    c, mval = jget("GET", f"/api/admin/lab/scenarios/{ms_id}/validate", token=admin)
+    chk("43yy2 the multi-step draft passes the publication validator (every step + branch reference-solves)",
+        c == 200 and mval.get("publishable") is True and mval.get("errors") == 0, (c, mval))
+    for stage in ("calc_review", "learning_review", "safety_review", "pilot"):
+        jget("POST", f"/api/admin/lab/scenarios/{ms_id}/review", token=admin, body={"to": stage})
+    jget("POST", f"/api/admin/lab/scenarios/{ms_id}/review", token=admin2, body={"to": "approved"})
+    c, mpub = jget("POST", f"/api/admin/lab/scenarios/{ms_id}/review", token=admin2, body={"to": "published"})
+    chk("43zz a second admin approves + publishes the multi-step scenario (maker-checker)",
+        c == 200 and mpub.get("review_state") == "published", (c, mpub))
+    c, msr = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "IT-MS-001", "mode": "training"})
+    rtask = msr.get("task", {}); rid = msr.get("attempt_id")
+    c, rsub = jget("POST", f"/api/me/lab/attempts/{rid}/submit", token=mtok, body={"answers": _ms_answers(rtask, {"d": "a"})})
+    chk("43zz2 a student runs the just-published multi-step scenario end-to-end to 100",
+        c == 200 and rsub.get("score") == 100, (c, rsub.get("score")))
+
+    # An ungradable multi-step (a step asking a measure the engine cannot resolve) is blocked at approval.
+    bad_cfg = {"multistep": True, "prompt": "bad", "pass_pct": 70, "competencies": ["earned_value"],
+               "steps": [{"id": "s1", "task": "evm", "prompt": "x", "given": {"pv": 1, "ev": 1, "ac": 1, "bac": 2},
+                          "ask": [{"key": "not_a_measure", "label": "nope", "type": "number"}]},
+                         {"id": "s2", "task": "evm", "prompt": "y", "given": {"pv": 1, "ev": 1, "ac": 1, "bac": 2},
+                          "ask": [{"key": "cpi", "label": "CPI", "type": "number"}]}]}
+    c, cbad = jget("POST", "/api/admin/lab/scenarios", token=admin, body={
+        "scenario_code": "IT-MS-BAD", "title": "Bad multi-step", "difficulty": "intermediate",
+        "competencies": ["earned_value"], "certification_id": 1, "config_json": bad_cfg,
+        "synthetic_declared": True, "summary": "synthetic"})
+    bad_id = cbad.get("id")
+    for stage in ("calc_review", "learning_review", "safety_review", "pilot"):
+        jget("POST", f"/api/admin/lab/scenarios/{bad_id}/review", token=admin, body={"to": stage})
+    c, ngb = jget("POST", f"/api/admin/lab/scenarios/{bad_id}/review", token=admin2, body={"to": "approved"})
+    chk("43zz3 an ungradable multi-step (unresolvable measure) is blocked at approval (not_publishable)",
+        c == 409 and ngb.get("error") == "not_publishable", (c, ngb.get("error")))
 
 def test_privacy_erasure(admin):
     # Incremental Testing Programme — Privacy / right-to-erasure lifecycle (previously ZERO coverage; §19/§26 GDPR-style).
@@ -5861,6 +6245,148 @@ def test_comms_centre(admin):
     con.execute("UPDATE comm_sender_profiles SET is_default=0 WHERE `key` IN ('ops55','mkt55')")
     con.execute("UPDATE comm_sender_profiles SET is_default=1 WHERE `key`=?", ("no-reply",))
     con.commit(); con.close()
+
+def test_free_templates(admin):
+    # Templates Library (§6A–6C, Endpoints/Templates.cs): the MEMBERS-ONLY student catalogue + authenticated CSV
+    # download vs the 'content'-gated admin CRUD. Templates are not on the public site — every student surface
+    # requires a portal session. Proves login gating, the serving invariant (only PUBLISHED templates are ever
+    # distributed), byte-exact CSV integrity, slug normalisation + duplicate refusal, and the download analytics.
+    print("\n=== 61. Templates Library: student catalogue, authenticated CSV download, admin CRUD ===")
+
+    stok, _suid = register_student("templates61@ex.co")
+
+    # Login gating: both student surfaces are 401 to an anonymous caller (the library is not public).
+    chk("61a0 the student catalogue and file download require a login (401 when anonymous)",
+        jget("GET", "/api/me/templates")[0] == 401 and _raw_get("/api/me/templates/wbs-template/file")[0] == 401)
+
+    c, cat = jget("GET", "/api/me/templates", token=stok)
+    rows = cat.get("rows", []) if isinstance(cat, dict) else []
+    wbs = next((r for r in rows if r.get("slug") == "wbs-template"), None)
+    blob = json.dumps(cat)
+    chk("61a the student catalogue serves the seeded published templates and never leaks the body in the list",
+        c == 200 and cat.get("total", 0) >= 12 and bool(wbs)
+        and wbs.get("download_url") == "/api/me/templates/wbs-template/file" and '"body"' not in blob,
+        (c, cat.get("total"), bool(wbs)))
+
+    st, body, ctype = _raw_get("/api/me/templates/wbs-template/file", token=stok)
+    text = body.decode("utf-8", "replace") if body else ""
+    chk("61b the CSV download streams the template body with a text/csv content-type",
+        st == 200 and "text/csv" in (ctype or "") and text.startswith("WBS ID,Parent ID"), (st, ctype, text[:24]))
+
+    st, _b, _ct = _raw_get("/api/me/templates/does-not-exist/file", token=stok)
+    chk("61d an unknown template slug returns 404", st == 404, st)
+
+    chk("61e the admin templates module refuses without a token (401 on list and create)",
+        jget("GET", "/api/admin/templates")[0] == 401
+        and jget("POST", "/api/admin/templates", body={"slug": "x58", "title": "x", "body": "a,b\n"})[0] == 401)
+    vtok = globals().get("_VIEWER_TOK")
+    if vtok:
+        c, fb = jget("GET", "/api/admin/templates", token=vtok)
+        chk("61e2 a viewer admin without the 'content' permission is refused (403)", c == 403, (c, fb))
+
+    c, mk = jget("POST", "/api/admin/templates", token=admin,
+                 body={"slug": "IT Test Template 58!!", "title": "IT Test Template", "category": "cost",
+                       "certification_id": 1, "summary": "integration test", "body": "A,B\n1,2\n", "published": False})
+    tid = mk.get("id"); tslug = mk.get("slug")
+    chk("61f an admin creates a template and the slug is normalised to a url-safe form",
+        c == 200 and tid and tslug == "it-test-template-58", (c, mk))
+    # A DRAFT is invisible to students — absent from the catalogue and not downloadable.
+    _c, cat2 = jget("GET", "/api/me/templates", token=stok)
+    in_list = any(r.get("slug") == tslug for r in (cat2.get("rows", []) if isinstance(cat2, dict) else []))
+    st, _b, _ct = _raw_get(f"/api/me/templates/{tslug}/file", token=stok)
+    chk("61g a DRAFT template is invisible to students (absent from catalogue, file 404)", (not in_list) and st == 404, (in_list, st))
+
+    c, dup = jget("POST", "/api/admin/templates", token=admin, body={"slug": tslug, "title": "dup", "body": "x,y\n"})
+    chk("61i a duplicate slug is refused (409)", c == 409 and dup.get("error") == "duplicate_slug", (c, dup))
+
+    c, _ = jget("PATCH", f"/api/admin/templates/{tid}", token=admin, body={"published": True})
+    st, _b, _ct = _raw_get(f"/api/me/templates/{tslug}/file", token=stok)
+    chk("61j publishing a draft makes it downloadable to students", c == 200 and st == 200, (c, st))
+
+    c, _ = jget("DELETE", f"/api/admin/templates/{tid}", token=admin)
+    st, _b, _ct = _raw_get(f"/api/me/templates/{tslug}/file", token=stok)
+    chk("61k deleting a template removes it from the student library (file 404)", c == 200 and st == 404, (c, st))
+
+    # §6C — per-template download analytics (admin, gated 'content'). A daily aggregate drives a dense 30-day
+    # trend + a top list; the grand total is the canonical per-template counter.
+    chk("61o the analytics endpoint refuses without a token (401) and to a viewer without 'content' (403)",
+        jget("GET", "/api/admin/templates/analytics")[0] == 401
+        and (globals().get("_VIEWER_TOK") is None
+             or jget("GET", "/api/admin/templates/analytics", token=globals()["_VIEWER_TOK"])[0] == 403))
+
+    c, a0 = jget("GET", "/api/admin/templates/analytics", token=admin)
+    win0 = a0.get("window_downloads", 0) if isinstance(a0, dict) else 0
+    tot0 = a0.get("total_downloads", 0) if isinstance(a0, dict) else 0
+    series0 = a0.get("series", []) if isinstance(a0, dict) else []
+    chk("61p the analytics shape is a dense 30-day series ending today plus a top list",
+        c == 200 and a0.get("window_days") == 30 and len(series0) == 30
+        and series0[-1].get("day") and isinstance(a0.get("top"), list) and a0["total_downloads"] >= a0["window_downloads"],
+        (c, len(series0), a0.get("window_days")))
+
+    # Two more authenticated student downloads must move both the grand total and today's bucket.
+    for _ in range(2):
+        _raw_get("/api/me/templates/evm-tracker/file", token=stok)
+    c, a1 = jget("GET", "/api/admin/templates/analytics", token=admin)
+    today1 = a1["series"][-1]["count"]
+    today0 = series0[-1]["count"]
+    chk("61q a student download increments the daily aggregate, the 30-day window and the grand total",
+        c == 200 and a1["window_downloads"] == win0 + 2 and a1["total_downloads"] == tot0 + 2 and today1 == today0 + 2,
+        (a1.get("window_downloads"), win0, a1.get("total_downloads"), tot0, today1, today0))
+    evm = next((t for t in a1["top"] if t.get("slug") == "evm-tracker"), None)
+    chk("61r the downloaded template appears in the top list with a positive count",
+        bool(evm) and evm["download_count"] >= 2, evm)
+
+    # §6D — per-student download history. The catalogue flags which templates THIS student has already taken
+    # (drives the "Downloaded" badge + new-only filter), and the flag is personal: another student sees only
+    # their own history. Student one has downloaded wbs-template (61b) and evm-tracker (61q), never risk-register.
+    _c, cat3 = jget("GET", "/api/me/templates", token=stok)
+    rows3 = cat3.get("rows", []) if isinstance(cat3, dict) else []
+    wbs3 = next((r for r in rows3 if r.get("slug") == "wbs-template"), None)
+    evm3 = next((r for r in rows3 if r.get("slug") == "evm-tracker"), None)
+    risk3 = next((r for r in rows3 if r.get("slug") == "risk-register"), None)
+    chk("61s the catalogue marks the templates this student has downloaded and leaves the rest unflagged",
+        bool(wbs3) and wbs3.get("downloaded") is True and bool(evm3) and evm3.get("downloaded") is True
+        and bool(risk3) and risk3.get("downloaded") is False,
+        (wbs3 and wbs3.get("downloaded"), evm3 and evm3.get("downloaded"), risk3 and risk3.get("downloaded")))
+
+    stok2, _suid2 = register_student("templates61b@ex.co")
+    _c, cat4 = jget("GET", "/api/me/templates", token=stok2)
+    rows4 = cat4.get("rows", []) if isinstance(cat4, dict) else []
+    wbs4 = next((r for r in rows4 if r.get("slug") == "wbs-template"), None)
+    chk("61t download history is per-student — a fresh student starts with nothing flagged",
+        bool(wbs4) and wbs4.get("downloaded") is False and not any(r.get("downloaded") for r in rows4),
+        (bool(wbs4), [r.get("slug") for r in rows4 if r.get("downloaded")]))
+
+    # A download by student two flags it for THEM only — student one still sees risk-register as new.
+    _raw_get("/api/me/templates/risk-register/file", token=stok2)
+    _c, cat5 = jget("GET", "/api/me/templates", token=stok2)
+    risk5 = next((r for r in (cat5.get("rows", []) if isinstance(cat5, dict) else []) if r.get("slug") == "risk-register"), None)
+    _c, cat6 = jget("GET", "/api/me/templates", token=stok)
+    risk6 = next((r for r in (cat6.get("rows", []) if isinstance(cat6, dict) else []) if r.get("slug") == "risk-register"), None)
+    chk("61u a student's download flags it for them only, never for another student",
+        bool(risk5) and risk5.get("downloaded") is True and bool(risk6) and risk6.get("downloaded") is False,
+        (risk5 and risk5.get("downloaded"), risk6 and risk6.get("downloaded")))
+
+    # §6E — reach: the admin analytics report DISTINCT-student counts, not just raw downloads. evm-tracker was
+    # pulled twice by one student (61q), so its download_count exceeds its distinct-downloader count; overall at
+    # least two students (student one + student two) have taken templates.
+    c, a2 = jget("GET", "/api/admin/templates/analytics", token=admin)
+    evm2 = next((t for t in (a2.get("top", []) if isinstance(a2, dict) else []) if t.get("slug") == "evm-tracker"), None)
+    chk("61v the analytics report distinct-student reach (unique downloaders overall + per template)",
+        c == 200 and a2.get("unique_downloaders", 0) >= 2 and bool(evm2)
+        and evm2.get("downloaders", 0) >= 1 and evm2["downloaders"] < evm2["download_count"],
+        (a2.get("unique_downloaders"), evm2))
+
+    # §6F — the admin templates list carries the same per-template distinct-downloader reach (drives the
+    # "Students" column and the full CSV export). evm-tracker was taken twice by one student, so its distinct
+    # downloader count is at least 1 and never exceeds its raw download count.
+    c, lst = jget("GET", "/api/admin/templates", token=admin)
+    levm = next((r for r in (lst.get("rows", []) if isinstance(lst, dict) else []) if r.get("slug") == "evm-tracker"), None)
+    chk("61w the admin templates list reports per-template distinct-student reach",
+        c == 200 and bool(levm) and "downloaders" in levm
+        and levm["downloaders"] >= 1 and levm["downloaders"] <= levm["download_count"],
+        (c, levm and {k: levm.get(k) for k in ("slug", "download_count", "downloaders")}))
+
 
 def test_public_documents(admin):
     # Incremental Testing Programme §57 — Public Downloads Centre (Endpoints/PublicDocuments.cs, 12 routes,

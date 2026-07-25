@@ -194,4 +194,21 @@ public class RbacTests
         Assert.Equal(new[] { "overview", "reports" }, Rbac.PermsFor("viewer", "{not json").OrderBy(x => x));
         Assert.Empty(Rbac.PermsFor("no_such_role", null));
     }
+
+    [Fact]
+    public void PermsFor_ContentGrandfathersSimLab_ButSimLabStaysLeastPrivilege()
+    {
+        // The Simulation Lab admin has its own first-class permission, surfaced in the Team & Access catalogue.
+        Assert.Contains("sim_lab", Rbac.AllSections);
+
+        // Grandfather: an admin who could manage the Lab via 'content' keeps access through 'sim_lab'.
+        Assert.Contains("sim_lab", Rbac.PermsFor("custom", "[\"content\"]"));
+        // The seeded website_manager bundle (which carried 'content') now also carries 'sim_lab'.
+        Assert.Contains("sim_lab", Rbac.PermsFor("website_manager", null));
+
+        // Least privilege: 'sim_lab' can be granted alone without conferring marketing-'content' rights.
+        var simOnly = Rbac.PermsFor("custom", "[\"sim_lab\"]");
+        Assert.Contains("sim_lab", simOnly);
+        Assert.DoesNotContain("content", simOnly);
+    }
 }

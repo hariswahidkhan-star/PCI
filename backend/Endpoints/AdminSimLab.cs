@@ -1,4 +1,6 @@
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using PCI.Backend.Core;
 using PCI.Backend.Data;
 
@@ -10,16 +12,27 @@ namespace PCI.Backend.Endpoints;
 /// competencies and interactivity, and how much practice each has seen (attempt + completion counts).
 /// Authoring / publishing lifecycle arrives in a later increment; this gives operators visibility now.
 ///
-/// Gated by the existing 'content' permission (the Lab is educational content). Read-only, self-contained,
-/// no external credentials, and it never exposes student-identifying data — only per-scenario aggregates.
+/// Gated by the dedicated 'sim_lab' permission (least privilege — a simulation author no longer needs full
+/// marketing-'content' rights to manage the Lab). 'content' is grandfathered to 'sim_lab' in Rbac.PermsFor so
+/// no existing operator loses access. Never exposes student-identifying data — only per-scenario aggregates.
 /// </summary>
 public static class AdminSimLab
 {
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log,
         Func<HttpRequest, string, Func<AdminCtx, IResult>, IResult> gate)
     {
+        // ---- authoring templates: one known-good starter config per engine task ----
+        // The Studio's config textarea is otherwise a blank page against 18 different engine contracts.
+        // Every template is proven publishable by SimTemplatesTests, so "start from template" always yields
+        // a draft that passes the validator before the author has written a word.
+        app.MapGet("/api/admin/lab/templates", (HttpRequest req) => gate(req, "sim_lab", _ =>
+            Results.Json(new
+            {
+                rows = SimTemplates.All.Select(t => new { task = t.Task, label = t.Label, hint = t.Hint, config = t.Config }),
+            })));
+
         // ---- scenario catalogue (all statuses) + per-scenario practice aggregates ----
-        app.MapGet("/api/admin/lab/scenarios", (HttpRequest req) => gate(req, "content", _ =>
+        app.MapGet("/api/admin/lab/scenarios", (HttpRequest req) => gate(req, "sim_lab", _ =>
         {
             // Per-scenario attempt + completion counts (aggregate only — no student identity).
             var stats = new Dictionary<long, (long attempts, long completed)>();
@@ -73,7 +86,7 @@ public static class AdminSimLab
         // ---- content-quality validation for one scenario (§14 publication gate) ----
         // Runs the deterministic SimContent validator: metadata completeness, retired-name check, and the
         // reference-solver pass (every asked measure must resolve through the engine). Read-only.
-        app.MapGet("/api/admin/lab/scenarios/{id}/validate", (HttpRequest req, long id) => gate(req, "content", _ =>
+        app.MapGet("/api/admin/lab/scenarios/{id}/validate", (HttpRequest req, long id) => gate(req, "sim_lab", _ =>
         {
             var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
             if (s is null) return Results.NotFound(new { error = "not_found" });
@@ -92,12 +105,154 @@ public static class AdminSimLab
             });
         }));
 
+        // ---- deterministic manifest export for one scenario version (§5B.4). Read-only: content +
+        //      governance state + the live validation verdict, checksummed over the graded content alone.
+        //      Byte-identical on every call for the same content — there is no export timestamp, no exporter
+        //      identity, no reviewer identity and no attempt counts (see SimManifest for why each is out). ----
+        app.MapGet("/api/admin/lab/scenarios/{id}/manifest", (HttpContext ctx, long id) => gate(ctx.Request, "sim_lab", adm =>
+        {
+            var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
+            if (s is null) return Results.NotFound(new { error = "not_found" });
+
+            var json = SimManifest.Build(s, SimContent.Validate(InputFrom(s), OtherCodes(db, id)));
+            var code = H.Str(s["scenario_code"]);
+            var version = H.L(s["version"]);
+            // FileName reduces the operator-authored code to a safe alphabet — a quote or newline in a
+            // scenario code must never be able to forge a response header.
+            ctx.Response.Headers["Content-Disposition"] = $"attachment; filename=\"{SimManifest.FileName(code, version)}\"";
+            log(adm.Id, "sim_scenario_export", $"{code} v{version}");
+            return Results.Text(json, "application/json", Encoding.UTF8);
+        }));
+
+        // ---- whole-catalogue manifest bundle (§5B.6). One deterministic file for backup or migration,
+        //      instead of exporting scenarios one at a time. `status` narrows it (default: everything);
+        //      ordering is by scenario_code so two environments holding the same content agree. ----
+        app.MapGet("/api/admin/lab/manifest-bundle", (HttpContext ctx, string? status) => gate(ctx.Request, "sim_lab", adm =>
+        {
+            // Validated against the operational status vocabulary rather than sanitised, so the value is
+            // safe by construction both in the query and in the response header.
+            var wanted = (status ?? "").Trim().ToLowerInvariant();
+            if (wanted.Length > 0 && wanted is not ("draft" or "published" or "suspended" or "archived"))
+                return Results.Json(new { error = "bad_status", message = "Use draft, published, suspended or archived." }, statusCode: 400);
+
+            var rows = wanted.Length == 0
+                ? db.Query("SELECT * FROM simulation_scenarios")
+                : db.Query("SELECT * FROM simulation_scenarios WHERE status=?", wanted);
+
+            var all = new List<(Dictionary<string, object?>, IReadOnlyList<SimContent.Issue>)>();
+            foreach (var s in rows)
+                all.Add((s, SimContent.Validate(InputFrom(s), OtherCodes(db, H.L(s["id"])))));
+
+            var json = SimManifest.Bundle(all);
+            var name = wanted.Length == 0 ? "catalogue" : wanted;
+            ctx.Response.Headers["Content-Disposition"] = $"attachment; filename=\"pci-simulation-{name}.pcisim-bundle.json\"";
+            log(adm.Id, "sim_bundle_export", $"{all.Count} scenario(s){(wanted.Length > 0 ? $" · {wanted}" : "")}");
+            return Results.Text(json, "application/json", Encoding.UTF8);
+        }));
+
+        // ---- import a manifest as a NEW DRAFT (§5B.5 — the other half of manifest I/O). Verifies the
+        //      envelope and recomputed content checksum, then lands the scenario in draft.
+        //
+        //      An import can never publish. Whatever lifecycle the file claims, the row is written at
+        //      draft/draft and must walk the full review workflow here — and because the importing admin is
+        //      recorded as the author, maker-checker still forces a different admin to approve it. Governance
+        //      dates are NOT carried either: a review-due or expiry from the source environment is a
+        //      statement about that environment's schedule, and silently importing one could expire content
+        //      the moment it lands. ----
+        // ---- import a whole catalogue bundle (§5B.8). Integrity is all-or-nothing: a bundle whose
+        //      checksum does not reconcile imports NOTHING, because if one entry was altered in transit
+        //      there is no reason to trust the rest. A code that is already taken is a different matter —
+        //      that is this environment's state, not the file's integrity — so those entries are skipped
+        //      and named, which also makes re-running an interrupted migration safe. ----
+        app.MapPost("/api/admin/lab/scenarios/import-bundle", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, "sim_lab", adm =>
+            {
+                var bundle = H.GetEl(b, "bundle") is { ValueKind: JsonValueKind.Object } el
+                    ? JsonNode.Parse(el.GetRawText()) as JsonObject : null;
+
+                var verdict = SimManifest.VerifyBundle(bundle, out var entries);
+                if (verdict != SimManifest.Reject.None)
+                    return Results.Json(new { error = SimManifest.Code(verdict), message = RejectMessage(verdict, bundleWord: true) },
+                        statusCode: verdict == SimManifest.Reject.ChecksumMismatch ? 409 : 400);
+
+                var imported = new List<object>();
+                var skipped = new List<object>();
+                foreach (var e in entries)
+                {
+                    if (db.QueryOne("SELECT id FROM simulation_scenarios WHERE scenario_code=?", e.Code) is not null)
+                    {
+                        skipped.Add(new { scenario_code = e.Code, reason = "duplicate_code" });
+                        continue;
+                    }
+                    var newId = InsertImported(db, e.Row, e.Code, adm.Id);
+                    var stored = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", newId)!;
+                    var found = SimContent.Validate(InputFrom(stored), OtherCodes(db, newId));
+                    imported.Add(new
+                    {
+                        id = newId, scenario_code = e.Code, checksum = e.Checksum, imported_version = e.Version,
+                        publishable = SimContent.Publishable(found),
+                        errors = found.Count(i => i.Severity == SimContent.Severity.Error),
+                        warnings = found.Count(i => i.Severity == SimContent.Severity.Warning),
+                    });
+                }
+
+                log(adm.Id, "sim_bundle_import", $"{imported.Count} imported · {skipped.Count} skipped of {entries.Count}");
+                return Results.Json(new
+                {
+                    total = entries.Count, imported_count = imported.Count, skipped_count = skipped.Count,
+                    imported, skipped,
+                });
+            });
+        });
+
+        app.MapPost("/api/admin/lab/scenarios/import", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, "sim_lab", adm =>
+            {
+                var manifest = H.GetEl(b, "manifest") is { ValueKind: JsonValueKind.Object } mEl
+                    ? JsonNode.Parse(mEl.GetRawText()) as JsonObject : null;
+
+                var verdict = SimManifest.Verify(manifest, out var row, out var checksum);
+                if (verdict != SimManifest.Reject.None)
+                    return Results.Json(new { error = SimManifest.Code(verdict), message = RejectMessage(verdict, bundleWord: false) },
+                        statusCode: verdict == SimManifest.Reject.ChecksumMismatch ? 409 : 400);
+
+                // The operator may land the import under a different code (importing alongside a scenario
+                // that already owns the original code).
+                var code = (H.GetS(b, "as_code") ?? H.Str(row["scenario_code"]) ?? "").Trim();
+                if (code.Length == 0) return Results.Json(new { error = "bad_manifest" }, statusCode: 400);
+                if (db.QueryOne("SELECT id FROM simulation_scenarios WHERE scenario_code=?", code) is not null)
+                    return Results.Json(new { error = "duplicate_code", message = "A scenario with this code already exists — import it under a different code." }, statusCode: 409);
+
+                var id = InsertImported(db, row, code, adm.Id);
+
+                // Re-run the §14 validator here: content that was publishable in the source environment may
+                // not be publishable in this one (a retired name, a colliding code, a task this build cannot
+                // solve), and the operator should see that immediately rather than at the approval gate.
+                var stored = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id)!;
+                var issues = SimContent.Validate(InputFrom(stored), OtherCodes(db, id));
+                log(adm.Id, "sim_scenario_import", $"{code} · #{id} · {checksum[..12]}");
+                return Results.Json(new
+                {
+                    id, scenario_code = code, review_state = "draft", status = "draft", checksum,
+                    imported_version = H.L(row["version"]),
+                    publishable = SimContent.Publishable(issues),
+                    errors = issues.Count(i => i.Severity == SimContent.Severity.Error),
+                    warnings = issues.Count(i => i.Severity == SimContent.Severity.Warning),
+                    issues = issues.Select(i => new { severity = i.Severity.ToString().ToLowerInvariant(), code = i.Code, message = i.Message }),
+                });
+            });
+        });
+
         // ---- create a DRAFT scenario (§13 authoring). Records the author for maker-checker; starts in the
         //      draft review state and is never served to students until it walks the review workflow. ----
         app.MapPost("/api/admin/lab/scenarios", async (HttpContext ctx) =>
         {
             var b = await H.Body(ctx.Request);
-            return gate(ctx.Request, "content", adm =>
+            return gate(ctx.Request, "sim_lab", adm =>
             {
                 var code = (H.GetS(b, "scenario_code") ?? "").Trim();
                 var title = (H.GetS(b, "title") ?? "").Trim();
@@ -131,7 +286,7 @@ public static class AdminSimLab
         app.MapPost("/api/admin/lab/scenarios/{id}/review", async (HttpContext ctx, long id) =>
         {
             var b = await H.Body(ctx.Request);
-            return gate(ctx.Request, "content", adm =>
+            return gate(ctx.Request, "sim_lab", adm =>
             {
                 var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
                 if (s is null) return Results.NotFound(new { error = "not_found" });
@@ -180,7 +335,7 @@ public static class AdminSimLab
         app.MapPatch("/api/admin/lab/scenarios/{id}", async (HttpContext ctx, long id) =>
         {
             var b = await H.Body(ctx.Request);
-            return gate(ctx.Request, "content", adm =>
+            return gate(ctx.Request, "sim_lab", adm =>
             {
                 var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
                 if (s is null) return Results.NotFound(new { error = "not_found" });
@@ -224,7 +379,7 @@ public static class AdminSimLab
         app.MapPost("/api/admin/lab/scenarios/{id}/revise", async (HttpContext ctx, long id) =>
         {
             var b = await H.Body(ctx.Request);
-            return gate(ctx.Request, "content", adm =>
+            return gate(ctx.Request, "sim_lab", adm =>
             {
                 var s = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", id);
                 if (s is null) return Results.NotFound(new { error = "not_found" });
@@ -253,7 +408,7 @@ public static class AdminSimLab
         app.MapPatch("/api/admin/lab/scenarios/{id}/governance", async (HttpContext ctx, long id) =>
         {
             var b = await H.Body(ctx.Request);
-            return gate(ctx.Request, "content", adm =>
+            return gate(ctx.Request, "sim_lab", adm =>
             {
                 var s = db.QueryOne("SELECT id,scenario_code FROM simulation_scenarios WHERE id=?", id);
                 if (s is null) return Results.NotFound(new { error = "not_found" });
@@ -284,6 +439,46 @@ public static class AdminSimLab
             });
         });
     }
+
+    static string RejectMessage(SimManifest.Reject r, bool bundleWord)
+    {
+        var noun = bundleWord ? "bundle" : "manifest";
+        return r switch
+        {
+            SimManifest.Reject.WrongKind => bundleWord
+                ? "This file is not a PCI simulation catalogue bundle."
+                : "This file is not a PCI simulation scenario manifest.",
+            SimManifest.Reject.UnsupportedVersion => $"This {noun} was written by a newer version of the platform.",
+            SimManifest.Reject.ChecksumMismatch => bundleWord
+                ? "The bundle's content does not match its checksum — it was modified or truncated, so none of it was imported."
+                : "The manifest's content does not match its checksum — it was modified or truncated.",
+            _ => bundleWord
+                ? "The bundle is missing the fields a catalogue needs."
+                : "The manifest is missing the fields a scenario needs.",
+        };
+    }
+
+    /// <summary>
+    /// The single INSERT both import paths use, so the two can never disagree about what an import is.
+    /// Three things are forced here rather than taken from the file: the row lands as a DRAFT (nothing in
+    /// a file may grant published state), the importing admin is the author (so maker-checker still needs
+    /// a second pair of eyes), and version starts at 1 (version numbers are a per-environment lineage, not
+    /// a property of the content — an imported v7 becomes this environment's v1, pinned by its checksum).
+    /// Governance dates are deliberately not carried: they describe the source environment's schedule.
+    /// </summary>
+    static long InsertImported(Db db, Dictionary<string, object?> row, string code, long adminId) =>
+        db.ExecuteReturningId(@"INSERT INTO simulation_scenarios
+            (scenario_code,title,kind,industry,project_type,difficulty,est_minutes,competencies_json,
+             certification_id,summary,brief,config_json,objectives_json,provenance,disclaimers,
+             worked_solution,status,review_state,version,synthetic_declared,authored_by,created_by)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'draft','draft', 1, ?, ?, ?)",
+            code, H.Str(row["title"]), H.Str(row["kind"]) ?? "scenario", H.Str(row["industry"]),
+            H.Str(row["project_type"]), H.Str(row["difficulty"]) ?? "foundation",
+            (int)H.L(row["est_minutes"]), H.Str(row["competencies_json"]),
+            row["certification_id"], H.Str(row["summary"]), H.Str(row["brief"]),
+            H.Str(row["config_json"]), H.Str(row["objectives_json"]), H.Str(row["provenance"]),
+            H.Str(row["disclaimers"]), H.Str(row["worked_solution"]),
+            H.L(row["synthetic_declared"]) == 1 ? 1 : 0, adminId, adminId);
 
     static SimContent.ScenarioInput InputFrom(Dictionary<string, object?> s) => new(
         H.Str(s["scenario_code"]) ?? "", H.Str(s["title"]), H.Str(s["summary"]), H.Str(s["difficulty"]),
