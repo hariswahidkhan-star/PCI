@@ -28,7 +28,9 @@ their subject matter without inheriting its defects.
   depth-expansion condition ([`PHASE1_REPORT.md`](PHASE1_REPORT.md)). Toolchain in
   [`_build/`](_build/): `verify_formulas.py` (99 golden checks), `make_figures.py`,
   `build_book.py` + `print.css`.
-- Phases 2–8 proceed per the charter §8; no phase is skipped to meet page count.
+- **Phase 2 — Foundation domains:** in progress under the production loop
+  ([`PHASE2_REPORT.md`](PHASE2_REPORT.md)); PFL-AI Domain 4 delivered.
+- Phases 3–8 proceed per the charter §8; no phase is skipped to meet page count.
 
 ## Relationship to the rest of the repository
 

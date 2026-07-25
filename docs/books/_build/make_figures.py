@@ -273,5 +273,80 @@ body = (grid + steps([(0, 0), (1, 30000), (2, 60000)], SLATE, 2.2)
         + "".join(f'<text x="{Xc(wk)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{wk}</text>' for wk in (0, 1, 2)))
 (PML / "fig_6_4_1.svg").write_text(svg(W, H, body))
 
+# ---- Fig 4.1.1 NPV profile --------------------------------------------------------
+def af_f(r, n):
+    return (1 - (1 + r) ** -n) / r if r else float(n)
+W, H, L, R, T, B = 640, 400, 84, 24, 24, 56
+def Xr4(r): return L + r / 0.20 * (W - L - R)
+def Yn4(v): return H - B - (v + 20e6) / 95e6 * (H - T - B)
+pts = " ".join(f"{Xr4(r/1000)},{Yn4(8.9e6*af_f(r/1000,15)-60e6)}" for r in range(0, 201, 5))
+grid = "".join(f'<line x1="{L}" y1="{Yn4(v*1e6)}" x2="{W-R}" y2="{Yn4(v*1e6)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yn4(v*1e6)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v}m</text>'
+               for v in range(-20, 76, 20))
+xt = "".join(f'<text x="{Xr4(r/100)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{r}%</text>' for r in range(0, 21, 5))
+irr_x, hz_x = Xr4(0.1219), Xr4(0.08)
+body = (grid + f'<line x1="{L}" y1="{Yn4(0)}" x2="{W-R}" y2="{Yn4(0)}" stroke="{INK}" stroke-width="1"/>'
+        + f'<polyline points="{pts}" fill="none" stroke="{BLUE}" stroke-width="2.6"/>'
+        + f'<line x1="{hz_x}" y1="{Yn4(-20e6)}" x2="{hz_x}" y2="{Yn4(16.18e6)}" stroke="{SLATE}" stroke-dasharray="5 4"/>'
+        + f'<circle cx="{hz_x}" cy="{Yn4(16.18e6)}" r="3.6" fill="{BLUE}"/>'
+        + f'<text x="{hz_x+6}" y="{Yn4(16.18e6)-8}" font-size="10.5" fill="{INK}">8% hurdle: NPV +16.18m</text>'
+        + f'<circle cx="{irr_x}" cy="{Yn4(0)}" r="4" fill="{CRIMSON}"/>'
+        + f'<text x="{irr_x+6}" y="{Yn4(0)+16}" font-size="10.5" font-weight="600" fill="{CRIMSON}">IRR 12.19%</text>'
+        + axes(L, T, W - R, H - B, "Discount rate", "NPV (USD)") + xt)
+(PFL / "fig_4_1_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 4.2.1 two paybacks -------------------------------------------------------
+W, H, L, R, T, B = 640, 400, 84, 24, 24, 56
+def Xy4(t): return L + t / 15 * (W - L - R)
+def Yc4(v): return H - B - (v + 60e6) / 140e6 * (H - T - B)
+nom, dis = [], []
+cn = cd = -60e6
+for t in range(16):
+    nom.append((t, cn)); dis.append((t, cd))
+    cn += 8.9e6; cd += 8.9e6 / 1.08 ** (t + 1)
+shade = ("M" + " L".join(f"{Xy4(t)},{Yc4(v)}" for t, v in nom)
+         + " L" + " L".join(f"{Xy4(t)},{Yc4(v)}" for t, v in reversed(dis)) + " Z")
+grid = "".join(f'<line x1="{L}" y1="{Yc4(v*1e6)}" x2="{W-R}" y2="{Yc4(v*1e6)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yc4(v*1e6)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v}m</text>'
+               for v in range(-60, 81, 20))
+xt = "".join(f'<text x="{Xy4(t)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{t}</text>' for t in range(0, 16, 3))
+body = (grid + f'<path d="{shade}" fill="{BLUE}" opacity="0.08"/>'
+        + f'<line x1="{L}" y1="{Yc4(0)}" x2="{W-R}" y2="{Yc4(0)}" stroke="{INK}" stroke-width="1"/>'
+        + f'<polyline points="{" ".join(f"{Xy4(t)},{Yc4(v)}" for t, v in nom)}" fill="none" stroke="{SLATE}" stroke-width="2.2" stroke-dasharray="6 4"/>'
+        + f'<polyline points="{" ".join(f"{Xy4(t)},{Yc4(v)}" for t, v in dis)}" fill="none" stroke="{BLUE}" stroke-width="2.6"/>'
+        + f'<circle cx="{Xy4(6.74)}" cy="{Yc4(0)}" r="3.6" fill="{INK}"/>'
+        + f'<text x="{Xy4(6.74)}" y="{Yc4(0)-10}" font-size="10.5" fill="{INK}" text-anchor="middle">payback 6.74</text>'
+        + f'<circle cx="{Xy4(10.07)}" cy="{Yc4(0)}" r="4" fill="{CRIMSON}"/>'
+        + f'<text x="{Xy4(10.07)+4}" y="{Yc4(0)+18}" font-size="10.5" font-weight="600" fill="{CRIMSON}">discounted 10.07</text>'
+        + f'<text x="{Xy4(12.6)}" y="{Yc4(30e6)}" font-size="10" fill="{SLATE}">the cost of time value</text>'
+        + axes(L, T, W - R, H - B, "Years", "Cumulative cash (USD)") + xt)
+(PFL / "fig_4_2_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 4.3.1 crossover ----------------------------------------------------------
+W, H, L, R, T, B = 640, 400, 84, 24, 24, 56
+def Xr5(r): return L + r / 0.30 * (W - L - R)
+def Yn5(v): return H - B - (v + 6e6) / 18e6 * (H - T - B)
+p_pts = " ".join(f"{Xr5(r/1000)},{Yn5(2e6*af_f(r/1000,5)-5e6)}" for r in range(0, 301, 5))
+q_pts = " ".join(f"{Xr5(r/1000)},{Yn5(6e6*af_f(r/1000,5)-20e6)}" for r in range(0, 301, 5))
+grid = "".join(f'<line x1="{L}" y1="{Yn5(v*1e6)}" x2="{W-R}" y2="{Yn5(v*1e6)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yn5(v*1e6)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v}m</text>'
+               for v in range(-6, 13, 3))
+xt = "".join(f'<text x="{Xr5(r/100)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{r}%</text>' for r in range(0, 31, 5))
+cx = Xr5(0.1042)
+cy = Yn5(2e6 * af_f(0.1042, 5) - 5e6)
+body = (grid + f'<line x1="{L}" y1="{Yn5(0)}" x2="{W-R}" y2="{Yn5(0)}" stroke="{INK}" stroke-width="1"/>'
+        + f'<polyline points="{q_pts}" fill="none" stroke="{BLUE}" stroke-width="2.6"/>'
+        + f'<polyline points="{p_pts}" fill="none" stroke="{SLATE}" stroke-width="2.2"/>'
+        + f'<line x1="{Xr5(0.08)}" y1="{Yn5(-6e6)}" x2="{Xr5(0.08)}" y2="{Yn5(12e6)}" stroke="{SLATE}" stroke-dasharray="5 4"/>'
+        + f'<text x="{Xr5(0.08)+4}" y="{T+14}" font-size="10" fill="{SLATE}">8% hurdle</text>'
+        + f'<circle cx="{cx}" cy="{cy}" r="4" fill="{CRIMSON}"/>'
+        + f'<text x="{cx+8}" y="{cy-8}" font-size="10.5" font-weight="600" fill="{CRIMSON}">crossover 10.42% — ranking flips</text>'
+        + f'<text x="{Xr5(0.015)}" y="{Yn5(10.2e6)}" font-size="11" font-weight="600" fill="{BLUE}">Q (full-scale)</text>'
+        + f'<text x="{Xr5(0.015)}" y="{Yn5(4.6e6)}" font-size="11" font-weight="600" fill="{SLATE}">P (compact)</text>'
+        + f'<text x="{Xr5(0.152)+6}" y="{Yn5(0)+16}" font-size="9.5" fill="{BLUE}">IRR(Q) 15.24%</text>'
+        + f'<text x="{Xr5(0.2865)+2}" y="{Yn5(0)-8}" font-size="9.5" fill="{SLATE}">IRR(P) 28.65%</text>'
+        + axes(L, T, W - R, H - B, "Discount rate", "NPV (USD)") + xt)
+(PFL / "fig_4_3_1.svg").write_text(svg(W, H, body))
+
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")

@@ -4,7 +4,7 @@
 symbol exists there). A chapter restates a symbol's definition inline when it uses it, but never changes
 it. Every formula entered here must carry at least one independently verified **golden example**
 (inputs → full-precision result → display rounding) before any chapter that uses it can pass gate.
-Golden examples are automated as checks in `tools/verify_formulas.py` (built in Phase 1).
+Golden examples are automated as checks in `_build/verify_formulas.py`.
 
 Status legend: ✅ verified golden example exists · ⏳ registered, verification pending.
 
@@ -31,9 +31,9 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
 
 | Symbol | Meaning | Unit | First home | Status |
 |---|---|---|---|---|
-| `ES` | Earned Schedule (time-based schedule measure) | time | PML-AI D6 | ⏳ |
-| `SPI(t)` | Schedule Performance Index (time) = `ES/AT` | ratio | PML-AI D6 | ⏳ |
-| `TF`, `FF` | Total float, free float | time | PML-AI D6 | ⏳ |
+| `ES` | Earned Schedule (time-based schedule measure) | time | PML-AI D6 | ✅ |
+| `SPI(t)` | Schedule Performance Index (time) = `ES/AT` | ratio | PML-AI D6 | ✅ |
+| `TF`, `FF` | Total float, free float | time | PML-AI D6 | ✅ |
 | `EMV` | Expected monetary value = Σ(probability × impact) | currency | PML-AI D8 | ⏳ |
 | `EVA(benefit)` | Benefit measure in benefits register (named in words to avoid EV clash) | currency | PML-AI D2/D16 | ⏳ |
 
@@ -41,11 +41,11 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
 
 | Symbol | Meaning | Unit | First home | Status |
 |---|---|---|---|---|
-| `FV(x)` | Future value of amount `x` | currency | PFL-AI D3 | ⏳ |
-| `NPV` | Net present value = Σ CFₜ/(1+r)ᵗ − I₀ | currency | PFL-AI D4 | ⏳ |
-| `IRR` / `MIRR` | Internal / modified internal rate of return | %/period | PFL-AI D4 | ⏳ |
-| `PI` | Profitability index = PV(future CF)/I₀ | ratio | PFL-AI D4 | ⏳ |
-| `EAV` | Equivalent annual value | currency/period | PFL-AI D4 | ⏳ |
+| `FV(x)` | Future value of amount `x` | currency | PFL-AI D3 | ✅ |
+| `NPV` | Net present value = Σ CFₜ/(1+r)ᵗ − I₀ | currency | PFL-AI D4 | ✅ |
+| `IRR` / `MIRR` | Internal / modified internal rate of return | %/period | PFL-AI D4 | ✅ |
+| `PI` | Profitability index = PV(future CF)/I₀ | ratio | PFL-AI D4 | ✅ |
+| `EAV` | Equivalent annual value | currency/period | PFL-AI D4 | ✅ |
 | `WACC` | Weighted average cost of capital | %/period | PFL-AI D4/D9 | ⏳ |
 | `CFADS` | Cash flow available for debt service | currency/period | PFL-AI D10 | ⏳ |
 | `DSCR` | Debt service coverage ratio = CFADS/(interest + scheduled principal) per period | ratio | PFL-AI D10 | ⏳ |
@@ -53,9 +53,9 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
 | `PLCR` | Project life coverage ratio = PV(CFADS over project life)/outstanding debt | ratio | PFL-AI D10 | ⏳ |
 | `ICR` | Interest coverage ratio | ratio | PFL-AI D10 | ⏳ |
 | `D/E` | Gearing (debt : equity) | ratio | PFL-AI D9 | ⏳ |
-| `i_nom`, `i_real`, `π` | Nominal rate, real rate, inflation (Fisher: `1+i_nom = (1+i_real)(1+π)`) | %/period | PFL-AI D3 | ⏳ |
-| `DF(t)` | Discount factor at period `t` = 1/(1+r)ᵗ | ratio | PFL-AI D3 | ⏳ |
-| `A` | Annuity payment (context-flagged; PCP-AI uses `A` = Assets in accounting chapters — write "annuity payment `A`" at first use) | currency/period | PFL-AI D3 | ⏳ |
+| `i_nom`, `i_real`, `π` | Nominal rate, real rate, inflation (Fisher: `1+i_nom = (1+i_real)(1+π)`) | %/period | PFL-AI D3 | ✅ |
+| `DF(t)` | Discount factor at period `t` = 1/(1+r)ᵗ | ratio | PFL-AI D3 | ✅ |
+| `A` | Annuity payment (context-flagged; PCP-AI uses `A` = Assets in accounting chapters — write "annuity payment `A`" at first use) | currency/period | PFL-AI D3 | ✅ |
 
 ## 4. Verification protocol
 
