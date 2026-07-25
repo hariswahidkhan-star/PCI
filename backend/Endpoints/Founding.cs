@@ -284,11 +284,12 @@ public static class Founding
             return J(new { rows });
         }));
 
-        app.MapGet("/api/admin/founding-applications/{id}/evidence", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
+        app.MapGet("/api/admin/founding-applications/{id}/evidence", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
-            var a = db.QueryOne("SELECT evidence_ref FROM founding_applications WHERE id=?", id);
+            var a = db.QueryOne("SELECT user_id,evidence_ref FROM founding_applications WHERE id=?", id);
             var got = a is null ? null : Storage.Get(H.Str(a["evidence_ref"]));
             if (got is null || got.Value.bytes is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            log(adm.Id, "founding_evidence_view", $"application {id} (user {H.Ln(a!["user_id"])})");
             return Results.File(got.Value.bytes!, got.Value.mime);
         }));
 

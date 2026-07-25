@@ -2,7 +2,10 @@ import { useState } from 'react'
 import { useQuery } from '../api/hooks'
 import { api } from '../api/client'
 import { Card, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
+import { DocumentRow, ViewDownloadActions } from '../components/documents/DocumentActions'
+import { studentToken } from '../files'
 import { fmtDate, titleCase } from '../format'
+import { useT } from '../i18n'
 
 interface DocRow {
   id: number
@@ -26,21 +29,6 @@ interface DocRow {
   lock_reason?: string | null
 }
 
-/** Human file size (e.g. 812 KB, 3.4 MB) from a byte count, or null when unknown. */
-function fmtSize(bytes?: number | null): string | null {
-  if (bytes == null || bytes <= 0) return null
-  if (bytes < 1024) return `${bytes} B`
-  const kb = bytes / 1024
-  if (kb < 1024) return `${kb < 10 ? kb.toFixed(1) : Math.round(kb)} KB`
-  const mb = kb / 1024
-  return `${mb < 10 ? mb.toFixed(1) : Math.round(mb)} MB`
-}
-
-/** Friendly label for why a document is locked (expired / suspended / archived / …). */
-function lockLabel(reason?: string | null): string {
-  return reason ? titleCase(reason) : 'Unavailable'
-}
-
 interface BookRow {
   id: number
   certification_id?: number | null
@@ -57,30 +45,11 @@ interface BookRow {
 }
 
 /** Books & study materials for the student's certifications (GET /api/me/cert-documents),
- * grouped per certification; stored files download through the authenticated (and, when
- * flagged, personally watermarked) endpoint, link rows open their external URL. */
+ * grouped per certification. Stored files view/download through the authenticated (and, when
+ * flagged, personally watermarked) endpoint; link rows open their external URL. */
 function BooksSection() {
+  const t = useT()
   const { data, loading, error } = useQuery<{ rows: BookRow[] }>('/api/me/cert-documents')
-  const [busy, setBusy] = useState<number | null>(null)
-
-  const download = async (r: BookRow) => {
-    setBusy(r.id)
-    const tok = sessionStorage.getItem('pci.session.token')
-    try {
-      const res = await fetch(`/api/me/cert-documents/${r.id}/download`, {
-        headers: tok ? { Authorization: 'Bearer ' + tok } : {},
-      })
-      if (!res.ok) { alert('Could not open this material right now. Please try again shortly or contact support.'); return }
-      const blob = await res.blob()
-      const href = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = href
-      a.download = r.filename || `${r.title}.pdf`
-      document.body.appendChild(a); a.click(); a.remove()
-      setTimeout(() => URL.revokeObjectURL(href), 60_000)
-    } catch { alert('Could not open this material right now. Please try again shortly or contact support.') }
-    finally { setBusy(null) }
-  }
 
   if (loading && !data) return null
   if (error) return null
@@ -97,39 +66,38 @@ function BooksSection() {
   return (
     <>
       <div>
-        <h2 style={{ margin: 0 }}>Books &amp; study materials</h2>
-        <p className="muted">Handbooks, Bodies of Knowledge and study guides for your certifications. Watermarked copies are personalised to you and not for redistribution.</p>
+        <h2 style={{ margin: 0 }}>{t('doc.booksTitle')}</h2>
+        <p className="muted">{t('doc.booksIntro')}</p>
       </div>
       {[...groups.entries()].map(([group, items]) => (
         <Card title={group} key={'books-' + group}>
           <div className="res-grid">
-            {items.map((r) => {
-              const meta = [titleCase((r.kind || 'book').replace('_', ' ')), fmtSize(r.size_bytes), r.watermark ? 'Personalised copy' : null]
-                .filter(Boolean).join(' · ')
-              return (
-                <div className="rep-item" key={r.id} style={{ alignItems: 'center' }}>
-                  <div className="rep-item-main row" style={{ gap: '.8rem' }}>
-                    <span className="res-ic">{(r.kind || 'BOOK').slice(0, 4).toUpperCase()}</span>
-                    <div>
-                      <strong>{r.title}</strong>
-                      {meta && <div className="muted small">{meta}</div>}
-                      {r.description && <div className="muted small">{r.description}</div>}
-                    </div>
-                  </div>
-                  <div className="rep-item-actions" style={{ display: 'grid', gap: '.35rem', justifyItems: 'end' }}>
-                    {r.has_file ? (
-                      <button className="btn sm" disabled={busy === r.id} onClick={() => download(r)}>
-                        {busy === r.id ? 'Preparing…' : 'Download'}
-                      </button>
-                    ) : r.url ? (
-                      <a className="btn sm secondary" href={r.url} target="_blank" rel="noreferrer">Open</a>
-                    ) : (
-                      <span className="muted small">Coming soon</span>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
+            {items.map((r) => (
+              <DocumentRow
+                key={r.id}
+                info={{
+                  title: r.title,
+                  description: r.description,
+                  filename: r.filename,
+                  sizeBytes: r.size_bytes,
+                  meta: [titleCase((r.kind || 'book').replace('_', ' ')), r.watermark ? t('doc.personalisedCopy') : null],
+                }}
+                actions={
+                  r.has_file ? (
+                    <ViewDownloadActions
+                      info={{ title: r.title, filename: r.filename, sizeBytes: r.size_bytes }}
+                      inlineUrl={`/api/me/cert-documents/${r.id}/download?inline=1`}
+                      downloadUrl={`/api/me/cert-documents/${r.id}/download`}
+                      token={studentToken()}
+                    />
+                  ) : r.url ? (
+                    <a className="btn sm secondary" href={r.url} target="_blank" rel="noreferrer">{t('doc.open')}</a>
+                  ) : (
+                    <span className="muted small">{t('doc.comingSoon')}</span>
+                  )
+                }
+              />
+            ))}
           </div>
         </Card>
       ))}
@@ -137,35 +105,12 @@ function BooksSection() {
   )
 }
 
-/** Documents the signed-in student has been assigned (GET /api/me/documents), with
- * download / acknowledge / locked / restricted / view-only handling. */
+/** Documents the signed-in student has been assigned (GET /api/me/documents), with the universal
+ * View + Download pair, acknowledge / locked / restricted / view-only handling. */
 export default function Documents() {
+  const t = useT()
   const { data, loading, error, refetch } = useQuery<{ rows: DocRow[] }>('/api/me/documents')
   const [ackBusy, setAckBusy] = useState<number | null>(null)
-
-  // Acknowledged, view-only, and download-required documents all fetch the file with the bearer
-  // token (a plain <a href> would 401). view_only rows open in a new tab; the rest force a save.
-  const openDoc = async (r: DocRow) => {
-    const tok = sessionStorage.getItem('pci.session.token')
-    try {
-      const res = await fetch(`/api/me/documents/${r.id}/download`, {
-        headers: tok ? { Authorization: 'Bearer ' + tok } : {},
-      })
-      if (!res.ok) { alert('Could not open this document right now. Please try again shortly or contact support.'); return }
-      const blob = await res.blob()
-      const href = URL.createObjectURL(blob)
-      if (r.view_only) {
-        // Keep the object URL alive for the new tab; the browser releases it when that tab closes.
-        window.open(href)
-      } else {
-        const a = document.createElement('a')
-        a.href = href
-        a.download = r.filename || `document-${r.id}`
-        document.body.appendChild(a); a.click(); a.remove()
-        setTimeout(() => URL.revokeObjectURL(href), 60_000)
-      }
-    } catch { alert('Could not open this document right now. Please try again shortly or contact support.') }
-  }
 
   // Record the student's acknowledgement, then refetch so the row flips to downloadable.
   const acknowledge = async (id: number) => {
@@ -174,7 +119,7 @@ export default function Documents() {
       await api.post(`/api/me/documents/${id}/acknowledge`, {})
       refetch()
     } catch (e) {
-      alert(e instanceof Error ? e.message : 'Could not record your acknowledgement. Please try again.')
+      alert(e instanceof Error ? e.message : t('doc.openError'))
     } finally {
       setAckBusy(null)
     }
@@ -182,30 +127,37 @@ export default function Documents() {
 
   const renderActions = (r: DocRow) => {
     // Time-gated: released to the student on a future date.
-    if (r.restricted) return <Badge tone="warn">Available {fmtDate(r.restricted_until)}</Badge>
+    if (r.restricted) return <Badge tone="warn">{t('doc.availableOn', { date: fmtDate(r.restricted_until) })}</Badge>
     // Locked for another reason (expired / suspended / archived / …).
-    if (r.locked) return <span className="muted small">{lockLabel(r.lock_reason)}</span>
+    if (r.locked) return <span className="muted small">{r.lock_reason ? titleCase(r.lock_reason) : t('doc.unavailable')}</span>
     // Must be acknowledged before it becomes downloadable.
     if (r.ack_required && !r.acknowledged) {
       return (
         <>
           <button className="btn sm" disabled={ackBusy === r.id} onClick={() => acknowledge(r.id)}>
-            {ackBusy === r.id ? 'Saving…' : 'Acknowledge'}
+            {ackBusy === r.id ? t('doc.saving') : t('doc.acknowledge')}
           </button>
-          <span className="muted small">Acknowledgement required before download.</span>
+          <span className="muted small">{t('doc.ackRequired')}</span>
         </>
       )
     }
-    // Ready to view or download.
+    // Ready: every downloadable document gets View AND (unless view-only) Download.
     if (r.downloadable) {
       return (
         <>
-          <button className="btn sm" onClick={() => openDoc(r)}>{r.view_only ? 'View' : 'Download'}</button>
-          {r.acknowledged && <span className="muted small">Acknowledged</span>}
+          <ViewDownloadActions
+            info={{ title: r.title, filename: r.filename, mime: r.mime, sizeBytes: r.size_bytes, version: r.version }}
+            inlineUrl={`/api/me/documents/${r.id}/download?inline=1`}
+            downloadUrl={`/api/me/documents/${r.id}/download`}
+            token={studentToken()}
+            canDownload={!r.view_only}
+            canPrint={!r.view_only}
+          />
+          {r.acknowledged && <span className="muted small">{t('doc.acknowledged')}</span>}
         </>
       )
     }
-    return <span className="muted small">Unavailable</span>
+    return <span className="muted small">{t('doc.unavailable')}</span>
   }
 
   if (loading && !data) return <Spinner />
@@ -222,35 +174,31 @@ export default function Documents() {
   return (
     <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
       <div>
-        <h1>My Documents</h1>
-        <p className="muted">Documents shared with you by the Institute. Download or review each one below.</p>
+        <h1>{t('doc.myDocuments')}</h1>
+        <p className="muted">{t('doc.myDocumentsIntro')}</p>
       </div>
 
       {rows.length === 0 ? (
-        <Card><Empty>You don't have any documents yet.</Empty></Card>
+        <Card><Empty>{t('doc.noDocuments')}</Empty></Card>
       ) : (
         [...groups.entries()].map(([category, items]) => (
           <Card title={category} key={category}>
             <div className="res-grid">
-              {items.map((r) => {
-                const meta = [r.doc_type, fmtSize(r.size_bytes)].filter(Boolean).join(' · ')
-                return (
-                  <div className="rep-item" key={r.id} style={{ alignItems: 'center' }}>
-                    <div className="rep-item-main row" style={{ gap: '.8rem' }}>
-                      <span className="res-ic">{(r.doc_type || 'DOC').slice(0, 4).toUpperCase()}</span>
-                      <div>
-                        <strong>{r.title}</strong>
-                        {r.version != null && r.version > 1 && <> <Badge>v{r.version}</Badge></>}
-                        {meta && <div className="muted small">{meta}</div>}
-                        {r.description && <div className="muted small">{r.description}</div>}
-                      </div>
-                    </div>
-                    <div className="rep-item-actions" style={{ display: 'grid', gap: '.35rem', justifyItems: 'end' }}>
-                      {renderActions(r)}
-                    </div>
-                  </div>
-                )
-              })}
+              {items.map((r) => (
+                <DocumentRow
+                  key={r.id}
+                  info={{
+                    title: r.title,
+                    description: r.description,
+                    filename: r.filename,
+                    mime: r.mime,
+                    sizeBytes: r.size_bytes,
+                    version: r.version,
+                    meta: [r.doc_type],
+                  }}
+                  actions={renderActions(r)}
+                />
+              ))}
             </div>
           </Card>
         ))

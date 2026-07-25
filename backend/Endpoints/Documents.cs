@@ -166,7 +166,7 @@ public static class Documents
             var d = db.QueryOne("SELECT * FROM documents WHERE id=?", id);
             if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var rootId = H.Ln(d["root_id"]) ?? id;
-            var versions = db.Query("SELECT id,version,filename,mime,size_bytes,sha256,status,created_at FROM documents WHERE root_id=? OR id=? ORDER BY version", rootId, rootId);
+            var versions = db.Query("SELECT id,version,filename,mime,size_bytes,sha256,status,replace_reason,restored_from_id,created_by,created_at FROM documents WHERE root_id=? OR id=? ORDER BY version", rootId, rootId);
             var recipients = db.Query(@"SELECT a.user_id, a.assignment_type, a.source, a.status, a.assigned_at, a.revoked_at,
                     u.first_name, u.last_name, u.email,
                     (SELECT acknowledged_at FROM document_acknowledgements k WHERE k.document_id=a.document_id AND k.user_id=a.user_id) acknowledged_at,
@@ -255,6 +255,35 @@ public static class Documents
         }));
 
         // ─────────────────────────── Admin: new version (never overwrites) ───────────────────────────
+        // Shared by "replace with a new upload" and "restore an earlier version": both create a brand-new
+        // immutable version row at the head of the chain — history is never rewritten or erased.
+        (long newId, long newV, bool priorLive) CreateVersionRow(AdminCtx adm, long curId, Dictionary<string, object?> cur,
+            string reference, string filename, string mime, long sizeBytes, string sha256, string? reason, long? restoredFromId)
+        {
+            var rootId = H.Ln(cur["root_id"]) ?? curId;
+            var maxV = db.Scalar<long>("SELECT COALESCE(MAX(version),1) FROM documents WHERE root_id=? OR id=?", rootId, rootId);
+            var newV = maxV + 1;
+            // A new version inherits the prior version's metadata + assignment target, starts published if
+            // the prior was live (so recipients keep access seamlessly), and supersedes the old row.
+            var priorLive = DocAccess.LiveStatuses.Contains((H.Str(cur["status"]) ?? "").ToLowerInvariant());
+            var newId = db.ExecuteReturningId(@"INSERT INTO documents(title,description,category,doc_type,status,storage_ref,filename,mime,size_bytes,sha256,version,root_id,supersedes_id,
+                    assignment_type,assignment_config,view_only,restricted_until,ack_required,watermark,include_test,publish_at,expires_at,visible_to_cs,created_by,is_test,replace_reason,restored_from_id)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?,?,?, ?,?)",
+                H.Str(cur["title"]) ?? "document", cur["description"], cur["category"], cur["doc_type"],
+                priorLive ? "published" : "draft",
+                reference, filename, mime, sizeBytes, sha256, newV, rootId, curId,
+                cur["assignment_type"], cur["assignment_config"], cur["view_only"], cur["restricted_until"], cur["ack_required"],
+                cur["watermark"], cur["include_test"], cur["publish_at"], cur["expires_at"], cur["visible_to_cs"], adm.Id, cur["is_test"],
+                reason, restoredFromId);
+            db.Execute("UPDATE documents SET status='replaced', superseded_by=?, updated_at=datetime('now'), updated_by=? WHERE id=?", newId, adm.Id, curId);
+            if (priorLive)
+            {
+                db.Execute("UPDATE documents SET published_at=datetime('now') WHERE id=?", newId);
+                DocAccess.Materialize(db, newId, H.Str(cur["assignment_type"]) ?? "all", H.Str(cur["assignment_config"]), H.L(cur["include_test"]) == 1, adm.Id);
+            }
+            return (newId, newV, priorLive);
+        }
+
         app.MapPost("/api/admin/documents/{id}/version", async (HttpContext ctx, long id) =>
         {
             AllowUpload(ctx);
@@ -266,30 +295,41 @@ public static class Documents
             var dec = DocStore.Decode(H.GetS(b, "file", "data", "file_data"));
             if (dec.file is null) return Results.Json(new { error = dec.error, message = DocErrorMessage(dec.error) }, statusCode: 400);
             var stored = DocStore.Put(dec.file);
-            var rootId = H.Ln(cur["root_id"]) ?? id;
-            var maxV = db.Scalar<long>("SELECT COALESCE(MAX(version),1) FROM documents WHERE root_id=? OR id=?", rootId, rootId);
-            var newV = maxV + 1;
-            var title = H.Str(cur["title"]) ?? "document";
-            var filename = DocStore.SafeName(H.GetS(b, "filename") ?? title, dec.file.Ext);
-            // A new version inherits the prior version's metadata + assignment target, starts published if
-            // the prior was live (so recipients keep access seamlessly), and supersedes the old row.
-            var priorLive = DocAccess.LiveStatuses.Contains((H.Str(cur["status"]) ?? "").ToLowerInvariant());
-            var newId = db.ExecuteReturningId(@"INSERT INTO documents(title,description,category,doc_type,status,storage_ref,filename,mime,size_bytes,sha256,version,root_id,supersedes_id,
-                    assignment_type,assignment_config,view_only,restricted_until,ack_required,watermark,include_test,publish_at,expires_at,visible_to_cs,created_by,is_test)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?,?,?)",
-                title, cur["description"], cur["category"], cur["doc_type"],
-                priorLive ? "published" : "draft",
-                stored.Reference, filename, dec.file.Mime, stored.SizeBytes, dec.file.Sha256, newV, rootId, id,
-                cur["assignment_type"], cur["assignment_config"], cur["view_only"], cur["restricted_until"], cur["ack_required"],
-                cur["watermark"], cur["include_test"], cur["publish_at"], cur["expires_at"], cur["visible_to_cs"], adm.Id, cur["is_test"]);
-            db.Execute("UPDATE documents SET status='replaced', superseded_by=?, updated_at=datetime('now'), updated_by=? WHERE id=?", newId, adm.Id, id);
-            if (priorLive)
-            {
-                db.Execute("UPDATE documents SET published_at=datetime('now') WHERE id=?", newId);
-                DocAccess.Materialize(db, newId, H.Str(cur["assignment_type"]) ?? "all", H.Str(cur["assignment_config"]), H.L(cur["include_test"]) == 1, adm.Id);
-            }
-            log(adm.Id, "document_version", $"doc {rootId} → v{newV} (id {newId})");
+            var filename = DocStore.SafeName(H.GetS(b, "filename") ?? H.Str(cur["title"]) ?? "document", dec.file.Ext);
+            var reason = H.GetS(b, "reason", "replace_reason");
+            var (newId, newV, priorLive) = CreateVersionRow(adm, id, cur, stored.Reference, filename, dec.file.Mime, stored.SizeBytes, dec.file.Sha256, reason, null);
+            log(adm.Id, "document_version", $"doc {H.Ln(cur["root_id"]) ?? id} → v{newV} (id {newId})" + (string.IsNullOrWhiteSpace(reason) ? "" : $" — {reason[..Math.Min(reason.Length, 160)]}"));
             return J(new { id = newId, version = newV, status = priorLive ? "published" : "draft" });
+        });
+
+        // ─────────────────────────── Admin: restore an earlier version ───────────────────────────
+        // Restoring never rewinds the chain: it creates ANOTHER new version whose file is the chosen
+        // older version's file, so the full history (including everything newer) stays intact and the
+        // restoration itself is an auditable event.
+        app.MapPost("/api/admin/documents/{id}/restore", async (HttpContext ctx, long id) =>
+        {
+            var g = Deny(ctx.Request, "documents"); if (g is not null) return g;
+            var adm = adminFromReq(ctx.Request)!;
+            var b = await H.Body(ctx.Request);
+            var versionId = (long)(H.GetNum(b, "version_id") ?? 0);
+            var old = db.QueryOne("SELECT * FROM documents WHERE id=?", versionId);
+            if (old is null) return Results.Json(new { error = "version_not_found" }, statusCode: 404);
+            // The target version must belong to the same chain as {id} and still have its file.
+            var cur = db.QueryOne("SELECT * FROM documents WHERE id=?", id);
+            if (cur is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var chainRoot = H.Ln(cur["root_id"]) ?? id;
+            var oldRoot = H.Ln(old["root_id"]) ?? versionId;
+            if (oldRoot != chainRoot) return Results.Json(new { error = "different_document" }, statusCode: 400);
+            if (H.Str(old["storage_ref"]) is not { Length: > 0 } oldRef) return Results.Json(new { error = "file_missing" }, statusCode: 404);
+            // Restore on top of the chain HEAD (the newest version), whatever id the caller passed.
+            var head = db.QueryOne("SELECT * FROM documents WHERE (root_id=? OR id=?) ORDER BY version DESC LIMIT 1", chainRoot, chainRoot)!;
+            var headId = H.L(head["id"]);
+            var reason = H.GetS(b, "reason") ?? $"Restored from v{H.Ln(old["version"]) ?? 1}";
+            var (newId, newV, priorLive) = CreateVersionRow(adm, headId, head, oldRef,
+                H.Str(old["filename"]) ?? "document", H.Str(old["mime"]) ?? "application/octet-stream",
+                H.Ln(old["size_bytes"]) ?? 0, H.Str(old["sha256"]) ?? "", reason, versionId);
+            log(adm.Id, "document_restore", $"doc {chainRoot} v{H.Ln(old["version"])} (id {versionId}) → v{newV} (id {newId})");
+            return J(new { id = newId, version = newV, restored_from = versionId, status = priorLive ? "published" : "draft" });
         });
 
         // ─────────────────────────── Admin: assignment target + preview ───────────────────────────
@@ -391,15 +431,25 @@ public static class Documents
             return J(new { ok = true, revoked = n });
         });
 
-        // ─────────────────────────── Admin: download the file (support/verification) ───────────────────────────
+        // ─────────────────────────── Admin: view/download the file (support/verification) ───────────────────────────
+        // Works for ANY version row (each version is its own documents row), so the version-history UI
+        // can open or fetch old versions. `?inline=1` serves for in-app viewing and audits as a view.
         app.MapGet("/api/admin/documents/{id}/download", (HttpContext ctx, long id) => gate(ctx.Request, "documents", adm =>
         {
-            var d = db.QueryOne("SELECT storage_ref,filename,mime FROM documents WHERE id=?", id);
+            var d = db.QueryOne("SELECT storage_ref,filename,mime,version FROM documents WHERE id=?", id);
             if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var bytes = DocStore.Get(H.Str(d["storage_ref"]));
             if (bytes is null) return Results.Json(new { error = "file_missing" }, statusCode: 404);
-            DlAudit(id, null, "admin#" + adm.Id, "admin", Ip(ctx), "download", "ok");
-            return Results.Bytes(bytes, H.Str(d["mime"]) ?? "application/octet-stream", H.Str(d["filename"]) ?? ("document-" + id));
+            var inline = ctx.Request.Query["inline"].ToString() == "1";
+            DlAudit(id, null, "admin#" + adm.Id, "admin", Ip(ctx), inline ? "view" : "download", "ok", H.Ln(d["version"]));
+            var mime = H.Str(d["mime"]) ?? "application/octet-stream";
+            var name = H.Str(d["filename"]) ?? ("document-" + id);
+            if (inline)
+            {
+                ctx.Response.Headers["Content-Disposition"] = "inline; filename=\"" + name.Replace("\"", "") + "\"";
+                return Results.Bytes(bytes, mime);
+            }
+            return Results.Bytes(bytes, mime, name);
         }));
 
         // ─────────────────────────── Admin: audit + report ───────────────────────────
@@ -584,9 +634,10 @@ public static class Documents
                 if (wm is not null) bytes = wm; else wmResult = "ok_unwatermarked";
             }
             var viewOnly = H.L(d["view_only"]) == 1;
-            DlAudit(id, null, p.Email, "partner", Ip(ctx), viewOnly ? "view" : "download", wmResult, H.Ln(d["version"]));
+            var inline = viewOnly || ctx.Request.Query["inline"].ToString() == "1";
+            DlAudit(id, null, p.Email, "partner", Ip(ctx), inline ? "view" : "download", wmResult, H.Ln(d["version"]));
             var name = H.Str(d["filename"]) ?? ("document-" + id);
-            if (viewOnly)
+            if (inline)
             {
                 ctx.Response.Headers["Content-Disposition"] = "inline; filename=\"" + name.Replace("\"", "") + "\"";
                 return Results.Bytes(bytes, mime);
@@ -623,12 +674,14 @@ public static class Documents
                     $"Issued to {fullName} (member #{uid}) via the PCI student portal - {DateTime.UtcNow:yyyy-MM-dd} - not for redistribution");
                 if (wm is not null) bytes = wm; else wmResult = "ok_unwatermarked";
             }
+            // In-app viewing (`?inline=1`) serves inline and audits as a view; view-only documents are
+            // ALWAYS inline (no attachment prompt). True copy-prevention is not achievable for a
+            // downloaded file; the master is never exposed and access stays audited.
             var viewOnly = H.L(d["view_only"]) == 1;
-            DlAudit(id, uid, actorEmail, role, Ip(ctx), viewOnly ? "view" : "download", wmResult, H.Ln(d["version"]));
+            var inline = viewOnly || ctx.Request.Query["inline"].ToString() == "1";
+            DlAudit(id, uid, actorEmail, role, Ip(ctx), inline ? "view" : "download", wmResult, H.Ln(d["version"]));
             var name = H.Str(d["filename"]) ?? ("document-" + id);
-            // View-only documents are served for INLINE display (no attachment prompt). True copy-prevention
-            // is not achievable for a downloaded file; the master is never exposed and access stays audited.
-            if (viewOnly)
+            if (inline)
             {
                 ctx.Response.Headers["Content-Disposition"] = "inline; filename=\"" + name.Replace("\"", "") + "\"";
                 return Results.Bytes(bytes, mime);

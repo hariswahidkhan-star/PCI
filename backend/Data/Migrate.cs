@@ -793,6 +793,11 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS document_acknowledgements(id INTEGER PRIMARY KEY AUTOINCREMENT,document_id INTEGER NOT NULL,user_id INTEGER NOT NULL,
             ip VARCHAR(64),acknowledged_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_docack ON document_acknowledgements(document_id, user_id)");
+        // Replacement provenance: why a version superseded its predecessor, and — when a version was
+        // created by restoring an earlier one — which version it was restored from. Additive AddCol so
+        // existing installs upgrade in place.
+        AddCol("documents", "replace_reason", "replace_reason TEXT");
+        AddCol("documents", "restored_from_id", "restored_from_id INTEGER");
         // First-run category set (only when empty — never overwrites admin edits).
         try
         {
@@ -916,6 +921,24 @@ public static class Migrate
             ip VARCHAR(64),
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_certdocdl_doc ON cert_document_downloads(cert_document_id)");
+
+        // Superseded-file history for books/study materials. The CURRENT file stays on cert_documents
+        // (backward compatible); every replace/restore snapshots the outgoing file here first, so a
+        // book's bytes are never silently lost and any prior version can be inspected or restored.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS cert_document_versions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            cert_document_id INTEGER NOT NULL,
+            version INTEGER NOT NULL,
+            storage_ref TEXT,
+            filename VARCHAR(255),
+            mime VARCHAR(80),
+            size_bytes INTEGER,
+            sha256 VARCHAR(64),
+            replaced_by INTEGER,
+            replace_reason TEXT,
+            restored_from_id INTEGER,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_certdocver_doc ON cert_document_versions(cert_document_id)");
 
         // ── Public Downloads Centre: governance/legal/policy documents distributed to anyone, no login. ──
         // Version-chained: every version is its own row sharing a stable doc_group (the public "document ID");

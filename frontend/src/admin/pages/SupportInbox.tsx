@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type TeamResponse } from '../api'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty, Stat, rowActivate } from '../../components/ui'
+import { ViewDownloadActions } from '../../components/documents/DocumentActions'
 import { fmtDate, fmtDateTime } from '../../format'
 import { ApiError } from '../../api/client'
 
@@ -250,6 +251,31 @@ function KbPanel({ onError }: { onError: (m: string) => void }) {
   )
 }
 
+/** Files the student attached to the ticket, streamed over the staff-side audited routes —
+ *  previously the inbox had no way to see what a student uploaded. */
+function TicketAttachments({ id }: { id: number }) {
+  const { data, error } = useAdminQuery<{ rows: { id: number; filename?: string | null; mime?: string | null; size_bytes?: number | null; created_at?: string | null }[] }>(`/api/support/tickets/${id}/attachments`)
+  const rows = data?.rows ?? []
+  if (error || rows.length === 0) return null
+  return (
+    <Card title={`Attachments (${rows.length})`}>
+      <div style={{ display: 'grid', gap: '.4rem' }}>
+        {rows.map((a) => (
+          <div key={a.id} className="row" style={{ gap: '.6rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            <span className="small"><strong>{a.filename || `attachment-${a.id}`}</strong> <span className="muted">{fmtDateTime(a.created_at)}</span></span>
+            <ViewDownloadActions
+              info={{ title: a.filename || `attachment-${a.id}`, filename: a.filename, mime: a.mime, sizeBytes: a.size_bytes }}
+              inlineUrl={`/api/support/tickets/${id}/attachments/${a.id}?inline=1`}
+              downloadUrl={`/api/support/tickets/${id}/attachments/${a.id}`}
+              token={adminApi.getToken()}
+            />
+          </div>
+        ))}
+      </div>
+    </Card>
+  )
+}
+
 function ConversationDrawer({ id, onClose, onChanged }: { id: number; onClose: () => void; onChanged: () => void }) {
   const { data, loading, error, refetch } = useAdminQuery<TicketDetailResp>(`/api/support/tickets/${id}`)
   const { data: templates } = useAdminQuery<{ rows: { id: number; title?: string | null; body?: string | null; category?: string | null }[] }>('/api/support/templates')
@@ -311,6 +337,8 @@ function ConversationDrawer({ id, onClose, onChanged }: { id: number; onClose: (
                 <button className="btn sm secondary" disabled={busy || !followup} onClick={() => post('followup', { at: followup }, () => setFollowup(''))}>Set follow-up</button>
               </div>
             </Card>
+
+            <TicketAttachments id={id} />
 
             <Card title={`Messages (${data.messages.length})`}>
               {data.messages.length === 0 ? <Empty>No messages yet.</Empty> : (

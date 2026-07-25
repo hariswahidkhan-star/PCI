@@ -63,12 +63,89 @@ public static class Books
                     (long)(H.GetNum(b, "sort_order") ?? 0));
             }
 
+            // Replacing an existing file snapshots the outgoing one into cert_document_versions first,
+            // so a book's bytes are never silently lost: the history lists every superseded file with
+            // who replaced it and why, and any snapshot can be viewed or restored. The audit-log line
+            // additionally records the old→new checksum for grep-ability.
+            var prevSha = existing is null ? null : db.Scalar<string>("SELECT sha256 FROM cert_documents WHERE id=?", id);
             var stored = DocStore.Put(file);
+            if (existing is not null)
+                SnapshotCurrentFile(id, adm.Id, H.GetS(b, "reason", "replace_reason"), null, stored.Sha256);
             db.Execute("UPDATE cert_documents SET storage_ref=?, filename=?, mime=?, size_bytes=?, sha256=?, updated_at=datetime('now') WHERE id=?",
                 stored.Reference, DocStore.SafeName(H.GetS(b, "filename"), file.Ext), file.Mime, file.Bytes.LongLength, stored.Sha256, id);
-            log(adm.Id, "cert_document_file_uploaded", $"cert_document {id} ({file.Mime}, {file.Bytes.LongLength} bytes)");
+            log(adm.Id, "cert_document_file_uploaded", $"cert_document {id} ({file.Mime}, {file.Bytes.LongLength} bytes)"
+                + (string.IsNullOrEmpty(prevSha) || prevSha == stored.Sha256 ? "" : $" replaced sha256 {prevSha[..Math.Min(prevSha.Length, 12)]}… → {stored.Sha256[..12]}…"));
             var row = db.QueryOne("SELECT id,certification_id,kind,title,watermark,published,filename,mime,size_bytes,sha256 FROM cert_documents WHERE id=?", id)!;
             return J(new { ok = true, row });
+        }));
+
+        // Snapshot the book's CURRENT file (if any) into cert_document_versions as the next version
+        // number. Skipped when there is no file or the incoming bytes are identical (no-op replace).
+        void SnapshotCurrentFile(long docId, long adminId, string? reason, long? restoredFromId, string? incomingSha)
+        {
+            var cur = db.QueryOne("SELECT storage_ref,filename,mime,size_bytes,sha256 FROM cert_documents WHERE id=?", docId);
+            if (cur is null || H.Str(cur["storage_ref"]) is not { Length: > 0 }) return;
+            if (incomingSha is not null && H.Str(cur["sha256"]) == incomingSha) return;
+            var nextV = db.Scalar<long>("SELECT COALESCE(MAX(version),0)+1 FROM cert_document_versions WHERE cert_document_id=?", docId);
+            db.Execute(@"INSERT INTO cert_document_versions(cert_document_id,version,storage_ref,filename,mime,size_bytes,sha256,replaced_by,replace_reason,restored_from_id)
+                VALUES(?,?,?,?,?,?,?,?,?,?)",
+                docId, nextV, cur["storage_ref"], cur["filename"], cur["mime"], cur["size_bytes"], cur["sha256"], adminId, reason, restoredFromId);
+        }
+
+        // Per-certification admin scoping shared by the history routes.
+        IResult? DenyCertScope(AdminCtx adm, Dictionary<string, object?> doc) =>
+            adm.CanCert(doc["certification_id"] is null ? Certs.DefaultId : H.L(doc["certification_id"]))
+                ? null : Results.Json(new { error = "certification_forbidden" }, statusCode: 403);
+
+        // ── Admin: superseded-file history for a book ──
+        app.MapGet("/api/admin/cert-documents/{id:long}/versions", (HttpRequest req, long id) => gate(req, "resources", adm =>
+        {
+            var d = db.QueryOne("SELECT certification_id FROM cert_documents WHERE id=?", id);
+            if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (DenyCertScope(adm, d) is { } deny) return deny;
+            return J(new { rows = db.Query("SELECT id,version,filename,mime,size_bytes,sha256,replaced_by,replace_reason,restored_from_id,created_at FROM cert_document_versions WHERE cert_document_id=? ORDER BY version DESC", id) });
+        }));
+
+        // ── Admin: view/download a superseded file (logged, inline-capable) ──
+        app.MapGet("/api/admin/cert-documents/{id:long}/versions/{vid:long}/file", (HttpContext ctx, long id, long vid) => gate(ctx.Request, "resources", adm =>
+        {
+            var d = db.QueryOne("SELECT certification_id FROM cert_documents WHERE id=?", id);
+            if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (DenyCertScope(adm, d) is { } deny) return deny;
+            var v = db.QueryOne("SELECT storage_ref,filename,mime FROM cert_document_versions WHERE id=? AND cert_document_id=?", vid, id);
+            if (v is null) return Results.Json(new { error = "version_not_found" }, statusCode: 404);
+            var bytes = DocStore.Get(H.Str(v["storage_ref"]));
+            if (bytes is null) return Results.Json(new { error = "file_missing" }, statusCode: 404);
+            log(adm.Id, "cert_document_version_view", $"cert_document {id} version row {vid}");
+            var mime = H.Str(v["mime"]) ?? "application/octet-stream";
+            var name = H.Str(v["filename"]) ?? ("book-" + id + "-v" + vid + ".pdf");
+            if (ctx.Request.Query["inline"].ToString() == "1")
+            {
+                ctx.Response.Headers["Content-Disposition"] = "inline; filename=\"" + name.Replace("\"", "") + "\"";
+                return Results.Bytes(bytes, mime);
+            }
+            return Results.Bytes(bytes, mime, name);
+        }));
+
+        // ── Admin: restore a superseded file as the book's current file ──
+        // The current file is snapshotted first, so restore never erases history either — it only
+        // moves the "current" pointer, exactly like the assigned-documents restore.
+        app.MapPost("/api/admin/cert-documents/{id:long}/restore", (HttpRequest req, long id) => gate(req, "resources", adm =>
+        {
+            var b = H.Body(req).GetAwaiter().GetResult();
+            var d = db.QueryOne("SELECT certification_id FROM cert_documents WHERE id=?", id);
+            if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (DenyCertScope(adm, d) is { } deny) return deny;
+            var vid = (long)(H.GetNum(b, "version_id") ?? 0);
+            var v = db.QueryOne("SELECT * FROM cert_document_versions WHERE id=? AND cert_document_id=?", vid, id);
+            if (v is null) return Results.Json(new { error = "version_not_found" }, statusCode: 404);
+            if (H.Str(v["storage_ref"]) is not { Length: > 0 } vref) return Results.Json(new { error = "file_missing" }, statusCode: 404);
+            var reason = H.GetS(b, "reason") ?? $"Restored from v{H.Ln(v["version"]) ?? 0}";
+            SnapshotCurrentFile(id, adm.Id, reason, vid, H.Str(v["sha256"]));
+            db.Execute("UPDATE cert_documents SET storage_ref=?, filename=?, mime=?, size_bytes=?, sha256=?, updated_at=datetime('now') WHERE id=?",
+                vref, v["filename"], v["mime"], v["size_bytes"], v["sha256"], id);
+            log(adm.Id, "cert_document_restore", $"cert_document {id} ← version row {vid} (v{H.Ln(v["version"])})");
+            return J(new { ok = true, restored_from = vid });
         }));
 
         // ── Student: authenticated, entitlement-scoped, watermarked download ──
@@ -128,9 +205,37 @@ public static class Books
                     $"Personal Copy - Not for Redistribution | Copy {copyId} | Downloaded {DateTime.UtcNow:yyyy-MM-dd}");
                 if (wm is not null) { bytes = wm; wmResult = "ok_watermarked"; } else wmResult = "ok_unwatermarked";
             }
-            DlAudit(id, u.Id, copyId, wmResult, Ip(ctx));
+            // `?inline=1` serves for the in-app viewer (still watermarked, still audited — the copy id
+            // makes a screen-captured page as traceable as a saved file).
+            var inline = ctx.Request.Query["inline"].ToString() == "1";
+            DlAudit(id, u.Id, copyId, inline ? wmResult + "_view" : wmResult, Ip(ctx));
             var name = H.Str(d["filename"]) ?? ("book-" + id + ".pdf");
+            if (inline)
+            {
+                ctx.Response.Headers["Content-Disposition"] = "inline; filename=\"" + name.Replace("\"", "") + "\"";
+                return Results.Bytes(bytes, mime);
+            }
             return Results.Bytes(bytes, mime, name);
         });
+
+        // ── Admin: view/download the stored file behind a book (verify what was uploaded) ──
+        app.MapGet("/api/admin/cert-documents/{id:long}/file", (HttpContext ctx, long id) => gate(ctx.Request, "resources", adm =>
+        {
+            var d = db.QueryOne("SELECT certification_id,storage_ref,filename,mime FROM cert_documents WHERE id=?", id);
+            if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (!adm.CanCert(d["certification_id"] is null ? Certs.DefaultId : H.L(d["certification_id"])))
+                return Results.Json(new { error = "certification_forbidden" }, statusCode: 403);
+            var bytes = DocStore.Get(H.Str(d["storage_ref"]));
+            if (bytes is null) return Results.Json(new { error = "file_missing" }, statusCode: 404);
+            log(adm.Id, "cert_document_file_view", $"cert_document {id}");
+            var mime = H.Str(d["mime"]) ?? "application/octet-stream";
+            var name = H.Str(d["filename"]) ?? ("book-" + id + ".pdf");
+            if (ctx.Request.Query["inline"].ToString() == "1")
+            {
+                ctx.Response.Headers["Content-Disposition"] = "inline; filename=\"" + name.Replace("\"", "") + "\"";
+                return Results.Bytes(bytes, mime);
+            }
+            return Results.Bytes(bytes, mime, name);
+        }));
     }
 }

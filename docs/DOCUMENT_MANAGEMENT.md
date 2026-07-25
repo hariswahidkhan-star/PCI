@@ -151,9 +151,14 @@ flagged) and audits with `role='partner'`. Another institution can neither list 
 
 ## 8. Known limitations / scoped for a later phase
 
-- **In-browser view-only viewer** — view-only documents are served inline; a dedicated no-download viewer is a
-  later enhancement. (True copy-prevention is not achievable for a downloaded file; the security guarantees are
-  private storage + per-request authorisation + per-recipient watermarking + full audit.)
+> Update: the universal-document increment (see `docs/documents/UNIVERSAL_DOCUMENTS.md`) has since
+> delivered the in-app secure viewer (student + admin), per-version download + restore with a
+> recorded reason, `?inline=1` view auditing, and the shared React document components.
+
+- **In-browser view-only viewer** — DELIVERED: `src/components/documents/DocumentViewer.tsx` renders
+  PDF/image/text/CSV in-app over the authenticated inline endpoint. (True copy-prevention is still not
+  achievable for a downloaded file; the security guarantees are private storage + per-request
+  authorisation + per-recipient watermarking + full audit.)
 - **Scheduled auto-publish** and **background bulk-assignment jobs** — a scheduled document is created and
   locked until its date; going live at that moment (and very large group fan-outs) would benefit from a
   background worker, deferred. Assignment resolution + notification currently run synchronously with a capped

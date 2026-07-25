@@ -266,11 +266,12 @@ public static class HonoraryApplication
 
         app.MapGet("/api/admin/honorary-applications/{id}/documents/{docId}/file", (HttpContext ctx, long id, long docId) =>
         {
-            var (_, deny) = Owner(ctx.Request); if (deny is not null) return deny;
+            var (adm, deny) = Owner(ctx.Request); if (deny is not null) return deny;
             var d = db.QueryOne("SELECT storage_ref,mime,filename FROM honorary_application_documents WHERE id=? AND application_id=?", docId, id);
             if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var got = Storage.Get(H.Str(d["storage_ref"]));
             if (got is null || got.Value.bytes is null) return Results.Json(new { error = "file_unavailable" }, statusCode: 404);
+            log(adm!.Id, "honorary_application_document_view", $"application {id} doc {docId} '{H.Str(d["filename"])}'");
             return Results.File(got.Value.bytes!, got.Value.mime);
         });
 

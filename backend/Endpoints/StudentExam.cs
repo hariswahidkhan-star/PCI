@@ -1110,6 +1110,53 @@ public static class StudentExam
         app.MapGet("/api/me/invoices", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             var rows = db.Query("SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference,waived_amount FROM payments WHERE user_id=? AND payment_status IN ('paid','waived') ORDER BY id DESC", u.Id);
             return J(new { rows }); });
+
+        // Downloadable PDF receipt for one of the caller's OWN settled payments. Generated per
+        // request (never stored) via the dependency-free SimplePdf used for governance documents;
+        // `?inline=1` serves it for the in-app viewer. Every download is audit-logged.
+        app.MapGet("/api/me/payments/{id:long}/receipt.pdf", (HttpContext ctx, long id) =>
+        {
+            var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
+            var p = db.QueryOne(@"SELECT id,product_type,final_amount,currency,payment_status,payment_date,reference,waived_amount,payment_provider
+                FROM payments WHERE id=? AND user_id=? AND payment_status IN ('paid','waived','partially_refunded')", id, u.Id);
+            if (p is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var status = H.Str(p["payment_status"]) ?? "paid";
+            var currency = (H.Str(p["currency"]) ?? "USD").ToUpperInvariant();
+            var amount = H.D(p["final_amount"]);
+            var reference = H.Str(p["reference"]) ?? ("PCI-" + id);
+            var holder = db.QueryOne("SELECT first_name,last_name,email,registration_no FROM users WHERE id=?", u.Id);
+            var holderName = ((H.Str(holder?["first_name"]) ?? "") + " " + (H.Str(holder?["last_name"]) ?? "")).Trim();
+            if (holderName.Length == 0) holderName = u.Email;
+            var product = (H.Str(p["product_type"]) ?? "purchase").Replace('_', ' ');
+            var waived = H.D(p["waived_amount"]);
+            var blocks = new List<(SimplePdf.Block, string)>
+            {
+                (SimplePdf.Block.H1, "Payment receipt"),
+                (SimplePdf.Block.Body, $"Receipt reference: {reference}"),
+                (SimplePdf.Block.Body, $"Received from: {holderName} ({u.Email})" +
+                    (H.Str(holder?["registration_no"]) is { Length: > 0 } rn ? $" — registration {rn}" : "")),
+                (SimplePdf.Block.Body, $"Item: {product}"),
+                (SimplePdf.Block.Body, $"Amount: {currency} {amount:0.00}" + (waived > 0 ? $" (of which waived: {currency} {waived:0.00})" : "")),
+                (SimplePdf.Block.Body, $"Status: {status.Replace('_', ' ')}"),
+                (SimplePdf.Block.Body, $"Payment date: {H.Str(p["payment_date"]) ?? "-"}"),
+                (SimplePdf.Block.Space, ""),
+                (SimplePdf.Block.Body, "This receipt confirms the payment recorded against your PCI account. " +
+                    "It is generated from the payment ledger and requires no signature."),
+            };
+            var pdf = SimplePdf.Build(
+                Core.PartnerStatement.OrgName(db) + " — Payment receipt",
+                $"{reference} · issued {DateTime.UtcNow:yyyy-MM-dd}",
+                blocks,
+                $"Receipt {reference}");
+            log(u.Id, "receipt_pdf_download", $"payment {id} ({reference})");
+            var name = $"pci-receipt-{reference}.pdf";
+            if (ctx.Request.Query["inline"].ToString() == "1")
+            {
+                ctx.Response.Headers["Content-Disposition"] = "inline; filename=\"" + name.Replace("\"", "") + "\"";
+                return Results.Bytes(pdf, "application/pdf");
+            }
+            return Results.Bytes(pdf, "application/pdf", name);
+        });
         app.MapGet("/api/me/faqs", (HttpContext ctx) => { var u = Auth401(ctx); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             return J(new { rows = db.Query("SELECT question,answer,category FROM faqs WHERE published=1 ORDER BY sort_order,id") }); });
 
