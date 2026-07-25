@@ -206,7 +206,13 @@ export default function AdminLayout() {
           <div className="row">
             <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>
             <div>
-              <div className="tb-crumb">Admin Console{current ? ` · ${current.group}` : ''}</div>
+              {/* "Admin Console" stays its own text node so the console identity is still
+                  addressable on its own (exact-text assertions, screen-reader scanning) once the
+                  category is appended beside it. */}
+              <div className="tb-crumb">
+                <span>Admin Console</span>
+                {current && <span> · {current.group}</span>}
+              </div>
               <strong className="tb-title">{current?.label ?? 'Dashboard'}</strong>
             </div>
           </div>
