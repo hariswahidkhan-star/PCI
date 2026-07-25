@@ -49,8 +49,9 @@ public class WorldTests
         var rows = db.Query("SELECT * FROM pciworld_challenges WHERE author_id IS NULL");
         Assert.Equal(WorldContentPack.Count, rows.Count);
         // Gate A (EXPANSION_GOVERNANCE §3): 50 flagship challenges, every one reviewed and
-        // reference-solved. The count is asserted here so it can never be claimed before it is real.
-        Assert.Equal(50, rows.Count);
+        // reference-solved, plus the traceability pair (WC-TRC-051/052). The count is asserted
+        // here so it can never be claimed before it is real.
+        Assert.Equal(52, rows.Count);
 
         // Release-2 gates: every difficulty and every track is represented, across a broad industry set.
         string S2(Dictionary<string, object?> r, string k) => Convert.ToString(r[k]) ?? "";

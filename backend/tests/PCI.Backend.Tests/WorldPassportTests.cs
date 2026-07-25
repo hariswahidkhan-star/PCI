@@ -74,6 +74,33 @@ public class WorldPassportTests
         Assert.Contains("<th scope=\"col\">Decision profile</th>", partial);
     }
 
+    // ───────────────────────── traceability ─────────────────────────
+
+    [Fact]
+    public void Every_passport_row_is_traceable_to_the_exact_published_challenge_version()
+    {
+        var db = NewWorldDb();
+        var (userId, _) = Participant(db);
+        var rows = WorldAccount.EvidenceRows(db, userId, visibleOnly: true);
+        Assert.NotEmpty(rows);
+
+        // The evidence rows carry the citation: challenge code + the pinned published version.
+        foreach (var r in rows)
+        {
+            Assert.False(string.IsNullOrWhiteSpace(H.Str(r["code"])));
+            Assert.True(H.L(r["version"]) >= 1);
+        }
+
+        // The public page prints the citation and links it back to the immutable challenge, so a
+        // reader can follow any claim to the exact brief the participant faced.
+        var page = WorldPages.PublicPassport(db, "Sam Rivera", rows, new WorldPassport.Disclosure(true, true, true));
+        var code = H.Str(rows[0]["code"])!;
+        Assert.Contains(code, page);
+        Assert.Contains($"/world/challenge/{code}", page);
+        Assert.Contains($"v{H.L(rows[0]["version"])}", page);
+        Assert.Contains("Traceability", page);
+    }
+
     // ───────────────────────── expiry ─────────────────────────
 
     [Fact]
@@ -128,7 +155,8 @@ public class WorldPassportTests
             Show = new WorldPassport.Disclosure(true, true, true),
         };
         foreach (var r in rows)
-            doc.Rows.Add((H.Str(r["title"]) ?? "", H.Str(r["industry"]) ?? "", "Professional", "88.5", "evidence led", "2026-05-04"));
+            doc.Rows.Add((H.Str(r["title"]) ?? "", $"{H.Str(r["code"])} · v{H.L(r["version"])}",
+                H.Str(r["industry"]) ?? "", "Professional", "88.5", "evidence led", "2026-05-04"));
 
         var pdf = WorldPassport.Pdf(doc);
         var text = Encoding.ASCII.GetString(pdf);
@@ -136,6 +164,9 @@ public class WorldPassportTests
         Assert.EndsWith("%%EOF", text);
         Assert.Contains("/Type /Catalog", text);
         Assert.Contains("startxref", text);
+
+        // The traceability citation reaches the document: each row names its challenge code.
+        Assert.Contains(H.Str(rows[0]["code"])!, text);
 
         // Deterministic for a given input: two renders of the same document are byte-identical, so
         // the artefact can be hashed and compared.

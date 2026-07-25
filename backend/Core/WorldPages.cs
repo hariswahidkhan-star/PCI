@@ -1264,7 +1264,8 @@ public static class WorldPages
         show ??= new WorldPassport.Disclosure(true, true, true);
         var items = string.Join("", rows.Select(r => $"""
             <tr>
-              <td>{E(H.Str(r["title"]))}</td>
+              <td>{E(H.Str(r["title"]))}<br>
+                <small class="num" style="color:var(--slate)"><a href="/world/challenge/{E(H.Str(r["code"]))}">{E(H.Str(r["code"]))}</a> &middot; v{H.L(r["version"])}</small></td>
               <td>{E(H.Str(r["industry"]))}</td>
               <td>{E(Cap(H.Str(r["difficulty"])))}</td>
               {(show.Scores ? $"<td class=\"num\">{H.D(r["score"]):0.#}</td>" : "")}
@@ -1339,6 +1340,7 @@ public static class WorldPages
               <div class="defn">
                 {(show.Scores ? "<div><b>Scores</b><span>Deterministic, out of 100: the same answers always earn the same score, so a number here is reproducible arithmetic against a reference solution — not an opinion, and not a curve.</span></div>" : "")}
                 {(show.Profiles ? "<div><b>Decision profiles</b><span>A named description of how this person decides under pressure — evidence-led, schedule-first, and so on. Profiles characterise judgement style; they do not rank people.</span></div>" : "")}
+                <div><b>Traceability</b><span>Every row cites the challenge code and the exact published version it was completed against. Published versions are immutable, so the challenge behind the citation is the same one this participant faced — follow the code to read the brief yourself.</span></div>
                 <div><b>Consent</b><span>Every row was published deliberately, item by item. Fields the owner withheld are absent from this page entirely, and answers are never shown to anyone.</span></div>
                 <div><b>The live record</b><span>This page is served from PCI World&rsquo;s records at the moment you load it. If the owner withdraws the link, it stops resolving — which is exactly what makes it worth trusting while it does.</span></div>
               </div>
@@ -1649,6 +1651,13 @@ public static class WorldPages
               '<div class="ppt-foot"><span>Operated by the Project Controls Institute</span>'+
               '<span>Practice evidence &middot; not a certification</span></div>'+
               '</div>';
+            // The panel is where practice and evidence meet: the next challenge is always one
+            // click away, and every completed one below is traceable to its published version.
+            h+='<div class="card"><span class="kicker">Challenges</span>'+
+              '<h2 style="margin-top:0">Keep practising</h2>'+
+              '<p style="color:var(--slate)">A new challenge is published every day (00:00 UTC), and the archive keeps every published one playable. Each challenge you complete becomes a traceable record below &mdash; pinned to the exact published version you faced.</p>'+
+              '<p><a class="btn" href="/world">Today&rsquo;s challenge</a> '+
+              '<a class="btn secondary" href="/world/archive">Browse the archive</a></p></div>';
             h+='<div class="card"><span class="kicker">Identity &amp; publication</span>'+
               '<h2 style="margin-top:0">Your name on the record</h2>'+
               '<label for="dn">Display name</label><input id="dn" maxlength="80" value="'+esc(p.display_name||'')+'">'+
@@ -1705,7 +1714,11 @@ public static class WorldPages
             (p.evidence||[]).forEach(function(e2){
               h+='<tr><td><input type="checkbox" class="ev-check" data-att="'+e2.attempt_id+'" '+(e2.passport_visible?'checked':'')+
                  ' aria-label="Show '+esc(e2.title)+' on public Passport"></td>'+
-                 '<td><b>'+esc(e2.title)+'</b><br><small style="color:var(--slate)">'+esc(e2.industry||'')+
+                 '<td><b>'+esc(e2.title)+'</b>'+
+                 // Traceability line: code + immutable version, linking back to the challenge —
+                 // the same citation the public Passport and the PDF carry.
+                 '<br><small class="num"><a href="/world/challenge/'+encodeURIComponent(e2.code||'')+'">'+esc(e2.code||'')+'</a> &middot; v'+esc(e2.version)+'</small>'+
+                 '<br><small style="color:var(--slate)">'+esc(e2.industry||'')+
                  (e2.difficulty?' &middot; '+esc(pretty(e2.difficulty)):'')+'</small></td>'+
                  '<td class="num">'+esc(e2.score)+'</td><td>'+esc(pretty(e2.profile))+'</td>'+
                  '<td class="num">'+esc((e2.completed_at||'').split(' ')[0])+'</td></tr>';
