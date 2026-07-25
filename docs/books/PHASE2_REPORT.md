@@ -37,10 +37,37 @@ variations, exam prep. Figures 1.1.1 (recourse spectrum), 1.1.2 (SPV hub), 1.2.1
 triangle). Harness: **241 golden checks, all passing**. PFL-AI volume: **56 pp** across
 Domains 1, 3, 4 (12 figures, 50 index entries).
 
+**Batch 6 (loop iteration 4) — PML-AI Domain 7, Cost, resources and commercial awareness.**
+The book's cost/EVM flagship (~7.6k words), continuing Project Auriga from Domain 6 with money
+attached (`BAC` 4,000,000; at week 13 `PV` 2,080,000, `EV` 1,920,000, `AC` 2,120,000):
+
+- KA 7.1 estimating methods and accuracy classes, three-point cost estimating (mean 780,000 vs
+  mode 750,000), and the estimate→control-account→baseline hierarchy with contingency inside the
+  baseline and management reserve outside it.
+- KA 7.2 actual-cost measurement (accruals, commitments, open-commitment hygiene), the
+  forecasting question, and baseline integrity.
+- KA 7.3 the full earned-value set: `CV` (200,000), `SV` (160,000), `CPI` 0.91, `SPI` 0.92,
+  48.0 % complete against 53.0 % spent; the four-method `EAC` family spanning **USD 408,056** on
+  identical data (4,200,000 / 4,416,667 / 4,608,056); `VAC` and `TCPI` (1.11 required against
+  0.91 demonstrated) — including the taught identity that `TCPI` to an `EAC` of `BAC/CPI` equals
+  the current `CPI`, i.e. that forecast *is* "nothing changes".
+- KA 7.4 blended rates (130.63/h), the five contract models by who carries cost risk, incentive
+  fee arithmetic and the **point of total assumption** (2,428,571, where the buyer's outlay
+  equals the ceiling exactly — verified as an invariant), and cash flow versus profit.
+- Advanced topics (earned schedule closing `SPI`'s late-project blind spot, EVM's stated limits,
+  reviewer invariants), industry variations, two case studies (the forecast the board actually
+  needed; past the point of total assumption), executive perspective, 5 exercises, 3 toolkits,
+  exam prep, 14 tagged MCQs, self-checks.
+- Figures 7.3.1 (earned-value S-curves at the data date) and 7.3.2 (the `EAC` fan beside the
+  `TCPI` gap).
+- Harness: **276 golden checks, all passing** (was 241). PML-AI volume now typesets at **45 pp**
+  across Domains 6–7 (7 figures, 47 index entries).
+
 ## Next production batch
 
-Queued in loop order: (1) PML-AI Domain 7 (Cost, resources and commercial awareness) — the
-EVM flagship, restating the family symbols; (2) PML-AI Domain 1 (The project leadership
-profession) — that book's opening domain; (3) PFL-AI Domain 2 (Accounting foundations),
-building the accrual-to-cash bridge Domain 1 promised; prototype residual depth folded
-alongside. Phase 2 completes when all foundation domains of both books pass gates.
+Queued in loop order: (1) PML-AI Domain 1 (The project leadership profession) — that book's
+opening domain, establishing accountability, systems thinking and the responsible-AI principle;
+(2) PFL-AI Domain 2 (Accounting foundations), building the accrual-to-cash bridge its Domain 1
+promised; (3) PML-AI Domain 8 (Risk, uncertainty and resilience), which the cost domain's
+contingency treatment now depends on; prototype residual depth folded alongside. Phase 2
+completes when all foundation domains of both books pass gates.

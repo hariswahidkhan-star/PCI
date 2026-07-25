@@ -412,5 +412,69 @@ body = (f'<polygon points="{ax},{ay} {bx},{by} {cxx},{cyy}" fill="{BLUE}" opacit
         f'<text x="{W/2}" y="{by-12}" font-size="9" fill="{SLATE}" text-anchor="middle">no value corner → no equity</text>')
 (PFL / "fig_1_2_1.svg").write_text(svg(W, H, body))
 
+# ---- Fig 7.3.1 Auriga earned-value S-curves ---------------------------------------
+W, H, L, R, T, B = 660, 410, 88, 26, 26, 58
+BAC7, DD = 4000000.0, 13
+def Xw7(w): return L + w / 25 * (W - L - R)
+def Yc7(v): return H - B - v / 4600000 * (H - T - B)
+# Planned value: smooth S-curve over 25 weeks calibrated to 2,080,000 at week 13.
+def pv_at(w):
+    x = w / 25.0
+    return BAC7 * (x * x * (3 - 2 * x))
+scale = 2080000.0 / pv_at(DD)
+pv_pts = [(w, pv_at(w) * (scale if w <= DD else 1) if w <= DD else pv_at(w)) for w in range(26)]
+pv_line = " ".join(f"{Xw7(w)},{Yc7(v)}" for w, v in pv_pts)
+ev_line = " ".join(f"{Xw7(w)},{Yc7(pv_at(w) * scale * (1920000.0 / 2080000.0))}" for w in range(DD + 1))
+ac_line = " ".join(f"{Xw7(w)},{Yc7(pv_at(w) * scale * (2120000.0 / 2080000.0))}" for w in range(DD + 1))
+grid = "".join(f'<line x1="{L}" y1="{Yc7(v)}" x2="{W-R}" y2="{Yc7(v)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yc7(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v/1000000:.1f}m</text>'
+               for v in range(0, 4600001, 1000000))
+xt = "".join(f'<text x="{Xw7(w)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{w}</text>' for w in range(0, 26, 5))
+fan = "".join(f'<line x1="{Xw7(DD)}" y1="{Yc7(2120000)}" x2="{Xw7(25)}" y2="{Yc7(v)}" stroke="{c}" stroke-width="1.6" stroke-dasharray="4 3"/>'
+              f'<text x="{Xw7(25)-2}" y="{Yc7(v)-5}" font-size="9" fill="{c}" text-anchor="end">{lab}</text>'
+              for v, c, lab in ((4200000, INK, "EAC(a) 4.20m"), (4416667, CRIMSON, "EAC(b) 4.42m")))
+body = (grid + fan
+        + f'<line x1="{Xw7(DD)}" y1="{Yc7(0)}" x2="{Xw7(DD)}" y2="{T}" stroke="{SLATE}" stroke-dasharray="5 4"/>'
+        + f'<text x="{Xw7(DD)}" y="{T-6}" font-size="10" fill="{SLATE}" text-anchor="middle">data date wk 13</text>'
+        + f'<line x1="{L}" y1="{Yc7(BAC7)}" x2="{W-R}" y2="{Yc7(BAC7)}" stroke="{INK}" stroke-width="1" stroke-dasharray="6 4"/>'
+        + f'<text x="{L+6}" y="{Yc7(BAC7)-6}" font-size="9.5" fill="{INK}">BAC 4.00m</text>'
+        + f'<polyline points="{pv_line}" fill="none" stroke="{SLATE}" stroke-width="2.2"/>'
+        + f'<polyline points="{ac_line}" fill="none" stroke="{CRIMSON}" stroke-width="2.6"/>'
+        + f'<polyline points="{ev_line}" fill="none" stroke="{BLUE}" stroke-width="2.6"/>'
+        + f'<circle cx="{Xw7(DD)}" cy="{Yc7(2120000)}" r="3.4" fill="{CRIMSON}"/>'
+        + f'<circle cx="{Xw7(DD)}" cy="{Yc7(2080000)}" r="3.4" fill="{SLATE}"/>'
+        + f'<circle cx="{Xw7(DD)}" cy="{Yc7(1920000)}" r="3.4" fill="{BLUE}"/>'
+        + f'<text x="{Xw7(DD)+8}" y="{Yc7(2120000)-6}" font-size="9.5" fill="{CRIMSON}">AC 2.12m</text>'
+        + f'<text x="{Xw7(DD)+8}" y="{Yc7(2080000)+13}" font-size="9.5" fill="{SLATE}">PV 2.08m</text>'
+        + f'<text x="{Xw7(DD)+8}" y="{Yc7(1920000)+22}" font-size="9.5" fill="{BLUE}">EV 1.92m</text>'
+        + f'<text x="{L+8}" y="{T+14}" font-size="10.5" fill="{INK}">CV (200k) · SV (160k) · CPI 0.91 · SPI 0.92</text>'
+        + axes(L, T, W - R, H - B, "Week", "Cumulative cost (USD)") + xt)
+(PML / "fig_7_3_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 7.3.2 EAC fan + TCPI gap -------------------------------------------------
+W, H = 660, 330
+# left panel: forecast bars; right panel: CPI vs required TCPI
+def bar(x, y, w, h, fill, label, val, col=INK):
+    return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="3" fill="{fill}"/>'
+            f'<text x="{x+w/2}" y="{y-7}" font-size="10" font-weight="600" fill="{col}" text-anchor="middle">{val}</text>'
+            f'<text x="{x+w/2}" y="{H-26}" font-size="9.5" fill="{SLATE}" text-anchor="middle">{label}</text>')
+base, top = H - 46, 60
+def hgt(v, vmax): return (base - top) * (v / vmax)
+body = f'<text x="30" y="30" font-size="11.5" font-weight="700" fill="{INK}">The EAC fan (USD m)</text>'
+for i, (v, lab, col) in enumerate(((4000000, "BAC", SLATE), (4200000, "EAC(a)", BLUE),
+                                   (4416667, "EAC(b)", INK), (4608056, "EAC(c)", CRIMSON))):
+    h = hgt(v, 4800000)
+    body += bar(40 + i * 66, base - h, 46, h, col, lab, f"{v/1000000:.2f}")
+body += (f'<line x1="330" y1="40" x2="330" y2="{base}" stroke="{GRID}" stroke-width="1.5"/>'
+         f'<text x="360" y="30" font-size="11.5" font-weight="700" fill="{INK}">What TCPI demands</text>')
+for i, (v, lab, col) in enumerate(((0.9057, "CPI achieved", SLATE), (1.1064, "TCPI to BAC", CRIMSON))):
+    h = hgt(v, 1.25)
+    body += bar(400 + i * 96, base - h, 62, h, col, lab, f"{v:.2f}")
+body += (f'<line x1="{400+62}" y1="{base-hgt(0.9057,1.25)}" x2="{400+96}" y2="{base-hgt(0.9057,1.25)}" stroke="{INK}" stroke-dasharray="3 3"/>'
+         f'<text x="596" y="{base-hgt(1.0,1.25)}" font-size="9.5" fill="{CRIMSON}" text-anchor="end">the gap a recovery</text>'
+         f'<text x="596" y="{base-hgt(1.0,1.25)+12}" font-size="9.5" fill="{CRIMSON}" text-anchor="end">plan must close</text>'
+         f'<line x1="30" y1="{base}" x2="{W-24}" y2="{base}" stroke="{INK}" stroke-width="1.2"/>')
+(PML / "fig_7_3_2.svg").write_text(svg(W, H, body))
+
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")

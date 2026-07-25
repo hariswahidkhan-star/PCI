@@ -295,6 +295,53 @@ check("EX 1.2 cliff decline", ((D(12000000) - 5200000) / 12000000).quantize(D("0
 check("MCQ 1.2-A distractor D", D(2000000) - 3000000 - 1000000 - 500000, -2500000, tol=D("0"))
 check("MCQ 1.2-B distractor D", (D(9000000) / 30000000).quantize(D("0.001")), D("0.30"), tol=D("0.0005"))
 
+# ---------- PML-AI Domain 7 — Cost, resources and commercial awareness ----------
+BAC7, PV7, EV7, AC7 = D(4000000), D(2080000), D(1920000), D(2120000)
+CPI7, SPI7 = EV7 / AC7, EV7 / PV7
+check("WE 7.3.2 CV", EV7 - AC7, -200000)
+check("WE 7.3.2 SV", EV7 - PV7, -160000)
+check("WE 7.3.2 CPI", CPI7.quantize(D("0.01")), D("0.91"), tol=D("0.005"))
+check("WE 7.3.2 SPI", SPI7.quantize(D("0.01")), D("0.92"), tol=D("0.005"))
+check("WE 7.3.2 percent complete", (EV7 / BAC7 * 100).quantize(D("0.1")), D("48.0"), tol=D("0.05"))
+check("WE 7.3.2 percent spent", (AC7 / BAC7 * 100).quantize(D("0.1")), D("53.0"), tol=D("0.05"))
+check("WE 7.3.3 EAC(a) budgeted rate", AC7 + (BAC7 - EV7), 4200000)
+check("WE 7.3.3 EAC(b) BAC/CPI", BAC7 / CPI7, D("4416666.67"))
+check("WE 7.3.3 EAC(c) CPIxSPI", AC7 + (BAC7 - EV7) / (CPI7 * SPI7), D("4608055.56"))
+check("WE 7.3.3 EAC spread (c)-(a)", AC7 + (BAC7 - EV7) / (CPI7 * SPI7) - (AC7 + (BAC7 - EV7)), D("408055.56"))
+check("EX 7.2 rounded-CPI error", D(4000000) / D("0.91"), D("4395604"), tol=D("1"))
+check("WE 7.3.4 VAC(a)", BAC7 - (AC7 + (BAC7 - EV7)), -200000)
+check("WE 7.3.4 VAC(b)", BAC7 - BAC7 / CPI7, D("-416666.67"))
+check("WE 7.3.4 VAC(c)", BAC7 - (AC7 + (BAC7 - EV7) / (CPI7 * SPI7)), D("-608055.56"))
+check("WE 7.3.4 TCPI to BAC", ((BAC7 - EV7) / (BAC7 - AC7)).quantize(D("0.01")), D("1.11"), tol=D("0.005"))
+# Identity: TCPI to an EAC of BAC/CPI is exactly the current CPI ("nothing changes").
+check("WE 7.3.4 TCPI to EAC(b) == CPI", (BAC7 - EV7) / (BAC7 / CPI7 - AC7), CPI7, tol=D("0.000001"))
+check("EX 7.3 TCPI wrong denominator (PV)", ((BAC7 - EV7) / (BAC7 - PV7)).quantize(D("0.01")), D("1.08"), tol=D("0.005"))
+check("7.A.1 earned schedule SPI(t)", (D(12) / D(13)).quantize(D("0.01")), D("0.92"), tol=D("0.005"))
+# Estimating
+check("WE 7.1.2 PERT cost te", (D(680000) + 4 * D(750000) + D(1000000)) / 6, 780000)
+check("WE 7.1.2 PERT cost sigma", ((D(1000000) - D(680000)) / 6).quantize(D("0.01")), D("53333.33"))
+check("WE 7.1.2 mean-over-mode", (D(680000) + 4 * D(750000) + D(1000000)) / 6 - 750000, 30000)
+# Resource economics
+check("WE 7.4.1 blended rate", (D(40) * 95 + D(25) * 140 + D(15) * 210) / 80, D("130.625"))
+check("MCQ 7.4-D distractor A (unweighted)", (D(95) + 140 + 210) / 3, D("148.33"), tol=D("0.005"))
+check("EX 7.5 blended rate", (D(30) * 105 + D(20) * 150 + D(10) * 220) / 60, D("139.1667"), tol=D("0.0001"))
+check("EX 7.5 crew cost", 5 * 40 * 4 * ((D(30) * 105 + D(20) * 150 + D(10) * 220) / 60), D("111333.33"))
+# Incentive contracts
+tc7, tf7, ceiling7, buyer_share = D(2000000), D(150000), D(2450000), D("0.70")
+check("WE 7.4.3 overrun", D(2300000) - tc7, 300000)
+check("WE 7.4.3 fee", tf7 - (D(2300000) - tc7) * D("0.30"), 60000)
+check("WE 7.4.3 buyer pays", D(2300000) + (tf7 - (D(2300000) - tc7) * D("0.30")), 2360000)
+check("WE 7.4.3 target price", tc7 + tf7, 2150000)
+check("WE 7.4.3 PTA", tc7 + (ceiling7 - (tc7 + tf7)) / buyer_share, D("2428571.43"))
+# At the PTA the buyer's outlay equals the ceiling price exactly.
+pta7 = tc7 + (ceiling7 - (tc7 + tf7)) / buyer_share
+check("WE 7.4.3 PTA outlay == ceiling", pta7 + (tf7 - (pta7 - tc7) * D("0.30")), ceiling7, tol=D("0.01"))
+check("EX 7.4 fee", D(180000) - (D(2650000) - D(2400000)) * D("0.20"), 130000)
+check("EX 7.4 buyer pays", D(2650000) + 130000, 2780000)
+check("EX 7.4 PTA", D(2400000) + (D(2900000) - (D(2400000) + D(180000))) / D("0.80"), 2800000)
+# Cash
+check("7.4.4 unpaid at 60-day terms", AC7 * D("0.35"), 742000)
+
 print()
 if FAILURES:
     print(f"✗ {len(FAILURES)} FAILURES:", *FAILURES, sep="\n  ")
