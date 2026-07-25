@@ -492,6 +492,10 @@ public static class Migrate
         AddCol("fee_waivers", "appeal_id", "appeal_id INTEGER");
         AddCol("fee_waivers", "evidence_ref", "evidence_ref TEXT");
         AddCol("fee_waivers", "payable_amount", "payable_amount DECIMAL(12,2)");
+        // Client idempotency for partial / reschedule-only (and optional full) waiver requests.
+        // Unique when present so retries cannot create duplicate ledger rows or discount codes.
+        AddCol("fee_waivers", "idempotency_key", "idempotency_key VARCHAR(120)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_fee_waivers_idem ON fee_waivers(idempotency_key)");
 
         // Authorization links so history + policy join cleanly.
         AddCol("exam_bookings", "authorization_id", "authorization_id INTEGER");

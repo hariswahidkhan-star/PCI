@@ -117,6 +117,16 @@ public static class AdminOps
             var percent = Math.Clamp(H.GetNum(b, "percent") ?? 100, 1, 100);
             var expires = (H.GetS(b, "expires") ?? "").Trim();       // yyyy-MM-dd for partial-waiver codes
             var listPrice = Settlement.ListPrice(db, product);
+            // Partial waivers mint a discount code + ledger row with no seat uniqueness guard — require a
+            // durable client idempotency key. Full waivers may also supply one for safe retries.
+            var idemKey = FeeWaiverLedger.ResolveKey(ctx.Request, b);
+            if (percent < 100 && idemKey is null)
+                return Err(400, "idempotency_key_required", "Partial waivers require an Idempotency-Key (header or body).");
+            if (idemKey is not null)
+            {
+                var prior = FeeWaiverLedger.Find(db, idemKey);
+                if (prior is not null) return J(FeeWaiverLedger.ReplayResponse(db, prior));
+            }
 
             if (percent >= 100)
             {
@@ -131,32 +141,68 @@ public static class AdminOps
                     if (open is not null && product == "exam" && !allowDup) return Err(409, "already_entitled");
                 }
                 // Full waiver — the same immediate settlement as mark-paid amount 0.
+                // When a client key is present, claim the ledger first so a retry cannot Grant twice.
                 var reference = "WAIVE-" + Security.RandomHex(5).ToUpperInvariant();
-                var payId = Settlement.Grant(db, id, H.Str(u["email"]), product, certId, 0, reference, "admin_waiver",
-                    new Settlement.Meta { Note = note.Length > 0 ? note : reason, RecordedBy = adm.Id, OriginalAmount = listPrice });
-                if ((product is "exam" or "bundle") && certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
-                db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,payment_id) VALUES(?,?,?, 'full', ?, ?, 0, ?, ?, ?, ?)",
-                    id, product, certId, listPrice, listPrice, reason, note.Length > 0 ? note : null, adm.Id, payId);
+                long payId = 0;
+                long waiverId = 0;
+                var raced = false;
+                db.Transaction(() =>
+                {
+                    bool created;
+                    (waiverId, created) = FeeWaiverLedger.TryInsert(db, idemKey, id, product, certId, "full",
+                        feeType: product == "membership" ? "membership" : "exam", waiverType: "full",
+                        originalAmount: listPrice, waivedAmount: listPrice, finalAmount: 0, payableAmount: 0,
+                        reason: reason, note: note.Length > 0 ? note : null, approvedBy: adm.Id);
+                    if (!created && idemKey is not null)
+                    {
+                        raced = true;
+                        return;
+                    }
+                    payId = Settlement.Grant(db, id, H.Str(u["email"]), product, certId, 0, reference, "admin_waiver",
+                        new Settlement.Meta { Note = note.Length > 0 ? note : reason, RecordedBy = adm.Id, OriginalAmount = listPrice });
+                    if ((product is "exam" or "bundle") && certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
+                    db.Execute("UPDATE fee_waivers SET payment_id=? WHERE id=?", payId, waiverId);
+                });
+                if (raced) return J(FeeWaiverLedger.ReplayResponse(db, FeeWaiverLedger.Find(db, idemKey!)!));
                 db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Account', 'Your fee has been waived', ?)", id,
                     $"The institute has waived your {product} fee in full ({reason}). Your access is active — no payment is needed.");
                 log(adm.Id, "fee_waiver_full", $"{product} 100% ({reason}) by {adm.Id} (subject {id}) pay {payId}");
-                return J(new { ok = true, kind = "full", payment_id = payId, waived_amount = listPrice, payable = 0 });
+                return J(new { ok = true, kind = "full", waiver_id = waiverId, payment_id = payId, waived_amount = listPrice, payable = 0, replayed = false });
             }
 
             // Partial waiver — a single-use discount code locked to this student's email; they pay the
             // remainder through the normal checkout, so the money still flows through the real pipeline.
-            var codeStr = "WVR-" + Security.RandomHex(5).ToUpperInvariant();
+            // Claim the idempotency key on the ledger first so a raced retry never mints a second code.
             var criteria = JsonSerializer.Serialize(new { email = H.Str(u["email"]) });
-            var codeId = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,end_date,max_uses,single_use_per_email,active,code_type,notes,per_user_limit,criteria_json)
-                VALUES(?, 'percentage', ?, ?, ?, 1, 1, 1, 'waiver', ?, 1, ?)",
-                codeStr, percent, product == "bundle" ? "all" : product, expires.Length > 0 ? expires : null, $"Partial waiver: {reason} (admin {adm.Id})", criteria);
             var waivedAmt = Math.Round(listPrice * percent / 100 * 100) / 100;
-            db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,code_id,expires_at) VALUES(?,?,?, 'partial', ?, ?, ?, ?, ?, ?, ?, ?)",
-                id, product, certId, listPrice, waivedAmt, Math.Max(0, listPrice - waivedAmt), reason, note.Length > 0 ? note : null, adm.Id, codeId, expires.Length > 0 ? expires : null);
+            var payableAmt = Math.Max(0, listPrice - waivedAmt);
+            string? codeStr = null;
+            long partialWaiverId = 0;
+            var partialRaced = false;
+            db.Transaction(() =>
+            {
+                bool created;
+                (partialWaiverId, created) = FeeWaiverLedger.TryInsert(db, idemKey, id, product, certId, "partial",
+                    feeType: product == "membership" ? "membership" : "exam", waiverType: "partial",
+                    originalAmount: listPrice, waivedAmount: waivedAmt, finalAmount: payableAmt, payableAmount: payableAmt,
+                    reason: reason, note: note.Length > 0 ? note : null, approvedBy: adm.Id,
+                    expiresAt: expires.Length > 0 ? expires : null);
+                if (!created)
+                {
+                    partialRaced = true;
+                    return;
+                }
+                codeStr = "WVR-" + Security.RandomHex(5).ToUpperInvariant();
+                var codeId = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,end_date,max_uses,single_use_per_email,active,code_type,notes,per_user_limit,criteria_json)
+                    VALUES(?, 'percentage', ?, ?, ?, 1, 1, 1, 'waiver', ?, 1, ?)",
+                    codeStr, percent, product == "bundle" ? "all" : product, expires.Length > 0 ? expires : null, $"Partial waiver: {reason} (admin {adm.Id})", criteria);
+                db.Execute("UPDATE fee_waivers SET code_id=? WHERE id=?", codeId, partialWaiverId);
+            });
+            if (partialRaced) return J(FeeWaiverLedger.ReplayResponse(db, FeeWaiverLedger.Find(db, idemKey!)!));
             db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Account', 'A fee reduction has been applied for you', ?, 'Go to billing', '/billing')", id,
                 $"The institute has granted you a {percent:0.#}% reduction on your {product} fee ({reason}). Use code {codeStr} at checkout{(expires.Length > 0 ? $" before {expires}" : "")}.");
             log(adm.Id, "fee_waiver_partial", $"{product} {percent:0.#}% code {codeStr} ({reason}) by {adm.Id} (subject {id})");
-            return J(new { ok = true, kind = "partial", code = codeStr, percent, original = listPrice, waived_amount = waivedAmt, payable = Math.Max(0, listPrice - waivedAmt), expires = expires.Length > 0 ? expires : null });
+            return J(new { ok = true, kind = "partial", waiver_id = partialWaiverId, code = codeStr, percent, original = listPrice, waived_amount = waivedAmt, payable = payableAmt, expires = expires.Length > 0 ? expires : null, replayed = false });
         }));
 
         // ================= reverse a manual settlement =================
