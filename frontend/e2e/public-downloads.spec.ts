@@ -25,7 +25,17 @@ test.describe('public downloads centre', () => {
     const download = await downloadPromise
     const path = await download.path()
     expect(path).toBeTruthy()
-    expect(readFileSync(path!).subarray(0, 4).toString()).toBe('%PDF')
+    // The centre serves more than one document type now — the governance PDFs plus the CSV templates
+    // library — so assert the bytes match the file the card actually offered rather than assuming PDF.
+    // This keeps the real point of the check (the pipeline serves genuine file content, not an error page)
+    // while staying correct as the register grows.
+    const bytes = readFileSync(path!)
+    expect(bytes.byteLength).toBeGreaterThan(0)
+    if (download.suggestedFilename().toLowerCase().endsWith('.csv')) {
+      expect(bytes.toString('utf8')).toContain(',')
+    } else {
+      expect(bytes.subarray(0, 4).toString()).toBe('%PDF')
+    }
     await captureStoryEvidence(page, testInfo, 'A8', 'download-centre')
   })
 
