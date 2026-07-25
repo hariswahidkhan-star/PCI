@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useQuery } from '../api/hooks'
 import { fmtDateTime } from '../format'
@@ -65,6 +65,28 @@ interface AttemptRow {
   started_at?: string | null
   completed_at?: string | null
 }
+// A compact in-progress row for the resume strip (the server computes it over the FULL catalogue, so
+// it survives an active filter). Carries just what the strip and metaLine need.
+interface ResumeRow {
+  scenario_code: string
+  title: string
+  kind: string
+  difficulty?: string | null
+  industry?: string | null
+  est_minutes?: number
+  certification_id?: number | null
+}
+// The catalogue response: matched rows for the cards, full-set facets for the filter controls, and a
+// whole-catalogue summary (KPIs) + resume list that are unaffected by the active filter. The client
+// asks the server to filter/search (the capacity path) and derives only track/duration/sort locally.
+interface CatalogueResp {
+  rows: LabRow[]
+  total: number
+  matched: number
+  facets?: { difficulties: string[]; kinds: string[]; industries: string[]; competencies: string[] }
+  summary?: { published: number; completed: number; in_progress: number; avg_score: number | null }
+  resume?: ResumeRow[]
+}
 
 const KIND_LABEL: Record<string, string> = {
   guided_lab: 'Guided lab',
@@ -127,7 +149,7 @@ function sortRows(rows: LabRow[], sort: SortKey): LabRow[] {
 }
 
 /** The card meta line: difficulty · industry · duration · track, tabular and quiet. */
-function metaLine(r: LabRow): string {
+function metaLine(r: Pick<LabRow, 'difficulty' | 'industry' | 'est_minutes' | 'certification_id'>): string {
   const parts = [r.difficulty ? titleCaseWords(r.difficulty) : 'Foundation']
   if (r.industry) parts.push(r.industry)
   if (r.est_minutes) parts.push(`~${r.est_minutes} min`)
@@ -137,16 +159,6 @@ function metaLine(r: LabRow): string {
 
 export default function Lab() {
   const { data: access, loading: aLoading, error: aError } = useQuery<Access>('/api/me/lab/access')
-  // Only load the catalogue once access is confirmed (the endpoint is access-gated).
-  const { data: cat, loading: cLoading, error: cError, refetch: refetchCat } = useQuery<{ rows: LabRow[] }>(
-    access?.has_access ? '/api/me/lab/catalogue' : null,
-  )
-  const { data: mastery } = useQuery<MasteryResp>(
-    access?.has_access ? '/api/me/lab/mastery' : null,
-  )
-  const { data: history } = useQuery<{ rows: AttemptRow[] }>(
-    access?.has_access ? '/api/me/lab/attempts' : null,
-  )
 
   // Filters live in the URL so a filtered view survives reload, back/forward and sharing.
   const [params, setParams] = useSearchParams()
@@ -167,37 +179,63 @@ export default function Lab() {
   const duration = (params.get('duration') ?? '') as DurationBucket
   const sort = (params.get('sort') ?? '') as SortKey
 
+  // Debounce the free-text search so we refetch once the student pauses, not on every keystroke.
+  const [qDebounced, setQDebounced] = useState(q)
+  useEffect(() => {
+    const t = setTimeout(() => setQDebounced(q), 250)
+    return () => clearTimeout(t)
+  }, [q])
+
+  // The catalogue is filtered/searched SERVER-side (the capacity path — the browser never has to hold
+  // or scan the whole set): the search text + the facet filters the endpoint understands go in the
+  // query string, so changing them refetches the matched rows. Track/duration/sort stay client-side
+  // (the server doesn't model them and they act on the small matched set). Only load once access is
+  // confirmed — the endpoint is access-gated.
+  const catPath = useMemo(() => {
+    if (!access?.has_access) return null
+    const p = new URLSearchParams()
+    if (qDebounced.trim()) p.set('q', qDebounced.trim())
+    if (difficulty) p.set('difficulty', difficulty)
+    if (kind) p.set('kind', kind)
+    if (industry) p.set('industry', industry)
+    if (competency) p.set('competency', competency)
+    const qs = p.toString()
+    return qs ? `/api/me/lab/catalogue?${qs}` : '/api/me/lab/catalogue'
+  }, [access?.has_access, qDebounced, difficulty, kind, industry, competency])
+
+  const { data: cat, loading: cLoading, error: cError, refetch: refetchCat } = useQuery<CatalogueResp>(catPath)
+  const { data: mastery } = useQuery<MasteryResp>(
+    access?.has_access ? '/api/me/lab/mastery' : null,
+  )
+  const { data: history } = useQuery<{ rows: AttemptRow[] }>(
+    access?.has_access ? '/api/me/lab/attempts' : null,
+  )
+
   const [detail, setDetail] = useState<LabRow | null>(null)
   const [allHistory, setAllHistory] = useState(false)
 
   const rows = useMemo(() => cat?.rows ?? [], [cat])
 
+  // Facet dropdowns come from the server's full-set facets (stable regardless of the active filter),
+  // falling back to whatever the matched rows expose if an older response omits them.
   const industries = useMemo(
-    () => [...new Set(rows.map((r) => r.industry).filter(Boolean) as string[])].sort(),
-    [rows],
+    () => cat?.facets?.industries ?? [...new Set(rows.map((r) => r.industry).filter(Boolean) as string[])].sort(),
+    [cat, rows],
   )
   const competencies = useMemo(
-    () => [...new Set(rows.flatMap((r) => r.competencies ?? []))].sort(),
-    [rows],
+    () => cat?.facets?.competencies ?? [...new Set(rows.flatMap((r) => r.competencies ?? []))].sort(),
+    [cat, rows],
   )
 
+  // The rows are already server-filtered/searched; apply only the client-side track + duration filters
+  // and the chosen sort over the matched set.
   const filtered = useMemo(() => {
-    const needle = q.trim().toLowerCase()
     return sortRows(rows.filter((r) => {
       if (track && String(r.certification_id ?? '') !== track) return false
-      if (industry && r.industry !== industry) return false
-      if (difficulty && (r.difficulty ?? 'foundation') !== difficulty) return false
-      if (kind && r.kind !== kind) return false
-      if (competency && !(r.competencies ?? []).includes(competency)) return false
       if (!matchesDuration(r.est_minutes, duration)) return false
-      if (needle) {
-        const hay = [r.title, r.summary, r.scenario_code, r.industry, ...(r.competencies ?? [])]
-          .filter(Boolean).join(' ').toLowerCase()
-        if (!hay.includes(needle)) return false
-      }
       return true
     }), sort)
-  }, [rows, q, track, industry, difficulty, kind, competency, duration, sort])
+  }, [rows, track, duration, sort])
 
   const anyFilter = !!(q || track || industry || difficulty || kind || competency || duration)
   const clearFilters = () => {
@@ -208,12 +246,12 @@ export default function Lab() {
     }, { replace: true })
   }
 
-  const inProgress = useMemo(() => rows.filter((r) => r.attempt_status === 'in_progress'), [rows])
-  const completedCount = useMemo(() => rows.filter((r) => DONE.has(r.attempt_status ?? '')).length, [rows])
-  const scored = useMemo(() => rows.filter((r) => typeof r.score === 'number'), [rows])
-  const avgScore = scored.length
-    ? Math.round(scored.reduce((n, r) => n + (r.score ?? 0), 0) / scored.length)
-    : null
+  // Whole-catalogue KPIs + resume list come from the server summary (unaffected by the active filter).
+  const totalPublished = cat?.summary?.published ?? cat?.total ?? 0
+  const completedCount = cat?.summary?.completed ?? 0
+  const inProgressCount = cat?.summary?.in_progress ?? 0
+  const avgScore = cat?.summary?.avg_score ?? null
+  const inProgress = useMemo(() => cat?.resume ?? [], [cat])
 
   if (aLoading) return <Spinner />
   if (aError) return <ErrorNote>{aError}</ErrorNote>
@@ -232,24 +270,24 @@ export default function Lab() {
         <Card>
           <Empty>{access?.reason ?? 'The Practice Lab is not currently available.'}</Empty>
         </Card>
-      ) : cLoading ? (
+      ) : cLoading && !cat ? (
         <SkeletonCards count={6} />
-      ) : cError && rows.length === 0 ? (
+      ) : cError && !cat ? (
         <InsightCallout tone="danger" title="The catalogue could not be loaded" role="alert">
           <p>Nothing you have done is lost. Check your connection, then try again.</p>
           <p style={{ marginTop: '.6rem' }}>
             <button className="btn secondary sm" type="button" onClick={refetchCat}>Try again</button>
           </p>
         </InsightCallout>
-      ) : rows.length === 0 ? (
+      ) : totalPublished === 0 ? (
         <Card><Empty>No practice labs have been published yet — new labs will appear here automatically.</Empty></Card>
       ) : (
         <>
           <KpiRow
             items={[
-              { k: 'Published labs', v: rows.length },
+              { k: 'Published labs', v: totalPublished },
               { k: 'Labs completed', v: completedCount },
-              { k: 'In progress', v: inProgress.length },
+              { k: 'In progress', v: inProgressCount },
               ...(avgScore != null ? [{ k: 'Average score', v: avgScore, suffix: '%' }] : []),
             ]}
           />
@@ -380,7 +418,7 @@ export default function Lab() {
               </label>
             </div>
             <p className="sl-results" role="status">
-              Showing {filtered.length} of {rows.length} labs
+              Showing {filtered.length} of {totalPublished} labs
               {anyFilter && (
                 <>
                   {' · '}

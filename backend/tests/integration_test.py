@@ -3782,6 +3782,21 @@ def test_simlab(admin):
     chk("43g5 filtering by kind=capstone returns only capstones",
         c == 200 and all(r.get("kind") == "capstone" for r in fk.get("rows", [])) and len(fk.get("rows", [])) >= 1, fk.get("matched"))
 
+    # Whole-catalogue summary (KPIs) + resume list — computed server-side over the FULL published set so
+    # the client can fetch only the matched rows without losing the KPIs. A member who hasn't started
+    # anything has zero progress and an empty resume list.
+    sm = cat.get("summary") or {}
+    chk("43g6 the catalogue carries a full-set summary (published/completed/in_progress/avg_score)",
+        isinstance(sm, dict) and sm.get("published") == cat.get("total")
+        and sm.get("completed") == 0 and sm.get("in_progress") == 0 and sm.get("avg_score") is None, sm)
+    chk("43g7 a fresh member has an empty resume list",
+        cat.get("resume") == [], cat.get("resume"))
+    # The summary is INVARIANT under the active filter: filtering the rows must not change the
+    # whole-catalogue KPIs (published stays the full published count, not the matched count).
+    chk("43g8 summary.published is unaffected by an active filter (full set, not the matched count)",
+        (fd.get("summary") or {}).get("published") == cat.get("total")
+        and fd.get("matched") < fd.get("total"), (fd.get("summary"), fd.get("matched"), fd.get("total")))
+
     # No draft/unpublished scenario ever leaks into the student catalogue.
     con = dbconn(); con.execute("INSERT INTO simulation_scenarios(scenario_code,title,kind,status) VALUES(?,?,?,?)",
                                 ("DRAFT-XYZ", "Hidden draft", "guided_lab", "draft")); con.commit(); con.close()
