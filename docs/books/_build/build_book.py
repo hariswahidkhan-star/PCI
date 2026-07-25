@@ -22,42 +22,62 @@ BOOKS = {
         "run_title": "PCI PML-AI Body of Knowledge",
         "subtitle": ("The reference for the PCI Project Management Leader – AI<br/>"
                      "Leadership · delivery systems · governance · the governed use of AI"),
-        "order": ["manuscript/domain-01-profession.md",
-                  "manuscript/domain-02-strategy-selection.md",
-                  "manuscript/domain-03-governance-decision-rights.md",
-                  "manuscript/domain-04-integration-delivery-architecture.md",
-                  "manuscript/domain-06-planning-scheduling-flow.md",
-                  "manuscript/domain-07-cost-resources-commercial.md",
-                  "manuscript/domain-08-risk-uncertainty-resilience.md"],
-        "parts": [("Part One", "Leading projects",
-                   "Domains 1–4 — the profession, strategy and selection, governance and decision rights, "
-                   "and delivery architecture: what a project leader is for and answerable for.",
-                   "Domain 1 —"),
-                  ("Part Two", "Delivering the work",
-                   "Domains 5–10 — scope, planning and flow, cost and commercial, risk and resilience, "
-                   "quality and assurance, and procurement: the machinery of delivery.",
-                   "Domain 6 —")],
+        # (part number, title, description, domain range) — a divider is emitted only where the
+        # part's lowest-numbered EXISTING domain is found, so parts appear as authorship reaches them.
+        "parts": [
+            (1, "Part One", "Leading projects",
+             "Domains 1–4 — the profession, strategy and selection, governance and decision rights, "
+             "and delivery architecture: what a project leader is for and answerable for.", (1, 4)),
+            (2, "Part Two", "Delivering the work",
+             "Domains 5–10 — scope, planning and flow, cost and commercial, risk and resilience, "
+             "quality and assurance, and procurement: the machinery of delivery.", (5, 10)),
+            (3, "Part Three", "Leading people and organisations",
+             "Domains 11–13 — stakeholders and influence, leadership and teams, and adaptive "
+             "delivery: the work that is done through other people.", (11, 13)),
+            (4, "Part Four", "Enterprise delivery and the digital future",
+             "Domains 14–16 — digital delivery and responsible AI, programmes and portfolios, and "
+             "transition and benefits realisation: delivery at enterprise scale.", (14, 16)),
+        ],
     },
     "pfl-ai": {
         "title": "PFL-AI<br/>Body of Knowledge",
         "run_title": "PCI PFL-AI Body of Knowledge",
         "subtitle": ("The reference for the PCI AI Project Finance Leader<br/>"
                      "Project economics · structuring · financial mathematics · the governed use of AI"),
-        "order": ["manuscript/domain-01-foundations.md",
-                  "manuscript/domain-02-accounting-foundations.md",
-                  "manuscript/domain-03-time-value-of-money.md",
-                  "manuscript/domain-04-investment-appraisal.md",
-                  "manuscript/domain-10-debt-sizing-covenants.md"],
-        "parts": [("Part One", "Foundations",
-                   "Domains 1–4 — the profession, accounting foundations, financial mathematics and "
-                   "investment appraisal: the financial grammar of project finance leadership.",
-                   "Domain 1 —"),
-                  ("Part Three", "Executing the transaction",
-                   "Domains 10–13 — debt sizing and covenants, risk allocation, financial close and "
-                   "model governance: turning an appraised project into a funded one.",
-                   "Domain 10 —")],
+        "parts": [
+            (1, "Part One", "Foundations",
+             "Domains 1–4 — the profession, accounting foundations, financial mathematics and "
+             "investment appraisal: the financial grammar of project finance leadership.", (1, 4)),
+            (2, "Part Two", "Structuring and modelling",
+             "Domains 5–9 — development and bankability, financial modelling, revenue and demand, "
+             "cost and contingency, and funding structure: how a project becomes financeable.", (5, 9)),
+            (3, "Part Three", "Executing the transaction",
+             "Domains 10–13 — debt sizing and covenants, risk allocation, contracts and transaction "
+             "structure, and due diligence to financial close: turning an appraised project into a "
+             "funded one.", (10, 13)),
+            (4, "Part Four", "Operating and the future",
+             "Domains 14–16 — operations and asset management, refinancing and portfolio value, and "
+             "the future of project finance: the life after close.", (14, 16)),
+        ],
     },
 }
+
+
+def manuscript_order(book_dir: pathlib.Path) -> list:
+    """Every manuscript/domain-NN-*.md, in domain-number order. Authorship adds a FILE; no list
+    here needs editing, which is what lets domains be written concurrently."""
+    files = []
+    for f in (book_dir / "manuscript").glob("domain-*.md"):
+        m = re.match(r"domain-(\d+)-", f.name)
+        if m:
+            files.append((int(m.group(1)), f))
+    return [f for _, f in sorted(files, key=lambda x: (x[0], x[1].name))]
+
+
+def domain_numbers(book_dir: pathlib.Path) -> list:
+    return sorted(int(re.match(r"domain-(\d+)-", f.name).group(1))
+                  for f in manuscript_order(book_dir))
+
 
 FRONT = """
 <div class="titlepage">
@@ -101,7 +121,9 @@ def inject_figures(book_dir: pathlib.Path, corpus: str) -> str:
 def build(book: str, out: pathlib.Path) -> None:
     cfg = BOOKS[book]
     book_dir = ROOT / book
-    corpus = "\n\n".join((book_dir / n).read_text(encoding="utf-8") for n in cfg["order"])
+    files = manuscript_order(book_dir)
+    print(f"manuscripts: {len(files)} — " + ", ".join(f.name for f in files))
+    corpus = "\n\n".join(f.read_text(encoding="utf-8") for f in files)
     corpus = inject_figures(book_dir, corpus)
 
     html = markdown.markdown(corpus, extensions=["tables", "fenced_code", "toc"],
@@ -139,17 +161,21 @@ def build(book: str, out: pathlib.Path) -> None:
     # Figure-spec blockquotes hidden in print.
     html = re.sub(r'<blockquote>(\s*<p><strong>Fig\s)', r'<blockquote class="figspec">\1', html)
 
-    # Part divider before its first chapter.
-    for i, (num, title, desc, first_chap) in enumerate(cfg["parts"], start=1):
-        # Match the kicker exactly ("Domain 1" must not match "Domain 10").
-        kicker = " ".join(first_chap.split(" ")[:2])
+    # Part divider before the first EXISTING chapter of each part.
+    present = domain_numbers(book_dir)
+    for pnum, num, title, desc, (lo, hi) in cfg["parts"]:
+        in_part = [d for d in present if lo <= d <= hi]
+        if not in_part:
+            continue                      # part not yet reached by authorship
+        kicker = f"Domain {in_part[0]}"
         kick_m = re.search(r'<div class="chapter"><div class="chapnum">\d+</div>'
                            r'<div class="chapkicker">' + re.escape(kicker) + r'</div>', html)
-        part_html = (f'<div class="partpage"><div class="partghost">{i:02d}</div>'
+        if not kick_m:
+            continue
+        part_html = (f'<div class="partpage"><div class="partghost">{pnum:02d}</div>'
                      f'<div class="partnum">{num}</div><div class="parttitle">{title}</div>'
                      f'<div class="partdesc">{desc}</div><div class="partbar"></div></div>')
-        if kick_m:
-            html = html[:kick_m.start()] + part_html + html[kick_m.start():]
+        html = html[:kick_m.start()] + part_html + html[kick_m.start():]
 
     # Contents (h1 + h2 headings, in order).
     toc_items = []

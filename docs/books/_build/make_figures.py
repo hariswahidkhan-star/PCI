@@ -4,6 +4,7 @@
 Style per the pattern spec: brand blue #1D4ED8, crimson #C13329, ink #0F172A, slate greys,
 Inter labels, clean axes, no decoration. Deterministic output — safe to re-run.
 """
+import importlib.util
 import pathlib
 
 BLUE, CRIMSON, INK, SLATE, GRID = "#1D4ED8", "#C13329", "#0F172A", "#64748B", "#E2E8F0"
@@ -845,6 +846,29 @@ body += (f'<line x1="{L_}" y1="{Yc(25000):.1f}" x2="{W-R}" y2="{Yc(25000):.1f}" 
          'A change quoted at 22,000 with the same two weeks of critical-path impact truly costs 50,560 '
          '&#8212; twice the threshold, decided without escalation</text>')
 (PML / "fig_4_4_1.svg").write_text(svg(W, H, body))
+
+# ---- Per-domain figure modules (parallel-safe contribution point) -----------------
+# Domains authored concurrently contribute figures_src/<book>_d<NN>.py exposing make(ctx) rather
+# than editing this file. See figures_src/_README.md for the contract.
+_FIG_CTX = {"svg": svg, "axes": axes, "PML": PML, "PFL": PFL, "FONT": FONT,
+            "BLUE": BLUE, "CRIMSON": CRIMSON, "INK": INK, "SLATE": SLATE, "GRID": GRID}
+_src_dir = pathlib.Path(__file__).resolve().parent / "figures_src"
+_fig_mods = sorted(_src_dir.glob("*.py")) if _src_dir.is_dir() else []
+_failed = []
+for _mp in _fig_mods:
+    if _mp.name.startswith("_"):
+        continue
+    _spec = importlib.util.spec_from_file_location(f"pci_figs_{_mp.stem}", _mp)
+    _m = importlib.util.module_from_spec(_spec)
+    try:
+        _spec.loader.exec_module(_m)
+        _m.make(_FIG_CTX)
+    except Exception as _e:
+        _failed.append(f"{_mp.name}: {type(_e).__name__}: {_e}")
+print(f"figure modules loaded: {len([m for m in _fig_mods if not m.name.startswith('_')])}")
+if _failed:
+    print("FIGURE MODULE FAILURES:", *_failed, sep="\n  ")
+    raise SystemExit(1)
 
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")

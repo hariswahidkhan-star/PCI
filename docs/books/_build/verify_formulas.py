@@ -5,6 +5,8 @@ Every worked example, in-text calculation and exercise in the manuscripts has a 
 the number is recomputed with decimal arithmetic and compared to the value printed in the book.
 A chapter cannot pass gate while this suite fails. Run:  python3 verify_formulas.py
 """
+import importlib.util
+import pathlib
 from decimal import Decimal as D, getcontext
 
 getcontext().prec = 28
@@ -920,6 +922,40 @@ check("EX 4.4 drift as % of baseline",
 check("EX 4.4 each change as % of baseline", (AVG44 / B44 * 100).quantize(D("0.0001")), D("0.1625"))
 check("EX 4.4 90-day aggregate", D(N44) / 4 * AVG44, 62400)
 check("EX 4.4 a 100,000 rule would not trip", 1 if D(N44) / 4 * AVG44 < 100000 else 0, 1)
+
+
+# ---------- Per-domain check modules (parallel-safe contribution point) ----------
+# Domains authored concurrently must not all edit this file. Each contributes
+# _build/checks/<book>_d<NN>.py exposing run(ctx); ctx carries the check helper, Decimal, the
+# shared rate/annuity helpers and the master-thread constants, so a new domain adds a FILE and
+# never a merge conflict. Modules run in sorted order and a missing directory is not an error.
+CTX = {
+    "check": check, "D": D, "af": af, "ew": ew, "mesh": mesh,
+    # PML-AI master threads
+    "MERIDIAN_COST_OF_DELAY": COD3, "MERIDIAN_BASELINE": BASE4,
+    "MERIDIAN_BENEFIT_70PCT": D(685440), "MERIDIAN_BENEFIT_FULL": D(979200),
+    "AURIGA_BAC": D(4000000), "AURIGA_WEEKS": 25,
+    # PFL-AI master thread (Kestrel Water SPC)
+    "KESTREL_DEBT": D(42000000), "KESTREL_EQUITY": D(18000000), "KESTREL_CAPEX": D(60000000),
+    "KESTREL_RATE": D("0.06"), "KESTREL_TENOR": 12, "KESTREL_LIFE": 25,
+    "KESTREL_INSTALMENT": D("5009635.23"), "KESTREL_CFADS": D(6384000),
+    "KESTREL_EBITDA": D(7500000), "KESTREL_EBIT": D(5100000), "KESTREL_INTEREST_Y1": D(2520000),
+    "KESTREL_DISCOUNT": D("0.08"), "KESTREL_NPV": D(16179360),
+}
+_checks_dir = pathlib.Path(__file__).resolve().parent / "checks"
+_modules = sorted(_checks_dir.glob("*.py")) if _checks_dir.is_dir() else []
+for _mod_path in _modules:
+    if _mod_path.name.startswith("_"):
+        continue
+    _spec = importlib.util.spec_from_file_location(f"pci_checks_{_mod_path.stem}", _mod_path)
+    _mod = importlib.util.module_from_spec(_spec)
+    try:
+        _spec.loader.exec_module(_mod)
+        _mod.run(CTX)
+    except Exception as _e:                       # a broken module is a failure, not a skip
+        FAILURES.append(f"{_mod_path.name}: {type(_e).__name__}: {_e}")
+        print(f"FAIL  {_mod_path.name} raised {type(_e).__name__}: {_e}")
+print(f"\ncheck modules loaded: {len(_modules)}")
 
 
 print()
