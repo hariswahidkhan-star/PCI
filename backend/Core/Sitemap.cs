@@ -57,6 +57,21 @@ public static class Sitemap
                 }
             }
             catch { /* blog tables absent on a very early boot — sitemap still valid */ }
+            // Open, published job postings — each has a server-rendered /careers/{code}/{slug} page with
+            // JobPosting structured data, so search engines and Google for Jobs discover them here.
+            try
+            {
+                foreach (var r in db.Query(@"SELECT id,job_code,title,slug,COALESCE(updated_at,posted_at,created_at) upd
+                    FROM job_postings WHERE status='published' AND (closes_at IS NULL OR closes_at='' OR closes_at > datetime('now'))
+                    AND job_code IS NOT NULL AND job_code<>'' ORDER BY id DESC"))
+                {
+                    var loc = host + CareerPage.Path(r);
+                    sb.Append("  <url><loc>").Append(Esc(loc)).Append("</loc>");
+                    if (H.Str(r["upd"]) is { Length: >= 10 } ju) sb.Append("<lastmod>").Append(Esc(ju[..10])).Append("</lastmod>");
+                    sb.Append("<changefreq>daily</changefreq></url>\n");
+                }
+            }
+            catch { /* careers tables absent on a very early boot — sitemap still valid */ }
             sb.Append("</urlset>\n");
             _xml = sb.ToString();
             _ver = v;
