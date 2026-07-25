@@ -5,6 +5,8 @@ import { useQuery } from '../api/hooks'
 import { api, ApiError, getToken } from '../api/client'
 import { startCheckout, checkoutErrorMessage } from '../api/checkout'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty } from '../components/ui'
+import { ViewDownloadActions } from '../components/documents/DocumentActions'
+import { studentToken } from '../files'
 import { fmtDate, fmtDateTime, fmtMoney, daysUntil } from '../format'
 import { useT } from '../i18n'
 import type { ExamEntry, IdentityDocument } from '../api/types'
@@ -196,7 +198,16 @@ function IdentityCard({ doc, onChanged }: { doc: IdentityDocument | null; onChan
           </div>
         </div>
       ) : (
-        <div className="row" style={{ marginTop: '.75rem' }}>
+        <div className="row" style={{ marginTop: '.75rem', gap: '.35rem', flexWrap: 'wrap' }}>
+          {/* Students can always see what is on file for them (served over the authenticated
+              own-document endpoint; staff views of the same file are separately audited). */}
+          <ViewDownloadActions
+            info={{ title: doc?.filename || t('cert.identityVerification'), filename: doc?.filename }}
+            inlineUrl="/api/me/identity-document/file"
+            token={studentToken()}
+            canDownload={false}
+            canPrint={false}
+          />
           <button className="btn sm secondary" onClick={() => setReplacing(true)}>{t('cert.replaceDocument')}</button>
         </div>
       )}

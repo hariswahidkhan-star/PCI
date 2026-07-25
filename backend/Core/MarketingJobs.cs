@@ -114,12 +114,25 @@ public sealed class MarketingJobDispatcher : BackgroundService
                 db.Execute("UPDATE mkt_jobs SET status='failed', attempts=?, last_error=?, provider_response=?, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
                     attempt, res.Response, Trunc(res.Response), id);
             else
-            {
-                var backoff = Math.Min(3600, (int)Math.Pow(2, attempt) * 30);   // 60s,120s,240s… capped 1h
-                db.Execute("UPDATE mkt_jobs SET status='retrying', attempts=?, last_error=?, next_attempt_at=datetime('now', ?), lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
-                    attempt, res.Response, $"+{backoff} seconds", id);
-            }
+                ScheduleRetry(db, id, attempt, res.Response);
         }
+    }
+
+    /// <summary>
+    /// Park a transiently-failed job for another pass, backing off 60s, 120s, 240s… capped at an hour.
+    ///
+    /// Its own method because every reachable path into it needs a live provider call, which no offline test
+    /// can make — so the statement went unexercised, and shipped in a form only SQLite could run. The
+    /// next-attempt instant is computed in C# rather than written as <c>datetime('now', ?)</c>: a modifier
+    /// bound as a PARAMETER is invisible to the textual SQLite→MySQL rewrite, so on MySQL the UPDATE threw,
+    /// DrainOnce's catch-all dead-lettered the row, and the first transient failure became a permanent one.
+    /// </summary>
+    public static void ScheduleRetry(Db db, long id, int attempt, string? error)
+    {
+        var backoffSec = Math.Min(3600, (int)Math.Pow(2, attempt) * 30);
+        db.Execute(@"UPDATE mkt_jobs SET status='retrying', attempts=?, last_error=?, next_attempt_at=?,
+            lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
+            attempt, error, H.StampInMinutes(backoffSec / 60.0), id);
     }
 
     static void OnSuccess(Db db, string type, long entityId, MarketingConnectors.Result res)

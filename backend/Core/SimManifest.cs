@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -48,14 +49,49 @@ public static class SimManifest
             ["competencies"] = Parse(Str(s, "competencies_json")) ?? new JsonArray(),
             ["summary"] = Str(s, "summary"),
             ["brief"] = Str(s, "brief"),
-            ["objectives"] = Parse(Str(s, "objectives_json")),
+            ["objectives"] = Canon(Parse(Str(s, "objectives_json"))),
             ["provenance"] = Str(s, "provenance"),
             ["disclaimers"] = Str(s, "disclaimers"),
             ["worked_solution"] = Str(s, "worked_solution"),
             ["synthetic_declared"] = Flag(s, "synthetic_declared"),
-            ["config"] = Parse(Str(s, "config_json")),
+            ["config"] = Canon(Parse(Str(s, "config_json"))),
         };
         return o;
+    }
+
+    /// <summary>
+    /// Normalises numbers so the checksum survives a JSON round-trip.
+    ///
+    /// JsonNode re-emits a number's ORIGINAL token — 1.50 stays "1.50", 2e3 stays "2e3". Any honest
+    /// tool in a transfer pipeline (jq, Python, a text editor's formatter) rewrites those to 1.5 and
+    /// 2000, which changes nothing about the value but changed the hash, so a genuine file came back
+    /// as checksum_mismatch. Re-creating each number from its parsed value gives one spelling per
+    /// value on both sides of the wire. Integers stay integers so a large id keeps its precision.
+    /// </summary>
+    static JsonNode? Canon(JsonNode? n)
+    {
+        switch (n)
+        {
+            case null: return null;
+            case JsonObject o:
+            {
+                var res = new JsonObject();
+                foreach (var kv in o) res[kv.Key] = Canon(kv.Value);
+                return res;
+            }
+            case JsonArray a:
+            {
+                var res = new JsonArray();
+                foreach (var item in a) res.Add(Canon(item));
+                return res;
+            }
+            default:
+                if (n.GetValueKind() != JsonValueKind.Number) return JsonNode.Parse(n.ToJsonString());
+                var raw = n.ToJsonString();
+                return long.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var l)
+                    ? JsonValue.Create(l)
+                    : JsonValue.Create(double.Parse(raw, CultureInfo.InvariantCulture));
+        }
     }
 
     /// <summary>SHA-256 of the canonical (compact) content block — the fingerprint of what gets graded.</summary>
@@ -207,6 +243,54 @@ public static class SimManifest
     /// It deliberately says nothing about lifecycle: the caller always lands an import in draft. Nothing in
     /// the file can grant published state.
     /// </summary>
+    /// <summary>One verified entry of a bundle: the row to insert, and the checksum that vouches for it.</summary>
+    public sealed record BundleEntry(string Code, Dictionary<string, object?> Row, string Checksum, long Version);
+
+    /// <summary>
+    /// Verifies a whole-catalogue bundle (§5B.8) — envelope, then every entry, then the bundle checksum.
+    ///
+    /// Integrity is all-or-nothing on purpose. A bundle whose checksum does not reconcile cannot be
+    /// partially trusted: if one entry was altered in transit there is no reason to believe the rest
+    /// survived, so the caller must import none of it rather than guess which half is genuine. Whether
+    /// an entry's CODE is already taken is a different question — that is this environment's state, not
+    /// the file's integrity — and is left to the caller.
+    /// </summary>
+    public static Reject VerifyBundle(JsonObject? bundle, out List<BundleEntry> entries)
+    {
+        entries = new List<BundleEntry>();
+        if (bundle is null) return Reject.BadManifest;
+
+        if (!string.Equals(bundle["kind"]?.GetValue<string>(), BundleKind, StringComparison.Ordinal))
+            return Reject.WrongKind;
+
+        var version = bundle["manifest_version"]?.GetValueKind() == JsonValueKind.Number
+            ? bundle["manifest_version"]!.GetValue<int>() : 0;
+        if (version <= 0 || version > ManifestVersion) return Reject.UnsupportedVersion;
+
+        if (bundle["scenarios"] is not JsonArray items) return Reject.BadManifest;
+
+        var found = new List<BundleEntry>();
+        foreach (var item in items)
+        {
+            if (item is not JsonObject one) return Reject.BadManifest;
+            var verdict = Verify(one, out var row, out var sum);
+            if (verdict != Reject.None) return verdict;   // one bad entry condemns the file
+            found.Add(new BundleEntry(H.Str(row["scenario_code"]) ?? "", row, sum,
+                one["scenario"]?["version"]?.GetValueKind() == JsonValueKind.Number
+                    ? one["scenario"]!["version"]!.GetValue<long>() : 0));
+        }
+
+        // Recompute the bundle checksum exactly as Bundle() derives it: the ordered per-entry checksums.
+        // Entries verified individually above, so this is what catches a reordered or truncated file.
+        var ordered = found.OrderBy(e => e.Code, StringComparer.Ordinal).ToList();
+        var recomputed = Security.Sha(string.Join("\n", ordered.Select(e => $"{e.Code}:{e.Checksum}")));
+        if (!string.Equals(recomputed, bundle["checksum"]?.GetValue<string>(), StringComparison.OrdinalIgnoreCase))
+            return Reject.ChecksumMismatch;
+
+        entries = ordered;
+        return Reject.None;
+    }
+
     public static Reject Verify(JsonObject? manifest, out Dictionary<string, object?> row, out string checksum)
     {
         row = new Dictionary<string, object?>();

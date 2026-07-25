@@ -6,6 +6,8 @@ import { api } from '../api/client'
 import { startCheckout, checkoutErrorMessage } from '../api/checkout'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
 import FoundingCard from '../components/FoundingCard'
+import { ViewDownloadActions } from '../components/documents/DocumentActions'
+import { studentToken } from '../files'
 import { fmtDate, fmtMoney, titleCase } from '../format'
 import { openPrintable, escapeHtml as e } from '../print'
 import { useT } from '../i18n'
@@ -485,8 +487,20 @@ export default function Billing() {
                   <td>{fmtMoney(p.final_amount, p.currency)}</td>
                   <td><StatusBadge status={p.payment_status} /></td>
                   <td>
-                    {p.payment_status === 'paid' && (
-                      <button className="btn ghost sm" onClick={() => receipt(p)}>{t('billing.receipt')}</button>
+                    {/* Print stays for a quick paper copy; the PDF is the durable, audited artefact
+                        served over the authenticated receipt endpoint (own payments only). */}
+                    {['paid', 'waived', 'partially_refunded'].includes(p.payment_status) && (
+                      <div className="row" style={{ gap: '.35rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                        {p.payment_status === 'paid' && (
+                          <button className="btn ghost sm" onClick={() => receipt(p)}>{t('billing.receipt')}</button>
+                        )}
+                        <ViewDownloadActions
+                          info={{ title: `${t('billing.receiptHeading')} ${p.reference || p.id}`, filename: `pci-receipt-${p.reference || p.id}.pdf`, mime: 'application/pdf' }}
+                          inlineUrl={`/api/me/payments/${p.id}/receipt.pdf?inline=1`}
+                          downloadUrl={`/api/me/payments/${p.id}/receipt.pdf`}
+                          token={studentToken()}
+                        />
+                      </div>
                     )}
                   </td>
                 </tr>

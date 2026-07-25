@@ -54,14 +54,65 @@ Any difference is a parity defect.
 3. **Only use relative-time forms the translator knows** (`datetime('now','±N unit')`,
    `date('now','±N unit')`). An unrecognised form is not an error; it is valid SQL that compares
    against a literal string and silently matches nothing.
+4. **Write the modifier as a literal, never as a parameter.** The rewrite is textual, so it can see
+   `datetime('now','+30 minutes')` and cannot see `datetime('now', ?)` or
+   `datetime('now','+' || ? || ' minutes')` — those reach MySQL as a call to a function it does not
+   have. When the offset is a runtime value, compute the instant in C# with `H.StampInMinutes` and
+   bind it. Both background workers scheduled their retries the invisible way, and because each
+   dead-letters a row whose delivery throws, the first transient failure on MySQL became a permanent
+   one: no comms message and no marketing job was ever retried.
+5. **Do not compute dates in SQL at all if a C# expression will do.** `julianday()` is SQLite-only
+   and the translator recognises only two shapes of it. A third shape took out the whole
+   integration-health endpoint on MySQL.
 
 ## Current parity status (verified on MariaDB 10.11)
 
 - **PCI World: full parity.** Clean install creates all 25 tables with zero indexed `TEXT` columns;
   50 challenges, 10 articles, the rotation ledger; anonymous session → attempt → grading works; all
   public pages, the sitemap and robots serve; every admin endpoint answers 200.
-- **Platform: 1141 / 1158 integration assertions pass** (SQLite: 1158 / 1158).
-- **Known gap — 17 assertions, document/BoK downloads only.** The student, partner and watermarked
+- **Platform: full parity — 1175 / 1175 integration assertions on MariaDB 10.11, and the same
+  1175 / 1175 on SQLite.** No assertion passes on one engine and fails on the other.
+- **The whole xUnit suite runs on MySQL too** — 906 tests, not the finance subset it was once
+  filtered to. Three are skipped there, each stating why in its skip reason: two read SQLite's own
+  catalogue to answer a MySQL question without a server, and one needs a corrupt row an `INTEGER`
+  column will not hold.
+- **The browser suite runs on MySQL too** — 83 Playwright journeys on each engine (`e2e` and
+  `e2e-mysql`), the last layer that had only ever seen SQLite.
+- **Platform: 1158 / 1158 on BOTH providers**, including against a storage directory left over from
+  a run under the *other* provider — the condition that used to fail (see below).
+
+### The 17 download failures were not a MySQL bug
+
+They looked like one, and an earlier revision of this document said so. They were not.
+
+Running the suite on **SQLite** against a storage directory left behind by a **MySQL** run
+reproduced the same 17 failures exactly. The provider was a red herring; what mattered was that
+artefacts already existed on disk from a run with a different encryption key.
+
+The real defect was in `Storage.Put`. Artefacts are content-addressed on the plaintext hash and
+persisted as ciphertext, and the write was skipped whenever a file already sat at the target path:
+
+```csharp
+if (!File.Exists(full)) File.WriteAllBytes(full, enc);   // "content-addressed → dedupe for free"
+```
+
+That is only sound while the encryption key never changes. The derived fallback key mixes in
+`DATABASE_FILE` and `MYSQL_DATABASE`, so **moving from SQLite to MySQL changes it** — as does
+setting `CREDENTIAL_ENCRYPTION_KEY` for the first time, or rotating it. After any of those, every
+stored file is undecryptable, and the dedupe skip made that permanent: re-uploading byte-identical
+content took the same path, skipped the write again, and the store served `file_missing` for ever
+with no signal and no repair route short of deleting files by hand.
+
+`Storage.Put` now verifies rather than assumes — it dedupes only against a file it can actually
+read back, and rewrites one it cannot. The store is self-healing across a key change.
+
+**This mattered directly for the migration this document describes.** Switching the live deployment
+from SQLite to MySQL would have silently made every existing document, Body-of-Knowledge PDF and
+evidence file undownloadable.
+
+### Previously recorded here and now resolved
+
+- ~~**Known gap — 17 assertions, document/BoK downloads only.**~~ The student, partner and watermarked
   download paths return `file_missing` on MySQL while the admin download of the same document
   succeeds. Investigation so far: the `documents` rows and their `storage_ref` values are intact and
   correctly formed, the upload writes the file, and the admin path serves it — but the artefact is

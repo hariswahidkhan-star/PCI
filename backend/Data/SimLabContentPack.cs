@@ -440,6 +440,10 @@ public static class SimLabContentPack
 
     public static int TotalAskCount => Scenarios.Sum(s => s.Ask.Length);
 
+    /// <summary>Codes owned by this pack, so validators can scope queries to pack rows only
+    /// (other house seeds in <see cref="SimLabSchema"/> are also synthetic_declared).</summary>
+    public static IReadOnlyList<string> ScenarioCodes => Scenarios.Select(s => s.Code).ToArray();
+
     public static void Seed(Db db)
     {
         foreach (var s in Scenarios)

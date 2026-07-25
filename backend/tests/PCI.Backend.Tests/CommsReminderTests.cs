@@ -63,14 +63,16 @@ public class CommsReminderTests
     static long Queued(Db db, string triggerCode)
         => db.Scalar<long>("SELECT COUNT(*) FROM comm_outbox WHERE trigger_code=?", triggerCode);
 
-    // -- Seed helpers: offsets are datetime() modifiers ("+29 day", "-31 day", ...) evaluated at seed time.
+    // -- Seed helpers: offsets are datetime() modifiers ("+29 day", "-31 day", ...) resolved at seed time by
+    // TestEnv.Stamp. They are resolved in C# rather than passed to datetime('now', ?) because a modifier bound
+    // as a PARAMETER is invisible to the SQLite-to-MySQL rewrite, so the statement only works on SQLite.
     static void SeedMembership(Db db, long uid, string status, string expiryOffset)
         => db.Execute(@"INSERT INTO memberships(user_id,membership_type,status,expiry_date)
-                        VALUES(?, 'Student Membership', ?, datetime('now', ?))", uid, status, expiryOffset);
+                        VALUES(?, 'Student Membership', ?, ?)", uid, status, TestEnv.Stamp(expiryOffset));
 
     static long SeedExamPayment(Db db, long uid, string deadlineOffset)
         => db.ExecuteReturningId(@"INSERT INTO payments(user_id,product_type,payment_status,exam_schedule_deadline)
-                        VALUES(?, 'exam', 'paid', datetime('now', ?))", uid, deadlineOffset);
+                        VALUES(?, 'exam', 'paid', ?)", uid, TestEnv.Stamp(deadlineOffset));
 
     static void SeedBooking(Db db, long uid, long payId, string status)
         => db.Execute(@"INSERT INTO exam_bookings(user_id,payment_id,certification_id,scheduled_at,status)
@@ -79,11 +81,11 @@ public class CommsReminderTests
     static void SeedApplication(Db db, long uid, string appNo, string status, string updatedOffset)
         => db.Execute(@"INSERT INTO certification_applications
                         (application_no,user_id,certification_id,route_key,status,updated_at)
-                        VALUES(?,?,1,'standard',?, datetime('now', ?))", appNo, uid, status, updatedOffset);
+                        VALUES(?,?,1,'standard',?, ?)", appNo, uid, status, TestEnv.Stamp(updatedOffset));
 
     static void SeedCredential(Db db, long uid, string credId, string status, string expiresOffset)
         => db.Execute(@"INSERT INTO issued_credentials(credential_id,user_id,credential,status,expires_at)
-                        VALUES(?,?, 'PCP-AI', ?, datetime('now', ?))", credId, uid, status, expiresOffset);
+                        VALUES(?,?, 'PCP-AI', ?, ?)", credId, uid, status, TestEnv.Stamp(expiresOffset));
 
     // ================================================================================================
     //  Rule 1 — membership.expiry_reminder : active membership, now < expiry_date <= now+30 days

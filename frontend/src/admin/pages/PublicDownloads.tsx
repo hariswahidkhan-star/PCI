@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { ViewDownloadActions } from '../../components/documents/DocumentActions'
+import { fileToDataUri } from '../../files'
 import { fmtDate } from '../../format'
 
 // Mirrors the backend allow-lists in PublicDocuments.cs / PublicDocsSeed.cs.
@@ -31,10 +33,6 @@ interface Doc {
 }
 interface Cert { id: number; code: string; name: string }
 interface Detail { document: Doc; versions: Array<{ id: number; version: string; status: string; is_current: number; published_at?: string | null; download_count?: number | null }>; recent_downloads: Array<{ ip?: string | null; ua?: string | null; created_at?: string | null }> }
-
-function fileToDataUri(file: File): Promise<string> {
-  return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result)); r.onerror = () => rej(new Error('read failed')); r.readAsDataURL(file) })
-}
 
 /** Admin management of the Public Downloads Centre: create, upload, version, publish, replace, withdraw and
  *  archive documents; set legal-review status; and view version history and download analytics. All data is
@@ -152,14 +150,24 @@ export default function PublicDownloads() {
 
             <div className="field" style={{ marginTop: '.5rem' }}>
               <label>File {open.document.has_file ? `— ${open.document.filename ?? 'attached'}` : '— none attached'}</label>
-              <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap' }}>
-                <label className="btn sm secondary" style={{ cursor: 'pointer' }}>
-                  {open.document.has_file ? 'Replace file' : 'Upload file'}
-                  <input type="file" accept="application/pdf" hidden disabled={busy} onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f, false) }} />
-                </label>
+              <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                {/* In-place file attach/replace is only possible pre-publication; after publication the
+                    bytes are immutable history and only "Upload as new version" remains (the backend
+                    enforces this with a 409 either way). */}
+                {['draft', 'under_review', 'legal_review_required', 'approved'].includes(open.document.status) && (
+                  <label className="btn sm secondary" style={{ cursor: 'pointer' }}>
+                    {open.document.has_file ? 'Replace file' : 'Upload file'}
+                    <input type="file" accept="application/pdf" hidden disabled={busy} onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f, false) }} />
+                  </label>
+                )}
                 {open.document.has_file && (
                   <>
-                    <a className="btn sm ghost" href={`/api/admin/public-documents/${open.document.id}/file`} target="_blank" rel="noopener">Preview</a>
+                    <ViewDownloadActions
+                      info={{ title: open.document.title, filename: open.document.filename, mime: 'application/pdf', sizeBytes: open.document.size_bytes }}
+                      inlineUrl={`/api/admin/public-documents/${open.document.id}/file`}
+                      downloadUrl={`/api/admin/public-documents/${open.document.id}/file?dl=1`}
+                      token={adminApi.getToken()}
+                    />
                     <label className="btn sm secondary" style={{ cursor: 'pointer' }}>
                       Upload as new version
                       <input type="file" accept="application/pdf" hidden disabled={busy} onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f, true) }} />

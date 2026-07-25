@@ -3,7 +3,15 @@ import { useQuery } from '../api/hooks'
 import { useMe } from '../data/MeContext'
 import { api, ApiError } from '../api/client'
 import { Card, Spinner, ErrorNote, Empty, StatusBadge } from '../components/ui'
+import { ViewDownloadActions } from '../components/documents/DocumentActions'
+import FileUploadField from '../components/documents/FileUploadField'
+import { fileToDataUri, studentToken } from '../files'
 import { fmtDate } from '../format'
+
+// Evidence uploads go through Storage.DecodeDataUri server-side (3 MB, jpeg/png/webp/pdf) — the
+// client mirrors those limits so a too-large or wrong-type pick fails fast instead of at submit.
+const EVIDENCE_MAX_BYTES = 3_000_000
+const EVIDENCE_ACCEPT = '.pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp'
 
 // Appeals & Accommodations — student surface for the formal casework the backend already supports
 // (backend/Endpoints/Casework.cs). Appeals let a candidate contest a result or an invalidated attempt,
@@ -50,16 +58,6 @@ const ACCOM_TYPES: { value: string; label: string }[] = [
 const APPEAL_LABEL: Record<string, string> = Object.fromEntries(APPEAL_TYPES.map((t) => [t.value, t.label]))
 const ACCOM_LABEL: Record<string, string> = Object.fromEntries(ACCOM_TYPES.map((t) => [t.value, t.label]))
 
-// Read a File as a data: URI for the evidence upload (same pattern as the ID-document upload).
-function toDataUri(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const r = new FileReader()
-    r.onload = () => resolve(String(r.result))
-    r.onerror = () => reject(new Error('Could not read the selected file.'))
-    r.readAsDataURL(file)
-  })
-}
-
 function errText(e: unknown, fallback: string): string {
   if (e instanceof ApiError && e.body && typeof e.body === 'object') {
     const body = e.body as Record<string, unknown>
@@ -94,18 +92,27 @@ export default function Appeals() {
 
 function EvidenceField({ file, setFile }: { file: File | null; setFile: (f: File | null) => void }) {
   return (
-    <label>
-      Supporting evidence <span className="muted small">(optional, max 5 MB)</span>
-      <input
-        type="file"
-        onChange={(e) => {
-          const f = e.target.files?.[0] ?? null
-          if (f && f.size > 5_000_000) { alert('Please choose a file under 5 MB.'); e.target.value = ''; return }
-          setFile(f)
-        }}
-      />
-      {file && <span className="muted small">Attached: {file.name}</span>}
-    </label>
+    <FileUploadField
+      label="Supporting evidence"
+      hint="(optional — PDF or image)"
+      accept={EVIDENCE_ACCEPT}
+      maxBytes={EVIDENCE_MAX_BYTES}
+      file={file}
+      onPick={setFile}
+    />
+  )
+}
+
+/** View/Download for evidence the student already submitted (served back over the authenticated
+ *  ownership-checked endpoint — students can always see what is on file for their own case). */
+function EvidenceActions({ base, name }: { base: string; name: string }) {
+  return (
+    <ViewDownloadActions
+      info={{ title: name, filename: name }}
+      inlineUrl={`${base}?inline=1`}
+      downloadUrl={base}
+      token={studentToken()}
+    />
   )
 }
 
@@ -137,7 +144,7 @@ function AppealForm({
       const body: Record<string, unknown> = { type, reason: reason.trim() }
       if (attemptId) body.attempt_id = Number(attemptId)
       if (credentialId) body.credential_id = credentialId
-      if (file) { body.evidence_data = await toDataUri(file); body.evidence_name = file.name }
+      if (file) { body.evidence_data = await fileToDataUri(file); body.evidence_name = file.name }
       await api.post('/api/me/appeals', body)
       setReason(''); setAttemptId(''); setCredentialId(''); setFile(null)
       setMsg({ ok: true, text: 'Your appeal has been submitted. PCI will review it and respond through your portal.' })
@@ -227,8 +234,13 @@ function AppealList({ q }: { q: ReturnType<typeof useQuery<{ rows: AppealRow[] }
               <div className="muted">
                 Submitted {fmtDate(r.submitted_at)}
                 {r.attempt_id ? ` · attempt #${r.attempt_id}` : ''}{r.credential_id ? ` · ${r.credential_id}` : ''}
-                {r.evidence_name ? ' · evidence attached' : ''}
               </div>
+              {r.evidence_name && (
+                <div className="row" style={{ gap: '.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <span className="muted">Evidence: {r.evidence_name}</span>
+                  <EvidenceActions base={`/api/me/appeals/${r.id}/evidence`} name={r.evidence_name} />
+                </div>
+              )}
               {r.decision && (
                 <div className="small" style={{ marginTop: '.2rem' }}>
                   <span className="muted">PCI decision{r.decided_at ? ` (${fmtDate(r.decided_at)})` : ''}:</span> {r.decision}
@@ -256,7 +268,7 @@ function AccommodationForm({ onDone }: { onDone: () => void }) {
     setMsg(null)
     try {
       const body: Record<string, unknown> = { request_type: type, description: desc.trim() }
-      if (file) { body.evidence_data = await toDataUri(file); body.evidence_name = file.name }
+      if (file) { body.evidence_data = await fileToDataUri(file); body.evidence_name = file.name }
       await api.post('/api/me/accommodations', body)
       setDesc(''); setFile(null)
       setMsg({ ok: true, text: 'Your accommodation request has been submitted for review. Please allow time before booking your exam.' })
@@ -324,8 +336,13 @@ function AccommodationList({ q }: { q: ReturnType<typeof useQuery<{ rows: AccomR
               <div className="muted">
                 Submitted {fmtDate(r.created_at)}
                 {r.approved_extra_minutes ? ` · +${r.approved_extra_minutes} min approved` : ''}
-                {r.evidence_name ? ' · evidence attached' : ''}
               </div>
+              {r.evidence_name && (
+                <div className="row" style={{ gap: '.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <span className="muted">Evidence: {r.evidence_name}</span>
+                  <EvidenceActions base={`/api/me/accommodations/${r.id}/evidence`} name={r.evidence_name} />
+                </div>
+              )}
               {r.admin_note && (
                 <div className="small" style={{ marginTop: '.2rem' }}>
                   <span className="muted">PCI note{r.decided_at ? ` (${fmtDate(r.decided_at)})` : ''}:</span> {r.admin_note}

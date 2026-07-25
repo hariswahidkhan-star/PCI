@@ -35,7 +35,7 @@ public class WorldMySqlParityTests
     /// PCI World index cover a column declared TEXT? If one does, MySQL 8 refuses it (error 1170) —
     /// or, in a composite key, both engines do (error 1071) — and the installer stops there.
     /// </summary>
-    [Fact]
+    [SqliteOnlyFact("Reads SQLite's own catalogue (sqlite_master / PRAGMA) to answer a MySQL question without needing a server. On MySQL the equivalent live check is migration_integrity_test.py \u00a74c.")]
     public void No_pciworld_index_covers_a_text_column()
     {
         var db = NewWorldDb();
@@ -69,7 +69,7 @@ public class WorldMySqlParityTests
 
     /// <summary>The columns that carry a datetime are bounded deliberately, not by accident — an
     /// ISO-8601 stamp is 19 characters and never needs TEXT.</summary>
-    [Fact]
+    [SqliteOnlyFact("Reads SQLite's own catalogue (sqlite_master / PRAGMA) to answer a MySQL question without needing a server. On MySQL the equivalent live check is migration_integrity_test.py \u00a74c.")]
     public void Indexed_datetime_columns_are_bounded()
     {
         var db = NewWorldDb();

@@ -13,6 +13,12 @@ import { LabHeader, KpiRow, ConfirmDialog, InsightCallout, SortHeader } from '..
 // separate from formal exam records, and no answer key is ever shown. The premium layer adds catalogue
 // search/filtering, a sticky-header table, and accessible dialogs in place of window.prompt.
 
+interface TemplateRow {
+  task: string
+  label: string
+  hint: string
+  config: string
+}
 interface ScenarioRow {
   id: number
   scenario_code: string
@@ -111,6 +117,25 @@ export default function SimLab() {
   const [comps, setComps] = useState('earned_value')
   const [config, setConfig] = useState('')
   const [synthetic, setSynthetic] = useState(true)
+  const [templateTask, setTemplateTask] = useState('')
+
+  // Authoring starters, one per engine task. Each is proven publishable server-side (SimTemplatesTests),
+  // so picking one gives the author a draft that already passes the validator.
+  const { data: templateData } = useAdminQuery<{ rows: TemplateRow[] }>('/api/admin/lab/templates')
+  const templates = useMemo(() => templateData?.rows ?? [], [templateData])
+  const chosenTemplate = templates.find((t) => t.task === templateTask)
+
+  function applyTemplate(task: string) {
+    setTemplateTask(task)
+    const t = templates.find((x) => x.task === task)
+    if (!t) return
+    setConfig(t.config.trim())
+    // Prefill the competencies the starter declares, so the two stay consistent out of the box.
+    try {
+      const parsed = JSON.parse(t.config) as { competencies?: string[] }
+      if (Array.isArray(parsed.competencies) && parsed.competencies.length) setComps(parsed.competencies.join(', '))
+    } catch { /* the server-side test guarantees valid JSON; ignore anything unexpected */ }
+  }
 
   const rows = useMemo(() => data?.rows ?? [], [data])
   const filtered = useMemo(() => {
@@ -363,6 +388,17 @@ export default function SimLab() {
             <label>Competencies (comma-separated)
               <input value={comps} onChange={(e) => setComps(e.target.value)} placeholder="earned_value, forecasting" />
             </label>
+            <label>Start from a template
+              <select value={templateTask} onChange={(e) => applyTemplate(e.target.value)}>
+                <option value="">Blank — write the task definition myself</option>
+                {templates.map((t) => (
+                  <option key={t.task} value={t.task}>{t.label}</option>
+                ))}
+              </select>
+            </label>
+            {chosenTemplate && (
+              <p className="muted small" style={{ margin: '-.2rem 0 0' }}>{chosenTemplate.hint}</p>
+            )}
             <label>Task definition (config JSON)
               <textarea value={config} onChange={(e) => setConfig(e.target.value)} rows={6}
                 placeholder='{"task":"evm","prompt":"…","given":{"pv":100000,"ev":90000,"ac":95000,"bac":200000},"ask":[{"key":"cpi","type":"number"}]}'

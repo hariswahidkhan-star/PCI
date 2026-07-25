@@ -139,7 +139,22 @@ var schemaFile = db.Provider == Db.Kind.MySql ? "schema.mysql.sql" : "schema.sql
 var schemaPath = Path.Combine(AppContext.BaseDirectory, schemaFile);
 if (!File.Exists(schemaPath)) schemaPath = schemaFile;
 Console.WriteLine($"[boot] database provider: {db.Provider} (schema: {schemaFile})");
-Migrate.Run(db, schemaPath);
+// Versioned + locked migration. A compatibility failure (older binary vs newer schema) or any migration
+// error must PREVENT startup — the service is never reported ready on a half-migrated/incompatible database.
+try
+{
+    Migrate.Run(db, schemaPath);
+}
+catch (PCI.Backend.Data.SchemaCompatibilityException ce)
+{
+    Console.Error.WriteLine($"[migrate] refusing to start: {ce.Message}");
+    Environment.Exit(75); // EX_TEMPFAIL — incompatible schema; a different build is required
+}
+catch (Exception me)
+{
+    Console.Error.WriteLine($"[migrate] refusing to start: schema migration failed — {me.Message}");
+    Environment.Exit(70); // EX_SOFTWARE — migration error; do not serve on a half-migrated database
+}
 // Deterministic browser-lifecycle tests need to book a policy-valid future slot and launch it
 // immediately. This override is deliberately Development-only and opt-in; production continues to
 // read the operator-controlled site setting with no test back door or public mutation endpoint.
@@ -652,11 +667,23 @@ app.MapGet("/api/admin/integrations/health", (HttpRequest req) =>
     if (a is null) return Results.Json(new { error = "unauthorised" }, statusCode: 401);
     if (!a.IsOwner && !a.Perms.Contains("integrations")) return Results.Json(new { error = "forbidden" }, statusCode: 403);
     string? E(string k) => Environment.GetEnvironmentVariable(k);
+    // The age is derived in C# from MIN(created_at) rather than in SQL: julianday() is SQLite-only, and this
+    // particular shape (ROUND(...*1440) AS INTEGER) is not one the SQLite→MySQL rewrite recognises, so the
+    // whole endpoint returned 500 on MySQL — which is production.
+    long? OldestPendingAgeMin(string table, string pendingSql)
+    {
+        var oldest = db.Scalar<string>($"SELECT MIN(created_at) FROM {table} WHERE {pendingSql}");
+        return DateTime.TryParse(oldest, System.Globalization.CultureInfo.InvariantCulture,
+                                 System.Globalization.DateTimeStyles.AdjustToUniversal |
+                                 System.Globalization.DateTimeStyles.AssumeUniversal, out var t)
+            ? (long)Math.Round((DateTime.UtcNow - t).TotalMinutes)
+            : null;
+    }
     object Queue(string table, string pendingSql, string failedSql) => new
     {
         pending = db.Scalar<long>($"SELECT COUNT(*) FROM {table} WHERE {pendingSql}"),
         failed = db.Scalar<long>($"SELECT COUNT(*) FROM {table} WHERE {failedSql}"),
-        oldest_pending_age_min = db.Scalar<long?>($"SELECT CAST(ROUND((julianday('now')-julianday(MIN(created_at)))*1440) AS INTEGER) FROM {table} WHERE {pendingSql}"),
+        oldest_pending_age_min = OldestPendingAgeMin(table, pendingSql),
     };
     var stripeConfigured = !string.IsNullOrEmpty(E("STRIPE_SECRET_KEY"));
     var stripeWh = E("STRIPE_WEBHOOK_URL");
@@ -1340,6 +1367,7 @@ app.MapPost("/api/admin/storage/purge", (HttpRequest req) =>
 // overrides fall straight through to the static-file middleware, so untouched pages pay nothing.
 var webRoot = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
 try { PCI.Backend.Data.PublicDocsSeed.Ensure(db, webRoot); } catch { } // Public Downloads Centre core documents (idempotent)
+try { PCI.Backend.Data.TemplatesLibrarySeed.Ensure(db); } catch { }     // Free Templates Library: working CSV artefacts mirroring each Lab engine (idempotent)
 PCI.Backend.Endpoints.AdminSeo.Map(app, db, logFn, GateFn, webRoot);   // Admin Console → SEO (/api/admin/seo/...)
 PCI.Backend.Endpoints.AdminAnalytics.Map(app, db, GateFn);             // Admin Console → Analytics (/api/admin/analytics/...)
 PCI.Backend.Endpoints.AdminAiVisibility.Map(app, db, logFn, GateFn, webRoot); // Admin Console → AI Visibility (/api/admin/ai-visibility/...)

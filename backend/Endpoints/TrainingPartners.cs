@@ -186,12 +186,13 @@ public static class TrainingPartners
             return J(new { application = a, documents = docs });
         }));
 
-        app.MapGet("/api/admin/training-partner-applications/{id}/documents/{docId}/file", (HttpRequest req, long id, long docId) => gate(req, "partners", _ =>
+        app.MapGet("/api/admin/training-partner-applications/{id}/documents/{docId}/file", (HttpRequest req, long id, long docId) => gate(req, "partners", adm =>
         {
             var d = db.QueryOne("SELECT storage_ref,mime,filename FROM training_partner_application_documents WHERE id=? AND application_id=?", docId, id);
             if (d is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var got = Storage.Get(H.Str(d["storage_ref"]));
             if (got is null || got.Value.bytes is null) return Results.Json(new { error = "file_unavailable" }, statusCode: 404);
+            log(adm.Id, "tp_application_document_view", $"application {id} doc {docId} '{H.Str(d["filename"])}'");
             return Results.File(got.Value.bytes!, got.Value.mime);
         }));
 

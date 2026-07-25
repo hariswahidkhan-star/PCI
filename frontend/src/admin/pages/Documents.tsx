@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { ViewDownloadActions } from '../../components/documents/DocumentActions'
 import { fmtDateTime } from '../../format'
 
 // Admin Console → Documents (gate 'documents'). Upload private, per-student documents into
@@ -59,6 +60,9 @@ interface DocVersion {
   size_bytes?: number | null
   sha256?: string | null
   status: string
+  replace_reason?: string | null
+  restored_from_id?: number | null
+  created_by?: number | null
   created_at?: string | null
 }
 
@@ -167,17 +171,6 @@ function fmtBytes(n?: number | null): string {
   if (n < 1024) return n + ' B'
   if (n < 1024 * 1024) return (n / 1024).toFixed(0) + ' KB'
   return (n / (1024 * 1024)).toFixed(1) + ' MB'
-}
-
-// Authenticated admin download → save via a temporary <a download>. Mirrors the student blob flow.
-async function downloadDoc(id: number, filename?: string | null): Promise<void> {
-  const tok = adminApi.getToken() ?? ''
-  const res = await fetch(`/api/admin/documents/${id}/download`, { headers: { Authorization: 'Bearer ' + tok } })
-  if (!res.ok) throw new Error('Could not download the file.')
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(await res.blob())
-  a.download = filename || `document-${id}`
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href)
 }
 
 // ─────────────────────────── page ───────────────────────────
@@ -477,23 +470,30 @@ function DocDetailPanel({ row, onChanged }: { row: DocRow; onChanged: () => void
     finally { setBusy(false) }
   }
 
+  const [verReason, setVerReason] = useState('')
+
   async function uploadVersion(file: File | null) {
     if (!file) return
     if (file.size > MAX_BYTES) { setErr('That file is larger than 25 MB.'); setVerKey((k) => k + 1); return }
     await run(async () => {
       const dataUri = await readFileAsDataUri(file)
-      await adminApi.post(`/api/admin/documents/${row.id}/version`, { file: dataUri, filename: file.name })
-      setVerKey((k) => k + 1)
+      await adminApi.post(`/api/admin/documents/${row.id}/version`, { file: dataUri, filename: file.name, reason: verReason.trim() || undefined })
+      setVerKey((k) => k + 1); setVerReason('')
     }, 'New version uploaded.')
   }
-  async function doDownload() {
-    setErr(null); setMsg(null)
-    try { await downloadDoc(row.id, data?.document.filename ?? row.filename) }
-    catch (e) { setErr(e instanceof Error ? e.message : 'Could not download the file.') }
+
+  // Restore = a NEW version whose file is the chosen older version's file. Nothing newer is erased.
+  async function restore(v: DocVersion) {
+    const reason = window.prompt(`Restore v${v.version} as the current version?\nOptional reason:`)
+    if (reason === null) return
+    await run(async () => {
+      await adminApi.post(`/api/admin/documents/${row.id}/restore`, { version_id: v.id, reason: reason.trim() || undefined })
+    }, `Restored v${v.version} as a new current version.`)
   }
 
   const recipients = data?.recipients ?? []
   const versions = data?.versions ?? []
+  const newestVersionId = versions.length > 0 ? versions[versions.length - 1].id : null
 
   return (
     <div style={{ display: 'grid', gap: '.9rem', padding: '.5rem 0' }}>
@@ -503,7 +503,12 @@ function DocDetailPanel({ row, onChanged }: { row: DocRow; onChanged: () => void
       {/* Lifecycle actions */}
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap', alignItems: 'center' }}>
         <button className="btn sm" disabled={busy} onClick={() => run(() => adminApi.post(`/api/admin/documents/${row.id}/publish`).then(() => {}), 'Published.')}>Publish</button>
-        <button className="btn ghost sm" disabled={busy} onClick={() => { void doDownload() }}>Download</button>
+        <ViewDownloadActions
+          info={{ title: row.title, filename: data?.document.filename ?? row.filename, mime: row.mime, sizeBytes: row.size_bytes, version: row.version }}
+          inlineUrl={`/api/admin/documents/${row.id}/download?inline=1`}
+          downloadUrl={`/api/admin/documents/${row.id}/download`}
+          token={adminApi.getToken()}
+        />
         <span className="muted small" style={{ marginLeft: '.4rem' }}>Set status</span>
         <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)} disabled={busy} aria-label="New status">
           {DOC_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -519,23 +524,43 @@ function DocDetailPanel({ row, onChanged }: { row: DocRow; onChanged: () => void
           <Section title={`Version history (${versions.length})`}>
             {versions.length === 0 ? <Empty>No versions.</Empty> : (
               <table className="data">
-                <thead><tr><th>Ver</th><th>File</th><th>Size</th><th>Status</th><th>Created</th></tr></thead>
+                <thead><tr><th>Ver</th><th>File</th><th>Size</th><th>Checksum</th><th>Status</th><th>Reason</th><th>Created</th><th /></tr></thead>
                 <tbody>
                   {versions.map((v) => (
                     <tr key={v.id}>
-                      <td className="small">v{v.version}</td>
+                      <td className="small">v{v.version}{v.restored_from_id != null && <div className="muted">restored</div>}</td>
                       <td className="small">{v.filename || '—'}<div className="muted small">{v.mime || ''}</div></td>
                       <td className="small">{fmtBytes(v.size_bytes)}</td>
+                      <td className="small muted" title={v.sha256 ?? undefined}>{v.sha256 ? v.sha256.slice(0, 10) + '…' : '—'}</td>
                       <td><DocStatus status={v.status} /></td>
+                      <td className="small muted">{v.replace_reason || '—'}</td>
                       <td className="small muted">{fmtDateTime(v.created_at)}</td>
+                      <td>
+                        <div className="row" style={{ gap: '.25rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                          <ViewDownloadActions
+                            info={{ title: `${row.title} — v${v.version}`, filename: v.filename, mime: v.mime, sizeBytes: v.size_bytes, version: v.version }}
+                            inlineUrl={`/api/admin/documents/${v.id}/download?inline=1`}
+                            downloadUrl={`/api/admin/documents/${v.id}/download`}
+                            token={adminApi.getToken()}
+                          />
+                          {v.id !== newestVersionId && (
+                            <button className="btn ghost sm" disabled={busy} onClick={() => { void restore(v) }}>Restore</button>
+                          )}
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             )}
-            <label className="small" style={{ display: 'block', marginTop: '.5rem' }}>Upload a new version <span className="muted">(never overwrites — a live document keeps recipients)</span>
-              <input key={verKey} type="file" accept={ACCEPT} disabled={busy} onChange={(e) => uploadVersion(e.target.files?.[0] ?? null)} />
-            </label>
+            <div style={{ display: 'grid', gap: '.35rem', marginTop: '.5rem' }}>
+              <label className="small">Replacement reason <span className="muted">(optional — recorded in the version history)</span>
+                <input value={verReason} onChange={(e) => setVerReason(e.target.value)} maxLength={300} placeholder="e.g. corrected 2026 fee table" />
+              </label>
+              <label className="small" style={{ display: 'block' }}>Upload a new version <span className="muted">(never overwrites — a live document keeps recipients)</span>
+                <input key={verKey} type="file" accept={ACCEPT} disabled={busy} onChange={(e) => uploadVersion(e.target.files?.[0] ?? null)} />
+              </label>
+            </div>
           </Section>
 
           {/* Recipients */}

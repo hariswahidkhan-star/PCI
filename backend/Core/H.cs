@@ -14,6 +14,20 @@ public static class H
     public static string? Str(object? v) => v?.ToString();
     public static bool B(object? v) => v is not null && (Convert.ToString(v) == "1" || string.Equals(Convert.ToString(v), "true", StringComparison.OrdinalIgnoreCase) || (v is long l && l != 0));
 
+    // ---- timestamps ----
+
+    /// <summary>
+    /// A UTC instant in the platform's canonical stored format, offset by <paramref name="minutes"/>.
+    ///
+    /// Use this instead of <c>datetime('now', ?)</c> or <c>datetime('now','+' || ? || ' minutes')</c> when the
+    /// offset is a RUNTIME value. The SQLite→MySQL rewrite in <see cref="Db.Translate"/> is textual, so it can
+    /// only see a modifier written as a literal; one that arrives as a bound parameter or through a
+    /// concatenation reaches MySQL as a call to a function it does not have. SQLite accepts both forms, which
+    /// is what makes the failure provider-specific and easy to ship.
+    /// </summary>
+    public static string StampInMinutes(double minutes) =>
+        DateTime.UtcNow.AddMinutes(minutes).ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+
     /// <summary>Trusted client IP for audit/rate-limiting: the LAST X-Forwarded-For hop (appended by
     /// our own TLS-terminating proxy), falling back to the socket address. NEVER the first hop — that
     /// value is client-controlled and forgeable, so auditing/keying on it lets an attacker spoof it.</summary>

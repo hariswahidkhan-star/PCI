@@ -167,8 +167,14 @@ def _reset_mysql():
 
 # ---- server lifecycle ----
 def boot():
-    # Content-addressed encrypted files cannot be reused across test databases with different
-    # derived keys. Each run owns a clean storage root and an explicit stable test key.
+    # The object store is wiped with the database, on BOTH providers, because the two are one state.
+    #
+    # Leaving it behind does not just orphan files, it breaks the run: the store is content-addressed and
+    # skips writing a blob whose hash is already on disk. A second run can otherwise re-use the FIRST
+    # run's ciphertext under incompatible configuration, every download 500s with "file_missing", and the
+    # blame lands on whatever else changed. That is exactly how 17 document/BoK assertions came to be
+    # recorded as MySQL-only failures: SQLite ran first against a clean tree and MySQL ran second against
+    # its leftovers. Neither provider was at fault. The explicit test key keeps each run internally stable.
     shutil.rmtree(STORAGE, ignore_errors=True)
     if PROVIDER == "mysql":
         _reset_mysql()
@@ -1363,7 +1369,8 @@ def test_documents_module(admin):
 
     # ---- versioning: never overwrites; old becomes 'replaced', student gets the new bytes ----
     nuri, nsha = _pdf_uri("welcome doc A v2")
-    c, ver = jget("POST", f"/api/admin/documents/{doc_id}/version", token=admin, body={"file": nuri, "filename": "welcome-v2.pdf"})
+    c, ver = jget("POST", f"/api/admin/documents/{doc_id}/version", token=admin,
+                  body={"file": nuri, "filename": "welcome-v2.pdf", "reason": "annual refresh"})
     chk("17u admin uploads a new version", c == 200 and ver.get("version") == 2 and ver.get("id") != doc_id, ver)
     new_id = ver.get("id")
     con = dbconn(); oldstat = con.execute("SELECT status FROM documents WHERE id=?", (doc_id,)).fetchone()[0]; con.close()
@@ -1372,6 +1379,32 @@ def test_documents_module(admin):
     chk("17w student now downloads the NEW version bytes", st == 200 and hashlib.sha256(vbody).hexdigest() == nsha, st)
     c, det = jget("GET", f"/api/admin/documents/{new_id}", token=admin)
     chk("17x version history lists both versions", len(det.get("versions", [])) == 2, len(det.get("versions", [])))
+
+    # ---- restore: an older version comes back as ANOTHER new version; newer history is never erased ----
+    c, res = jget("POST", f"/api/admin/documents/{new_id}/restore", token=admin,
+                  body={"version_id": doc_id, "reason": "reverting bad upload"})
+    chk("17va restore creates a NEW version pointing at the old file",
+        c == 200 and res.get("version") == 3 and res.get("restored_from") == doc_id, res)
+    res_id = res.get("id")
+    st, rbody, _ = _raw_get(f"/api/me/documents/{res_id}/download", token=a_tok)
+    chk("17vb student now downloads the RESTORED (v1) bytes", st == 200 and hashlib.sha256(rbody).hexdigest() == sha, st)
+    c, det = jget("GET", f"/api/admin/documents/{res_id}", token=admin)
+    vers = det.get("versions", [])
+    chk("17vc history keeps all three versions (two replaced, one live)",
+        len(vers) == 3 and sum(1 for v in vers if v.get("status") == "replaced") == 2, vers)
+    chk("17vd replacement reasons are recorded per version",
+        any(v.get("replace_reason") == "annual refresh" for v in vers)
+        and any(v.get("replace_reason") == "reverting bad upload" and v.get("restored_from_id") == doc_id for v in vers), vers)
+    chk("17ve restoring across chains is refused (400)",
+        jget("POST", f"/api/admin/documents/{res_id}/restore", token=admin, body={"version_id": ack_id})[0] == 400)
+    chk("17vf student token cannot restore (401/403)",
+        jget("POST", f"/api/admin/documents/{res_id}/restore", token=a_tok, body={"version_id": doc_id})[0] in (401, 403))
+
+    # ---- in-app viewing: ?inline=1 serves inline and audits as a VIEW, not a download ----
+    st, ibody, _ = _raw_get(f"/api/me/documents/{res_id}/download?inline=1", token=a_tok)
+    chk("17vg inline view serves the same bytes", st == 200 and hashlib.sha256(ibody).hexdigest() == sha, st)
+    con = dbconn(); nview = con.execute("SELECT COUNT(*) FROM document_downloads WHERE document_id=? AND action='view'", (res_id,)).fetchone()[0]; con.close()
+    chk("17vh in-app view is audited as a view", nview >= 1, nview)
 
     # ---- restriction window: listed but not downloadable until a future date ----
     ruri, _ = _pdf_uri("restricted future doc")
@@ -1617,6 +1650,33 @@ def test_leadership_suite(admin):
     dl = con.execute("SELECT COUNT(*), COUNT(DISTINCT copy_id) FROM cert_document_downloads WHERE cert_document_id=? AND result='ok_watermarked'", (bid,)).fetchone()
     con.close()
     chk("18s downloads are audited with per-copy ids", dl[0] >= 2 and dl[1] >= 2, dl)
+
+    # ---- replacing a book file snapshots the outgoing one; history is viewable and restorable ----
+    b2uri, b2sha = _pdf_uri("suite3 handbook v2")
+    c, rep = jget("POST", "/api/admin/cert-documents/upload", token=admin,
+                  body={"id": bid, "file": b2uri, "filename": "pfl-handbook-v2.pdf", "reason": "typo fixes"})
+    chk("18s1 replacing the book's file succeeds", c == 200 and rep.get("ok") is True, rep)
+    c, hist = jget("GET", f"/api/admin/cert-documents/{bid}/versions", token=admin)
+    v1 = (hist.get("rows") or [None])[0]
+    chk("18s2 the outgoing file is snapshotted with reason + checksum",
+        c == 200 and v1 is not None and v1.get("version") == 1
+        and v1.get("replace_reason") == "typo fixes" and v1.get("sha256") == hashlib.sha256(braw).hexdigest(), v1)
+    stv, vbytes, _ = _raw_get(f"/api/admin/cert-documents/{bid}/versions/{v1['id']}/file", token=admin)
+    chk("18s3 the superseded bytes are retrievable byte-exact", stv == 200 and vbytes == braw, (stv, len(vbytes)))
+    con = dbconn(); cursha = con.execute("SELECT sha256 FROM cert_documents WHERE id=?", (bid,)).fetchone()[0]; con.close()
+    chk("18s4 the current pointer moved to the new file", cursha == b2sha, cursha)
+    c, res = jget("POST", f"/api/admin/cert-documents/{bid}/restore", token=admin,
+                  body={"version_id": v1["id"], "reason": "regression in v2"})
+    con = dbconn()
+    cursha = con.execute("SELECT sha256 FROM cert_documents WHERE id=?", (bid,)).fetchone()[0]
+    nver = con.execute("SELECT COUNT(*) FROM cert_document_versions WHERE cert_document_id=?", (bid,)).fetchone()[0]
+    con.close()
+    chk("18s5 restore brings the original bytes back and keeps BOTH snapshots (nothing lost)",
+        c == 200 and cursha == hashlib.sha256(braw).hexdigest() and nver == 2, (c, cursha, nver))
+    chk("18s6 restoring a version belonging to a different book is refused (404)",
+        jget("POST", f"/api/admin/cert-documents/{pid2}/restore", token=admin, body={"version_id": v1["id"]})[0] == 404)
+    chk("18s7 a student token cannot reach the version surface (401/403)",
+        jget("GET", f"/api/admin/cert-documents/{bid}/versions", token=stok)[0] in (401, 403))
 
     # the authored Body of Knowledge PDFs ship with the app (books/<code>-bok.pdf) and attach to the
     # seeded BoK rows at boot; an entitled candidate downloads a personalised copy immediately.
@@ -3446,7 +3506,9 @@ def run(proc):
     test_privacy_erasure(admin)
     test_login_lockout()
     test_payment_reversal_webhooks(admin)
-    test_support_attachment_idor()
+    test_support_attachment_idor(admin)
+    test_student_evidence_viewback(admin)
+    test_receipt_pdf(admin)
     test_certificate_suspension(admin)
     test_exam_self_reschedule(admin)
     test_training_partner_application(admin)
@@ -3478,6 +3540,7 @@ def run(proc):
     test_admin_extra_gaps(admin)
     test_proctoring_analytics_gaps(admin)
     test_time_sweeps(admin)
+    test_integration_health(admin)
     test_simlab(admin)
 
     print("\n(assertions complete)")
@@ -4162,6 +4225,69 @@ def test_simlab(admin):
     chk("43zb10 a 'sim_lab'-only admin can export the bundle (200)",
         c == 200 and json.loads(slb).get("kind") == "pci.simulation.bundle", c)
 
+    # ---- §5B.8: importing a bundle. Integrity is all-or-nothing; a taken code is skipped, not fatal ----
+    def import_bundle(doc, token=admin):
+        return jget("POST", "/api/admin/lab/scenarios/import-bundle", token=token, body={"bundle": doc})
+
+    # The environment's own bundle re-imported: every entry verifies, every code is already taken, so
+    # nothing is created. That is what makes re-running an interrupted migration safe.
+    before_total = alist.get("total")
+    c, res = import_bundle(bjson)
+    chk("43zk1 a genuine bundle verifies and reports one outcome per entry",
+        c == 200 and res.get("total") == before_total, (c, res.get("total"), before_total))
+    chk("43zk2 entries whose code is already taken are skipped, not imported",
+        res.get("imported_count") == 0 and res.get("skipped_count") == before_total
+        and all(r.get("reason") == "duplicate_code" for r in res.get("skipped", [])),
+        (res.get("imported_count"), res.get("skipped_count")))
+    c, after = jget("GET", "/api/admin/lab/scenarios", token=admin)
+    chk("43zk3 re-importing the catalogue created no duplicate scenarios",
+        after.get("total") == before_total, (after.get("total"), before_total))
+
+    # Integrity: one altered entry condemns the whole file, and nothing is written.
+    tampered = json.loads(btext)
+    tampered["scenarios"][0]["scenario"]["title"] = "Edited in transit"
+    c, res = import_bundle(tampered)
+    chk("43zk4 an edited entry is refused (409 checksum_mismatch)",
+        c == 409 and res.get("error") == "checksum_mismatch", (c, res.get("error")))
+    c, after = jget("GET", "/api/admin/lab/scenarios", token=admin)
+    chk("43zk5 a refused bundle imported nothing at all", after.get("total") == before_total, after.get("total"))
+
+    # Dropping an entry leaves every survivor individually valid — only the bundle checksum catches it.
+    truncated = json.loads(btext)
+    if truncated.get("scenarios"):
+        truncated["scenarios"].pop()
+        c, res = import_bundle(truncated)
+        chk("43zk6 a truncated bundle is refused even though every remaining entry is intact",
+            c == 409 and res.get("error") == "checksum_mismatch", (c, res.get("error")))
+
+    # Envelope checks.
+    c, res = import_bundle(mjson)
+    chk("43zk7 a single-scenario manifest is not a bundle (400 wrong_kind)",
+        c == 400 and res.get("error") == "wrong_kind", (c, res.get("error")))
+    future_b = json.loads(btext); future_b["manifest_version"] = 99
+    c, res = import_bundle(future_b)
+    chk("43zk8 a bundle from a newer build is refused rather than imported lossily",
+        c == 400 and res.get("error") == "unsupported_version", (c, res.get("error")))
+    c, res = import_bundle({})
+    chk("43zk9 a document with no bundle envelope is refused",
+        c == 400 and res.get("error") in ("bad_manifest", "wrong_kind"), (c, res.get("error")))
+
+    # An empty catalogue is a legitimate bundle: it verifies and imports nothing.
+    c, empty_txt, _ = bundle("?status=suspended", token=admin)
+    if c == 200 and json.loads(empty_txt).get("count") == 0:
+        c, res = import_bundle(json.loads(empty_txt))
+        chk("43zk10 an empty bundle verifies and imports nothing",
+            c == 200 and res.get("total") == 0 and res.get("imported_count") == 0, (c, res))
+
+    # Permission wiring matches the rest of the Lab.
+    c, _r = import_bundle(bjson, token=mtok)
+    chk("43zk11 bundle import is not reachable with a student token", c in (401, 403), c)
+    if vtok:
+        c, _r = import_bundle(bjson, token=vtok)
+        chk("43zk12 a viewer is refused bundle import (403)", c == 403, c)
+    c, res = import_bundle(bjson, token=sltok)
+    chk("43zk13 a 'sim_lab'-only admin may import a bundle (200)", c == 200, c)
+
     # ---- Phase 2 engine: forecasting (three EAC methods) + CBS cost roll-up, graded deterministically ----
     c, stf = jget("POST", "/api/me/lab/attempts", token=mtok, body={"scenario_code": "SD-FCT-001"})
     fid = stf.get("attempt_id")
@@ -4532,7 +4658,7 @@ def test_payment_reversal_webhooks(admin):
     con.close()
     chk("29j re-delivering the refund event stays refunded (idempotent)", code2 == 200 and bool(p2) and p2[0] == "refunded", (code2, p2))
 
-def test_support_attachment_idor():
+def test_support_attachment_idor(admin):
     # Incremental Testing Programme — private-file access control on support-ticket attachments. Isolation
     # was proven for documents/partner-docs but NOT for support attachments (the /api/me/tickets/{tid}/
     # attachments/{aid} serve endpoint joins on t.user_id, so another student must get 404).
@@ -4552,6 +4678,83 @@ def test_support_attachment_idor():
     chk("30d student B is refused A's attachment (404 — IDOR blocked)", c2 == 404, (c2, r2))
     c3, r3 = jget("GET", f"/api/me/tickets/{tid}/attachments/{aid}")
     chk("30e an anonymous request for the attachment is refused (401)", c3 == 401, (c3, r3))
+    # Staff side: the support inbox can now list and stream the ticket's attachments, and every
+    # staff read is written to the audit log. A student token is refused the staff routes.
+    c4, lst = jget("GET", f"/api/support/tickets/{tid}/attachments", token=admin)
+    chk("30f support staff list the ticket's attachments", c4 == 200 and any(r.get("id") == aid for r in lst.get("rows", [])), (c4, lst))
+    st5, sbody, _ = _raw_get(f"/api/support/tickets/{tid}/attachments/{aid}", token=admin)
+    chk("30g support staff stream the attachment bytes (200, %PDF)", st5 == 200 and sbody[:5] == b"%PDF-", st5)
+    con = dbconn(); nlog = con.execute("SELECT COUNT(*) FROM audit_logs WHERE action='ticket_attachment_view'").fetchone()[0]; con.close()
+    chk("30h the staff read is audit-logged", nlog >= 1, nlog)
+    chk("30i a student token is refused the staff attachment routes (401/403)",
+        jget("GET", f"/api/support/tickets/{tid}/attachments", token=atok)[0] in (401, 403))
+
+def test_student_evidence_viewback(admin):
+    # Universal document actions — students can VIEW/DOWNLOAD back what they submitted (appeal,
+    # accommodation and CPD evidence), strictly own-rows-only; admin evidence reads are audit-logged.
+    print("\n=== 30B. Student evidence view-back (appeals / accommodations / CPD) ===")
+    tok, uid = register_student("viewback@ex.co")
+    other, _ = register_student("viewback-other@ex.co")
+    ev = b"%PDF-1.4 viewback-evidence"
+    ev_uri = "data:application/pdf;base64," + base64.b64encode(ev).decode()
+
+    c, ap = jget("POST", "/api/me/appeals", token=tok,
+                 body={"type": "complaint", "reason": "This complaint has enough characters to be accepted.",
+                       "evidence_name": "proof.pdf", "evidence_data": ev_uri})
+    apid = ap.get("id")
+    chk("30B-a appeal with evidence submits", c == 200 and apid, ap)
+    st, body, _ = _raw_get(f"/api/me/appeals/{apid}/evidence", token=tok)
+    chk("30B-b the student views their own appeal evidence back (exact bytes)", st == 200 and body == ev, st)
+    chk("30B-c another student is refused it (404)", _raw_get(f"/api/me/appeals/{apid}/evidence", token=other)[0] == 404)
+    chk("30B-d anonymous is refused it (401)", _raw_get(f"/api/me/appeals/{apid}/evidence")[0] == 401)
+
+    c, ar = jget("POST", "/api/me/accommodations", token=tok,
+                 body={"request_type": "extra_time", "description": "A description long enough to be accepted here.",
+                       "evidence_name": "medical.pdf", "evidence_data": ev_uri})
+    arid = ar.get("id")
+    chk("30B-e accommodation with evidence submits", c == 200 and arid, ar)
+    st, body, _ = _raw_get(f"/api/me/accommodations/{arid}/evidence", token=tok)
+    chk("30B-f the student views their own accommodation evidence back", st == 200 and body == ev, st)
+    chk("30B-g another student is refused it (404)", _raw_get(f"/api/me/accommodations/{arid}/evidence", token=other)[0] == 404)
+
+    c, ce = jget("POST", "/api/me/cpd", token=tok, body={"description": "Course", "category": "Structured learning", "hours": 2})
+    con = dbconn(); cid = con.execute("SELECT id FROM cpd_entries WHERE user_id=? ORDER BY id DESC", (uid,)).fetchone()[0]; con.close()
+    c, at = jget("POST", f"/api/me/cpd/{cid}/evidence", token=tok, body={"filename": "cert.pdf", "data_uri": ev_uri})
+    chk("30B-h CPD evidence attaches", c == 200, (c, at))
+    st, body, _ = _raw_get(f"/api/me/cpd/{cid}/evidence", token=tok)
+    chk("30B-i the student views their own CPD evidence back", st == 200 and body == ev, st)
+    chk("30B-j another student is refused it (404)", _raw_get(f"/api/me/cpd/{cid}/evidence", token=other)[0] == 404)
+
+    # Admin evidence reads flow through the same serve path and are audit-logged per case type.
+    st, _, _ = _raw_get(f"/api/admin/appeals/{apid}/evidence", token=admin)
+    st2, _, _ = _raw_get(f"/api/admin/cpd/{cid}/evidence", token=admin)
+    con = dbconn()
+    nap = con.execute("SELECT COUNT(*) FROM audit_logs WHERE action='appeal_evidence_view'").fetchone()[0]
+    ncp = con.execute("SELECT COUNT(*) FROM audit_logs WHERE action='cpd_evidence_view'").fetchone()[0]
+    con.close()
+    chk("30B-k admin evidence reads succeed and are audit-logged", st == 200 and st2 == 200 and nap >= 1 and ncp >= 1, (st, st2, nap, ncp))
+
+def test_receipt_pdf(admin):
+    # Universal document actions — a settled payment yields a downloadable PDF receipt (generated
+    # per request, never stored), own-payments-only, audit-logged, inline-capable for the viewer.
+    print("\n=== 30C. Payment receipt PDFs ===")
+    tok, uid = make_paid_user("receipt-pdf@ex.co")
+    c, inv = jget("GET", "/api/me/invoices", token=tok)
+    pay = (inv.get("rows") or [None])[0]
+    chk("30C-a the settled payment lists in invoices", c == 200 and pay is not None, inv)
+    pid = pay["id"]; ref = pay.get("reference") or f"PCI-{pid}"
+    st, body, ctype = _raw_get(f"/api/me/payments/{pid}/receipt.pdf", token=tok)
+    chk("30C-b the receipt downloads as a real PDF", st == 200 and body[:5] == b"%PDF-" and ctype.startswith("application/pdf"), (st, ctype))
+    txt = _pdf_text(body)
+    chk("30C-c the receipt carries the reference, holder email and amount",
+        ref in txt and "receipt-pdf@ex.co" in txt and "Payment receipt" in txt, txt[:160])
+    st2, body2, _ = _raw_get(f"/api/me/payments/{pid}/receipt.pdf?inline=1", token=tok)
+    chk("30C-d inline serve returns the same document for the in-app viewer", st2 == 200 and body2[:5] == b"%PDF-", st2)
+    other, _ = register_student("receipt-other@ex.co")
+    chk("30C-e another student is refused the receipt (404)", _raw_get(f"/api/me/payments/{pid}/receipt.pdf", token=other)[0] == 404)
+    chk("30C-f anonymous is refused (401)", _raw_get(f"/api/me/payments/{pid}/receipt.pdf")[0] == 401)
+    con = dbconn(); nlog = con.execute("SELECT COUNT(*) FROM audit_logs WHERE action='receipt_pdf_download'").fetchone()[0]; con.close()
+    chk("30C-g receipt downloads are audit-logged", nlog >= 2, nlog)
 
 def test_certificate_suspension(admin):
     # Incremental Testing Programme — the download gate on a SUSPENDED credential (Certificates.cs), which
@@ -4684,8 +4887,14 @@ def test_membership_expiry(admin):
     con = dbconn(); con.execute("UPDATE memberships SET expiry_date=datetime('now','-10 day') WHERE user_id=?", (muid,)); con.commit(); con.close()
     c, me2 = jget("GET", "/api/me", token=mtok)
     chk("35b a past expiry_date with status='active' still reads active until the expiry sweep runs", me2.get("lifecycle", {}).get("membership_status") == "active", me2.get("lifecycle", {}).get("membership_status"))
+    # The exam-fee gate is EXPIRY-AWARE: a lapsed membership (past expiry_date) cannot buy a standalone
+    # exam even while status is still 'active' pre-sweep — the student must renew (or use the bundle) first.
     c, gate1 = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "expiremember@ex.co"})
-    chk("35c the exam-fee gate still passes while status='active'", not blocked(gate1), (c, gate1))
+    chk("35c the exam-fee gate blocks a lapsed membership (past expiry) even before the sweep", c == 400 and blocked(gate1), (c, gate1))
+    # Positive control: restore a future expiry and the same account passes the gate again.
+    con = dbconn(); con.execute("UPDATE memberships SET expiry_date=datetime('now','+30 day') WHERE user_id=?", (muid,)); con.commit(); con.close()
+    c, gate1b = jget("POST", "/api/create-checkout-session", body={"product": "exam", "email": "expiremember@ex.co"})
+    chk("35c2 a membership with a future expiry passes the exam-fee gate", not blocked(gate1b), (c, gate1b))
     con = dbconn(); con.execute("UPDATE memberships SET status='expired' WHERE user_id=?", (muid,)); con.commit(); con.close()
     c, me3 = jget("GET", "/api/me", token=mtok)
     chk("35d status='expired' is reflected as an expired membership", me3.get("lifecycle", {}).get("membership_status") == "expired", me3.get("lifecycle", {}).get("membership_status"))
@@ -6458,6 +6667,14 @@ def test_public_documents(admin):
         st == 200 and fbody == png and ctype.startswith("image/png")
         and pd.get("document", {}).get("download_count") == 1 and ndl == 1, (st, ctype, ndl))
 
+    # Once published, the version's bytes are immutable history: the in-place /file attach is refused
+    # (409) and the file on disk is untouched — replacing requires the /replace new-version route.
+    c, r = jget("POST", f"/api/admin/public-documents/{did}/file", token=admin,
+                body={"data_uri": TINY_PNG, "filename": "sneaky-swap.png"})
+    st, fbody2, _ = _raw_get(f"/api/public/documents/{grp}/file")
+    chk("57k2 a published version's file cannot be overwritten in place (409 published_file_immutable; bytes unchanged)",
+        c == 409 and r.get("error") == "published_file_immutable" and st == 200 and fbody2 == png, (c, r))
+
     c, rp = jget("POST", f"/api/admin/public-documents/{did}/replace", token=admin, body={})
     nid = rp.get("id")
     c2, det = jget("GET", f"/api/admin/public-documents/{nid}", token=admin)
@@ -7184,6 +7401,38 @@ def test_time_sweeps(admin):
     c, sw2 = jget("POST", "/api/admin/ops/sweeps/run", token=admin)
     chk("60g a second run is a clean no-op (nothing left due: 0 published, 0 expired)",
         c == 200 and H0(sw2.get("published")) == 0 and H0(sw2.get("memberships_expired")) == 0, sw2)
+
+
+def test_integration_health(admin):
+    # Incremental Testing Programme §62 — GET /api/admin/integrations/health, the operator's queue-depth and
+    # connector-readiness view. It was unreachable on MySQL: its oldest_pending_age_min column was computed
+    # with julianday(), a SQLite-only function whose shape here (ROUND(...*1440) AS INTEGER) no rewrite rule
+    # recognised, so the whole endpoint answered 500 on the only database production runs. Nothing asserted
+    # it, on either provider. This section runs on BOTH, which is what makes it the regression guard.
+    print("\n=== 62. Integration health: queue depth + connector readiness on both providers ===")
+    c, h = jget("GET", "/api/admin/integrations/health", token=admin)
+    chk("62a the endpoint answers 200 with ok=true (it returned 500 on MySQL before the julianday fix)",
+        c == 200 and isinstance(h, dict) and h.get("ok") is True, (c, h))
+
+    queues = {k: v for k, v in h.items() if isinstance(v, dict) and "pending" in v and "failed" in v}
+    chk("62b it reports at least one queue, each with pending/failed counts and an oldest-pending age field",
+        len(queues) >= 1 and all(
+            isinstance(q.get("pending"), int) and isinstance(q.get("failed"), int)
+            and "oldest_pending_age_min" in q for q in queues.values()),
+        {k: v for k, v in list(queues.items())[:3]})
+
+    # An empty queue must report age None rather than 0 — MIN over no rows is NULL, and a 0 there would read
+    # as "something has been pending for under a minute", which is the opposite of the truth.
+    empty = [k for k, q in queues.items() if q.get("pending") == 0]
+    chk("62c a queue with nothing pending reports oldest_pending_age_min = null, not 0",
+        all(queues[k].get("oldest_pending_age_min") is None for k in empty),
+        {k: queues[k] for k in empty[:3]})
+
+    c2, h2 = jget("GET", "/api/admin/integrations/health")
+    vtok = globals().get("_VIEWER_TOK")
+    c3, h3 = jget("GET", "/api/admin/integrations/health", token=vtok)
+    chk("62d it is gated: 401 anonymous, 403 for an admin without the 'integrations' permission",
+        c2 == 401 and bool(vtok) and c3 == 403, (c2, c3))
 
 if __name__ == "__main__":
     main()

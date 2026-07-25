@@ -21,6 +21,16 @@ public static class AdminSimLab
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log,
         Func<HttpRequest, string, Func<AdminCtx, IResult>, IResult> gate)
     {
+        // ---- authoring templates: one known-good starter config per engine task ----
+        // The Studio's config textarea is otherwise a blank page against 18 different engine contracts.
+        // Every template is proven publishable by SimTemplatesTests, so "start from template" always yields
+        // a draft that passes the validator before the author has written a word.
+        app.MapGet("/api/admin/lab/templates", (HttpRequest req) => gate(req, "sim_lab", _ =>
+            Results.Json(new
+            {
+                rows = SimTemplates.All.Select(t => new { task = t.Task, label = t.Label, hint = t.Hint, config = t.Config }),
+            })));
+
         // ---- scenario catalogue (all statuses) + per-scenario practice aggregates ----
         app.MapGet("/api/admin/lab/scenarios", (HttpRequest req) => gate(req, "sim_lab", _ =>
         {
@@ -149,6 +159,54 @@ public static class AdminSimLab
         //      dates are NOT carried either: a review-due or expiry from the source environment is a
         //      statement about that environment's schedule, and silently importing one could expire content
         //      the moment it lands. ----
+        // ---- import a whole catalogue bundle (§5B.8). Integrity is all-or-nothing: a bundle whose
+        //      checksum does not reconcile imports NOTHING, because if one entry was altered in transit
+        //      there is no reason to trust the rest. A code that is already taken is a different matter —
+        //      that is this environment's state, not the file's integrity — so those entries are skipped
+        //      and named, which also makes re-running an interrupted migration safe. ----
+        app.MapPost("/api/admin/lab/scenarios/import-bundle", async (HttpContext ctx) =>
+        {
+            var b = await H.Body(ctx.Request);
+            return gate(ctx.Request, "sim_lab", adm =>
+            {
+                var bundle = H.GetEl(b, "bundle") is { ValueKind: JsonValueKind.Object } el
+                    ? JsonNode.Parse(el.GetRawText()) as JsonObject : null;
+
+                var verdict = SimManifest.VerifyBundle(bundle, out var entries);
+                if (verdict != SimManifest.Reject.None)
+                    return Results.Json(new { error = SimManifest.Code(verdict), message = RejectMessage(verdict, bundleWord: true) },
+                        statusCode: verdict == SimManifest.Reject.ChecksumMismatch ? 409 : 400);
+
+                var imported = new List<object>();
+                var skipped = new List<object>();
+                foreach (var e in entries)
+                {
+                    if (db.QueryOne("SELECT id FROM simulation_scenarios WHERE scenario_code=?", e.Code) is not null)
+                    {
+                        skipped.Add(new { scenario_code = e.Code, reason = "duplicate_code" });
+                        continue;
+                    }
+                    var newId = InsertImported(db, e.Row, e.Code, adm.Id);
+                    var stored = db.QueryOne("SELECT * FROM simulation_scenarios WHERE id=?", newId)!;
+                    var found = SimContent.Validate(InputFrom(stored), OtherCodes(db, newId));
+                    imported.Add(new
+                    {
+                        id = newId, scenario_code = e.Code, checksum = e.Checksum, imported_version = e.Version,
+                        publishable = SimContent.Publishable(found),
+                        errors = found.Count(i => i.Severity == SimContent.Severity.Error),
+                        warnings = found.Count(i => i.Severity == SimContent.Severity.Warning),
+                    });
+                }
+
+                log(adm.Id, "sim_bundle_import", $"{imported.Count} imported · {skipped.Count} skipped of {entries.Count}");
+                return Results.Json(new
+                {
+                    total = entries.Count, imported_count = imported.Count, skipped_count = skipped.Count,
+                    imported, skipped,
+                });
+            });
+        });
+
         app.MapPost("/api/admin/lab/scenarios/import", async (HttpContext ctx) =>
         {
             var b = await H.Body(ctx.Request);
@@ -159,17 +217,8 @@ public static class AdminSimLab
 
                 var verdict = SimManifest.Verify(manifest, out var row, out var checksum);
                 if (verdict != SimManifest.Reject.None)
-                    return Results.Json(new
-                    {
-                        error = SimManifest.Code(verdict),
-                        message = verdict switch
-                        {
-                            SimManifest.Reject.WrongKind => "This file is not a PCI simulation scenario manifest.",
-                            SimManifest.Reject.UnsupportedVersion => "This manifest was written by a newer version of the platform.",
-                            SimManifest.Reject.ChecksumMismatch => "The manifest's content does not match its checksum — it was modified or truncated.",
-                            _ => "The manifest is missing the fields a scenario needs.",
-                        },
-                    }, statusCode: verdict == SimManifest.Reject.ChecksumMismatch ? 409 : 400);
+                    return Results.Json(new { error = SimManifest.Code(verdict), message = RejectMessage(verdict, bundleWord: false) },
+                        statusCode: verdict == SimManifest.Reject.ChecksumMismatch ? 409 : 400);
 
                 // The operator may land the import under a different code (importing alongside a scenario
                 // that already owns the original code).
@@ -178,20 +227,7 @@ public static class AdminSimLab
                 if (db.QueryOne("SELECT id FROM simulation_scenarios WHERE scenario_code=?", code) is not null)
                     return Results.Json(new { error = "duplicate_code", message = "A scenario with this code already exists — import it under a different code." }, statusCode: 409);
 
-                // version starts at 1: version numbers are a per-environment lineage, not a property of the
-                // content, so an imported v7 becomes this environment's v1 (its content is pinned by checksum).
-                var id = db.ExecuteReturningId(@"INSERT INTO simulation_scenarios
-                    (scenario_code,title,kind,industry,project_type,difficulty,est_minutes,competencies_json,
-                     certification_id,summary,brief,config_json,objectives_json,provenance,disclaimers,
-                     worked_solution,status,review_state,version,synthetic_declared,authored_by,created_by)
-                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'draft','draft', 1, ?, ?, ?)",
-                    code, H.Str(row["title"]), H.Str(row["kind"]) ?? "scenario", H.Str(row["industry"]),
-                    H.Str(row["project_type"]), H.Str(row["difficulty"]) ?? "foundation",
-                    (int)H.L(row["est_minutes"]), H.Str(row["competencies_json"]),
-                    row["certification_id"], H.Str(row["summary"]), H.Str(row["brief"]),
-                    H.Str(row["config_json"]), H.Str(row["objectives_json"]), H.Str(row["provenance"]),
-                    H.Str(row["disclaimers"]), H.Str(row["worked_solution"]),
-                    H.L(row["synthetic_declared"]) == 1 ? 1 : 0, adm.Id, adm.Id);
+                var id = InsertImported(db, row, code, adm.Id);
 
                 // Re-run the §14 validator here: content that was publishable in the source environment may
                 // not be publishable in this one (a retired name, a colliding code, a task this build cannot
@@ -403,6 +439,46 @@ public static class AdminSimLab
             });
         });
     }
+
+    static string RejectMessage(SimManifest.Reject r, bool bundleWord)
+    {
+        var noun = bundleWord ? "bundle" : "manifest";
+        return r switch
+        {
+            SimManifest.Reject.WrongKind => bundleWord
+                ? "This file is not a PCI simulation catalogue bundle."
+                : "This file is not a PCI simulation scenario manifest.",
+            SimManifest.Reject.UnsupportedVersion => $"This {noun} was written by a newer version of the platform.",
+            SimManifest.Reject.ChecksumMismatch => bundleWord
+                ? "The bundle's content does not match its checksum — it was modified or truncated, so none of it was imported."
+                : "The manifest's content does not match its checksum — it was modified or truncated.",
+            _ => bundleWord
+                ? "The bundle is missing the fields a catalogue needs."
+                : "The manifest is missing the fields a scenario needs.",
+        };
+    }
+
+    /// <summary>
+    /// The single INSERT both import paths use, so the two can never disagree about what an import is.
+    /// Three things are forced here rather than taken from the file: the row lands as a DRAFT (nothing in
+    /// a file may grant published state), the importing admin is the author (so maker-checker still needs
+    /// a second pair of eyes), and version starts at 1 (version numbers are a per-environment lineage, not
+    /// a property of the content — an imported v7 becomes this environment's v1, pinned by its checksum).
+    /// Governance dates are deliberately not carried: they describe the source environment's schedule.
+    /// </summary>
+    static long InsertImported(Db db, Dictionary<string, object?> row, string code, long adminId) =>
+        db.ExecuteReturningId(@"INSERT INTO simulation_scenarios
+            (scenario_code,title,kind,industry,project_type,difficulty,est_minutes,competencies_json,
+             certification_id,summary,brief,config_json,objectives_json,provenance,disclaimers,
+             worked_solution,status,review_state,version,synthetic_declared,authored_by,created_by)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'draft','draft', 1, ?, ?, ?)",
+            code, H.Str(row["title"]), H.Str(row["kind"]) ?? "scenario", H.Str(row["industry"]),
+            H.Str(row["project_type"]), H.Str(row["difficulty"]) ?? "foundation",
+            (int)H.L(row["est_minutes"]), H.Str(row["competencies_json"]),
+            row["certification_id"], H.Str(row["summary"]), H.Str(row["brief"]),
+            H.Str(row["config_json"]), H.Str(row["objectives_json"]), H.Str(row["provenance"]),
+            H.Str(row["disclaimers"]), H.Str(row["worked_solution"]),
+            H.L(row["synthetic_declared"]) == 1 ? 1 : 0, adminId, adminId);
 
     static SimContent.ScenarioInput InputFrom(Dictionary<string, object?> s) => new(
         H.Str(s["scenario_code"]) ?? "", H.Str(s["title"]), H.Str(s["summary"]), H.Str(s["difficulty"]),

@@ -122,9 +122,12 @@ public sealed class OutboxDispatcher : BackgroundService
         else
         {
             var backoffMin = Math.Min(60, (int)Math.Pow(2, attempt)); // 2,4,8,16,32,60 min
+            // The next-attempt instant is computed here rather than as datetime('now','+' || ? || ' minutes'):
+            // that expression is SQLite-only, and because DrainOnce dead-letters a row whose delivery throws,
+            // its failure on MySQL turned every FIRST transient failure into a permanent one.
             db.Execute(@"UPDATE comm_outbox SET status='retrying', attempts=?, provider=?, last_error=?,
-                next_attempt_at=datetime('now', '+' || ? || ' minutes'), lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
-                attempt, res.Provider, Trim(res.Response), backoffMin, id);
+                next_attempt_at=?, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
+                attempt, res.Provider, Trim(res.Response), H.StampInMinutes(backoffMin), id);
         }
     }
 

@@ -243,13 +243,17 @@ public class SimContentTests
         var db = TestEnv.NewMigratedDb();
         SimLabSchema.Ensure(db);
 
-        // The content pack is the single-task catalogue; the P1 multi-step scenario (config carries
-        // "multistep") is accounted for and validated separately in SimStepTests, so exclude it here.
+        // Scope to the pack's own codes: other house seeds (SimLabSchema starter + expansion
+        // scenarios, and the P1 multi-step MS-RECOVERY-001 validated in SimStepTests) are also
+        // published and synthetic_declared, and are validated separately by SimSeedContentTests.
+        var packCodes = SimLabContentPack.ScenarioCodes.ToHashSet();
         var rows = db.Query(@"SELECT scenario_code,title,summary,difficulty,certification_id,
                 competencies_json,config_json,synthetic_declared,industry
             FROM simulation_scenarios
-            WHERE status='published' AND synthetic_declared=1 AND config_json NOT LIKE '%multistep%'
-            ORDER BY scenario_code");
+            WHERE status='published' AND synthetic_declared=1
+            ORDER BY scenario_code")
+            .Where(r => packCodes.Contains(Convert.ToString(r["scenario_code"]) ?? ""))
+            .ToList();
 
         Assert.Equal(30, SimLabContentPack.ScenarioCount);
         Assert.True(SimLabContentPack.TotalAskCount >= 240);
