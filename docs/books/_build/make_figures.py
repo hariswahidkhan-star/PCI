@@ -225,5 +225,53 @@ axis = (f'<line x1="{L}" y1="{H-B}" x2="{W-R}" y2="{H-B}" stroke="{INK}" stroke-
         + f'<text x="{(L+W-R)/2}" y="{H-B+32}" font-size="12" fill="{SLATE}" text-anchor="middle">Months</text>')
 (PML / "fig_6_3_2.svg").write_text(svg(W, H, bars + zones + axis))
 
+# ---- Fig 6.1.1 schedule hierarchy -------------------------------------------------
+W, H = 700, 360
+bands = [("L1 — EXECUTIVE SUMMARY", "10–30 bars · board & sponsor", SLATE, 0.35),
+         ("L2 — MANAGEMENT SCHEDULE", "50–300 activities · steering & PMO", SLATE, 0.55),
+         ("L3 — CONTROL SCHEDULE", "300–5,000 activities · logic · float · critical path live here", BLUE, 1.0),
+         ("L4 — EXECUTION / LOOKAHEAD", "daily & shift detail · site and squads", SLATE, 0.45)]
+body = ""
+for i, (t, sub, col, emph) in enumerate(bands):
+    y = 34 + i * 76
+    wgt = 700 if emph == 1.0 else 620
+    x = (W - wgt) / 2
+    body += (f'<rect x="{x+40}" y="{y}" width="{wgt-80}" height="58" rx="8" fill="white" '
+             f'stroke="{col}" stroke-width="{3 if emph==1.0 else 1.4}"/>'
+             f'<text x="{W/2}" y="{y+24}" font-size="13.5" font-weight="700" fill="{col if emph==1.0 else INK}" text-anchor="middle">{t}</text>'
+             f'<text x="{W/2}" y="{y+43}" font-size="10.5" fill="{SLATE}" text-anchor="middle">{sub}</text>')
+    if i < 3:
+        body += (f'<line x1="{W/2-90}" y1="{y+58}" x2="{W/2-90}" y2="{y+76}" stroke="{SLATE}" stroke-width="1.4" marker-end="url(#ar2)"/>'
+                 f'<line x1="{W/2+90}" y1="{y+76}" x2="{W/2+90}" y2="{y+58}" stroke="{SLATE}" stroke-width="1.4" marker-end="url(#ar2)"/>')
+body = ('<defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">'
+        f'<path d="M0 0L10 5L0 10z" fill="{SLATE}"/></marker></defs>' + body
+        + f'<text x="{W/2-96}" y="{34+58+50}" font-size="9.5" fill="{SLATE}" text-anchor="end">summarised from ↑</text>'
+        + f'<text x="{W/2+96}" y="{34+58+50}" font-size="9.5" fill="{SLATE}">↓ traceable to</text>'
+        + f'<text x="{W-24}" y="{34+2*76+30}" font-size="10" font-weight="600" fill="{CRIMSON}" text-anchor="end">under change control</text>')
+(PML / "fig_6_1_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 6.4.1 crash economics ----------------------------------------------------
+W, H, L, R, T, B = 640, 380, 84, 24, 30, 56
+def Xc(wk): return L + wk / 2.4 * (W - L - R)
+def Yc2(v): return H - B - v / 70000 * (H - T - B)
+grid = "".join(f'<line x1="{L}" y1="{Yc2(v)}" x2="{W-R}" y2="{Yc2(v)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yc2(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v//1000}k</text>'
+               for v in range(0, 70001, 15000))
+def steps(pts, col, w):
+    d = f"M{Xc(pts[0][0])},{Yc2(pts[0][1])}"
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        d += f" L{Xc(x1)},{Yc2(y0)} L{Xc(x1)},{Yc2(y1)}"
+    return f'<path d="{d}" fill="none" stroke="{col}" stroke-width="{w}"/>'
+body = (grid + steps([(0, 0), (1, 30000), (2, 60000)], SLATE, 2.2)
+        + steps([(0, 0), (1, 45000), (2, 45000)], BLUE, 2.6)
+        + f'<circle cx="{Xc(1)}" cy="{Yc2(45000)}" r="4" fill="{CRIMSON}"/>'
+        + f'<text x="{Xc(1)+8}" y="{Yc2(45000)-10}" font-size="10.5" fill="{CRIMSON}" font-weight="600">path migration — second week buys nothing</text>'
+        + f'<text x="{Xc(1.62)}" y="{Yc2(60000)+2}" font-size="11" fill="{SLATE}" font-weight="600">cumulative crash cost</text>'
+        + f'<text x="{Xc(1.55)}" y="{Yc2(42000)+16}" font-size="11" fill="{BLUE}" font-weight="600">value of weeks saved</text>'
+        + f'<text x="{Xc(1)}" y="{H-B+34}" font-size="10.5" fill="{INK}" text-anchor="middle">net +15,000 at 1 wk · net −15,000 at 2 wk</text>'
+        + axes(L, T, W - R, H - B, "Weeks of crash bought on C", "USD")
+        + "".join(f'<text x="{Xc(wk)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{wk}</text>' for wk in (0, 1, 2)))
+(PML / "fig_6_4_1.svg").write_text(svg(W, H, body))
+
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")

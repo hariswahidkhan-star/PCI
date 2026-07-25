@@ -79,6 +79,16 @@ The §3 expansion list has been partially executed and re-gated:
   6–8 MCQs per KA, SAR cadence throughout, and one further advanced worked example each — queued
   for the production loop alongside Phase 2 domains.
 
+**Batch 3 (production loop, iteration 1).** Both prototypes advanced again: PFL-AI D3 → ~8.9k
+words / 28 pp (Industry variations section; WE 3.A.3 term-structure worked example; MCQs to
+6 per KA; SAR cadence; breakeven rate refined to 8.36 %); PML-AI D6 → ~9.3k words / 27 pp
+(Industry variations; WE 6.A.4 negative-float buy-back with path-migration pricing; MCQs to
+6 per KA; figures 6.1.1 schedule hierarchy and 6.4.1 crash economics — every KA in both books
+now carries at least one figure, 11 total). Harness: **165 golden checks, all passing**; it
+caught a second drafted-number error (MCQ 3.1-F distractor) before commit. Next batch: one
+further case per domain and remaining SAR/advanced depth, then the Phase 2 foundation domains
+begin (PFL-AI D4 Investment appraisal first, reusing D3's machinery).
+
 ## 4. Standard phase reporting
 
 1. **Sections completed:** 2 prototype domains (all 20 family sections each, where applicable).

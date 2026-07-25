@@ -67,6 +67,15 @@ the floats and the critical path, and it is the version under change control (Do
 An L1 milestone that cannot be traced to L3 logic is decoration, and steering committees should
 treat it as such (Domain 3, KA 3.2).
 
+> **Fig 6.1.1 — The schedule hierarchy: one logic, four honest views.** Layered diagram, four
+> horizontal bands labelled L1 Executive (10–30 bars), L2 Management (50–300 activities),
+> L3 Control — the CPM network (300–5,000 activities, highlighted in brand blue with "logic ·
+> float · critical path live here"), L4 Execution/lookahead (daily detail). Upward arrows
+> labelled "summarised from"; downward arrows labelled "traceable to"; a crimson side note at L3:
+> "under change control". Source: PCI original. Alt text: four stacked schedule levels from
+> executive summary to daily lookahead, with the control schedule highlighted as the single
+> source all other views summarise.
+
 ### 6.1.2 Dependencies and logic
 
 **Definitions.** Activities link through four dependency types — finish-to-start (**FS**, the
@@ -153,6 +162,17 @@ milestones reported to the board. The most accurate reading is:
 *Rationale:* Pins override logic: the network can be slipping while pinned milestones hold still,
 hiding negative float until it is unrecoverable. A and B mistake suppression for control; D is
 false — every pin degrades the model's predictive value.
+
+**MCQ 6.1-E `[6.1.1 · Recall]`** The schedule level that carries the logic, the floats and the
+critical path — and sits under formal change control — is:
+- A. L1, because the board owns the schedule
+- B. L2, because the PMO maintains it
+- C. L3, the control schedule ✅
+- D. L4, because it has the most detail
+
+*Rationale:* The L3 control schedule is the analytical model; L1/L2 summarise it and L4
+elaborates near-term execution from it. Detail (D) is not the same as control — L4 churns weekly
+by design and is never the baselined network.
 
 **MCQ 6.1-C `[6.1.2 · Application]`** Survey P (4 wk) feeds report Q (6 wk). Under `FS+2` the
 chain completes week 12. Re-linked `SS+1`, it completes week:
@@ -309,6 +329,17 @@ immediately (not B). D inverts the invariant — `FF ≤ TF` always.
 the second crashed week buys nothing — duration stays 24. A assumes both weeks convert to project
 weeks; C forgets the crash entirely; D subtracts from the wrong baseline. (The full economics:
 KA 6.4.)
+
+**MCQ 6.2-F `[6.2.1 · Application]`** Auriga's procurement C slips from 8 weeks to 9 (all else
+unchanged). The new project duration is:
+- A. 25 weeks
+- B. 26 weeks ✅
+- C. 27 weeks
+- D. 24 weeks
+
+*Rationale:* C was critical with zero float, so its extra week passes straight through:
+E runs 17–22, F finishes week 26. A assumes float absorbed a critical activity's slip; C adds
+the week twice; D subtracts it.
 
 **MCQ 6.2-D `[6.2.1 · Application]`** Auriga's training activity G runs ES 15–EF 17 with
 `LF` = 25. Its total float is:
@@ -476,6 +507,17 @@ including month 30. The strongest inference is:
 the opposite of diligence in effect (A) and the opposite of rolling wave (D); constant churn
 makes re-baselining more likely, not less (C).
 
+**MCQ 6.3-E `[6.3.1 · Application]`** D needs 3 crews in weeks 9–15 and concurrent staging needs
+2; the site cap is 4. The excess demand the histogram must clear is:
+- A. 1 crew for 7 weeks ✅
+- B. 5 crews for 7 weeks
+- C. 2 crews for 7 weeks
+- D. nothing — 3 + 2 = 5 is within a 4-crew cap across two activities
+
+*Rationale:* Peak demand 5 against cap 4 leaves one excess crew-week in each of the seven
+overlap weeks — the precise quantity smoothing must relocate. B is total demand, not excess;
+C is the staging demand itself; D misreads the cap as per-activity when it is per-site.
+
 **MCQ 6.3-C `[6.3.1 · Application]`** A hard 3-crew cap forces either a 4-week project extension
 (delay cost USD 45,000/week) or a second-shift waiver at USD 20,000/week for the same 4 weeks
 (end date held). The value-maximising choice and its saving are:
@@ -538,8 +580,9 @@ Both obey the same law: work the critical path, and re-run the passes after ever
 
 **Worked example 6.4.2 — the crash that stopped paying.**
 
-1. **Setup.** Auriga's client offers a bonus of USD 45,000 per week saved. Expediting C costs
-   USD 30,000 per week, up to two weeks. Should the leader buy one week, two, or none?
+1. **Setup.** Auriga's client offers a bonus of USD 45,000 (≈ SAR 168,750) per week saved.
+   Expediting C costs USD 30,000 per week, up to two weeks. Should the leader buy one week, two,
+   or none?
 2. **Formula.** Crash only while (weeks actually saved × value per week) > crash cost — checked
    against the *re-run passes*, not the original network.
 3. **Substitution.** Crash C by 1 (8→7): duration 25→24; net gain `45,000 − 30,000 = +15,000`.
@@ -551,6 +594,15 @@ Both obey the same law: work the critical path, and re-run the passes after ever
    the cheapest week on it → re-run the passes → repeat until the next week costs more than it
    is worth. Leaders who mandate "crash procurement by two weeks" from the original network pay
    for weeks that no longer exist.
+
+> **Fig 6.4.1 — The economics of crashing Auriga's procurement.** Step chart, x-axis "weeks of
+> crash bought on C" (0, 1, 2), left y-axis USD. Two series: cumulative cost (0 → 30,000 →
+> 60,000, grey steps) and cumulative value of weeks actually saved (0 → 45,000 → 45,000, brand
+> blue — flat after week 1 because path B–D–E–F becomes co-critical at 24). Net-gain annotations:
+> +15,000 at one week, −15,000 at two. Crimson marker at the co-criticality point labelled "path
+> migration — second week buys nothing". Source: PCI original. Alt text: step chart showing
+> crash cost rising linearly while saved-week value flattens after the first week, so the second
+> crashed week loses money.
 
 **Recovery.** When the network slips (self-check 6.2.3: D at 10 weeks → 27), recovery options
 rank by cost-of-time: re-sequencing and logic re-choice (cheapest — KA 6.1's chosen logic);
@@ -654,6 +706,17 @@ team for an integration milestone. The schedule-sound way to join the two worlds
 requirement out. A dictates without evidence; C leaves the network blind at a convergence point;
 D destroys the team's delivery system to decorate the network.
 
+**MCQ 6.4-F `[6.4.3 · Application]`** An activity is estimated optimistic 3, most-likely 4,
+pessimistic 8 weeks. Its PERT expected duration and standard deviation are:
+- A. tₑ = 4.5, σ = 0.83 ✅
+- B. tₑ = 4.0, σ = 0.83
+- C. tₑ = 5.0, σ = 1.67
+- D. tₑ = 4.5, σ = 5.0
+
+*Rationale:* `tₑ = (3 + 16 + 8)/6 = 4.5`; `σ = (8 − 3)/6 = 0.83`. B reports the mode as the
+mean; C is the unweighted three-point average with a doubled spread; D confuses σ with the
+pessimistic-minus-optimistic range.
+
 **MCQ 6.4-D `[6.4.3 · Application]`** At week 22, a programme has earned the value its baseline
 planned to earn by week 20. Its time-based schedule performance index `SPI(t)` is:
 - A. 1.10
@@ -728,7 +791,46 @@ The professional response mirrors KA 6.4.2: quantify it, trace the binding path,
 recovery options, and escalate the decision to whoever owns the trade (Domain 3's escalation
 design).
 
+**Worked example 6.A.4 — buying back two weeks of negative float.**
+
+1. **Setup.** A newly imposed outage constraint requires Auriga to finish by **week 23**; logic
+   says 25 — so `TF` = −2 on A–B–C–E–F. Available buys: crash C at USD 30,000/week (max 2);
+   crash E at USD 55,000/week (max 1). Find the cheapest feasible recovery to week 23.
+2. **Formula.** Recover week by week on the *currently binding* path(s), re-running the passes
+   after each buy (path migration, 6.4.2).
+3. **Substitution.** Week one: crash C by 1 → duration 24, but B–D–E–F is now co-critical at 24.
+   Week two must shorten *both* paths: the only shared activity available is E → crash E by 1
+   (USD 55,000) → duration 23. (C's second week alone would leave B–D–E–F at 24 — spent money,
+   no schedule.)
+4. **Result.** Feasible recovery: **crash C ×1 + crash E ×1 = USD 85,000**, finishing week 23.
+5. **Interpretation.** Negative float is bought back on the binding path *as it migrates* — the
+   second-cheapest week on the original critical path (C's second week, USD 30,000) is worthless,
+   while the dearest activity (E, on both paths) is the only week-two purchase that works. This
+   is why recovery plans list options *in re-run order*, not in unit-cost order (toolkit 6.T.2).
+
 ---
+
+## Industry variations — Domain 6
+
+The passes are universal; what counts as a schedule, and what discipline it needs, is sectoral:
+
+- **Construction and EPC.** Deep L3/L4 hierarchies, thousand-activity networks, contractual
+  float-ownership clauses (Domain 10) and delay-analysis protocols make float a legal quantity —
+  the honesty settings of the Executive perspective are contract compliance here, not just
+  culture.
+- **Technology and product.** Hybrid is the default (KA 6.4.1): cadence-based streams joined to
+  a thin predictive network at integration milestones; the commonest defect is a network so
+  sparse that convergence points are invisible until they slip.
+- **Shutdowns and turnarounds.** The network runs in *hours*; near-critical analysis widens to
+  every path within minutes of critical, and the drum logic of 6.A.1 governs a single shared
+  crane or permit desk. Compression economics (6.4.2) turn over in shifts, not weeks.
+- **Pharmaceutical and regulated development.** Milestones are regulatory events with
+  submission-window physics — genuine date constraints (6.3.2), modelled as logic, with the
+  pin-and-squeeze temptation at its most dangerous because windows are unforgiving.
+- **Public programmes.** Announced dates precede networks (Case study B); the leader's
+  protection — milestones only after the backward pass — is hardest exactly where it matters
+  most, and negative-float honesty (6.A.4) is the difference between an early re-plan and a
+  public failure.
 
 ## Case study — Domain 6: recovering Auriga (utilities / technology)
 

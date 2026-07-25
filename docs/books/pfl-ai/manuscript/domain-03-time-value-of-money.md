@@ -207,6 +207,16 @@ affordability using simple interest "as a conservative shortcut". The analyst's 
 ≈ 6.85 versus 3.0 simple — the shortcut is anti-conservative, the opposite of the analyst's claim
 (so A is wrong); the methods diverge rather than converge (C); D is arithmetic nonsense.
 
+**MCQ 3.1-F `[3.1.2 · Application]`** USD 250,000 is invested at 7 % compound for 6 years. Its
+future value is closest to:
+- A. USD 355,000
+- B. USD 350,638
+- C. USD 375,183 ✅
+- D. USD 166,586
+
+*Rationale:* `250,000 × 1.07⁶ = 375,183`. A is simple interest (`1 + 0.07 × 6`); B compounds
+only 5 years; D divides instead of multiplying — discounting when the question asks for growth.
+
 **MCQ 3.1-D `[3.1.3 · Recall]`** Which statement about discount factors is an invariant a
 reviewer can test without knowing the project?
 - A. `DF(t)` rises when cash flows are contracted
@@ -334,7 +344,8 @@ scheduled three ways, and a project finance leader must read all three on sight:
 2. **Formula.** `A = P × r / (1 − (1+r)^−n)`, with `P` = 42,000,000, `r` = 0.06, `n` = 12. Each
    row: interest = opening balance × `r`; principal = `A` − interest; closing = opening − principal.
 3. **Substitution.** `A = 42,000,000 × 0.06 / (1 − 1.06⁻¹²) = 42,000,000 / 8.383844`.
-4. **Result.** `A` = **USD 5,009,635** per year (5,009,635.23). Schedule:
+4. **Result.** `A` = **USD 5,009,635** per year (5,009,635.23; indicatively ≈ SAR 18,786,132).
+   Schedule:
 
    | Year | Opening balance | Interest (6 %) | Principal | Closing balance |
    |---|---|---|---|---|
@@ -464,6 +475,18 @@ factor to four decimals. The most defensible statement is:
 *Rationale:* Factor rounding error scales linearly with the cash flows and has no consistent
 conservative direction (B, D wrong); materiality depends on scale, not convention (C wrong); model
 audit standards require full-precision arithmetic with display-only rounding.
+
+**MCQ 3.2-F `[3.2.1 · Analysis]`** A wayleave pays USD 800,000 per year; the discount rate is
+8 %. Modelling it as a 30-year annuity instead of a perpetuity understates its value by:
+- A. USD 993,773 — the present value of the post-year-30 tail ✅
+- B. nothing material — thirty years is effectively forever
+- C. USD 4,000,000 — one-third of the perpetuity value
+- D. it overstates value, because perpetuities are riskier
+
+*Rationale:* Perpetuity `800,000/0.08 = 10,000,000`; 30-year annuity `800,000 × 11.257783 =
+9,006,227`; the gap — 9.9 % of value — is the discounted tail. B waves away a million dollars;
+C invents a fraction; D confuses valuation arithmetic with a risk adjustment that belongs in the
+rate, not the formula choice.
 
 **MCQ 3.2-D `[3.2.1 · Application]`** A 5-year, USD 500,000-per-year lease payable **in advance**
 is valued at 8 %. Its present value is closest to:
@@ -680,6 +703,18 @@ sponsor's nominal 9 % hurdle. The result:
 inside the rate — so value is systematically understated. The consistency rule admits no threshold
 (C) and no default (D); A reverses the direction of the error.
 
+**MCQ 3.3-F `[3.3.1 · Application]`** A model shows a nominal cash flow of USD 2,000,000 in
+year 5; inflation is 3 %. Its value in today's purchasing power (real terms) is:
+- A. USD 2,000,000 — real and nominal are equal at year 5
+- B. USD 1,725,218 ✅
+- C. USD 1,700,000
+- D. USD 2,318,548
+
+*Rationale:* `2,000,000 / 1.03⁵ = 1,725,218` — deflating by the price level, not discounting for
+time value (that happens separately, at a real rate). A ignores five years of inflation; C
+deflates simply (`2,000,000 × (1 − 0.03 × 5) = 1,700,000`); D multiplies by `1.03⁵` — inflating
+instead of deflating.
+
 **MCQ 3.3-D `[3.3.4 · Application]`** A USD 42,000,000 balance accrues at 6 % over a 92-day
 quarter. Under **actual/360** the interest is:
 - A. USD 630,000
@@ -755,6 +790,23 @@ a **term structure**, and precise valuation discounts each period's flow at that
 deliberate simplification of a curve — acceptable when documented and stress-tested (Domain 6,
 KA 6.4), a silent error when inherited unexamined from a template.
 
+**Worked example 3.A.3 — flat rate versus the curve.**
+
+1. **Setup.** A contractor is owed USD 1,000,000 at the end of each of years 1 and 2. The spot
+   curve prices 1-year money at 5.0 % and 2-year money at 7.0 %; the model uses a flat 6.0 %.
+   How far wrong is the flat rate?
+2. **Formula.** Curve: `PV = x/(1 + r₁) + x/(1 + r₂)²`. Flat: `PV = x/(1+r) + x/(1+r)²`.
+3. **Substitution.** Curve: `1,000,000/1.05 + 1,000,000/1.07² = 952,381 + 873,439`. Flat:
+   `943,396 + 889,996`.
+4. **Result.** Curve **USD 1,825,820**; flat **USD 1,833,393** — the flat model overstates value
+   by **USD 7,573** (0.4 %).
+5. **Interpretation.** The flat 6 % "averages" the curve but misprices *both* flows — too harsh
+   on the near one, too kind on the far one — and the errors do not cancel unless the stream is
+   symmetric around the average tenor. For a two-flow example the drift is small; on a 25-year
+   concession against a steep curve it moves tens of millions. The audit question is never "is
+   the rate reasonable?" but "which curve does this rate summarise, and has the summary been
+   stress-tested?"
+
 ### 3.A.4 The reviewer's TVM eye
 
 Experienced reviewers do not recompute everything; they run invariants. The domain's collected
@@ -764,6 +816,31 @@ whenever `π > 0`; forward off-spot in the direction of the interest differentia
 invariant is a defect *somewhere* — find it before anyone downstream builds on it.
 
 ---
+
+## Industry variations — Domain 3
+
+The machinery is universal; its parameters are sectoral, and a project finance leader reads the
+sector before trusting any inherited rate, tenor or convention:
+
+- **Power and renewables.** Long contracted tenors (20–35 years) make value acutely
+  curve-sensitive (3.A.3) and escalation-sensitive (3.3.2); availability and capacity payments
+  are near-annuities, so the annuity family does most of the valuation work. Debt sculpting to
+  seasonal cash flows (Domain 10) starts from monthly, not annual, discounting.
+- **Transport concessions.** Patronage risk pushes discount rates up and makes single-rate
+  valuation least defensible — scenario-based rates and revenue stress tests (Domain 7, KA 7.4)
+  ride directly on this domain's factors.
+- **Water and regulated utilities.** Regulatory reset cycles (often 5-yearly) partition the
+  horizon: within-period flows discount at financing rates; across resets, the *real/nominal
+  discipline* (3.3.1) dominates because regulators commonly work in real terms while lenders
+  live in nominal.
+- **Digital infrastructure.** Shorter economic lives and refresh capex compress tenors: bullet
+  and mini-perm shapes (3.2.2) with deliberate refinancing (Domain 15) are standard, so the
+  balloon-risk arithmetic of Case B is daily practice, not a cautionary tale.
+- **Oil, gas and mining.** Commodity-linked revenue makes escalation assumptions (3.3.2) the
+  loudest value driver, and multi-currency operations make the day-count and FX conventions
+  (3.3.3–3.3.4) contractual battlegrounds rather than back-office detail.
+- **Social infrastructure PPPs.** Availability payments in advance are common — the annuity-due
+  reading (WE 3.2.1b) is the difference between winning and mispricing a bid.
 
 ## Case study — Domain 3: choosing between an upfront grant and an availability stream (water / PPP)
 
@@ -789,7 +866,7 @@ wedge, not a disagreement about arithmetic. Kestrel takes the stream (worth more
 grantor is glad to give it (cheaper at 10 %); the deal closes with both counterparties better off
 by their own measure. The board minute records the rate, the convention (annual, in arrears) and
 the sensitivity: the stream's advantage to Kestrel disappears if its discount rate rises past
-≈ 8.35 % — the **breakeven rate** at which `AF × 5,600,000 = 58,000,000`, i.e. `AF = 10.357`.
+≈ 8.36 % — the **breakeven rate** at which `AF × 5,600,000 = 58,000,000`, i.e. `AF = 10.3571`.
 
 **What the domain teaches here.** Valuation is always *at a rate, for a party*; streams and lumps
 are only comparable through `PV(x)`; and the negotiation surface between two parties' rates is
