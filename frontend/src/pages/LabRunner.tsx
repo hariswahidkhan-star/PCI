@@ -35,6 +35,8 @@ interface Task {
   multistep?: boolean; steps?: StepDef[]
 }
 interface ScenarioMeta { id: number; scenario_code: string; title: string; kind: string; difficulty?: string; summary?: string }
+/** Free Templates Library entry; `engine` is the Lab task this working sheet serves ("" = general artefact). */
+interface TemplateRow { doc_group: string; title: string; engine: string; description: string; url: string }
 interface StartResp {
   attempt_id: number
   resumed: boolean
@@ -541,6 +543,7 @@ export default function LabRunner() {
   const [stepAnswers, setStepAnswers] = useState<Record<string, Record<string, string>>>({})   // multi-step: per-step measures
   const [decisions, setDecisions] = useState<Record<string, string>>({})                        // multi-step: chosen options
   const [grade, setGrade] = useState<Grade | null>(null)
+  const [templates, setTemplates] = useState<TemplateRow[]>([])
   const [coach, setCoach] = useState<CoachResp | null>(null)
   const [coaching, setCoaching] = useState(false)
   const [coachMode, setCoachMode] = useState('guided')
@@ -628,6 +631,20 @@ export default function LabRunner() {
     if (reviewId) void loadReview(reviewId)
     else void begin(mode)
   }, [begin, loadReview, mode, reviewId])
+
+  // The Free Templates Library, fetched once so the graded result can offer the working sheet for the
+  // technique just practised. Wrapped so that ANY failure — a rejection, or a client that returns nothing
+  // at all — is swallowed: the download is a bonus, and must never take the workspace down with it.
+  useEffect(() => {
+    let cancelled = false
+    void (async () => {
+      try {
+        const r = await api.get<{ rows: TemplateRow[] }>('/api/me/lab/templates')
+        if (!cancelled && Array.isArray(r?.rows)) setTemplates(r.rows)
+      } catch { /* library unavailable — the workspace works exactly as before */ }
+    })()
+    return () => { cancelled = true }
+  }, [])
 
   const coerce = (a: Ask, raw: string): unknown => {
     const v = (raw ?? '').trim()
@@ -784,6 +801,13 @@ export default function LabRunner() {
 
   const assessment = !!start?.task.assessment
 
+  // The working sheet for this scenario's engine. Multi-step scenarios drive several engines, so they get
+  // the template for the step the learner is on; single-task scenarios match on the task itself.
+  const engineNow = start?.task.multistep
+    ? start.task.steps?.[0]?.task ?? ''
+    : start?.task.task ?? ''
+  const workingTemplate = templates.find((t) => t.engine && t.engine === engineNow) ?? null
+
   // Printable debrief summary via the platform's existing printable-document pattern.
   const printSummary = () => {
     if (!start || !grade) return
@@ -890,6 +914,17 @@ export default function LabRunner() {
                     <div style={{ margin: '.8rem 0 .2rem' }}><Histogram mc={start.task.montecarlo} /></div>
                   )}
                 </>
+              )}
+              {/* The technique this scenario teaches, as a working sheet for a real project. Only shown
+                  once the attempt is graded, so it can never become a hint mid-attempt. */}
+              {grade && workingTemplate && (
+                <div style={{ marginTop: '.9rem' }}>
+                  <PanelSub>Take it to your own project</PanelSub>
+                  <p className="muted small" style={{ margin: '.2rem 0 .4rem' }}>{workingTemplate.description}</p>
+                  <a className="btn sm" href={workingTemplate.url} download>
+                    Download “{workingTemplate.title}”
+                  </a>
+                </div>
               )}
             </Card>
 

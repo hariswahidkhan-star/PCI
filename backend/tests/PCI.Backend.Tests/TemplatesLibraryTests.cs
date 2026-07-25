@@ -41,6 +41,35 @@ public class TemplatesLibraryTests : IClassFixture<DbFixture>
         }
     }
 
+    /// <summary>
+    /// The library's premise is that a learner practises a technique in the Lab and then downloads the sheet
+    /// that runs it, so the engine mapping is load-bearing: GET /api/me/lab/templates joins on it. Every
+    /// declared engine must be a real one, no engine may claim two sheets (the Lab would have to pick), and
+    /// the general artefacts — the ones with no engine behind them — must still be present.
+    /// </summary>
+    [Fact]
+    public void Engine_mapping_is_sound_and_general_artefacts_are_included()
+    {
+        var byEngine = TemplatesLibrarySeed.Catalogue
+            .Where(t => t.Engine.Length > 0)
+            .GroupBy(t => t.Engine)
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        foreach (var (engine, count) in byEngine)
+        {
+            Assert.True(SimCalc.KnownTasks.Contains(engine), $"template maps to unknown engine '{engine}'");
+            Assert.True(count == 1, $"engine '{engine}' has {count} templates; the Lab link must be unambiguous");
+        }
+        Assert.True(byEngine.Count >= 15, $"only {byEngine.Count} engines have a working sheet");
+        Assert.True(TemplatesLibrarySeed.Catalogue.Count(t => t.Engine.Length == 0) >= 5,
+            "the library should also carry general artefacts that no Lab engine grades");
+
+        Assert.Equal("evm", TemplatesLibrarySeed.ForEngine("evm")?.Engine);
+        Assert.Null(TemplatesLibrarySeed.ForEngine("no_such_engine"));
+        Assert.Null(TemplatesLibrarySeed.ForEngine(null));
+        Assert.Null(TemplatesLibrarySeed.ForEngine(""));
+    }
+
     [Fact]
     public void Every_template_file_is_inert_when_opened_in_a_spreadsheet()
     {

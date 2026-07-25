@@ -34,7 +34,15 @@ const renderRunner = (entry = '/lab/GL-EVM-001') => render(
 )
 
 describe('LabRunner (Simulation Lab workspace)', () => {
-  beforeEach(() => { post.mockReset(); get.mockReset(); openPrintable.mockReset() })
+  beforeEach(() => {
+    post.mockReset(); get.mockReset(); openPrintable.mockReset()
+    // The workspace fetches the Free Templates Library on mount to offer the working sheet for the engine
+    // once an attempt is graded. Individual tests override this when they exercise a specific GET.
+    get.mockImplementation((path: string) =>
+      path === '/api/me/lab/templates'
+        ? Promise.resolve({ rows: [{ doc_group: 'template-evm-tracker', title: 'Earned Value Tracker (CSV)', engine: 'evm', description: 'Period-by-period earned value.', url: '/api/public/documents/template-evm-tracker/file' }] })
+        : Promise.resolve({}))
+  })
 
   it('starts an attempt, shows the brief + inputs, and renders the deterministic grade on submit', async () => {
     post.mockImplementation((path: string) => {
@@ -57,6 +65,29 @@ describe('LabRunner (Simulation Lab workspace)', () => {
     expect(screen.getByText('Passed')).toBeInTheDocument()
     expect(screen.getAllByText('0.9').length).toBeGreaterThanOrEqual(2)  // your answer + correct, both revealed
     expect(screen.getByText(/Earned Value · Advanced/)).toBeInTheDocument()
+  })
+
+  it('offers the matching Free Templates Library sheet only AFTER grading, never mid-attempt', async () => {
+    post.mockImplementation((path: string) => {
+      if (path === '/api/me/lab/attempts') return Promise.resolve(startResp(false))
+      if (String(path).endsWith('/submit')) return Promise.resolve({
+        score: 100, passed: true, correct: 1, total: 1, mode: 'training', assessment: false,
+        measures: [{ key: 'spi', label: 'Schedule Performance Index (SPI)', is_correct: true, correct_value: 0.9, your_value: 0.9 }],
+        competencies: [],
+      })
+      return Promise.resolve({})
+    })
+    renderRunner()
+    expect(await screen.findByText('Compute the earned-value measures.')).toBeInTheDocument()
+    // Mid-attempt the download must be absent: it names the technique, so it would be a hint.
+    expect(screen.queryByRole('link', { name: /Earned Value Tracker/ })).not.toBeInTheDocument()
+
+    fireEvent.change(screen.getByPlaceholderText('number'), { target: { value: '0.9' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Submit for grading' }))
+
+    expect(await screen.findByText('Result — 100%')).toBeInTheDocument()
+    const link = screen.getByRole('link', { name: /Earned Value Tracker/ })
+    expect(link).toHaveAttribute('href', '/api/public/documents/template-evm-tracker/file')
   })
 
   it('fetches and shows a coaching message on request (Training Mode)', async () => {
