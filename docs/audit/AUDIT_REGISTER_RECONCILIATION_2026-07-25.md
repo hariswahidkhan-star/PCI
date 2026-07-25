@@ -38,14 +38,14 @@ Node 22, Python 3.11, Playwright + preinstalled Chromium.
 | MySQL adversarial integration — **Blocked** | integration suite vs MySQL: **1220/1220 passed** (after fixing one genuine MySQL-parity defect this run surfaced — see §4); founding **46/46**, honorary **19/19**, honorary-application **48/48** on MySQL |
 | SQLite adversarial integration — not run | **1220/1220 passed** |
 | 500-sweep (every route × anon/student/owner) — not run | **0 × 500 — PASS** |
-| Live smoke suite — not run | See §5 |
+| Live smoke suite — not run | **65/65 passed** (see §5) |
 | Migration versioning/lock (P0-6) — CI pending | **8/8 passed** |
 | Impersonation read-only (P0-1) — CI pending | **54/54 passed** |
 | Retake wait (P0-7) — CI pending | **4/4 passed** |
 | Backup → restore round-trip (DR-1) — **Not evidenced** | **7/7 passed** (mysqldump → restore, against live MySQL) |
 | S3 storage behaviour — **Blocked** (`moto` absent) | **9/9 passed** against a live moto S3 server — after fixing the suite itself, which had never actually run (DEF-23, §4) |
 | Frontend typecheck/tests/build — passing | Re-confirmed: typecheck clean, **291/291** unit tests (44 files), student + admin production builds OK |
-| Playwright browser suite (audit discovered 82) — **Not executed** | **110 scenarios** now exist in 24 spec files; full chromium run executed this cycle — results in §5 |
+| Playwright browser suite (audit discovered 82) — **Not executed** | **110 scenarios** now exist in 24 spec files; chromium project **84 passed / 2 skipped / 0 failed**, mobile-chrome smoke **6/6** (see §5) |
 | Python logic suites — passing | Re-confirmed: production-config 11/11 (one case added), lifecycle, release, casework, settings, publication, storage — all pass |
 | Generated MySQL schema determinism | Regeneration is byte-identical to the committed file (SHA-256 `993f2833…`) — after fixing a real generator bug the audit's hash-check could never have caught (DEF-22, §4) |
 
@@ -115,8 +115,15 @@ Plus one audit item implemented as designed:
 - **Smoke:** `smoke-test.sh` executed against a booted backend after the browser run released the
   port — result recorded below.
 
-> _Run results (this cycle):_ **PENDING — chromium suite and smoke run were still executing when
-> this revision was committed; the final counts are appended in the follow-up commit.**
+> _Run results (this cycle):_ chromium project **84 passed / 2 skipped / 0 failed** (4.2 min);
+> mobile-chrome cross-browser smoke **6/6 passed**; `smoke-test.sh` **65/65 passed** against the
+> booted Release backend. (The firefox/webkit smoke projects need their engines installed — they
+> run in the CI `e2e` job; only Chromium is preinstalled here.)
+>
+> _MySQL parity (final, after this branch's 1093 fix):_ adversarial integration **1220/1220**,
+> founding **46/46**, honorary **19/19**, honorary-application **48/48**, migration integrity
+> **23/23** (including the new `fee_waivers.idempotency_key` migration), backup→restore **7/7** —
+> all against Oracle MySQL 8.0.46.
 
 ## 6. Audit residual register (RES-001..026) — disposition against current main
 
