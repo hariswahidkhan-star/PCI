@@ -367,6 +367,59 @@ check("EX 1.1 overstatement pct", ((D(1242000) - D(807300)) / D(1242000) * 100).
 check("EX 1.2 five-week cost of delay", CLIN * ADOPT * HRS * RATE * 5, 71400)
 check("EX 1.3 adoption spread 50→90", CLIN * D("0.90") * HRS * RATE * WKS - CLIN * D("0.50") * HRS * RATE * WKS, 391680)
 
+# ---------- PFL-AI Domain 2 — Accounting foundations ----------
+REV2, OPEX2 = D(12000000), D(4500000)
+DEP2 = D(60000000) / 25            # Domain 4's I₀ over 25 years
+INT2 = D(42000000) * D("0.06")     # Domain 3's year-one interest
+EBITDA2 = REV2 - OPEX2
+EBIT2 = EBITDA2 - DEP2
+PBT2 = EBIT2 - INT2
+TAX2 = PBT2 * D("0.20")
+NI2 = PBT2 - TAX2
+DS2 = D(42000000) * D("0.06") / (1 - D("1.06") ** -12)   # Domain 3's instalment
+check("WE 2.2.1 EBITDA", EBITDA2, 7500000)
+check("WE 2.2.1 depreciation", DEP2, 2400000)
+check("WE 2.2.1 EBIT", EBIT2, 5100000)
+check("WE 2.2.1 interest ties to D3", INT2, 2520000)
+check("WE 2.2.1 PBT", PBT2, 2580000)
+check("WE 2.2.1 tax", TAX2, 516000)
+check("WE 2.2.1 net income", NI2, 2064000)
+check("MCQ 2.2-A distractor C (tax on EBIT)", EBIT2 - EBIT2 * D("0.20"), 4080000)
+check("2.2.2 plant net of depreciation", D(60000000) - DEP2, 57600000)
+check("2.2.2 year-one principal ties to D3", DS2 - INT2, D("2489635.23"))
+check("2.2.2 closing senior debt", D(42000000) - (DS2 - INT2), D("39510364.77"))
+check("WE 2.2.4 operating cash flow", NI2 + DEP2 - 900000 + 300000, 3864000)
+check("WE 2.2.4 net working-capital absorption", D(900000) - 300000, 600000)
+check("MCQ 2.2-B distractor A (no WC)", NI2 + DEP2, 4464000)
+check("MCQ 2.2-B distractor C (payables signed wrong)", NI2 + DEP2 - 900000 - 300000, 3264000)
+check("WE 2.3.1 CFADS excl. working capital", EBITDA2 - TAX2, 6984000)
+check("WE 2.3.1 DSCR excl. working capital", ((EBITDA2 - TAX2) / DS2).quantize(D("0.01")), D("1.39"), tol=D("0.005"))
+check("WE 2.3.1 CFADS incl. working capital", EBITDA2 - TAX2 - 600000, 6384000)
+check("WE 2.3.1 DSCR incl. working capital", ((EBITDA2 - TAX2 - 600000) / DS2).quantize(D("0.01")), D("1.27"), tol=D("0.005"))
+check("WE 2.3.3 capitalised annual charge", D(1200000) / 10, 120000)
+check("WE 2.3.3 profit difference", D(1200000) - D(1200000) / 10, 1080000)
+check("WE 2.4.2 interest cover", (EBIT2 / INT2).quantize(D("0.01")), D("2.02"), tol=D("0.005"))
+check("WE 2.4.2 debt/EBITDA", ((D(42000000) - (DS2 - INT2)) / EBITDA2).quantize(D("0.01")), D("5.27"), tol=D("0.005"))
+check("Case B capitalised charge", D(9000000) / 12, 750000)
+check("Case B profit lift vs expensing", D(9000000) - D(9000000) / 12, 8250000)
+# Exercises
+EBITDA_X = D(15000000) - D(5800000)
+DEP_X = D(75000000) / 30
+PBT_X = EBITDA_X - DEP_X - D(2100000)
+check("EX 2.1 EBITDA", EBITDA_X, 9200000)
+check("EX 2.1 depreciation", DEP_X, 2500000)
+check("EX 2.1 EBIT", EBITDA_X - DEP_X, 6700000)
+check("EX 2.1 PBT", PBT_X, 4600000)
+check("EX 2.1 tax", PBT_X * D("0.20"), 920000)
+check("EX 2.1 net income", PBT_X * D("0.80"), 3680000)
+check("EX 2.1 common error (tax on EBIT)", (EBITDA_X - DEP_X) * D("0.20"), 1340000)
+check("EX 2.2 operating cash flow", PBT_X * D("0.80") + DEP_X - 1100000 - 200000 + 450000, 5330000)
+check("EX 2.3 DSCR before WC", ((EBITDA_X - PBT_X * D("0.20")) / D(4400000)).quantize(D("0.01")), D("1.88"), tol=D("0.005"))
+check("EX 2.3 delta working capital", D(1100000) + 200000 - 450000, 850000)
+check("EX 2.3 CFADS after WC", EBITDA_X - PBT_X * D("0.20") - 850000, 7430000)
+check("EX 2.3 DSCR after WC", ((EBITDA_X - PBT_X * D("0.20") - 850000) / D(4400000)).quantize(D("0.01")), D("1.69"), tol=D("0.005"))
+check("EX 2.4 profit difference", D(2400000) - D(2400000) / 8, 2100000)
+
 print()
 if FAILURES:
     print(f"✗ {len(FAILURES)} FAILURES:", *FAILURES, sep="\n  ")

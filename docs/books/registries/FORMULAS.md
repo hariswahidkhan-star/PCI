@@ -47,7 +47,7 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
 | `PI` | Profitability index = PV(future CF)/I₀ | ratio | PFL-AI D4 | ✅ |
 | `EAV` | Equivalent annual value | currency/period | PFL-AI D4 | ✅ |
 | `WACC` | Weighted average cost of capital | %/period | PFL-AI D4/D9 | ⏳ |
-| `CFADS` | Cash flow available for debt service | currency/period | PFL-AI D10 | ⏳ |
+| `CFADS` | Cash flow available for debt service (a **defined term** — see PFL-AI D2 KA 2.3.1: whether it is struck before or after working-capital movements changes every ratio built on it) | currency/period | PFL-AI D2/D10 | ✅ |
 | `DSCR` | Debt service coverage ratio = CFADS/(interest + scheduled principal) per period | ratio | PFL-AI D10 | ⏳ |
 | `LLCR` | Loan life coverage ratio = PV(CFADS over loan life, at loan rate)/outstanding debt | ratio | PFL-AI D10 | ⏳ |
 | `PLCR` | Project life coverage ratio = PV(CFADS over project life)/outstanding debt | ratio | PFL-AI D10 | ⏳ |

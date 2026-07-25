@@ -95,11 +95,42 @@ Records** (40-clinic public-health records rollout) that returns in Domains 2 an
   overstatement equals the non-adoption rate. PML-AI volume now typesets at **64 pp** across
   Domains 1, 6 and 7 (8 figures, 69 index entries), with the Part One divider now leading.
 
+**Batch 8 (loop iteration 6) — PFL-AI Domain 2, Accounting and financial-statement foundations.**
+This **completes PFL-AI Part One** (~7.3k words), discharging the obligation Domain 1 left open —
+if profit does not pay debt service, how do you get from one to the other:
+
+- KA 2.1 accrual vs cash (each governing different covenants), recognition and measurement as
+  tests rather than preferences, and articulation as the reader's diagnostic.
+- KA 2.2 the three statements built on Kestrel's first operating year, **tied numerically to
+  Domains 3 and 4**: the plant is Domain 4's `I₀` 60,000,000 over 25 years, interest is Domain 3's
+  year-one 2,520,000, and the 2,489,635 of principal is Domain 3's own schedule row — so
+  `EBITDA` 7,500,000 → `EBIT` 5,100,000 → PBT 2,580,000 → net income 2,064,000, bridged to
+  **operating cash flow 3,864,000** and proven to articulate.
+- KA 2.3 the four decisive treatments: working capital moving `DSCR` from **1.39 to 1.27** on the
+  *documented* `CFADS` definition (the domain's central professional point — a ratio is only as
+  good as its defined term); revenue recognition following performance and needing to agree with
+  the progress evidence PML-AI Domain 7 uses for earned value; capex vs opex moving year-one
+  profit by **1,080,000** on 1,200,000 of spend while **cash is identical**; and provisions
+  recognised on tests, never created as reserves.
+- KA 2.4 ratio families, interest cover **2.02×** against debt/`EBITDA` **5.27×** (both true,
+  pointing different ways — revenue certainty, not the ratio, is what makes leverage tolerable),
+  and the project/ledger interfaces including the **five meanings of "spend"**.
+- Advanced topics (deferred tax and why cash tax ≠ accounting tax in `CFADS`, leases and stale
+  off-balance-sheet intuitions, reviewer invariants), industry variations, two case studies (the
+  profitable year that came within ~USD 100,000 of a covenant breach; capitalised into a
+  better-looking year, restated into a breach with no cash change), executive perspective,
+  4 exercises, 3 toolkits, exam prep, 14 tagged MCQs.
+- Figure 2.2.1 (the accrual-to-cash bridge as a waterfall).
+- Harness: **334 golden checks, all passing** (was 296), including the cross-domain ties to
+  Domain 3's instalment split. PFL-AI volume now typesets at **76 pp** across Domains 1–4
+  (13 figures, 71 index entries) — **Part One complete**.
+
 ## Next production batch
 
-Queued in loop order: (1) PFL-AI Domain 2 (Accounting foundations) — the accrual-to-cash bridge
-its Domain 1 promised, and the last unstarted Part One domain of that book; (2) PML-AI Domain 8
-(Risk, uncertainty and resilience), which Domain 7's contingency treatment now depends on and
-which registers `EMV`; (3) PML-AI Domain 2 (Strategy, selection and business alignment),
-continuing the Meridian thread into benefits mapping; prototype residual depth folded alongside.
-Phase 2 completes when all foundation domains of both books pass gates.
+Queued in loop order: (1) PML-AI Domain 8 (Risk, uncertainty and resilience) — Domain 7's
+contingency treatment depends on it, and it registers `EMV`; (2) PML-AI Domain 2 (Strategy,
+selection and business alignment), continuing the Meridian thread into benefits mapping and
+completing PML-AI Part One alongside Domains 3–4; (3) PFL-AI Domain 10 (Debt sizing, covenants and
+credit metrics), which Domains 2–4 have now fully prepared (`CFADS` defined, discounting built,
+appraisal in place) and which registers `DSCR`/`LLCR`/`PLCR`. Phase 2 completes when all
+foundation domains of both books pass gates; PFL-AI Part One is now done.

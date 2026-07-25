@@ -506,5 +506,35 @@ body = ('<defs><marker id="vc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth
         + f'<text x="30" y="{y0+180}" font-size="10.5" fill="{SLATE}">Adoption is the outcome measure that links an output to any benefit at all — so it needs its own owner (Toolkit 1.T.1).</text>')
 (PML / "fig_1_3_1.svg").write_text(svg(W, H, body))
 
+# ---- Fig 2.2.1 accrual-to-cash bridge (waterfall) ---------------------------------
+W, H, L, R, T, B = 660, 400, 92, 26, 34, 66
+def Yb(v): return H - B - v / 5000000 * (H - T - B)
+steps = [("Net income", 0, 2064000, INK, False), ("+ Depreciation", 2064000, 2400000, BLUE, True),
+         ("− Receivables", 4464000, -900000, CRIMSON, True), ("+ Payables", 3564000, 300000, BLUE, True),
+         ("Operating cash", 0, 3864000, INK, False)]
+bw = 76
+grid = "".join(f'<line x1="{L}" y1="{Yb(v)}" x2="{W-R}" y2="{Yb(v)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yb(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v/1000000:.0f}m</text>'
+               for v in range(0, 5000001, 1000000))
+body = grid
+for i, (lab, base_v, delta, col, floating) in enumerate(steps):
+    x = L + 22 + i * (bw + 28)
+    lo = min(base_v, base_v + delta) if floating else 0
+    hi = max(base_v, base_v + delta) if floating else delta
+    opacity = ' opacity="0.85"' if floating else ""
+    sign = "+" if delta > 0 and floating else ""
+    word1, rest = lab.split()[0], " ".join(lab.split()[1:])
+    body += (f'<rect x="{x}" y="{Yb(hi)}" width="{bw}" height="{Yb(lo)-Yb(hi)}" rx="3" fill="{col}"{opacity}/>'
+             f'<text x="{x+bw/2}" y="{Yb(hi)-7}" font-size="10" font-weight="600" fill="{col}" text-anchor="middle">'
+             f'{sign}{delta/1000000:.2f}m</text>'
+             f'<text x="{x+bw/2}" y="{H-B+16}" font-size="9.5" fill="{SLATE}" text-anchor="middle">{word1}</text>'
+             f'<text x="{x+bw/2}" y="{H-B+29}" font-size="9.5" fill="{SLATE}" text-anchor="middle">{rest}</text>')
+    if i < len(steps) - 1:
+        end_v = (base_v + delta) if floating else delta
+        body += f'<line x1="{x+bw}" y1="{Yb(end_v)}" x2="{x+bw+28}" y2="{Yb(end_v)}" stroke="{SLATE}" stroke-width="1" stroke-dasharray="3 3"/>'
+body += (f'<text x="{L+22}" y="{T-8}" font-size="11" fill="{SLATE}">the accrual adjustments — none of them cash decisions of this period</text>'
+         + axes(L, T, W - R, H - B, "", "USD"))
+(PFL / "fig_2_2_1.svg").write_text(svg(W, H, body))
+
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")

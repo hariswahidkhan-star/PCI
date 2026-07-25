@@ -36,6 +36,7 @@ BOOKS = {
         "subtitle": ("The reference for the PCI AI Project Finance Leader<br/>"
                      "Project economics · structuring · financial mathematics · the governed use of AI"),
         "order": ["manuscript/domain-01-foundations.md",
+                  "manuscript/domain-02-accounting-foundations.md",
                   "manuscript/domain-03-time-value-of-money.md",
                   "manuscript/domain-04-investment-appraisal.md"],
         "parts": [("Part One", "Foundations",
