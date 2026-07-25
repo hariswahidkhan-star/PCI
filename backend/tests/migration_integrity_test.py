@@ -294,6 +294,29 @@ REQUIRED_UNIQUE = {
     "partner_campaign_links":          ("token",),
     "partner_disputes":                ("dispute_no",),
 }
+def sqlite_live_indexes():
+    """Index names per table on SQLite, excluding the implicit UNIQUE autoindexes."""
+    con = sqlite3.connect(DB)
+    out = {}
+    for (t,) in con.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"):
+        names = {r[1].lower() for r in con.execute(f'PRAGMA index_list("{t}")')
+                 if not str(r[1]).startswith("sqlite_autoindex")}
+        if names: out[t.lower()] = names
+    con.close()
+    return out
+
+
+def mysql_live_indexes():
+    import pymysql
+    con = pymysql.connect(database=MIG_DB, **MYSQL)
+    cur = con.cursor()
+    cur.execute("SELECT LOWER(table_name), LOWER(index_name) FROM information_schema.statistics"
+                " WHERE table_schema=%s AND index_name<>'PRIMARY'", (MIG_DB,))
+    out = {}
+    for t, i in cur.fetchall(): out.setdefault(t, set()).add(i)
+    con.close()
+    return out
+
 
 # ============================================================================
 def main():
@@ -425,6 +448,21 @@ def main():
                 print(f"        drift {t}: sqlite-only={sorted(s_only)} mysql-only={sorted(m_only)}")
         chk(f"4b column-name parity across all {len(lt & mt)} shared tables",
             not drift, f"{len(drift)} tables drifted (detailed above)")
+
+        # 4c. An index that SQLite builds and MySQL does not is invisible in normal operation: the
+        # installers wrap index creation in catch-and-log, so the statement is skipped, the rest of
+        # that installer may be abandoned, and the only symptom is a slow query — or, as with the
+        # pciworld editorial tables, seven tables that never got created. Comparing what each
+        # provider actually built needs no model of MySQL's key-length rules.
+        s_ix, m_ix = sqlite_live_indexes(), mysql_live_indexes()
+        ix_missing = {}
+        for t in sorted(set(s_ix) & (set(m_ix) | (lt & mt))):
+            gone = s_ix.get(t, set()) - m_ix.get(t, set())
+            if gone:
+                ix_missing[t] = sorted(gone)
+                print(f"        missing on mysql {t}: {sorted(gone)}")
+        chk("4c every index SQLite builds also exists on MySQL",
+            not ix_missing, f"{len(ix_missing)} tables missing indexes on mysql (detailed above)")
 
         # ── 5. Money-column and index integrity (the gap sections 1-4 cannot see) ──
         print("\n=== 5. Money columns are exact, and the UNIQUE guarantees exist ===")
