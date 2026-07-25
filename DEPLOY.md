@@ -36,6 +36,27 @@ website; everything students do appears in the dashboard. There is nothing separ
 6. Verify: log into `/admin.html` and open **System check** (owner-only) — everything should be
    green except Stripe/SMTP if you skipped them.
 
+### Deploys suddenly failing with “production requires DB_PROVIDER=mysql”?
+
+The platform now **fails closed on MySQL in production**: a Production boot refuses to open a
+database unless `DB_PROVIDER=mysql` (with the `MYSQL_*` settings) is configured. An existing
+service that was deployed on the earlier SQLite-on-persistent-disk posture will therefore fail
+every new deploy at the health check (the container exits with code 78 before serving traffic),
+while the last successful deploy stays live.
+
+Two ways forward:
+
+1. **Recommended — move to managed MySQL**: provision MySQL 8 / MariaDB (PlanetScale, Aiven, RDS,
+   DigitalOcean…), set `DB_PROVIDER=mysql` + the `MYSQL_*` variables, and run the one-time data
+   migration `backend/tools/migrate_sqlite_to_mysql.py` (see `docs/MYSQL_MIGRATION.md`).
+2. **Interim — keep SQLite on the persistent disk, explicitly**: set **one** environment variable
+   on the service (Settings → Environment): `ALLOW_SQLITE_IN_PRODUCTION=true`. This waives ONLY
+   the MySQL requirement, still requires the database to live under the mounted `/data` disk, and
+   keeps every other production check (HTTPS base URL, explicit CORS origin,
+   `CREDENTIAL_ENCRYPTION_KEY`, …) fully active. The boot log prints a warning on every start so
+   the posture stays visible. Do not confuse it with `ALLOW_INSECURE_PRODUCTION=true`, which
+   disables **all** checks and is not recommended.
+
 ### Already running WITHOUT the blueprint (service created by hand)?
 If the service was created manually — especially on the **free tier** — the database and every
 uploaded file are erased on each deploy or restart. Fixing it is two dashboard steps, no
