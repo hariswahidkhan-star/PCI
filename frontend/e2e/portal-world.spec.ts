@@ -78,6 +78,33 @@ test.describe('PCI World — public journey', () => {
     await expect(rows.nth(1)).toContainText('yes')
   })
 
+  test('a stale session token recovers instead of dead-ending on "Start a session first"', async ({ page }) => {
+    // The exact live failure: a token in localStorage whose server row no longer exists — because
+    // the participant's session aged out, or the deployment's storage was replaced. The client used
+    // to trust the key's mere presence, so the page said "Start a session first." on every attempt
+    // for ever, with no way out but clearing site data.
+    await page.goto('/world/challenge/WC-EVM-001')
+    await page.evaluate(() => localStorage.setItem('world_session', 'a'.repeat(64)))
+
+    await page.getByRole('button', { name: 'Start the challenge' }).click()
+
+    // It recovers: the dead token is discarded, a fresh session is minted, the attempt starts.
+    await expect(page.locator('#evidence tbody tr')).toHaveCount(5)
+    await expect(page.locator('#starterr')).toHaveText('')
+    const token = await page.evaluate(() => localStorage.getItem('world_session'))
+    expect(token).not.toBe('a'.repeat(64))
+    expect(token).toHaveLength(64)
+
+    // And the recovered session is a real one — the attempt grades through to a result.
+    await page.locator('#ask_sv').fill('-420000')
+    await page.locator('#ask_cv').fill('-320000')
+    await page.locator('#ask_spi').fill('0.9')
+    await page.locator('#ask_cpi').fill('0.92')
+    await page.getByRole('radio').nth(1).check()
+    await page.getByRole('button', { name: 'Submit my answers' }).click()
+    await expect(page.locator('#result')).toContainText('Your result')
+  })
+
   test('a participant can report a content issue from the workspace', async ({ page }) => {
     await page.goto('/world/challenge/WC-SCH-002')
     await page.getByText('Report an issue with this challenge').click()

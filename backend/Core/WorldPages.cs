@@ -445,9 +445,28 @@ public static class WorldPages
             'X-World-Session': localStorage.getItem('world_session') || '' },
             body: JSON.stringify(body || {}) }).then(function(r){ return r.json().then(function(j){ if(!r.ok) throw j; return j; }); });
         }
-        function ensureSession(){
-          if (localStorage.getItem('world_session')) return Promise.resolve();
+        function mintSession(){
+          localStorage.removeItem('world_session');
           return api('/api/world/session').then(function(r){ localStorage.setItem('world_session', r.token); });
+        }
+        function ensureSession(){
+          return localStorage.getItem('world_session') ? Promise.resolve() : mintSession();
+        }
+        // A session token in this browser is a CLAIM about a row on the server, not proof of one.
+        // The row can be gone — the participant cleared it, it aged out of the retention sweep, or
+        // the deployment's storage was replaced. Previously the client trusted the key's mere
+        // presence, so a stale token produced "Start a session first." on every attempt for ever,
+        // with no way out but clearing site data: a permanently broken page.
+        //
+        // So every session-scoped call runs through here. On the server's `no_session` answer we
+        // discard the dead token, mint a fresh one and retry EXACTLY once — enough to recover from
+        // a vanished session, never enough to loop if something else is wrong.
+        function lostSession(e){ return !!e && (e.error === 'no_session' || e.error === 'not_found'); }
+        function withSession(call){
+          return ensureSession().then(call).catch(function(e){
+            if (!e || e.error !== 'no_session') throw e;
+            return mintSession().then(call);
+          });
         }
         function renderBrief(){ $('context').textContent = WORLD.view.context || ''; }
         function renderWork(saved){
@@ -535,7 +554,15 @@ public static class WorldPages
           saveTimer = setTimeout(function(){
             api('/api/world/attempts/' + att.attempt_id + '/save', { answers: answers() })
               .then(function(){ $('savestate').textContent = 'Progress saved.'; })
-              .catch(function(){ $('savestate').textContent = 'Could not save — will retry on your next change.'; });
+              .catch(function(e){
+                // An attempt belongs to the session that started it, so a lost session cannot be
+                // repaired by minting a new one — the honest thing is to say so while the answers
+                // are still on screen, rather than to fail silently until submit.
+                $('submiterr').textContent = lostSession(e)
+                  ? 'Your session has ended, so progress is no longer being saved. Copy anything you want to keep, then reload the page to start again.'
+                  : '';
+                $('savestate').textContent = lostSession(e) ? '' : 'Could not save — will retry on your next change.';
+              });
           }, 1200);
         }
         function shareLinks(url){
@@ -609,7 +636,7 @@ public static class WorldPages
         }
         $('start').addEventListener('click', function(){
           $('starterr').textContent = '';
-          ensureSession().then(function(){
+          withSession(function(){
             return api('/api/world/attempts', { code: WORLD.code, invite: WORLD.invite });
           }).then(function(r){
             att = r;
@@ -635,7 +662,9 @@ public static class WorldPages
               btn.disabled = false;
               // A failed submission is an error, not a status: it goes to role="alert", not to the
               // polite autosave region where it was previously easy to miss entirely.
-              $('submiterr').textContent = (e && e.message) || 'Submission failed — your work is saved, try again.';
+              $('submiterr').textContent = lostSession(e)
+                ? 'Your session has ended, so this attempt can no longer be submitted. Reload the page to start the challenge again.'
+                : ((e && e.message) || 'Submission failed — your work is saved, try again.');
             });
         });
         $('rep_go').addEventListener('click', function(){
