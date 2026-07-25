@@ -8,12 +8,12 @@ know exactly where the trust boundary is before you rely on it.
 
 ## 0. What this system is (architecture in one paragraph)
 
-- **Backend** — ASP.NET Core 8 **Minimal API** (not MVC controllers). ~157 HTTP endpoints across
-  `PCI.Backend/Endpoints/*.cs`, backed by **SQLite** (`schema.sql` + idempotent `Data/Migrate.cs`).
-  Validation is inline in each endpoint (~170 guards: RBAC, ownership, timing, type/size, entitlement).
-- **Frontend** — static single-file HTML/CSS/vanilla-JS apps in `PCI.Backend/wwwroot/`
-  (public site, `student.html`, `admin.html`, `exam-ui.html`, `checkout.html`, `enroll.html`).
-  Served by the backend itself (`app.UseStaticFiles()`), so there is no separate web server to run.
+- **Backend** — ASP.NET Core 8 **Minimal API** (not MVC controllers). Endpoints across
+  `Endpoints/*.cs`, dual-provider DB: **SQLite for local/CI smoke**, **MySQL/MariaDB for
+  production** (`schema.sql` / `schema.mysql.sql` + idempotent `Data/Migrate.cs`). See `MYSQL.md`.
+  Validation is inline in each endpoint (RBAC, ownership, timing, type/size, entitlement).
+- **Frontend** — public site HTML under `wwwroot/`, plus React SPAs at `/app` (student) and
+  `/admin` (admin console), served by the backend (`app.UseStaticFiles()`).
 - **Desktop secure exam client** — `PCI.SecureExam/`, a **Windows-only** WPF app (`net8.0-windows`,
   OpenCV + NAudio). `PCI.SecureExam.Core` (pure `net8.0`) holds the shared, testable logic.
 - **Payments** — Stripe (checkout + webhook), keyed off environment variables.
@@ -57,7 +57,8 @@ First-run admin (from `Data/Migrate.cs`): `owner@pci.local` / `changeme-owner` �
 
 | Var | Needed when | Notes |
 |---|---|---|
-| `DATABASE_FILE` | always | use a **persistent** path in prod (not `/tmp`). If a writable disk is mounted at `/data` and this is unset, the app adopts `/data/pci.db` automatically |
+| `DATABASE_FILE` | SQLite local/dev | use a persistent path locally. If `/data` is writable and provider is **not** MySQL, the app may adopt `/data/pci.db`. Production uses MySQL (`DB_PROVIDER=mysql`) — see `MYSQL.md` |
+| `DB_PROVIDER` | production | `mysql` required in Production (`render.yaml`); default `sqlite` for local |
 | `PORT` | optional | default 8080 |
 | `STRIPE_SECRET_KEY` | payments on | without it, payment endpoints return 503 |
 | `STRIPE_WEBHOOK_SECRET` | payments on | **required in prod**; used to verify webhook signatures |

@@ -1,6 +1,7 @@
 -- GENERATED from schema.sql by tools/sqlite_to_mysql.py — DO NOT EDIT BY HAND.
 -- Regenerate after changing schema.sql. Datetimes are VARCHAR strings in the SQLite
 -- format so the app's string-based date handling is identical across providers.
+-- Money columns are DECIMAL(12,2); regenerate — do not hand-tune types.
 
 SET sql_mode='';
 
@@ -59,15 +60,17 @@ CREATE TABLE IF NOT EXISTS discount_codes (
   batch_id TEXT,                             -- set when generated in bulk
   per_user_limit BIGINT,                    -- max redemptions per email (NULL = unlimited)
   notes TEXT,
-  -- founding-stage access: ONE founding route (grants membership + study + exam together)
+  -- founding-stage access (100% fee waiver layered over the paid flow; start/end_date is the window).
+  -- ONE founding route: a valid code grants membership + study + exam together (three-route model);
+  -- legacy founding_member/founding_candidate values are migrated forward to 'founding'.
   founding_route TEXT,                       -- NULL | founding
   grants_membership BIGINT DEFAULT 1,
   grants_exam BIGINT DEFAULT 1,
   grants_study_access BIGINT DEFAULT 1,
-  requires_application BIGINT DEFAULT 0,
+  requires_application BIGINT DEFAULT 0,    -- board-optional gating (application + evidence)
   auto_approve BIGINT DEFAULT 1,
-  membership_months BIGINT DEFAULT 12,
-  criteria_json TEXT
+  membership_months BIGINT DEFAULT 12,      -- term of the granted membership
+  criteria_json TEXT                         -- board-set thresholds, e.g. {"min_experience_years":3,...}
 );
 CREATE TABLE IF NOT EXISTS payments (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -327,47 +330,47 @@ CREATE TABLE IF NOT EXISTS sample_questions (
   answer_index BIGINT, domain TEXT,
   published BIGINT DEFAULT 1, sort_order BIGINT,
   is_practice BIGINT DEFAULT 0,
-  explanation TEXT, difficulty TEXT,          -- Certuvo (Phase 8): teaching explanation + difficulty band
+  explanation TEXT, difficulty TEXT,          -- Certuvo (Phase 8): teaching explanation + difficulty band (practice rows)
   certification_id BIGINT DEFAULT 1
 );
 -- Certuvo practice attempts (Phase 8): formative quiz / mock sittings, separate from exam_attempts.
 CREATE TABLE IF NOT EXISTS practice_attempts (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT NOT NULL,
-  mode TEXT NOT NULL DEFAULT 'quiz',
-  domain TEXT,
-  question_ids TEXT, answers TEXT,
+  mode TEXT NOT NULL DEFAULT 'quiz',          -- quiz | mock
+  domain TEXT,                                -- null = mixed
+  question_ids TEXT, answers TEXT,            -- JSON: served id order, and {qid:index}
   score BIGINT, total BIGINT, domain_breakdown TEXT,
-  status TEXT NOT NULL DEFAULT 'in_progress',
+  status TEXT NOT NULL DEFAULT 'in_progress', -- in_progress | completed
   duration_seconds BIGINT,
   started_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), completed_at TEXT
 );
 CREATE INDEX IF NOT EXISTS ix_practice_user ON practice_attempts(user_id);
--- ERP / integrations foundation (Phase 9) — see schema.sql for the narrative.
+-- ERP / integrations foundation (Phase 9): durable event outbox + connector registry + delivery ledger.
 CREATE TABLE IF NOT EXISTS integrations (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  provider TEXT NOT NULL DEFAULT 'webhook',
+  provider TEXT NOT NULL DEFAULT 'webhook',    -- webhook (generic) | future ERP connectors
   name TEXT, enabled BIGINT DEFAULT 0,
-  endpoint_url TEXT, secret TEXT,
-  event_filter TEXT,
+  endpoint_url TEXT, secret TEXT,              -- secret is write-only via the API (never returned)
+  event_filter TEXT,                           -- JSON array of event types; empty/null = all
   config TEXT, status TEXT DEFAULT 'idle', last_delivery_at TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE TABLE IF NOT EXISTS integration_events (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  event_type TEXT NOT NULL,
+  event_type TEXT NOT NULL,                    -- payment.recorded | membership.activated | member.registered | ping
   entity_type TEXT, entity_id BIGINT,
   payload TEXT, created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
-CREATE INDEX IF NOT EXISTS ix_intevent_created ON integration_events(created_at(20));
+CREATE INDEX IF NOT EXISTS ix_intevent_created ON integration_events(created_at(191));
 CREATE TABLE IF NOT EXISTS integration_deliveries (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   event_id BIGINT NOT NULL, integration_id BIGINT NOT NULL,
-  status TEXT NOT NULL DEFAULT 'pending',
+  status TEXT NOT NULL DEFAULT 'pending',      -- pending | delivered | failed
   attempts BIGINT DEFAULT 0, response_code BIGINT, last_error TEXT, next_attempt_at TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
-CREATE INDEX IF NOT EXISTS ix_intdel_pending ON integration_deliveries(status(16), next_attempt_at(20));
+CREATE INDEX IF NOT EXISTS ix_intdel_pending ON integration_deliveries(status(191), next_attempt_at(191));
 CREATE UNIQUE INDEX IF NOT EXISTS ux_intdel_event_int ON integration_deliveries(event_id, integration_id);
 
 -- ============================================================
@@ -399,16 +402,16 @@ CREATE TABLE IF NOT EXISTS governance_roles (
 );
 CREATE TABLE IF NOT EXISTS resources (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  title VARCHAR(500) NOT NULL, category TEXT, doc_type TEXT DEFAULT 'PDF', url TEXT, description TEXT,
+  title TEXT NOT NULL, category TEXT, doc_type TEXT DEFAULT 'PDF', url TEXT, description TEXT,
   published BIGINT DEFAULT 1, sort_order BIGINT DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS news (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  title VARCHAR(500) NOT NULL, body TEXT, url TEXT, published_date TEXT, published BIGINT DEFAULT 1, sort_order BIGINT DEFAULT 0
+  title TEXT NOT NULL, body TEXT, url TEXT, published_date TEXT, published BIGINT DEFAULT 1, sort_order BIGINT DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS nav_items (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  label TEXT NOT NULL, url VARCHAR(500), nav_group TEXT DEFAULT 'Footer', sort_order BIGINT DEFAULT 0, visible BIGINT DEFAULT 1
+  label TEXT NOT NULL, url TEXT, nav_group TEXT DEFAULT 'Footer', sort_order BIGINT DEFAULT 0, visible BIGINT DEFAULT 1
 );
 CREATE TABLE IF NOT EXISTS newsletter_subscribers (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -940,7 +943,7 @@ CREATE TABLE IF NOT EXISTS work_experiences (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT NOT NULL,
   company TEXT NOT NULL, title TEXT NOT NULL,
-  start_date TEXT, end_date TEXT, is_current INTEGER DEFAULT 0,
+  start_date TEXT, end_date TEXT, is_current BIGINT DEFAULT 0,
   country TEXT, industry TEXT, hours_per_week TEXT, summary TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
@@ -963,10 +966,12 @@ CREATE TABLE IF NOT EXISTS held_certifications (
 CREATE INDEX IF NOT EXISTS ix_heldcert_user ON held_certifications(user_id);
 
 -- ===== identity documents: a government-issued photo ID is required before booking an exam =====
+-- The file itself lives in Storage (local/S3); the row holds metadata + the provider reference.
+-- status: submitted (satisfies the booking gate) | verified | rejected (re-blocks until re-upload)
 CREATE TABLE IF NOT EXISTS identity_documents (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT NOT NULL,
-  doc_kind TEXT DEFAULT 'passport',
+  doc_kind TEXT DEFAULT 'passport',            -- passport | national_id | driving_licence | other
   filename TEXT, mime TEXT, size_bytes BIGINT, storage_ref TEXT, sha256 TEXT,
   status TEXT NOT NULL DEFAULT 'submitted',
   review_note TEXT, reviewed_by BIGINT, reviewed_at TEXT,
@@ -980,116 +985,125 @@ CREATE TABLE IF NOT EXISTS founding_applications (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT NOT NULL,
   code_id BIGINT NOT NULL,
-  route TEXT,
+  route TEXT,                                -- founding (legacy tier values migrated forward)
   declared_experience_years BIGINT,
   declared_role TEXT,
   declared_qualification TEXT,
-  evidence_ref TEXT,
+  evidence_ref TEXT,                         -- Storage reference (local:/s3:), required
   evidence_name TEXT, evidence_mime TEXT, evidence_size BIGINT,
-  status TEXT NOT NULL DEFAULT 'pending_review',
+  status TEXT NOT NULL DEFAULT 'pending_review', -- auto_approved | pending_review | approved | rejected | revoked
   decided_by BIGINT, decided_at TEXT, admin_note TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_founding_app_user ON founding_applications(user_id);
 CREATE INDEX IF NOT EXISTS ix_founding_app_code ON founding_applications(code_id);
 
--- ===== honorary awards: board-conferred recognition, separate from exam credentials =====
+-- ===== honorary awards: board-conferred recognition, deliberately SEPARATE from exam credentials =====
+-- "Honorary Fellow (PCI)" is NOT the PCL-AI credential: no exam, no entitlement, no issued_credentials
+-- row. The PCI-HON award number prefix guarantees it can never be confused with a PCP-AI id.
 CREATE TABLE IF NOT EXISTS honorary_awards (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  award_no VARCHAR(191) UNIQUE NOT NULL,
+  award_no VARCHAR(500) UNIQUE NOT NULL,             -- PCI-HON-YYYY-NNNN
   recipient_name TEXT NOT NULL,
-  user_id BIGINT,
-  citation TEXT,
+  user_id BIGINT,                           -- optional link when the recipient has an account
+  citation TEXT,                             -- the board's reason (shown on certificate/verify)
   designation TEXT DEFAULT 'Honorary Fellow (PCI)',
-  status TEXT DEFAULT 'active',
-  conferred_by BIGINT NOT NULL,
+  status TEXT DEFAULT 'active',              -- active | revoked
+  conferred_by BIGINT NOT NULL,             -- admin id (board/owner)
   conferred_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
   revoked_by BIGINT, revoked_at TEXT, revoke_reason TEXT
 );
 CREATE INDEX IF NOT EXISTS ix_honorary_user ON honorary_awards(user_id);
 
--- honorary-route APPLICATIONS (public apply → board review → conferral)
+-- ===== honorary-route APPLICATIONS (public apply → board review → conferral). Distinct from the
+-- board-only manual conferral above: anyone may apply, the board reviews, and approval confers a
+-- normal honorary_awards row. Never touches exam/entitlement/credential data. =====
 CREATE TABLE IF NOT EXISTS honorary_applications (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  reference VARCHAR(191) UNIQUE NOT NULL,
+  reference VARCHAR(500) UNIQUE NOT NULL,             -- PCI-HONAPP-YYYY-NNNN
   first_name TEXT, last_name TEXT, email TEXT, mobile TEXT,
   country TEXT, city TEXT, nationality TEXT,
   job_title TEXT, employer TEXT, years_experience BIGINT, industry TEXT,
   highest_qualification TEXT, professional_certifications TEXT,
   relevant_experience TEXT, professional_summary TEXT,
   declaration BIGINT DEFAULT 0,
-  status TEXT NOT NULL DEFAULT 'pending_review',
-  award_no VARCHAR(191),
+  status TEXT NOT NULL DEFAULT 'pending_review', -- pending_review | under_review | approved | rejected
+  award_no TEXT,                             -- set on approval (links to honorary_awards.award_no)
   decided_by BIGINT, decided_at TEXT, admin_note TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
   updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
-CREATE INDEX IF NOT EXISTS ix_honapp_status ON honorary_applications(status);
+CREATE INDEX IF NOT EXISTS ix_honapp_status ON honorary_applications(status(191));
 CREATE TABLE IF NOT EXISTS honorary_application_documents (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   application_id BIGINT NOT NULL,
-  doc_kind TEXT DEFAULT 'supporting',
+  doc_kind TEXT DEFAULT 'supporting',        -- resume | academic | certifications | supporting
   filename TEXT, mime TEXT, size_bytes BIGINT, storage_ref TEXT, sha256 TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_honappdoc_app ON honorary_application_documents(application_id);
--- ===== Training Partner framework (Phase 7) — see schema.sql for the narrative. =====
+
+-- ===== Training Partner framework (Phase 7): third-party training providers apply to be recognised
+-- as PCI Training Partners. Applications are reviewed in the admin console; on approval a directory
+-- entry (training_partners) is created and, once published (listed=1), rendered on the public site.
+-- Certification stays independent of training — a partner delivers exam-prep, never the exam itself. =====
 CREATE TABLE IF NOT EXISTS training_partners (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name TEXT NOT NULL,
-  slug VARCHAR(191) UNIQUE,
-  tier TEXT NOT NULL DEFAULT 'registered',
+  slug VARCHAR(500) UNIQUE,
+  tier TEXT NOT NULL DEFAULT 'registered',   -- registered | authorized | premier
   country TEXT, region TEXT, city TEXT,
   website TEXT, logo_url TEXT,
   summary TEXT, description TEXT, specialties TEXT,
   contact_email TEXT,
-  listed BIGINT DEFAULT 0,
+  listed BIGINT DEFAULT 0,                   -- 1 = published to the public directory
   sort_order BIGINT DEFAULT 0,
-  source_application_id BIGINT,
+  source_application_id BIGINT,             -- set when created from an approved application
   approved_at TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
   updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_partners_listed ON training_partners(listed);
-CREATE INDEX IF NOT EXISTS ix_partners_tier ON training_partners(tier(24));
+CREATE INDEX IF NOT EXISTS ix_partners_tier ON training_partners(tier(191));
 CREATE TABLE IF NOT EXISTS training_partner_applications (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  reference VARCHAR(191) UNIQUE NOT NULL,
+  reference VARCHAR(500) UNIQUE NOT NULL,            -- PCI-TPA-YYYY-NNNN
   org_name TEXT, website TEXT,
   contact_name TEXT, contact_email TEXT, contact_phone TEXT,
   country TEXT, city TEXT, region TEXT,
   delivery_modes TEXT, specialties TEXT, learners_per_year BIGINT,
   description TEXT,
   declaration BIGINT DEFAULT 0,
-  status TEXT NOT NULL DEFAULT 'pending_review',
-  proposed_tier TEXT,
-  partner_id BIGINT,
+  status TEXT NOT NULL DEFAULT 'pending_review', -- pending_review | under_review | approved | rejected
+  proposed_tier TEXT,                        -- tier granted on approval
+  partner_id BIGINT,                        -- set on approval (links to training_partners.id)
   decided_by BIGINT, decided_at TEXT, admin_note TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
   updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
-CREATE INDEX IF NOT EXISTS ix_tpapp_status ON training_partner_applications(status(24));
+CREATE INDEX IF NOT EXISTS ix_tpapp_status ON training_partner_applications(status(191));
 CREATE TABLE IF NOT EXISTS training_partner_application_documents (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   application_id BIGINT NOT NULL,
-  doc_kind TEXT DEFAULT 'supporting',
+  doc_kind TEXT DEFAULT 'supporting',        -- accreditation | company_profile | curriculum | supporting
   filename TEXT, mime TEXT, size_bytes BIGINT, storage_ref TEXT, sha256 TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_tpappdoc_app ON training_partner_application_documents(application_id);
+
+-- ===== reusable notification ledger: one row per notification attempt on any channel (email now;
+-- sms / in_app are seams for later). Recipients/sender/enable live in site_settings, never hardcoded. =====
 CREATE TABLE IF NOT EXISTS notification_history (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  channel TEXT NOT NULL DEFAULT 'email',
-  recipient TEXT, subject TEXT, status TEXT,
-  related_type TEXT, related_id BIGINT,
+  channel TEXT NOT NULL DEFAULT 'email',     -- email | sms | in_app
+  recipient TEXT, subject TEXT,
+  status TEXT,                               -- sent | console | failed | skipped | disabled
+  related_type TEXT, related_id BIGINT,     -- e.g. honorary_application / 42
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
-INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1');
-INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','');
-INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_ack_subject','');
-INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_admin_subject','');
-
--- SEO: managed path redirects (mirrors schema.sql; TEXT key needs a prefix length in MySQL).
+-- ===== SEO: managed path redirects (Admin → SEO → Redirects). from_path is an absolute site path
+-- ('/old-page.html'); to_url is a path or absolute URL. Applied server-side before page serving;
+-- chains are rejected at write time so every redirect is a single hop. =====
 CREATE TABLE IF NOT EXISTS seo_redirects (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   from_path TEXT NOT NULL,
@@ -1101,7 +1115,9 @@ CREATE TABLE IF NOT EXISTS seo_redirects (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ux_seo_redirect_from ON seo_redirects(from_path(191));
 
--- First-party analytics (mirrors schema.sql).
+-- ===== First-party analytics (Admin -> Analytics): one row per page view / business event.
+-- Cookieless + privacy-first: 'visitor' is a non-reversible daily-rotating hash (never a raw IP);
+-- country only from a trusted CDN geo header; attribution copied from the pci_attr cookie. =====
 CREATE TABLE IF NOT EXISTS analytics_events (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   event TEXT NOT NULL,
@@ -1111,29 +1127,37 @@ CREATE TABLE IF NOT EXISTS analytics_events (
   value DECIMAL(12,2), currency TEXT, detail TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
-CREATE INDEX IF NOT EXISTS ix_analytics_event_time ON analytics_events(event(24), created_at(20));
-CREATE INDEX IF NOT EXISTS ix_analytics_time ON analytics_events(created_at(20));
+CREATE INDEX IF NOT EXISTS ix_analytics_event_time ON analytics_events(event(191), created_at(191));
+CREATE INDEX IF NOT EXISTS ix_analytics_time ON analytics_events(created_at(191));
 
--- SEO: search-engine submission ledger (mirrors schema.sql).
+-- ===== SEO: search-engine submission ledger (IndexNow now; others later). One row per attempt. =====
 CREATE TABLE IF NOT EXISTS seo_submissions (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  engine TEXT NOT NULL,
+  engine TEXT NOT NULL,                      -- indexnow | google | bing
   url_count BIGINT DEFAULT 0,
-  status TEXT,
+  status TEXT,                               -- submitted | failed
   detail TEXT,
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 
--- Public-website internationalisation (Phase 3 multilingual): one translation per captured region
--- per language (mirrors schema.sql; TEXT keys need prefix lengths in the MySQL unique index).
+-- ===== Public-website internationalisation: one human-authored translation per captured text
+-- region, per language. scope: 'p' page block (slug + block_key) | 'g' shared/global element (gkey)
+-- | 'nav' navigation label (keyed by its English text) | 'meta' page title/description. English is
+-- the source and default; with lang=en nothing is injected and pages are served byte-identical. =====
 CREATE TABLE IF NOT EXISTS content_i18n (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  lang TEXT NOT NULL,
-  scope TEXT NOT NULL,
-  slug TEXT NOT NULL,
-  ckey TEXT NOT NULL,
+  lang TEXT NOT NULL,                         -- ko | ar | es | fr | zh | ru
+  scope TEXT NOT NULL,                        -- p | g | nav | meta
+  slug TEXT NOT NULL DEFAULT '',              -- page slug for p/meta; '' for g/nav
+  ckey TEXT NOT NULL,                         -- block_key (t:…) | gkey (g:…) | English nav label | title|meta
   cvalue TEXT,
   updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
-CREATE UNIQUE INDEX IF NOT EXISTS ux_content_i18n ON content_i18n(lang(8), scope(8), slug(160), ckey(160));
-CREATE INDEX IF NOT EXISTS ix_content_i18n_lang ON content_i18n(lang(8));
+CREATE UNIQUE INDEX IF NOT EXISTS ux_content_i18n ON content_i18n(lang(191), scope(191), slug(191), ckey(191));
+CREATE INDEX IF NOT EXISTS ix_content_i18n_lang ON content_i18n(lang(191));
+
+-- Configurable notification settings (owner-editable in Admin → Settings; never hardcoded).
+INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1');
+INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','');
+INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_ack_subject','');
+INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_admin_subject','');

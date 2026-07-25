@@ -114,7 +114,7 @@ public static class MarketingSchema
         db.Exec(@"CREATE TABLE IF NOT EXISTS mkt_promotions(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL, code VARCHAR(60), promo_type VARCHAR(40), certification_id INTEGER, route_key TEXT,
-            fee_type VARCHAR(40), original_amount REAL, discount_amount REAL, discount_percent REAL, net_amount REAL,
+            fee_type VARCHAR(40), original_amount DECIMAL(12,2), discount_amount DECIMAL(12,2), discount_percent REAL, net_amount DECIMAL(12,2),
             currency VARCHAR(8) DEFAULT 'USD', start_date TEXT, end_date TEXT,
             countries TEXT, languages TEXT, usage_limit INTEGER, per_user_limit INTEGER,
             landing_page_id INTEGER, status VARCHAR(24) DEFAULT 'draft', approval_status VARCHAR(30) DEFAULT 'draft',
@@ -186,11 +186,11 @@ public static class MarketingSchema
         db.Exec(@"CREATE TABLE IF NOT EXISTS mkt_conversions(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL, platform_code VARCHAR(40), provider_conversion_id TEXT,
-            business_event VARCHAR(60), value REAL, currency VARCHAR(8) DEFAULT 'USD',
+            business_event VARCHAR(60), value DECIMAL(12,2), currency VARCHAR(8) DEFAULT 'USD',
             enabled INTEGER DEFAULT 1, created_by INTEGER, created_at TEXT DEFAULT (datetime('now')))");
         db.Exec(@"CREATE TABLE IF NOT EXISTS mkt_conversion_events(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            conversion_id INTEGER, campaign_id INTEGER, user_ref TEXT, value REAL, currency VARCHAR(8),
+            conversion_id INTEGER, campaign_id INTEGER, user_ref TEXT, value DECIMAL(12,2), currency VARCHAR(8),
             utm_json TEXT, event_at TEXT, upload_status VARCHAR(24) DEFAULT 'pending', provider_response TEXT,
             dedup_key VARCHAR(160), created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_mkt_conv_evt_dedup ON mkt_conversion_events(dedup_key)");
@@ -224,7 +224,7 @@ public static class MarketingSchema
         // ── Budget approvals ──
         db.Exec(@"CREATE TABLE IF NOT EXISTS mkt_budget_approvals(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            campaign_id INTEGER, requested_amount REAL, currency VARCHAR(8), reason TEXT,
+            campaign_id INTEGER, requested_amount DECIMAL(12,2), currency VARCHAR(8), reason TEXT,
             tier VARCHAR(30),  -- marketing|finance|senior|two_person
             requested_by INTEGER, status VARCHAR(20) DEFAULT 'pending', decided_by INTEGER, decided_at TEXT, note TEXT,
             created_at TEXT DEFAULT (datetime('now')))");

@@ -146,7 +146,7 @@ Full per-route matrix continues in `docs/testing/REQUIREMENT_TRACEABILITY_MATRIX
 | Phase | Focus | Gate |
 |-------|-------|------|
 | **0** | Inventory + P0 fail-open / auth-bypass | this PR |
-| **1** | MySQL-default tests; retire silent SQLite defaults in staging docs; money DECIMAL parity | no P0 open |
+| **1** | MySQL-default tests; retire silent SQLite defaults in staging docs; money DECIMAL parity | **done** — see `PHASE_1_MYSQL_MONEY_PARITY_2026-07-25.md` |
 | **2** | Public + student critical journeys re-verified on MySQL E2E | |
 | **3** | Exam/credential isolation for PCL/PFL/PML | |
 | **4** | Admin + partner React migration / finance maker-checker E2E | |

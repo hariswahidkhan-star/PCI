@@ -247,7 +247,7 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS partner_payouts(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             partner_id INTEGER NOT NULL,
-            amount REAL NOT NULL,
+            amount DECIMAL(12,2) NOT NULL,
             currency TEXT DEFAULT 'USD',
             note TEXT,
             paid_by INTEGER,
@@ -311,12 +311,13 @@ public static class Migrate
         AddCol("payments", "receipt_no", "receipt_no TEXT");
         AddCol("payments", "note", "note TEXT");
         AddCol("payments", "recorded_by", "recorded_by INTEGER");          // admin_users.id for manual entries
-        AddCol("payments", "waived_amount", "waived_amount REAL");
+        AddCol("payments", "waived_amount", "waived_amount DECIMAL(12,2)");
         AddCol("payments", "reversed_at", "reversed_at TEXT");
         AddCol("payments", "reversed_by", "reversed_by INTEGER");
         AddCol("payments", "reversal_reason", "reversal_reason TEXT");
         // Waiver ledger: every full/partial waiver as a first-class record (who, what, why, how much).
-        db.Exec(@"CREATE TABLE IF NOT EXISTS fee_waivers(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,product_type VARCHAR(24),certification_id INTEGER,kind VARCHAR(16) DEFAULT 'full',original_amount REAL,waived_amount REAL,final_amount REAL,currency VARCHAR(8) DEFAULT 'USD',reason TEXT,note TEXT,approved_by INTEGER,code_id INTEGER,payment_id INTEGER,expires_at TEXT,status VARCHAR(16) DEFAULT 'granted',created_at TEXT DEFAULT (datetime('now')))");
+        // Money columns use DECIMAL(12,2) so MySQL stores exact cents (SQLite treats DECIMAL as NUMERIC affinity).
+        db.Exec(@"CREATE TABLE IF NOT EXISTS fee_waivers(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL,product_type VARCHAR(24),certification_id INTEGER,kind VARCHAR(16) DEFAULT 'full',original_amount DECIMAL(12,2),waived_amount DECIMAL(12,2),final_amount DECIMAL(12,2),currency VARCHAR(8) DEFAULT 'USD',reason TEXT,note TEXT,approved_by INTEGER,code_id INTEGER,payment_id INTEGER,expires_at TEXT,status VARCHAR(16) DEFAULT 'granted',created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_fee_waivers_user ON fee_waivers(user_id)");
 
         // ── Exam Exceptions & Authorizations ──────────────────────────────────────────────────────────
@@ -377,7 +378,7 @@ public static class Migrate
         AddCol("fee_waivers", "incident_id", "incident_id INTEGER");
         AddCol("fee_waivers", "appeal_id", "appeal_id INTEGER");
         AddCol("fee_waivers", "evidence_ref", "evidence_ref TEXT");
-        AddCol("fee_waivers", "payable_amount", "payable_amount REAL");
+        AddCol("fee_waivers", "payable_amount", "payable_amount DECIMAL(12,2)");
 
         // Authorization links so history + policy join cleanly.
         AddCol("exam_bookings", "authorization_id", "authorization_id INTEGER");
@@ -448,7 +449,7 @@ public static class Migrate
         AddCol("discount_codes", "approved_at", "approved_at TEXT");
         AddCol("discount_codes", "rejection_reason", "rejection_reason TEXT");
         AddCol("discount_codes", "campaign_name", "campaign_name TEXT");
-        AddCol("discount_codes", "min_payable", "min_payable REAL");
+        AddCol("discount_codes", "min_payable", "min_payable DECIMAL(12,2)");
         AddCol("discount_codes", "eligible_countries", "eligible_countries TEXT");       // CSV of ISO/plain names; NULL = all
         // Fraud/abuse review queue — nothing is auto-blocked without a human path.
         db.Exec(@"CREATE TABLE IF NOT EXISTS fraud_flags(id INTEGER PRIMARY KEY AUTOINCREMENT,kind VARCHAR(40) NOT NULL,code_id INTEGER,user_id INTEGER,email TEXT,detail TEXT,status VARCHAR(16) DEFAULT 'open',actioned_by INTEGER,actioned_at TEXT,created_at TEXT DEFAULT (datetime('now')))");
@@ -807,7 +808,7 @@ public static class Migrate
             ("acronym","acronym TEXT"), ("short_name","short_name TEXT"), ("public_title","public_title TEXT"),
             ("tagline","tagline TEXT"), ("short_description","short_description TEXT"), ("category","category TEXT"),
             ("level","level TEXT"), ("status","status TEXT"), ("slug","slug TEXT"), ("audience","audience TEXT"),
-            ("overview","overview TEXT"), ("application_fee","application_fee REAL"),
+            ("overview","overview TEXT"), ("application_fee","application_fee DECIMAL(12,2)"),
             ("membership_required","membership_required INTEGER DEFAULT 0"), ("next_exam_note","next_exam_note TEXT"),
             ("meta_title","meta_title TEXT"), ("meta_description","meta_description TEXT"), ("keywords","keywords TEXT"),
             ("og_title","og_title TEXT"), ("og_description","og_description TEXT"), ("social_image","social_image TEXT"),
@@ -1075,8 +1076,8 @@ public static class Migrate
         // certification_id NULL = valid for every certification; route_key NULL = every route.
         AddCol("discount_codes", "certification_id", "certification_id INTEGER");
         AddCol("discount_codes", "route_key", "route_key TEXT");
-        AddCol("discount_codes", "min_transaction", "min_transaction REAL");
-        AddCol("discount_codes", "max_discount", "max_discount REAL");
+        AddCol("discount_codes", "min_transaction", "min_transaction DECIMAL(12,2)");
+        AddCol("discount_codes", "max_discount", "max_discount DECIMAL(12,2)");
 
         // Granular per-certification admin permissions: JSON array of certification ids an admin is
         // restricted to (NULL/empty = all certifications — the default, and forced for owners).
@@ -1445,8 +1446,13 @@ public static class Migrate
         AddCol("exam_bookings", "delivery_status", "delivery_status VARCHAR(32)");
 
         // EXT-P0-02 — partial refunds update financial state without revoking access.
-        AddCol("payments", "amount_refunded", "amount_refunded REAL DEFAULT 0");
+        AddCol("payments", "amount_refunded", "amount_refunded DECIMAL(12,2) DEFAULT 0");
         AddCol("payments", "refunded_at", "refunded_at TEXT");
+
+        // Phase 1 audit — MySQL money columns must be DECIMAL(12,2), not DOUBLE/FLOAT.
+        // CREATE TABLE IF NOT EXISTS / ADD COLUMN cannot change an existing inexact type; upgrade in place.
+        if (db.Provider == Db.Kind.MySql)
+            EnsureMoneyDecimals(db);
 
         // Backfill Exam Authorizations for any pre-existing settled exam seat (idempotent; best-effort).
         PCI.Backend.Core.ExamAuthorization.BackfillAll(db);
@@ -1476,5 +1482,79 @@ public static class Migrate
             }
         }
         catch { /* users may not exist on a very first pass; ignored */ }
+    }
+
+    /// <summary>
+    /// Idempotent MySQL-only upgrade: known currency columns that landed as DOUBLE/FLOAT/REAL
+    /// (via older schema.mysql.sql regenerations or Migrate DDL written with REAL) become
+    /// DECIMAL(12,2). Never drops tables or deletes rows; skips columns already exact.
+    /// </summary>
+    static void EnsureMoneyDecimals(Db db)
+    {
+        // Keep in sync with tools/sqlite_to_mysql.py MONEY_COLUMNS + runtime Migrate money cols.
+        var targets = new (string Table, string Column)[]
+        {
+            ("pricing_rules", "standard_price"),
+            ("discount_codes", "discount_value"),
+            ("discount_codes", "min_payable"),
+            ("discount_codes", "min_transaction"),
+            ("discount_codes", "max_discount"),
+            ("payments", "standard_amount"),
+            ("payments", "default_discount_amount"),
+            ("payments", "discount_code_amount"),
+            ("payments", "final_amount"),
+            ("payments", "waived_amount"),
+            ("payments", "amount_refunded"),
+            ("memberships", "renewal_fee"),
+            ("memberships", "amount_paid"),
+            ("certifications", "exam_price"),
+            ("certifications", "application_fee"),
+            ("code_redemptions", "amount_before"),
+            ("code_redemptions", "discount_amount"),
+            ("partner_payouts", "amount"),
+            ("fee_waivers", "original_amount"),
+            ("fee_waivers", "waived_amount"),
+            ("fee_waivers", "final_amount"),
+            ("fee_waivers", "payable_amount"),
+            ("analytics_events", "value"),
+            ("certification_routes", "fee_amount"),
+            ("mkt_promotions", "original_amount"),
+            ("mkt_promotions", "discount_amount"),
+            ("mkt_promotions", "net_amount"),
+            ("mkt_conversions", "value"),
+            ("mkt_conversion_events", "value"),
+            ("mkt_budget_approvals", "requested_amount"),
+        };
+
+        foreach (var (table, column) in targets)
+        {
+            try
+            {
+                var row = db.QueryOne(
+                    "SELECT DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT FROM information_schema.COLUMNS "
+                    + "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?",
+                    table, column);
+                if (row is null) continue;
+                var dataType = Convert.ToString(row["DATA_TYPE"])?.ToLowerInvariant();
+                if (dataType is not ("double" or "float" or "real")) continue;
+
+                var nullable = string.Equals(Convert.ToString(row["IS_NULLABLE"]), "YES", StringComparison.OrdinalIgnoreCase);
+                var nullSql = nullable ? "NULL" : "NOT NULL";
+                var defSql = "";
+                var def = row["COLUMN_DEFAULT"];
+                if (def is not null and not DBNull)
+                {
+                    var defText = Convert.ToString(def)?.Trim();
+                    if (!string.IsNullOrEmpty(defText) && !defText.Equals("NULL", StringComparison.OrdinalIgnoreCase))
+                        defSql = " DEFAULT " + defText;
+                }
+
+                db.Exec($"ALTER TABLE `{table}` MODIFY COLUMN `{column}` DECIMAL(12,2) {nullSql}{defSql}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[migrate] money DECIMAL upgrade skipped for {table}.{column}: {ex.Message}");
+            }
+        }
     }
 }

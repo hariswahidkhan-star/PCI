@@ -525,7 +525,7 @@ public static class MultiCert
             exam_required INTEGER DEFAULT 1,
             requires_approval INTEGER DEFAULT 1,
             fee_mode TEXT DEFAULT 'standard',
-            fee_amount REAL,
+            fee_amount DECIMAL(12,2),
             discount_pct REAL,
             opens_at TEXT, closes_at TEXT,
             max_applications INTEGER, max_approvals INTEGER,

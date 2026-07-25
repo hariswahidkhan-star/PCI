@@ -120,7 +120,8 @@ jobs:
           if [ "$code" = "401" ] || [ "$code" = "200" ]; then echo "system-check gated OK ($code)"; else echo "::error::system-check returned $code"; exit 1; fi
 
   backend-mysql:
-    # Proves the dual-provider backend runs identically on MySQL: same adversarial suite, MySQL-backed.
+    # Production-parity gate: same adversarial suite + migration integrity on MariaDB/MySQL.
+    # SQLite `backend` is the fast smoke; this job is the database that holds production money.
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: backend } }
     services:
@@ -301,7 +302,7 @@ jobs:
     # webServer boots the built backend DLL and waits for /api/health, then runs the specs headless.
     # GATING since it accumulated a long unbroken green history across the coverage-programme heads —
     # a red browser run now blocks the pipeline like any other job.
-    # Default provider is still SQLite for speed; `e2e-mysql` below proves the same suite on MySQL.
+    # SQLite smoke for speed; `e2e-mysql` below is the production-parity UI→API→DB gate.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

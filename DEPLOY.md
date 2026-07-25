@@ -18,13 +18,16 @@ website; everything students do appears in the dashboard. There is nothing separ
 1. **Merge PR #1** so `main` has the deployable code (or deploy from the branch).
 2. Create an account at https://render.com and connect your GitHub.
 3. Dashboard → **New → Blueprint** → pick the `PCI` repository. Render reads `render.yaml`
-   and pre-configures the service, the health check, and a **5 GB persistent disk at `/data`**
-   (the SQLite database + uploaded files live there and survive deploys).
+   and pre-configures the service, the health check, **managed MySQL** (`DB_PROVIDER=mysql`), and a
+   **persistent disk at `/data`** for uploaded files (not the primary database).
+   - Production **requires MySQL** — the app refuses to boot on SQLite in Production (see
+     `backend/MYSQL.md` and `docs/MYSQL_MIGRATION.md`). SQLite is local/dev and CI smoke only.
    - Choose the **Starter** plan or above. **Not the free tier** — free instances have no disk,
-     so the database would be wiped on every restart.
+     so uploads on `/data` would be wiped on every restart.
 4. Fill in the environment variables it asks for:
    - `APP_BASE_URL` and `ALLOWED_ORIGIN`: your public URL, e.g. `https://pci-platform.onrender.com`
      (update both later if you attach a custom domain — no trailing slash).
+   - `MYSQL_*` / `DB_PROVIDER=mysql` (from the blueprint) — required for Production.
    - `ADMIN_OWNER_EMAIL` / `ADMIN_OWNER_PASSWORD`: your real admin login for first boot.
    - Leave the Stripe/SMTP ones empty for now if you just want to see the site (payments answer
      503 and emails print to the logs until configured).
@@ -41,10 +44,11 @@ environment variables needed:
 1. Service → **Settings → Instance Type** → choose **Starter** (disks need a paid instance).
 2. Service → **Disks → Add Disk** → name it anything, **Mount Path `/data`**, size 5 GB → Save.
 
-The service restarts and the app **detects the disk automatically**, storing the database at
-`/data/pci.db` and uploads under `/data/storage` from then on (the boot log prints
-`persistent disk detected at /data`). Data created before the disk existed was on the ephemeral
-filesystem and cannot be recovered — do this before inviting real users.
+The service restarts and the app **detects the disk automatically** for uploads under
+`/data/storage` (the boot log prints `persistent disk detected at /data`). With
+`DB_PROVIDER=mysql`, the app does **not** invent a SQLite file on `/data`. Data created before
+the disk existed was on the ephemeral filesystem and cannot be recovered — do this before
+inviting real users.
 
 ### Enabling email (two options)
 - **Easiest — Resend:** create a free account at https://resend.com, add an API key, and set one
