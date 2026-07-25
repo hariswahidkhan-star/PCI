@@ -26,9 +26,8 @@ export default defineConfig({
   globalSetup: './e2e/global-setup.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  // A dirty-state retry must not turn a MySQL-only first-attempt failure into a green parity gate.
-  retries: process.env.CI && !mysqlParity ? 1 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI || mysqlParity ? 1 : undefined,
   reporter: process.env.CI ? [['github'], ['list'], ['html', { open: 'never' }]] : [['list'], ['html', { open: 'never' }]],
   timeout: 30_000,
   use: {

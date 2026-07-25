@@ -20,7 +20,7 @@ Set these environment variables (on Render: the service's Environment settings):
 | `MYSQL_DATABASE` | `pci` | must exist; the app creates all tables on first boot |
 | `MYSQL_USER` | `pci` | needs full rights on the database |
 | `MYSQL_PASSWORD` | `••••••` | |
-| `MYSQL_SSL` | `false` | omit (or leave unset) to require TLS; set `false` only for local dev |
+| `MYSQL_SSL` | `required` | set `required`/`true` for managed production; unset is connector `Preferred`, `false` only for local dev |
 
 Or set a single `MYSQL_CONNECTION_STRING` (a MySqlConnector connection string) to override all of the above.
 

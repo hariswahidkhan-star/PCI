@@ -1,5 +1,9 @@
 # PCI Complete Platform Audit — Phase 0 Inventory & Architecture Verification
 
+> Phase 1's deep re-run supersedes the PCI World zero-config and production-environment conclusions
+> below. The dedicated World image now requires MySQL, and framework-default Production,
+> `DOTNET_ENVIRONMENT=Production`, and Staging fail closed before DB open.
+
 **Date:** 2026-07-25 · **Branch:** `cursor/platform-audit-phase0-d975` · **Method:** concurrent code inspection of the live repository (not documentation claims). Status vocabulary: **verified**, **partially verified**, **failed**, **blocked**, **not implemented**.
 
 ---

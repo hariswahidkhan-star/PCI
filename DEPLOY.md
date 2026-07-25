@@ -18,9 +18,9 @@ website; everything students do appears in the dashboard. There is nothing separ
 1. **Merge PR #1** so `main` has the deployable code (or deploy from the branch).
 2. Create an account at https://render.com and connect your GitHub.
 3. Dashboard → **New → Blueprint** → pick the `PCI` repository. Render reads `render.yaml`
-   and pre-configures the service, the health check, **managed MySQL** (`DB_PROVIDER=mysql`), and a
+   and pre-configures the service, the health check, **external managed MySQL settings** (`DB_PROVIDER=mysql`), and a
    **persistent disk at `/data`** for uploaded files (not the primary database).
-   - Production **requires MySQL** — the app refuses to boot on SQLite in Production (see
+   - Provision MySQL separately; `render.yaml` does not create the database. Production **requires MySQL** — the app refuses to boot on SQLite in Production (see
      `backend/MYSQL.md` and `docs/MYSQL_MIGRATION.md`). SQLite is local/dev and CI smoke only.
    - Choose the **Starter** plan or above. **Not the free tier** — free instances have no disk,
      so uploads on `/data` would be wiped on every restart.
@@ -82,16 +82,22 @@ docker run -d --name pci --restart unless-stopped \
   -p 8080:8080 \
   -v /srv/pci-data:/data \
   -e ASPNETCORE_ENVIRONMENT=Production \
+  -e DB_PROVIDER=mysql \
+  -e MYSQL_HOST=db.internal -e MYSQL_DATABASE=pci \
+  -e MYSQL_USER=pci -e MYSQL_PASSWORD='a-strong-db-password' \
+  -e MYSQL_SSL=required \
   -e APP_BASE_URL=https://www.yourdomain.org \
   -e ALLOWED_ORIGIN=https://www.yourdomain.org \
+  -e CREDENTIAL_ENCRYPTION_KEY='a-separate-32-byte-or-longer-secret' \
   -e ADMIN_OWNER_EMAIL=you@yourdomain.org \
   -e ADMIN_OWNER_PASSWORD='a-strong-password' \
   pci-platform
 ```
 
 Put a TLS-terminating reverse proxy (Caddy/nginx/Traefik) in front, forwarding to `:8080` with
-`X-Forwarded-Proto` set — see `backend/RUN.md` §8 for the nginx/HSTS notes. Back up `/srv/pci-data`
-(it contains the SQLite DB and all uploaded evidence/attachments).
+`X-Forwarded-Proto` set — see `backend/RUN.md` §8. Back up MySQL with
+`backend/tools/mysql_backup.sh` and back up `/srv/pci-data` (uploaded evidence/attachments) in the
+same restore set.
 
 **Quick local look without any production config:**
 ```bash

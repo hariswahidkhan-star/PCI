@@ -22,7 +22,7 @@ which is the standard way to make such cases fast and deterministic.
 
 Exit code 0 iff every assertion passes.  Run from backend/:  python3 tests/integration_test.py
 """
-import base64, hashlib, hmac, http.server, json, os, re, socket, sqlite3, subprocess, sys, threading, time, urllib.error, urllib.request
+import base64, hashlib, hmac, http.server, json, os, re, shutil, socket, sqlite3, subprocess, sys, threading, time, urllib.error, urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BACKEND = os.path.dirname(HERE)
@@ -31,6 +31,7 @@ DB = os.path.join(HERE, "_integration.db")
 STORAGE = os.path.join(HERE, "_integration_storage")
 WEBHOOK_SECRET = "whsec_integration_test_secret"
 STRIPE_KEY = "sk_test_integration"
+ENCRYPTION_KEY = "integration-test-encryption-key-32-bytes"
 
 passed = failed = 0
 def chk(name, cond, extra=""):
@@ -166,6 +167,9 @@ def _reset_mysql():
 
 # ---- server lifecycle ----
 def boot():
+    # Content-addressed encrypted files cannot be reused across test databases with different
+    # derived keys. Each run owns a clean storage root and an explicit stable test key.
+    shutil.rmtree(STORAGE, ignore_errors=True)
     if PROVIDER == "mysql":
         _reset_mysql()
         env = dict(os.environ, DB_PROVIDER="mysql", PORT=str(PORT), STORAGE_ROOT=STORAGE,
@@ -175,6 +179,7 @@ def boot():
                    INTEGRATIONS_ALLOW_PRIVATE_EGRESS="true",
                    # Meta Lead Ads fail closed without META_APP_SECRET (EXT-P1-02); tests sign with this key.
                    META_APP_SECRET="meta-test-secret-56",
+                   CREDENTIAL_ENCRYPTION_KEY=ENCRYPTION_KEY,
                    ASPNETCORE_ENVIRONMENT="Development", DATABASE_FILE=DB,
                    MYSQL_DATABASE=MYSQL["database"])
         env.pop("MYSQL_CONNECTION_STRING", None)
@@ -186,6 +191,7 @@ def boot():
                    STRIPE_SECRET_KEY=STRIPE_KEY, STRIPE_WEBHOOK_SECRET=WEBHOOK_SECRET,
                    INTEGRATIONS_ALLOW_PRIVATE_EGRESS="true",   # mock vendors run on loopback (see mysql branch note)
                    META_APP_SECRET="meta-test-secret-56",
+                   CREDENTIAL_ENCRYPTION_KEY=ENCRYPTION_KEY,
                    ASPNETCORE_ENVIRONMENT="Development")
     boot_log = os.path.join(HERE, "_server_boot.log")
     logf = open(boot_log, "wb")
@@ -4919,7 +4925,7 @@ def test_partner_commission_accrual(admin):
     chk("41a before any paid redemption the ledger accrues nothing",
         c == 200 and (comm0.get("attributed_revenue") or 0) == 0 and (comm0.get("accrued") or 0) == 0, comm0)
     # Drive a REAL paid redemption of the partner code through the signed webhook (final_amount = 119).
-    stok, suid = make_paid_user("commission-buyer-41@ex.co", product="membership",
+    stok, suid = make_paid_user("commission-buyer-41@ex.co", product="membership", amount=11900,
                                 metadata={"discount_code": "PART41CODE", "standard_amount": "149", "code_amount": "30", "final_amount": "119"})
     c, comm1 = jget("GET", "/api/partner/commissions", token=ptok)
     chk("41b the paid redemption attributes its final_amount to the partner",
@@ -6167,7 +6173,7 @@ def test_comms_centre(admin):
 
     # --- one-click unsubscribe: forged token refused; a valid signed token withdraws consent + suppresses ---
     cb, bad = jget("POST", "/api/comms/unsubscribe", body={"token": "424242.deadbeefdeadbeefdead"})
-    _sec = (os.environ.get("UNSUBSCRIBE_SECRET") or os.environ.get("CREDENTIAL_ENCRYPTION_KEY")
+    _sec = (os.environ.get("UNSUBSCRIBE_SECRET") or ENCRYPTION_KEY
             or "pci-unsubscribe-v1") + "|pci-unsub"   # same precedence the server uses (Core/Comms.cs)
     utok = f"{u1}." + hashlib.sha256(f"{u1}.{_sec}".encode()).hexdigest()[:24]
     cg, good = jget("POST", "/api/comms/unsubscribe", body={"token": utok})
@@ -6556,7 +6562,7 @@ def test_marketing_centre(admin):
         (c0, c2, urf.get("reason"), row and row.get("status")))
 
     # --- public OAuth callback: signed-state machine, recomputed with the server's exact secret precedence ---
-    _mksec = (os.environ.get("MARKETING_OAUTH_SECRET") or os.environ.get("CREDENTIAL_ENCRYPTION_KEY")
+    _mksec = (os.environ.get("MARKETING_OAUTH_SECRET") or ENCRYPTION_KEY
               or "pci-marketing-oauth-v1") + "|pci-mkt-oauth"   # Core/MarketingOAuth.StateSecret
     exp = int(time.time()) + 3600
     good_state = f"{li}.{exp}." + hashlib.sha256(f"{li}.{exp}.{_mksec}".encode()).hexdigest()[:24]
