@@ -13,6 +13,7 @@ namespace PCI.Backend.Tests;
 /// statement that silently dropped the last day of the month would be worse than no statement), and
 /// that the rendered CSV and PDF are produced from the same numbers rather than recomputed.
 /// </summary>
+[Collection(DbCollection.Name)]
 public class PartnerStatementTests
 {
     static Db Fresh()

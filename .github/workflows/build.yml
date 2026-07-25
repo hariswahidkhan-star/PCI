@@ -174,6 +174,50 @@ jobs:
           MYSQL_PASSWORD: pcipass
         run: python3 tests/backup_restore_test.py
 
+  backend-unit-mysql:
+    # The xUnit layer, run against a real MariaDB instead of SQLite.
+    #
+    # Production runs MySQL only — SQLite is a dev/test convenience — so logic verified solely on SQLite
+    # is logic nobody has checked against the database that actually holds the money. The ix_plc_link
+    # defect (an index MySQL rejected while SQLite accepted it, swallowed by the installer) is exactly
+    # what that blind spot produces, and schema parity alone would not have caught a behavioural
+    # difference in SUM(), type affinity or date comparison.
+    #
+    # Scoped to the finance suites deliberately. They own their fixtures and share the DbCollection, so
+    # the between-test wipe is safe for them; the rest of the unit layer has never been run on MySQL and
+    # would need its own pass over fixed keys and seeded-row assumptions first. Widening the filter is the
+    # next step, not a silent one.
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mariadb:10.11
+        env: { MARIADB_ROOT_PASSWORD: root, MARIADB_DATABASE: pci, MARIADB_USER: pci, MARIADB_PASSWORD: pcipass }
+        ports: [ '3306:3306' ]
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - name: Create the unit-test database and grant rights
+        # A dedicated database (pci_unit) so a unit run can never touch the one the integration suites use.
+        run: |
+          mysql -h 127.0.0.1 -uroot -proot -e "CREATE DATABASE IF NOT EXISTS pci_unit CHARACTER SET utf8mb4;"
+          mysql -h 127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'pci'@'%'; FLUSH PRIVILEGES;"
+      - name: Finance unit suite against MySQL
+        env:
+          TEST_DB_PROVIDER: mysql
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_PORT: '3306'
+          MYSQL_USER: pci
+          MYSQL_PASSWORD: pcipass
+          MYSQL_DATABASE: pci
+          MYSQL_SSL: 'false'
+        run: >-
+          dotnet test backend/tests/PCI.Backend.Tests/PCI.Backend.Tests.csproj -c Release
+          --filter "FullyQualifiedName~PCI.Backend.Tests.Partner"
+
   backend-unit:
     # Hermetic xUnit layer over backend logic the live-HTTP suites cannot reach directly (retention
     # sweeps, token/crypto helpers, egress/redirect guards, storage intake). Temp SQLite + temp

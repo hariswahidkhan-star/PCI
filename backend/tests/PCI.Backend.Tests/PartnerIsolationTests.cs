@@ -15,6 +15,7 @@ namespace PCI.Backend.Tests;
 /// It also pins the permission posture: the pf_* capabilities must never become a side-effect of a job
 /// title, because "who can move money" has to stay an explicit decision.
 /// </summary>
+[Collection(DbCollection.Name)]
 public class PartnerIsolationTests
 {
     static Db Fresh()
