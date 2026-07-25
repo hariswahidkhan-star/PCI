@@ -182,7 +182,11 @@ public static class StudentExam
                 // Cap free-text profile fields so a client can't store unbounded blobs (DoS / storage
                 // abuse). 1000 chars is generous for every field here (roles, company, LinkedIn URL, etc.).
                 var vals = set.Select(k => { var s = H.GetS(b, k) ?? ""; return (object?)(s.Length > 1000 ? s[..1000] : s); }).Append(u.Id).ToArray();
-                db.Execute($"UPDATE student_profiles SET {string.Join(",", set.Select(k => k + "=?"))} WHERE user_id=?", vals);
+                // Back-quote each column. `current_role` is a RESERVED WORD on MySQL and MariaDB, so
+                // the unquoted form was a syntax error there and every profile save failed with a 500 —
+                // invisible on SQLite, which has no such reserved word. Back-quotes are accepted as
+                // identifier quoting by all three engines, so one form works everywhere.
+                db.Execute($"UPDATE student_profiles SET {string.Join(",", set.Select(k => $"`{k}`=?"))} WHERE user_id=?", vals);
             }
             Account.RecomputeCompletion(db, u.Id);
             log(u.Id, "profile_update", string.Join(",", set));
@@ -931,7 +935,9 @@ public static class StudentExam
                 ["activity_date"] = H.GetS(b, "activity_date", "date") ?? DateTime.UtcNow.ToString("yyyy-MM-dd")
             };
             var use = map.Keys.Where(k => cols.Contains(k)).ToList();
-            db.Execute($"INSERT INTO cpd_entries({string.Join(",", use)}) VALUES({string.Join(",", use.Select(_ => "?"))})", use.Select(k => map[k]).ToArray());
+            // Same identifier quoting as the profile update above: any dynamically-assembled column
+            // list must survive a column whose name is reserved on one engine and not another.
+            db.Execute($"INSERT INTO cpd_entries({string.Join(",", use.Select(k => $"`{k}`"))}) VALUES({string.Join(",", use.Select(_ => "?"))})", use.Select(k => map[k]).ToArray());
             return J(new { ok = true });
         });
         app.MapDelete("/api/me/cpd/{id}", (HttpContext ctx, long id) =>
