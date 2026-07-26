@@ -95,14 +95,22 @@ regression test (see `docs/testing/DEFECT_REGISTER.md` DEF-22..26 and the commit
 
 Plus one audit item implemented as designed:
 
-4. **DEF-25 — the MySQL schema gate was made green against broken output.** PR #169 regenerated
-   `schema.mysql.sql` to fix a red `backend-mysql` "schema is current" gate, diagnosing the
-   `email(191)` prefix as stale. It was not stale: `code_redemptions.email` is still `TEXT`, and
-   the regeneration was performed with the DEF-22 generator bug, which silently drops the prefix.
-   Verified directly against Oracle MySQL 8.0.46: `CREATE INDEX … ON code_redemptions(email)` →
-   **ERROR 1170 (BLOB/TEXT column used in key specification without a key length)**, while the
-   `(191)` form succeeds. Fixing the generator (item 1) and regenerating restores the correct DDL;
-   the schema gate now passes against *correct* output rather than matching the broken output.
+4. **DEF-25 — the MySQL schema gate was re-pinned to incorrect generated output.** PR #169 fixed a
+   red `backend-mysql` "schema is current" gate by regenerating `schema.mysql.sql`, diagnosing the
+   `email(191)` prefix as stale. It was not stale: `code_redemptions.email` is still `TEXT`, and the
+   regeneration ran through the DEF-22 generator bug, which drops the prefix. The gate then passed
+   because the committed file matched the *incorrect* output — removing the very signal that would
+   have surfaced DEF-22.
+
+   **Impact, measured rather than assumed:** none. An earlier revision of this document claimed the
+   index was consequently absent on MySQL and that `code_redemptions.email` lookups degraded to full
+   scans. That claim was **wrong and has been retracted.** `Db.Exec` carries an explicit
+   `BlobKeyWithoutLength` (1170) handler that retries through `PrefixIndexedColumns`; booting against
+   a fresh Oracle MySQL 8.0.46 database with the *unprefixed* schema still yields
+   `ix_redemptions_email` with `sub_part = 191`, identical to the prefixed schema. The runtime's
+   defence-in-depth absorbed the defect end to end. The generator fix is still worth having — a
+   generated artifact should be correct, and the gate should test correct output — but this was a
+   tooling/process defect, not a production one.
 
 5. **DEF-26 — an idempotency key could bridge students.** Main's `FeeWaiverLedger.Find` matched on
    the key alone, so reusing a key for a different subject returned `ok/replayed:true` carrying the
