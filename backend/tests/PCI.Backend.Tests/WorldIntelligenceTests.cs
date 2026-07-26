@@ -51,7 +51,7 @@ public class WorldIntelligenceTests
         var db = NewWorldDb();
         var rows = db.Query("SELECT code,pi_type,pi_domain,pi_lifecycle,pi_sector,pi_interaction FROM pciworld_challenges WHERE author_id IS NULL");
         Assert.Equal(WorldContentPack.Count + WorldIntelligencePack.Count, rows.Count);
-        Assert.Equal(226, rows.Count);
+        Assert.Equal(255, rows.Count);
         foreach (var r in rows)
         {
             var code = H.Str(r["code"])!;
@@ -305,7 +305,7 @@ public class WorldIntelligenceTests
         var db = NewWorldDb();
         var plan = Plan();
         var mapped = plan.Scheduled.Where(e => e.Status == "mapped").ToList();
-        Assert.Equal(226, mapped.Count);
+        Assert.Equal(255, mapped.Count);
         Assert.All(plan.Reserve, e => Assert.Equal("planned", e.Status));
         var seen = new HashSet<string>(StringComparer.Ordinal);
         foreach (var e in mapped)
@@ -341,12 +341,12 @@ public class WorldIntelligenceTests
         Assert.Equal(365, (int)G("scheduled_total"));
         Assert.Equal(55, (int)G("reserve_total"));
         Assert.Equal(420, (int)G("bank_total"));
-        Assert.Equal(226, (int)G("mapped"));
-        Assert.Equal(139, (int)G("planned"));
-        Assert.Equal(226, (int)G("backed_by_published_challenge"));
-        // January–July are fully authored: 212 consecutive backed days from day 1, with August
-        // day 213 planned. The 60-day alert stays cleared — with real published content.
-        Assert.Equal(212, (int)G("runway_days"));
+        Assert.Equal(255, (int)G("mapped"));
+        Assert.Equal(110, (int)G("planned"));
+        Assert.Equal(255, (int)G("backed_by_published_challenge"));
+        // January–August are fully authored: 243 consecutive backed days from day 1, with
+        // September day 244 planned. The 60-day alert stays cleared — with real content.
+        Assert.Equal(243, (int)G("runway_days"));
         Assert.False((bool)G("runway_alert"));
     }
 }

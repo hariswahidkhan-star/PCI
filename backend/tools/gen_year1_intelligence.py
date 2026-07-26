@@ -347,7 +347,41 @@ MAPPED_JUL = [
     ("WC-RSC-210", "Rollback is also a decision", "project_rescue", "change_claims_recovery", "execution_control", "public_sector", "multi_stage_decision", "professional", 14, 212),
 ]
 assert len(MAPPED_JUL) == 26
-MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN + MAPPED_JUL
+
+# ── August authored pack: leadership, teams, communication and conflict. ──
+MAPPED_AUG = [
+    ("WC-COM-227", "The councillor was in the room", "daily_decision", "stakeholders_communication", "execution_control", "public_sector", "single_decision", "professional", 6, 213),
+    ("WC-RES-237", "Eight starters, one absorbing team", "schedule_strategy", "resources_leadership", "execution_control", "cross_sector", "order_rank", "professional", 9, 214),
+    ("WC-SCO-253", "The festival's fifty asks", "logic_sequence", "scope_requirements", "execution_control", "professional_services_other", "order_rank", "professional", 5, 215),
+    ("WC-COM-228", "The all-hands after the axe", "daily_decision", "stakeholders_communication", "execution_control", "cross_sector", "single_decision", "professional", 7, 216),
+    ("WC-RES-238", "The stalled front's crews", "schedule_strategy", "resources_leadership", "execution_control", "construction_infrastructure", "order_rank", "professional", 10, 217),
+    ("WC-SCO-254", "Two hundred requirements, forty duplicates", "logic_sequence", "scope_requirements", "definition_planning", "cross_sector", "order_rank", "professional", 5, 218),
+    ("WC-COM-229", "The group chat that knows too much", "daily_decision", "stakeholders_communication", "execution_control", "healthcare_life_sciences", "single_decision", "professional", 5, 219),
+    ("WC-RES-239", "Five asks, one analyst", "schedule_strategy", "resources_leadership", "execution_control", "cross_sector", "order_rank", "professional", 8, 220),
+    ("WC-SCH-255", "An agenda is a schedule", "logic_sequence", "schedule_planning", "definition_planning", "manufacturing_industrial", "order_rank", "professional", 6, 221),
+    ("WC-COM-230", "Briefed, in what language", "daily_decision", "stakeholders_communication", "execution_control", "construction_infrastructure", "single_decision", "professional", 6, 222),
+    ("WC-RES-240", "Roster the shutdown, mind the humans", "schedule_strategy", "resources_leadership", "execution_control", "energy_utilities", "order_rank", "professional", 11, 223),
+    ("WC-COM-231", "The wrong number, said proudly", "daily_decision", "stakeholders_communication", "execution_control", "climate_sustainability", "single_decision", "professional", 7, 224),
+    ("WC-RES-241", "One squad, two releases", "schedule_strategy", "resources_leadership", "execution_control", "technology_digital", "order_rank", "professional", 12, 225),
+    ("WC-COM-232", "The retro that drew blood", "daily_decision", "stakeholders_communication", "execution_control", "energy_utilities", "single_decision", "professional", 5, 226),
+    ("WC-RES-242", "Train the trainers first", "schedule_strategy", "resources_leadership", "execution_control", "cross_sector", "order_rank", "professional", 9, 227),
+    ("WC-COM-233", "Present in the room, absent from the decision", "daily_decision", "stakeholders_communication", "execution_control", "technology_digital", "single_decision", "professional", 6, 230),
+    ("WC-RES-243", "Three fronts, two scaffold gangs", "schedule_strategy", "resources_leadership", "execution_control", "construction_infrastructure", "order_rank", "professional", 10, 231),
+    ("WC-COM-234", "Two executives, one team, opposite orders", "daily_decision", "stakeholders_communication", "execution_control", "cross_sector", "single_decision", "professional", 7, 232),
+    ("WC-RES-244", "Kill the meetings, keep the decisions", "schedule_strategy", "resources_leadership", "execution_control", "cross_sector", "order_rank", "professional", 8, 233),
+    ("WC-COM-235", "Slide forty-one, someone else's logo", "daily_decision", "stakeholders_communication", "execution_control", "cross_sector", "single_decision", "professional", 5, 234),
+    ("WC-RES-245", "Change the shift, keep the depot", "schedule_strategy", "resources_leadership", "execution_control", "transport_logistics", "order_rank", "professional", 11, 235),
+    ("WC-COM-236", "The talk nobody hears anymore", "daily_decision", "stakeholders_communication", "execution_control", "construction_infrastructure", "single_decision", "professional", 6, 236),
+    ("WC-RES-246", "The matrix nobody staffed", "schedule_strategy", "resources_leadership", "execution_control", "manufacturing_industrial", "order_rank", "professional", 12, 237),
+    ("WC-GOV-248", "Decided, says the corridor", "daily_decision", "integration_governance", "execution_control", "cross_sector", "single_decision", "professional", 7, 238),
+    ("WC-SCH-247", "The nine days before the possession", "schedule_strategy", "schedule_planning", "execution_control", "transport_logistics", "order_rank", "professional", 9, 239),
+    ("WC-QLT-251", "Audited to a standstill", "daily_decision", "quality_assurance", "execution_control", "energy_utilities", "single_decision", "professional", 6, 240),
+    ("WC-GOV-249", "Around the architecture board", "daily_decision", "integration_governance", "execution_control", "technology_digital", "single_decision", "professional", 7, 241),
+    ("WC-QLT-252", "The quality plan from the last job", "daily_decision", "quality_assurance", "definition_planning", "public_sector", "single_decision", "professional", 7, 242),
+    ("WC-GOV-250", "Skip the gate, just this once", "daily_decision", "integration_governance", "definition_planning", "construction_infrastructure", "single_decision", "professional", 5, 243),
+]
+assert len(MAPPED_AUG) == 29
+MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN + MAPPED_JUL + MAPPED_AUG
 
 # Existing bank items that complete January, February and March — pinned so the months stay
 # fully authored (March's thirteen legacy schedule items hold their theme-month days).
@@ -363,7 +397,8 @@ PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17,
                    "WC-PRT-021": 138, "WC-PRT-039": 139,
                    "WC-PRC-046": 165, "WC-PRC-014": 166, "WC-BOQ-012": 167, "WC-BOQ-035": 168,
                    "WC-CHG-040": 195, "WC-CHG-023": 196, "WC-EVM-001": 197, "WC-CHG-005": 198,
-                   "WC-CSH-034": 199}
+                   "WC-CSH-034": 199,
+                   "WC-RES-013": 228, "WC-RES-037": 229}
 
 DIFF_BAND = {"foundation": "foundation", "developing": "foundation", "professional": "practitioner",
              "advanced": "advanced", "expert": "executive"}

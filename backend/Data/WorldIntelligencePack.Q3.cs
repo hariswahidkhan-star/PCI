@@ -952,5 +952,855 @@ public static partial class WorldIntelligencePack
              "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
              "share_line":"Ranked five rescue options by their expiry dates and dependencies, not their headline weeks."}
             """),
+
+        // ═════════════ AUGUST — leadership, teams, communication and conflict ═════════════
+        // ───────────── Daily Decisions · communication · practitioner ─────────────
+
+        ("WC-COM-227", "The councillor was in the room", "Your engineer called the council's process 'a joke'. The council heard.",
+            "Public Programmes", "Programme Manager", "project_management", "professional", 6,
+            """["stakeholder_communication","leadership"]""",
+            """
+            {"context":"In a public liaison meeting about your leisure-centre programme, your senior engineer — frustrated by a real permitting delay — described the council's approval process as 'frankly, a joke'. A councillor was in the audience. The engineer is your best; the frustration was legitimate; the sentence is tomorrow's minutes. The council's planning cooperation matters for two more phases.",
+             "evidence":[
+               {"label":"The words","value":"'Frankly, a joke' — about the council's process, publicly"},
+               {"label":"The audience","value":"Included a councillor; meeting was minuted"},
+               {"label":"The person","value":"Your best engineer; the underlying delay is real"},
+               {"label":"The stake","value":"Council cooperation needed for 2 more phases"}],
+             "decisions":[
+               {"key":"respond","prompt":"Your next 24 hours?",
+                "options":[
+                  {"key":"repair_both","label":"Call the council's programme contact TODAY — acknowledge the comment was unprofessional, without disowning the underlying delay concern, which you then raise properly — and debrief the engineer privately: the frustration was right, the venue was not","quality":100,
+                   "consequence":"The council hears an organisation that corrects itself; the permitting delay finally gets the formal escalation it needed, and the engineer — corrected without humiliation — self-edits thereafter.",
+                   "principle":"Repair the relationship AND keep the substance: apologise for the register, escalate the issue, coach the person — three separate acts, all needed."},
+                  {"key":"defend","label":"Let it stand — the process IS slow and the council should hear honest feedback","quality":10,
+                   "consequence":"The 'honest feedback' framing reaches the planning department as institutional contempt; phase 3's approvals move at a pace that feels personal, because it is.",
+                   "principle":"Being right about the substance never licenses the register — bureaucracies forgive challenges and remember insults."},
+                  {"key":"punish","label":"Formally discipline the engineer and copy the council on the outcome","quality":15,
+                   "consequence":"The council gets its pound of flesh; your best engineer gets a file note for one hot sentence, and the team learns that honesty about delays is career-limiting.",
+                   "principle":"Sacrificing your own person to appease a stakeholder buys less goodwill than it costs trust."}]}],
+             "hints":["Separate the register (wrong) from the concern (right) — handle each in its proper channel.",
+               "Speed matters: the call made today is an apology; next week it is damage control.",
+               "Coach in private, repair in public — never the reverse."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Executive Communicator"},
+             "share_line":"Turned a hot sentence into a cool apology and a proper escalation."}
+            """),
+
+        ("WC-COM-228", "The all-hands after the axe", "The workstream is cancelled. Forty people want to know what it means for them.",
+            "Enterprise Programmes", "Programme Director", "project_management", "professional", 7,
+            """["stakeholder_communication","leadership"]""",
+            """
+            {"context":"The board cancelled your programme's analytics workstream yesterday — a strategy change, not a performance issue. Twelve people are directly affected: eight redeploy within the programme, three move to another division, one role is at risk. The all-hands is tomorrow; rumours are already ahead of you ('the whole programme is next'). HR has cleared what you can say about individuals: nothing specific.",
+             "evidence":[
+               {"label":"Fact","value":"Workstream cancelled — strategy, not performance"},
+               {"label":"People","value":"8 redeploy internally · 3 to another division · 1 at risk"},
+               {"label":"Rumour","value":"'The whole programme is next'"},
+               {"label":"Constraint","value":"Nothing specific about individuals"}],
+             "decisions":[
+               {"key":"allhands","prompt":"Tomorrow's all-hands leads with:",
+                "options":[
+                  {"key":"straight","label":"The decision and its reason, plainly; the numbers (8/3/1) without names; the timeline for individual conversations (this week, direct, private); and a direct answer to the rumour — the programme's mandate, reconfirmed in writing by the board","quality":100,
+                   "consequence":"The room gets facts before corridor fiction hardens; the twelve hear their situations privately within days, and the rumour dies against the board's written reconfirmation.",
+                   "principle":"After a cancellation: facts in public, futures in private, and kill the meta-rumour with evidence — the gap you leave is the story you get."},
+                  {"key":"upbeat","label":"Frame it as 'exciting refocusing' — morale needs protecting and the language matters","quality":10,
+                   "consequence":"Forty people hear a colleague's at-risk role described as exciting; the euphemism becomes a screenshot, and every future announcement is translated by cynics first.",
+                   "principle":"Spin at an all-hands converts one bad day into a permanent credibility tax."},
+                  {"key":"minimal","label":"Announce only the cancellation; defer all people questions to 'appropriate channels'","quality":20,
+                   "consequence":"The room's only question — 'am I the one?' — goes unanswered for a week; productivity halts while forty people privately calculate their odds.",
+                   "principle":"Withholding the shape of the people-impact doesn't protect anyone — it just privatises the anxiety."}]}],
+             "hints":["The room's real question is 'am I safe?' — answer its shape even when names must wait.",
+               "Address the rumour explicitly; ignored rumours read as confirmed.",
+               "The 8/3/1 numbers are sayable and calming — specificity without names."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Executive Communicator"},
+             "share_line":"Delivered a cancellation all-hands that answered the question everyone actually had."}
+            """),
+
+        ("WC-COM-229", "The group chat that knows too much", "Handover photos, patient corridors, and forty members who aren't all staff.",
+            "Healthcare Estates", "Project Manager", "project_management", "professional", 5,
+            """["stakeholder_communication","governance"]""",
+            """
+            {"context":"You discover the ward-refurbishment site team runs a WhatsApp group — 40+ members including subcontractors and two people nobody can identify — used for genuinely useful coordination AND containing progress photos that include ward corridors, a patient's name-board visible in one, plus candid commentary about hospital staff. It formed organically two years ago; it works; it is also an information-governance incident in waiting (or already).",
+             "evidence":[
+               {"label":"The group","value":"40+ members incl. subbies and 2 unidentified"},
+               {"label":"Content","value":"Useful coordination + corridor photos (one with a patient name-board) + staff commentary"},
+               {"label":"Context","value":"Hospital site — information governance rules apply"},
+               {"label":"Value","value":"It genuinely coordinates the job"}],
+             "decisions":[
+               {"key":"channel","prompt":"You:",
+                "options":[
+                  {"key":"replace","label":"Replace, don't just ban: stand up a managed channel (project tool, verified membership, no-photo-in-clinical-areas rule) within the week, migrate the coordination value, close the WhatsApp group — and report the name-board photo to the trust's IG office yourself, today","quality":100,
+                   "consequence":"The coordination survives in a channel with a membership list; the IG office, told by you first, treats it as self-reported and proportionate — the alternative discovery path had a very different tone.",
+                   "principle":"Ban a useful-but-dangerous channel only by replacing its usefulness — and self-report the breach you found before it reports you."},
+                  {"key":"ban","label":"Order the group closed immediately — the risk is obvious and the rules are clear","quality":25,
+                   "consequence":"The group closes; a new one forms within days, smaller and hidden, minus you — the coordination need didn't read the order.",
+                   "principle":"Communication bans without replacements create shadow channels with worse hygiene."},
+                  {"key":"quiet_fix","label":"Ask admins to delete the photos and tighten membership — keep what works, no fuss","quality":10,
+                   "consequence":"The photos are deleted from the group, not from forty phones; when the name-board image surfaces elsewhere, 'we quietly deleted it' reads exactly like concealment.",
+                   "principle":"A known breach handled informally becomes YOUR breach the day it resurfaces."}]}],
+             "hints":["The group exists because it solves a real problem — solve the problem in the replacement.",
+               "The name-board photo is already an incident; the only choice is who reports it, and when.",
+               "Verified membership is the difference between a channel and a leak."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Executive Communicator"},
+             "share_line":"Replaced a leaky group chat with a governed channel — and self-reported the breach it held."}
+            """),
+
+        ("WC-COM-230", "Briefed, in what language", "The toolbox talk was delivered. A third of the gang didn't understand it.",
+            "Construction", "Site Delivery Manager", "project_management", "professional", 6,
+            """["stakeholder_communication","leadership"]""",
+            """
+            {"context":"Investigating a near-miss (a gang working under a load path that morning's briefing had prohibited), you find the root cause: the toolbox talk was delivered in rapid technical English to a gang where a third have limited English — they nodded, signed the sheet, and misunderstood the exclusion zone. The signing sheet says 'briefed'. The reality says otherwise. This is your best-performing subcontractor.",
+             "evidence":[
+               {"label":"Near-miss","value":"Gang under a prohibited load path"},
+               {"label":"Root cause","value":"Briefing not understood — language barrier; sheet signed anyway"},
+               {"label":"Scale","value":"~1/3 of the gang has limited English"},
+               {"label":"Context","value":"Best-performing subcontractor on site"}],
+             "decisions":[
+               {"key":"fix","prompt":"Beyond closing the near-miss, you:",
+                "options":[
+                  {"key":"comprehension","label":"Rebuild briefing around COMPREHENSION, not attendance: visual exclusion-zone maps, briefings delivered bilingually via the gang's own bilingual chargehand (paid role), and spot-check understanding with questions, not signatures — rolled out site-wide, not just this gang","quality":100,
+                   "consequence":"The next audit finds workers who can explain the exclusion zones rather than just point at their signatures; the bilingual chargehand model spreads to two other sites via the subcontractor themselves.",
+                   "principle":"A signature proves presence; only a question proves understanding — brief for the second, audit the second."},
+                  {"key":"paper","label":"Require translated written briefings for all languages on site","quality":30,
+                   "consequence":"Six translated documents appear; the workers who couldn't follow spoken technical English get written technical English in translation — literacy and comprehension were the issue, not the alphabet.",
+                   "principle":"Translating the paperwork translates the compliance, not the understanding."},
+                  {"key":"blame","label":"Raise a nonconformance against the subcontractor for signing unbriefed workers","quality":15,
+                   "consequence":"Technically valid; the subcontractor tightens signatures, workers learn to nod more convincingly, and the comprehension gap survives with better paperwork.",
+                   "principle":"Punishing the record-keeping fixes the records — the near-miss came from the understanding."}]}],
+             "hints":["Ask what the signature was actually evidence OF — presence, not comprehension.",
+               "The gang's own bilingual members are the untapped channel — formalise and pay the role.",
+               "Fix it site-wide; the audited gang is never the only one."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Rebuilt site briefings around questions answered, not sheets signed."}
+            """),
+
+        ("WC-COM-231", "The wrong number, said proudly", "Your analyst told the community meeting the wrong CO2 figure. Confidently. On camera.",
+            "Climate Adaptation", "Engagement Programme Lead", "project_management", "professional", 7,
+            """["stakeholder_communication","leadership"]""",
+            """
+            {"context":"At last night's community meeting about your retrofit programme, your junior analyst — presenting for the first time — stated the scheme's carbon saving as 'forty thousand tonnes a year'. The real figure is four thousand. The error (a units slip in her notes) was confident, clear, and recorded on the council's livestream. A local campaign group has already clipped it. She realised this morning and is mortified.",
+             "evidence":[
+               {"label":"Error","value":"40,000 tCO2/yr stated; real figure 4,000"},
+               {"label":"Visibility","value":"Council livestream; campaign group has the clip"},
+               {"label":"The person","value":"Junior, first public presentation, mortified, self-reported"},
+               {"label":"Risk","value":"Programme credibility on its central claim"}],
+             "decisions":[
+               {"key":"correct","prompt":"The correction strategy?",
+                "options":[
+                  {"key":"fast_owned","label":"Correct publicly TODAY, as the programme (not the person): a note to attendees and the council with the right figure and the cause ('a units error in our presentation — the assessment itself is unchanged, here it is') — and back the analyst visibly, including her delivering the corrected figure at the next meeting","quality":100,
+                   "consequence":"The correction outruns the clip; the campaign group's 'they inflated by 10x' story dies against a same-day self-correction, and the analyst — publicly backed — becomes the programme's most careful presenter.",
+                   "principle":"Correct at the speed and scale of the error, own it institutionally, and never feed the presenter to the crowd — audiences forgive corrected mistakes and remember abandoned juniors."},
+                  {"key":"quiet","label":"Correct it in the next scheduled newsletter — a formal correction now amplifies the clip","quality":10,
+                   "consequence":"Three weeks of the clip circulating uncorrected; by newsletter day the 40,000 figure has been quoted in an objection letter, and the correction now looks extracted rather than offered.",
+                   "principle":"A correction delayed until convenient is a concealment with a publication date."},
+                  {"key":"blame","label":"Issue the correction noting it was 'a presenter's error, not the programme's assessment'","quality":15,
+                   "consequence":"Technically true, publicly cowardly: the sentence throws one mortified junior under the campaign group's wheels, and your best people quietly stop volunteering to present.",
+                   "principle":"The organisation that distances itself from its junior's slip teaches everyone what backing means here."}]}],
+             "hints":["The clip is already moving — your correction competes on speed, not elegance.",
+               "Institutional ownership ('our presentation') costs nothing and protects everything.",
+               "How you treat the mistaken junior is watched by everyone who might present next."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Executive Communicator"},
+             "share_line":"Outran a viral wrong number with a same-day, institution-owned correction."}
+            """),
+
+        ("WC-COM-232", "The retro that drew blood", "Anonymous feedback named a name. The room is waiting to see what you do.",
+            "Energy Networks", "Delivery Team Lead", "project_management", "professional", 5,
+            """["stakeholder_communication","leadership"]""",
+            """
+            {"context":"Your team's quarterly retrospective uses anonymous input cards. Today's batch includes one that names your commissioning engineer: 'X hoards information and makes everyone beg for handover data — biggest blocker on this team.' It is harsh, personal — and, you privately suspect, partly true. The team saw you read it. X is in the room.",
+             "evidence":[
+               {"label":"The card","value":"Names X: 'hoards information… biggest blocker'"},
+               {"label":"Truth content","value":"Partly true, in your judgment"},
+               {"label":"Format","value":"Anonymous input, read live, team watching"},
+               {"label":"X","value":"In the room"}],
+             "decisions":[
+               {"key":"room","prompt":"In the moment, you:",
+                "options":[
+                  {"key":"depersonalise","label":"Depersonalise live, keep the issue: 'Named feedback doesn't belong in anonymous cards — but information flow at handover is a real theme; let's work THAT as a process problem now' — then talk to X privately this week about the underlying pattern","quality":100,
+                   "consequence":"The room sees the norm defended AND the issue kept; the process discussion surfaces two fixes X actually supports, and the private conversation lands because it wasn't a public trial.",
+                   "principle":"Protect people in public, address patterns in private, and never let a norm violation kill a true signal — three moves, one moment."},
+                  {"key":"read_on","label":"Address it as written — the feedback is data and X is an adult","quality":10,
+                   "consequence":"X endures a public critique via anonymous accusation; the retro format dies that day — next quarter's cards are all blank, because everyone watched what candour costs.",
+                   "principle":"Processing an anonymous attack live teaches the team that retros are ambush venues."},
+                  {"key":"suppress","label":"Skip the card entirely — anonymous personal attacks get no airtime","quality":25,
+                   "consequence":"The norm is defended and the signal buried; the handover bottleneck — real — continues, and whoever wrote the card concludes feedback goes nowhere.",
+                   "principle":"Suppressing the venue without harvesting the truth loses the half that mattered."}]}],
+             "hints":["Two things are true at once: the format was violated AND the signal may be real.",
+               "The room is learning the retro's rules from your next sentence.",
+               "The person conversation happens — later, privately, about the pattern."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Executive Communicator"},
+             "share_line":"Defended the retro's rules and rescued the true signal inside a personal attack."}
+            """),
+
+        ("WC-COM-233", "Present in the room, absent from the decision", "Hybrid meetings work fine — for the people in the building.",
+            "Technology Programmes", "Programme Delivery Manager", "project_management", "professional", 6,
+            """["stakeholder_communication","leadership"]""",
+            """
+            {"context":"Your platform programme's core team is hybrid: six in the office, five remote (two other cities, one other timezone). You notice a pattern: the last four significant decisions were effectively made in post-meeting huddles — the office six talking at the whiteboard after the call ended. Remote members learn outcomes from the notes. Two of your strongest engineers are remote; one has started saying 'whatever the office decides' in planning.",
+             "evidence":[
+               {"label":"Pattern","value":"4 recent decisions made in post-call office huddles"},
+               {"label":"Effect","value":"Remote members reading decisions in the notes"},
+               {"label":"Signal","value":"'Whatever the office decides' from a strong remote engineer"},
+               {"label":"Team","value":"6 office, 5 remote incl. 1 other timezone"}],
+             "decisions":[
+               {"key":"fix","prompt":"You:",
+                "options":[
+                  {"key":"structural","label":"Change the decision mechanics, not the exhortations: decisions of consequence get made IN the documented channel (proposal written, comments async, decision recorded) — the huddle can discuss but the channel decides; and you visibly route your OWN next two decisions that way","quality":100,
+                   "consequence":"The whiteboard huddles keep happening — as discussions; the decisions move to where all eleven can shape them, and the 'whatever the office decides' engineer ships the quarter's best design proposal three weeks later.",
+                   "principle":"Hybrid equity is an architecture, not an attitude — put the decision where the whole team is, and let the room be just a room."},
+                  {"key":"exhort","label":"Raise it at the next team meeting: huddle decisions must stop, everyone deserves a voice","quality":20,
+                   "consequence":"Everyone agrees warmly; the next huddle happens anyway — organic conversation doesn't obey memos, and the remote five watch the gap between speech and structure widen.",
+                   "principle":"Norms announced without mechanics are wishes — the huddle is natural; only the decision's HOME can change."},
+                  {"key":"office","label":"Mandate office days for decision-heavy phases — co-location fixes what process can't","quality":15,
+                   "consequence":"The two other cities can't comply and the other timezone can't exist differently; the mandate reads as 'remote careers end here', and the strongest remote engineer's next call is with a recruiter.",
+                   "principle":"Solving hybrid friction by unwinding hybrid selects for proximity over talent."}]}],
+             "hints":["The huddle isn't the problem — the decision living there is.",
+               "Fix the mechanics (where decisions are made) before the manners (who talks in meetings).",
+               "Model it yourself first; teams copy routing, not requests."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Moved decisions from the whiteboard huddle to where all eleven people are."}
+            """),
+
+        ("WC-COM-234", "Two executives, one team, opposite orders", "The CFO says freeze spend. The COO says accelerate. Your team holds both emails.",
+            "Enterprise Programmes", "Workstream Lead", "project_management", "professional", 7,
+            """["stakeholder_communication","governance"]""",
+            """
+            {"context":"Monday morning: the CFO's office emails all programme teams to freeze discretionary spend pending quarter-end review. Monday afternoon: the COO — your programme's sponsor — emails your team directly to 'accelerate the warehouse rollout, whatever it takes'. Both are genuine instructions from people who outrank everyone you can easily reach. Your team is asking which email to obey; procurement has two POs waiting.",
+             "evidence":[
+               {"label":"Instruction 1","value":"CFO: freeze discretionary spend (all programmes)"},
+               {"label":"Instruction 2","value":"COO/sponsor: 'accelerate, whatever it takes' (your team, directly)"},
+               {"label":"Pending","value":"2 POs with procurement"},
+               {"label":"Team","value":"Asking which to obey"}],
+             "decisions":[
+               {"key":"conflict","prompt":"You:",
+                "options":[
+                  {"key":"surface","label":"Force the collision upward TODAY, in writing to both offices: 'These instructions conflict for these 2 POs — we hold both until you align; here is the cost of each day held' — while your team continues all non-spend acceleration","quality":100,
+                   "consequence":"The two offices — genuinely unaware of the collision — align within a day (rollout exempted from the freeze, in writing); your team never had to gamble on which executive to disobey.",
+                   "principle":"Never resolve your superiors' contradiction by guessing — surface it to its owners, priced, and keep moving on everything uncontradicted."},
+                  {"key":"sponsor","label":"Follow the COO — they're your sponsor and the more specific instruction wins","quality":15,
+                   "consequence":"Defensible logic, discovered at quarter-end review as 'the team that ignored the freeze'; the CFO's office doesn't process 'specificity doctrine' as an excuse.",
+                   "principle":"Picking a winner between executives makes YOU the author of the choice — and its consequences."},
+                  {"key":"freeze","label":"Follow the CFO — finance instructions trump line instructions, always","quality":15,
+                   "consequence":"Equally defensible, symmetrical outcome: the sponsor finds their direct instruction ignored and their rollout stalled by a subordinate's doctrine of precedence.",
+                   "principle":"Both 'safe' choices are bets; the only non-bet is making the owners collide."}]}],
+             "hints":["The contradiction belongs to its authors — deliver it back to them, together.",
+               "Price the delay per day; executives align faster around numbers.",
+               "Separate what's actually contradicted (2 POs) from what isn't (everything else) — keep the rest moving."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Governance Steward"},
+             "share_line":"Returned two contradictory executive orders to their owners, priced by the day."}
+            """),
+
+        ("WC-COM-235", "Slide forty-one, someone else's logo", "Your team's analysis just won the steering group's applause — presented by another department.",
+            "Enterprise Programmes", "Analysis Team Lead", "project_management", "professional", 5,
+            """["stakeholder_communication","leadership"]""",
+            """
+            {"context":"At programme steering, the transformation office presented 'their' options analysis for the logistics decision — nine slides your team built last month, shared 'for input', now carrying the transformation office's branding and no attribution. The analysis won the room. Your two analysts who built it were watching on the call. The transformation office's director is a peer you work with weekly.",
+             "evidence":[
+               {"label":"The work","value":"9 slides, your team's analysis, shared 'for input'"},
+               {"label":"The presentation","value":"Rebranded, unattributed, well received"},
+               {"label":"Witnesses","value":"Your two analysts, on the call"},
+               {"label":"Relationship","value":"Peer director, weekly working contact"}],
+             "decisions":[
+               {"key":"respond","prompt":"You:",
+                "options":[
+                  {"key":"direct_private","label":"Raise it with the peer directly and today — assume sloppiness before theft ('your team presented our analysis unattributed; fix the record with the steering secretariat') — and tell your analysts, before they ask, exactly what you've done about it","quality":100,
+                   "consequence":"The peer, embarrassed, corrects the attribution in the minutes and credits the team at the next steering; your analysts learn their lead defends their work at the speed it gets taken.",
+                   "principle":"Credit theft is corrected peer-to-peer, fast and factually — and your team must SEE the correction happen, or they'll stop showing you their best work."},
+                  {"key":"escalate","label":"Raise it with the programme director — attribution is a governance matter","quality":20,
+                   "consequence":"The director shrugs it into 'sort it between yourselves'; you've spent an escalation on something a direct conversation would have fixed, and the peer now knows you go upstairs first.",
+                   "principle":"Escalating what a peer conversation can fix converts a correction into a feud."},
+                  {"key":"let_go","label":"Let it pass — the programme benefited and internal credit games are beneath the work","quality":10,
+                   "consequence":"Magnanimous, and observed: your analysts saw their work taken and their lead silent; the next brilliant analysis stays in a drawer until 'it's protected'.",
+                   "principle":"Uncorrected credit theft is a tax on your team's future openness — the audience for your response is them, not the peer."}]}],
+             "hints":["Assume incompetence before malice — but correct the record either way.",
+               "Your primary audience is your own team watching what you do.",
+               "The correction wants to be factual and boring, not dramatic."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Executive Communicator"},
+             "share_line":"Got a stolen analysis re-attributed within a day — where the team could see it."}
+            """),
+
+        ("WC-COM-236", "The talk nobody hears anymore", "Same briefing, every morning, word for word. Compliance is total. Attention is zero.",
+            "Construction", "HSE & Communications Lead", "project_management", "professional", 6,
+            """["stakeholder_communication","leadership"]""",
+            """
+            {"context":"Your viaduct project's daily pre-start briefing has calcified: the same supervisor reads the same generic script ('watch out for plant movements, hydrate, report hazards') every morning to a yard of workers checking phones. Attendance: 100%. Attention: none. This week's actual hazards — a new crane radius, a reversed traffic route, live cable pulls — were technically 'covered' by the generic words. An audit would pass it. A near-miss wouldn't.",
+             "evidence":[
+               {"label":"Format","value":"Same generic script daily; supervisor reads, yard scrolls"},
+               {"label":"Compliance","value":"100% attendance, signed"},
+               {"label":"This week's reality","value":"New crane radius · reversed traffic route · live cable pulls"},
+               {"label":"Status","value":"Audit-proof and attention-free"}],
+             "decisions":[
+               {"key":"revive","prompt":"You:",
+                "options":[
+                  {"key":"specific","label":"Rebuild around TODAY's delta: two minutes, only what changed since yesterday (the crane radius, the route, the pulls), delivered at the work front by the relevant chargehand with one check-question — the generic content moves to induction where it belongs","quality":100,
+                   "consequence":"Briefings drop from ten minutes to three and the yard starts listening — because the content is finally news; the cable-pull exclusion question gets a wrong answer on day 2, corrected on the spot, which is the system working.",
+                   "principle":"Attention follows information content — brief the delta, at the front, from the person who owns it, and test one answer."},
+                  {"key":"enforce","label":"Ban phones at briefings and require eye contact — attention is a discipline matter","quality":10,
+                   "consequence":"Phones vanish, eyes point forward, and the same generic words wash over a now-resentful yard; the crane radius still surprises someone Thursday.",
+                   "principle":"Compelled attention to content-free communication produces theatre, not safety."},
+                  {"key":"materials","label":"Invest in better materials — visual boards, videos, translated cards","quality":30,
+                   "consequence":"Handsome boards display the same generic hazards in four languages; production values rose, information content didn't.",
+                   "principle":"Presentation upgrades to a stale message polish the staleness."}]}],
+             "hints":["Ask what in the briefing was NEW today — that fraction is its whole value.",
+               "Move the briefing to where the hazard is; abstraction is the enemy of attention.",
+               "One check-question converts listeners from audience to participants."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Cut a dead ten-minute briefing to three live minutes of what actually changed."}
+            """),
+
+        // ───────────── August · Schedule Strategy · resources & leadership · order/rank ─────────────
+
+        ("WC-RES-237", "Eight starters, one absorbing team", "The reinforcements arrive Monday. Sequenced wrong, they'll slow you down for a quarter.",
+            "Enterprise Programmes", "Delivery Capability Lead", "project_management", "professional", 9,
+            """["resource_management","leadership"]""",
+            """
+            {"context":"Your scaling programme receives eight new hires on Monday — two senior engineers, four mid-level, two juniors — into a delivery team of twelve already at full stretch. Onboarding capacity: each existing senior can properly mentor one starter at a time (there are four seniors). The instinct from above: 'get them all productive immediately, we hired them for the backlog'.",
+             "evidence":[
+               {"label":"Incoming","value":"2 senior · 4 mid · 2 junior, all Monday"},
+               {"label":"Absorbers","value":"4 existing seniors, 1 mentee each properly"},
+               {"label":"Team state","value":"12 people, fully stretched"},
+               {"label":"Pressure","value":"'All productive immediately'"}],
+             "decisions":[
+               {"key":"sequence","prompt":"Your onboarding sequence?",
+                "options":[
+                  {"key":"waves","label":"Sequence by absorption arithmetic: wave 1 = the 2 senior hires (near-self-sufficient, and they become mentors in 4 weeks, doubling capacity) + 2 mids; wave 2 (week 4) = remaining mids + juniors, mentored partly by wave-1 seniors — with waves 2's start dates moved formally, not left ambiguous","quality":100,
+                   "consequence":"Wave 1 lands cleanly; by week five there are six mentors, and the full eight are genuinely productive by week nine — faster than the all-at-once plan's honest trajectory, with zero mentor burnout.",
+                   "principle":"Onboarding is constrained by absorbers, not desks — sequence arrivals to GROW absorption capacity, seniors first."},
+                  {"key":"all","label":"All eight Monday as demanded — spread them across the team and let osmosis work","quality":10,
+                   "consequence":"Four seniors try to mentor eight people while delivering; velocity DROPS for six weeks, two starters flounder invisibly, and one junior resigns in month three citing 'no support'.",
+                   "principle":"Overloading the absorbers converts reinforcements into drag — the backlog gets slower service from twenty people than it had from twelve."},
+                  {"key":"selfserve","label":"All eight Monday with a self-service onboarding pack instead of mentors","quality":20,
+                   "consequence":"The pack is good; the tacit knowledge (which tests lie, whose approval matters, where the bodies are buried) isn't in it, and the mids build confidently on wrong assumptions.",
+                   "principle":"Documentation onboards people to the explicit 20% — the mentored 80% is why onboarding takes people."}]}],
+             "hints":["Count the absorbers, not the desks — mentoring capacity is the constraint.",
+               "Sequence to grow the constraint: who becomes a mentor soonest?",
+               "Formalise the staggered start; ambiguity reads as chaos to people who just joined."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sequenced eight starters by mentor arithmetic and beat the all-at-once plan by weeks."}
+            """),
+
+        ("WC-RES-238", "The stalled front's crews", "Sixty operatives, no work face, four other fronts begging. Reallocate — in the right order.",
+            "Construction", "Construction Delivery Manager", "project_management", "professional", 10,
+            """["resource_management","schedule_analysis"]""",
+            """
+            {"context":"A design query has stalled your viaduct project's north abutment for an estimated three weeks — idling 60 operatives (piling gang, steel-fixers, formwork carpenters, general operatives). Four other fronts want them: the south abutment (can absorb steel-fixers now, carpenters in a week), the access structures (general operatives, immediately), a neighbouring project (anything, but 2-week minimum commitment), and 'hold some for restart' (the site agent's plea — remobilising scattered crews historically takes a fortnight).",
+             "evidence":[
+               {"label":"Idle","value":"60 operatives: piling · steel-fixing · formwork · general"},
+               {"label":"Stall","value":"~3 weeks (design query)"},
+               {"label":"Demands","value":"South abutment (partial fit) · access works (general) · other project (2wk min) · hold-for-restart"},
+               {"label":"History","value":"Remobilising scattered crews ≈ 2 weeks"}],
+             "decisions":[
+               {"key":"allocate","prompt":"Your allocation sequence?",
+                "options":[
+                  {"key":"fit_and_restart","label":"Match by trade AND protect the restart: steel-fixers to south now, general operatives to access works, carpenters follow south in a week — the PILING gang (needed first at restart, hardest to re-source) stays on productive standby prep (maintenance, pre-fabrication) on site; nobody goes to the 2-week external commitment given a 3-week stall estimate's error bars","quality":100,
+                   "consequence":"Three fronts accelerate; when the design query clears in 2.5 weeks, the piling gang restarts the abutment within two days — the fortnight remobilisation that killed the last stall never happens.",
+                   "principle":"Reallocate idle crews by trade fit — but ring-fence the restart's critical first trade, and never lend crews for longer than the stall's LOWER error bar."},
+                  {"key":"everyone","label":"Deploy everyone to whoever can use them, external project included — idle hours are pure waste","quality":15,
+                   "consequence":"All 60 are productive somewhere within days; the query clears early and the restart waits eleven days for the piling gang to unwind from the neighbour's 2-week commitment.",
+                   "principle":"Zero idle time today at the cost of a stalled restart is efficiency theatre — the critical path pays for the utilisation chart."},
+                  {"key":"hold","label":"Hold everyone on site — three weeks isn't long and scattered crews never come back right","quality":20,
+                   "consequence":"The restart is instant and immaculate; 180 crew-weeks of paid standby preceded it, and three other fronts slipped for want of trades that sat visible and idle.",
+                   "principle":"Protecting the restart by freezing everything pays restart insurance at a rate nobody would quote."}]}],
+             "hints":["Sort the crews by trade fit against the demands — not everyone is interchangeable.",
+               "Identify which trade the RESTART needs first; that one has a different calculus.",
+               "Lend nothing for longer than the stall's optimistic estimate — stalls end early sometimes."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Reallocated a stalled front's crews by trade — and kept the restart's key gang ready."}
+            """),
+
+        ("WC-RES-239", "Five asks, one analyst", "Everyone's request is urgent. Her week is still forty hours.",
+            "Enterprise Programmes", "PMO Manager", "project_management", "professional", 8,
+            """["resource_management","prioritization"]""",
+            """
+            {"context":"Your programme's only data analyst has five requests for the same week: (1) the sponsor wants a benefits dashboard refresh for a board meeting Thursday; (2) delivery needs defect-trend analysis for a go/no-go Friday; (3) finance wants cost-model support 'this month'; (4) an auditor has asked for data extracts, deadline in two weeks; (5) her own overdue automation work that would halve future extract time. Each requester believes theirs is first.",
+             "evidence":[
+               {"label":"1 Sponsor","value":"Dashboard for Thursday's board"},
+               {"label":"2 Delivery","value":"Defect trends for Friday go/no-go"},
+               {"label":"3 Finance","value":"'This month'"},
+               {"label":"4 Auditor","value":"Extracts, 2-week deadline"},
+               {"label":"5 Her own","value":"Automation halving future extract effort"}],
+             "decisions":[
+               {"key":"rank","prompt":"The week's ranking?",
+                "options":[
+                  {"key":"decision_dated","label":"Rank by decision-date and consequence: (2) go/no-go first — an irreversible decision feeds on it; (1) board dashboard second; then start (5) the automation THIS week precisely because (4)'s audit extracts land easier with it; (3) finance gets a scheduled slot next week — each requester told the ranking and why, once, together","quality":100,
+                   "consequence":"Both decision-fed deliverables land; the automation, started early, turns the audit request from three days' work into four hours — and the published ranking logic means next week's five requests arrive pre-triaged.",
+                   "principle":"Rank single-resource demand by what DECISIONS consume it and when — and notice when investing in the tool beats serving the queue."},
+                  {"key":"seniority","label":"Sponsor first, always — then take the rest in seniority order","quality":15,
+                   "consequence":"The dashboard shines Thursday; Friday's go/no-go proceeds on gut feel because the defect analysis wasn't ready, and the decision it produced costs more than every dashboard ever refreshed.",
+                   "principle":"Seniority-ranking optimises for who complains, not what the organisation is about to decide."},
+                  {"key":"fifo","label":"Strict first-come-first-served — the only defensible neutral rule","quality":10,
+                   "consequence":"Finance's month-loose request (first submitted) consumes Monday–Wednesday; both decision deadlines miss, defended by a queue discipline nobody thanked.",
+                   "principle":"FIFO is fair to requests and blind to consequences — queues serve tickets, judgment serves outcomes."}]}],
+             "hints":["Find which requests feed IRREVERSIBLE decisions, and when those decisions occur.",
+               "Check whether any request is really an investment that shrinks the others.",
+               "Publish the ranking and its logic — triage transparency is next week's time-saver."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Ranked five urgent asks by decision dates — and funded the tool that shrank the queue."}
+            """),
+
+        ("WC-RES-240", "Roster the shutdown, mind the humans", "Ten days, round-the-clock, and fatigue rules that don't bend for optimism.",
+            "Energy Networks", "Shutdown Resource Planner", "project_management", "professional", 11,
+            """["resource_management","safety_management"]""",
+            """
+            {"context":"Your substation replacement's 10-day shutdown runs 24/7. Available: 3 authorised senior persons (APs — required for every switching operation, max 12-hour shifts, 11-hour minimum rest by rule), 6 fitter crews (12-hour shift pattern), 2 commissioning engineers (needed heavily in days 8–10). Your first-draft roster has AP coverage failing on nights 6–7 (leave commitments) and both commissioning engineers working 16 days straight if testing slips. The plan review is tomorrow.",
+             "evidence":[
+               {"label":"APs","value":"3 total · every switching op needs one · 12h max, 11h rest"},
+               {"label":"Gap","value":"AP night cover fails nights 6–7"},
+               {"label":"Commissioning","value":"2 engineers, heavy days 8–10, 16 straight days if slip"},
+               {"label":"Review","value":"Tomorrow"}],
+             "decisions":[
+               {"key":"roster","prompt":"Your roster strategy?",
+                "options":[
+                  {"key":"constraint_first","label":"Build the roster around the LEGAL constraint first: schedule all switching operations into AP-covered windows (nights 6–7 get NO switching — plan those nights' work to need none), borrow a 4th AP from a sister project for contingency only, and pre-plan the commissioning slip scenario with a rest-protected handover split between the two engineers","quality":100,
+                   "consequence":"The switching plan bends to the AP calendar instead of hoping; nights 6–7 run mechanical-only smoothly, and when testing does slip a day, the pre-split commissioning pattern absorbs it without anyone's 16th consecutive day.",
+                   "principle":"Roster from the hardest constraint outward — the work plan serves the fatigue rules, because the alternative is the fatigue rules failing at 3am."},
+                  {"key":"hope","label":"Roster as drafted and manage nights 6–7 'dynamically' if switching is needed","quality":5,
+                   "consequence":"Night 6 needs an unplanned isolation; the nearest rested AP is four hours away, the shutdown holds for a shift, and the dynamic management is a phone tree of tired people.",
+                   "principle":"'Manage it dynamically' is roster language for 'the gap is now the night shift's problem'."},
+                  {"key":"extend","label":"Ask the APs to flex their hours for the two nights — they're professionals and it's two nights","quality":10,
+                   "consequence":"Two APs agree because professionals do; the rule existed because switching errors cluster in hour 13, and the near-miss report writes itself.",
+                   "principle":"Fatigue limits that flex under schedule pressure aren't limits — they're suggestions with consequences."}]}],
+             "hints":["Identify the constraint with legal force — the roster is built outward from it.",
+               "If coverage can't move to the work, move the WORK to the coverage.",
+               "Pre-plan the slip scenario now; day 8 is too late to invent rest-compliant patterns."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Governance Steward"},
+             "share_line":"Rostered a 10-day shutdown from its legal constraints outward — and the slip never broke it."}
+            """),
+
+        ("WC-RES-241", "One squad, two releases", "Splitting the team is wrong. Not splitting the team is wrong. Choose the right wrong.",
+            "Technology Programmes", "Engineering Delivery Lead", "project_management", "professional", 12,
+            """["resource_management","leadership"]""",
+            """
+            {"context":"Your 9-person platform squad must deliver two releases in the same six-week window: the regulatory reporting release (fixed statutory date, moderate complexity, well-understood) and the customer-portal release (commercially promised, higher complexity, novel work). The squad works best together; splitting it breaks pairing and review chains. Not splitting it means sequencing — and one release's window doesn't fit behind the other's.",
+             "evidence":[
+               {"label":"Release A","value":"Regulatory — statutory date, moderate, well-understood"},
+               {"label":"Release B","value":"Portal — promised, complex, novel"},
+               {"label":"Squad","value":"9 people, strong pairing/review culture"},
+               {"label":"Arithmetic","value":"Sequential doesn't fit; parallel means splitting"}],
+             "decisions":[
+               {"key":"split","prompt":"Your structure for the six weeks?",
+                "options":[
+                  {"key":"asymmetric","label":"Split ASYMMETRICALLY by work nature: 3 people (including one senior) take the well-understood regulatory release as a tight sub-team; 6 keep the novel portal work with the pairing culture intact — with one shared daily sync and the explicit promise the split dies at week six","quality":100,
+                   "consequence":"The regulatory three run a known playbook without needing the full squad's creativity; the portal six keep the collaborative density the novel work actually requires, and both releases land — the temporary structure dissolving on schedule.",
+                   "principle":"Split by what the work needs, not by fairness: routine work travels in small teams; novel work is what the culture was built for."},
+                  {"key":"even","label":"Split 5/4 evenly — both releases matter, both get half the squad","quality":20,
+                   "consequence":"The portal's novel work loses critical mass for its design debates while the regulatory release carries more people than its playbook needs; even was equitable and wrong for both.",
+                   "principle":"Symmetric splits of asymmetric work shortchange the hard half and pad the easy one."},
+                  {"key":"hero","label":"Keep the squad whole on the portal; give the regulatory release to two contractors","quality":15,
+                   "consequence":"The contractors, new to the codebase, take three weeks to move safely; the statutory date arrives with the release at 70% and no one inside the squad fluent in its state.",
+                   "principle":"Statutory dates are the last place for onboarding risk — outsource novel exploration never, routine-but-critical rarely."}]}],
+             "hints":["Classify each release: playbook work or discovery work? They need different structures.",
+               "Protect collaborative density where the problems are unsolved.",
+               "Make the split explicitly temporary — reversibility is what makes it acceptable."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Split a squad asymmetrically — playbook three, discovery six — and landed both releases."}
+            """),
+
+        ("WC-RES-242", "Train the trainers first", "Four hundred users, six weeks, and a training team of three.",
+            "Enterprise Programmes", "Business Change Manager", "project_management", "professional", 9,
+            """["resource_management","change_management"]""",
+            """
+            {"context":"Your CRM rollout needs 400 users trained across five departments in six weeks. Your training team: three people. The maths of direct delivery fails (400 users ÷ 12-person sessions ÷ 3 trainers = impossible). Department heads propose their own sequences: sales first (biggest team), or claims first (most change-resistant), or 'whoever's free'. Meanwhile 20 volunteers from the pilot phase know the system well.",
+             "evidence":[
+               {"label":"Load","value":"400 users, 5 departments, 6 weeks"},
+               {"label":"Capacity","value":"3 trainers; direct delivery maths fails"},
+               {"label":"Asset","value":"20 pilot-phase power users, system-fluent"},
+               {"label":"Politics","value":"Each department claims first slot"}],
+             "decisions":[
+               {"key":"model","prompt":"Your delivery model and sequence?",
+                "options":[
+                  {"key":"cascade","label":"Weeks 1–2: the three trainers train the 20 pilot users as departmental trainers (materials, practice sessions, certification); weeks 3–6: 23 trainers cascade to 400, sequenced by GO-LIVE ORDER (not politics) — with the core team floating as quality support","quality":100,
+                   "consequence":"The cascade delivers 400 trained users with local trainers who stay after week six as floor-walking support — the thing no central team could ever have provided; go-live order sequencing means no one is trained months before or after they need it.",
+                   "principle":"When delivery capacity fails the arithmetic, train multipliers first — and sequence by when knowledge will be USED, not by who lobbies loudest."},
+                  {"key":"blitz","label":"Direct delivery, bigger sessions — 40-person lectures fit the maths","quality":15,
+                   "consequence":"The arithmetic works and the learning doesn't: 40-person lectures on a hands-on system produce sign-in sheets, not capability, and go-live's helpdesk queue proves it.",
+                   "principle":"Scaling class size to fit the calendar trades attendance for competence at 1:1."},
+                  {"key":"external","label":"Contract an external training provider to multiply capacity","quality":25,
+                   "consequence":"Eight external trainers learn your configuration for two weeks (of six), deliver generic-flavoured sessions, and leave at week six with everything they learned — the pilot users were free and permanent.",
+                   "principle":"Renting capacity you could grow internally pays twice: once in fees, once in the departed knowledge."}]}],
+             "hints":["When the delivery maths fails, look for the multiplier model.",
+               "The 20 pilot users are the asset the org chart doesn't show.",
+               "Sequence training by go-live order — knowledge decays from the moment it's taught."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Turned 3 trainers into 23 and sequenced 400 users by go-live, not by lobbying."}
+            """),
+
+        ("WC-RES-243", "Three fronts, two scaffold gangs", "Scaffolding is suddenly the constraint. Sequence it like one.",
+            "Construction", "Site Resource Coordinator", "project_management", "professional", 10,
+            """["resource_management","schedule_analysis"]""",
+            """
+            {"context":"Your hospital-wing project has three work fronts needing scaffold work in the same fortnight: the facade (5 days' scaffold adaptation, gates the cladding crew arriving Monday week 2), the plant room (3 days' access scaffold, gates M&E second fix — 12 fitters currently on other work until it's ready), and the atrium (8 days' birdcage, gates ceiling works that have 3 weeks' float). Two scaffold gangs available; a third possible from the supplier in a week at premium rates.",
+             "evidence":[
+               {"label":"Facade","value":"5 days · gates cladding crew arriving Mon wk2"},
+               {"label":"Plant room","value":"3 days · releases 12 fitters to second fix"},
+               {"label":"Atrium","value":"8 days · gated work has 3 weeks' float"},
+               {"label":"Capacity","value":"2 gangs now · 3rd possible in a week, premium"}],
+             "decisions":[
+               {"key":"sequence","prompt":"Gang allocation, week one?",
+                "options":[
+                  {"key":"gated_first","label":"Sequence by what each front RELEASES: gang 1 to the facade (hard external date — the cladding crew's arrival), gang 2 to the plant room first (3 days releases 12 fitters — the biggest labour unlock per scaffold day), then gang 2 joins the atrium; decline the premium third gang — the atrium's float absorbs the sequencing","quality":100,
+                   "consequence":"The cladding crew lands on ready scaffold; the fitters mobilise Thursday instead of week 3; the atrium birdcage finishes with float to spare — and the premium gang was never needed because the float was doing its job.",
+                   "principle":"Sequence a constrained resource by what each assignment UNLOCKS — external commitments and labour releases first, floated work last, and spend money only when float runs out."},
+                  {"key":"biggest","label":"Both gangs to the atrium first — 8 days is the longest job, start the longest first","quality":10,
+                   "consequence":"The birdcage finishes early into its three weeks of float; the cladding crew stands down Monday week 2 at full cost, and twelve fitters wait a fortnight for a three-day scaffold.",
+                   "principle":"'Longest first' optimises the scaffold programme and wrecks everyone else's — duration is not priority."},
+                  {"key":"third","label":"Hire the premium third gang and run all three fronts at once","quality":25,
+                   "consequence":"Everything proceeds in parallel at premium cost — solving with money what the float would have solved for free; the atrium's early finish buys nothing that was for sale.",
+                   "principle":"Buying capacity to avoid sequencing is only right when no front can wait — check the float before the phone."}]}],
+             "hints":["For each front, ask what its scaffold RELEASES and what it costs to wait.",
+               "External arrival dates and big labour unlocks outrank internal duration.",
+               "Float exists to absorb exactly this — spend it before spending money."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sequenced two scaffold gangs by what each front unlocked — and let float pay for the third."}
+            """),
+
+        ("WC-RES-244", "Kill the meetings, keep the decisions", "Thirty-one recurring meetings. The team delivers in the gaps between them.",
+            "Enterprise Programmes", "Team Effectiveness Lead", "project_management", "professional", 8,
+            """["resource_management","leadership"]""",
+            """
+            {"context":"A calendar audit of your 15-person delivery team finds 31 recurring meetings consuming 28% of team hours: 4 are decision forums with named authorities; 9 are status meetings that duplicate the dashboard; 6 are 'syncs' between people who sit together; 5 are stakeholder updates with declining attendance; 4 are technical design sessions (well-rated); 3 nobody could explain. The team's ask: 'give us our week back — but don't break anything'.",
+             "evidence":[
+               {"label":"Load","value":"31 recurring meetings, 28% of team hours"},
+               {"label":"Mix","value":"4 decision · 9 status · 6 adjacent-desk syncs · 5 fading updates · 4 valued design · 3 unexplained"},
+               {"label":"Constraint","value":"'Don't break anything'"},
+               {"label":"Instrument","value":"Dashboard already duplicates the status content"}],
+             "decisions":[
+               {"key":"cull","prompt":"The cull order?",
+                "options":[
+                  {"key":"by_function","label":"Cull by FUNCTION, protect by function: the 3 unexplained die today; the 9 status meetings collapse into the dashboard with one weekly exceptions-only slot; the 6 syncs are cancelled (the desks are adjacent); the 5 updates merge to 2 with fresh formats; the 4 decision forums and 4 design sessions — the ones doing irreplaceable work — remain untouched. Review in 6 weeks for regrowth","quality":100,
+                   "consequence":"Team hours recovered: ~19% — with zero broken decisions, because the cull never touched a meeting that DECIDED or DESIGNED anything; the six-week review catches two status meetings quietly regrowing and kills them again.",
+                   "principle":"Meetings are killed by function, not by count: anything that merely TRANSFERS information dies into a tool; anything that DECIDES or CREATES survives on merit."},
+                  {"key":"halve","label":"Mandate a 50% cut and let each meeting owner defend their slot","quality":20,
+                   "consequence":"The best-defended meetings survive — which selects for owners' attachment, not function; a decision forum dies to a well-argued status meeting, and the exercise is remembered as theatre.",
+                   "principle":"Uniform cut targets select for advocacy; function tests select for value."},
+                  {"key":"gentle","label":"Shorten everything to 25 minutes instead of cancelling — less disruptive","quality":15,
+                   "consequence":"31 meetings still fragment the week into confetti; the 28% falls to 21%, and the context-switching cost — the real tax — doesn't fall at all.",
+                   "principle":"The cost of a meeting-heavy week is fragmentation, not just minutes — shortening everything shortens nothing that matters."}]}],
+             "hints":["Classify by what each meeting DOES: decide, create, transfer, or nothing.",
+               "Information transfer belongs in tools; only deciding and creating need rooms.",
+               "Schedule the regrowth review now — culled meetings reseed within a quarter."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Culled 31 meetings by function and gave a team back a fifth of its week — decisions intact."}
+            """),
+
+        ("WC-RES-245", "Change the shift, keep the depot", "The new pattern is better on paper. The transition is where depots break.",
+            "Transport Operations", "Depot Transition Manager", "project_management", "professional", 11,
+            """["resource_management","change_management"]""",
+            """
+            {"context":"Your depot modernisation includes moving maintenance from a 2-shift to a 3-shift pattern — agreed with the union, better for asset availability, effective in eight weeks. The transition risk: the depot must keep its nightly maintenance quota THROUGH the change, staff need rota re-bidding (seniority rules), 12 fitters need nights training (they've never worked unsupervised nights), and the supervisors' pattern changes a week before everyone else's under the agreement. Sequence the transition.",
+             "evidence":[
+               {"label":"Change","value":"2-shift → 3-shift in 8 weeks; union-agreed"},
+               {"label":"Constraint","value":"Nightly maintenance quota must hold throughout"},
+               {"label":"People","value":"Rota re-bid (seniority rules) · 12 fitters night-trained · supervisors move 1 week early"},
+               {"label":"Risk","value":"Transitions are where depots miss quotas"}],
+             "decisions":[
+               {"key":"sequence","prompt":"The transition sequence?",
+                "options":[
+                  {"key":"dependency","label":"Sequence by dependency and lead time: rota re-bid FIRST (weeks 1–3, it determines who needs night training), night training for the actual night-bidders (weeks 3–7, supervised on existing nights), supervisors transition week 7 (their early week becomes the new pattern's shakedown), full cutover week 8 — with quota tracked nightly and a two-week overlap staffing buffer costed and approved upfront","quality":100,
+                   "consequence":"The re-bid surfaces that only 9 of the 12 assumed fitters actually bid nights — caught in week 2 (trainable) instead of week 8 (crisis); the supervisors' shakedown week catches two handover-process gaps, and the quota never dips.",
+                   "principle":"Sequence people transitions by information dependency — the re-bid tells you who to train, so it goes first, however administratively dull it looks."},
+                  {"key":"train_first","label":"Start night training immediately — it's the longest task, so it starts first","quality":20,
+                   "consequence":"Twelve assumed fitters train for five weeks; the re-bid then assigns three of them to days (seniority), and three untrained fitters to nights — the longest task ran first and trained partly the wrong people.",
+                   "principle":"'Longest first' fails when an upstream decision determines WHO the task applies to."},
+                  {"key":"bigbang","label":"Do everything in the final fortnight — short transitions minimise the disruption window","quality":10,
+                   "consequence":"Re-bid, training and cutover compress into two weeks; the quota drops 30% for a month, and the union files a dispute about training adequacy that the eight-week plan existed to avoid.",
+                   "principle":"Compressing a people-transition compresses its learning, not its risk."}]}],
+             "hints":["Find the step whose OUTPUT other steps consume — the re-bid names the trainees.",
+               "Use the supervisors' early week as deliberate shakedown, not accidental oddity.",
+               "The quota is the invariant: staff the overlap, don't hope through it."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sequenced a depot shift change by information dependency — and never missed a nightly quota."}
+            """),
+
+        ("WC-RES-246", "The matrix nobody staffed", "Maintenance lends the project its people. The plant still has to run.",
+            "Industrial Manufacturing", "Site Resource Planner", "project_management", "professional", 12,
+            """["resource_management","stakeholder_communication"]""",
+            """
+            {"context":"Your line-upgrade project draws its electricians and instrument techs from the plant's maintenance department — a matrix arrangement agreed 'in principle' at kickoff. Reality, month 3: the maintenance manager pulls people back for every breakdown (rightly — production pays everyone's wages), project tasks restart constantly, and your schedule has quietly slipped 3 weeks through a hundred small withdrawals. Both of you report to the site director, who 'expects you to work it out'.",
+             "evidence":[
+               {"label":"Arrangement","value":"Matrix — project borrows maintenance trades, agreed 'in principle'"},
+               {"label":"Reality","value":"Constant recalls for breakdowns; tasks restart repeatedly"},
+               {"label":"Damage","value":"3 weeks' slip via a hundred small withdrawals"},
+               {"label":"Governance","value":"Shared boss 'expects you to work it out'"}],
+             "decisions":[
+               {"key":"structure","prompt":"Your proposal to the maintenance manager?",
+                "options":[
+                  {"key":"protected_blocks","label":"Replace the always-borrowable pool with PROTECTED BLOCKS: named people, agreed 4-hour minimum blocks, a jointly-held escalation rule for genuine plant emergencies (defined: line-down, not routine), and a visible shared dashboard of withdrawals — so the cost of each recall is counted, not felt","quality":100,
+                   "consequence":"Recalls drop 70% — most 'breakdowns' turn out to be routine work that waits four hours perfectly well; the genuine line-down emergencies still get instant response, and the slip stabilises then recovers.",
+                   "principle":"Matrix resourcing fails through unpriced interruptions — protect blocks, define 'emergency', and make every withdrawal visible and countable."},
+                  {"key":"escalate","label":"Take the 3-week slip to the site director for a ruling on priority","quality":20,
+                   "consequence":"The director rules 'production first, obviously' — now formalised AGAINST the project; the 'work it out' instruction was the offer of a better deal than any ruling would be.",
+                   "principle":"Escalating a structural problem to a boss who said 'work it out' buys a worse structure with an audience."},
+                  {"key":"dedicate","label":"Demand dedicated project electricians — hire or transfer, end the matrix","quality":25,
+                   "consequence":"The business case for six dedicated trades on a five-month project fails in finance; three months of requisition argument later, the matrix is unchanged and unimproved.",
+                   "principle":"Demanding the org-chart solution to a working-agreement problem swaps a fixable friction for an unwinnable budget fight."}]}],
+             "hints":["Count the interruptions — a hundred small withdrawals is a structure, not bad luck.",
+               "Define 'emergency' jointly; most recalls fail their own definition.",
+               "Make the borrowing visible on a shared instrument — counted costs behave differently from felt ones."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Executive Communicator"},
+             "share_line":"Fixed a leaking matrix with protected blocks and a definition of 'emergency'."}
+            """),
+
+        ("WC-SCH-247", "The nine days before the possession", "Everything must be ready by Friday week. Order the readiness work backwards.",
+            "Rail Infrastructure", "Possession Readiness Planner", "project_controls", "professional", 9,
+            """["schedule_analysis","sequencing"]""",
+            """
+            {"context":"Your junction-renewal possession starts in nine days. Outstanding readiness items: materials to site compound (3 days' delivery lead), plant acceptance inspections (1 day, needs the plant on site), possession staff briefings (must be within 5 days of the work by rule), the practice lift for the crane move (needs the crane accepted and materials present), the method-statement briefing cascade (after any practice-lift learnings), and welfare setup (2 days, independent). The team is treating it as a checklist. It is a network.",
+             "evidence":[
+               {"label":"Items","value":"Materials (3d lead) · plant acceptance (needs plant) · briefings (within 5d of work) · practice lift (needs crane+materials) · MS cascade (after practice lift) · welfare (2d, independent)"},
+               {"label":"Clock","value":"9 days to possession"},
+               {"label":"Team habit","value":"Treating it as a checklist, not a network"}],
+             "decisions":[
+               {"key":"order","prompt":"The backward-passed order?",
+                "options":[
+                  {"key":"network","label":"Chain it: materials ordered TODAY (3-day lead) → plant arrives and is accepted days 3–4 → practice lift day 5 → method statements updated with its learnings day 6 → briefing cascade days 6–8 (inside the 5-day rule) → welfare runs parallel days 1–2. The practice lift is the pivot — everything upstream feeds it, everything downstream learns from it","quality":100,
+                   "consequence":"The practice lift on day 5 finds the crane mat position fouls a signal cable route — corrected in the method statement everyone is then briefed on; the possession's actual lift takes 40 minutes, boring and right.",
+                   "principle":"Readiness is a dependency network wearing a checklist's clothes — find the pivot item that both consumes and produces, and hang the calendar on it."},
+                  {"key":"checklist","label":"Work the checklist by owner availability — everything done by day 9 is success","quality":10,
+                   "consequence":"Briefings happen day 2 (owner was free) — outside the 5-day rule, so they repeat day 8, now WITHOUT practice-lift learnings that arrived day 7 late because materials ordered day 4; three items done twice, one rule broken.",
+                   "principle":"Checklists hide sequence errors until the items collide — by-availability ordering is collision scheduling."},
+                  {"key":"buffer","label":"Compress everything into days 6–9 so information is freshest for the possession","quality":15,
+                   "consequence":"Freshness achieved, margin destroyed: the materials delivery slips one day (they do) and the whole compressed stack lands on the possession weekend itself.",
+                   "principle":"Back-loading for freshness deletes the recovery time that front-loading exists to buy."}]}],
+             "hints":["Find the item with the longest lead — its clock started yesterday.",
+               "Find the pivot: what both needs several inputs AND changes what follows?",
+               "Rules with time windows (briefings) are placed, not slotted."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Turned a possession-readiness checklist back into the network it always was."}
+            """),
+
+        // ───────────── August · governance & quality dailies · practitioner ─────────────
+
+        ("WC-GOV-248", "Decided, says the corridor", "Half the programme's decisions have no home, no record and no owner.",
+            "Enterprise Programmes", "Governance Manager", "project_management", "professional", 7,
+            """["governance","decision_quality"]""",
+            """
+            {"context":"Preparing for a gateway review, you try to reconstruct how five significant decisions were made this quarter — the data-residency choice, the vendor short-list cut, the phase-2 descope, the test-environment budget, the go-live criteria change. Findings: two live in meeting minutes (different meetings, different attendees), one in an email thread, one 'was agreed with the sponsor' (no record), one nobody can source at all. All five are being acted on.",
+             "evidence":[
+               {"label":"Reconstruction","value":"5 significant decisions: 2 in scattered minutes · 1 in email · 1 unrecorded 'sponsor agreement' · 1 unsourceable"},
+               {"label":"Status","value":"All five being acted on"},
+               {"label":"Trigger","value":"Gateway review imminent"},
+               {"label":"Culture","value":"Fast-moving, informal, allergic to bureaucracy"}],
+             "decisions":[
+               {"key":"fix","prompt":"Your fix, sized for a bureaucracy-allergic culture?",
+                "options":[
+                  {"key":"log_light","label":"A single lightweight decision log — one line per decision: what, who, when, where recorded — populated backwards for the five NOW (getting the unsourced one actually re-decided), maintained forward as a 5-minute weekly discipline; no new meetings, no templates beyond the one line","quality":100,
+                   "consequence":"The backfill exposes that the 'sponsor agreement' descope was never actually agreed — re-decided properly before the gateway asks; the one-line log costs minutes a week and answers every future 'who decided this?' in seconds.",
+                   "principle":"Decision governance is an INDEX, not a process — the minimum record that makes decisions findable, owned and real."},
+                  {"key":"process","label":"Introduce a decision-paper template and approval workflow for all significant decisions","quality":15,
+                   "consequence":"The bureaucracy-allergic culture routes around the workflow within a month — decisions now happen in corridors AND avoid the record deliberately; the cure taught evasion.",
+                   "principle":"Over-weighted governance in a fast culture doesn't slow decisions — it drives them underground."},
+                  {"key":"accept","label":"Accept it — fast informal decisions are why the programme moves; the gateway will understand","quality":10,
+                   "consequence":"The gateway does not understand; 'nobody can source the descope decision' becomes the review's headline finding, and the imposed remedy is the heavyweight process option one avoided.",
+                   "principle":"Ungoverned decision-making eventually gets governed by someone else, on worse terms."}]}],
+             "hints":["The problem is findability and ownership, not formality — size the fix to that.",
+               "Backfill first: one of the five will turn out never to have been decided at all.",
+               "The best control for a fast culture is the one that costs less than the corridor."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Indexed a programme's corridor decisions in one line each — and caught the one that never happened."}
+            """),
+
+        ("WC-GOV-249", "Around the architecture board", "The team found a faster route to production. It goes through no reviews at all.",
+            "Technology Programmes", "Technical Governance Lead", "project_management", "professional", 7,
+            """["governance","quality_management"]""",
+            """
+            {"context":"Your platform programme's architecture board reviews all production changes — turnaround averaging 12 days, a real drag. You discover a delivery team has been shipping 'configuration changes' through the ops change process (2-day turnaround) — including, last month, a new authentication flow and a data-retention change that are architecture by any definition. Their lead is unapologetic: 'the board is where velocity goes to die; we shipped safely'. They did ship safely. So far.",
+             "evidence":[
+               {"label":"Bypass","value":"Architecture shipped as 'config' via ops process"},
+               {"label":"Examples","value":"New auth flow · data-retention change"},
+               {"label":"Their defence","value":"'Board takes 12 days; we shipped safely'"},
+               {"label":"Fact","value":"They DID ship safely — and the board IS slow"}],
+             "decisions":[
+               {"key":"respond","prompt":"You:",
+                "options":[
+                  {"key":"both","label":"Close the loophole AND fix its cause together: the bypassed changes get retrospective review this week (the retention change has a compliance issue — found, fixed); simultaneously, the board adopts the tiered model the bypass was crying out for — pre-approved patterns ship at ops speed, only genuine novelty gets full review","quality":100,
+                   "consequence":"The retention issue is caught before the regulator's audit; the tiered model cuts median review to 3 days, and the bypassing team becomes the new model's loudest advocate — their complaint was correct even though their route wasn't.",
+                   "principle":"A governance bypass is two findings: a violation to close and a signal to heed — teams route around friction that exceeds its value; fix both or the next bypass is smarter."},
+                  {"key":"enforce","label":"Shut the loophole hard: mandatory review for everything, disciplinary note for the lead","quality":15,
+                   "consequence":"The loophole closes; the 12-day queue doubles with re-routed traffic, delivery slows programme-wide, and the next bypass is designed not to be discoverable.",
+                   "principle":"Enforcing slow governance harder makes evasion a competence — the queue was the co-author of the crime."},
+                  {"key":"bless","label":"Legitimise it — if they shipped safely for months, the ops route evidently works for most changes","quality":10,
+                   "consequence":"The retention change's compliance issue — unreviewed — surfaces in the audit; 'we legitimised the bypass' is a sentence the CIO gets to say to the regulator.",
+                   "principle":"'It worked so far' is how every unreviewed risk describes itself until it doesn't."}]}],
+             "hints":["Audit the bypassed changes first — at least one will justify the review's existence.",
+               "Treat the bypass as user research on your governance's cost/value ratio.",
+               "Tiered review — patterns fast, novelty deep — is the durable settlement."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Closed an architecture bypass and fixed the 12-day queue that created it."}
+            """),
+
+        ("WC-GOV-250", "Skip the gate, just this once", "The sponsor wants definition closed by Friday. The gate review is the only thing in the way.",
+            "Construction", "PMO Lead", "project_management", "professional", 5,
+            """["governance","decision_quality"]""",
+            """
+            {"context":"Your depot-redevelopment project's definition gate review is scheduled for Friday week. The sponsor — under pressure to show the board progress — asks you to 'close definition administratively' this Friday instead: 'the review's a formality; the documents are all basically done; we'll do a retrospective gate if anyone asks'. The documents are 80% done. The gate's purpose is testing the 20%.",
+             "evidence":[
+               {"label":"Ask","value":"Close the gate 'administratively', a week early, review skipped"},
+               {"label":"Reason","value":"Sponsor wants board-visible progress"},
+               {"label":"Reality","value":"Documents 80% done; the gate exists to test the missing 20%"},
+               {"label":"Offer","value":"'Retrospective gate if anyone asks'"}],
+             "decisions":[
+               {"key":"gate","prompt":"Your response to the sponsor?",
+                "options":[
+                  {"key":"alternative","label":"Give the sponsor what they NEED without breaking the gate: a board-ready progress statement Friday ('definition substantially complete, gate review [date] confirmed'), the review held as scheduled — offering to compress it to a half-day if the panel agrees — and a plain sentence about what 'administrative closure' would make YOUR signature mean","quality":100,
+                   "consequence":"The board hears crisp progress Friday; the gate a week later catches a ground-risk allocation gap in the missing 20% — the sponsor, watching it get fixed pre-contract, never asks for an administrative closure again.",
+                   "principle":"Serve the sponsor's real need (visible progress) without serving the request (a hollow gate) — most gate-skipping asks are progress-optics problems wearing governance clothes."},
+                  {"key":"comply","label":"Close it as asked — sponsors own their programmes and the retrospective offer covers you","quality":5,
+                   "consequence":"The 20% contains the ground-risk gap; it's discovered post-contract at contract prices, and the 'retrospective gate' — never held, naturally — is now the first exhibit in the lessons-learned review.",
+                   "principle":"A gate closed administratively certifies nothing except who was willing to close it."},
+                  {"key":"refuse","label":"Refuse flatly — gates are gates, and the sponsor should know better","quality":25,
+                   "consequence":"The gate survives; the relationship doesn't — a sponsor rebuffed without an alternative escalates over you, and someone more flexible inherits your chair by year-end.",
+                   "principle":"Defending governance without solving the need behind the attack wins the battle and loses the appointment."}]}],
+             "hints":["Ask what the sponsor actually needs Friday — it's rarely the gate itself.",
+               "The 20% undone is precisely what gates exist to examine.",
+               "Offer speed (compressed review), never substitution (skipped review)."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Executive Communicator"},
+             "share_line":"Gave a sponsor Friday's headline without selling Friday's gate."}
+            """),
+
+        ("WC-QLT-251", "Audited to a standstill", "Four audits in six weeks, all asking the same questions. The team has stopped working to be audited.",
+            "Energy Networks", "Quality & Assurance Manager", "project_management", "professional", 6,
+            """["quality_management","governance"]""",
+            """
+            {"context":"Your grid-connection project has hosted four audits in six weeks: the client's technical audit, your own corporate QA audit, the ISO surveillance visit, and the funder's assurance review. Each consumed 2–4 days of the same key people; overlap between their document requests was ~70%. A fifth (the regulator's) is scheduled next month. The site team's phrase: 'we stop working to be audited about the work we've stopped doing'.",
+             "evidence":[
+               {"label":"Load","value":"4 audits / 6 weeks · 2–4 days each of key people"},
+               {"label":"Overlap","value":"~70% same document requests"},
+               {"label":"Incoming","value":"Regulator's audit next month"},
+               {"label":"Effect","value":"Delivery time consumed by assurance of delivery"}],
+             "decisions":[
+               {"key":"fix","prompt":"You:",
+                "options":[
+                  {"key":"single_pack","label":"Build the evidence architecture once: a maintained assurance pack (the 70% overlap — certs, registers, records — kept current in one indexed repository with read access for auditors), a coordinated forward audit calendar shared with all five bodies, and pre-audit alignment calls offering each auditor the pack FIRST so visits focus on their unique 30%","quality":100,
+                   "consequence":"The regulator's audit takes a day and a half instead of four — they arrived having read the pack; two of next year's audits agree to share findings under the calendar, and the team's audit load halves without a single scope reduction.",
+                   "principle":"You cannot refuse assurance, but you can architect it: one evidence source, one calendar, and every audit spends its days on what only IT asks."},
+                  {"key":"pushback","label":"Escalate the audit burden to the sponsor and ask for two of the five to be waived","quality":15,
+                   "consequence":"The client's and funder's audits are contractual, ISO is certification, the regulator is the regulator, and your own QA is your own — the waiver request returns with zero waivers and a note about attitude to assurance.",
+                   "principle":"Audit demand from five independent authorities doesn't negotiate — only its COST does."},
+                  {"key":"absorb","label":"Assign a full-time audit liaison to shield the team — bodies between auditors and workers","quality":30,
+                   "consequence":"The liaison helps logistics and can't answer technical questions — the key people still get pulled in for the substance, now with an extra relay in the middle.",
+                   "principle":"A human buffer relocates the disruption; only shared evidence architecture reduces it."}]}],
+             "hints":["Measure the overlap — 70% common requests is an architecture opportunity.",
+               "Auditors accept ready evidence gladly; their days are costly to them too.",
+               "The calendar is leverage: bodies coordinate when someone offers the coordination."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Governance Steward"},
+             "share_line":"Halved a project's audit burden with one evidence pack and one shared calendar."}
+            """),
+
+        ("WC-QLT-252", "The quality plan from the last job", "Search-and-replace quality: the plan says 'the bridge' in three places. This is a school.",
+            "Public Estates", "Quality Reviewer", "project_management", "professional", 7,
+            """["quality_management","governance"]""",
+            """
+            {"context":"Reviewing the definition-stage quality plan your delivery partner submitted for the schools programme, you find it is their standard template lightly edited: 'the bridge' survives in three paragraphs, the inspection regime references NDT welding protocols (there is no structural steel in phase 1), and the roles section names people who left the partner last year. It was signed by their quality director. The plan is contractually required before mobilisation — which everyone wants next month.",
+             "evidence":[
+               {"label":"Artefacts","value":"'The bridge' ×3 · NDT welding regime (no steel in scope) · departed staff named"},
+               {"label":"Signature","value":"Partner's quality director signed it"},
+               {"label":"Status","value":"Contractual prerequisite for mobilisation, wanted next month"},
+               {"label":"Question","value":"Reject, accept, or something better"}],
+             "decisions":[
+               {"key":"respond","prompt":"Your response?",
+                "options":[
+                  {"key":"reject_specific","label":"Reject with a SPECIFIC schedule of deficiencies (the three artefacts plus the real test: 'show us the inspection and test regime for THIS scope — masonry, roofing, M&E in occupied sites'), a resubmission date that protects mobilisation, and a required session where their quality lead walks YOUR team through the resubmission","quality":100,
+                   "consequence":"The resubmission is genuinely scope-specific — the walk-through requirement made copy-paste impossible; more usefully, the occupied-sites inspection regime it forced into existence catches two real gaps in month 2.",
+                   "principle":"Reject template quality with specifics and a walk-through — a plan someone must EXPLAIN aloud cannot be a search-and-replace."},
+                  {"key":"accept_note","label":"Accept it with comments — the errors are cosmetic and mobilisation shouldn't wait on typos","quality":10,
+                   "consequence":"'The bridge' was cosmetic; the welding-inspection regime standing in for an occupied-schools regime was not — the plan's first real test (dust control failure near a classroom) finds it silent, because it was written for a bridge.",
+                   "principle":"Template artefacts are the visible symptom; the disease is that nobody thought about THIS project's risks."},
+                  {"key":"escalate","label":"Escalate to the partner's account director as a professional-standards failure","quality":25,
+                   "consequence":"An apology arrives with impressive speed, followed by a corrected plan produced under the same conditions that produced the first one — pressure without the specificity that would force actual thought.",
+                   "principle":"Escalating volume without specifying substance gets you a faster template."}]}],
+             "hints":["The copy-paste artefacts are evidence of process, not just carelessness.",
+               "Specify what a scope-specific plan must demonstrate — occupied sites are the real test here.",
+               "Require the plan be presented aloud; explanation is the enemy of boilerplate."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Rejected a bridge's quality plan on behalf of a school — with specifics that forced real thought."}
+            """),
+
+        // ───────────── August · Logic & Sequence · practitioner ─────────────
+
+        ("WC-SCO-253", "The festival's fifty asks", "Three weeks out, the stakeholder wish-list needs sorting into contract, change and no.",
+            "Events & Venues", "Event Delivery Coordinator", "project_controls", "professional", 5,
+            """["scope_discipline","change_control"]""",
+            """
+            {"context":"Three weeks before a food festival's build, the venue, headline sponsor, council and community group have collectively submitted ~50 requests: extra sponsor branding positions, a community stage slot, changed traffic marshalling hours, more accessible viewing platforms, a drone display, extended bar hours, additional waste points. Some are contractual obligations already; some are priced changes; some are safety-relevant; some are simply new. The team is answering them in email-arrival order.",
+             "evidence":[
+               {"label":"Volume","value":"~50 requests, 4 stakeholder groups, 3 weeks out"},
+               {"label":"Mix","value":"Existing obligations · priced changes · safety-relevant · plain new asks"},
+               {"label":"Current method","value":"Email-arrival order"},
+               {"label":"Constraint","value":"Licence conditions & safety case are fixed"}],
+             "decisions":[
+               {"key":"triage","prompt":"The sorting rule?",
+                "options":[
+                  {"key":"classify","label":"Classify before answering: (1) already-contractual items get scheduled, not debated; (2) safety/licence-touching items (traffic hours, drone, bar extension) route to the safety advisor group THIS week — they have external clocks; (3) genuine changes get priced and offered; (4) the rest get a courteous no with reasons — and every stakeholder sees the same published triage","quality":100,
+                   "consequence":"The safety-relevant items hit the safety advisory meeting with days to spare (the drone needs an aviation notification that takes 21 days — caught exactly in time); the sponsor pays for two branding changes, and the email queue stops governing the event.",
+                   "principle":"Sort stakeholder asks by their GOVERNING regime — obligation, safety, change, or courtesy — before any individual answer; the sort finds the hidden deadlines."},
+                  {"key":"stakeholder","label":"Answer by stakeholder importance: sponsor first, venue second, council third, community last","quality":15,
+                   "consequence":"The sponsor's branding positions are settled beautifully while the council's traffic-hours item — carrying a statutory consultation clock — waits in third place until the clock wins.",
+                   "principle":"Ranking by stakeholder power misses that some requests carry deadlines no power can extend."},
+                  {"key":"continue","label":"Keep arrival order — it's fair and everyone can see the queue","quality":10,
+                   "consequence":"Request 34 (the drone) reaches the top of the fair queue six days too late for its aviation notification; fairness to emails was unfairness to physics.",
+                   "principle":"Arrival order treats a licence condition and a bar-hours wish as the same species — they are not."}]}],
+             "hints":["First sort by governing regime, not by requester or arrival.",
+               "Hunt for external clocks — notifications, consultations, licence variations.",
+               "Publish the triage; visible rules stop the relitigating."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sorted fifty festival asks by regime and caught the 21-day drone clock in time."}
+            """),
+
+        ("WC-SCO-254", "Two hundred requirements, forty duplicates", "Before the backlog is ordered, it must stop describing the same thing six ways.",
+            "Enterprise Programmes", "Requirements Analyst", "project_controls", "professional", 5,
+            """["requirements_management","scope_discipline"]""",
+            """
+            {"context":"Consolidating requirements from five departments for the case-management platform, you hold ~200 statements. Sampling shows the real problem isn't volume but redundancy-in-disguise: 'audit trail of all changes', 'history of who edited what', 'tamper-evident record keeping' and three similar statements are one requirement wearing six outfits — with subtly different acceptance implications. The programme wants a prioritised backlog by Friday. Prioritising duplicates ranks the same thing six times.",
+             "evidence":[
+               {"label":"Volume","value":"~200 statements, 5 departments"},
+               {"label":"Sample finding","value":"Requirement families: same need, 4–6 phrasings, subtly different acceptance edges"},
+               {"label":"Ask","value":"Prioritised backlog by Friday"},
+               {"label":"Trap","value":"Prioritising before deduplicating ranks ghosts"}],
+             "decisions":[
+               {"key":"order","prompt":"The consolidation order?",
+                "options":[
+                  {"key":"dedupe_first","label":"Cluster → merge → THEN prioritise: group by underlying need (the audit-trail family becomes ONE requirement whose acceptance criteria union the six variants' real edges, each variant's author confirming their edge survived), then rank the ~120 genuine requirements — Friday delivers fewer, truer, ranked items","quality":100,
+                   "consequence":"The 200 collapse to 118; the audit-trail merge surfaces that one department needed legal-hold semantics the others didn't — an acceptance edge that would have been lost in six separate medium-priority duplicates.",
+                   "principle":"Deduplicate by NEED before prioritising by value — merging is where the real requirements emerge, and the variants' edges are the treasure, not the trash."},
+                  {"key":"rank_all","label":"Prioritise all 200 as submitted — departments wrote what they meant; merging is presumptuous","quality":10,
+                   "consequence":"The audit-trail need appears at ranks 12, 31, 48, 77, 90 and 130; the build team implements rank 12's phrasing, and the legal-hold edge (rank 90's version) is discovered missing at UAT.",
+                   "principle":"A duplicated requirement's priority is meaningless — its highest-ranked phrasing wins and its edges lose."},
+                  {"key":"per_dept","label":"Keep five departmental backlogs — merging across departments causes fights","quality":20,
+                   "consequence":"Five tidy backlogs, one platform: the build sequences by department, rebuilding the audit trail three times as each department's variant arrives.",
+                   "principle":"Departmental backlogs for one shared platform schedule the duplication into the build itself."}]}],
+             "hints":["Cluster by the NEED under the words — phrasing families are one requirement.",
+               "The variants' differences are acceptance criteria in disguise; union them, don't discard.",
+               "Have each variant's author confirm their edge survived the merge — that's the fight worth having."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Collapsed 200 requirements to 118 real ones — and found the legal-hold edge hiding in a duplicate."}
+            """),
+
+        ("WC-SCH-255", "An agenda is a schedule", "The planning workshop has one day to produce a plan. Sequence the day like you'd sequence a project.",
+            "Industrial Manufacturing", "Planning Workshop Facilitator", "project_controls", "professional", 6,
+            """["schedule_analysis","facilitation"]""",
+            """
+            {"context":"You're facilitating the one-day planning workshop for the packaging-line relocation — 14 attendees including the ops manager (mornings only), the design lead (needed for constraints AND sequencing) and the logistics contractor (joining remotely, 2-hour window at 13:00). Agenda items: scope walkthrough, constraints capture, milestone definition, activity sequencing, risk identification, and 'parking lot' resolution. Draft agenda currently runs them in that listed order.",
+             "evidence":[
+               {"label":"People","value":"Ops manager AM only · design lead needed twice · logistics 13:00–15:00 remote"},
+               {"label":"Items","value":"Scope · constraints · milestones · sequencing · risks · parking lot"},
+               {"label":"Dependency","value":"Sequencing needs constraints; milestones anchor sequencing; risks emerge FROM sequencing"},
+               {"label":"Draft","value":"Listed order, people ignored"}],
+             "decisions":[
+               {"key":"agenda","prompt":"The right agenda?",
+                "options":[
+                  {"key":"resource_levelled","label":"Schedule it like a project — dependencies AND resource calendars: scope + constraints in the morning (ops manager present for both), milestones before lunch (anchored while ops is still there), sequencing at 13:00 when logistics joins (their window aligned to the item needing them), risks harvested DURING sequencing, parking lot last — the agenda is a resource-levelled network","quality":100,
+                   "consequence":"Every item runs with its essential people present; the logistics contractor's two hours land exactly on the sequencing they inform, and the risk list emerges rich because it was captured where risks actually surface — mid-sequencing.",
+                   "principle":"An agenda is a schedule with people as resources — level it against attendee calendars and item dependencies like any other plan."},
+                  {"key":"listed","label":"Run the listed order — logical enough, and reshuffling confuses attendees","quality":10,
+                   "consequence":"Sequencing starts at 14:30 — logistics' window half gone, ops manager long departed; the afternoon's plan is built missing the two voices it most needed, and Tuesday's follow-up meeting is born.",
+                   "principle":"An agenda that ignores its attendees' calendars schedules their absence into the output."},
+                  {"key":"flexible","label":"No fixed agenda — work the items dynamically as energy and attendance allow","quality":15,
+                   "consequence":"Dynamic facilitation meets fourteen opinions about what's next; the day produces excellent discussion of three items and a parking lot containing the other three.",
+                   "principle":"Improvised sequencing under attendance constraints just moves the collisions inside the room."}]}],
+             "hints":["List who each item NEEDS, then read the attendance calendar — the agenda writes itself.",
+               "Fixed windows (the remote contractor) are immovable resources; place their item first.",
+               "Some items produce others' inputs — risks live inside sequencing, not after it."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Resource-levelled a workshop agenda like a project — and finished the plan in the room."}
+            """),
     };
 }
