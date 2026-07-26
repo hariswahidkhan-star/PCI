@@ -172,8 +172,41 @@ MAPPED_JAN = [
 ]
 assert len(MAPPED_JAN) == 28
 
-# Existing bank items that complete January — pinned so the month stays fully authored.
-PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17}
+# ── February authored pack: scope, requirements and stakeholder alignment. ──
+MAPPED_FEB = [
+    ("WC-SCO-081", "The requirement nobody owned", "logic_sequence", "scope_requirements", "definition_planning", "cross_sector", "order_rank", "foundation", 6, 32),
+    ("WC-STK-090", "The workshop that would not converge", "stakeholder_dilemma", "stakeholders_communication", "definition_planning", "cross_sector", "negotiation_communication", "professional", 6, 33),
+    ("WC-EVM-099", "Three letters the board reads first", "cost_value", "cost_commercial", "definition_planning", "cross_sector", "numeric_calculation", "foundation", 10, 34),
+    ("WC-CAP-101", "The definition gateway", "executive_mission", "integration_governance", "definition_planning", "cross_sector", "multi_stage_decision", "expert", 24, 35),
+    ("WC-RSK-103", "The register from one workshop", "risk_room", "risk_uncertainty", "definition_planning", "construction_infrastructure", "numeric_calculation", "professional", 8, 36),
+    ("WC-CPM-105", "The enabling works nobody scheduled", "schedule_strategy", "schedule_planning", "definition_planning", "climate_sustainability", "numeric_calculation", "professional", 9, 37),
+    ("WC-SCO-082", "One deliverable, three definitions", "logic_sequence", "scope_requirements", "definition_planning", "cross_sector", "order_rank", "foundation", 7, 38),
+    ("WC-STK-091", "Two departments, one front door", "stakeholder_dilemma", "stakeholders_communication", "definition_planning", "public_sector", "negotiation_communication", "professional", 7, 39),
+    ("WC-CHG-100", "Where the contingency actually went", "cost_value", "cost_commercial", "definition_planning", "manufacturing_industrial", "numeric_calculation", "foundation", 12, 40),
+    ("WC-CAP-102", "Seven platforms, one future", "executive_mission", "integration_governance", "definition_planning", "technology_digital", "multi_stage_decision", "expert", 22, 41),
+    ("WC-RSK-104", "Contingency before the case closes", "risk_room", "risk_uncertainty", "definition_planning", "cross_sector", "numeric_calculation", "professional", 9, 42),
+    ("WC-CPM-106", "Planning the turnaround backwards", "schedule_strategy", "schedule_planning", "definition_planning", "energy_utilities", "numeric_calculation", "professional", 11, 43),
+    ("WC-SCO-083", "In scope, out of scope, says who", "logic_sequence", "scope_requirements", "definition_planning", "construction_infrastructure", "order_rank", "foundation", 5, 44),
+    ("WC-STK-092", "The regulator reads it differently", "stakeholder_dilemma", "stakeholders_communication", "definition_planning", "transport_logistics", "negotiation_communication", "professional", 5, 47),
+    ("WC-SCO-084", "Where the project ends and the asset begins", "logic_sequence", "scope_requirements", "definition_planning", "cross_sector", "order_rank", "foundation", 6, 48),
+    ("WC-STK-093", "Just a clarification", "stakeholder_dilemma", "stakeholders_communication", "definition_planning", "cross_sector", "negotiation_communication", "professional", 6, 49),
+    ("WC-SCO-085", "The exclusion that came back", "logic_sequence", "scope_requirements", "definition_planning", "energy_utilities", "order_rank", "foundation", 7, 50),
+    ("WC-STK-094", "The design review that became a duel", "stakeholder_dilemma", "stakeholders_communication", "definition_planning", "construction_infrastructure", "negotiation_communication", "professional", 7, 51),
+    ("WC-SCO-086", "Acceptance criteria, after the fact", "logic_sequence", "scope_requirements", "definition_planning", "technology_digital", "order_rank", "foundation", 5, 52),
+    ("WC-STK-095", "The must-have that isn't in scope", "stakeholder_dilemma", "stakeholders_communication", "definition_planning", "energy_utilities", "negotiation_communication", "professional", 5, 53),
+    ("WC-SCO-087", "The backlog that ate the baseline", "logic_sequence", "scope_requirements", "definition_planning", "cross_sector", "order_rank", "foundation", 6, 54),
+    ("WC-STK-096", "Whose signature accepts the ward", "stakeholder_dilemma", "stakeholders_communication", "definition_planning", "healthcare_life_sciences", "negotiation_communication", "professional", 6, 55),
+    ("WC-SCO-088", "Roll it up before you promise it", "logic_sequence", "scope_requirements", "definition_planning", "construction_infrastructure", "order_rank", "foundation", 7, 56),
+    ("WC-STK-097", "The demo that sold what we didn't spec", "stakeholder_dilemma", "stakeholders_communication", "definition_planning", "technology_digital", "negotiation_communication", "professional", 7, 57),
+    ("WC-SCO-089", "The spare-parts scope nobody claimed", "logic_sequence", "scope_requirements", "definition_planning", "manufacturing_industrial", "order_rank", "foundation", 5, 58),
+    ("WC-STK-098", "The requirement announced to the press", "stakeholder_dilemma", "stakeholders_communication", "definition_planning", "cross_sector", "negotiation_communication", "professional", 5, 59),
+]
+assert len(MAPPED_FEB) == 26
+MAPPED_JAN = MAPPED_JAN + MAPPED_FEB
+
+# Existing bank items that complete January and February — pinned so the months stay fully authored.
+PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17,
+                   "WC-WBS-048": 45, "WC-WBS-026": 46}
 
 DIFF_BAND = {"foundation": "foundation", "developing": "foundation", "professional": "practitioner",
              "advanced": "advanced", "expert": "executive"}

@@ -79,6 +79,22 @@ Delivered on top of Phase A:
 
 The bank now holds **80 published house challenges** (52 legacy + 28 Year-1 January).
 
+## 1c. Phase B slice 2 — February fully authored
+
+- **26 new experiences** (`WC-SCO-081`…`WC-STK-098`, `WC-EVM-099`, `WC-CHG-100`, `WC-CAP-101/102`,
+  `WC-RSK-103/104`, `WC-CPM-105/106`) complete February's plan: 9 Logic & Sequence scope exercises
+  (WBS roll-ups + structuring decisions), 9 Stakeholder Dilemmas on scope/requirements alignment,
+  2 Cost & Value (EVM forecasting set, change-register baseline), 2 capstone Executive Missions
+  (three-stage definition-gateway and platform-consolidation missions), 2 Risk Rooms (EMV), and
+  2 Schedule Strategies (CPM). Every item carries the full editorial contract and passes the
+  publication validator, reference solve, leakage scan and premium-language gate in CI.
+- With the two legacy WBS items pinned to their February days, **all 59 January + February days
+  are backed: runway_days = 59** — one day below the 60-day bar, so the runway alert correctly
+  remains raised until March authoring begins. The bank now holds **106 published challenges**.
+- Note on Logic & Sequence rendering: the catalogue interaction is `order_rank`; until the World
+  React shell (D1) ships a dedicated ordering control, these items express sequencing through
+  keyboard-accessible structured decisions and WBS roll-ups — accessible by construction.
+
 ## 2. Audit of the existing 52-challenge bank
 
 Every house challenge (`WC-…-001` … `WC-…-052`) was classified into the Project Intelligence

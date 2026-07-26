@@ -9,7 +9,7 @@
    "day": 213,
    "status": "planned",
    "source_challenge": null,
-   "title": "A commitment made in the corridor — a hospital ward refurbishment",
+   "title": "The partner who heard it elsewhere — an enterprise transformation",
    "experience_type": "daily_decision",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "practitioner",
@@ -17,29 +17,29 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "healthcare_life_sciences"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D214",
    "day": 214,
    "status": "planned",
    "source_challenge": null,
-   "title": "Overtime as a plan, again — a multi-site capital programme",
+   "title": "Overtime as a plan, again — a refinery turnaround",
    "experience_type": "schedule_strategy",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 8,
+   "est_minutes": 10,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "energy_utilities"
   },
   {
    "code": "PI-Y1-D215",
    "day": 215,
    "status": "planned",
    "source_challenge": null,
-   "title": "A deliverable with three definitions — a joint-venture delivery office",
+   "title": "The backlog that ate the baseline — a mixed-use development",
    "experience_type": "logic_sequence",
    "primary_domain": "scope_requirements",
    "difficulty_band": "practitioner",
@@ -47,14 +47,14 @@
    "est_minutes": 5,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D216",
    "day": 216,
    "status": "planned",
    "source_challenge": null,
-   "title": "The update that landed badly — a platform migration",
+   "title": "A commitment made in the corridor — a pilot production ramp",
    "experience_type": "daily_decision",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "practitioner",
@@ -62,19 +62,19 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "technology_digital"
+   "sector": "manufacturing_industrial"
   },
   {
    "code": "PI-Y1-D217",
    "day": 217,
    "status": "planned",
    "source_challenge": null,
-   "title": "The onboarding that never happened — a flood defence scheme",
+   "title": "The onboarding that never happened — a stadium fit-out",
    "experience_type": "schedule_strategy",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 11,
+   "est_minutes": 8,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
    "sector": "construction_infrastructure"
@@ -84,7 +84,7 @@
    "day": 218,
    "status": "planned",
    "source_challenge": null,
-   "title": "The scope statement that meant four things — a mixed-use development",
+   "title": "The requirement nobody owned — a flood defence scheme",
    "experience_type": "logic_sequence",
    "primary_domain": "scope_requirements",
    "difficulty_band": "practitioner",
@@ -99,7 +99,7 @@
    "day": 219,
    "status": "planned",
    "source_challenge": null,
-   "title": "A community meeting with one answer left — an enterprise transformation",
+   "title": "The update that landed badly — a census-scale IT programme",
    "experience_type": "daily_decision",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "practitioner",
@@ -107,29 +107,29 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "public_sector"
   },
   {
    "code": "PI-Y1-D220",
    "day": 220,
    "status": "planned",
    "source_challenge": null,
-   "title": "A team split across three sites — a grid reinforcement project",
+   "title": "A team split across three sites — a portfolio review",
    "experience_type": "schedule_strategy",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 12,
+   "est_minutes": 11,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "energy_utilities"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D221",
    "day": 221,
    "status": "planned",
    "source_challenge": null,
-   "title": "The float that was already spent — a conference-centre refit",
+   "title": "A forecast the trend does not support — an equipment overhaul",
    "experience_type": "logic_sequence",
    "primary_domain": "schedule_planning",
    "difficulty_band": "practitioner",
@@ -137,14 +137,14 @@
    "est_minutes": 6,
    "interaction": "order_rank",
    "lifecycle_stage": "definition_planning",
-   "sector": "professional_services_other"
+   "sector": "manufacturing_industrial"
   },
   {
    "code": "PI-Y1-D222",
    "day": 222,
    "status": "planned",
    "source_challenge": null,
-   "title": "The regulator's question you saw coming — a highway upgrade",
+   "title": "A community meeting with one answer left — a multi-site capital programme",
    "experience_type": "daily_decision",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "practitioner",
@@ -152,29 +152,29 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "construction_infrastructure"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D223",
    "day": 223,
    "status": "planned",
    "source_challenge": null,
-   "title": "Two projects, one senior engineer — a network modernisation",
+   "title": "Two projects, one senior engineer — a joint-venture delivery office",
    "experience_type": "schedule_strategy",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 9,
+   "est_minutes": 12,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "technology_digital"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D224",
    "day": 224,
    "status": "planned",
    "source_challenge": null,
-   "title": "An escalation drafted in anger — a production line install",
+   "title": "The regulator's question you saw coming — a river crossing",
    "experience_type": "daily_decision",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "practitioner",
@@ -182,29 +182,29 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "manufacturing_industrial"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D225",
    "day": 225,
    "status": "planned",
    "source_challenge": null,
-   "title": "The crew that was promised twice — a portfolio review",
+   "title": "The crew that was promised twice — a headquarters relocation",
    "experience_type": "schedule_strategy",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 10,
+   "est_minutes": 9,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "professional_services_other"
   },
   {
    "code": "PI-Y1-D226",
    "day": 226,
    "status": "planned",
    "source_challenge": null,
-   "title": "The steering pack with two audiences — a retrofit programme",
+   "title": "An escalation drafted in anger — a laboratory relocation",
    "experience_type": "daily_decision",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "practitioner",
@@ -212,22 +212,22 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "climate_sustainability"
+   "sector": "healthcare_life_sciences"
   },
   {
    "code": "PI-Y1-D227",
    "day": 227,
    "status": "planned",
    "source_challenge": null,
-   "title": "A handover the team was not ready for — a joint-venture delivery office",
+   "title": "A handover the team was not ready for — a rail resignalling project",
    "experience_type": "schedule_strategy",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 8,
+   "est_minutes": 10,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "transport_logistics"
   },
   {
    "code": "PI-Y1-D228",
@@ -264,7 +264,7 @@
    "day": 230,
    "status": "planned",
    "source_challenge": null,
-   "title": "Bad news, first telling — a multi-site capital programme",
+   "title": "The steering pack with two audiences — a solar portfolio build-out",
    "experience_type": "daily_decision",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "practitioner",
@@ -272,14 +272,44 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "climate_sustainability"
   },
   {
    "code": "PI-Y1-D231",
    "day": 231,
    "status": "planned",
    "source_challenge": null,
-   "title": "The specialist who became the bottleneck — a stadium fit-out",
+   "title": "The specialist who became the bottleneck — a framework programme",
+   "experience_type": "schedule_strategy",
+   "primary_domain": "resources_leadership",
+   "difficulty_band": "practitioner",
+   "duration_band": "standard",
+   "est_minutes": 8,
+   "interaction": "order_rank",
+   "lifecycle_stage": "execution_control",
+   "sector": "cross_sector"
+  },
+  {
+   "code": "PI-Y1-D232",
+   "day": 232,
+   "status": "planned",
+   "source_challenge": null,
+   "title": "Bad news, first telling — a portfolio review",
+   "experience_type": "daily_decision",
+   "primary_domain": "stakeholders_communication",
+   "difficulty_band": "practitioner",
+   "duration_band": "quick",
+   "est_minutes": 7,
+   "interaction": "single_decision",
+   "lifecycle_stage": "execution_control",
+   "sector": "cross_sector"
+  },
+  {
+   "code": "PI-Y1-D233",
+   "day": 233,
+   "status": "planned",
+   "source_challenge": null,
+   "title": "Overtime as a plan, again — a highway upgrade",
    "experience_type": "schedule_strategy",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
@@ -290,41 +320,11 @@
    "sector": "construction_infrastructure"
   },
   {
-   "code": "PI-Y1-D232",
-   "day": 232,
-   "status": "planned",
-   "source_challenge": null,
-   "title": "The partner who heard it elsewhere — a fleet transition",
-   "experience_type": "daily_decision",
-   "primary_domain": "stakeholders_communication",
-   "difficulty_band": "practitioner",
-   "duration_band": "quick",
-   "est_minutes": 7,
-   "interaction": "single_decision",
-   "lifecycle_stage": "execution_control",
-   "sector": "transport_logistics"
-  },
-  {
-   "code": "PI-Y1-D233",
-   "day": 233,
-   "status": "planned",
-   "source_challenge": null,
-   "title": "Overtime as a plan, again — a hospital trust capital plan",
-   "experience_type": "schedule_strategy",
-   "primary_domain": "resources_leadership",
-   "difficulty_band": "practitioner",
-   "duration_band": "standard",
-   "est_minutes": 12,
-   "interaction": "order_rank",
-   "lifecycle_stage": "execution_control",
-   "sector": "public_sector"
-  },
-  {
    "code": "PI-Y1-D234",
    "day": 234,
    "status": "planned",
    "source_challenge": null,
-   "title": "A commitment made in the corridor — a portfolio review",
+   "title": "The partner who heard it elsewhere — an offshore maintenance campaign",
    "experience_type": "daily_decision",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "practitioner",
@@ -332,29 +332,29 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "energy_utilities"
   },
   {
    "code": "PI-Y1-D235",
    "day": 235,
    "status": "planned",
    "source_challenge": null,
-   "title": "The onboarding that never happened — a framework programme",
+   "title": "The onboarding that never happened — a water treatment upgrade",
    "experience_type": "schedule_strategy",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 9,
+   "est_minutes": 12,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "energy_utilities"
   },
   {
    "code": "PI-Y1-D236",
    "day": 236,
    "status": "planned",
    "source_challenge": null,
-   "title": "The update that landed badly — a river crossing",
+   "title": "A commitment made in the corridor — a joint-venture delivery office",
    "experience_type": "daily_decision",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "practitioner",
@@ -362,29 +362,29 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "construction_infrastructure"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D237",
    "day": 237,
    "status": "planned",
    "source_challenge": null,
-   "title": "A team split across three sites — a substation replacement",
+   "title": "A team split across three sites — a national rollout",
    "experience_type": "schedule_strategy",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 10,
+   "est_minutes": 9,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "energy_utilities"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D238",
    "day": 238,
    "status": "planned",
    "source_challenge": null,
-   "title": "The go/no-go with missing evidence — a refinery turnaround",
+   "title": "The baseline the board never saw — a network modernisation",
    "experience_type": "daily_decision",
    "primary_domain": "integration_governance",
    "difficulty_band": "practitioner",
@@ -392,29 +392,29 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "energy_utilities"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D239",
    "day": 239,
    "status": "planned",
    "source_challenge": null,
-   "title": "The handover date that moved twice — a data-centre build",
+   "title": "The calendar the site never agreed to — an airport baggage upgrade",
    "experience_type": "schedule_strategy",
    "primary_domain": "schedule_planning",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 8,
+   "est_minutes": 10,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "technology_digital"
+   "sector": "transport_logistics"
   },
   {
    "code": "PI-Y1-D240",
    "day": 240,
    "status": "planned",
    "source_challenge": null,
-   "title": "Rework the dashboard called progress — a courts modernisation programme",
+   "title": "Rework the dashboard called progress — a framework programme",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "practitioner",
@@ -422,14 +422,14 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "public_sector"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D241",
    "day": 241,
    "status": "planned",
    "source_challenge": null,
-   "title": "One sponsor, two mandates — a multi-site capital programme",
+   "title": "The go/no-go with missing evidence — a multi-site capital programme",
    "experience_type": "daily_decision",
    "primary_domain": "integration_governance",
    "difficulty_band": "practitioner",
@@ -444,7 +444,7 @@
    "day": 242,
    "status": "planned",
    "source_challenge": null,
-   "title": "The hold point under commercial pressure — a portfolio review",
+   "title": "The hold point under commercial pressure — a hospital trust capital plan",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "practitioner",
@@ -452,14 +452,14 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "definition_planning",
-   "sector": "cross_sector"
+   "sector": "public_sector"
   },
   {
    "code": "PI-Y1-D243",
    "day": 243,
    "status": "planned",
    "source_challenge": null,
-   "title": "The programme that outgrew its case — a plant expansion",
+   "title": "The stage gate that split the board — a grid reinforcement project",
    "experience_type": "daily_decision",
    "primary_domain": "integration_governance",
    "difficulty_band": "practitioner",
@@ -467,7 +467,7 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "definition_planning",
-   "sector": "manufacturing_industrial"
+   "sector": "energy_utilities"
   }
  ]
 }

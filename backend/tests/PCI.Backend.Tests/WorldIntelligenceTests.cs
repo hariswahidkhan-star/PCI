@@ -51,7 +51,7 @@ public class WorldIntelligenceTests
         var db = NewWorldDb();
         var rows = db.Query("SELECT code,pi_type,pi_domain,pi_lifecycle,pi_sector,pi_interaction FROM pciworld_challenges WHERE author_id IS NULL");
         Assert.Equal(WorldContentPack.Count + WorldIntelligencePack.Count, rows.Count);
-        Assert.Equal(80, rows.Count);
+        Assert.Equal(106, rows.Count);
         foreach (var r in rows)
         {
             var code = H.Str(r["code"])!;
@@ -108,13 +108,11 @@ public class WorldIntelligenceTests
     // ───────────────────────── progressive hints (PI-US-051) ─────────────────────────
 
     [Fact]
-    public void Every_january_pack_item_carries_exactly_three_hints_that_pass_the_gates()
+    public void Every_year1_pack_item_carries_exactly_three_hints_that_pass_the_gates()
     {
         var db = NewWorldDb();
         var rows = db.Query("SELECT code,title,hook,config_json FROM pciworld_challenges WHERE author_id IS NULL");
-        var packCodes = rows.Select(r => H.Str(r["code"])!).Where(c =>
-            System.Text.RegularExpressions.Regex.IsMatch(c, "^WC-(GOV|STK)-0(5[3-9]|6[0-9]|7[0-1])$") ||
-            System.Text.RegularExpressions.Regex.IsMatch(c, "^WC-(RSK-07[2-7]|CPM-07[8-9]|EVM-080)$")).ToHashSet();
+        var packCodes = WorldIntelligencePack.Codes.ToHashSet(StringComparer.Ordinal);
         Assert.Equal(WorldIntelligencePack.Count, packCodes.Count);
         foreach (var r in rows.Where(r => packCodes.Contains(H.Str(r["code"])!)))
         {
@@ -307,7 +305,7 @@ public class WorldIntelligenceTests
         var db = NewWorldDb();
         var plan = Plan();
         var mapped = plan.Scheduled.Where(e => e.Status == "mapped").ToList();
-        Assert.Equal(80, mapped.Count);
+        Assert.Equal(106, mapped.Count);
         Assert.All(plan.Reserve, e => Assert.Equal("planned", e.Status));
         var seen = new HashSet<string>(StringComparer.Ordinal);
         foreach (var e in mapped)
@@ -343,13 +341,13 @@ public class WorldIntelligenceTests
         Assert.Equal(365, (int)G("scheduled_total"));
         Assert.Equal(55, (int)G("reserve_total"));
         Assert.Equal(420, (int)G("bank_total"));
-        Assert.Equal(80, (int)G("mapped"));
-        Assert.Equal(285, (int)G("planned"));
-        Assert.Equal(80, (int)G("backed_by_published_challenge"));
-        // January is fully authored (31 consecutive backed days) and February day 32 is planned,
-        // so the runway is exactly 31 — still below the 60-day bar, so the alert must be RAISED.
-        // This is the "no unsupported capacity claims" rule as a test.
-        Assert.Equal(31, (int)G("runway_days"));
+        Assert.Equal(106, (int)G("mapped"));
+        Assert.Equal(259, (int)G("planned"));
+        Assert.Equal(106, (int)G("backed_by_published_challenge"));
+        // January and February are fully authored (59 consecutive backed days) and March day 60
+        // is planned, so the runway is exactly 59 — one day below the 60-day bar, so the alert
+        // must still be RAISED. This is the "no unsupported capacity claims" rule as a test.
+        Assert.Equal(59, (int)G("runway_days"));
         Assert.True((bool)G("runway_alert"));
     }
 }

@@ -17,6 +17,9 @@ public static class WorldIntelligencePack
 {
     public static int Count => Items.Length;
 
+    /// <summary>Codes of every Year-1 pack item — the tests' authoritative list.</summary>
+    public static IEnumerable<string> Codes => Items.Select(i => i.Code);
+
     public static void Seed(Db db)
     {
         foreach (var (code, title, hook, industry, role, track, difficulty, minutes, competencies, config) in Items)
@@ -1003,6 +1006,1043 @@ public static class WorldIntelligencePack
                "Ask what the rollout model assumes about efficiency — then compare it with the measured CPI."],
              "profile_map":{"calculation":"Cost Guardian","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
              "share_line":"Stopped a pilot's optimism scaling into a full-rollout business case."}
+            """),
+
+        // ═════════════ FEBRUARY — scope, requirements and stakeholder alignment ═════════════
+        // ───────────── Logic & Sequence · scope & requirements · foundation ─────────────
+
+        ("WC-SCO-081", "The requirement nobody owned", "Every workstream assumed another one had it. Roll up the structure and find the hole.",
+            "Capital Programmes", "Requirements Analyst", "project_controls", "foundation", 6,
+            """["scope_structuring","requirements_management"]""",
+            """
+            {"context":"A multi-site capital programme is closing its definition phase. The interface-management requirement appears in the requirements register but in no work package below. Roll up the draft WBS to check the budget, test the 100% rule, and decide what happens to the orphan requirement.",
+             "evidence":[
+               {"label":"1.1 Programme design","value":"300,000"},
+               {"label":"1.2 Site delivery (parent)","value":"—"},
+               {"label":"1.2.1 North sites","value":"520,000"},
+               {"label":"1.2.2 South sites","value":"260,000"},
+               {"label":"1.3 Commissioning support","value":"140,000"},
+               {"label":"Orphan","value":"Interface management — in the register, in no package"}],
+             "task":"wbs","given":{"nodes":[
+               {"id":"1","parent":null,"name":"Programme"},
+               {"id":"1.1","parent":"1","name":"Design","value":300000},
+               {"id":"1.2","parent":"1","name":"Site delivery"},
+               {"id":"1.2.1","parent":"1.2","name":"North","value":520000},
+               {"id":"1.2.2","parent":"1.2","name":"South","value":260000},
+               {"id":"1.3","parent":"1","name":"Commissioning","value":140000}]},
+             "ask":[
+               {"key":"root_total","label":"Programme budget (root roll-up)","type":"number"},
+               {"key":"hundred_percent_valid","label":"Does the WBS satisfy the 100% rule? (yes/no)","type":"bool"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"orphan","prompt":"The orphan interface requirement — what is the correct sequence of actions?",
+                "options":[
+                  {"key":"assign","label":"Assign it to a package with a named owner and budget, THEN baseline, THEN open cost accounts","quality":100,
+                   "consequence":"The requirement has an address before any money moves; the register and the WBS reconcile line for line.",
+                   "principle":"Structure first, baseline second, spend third — the order is the control."},
+                  {"key":"baseline","label":"Baseline now to hold the date, assign the orphan in the first change cycle","quality":25,
+                   "consequence":"The baseline is born incomplete; the first change cycle starts with a correction rather than a change.",
+                   "principle":"A baseline that omits known scope is a schedule for surprise."},
+                  {"key":"note","label":"Record it as an assumption and move on — interfaces always sort themselves out","quality":0,
+                   "consequence":"Two site teams each assume the other holds the interface budget; the gap surfaces as a claim.",
+                   "principle":"An unowned requirement is billed by whoever finds it first."}]}],
+             "hints":["Sum the leaf packages — parents roll up from children, never the other way around.",
+               "The 100% rule asks whether every child's value is fully captured under its parent structure.",
+               "For the orphan, think about which step must come first for the register and WBS to reconcile."],
+             "profile_map":{"calculation":"Strategic Project Controller","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Found the unowned requirement in a programme WBS before it billed anyone."}
+            """),
+
+        ("WC-SCO-082", "One deliverable, three definitions", "The client, the designer and the operator each signed a different sentence.",
+            "Enterprise Programmes", "Scope Manager", "project_management", "foundation", 7,
+            """["requirements_management","scope_discipline"]""",
+            """
+            {"context":"During definition of an enterprise reporting platform, 'the executive dashboard' is a deliverable in three signed documents — with three different definitions. The client's contract says 'real-time performance dashboard'; the design specification says 'daily-refreshed KPI summary'; the operator's service agreement says 'monthly board pack automation'. All three parties believe their version is the deliverable.",
+             "evidence":[
+               {"label":"Contract","value":"'Real-time performance dashboard'"},
+               {"label":"Design spec","value":"'Daily-refreshed KPI summary'"},
+               {"label":"Service agreement","value":"'Monthly board pack automation'"},
+               {"label":"Stage","value":"Definition — build has not started"}],
+             "decisions":[
+               {"key":"sequence","prompt":"What is the right order of moves?",
+                "options":[
+                  {"key":"converge","label":"Table the three texts side by side → facilitate one agreed definition → amend all three documents → then let design proceed","quality":100,
+                   "consequence":"One uncomfortable workshop now; one definition everywhere; the build starts against a single sentence.",
+                   "principle":"Reconcile definitions where they are cheapest — before anything is built to the wrong one."},
+                  {"key":"design","label":"Let the design spec govern — it is the most detailed — and fix the other documents at handover","quality":20,
+                   "consequence":"The client discovers at acceptance that 'real-time' quietly became 'daily'; the argument now has an invoice attached.",
+                   "principle":"The most detailed document is not automatically the agreed one."},
+                  {"key":"defer","label":"Build the daily version as a 'phase 1' and treat the differences as future enhancements","quality":35,
+                   "consequence":"Pragmatic-sounding, but nobody agreed the phasing — three parties still hold three expectations, now with dates.",
+                   "principle":"Phasing is a scope decision; unilateral phasing is a scope dispute on a timer."}]},
+               {"key":"record","prompt":"Once converged, where does the single definition live?",
+                "options":[
+                  {"key":"dictionary","label":"In the WBS dictionary entry, referenced by contract, spec and service agreement alike","quality":100,
+                   "consequence":"Every later document points at one source; the next ambiguity has nowhere to hide.",
+                   "principle":"One definition, one home, many references."},
+                  {"key":"minutes","label":"In the workshop minutes","quality":15,
+                   "consequence":"Minutes are read once; contracts are read at every dispute.",
+                   "principle":"A definition that lives in minutes dies in a claim."}]}],
+             "hints":["Compare what each document's author would expect at acceptance — that is where the versions collide.",
+               "Ask which sequencing makes the disagreement visible while it is still cheap to resolve.",
+               "A converged definition needs one authoritative home that all three documents cite."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Converged three signed definitions of one deliverable before build began."}
+            """),
+
+        ("WC-SCO-083", "In scope, out of scope, says who", "Six items from the workshop flipchart. Each needs an address before Friday.",
+            "Residential Development", "Assistant Project Manager", "project_management", "foundation", 5,
+            """["scope_discipline","requirements_management"]""",
+            """
+            {"context":"A mixed-use development's scope workshop ended with six flipchart items nobody classified. The scope statement freezes Friday. Your job is to classify each item — in scope, out of scope, or needs a decision — and to route the ones that need deciding.",
+             "evidence":[
+               {"label":"1","value":"Public realm landscaping to the site boundary"},
+               {"label":"2","value":"Landscaping BEYOND the boundary the council hinted at"},
+               {"label":"3","value":"Tenant fit-out of the retail units"},
+               {"label":"4","value":"Utility diversions discovered in survey"},
+               {"label":"5","value":"A marketing suite the sales team assumed"},
+               {"label":"6","value":"EV charging — in the planning condition, in nobody's budget"}],
+             "decisions":[
+               {"key":"classify","prompt":"Which classification is right for the ambiguous items?",
+                "options":[
+                  {"key":"routed","label":"2 and 5 → sponsor decision this week; 6 → in scope (planning condition binds); 3 → explicit exclusion; 1 and 4 → in scope","quality":100,
+                   "consequence":"Friday's scope statement carries decisions, exclusions and inclusions — not silence.",
+                   "principle":"Every item gets exactly one of three addresses: in, out, or decided-by-name-and-date."},
+                  {"key":"generous","label":"Include everything — descoping later is easier than adding","quality":10,
+                   "consequence":"The budget absorbs a marketing suite and off-site landscaping nobody approved; descoping later means disappointing people in writing.",
+                   "principle":"Scope added silently is budget spent silently."},
+                  {"key":"strict","label":"Exclude everything ambiguous — the workshop should have been clearer","quality":25,
+                   "consequence":"The planning-condition EV charging is now formally out of scope, which the council will enjoy pointing out.",
+                   "principle":"Obligations do not become optional by being ambiguous."}]},
+               {"key":"exclusions","prompt":"How do the exclusions appear in the scope statement?",
+                "options":[
+                  {"key":"named","label":"Named, with the reason and the owning party for each","quality":100,
+                   "consequence":"Nobody later claims the retail fit-out was 'obviously included' — the sentence that says otherwise has a date on it.",
+                   "principle":"An exclusion is only real if it is written where the reader of the claim will look."},
+                  {"key":"blanket","label":"A blanket line: 'anything not listed is excluded'","quality":30,
+                   "consequence":"Legally comforting, practically useless — every stakeholder still believes their item was listed in spirit.",
+                   "principle":"Blanket exclusions exclude nothing anyone actually expected."}]}],
+             "hints":["Sort the six into obligations, assumptions, and wishes before classifying.",
+               "Check which items are bound by external commitments — those are not yours to exclude.",
+               "For each ambiguous item, name who decides and by when — that is also a classification."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Gave six orphan scope items an address before the statement froze."}
+            """),
+
+        ("WC-SCO-084", "Where the project ends and the asset begins", "The fit-out and the operator disagree about one wall's worth of scope.",
+            "Corporate Real Estate", "Project Controls Analyst", "project_controls", "foundation", 6,
+            """["scope_structuring","interface_management"]""",
+            """
+            {"context":"A headquarters fit-out's WBS is being finalised. The operator's facilities team maintains the building systems after handover — and both budgets currently include the access-control head-end: the project WBS under Systems, and the operator's asset plan as 'day-one upgrade'. Roll up the WBS, check the 100% rule, and fix the boundary.",
+             "evidence":[
+               {"label":"1.1 Enabling works","value":"180,000"},
+               {"label":"1.2 Fit-out (parent)","value":"—"},
+               {"label":"1.2.1 Interiors","value":"340,000"},
+               {"label":"1.2.2 Systems","value":"410,000"},
+               {"label":"1.3 Migration","value":"90,000"},
+               {"label":"Conflict","value":"Access-control head-end funded in BOTH budgets"}],
+             "task":"wbs","given":{"nodes":[
+               {"id":"1","parent":null,"name":"HQ fit-out"},
+               {"id":"1.1","parent":"1","name":"Enabling","value":180000},
+               {"id":"1.2","parent":"1","name":"Fit-out"},
+               {"id":"1.2.1","parent":"1.2","name":"Interiors","value":340000},
+               {"id":"1.2.2","parent":"1.2","name":"Systems","value":410000},
+               {"id":"1.3","parent":"1","name":"Migration","value":90000}]},
+             "ask":[
+               {"key":"root_total","label":"Project budget (root roll-up)","type":"number"},
+               {"key":"hundred_percent_valid","label":"Does the WBS satisfy the 100% rule? (yes/no)","type":"bool"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"boundary","prompt":"The double-funded head-end — what fixes the boundary?",
+                "options":[
+                  {"key":"agree","label":"Agree the boundary with the operator in writing, keep it in ONE budget, and record the handover interface in both WBS dictionaries","quality":100,
+                   "consequence":"One funder, one owner, one dated interface record — and a freed budget line on the other side.",
+                   "principle":"Every scope boundary is an agreement between two structures, recorded in both."},
+                  {"key":"keep","label":"Keep it in both — redundancy is safer than a gap","quality":10,
+                   "consequence":"Double funding survives until an auditor adds the two budgets together; the correction lands mid-delivery.",
+                   "principle":"Double-funded scope is a gap wearing a disguise — the money is real, the control is not."},
+                  {"key":"drop","label":"Drop it from the project — the operator claimed it, let them have it","quality":30,
+                   "consequence":"The operator's 'day-one upgrade' turns out to assume the project delivers the containment first; the gap appears at handover.",
+                   "principle":"Conceding a boundary without mapping its dependencies just moves the gap downstream."}]}],
+             "hints":["Roll up the leaves; the parent rows carry no value of their own.",
+               "The 100% rule is about the project's own structure — the operator's plan is a separate structure with its own rule.",
+               "A boundary is fixed when both sides' documents point at the same dated agreement."],
+             "profile_map":{"calculation":"Strategic Project Controller","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Un-double-funded a scope boundary between a fit-out and its future operator."}
+            """),
+
+        ("WC-SCO-085", "The exclusion that came back", "Descoped in the business case. Reappeared in the design review. Now what?",
+            "Energy Networks", "Change & Scope Coordinator", "project_controls", "foundation", 7,
+            """["scope_discipline","change_control"]""",
+            """
+            {"context":"A grid reinforcement scheme formally excluded the second transformer bay at business-case stage — recorded, signed, and priced out. Six months later the design review 'assumes' the second bay's civil works 'to avoid abortive work later'. The designer has already drawn it. The sponsor is sympathetic. The exclusion is still in force.",
+             "evidence":[
+               {"label":"Business case","value":"Second bay EXCLUDED — signed decision"},
+               {"label":"Design review","value":"Second-bay civils 'assumed' and drawn"},
+               {"label":"Designer's argument","value":"'Avoids abortive work later'"},
+               {"label":"Sponsor","value":"Sympathetic but hasn't decided anything"}],
+             "decisions":[
+               {"key":"route","prompt":"What is the correct sequence for the returning scope?",
+                "options":[
+                  {"key":"change","label":"Stop the drawing → raise a change with the civils priced and the 'abortive work avoided' benefit quantified → sponsor decides → then design","quality":100,
+                   "consequence":"The sponsor approves a priced, deliberate reversal — or doesn't. Either way the baseline and the drawings agree.",
+                   "principle":"Excluded scope re-enters through the same gate it left by — priced, decided, recorded."},
+                  {"key":"drift","label":"Let the design continue — the change paperwork can ratify what engineering has already judged sensible","quality":5,
+                   "consequence":"The 'assumption' hardens into steel and concrete; the change board is eventually asked to approve history.",
+                   "principle":"Design that precedes decision converts governance into stenography."},
+                  {"key":"strip","label":"Instruct the designer to strip the second bay from the drawings immediately, no discussion","quality":35,
+                   "consequence":"Compliant — and the possibly-genuine 'abortive work' argument dies unexamined, maybe expensively.",
+                   "principle":"Enforcing the baseline and evaluating a good idea are not mutually exclusive."}]},
+               {"key":"root","prompt":"Why do exclusions keep 'coming back' on this scheme?",
+                "options":[
+                  {"key":"visibility","label":"Exclusions aren't visible where designers work — put them in the design brief and review checklist, not just the business case","quality":100,
+                   "consequence":"The next designer sees the exclusion beside the requirement, not six documents away.",
+                   "principle":"Controls live where the work happens, or they do not live."},
+                  {"key":"discipline","label":"Designers keep overstepping — escalate the individual to their manager","quality":15,
+                   "consequence":"One designer chastened; the systemic invisibility of exclusions untouched; the next 'assumption' is already drawn.",
+                   "principle":"Blaming the person leaves the process exactly as it found them."}]}],
+             "hints":["Check what status the exclusion legally has right now — it is still a signed decision.",
+               "Separate the process question (how scope re-enters) from the merits question (is the bay worth it).",
+               "Ask where a designer would have had to look to know about the exclusion — that is the real defect."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Routed a returning exclusion back through the gate it left by."}
+            """),
+
+        ("WC-SCO-086", "Acceptance criteria, after the fact", "The module is built. Now the client wants to write what 'done' means.",
+            "Software Delivery", "Delivery Lead", "project_management", "foundation", 5,
+            """["requirements_management","quality_management"]""",
+            """
+            {"context":"On a platform migration, the reporting module was built from a two-line requirement: 'migrate all standard reports with equivalent functionality'. At handover the client's new operations manager produces a page of acceptance criteria — written last week — including three behaviours the legacy system never had. The team is due to demo tomorrow.",
+             "evidence":[
+               {"label":"Original requirement","value":"'Migrate all standard reports with equivalent functionality'"},
+               {"label":"New criteria","value":"One page, written post-build"},
+               {"label":"Delta","value":"3 behaviours the legacy system never had"},
+               {"label":"Demo","value":"Tomorrow"}],
+             "decisions":[
+               {"key":"handle","prompt":"How do you handle tomorrow?",
+                "options":[
+                  {"key":"split","label":"Demo against 'equivalent functionality' evidence; log the 3 new behaviours as change candidates; agree criteria-before-build for every remaining module","quality":100,
+                   "consequence":"The module passes what was asked; the new asks get priced honestly; the process leak is plugged for the rest of the programme.",
+                   "principle":"Accept against what was agreed; price what was added; fix why it was late."},
+                  {"key":"absorb","label":"Quietly build the 3 behaviours before the demo — they're small and the relationship matters","quality":15,
+                   "consequence":"Tomorrow goes smoothly; the precedent that criteria can arrive post-build, free of charge, costs you every remaining module.",
+                   "principle":"Absorbing unpriced scope buys one good meeting at compound interest."},
+                  {"key":"refuse","label":"Reject the document entirely — acceptance criteria written after build have no standing","quality":30,
+                   "consequence":"Contractually crisp; the operations manager who will run this system for years is now your opponent at every demo.",
+                   "principle":"Standing on process is sometimes right and rarely sufficient."}]},
+               {"key":"forward","prompt":"For the remaining modules, 'done' is defined:",
+                "options":[
+                  {"key":"before","label":"Jointly, before build starts, signed by the person who will accept","quality":100,
+                   "consequence":"Every later demo argues about evidence, not definitions.",
+                   "principle":"Acceptance criteria are requirements — they exist before the work or they arrive as changes."},
+                  {"key":"template","label":"By your team, from a standard template, issued for information","quality":25,
+                   "consequence":"Criteria exist and bind nobody; the next operations manager writes their own page again.",
+                   "principle":"Criteria the acceptor didn't sign are opinions with formatting."}]}],
+             "hints":["Separate what was agreed pre-build from what arrived post-build — they have different price tags.",
+               "Consider who has to live with the system, and what tomorrow costs their trust either way.",
+               "The durable fix is about WHEN criteria get written, and by whom."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Separated built-to-spec from added-last-week at a migration handover."}
+            """),
+
+        ("WC-SCO-087", "The backlog that ate the baseline", "Two hundred 'small' items, one fixed envelope, and a definition phase that will not close.",
+            "Framework Programmes", "Programme Planner", "project_management", "foundation", 6,
+            """["scope_discipline","prioritization"]""",
+            """
+            {"context":"A framework programme's definition phase has collected a 200-item improvement backlog from workshops across five client departments. Every item is individually 'small'; collectively they are half the programme's envelope. The definition phase cannot close until the backlog has a disposition, and the departments are watching which items survive.",
+             "evidence":[
+               {"label":"Backlog","value":"~200 items from 5 departments"},
+               {"label":"Collective size","value":"~50% of the envelope"},
+               {"label":"Gate condition","value":"Definition cannot close without a disposition"},
+               {"label":"Politics","value":"Departments tracking whose items survive"}],
+             "decisions":[
+               {"key":"triage","prompt":"What disposition process closes the phase honestly?",
+                "options":[
+                  {"key":"criteria","label":"Publish scoring criteria first → score all 200 with department reps in the room → fund the top slice to the envelope → park the rest in a governed, revisitable backlog","quality":100,
+                   "consequence":"Departments argue about criteria once instead of about items two hundred times; the parked items have a real route back.",
+                   "principle":"Prioritise by published criteria, not by meeting stamina."},
+                  {"key":"fair","label":"Give each department an equal share of the envelope to spend on its own items","quality":30,
+                   "consequence":"Politically peaceful; the programme funds each department's pet mediocrity while cross-cutting winners die of shared parentage.",
+                   "principle":"Equal shares is a peace treaty, not a prioritisation."},
+                  {"key":"defer","label":"Close the phase with the backlog attached 'for delivery to absorb'","quality":5,
+                   "consequence":"Delivery inherits 200 unpriced expectations; the baseline is eaten from day one, one small item at a time.",
+                   "principle":"A backlog without a disposition is scope creep with a spreadsheet."}]},
+               {"key":"parked","prompt":"The parked items — what keeps them honest?",
+                "options":[
+                  {"key":"governed","label":"A named owner, a review cadence, and re-entry only through change control with current pricing","quality":100,
+                   "consequence":"The backlog is a managed asset, not a haunted attic; three items return next year, priced and chosen.",
+                   "principle":"Parked scope is still scope — it needs an owner and a gate like everything else."},
+                  {"key":"list","label":"A shared spreadsheet anyone can add to","quality":10,
+                   "consequence":"The list doubles in a quarter and its items start appearing in delivery conversations as 'already agreed'.",
+                   "principle":"An ungoverned list is a rumour mill with columns."}]}],
+             "hints":["The fight is cheapest at the criteria level — have it once, before any item is scored.",
+               "Watch for the difference between individually-small and collectively-material.",
+               "Parked is a state with rules, not a euphemism for forgotten."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Closed a definition phase over a 200-item backlog without feeding it the baseline."}
+            """),
+
+        ("WC-SCO-088", "Roll it up before you promise it", "The crossing's cost accounts open Monday. One branch of the WBS does not add up.",
+            "Bridges & Crossings", "Cost Engineer", "project_controls", "foundation", 7,
+            """["scope_structuring","cost_control"]""",
+            """
+            {"context":"A river crossing's definition-phase WBS is due for baseline Monday, when cost accounts open. Finance has asked for the rolled-up total and confirmation that the structure obeys the 100% rule. The south-approach team has been reorganising its packages all week and something below 1.2 looks off.",
+             "evidence":[
+               {"label":"1.1 Design & consents","value":"220,000"},
+               {"label":"1.2 Approaches (parent)","value":"—"},
+               {"label":"1.2.1 North approach","value":"640,000"},
+               {"label":"1.2.2 South approach","value":"310,000"},
+               {"label":"1.3 Main span enabling","value":"150,000"},
+               {"label":"South team note","value":"'Utilities scope moved out of 1.2.2 — destination TBD'"}],
+             "task":"wbs","given":{"nodes":[
+               {"id":"1","parent":null,"name":"Crossing"},
+               {"id":"1.1","parent":"1","name":"Design","value":220000},
+               {"id":"1.2","parent":"1","name":"Approaches"},
+               {"id":"1.2.1","parent":"1.2","name":"North","value":640000},
+               {"id":"1.2.2","parent":"1.2","name":"South","value":310000},
+               {"id":"1.3","parent":"1","name":"Enabling","value":150000}]},
+             "ask":[
+               {"key":"root_total","label":"Rolled-up total for Monday","type":"number"},
+               {"key":"hundred_percent_valid","label":"Does the structure satisfy the 100% rule? (yes/no)","type":"bool"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"tbd","prompt":"The 'destination TBD' utilities scope — Monday is two days away. You:",
+                "options":[
+                  {"key":"resolve","label":"Resolve the destination NOW with the south team — into an existing package or a new one — before the baseline, even if Monday slips a day","quality":100,
+                   "consequence":"The baseline opens with every scope element addressed; a one-day slip nobody remembers beats a homeless scope everybody meets again.",
+                   "principle":"Never baseline a structure containing the letters TBD."},
+                  {"key":"park","label":"Baseline without it and add the utilities scope by early change next week","quality":25,
+                   "consequence":"The change lands, but the baseline's opening act is a correction — and finance now samples your other packages for more TBDs.",
+                   "principle":"A baseline's credibility is set by its first week."},
+                  {"key":"pad","label":"Add an allowance line under 1.2 to cover 'whatever the utilities scope turns out to be'","quality":10,
+                   "consequence":"An unscoped allowance becomes everyone's favourite funding source; the utilities work still has no owner.",
+                   "principle":"Money without scope definition is an invitation, not a control."}]}],
+             "hints":["Only leaf packages carry value — roll them up through the parents.",
+               "The 100% rule fails the moment known scope has no package — 'TBD' is exactly that.",
+               "Weigh a small, visible delay against baselining a known hole."],
+             "profile_map":{"calculation":"Strategic Project Controller","decision":"Cost Guardian","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Refused to baseline a crossing WBS with TBD in it — and fixed it in a day."}
+            """),
+
+        ("WC-SCO-089", "The spare-parts scope nobody claimed", "Commissioning assumes stores has it. Stores assumes procurement. Procurement assumes commissioning.",
+            "Industrial Manufacturing", "Definition Phase Planner", "project_management", "foundation", 5,
+            """["scope_structuring","interface_management"]""",
+            """
+            {"context":"A production line install is closing definition. Three teams each assume another holds the commissioning spares scope: commissioning ('stores buys spares'), stores ('procurement's package'), procurement ('commissioning specifies, so commissioning owns'). The scope statement, WBS and procurement plan are all silent. Definition closes this week.",
+             "evidence":[
+               {"label":"Commissioning","value":"'Stores buys spares — always has'"},
+               {"label":"Stores","value":"'That's in procurement's package'"},
+               {"label":"Procurement","value":"'Commissioning specifies it, they own it'"},
+               {"label":"Documents","value":"Scope statement, WBS, procurement plan: all silent"}],
+             "decisions":[
+               {"key":"fix","prompt":"What closes this properly before the phase gate?",
+                "options":[
+                  {"key":"raci","label":"Convene the three leads → assign ONE owning package → write the spares scope, budget and interfaces into the WBS dictionary → then close the phase","quality":100,
+                   "consequence":"The line starts up with spares on the shelf because someone was paid and named to put them there.",
+                   "principle":"Triangular assumptions are resolved by a named owner, not by a fourth meeting."},
+                  {"key":"gate","label":"Close the phase on time and let the three teams sort it out in delivery","quality":5,
+                   "consequence":"The first breakdown after start-up waits nine weeks for a bearing no one bought.",
+                   "principle":"A gap you can name at the gate is a gap you chose to keep."},
+                  {"key":"budget","label":"Add a spares budget line at programme level without assigning an owner","quality":25,
+                   "consequence":"Funded and still unowned: three teams now assume one of the OTHERS will spend the new budget.",
+                   "principle":"Budgets don't buy things; owners do."}]},
+               {"key":"pattern","prompt":"This is the third 'everyone assumed' gap this phase. The systemic fix is:",
+                "options":[
+                  {"key":"matrix","label":"A scope-to-owner matrix walked through at every phase review — every scope line, exactly one owner, gaps visible as blank cells","quality":100,
+                   "consequence":"The fourth gap is found by the matrix in review, not by delivery in month six.",
+                   "principle":"Make ownership visible as a structure and gaps become findable instead of discoverable."},
+                  {"key":"emails","label":"Ask all leads to confirm their scope by email each month","quality":20,
+                   "consequence":"Everyone confirms what they already believed — including the contradictory parts.",
+                   "principle":"Confirmation without cross-checking just notarises the assumptions."}]}],
+             "hints":["Notice the shape: each team's assumption is individually reasonable and collectively circular.",
+               "One owner per scope line — 'shared' ownership is how this gap was born.",
+               "The durable fix makes gaps visible structurally, before anyone has to be clever."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Broke a three-way scope assumption loop before the phase gate closed on it."}
+            """),
+
+        // ───────────── Stakeholder Dilemma · alignment on scope & requirements · practitioner ─────────────
+
+        ("WC-STK-090", "The workshop that would not converge", "Operations wants resilience. Finance wants the smaller number. The room wants to go home.",
+            "Enterprise Programmes", "Requirements Workshop Facilitator", "project_management", "professional", 6,
+            """["stakeholder_communication","requirements_management"]""",
+            """
+            {"context":"Hour three of the requirements workshop for a shared-services programme. Operations insists on dual-site resilience as a must-have; finance insists the business case only works single-site; both directors are in the room and neither will move. Fourteen other requirements are waiting behind this one, and the workshop is your last scheduled session before the requirements freeze.",
+             "evidence":[
+               {"label":"Operations position","value":"Dual-site resilience is a MUST"},
+               {"label":"Finance position","value":"Case only closes single-site"},
+               {"label":"Queue","value":"14 requirements still to review"},
+               {"label":"Calendar","value":"Last session before the freeze"}],
+             "decisions":[
+               {"key":"room","prompt":"What do you do with the deadlock, right now?",
+                "options":[
+                  {"key":"park","label":"Park it with a precise disagreement statement both directors approve — what each believes and what evidence would move them — then clear the other 14","quality":100,
+                   "consequence":"The 14 flow in ninety minutes; the resilience question leaves the room as a well-formed decision for the sponsor, not a grudge.",
+                   "principle":"A precisely stated disagreement is progress; an argued-out room is not."},
+                  {"key":"push","label":"Keep the room on it until someone concedes — freezes exist for a reason","quality":15,
+                   "consequence":"Hour five produces a resentful pseudo-agreement that unravels by email on Thursday, and the 14 waiting requirements miss the freeze.",
+                   "principle":"Fatigue produces signatures, not alignment."},
+                  {"key":"split","label":"Write 'dual-site capable, single-site funded' and move on — both sides can read it their way","quality":25,
+                   "consequence":"Both sides do read it their way; the ambiguity is now baselined, with interest accruing.",
+                   "principle":"A requirement both sides read differently is a dispute with a requirement ID."}]},
+               {"key":"escalate","prompt":"The parked question goes to the sponsor. How?",
+                "options":[
+                  {"key":"framed","label":"As a priced choice: the resilience premium, the outage exposure without it, and each director's evidence — recommendation optional","quality":100,
+                   "consequence":"The sponsor decides in one sitting because the decision arrived shaped like one.",
+                   "principle":"Escalate decisions, not arguments."},
+                  {"key":"raw","label":"Forward the workshop minutes and let the sponsor read the debate","quality":20,
+                   "consequence":"The sponsor reads two pages, calls a meeting, and the workshop reconvenes — with the same people and the same positions.",
+                   "principle":"An unshaped escalation returns as a boomerang."}]}],
+             "hints":["Ask what the other fourteen requirements cost while two directors repeat themselves.",
+               "A disagreement written precisely — positions, evidence, what would change minds — is a deliverable.",
+               "Sponsors decide between priced options; they mediate arguments badly."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Executive Communicator"},
+             "share_line":"Turned a deadlocked requirements workshop into one clean sponsor decision."}
+            """),
+
+        ("WC-STK-091", "Two departments, one front door", "Housing wants walk-in access. Social care wants appointments only. The building has one entrance.",
+            "Civic Buildings", "Stakeholder & Requirements Lead", "project_management", "professional", 7,
+            """["stakeholder_communication","requirements_management"]""",
+            """
+            {"context":"Defining a shared civic services hub, the housing department requires open walk-in access ('our users won't book'); adult social care requires controlled appointment-only entry ('our users need privacy and safeguarding'). Both cite statutory duties. The concept has one entrance, the requirements freeze in three weeks, and each department head has separately asked you to 'hold the line' for them.",
+             "evidence":[
+               {"label":"Housing","value":"Walk-in access — statutory homelessness duty cited"},
+               {"label":"Social care","value":"Appointment-only — safeguarding duty cited"},
+               {"label":"Concept design","value":"Single shared entrance"},
+               {"label":"Both heads","value":"Each privately asked you to hold their line"}],
+             "decisions":[
+               {"key":"conflict","prompt":"How do you handle the collision?",
+                "options":[
+                  {"key":"reframe","label":"Take both duties to the designers as constraints, not solutions — ask for options that satisfy safeguarding AND walk-in (zoned entry, dual reception, scheduling by time-of-day) — then let the heads choose between real options","quality":100,
+                   "consequence":"The designers return three workable configurations; the heads pick zoned entry in one meeting, each satisfied their duty is met.",
+                   "principle":"Stakeholders collide on solutions; they align on constraints — negotiate at the level where both can win."},
+                  {"key":"senior","label":"Escalate immediately to the chief executive to pick a department","quality":20,
+                   "consequence":"A winner is declared; the losing department's cooperation on everything else quietly evaporates for a year.",
+                   "principle":"Escalating a solvable design conflict buys one answer at the price of the relationship."},
+                  {"key":"average","label":"Specify walk-in mornings and appointments afternoons as a compromise nobody asked for","quality":30,
+                   "consequence":"Both duties are half-met; both heads disown the schedule the first time it inconveniences their users.",
+                   "principle":"A compromise invented by the facilitator belongs to no one who has to defend it."}]},
+               {"key":"private","prompt":"And the two private 'hold the line' requests?",
+                "options":[
+                  {"key":"transparent","label":"Tell each head, kindly and identically: you will represent their DUTY faithfully and will not run a private line for either","quality":100,
+                   "consequence":"Both heads grumble; both trust the process — and you — more than before.",
+                   "principle":"Neutrality is only credible when both sides hear you decline in the same words."},
+                  {"key":"both","label":"Assure each head privately that you're on their side — it keeps them engaged","quality":0,
+                   "consequence":"They compare notes at the freeze meeting. Your usefulness on this programme ends there.",
+                   "principle":"Two private promises make one public liar."}]}],
+             "hints":["Look for the level at which the two positions stop contradicting — duties, not door policies.",
+               "Ask the designers for options before asking an executive for a ruling.",
+               "Handle the identical private requests identically — and say so."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Executive Communicator"},
+             "share_line":"Aligned two statutory duties on one front door without an executive casualty."}
+            """),
+
+        ("WC-STK-092", "The regulator reads it differently", "Your scope says 'refurbish'. The port authority's inspector just used the word 'rebuild'.",
+            "Ports & Marine", "Consents & Compliance Manager", "project_management", "professional", 5,
+            """["stakeholder_communication","governance"]""",
+            """
+            {"context":"Defining a port expansion, your scope treats the west quay works as refurbishment — permitted under the existing licence. In a routine liaison call, the harbour authority's inspector refers to the same works as 'effectively a rebuild', which would trigger a full new consent process adding months. The inspector hasn't put anything in writing. Your licence submission is due in four weeks.",
+             "evidence":[
+               {"label":"Your scope","value":"West quay: refurbishment (existing licence)"},
+               {"label":"Inspector's phrase","value":"'Effectively a rebuild' — verbal, routine call"},
+               {"label":"If rebuild","value":"Full consent process, months added"},
+               {"label":"Submission","value":"Due in 4 weeks"}],
+             "decisions":[
+               {"key":"respond","prompt":"What do you do with the inspector's remark?",
+                "options":[
+                  {"key":"engage","label":"Request a pre-submission meeting now: present the engineering definition of the works and ask the authority to confirm the classification before you submit","quality":100,
+                   "consequence":"The meeting surfaces one genuinely borderline element; you adjust its specification, the authority confirms 'refurbishment' in writing, and the submission lands safe.",
+                   "principle":"A regulator's stray phrase is free intelligence — spend it before submission, not in appeal."},
+                  {"key":"proceed","label":"Submit as planned — one inspector's verbal aside is not the authority's position","quality":10,
+                   "consequence":"The aside turns out to be the authority's draft position; your submission is rejected and the consent clock starts at zero, months later than a meeting would have.",
+                   "principle":"Hoping a regulator didn't mean it is not a consenting strategy."},
+                  {"key":"redesign","label":"Preemptively redesign the works to be unambiguously refurbishment, before anyone asks","quality":35,
+                   "consequence":"Scope shrinks to fit a classification nobody had actually ruled on; you paid the rebuild price in capability without being asked.",
+                   "principle":"Never concede to an objection that has not been made."}]},
+               {"key":"inside","prompt":"Internally, the project director says 'don't poke the regulator — meetings invite scrutiny'. You:",
+                "options":[
+                  {"key":"case","label":"Show the director the two timelines: a pre-submission meeting risking early scrutiny, versus a rejected submission risking the programme — and recommend the meeting","quality":100,
+                   "consequence":"The director takes the meeting once the asymmetry is visible on one page.",
+                   "principle":"'Don't poke the regulator' usually means 'let the regulator surprise us later'."},
+                  {"key":"comply","label":"Follow the instruction and submit quietly","quality":15,
+                   "consequence":"The rejection arrives with the director's name on the covering letter and your silence in the file.",
+                   "principle":"Complying with a mistake you saw coming is a shared authorship."}]}],
+             "hints":["Weigh what the remark costs to check now against what it costs to be right later.",
+               "Regulators respond to engineering definitions better than to hopeful labels.",
+               "Bring your director the asymmetry of outcomes, not just the recommendation."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Chased down a regulator's stray phrase four weeks before it became a rejection."}
+            """),
+
+        ("WC-STK-093", "Just a clarification", "The sponsor's 'clarified' requirement is twice the size of the original. The freeze was last month.",
+            "Portfolio & PMO", "Programme Scope Manager", "project_management", "professional", 6,
+            """["stakeholder_communication","scope_discipline"]""",
+            """
+            {"context":"A month after the requirements freeze on a portfolio consolidation programme, the sponsor circulates a note 'clarifying' requirement R-31: 'management reporting' apparently 'always meant' self-service analytics for 400 users, not the 12 scheduled reports the estimate priced. The note thanks the team for its flexibility. The delivery partner has already flagged, informally, that the difference is several hundred days of effort.",
+             "evidence":[
+               {"label":"R-31 as frozen","value":"'Management reporting' — priced as 12 scheduled reports"},
+               {"label":"The 'clarification'","value":"Self-service analytics, 400 users"},
+               {"label":"Partner's informal flag","value":"Several hundred days of effort difference"},
+               {"label":"Tone","value":"Sponsor thanks the team for flexibility"}],
+             "decisions":[
+               {"key":"respond","prompt":"How do you respond to the sponsor's note?",
+                "options":[
+                  {"key":"price","label":"Warmly and promptly: treat the clarified intent as a candidate change, bring the sponsor its price and options (full, phased, descoped elsewhere) within the week","quality":100,
+                   "consequence":"The sponsor — who genuinely believed it was a clarification — sees the delta, phases the analytics, and the baseline stays true.",
+                   "principle":"Never argue about the word 'clarification'; price the difference and let the number do the talking."},
+                  {"key":"accept","label":"Accept it — sponsors define intent, and the note is now on the record","quality":5,
+                   "consequence":"Several hundred unpriced days enter the plan silently; the overrun, when it surfaces, belongs to the delivery team that 'agreed'.",
+                   "principle":"Whoever absorbs a change silently adopts it, cost and all."},
+                  {"key":"contest","label":"Reply that R-31 is frozen and the note has no contractual effect","quality":25,
+                   "consequence":"Technically true, relationally expensive: the sponsor now describes the programme as 'lawyering its own sponsor'.",
+                   "principle":"Being right about the freeze is not a communication strategy."}]},
+               {"key":"partner","prompt":"The delivery partner's flag was informal. You:",
+                "options":[
+                  {"key":"formalise","label":"Ask the partner to put their impact estimate in writing NOW, before the sponsor conversation","quality":100,
+                   "consequence":"The sponsor meeting runs on a real number instead of 'the partner seems worried'.",
+                   "principle":"Informal flags evaporate exactly when you need them — bank the estimate while it is fresh."},
+                  {"key":"hold","label":"Keep it informal to avoid alarming the sponsor prematurely","quality":20,
+                   "consequence":"When you finally need the number, the partner's memory of it has strategically improved.",
+                   "principle":"An estimate that was never written down was never given."}]}],
+             "hints":["Don't litigate the label — quantify the gap between what was priced and what is now described.",
+               "Assume good faith: sponsors often genuinely believe the larger reading was always the intent.",
+               "Get the partner's impact in writing before, not after, the sponsor conversation."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Priced a 'clarification' before it became a silent baseline change."}
+            """),
+
+        ("WC-STK-094", "The design review that became a duel", "The architect and the cost consultant are fighting in front of the client. You chair the meeting.",
+            "Flood Defence", "Design Stage Project Manager", "project_management", "professional", 7,
+            """["stakeholder_communication","conflict_management"]""",
+            """
+            {"context":"Mid design review for a flood defence scheme, with the client's director present, the architect and the cost consultant have stopped reviewing and started duelling: the architect accuses the consultant of 'pricing out every piece of design quality'; the consultant accuses the architect of 'gold-plating a flood wall'. The disputed item — a visitor viewpoint structure — is 3% of scheme cost. The client director is watching you, the chair, with interest.",
+             "evidence":[
+               {"label":"Dispute","value":"Viewpoint structure — ~3% of scheme cost"},
+               {"label":"Architect","value":"'Quality is being priced out'"},
+               {"label":"Cost consultant","value":"'It's gold-plating'"},
+               {"label":"Audience","value":"Client director, watching the chair"}],
+             "decisions":[
+               {"key":"chair","prompt":"As chair, right now, you:",
+                "options":[
+                  {"key":"structure","label":"Stop the exchange, restate the item as a client value decision — amenity benefit versus 3% cost — task both advisers to produce a one-page joint options note, and move the review on","quality":100,
+                   "consequence":"The review recovers its agenda; the client director gets a decision shaped for them within the week, built by both duellists together.",
+                   "principle":"The chair's job is to convert heat into a decision for the person who owns the trade-off."},
+                  {"key":"side","label":"Back the cost consultant in the room — the business case is tight and the client will appreciate the discipline","quality":15,
+                   "consequence":"The architect goes quiet — in this meeting and, more expensively, in the three later reviews where their challenge would have caught real problems.",
+                   "principle":"Publicly picking a winner between advisers teaches the loser to stop advising."},
+                  {"key":"offline","label":"Let them finish the argument — clients deserve to see the real debate","quality":25,
+                   "consequence":"The client director sees twenty minutes of professionals interrupting each other and concludes the scheme's governance needs 'strengthening'.",
+                   "principle":"Unmanaged conflict in front of the client is not transparency; it is a confidence leak."}]},
+               {"key":"after","prompt":"After the meeting, with each adviser separately, you:",
+                "options":[
+                  {"key":"reset","label":"Reset expectations with both: challenge is wanted, in review papers and options — not as courtroom drama in front of the client","quality":100,
+                   "consequence":"The next review gets the same rigour with none of the theatre; both advisers privately thank you.",
+                   "principle":"Protect the disagreement, change its venue."},
+                  {"key":"report","label":"Report both to their firms' partners","quality":10,
+                   "consequence":"Two defensive firms, two carefully lawyered advisers, no more spontaneous professional judgment in your reviews.",
+                   "principle":"Escalating a behaviour you could have coached converts colleagues into counsel."}]}],
+             "hints":["Identify who actually owns the disputed trade-off — it is neither adviser.",
+               "Notice what the client director is really evaluating: the item, or the governance.",
+               "Keep the disagreement's content and kill its format."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Executive Communicator"},
+             "share_line":"Turned an advisers' duel into a one-page client decision."}
+            """),
+
+        ("WC-STK-095", "The must-have that isn't in scope", "Operations' number one requirement was never in the approved case. Someone has to tell them.",
+            "Energy Networks", "Engagement Manager", "project_management", "professional", 5,
+            """["stakeholder_communication","scope_discipline"]""",
+            """
+            {"context":"The substation replacement's approved business case covers like-for-like replacement. Operations' engagement survey response lists remote-switching capability as their top requirement — 'assumed it was obviously included'. It never was: it was evaluated and dropped at options stage for cost, a decision recorded in a paper operations never saw. You are the one who has to close the loop with the operations manager, whose team will run this asset for thirty years.",
+             "evidence":[
+               {"label":"Approved case","value":"Like-for-like replacement only"},
+               {"label":"Ops top requirement","value":"Remote switching — 'assumed included'"},
+               {"label":"History","value":"Evaluated and dropped at options stage, for cost"},
+               {"label":"Relationship","value":"Ops runs the asset for 30 years"}],
+             "decisions":[
+               {"key":"tell","prompt":"How do you close the loop?",
+                "options":[
+                  {"key":"full","label":"Meet the ops manager: show the options-stage evaluation, own that ops should have been consulted then, and offer the legitimate route — a costed change proposal they can sponsor","quality":100,
+                   "consequence":"The manager is annoyed about the process and respects the honesty; the change proposal loses on cost, and ops accepts it because this time they were in the room.",
+                   "principle":"People accept 'no' when they can see the evaluation and were offered the door back in."},
+                  {"key":"soft","label":"Say the requirement is 'being considered for a future phase' to keep the relationship warm","quality":10,
+                   "consequence":"There is no future phase; the manager plans staffing around a capability that never comes, and finds out from an as-built drawing.",
+                   "principle":"A comfortable ambiguity today is a betrayal with a delivery date."},
+                  {"key":"deflect","label":"Point out the case was approved by their own directorate — the miss is on their side","quality":20,
+                   "consequence":"Technically arguable, and now the thirty-year operator of your asset opens every future conversation from a grudge.",
+                   "principle":"Winning the attribution argument loses the operating decades."}]},
+               {"key":"systemic","prompt":"So requirements stop being 'assumed included':",
+                "options":[
+                  {"key":"traceout","label":"Publish dropped-options summaries to affected stakeholders at each stage gate — what was considered, what was excluded, and why","quality":100,
+                   "consequence":"The next 'obviously included' assumption dies at options stage, in daylight, cheaply.",
+                   "principle":"Exclusions communicated at decision time cost a paragraph; discovered at delivery they cost trust."},
+                  {"key":"survey","label":"Run the engagement survey earlier next time","quality":30,
+                   "consequence":"Earlier surveys, same blindness: stakeholders still can't react to exclusions nobody showed them.",
+                   "principle":"Asking earlier doesn't help if the answers still never travel back."}]}],
+             "hints":["Bring the actual options-stage record — evidence turns a rejection into an explanation.",
+               "Offer the legitimate re-entry route even when you expect it to fail; the offer is the respect.",
+               "Fix the loop that let an exclusion stay invisible to the people it excluded."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Executive Communicator"},
+             "share_line":"Delivered a five-year-old 'no' honestly — and kept the thirty-year relationship."}
+            """),
+
+        ("WC-STK-096", "Whose signature accepts the ward", "The nurses' requirements have three authors and no owner. The refurbishment can't freeze without one.",
+            "Healthcare Estates", "Clinical Liaison Project Manager", "project_management", "professional", 6,
+            """["stakeholder_communication","requirements_management"]""",
+            """
+            {"context":"A hospital ward refurbishment is trying to freeze clinical requirements. The senior sister, the infection-control lead and the clinical director have each edited the requirements document — sometimes overwriting each other — and none will sign as THE clinical owner: each says sign-off belongs to one of the others. The freeze is blocking the design contract award, now eight days away.",
+             "evidence":[
+               {"label":"Document","value":"3 editors, conflicting edits, no owner"},
+               {"label":"Senior sister","value":"'Infection control must sign'"},
+               {"label":"Infection control","value":"'The clinical director signs'"},
+               {"label":"Clinical director","value":"'The ward team signs — they live there'"},
+               {"label":"Design award","value":"Blocked; 8 days"}],
+             "decisions":[
+               {"key":"unblock","prompt":"How do you unblock sign-off?",
+                "options":[
+                  {"key":"structure","label":"Split the signature to match real authority: sister signs operational requirements, IC lead signs infection-control requirements, director countersigns the whole — one page, three scopes, this week","quality":100,
+                   "consequence":"Each signs what they actually own within days; the circular deference ends because nobody is being asked to own someone else's expertise.",
+                   "principle":"When nobody will own everything, partition the ownership to match the authority that already exists."},
+                  {"key":"chase","label":"Book a joint meeting and keep the three in the room until one signs","quality":20,
+                   "consequence":"The meeting reproduces the deference loop with better biscuits; day six, still no signature.",
+                   "principle":"A room cannot create an authority that the organisation hasn't defined."},
+                  {"key":"proxy","label":"Have the project director sign 'on behalf of clinical stakeholders' to protect the award date","quality":5,
+                   "consequence":"The award proceeds; at handover the ward rejects the layout 'nobody clinical ever approved', with the signature to prove it.",
+                   "principle":"A proxy signature converts a requirements gap into an acceptance dispute."}]},
+               {"key":"edits","prompt":"And the conflicting overwrites in the document?",
+                "options":[
+                  {"key":"reconcile","label":"Reconcile visibly: walk the conflicts with all three, record each resolution against its owner's new scope","quality":100,
+                   "consequence":"The frozen document is one everyone recognises; no author later disowns a sentence.",
+                   "principle":"Freeze agreements, not the last person's save."},
+                  {"key":"latest","label":"Freeze the latest version — someone has to pick","quality":15,
+                   "consequence":"The 'latest' happens to be the sister's Tuesday edits; infection control discovers their overwritten clause at the design review, loudly.",
+                   "principle":"Version-by-timestamp is arbitration by accident."}]}],
+             "hints":["Notice the deference is circular because the signature is monolithic — no one owns ALL of it.",
+               "Match each signature to an authority that already exists in the organisation.",
+               "A frozen document must be one all its authors can recognise as theirs."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Partitioned a clinical sign-off so three non-signers became three owners."}
+            """),
+
+        ("WC-STK-097", "The demo that sold what we didn't spec", "The vendor's pre-sales demo showed features your requirements never asked for. The users now require them.",
+            "Technology Programmes", "Business Change Lead", "project_management", "professional", 7,
+            """["stakeholder_communication","requirements_management"]""",
+            """
+            {"context":"During definition of a workflow platform, the shortlisted vendor ran a 'capability demo' for your user community — showing, among the specified features, an AI-assisted triage screen that is NOT in your requirements and not in the priced configuration. The user representatives now list the triage screen among their expectations; two department heads have referenced it in planning documents. The vendor's account manager calls it 'a natural phase 2 conversation'.",
+             "evidence":[
+               {"label":"Requirements","value":"No AI triage — never specified, never priced"},
+               {"label":"The demo","value":"Vendor showed it to your user community"},
+               {"label":"Effect","value":"Users expect it; 2 department heads planning around it"},
+               {"label":"Vendor","value":"'A natural phase 2 conversation'"}],
+             "decisions":[
+               {"key":"users","prompt":"With the user community, you:",
+                "options":[
+                  {"key":"reset","label":"Publish a clear scope statement — what is bought and configured versus what was demonstration-only — and route the triage screen into the governed backlog with an honest evaluation date","quality":100,
+                   "consequence":"Expectations correct within a fortnight; the triage feature gets a real evaluation instead of a resentful haunting.",
+                   "principle":"Correct an inflated expectation the week it forms — its price doubles every planning cycle it survives."},
+                  {"key":"ride","label":"Let the enthusiasm ride — engaged users are hard-won and the feature might land in phase 2 anyway","quality":10,
+                   "consequence":"Go-live day delivers the specified system to users measuring it against the demo; adoption reads as 'the cheap version arrived'.",
+                   "principle":"Unmanaged expectations grade your delivery against someone else's demo."},
+                  {"key":"blame","label":"Tell users the vendor oversold — expectations are the vendor's problem to walk back","quality":25,
+                   "consequence":"The vendor shrugs, users hear the project bad-mouthing its own supplier, and the expectation stays exactly where it was.",
+                   "principle":"Attribution doesn't deflate an expectation; information does."}]},
+               {"key":"vendor","prompt":"With the vendor, before contract award, you:",
+                "options":[
+                  {"key":"discipline","label":"Require demo content to match the priced configuration in all future sessions, in writing — and get the triage screen's phase-2 price banked now, while competition still exists","quality":100,
+                   "consequence":"Demos stop selling futures; the phase-2 price obtained pre-award is 40% below what it would cost post-lock-in.",
+                   "principle":"Price the dream while you can still walk away from it."},
+                  {"key":"friendly","label":"Mention it informally — no need to sour the relationship before award","quality":15,
+                   "consequence":"The next demo shows two more unpriced features; the account manager has learned exactly what informal means.",
+                   "principle":"A boundary that costs nothing to cross will be crossed on schedule."}]}],
+             "hints":["Time matters twice: expectations harden with every cycle, and leverage dies at contract award.",
+               "Give users the truth plus a legitimate route for the wish — not just the truth.",
+               "Whatever the vendor showed, YOUR scope statement defines what arrives at go-live."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Deflated a demo-inflated expectation and banked the phase-2 price before award."}
+            """),
+
+        ("WC-STK-098", "The requirement announced to the press", "A board member told a journalist the programme includes something it does not.",
+            "Portfolio & PMO", "Programme Communications & Scope Lead", "project_management", "professional", 5,
+            """["stakeholder_communication","governance"]""",
+            """
+            {"context":"A board member, interviewed about your portfolio modernisation programme, told a trade journalist it would deliver 'full public self-service by next year'. That capability was explicitly deferred from scope at the last investment review — a decision the same board member attended. The article runs tomorrow; the journalist has asked the programme office to 'confirm details'; your sponsor is travelling until Thursday.",
+             "evidence":[
+               {"label":"Public claim","value":"'Full public self-service by next year'"},
+               {"label":"Actual scope","value":"Deferred at last investment review"},
+               {"label":"Awkward fact","value":"The board member attended that review"},
+               {"label":"Clock","value":"Article runs tomorrow; sponsor back Thursday"}],
+             "decisions":[
+               {"key":"journalist","prompt":"The journalist wants confirmation today. You:",
+                "options":[
+                  {"key":"accurate","label":"Provide the accurate approved-scope description in neutral language — what IS being delivered and when — without commentary on the board member's phrasing","quality":100,
+                   "consequence":"The article prints the accurate scope beside the quote; the gap is visible but unexplained, which is the board member's problem to manage, not yours to widen.",
+                   "principle":"Correct the record with facts; never audit a board member in the press."},
+                  {"key":"confirm","label":"Confirm the board member's version — contradicting a board member publicly is above your pay grade","quality":5,
+                   "consequence":"The programme is now publicly committed to deferred scope; the next investment review must either fund it unplanned or un-say it in print.",
+                   "principle":"A confirmed misstatement becomes a commitment with your office's name on it."},
+                  {"key":"silence","label":"Decline all comment until the sponsor returns Thursday","quality":25,
+                   "consequence":"The article runs on the board member's version alone, now uncorrected AND unchallenged — Thursday's options are all worse.",
+                   "principle":"In a running news cycle, silence is a version of confirmation."}]},
+               {"key":"member","prompt":"And the board member?",
+                "options":[
+                  {"key":"brief","label":"Same day, through the sponsor's office: a courteous note with the approved scope summary and an offer of a standing briefing pack for future interviews","quality":100,
+                   "consequence":"The member — who had genuinely conflated aspiration with scope — takes the pack; future interviews quote it.",
+                   "principle":"Equip the voice you cannot control; most misstatements are briefing failures, not malice."},
+                  {"key":"report","label":"Formally report the misstatement to the board secretary as a governance breach","quality":15,
+                   "consequence":"Procedurally defensible; politically, the programme office just filed a complaint against its own board — Thursday's sponsor conversation is now about YOU.",
+                   "principle":"Choose the remedy that fixes the next interview, not the one that wins this one."}]}],
+             "hints":["Separate correcting the public record from managing the person — different channels, different tones.",
+               "The programme office's only sustainable currency with the press is accuracy without commentary.",
+               "Ask why the board member misspoke — the fix for a briefing failure is a briefing."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Executive Communicator"},
+             "share_line":"Corrected a public scope misstatement without starting a boardroom war."}
+            """),
+
+        // ───────────── Cost & Value · foundation ─────────────
+
+        ("WC-EVM-099", "Three letters the board reads first", "PV, EV, AC — and the forecast the definition team promised the board it could hold.",
+            "Enterprise Programmes", "Junior Cost Analyst", "project_controls", "foundation", 10,
+            """["earned_value","forecasting"]""",
+            """
+            {"context":"A shared-services programme's definition phase runs as its own funded project. At period 6 the definition budget shows Planned Value 2,000,000; Earned Value 1,800,000; Actual Cost 1,950,000 against the phase Budget at Completion of 6,000,000. The board pack's forecast line still shows the phase completing on budget. Compute the standard forecast set and decide what the pack should say.",
+             "evidence":[
+               {"label":"Planned Value (PV)","value":"2,000,000"},
+               {"label":"Earned Value (EV)","value":"1,800,000"},
+               {"label":"Actual Cost (AC)","value":"1,950,000"},
+               {"label":"Phase BAC","value":"6,000,000"},
+               {"label":"Pack forecast","value":"'Completing on budget' — unchanged since period 1"}],
+             "task":"evm","given":{"pv":2000000,"ev":1800000,"ac":1950000,"bac":6000000},
+             "ask":[
+               {"key":"cpi","label":"Cost Performance Index (CPI)","type":"number"},
+               {"key":"eac","label":"Estimate at Completion (EAC = BAC/CPI)","type":"number"},
+               {"key":"etc","label":"Estimate to Complete (ETC)","type":"number"},
+               {"key":"vac","label":"Variance at Completion (VAC)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"pack","prompt":"What does the board pack's forecast line say this period?",
+                "options":[
+                  {"key":"hold","label":"Keep 'on budget' — definition phases always catch up in the back half","quality":5,
+                   "consequence":"Period 9 forces the correction anyway, now with three periods of 'on budget' to explain alongside the overrun.",
+                   "principle":"'It always catches up' is a hope wearing a forecast's clothes."},
+                  {"key":"measured","label":"Show the CPI-based EAC with the VAC, plus the two recovery options that could close part of the gap","quality":100,
+                   "consequence":"The board sees the measured position early enough to act on it — and approves the smaller of the recovery options.",
+                   "principle":"A forecast is what the measurement says, adjusted by funded actions — not by optimism."},
+                  {"key":"range","label":"Show a range from 'on budget' to the CPI forecast, letting readers pick","quality":30,
+                   "consequence":"Everyone reads the end of the range they prefer; the pack has technically informed and practically decided nothing.",
+                   "principle":"A range without a stated most-likely is a mirror, not a forecast."}]}],
+             "hints":["CPI is EV divided by AC — efficiency of money already spent.",
+               "The standard EAC divides BAC by CPI: past efficiency projected forward.",
+               "ETC is EAC minus AC; VAC is BAC minus EAC — the gap the board actually cares about."],
+             "profile_map":{"calculation":"Cost Guardian","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Replaced an 'on budget' hope with a measured forecast the board could act on."}
+            """),
+
+        ("WC-CHG-100", "Where the contingency actually went", "The plant expansion 'never used its contingency'. The change register tells a different story.",
+            "Industrial Manufacturing", "Assistant Project Controller", "project_controls", "foundation", 12,
+            """["change_control","cost_control"]""",
+            """
+            {"context":"A plant expansion enters delivery planning with a proud claim: 'contingency untouched'. You reconcile the change register against the baseline of 5,600,000 and 180 days. Four changes exist in different states — and the pending one is being worked on site 'in anticipation'. Build the revised baseline from approved changes only, then deal with what you find.",
+             "evidence":[
+               {"label":"Baseline","value":"BAC 5,600,000 · 180 days"},
+               {"label":"C1 — Line-speed upgrade","value":"APPROVED · cost +240,000 · schedule +10 days"},
+               {"label":"C2 — Robot cell addition","value":"PENDING · cost +380,000 · schedule +20 days · 'work started in anticipation'"},
+               {"label":"C3 — Descope spare conveyor","value":"APPROVED · cost -90,000 · schedule -5 days"},
+               {"label":"C4 — Mezzanine extension","value":"REJECTED · cost +150,000 · schedule +8 days"}],
+             "task":"change",
+             "given":{"baseline_bac":5600000,"baseline_duration":180,"changes":[
+               {"id":"C1","status":"approved","cost_delta":240000,"schedule_delta":10},
+               {"id":"C2","status":"pending","cost_delta":380000,"schedule_delta":20},
+               {"id":"C3","status":"approved","cost_delta":-90000,"schedule_delta":-5},
+               {"id":"C4","status":"rejected","cost_delta":150000,"schedule_delta":8}]},
+             "ask":[
+               {"key":"revised_bac","label":"Revised BAC (approved only)","type":"number"},
+               {"key":"revised_duration","label":"Revised duration (days)","type":"number"},
+               {"key":"approved_count","label":"Approved change count","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"anticipation","prompt":"C2's robot cell work has started on site while the change is pending. You:",
+                "options":[
+                  {"key":"stop","label":"Flag it to the change board this week: stop-work or emergency approval, but not limbo — and quantify the exposure already committed","quality":100,
+                   "consequence":"The board approves C2 at a negotiated amount; the committed exposure is inside the decision instead of underneath it.",
+                   "principle":"Work-in-anticipation is an unapproved commitment; surface it while it is still small enough to decide about."},
+                  {"key":"assume","label":"Treat C2 as effectively approved — the board always approves what's already built","quality":5,
+                   "consequence":"The board, resentful of being pre-empted, approves C2 at cost and starts auditing what else is 'anticipated'.",
+                   "principle":"Boards that discover they are rubber stamps stop stamping."},
+                  {"key":"bury","label":"Absorb the early works into C1's approved budget — they're adjacent scopes","quality":0,
+                   "consequence":"C1 overruns 'inexplicably'; the reconciliation you were hired to do is now the thing you did.",
+                   "principle":"Moving unapproved cost into approved lines is not control; it is concealment."}]}],
+             "hints":["Only APPROVED changes move the baseline — pending and rejected do not, whatever site is doing.",
+               "Apply cost and schedule deltas with their signs; descopes reduce.",
+               "The claim 'contingency untouched' should be tested against commitments, not just approvals."],
+             "profile_map":{"calculation":"Cost Guardian","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Reconciled a 'contingency untouched' claim against the change register that said otherwise."}
+            """),
+
+        // ───────────── Executive Mission · capstone · multi-stage ─────────────
+
+        ("WC-CAP-101", "The definition gateway", "Three decisions in one afternoon set the programme's shape for five years.",
+            "Capital Programmes", "Programme Director (acting)", "project_management", "expert", 24,
+            """["governance","strategy_execution","stakeholder_communication"]""",
+            """
+            {"context":"You are acting programme director for a multi-site modernisation programme approaching its definition gateway. In one afternoon session the gateway panel expects your position on three linked questions: the delivery scope option, the funding structure, and the governance model for delivery. The analysis pack is honest but incomplete — as definition packs always are. Whatever you choose shapes the next five years.",
+             "evidence":[
+               {"label":"Scope options","value":"A: all 8 sites in one wave · B: 3 lead sites then rolling waves · C: 8 sites, descoped specification"},
+               {"label":"Analysis","value":"Option B's lead sites cover 70% of benefit variance; A maximises theoretical NPV; C minimises capital"},
+               {"label":"Funding","value":"Single sanction now vs staged sanction per wave"},
+               {"label":"Delivery governance","value":"Central programme team vs site-led with programme assurance"},
+               {"label":"Known unknowns","value":"Site-condition surveys complete at only 3 of 8 sites"}],
+             "decisions":[
+               {"key":"scope","prompt":"Stage 1 — which scope option do you take to the panel?",
+                "options":[
+                  {"key":"waves","label":"Option B: three surveyed lead sites first, later waves shaped by lead-site evidence","quality":100,
+                   "consequence":"The programme commits hard where it has evidence and keeps options where it does not; wave 2's design is measurably cheaper for it.",
+                   "principle":"Commit to what is surveyed; buy options on what is not."},
+                  {"key":"all","label":"Option A: all eight sites — the NPV is highest and the political moment is now","quality":25,
+                   "consequence":"Five unsurveyed sites deliver their surprises simultaneously in year 2; the NPV that justified the wave was never real.",
+                   "principle":"A theoretical optimum built on unsurveyed ground is a liability with a discount rate."},
+                  {"key":"cheap","label":"Option C: everything, thinner — spread the capital across all sites","quality":15,
+                   "consequence":"Eight sites each get too little to transform anything; the programme delivers percentages instead of outcomes.",
+                   "principle":"Descoping the specification everywhere is how programmes fail everywhere at once."}]},
+               {"key":"funding","prompt":"Stage 2 — funding structure?",
+                "options":[
+                  {"key":"staged","label":"Staged sanction: full funding for wave 1, committed envelope with per-wave release gates for the rest","quality":100,
+                   "consequence":"Wave 2's sanction, informed by wave 1 actuals, passes in twenty minutes; the programme never carries idle capital.",
+                   "principle":"Match the money's commitment profile to the evidence's arrival profile."},
+                  {"key":"all_now","label":"Single full sanction — going back to the board per wave invites re-litigation of the whole programme","quality":30,
+                   "consequence":"Full capital is locked against year-4 estimates that year-1 evidence immediately invalidates; the re-litigation happens anyway, as a variance inquiry.",
+                   "principle":"Money sanctioned ahead of evidence converts learning into embarrassment."},
+                  {"key":"minimal","label":"Fund wave 1 only, with no committed envelope beyond it","quality":35,
+                   "consequence":"Wave 1 delivers; waves 2-4 die in the next budget cycle to a competing priority, exactly as the supply chain predicted when it priced wave 1 accordingly.",
+                   "principle":"A programme with no committed horizon pays spot prices for everything, including attention."}]},
+               {"key":"govern","prompt":"Stage 3 — delivery governance?",
+                "options":[
+                  {"key":"hybrid","label":"Site-led delivery inside a programme-set framework: common standards, gates and reporting; local delivery authority within them","quality":100,
+                   "consequence":"Sites own their delivery and the programme owns comparability; wave-2 sites reuse wave-1 learning because the framework made it legible.",
+                   "principle":"Centralise the standards, devolve the delivery, and make learning the thing that travels."},
+                  {"key":"central","label":"A strong central team delivering all sites directly","quality":30,
+                   "consequence":"Consistent, and slow: every site decision queues in the centre, and site ownership — needed at handover — never forms.",
+                   "principle":"A centre that does everything becomes the queue everything waits in."},
+                  {"key":"loose","label":"Each site delivers its own way, with light programme assurance","quality":15,
+                   "consequence":"Eight delivery models, incomparable reports, and wave-2 sites repeating wave-1 mistakes with local variations.",
+                   "principle":"Without common structure, a programme is just eight projects sharing a logo."}]}],
+             "hints":["Trace where the evidence actually exists — surveys, benefit variance — and align commitment to it.",
+               "Each stage's answer should make the next stage easier: scope shapes funding shapes governance.",
+               "Ask of every option: what does this commit irreversibly, and on what evidence?"],
+             "profile_map":{"decision":"Strategic Programme Leader","balanced":"Strategic Programme Leader"},
+             "share_line":"Set a five-year programme's scope, funding and governance in one gateway afternoon."}
+            """),
+
+        ("WC-CAP-102", "Seven platforms, one future", "The consolidation everyone wants in principle and nobody wants in their department.",
+            "Technology Programmes", "Consolidation Programme Lead", "project_management", "expert", 22,
+            """["governance","strategy_execution","stakeholder_communication"]""",
+            """
+            {"context":"Your organisation runs seven overlapping workflow platforms across departments; the board has mandated consolidation to 'at most two' and handed you the definition. Every department agrees consolidation is overdue — and each has nominated its own platform as the survivor. You must take a position on the target architecture, the migration sequence, and what happens to the departments whose platforms retire.",
+             "evidence":[
+               {"label":"Estate","value":"7 platforms; 2 cover ~80% of use cases between them"},
+               {"label":"Politics","value":"Each department nominates its own platform"},
+               {"label":"Costs","value":"Licence + support saving ~ 40% at 2 platforms"},
+               {"label":"Risk","value":"Two departments run regulated processes on retiring platforms"},
+               {"label":"Mandate","value":"Board: 'at most two', definition due"}],
+             "decisions":[
+               {"key":"target","prompt":"Stage 1 — how do you pick the surviving platforms?",
+                "options":[
+                  {"key":"criteria","label":"Published capability/cost/risk criteria, scored openly with department architects in the room — nominations welcome as evidence, not votes","quality":100,
+                   "consequence":"The two survivors are the ones the criteria pick; three departments are disappointed in the criteria rather than defeated by rivals — which turns out to matter enormously.",
+                   "principle":"Selection by open criteria converts losers into participants; selection by influence converts them into insurgents."},
+                  {"key":"incumbent","label":"Pick the two biggest platforms by user count — simplest defensible line","quality":30,
+                   "consequence":"User count rewarded past procurement, not fitness; one 'winner' needs replacing within three years, restarting this entire exercise.",
+                   "principle":"Installed base measures history, not suitability."},
+                  {"key":"neutral","label":"Buy a new eighth platform nobody currently owns — perfectly neutral","quality":10,
+                   "consequence":"Seven migrations instead of five, no internal expertise anywhere, and the neutrality premium is paid by every department equally — in years.",
+                   "principle":"Neutrality that maximises total migration is not a compromise; it is a surrender to politics priced in delivery."}]},
+               {"key":"sequence","prompt":"Stage 2 — migration sequence?",
+                "options":[
+                  {"key":"riskled","label":"Non-regulated processes first to prove the route; the two regulated migrations go last, each behind a rehearsed cutover with fallback","quality":100,
+                   "consequence":"By the time the regulated processes move, the route has been walked eight times; the regulator's questions have rehearsal logs as answers.",
+                   "principle":"Sequence so that your riskiest step is your most practised."},
+                  {"key":"bigbang","label":"All migrations in one coordinated window — shorter total disruption","quality":10,
+                   "consequence":"One window, seven simultaneous failure modes, and the regulated fallback plan turns out to depend on a platform already switched off.",
+                   "principle":"A big bang converts independent risks into one correlated one."},
+                  {"key":"easyfirst","label":"Easiest departments first to build momentum, hardest last, no other logic","quality":35,
+                   "consequence":"Momentum builds, then stalls exactly at the hard cases — now with the programme's budget mostly spent on the easy ones.",
+                   "principle":"Momentum is a by-product of sequencing, not a substitute for it."}]},
+               {"key":"losers","prompt":"Stage 3 — the departments whose platforms retire?",
+                "options":[
+                  {"key":"invest","label":"A funded transition package per department: capability parity analysis, feature-gap remediation on the surviving platform, and their experts seconded into the migration team","quality":100,
+                   "consequence":"The 'losing' departments' experts become the migration's best engineers — they know the edge cases — and adoption follows their credibility.",
+                   "principle":"The people who lose the platform decision must visibly win the transition, or they will quietly re-run the decision forever."},
+                  {"key":"mandate","label":"The board mandated it; departments comply — transition support is business-as-usual training","quality":15,
+                   "consequence":"Compliance is achieved and adoption is not: shadow spreadsheets bloom, and the 40% saving erodes into workaround costs.",
+                   "principle":"Mandates move systems; only investment moves behaviour."},
+                  {"key":"exempt","label":"Grant the two loudest departments temporary exemptions to keep the peace","quality":20,
+                   "consequence":"'Temporary' calcifies; three platforms persist, the saving halves, and every future consolidation cites your exemptions as precedent.",
+                   "principle":"An exemption to end an argument is a lease the argument signs on your building."}]}],
+             "hints":["Design the selection so its losers can respect it — that is worth more than the selection itself.",
+               "Put your rehearsals before your regulated risk, not after it.",
+               "Fund the losing departments' transition as seriously as the winning platforms' scale-up."],
+             "profile_map":{"decision":"Strategic Programme Leader","balanced":"Strategic Programme Leader"},
+             "share_line":"Consolidated seven platforms to two without creating seven enemies."}
+            """),
+
+        // ───────────── Risk Room · practitioner · EMV ─────────────
+
+        ("WC-RSK-103", "The register from one workshop", "Ninety minutes, one wall of sticky notes, four quantified lines. Is that a register?",
+            "Logistics & Warehousing", "Project Risk Analyst", "project_controls", "professional", 8,
+            """["risk_management","facilitation"]""",
+            """
+            {"context":"A distribution warehouse project's definition-stage risk register was produced in a single ninety-minute workshop. Four risks were quantified before the room was needed for something else. The steering group wants the net EMV for the funding paper — and asks whether one workshop's output deserves the word 'register'.",
+             "evidence":[
+               {"label":"R1 — Ground improvement underestimate","value":"probability 0.30, impact -450,000"},
+               {"label":"R2 — Racking supplier failure","value":"probability 0.25, impact -800,000"},
+               {"label":"R3 — Early tenant fit-out revenue","value":"probability 0.50, impact +160,000"},
+               {"label":"R4 — Planning judicial review","value":"probability 0.10, impact -1,300,000"},
+               {"label":"Provenance","value":"One 90-minute workshop, operations not present"}],
+             "task":"risk",
+             "given":{"risks":[
+               {"id":"R1","probability":0.3,"impact":-450000},{"id":"R2","probability":0.25,"impact":-800000},
+               {"id":"R3","probability":0.5,"impact":160000},{"id":"R4","probability":0.1,"impact":-1300000}]},
+             "ask":[
+               {"key":"emv","label":"Net register EMV","type":"number"},
+               {"key":"emv_R2","label":"EMV of R2 — racking supplier","type":"number"},
+               {"key":"emv_R4","label":"EMV of R4 — judicial review","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"depth","prompt":"Your answer to 'is this a register?'",
+                "options":[
+                  {"key":"honest","label":"It is a first pass: present the EMV labelled as workshop-stage, with a completion plan — operations interviews, supplier assessment, a planning-counsel view on R4 — before sanction","quality":100,
+                   "consequence":"The funding paper carries a number with its provenance attached; the completion pass adds two risks the workshop missed, both material.",
+                   "principle":"Label the maturity of every number; a first pass presented as a register is a forecast presented as fact."},
+                  {"key":"yes","label":"Yes — four quantified risks with an EMV is more than most projects have at this stage","quality":20,
+                   "consequence":"The register's gaps surface as 'new' risks after sanction, when they are no longer fundable from the contingency the EMV sized.",
+                   "principle":"Comparing to worse practice is how immature numbers get sanctioned."},
+                  {"key":"no","label":"No — refuse to provide the EMV until a full risk process has run","quality":35,
+                   "consequence":"The funding paper proceeds with NO risk number, which is the only thing worse than a labelled early one.",
+                   "principle":"Withholding an imperfect number rarely produces a better one in time."}]}],
+             "hints":["EMV each line as probability × impact; the tenant-revenue line is an opportunity.",
+               "Note which single line carries the largest exposure despite its low probability.",
+               "The question behind the question: what maturity label does this number deserve?"],
+             "profile_map":{"calculation":"Risk Strategist","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Priced a workshop-stage risk register — and labelled its maturity honestly."}
+            """),
+
+        ("WC-RSK-104", "Contingency before the case closes", "The business case wants one contingency number. The register wants to be believed first.",
+            "Enterprise Programmes", "Programme Risk Manager", "project_controls", "professional", 9,
+            """["risk_management","cost_control"]""",
+            """
+            {"context":"An enterprise transformation's business case closes next week and needs its contingency line. The definition-stage register holds four quantified entries. Finance proposes 'the usual 10%'; the sponsor asks what the register itself justifies. Compute the net EMV and the key exposures, then recommend the contingency basis.",
+             "evidence":[
+               {"label":"R1 — Data migration complexity","value":"probability 0.40, impact -350,000"},
+               {"label":"R2 — Core-team attrition mid-programme","value":"probability 0.20, impact -1,200,000"},
+               {"label":"R3 — Licence renegotiation slips","value":"probability 0.35, impact -300,000"},
+               {"label":"R4 — Early decommissioning saving","value":"probability 0.25, impact +240,000"},
+               {"label":"Finance proposal","value":"'The usual 10% of programme cost'"}],
+             "task":"risk",
+             "given":{"risks":[
+               {"id":"R1","probability":0.4,"impact":-350000},{"id":"R2","probability":0.2,"impact":-1200000},
+               {"id":"R3","probability":0.35,"impact":-300000},{"id":"R4","probability":0.25,"impact":240000}]},
+             "ask":[
+               {"key":"emv","label":"Net register EMV","type":"number"},
+               {"key":"emv_R1","label":"EMV of R1 — data migration","type":"number"},
+               {"key":"emv_R2","label":"EMV of R2 — attrition","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"basis","prompt":"Your contingency recommendation for the case?",
+                "options":[
+                  {"key":"register","label":"Contingency built from the register EMV plus a stated allowance for the R2 tail — with the 10% benchmark shown alongside as a sanity cross-check","quality":100,
+                   "consequence":"The case carries a contingency that can answer 'why this number?' line by line — which the investment committee duly asks.",
+                   "principle":"Benchmarks sanity-check a contingency; only the register can justify one."},
+                  {"key":"percent","label":"Take finance's 10% — benchmarks exist because registers are always incomplete anyway","quality":25,
+                   "consequence":"The 10% turns out generous in year 1 and hopeless in year 2 when R2 half-materialises; nobody can say what the number was FOR.",
+                   "principle":"A percentage is a number about other projects; the register is a number about yours."},
+                  {"key":"both","label":"Take whichever of the two numbers is larger, to be safe","quality":35,
+                   "consequence":"Prudent-sounding, unjustifiable: the case now carries a contingency defined by 'whichever', which the committee trims arbitrarily because it was set arbitrarily.",
+                   "principle":"A contingency without a basis invites cuts without a basis."}]}],
+             "hints":["Net the four lines with signs — the decommissioning saving is a genuine opportunity.",
+               "Compare the EMV total with what 10% of programme cost would be — the gap IS the conversation.",
+               "Expected value funds the middle of the distribution; name the tail separately."],
+             "profile_map":{"calculation":"Risk Strategist","decision":"Cost Guardian","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Built a business-case contingency the register could defend line by line."}
+            """),
+
+        // ───────────── Schedule Strategy · practitioner · CPM ─────────────
+
+        ("WC-CPM-105", "The enabling works nobody scheduled", "Five solar sites, one enabling network, and a definition team arguing about the wrong activity.",
+            "Renewables", "Programme Planner", "project_controls", "professional", 9,
+            """["schedule_analysis","critical_path"]""",
+            """
+            {"context":"A solar portfolio's shared enabling works — one network feeding all five sites — is being planned at definition. The grid team insists activity B (the substation bay) is 'obviously critical' and wants it accelerated. Run the network before anyone spends money on that instinct.",
+             "evidence":[
+               {"label":"A — Consents package","value":"2 days, no predecessors"},
+               {"label":"B — Substation bay works","value":"4 days, after A"},
+               {"label":"C — Access & haul roads","value":"3 days, after A"},
+               {"label":"D — Cable route civils","value":"5 days, after B"},
+               {"label":"E — Site compounds","value":"5 days, after C"},
+               {"label":"F — Enabling handover","value":"2 days, after D and E"}],
+             "task":"cpm",
+             "given":{"activities":[
+               {"id":"A","dur":2,"preds":[]},{"id":"B","dur":4,"preds":["A"]},{"id":"C","dur":3,"preds":["A"]},
+               {"id":"D","dur":5,"preds":["B"]},{"id":"E","dur":5,"preds":["C"]},{"id":"F","dur":2,"preds":["D","E"]}]},
+             "ask":[
+               {"key":"project_duration","label":"Enabling duration (days)","type":"number"},
+               {"key":"float_C","label":"Total float of C — access roads (days)","type":"number"},
+               {"key":"float_E","label":"Total float of E — site compounds (days)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"instinct","prompt":"The grid team's 'accelerate B' instinct — your finding?",
+                "options":[
+                  {"key":"confirm","label":"Confirm B IS on the critical path — but show the compounds path is one day behind it, so any acceleration of B beyond a day just moves the criticality, not the date","quality":100,
+                   "consequence":"The team buys exactly one day of B acceleration instead of three, and watches the near-critical path like it now deserves.",
+                   "principle":"Acceleration is bounded by the NEXT path, not by enthusiasm for the current one."},
+                  {"key":"agree","label":"Agree fully — critical is critical, accelerate B as much as the budget allows","quality":20,
+                   "consequence":"Three days bought on B; the handover moves one day, because the compounds path quietly became the constraint after day one.",
+                   "principle":"Crashing past the near-critical path donates money to the schedule gods."},
+                  {"key":"dismiss","label":"Dismiss the instinct — instincts have no place in planning","quality":30,
+                   "consequence":"The instinct happened to be half-right; dismissing it costs you the grid team's engagement with the plan they must deliver.",
+                   "principle":"Test instincts with the network — validated instinct is how planners earn allies."}]}],
+             "hints":["Trace both paths through to F and compare their lengths.",
+               "An activity's float is how far it can slip before the end date moves.",
+               "When you accelerate the critical path, check which path becomes critical next — and when."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Schedule Analyst","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Bounded an acceleration instinct with the near-critical path that would inherit it."}
+            """),
+
+        ("WC-CPM-106", "Planning the turnaround backwards", "The refinery gives you a fixed restart date. Everything else is yours to arrange.",
+            "Downstream Energy", "Turnaround Planning Engineer", "project_controls", "professional", 11,
+            """["schedule_analysis","critical_path"]""",
+            """
+            {"context":"A refinery turnaround's definition plan has six major blocks and a contractually fixed restart date. The maintenance superintendent wants to know the minimum turnaround duration, which blocks can flex, and where the plan's real pressure point is — before the outage window is booked with the commercial team.",
+             "evidence":[
+               {"label":"A — Shutdown & decontamination","value":"3 days, no predecessors"},
+               {"label":"B — Exchanger bundle pulls","value":"6 days, after A"},
+               {"label":"C — Column internals inspection","value":"5 days, after A"},
+               {"label":"D — Bundle repairs & retube","value":"2 days, after B"},
+               {"label":"E — Column repairs & reassembly","value":"4 days, after C"},
+               {"label":"F — Reinstatement & restart prep","value":"3 days, after D and E"}],
+             "task":"cpm",
+             "given":{"activities":[
+               {"id":"A","dur":3,"preds":[]},{"id":"B","dur":6,"preds":["A"]},{"id":"C","dur":5,"preds":["A"]},
+               {"id":"D","dur":2,"preds":["B"]},{"id":"E","dur":4,"preds":["C"]},{"id":"F","dur":3,"preds":["D","E"]}]},
+             "ask":[
+               {"key":"project_duration","label":"Minimum turnaround duration (days)","type":"number"},
+               {"key":"float_B","label":"Total float of B — bundle pulls (days)","type":"number"},
+               {"key":"float_D","label":"Total float of D — bundle repairs (days)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"window","prompt":"Booking the outage window with commercial, you recommend:",
+                "options":[
+                  {"key":"buffered","label":"The computed minimum plus a visible, owned buffer sized to turnaround discovery risk — presented as two numbers, not one","quality":100,
+                   "consequence":"Commercial books the buffered window knowing exactly what the buffer is for; when inspection finds two surprise repairs, the buffer absorbs them in daylight.",
+                   "principle":"A buffer that is visible and owned gets spent on risk; one hidden inside activities gets spent on comfort."},
+                  {"key":"minimum","label":"The computed minimum exactly — buffers invite Parkinson's law","quality":20,
+                   "consequence":"The first discovery repair blows the window; the restart slips against a contractual date, which costs more per day than the whole buffer would have.",
+                   "principle":"A fixed-date commitment at the theoretical minimum is a bet that inspection finds nothing."},
+                  {"key":"padded","label":"The minimum with 30% silently added into each block's duration","quality":25,
+                   "consequence":"Every block expands to its padded duration — Parkinson delivers — and when real discovery work appears there is somehow still no room.",
+                   "principle":"Hidden padding is consumed by work; visible buffer is consumed by risk."}]}],
+             "hints":["Compute both branch durations from A to F to find the driving path.",
+               "Float on the shorter branch is the difference between the two branches.",
+               "Decide separately: the network's minimum, and the risk buffer the WINDOW needs."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sized a refinery outage window with its buffer in daylight."}
             """),
     };
 }

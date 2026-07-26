@@ -9,22 +9,22 @@
    "day": 121,
    "status": "planned",
    "source_challenge": null,
-   "title": "A contingency drawdown decision — an equipment overhaul",
+   "title": "Quantifying the risk nobody would name — an offshore maintenance campaign",
    "experience_type": "risk_room",
    "primary_domain": "risk_uncertainty",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 9,
+   "est_minutes": 12,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "execution_control",
-   "sector": "manufacturing_industrial"
+   "sector": "energy_utilities"
   },
   {
    "code": "PI-Y1-D122",
    "day": 122,
    "status": "planned",
    "source_challenge": null,
-   "title": "The audit trail with a missing week — a fleet transition",
+   "title": "The audit trail with a missing week — a hospital ward refurbishment",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "foundation",
@@ -32,14 +32,14 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "transport_logistics"
+   "sector": "healthcare_life_sciences"
   },
   {
    "code": "PI-Y1-D123",
    "day": 123,
    "status": "planned",
    "source_challenge": null,
-   "title": "Overtime as a plan, again — a joint-venture delivery office",
+   "title": "Overtime as a plan, again — a pilot production ramp",
    "experience_type": "stakeholder_dilemma",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
@@ -47,19 +47,19 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "manufacturing_industrial"
   },
   {
    "code": "PI-Y1-D124",
    "day": 124,
    "status": "planned",
    "source_challenge": null,
-   "title": "Benefits on paper, pressure in the room — an enterprise transformation",
+   "title": "Strategy says yes, capacity says no — an enterprise transformation",
    "experience_type": "executive_mission",
    "primary_domain": "integration_governance",
    "difficulty_band": "executive",
    "duration_band": "capstone",
-   "est_minutes": 26,
+   "est_minutes": 24,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "execution_control",
    "sector": "cross_sector"
@@ -69,7 +69,7 @@
    "day": 125,
    "status": "planned",
    "source_challenge": null,
-   "title": "The scope statement that meant four things — a flood defence scheme",
+   "title": "The requirement nobody owned — a platform migration",
    "experience_type": "logic_sequence",
    "primary_domain": "scope_requirements",
    "difficulty_band": "foundation",
@@ -77,29 +77,29 @@
    "est_minutes": 7,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "construction_infrastructure"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D126",
    "day": 126,
    "status": "planned",
    "source_challenge": null,
-   "title": "The opportunity hidden in the delay — an enterprise transformation",
+   "title": "The register that stopped being read — a rail resignalling project",
    "experience_type": "risk_room",
    "primary_domain": "risk_uncertainty",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 10,
+   "est_minutes": 9,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "transport_logistics"
   },
   {
    "code": "PI-Y1-D127",
    "day": 127,
    "status": "planned",
    "source_challenge": null,
-   "title": "The long-lead item with no float — a water treatment upgrade",
+   "title": "The long-lead item with no float — a census-scale IT programme",
    "experience_type": "daily_decision",
    "primary_domain": "procurement_contracts",
    "difficulty_band": "foundation",
@@ -107,7 +107,7 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "energy_utilities"
+   "sector": "public_sector"
   },
   {
    "code": "PI-Y1-D128",
@@ -129,22 +129,22 @@
    "day": 129,
    "status": "planned",
    "source_challenge": null,
-   "title": "One sponsor, two mandates — a coastal resilience scheme",
+   "title": "The go/no-go with missing evidence — a substation replacement",
    "experience_type": "executive_mission",
    "primary_domain": "integration_governance",
    "difficulty_band": "executive",
    "duration_band": "capstone",
-   "est_minutes": 28,
+   "est_minutes": 22,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "climate_sustainability"
+   "sector": "energy_utilities"
   },
   {
    "code": "PI-Y1-D130",
    "day": 130,
    "status": "planned",
    "source_challenge": null,
-   "title": "Where the fit-out ends and the asset begins — a stadium fit-out",
+   "title": "A deliverable with three definitions — a portfolio review",
    "experience_type": "logic_sequence",
    "primary_domain": "scope_requirements",
    "difficulty_band": "foundation",
@@ -152,29 +152,29 @@
    "est_minutes": 6,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "construction_infrastructure"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D131",
    "day": 131,
    "status": "planned",
    "source_challenge": null,
-   "title": "Exposure the heat map understated — a river crossing",
+   "title": "A contingency drawdown decision — a multi-site capital programme",
    "experience_type": "risk_room",
    "primary_domain": "risk_uncertainty",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 8,
+   "est_minutes": 10,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "execution_control",
-   "sector": "construction_infrastructure"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D132",
    "day": 132,
    "status": "planned",
    "source_challenge": null,
-   "title": "Rework the dashboard called progress — a production line install",
+   "title": "Rework the dashboard called progress — a stadium fit-out",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "foundation",
@@ -182,14 +182,14 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "manufacturing_industrial"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D133",
    "day": 133,
    "status": "planned",
    "source_challenge": null,
-   "title": "A community meeting with one answer left — a core-system replacement",
+   "title": "The update that landed badly — a broadcast facility move",
    "experience_type": "stakeholder_dilemma",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "practitioner",
@@ -197,7 +197,7 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "technology_digital"
+   "sector": "professional_services_other"
   },
   {
    "code": "PI-Y1-D134",
@@ -294,22 +294,22 @@
    "day": 140,
    "status": "planned",
    "source_challenge": null,
-   "title": "The single point of failure everyone knew — a refinery turnaround",
+   "title": "The opportunity hidden in the delay — a mixed-use development",
    "experience_type": "risk_room",
    "primary_domain": "risk_uncertainty",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 11,
+   "est_minutes": 8,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "execution_control",
-   "sector": "energy_utilities"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D141",
    "day": 141,
    "status": "planned",
    "source_challenge": null,
-   "title": "Liquidated damages, tested — a portfolio review",
+   "title": "Liquidated damages, tested — an airport baggage upgrade",
    "experience_type": "daily_decision",
    "primary_domain": "procurement_contracts",
    "difficulty_band": "foundation",
@@ -317,14 +317,14 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "transport_logistics"
   },
   {
    "code": "PI-Y1-D142",
    "day": 142,
    "status": "planned",
    "source_challenge": null,
-   "title": "A team split across three sites — a courts modernisation programme",
+   "title": "A team split across three sites — a wind farm repowering",
    "experience_type": "stakeholder_dilemma",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
@@ -332,29 +332,29 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "public_sector"
+   "sector": "climate_sustainability"
   },
   {
    "code": "PI-Y1-D143",
    "day": 143,
    "status": "planned",
    "source_challenge": null,
-   "title": "A residual risk with no owner — a multi-site capital programme",
+   "title": "Exposure the heat map understated — a network modernisation",
    "experience_type": "risk_room",
    "primary_domain": "risk_uncertainty",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 12,
+   "est_minutes": 11,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D144",
    "day": 144,
    "status": "planned",
    "source_challenge": null,
-   "title": "The hold point under commercial pressure — an offshore maintenance campaign",
+   "title": "The hold point under commercial pressure — a highway upgrade",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "foundation",
@@ -362,14 +362,14 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "energy_utilities"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D145",
    "day": 145,
    "status": "planned",
    "source_challenge": null,
-   "title": "The regulator's question you saw coming — a joint-venture delivery office",
+   "title": "A community meeting with one answer left — a joint-venture delivery office",
    "experience_type": "stakeholder_dilemma",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "practitioner",
@@ -384,22 +384,22 @@
    "day": 146,
    "status": "planned",
    "source_challenge": null,
-   "title": "The weather window and the reserve — a hospital trust capital plan",
+   "title": "The single point of failure everyone knew — a portfolio review",
    "experience_type": "risk_room",
    "primary_domain": "risk_uncertainty",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 9,
+   "est_minutes": 12,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "execution_control",
-   "sector": "public_sector"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D147",
    "day": 147,
    "status": "planned",
    "source_challenge": null,
-   "title": "The supplier who asked for help early — a framework programme",
+   "title": "The supplier who asked for help early — a data-centre build",
    "experience_type": "daily_decision",
    "primary_domain": "procurement_contracts",
    "difficulty_band": "foundation",
@@ -407,14 +407,29 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D148",
    "day": 148,
    "status": "planned",
    "source_challenge": null,
-   "title": "Quantifying the risk nobody would name — a clinical trials expansion",
+   "title": "A residual risk with no owner — a joint-venture delivery office",
+   "experience_type": "risk_room",
+   "primary_domain": "risk_uncertainty",
+   "difficulty_band": "practitioner",
+   "duration_band": "standard",
+   "est_minutes": 9,
+   "interaction": "evidence_diagnosis",
+   "lifecycle_stage": "execution_control",
+   "sector": "cross_sector"
+  },
+  {
+   "code": "PI-Y1-D149",
+   "day": 149,
+   "status": "planned",
+   "source_challenge": null,
+   "title": "The weather window and the reserve — a flood defence scheme",
    "experience_type": "risk_room",
    "primary_domain": "risk_uncertainty",
    "difficulty_band": "practitioner",
@@ -422,14 +437,14 @@
    "est_minutes": 10,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "execution_control",
-   "sector": "healthcare_life_sciences"
+   "sector": "construction_infrastructure"
   },
   {
-   "code": "PI-Y1-D149",
-   "day": 149,
+   "code": "PI-Y1-D150",
+   "day": 150,
    "status": "planned",
    "source_challenge": null,
-   "title": "The register that stopped being read — a national rollout",
+   "title": "Quantifying the risk nobody would name — a grid reinforcement project",
    "experience_type": "risk_room",
    "primary_domain": "risk_uncertainty",
    "difficulty_band": "practitioner",
@@ -437,14 +452,14 @@
    "est_minutes": 8,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "execution_control",
-   "sector": "technology_digital"
+   "sector": "energy_utilities"
   },
   {
-   "code": "PI-Y1-D150",
-   "day": 150,
+   "code": "PI-Y1-D151",
+   "day": 151,
    "status": "planned",
    "source_challenge": null,
-   "title": "A contingency drawdown decision — a portfolio review",
+   "title": "The register that stopped being read — a framework programme",
    "experience_type": "risk_room",
    "primary_domain": "risk_uncertainty",
    "difficulty_band": "practitioner",
@@ -453,21 +468,6 @@
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "execution_control",
    "sector": "cross_sector"
-  },
-  {
-   "code": "PI-Y1-D151",
-   "day": 151,
-   "status": "planned",
-   "source_challenge": null,
-   "title": "The opportunity hidden in the delay — a mixed-use development",
-   "experience_type": "risk_room",
-   "primary_domain": "risk_uncertainty",
-   "difficulty_band": "practitioner",
-   "duration_band": "standard",
-   "est_minutes": 12,
-   "interaction": "evidence_diagnosis",
-   "lifecycle_stage": "execution_control",
-   "sector": "construction_infrastructure"
   }
  ]
 }
