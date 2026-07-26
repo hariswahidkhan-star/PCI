@@ -255,7 +255,37 @@ MAPPED_APR = [
     ("WC-CST-134", "Spend it by March", "cost_value", "cost_commercial", "execution_control", "public_sector", "single_decision", "foundation", 12, 120),
 ]
 assert len(MAPPED_APR) == 25
-MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR
+
+# ── May authored pack: risk, opportunity, uncertainty and contingency. ──
+MAPPED_MAY = [
+    ("WC-RSK-150", "Four warranty claims, one pattern", "risk_room", "risk_uncertainty", "execution_control", "cross_sector", "evidence_diagnosis", "professional", 9, 121),
+    ("WC-QLT-160", "The survey kit with the expired sticker", "daily_decision", "quality_assurance", "execution_control", "transport_logistics", "single_decision", "foundation", 6, 122),
+    ("WC-STK-166", "The team that stopped saying no", "stakeholder_dilemma", "resources_leadership", "execution_control", "cross_sector", "single_decision", "professional", 7, 123),
+    ("WC-CAP-171", "The appetite reset", "executive_mission", "integration_governance", "execution_control", "cross_sector", "multi_stage_decision", "expert", 24, 124),
+    ("WC-SCO-173", "The emergency that rewrote the scope", "logic_sequence", "scope_requirements", "execution_control", "energy_utilities", "order_rank", "foundation", 6, 125),
+    ("WC-RSK-151", "The trend and the threshold", "risk_room", "risk_uncertainty", "execution_control", "construction_infrastructure", "evidence_diagnosis", "professional", 10, 126),
+    ("WC-PRC-163", "Working on a letter, waiting on a contract", "daily_decision", "procurement_contracts", "execution_control", "construction_infrastructure", "single_decision", "foundation", 5, 127),
+    ("WC-STK-167", "The counteroffer conversation", "stakeholder_dilemma", "resources_leadership", "execution_control", "technology_digital", "single_decision", "professional", 5, 128),
+    ("WC-CAP-172", "The incident on someone else's project", "executive_mission", "integration_governance", "execution_control", "construction_infrastructure", "multi_stage_decision", "expert", 22, 129),
+    ("WC-SCO-174", "Thirty requests, one intake", "logic_sequence", "scope_requirements", "execution_control", "cross_sector", "order_rank", "foundation", 5, 130),
+    ("WC-RSK-152", "The month nobody nearly got hurt", "risk_room", "risk_uncertainty", "execution_control", "cross_sector", "evidence_diagnosis", "professional", 8, 131),
+    ("WC-QLT-161", "The shortcut through the cleanroom", "daily_decision", "quality_assurance", "execution_control", "healthcare_life_sciences", "single_decision", "foundation", 7, 132),
+    ("WC-STK-168", "The map that went viral", "stakeholder_dilemma", "stakeholders_communication", "execution_control", "climate_sustainability", "single_decision", "professional", 6, 133),
+    ("WC-RSK-153", "The register the leaver left behind", "risk_room", "risk_uncertainty", "execution_control", "cross_sector", "evidence_diagnosis", "professional", 11, 140),
+    ("WC-PRC-164", "One quote, familiar face", "daily_decision", "procurement_contracts", "execution_control", "cross_sector", "single_decision", "foundation", 7, 141),
+    ("WC-STK-169", "The secondee's other employer", "stakeholder_dilemma", "resources_leadership", "execution_control", "public_sector", "single_decision", "professional", 7, 142),
+    ("WC-RSK-154", "The supplier's quiet quarter", "risk_room", "risk_uncertainty", "execution_control", "energy_utilities", "evidence_diagnosis", "professional", 12, 143),
+    ("WC-QLT-162", "The finding that got friendlier", "daily_decision", "quality_assurance", "execution_control", "cross_sector", "single_decision", "foundation", 6, 144),
+    ("WC-STK-170", "Forty-eight hours of darkness", "stakeholder_dilemma", "stakeholders_communication", "execution_control", "energy_utilities", "single_decision", "professional", 5, 145),
+    ("WC-RSK-155", "Seventeen findings and a launch date", "risk_room", "risk_uncertainty", "execution_control", "technology_digital", "evidence_diagnosis", "professional", 9, 146),
+    ("WC-PRC-165", "The part that changed inside the box", "daily_decision", "procurement_contracts", "execution_control", "manufacturing_industrial", "single_decision", "foundation", 6, 147),
+    ("WC-RSK-156", "Ninety-six percent of the chart", "risk_room", "risk_uncertainty", "execution_control", "construction_infrastructure", "evidence_diagnosis", "professional", 10, 148),
+    ("WC-RSK-157", "The exclusion in the renewal", "risk_room", "risk_uncertainty", "execution_control", "cross_sector", "evidence_diagnosis", "professional", 8, 149),
+    ("WC-RSK-158", "The milestone that was true from a distance", "risk_room", "risk_uncertainty", "execution_control", "public_sector", "evidence_diagnosis", "professional", 11, 150),
+    ("WC-RSK-159", "One rig, three lines", "risk_room", "risk_uncertainty", "execution_control", "manufacturing_industrial", "evidence_diagnosis", "professional", 12, 151),
+]
+assert len(MAPPED_MAY) == 25
+MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY
 
 # Existing bank items that complete January, February and March — pinned so the months stay
 # fully authored (March's thirteen legacy schedule items hold their theme-month days).
@@ -266,7 +296,9 @@ PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17,
                    "WC-TML-009": 77, "WC-ESC-024": 78, "WC-PRG-028": 79, "WC-ESC-041": 80,
                    "WC-PRG-047": 81,
                    "WC-PRD-036": 104, "WC-EVM-018": 105, "WC-CSH-004": 106, "WC-CBS-027": 107,
-                   "WC-EVM-049": 108}
+                   "WC-EVM-049": 108,
+                   "WC-RSK-033": 134, "WC-RSK-020": 135, "WC-RSK-003": 136, "WC-PRT-008": 137,
+                   "WC-PRT-021": 138, "WC-PRT-039": 139}
 
 DIFF_BAND = {"foundation": "foundation", "developing": "foundation", "professional": "practitioner",
              "advanced": "advanced", "expert": "executive"}

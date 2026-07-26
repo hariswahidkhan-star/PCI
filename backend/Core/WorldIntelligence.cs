@@ -320,6 +320,33 @@ public static class WorldIntelligence
         ["WC-STK-147"] = new("stakeholder_dilemma", "resources_leadership", "execution_control", "cross_sector", "single_decision"),
         ["WC-CAP-148"] = new("executive_mission", "integration_governance", "execution_control", "cross_sector", "multi_stage_decision"),
         ["WC-CAP-149"] = new("executive_mission", "integration_governance", "execution_control", "construction_infrastructure", "multi_stage_decision"),
+
+        // ── Year-1 May authored pack — risk, opportunity, uncertainty and contingency. ──
+        ["WC-RSK-150"] = new("risk_room", "risk_uncertainty", "execution_control", "cross_sector", "evidence_diagnosis"),
+        ["WC-RSK-151"] = new("risk_room", "risk_uncertainty", "execution_control", "construction_infrastructure", "evidence_diagnosis"),
+        ["WC-RSK-152"] = new("risk_room", "risk_uncertainty", "execution_control", "cross_sector", "evidence_diagnosis"),
+        ["WC-RSK-153"] = new("risk_room", "risk_uncertainty", "execution_control", "cross_sector", "evidence_diagnosis"),
+        ["WC-RSK-154"] = new("risk_room", "risk_uncertainty", "execution_control", "energy_utilities", "evidence_diagnosis"),
+        ["WC-RSK-155"] = new("risk_room", "risk_uncertainty", "execution_control", "technology_digital", "evidence_diagnosis"),
+        ["WC-RSK-156"] = new("risk_room", "risk_uncertainty", "execution_control", "construction_infrastructure", "evidence_diagnosis"),
+        ["WC-RSK-157"] = new("risk_room", "risk_uncertainty", "execution_control", "cross_sector", "evidence_diagnosis"),
+        ["WC-RSK-158"] = new("risk_room", "risk_uncertainty", "execution_control", "public_sector", "evidence_diagnosis"),
+        ["WC-RSK-159"] = new("risk_room", "risk_uncertainty", "execution_control", "manufacturing_industrial", "evidence_diagnosis"),
+        ["WC-QLT-160"] = new("daily_decision", "quality_assurance", "execution_control", "transport_logistics", "single_decision"),
+        ["WC-QLT-161"] = new("daily_decision", "quality_assurance", "execution_control", "healthcare_life_sciences", "single_decision"),
+        ["WC-QLT-162"] = new("daily_decision", "quality_assurance", "execution_control", "cross_sector", "single_decision"),
+        ["WC-PRC-163"] = new("daily_decision", "procurement_contracts", "execution_control", "construction_infrastructure", "single_decision"),
+        ["WC-PRC-164"] = new("daily_decision", "procurement_contracts", "execution_control", "cross_sector", "single_decision"),
+        ["WC-PRC-165"] = new("daily_decision", "procurement_contracts", "execution_control", "manufacturing_industrial", "single_decision"),
+        ["WC-STK-166"] = new("stakeholder_dilemma", "resources_leadership", "execution_control", "cross_sector", "single_decision"),
+        ["WC-STK-167"] = new("stakeholder_dilemma", "resources_leadership", "execution_control", "technology_digital", "single_decision"),
+        ["WC-STK-168"] = new("stakeholder_dilemma", "stakeholders_communication", "execution_control", "climate_sustainability", "single_decision"),
+        ["WC-STK-169"] = new("stakeholder_dilemma", "resources_leadership", "execution_control", "public_sector", "single_decision"),
+        ["WC-STK-170"] = new("stakeholder_dilemma", "stakeholders_communication", "execution_control", "energy_utilities", "single_decision"),
+        ["WC-SCO-173"] = new("logic_sequence", "scope_requirements", "execution_control", "energy_utilities", "order_rank"),
+        ["WC-SCO-174"] = new("logic_sequence", "scope_requirements", "execution_control", "cross_sector", "order_rank"),
+        ["WC-CAP-171"] = new("executive_mission", "integration_governance", "execution_control", "cross_sector", "multi_stage_decision"),
+        ["WC-CAP-172"] = new("executive_mission", "integration_governance", "execution_control", "construction_infrastructure", "multi_stage_decision"),
     };
 
     /// <summary>
