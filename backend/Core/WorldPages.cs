@@ -1726,9 +1726,10 @@ public static class WorldPages
           // page's head (one primary action, today's state, unfinished work), the Passport its
           // management body. The aggregate failing quietly never blocks the Passport tools.
           return Promise.all([api('/api/world/passport'),
-                              api('/api/world/me/dashboard').catch(function(){return null;})])
+                              api('/api/world/me/dashboard').catch(function(){return null;}),
+                              api('/api/world/me/profile').catch(function(){return null;})])
           .then(function(res){
-            var p=res[0],d=res[1];
+            var p=res[0],d=res[1],prof=res[2];
             $('auth').hidden=true;$('me').hidden=false;$('me').focus();
             var seal=(document.getElementById('sealTpl')||{innerHTML:''}).innerHTML;
             function pretty(s){s=(s||'').replace(/_/g,' ');return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
@@ -1751,7 +1752,11 @@ public static class WorldPages
                  '<h2 style="margin-top:0">Welcome back'+(p.display_name?', '+esc(p.display_name):'')+'</h2>'+
                  '<p style="color:var(--slate)">'+(p.email_verified?'Email verified.':'Email not verified yet — publishing your Passport needs it.')+
                  ' '+d.progress.completed+' completed challenge'+(d.progress.completed===1?'':'s')+
-                 (d.progress.completed>0?' across '+d.progress.industries+' industr'+(d.progress.industries===1?'y':'ies'):'')+'.</p>'+
+                 (d.progress.completed>0?' across '+d.progress.industries+' industr'+(d.progress.industries===1?'y':'ies'):'')+'.'+
+                 // The streak is a practice habit, never a credential — shown only when it exists,
+                 // and never used to shame a gap (a zero simply says nothing).
+                 (d.streak_days>0?' <b>'+d.streak_days+'-day practice streak</b> <small>(a habit, not a credential)</small>':'')+
+                 '</p>'+
                  '<p>'+cta+'</p></div>';
               if(d.today&&d.today.code){
                 var reset=d.today.changes_at?new Date(d.today.changes_at):null;
@@ -1849,6 +1854,32 @@ public static class WorldPages
                 :((p.email_verified&&p.display_name)?''
                   :'<p style="color:var(--slate);font-size:14px">Publishing needs a verified email and a display name — the two things that make the record worth reading.</p>'))+
               '</div>';
+            // ── The shared PCI student profile (P1-10): ONE record, both products. Edits here land
+            //    on the same canonical profile the Institute portal reads — and nothing from it is
+            //    ever public on the Passport without the separate disclosure consent below. ──
+            if(prof&&prof.linked&&prof.profile){
+              var sp=prof.profile;
+              h+='<div class="card"><span class="kicker">PCI student profile</span>'+
+                 '<h2 style="margin-top:0">Your shared profile</h2>'+
+                 '<p style="color:var(--slate)">This is your one PCI student profile — the same record your Institute student portal uses. '+
+                 'A change saved here appears there, and vice versa. Nothing from it is shown on your public Passport unless you choose so in Disclosure below.</p>'+
+                 '<p><b>'+esc(((sp.first_name||'')+' '+(sp.last_name||'')).trim()||'Name not set')+'</b> '+
+                 '<small style="color:var(--slate)">&middot; profile '+esc(sp.profile_completion_percentage)+'% complete</small></p>'+
+                 '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">'+
+                 [['sp_role','Current role','current_role'],['sp_company','Company','company'],
+                  ['sp_country','Country','country'],['sp_city','City','city']].map(function(f){
+                   return '<div><label for="'+f[0]+'">'+f[1]+'</label>'+
+                          '<input id="'+f[0]+'" maxlength="200" value="'+esc(sp[f[2]]||'')+'"></div>';
+                 }).join('')+
+                 '</div>'+
+                 '<p style="margin-top:14px"><button class="btn secondary" id="spSave">Save profile</button> '+
+                 '<span id="spMsg" role="status"></span></p></div>';
+            }else if(prof&&!prof.linked){
+              h+='<div class="card"><span class="kicker">PCI student profile</span>'+
+                 '<h2 style="margin-top:0">Not linked yet</h2>'+
+                 '<p style="color:var(--slate)">This World account is not linked to a PCI student identity yet, so there is no shared profile to show. '+
+                 'Sign in with your PCI credentials (the ones you use on the Institute student portal), or contact support if you believe this is wrong.</p></div>';
+            }
             // Field-level disclosure: publishing WHAT you have practised should never force you to
             // publish your scores as well. These switches apply to the public page and the PDF alike.
             h+='<div class="card"><span class="kicker">Disclosure</span>'+
@@ -1936,6 +1967,13 @@ public static class WorldPages
             $('me').innerHTML=h;
             $('saveName').addEventListener('click',function(){
               api('/api/world/account/profile',{display_name:$('dn').value}).then(load);
+            });
+            if($('spSave'))$('spSave').addEventListener('click',function(){
+              $('spMsg').textContent='';
+              api('/api/world/me/profile',{current_role:$('sp_role').value,company:$('sp_company').value,
+                country:$('sp_country').value,city:$('sp_city').value},'PATCH')
+                .then(function(){$('spMsg').textContent='Saved — your PCI profile is updated everywhere.';})
+                .catch(function(){$('spMsg').textContent='Could not save — try again.';});
             });
             if($('pa_verify'))$('pa_verify').addEventListener('click',function(){
               api('/api/world/account/resend-verification',{})

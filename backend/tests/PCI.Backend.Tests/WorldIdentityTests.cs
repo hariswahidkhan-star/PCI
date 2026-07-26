@@ -235,6 +235,39 @@ public class WorldIdentityTests
     }
 
     [Fact]
+    public void Attempt_ownership_reconciles_to_canonical_identities_before_any_cutover()
+    {
+        var db = NewWorldDb();
+        var sess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES('s-audit')");
+        var (_, wid, _) = WorldAccount.Register(db, "audit-own@x.test", "long-password-1", "A O", null);
+        var ch = db.QueryOne("SELECT id,current_version FROM pciworld_challenges WHERE current_version>=1 LIMIT 1")!;
+        var att = db.ExecuteReturningId(@"INSERT INTO pciworld_attempts(session_id,challenge_id,version,status,score,user_id,completed_at)
+            VALUES(?,?,?, 'completed', 66, ?, datetime('now'))", sess, ch["id"], ch["current_version"], wid);
+        db.Execute(@"INSERT INTO pciworld_attempts(session_id,challenge_id,version,status) VALUES(?,?,?, 'in_progress')",
+            sess, ch["id"], ch["current_version"]);   // anonymous — not part of the owned count
+
+        var audit = WorldIdentity.AuditAttemptOwnership(db);
+        Assert.Equal(1, audit.OwnedAttempts);
+        Assert.Equal(1, audit.Resolvable);
+        Assert.True(audit.CutoverReady);
+        Assert.Equal(WorldIdentity.CanonicalUserFor(db, wid), WorldIdentity.CanonicalOwnerOfAttempt(db, att));
+
+        // An attempt owned by a World id with NO canonical resolution (quarantined conflict)
+        // makes the audit fail closed — the cutover must wait for the mapping, never strand work.
+        CanonicalUser(db, "clash-own@x.test");
+        var clashWid = LegacyWorld(db, "clash-own@x.test");
+        WorldIdentity.Run(db);
+        db.Execute(@"INSERT INTO pciworld_attempts(session_id,challenge_id,version,status,score,user_id,completed_at)
+            VALUES(?,?,?, 'completed', 50, ?, datetime('now'))", sess, ch["id"], ch["current_version"], clashWid);
+        var audit2 = WorldIdentity.AuditAttemptOwnership(db);
+        Assert.Equal(2, audit2.OwnedAttempts);
+        Assert.Equal(1, audit2.Orphaned);
+        Assert.False(audit2.CutoverReady);
+        Assert.Null(WorldIdentity.CanonicalOwnerOfAttempt(db, db.Scalar<long>(
+            "SELECT id FROM pciworld_attempts WHERE user_id=?", clashWid)));
+    }
+
+    [Fact]
     public void Participation_rows_hold_product_data_only_and_are_unique_per_user()
     {
         var db = NewWorldDb();

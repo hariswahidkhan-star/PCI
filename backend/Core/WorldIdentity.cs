@@ -237,6 +237,38 @@ public static class WorldIdentity
         return null;
     }
 
+    // ───────────────────────── attempt-namespace reconciliation (cutover groundwork) ─────────────────────────
+
+    public sealed record OwnershipAudit(long OwnedAttempts, long Resolvable, long Orphaned)
+    {
+        /// <summary>True when every owned attempt's user_id (legacy World namespace) resolves to a
+        /// canonical identity — the precondition for a mechanical namespace cutover.</summary>
+        public bool CutoverReady => Orphaned == 0;
+    }
+
+    /// <summary>Reconciliation: pciworld_attempts.user_id values live in the LEGACY World-id
+    /// namespace; this proves how many resolve to a canonical user through the map or the direct
+    /// link. Orphaned &gt; 0 means a cutover would strand evidence — fix the mapping first.</summary>
+    public static OwnershipAudit AuditAttemptOwnership(Db db)
+    {
+        var owned = db.Scalar<long>("SELECT COUNT(*) FROM pciworld_attempts WHERE user_id IS NOT NULL");
+        var resolvable = db.Scalar<long>(@"SELECT COUNT(*) FROM pciworld_attempts a
+            WHERE a.user_id IS NOT NULL AND (
+              EXISTS(SELECT 1 FROM pciworld_user_map m
+                     WHERE m.legacy_world_id=a.user_id AND m.canonical_user_id IS NOT NULL)
+              OR EXISTS(SELECT 1 FROM pciworld_users w
+                        WHERE w.id=a.user_id AND w.student_user_id IS NOT NULL))");
+        return new(owned, resolvable, owned - resolvable);
+    }
+
+    /// <summary>The canonical owner of an attempt (via its legacy World user id), or null for
+    /// anonymous/unresolvable attempts. The read path future product surfaces will use.</summary>
+    public static long? CanonicalOwnerOfAttempt(Db db, long attemptId)
+    {
+        var a = db.QueryOne("SELECT user_id FROM pciworld_attempts WHERE id=?", attemptId);
+        return a?["user_id"] is null ? null : CanonicalUserFor(db, H.L(a["user_id"]));
+    }
+
     public static void EnsureParticipant(Db db, long canonicalUserId) =>
         db.Execute("INSERT OR IGNORE INTO pciworld_participants(user_id) VALUES(?)", canonicalUserId);
 
