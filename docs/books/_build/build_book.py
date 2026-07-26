@@ -257,10 +257,21 @@ def build(book: str, out: pathlib.Path) -> None:
                       + inner + "</div>")
         print(f"glossary entries: {n_terms}")
 
+    # Back matter — the derived appendices (see make_appendices.py).
+    app_file = book_dir / "APPENDICES.md"
+    app_html = ""
+    if app_file.exists():
+        atext = app_file.read_text(encoding="utf-8")
+        abody = re.sub(r"\A# [^\n]*\n+(?:> [^\n]*\n)*\n?", "", atext)
+        inner = markdown.markdown(abody, extensions=["tables"])
+        inner = re.sub(r"<h2>([^<]+)</h2>", r'<h2 class="apptitle">\1</h2>', inner)
+        app_html = '<div class="backmatter appendices">' + inner + "</div>"
+        print(f"appendix tables: {inner.count('<table>')}")
+
     front = FRONT.format(title=cfg["title"], subtitle=cfg["subtitle"], domains=len(files))
     doc_html = ("<!doctype html><html><head><meta charset='utf-8'>"
                 f"<style>html {{ string-set: booktitle \"{cfg['run_title']}\"; }}</style>"
-                f"</head><body>{front}{''.join(toc)}{html}{gloss_html}{''.join(ix)}</body></html>")
+                f"</head><body>{front}{''.join(toc)}{html}{app_html}{gloss_html}{''.join(ix)}</body></html>")
     html_file = book_dir / "build" / "_combined.html"
     html_file.parent.mkdir(parents=True, exist_ok=True)
     html_file.write_text(doc_html, encoding="utf-8")

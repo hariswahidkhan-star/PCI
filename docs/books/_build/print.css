@@ -265,3 +265,27 @@ nav#TOC a::after {
 }
 .glossary p.glossentry strong { color: #0F172A; font-weight: 700; }
 .glossary p.glossentry em { color: #64748B; font-style: italic; }
+
+/* ---- Back matter: derived appendices ---------------------------------------------- */
+.appendices { page-break-before: always; }
+.appendices h2.apptitle {
+  font-family: "IBM Plex Serif", Georgia, serif; font-size: 21pt; font-weight: 600;
+  color: #0F172A; margin: 0 0 4mm 0; padding-bottom: 2.5mm;
+  border-bottom: 0.5mm solid #1D4ED8; break-after: avoid; page-break-before: always;
+}
+.appendices h2.apptitle:first-of-type { page-break-before: avoid; }
+.appendices h3 {
+  font-family: Inter, sans-serif; font-size: 11.5pt; font-weight: 700; color: #1D4ED8;
+  margin: 6mm 0 2mm 0; break-after: avoid;
+}
+.appendices p { font-family: Inter, sans-serif; font-size: 9.2pt; line-height: 1.62; color: #0F172A; }
+.appendices table { font-size: 8.2pt; width: 100%; border-collapse: collapse; margin: 3mm 0 5mm 0; }
+.appendices th {
+  font-family: Inter, sans-serif; font-size: 7.8pt; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.3pt; color: #64748B; text-align: left; border-bottom: 0.4mm solid #0F172A;
+  padding: 1.4mm 2mm;
+}
+.appendices td {
+  padding: 1.2mm 2mm; border-bottom: 0.15mm solid #E2E8F0; vertical-align: top; line-height: 1.45;
+}
+.appendices tr { break-inside: avoid; }

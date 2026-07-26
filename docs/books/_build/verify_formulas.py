@@ -7,16 +7,31 @@ A chapter cannot pass gate while this suite fails. Run:  python3 verify_formulas
 """
 import importlib.util
 import pathlib
+import re
 from decimal import Decimal as D, getcontext
 
 getcontext().prec = 28
 FAILURES = []
 
 
+# Attribution of each assertion to its book and domain, recorded at RUNTIME. Source counting cannot
+# do this: several sections below assert inside loops, so one `check(` occurrence emits many lines.
+# Appendix C states the size of the verification record to a reader deciding how much to trust the
+# arithmetic, so the record counts itself rather than being estimated from the source.
+CURRENT = [None, None]
+TALLY = {}
+
+
+def section(book, domain):
+    CURRENT[0], CURRENT[1] = book, domain
+
+
 def check(name, computed, printed, tol=D("0.005")):
     computed, printed = D(str(computed)), D(str(printed))
     ok = abs(computed - printed) <= tol
     print(f"{'PASS' if ok else 'FAIL'}  {name}: computed {computed}  printed {printed}")
+    if CURRENT[0]:
+        TALLY[(CURRENT[0], CURRENT[1])] = TALLY.get((CURRENT[0], CURRENT[1]), 0) + 1
     if not ok:
         FAILURES.append(name)
 
@@ -26,6 +41,7 @@ def af(r, n):  # ordinary annuity factor
 
 
 # ---------- PFL-AI Domain 3 — Time value of money ----------
+section("PFL-AI", 3)
 check("WE 3.1.1 simple FV", D(100000) * (1 + D("0.08") * 3), 124000)
 check("WE 3.1.1 compound FV", D(100000) * D("1.08") ** 3, D("125971.20"))
 check("WE 3.1.2 PV of 500k @7% 5y", D(500000) / D("1.07") ** 5, D("356493.09"))
@@ -76,6 +92,7 @@ check("Fig 3.1.1 y10 compound", D(100000) * D("1.08") ** 10, 215892, tol=D("0.6"
 check("Fig 3.3.1 y20 real value", D(1000000) / D("1.03") ** 20, 553676, tol=D("0.5"))
 
 # ---------- PML-AI Domain 6 — Planning, scheduling, delivery flow ----------
+section("PML-AI", 6)
 ACTS = {"A": (2, []), "B": (6, ["A"]), "C": (8, ["B"]), "D": (7, ["B"]),
         "E": (5, ["C", "D"]), "F": (4, ["E"]), "G": (2, ["D"])}
 
@@ -221,6 +238,7 @@ check("MCQ 6.4-F te", D(3 + 4 * 4 + 8) / 6, D("4.5"))
 check("MCQ 6.4-F sigma", (D(8 - 3) / 6).quantize(D("0.01")), D("0.83"), tol=D("0.005"))
 
 # ---------- PFL-AI Domain 4 — Investment appraisal ----------
+section("PFL-AI", 4)
 AF15 = af(D("0.08"), 15)
 check("D4 AF(8%,15)", AF15.quantize(D("0.000001")), D("8.559479"), tol=D("0.0000005"))
 check("WE 4.1.1 PV inflows", D(8900000) * AF15, D("76179360"), tol=D("0.5"))
@@ -280,6 +298,7 @@ check("EX 4.5 optimal set", D("2.6") + D("3.3"), D("5.9"))
 check("4.A.3 EAV invariant", ((D(8900000) * AF15 - 60000000) / AF15 * AF15), D(8900000) * AF15 - 60000000, tol=D("0.01"))
 
 # ---------- PFL-AI Domain 1 — Foundations ----------
+section("PFL-AI", 1)
 check("WE 1.2.2 profit", 10000000 - 8000000, 2000000, tol=D("0"))
 check("WE 1.2.2 operating cash", D(2000000) - 3000000 - 1000000 + 500000, -1500000, tol=D("0"))
 check("WE 1.2.3 debt service", D(70000000) * D("0.06"), 4200000)
@@ -298,6 +317,7 @@ check("MCQ 1.2-A distractor D", D(2000000) - 3000000 - 1000000 - 500000, -250000
 check("MCQ 1.2-B distractor D", (D(9000000) / 30000000).quantize(D("0.001")), D("0.30"), tol=D("0.0005"))
 
 # ---------- PML-AI Domain 7 — Cost, resources and commercial awareness ----------
+section("PML-AI", 7)
 BAC7, PV7, EV7, AC7 = D(4000000), D(2080000), D(1920000), D(2120000)
 CPI7, SPI7 = EV7 / AC7, EV7 / PV7
 check("WE 7.3.2 CV", EV7 - AC7, -200000)
@@ -345,6 +365,7 @@ check("EX 7.4 PTA", D(2400000) + (D(2900000) - (D(2400000) + D(180000))) / D("0.
 check("7.4.4 unpaid at 60-day terms", AC7 * D("0.35"), 742000)
 
 # ---------- PML-AI Domain 1 — The project leadership profession ----------
+section("PML-AI", 1)
 CLIN, ADOPT, HRS, RATE, WKS = D(40), D("0.70"), D(6), D(85), D(48)
 check("WE 1.3.2 adopting clinics", CLIN * ADOPT, 28)
 check("WE 1.3.2 annual benefit", CLIN * ADOPT * HRS * RATE * WKS, 685440)
@@ -370,6 +391,7 @@ check("EX 1.2 five-week cost of delay", CLIN * ADOPT * HRS * RATE * 5, 71400)
 check("EX 1.3 adoption spread 50→90", CLIN * D("0.90") * HRS * RATE * WKS - CLIN * D("0.50") * HRS * RATE * WKS, 391680)
 
 # ---------- PFL-AI Domain 2 — Accounting foundations ----------
+section("PFL-AI", 2)
 REV2, OPEX2 = D(12000000), D(4500000)
 DEP2 = D(60000000) / 25            # Domain 4's I₀ over 25 years
 INT2 = D(42000000) * D("0.06")     # Domain 3's year-one interest
@@ -423,6 +445,7 @@ check("EX 2.3 DSCR after WC", ((EBITDA_X - PBT_X * D("0.20") - 850000) / D(44000
 check("EX 2.4 profit difference", D(2400000) - D(2400000) / 8, 2100000)
 
 # ---------- PML-AI Domain 8 — Risk, uncertainty and resilience ----------
+section("PML-AI", 8)
 import math as _math
 AURIGA_RISKS = [("R1", D("0.35"), D(240000), 84000), ("R2", D("0.50"), D(180000), 90000),
                 ("R3", D("0.25"), D(320000), 80000), ("R4", D("0.15"), D(400000), 60000),
@@ -473,6 +496,7 @@ check("EX 8.3 EMV after", D("0.10") * D(400000), 40000)
 check("EX 8.3 net of mitigation", (D("0.30") - D("0.10")) * D(400000) - 70000, 10000)
 
 # ---------- PML-AI Domain 2 — Strategy, selection and business alignment ----------
+section("PML-AI", 2)
 R2, POT2, COST2 = D("0.07"), D(979200), D(2400000)   # POT2 is Domain 1's output-based claim
 AF8 = af(R2, 8)
 check("D2 AF(7%,8)", AF8.quantize(D("0.000001")), D("5.971299"), tol=D("0.0000005"))
@@ -526,6 +550,7 @@ check("EX 2.3 score P", sum(w * D(s) for w, s in zip(WX, [4, 5, 2, 2])), D("3.70
 check("EX 2.3 score Q", sum(w * D(s) for w, s in zip(WX, [5, 3, 4, 3])), D("4.00"))
 
 # ---------- PFL-AI Domain 10 — Debt sizing, covenants and credit metrics ----------
+section("PFL-AI", 10)
 CF10 = D(6384000)               # Kestrel documented CFADS, after working capital (Domain 2)
 DS10 = D("5009635.23")          # Domain 3's annual instalment on 42,000,000 @ 6% / 12y
 DEBT10, EQ10 = D(42000000), D(18000000)
@@ -644,6 +669,7 @@ check("EX 10.4 payment still made from cash", 1 if CFX * D("0.75") > D("6814815"
 
 
 # ---------- PML-AI Domain 3 — Governance, organization and decision rights ----------
+section("PML-AI", 3)
 COD3 = D(14280)                 # Meridian cost of delay per week (Domain 1)
 
 
@@ -794,6 +820,7 @@ check("EX 3.4 understatement from omitting lead times", TOTX - 10, 7)
 
 
 # ---------- PML-AI Domain 4 — Integration and delivery architecture ----------
+section("PML-AI", 4)
 BASE4 = D(2400000)              # Meridian approved cost baseline (Domain 2)
 
 
@@ -947,6 +974,12 @@ _modules = sorted(_checks_dir.glob("*.py")) if _checks_dir.is_dir() else []
 for _mod_path in _modules:
     if _mod_path.name.startswith("_"):
         continue
+    # Attribute the module's assertions to ITS domain, not to whatever section ran last — otherwise
+    # every module's checks land on the final domain of this file, which is how PML-AI Domain 4 came
+    # to be credited with 6,595 of them.
+    _mm = re.match(r"(pml|pfl)_d(\d+)(_ext)?\.py$", _mod_path.name)
+    section(("PML-AI" if _mm.group(1) == "pml" else "PFL-AI"), int(_mm.group(2))) if _mm \
+        else section(None, None)
     _spec = importlib.util.spec_from_file_location(f"pci_checks_{_mod_path.stem}", _mod_path)
     _mod = importlib.util.module_from_spec(_spec)
     try:
@@ -957,6 +990,10 @@ for _mod_path in _modules:
         print(f"FAIL  {_mod_path.name} raised {type(_e).__name__}: {_e}")
 print(f"\ncheck modules loaded: {len(_modules)}")
 
+
+# Machine-readable attribution for the derived appendices. One line, easy to parse, and it cannot
+# disagree with the assertions above because it is produced by them.
+print("\nTALLY " + ";".join(f"{b}:{d}={n}" for (b, d), n in sorted(TALLY.items())))
 
 print()
 if FAILURES:
