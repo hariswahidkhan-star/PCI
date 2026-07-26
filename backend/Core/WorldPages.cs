@@ -1628,7 +1628,7 @@ public static class WorldPages
             <div><b>Your email</b><span>Used to sign in and to verify the account. It never appears on your Passport, the PDF, or any public page.</span></div>
             <div><b>Your answers</b><span>Grading detail stays between you and the scoring engine. No public surface shows an answer, under any setting.</span></div>
             <div><b>Your link</b><span>Stored only as a hash — the server itself cannot reprint it. Generating a new link retires the old one immediately.</span></div>
-            <div><b>Leaving</b><span>Export everything as JSON at any time. Deleting your account removes your identity, sign-in and every public link; completed challenges survive only as anonymous statistics.</span></div>
+            <div><b>Leaving</b><span>Export your PCI World data as JSON at any time. Deleting your PCI World participation removes your World sign-in, Passport and every public link — your PCI student account and any certifications are untouched; completed challenges survive only as anonymous statistics.</span></div>
           </div>
         </div>
         <script>{AccountJs}</script>
@@ -1781,10 +1781,15 @@ public static class WorldPages
                // clear text, carries no label, cannot be styled or translated, and is blocked
                // outright by some browsers.
                '<div id="delbox" hidden class="card" style="border-color:var(--crimson)">'+
-               '<h2 style="margin-top:0">Delete your account</h2>'+
-               '<p>This removes your Passport, every public link you minted and your sign-in. '+
-               'Completed challenges are kept as anonymous statistics with nothing that identifies you.</p>'+
-               '<label for="delpw">Confirm your password</label>'+
+               '<h2 style="margin-top:0">Delete your PCI World participation</h2>'+
+               '<p>This removes your PCI World Passport, every public link you minted, your World '+
+               'preferences and your World sign-in. Completed challenges are kept as anonymous '+
+               'statistics with nothing that identifies you.</p>'+
+               '<p><b>Your PCI student account is not affected.</b> If you also hold a Project '+
+               'Controls Institute student account (certifications, exams, payments), it stays '+
+               'exactly as it is — deleting the complete PCI account is a separate action in the '+
+               'student portal.</p>'+
+               '<label for="delpw">Confirm your PCI password</label>'+
                '<input id="delpw" type="password" autocomplete="current-password">'+
                '<p style="margin-top:14px"><button class="btn" id="delgo">Delete my account permanently</button> '+
                '<button class="btn secondary" id="delno">Keep my account</button></p></div>'+
@@ -1885,7 +1890,22 @@ public static class WorldPages
                 .then(function(){localStorage.removeItem(KEY);showAuth();})
                 .catch(function(){$('acctmsg').textContent='Password incorrect — account not deleted.';$('delpw').focus();});
             });
-          }).catch(showAuth);
+          }).catch(function(e2){
+            // A failure to LOAD is not a sign-out (journey repair P1-04): only a rejected token
+            // shows the sign-in panel. A network drop or server error says so honestly, keeps the
+            // stored session, and offers a retry — presenting it as "you are not registered" made
+            // people re-register and lose track of their account.
+            if(e2&&(e2.error==='no_token'||e2.error==='world_disabled')){localStorage.removeItem(KEY);return showAuth();}
+            $('auth').hidden=true;$('me').hidden=false;
+            $('me').innerHTML='<div class="card"><span class="kicker">Connection problem</span>'+
+              '<h2 style="margin-top:0">We could not load your account</h2>'+
+              '<p style="color:var(--slate)">'+(navigator.onLine===false
+                ?'You appear to be offline. Your account and evidence are safe on the server — reconnect and try again.'
+                :'The service did not answer just now. You are still signed in; nothing has been lost.')+'</p>'+
+              '<p><button class="btn" id="retryLoad">Try again</button></p></div>';
+            $('me').focus();
+            $('retryLoad').addEventListener('click',function(){load();});
+          });
         }
         $('doRegister').addEventListener('click',function(){
           $('autherr').textContent='';
@@ -1905,7 +1925,18 @@ public static class WorldPages
             .then(function(r){$('autherr').textContent=r.message||'If that address has an account, a reset link is on its way.';})
             .catch(function(){$('autherr').textContent='Could not send the reset email — try again shortly.';});
         });
-        if(localStorage.getItem(KEY))load();else showAuth();
+        // Portal handoff (P0-02): the SSO bridge sends a one-time code in the URL FRAGMENT (never
+        // in a query string the server would log). Exchange it once for a session, then scrub it
+        // from the address bar and history immediately.
+        var hm=(location.hash||'').match(/h=([a-f0-9]{48,64})/);
+        if(hm){
+          history.replaceState(null,'',location.pathname);
+          api('/api/world/account/handoff',{code:hm[1]})
+            .then(function(r){localStorage.setItem(KEY,r.token);load();})
+            .catch(function(e2){showAuth();
+              $('autherr').textContent=(e2&&e2.message)||'That sign-in link has expired — sign in below, or reopen your Passport from the student portal.';});
+        }
+        else if(localStorage.getItem(KEY))load();else showAuth();
         })();
         """;
 

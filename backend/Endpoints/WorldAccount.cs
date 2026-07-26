@@ -119,6 +119,57 @@ public static class WorldAccount
         return token;
     }
 
+    /// <summary>Mint a one-time, two-minute cross-surface handoff code (journey repair P0-02).
+    /// The RAW code is returned once and never stored; only the allow-listed return path rides
+    /// along. This replaces handing a reusable 30-day bearer token through the portal origin.</summary>
+    public static string CreateHandoff(Db db, long worldUserId, string? returnTo = null)
+    {
+        var code = Security.RandomHex(32);
+        db.Execute(@"INSERT INTO pciworld_handoff_codes(code_sha,world_user_id,return_to,expires_at)
+            VALUES(?,?,?, datetime('now','+2 minutes'))",
+            Security.Sha(code), worldUserId, AllowedReturnTo(returnTo));
+        return code;
+    }
+
+    /// <summary>Redeem a handoff code EXACTLY once: the consumption UPDATE is the lock, so a
+    /// concurrent replay races into 0 rows and learns nothing. Expired, replayed and never-existed
+    /// are deliberately indistinguishable.</summary>
+    public static (string? Error, long UserId, string? ReturnTo) RedeemHandoff(Db db, string? code)
+    {
+        if (string.IsNullOrWhiteSpace(code) || code.Length < 32) return ("invalid_code", 0, null);
+        var sha = Security.Sha(code);
+        var n = db.Execute(@"UPDATE pciworld_handoff_codes SET consumed_at=datetime('now')
+            WHERE code_sha=? AND consumed_at IS NULL AND expires_at>datetime('now')", sha);
+        if (n == 0) return ("invalid_code", 0, null);
+        var row = db.QueryOne("SELECT world_user_id, return_to FROM pciworld_handoff_codes WHERE code_sha=?", sha)!;
+        return (null, H.L(row["world_user_id"]), H.Str(row["return_to"]));
+    }
+
+    /// <summary>Relative, same-origin World destinations only — never an open redirect.</summary>
+    static string AllowedReturnTo(string? p) =>
+        p is not null && p.StartsWith("/world") && !p.StartsWith("//") && !p.Contains("://")
+            ? (p.Length <= 128 ? p : p[..128]) : "/world/account";
+
+    /// <summary>
+    /// Verify the password for a sensitive World action (delete, password change). The canonical
+    /// PCI credential is the authority (journey repair P0-03): accounts created through the portal
+    /// bridge hold a random World hash the person never saw, so their REAL password — the one they
+    /// use on the platform — must work here. The legacy World hash is still accepted
+    /// transitionally for standalone accounts.
+    /// </summary>
+    public static bool VerifyAccountPassword(Db db, long worldUserId, string? password)
+    {
+        if (string.IsNullOrEmpty(password)) return false;
+        var row = db.QueryOne("SELECT password_hash, student_user_id FROM pciworld_users WHERE id=?", worldUserId);
+        if (row is null) return false;
+        if (Security.VerifyPassword(password, row["password_hash"] as string)) return true;
+        var canonical = WorldIdentity.CanonicalFor(db, worldUserId)
+                        ?? (row["student_user_id"] is null ? (long?)null : H.L(row["student_user_id"]));
+        if (canonical is null) return false;
+        var cu = db.QueryOne("SELECT password_hash FROM users WHERE id=? AND status='active'", canonical);
+        return cu is not null && Security.VerifyPassword(password, cu["password_hash"] as string);
+    }
+
     /// <summary>Publish the Passport: consent + verified email + a display name are all required.
     /// Returns the public path or an error key. Republishing rotates the token (old links die).</summary>
     public static (string? Error, string? Url) PublishPassport(Db db, long userId)
@@ -220,6 +271,13 @@ public static class WorldAccount
             result_token_sha=NULL, result_revoked=1, answers_json=NULL, session_id=0 WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_user_tokens WHERE user_id=?", userId);
+        db.Execute("DELETE FROM pciworld_handoff_codes WHERE world_user_id=?", userId);
+        // WORLD-ONLY scope (journey repair P0-03): the participation record goes; the canonical
+        // PCI identity, student profile and every platform record survive untouched. The map row
+        // stays as the audit ledger of what was deleted and when it had been linked.
+        var canonical = WorldIdentity.CanonicalFor(db, userId);
+        if (canonical is not null)
+            db.Execute("DELETE FROM pciworld_participants WHERE user_id=?", canonical);
         db.Execute("DELETE FROM pciworld_users WHERE id=?", userId);
     }
 
@@ -404,8 +462,9 @@ public static class WorldAccount
             var b = await H.Body(ctx.Request);
             var next = H.GetS(b, "next") ?? "";
             if (next.Length < 10) return Err("weak_password", 400, "Use at least 10 characters.");
-            var row = db.QueryOne("SELECT password_hash FROM pciworld_users WHERE id=?", u.Id);
-            if (!Security.VerifyPassword(H.GetS(b, "current") ?? "", row?["password_hash"] as string))
+            // Canonical credential is the authority (P0-03): a bridge-created account's hidden
+            // random World hash can never be the only key to this door.
+            if (!VerifyAccountPassword(db, u.Id, H.GetS(b, "current")))
                 return Err("invalid_credentials", 401);
             db.Execute("UPDATE pciworld_users SET password_hash=? WHERE id=?", BCrypt.Net.BCrypt.HashPassword(next), u.Id);
             db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=?", u.Id);   // re-login everywhere
@@ -455,8 +514,9 @@ public static class WorldAccount
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
             var b = await H.Body(ctx.Request);
-            var row = db.QueryOne("SELECT password_hash FROM pciworld_users WHERE id=?", u.Id);
-            if (!Security.VerifyPassword(H.GetS(b, "password") ?? "", row?["password_hash"] as string))
+            // Step-up via the canonical PCI credential (P0-03): the password the person actually
+            // knows confirms deletion; bridge-created accounts are no longer undeletable.
+            if (!VerifyAccountPassword(db, u.Id, H.GetS(b, "password")))
                 return Err("invalid_credentials", 401);
             DeleteAccount(db, u.Id);
             log(null, "world_account_delete", $"#{u.Id}");
@@ -499,9 +559,32 @@ public static class WorldAccount
                 }
             }
             ClaimSession(db, worldId, sessionId);
-            var token = MintSession(db, worldId);
+            // One-time handoff CODE, not a reusable bearer token (journey repair P0-02): the code
+            // rides in the URL FRAGMENT (never sent to the server or its logs), lives two minutes,
+            // and dies at first redemption. The World page exchanges it for its own session.
+            var code = CreateHandoff(db, worldId, "/world/account");
             log(s.Id, "world_passport_sso", $"student #{s.Id} → world #{worldId}");
-            return J(new { ok = true, token, url = "/world/account" });
+            return J(new { ok = true, url = "/world/account#h=" + code });
+        });
+
+        // Redeem a one-time handoff code for a World session. Deliberately quiet on failure:
+        // expired, replayed and never-existed all answer the same 401.
+        app.MapPost("/api/world/account/handoff", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            if (Throttled("handoff|" + Ip(ctx), 20)) return Err("rate_limited", 429);
+            var b = await H.Body(ctx.Request);
+            var (err, worldId, returnTo) = RedeemHandoff(db, H.GetS(b, "code"));
+            if (err is not null) return Err("invalid_code", 401,
+                "That sign-in link has expired or was already used — reopen your Passport from the student portal.");
+            var u = db.QueryOne("SELECT * FROM pciworld_users WHERE id=? AND status='active'", worldId);
+            if (u is null) return Err("invalid_code", 401);
+            ClaimSession(db, worldId, WorldSessionId(ctx));
+            var token = MintSession(db, worldId);
+            log(null, "world_handoff_redeem", $"world #{worldId}");
+            return J(new { ok = true, token, return_to = returnTo ?? "/world/account",
+                display_name = H.Str(u["display_name"]),
+                email_verified = H.L(u["email_verified"]) == 1, passport_public = H.L(u["passport_public"]) == 1 });
         });
 
         // ───────────── passport ─────────────

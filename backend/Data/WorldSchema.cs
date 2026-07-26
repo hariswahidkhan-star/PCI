@@ -238,6 +238,21 @@ public static class WorldSchema
             expires_at TEXT NOT NULL,
             created_at TEXT DEFAULT (datetime('now')))");
 
+        // ── One-time cross-surface handoff codes (journey repair P0-02). The portal→World bridge
+        //    used to hand the browser a REUSABLE 30-day bearer token through the portal origin;
+        //    now it mints a hashed, two-minute, single-consumption code instead. The raw code
+        //    travels once in a URL fragment (never a query string the server logs) and dies at
+        //    first redemption — replay, expiry and "never existed" are indistinguishable. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_handoff_codes(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code_sha VARCHAR(64) UNIQUE NOT NULL,
+            world_user_id INTEGER NOT NULL,
+            return_to VARCHAR(128),
+            expires_at VARCHAR(32) NOT NULL,
+            consumed_at VARCHAR(32),
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldhandoff_user ON pciworld_handoff_codes(world_user_id)");
+
         // Additive upgrade columns for installs created before Phase 1b (fresh installs get them
         // from CREATE TABLE below/above; both providers share this code path).
         void AddCol(string table, string col, string ddl)
