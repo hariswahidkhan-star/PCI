@@ -1,0 +1,113 @@
+{
+ "schema_version": 1,
+ "product": "PCI Project Intelligence",
+ "tagline": "Think. Decide. Deliver.",
+ "generator": "backend/tools/gen_year1_intelligence.py",
+ "scheduled_total": 365,
+ "reserve_total": 55,
+ "bank_total": 420,
+ "month_files": [
+  "01-january.json",
+  "02-february.json",
+  "03-march.json",
+  "04-april.json",
+  "05-may.json",
+  "06-june.json",
+  "07-july.json",
+  "08-august.json",
+  "09-september.json",
+  "10-october.json",
+  "11-november.json",
+  "12-december.json"
+ ],
+ "distributions": {
+  "experience_type_scheduled": {
+   "daily_decision": 120,
+   "project_rescue": 50,
+   "risk_room": 43,
+   "schedule_strategy": 43,
+   "cost_value": 37,
+   "stakeholder_dilemma": 33,
+   "logic_sequence": 26,
+   "executive_mission": 13
+  },
+  "experience_type_reserve": {
+   "daily_decision": 20,
+   "project_rescue": 8,
+   "risk_room": 6,
+   "schedule_strategy": 6,
+   "cost_value": 5,
+   "stakeholder_dilemma": 4,
+   "logic_sequence": 4,
+   "executive_mission": 2
+  },
+  "primary_domain": {
+   "integration_governance": 45,
+   "scope_requirements": 32,
+   "schedule_planning": 45,
+   "cost_commercial": 42,
+   "risk_uncertainty": 42,
+   "quality_assurance": 26,
+   "resources_leadership": 28,
+   "stakeholders_communication": 38,
+   "procurement_contracts": 28,
+   "change_claims_recovery": 20,
+   "safety_sustainability": 10,
+   "digital_data_ai": 9
+  },
+  "difficulty_band": {
+   "foundation": 105,
+   "practitioner": 150,
+   "advanced": 90,
+   "executive": 20
+  },
+  "duration_band": {
+   "quick": 150,
+   "standard": 130,
+   "deep": 65,
+   "capstone": 20
+  },
+  "interaction": {
+   "single_decision": 140,
+   "order_rank": 45,
+   "numeric_calculation": 65,
+   "multi_stage_decision": 55,
+   "evidence_diagnosis": 40,
+   "negotiation_communication": 20
+  },
+  "lifecycle_stage": {
+   "concept_business_case": 45,
+   "definition_planning": 85,
+   "procurement_mobilization": 45,
+   "execution_control": 130,
+   "commissioning_handover": 35,
+   "closeout_lessons": 25
+  },
+  "sector": {
+   "cross_sector": 105,
+   "construction_infrastructure": 55,
+   "energy_utilities": 40,
+   "technology_digital": 40,
+   "manufacturing_industrial": 30,
+   "transport_logistics": 25,
+   "public_sector": 25,
+   "healthcare_life_sciences": 20,
+   "climate_sustainability": 15,
+   "professional_services_other": 10
+  },
+  "monthly": {
+   "01": 31,
+   "02": 28,
+   "03": 31,
+   "04": 30,
+   "05": 31,
+   "06": 30,
+   "07": 31,
+   "08": 31,
+   "09": 30,
+   "10": 31,
+   "11": 30,
+   "12": 31
+  }
+ }
+}

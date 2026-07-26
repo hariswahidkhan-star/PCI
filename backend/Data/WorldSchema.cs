@@ -22,7 +22,12 @@ public static class WorldSchema
         Tables(db);
         Seed(db);
         WorldContentPack.Seed(db);
+        WorldIntelligencePack.Seed(db);
         WorldArticlePack.Seed(db);
+        // Project Intelligence taxonomy backfill — idempotent, house rows only, metadata only
+        // (never config_json, never a version snapshot). Runs after the pack so a fresh install
+        // classifies its whole bank on first boot.
+        Core.WorldIntelligence.Backfill(db);
         // Canonical-identity bridge (journey repair P0-00): the participation aggregate keyed by
         // canonical users.id, plus the reversible legacy pciworld_users → users mapping. Idempotent
         // on every boot; conflicts are quarantined in the map, never silently merged.
@@ -253,6 +258,27 @@ public static class WorldSchema
             created_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldhandoff_user ON pciworld_handoff_codes(world_user_id)");
 
+        // OAuth 2.1-shaped authorization layer (the dedicated-domain groundwork): a client
+        // registry with EXACT redirect URIs, and single-use PKCE-bound authorization codes.
+        // The registry is data, not code — a future pciworld.org app is one more row.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_oauth_clients(
+            client_id VARCHAR(64) PRIMARY KEY,
+            name VARCHAR(120) NOT NULL,
+            redirect_uris TEXT NOT NULL,
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_oauth_codes(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code_sha VARCHAR(64) UNIQUE NOT NULL,
+            client_id VARCHAR(64) NOT NULL,
+            world_user_id INTEGER NOT NULL,
+            redirect_uri VARCHAR(400) NOT NULL,
+            code_challenge VARCHAR(128) NOT NULL,
+            minted_token_sha VARCHAR(64),
+            expires_at VARCHAR(32) NOT NULL,
+            consumed_at VARCHAR(32),
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("INSERT OR IGNORE INTO pciworld_oauth_clients(client_id,name,redirect_uris) VALUES('pciworld-app','PCI World participant app','/world/account')");
+
         // Additive upgrade columns for installs created before Phase 1b (fresh installs get them
         // from CREATE TABLE below/above; both providers share this code path).
         void AddCol(string table, string col, string ddl)
@@ -262,6 +288,22 @@ public static class WorldSchema
         }
         AddCol("pciworld_attempts", "user_id", "user_id INTEGER");
         AddCol("pciworld_attempts", "passport_visible", "passport_visible INTEGER DEFAULT 0");
+        // Progressive hints (PI-US-051): how many authored hints this attempt has revealed.
+        // Transparent by design — hints carry NO hidden score penalty; the count is simply recorded.
+        AddCol("pciworld_attempts", "hints_used", "hints_used INTEGER DEFAULT 0");
+
+        // ── Project Intelligence taxonomy (Core/WorldIntelligence.cs). Catalogue metadata on the
+        //    WORKING COPY only — deliberately not on pciworld_challenge_versions, because facets
+        //    are how content is found and reported, never part of what an attempt replays. All
+        //    values come from the approved vocabularies; NULL means "not yet classified". ──
+        AddCol("pciworld_challenges", "pi_type", "pi_type VARCHAR(24)");
+        AddCol("pciworld_challenges", "pi_domain", "pi_domain VARCHAR(32)");
+        AddCol("pciworld_challenges", "pi_lifecycle", "pi_lifecycle VARCHAR(32)");
+        AddCol("pciworld_challenges", "pi_sector", "pi_sector VARCHAR(32)");
+        AddCol("pciworld_challenges", "pi_interaction", "pi_interaction VARCHAR(32)");
+        // Catalogue filters combine type+domain most often; sector/lifecycle piggyback on the scan.
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldch_pi ON pciworld_challenges(pi_type, pi_domain)");
+
         // Retake lineage (journey repair P0-04): a fresh attempt after completion is an explicit
         // retake linked to the attempt it retries — the original stays immutable evidence.
         AddCol("pciworld_attempts", "parent_attempt_id", "parent_attempt_id INTEGER");

@@ -160,7 +160,7 @@ public static class WorldAccount
             userId, canonical, worldSessionId);
     }
 
-    static string MintSession(Db db, long userId)
+    internal static string MintSession(Db db, long userId)
     {
         var token = Security.RandomHex(32);
         db.Execute("INSERT INTO pciworld_user_sessions(user_id,token,expires_at) VALUES(?,?, datetime('now','+30 days'))",

@@ -286,6 +286,43 @@ public static class World
                 : Results.Json(new { ok = true });
         });
 
+        // ── Progressive authored hints (PI-US-051). One hint per request, in authored order, for
+        //    an in-progress attempt the caller owns. Reveals are recorded (hints_used) and carry no
+        //    hidden penalty; already-revealed hints are returned again so a refresh loses nothing.
+        //    Hint text NEVER appears in PublicView — this endpoint is its only exit. ──
+        app.MapPost("/api/world/attempts/{id:long}/hint", (HttpContext ctx, long id) =>
+        {
+            if (!Enabled()) return Disabled();
+            var sess = Session(ctx);
+            if (sess is null) return Results.Json(new { error = "no_session" }, statusCode: 401);
+            if (Throttled("hint|" + H.L(sess["id"]), 60))
+                return Results.Json(new { error = "rate_limited" }, statusCode: 429);
+            var att = db.QueryOne("SELECT * FROM pciworld_attempts WHERE id=? AND session_id=?", id, H.L(sess["id"]));
+            if (att is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (H.Str(att["status"]) != "in_progress")
+                return Results.Json(new { error = "not_in_progress", message = "Hints are only available before submission." }, statusCode: 409);
+            var snapshot = WorldLifecycle.PinnedVersion(db, H.L(att["challenge_id"]), H.L(att["version"]));
+            if (snapshot is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var hints = WorldContent.Hints(H.Str(snapshot["config_json"])!);
+            if (hints.Count == 0)
+                return Results.Json(new { error = "no_hints", message = "This experience has no authored hints." }, statusCode: 404);
+            var used = (int)H.L(att["hints_used"]);
+            if (used < hints.Count)
+            {
+                // Guarded increment: a double-click reveals one hint, not two.
+                var n = db.Execute("UPDATE pciworld_attempts SET hints_used=?, updated_at=datetime('now') WHERE id=? AND hints_used=?",
+                    used + 1, id, used);
+                if (n > 0) { used += 1; Track("hint_requested", H.L(att["challenge_id"]), H.L(sess["id"])); }
+                else used = (int)H.L(db.QueryOne("SELECT hints_used FROM pciworld_attempts WHERE id=?", id)!["hints_used"]);
+            }
+            return Results.Json(new
+            {
+                ok = true,
+                revealed = hints.Take(Math.Min(used, hints.Count)).Select((t, i) => new { index = i + 1, text = t }),
+                remaining = Math.Max(0, hints.Count - used),
+            });
+        });
+
         app.MapPost("/api/world/attempts/{id:long}/submit", async (HttpContext ctx, long id) =>
         {
             if (!Enabled()) return Disabled();

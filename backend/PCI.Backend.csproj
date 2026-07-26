@@ -44,5 +44,8 @@
     <None Include="simlab_scenarios_seed.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('simlab_scenarios_seed.json')" />
     <None Include="emails/**/*" CopyToOutputDirectory="PreserveNewest" />
     <None Include="books/**/*" CopyToOutputDirectory="PreserveNewest" />
+    <!-- PCI Project Intelligence — governed Year-1 content plan, shipped with the app so the
+         coverage report and runway alert read the same files CI verified -->
+    <None Include="content/**/*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
