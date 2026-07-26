@@ -365,25 +365,72 @@ and the joins are not.**
 - PML-AI volume now typesets at **156 pp** across Domains 1, 2, 3, 4, 6, 7 and 8 (15 figures, 165
   index entries). Both volumes together stand at **251 typeset pages**.
 
+**Batch 14 (scaled authorship) — the remaining 20 domains, authored concurrently.**
+The parallel-safe contribution points were built for exactly this and then used: 20 domains authored
+at once, each adding a manuscript, a `figures_src` module and a `checks` module, none of them touching
+a shared file. Five agents per domain — one author, three read-only reviewers (master-thread
+continuity; pattern conformance and padding; MCQ integrity and IP/legal safety), and one
+verifier/fixer who was the only agent permitted to edit after the author.
+
+**Both books now carry their full 16-domain structure.**
+
+| | Domains | Typeset | Figures | Worked examples | Index entries |
+|---|---|---|---|---|---|
+| **PML-AI** | 16 | **502 pp** | 33 | 95 | 479 |
+| **PFL-AI** | 16 | **490 pp** | 36 | 128 | 397 |
+| **Total** | **32** | **992 pp** | **69** | **223** | **876** |
+
+The golden-answer suite stands at **4,675 checks, all passing**, across `verify_formulas.py` (the
+first twelve domains) and 14 per-domain modules averaging ~240 checks each. The new domains run
+15,000–21,000 words against the 7,000–12,000 of the first twelve — materially deeper, and the depth is
+in worked examples and Interpretation steps rather than in prose volume.
+
+**What went wrong, and what it cost.** The run was interrupted by a session restart after roughly
+eight hours, which dropped the workflow's task handle. The work itself survived on disk — every
+manuscript and every figure module completed — but **six domains lost their verification stage**:
+PML-AI D5 and D16, PFL-AI D5, D6, D8 and D16. Their arithmetic was therefore entirely unchecked, which
+is a gate failure and was recorded as one rather than absorbed. A focused six-agent run is completing
+that verification; until it lands, nothing in those six domains should be relied on.
+
+**Two pattern deviations, found by audit and normalised corpus-wide.** New domains had used
+`## Summary — Domain N` where the pattern spec §4.10 and the approved book both specify
+`## Domain N summary` (21 files), and one domain numbered its toolkits `### 16.T.n` rather than
+`### Toolkit 16.T.n`. All 32 summaries and all 96 toolkits are now uniform.
+
+**Hard-constraint audit across all 32 manuscripts — clean.** No trademark symbols. One reference to a
+third-party body (AACE's Total Cost Management class progression), cited by name with the text stating
+explicitly that it is described in this book's own words. Standards cited by number only (ISO 19650,
+ISO 8000, ISO 9000/9001, IFRS 15, IFRS 16, IAS 37) with no content reproduced. Zero instances of
+invented-evidence phrasing ("studies show", "research demonstrates" and eleven similar patterns). Every
+domain joins an existing master thread and none introduced a third — Meridian and Auriga split
+sensibly across PML-AI by scale, Kestrel runs through all sixteen PFL-AI domains.
+
+**Master-thread numeric continuity — verified by sweep.** Kestrel's instalment (5,009,635), `CFADS`
+(6,384,000), debt (42,000,000), equity (18,000,000), NPV (16,179,360) and `DSCR` (1.2743) appear
+identically across 7–14 domains each. Four near-miss values were investigated individually and all are
+legitimately different quantities: a year-8 `DSCR` of 1.2723 in a coverage table, a negotiation
+settlement of 684,940, a retesting value of 689,585, and one that was a substring of 16,380,000.
+
+**Front matter corrected.** Both volumes still declared themselves a "Phase 1 production prototype of
+one domain" — false about a 500-page complete draft, on the one page whose entire job is to say what
+the reader is holding. Replaced with a status page that separates what has been verified from what has
+not, states plainly that the draft is AI-drafted and requires human editorial and technical review
+before release and is attributed to no named expert, and carries the legal/jurisdictional note. The
+domain count is now interpolated from the manuscripts actually built, so it cannot drift again.
+
 ## Next production batch
 
-**Phase 2's foundation scope is now met on both books** — PML-AI Part One (Domains 1–4) and PFL-AI
-Part One (Domains 1–4) are complete, with PFL-AI Part Three opened by Domain 10 and PML-AI Part Two
-opened by Domains 6–8. Production continues into the remaining domains in loop order:
-(1) **PFL-AI Domain 5 — Project development and bankability**, opening PFL-AI Part Two, per the
-Phase 0 TOC (`pfl-ai/TOC.md`); note the correction, since Batch 12's queue named this slot "cost of
-capital and capital structure", which the blueprint does not have as a domain — cost of capital and
-the instruments live in **Domain 9 (Funding structure and sources of capital)** and returns in
-Domain 6, and the TOC governs. (2) **PML-AI Domain 5 — Scope, requirements and value definition**,
-which completes the front of Part Two that Domains 6–8 already assume. (3) **PFL-AI Domain 6 —
-Financial modelling and model governance**, which Domains 3, 4 and 10 have each deferred a model-audit
-point to, and which PML-AI Domain 4's baseline-reconciliation discipline maps onto directly. A Phase 2
-gate report closes the phase once these three land; Phase 3 (cases and question banks) follows per the
-charter §8.
-
-**Standing note for the next author.** Both books now have a *pair* of master threads rather than one,
-and the pairing is deliberate: PML-AI runs **Meridian Care Records** at programme scale (Domains 1–4)
-and **Project Auriga** at single-project scale (Domains 6–8), which Domain 4's opening states
-explicitly; PFL-AI runs **Kestrel Water SPC** throughout. New domains must join an existing thread
-rather than introduce a third, and any figure reused across domains must carry the same numbers — the
-harness enforces this, since a value that appears in two domains has one golden check, not two.
+1. **Close the verification gap** — the six unverified domains (PML-AI D5, D16; PFL-AI D5, D6, D8,
+   D16). Until every one has a passing checks module, neither book passes gate, whatever the page
+   count says.
+2. **Apply the registry updates** each verifier reports, and flip the remaining ⏳ rows. `WACC` is now
+   ✅ — PFL-AI D9 derives it and discharges D4's use of 8 % as a given. `EVA(benefit)` waits on
+   `pml_d16`.
+3. **Phase 2 gate report**, then the phases the charter §8 sequences and this batch did NOT do:
+   Phase 3 cases and question banks, Phase 4 glossaries and appendices, Phase 5 indexes, Phase 6
+   accessibility, Phase 7 pilot review. Scaled authorship produced the domain corpus; it did not
+   produce the back matter, and the page count must not be read as though it had.
+4. **Human review remains outstanding and is not optional.** The charter requires editorial and
+   technical review before release; 992 pages of AI-drafted material have had neither. The
+   verification suite establishes that the arithmetic is right, which is a different claim from the
+   book being correct, well-judged and publishable.

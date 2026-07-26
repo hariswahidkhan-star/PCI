@@ -241,9 +241,10 @@ further sites believe they are included. The boundary exposure is:
 - C. USD 60,000
 - D. USD 188,496
 
-*Rationale:* `520,000/40 = 13,000` per site, `× 11 = 143,000` (5.1.3). A is one site; C divides the
-whole 2,400,000 baseline by 40 rather than the rollout element; D is the annual *benefit* of the 11
-sites, not their cost.
+*Rationale:* `520,000/40 = 13,000` per site, `× 11 = 143,000` (5.1.3). A is the cost of one site, not
+of eleven; C divides the whole 2,400,000 baseline by 40 rather than the rollout element, giving a
+per-site 60,000 — the wrong cost base, and a per-site figure rather than an exposure; D is the annual
+*benefit* of the 11 sites, not their cost.
 
 **MCQ 5.1-C `[5.1.3 · Evaluation]`** The 11 sites would cost USD 143,000 to include and generate
 USD 188,496 a year at realistic adoption. The correct professional conclusion is that:
@@ -520,8 +521,8 @@ defects move (5.2.1); A and C are true but depend on the whole estimated shift, 
 practice rather than a computation.
 
 **MCQ 5.2-C `[5.2.3 · Analysis]`** In a 480-requirement audit, 34 have no design element, 21 no test
-case, and 9 are recorded as accepted with no verification evidence. Which class is most serious, and
-why?
+case, and 9 are recorded as accepted with no verification evidence. Which finding most undermines the
+**release decision itself**, and why?
 - A. the 34, because unmet scope is the largest group
 - B. the 21, because untested requirements reach live service
 - C. the 9, because the acceptance record states something untrue, so every decision that relied on it
@@ -529,8 +530,10 @@ why?
 - D. all three equally, at a combined 13.33 % defect rate
 
 *Rationale:* A false record invalidates the decisions taken on it, including the release decision
-(5.2.3) — the same structural failure as Domain 4's mis-recorded configuration items. D is the reading
-the class breakdown exists to prevent.
+(5.2.3) — the same structural failure as Domain 4's mis-recorded configuration items. A ranks by group
+size and B by future correction cost; both are real findings and both leave the release record
+truthful, which is why neither is the answer to *this* question. D is the reading the class breakdown
+exists to prevent.
 
 **MCQ 5.2-D `[5.2.3 · Comprehension]`** Seventeen design elements trace to no approved requirement out
 of a 425-element register. This is:
@@ -540,7 +543,10 @@ of a 425-element register. This is:
 - D. evidence that 17 requirements were lost
 
 *Rationale:* `17/425 = 4.00 %`, and the design register is not the requirements baseline, so the two
-rates are not combinable (5.2.3). C ignores unrequested effort worth 108,800 at build-stage cost.
+rates are not combinable (5.2.3). A puts the 17 over the 480-requirement baseline (`17/480 = 3.54 %`)
+and then mislabels a reverse finding as a forward one — the wrong denominator and the wrong test. C
+ignores unrequested effort worth 108,800 at build-stage cost. D inverts the finding: an orphan is work
+nobody asked for, not a requirement that went missing.
 
 **MCQ 5.2-E `[5.2.2 · Evaluation]`** A requirement reads "the system shall provide faster record
 retrieval and improved reporting". Its defects are:
@@ -856,7 +862,8 @@ and 5.2.3's reverse traceability test is the only cheap way to see it.
    change report. Meridian had a working change process, a decision log and — after Domain 4 — a
    cumulative test derived from its own change rate, and all of that machinery was monitoring a little
    over half the movement it existed to control. The other 43 % was not hidden; it was simply never a
-   change, because nobody raised it. Each crept requirement is **0.175 %** of the baseline, so no
+   change, because nobody raised it. Each crept requirement carries **USD 4,200** of direct cost —
+   **0.175 %** of the baseline, the basis on which a delegation threshold reads a single item — so no
    threshold in Domain 3's delegation schedule can see one, and no cumulative test can aggregate what
    its log does not contain. Which gives the instrument, and it is almost embarrassingly cheap: **count
    the requirements.** Baseline count plus approved additions must equal the traced count, every
@@ -1132,8 +1139,17 @@ baselined before signature**, since a criterion negotiated after award is negoti
 wants payment. **Traceability is a deliverable**, with a stated format and an audit right, or the buyer
 cannot run either test in KA 5.2.3 against work it did not do. And the buyer's own obligations — data,
 access, decisions within stated times, where Domain 3's `E[wait]` becomes a contractual exposure — are
-stated with the specificity demanded of the supplier, because an unstated buyer obligation is the
-standard root of a claim.
+stated with the specificity demanded of the supplier, because an unstated buyer obligation is a common
+root of a claim.
+
+Two boundaries on this section. Whether a given specification style, remedy or acceptance provision has
+the effect described depends on the contract's governing law and on the form of agreement used, and
+those differ materially between jurisdictions and between standard forms; nothing here states the law of
+any jurisdiction and none of it is legal advice. Drafting, risk allocation and any remedy question go to
+qualified counsel (Domain 10). What is portable is the *method*: decide which specification style you
+have signed, allocate requirement-defect risk deliberately rather than by default, baseline the
+acceptance criteria before signature, make traceability a deliverable, and state the buyer's own
+obligations as precisely as the supplier's.
 
 ### 5.A.3 The reviewer's scope eye
 
@@ -1243,8 +1259,12 @@ internal officers. External applicants — about **4,200** a year, the people wh
 benefit case depended on — were not consulted: they were not employees and there was no mechanism to
 convene them. Of the 612 requirements, **47** — **7.68 %** — addressed the applicant's own journey; the
 rest described the officers' work. The platform therefore automated the authority's processing
-beautifully and left applicants submitting on paper, so the digital-channel adoption on which 78 % of
-the forecast benefit rested never arrived. Verification was complete because the specification was
+beautifully and left applicants submitting on paper, so the digital-channel adoption on which **78 %**
+of the forecast benefit rested barely arrived. The decomposition is worth stating, because it is why the
+shortfall was 66 points and not 78: **USD 897,000** of the forecast depended on digital adoption and
+**USD 253,000** did not, so a realised 391,000 implies that — taking the non-digital benefit as landing
+in full — only **USD 138,000** of the digital-dependent benefit, **15.4 %** of it, was ever delivered.
+Verification was complete because the specification was
 internally coherent; validation had never been attempted, because nobody had defined what a validated
 outcome looked like from outside the organisation.
 
@@ -1523,7 +1543,8 @@ Finally, scope moves without anyone approving anything. Meridian's baseline of *
 plus **12** approved additions should have traced **492**; it traced **531**, so **39** requirements —
 about three a month, **3.25 times** the approved additions — entered with no record at all, costing
 **USD 163,800** direct and **4.0** weeks of critical path, **USD 220,920** in total, **9.20 %** of the
-baseline, at **0.175 %** each, which is below every threshold any delegation schedule will ever set.
+baseline, at **USD 4,200** of direct cost each — **0.175 %** of baseline, below every threshold any
+delegation schedule will ever set.
 Set beside Domain 4's **USD 291,176** of authorised drift, total movement is **USD 512,096** — **21.34
 %** of baseline and **38.42 %** of the approved NPV — of which the change log captured **56.86 %**. No
 cumulative test on a change log can find the rest; **only counting the requirements can**, and it is

@@ -26,14 +26,21 @@ their subject matter without inheriting its defects.
 - **Phase 0 — Governance and blueprint:** complete ([`PHASE0_REPORT.md`](PHASE0_REPORT.md)).
 - **Phase 1 — Prototype domains:** production model proven; prototypes apparatus-complete with a
   depth-expansion condition ([`PHASE1_REPORT.md`](PHASE1_REPORT.md)). Toolchain in
-  [`_build/`](_build/): `verify_formulas.py` (**661 golden checks**, all passing — no domain
-  passes gate while it fails), `make_figures.py` (29 PCI-original SVG masters),
+  [`_build/`](_build/): `verify_formulas.py` (**4,675 golden checks**, all passing — no domain
+  passes gate while it fails), `make_figures.py` (69 PCI-original SVG masters, 20 of them from per-domain modules),
   `build_book.py` + `print.css`.
-- **Phase 2 — Foundation domains:** in progress under the production loop
-  ([`PHASE2_REPORT.md`](PHASE2_REPORT.md)). **12 domains delivered, 251 typeset pages:**
-  PML-AI D1, D2, D3, D4, D6, D7, D8 (156 pp) · PFL-AI D1, D2, D3, D4, D10 (95 pp). **Part One
-  of both books is complete**; PML-AI Part Two and PFL-AI Part Three are open. The report's
-  *next production batch* section is the loop's work queue.
+- **Phase 2 — Foundation domains:** complete, and scaled authorship has run past it
+  ([`PHASE2_REPORT.md`](PHASE2_REPORT.md)). **All 32 domains are drafted — 992 typeset pages:**
+  PML-AI 16 domains / 502 pp / 33 figures · PFL-AI 16 domains / 490 pp / 36 figures. The
+  golden-answer suite stands at **4,675 checks, all passing**.
+- **Known gap, not glossed:** six domains (PML-AI D5, D16; PFL-AI D5, D6, D8, D16) lost their
+  verification stage when the authoring run was interrupted, so their arithmetic is unchecked and
+  **they do not pass gate**. Verification is in progress; nothing in those six should be relied on
+  until it lands.
+- **Human review is outstanding and is not optional.** The charter requires editorial and technical
+  review before release. 992 pages of AI-drafted material have had neither. A passing verification
+  suite establishes that the arithmetic is right — a different and much narrower claim than the book
+  being correct, well-judged and publishable.
 - Phases 3–8 proceed per the charter §8; no phase is skipped to meet page count.
 
 ## Relationship to the rest of the repository

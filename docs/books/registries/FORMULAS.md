@@ -54,7 +54,7 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
 | `IRR` / `MIRR` | Internal / modified internal rate of return | %/period | PFL-AI D4 | ✅ |
 | `PI` | Profitability index = PV(future CF)/I₀ | ratio | PFL-AI D4 | ✅ |
 | `EAV` | Equivalent annual value | currency/period | PFL-AI D4 | ✅ |
-| `WACC` | Weighted average cost of capital | %/period | PFL-AI D4/D9 | ⏳ |
+| `WACC` | Weighted average cost of capital = g·k_d(1−T) + (1−g)·k_e — **derived** in PFL-AI D9, which discharges D4's use of 8 % as a given; note it is linear in gearing only while k_e is held fixed | %/period | PFL-AI D4/D9 | ✅ |
 | `CFADS` | Cash flow available for debt service (a **defined term** — see PFL-AI D2 KA 2.3.1: whether it is struck before or after working-capital movements changes every ratio built on it) | currency/period | PFL-AI D2/D10 | ✅ |
 | `DSCR` | Debt service coverage ratio = CFADS/(interest + scheduled principal) per period | ratio | PFL-AI D10 | ✅ |
 | `LLCR` | Loan life coverage ratio = PV(CFADS over loan life, at loan rate)/outstanding debt | ratio | PFL-AI D10 | ✅ |
@@ -80,3 +80,21 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
   percentage-of-completion.
 - Every worked example in either book cites its registry row; a formula not in this registry cannot
   appear in a chapter.
+
+## 5. Where a formula's verification actually lives
+
+This registry names formulas and records whether a verified golden example exists. The **executable**
+record is the golden-answer suite:
+
+- `_build/verify_formulas.py` holds the checks for the twelve domains authored before scaled
+  authorship began, and loads every per-domain module.
+- `_build/checks/<book>_d<NN>.py` holds one module per domain authored since, each pinning every
+  printed number in that domain **and** each teaching invariant it claims — an identity, a breakeven,
+  a bound, an inequality — so that a claim cannot silently stop being true.
+- `_build/run_checks.py <module>` runs one module in isolation, which is what makes concurrent
+  authorship safe.
+
+A ✅ in the table above means such a check exists and passes. If you change a formula's treatment in a
+manuscript, the module is what will catch you; if you add a formula, add the row here **and** the check
+there, because a formula not in this registry cannot appear in a chapter and a number without a check
+cannot pass gate.
