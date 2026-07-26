@@ -1,7 +1,11 @@
 # Phase 2 Report — Foundation Domains (running)
 
-**Phase:** 2 of 8 · **Scope:** foundation parts of both books (PML-AI D1–D4; PFL-AI D1–D2 and
-D4 — D3 delivered as the Phase 1 prototype) · **Status:** in progress under the production loop.
+**Phase:** 2 of 8 — **CLOSED**, superseded by [`CORPUS_GATE_REPORT.md`](CORPUS_GATE_REPORT.md),
+which reports Phases 2, 3 and 4 together because scaled authorship delivered them in one run.
+
+**Scope:** foundation parts of both books (PML-AI D1–D4; PFL-AI D1–D2 and
+D4 — D3 delivered as the Phase 1 prototype) · **Status:** complete. The six-domain verification gap this report tracked is CLOSED — all 20
+per-domain check modules pass and the suite stands at 7,176 checks.
 
 ## Batch log
 

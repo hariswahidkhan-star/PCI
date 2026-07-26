@@ -29,19 +29,29 @@ their subject matter without inheriting its defects.
   [`_build/`](_build/): `verify_formulas.py` (**4,675 golden checks**, all passing — no domain
   passes gate while it fails), `make_figures.py` (69 PCI-original SVG masters, 20 of them from per-domain modules),
   `build_book.py` + `print.css`.
-- **Phase 2 — Foundation domains:** complete, and scaled authorship has run past it
-  ([`PHASE2_REPORT.md`](PHASE2_REPORT.md)). **All 32 domains are drafted — 992 typeset pages:**
-  PML-AI 16 domains / 502 pp / 33 figures · PFL-AI 16 domains / 490 pp / 36 figures. The
-  golden-answer suite stands at **4,675 checks, all passing**.
-- **Known gap, not glossed:** six domains (PML-AI D5, D16; PFL-AI D5, D6, D8, D16) lost their
-  verification stage when the authoring run was interrupted, so their arithmetic is unchecked and
-  **they do not pass gate**. Verification is in progress; nothing in those six should be relied on
-  until it lands.
-- **Human review is outstanding and is not optional.** The charter requires editorial and technical
-  review before release. 992 pages of AI-drafted material have had neither. A passing verification
-  suite establishes that the arithmetic is right — a different and much narrower claim than the book
-  being correct, well-judged and publishable.
-- Phases 3–8 proceed per the charter §8; no phase is skipped to meet page count.
+- **Phases 2, 3 and 4 — the domain corpus:** **complete and gate-passed**
+  ([`CORPUS_GATE_REPORT.md`](CORPUS_GATE_REPORT.md)). All 32 domains drafted:
+
+  | | Domains | Typeset | Words | Figures | Worked examples | MCQs | Exercises |
+  |---|---|---|---|---|---|---|---|
+  | PML-AI | 16 | 503 pp | 252,180 | 33 | 96 | 289 | 74 |
+  | PFL-AI | 16 | 494 pp | 242,943 | 36 | 129 | 241 | 76 |
+
+  **7,176 golden-answer checks, all passing** across 21 modules. Every printed result is recomputed
+  with decimal arithmetic — including every numeric MCQ option, not only the correct one.
+- **Phase 5 — cases, exercises and companions:** **not started.** This is where the remaining ~700
+  pages per volume legitimately come from: consolidated question banks, glossaries, appendices,
+  capstone cases, front and back matter. Both volumes are short of the 1,200-page target and the gap
+  must be closed with that content, never with typographic inflation, duplication or padded
+  appendices.
+- **Phase 6 independent review · Phase 7 copy edit and typesetting · Phase 8 pilot and release:**
+  not started.
+- **Human review is outstanding and is not optional.** The corpus was AI-drafted end to end and has
+  had no editorial or technical review. A passing verification suite establishes that the arithmetic
+  is right and that the numbers are the ones the methods produce. It does **not** establish that the
+  pedagogy is sound, the judgements are ones an experienced practitioner would endorse, the emphasis
+  is right, or that nothing important is missing. Nothing here should be presented to a candidate,
+  regulator, accreditation body or customer as reviewed material.
 
 ## Relationship to the rest of the repository
 
