@@ -23,17 +23,33 @@ know who bears it, and stay accountable.*
 
 **Learning objectives.** After this domain a candidate can: describe the project finance
 leader's role at each lifecycle stage; place a financing on the recourse spectrum and explain
-what limited recourse buys and costs; explain the SPV's purpose and the interests of each
-party around it; describe the infrastructure-finance market's asset classes and investors;
-explain why cash, not profit, is the binding constraint and demonstrate the difference;
-explain leverage's amplification of equity returns and of risk with a computed example; state
-the risk-return-bankability logic; and apply the profession's ethical and responsible-AI
-obligations to realistic situations.
+what limited recourse buys and costs; **price** the recourse decision — computing the
+incremental cost of the limited-recourse route and the breakeven probability of a
+parent-impairing failure at which it repays that cost — and explain why the breakeven falls
+with facility size and why it is nonetheless the wrong sole test; explain the SPV's purpose,
+the interests of each party around it, and the five ways a ring-fence leaks; describe the
+infrastructure-finance market's asset classes and investors, and compute the Macaulay duration
+of a project's cash stream to distinguish matching an asset's *life* from matching its
+*duration*; explain why cash, not profit, is the binding constraint, demonstrate the
+difference, and translate covenant headroom into days of receivables; derive the levered-return
+identity, locate the crossover at which leverage stops helping, and show how far the equity
+cliff moves when the same debt amortises rather than paying interest only; price a retained
+risk through the capital structure the lenders will impose; price sponsor support as a
+contingent claim; state the risk-return-bankability logic; and apply the profession's ethical
+and responsible-AI obligations to realistic situations — including in explicit expected-value
+terms, while explaining why the duty does not depend on the arithmetic.
 
 **The master thread.** Kestrel Water SPC — whose loan, availability stream and investment case
 Domains 3 and 4 priced — began here: a sponsor group weighing *how* to finance a desalination
-plant at all. This domain tells that part of the story; Domain 5 takes the project through
-development to bankability.
+plant at all. The figures this domain works with are the ones the rest of the book inherits:
+capital cost **USD 60,000,000**, funded **70/30** as **USD 42,000,000** of senior debt at
+**6.0 % over 12 years** — annual instalment **USD 5,009,635.23**, of which year-one interest is
+**2,520,000** and principal **2,489,635** (Domain 3) — plus **USD 18,000,000** of sponsor
+equity; a 25-year asset life; first-year documented `CFADS` of **USD 6,384,000** on revenue of
+**12,000,000** (Domain 2), giving `DSCR` **1.2743** (Domain 10); and an appraisal at 8.0 % of
+**NPV +16,179,360** on a 15-year operating stream of 8,900,000 (Domain 4). This domain tells the
+part of the story that precedes all of it — the choice of financing route — and Domain 5 takes
+the project through development to bankability.
 
 ---
 
