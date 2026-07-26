@@ -2024,7 +2024,13 @@ public static class WorldPages
                // export — the complete PCI account export lives in the Institute student portal.
                '<p><button class="btn secondary" id="dlexport">Export my PCI World data (JSON)</button> '+
                '<button class="btn secondary" id="signout">Sign out</button> '+
+               '<button class="btn secondary" id="signoutAll">Sign out of all PCI services</button> '+
                '<button class="btn secondary" id="delacct">Delete my PCI World participation</button></p>'+
+               // Scope, in plain words (PW-US-010): the person always knows which doors they are
+               // closing before they close them.
+               '<p><small style="color:var(--slate)">&ldquo;Sign out&rdquo; ends this device&rsquo;s PCI World session only. '+
+               '&ldquo;Sign out of all PCI services&rdquo; ends every PCI World session on every device and, when your '+
+               'account is linked, your Institute student-portal sessions too.</small></p>'+
                // A labelled password field, not window.prompt(): prompt() shows the password in
                // clear text, carries no label, cannot be styled or translated, and is blocked
                // outright by some browsers.
@@ -2232,6 +2238,11 @@ public static class WorldPages
             $('signout').addEventListener('click',function(){
               api('/api/world/account/logout',{}).catch(function(){});
               localStorage.removeItem(KEY);showAuth();
+            });
+            if($('signoutAll'))$('signoutAll').addEventListener('click',function(){
+              api('/api/world/account/logout',{everywhere:true}).catch(function(){});
+              localStorage.removeItem(KEY);localStorage.removeItem('pciworld_passport_url');showAuth();
+              $('autherr').textContent='Signed out of all PCI services on every device.';
             });
             if($('lastlink')){
               var saved=localStorage.getItem('pciworld_passport_url');

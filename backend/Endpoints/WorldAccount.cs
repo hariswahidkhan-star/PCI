@@ -309,20 +309,29 @@ public static class WorldAccount
     /// <summary>The account's evidence rows (own view — includes hidden items so they can be toggled).
     /// Paginated (journey repair P1-06): the page size is a window, never the truth — totals come
     /// from <see cref="EvidenceStats"/> so an account with 1,000 attempts counts 1,000.</summary>
+    /// <summary>Union ownership predicate (cutover read-flip): a row belongs to this account when
+    /// its LEGACY World id matches, or its stamped canonical id does — one row either way, never
+    /// double-counted. -1 never matches when the account is unmapped.</summary>
+    static (string Sql, long CanonicalKey) OwnedBy(Db db, long userId) =>
+        ("(a.user_id=? OR a.canonical_user_id=?)", WorldIdentity.CanonicalUserFor(db, userId) ?? -1);
+
     public static List<Dictionary<string, object?>> EvidenceRows(Db db, long userId, bool visibleOnly,
-        int limit = 200, int offset = 0) =>
+        int limit = 200, int offset = 0)
+    {
+        var (owned, ck) = OwnedBy(db, userId);
         // Deliberately NO answers_json and NO session_id: this shape feeds the PUBLIC Passport and
         // the PDF, so anything selected here is one careless interpolation away from publication.
         // The data export fetches answers on its own, separate path.
-        db.Query($@"SELECT a.id, a.score, a.profile_key, a.completed_at, a.passport_visible,
+        return db.Query($@"SELECT a.id, a.score, a.profile_key, a.completed_at, a.passport_visible,
                 a.result_token_sha, a.result_revoked, c.code, a.version,
                 v.title, v.industry, v.track, v.difficulty
             FROM pciworld_attempts a
             JOIN pciworld_challenges c ON c.id=a.challenge_id
             JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
-            WHERE a.user_id=? AND a.status='completed' {(visibleOnly ? "AND a.passport_visible=1" : "")}
+            WHERE {owned} AND a.status='completed' {(visibleOnly ? "AND a.passport_visible=1" : "")}
             ORDER BY a.completed_at DESC, a.id DESC
-            LIMIT {Math.Clamp(limit, 1, 500)} OFFSET {Math.Max(0, offset)}", userId);
+            LIMIT {Math.Clamp(limit, 1, 500)} OFFSET {Math.Max(0, offset)}", userId, ck);
+    }
 
     public sealed record Stats(long Completed, long Industries, long Tracks);
 
@@ -330,11 +339,12 @@ public static class WorldAccount
     /// (P1-06). These feed the account view, the public Passport and the PDF alike.</summary>
     public static Stats EvidenceStats(Db db, long userId, bool visibleOnly)
     {
+        var (owned, ck) = OwnedBy(db, userId);
         var row = db.QueryOne($@"SELECT COUNT(*) AS c,
                 COUNT(DISTINCT v.industry) AS i, COUNT(DISTINCT v.track) AS t
             FROM pciworld_attempts a
             JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
-            WHERE a.user_id=? AND a.status='completed' {(visibleOnly ? "AND a.passport_visible=1" : "")}", userId)!;
+            WHERE {owned} AND a.status='completed' {(visibleOnly ? "AND a.passport_visible=1" : "")}", userId, ck)!;
         return new(H.L(row["c"]), H.L(row["i"]), H.L(row["t"]));
     }
 
@@ -456,16 +466,40 @@ public static class WorldAccount
                 email_verified = H.L(me["email_verified"]) == 1, passport_public = H.L(me["passport_public"]) == 1 });
         });
 
-        app.MapPost("/api/world/account/logout", (HttpContext ctx) =>
+        app.MapPost("/api/world/account/logout", async (HttpContext ctx) =>
         {
-            // Revoke BOTH carriers of the session (P0-07): the header token and the HttpOnly
-            // cookie, then clear the cookie so a shared browser holds nothing after sign-out.
+            // Sign-out scope (PW-US-010/043). Default: revoke BOTH carriers of THIS session
+            // (P0-07) and clear the cookie so a shared browser holds nothing. {everywhere:true}:
+            // the coordinated central sign-out — every World session for this account dies, and
+            // when the account is canonically linked, the canonical portal sessions
+            // (login_tokens, purpose 'session') die with them. Suspension never blocks a
+            // sign-out, so the owner is resolved from the raw session row, not the active-only
+            // resolver.
+            var b = await H.Body(ctx.Request);
+            var everywhere = H.GetEl(b, "everywhere") is { ValueKind: JsonValueKind.True };
+            long? owner = null;
             foreach (var tok in new[] { ctx.Request.Headers["X-World-Account"].ToString(),
                                         ctx.Request.Cookies[SessionCookie] ?? "" })
-                if (!string.IsNullOrWhiteSpace(tok))
-                    db.Execute("DELETE FROM pciworld_user_sessions WHERE token=?", Security.Sha(tok));
+            {
+                if (string.IsNullOrWhiteSpace(tok)) continue;
+                var row = db.QueryOne("SELECT user_id FROM pciworld_user_sessions WHERE token=?", Security.Sha(tok));
+                if (row is not null) owner ??= H.L(row["user_id"]);
+                db.Execute("DELETE FROM pciworld_user_sessions WHERE token=?", Security.Sha(tok));
+            }
+            var revokedWorld = 0; var revokedCanonical = 0;
+            if (everywhere && owner is not null)
+            {
+                revokedWorld = db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=?", owner);
+                var canonical = WorldIdentity.CanonicalUserFor(db, owner.Value);
+                if (canonical is not null)
+                    revokedCanonical = db.Execute(
+                        "DELETE FROM login_tokens WHERE user_id=? AND purpose='session'", canonical);
+                log(null, "world_logout_everywhere",
+                    $"world #{owner}: {revokedWorld} world + {revokedCanonical} canonical session(s)");
+            }
             ctx.Response.Cookies.Delete(SessionCookie, new CookieOptions { Path = "/" });
-            return J(new { ok = true });
+            return J(new { ok = true, everywhere,
+                revoked_world_sessions = revokedWorld, revoked_pci_sessions = revokedCanonical });
         });
 
         // Deliberate verification (journey repair P1-03): the GET only LOOKS — mail scanners and
