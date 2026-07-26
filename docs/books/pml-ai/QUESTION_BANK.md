@@ -580,7 +580,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. 11.7 weeks ✅
 - D. 12.0 weeks
 
-*Rationale:* `p³ = 0.343`, so `E[cycles] = 1/0.343 = 2.9155` and `E[wait] = 4/2 + 2 + 1.9155 × 4 = 11.6618` weeks (3.1.2). A is the single-authority wait, ignoring the failure probability altogether. B applies the readiness probability once rather than to the power of three (`1/0.70 = 1.4286` cycles → 5.71 weeks) — the commonest error, because it treats the board as one actor. D adds one whole extra meeting interval instead of the expected 1.9155 of them.
+*Rationale:* `p³ = 0.343`, so `E[cycles] = 1/0.343 = 2.9155` and `E[wait] = 4/2 + 2 + 1.9155 × 4 = 11.6618` weeks (3.1.2). A is the single-authority wait, ignoring the failure probability altogether. B applies the readiness probability once rather than to the power of three (`1/0.70 = 1.4286` cycles → 5.71 weeks) — the commonest error, because it treats the board as one actor. D rounds the 2.9155 expected cycles up to 3 whole cycles and so adds two whole meeting intervals (`4 + 2 × 4 = 12.0`) instead of the expected 1.9155 of them.
 
 
 **3.1-F** `[3.1.3 · Evaluation]` A monthly committee with a 2-week paper deadline governs 2-week increments. Of 65 above-authority decisions, 41 are needed within the current increment, 9 at 2–3 weeks, 7 at 3–4 weeks and 8 beyond 4 weeks. Management proposes meeting fortnightly with a one-week deadline. The strongest evaluation of that proposal is that it:
@@ -590,7 +590,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. fails, because committee latency is irrelevant to iterative delivery
 - D. raises servable coverage to 63.08 %, which is the minimum required
 
-*Rationale:* At `E[wait]` = 2.0 weeks the servable buckets are the 8, 7 and 9, i.e. 24 of 65 = 36.92 %, against 8 of 65 = 12.31 % as designed (3.1.3). A confuses `E[wait]` = 2.0 with a two-week meeting interval and ignores the paper lead time. C overcorrects: latency matters, it is simply not sufficient. D misreads 63.08 % — that is the minimum *envelope coverage* the same-increment decisions require, not a coverage the committee achieves.
+*Rationale:* At `E[wait]` = 2.0 weeks the servable buckets are the 8, 7 and 9, i.e. 24 of 65 = 36.92 %, against 8 of 65 = 12.31 % as designed (3.1.3). A mistakes latency *equal* to the increment for latency shorter than it: at `E[wait]` = 2.0 against a 2-week increment the latency-to-cycle ratio is 1.0, and the 41 same-increment decisions need their answer *inside* the increment, not at the end of it. C overcorrects: latency matters, it is simply not sufficient. D misreads 63.08 % — that is the minimum *envelope coverage* the same-increment decisions require, not a coverage the committee achieves.
 
 
 **3.2-A** `[3.2.3 · Application]` A committee meets every 6 weeks and closes papers 2 weeks before each meeting. The expected wait for a decision arising at a random point in the cycle is:
@@ -660,7 +660,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. USD 180,000, because authority reads on `max(value, cost to undo)` ✅
 - D. USD 195,000, the sum of value and reversal cost
 
-*Rationale:* The reversal-cost ratio is `180,000/15,000 = 12`, and the rule reads authority on the larger of the two figures (3.2.3). A is the value-only failure of Case study B. B subtracts the value from the reversal cost, which double-counts nothing and describes nothing. D adds two quantities that are not additive — the reversal cost already includes undoing the 15,000 of work.
+*Rationale:* The reversal-cost ratio is `180,000/15,000 = 12`, and the rule reads authority on the larger of the two figures (3.2.3). A is the value-only failure of Case study B. B nets the change's value off the reversal cost as though the value earned offset the cost of undoing it; there is no such offset — the reversal cost is what it costs to return to the prior state. D adds two quantities that are not additive — the reversal cost already includes undoing the 15,000 of work.
 
 
 **3.3-A** `[3.3.1 · Application]` A gate costs 45,000 in review effort and 6 weeks of elapsed time at a delay cost of 14,280 per week. Expected remediation cost with the gate is 82,800; without the gate it is 270,000. The gate's net value is:
@@ -728,9 +728,9 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - A. remains worthwhile, since its detection rate is well above the breakeven
 - B. has an effective detection rate of 31.30 %, is therefore below breakeven, and destroys USD 57,427.83 ✅
 - C. is worthwhile but should be shortened from 6 weeks to 4
-- D. has an effective detection rate of 39.13 % and is marginally below breakeven
+- D. has an effective detection rate of 39.13 % and is therefore below breakeven
 
-*Rationale:* `q_eff = q × r = 0.80 × 9/23 = 0.3130`, which is below the 0.5585 breakeven, inverting the gate's value (3.3.1b). A ignores closure altogether — the commonest error, because governance reports count conditions issued, not closed. C treats elapsed time as the binding constraint when the binding constraint is `r`. D mistakes the closure rate itself for the effective detection rate, omitting the multiplication by `q`.
+*Rationale:* `q_eff = q × r = 0.80 × 9/23 = 0.3130`, which is below the 0.5585 breakeven, inverting the gate's value (3.3.1b). A ignores closure altogether — the commonest error, because governance reports count conditions issued, not closed. C treats elapsed time as the binding constraint when the binding constraint is `r`. D mistakes the closure rate itself for the effective detection rate, omitting the multiplication by `q` — it reaches the right conclusion from the wrong quantity, and will not survive a gate where `q × r` and `r` fall on opposite sides of the breakeven.
 
 
 **3.3-H** `[3.3.2 · Evaluation]` An assurance map shows all three lines on a risk carrying 7.87 % of residual exposure and no line on the risk carrying 58.27 % of it. The soundest conclusion is that:

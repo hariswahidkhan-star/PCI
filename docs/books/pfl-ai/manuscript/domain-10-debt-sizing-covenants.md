@@ -1526,13 +1526,18 @@ recurring trap in coverage negotiations: **a lower ratio applied to a lower cash
 concession.** *Lengthen tenor*: 15 years was unavailable against a 25-year concession with a
 required tail. *Lower the rate*: not negotiable in the market of the day.
 
-**The outcome.** A structure at **41,000,000** senior debt — debt service `41,000,000/8.383844 =`
-**4,890,358**, a base-case `DSCR` of **1.3054**, comfortably inside the 1.30× requirement — with the
-residual **1,000,000 funded as additional equity**, a six-month DSRA (2,504,818), sculpted service
-against the declining coverage profile, and a 1.15× lock-up. Equity rose from 18,000,000 to
-19,000,000, gearing
-from 70/30 to **68.3/31.7** (debt/equity 2.16:1), and the sponsors' modelled IRR fell by roughly
-40 basis points — the true price of the coverage requirement, paid in equity rather than argued away.
+**The outcome.** The facility closed at the sized maximum: **41,171,123** of senior debt — debt
+service `41,171,123/8.383844 =` **4,910,769**, a base-case `DSCR` of exactly **1.30000**, which is
+what a credit committee documents when it has set a requirement and means it — with the residual
+**828,877 funded as additional equity**, a six-month DSRA (2,504,818), sculpted service against the
+declining coverage profile, and a 1.15× lock-up. Equity rose from 18,000,000 to **18,828,877**,
+gearing from 70/30 to **68.62/31.38** (debt/equity **2.1866:1**), and the sponsors' modelled IRR fell
+by roughly 40 basis points — the true price of the coverage requirement, paid in equity rather than
+argued away. Note that the 828,877 is not a new number: it is precisely the gap Worked example 10.1.2
+computed at the top of this domain, which is the point. **The sizing arithmetic did not describe the
+negotiation; it determined its outcome**, and every hour spent arguing about the amount was spent
+arguing with a division. Domain 6 models this structure and Domain 15 operates it, both on the same
+41,171,123.
 
 **What the domain teaches here.** Debt capacity is arithmetic, and the negotiation is about its four
 inputs — not about the number itself. Every attempt to move the answer without moving an input

@@ -498,9 +498,9 @@ deadline. The strongest evaluation of that proposal is that it:
 36.92 %, against 8 of 65 = 12.31 % as designed (3.1.3). A mistakes latency *equal* to the increment for
 latency shorter than it: at `E[wait]` = 2.0 against a 2-week increment the latency-to-cycle ratio is
 1.0, and the 41 same-increment decisions need their answer *inside* the increment, not at the end of
-it. C overcorrects: latency matters, it is simply not
-sufficient. D misreads 63.08 % — that is the minimum *envelope coverage* the same-increment decisions
-require, not a coverage the committee achieves.
+it. C overcorrects: latency matters, it is simply not sufficient. D misreads 63.08 % — that is the
+minimum *envelope coverage* the same-increment decisions require, not a coverage the committee
+achieves.
 
 ### Self-check — KA 3.1
 
@@ -2336,8 +2336,8 @@ reference, has not been made — it has been remembered, which cost Meridian **U
 template. Case study B's four differences were assembled from **20** individually authorised changes
 totalling **700,000**, which is the whole argument for a delegation schedule that reads on reversibility
 and externality and aggregates — and its first cumulative rule, summed over four workstreams, would have
-tripped in all **16** workstream-quarters on ordinary traffic, which is the whole argument for sizing such
-a rule against the base rate of the class it sums over.
+tripped in all **16** workstream-quarters on ordinary traffic, which is why such a rule must be sized
+against the base rate of the class it sums over.
 
 The through-line: **governance has a price, the price is computable, and until it is computed
 governance complaints are cultural and go nowhere.** Compute it, and they become engineering.

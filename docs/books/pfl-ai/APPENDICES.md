@@ -100,7 +100,7 @@ professional verifies, decides and remains accountable.*
 
 ## Appendix C — Verification record
 
-**5,528 golden-answer checks** stand behind this volume. Every number printed as a *result* —
+**5,530 golden-answer checks** stand behind this volume. Every number printed as a *result* —
 in worked examples, in-text calculations, multiple-choice options (all of them, not only the correct
 one), exercise solutions, case studies and figure specifications — is recomputed independently with
 decimal arithmetic at 28-digit precision and compared to the printed value. Each domain's module also
@@ -118,14 +118,14 @@ claim cannot silently stop being true.
 | 7 | Revenue, Demand and Commercial Models | 340 |
 | 8 | Cost, Schedule and Contingency Integration | 469 |
 | 9 | Funding Structure and Sources of Capital | 314 |
-| 10 | Debt Sizing, Covenants and Credit Metrics | 354 |
+| 10 | Debt Sizing, Covenants and Credit Metrics | 356 |
 | 11 | Risk Identification and Allocation | 368 |
 | 12 | Contracts and Transaction Structure | 196 |
 | 13 | Due Diligence and Financial Close | 239 |
 | 14 | Construction Monitoring and Drawdown | 326 |
 | 15 | Operations, Performance and Restructuring | 322 |
 | 16 | Data, Automation and Responsible AI in Finance | 508 |
-| | **Total** | **5,528** |
+| | **Total** | **5,530** |
 
 Reproduce it with `python3 _build/verify_formulas.py`, or check one domain with
 `python3 _build/run_checks.py checks/<module>.py`. Both loaders are fail-closed: a check module that

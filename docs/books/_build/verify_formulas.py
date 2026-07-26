@@ -619,17 +619,26 @@ check("CS 10A capacity at 1.25x on stressed cash", CF10 * D("0.95") / D("1.25") 
       D("40677069"), tol=D("0.51"))
 check("CS 10A lower ratio on lower case is no concession",
       1 if CF10 * D("0.95") / D("1.25") * AF6_12 < MAXDS10 * AF6_12 else 0, 1)
-DS10OUT = D(41000000) / AF6_12
-check("CS 10A outcome debt service on 41,000,000", DS10OUT, D("4890358"), tol=D("0.51"))
-check("CS 10A outcome DSCR", (CF10 / DS10OUT).quantize(D("0.0001")), D("1.3054"))
-check("CS 10A outcome clears the 1.30x requirement", 1 if CF10 / DS10OUT >= D("1.30") else 0, 1)
-check("CS 10A residual funded as equity", DEBT10 - D(41000000), 1000000)
-check("CS 10A revised equity", EQ10 + 1000000, 19000000)
+# Case study A closes at the SIZED MAXIMUM, not at a round number below it. An earlier draft closed
+# it at 41,000,000, which contradicted Domain 6 — that domain models the structure seven times over
+# as "Domain 10's properly sized 41,171,123", and it is right to. One canonical figure now, and the
+# residual equity is exactly the gap WE 10.1.2 computed, which is the case study's point.
+CS10A_DEBT = (MAXDS10 * AF6_12).quantize(D("1"))
+check("CS 10A closes at the sized maximum", CS10A_DEBT, 41171123)
+DS10OUT = CS10A_DEBT / AF6_12
+check("CS 10A outcome debt service", DS10OUT, D("4910769"), tol=D("0.51"))
+check("CS 10A outcome DSCR is exactly the requirement",
+      (CF10 / DS10OUT).quantize(D("0.00001")), D("1.30000"), tol=D("0.000005"))
+check("CS 10A outcome meets the 1.30x requirement", 1 if CF10 / DS10OUT >= D("1.2999") else 0, 1)
+check("CS 10A residual funded as equity is WE 10.1.2's gap", DEBT10 - CS10A_DEBT, 828877)
+check("CS 10A revised equity", EQ10 + (DEBT10 - CS10A_DEBT), 18828877)
 check("CS 10A revised gearing debt %",
-      (D(41000000) / D(60000000) * 100).quantize(D("0.1")), D("68.3"))
+      (CS10A_DEBT / D(60000000) * 100).quantize(D("0.01")), D("68.62"))
 check("CS 10A revised gearing equity %",
-      (D(19000000) / D(60000000) * 100).quantize(D("0.1")), D("31.7"))
-check("CS 10A revised debt/equity", (D(41000000) / D(19000000)).quantize(D("0.01")), D("2.16"))
+      ((D(60000000) - CS10A_DEBT) / D(60000000) * 100).quantize(D("0.01")), D("31.38"))
+check("CS 10A revised debt/equity",
+      (CS10A_DEBT / (D(60000000) - CS10A_DEBT)).quantize(D("0.0001")), D("2.1866"))
+check("CS 10A agrees with Domain 6's canonical sized debt", CS10A_DEBT, 41171123)
 # Case study B — paid in full and in breach
 CFB, DSB = D(19700000), D(18600000)
 check("CS 10B DSCR", (CFB / DSB).quantize(D("0.0001")), D("1.0591"))
