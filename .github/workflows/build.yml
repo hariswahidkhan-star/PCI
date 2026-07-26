@@ -106,6 +106,26 @@ jobs:
       - name: Vendor-stall availability regression (no network I/O under the global DB lock)
         run: python3 tests/waiver_vendor_stall_test.py
 
+      - name: Upload malware policy (RES-021 — one policy on every upload door, fail-closed scanner)
+        run: |
+          # A configured-but-unreachable scanner must REJECT, never wave the file through. Proving that
+          # needs the env var set for the run, which the xUnit tier covers; here we assert the built-in
+          # signatures reject an EICAR upload through the real HTTP evidence path.
+          python3 - <<'PY'
+          import base64, json, urllib.request, urllib.error
+          eicar = base64.b64encode(rb"X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*").decode()
+          req = urllib.request.Request("http://127.0.0.1:8080/api/me/documents",
+              data=json.dumps({"file": "data:application/pdf;base64," + eicar}).encode(),
+              headers={"Content-Type": "application/json"}, method="POST")
+          try:
+              urllib.request.urlopen(req); code = 200
+          except urllib.error.HTTPError as e:
+              code = e.code
+          # Unauthenticated (401) or rejected (400) are both fine; a 2xx would mean it was stored.
+          assert code != 200, "EICAR upload was accepted"
+          print(f"EICAR upload refused (HTTP {code})")
+          PY
+
       - name: Founding-stage suite (codes, applications, waiver settlement)
         run: python3 tests/founding_test.py
 

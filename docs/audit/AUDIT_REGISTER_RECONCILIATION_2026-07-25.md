@@ -182,7 +182,7 @@ Plus the audit item that main and this branch fixed independently:
 | RES-005 PCI World | **Implemented** in main (World* core/endpoints/schema/content packs, daily rotation, passport, SEO, admin scope) — the audited branch simply predated it. Browser specs: `portal-world.spec.ts`. |
 | RES-006 free templates | **Implemented** (`Endpoints/Templates.cs`, `TemplatesSchema/Seed`, public downloads centre; `TemplatesLibraryTests`). |
 | RES-007 simulation lab | **Implemented** far beyond the audit's snapshot (20+ Sim* modules: scenarios, variants, versions, governance, review, grading, coach + eval harness; 15+ xUnit suites; `portal-simlab.spec.ts`; load scripts under `tests/load`). Formal SME sign-off of content remains a content gate (DEF-20 tracks one open scoring-policy question). |
-| RES-008/009 Zoho / Odoo | **Not implemented — confirmed.** No connector exists. The generic signed-webhook outbox + QuickBooks connector remain the integration surface. Needs a product decision + sandbox tenants; cannot be closed from code alone. |
+| RES-008/009 Zoho / Odoo | **Implemented** (`Core/ZohoConnector.cs`, `Core/OdooConnector.cs`). Both plug into the existing outbox/delivery/retry/lease pipeline: `member.registered` → Zoho Contact / Odoo `res.partner`, `payment.recorded` → Zoho Invoice / Odoo `account.move`. Zoho is region-aware (API **and** accounts host follow the data centre; the `api_base` override deliberately does *not* move the accounts host, so a test receiver can never be handed real OAuth credentials). Odoo speaks JSON-RPC and reports faults as **HTTP 200 with an `error` member**, so the delivery path inspects the body — a fault or `authenticate: false` records a FAILED delivery, never a delivered one. Evidence: `ErpConnectorTests` (33) + integration §64 (19 assertions over real HTTP against mock vendors, including the bad-credential path). **Still needs approved vendor sandbox tenants** before anyone calls it production-verified — that part is unchanged. |
 | RES-010 production foreign keys | **Open by design** — requires the real production data profile (orphan reconciliation, lock/downtime measurement) exactly as the audit says. Not actionable from this environment. |
 | RES-011 monetary data conversion | Fresh schemas use DECIMAL (verified by migration-integrity money checks on MySQL). The *existing production data* conversion remains a production-clone rehearsal task (see `docs/audit/PHASE_1_MYSQL_MONEY_PARITY_2026-07-25.md`). |
 | RES-012 email durability | **Substantially implemented** in main: `comm_outbox` transactional outbox, dedup keys, exponential retry with dead-lettering, per-channel providers, delivery-attempt ledger, atomic worker leasing (now regression-tested 13/13). Live provider delivery tests still need real credentials. |
@@ -194,7 +194,7 @@ Plus the audit item that main and this branch fixed independently:
 | RES-018 backend gate | **Executed** — build clean, xUnit 930/930. |
 | RES-019 MySQL browser lane | **Exists in CI** (`e2e-mysql` job) — the audit predated it. |
 | RES-020 S3/moto | **Fixed and executed** (9/9) — see DEF-23. |
-| RES-021 malware scanning | **Open.** MIME sniff/size caps/traversal guards + at-rest encryption exist; an AV quarantine pipeline does not. Needs a scanner decision (infra dependency). |
+| RES-021 malware scanning | **Implemented** (`Core/UploadScan.cs`). The audit understated this: the two upload doors *disagreed* — `DocStore.Decode` rejected executable headers while `Storage.DecodeDataUri`, the door evidence, identity documents and support attachments come through, applied **no content-safety check at all**. Both now share one policy: executable images (PE/ELF/Mach-O), shebang scripts, the EICAR test file anywhere in the payload, and PDFs carrying a `/Launch` action. An optional `UPLOAD_SCANNER_URL` seam adds real AV and **fails closed** when configured but unreachable — an operator who asks for scanning gets scanning or an error, never a silent bypass. Evidence: `UploadScanTests` (15), including both doors refusing the same payload. A specific AV product is still an infrastructure choice. |
 | RES-022 bundle sizes | **Open (advisory).** Builds emit chunk-size warnings; route-level code-splitting is tracked as an optimisation with budgets to be set from real Core Web Vitals. |
 | RES-023 lint debt | Lint passes with warnings only; CI blocks on errors (SQ-2). Warning burn-down remains housekeeping. |
 | RES-024 live public/SEO crawl | **Blocked in any local environment** — needs the deployed site. Deterministic URL inventory + redirect/canonical logic are covered by RedirectTests/SeoTags/Sitemap units and public-site browser specs. |
@@ -213,11 +213,11 @@ Code-closable items are closed. What remains needs things this repository cannot
 3. **Content gates** — ≥50 approved confidential formal questions per certification with SME and
    psychometric sign-off (RES-015); the DEF-20 scoring-policy product ruling; the DEF-21
    published-download renaming pass.
-4. **Product decisions** — Zoho/Odoo connectors (RES-008/009), student-facing six-route application
-   wizard (RES-004), domain separation topology (RES-013), pre-checkout reservation design
-   (RES-001/002).
-5. **Deployed-site audits** — live crawl/SEO/Lighthouse/axe over production URLs (RES-024), malware
-   scanning infrastructure (RES-021).
+4. **Product decisions** — student-facing six-route application wizard (RES-004), domain separation
+   topology (RES-013). (Zoho/Odoo are now built — what remains for them is sandbox validation, item 1.)
+5. **Deployed-site audits** — live crawl/SEO/Lighthouse/axe over production URLs (RES-024). Malware
+   scanning is now enforced in code on every upload path (RES-021); choosing and hosting the AV
+   product behind `UPLOAD_SCANNER_URL` remains an infrastructure decision.
 
 ## 8. Evidence quality statement
 
