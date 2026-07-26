@@ -348,7 +348,8 @@ therefore how much elicitation is worth buying* — and that is arithmetic.
    have to extend the definition phase by **more than 36.89 weeks** before it destroyed value, and a
    realistic four-week extension costs `4 × 14,280 =` **USD 57,120**, leaving **USD 469,680** net. The
    objection is real, and the breakeven is **more than nine times** the extension anyone is proposing —
-   an order of magnitude short of decisive; a leader who cannot say that has to argue about it instead. Third, the saving is computed on the **difference** between
+   an order of magnitude short of decisive; a leader who cannot say that has to argue about it
+   instead. Third, the saving is computed on the **difference** between
    stages, never on the later cost alone: the gross figures give
    `13 × 6,400 + 9 × 25,600 + 3 × 102,400 =` **620,800**, overstating the saving by 10,000 by
    forgetting that the defect still has to be fixed. Fourth, two real limits rather than hedges. The

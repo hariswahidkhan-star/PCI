@@ -130,7 +130,7 @@ model that does not state them cannot be reproduced.
 unlevered), its **horizon** (the number of periods valued, and what is assumed about value beyond
 them), and its **case** (which set of assumptions was switched on).
 
-**Worked example 6.1.3 — one project, four correct net present values.**
+**Worked example 6.1.3 — one project, five correct net present values.**
 
 1. **Setup.** Kestrel, on the master model. Domain 4 appraised net inflows of **8,900,000** a year
    for **15 years** against `I₀` = 60,000,000 at **8.0 %**. Domain 2 documented a first-year
@@ -145,7 +145,7 @@ them), and its **case** (which set of assumptions was switched on).
    `0.20 × 2,400,000`).
 3. **Substitution.** `8,900,000 × 8.559479 = 76,179,360`. Solving the escalating `EBITDA` stream
    over 15 years at 8 % gives **`g` = 2.967 %**, reproducing a present value of 76,180,021 —
-   within **660** of Domain 4's figure, or 0.001 %. Then value `FCF(t)` at 8 % over 15 and 25
+   **661** above Domain 4's 76,179,360, or 0.001 %. Then value `FCF(t)` at 8 % over 15 and 25
    years, at `g` = 2.967 % and at `g` = 0.
 4. **Result.**
 
@@ -308,8 +308,10 @@ never a round number.**
 2. **Formula.** For each quarter: `interest = opening debt balance × 0.015`;
    `funding requirement = certified spend + interest`; `debt draw = 0.70 × requirement`;
    `equity draw = 0.30 × requirement`; closing balance = opening + debt draw. Contingency solves
-   `fees + development + EPC + owner's costs + contingency + IDC(contingency) = 60,000,000`.
-3. **Substitution.** Close: requirement 2,640,000, debt draw 1,848,000. Quarter 1: interest
+   `fees + development + EPC + owner's costs + contingency + IDC(contingency) = 60,000,000`, and
+   the profile applies to the **certified-spend base** — EPC plus owner's costs plus contingency.
+3. **Substitution.** Close: requirement 2,640,000, debt draw 1,848,000. The certified-spend base
+   solves to **55,245,403**, so quarter 1's 6 % is 3,314,724. Quarter 1: interest
    `1,848,000 × 0.015 = 27,720`; requirement `3,314,724 + 27,720 = 3,342,444`; debt draw
    2,339,711; closing balance 4,187,711. Iterating to quarter 8 gives a closing balance of exactly
    42,000,000 and cumulative equity of exactly 18,000,000.
@@ -340,10 +342,11 @@ never a round number.**
    of the quarterly answer, so the 41 % error requires both mistakes together — which is why
    convention lists must be read as a set. **And the balancing line is evidence.** Kestrel's
    3,645,403 of contingency is 7.59 % of the EPC price, inside the band a lender would expect for
-   proven water-treatment technology under a full EPC wrap (Domain 5, KA 5.4.1), so the envelope is
-   credible. Had the residual come out at 2 %, the correct response would not have been to accept a
-   thin contingency but to conclude that a 60,000,000 envelope does not fund this project — a
-   financing conversation, not a modelling one. **Contingency is what is left, and what is left
+   proven water-treatment technology under a full EPC wrap (Domain 5, KA 5.4.1; Domain 8, KA 8.1.2
+   tests that percentage against estimate class), so the envelope is credible. Had the residual
+   come out at 2 %, the correct response would not have been to accept a thin contingency but to
+   conclude that a 60,000,000 envelope does not fund this project — a financing conversation, not
+   a modelling one. **Contingency is what is left, and what is left
    must still be defensible**; the arithmetic cannot tell you which of those two is binding.
 
 > **Fig 6.2.1 — Construction funding and interest during construction.** Combination chart,
@@ -529,13 +532,14 @@ in operating cash flow, is 2,520,000. `CFADS` is:
 - D. 8,904,000
 
 *Rationale:* `CFADS` = operating cash flow + interest paid (6.2.2). A deducts interest a second
-time; B forgets that operating cash flow is already struck after interest; D adds the whole debt
-service of 5,009,635, double-counting principal, which is a financing flow and never in operating
-cash flow.
+time; B forgets that operating cash flow is already struck after interest; D adds interest a
+second time to a `CFADS` already struck before debt service, a figure no definition produces —
+and principal, a financing flow, never enters operating cash flow at all.
 
-**MCQ 6.2-C `[6.2.3 · Analysis]`** A model shows cash tax of 516,000 against taxable profit of
-2,580,000 in year one and, in year eight, cash tax of 766,771 against taxable profit of
-3,833,856. The statutory rate is 20 %. A reviewer should conclude:
+**MCQ 6.2-C `[6.2.3 · Analysis]`** A model of a project with flat revenue and level annuity debt
+service shows cash tax of 516,000 against taxable profit of 2,580,000 in year one and, in year
+eight, cash tax of 766,771 against taxable profit of 3,833,856. The statutory rate is 20 %. A
+reviewer should conclude:
 
 - A. the tax line is wrong, because cash tax has risen while revenue is flat
 - B. the effective rate is 20.0 % in both years, so the tax line is consistent; cash tax rises
@@ -668,7 +672,7 @@ waterfall. They answer different questions and are routinely conflated.
    |---|---|---|
    | Project (unlevered, post-tax) `NPV` at 8 % | **+2,767,684** | **+19,875,251** |
    | Project `IRR` (unlevered, post-tax) | **8.54 %** | — |
-   | Equity `IRR` | **9.83 %** | **13.53 %** |
+   | Equity `IRR` | **9.83 %** | **13.52 %** |
    | Total distributions over 25 years | **90,507,502** | **151,536,729** |
    | Money multiple on 18,000,000 | **5.028×** | **8.419×** |
    | Equity payback from financial close | **14.67 years** | — |
@@ -684,7 +688,7 @@ waterfall. They answer different questions and are routinely conflated.
    the reserve released, and the first two operating years return **121,956** and **92,080** on
    18,000,000 contributed. A sponsor whose investment committee expects distributions in year one
    has misread the waterfall, not the project. **The case, not the asset, produces most of the
-   return.** The 3.70-point difference between 9.83 % and 13.53 % comes entirely from a 2.967 %
+   return.** The 3.69-point difference between 9.83 % and 13.52 % comes entirely from a 2.967 %
    escalation assumption — which is why escalation is contested in offtake negotiation (Domain 7)
    and why an equity `IRR` without its case is worthless. The habit that follows: state the
    escalation at which the equity return meets the sponsor's hurdle, and ask whether it is
@@ -846,9 +850,10 @@ statutory rate plus explained differences.
    allowed to run negative, which is precisely why 6.3.2 insists on the floor. The consequences
    scale badly in both directions. Understated, as here, the model reports a covenant breach that
    does not exist, kills 3,250,352 of debt capacity, and sends the sponsors to find equity they do
-   not need — 3,250,352 of equity substituted for debt at a 6-point spread costs roughly 195,021 a
-   year, a present value near 1,469,700 over the twelve years. Overstated, the same class of error
-   sizes debt the project cannot service, which is the case study of KA 6.4.3. The discipline is
+   not need. Substituting 3,250,352 of equity for debt at a 6-point spread (a 12 % equity
+   requirement against the 6.0 % achieved on debt) costs 195,021 a year, a present value of
+   **1,469,694** over the twelve years at 8 %. Overstated, the same class of error sizes debt the
+   project cannot service, which is Worked example 6.4.3's illustrative error. The discipline is
    therefore not "check that it balances" but **"know what each check can and cannot see"**: the
    six invariants test structure, the effective-rate and ratio checks test economics, and only a
    reconciliation to the documents tests definitions (Domain 10, Toolkit 10.T.1).
@@ -881,7 +886,7 @@ shrinks, cash tax rises, and `CFADS` falls against a level instalment.
    professional consequences. **Report the minimum and the year it occurs**, which is Domain 10's
    rule now earned rather than asserted: the average of 1.2340 passes and the project still
    breaches. **The escalation assumption decides where the minimum lies.** On the sponsor case,
-   with revenue escalating at 2.967 %, `DSCR` *rises* from 1.2743 to **1.5945** and the minimum is
+   with revenue escalating at 2.967 %, `DSCR` *rises* from 1.2743 to **1.5940** and the minimum is
    year one — which is why lenders insist on the flat case: not because they believe it, but
    because it is the case that finds this defect. **And the fix belongs to sizing, not
    reporting.** At Domain 10's properly sized **41,171,123** the instalment is 4,910,769 and the
@@ -896,7 +901,7 @@ shrinks, cash tax rises, and `CFADS` falls against a level instalment.
 > y-axis `DSCR` 1.10–1.65. Three series, all starting at **1.2743**: dashed slate horizontal at
 > 1.2743 (the level assumption); ink line falling monotonically to **1.1851** in year 12 (bank
 > case — flat revenue, cash tax on the actual interest schedule), with a crimson marker and
-> "1.1851 — breach"; brand-blue line rising to **1.5945** (sponsor case, 2.967 % escalation).
+> "1.1851 — breach"; brand-blue line rising to **1.5940** (sponsor case, 2.967 % escalation).
 > Crimson dashed horizontal at the **1.20× covenant**. Footer: average `DSCR` 1.2340 on the bank
 > case, and the note that the average is not the number the covenant tests. Source: PCI original.
 > Alt text: three coverage-ratio lines from a common starting point, one flat, one declining below
@@ -1145,7 +1150,7 @@ is:
 - D. indeterminate without the sponsor case
 
 *Rationale:* Domain 10's rule, earned here: an average conceals the period that breaches (6.4.1b,
-KA 10.A.3). D inverts the logic — the sponsor case, in which coverage rises to 1.5945, is the case
+KA 10.A.3). D inverts the logic — the sponsor case, in which coverage rises to 1.5940, is the case
 that hides the problem.
 
 **MCQ 6.4-C `[6.4.2 · Analysis]`** Kestrel's unlevered `NPV` has an elasticity of 0.00 to the
@@ -1172,7 +1177,7 @@ opportunity cost of capital with the cost of debt.
 
 *Rationale:* `CFADS` amplifies revenue by 1.4098, so the covenant breaks at revenue of 11,503,416,
 a 4.14 % fall (6.4.2). A carries the `CFADS` percentage across as if the two were interchangeable —
-overstating the operations team's room by 41 %; C divides rather than multiplies by the elasticity;
+overstating the operations team's room by 41 %; C multiplies rather than divides by the elasticity;
 D is the fall at which payment itself fails.
 
 **MCQ 6.4-E `[6.4.3 · Evaluation]`** A model audit costs 180,000 and two weeks of delay worth
@@ -1545,7 +1550,7 @@ A financial model's authority comes from its architecture and its checks, not fr
 Kestrel proves it four times over. **One project supports five arithmetically correct net present
 values spanning USD 29,545,516** — from −9,670,265 to +19,875,251 — differing only in basis,
 horizon and case; Domain 4's **+16,179,360** is the pre-tax, fifteen-year member of that family,
-reconciled to Domain 2's `CFADS` by an implied escalation of **2.967 %** to within 660 of present
+reconciled to Domain 2's `CFADS` by an implied escalation of **2.967 %** to within 661 of present
 value, and the required deliverable is the bridge rather than any one number. **Convention is worth
 more than most contested assumptions**: the same drawdown at the same 6.0 % returns capitalised
 interest of **2,114,597** quarterly on opening balances and **1,247,352** annually — a 41.01 %
@@ -1567,7 +1572,7 @@ The first operating year articulates completely — operating cash flow **3,864,
 **6,384,000** through the interest tie, a closing balance sheet of **59,752,409** on both sides, and
 a distribution to equity of **121,956**, 0.68 % of the 18,000,000 contributed — and the returns it
 leads to are honest about who earns what: the asset **8.54 %**, the equity **9.83 %** on the bank
-case and **13.53 %** with escalation, with equity payback **14.67 years** from close. Sensitivity
+case and **13.52 %** with escalation, with equity payback **14.67 years** from close. Sensitivity
 ranks revenue first at an elasticity of **6.27** on the sponsor case and **34.71** on the bank
 case — proof that elasticity is a property of the case — reports **0.00** elasticity of unlevered
 value to the interest rate while the same move drives the minimum `DSCR` to 1.1485, and translates

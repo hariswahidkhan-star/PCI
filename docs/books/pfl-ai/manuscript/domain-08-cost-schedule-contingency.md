@@ -1,6 +1,6 @@
 # Domain 8 — Cost, Schedule and Contingency Integration *(quantitative — the project-controls bridge)*
 
-> **Group:** Structuring and modelling (Domain 8 of 5 in Part Two). **Target:** ~76 pages.
+> **Group:** Structuring and modelling (Domain 4 of 5 in Part Two). **Target:** ~76 pages.
 > **Binds to:** the PCI Book Pattern Specification and the shared registries
 > (`docs/books/registries/`). This is the **bridge domain between the two books**: it consumes
 > PML-AI Domain 7's earned-value machinery (`BAC`, `CPI`, `SPI`, the `EAC` family) and PML-AI
@@ -10,6 +10,14 @@
 > `AF(r, n)`, Domain 4's `EAV`, Domain 5's completion-risk and delay-damages structure, Domain
 > 6's sources-and-uses and capitalised-interest arithmetic, and Domain 10's `DSCR` machinery.
 > British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
+> Tax, accounting and legal treatments described here are **illustrative and
+> jurisdiction-specific**; none is presented as universal. In particular, whether a
+> delay-damages rate, cap or stepped structure, a contingency-recalculation clause or a handback
+> obligation is enforceable as drafted is a matter for qualified counsel in the governing
+> jurisdiction, and whether a cost is capitalised into the depreciable base is a matter for the
+> sponsor's own auditors under the applicable framework. Nothing in this domain is legal,
+> tax or accounting advice. Kestrel Water SPC, Project Auriga and both case studies are
+> illustrative constructs, not accounts of identifiable projects or organisations.
 
 ## Why this domain exists
 
@@ -86,8 +94,9 @@ structure in a different place, on a different basis, under different control.
 legal and advisory fees, permit applications, land options, the sponsors' own staff time. It is
 spent at risk, before any facility exists, and its treatment at close is a negotiation — Kestrel
 capitalised 1,800,000 of it into the funding envelope (Domain 6), which means the equity that
-funded it is reimbursed and the amount enters the depreciable base. Development cost that is
-*not* accepted into the envelope is sunk equity, and Domain 5 (KA 5.1.2) priced it per close
+funded it is reimbursed and — subject to the accounting and tax framework that applies, which is a
+question for the sponsor's own auditors (Domain 2) — the amount enters the depreciable base.
+Development cost that is *not* accepted into the envelope is sunk equity, and Domain 5 (KA 5.1.2) priced it per close
 rather than per deal for exactly that reason.
 
 **Capital cost** is the asset: the EPC contract price, owner-supplied equipment, owner's costs,
@@ -119,10 +128,11 @@ period. Lifecycle cost creates a reserve obligation. A cost report that presents
 was made, and carries with it a stated **accuracy range** — the band within which the estimate's
 author expects the outturn to fall. The range is not a confidence interval in the statistical
 sense; it is an expression of definitional maturity, and it narrows as engineering, site
-investigation, procurement and contracting progress. Several professional estimating bodies and
-most large owners publish classification frameworks; the principle is common practice, the
+investigation, procurement and contracting progress. Professional estimating bodies and large owner
+organisations publish classification frameworks of their own; the principle is common practice, the
 specific bands are always organisation-specific, and the table below is the PCI illustrative
-ladder used throughout this book.
+ladder used throughout this book — it reproduces no other body's classification and should not be
+read as one.
 
 | Stage | Scope definition | Typical basis | Accuracy range | Implied contingency to the upper bound on a 48,000,000 base |
 |---|---|---|---|---|
@@ -205,7 +215,7 @@ the profile a coverage covenant handles worst.
    | 14 | Membrane replacement | 3,200,000 | 5,250,329 | 1,787,533 |
    | 21 | Membrane replacement | 3,200,000 | 6,725,194 | 1,335,999 |
    | 24 | Pump refurbishment | 1,400,000 | 3,271,615 | 515,931 |
-   | | **Total** | **12,400,000** | **21,486,201** | **6,881,021** |
+   | | **Total** | **12,400,000** | **21,486,202** | **6,881,021** |
 
    `AF(0.08, 25) = 10.674776`; level charge `= 6,881,021 / 10.674776`.
 4. **Result.** Present value of the lifecycle programme **USD 6,881,021**; **level annual charge
@@ -217,8 +227,9 @@ the profile a coverage covenant handles worst.
 5. **Interpretation.** A `DSCR` of 0.4561 is not a covenant breach; it is a **payment default** —
    the project cannot pay debt service from cash in the year it replaces its membranes, having been
    entirely healthy in the six years before and the six years after. That is the whole case for a
-   maintenance reserve in one number, and it explains why lenders require one on any asset with a
-   material overhaul cycle and why they require the reserve to be **forward-looking**: funded
+   maintenance reserve in one number, and it explains why lenders commonly require one on an asset
+   with a material overhaul cycle and why they generally require the reserve to be
+   **forward-looking**: funded
    against the *next* overhaul, not accumulated at a policy percentage. Three professional
    qualifications belong beside the arithmetic. **The level charge is not the reserve deposit
    schedule.** 644,606 per year is the economically equivalent annual cost; the actual deposit
@@ -291,8 +302,8 @@ not exist; C is the error the whole KA exists to remove; D substitutes a differe
 percentage for the first one.
 
 **MCQ 8.1-B `[8.1.2 · Analysis]`** A project is procured as six separate packages against a Stage C
-feasibility estimate of 48,000,000, with the owner managing interfaces. The contingency implied by
-the estimate's own upper bound is:
+feasibility estimate of 48,000,000 carrying a stated accuracy range of −15 % / +30 %, with the owner
+managing interfaces. The contingency implied by the estimate's own upper bound is:
 - A. 3,840,000
 - B. 8,640,000
 - C. 14,400,000 ✅
@@ -307,12 +318,12 @@ no maintenance reserve, the year-seven `DSCR` is closest to:
 - A. 1.2743
 - B. 0.4561 ✅
 - C. 0.6356
-- D. 1.1355
+- D. 1.1457
 
 *Rationale:* Nominal cost `3,200,000 × 1.036⁷ = 4,098,909`; `(6,384,000 − 4,098,909)/5,009,635.23 =
 0.4561`. A is the ratio with a funded reserve; C forgets to escalate (using 3,200,000, giving
 3,184,000/5,009,635.23 = 0.6356); D deducts only the level annual charge of 644,606 rather than the
-actual spend.
+actual spend (`5,739,394/5,009,635.23 = 1.1457`).
 
 **MCQ 8.1-D `[8.1.1 · Analysis]`** An operating-cost forecast understates annual cost by 500,000.
 Against Kestrel's 1.20× covenant with annual headroom of 372,438, the consequence is:
@@ -518,12 +529,12 @@ is run.
 3.9700. Capitalised interest is:
 - A. USD 1,607,760
 - B. USD 2,000,880 ✅
-- C. USD 2,857,257
+- C. USD 2,858,400
 - D. USD 504,000
 
 *Rationale:* `0.015 × 0.70 × 48,000,000 × 3.9700 = 2,000,880`. A is the S-curve's area of 3.1900;
-C omits the gearing (applying interest to full spend); D is the per-unit-of-area coefficient
-mistaken for the answer.
+C omits the gearing, applying interest to full spend (`0.015 × 48,000,000 × 3.9700 = 2,858,400`);
+D is the per-unit-of-area coefficient mistaken for the answer.
 
 **MCQ 8.2-B `[8.2.3 · Analysis]`** A model escalates a 48,000,000 two-year construction estimate by
 multiplying it by `1.036²`, giving 51,518,208, where the profile-correct figure for the same S-curve
@@ -545,7 +556,9 @@ escalation rate above which front-loading spend becomes cheaper than back-loadin
 - D. 1.8 %
 
 *Rationale:* Deferral costs escalation on 100 % of spend and saves interest on the geared 70 %, so
-neutrality is at `e ≈ g × r = 4.20 %` (computed exactly as 4.1659 % on the quarterly convention).
+neutrality is at `e ≈ g × r = 4.20 %` — computed as **4.1352 %** between Kestrel's front- and
+back-loaded profiles on the quarterly convention (8.2.3 quotes 4.1659 % for the same effect measured
+between the S-curve and the back-loaded profile; every pairwise breakeven sits just below `g × r`).
 A ignores gearing; C is the assumed escalation rate, not the breakeven; D halves the rate for no
 stated reason.
 
@@ -688,12 +701,14 @@ mean + 0.8416 σ.
 > **Fig 8.3.1 — Six answers to one question: how much contingency?** Horizontal bar chart, x-axis
 > contingency in USD on Kestrel's 48,000,000 base estimate (0–9m). Bars, top to bottom: worst-case
 > sum of threats **8,500,000** (17.71 %); range P80 on the Stage C estimate, unwrapped
-> **6,512,795** (13.57 %); the ten-per-cent rule **4,800,000** (10.00 %, annotated "P87.3 on the
-> register, P70.4 on the range"); register P80 under a wrap **4,246,095** (8.85 %, brand blue, "the
-> defensible provision here"); the funded balancing line from Domain 6 **3,645,403** (7.59 %,
+> **6,512,795** (13.57 %); the ten-per-cent rule **4,800,000** (10.00 %, crimson, annotated "P87.3
+> on the register, P70.4 on the range"); register P80 under a wrap **4,246,095** (8.85 %, brand blue,
+> "the defensible provision here"); the funded balancing line from Domain 6 **3,645,403** (7.59 %,
 > crimson, "a P69.7 provision — 600,692 short"); register mean Σ`EMV` **2,690,000** (5.60 %). The
-> two bars that state no confidence level are crimson. Footer: a contingency percentage is
-> meaningless without the estimate class and the basis it was sized on. Source: PCI original. Alt
+> two crimson bars are the two provisions that state no confidence level of their own — the
+> percentage rule and the balancing line. Headline: a 3.16× spread between the six answers. Footer:
+> a contingency percentage is meaningless without the estimate class and the basis it was sized on.
+> Source: PCI original. Alt
 > text: six horizontal bars showing contingency amounts from two point seven million to eight and a
 > half million for the same project, with the funded amount third from the bottom and the
 > percentage rule of thumb in the middle.
@@ -1204,7 +1219,7 @@ Testable invariants for any construction cost and contingency model:
 - **Process industry and petrochemicals.** Estimate classes matter most here, because scope definition
   genuinely drives outturn and the ladder's factor of 6.25 is not theoretical. Long-lead equipment
   pulls escalation exposure early, pushing 8.2.3's breakeven towards front-loading; turnaround and
-  inspection cycles drive lifecycle cost and are regulated in most jurisdictions, so their timing is
+  inspection cycles drive lifecycle cost and are regulated in many jurisdictions, so their timing is
   less discretionary than elsewhere.
 - **Social infrastructure and availability PPPs.** Capital cost is comparatively predictable and the
   lifecycle obligation *is* the commercial substance: a 25- or 30-year hard-facilities obligation with
@@ -1277,8 +1292,8 @@ without them gave a mean of **2,940,000**, a standard deviation of **1,974,842**
 4,602,027** — the P80 requirement had fallen by **5,047,232**, more than half, on a single month's
 news. Against 11,100,000 of contingency of which **1,800,000** had been drawn, the project was
 holding an undrawn commitment of **9,300,000** against a P80 requirement of 4,602,027 — an excess of
-**4,697,973**. Nobody proposed releasing it. The project director's position, recorded in the
-minutes, was that "contingency should never be reduced during construction"; the sponsor's finance
+**4,697,973**. Nobody proposed releasing it. The project director's position was that contingency
+should not be reduced while construction was still running; the sponsor's finance
 function did not challenge it, because the visible cost of the excess was only the commitment fee —
 **28,188 a year** — which no operating budget felt.
 

@@ -49,9 +49,9 @@ value-neutral, while the same rule above a derivable threshold is strongly posit
 Underneath all four sits the principle the suite has carried since its first page, now with an
 arithmetic meaning rather than a rhetorical one: **AI proposes; the professional verifies, decides
 and remains accountable.** Verification is not a moral posture in this domain. It is a line item
-whose expected return, in every worked example below, exceeds its cost by two to three orders of
-magnitude — and that is the finding a leader should take away, because it survives disagreement
-about the technology.
+whose expected return, in every worked example below, runs between **eighteen and four hundred and
+thirty times** its cost — and that is the finding a leader should take away, because it survives
+disagreement about the technology.
 
 **Learning objectives.** After this domain a candidate can: describe a financial-data spine and
 price the architecture choice against a pairwise-reconciliation estate using the registered
@@ -87,9 +87,10 @@ them, and that is the unit this domain analyses, because automation economics ar
 question rather than a project question. The estate produces **56,400 consumption-and-billing
 records a year** (Kestrel alone contributes **9,400**) that feed the revenue forecast, and
 **48,000 payments and journal entries a year** of which **2.5 per cent** are genuinely erroneous.
-Nine finance-relevant systems hold the data. A proposed automation platform costs **USD 900,000**
-to build and **USD 140,000** a year to run, and the review pipeline it would replace costs
-**USD 13.60** a record in labour. Against that estate the domain prices every judgment the earlier
+Nine finance-relevant systems hold the data. A proposed financial-data spine costs **USD 900,000**
+to build and **USD 140,000** a year to run; a separate review-automation platform commits
+**USD 148,000** a year against a manual review pipeline costing **USD 13.60** a record in labour.
+Against that estate the domain prices every judgment the earlier
 fifteen made in words: Kestrel's covenant headroom of **USD 372,438** a year is the yardstick every
 data-quality figure is measured against, because it is the amount of cash the project can lose
 before a covenant fails, and a forecast error, a missed anomaly or a misread definition that
@@ -151,11 +152,14 @@ organisation discovers the drift when two papers disagree in front of a credit c
    at the estate size the organisation expects rather than the one it has. Two cautions, and the
    second is the professional one. **The saving is only realised if the pairwise reconciliations are
    actually retired** — estates routinely acquire a spine and keep the reconciliations, which
-   converts a 316,192 saving into a 140,000 cost, and that failure is a governance failure rather
-   than a technical one. And **the labour case is not the case that matters.** A single definitional
+   converts a 316,192 saving into a 181,472 cost — the spine's own 41,472 of feed labour plus its
+   140,000 run cost, paid on top of an unchanged mesh — and that failure is a governance failure
+   rather than a technical one. And **the labour case is not the case that matters.** A single definitional
    divergence in `CFADS` is worth **600,000** of reported cash (Domain 2, KA 2.3.1) — **1.6110
-   times** Kestrel's entire annual covenant headroom of 372,438 — and one such event in ten years
-   dwarfs the 1,221,674 the hours produced. The business case that gets built is the labour one;
+   times** Kestrel's entire annual covenant headroom of 372,438 — and a definition implemented
+   wrongly in code does not misreport once: it misreports every period until somebody finds it, so
+   over the same ten-year appraisal it is worth `600,000 × AF(0.08, 10) =` **USD 4,026,049** in
+   present value, **3.2955 times** the 1,221,674 the hours produced. The business case that gets built is the labour one;
    the business case that decides is the definitional one. State both, and be honest that the
    second is the reason.
 
@@ -286,8 +290,8 @@ the choice of threshold, which none of those three is: **total misclassification
    precision.** At T4 only **50.2618 per cent** of alerts are real, so the team working the queue
    experiences a coin flip and will lobby to tighten the threshold; the leader's job is to explain
    that a queue which is half false is the *correct* queue at these costs, and to resource the
-   **1,910 alerts** — about **214.88 hours** a year of adjudication — rather than tune the model to
-   make the queue feel better. **The decision rule is marginal, not average.** The break-even
+   **1,910 alerts** — at 25 minutes each, about **795.83 hours** a year, or **USD 76,400** of
+   analyst time — rather than tune the model to make the queue feel better. **The decision rule is marginal, not average.** The break-even
    posterior is `40 ÷ 320 = 12.5 per cent`: act on an item whenever there is at least a **one in
    eight** chance it is real. Average precision at every threshold in the table exceeds 12.5 per
    cent, including T5's 27.1357 per cent — yet T5 is worse than T4, because what matters is the
@@ -301,8 +305,8 @@ the choice of threshold, which none of those three is: **total misclassification
    two cost inputs are the real argument.** They are estimates, and the threshold is a function of
    their ratio alone, so the productive discussion in the room is "what does a missed error
    actually cost us?" rather than "which model is best". Change the ratio to 1:4 and the optimum
-   tightens; change it to 1:20 and it loosens past T5. State the ratio, own it, and revisit it
-   when the consequence changes — for instance when the same detector begins to screen items that
+   tightens to T3; change it to 1:20 and it loosens to T5, the last threshold measured. State the
+   ratio, own it, and revisit it when the consequence changes — for instance when the same detector begins to screen items that
    feed a covenant certificate rather than a management report.
 
 > **Fig 16.1.3 — The accuracy-maximising threshold is not the cost-minimising threshold.**
@@ -381,7 +385,9 @@ error against the automated *processing* cost alone (`148,000 ÷ 1.04`), ignorin
 alternative entirely.
 
 **MCQ 16.1-B `[16.1.2 · Analysis]`** An organisation reprices an undetected error from USD 320 to
-USD 1,200 on the same two processes. The breakeven volume:
+USD 1,200 on the same two processes — manual review 13.60 a record leaving 1.80 % of records with an
+undetected error, automated processing 1.04 a record leaving 2.60 %, on a committed fixed cost of
+148,000 a year. The breakeven volume:
 - A. falls, because errors are now more expensive and automation catches more of them
 - B. is unchanged, because the error rates are unchanged
 - C. rises from 14,800 to 50,000, because the automated process has the higher error rate so a larger consequence erodes its advantage ✅
@@ -432,8 +438,9 @@ objective. D is false — the counts given already embed the base rate.
    looks best.
 3. *What does a data spine actually buy in a financing, beyond hours?* — One implementation of each
    defined term, so `CFADS` means in the data what it means in the document; the 600,000
-   definitional divergence of Domain 2 is 1.6110 times Kestrel's annual covenant headroom, which is
-   larger than the whole labour case.
+   definitional divergence of Domain 2 is 1.6110 times Kestrel's annual covenant headroom, and
+   because a mis-implemented definition recurs every period it is worth 4,026,049 in present value
+   over the ten-year appraisal — 3.2955 times the whole labour case.
 
 ---
 
@@ -754,7 +761,8 @@ cases are enough, and it has a derivable answer under stated assumptions.
    high-volume model safe, and an organisation that behaves as though it were has mis-sited its
    assurance. The load must be carried by three things instead: **continuous monitoring** of the
    production error rate, which accumulates evidence at production volume rather than at test
-   volume and will reach 16,895 observations in a quarter; **human approval** at the points where
+   volume and reaches 16,895 observations in **about four months** (16,895 ÷ 56,400 of a year,
+   109 days), against the years a test programme would need; **human approval** at the points where
    consequence is concentrated (KA 16.4.3, and the tiering of 16.3.4, which is how one decides
    where); and **rollback**, because the realistic response to a discovered defect is to stop, not
    to have prevented it. Four cautions on the arithmetic itself, all of which a reviewer should
@@ -804,8 +812,10 @@ in every metric the model reports.
    assumed. True anomaly population **1,744**, **45.3333 per cent** above the assumed 1,200. True
    recall **55.0459 per cent**, not 80. Restated total cost **USD 288,880** against the reported
    114,800 — a factor of **2.5164** — with the false-negative cost understated by **USD 174,080**.
-   The audit that revealed this cost **USD 13,600** (1,000 records at 13.60) and identified missed
-   errors worth **USD 250,880** a year, a return of **18.4471 times**. A sample of **937** would
+   The audit that revealed this cost **USD 13,600** — 1,000 items re-reviewed at 8.5 minutes each,
+   **USD 13.60** at the loaded analyst rate, a desk re-review rather than the 25-minute
+   investigation an alert requires — and identified missed errors worth **USD 250,880** a year, a
+   return of **18.4471 times**. A sample of **937** would
    have sufficed for a ±1 percentage-point bound at 95 per cent confidence on a 2.5 per cent rate.
 5. **Interpretation.** The mechanism deserves stating slowly, because it is the most
    under-appreciated failure in automated controls. **A detector trained on a prior process's
@@ -862,7 +872,7 @@ organisation is willing to accumulate between validations, and the interval foll
    | M1 Covenant-forecast model | 12 | 0.030 | 372,438 | 134,077.68 | 0.372918 yr = **136.12 d** | Quarterly |
    | M2 Payment anomaly detector | 48,000 | 0.001 | 320 | 15,360.00 | 3.255208 yr = 1,188.15 d | Annual (policy floor) |
    | M3 Consumption forecaster | 12 | 0.050 | 306,432 | 183,859.20 | 0.271947 yr = **99.26 d** | Quarterly |
-   | M4 Defined-term extractor | 4 | 0.885585 | 600,000 | 2,125,403.65 | 0.023525 yr = **8.59 d** | **Verify every use** |
+   | M4 Defined-term extractor | 4 | 0.885585 | 600,000 | 2,125,404.00 | 0.023525 yr = **8.59 d** | **Verify every use** |
    | M5 Covenant-certificate assembler | 4 | 0.020 | 325,000 | 26,000.00 | 1.923077 yr = 701.92 d | Annual (policy floor) |
 
 4. **Interpretation.** The instrument's value is that it produces a **calendar an auditor can
@@ -970,7 +980,7 @@ loss between validations, the revalidation interval is:
 - C. quarterly, matching the use frequency
 - D. about 3.26 years, since the annual `EMV` is small
 
-*Rationale:* `EMV = 4 × 0.885585 × 600,000 = 2,125,403.65`; `50,000 ÷ 2,125,403.65 = 0.023525`
+*Rationale:* `EMV = 4 × 0.885585 × 600,000 = 2,125,404`; `50,000 ÷ 2,125,404 = 0.023525`
 years. A and C tier by volume or convenience rather than by expected loss — the inversion the topic
 exists to correct. D is the interval for the payment detector (M2), whose `EMV` is 15,360.
 
@@ -1458,7 +1468,7 @@ factually correct and economically irrelevant, since the break-even posterior is
 
 *The label-bias discovery.* In the second year the finance director commissioned a **blind audit**
 of the items the detector had *not* flagged: **1,000** of **46,090**, reviewed independently of the
-labelling team, at a cost of **USD 13,600**. It found **17** genuine errors — a **1.70 per cent**
+labelling team at 8.5 minutes an item, a cost of **USD 13,600**. It found **17** genuine errors — a **1.70 per cent**
 rate, extrapolating to **784** missed errors a year against the **240** the detector's own
 arithmetic assumed. The true anomaly population was therefore about **1,744**, not 1,200 — **45.3333
 per cent** higher — the detector's true recall was **55.0459 per cent**, not 80, and the restated
@@ -1757,7 +1767,7 @@ from 114,800 to **USD 288,880**, returning **18.4471** times its cost; a model i
 **8.59-day** interval that independently reproduces "verify every use"; a deployment choice turns on
 a breakeven consequence of **USD 40,307,692** rather than on an `EMV`; and an approval gate costs
 **USD 45,589.04** a change through a quarterly committee against **USD 6,268.49** through a mandated
-panel. Every one of those verification steps returns between eighteen and four hundred times its
-cost, which is the domain's real finding and the one that survives every disagreement about the
+panel. Every one of those verification steps returns between eighteen and four hundred and thirty
+times its cost, which is the domain's real finding and the one that survives every disagreement about the
 technology: **AI proposes; the professional verifies, decides and remains accountable — and the
 verification is the cheapest line in the budget.**

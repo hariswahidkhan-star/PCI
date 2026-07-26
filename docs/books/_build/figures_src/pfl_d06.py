@@ -97,8 +97,8 @@ def make(ctx):
     # ---- Fig 6.4.1 — the minimum the level line hides ------------------------------
     bank = ["1.2743", "1.2684", "1.2621", "1.2554", "1.2483", "1.2407",
             "1.2327", "1.2243", "1.2153", "1.2058", "1.1957", "1.1851"]
-    spon = ["1.2743", "1.3004", "1.3270", "1.3543", "1.3821", "1.4106",
-            "1.4397", "1.4694", "1.4997", "1.5307", "1.5622", "1.5945"]
+    spon = ["1.2743", "1.3004", "1.3270", "1.3542", "1.3820", "1.4104",
+            "1.4394", "1.4691", "1.4994", "1.5303", "1.5618", "1.5940"]
     W, H = 700, 440
     L, R, T, B = 82, 150, 70, 74
     lo, hi = 1.10, 1.65
@@ -132,9 +132,9 @@ def make(ctx):
             + f'<circle cx="{Xy(12):.1f}" cy="{Yr(1.1851):.1f}" r="4.4" fill="{CRIMSON}"/>'
             + f'<text x="{Xy(12) - 6:.1f}" y="{Yr(1.1851) + 20:.1f}" font-size="10.8" '
               f'font-weight="700" fill="{CRIMSON}" text-anchor="end">1.1851 &#8212; breach</text>'
-            + f'<text x="{W - R + 8}" y="{Yr(1.5945) + 4:.1f}" font-size="10.4" '
+            + f'<text x="{W - R + 8}" y="{Yr(1.5940) + 4:.1f}" font-size="10.4" '
               f'font-weight="700" fill="{BLUE}">sponsor case</text>'
-            + f'<text x="{W - R + 8}" y="{Yr(1.5945) + 18:.1f}" font-size="10" '
+            + f'<text x="{W - R + 8}" y="{Yr(1.5940) + 18:.1f}" font-size="10" '
               f'fill="{BLUE}">2.967 % escalation</text>'
             + f'<text x="{W - R + 8}" y="{Yr(1.2743) - 4:.1f}" font-size="10.4" '
               f'fill="{SLATE}">level illusion</text>'

@@ -7,6 +7,11 @@
 > Domain 6 a structure to model. Coverage machinery (`DSCR`, `LLCR`, max debt capacity) is **cited
 > from Domain 10, never re-derived here.** British English; USD (+SAR where useful, indicative
 > `USD 1 ≈ SAR 3.75`).
+> Tax, accounting and legal treatments described here are **illustrative and
+> jurisdiction-specific**; none is presented as universal. In particular, whether a
+> liquidated-damages rate or cap, a dilution or conversion mechanic, or a stated liability basis is
+> enforceable as drafted is a matter for qualified counsel in the governing jurisdiction, and
+> nothing in this domain is legal advice.
 
 ## Why this domain exists
 
@@ -112,8 +117,9 @@ pursued**, not the cost of the deal that closed.
    surprised by the expense line. The **breakeven close rate of 2.29 % against an achieved 5.0 %** gives
    the programme **2.19× of margin** — it could halve its hit rate and still create value — which converts
    "development is expensive" into "development stops paying below one close in 44 screenings", the
-   sentence a budget is actually defended with. And sensitivity runs through value per close and
-   late-stage conversion, not screening cost: the 1,000,000 of screening is 6.8 % of programme spend and
+   sentence a budget is actually defended with (the exact breakeven is one close in 43.73). And
+   sensitivity runs through value per close and late-stage conversion, not screening cost: the
+   1,000,000 of screening is 6.8 % of programme spend and
    buys the whole funnel, while one lost late-stage project costs 2,400,000 outright — so the governance
    conclusion is counter-intuitive and consistent, **screen more widely and kill earlier**. The caution:
    value per close is a forecast (Domain 4, KA 4.3.3), so a programme justified on optimistic deal
@@ -140,9 +146,10 @@ transaction budget plus abortive adviser fees.
 
 **Worked example 5.1.3 — the gate that pays, and the bid window that kills it.**
 
-1. **Setup.** Of the five projects entering feasibility, evidence on comparable pursuits says **40 %**
-   carry a fatal bankability condition. A dedicated conditions review costs **USD 180,000** per project
-   and detects such a flaw with probability **0.75**. A flaw surviving the gate is found in diligence,
+1. **Setup.** Of the five projects entering feasibility, the sponsor group's own post-mortem record on
+   comparable pursuits puts at **40 %** the share carrying a fatal bankability condition (a pipeline
+   statistic, not a market one). A conditions review costs **USD 180,000** per project and detects
+   such a flaw with probability **0.75**. A flaw surviving the gate is found in diligence,
    by which point the project has spent its **2,400,000** transaction tranche plus **900,000** of
    abortive external fees — **3,300,000** wasted. The gate adds **8 weeks**, and in a competitive
    concession procurement that carries a **10 %** probability of missing the bid window, forgoing a
@@ -210,8 +217,8 @@ closed project is:
 produced the winners; C is the whole closing stage undivided; D attributes the entire programme to one
 project.
 
-**MCQ 5.1-B `[5.1.2 · Analysis]`** The programme delivers 16,179,360 per close. Its breakeven close rate
-on 40 screened opportunities is closest to:
+**MCQ 5.1-B `[5.1.2 · Analysis]`** A programme spends 14,800,000 across a funnel of 40 screened
+opportunities and delivers 16,179,360 of value per close. Its breakeven close rate is closest to:
 - A. 5.00 %
 - B. 2.29 % ✅
 - C. 45.74 %
@@ -232,8 +239,9 @@ value, ignoring elapsed time, is:
 *Rationale:* `1,320,000 − [180,000 + 0.40 × 0.25 × 3,300,000] = 810,000`. A is the expected waste without
 the gate; C omits the gate's 180,000 cost; D is the residual expected waste after it.
 
-**MCQ 5.1-D `[5.1.3 · Analysis]`** The gate adds 8 weeks and so carries a 10 % chance of missing a bid
-window on a project worth 16,179,360. The correct conclusion is:
+**MCQ 5.1-D `[5.1.3 · Analysis]`** A gate worth **+810,000** per project before elapsed time is counted
+adds 8 weeks and so carries a 10 % chance of missing a bid window on a project worth 16,179,360. The
+correct conclusion is:
 - A. the gate still pays, since 810,000 is positive
 - B. as designed it destroys 807,936 of value, so it should be run concurrently or staged rather than abolished ✅
 - C. it should be abolished, since delay always dominates in competitive procurement
@@ -281,7 +289,7 @@ completion is the party whose failure causes the claim.
 ### 5.2.2 The SPV and the limits of its ring-fence
 
 **Definition.** A **special-purpose vehicle** is the ring-fenced legal entity created to own, finance and
-operate a single project; Domain 1 (KA 1.1.2, Fig 1.1.2) established it as the hub of the contract
+operate a single project; Domain 1 (KA 1.1.3, Fig 1.1.2) established it as the hub of the contract
 structure. It achieves *risk containment* (a failed project's creditors reach the vehicle, not the
 sponsors, beyond agreed support), *security* (lenders take security over the whole of a single-purpose
 entity, so enforcement delivers a working project rather than assets scattered through a group), *clean
@@ -365,8 +373,10 @@ Price the bridge on Kestrel. Construction runs **two years**; pro rata the spons
 t = 2. Bridge interest is `9,000,000 × (1.055² − 1) = 1,017,225` plus `9,000,000 × 0.055 = 495,000` =
 **1,512,225**, so the repayment is **19,512,225**. Discounted at the bridge rate the two profiles are
 **identical at USD 17,530,806** (`19,512,225/1.055²` against `9,000,000 + 9,000,000/1.055`) — a
-difference of **zero**. At the sponsors' **12 %** equity requirement the bridge profile is worth
-**15,555,026** against **17,035,714**, a **saving of USD 1,480,688**, or **8.69 %**.
+difference of **zero**. At the sponsors' **12 %** equity requirement — an indicative sponsor hurdle used
+for illustration here, not a derived cost of equity; Domain 9 (KA 9.1.3) builds Kestrel's `k_e` up from
+its components — the bridge profile is worth **15,555,026** against **17,035,714**, a **saving of
+USD 1,480,688**, or **8.69 %**.
 
 The identity is the point: **an equity bridge creates no project value.** It is an arbitrage between the
 bridge rate and the sponsors' required return — a 6.5-point spread over an average deferral of about
@@ -410,12 +420,14 @@ committed capital is:
 - C. USD 2,100,000
 - D. USD 12,300,000
 
-*Rationale:* `18,000,000 × 0.35 = 6,300,000` plus `6,000,000 × 0.35 = 2,100,000`. A is base equity only —
-the 33.3 % understatement the example corrects; C is the support alone; D reads the support as joint and
-several, adding the whole 6,000,000 pool.
+*Rationale:* `18,000,000 × 0.35 = 6,300,000` plus `6,000,000 × 0.35 = 2,100,000`. A is base equity only,
+**25.0 % below** the committed figure — the omission the example corrects, and the same gap seen the other
+way round as the 33.3 % that support adds to every sponsor's equity share; C is the support alone; D reads
+the support as joint and several, adding the whole 6,000,000 pool.
 
-**MCQ 5.2-B `[5.2.3 · Analysis]`** The agreement is amended from several to joint and several liability
-for the overrun support. The 55 % sponsor's worst-case exposure becomes:
+**MCQ 5.2-B `[5.2.3 · Analysis]`** The 55 % sponsor holds 9,900,000 of an 18,000,000 equity ticket and
+subscribes pro rata to a 6,000,000 cost-overrun support pool. The agreement is amended from several to
+joint and several liability for that support. The 55 % sponsor's worst-case exposure becomes:
 - A. unchanged at 13,200,000
 - B. 15,900,000 — its own 9,900,000 of equity plus the whole 6,000,000 pool ✅
 - C. 24,000,000
@@ -559,11 +571,13 @@ over a few hundred metres can stop an otherwise complete project (Case study A).
 
 Environmental and social consent deserves separate naming. Lenders on limited-recourse infrastructure
 commonly require environmental and social risk to be assessed and managed to a defined standard, and
-many financial institutions have voluntarily adopted the **Equator Principles**, a framework for
-determining, assessing and managing environmental and social risk in projects, which in turn references
-the **IFC Performance Standards**. Whether either applies, in what version and with what categorisation
-is a matter for the specific lenders and project; both are named here for identification only. The duty
-is to establish the applicable requirement early, because retrofitting a stakeholder-engagement or
+many financial institutions have voluntarily adopted the **Equator Principles**, a lender framework
+under which participating institutions apply agreed environmental and social requirements to the
+projects they finance and which in turn refers to the **IFC Performance Standards**. Whether either
+applies, in what version and with what categorisation is a matter for the specific lenders and project;
+both are named here for identification only, neither is reproduced or summarised as a source of
+requirements, and neither body is associated with this book. The duty is to establish the applicable
+requirement early, because retrofitting a stakeholder-engagement or
 resettlement process to a completed design is the most expensive rework in infrastructure development.
 
 ### 5.3.4 Technology, the bankable track record and its price
@@ -630,11 +644,12 @@ person, probabilities carry the assessor's name and date, and extraction is samp
 - D. 43.0 %
 
 *Rationale:* the product is 0.5472. A is the arithmetic mean — the error the example corrects; C quotes
-the weakest condition as though the others were certain; D subtracts each shortfall from one and sums
-them (0.57), over-counting the failures.
+the weakest condition as though the others were certain; D sums the six shortfalls (0.57) and subtracts
+the total from one, over-counting the failures by treating them as mutually exclusive.
 
-**MCQ 5.3-B `[5.3.1 · Analysis]`** One week of effort can lift either the financing condition from 0.85
-to 0.95 or the land condition from 0.95 to 0.98. The value-maximising choice is:
+**MCQ 5.3-B `[5.3.1 · Analysis]`** In a six-condition set whose joint probability is 0.5472, one week of
+effort can lift either the financing condition from 0.85 to 0.95 or the land condition from 0.95 to 0.98.
+The value-maximising choice is:
 - A. land, because 0.98 is the higher absolute probability
 - B. financing, which adds 6.44 points against land's 1.73 — a factor of 3.73 ✅
 - C. either, since both raise one condition by a similar amount
@@ -696,10 +711,14 @@ components are each a bankability condition — a fixed lump-sum price with defi
 date certain with **delay liquidated damages** (5.4.2); **performance guarantees** with performance
 damages or **buy-down** (5.4.3); performance security sized to the residual exposure; a
 defects-liability period; and a parent guarantee where the contracting entity is thinly capitalised
-(Domain 12 drafts these; Domain 11 allocates the risks behind them). The wrap's price is the **wrap
-premium** — a contractor pricing interface and schedule risk it does not control charges for it, typically
-several percentage points of capital cost — and its two failure modes are **multi-package delivery
-without a wrap**, where the SPV holds every interface dispute, and **a wrap exceeding the contractor's
+(Domain 12 drafts these; Domain 11 allocates the risks behind them). Whether a given damages rate, cap or
+security instrument is enforceable as drafted is jurisdiction-specific and belongs to counsel, not to the
+model; what this domain computes is the **cash** each provision would have to deliver to be adequate. The
+wrap's price is the **wrap premium** — a contractor pricing interface and schedule risk it does not
+control charges for it, and the charge is material enough that a multi-package alternative must be
+compared against it on interface exposure and price together, never on price alone — and its two failure
+modes are **multi-package delivery without a wrap**, where the SPV holds every interface dispute, and
+**a wrap exceeding the contractor's
 capacity to stand behind it**, since damages and guarantees are worth only the guarantor's balance sheet.
 
 ### 5.4.2 The cost of a slip in the commercial operations date
@@ -743,8 +762,8 @@ negotiation is an attempt to price them.
    knowable amount.** A rate of 20,000 against a daily cost of 24,733.33 leaves equity carrying 4,733.33
    per day, and the negotiating position is not "higher damages" but "damages calibrated to interest plus
    forgone `CFADS`" — a computation the contractor can check and therefore argue about honestly. The
-   commonest calibration error is to size on **forgone revenue alone**, which covers only 71.7 % of the
-   cost; the omitted 7,000 per day is 28.3 % and the most certain component of all, because it accrues
+   commonest calibration error is to size on the **forgone `CFADS` alone**, which covers only 71.7 % of
+   the cost; the omitted 7,000 per day is 28.3 % and the most certain component of all, because it accrues
    whether or not the plant would have run well. **The cap is where the structure actually breaks.**
    Below day 240 damages absorb most of the pain; beyond it every further day costs the SPV the full
    24,733.33, so a 360-day slip leaves **4,104,000** uncovered — which is why lenders test the delay
@@ -861,7 +880,7 @@ under which contract. **AI proposes; the professional verifies, decides and rema
 | **Delay liquidated damages** | Daily payment for late completion; calibrate to interest **plus** forgone `CFADS`. |
 | **Damages cap** | The ceiling beyond which every further day is borne by the SPV (day 240 for Kestrel). |
 | **Buy-down** | Payment applied to prepay debt so sized coverage is restored after a performance shortfall. |
-| **Operating leverage (plant)** | Cash shortfall ÷ output shortfall; 1.510× for Kestrel at 85 % fixed cost. |
+| **Operating leverage (plant)** | `EBITDA` shortfall ÷ output shortfall; 1.510× for Kestrel at 85 % fixed cost. |
 | **Operational readiness** | Capability to operate to contract standard from the first day of the operating period. |
 
 ### Sample MCQs — KA 5.4
@@ -874,11 +893,12 @@ under which contract. **AI proposes; the professional verifies, decides and rema
 - D. USD 26,400.00
 
 *Rationale:* `42,000,000 × 0.06/360 = 7,000` of interest plus `6,384,000/360 = 17,733.33` of forgone
-`CFADS`. A is the revenue side alone — the calibration error leaving 28.3 % uncovered; C is the interest
-alone; D uses the pre-working-capital `CFADS` of 6,984,000 (Domain 2's other definition, 19,400 per day).
+`CFADS`. A is the forgone-`CFADS` side alone — the calibration error leaving 28.3 % uncovered; C is the
+interest alone; D uses the pre-working-capital `CFADS` of 6,984,000 (Domain 2's other definition, 19,400
+per day).
 
-**MCQ 5.4-B `[5.4.2 · Analysis]`** Delay damages are 20,000 per day, capped at 10 % of a 48,000,000 EPC
-price. For a 360-day slip the SPV bears:
+**MCQ 5.4-B `[5.4.2 · Analysis]`** The daily economic cost of a COD slip is 24,733.33. Delay damages are
+20,000 per day, capped at 10 % of a 48,000,000 EPC price. For a 360-day slip the SPV bears:
 - A. nothing — the damages cover the delay
 - B. USD 4,104,000, because the cap binds at day 240 against an economic cost of 8,904,000 ✅
 - C. USD 1,704,000
@@ -888,9 +908,10 @@ price. For a 360-day slip the SPV bears:
 8,904,000`; uncovered `= 4,104,000`. A ignores the cap; C computes damages as though all 360 days were
 payable (7,200,000) and subtracts; D omits recovery altogether.
 
-**MCQ 5.4-C `[5.4.2 · Analysis]`** 1,260,000 of extra construction interest is capitalised, taking debt
-to 43,260,000 at the same tenor and rate (`AF` = 8.383844). The most important consequence for the
-operating period is:
+**MCQ 5.4-C `[5.4.2 · Analysis]`** A facility of 42,000,000 over 12 years at 6 % (`AF` = 8.383844) carries
+a 1.20× cash covenant against `CFADS` of 6,384,000, leaving annual headroom of 372,438. 1,260,000 of extra
+construction interest is capitalised, taking debt to 43,260,000 at the same tenor and rate. The most
+important consequence for the operating period is:
 - A. none — the debt is repaid over the same period
 - B. annual covenant headroom falls from 372,438 to 192,090.85, roughly halving it for the whole loan life ✅
 - C. the loan tenor extends
@@ -916,8 +937,9 @@ interest of 5.4.2; D is the technology premium of 5.3.4 — correct numbers in t
 1. *What two costs make up a COD slip, and which is more often omitted?* — Extra interest on drawn debt
    (7,000 per day) and forgone `CFADS` (17,733.33 per day); the interest is omitted, and it is the more
    certain of the two.
-2. *Why does a 3 % output shortfall cut cash by 4.53 %?* — Operating leverage: 85 % of cash operating cost
-   is fixed, so cash falls faster than output (1.510×).
+2. *Why does a 3 % output shortfall cut `EBITDA` by 4.53 %?* — Operating leverage: 85 % of cash operating
+   cost is fixed, so `EBITDA` falls faster than output (1.510×), and `CFADS` with it — by 4.26 % once tax
+   and working capital are taken.
 3. *Why can declaring COD early be the most expensive decision in a project?* — It converts a construction
    problem the contractor owns and damages cover into an operating problem equity owns and nothing covers,
    at the moment the covenant regime begins.
@@ -1032,8 +1054,9 @@ review at the feasibility gate, of exactly the kind priced in Worked example 5.1
 while re-routing was a design choice rather than a crisis.
 
 **How it resolved.** Close occurred nine months late on the original 42,000,000 / 18,000,000 structure,
-with the re-route funded from contingency and a 400,000 equity increase. Lenders required as a condition
-precedent a **complete registered-title schedule for every corridor parcel** with counsel's opinion. The
+the 1,400,000 re-route being absorbed by construction contingency inside the unchanged 60,000,000 capital
+budget, so neither the debt nor the equity ticket moved. Lenders required as a condition precedent a
+**complete registered-title schedule for every corridor parcel** with counsel's opinion. The
 sponsor group changed two things permanently: the feasibility gate acquired a mandatory corridor-tenure
 review for every linear asset, run **concurrently** with technical feasibility so that it adds no elapsed
 time (the 5.1.3 remedy), and the bankability register stopped recording "land" as one condition, splitting
@@ -1069,8 +1092,9 @@ equity value (the present value of distributions, **96,000,000**) was unchanged 
 funded, it would hold 10 % of 96,000,000 = 9,600,000 having paid 1,600,000, a net **8,000,000**; having
 declined, it holds 8.1448 % = **7,819,005** and kept its cash. **Declining therefore cost it 180,995 —
 11.3 % of the 1,600,000 it withheld**; at a par conversion the cost would have been **145,455**. For
-dilution to price the default at the full 1,600,000 the multiplier would have to be **13.50×**, which no
-shareholders' agreement contains. The conclusion is uncomfortable and general: **in a small-stake
+dilution to price the default at the full 1,600,000 the multiplier would have to be **13.50×** — far
+outside the range such clauses use, and at that level a conversion whose enforceability counsel would have
+to test before anyone relied on it. The conclusion is uncomfortable and general: **in a small-stake
 structure, dilution cannot price a funding default.** It is a discount, not a deterrent.
 
 **How it resolved.** The operator funded, took the dilution credit and — because dilution was inadequate —
@@ -1152,7 +1176,8 @@ equity.
 Group committed **35,800,000**, or **39.78 %** of capital cost against a 27.8 % equity headline; the uplift
 is a uniform **43.2 %** for every sponsor, because support is subscribed pro rata.
 *Common error:* quoting the 10 % sponsor's exposure as its 2,500,000 of equity and omitting the 1,080,000
-of several support — a 43.2 % understatement, and the number a lender will nonetheless call.
+of several support — **30.2 % below** the 3,580,000 a lender will nonetheless call, the same gap that reads
+as a 43.2 % uplift when taken the other way round.
 
 **Exercise 5.4** Debt of 50,000,000 is fully drawn at 7.0 %; annual `CFADS` would be 8,000,000; delay
 damages are 25,000 per day capped at 8 % of a 60,000,000 EPC price; 30/360 applies. For a 150-day COD slip
@@ -1163,8 +1188,8 @@ day.
 **3,333,333.33**, total **4,791,666.67**. Damages `150 × 25,000 =` **3,750,000**, leaving
 **1,041,666.67**; coverage `25,000/31,944.44 =` **78.26 %**. The cap `60,000,000 × 0.08 = 4,800,000` binds
 at `4,800,000/25,000 =` **192 days**.
-*Common error:* calibrating the damages rate on forgone revenue alone (22,222.22 per day) and omitting the
-interest, which is **30.43 %** of the daily cost and its most certain component.
+*Common error:* calibrating the damages rate on the forgone `CFADS` alone (22,222.22 per day) and omitting
+the interest, which is **30.43 %** of the daily cost and its most certain component.
 
 **Exercise 5.5** A credit committee will size debt at a target `DSCR` of 1.30× on proven technology or
 1.50× on a first-of-a-kind configuration. `CFADS` is 8,000,000; the loan runs 14 years at 6.5 %
@@ -1249,8 +1274,8 @@ output shortfall with a fixed/variable split, and the buy-down that restores siz
   MCQ 5.3-D).
 - Applying a change in target `DSCR` to the principal as though ratio points were percentages (5.3.4,
   MCQ 5.3-C).
-- Calibrating delay damages on forgone revenue alone and omitting interest during construction — 28.3 % of
-  the daily cost on Kestrel, 30.43 % in Exercise 5.4 (5.4.2, MCQ 5.4-A).
+- Calibrating delay damages on the forgone `CFADS` alone and omitting interest during construction —
+  28.3 % of the daily cost on Kestrel, 30.43 % in Exercise 5.4 (5.4.2, MCQ 5.4-A).
 - Ignoring the damages cap, which is where the exposure actually sits (5.4.2, MCQ 5.4-B).
 - Forgetting that capitalised construction interest is a permanent coverage cost (5.4.2, MCQ 5.4-C).
 - Sizing a buy-down on the annual cash shortfall rather than on debt × the proportional `CFADS` shortfall

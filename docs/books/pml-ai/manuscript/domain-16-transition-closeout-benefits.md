@@ -19,8 +19,9 @@ project ends, that something else takes it over, and that somebody eventually fi
 was worth doing.** Until that happens, a project's entire claim to value rests on an estimate, and
 the organisation's memory of it rests on whoever is still in post.
 
-Closeout is the least respected phase in the delivery lifecycle and the one where the most value is
-irrecoverably lost. The pattern is consistent and it is not primarily about paperwork. Handover
+Closeout is, on this book's argument, the least respected phase in the delivery lifecycle and the one
+in which value is most easily lost beyond recovery. The failure modes below are the ones a reviewer
+meets repeatedly, and they are not primarily about paperwork. Handover
 happens on a date rather than on a condition, so a receiving organisation that is 90 per cent ready
 absorbs a system it cannot run. Contracts are left open because closing them requires a conversation
 nobody wants, and the carrying cost of that avoidance is never added up. Lessons are captured
@@ -144,8 +145,11 @@ that are green.
 
 This is the most consequential piece of arithmetic in the domain, because the artefact that
 organisations actually use — a readiness dashboard showing a weighted percentage — is not a
-measurement of readiness at all. With `k` conditions each holding with probability `pᵢ`, and treating
-their failures as independent,
+measurement of readiness at all. The product rule itself is Domain 15's (KA 15.1.3, where a
+six-predecessor programme milestone with no predecessor assessed worse than 0.85 comes to 52.95 per
+cent); what this KA adds is the contrast with the averaged dashboard, the remediation ranking that
+follows from it, and the two correlation bounds the go-live decision must be tested against. With `k`
+conditions each holding with probability `pᵢ`, and treating their failures as independent,
 
 ```
 P(clean transition) = ∏ pᵢ  for i = 1 … k
@@ -254,7 +258,7 @@ it is worth doing because the intuitive answer is usually wrong in the expensive
    Meridian. **The delay cost is small relative to the failure cost, and it is the only one that is
    visible.** Forty-two thousand dollars of deferred benefit appears in a report as a slipped
    milestone; half a million dollars of remediation appears as twenty separate operational incidents
-   attributed to change resistance. That asymmetry is why go-live decisions are systematically taken
+   attributed to change resistance. That asymmetry is a large part of why go-live decisions tend to be taken
    too early. **The breakeven uplift spend is enormous**: holding remains worthwhile up to
    **USD 357,864** of uplift cost under the independent case, which is 3.7 times what the blanket
    remediation actually costs — so the decision is not close, and a leader arguing it should say so
@@ -268,8 +272,9 @@ it is worth doing because the intuitive answer is usually wrong in the expensive
 things a project rarely gives it: a **stated duration**, **exit criteria expressed as a measurement
 rather than a date**, and a **named owner in the receiving organisation from day one** rather than at
 the end. Meridian's design used an incident rate per clinic per week with a threshold of **0.8**
-sustained for two consecutive weeks; the observed series ran 1.4, 0.9, 0.6, 0.5, so hypercare exited
-at week 7 rather than the planned week 6 — which is the point of a measured exit criterion. Hypercare
+sustained for two consecutive weeks; the observed series over weeks 4 to 7 ran 1.4, 0.9, 0.6, 0.5, so
+the two-consecutive-week condition was first satisfied at **week 7** and hypercare exited then rather
+than at the planned week 6 — which is the point of a measured exit criterion. Hypercare
 that ends on a date ends by transferring an unstable service.
 
 **The reversion plan** is the option the go-live arithmetic proves is needed. It must state the
@@ -321,8 +326,9 @@ estimate.
 
 ### Sample MCQs — KA 16.1
 
-**MCQ 16.1-A `[16.1.3 · Application]`** Seven readiness conditions hold with probabilities 0.96,
-0.90, 0.94, 0.98, 0.85, 0.80 and 0.92. The probability of a clean go-live is closest to:
+**MCQ 16.1-A `[16.1.3 · Application]`** Seven readiness conditions, whose failures are assessed as
+independent, hold with probabilities 0.96, 0.90, 0.94, 0.98, 0.85, 0.80 and 0.92. All seven are
+necessary for a clean go-live. The probability of a clean go-live is closest to:
 - A. 90.71 %
 - B. 80.00 %
 - C. 49.79 % ✅
@@ -330,11 +336,12 @@ estimate.
 
 *Rationale:* The conjunction is the product, `0.96 × 0.90 × 0.94 × 0.98 × 0.85 × 0.80 × 0.92 =
 49.79 %` (16.1.3). A is the equal-weight average — the dashboard figure, and a different quantity. B
-is `min(pᵢ)`, the perfectly correlated bound, which is the optimistic case and not the answer to the
-question asked. D is the error of applying the average to all seven conditions, `0.9071⁷`, which
-double-counts the averaging.
+is `min(pᵢ)`, the perfectly correlated bound, which the stem's independence assumption excludes and
+which is in any case the optimistic case. D rounds the dashboard reading to 0.90 and raises *that* to
+the seventh power, `0.90⁷ = 47.83 %` — an answer that both rounds and double-counts the averaging.
 
-**MCQ 16.1-B `[16.1.3 · Analysis]`** For the same seven conditions, the gain in the probability of a
+**MCQ 16.1-B `[16.1.3 · Analysis]`** Seven independent readiness conditions, holding at 0.96, 0.90,
+0.94, 0.98, 0.85, 0.80 and 0.92, give a conjunction of 49.79 %. The gain in the probability of a
 clean go-live from lifting one condition is governed by:
 - A. the absolute gap to the target, with an equal gain per percentage point of gap closed
 - B. the ratio `p′/p`, so the same gap closed at a lower `p` yields a larger gain ✅
@@ -360,18 +367,20 @@ to:
 to their conjunction. C gives only `0.98⁷ = 86.81 %`. D is stricter than required and would be
 rejected as unachievable, losing the argument the arithmetic wins.
 
-**MCQ 16.1-D `[16.1.4 · Application]`** Forty sites face a 49.79 % probability of a clean go-live; a
-failed go-live costs 27,060. A three-week hold costs 42,840 in deferred benefit plus 96,000 of
-remediation and lifts every condition to 0.98. The expected saving from holding is closest to:
+**MCQ 16.1-D `[16.1.4 · Application]`** Forty sites each face seven independent readiness conditions
+giving a 49.79 % probability of a clean go-live; a failed go-live costs 27,060. A three-week hold
+costs 42,840 in deferred benefit plus 96,000 of remediation and lifts all seven conditions to 0.98.
+The expected saving from holding is closest to:
 - A. USD 138,840
 - B. USD 261,864 ✅
-- C. USD 400,605
+- C. USD 404,605
 - D. USD 543,445
 
 *Rationale:* Going now costs `40 × (1 − 0.4979) × 27,060 = 543,445`; holding costs
 `42,840 + 96,000 + 40 × (1 − 0.8681) × 27,060 = 281,581`; the saving is **261,864** (16.1.4). A is the
-cost of holding, not the saving. C omits the residual remediation after the uplift, the error that
-makes readiness work look better than it is. D is the cost of going now with no credit for the hold.
+cost of holding, not the saving. C omits the residual remediation after the uplift and so credits the
+hold with the whole 543,445, giving `543,445 − 138,840 = 404,605` — the error that makes readiness work
+look better than it is. D is the cost of going now with no credit for the hold at all.
 
 **MCQ 16.1-E `[16.1.1 · Comprehension]`** Which of the following does **not** transfer at handover?
 - A. custody of the asset
@@ -537,7 +546,9 @@ reliably, and it is worth being able to do in a meeting.
    **assessment must precede the negotiation**, because a settlement premium can only be judged
    against a defensible assessed value, and an organisation that settles without one is not paying a
    premium, it is guessing. And a settlement must be **documented as full and final for defined
-   matters**, or the carrying cost simply resumes under a different heading.
+   matters** — drafting that belongs with qualified legal advice, since what a release covers and what
+   it cannot reach is a legal question and not a management one — or the carrying cost simply resumes
+   under a different heading.
 
 ### AI in this KA
 
@@ -603,8 +614,10 @@ settlement price is:
 C is the expected cost of fighting, without crediting the two months still carried under the
 settlement option. D is fourteen months of carrying cost alone.
 
-**MCQ 16.2-C `[16.2.4 · Analysis]`** For the same claim, assessed by the client at 62,000, the
-breakeven **premium** over the assessed value is 69,500. The most defensible reading is that:
+**MCQ 16.2-C `[16.2.4 · Analysis]`** A claim costing 5,250 a month to carry, with an expected
+determination of 68,500 at month 14 and settlement available at month 2, is assessed by the client at
+62,000 against the contractor's claimed 148,000. The breakeven **premium** over the assessed value is
+69,500. The most defensible reading is that:
 - A. the claim should be conceded in full at 148,000
 - B. up to 69,500 above the assessed value can be paid to close twelve months earlier, because
   carrying cost times months saved plus the gap between the expected determination and the assessment
@@ -628,8 +641,9 @@ service whose measured run cost is 108,000 a year. Over an eight-year appraisal 
 commonest error and an overstatement of 34.0 %. C is a single year. D applies a five-year horizon
 undiscounted.
 
-**MCQ 16.2-E `[16.2.2 · Analysis]`** Releasing the whole retention at takeover rather than in stages
-would most directly have:
+**MCQ 16.2-E `[16.2.2 · Analysis]`** A client holds 84,000 of retention, releases half of it at
+takeover, and later recovers 18,600 for defects that another supplier had to rectify. Releasing the
+whole retention at takeover rather than in stages would most directly have:
 - A. improved the contractor's cash position at no cost to the client
 - B. converted an 18,600 recovery into a debt to be pursued from a contractor with no remaining
   incentive ✅
@@ -680,9 +694,11 @@ The economics are one-sided and worth stating because they are always resisted a
 matter. Three of Meridian's clinics had interface configurations that were changed during
 commissioning and never recorded. Reconstructing each afterwards — reading the live configuration,
 re-testing, re-documenting — cost **USD 8,400**, a total of **USD 25,200**, against **USD 1,200** each
-to document at the time, or **USD 3,600**: a ratio of **7.00**. That ratio is stable across contexts
-for the same reason in every one of them — at handover the knowledge is in someone's head and the cost
-is a note; afterwards it must be re-derived from the artefact by someone who never had it.
+to document at the time, or **USD 3,600**: a ratio of **7.00**. The multiple is Meridian's own and is
+not a constant, but its direction follows from a mechanism that does not change with the context — at
+handover the knowledge is in someone's head and the cost is a note; afterwards it must be re-derived
+from the artefact by someone who never had it. An organisation that wants the multiple for its own
+estimating has to measure it, and the measurement is cheap because both costs are already invoiced.
 
 ### 16.3.2 The post-project review
 
@@ -821,7 +837,9 @@ current retrieval rate, not the breakeven. C is `46,000/106,080` — the share o
 consumed by the review, which is a cost-recovery ratio and not a rate. D misplaces the decimal, a
 common slip on a small ratio.
 
-**MCQ 16.3-B `[16.3.3 · Evaluation]`** Given the figures above, the highest-return improvement is to:
+**MCQ 16.3-B `[16.3.3 · Evaluation]`** A review costing 46,000 produces 34 lessons, an applied lesson
+avoids 26,000 on average, and 12 % of captured lessons are currently retrieved before a comparable
+decision. The highest-return improvement is to:
 - A. run a longer, better-facilitated review workshop
 - B. spend 18,000 indexing the lessons against the decision points where they apply, raising retrieval
   from 12 % to 35 % ✅
@@ -840,8 +858,10 @@ incurred cost is:
 - C. 21,600 to 1
 - D. 2.33
 
-*Rationale:* `25,200/3,600 = 7.00` (16.3.1). B counts the three items rather than the cost ratio. C
-is the absolute saving mislabelled as a ratio. D inverts part of the calculation.
+*Rationale:* `25,200/3,600 = 7.00`, which is also the per-item ratio `8,400/1,200` (16.3.1). B counts
+the three items rather than the cost ratio. C is the absolute saving, `25,200 − 3,600 = 21,600`,
+mislabelled as a ratio. D divides the *per-item* reconstruction cost by the *total* documentation cost,
+`8,400/3,600 = 2.33`, mixing a unit figure with a total.
 
 **MCQ 16.3-D `[16.3.2 · Analysis]`** The review practice most likely to produce transferable findings
 rather than narrative is to:
@@ -887,9 +907,9 @@ the ones that make a measured number arguable.
 **The measure's exact definition, including its denominator.** Meridian registered "clinics in daily
 use" as its adoption measure, with "daily use" defined as at least one clinical episode recorded in
 the system on at least four days of a working week, averaged over a month. At the twelve-month benefits
-review the figure was **27 of 40 clinics, 67.50 %**. An informal figure of 68 % had circulated,
-computed on a *clinician* count rather than a clinic count; the two measures differ because
-non-adopting clinics are smaller than average. Neither number is wrong; only one is the registered
+review the figure was **27 of 40 clinics, 67.50 %**. An informal figure of **68 %** had circulated —
+the number Domain 1's case study records — computed on a *clinician* count rather than a clinic count;
+the two measures differ because the non-adopting clinics are smaller than average. Neither number is wrong; only one is the registered
 measure, and the discipline that matters is that the definition was fixed before measurement and the
 review reports the registered measure with the variant identified. A programme that discovers at
 measurement time that its measure has two readings will end up reporting whichever reading is more
@@ -945,7 +965,7 @@ Domain 2 appraised the honest ramped profile at a present value of **USD 3,732,8
    | Bridge line | NPV (USD) |
    |---|---|
    | Flat claim, as approved | **+3,447,096** |
-   | Adoption term corrected (Domain 1) | (2,114,198) |
+   | Adoption term corrected (Domain 1's term, valued in Domain 2) | (2,114,198) |
    | **Honest ramped case (Domain 2)** | **+1,332,898** |
    | Level variance — measured hours 5.4 and steady adoption 67.50 % | (465,015) |
    | Timing variance — the ramp arrived one year late | (413,809) |
@@ -956,7 +976,13 @@ Domain 2 appraised the honest ramped profile at a present value of **USD 3,732,8
    | **Post-plan NPV** | **+35,329** |
 
    *Rows are rounded to the nearest dollar; subtotals are struck at full precision, so a row-by-row
-   addition may differ by USD 1.*
+   addition may differ by USD 1. The two variance lines are counterfactuals and the convention is the
+   same one used on the annual decomposition — first factor at plan, second at actual. The **level**
+   line values the measured 5.4 hours and 67.50 % steady adoption on the **case's own** adoption timing
+   (40 % in year 1, 60 % in year 2, steady from year 3), and the **timing** line is the further loss
+   from the measured ramp of 15 % / 40 % / 60 % reaching steady state only in year 4. Reversing the
+   order would report timing at (479,771) and level at (399,053) — the same total, with **USD 65,962**
+   of level-and-timing interaction moved between the lines.*
 
 5. **Interpretation.** Six readings, and they are the closing lessons of the book. **First, the
    largest single line is not a delivery failure at all.** The **2,114,198** correction is the
@@ -992,8 +1018,9 @@ Domain 2 appraised the honest ramped profile at a present value of **USD 3,732,8
    to rest on USD 180,000 of post-project adoption work that appeared in no project plan, and the
    professional caution attached is exact: that plan needs an owner, a budget line and a decision, and
    at the moment the project closes there is no project to provide any of the three. The breakeven is
-   worth stating for the board — the account needs an effective realisation level of **78.60 %** of
-   full potential in years 5 to 8 to reach zero, against **60.75 %** on the current trajectory.
+   worth stating for the board — with the plan's USD 180,000 spent, the account needs an effective
+   realisation level of **78.60 %** of full potential in years 5 to 8 to reach zero, against
+   **60.75 %** on the current trajectory and the **80 %** the plan is designed to deliver.
 
 > **Fig 16.4.1 — The closing account of Meridian Care Records.** Waterfall bridge in NPV terms, USD,
 > eight years at 7 % (`AF = 5.971299`), with subtotal columns in solid brand blue, decrements in
@@ -1290,7 +1317,9 @@ and the specific obligations are: secure and value whatever is salvageable, incl
 that another project can use, licences that can be redeployed and, most often overlooked,
 **requirements and design work that retains value independently of the delivery**; settle contracts on
 a termination basis rather than abandoning them, since an unterminated contract accrues the carrying
-cost of 16.2.4 indefinitely; account for the sunk cost honestly and separately from the decision to
+cost of 16.2.4 indefinitely — termination rights, their notice mechanics and the compensation they
+trigger are contractual and jurisdictional, so take qualified legal advice before serving anything;
+account for the sunk cost honestly and separately from the decision to
 stop, because conflating them is how the next cancellation gets delayed; and hold the review, which is
 the highest-value review the organisation will ever run and the one it is least likely to hold, because
 the findings are uncomfortable and the participants have dispersed.
@@ -1487,7 +1516,8 @@ What a programme director cannot delegate in this domain:
 
 ## Calculation exercises — Domain 16
 
-**Exercise 16.1** A transition gate carries six conditions, assessed at 0.95, 0.88, 0.92, 0.99, 0.86
+**Exercise 16.1** A transition gate carries six conditions, all necessary and assessed as
+independent, at 0.95, 0.88, 0.92, 0.99, 0.86
 and 0.90. Compute the averaged dashboard reading and the probability of a clean transition; identify
 which single condition, lifted to 0.99, gains most and by how much; and state the per-condition
 probability needed for a 90 % chance of a clean transition.
