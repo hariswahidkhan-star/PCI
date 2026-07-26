@@ -898,7 +898,7 @@ interface register, because a false dependency creates real coordination cost �
 |---|---|
 | **Blocked work in progress** | Blocked arrival rate × `E[wait]` — the items a team holds but cannot work on, invisible on a board. |
 | **Cycle-time decomposition** | Splitting average cycle time into its blocked and unblocked populations to locate the delay. |
-| **Out-of-cycle route** | A written-resolution or delegated path used when the ordinary governance cadence is slower than the work. |
+| **Out-of-cycle route** | Domain 3's mechanism (KA 3.3.3) applied where governance latency exceeds the iteration length — the specific mismatch KA 13.3 quantifies. |
 | **Integration layer** | An architecture or interface contract that replaces `n(n−1)/2` pairwise agreements with `n`. |
 | **Hybrid boundary** | The named line where feedback stops being cheap and fast, and the control regime changes. |
 | **Integration milestone** | The boundary event where an adaptive stream's ranged forecast enters a predictive network. |

@@ -831,7 +831,7 @@ the result at the pessimistic and optimistic ends, not only at the mean.
 | **Target fee vs expected fee** | The fee at the target cost, against the probability-weighted fee actually expected; any real overrun risk makes the second lower than the first. |
 | **Influence test** | A risk should be allocated to the party that can influence it; a risk allocated elsewhere is priced, not managed. |
 | **Deterrence cap vs compensation cap** | The service-credit cap needed to exceed the supplier's cost of compliance, against the cap needed to cover the buyer's loss; they differ. |
-| **Out-of-cycle route** | A named decision path on both sides for decisions that cannot wait for the supplier-review cadence. |
+| **Out-of-cycle route** | Domain 3's mechanism (KA 3.3.3) applied across a contract boundary: named authorities on **both** sides, since a route that exists for only one party is not a route. |
 
 ### Sample MCQs — KA 10.3
 

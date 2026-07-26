@@ -600,7 +600,7 @@ report is documented knowledge of an inconsistency, which is worse than no check
 | **Maximum blindness** | `P + C + L` — how long a problem arising just after a cut-off stays invisible to the decision body. |
 | **Amber compression** | The collapse of traffic-light status into a single uninformative colour, caused by author discretion over undefined thresholds. |
 | **Escalation-grade message** | Exception, cause, impact priced, options, recommendation by name, decision required by whom and by when, and the date the leader knew. |
-| **Tailoring** | Varying depth and vocabulary by audience while holding the facts identical. |
+| **Tailoring** (of a message) | Varying depth and vocabulary by audience while holding the facts identical. **Context flag:** distinct from *tailoring of method* (Domain 4, KA 4.1.3), which is a recorded decision to adapt process; the shared word carries two different concepts and neither reading substitutes for the other. |
 
 ### Sample MCQs — KA 11.2
 

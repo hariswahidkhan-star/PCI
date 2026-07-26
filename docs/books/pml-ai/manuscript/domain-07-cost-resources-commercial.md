@@ -225,7 +225,7 @@ measuring anything — the cost analogue of Domain 6's pinned milestone.
 | **`AC`** | Actual Cost of the work performed, including period accruals. |
 | **Accrual** | Cost of work received but not yet invoiced, recognised in the period. |
 | **Commitment** | A contractual obligation (e.g. a PO); a funding fact, not yet a cost. |
-| **Re-baselining** | A governed change to the baseline; never a variance-hiding device. |
+| **Re-baselining** | Domain 4's instrument (KA 4.3.3) seen from earned value: it resets the `PV` curve every index is measured against, which is exactly why it cannot be used to retire an adverse variance. |
 
 ### Sample MCQs — KA 7.2
 

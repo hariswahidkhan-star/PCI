@@ -874,7 +874,7 @@ under which contract. **AI proposes; the professional verifies, decides and rema
 | Term | Meaning |
 |---|---|
 | **Completion risk** | Risk of not delivering on time, to cost and to sized performance — all debt, no cash flow. |
-| **EPC wrap** | Single-contractor fixed-price, date-certain, turnkey responsibility for the whole works. |
+| **EPC wrap** | Read here only as what makes completion risk *bankable*: one contractor answerable for the whole works, so lenders face a single counterparty. Defined and priced in Domain 12, KA 12.1. |
 | **Commercial operations date (COD)** | Contractual start of operations: revenue, term debt and the operating covenant regime. |
 | **Interest during construction** | Interest accruing on drawn debt before revenue; 7,000 per day for Kestrel. |
 | **Delay liquidated damages** | Daily payment for late completion; calibrate to interest **plus** forgone `CFADS`. |

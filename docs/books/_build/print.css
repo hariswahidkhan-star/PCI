@@ -241,3 +241,27 @@ nav#TOC a::after {
   content: leader(".") " " target-counter(attr(href url), page);
   color: #64748B; font-size: 7.8pt;
 }
+
+/* ---- Back matter: derived glossary ------------------------------------------------ */
+.backmatter { page-break-before: always; }
+.backmatter .bmtitle {
+  font-family: "IBM Plex Serif", Georgia, serif; font-size: 30pt; font-weight: 600;
+  color: #0F172A; margin: 0 0 2mm 0; letter-spacing: -0.4pt;
+}
+.backmatter .bmnote {
+  font-family: Inter, sans-serif; font-size: 9pt; color: #64748B; line-height: 1.6;
+  max-width: 120mm; margin: 0 0 7mm 0; padding-bottom: 4mm; border-bottom: 0.5mm solid #1D4ED8;
+}
+.glossary { column-count: 2; column-gap: 8mm; column-fill: auto; }
+.glossary .bmtitle, .glossary .bmnote { column-span: all; }
+.glossary .glossletter {
+  font-family: Inter, sans-serif; font-size: 13pt; font-weight: 800; color: #1D4ED8;
+  margin: 5mm 0 2mm 0; padding-bottom: 1mm; border-bottom: 0.3mm solid #E2E8F0;
+  break-after: avoid; break-inside: avoid;
+}
+.glossary p.glossentry {
+  font-family: Inter, sans-serif; font-size: 8.4pt; line-height: 1.5; color: #0F172A;
+  margin: 0 0 2.4mm 0; text-align: left; break-inside: avoid; orphans: 2; widows: 2;
+}
+.glossary p.glossentry strong { color: #0F172A; font-weight: 700; }
+.glossary p.glossentry em { color: #64748B; font-style: italic; }

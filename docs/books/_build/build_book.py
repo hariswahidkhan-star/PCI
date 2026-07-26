@@ -236,10 +236,31 @@ def build(book: str, out: pathlib.Path) -> None:
     ix.append("</div></div>")
     print(f"index entries: {sum(len(v) for v in groups.values())}")
 
+    # Back matter — the derived glossary (see make_glossary.py). Rendered from the same source as
+    # the chapters' key-terms tables, so it cannot disagree with them.
+    gloss_file = book_dir / "GLOSSARY.md"
+    gloss_html = ""
+    if gloss_file.exists():
+        gtext = gloss_file.read_text(encoding="utf-8")
+        # Drop the file's own H1 and the derivation note; the book supplies its own opener.
+        gbody = re.sub(r"\A# [^\n]*\n+(?:> [^\n]*\n)*\n?", "", gtext)
+        gbody = re.sub(r"\A\*\*\d[^\n]*\n+", "", gbody)
+        inner = markdown.markdown(gbody, extensions=["tables"])
+        inner = re.sub(r"<h2>([^<]+)</h2>", r'<div class="glossletter">\1</div>', inner)
+        inner = re.sub(r"<p><strong>", '<p class="glossentry"><strong>', inner)
+        n_terms = inner.count('class="glossentry"')
+        gloss_html = ('<div class="backmatter glossary">'
+                      '<h1 id="glossary" class="bmtitle">Glossary</h1>'
+                      '<p class="bmnote">Consolidated from every Knowledge Area\u2019s key-terms table. '
+                      'The Knowledge Area reference after each entry is the authority \u2014 the gloss '
+                      'points to the treatment and does not replace it.</p>'
+                      + inner + "</div>")
+        print(f"glossary entries: {n_terms}")
+
     front = FRONT.format(title=cfg["title"], subtitle=cfg["subtitle"], domains=len(files))
     doc_html = ("<!doctype html><html><head><meta charset='utf-8'>"
                 f"<style>html {{ string-set: booktitle \"{cfg['run_title']}\"; }}</style>"
-                f"</head><body>{front}{''.join(toc)}{html}{''.join(ix)}</body></html>")
+                f"</head><body>{front}{''.join(toc)}{html}{gloss_html}{''.join(ix)}</body></html>")
     html_file = book_dir / "build" / "_combined.html"
     html_file.parent.mkdir(parents=True, exist_ok=True)
     html_file.write_text(doc_html, encoding="utf-8")

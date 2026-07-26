@@ -1132,7 +1132,7 @@ one is not a recommendation, it is a suggestion nobody has made.
 | **Enterprise decision architecture** | The set of governance tiers, the decision classes routed through them, and the resulting latency distribution. |
 | **Gross latency-weeks** | Σ over decision classes of count × cumulative tier latency; the portfolio's total waiting. |
 | **Tier traversal** | One decision passing one tier; the unit on which a paper-lead-time saving accrues. |
-| **Out-of-cycle route** | A written-resolution or delegated procedure used where the ordinary cadence is too slow; most valuable at the slow tiers. |
+| **Out-of-cycle route** | Domain 3's mechanism (KA 3.3.3) applied at enterprise scale, where it is worth most: the saving is largest at the slowest tier, because `E[wait] = M/2 + L` grows with `M`. |
 | **Aggregation trap** | Averaging component ratios instead of summing their numerators and denominators; frequently reverses the sign. |
 | **Concentration line** | The share of portfolio cost sitting in components below the alert threshold; the companion to any aggregate index. |
 | **Portfolio one-page view** | The report supporting exactly three decisions: continue/change/stop, reallocate, escalate. |
