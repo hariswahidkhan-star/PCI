@@ -196,4 +196,23 @@ public static class WorldLifecycle
     /// now recorded as the period's source rather than being re-evaluated on every request.
     /// </summary>
     public static Dictionary<string, object?>? Today(Db db, DateTime utcNow) => WorldRotation.Current(db, utcNow);
+
+    /// <summary>
+    /// Today's featured challenge AND the immutable snapshot the day pinned when it opened.
+    /// The period record is the version authority: a revision published mid-day must never change
+    /// the challenge later participants face, so home, the Today API and attempt start all read
+    /// through here rather than through the challenge's mutable current_version.
+    /// </summary>
+    public static (Dictionary<string, object?> Challenge, Dictionary<string, object?> Version)? TodayPinned(Db db, DateTime utcNow)
+    {
+        var period = WorldRotation.CurrentPeriod(db, utcNow);
+        if (period is null) return null;
+        var ch = db.QueryOne("SELECT * FROM pciworld_challenges WHERE id=?", period["challenge_id"]);
+        if (ch is null) return null;
+        // The pinned snapshot; a period written before snapshots existed (or a repaired ledger row)
+        // falls back to the live version rather than serving nothing.
+        var snapshot = PinnedVersion(db, H.L(period["challenge_id"]), H.L(period["version"]))
+                       ?? LiveVersion(db, H.L(period["challenge_id"]));
+        return snapshot is null ? null : (ch, snapshot);
+    }
 }

@@ -164,8 +164,11 @@ public class WorldAccountTests
     {
         var db = NewWorldDb();
         WorldAccount.Register(db, "sep@x.test", "long-password-1", "S", null);
-        // A PCI World account creates NO row in the platform's users table — the identities never mix.
-        Assert.Equal(0L, db.Scalar<long>("SELECT COUNT(*) FROM users WHERE email='sep@x.test'"));
+        // Canonical-identity model (journey repair P0-00): a World registration creates exactly ONE
+        // canonical users row — the same credentials work on both products, and there is never a
+        // duplicate. Product SESSIONS stay separate (below); the identity does not.
+        Assert.Equal(1L, db.Scalar<long>("SELECT COUNT(*) FROM users WHERE email='sep@x.test'"));
+        Assert.Equal(1L, db.Scalar<long>("SELECT COUNT(*) FROM pciworld_users WHERE email='sep@x.test'"));
         // And a platform student session token means nothing to the world-account resolver.
         var u = db.ExecuteReturningId(
             "INSERT INTO users(email,password_hash,status,first_name) VALUES('stud@pci.local','x','active','S')");

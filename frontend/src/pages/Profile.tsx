@@ -173,8 +173,13 @@ function PassportCard() {
     setBusy(true)
     setErr(null)
     try {
-      const r = await api.post<{ token: string; url?: string }>('/api/me/world-passport/sso', {})
-      localStorage.setItem('world_account', r.token)
+      // Pass the browser's anonymous PCI World session so the bridge claims any challenges
+      // completed here before signing in — without it that work never reaches the Passport.
+      // The response carries a ONE-TIME handoff code in the URL fragment (never a reusable
+      // bearer token): the Passport page exchanges it for its own session on arrival.
+      const r = await api.post<{ url?: string }>('/api/me/world-passport/sso', {
+        world_session: localStorage.getItem('world_session') || undefined,
+      })
       window.location.assign(r.url || '/world/account')
     } catch (e) {
       setErr(e instanceof Error ? e.message : 'Could not open your Passport.')

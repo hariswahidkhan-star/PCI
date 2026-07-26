@@ -76,6 +76,19 @@ public static class WorldPages
           if(!h) return;
           var t=function(){h.classList.toggle('is-stuck',window.scrollY>4)};
           addEventListener('scroll',t,{passive:true});t();
+          // Account-aware navigation (journey repair P1-07/PW-US-003): a signed-in participant
+          // sees "My dashboard", never an invitation to create what they already have. The token's
+          // PRESENCE is only a hint for the label — every real decision stays server-side.
+          try{
+            if(localStorage.getItem('world_account')){
+              document.querySelectorAll('a[href="/world/account"]').forEach(function(a){
+                var txt=(a.textContent||'').trim();
+                if(txt==='Passport')a.textContent='My dashboard';
+                if(txt==='Your Passport')a.textContent='My dashboard';
+                if(txt==='Start your Passport')a.textContent='Open my dashboard';
+              });
+            }
+          }catch(e){}
         })();
         </script>
         """;
@@ -579,15 +592,19 @@ public static class WorldPages
         // this host — the progression link must never dead-end inside our own allowlist.
         var simlab = WorldOnly.Enabled ? E(InstituteUrl(db)) : E(Settings.Str(db, "world_simlab_url", "/app/lab"));
         var primaryHref = today is not null ? $"/world/challenge/{E(H.Str(today["code"]))}" : "/world/archive";
+        // One boundary, said the same way everywhere (PW-US-019): operators set the rotation
+        // timezone, so "00:00 UTC" was simply wrong wherever they had — the copy follows the
+        // setting, exactly like the Today API's changes_at.
+        var rotZone = E(Settings.Str(db, "world_rotation_timezone", "UTC"));
         var todayCard = today is null || version is null
-            ? """
+            ? $"""
               <div class="card"><span class="kicker">Today's challenge</span>
               <h2>The first challenge is being prepared</h2>
-              <p style="color:var(--slate)">PCI World rotates a new project challenge every day at 00:00 UTC. Check back shortly.</p></div>
+              <p style="color:var(--slate)">PCI World rotates a new project challenge every day at midnight ({rotZone}). Check back shortly.</p></div>
               """
             : $"""
               <div class="card card--noir">
-                <span class="kicker">Today&rsquo;s challenge &middot; rotates daily at 00:00 UTC</span>
+                <span class="kicker">Today&rsquo;s challenge &middot; rotates daily at midnight ({rotZone})</span>
                 <h2>{E(H.Str(version["title"]))}</h2>
                 <p style="color:#CBD5E1;max-width:64ch">{E(H.Str(version["hook"]))}</p>
                 <div class="meta">
@@ -620,7 +637,7 @@ public static class WorldPages
                     <a class="btn secondary" href="/world/about">See how PCI World works</a>
                   </div>
                   <ul class="hero-facts">
-                    <li>Free</li><li>No account needed</li><li>New challenge daily at 00:00 UTC</li>
+                    <li>Free</li><li>No account needed</li><li>New challenge daily at midnight ({rotZone})</li>
                   </ul>
                 </div>
                 <div class="hero-panel" role="img" aria-label="A project performance chart: planned value as a dashed baseline, earned value tracking below plan, and actual cost running above earned value at the data date — the situation a PCI World challenge drops you into.">
@@ -812,8 +829,12 @@ public static class WorldPages
         function $(id){ return document.getElementById(id); }
         function esc(s){ var d = document.createElement('span'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
         function api(path, body){
+          // The signed-in account travels with EVERY workspace call (journey repair P0-01):
+          // without it, challenges completed while signed in stayed anonymous and never reached
+          // the account's history or Passport until some later login happened to claim them.
           return fetch(path, { method:'POST', headers:{ 'Content-Type':'application/json',
-            'X-World-Session': localStorage.getItem('world_session') || '' },
+            'X-World-Session': localStorage.getItem('world_session') || '',
+            'X-World-Account': localStorage.getItem('world_account') || '' },
             body: JSON.stringify(body || {}) }).then(function(r){ return r.json().then(function(j){ if(!r.ok) throw j; return j; }); });
         }
         function mintSession(){
@@ -982,9 +1003,14 @@ public static class WorldPages
                '<label for="dispname" style="margin-top:0">Name on your public result (leave blank to stay anonymous)</label>' +
                '<input type="text" id="dispname" maxlength="80" autocomplete="name">' +
                '<p style="margin-top:12px"><button class="btn" type="button" id="mkshare">Get my verified result link</button> ' +
-               '<button class="btn secondary" type="button" id="mkinvite">Challenge a friend</button></p>' +
+               '<button class="btn secondary" type="button" id="mkinvite">Challenge a friend</button> ' +
+               '<button class="btn secondary" type="button" id="mkretake">Retake this challenge</button></p>' +
                '<div id="sharebox"></div><div id="invitebox"></div>' +
-               '<p style="margin-top:14px"><a href="/world/account">Create your free PCI World Passport</a> to keep this result as verified evidence — challenges completed in this browser are added automatically.</p>' +
+               // Account-aware, and honest either way (P1-07/PW-US-003): signed-in work is owned
+               // from the first answer; anonymous work is adopted when this browser signs in.
+               (localStorage.getItem('world_account')
+                 ? '<p style="margin-top:14px"><a href="/world/account">Open your PCI World dashboard</a> — this result is saved to your account.</p>'
+                 : '<p style="margin-top:14px"><a href="/world/account">Create your free PCI World Passport</a> to keep this result as verified evidence — challenges completed in this browser are added when you sign up or sign in here.</p>') +
                '<p class="notice">Your answers are never shown on the public result page.</p></div>';
           el.innerHTML = h;
           $('mkshare').addEventListener('click', function(){
@@ -997,6 +1023,14 @@ public static class WorldPages
               .then(function(s){ $('invitebox').innerHTML =
                 '<p>Send this to someone who thinks they can do better:</p>' + shareLinks(s.url); })
               .catch(function(){ $('invitebox').innerHTML = '<p class="bad">Could not create the invitation — try again.</p>'; });
+          });
+          // Retake is a DELIBERATE act (journey repair P0-04): it opens a fresh linked attempt on the
+          // server, then reloads so the workspace resumes it — the completed original is untouched.
+          $('mkretake').addEventListener('click', function(){
+            withSession(function(){
+              return api('/api/world/attempts', { code: WORLD.code, invite: WORLD.invite, retake: true });
+            }).then(function(){ location.reload(); })
+              .catch(function(){ $('invitebox').innerHTML = '<p class="bad">Could not start a retake — try again.</p>'; });
           });
           // Honour prefers-reduced-motion: a smooth scroll is motion the user asked us not to make.
           var smooth = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -1218,20 +1252,59 @@ public static class WorldPages
             noindex: true);
     }
 
-    public static string VerifyEmail(Db db, bool ok) => Layout(db,
-        ok ? "Email verified — PCI World" : "Verification link invalid — PCI World",
+    /// <summary>
+    /// Email verification page (journey repair P1-03). States: "confirm" — the token is valid and
+    /// verification happens only on the deliberate button press (the POST consumes it; a GET from
+    /// a mail scanner or link preview changes nothing); "already" — the account is verified, the
+    /// press would be a no-op and says so; "invalid" — expired, used or malformed.
+    /// </summary>
+    public static string VerifyEmail(Db db, string state) => Layout(db,
+        state switch
+        {
+            "confirm" => "Confirm your email — PCI World",
+            "already" => "Email already verified — PCI World",
+            _ => "Verification link invalid — PCI World",
+        },
         "PCI World email verification.",
-        ok
-            ? """
-              <h1>Email verified</h1>
-              <p class="lede">Your PCI World account email is confirmed. You can now publish your Passport when you choose to.</p>
-              <p><a class="btn" href="/world/account">Go to your account</a></p>
-              """
-            : """
-              <h1>That link didn&rsquo;t work</h1>
-              <p class="lede">The verification link is invalid or has expired. Sign in and request a new one from your account page.</p>
+        state switch
+        {
+            "confirm" => """
+              <span class="kicker">Account</span>
+              <h1>Confirm your email address</h1>
+              <div class="card" style="max-width:480px">
+                <p class="lede" style="margin-top:0">Press the button to verify this email for your PCI World account.
+                Nothing happens until you do — opening this link alone changes nothing.</p>
+                <p><button class="btn" id="ve_go">Verify my email</button></p>
+                <p id="ve_msg" role="status"></p>
+              </div>
+              <script>
+              (function(){
+              'use strict';
+              var btn=document.getElementById('ve_go'),msg=document.getElementById('ve_msg');
+              btn.addEventListener('click',function(){
+                btn.disabled=true;
+                var t=new URLSearchParams(location.search).get('t')||'';
+                fetch('/api/world/account/verify-email',{method:'POST',headers:{'Content-Type':'application/json'},
+                  body:JSON.stringify({token:t})})
+                .then(function(r){return r.json().then(function(j){if(!r.ok)throw j;return j;});})
+                .then(function(){msg.innerHTML='<span class="ok">Email verified.</span> <a href="/world/account">Go to your account</a> to continue.';})
+                .catch(function(e){btn.disabled=false;
+                  msg.innerHTML='<span class="bad">'+((e&&e.message)||'That link is no longer valid — request a new one from your account page.')+'</span>';});
+              });
+              })();
+              </script>
+              """,
+            "already" => """
+              <h1>This email is already verified</h1>
+              <p class="lede">Nothing more to do — your PCI World account email is confirmed and this link has no further effect.</p>
               <p><a class="btn" href="/world/account">Go to your account</a></p>
               """,
+            _ => """
+              <h1>That link didn&rsquo;t work</h1>
+              <p class="lede">The verification link is invalid, has expired, or was already used. Sign in and request a new one from your account page — sending again is free and takes seconds.</p>
+              <p><a class="btn" href="/world/account">Go to your account</a></p>
+              """,
+        },
         "/world/account", noindex: true);
 
     public static string ResetPassword(Db db) => Layout(db,
@@ -1268,7 +1341,7 @@ public static class WorldPages
     /// answer, never presented as a credential.</summary>
     public static string PublicPassport(Db db, string name, List<Dictionary<string, object?>> rows,
         WorldPassport.Disclosure? show = null, string? verifyUrl = null, string? token = null, string? expiresAt = null,
-        string? photoUrl = null)
+        string? photoUrl = null, long? totalCompleted = null, long? totalIndustries = null, long? totalTracks = null)
     {
         // Field-level disclosure is enforced HERE, at render, not by hiding columns in CSS: a value
         // the owner did not publish never reaches the page at all.
@@ -1284,8 +1357,14 @@ public static class WorldPages
               {(show.Dates ? $"<td class=\"num\">{E((H.Str(r["completed_at"]) ?? "").Split(' ')[0])}</td>" : "")}
             </tr>
             """));
-        var industries = rows.Select(r => H.Str(r["industry"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
-        var tracks = rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
+        // Whole-history totals when the caller supplies them (P1-06); the page of rows is only a
+        // window, and the stats must never understate a long history.
+        var completedTotal = totalCompleted ?? rows.Count;
+        var industries = totalIndustries ?? rows.Select(r => H.Str(r["industry"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
+        var tracks = totalTracks ?? rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
+        var truncated = completedTotal > rows.Count
+            ? $"<p class=\"meta\"><span>Showing the {rows.Count} most recent of {completedTotal} published challenges.</span></p>"
+            : "";
         var verifyBlock = verifyUrl is null ? "" : $"""
             <div class="card" id="verify">
               <span class="kicker">Verification</span>
@@ -1306,7 +1385,7 @@ public static class WorldPages
             """;
         return Layout(db,
             $"{name} — PCI World Passport",
-            $"Verified virtual project experience: {rows.Count} completed PCI World challenge{(rows.Count == 1 ? "" : "s")} across {industries} industr{(industries == 1 ? "y" : "ies")}.",
+            $"Verified virtual project experience: {completedTotal} completed PCI World challenge{(completedTotal == 1 ? "" : "s")} across {industries} industr{(industries == 1 ? "y" : "ies")}.",
             $"""
             <div class="ppt-cover" style="margin-top:6px">
               <div class="ppt-lines" aria-hidden="true"></div>
@@ -1325,7 +1404,7 @@ public static class WorldPages
                 {SealSvg()}
               </div>
               <div class="ppt-stats">
-                <div><span class="kicker">Challenges</span><b class="score num">{rows.Count}</b></div>
+                <div><span class="kicker">Challenges</span><b class="score num">{completedTotal}</b></div>
                 <div><span class="kicker">Industries</span><b class="score num">{industries}</b></div>
                 <div><span class="kicker">Tracks</span><b class="score num">{tracks}</b></div>
               </div>
@@ -1347,6 +1426,7 @@ public static class WorldPages
                 <tbody>{items}</tbody>
               </table>
               </div>
+              {truncated}
             </div>
             <div class="card">
               <h2 style="margin-top:0">How to read this Passport</h2>
@@ -1615,7 +1695,7 @@ public static class WorldPages
             <div><b>Your email</b><span>Used to sign in and to verify the account. It never appears on your Passport, the PDF, or any public page.</span></div>
             <div><b>Your answers</b><span>Grading detail stays between you and the scoring engine. No public surface shows an answer, under any setting.</span></div>
             <div><b>Your link</b><span>Stored only as a hash — the server itself cannot reprint it. Generating a new link retires the old one immediately.</span></div>
-            <div><b>Leaving</b><span>Export everything as JSON at any time. Deleting your account removes your identity, sign-in and every public link; completed challenges survive only as anonymous statistics.</span></div>
+            <div><b>Leaving</b><span>Export your PCI World data as JSON at any time. Deleting your PCI World participation removes your World sign-in, Passport and every public link — your PCI student account and any certifications are untouched; completed challenges survive only as anonymous statistics.</span></div>
           </div>
         </div>
         <script>{AccountJs}</script>
@@ -1642,13 +1722,78 @@ public static class WorldPages
         // Returns its promise: load() replaces the whole panel, so anything that wants to leave a
         // message on screen has to write it AFTER the re-render, onto the node that survives.
         function load(){
-          return api('/api/world/passport').then(function(p){
+          // The dashboard aggregate and the Passport view load together — the dashboard is the
+          // page's head (one primary action, today's state, unfinished work), the Passport its
+          // management body. The aggregate failing quietly never blocks the Passport tools.
+          return Promise.all([api('/api/world/passport'),
+                              api('/api/world/me/dashboard').catch(function(){return null;})])
+          .then(function(res){
+            var p=res[0],d=res[1];
             $('auth').hidden=true;$('me').hidden=false;$('me').focus();
             var seal=(document.getElementById('sealTpl')||{innerHTML:''}).innerHTML;
             function pretty(s){s=(s||'').replace(/_/g,' ');return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+            var h='';
+            // ── The dashboard head (journey repair P1-01): who you are, ONE next action, today's
+            //    state, unfinished work, recent results — computed server-side, rendered here. ──
+            if(d){
+              var todayHref='/world/challenge/'+encodeURIComponent((d.today&&d.today.code)||'');
+              var cta;
+              switch(d.primary_action){
+                case 'verify_email':cta='<button class="btn" id="pa_verify">Verify my email</button>';break;
+                case 'continue_today':cta='<a class="btn" href="'+todayHref+'">Continue today&rsquo;s challenge</a>';break;
+                case 'view_result':cta='<a class="btn" href="'+todayHref+'">View today&rsquo;s result</a>';break;
+                case 'start_today':cta='<a class="btn" href="'+todayHref+'">Start today&rsquo;s challenge</a>';break;
+                case 'continue_passport':cta='<a class="btn" href="#evidence-card">Finish setting up your Passport</a>';break;
+                case 'recommended':cta='<a class="btn" href="/world/challenge/'+encodeURIComponent(d.primary_code||'')+'">Try a recommended challenge</a>';break;
+                default:cta='<a class="btn" href="/world/archive">Browse the challenge library</a>';
+              }
+              h+='<div class="card"><span class="kicker">Your dashboard</span>'+
+                 '<h2 style="margin-top:0">Welcome back'+(p.display_name?', '+esc(p.display_name):'')+'</h2>'+
+                 '<p style="color:var(--slate)">'+(p.email_verified?'Email verified.':'Email not verified yet — publishing your Passport needs it.')+
+                 ' '+d.progress.completed+' completed challenge'+(d.progress.completed===1?'':'s')+
+                 (d.progress.completed>0?' across '+d.progress.industries+' industr'+(d.progress.industries===1?'y':'ies'):'')+'.</p>'+
+                 '<p>'+cta+'</p></div>';
+              if(d.today&&d.today.code){
+                var reset=d.today.changes_at?new Date(d.today.changes_at):null;
+                h+='<div class="card"><span class="kicker">Today&rsquo;s challenge</span>'+
+                   '<h2 style="margin-top:0">'+esc(d.today.title||'')+'</h2>'+
+                   '<p style="color:var(--slate)">'+esc(pretty(d.today.difficulty||''))+
+                   (d.today.est_minutes?' &middot; ~'+d.today.est_minutes+' minutes':'')+
+                   (reset&&!isNaN(reset)?' &middot; next challenge '+esc(reset.toLocaleString())+' (your local time)':'')+
+                   (d.today.paused?' &middot; rotation is paused, so this challenge stays featured':'')+'</p>'+
+                   (d.today.state==='completed'?'<p class="ok">Completed today.</p>'
+                    :d.today.state==='in_progress'?'<p>In progress &mdash; your answers are saved.</p>':'')+
+                   '</div>';
+              }
+              if((d.in_progress||[]).length){
+                h+='<div class="card"><span class="kicker">Unfinished work</span>'+
+                   '<h2 style="margin-top:0">Pick up where you left off</h2>';
+                d.in_progress.forEach(function(w){
+                  h+='<p><a href="/world/challenge/'+encodeURIComponent(w.code||'')+'">Continue: '+esc(w.title)+'</a>'+
+                     ' <small style="color:var(--slate)">saved '+esc((w.updated_at||'').split(' ')[0])+'</small></p>';
+                });
+                h+='</div>';
+              }
+              if((d.recent||[]).length){
+                h+='<div class="card"><span class="kicker">Recent results</span>'+
+                   '<h2 style="margin-top:0">Your latest completions</h2>'+
+                   '<div class="tbl-wrap"><table><thead><tr><th scope="col">Challenge</th><th scope="col">Score</th><th scope="col">Date</th></tr></thead><tbody>';
+                d.recent.forEach(function(w){
+                  h+='<tr><td>'+esc(w.title)+'<br><small class="num" style="color:var(--slate)">'+esc(w.code||'')+' &middot; v'+esc(w.version)+'</small></td>'+
+                     '<td class="num">'+esc(w.score)+'</td><td class="num">'+esc((w.completed_at||'').split(' ')[0])+'</td></tr>';
+                });
+                h+='</tbody></table></div></div>';
+              }
+              if(d.recommended&&d.today&&d.today.state==='completed'){
+                h+='<div class="card"><span class="kicker">Keep going</span>'+
+                   '<h2 style="margin-top:0">Recommended next</h2>'+
+                   '<p style="color:var(--slate)">'+esc(d.recommended.title||'')+' <small>(rule-based: a challenge you have not completed yet)</small></p>'+
+                   '<p><a class="btn secondary" href="/world/challenge/'+encodeURIComponent(d.recommended.code||'')+'">Open this challenge</a></p></div>';
+              }
+            }
             // The cover: the owner's own Passport drawn as the artefact a reader of the public
             // page will see — same seal, same stats, same honesty line.
-            var h='<div class="ppt-cover">'+
+            h+='<div class="ppt-cover">'+
               '<div class="ppt-lines" aria-hidden="true"></div>'+
               '<div class="ppt-top"><span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span>'+
               '<span class="ppt-from">From the Project<br>Controls Institute</span>'+
@@ -1670,7 +1815,7 @@ public static class WorldPages
             // click away, and every completed one below is traceable to its published version.
             h+='<div class="card"><span class="kicker">Challenges</span>'+
               '<h2 style="margin-top:0">Keep practising</h2>'+
-              '<p style="color:var(--slate)">A new challenge is published every day (00:00 UTC), and the archive keeps every published one playable. Each challenge you complete becomes a traceable record below &mdash; pinned to the exact published version you faced.</p>'+
+              '<p style="color:var(--slate)">A new challenge is published every day, and the archive keeps every published one playable. Each challenge you complete becomes a traceable record below &mdash; pinned to the exact published version you faced.</p>'+
               '<p><a class="btn" href="/world">Today&rsquo;s challenge</a> '+
               '<a class="btn secondary" href="/world/archive">Browse the archive</a></p></div>';
             h+='<div class="card"><span class="kicker">Identity &amp; publication</span>'+
@@ -1722,7 +1867,11 @@ public static class WorldPages
                'a Passport says nothing. Your answers are never shown.</small></p></fieldset>'+
                '<label for="sw_exp">Link expiry</label>'+
                '<select id="sw_exp">'+
-               '<option value="0"'+(p.expires_at?'':' selected')+'>Never expires</option>'+
+               // The stored expiry is its own persisted setting: the dropdown must REPRESENT it,
+               // not silently overwrite it. "Keep" is selected whenever an expiry exists, and only
+               // an explicit different choice is ever sent to the server (journey repair P0-06).
+               (p.expires_at?'<option value="keep" selected>Keep current expiry ('+esc(p.expires_at)+')</option>':'')+
+               '<option value="0"'+(p.expires_at?'':' selected')+'>Never expires'+(p.expires_at?' (removes the current expiry)':'')+'</option>'+
                '<option value="90">Expires in 90 days</option>'+
                '<option value="180">Expires in 6 months</option>'+
                '<option value="365">Expires in 12 months</option>'+
@@ -1731,13 +1880,13 @@ public static class WorldPages
                '<p style="margin-top:16px"><button class="btn secondary" id="saveShow">Save these settings</button> '+
                '<span id="showmsg" role="status"></span></p>'+
                '</div>';
-            h+='<div class="card"><span class="kicker">Evidence</span>'+
+            h+='<div class="card" id="evidence-card"><span class="kicker">Evidence</span>'+
                '<h2 style="margin-top:0">Choose what appears</h2>'+
                '<p style="color:var(--slate)">Tick the results you want on your public Passport. Nothing is shown without your choice.</p>'+
                '<div class="tbl-wrap"><table><thead><tr><th scope="col">Show</th><th scope="col">Challenge</th>'+
                '<th scope="col">Score</th><th scope="col">Profile</th><th scope="col">Date</th></tr></thead><tbody>';
-            (p.evidence||[]).forEach(function(e2){
-              h+='<tr><td><input type="checkbox" class="ev-check" data-att="'+e2.attempt_id+'" '+(e2.passport_visible?'checked':'')+
+            function evRow(e2){
+              return '<tr><td><input type="checkbox" class="ev-check" data-att="'+e2.attempt_id+'" '+(e2.passport_visible?'checked':'')+
                  ' aria-label="Show '+esc(e2.title)+' on public Passport"></td>'+
                  '<td><b>'+esc(e2.title)+'</b>'+
                  // Traceability line: code + immutable version, linking back to the challenge —
@@ -1747,8 +1896,15 @@ public static class WorldPages
                  (e2.difficulty?' &middot; '+esc(pretty(e2.difficulty)):'')+'</small></td>'+
                  '<td class="num">'+esc(e2.score)+'</td><td>'+esc(pretty(e2.profile))+'</td>'+
                  '<td class="num">'+esc((e2.completed_at||'').split(' ')[0])+'</td></tr>';
-            });
+            }
+            (p.evidence||[]).forEach(function(e2){h+=evRow(e2);});
             h+='</tbody></table></div>'+
+               // Whole-history honesty (P1-06): the table is a window; the totals above are SQL
+               // truth, and every older row stays reachable through Load more.
+               (p.evidence_total>(p.evidence||[]).length
+                 ?'<p class="meta"><span id="evshown" role="status">Showing '+(p.evidence||[]).length+' of '+p.evidence_total+' completed challenges</span></p>'+
+                  '<p><button class="btn secondary" id="evmore">Load more</button></p>'
+                 :'')+
                ((p.evidence||[]).length?'':'<p style="color:var(--slate)">No completed challenges yet — '+
                  '<a href="/world">today&rsquo;s challenge</a> takes five to ten minutes, and it will appear here the moment you finish.</p>')+
                '</div>'+
@@ -1764,10 +1920,15 @@ public static class WorldPages
                // clear text, carries no label, cannot be styled or translated, and is blocked
                // outright by some browsers.
                '<div id="delbox" hidden class="card" style="border-color:var(--crimson)">'+
-               '<h2 style="margin-top:0">Delete your account</h2>'+
-               '<p>This removes your Passport, every public link you minted and your sign-in. '+
-               'Completed challenges are kept as anonymous statistics with nothing that identifies you.</p>'+
-               '<label for="delpw">Confirm your password</label>'+
+               '<h2 style="margin-top:0">Delete your PCI World participation</h2>'+
+               '<p>This removes your PCI World Passport, every public link you minted, your World '+
+               'preferences and your World sign-in. Completed challenges are kept as anonymous '+
+               'statistics with nothing that identifies you.</p>'+
+               '<p><b>Your PCI student account is not affected.</b> If you also hold a Project '+
+               'Controls Institute student account (certifications, exams, payments), it stays '+
+               'exactly as it is — deleting the complete PCI account is a separate action in the '+
+               'student portal.</p>'+
+               '<label for="delpw">Confirm your PCI password</label>'+
                '<input id="delpw" type="password" autocomplete="current-password">'+
                '<p style="margin-top:14px"><button class="btn" id="delgo">Delete my account permanently</button> '+
                '<button class="btn secondary" id="delno">Keep my account</button></p></div>'+
@@ -1775,6 +1936,11 @@ public static class WorldPages
             $('me').innerHTML=h;
             $('saveName').addEventListener('click',function(){
               api('/api/world/account/profile',{display_name:$('dn').value}).then(load);
+            });
+            if($('pa_verify'))$('pa_verify').addEventListener('click',function(){
+              api('/api/world/account/resend-verification',{})
+                .then(function(){$('pa_verify').textContent='Verification email sent — check your inbox.';$('pa_verify').disabled=true;})
+                .catch(function(){$('pa_verify').textContent='Could not send — try again shortly.';});
             });
             // The cover preview is authenticated by the account header, which an <img> navigation
             // never sends — so it is fetched as a blob, the same way the data export is.
@@ -1813,11 +1979,30 @@ public static class WorldPages
             if($('unpub'))$('unpub').addEventListener('click',function(){
               api('/api/world/passport/publish',{publish:false}).then(load);
             });
-            $('me').querySelectorAll('input[data-att]').forEach(function(cb){
-              cb.addEventListener('change',function(){
-                api('/api/world/passport/evidence',{attempt_id:parseInt(cb.dataset.att,10),visible:cb.checked});
+            function bindEv(scope){
+              scope.querySelectorAll('input[data-att]').forEach(function(cb){
+                if(cb.dataset.bound)return;cb.dataset.bound='1';
+                cb.addEventListener('change',function(){
+                  api('/api/world/passport/evidence',{attempt_id:parseInt(cb.dataset.att,10),visible:cb.checked});
+                });
               });
-            });
+            }
+            bindEv($('me'));
+            if($('evmore')){
+              var evCount=(p.evidence||[]).length;
+              $('evmore').addEventListener('click',function(){
+                $('evmore').disabled=true;
+                api('/api/world/passport?offset='+evCount).then(function(q){
+                  var tb=$('me').querySelector('table tbody');
+                  (q.evidence||[]).forEach(function(e2){tb.insertAdjacentHTML('beforeend',evRow(e2));});
+                  bindEv(tb);
+                  evCount+=(q.evidence||[]).length;
+                  $('evshown').textContent='Showing '+evCount+' of '+q.evidence_total+' completed challenges';
+                  $('evmore').disabled=false;
+                  if(!(q.evidence||[]).length||evCount>=q.evidence_total)$('evmore').hidden=true;
+                }).catch(function(){$('evmore').disabled=false;});
+              });
+            }
             $('signout').addEventListener('click',function(){
               api('/api/world/account/logout',{}).catch(function(){});
               localStorage.removeItem(KEY);showAuth();
@@ -1835,9 +2020,12 @@ public static class WorldPages
             });
             $('saveShow').addEventListener('click',function(){
               $('showmsg').textContent='';
-              api('/api/world/passport/disclosure',{
-                show_scores:$('sw_scores').checked,show_profiles:$('sw_profiles').checked,
-                show_dates:$('sw_dates').checked,expires_in_days:parseInt($('sw_exp').value,10)||0})
+              // expires_in_days is included ONLY when the owner chose something other than "keep":
+              // an unrelated disclosure save can never touch the stored expiry (P0-06).
+              var body={show_scores:$('sw_scores').checked,show_profiles:$('sw_profiles').checked,
+                show_dates:$('sw_dates').checked};
+              if($('sw_exp').value!=='keep')body.expires_in_days=parseInt($('sw_exp').value,10)||0;
+              api('/api/world/passport/disclosure',body)
                 .then(load).then(function(){$('showmsg').textContent='Saved.';})
                 .catch(function(){$('showmsg').textContent='Could not save — try again.';});
             });
@@ -1865,18 +2053,41 @@ public static class WorldPages
                 .then(function(){localStorage.removeItem(KEY);showAuth();})
                 .catch(function(){$('acctmsg').textContent='Password incorrect — account not deleted.';$('delpw').focus();});
             });
-          }).catch(showAuth);
+          }).catch(function(e2){
+            // A failure to LOAD is not a sign-out (journey repair P1-04): only a rejected token
+            // shows the sign-in panel. A network drop or server error says so honestly, keeps the
+            // stored session, and offers a retry — presenting it as "you are not registered" made
+            // people re-register and lose track of their account.
+            if(e2&&(e2.error==='no_token'||e2.error==='world_disabled')){localStorage.removeItem(KEY);return showAuth();}
+            $('auth').hidden=true;$('me').hidden=false;
+            $('me').innerHTML='<div class="card"><span class="kicker">Connection problem</span>'+
+              '<h2 style="margin-top:0">We could not load your account</h2>'+
+              '<p style="color:var(--slate)">'+(navigator.onLine===false
+                ?'You appear to be offline. Your account and evidence are safe on the server — reconnect and try again.'
+                :'The service did not answer just now. You are still signed in; nothing has been lost.')+'</p>'+
+              '<p><button class="btn" id="retryLoad">Try again</button></p></div>';
+            $('me').focus();
+            $('retryLoad').addEventListener('click',function(){load();});
+          });
+        }
+        // Preserved destination (§6 compatibility): a deep link that sent someone here to sign in
+        // continues to that exact safe place afterwards. Same-origin /world paths only — an
+        // external or protocol-relative destination is ignored, never followed.
+        function afterAuth(){
+          var rt=new URLSearchParams(location.search).get('returnTo')||'';
+          if(rt.indexOf('/world')===0&&rt.indexOf('//')!==0&&rt.indexOf(':')<0){location.href=rt;return true;}
+          return false;
         }
         $('doRegister').addEventListener('click',function(){
           $('autherr').textContent='';
           api('/api/world/account/register',{email:$('r_email').value,password:$('r_pw').value,display_name:$('r_name').value})
-            .then(function(r){localStorage.setItem(KEY,r.token);load();})
+            .then(function(r){localStorage.setItem(KEY,r.token);if(!afterAuth())load();})
             .catch(function(e2){$('autherr').textContent=(e2&&e2.message)||(e2&&e2.error)||'Could not create the account.';});
         });
         $('doLogin').addEventListener('click',function(){
           $('autherr').textContent='';
           api('/api/world/account/login',{email:$('l_email').value,password:$('l_pw').value})
-            .then(function(r){localStorage.setItem(KEY,r.token);load();})
+            .then(function(r){localStorage.setItem(KEY,r.token);if(!afterAuth())load();})
             .catch(function(e2){$('autherr').textContent=(e2&&e2.error)==='account_locked'?'Too many attempts — try later.':'Sign-in failed.';});
         });
         $('doForgot').addEventListener('click',function(){
@@ -1885,7 +2096,22 @@ public static class WorldPages
             .then(function(r){$('autherr').textContent=r.message||'If that address has an account, a reset link is on its way.';})
             .catch(function(){$('autherr').textContent='Could not send the reset email — try again shortly.';});
         });
-        if(localStorage.getItem(KEY))load();else showAuth();
+        // Portal handoff (P0-02): the SSO bridge sends a one-time code in the URL FRAGMENT (never
+        // in a query string the server would log). Exchange it once for a session, then scrub it
+        // from the address bar and history immediately.
+        var hm=(location.hash||'').match(/h=([a-f0-9]{48,64})/);
+        if(hm){
+          history.replaceState(null,'',location.pathname);
+          api('/api/world/account/handoff',{code:hm[1]})
+            .then(function(r){localStorage.setItem(KEY,r.token);
+              // The allow-listed destination the handoff preserved — deep entry (today's
+              // challenge, a result) continues there; the account page is only the default.
+              if(r.return_to&&r.return_to!=='/world/account'){location.href=r.return_to;return;}
+              load();})
+            .catch(function(e2){showAuth();
+              $('autherr').textContent=(e2&&e2.message)||'That sign-in link has expired — sign in below, or reopen your Passport from the student portal.';});
+        }
+        else if(localStorage.getItem(KEY))load();else showAuth();
         })();
         """;
 

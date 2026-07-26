@@ -21,9 +21,29 @@ public static class WorldAccount
 {
     public sealed record UserCtx(long Id, string Email, string? DisplayName, bool EmailVerified, bool PassportPublic);
 
+    /// <summary>The World session cookie (journey repair P0-07, transitional). HttpOnly + Strict:
+    /// scripts cannot read it and cross-site requests never carry it, which is the CSRF posture
+    /// until the header token is retired and a full CSRF token ships with the React app.</summary>
+    public const string SessionCookie = "pciworld_sess";
+
+    public static void SetSessionCookie(HttpContext ctx, string token) =>
+        ctx.Response.Cookies.Append(SessionCookie, token, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = ctx.Request.IsHttps ||
+                     string.Equals(ctx.Request.Headers["X-Forwarded-Proto"].ToString(), "https", StringComparison.OrdinalIgnoreCase),
+            SameSite = SameSiteMode.Strict,
+            Path = "/",
+            MaxAge = TimeSpan.FromDays(30),
+        });
+
     public static UserCtx? FromReq(HttpRequest req, Db db)
     {
         var h = req.Headers["X-World-Account"].ToString();
+        // Transitional dual acceptance (P0-07): the explicit header wins; the HttpOnly cookie set
+        // at login/register/handoff authenticates when no header is present, so the participant
+        // app can migrate off localStorage without a breaking cutover.
+        if (string.IsNullOrWhiteSpace(h)) h = req.Cookies[SessionCookie] ?? "";
         if (string.IsNullOrWhiteSpace(h)) return null;
         var sess = db.QueryOne("SELECT * FROM pciworld_user_sessions WHERE token=? AND expires_at>datetime('now')", Security.Sha(h));
         if (sess is null) return null;
@@ -46,6 +66,11 @@ public static class WorldAccount
         var id = db.ExecuteReturningId("INSERT INTO pciworld_users(email,password_hash,display_name) VALUES(?,?,?)",
             email, BCrypt.Net.BCrypt.HashPassword(password), Trunc(displayName, 80));
         ClaimSession(db, id, worldSessionId);
+        // Canonical identity from the moment the account exists (P0-00): a standalone World
+        // registration creates its canonical users/student_profiles pair immediately (same bcrypt
+        // hash, so the one password works on both products); an email already registered on the
+        // platform is quarantined in the map, never silently merged.
+        try { WorldIdentity.MapOne(db, id); } catch { /* mapping must never break registration */ }
         return (null, id, MintSession(db, id));
     }
 
@@ -53,19 +78,48 @@ public static class WorldAccount
     {
         email = email.Trim().ToLowerInvariant();
         var u = db.QueryOne("SELECT * FROM pciworld_users WHERE email=?", email);
-        if (u is null) { LoginGuard.BurnTime(password); return ("invalid_credentials", 0, ""); }
-        if (LoginGuard.IsLocked(db, "pciworld_users", u["id"])) return ("account_locked", 0, "");
-        if (!Security.VerifyPassword(password, u["password_hash"] as string))
+
+        // Legacy World credential first (transitional back-compat while pciworld_users remains).
+        if (u is not null)
         {
-            LoginGuard.OnFail(db, "pciworld_users", u["id"]);
-            return ("invalid_credentials", 0, "");
+            if (LoginGuard.IsLocked(db, "pciworld_users", u["id"])) return ("account_locked", 0, "");
+            if (Security.VerifyPassword(password, u["password_hash"] as string))
+            {
+                LoginGuard.OnSuccess(db, "pciworld_users", u["id"]);
+                if (H.Str(u["status"]) != "active") return ("account_suspended", 0, "");
+                var id = H.L(u["id"]);
+                ClaimSession(db, id, worldSessionId);
+                db.Execute("UPDATE pciworld_users SET last_login_at=datetime('now') WHERE id=?", id);
+                return (null, id, MintSession(db, id));
+            }
         }
-        LoginGuard.OnSuccess(db, "pciworld_users", u["id"]);
-        if (H.Str(u["status"]) != "active") return ("account_suspended", 0, "");
-        var id = H.L(u["id"]);
-        ClaimSession(db, id, worldSessionId);
-        db.Execute("UPDATE pciworld_users SET last_login_at=datetime('now') WHERE id=?", id);
-        return (null, id, MintSession(db, id));
+
+        // Canonical PCI credentials (journey repair P0-00/P0-02): the same email/password a student
+        // uses on the PCI AI portal signs them into PCI World — one credential authority, no second
+        // password. Verification happens against `users`; on success the World account is linked or
+        // created through the same guarded bridge the portal SSO uses (an email held by a DIFFERENT
+        // student is refused, never hijacked). This also makes a portal-side password change
+        // effective here: the canonical hash is the one that wins.
+        var cu = db.QueryOne("SELECT * FROM users WHERE lower(email)=?", email);
+        if (cu is not null && !LoginGuard.IsLocked(db, "users", cu["id"]) &&
+            Security.VerifyPassword(password, cu["password_hash"] as string))
+        {
+            if (H.Str(cu["status"]) != "active") return ("account_suspended", 0, "");
+            LoginGuard.OnSuccess(db, "users", cu["id"]);
+            var (lerr, wid) = LinkStudent(db, H.L(cu["id"]), email,
+                ($"{H.Str(cu["first_name"])} {H.Str(cu["last_name"])}").Trim());
+            if (lerr is not null) return (lerr, 0, "");
+            ClaimSession(db, wid, worldSessionId);
+            db.Execute("UPDATE pciworld_users SET last_login_at=datetime('now') WHERE id=?", wid);
+            return (null, wid, MintSession(db, wid));
+        }
+
+        // Failure: one generic answer (no enumeration), counted against whichever record exists so
+        // central lockout cannot be bypassed by alternating product login pages.
+        if (u is null && cu is null) { LoginGuard.BurnTime(password); return ("invalid_credentials", 0, ""); }
+        if (u is not null) LoginGuard.OnFail(db, "pciworld_users", u["id"]);
+        else LoginGuard.OnFail(db, "users", cu!["id"]);
+        return ("invalid_credentials", 0, "");
     }
 
     /// <summary>Adopt the anonymous session's attempts into the account — only unclaimed ones;
@@ -83,6 +137,57 @@ public static class WorldAccount
         db.Execute("INSERT INTO pciworld_user_sessions(user_id,token,expires_at) VALUES(?,?, datetime('now','+30 days'))",
             userId, Security.Sha(token));
         return token;
+    }
+
+    /// <summary>Mint a one-time, two-minute cross-surface handoff code (journey repair P0-02).
+    /// The RAW code is returned once and never stored; only the allow-listed return path rides
+    /// along. This replaces handing a reusable 30-day bearer token through the portal origin.</summary>
+    public static string CreateHandoff(Db db, long worldUserId, string? returnTo = null)
+    {
+        var code = Security.RandomHex(32);
+        db.Execute(@"INSERT INTO pciworld_handoff_codes(code_sha,world_user_id,return_to,expires_at)
+            VALUES(?,?,?, datetime('now','+2 minutes'))",
+            Security.Sha(code), worldUserId, AllowedReturnTo(returnTo));
+        return code;
+    }
+
+    /// <summary>Redeem a handoff code EXACTLY once: the consumption UPDATE is the lock, so a
+    /// concurrent replay races into 0 rows and learns nothing. Expired, replayed and never-existed
+    /// are deliberately indistinguishable.</summary>
+    public static (string? Error, long UserId, string? ReturnTo) RedeemHandoff(Db db, string? code)
+    {
+        if (string.IsNullOrWhiteSpace(code) || code.Length < 32) return ("invalid_code", 0, null);
+        var sha = Security.Sha(code);
+        var n = db.Execute(@"UPDATE pciworld_handoff_codes SET consumed_at=datetime('now')
+            WHERE code_sha=? AND consumed_at IS NULL AND expires_at>datetime('now')", sha);
+        if (n == 0) return ("invalid_code", 0, null);
+        var row = db.QueryOne("SELECT world_user_id, return_to FROM pciworld_handoff_codes WHERE code_sha=?", sha)!;
+        return (null, H.L(row["world_user_id"]), H.Str(row["return_to"]));
+    }
+
+    /// <summary>Relative, same-origin World destinations only — never an open redirect.</summary>
+    static string AllowedReturnTo(string? p) =>
+        p is not null && p.StartsWith("/world") && !p.StartsWith("//") && !p.Contains("://")
+            ? (p.Length <= 128 ? p : p[..128]) : "/world/account";
+
+    /// <summary>
+    /// Verify the password for a sensitive World action (delete, password change). The canonical
+    /// PCI credential is the authority (journey repair P0-03): accounts created through the portal
+    /// bridge hold a random World hash the person never saw, so their REAL password — the one they
+    /// use on the platform — must work here. The legacy World hash is still accepted
+    /// transitionally for standalone accounts.
+    /// </summary>
+    public static bool VerifyAccountPassword(Db db, long worldUserId, string? password)
+    {
+        if (string.IsNullOrEmpty(password)) return false;
+        var row = db.QueryOne("SELECT password_hash, student_user_id FROM pciworld_users WHERE id=?", worldUserId);
+        if (row is null) return false;
+        if (Security.VerifyPassword(password, row["password_hash"] as string)) return true;
+        var canonical = WorldIdentity.CanonicalFor(db, worldUserId)
+                        ?? (row["student_user_id"] is null ? (long?)null : H.L(row["student_user_id"]));
+        if (canonical is null) return false;
+        var cu = db.QueryOne("SELECT password_hash FROM users WHERE id=? AND status='active'", canonical);
+        return cu is not null && Security.VerifyPassword(password, cu["password_hash"] as string);
     }
 
     /// <summary>Publish the Passport: consent + verified email + a display name are all required.
@@ -119,20 +224,30 @@ public static class WorldAccount
         {
             var byEmail = db.QueryOne("SELECT * FROM pciworld_users WHERE email=?", email);
             if (byEmail is null)
-                return (null, db.ExecuteReturningId(
+            {
+                var fresh = db.ExecuteReturningId(
                     "INSERT INTO pciworld_users(email,password_hash,display_name,email_verified,student_user_id) VALUES(?,?,?,1,?)",
-                    email, BCrypt.Net.BCrypt.HashPassword(Security.RandomHex(24)), Trunc(displayName, 80), studentId));
+                    email, BCrypt.Net.BCrypt.HashPassword(Security.RandomHex(24)), Trunc(displayName, 80), studentId);
+                try { WorldIdentity.MapOne(db, fresh); WorldIdentity.EnsureParticipant(db, studentId); } catch { }
+                return (null, fresh);
+            }
             var linked = H.L(byEmail["student_user_id"]);
             if (linked != 0 && linked != studentId) return ("email_in_use", 0);
             db.Execute("UPDATE pciworld_users SET student_user_id=?, email_verified=1 WHERE id=?", studentId, byEmail["id"]);
             u = byEmail;
         }
         if (H.Str(u["status"]) != "active") return ("account_suspended", 0);
+        // The bridge proved the canonical identity (the student is signed in): record the mapping
+        // and the participation row keyed by canonical users.id (P0-00).
+        try { WorldIdentity.MapOne(db, H.L(u["id"])); WorldIdentity.EnsureParticipant(db, studentId); } catch { }
         return (null, H.L(u["id"]));
     }
 
-    /// <summary>The account's evidence rows (own view — includes hidden items so they can be toggled).</summary>
-    public static List<Dictionary<string, object?>> EvidenceRows(Db db, long userId, bool visibleOnly) =>
+    /// <summary>The account's evidence rows (own view — includes hidden items so they can be toggled).
+    /// Paginated (journey repair P1-06): the page size is a window, never the truth — totals come
+    /// from <see cref="EvidenceStats"/> so an account with 1,000 attempts counts 1,000.</summary>
+    public static List<Dictionary<string, object?>> EvidenceRows(Db db, long userId, bool visibleOnly,
+        int limit = 200, int offset = 0) =>
         // Deliberately NO answers_json and NO session_id: this shape feeds the PUBLIC Passport and
         // the PDF, so anything selected here is one careless interpolation away from publication.
         // The data export fetches answers on its own, separate path.
@@ -143,7 +258,22 @@ public static class WorldAccount
             JOIN pciworld_challenges c ON c.id=a.challenge_id
             JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
             WHERE a.user_id=? AND a.status='completed' {(visibleOnly ? "AND a.passport_visible=1" : "")}
-            ORDER BY a.completed_at DESC, a.id DESC LIMIT 200", userId);
+            ORDER BY a.completed_at DESC, a.id DESC
+            LIMIT {Math.Clamp(limit, 1, 500)} OFFSET {Math.Max(0, offset)}", userId);
+
+    public sealed record Stats(long Completed, long Industries, long Tracks);
+
+    /// <summary>Whole-history aggregates straight from SQL — independent of any page of evidence
+    /// (P1-06). These feed the account view, the public Passport and the PDF alike.</summary>
+    public static Stats EvidenceStats(Db db, long userId, bool visibleOnly)
+    {
+        var row = db.QueryOne($@"SELECT COUNT(*) AS c,
+                COUNT(DISTINCT v.industry) AS i, COUNT(DISTINCT v.track) AS t
+            FROM pciworld_attempts a
+            JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
+            WHERE a.user_id=? AND a.status='completed' {(visibleOnly ? "AND a.passport_visible=1" : "")}", userId)!;
+        return new(H.L(row["c"]), H.L(row["i"]), H.L(row["t"]));
+    }
 
     /// <summary>
     /// Erase the account and DE-IDENTIFY everything it leaves behind.
@@ -179,6 +309,13 @@ public static class WorldAccount
             result_token_sha=NULL, result_revoked=1, answers_json=NULL, session_id=0 WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_user_tokens WHERE user_id=?", userId);
+        db.Execute("DELETE FROM pciworld_handoff_codes WHERE world_user_id=?", userId);
+        // WORLD-ONLY scope (journey repair P0-03): the participation record goes; the canonical
+        // PCI identity, student profile and every platform record survive untouched. The map row
+        // stays as the audit ledger of what was deleted and when it had been linked.
+        var canonical = WorldIdentity.CanonicalFor(db, userId);
+        if (canonical is not null)
+            db.Execute("DELETE FROM pciworld_participants WHERE user_id=?", canonical);
         db.Execute("DELETE FROM pciworld_users WHERE id=?", userId);
     }
 
@@ -237,6 +374,7 @@ public static class WorldAccount
             if (err is not null) return Err(err, err == "duplicate_email" ? 409 : 400,
                 err == "weak_password" ? "Use at least 10 characters." : null);
             SendVerification(ctx, userId, (H.GetS(b, "email") ?? "").Trim().ToLowerInvariant());
+            SetSessionCookie(ctx, token);
             log(null, "world_register", $"#{userId}");
             return J(new { ok = true, token, email_verified = false });
         });
@@ -249,31 +387,57 @@ public static class WorldAccount
             var (err, userId, token) = Login(db, H.GetS(b, "email") ?? "", H.GetS(b, "password") ?? "", WorldSessionId(ctx));
             if (err is not null) return Err(err, err == "account_locked" ? 429 : err == "account_suspended" ? 403 : 401);
             var me = db.QueryOne("SELECT display_name,email_verified,passport_public FROM pciworld_users WHERE id=?", userId)!;
+            SetSessionCookie(ctx, token);
             return J(new { ok = true, token, display_name = H.Str(me["display_name"]),
                 email_verified = H.L(me["email_verified"]) == 1, passport_public = H.L(me["passport_public"]) == 1 });
         });
 
         app.MapPost("/api/world/account/logout", (HttpContext ctx) =>
         {
-            var h = ctx.Request.Headers["X-World-Account"].ToString();
-            if (!string.IsNullOrWhiteSpace(h))
-                db.Execute("DELETE FROM pciworld_user_sessions WHERE token=?", Security.Sha(h));
+            // Revoke BOTH carriers of the session (P0-07): the header token and the HttpOnly
+            // cookie, then clear the cookie so a shared browser holds nothing after sign-out.
+            foreach (var tok in new[] { ctx.Request.Headers["X-World-Account"].ToString(),
+                                        ctx.Request.Cookies[SessionCookie] ?? "" })
+                if (!string.IsNullOrWhiteSpace(tok))
+                    db.Execute("DELETE FROM pciworld_user_sessions WHERE token=?", Security.Sha(tok));
+            ctx.Response.Cookies.Delete(SessionCookie, new CookieOptions { Path = "/" });
             return J(new { ok = true });
         });
 
+        // Deliberate verification (journey repair P1-03): the GET only LOOKS — mail scanners and
+        // link-preview bots that prefetch the URL can no longer consume the token. State changes
+        // happen exclusively in the POST below, on the person's explicit button press.
         app.MapGet("/world/verify-email", (HttpContext ctx) =>
         {
             if (!Enabled()) return Disabled();
             var t = ctx.Request.Query["t"].ToString();
             var row = t.Length > 0 ? db.QueryOne(@"SELECT * FROM pciworld_user_tokens
                 WHERE token_sha=? AND purpose='verify' AND expires_at>datetime('now')", Security.Sha(t)) : null;
-            var ok = row is not null;
-            if (ok)
+            var state = "invalid";
+            if (row is not null)
             {
-                db.Execute("UPDATE pciworld_users SET email_verified=1 WHERE id=?", row!["user_id"]);
-                db.Execute("DELETE FROM pciworld_user_tokens WHERE id=?", row["id"]);
+                var u = db.QueryOne("SELECT email_verified FROM pciworld_users WHERE id=?", row["user_id"]);
+                state = u is not null && H.L(u["email_verified"]) == 1 ? "already" : "confirm";
             }
-            return Results.Content(WorldPages.VerifyEmail(db, ok), "text/html; charset=utf-8");
+            return Results.Content(WorldPages.VerifyEmail(db, state), "text/html; charset=utf-8");
+        });
+
+        app.MapPost("/api/world/account/verify-email", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            if (Throttled("verifygo|" + Ip(ctx), 20)) return Err("rate_limited", 429);
+            var b = await H.Body(ctx.Request);
+            var t = H.GetS(b, "token") ?? "";
+            var row = t.Length > 0 ? db.QueryOne(@"SELECT * FROM pciworld_user_tokens
+                WHERE token_sha=? AND purpose='verify' AND expires_at>datetime('now')", Security.Sha(t)) : null;
+            if (row is null) return Err("invalid_token", 400,
+                "That link is no longer valid — request a new verification email from your account page.");
+            // Single use, race-safe: the DELETE is the lock; a concurrent duplicate deletes 0 rows.
+            var n = db.Execute("DELETE FROM pciworld_user_tokens WHERE id=?", row["id"]);
+            if (n == 0) return Err("invalid_token", 400);
+            db.Execute("UPDATE pciworld_users SET email_verified=1 WHERE id=?", row["user_id"]);
+            log(null, "world_email_verified", $"#{H.L(row["user_id"])}");
+            return J(new { ok = true });
         });
 
         app.MapPost("/api/world/account/resend-verification", (HttpContext ctx) =>
@@ -336,6 +500,52 @@ public static class WorldAccount
         app.MapGet("/world/reset-password", () => !Enabled() ? Disabled()
             : Results.Content(WorldPages.ResetPassword(db), "text/html; charset=utf-8"));
 
+        // The participant dashboard aggregate (P1-01/§9): one call, one server-computed primary
+        // action, whole-history progress — never an N+1 waterfall from the client.
+        app.MapGet("/api/world/me/dashboard", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var s = WorldDashboard.Build(db, u, DateTime.UtcNow);
+            return J(new
+            {
+                display_name = u.DisplayName,
+                email_verified = u.EmailVerified,
+                primary_action = s.PrimaryAction,
+                primary_attempt_id = s.PrimaryAttemptId,
+                primary_code = s.PrimaryCode,
+                today = new
+                {
+                    period_id = s.TodayState.PeriodId, day = s.TodayState.DayKey,
+                    timezone = s.TodayState.Timezone, changes_at = s.TodayState.ChangesAtUtc,
+                    paused = s.TodayState.Paused, code = s.TodayState.Code, title = s.TodayState.Title,
+                    difficulty = s.TodayState.Difficulty, est_minutes = s.TodayState.EstMinutes,
+                    version = s.TodayState.Version, state = s.TodayState.State, attempt_id = s.TodayState.AttemptId,
+                },
+                passport = new
+                {
+                    state = s.Passport.State, is_public = s.Passport.Public, expires_at = s.Passport.ExpiresAt,
+                    email_verified = s.Passport.EmailVerified, has_display_name = s.Passport.HasDisplayName,
+                    visible_evidence = s.Passport.VisibleEvidence,
+                },
+                progress = new { completed = s.Progress.Completed, industries = s.Progress.Industries, tracks = s.Progress.Tracks },
+                recent = s.RecentResults.Select(r => new
+                {
+                    attempt_id = H.L(r["id"]), code = H.Str(r["code"]), version = H.L(r["version"]),
+                    title = H.Str(r["title"]), difficulty = H.Str(r["difficulty"]), score = r["score"],
+                    profile = H.Str(r["profile_key"]), completed_at = H.Str(r["completed_at"]),
+                    passport_visible = H.L(r["passport_visible"]) == 1,
+                }),
+                in_progress = s.InProgress.Select(r => new
+                {
+                    attempt_id = H.L(r["id"]), code = H.Str(r["code"]), version = H.L(r["version"]),
+                    title = H.Str(r["title"]), updated_at = H.Str(r["updated_at"]),
+                }),
+                recommended = s.RecommendedCode is null ? null : new { code = s.RecommendedCode, title = s.RecommendedTitle },
+            });
+        });
+
         app.MapGet("/api/world/account", (HttpContext ctx) =>
         {
             if (!Enabled()) return Disabled();
@@ -363,8 +573,9 @@ public static class WorldAccount
             var b = await H.Body(ctx.Request);
             var next = H.GetS(b, "next") ?? "";
             if (next.Length < 10) return Err("weak_password", 400, "Use at least 10 characters.");
-            var row = db.QueryOne("SELECT password_hash FROM pciworld_users WHERE id=?", u.Id);
-            if (!Security.VerifyPassword(H.GetS(b, "current") ?? "", row?["password_hash"] as string))
+            // Canonical credential is the authority (P0-03): a bridge-created account's hidden
+            // random World hash can never be the only key to this door.
+            if (!VerifyAccountPassword(db, u.Id, H.GetS(b, "current")))
                 return Err("invalid_credentials", 401);
             db.Execute("UPDATE pciworld_users SET password_hash=? WHERE id=?", BCrypt.Net.BCrypt.HashPassword(next), u.Id);
             db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=?", u.Id);   // re-login everywhere
@@ -414,8 +625,9 @@ public static class WorldAccount
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
             var b = await H.Body(ctx.Request);
-            var row = db.QueryOne("SELECT password_hash FROM pciworld_users WHERE id=?", u.Id);
-            if (!Security.VerifyPassword(H.GetS(b, "password") ?? "", row?["password_hash"] as string))
+            // Step-up via the canonical PCI credential (P0-03): the password the person actually
+            // knows confirms deletion; bridge-created accounts are no longer undeletable.
+            if (!VerifyAccountPassword(db, u.Id, H.GetS(b, "password")))
                 return Err("invalid_credentials", 401);
             DeleteAccount(db, u.Id);
             log(null, "world_account_delete", $"#{u.Id}");
@@ -429,7 +641,7 @@ public static class WorldAccount
         // links or creates the matching world account once (LinkStudent), and mints an ordinary
         // PCI World session for the browser to carry to /world/account. World code still never
         // reads exam, entitlement or credential data.
-        app.MapPost("/api/me/world-passport/sso", (HttpContext ctx) =>
+        app.MapPost("/api/me/world-passport/sso", async (HttpContext ctx) =>
         {
             if (!Enabled()) return Disabled();
             var s = Auth.UserFromReq(ctx.Request, db);
@@ -441,9 +653,52 @@ public static class WorldAccount
             if (err is not null) return Err(err, err == "email_in_use" ? 409 : 403, err == "email_in_use"
                 ? "A PCI World account with your email address is linked to a different sign-in — contact support."
                 : null);
-            var token = MintSession(db, worldId);
+            // Claim the browser's CURRENT anonymous World session too (journey repair P0-01): the
+            // portal bridge used to link the account without adopting the anonymous work sitting in
+            // this very browser, so challenges completed before pressing "open my Passport" never
+            // appeared in it. Claim-only-unowned, identical to register/login. The portal client
+            // passes the anonymous token in the body (its typed wrapper sets no custom headers).
+            var body = await H.Body(ctx.Request);
+            var sessionId = WorldSessionId(ctx);
+            if (sessionId is null)
+            {
+                var anon = H.GetS(body, "world_session");
+                if (!string.IsNullOrWhiteSpace(anon))
+                {
+                    var row = db.QueryOne("SELECT id FROM pciworld_sessions WHERE token_sha=?", Security.Sha(anon));
+                    if (row is not null) sessionId = H.L(row["id"]);
+                }
+            }
+            ClaimSession(db, worldId, sessionId);
+            // One-time handoff CODE, not a reusable bearer token (journey repair P0-02): the code
+            // rides in the URL FRAGMENT (never sent to the server or its logs), lives two minutes,
+            // and dies at first redemption. The World page exchanges it for its own session, then
+            // continues to the allow-listed destination the caller asked for (deep entry into
+            // today's challenge from the portal Overview, for example).
+            var code = CreateHandoff(db, worldId, H.GetS(body, "return_to"));
             log(s.Id, "world_passport_sso", $"student #{s.Id} → world #{worldId}");
-            return J(new { ok = true, token, url = "/world/account" });
+            return J(new { ok = true, url = "/world/account#h=" + code });
+        });
+
+        // Redeem a one-time handoff code for a World session. Deliberately quiet on failure:
+        // expired, replayed and never-existed all answer the same 401.
+        app.MapPost("/api/world/account/handoff", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            if (Throttled("handoff|" + Ip(ctx), 20)) return Err("rate_limited", 429);
+            var b = await H.Body(ctx.Request);
+            var (err, worldId, returnTo) = RedeemHandoff(db, H.GetS(b, "code"));
+            if (err is not null) return Err("invalid_code", 401,
+                "That sign-in link has expired or was already used — reopen your Passport from the student portal.");
+            var u = db.QueryOne("SELECT * FROM pciworld_users WHERE id=? AND status='active'", worldId);
+            if (u is null) return Err("invalid_code", 401);
+            ClaimSession(db, worldId, WorldSessionId(ctx));
+            var token = MintSession(db, worldId);
+            SetSessionCookie(ctx, token);
+            log(null, "world_handoff_redeem", $"world #{worldId}");
+            return J(new { ok = true, token, return_to = returnTo ?? "/world/account",
+                display_name = H.Str(u["display_name"]),
+                email_verified = H.L(u["email_verified"]) == 1, passport_public = H.L(u["passport_public"]) == 1 });
         });
 
         // ───────────── passport ─────────────
@@ -453,7 +708,11 @@ public static class WorldAccount
             if (!Enabled()) return Disabled();
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
-            var rows = EvidenceRows(db, u.Id, visibleOnly: false);
+            // Whole-history statistics from SQL, a paged window of evidence (P1-06): an account
+            // with 1,000 completed challenges reports 1,000 and can reach every one of them.
+            var offset = (int)(H.QL(ctx, "offset") ?? 0);
+            var stats = EvidenceStats(db, u.Id, visibleOnly: false);
+            var rows = EvidenceRows(db, u.Id, visibleOnly: false, limit: 200, offset: offset);
             var evidence = rows.Select(r => new
             {
                 attempt_id = H.L(r["id"]), title = H.Str(r["title"]), industry = H.Str(r["industry"]),
@@ -469,9 +728,11 @@ public static class WorldAccount
             return J(new
             {
                 display_name = u.DisplayName, email_verified = u.EmailVerified, passport_public = u.PassportPublic,
-                completed = rows.Count,
-                industries = rows.Select(r => H.Str(r["industry"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count(),
-                tracks = rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count(),
+                completed = stats.Completed,
+                industries = stats.Industries,
+                tracks = stats.Tracks,
+                evidence_total = stats.Completed,
+                evidence_offset = offset,
                 evidence,
                 show_scores = show.Scores, show_profiles = show.Profiles, show_dates = show.Dates,
                 expires_at = H.Str(me["passport_expires_at"])?.Split(' ')[0],
@@ -533,23 +794,12 @@ public static class WorldAccount
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
             var b = await H.Body(ctx.Request);
-            foreach (var (key, col) in new[] { ("show_scores", "passport_show_scores"),
-                                               ("show_profiles", "passport_show_profiles"),
-                                               ("show_dates", "passport_show_dates") })
-                if (H.GetBool(b, key) is { } v)
-                    db.Execute($"UPDATE pciworld_users SET {col}=? WHERE id=?", v ? 1 : 0, u.Id);
-
-            // expires_in_days: 0 or absent clears the expiry; a positive value sets one. Capped at
-            // five years so "expiry" always means something.
-            if (H.GetNum(b, "expires_in_days") is { } days)
-            {
-                if (days <= 0) db.Execute("UPDATE pciworld_users SET passport_expires_at=NULL WHERE id=?", u.Id);
-                else
-                {
-                    var when = DateTime.UtcNow.AddDays(Math.Min(days, 1825)).ToString("yyyy-MM-dd HH:mm:ss");
-                    db.Execute("UPDATE pciworld_users SET passport_expires_at=? WHERE id=?", when, u.Id);
-                }
-            }
+            // Independent fields (P0-06): absent keys leave stored values — including the link
+            // expiry — untouched. Sending expires_in_days is the ONLY way to change the expiry;
+            // 0 clears it deliberately, a positive value sets one (capped at five years).
+            WorldPassport.ApplyDisclosure(db, u.Id,
+                H.GetBool(b, "show_scores"), H.GetBool(b, "show_profiles"), H.GetBool(b, "show_dates"),
+                H.GetNum(b, "expires_in_days"));
             var me = db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", u.Id)!;
             var show = WorldPassport.Disclosure.From(me);
             return J(new { ok = true, show_scores = show.Scores, show_profiles = show.Profiles,
@@ -607,11 +857,13 @@ public static class WorldAccount
             var u = PassportByToken(token);
             if (u is null) return Results.NotFound();
             var rows = EvidenceRows(db, H.L(u["id"]), visibleOnly: true);
+            var stats = EvidenceStats(db, H.L(u["id"]), visibleOnly: true);
             var verifyUrl = WorldUrl.Abs(ctx.Request, "/world/p/" + token);
             return Results.Content(
                 WorldPages.PublicPassport(db, H.Str(u["display_name"]) ?? "PCI World participant", rows,
                     WorldPassport.Disclosure.From(u), verifyUrl, token, H.Str(u["passport_expires_at"]),
-                    string.IsNullOrEmpty(H.Str(u["passport_photo_ref"])) ? null : $"/world/p/{token}/photo"),
+                    string.IsNullOrEmpty(H.Str(u["passport_photo_ref"])) ? null : $"/world/p/{token}/photo",
+                    stats.Completed, stats.Industries, stats.Tracks),
                 "text/html; charset=utf-8");
         });
 
@@ -637,14 +889,18 @@ public static class WorldAccount
             var u = PassportByToken(token);
             if (u is null) return Results.NotFound();
             var rows = EvidenceRows(db, H.L(u["id"]), visibleOnly: true);
+            var stats = EvidenceStats(db, H.L(u["id"]), visibleOnly: true);
             var show = WorldPassport.Disclosure.From(u);
             var doc = new WorldPassport.PassportDoc
             {
                 Name = H.Str(u["display_name"]) ?? "PCI World participant",
                 VerifyUrl = WorldUrl.Abs(ctx.Request, "/world/p/" + token),
-                Completed = rows.Count,
-                Industries = rows.Select(r => H.Str(r["industry"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count(),
-                Tracks = rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count(),
+                // Whole-history counts from SQL (P1-06) — the page of rows is only the window the
+                // one-page document can draw, and it says so when it cannot draw them all.
+                Completed = (int)stats.Completed,
+                Industries = (int)stats.Industries,
+                Tracks = (int)stats.Tracks,
+                TotalRows = stats.Completed,
                 IssuedOn = DateTime.UtcNow.ToString("yyyy-MM-dd"),
                 ExpiresOn = H.Str(u["passport_expires_at"])?.Split(' ')[0],
                 Show = show,
