@@ -42,7 +42,10 @@ public class WorldVerificationAndScaleTests
         Assert.Empty(WorldAccount.EvidenceRows(db, uid, false, limit: 200, offset: 260));
 
         // Visible-only statistics drive the public Passport and the PDF the same way.
-        db.Execute("UPDATE pciworld_attempts SET passport_visible=0 WHERE user_id=? AND id IN (SELECT id FROM pciworld_attempts WHERE user_id=? LIMIT 10)", uid, uid);
+        // Portable on SQLite AND MariaDB (no LIMIT inside IN, no self-referencing update subquery):
+        // hide the ten oldest rows by id threshold.
+        var tenth = db.Scalar<long>("SELECT id FROM pciworld_attempts WHERE user_id=? ORDER BY id LIMIT 1 OFFSET 9", uid);
+        db.Execute("UPDATE pciworld_attempts SET passport_visible=0 WHERE user_id=? AND id<=?", uid, tenth);
         Assert.Equal(250, WorldAccount.EvidenceStats(db, uid, visibleOnly: true).Completed);
     }
 
