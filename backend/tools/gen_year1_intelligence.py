@@ -414,7 +414,39 @@ MAPPED_SEP = [
     ("WC-GOV-277", "Whose benefits are these anyway", "daily_decision", "integration_governance", "commissioning_handover", "cross_sector", "single_decision", "advanced", 7, 273),
 ]
 assert len(MAPPED_SEP) == 28
-MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN + MAPPED_JUL + MAPPED_AUG + MAPPED_SEP
+
+# ── October authored pack: digital delivery, data quality and responsible AI. ──
+MAPPED_OCT = [
+    ("WC-AIA-284", "The model that was confidently wrong", "daily_decision", "digital_data_ai", "definition_planning", "cross_sector", "single_decision", "advanced", 6, 274),
+    ("WC-RSC-289", "The float that was spent three times", "project_rescue", "schedule_planning", "definition_planning", "healthcare_life_sciences", "multi_stage_decision", "advanced", 15, 275),
+    ("WC-RSK-293", "The register that stopped being read", "risk_room", "risk_uncertainty", "definition_planning", "transport_logistics", "evidence_diagnosis", "advanced", 10, 276),
+    ("WC-DQA-285", "A dashboard with two sources of truth", "daily_decision", "digital_data_ai", "definition_planning", "construction_infrastructure", "single_decision", "advanced", 7, 277),
+    ("WC-RSC-290", "Two critical paths, one promise", "project_rescue", "schedule_planning", "definition_planning", "energy_utilities", "multi_stage_decision", "advanced", 13, 278),
+    ("WC-RSK-294", "A contingency drawdown decision", "risk_room", "risk_uncertainty", "definition_planning", "manufacturing_industrial", "evidence_diagnosis", "advanced", 12, 279),
+    ("WC-AIA-286", "The forecast the algorithm inherited", "daily_decision", "digital_data_ai", "definition_planning", "cross_sector", "single_decision", "advanced", 5, 280),
+    ("WC-RSC-291", "A milestone with no logic behind it", "project_rescue", "schedule_planning", "definition_planning", "professional_services_other", "multi_stage_decision", "advanced", 18, 281),
+    ("WC-RSK-295", "The opportunity hidden in the delay", "risk_room", "risk_uncertainty", "definition_planning", "technology_digital", "evidence_diagnosis", "advanced", 8, 282),
+    ("WC-DQA-287", "Data quality as a delivery risk", "daily_decision", "digital_data_ai", "definition_planning", "energy_utilities", "single_decision", "advanced", 6, 283),
+    ("WC-RSC-292", "The recovery plan that borrowed from testing", "project_rescue", "schedule_planning", "closeout_lessons", "technology_digital", "multi_stage_decision", "advanced", 14, 284),
+    ("WC-RSK-296", "Exposure the heat map understated", "risk_room", "risk_uncertainty", "definition_planning", "public_sector", "evidence_diagnosis", "advanced", 10, 285),
+    ("WC-AIA-288", "An AI recommendation without provenance", "daily_decision", "digital_data_ai", "definition_planning", "technology_digital", "single_decision", "advanced", 7, 286),
+    ("WC-QLT-297", "The inspection that was signed, not done", "daily_decision", "quality_assurance", "definition_planning", "cross_sector", "single_decision", "advanced", 5, 287),
+    ("WC-QLT-298", "A non-conformance on the critical path", "daily_decision", "quality_assurance", "definition_planning", "construction_infrastructure", "single_decision", "advanced", 6, 292),
+    ("WC-QLT-299", "The audit trail with a missing week", "daily_decision", "quality_assurance", "definition_planning", "public_sector", "single_decision", "advanced", 9, 293),
+    ("WC-GOV-300", "The stage gate that split the board", "daily_decision", "integration_governance", "definition_planning", "cross_sector", "single_decision", "advanced", 8, 294),
+    ("WC-SCO-304", "The provision nobody priced", "daily_decision", "scope_requirements", "definition_planning", "climate_sustainability", "single_decision", "advanced", 11, 295),
+    ("WC-GOV-301", "Benefits on paper, pressure in the room", "daily_decision", "integration_governance", "definition_planning", "cross_sector", "single_decision", "advanced", 9, 296),
+    ("WC-SCO-305", "A deliverable with three definitions", "daily_decision", "scope_requirements", "definition_planning", "construction_infrastructure", "single_decision", "advanced", 10, 297),
+    ("WC-PRC-308", "The bid that was too good", "daily_decision", "procurement_contracts", "definition_planning", "cross_sector", "single_decision", "advanced", 11, 298),
+    ("WC-GOV-302", "One sponsor, two mandates", "daily_decision", "integration_governance", "definition_planning", "cross_sector", "single_decision", "advanced", 12, 299),
+    ("WC-SCO-306", "The scope statement that meant four things", "daily_decision", "scope_requirements", "definition_planning", "construction_infrastructure", "single_decision", "advanced", 9, 300),
+    ("WC-PRC-309", "A variation priced under duress", "daily_decision", "procurement_contracts", "definition_planning", "transport_logistics", "single_decision", "advanced", 8, 301),
+    ("WC-GOV-303", "The programme that outgrew its case", "daily_decision", "integration_governance", "closeout_lessons", "cross_sector", "single_decision", "advanced", 11, 302),
+    ("WC-SCO-307", "Where the fit-out ends and the asset begins", "daily_decision", "scope_requirements", "closeout_lessons", "energy_utilities", "single_decision", "advanced", 16, 303),
+    ("WC-CST-310", "The forecast that flattered the month", "daily_decision", "cost_commercial", "closeout_lessons", "construction_infrastructure", "single_decision", "advanced", 15, 304),
+]
+assert len(MAPPED_OCT) == 27
+MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN + MAPPED_JUL + MAPPED_AUG + MAPPED_SEP + MAPPED_OCT
 
 # Existing bank items that complete January, February and March — pinned so the months stay
 # fully authored (March's thirteen legacy schedule items hold their theme-month days).
@@ -432,7 +464,8 @@ PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17,
                    "WC-CHG-040": 195, "WC-CHG-023": 196, "WC-EVM-001": 197, "WC-CHG-005": 198,
                    "WC-CSH-034": 199,
                    "WC-RES-013": 228, "WC-RES-037": 229,
-                   "WC-TRC-052": 258, "WC-TRC-051": 259}
+                   "WC-TRC-052": 258, "WC-TRC-051": 259,
+                   "WC-AIA-029": 288, "WC-AIA-010": 289, "WC-DQA-017": 290, "WC-DQ-045": 291}
 
 DIFF_BAND = {"foundation": "foundation", "developing": "foundation", "professional": "practitioner",
              "advanced": "advanced", "expert": "executive"}

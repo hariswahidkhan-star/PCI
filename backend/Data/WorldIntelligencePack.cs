@@ -23,7 +23,7 @@ public static partial class WorldIntelligencePack
     /// <summary>All authored Year-1 items across the quarterly partial files.</summary>
     static (string Code, string Title, string Hook, string Industry, string Role, string Track,
         string Difficulty, int Minutes, string Competencies, string Config)[] Items =>
-        _items ??= ItemsQ1.Concat(ItemsQ2).Concat(ItemsQ3).ToArray();
+        _items ??= ItemsQ1.Concat(ItemsQ2).Concat(ItemsQ3).Concat(ItemsQ4).ToArray();
     static (string, string, string, string, string, string, string, int, string, string)[]? _items;
 
     public static void Seed(Db db)
