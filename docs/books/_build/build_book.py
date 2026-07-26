@@ -84,20 +84,34 @@ FRONT = """
   <h1>{title}</h1>
   <div class="subtitle">{subtitle}</div>
   <div class="rule"></div>
-  <div class="meta">FIRST EDITION — PHASE 1 PROTOTYPE (NOT FOR RELEASE)<br/>
+  <div class="meta">FIRST EDITION — DRAFT FOR EDITORIAL AND TECHNICAL REVIEW<br/>
+  NOT FOR RELEASE OR DISTRIBUTION<br/>
   PROJECT CONTROLS INSTITUTE GLOBAL<br/>
   <em>Finance intelligently. Control predictively. Deliver successfully.</em><br/>
   <em>AI proposes; the professional verifies, decides and remains accountable.</em></div>
 </div>
 <div class="frontmatter">
-  <h2 style="page-break-before: always;">Prototype notice</h2>
-  <p>This document is a <strong>Phase 1 production prototype</strong> of one domain, built to
-  validate the book's pattern, calculation-verification harness, figures and typesetting pipeline
-  before scaled authorship. It is not a released PCI publication and carries no entitlement,
-  syllabus or examination status. The released edition will carry the full copyright, disclaimer
-  and trademark notices of the PCI book family; all examples here are original and fictional, all
-  calculations pass the golden-answer suite (<code>verify_formulas.py</code>), and no standard's
-  text is reproduced.</p>
+  <h2 style="page-break-before: always;">Status of this draft</h2>
+  <p>This is a <strong>complete first draft</strong> of all {domains} domains of this volume, produced
+  under the phase-gated programme recorded in <code>docs/books/</code>. It is <strong>not a released
+  PCI publication</strong>: it carries no entitlement, syllabus or examination status, and the
+  released edition will carry the full copyright, disclaimer and notices of the PCI book family.</p>
+  <p><strong>What has been verified.</strong> Every number printed in this volume as a result — in
+  worked examples, in-text calculations, multiple-choice options, exercise solutions and case studies
+  — is recomputed independently with decimal arithmetic by the golden-answer suite
+  (<code>_build/verify_formulas.py</code>), which must pass in full before any domain passes gate. All
+  figures are PCI-original artwork generated from source in <code>_build/figures_src/</code>. No text,
+  table, diagram, question or distinctive structure from any other publisher or certification body is
+  reproduced; public standards are discussed and cited by name without reproducing their content. All
+  organisations, projects and cases are fictitious.</p>
+  <p><strong>What has not.</strong> This draft was <strong>AI-drafted and requires human editorial and
+  technical review before release</strong>. It is not attributed to any named author or expert, and no
+  claim of human authorship is made for it. Nothing in it should be presented as reviewed until that
+  review is recorded. Where a professional judgement is stated rather than a measured effect, the text
+  says so; readers should treat any unqualified generalisation as a drafting defect and report it.</p>
+  <p><strong>Legal and jurisdictional note.</strong> Nothing here is legal, tax, accounting or
+  investment advice. Treatments differ by jurisdiction and by reporting framework; specific matters
+  must be referred to qualified professional advisers in the relevant jurisdiction.</p>
 </div>
 """
 
@@ -222,7 +236,7 @@ def build(book: str, out: pathlib.Path) -> None:
     ix.append("</div></div>")
     print(f"index entries: {sum(len(v) for v in groups.values())}")
 
-    front = FRONT.format(title=cfg["title"], subtitle=cfg["subtitle"])
+    front = FRONT.format(title=cfg["title"], subtitle=cfg["subtitle"], domains=len(files))
     doc_html = ("<!doctype html><html><head><meta charset='utf-8'>"
                 f"<style>html {{ string-set: booktitle \"{cfg['run_title']}\"; }}</style>"
                 f"</head><body>{front}{''.join(toc)}{html}{''.join(ix)}</body></html>")
@@ -238,5 +252,5 @@ def build(book: str, out: pathlib.Path) -> None:
 
 if __name__ == "__main__":
     book = sys.argv[1]
-    out = pathlib.Path(sys.argv[2]) if len(sys.argv) > 2 else ROOT / book / "build" / f"{book}-prototype.pdf"
+    out = pathlib.Path(sys.argv[2]) if len(sys.argv) > 2 else ROOT / book / "build" / f"{book}-bok-draft.pdf"
     build(book, out)

@@ -346,8 +346,8 @@ therefore how much elicitation is worth buying* — and that is arithmetic.
    objection this investment always attracts — that elicitation delays the start. Elicitation would
    have to extend the definition phase by **more than 36.89 weeks** before it destroyed value, and a
    realistic four-week extension costs `4 × 14,280 =` **USD 57,120**, leaving **USD 469,680** net. The
-   objection is real and it is two orders of magnitude from being decisive; a leader who cannot say
-   that has to argue about it instead. Third, the saving is computed on the **difference** between
+   objection is real, and the breakeven is **more than nine times** the extension anyone is proposing —
+   an order of magnitude short of decisive; a leader who cannot say that has to argue about it instead. Third, the saving is computed on the **difference** between
    stages, never on the later cost alone: the gross figures give
    `13 × 6,400 + 9 × 25,600 + 3 × 102,400 =` **620,800**, overstating the saving by 10,000 by
    forgetting that the defect still has to be fixed. Fourth, two real limits rather than hedges. The
@@ -838,7 +838,8 @@ and 5.2.3's reverse traceability test is the only cheap way to see it.
    build cost of an uncontrolled requirement is **USD 4,200**, and **16** of them consumed critical-path
    time averaging **0.25 weeks** each. Cost of delay **USD 14,280** per week; baseline
    **USD 2,400,000**. Domain 4, KA 4.3.3 separately established **USD 291,176** of *authorised*
-   baseline drift over the same period.
+   baseline drift over the programme's first year, so the two figures set beside each other are
+   Meridian's cumulative baseline movement to date rather than two readings of one identical window.
 2. **Formula.** **Requirement-count reconciliation:** baseline count + approved additions = expected
    traced count; actual − expected = unexplained requirements. Creep cost = (unexplained × average
    direct cost) + (affected count × average weeks × cost of delay). Then combine with the authorised
@@ -899,7 +900,7 @@ later is written by whoever needs the deliverable accepted.
 3. **Substitution.** `(71 + 27) × 320`; `9,600 + (1/3 × 0.5 × 14,280)`; `98 × 0.25 × 11,980`;
    `31,360 / (98 × 11,980)`.
 4. **Result.** **98** requirements are deficient — **20.42 %** of the baseline, comprising **14.79 %**
-   restated and **5.62 %** absent. Remediating all of them costs **USD 31,360**. Expected cost per
+   restated and **5.63 %** absent. Remediating all of them costs **USD 31,360**. Expected cost per
    dispute is **USD 11,980** (9,600 of rework plus **USD 2,380** of expected delay). Expected disputes
    are **24.5**, at an expected cost of **USD 293,510**. Remediation therefore nets **USD 262,150**, a
    return of **9.36 times**. And the **breakeven dispute probability is 2.67 %** against an observed
@@ -1027,7 +1028,8 @@ Total creep cost is:
 additions including the 12 that were properly approved; D is the schedule impact alone.
 
 **MCQ 5.4-B `[5.4.1 · Evaluation]`** Domain 4 established USD 291,176 of authorised baseline drift over
-the same period. The most important consequence of the creep figure is that:
+the programme's first year, giving cumulative movement of USD 512,096 against a USD 2,400,000 baseline.
+The most important consequence of the creep figure is that:
 - A. total movement is 21.34 % of the baseline
 - B. the change log captures only 56.86 % of the movement it exists to control, and no cumulative test
   on that log can see the rest ✅
