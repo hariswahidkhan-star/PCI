@@ -120,6 +120,7 @@ public static class WorldPages
               --ease:cubic-bezier(.22,.61,.36,1)}
         *{box-sizing:border-box;margin:0}
         html{-webkit-text-size-adjust:100%}
+        ::selection{background:#BFDBFE}
         /* A cool wash across the top of the page so the first screen reads as a lit control room
            rather than a blank sheet. Painted as a background layer rather than an absolutely
            positioned element: a full-bleed div wider than the viewport adds a horizontal scrollbar
@@ -195,8 +196,11 @@ public static class WorldPages
         .card--noir .meta span{border-color:#26334a;color:#CBD5E1;background:transparent}
         .btn{display:inline-flex;align-items:center;gap:10px;background:var(--blue);color:#fff;border:2px solid var(--blue);
              font-family:var(--sans);font-weight:600;font-size:15.5px;padding:15px 28px;cursor:pointer;text-decoration:none;
-             border-radius:0;transition:background .16s var(--ease),border-color .16s var(--ease),color .16s var(--ease)}
-        .btn:hover{background:var(--blue-deep);border-color:var(--blue-deep)}
+             border-radius:0;transition:background .16s var(--ease),border-color .16s var(--ease),color .16s var(--ease),
+             transform .16s var(--ease),box-shadow .16s var(--ease)}
+        .btn:hover{background:var(--blue-deep);border-color:var(--blue-deep);transform:translateY(-1px);
+             box-shadow:0 12px 26px -14px rgba(29,78,216,.55)}
+        .btn:active{transform:none;box-shadow:none}
         .btn.secondary{background:transparent;color:var(--ink);border:1.5px solid var(--field);padding:15.5px 28px}
         .btn.secondary:hover{border-color:var(--ink);background:var(--paper)}
         /* On a noir surface the default ink-on-transparent secondary button is unreadable. It needs
@@ -351,19 +355,44 @@ public static class WorldPages
         @media (max-width:860px){.ft-grid{grid-template-columns:1fr 1fr}}
         @media (max-width:520px){.ft-grid{grid-template-columns:1fr}}
         /* ── the Passport artefact ─────────────────────────────────────────────
-           A passport cover, not a web card: deep noir with a corner sheen, hairline gilt frame,
-           engraved guilloché rings (pure CSS, deterministic), a seal, and letter-spaced labels.
-           Gilt (#C8A24B) is 7.5:1 on noir; slate labels 5.2:1; the name is white. */
-        .ppt-cover{position:relative;background:radial-gradient(130% 150% at 88% -30%,#1C2C4E 0%,var(--noir) 56%);
-             border-radius:18px;color:#CBD5E1;padding:42px 42px 34px;margin:28px 0;overflow:hidden;
-             box-shadow:0 2px 6px rgba(8,15,35,.16),0 40px 80px -34px rgba(8,15,35,.55)}
-        .ppt-cover::before{content:"";position:absolute;inset:11px;border:1px solid rgba(200,162,75,.42);
-             border-radius:11px;pointer-events:none}
-        .ppt-cover::after{content:"";position:absolute;inset:14px;border:1px solid rgba(200,162,75,.16);
-             border-radius:9px;pointer-events:none}
+           A passport data page, not a web card: deep noir with layered engraving. The material is
+           built from five deterministic layers — the lit ground, a fine guilloché with a corner
+           rosette (.ppt-lines), a diagonal sheen (.ppt-sheen), a gilt hairline frame with engraved
+           corner marks (::before/::after), and a machine-readable strip (.ppt-mrz) whose text only
+           restates what the page already says. Gilt (#C8A24B) is 7.5:1 on noir; the name is white. */
+        .ppt-cover{position:relative;color:#CBD5E1;padding:46px 46px 30px;margin:28px 0;overflow:hidden;
+             border-radius:20px;
+             background:radial-gradient(120% 150% at 86% -28%,#243761 0%,#1A2743 40%,var(--noir) 66%,#0A101C 100%);
+             box-shadow:0 1px 0 rgba(255,255,255,.07) inset,0 0 0 1px rgba(255,255,255,.04),
+                        0 2px 6px rgba(8,15,35,.18),0 48px 90px -38px rgba(8,15,35,.62)}
+        .ppt-cover::before{content:"";position:absolute;inset:12px;border:1px solid rgba(213,178,96,.44);
+             border-radius:12px;pointer-events:none;
+             box-shadow:0 0 0 3px rgba(200,162,75,.05),inset 0 0 0 1px rgba(200,162,75,.05)}
+        /* Engraved corner marks on the inner plate — eight hairline arms, two per corner. */
+        .ppt-cover::after{content:"";position:absolute;inset:17px;pointer-events:none;background:
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) left top/22px 1px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) left top/1px 22px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) right top/22px 1px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) right top/1px 22px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) left bottom/22px 1px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) left bottom/1px 22px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) right bottom/22px 1px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) right bottom/1px 22px no-repeat}
+        /* Guilloché: two ring systems and a fine ray rosette anchored past the lower-right corner,
+           echoed by a fainter silver system upper-left — engraving, not decoration, so it stays
+           under 10% opacity and fades toward the text. */
         .ppt-lines{position:absolute;inset:0;pointer-events:none;
-             background:repeating-radial-gradient(circle at 106% 112%,transparent 0 10px,rgba(200,162,75,.075) 10px 11px),
-                        repeating-radial-gradient(circle at -8% -14%,transparent 0 13px,rgba(148,163,184,.05) 13px 14px)}
+             background:repeating-radial-gradient(circle at 107% 114%,transparent 0 9px,rgba(200,162,75,.11) 9px 10px),
+                        repeating-radial-gradient(circle at 107% 114%,transparent 0 23px,rgba(226,192,119,.07) 23px 24.5px),
+                        repeating-conic-gradient(from 0deg at 107% 114%,rgba(200,162,75,.08) 0deg 1deg,transparent 1deg 5.5deg),
+                        repeating-radial-gradient(circle at -9% -16%,transparent 0 12px,rgba(148,163,184,.065) 12px 13px),
+                        repeating-radial-gradient(circle at -9% -16%,transparent 0 29px,rgba(148,163,184,.045) 29px 30.5px);
+             -webkit-mask-image:radial-gradient(115% 115% at 50% 45%,transparent 18%,#000 70%);
+             mask-image:radial-gradient(115% 115% at 50% 45%,transparent 18%,#000 70%)}
+        /* One still band of light across the plate, as on a photographed document. Static — the
+           artefact is an object, not an animation. */
+        .ppt-sheen{position:absolute;inset:0;pointer-events:none;
+             background:linear-gradient(112deg,transparent 34%,rgba(255,255,255,.045) 46%,rgba(255,255,255,.10) 51%,rgba(255,255,255,.035) 56%,transparent 68%)}
         .ppt-top{position:relative;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:30px}
         .ppt-top .wordmark{font-family:var(--display);font-weight:900;font-size:19px;letter-spacing:-.03em;color:#fff;white-space:nowrap}
         .ppt-top .bar{width:2px;height:24px;background:var(--crimson);border-radius:2px;flex:0 0 auto}
@@ -371,28 +400,48 @@ public static class WorldPages
            the red line, then who it is from. */
         .ppt-top .ppt-from{font-weight:600;font-size:11.5px;letter-spacing:.02em;color:#94A3B8;
              line-height:1.25;max-width:150px}
-        .ppt-top .ppt-word{margin-left:auto;font-weight:700;font-size:12px;letter-spacing:.42em;
+        .ppt-top .ppt-word{margin-left:auto;font-weight:800;font-size:12.5px;letter-spacing:.46em;
              text-transform:uppercase;color:var(--gilt);padding-left:4px}
-        /* The owner's photograph, framed like the artefact's other engraved elements. */
-        .ppt-photo{flex:0 0 auto;width:112px;height:140px;object-fit:cover;border-radius:9px;
-             border:1px solid rgba(200,162,75,.6);box-shadow:0 0 0 5px rgba(200,162,75,.12);
-             display:block;background:#0A101C}
-        .ppt-kicker{position:relative;display:block;font-weight:700;font-size:11.5px;letter-spacing:.22em;
+        /* Foil, where the platform can print it: the word is clipped out of a metallic gradient.
+           Engines without background-clip:text keep the flat gilt above — same word, same colour
+           family, so nothing is lost. */
+        @supports ((-webkit-background-clip:text) or (background-clip:text)){
+          .ppt-top .ppt-word{background:linear-gradient(103deg,#8F6B2E 0%,#D9B96A 24%,#F4E4AF 40%,#BE9440 56%,#E8CD86 76%,#9E7833 100%);
+               -webkit-background-clip:text;background-clip:text;color:transparent}
+        }
+        /* The owner's photograph, mounted: a gilt bezel, a dark mat, and a drop into the page. */
+        .ppt-photo{flex:0 0 auto;width:112px;height:140px;object-fit:cover;border-radius:8px;
+             border:1px solid rgba(226,192,119,.7);display:block;background:#0A101C;
+             box-shadow:0 0 0 4px rgba(10,16,28,.85),0 0 0 5px rgba(200,162,75,.4),
+                        0 18px 34px -14px rgba(0,0,0,.65)}
+        .ppt-kicker{position:relative;display:block;font-weight:700;font-size:11.5px;letter-spacing:.24em;
              text-transform:uppercase;color:var(--gilt);margin-bottom:12px}
-        .ppt-name{position:relative;font-family:var(--display);font-weight:800;font-size:clamp(30px,4.8vw,46px);
-             line-height:1.05;letter-spacing:-.02em;color:#fff;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+        /* The hairline grows out of the kicker — an engraver's rule, anchoring the name. */
+        .ppt-kicker::after{content:"";display:block;width:46px;height:1px;margin-top:11px;
+             background:linear-gradient(90deg,rgba(226,192,119,.9),rgba(226,192,119,0))}
+        .ppt-name{position:relative;font-family:var(--display);font-weight:900;font-size:clamp(30px,4.8vw,46px);
+             line-height:1.04;letter-spacing:-.022em;color:#fff;margin:0 0 10px;text-wrap:balance;max-width:24ch;
+             text-shadow:0 1px 0 rgba(0,0,0,.3)}
         .ppt-sub{position:relative;color:#94A3B8;font-size:15px;max-width:60ch;margin:0}
         .ppt-cover h2{position:relative}
-        .ppt-stats{position:relative;display:flex;flex-wrap:wrap;gap:0;margin-top:30px;padding-top:6px;
-             border-top:1px solid rgba(148,163,184,.28)}
-        .ppt-stats>div{padding:16px 36px 0 0;margin-right:36px;border-right:1px solid rgba(148,163,184,.16)}
+        .ppt-stats{position:relative;display:flex;flex-wrap:wrap;gap:0;margin-top:32px;padding-top:6px;
+             border-top:1px solid rgba(200,162,75,.32)}
+        .ppt-stats>div{padding:18px 38px 0 0;margin-right:38px;border-right:1px solid rgba(148,163,184,.14)}
         .ppt-stats>div:last-child{border-right:0;margin-right:0;padding-right:0}
-        .ppt-stats .kicker{color:#94A3B8;margin-bottom:5px;font-size:11.5px;letter-spacing:.18em}
-        .ppt-stats b{font-family:var(--display);font-weight:800;font-size:40px;letter-spacing:-.02em;
-             display:block;line-height:1.05;color:#fff;font-variant-numeric:tabular-nums}
-        .ppt-seal{flex:0 0 auto;display:block}
-        .ppt-foot{position:relative;display:flex;gap:10px 26px;flex-wrap:wrap;margin-top:26px;
-             font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#7C8CA0}
+        .ppt-stats .kicker{color:#9FB0C6;margin-bottom:7px;font-size:11px;letter-spacing:.2em}
+        .ppt-stats b{font-family:var(--display);font-weight:900;font-size:42px;letter-spacing:-.02em;
+             display:block;line-height:1.05;color:#fff;font-variant-numeric:tabular-nums;
+             text-shadow:0 1px 0 rgba(0,0,0,.3)}
+        .ppt-seal{flex:0 0 auto;display:block;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35))}
+        .ppt-foot{position:relative;display:flex;gap:10px 26px;flex-wrap:wrap;margin-top:28px;
+             font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8595AB}
+        /* The machine-readable zone. Purely typographic — the strip restates, in the chevron idiom
+           every passport reader recognises, exactly what the cover already says in words. */
+        .ppt-mrz{position:relative;margin-top:22px;padding-top:15px;border-top:1px solid rgba(200,162,75,.26);
+             font-family:ui-monospace,'Cascadia Mono','Courier New',monospace;font-size:11.5px;
+             letter-spacing:.16em;line-height:2;color:rgba(203,213,225,.38);
+             white-space:nowrap;overflow:hidden}
+        .ppt-mrz span{display:block}
         /* Disclosure switches: still real checkboxes (the tests and assistive tech depend on that),
            drawn as instrument toggles. The control itself is the track, so it stays visible,
            focusable and clickable exactly as before. */
@@ -419,10 +468,11 @@ public static class WorldPages
         @media (max-width:700px){.auth-alt{border-inline-start:0;padding-inline-start:0;
              border-top:1.5px solid var(--line);padding-top:26px}}
         @media (max-width:560px){
-          .ppt-cover{padding:28px 22px 24px}
+          .ppt-cover{padding:30px 24px 22px}
           .ppt-stats>div{padding-right:22px;margin-right:22px}
           .ppt-stats b{font-size:31px}
           .ppt-photo{width:88px;height:110px}
+          .ppt-mrz{font-size:9.5px;letter-spacing:.12em}
           .defn>div{grid-template-columns:1fr;gap:4px}
         }
         .crumbs{font-size:14px;color:var(--slate);margin-bottom:18px}
@@ -723,23 +773,35 @@ public static class WorldPages
 
     /// <summary>The Passport seal — an engraved-style emblem drawn as inline SVG. Deterministic,
     /// self-contained (no external references) and decorative by role: it never carries meaning
-    /// the surrounding text does not state.</summary>
+    /// the surrounding text does not state — the ring lettering repeats the operator and product
+    /// names already printed beside it. The gradient defs use fixed ids; at most one seal is ever
+    /// in the live DOM per page (the account page's second copy sits inert inside a template).</summary>
     public static string SealSvg(int size = 92) => $"""
         <svg class="ppt-seal" width="{size}" height="{size}" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
-          <circle cx="48" cy="48" r="45" fill="none" stroke="#C8A24B" stroke-width="1.5" opacity=".9"/>
-          <circle cx="48" cy="48" r="40.5" fill="none" stroke="#C8A24B" stroke-width=".7" opacity=".5"/>
-          <circle cx="48" cy="48" r="31" fill="none" stroke="#C8A24B" stroke-width=".9" opacity=".65"/>
-          <g stroke="#C8A24B" stroke-width="1.1" opacity=".75">
-            <line x1="89" y1="48" x2="93" y2="48"/><line x1="83.5" y1="68.5" x2="87" y2="70.5"/>
-            <line x1="68.5" y1="83.5" x2="70.5" y2="87"/><line x1="48" y1="89" x2="48" y2="93"/>
-            <line x1="27.5" y1="83.5" x2="25.5" y2="87"/><line x1="12.5" y1="68.5" x2="9" y2="70.5"/>
-            <line x1="7" y1="48" x2="3" y2="48"/><line x1="12.5" y1="27.5" x2="9" y2="25.5"/>
-            <line x1="27.5" y1="12.5" x2="25.5" y2="9"/><line x1="48" y1="7" x2="48" y2="3"/>
-            <line x1="68.5" y1="12.5" x2="70.5" y2="9"/><line x1="83.5" y1="27.5" x2="87" y2="25.5"/>
-          </g>
-          <text x="48" y="55" text-anchor="middle" font-family="Archivo,Arial,sans-serif" font-weight="900"
-                font-size="24" fill="#C8A24B" letter-spacing="-1">PW</text>
-          <rect x="39" y="61" width="18" height="2.5" rx="1.25" fill="#C13329"/>
+          <defs>
+            <linearGradient id="pwsealg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#EBD08C"/><stop offset=".38" stop-color="#C8A24B"/>
+              <stop offset=".62" stop-color="#9E7833"/><stop offset="1" stop-color="#E2C077"/>
+            </linearGradient>
+            <path id="pwsealat" d="M13.5 48a34.5 34.5 0 0 1 69 0"/>
+            <path id="pwsealab" d="M16.5 48a31.5 31.5 0 0 0 63 0"/>
+          </defs>
+          <circle cx="48" cy="48" r="45" fill="none" stroke="url(#pwsealg)" stroke-width="1.6"/>
+          <circle cx="48" cy="48" r="42.5" fill="none" stroke="#C8A24B" stroke-width=".5" opacity=".55"/>
+          <circle cx="48" cy="48" r="27.5" fill="none" stroke="url(#pwsealg)" stroke-width=".9"/>
+          <circle cx="48" cy="48" r="25.5" fill="none" stroke="#C8A24B" stroke-width=".45" opacity=".5"/>
+          <circle cx="13.5" cy="48" r="1.2" fill="#C8A24B"/><circle cx="82.5" cy="48" r="1.2" fill="#C8A24B"/>
+          <text font-family="Archivo,Arial,sans-serif" font-weight="700" font-size="4.9"
+                fill="#C8A24B" letter-spacing=".9">
+            <textPath href="#pwsealat" startOffset="50%" text-anchor="middle">PROJECT CONTROLS INSTITUTE</textPath>
+          </text>
+          <text font-family="Archivo,Arial,sans-serif" font-weight="700" font-size="6"
+                fill="#C8A24B" letter-spacing="3">
+            <textPath href="#pwsealab" startOffset="50%" text-anchor="middle">PCI WORLD</textPath>
+          </text>
+          <text x="48" y="53.5" text-anchor="middle" font-family="Archivo,Arial,sans-serif" font-weight="900"
+                font-size="19" fill="url(#pwsealg)" letter-spacing="-.5">PW</text>
+          <rect x="40.5" y="58.5" width="15" height="2.2" rx="1.1" fill="#C13329"/>
         </svg>
         """;
 
@@ -1348,7 +1410,7 @@ public static class WorldPages
         show ??= new WorldPassport.Disclosure(true, true, true);
         var items = string.Join("", rows.Select(r => $"""
             <tr>
-              <td>{E(H.Str(r["title"]))}<br>
+              <td><b>{E(H.Str(r["title"]))}</b><br>
                 <small class="num" style="color:var(--slate)"><a href="/world/challenge/{E(H.Str(r["code"]))}">{E(H.Str(r["code"]))}</a> &middot; v{H.L(r["version"])}</small></td>
               <td>{E(H.Str(r["industry"]))}</td>
               <td>{E(Cap(H.Str(r["difficulty"])))}</td>
@@ -1389,6 +1451,7 @@ public static class WorldPages
             $"""
             <div class="ppt-cover" style="margin-top:6px">
               <div class="ppt-lines" aria-hidden="true"></div>
+              <div class="ppt-sheen" aria-hidden="true"></div>
               <div class="ppt-top">
                 <span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span>
                 <span class="ppt-from">From the Project<br>Controls Institute</span>
@@ -1411,6 +1474,10 @@ public static class WorldPages
               <div class="ppt-foot">
                 <span>Operated by the Project Controls Institute</span>
                 <span>Practice evidence &middot; not a certification</span>
+              </div>
+              <div class="ppt-mrz" aria-hidden="true">
+                <span>P&lt;PCIWORLD&lt;&lt;VERIFIED&lt;VIRTUAL&lt;PROJECT&lt;EXPERIENCE&lt;&lt;&lt;&lt;</span>
+                <span>PCIW&lt;&lt;PRACTICE&lt;EVIDENCE&lt;&lt;NOT&lt;A&lt;CERTIFICATION&lt;&lt;&lt;&lt;&lt;&lt;</span>
               </div>
             </div>
             <div class="card">
@@ -1869,6 +1936,7 @@ public static class WorldPages
             // page will see — same seal, same stats, same honesty line.
             h+='<div class="ppt-cover">'+
               '<div class="ppt-lines" aria-hidden="true"></div>'+
+              '<div class="ppt-sheen" aria-hidden="true"></div>'+
               '<div class="ppt-top"><span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span>'+
               '<span class="ppt-from">From the Project<br>Controls Institute</span>'+
               '<span class="ppt-word">Passport</span></div>'+
@@ -1884,6 +1952,9 @@ public static class WorldPages
               '<div><span class="kicker">Tracks</span><b class="score num">'+p.tracks+'</b></div></div>'+
               '<div class="ppt-foot"><span>Operated by the Project Controls Institute</span>'+
               '<span>Practice evidence &middot; not a certification</span></div>'+
+              '<div class="ppt-mrz" aria-hidden="true">'+
+              '<span>P&lt;PCIWORLD&lt;&lt;VERIFIED&lt;VIRTUAL&lt;PROJECT&lt;EXPERIENCE&lt;&lt;&lt;&lt;</span>'+
+              '<span>PCIW&lt;&lt;PRACTICE&lt;EVIDENCE&lt;&lt;NOT&lt;A&lt;CERTIFICATION&lt;&lt;&lt;&lt;&lt;&lt;</span></div>'+
               '</div>';
             // The panel is where practice and evidence meet: the next challenge is always one
             // click away, and every completed one below is traceable to its published version.
