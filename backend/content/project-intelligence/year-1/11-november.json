@@ -9,7 +9,7 @@
    "day": 305,
    "status": "planned",
    "source_challenge": null,
-   "title": "An estimate at completion with three authors — a highway upgrade",
+   "title": "An estimate at completion with three authors — a portfolio review",
    "experience_type": "project_rescue",
    "primary_domain": "cost_commercial",
    "difficulty_band": "advanced",
@@ -17,14 +17,14 @@
    "est_minutes": 18,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "closeout_lessons",
-   "sector": "construction_infrastructure"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D306",
    "day": 306,
    "status": "planned",
    "source_challenge": null,
-   "title": "Strategy says yes, capacity says no — a platform migration",
+   "title": "A delegation question with teeth — a framework programme",
    "experience_type": "daily_decision",
    "primary_domain": "integration_governance",
    "difficulty_band": "advanced",
@@ -32,14 +32,14 @@
    "est_minutes": 13,
    "interaction": "single_decision",
    "lifecycle_stage": "closeout_lessons",
-   "sector": "technology_digital"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D307",
    "day": 307,
    "status": "planned",
    "source_challenge": null,
-   "title": "The single point of failure everyone knew — a multi-site capital programme",
+   "title": "The single point of failure everyone knew — a river crossing",
    "experience_type": "risk_room",
    "primary_domain": "risk_uncertainty",
    "difficulty_band": "advanced",
@@ -47,14 +47,14 @@
    "est_minutes": 16,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "concept_business_case",
-   "sector": "cross_sector"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D308",
    "day": 308,
    "status": "planned",
    "source_challenge": null,
-   "title": "The long-lead item with no float — a coastal resilience scheme",
+   "title": "The long-lead item with no float — a joint-venture delivery office",
    "experience_type": "project_rescue",
    "primary_domain": "procurement_contracts",
    "difficulty_band": "advanced",
@@ -62,14 +62,14 @@
    "est_minutes": 14,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "procurement_mobilization",
-   "sector": "climate_sustainability"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D309",
    "day": 309,
    "status": "planned",
    "source_challenge": null,
-   "title": "The go/no-go with missing evidence — a joint-venture delivery office",
+   "title": "The baseline the board never saw — a retrofit programme",
    "experience_type": "daily_decision",
    "primary_domain": "integration_governance",
    "difficulty_band": "advanced",
@@ -77,14 +77,14 @@
    "est_minutes": 18,
    "interaction": "single_decision",
    "lifecycle_stage": "closeout_lessons",
-   "sector": "cross_sector"
+   "sector": "climate_sustainability"
   },
   {
    "code": "PI-Y1-D310",
    "day": 310,
    "status": "planned",
    "source_challenge": null,
-   "title": "A residual risk with no owner — an equipment overhaul",
+   "title": "A residual risk with no owner — a framework programme",
    "experience_type": "risk_room",
    "primary_domain": "risk_uncertainty",
    "difficulty_band": "advanced",
@@ -92,14 +92,14 @@
    "est_minutes": 16,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "closeout_lessons",
-   "sector": "manufacturing_industrial"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D311",
    "day": 311,
    "status": "planned",
    "source_challenge": null,
-   "title": "The change that arrived as a fact — a portfolio review",
+   "title": "The change that arrived as a fact — a wind farm repowering",
    "experience_type": "project_rescue",
    "primary_domain": "change_claims_recovery",
    "difficulty_band": "advanced",
@@ -107,14 +107,14 @@
    "est_minutes": 15,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "closeout_lessons",
-   "sector": "cross_sector"
+   "sector": "climate_sustainability"
   },
   {
    "code": "PI-Y1-D312",
    "day": 312,
    "status": "planned",
    "source_challenge": null,
-   "title": "The stage gate that split the board — a clinical trials expansion",
+   "title": "Strategy says yes, capacity says no — a laboratory relocation",
    "experience_type": "daily_decision",
    "primary_domain": "integration_governance",
    "difficulty_band": "advanced",
@@ -129,7 +129,7 @@
    "day": 313,
    "status": "planned",
    "source_challenge": null,
-   "title": "The weather window and the reserve — a framework programme",
+   "title": "The weather window and the reserve — a broadcast facility move",
    "experience_type": "risk_room",
    "primary_domain": "risk_uncertainty",
    "difficulty_band": "advanced",
@@ -137,14 +137,14 @@
    "est_minutes": 16,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "procurement_mobilization",
-   "sector": "cross_sector"
+   "sector": "professional_services_other"
   },
   {
    "code": "PI-Y1-D314",
    "day": 314,
    "status": "planned",
    "source_challenge": null,
-   "title": "The requirement nobody owned — a river crossing",
+   "title": "The exclusion that came back — a hospital ward refurbishment",
    "experience_type": "project_rescue",
    "primary_domain": "scope_requirements",
    "difficulty_band": "advanced",
@@ -152,14 +152,14 @@
    "est_minutes": 13,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "concept_business_case",
-   "sector": "construction_infrastructure"
+   "sector": "healthcare_life_sciences"
   },
   {
    "code": "PI-Y1-D315",
    "day": 315,
    "status": "planned",
    "source_challenge": null,
-   "title": "Benefits on paper, pressure in the room — a pilot production ramp",
+   "title": "The go/no-go with missing evidence — a plant expansion",
    "experience_type": "daily_decision",
    "primary_domain": "integration_governance",
    "difficulty_band": "advanced",
@@ -174,7 +174,7 @@
    "day": 316,
    "status": "planned",
    "source_challenge": null,
-   "title": "The handover date that moved twice — a vaccine plant upgrade",
+   "title": "Sequencing the work nobody wants first — a factory relocation",
    "experience_type": "project_rescue",
    "primary_domain": "schedule_planning",
    "difficulty_band": "advanced",
@@ -182,14 +182,14 @@
    "est_minutes": 18,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "procurement_mobilization",
-   "sector": "healthcare_life_sciences"
+   "sector": "manufacturing_industrial"
   },
   {
    "code": "PI-Y1-D317",
    "day": 317,
    "status": "planned",
    "source_challenge": null,
-   "title": "One sponsor, two mandates — a census-scale IT programme",
+   "title": "The stage gate that split the board — an enterprise transformation",
    "experience_type": "daily_decision",
    "primary_domain": "integration_governance",
    "difficulty_band": "advanced",
@@ -197,7 +197,7 @@
    "est_minutes": 15,
    "interaction": "single_decision",
    "lifecycle_stage": "closeout_lessons",
-   "sector": "public_sector"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D318",
@@ -264,7 +264,7 @@
    "day": 322,
    "status": "planned",
    "source_challenge": null,
-   "title": "Liquidated damages, tested — a hospital trust capital plan",
+   "title": "Liquidated damages, tested — a mixed-use development",
    "experience_type": "project_rescue",
    "primary_domain": "procurement_contracts",
    "difficulty_band": "advanced",
@@ -272,14 +272,14 @@
    "est_minutes": 14,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "concept_business_case",
-   "sector": "public_sector"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D323",
    "day": 323,
    "status": "planned",
    "source_challenge": null,
-   "title": "The programme that outgrew its case — a stadium fit-out",
+   "title": "Benefits on paper, pressure in the room — a highway upgrade",
    "experience_type": "daily_decision",
    "primary_domain": "integration_governance",
    "difficulty_band": "advanced",
@@ -294,7 +294,7 @@
    "day": 324,
    "status": "planned",
    "source_challenge": null,
-   "title": "A claim built from diary pages — a joint-venture delivery office",
+   "title": "A claim built from diary pages — an offshore maintenance campaign",
    "experience_type": "project_rescue",
    "primary_domain": "change_claims_recovery",
    "difficulty_band": "advanced",
@@ -302,14 +302,14 @@
    "est_minutes": 15,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "procurement_mobilization",
-   "sector": "cross_sector"
+   "sector": "energy_utilities"
   },
   {
    "code": "PI-Y1-D325",
    "day": 325,
    "status": "planned",
    "source_challenge": null,
-   "title": "Contingency, spent in silence — a framework programme",
+   "title": "Contingency, spent in silence — a multi-site capital programme",
    "experience_type": "daily_decision",
    "primary_domain": "cost_commercial",
    "difficulty_band": "advanced",
@@ -324,7 +324,7 @@
    "day": 326,
    "status": "planned",
    "source_challenge": null,
-   "title": "The scope statement that meant four things — a water treatment upgrade",
+   "title": "Acceptance criteria, written after the fact — a network modernisation",
    "experience_type": "project_rescue",
    "primary_domain": "scope_requirements",
    "difficulty_band": "advanced",
@@ -332,14 +332,14 @@
    "est_minutes": 13,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "closeout_lessons",
-   "sector": "energy_utilities"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D327",
    "day": 327,
    "status": "planned",
    "source_challenge": null,
-   "title": "A value engineering call under pressure — an enterprise transformation",
+   "title": "A value engineering call under pressure — a water treatment upgrade",
    "experience_type": "daily_decision",
    "primary_domain": "cost_commercial",
    "difficulty_band": "advanced",
@@ -347,14 +347,14 @@
    "est_minutes": 16,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "closeout_lessons",
-   "sector": "cross_sector"
+   "sector": "energy_utilities"
   },
   {
    "code": "PI-Y1-D328",
    "day": 328,
    "status": "planned",
    "source_challenge": null,
-   "title": "The float that was already spent — a national rollout",
+   "title": "The calendar the site never agreed to — an enterprise transformation",
    "experience_type": "project_rescue",
    "primary_domain": "schedule_planning",
    "difficulty_band": "advanced",
@@ -362,14 +362,14 @@
    "est_minutes": 18,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "concept_business_case",
-   "sector": "technology_digital"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D329",
    "day": 329,
    "status": "planned",
    "source_challenge": null,
-   "title": "The cash curve that crossed the facility — a fleet transition",
+   "title": "The cash curve that crossed the facility — a defence facility upgrade",
    "experience_type": "daily_decision",
    "primary_domain": "cost_commercial",
    "difficulty_band": "advanced",
@@ -377,14 +377,14 @@
    "est_minutes": 14,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "procurement_mobilization",
-   "sector": "transport_logistics"
+   "sector": "public_sector"
   },
   {
    "code": "PI-Y1-D330",
    "day": 330,
    "status": "planned",
    "source_challenge": null,
-   "title": "Two projects, one senior engineer — a festival build",
+   "title": "Two projects, one senior engineer — a census-scale IT programme",
    "experience_type": "project_rescue",
    "primary_domain": "resources_leadership",
    "difficulty_band": "advanced",
@@ -392,14 +392,14 @@
    "est_minutes": 14,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "closeout_lessons",
-   "sector": "professional_services_other"
+   "sector": "public_sector"
   },
   {
    "code": "PI-Y1-D331",
    "day": 331,
    "status": "planned",
    "source_challenge": null,
-   "title": "Unit rates that stopped meaning anything — a substation replacement",
+   "title": "Unit rates that stopped meaning anything — a core-system replacement",
    "experience_type": "daily_decision",
    "primary_domain": "cost_commercial",
    "difficulty_band": "advanced",
@@ -407,14 +407,14 @@
    "est_minutes": 15,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "closeout_lessons",
-   "sector": "energy_utilities"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D332",
    "day": 332,
    "status": "planned",
    "source_challenge": null,
-   "title": "The update that landed badly — a depot modernisation",
+   "title": "The update that landed badly — an airport baggage upgrade",
    "experience_type": "project_rescue",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "advanced",
@@ -429,7 +429,7 @@
    "day": 333,
    "status": "planned",
    "source_challenge": null,
-   "title": "The commitment ledger nobody reconciled — a data-centre build",
+   "title": "The commitment ledger nobody reconciled — a rail resignalling project",
    "experience_type": "daily_decision",
    "primary_domain": "cost_commercial",
    "difficulty_band": "advanced",
@@ -437,14 +437,14 @@
    "est_minutes": 13,
    "interaction": "evidence_diagnosis",
    "lifecycle_stage": "procurement_mobilization",
-   "sector": "technology_digital"
+   "sector": "transport_logistics"
   },
   {
    "code": "PI-Y1-D334",
    "day": 334,
    "status": "planned",
    "source_challenge": null,
-   "title": "The supplier who asked for help early — a mixed-use development",
+   "title": "The supplier who asked for help early — a flood defence scheme",
    "experience_type": "project_rescue",
    "primary_domain": "procurement_contracts",
    "difficulty_band": "advanced",

@@ -381,7 +381,40 @@ MAPPED_AUG = [
     ("WC-GOV-250", "Skip the gate, just this once", "daily_decision", "integration_governance", "definition_planning", "construction_infrastructure", "single_decision", "professional", 5, 243),
 ]
 assert len(MAPPED_AUG) == 29
-MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN + MAPPED_JUL + MAPPED_AUG
+
+# ── September authored pack: commissioning, handover and closeout quality. ──
+MAPPED_SEP = [
+    ("WC-QLT-256", "Category B, by negotiation", "daily_decision", "quality_assurance", "commissioning_handover", "cross_sector", "single_decision", "professional", 6, 244),
+    ("WC-SCO-278", "Assemble the handover, backwards", "logic_sequence", "scope_requirements", "commissioning_handover", "cross_sector", "order_rank", "professional", 5, 245),
+    ("WC-QLT-257", "Witnessed by an empty chair", "daily_decision", "quality_assurance", "commissioning_handover", "construction_infrastructure", "single_decision", "professional", 7, 246),
+    ("WC-SCH-281", "De-rig is a project too", "logic_sequence", "schedule_planning", "commissioning_handover", "professional_services_other", "order_rank", "professional", 6, 247),
+    ("WC-QLT-258", "The manuals are 'nearly done'", "daily_decision", "quality_assurance", "commissioning_handover", "cross_sector", "single_decision", "professional", 5, 248),
+    ("WC-SCO-279", "Grade the snags like an engineer", "logic_sequence", "scope_requirements", "commissioning_handover", "energy_utilities", "order_rank", "advanced", 5, 249),
+    ("WC-QLT-259", "Inside the limit, outside the comfort", "daily_decision", "quality_assurance", "commissioning_handover", "energy_utilities", "single_decision", "professional", 6, 250),
+    ("WC-SCH-282", "From cutover to Tuesday", "logic_sequence", "schedule_planning", "commissioning_handover", "technology_digital", "order_rank", "advanced", 6, 251),
+    ("WC-QLT-260", "The performance test's best week", "daily_decision", "quality_assurance", "commissioning_handover", "technology_digital", "single_decision", "professional", 7, 252),
+    ("WC-SCO-280", "The gates between building and healing", "logic_sequence", "scope_requirements", "commissioning_handover", "healthcare_life_sciences", "order_rank", "advanced", 5, 253),
+    ("WC-QLT-261", "Trained, on paper", "daily_decision", "quality_assurance", "commissioning_handover", "cross_sector", "single_decision", "professional", 5, 254),
+    ("WC-SCH-283", "Prove it in the right order", "logic_sequence", "schedule_planning", "commissioning_handover", "manufacturing_industrial", "order_rank", "advanced", 6, 255),
+    ("WC-QLT-262", "Found on the walk, filed where", "daily_decision", "quality_assurance", "commissioning_handover", "construction_infrastructure", "single_decision", "professional", 6, 256),
+    ("WC-QLT-263", "As built, as imagined", "daily_decision", "quality_assurance", "commissioning_handover", "cross_sector", "single_decision", "professional", 7, 257),
+    ("WC-QLT-264", "The spares that came up short", "daily_decision", "quality_assurance", "commissioning_handover", "transport_logistics", "single_decision", "professional", 5, 260),
+    ("WC-QLT-265", "Clean enough to open?", "daily_decision", "quality_assurance", "commissioning_handover", "healthcare_life_sciences", "single_decision", "professional", 6, 261),
+    ("WC-SAF-266", "The interlock with the cable tie", "daily_decision", "safety_sustainability", "commissioning_handover", "manufacturing_industrial", "single_decision", "professional", 7, 262),
+    ("WC-SAF-267", "The corridor that isn't on the strategy", "daily_decision", "safety_sustainability", "commissioning_handover", "public_sector", "single_decision", "professional", 5, 263),
+    ("WC-SAF-268", "Designed A, performing C", "daily_decision", "safety_sustainability", "commissioning_handover", "cross_sector", "single_decision", "professional", 6, 264),
+    ("WC-SAF-269", "Count the saplings", "daily_decision", "safety_sustainability", "commissioning_handover", "climate_sustainability", "single_decision", "professional", 7, 265),
+    ("WC-SAF-270", "The file that protects the next people", "daily_decision", "safety_sustainability", "commissioning_handover", "construction_infrastructure", "single_decision", "professional", 5, 266),
+    ("WC-SAF-271", "The gas that counts double", "daily_decision", "safety_sustainability", "commissioning_handover", "energy_utilities", "single_decision", "professional", 6, 267),
+    ("WC-SAF-272", "The button nobody pressed", "daily_decision", "safety_sustainability", "commissioning_handover", "technology_digital", "single_decision", "professional", 7, 268),
+    ("WC-SAF-273", "Eighteen loads, no notes", "daily_decision", "safety_sustainability", "commissioning_handover", "cross_sector", "single_decision", "professional", 5, 269),
+    ("WC-SAF-274", "Social value, actual value", "daily_decision", "safety_sustainability", "commissioning_handover", "cross_sector", "single_decision", "professional", 6, 270),
+    ("WC-SAF-275", "Strike it in the right order", "daily_decision", "safety_sustainability", "commissioning_handover", "construction_infrastructure", "single_decision", "professional", 7, 271),
+    ("WC-GOV-276", "Ready, with fourteen conditions", "daily_decision", "integration_governance", "commissioning_handover", "transport_logistics", "single_decision", "professional", 7, 272),
+    ("WC-GOV-277", "Whose benefits are these anyway", "daily_decision", "integration_governance", "commissioning_handover", "cross_sector", "single_decision", "advanced", 7, 273),
+]
+assert len(MAPPED_SEP) == 28
+MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN + MAPPED_JUL + MAPPED_AUG + MAPPED_SEP
 
 # Existing bank items that complete January, February and March — pinned so the months stay
 # fully authored (March's thirteen legacy schedule items hold their theme-month days).
@@ -398,7 +431,8 @@ PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17,
                    "WC-PRC-046": 165, "WC-PRC-014": 166, "WC-BOQ-012": 167, "WC-BOQ-035": 168,
                    "WC-CHG-040": 195, "WC-CHG-023": 196, "WC-EVM-001": 197, "WC-CHG-005": 198,
                    "WC-CSH-034": 199,
-                   "WC-RES-013": 228, "WC-RES-037": 229}
+                   "WC-RES-013": 228, "WC-RES-037": 229,
+                   "WC-TRC-052": 258, "WC-TRC-051": 259}
 
 DIFF_BAND = {"foundation": "foundation", "developing": "foundation", "professional": "practitioner",
              "advanced": "advanced", "expert": "executive"}

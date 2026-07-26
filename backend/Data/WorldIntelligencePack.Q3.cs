@@ -1802,5 +1802,824 @@ public static partial class WorldIntelligencePack
              "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
              "share_line":"Resource-levelled a workshop agenda like a project — and finished the plan in the room."}
             """),
+
+        // ═════════════ SEPTEMBER — quality, assurance, safety and sustainability ═════════════
+        // ───────────── Quality dailies · commissioning & handover · practitioner ─────────────
+
+        ("WC-QLT-256", "Category B, by negotiation", "The punch list shrank overnight. The defects didn't.",
+            "Enterprise Programmes", "Handover Quality Lead", "project_management", "professional", 6,
+            """["quality_management","governance"]""",
+            """
+            {"context":"Reviewing the logistics-hub punch list before Friday's handover certificate, you find 14 items re-categorised overnight from A (must fix before handover) to B (fix within 30 days post-handover) — including a fire-door closer fault and two emergency-light failures. The recategorisation was agreed 'pragmatically' between the contractor's manager and your deputy to protect the date. Category definitions are written: life-safety items are A, no discretion.",
+             "evidence":[
+               {"label":"Change","value":"14 items A→B overnight, incl. fire-door closer + 2 emergency lights"},
+               {"label":"How","value":"'Pragmatic' agreement, contractor + your deputy"},
+               {"label":"Rules","value":"Life-safety = Category A, no discretion"},
+               {"label":"Date","value":"Handover certificate due Friday"}],
+             "decisions":[
+               {"key":"recat","prompt":"You:",
+                "options":[
+                  {"key":"restore","label":"Restore the life-safety items to A (the definitions leave no room), let the genuinely cosmetic recategorisations stand on their merits, and get the contractor a 48-hour blitz plan for the restored items — Friday survives if the closers and lights do","quality":100,
+                   "consequence":"The contractor's blitz clears the life-safety items by Thursday night; handover certifies on time WITH the building actually safe — and both negotiators learn the categories aren't currency.",
+                   "principle":"Punch-list categories are definitions, not bargaining chips — restore by rule, then solve the date with effort, not paperwork."},
+                  {"key":"stand","label":"Let the recategorisation stand — B items get fixed within 30 days anyway","quality":0,
+                   "consequence":"The building occupies Friday with faulty emergency lights on a 30-day promise; the fire officer's spot check on day 9 finds them, and the certificate's signatories get formally asked what Category A means.",
+                   "principle":"Occupying a building past known life-safety defects converts a schedule decision into a liability."},
+                  {"key":"delay","label":"Push handover a week — the recategorisation stinks and the whole list needs re-review","quality":30,
+                   "consequence":"Defensible but blunt: a full re-review for 14 items delays a hub whose tenant contracts start Monday, when a targeted restoration plus a blitz would have held both safety and schedule.",
+                   "principle":"Match the correction to the corruption — the whole list wasn't gamed, fourteen lines were."}]}],
+             "hints":["Check which recategorised items touch life-safety — those aren't negotiable by definition.",
+               "The date pressure is real; answer it with a fix blitz, not a category shuffle.",
+               "Whoever negotiated categories once will again — close the discretion, not just the instance."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Un-negotiated a punch list's life-safety items and still made Friday."}
+            """),
+
+        ("WC-QLT-257", "Witnessed by an empty chair", "The client didn't show for the witness test. The programme wants it run anyway.",
+            "Construction", "Commissioning Coordinator", "project_management", "professional", 7,
+            """["quality_management","governance"]""",
+            """
+            {"context":"Today's generator load-bank test is contractually a client-witnessed test — their M&E consultant confirmed attendance, then didn't arrive (a diary error, per their apologetic email). The test rig, fuel and specialists are on site at four figures a day; the programme wants the test run now and 'the paperwork sorted later'. The contract says witnessed tests require the client's rep OR their written waiver.",
+             "evidence":[
+               {"label":"Situation","value":"Client rep absent (diary error); rig + specialists on-site, expensive"},
+               {"label":"Contract","value":"Witnessed test: client rep present OR written waiver"},
+               {"label":"Pressure","value":"'Run it, sort paperwork later'"},
+               {"label":"Fact","value":"The consultant is contactable — he emailed his apology"}],
+             "decisions":[
+               {"key":"test","prompt":"You:",
+                "options":[
+                  {"key":"waiver","label":"Get the waiver NOW: call the consultant, request written waiver-with-conditions by return email (full instrumented records + video, results reviewed jointly tomorrow) — and run the test under exactly those terms","quality":100,
+                   "consequence":"The waiver lands in 20 minutes — the consultant is embarrassed and cooperative; the test runs today, the joint review tomorrow catches one query the video answers, and the acceptance file is bulletproof.",
+                   "principle":"The contract offered the solution ('or written waiver') — use the mechanism, don't bypass the requirement it protects."},
+                  {"key":"run","label":"Run it — the diary error is theirs, the cost is yours, and the results speak for themselves","quality":10,
+                   "consequence":"The generator later underperforms in service; the unwitnessed, unwaivered test is contractually void, and the retest happens at YOUR cost with THEIR lawyers watching.",
+                   "principle":"An unwitnessed witnessed-test isn't evidence of performance — it is evidence of impatience."},
+                  {"key":"standdown","label":"Stand down and rebook — witnessed means witnessed","quality":25,
+                   "consequence":"Contractually pure, financially silly: four figures of demobilisation for want of a phone call the contract explicitly anticipated.",
+                   "principle":"Before paying the strict-compliance price, check whether the contract sells a cheaper route."}]}],
+             "hints":["Re-read the clause — 'or written waiver' is the escape the drafters built.",
+               "Waivers-with-conditions protect both sides; offer the conditions yourself.",
+               "Twenty minutes of phone calls versus a void test: price both."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Rescued a witnessed test with the waiver clause everyone had forgotten."}
+            """),
+
+        ("WC-QLT-258", "The manuals are 'nearly done'", "The building is finished. The knowledge to run it is at 60%.",
+            "Enterprise Programmes", "Handover Manager", "project_management", "professional", 5,
+            """["quality_management","governance"]""",
+            """
+            {"context":"Your innovation-centre project reaches practical completion next Friday. The O&M manuals — contractually a completion deliverable — stand at roughly 60%: mechanical is complete, electrical is drafts, the BMS documentation is 'with the subcontractor'. The facilities team that takes over Monday has seen none of it. The contractor proposes 'PC now, manuals within 30 days — standard practice'.",
+             "evidence":[
+               {"label":"Manuals","value":"~60%: mech done · elec drafts · BMS 'with subcontractor'"},
+               {"label":"Contract","value":"O&Ms are a completion deliverable"},
+               {"label":"Operators","value":"FM team starts Monday, has seen nothing"},
+               {"label":"Proposal","value":"'PC now, manuals in 30 days'"}],
+             "decisions":[
+               {"key":"handover","prompt":"You:",
+                "options":[
+                  {"key":"tiered","label":"Split by operational need, not document count: the day-one-critical set (BMS operation, isolation points, emergency procedures, statutory certs) must be complete AND walked through with the FM team before PC — the rest on a 30-day schedule with retention held against it","quality":100,
+                   "consequence":"The critical set forces the BMS documentation out of the subcontractor's drawer; the FM team's walk-through surfaces two undocumented isolation quirks, and Monday's operators can actually run their building — the encyclopedia follows within the month.",
+                   "principle":"Rank handover documents by what the operator needs at 8am Monday — completeness is negotiable by schedule, operability is not."},
+                  {"key":"accept","label":"Accept the 30-day promise — it genuinely is common practice","quality":10,
+                   "consequence":"Week two: a BMS alarm cascade at 2am, no documentation, the subcontractor's engineer on holiday — the FM team's improvisation costs a chiller, and 'standard practice' is nowhere in the incident report.",
+                   "principle":"Common practice is how operators everywhere end up running buildings from memory that isn't theirs."},
+                  {"key":"withhold","label":"Withhold PC until every manual is 100% complete","quality":30,
+                   "consequence":"Contractually available; practically, PC (and the tenant's lease start) waits three weeks for appendices nobody will read — the retention mechanism existed for exactly this.",
+                   "principle":"Withholding completion for the non-critical tail spends real money enforcing a schedule the retention clause enforces for free."}]}],
+             "hints":["Sort the manuals by Monday-morning need, not by percentage complete.",
+               "A walk-through with the incoming operators is worth more than any document count.",
+               "Retention held against the tail is the mechanism for the rest."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Split a 60%-done O&M mountain into Monday-critical and retention-backed."}
+            """),
+
+        ("WC-QLT-259", "Inside the limit, outside the comfort", "Every reading passed. Every reading was within two percent of failing.",
+            "Energy Networks", "Commissioning Engineer", "project_controls", "professional", 6,
+            """["quality_management","evidence_analysis"]""",
+            """
+            {"context":"The transformer commissioning results are in: all 24 test readings pass — but the insulation-resistance values cluster at 92–98% of the minimum acceptable limit, where the previous two identical units tested at 300–400% of minimum. Nothing fails. The contractor's engineer notes 'all results compliant' and wants signatures. Your gut notes something else.",
+             "evidence":[
+               {"label":"Results","value":"24/24 pass — clustered at 92–98% of the minimum limit"},
+               {"label":"Comparators","value":"Two identical units: 300–400% of minimum"},
+               {"label":"Contractor","value":"'All compliant' — signature requested"},
+               {"label":"Context","value":"Unit sat on site 5 months through a wet winter"}],
+             "decisions":[
+               {"key":"sign","prompt":"You:",
+                "options":[
+                  {"key":"investigate","label":"Withhold signature pending ONE targeted investigation: results this far from the fleet's pattern suggest moisture ingress — request dew-point/dry-out checks and a repeat test after, with the comparison data attached as your reason","quality":100,
+                   "consequence":"The dry-out finds moisture in the tap-changer compartment (a breather left capped); after treatment the repeat readings sit at 350% of minimum — the unit that would have failed in service within two winters now won't.",
+                   "principle":"Compliance is a threshold; health is a pattern — readings that pass while sitting on the limit are a message from the asset, not a signature request."},
+                  {"key":"sign_off","label":"Sign — the criteria exist precisely so engineers don't relitigate passing results","quality":10,
+                   "consequence":"Legally clean; eighteen months later the winter trip-out and forensic teardown find the moisture, and the commissioning file shows readings that were shouting about it.",
+                   "principle":"The signature that certifies a barely-passing outlier owns the failure it foreshadowed."},
+                  {"key":"reject","label":"Reject the unit — those readings mean it's defective regardless of the pass","quality":25,
+                   "consequence":"Overreach: the readings mean 'investigate', not 'condemn' — rejection without diagnosis starts a commercial war over a unit a week of dry-out would have fixed.",
+                   "principle":"A suspicious pass earns an investigation, not a verdict."}]}],
+             "hints":["Compare against the fleet, not just the limit — identical units are the baseline.",
+               "Ask what failure mode produces uniformly-low-but-passing insulation readings.",
+               "Withhold with a reason and a test plan, never with just a feeling."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Read 24 passing results as one warning — and found the moisture before winter did."}
+            """),
+
+        ("WC-QLT-260", "The performance test's best week", "The system passed — measured over the seven calmest days of the quarter.",
+            "Technology Programmes", "Acceptance Manager", "project_management", "professional", 7,
+            """["quality_management","evidence_analysis"]""",
+            """
+            {"context":"The trading-platform's performance acceptance report is in: all response-time and throughput targets met over the contractual 7-day measurement window. Checking the calendar, you notice the vendor scheduled the window across a bank-holiday week — volumes ran at 40% of normal. The contract specifies 'a representative 7-day period'; the vendor argues the window was agreed in the test plan you approved.",
+             "evidence":[
+               {"label":"Report","value":"All targets met, 7-day window"},
+               {"label":"Catch","value":"Window spanned a bank holiday — 40% of normal volume"},
+               {"label":"Contract","value":"'A representative 7-day period'"},
+               {"label":"Vendor","value":"'You approved the test plan's dates'"}],
+             "decisions":[
+               {"key":"accept","prompt":"You:",
+                "options":[
+                  {"key":"remeasure","label":"Decline acceptance on representativeness — the contract's word, not the calendar's — acknowledging the approved-dates point costs you shared blame, and agree an immediate re-measurement over a normal fortnight with the same instrumentation","quality":100,
+                   "consequence":"The normal-volume window finds the platform 12% short of throughput target at peak; the vendor tunes it under warranty pre-acceptance — versus post-acceptance, where the same fix would have been a paid change and a production incident.",
+                   "principle":"'Representative' is the load, not the calendar — and shared procedural blame never converts an unrepresentative test into a representative one."},
+                  {"key":"accept_it","label":"Accept — the plan was approved, the targets were met, and refusing punishes the vendor for your oversight","quality":10,
+                   "consequence":"The first normal Monday finds the 12% gap in production, at trading hours; the acceptance certificate — signed knowing the volumes — makes the remediation negotiation start from your side of the table.",
+                   "principle":"Accepting evidence you know is unrepresentative isn't fairness to the vendor — it is a gift of your leverage."},
+                  {"key":"blame","label":"Reject the report AND allege the vendor gamed the window deliberately","quality":20,
+                   "consequence":"Maybe they did; unprovable — and the allegation converts a fixable measurement dispute into a relationship rupture while the re-test still has to happen.",
+                   "principle":"Attack the evidence's validity, never the counterparty's soul — the first is winnable."}]}],
+             "hints":["Check what the measurement window's LOAD was, not just its length.",
+               "Own your share of the procedural miss — it buys the standing to insist on the re-test.",
+               "Price the fix pre-acceptance vs post-acceptance; that difference is what's at stake."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Governance Steward"},
+             "share_line":"Caught an acceptance test measured over the calmest week of the quarter."}
+            """),
+
+        ("WC-QLT-261", "Trained, on paper", "Forty signatures say the operators are ready. Four of them can't log in.",
+            "Enterprise Programmes", "Operational Readiness Lead", "project_management", "professional", 5,
+            """["quality_management","change_management"]""",
+            """
+            {"context":"The warehouse-automation go-live readiness review shows training complete: 40/40 operators signed off across four modules. Spot-checking, you sit with five operators: one is fluent, two manage with prompts, one struggles with basic navigation, one can't reliably log in — 'the trainer clicked through with us'. The signatures are real; the training evidently varied. Go-live is in two weeks.",
+             "evidence":[
+               {"label":"Records","value":"40/40 signed, four modules"},
+               {"label":"Spot check","value":"5 sampled: 1 fluent · 2 with prompts · 1 struggling · 1 can't log in"},
+               {"label":"Cause","value":"'Trainer clicked through with us'"},
+               {"label":"Clock","value":"Go-live in 2 weeks"}],
+             "decisions":[
+               {"key":"ready","prompt":"You:",
+                "options":[
+                  {"key":"assess","label":"Replace signatures with a 20-minute practical assessment for all 40 THIS week (three core tasks, unassisted), remediate the gap population with hands-on sessions, and re-baseline the readiness report on assessment results — go-live holds if the remediation curve says so","quality":100,
+                   "consequence":"The assessment finds 12 of 40 below bar — enough time to fix at two weeks, catastrophic to discover at go-live; eleven pass the re-take, one is redeployed, and day one runs on operators who can actually operate.",
+                   "principle":"Readiness is demonstrated, never signed — a signature records attendance; only a task records ability."},
+                  {"key":"trust","label":"Trust the records — spot checks always find stragglers and go-live has a hypercare period for exactly this","quality":10,
+                   "consequence":"Hypercare absorbs week one at triple staffing; the backlog from mis-picks costs more than every training session ever run, and the 'stragglers' turn out to be 30% of the shift.",
+                   "principle":"Hypercare is for the unknown unknowns — spending it on known training gaps is burning the reserve on a forecast problem."},
+                  {"key":"retrain","label":"Rerun all training from scratch for everyone — the records are worthless","quality":25,
+                   "consequence":"Forty operators including the fluent third repeat four modules; the schedule can't hold it, morale drops, and the assessment that would have targeted the real dozen never happens.",
+                   "principle":"When records fail, MEASURE — blanket retraining punishes the trained to find the untrained."}]}],
+             "hints":["Distinguish evidence of attendance from evidence of ability.",
+               "Assess first, then remediate the measured gap — never blanket-retrain.",
+               "Two weeks is enough to fix a known dozen; it is not enough to discover them at go-live."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Swapped 40 training signatures for 40 practical assessments — and found the dozen in time."}
+            """),
+
+        ("WC-QLT-262", "Found on the walk, filed where", "The pre-handover walk found a floor defect. The client hasn't seen it yet.",
+            "Construction", "Senior Site Manager", "project_management", "professional", 6,
+            """["quality_management","governance"]""",
+            """
+            {"context":"During your internal pre-handover walk of the distribution centre — two days before the client's inspection — your team finds a mezzanine floor section with visible deflection under point load: possibly a missing stiffener, possibly worse. Investigating properly means opening the ceiling below (2–3 days, visible). The client's inspection is Thursday; the defect is not on any list they've seen; nobody outside your team knows.",
+             "evidence":[
+               {"label":"Found","value":"Mezzanine deflection under point load — cause unknown"},
+               {"label":"To diagnose","value":"Open the ceiling below: 2–3 days, visible work"},
+               {"label":"Clock","value":"Client inspection Thursday"},
+               {"label":"Knowledge","value":"Currently: your team only"}],
+             "decisions":[
+               {"key":"disclose","prompt":"You:",
+                "options":[
+                  {"key":"now","label":"Tell the client TODAY: the finding, the investigation plan, the likely scenarios and their timelines — and start opening the ceiling before Thursday, so their inspection sees a defect being competently diagnosed rather than concealed","quality":100,
+                   "consequence":"The client, braced for a cover-up culture, gets its opposite; the stiffener IS missing (a fabrication error), the fix takes a week, handover moves 5 days — and the relationship's stock rises through a defect.",
+                   "principle":"A defect you found and disclosed is a competence story; a defect they found after you knew is a concealment story — same defect, opposite outcomes."},
+                  {"key":"quiet","label":"Investigate quietly after Thursday — no point alarming anyone before you know what it is","quality":5,
+                   "consequence":"Thursday's inspection walks the mezzanine (they load-test with a pallet truck — clients do); the deflection is found by THEM, and the timeline showing you knew Monday converts a fabrication error into a trust rupture.",
+                   "principle":"'Wait until we know more' reads as 'hoped they wouldn't look' the moment someone looks."},
+                  {"key":"patch","label":"Prop it discreetly from below and add it to the post-handover defects list","quality":0,
+                   "consequence":"A structural unknown, propped and papered over, in a building about to fill with racking and people — the sentence contains its own inquiry.",
+                   "principle":"Structural uncertainty is never a snagging item, whatever the schedule wants."}]}],
+             "hints":["Play the discovery timeline forward: who finds it, when, knowing what about what you knew?",
+               "Disclosure with an investigation plan reads as competence, not confession.",
+               "Structural unknowns have no place on any deferred list, ever."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Executive Communicator"},
+             "share_line":"Disclosed a found defect before the client's inspection — and gained trust through it."}
+            """),
+
+        ("WC-QLT-263", "As built, as imagined", "The drawings say one thing. The ceiling voids say another. The certificate wants signing.",
+            "Enterprise Programmes", "Technical Assurance Lead", "project_management", "professional", 7,
+            """["quality_management","governance"]""",
+            """
+            {"context":"Certifying the office-campus as-built drawing set for handover, your sample check of 12 drawings against reality finds 4 with discrepancies: a rerouted sprinkler main not shown, cable-tray routes differing from the record, an access hatch that doesn't exist on paper. The M&E contractor insists the full set is '98% accurate — samples always find the odd historic markup lag'. The FM contract prices its maintenance on these drawings.",
+             "evidence":[
+               {"label":"Sample","value":"4 of 12 drawings wrong (sprinkler main, tray routes, phantom hatch)"},
+               {"label":"Contractor","value":"'98% accurate; sample anomalies'"},
+               {"label":"Stakes","value":"FM maintenance priced on these drawings"},
+               {"label":"Statistics","value":"4/12 in a random sample is not an anomaly"}],
+             "decisions":[
+               {"key":"certify","prompt":"You:",
+                "options":[
+                  {"key":"sample_logic","label":"Apply the sample's arithmetic: 33% discrepancy in a random sample predicts the population — require a full verification survey of the safety-critical systems (fire, electrical isolation) and a corrected set for the rest before certification, with the FM team's walk-downs as the verification method","quality":100,
+                   "consequence":"The verification finds 60+ discrepancies including two isolation points that the drawings would have sent an FM electrician to the wrong end of; the corrected set takes three weeks and the FM contract starts on documents that describe the building.",
+                   "principle":"A sample IS the evidence — 4 in 12 isn't bad luck, it's a 33% defect rate asking to be extrapolated."},
+                  {"key":"accept","label":"Accept with the four corrected — no as-built set is perfect and the FM team will mark up as they go","quality":10,
+                   "consequence":"Month 3: an FM electrician isolates the wrong circuit from the drawing, live-works an energised tray, and the near-miss investigation reads your certification of a set you'd measured at 33% wrong.",
+                   "principle":"'They'll mark it up as they go' means learning the building by surprise, one energised surprise at a time."},
+                  {"key":"reject_all","label":"Reject the entire set and require full re-survey of everything before any certification","quality":35,
+                   "consequence":"Defensible, undifferentiated: the full re-survey of every domestic-water branch delays handover six weeks, when risk-ranking (safety-critical first) would have protected what mattered in three.",
+                   "principle":"Extrapolate the sample, then spend the verification where wrongness kills — not evenly."}]}],
+             "hints":["Do the arithmetic on your own sample — what rate does 4/12 predict?",
+               "Rank systems by what a wrong drawing does: fire and isolation first.",
+               "The FM team's walk-downs can BE the verification — align the incentive with the checker."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Governance Steward"},
+             "share_line":"Extrapolated a 4-in-12 drawing sample before an electrician could test it live."}
+            """),
+
+        ("WC-QLT-264", "The spares that came up short", "Handover says 200 line items of spares. The shelves say 147.",
+            "Transport Infrastructure", "Handover Coordinator", "project_management", "professional", 5,
+            """["quality_management","commercial_management"]""",
+            """
+            {"context":"The depot handover includes a contractual spares package: 200 line items per the agreed schedule. Goods-in reconciliation: 147 present and correct, 31 short-shipped, 15 'superseded — equivalent supplied' (unverified), 7 missing entirely including two long-lead gearbox assemblies (26-week reorder). The contractor wants handover certified with 'spares completion within 60 days' noted. Operations starts Monday with the fleet it has.",
+             "evidence":[
+               {"label":"Count","value":"147 of 200 correct · 31 short · 15 'equivalents' unverified · 7 missing"},
+               {"label":"Critical","value":"2 gearbox assemblies missing — 26-week lead"},
+               {"label":"Proposal","value":"Certify now, complete 'within 60 days'"},
+               {"label":"Reality","value":"Operations begins Monday regardless"}],
+             "decisions":[
+               {"key":"certify","prompt":"You:",
+                "options":[
+                  {"key":"secured","label":"Certify with the shortfall SECURED, not promised: retention held at the shortfall's replacement value, the gearbox orders placed THIS week with evidence (26 weeks doesn't care about the 60-day note), the 'equivalents' verified against spec before acceptance, and a dated completion schedule per line","quality":100,
+                   "consequence":"The gearbox orders go in Tuesday — the only date that mattered; retention converts the '60 days' from a hope into a funded obligation, and two 'equivalents' fail verification and get replaced.",
+                   "principle":"Certify around a shortfall only with money held and long-lead clocks started — a completion promise without retention is a to-do list."},
+                  {"key":"note","label":"Accept the 60-day note — spares completion is routine handover tidying","quality":10,
+                   "consequence":"Day 60 passes with 12 items still short; month 7 a gearbox fails, the reorder starts THAT day, and a unit sits cold for six months for want of a Tuesday order in handover week.",
+                   "principle":"Long-lead items don't hear promises — only purchase orders start their clocks."},
+                  {"key":"refuse","label":"Refuse handover until all 200 items are on the shelf","quality":25,
+                   "consequence":"The 26-week gearboxes make that a half-year refusal; operations, starting Monday regardless, runs unsupported by ANY contractual spares regime in the meantime.",
+                   "principle":"When operations starts regardless, blocking certification blocks your own protections."}]}],
+             "hints":["Find the longest-lead missing items — their order date is the real deadline.",
+               "Retention converts promises into funded obligations.",
+               "'Equivalent supplied' is a claim needing the same verification any substitution needs."],
+             "profile_map":{"decision":"Cost Guardian","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Certified a spares shortfall with money held and the 26-week clocks started."}
+            """),
+
+        ("WC-QLT-265", "Clean enough to open?", "The ward's cleaning validation is one cycle short. The patients arrive in four days.",
+            "Healthcare Estates", "Compliance & Handover Lead", "project_management", "professional", 6,
+            """["quality_management","governance"]""",
+            """
+            {"context":"The refurbished ward's terminal-clean validation protocol requires three consecutive passing cycles (ATP swab counts under threshold). Cycles one and two passed; cycle three is scheduled for tomorrow — but the results lab needs 48 hours, landing the final result one day AFTER the planned patient transfer. The ward manager proposes transferring on the strength of two passes: 'the third is a formality, and the decant ward's closure is booked'.",
+             "evidence":[
+               {"label":"Protocol","value":"3 consecutive passing clean cycles (ATP)"},
+               {"label":"Status","value":"2 passed · 3rd sampled tomorrow · results 48h"},
+               {"label":"Collision","value":"Final result lands 1 day after planned transfer"},
+               {"label":"Pressure","value":"Decant ward closure booked"}],
+             "decisions":[
+               {"key":"transfer","prompt":"You:",
+                "options":[
+                  {"key":"hold_solve","label":"Hold the transfer to the protocol — AND attack the logistics: ask the lab for priority processing (24h is purchasable), move the transfer one day, and get infection control to co-own the decision so the decant rebooking has clinical cover","quality":100,
+                   "consequence":"The lab's priority service returns the result in 22 hours; the transfer moves 24 hours, the decant closure flexes with IC's endorsement — and cycle three, as it happens, passes. The protocol never learned it was almost optional.",
+                   "principle":"An infection-control protocol one cycle from complete is not 99% done — it is not done; solve the calendar, never the criteria."},
+                  {"key":"transfer_now","label":"Transfer on two passes — the pattern is clear and beds are needed","quality":0,
+                   "consequence":"Cycle three, as it happens, FAILS (a contractor re-entered to fix a door closer post-clean); the patients are already in, and the incident review reads a protocol abandoned at its last step for a booking.",
+                   "principle":"Validation protocols exist because 'the pattern is clear' is what everyone says before the exception."},
+                  {"key":"conditional","label":"Transfer but hold the highest-risk patients back until the result lands","quality":20,
+                   "consequence":"A two-tier ward occupancy invented at a whiteboard — infection control's first question ('which patients are you comfortable exposing?') has no good answer.",
+                   "principle":"Partial compliance with a binary protocol is a category error wearing a compromise's clothes."}]}],
+             "hints":["The protocol's completion is binary — creativity belongs in the logistics around it.",
+               "Priority lab processing exists and is cheap against a ward incident.",
+               "Co-own schedule-vs-safety calls with the clinical authority — that's what IC is for."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Bought 24 hours from a lab instead of borrowing them from an infection-control protocol."}
+            """),
+
+        // ───────────── Safety & sustainability dailies · practitioner ─────────────
+
+        ("WC-SAF-266", "The interlock with the cable tie", "Commissioning is faster with the guard defeated. Everyone knows. Nobody has said it.",
+            "Industrial Manufacturing", "Commissioning HSE Lead", "project_management", "professional", 7,
+            """["safety_management","governance"]""",
+            """
+            {"context":"Walking the packaging line during commissioning, you find the infeed guard interlock defeated — a cable tie holding the switch closed. The commissioning technicians are cycling the machine with guards open to adjust sensors, 'the way it's always done during setup'; the OEM's own procedure requires a documented commissioning-mode override with a second person, not a cable tie. Production trials start next week; this crew commissions your next three lines.",
+             "evidence":[
+               {"label":"Found","value":"Interlock defeated by cable tie; guards-open cycling"},
+               {"label":"Justification","value":"'Always done during setup'"},
+               {"label":"Proper route","value":"OEM documented commissioning mode + second person"},
+               {"label":"Context","value":"Same crew does the next 3 lines"}],
+             "decisions":[
+               {"key":"respond","prompt":"You:",
+                "options":[
+                  {"key":"stop_route","label":"Stop the activity now, remove the defeat — then immediately stand up the LEGITIMATE route: the OEM commissioning mode enabled, the two-person procedure briefed, and the task resumed same-day; the finding logged as a near-miss with the crew, not against them","quality":100,
+                   "consequence":"Work resumes within hours through the proper mode — barely slower than the cable tie; the crew, treated as people with a task problem rather than criminals, adopt the procedure for the next three lines unprompted.",
+                   "principle":"A defeated safety device means the legitimate route was too far away — remove the defeat AND bring the route closer, same hour."},
+                  {"key":"stop_only","label":"Stop work, remove the tie, require full guards-closed working — no overrides at all","quality":25,
+                   "consequence":"Sensor alignment through closed guards is physically impossible; work stalls two days until someone finds the OEM mode you could have enabled Monday — and the next defeat will simply be better hidden.",
+                   "principle":"Prohibition without an alternative teaches concealment, not compliance."},
+                  {"key":"note","label":"Have a quiet word and note it for the weekly HSE meeting — commissioning is different from production","quality":5,
+                   "consequence":"The quiet word evaporates by Thursday; week three's technician reaches past an open guard toward a cycling infeed, and the investigation finds a photographed cable tie nobody formally acted on.",
+                   "principle":"A found-and-tolerated defeat is authorisation — your signature is on it from the moment you walked past."}]}],
+             "hints":["The cable tie is a symptom; the distance to the legitimate mode is the disease.",
+               "Same-day restoration of work through the proper route is what makes the stop stick.",
+               "Log it as a near-miss WITH the crew — the next three lines need their buy-in, not their silence."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Replaced a cable-tied interlock with the OEM's real commissioning mode — same day."}
+            """),
+
+        ("WC-SAF-267", "The corridor that isn't on the strategy", "The fire strategy says one thing. The built school says another. Term starts in three weeks.",
+            "Public Estates", "Handover Compliance Manager", "project_management", "professional", 5,
+            """["safety_management","governance"]""",
+            """
+            {"context":"Pre-handover review of the new school block: the built layout differs from the approved fire strategy — a storage enclosure added under the main stair (the strategy shows it sterile) and a corridor door swapped for a wider leaf without the strategy's specified closer rating. Both changes trace to mid-construction 'client accommodation requests' that never went through the fire engineer. Term starts in three weeks; building control sign-off is booked for Friday.",
+             "evidence":[
+               {"label":"Deviations","value":"Storage under 'sterile' stair · corridor door closer rating changed"},
+               {"label":"Cause","value":"Client accommodation requests, fire engineer bypassed"},
+               {"label":"Clock","value":"Building control Friday; term in 3 weeks"},
+               {"label":"Nature","value":"Both changes possibly fine — but UNASSESSED"}],
+             "decisions":[
+               {"key":"route","prompt":"You:",
+                "options":[
+                  {"key":"assess","label":"Get the fire engineer's assessment of both deviations THIS week — as-built review against the strategy — before Friday's inspection: either the changes are justified into a revised strategy, or they're corrected; building control sees a coherent package either way","quality":100,
+                   "consequence":"The engineer accepts the door (equivalent rating, documented) and rejects the stair storage (corrected in two days); Friday's inspection reviews a strategy that matches the building — and term starts in a school whose escape routes were assessed, not assumed.",
+                   "principle":"An unassessed fire-strategy deviation is not a small change — it is an unknown; the fix is assessment, this week, whichever way it lands."},
+                  {"key":"chance","label":"Proceed to Friday as booked — building control may well not notice either item","quality":0,
+                   "consequence":"They don't notice; the strategy and building diverge on file for the school's whole life, and the divergence surfaces during the fire service's post-incident review, with the timeline showing who knew.",
+                   "principle":"'They may not notice' converts a fixable construction error into a permanent concealment with your date-stamp on it."},
+                  {"key":"correct_all","label":"Correct both deviations back to the strategy — no assessments, no debates, three weeks is tight","quality":40,
+                   "consequence":"Safe and wasteful in half: the wider door was a genuine accessibility improvement the engineer would have approved in a day — rebuilt to the old spec for want of a phone call.",
+                   "principle":"Blind reversion treats the strategy as scripture when it is a model — assessment could keep the improvement AND the safety."}]}],
+             "hints":["The deviations aren't necessarily wrong — they are unassessed; that's the actual defect.",
+               "The fire engineer's as-built review is days, not weeks — sequence it before sign-off.",
+               "Never let an inspection pass on divergent documents; the divergence outlives everyone present."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Got two unassessed fire-strategy deviations assessed before the inspector, not after the incident."}
+            """),
+
+        ("WC-SAF-268", "Designed A, performing C", "The energy model promised. The meters disagree. Handover wants a certificate.",
+            "Enterprise Programmes", "Sustainability Performance Lead", "project_management", "professional", 6,
+            """["sustainability","evidence_analysis"]""",
+            """
+            {"context":"Your headquarters project was designed — and marketed to the board — as EPC-A with a modelled 40% energy saving. Three months of commissioning-period metering shows consumption tracking ~35% ABOVE the model: the building performs like a C. Known contributors: BMS schedules still in commissioning mode, unregulated loads (server room, catering) excluded from the model, and possibly deeper issues. The board pack wants 'sustainability achievement confirmed' at handover.",
+             "evidence":[
+               {"label":"Promise","value":"EPC-A design · modelled 40% saving · marketed to board"},
+               {"label":"Meters","value":"~35% above model — C-like performance"},
+               {"label":"Known factors","value":"BMS in commissioning mode · unregulated loads unmodelled · unknowns"},
+               {"label":"Ask","value":"'Confirm sustainability achievement' in the handover pack"}],
+             "decisions":[
+               {"key":"report","prompt":"The handover pack says:",
+                "options":[
+                  {"key":"gap_plan","label":"The truth with its structure: design certification achieved (that's real), measured performance currently above model with the decomposed reasons, and a 12-month performance-tuning plan with quarterly reporting — the industry's known performance gap, managed rather than denied","quality":100,
+                   "consequence":"The board hears 'certified design, tuning to close the measured gap' — accurate and unalarming; month 9's report shows the gap at 8% after BMS tuning, and the organisation learns to commission buildings, not just build them.",
+                   "principle":"Design ratings and measured performance are different facts — report both, decompose the gap, and manage it in daylight; the performance gap is only a scandal when it's a secret."},
+                  {"key":"confirm","label":"Confirm achievement — the EPC-A is genuinely certified and the metering period isn't representative yet","quality":10,
+                   "consequence":"'Achievement confirmed' enters the annual report; the first full-year energy bill lands 30% over the business case, and the gap between the certificate and the meter becomes an audit finding with your pack as exhibit one.",
+                   "principle":"Confirming modelled performance while holding contrary meter data is how sustainability reporting becomes greenwash — one pack at a time."},
+                  {"key":"delay","label":"Defer all sustainability reporting until a full year of 'representative' data exists","quality":25,
+                   "consequence":"A year of silence on the board's flagship green metric reads as evasion; the tuning that needed month-one attention starts in month thirteen.",
+                   "principle":"Deferring the report defers the management — performance gaps close under attention, not under embargo."}]}],
+             "hints":["Separate the design certificate (fact) from measured performance (different fact).",
+               "Decompose the gap: commissioning-mode artefacts, unmodelled loads, real issues.",
+               "A tuning plan with dates turns a gap from an embarrassment into a programme."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Governance Steward"},
+             "share_line":"Reported a building's energy gap with its decomposition — and closed it in daylight."}
+            """),
+
+        ("WC-SAF-269", "Count the saplings", "The planning condition says 8,000 trees and 95% survival. Handover says 'landscaping complete'.",
+            "Climate Adaptation", "Environmental Compliance Officer", "project_management", "professional", 7,
+            """["sustainability","governance"]""",
+            """
+            {"context":"Your flood-scheme's planning conditions include compensatory planting: 8,000 native trees with 95% establishment at year two, plus wetland habitat creation signed off by an ecologist. The contractor's handover pack states 'landscaping complete per drawings'. Your walkover estimate: planting areas exist but look thin; no planting records by species/zone were kept ('the landscaper just got on with it'); the ecologist's wetland sign-off is 'being arranged'. The council's compliance officer visits within the year.",
+             "evidence":[
+               {"label":"Conditions","value":"8,000 natives · 95% establishment at yr 2 · ecologist wetland sign-off"},
+               {"label":"Pack claims","value":"'Landscaping complete per drawings'"},
+               {"label":"Reality","value":"Thin-looking areas · no species/zone records · sign-off 'being arranged'"},
+               {"label":"Exposure","value":"Council compliance visit within 12 months"}],
+             "decisions":[
+               {"key":"verify","prompt":"You:",
+                "options":[
+                  {"key":"baseline","label":"Commission the baseline NOW: an independent planting audit (counts by zone and species against the schedule), the ecologist's inspection booked this month, shortfalls made good this planting season — and the year-two establishment monitoring contract LET before the contractor demobilises","quality":100,
+                   "consequence":"The audit finds 6,400 of 8,000 planted; the make-good happens this season under the contractor's own obligations — versus next year, when the gap would have been yours, out of season, at your cost, in front of the council.",
+                   "principle":"Environmental conditions are numbers with dates — verify against the numbers while the party who owes them is still on site."},
+                  {"key":"accept","label":"Accept 'complete per drawings' — landscaping looks thin for years; that's how saplings work","quality":10,
+                   "consequence":"The council's officer counts a sample zone (they do), finds 78% of schedule, and the enforcement notice arrives with the contractor long demobilised — the make-good is now yours, off-season, at retail.",
+                   "principle":"'It always looks thin' is true of healthy planting AND of under-planting — only counting tells them apart."},
+                  {"key":"paper","label":"Get the contractor to sign a completion warranty for the planting numbers and file it","quality":25,
+                   "consequence":"A warranty from a contractor who kept no records warrants their optimism, not the trees; when the count fails, you hold paper against a demobilised counterparty instead of saplings in the ground.",
+                   "principle":"A warranty is only as good as the verification behind it — paper doesn't photosynthesise."}]}],
+             "hints":["Convert the conditions into countable numbers with dates — then count.",
+               "Everything is cheaper while the obligated contractor is still mobilised.",
+               "Year-two obligations need their monitoring arranged NOW, not in year two."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Counted the trees before the council did — and got the missing 1,600 planted in season."}
+            """),
+
+        ("WC-SAF-270", "The file that protects the next people", "The health and safety file is a legal deliverable. It's also a shelf of unsorted folders.",
+            "Construction", "CDM Coordinator", "project_management", "professional", 5,
+            """["safety_management","governance"]""",
+            """
+            {"context":"The mixed-use development reaches completion in two weeks. The CDM health and safety file — the legal record future maintainers and refurbishers depend on — currently exists as a shelf of unsorted subcontractor folders: some complete, some missing residual-risk registers, the asbestos-free certification for recycled fill unverified, and the buried-services drawings in three conflicting versions. The principal contractor calls it 'ninety percent there — an admin task'.",
+             "evidence":[
+               {"label":"Status","value":"Unsorted folders · missing residual-risk registers · unverified fill cert · 3 versions of buried-services drawings"},
+               {"label":"Legal weight","value":"The file protects future workers on this building"},
+               {"label":"Contractor","value":"'90% there — admin task'"},
+               {"label":"Clock","value":"Completion in 2 weeks"}],
+             "decisions":[
+               {"key":"file","prompt":"You:",
+                "options":[
+                  {"key":"risk_first","label":"Triage by future-harm potential, not by folder count: buried services reconciled to ONE authoritative drawing set, the fill certification verified, residual-risk registers chased per package — these are the file's reason to exist; the formatting genuinely IS admin and can follow","quality":100,
+                   "consequence":"The reconciliation finds the three buried-services versions differ on an 11kV route by four metres — resolved by survey before completion; whoever excavates that courtyard in 2034 will never know what the file did for them, which is the point.",
+                   "principle":"The H&S file's admin can lag; its truth cannot — sequence by what a future excavator or refurbisher would die not knowing."},
+                  {"key":"admin","label":"Agree it's admin — assign a document controller to compile and index everything as-is","quality":10,
+                   "consequence":"A beautifully indexed file containing three contradictory buried-services drawings; the 2034 excavation crew picks the wrong one, professionally indexed.",
+                   "principle":"Indexing contradictions preserves them — compilation without reconciliation is decoration."},
+                  {"key":"withhold","label":"Report the file as blocking completion until 100% assembled and verified","quality":30,
+                   "consequence":"Two of the missing residual-risk registers belong to an insolvent subcontractor and will simply never exist; the absolutist position blocks completion on unobtainables while the reconcilable safety-critical items needed the fortnight.",
+                   "principle":"Perfect files don't exist; truthful ones about what's known AND what's missing do."}]}],
+             "hints":["Ask what a future worker could be killed by not knowing — that's the priority list.",
+               "Three versions of a buried-services drawing is one survey away from one truth.",
+               "Record known gaps AS gaps — an honest hole beats a papered one."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sorted a health-and-safety file by what could kill someone in 2034."}
+            """),
+
+        ("WC-SAF-271", "The gas that counts double", "Six cylinders of SF6, four sets of paperwork, and a regulator who weighs.",
+            "Energy Networks", "Environmental Compliance Lead", "project_management", "professional", 6,
+            """["sustainability","governance"]""",
+            """
+            {"context":"Closing out the switchgear installation, the SF6 accounting doesn't reconcile: six cylinders were logged to site, the installed equipment's nameplate total accounts for the contents of roughly five, records exist for four, and one part-used cylinder can't be located. SF6 is a reportable F-gas with ~23,000× CO2 equivalence; your operator's annual regulatory return builds on these records. The installer says 'it'll be in a container somewhere — the gas is in the switchgear, the paperwork always lags'.",
+             "evidence":[
+               {"label":"Gap","value":"6 cylinders in · nameplate ≈ 5 accounted · records for 4 · 1 part-used missing"},
+               {"label":"Stakes","value":"F-gas regulated; ~23,000× CO2e; feeds the annual return"},
+               {"label":"Installer","value":"'Paperwork always lags; it's in a container somewhere'"},
+               {"label":"Deadline","value":"Records feed the operator's regulatory return"}],
+             "decisions":[
+               {"key":"reconcile","prompt":"You:",
+                "options":[
+                  {"key":"physical","label":"Physical reconciliation before anything is signed: locate and WEIGH every cylinder (full, part, empty), reconcile against nameplate quantities and top-up logs, and report the residual discrepancy honestly if one remains — mass balance, not folder balance","quality":100,
+                   "consequence":"The weighing finds the missing cylinder (mislabelled in the installer's van stock) AND a 0.8kg genuine discrepancy from a fitting leak during filling — reported as a minor loss event, correctly; the annual return builds on measured mass.",
+                   "principle":"F-gas accounting is mass balance — cylinders are weighed, not assumed, and a small honest loss beats a large tidy fiction."},
+                  {"key":"paper","label":"Reconcile the paperwork to the nameplate totals — the gas is demonstrably in the equipment","quality":5,
+                   "consequence":"Tidy records certifying assumptions; the mislabelled cylinder is part-vented by someone who trusts its label next year, and the regulator's site audit weighs what your records guessed.",
+                   "principle":"Adjusting records to expectations is fabrication with a spreadsheet — for a gas the regulator weighs."},
+                  {"key":"installer","label":"Make the installer sign for the reconciliation — their gas handling, their problem","quality":20,
+                   "consequence":"They sign cheerfully (their van stock benefits); the return is still YOUR operator's legal declaration, built on a signature instead of a scale.",
+                   "principle":"Accountability can be delegated; regulatory liability cannot — weigh it yourself."}]}],
+             "hints":["High-GWP gas accounting is physical: weigh, don't reconcile on paper.",
+               "A found discrepancy honestly reported is a minor event; a discovered fiction is an enforcement.",
+               "The return is the operator's declaration — its evidence standard is yours to set."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Weighed the SF6 instead of reconciling the folder — and found both the cylinder and the truth."}
+            """),
+
+        ("WC-SAF-272", "The button nobody pressed", "Every system test passed. The one that kills the power on purpose keeps being deferred.",
+            "Technology Programmes", "Data Centre Commissioning Manager", "project_management", "professional", 7,
+            """["safety_management","governance"]""",
+            """
+            {"context":"The data-centre commissioning programme is nearly complete: every individual system tested, integrated systems test passed. One item keeps sliding: the EPO (emergency power off) verification and the full black-building test — deliberately killing utility power to prove the generators, UPS ride-through and controlled shutdown sequences work together. The client's IT team, already migrating servers in, wants it waived: 'we can't take the risk of the test breaking something'. The irony writes itself.",
+             "evidence":[
+               {"label":"Done","value":"All individual + integrated tests passed"},
+               {"label":"Deferred","value":"EPO verification + black-building test"},
+               {"label":"Objection","value":"'The test might break something' — from the team already migrating in"},
+               {"label":"Fact","value":"Untested failure sequences will run for the first time during a real failure"}],
+             "decisions":[
+               {"key":"test","prompt":"You:",
+                "options":[
+                  {"key":"insist_window","label":"Hold the line with a solution: the black-building test happens BEFORE the migration passes the point of no return — negotiated into a controlled window (migrated servers gracefully shut down, client witnesses, rollback plan), because the alternative is running this test unrehearsed at 3am with a real storm","quality":100,
+                   "consequence":"The controlled test finds a UPS-to-generator transfer timing fault that drops one distribution board — fixed in a week; eleven months later a genuine utility failure executes flawlessly, witnessed by nobody, which is the whole point.",
+                   "principle":"A failure-mode test deferred is a failure-mode test rescheduled by the grid, at its convenience — the only question is whether the first black building is rehearsed or real."},
+                  {"key":"waive","label":"Accept the waiver — the components all tested fine and the client owns the risk","quality":5,
+                   "consequence":"The transfer-timing fault waits in the wiring; the first real outage drops three boards under full production load, and 'the client accepted the risk' turns out to be a sentence nobody remembers agreeing to.",
+                   "principle":"Component tests passing is not systems proof — emergencies exercise the seams, and the seams are what the black test checks."},
+                  {"key":"partial","label":"Compromise: test the EPO circuits electrically but skip the actual power-kill","quality":25,
+                   "consequence":"The circuits verify; the transfer TIMING — a dynamic behaviour only a real power loss exercises — stays untested, which was the finding the full test existed to find.",
+                   "principle":"Simulating the trigger while skipping the transient tests the wiring diagram, not the building."}]}],
+             "hints":["Ask when this failure sequence will next run if not tested — the answer is 'during a failure'.",
+               "The migration creates a closing window; the test's cost rises weekly.",
+               "Design the controlled window to answer the objection — grace, witnesses, rollback."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Killed the power on purpose, once, before the grid could do it unrehearsed."}
+            """),
+
+        ("WC-SAF-273", "Eighteen loads, no notes", "The waste left the site. The paper trail didn't follow.",
+            "Enterprise Programmes", "Environmental Coordinator", "project_management", "professional", 5,
+            """["sustainability","governance"]""",
+            """
+            {"context":"Closing out the campus enabling works, your duty-of-care audit finds gaps: 18 waste movements (mixed construction waste and 3 loads of contaminated soil) have no waste transfer notes on file — the groundworks subcontractor 'used a mate's haulage firm for the overflow'. The soil loads worry you most: no consignment notes means no proof of where contaminated material went. Duty of care is yours as producer, regardless of who hauled it.",
+             "evidence":[
+               {"label":"Gap","value":"18 movements unpapered, incl. 3 contaminated-soil loads"},
+               {"label":"Cause","value":"'Mate's haulage firm for the overflow'"},
+               {"label":"Law","value":"Producer's duty of care — yours, regardless of haulier"},
+               {"label":"Worst case","value":"Contaminated soil, destination unknown"}],
+             "decisions":[
+               {"key":"trace","prompt":"You:",
+                "options":[
+                  {"key":"reconstruct","label":"Reconstruct the chain NOW: haulier identified and interviewed, destinations confirmed with the receiving sites' own records (licensed facilities keep intake logs), retrospective documentation assembled where the trail proves legitimate — and self-report to the regulator if any soil load can't be traced to a licensed facility","quality":100,
+                   "consequence":"Fifteen loads reconstruct cleanly from the facilities' intake logs; two soil loads trace to a licensed site with matching records — and one cannot be traced, self-reported, and resolved with the regulator as a documentation failure rather than discovered as fly-tipping with your name on the soil analysis.",
+                   "principle":"Duty of care survives the subcontractor's shortcuts — reconstruct the chain while memories and intake logs exist, and self-report the untraceable before it self-reports you."},
+                  {"key":"backfill","label":"Have the subcontractor produce retrospective transfer notes for all 18 — they moved it, they can paper it","quality":5,
+                   "consequence":"Eighteen notes appear, dated helpfully; the one load that actually went somewhere it shouldn't have now has FORGED paperwork on top — and forged environmental records convert a civil matter into the other kind.",
+                   "principle":"Retrospective documentation is reconstruction only when it's verified — unverified, it is backdating."},
+                  {"key":"file","label":"Note the gap in the closeout report and move on — the waste is long gone either way","quality":10,
+                   "consequence":"The contaminated soil surfaces in a farmer's field investigation eight months later; the analysis matches your site profile, and the closeout report's note proves knowledge without action.",
+                   "principle":"A documented-but-unactioned compliance gap is the worst of both worlds: proof you knew, proof you didn't act."}]}],
+             "hints":["Receiving facilities keep intake records — the chain reconstructs from BOTH ends.",
+               "Distinguish verified reconstruction from convenient backdating; only one is legal.",
+               "The untraceable load is a self-report decision — and timing decides how that goes."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Reconstructed eighteen unpapered waste movements from both ends of the chain."}
+            """),
+
+        ("WC-SAF-274", "Social value, actual value", "The completion report claims 61 jobs. The evidence folder holds 12 names.",
+            "Enterprise Programmes", "Social Value Manager", "project_management", "professional", 6,
+            """["sustainability","governance"]""",
+            """
+            {"context":"Drafting the regeneration project's completion report, you review the social-value claims the delivery partner supplied: '61 local jobs created' (the evidence folder documents 12 direct hires; the rest are 'estimated supply-chain effects' via a multiplier), '14 apprenticeship completions' (records show 9 completed, 3 ongoing, 2 left early), and '£2.1M local spend' (verifiable to £1.4M). The funder's completion certificate relies on this report; a portion of final payment is social-value-linked.",
+             "evidence":[
+               {"label":"Jobs","value":"Claimed 61 · evidenced 12 direct + multiplier 'estimates'"},
+               {"label":"Apprenticeships","value":"Claimed 14 · records: 9 done, 3 ongoing, 2 left"},
+               {"label":"Spend","value":"Claimed £2.1M · verifiable £1.4M"},
+               {"label":"Stakes","value":"Funder certificate + payment linked to the numbers"}],
+             "decisions":[
+               {"key":"report","prompt":"Your completion report states:",
+                "options":[
+                  {"key":"stratified","label":"The stratified truth: 12 direct jobs evidenced, supply-chain estimates shown separately WITH their method labelled as modelled, 9 apprenticeships complete (3 ongoing, tracked), £1.4M verified spend with the gap explained — and the payment claim made against the evidenced tier only","quality":100,
+                   "consequence":"The funder — who audits a sample of completion reports annually — finds yours already honest; the payment settles on evidence, and the partner's future claims arrive pre-stratified because the standard has been set.",
+                   "principle":"Social value survives scrutiny only when measured claims and modelled estimates are visibly different things — stratify or eventually be stratified by an auditor."},
+                  {"key":"submit","label":"Submit the partner's figures — multipliers are standard practice in social-value reporting","quality":10,
+                   "consequence":"The funder's sample audit lands on your report; '61 jobs' deflates to 12 in their working papers, the clawback covers the linked payment, and every historic report from your programme joins the review.",
+                   "principle":"Multipliers ARE standard practice — presenting them as headcount is the part that isn't."},
+                  {"key":"split_difference","label":"Trim the claims to 'defensible middles' — 40 jobs, 12 apprenticeships — and submit","quality":5,
+                   "consequence":"Numbers that match neither the evidence nor the estimates, indefensible from both directions — invented precision is the one variant with no audit story at all.",
+                   "principle":"A negotiated number between truth and claim is just a smaller fiction."}]}],
+             "hints":["Sort every claim into measured, modelled, or hoped — then label the strata.",
+               "Payment claims follow evidence tiers; estimates can inform, never invoice.",
+               "The 3 ongoing apprenticeships are real value — report them as ongoing, not complete."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Stratified a social-value report into measured and modelled — before an auditor did."}
+            """),
+
+        ("WC-SAF-275", "Strike it in the right order", "The falsework comes down this week. The pressure is to skip the checks between the props.",
+            "Construction", "Temporary Works Coordinator", "project_management", "professional", 7,
+            """["safety_management","governance"]""",
+            """
+            {"context":"The transfer-slab falsework on your podium project is due to strike this week. The approved sequence: cube results confirming strength → designer's permit to strike → progressive de-propping in the drawn pattern with deflection monitoring between stages. The frame contractor — behind schedule — proposes 'de-propping the obvious low-load areas' while waiting for the cube results, and treating the monitoring stages as 'continuous rather than hold-points'. The site manager is inclined to agree; the crane is booked for Thursday.",
+             "evidence":[
+               {"label":"Approved sequence","value":"Cubes → permit → drawn de-prop pattern with monitored hold-points"},
+               {"label":"Proposal","value":"Pre-strike 'low-load areas' before cubes; monitoring 'continuous' not held"},
+               {"label":"Pressure","value":"Programme + crane booked Thursday"},
+               {"label":"Structure","value":"Transfer slab — the element everything above depends on"}],
+             "decisions":[
+               {"key":"strike","prompt":"You:",
+                "options":[
+                  {"key":"hold_sequence","label":"Hold the sequence entire — 'low-load' is a claim the cube results and designer exist to verify, and hold-points held is what monitoring MEANS — while attacking the real constraint: early cube testing (paid), the designer primed for same-day permit turnaround, Thursday preserved by process speed rather than process surgery","quality":100,
+                   "consequence":"The early cubes come back Wednesday morning at strength; the permit lands by noon, the pattern strikes with monitoring holds — one of which catches a deflection reading at stage 3 worth a designer phone call; Thursday's crane lifts on schedule over a slab that earned it.",
+                   "principle":"A striking sequence is the temporary-works design's last chapter — compress the waits around it, never the verifications within it."},
+                  {"key":"partial","label":"Allow the low-load pre-strike — the contractor knows the structure and the cubes are a formality at 28 days","quality":0,
+                   "consequence":"'Low-load' by eye includes two props the design carries as load-sharing with the back-propping below; the slab takes it — this time — and an unrecorded redistribution becomes the assumed norm for the next three podium decks.",
+                   "principle":"Load paths are the designer's fact, not the striker's opinion — 'obvious' is how transfer structures get surprised."},
+                  {"key":"defer","label":"Push the whole strike a week — the schedule pressure itself makes this unsafe to run now","quality":30,
+                   "consequence":"Cautious and unexamined: the pressure was absorbable by early cubes and a primed designer; a week of standing falsework and a lost crane slot bought nothing the process couldn't have.",
+                   "principle":"Pressure is a reason to accelerate the checks, not to abandon the work."}]}],
+             "hints":["Every step in the strike sequence verifies a specific claim — identify what each protects.",
+               "Compress the WAITS (testing, permit turnaround), never the VERIFICATIONS.",
+               "'Continuous monitoring' without hold-points is data collection during, not control of, the strike."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Held a falsework strike sequence and made Thursday anyway — by speeding the waits, not the checks."}
+            """),
+
+        // ───────────── September · governance dailies + logic/sequence ─────────────
+
+        ("WC-GOV-276", "Ready, with fourteen conditions", "The operational readiness board wants to say yes. The conditions list says not yet.",
+            "Transport Infrastructure", "Readiness Review Chair", "project_management", "professional", 7,
+            """["governance","decision_quality"]""",
+            """
+            {"context":"You chair the depot's operational readiness board. The recommendation before you: 'accept for operations with 14 conditions' — a list mixing minutiae (signage snags) with substance (the fire-suppression system's final certification 'expected next week', two maintenance procedures unwritten, night-shift training at 70%). Everyone in the room wants yes; the operator's leadership is waiting outside. Conditions-based acceptance is legitimate — the question is which conditions.",
+             "evidence":[
+               {"label":"Recommendation","value":"Accept with 14 conditions"},
+               {"label":"The mix","value":"Signage snags ↔ fire cert pending · procedures unwritten · training 70%"},
+               {"label":"Mood","value":"Room wants yes; leadership outside"},
+               {"label":"Tool","value":"Conditional acceptance is legitimate — if conditions are the right kind"}],
+             "decisions":[
+               {"key":"conditions","prompt":"Your chairing?",
+                "options":[
+                  {"key":"sort","label":"Sort the 14 by a single test — 'can operations run SAFELY today without it?': the fire certification fails that test (acceptance waits days for it), procedures and training become dated conditions with named owners and a review call, snags become a punch list that never belonged at this board","quality":100,
+                   "consequence":"Acceptance lands four days later with the fire cert in hand and five real conditions instead of fourteen decorative ones; the dated review call catches the one condition drifting at week three — because someone owned it.",
+                   "principle":"Conditional acceptance works when every condition passes the safe-today test and carries an owner and a date — a 14-item mixed list is a NO wearing a YES's clothes."},
+                  {"key":"accept_all","label":"Accept with all 14 as drafted — momentum matters and the list covers everything","quality":10,
+                   "consequence":"Operations start; the fire-suppression certification 'expected next week' takes five (a damper fault), and the depot runs occupied and uncertified — condition 7 of 14, noticed by the insurer's auditor first.",
+                   "principle":"A safety-critical item inside a long conditions list is a risk hidden in plain sight — lists launder severity."},
+                  {"key":"refuse","label":"Refuse acceptance until all 14 are closed — clean binary, no conditions culture","quality":25,
+                   "consequence":"The depot waits three weeks for signage snags; conditional acceptance existed precisely to prevent this, and the board's credibility as an enabler dies with the delay.",
+                   "principle":"Rejecting the conditions mechanism because it was misused throws out governance's most useful gear."}]}],
+             "hints":["One test sorts everything: safe to operate today without it — yes or no?",
+               "Conditions need owners, dates and a review mechanism, or they're wishes.",
+               "The snag-list items dilute the list's seriousness — evict them to where they belong."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sorted fourteen acceptance conditions down to five real ones — and held the one that mattered."}
+            """),
+
+        ("WC-GOV-277", "Whose benefits are these anyway", "The project ends Friday. The benefits start Monday. Nobody owns Monday.",
+            "Enterprise Programmes", "Benefits Transition Adviser", "project_management", "advanced", 7,
+            """["governance","benefits_management"]""",
+            """
+            {"context":"The claims-automation project closes Friday: system live, team disbanding, closure report drafted. The business case promised 30% cycle-time reduction and 12 FTE redeployment — benefits that accrue over the next 18 months, through operational choices (workflow enforcement, staffing decisions) that belong to operations, who consider the targets 'the project's numbers, not ours'. The project board wants to close clean; operations hasn't signed up to own anything; the benefits are about to be orphaned at the exact moment they start.",
+             "evidence":[
+               {"label":"Friday","value":"Project closes; team disbands"},
+               {"label":"Promised","value":"30% cycle time · 12 FTE redeployment, over 18 months"},
+               {"label":"Mechanism","value":"Operational choices — workflow enforcement, staffing"},
+               {"label":"Ops position","value":"'The project's numbers, not ours'"}],
+             "decisions":[
+               {"key":"transition","prompt":"Before Friday, you drive:",
+                "options":[
+                  {"key":"contract","label":"A benefits handover contract as a closure CONDITION: each benefit assigned to a named operations owner with its baseline, trajectory, levers and reporting cadence — negotiated with ops leadership this week (including revising targets ops can actually stand behind), because an owned 25% beats an orphaned 30%","quality":100,
+                   "consequence":"Ops accepts ownership at a renegotiated 25% — with levers they control and quarterly reporting to the sponsor; eighteen months later 27% is achieved and MEASURED, versus the counterfactual where the closure report was the last time anyone mentioned the number.",
+                   "principle":"Benefits die at project closure unless ownership transfers with baselines, levers and honest targets — an accepted smaller number outperforms an orphaned bigger one."},
+                  {"key":"close","label":"Close as planned — the closure report documents the targets; realisation is operations' job by definition","quality":10,
+                   "consequence":"'By definition' meets 'not our numbers': no one enforces the new workflow, the old process shadows back within a quarter, and the benefits review two years later finds 6% and no one accountable.",
+                   "principle":"A benefit documented but unowned is a press release with a baseline."},
+                  {"key":"extend","label":"Extend the project six months to 'embed benefits' before closing","quality":25,
+                   "consequence":"The project team — which doesn't control staffing or workflow enforcement — spends six funded months encouraging people who don't report to them; the ownership question is deferred at burn rate.",
+                   "principle":"Extending the project substitutes presence for ownership — the levers still belong to someone else."}]}],
+             "hints":["Find who controls each benefit's LEVERS — that's the only viable owner.",
+               "A renegotiated target the owner accepts beats an inherited one they disown.",
+               "Make the handover a closure condition; afterwards you have no currency left."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Strategic Programme Leader"},
+             "share_line":"Transferred a closing project's benefits to owners who accepted them — at a number they'd defend."}
+            """),
+
+        ("WC-SCO-278", "Assemble the handover, backwards", "Six document streams, one certificate, and a receiving team that starts Monday.",
+            "Enterprise Programmes", "Handover Documentation Lead", "project_controls", "professional", 5,
+            """["scope_discipline","quality_management"]""",
+            """
+            {"context":"The campus handover certificate needs six documentation streams assembled: statutory certificates (complete), O&M manuals (80%), as-builts (verification running), training records (complete), spares schedules (reconciling), and the H&S file (compiling). The team plans to 'finish each stream then assemble'. The receiving FM team starts Monday and has asked, reasonably, what they should read first.",
+             "evidence":[
+               {"label":"Streams","value":"Stat certs ✓ · O&Ms 80% · as-builts verifying · training ✓ · spares reconciling · H&S file compiling"},
+               {"label":"Plan","value":"'Finish each stream, then assemble'"},
+               {"label":"Receiver","value":"FM team starts Monday, asking what to read first"},
+               {"label":"Insight","value":"The receiver's reading order ≠ the producer's finishing order"}],
+             "decisions":[
+               {"key":"assemble","prompt":"You:",
+                "options":[
+                  {"key":"receiver_first","label":"Assemble by the RECEIVER's need-order, releasing in waves: day-one operating pack Monday (stat certs, emergency procedures, training records, critical O&Ms — all complete or completable now), week-one pack next (spares, remaining O&Ms), archive pack last (full as-builts, H&S file) — each wave complete-in-itself with a manifest of what follows","quality":100,
+                   "consequence":"The FM team starts Monday with exactly what Monday needs, knowing what arrives when; the producers' remaining work is re-prioritised by receiver need — and the 'what should we read first' question has answered itself.",
+                   "principle":"Handover documentation serves the receiver's timeline, not the producer's — release in need-ordered waves with manifests, never as one eventual heap."},
+                  {"key":"finish_first","label":"Finish all six streams, then hand over one complete package — partial handovers cause confusion","quality":15,
+                   "consequence":"The complete package lands in week four; the FM team's first three weeks run on phone calls and guesses, and the beautiful complete set arrives after its most valuable window.",
+                   "principle":"Completeness delivered late loses to sufficiency delivered on time — the receiver's clock is the only clock."},
+                  {"key":"dump","label":"Hand over everything as-is Monday — let the FM team sort what they need","quality":10,
+                   "consequence":"Six part-finished streams land unindexed on a team that doesn't know the building; they read the wrong 80% first, and the critical emergency procedure is in the pile somewhere.",
+                   "principle":"Transferring the sorting problem isn't a handover — it's an abdication with boxes."}]}],
+             "hints":["Ask what the receiver needs at 8am Monday, at week one, at month six — three different packs.",
+               "Each wave must be complete-in-itself with a manifest of what's coming.",
+               "The producers' finishing order should bend to the receiver's reading order."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Released a campus handover in receiver-ordered waves instead of one late heap."}
+            """),
+
+        ("WC-SCO-279", "Grade the snags like an engineer", "Four hundred defects, three categories, and every wrong grading is a future argument.",
+            "Energy Networks", "Completion Manager", "project_controls", "advanced", 5,
+            """["quality_management","scope_discipline"]""",
+            """
+            {"context":"The windfarm substation's completion inspection produced 400+ defect items to categorise: A (bars energisation), B (fix within 30 days), C (cosmetic/record). Sampling the contractor's proposed grading, you find: an incorrect relay setting graded B ('it's just settings'), missing anti-climb guards graded C ('cosmetic'), phase-labelling errors graded C ('records'), and 60 genuine paint snags graded B ('to be safe'). Each mis-grade is either a hazard deferred or effort wasted.",
+             "evidence":[
+               {"label":"Volume","value":"400+ items, three categories"},
+               {"label":"Mis-grades down","value":"Relay setting = B · anti-climb = C · phase labels = C"},
+               {"label":"Mis-grades up","value":"60 paint snags = B 'to be safe'"},
+               {"label":"Stakes","value":"A bars energisation; B consumes the 30-day window; C is forever"}],
+             "decisions":[
+               {"key":"grade","prompt":"Your regrading rule?",
+                "options":[
+                  {"key":"consequence","label":"Grade by consequence-at-energisation, both directions: the relay setting is A (wrong protection settings ARE an energisation bar), anti-climb and phase labels are B with early dates (safety and operational-error risks, not cosmetics), and the 60 paint snags drop to C — 'to be safe' gradings that inflate B waste the 30-day window the real Bs need","quality":100,
+                   "consequence":"Energisation waits two days for the relay settings — correctly; the 30-day window spends itself on guards and labels instead of paint, and the C-list is honest about what nobody will ever rush.",
+                   "principle":"Defect grading is consequence engineering, not negotiation — and over-grading is a real failure mode: it hides the important Bs inside decorative ones."},
+                  {"key":"accept","label":"Accept the contractor's grading — 400 items, and the big picture is a well-built substation","quality":5,
+                   "consequence":"Energisation proceeds on wrong relay settings; the first through-fault trips half the windfarm instead of one feeder, and the investigation finds 'it's just settings' graded B in your accepted list.",
+                   "principle":"One mis-graded A inside 400 items is why the grading review exists — volume is not a defence."},
+                  {"key":"conservative","label":"When in doubt grade up — make everything questionable a B, safety first","quality":20,
+                   "consequence":"180 Bs enter a 30-day window built for 60; the contractor triages by ease, the paint gets done, and the anti-climb guards — real Bs — slide past day 30 in the noise.",
+                   "principle":"Grading everything up doesn't add safety — it removes the signal that made grades useful."}]}],
+             "hints":["Ask of each item: what happens at energisation, and what happens operationally, if it waits?",
+               "Watch both failure modes: hazards graded down AND minutiae graded up.",
+               "'Settings' and 'labels' are operational-safety items wearing admin clothes."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Governance Steward"},
+             "share_line":"Regraded 400 completion defects by consequence — in both directions."}
+            """),
+
+        ("WC-SCO-280", "The gates between building and healing", "A finished hospital wing is not a working one. Order the gates that make it one.",
+            "Healthcare Estates", "Clinical Commissioning Coordinator", "project_controls", "advanced", 5,
+            """["quality_management","scope_discipline"]""",
+            """
+            {"context":"The new endoscopy suite is construction-complete. Between now and the first patient stand multiple gates: construction handover, ventilation validation (HTM-critical for endoscopy), decontamination-equipment validation, deep clean + microbiological sampling, equipment commissioning, clinical staff familiarisation, CQC registration variation, and the go-live readiness sign-off. The operations director has published a two-week countdown treating these as a checklist. Some gate others; some have external clocks; the order is not optional.",
+             "evidence":[
+               {"label":"Gates","value":"Handover · ventilation validation · decontam validation · clean+micro · equipment · familiarisation · CQC variation · go-live sign-off"},
+               {"label":"External clocks","value":"CQC variation ~3 weeks · micro sampling 5-day incubation"},
+               {"label":"Dependencies","value":"Ventilation gates decontam gates clean gates familiarisation"},
+               {"label":"Published","value":"A two-week checklist countdown"}],
+             "decisions":[
+               {"key":"gates","prompt":"You:",
+                "options":[
+                  {"key":"network","label":"Re-plan as the dependency network it is — CQC variation submitted TODAY (longest external clock, needs only handover evidence), ventilation validation immediately (it gates decontam AND the clean), micro sampling scheduled against its 5-day incubation, familiarisation running on validated systems only — and give the director the honest critical path: ~4 weeks, with the evidence","quality":100,
+                   "consequence":"The director takes the four-week truth badly for a day and gratefully for a year: the CQC variation — submitted day one — lands exactly when the clinical gates clear, and the first patient enters a suite where every gate genuinely passed.",
+                   "principle":"Clinical commissioning gates are sequential verifications with external clocks — the plan is a network, and the kindest thing you can do to a countdown is correct it early."},
+                  {"key":"checklist","label":"Work the two-week checklist hard — parallel everything possible and hope the clocks compress","quality":5,
+                   "consequence":"Familiarisation happens on unvalidated ventilation (retrained later), the micro samples' incubation ignores the countdown, and week two ends with a suite that is 'complete' except for the permissions and proofs that make it a hospital.",
+                   "principle":"External clocks and biological incubation don't attend countdown meetings."},
+                  {"key":"delegate","label":"Split the gates among owners and let each run at their own pace to their own sign-off","quality":20,
+                   "consequence":"Eight owners optimise eight gates; nobody owns the sequence, and the decontam validation team arrives to validate equipment in a suite whose ventilation validation starts next week.",
+                   "principle":"Distributed ownership without a sequence owner is how gates queue behind each other by accident."}]}],
+             "hints":["Submit the longest external clock's application first — it runs while you work.",
+               "Find which validations gate which — ventilation usually gates most of clinical readiness.",
+               "Correct the published countdown early; its collision with reality only gets more expensive."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Governance Steward"},
+             "share_line":"Turned a two-week countdown into the four-week gate network it always was."}
+            """),
+
+        ("WC-SCH-281", "De-rig is a project too", "The show closes Sunday night. The venue reopens as a car park Thursday.",
+            "Events & Venues", "De-rig Coordinator", "project_controls", "professional", 6,
+            """["schedule_analysis","sequencing"]""",
+            """
+            {"context":"The trade show closes 22:00 Sunday; the venue must be handed back bare by Thursday 08:00. De-rig scope: exhibitor breakdown (Sunday night, their own crews), stand structures down (your contractor), rigging and overhead electrics (certified riggers only, nothing beneath them while live), floor protection lift, waste clearance (skips booked when?), and the joint damage inspection with the venue — which determines your bond return. The contractor's draft runs everything in parallel 'to be safe'.",
+             "evidence":[
+               {"label":"Window","value":"Sun 22:00 → Thu 08:00"},
+               {"label":"Scope","value":"Exhibitors · stands · rigging/overheads · floor lift · waste · joint inspection"},
+               {"label":"Rules","value":"Nothing under live rigging work · inspection needs a CLEAR floor"},
+               {"label":"Stake","value":"Damage inspection determines the bond"}],
+             "decisions":[
+               {"key":"derig","prompt":"The sequence?",
+                "options":[
+                  {"key":"zones","label":"Sequence by exclusion and evidence: exhibitors out Sunday night, then RIGGING FIRST by zone (its exclusion footprint empties each zone anyway) with stands following the riggers zone by zone, floor protection lifted last thing Wednesday, waste flowing continuously (skips from Monday 06:00) — and the joint inspection Wednesday evening on a bare floor, photographed, BEFORE the Thursday deadline pressure can rush it","quality":100,
+                   "consequence":"The zones cascade cleanly — riggers never wait, stands never sit under live work; Wednesday's unhurried inspection documents two scuffs as pre-existing (your move-in photos prove it) and the bond returns whole.",
+                   "principle":"De-rig is reverse construction with the same physics: exclusion zones sequence the trades, and the money event — the inspection — gets protected time, not leftover time."},
+                  {"key":"parallel","label":"Run everything in parallel as drafted — four days is generous and crews sort themselves out","quality":10,
+                   "consequence":"Monday morning: stand crews working under live rigging drops until the venue's safety officer stops the floor for three hours; the inspection happens Thursday 06:30, rushed, and the bond argument about floor scuffs has no photos on your side.",
+                   "principle":"'Parallel to be safe' under overhead work is a contradiction the safety officer will resolve for you, expensively."},
+                  {"key":"backload","label":"Give exhibitors and stands Monday–Tuesday, compress your works into Wednesday","quality":20,
+                   "consequence":"Wednesday holds rigging, floor lift, waste AND inspection; one rigging over-run cascades into an inspection at midnight — the single day carries every risk the other three days could have absorbed.",
+                   "principle":"Back-loading a fixed window concentrates exactly the risk the window's length was there to dilute."}]}],
+             "hints":["The rigging's exclusion zone is the sequencing engine — everything else flows around it.",
+               "Book the waste stream as a continuous flow, not an end-state task.",
+               "Protect the inspection: it's the only activity that directly returns money."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sequenced a four-day de-rig around exclusion zones — and gave the bond inspection its own calm evening."}
+            """),
+
+        ("WC-SCH-282", "From cutover to Tuesday", "The system is live. The war room wants to disband. Order the descent carefully.",
+            "Technology Programmes", "Transition-to-BAU Manager", "project_controls", "advanced", 6,
+            """["schedule_analysis","change_management"]""",
+            """
+            {"context":"The billing platform cut over successfully ten days ago; hypercare (war room, vendor on site, hourly monitoring) is expensive and everyone wants 'normal'. Transition steps remaining: incident-queue handover to the service desk (their training 80% done), vendor on-site presence ending, monitoring thresholds relaxing from hypercare to BAU levels, the war room disbanding, project team release, and the 30-day stability review. The programme board proposes doing all of it this Friday.",
+             "evidence":[
+               {"label":"State","value":"Live 10 days, clean; hypercare expensive"},
+               {"label":"Steps","value":"Queue handover · vendor exit · threshold relaxation · war room down · team release · 30-day review"},
+               {"label":"Gap","value":"Service desk training 80%"},
+               {"label":"Proposal","value":"Everything this Friday"}],
+             "decisions":[
+               {"key":"descend","prompt":"Your transition order?",
+                "options":[
+                  {"key":"staged","label":"Descend in stages, each proving the next: queue handover first WITH the war room still behind it as backstop (finish the training against real tickets), vendor exits after the first unassisted week, thresholds relax after the first month-end billing run — the real stress test — war room dissolves then, and the stability review at day 30 gates the final team release","quality":100,
+                   "consequence":"The month-end run — the first real test — happens with thresholds still tight and catches a tariff-rounding defect at 200 accounts instead of 200,000; each safety layer came down only after the layer below took the weight.",
+                   "principle":"Hypercare descends like scaffolding: each support comes down only after what's beneath has carried load through a REAL test — and month-end, not day count, is this system's real test."},
+                  {"key":"friday","label":"Everything Friday as proposed — ten clean days is the evidence, and hypercare costs real money daily","quality":10,
+                   "consequence":"Friday disbands everything; the first month-end run — day 19 — meets BAU thresholds, a half-trained service desk and no war room, and the tariff defect bills 200,000 accounts before Monday.",
+                   "principle":"Ten quiet days proves ten quiet days — a billing system's first exam is month-end, and the safety net came down before it."},
+                  {"key":"extend","label":"Extend full hypercare to day 60 — cheap insurance against the unknown","quality":25,
+                   "consequence":"Fifty more days of war-room burn and vendor rates guarding a system that needed staged descent, not frozen vigilance; the board's patience and the budget both run out before the value does.",
+                   "principle":"Undifferentiated caution is expensive exactly where structured descent is free."}]}],
+             "hints":["Identify the system's REAL first test — calendar events, not day counts.",
+               "Remove each layer only after the layer below has carried real weight.",
+               "The 80% training finishes fastest with real tickets and a backstop behind it."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Descended from hypercare like scaffolding — and kept the net up through month-end."}
+            """),
+
+        ("WC-SCH-283", "Prove it in the right order", "Seventy-two hours of performance tests, and the sequence decides what a failure costs.",
+            "Industrial Manufacturing", "Performance Test Manager", "project_controls", "advanced", 6,
+            """["schedule_analysis","quality_management"]""",
+            """
+            {"context":"The recycling plant's acceptance requires a 72-hour continuous performance test plus supporting proofs: feed-rate capacity runs, product-quality sampling, availability logging, emissions compliance monitoring, and power-consumption verification. The contractor proposes starting the 72-hour continuous run Monday 'to get the big one done', with capacity and emissions runs after. A failed 72-hour run means a full restart of it — and the plant has known teething risks in the feed system.",
+             "evidence":[
+               {"label":"Tests","value":"72h continuous · capacity runs · quality sampling · availability · emissions · power"},
+               {"label":"Proposal","value":"72-hour run FIRST — 'get the big one done'"},
+               {"label":"Rule","value":"72h failure = full 72h restart"},
+               {"label":"Known risk","value":"Feed-system teething"}],
+             "decisions":[
+               {"key":"testorder","prompt":"Your test sequence?",
+                "options":[
+                  {"key":"shakedown","label":"Cheap proofs first as paid shakedown: capacity runs and emissions spot-checks early (they exercise the feed system in bounded bursts and their failures cost hours, not days), quality sampling calibrated during them — the 72-hour marathon runs LAST, when everything it tests has already survived the sprints, with sampling/availability/power logged inside it","quality":100,
+                   "consequence":"The capacity runs find the feed-system jam signature on day one — a four-hour fix; the 72-hour run then passes first time with all the piggy-backed proofs inside it, and acceptance lands a week earlier than the 'big one first' plan's honest expectation.",
+                   "principle":"Sequence tests by cost-of-failure: let the cheap sprints find the defects the expensive marathon would otherwise find at hour 60."},
+                  {"key":"marathon","label":"As proposed — the 72-hour run is the critical path, so it starts first","quality":10,
+                   "consequence":"Hour 58: the feed jam. Full restart. The second attempt's hour 31: a related jam. The 'critical path first' logic has now spent nine days proving what a four-hour capacity run would have found Monday morning.",
+                   "principle":"Putting the most expensive test first means paying marathon prices for sprint-sized discoveries."},
+                  {"key":"parallel","label":"Run everything simultaneously inside one combined 72-hour campaign — maximum efficiency","quality":20,
+                   "consequence":"Feasible for the piggy-backed logging — but the capacity runs' deliberate feed-rate excursions violate the continuous run's steady-state conditions; the combined campaign fails its own protocol and the argument about which test 'counts' consumes a week.",
+                   "principle":"Tests with conflicting operating conditions cannot share a window — check the protocols before merging them."}]}],
+             "hints":["Rank each test by its cost-of-failure and restart rules.",
+               "Bounded bursts find teething defects at burst prices — spend them first.",
+               "Piggy-back the passive logging on the marathon; never the active excursions."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Ran the cheap tests first and let the 72-hour marathon pass on the first attempt."}
+            """),
     };
 }
