@@ -420,6 +420,60 @@ public static class WorldIdentity
         return a?["user_id"] is null ? null : CanonicalUserFor(db, H.L(a["user_id"]));
     }
 
+    // ───────────────────────── support diagnostics (PW-US-050) ─────────────────────────
+
+    /// <summary>
+    /// Safe participant diagnostics for support staff: identity references, mapping outcome,
+    /// participation/onboarding state and COUNTS — enough to diagnose a stuck journey, and
+    /// deliberately nothing more. Never answers, never tokens or their hashes, never disclosure
+    /// choices, never photo references: support can see THAT a Passport exists, not what its
+    /// owner chose to put on it.
+    /// </summary>
+    public static Dictionary<string, object?>? SupportDiagnostics(Db db, string lookup)
+    {
+        lookup = (lookup ?? "").Trim();
+        if (lookup.Length == 0) return null;
+        var w = long.TryParse(lookup, out var id)
+            ? db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", id)
+            : db.QueryOne("SELECT * FROM pciworld_users WHERE email=?", lookup.ToLowerInvariant());
+        if (w is null) return null;
+        var wid = H.L(w["id"]);
+        var map = db.QueryOne(@"SELECT outcome, detail, canonical_user_id, created_at, resolved_at
+            FROM pciworld_user_map WHERE legacy_world_id=?", wid);
+        var canonical = CanonicalUserFor(db, wid);
+        var participant = canonical is null ? null : db.QueryOne(
+            "SELECT status, onboarding_state, goal, first_entered_at, onboarded_at FROM pciworld_participants WHERE user_id=?", canonical);
+        var me = db.QueryOne(@"SELECT
+                COUNT(*) AS total,
+                SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END) AS done,
+                SUM(CASE WHEN status='in_progress' THEN 1 ELSE 0 END) AS open
+            FROM pciworld_attempts WHERE user_id=?", wid)!;
+        return new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["world_id"] = wid,
+            ["email"] = H.Str(w["email"]),
+            ["status"] = H.Str(w["status"]),
+            ["email_verified"] = H.L(w["email_verified"]) == 1,
+            ["created_at"] = H.Str(w["created_at"]),
+            ["last_login_at"] = H.Str(w["last_login_at"]),
+            ["mapping_outcome"] = map is null ? "none" : H.Str(map["outcome"]),
+            ["mapping_detail"] = map is null ? null : H.Str(map["detail"]),
+            ["canonical_user_id"] = canonical,
+            ["participation_status"] = participant is null ? null : H.Str(participant["status"]),
+            ["onboarding_state"] = participant is null ? null : H.Str(participant["onboarding_state"]),
+            ["goal"] = participant is null ? null : H.Str(participant["goal"]),
+            ["attempts_total"] = H.L(me["total"]),
+            ["attempts_completed"] = H.L(me["done"]),
+            ["attempts_in_progress"] = H.L(me["open"]),
+            ["passport_public"] = H.L(w["passport_public"]) == 1,
+            ["passport_expired"] = WorldPassport.Expired(w),
+            ["visible_evidence"] = db.Scalar<long>(
+                "SELECT COUNT(*) FROM pciworld_attempts WHERE user_id=? AND status='completed' AND passport_visible=1", wid),
+            ["live_sessions"] = db.Scalar<long>(
+                "SELECT COUNT(*) FROM pciworld_user_sessions WHERE user_id=? AND expires_at>datetime('now')", wid),
+        };
+    }
+
     public static void EnsureParticipant(Db db, long canonicalUserId) =>
         db.Execute("INSERT OR IGNORE INTO pciworld_participants(user_id) VALUES(?)", canonicalUserId);
 

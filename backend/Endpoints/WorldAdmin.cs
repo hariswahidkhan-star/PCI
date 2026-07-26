@@ -650,6 +650,19 @@ public static class WorldAdmin
             });
         });
 
+        // Support diagnostics (PW-US-050): safe lookup for a stuck participant journey — identity
+        // references, mapping outcome, states and counts. Never answers, tokens, disclosure
+        // choices or photo references; support sees THAT a Passport exists, not its content.
+        app.MapGet("/api/world-admin/participants", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "read", out var adm) is { } blocked) return blocked;
+            var q = ctx.Request.Query["q"].ToString();
+            var diag = Core.WorldIdentity.SupportDiagnostics(db, q);
+            if (diag is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            Audit(adm!.Id, "participant_lookup", $"#{diag["world_id"]}");
+            return J(new { participant = diag });
+        });
+
         app.MapGet("/api/world-admin/users", (HttpContext ctx) =>
         {
             if (Gate(ctx, "admin", out _) is { } blocked) return blocked;
@@ -1211,7 +1224,32 @@ public static class WorldAdmin
               });
               h+='</tbody></table>';
             }
+            // Support lookup (PW-US-050): read-gated diagnostics for a stuck participant journey.
+            // The answer is states and counts — never answers, tokens, disclosure or photos.
+            h+='<h2 style="margin-top:22px">Participant lookup (support)</h2>'+
+               '<div class="row" style="max-width:560px">'+
+               '<div><label for="pl_q">World account id or email</label><input id="pl_q" placeholder="42 or person@example.org"></div>'+
+               '</div><p><button id="pl_go">Look up</button></p><div id="pl_out"></div>';
             $('tab-reports').innerHTML=h;
+            $('pl_go').addEventListener('click',function(){
+              $('pl_out').innerHTML='';
+              api('/api/world-admin/participants?q='+encodeURIComponent($('pl_q').value))
+                .then(function(o){
+                  var p=o.participant,rows=[
+                    ['World account','#'+p.world_id+' · '+p.email+' · '+p.status+(p.email_verified?' · verified':' · unverified')],
+                    ['Canonical identity',p.canonical_user_id?('users #'+p.canonical_user_id+' ('+p.mapping_outcome+')'):('none — '+p.mapping_outcome+(p.mapping_detail?': '+p.mapping_detail:''))],
+                    ['Participation',(p.participation_status||'—')+' · onboarding '+(p.onboarding_state||'—')+(p.goal?' · goal '+p.goal:'')],
+                    ['Attempts',p.attempts_total+' total · '+p.attempts_completed+' completed · '+p.attempts_in_progress+' in progress'],
+                    ['Passport',(p.passport_public?'published':'private')+(p.passport_expired?' (expired)':'')+' · '+p.visible_evidence+' selected evidence item(s)'],
+                    ['Sessions',p.live_sessions+' live'],
+                    ['Signed up',p.created_at+(p.last_login_at?' · last sign-in '+p.last_login_at:'')]];
+                  var t='<table><tbody>';
+                  rows.forEach(function(r2){t+='<tr><th style="text-align:left;padding-right:12px">'+esc(r2[0])+'</th><td>'+esc(r2[1])+'</td></tr>';});
+                  $('pl_out').innerHTML=t+'</tbody></table>'+
+                    '<p><small>Diagnostics only: answers, tokens, disclosure choices and photographs are never shown here.</small></p>';
+                })
+                .catch(function(e){$('pl_out').innerHTML='<p class="bad">'+esc((e&&e.error)==='not_found'?'No PCI World account matches that.':'Lookup failed — try again.')+'</p>';});
+            });
             $('tab-reports').querySelectorAll('[data-resolve]').forEach(function(btn){
               btn.addEventListener('click',function(){
                 var note=prompt('Resolution note (what was checked or changed):')||'';

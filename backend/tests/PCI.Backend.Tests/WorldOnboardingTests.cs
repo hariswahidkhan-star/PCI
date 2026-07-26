@@ -99,6 +99,61 @@ public class WorldOnboardingTests
     }
 
     [Fact]
+    public void Support_diagnostics_show_states_and_counts_never_private_content()
+    {
+        var db = NewWorldDb();
+        var sess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES('s-diag')");
+        var (_, wid, _) = WorldAccount.Register(db, "diag@x.test", "long-password-1", "D", null);
+        db.Execute("UPDATE pciworld_users SET email_verified=1, passport_public=1, passport_token_sha='secret-sha', passport_photo_ref='photos/x.jpg' WHERE id=?", wid);
+        var ch = db.QueryOne("SELECT id,current_version FROM pciworld_challenges WHERE current_version>=1 LIMIT 1")!;
+        db.Execute(@"INSERT INTO pciworld_attempts(session_id,challenge_id,version,status,score,user_id,passport_visible,answers_json,completed_at)
+            VALUES(?,?,?, 'completed', 88, ?, 1, '{""secret"":""answer-text""}', datetime('now'))",
+            sess, ch["id"], ch["current_version"], wid);
+
+        // Lookup by id and by email resolve the same record.
+        var byId = WorldIdentity.SupportDiagnostics(db, wid.ToString())!;
+        var byEmail = WorldIdentity.SupportDiagnostics(db, "DIAG@x.test")!;
+        Assert.Equal(byId["world_id"], byEmail["world_id"]);
+
+        Assert.Equal("created", byId["mapping_outcome"]);
+        Assert.NotNull(byId["canonical_user_id"]);
+        Assert.Equal("not_started", byId["onboarding_state"]);
+        Assert.Equal(1L, byId["attempts_completed"]);
+        Assert.Equal(true, byId["passport_public"]);
+        Assert.Equal(1L, byId["visible_evidence"]);
+        Assert.Equal(1L, byId["live_sessions"]);
+
+        // The privacy boundary: no answers, no token material, no disclosure, no photo reference —
+        // not as values and not as keys.
+        var json = System.Text.Json.JsonSerializer.Serialize(byId);
+        Assert.DoesNotContain("answer-text", json);
+        Assert.DoesNotContain("secret-sha", json);
+        Assert.DoesNotContain("photos/x.jpg", json);
+        foreach (var forbidden in new[] { "answers", "token", "photo", "show_scores", "disclosure" })
+            Assert.DoesNotContain(forbidden, json, StringComparison.OrdinalIgnoreCase);
+
+        Assert.Null(WorldIdentity.SupportDiagnostics(db, "nobody@x.test"));
+        Assert.Null(WorldIdentity.SupportDiagnostics(db, ""));
+    }
+
+    [Fact]
+    public void The_sweep_clears_expired_and_consumed_handoff_codes()
+    {
+        var db = NewWorldDb();
+        var (_, wid, _) = WorldAccount.Register(db, "sweep-h@x.test", "long-password-1", "S", null);
+        var live = WorldAccount.CreateHandoff(db, wid);
+        var dead = WorldAccount.CreateHandoff(db, wid);
+        var used = WorldAccount.CreateHandoff(db, wid);
+        db.Execute("UPDATE pciworld_handoff_codes SET expires_at=datetime('now','-1 minutes') WHERE code_sha=?", Security.Sha(dead));
+        WorldAccount.RedeemHandoff(db, used);
+
+        WorldRetentionService.Sweep(db);
+        // The unexpired, unconsumed code survives; residue is gone.
+        Assert.Equal(1L, db.Scalar<long>("SELECT COUNT(*) FROM pciworld_handoff_codes WHERE world_user_id=?", wid));
+        Assert.Null(WorldAccount.RedeemHandoff(db, live).Error);
+    }
+
+    [Fact]
     public void An_unlinked_account_cannot_onboard_and_the_switcher_state_says_why()
     {
         var db = NewWorldDb();

@@ -1698,6 +1698,7 @@ public static class WorldPages
             <div><b>Leaving</b><span>Export your PCI World data as JSON at any time. Deleting your PCI World participation removes your World sign-in, Passport and every public link — your PCI student account and any certifications are untouched; completed challenges survive only as anonymous statistics.</span></div>
           </div>
         </div>
+        <script>var PORTAL_URL='{E(WorldOnly.Enabled ? InstituteUrl(db) : "/app/")}';</script>
         <script>{AccountJs}</script>
         """,
         "/world/account", noindex: true);
@@ -1850,6 +1851,18 @@ public static class WorldPages
                    '<h2 style="margin-top:0">Recommended next</h2>'+
                    '<p style="color:var(--slate)">'+esc(d.recommended.title||'')+' <small>(rule-based: a challenge you have not completed yet)</small></p>'+
                    '<p><a class="btn secondary" href="/world/challenge/'+encodeURIComponent(d.recommended.code||'')+'">Open this challenge</a></p></div>';
+              }
+              // ── The PCI ecosystem (P1-11): bidirectional discoverability. The portal shows a
+              //    PCI World card; this is the RETURN direction — current product marked, the
+              //    destination's honest state, and never a certification or entitlement claim. ──
+              if(d.products&&d.products.pci_ai){
+                h+='<div class="card"><span class="kicker">PCI ecosystem &middot; you are in PCI World</span>'+
+                   '<h2 style="margin-top:0">PCI Institute student portal</h2>'+
+                   (d.products.pci_ai.state==='ready'
+                     ?'<p style="color:var(--slate)">Your PCI student identity is linked. Certifications, exams, membership and billing live in the Institute student portal — you practise here, and your one PCI sign-in works in both places.</p>'+
+                      '<p><a class="btn secondary" href="'+esc(typeof PORTAL_URL!=='undefined'?PORTAL_URL:'/app/')+'">Open the student portal</a></p>'
+                     :'<p style="color:var(--slate)">This World account is not linked to a PCI student identity yet. Sign in to PCI World with the same email and password you use on the Institute student portal and the two link automatically — no second account is ever created. If you believe this is wrong, contact support.</p>')+
+                   '</div>';
               }
             }
             // The cover: the owner's own Passport drawn as the artefact a reader of the public
