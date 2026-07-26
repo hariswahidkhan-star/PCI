@@ -23,6 +23,10 @@ public static class WorldSchema
         Seed(db);
         WorldContentPack.Seed(db);
         WorldArticlePack.Seed(db);
+        // Project Intelligence taxonomy backfill — idempotent, house rows only, metadata only
+        // (never config_json, never a version snapshot). Runs after the pack so a fresh install
+        // classifies its whole bank on first boot.
+        Core.WorldIntelligence.Backfill(db);
     }
 
     static void Tables(Db db)
@@ -240,6 +244,18 @@ public static class WorldSchema
         }
         AddCol("pciworld_attempts", "user_id", "user_id INTEGER");
         AddCol("pciworld_attempts", "passport_visible", "passport_visible INTEGER DEFAULT 0");
+
+        // ── Project Intelligence taxonomy (Core/WorldIntelligence.cs). Catalogue metadata on the
+        //    WORKING COPY only — deliberately not on pciworld_challenge_versions, because facets
+        //    are how content is found and reported, never part of what an attempt replays. All
+        //    values come from the approved vocabularies; NULL means "not yet classified". ──
+        AddCol("pciworld_challenges", "pi_type", "pi_type VARCHAR(24)");
+        AddCol("pciworld_challenges", "pi_domain", "pi_domain VARCHAR(32)");
+        AddCol("pciworld_challenges", "pi_lifecycle", "pi_lifecycle VARCHAR(32)");
+        AddCol("pciworld_challenges", "pi_sector", "pi_sector VARCHAR(32)");
+        AddCol("pciworld_challenges", "pi_interaction", "pi_interaction VARCHAR(32)");
+        // Catalogue filters combine type+domain most often; sector/lifecycle piggyback on the scan.
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldch_pi ON pciworld_challenges(pi_type, pi_domain)");
 
         // Passport disclosure is per FIELD as well as per item: publishing evidence of what you
         // have practised should not force you to publish your scores. Defaults preserve the

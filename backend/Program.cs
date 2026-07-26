@@ -1488,6 +1488,7 @@ PCI.Backend.Endpoints.SimLab.Map(app, db, logFn);                     // AI Proj
 PCI.Backend.Endpoints.World.Map(app, db, logFn);                      // PCI World — public challenge platform (separate product)
 PCI.Backend.Endpoints.WorldAdmin.Map(app, db, logFn);                 // PCI World — SEPARATE admin realm (never linked from PCI admin)
 PCI.Backend.Endpoints.WorldAccount.Map(app, db, logFn);               // PCI World — participant accounts + Passport (practice identity only)
+PCI.Backend.Endpoints.WorldIntelligenceApi.Map(app, db, logFn);       // PCI Project Intelligence — versioned learner API + admin coverage
 PCI.Backend.Endpoints.AdminI18n.Map(app, db, logFn);
 PCI.Backend.Endpoints.Social.Map(app, db, logFn, GateFn);              // footer social-media links (admin-controlled)
 PCI.Backend.Endpoints.Notifications.Map(app, db, logFn, GateFn);       // owner alert recipients + per-event toggles
